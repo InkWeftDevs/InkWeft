@@ -30,8 +30,9 @@ jobs:
         uses: android-actions/setup-android@9fc6c4e9069bf8d3d10b2204b1fb8f6ef7065407
         with:
           packages: "platform-tools"
+          log-accepted-android-sdk-licenses: false
       - name: Install declared SDK
-        run: sdkmanager "platforms;android-37" "build-tools;36.0.0"
+        run: sdkmanager "platforms;android-36" "build-tools;36.0.0"
       - name: Generate standard wrapper and build
         working-directory: android
         run: |
@@ -54,7 +55,7 @@ jobs:
           Path("build/evidence/build.json").write_text(json.dumps({
             "commit": os.environ["BUILD_COMMIT"],
             "scope": "A0_NATIVE_TEXT_FOUNDATION_NOT_HANDWRITING",
-            "compileSdk": 37, "targetSdk": 37, "minSdk": 31,
+            "compileSdk": 36, "targetSdk": 36, "minSdk": 31,
             "applicationId": "org.inkweft.app.a0",
             "runner": platform.platform(),
             "apk_install": "NOT_RUN",

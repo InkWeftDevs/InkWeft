@@ -4,7 +4,7 @@ plugins {
 }
 android {
     namespace = "org.inkweft.data"
-    compileSdk = 37
+    compileSdk = 36
     defaultConfig {
         minSdk = 31
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"

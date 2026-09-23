@@ -21,7 +21,9 @@
 
 ## 构建
 
-固定：JDK 17、Gradle 9.4.1、AGP 9.2.1、Kotlin/Compose plugin 2.3.10、compile/target 37、min 31。直接依赖版本见 `gradle/libs.versions.toml`。AGP 9 使用 built-in Kotlin；Android模块不再重复应用 kotlin-android。
+本次构建例外：最初声明API37，但实际CI（run 35875551637）在官方SDK源返回 `Failed to find package platforms;android-37`。仅此A0文字基础切片显式改用compile/target36，min31不变；不是静默退回，也不表示API37验证通过。后续原生主线按实际SDK可用性再评审升至37。SDK工具显式安装，不依赖runner预置PATH。
+
+固定：JDK 17、Gradle 9.4.1、AGP 9.2.1、Kotlin/Compose plugin 2.3.10、compile/target 36、min 31。直接依赖版本见 `gradle/libs.versions.toml`。AGP 9 使用 built-in Kotlin；Android模块不再重复应用 kotlin-android。
 
 首次引导需要官方 Gradle 9.4.1（CI使用固定提交的setup-gradle）。**本提交未携带wrapper JAR**：先使用一次已安装的固定Gradle生成标准wrapper，CI同时输出生成的wrapper文件供审阅；没有另写下载执行器或伪造JAR。
 
