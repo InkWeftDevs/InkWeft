@@ -1,0 +1,84 @@
+name: Android A0 foundation
+on:
+  push:
+    branches: ["codex/android-a0-foundation-20260923"]
+    paths: ["android/**", ".github/workflows/android-a0.yml"]
+  pull_request:
+    paths: ["android/**", ".github/workflows/android-a0.yml"]
+permissions:
+  contents: read
+concurrency:
+  group: android-a0-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3
+        with:
+          distribution: temurin
+          java-version: "17"
+      - uses: gradle/actions/setup-gradle@ed408507eac070d1f99cc633dbcf757c94c7933a
+        with:
+          gradle-version: "9.4.1"
+          cache-read-only: true
+      - name: Install declared SDK
+        run: sdkmanager "platforms;android-37" "build-tools;36.0.0"
+      - name: Generate standard wrapper and build
+        working-directory: android
+        run: |
+          set -euo pipefail
+          gradle --no-daemon wrapper
+          ./gradlew --no-daemon :core-domain:test :app:lintDebug :app:assembleDebug :data-local:assembleDebugAndroidTest
+      - name: Record actual APK provenance
+        working-directory: android
+        env:
+          BUILD_COMMIT: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          mkdir -p build/evidence
+          cp app/build/outputs/apk/debug/app-debug.apk build/evidence/inkweft-a0-text-debug.apk
+          sha256sum build/evidence/inkweft-a0-text-debug.apk > build/evidence/APK-SHA256.txt
+          "$ANDROID_HOME/build-tools/36.0.0/apksigner" verify --verbose --print-certs build/evidence/inkweft-a0-text-debug.apk > build/evidence/apk-signature.txt
+          python3 - <<'PY'
+          import json, os, platform
+          from pathlib import Path
+          Path("build/evidence/build.json").write_text(json.dumps({
+            "commit": os.environ["BUILD_COMMIT"],
+            "scope": "A0_NATIVE_TEXT_FOUNDATION_NOT_HANDWRITING",
+            "compileSdk": 37, "targetSdk": 37, "minSdk": 31,
+            "applicationId": "org.inkweft.app.a0",
+            "runner": platform.platform(),
+            "apk_install": "NOT_RUN",
+            "instrumented_tests": "COMPILED_NOT_RUN",
+            "pencil3": "NOT_RUN",
+            "plan_37_acceptance_cases": "NOT_RUN"
+          }, indent=2) + "\n")
+          PY
+      - name: Upload successfully built APK and bootstrap outputs
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: inkweft-a0-text-${{ github.sha }}
+          retention-days: 7
+          if-no-files-found: error
+          path: |
+            android/build/evidence/
+            android/gradlew
+            android/gradlew.bat
+            android/gradle/wrapper/
+            android/data-local/schemas/
+      - name: Upload existing test and lint reports
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: android-a0-reports-${{ github.run_id }}
+          retention-days: 7
+          if-no-files-found: warn
+          path: |
+            android/core-domain/build/test-results/
+            android/core-domain/build/reports/tests/
+            android/app/build/reports/lint-results*

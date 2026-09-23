@@ -1,0 +1,34 @@
+<resources>
+    <string name="app_name">墨织 A0</string>
+    <string name="library">我的笔记</string>
+    <string name="library_hint">先把想法记下来，再慢慢整理。</string>
+    <string name="new_note">新建笔记</string>
+    <string name="cancel">取消</string>
+    <string name="create">创建</string>
+    <string name="title">笔记标题</string>
+    <string name="untitled">未命名笔记</string>
+    <string name="empty">从一页白纸开始</string>
+    <string name="empty_hint">无需登录。此构建验证原生文字编辑与本地提交。</string>
+    <string name="preview_scope">A0 开发预览 · 当前仅文字，手写与 PDF 尚未接入</string>
+    <string name="back">资料库</string>
+    <string name="save">保存</string>
+    <string name="saved">已提交到本机数据库</string>
+    <string name="draft">未保存 · 草稿仅在本次会话保留</string>
+    <string name="saving">正在保存…</string>
+    <string name="unknown">结果待核对，草稿已保留。重试沿用同一命令。</string>
+    <string name="conflict">原版本已变化，未覆盖。可保留草稿或明确加载已保存版本。</string>
+    <string name="rejected">命令身份或参数不一致，未覆盖内容。</string>
+    <string name="retry">核对并重试</string>
+    <string name="load_saved">放弃此草稿，加载已保存版本</string>
+    <string name="body_hint">写下自己的理解、推导或待解决的问题…</string>
+    <string name="export_text">导出文字</string>
+    <string name="export_notice">明文导出，不含修订和回执；不是完整备份。目标可能是你选定的云端文件提供方。</string>
+    <string name="error_load">数据库读取失败。未重置或覆盖已有资料。</string>
+    <string name="retry_load">重新读取</string>
+    <string name="export_success">已完成本次文字导出</string>
+    <string name="export_failed">导出未完成，原资料未改变</string>
+    <string name="export_filename">墨织笔记.txt</string>
+    <string name="version_label">修订 %1$d</string>
+    <string name="note_count">%1$d 份本地笔记</string>
+    <string name="development_limit">未保存草稿可能随进程终止而丢失；当前构建不是正式资料保管工具。</string>
+</resources>
