@@ -26,6 +26,10 @@ jobs:
         with:
           gradle-version: "9.4.1"
           cache-read-only: true
+      - name: Provision SDK tools explicitly
+        uses: android-actions/setup-android@9fc6c4e9069bf8d3d10b2204b1fb8f6ef7065407
+        with:
+          packages: "platform-tools"
       - name: Install declared SDK
         run: sdkmanager "platforms;android-37" "build-tools;36.0.0"
       - name: Generate standard wrapper and build
