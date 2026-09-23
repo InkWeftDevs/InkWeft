@@ -83,14 +83,20 @@ class NotebookViewModel(application: Application) : AndroidViewModel(application
         }
     }
 
-    /** Explicit user action only; there is no automatic rebase of old editor input. */
+    /** Explicit discard is scoped to the exact draft present when requested. */
     fun discardDraftAndRead() {
-        val id = ui.value.selectedId ?: return
-        if (ui.value.current?.phase in listOf(SavePhase.SAVING, SavePhase.UNKNOWN)) return
+        val requested = ui.value.current ?: return
+        if (requested.phase in listOf(SavePhase.SAVING, SavePhase.UNKNOWN)) return
+        val id = requested.base.id
         viewModelScope.launch {
             try {
                 val note = repository.read(id) ?: return@launch
-                replace(id, NoteDraft(note))
+                mutableUi.update { currentUi ->
+                    val currentDraft = currentUi.drafts[id] ?: return@update currentUi
+                    val replacement = currentDraft.acceptExplicitReload(requested, note)
+                    if (replacement === currentDraft) currentUi
+                    else currentUi.copy(drafts = currentUi.drafts + (id to replacement))
+                }
             } catch (cancelled: CancellationException) { throw cancelled
             } catch (_: Exception) { mutableUi.update { it.copy(readFailed = true) } }
         }

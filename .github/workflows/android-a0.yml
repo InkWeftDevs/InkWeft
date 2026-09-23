@@ -1,9 +1,10 @@
 name: Android A0 foundation
 on:
   push:
-    branches: ["codex/android-a0-foundation-20260923"]
+    branches: ["main"]
     paths: ["android/**", ".github/workflows/android-a0.yml"]
   pull_request:
+    branches: ["main"]
     paths: ["android/**", ".github/workflows/android-a0.yml"]
 permissions:
   contents: read
@@ -33,12 +34,14 @@ jobs:
           log-accepted-android-sdk-licenses: false
       - name: Install declared SDK
         run: sdkmanager "platforms;android-36" "build-tools;36.0.0"
-      - name: Generate standard wrapper and build
+      - name: Generate verified standard wrapper and build
         working-directory: android
         run: |
           set -euo pipefail
           gradle --no-daemon wrapper
+          printf '%s  %s\n' '55243ef57851f12b070ad14f7f5bb8302daceeebc5bce5ece5fa6edb23e1145c' 'gradle/wrapper/gradle-wrapper.jar' | sha256sum --check -
           ./gradlew --no-daemon :core-domain:test :app:lintDebug :app:assembleDebug :data-local:assembleDebugAndroidTest
+          git diff --exit-code -- data-local/schemas
       - name: Record actual APK provenance
         working-directory: android
         env:

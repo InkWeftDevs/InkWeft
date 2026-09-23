@@ -8,6 +8,7 @@
 - 新建、选笔记、文字输入、显式保存、独立明文文本导出。
 - 草稿按 noteId/baseRevision 保存于 ViewModel：失焦不清空，切卡不串写，合法空正文保持空。
 - 内容、不可变修订和幂等回执放在同一 Room 事务；失败不显示“已保存”，结果未知保留原命令重试，陈旧版本拒绝覆盖。
+- 显式丢弃草稿后的异步读取，只能替换当时的同一个草稿实例；期间编辑、再次保存或其他读取均使旧请求失效，不以结构相等绕过检查。
 - 无 INTERNET、麦克风、相机、全文件权限；声明排除系统备份与设备迁移。构建依赖下载不等于运行时联网。
 - 保留现有数据库：无 destructive migration；自定义 open helper 在腐败回调时拒绝默认删除，并明确关闭 allowDataLossOnRecovery。此行为仍需真实故障验证。
 
@@ -25,7 +26,7 @@
 
 固定：JDK 17、Gradle 9.4.1、AGP 9.2.1、Kotlin/Compose plugin 2.3.10、compile/target 36、min 31。直接依赖版本见 `gradle/libs.versions.toml`。AGP 9 使用 built-in Kotlin；Android模块不再重复应用 kotlin-android。
 
-首次引导需要官方 Gradle 9.4.1（CI使用固定提交的setup-gradle）。**本提交未携带wrapper JAR**：先使用一次已安装的固定Gradle生成标准wrapper，CI同时输出生成的wrapper文件供审阅；没有另写下载执行器或伪造JAR。
+首次引导需要官方 Gradle 9.4.1（CI使用固定提交的setup-gradle）。**源码暂未携带wrapper JAR**：先使用一次已安装的固定Gradle生成标准wrapper，CI同时输出生成的wrapper文件供审阅；没有另写下载执行器或伪造JAR。这是开发基础版的明确构建前置，后续应提交完整标准wrapper；不声称现在仅靠git clone即可运行gradlew。
 
 ```powershell
 Set-Location android
@@ -36,22 +37,28 @@ gradle wrapper
 标准wrapper生成任务固定官方分发SHA-256：
 `2ab2958f2a1e51120c326cad6f385153bb11ee93b3c216c5fccebfdfbb7ec6cb`
 来源：Gradle官方9.4.1 release中的gradle-9.4.1-bin.zip资产digest。
+CI还在执行生成的wrapper前验证官方JAR SHA-256：
+`55243ef57851f12b070ad14f7f5bb8302daceeebc5bce5ece5fa6edb23e1145c`
+来源：https://gradle.org/release-checksums/
 
-Room schema由KSP在 `data-local/schemas` 生成；发布前需取回并审阅Schema、标准wrapper与传递依赖锁/校验材料。这些缺口没有用空文件宣称完成。
+Room schema v1已从成功CI run35876852580的artifact10758881048取回并核对字段后提交至 `data-local/schemas`；未改数据库版本或结构。CI重建后检查已提交Schema没有漂移。传递依赖锁/校验材料仍需补齐，不能将直接版本固定等同整个供应链已完成。
 
 ## 证据
+
+CI针对指向main的PR和main的相关push分别验证。先前只触发开发分支的配置已移除，合并之后仍检查实际main构件。
 
 CI分别编译 Debug APK、运行纯Kotlin JUnit、lint，并编译（不执行）instrumentation test APK。实际结果以对应提交的 Actions 为准。CI输出APK SHA-256、签名指纹和构建信息。没有模拟器/设备任务就保持安装、Room instrumented tests、Compose操作、热/笔延迟为 NOT_RUN；不能将 `assembleDebugAndroidTest` 当作测试通过。
 
 测试：
 - core-domain：空文本、原编辑基线、未知结果同命令重试、冲突保留、字段边界和摘要。
+- DraftReloadTest：明确读取、迟到结果、新输入、保存中、结果未知、相等但不同的草稿实例、重复结果与跨笔记读取；定义不等于已执行，以本次CI XML为准。
 - data-local/androidTest：幂等、陈旧版本、重开、旧回执固定版本。仅定义/编译不等于运行。
 
 调试APK使用当前构建环境debug key，不是正式签名；不同环境证书不保证兼容覆盖安装，禁止脚本自动卸载清库。没有自动合并、Release或上传商店。
 
 ## 后续最短路径
 
-1. 验证当前CI并审阅生成构件；提交标准wrapper与真实schema/依赖材料。
+1. 提交完整标准wrapper与传递依赖材料；开发基础版当前有明确bootstrap方式。
 2. 原生Ink画布、笔盒、事务化笔迹保存、取消/长笔分段、完整导出恢复。
 3. 真机安装、旋转/进程终止/低空间；再接PDF与一张共享知识卡。
 4. 本批未修改网页残留问题，它们仍需独立小修，不以安卓实现宣布网页已修复。
