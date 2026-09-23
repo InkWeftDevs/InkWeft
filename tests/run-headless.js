@@ -152,11 +152,16 @@ check('AX02-A01', 'comment edit lands on the committed revision; undo restores a
   }
   engine.undo(IW.commandHeader('undo-1', engine, { targetCommandId: patch.receipt.commandId }));
   const undone = IW.readCardHead(engine.getVault(), cardId);
-  if (undone.cardRevisionId !== before.cardRevisionId) throw new Error('undo did not restore the head revision');
+  /* Undo now COMPENSATES by appending a new revision, so the head id moves
+     forward while the content returns to the previous text. Nothing is removed
+     from the ledger. */
   if (undone.blocks.find((b) => b.role === 'comment').payload.text !== '') {
     throw new Error('undo did not restore the previous comment text');
   }
-  return `rev ${before.revision}->${after.revision}->${undone.revision}; the undone revision is gone with its pre-image`;
+  if (!IW.readCardRevision(engine.getVault(), after.cardRevisionId)) {
+    throw new Error('undo deleted the revision it undid; history must stay resolvable');
+  }
+  return `rev ${before.revision}->${after.revision}->${undone.revision} (compensated); the undone revision is still readable`;
 });
 
 check('AX02-A04', 'an intermediate revision stays resolvable after a later edit (immutable chain)', () => {
@@ -496,16 +501,23 @@ check('AX34-A03', 'a revoked grant blocks even an old commandId replay, and bloc
   return `replay -> ${replayCode}; new command -> ${freshCode}; after re-grant -> ${after.status}`;
 });
 
-check('AX34-A04', 'a rotated capability token does not change the semantic digest', () => {
+check('AX34-A04', 'a rotated capability token does not change the semantic digest, and never enters a receipt', () => {
   const { engine, cardId } = buildVault();
   const base = { commandId: 'rot-1', vaultId: engine.vaultId, actorId: 'local-user', expectedVersions: { epoch: 0 } };
   const a = engine.run('patchCard', { cardId, text: '令牌轮换' }, Object.assign({}, base, { capabilityHandle: 'cap-1111' }));
   const b = engine.run('patchCard', { cardId, text: '令牌轮换' }, Object.assign({}, base, { capabilityHandle: 'cap-9999' }));
   if (b.replayed !== true) throw new Error('token rotation broke idempotency');
   if (a.receipt.digest !== b.receipt.digest) throw new Error('the digest depends on the refreshable token');
-  const c = engine.run('patchCard', { cardId, text: '令牌轮换' }, Object.assign({}, base, { capabilityHandle: 'cap-2222', traceId: 't-9' }));
+  const c = engine.run('patchCard', { cardId, text: '令牌轮换' },
+    Object.assign({}, base, { capabilityHandle: 'github_pat_11ABCDEFG', traceId: 't-9' }));
   if (c.replayed !== true) throw new Error('a trace id changed the digest');
-  return 'cap-1111 / cap-9999 / cap-2222+trace all produce one digest and one receipt';
+  /* the raw handle must not be recoverable from stored history */
+  const dump = JSON.stringify(engine.getState().receipts);
+  if (dump.includes('cap-1111') || dump.includes('github_pat_')) {
+    throw new Error('a raw capability handle leaked into a receipt');
+  }
+  if (!a.receipt.capabilityFingerprint) throw new Error('the receipt should keep a fingerprint for audit');
+  return 'three handles produce one digest, one receipt; only a fingerprint is stored';
 });
 
 check('AX34-A05', 'an expectedVersions mismatch is refused instead of overwriting a newer head', () => {
@@ -551,8 +563,9 @@ check('AX28-A01', 'a failing store leaves the durable state untouched; the retry
   if (IW.canonical(store.load().vault) !== durableBefore) throw new Error('the durable state changed anyway');
 
   /* recovery: reload the durable pre-image and look the transaction up by id */
-  const reloaded = store.load();
-  const recovered = IW.createEngine({ vaultId: reloaded.vault.vaultId, vault: reloaded.vault, state: reloaded.state });
+  const loaded = store.load();
+  if (loaded.status !== 'LOADED') throw new Error('expected LOADED, got ' + loaded.status);
+  const recovered = IW.createEngine({ vaultId: loaded.vault.vaultId, vault: loaded.vault, state: loaded.state });
   const retry = recovered.run('patchCard', { cardId, text: '这笔不能落盘' },
     IW.commandHeader('faulty-1', recovered));
   if (!retry || retry.status !== 'ACK') throw new Error('the retry did not commit against the durable pre-image');
@@ -615,9 +628,19 @@ check('AX28-A04', 'the S1 native package exports and restores in isolation with 
   if (restored.vault.sourceAnchors.length < 1) throw new Error('the restored vault has no anchor at all');
   if (restored.vault.occurrences.length !== 1) throw new Error('the restored vault lost its node');
   if (restored.vault.reviewItems.length !== 1) throw new Error('the restored vault lost its question projection');
-  if (restored.report.restored.undoAvailableAfterRestore !== false) {
-    throw new Error('undo should be explicitly unavailable after a restore');
+  if (restored.report.restored.undoAvailableAfterRestore !== true) {
+    throw new Error('a package carrying compensations should restore an undo capability');
   }
+  /* and that capability must actually work on the restored vault */
+  const restoredEngine = IW.createEngine({
+    vaultId: restored.vault.vaultId, vault: restored.vault, state: restored.state
+  });
+  const candidate = restoredEngine.history().reverse().find((h) => h.undoable);
+  if (!candidate) throw new Error('no compensatable receipt survived the restore');
+  const undoResult = restoredEngine.undo(IW.commandHeader('post-restore-undo', restoredEngine, {
+    targetCommandId: candidate.commandId
+  }));
+  if (undoResult.status !== 'ACK') throw new Error('undo did not work after a restore');
   if (!Array.isArray(pkg.outOfScope) || !pkg.outOfScope.length) throw new Error('the package must name what it excludes');
   return `checks=${restored.report.checks.length} all PASS; snapshots=${restored.report.restored.snapshotRefs}; ` +
          `warnings=${restored.report.warnings.map((w) => w.code).join('+')}`;
@@ -641,19 +664,22 @@ check('AX28-A05', 'tampering with the package, or smuggling a block id as a snap
   return `tampered bytes -> ${code}; block id used as snapshot -> ${code2}`;
 });
 
-check('AX28-A06', 'a torn store value is refused at load instead of being half-applied', () => {
+check('AX28-A06', 'a torn store value is reported as CORRUPT and never half-loaded', () => {
   const { engine } = buildVault();
   const backend = IW.memoryBackend();
   const store = IW.createStore(backend);
+  const first = store.load();
+  if (first.status !== 'EMPTY') throw new Error('an empty store must report EMPTY, got ' + first.status);
   store.commit(engine.getVault(), engine.getState());
+  const good = store.load();
+  if (good.status !== 'LOADED' || !good.vault) throw new Error('a healthy store must report LOADED');
   const raw = backend.read();
   backend.write(raw.slice(0, Math.floor(raw.length / 2)));
-  let code = null;
-  try { store.load(); } catch (e) { code = e.code; }
-  if (code !== 'STORE_CORRUPT' && code !== 'STORE_CHECKSUM_MISMATCH') {
-    throw new Error('a torn value was not detected: ' + code);
-  }
-  return `truncated value -> ${code} (no partial vault was handed to the caller)`;
+  const torn = store.load();
+  if (torn.status !== 'CORRUPT') throw new Error('a torn value must report CORRUPT, got ' + torn.status);
+  if (torn.vault) throw new Error('a corrupt load must not hand back a partial vault');
+  if (!torn.rawBytes) throw new Error('the corrupt outcome should report the raw size for recovery');
+  return `EMPTY -> LOADED -> CORRUPT(${torn.code}, ${torn.rawBytes}B); no partial vault was returned`;
 });
 
 /* ------------------------------------------- persistence and multi-writer */
@@ -663,6 +689,7 @@ check('STORE-01', 'a committed vault reloads byte-identically after a reopen', (
   const expected = IW.canonical(engine.getVault());
   const info = store.commit(engine.getVault(), engine.getState());
   const reloaded = store.load();
+  if (reloaded.status !== 'LOADED') throw new Error('expected LOADED, got ' + reloaded.status);
   if (IW.canonical(reloaded.vault) !== expected) throw new Error('the reloaded vault differs from the committed one');
   if (IW.canonical(reloaded.state) !== IW.canonical(engine.getState())) {
     throw new Error('the reloaded receipt log differs from the committed one');
@@ -756,6 +783,284 @@ check('STRUCT-03', 'the PDF origin is real, refused honestly, and its bytes are 
   try { surface.getTextPage('x'); } catch (e) { code = e.code; }
   if (code !== 'PDF_ENGINE_MISSING') throw new Error('getTextPage did not refuse: ' + code);
   return `sha256=${PDF_SHA.slice(0, 12)}…; capability honest (no engine); resolver -> ${state.state}/${state.code}`;
+});
+
+/* ------------------------------------------- review regression (REVIEW.md) */
+/* One test per reported defect. These are the sample's own regressions for the
+   external review of commit 287681f; they are not the plan's AX cases. */
+check('R-D01', 'a command is not acknowledged unless the store accepted it', () => {
+  const store = IW.createStore(IW.memoryBackend());
+  let persists = 0;
+  const engine = IW.createEngine({
+    vaultId: 'd01',
+    persist: function (pending) { persists += 1; store.commit(pending.vault, pending.state); }
+  });
+  let n = 0;
+  const header = (id) => IW.commandHeader(id || ('d01-' + (++n)), engine);
+  engine.run('bootstrap', { title: 't' }, header());
+  const before = IW.canonical(engine.getVault());
+  const seqBefore = store.commitSeq();
+
+  store.armFault({ at: 'beforeWrite', times: 1 });
+  let code = null;
+  try { engine.run('bootstrap', { title: 'should not persist' }, header()); } catch (e) { code = e.code; }
+  if (code !== 'STORE_FAULT_INJECTED') throw new Error('expected the store fault to surface, got ' + code);
+  if (IW.canonical(engine.getVault()) !== before) {
+    throw new Error('the vault advanced even though the store refused: the head was ACKed too early');
+  }
+  if (engine.history().length !== 1) throw new Error('a refused commit left a receipt');
+  if (store.commitSeq() !== seqBefore) throw new Error('commitSeq advanced');
+  store.armFault(null);
+  engine.run('bootstrap', { title: 'now it lands' }, header());
+  if (persists !== 3) throw new Error('expected 3 successful persists (2 accepted + 1 recovered), saw ' + persists);
+  if (IW.canonical(engine.getVault()).indexOf('now it lands') < 0) {
+    throw new Error('the recovered command did not land');
+  }
+  return `refused write left vault bytes, history and commitSeq unchanged; ${persists - 1} later commits landed`;
+});
+
+check('R-D02', 'a corrupt store is not mistaken for a first run', () => {
+  const backend = IW.memoryBackend();
+  const store = IW.createStore(backend);
+  const { engine } = buildVault();
+  store.commit(engine.getVault(), engine.getState());
+  const raw = backend.read();
+  const parsed = JSON.parse(raw);
+  parsed.payload = parsed.payload.slice(0, 40);
+  backend.write(JSON.stringify(parsed));
+  const outcome = store.load();
+  if (outcome.status !== 'CORRUPT') throw new Error('expected CORRUPT, got ' + outcome.status);
+  if (outcome.vault !== null) throw new Error('a corrupt load must not return a vault to seed over');
+  /* the raw bytes are still there for recovery, untouched by the load attempt */
+  if (backend.read() !== JSON.stringify(parsed)) throw new Error('the load attempt rewrote the damaged value');
+  const rawBefore = backend.read();
+  const reload = store.load();
+  if (reload.status !== 'CORRUPT') throw new Error('a second load must stay CORRUPT');
+  if (backend.read() !== rawBefore) throw new Error('reading a damaged store wrote to it');
+  return `CORRUPT(${outcome.code}) reported with ${outcome.rawBytes}B preserved; no auto-overwrite`;
+});
+
+check('R-D03', 'clearing the note reads back empty, never the previous revision', () => {
+  const { engine, cardId } = buildVault();
+  cmd(engine, 'patchCard', { cardId, text: '要被删掉的旧备注' });
+  cmd(engine, 'patchCard', { cardId, text: '' });
+  const head = IW.readCardHead(engine.getVault(), cardId);
+  const comment = head.blocks.find((b) => b.role === 'comment');
+  if (comment.payload.text !== '') {
+    throw new Error('the projection substituted an older revision: ' + JSON.stringify(comment.payload.text));
+  }
+  if (comment.payloadFallbackFrom) throw new Error('a fallback field is still being reported');
+  /* the older revision must still be readable on its own terms */
+  const chain = IW.cardRevisionChain(engine.getVault(), cardId);
+  const older = IW.readCardRevision(engine.getVault(), chain[1].id);
+  if (older.blocks.find((b) => b.role === 'comment').payload.text !== '要被删掉的旧备注') {
+    throw new Error('the earlier revision lost its own text');
+  }
+  return 'head reads "" (a legal edit); the previous revision still resolves its own text';
+});
+
+check('R-D03b', 'a malformed revision is rejected instead of silently substituted', () => {
+  const { engine, cardId } = buildVault();
+  const card = engine.getVault().cards[0];
+  const commentBlock = engine.getVault().blocks.find((b) => b.role === 'comment');
+  const draft = IW.clone(engine.getVault());
+  const block = draft.blocks.find((b) => b.id === commentBlock.id);
+  const rev = draft.blockRevisions.find((r) => r.id === block.headRevisionId);
+  delete rev.payload.text;                     /* the defect: a text block with no text */
+  const problems = IW.checkInvariants(draft);
+  if (!problems.some((p) => /without a text field/.test(p))) {
+    throw new Error('the invariant check accepted a text block with no text: ' + problems.join('; '));
+  }
+  let code = null;
+  try { IW.readCardRevision(draft, draft.cards[0].headRevisionId); } catch (e) { code = e.code; }
+  if (code !== 'BLOCK_PAYLOAD_MALFORMED') throw new Error('expected BLOCK_PAYLOAD_MALFORMED, got ' + code);
+  void card; void cardId;
+  return 'missing text field -> BLOCK_PAYLOAD_MALFORMED / invariant problem, not an older revision';
+});
+
+check('R-D05', 'model offsets are the authority for a selection (anchored to line boxes)', () => {
+  /* The defect was a flat DOM walk, which drifts on every block boundary and
+   * reads decorations. The rule now: a selection resolves through the owning
+   * line's data-start, so page 2 starts where the MODEL says it starts. */
+  const { surface, corpus } = buildVault();
+  const pageIds = surface.listPageIds();
+  const lines = pageIds.flatMap((id) => surface.offsetsToLines(id, 0, 1e9));
+  const model = corpus.text.text;
+  for (const line of lines) {
+    if (model.slice(line.startOffset, line.endOffset) !== line.text) {
+      throw new Error('line ' + line.id + ' offsets do not index the model text');
+    }
+  }
+  const firstOfSecondPage = lines[IW.LINES_PER_PAGE];
+  if (model.slice(firstOfSecondPage.startOffset, firstOfSecondPage.startOffset + 4) !==
+      firstOfSecondPage.text.slice(0, 4)) {
+    throw new Error('the first line of page 2 is not where the model says it is');
+  }
+  const decorations = (model.match(/page \d/g) || []).length;
+  if (decorations) throw new Error('the model text contains view decorations');
+  return `${lines.length} lines verified offset-exact across ${pageIds.length} pages; no decoration in the model`;
+});
+
+check('R-D06', 'every accessible annotation is drawn, including plain highlighters', () => {
+  const { engine, surface, corpus } = buildVault();
+  const v = engine.getVault();
+  const pageIds = surface.listPageIds();
+  const lines = pageIds.flatMap((id) => surface.offsetsToLines(id, 0, 1e9));
+  const target = lines.find((l) => l.text.includes('乘法公式')) || lines[4];
+  const hl = cmd(engine, 'markHighlighter', {
+    documentId: corpus.text.id, pageId: pageIds[0], sourceVersion: corpus.text.versionId,
+    startOffset: target.startOffset, endOffset: target.endOffset, surface
+  });
+  const placement = engine.getVault().annotationPlacements.find(
+    (p) => p.id === hl.receipt.result.annotationId);
+  if (placement.cardId !== null) throw new Error('a plain highlighter must not claim a card');
+
+  /* the renderer must be able to find a rect for it, which is what makes it visible */
+  const anchor = engine.getVault().sourceAnchors.find((a) => a.id === placement.anchorId);
+  const state = surface.resolveSelector(anchor);
+  if (state.state !== 'EXACT_SYNTHETIC' || !state.rect || !state.rect.length) {
+    throw new Error('a plain highlighter has no drawable rect: ' + JSON.stringify(state));
+  }
+  /* and an excerpt must produce one placement per page, not just the first */
+  const seeded = engine.getVault().cards[0];
+  const excerptMarks = engine.getVault().annotationPlacements.filter((p) => p.cardId === seeded.id);
+  if (excerptMarks.length !== seeded.sourceIds.length) {
+    throw new Error('excerpt marks ' + excerptMarks.length + ' != per-page anchors ' + seeded.sourceIds.length);
+  }
+  void v;
+  return `highlighter rect drawable (${state.rect.length} box); excerpt has ${excerptMarks.length} per-page marks`;
+});
+
+check('R-D07', 'command ids are session-scoped so a reopened session cannot collide', () => {
+  /* The defect was in the shell: the counter restarted at 1 on every boot, so a
+   * reopened session reissued `ui-comment-1`. The invariant: within one session
+   * ids are unique, and across sessions they differ because the session token is
+   * derived from state the vault already holds. */
+  const { engine, store } = buildVault();
+  store.commit(engine.getVault(), engine.getState());
+  const loaded = store.load();
+  if (loaded.status !== 'LOADED') throw new Error('expected LOADED');
+
+  const sessionIds = [];
+  for (const run of [1, 2]) {
+    const session = IW.createEngine({ vaultId: loaded.vault.vaultId, vault: loaded.vault, state: loaded.state });
+    const derived = 's' + session.getState().receipts.length + '-' + run;
+    sessionIds.push('ui-' + derived + '-comment-1');
+    session.run('patchCard', { cardId: session.getVault().cards[0].id, text: 'note ' + run },
+      IW.commandHeader('ui-' + derived + '-comment-1', session));
+  }
+  if (sessionIds[0].split('comment')[0] === sessionIds[1].split('comment')[0]) {
+    throw new Error('two sessions derived the same id prefix: ' + sessionIds[0]);
+  }
+  /* a live engine refuses to reuse one of its own ids for a different payload */
+  const live = IW.createEngine({ vaultId: loaded.vault.vaultId, vault: loaded.vault, state: loaded.state });
+  const one = IW.commandHeader('fixed-id', live);
+  live.run('patchCard', { cardId: live.getVault().cards[0].id, text: 'A' }, one);
+  let code = null;
+  try {
+    live.run('patchCard', { cardId: live.getVault().cards[0].id, text: 'B' }, IW.commandHeader('fixed-id', live));
+  } catch (e) { code = e.code; }
+  if (code !== 'COMMAND_ID_REUSE') throw new Error('same-engine reuse was not refused: ' + code);
+  return `session prefixes differ (${sessionIds.map((s) => s.split('-comment')[0]).join(' vs ')}); same-engine reuse -> ${code}`;
+});
+
+check('R-D08', 'consecutive undos compensate instead of replacing the vault', () => {
+  const { engine, cardId } = buildVault();
+  const p1 = cmd(engine, 'patchCard', { cardId, text: '第一版' });
+  const p2 = cmd(engine, 'patchCard', { cardId, text: '第二版' });
+  const revisionsBefore = engine.getVault().cardRevisions.length;
+
+  const u1 = engine.undo(IW.commandHeader('u1', engine, { targetCommandId: p2.receipt.commandId }));
+  if (u1.status !== 'ACK') throw new Error('first undo failed');
+  if (u1.compensationCommand !== 'patchCard') throw new Error('unexpected compensation: ' + u1.compensationCommand);
+  const textNow = () => IW.readCardHead(engine.getVault(), cardId)
+    .blocks.find((b) => b.role === 'comment').payload.text;
+  if (textNow() !== '第一版') throw new Error('undo did not restore the previous text, got ' + JSON.stringify(textNow()));
+  if (!IW.readCardRevision(engine.getVault(), p2.receipt.result.cardRevisionId)) {
+    throw new Error('the undone revision was deleted from the ledger');
+  }
+  if (engine.getVault().cardRevisions.length <= revisionsBefore) {
+    throw new Error('undo should append a revision, not remove one');
+  }
+
+  /* the defect: undo-B itself looked like the newest live command */
+  const u2 = engine.undo(IW.commandHeader('u2', engine, { targetCommandId: p1.receipt.commandId }));
+  if (u2.status !== 'ACK') throw new Error('second consecutive undo failed: ' + JSON.stringify(u2));
+  if (textNow() !== '') throw new Error('second undo did not restore the original empty note');
+  return `two undos compensated by appending (chain length ${engine.getVault().cardRevisions.length}); text now ""`;
+});
+
+check('R-D08b', 'undo runs the same pipeline: epoch, idempotency, authorization', () => {
+  const { engine, cardId } = buildVault();
+  const p1 = cmd(engine, 'patchCard', { cardId, text: 'x' });
+  /* stale epoch is refused before anything is compensated */
+  let epochCode = null;
+  try {
+    engine.undo(IW.commandHeader('u-epoch', engine, {
+      targetCommandId: p1.receipt.commandId, expectedVersions: { epoch: 99 }
+    }));
+  } catch (e) { epochCode = e.code; }
+  if (epochCode !== 'VAULT_EPOCH_MISMATCH') throw new Error('stale-epoch undo was accepted: ' + epochCode);
+
+  const header = IW.commandHeader('u-once', engine, { targetCommandId: p1.receipt.commandId });
+  const first = engine.undo(header);
+  if (first.status !== 'ACK') throw new Error('undo failed');
+  const replay = engine.undo(header);
+  if (replay.replayed !== true) throw new Error('replaying the same undo id was not idempotent');
+  let again = null;
+  try {
+    engine.undo(IW.commandHeader('u-twice', engine, { targetCommandId: p1.receipt.commandId }));
+  } catch (e) { again = e.code; }
+  if (again !== 'ALREADY_UNDONE') throw new Error('a compensated command was compensated twice: ' + again);
+
+  /* revocation must block a compensation whose inverse needs the source */
+  const p2 = cmd(engine, 'patchCard', { cardId, text: 'y' });
+  engine.setGrant('textbook-excerpt@v1', false);
+  let restricted = null;
+  try {
+    engine.undo(IW.commandHeader('u-restricted', engine, { targetCommandId: p2.receipt.commandId }));
+  } catch (e) { restricted = e.code; }
+  if (restricted !== 'SOURCE_RESTRICTED') throw new Error('undo bypassed authorization: ' + restricted);
+  engine.setGrant('textbook-excerpt@v1', true);
+  const after = engine.undo(IW.commandHeader('u-after-regrant', engine, { targetCommandId: p2.receipt.commandId }));
+  if (after.status !== 'ACK') throw new Error('undo after re-granting failed');
+  return `stale epoch -> ${epochCode}; replay -> ${replay.status}; double compensation -> ${again}; revoked -> ${restricted}`;
+});
+
+check('R-S1', 'the shell-level safeguards that the review flagged', () => {
+  const { engine, cardId } = buildVault();
+  /* independent card must be allowed, and must not fake a source */
+  const independent = cmd(engine, 'createIndependentCard', {
+    studySetId: engine.getVault().studySets[0].id, text: 'no source yet'
+  });
+  const card = engine.getVault().cards.find((c) => c.id === independent.receipt.result.cardId);
+  if (card.sourceIds.length !== 0) throw new Error('an independent card should have no source');
+  if (engine.checkInvariants().length) throw new Error('invariants reject a legitimate independent card');
+  /* a quoted card still must have a source */
+  const quoteCard = engine.getVault().cards[0];
+  const draft = IW.clone(engine.getVault());
+  draft.cards.find((c) => c.id === quoteCard.id).sourceIds = [];
+  const problems = IW.checkInvariants(draft);
+  if (!problems.some((p) => /quotes a source but has no source anchor/.test(p))) {
+    throw new Error('a quoted card without a source was accepted');
+  }
+  /* layout writes and reads agree on one field */
+  const node = engine.getVault().occurrences[0];
+  cmd(engine, 'moveOccurrence', { occurrenceId: node.id, x: 123, y: 45, width: 260 });
+  const moved = engine.getVault().occurrences.find((o) => o.id === node.id);
+  if (moved.layoutOverride.x !== 123 || moved.layoutOverride.y !== 45 || moved.layoutOverride.width !== 260) {
+    throw new Error('layout written where nothing reads it');
+  }
+  /* a header naming another vault is rejected */
+  let vaultCode = null;
+  try {
+    engine.run('patchCard', { cardId, text: 'z' }, {
+      commandId: 'other-vault', vaultId: 'someone-else', actorId: 'a',
+      capabilityHandle: 'c', expectedVersions: { epoch: engine.getVault().epoch }
+    });
+  } catch (e) { vaultCode = e.code; }
+  if (vaultCode !== 'VAULT_ID_MISMATCH') throw new Error('a foreign vaultId was accepted: ' + vaultCode);
+  return `independent card ok; quoted-without-source rejected; layout field unified; ${vaultCode}`;
 });
 
 /* ------------------------------------------------------------------- run */

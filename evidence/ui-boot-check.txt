@@ -1,5 +1,5 @@
 UI BOOT CHECK PASSED
-  elements wired: 45
+  elements wired: 47
   boot paths: first boot (seed) + second boot (restore) + torn-store refusal
   commands exercised: seed plan, patchCard, stale write + resolve, attachOccurrence,
                       moveOccurrence, undo, export, import, fault injection, epoch,

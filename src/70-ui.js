@@ -4,6 +4,10 @@
   'use strict';
 
   var el = function (id) { return document.getElementById(id); };
+  /* Monotonic across App instances in this page: two boots inside the same
+     millisecond must still be two different sessions, or they would reissue each
+     other's command ids. */
+  var bootCounter = 0;
   var esc = function (s) {
     return String(s === undefined || s === null ? '' : s)
       .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
@@ -11,11 +15,21 @@
   };
 
   function App() {
+    bootCounter += 1;
+    this.bootSeq = bootCounter;
     this.corpus = IW.corpus();
     this.store = IW.createStore(IW.browserBackend(), null);
     this.engine = null;
     this.surface = null;
+    this.sessionId = 's0-boot';
+    this.commandCounter = 0;
     this.selectedCardId = null;
+    this.renderedCardId = null;
+    this.commentBinding = null;
+    this.commentFocused = false;
+    this.loadState = 'EMPTY';
+    this.corruptInfo = null;
+    this.readOnly = false;
     this.markMode = 'excerpt';
     this.activeAnchorId = null;
     this.log = [];
@@ -26,16 +40,33 @@
   /* ------------------------------------------------------------- lifecycle */
   App.prototype.boot = function () {
     var self = this;
-    var saved = null;
-    try { saved = this.store.load(); } catch (e) { self.note('warn', 'stored vault refused: ' + e.code); }
+    var loaded = this.store.load();
 
-    if (saved) {
-      this.engine = IW.createEngine({
-        vaultId: saved.vault.vaultId, vault: saved.vault, state: saved.state
-      });
-      this.note('info', 'restored a persisted vault (commitSeq ' + saved.commitSeq + ')');
-    } else {
+    /* A damaged stored value is NOT an empty store. Treating it as one made the
+       app overwrite a corrupt vault with a fresh demo one, which is the single
+       worst thing a store can lead a caller into. Corrupt => read-only recovery. */
+    this.loadState = loaded.status;      /* EMPTY | LOADED | CORRUPT */
+    this.corruptInfo = loaded.status === 'CORRUPT'
+      ? { code: loaded.code, message: loaded.message, rawBytes: loaded.rawBytes }
+      : null;
+    this.readOnly = false;
+
+    if (loaded.status === 'CORRUPT') {
+      this.readOnly = true;
+      this.sessionId = this.sessionIdFrom(null);
+      this.note('warn', 'stored value refused at load: ' + loaded.code +
+        ' — entering read-only recovery (nothing will be written)');
       this.engine = IW.createEngine({ vaultId: 'inkweft-sample-vault' });
+    } else if (loaded.status === 'LOADED') {
+      this.engine = IW.createEngine({
+        vaultId: loaded.vault.vaultId, vault: loaded.vault, state: loaded.state,
+        persist: this.persistHook()
+      });
+      this.sessionId = this.sessionIdFrom(loaded.state);
+      this.note('info', 'restored a persisted vault (commitSeq ' + loaded.commitSeq + ')');
+    } else {
+      this.engine = IW.createEngine({ vaultId: 'inkweft-sample-vault', persist: this.persistHook() });
+      this.sessionId = this.sessionIdFrom(null);
     }
 
     /* The surface must exist before seeding: the seed card is created through the
@@ -43,13 +74,14 @@
        through the surface. */
     this.surface = IW.createSurface(IW.originFor(this.corpus.text), this.surfaceCtx());
 
-    if (!saved) {
+    if (loaded.status === 'EMPTY') {
       this.seed();
-      this.persist();
     }
 
     this.selectedCardId = this.engine.getVault().cards.length
       ? this.engine.getVault().cards[0].id : null;
+    this.renderedCardId = this.selectedCardId;
+    this.commentBinding = { cardId: this.selectedCardId, cardRevisionId: null };
 
     /* The PDF is a real file; hashing it proves the "original unchanged" claim
        against bytes rather than against a number we wrote ourselves. */
@@ -58,6 +90,30 @@
     el('mark-excerpt').checked = true;
     this.bind();
     this.renderAll();
+  };
+
+  /* Every command write goes through this hook, so the engine persists BEFORE it
+     publishes the new state or answers ACK. Without it the UI used to ACK first
+     and save afterwards, which meant a failed save still counted as the
+     authoritative head, history and export scope. */
+  App.prototype.persistHook = function () {
+    var self = this;
+    return function (pending) {
+      if (self.readOnly) {
+        IW.fail('STORE_READ_ONLY', 'the stored vault is damaged; recovery mode does not write');
+      }
+      var info = self.store.commit(pending.vault, pending.state);
+      self.lastCommit = info;
+      return info;
+    };
+  };
+
+  /* A reopened session must not reissue ids it already used. The counters are
+     derived from what the vault already contains, not from a fresh App object. */
+  App.prototype.sessionIdFrom = function (state) {
+    var count = (state && state.receipts ? state.receipts.length : 0);
+    var stamp = Date.now().toString(36).slice(-6);
+    return 's' + count + '-' + stamp + '-' + this.bootSeq;
   };
 
   App.prototype.surfaceCtx = function () {
@@ -73,6 +129,7 @@
   App.prototype.checkPdf = function () {
     var self = this;
     var url = this.corpus.pdf.assetPath;
+    if (this.readOnly) { this.assetMeta.pdfStatus = 'not checked (recovery mode)'; return; }
     if (typeof fetch !== 'function') {
       this.assetMeta.pdfStatus = 'fetch unavailable (file:// origin?)';
       return;
@@ -86,7 +143,7 @@
       self.assetMeta.pdfSha256 = IW.sha256Hex(bytes);
       self.assetMeta.pdfStatus = 'verified ' + self.assetMeta.pdfSha256.slice(0, 16) + '…';
       if (!self.engine.getVault().documentVersions.some(function (v) { return v.kind === 'pdf-origin'; })) {
-        self.engine.run('registerDocumentVersion', {
+        self.dispatch('registerDocumentVersion', {
           documentId: self.corpus.pdf.id,
           versionId: self.corpus.pdf.versionId,
           title: self.corpus.pdf.title,
@@ -95,9 +152,7 @@
           bytes: bytes.length,
           sha256: self.assetMeta.pdfSha256,
           textSha256: null
-        }, self.header('pdf-register'));
-        self.persist();
-        self.renderAll();
+        }, 'pdf-register');
       }
       self.renderAssetStatus();
     }).catch(function (e) {
@@ -106,12 +161,16 @@
     });
   };
 
+  /* Command ids are scoped to this session, and the session is derived from what
+     the vault already holds. Previously the counter restarted at 1 on every boot,
+     so a reopened session reissued `ui-comment-1` and tripped COMMAND_ID_REUSE on
+     the user's second edit — an identity bug in the shell, not in idempotency. */
   App.prototype.header = function (tag, extra) {
     var h = {
-      commandId: 'ui-' + tag + '-' + (++this.commandCounter || (this.commandCounter = 1)),
+      commandId: 'ui-' + this.sessionId + '-' + tag + '-' + (++this.commandCounter || (this.commandCounter = 1)),
       vaultId: this.engine.vaultId,
       actorId: 'local-user',
-      capabilityHandle: 'cap-ui-0001',
+      capabilityHandle: 'cap-ui-' + this.sessionId,
       expectedVersions: { epoch: this.engine.getVault().epoch }
     };
     if (extra) Object.keys(extra).forEach(function (k) { h[k] = extra[k]; });
@@ -120,12 +179,17 @@
 
   App.prototype.seed = function () {
     var self = this;
-    var steps = IW.seedPlan(this.corpus, {});
-    steps.forEach(function (step) {
-      self.engine.run(step.command, step.params, self.header('seed-' + step.command));
+    var studySetId = null;
+    /* Seeding goes through dispatch too, so it obeys the same persist-before-ack
+       rule as a user edit. A demo that seeds around the write path would prove
+       nothing about the write path. */
+    IW.seedPlan(this.corpus, {}).forEach(function (step) {
+      var result = self.dispatch(step.command, step.params, 'seed-' + step.command);
+      if (result.error) throw result.error;
     });
-    var studySetId = this.engine.getVault().studySets[0].id;
-    var seeded = IW.createFirstCard(this.engine, this.surface, this.corpus.text, IW.defaultSelection(this.corpus));
+    studySetId = this.engine.getVault().studySets[0].id;
+    var seeded = IW.createFirstCard(this.engine, this.surface, this.corpus.text,
+      IW.defaultSelection(this.corpus));
     var cardId = seeded.receipt.result.cardId;
     this.engine.run('attachOccurrence', { cardId: cardId, mapId: null, studySetId: studySetId },
       this.header('seed-node'));
@@ -136,16 +200,15 @@
     this.note('ok', 'seeded: one excerpt card, one node, one manual question');
   };
 
-  App.prototype.persist = function () {
+  /* Only for bookkeeping writes the engine does not own, e.g. nothing today.
+     Command writes must go through dispatch so the persist hook stays in charge. */
+  App.prototype.commitEngineState = function () {
     try {
-      var info = this.store.commit(this.engine.getVault(), this.engine.getState());
-      el('store-state').textContent = 'commitSeq ' + info.commitSeq;
-      el('store-state').className = 'chip ok';
-      return info;
+      return this.store.commit(this.engine.getVault(), this.engine.getState());
     } catch (e) {
       el('store-state').textContent = 'NOT SAVED — ' + e.code;
       el('store-state').className = 'chip bad';
-      this.note('warn', 'store refused the commit: ' + e.code + ' (' + e.message + ')');
+      this.note('warn', 'store refused a direct commit: ' + e.code);
       return null;
     }
   };
@@ -153,12 +216,14 @@
   App.prototype.dispatch = function (commandType, params, tag, expectedVersions) {
     var header = this.header(tag, expectedVersions ? { expectedVersions: expectedVersions } : null);
     try {
+      /* The engine persists through the hook BEFORE publishing and before this
+         returns. There is no "ACK now, save later" window any more. */
       var result = this.engine.run(commandType, params, header);
       this.note(result.replayed ? 'info' : 'ok',
         commandType + ' -> ' + result.status + (result.replayed ? ' (idempotent replay)' : ''));
-      this.persist();
+      el('store-state').textContent = 'commitSeq ' + this.store.commitSeq();
+      el('store-state').className = 'chip ok';
       this.conflict = null;
-      this.renderAll();
       return result;
     } catch (e) {
       this.note('warn', commandType + ' refused: ' + e.code + ' — ' + e.message);
@@ -166,8 +231,16 @@
         this.conflict = { commandType: commandType, params: params, details: e.details, message: e.message };
         this.note('info', 'another view advanced this card. Use "重新读取并保存" instead of overwriting.');
       }
-      this.renderAll();
+      if (e.code === 'STORE_FAULT_INJECTED') {
+        /* The write was refused before publication, so the head, the history and
+           the durable bytes are all still the previous ones. */
+        el('store-state').textContent = 'NOT SAVED — ' + e.code;
+        el('store-state').className = 'chip bad';
+        this.note('info', 'nothing was published: check the authoritative head below, then retry the same commandId');
+      }
       return { error: e };
+    } finally {
+      this.renderAll();
     }
   };
 
@@ -177,29 +250,57 @@
   };
 
   /* ---------------------------------------------------------- interaction */
+  /* Two properties this must keep:
+       1. binding is idempotent — booting twice must not stack listeners, or one
+          click would run a command once per accumulated app;
+       2. handlers resolve the LIVE app instead of closing over one instance, so
+          a re-boot (mock suite, or an app restart) cannot leave dead listeners
+          driving a discarded engine. */
   App.prototype.bind = function () {
     var self = this;
-    el('mark-excerpt').addEventListener('change', function () { self.setMarkMode('excerpt'); });
-    el('mark-highlighter').addEventListener('change', function () { self.setMarkMode('highlighter'); });
-    el('btn-save-comment').addEventListener('click', function () { self.saveComment(); });
-    el('btn-add-node').addEventListener('click', function () { self.addNode(); });
-    el('btn-undo').addEventListener('click', function () { self.undoLast(); });
-    el('btn-export').addEventListener('click', function () { self.exportPackage(); });
-    el('btn-reimport').addEventListener('click', function () { self.reimportPackage(); });
-    el('chk-fault').addEventListener('change', function () { self.armFault(); });
-    el('btn-epoch').addEventListener('click', function () { self.resetEpoch(); });
-    el('btn-reset').addEventListener('click', function () { self.hardReset(); });
-    el('btn-resolve').addEventListener('click', function () { self.resolveConflict(); });
-    el('card-select').addEventListener('change', function (e) {
-      self.selectedCardId = e.target.value; self.activeAnchorId = null; self.renderAll();
+    var live = function () { return globalThis.inkweft || self; };
+    if (el('btn-save-comment')._inkweftBound) { this.renderAll(); return; }
+    var mark = function (node) { node._inkweftBound = true; return node; };
+    mark(el('mark-excerpt')).addEventListener('change', function () { live().setMarkMode('excerpt'); });
+    mark(el('mark-highlighter')).addEventListener('change', function () { live().setMarkMode('highlighter'); });
+    mark(el('btn-save-comment')).addEventListener('click', function () { live().saveComment(); });
+    mark(el('btn-add-node')).addEventListener('click', function () { live().addNode(); });
+    mark(el('btn-undo')).addEventListener('click', function () { live().undoLast(); });
+    mark(el('btn-export')).addEventListener('click', function () { live().exportPackage(); });
+    mark(el('btn-reimport')).addEventListener('click', function () { live().reimportPackage(); });
+    mark(el('chk-fault')).addEventListener('change', function () { live().armFault(); });
+    mark(el('btn-epoch')).addEventListener('click', function () { live().resetEpoch(); });
+    mark(el('btn-reset')).addEventListener('click', function () { live().hardReset(); });
+    mark(el('btn-resolve')).addEventListener('click', function () { live().resolveConflict(); });
+    mark(el('card-select')).addEventListener('change', function (e) {
+      var app = live();
+      app.selectedCardId = e.target.value;
+      /* Rebind the editor to the newly selected card so a later save cannot
+         commit this buffer against the previous card. */
+      app.commentBinding = { cardId: e.target.value, cardRevisionId: null };
+      app.commentEdited = false;
+      app.activeAnchorId = null;
+      app.renderAll();
     });
-    el('node-width').addEventListener('change', function (e) { self.setNodeWidth(Number(e.target.value)); });
-    document.addEventListener('mouseup', function (e) {
-      if (el('doc').contains(e.target)) self.captureSelection();
+    mark(el('comment')).addEventListener('focus', function () { live().commentFocused = true; });
+    mark(el('comment')).addEventListener('blur', function () {
+      var app = live();
+      app.commentFocused = false;
+      app.commentEdited = false;
+      app.renderAll();
     });
-    el('doc').addEventListener('click', function (e) {
+    mark(el('comment')).addEventListener('input', function () { live().commentEdited = true; });
+    mark(el('node-width')).addEventListener('change', function (e) { live().setNodeWidth(Number(e.target.value)); });
+    if (!document._inkweftBound) {
+      document._inkweftBound = true;
+      document.addEventListener('mouseup', function (e) {
+        var app = globalThis.inkweft;
+        if (app && el('doc').contains(e.target)) app.captureSelection();
+      });
+    }
+    mark(el('doc')).addEventListener('click', function (e) {
       var hit = e.target.closest ? e.target.closest('[data-anchor]') : null;
-      if (hit) { self.flashAnchor(hit.getAttribute('data-anchor')); }
+      if (hit) { live().flashAnchor(hit.getAttribute('data-anchor')); }
     });
   };
 
@@ -210,29 +311,59 @@
     this.renderAll();
   };
 
-  /* Turn a DOM selection into global character offsets. The document is rendered
-     as one continuous offset space, exactly like the surface's line model. */
+  /* Turn a DOM selection into model offsets.
+
+     The model counts `line.length + 1` per line, so DOM offsets can only match it
+     if they are anchored to the line boxes. A flat TreeWalker over the document
+     drifts on every line (block elements contribute no newline) and happily reads
+     the page label as content — the earlier implementation did exactly that, so
+     only the first line was ever right. Instead: find the `.line` element owning
+     each endpoint and read its model start from the data attribute. */
   App.prototype.captureSelection = function () {
-    var sel = window.getSelection();
+    var sel = window.getSelection ? window.getSelection() : null;
     if (!sel || sel.isCollapsed || sel.rangeCount === 0) return;
     var range = sel.getRangeAt(0);
     var host = el('doc-body');
     if (!host.contains(range.startContainer) || !host.contains(range.endContainer)) return;
 
-    function offsetOf(node, offset) {
-      var walker = document.createTreeWalker(host, NodeFilter.SHOW_TEXT, null);
-      var total = 0;
-      var current;
-      while ((current = walker.nextNode())) {
-        if (current === node) return total + offset;
-        total += current.nodeValue.length;
-      }
-      return null;
-    }
-    var start = offsetOf(range.startContainer, range.startOffset);
-    var end = offsetOf(range.endContainer, range.endOffset);
+    var start = this.lineOffset(range.startContainer, range.startOffset, 'start');
+    var end = this.lineOffset(range.endContainer, range.endOffset, 'end');
     if (start === null || end === null || end <= start) return;
     this.applySelection(start, end, sel.toString());
+  };
+
+  /* Model offset of one endpoint. Returns null when the endpoint is not part of a
+     text line at all (padding, a page label, an overlay mark). */
+  App.prototype.lineOffset = function (node, offset, edge) {
+    var element = node && node.nodeType === 1 ? node : node && node.parentNode;
+    while (element && element.nodeType !== 1) element = element.parentNode;
+    var line = null;
+    while (element) {
+      if (element.getAttribute && element.getAttribute('data-start') !== null) { line = element; break; }
+      element = element.parentNode;
+    }
+    if (!line) return null;
+    var lineStart = Number(line.getAttribute('data-start'));
+    var lineEnd = Number(line.getAttribute('data-end'));
+    var body = line.querySelector ? line.querySelector('.line-body') : null;
+    if (!body) return null;
+
+    /* Only text inside .line-body counts; page labels and marks are excluded. */
+    var inner = 0;
+    var matched = false;
+    var walker = document.createTreeWalker(body, NodeFilter.SHOW_TEXT, null);
+    var current;
+    while ((current = walker.nextNode())) {
+      if (current === node) { inner += offset; matched = true; break; }
+      inner += current.nodeValue.length;
+    }
+    if (!matched) {
+      /* The endpoint is the element itself or sits outside the text nodes: treat
+         it as the line boundary closest to the requested edge. */
+      if (node === line || node === body) inner = edge === 'end' ? body.textContent.length : 0;
+      else inner = edge === 'end' ? body.textContent.length : 0;
+    }
+    return Math.max(lineStart, Math.min(lineStart + inner, lineEnd));
   };
 
   App.prototype.applySelection = function (start, end, selectedText) {
@@ -264,19 +395,33 @@
     params.comment = '';
     result = this.dispatch('createCardFromSelection', params, 'excerpt');
     if (result.error) return;
+    /* Update the selection BEFORE rendering, otherwise the panel keeps showing the
+       previous card while the next save targets the new one. */
     this.selectedCardId = result.receipt.result.cardId;
+    this.renderedCardId = this.selectedCardId;
     this.activeAnchorId = result.receipt.result.anchorId;
     this.note('info', 'excerpt card created; quoting: ' + (selectedText || '').slice(0, 40).replace(/\n/g, ' / '));
     if (window.getSelection) {
       var live = window.getSelection();
       if (live && live.removeAllRanges) live.removeAllRanges();
     }
+    this.renderAll();
   };
 
   /* ----------------------------------------------------------- mutations */
   App.prototype.saveComment = function () {
-    var cardId = this.selectedCardId;
-    if (!cardId) return;
+    /* The edit buffer is bound to a card. If the panel moved on to another card
+       while the user was typing (or an excerpt was created), committing the
+       buffer against the new card would silently transplant one card's text onto
+       another. Refuse and say why. */
+    var bound = this.commentBinding;
+    if (!bound || !bound.cardId) return;
+    if (bound.cardId !== this.selectedCardId) {
+      this.note('warn', 'the panel now shows another card; the editor was rebound — nothing was saved');
+      this.renderAll();
+      return;
+    }
+    var cardId = bound.cardId;
     var text = el('comment').value;
     var observedRevision = IW.readCardHead(this.engine.getVault(), cardId).revision;
     var expected = { epoch: this.engine.getVault().epoch };
@@ -292,9 +437,10 @@
 
   App.prototype.resolveConflict = function () {
     if (!this.conflict) return;
-    var cardId = this.selectedCardId;
+    var cardId = this.conflict.params && this.conflict.params.cardId
+      ? this.conflict.params.cardId : this.selectedCardId;
+    if (!cardId) return;
     var observed = IW.readCardHead(this.engine.getVault(), cardId).cardRevisionId;
-    el('comment').value = el('comment').value;
     this.dispatch('commitResolveConflict', {
       cardId: cardId, text: el('comment').value, observedCardRevisionId: observed
     }, 'resolve');
@@ -320,15 +466,28 @@
     for (var i = history.length - 1; i >= 0; i--) {
       if (history[i].undoable) { undoable = history[i]; break; }
     }
-    if (!undoable) { this.note('warn', 'nothing to undo'); this.renderAll(); return; }
+    if (!undoable) {
+      this.note('warn', 'nothing compensatable left to undo in this sample');
+      this.renderAll();
+      return;
+    }
     try {
-      this.engine.undo(IW.commandHeader('ui-undo-' + Date.now(), this.engine, {
+      /* Undo now runs the same pipeline as any write (authorization, epoch,
+         idempotency, persist-before-ack) and compensates by APPENDING work, so
+         the revision being undone stays readable afterwards. */
+      var result = this.engine.undo(this.header('undo-' + undoable.commandId, {
         targetCommandId: undoable.commandId
       }));
-      this.note('ok', 'undid ' + undoable.commandType);
-      this.persist();
+      this.note('ok', 'compensated ' + undoable.commandType + ' with ' +
+        result.compensationCommand + ' (history kept)');
+      el('store-state').textContent = 'commitSeq ' + this.store.commitSeq();
+      el('store-state').className = 'chip ok';
     } catch (e) {
-      this.note('warn', 'undo refused: ' + e.code);
+      this.note('warn', 'undo refused: ' + e.code + ' — ' + e.message);
+      if (e.code === 'STORE_FAULT_INJECTED') {
+        el('store-state').textContent = 'NOT SAVED — ' + e.code;
+        el('store-state').className = 'chip bad';
+      }
     }
     this.conflict = null;
     this.renderAll();
@@ -349,15 +508,20 @@
   };
 
   App.prototype.hardReset = function () {
-    this.store.clear();
-    this.engine = IW.createEngine({ vaultId: 'inkweft-sample-vault' });
-    this.surface = IW.createSurface(IW.originFor(this.corpus.text), this.surfaceCtx());
-    this.seed();
-    this.persist();
-    this.selectedCardId = this.engine.getVault().cards[0].id;
-    this.conflict = null;
-    this.note('info', 'vault recreated from scratch');
-    this.renderAll();
+    if (!window.confirm || window.confirm('这会丢弃当前存储里的资料库并重新播种一份演示数据。继续？')) {
+      this.store.clear();
+      this.readOnly = false;
+      this.corruptInfo = null;
+      this.engine = IW.createEngine({ vaultId: 'inkweft-sample-vault', persist: this.persistHook() });
+      this.surface = IW.createSurface(IW.originFor(this.corpus.text), this.surfaceCtx());
+      this.seed();
+      this.selectedCardId = this.engine.getVault().cards[0].id;
+      this.renderedCardId = this.selectedCardId;
+      this.commentBinding = { cardId: this.selectedCardId, cardRevisionId: null };
+      this.conflict = null;
+      this.note('info', 'vault recreated from scratch');
+      this.renderAll();
+    }
   };
 
   App.prototype.exportPackage = function () {
@@ -385,14 +549,20 @@
         assetBytes: (function (o) { o[this.corpus.text.versionId] = this.corpus.text.text; return o; }).call(this, {})
       });
       var failed = restored.report.checks.filter(function (c) { return c.result !== 'PASS'; });
+      /* Rebuild with the persist hook too, so the restored vault is not read-only
+         by accident and further edits still commit before acknowledging. */
       this.engine = IW.createEngine({
-        vaultId: restored.vault.vaultId, vault: restored.vault, state: restored.state
+        vaultId: restored.vault.vaultId, vault: restored.vault, state: restored.state,
+        persist: this.persistHook()
       });
+      this.sessionId = this.sessionIdFrom(restored.state);
+      this.commandCounter = 0;
       this.surface = IW.createSurface(IW.originFor(this.corpus.text), this.surfaceCtx());
-      this.selectedCardId = this.engine.getVault().cards[0].id;
+      this.selectedCardId = this.engine.getVault().cards.length ? this.engine.getVault().cards[0].id : null;
+      this.renderedCardId = this.selectedCardId;
+      this.commentBinding = { cardId: this.selectedCardId, cardRevisionId: null };
       this.note('ok', 'restored in isolation: ' + restored.report.checks.length + ' checks, ' +
         failed.length + ' failed, undo ' + (restored.report.restored.undoAvailableAfterRestore ? 'available' : 'unavailable'));
-      restored.report.warnings.forEach(function (w) { /* surfaced in the report panel */ });
       this.lastRestoreReport = restored.report;
       this.renderAll();
     } catch (e) {
@@ -427,6 +597,19 @@
       v.cardRevisions.length + ' card revisions / ' + v.occurrences.length + ' node';
     el('commit-log-count').textContent = this.store.commitSeq();
     el('card-count').textContent = v.cards.length + ' 张卡';
+    if (this.readOnly) {
+      el('store-state').textContent = '只读恢复模式 — ' + (this.corruptInfo ? this.corruptInfo.code : 'DAMAGED');
+      el('store-state').className = 'chip bad';
+    }
+    var recover = el('recovery-bar');
+    if (recover) {
+      recover.style.display = this.readOnly ? 'flex' : 'none';
+      if (this.readOnly && this.corruptInfo) {
+        el('recovery-text').textContent =
+          '存储里的资料库无法解析（' + this.corruptInfo.code + '，' + this.corruptInfo.rawBytes +
+          ' 字节）。为避免覆盖原始字节，本会话不写入任何内容；要重新开始必须显式确认。';
+      }
+    }
     this.renderAssetStatus();
   };
 
@@ -459,45 +642,55 @@
     }).join('') || '<option>(no cards)</option>';
   };
 
-  /* One continuous text flow per page, so DOM offsets equal surface offsets. */
+  /* Renders the document surface. Two things matter here:
+       1. every line is a block with an explicit model offset, so a selection can
+          be mapped back to the model instead of guessed from DOM positions;
+       2. ALL accessible annotations are drawn — a plain highlighter has no card
+          but still has to be visible, otherwise the mode is a lie. */
   App.prototype.renderDocument = function () {
     var self = this;
-    var card = this.selectedCardId ? IW.readCardHead(this.engine.getVault(), this.selectedCardId) : null;
-    var anchors = card ? card.sourceIds.map(function (id) {
-      return IW.byId(self.engine.getVault().sourceAnchors, id);
-    }).filter(Boolean) : [];
+    var v = this.engine.getVault();
+    var selectedCard = this.selectedCardId ? IW.readCardHead(v, this.selectedCardId) : null;
+    var selectedAnchors = {};
+    if (selectedCard) selectedCard.sourceIds.forEach(function (id) { selectedAnchors[id] = true; });
+
+    /* annotation placements (excerpt marks and plain highlighters alike) */
+    var annotations = v.annotationPlacements.map(function (p) {
+      var anchor = IW.byId(v.sourceAnchors, p.anchorId);
+      if (!anchor) return null;
+      return { placement: p, anchor: anchor };
+    }).filter(Boolean);
 
     var html = this.surface.listPageIds().map(function (pageId) {
       var page = self.surface.getTextPage(pageId);
-      var marks = anchors.filter(function (a) { return a.pageId === pageId; });
-      var markHtml = marks.map(function (a) {
-        return a.selector.rects.map(function (r) {
-          return '<span class="mark" data-anchor="' + esc(a.id) + '" style="left:' +
+      var marks = annotations.filter(function (m) { return m.anchor.pageId === pageId; });
+      var markHtml = marks.map(function (m) {
+        var isSelected = !!selectedAnchors[m.anchor.id];
+        var kind = m.placement.cardId ? 'excerpt' : 'highlighter';
+        return m.anchor.selector.rects.map(function (r) {
+          return '<span class="mark ' + (isSelected ? 'selected' : '') + '" data-kind="' + kind +
+            '" data-anchor="' + esc(m.anchor.id) + '" data-placement="' + esc(m.placement.id) + '" style="left:' +
             (r[0] * 100).toFixed(2) + '%;top:' + (r[1] * 100).toFixed(2) + '%;width:' +
             (r[2] * 100).toFixed(2) + '%;height:' + (r[3] * 100).toFixed(2) + '%"></span>';
         }).join('');
       }).join('');
       return '<section class="page" data-page="' + esc(pageId) + '">' + markHtml +
         '<div class="page-body">' + page.lines.map(function (l) {
-          return '<p class="line" data-start="' + l.startOffset + '" data-end="' + l.endOffset + '">' +
-            esc(l.text) + '</p>';
+          return '<div class="line" data-start="' + l.startOffset + '" data-end="' + l.endOffset + '">' +
+            '<span class="line-body">' + esc(l.text) + '</span></div>';
         }).join('') + '</div>' +
-        '<div class="page-label">' + esc(pageId.split(':p')[0]) + ' · page ' + (page.ordinal + 1) + '</div>' +
+        '<div class="page-label" data-decoration="1">' + esc(pageId.split(':p')[0]) +
+        ' · page ' + (page.ordinal + 1) + '</div>' +
         '</section>';
     }).join('');
 
-    /* plain highlighter marks are shown too; they are annotations, not cards, and
-       the count is surfaced in the hint line so the distinction is visible. */
-    var plain = this.engine.getVault().annotationPlacements.filter(function (p) {
-      return p.style === 'highlighter';
-    });
-
     el('doc-body').innerHTML = html;
-    var anchorCount = this.engine.getVault().sourceAnchors.length;
-    var plainCount = plain.length;
+
+    var anchorCount = v.sourceAnchors.length;
+    var plainCount = v.annotationPlacements.filter(function (p) { return !p.cardId; }).length;
     el('doc-hint').textContent = this.markMode === 'excerpt'
-      ? '摘录模式：选中文字 → 建这张卡（当前 ' + anchorCount + ' 个来源片段）'
-      : '普通荧光标记模式：选中文字 → 只留标记，不建卡（已有 ' + plainCount + ' 个标记）';
+      ? '摘录模式：选中文字 → 建这张卡（当前文档 ' + anchorCount + ' 个来源片段，' + annotations.length + ' 个已绘制标记）'
+      : '普通荧光标记模式：选中文字 → 只留标记，不建卡（已有 ' + plainCount + ' 个普通标记）';
   };
 
   App.prototype.flashAnchor = function (anchorId) {
@@ -532,7 +725,25 @@
     el('card-identity').textContent = 'cardId ' + cardId;
     el('card-head').textContent = 'headRevision ' + head.cardRevisionId + ' · rev ' + head.revision;
     el('quote').textContent = quote.map(function (b) { return b.payload.text; }).join('\n\n---\n\n');
-    el('comment').value = comment.map(function (b) { return b.payload.text || ''; }).join('\n');
+
+    /* Bind the editor to (cardId, headRevision). The buffer is only preserved
+       while the user is actually editing it; once focus leaves, the head wins.
+       Stale buffer text silently surviving a rebind is how one card's note ends
+       up looking like another's. */
+    var bound = this.commentBinding;
+    var headText = comment.map(function (b) { return b.payload.text || ''; }).join('\n');
+    var boundChanged = !bound || bound.cardId !== cardId ||
+      (bound.cardRevisionId !== head.cardRevisionId && this.commentEdited !== true);
+    if (boundChanged) {
+      if (!this.commentFocused) el('comment').value = headText;
+      this.commentBinding = { cardId: cardId, cardRevisionId: head.cardRevisionId };
+      this.commentEdited = false;
+    } else if (!this.commentFocused && el('comment').value !== headText) {
+      el('comment').value = headText;
+      this.commentEdited = false;
+      this.commentBinding = { cardId: cardId, cardRevisionId: head.cardRevisionId };
+    }
+    this.renderedCardId = cardId;
 
     var node = this.currentNode();
     el('node-info').textContent = node
@@ -604,25 +815,36 @@
     var self = this;
     var history = this.engine.history();
     el('history').innerHTML = history.slice().reverse().map(function (h) {
-      return '<li class="' + (h.undone ? 'done' : '') + '"><span class="tiny">' + esc(h.at) + '</span> ' +
-        '<code>' + esc(h.commandType) + '</code>' +
+      var label = h.commandType === 'undo'
+        ? 'undo → ' + (h.result && h.result.compensationCommand ? h.result.compensationCommand : '?')
+        : h.commandType;
+      return '<li class="' + (h.compensated ? 'done' : '') + '"><span class="tiny">' + esc(h.at) + '</span> ' +
+        '<code>' + esc(label) + '</code>' +
         (h.undoable ? ' <button class="mini" data-undo="' + esc(h.commandId) + '">撤销</button>' : '') +
+        (h.inverse ? '' : ' <span class="tag warn">不可补偿</span>') +
         '<br><span class="tiny">' + esc(h.commandId) + ' · digest ' + esc(h.digest.slice(0, 8)) + '…</span></li>';
     }).join('');
     Array.prototype.forEach.call(el('history').querySelectorAll('[data-undo]'), function (btn) {
-      btn.addEventListener('click', function () {
-        try {
-          self.engine.undo(IW.commandHeader('ui-undo-' + Date.now(), self.engine, {
-            targetCommandId: btn.getAttribute('data-undo')
-          }));
-          self.note('ok', 'undone');
-          self.persist();
-        } catch (e) {
-          self.note('warn', 'undo refused: ' + e.code);
-        }
-        self.renderAll();
-      });
+      btn.addEventListener('click', function () { self.undoTarget(btn.getAttribute('data-undo')); });
     });
+  };
+
+  App.prototype.undoTarget = function (targetCommandId) {
+    try {
+      var result = this.engine.undo(this.header('undo-' + targetCommandId, {
+        targetCommandId: targetCommandId
+      }));
+      this.note('ok', 'compensated with ' + result.compensationCommand + ' (the undone revision is still readable)');
+      el('store-state').textContent = 'commitSeq ' + this.store.commitSeq();
+      el('store-state').className = 'chip ok';
+    } catch (e) {
+      this.note('warn', 'undo refused: ' + e.code + ' — ' + e.message);
+      if (e.code === 'STORE_FAULT_INJECTED') {
+        el('store-state').textContent = 'NOT SAVED — ' + e.code;
+        el('store-state').className = 'chip bad';
+      }
+    }
+    this.renderAll();
   };
 
   App.prototype.renderLog = function () {

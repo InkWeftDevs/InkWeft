@@ -30,12 +30,14 @@
 | `tools/build.js` | 源文件 → 单文件产物 |
 | `tools/serve.py` | 本地 HTTP 服务 |
 | `tools/make_sample_pdf.py` | 可复现地重新生成 PDF |
-| `tests/run-headless.js` | 29 项模型/命令/持久化/导出自检 |
+| `tests/run-headless.js` | 39 项模型/命令/持久化/导出/审阅回归自检 |
 | `tests/check-build.js` | 产物结构、id 引用、离线约束 |
 | `tests/check-ui-boot.js` | mock DOM 下 UI 启动冒烟 |
-| `evidence/host-check.json` | 29 项自检的机器可读原始输出 |
+| `evidence/host-check.json` | 39 项自检的机器可读原始输出 |
 | `evidence/build-check.txt`、`evidence/ui-boot-check.txt` | 另两项的原始输出 |
 | `README.md`、`sample-REPORT.md` | 说明与本报告 |
+| `LICENSE` | AGPL-3.0 完整标准文本（34273 B） |
+| `REVIEW-RESPONSE.md` | 对 `REVIEW.md` 报的 D01–D08 的逐条修复说明与回归 |
 
 ---
 
@@ -53,7 +55,7 @@
 
 ---
 
-## 3. 已执行的断言（29 项，全部 PASS）
+## 3. 已执行的断言（39 项，全部 PASS）
 
 原始输出：`evidence/host-check.json`（`scope: SAMPLE_SELF_CHECK_NOT_PLAN_ACCEPTANCE`，
 `runtime_cases_executed` 概念上为 0 —— 这不是应用运行）。
@@ -92,15 +94,28 @@
 
 另两项：
 
-- `check-build.js`：**PASS** —— 无外部脚本/样式/绝对 URL；UI 引用的 43 个 id 全部存在于标记中；
+- `check-build.js`：**PASS** —— 无外部脚本/样式/绝对 URL；UI 引用的 47 个 id 全部存在于标记中；
   8 个模块按依赖顺序内联；披露用语（`NOT_RUN`、`EXACT_SYNTHETIC`、`不建卡`、`PDF 引擎`）仍在产物中。
-- `check-ui-boot.js`：**PASS** —— 45 个元素接线；在 mock DOM 中依次演练
+- `check-ui-boot.js`：**PASS** —— 47 个元素接线；在 mock DOM 中依次演练
   播种、保存备注、版本冲突与更正、加节点与改宽、撤销、导出、隔离恢复、注入写失败、epoch、
   荧光标记、摘录建卡；随后用**同一份 localStorage 再启动一次**，验证「重开」走恢复分支而非重新播种、
-  已提交的备注与每页锚点仍在、重开后仍能继续写入并落盘，以及撕裂的存储值会在启动时被拒绝。
+  已提交的备注与每页锚点仍在、重开后仍能继续写入并落盘；再验证损坏值会让界面进入
+  **只读恢复模式**（写被拒绝、损坏字节前后不变）、命令 ID 带会话前缀、连按两次撤销能回到原值。
 - `check-http-origin.js`：**PASS**（需先起 `python tools/serve.py 8777`）——
   在真实 HTTP 来源下重新读取 PDF 字节并复算 SHA-256 = `fc4d5eef9175…`，与记录值一致，
   并用该哈希播种成功。它覆盖 HTTP 来源与字节校验，**不覆盖** IndexedDB/原生持久化与耐久性。
+
+### 3.1 外部审阅回归
+
+`REVIEW.md`（针对提交 `287681f`）报的 8 个缺陷全部复现、修复并加了回归：
+`R-D01`（存储拒绝时不得 ACK）、`R-D02`（损坏 ≠ 首次运行，损坏时只读）、
+`R-D03`/`R-D03b`（清空备注读回空串；缺字段报错不替旧值）、`R-D05`（选区偏移锚定行盒）、
+`R-D06`（普通荧光标记真的被绘制；摘录每页一个标记）、`R-D07`（命令 ID 带会话）、
+`R-D08`/`R-D08b`（追加式补偿撤销；撤销走完整管线）、`R-S1`（独立卡合同、布局字段统一、
+`vaultId` 校验）。逐条说明见 `REVIEW-RESPONSE.md`。
+
+修复过程中我自己的测试还暴露了同类的第九个缺陷：`App.bind()` 在重复启动时会叠加监听，
+一次点击执行多次命令。现已对每个元素幂等，并让处理函数解析「当前活跃 App」而非闭包捕获实例。
 
 ---
 

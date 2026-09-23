@@ -62,12 +62,15 @@
         documentVersions: vault.documentVersions.length
       },
       assets: assets,
-      /* History travels so an isolated restore can still resolve old revisions. */
+      /* History travels so an isolated restore can still resolve old revisions.
+         `inverse` travels instead of a whole pre-image: the compensation is a
+         small command, not a copy of the vault. */
       history: state ? {
         receipts: (state.receipts || []).map(function (r) {
           return {
             commandId: r.commandId, commandType: r.commandType, digest: r.digest,
-            at: r.at, receiptRevision: r.receiptRevision, result: clone(r.result)
+            at: r.at, receiptRevision: r.receiptRevision, result: clone(r.result),
+            inverse: r.inverse ? clone(r.inverse) : null
           };
         }),
         undone: clone(state.undone || {})
@@ -200,18 +203,26 @@
     var problems = IW.checkInvariants(vault);
     check('invariants', problems.length === 0, 'restored vault passes invariant checks: ' + (problems.join('; ') || 'none'));
 
-    /* Rebuild the engine state from the historical receipts that came along. */
+    /* Rebuild the engine state from the historical receipts that came along.
+       Undo is available again after a restore only when every live receipt still
+       carries a usable inverse; otherwise it is reported as unavailable rather
+       than silently presenting a broken button. */
+    var restoredReceipts = (pkg.history && pkg.history.receipts ? pkg.history.receipts : []).map(function (r) {
+      return {
+        commandId: r.commandId, commandType: r.commandType, digest: r.digest, at: r.at,
+        actorId: '(restored)', capabilityFingerprint: '(restored)',
+        result: r.result, inverse: r.inverse ? clone(r.inverse) : null,
+        receiptRevision: r.receiptRevision,
+        undoState: r.inverse ? 'AVAILABLE' : 'NOT_REVERSIBLE'
+      };
+    });
+    var restorableUndo = restoredReceipts.filter(function (r) {
+      return r.inverse && !(r.commandType === 'undo');
+    }).length > 0;
     var state = {
-      receipts: (pkg.history && pkg.history.receipts ? pkg.history.receipts : []).map(function (r) {
-        return {
-          commandId: r.commandId, commandType: r.commandType, digest: r.digest, at: r.at,
-          actorId: '(restored)', capabilityHandle: '(restored)',
-          result: r.result, preImage: null, receiptRevision: r.receiptRevision,
-          undoState: 'UNAVAILABLE_AFTER_RESTORE'
-        };
-      }),
+      receipts: restoredReceipts,
       undone: clone((pkg.history && pkg.history.undone) || {}),
-      sequence: pkg.history && pkg.history.receipts ? pkg.history.receipts.length : 0
+      sequence: restoredReceipts.length
     };
 
     report.restored = {
@@ -223,13 +234,15 @@
       occurrences: vault.occurrences.length,
       reviewItems: vault.reviewItems.length,
       snapshotRefs: snapshotRefs,
-      undoAvailableAfterRestore: false
+      undoAvailableAfterRestore: restorableUndo
     };
-    report.warnings.push({
-      code: 'UNDO_UNAVAILABLE_AFTER_RESTORE',
-      detail: 'pre-images are not exported, so undo restarts empty after a recovery. ' +
-              'The plan asks for honest capability reporting rather than fake reversibility.'
-    });
+    if (!restorableUndo) {
+      report.warnings.push({
+        code: 'UNDO_UNAVAILABLE_AFTER_RESTORE',
+        detail: 'no live receipt carried a compensating action, so undo restarts empty ' +
+                'after a recovery. Reported rather than presenting a button that cannot work.'
+      });
+    }
     return { vault: vault, state: state, report: report };
   }
 

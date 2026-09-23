@@ -19,7 +19,7 @@ python tools/serve.py 8777
 # 然后打开 http://127.0.0.1:8777/index.html
 
 # 自检（不需要浏览器）
-node tests/run-headless.js     # 模型/命令/持久化/导出，29 项
+node tests/run-headless.js     # 模型/命令/持久化/导出/审阅回归，39 项
 node tests/check-build.js      # 产物结构、id 引用、离线约束
 node tests/check-ui-boot.js    # 在 mock DOM 里跑真实 UI 启动路径
 
@@ -96,7 +96,9 @@ node tools/build.js     # 由 src/*.js + src/style.css + src/index.template.html
 
 ---
 
-## 4. 自检覆盖（29 + 1 + 1 项，全部当前通过）
+## 4. 自检覆盖（39 + 1 + 1 项，全部当前通过）
+
+### 4.1 对应规划 S1 断言的部分
 
 `node tests/run-headless.js` 的每一项都注明它对应哪条 S1 断言：
 
@@ -111,14 +113,31 @@ node tools/build.js     # 由 src/*.js + src/style.css + src/index.template.html
 | `STORE-01/02` | 重开字节一致；两个写者冲突而非互相覆盖；epoch 阻断旧会话 |
 | `STRUCT-01..03` | 两次播种逐字节一致；S1 范围是**强制**的（越界命令不存在）；PDF 来源真实、能力诚实、字节可校验 |
 
+### 4.2 外部审阅回归（`R-D01` … `R-S1`）
+
+`REVIEW.md`（针对提交 `287681f`）报的 8 个缺陷，每个都有对应的回归；逐条修复说明见
+`REVIEW-RESPONSE.md`：
+
+| 检查 | 断言的性质 |
+|---|---|
+| `R-D01` | 存储拒绝时命令**不**被 ACK：vault 字节、`history()`、`commitSeq` 三者都不动 |
+| `R-D02` | `EMPTY / LOADED / CORRUPT` 三态可区分；损坏值不被读操作或启动改写 |
+| `R-D03` / `R-D03b` | 清空备注读回空串；缺字段的修订报 `BLOCK_PAYLOAD_MALFORMED` 而不是替旧值 |
+| `R-D05` | 行盒偏移逐行等于模型文本；模型里不含视图装饰 |
+| `R-D06` | 普通荧光标记有可绘制 rect；摘录标记数 === 每页锚点数 |
+| `R-D07` | 会话前缀不同、同会话不自撞；同引擎复用固定 ID 仍被拒 |
+| `R-D08` / `R-D08b` | 连续两次撤销靠**追加补偿**成功且台账只增不减；撤销走完整管线（epoch/幂等/授权） |
+| `R-S1` | 独立卡合法而"引用来源却不带锚点"被拒；布局字段读写统一；异地 `vaultId` 被拒 |
+
 `node tests/check-build.js`：产物无外链、无 `http(s)://`、无外置样式/脚本；
-UI 里 `el('...')` 用到的 **43 个 id 全部存在**；模块拼接顺序正确。
+UI 里 `el('...')` 用到的 **47 个 id 全部存在**；模块拼接顺序正确。
 
 `node tests/check-ui-boot.js`：在 mock DOM 里跑真实启动路径，并依次演练
 播种、保存备注、版本冲突与更正、加节点与改宽、撤销、导出、隔离恢复、
 注入写失败、epoch、荧光标记、摘录建卡；随后**用同一份 localStorage 再启动一次**，
-验证「重开」走的是恢复分支而不是重新播种、已提交内容与锚点仍在、
-撕裂的存储值会被拒绝而不是半份载入。
+验证「重开」走的是恢复分支而不是重新播种、已提交内容与锚点仍在；
+再验证损坏值会让界面进入**只读恢复模式**（写被 `STORE_READ_ONLY` 拒绝、
+损坏字节前后不变）、命令 ID 带会话前缀、连按两次撤销能回到原值。
 
 `node tests/check-http-origin.js 8777`（需先起 `serve.py`）：在真实 HTTP 来源下重新读取
 `assets/conditional-probability-note.pdf` 的字节并复算 SHA-256，与已记录值一致；
@@ -166,9 +185,13 @@ UI 里 `el('...')` 用到的 **43 个 id 全部存在**；模块拼接顺序正�
 
 另有两条**已知的样品级简化**，都不伪装成完整实现：
 
-- 撤销靠保存每条命令的完整预映像，小资料库可行，真实数据量下要换成细粒度逆变更。
+- 撤销用**追加式补偿**（见 `REVIEW-RESPONSE.md` D08），不再整体替换 vault；
+  但持久化仍是「整库单键同步写」，真实数据量下需要细粒度操作日志与检查点。
 - `commitResolveConflict` 用**新增一个备注块**的方式保住两个视图各自的文字；
   真实产品应把它建模为冲突解决，而不是并列两个块。
+
+外部审阅（`REVIEW.md`，针对提交 `287681f`）报的 D01–D08 已逐条修复，
+每条都有回归用例；修复说明见 `REVIEW-RESPONSE.md`。
 
 ---
 
@@ -177,6 +200,8 @@ UI 里 `el('...')` 用到的 **43 个 id 全部存在**；模块拼接顺序正�
 ```text
 inkweft/
   index.html                  ← 零依赖单文件产物（由 build.js 生成，不要手改）
+  LICENSE                     ← AGPL-3.0（完整标准文本）
+  REVIEW-RESPONSE.md          ← 对 REVIEW.md 的逐条修复说明
   assets/
     textbook-excerpt.txt      文本来源（真实文件，哈希会被复核）
     conditional-probability-note.pdf  真实 PDF（1.7 KB，xref 有效，无内嵌字体）
@@ -184,8 +209,8 @@ inkweft/
     00-core.js                身份（UUIDv5 形状+抗碰撞推进）、语义摘要、时间、错误码
     10-vault.js               vault 形状、不可变修订链、全量引用闭包不变式
     20-document.js            DocumentSurfaceAdapter 接口 + TextSurface / PdfSurface、本地 SHA-256
-    30-commands.js            唯一写入口：幂等、原子提交、授权先检、撤销重做
-    40-store.js               单键同步持久化 + 校验和 + 故障注入钩子
+    30-commands.js            唯一写入口：幂等、原子提交、授权先检、可补偿撤销
+    40-store.js               单键同步持久化 + 校验和 + 故障注入 + EMPTY/LOADED/CORRUPT 判别
     50-export.js              S1 原生包导出/导入与逐项校验
     60-seed.js                演示语料与首张卡的播种计划
     70-ui.js                  四面板界面；只调 engine.run()
@@ -195,12 +220,12 @@ inkweft/
     serve.py                  本地 HTTP 服务（让 PDF 字节校验真正跑起来）
     make_sample_pdf.py        重新生成那份 PDF（可复现）
   tests/
-    run-headless.js           29 项模型/命令/持久化/导出自检（--json 可出机器可读结果）
+    run-headless.js           39 项模型/命令/持久化/导出/审阅回归自检（--json 可出机器可读结果）
     check-build.js            产物结构与离线约束检查
     check-ui-boot.js          mock DOM 下的 UI 启动冒烟
     check-http-origin.js      HTTP 来源下的字节哈希复核（需先起 serve.py）
   evidence/
-    host-check.json           29 项自检的机器可读原始输出
+    host-check.json           39 项自检的机器可读原始输出
     build-check.txt           check-build.js 原始输出
     ui-boot-check.txt         check-ui-boot.js 原始输出
     http-origin-check.txt     check-http-origin.js 原始输出

@@ -11,8 +11,8 @@
     "pdfSha256": "fc4d5eef917593ff352de6ad0e5b9bb2e0d275d4b984c95d2b5055f86fc13ece"
   },
   "totals": {
-    "checks": 29,
-    "passed": 29,
+    "checks": 39,
+    "passed": 39,
     "failed": 0
   },
   "results": [
@@ -21,7 +21,7 @@
       "title": "one authoritative card; all three entries resolve to one cardId + headRevisionId",
       "result": "PASS",
       "detail": "cardId=0bc9d7d9… head=e27cba73… rev=1; 3 entries agree",
-      "ms": 5
+      "ms": 4
     },
     {
       "id": "AX01-A02",
@@ -35,14 +35,14 @@
       "title": "no dictionary, no FSRS, no fabricated history in the S1 slice",
       "result": "PASS",
       "detail": "dictionary=0 events=0 attempts=0 scheduler=UNASSIGNED dueAt=null",
-      "ms": 1
+      "ms": 2
     },
     {
       "id": "AX02-A01",
       "title": "comment edit lands on the committed revision; undo restores a consistent state",
       "result": "PASS",
-      "detail": "rev 1->2->1; the undone revision is gone with its pre-image",
-      "ms": 2
+      "detail": "rev 1->2->3 (compensated); the undone revision is still readable",
+      "ms": 1
     },
     {
       "id": "AX02-A04",
@@ -63,14 +63,14 @@
       "title": "a node resize affects only that occurrence, never card content or another map",
       "result": "PASS",
       "detail": "width=340 on map1 only (default 220); card rev stayed 1; map2 node width=220",
-      "ms": 2
+      "ms": 1
     },
     {
       "id": "AX03-A01",
       "title": "a second source appends without loss; pages are identified by version-scoped ids",
       "result": "PASS",
       "detail": "sources=3; pageIds=textbook-excerpt@v1:p0 , textbook-excerpt@v1:p1 , textbook-excerpt@v1:p1",
-      "ms": 2
+      "ms": 1
     },
     {
       "id": "AX03-A02",
@@ -91,13 +91,13 @@
       "title": "a revoked source resolves as RESTRICTED without leaking detail",
       "result": "PASS",
       "detail": "state=RESTRICTED, detail=\"source version is not readable under the current grant\" (no title, text or count leaked)",
-      "ms": 1
+      "ms": 0
     },
     {
       "id": "AX33-A01",
       "title": "a plain highlighter creates no card, no node and no review item",
       "result": "PASS",
-      "detail": "cards 1->1, nodes 1->1, marks 1->2, anchor ok",
+      "detail": "cards 1->1, nodes 1->1, marks 2->3, anchor ok",
       "ms": 1
     },
     {
@@ -119,7 +119,7 @@
       "title": "same commandId + same payload returns the original receipt and applies nothing twice",
       "result": "PASS",
       "detail": "status=REPLAYED; revision and block revisions frozen at 2/3",
-      "ms": 1
+      "ms": 0
     },
     {
       "id": "AX34-A02",
@@ -133,63 +133,63 @@
       "title": "a revoked grant blocks even an old commandId replay, and blocks new commands too",
       "result": "PASS",
       "detail": "replay -> SOURCE_RESTRICTED; new command -> SOURCE_RESTRICTED; after re-grant -> ACK",
-      "ms": 1
+      "ms": 0
     },
     {
       "id": "AX34-A04",
-      "title": "a rotated capability token does not change the semantic digest",
+      "title": "a rotated capability token does not change the semantic digest, and never enters a receipt",
       "result": "PASS",
-      "detail": "cap-1111 / cap-9999 / cap-2222+trace all produce one digest and one receipt",
-      "ms": 0
+      "detail": "three handles produce one digest, one receipt; only a fingerprint is stored",
+      "ms": 1
     },
     {
       "id": "AX34-A05",
       "title": "an expectedVersions mismatch is refused instead of overwriting a newer head",
       "result": "PASS",
-      "detail": "stale -> EXPECTED_VERSION_MISMATCH (actual rev 2); resolved against 1db2c8ea…; both edits kept (2 comment blocks)",
-      "ms": 2
+      "detail": "stale -> EXPECTED_VERSION_MISMATCH (actual rev 2); resolved against b6cc3b64…; both edits kept (2 comment blocks)",
+      "ms": 1
     },
     {
       "id": "AX28-A01",
       "title": "a failing store leaves the durable state untouched; the retry returns the original receipt",
       "result": "PASS",
       "detail": "write refused; durable bytes identical; retry -> ACK; recovery commitSeq 1->2",
-      "ms": 10
+      "ms": 4
     },
     {
       "id": "AX28-A02",
       "title": "no command can publish a half-built closure; refusals leave the vault clean",
       "result": "PASS",
-      "detail": "refusals: SOURCE_VERSION_NOT_FOUND, ANSWER_BLOCK_FOREIGN, INVARIANT_VIOLATION; invariants clean",
+      "detail": "refusals: SOURCE_VERSION_NOT_FOUND, ANSWER_BLOCK_FOREIGN; invariants clean",
       "ms": 1
     },
     {
       "id": "AX28-A04",
       "title": "the S1 native package exports and restores in isolation with every reference resolving",
       "result": "PASS",
-      "detail": "checks=15 all PASS; snapshots=2; warnings=ASSET_BYTES_NOT_PROVIDED+UNDO_UNAVAILABLE_AFTER_RESTORE",
-      "ms": 3
+      "detail": "checks=15 all PASS; snapshots=2; warnings=ASSET_BYTES_NOT_PROVIDED",
+      "ms": 2
     },
     {
       "id": "AX28-A05",
       "title": "tampering with the package, or smuggling a block id as a snapshot, is detected",
       "result": "PASS",
       "detail": "tampered bytes -> PACKAGE_TAMPERED; block id used as snapshot -> IMPORT_CHECK_FAILED",
-      "ms": 3
+      "ms": 4
     },
     {
       "id": "AX28-A06",
-      "title": "a torn store value is refused at load instead of being half-applied",
+      "title": "a torn store value is reported as CORRUPT and never half-loaded",
       "result": "PASS",
-      "detail": "truncated value -> STORE_CORRUPT (no partial vault was handed to the caller)",
-      "ms": 2
+      "detail": "EMPTY -> LOADED -> CORRUPT(STORE_CORRUPT, 5976B); no partial vault was returned",
+      "ms": 1
     },
     {
       "id": "STORE-01",
       "title": "a committed vault reloads byte-identically after a reopen",
       "result": "PASS",
-      "detail": "commitSeq=1 bytes=42413; reopened rev=2, next rev=3",
-      "ms": 6
+      "detail": "commitSeq=1 bytes=13344; reopened rev=2, next rev=3",
+      "ms": 3
     },
     {
       "id": "STORE-02",
@@ -202,8 +202,8 @@
       "id": "STRUCT-01",
       "title": "the whole demo can be rebuilt deterministically",
       "result": "PASS",
-      "detail": "two runs byte-identical (7132 canonical bytes)",
-      "ms": 2
+      "detail": "two runs byte-identical (7364 canonical bytes)",
+      "ms": 1
     },
     {
       "id": "STRUCT-02",
@@ -217,6 +217,76 @@
       "title": "the PDF origin is real, refused honestly, and its bytes are verifiable",
       "result": "PASS",
       "detail": "sha256=fc4d5eef9175…; capability honest (no engine); resolver -> MISSING/PDF_ENGINE_MISSING",
+      "ms": 1
+    },
+    {
+      "id": "R-D01",
+      "title": "a command is not acknowledged unless the store accepted it",
+      "result": "PASS",
+      "detail": "refused write left vault bytes, history and commitSeq unchanged; 2 later commits landed",
+      "ms": 0
+    },
+    {
+      "id": "R-D02",
+      "title": "a corrupt store is not mistaken for a first run",
+      "result": "PASS",
+      "detail": "CORRUPT(STORE_CHECKSUM_MISMATCH) reported with 183B preserved; no auto-overwrite",
+      "ms": 1
+    },
+    {
+      "id": "R-D03",
+      "title": "clearing the note reads back empty, never the previous revision",
+      "result": "PASS",
+      "detail": "head reads \"\" (a legal edit); the previous revision still resolves its own text",
+      "ms": 1
+    },
+    {
+      "id": "R-D03b",
+      "title": "a malformed revision is rejected instead of silently substituted",
+      "result": "PASS",
+      "detail": "missing text field -> BLOCK_PAYLOAD_MALFORMED / invariant problem, not an older revision",
+      "ms": 1
+    },
+    {
+      "id": "R-D05",
+      "title": "model offsets are the authority for a selection (anchored to line boxes)",
+      "result": "PASS",
+      "detail": "7 lines verified offset-exact across 2 pages; no decoration in the model",
+      "ms": 1
+    },
+    {
+      "id": "R-D06",
+      "title": "every accessible annotation is drawn, including plain highlighters",
+      "result": "PASS",
+      "detail": "highlighter rect drawable (4 box); excerpt has 2 per-page marks",
+      "ms": 1
+    },
+    {
+      "id": "R-D07",
+      "title": "command ids are session-scoped so a reopened session cannot collide",
+      "result": "PASS",
+      "detail": "session prefixes differ (ui-s7-1 vs ui-s7-2); same-engine reuse -> COMMAND_ID_REUSE",
+      "ms": 2
+    },
+    {
+      "id": "R-D08",
+      "title": "consecutive undos compensate instead of replacing the vault",
+      "result": "PASS",
+      "detail": "two undos compensated by appending (chain length 5); text now \"\"",
+      "ms": 1
+    },
+    {
+      "id": "R-D08b",
+      "title": "undo runs the same pipeline: epoch, idempotency, authorization",
+      "result": "PASS",
+      "detail": "stale epoch -> VAULT_EPOCH_MISMATCH; replay -> REPLAYED; double compensation -> ALREADY_UNDONE; revoked -> SOURCE_RESTRICTED",
+      "ms": 1
+    },
+    {
+      "id": "R-S1",
+      "title": "the shell-level safeguards that the review flagged",
+      "result": "PASS",
+      "detail": "independent card ok; quoted-without-source rejected; layout field unified; VAULT_ID_MISMATCH",
       "ms": 1
     }
   ]

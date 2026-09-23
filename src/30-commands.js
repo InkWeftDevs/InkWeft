@@ -151,6 +151,11 @@
          never one oversized rectangle spanning pages (AX03-A02). */
       createCardFromSelection: {
         description: 'Create a knowledge card from a source selection, atomically with its anchor(s) and marker.',
+        /* Compensate by tombstoning the card, not by erasing it: a committed
+           revision must never leave the ledger. */
+        inverse: function (vault, p, result) {
+          return { command: 'trashCard', params: { cardId: result.cardId } };
+        },
         apply: function (vault, ids, p, ts) {
           if (!p.studySetId || !byId(vault.studySets, p.studySetId)) {
             fail('STUDY_SET_REQUIRED', 'a study set is required before creating a card');
@@ -186,15 +191,20 @@
             sourceIds: card.sourceIds
           }, ts);
 
-          var mark = {
-            id: ids.next(),
-            cardId: card.id,
-            anchorId: built.anchors[0].id,
-            style: 'excerpt-highlight',
-            presentationRevision: 1,
-            createdAt: ts
-          };
-          vault.annotationPlacements.push(mark);
+          /* One marker per page, so every per-page anchor gets an editable
+             placement of its own instead of silently losing the later pages. */
+          var marks = built.anchors.map(function (a) {
+            var mark = {
+              id: ids.next(),
+              cardId: card.id,
+              anchorId: a.id,
+              style: 'excerpt-highlight',
+              presentationRevision: 1,
+              createdAt: ts
+            };
+            vault.annotationPlacements.push(mark);
+            return mark;
+          });
 
           /* Auto-attach / auto-enqueue stay OFF unless the vault asks for them;
              the plain default is "card only". */
@@ -208,7 +218,8 @@
             cardRevisionId: revision.id,
             anchorId: built.anchors[0].id,
             anchorIds: card.sourceIds.slice(),
-            annotationId: mark.id,
+            annotationId: marks[0].id,
+            annotationIds: marks.map(function (m) { return m.id; }),
             occurrenceId: attached ? attached.id : null,
             quoteBlockId: quoteBlock.id,
             commentBlockId: commentBlock.id
@@ -218,6 +229,9 @@
 
       createIndependentCard: {
         description: 'Create a card that deliberately has no source anchor yet.',
+        inverse: function (vault, p, result) {
+          return { command: 'trashCard', params: { cardId: result.cardId } };
+        },
         apply: function (vault, ids, p, ts) {
           var card = {
             id: ids.next(), studySetId: p.studySetId, revision: 0, headRevisionId: null,
@@ -251,6 +265,25 @@
             }
           });
           return blocked;
+        },
+        /* Undo appends a NEW block revision carrying the previous text, so the
+           cleared/edited revision stays resolvable in the ledger. */
+        inverse: function (vault, p, result) {
+          var card = byId(vault.cards, p.cardId);
+          if (!card) return null;
+          var commentBlock = null;
+          card.blockOrder.forEach(function (blockId) {
+            var block = byId(vault.blocks, blockId);
+            if (block && block.role === 'comment') commentBlock = block;
+          });
+          var previousText = commentBlock && byId(vault.blockRevisions, commentBlock.headRevisionId)
+            ? byId(vault.blockRevisions, commentBlock.headRevisionId).payload.text
+            : '';
+          var params = { cardId: p.cardId };
+          if (p.text !== undefined) params.text = previousText;
+          if (p.title !== undefined) params.title = card.title;
+          if (p.tags !== undefined) params.tags = card.tags.slice();
+          return { command: 'patchCard', params: params };
         },
         apply: function (vault, ids, p, ts) {
           var card = byId(vault.cards, p.cardId);
@@ -300,6 +333,10 @@
 
       attachOccurrence: {
         description: 'Place a card on a mind map as a node; layout only, content untouched.',
+        /* Undo removes only this map position; the card and its content survive. */
+        inverse: function (vault, p, result) {
+          return { command: 'detachOccurrence', params: { occurrenceId: result.occurrenceId } };
+        },
         apply: function (vault, ids, p, ts) {
           var mapId = p.mapId;
           if (!mapId) {
@@ -345,6 +382,18 @@
 
       moveOccurrence: {
         description: 'Move or resize ONE node. Must not touch card content or other maps (AX02-A03).',
+        inverse: function (vault, p, result) {
+          var node = byId(vault.occurrences, p.occurrenceId);
+          if (!node) return null;
+          var back = { occurrenceId: p.occurrenceId };
+          ['x', 'y', 'width'].forEach(function (key) {
+            if (p[key] !== undefined && node.layoutOverride[key] !== undefined) {
+              back[key] = node.layoutOverride[key];
+            }
+          });
+          if (p.collapsed !== undefined) back.collapsed = node.collapsed;
+          return { command: 'moveOccurrence', params: back };
+        },
         pre: function (vault, p) {
           var node = byId(vault.occurrences, p.occurrenceId);
           if (!node) return { code: 'OCCURRENCE_NOT_FOUND', message: 'no occurrence ' + p.occurrenceId };
@@ -370,6 +419,13 @@
 
       reparentOccurrence: {
         description: 'Re-parent a node inside one map. Cross-map parents and cycles are refused.',
+        inverse: function (vault, p, result) {
+          var node = byId(vault.occurrences, p.occurrenceId);
+          if (!node) return null;
+          var back = { occurrenceId: p.occurrenceId };
+          back.parentOccurrenceId = node.parentOccurrenceId;
+          return { command: 'reparentOccurrence', params: back };
+        },
         apply: function (vault, ids, p) {
           var node = byId(vault.occurrences, p.occurrenceId);
           if (!node) fail('OCCURRENCE_NOT_FOUND', 'no occurrence ' + p.occurrenceId);
@@ -520,8 +576,14 @@
         }
       },
 
+      /* A card is never destroyed, only tombstoned. That also makes it the
+         compensating action for every "this card should not exist yet" case, so
+         undo never has to un-publish a committed revision. */
       trashCard: {
         description: 'Move the card to the trash by tombstone; placements and nodes are suspended, not deleted.',
+        inverse: function (vault, p, result) {
+          return { command: 'restoreCard', params: { cardId: p.cardId } };
+        },
         apply: function (vault, ids, p, ts) {
           var card = byId(vault.cards, p.cardId);
           if (!card) fail('CARD_NOT_FOUND', 'no card ' + p.cardId);
@@ -540,6 +602,9 @@
 
       restoreCard: {
         description: 'Clear the tombstone. Same identity, same history.',
+        inverse: function (vault, p, result) {
+          return { command: 'trashCard', params: { cardId: p.cardId } };
+        },
         apply: function (vault, ids, p) {
           var card = byId(vault.cards, p.cardId);
           if (!card) fail('CARD_NOT_FOUND', 'no card ' + p.cardId);
@@ -784,6 +849,12 @@
       COMMAND_HEADER.forEach(function (key) {
         if (!h[key]) fail('MALFORMED_HEADER', 'command header is missing ' + key, { command: commandType });
       });
+      /* The header must name THIS vault. Digging the digest out of the current
+         vault while accepting any vaultId string would let a command written for
+         one library be replayed against another. */
+      if (String(h.vaultId) !== vault.vaultId) {
+        fail('VAULT_ID_MISMATCH', 'command targets vault ' + h.vaultId + ' but this vault is ' + vault.vaultId);
+      }
       var command = commands[commandType];
       if (!command) fail('UNKNOWN_COMMAND', 'no such command: ' + commandType);
 
@@ -800,9 +871,12 @@
         if (early) fail(early.code, early.message, early.details);
       }
 
-      /* 2. Digest the semantic payload. Refreshable secrets, retry timestamps and
-            trace ids are deliberately excluded, so a retry after token rotation
-            still matches while a changed payload never does. */
+      /* 2. Digest the semantic payload. A capability handle authorises an
+            operation; it is not part of what the operation MEANS. So it stays out
+            of the digest entirely — deriving it (even as a digest) would make a
+            token rotation look like a different command. For audit, the receipt
+            keeps only a fingerprint, never the raw handle: a refreshable secret
+            must not be written into stored history. */
       var digestInput = {
         commandType: commandType,
         vaultId: vault.vaultId,
@@ -812,9 +886,8 @@
         epoch: (h.expectedVersions && h.expectedVersions.epoch !== undefined)
           ? h.expectedVersions.epoch : vault.epoch
       };
+      var capabilityFingerprint = digest({ handle: String(h.capabilityHandle) });
       var semantic = digest(digestInput);
-      var capabilityDigest = digest({ handle: String(h.capabilityHandle).replace(/[0-9]{4}$/, '****') });
-      semantic = digest({ semantic: semantic, capability: capabilityDigest });
 
       /* 3. Replay or refuse. An existing receipt is authoritative. */
       var existing = receiptFor(h.commandId);
@@ -840,7 +913,6 @@
             If a minted id collides with one already in the vault (only possible
             after a reload), advance the generator and apply again — never repair
             the vault by hand, or the transaction guarantee becomes a lie. */
-      var preImage = clone(vault);
       var draft, result, problems;
       var attempts = 0;
       for (;;) {
@@ -848,7 +920,7 @@
         try {
           result = command.apply(draft, ids, params, clock.iso());
         } catch (err) {
-          /* Nothing was published: the vault is byte-identical to the pre-image. */
+          /* Nothing was published: the vault is byte-identical to before. */
           throw err;
         }
         problems = IW.checkInvariants(draft);
@@ -868,17 +940,24 @@
         });
       }
 
+      /* The compensating action is computed from the PRE-image, so it describes
+         how to undo this command without ever deleting a committed revision. */
+      var inverse = null;
+      if (typeof command.inverse === 'function') {
+        try { inverse = command.inverse(vault, params, result); } catch (e) { inverse = null; }
+      }
+
       var receipt = {
         commandId: h.commandId,
         commandType: commandType,
         digest: semantic,
         actorId: h.actorId,
-        capabilityHandle: String(h.capabilityHandle),
+        capabilityFingerprint: capabilityFingerprint,
         at: clock.iso(),
         result: result,
-        preImage: preImage,
+        inverse: inverse,
         receiptRevision: state.sequence + 1,
-        undoState: 'AVAILABLE'
+        undoState: inverse ? 'AVAILABLE' : 'NOT_REVERSIBLE'
       };
 
       /* 6. Persist before acknowledging. A failing store must leave no receipt. */
@@ -895,49 +974,19 @@
       return { status: 'ACK', code: 'COMMITTED', replayed: false, receipt: clone(receipt) };
     }
 
-    function undo(header) {
-      COMMAND_HEADER.forEach(function (key) {
-        if (!header || !header[key]) fail('MALFORMED_HEADER', 'undo needs a full command header');
-      });
-      var targetId = header.targetCommandId;
-      if (!targetId) fail('UNDO_TARGET_REQUIRED', 'undo needs targetCommandId');
-      var target = receiptFor(targetId);
-      if (!target) fail('UNDO_TARGET_NOT_FOUND', 'no receipt ' + targetId);
-      if (state.undone[targetId]) fail('ALREADY_UNDONE', 'that command was already undone');
-      /* Only the newest reversible command may be undone, so an old restore can
-         never overwrite newer work from another view. */
-      var live = state.receipts.filter(function (r) { return !state.undone[r.commandId]; });
-      var newest = live[live.length - 1];
-      if (!newest || newest.commandId !== targetId) {
-        fail('UNDO_NOT_LATEST', 'only the most recent command can be undone in this sample', {
-          newest: newest ? newest.commandId : null
-        });
+    /* The newest receipt that can still be compensated. `undo` receipts are NOT
+       candidates, and neither is anything already undone — forgetting that made
+       a second undo fail with UNDO_NOT_LATEST because undo-B itself looked like
+       the newest live command. */
+    function newestUndoCandidate() {
+      for (var i = state.receipts.length - 1; i >= 0; i--) {
+        var r = state.receipts[i];
+        if (r.commandType === 'undo') continue;
+        if (state.undone[r.commandId]) continue;
+        if (!r.inverse) continue;
+        return r;
       }
-      var restored = clone(target.preImage);
-      var preImage = clone(vault);
-      var receipt = {
-        commandId: header.commandId,
-        commandType: 'undo',
-        digest: digest({ commandType: 'undo', target: targetId, epoch: vault.epoch }),
-        actorId: header.actorId,
-        capabilityHandle: String(header.capabilityHandle),
-        at: clock.iso(),
-        result: { undoneCommandId: targetId, invertedCommandType: target.commandType },
-        preImage: preImage,
-        receiptRevision: state.sequence + 1,
-        undoState: 'AVAILABLE'
-      };
-      var nextState = {
-        receipts: state.receipts.concat([receipt]),
-        undone: clone(state.undone),
-        sequence: state.sequence + 1
-      };
-      nextState.undone[targetId] = receipt.commandId;
-      if (persistHook) persistHook({ vault: restored, state: nextState, receipt: receipt });
-      vault = restored;
-      state = nextState;
-      notify({ type: 'undo', receipt: receipt, vault: vault });
-      return { status: 'ACK', code: 'UNDONE', receipt: clone(receipt), undoneCommandId: targetId };
+      return null;
     }
 
     function history() {
@@ -947,11 +996,145 @@
           commandType: r.commandType,
           at: r.at,
           digest: r.digest,
+          compensated: !!state.undone[r.commandId],
           undone: !!state.undone[r.commandId] || r.commandType === 'undo',
           result: clone(r.result),
-          undoable: !state.undone[r.commandId] && r.commandType !== 'undo'
+          inverse: r.inverse ? clone(r.inverse) : null,
+          undoable: !state.undone[r.commandId] && r.commandType !== 'undo' && !!r.inverse
         };
       });
+    }
+
+    /* Undo runs through the SAME pipeline as any other write: header validation,
+       vault identity, live authorization, epoch/expected-version checks, digest,
+       idempotent replay, invariant closure, and persist-before-acknowledge.
+       It compensates by APPLYING THE INVERSE, so no committed revision is
+       deleted and existing history stays resolvable. */
+    function undo(header) {
+      var h = header || {};
+      COMMAND_HEADER.forEach(function (key) {
+        if (!h[key]) fail('MALFORMED_HEADER', 'undo needs a full command header');
+      });
+      if (String(h.vaultId) !== vault.vaultId) {
+        fail('VAULT_ID_MISMATCH', 'undo targets vault ' + h.vaultId + ' but this vault is ' + vault.vaultId);
+      }
+      var targetId = h.targetCommandId;
+      if (!targetId) fail('UNDO_TARGET_REQUIRED', 'undo needs targetCommandId');
+
+      /* Epoch and expected versions are checked in the undo path too, not only
+         inside run(): a session holding a replaced vault must not be able to
+         compensate anything in the new one. */
+      var undoPre = checkExpectedVersions(vault, h.expectedVersions);
+      if (undoPre) fail(undoPre.code, undoPre.message, undoPre.details);
+      if (h.expectedVersions && h.expectedVersions.epoch !== undefined &&
+          h.expectedVersions.epoch !== vault.epoch) {
+        fail('VAULT_EPOCH_MISMATCH', 'undo belongs to vault epoch ' +
+          h.expectedVersions.epoch + ' but the vault is at ' + vault.epoch);
+      }
+
+      /* The undo digest deliberately covers target + expected versions only; the
+         capability handle is excluded here for the same reason as in run(). */
+      var semantic = digest({
+        commandType: 'undo',
+        vaultId: vault.vaultId,
+        actorId: h.actorId,
+        targetCommandId: targetId,
+        expectedVersions: h.expectedVersions || null
+      });
+      var capabilityFingerprint2 = digest({ handle: String(h.capabilityHandle) });
+
+      var existing = receiptFor(h.commandId);
+      if (existing) {
+        if (existing.digest === semantic) {
+          return {
+            status: 'REPLAYED', code: 'RECEIPT_REPLAYED', replayed: true,
+            receipt: clone(existing),
+            message: 'same undo commandId and payload: original receipt returned'
+          };
+        }
+        fail('COMMAND_ID_REUSE', 'undo commandId ' + h.commandId + ' was used with a different payload');
+      }
+
+      var target = receiptFor(targetId);
+      if (!target) fail('UNDO_TARGET_NOT_FOUND', 'no receipt ' + targetId);
+      if (state.undone[targetId]) fail('ALREADY_UNDONE', 'that command was already compensated');
+      if (!target.inverse) {
+        fail('NOT_REVERSIBLE', target.commandType + ' has no compensating action in this sample', {
+          commandType: target.commandType
+        });
+      }
+      var newest = newestUndoCandidate();
+      if (!newest || newest.commandId !== targetId) {
+        fail('UNDO_NOT_LATEST', 'only the most recent compensatable command can be undone in this sample', {
+          newest: newest ? newest.commandId : null
+        });
+      }
+
+      /* The inverse is a normal command, so its preconditions, authorization and
+         closure checks all apply. */
+      var inverseCommand = commands[target.inverse.command];
+      if (!inverseCommand) fail('UNKNOWN_INVERSE', 'inverse command is not defined: ' + target.inverse.command);
+      var authError = authFor(inverseCommand, target.inverse.params);
+      if (authError) fail(authError.code, authError.message);
+      if (inverseCommand.pre) {
+        var early = inverseCommand.pre(vault, target.inverse.params);
+        if (early) fail(early.code, early.message, early.details);
+      }
+      var preError = checkExpectedVersions(vault, h.expectedVersions);
+      if (preError) fail(preError.code, preError.message, preError.details);
+
+      var draft = clone(vault);
+      var result, problems;
+      var attempts = 0;
+      for (;;) {
+        draft = clone(vault);
+        result = inverseCommand.apply(draft, ids, target.inverse.params, clock.iso());
+        problems = IW.checkInvariants(draft);
+        if (problems.length) {
+          var idProblems = problems.filter(function (p) { return /duplicate id/.test(p); });
+          if (idProblems.length && ++attempts < 8) {
+            if (advancePastCollisions(ids, collectIds(draft))) continue;
+          }
+        }
+        break;
+      }
+      if (problems.length) {
+        fail('INVARIANT_VIOLATION', 'the compensating command would leave an incomplete closure', {
+          problems: problems, targetCommandId: targetId
+        });
+      }
+
+      var receipt = {
+        commandId: h.commandId,
+        commandType: 'undo',
+        digest: semantic,
+        actorId: h.actorId,
+        capabilityFingerprint: capabilityFingerprint2,
+        at: clock.iso(),
+        result: {
+          undoneCommandId: targetId,
+          invertedCommandType: target.commandType,
+          compensationCommand: target.inverse.command,
+          strategy: 'APPEND_COMPENSATION'
+        },
+        inverse: null,
+        receiptRevision: state.sequence + 1,
+        undoState: 'NOT_REVERSIBLE'
+      };
+      var nextState = {
+        receipts: state.receipts.concat([receipt]),
+        undone: clone(state.undone),
+        sequence: state.sequence + 1
+      };
+      nextState.undone[targetId] = receipt.commandId;
+      if (persistHook) persistHook({ vault: draft, state: nextState, receipt: receipt });
+      vault = draft;
+      state = nextState;
+      notify({ type: 'undo', receipt: receipt, vault: vault });
+      return {
+        status: 'ACK', code: 'UNDONE', receipt: clone(receipt),
+        undoneCommandId: targetId, compensationCommand: target.inverse.command
+      };
     }
 
     function read(fn) { return fn({ vault: vault, state: state, grants: grants }); }

@@ -1,9 +1,9 @@
 BUILD CHECK PASSED
 {
-  "htmlBytes": 147097,
-  "inlineScriptBytes": 131579,
-  "elementIds": 45,
-  "referencedIds": 43,
+  "htmlBytes": 171839,
+  "inlineScriptBytes": 155528,
+  "elementIds": 47,
+  "referencedIds": 45,
   "modules": 8,
   "assets": [
     {

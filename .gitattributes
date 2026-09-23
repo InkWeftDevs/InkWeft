@@ -5,4 +5,7 @@
 *.css text eol=lf
 *.html text eol=lf
 *.txt text eol=lf
+# License texts must stay byte-exact: normalising them changes their digest and
+# makes an independent verification against the FSF copy fail.
+LICENSE -text
 *.pdf -text

@@ -56,6 +56,12 @@
     <button id="btn-resolve" class="btn">重新读取并保存</button>
   </div>
 
+  <div class="conflict-bar recovery" id="recovery-bar">
+    <span class="tag warn">只读恢复模式</span>
+    <span id="recovery-text"></span>
+    <button id="btn-reset" class="btn">丢弃并重新播种</button>
+  </div>
+
   <main class="grid">
 
     <section class="panel doc-panel">
@@ -123,9 +129,8 @@
         <div class="dev-row">
           <label class="mode"><input type="checkbox" id="chk-fault"> 下一次写入注入失败</label>
           <button id="btn-epoch" class="btn">推进 vault epoch</button>
-          <button id="btn-reset" class="btn">重建资料库</button>
-        </div>
-        <p class="tiny">
+          <span class="tiny">重建资料库入口在写失败/损坏时的提示条上（避免误触）。</span>
+        </div>        <p class="tiny">
           注入失败只影响持久层：命令在内存里已应用，但 durable 值不变、commitSeq 不前进。
           重开时旧的 commandId 仍可查到回执 —— 先查原命令，不猜结果。
         </p>

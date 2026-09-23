@@ -101,38 +101,33 @@
   }
 
   /* Resolve a card revision into readable content. Old revisions keep resolving
-     to the block versions that were current when they were committed. */
+     to the block versions that were current when they were committed.
+
+     Exactness matters more than convenience here: an EMPTY text is a legitimate
+     user edit ("I deleted my note"), so this must never fall back to an older
+     revision. Only a genuinely malformed revision is rejected, loudly. */
   function readCardRevision(vault, cardRevisionId) {
     var rev = byId(vault.cardRevisions, cardRevisionId);
     if (!rev) fail('CARD_REVISION_UNRESOLVED', 'no card revision ' + cardRevisionId);
     var blocks = rev.blockSnapshotIds.map(function (snapshotId) {
       var blockRev = byId(vault.blockRevisions, snapshotId);
       if (!blockRev) fail('BLOCK_REVISION_UNRESOLVED', 'snapshot ' + snapshotId + ' is missing');
-      /* An empty payload would make a view render a blank block and look like data
-         loss, so fall back to the newest revision of the same block that has
-         content. The snapshot id is still reported, so nothing is hidden. */
-      var payload = blockRev.payload;
-      var fallbackFrom = null;
-      if (!payload || payload.text === '' || payload.text === undefined) {
-        var cursor = blockRev;
-        var guard = 0;
-        while (cursor) {
-          if (cursor.payload && cursor.payload.text) {
-            payload = cursor.payload;
-            fallbackFrom = cursor.id;
-            break;
-          }
-          cursor = cursor.previousRevisionId ? byId(vault.blockRevisions, cursor.previousRevisionId) : null;
-          if (++guard > 1000) break;
-        }
+      if (!blockRev.payload || typeof blockRev.payload !== 'object') {
+        fail('BLOCK_PAYLOAD_MALFORMED', 'block revision ' + blockRev.id + ' has no payload object', {
+          blockRevisionId: blockRev.id, blockId: blockRev.blockId
+        });
+      }
+      if (blockRev.kind === 'text' && typeof blockRev.payload.text !== 'string') {
+        fail('BLOCK_PAYLOAD_MALFORMED',
+          'text block revision ' + blockRev.id + ' has no text field; refusing to substitute an older revision',
+          { blockRevisionId: blockRev.id, blockId: blockRev.blockId });
       }
       return {
         blockId: blockRev.blockId,
         blockRevisionId: blockRev.id,
         role: blockRev.role,
         kind: blockRev.kind,
-        payload: clone(payload || {}),
-        payloadFallbackFrom: fallbackFrom,
+        payload: clone(blockRev.payload),
         sourceAnchorId: blockRev.sourceAnchorId
       };
     });
@@ -237,7 +232,17 @@
           problems.push('block ' + blockId + ' head revision unresolved');
         }
       });
-      if (!c.sourceIds.length) problems.push('card ' + c.id + ' has no source anchor');
+      /* A card with a source-quote block MUST have a resolvable source; a card
+         without one (created as an independent note) legitimately has none. The
+         earlier blanket rule contradicted createIndependentCard. */
+      var hasQuote = false;
+      c.blockOrder.forEach(function (blockId) {
+        var block = byId(vault.blocks, blockId);
+        if (block && block.role === 'source_quote') hasQuote = true;
+      });
+      if (hasQuote && !c.sourceIds.length) {
+        problems.push('card ' + c.id + ' quotes a source but has no source anchor');
+      }
       c.sourceIds.forEach(function (anchorId) {
         if (!byId(vault.sourceAnchors, anchorId)) problems.push('card ' + c.id + ' dangling anchor ' + anchorId);
       });
@@ -248,6 +253,13 @@
       if (!byId(vault.blocks, r.blockId)) problems.push('blockRevision ' + r.id + ' orphaned');
       if (r.previousRevisionId && !byId(vault.blockRevisions, r.previousRevisionId)) {
         problems.push('blockRevision ' + r.id + ' previous revision unresolved');
+      }
+      /* Payload shape is checked per kind. An EMPTY string is valid content; a
+         MISSING field is a malformed revision that must never reach a view. */
+      if (!r.payload || typeof r.payload !== 'object') {
+        problems.push('blockRevision ' + r.id + ' has no payload object');
+      } else if (r.kind === 'text' && typeof r.payload.text !== 'string') {
+        problems.push('blockRevision ' + r.id + ' is a text block without a text field');
       }
     });
 

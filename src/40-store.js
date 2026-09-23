@@ -89,10 +89,44 @@
     return {
       backendKind: backend.kind,
       describe: backend.describe,
+      raw: function () { return backend.read(); },
+      rawBytes: function () {
+        var v = backend.read();
+        return v === null || v === undefined ? 0 : String(v).length;
+      },
 
+      /* Deliberately returns a DISCRIMINATED outcome instead of `null` for every
+         problem. Collapsing "nothing stored yet" into "stored value is damaged"
+         made the app overwrite a corrupted vault with a fresh demo one, which is
+         the one thing a store must never lead a caller to do. */
       load: function () {
         var raw = backend.read();
-        if (raw === null || raw === undefined) return null;
+        if (raw === null || raw === undefined || raw === '') {
+          return { status: 'EMPTY', vault: null, state: null, commitSeq: 0 };
+        }
+        try {
+          var doc = decode(raw);
+          seq = doc.commitSeq || 0;
+          lastError = null;
+          return { status: 'LOADED', vault: doc.vault, state: doc.state, commitSeq: doc.commitSeq };
+        } catch (e) {
+          lastError = e;
+          return {
+            status: 'CORRUPT',
+            code: e.code || 'STORE_CORRUPT',
+            message: e.message,
+            rawBytes: String(raw).length,
+            vault: null,
+            state: null,
+            commitSeq: 0
+          };
+        }
+      },
+
+      /* Throws on damage; used where a caller genuinely wants an exception. */
+      loadOrThrow: function () {
+        var raw = backend.read();
+        if (raw === null || raw === undefined || raw === '') return null;
         var doc = decode(raw);
         seq = doc.commitSeq || 0;
         return doc;
@@ -117,7 +151,8 @@
 
       commitSeq: function () { return seq; },
       lastError: function () { return lastError; },
-      clear: function () { backend.clear(); seq = 0; },
+      lastErrorCode: function () { return lastError ? (lastError.code || 'STORE_ERROR') : null; },
+      clear: function () { backend.clear(); seq = 0; lastError = null; },
       armFault: function (f) {
         fault = f;
         faultState = f ? { remaining: f.times === undefined ? 1 : f.times } : null;

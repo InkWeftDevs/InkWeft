@@ -158,6 +158,23 @@ function check(name, fn) {
   try { fn(); } catch (e) { problems.push(name + ': ' + (e && e.message)); }
 }
 
+/* Each UI check must start from a known store. Two resets are needed:
+     - the stored value, or checks inherit each other's vaults;
+     - the listener flags, so the DOM really re-binds against the new app.
+   A real page reload resets both; the mock has to do it explicitly. */
+function freshApp() {
+  sandbox.localStorage.removeItem('inkweft.s1.vault');
+  for (const node of Object.values(registry)) {
+    node._listeners = {};
+    node._inkweftBound = false;
+  }
+  documentMock._listeners = {};
+  documentMock._inkweftBound = false;
+  const app = sandbox.IW.start();
+  registry['comment'].value = '';
+  return app;
+}
+
 const context = vm.createContext(sandbox);
 check('inline script evaluates', () => {
   new vm.Script(script, { filename: 'index.inline.js' }).runInContext(context);
@@ -192,7 +209,9 @@ if (app) {
     }
   });
   check('the vault was persisted', () => {
-    if (app.store.commitSeq() !== 1) throw new Error('commitSeq = ' + app.store.commitSeq());
+    /* the seed plan and the follow-up commands each commit through the hook */
+    if (app.store.commitSeq() < 1) throw new Error('commitSeq = ' + app.store.commitSeq());
+    if (app.store.load().status !== 'LOADED') throw new Error('nothing durable to reload');
   });
   check('the document panel rendered real offsets', () => {
     const html2 = registry['doc-body'].innerHTML;
@@ -403,12 +422,105 @@ if (reopened) {
     const parsed = JSON.parse(good);
     parsed.payload = parsed.payload.slice(0, Math.floor(parsed.payload.length / 2));
     sandbox.localStorage.setItem('inkweft.s1.vault', JSON.stringify(parsed));
+    const damagedBytes = sandbox.localStorage.getItem('inkweft.s1.vault');
     const third = sandbox.IW.start();
     const log = third.log.map((l) => l.text).join('\n');
-    if (log.indexOf('stored vault refused') < 0) {
-      throw new Error('a torn stored value was accepted at boot: ' + log.slice(0, 120));
+    if (third.loadState !== 'CORRUPT') {
+      throw new Error('a torn stored value was not reported as CORRUPT: ' + third.loadState);
     }
+    if (!third.readOnly) throw new Error('recovery mode was not entered');
+    if (log.indexOf('read-only recovery') < 0) {
+      throw new Error('the boot log does not mention recovery: ' + log.slice(0, 160));
+    }
+    /* the whole point: a damaged value must not be silently overwritten */
+    if (sandbox.localStorage.getItem('inkweft.s1.vault') !== damagedBytes) {
+      throw new Error('the damaged value was overwritten during recovery boot');
+    }
+    const seqBefore = third.store.commitSeq();
+    /* the persist hook is the single gate every write passes through; in
+       recovery mode it must refuse rather than store anything */
+    let code = null;
+    try { third.persistHook()({ vault: third.engine.getVault(), state: third.engine.getState(), receipt: null }); }
+    catch (e) { code = e.code; }
+    if (code !== 'STORE_READ_ONLY') {
+      throw new Error('recovery mode did not refuse a write, code=' + code);
+    }
+    if (third.store.commitSeq() !== seqBefore) throw new Error('recovery mode wrote to the store');
+    if (sandbox.localStorage.getItem('inkweft.s1.vault') !== damagedBytes) {
+      throw new Error('recovery mode mutated the damaged value');
+    }
+    /* put a healthy value back so the remaining checks have a vault to work with */
     sandbox.localStorage.setItem('inkweft.s1.vault', good);
+    const healed = sandbox.IW.start();
+    if (healed.loadState !== 'LOADED') throw new Error('the healthy value did not load again: ' + healed.loadState);
+  });
+  check('every command id carries the session so a reopen cannot collide', () => {
+    const a = sandbox.IW.start();
+    const idA = a.header('comment').commandId;
+    const b = sandbox.IW.start();
+    const idB = b.header('comment').commandId;
+    if (idA === idB) throw new Error('two sessions produced the same commandId: ' + idA);
+    if (!/^ui-s\d+-[a-z0-9]+-\d+-comment-\d+$/.test(idA)) {
+      throw new Error('unexpected command id shape: ' + idA);
+    }
+    /* and one session never repeats itself */
+    const first = b.header('comment').commandId;
+    const second = b.header('comment').commandId;
+    if (first === second) throw new Error('a session reissued its own commandId');
+  });
+  check('an empty note reads back empty after a save (not the previous text)', () => {
+    const a = freshApp();
+    const cardId = a.selectedCardId;
+    if (!cardId) throw new Error('no card to edit — the vault was not seeded');
+    registry['comment'].value = '要被删掉的备注';
+    registry['btn-save-comment'].dispatch('click');
+    const mid = sandbox.IW.readCardHead(a.engine.getVault(), cardId)
+      .blocks.find((b) => b.role === 'comment').payload.text;
+    if (mid !== '要被删掉的备注') {
+      throw new Error('the first save did not land: ' + JSON.stringify(mid) +
+        ' | allBlocks=' + JSON.stringify(sandbox.IW.readCardHead(a.engine.getVault(), cardId)
+          .blocks.map((b) => b.role + '=' + (b.payload.text || '').slice(0, 12))) +
+        ' | log: ' + a.log.slice(0, 4).map((l) => l.kind + ':' + l.text).join(' || '));
+    }
+    registry['comment'].value = '';
+    registry['btn-save-comment'].dispatch('click');
+    const head = sandbox.IW.readCardHead(a.engine.getVault(), cardId);
+    const text = head.blocks.find((b) => b.role === 'comment').payload.text;
+    if (text !== '') {
+      throw new Error('the view substituted an older revision: ' + JSON.stringify(text));
+    }
+  });
+  check('the highlighter mode actually draws the mark it counted', () => {
+    const a = sandbox.IW.start();
+    const before = (registry['doc-body'].innerHTML.match(/data-kind="highlighter"/g) || []).length;
+    a.setMarkMode('highlighter');
+    const pageIds = a.surface.listPageIds();
+    const lines = pageIds.flatMap((id) => a.surface.offsetsToLines(id, 0, 1e9));
+    const t = lines[1];
+    a.applySelection(t.startOffset, t.endOffset, t.text);
+    const after = (registry['doc-body'].innerHTML.match(/data-kind="highlighter"/g) || []).length;
+    if (after !== before + 1) {
+      throw new Error(`the count changed but the mark was not drawn (${before} -> ${after})`);
+    }
+  });
+  check('two consecutive undos compensate instead of failing the second time', () => {
+    const a = freshApp();
+    const cardId = a.selectedCardId;
+    registry['comment'].value = '第一版';
+    registry['btn-save-comment'].dispatch('click');
+    registry['comment'].value = '第二版';
+    registry['btn-save-comment'].dispatch('click');
+    const revisionsBefore = a.engine.getVault().cardRevisions.length;
+    registry['btn-undo'].dispatch('click');
+    registry['btn-undo'].dispatch('click');
+    const text = sandbox.IW.readCardHead(a.engine.getVault(), cardId)
+      .blocks.find((b) => b.role === 'comment').payload.text;
+    if (text !== '') throw new Error('two undos did not get back to the empty note: ' + JSON.stringify(text));
+    if (a.engine.getVault().cardRevisions.length <= revisionsBefore) {
+      throw new Error('undo removed revisions instead of appending compensations');
+    }
+    const log = a.log.map((l) => l.text).join('\n');
+    if (log.indexOf('UNDO_NOT_LATEST') >= 0) throw new Error('the second undo hit UNDO_NOT_LATEST again');
   });
 }
 

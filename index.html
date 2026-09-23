@@ -112,6 +112,11 @@ h1, h2, h3, h4 { line-height: 1.35; }
   border: 1px solid rgba(163,52,31,.4); background: #fdeceb; color: #6d2718;
   border-radius: 10px; padding: 9px 14px; margin-bottom: 12px; font-size: 13px;
 }
+.conflict-bar.recovery {
+  border-color: rgba(163,98,26,.45); background: var(--warn-bg); color: #5c421c;
+}
+.line { position: relative; }
+.line-body { display: inline; }
 
 /* ----------------------------------------------------------------- grid */
 .grid {
@@ -147,8 +152,7 @@ h1, h2, h3, h4 { line-height: 1.35; }
 .line {
   margin: 0 0 10px; line-height: 1.9; font-size: 15.5px;
   white-space: pre-wrap; word-break: break-word;
-}
-.page-label {
+}.page-label {
   position: absolute; right: 10px; bottom: 6px; font-size: 11px; color: #a9a294;
   font-family: var(--mono);
 }
@@ -158,7 +162,14 @@ h1, h2, h3, h4 { line-height: 1.35; }
   cursor: pointer; transition: background .2s, box-shadow .2s;
 }
 .mark:hover { background: rgba(214,178,74,.55); }
-.mark.flash { background: rgba(47,111,79,.28); box-shadow: 0 0 0 2px rgba(47,111,79,.35); }
+.mark.flash, .mark.selected { background: rgba(47,111,79,.28); box-shadow: 0 0 0 2px rgba(47,111,79,.35); }
+/* a plain highlighter has no card: it is drawn in a different hue so the mode is
+   visibly distinct from "this created knowledge" */
+.mark[data-kind="highlighter"] {
+  background: rgba(120, 160, 200, .28);
+  border-bottom-color: rgba(70, 110, 150, .55);
+}
+.mark[data-kind="highlighter"]:hover { background: rgba(120, 160, 200, .45); }
 
 /* ----------------------------------------------------------------- card */
 .card-panel .panel-body { max-height: 70vh; overflow: auto; }
@@ -265,6 +276,12 @@ footer.foot code { background: #f1eee4; padding: 1px 5px; border-radius: 4px; }<
     <button id="btn-resolve" class="btn">重新读取并保存</button>
   </div>
 
+  <div class="conflict-bar recovery" id="recovery-bar">
+    <span class="tag warn">只读恢复模式</span>
+    <span id="recovery-text"></span>
+    <button id="btn-reset" class="btn">丢弃并重新播种</button>
+  </div>
+
   <main class="grid">
 
     <section class="panel doc-panel">
@@ -332,9 +349,8 @@ footer.foot code { background: #f1eee4; padding: 1px 5px; border-radius: 4px; }<
         <div class="dev-row">
           <label class="mode"><input type="checkbox" id="chk-fault"> 下一次写入注入失败</label>
           <button id="btn-epoch" class="btn">推进 vault epoch</button>
-          <button id="btn-reset" class="btn">重建资料库</button>
-        </div>
-        <p class="tiny">
+          <span class="tiny">重建资料库入口在写失败/损坏时的提示条上（避免误触）。</span>
+        </div>        <p class="tiny">
           注入失败只影响持久层：命令在内存里已应用，但 durable 值不变、commitSeq 不前进。
           重开时旧的 commandId 仍可查到回执 —— 先查原命令，不猜结果。
         </p>
@@ -604,38 +620,33 @@ footer.foot code { background: #f1eee4; padding: 1px 5px; border-radius: 4px; }<
   }
 
   /* Resolve a card revision into readable content. Old revisions keep resolving
-     to the block versions that were current when they were committed. */
+     to the block versions that were current when they were committed.
+
+     Exactness matters more than convenience here: an EMPTY text is a legitimate
+     user edit ("I deleted my note"), so this must never fall back to an older
+     revision. Only a genuinely malformed revision is rejected, loudly. */
   function readCardRevision(vault, cardRevisionId) {
     var rev = byId(vault.cardRevisions, cardRevisionId);
     if (!rev) fail('CARD_REVISION_UNRESOLVED', 'no card revision ' + cardRevisionId);
     var blocks = rev.blockSnapshotIds.map(function (snapshotId) {
       var blockRev = byId(vault.blockRevisions, snapshotId);
       if (!blockRev) fail('BLOCK_REVISION_UNRESOLVED', 'snapshot ' + snapshotId + ' is missing');
-      /* An empty payload would make a view render a blank block and look like data
-         loss, so fall back to the newest revision of the same block that has
-         content. The snapshot id is still reported, so nothing is hidden. */
-      var payload = blockRev.payload;
-      var fallbackFrom = null;
-      if (!payload || payload.text === '' || payload.text === undefined) {
-        var cursor = blockRev;
-        var guard = 0;
-        while (cursor) {
-          if (cursor.payload && cursor.payload.text) {
-            payload = cursor.payload;
-            fallbackFrom = cursor.id;
-            break;
-          }
-          cursor = cursor.previousRevisionId ? byId(vault.blockRevisions, cursor.previousRevisionId) : null;
-          if (++guard > 1000) break;
-        }
+      if (!blockRev.payload || typeof blockRev.payload !== 'object') {
+        fail('BLOCK_PAYLOAD_MALFORMED', 'block revision ' + blockRev.id + ' has no payload object', {
+          blockRevisionId: blockRev.id, blockId: blockRev.blockId
+        });
+      }
+      if (blockRev.kind === 'text' && typeof blockRev.payload.text !== 'string') {
+        fail('BLOCK_PAYLOAD_MALFORMED',
+          'text block revision ' + blockRev.id + ' has no text field; refusing to substitute an older revision',
+          { blockRevisionId: blockRev.id, blockId: blockRev.blockId });
       }
       return {
         blockId: blockRev.blockId,
         blockRevisionId: blockRev.id,
         role: blockRev.role,
         kind: blockRev.kind,
-        payload: clone(payload || {}),
-        payloadFallbackFrom: fallbackFrom,
+        payload: clone(blockRev.payload),
         sourceAnchorId: blockRev.sourceAnchorId
       };
     });
@@ -740,7 +751,17 @@ footer.foot code { background: #f1eee4; padding: 1px 5px; border-radius: 4px; }<
           problems.push('block ' + blockId + ' head revision unresolved');
         }
       });
-      if (!c.sourceIds.length) problems.push('card ' + c.id + ' has no source anchor');
+      /* A card with a source-quote block MUST have a resolvable source; a card
+         without one (created as an independent note) legitimately has none. The
+         earlier blanket rule contradicted createIndependentCard. */
+      var hasQuote = false;
+      c.blockOrder.forEach(function (blockId) {
+        var block = byId(vault.blocks, blockId);
+        if (block && block.role === 'source_quote') hasQuote = true;
+      });
+      if (hasQuote && !c.sourceIds.length) {
+        problems.push('card ' + c.id + ' quotes a source but has no source anchor');
+      }
       c.sourceIds.forEach(function (anchorId) {
         if (!byId(vault.sourceAnchors, anchorId)) problems.push('card ' + c.id + ' dangling anchor ' + anchorId);
       });
@@ -751,6 +772,13 @@ footer.foot code { background: #f1eee4; padding: 1px 5px; border-radius: 4px; }<
       if (!byId(vault.blocks, r.blockId)) problems.push('blockRevision ' + r.id + ' orphaned');
       if (r.previousRevisionId && !byId(vault.blockRevisions, r.previousRevisionId)) {
         problems.push('blockRevision ' + r.id + ' previous revision unresolved');
+      }
+      /* Payload shape is checked per kind. An EMPTY string is valid content; a
+         MISSING field is a malformed revision that must never reach a view. */
+      if (!r.payload || typeof r.payload !== 'object') {
+        problems.push('blockRevision ' + r.id + ' has no payload object');
+      } else if (r.kind === 'text' && typeof r.payload.text !== 'string') {
+        problems.push('blockRevision ' + r.id + ' is a text block without a text field');
       }
     });
 
@@ -1385,6 +1413,11 @@ footer.foot code { background: #f1eee4; padding: 1px 5px; border-radius: 4px; }<
          never one oversized rectangle spanning pages (AX03-A02). */
       createCardFromSelection: {
         description: 'Create a knowledge card from a source selection, atomically with its anchor(s) and marker.',
+        /* Compensate by tombstoning the card, not by erasing it: a committed
+           revision must never leave the ledger. */
+        inverse: function (vault, p, result) {
+          return { command: 'trashCard', params: { cardId: result.cardId } };
+        },
         apply: function (vault, ids, p, ts) {
           if (!p.studySetId || !byId(vault.studySets, p.studySetId)) {
             fail('STUDY_SET_REQUIRED', 'a study set is required before creating a card');
@@ -1420,15 +1453,20 @@ footer.foot code { background: #f1eee4; padding: 1px 5px; border-radius: 4px; }<
             sourceIds: card.sourceIds
           }, ts);
 
-          var mark = {
-            id: ids.next(),
-            cardId: card.id,
-            anchorId: built.anchors[0].id,
-            style: 'excerpt-highlight',
-            presentationRevision: 1,
-            createdAt: ts
-          };
-          vault.annotationPlacements.push(mark);
+          /* One marker per page, so every per-page anchor gets an editable
+             placement of its own instead of silently losing the later pages. */
+          var marks = built.anchors.map(function (a) {
+            var mark = {
+              id: ids.next(),
+              cardId: card.id,
+              anchorId: a.id,
+              style: 'excerpt-highlight',
+              presentationRevision: 1,
+              createdAt: ts
+            };
+            vault.annotationPlacements.push(mark);
+            return mark;
+          });
 
           /* Auto-attach / auto-enqueue stay OFF unless the vault asks for them;
              the plain default is "card only". */
@@ -1442,7 +1480,8 @@ footer.foot code { background: #f1eee4; padding: 1px 5px; border-radius: 4px; }<
             cardRevisionId: revision.id,
             anchorId: built.anchors[0].id,
             anchorIds: card.sourceIds.slice(),
-            annotationId: mark.id,
+            annotationId: marks[0].id,
+            annotationIds: marks.map(function (m) { return m.id; }),
             occurrenceId: attached ? attached.id : null,
             quoteBlockId: quoteBlock.id,
             commentBlockId: commentBlock.id
@@ -1452,6 +1491,9 @@ footer.foot code { background: #f1eee4; padding: 1px 5px; border-radius: 4px; }<
 
       createIndependentCard: {
         description: 'Create a card that deliberately has no source anchor yet.',
+        inverse: function (vault, p, result) {
+          return { command: 'trashCard', params: { cardId: result.cardId } };
+        },
         apply: function (vault, ids, p, ts) {
           var card = {
             id: ids.next(), studySetId: p.studySetId, revision: 0, headRevisionId: null,
@@ -1485,6 +1527,25 @@ footer.foot code { background: #f1eee4; padding: 1px 5px; border-radius: 4px; }<
             }
           });
           return blocked;
+        },
+        /* Undo appends a NEW block revision carrying the previous text, so the
+           cleared/edited revision stays resolvable in the ledger. */
+        inverse: function (vault, p, result) {
+          var card = byId(vault.cards, p.cardId);
+          if (!card) return null;
+          var commentBlock = null;
+          card.blockOrder.forEach(function (blockId) {
+            var block = byId(vault.blocks, blockId);
+            if (block && block.role === 'comment') commentBlock = block;
+          });
+          var previousText = commentBlock && byId(vault.blockRevisions, commentBlock.headRevisionId)
+            ? byId(vault.blockRevisions, commentBlock.headRevisionId).payload.text
+            : '';
+          var params = { cardId: p.cardId };
+          if (p.text !== undefined) params.text = previousText;
+          if (p.title !== undefined) params.title = card.title;
+          if (p.tags !== undefined) params.tags = card.tags.slice();
+          return { command: 'patchCard', params: params };
         },
         apply: function (vault, ids, p, ts) {
           var card = byId(vault.cards, p.cardId);
@@ -1534,6 +1595,10 @@ footer.foot code { background: #f1eee4; padding: 1px 5px; border-radius: 4px; }<
 
       attachOccurrence: {
         description: 'Place a card on a mind map as a node; layout only, content untouched.',
+        /* Undo removes only this map position; the card and its content survive. */
+        inverse: function (vault, p, result) {
+          return { command: 'detachOccurrence', params: { occurrenceId: result.occurrenceId } };
+        },
         apply: function (vault, ids, p, ts) {
           var mapId = p.mapId;
           if (!mapId) {
@@ -1579,6 +1644,18 @@ footer.foot code { background: #f1eee4; padding: 1px 5px; border-radius: 4px; }<
 
       moveOccurrence: {
         description: 'Move or resize ONE node. Must not touch card content or other maps (AX02-A03).',
+        inverse: function (vault, p, result) {
+          var node = byId(vault.occurrences, p.occurrenceId);
+          if (!node) return null;
+          var back = { occurrenceId: p.occurrenceId };
+          ['x', 'y', 'width'].forEach(function (key) {
+            if (p[key] !== undefined && node.layoutOverride[key] !== undefined) {
+              back[key] = node.layoutOverride[key];
+            }
+          });
+          if (p.collapsed !== undefined) back.collapsed = node.collapsed;
+          return { command: 'moveOccurrence', params: back };
+        },
         pre: function (vault, p) {
           var node = byId(vault.occurrences, p.occurrenceId);
           if (!node) return { code: 'OCCURRENCE_NOT_FOUND', message: 'no occurrence ' + p.occurrenceId };
@@ -1604,6 +1681,13 @@ footer.foot code { background: #f1eee4; padding: 1px 5px; border-radius: 4px; }<
 
       reparentOccurrence: {
         description: 'Re-parent a node inside one map. Cross-map parents and cycles are refused.',
+        inverse: function (vault, p, result) {
+          var node = byId(vault.occurrences, p.occurrenceId);
+          if (!node) return null;
+          var back = { occurrenceId: p.occurrenceId };
+          back.parentOccurrenceId = node.parentOccurrenceId;
+          return { command: 'reparentOccurrence', params: back };
+        },
         apply: function (vault, ids, p) {
           var node = byId(vault.occurrences, p.occurrenceId);
           if (!node) fail('OCCURRENCE_NOT_FOUND', 'no occurrence ' + p.occurrenceId);
@@ -1754,8 +1838,14 @@ footer.foot code { background: #f1eee4; padding: 1px 5px; border-radius: 4px; }<
         }
       },
 
+      /* A card is never destroyed, only tombstoned. That also makes it the
+         compensating action for every "this card should not exist yet" case, so
+         undo never has to un-publish a committed revision. */
       trashCard: {
         description: 'Move the card to the trash by tombstone; placements and nodes are suspended, not deleted.',
+        inverse: function (vault, p, result) {
+          return { command: 'restoreCard', params: { cardId: p.cardId } };
+        },
         apply: function (vault, ids, p, ts) {
           var card = byId(vault.cards, p.cardId);
           if (!card) fail('CARD_NOT_FOUND', 'no card ' + p.cardId);
@@ -1774,6 +1864,9 @@ footer.foot code { background: #f1eee4; padding: 1px 5px; border-radius: 4px; }<
 
       restoreCard: {
         description: 'Clear the tombstone. Same identity, same history.',
+        inverse: function (vault, p, result) {
+          return { command: 'trashCard', params: { cardId: p.cardId } };
+        },
         apply: function (vault, ids, p) {
           var card = byId(vault.cards, p.cardId);
           if (!card) fail('CARD_NOT_FOUND', 'no card ' + p.cardId);
@@ -2018,6 +2111,12 @@ footer.foot code { background: #f1eee4; padding: 1px 5px; border-radius: 4px; }<
       COMMAND_HEADER.forEach(function (key) {
         if (!h[key]) fail('MALFORMED_HEADER', 'command header is missing ' + key, { command: commandType });
       });
+      /* The header must name THIS vault. Digging the digest out of the current
+         vault while accepting any vaultId string would let a command written for
+         one library be replayed against another. */
+      if (String(h.vaultId) !== vault.vaultId) {
+        fail('VAULT_ID_MISMATCH', 'command targets vault ' + h.vaultId + ' but this vault is ' + vault.vaultId);
+      }
       var command = commands[commandType];
       if (!command) fail('UNKNOWN_COMMAND', 'no such command: ' + commandType);
 
@@ -2034,9 +2133,12 @@ footer.foot code { background: #f1eee4; padding: 1px 5px; border-radius: 4px; }<
         if (early) fail(early.code, early.message, early.details);
       }
 
-      /* 2. Digest the semantic payload. Refreshable secrets, retry timestamps and
-            trace ids are deliberately excluded, so a retry after token rotation
-            still matches while a changed payload never does. */
+      /* 2. Digest the semantic payload. A capability handle authorises an
+            operation; it is not part of what the operation MEANS. So it stays out
+            of the digest entirely — deriving it (even as a digest) would make a
+            token rotation look like a different command. For audit, the receipt
+            keeps only a fingerprint, never the raw handle: a refreshable secret
+            must not be written into stored history. */
       var digestInput = {
         commandType: commandType,
         vaultId: vault.vaultId,
@@ -2046,9 +2148,8 @@ footer.foot code { background: #f1eee4; padding: 1px 5px; border-radius: 4px; }<
         epoch: (h.expectedVersions && h.expectedVersions.epoch !== undefined)
           ? h.expectedVersions.epoch : vault.epoch
       };
+      var capabilityFingerprint = digest({ handle: String(h.capabilityHandle) });
       var semantic = digest(digestInput);
-      var capabilityDigest = digest({ handle: String(h.capabilityHandle).replace(/[0-9]{4}$/, '****') });
-      semantic = digest({ semantic: semantic, capability: capabilityDigest });
 
       /* 3. Replay or refuse. An existing receipt is authoritative. */
       var existing = receiptFor(h.commandId);
@@ -2074,7 +2175,6 @@ footer.foot code { background: #f1eee4; padding: 1px 5px; border-radius: 4px; }<
             If a minted id collides with one already in the vault (only possible
             after a reload), advance the generator and apply again — never repair
             the vault by hand, or the transaction guarantee becomes a lie. */
-      var preImage = clone(vault);
       var draft, result, problems;
       var attempts = 0;
       for (;;) {
@@ -2082,7 +2182,7 @@ footer.foot code { background: #f1eee4; padding: 1px 5px; border-radius: 4px; }<
         try {
           result = command.apply(draft, ids, params, clock.iso());
         } catch (err) {
-          /* Nothing was published: the vault is byte-identical to the pre-image. */
+          /* Nothing was published: the vault is byte-identical to before. */
           throw err;
         }
         problems = IW.checkInvariants(draft);
@@ -2102,17 +2202,24 @@ footer.foot code { background: #f1eee4; padding: 1px 5px; border-radius: 4px; }<
         });
       }
 
+      /* The compensating action is computed from the PRE-image, so it describes
+         how to undo this command without ever deleting a committed revision. */
+      var inverse = null;
+      if (typeof command.inverse === 'function') {
+        try { inverse = command.inverse(vault, params, result); } catch (e) { inverse = null; }
+      }
+
       var receipt = {
         commandId: h.commandId,
         commandType: commandType,
         digest: semantic,
         actorId: h.actorId,
-        capabilityHandle: String(h.capabilityHandle),
+        capabilityFingerprint: capabilityFingerprint,
         at: clock.iso(),
         result: result,
-        preImage: preImage,
+        inverse: inverse,
         receiptRevision: state.sequence + 1,
-        undoState: 'AVAILABLE'
+        undoState: inverse ? 'AVAILABLE' : 'NOT_REVERSIBLE'
       };
 
       /* 6. Persist before acknowledging. A failing store must leave no receipt. */
@@ -2129,49 +2236,19 @@ footer.foot code { background: #f1eee4; padding: 1px 5px; border-radius: 4px; }<
       return { status: 'ACK', code: 'COMMITTED', replayed: false, receipt: clone(receipt) };
     }
 
-    function undo(header) {
-      COMMAND_HEADER.forEach(function (key) {
-        if (!header || !header[key]) fail('MALFORMED_HEADER', 'undo needs a full command header');
-      });
-      var targetId = header.targetCommandId;
-      if (!targetId) fail('UNDO_TARGET_REQUIRED', 'undo needs targetCommandId');
-      var target = receiptFor(targetId);
-      if (!target) fail('UNDO_TARGET_NOT_FOUND', 'no receipt ' + targetId);
-      if (state.undone[targetId]) fail('ALREADY_UNDONE', 'that command was already undone');
-      /* Only the newest reversible command may be undone, so an old restore can
-         never overwrite newer work from another view. */
-      var live = state.receipts.filter(function (r) { return !state.undone[r.commandId]; });
-      var newest = live[live.length - 1];
-      if (!newest || newest.commandId !== targetId) {
-        fail('UNDO_NOT_LATEST', 'only the most recent command can be undone in this sample', {
-          newest: newest ? newest.commandId : null
-        });
+    /* The newest receipt that can still be compensated. `undo` receipts are NOT
+       candidates, and neither is anything already undone — forgetting that made
+       a second undo fail with UNDO_NOT_LATEST because undo-B itself looked like
+       the newest live command. */
+    function newestUndoCandidate() {
+      for (var i = state.receipts.length - 1; i >= 0; i--) {
+        var r = state.receipts[i];
+        if (r.commandType === 'undo') continue;
+        if (state.undone[r.commandId]) continue;
+        if (!r.inverse) continue;
+        return r;
       }
-      var restored = clone(target.preImage);
-      var preImage = clone(vault);
-      var receipt = {
-        commandId: header.commandId,
-        commandType: 'undo',
-        digest: digest({ commandType: 'undo', target: targetId, epoch: vault.epoch }),
-        actorId: header.actorId,
-        capabilityHandle: String(header.capabilityHandle),
-        at: clock.iso(),
-        result: { undoneCommandId: targetId, invertedCommandType: target.commandType },
-        preImage: preImage,
-        receiptRevision: state.sequence + 1,
-        undoState: 'AVAILABLE'
-      };
-      var nextState = {
-        receipts: state.receipts.concat([receipt]),
-        undone: clone(state.undone),
-        sequence: state.sequence + 1
-      };
-      nextState.undone[targetId] = receipt.commandId;
-      if (persistHook) persistHook({ vault: restored, state: nextState, receipt: receipt });
-      vault = restored;
-      state = nextState;
-      notify({ type: 'undo', receipt: receipt, vault: vault });
-      return { status: 'ACK', code: 'UNDONE', receipt: clone(receipt), undoneCommandId: targetId };
+      return null;
     }
 
     function history() {
@@ -2181,11 +2258,145 @@ footer.foot code { background: #f1eee4; padding: 1px 5px; border-radius: 4px; }<
           commandType: r.commandType,
           at: r.at,
           digest: r.digest,
+          compensated: !!state.undone[r.commandId],
           undone: !!state.undone[r.commandId] || r.commandType === 'undo',
           result: clone(r.result),
-          undoable: !state.undone[r.commandId] && r.commandType !== 'undo'
+          inverse: r.inverse ? clone(r.inverse) : null,
+          undoable: !state.undone[r.commandId] && r.commandType !== 'undo' && !!r.inverse
         };
       });
+    }
+
+    /* Undo runs through the SAME pipeline as any other write: header validation,
+       vault identity, live authorization, epoch/expected-version checks, digest,
+       idempotent replay, invariant closure, and persist-before-acknowledge.
+       It compensates by APPLYING THE INVERSE, so no committed revision is
+       deleted and existing history stays resolvable. */
+    function undo(header) {
+      var h = header || {};
+      COMMAND_HEADER.forEach(function (key) {
+        if (!h[key]) fail('MALFORMED_HEADER', 'undo needs a full command header');
+      });
+      if (String(h.vaultId) !== vault.vaultId) {
+        fail('VAULT_ID_MISMATCH', 'undo targets vault ' + h.vaultId + ' but this vault is ' + vault.vaultId);
+      }
+      var targetId = h.targetCommandId;
+      if (!targetId) fail('UNDO_TARGET_REQUIRED', 'undo needs targetCommandId');
+
+      /* Epoch and expected versions are checked in the undo path too, not only
+         inside run(): a session holding a replaced vault must not be able to
+         compensate anything in the new one. */
+      var undoPre = checkExpectedVersions(vault, h.expectedVersions);
+      if (undoPre) fail(undoPre.code, undoPre.message, undoPre.details);
+      if (h.expectedVersions && h.expectedVersions.epoch !== undefined &&
+          h.expectedVersions.epoch !== vault.epoch) {
+        fail('VAULT_EPOCH_MISMATCH', 'undo belongs to vault epoch ' +
+          h.expectedVersions.epoch + ' but the vault is at ' + vault.epoch);
+      }
+
+      /* The undo digest deliberately covers target + expected versions only; the
+         capability handle is excluded here for the same reason as in run(). */
+      var semantic = digest({
+        commandType: 'undo',
+        vaultId: vault.vaultId,
+        actorId: h.actorId,
+        targetCommandId: targetId,
+        expectedVersions: h.expectedVersions || null
+      });
+      var capabilityFingerprint2 = digest({ handle: String(h.capabilityHandle) });
+
+      var existing = receiptFor(h.commandId);
+      if (existing) {
+        if (existing.digest === semantic) {
+          return {
+            status: 'REPLAYED', code: 'RECEIPT_REPLAYED', replayed: true,
+            receipt: clone(existing),
+            message: 'same undo commandId and payload: original receipt returned'
+          };
+        }
+        fail('COMMAND_ID_REUSE', 'undo commandId ' + h.commandId + ' was used with a different payload');
+      }
+
+      var target = receiptFor(targetId);
+      if (!target) fail('UNDO_TARGET_NOT_FOUND', 'no receipt ' + targetId);
+      if (state.undone[targetId]) fail('ALREADY_UNDONE', 'that command was already compensated');
+      if (!target.inverse) {
+        fail('NOT_REVERSIBLE', target.commandType + ' has no compensating action in this sample', {
+          commandType: target.commandType
+        });
+      }
+      var newest = newestUndoCandidate();
+      if (!newest || newest.commandId !== targetId) {
+        fail('UNDO_NOT_LATEST', 'only the most recent compensatable command can be undone in this sample', {
+          newest: newest ? newest.commandId : null
+        });
+      }
+
+      /* The inverse is a normal command, so its preconditions, authorization and
+         closure checks all apply. */
+      var inverseCommand = commands[target.inverse.command];
+      if (!inverseCommand) fail('UNKNOWN_INVERSE', 'inverse command is not defined: ' + target.inverse.command);
+      var authError = authFor(inverseCommand, target.inverse.params);
+      if (authError) fail(authError.code, authError.message);
+      if (inverseCommand.pre) {
+        var early = inverseCommand.pre(vault, target.inverse.params);
+        if (early) fail(early.code, early.message, early.details);
+      }
+      var preError = checkExpectedVersions(vault, h.expectedVersions);
+      if (preError) fail(preError.code, preError.message, preError.details);
+
+      var draft = clone(vault);
+      var result, problems;
+      var attempts = 0;
+      for (;;) {
+        draft = clone(vault);
+        result = inverseCommand.apply(draft, ids, target.inverse.params, clock.iso());
+        problems = IW.checkInvariants(draft);
+        if (problems.length) {
+          var idProblems = problems.filter(function (p) { return /duplicate id/.test(p); });
+          if (idProblems.length && ++attempts < 8) {
+            if (advancePastCollisions(ids, collectIds(draft))) continue;
+          }
+        }
+        break;
+      }
+      if (problems.length) {
+        fail('INVARIANT_VIOLATION', 'the compensating command would leave an incomplete closure', {
+          problems: problems, targetCommandId: targetId
+        });
+      }
+
+      var receipt = {
+        commandId: h.commandId,
+        commandType: 'undo',
+        digest: semantic,
+        actorId: h.actorId,
+        capabilityFingerprint: capabilityFingerprint2,
+        at: clock.iso(),
+        result: {
+          undoneCommandId: targetId,
+          invertedCommandType: target.commandType,
+          compensationCommand: target.inverse.command,
+          strategy: 'APPEND_COMPENSATION'
+        },
+        inverse: null,
+        receiptRevision: state.sequence + 1,
+        undoState: 'NOT_REVERSIBLE'
+      };
+      var nextState = {
+        receipts: state.receipts.concat([receipt]),
+        undone: clone(state.undone),
+        sequence: state.sequence + 1
+      };
+      nextState.undone[targetId] = receipt.commandId;
+      if (persistHook) persistHook({ vault: draft, state: nextState, receipt: receipt });
+      vault = draft;
+      state = nextState;
+      notify({ type: 'undo', receipt: receipt, vault: vault });
+      return {
+        status: 'ACK', code: 'UNDONE', receipt: clone(receipt),
+        undoneCommandId: targetId, compensationCommand: target.inverse.command
+      };
     }
 
     function read(fn) { return fn({ vault: vault, state: state, grants: grants }); }
@@ -2315,10 +2526,44 @@ footer.foot code { background: #f1eee4; padding: 1px 5px; border-radius: 4px; }<
     return {
       backendKind: backend.kind,
       describe: backend.describe,
+      raw: function () { return backend.read(); },
+      rawBytes: function () {
+        var v = backend.read();
+        return v === null || v === undefined ? 0 : String(v).length;
+      },
 
+      /* Deliberately returns a DISCRIMINATED outcome instead of `null` for every
+         problem. Collapsing "nothing stored yet" into "stored value is damaged"
+         made the app overwrite a corrupted vault with a fresh demo one, which is
+         the one thing a store must never lead a caller to do. */
       load: function () {
         var raw = backend.read();
-        if (raw === null || raw === undefined) return null;
+        if (raw === null || raw === undefined || raw === '') {
+          return { status: 'EMPTY', vault: null, state: null, commitSeq: 0 };
+        }
+        try {
+          var doc = decode(raw);
+          seq = doc.commitSeq || 0;
+          lastError = null;
+          return { status: 'LOADED', vault: doc.vault, state: doc.state, commitSeq: doc.commitSeq };
+        } catch (e) {
+          lastError = e;
+          return {
+            status: 'CORRUPT',
+            code: e.code || 'STORE_CORRUPT',
+            message: e.message,
+            rawBytes: String(raw).length,
+            vault: null,
+            state: null,
+            commitSeq: 0
+          };
+        }
+      },
+
+      /* Throws on damage; used where a caller genuinely wants an exception. */
+      loadOrThrow: function () {
+        var raw = backend.read();
+        if (raw === null || raw === undefined || raw === '') return null;
         var doc = decode(raw);
         seq = doc.commitSeq || 0;
         return doc;
@@ -2343,7 +2588,8 @@ footer.foot code { background: #f1eee4; padding: 1px 5px; border-radius: 4px; }<
 
       commitSeq: function () { return seq; },
       lastError: function () { return lastError; },
-      clear: function () { backend.clear(); seq = 0; },
+      lastErrorCode: function () { return lastError ? (lastError.code || 'STORE_ERROR') : null; },
+      clear: function () { backend.clear(); seq = 0; lastError = null; },
       armFault: function (f) {
         fault = f;
         faultState = f ? { remaining: f.times === undefined ? 1 : f.times } : null;
@@ -2440,12 +2686,15 @@ footer.foot code { background: #f1eee4; padding: 1px 5px; border-radius: 4px; }<
         documentVersions: vault.documentVersions.length
       },
       assets: assets,
-      /* History travels so an isolated restore can still resolve old revisions. */
+      /* History travels so an isolated restore can still resolve old revisions.
+         `inverse` travels instead of a whole pre-image: the compensation is a
+         small command, not a copy of the vault. */
       history: state ? {
         receipts: (state.receipts || []).map(function (r) {
           return {
             commandId: r.commandId, commandType: r.commandType, digest: r.digest,
-            at: r.at, receiptRevision: r.receiptRevision, result: clone(r.result)
+            at: r.at, receiptRevision: r.receiptRevision, result: clone(r.result),
+            inverse: r.inverse ? clone(r.inverse) : null
           };
         }),
         undone: clone(state.undone || {})
@@ -2578,18 +2827,26 @@ footer.foot code { background: #f1eee4; padding: 1px 5px; border-radius: 4px; }<
     var problems = IW.checkInvariants(vault);
     check('invariants', problems.length === 0, 'restored vault passes invariant checks: ' + (problems.join('; ') || 'none'));
 
-    /* Rebuild the engine state from the historical receipts that came along. */
+    /* Rebuild the engine state from the historical receipts that came along.
+       Undo is available again after a restore only when every live receipt still
+       carries a usable inverse; otherwise it is reported as unavailable rather
+       than silently presenting a broken button. */
+    var restoredReceipts = (pkg.history && pkg.history.receipts ? pkg.history.receipts : []).map(function (r) {
+      return {
+        commandId: r.commandId, commandType: r.commandType, digest: r.digest, at: r.at,
+        actorId: '(restored)', capabilityFingerprint: '(restored)',
+        result: r.result, inverse: r.inverse ? clone(r.inverse) : null,
+        receiptRevision: r.receiptRevision,
+        undoState: r.inverse ? 'AVAILABLE' : 'NOT_REVERSIBLE'
+      };
+    });
+    var restorableUndo = restoredReceipts.filter(function (r) {
+      return r.inverse && !(r.commandType === 'undo');
+    }).length > 0;
     var state = {
-      receipts: (pkg.history && pkg.history.receipts ? pkg.history.receipts : []).map(function (r) {
-        return {
-          commandId: r.commandId, commandType: r.commandType, digest: r.digest, at: r.at,
-          actorId: '(restored)', capabilityHandle: '(restored)',
-          result: r.result, preImage: null, receiptRevision: r.receiptRevision,
-          undoState: 'UNAVAILABLE_AFTER_RESTORE'
-        };
-      }),
+      receipts: restoredReceipts,
       undone: clone((pkg.history && pkg.history.undone) || {}),
-      sequence: pkg.history && pkg.history.receipts ? pkg.history.receipts.length : 0
+      sequence: restoredReceipts.length
     };
 
     report.restored = {
@@ -2601,13 +2858,15 @@ footer.foot code { background: #f1eee4; padding: 1px 5px; border-radius: 4px; }<
       occurrences: vault.occurrences.length,
       reviewItems: vault.reviewItems.length,
       snapshotRefs: snapshotRefs,
-      undoAvailableAfterRestore: false
+      undoAvailableAfterRestore: restorableUndo
     };
-    report.warnings.push({
-      code: 'UNDO_UNAVAILABLE_AFTER_RESTORE',
-      detail: 'pre-images are not exported, so undo restarts empty after a recovery. ' +
-              'The plan asks for honest capability reporting rather than fake reversibility.'
-    });
+    if (!restorableUndo) {
+      report.warnings.push({
+        code: 'UNDO_UNAVAILABLE_AFTER_RESTORE',
+        detail: 'no live receipt carried a compensating action, so undo restarts empty ' +
+                'after a recovery. Reported rather than presenting a button that cannot work.'
+      });
+    }
     return { vault: vault, state: state, report: report };
   }
 
@@ -2792,6 +3051,10 @@ footer.foot code { background: #f1eee4; padding: 1px 5px; border-radius: 4px; }<
   'use strict';
 
   var el = function (id) { return document.getElementById(id); };
+  /* Monotonic across App instances in this page: two boots inside the same
+     millisecond must still be two different sessions, or they would reissue each
+     other's command ids. */
+  var bootCounter = 0;
   var esc = function (s) {
     return String(s === undefined || s === null ? '' : s)
       .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
@@ -2799,11 +3062,21 @@ footer.foot code { background: #f1eee4; padding: 1px 5px; border-radius: 4px; }<
   };
 
   function App() {
+    bootCounter += 1;
+    this.bootSeq = bootCounter;
     this.corpus = IW.corpus();
     this.store = IW.createStore(IW.browserBackend(), null);
     this.engine = null;
     this.surface = null;
+    this.sessionId = 's0-boot';
+    this.commandCounter = 0;
     this.selectedCardId = null;
+    this.renderedCardId = null;
+    this.commentBinding = null;
+    this.commentFocused = false;
+    this.loadState = 'EMPTY';
+    this.corruptInfo = null;
+    this.readOnly = false;
     this.markMode = 'excerpt';
     this.activeAnchorId = null;
     this.log = [];
@@ -2814,16 +3087,33 @@ footer.foot code { background: #f1eee4; padding: 1px 5px; border-radius: 4px; }<
   /* ------------------------------------------------------------- lifecycle */
   App.prototype.boot = function () {
     var self = this;
-    var saved = null;
-    try { saved = this.store.load(); } catch (e) { self.note('warn', 'stored vault refused: ' + e.code); }
+    var loaded = this.store.load();
 
-    if (saved) {
-      this.engine = IW.createEngine({
-        vaultId: saved.vault.vaultId, vault: saved.vault, state: saved.state
-      });
-      this.note('info', 'restored a persisted vault (commitSeq ' + saved.commitSeq + ')');
-    } else {
+    /* A damaged stored value is NOT an empty store. Treating it as one made the
+       app overwrite a corrupt vault with a fresh demo one, which is the single
+       worst thing a store can lead a caller into. Corrupt => read-only recovery. */
+    this.loadState = loaded.status;      /* EMPTY | LOADED | CORRUPT */
+    this.corruptInfo = loaded.status === 'CORRUPT'
+      ? { code: loaded.code, message: loaded.message, rawBytes: loaded.rawBytes }
+      : null;
+    this.readOnly = false;
+
+    if (loaded.status === 'CORRUPT') {
+      this.readOnly = true;
+      this.sessionId = this.sessionIdFrom(null);
+      this.note('warn', 'stored value refused at load: ' + loaded.code +
+        ' — entering read-only recovery (nothing will be written)');
       this.engine = IW.createEngine({ vaultId: 'inkweft-sample-vault' });
+    } else if (loaded.status === 'LOADED') {
+      this.engine = IW.createEngine({
+        vaultId: loaded.vault.vaultId, vault: loaded.vault, state: loaded.state,
+        persist: this.persistHook()
+      });
+      this.sessionId = this.sessionIdFrom(loaded.state);
+      this.note('info', 'restored a persisted vault (commitSeq ' + loaded.commitSeq + ')');
+    } else {
+      this.engine = IW.createEngine({ vaultId: 'inkweft-sample-vault', persist: this.persistHook() });
+      this.sessionId = this.sessionIdFrom(null);
     }
 
     /* The surface must exist before seeding: the seed card is created through the
@@ -2831,13 +3121,14 @@ footer.foot code { background: #f1eee4; padding: 1px 5px; border-radius: 4px; }<
        through the surface. */
     this.surface = IW.createSurface(IW.originFor(this.corpus.text), this.surfaceCtx());
 
-    if (!saved) {
+    if (loaded.status === 'EMPTY') {
       this.seed();
-      this.persist();
     }
 
     this.selectedCardId = this.engine.getVault().cards.length
       ? this.engine.getVault().cards[0].id : null;
+    this.renderedCardId = this.selectedCardId;
+    this.commentBinding = { cardId: this.selectedCardId, cardRevisionId: null };
 
     /* The PDF is a real file; hashing it proves the "original unchanged" claim
        against bytes rather than against a number we wrote ourselves. */
@@ -2846,6 +3137,30 @@ footer.foot code { background: #f1eee4; padding: 1px 5px; border-radius: 4px; }<
     el('mark-excerpt').checked = true;
     this.bind();
     this.renderAll();
+  };
+
+  /* Every command write goes through this hook, so the engine persists BEFORE it
+     publishes the new state or answers ACK. Without it the UI used to ACK first
+     and save afterwards, which meant a failed save still counted as the
+     authoritative head, history and export scope. */
+  App.prototype.persistHook = function () {
+    var self = this;
+    return function (pending) {
+      if (self.readOnly) {
+        IW.fail('STORE_READ_ONLY', 'the stored vault is damaged; recovery mode does not write');
+      }
+      var info = self.store.commit(pending.vault, pending.state);
+      self.lastCommit = info;
+      return info;
+    };
+  };
+
+  /* A reopened session must not reissue ids it already used. The counters are
+     derived from what the vault already contains, not from a fresh App object. */
+  App.prototype.sessionIdFrom = function (state) {
+    var count = (state && state.receipts ? state.receipts.length : 0);
+    var stamp = Date.now().toString(36).slice(-6);
+    return 's' + count + '-' + stamp + '-' + this.bootSeq;
   };
 
   App.prototype.surfaceCtx = function () {
@@ -2861,6 +3176,7 @@ footer.foot code { background: #f1eee4; padding: 1px 5px; border-radius: 4px; }<
   App.prototype.checkPdf = function () {
     var self = this;
     var url = this.corpus.pdf.assetPath;
+    if (this.readOnly) { this.assetMeta.pdfStatus = 'not checked (recovery mode)'; return; }
     if (typeof fetch !== 'function') {
       this.assetMeta.pdfStatus = 'fetch unavailable (file:// origin?)';
       return;
@@ -2874,7 +3190,7 @@ footer.foot code { background: #f1eee4; padding: 1px 5px; border-radius: 4px; }<
       self.assetMeta.pdfSha256 = IW.sha256Hex(bytes);
       self.assetMeta.pdfStatus = 'verified ' + self.assetMeta.pdfSha256.slice(0, 16) + '…';
       if (!self.engine.getVault().documentVersions.some(function (v) { return v.kind === 'pdf-origin'; })) {
-        self.engine.run('registerDocumentVersion', {
+        self.dispatch('registerDocumentVersion', {
           documentId: self.corpus.pdf.id,
           versionId: self.corpus.pdf.versionId,
           title: self.corpus.pdf.title,
@@ -2883,9 +3199,7 @@ footer.foot code { background: #f1eee4; padding: 1px 5px; border-radius: 4px; }<
           bytes: bytes.length,
           sha256: self.assetMeta.pdfSha256,
           textSha256: null
-        }, self.header('pdf-register'));
-        self.persist();
-        self.renderAll();
+        }, 'pdf-register');
       }
       self.renderAssetStatus();
     }).catch(function (e) {
@@ -2894,12 +3208,16 @@ footer.foot code { background: #f1eee4; padding: 1px 5px; border-radius: 4px; }<
     });
   };
 
+  /* Command ids are scoped to this session, and the session is derived from what
+     the vault already holds. Previously the counter restarted at 1 on every boot,
+     so a reopened session reissued `ui-comment-1` and tripped COMMAND_ID_REUSE on
+     the user's second edit — an identity bug in the shell, not in idempotency. */
   App.prototype.header = function (tag, extra) {
     var h = {
-      commandId: 'ui-' + tag + '-' + (++this.commandCounter || (this.commandCounter = 1)),
+      commandId: 'ui-' + this.sessionId + '-' + tag + '-' + (++this.commandCounter || (this.commandCounter = 1)),
       vaultId: this.engine.vaultId,
       actorId: 'local-user',
-      capabilityHandle: 'cap-ui-0001',
+      capabilityHandle: 'cap-ui-' + this.sessionId,
       expectedVersions: { epoch: this.engine.getVault().epoch }
     };
     if (extra) Object.keys(extra).forEach(function (k) { h[k] = extra[k]; });
@@ -2908,12 +3226,17 @@ footer.foot code { background: #f1eee4; padding: 1px 5px; border-radius: 4px; }<
 
   App.prototype.seed = function () {
     var self = this;
-    var steps = IW.seedPlan(this.corpus, {});
-    steps.forEach(function (step) {
-      self.engine.run(step.command, step.params, self.header('seed-' + step.command));
+    var studySetId = null;
+    /* Seeding goes through dispatch too, so it obeys the same persist-before-ack
+       rule as a user edit. A demo that seeds around the write path would prove
+       nothing about the write path. */
+    IW.seedPlan(this.corpus, {}).forEach(function (step) {
+      var result = self.dispatch(step.command, step.params, 'seed-' + step.command);
+      if (result.error) throw result.error;
     });
-    var studySetId = this.engine.getVault().studySets[0].id;
-    var seeded = IW.createFirstCard(this.engine, this.surface, this.corpus.text, IW.defaultSelection(this.corpus));
+    studySetId = this.engine.getVault().studySets[0].id;
+    var seeded = IW.createFirstCard(this.engine, this.surface, this.corpus.text,
+      IW.defaultSelection(this.corpus));
     var cardId = seeded.receipt.result.cardId;
     this.engine.run('attachOccurrence', { cardId: cardId, mapId: null, studySetId: studySetId },
       this.header('seed-node'));
@@ -2924,16 +3247,15 @@ footer.foot code { background: #f1eee4; padding: 1px 5px; border-radius: 4px; }<
     this.note('ok', 'seeded: one excerpt card, one node, one manual question');
   };
 
-  App.prototype.persist = function () {
+  /* Only for bookkeeping writes the engine does not own, e.g. nothing today.
+     Command writes must go through dispatch so the persist hook stays in charge. */
+  App.prototype.commitEngineState = function () {
     try {
-      var info = this.store.commit(this.engine.getVault(), this.engine.getState());
-      el('store-state').textContent = 'commitSeq ' + info.commitSeq;
-      el('store-state').className = 'chip ok';
-      return info;
+      return this.store.commit(this.engine.getVault(), this.engine.getState());
     } catch (e) {
       el('store-state').textContent = 'NOT SAVED — ' + e.code;
       el('store-state').className = 'chip bad';
-      this.note('warn', 'store refused the commit: ' + e.code + ' (' + e.message + ')');
+      this.note('warn', 'store refused a direct commit: ' + e.code);
       return null;
     }
   };
@@ -2941,12 +3263,14 @@ footer.foot code { background: #f1eee4; padding: 1px 5px; border-radius: 4px; }<
   App.prototype.dispatch = function (commandType, params, tag, expectedVersions) {
     var header = this.header(tag, expectedVersions ? { expectedVersions: expectedVersions } : null);
     try {
+      /* The engine persists through the hook BEFORE publishing and before this
+         returns. There is no "ACK now, save later" window any more. */
       var result = this.engine.run(commandType, params, header);
       this.note(result.replayed ? 'info' : 'ok',
         commandType + ' -> ' + result.status + (result.replayed ? ' (idempotent replay)' : ''));
-      this.persist();
+      el('store-state').textContent = 'commitSeq ' + this.store.commitSeq();
+      el('store-state').className = 'chip ok';
       this.conflict = null;
-      this.renderAll();
       return result;
     } catch (e) {
       this.note('warn', commandType + ' refused: ' + e.code + ' — ' + e.message);
@@ -2954,8 +3278,16 @@ footer.foot code { background: #f1eee4; padding: 1px 5px; border-radius: 4px; }<
         this.conflict = { commandType: commandType, params: params, details: e.details, message: e.message };
         this.note('info', 'another view advanced this card. Use "重新读取并保存" instead of overwriting.');
       }
-      this.renderAll();
+      if (e.code === 'STORE_FAULT_INJECTED') {
+        /* The write was refused before publication, so the head, the history and
+           the durable bytes are all still the previous ones. */
+        el('store-state').textContent = 'NOT SAVED — ' + e.code;
+        el('store-state').className = 'chip bad';
+        this.note('info', 'nothing was published: check the authoritative head below, then retry the same commandId');
+      }
       return { error: e };
+    } finally {
+      this.renderAll();
     }
   };
 
@@ -2965,29 +3297,57 @@ footer.foot code { background: #f1eee4; padding: 1px 5px; border-radius: 4px; }<
   };
 
   /* ---------------------------------------------------------- interaction */
+  /* Two properties this must keep:
+       1. binding is idempotent — booting twice must not stack listeners, or one
+          click would run a command once per accumulated app;
+       2. handlers resolve the LIVE app instead of closing over one instance, so
+          a re-boot (mock suite, or an app restart) cannot leave dead listeners
+          driving a discarded engine. */
   App.prototype.bind = function () {
     var self = this;
-    el('mark-excerpt').addEventListener('change', function () { self.setMarkMode('excerpt'); });
-    el('mark-highlighter').addEventListener('change', function () { self.setMarkMode('highlighter'); });
-    el('btn-save-comment').addEventListener('click', function () { self.saveComment(); });
-    el('btn-add-node').addEventListener('click', function () { self.addNode(); });
-    el('btn-undo').addEventListener('click', function () { self.undoLast(); });
-    el('btn-export').addEventListener('click', function () { self.exportPackage(); });
-    el('btn-reimport').addEventListener('click', function () { self.reimportPackage(); });
-    el('chk-fault').addEventListener('change', function () { self.armFault(); });
-    el('btn-epoch').addEventListener('click', function () { self.resetEpoch(); });
-    el('btn-reset').addEventListener('click', function () { self.hardReset(); });
-    el('btn-resolve').addEventListener('click', function () { self.resolveConflict(); });
-    el('card-select').addEventListener('change', function (e) {
-      self.selectedCardId = e.target.value; self.activeAnchorId = null; self.renderAll();
+    var live = function () { return globalThis.inkweft || self; };
+    if (el('btn-save-comment')._inkweftBound) { this.renderAll(); return; }
+    var mark = function (node) { node._inkweftBound = true; return node; };
+    mark(el('mark-excerpt')).addEventListener('change', function () { live().setMarkMode('excerpt'); });
+    mark(el('mark-highlighter')).addEventListener('change', function () { live().setMarkMode('highlighter'); });
+    mark(el('btn-save-comment')).addEventListener('click', function () { live().saveComment(); });
+    mark(el('btn-add-node')).addEventListener('click', function () { live().addNode(); });
+    mark(el('btn-undo')).addEventListener('click', function () { live().undoLast(); });
+    mark(el('btn-export')).addEventListener('click', function () { live().exportPackage(); });
+    mark(el('btn-reimport')).addEventListener('click', function () { live().reimportPackage(); });
+    mark(el('chk-fault')).addEventListener('change', function () { live().armFault(); });
+    mark(el('btn-epoch')).addEventListener('click', function () { live().resetEpoch(); });
+    mark(el('btn-reset')).addEventListener('click', function () { live().hardReset(); });
+    mark(el('btn-resolve')).addEventListener('click', function () { live().resolveConflict(); });
+    mark(el('card-select')).addEventListener('change', function (e) {
+      var app = live();
+      app.selectedCardId = e.target.value;
+      /* Rebind the editor to the newly selected card so a later save cannot
+         commit this buffer against the previous card. */
+      app.commentBinding = { cardId: e.target.value, cardRevisionId: null };
+      app.commentEdited = false;
+      app.activeAnchorId = null;
+      app.renderAll();
     });
-    el('node-width').addEventListener('change', function (e) { self.setNodeWidth(Number(e.target.value)); });
-    document.addEventListener('mouseup', function (e) {
-      if (el('doc').contains(e.target)) self.captureSelection();
+    mark(el('comment')).addEventListener('focus', function () { live().commentFocused = true; });
+    mark(el('comment')).addEventListener('blur', function () {
+      var app = live();
+      app.commentFocused = false;
+      app.commentEdited = false;
+      app.renderAll();
     });
-    el('doc').addEventListener('click', function (e) {
+    mark(el('comment')).addEventListener('input', function () { live().commentEdited = true; });
+    mark(el('node-width')).addEventListener('change', function (e) { live().setNodeWidth(Number(e.target.value)); });
+    if (!document._inkweftBound) {
+      document._inkweftBound = true;
+      document.addEventListener('mouseup', function (e) {
+        var app = globalThis.inkweft;
+        if (app && el('doc').contains(e.target)) app.captureSelection();
+      });
+    }
+    mark(el('doc')).addEventListener('click', function (e) {
       var hit = e.target.closest ? e.target.closest('[data-anchor]') : null;
-      if (hit) { self.flashAnchor(hit.getAttribute('data-anchor')); }
+      if (hit) { live().flashAnchor(hit.getAttribute('data-anchor')); }
     });
   };
 
@@ -2998,29 +3358,59 @@ footer.foot code { background: #f1eee4; padding: 1px 5px; border-radius: 4px; }<
     this.renderAll();
   };
 
-  /* Turn a DOM selection into global character offsets. The document is rendered
-     as one continuous offset space, exactly like the surface's line model. */
+  /* Turn a DOM selection into model offsets.
+
+     The model counts `line.length + 1` per line, so DOM offsets can only match it
+     if they are anchored to the line boxes. A flat TreeWalker over the document
+     drifts on every line (block elements contribute no newline) and happily reads
+     the page label as content — the earlier implementation did exactly that, so
+     only the first line was ever right. Instead: find the `.line` element owning
+     each endpoint and read its model start from the data attribute. */
   App.prototype.captureSelection = function () {
-    var sel = window.getSelection();
+    var sel = window.getSelection ? window.getSelection() : null;
     if (!sel || sel.isCollapsed || sel.rangeCount === 0) return;
     var range = sel.getRangeAt(0);
     var host = el('doc-body');
     if (!host.contains(range.startContainer) || !host.contains(range.endContainer)) return;
 
-    function offsetOf(node, offset) {
-      var walker = document.createTreeWalker(host, NodeFilter.SHOW_TEXT, null);
-      var total = 0;
-      var current;
-      while ((current = walker.nextNode())) {
-        if (current === node) return total + offset;
-        total += current.nodeValue.length;
-      }
-      return null;
-    }
-    var start = offsetOf(range.startContainer, range.startOffset);
-    var end = offsetOf(range.endContainer, range.endOffset);
+    var start = this.lineOffset(range.startContainer, range.startOffset, 'start');
+    var end = this.lineOffset(range.endContainer, range.endOffset, 'end');
     if (start === null || end === null || end <= start) return;
     this.applySelection(start, end, sel.toString());
+  };
+
+  /* Model offset of one endpoint. Returns null when the endpoint is not part of a
+     text line at all (padding, a page label, an overlay mark). */
+  App.prototype.lineOffset = function (node, offset, edge) {
+    var element = node && node.nodeType === 1 ? node : node && node.parentNode;
+    while (element && element.nodeType !== 1) element = element.parentNode;
+    var line = null;
+    while (element) {
+      if (element.getAttribute && element.getAttribute('data-start') !== null) { line = element; break; }
+      element = element.parentNode;
+    }
+    if (!line) return null;
+    var lineStart = Number(line.getAttribute('data-start'));
+    var lineEnd = Number(line.getAttribute('data-end'));
+    var body = line.querySelector ? line.querySelector('.line-body') : null;
+    if (!body) return null;
+
+    /* Only text inside .line-body counts; page labels and marks are excluded. */
+    var inner = 0;
+    var matched = false;
+    var walker = document.createTreeWalker(body, NodeFilter.SHOW_TEXT, null);
+    var current;
+    while ((current = walker.nextNode())) {
+      if (current === node) { inner += offset; matched = true; break; }
+      inner += current.nodeValue.length;
+    }
+    if (!matched) {
+      /* The endpoint is the element itself or sits outside the text nodes: treat
+         it as the line boundary closest to the requested edge. */
+      if (node === line || node === body) inner = edge === 'end' ? body.textContent.length : 0;
+      else inner = edge === 'end' ? body.textContent.length : 0;
+    }
+    return Math.max(lineStart, Math.min(lineStart + inner, lineEnd));
   };
 
   App.prototype.applySelection = function (start, end, selectedText) {
@@ -3052,19 +3442,33 @@ footer.foot code { background: #f1eee4; padding: 1px 5px; border-radius: 4px; }<
     params.comment = '';
     result = this.dispatch('createCardFromSelection', params, 'excerpt');
     if (result.error) return;
+    /* Update the selection BEFORE rendering, otherwise the panel keeps showing the
+       previous card while the next save targets the new one. */
     this.selectedCardId = result.receipt.result.cardId;
+    this.renderedCardId = this.selectedCardId;
     this.activeAnchorId = result.receipt.result.anchorId;
     this.note('info', 'excerpt card created; quoting: ' + (selectedText || '').slice(0, 40).replace(/\n/g, ' / '));
     if (window.getSelection) {
       var live = window.getSelection();
       if (live && live.removeAllRanges) live.removeAllRanges();
     }
+    this.renderAll();
   };
 
   /* ----------------------------------------------------------- mutations */
   App.prototype.saveComment = function () {
-    var cardId = this.selectedCardId;
-    if (!cardId) return;
+    /* The edit buffer is bound to a card. If the panel moved on to another card
+       while the user was typing (or an excerpt was created), committing the
+       buffer against the new card would silently transplant one card's text onto
+       another. Refuse and say why. */
+    var bound = this.commentBinding;
+    if (!bound || !bound.cardId) return;
+    if (bound.cardId !== this.selectedCardId) {
+      this.note('warn', 'the panel now shows another card; the editor was rebound — nothing was saved');
+      this.renderAll();
+      return;
+    }
+    var cardId = bound.cardId;
     var text = el('comment').value;
     var observedRevision = IW.readCardHead(this.engine.getVault(), cardId).revision;
     var expected = { epoch: this.engine.getVault().epoch };
@@ -3080,9 +3484,10 @@ footer.foot code { background: #f1eee4; padding: 1px 5px; border-radius: 4px; }<
 
   App.prototype.resolveConflict = function () {
     if (!this.conflict) return;
-    var cardId = this.selectedCardId;
+    var cardId = this.conflict.params && this.conflict.params.cardId
+      ? this.conflict.params.cardId : this.selectedCardId;
+    if (!cardId) return;
     var observed = IW.readCardHead(this.engine.getVault(), cardId).cardRevisionId;
-    el('comment').value = el('comment').value;
     this.dispatch('commitResolveConflict', {
       cardId: cardId, text: el('comment').value, observedCardRevisionId: observed
     }, 'resolve');
@@ -3108,15 +3513,28 @@ footer.foot code { background: #f1eee4; padding: 1px 5px; border-radius: 4px; }<
     for (var i = history.length - 1; i >= 0; i--) {
       if (history[i].undoable) { undoable = history[i]; break; }
     }
-    if (!undoable) { this.note('warn', 'nothing to undo'); this.renderAll(); return; }
+    if (!undoable) {
+      this.note('warn', 'nothing compensatable left to undo in this sample');
+      this.renderAll();
+      return;
+    }
     try {
-      this.engine.undo(IW.commandHeader('ui-undo-' + Date.now(), this.engine, {
+      /* Undo now runs the same pipeline as any write (authorization, epoch,
+         idempotency, persist-before-ack) and compensates by APPENDING work, so
+         the revision being undone stays readable afterwards. */
+      var result = this.engine.undo(this.header('undo-' + undoable.commandId, {
         targetCommandId: undoable.commandId
       }));
-      this.note('ok', 'undid ' + undoable.commandType);
-      this.persist();
+      this.note('ok', 'compensated ' + undoable.commandType + ' with ' +
+        result.compensationCommand + ' (history kept)');
+      el('store-state').textContent = 'commitSeq ' + this.store.commitSeq();
+      el('store-state').className = 'chip ok';
     } catch (e) {
-      this.note('warn', 'undo refused: ' + e.code);
+      this.note('warn', 'undo refused: ' + e.code + ' — ' + e.message);
+      if (e.code === 'STORE_FAULT_INJECTED') {
+        el('store-state').textContent = 'NOT SAVED — ' + e.code;
+        el('store-state').className = 'chip bad';
+      }
     }
     this.conflict = null;
     this.renderAll();
@@ -3137,15 +3555,20 @@ footer.foot code { background: #f1eee4; padding: 1px 5px; border-radius: 4px; }<
   };
 
   App.prototype.hardReset = function () {
-    this.store.clear();
-    this.engine = IW.createEngine({ vaultId: 'inkweft-sample-vault' });
-    this.surface = IW.createSurface(IW.originFor(this.corpus.text), this.surfaceCtx());
-    this.seed();
-    this.persist();
-    this.selectedCardId = this.engine.getVault().cards[0].id;
-    this.conflict = null;
-    this.note('info', 'vault recreated from scratch');
-    this.renderAll();
+    if (!window.confirm || window.confirm('这会丢弃当前存储里的资料库并重新播种一份演示数据。继续？')) {
+      this.store.clear();
+      this.readOnly = false;
+      this.corruptInfo = null;
+      this.engine = IW.createEngine({ vaultId: 'inkweft-sample-vault', persist: this.persistHook() });
+      this.surface = IW.createSurface(IW.originFor(this.corpus.text), this.surfaceCtx());
+      this.seed();
+      this.selectedCardId = this.engine.getVault().cards[0].id;
+      this.renderedCardId = this.selectedCardId;
+      this.commentBinding = { cardId: this.selectedCardId, cardRevisionId: null };
+      this.conflict = null;
+      this.note('info', 'vault recreated from scratch');
+      this.renderAll();
+    }
   };
 
   App.prototype.exportPackage = function () {
@@ -3173,14 +3596,20 @@ footer.foot code { background: #f1eee4; padding: 1px 5px; border-radius: 4px; }<
         assetBytes: (function (o) { o[this.corpus.text.versionId] = this.corpus.text.text; return o; }).call(this, {})
       });
       var failed = restored.report.checks.filter(function (c) { return c.result !== 'PASS'; });
+      /* Rebuild with the persist hook too, so the restored vault is not read-only
+         by accident and further edits still commit before acknowledging. */
       this.engine = IW.createEngine({
-        vaultId: restored.vault.vaultId, vault: restored.vault, state: restored.state
+        vaultId: restored.vault.vaultId, vault: restored.vault, state: restored.state,
+        persist: this.persistHook()
       });
+      this.sessionId = this.sessionIdFrom(restored.state);
+      this.commandCounter = 0;
       this.surface = IW.createSurface(IW.originFor(this.corpus.text), this.surfaceCtx());
-      this.selectedCardId = this.engine.getVault().cards[0].id;
+      this.selectedCardId = this.engine.getVault().cards.length ? this.engine.getVault().cards[0].id : null;
+      this.renderedCardId = this.selectedCardId;
+      this.commentBinding = { cardId: this.selectedCardId, cardRevisionId: null };
       this.note('ok', 'restored in isolation: ' + restored.report.checks.length + ' checks, ' +
         failed.length + ' failed, undo ' + (restored.report.restored.undoAvailableAfterRestore ? 'available' : 'unavailable'));
-      restored.report.warnings.forEach(function (w) { /* surfaced in the report panel */ });
       this.lastRestoreReport = restored.report;
       this.renderAll();
     } catch (e) {
@@ -3215,6 +3644,19 @@ footer.foot code { background: #f1eee4; padding: 1px 5px; border-radius: 4px; }<
       v.cardRevisions.length + ' card revisions / ' + v.occurrences.length + ' node';
     el('commit-log-count').textContent = this.store.commitSeq();
     el('card-count').textContent = v.cards.length + ' 张卡';
+    if (this.readOnly) {
+      el('store-state').textContent = '只读恢复模式 — ' + (this.corruptInfo ? this.corruptInfo.code : 'DAMAGED');
+      el('store-state').className = 'chip bad';
+    }
+    var recover = el('recovery-bar');
+    if (recover) {
+      recover.style.display = this.readOnly ? 'flex' : 'none';
+      if (this.readOnly && this.corruptInfo) {
+        el('recovery-text').textContent =
+          '存储里的资料库无法解析（' + this.corruptInfo.code + '，' + this.corruptInfo.rawBytes +
+          ' 字节）。为避免覆盖原始字节，本会话不写入任何内容；要重新开始必须显式确认。';
+      }
+    }
     this.renderAssetStatus();
   };
 
@@ -3247,45 +3689,55 @@ footer.foot code { background: #f1eee4; padding: 1px 5px; border-radius: 4px; }<
     }).join('') || '<option>(no cards)</option>';
   };
 
-  /* One continuous text flow per page, so DOM offsets equal surface offsets. */
+  /* Renders the document surface. Two things matter here:
+       1. every line is a block with an explicit model offset, so a selection can
+          be mapped back to the model instead of guessed from DOM positions;
+       2. ALL accessible annotations are drawn — a plain highlighter has no card
+          but still has to be visible, otherwise the mode is a lie. */
   App.prototype.renderDocument = function () {
     var self = this;
-    var card = this.selectedCardId ? IW.readCardHead(this.engine.getVault(), this.selectedCardId) : null;
-    var anchors = card ? card.sourceIds.map(function (id) {
-      return IW.byId(self.engine.getVault().sourceAnchors, id);
-    }).filter(Boolean) : [];
+    var v = this.engine.getVault();
+    var selectedCard = this.selectedCardId ? IW.readCardHead(v, this.selectedCardId) : null;
+    var selectedAnchors = {};
+    if (selectedCard) selectedCard.sourceIds.forEach(function (id) { selectedAnchors[id] = true; });
+
+    /* annotation placements (excerpt marks and plain highlighters alike) */
+    var annotations = v.annotationPlacements.map(function (p) {
+      var anchor = IW.byId(v.sourceAnchors, p.anchorId);
+      if (!anchor) return null;
+      return { placement: p, anchor: anchor };
+    }).filter(Boolean);
 
     var html = this.surface.listPageIds().map(function (pageId) {
       var page = self.surface.getTextPage(pageId);
-      var marks = anchors.filter(function (a) { return a.pageId === pageId; });
-      var markHtml = marks.map(function (a) {
-        return a.selector.rects.map(function (r) {
-          return '<span class="mark" data-anchor="' + esc(a.id) + '" style="left:' +
+      var marks = annotations.filter(function (m) { return m.anchor.pageId === pageId; });
+      var markHtml = marks.map(function (m) {
+        var isSelected = !!selectedAnchors[m.anchor.id];
+        var kind = m.placement.cardId ? 'excerpt' : 'highlighter';
+        return m.anchor.selector.rects.map(function (r) {
+          return '<span class="mark ' + (isSelected ? 'selected' : '') + '" data-kind="' + kind +
+            '" data-anchor="' + esc(m.anchor.id) + '" data-placement="' + esc(m.placement.id) + '" style="left:' +
             (r[0] * 100).toFixed(2) + '%;top:' + (r[1] * 100).toFixed(2) + '%;width:' +
             (r[2] * 100).toFixed(2) + '%;height:' + (r[3] * 100).toFixed(2) + '%"></span>';
         }).join('');
       }).join('');
       return '<section class="page" data-page="' + esc(pageId) + '">' + markHtml +
         '<div class="page-body">' + page.lines.map(function (l) {
-          return '<p class="line" data-start="' + l.startOffset + '" data-end="' + l.endOffset + '">' +
-            esc(l.text) + '</p>';
+          return '<div class="line" data-start="' + l.startOffset + '" data-end="' + l.endOffset + '">' +
+            '<span class="line-body">' + esc(l.text) + '</span></div>';
         }).join('') + '</div>' +
-        '<div class="page-label">' + esc(pageId.split(':p')[0]) + ' · page ' + (page.ordinal + 1) + '</div>' +
+        '<div class="page-label" data-decoration="1">' + esc(pageId.split(':p')[0]) +
+        ' · page ' + (page.ordinal + 1) + '</div>' +
         '</section>';
     }).join('');
 
-    /* plain highlighter marks are shown too; they are annotations, not cards, and
-       the count is surfaced in the hint line so the distinction is visible. */
-    var plain = this.engine.getVault().annotationPlacements.filter(function (p) {
-      return p.style === 'highlighter';
-    });
-
     el('doc-body').innerHTML = html;
-    var anchorCount = this.engine.getVault().sourceAnchors.length;
-    var plainCount = plain.length;
+
+    var anchorCount = v.sourceAnchors.length;
+    var plainCount = v.annotationPlacements.filter(function (p) { return !p.cardId; }).length;
     el('doc-hint').textContent = this.markMode === 'excerpt'
-      ? '摘录模式：选中文字 → 建这张卡（当前 ' + anchorCount + ' 个来源片段）'
-      : '普通荧光标记模式：选中文字 → 只留标记，不建卡（已有 ' + plainCount + ' 个标记）';
+      ? '摘录模式：选中文字 → 建这张卡（当前文档 ' + anchorCount + ' 个来源片段，' + annotations.length + ' 个已绘制标记）'
+      : '普通荧光标记模式：选中文字 → 只留标记，不建卡（已有 ' + plainCount + ' 个普通标记）';
   };
 
   App.prototype.flashAnchor = function (anchorId) {
@@ -3320,7 +3772,25 @@ footer.foot code { background: #f1eee4; padding: 1px 5px; border-radius: 4px; }<
     el('card-identity').textContent = 'cardId ' + cardId;
     el('card-head').textContent = 'headRevision ' + head.cardRevisionId + ' · rev ' + head.revision;
     el('quote').textContent = quote.map(function (b) { return b.payload.text; }).join('\n\n---\n\n');
-    el('comment').value = comment.map(function (b) { return b.payload.text || ''; }).join('\n');
+
+    /* Bind the editor to (cardId, headRevision). The buffer is only preserved
+       while the user is actually editing it; once focus leaves, the head wins.
+       Stale buffer text silently surviving a rebind is how one card's note ends
+       up looking like another's. */
+    var bound = this.commentBinding;
+    var headText = comment.map(function (b) { return b.payload.text || ''; }).join('\n');
+    var boundChanged = !bound || bound.cardId !== cardId ||
+      (bound.cardRevisionId !== head.cardRevisionId && this.commentEdited !== true);
+    if (boundChanged) {
+      if (!this.commentFocused) el('comment').value = headText;
+      this.commentBinding = { cardId: cardId, cardRevisionId: head.cardRevisionId };
+      this.commentEdited = false;
+    } else if (!this.commentFocused && el('comment').value !== headText) {
+      el('comment').value = headText;
+      this.commentEdited = false;
+      this.commentBinding = { cardId: cardId, cardRevisionId: head.cardRevisionId };
+    }
+    this.renderedCardId = cardId;
 
     var node = this.currentNode();
     el('node-info').textContent = node
@@ -3392,25 +3862,36 @@ footer.foot code { background: #f1eee4; padding: 1px 5px; border-radius: 4px; }<
     var self = this;
     var history = this.engine.history();
     el('history').innerHTML = history.slice().reverse().map(function (h) {
-      return '<li class="' + (h.undone ? 'done' : '') + '"><span class="tiny">' + esc(h.at) + '</span> ' +
-        '<code>' + esc(h.commandType) + '</code>' +
+      var label = h.commandType === 'undo'
+        ? 'undo → ' + (h.result && h.result.compensationCommand ? h.result.compensationCommand : '?')
+        : h.commandType;
+      return '<li class="' + (h.compensated ? 'done' : '') + '"><span class="tiny">' + esc(h.at) + '</span> ' +
+        '<code>' + esc(label) + '</code>' +
         (h.undoable ? ' <button class="mini" data-undo="' + esc(h.commandId) + '">撤销</button>' : '') +
+        (h.inverse ? '' : ' <span class="tag warn">不可补偿</span>') +
         '<br><span class="tiny">' + esc(h.commandId) + ' · digest ' + esc(h.digest.slice(0, 8)) + '…</span></li>';
     }).join('');
     Array.prototype.forEach.call(el('history').querySelectorAll('[data-undo]'), function (btn) {
-      btn.addEventListener('click', function () {
-        try {
-          self.engine.undo(IW.commandHeader('ui-undo-' + Date.now(), self.engine, {
-            targetCommandId: btn.getAttribute('data-undo')
-          }));
-          self.note('ok', 'undone');
-          self.persist();
-        } catch (e) {
-          self.note('warn', 'undo refused: ' + e.code);
-        }
-        self.renderAll();
-      });
+      btn.addEventListener('click', function () { self.undoTarget(btn.getAttribute('data-undo')); });
     });
+  };
+
+  App.prototype.undoTarget = function (targetCommandId) {
+    try {
+      var result = this.engine.undo(this.header('undo-' + targetCommandId, {
+        targetCommandId: targetCommandId
+      }));
+      this.note('ok', 'compensated with ' + result.compensationCommand + ' (the undone revision is still readable)');
+      el('store-state').textContent = 'commitSeq ' + this.store.commitSeq();
+      el('store-state').className = 'chip ok';
+    } catch (e) {
+      this.note('warn', 'undo refused: ' + e.code + ' — ' + e.message);
+      if (e.code === 'STORE_FAULT_INJECTED') {
+        el('store-state').textContent = 'NOT SAVED — ' + e.code;
+        el('store-state').className = 'chip bad';
+      }
+    }
+    this.renderAll();
   };
 
   App.prototype.renderLog = function () {
