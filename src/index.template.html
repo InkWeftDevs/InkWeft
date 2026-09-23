@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>墨织 InkWeft · S1 纵向切片样品</title>
+<style>/*__STYLES__*/</style>
+</head>
+<body>
+<div class="app">
+
+  <header class="top">
+    <div class="brand">
+      <span class="dot"></span>
+      <div>
+        <h1>墨织 InkWeft</h1>
+        <p class="tiny">S1 纵向切片样品 · 一卡多视图共享同一 <code>cardId</code> · 规划包 v1.1.1 的 K00/K01/K02</p>
+      </div>
+    </div>
+    <div class="status-chips">
+      <span class="chip" id="vault-id">—</span>
+      <span class="chip" id="epoch">—</span>
+      <span class="chip" id="store-state">—</span>
+      <span class="chip" id="asset-state">—</span>
+      <span class="chip warn" id="pdf-capability">—</span>
+    </div>
+  </header>
+
+  <div class="banner">
+    <strong>这是样品，不是应用验收。</strong>
+    静态与宿主自检见 <code>tests/run-headless.js</code>（29 项）。规划包里的 37 条 AX 用例
+    仍是 <code>NOT_RUN</code>：它们需要真机、真实浏览来源与外部 ACK oracle。
+    <span id="counts" class="tiny"></span>
+  </div>
+
+  <div class="toolbar">
+    <label class="mode"><input type="checkbox" id="mark-excerpt" checked> 摘录模式（自动建卡）</label>
+    <label class="mode"><input type="checkbox" id="mark-highlighter"> 普通荧光标记（不建卡）</label>
+    <span class="sep"></span>
+    <span class="mode-label" id="card-count">—</span>
+    <span class="sep"></span>
+    <button id="btn-add-node" class="btn">加入脑图节点</button>
+    <label class="mode">节点宽度
+      <input type="number" id="node-width" min="120" max="640" step="20" value="220">
+    </label>
+    <span class="sep"></span>
+    <button id="btn-undo" class="btn">撤销上一步</button>
+    <button id="btn-save-comment" class="btn primary">保存备注</button>
+    <span class="sep"></span>
+    <span class="tiny" id="doc-hint"></span>
+  </div>
+
+  <div class="conflict-bar" id="conflict-bar">
+    <span class="tag warn">版本冲突</span>
+    <span id="conflict-text"></span>
+    <button id="btn-resolve" class="btn">重新读取并保存</button>
+  </div>
+
+  <main class="grid">
+
+    <section class="panel doc-panel">
+      <div class="panel-head">
+        <h2>① 原文（DocumentSurfaceAdapter）</h2>
+        <span class="tiny">TEXT_FLOW · 合成行盒</span>
+      </div>
+      <div class="panel-body" id="doc">
+        <div id="doc-body"></div>
+      </div>
+      <p class="foot tiny">
+        几何是合成行盒（<code>EXACT_SYNTHETIC</code>），不是真实 PDF 坐标；真实 PDF 存在但本包不内置 PDF 引擎。
+      </p>
+    </section>
+
+    <section class="panel card-panel">
+      <div class="panel-head">
+        <h2>② 知识卡（唯一权威内容）</h2>
+        <select id="card-select" class="select"></select>
+      </div>
+      <div class="panel-body">
+        <h3 id="card-title">—</h3>
+        <p class="tiny mono" id="card-identity"></p>
+        <p class="tiny mono" id="card-head"></p>
+
+        <h4>源摘录块 <span class="tag">source_quote · 只读</span></h4>
+        <pre class="quote" id="quote"></pre>
+
+        <h4>个人备注块 <span class="tag">comment</span></h4>
+        <textarea id="comment" rows="4" placeholder="写自己的理解。改这里只产生新的块修订与新的卡修订，源摘录永远不会被改写。"></textarea>
+
+        <h4>脑图节点出现位置 <span class="tag">MapOccurrence</span></h4>
+        <p class="tiny" id="node-info"></p>
+
+        <h4>手动问答投影 <span class="tag">ReviewItem · 无 FSRS</span></h4>
+        <p id="question" class="question"></p>
+        <p class="tiny mono" id="question-meta"></p>
+        <p class="tiny">答案引用（块 ID，不是正文副本）：<span class="mono" id="answer-refs"></span></p>
+
+        <h4>卡修订链 <span class="tag">CardRevision</span></h4>
+        <ul class="chain" id="revision-chain"></ul>
+      </div>
+    </section>
+
+    <section class="panel struct-panel">
+      <div class="panel-head"><h2>③ 结构（同一 cardId 的引用）</h2></div>
+      <div class="panel-body">
+        <h4>来源锚点 / 解析状态</h4>
+        <ul class="list" id="anchors"></ul>
+
+        <h4>脑图出现位置</h4>
+        <ul class="list" id="occurrences"></ul>
+
+        <h4>标记（含普通荧光）</h4>
+        <ul class="list" id="placements"></ul>
+
+        <h4>命令历史 / 幂等</h4>
+        <ul class="list history" id="history"></ul>
+      </div>
+    </section>
+
+    <section class="panel dev-panel">
+      <div class="panel-head"><h2>④ 故障、恢复与诊断</h2></div>
+      <div class="panel-body">
+        <div class="dev-row">
+          <label class="mode"><input type="checkbox" id="chk-fault"> 下一次写入注入失败</label>
+          <button id="btn-epoch" class="btn">推进 vault epoch</button>
+          <button id="btn-reset" class="btn">重建资料库</button>
+        </div>
+        <p class="tiny">
+          注入失败只影响持久层：命令在内存里已应用，但 durable 值不变、commitSeq 不前进。
+          重开时旧的 commandId 仍可查到回执 —— 先查原命令，不猜结果。
+        </p>
+
+        <div class="dev-row">
+          <button id="btn-export" class="btn">导出 S1 原生包</button>
+          <button id="btn-reimport" class="btn">隔离恢复这个包</button>
+        </div>
+        <div id="restore-report" class="report"></div>
+        <pre class="package" id="package-out"></pre>
+
+        <h4>运行日志</h4>
+        <ul class="log" id="log"></ul>
+
+        <p class="tiny">
+          持久层：<span id="store-desc">localStorage 单键同步写，非 WAL、非 fsync</span>。
+          <span id="commit-log-count-wrap">commitSeq <span id="commit-log-count">0</span></span>
+        </p>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="foot">
+    <p>
+      唯一写入口：<code>engine.run(commandType, params, header)</code>。
+      任何视图都从 <code>IW.readCardHead(vault, cardId)</code> 读取正文，没有第二份副本，也没有定时同步。
+    </p>
+    <p>
+      未做（明确列在包外）：词典与别名（K03）、正式 FSRS 与多题历史（K08）、嵌入留白（K05）、
+      完整脑图样式与子图（K06）、沉浸回忆（K07）。PDF 渲染需要本机自备 PDF 引擎。
+    </p>
+  </footer>
+</div>
+
+<script>/*__SCRIPTS__*/</script>
+</body>
+</html>

@@ -1,0 +1,6 @@
+HTTP ORIGIN CHECK PASSED
+  origin      http://127.0.0.1:8777
+  pdf bytes   1774
+  sha256      fc4d5eef917593ff352de6ad0e5b9bb2e0d275d4b984c95d2b5055f86fc13ece
+  note        this covers the HTTP origin and byte verification only.
+              IndexedDB/native persistence and durability remain NOT_RUN.

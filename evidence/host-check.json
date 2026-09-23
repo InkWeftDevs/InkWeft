@@ -1,0 +1,223 @@
+{
+  "scope": "SAMPLE_SELF_CHECK_NOT_PLAN_ACCEPTANCE",
+  "runtime": {
+    "node": "v24.12.0",
+    "platform": "win32",
+    "arch": "x64"
+  },
+  "corpus": {
+    "pdfPath": "assets/conditional-probability-note.pdf",
+    "pdfBytes": 1774,
+    "pdfSha256": "fc4d5eef917593ff352de6ad0e5b9bb2e0d275d4b984c95d2b5055f86fc13ece"
+  },
+  "totals": {
+    "checks": 29,
+    "passed": 29,
+    "failed": 0
+  },
+  "results": [
+    {
+      "id": "AX01-A01",
+      "title": "one authoritative card; all three entries resolve to one cardId + headRevisionId",
+      "result": "PASS",
+      "detail": "cardId=0bc9d7d9… head=e27cba73… rev=1; 3 entries agree",
+      "ms": 5
+    },
+    {
+      "id": "AX01-A02",
+      "title": "source hash unchanged; the question projection holds no copy of the body",
+      "result": "PASS",
+      "detail": "pdf=1774B sha256=fc4d5eef9175… answerRefs=2",
+      "ms": 2
+    },
+    {
+      "id": "AX01-A03",
+      "title": "no dictionary, no FSRS, no fabricated history in the S1 slice",
+      "result": "PASS",
+      "detail": "dictionary=0 events=0 attempts=0 scheduler=UNASSIGNED dueAt=null",
+      "ms": 1
+    },
+    {
+      "id": "AX02-A01",
+      "title": "comment edit lands on the committed revision; undo restores a consistent state",
+      "result": "PASS",
+      "detail": "rev 1->2->1; the undone revision is gone with its pre-image",
+      "ms": 2
+    },
+    {
+      "id": "AX02-A04",
+      "title": "an intermediate revision stays resolvable after a later edit (immutable chain)",
+      "result": "PASS",
+      "detail": "chain=3<-2<-1; middle text preserved: \"第一版备注\"",
+      "ms": 1
+    },
+    {
+      "id": "AX02-A02",
+      "title": "the source quote block and the original asset are never rewritten",
+      "result": "PASS",
+      "detail": "quote frozen at revision bdabfc3e…; 2 anchors reproduce it; origin hash intact",
+      "ms": 1
+    },
+    {
+      "id": "AX02-A03",
+      "title": "a node resize affects only that occurrence, never card content or another map",
+      "result": "PASS",
+      "detail": "width=340 on map1 only (default 220); card rev stayed 1; map2 node width=220",
+      "ms": 2
+    },
+    {
+      "id": "AX03-A01",
+      "title": "a second source appends without loss; pages are identified by version-scoped ids",
+      "result": "PASS",
+      "detail": "sources=3; pageIds=textbook-excerpt@v1:p0 , textbook-excerpt@v1:p1 , textbook-excerpt@v1:p1",
+      "ms": 2
+    },
+    {
+      "id": "AX03-A02",
+      "title": "a selection crossing a page break yields one anchor per page, with no page bleed",
+      "result": "PASS",
+      "detail": "2 anchors (textbook-excerpt@v1:p0 | textbook-excerpt@v1:p1), 1 line each; quote=\"应用前先核对分母，是本章最容易失分的…\"",
+      "ms": 1
+    },
+    {
+      "id": "AX03-A03",
+      "title": "replacing the source version keeps the old anchor and reports STALE, never silently re-points",
+      "result": "PASS",
+      "detail": "anchor stays on textbook-excerpt@v1; resolver says STALE; old version retained",
+      "ms": 1
+    },
+    {
+      "id": "AX03-A04",
+      "title": "a revoked source resolves as RESTRICTED without leaking detail",
+      "result": "PASS",
+      "detail": "state=RESTRICTED, detail=\"source version is not readable under the current grant\" (no title, text or count leaked)",
+      "ms": 1
+    },
+    {
+      "id": "AX33-A01",
+      "title": "a plain highlighter creates no card, no node and no review item",
+      "result": "PASS",
+      "detail": "cards 1->1, nodes 1->1, marks 1->2, anchor ok",
+      "ms": 1
+    },
+    {
+      "id": "AX33-A02",
+      "title": "the excerpt creates card + anchor + marker atomically and does not auto-enter review",
+      "result": "PASS",
+      "detail": "card + 2 per-page anchors + excerpt marker at revision 1; one explicit node only",
+      "ms": 0
+    },
+    {
+      "id": "AX33-A03",
+      "title": "a refused excerpt leaves no half card, no dangling anchor and no receipt",
+      "result": "PASS",
+      "detail": "refused with SURFACE_REQUIRED then EMPTY_SELECTION; cards, anchors and receipts unchanged",
+      "ms": 2
+    },
+    {
+      "id": "AX34-A01",
+      "title": "same commandId + same payload returns the original receipt and applies nothing twice",
+      "result": "PASS",
+      "detail": "status=REPLAYED; revision and block revisions frozen at 2/3",
+      "ms": 1
+    },
+    {
+      "id": "AX34-A02",
+      "title": "same commandId with a different payload or expected versions is COMMAND_ID_REUSE",
+      "result": "PASS",
+      "detail": "payload change -> COMMAND_ID_REUSE; expectedVersions change -> COMMAND_ID_REUSE; revision frozen at 2",
+      "ms": 1
+    },
+    {
+      "id": "AX34-A03",
+      "title": "a revoked grant blocks even an old commandId replay, and blocks new commands too",
+      "result": "PASS",
+      "detail": "replay -> SOURCE_RESTRICTED; new command -> SOURCE_RESTRICTED; after re-grant -> ACK",
+      "ms": 1
+    },
+    {
+      "id": "AX34-A04",
+      "title": "a rotated capability token does not change the semantic digest",
+      "result": "PASS",
+      "detail": "cap-1111 / cap-9999 / cap-2222+trace all produce one digest and one receipt",
+      "ms": 0
+    },
+    {
+      "id": "AX34-A05",
+      "title": "an expectedVersions mismatch is refused instead of overwriting a newer head",
+      "result": "PASS",
+      "detail": "stale -> EXPECTED_VERSION_MISMATCH (actual rev 2); resolved against 1db2c8ea…; both edits kept (2 comment blocks)",
+      "ms": 2
+    },
+    {
+      "id": "AX28-A01",
+      "title": "a failing store leaves the durable state untouched; the retry returns the original receipt",
+      "result": "PASS",
+      "detail": "write refused; durable bytes identical; retry -> ACK; recovery commitSeq 1->2",
+      "ms": 10
+    },
+    {
+      "id": "AX28-A02",
+      "title": "no command can publish a half-built closure; refusals leave the vault clean",
+      "result": "PASS",
+      "detail": "refusals: SOURCE_VERSION_NOT_FOUND, ANSWER_BLOCK_FOREIGN, INVARIANT_VIOLATION; invariants clean",
+      "ms": 1
+    },
+    {
+      "id": "AX28-A04",
+      "title": "the S1 native package exports and restores in isolation with every reference resolving",
+      "result": "PASS",
+      "detail": "checks=15 all PASS; snapshots=2; warnings=ASSET_BYTES_NOT_PROVIDED+UNDO_UNAVAILABLE_AFTER_RESTORE",
+      "ms": 3
+    },
+    {
+      "id": "AX28-A05",
+      "title": "tampering with the package, or smuggling a block id as a snapshot, is detected",
+      "result": "PASS",
+      "detail": "tampered bytes -> PACKAGE_TAMPERED; block id used as snapshot -> IMPORT_CHECK_FAILED",
+      "ms": 3
+    },
+    {
+      "id": "AX28-A06",
+      "title": "a torn store value is refused at load instead of being half-applied",
+      "result": "PASS",
+      "detail": "truncated value -> STORE_CORRUPT (no partial vault was handed to the caller)",
+      "ms": 2
+    },
+    {
+      "id": "STORE-01",
+      "title": "a committed vault reloads byte-identically after a reopen",
+      "result": "PASS",
+      "detail": "commitSeq=1 bytes=42413; reopened rev=2, next rev=3",
+      "ms": 6
+    },
+    {
+      "id": "STORE-02",
+      "title": "two writers conflict instead of clobbering; the vault epoch blocks a stale session",
+      "result": "PASS",
+      "detail": "concurrent write -> EXPECTED_VERSION_MISMATCH; commit survived; post-reset stale session -> VAULT_EPOCH_MISMATCH",
+      "ms": 1
+    },
+    {
+      "id": "STRUCT-01",
+      "title": "the whole demo can be rebuilt deterministically",
+      "result": "PASS",
+      "detail": "two runs byte-identical (7132 canonical bytes)",
+      "ms": 2
+    },
+    {
+      "id": "STRUCT-02",
+      "title": "S1 scope is enforced, not merely documented",
+      "result": "PASS",
+      "detail": "excluded commands absent; card survived node removal with 2 blocks",
+      "ms": 1
+    },
+    {
+      "id": "STRUCT-03",
+      "title": "the PDF origin is real, refused honestly, and its bytes are verifiable",
+      "result": "PASS",
+      "detail": "sha256=fc4d5eef9175…; capability honest (no engine); resolver -> MISSING/PDF_ENGINE_MISSING",
+      "ms": 1
+    }
+  ]
+}

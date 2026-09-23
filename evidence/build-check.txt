@@ -1,0 +1,18 @@
+BUILD CHECK PASSED
+{
+  "htmlBytes": 147097,
+  "inlineScriptBytes": 131579,
+  "elementIds": 45,
+  "referencedIds": 43,
+  "modules": 8,
+  "assets": [
+    {
+      "name": "conditional-probability-note.pdf",
+      "bytes": 1774
+    },
+    {
+      "name": "textbook-excerpt.txt",
+      "bytes": 408
+    }
+  ]
+}

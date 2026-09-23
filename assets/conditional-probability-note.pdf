@@ -1,0 +1,77 @@
+%PDF-1.4
+%‚„œ”
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 4 0 R /F2 5 0 R >> >> /Contents 6 0 R >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Courier /Encoding /WinAnsiEncoding >>
+endobj
+6 0 obj
+<< /Length 1070 >>
+stream
+BT
+/F1 17 Tf
+1 0 0 1 72 750 Tm
+(Conditional Probability) Tj
+/F1 12 Tf
+1 0 0 1 72 706 Tm
+(Definition. For events A and B with P\(B\) > 0, the conditional) Tj
+/F1 12 Tf
+1 0 0 1 72 684 Tm
+(probability of A given B is defined as) Tj
+/F2 12 Tf
+1 0 0 1 72 662 Tm
+(P\(A | B\) = P\(A and B\) / P\(B\).) Tj
+/F1 12 Tf
+1 0 0 1 72 640 Tm
+(Requirement. The condition P\(B\) > 0 must be checked before the) Tj
+/F1 12 Tf
+1 0 0 1 72 618 Tm
+(formula is applied. The denominator can never be zero.) Tj
+/F1 12 Tf
+1 0 0 1 72 596 Tm
+(Interpretation. Conditioning restricts the sample space to B and) Tj
+/F1 12 Tf
+1 0 0 1 72 574 Tm
+(then rescales the measure so that the total mass is one again.) Tj
+/F1 12 Tf
+1 0 0 1 72 552 Tm
+(Chain rule. For three events with positive probability,) Tj
+/F2 12 Tf
+1 0 0 1 72 530 Tm
+(P\(A and B and C\) = P\(A\) * P\(B | A\) * P\(C | A and B\).) Tj
+/F1 12 Tf
+1 0 0 1 72 508 Tm
+(Independence. A and B are independent exactly when) Tj
+/F2 12 Tf
+1 0 0 1 72 486 Tm
+(P\(A | B\) = P\(A\),) Tj
+/F1 12 Tf
+1 0 0 1 72 464 Tm
+(which requires P\(B\) > 0 as well.) Tj
+ET
+endstream
+endobj
+xref
+0 7
+0000000000 65535 f 
+0000000015 00000 n 
+0000000064 00000 n 
+0000000121 00000 n 
+0000000257 00000 n 
+0000000354 00000 n 
+0000000449 00000 n 
+trailer
+<< /Size 7 /Root 1 0 R >>
+startxref
+1570
+%%EOF
