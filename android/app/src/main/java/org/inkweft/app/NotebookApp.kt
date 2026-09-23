@@ -37,6 +37,7 @@ private val Ink = Color(0xFF24342F)
 fun NotebookApp(vm: NotebookViewModel = viewModel()) {
     val ui by vm.ui.collectAsStateWithLifecycle()
     val context = LocalContext.current
+    val exportFilename = stringResource(R.string.export_filename)
     val scope = rememberCoroutineScope()
     var showCreate by remember { mutableStateOf(false) }
     var newTitle by remember { mutableStateOf("") }
@@ -175,7 +176,7 @@ fun NotebookApp(vm: NotebookViewModel = viewModel()) {
                 confirmExport = false
                 if (d != null) {
                     exportSnapshot = d.title + "\n\n" + d.text
-                    export.launch(context.getString(R.string.export_filename))
+                    export.launch(exportFilename)
                 }
             }) { Text(stringResource(R.string.export_text)) } },
             dismissButton = { TextButton(onClick = { confirmExport = false }) { Text(stringResource(R.string.cancel)) } },
