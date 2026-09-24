@@ -1,4 +1,4 @@
-name: Android A0 foundation
+name: Android native text and ink
 on:
   push:
     branches: ["main"]
@@ -14,7 +14,7 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-24.04
-    timeout-minutes: 25
+    timeout-minutes: 40
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
@@ -40,37 +40,37 @@ jobs:
           set -euo pipefail
           gradle --no-daemon wrapper
           printf '%s  %s\n' '55243ef57851f12b070ad14f7f5bb8302daceeebc5bce5ece5fa6edb23e1145c' 'gradle/wrapper/gradle-wrapper.jar' | sha256sum --check -
-          ./gradlew --no-daemon :core-domain:test :app:lintDebug :app:assembleDebug :data-local:assembleDebugAndroidTest
+          ./gradlew --no-daemon :core-domain:test :app:lintDebug :app:assembleDebug :app:assembleDebugAndroidTest :data-local:assembleDebugAndroidTest
           git diff --exit-code -- data-local/schemas
       - name: Record actual APK provenance
         working-directory: android
         env:
           BUILD_COMMIT: ${{ github.sha }}
+          HEAD_COMMIT: ${{ github.event.pull_request.head.sha || github.sha }}
         run: |
           set -euo pipefail
           mkdir -p build/evidence
-          cp app/build/outputs/apk/debug/app-debug.apk build/evidence/inkweft-a0-text-debug.apk
-          sha256sum build/evidence/inkweft-a0-text-debug.apk > build/evidence/APK-SHA256.txt
-          "$ANDROID_HOME/build-tools/36.0.0/apksigner" verify --verbose --print-certs build/evidence/inkweft-a0-text-debug.apk > build/evidence/apk-signature.txt
+          cp app/build/outputs/apk/debug/app-debug.apk build/evidence/inkweft-a1-ink-debug.apk
+          sha256sum build/evidence/inkweft-a1-ink-debug.apk > build/evidence/APK-SHA256.txt
+          "$ANDROID_HOME/build-tools/36.0.0/apksigner" verify --verbose --print-certs build/evidence/inkweft-a1-ink-debug.apk > build/evidence/apk-signature.txt
+          "$ANDROID_HOME/build-tools/36.0.0/zipalign" -c -P 16 -v 4 build/evidence/inkweft-a1-ink-debug.apk > build/evidence/zip-alignment.txt
           python3 - <<'PY'
           import json, os, platform
           from pathlib import Path
           Path("build/evidence/build.json").write_text(json.dumps({
-            "commit": os.environ["BUILD_COMMIT"],
-            "scope": "A0_NATIVE_TEXT_FOUNDATION_NOT_HANDWRITING",
+            "commit": os.environ["BUILD_COMMIT"], "pr_head": os.environ["HEAD_COMMIT"],
+            "scope": "A1_SINGLE_PAGE_INK_PREVIEW_NOT_FULL_G1_OR_S1",
             "compileSdk": 36, "targetSdk": 36, "minSdk": 31,
-            "applicationId": "org.inkweft.app.a0",
-            "runner": platform.platform(),
-            "apk_install": "NOT_RUN",
-            "instrumented_tests": "COMPILED_NOT_RUN",
-            "pencil3": "NOT_RUN",
+            "applicationId": "org.inkweft.app.a0", "inkVersion": "1.0.0",
+            "runner": platform.platform(), "instrumented_tests": "SEE_RUNTIME_REPORT",
+            "physical_device": "NOT_RUN", "pencil3": "NOT_RUN", "long_stroke_checkpoints": "NOT_IMPLEMENTED",
             "plan_37_acceptance_cases": "NOT_RUN"
           }, indent=2) + "\n")
           PY
-      - name: Upload successfully built APK and bootstrap outputs
+      - name: Upload built APK and schema before device checks
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: inkweft-a0-text-${{ github.sha }}
+          name: inkweft-a1-ink-${{ github.sha }}
           retention-days: 7
           if-no-files-found: error
           path: |
@@ -79,14 +79,51 @@ jobs:
             android/gradlew.bat
             android/gradle/wrapper/
             android/data-local/schemas/
-      - name: Upload existing test and lint reports
+      - name: Install emulator test image
+        run: sdkmanager "emulator" "system-images;android-35;google_apis;x86_64"
+      - name: Start disposable emulator
+        run: |
+          set -euo pipefail
+          test -e /dev/kvm
+          sudo chmod 666 /dev/kvm
+          printf 'no\n' | avdmanager create avd --force --name inkweft-ci --package "system-images;android-35;google_apis;x86_64" --device pixel_2
+          mkdir -p android/build/evidence
+          nohup "$ANDROID_HOME/emulator/emulator" -avd inkweft-ci -no-window -no-snapshot -noaudio -no-boot-anim -gpu swiftshader_indirect -accel on > android/build/evidence/emulator.log 2>&1 &
+          echo $! > android/build/evidence/emulator.pid
+          timeout 240 bash -c 'until [ "$(adb shell getprop sys.boot_completed 2>/dev/null | tr -d "\r")" = "1" ]; do sleep 3; done'
+          adb shell input keyevent 82
+          adb shell settings put global window_animation_scale 0
+          adb shell settings put global transition_animation_scale 0
+          adb shell settings put global animator_duration_scale 0
+          adb shell getprop > android/build/evidence/emulator-properties.txt
+      - name: Run real Room and Compose instrumented tests
+        working-directory: android
+        run: |
+          set -euo pipefail
+          ./gradlew --no-daemon :data-local:connectedDebugAndroidTest :app:connectedDebugAndroidTest
+          adb pull /sdcard/Android/data/org.inkweft.app.a0/files/ink-ui-emulator.png build/evidence/ink-ui-emulator.png
+          printf '%s\n' 'Instrumented tasks completed on an API35 x86_64 emulator. Not Pencil3 or physical-device evidence. See JUnit XML.' > build/evidence/instrumentation-completed.txt
+      - name: Capture emulator logs
+        if: always()
+        run: |
+          mkdir -p android/build/evidence
+          if adb get-state >/dev/null 2>&1; then
+            adb logcat -d -t 1500 > android/build/evidence/emulator-logcat.txt
+            adb emu kill || true
+          fi
+      - name: Upload all actually existing test and runtime reports
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: android-a0-reports-${{ github.run_id }}
+          name: android-a1-reports-${{ github.run_id }}
           retention-days: 7
           if-no-files-found: warn
           path: |
             android/core-domain/build/test-results/
             android/core-domain/build/reports/tests/
             android/app/build/reports/lint-results*
+            android/app/build/outputs/androidTest-results/
+            android/app/build/reports/androidTests/
+            android/data-local/build/outputs/androidTest-results/
+            android/data-local/build/reports/androidTests/
+            android/build/evidence/

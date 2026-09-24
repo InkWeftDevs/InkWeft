@@ -9,8 +9,9 @@ android {
         applicationId = "org.inkweft.app.a0"
         minSdk = 31
         targetSdk = 36
-        versionCode = 1
-        versionName = "0.0.1-a0-text-foundation"
+        versionCode = 2
+        versionName = "0.0.2-a1-ink-preview"
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
     buildFeatures { compose = true; buildConfig = true }
     compileOptions {
@@ -29,4 +30,14 @@ dependencies {
     implementation(libs.lifecycle.viewmodel.compose)
     implementation(libs.lifecycle.runtime.compose)
     implementation(libs.kotlinx.coroutines)
+    implementation(libs.ink.brush)
+    implementation(libs.ink.strokes)
+    implementation(libs.ink.rendering)
+    androidTestImplementation(platform(libs.compose.bom))
+    androidTestImplementation(libs.compose.ui.test)
+    androidTestImplementation(libs.androidx.test.core)
+    androidTestImplementation(libs.androidx.test.runner)
+    androidTestImplementation(libs.androidx.test.junit)
+    androidTestImplementation(libs.junit)
+    debugImplementation(libs.compose.ui.test.manifest)
 }
