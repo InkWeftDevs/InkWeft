@@ -9,10 +9,16 @@ android {
         minSdk = 31
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
-    sourceSets["androidTest"].assets.srcDir("$projectDir/schemas")
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
+    }
+}
+androidComponents {
+    onVariants(selector().all()) { variant ->
+        variant.deviceTests.values.forEach { test ->
+            test.sources.assets?.addStaticSourceDirectory("schemas")
+        }
     }
 }
 ksp { arg("room.schemaLocation", "$projectDir/schemas") }
