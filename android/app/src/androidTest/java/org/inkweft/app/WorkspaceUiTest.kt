@@ -2,11 +2,15 @@
 package org.inkweft.app
 
 import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Color
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.test.platform.app.InstrumentationRegistry
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.flow.first
@@ -23,9 +27,16 @@ class WorkspaceUiTest {
     private val app get()=compose.activity.application as InkWeftApplication
     private fun waitForShelf(){compose.waitUntil(10_000){runCatching{compose.onNodeWithTag("new-note").assertIsEnabled()}.isSuccess}}
     private var createdId=""
-    private fun create(world:Boolean){waitForShelf();compose.onNodeWithTag("new-note").performClick();compose.onNodeWithTag("new-title").performTextInput((if(world)"知识草稿 · 无界"else"微积分 · 随手推导")+" · "+UUID.randomUUID().toString().take(6));if(world)compose.onNodeWithTag("create-world").performClick();compose.onNodeWithTag("create-note").performClick();saved(0)
-        compose.waitUntil(10_000){androidx.core.view.ViewCompat.getRootWindowInsets(compose.activity.window.decorView)?.isVisible(androidx.core.view.WindowInsetsCompat.Type.ime())==false}
+    private fun settleKeyboard(){
+        compose.activityRule.scenario.onActivity{activity->
+            activity.currentFocus?.clearFocus()
+            WindowCompat.getInsetsController(activity.window,activity.window.decorView).hide(WindowInsetsCompat.Type.ime())
+        }
+        compose.waitUntil(10_000){androidx.core.view.ViewCompat.getRootWindowInsets(compose.activity.window.decorView)?.isVisible(WindowInsetsCompat.Type.ime())==false}
         compose.waitForIdle()
+    }
+    private fun create(world:Boolean){waitForShelf();compose.onNodeWithTag("new-note").performClick();compose.onNodeWithTag("new-title").performTextInput((if(world)"知识草稿 · 无界"else"微积分 · 随手推导")+" · "+UUID.randomUUID().toString().take(6));if(world)compose.onNodeWithTag("create-world").performClick();compose.onNodeWithTag("create-note").performClick();saved(0)
+        settleKeyboard()
         createdId=runBlocking{app.repository.observeNotes().first()}.first().id
     }
     private fun saved(n:Int){try{compose.waitUntil(10_000){runCatching{compose.onNodeWithTag("ink-status").assertTextContains("已提交",substring=true).assertTextContains("$n 笔",substring=true)}.isSuccess}}catch(error:Throwable){
@@ -39,8 +50,45 @@ class WorkspaceUiTest {
         return checkNotNull(find(compose.activity.window.decorView))
     }
     private fun shot(name:String){compose.waitForIdle();val bitmap=checkNotNull(InstrumentationRegistry.getInstrumentation().uiAutomation.takeScreenshot());File(compose.activity.getExternalFilesDir(null),name).outputStream().use{bitmap.compress(Bitmap.CompressFormat.PNG,100,it)};bitmap.recycle()}
+    private fun assertViewportClip(world:Boolean){
+        compose.runOnIdle{
+            val view=InkCanvasView(compose.activity)
+            view.configure(world,PaperStyle.GRID,null);view.layout(0,0,160,220)
+            val image=Bitmap.createBitmap(320,340,Bitmap.Config.ARGB_8888)
+            try{
+                image.eraseColor(Color.MAGENTA)
+                val target=Canvas(image);target.translate(60f,50f);view.draw(target)
+                assertEquals("view draw must not fill parent above",Color.MAGENTA,image.getPixel(80,20))
+                assertEquals("view draw must not fill parent below",Color.MAGENTA,image.getPixel(80,290))
+                assertEquals("view draw must not fill parent left",Color.MAGENTA,image.getPixel(20,80))
+                assertEquals("view draw must not fill parent right",Color.MAGENTA,image.getPixel(250,80))
+                assertNotEquals("the viewport itself must render",Color.MAGENTA,image.getPixel(100,100))
+                target.drawColor(Color.CYAN)
+                assertEquals("clip must be restored for parent draw",Color.CYAN,image.getPixel(10,10))
+            }finally{image.recycle()}
+        }
+    }
+    private fun assertToolbarPixels(){
+        // Semantics can remain clickable under an overflowing AndroidView. Inspect
+        // actual screen pixels above its viewport as well as asserting controls.
+        compose.onNodeWithTag("back-library").assertIsDisplayed()
+        compose.onNodeWithTag("ink-tool-0").assertIsDisplayed()
+        compose.waitForIdle()
+        var top=0;var left=0;var right=0
+        compose.runOnIdle{val v=canvas();val location=IntArray(2);v.getLocationOnScreen(location);top=location[1];left=location[0];right=left+v.width}
+        val image=checkNotNull(InstrumentationRegistry.getInstrumentation().uiAutomation.takeScreenshot())
+        try{
+            val y0=(top-110).coerceAtLeast(35);val y1=(top-4).coerceAtMost(image.height)
+            var dark=0
+            for(y in y0 until y1)for(x in left.coerceAtLeast(0) until right.coerceAtMost(image.width)){
+                val color=image.getPixel(x,y)
+                if(Color.red(color)<150 && Color.green(color)<165 && Color.blue(color)<160)dark++
+            }
+            assertTrue("toolbar text/icons were painted over by the canvas: $dark visible pixels",dark>80)
+        }finally{image.recycle()}
+    }
     @Test fun realBoardNegativeCoordinatesPanZoomAndReopen(){
-        create(true);compose.onNodeWithTag("ink-finger").performScrollTo().performClick();draw();saved(1)
+        create(true);assertViewportClip(true);compose.onNodeWithTag("ink-finger").performScrollTo().performClick();draw();saved(1)
         compose.onNodeWithTag("ink-finger").performScrollTo().performClick()
         compose.onNodeWithTag("ink-surface").performTouchInput{swipe(Offset(width*.3f,height*.4f),Offset(width*.7f,height*.65f),250)}
         compose.onNodeWithTag("zoom-in").performClick()
@@ -52,7 +100,7 @@ class WorkspaceUiTest {
         compose.waitUntil(10_000){runBlocking{app.workspaceRepository.get(note.id).zoom>0}}
         compose.activityRule.scenario.recreate();saved(1)
         compose.runOnIdle{assertEquals(before,canvas().snapshotViewport())}
-        compose.onNodeWithTag("fit-content").performClick();shot("workspace-board.png")
+        compose.onNodeWithTag("fit-content").performClick();assertToolbarPixels();shot("workspace-board.png")
         val reread=runBlocking{app.inkRepository.read(note.id).strokes.map{it.stroke}}
         assertEquals(paths.single().samples,reread.single().samples)
         compose.onNodeWithTag("back-library").performClick()
@@ -70,18 +118,18 @@ class WorkspaceUiTest {
         compose.onNodeWithTag("note-menu-${b.id}").performClick();compose.onNodeWithText("移入回收站",useUnmergedTree=true).performClick();compose.onNodeWithText("移入回收站",useUnmergedTree=true).performClick()
         compose.waitUntil(10_000){runBlocking{app.workspaceRepository.get(b.id).trashedAt!=null}}
         runBlocking{val row=app.workspaceRepository.get(b.id);assertTrue(app.workspaceRepository.organize(b.id,row.revision,"数学","复习",true,false))}
-        compose.onNodeWithTag("library-search").performTextClearance();compose.onNodeWithTag("library-type-all").performClick();shot("workspace-library.png")
+        compose.onNodeWithTag("library-search").performTextClearance();compose.onNodeWithTag("library-type-all").performClick();settleKeyboard();shot("workspace-library.png")
         assertNotNull(runBlocking{app.repository.read(a.id)})
     }
     @Test fun fitModesAndPaperChangesDoNotRewriteSamples(){
-        create(false);compose.onNodeWithTag("ink-finger").performScrollTo().performClick();draw();saved(1)
+        create(false);assertViewportClip(false);compose.onNodeWithTag("ink-finger").performScrollTo().performClick();draw();saved(1)
         val n=runBlocking{app.repository.observeNotes().first()}.first{it.id==createdId}
         val before=runBlocking{app.inkRepository.read(n.id).strokes.single().stroke.samples}
         compose.onNodeWithTag("fit-page").performClick();var small=0.0;compose.runOnIdle{small=canvas().snapshotViewport().zoom}
         compose.onNodeWithTag("fit-width").performClick();compose.runOnIdle{assertTrue(canvas().snapshotViewport().zoom>=small)}
         compose.onNodeWithTag("ink-more").performScrollTo().performClick();compose.onNodeWithText("纸面 · 方格",useUnmergedTree=true).performClick()
         compose.waitUntil(10_000){runBlocking{app.workspaceRepository.get(n.id).paper==PaperStyle.GRID.ordinal}}
-        assertEquals(before,runBlocking{app.inkRepository.read(n.id).strokes.single().stroke.samples});shot("workspace-page.png");compose.onNodeWithTag("back-library").performClick()
+        assertEquals(before,runBlocking{app.inkRepository.read(n.id).strokes.single().stroke.samples});assertToolbarPixels();shot("workspace-page.png");compose.onNodeWithTag("back-library").performClick()
     }
     @Test fun compactLayoutStillCreatesBoardAndCanOpenDiagnostics(){
         val automation=InstrumentationRegistry.getInstrumentation().uiAutomation

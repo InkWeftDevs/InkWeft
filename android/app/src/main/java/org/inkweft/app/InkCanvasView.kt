@@ -106,6 +106,17 @@ class InkCanvasView(context:Context):View(context){
     }
     fun zoomBy(ratio:Double){cancelGesture();viewport=viewport.zoomAt(ratio,width/2.0,height/2.0,width.toDouble(),height.toDouble(),density);transform();invalidate();onViewport(viewport)}
     override fun onSizeChanged(w:Int,h:Int,oldw:Int,oldh:Int){cancelGesture();if(configured && oldw==0 && !restored)initialFit();if(preview)if(world)fitContent(false)else fitPage(false);transform()}
+    override fun draw(canvas:Canvas){
+        // AndroidView does not clip to its layout bounds. drawColor otherwise
+        // paints over the Compose toolbar even while its semantics remain live.
+        // The viewport clip is independent of the source-page clip and must stay
+        // in local view coordinates, before any pan/zoom or Ink render transform.
+        val viewportClip=canvas.save()
+        try{
+            canvas.clipRect(0,0,width,height)
+            super.draw(canvas)
+        }finally{canvas.restoreToCount(viewportClip)}
+    }
     override fun onDraw(canvas:Canvas){
         super.onDraw(canvas)
         if(!configured)return
