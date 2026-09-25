@@ -80,9 +80,9 @@ fun InkScreen(note:NoteDraft,workspace:WorkspaceViewModel=viewModel()){
         }
     },confirmButton={TextButton(onClick={directory=false}){Text("关闭")}})
     insertion?.let{(anchor,location)->
-        InsertPagesDialog(ui.pages,anchor,location,{insertion=null}){where,id,paper,count,open->
+        InsertPagesDialog(ui.pages,anchor,location,{insertion=null}){where,id,paper,count,open,order->
             insertion=null
-            if(canNavigate&&!ui.busy&&!ui.insertionUnknown)vm.insert(where,id,paper,count,open)
+            if(canNavigate&&!ui.busy&&!ui.insertionUnknown)vm.insert(where,id,paper,count,open,order)
         }
     }
     if(confirmBook)AlertDialog(onDismissRequest={confirmBook=false},title={Text("导出整本内容副本")},text={Text("包括本笔记所有已保存页面、局部擦除效果和键入文字。明文 .iwbook，不含撤销历史、账号或密钥；不是完整资料库备份。目标可能由云盘提供。")},confirmButton={TextButton(onClick={confirmBook=false;exporting=true;scope.launch{try{val bytes=withContext(Dispatchers.IO){app.pages.exportBook(note.base.id).encode()};exportBytes=bytes;export.launch("墨织笔记本.iwbook")}catch(c:CancellationException){throw c}catch(_:Exception){Toast.makeText(context,"无法导出整本内容，原数据保留；可尝试逐页导出",Toast.LENGTH_LONG).show()}finally{exporting=false}}}){Text("选择位置")}},dismissButton={TextButton(onClick={confirmBook=false}){Text("取消")}})

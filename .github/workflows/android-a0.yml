@@ -121,7 +121,7 @@ jobs:
           python3 - <<'PY'
           import glob, sys
           import xml.etree.ElementTree as ET
-          expected_totals = {":data-local": 42, ":app": 25}
+          expected_totals = {":data-local": 44, ":app": 25}
           roots = {
               ":data-local": glob.glob("data-local/build/outputs/androidTest-results/**/*.xml", recursive=True),
               ":app": glob.glob("app/build/outputs/androidTest-results/**/*.xml", recursive=True),
@@ -176,6 +176,8 @@ jobs:
           mkdir -p android/build/evidence
           if adb get-state >/dev/null 2>&1; then
             adb logcat -d -t 1500 > android/build/evidence/emulator-logcat.txt
+            # Preserve synthetic test screenshots even when connected tests fail.
+            adb pull "/sdcard/Android/data/org.inkweft.app.a0.insertion/files/." "android/build/evidence/" || true
             adb emu kill || true
           fi
       - name: Upload all actually existing test and runtime reports

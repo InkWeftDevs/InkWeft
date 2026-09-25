@@ -47,6 +47,9 @@ class PageInsertionRepository(private val db: NoteDatabase, private val fault: (
                 return@withTransaction InsertPagesResult.CapacityReached
             if (command.pageIds.any { db.pages().get(it) != null })
                 return@withTransaction InsertPagesResult.CommandReused
+            val stay = command.stayOnPageId ?: workspace.selectedPageId.takeIf { id -> pages.any { it.id == id } }
+                ?: pages.first().id
+            if (pages.none { it.id == stay }) return@withTransaction InsertPagesResult.Unavailable
             val index = command.insertionIndex(pages.map { it.id })
             check(db.pageInsertions().shift(book.id, index, command.pageIds.size) == pages.size - index)
             val predecessor = pages.getOrNull(index - 1)?.id
@@ -54,7 +57,7 @@ class PageInsertionRepository(private val db: NoteDatabase, private val fault: (
                 db.pages().insert(NotebookPageRow(id, book.id, index + offset, false, command.paper.ordinal,
                     createdAfterId = if (offset == 0) predecessor else command.pageIds[offset - 1]))
             }
-            if (command.openInserted) check(db.workspace().selectPage(book.id, command.pageIds.first()) == 1)
+            check(db.workspace().selectPage(book.id, if (command.openInserted) command.pageIds.first() else stay) == 1)
             check(db.notes().touch(book.id, System.currentTimeMillis()) == 1)
             fault(PageInsertFault.BEFORE_RECEIPT)
             db.pageInsertions().record(PageInsertReceiptRow(command.commandId, book.id, digest, command.pageIds.joinToString(",")))

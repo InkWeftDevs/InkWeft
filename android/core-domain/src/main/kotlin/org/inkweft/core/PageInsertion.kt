@@ -20,10 +20,12 @@ class InsertPages(
     val paper: PaperStyle,
     pageIds: List<String>,
     val openInserted: Boolean,
+    val stayOnPageId: String? = null,
 ) {
     val pageIds: List<String> = Collections.unmodifiableList(ArrayList(pageIds))
     init {
         canonicalId(commandId); canonicalId(notebookId)
+        stayOnPageId?.let { canonicalId(it); require(!openInserted && it !in this.pageIds) }
         require(expectedOrder.matches(Regex("[a-f0-9]{64}")))
         require(this.pageIds.size in 1..MAX_BATCH && this.pageIds.distinct().size == this.pageIds.size)
         this.pageIds.forEach(::canonicalId)
@@ -45,7 +47,7 @@ class InsertPages(
         }
     }
     fun digest(): String = hashFields(listOf("inkweft.insert-pages.v1", commandId, notebookId,
-        expectedOrder, location.name, anchorPageId.orEmpty(), paper.name, openInserted.toString()) + pageIds)
+        expectedOrder, location.name, anchorPageId.orEmpty(), paper.name, openInserted.toString(), stayOnPageId.orEmpty()) + pageIds)
 
     companion object {
         const val MAX_BATCH = 20

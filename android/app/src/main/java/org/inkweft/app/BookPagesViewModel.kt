@@ -55,12 +55,16 @@ class BookPagesViewModel(
             }
         }
     }
-    fun insert(location: PageInsertLocation, anchorId: String?, paper: PaperStyle, count: Int, openNew: Boolean) {
+    fun insert(location: PageInsertLocation, anchorId: String?, paper: PaperStyle, count: Int, openNew: Boolean, previewOrder: String) {
         if (ui.value.loading || ui.value.busy || pending != null || count !in 1..InsertPages.MAX_BATCH) return
         val rows = ui.value.pages
         if (rows.isEmpty() || rows.any { it.world } || rows.size + count > InsertPages.MAX_PAGES) return
-        pending = InsertPages(UUID.randomUUID().toString(), bookId, InsertPages.orderHash(rows.map { it.id }),
-            location, anchorId, paper, List(count) { UUID.randomUUID().toString() }, openNew)
+        if (previewOrder != InsertPages.orderHash(rows.map { it.id })) {
+            mutable.update { it.copy(error = "页面顺序已变化，没有插入。请重新核对插页预览。") }; return
+        }
+        pending = InsertPages(UUID.randomUUID().toString(), bookId, previewOrder,
+            location, anchorId, paper, List(count) { UUID.randomUUID().toString() }, openNew,
+            if (openNew) null else ui.value.selectedId)
         persistPending(); submitPending()
     }
     fun retryInsertion() { if (!ui.value.busy && pending != null) submitPending() }
@@ -105,6 +109,7 @@ class BookPagesViewModel(
     // unacknowledged work across force-stop. Durable receipts cover committed work.
     private fun persistPending() {
         val c = pending
+        savedState.set<String?>("insert.stay", c?.stayOnPageId)
         savedState.set<ArrayList<String>?>("insert.operation", c?.let {
             arrayListOf(it.commandId, it.notebookId, it.expectedOrder, it.location.name,
                 it.anchorPageId.orEmpty(), it.paper.name, it.openInserted.toString(), *it.pageIds.toTypedArray())
@@ -114,7 +119,8 @@ class BookPagesViewModel(
         val values = savedState.get<ArrayList<String>>("insert.operation") ?: return null
         require(values.size in 8..(7 + InsertPages.MAX_BATCH) && values[1] == bookId)
         return InsertPages(values[0], values[1], values[2], PageInsertLocation.valueOf(values[3]),
-            values[4].ifEmpty { null }, PaperStyle.valueOf(values[5]), values.drop(7), values[6].toBooleanStrict())
+            values[4].ifEmpty { null }, PaperStyle.valueOf(values[5]), values.drop(7), values[6].toBooleanStrict(),
+            savedState.get<String>("insert.stay"))
     }
     class Factory(private val id: String, private val repo: NotebookPages, private val workspace: WorkspaceRepository) : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {

@@ -20,7 +20,7 @@ import org.inkweft.data.NotebookPageRow
 @Composable
 internal fun InsertPagesDialog(
     pages: List<NotebookPageRow>, initialAnchor: String, initialLocation: PageInsertLocation,
-    onDismiss: () -> Unit, onInsert: (PageInsertLocation, String?, PaperStyle, Int, Boolean) -> Unit,
+    onDismiss: () -> Unit, onInsert: (PageInsertLocation, String?, PaperStyle, Int, Boolean, String) -> Unit,
 ) {
     var location by remember { mutableStateOf(initialLocation) }
     var anchorId by remember { mutableStateOf(initialAnchor) }
@@ -88,7 +88,7 @@ internal fun InsertPagesDialog(
                 }
             }
         },
-        confirmButton={Button(onClick={onInsert(location,if(location in listOf(PageInsertLocation.BEFORE,PageInsertLocation.AFTER))anchorId else null,selectedStyle,count,openNew)},
+        confirmButton={Button(onClick={onInsert(location,if(location in listOf(PageInsertLocation.BEFORE,PageInsertLocation.AFTER))anchorId else null,selectedStyle,count,openNew,InsertPages.orderHash(pages.map { it.id }))},
             enabled=valid,modifier=Modifier.testTag("confirm-insert-pages")){Text("插入 $count 页")}},
         dismissButton={TextButton(onClick=onDismiss){Text("取消")}})
 }

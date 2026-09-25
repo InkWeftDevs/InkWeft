@@ -45,7 +45,7 @@ class PageInsertionUiTest {
         compose.waitUntil(10_000){rows(book).size==3}
         assertEquals(book,rows(book).last().id);assertTrue(rows(book).take(2).all{it.paper==PaperStyle.GRID.ordinal})
         assertEquals(stroke.samples,runBlocking{app.inkRepository.read(book).strokes.single().stroke.samples})
-        compose.onNodeWithTag("page-counter").assertTextEquals("第 1 / 3 页")
+        compose.onNodeWithTag("page-counter",useUnmergedTree=true).assertTextEquals("第 1 / 3 页")
         compose.onNodeWithTag("page-directory").performClick();shot("page-directory-insertion.png")
         compose.onNodeWithTag("jump-page-3").performClick();saved();compose.onNodeWithTag("ink-status").assertTextContains("1 笔",substring=true)
     }
@@ -57,14 +57,14 @@ class PageInsertionUiTest {
         compose.onNodeWithTag("insert-open-new").performScrollTo().performClick();insert()
         compose.waitUntil(10_000){rows(book).size==4};val actual=rows(book)
         assertEquals(previous.map{it.id},actual.drop(1).map{it.id})
-        compose.onNodeWithTag("page-counter").assertTextEquals("第 3 / 4 页")
-        compose.activityRule.scenario.recreate();saved();compose.onNodeWithTag("page-counter").assertTextEquals("第 3 / 4 页")
+        compose.onNodeWithTag("page-counter",useUnmergedTree=true).assertTextEquals("第 3 / 4 页")
+        compose.activityRule.scenario.recreate();saved();compose.onNodeWithTag("page-counter",useUnmergedTree=true).assertTextEquals("第 3 / 4 页")
     }
     @Test fun cancelledDialogDoesNotAddPagesAndEndKeepsOrder(){
         val book=create();val first=rows(book)
         compose.onNodeWithTag("add-page").performClick();compose.onNodeWithTag("insert-count-plus").performScrollTo().performClick();compose.onNodeWithText("取消").performClick()
         assertEquals(first,rows(book));compose.onNodeWithTag("add-page").performClick();compose.onNodeWithTag("insert-end").performScrollTo().performClick();insert()
         compose.waitUntil(10_000){rows(book).size==2};assertEquals(book,rows(book).first().id)
-        compose.onNodeWithTag("page-counter").assertTextEquals("第 2 / 2 页")
+        compose.onNodeWithTag("page-counter",useUnmergedTree=true).assertTextEquals("第 2 / 2 页")
     }
 }
