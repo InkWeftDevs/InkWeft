@@ -18,9 +18,6 @@ jobs:
     env:
       ORG_GRADLE_PROJECT_inkweftDiagnosticBuild: "true"
       INKWEFT_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
-      ANDROID_AVD_HOME: ${{ runner.temp }}/inkweft-avd
-      ANDROID_USER_HOME: ${{ runner.temp }}/inkweft-android-user
-      ANDROID_EMULATOR_HOME: ${{ runner.temp }}/inkweft-android-user
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
@@ -88,6 +85,10 @@ jobs:
       - name: Install emulator test image
         run: sdkmanager "emulator" "system-images;android-35;google_apis;x86_64"
       - name: Start disposable emulator
+        env:
+          ANDROID_AVD_HOME: ${{ runner.temp }}/inkweft-avd
+          ANDROID_USER_HOME: ${{ runner.temp }}/inkweft-android-user
+          ANDROID_EMULATOR_HOME: ${{ runner.temp }}/inkweft-android-user
         run: |
           set -euo pipefail
           test -e /dev/kvm
