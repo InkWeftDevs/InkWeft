@@ -8,12 +8,12 @@ android {
     namespace = "org.inkweft.app"
     compileSdk = 36
     defaultConfig {
-        applicationId = if (diagnosticBuild) "org.inkweft.app.a0.diagnostics" else "org.inkweft.app.a0"
+        applicationId = if (diagnosticBuild) "org.inkweft.app.a0.workspace" else "org.inkweft.app.a0"
         minSdk = 31
         targetSdk = 36
-        versionCode = 3
-        versionName = "0.0.3-a1-diagnostics"
-        manifestPlaceholders["appLabel"] = if (diagnosticBuild) "墨织诊断预览" else "墨织"
+        versionCode = 4
+        versionName = "0.0.4-a2-workspace"
+        manifestPlaceholders["appLabel"] = if (diagnosticBuild) "墨织工作台预览" else "墨织"
         buildConfigField("String", "BUILD_COMMIT", "\"${commitValue("GITHUB_SHA")}\"")
         buildConfigField("String", "SOURCE_COMMIT", "\"${commitValue("INKWEFT_HEAD_SHA")}\"")
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"

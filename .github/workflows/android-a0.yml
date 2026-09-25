@@ -1,4 +1,4 @@
-name: Android native text and ink
+name: Android workspace and native ink
 on:
   push:
     branches: ["main"]
@@ -53,27 +53,29 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p build/evidence
-          cp app/build/outputs/apk/debug/app-debug.apk build/evidence/inkweft-a1-diagnostics-debug.apk
-          sha256sum build/evidence/inkweft-a1-diagnostics-debug.apk > build/evidence/APK-SHA256.txt
-          "$ANDROID_HOME/build-tools/36.0.0/apksigner" verify --verbose --print-certs build/evidence/inkweft-a1-diagnostics-debug.apk > build/evidence/apk-signature.txt
-          "$ANDROID_HOME/build-tools/36.0.0/zipalign" -c -P 16 -v 4 build/evidence/inkweft-a1-diagnostics-debug.apk > build/evidence/zip-alignment.txt
+          cp app/build/outputs/apk/debug/app-debug.apk build/evidence/inkweft-a2-workspace-debug.apk
+          sha256sum build/evidence/inkweft-a2-workspace-debug.apk > build/evidence/APK-SHA256.txt
+          "$ANDROID_HOME/build-tools/36.0.0/apksigner" verify --verbose --print-certs build/evidence/inkweft-a2-workspace-debug.apk > build/evidence/apk-signature.txt
+          "$ANDROID_HOME/build-tools/36.0.0/zipalign" -c -P 16 -v 4 build/evidence/inkweft-a2-workspace-debug.apk > build/evidence/zip-alignment.txt
           python3 - <<'PY'
           import json, os, platform
           from pathlib import Path
+          metadata=json.loads(Path("app/build/outputs/apk/debug/output-metadata.json").read_text())
+          assert metadata['applicationId']=='org.inkweft.app.a0.workspace'
           Path("build/evidence/build.json").write_text(json.dumps({
             "commit": os.environ["BUILD_COMMIT"], "pr_head": os.environ["HEAD_COMMIT"],
-            "scope": "A1_DIAGNOSTICS_SIDE_BY_SIDE_PREVIEW_NOT_FULL_G1_OR_S1",
+            "scope": "A2_WORKSPACE_BOARD_PREVIEW_NOT_FULL_G1_OR_S1",
             "compileSdk": 36, "targetSdk": 36, "minSdk": 31,
-            "applicationId": "org.inkweft.app.a0.diagnostics", "versionName": "0.0.3-a1-diagnostics", "inkVersion": "1.0.0",
-            "runner": platform.platform(), "instrumented_tests": "SEE_RUNTIME_REPORT",
+            "applicationId": metadata['applicationId'], "versionName": metadata['elements'][0]['versionName'],
+            "inkVersion": "1.0.0", "runner": platform.platform(), "instrumented_tests": "SEE_RUNTIME_REPORT",
             "physical_device": "NOT_RUN", "pencil3": "NOT_RUN", "long_stroke_checkpoints": "NOT_IMPLEMENTED",
-            "plan_37_acceptance_cases": "NOT_RUN"
+            "restart_undo_history": "NOT_IMPLEMENTED", "plan_37_acceptance_cases": "NOT_RUN"
           }, indent=2) + "\n")
           PY
       - name: Upload built APK and schema before device checks
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: inkweft-a1-diagnostics-${{ github.sha }}
+          name: inkweft-a2-workspace-${{ github.sha }}
           retention-days: 7
           if-no-files-found: error
           path: |
@@ -84,7 +86,7 @@ jobs:
             android/data-local/schemas/
       - name: Install emulator test image
         run: sdkmanager "emulator" "system-images;android-35;google_apis;x86_64"
-      - name: Start disposable emulator
+      - name: Start disposable tablet emulator
         env:
           ANDROID_AVD_HOME: ${{ runner.temp }}/inkweft-avd
           ANDROID_USER_HOME: ${{ runner.temp }}/inkweft-android-user
@@ -101,6 +103,8 @@ jobs:
           echo $! > android/build/evidence/emulator.pid
           timeout 240 bash -c 'until [ "$(adb shell getprop sys.boot_completed 2>/dev/null | tr -d "\r")" = "1" ]; do sleep 3; done'
           adb shell input keyevent 82
+          adb shell wm size 1920x1200
+          adb shell wm density 240
           adb shell settings put global window_animation_scale 0
           adb shell settings put global transition_animation_scale 0
           adb shell settings put global animator_duration_scale 0
@@ -110,21 +114,20 @@ jobs:
         run: |
           set -euo pipefail
           ./gradlew --no-daemon :data-local:connectedDebugAndroidTest :app:connectedDebugAndroidTest
-          printf '%s\n' 'Instrumented tasks completed on an API35 x86_64 emulator. Not Pencil3, actual share-target, or physical-device evidence. See JUnit XML.' > build/evidence/instrumentation-completed.txt
-      - name: Capture actual in-app diagnostic output on disposable test install
+          printf '%s\n' 'Instrumented tasks completed on API35 x86_64 emulator. Not Pencil3 or physical-device evidence. See actual JUnit XML.' > build/evidence/instrumentation-completed.txt
+      - name: Capture actual workspace screenshots and diagnostic output
         working-directory: android
         run: |
           set -euo pipefail
-          # Gradle-managed test installation may be removed before a subsequent adb pull.
-          # Repeat the same four UI cases with explicit lifetime; never clear a user device.
+          # Explicit disposable CI install, never a user device or user-data reset.
           adb install -r app/build/outputs/apk/debug/app-debug.apk
           adb install -r app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk
-          timeout 180 adb shell am instrument -w org.inkweft.app.a0.diagnostics.test/androidx.test.runner.AndroidJUnitRunner | tr -d '\r' | tee build/evidence/evidence-capture-instrumentation.txt
-          grep -Fx 'OK (4 tests)' build/evidence/evidence-capture-instrumentation.txt
-          adb pull /sdcard/Android/data/org.inkweft.app.a0.diagnostics/files/ink-ui-emulator.png build/evidence/ink-ui-emulator.png
-          adb pull /sdcard/Android/data/org.inkweft.app.a0.diagnostics/files/diagnostics-emulator.zip build/evidence/diagnostics-emulator.zip
-          adb pull /sdcard/Android/data/org.inkweft.app.a0.diagnostics/files/diagnostics-emulator.png build/evidence/diagnostics-emulator.png
-          printf '%s\n' 'Four UI cases were repeated for artifact capture, not four additional distinct acceptance tests. Actual share-target and physical device remain NOT_RUN.' > build/evidence/evidence-capture-scope.txt
+          timeout 240 adb shell am instrument -w org.inkweft.app.a0.workspace.test/androidx.test.runner.AndroidJUnitRunner | tr -d '\r' | tee build/evidence/evidence-capture-instrumentation.txt
+          grep -Fx 'OK (8 tests)' build/evidence/evidence-capture-instrumentation.txt
+          for name in ink-ui-emulator.png diagnostics-emulator.zip diagnostics-emulator.png workspace-library.png workspace-board.png workspace-page.png workspace-narrow.png; do
+            adb pull "/sdcard/Android/data/org.inkweft.app.a0.workspace/files/$name" "build/evidence/$name"
+          done
+          printf '%s\n' 'Eight UI cases repeated only for artifact capture, not additional unique tests. Actual device and real share-target remain NOT_RUN.' > build/evidence/evidence-capture-scope.txt
       - name: Capture emulator logs
         if: always()
         run: |
@@ -137,7 +140,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: android-a1-reports-${{ github.run_id }}
+          name: android-a2-reports-${{ github.run_id }}
           retention-days: 7
           if-no-files-found: warn
           path: |
