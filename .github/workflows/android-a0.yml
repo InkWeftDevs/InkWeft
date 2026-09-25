@@ -17,6 +17,7 @@ jobs:
     timeout-minutes: 40
     env:
       ORG_GRADLE_PROJECT_inkweftDiagnosticBuild: "true"
+      ORG_GRADLE_PROJECT_inkweftInsertionPreview: "true"
       INKWEFT_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
@@ -54,30 +55,31 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p build/evidence
-          cp app/build/outputs/apk/debug/app-debug.apk build/evidence/inkweft-a3-editing-debug.apk
-          sha256sum build/evidence/inkweft-a3-editing-debug.apk > build/evidence/APK-SHA256.txt
-          "$ANDROID_HOME/build-tools/36.0.0/apksigner" verify --verbose --print-certs build/evidence/inkweft-a3-editing-debug.apk > build/evidence/apk-signature.txt
-          "$ANDROID_HOME/build-tools/36.0.0/zipalign" -c -P 16 -v 4 build/evidence/inkweft-a3-editing-debug.apk > build/evidence/zip-alignment.txt
+          cp app/build/outputs/apk/debug/app-debug.apk build/evidence/inkweft-a3.1-insertion-debug.apk
+          sha256sum build/evidence/inkweft-a3.1-insertion-debug.apk > build/evidence/APK-SHA256.txt
+          "$ANDROID_HOME/build-tools/36.0.0/apksigner" verify --verbose --print-certs build/evidence/inkweft-a3.1-insertion-debug.apk > build/evidence/apk-signature.txt
+          "$ANDROID_HOME/build-tools/36.0.0/zipalign" -c -P 16 -v 4 build/evidence/inkweft-a3.1-insertion-debug.apk > build/evidence/zip-alignment.txt
           python3 - <<'PY'
           import json, os, platform
           from pathlib import Path
           metadata=json.loads(Path("app/build/outputs/apk/debug/output-metadata.json").read_text())
-          assert metadata['applicationId']=='org.inkweft.app.a0.workspace'
+          assert metadata['applicationId']=='org.inkweft.app.a0.insertion'
           Path("build/evidence/build.json").write_text(json.dumps({
             "commit": os.environ["BUILD_COMMIT"], "pr_head": os.environ["HEAD_COMMIT"],
-            "scope": "A3_LOCAL_ERASER_MULTIPAGE_COVER_RENAME_NOT_FULL_G1_OR_S1",
+            "scope": "A3_1_POSITIONED_PAGE_INSERTION_NOT_FULL_G1_OR_S1",
             "compileSdk": 36, "targetSdk": 36, "minSdk": 31,
             "applicationId": metadata['applicationId'], "versionName": metadata['elements'][0]['versionName'],
             "inkVersion": "1.0.0", "runner": platform.platform(), "instrumented_tests": "SEE_RUNTIME_REPORT",
             "physical_device": "NOT_RUN", "pencil3": "NOT_RUN", "long_stroke_checkpoints": "NOT_IMPLEMENTED",
             "restart_undo_history": "NOT_IMPLEMENTED", "plan_37_acceptance_cases": "NOT_RUN",
-            "handwriting_recognition": "NOT_IMPLEMENTED_MANUAL_INDEX_ONLY"
+            "handwriting_recognition": "NOT_IMPLEMENTED_MANUAL_INDEX_ONLY",
+            "install_note": "independent insertion preview; existing workspace data is not migrated automatically"
           }, indent=2) + "\n")
           PY
       - name: Upload built APK and schema before device checks
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: inkweft-a3-editing-${{ github.sha }}
+          name: inkweft-a3.1-insertion-${{ github.sha }}
           retention-days: 7
           if-no-files-found: error
           path: |
@@ -116,45 +118,30 @@ jobs:
         run: |
           set -euo pipefail
           ./gradlew --no-daemon :data-local:connectedDebugAndroidTest :app:connectedDebugAndroidTest
-          # Gates derived from the JUnit XML that was actually produced. No test total
-          # is written by hand, no assertion is removed, and no continue-on-error is used.
           python3 - <<'PY'
           import glob, sys
           import xml.etree.ElementTree as ET
-
-          expected_totals = {":data-local": 31, ":app": 18}
+          expected_totals = {":data-local": 41, ":app": 21}
           roots = {
-              ":data-local": glob.glob("data-local/build/outputs/androidTest-results/**/*.xml",
-                                       recursive=True),
-              ":app": glob.glob("app/build/outputs/androidTest-results/**/*.xml",
-                                recursive=True),
+              ":data-local": glob.glob("data-local/build/outputs/androidTest-results/**/*.xml", recursive=True),
+              ":app": glob.glob("app/build/outputs/androidTest-results/**/*.xml", recursive=True),
           }
           failed = False
           for module, paths in roots.items():
               tests = failures = errors = skipped = 0
+              identities = set()
               for path in paths:
                   root = ET.parse(path).getroot()
-                  suites = ([root] if root.tag == "testsuite"
-                            else root.findall(".//testsuite"))
+                  suites = ([root] if root.tag == "testsuite" else root.findall(".//testsuite"))
                   for suite in suites:
                       tests += int(suite.get("tests") or 0)
                       failures += int(suite.get("failures") or 0)
                       errors += int(suite.get("errors") or 0)
                       skipped += int(suite.get("skipped") or 0)
-              print(f"{module}: xml_files={len(paths)} tests={tests} "
-                    f"failures={failures} errors={errors} skipped={skipped}")
-              if not paths:
-                  print(f"{module}: NO JUNIT XML PRODUCED", file=sys.stderr)
-                  failed = True
-              if failures or errors:
-                  failed = True
-              if skipped:
-                  print(f"{module}: {skipped} test(s) skipped - must be explained",
-                        file=sys.stderr)
-                  failed = True
-              if tests < expected_totals[module]:
-                  print(f"{module}: saw {tests} tests, expected at least "
-                        f"{expected_totals[module]}", file=sys.stderr)
+                      for case in suite.findall("testcase"):
+                          identities.add((case.get('classname'), case.get('name')))
+              print(f"{module}: xml_files={len(paths)} tests={tests} unique={len(identities)} failures={failures} errors={errors} skipped={skipped}")
+              if not paths or failures or errors or skipped or len(identities) < expected_totals[module]:
                   failed = True
           if failed:
               sys.exit(1)
@@ -165,23 +152,24 @@ jobs:
         working-directory: android
         run: |
           set -euo pipefail
-          # Explicit disposable CI install, never a user device or user-data reset.
+          # These are disposable CI installs, never user-device uninstall/clear operations.
           adb install -r app/build/outputs/apk/debug/app-debug.apk
           adb install -r app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk
-          timeout 240 adb shell am instrument -w org.inkweft.app.a0.workspace.test/androidx.test.runner.AndroidJUnitRunner | tr -d '\r' | tee build/evidence/evidence-capture-instrumentation.txt
-          # The previous workflow asserted the literal "OK (8 tests)" from the retired
-          # A2 capture run. File counts are recorded as measurements instead, and the
-          # zero-failure and suite-size gates below are derived from the actual XML.
-          adb shell "ls '/sdcard/Android/data/org.inkweft.app.a0.workspace/files'" | tr -d '\r' > build/evidence/device-evidence-files.txt || true
-          adb pull "/sdcard/Android/data/org.inkweft.app.a0.workspace/files/." "build/evidence/" || true
-          test -f build/evidence/ink-ui-emulator.png
-          test -f build/evidence/diagnostics-emulator.zip
-          test -f build/evidence/workspace-library.png
-          test -f build/evidence/workspace-board.png
-          test -f build/evidence/workspace-page.png
-          test -f build/evidence/workspace-narrow.png
+          timeout 420 adb shell am instrument -w org.inkweft.app.a0.insertion.test/androidx.test.runner.AndroidJUnitRunner | tr -d '\r' | tee build/evidence/evidence-capture-instrumentation.txt
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          text=Path('build/evidence/evidence-capture-instrumentation.txt').read_text()
+          match=re.search(r'^OK \((\d+) tests?\)\s*$',text,re.M)
+          assert match and int(match.group(1)) >= 21, 'Missing successful complete repeat run'
+          assert 'FAILURES!!!' not in text
+          PY
+          adb pull "/sdcard/Android/data/org.inkweft.app.a0.insertion/files/." "build/evidence/"
+          for name in ink-ui-emulator.png diagnostics-emulator.zip workspace-library.png workspace-board.png workspace-page.png workspace-narrow.png insert-pages-options.png page-directory-insertion.png; do
+            test -f "build/evidence/$name"
+          done
           ls -1 build/evidence | sort > build/evidence/evidence-file-list.txt
-          printf '%s\n' 'UI artifacts captured for on-device verification only, not additional unique tests. Actual device and real share-target remain NOT_RUN.' > build/evidence/evidence-capture-scope.txt
+          printf '%s\n' 'UI cases repeated for evidence capture only, not additional unique tests. Real device remains NOT_RUN.' > build/evidence/evidence-capture-scope.txt
       - name: Capture emulator logs
         if: always()
         run: |
@@ -194,7 +182,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: android-a3-reports-${{ github.run_id }}
+          name: android-a3.1-reports-${{ github.run_id }}
           retention-days: 7
           if-no-files-found: warn
           path: |
@@ -205,4 +193,5 @@ jobs:
             android/app/build/reports/androidTests/
             android/data-local/build/outputs/androidTest-results/
             android/data-local/build/reports/androidTests/
+            android/data-local/schemas/
             android/build/evidence/

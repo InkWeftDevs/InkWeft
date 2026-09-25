@@ -26,13 +26,14 @@ interface NoteDao {
     @Insert(onConflict=OnConflictStrategy.ABORT) suspend fun insertRevision(row:NoteRevisionRow)
     @Insert(onConflict=OnConflictStrategy.ABORT) suspend fun insertReceipt(row:ReceiptRow)
 }
-@Database(entities=[NoteRow::class,NoteRevisionRow::class,ReceiptRow::class,InkPageRow::class,InkStrokeRow::class,InkReceiptRow::class,WorkspaceRow::class,NotebookPageRow::class,InkCutRow::class,PageSearchRow::class],
-    version=4,exportSchema=true,autoMigrations=[AutoMigration(from=1,to=2)])
+@Database(entities=[NoteRow::class,NoteRevisionRow::class,ReceiptRow::class,InkPageRow::class,InkStrokeRow::class,InkReceiptRow::class,WorkspaceRow::class,NotebookPageRow::class,InkCutRow::class,PageSearchRow::class,PageInsertReceiptRow::class],
+    version=5,exportSchema=true,autoMigrations=[AutoMigration(from=1,to=2)])
 abstract class NoteDatabase:RoomDatabase() {
     abstract fun notes():NoteDao
     abstract fun ink():InkDao
     abstract fun workspace():WorkspaceDao
     abstract fun pages():NotebookPageDao
+    abstract fun pageInsertions():PageInsertionDao
     companion object {
         val MIGRATION_2_3=object:Migration(2,3){
             override fun migrate(db:SupportSQLiteDatabase){
@@ -67,11 +68,17 @@ abstract class NoteDatabase:RoomDatabase() {
                 db.execSQL("CREATE TABLE IF NOT EXISTS `page_search_text` (`pageId` TEXT NOT NULL, `inkRevision` INTEGER NOT NULL, `text` TEXT NOT NULL, `method` TEXT NOT NULL, PRIMARY KEY(`pageId`), FOREIGN KEY(`pageId`) REFERENCES `notebook_pages`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION)")
             }
         }
+        val MIGRATION_4_5=object:Migration(4,5){
+            override fun migrate(db:SupportSQLiteDatabase){
+                db.execSQL("CREATE TABLE IF NOT EXISTS `page_insert_receipts` (`commandId` TEXT NOT NULL, `notebookId` TEXT NOT NULL, `digest` TEXT NOT NULL, `pageIds` TEXT NOT NULL, PRIMARY KEY(`commandId`), FOREIGN KEY(`notebookId`) REFERENCES `notes`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS `index_page_insert_receipts_notebookId` ON `page_insert_receipts` (`notebookId`)")
+            }
+        }
         fun open(context:Context,name:String="inkweft-a0.db"):NoteDatabase=
             Room.databaseBuilder(context.applicationContext,NoteDatabase::class.java,name)
                 .openHelperFactory(PreservingOpenHelperFactory())
                 .setJournalMode(JournalMode.WRITE_AHEAD_LOGGING)
-                .addMigrations(MIGRATION_2_3,MIGRATION_3_4)
+                .addMigrations(MIGRATION_2_3,MIGRATION_3_4,MIGRATION_4_5)
                 .addCallback(object:Callback(){override fun onOpen(db:SupportSQLiteDatabase){db.execSQL("PRAGMA synchronous=FULL")}})
                 .build()
     }

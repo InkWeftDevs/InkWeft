@@ -29,6 +29,7 @@ interface NotebookPageDao {
     fun observeSearch():Flow<List<PageSearchHit>>
 }
 class NotebookPages(private val db:NoteDatabase) {
+    suspend fun insert(command:InsertPages):InsertPagesResult = PageInsertionRepository(db).insert(command)
     fun observe(id:String)=db.pages().observe(id)
     fun observeSearch()=db.pages().observeSearch()
     suspend fun ensureFirst(notebookId:String):NotebookPageRow=db.withTransaction {

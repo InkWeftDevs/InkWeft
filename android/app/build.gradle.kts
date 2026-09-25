@@ -3,17 +3,18 @@ plugins {
     alias(libs.plugins.kotlin.compose)
 }
 val diagnosticBuild = providers.gradleProperty("inkweftDiagnosticBuild").orNull == "true"
+val insertionPreview = providers.gradleProperty("inkweftInsertionPreview").orNull == "true"
 fun commitValue(name: String): String = System.getenv(name)?.takeIf { it.matches(Regex("[0-9a-f]{40}")) } ?: "local-unknown"
 android {
     namespace = "org.inkweft.app"
     compileSdk = 36
     defaultConfig {
-        applicationId = if (diagnosticBuild) "org.inkweft.app.a0.workspace" else "org.inkweft.app.a0"
+        applicationId = if (insertionPreview) "org.inkweft.app.a0.insertion" else if (diagnosticBuild) "org.inkweft.app.a0.workspace" else "org.inkweft.app.a0"
         minSdk = 31
         targetSdk = 36
-        versionCode = 5
-        versionName = "0.0.5-a3-editing"
-        manifestPlaceholders["appLabel"] = if (diagnosticBuild) "墨织工作台预览" else "墨织"
+        versionCode = 6
+        versionName = "0.0.6-a3.1-insertion"
+        manifestPlaceholders["appLabel"] = if (insertionPreview) "墨织插页预览" else if (diagnosticBuild) "墨织工作台预览" else "墨织"
         buildConfigField("String", "BUILD_COMMIT", "\"${commitValue("GITHUB_SHA")}\"")
         buildConfigField("String", "SOURCE_COMMIT", "\"${commitValue("INKWEFT_HEAD_SHA")}\"")
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"

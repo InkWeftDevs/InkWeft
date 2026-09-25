@@ -38,33 +38,58 @@ fun InkScreen(note:NoteDraft,workspace:WorkspaceViewModel=viewModel()){
     var searchTarget by remember{mutableStateOf<Pair<String,Long>?>(null)}
     var exportBytes by remember{mutableStateOf<ByteArray?>(null)};var exporting by remember{mutableStateOf(false)}
     var confirmBook by remember{mutableStateOf(false)}
+    var insertion by remember{mutableStateOf<Pair<String,PageInsertLocation>?>(null)}
     val export=rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("application/octet-stream")){uri->
         val bytes=exportBytes;exportBytes=null
         if(uri!=null&&bytes!=null)scope.launch{val ok=try{withContext(Dispatchers.IO){checkNotNull(context.contentResolver.openOutputStream(uri,"wt")).use{it.write(bytes)}};true}catch(c:CancellationException){throw c}catch(_:Exception){false};Toast.makeText(context,if(ok)"整本内容副本已导出"else"导出失败，原笔记保留",Toast.LENGTH_LONG).show()}
     }
     val page=ui.pages.firstOrNull{it.id==ui.selectedId}
     Column(Modifier.fillMaxSize()){
-        if(ui.error!=null)Row(Modifier.fillMaxWidth().padding(horizontal=12.dp),verticalAlignment=Alignment.CenterVertically){Text(ui.error!!,Modifier.weight(1f),fontSize=12.sp);TextButton(onClick=vm::clearError){Text("知道了")}}
+        if(ui.error!=null)Row(Modifier.fillMaxWidth().padding(horizontal=12.dp),verticalAlignment=Alignment.CenterVertically){Text(ui.error!!,Modifier.weight(1f),fontSize=12.sp);if(!ui.insertionUnknown)TextButton(onClick=vm::clearError){Text("知道了")}}
+        if(ui.insertionUnknown)Surface(color=androidx.compose.ui.graphics.Color(0xfffff4e3)){
+            Row(Modifier.fillMaxWidth().padding(horizontal=12.dp),verticalAlignment=Alignment.CenterVertically){
+                Text("上次插页尚待核对；先核对原操作，勿另建一批。",Modifier.weight(1f),fontSize=12.sp)
+                TextButton(onClick=vm::retryInsertion,enabled=!ui.busy,modifier=Modifier.testTag("retry-page-insertion")){Text("核对原插页")}
+            }
+        }
         if(page!=null&&!page.world)Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()).padding(horizontal=12.dp),verticalAlignment=Alignment.CenterVertically){
-            TextButton(onClick={directory=true},enabled=canNavigate&&!ui.busy,modifier=Modifier.testTag("page-directory")){Text("第 ${page.position+1} / ${ui.pages.size} 页",modifier=Modifier.testTag("page-counter"))}
-            TextButton(onClick={ui.pages.getOrNull(page.position-1)?.let{vm.select(it.id)}},enabled=canNavigate&&page.position>0&&!ui.busy,modifier=Modifier.testTag("previous-page")){Text("上一页")}
-            TextButton(onClick={ui.pages.getOrNull(page.position+1)?.let{vm.select(it.id)}},enabled=canNavigate&&page.position<ui.pages.lastIndex&&!ui.busy,modifier=Modifier.testTag("next-page")){Text("下一页")}
-            OutlinedButton(onClick=vm::add,enabled=canNavigate&&!ui.busy&&ui.pages.size<500,modifier=Modifier.testTag("add-page")){Text(if(ui.busy)"正在核对…"else"＋ 添加页")}
-            TextButton(onClick={confirmBook=true},enabled=canNavigate&&!ui.busy&&!exporting,modifier=Modifier.testTag("export-book")){Text("导出整本")}
+            TextButton(onClick={directory=true},enabled=canNavigate&&!ui.busy&&!ui.insertionUnknown,modifier=Modifier.testTag("page-directory")){Text("第 ${page.position+1} / ${ui.pages.size} 页",modifier=Modifier.testTag("page-counter"))}
+            TextButton(onClick={ui.pages.getOrNull(page.position-1)?.let{vm.select(it.id)}},enabled=canNavigate&&page.position>0&&!ui.busy&&!ui.insertionUnknown,modifier=Modifier.testTag("previous-page")){Text("上一页")}
+            TextButton(onClick={ui.pages.getOrNull(page.position+1)?.let{vm.select(it.id)}},enabled=canNavigate&&page.position<ui.pages.lastIndex&&!ui.busy&&!ui.insertionUnknown,modifier=Modifier.testTag("next-page")){Text("下一页")}
+            OutlinedButton(onClick={insertion=page.id to PageInsertLocation.AFTER},enabled=canNavigate&&!ui.busy&&!ui.insertionUnknown&&ui.pages.size<500,modifier=Modifier.testTag("add-page")){Text(if(ui.busy)"正在核对…"else"＋ 添加页 ▾")}
+            TextButton(onClick={confirmBook=true},enabled=canNavigate&&!ui.busy&&!ui.insertionUnknown&&!exporting,modifier=Modifier.testTag("export-book")){Text("导出整本")}
         }
         if(page==null)Box(Modifier.weight(1f).fillMaxWidth(),contentAlignment=Alignment.Center){if(ui.loading)CircularProgressIndicator()else Text("页面未能载入，原数据保留")}
         else Box(Modifier.weight(1f)){key(page.id){InkPageScreen(note,workspace,page,{canNavigate=it},{rev->searchTarget=page.id to rev})}}
     }
     if(directory)AlertDialog(onDismissRequest={directory=false},title={Text("页面 · ${ui.pages.size} 页")},text={
         LazyVerticalGrid(columns=GridCells.Adaptive(100.dp),modifier=Modifier.heightIn(max=400.dp),horizontalArrangement=Arrangement.spacedBy(10.dp),verticalArrangement=Arrangement.spacedBy(12.dp)){
-            items(ui.pages,key={it.id}){p->Column(Modifier.clickable{directory=false;vm.select(p.id)}.testTag("jump-page-${p.position+1}"),horizontalAlignment=Alignment.CenterHorizontally){PageThumb(p);Text("第 ${p.position+1} 页",fontSize=12.sp)}}
+            items(ui.pages,key={it.id}){p->
+                var menu by remember{mutableStateOf(false)}
+                Column(horizontalAlignment=Alignment.CenterHorizontally){
+                    Column(Modifier.clickable(enabled=canNavigate&&!ui.busy&&!ui.insertionUnknown){directory=false;vm.select(p.id)}.testTag("jump-page-${p.position+1}"),horizontalAlignment=Alignment.CenterHorizontally){PageThumb(p);Text("第 ${p.position+1} 页",fontSize=12.sp)}
+                    Box{
+                        TextButton(onClick={menu=true},enabled=canNavigate&&!ui.busy&&!ui.insertionUnknown,modifier=Modifier.testTag("page-menu-${p.position+1}")){Text("插页选项 ⋯",fontSize=11.sp)}
+                        DropdownMenu(expanded=menu,onDismissRequest={menu=false}){
+                            DropdownMenuItem(text={Text("在此页之前插入")},onClick={menu=false;directory=false;insertion=p.id to PageInsertLocation.BEFORE})
+                            DropdownMenuItem(text={Text("在此页之后插入")},onClick={menu=false;directory=false;insertion=p.id to PageInsertLocation.AFTER})
+                        }
+                    }
+                }
+            }
         }
     },confirmButton={TextButton(onClick={directory=false}){Text("关闭")}})
+    insertion?.let{(anchor,location)->
+        InsertPagesDialog(ui.pages,anchor,location,{insertion=null}){where,id,paper,count,open->
+            insertion=null
+            if(canNavigate&&!ui.busy&&!ui.insertionUnknown)vm.insert(where,id,paper,count,open)
+        }
+    }
     if(confirmBook)AlertDialog(onDismissRequest={confirmBook=false},title={Text("导出整本内容副本")},text={Text("包括本笔记所有已保存页面、局部擦除效果和键入文字。明文 .iwbook，不含撤销历史、账号或密钥；不是完整资料库备份。目标可能由云盘提供。")},confirmButton={TextButton(onClick={confirmBook=false;exporting=true;scope.launch{try{val bytes=withContext(Dispatchers.IO){app.pages.exportBook(note.base.id).encode()};exportBytes=bytes;export.launch("墨织笔记本.iwbook")}catch(c:CancellationException){throw c}catch(_:Exception){Toast.makeText(context,"无法导出整本内容，原数据保留；可尝试逐页导出",Toast.LENGTH_LONG).show()}finally{exporting=false}}}){Text("选择位置")}},dismissButton={TextButton(onClick={confirmBook=false}){Text("取消")}})
     searchTarget?.let{(id,revision)->PageSearchDialog(id,revision){searchTarget=null}}
 }
 @Composable
-private fun PageThumb(page:NotebookPageRow){
+internal fun PageThumb(page:NotebookPageRow){
     val app=LocalContext.current.applicationContext as InkWeftApplication
     val strokes by produceState<List<InkStroke>?>(null,page.id){value=withContext(Dispatchers.IO){runCatching{InkSession(app.inkRepository.read(page.id)).visibleDraft()}.getOrNull()}}
     Box(Modifier.size(84.dp,110.dp)){
