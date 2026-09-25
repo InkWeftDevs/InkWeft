@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 package org.inkweft.app
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -41,6 +42,7 @@ fun LibraryScreen(ui:NotebookUi,workspace:WorkspaceViewModel,open:(Note)->Unit,c
     var navOpen by remember { mutableStateOf(false) }
     var editing by remember { mutableStateOf<WorkspaceRow?>(null) }
     var removing by remember { mutableStateOf<WorkspaceRow?>(null) }
+    BackHandler(enabled=navOpen){navOpen=false}
     val display=LinkedHashMap<String,Note>()
     ui.notes.forEach{display[it.id]=it};ui.drafts.values.forEach{d->display[d.base.id]=d.base.copy(title=d.title,text=d.text)}
     val all=display.values.toList()
@@ -85,18 +87,18 @@ fun LibraryScreen(ui:NotebookUi,workspace:WorkspaceViewModel,open:(Note)->Unit,c
             if(wide){nav();VerticalDivider(color=Line)}
             Column(Modifier.weight(1f).fillMaxHeight().padding(horizontal=if(wide)26.dp else 16.dp)){
                 Row(Modifier.fillMaxWidth().heightIn(min=76.dp),verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(5.dp)){
-                    if(!wide)IconButton(onClick={navOpen=true}){Glyph("menu")}
+                    if(!wide)IconButton(onClick={navOpen=true},modifier=Modifier.describedAs("展开分类")){Glyph("menu")}
                     Text(title,fontSize=22.sp,fontWeight=FontWeight.SemiBold,modifier=Modifier.weight(1f),maxLines=1,overflow=TextOverflow.Ellipsis)
-                    IconButton(onClick={grid=!grid},modifier=Modifier.testTag("library-layout")){Glyph(if(grid)"list" else "grid")}
-                    IconButton(onClick={byTitle=!byTitle},modifier=Modifier.testTag("library-sort")){Glyph("sort",if(byTitle)Forest else Quiet)}
-                    if(!wide)IconButton(onClick=diagnostics,modifier=Modifier.testTag("open-diagnostics")){Glyph("diagnostics")}
+                    IconButton(onClick={grid=!grid},modifier=Modifier.testTag("library-layout").describedAs(if(grid)"切换列表视图"else"切换网格视图")){Glyph(if(grid)"list" else "grid")}
+                    IconButton(onClick={byTitle=!byTitle},modifier=Modifier.testTag("library-sort").describedAs(if(byTitle)"改按最近修改排序"else"改按标题排序")){Glyph("sort",if(byTitle)Forest else Quiet)}
+                    if(!wide)IconButton(onClick=diagnostics,modifier=Modifier.testTag("open-diagnostics").describedAs("诊断与导出")){Glyph("diagnostics")}
                     TextButton(onClick=importPage,enabled=!ui.readFailed){Text("导入副本",fontSize=12.sp)}
                     Button(onClick=create,enabled=!ui.loading&&!ui.readFailed,modifier=Modifier.testTag("new-note"),contentPadding=PaddingValues(horizontal=18.dp,vertical=10.dp)){Glyph("add");Spacer(Modifier.width(6.dp));Text("新建")}
                 }
                 if(!wide)OutlinedTextField(query,{query=it},singleLine=true,placeholder={Text("搜索标题与文字（不含未识别手写）",fontSize=12.sp)},leadingIcon={Glyph("search")},modifier=Modifier.fillMaxWidth().testTag("library-search"))
                 Row(Modifier.fillMaxWidth().padding(vertical=5.dp),verticalAlignment=Alignment.CenterVertically){
                     listOf("all" to "全部","page" to "纸张笔记","board" to "无界笔记").forEach{(id,label)->
-                        Column(Modifier.clickable{type=id}.padding(end=20.dp).testTag("library-type-$id"),horizontalAlignment=Alignment.CenterHorizontally){Text(label,color=if(type==id)Forest else Quiet,fontSize=13.sp,modifier=Modifier.padding(vertical=13.dp));HorizontalDivider(Modifier.width(if(id=="all")28.dp else 60.dp),thickness=if(type==id)2.dp else 0.dp,color=if(type==id)Forest else Color.Transparent)}
+                        Column(Modifier.heightIn(min=48.dp).clickable{type=id}.padding(end=20.dp).testTag("library-type-$id"),horizontalAlignment=Alignment.CenterHorizontally){Text(label,color=if(type==id)Forest else Quiet,fontSize=13.sp,modifier=Modifier.padding(vertical=13.dp));HorizontalDivider(Modifier.width(if(id=="all")28.dp else 60.dp),thickness=if(type==id)2.dp else 0.dp,color=if(type==id)Forest else Color.Transparent)}
                     }
                     Spacer(Modifier.weight(1f));Text("${shown.size} 份",fontSize=11.sp,color=Quiet)
                 }
@@ -141,7 +143,7 @@ private fun NavigationLine(title:String,icon:String,count:Int?,selected:Boolean,
 @Composable
 private fun NewTile(create:()->Unit){
     Column(Modifier.fillMaxWidth(),horizontalAlignment=Alignment.CenterHorizontally){
-        Box(Modifier.height(185.dp).width(136.dp).border(1.dp,Color(0xff91b3a3),RoundedCornerShape(9.dp)).background(Color(0xfff8fbf9),RoundedCornerShape(9.dp)).clickable(onClick=create).testTag("new-note-tile"),contentAlignment=Alignment.Center){Glyph("add",Forest,Modifier.size(34.dp))}
+        Box(Modifier.height(185.dp).width(136.dp).border(1.dp,Color(0xff91b3a3),RoundedCornerShape(9.dp)).background(Color(0xfff8fbf9),RoundedCornerShape(9.dp)).clickable(onClick=create).testTag("new-note-tile").describedAs("新建纸张或无界笔记"),contentAlignment=Alignment.Center){Glyph("add",Forest,Modifier.size(34.dp))}
         Text("新建",color=Forest,fontSize=14.sp,modifier=Modifier.padding(top=14.dp));Text("纸张 / 无界画布",fontSize=10.sp,color=Quiet,modifier=Modifier.padding(top=5.dp))
     }
 }
@@ -149,11 +151,11 @@ private fun NewTile(create:()->Unit){
 private fun NoteTile(note:Note,row:WorkspaceRow,inkRevision:Long,count:Int,grid:Boolean,open:()->Unit,favorite:()->Unit,classify:()->Unit,trash:()->Unit){
     var menu by remember{mutableStateOf(false)}
     val context=LocalContext.current;val app=context.applicationContext as InkWeftApplication
-    val strokes by produceState<List<InkStroke>?>(null,note.id,inkRevision){value=try{withContext(Dispatchers.IO){app.inkRepository.read(note.id).strokes.filter{it.visible}.map{it.stroke}}}catch(_:Exception){null}}
+    val strokes by produceState<List<InkStroke>?>(null,note.id,inkRevision){value=try{withContext(Dispatchers.IO){app.inkRepository.read(note.id).strokes.filter{it.visible}.map{it.stroke}}}catch(c:kotlinx.coroutines.CancellationException){throw c}catch(_:Exception){null}}
     val date by produceState("",note.id,inkRevision,note.revision){val at=withContext(Dispatchers.IO){runCatching{app.workspaceRepository.modifiedAt(note.id)}.getOrDefault(0L)};value=if(at>0)SimpleDateFormat("yyyy/MM/dd",Locale.getDefault()).format(Date(at))else""}
     val cover:@Composable (Modifier)->Unit={m->
         Surface(m,shape=RoundedCornerShape(7.dp),color=Color.White,border=BorderStroke(1.dp,Line),shadowElevation=1.dp){
-            Box(Modifier.fillMaxSize().clickable(onClick=open)){
+            Box(Modifier.fillMaxSize().clickable(onClick=open).describedAs("打开笔记：${note.title}")){
                 val loaded=strokes
                 if(loaded!=null&&loaded.isNotEmpty())AndroidView(factory={c->InkCanvasView(c).apply{preview=true;importantForAccessibility=android.view.View.IMPORTANT_FOR_ACCESSIBILITY_NO}},update={v->v.configure(row.world,PaperStyle.entries.getOrElse(row.paper){PaperStyle.RULED},null);v.showStrokes(loaded)},modifier=Modifier.fillMaxSize())
                 else PaperThumbnail(row.world,PaperStyle.entries.getOrElse(row.paper){PaperStyle.RULED})
@@ -164,7 +166,7 @@ private fun NoteTile(note:Note,row:WorkspaceRow,inkRevision:Long,count:Int,grid:
         }
     }
     val info:@Composable ()->Unit={
-        Row(verticalAlignment=Alignment.CenterVertically){Text(note.title,maxLines=1,overflow=TextOverflow.Ellipsis,fontSize=14.sp,modifier=Modifier.weight(1f).clickable(onClick=open));Box{IconButton(onClick={menu=true},modifier=Modifier.size(36.dp).testTag("note-menu-${note.id}")){Glyph("more",Quiet,Modifier.size(17.dp))};DropdownMenu(expanded=menu,onDismissRequest={menu=false}){
+        Row(verticalAlignment=Alignment.CenterVertically){Text(note.title,maxLines=1,overflow=TextOverflow.Ellipsis,fontSize=14.sp,modifier=Modifier.weight(1f).clickable(onClick=open));Box{IconButton(onClick={menu=true},modifier=Modifier.size(36.dp).testTag("note-menu-${note.id}").describedAs("笔记菜单：${note.title}")){Glyph("more",Quiet,Modifier.size(17.dp))};DropdownMenu(expanded=menu,onDismissRequest={menu=false}){
             if(row.trashedAt==null){DropdownMenuItem(text={Text(if(row.favorite)"取消收藏"else"收藏")},onClick={menu=false;favorite()});DropdownMenuItem(text={Text("文件夹与标签")},onClick={menu=false;classify()})}
             DropdownMenuItem(text={Text(if(row.trashedAt!=null)"恢复笔记"else"移入回收站")},onClick={menu=false;trash()})
         }}}

@@ -45,6 +45,7 @@ jobs:
           printf '%s  %s\n' '55243ef57851f12b070ad14f7f5bb8302daceeebc5bce5ece5fa6edb23e1145c' 'gradle/wrapper/gradle-wrapper.jar' | sha256sum --check -
           ./gradlew --no-daemon :core-domain:test :app:lintDebug :app:assembleDebug :app:assembleDebugAndroidTest :data-local:assembleDebugAndroidTest
           git diff --exit-code -- data-local/schemas
+          test -z "$(git ls-files --others --exclude-standard -- data-local/schemas)"
       - name: Record actual APK provenance
         working-directory: android
         env:
@@ -123,10 +124,15 @@ jobs:
           adb install -r app/build/outputs/apk/debug/app-debug.apk
           adb install -r app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk
           timeout 240 adb shell am instrument -w org.inkweft.app.a0.workspace.test/androidx.test.runner.AndroidJUnitRunner | tr -d '\r' | tee build/evidence/evidence-capture-instrumentation.txt
-          grep -Fx 'OK (8 tests)' build/evidence/evidence-capture-instrumentation.txt
+          missing=0
           for name in ink-ui-emulator.png diagnostics-emulator.zip diagnostics-emulator.png workspace-library.png workspace-board.png workspace-page.png workspace-narrow.png; do
-            adb pull "/sdcard/Android/data/org.inkweft.app.a0.workspace/files/$name" "build/evidence/$name"
+            adb pull "/sdcard/Android/data/org.inkweft.app.a0.workspace/files/$name" "build/evidence/$name" || missing=1
           done
+          for name in workspace-failure.png workspace-failure-diagnostics.zip; do
+            adb pull "/sdcard/Android/data/org.inkweft.app.a0.workspace/files/$name" "build/evidence/$name" || true
+          done
+          grep -Fx 'OK (8 tests)' build/evidence/evidence-capture-instrumentation.txt
+          test "$missing" -eq 0
           printf '%s\n' 'Eight UI cases repeated only for artifact capture, not additional unique tests. Actual device and real share-target remain NOT_RUN.' > build/evidence/evidence-capture-scope.txt
       - name: Capture emulator logs
         if: always()

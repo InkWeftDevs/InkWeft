@@ -67,11 +67,11 @@ fun InkScreen(note:NoteDraft,workspace:WorkspaceViewModel=viewModel()){
             }
             VerticalDivider(Modifier.height(28.dp),color=Line)
             FilterChip(selected=tool==3,onClick={tool=3},enabled=!busy,label={Text("整笔橡皮",fontSize=12.sp)},leadingIcon={Glyph("eraser")},modifier=Modifier.testTag("ink-tool-3"))
-            IconButton(onClick=vm::undo,enabled=ui.canUndo&&!busy,modifier=Modifier.testTag("ink-undo")){Glyph("undo")}
-            IconButton(onClick=vm::redo,enabled=ui.canRedo&&!busy,modifier=Modifier.testTag("ink-redo")){Glyph("redo")}
+            IconButton(onClick=vm::undo,enabled=ui.canUndo&&!busy,modifier=Modifier.testTag("ink-undo").describedAs("撤销")){Glyph("undo")}
+            IconButton(onClick=vm::redo,enabled=ui.canRedo&&!busy,modifier=Modifier.testTag("ink-redo").describedAs("重做")){Glyph("redo")}
             VerticalDivider(Modifier.height(28.dp),color=Line)
             FilterChip(selected=finger,onClick={finger=!finger},enabled=!busy,label={Text("手指书写",fontSize=12.sp)},modifier=Modifier.testTag("ink-finger"))
-            Box{IconButton(onClick={more=true},enabled=!busy,modifier=Modifier.testTag("ink-more")){Glyph("more")};DropdownMenu(expanded=more,onDismissRequest={more=false}){
+            Box{IconButton(onClick={more=true},enabled=!busy,modifier=Modifier.testTag("ink-more").describedAs("更多编辑选项")){Glyph("more")};DropdownMenu(expanded=more,onDismissRequest={more=false}){
                 DropdownMenuItem(text={Text("导出页面副本")},onClick={more=false;confirmExport=true},enabled=!ui.loading&&row!=null)
                 DropdownMenuItem(text={Text(if(dockBottom)"笔盒放到顶部"else"笔盒放到底部")},onClick={dockBottom=!dockBottom;more=false})
                 PaperStyle.entries.forEach{style->DropdownMenuItem(text={Text("纸面 · "+when(style){PaperStyle.BLANK->"空白";PaperStyle.RULED->"横线";PaperStyle.GRID->"方格";PaperStyle.DOTS->"点阵"})},onClick={workspace.paper(note.base.id,style);more=false})}
@@ -88,7 +88,7 @@ fun InkScreen(note:NoteDraft,workspace:WorkspaceViewModel=viewModel()){
             if(ui.blocked in listOf(InkCommitResult.Conflict,InkCommitResult.Rejected))TextButton(onClick={discard=true},enabled=!busy){Text("读取已保存页")}
             if(ui.readFailed&&ui.blocked==null)TextButton(onClick=vm::load){Text("重试")}
         }
-        if(notice!=null)Row(Modifier.fillMaxWidth().background(Color(0xfffff5e5)).padding(start=16.dp),verticalAlignment=Alignment.CenterVertically){Text(notice!!,Modifier.weight(1f),fontSize=12.sp);IconButton(onClick={notice=null}){Glyph("close")}}
+        if(notice!=null)Row(Modifier.fillMaxWidth().background(Color(0xfffff5e5)).padding(start=16.dp),verticalAlignment=Alignment.CenterVertically){Text(notice!!,Modifier.weight(1f),fontSize=12.sp);IconButton(onClick={notice=null},modifier=Modifier.describedAs("关闭提示")){Glyph("close")}}
         if(row!=null){
             val initial=remember(note.base.id){workspace.cachedViewport(note.base.id)?:row.takeIf{it.zoom>0}?.let{runCatching{CanvasViewport(it.centerX,it.centerY,it.zoom)}.getOrNull()}}
             AndroidView(factory={ctx->InkCanvasView(ctx).also{v->

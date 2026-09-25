@@ -9,6 +9,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.*
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.drawscope.*
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.unit.dp
 
 internal val Forest=Color(0xff236653)
@@ -59,3 +61,5 @@ internal fun Glyph(kind:String,tint:Color=LocalContentColor.current,modifier:Mod
         }
     }
 }
+
+internal fun Modifier.describedAs(label:String)=semantics { contentDescription=label }

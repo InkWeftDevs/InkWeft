@@ -19,6 +19,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.TextStyle
@@ -49,6 +51,7 @@ fun NotebookApp(vm:NotebookViewModel=viewModel(),onDiagnostics:()->Unit={}){
     val workspaceError by workspace.error.collectAsStateWithLifecycle()
     val busy by workspace.busy.collectAsStateWithLifecycle()
     val context=LocalContext.current;val app=context.applicationContext as InkWeftApplication
+    val keyboard=LocalSoftwareKeyboardController.current;val focus=LocalFocusManager.current
     val scope=rememberCoroutineScope()
     var showCreate by remember{mutableStateOf(false)}
     var newTitle by remember{mutableStateOf("")}
@@ -71,6 +74,7 @@ fun NotebookApp(vm:NotebookViewModel=viewModel(),onDiagnostics:()->Unit={}){
     }
     fun openCreate(){newTitle="";newWorld=false;newPaper=PaperStyle.RULED;showCreate=true}
     BackHandler(enabled=ui.selectedId!=null){vm.back()}
+    LaunchedEffect(ui.selectedId,inkMode){if(ui.selectedId!=null&&inkMode){focus.clearFocus(force=true);keyboard?.hide()}}
     Column(Modifier.fillMaxSize().background(Color.White).statusBarsPadding().navigationBarsPadding().imePadding()){
         if(ui.readFailed)Surface(color=Color(0xffffeee7)){Row(Modifier.fillMaxWidth().padding(12.dp),verticalAlignment=Alignment.CenterVertically){Text("资料读取失败，原数据不会被空库覆盖。",Modifier.weight(1f),fontSize=13.sp);TextButton(onClick=vm::retryRead){Text("重试")};if(ui.current!=null)TextButton(onClick=onDiagnostics,modifier=Modifier.testTag("open-diagnostics-error")){Text("诊断")}}}
         if(workspaceError!=null)Surface(color=Color(0xfffff4e3)){Row(Modifier.fillMaxWidth().padding(horizontal=16.dp),verticalAlignment=Alignment.CenterVertically){Text(workspaceError!!,Modifier.weight(1f),fontSize=12.sp);TextButton(onClick=workspace::clearError){Text("知道了")}}}
@@ -84,7 +88,7 @@ fun NotebookApp(vm:NotebookViewModel=viewModel(),onDiagnostics:()->Unit={}){
                 Text(draft.title,fontSize=17.sp,fontWeight=FontWeight.Medium,modifier=Modifier.weight(1f),maxLines=1,overflow=TextOverflow.Ellipsis)
                 FilterChip(selected=inkMode,onClick={inkMode=true},enabled=draft.base.revision>0,label={Text("手写",fontSize=12.sp)},modifier=Modifier.testTag("mode-ink"))
                 FilterChip(selected=!inkMode,onClick={inkMode=false},label={Text("文字",fontSize=12.sp)},modifier=Modifier.testTag("mode-text"))
-                IconButton(onClick=onDiagnostics,modifier=Modifier.testTag("open-diagnostics")){Glyph("diagnostics",Quiet)}
+                IconButton(onClick=onDiagnostics,modifier=Modifier.testTag("open-diagnostics").describedAs("诊断与导出")){Glyph("diagnostics",Quiet)}
             }
             HorizontalDivider(color=Line)
             if(inkMode&&draft.base.revision>0)Box(Modifier.weight(1f)){key(draft.base.id){InkScreen(draft,workspace)}}
@@ -108,7 +112,7 @@ fun NotebookApp(vm:NotebookViewModel=viewModel(),onDiagnostics:()->Unit={}){
                 }}
             }
             Text("格式在创建时确定；本版无界画布仍有数值与单笔/总采样安全预算。",fontSize=10.sp,color=Quiet)
-        }},confirmButton={Button(onClick={workspace.create(newTitle.ifBlank{"未命名笔记"},newWorld,newPaper){vm.select(it)};showCreate=false},enabled=!busy,modifier=Modifier.testTag("create-note")){Text("创建")}},dismissButton={TextButton(onClick={showCreate=false},enabled=!busy){Text("取消")}})
+        }},confirmButton={Button(onClick={focus.clearFocus(force=true);keyboard?.hide();workspace.create(newTitle.ifBlank{"未命名笔记"},newWorld,newPaper){vm.select(it)};showCreate=false},enabled=!busy,modifier=Modifier.testTag("create-note")){Text("创建")}},dismissButton={TextButton(onClick={showCreate=false},enabled=!busy){Text("取消")}})
     if(confirmExport)AlertDialog(onDismissRequest={confirmExport=false},title={Text("导出文字")},text={Text("明文文字副本，不包含手写、历史或回执。所选位置可能由云盘提供方管理。")},confirmButton={TextButton(onClick={confirmExport=false;ui.current?.let{exportText=it.title+"\n\n"+it.text;textExport.launch("墨织笔记.txt")}}){Text("选择位置")}},dismissButton={TextButton(onClick={confirmExport=false}){Text("取消")}})
 }
 

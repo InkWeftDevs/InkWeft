@@ -22,8 +22,17 @@ class WorkspaceUiTest {
     @get:Rule val compose=createAndroidComposeRule<MainActivity>()
     private val app get()=compose.activity.application as InkWeftApplication
     private fun waitForShelf(){compose.waitUntil(10_000){runCatching{compose.onNodeWithTag("new-note").assertIsEnabled()}.isSuccess}}
-    private fun create(world:Boolean){waitForShelf();compose.onNodeWithTag("new-note").performClick();compose.onNodeWithTag("new-title").performTextInput(if(world)"知识草稿 · 无界"else"微积分 · 随手推导");if(world)compose.onNodeWithTag("create-world").performClick();compose.onNodeWithTag("create-note").performClick();saved(0)}
-    private fun saved(n:Int){compose.waitUntil(10_000){runCatching{compose.onNodeWithTag("ink-status").assertTextContains("已提交",substring=true).assertTextContains("$n 笔",substring=true)}.isSuccess}}
+    private var createdId=""
+    private fun create(world:Boolean){waitForShelf();compose.onNodeWithTag("new-note").performClick();compose.onNodeWithTag("new-title").performTextInput((if(world)"知识草稿 · 无界"else"微积分 · 随手推导")+" · "+UUID.randomUUID().toString().take(6));if(world)compose.onNodeWithTag("create-world").performClick();compose.onNodeWithTag("create-note").performClick();saved(0)
+        compose.waitUntil(10_000){androidx.core.view.ViewCompat.getRootWindowInsets(compose.activity.window.decorView)?.isVisible(androidx.core.view.WindowInsetsCompat.Type.ime())==false}
+        compose.waitForIdle()
+        createdId=runBlocking{app.repository.observeNotes().first()}.first().id
+    }
+    private fun saved(n:Int){try{compose.waitUntil(10_000){runCatching{compose.onNodeWithTag("ink-status").assertTextContains("已提交",substring=true).assertTextContains("$n 笔",substring=true)}.isSuccess}}catch(error:Throwable){
+        runCatching{shot("workspace-failure.png")}
+        runCatching{val data=runBlocking{app.diagnostics.bundle()};File(compose.activity.getExternalFilesDir(null),"workspace-failure-diagnostics.zip").writeBytes(data)}
+        throw error
+    }}
     private fun draw(){compose.onNodeWithTag("ink-surface").performTouchInput{swipe(Offset(width*.25f,height*.30f),Offset(width*.44f,height*.56f),260)}}
     private fun canvas():InkCanvasView {
         fun find(v:View):InkCanvasView?{if(v is InkCanvasView&&!v.preview)return v;if(v is ViewGroup)for(i in 0 until v.childCount)find(v.getChildAt(i))?.let{return it};return null}
@@ -37,7 +46,7 @@ class WorkspaceUiTest {
         compose.onNodeWithTag("zoom-in").performClick()
         var before=CanvasViewport();compose.runOnIdle{before=canvas().snapshotViewport()}
         val notes=runBlocking{app.repository.observeNotes().first()}
-        val note=notes.first{it.title=="知识草稿 · 无界"}
+        val note=notes.first{it.id==createdId}
         val paths=runBlocking{app.inkRepository.read(note.id).strokes.map{it.stroke}}
         assertTrue(paths.single().world);assertTrue(paths.single().samples.any{it.x<0||it.y<0})
         compose.waitUntil(10_000){runBlocking{app.workspaceRepository.get(note.id).zoom>0}}
@@ -66,7 +75,7 @@ class WorkspaceUiTest {
     }
     @Test fun fitModesAndPaperChangesDoNotRewriteSamples(){
         create(false);compose.onNodeWithTag("ink-finger").performScrollTo().performClick();draw();saved(1)
-        val n=runBlocking{app.repository.observeNotes().first()}.first{it.title=="微积分 · 随手推导"}
+        val n=runBlocking{app.repository.observeNotes().first()}.first{it.id==createdId}
         val before=runBlocking{app.inkRepository.read(n.id).strokes.single().stroke.samples}
         compose.onNodeWithTag("fit-page").performClick();var small=0.0;compose.runOnIdle{small=canvas().snapshotViewport().zoom}
         compose.onNodeWithTag("fit-width").performClick();compose.runOnIdle{assertTrue(canvas().snapshotViewport().zoom>=small)}
