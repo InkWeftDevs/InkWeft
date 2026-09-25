@@ -87,4 +87,37 @@ class PageInsertionRepositoryTest {
             assertEquals(expected,db.pages().list(n.id));assertTrue((PageInsertionRepository(db).insert(c) as InsertPagesResult.Applied).replayed)
         }finally{db.close();context.deleteDatabase(name)}
     }
+    @Test fun generatedVersion4MigratesWithoutChangingInkOrPageOrder()=runBlocking {
+        val name="insert-migration-${id()}.db";val path=context.getDatabasePath(name);path.parentFile!!.mkdirs()
+        val text=androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().context.assets
+            .open("org.inkweft.data.NoteDatabase/4.json").bufferedReader().use{it.readText()}
+        val schema=org.json.JSONObject(text).getJSONObject("database")
+        val sql=android.database.sqlite.SQLiteDatabase.openOrCreateDatabase(path,null)
+        val book=id();val payload=InkStrokeCodec.encode(InkStroke(id(),InkPen.PEN,0xff000000.toInt(),3f,InkTool.TOUCH,listOf(InkSample(10f,20f,0))))
+        try {
+            val entities=schema.getJSONArray("entities")
+            for(i in 0 until entities.length()){
+                val e=entities.getJSONObject(i);sql.execSQL(e.getString("createSql").replace("\${TABLE_NAME}",e.getString("tableName")))
+                val indices=e.optJSONArray("indices")
+                for(j in 0 until (indices?.length()?:0))sql.execSQL(checkNotNull(indices).getJSONObject(j).getString("createSql").replace("\${TABLE_NAME}",e.getString("tableName")))
+            }
+            val queries=schema.getJSONArray("setupQueries");for(i in 0 until queries.length())sql.execSQL(queries.getString(i))
+            sql.execSQL("INSERT INTO notes VALUES(?,1,'原笔记','正文',1)",arrayOf(book))
+            sql.execSQL("INSERT INTO notebook_workspace VALUES(?,0,1,'','',0,NULL,500,707,0,0,'forest',?)",arrayOf(book,book))
+            sql.execSQL("INSERT INTO notebook_pages VALUES(?,?,0,0,1,500,707,0,NULL)",arrayOf(book,book))
+            sql.execSQL("INSERT INTO ink_pages VALUES(?,1)",arrayOf(book))
+            sql.execSQL("INSERT INTO ink_strokes VALUES(?,?,?,1,1,1)",arrayOf(InkStrokeCodec.decode(payload).id,book,payload))
+            sql.execSQL("INSERT INTO page_search_text VALUES(?,1,'测试关键词','MANUAL')",arrayOf(book))
+            sql.version=4
+        }finally{sql.close()}
+        val db=NoteDatabase.open(context,name)
+        try {
+            assertEquals("原笔记",db.notes().note(book)?.title);assertArrayEquals(payload,db.ink().strokes(book).single().payload)
+            assertEquals("forest",db.workspace().get(book)?.coverKey);assertEquals("测试关键词",db.pages().search(book)?.text)
+            assertEquals(0,db.pages().get(book)?.position)
+            val c=operation(db,book,PageInsertLocation.START,null,2)
+            assertTrue(PageInsertionRepository(db).insert(c) is InsertPagesResult.Applied)
+            assertEquals(book,db.pages().list(book).last().id);assertArrayEquals(payload,db.ink().strokes(book).single().payload)
+        }finally{db.close();context.deleteDatabase(name)}
+    }
 }

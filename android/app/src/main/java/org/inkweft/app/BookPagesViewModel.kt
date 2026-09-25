@@ -5,6 +5,7 @@ import androidx.lifecycle.*
 import androidx.lifecycle.viewmodel.CreationExtras
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.sync.withLock
 import org.inkweft.core.*
 import org.inkweft.data.*
 import java.util.UUID
@@ -47,12 +48,11 @@ class BookPagesViewModel(
         mutable.update { it.copy(selectedId = id) }
         val generation = ++selectGeneration
         viewModelScope.launch {
-            selectionLock.lock()
             try {
-                if (selectGeneration == generation) withContext(Dispatchers.IO) { repo.select(bookId, id) }
+                selectionLock.withLock { if (selectGeneration == generation) withContext(Dispatchers.IO) { repo.select(bookId, id) } }
             } catch (c: CancellationException) { throw c
             } catch (_: Exception) { mutable.update { it.copy(error = "当前页已打开，但最后阅读页未保存；无需重复加页。") }
-            } finally { selectionLock.unlock() }
+            }
         }
     }
     fun insert(location: PageInsertLocation, anchorId: String?, paper: PaperStyle, count: Int, openNew: Boolean) {
@@ -67,12 +67,14 @@ class BookPagesViewModel(
     private fun submitPending() {
         val command = pending ?: return
         mutable.update { it.copy(busy = true, insertionUnknown = false, error = null) }
-        ++selectGeneration
+        ++selectGeneration // Queued older page-selection writes are no longer authoritative.
         viewModelScope.launch {
-            selectionLock.lock()
             try {
-                when (val result = withContext(Dispatchers.IO) { repo.insert(command) }) {
+                val outcome = selectionLock.withLock { withContext(Dispatchers.IO) { repo.insert(command) } }
+                when (val result = outcome) {
                     is InsertPagesResult.Applied -> {
+                        // Reading position is part of that SAME transaction, not a
+                        // second write which could misreport a successful insertion.
                         if (command.openInserted) requestedSelection = result.pageIds.first()
                         pending = null; persistPending()
                         mutable.update { old -> old.copy(busy = false, insertionUnknown = false, error = null,
@@ -94,7 +96,7 @@ class BookPagesViewModel(
             } catch (_: Exception) {
                 mutable.update { it.copy(busy = false, insertionUnknown = true,
                     error = "插页结果待核对。使用“核对原插页”，不会新建另一批页面。") }
-            } finally { selectionLock.unlock() }
+            }
         }
     }
     fun clearError() { if (pending == null) mutable.update { it.copy(error = null) } }

@@ -37,6 +37,7 @@ fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:NotebookPageR
     var dockBottom by rememberSaveable(page.id){mutableStateOf(false)}
     val penStore=remember(context){PenWidthStore(context)}
     var widths by remember(page.id){mutableStateOf(penStore.read())}
+    var colors by remember(page.id){mutableStateOf(penStore.readColors())}
     var gesture by remember{mutableStateOf(false)}
     var notice by remember{mutableStateOf<String?>(null)}
     var axes by remember{mutableStateOf("本次启动尚未检测笔输入")}
@@ -62,19 +63,30 @@ fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:NotebookPageR
     val busy=gesture||ui.processing
     SideEffect{onCanNavigate(!busy&&!ui.loading&&!ui.readFailed&&ui.queued==0&&ui.blocked==null)}
     LaunchedEffect(ui.message){if(ui.message!=null){notice=ui.message;vm.clearMessage()}}
+    fun savePreset(selected:Int,width:Float,color:Int){
+        widths=widths.mapIndexed{i,w->if(i==selected)width else w}
+        colors=colors.mapIndexed{i,c->if(i==selected)color else c}
+        scope.launch{val saved=try{penStore.savePreset(selected,width,color)}catch(c:CancellationException){throw c}catch(_:Exception){false}
+            if(!saved)notice="常用笔已用于本次书写，但设置未保存；原笔迹未改动。"}
+    }
     val toolbar:@Composable ()->Unit={
         Row(Modifier.fillMaxWidth().background(Color.White).horizontalScroll(rememberScrollState()).padding(horizontal=12.dp,vertical=5.dp),horizontalArrangement=Arrangement.spacedBy(7.dp),verticalAlignment=Alignment.CenterVertically){
-            listOf("黑色笔","红色笔","荧光笔").forEachIndexed{i,label->
-                val color=when(i){1->Color(0xffb83239);2->Color(0xffd7ab20);else->TextInk}
+            (0..2).forEach{i->
+                val label=PenWidthStore.name(i)
+                val color=Color(colors[i] or 0xff000000.toInt())
                 Surface(onClick={if(tool==i)settings=true else tool=i},enabled=!busy,color=if(tool==i)Leaf else Color.White,shape=RoundedCornerShape(9.dp),border=BorderStroke(1.dp,if(tool==i)Color(0xff95b7a5)else Line),modifier=Modifier.heightIn(min=48.dp).testTag("ink-tool-$i")){
                     Row(Modifier.padding(horizontal=11.dp,vertical=7.dp),verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(8.dp)){
                         Glyph("pen",color);Column{Text(label,fontSize=12.sp);Text("线宽 "+PenWidthStore.label(widths[i]),fontSize=10.sp,color=Quiet)}
                     }
                 }
             }
-            // Visible settings entry; no need to discover a second tap on a pen.
-            OutlinedButton(onClick={if(tool==3)eraserDialog=true else settings=true},enabled=!busy,modifier=Modifier.heightIn(min=48.dp).testTag("pen-width-open")){
-                Text(if(tool<3)"线宽 ${PenWidthStore.label(widths[tool])} ▾"else"橡皮 ${eraser.diameterDp.toInt()} ▾",fontSize=12.sp)
+            Box{
+                OutlinedButton(onClick={if(tool==3)eraserDialog=true else settings=true},enabled=!busy,modifier=Modifier.heightIn(min=48.dp).testTag("pen-width-open")){
+                    Text(if(tool<3)"颜色 / 线宽 ▾"else"橡皮 ${eraser.diameterDp.toInt()} ▾",fontSize=12.sp)
+                }
+                if(tool<3)PenPresetMenu(settings,tool,widths[tool],colors[tool],{settings=false}){width,color->
+                    savePreset(tool,width,color);settings=false
+                }
             }
             VerticalDivider(Modifier.height(28.dp),color=Line)
             FilterChip(selected=tool==3,onClick={if(tool==3)eraserDialog=true else tool=3},enabled=!busy,label={Text(if(eraser.whole)"整笔橡皮"else"局部橡皮",fontSize=12.sp)},leadingIcon={Glyph("eraser")},modifier=Modifier.testTag("ink-tool-3"))
@@ -111,7 +123,7 @@ fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:NotebookPageR
             }},update={v->
                 v.configure(row.world,PaperStyle.entries.getOrElse(row.paper){PaperStyle.RULED},initial)
                 v.allowInput=if(tool==3)!ui.loading&&!ui.readFailed&&ui.blocked==null&&!ui.processing&&ui.queued<16 else ui.canStart;v.eraserWhole=eraser.whole;v.eraserHighlighterOnly=eraser.onlyHighlighter;v.eraserDiameterDp=eraser.diameterDp;v.fingerWrites=finger;v.eraseMode=tool==3;v.pen=if(tool==2)InkPen.HIGHLIGHTER else InkPen.PEN
-                v.penWidth=widths[tool.coerceAtMost(2)];v.penColor=when(tool){1->0xffb83239.toInt();2->0x66efc63a;else->0xff24342f.toInt()}
+                v.penWidth=widths[tool.coerceAtMost(2)];v.penColor=colors[tool.coerceAtMost(2)]
                 v.showStrokes(ui.strokes)
             },modifier=Modifier.fillMaxWidth().weight(1f).testTag("ink-surface"))
         }else Box(Modifier.weight(1f).fillMaxWidth(),contentAlignment=Alignment.Center){CircularProgressIndicator()}
@@ -127,13 +139,6 @@ fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:NotebookPageR
         }
     }
     if(eraserDialog)EraserDialog(eraser,{eraserDialog=false}){next->eraser=next;eraserDialog=false;scope.launch{val saved=try{eraserStore.save(next)}catch(c:CancellationException){throw c}catch(_:Exception){false};if(!saved)notice="本次橡皮已应用，但设置未保存。"}}
-    if(settings && tool<3)PenWidthDialog(tool,widths[tool],onDismiss={settings=false},onApply={value->
-        val selected=tool
-        widths=widths.mapIndexed{i,w->if(i==selected)value else w};settings=false
-        scope.launch{val saved=try{penStore.save(selected,value)}catch(c:CancellationException){throw c}catch(_:Exception){false}
-            if(!saved)notice="本次线宽已应用，但设置未保存；笔记内容不受影响。"
-        }
-    })
     if(confirmExport)AlertDialog(onDismissRequest={confirmExport=false},title={Text("导出可编辑页面副本")},text={Text("包括可见笔迹、纸张/无界形式、纸面样式和当前文字（可能含未确认内容）。明文 .iwpage，不是整库备份，不包含隐藏笔迹、撤销历史、分类、视图位置和回执。所选位置可能属于云盘。")},confirmButton={TextButton(onClick={confirmExport=false;val r=row?:return@TextButton;exportPending=InkPageFile(note.title.ifBlank{"笔记"},note.text,ui.strokes,r.world,PaperStyle.entries.getOrElse(r.paper){PaperStyle.RULED});launcher.launch("墨织页面.iwpage")}){Text("选择保存位置")}},dismissButton={TextButton(onClick={confirmExport=false}){Text("取消")}})
     if(discard)AlertDialog(onDismissRequest={discard=false},title={Text("放弃未确认笔迹？")},text={Text("只重新读取已保存内容。建议先导出副本，已保存笔迹不会删除。")},confirmButton={TextButton(onClick={discard=false;vm.discardRejectedDraft()}){Text("放弃草稿并读取")}},dismissButton={TextButton(onClick={discard=false}){Text("取消")}})
 }

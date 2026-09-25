@@ -183,14 +183,21 @@ private fun NoteTile(note:Note,row:WorkspaceRow,inkRevision:Long,count:Int,grid:
     val info:@Composable ()->Unit={
         Row(verticalAlignment=Alignment.CenterVertically){Text(note.title,maxLines=1,overflow=TextOverflow.Ellipsis,fontSize=14.sp,modifier=Modifier.weight(1f).clickable(onClick=open));Box{
             IconButton(onClick={menu=true},modifier=Modifier.size(48.dp).testTag("note-menu-${note.id}").describedAs("笔记菜单：${note.title}")){Glyph("more",Quiet,Modifier.size(17.dp))}
-            DropdownMenu(expanded=menu,onDismissRequest={menu=false}){
+            DropdownMenu(expanded=menu,onDismissRequest={menu=false},modifier=Modifier.width(240.dp).testTag("notebook-actions-menu")){
+                Text(note.title,fontSize=12.sp,color=Quiet,maxLines=1,overflow=TextOverflow.Ellipsis,
+                    modifier=Modifier.padding(horizontal=16.dp,vertical=9.dp))
+                HorizontalDivider(color=Line)
                 if(row.trashedAt==null){
-                    DropdownMenuItem(text={Text("重命名")},onClick={menu=false;rename()},modifier=Modifier.testTag("rename-note-${note.id}"))
-                    DropdownMenuItem(text={Text("更换封面")},onClick={menu=false;cover()},modifier=Modifier.testTag("change-cover-${note.id}"))
-                    DropdownMenuItem(text={Text(if(row.favorite)"取消收藏"else"收藏")},onClick={menu=false;favorite()})
-                    DropdownMenuItem(text={Text("文件夹与标签")},onClick={menu=false;classify()})
+                    DropdownMenuItem(text={Text("打开笔记")},leadingIcon={Glyph("note")},onClick={menu=false;open()})
+                    DropdownMenuItem(text={Text("重命名")},leadingIcon={Glyph("pen")},onClick={menu=false;rename()},modifier=Modifier.testTag("rename-note-${note.id}"))
+                    DropdownMenuItem(text={Text("更换封面")},leadingIcon={Glyph("note")},onClick={menu=false;cover()},modifier=Modifier.testTag("change-cover-${note.id}"))
+                    HorizontalDivider(color=Line)
+                    DropdownMenuItem(text={Text(if(row.favorite)"取消收藏"else"收藏")},leadingIcon={Glyph("star")},onClick={menu=false;favorite()})
+                    DropdownMenuItem(text={Text("文件夹与标签")},leadingIcon={Glyph("folder")},onClick={menu=false;classify()})
+                    HorizontalDivider(color=Line)
                 }
-                DropdownMenuItem(text={Text(if(row.trashedAt!=null)"恢复笔记"else"移入回收站")},onClick={menu=false;trash()})
+                DropdownMenuItem(text={Text(if(row.trashedAt!=null)"恢复笔记"else"移入回收站",color=if(row.trashedAt!=null)Forest else Color(0xffab3939))},
+                    leadingIcon={Glyph(if(row.trashedAt!=null)"undo"else"trash",if(row.trashedAt!=null)Forest else Color(0xffab3939))},onClick={menu=false;trash()})
             }
         }}
         Text(date+(if(count>0)" · $count 笔"else""),fontSize=10.sp,color=Quiet)

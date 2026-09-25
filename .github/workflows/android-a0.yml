@@ -121,7 +121,7 @@ jobs:
           python3 - <<'PY'
           import glob, sys
           import xml.etree.ElementTree as ET
-          expected_totals = {":data-local": 41, ":app": 21}
+          expected_totals = {":data-local": 42, ":app": 25}
           roots = {
               ":data-local": glob.glob("data-local/build/outputs/androidTest-results/**/*.xml", recursive=True),
               ":app": glob.glob("app/build/outputs/androidTest-results/**/*.xml", recursive=True),
@@ -161,11 +161,11 @@ jobs:
           import re
           text=Path('build/evidence/evidence-capture-instrumentation.txt').read_text()
           match=re.search(r'^OK \((\d+) tests?\)\s*$',text,re.M)
-          assert match and int(match.group(1)) >= 21, 'Missing successful complete repeat run'
+          assert match and int(match.group(1)) >= 25, 'Missing successful complete repeat run'
           assert 'FAILURES!!!' not in text
           PY
           adb pull "/sdcard/Android/data/org.inkweft.app.a0.insertion/files/." "build/evidence/"
-          for name in ink-ui-emulator.png diagnostics-emulator.zip workspace-library.png workspace-board.png workspace-page.png workspace-narrow.png insert-pages-options.png page-directory-insertion.png; do
+          for name in ink-ui-emulator.png diagnostics-emulator.zip workspace-library.png workspace-board.png workspace-page.png workspace-narrow.png insert-pages-options.png page-directory-insertion.png pen-presets-popover.png shelf-note-menu.png; do
             test -f "build/evidence/$name"
           done
           ls -1 build/evidence | sort > build/evidence/evidence-file-list.txt
