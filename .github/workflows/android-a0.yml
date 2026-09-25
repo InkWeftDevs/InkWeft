@@ -110,10 +110,21 @@ jobs:
         run: |
           set -euo pipefail
           ./gradlew --no-daemon :data-local:connectedDebugAndroidTest :app:connectedDebugAndroidTest
+          printf '%s\n' 'Instrumented tasks completed on an API35 x86_64 emulator. Not Pencil3, actual share-target, or physical-device evidence. See JUnit XML.' > build/evidence/instrumentation-completed.txt
+      - name: Capture actual in-app diagnostic output on disposable test install
+        working-directory: android
+        run: |
+          set -euo pipefail
+          # Gradle-managed test installation may be removed before a subsequent adb pull.
+          # Repeat the same four UI cases with explicit lifetime; never clear a user device.
+          adb install -r app/build/outputs/apk/debug/app-debug.apk
+          adb install -r app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk
+          timeout 180 adb shell am instrument -w org.inkweft.app.a0.diagnostics.test/androidx.test.runner.AndroidJUnitRunner | tr -d '\r' | tee build/evidence/evidence-capture-instrumentation.txt
+          grep -Fx 'OK (4 tests)' build/evidence/evidence-capture-instrumentation.txt
           adb pull /sdcard/Android/data/org.inkweft.app.a0.diagnostics/files/ink-ui-emulator.png build/evidence/ink-ui-emulator.png
           adb pull /sdcard/Android/data/org.inkweft.app.a0.diagnostics/files/diagnostics-emulator.zip build/evidence/diagnostics-emulator.zip
           adb pull /sdcard/Android/data/org.inkweft.app.a0.diagnostics/files/diagnostics-emulator.png build/evidence/diagnostics-emulator.png
-          printf '%s\n' 'Instrumented tasks completed on an API35 x86_64 emulator. Not Pencil3, actual share-target, or physical-device evidence. See JUnit XML.' > build/evidence/instrumentation-completed.txt
+          printf '%s\n' 'Four UI cases were repeated for artifact capture, not four additional distinct acceptance tests. Actual share-target and physical device remain NOT_RUN.' > build/evidence/evidence-capture-scope.txt
       - name: Capture emulator logs
         if: always()
         run: |
