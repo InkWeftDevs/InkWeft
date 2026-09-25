@@ -24,7 +24,7 @@ class InkUiTest {
         compose.onNodeWithTag("create-note").performClick()
         compose.waitUntil(10_000){compose.onAllNodesWithTag("ink-surface").fetchSemanticsNodes().isNotEmpty()}
         compose.waitUntil(10_000){runCatching { compose.onNodeWithTag("ink-status").assertTextContains("已提交",substring=true) }.isSuccess}
-        compose.onNodeWithTag("ink-finger").performClick()
+        compose.onNodeWithTag("ink-finger").performScrollTo().performClick()
     }
     private fun count(n: Int) {
         compose.waitUntil(10_000){runCatching { compose.onNodeWithTag("ink-status").assertTextContains("$n 笔",substring=true) }.isSuccess}
@@ -36,9 +36,9 @@ class InkUiTest {
     }
     @Test fun realTouchUndoRedoAndActivityRecreation() {
         newNote();draw();count(1)
-        compose.onNodeWithTag("ink-tool-1").performClick();draw();count(2)
-        compose.onNodeWithTag("ink-undo").performClick();count(1)
-        compose.onNodeWithTag("ink-redo").performClick();count(2)
+        compose.onNodeWithTag("ink-tool-1").performScrollTo().performClick();draw();count(2)
+        compose.onNodeWithTag("ink-undo").performScrollTo().performClick();count(1)
+        compose.onNodeWithTag("ink-redo").performScrollTo().performClick();count(2)
         compose.activityRule.scenario.recreate();count(2)
         compose.waitForIdle()
         val bitmap=checkNotNull(InstrumentationRegistry.getInstrumentation().uiAutomation.takeScreenshot())

@@ -2,15 +2,20 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
 }
+val diagnosticBuild = providers.gradleProperty("inkweftDiagnosticBuild").orNull == "true"
+fun commitValue(name: String): String = System.getenv(name)?.takeIf { it.matches(Regex("[0-9a-f]{40}")) } ?: "local-unknown"
 android {
     namespace = "org.inkweft.app"
     compileSdk = 36
     defaultConfig {
-        applicationId = "org.inkweft.app.a0"
+        applicationId = if (diagnosticBuild) "org.inkweft.app.a0.diagnostics" else "org.inkweft.app.a0"
         minSdk = 31
         targetSdk = 36
-        versionCode = 2
-        versionName = "0.0.2-a1-ink-preview"
+        versionCode = 3
+        versionName = "0.0.3-a1-diagnostics"
+        manifestPlaceholders["appLabel"] = if (diagnosticBuild) "墨织诊断预览" else "墨织"
+        buildConfigField("String", "BUILD_COMMIT", "\"${commitValue("GITHUB_SHA")}\"")
+        buildConfigField("String", "SOURCE_COMMIT", "\"${commitValue("INKWEFT_HEAD_SHA")}\"")
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
     buildFeatures { compose = true; buildConfig = true }

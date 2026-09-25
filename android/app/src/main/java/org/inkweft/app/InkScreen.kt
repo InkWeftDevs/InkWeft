@@ -40,6 +40,17 @@ fun InkScreen(note: NoteDraft) {
     var exportPending by remember { mutableStateOf<InkPageFile?>(null) }
     var confirmExport by remember { mutableStateOf(false) }
     var discard by remember { mutableStateOf(false) }
+    val diagnosticState=when {
+        ui.readFailed -> DiagnosticResult.READ_FAILED
+        ui.loading -> DiagnosticResult.LOADING
+        ui.blocked==InkCommitResult.Unknown -> DiagnosticResult.UNKNOWN
+        ui.blocked==InkCommitResult.Conflict -> DiagnosticResult.CONFLICT
+        ui.blocked!=null -> DiagnosticResult.REJECTED
+        gesture -> DiagnosticResult.EDITING
+        ui.queued>0 -> DiagnosticResult.SAVING
+        else -> DiagnosticResult.SAVED
+    }
+    SideEffect { app.diagnostics.ink(ui.loading,ui.readFailed,ui.strokes.size,ui.queued,ui.revision,gesture,diagnosticState) }
     val launcher=rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("application/octet-stream")) { uri ->
         val file=exportPending;exportPending=null
         if(uri!=null && file!=null)scope.launch {
@@ -83,8 +94,11 @@ fun InkScreen(note: NoteDraft) {
         if(ui.loading)LinearProgressIndicator(Modifier.fillMaxWidth())
         AndroidView(factory={ctx->InkCanvasView(ctx).also { v ->
             view=v;v.onStroke=vm::accept;v.onErase=vm::erase
-            v.onGesture={gesture=it};v.onNotice={notice=it}
-            v.onAxes={pressure,tilt->axes="本次输入：压力${if(pressure)"已上报" else "未上报"} · 倾斜${if(tilt)"已上报" else "未上报"}"}
+            v.onGesture={gesture=it};v.onNotice={notice=it;app.diagnostics.event(DiagnosticCode.INK_UI,DiagnosticResult.REJECTED)}
+            v.onAxes={pressure,tilt->
+                app.diagnostics.inputAxes(pressure,tilt)
+                axes="本次输入：压力${if(pressure)"已上报" else "未上报"} · 倾斜${if(tilt)"已上报" else "未上报"}"
+            }
         }},update={v->
             v.allowInput=ui.canStart;v.fingerWrites=finger;v.eraseMode=tool==3
             v.pen=if(tool==2)InkPen.HIGHLIGHTER else InkPen.PEN
