@@ -60,13 +60,14 @@ CI分别编译 Debug APK、运行纯Kotlin JUnit、lint，并编译（不执行�
 本节的数字来自本地实际执行并保留原始日志与报告，不是计划值，也不是把定义中的用例算作通过。
 
 - 编译：`:core-domain:test :app:lintDebug :app:assembleDebug :app:assembleDebugAndroidTest :data-local:assembleDebugAndroidTest` 全部成功（153 个任务）。
-- JVM 单元测试：**104 项通过，0 失败 / 0 错误 / 0 跳过**（CanvasViewport20、DiagnosticLog14、DraftReload8、InkEditing12、InkModels26、NotebookAppearance12、NoteDraft12）。
-- lint：**0 错误、40 警告**；未关闭规则、未用 `continue-on-error`。
-- Room schema4 由真实 KSP 生成并提交，`identityHash=43aaa681e66f431ce083dc510f59cbe8`。用宿主 SQLite 独立复核：3→4 迁移后的结构与 Room 期望的 schema4 逐表逐索引一致，2→3→4 链式升级结果同样一致；原笔迹 `payload` 字节在迁移前后完全相同，第一页保留原 UUID 身份。
-- 设备（MuMu Android 12 / API 32，x86_64）实测：data-local 仪器测试 **OK (31 tests)**，包含 `migration3To4PreservesAllOriginalInkBytesAndReferences`。
-- app 仪器测试：18 项中 17 项已在设备上通过。其中 `compactDrawerDoesNotReplaceThumbnailsOrDuplicateSearch` 与 `drawerUsesOneSearchAndClosesWithBackWithAnimationsEnabled` 需要窄屏（<840dp）布局；该 VM 的虚拟显示被锁定为横屏（配置恒为 `w1280dp land`），提高密度到宽 533dp 后这两项亦通过。CI 的模拟器不受此限制。整套 18 项在此 VM 上尚未一次跑完，未把未完成的一次算作通过。
+- JVM 单元测试：**104 项通过，0 失败 / 0 错误 / 0 跳过**（CanvasViewport20、DiagnosticLog14、DraftReload8、InkEditing12、InkModels26、NotebookAppearance12、NoteDraft12）。本地与 CI 两次独立执行数字一致。
+- lint：本地 0 错误/40 警告，CI 0 错误/49 警告（规则集合差异）；未关闭规则、未用 `continue-on-error`。
+- Room schema4 由真实 KSP 生成并提交，`identityHash=43aaa681e66f431ce083dc510f59cbe8`。用宿主 SQLite 独立复核：3→4 迁移后的结构与 Room 期望的 schema4 逐表逐索引一致，2→3→4 链式升级结果同样一致；原笔迹 `payload` 字节在迁移前后完全相同，第一页保留原 UUID 身份。CI 生成的 4.json 与本地生成逐字节相同。
+- CI（run 36144792720，head `62e5e4e`）整体 success，实际 JUnit XML 统计：**app 仪器测试 18/18 通过，data-local 仪器测试 31/31 通过，0 失败 / 0 错误 / 0 跳过**。其中包含 `migration3To4PreservesAllOriginalInkBytesAndReferences`。
+- 本地另用 MuMu Android 12（API 32，x86_64）独立复跑：data-local 31 项全部通过；app 侧 17/18 通过，两项抽屉用例需要窄于 840dp 的宽度，而该 VM 的虚拟显示被锁定为横屏，提高密度后这两项亦通过。该 VM 的限制属于本地模拟器环境，不代表用例有问题——CI 的 API35 模拟器上 18 项全部通过。
 - 构件：`org.inkweft.app.a0.workspace`，versionCode 5 / `0.0.5-a3-editing`，minSdk 31 / target 36，四种 ABI。
-  APK SHA-256 `CBDC7B6FD92E157B78559D45B39DFB39141018794AFB8994B6BAFE6403D25BA0`（35,248,119 bytes；CI artifact 内另有 `APK-SHA256.txt`）；签名 v2 通过，证书 SHA-256 `18e67dbce88152dbe4d4821b5a3a513a409a3df4eac9261f4c11126c36e43969`。
+  - CI 构件 APK SHA-256 `125e390b7b3ef4192d5fac0a6bf9d695f42c9a2e1479877d83856b36de9398ca`（35,248,119 bytes），签名 v2 通过，证书 SHA-256 `ea2d4ed2ddfda316f001195d379d129ef47b3a07df05723462611b912f4b082c`。
+  - 本地同源构建 APK SHA-256 `CBDC7B6FD92E157B78559D45B39DFB39141018794AFB8994B6BAFE6403D25BA0`，证书 SHA-256 `18e67dbce88152dbe4d4821b5a3a513a409a3df4eac9261f4c11126c36e43969`。两者字节不同只因为调试签名证书不同；版本、包名、schema 与内容一致。
 - 仍然 NOT_RUN：真机 iQOO/Pencil3、真实掌拒与笔身按钮、光学延迟、温升/掉电、系统分享目标、16KiB 设备、自动手写识别（当前仅为人工转录索引）。上面通过的是模拟器与宿主检查，不等于这些项目已验收。
 
 ## 后续最短路径
