@@ -26,12 +26,13 @@ interface NoteDao {
     @Insert(onConflict=OnConflictStrategy.ABORT) suspend fun insertRevision(row:NoteRevisionRow)
     @Insert(onConflict=OnConflictStrategy.ABORT) suspend fun insertReceipt(row:ReceiptRow)
 }
-@Database(entities=[NoteRow::class,NoteRevisionRow::class,ReceiptRow::class,InkPageRow::class,InkStrokeRow::class,InkReceiptRow::class,WorkspaceRow::class],
-    version=3,exportSchema=true,autoMigrations=[AutoMigration(from=1,to=2)])
+@Database(entities=[NoteRow::class,NoteRevisionRow::class,ReceiptRow::class,InkPageRow::class,InkStrokeRow::class,InkReceiptRow::class,WorkspaceRow::class,NotebookPageRow::class,InkCutRow::class,PageSearchRow::class],
+    version=4,exportSchema=true,autoMigrations=[AutoMigration(from=1,to=2)])
 abstract class NoteDatabase:RoomDatabase() {
     abstract fun notes():NoteDao
     abstract fun ink():InkDao
     abstract fun workspace():WorkspaceDao
+    abstract fun pages():NotebookPageDao
     companion object {
         val MIGRATION_2_3=object:Migration(2,3){
             override fun migrate(db:SupportSQLiteDatabase){
@@ -39,11 +40,38 @@ abstract class NoteDatabase:RoomDatabase() {
                 db.execSQL("INSERT INTO notebook_workspace (noteId,world,paper,folder,tags,favorite,trashedAt,centerX,centerY,zoom,revision) SELECT id,0,1,'','',0,NULL,500.0,707.0,0.0,0 FROM notes")
             }
         }
+        val MIGRATION_3_4=object:Migration(3,4){
+            override fun migrate(db:SupportSQLiteDatabase){
+                db.execSQL("ALTER TABLE `notebook_workspace` ADD COLUMN `coverKey` TEXT NOT NULL DEFAULT 'auto'")
+                db.execSQL("ALTER TABLE `notebook_workspace` ADD COLUMN `selectedPageId` TEXT NOT NULL DEFAULT ''")
+                db.execSQL("CREATE TABLE IF NOT EXISTS `notebook_pages` (`id` TEXT NOT NULL, `notebookId` TEXT NOT NULL, `position` INTEGER NOT NULL, `world` INTEGER NOT NULL, `paper` INTEGER NOT NULL, `centerX` REAL NOT NULL, `centerY` REAL NOT NULL, `zoom` REAL NOT NULL, `createdAfterId` TEXT, PRIMARY KEY(`id`), FOREIGN KEY(`notebookId`) REFERENCES `notes`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS `index_notebook_pages_notebookId` ON `notebook_pages` (`notebookId`)")
+                db.execSQL("INSERT INTO notebook_pages (id,notebookId,position,world,paper,centerX,centerY,zoom,createdAfterId) SELECT n.id,n.id,0,COALESCE(w.world,0),COALESCE(w.paper,1),COALESCE(w.centerX,500.0),COALESCE(w.centerY,707.0),COALESCE(w.zoom,0.0),NULL FROM notes n LEFT JOIN notebook_workspace w ON w.noteId=n.id")
+                // Copy bytes without decoding/resampling; only the ownership FK changes.
+                db.execSQL("CREATE TABLE ink_pages_new (`noteId` TEXT NOT NULL, `revision` INTEGER NOT NULL, PRIMARY KEY(`noteId`), FOREIGN KEY(`noteId`) REFERENCES `notebook_pages`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION)")
+                db.execSQL("INSERT INTO ink_pages_new SELECT * FROM ink_pages")
+                db.execSQL("DROP TABLE ink_pages")
+                db.execSQL("ALTER TABLE ink_pages_new RENAME TO ink_pages")
+                db.execSQL("CREATE TABLE ink_strokes_new (`id` TEXT NOT NULL, `noteId` TEXT NOT NULL, `payload` BLOB NOT NULL, `pointCount` INTEGER NOT NULL, `visible` INTEGER NOT NULL, `createdRevision` INTEGER NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`noteId`) REFERENCES `notebook_pages`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION)")
+                db.execSQL("INSERT INTO ink_strokes_new SELECT * FROM ink_strokes")
+                db.execSQL("DROP TABLE ink_strokes")
+                db.execSQL("ALTER TABLE ink_strokes_new RENAME TO ink_strokes")
+                db.execSQL("CREATE INDEX index_ink_strokes_noteId ON ink_strokes(noteId)")
+                db.execSQL("CREATE TABLE ink_receipts_new (`commandId` TEXT NOT NULL, `noteId` TEXT NOT NULL, `digest` TEXT NOT NULL, `committedRevision` INTEGER NOT NULL, `strokeIds` TEXT NOT NULL, `visible` INTEGER NOT NULL, PRIMARY KEY(`commandId`), FOREIGN KEY(`noteId`) REFERENCES `notebook_pages`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION)")
+                db.execSQL("INSERT INTO ink_receipts_new SELECT * FROM ink_receipts")
+                db.execSQL("DROP TABLE ink_receipts")
+                db.execSQL("ALTER TABLE ink_receipts_new RENAME TO ink_receipts")
+                db.execSQL("CREATE INDEX index_ink_receipts_noteId ON ink_receipts(noteId)")
+                db.execSQL("CREATE TABLE IF NOT EXISTS `ink_cuts` (`id` TEXT NOT NULL, `noteId` TEXT NOT NULL, `payload` BLOB NOT NULL, `strokeIds` TEXT NOT NULL, `visible` INTEGER NOT NULL, `createdRevision` INTEGER NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`noteId`) REFERENCES `notebook_pages`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS `index_ink_cuts_noteId` ON `ink_cuts` (`noteId`)")
+                db.execSQL("CREATE TABLE IF NOT EXISTS `page_search_text` (`pageId` TEXT NOT NULL, `inkRevision` INTEGER NOT NULL, `text` TEXT NOT NULL, `method` TEXT NOT NULL, PRIMARY KEY(`pageId`), FOREIGN KEY(`pageId`) REFERENCES `notebook_pages`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION)")
+            }
+        }
         fun open(context:Context,name:String="inkweft-a0.db"):NoteDatabase=
             Room.databaseBuilder(context.applicationContext,NoteDatabase::class.java,name)
                 .openHelperFactory(PreservingOpenHelperFactory())
                 .setJournalMode(JournalMode.WRITE_AHEAD_LOGGING)
-                .addMigrations(MIGRATION_2_3)
+                .addMigrations(MIGRATION_2_3,MIGRATION_3_4)
                 .addCallback(object:Callback(){override fun onOpen(db:SupportSQLiteDatabase){db.execSQL("PRAGMA synchronous=FULL")}})
                 .build()
     }

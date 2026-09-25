@@ -6,11 +6,13 @@ import kotlinx.coroutines.flow.Flow
 import org.inkweft.core.*
 import java.util.UUID
 
-/** Presentation/organization lives in the same database, never in diagnostic logs. */
+/** Shelf appearance is stored with organization; never encoded into pen data. */
 @Entity(tableName="notebook_workspace",foreignKeys=[ForeignKey(entity=NoteRow::class,parentColumns=["id"],childColumns=["noteId"],onDelete=ForeignKey.NO_ACTION)])
 data class WorkspaceRow(@PrimaryKey val noteId:String,val world:Boolean=false,val paper:Int=1,
     val folder:String="",val tags:String="",val favorite:Boolean=false,val trashedAt:Long?=null,
-    val centerX:Double=500.0,val centerY:Double=707.0,val zoom:Double=0.0,val revision:Long=0)
+    val centerX:Double=500.0,val centerY:Double=707.0,val zoom:Double=0.0,val revision:Long=0,
+    @ColumnInfo(defaultValue="'auto'") val coverKey:String="auto",
+    @ColumnInfo(defaultValue="''") val selectedPageId:String="")
 
 data class LibraryInkCount(val noteId:String,val visibleCount:Int,val modifiedRevision:Long)
 
@@ -22,12 +24,12 @@ interface WorkspaceDao {
     @Update suspend fun update(row:WorkspaceRow):Int
     @Query("UPDATE notebook_workspace SET centerX=:x,centerY=:y,zoom=:zoom WHERE noteId=:id")
     suspend fun viewport(id:String,x:Double,y:Double,zoom:Double):Int
-    @Query("SELECT n.id AS noteId,COALESCE(SUM(CASE WHEN s.visible=1 THEN 1 ELSE 0 END),0) AS visibleCount,COALESCE(p.revision,0) AS modifiedRevision FROM notes n LEFT JOIN ink_pages p ON p.noteId=n.id LEFT JOIN ink_strokes s ON s.noteId=n.id GROUP BY n.id")
+    @Query("UPDATE notebook_workspace SET selectedPageId=:pageId WHERE noteId=:id") suspend fun selectPage(id:String,pageId:String):Int
+    @Query("SELECT n.id AS noteId,COALESCE((SELECT COUNT(*) FROM notebook_pages p JOIN ink_strokes s ON s.noteId=p.id WHERE p.notebookId=n.id AND s.visible=1),0) AS visibleCount,COALESCE((SELECT SUM(h.revision) FROM notebook_pages p JOIN ink_pages h ON h.noteId=p.id WHERE p.notebookId=n.id),0) AS modifiedRevision FROM notes n")
     fun observeInkCounts():Flow<List<LibraryInkCount>>
     @Query("SELECT updatedAt FROM notes WHERE id=:id") suspend fun updatedAt(id:String):Long?
 }
 
-/** No destructive deletion. The trash is a reversible shelf membership flag. */
 class WorkspaceRepository(private val db:NoteDatabase) {
     fun observe()=db.workspace().observe()
     fun observeInkCounts()=db.workspace().observeInkCounts()
@@ -35,11 +37,12 @@ class WorkspaceRepository(private val db:NoteDatabase) {
         checkNotNull(db.notes().note(id))
         db.workspace().get(id)?:WorkspaceRow(id).also { db.workspace().insert(it) }
     }
-    suspend fun create(title:String,world:Boolean,paper:PaperStyle):Note=db.withTransaction {
-        val clean=title.trim();require(clean.isNotBlank() && clean.length<=120)
+    suspend fun create(title:String,world:Boolean,paper:PaperStyle,cover:NotebookCover=NotebookCover.AUTO):Note=db.withTransaction {
+        val clean=title.trim();require(RenameNote.validTitle(clean))
         val id=UUID.randomUUID().toString();val at=System.currentTimeMillis()
         db.notes().insertNote(NoteRow(id,1,clean,"",at));db.notes().insertRevision(NoteRevisionRow(id,1,clean,"",at))
-        db.workspace().insert(WorkspaceRow(id,world,paper.ordinal,centerX=if(world)0.0 else 500.0,centerY=if(world)0.0 else 707.0))
+        db.workspace().insert(WorkspaceRow(id,world,paper.ordinal,centerX=if(world)0.0 else 500.0,centerY=if(world)0.0 else 707.0,coverKey=cover.key))
+        db.pages().insert(NotebookPageRow(id,id,0,world,paper.ordinal,centerX=if(world)0.0 else 500.0,centerY=if(world)0.0 else 707.0))
         Note(id,1,clean,"")
     }
     suspend fun organize(id:String,expected:Long,folder:String,tags:String,favorite:Boolean,trash:Boolean):Boolean=db.withTransaction {
@@ -53,11 +56,23 @@ class WorkspaceRepository(private val db:NoteDatabase) {
             trashedAt=if(trash)row.trashedAt?:System.currentTimeMillis() else null,revision=row.revision+1))==1)
         true
     }
+    /** Desired-state assignment; same cover is idempotent, stale different choice conflicts. */
+    suspend fun changeCover(id:String,expected:Long,cover:NotebookCover):Boolean=db.withTransaction {
+        val row=get(id)
+        if(row.coverKey==cover.key)return@withTransaction true
+        if(row.revision!=expected || row.trashedAt!=null)return@withTransaction false
+        check(db.workspace().update(row.copy(coverKey=cover.key,revision=row.revision+1))==1)
+        true
+    }
     suspend fun changePaper(id:String,paper:PaperStyle)=db.withTransaction {
-        val row=get(id);check(db.workspace().update(row.copy(paper=paper.ordinal,revision=row.revision+1))==1)
+        val page=db.pages().get(id)?:NotebookPages(db).ensureFirst(id)
+        check(db.pages().paper(id,paper.ordinal)==1)
+        if(id==page.notebookId){val row=get(id);check(db.workspace().update(row.copy(paper=paper.ordinal,revision=row.revision+1))==1)}
     }
     suspend fun saveViewport(id:String,v:CanvasViewport)=db.withTransaction {
-        get(id);check(db.workspace().viewport(id,v.centerX,v.centerY,v.zoom)==1)
+        val page=db.pages().get(id)?:NotebookPages(db).ensureFirst(id)
+        check(db.pages().viewport(id,v.centerX,v.centerY,v.zoom)==1)
+        if(id==page.notebookId){get(id);check(db.workspace().viewport(id,v.centerX,v.centerY,v.zoom)==1)}
     }
     suspend fun modifiedAt(id:String)=db.workspace().updatedAt(id)?:0L
 }
