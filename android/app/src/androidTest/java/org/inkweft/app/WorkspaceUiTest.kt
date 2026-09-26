@@ -106,6 +106,9 @@ class WorkspaceUiTest {
         compose.onNodeWithTag("back-library").performClick()
     }
     @Test fun libraryHasRealSearchFilterFavoriteAndRecycle(){
+        val automation=InstrumentationRegistry.getInstrumentation().uiAutomation
+        val previousFlags=automation.serviceInfo.flags
+        automation.serviceInfo=automation.serviceInfo.apply{flags=flags or android.accessibilityservice.AccessibilityServiceInfo.FLAG_RETRIEVE_INTERACTIVE_WINDOWS}
         try{
             waitForShelf()
             val prefix="A2-"+UUID.randomUUID().toString().take(5)
@@ -115,8 +118,16 @@ class WorkspaceUiTest {
             compose.onNodeWithTag("library-search").performTextInput(prefix)
             compose.onNodeWithTag("library-type-board").performClick();compose.onNodeWithText("$prefix 思维草稿").assertExists();compose.onNodeWithText("$prefix 原文笔记").assertDoesNotExist()
             compose.onNodeWithTag("note-menu-${b.id}").performClick()
-            // The product menu, not a test shell command, dismisses the search IME.
-            compose.waitUntil(10_000){androidx.core.view.ViewCompat.getRootWindowInsets(compose.activity.window.decorView)?.isVisible(WindowInsetsCompat.Type.ime())==false}
+            // A focusable popup owns a different window. The inactive Activity can retain
+            // old IME insets on API 35; verify the user's interactive keyboard window instead.
+            compose.waitUntil(10_000){val windows=automation.windows
+                windows.any{it.type==android.view.accessibility.AccessibilityWindowInfo.TYPE_APPLICATION}&&
+                    windows.none{it.type==android.view.accessibility.AccessibilityWindowInfo.TYPE_INPUT_METHOD}}
+            val windowTypes=automation.windows.map{it.type}
+            val activityIme=androidx.core.view.ViewCompat.getRootWindowInsets(compose.activity.window.decorView)?.isVisible(WindowInsetsCompat.Type.ime())
+            val inputMethod=automation.executeShellCommand("dumpsys input_method").use{android.os.ParcelFileDescriptor.AutoCloseInputStream(it).use{input->input.bufferedReader().readLines().filter{line->line.contains("mInputShown=")||line.contains("mShowRequested=")}.joinToString("\n")}}
+            File(compose.activity.getExternalFilesDir(null),"shelf-menu-window-check.txt").writeText("interactiveWindowTypes=$windowTypes\ninactiveActivityIme=$activityIme\n$inputMethod\n")
+            assertFalse("Input method still shown: $inputMethod",Regex("mInputShown\\s*[=:]\\s*true").containsMatchIn(inputMethod))
             compose.onNodeWithTag("favorite-note-${b.id}").performScrollTo().assertIsDisplayed().performClick()
             compose.waitUntil(10_000){runBlocking{app.workspaceRepository.get(b.id).favorite}}
             compose.onNodeWithTag("note-menu-${b.id}").performClick()
@@ -133,7 +144,7 @@ class WorkspaceUiTest {
             runCatching{shot("shelf-menu-failure.png")}
             runCatching{File(compose.activity.getExternalFilesDir(null),"shelf-menu-semantics.txt").writeText(compose.onRoot(useUnmergedTree=true).printToString())}
             throw error
-        }
+        }finally{automation.serviceInfo=automation.serviceInfo.apply{flags=previousFlags}}
     }
     @Test fun fitModesAndPaperChangesDoNotRewriteSamples(){
         create(false);assertViewportClip(false);compose.onNodeWithTag("ink-more").performScrollTo().performClick();compose.onNodeWithTag("ink-finger").performScrollTo().performClick();draw();saved(1)
