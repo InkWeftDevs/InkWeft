@@ -45,7 +45,8 @@ class PageEditingRepository(private val db:NoteDatabase,private val fault:(PageE
             if(active.none{it.id==c.stayOnPageId})return@withTransaction EditPageResult.Unavailable
             if(c.kind==PageEditKind.TRASH&&active.size==1)return@withTransaction EditPageResult.LastPage
             if(c.kind==PageEditKind.COPY&&all.size>=InsertPages.MAX_PAGES)return@withTransaction EditPageResult.CapacityReached
-            if(c.newPageId!=null&&(db.pages().get(c.newPageId)!=null||db.notes().note(c.newPageId)!=null))return@withTransaction EditPageResult.CommandReused
+            val newId=c.newPageId
+            if(newId!=null&&(db.pages().get(newId)!=null||db.notes().note(newId)!=null))return@withTransaction EditPageResult.CommandReused
             if(c.anchorPageId!=null&&active.none{it.id==c.anchorPageId})return@withTransaction EditPageResult.Unavailable
             val ordered=active.map{it.id}.toMutableList()
             var resultId=source.id
