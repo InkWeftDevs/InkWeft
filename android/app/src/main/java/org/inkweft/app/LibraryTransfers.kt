@@ -73,10 +73,16 @@ class LibraryTransfersViewModel(app:Application,private val saved:SavedStateHand
     fun commit(){
         if(ui.value.busy||!hasPending())return
         if(value("kind")=="IMPORT"&&prepared==null){mutable.value=LibraryTransferUi("IMPORT",message="请重新选择上次同一文件，命令身份保持不变。",needsFile=true);return}
+        // Freeze identity on the main actor before dispatching any work. SavedStateHandle
+        // is not a mutable request object for a background worker to re-read.
+        val kind=value("kind")
+        val copy=if(kind=="COPY")copyCommand()else null
+        val imported=if(kind=="IMPORT")importCommand()else null
+        val content=prepared
         mutable.value=ui.value.copy(busy=true,message="正在提交完整副本…")
         viewModelScope.launch{
             try{
-                val note=withContext(Dispatchers.IO){if(value("kind")=="COPY")repo.duplicate(copyCommand())else repo.import(importCommand(),checkNotNull(prepared))}
+                val note=withContext(Dispatchers.IO){if(copy!=null)repo.duplicate(copy)else repo.import(checkNotNull(imported),checkNotNull(content))}
                 completed(note)
             }catch(c:CancellationException){throw c}
             catch(_:IllegalArgumentException){mutable.value=LibraryTransferUi("REJECTED",message="未完成复制或导入：源状态、容量或内容校验未通过。原资料保持不变，可取消后重新检查。")}
@@ -86,10 +92,11 @@ class LibraryTransfersViewModel(app:Application,private val saved:SavedStateHand
     private fun completed(note:Note){forget();mutable.value=LibraryTransferUi("DONE",message="副本已提交至本机资料库。",result=note)}
     fun checkPending(){
         if(ui.value.busy||!hasPending())return
+        val id=value("id");val kind=value("kind");val semanticDigest=digest()
         mutable.value=LibraryTransferUi("CHECKING",true,"正在查询原操作回执…")
         viewModelScope.launch{
             try{
-                val note=withContext(Dispatchers.IO){repo.lookup(value("id"),value("kind"),digest())}
+                val note=withContext(Dispatchers.IO){repo.lookup(id,kind,semanticDigest)}
                 if(note!=null)completed(note)
                 else mutable.value=LibraryTransferUi(value("kind"),message="没有找到已提交回执。可按原操作重试，或取消；不会生成新的命令身份。",needsFile=value("kind")=="IMPORT"&&prepared==null)
             }catch(c:CancellationException){throw c}
