@@ -43,11 +43,23 @@ class PageEditingUiTest {
         return n to ids
     }
     private fun menu(number:Int){compose.onNodeWithTag("page-directory").performClick();compose.onNodeWithTag("page-menu-$number").performClick()}
-    private fun confirm(){compose.waitUntil(15_000){runCatching{compose.onNodeWithTag("confirm-page-edit").assertIsEnabled()}.isSuccess};compose.onNodeWithTag("confirm-page-edit").performClick()}
+    private fun editReady(){
+        try{
+            compose.waitUntil(15_000){runCatching{
+                compose.onNodeWithTag("page-edit-version",useUnmergedTree=true).assertTextEquals("页面版本已核对")
+                compose.onNodeWithTag("confirm-page-edit").assertIsEnabled()
+            }.isSuccess}
+        }catch(error:Throwable){
+            runCatching{shot("page-edit-confirm-failure.png")}
+            runCatching{println(compose.onRoot(useUnmergedTree=true).printToString())}
+            throw error
+        }
+    }
+    private fun confirm(){editReady();compose.onNodeWithTag("confirm-page-edit").performClick()}
     private fun shot(name:String){compose.waitForIdle();val b=checkNotNull(InstrumentationRegistry.getInstrumentation().uiAutomation.takeScreenshot());try{File(compose.activity.getExternalFilesDir(null),name).outputStream().use{b.compress(Bitmap.CompressFormat.PNG,100,it)}}finally{b.recycle()}}
     @Test fun movingCurrentPageKeepsItsIdentityAndReadingPosition(){
         val (n,ids)=seed();menu(1);compose.onNodeWithTag("move-page-1").performClick()
-        compose.onNodeWithTag("page-edit-end").performClick();shot("page-move-options.png");confirm();counter("第 3 / 3 页")
+        compose.onNodeWithTag("page-edit-end").performClick();editReady();shot("page-move-options.png");confirm();counter("第 3 / 3 页")
         assertEquals(listOf(ids[1],ids[2],ids[0]),runBlocking{app.pages.activePages(n.id)}.map{it.id})
         compose.activityRule.scenario.recreate();counter("第 3 / 3 页")
     }
