@@ -12,6 +12,9 @@ import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.lifecycle.ViewModelProvider
 import androidx.test.platform.app.InstrumentationRegistry
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.yield
 import kotlinx.coroutines.flow.first
 import org.inkweft.core.*
 import org.junit.Assert.*
@@ -71,8 +74,12 @@ class SelectionStudyUiTest {
         val(n,s)=seed();select();compose.onNodeWithTag("selection-beautify").performScrollTo().assertIsEnabled().performClick()
         compose.onNodeWithTag("beautify-dialog").assertIsDisplayed();awaitBeauty();shot("beautify-preview.png")
         compose.onNodeWithText("取消",useUnmergedTree=true).performClick();assertEquals(1L,runBlocking{app.inkRepository.read(n.id).revision})
-        compose.onNodeWithTag("selection-beautify").performScrollTo().performClick();awaitBeauty();compose.onNodeWithTag("apply-beautify").performClick();saved(1)
+        compose.onNodeWithTag("selection-beautify").performScrollTo().performClick();awaitBeauty()
+        compose.onNodeWithTag("beautify-strength").performSemanticsAction(androidx.compose.ui.semantics.SemanticsActions.SetProgress){it(.2f)}
+        compose.onNodeWithTag("beautify-strength").performSemanticsAction(androidx.compose.ui.semantics.SemanticsActions.SetProgress){it(.8f)}
+        awaitBeauty();compose.onNodeWithTag("apply-beautify").performClick();saved(1)
         compose.waitUntil(10_000){runBlocking{app.inkRepository.read(n.id).revision}==2L}
+        assertEquals(InkSelectionEdit.beautify(listOf(s),.8f).single().samples,InkSession(runBlocking{app.inkRepository.read(n.id)}).visibleDraft().single().samples)
         assertEquals(2,runBlocking{app.inkRepository.read(n.id).strokes.size});compose.onNodeWithTag("ink-undo").performScrollTo().performClick();saved(1)
         assertEquals(s.samples,InkSession(runBlocking{app.inkRepository.read(n.id)}).visibleDraft().single().samples)
     }
@@ -138,5 +145,18 @@ class SelectionStudyUiTest {
                 assertNotEquals(Color.MAGENTA,bitmap.getPixel(100,100))
             }finally{bitmap.recycle()}
         }
+    }
+    @Test fun previewFailureIsExplicitAndCanRetry()=runBlocking{
+        var fail=true
+        val preview=BeautifyPreview(emptyList()){_,_->if(fail)throw IllegalStateException("synthetic failure")else emptyList()}
+        preview.compute(.5f);assertTrue(preview.state.value.error);assertNull(preview.state.value.strokes)
+        fail=false;preview.compute(.5f);assertFalse(preview.state.value.error);assertNotNull(preview.state.value.strokes)
+    }
+    @Test fun latePreviewCannotReplaceNewerStrength()=runBlocking{
+        val release=CompletableDeferred<Unit>()
+        val preview=BeautifyPreview(emptyList()){_,strength->if(strength==.2f)release.await();emptyList()}
+        val old=launch{preview.compute(.2f)};yield()
+        preview.compute(.8f);release.complete(Unit);old.join()
+        assertEquals(.8f,preview.state.value.strength);assertNotNull(preview.state.value.strokes)
     }
 }
