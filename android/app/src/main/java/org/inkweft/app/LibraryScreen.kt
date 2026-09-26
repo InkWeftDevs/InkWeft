@@ -171,14 +171,7 @@ fun LibraryScreen(ui:NotebookUi,workspace:WorkspaceViewModel,open:(Note)->Unit,c
         scope.launch{try{if(workspace.cover(r,choice,custom))coverTargetId=null else coverError="设置已被其他操作更新，未覆盖。请关闭并重新打开，查看最新封面。"}
         catch(c:CancellationException){throw c}catch(e:IllegalArgumentException){coverError=if(e.message=="COVER_LIBRARY_BUDGET")"封面图片空间已达 32 MB；请先移除不需要的图片封面。"else"封面数据无效，未保存。请重新选择图片或样式。"}catch(_:Exception){coverError="封面结果待核对；可以重试相同选择。笔记正文与笔迹不受影响。"}finally{coverBusy=false}}
     }}}
-    editing?.let{r->
-        var folder by remember(r.noteId){mutableStateOf(r.folder)};var label by remember(r.noteId){mutableStateOf(r.tags.replace('\n',','))}
-        AlertDialog(onDismissRequest={editing=null},title={Text("文件夹与标签")},text={Column(verticalArrangement=Arrangement.spacedBy(12.dp)){
-            OutlinedTextField(folder,{if(it.length<=48)folder=it},label={Text("文件夹，留空为未分类")},singleLine=true)
-            OutlinedTextField(label,{if(it.length<=240)label=it},label={Text("标签，以逗号分隔")})
-            Text("现有内容不移动、不复制。一个文件夹，多枚标签。",fontSize=12.sp,color=Quiet)
-        }},confirmButton={TextButton(onClick={workspace.organize(r,folder=folder,tags=label);editing=null}){Text("保存")}},dismissButton={TextButton(onClick={editing=null}){Text("取消")}})
-    }
+    editing?.let{r->NotebookClassificationDialog(r,{editing=null}){folder,tags->workspace.organize(r,folder=folder,tags=tags);editing=null}}
     removing?.let{r->AlertDialog(onDismissRequest={removing=null},modifier=Modifier.testTag("trash-note-dialog"),title={Text("移入回收站？")},text={Text("笔迹、文字和封面都会保留，可随时恢复。不会清空数据库。")},confirmButton={TextButton(onClick={workspace.organize(r,trash=true);removing=null},modifier=Modifier.testTag("confirm-trash-${r.noteId}")){Text("移入回收站")}},dismissButton={TextButton(onClick={removing=null}){Text("取消")}})}
 }
 

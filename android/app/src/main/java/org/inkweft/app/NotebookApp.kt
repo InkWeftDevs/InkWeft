@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveableStateHolder
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -45,6 +46,7 @@ fun NotebookApp(vm:NotebookViewModel=viewModel(),onDiagnostics:()->Unit={}){
     val context=LocalContext.current;val app=context.applicationContext as InkWeftApplication
     val transfers:LibraryTransfersViewModel=viewModel();val transferUi by transfers.ui.collectAsStateWithLifecycle()
     val keyboard=LocalSoftwareKeyboardController.current;val focus=LocalFocusManager.current;val scope=rememberCoroutineScope()
+    val notebookStates=rememberSaveableStateHolder()
     val pendingCreate by workspace.pendingCreate.collectAsStateWithLifecycle()
     val defaults=remember(context){context.getSharedPreferences("inkweft-new-notebook",android.content.Context.MODE_PRIVATE)}
     val target by app.openKnowledgeTarget.collectAsStateWithLifecycle()
@@ -83,6 +85,8 @@ fun NotebookApp(vm:NotebookViewModel=viewModel(),onDiagnostics:()->Unit={}){
         if(workspaceError!=null)Surface(color=Color(0xfffff4e3)){Row(Modifier.fillMaxWidth().padding(horizontal=16.dp),verticalAlignment=Alignment.CenterVertically){Text(workspaceError!!,Modifier.weight(1f),fontSize=12.sp);TextButton(onClick=workspace::clearError){Text("知道了")}}}
         if(pendingCreate!=null&&!busy)TextButton(onClick={workspace.retryCreate{vm.select(it)}},modifier=Modifier.testTag("retry-create-notebook")){Text("核对原创建请求")}
         if(transferUi.busy||busy)LinearProgressIndicator(Modifier.fillMaxWidth())
+        if(ui.current!=null)NotebookTabs(ui,navigationReady&&!busy&&!transferUi.busy,{id->focus.clearFocus(force=true);keyboard?.hide();vm.selectTab(id)},
+            {id->if(vm.closeTab(id))notebookStates.removeState(id)else Toast.makeText(context,"这份笔记有未保存文字或待核对操作，请先处理后再关闭标签。",Toast.LENGTH_SHORT).show()},vm::back)
         val draft=ui.current
         if(draft==null)Box(Modifier.weight(1f)){LibraryScreen(ui,workspace,vm::select,::openCreate,{pageImport.launch(arrayOf("application/octet-stream","*/*"))},onDiagnostics,::beginRename,{transfers.requestCopy(it.id)},{transfers.export(it.id)})}
         else{
@@ -97,7 +101,7 @@ fun NotebookApp(vm:NotebookViewModel=viewModel(),onDiagnostics:()->Unit={}){
                 IconButton(onClick=onDiagnostics,modifier=Modifier.testTag("open-diagnostics").describedAs("诊断与导出")){Glyph("diagnostics",Quiet)}
             }
             HorizontalDivider(color=Line)
-            if(inkMode&&draft.base.revision>0)Box(Modifier.weight(1f)){key(draft.base.id){InkScreen(draft,workspace,vm::back,{beginRename(draft.base)},{inkMode=false},onDiagnostics)}}
+            if(inkMode&&draft.base.revision>0)Box(Modifier.weight(1f)){notebookStates.SaveableStateProvider(draft.base.id){InkScreen(draft,workspace,vm::back,{beginRename(draft.base)},{inkMode=false},onDiagnostics)}}
             else TextPage(draft,vm,Modifier.weight(1f)){confirmExport=true}
         }
     }

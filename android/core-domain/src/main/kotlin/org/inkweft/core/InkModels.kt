@@ -27,7 +27,7 @@ data class InkSample(val x:Float,val y:Float,val elapsedMs:Long,val pressure:Flo
         require(orientation==-1f||(orientation.isFinite()&&orientation in 0f..2*Math.PI.toFloat()))
     }
 }
-enum class InkPen { PEN,HIGHLIGHTER }
+enum class InkPen { PEN,HIGHLIGHTER,BALLPOINT,BRUSH,MARKER }
 enum class InkTool { TOUCH,STYLUS,MOUSE }
 data class EraserPoint(val x:Float,val y:Float) {
     init {require(x.isFinite()&&y.isFinite()&&x in -BoardLimits.WORLD..BoardLimits.WORLD&&y in -BoardLimits.WORLD..BoardLimits.WORLD)}

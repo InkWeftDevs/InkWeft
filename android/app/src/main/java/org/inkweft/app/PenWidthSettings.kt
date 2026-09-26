@@ -19,6 +19,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import org.inkweft.core.*
 import java.util.Locale
 import kotlin.math.roundToInt
 
@@ -35,13 +36,17 @@ internal class PenWidthStore(context:Context,name:String="inkweft-pen-widths") {
         val fallback=global?.readColors()?.get(tool)?:colors(tool)[if(tool==1)1 else if(tool==2)4 else 0]
         runCatching{preferences.getInt("color-$tool",fallback)}.getOrDefault(fallback).takeIf{validColor(tool,it)}?:fallback
     }
+    fun readKinds():List<InkPen> = (0..2).map{tool->
+        val fallback=global?.readKinds()?.get(tool)?:defaultKind(tool)
+        runCatching{InkPen.valueOf(preferences.getString("kind-$tool",fallback.name)!!)}.getOrDefault(fallback).takeIf{allowed(tool,it)}?:fallback
+    }
     suspend fun save(tool:Int,width:Float):Boolean {
         require(tool in 0..2 && width.isFinite() && width in range(tool))
         return writes.withLock { withContext(Dispatchers.IO){preferences.edit().putFloat("width-$tool",width).commit()} }
     }
-    suspend fun savePreset(tool:Int,width:Float,color:Int):Boolean {
-        require(tool in 0..2 && width.isFinite() && width in range(tool) && validColor(tool,color))
-        return writes.withLock { withContext(Dispatchers.IO){preferences.edit().putFloat("width-$tool",width).putInt("color-$tool",color).commit()} }
+    suspend fun savePreset(tool:Int,width:Float,color:Int,kind:InkPen=readKinds()[tool]):Boolean {
+        require(tool in 0..2 && width.isFinite() && width in range(tool) && validColor(tool,color) && allowed(tool,kind))
+        return writes.withLock { withContext(Dispatchers.IO){preferences.edit().putFloat("width-$tool",width).putInt("color-$tool",color).putString("kind-$tool",kind.name).commit()} }
     }
     companion object {
         fun validColor(tool:Int,color:Int)=(color ushr 24)==(if(tool==2)0x66 else 0xff)
@@ -50,18 +55,25 @@ internal class PenWidthStore(context:Context,name:String="inkweft-pen-widths") {
         fun presets(tool:Int)=if(tool==2)listOf(12f,22f,34f)else listOf(1.5f,3f,6f)
         fun colors(tool:Int)=listOf(0x24342f,0xb83239,0x2f53aa,0x126b50,0xe1ad19).map{it or (if(tool==2)0x66000000 else 0xff000000.toInt())}
         fun label(width:Float)=String.format(Locale.ROOT,"%.1f",width)
-        fun name(tool:Int)=if(tool==2)"荧光笔"else"常用笔 ${tool+1}"
+        fun defaultKind(tool:Int)=when(tool){0->InkPen.BALLPOINT;1->InkPen.PEN;else->InkPen.HIGHLIGHTER}
+        fun allowed(tool:Int,kind:InkPen)=if(tool==2)kind==InkPen.HIGHLIGHTER else kind in PenKinds.writing
+        fun name(tool:Int,kind:InkPen=defaultKind(tool))=PenKinds.title(kind)
     }
 }
 
 /** Anchored to the toolbar. Outside taps dismiss without passing into ink. */
 @Composable
-internal fun PenPresetMenu(expanded:Boolean,tool:Int,current:Float,currentColor:Int,onDismiss:()->Unit,onApply:(Float,Int)->Unit) {
+internal fun PenPresetMenu(expanded:Boolean,tool:Int,current:Float,currentColor:Int,currentKind:InkPen,onDismiss:()->Unit,onApply:(Float,Int,InkPen)->Unit) {
     DropdownMenu(expanded=expanded,onDismissRequest=onDismiss,modifier=Modifier.width(320.dp).testTag("pen-width-dialog")) {
+        var kind by remember(expanded,tool,currentKind){mutableStateOf(currentKind)}
         var draft by remember(expanded,tool,current){mutableFloatStateOf(current)}
         var color by remember(expanded,tool,currentColor){mutableIntStateOf(currentColor)}
         Column(Modifier.padding(horizontal=16.dp,vertical=10.dp),verticalArrangement=Arrangement.spacedBy(10.dp)) {
-            Text(PenWidthStore.name(tool),fontSize=17.sp,color=TextInk)
+            Text("笔盒 · "+PenKinds.title(kind),fontSize=17.sp,color=TextInk)
+            if(tool!=2)PenKinds.writing.chunked(2).forEach{row->Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.spacedBy(8.dp)){row.forEach{p->
+                FilterChip(selected=kind==p,onClick={kind=p;draft=PenKinds.defaultWidth(p)},label={Text(PenKinds.title(p))},modifier=Modifier.weight(1f).testTag("pen-kind-${p.name.lowercase()}"))
+            }}}
+            Text(PenKinds.description(kind),fontSize=12.sp,color=Quiet)
             HorizontalDivider(color=Line)
             Text("粗细",fontSize=13.sp)
             Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.spacedBy(6.dp)) {
@@ -84,15 +96,12 @@ internal fun PenPresetMenu(expanded:Boolean,tool:Int,current:Float,currentColor:
             var hex by remember(color){mutableStateOf(String.format(Locale.ROOT,"%06X",color and 0xffffff))}
             OutlinedTextField(hex,{value->if(value.length<=6)hex=value.uppercase(Locale.ROOT)},label={Text("自定义颜色 · 六位十六进制")},isError=!hex.matches(Regex("[0-9A-F]{6}")),singleLine=true,modifier=Modifier.fillMaxWidth().testTag("pen-custom-color"))
             TextButton(onClick={color=hex.toInt(16) or (if(tool==2)0x66000000 else 0xff000000.toInt())},enabled=hex.matches(Regex("[0-9A-F]{6}"))){Text("使用自定义颜色")}
-            Canvas(Modifier.fillMaxWidth().height(38.dp).background(Color.White)) {
-                drawLine(Color(color),Offset(8.dp.toPx(),size.height/2),Offset(size.width-8.dp.toPx(),size.height/2),
-                    strokeWidth=draft.coerceAtMost(24f).dp.toPx(),cap=StrokeCap.Round)
-            }
-            Text("预览为粗细示意。数值使用画布单位，不冒充物理毫米；压感使用当前笔刷与设备能力。",fontSize=11.sp,lineHeight=17.sp,color=Quiet)
-            Text("只影响之后的笔迹。保存后，颜色和线宽在这支常用笔中一起记住。",fontSize=11.sp,lineHeight=17.sp,color=Quiet)
+            PenStrokePreview(kind,color,draft)
+            Text(if(PenKinds.pressureSensitive(kind))"模拟轻 → 重 → 轻。实际粗细取决于笔的压力；无压感输入按定宽书写。"else"实际笔刷示意；线宽不随压力变化。",fontSize=11.sp,lineHeight=17.sp,color=Quiet)
+            Text("只影响之后的笔迹。笔型、颜色和线宽一起保存；线宽使用画布单位。",fontSize=11.sp,lineHeight=17.sp,color=Quiet)
             Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.End) {
                 TextButton(onClick=onDismiss,modifier=Modifier.testTag("cancel-pen-preset")){Text("取消")}
-                Button(onClick={onApply(draft,color)},modifier=Modifier.testTag("apply-pen-width")){Text("保存到此笔")}
+                Button(onClick={onApply(draft,color,kind)},modifier=Modifier.testTag("apply-pen-width")){Text("保存到此笔")}
             }
         }
     }

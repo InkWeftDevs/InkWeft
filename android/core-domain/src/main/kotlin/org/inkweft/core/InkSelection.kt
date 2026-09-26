@@ -52,7 +52,7 @@ object InkSelectionEdit {
     fun beautify(strokes:List<InkStroke>,strength:Float):List<InkStroke> {
         require(strokes.size in 1..MAX_SELECTED&&strength in 0f..1f)
         return strokes.map{s->
-            require(s.pen==InkPen.PEN&&s.cuts.isEmpty()){"BEAUTIFY_REQUIRES_UNMASKED_PEN"}
+            require(s.pen!=InkPen.HIGHLIGHTER&&s.cuts.isEmpty()){"BEAUTIFY_REQUIRES_UNMASKED_PEN"}
             val samples=s.samples.mapIndexed{i,p->
                 if(i==0||i==s.samples.lastIndex||strength==0f)p else {
                     val a=s.samples[i-1];val b=s.samples[i+1]

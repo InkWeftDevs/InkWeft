@@ -35,6 +35,9 @@ fun InkScreen(note:NoteDraft,workspace:WorkspaceViewModel=viewModel(),onBack:()-
             vm.select(requested);workspace.consumePageNavigation(note.base.id,requested)
         }
     }
+    val readingPrefs=remember(context){context.getSharedPreferences("inkweft-reading",android.content.Context.MODE_PRIVATE)}
+    var continuous by rememberSaveable(note.base.id){mutableStateOf(readingPrefs.getBoolean("continuous-${note.base.id}",false))}
+    fun readingMode(value:Boolean){continuous=value;readingPrefs.edit().putBoolean("continuous-${note.base.id}",value).apply()}
     var canNavigate by remember{mutableStateOf(false)};var directory by remember{mutableStateOf(false)}
     SideEffect{app.navigationReady.value=canNavigate&&!ui.busy&&!ui.actionUnknown&&!ui.insertionUnknown}
     androidx.activity.compose.BackHandler(enabled=!canNavigate||ui.busy||ui.actionUnknown||ui.insertionUnknown){
@@ -50,6 +53,9 @@ fun InkScreen(note:NoteDraft,workspace:WorkspaceViewModel=viewModel(),onBack:()-
     var knowledgeOpen by remember{mutableStateOf(false)}
     var knowledgeAnchor by remember{mutableStateOf<KnowledgeData.Anchor?>(null)}
     var documentMore by remember{mutableStateOf(false)}
+    var documentSettings by remember{mutableStateOf(false)}
+    var classify by remember{mutableStateOf(false)}
+    val entries by workspace.entries.collectAsStateWithLifecycle()
     var initialStudyCard by remember{mutableStateOf<String?>(null)}
     var studyOpen by remember{mutableStateOf(false)}
     var studySource by remember{mutableStateOf<StudySourceDraft?>(null)}
@@ -58,7 +64,7 @@ fun InkScreen(note:NoteDraft,workspace:WorkspaceViewModel=viewModel(),onBack:()-
     val requestedCard by workspace.studyCardRequest.collectAsStateWithLifecycle()
     LaunchedEffect(requestedCard){requestedCard?.let{initialStudyCard=it;studyOpen=true;workspace.studyCardRequest.value=null}}
     val externalAnchor by workspace.focusAnchor.collectAsStateWithLifecycle()
-    LaunchedEffect(externalAnchor,ui.loading,ui.selectedId){externalAnchor?.let{anchor->if(ui.selectedId==anchor.pageId&&!ui.loading){sourceFocus=anchor.pageId to anchor.bounds;workspace.focusAnchor.value=null}}}
+    LaunchedEffect(externalAnchor,ui.loading,ui.selectedId){externalAnchor?.let{anchor->if(ui.selectedId==anchor.pageId&&!ui.loading){readingMode(false);sourceFocus=anchor.pageId to anchor.bounds;workspace.focusAnchor.value=null}}}
 
     fun requestAction(p:NotebookPageRow,kind:PageEditKind){directory=false;pageActionKind=kind.name;pageActionId=p.id}
     val export=rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("application/octet-stream")){uri->
@@ -79,6 +85,8 @@ fun InkScreen(note:NoteDraft,workspace:WorkspaceViewModel=viewModel(),onBack:()-
             IconButton(onClick={studySource=null;studyOpen=true},enabled=navigationEnabled,modifier=Modifier.testTag("study-open").describedAs("摘要卡、大纲与脑图")){Glyph("learn")}
             Box{IconButton(onClick={documentMore=true},enabled=navigationEnabled,modifier=Modifier.testTag("document-more").describedAs("文档选项")){Glyph("more")}
                 DropdownMenu(documentMore,{documentMore=false}){
+                    DropdownMenuItem(text={Text("阅读与笔记设置")},onClick={documentMore=false;documentSettings=true},modifier=Modifier.testTag("document-settings"))
+                    if(page!=null&&!page.world)DropdownMenuItem(text={Text(if(continuous)"切换为单页"else"上下连续翻页")},onClick={documentMore=false;readingMode(!continuous)},modifier=Modifier.testTag("toggle-continuous"))
                     DropdownMenuItem(text={Text("编辑键入文字")},onClick={documentMore=false;onText()},modifier=Modifier.testTag("mode-text"))
                     if(page!=null&&!page.world)DropdownMenuItem(text={Text("导出整本内容副本")},onClick={documentMore=false;confirmBook=true},enabled=!exporting,modifier=Modifier.testTag("export-book"))
                     DropdownMenuItem(text={Text("诊断与导出")},onClick={documentMore=false;onDiagnostics()},modifier=Modifier.testTag("open-diagnostics"))
@@ -100,7 +108,7 @@ fun InkScreen(note:NoteDraft,workspace:WorkspaceViewModel=viewModel(),onBack:()-
             }
         }
         if(page==null)Box(Modifier.weight(1f).fillMaxWidth(),contentAlignment=Alignment.Center){if(ui.loading)CircularProgressIndicator()else Text("页面未能载入，原数据保留")}
-        else Box(Modifier.weight(1f)){key(page.id){InkPageScreen(note,workspace,page,{canNavigate=it},{rev->searchTarget=page.id to rev},!ui.busy&&!ui.actionUnknown&&!ui.insertionUnknown&&pageActionId==null,
+        else Box(Modifier.weight(1f)){InkPageScreen(note,workspace,page,{canNavigate=it},{rev->searchTarget=page.id to rev},!ui.busy&&!ui.actionUnknown&&!ui.insertionUnknown&&pageActionId==null,
             onAssociate={selection->knowledgeAnchor=KnowledgeData.Anchor(page.id,selection.revision,selection.region.bounds,selection.strokes.map{it.id});knowledgeOpen=true},
             onExcerpt={selection->studySource=StudySourceDraft(page.id,selection.revision,selection.region.bounds,selection.strokes.map{it.id});studyOpen=true},
             focusRegion=sourceFocus?.takeIf{it.first==page.id}?.second,onFocusConsumed={sourceFocus=null},pageNavigation={
@@ -109,13 +117,29 @@ fun InkScreen(note:NoteDraft,workspace:WorkspaceViewModel=viewModel(),onBack:()-
                     Text("第 ${page.position+1} / ${ui.pages.size} 页",fontSize=12.sp,modifier=Modifier.testTag("page-counter"))
                     TextButton(onClick={ui.pages.getOrNull(page.position+1)?.let{vm.select(it.id)}},enabled=navigationEnabled&&page.position<ui.pages.lastIndex,modifier=Modifier.testTag("next-page")){Text("›")}
                 }
-            })}}
+            },continuousPages=if(continuous&&!page.world)ui.pages else null,onContinuousPage={if(it!=ui.selectedId)vm.select(it)},leaveContinuous={readingMode(false)})}
     }
+    if(documentSettings)AlertDialog(onDismissRequest={documentSettings=false},modifier=Modifier.testTag("document-settings-dialog"),title={Text("阅读与笔记设置")},text={
+        Column(Modifier.verticalScroll(rememberScrollState()),verticalArrangement=Arrangement.spacedBy(8.dp)){
+            Text("当前笔记",color=Quiet,fontSize=12.sp)
+            if(page!=null&&!page.world){
+                Row(verticalAlignment=Alignment.CenterVertically){Text("上下连续翻页",Modifier.weight(1f));Switch(continuous,{readingMode(it)},modifier=Modifier.testTag("continuous-setting"))}
+                Text("连续模式用手指滚动、触控笔书写。精确缩放和套索可切回单页；每本笔记分别记住阅读方式。",fontSize=12.sp,color=Quiet)
+                TextButton(onClick={documentSettings=false;directory=true},modifier=Modifier.testTag("settings-page-directory")){Text("跳转页面与页面整理")}
+            }
+            TextButton(onClick={documentSettings=false;classify=true},enabled=entries[note.base.id]!=null,modifier=Modifier.testTag("settings-tags")){Text("文件夹与标签")}
+            HorizontalDivider()
+            Text("编辑工具",color=Quiet,fontSize=12.sp)
+            Text("点选当前常用笔，可切换笔型、颜色和粗细。工具栏的选择工具支持自由套索、圈选擦除和摘录为摘要卡。工具栏位置在编辑工具的更多菜单中调整。",fontSize=13.sp)
+            TextButton(onClick={documentSettings=false;onDiagnostics()}){Text("诊断与导出")}
+        }
+    },confirmButton={TextButton(onClick={documentSettings=false}){Text("完成")}})
+    if(classify)entries[note.base.id]?.let{row->NotebookClassificationDialog(row,{classify=false}){folder,tags->workspace.organize(row,folder=folder,tags=tags);classify=false}}
     if(knowledgeOpen)KnowledgeWorkspace(note.base.id,page?.let{TargetRef(TargetKind.PAGE,it.id)}?:TargetRef(TargetKind.NOTE,note.base.id),knowledgeAnchor,dismiss={knowledgeOpen=false}){target->
         app.openKnowledgeTarget.value=target;knowledgeOpen=false
     }
     if(studyOpen)StudyWorkspace(note,studySource,{studyOpen=false;studySource=null;initialStudyCard=null},initialCardId=initialStudyCard){source->
-        if(ui.pages.any{it.id==source.pageId}){vm.select(source.pageId);sourceFocus=source.pageId to CanvasBounds(source.left,source.top,source.right,source.bottom);true}else false
+        if(ui.pages.any{it.id==source.pageId}){readingMode(false);vm.select(source.pageId);sourceFocus=source.pageId to CanvasBounds(source.left,source.top,source.right,source.bottom);true}else false
     }
     if(directory)AlertDialog(onDismissRequest={directory=false},modifier=Modifier.testTag("pages-directory-dialog"),title={Text("页面 · ${ui.pages.size} 页")},text={
         Column(verticalArrangement=Arrangement.spacedBy(10.dp)){

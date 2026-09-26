@@ -30,6 +30,7 @@ class InkCanvasView(context:Context):View(context){
     var eraserWhole=false
     var eraserHighlighterOnly=false
     var eraserDiameterDp=28f
+    var embeddedPage=false
     var preview=false
     var pen=InkPen.PEN
     var penColor=0xff24342f.toInt()
@@ -103,19 +104,15 @@ class InkCanvasView(context:Context):View(context){
         if(preview&&width>0&&height>0)if(world)fitContent(false)else fitPage(false)
         invalidate()
     }
-    private fun family(p:InkPen,pressure:Boolean)=when{p==InkPen.HIGHLIGHTER->StockBrushes.highlighter();pressure->StockBrushes.pressurePen();else->StockBrushes.marker()}
-    private fun brush(p:InkPen,color:Int,w:Float,pressure:Boolean)=Brush.createWithColorIntArgb(family(p,pressure),color,w,.1f)
-    private fun inputType(t:InkTool)=when(t){InkTool.STYLUS->InputToolType.STYLUS;InkTool.MOUSE->InputToolType.MOUSE;InkTool.TOUCH->InputToolType.TOUCH}
-    private fun batchPoint(b:MutableStrokeInputBatch,p:InkSample,t:InkTool){b.add(inputType(t),p.x,p.y,p.elapsedMs,pressure=if(p.pressure<0)StrokeInput.NO_PRESSURE else p.pressure,tiltRadians=if(p.tilt<0)StrokeInput.NO_TILT else p.tilt,orientationRadians=if(p.orientation<0)StrokeInput.NO_ORIENTATION else p.orientation)}
-    private fun toInk(s:InkStroke):Stroke{val b=MutableStrokeInputBatch();s.samples.forEach{batchPoint(b,it,s.tool)};return Stroke(brush(s.pen,s.color,s.width,s.samples.first().pressure>=0),b)}
+    private fun toInk(s:InkStroke):Stroke=InkBrushes.stroke(s)
     private fun transform(){val f=(viewport.zoom*density).toFloat();matrix.setScale(f,f);matrix.postTranslate((width/2-viewport.centerX*f).toFloat(),(height/2-viewport.centerY*f).toFloat());onScale(viewport.zoom)}
-    private fun initialFit(){viewport=if(world)CanvasViewport(0.0,0.0,.8)else CanvasViewport.pageWidth(width/density,height/density);if(preview)fitPage(false);transform()}
+    private fun initialFit(){viewport=if(world)CanvasViewport(0.0,0.0,.8)else CanvasViewport.pageWidth(width/density,height/density);if(preview||embeddedPage)fitPage(false);transform()}
     fun fitPage(publish:Boolean=true){cancelGesture();viewport=CanvasViewport.fit(CanvasBounds(0.0,0.0,1000.0,1414.0),width/density,height/density);transform();invalidate();if(publish)onViewport(viewport)}
     fun fitWidth(){cancelGesture();viewport=CanvasViewport.pageWidth(width/density,height/density);transform();invalidate();onViewport(viewport)}
     fun origin(){cancelGesture();viewport=if(world)CanvasViewport(0.0,0.0,.8)else CanvasViewport.pageWidth(width/density,height/density);transform();invalidate();onViewport(viewport)}
     fun fitContent(publish:Boolean=true){cancelGesture();if(content.isEmpty()){if(world)viewport=CanvasViewport(0.0,0.0,.8)else fitPage(false)}else viewport=CanvasViewport.fit(bounds.values.reduce{a,b->a.union(b)}.padded(40.0),width/density,height/density);transform();invalidate();if(publish)onViewport(viewport)}
     fun zoomBy(ratio:Double){cancelGesture();viewport=viewport.zoomAt(ratio,width/2.0,height/2.0,width.toDouble(),height.toDouble(),density);transform();invalidate();onViewport(viewport)}
-    override fun onSizeChanged(w:Int,h:Int,oldw:Int,oldh:Int){cancelGesture();if(configured&&oldw==0&&!restored)initialFit();if(preview)if(world)fitContent(false)else fitPage(false);transform()}
+    override fun onSizeChanged(w:Int,h:Int,oldw:Int,oldh:Int){cancelGesture();if(configured&&oldw==0&&!restored)initialFit();if(embeddedPage&&configured)fitPage(false);if(preview)if(world)fitContent(false)else fitPage(false);transform()}
     override fun draw(c:Canvas){val save=c.save();try{c.clipRect(0,0,width,height);super.draw(c)}finally{c.restoreToCount(save)}}
     internal fun cutPath(cut:InkCut):Path=maskPaths[cut]?:when(cut.shape){
         InkCutShape.ROUND->sweptPath(cut.points,cut.radius)
@@ -158,6 +155,7 @@ class InkCanvasView(context:Context):View(context){
     override fun onTouchEvent(e:MotionEvent):Boolean{
         if(preview)return false;if(!configured)return true
         if(e.actionMasked==MotionEvent.ACTION_CANCEL||(e.flags and MotionEvent.FLAG_CANCELED)!=0){cancelGesture();panPointer=-1;finishViewport();return true}
+        if(embeddedPage&&inputId==-1&&e.getToolType(0)==MotionEvent.TOOL_TYPE_FINGER)return false
         if(inputId==-1||inputKind!=InkTool.STYLUS)scaleDetector.onTouchEvent(e)
         if(e.actionMasked==MotionEvent.ACTION_POINTER_DOWN){if(inputKind!=InkTool.STYLUS)cancelGesture();panPointer=-1;return true}
         if(e.actionMasked==MotionEvent.ACTION_DOWN){
@@ -173,7 +171,7 @@ class InkCanvasView(context:Context):View(context){
             raw=ArrayList();val device=e.device;val pressure=device?.getMotionRange(MotionEvent.AXIS_PRESSURE,e.source)
             hasPressure=inputKind==InkTool.STYLUS&&pressure!=null&&pressure.max>pressure.min;pressureMin=pressure?.min?:0f;pressureSpan=(pressure?.range?:1f).coerceAtLeast(.001f)
             hasTilt=inputKind==InkTool.STYLUS&&device?.getMotionRange(MotionEvent.AXIS_TILT,e.source)!=null;hasOrientation=inputKind==InkTool.STYLUS&&device?.getMotionRange(MotionEvent.AXIS_ORIENTATION,e.source)!=null
-            onAxes(hasPressure,hasTilt);onGesture(true);if(!gestureErase)live.start(brush(gesturePen,gestureColor,gestureWidth,hasPressure));append(e,0,-1);postInvalidateOnAnimation();return true
+            onAxes(hasPressure,hasTilt);onGesture(true);if(!gestureErase)live.start(InkBrushes.brush(gesturePen,gestureColor,gestureWidth,hasPressure));append(e,0,-1);postInvalidateOnAnimation();return true
         }
         if(inputId==-1){if(e.actionMasked==MotionEvent.ACTION_MOVE&&panPointer!=-1&&e.pointerCount==1&&!scaleDetector.isInProgress){viewport=viewport.pan((e.x-panLastX).toDouble(),(e.y-panLastY).toDouble(),density);panLastX=e.x;panLastY=e.y;movingViewport=true;transform();invalidate()};if(e.actionMasked==MotionEvent.ACTION_UP){panPointer=-1;finishViewport();performClick()};return true}
         val index=e.findPointerIndex(inputId);if(index<0){cancelGesture();return true}
@@ -198,7 +196,7 @@ class InkCanvasView(context:Context):View(context){
         val freeGesture=world||gestureErase
         val point=InkSample(if(freeGesture)w.x.toFloat()else w.x.toFloat().coerceIn(0f,1000f),if(freeGesture)w.y.toFloat()else w.y.toFloat().coerceIn(0f,1414f),time,pressure,tilt,orientation,freeGesture)
         if(raw.lastOrNull()?.let{it==point||it.elapsedMs>time}==true)return
-        try{if(!gestureErase){incremental.clear();batchPoint(incremental,point,inputKind);live.enqueueInputs(incremental,empty)};raw.add(point);if(raw.size==InkLimits.MAX_POINTS)onNotice("达到单笔采样上限，请抬笔提交后继续。")}catch(_:IllegalArgumentException){onNotice("无效设备采样未进入笔迹。")}
+        try{if(!gestureErase){incremental.clear();InkBrushes.add(incremental,point,inputKind,gesturePen);live.enqueueInputs(incremental,empty)};raw.add(point);if(raw.size==InkLimits.MAX_POINTS)onNotice("达到单笔采样上限，请抬笔提交后继续。")}catch(_:IllegalArgumentException){onNotice("无效设备采样未进入笔迹。")}
     }
     private fun finishGesture(){
         if(inputId==-1)return

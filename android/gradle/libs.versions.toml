@@ -10,7 +10,7 @@ coroutines = "1.10.2"
 junit = "4.13.2"
 androidx-test = "1.7.0"
 androidx-junit = "1.3.0"
-ink = "1.0.0"
+ink = "1.1.0-alpha09"
 
 [libraries]
 compose-bom = { module = "androidx.compose:compose-bom", version.ref = "compose-bom" }

@@ -11,6 +11,7 @@ import androidx.test.platform.app.InstrumentationRegistry
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.*
+import org.inkweft.core.InkPen
 import org.junit.Rule
 import org.junit.Test
 import java.io.File
@@ -35,7 +36,7 @@ class PenPresetUiTest {
         val original=runBlocking{app.inkRepository.read(id).strokes.single().stroke}
         assertEquals(previous,original.color)
         compose.onNodeWithTag("pen-width-open").performScrollTo().performClick()
-        compose.onNodeWithTag("width-preset-2").performScrollTo().performClick();compose.onNodeWithTag("pen-color-2").performScrollTo().performClick()
+        compose.onNodeWithTag("pen-kind-brush").performScrollTo().performClick();compose.onNodeWithTag("width-preset-2").performScrollTo().performClick();compose.onNodeWithTag("pen-color-2").performScrollTo().performClick()
         compose.onNodeWithTag("pen-width-dialog").assertIsDisplayed()
         val bmp=checkNotNull(InstrumentationRegistry.getInstrumentation().uiAutomation.takeScreenshot())
         try{File(compose.activity.getExternalFilesDir(null),"pen-presets-popover.png").outputStream().use{bmp.compress(Bitmap.CompressFormat.PNG,100,it)}}finally{bmp.recycle()}
@@ -44,17 +45,17 @@ class PenPresetUiTest {
         draw();saved(2)
         val paths=runBlocking{app.inkRepository.read(id).strokes.map{it.stroke}}
         assertEquals(original.samples,paths[0].samples);assertEquals(original.color,paths[0].color)
-        assertEquals(6f,paths[1].width,0f);assertEquals(PenWidthStore.colors(0)[2],paths[1].color)
+        assertEquals(InkPen.BRUSH,paths[1].pen);assertEquals(InkPen.BALLPOINT,original.pen);assertEquals(6f,paths[1].width,0f);assertEquals(PenWidthStore.colors(0)[2],paths[1].color)
         compose.activityRule.scenario.recreate();saved(2)
         compose.onNodeWithTag("pen-width-open").performScrollTo().performClick();compose.onNodeWithTag("pen-width-value").assertTextEquals("线宽 6.0")
         compose.onNodeWithTag("cancel-pen-preset").performScrollTo().performClick()
     }
     @Test fun cancelDoesNotPersistOrMakeAnInkStroke(){
         val id=create();val before=PenWidthStore(compose.activity,"inkweft-pen-widths-book-"+id).read();val colors=PenWidthStore(compose.activity,"inkweft-pen-widths-book-"+id).readColors()
-        compose.onNodeWithTag("pen-width-open").performScrollTo().performClick();compose.onNodeWithTag("width-preset-0").performClick();compose.onNodeWithTag("pen-color-3").performScrollTo().performClick()
+        compose.onNodeWithTag("pen-width-open").performScrollTo().performClick();compose.onNodeWithTag("pen-kind-marker").performScrollTo().performClick();compose.onNodeWithTag("width-preset-0").performScrollTo().performClick();compose.onNodeWithTag("pen-color-3").performScrollTo().performClick()
         compose.onNodeWithTag("cancel-pen-preset").performScrollTo().performClick();saved(0)
         assertEquals(before,PenWidthStore(compose.activity,"inkweft-pen-widths-book-"+id).read());assertEquals(colors,PenWidthStore(compose.activity,"inkweft-pen-widths-book-"+id).readColors())
-        assertTrue(runBlocking{app.inkRepository.read(id).strokes}.isEmpty())
+        assertEquals(InkPen.BALLPOINT,PenWidthStore(compose.activity,"inkweft-pen-widths-book-"+id).readKinds()[0]);assertTrue(runBlocking{app.inkRepository.read(id).strokes}.isEmpty())
     }
     @Test fun settingsRoundTripKeepsSlotsIndependentAndRejectsTransparentPen(){
         val context=InstrumentationRegistry.getInstrumentation().targetContext;val name="synthetic-preset-"+UUID.randomUUID()
