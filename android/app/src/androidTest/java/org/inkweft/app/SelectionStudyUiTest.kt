@@ -25,6 +25,16 @@ class SelectionStudyUiTest {
     @get:Rule val compose=createAndroidComposeRule<MainActivity>()
     private val app get()=compose.activity.application as InkWeftApplication
     private fun id()=UUID.randomUUID().toString()
+    private fun awaitBeauty(){
+        var last:Throwable?=null
+        try{compose.waitUntil(10_000){runCatching{compose.onNodeWithTag("apply-beautify").assertIsDisplayed().assertIsEnabled()}.onFailure{last=it}.isSuccess}}
+        catch(error:Throwable){
+            println("BEAUTIFY_CONTROL_FAILURE: $last")
+            runCatching{shot("beautify-failure.png")}
+            compose.onAllNodes(isRoot(),useUnmergedTree=true).fetchSemanticsNodes().indices.forEach{i->runCatching{println(compose.onAllNodes(isRoot(),useUnmergedTree=true)[i].printToString())}}
+            throw error
+        }
+    }
     private fun ready(){compose.waitUntil(15_000){runCatching{compose.onNodeWithTag("new-note").assertIsEnabled()}.isSuccess}}
     private fun saved(n:Int){compose.waitUntil(15_000){runCatching{compose.onNodeWithTag("ink-status").assertTextContains("已提交",substring=true).assertTextContains("$n 笔",substring=true)}.isSuccess}}
     private fun seed():Pair<Note,InkStroke>{
@@ -59,9 +69,9 @@ class SelectionStudyUiTest {
     }
     @Test fun beautifyPreviewCancelThenApplyIsReversible(){
         val(n,s)=seed();select();compose.onNodeWithTag("selection-beautify").performScrollTo().assertIsEnabled().performClick()
-        compose.onNodeWithTag("beautify-dialog").assertIsDisplayed();compose.waitUntil(10_000){runCatching{compose.onNodeWithTag("apply-beautify").assertIsEnabled()}.isSuccess};shot("beautify-preview.png")
+        compose.onNodeWithTag("beautify-dialog").assertIsDisplayed();awaitBeauty();shot("beautify-preview.png")
         compose.onNodeWithText("取消",useUnmergedTree=true).performClick();assertEquals(1L,runBlocking{app.inkRepository.read(n.id).revision})
-        compose.onNodeWithTag("selection-beautify").performScrollTo().performClick();compose.waitUntil(10_000){runCatching{compose.onNodeWithTag("apply-beautify").assertIsEnabled()}.isSuccess};compose.onNodeWithTag("apply-beautify").performClick();saved(1)
+        compose.onNodeWithTag("selection-beautify").performScrollTo().performClick();awaitBeauty();compose.onNodeWithTag("apply-beautify").performClick();saved(1)
         compose.waitUntil(10_000){runBlocking{app.inkRepository.read(n.id).revision}==2L}
         assertEquals(2,runBlocking{app.inkRepository.read(n.id).strokes.size});compose.onNodeWithTag("ink-undo").performScrollTo().performClick();saved(1)
         assertEquals(s.samples,InkSession(runBlocking{app.inkRepository.read(n.id)}).visibleDraft().single().samples)
@@ -98,6 +108,21 @@ class SelectionStudyUiTest {
         val child=runBlocking{app.study.nodes(n.id).first()}.single{it.parentId==root.id}
         compose.onNodeWithTag("outline-node-${child.id}").performClick();compose.onNodeWithTag("study-remove-node").performScrollTo().performClick()
         compose.waitUntil(10_000){runBlocking{app.study.nodes(n.id).first().single{it.id==child.id}.removed}}
+        assertEquals(2,runBlocking{app.study.cards(n.id).first().size})
+    }
+    @Test fun cardSearchFindsBodyAndClearRestoresCards(){
+        val(n,_)=seed();compose.onNodeWithTag("study-open").performClick()
+        compose.onNodeWithTag("study-add-card").performClick();addCard("概率","先验条件")
+        compose.onNodeWithTag("study-add-card").performClick();addCard("微积分","连续可导")
+        val cards=runBlocking{app.study.cards(n.id).first()}
+        val probability=cards.single{it.title=="概率"};val calculus=cards.single{it.title=="微积分"}
+        compose.onNodeWithTag("study-search").performTextInput("先验")
+        compose.onNodeWithTag("study-card-${probability.id}").assertExists()
+        compose.onNodeWithTag("study-card-${calculus.id}").assertDoesNotExist()
+        compose.onNodeWithTag("study-search").performTextReplacement("未命中")
+        compose.onNodeWithText("没有匹配的摘要卡").assertExists()
+        compose.onNodeWithTag("study-search").performTextClearance()
+        compose.onNodeWithTag("study-card-${calculus.id}").assertExists()
         assertEquals(2,runBlocking{app.study.cards(n.id).first().size})
     }
 }

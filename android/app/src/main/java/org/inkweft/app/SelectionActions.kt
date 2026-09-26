@@ -46,7 +46,7 @@ private fun BeautifyDialog(original:List<InkStroke>,dismiss:()->Unit,apply:(List
     var strength by remember{mutableFloatStateOf(.5f)}
     var comparison by remember{mutableStateOf(false)}
     val preview by produceState<List<InkStroke>?>(null,original,strength){value=null;value=withContext(Dispatchers.Default){InkSelectionEdit.beautify(original,strength)}}
-    AlertDialog(onDismissRequest=dismiss,modifier=Modifier.testTag("beautify-dialog"),title={Text("稳线美化 · 先预览后应用")},text={Column(verticalArrangement=Arrangement.spacedBy(10.dp)){
+    AlertDialog(onDismissRequest=dismiss,modifier=Modifier.testTag("beautify-dialog"),title={Text("稳线美化 · 先预览后应用")},text={Column(Modifier.verticalScroll(rememberScrollState()),verticalArrangement=Arrangement.spacedBy(10.dp)){
         Text("减轻细小抖动，保留转折与端点。不是换字体或自动纠错；应用后仍可撤销。已局部擦除或荧光笔暂不美化。",fontSize=12.sp)
         Slider(value=strength,onValueChange={strength=it},valueRange=0f..1f,modifier=Modifier.testTag("beautify-strength"))
         Text("强度 ${(strength*100).toInt()}%",color=Quiet)
