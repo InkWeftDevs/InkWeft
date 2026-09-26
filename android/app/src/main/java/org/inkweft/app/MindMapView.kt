@@ -37,6 +37,9 @@ internal class MindMapView(context:Context):View(context){
     private fun x(n:StudyNodeRow)=n.x.toFloat()+if(n.id==active?.id)dx else 0f
     private fun y(n:StudyNodeRow)=n.y.toFloat()+if(n.id==active?.id)dy else 0f
     override fun onSizeChanged(w:Int,h:Int,oldw:Int,oldh:Int){super.onSizeChanged(w,h,oldw,oldh);if(oldw==0)fit()}
+    // AndroidView can share a Compose canvas with surrounding controls. A background
+    // drawColor and transformed nodes must never paint outside this viewport.
+    override fun draw(canvas:Canvas){val save=canvas.save();try{canvas.clipRect(0,0,width,height);super.draw(canvas)}finally{canvas.restoreToCount(save)}}
     override fun onDraw(c:Canvas){super.onDraw(c);c.drawColor(Color.rgb(248,250,249));val save=c.save();c.translate(tx,ty);c.scale(scale*d,scale*d)
         val lookup=nodes.associateBy{it.id};paint.style=Paint.Style.STROKE;paint.strokeWidth=2f;paint.color=0xff92aaa1.toInt()
         for(n in nodes){val p=lookup[n.parentId]?:continue;val path=Path();path.moveTo(x(p)+216,y(p)+42);path.cubicTo(x(p)+244,y(p)+42,x(n)-28,y(n)+42,x(n),y(n)+42);c.drawPath(path,paint)}

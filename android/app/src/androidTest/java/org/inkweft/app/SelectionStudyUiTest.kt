@@ -125,4 +125,18 @@ class SelectionStudyUiTest {
         compose.onNodeWithTag("study-card-${calculus.id}").assertExists()
         assertEquals(2,runBlocking{app.study.cards(n.id).first().size})
     }
+    @Test fun mindMapPaintStaysInsideItsViewport(){
+        compose.runOnIdle{
+            val v=MindMapView(compose.activity);v.layout(0,0,300,200)
+            val bitmap=Bitmap.createBitmap(400,300,Bitmap.Config.ARGB_8888)
+            try{
+                bitmap.eraseColor(Color.MAGENTA);val canvas=Canvas(bitmap);canvas.translate(50f,50f);v.draw(canvas)
+                assertEquals("Map must not cover controls above it",Color.MAGENTA,bitmap.getPixel(100,25))
+                assertEquals("Map must not cover controls below it",Color.MAGENTA,bitmap.getPixel(100,275))
+                assertEquals(Color.MAGENTA,bitmap.getPixel(25,100))
+                assertEquals(Color.MAGENTA,bitmap.getPixel(375,100))
+                assertNotEquals(Color.MAGENTA,bitmap.getPixel(100,100))
+            }finally{bitmap.recycle()}
+        }
+    }
 }
