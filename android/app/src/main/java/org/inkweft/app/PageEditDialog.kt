@@ -13,6 +13,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.*
 import org.inkweft.core.*
 import org.inkweft.data.NotebookPageRow
@@ -28,17 +29,12 @@ internal fun PageEditDialog(source:NotebookPageRow,kind:PageEditKind,pages:List<
     val candidates=original.filter{kind!=PageEditKind.MOVE||it.id!=source.id}
     var where by remember{mutableStateOf(if(kind==PageEditKind.COPY)PageInsertLocation.AFTER else PageInsertLocation.END)}
     var anchor by remember{mutableStateOf(if(kind==PageEditKind.COPY)source.id else candidates.firstOrNull()?.id)}
-    var head by remember(source.id,kind){mutableStateOf<Long?>(null)}
-    var error by remember(source.id,kind){mutableStateOf<String?>(null)}
+    val preview=remember(source.id,kind){PageVersionPreview{app.pages.inkRevision(source.id)}}
+    val version by preview.state.collectAsStateWithLifecycle()
+    val head=version.head
+    val error=version.error
     var readAttempt by remember(source.id,kind){mutableIntStateOf(0)}
-    LaunchedEffect(source.id,kind,readAttempt){
-        head=null;error=null
-        try{
-            val value=withContext(Dispatchers.IO){withTimeoutOrNull(8_000){app.pages.inkRevision(source.id)}}
-            if(value==null)error="页面版本读取超时，未执行操作。可以重试核对或取消。" else head=value
-        }catch(c:CancellationException){throw c}
-        catch(_:Exception){error="无法读取页面版本，未修改原资料。请重试核对。"}
-    }
+    LaunchedEffect(preview,readAttempt){preview.load()}
     val index=when(where){PageInsertLocation.START->0;PageInsertLocation.END->candidates.size;else->candidates.indexOfFirst{it.id==anchor}.let{if(it<0)-1 else it+if(where==PageInsertLocation.AFTER)1 else 0}}
     val verb=when(kind){PageEditKind.MOVE->"移动页面";PageEditKind.COPY->"复制此页";PageEditKind.TRASH->"移入页面回收区";PageEditKind.RESTORE->"恢复页面"}
     val stale=order!=InsertPages.orderHash(pages.map{it.id}) || source.trashedAt!=originalTrash ||
