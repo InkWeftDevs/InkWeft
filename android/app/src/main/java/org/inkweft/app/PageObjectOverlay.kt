@@ -41,7 +41,7 @@ internal class PageObjectOverlay(context:Context):View(context) {
                 start=author(e.x,e.y)
                 val old=objects.find{it.id==selected}
                 resize=old?.let{val p=screen(it.x+it.width,it.y+it.height);hypot(e.x-p.x,e.y-p.y)<=24*density}?:false
-                original=if(resize)old else objects.asReversed().find{start.x>=it.x&&start.x<=it.x+it.width&&start.y>=it.y&&start.y<=it.y+it.height}
+                original=if(resize)old else (objects.filter{it.kind!=PageObjectKind.TAPE}+objects.filter{it.kind==PageObjectKind.TAPE}).asReversed().find{start.x>=it.x&&start.x<=it.x+it.width&&start.y>=it.y&&start.y<=it.y+it.height}
                 draft=original;onSelect(original?.id)
                 if(original!=null){parent?.requestDisallowInterceptTouchEvent(true);onActive(true)}else v.onTouchEvent(e)
                 invalidate()

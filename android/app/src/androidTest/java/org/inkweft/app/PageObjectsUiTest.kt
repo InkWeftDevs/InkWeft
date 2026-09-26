@@ -88,6 +88,16 @@ class PageObjectsUiTest {
             assertEquals(Color.BLUE,result.getPixel(50,50))
             painter.draw(canvas,listOf(o,tape.copy(revealed=true)),false,visible);painter.draw(canvas,listOf(o,tape.copy(revealed=true)),true,visible)
             assertTrue(Color.red(result.getPixel(50,50))>245);assertTrue(Color.blue(result.getPixel(50,50))<10)
+            InstrumentationRegistry.getInstrumentation().runOnMainSync {
+                val view=InkCanvasView(compose.activity)
+                view.configure(false,PaperStyle.BLANK,CanvasViewport(200.0,100.0,1.0/compose.activity.resources.displayMetrics.density))
+                view.layout(0,0,400,200)
+                var selected:String?=null
+                val overlay=PageObjectOverlay(compose.activity).apply{canvasView=view;objects=listOf(tape,o);onSelect={selected=it};layout(0,0,400,200)}
+                val down=android.view.MotionEvent.obtain(0,0,android.view.MotionEvent.ACTION_DOWN,50f,50f,0)
+                val up=android.view.MotionEvent.obtain(0,10,android.view.MotionEvent.ACTION_UP,50f,50f,0)
+                try{overlay.onTouchEvent(down);overlay.onTouchEvent(up);assertEquals("Hit testing must follow tape-over-image rendering even when image was inserted later",tape.id,selected)}finally{down.recycle();up.recycle()}
+            }
             val id=create();runBlocking{app.pageObjects.save(id,0,UUID.randomUUID().toString(),listOf(o,tape))}
             assertEquals(listOf(o,tape),objects(id))
             val exported=runBlocking{app.pages.exportBook(id)};assertEquals(o.image,NotebookFile.decode(exported.encode()).pages.single().objects.first().image)

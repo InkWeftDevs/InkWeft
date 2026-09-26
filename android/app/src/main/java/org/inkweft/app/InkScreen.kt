@@ -124,7 +124,7 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
                 Box{IconButton(onClick={more=true},enabled=!busy,modifier=Modifier.testTag("ink-more").describedAs("更多编辑选项")){Glyph("more")}
                     DropdownMenu(more,{more=false}){
                         if(compact){(0..2).forEach{i->DropdownMenuItem(text={Text(PenWidthStore.name(i,kinds[i]))},onClick={tool=i;more=false},modifier=Modifier.testTag("choose-pen-$i"))}
-                            DropdownMenuItem(text={Text("重做")},onClick={vm.redo();more=false},enabled=ui.canRedo,modifier=Modifier.testTag("ink-redo"))}
+                            DropdownMenuItem(text={Text("重做")},onClick={if(tool==5)objectsVm.redo()else vm.redo();more=false},enabled=if(tool==5)objectsUi.redo else ui.canRedo,modifier=Modifier.testTag("ink-redo"))}
                         DropdownMenuItem(text={Text("套索、圈选擦除与摘录")},onClick={more=false;if(continuousPages!=null)leaveContinuous();tool=4;freehand=true},enabled=!continuousBlocked,modifier=Modifier.testTag("selection-tools"))
                         DropdownMenuItem(text={Text(if(dockBottom)"工具栏移到顶部"else"工具栏移到底部")},onClick={more=false;dockBottom=!dockBottom;editorPrefs.edit().putBoolean("toolbar-bottom",dockBottom).apply()},modifier=Modifier.testTag("toolbar-position"))
                         if(continuousPages!=null)DropdownMenuItem(text={Text("连续模式：手指滚动，触控笔书写")},onClick={},enabled=false)else DropdownMenuItem(text={Text(if(finger)"关闭手指书写"else"开启手指书写")},onClick={finger=!finger;more=false},modifier=Modifier.testTag("ink-finger"))
