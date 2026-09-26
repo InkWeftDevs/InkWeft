@@ -126,7 +126,7 @@ jobs:
           adb shell settings put global transition_animation_scale 0
           adb shell settings put global animator_duration_scale 0
           adb shell getprop > android/build/evidence/emulator-properties.txt
-      - name: 核对同签名版本 9 到 12 的保留资料升级
+      - name: 核对同签名版本 9 到 13 的保留资料升级
         working-directory: android
         run: |
           set -euo pipefail

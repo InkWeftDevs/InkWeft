@@ -17,6 +17,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.testTag
@@ -198,6 +199,17 @@ private fun NoteTile(note:Note,row:WorkspaceRow,inkRevision:Long,count:Int,grid:
     var menu by remember{mutableStateOf(false)}
     val menuFocus=LocalFocusManager.current
     val menuKeyboard=LocalSoftwareKeyboardController.current
+    val menuView=LocalView.current;val menuScope=rememberCoroutineScope()
+    var menuOpening by remember{mutableStateOf(false)}
+    fun openMenu(){if(menuOpening)return;menuOpening=true;menuScope.launch{
+        try{
+            menuFocus.clearFocus(force=true);menuKeyboard?.hide()
+            menuView.windowInsetsController?.hide(android.view.WindowInsets.Type.ime())
+            // Let the editor window finish hiding its IME before a focusable popup takes control.
+            withTimeoutOrNull(1500){while(menuView.rootWindowInsets?.isVisible(android.view.WindowInsets.Type.ime())==true)withFrameNanos{}}
+            menu=true
+        }finally{menuOpening=false}
+    }}
     val context=LocalContext.current;val app=context.applicationContext as InkWeftApplication
     val style=NotebookCover.fromKey(row.coverKey)
     // Decorated covers do not load or decode the author's strokes just to draw the shelf.
@@ -230,7 +242,7 @@ private fun NoteTile(note:Note,row:WorkspaceRow,inkRevision:Long,count:Int,grid:
     }
     val info:@Composable ()->Unit={
         Row(verticalAlignment=Alignment.CenterVertically){Text(note.title,maxLines=1,overflow=TextOverflow.Ellipsis,fontSize=14.sp,modifier=Modifier.weight(1f).clickable(onClick=open));Box{
-            IconButton(onClick={menuFocus.clearFocus(force=true);menuKeyboard?.hide();menu=true},modifier=Modifier.size(48.dp).testTag("note-menu-${note.id}").describedAs("笔记菜单：${note.title}")){Glyph("more",Quiet,Modifier.size(17.dp))}
+            IconButton(onClick=::openMenu,enabled=!menuOpening,modifier=Modifier.size(48.dp).testTag("note-menu-${note.id}").describedAs("笔记菜单：${note.title}")){Glyph("more",Quiet,Modifier.size(17.dp))}
             DropdownMenu(expanded=menu,onDismissRequest={menu=false},modifier=Modifier.width(240.dp).testTag("notebook-actions-menu")){
                 Text(note.title,fontSize=12.sp,color=Quiet,maxLines=1,overflow=TextOverflow.Ellipsis,
                     modifier=Modifier.padding(horizontal=16.dp,vertical=9.dp))

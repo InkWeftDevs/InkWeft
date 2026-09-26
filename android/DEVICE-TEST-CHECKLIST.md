@@ -1,6 +1,6 @@
 # 墨织真机测试清单
 
-更新日期：2026-09-26。适用 **自定义封面 / 0.0.12-custom-covers / versionCode 12**，应用名 **墨织工作台预览**，包名 `org.inkweft.app.a0.workspace`，Android 12 及以上。
+更新日期：2026-09-26。适用 **自定义封面 / 0.0.13-custom-covers / versionCode 13**，应用名 **墨织工作台预览**，包名 `org.inkweft.app.a0.workspace`，Android 12 及以上。
 
 本清单是操作说明，**目前所有真机项目均待测**。CI、模拟器通过情况见 [修改日志](CHANGELOG.md)，功能开发计划见 [待实现内容](TODO.md)。没有执行、没有对应硬件或没有合适旧包时，分别记录“待测”“不适用”或“受阻”，不要勾选通过。
 
