@@ -45,5 +45,7 @@ dependencies {
     androidTestImplementation(libs.androidx.test.runner)
     androidTestImplementation(libs.androidx.test.junit)
     androidTestImplementation(libs.junit)
+    // Backup UI tests create and close an isolated source Room database.
+    androidTestImplementation(libs.room.runtime)
     debugImplementation(libs.compose.ui.test.manifest)
 }
