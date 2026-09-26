@@ -22,7 +22,8 @@ import org.inkweft.core.*
 @Composable
 internal fun NewNotebookScreen(title:String,onTitle:(String)->Unit,world:Boolean,onWorld:(Boolean)->Unit,
     paper:PaperStyle,onPaper:(PaperStyle)->Unit,cover:NotebookCover,onCover:(NotebookCover)->Unit,
-    busy:Boolean,cancel:()->Unit,create:()->Unit){
+    custom:ByteArray?,onCustom:(ByteArray?)->Unit,busy:Boolean,cancel:()->Unit,create:()->Unit){
+    var editCover by rememberSaveable{mutableStateOf(false)}
     var category by rememberSaveable{mutableStateOf("全部")}
     Dialog(onDismissRequest={if(!busy)cancel()},properties=DialogProperties(usePlatformDefaultWidth=false)){
         Surface(Modifier.fillMaxSize().testTag("new-notebook-screen"),color=Color.White){Column(Modifier.safeDrawingPadding().imePadding()){
@@ -37,7 +38,7 @@ internal fun NewNotebookScreen(title:String,onTitle:(String)->Unit,world:Boolean
                 LazyVerticalGrid(columns=GridCells.Adaptive(148.dp),modifier=Modifier.fillMaxSize(),contentPadding=PaddingValues(if(wide)32.dp else 16.dp),horizontalArrangement=Arrangement.spacedBy(16.dp),verticalArrangement=Arrangement.spacedBy(16.dp)){
                     item(span={GridItemSpan(maxLineSpan)}){
                         val preview:@Composable ()->Unit={Row(Modifier.padding(12.dp),horizontalArrangement=Arrangement.spacedBy(16.dp),verticalAlignment=Alignment.CenterVertically){
-                            Column(horizontalAlignment=Alignment.CenterHorizontally){NotebookCoverArt(cover,"preview",title.ifBlank{"我的笔记"},world,Modifier.width(112.dp).height(158.dp));Text("封面 · 不占正文页",fontSize=12.sp,color=Quiet)}
+                            Column(horizontalAlignment=Alignment.CenterHorizontally){if(cover==NotebookCover.CUSTOM&&custom!=null)CustomCoverArt(remember(custom){CustomCoverCodec.decode(custom)},title,Modifier.width(112.dp).height(158.dp))else NotebookCoverArt(cover,"preview",title.ifBlank{"我的笔记"},world,Modifier.width(112.dp).height(158.dp));Text("封面 · 不占正文页",fontSize=12.sp,color=Quiet)}
                             Column(horizontalAlignment=Alignment.CenterHorizontally){Box(Modifier.width(112.dp).height(158.dp).border(1.dp,Line)){PaperThumbnail(world,paper)};Text(PaperTemplates.title(paper),fontSize=12.sp,color=Quiet)}
                         }}
                         val properties:@Composable ()->Unit={Column(verticalArrangement=Arrangement.spacedBy(12.dp)){
@@ -48,6 +49,7 @@ internal fun NewNotebookScreen(title:String,onTitle:(String)->Unit,world:Boolean
                             }
                             Text(if(world)"向四周展开，手指导航，触控笔书写。"else"标准竖页 · 封面与正文分开，创建后可插页。",fontSize=14.sp,color=Quiet)
                             CoverSwatches(cover,onCover)
+                            OutlinedButton(onClick={editCover=true},enabled=!busy,modifier=Modifier.testTag("new-custom-cover")){Text(if(cover==NotebookCover.CUSTOM)"编辑自定义封面"else"设计封面 / 导入图片")}
                         }}
                         if(wide)Row(horizontalArrangement=Arrangement.spacedBy(24.dp),verticalAlignment=Alignment.CenterVertically){preview();Box(Modifier.weight(1f)){properties()}}
                         else Column(verticalArrangement=Arrangement.spacedBy(16.dp)){properties();preview()}
@@ -66,10 +68,11 @@ internal fun NewNotebookScreen(title:String,onTitle:(String)->Unit,world:Boolean
             }
         }}
     }
+    if(editCover)CoverPickerDialog(title,world,cover,false,null,{editCover=false},custom){choice,payload->onCover(choice);onCustom(payload);editCover=false}
 }
 
 @Composable private fun CoverSwatches(selected:NotebookCover,choose:(NotebookCover)->Unit){
     Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),horizontalArrangement=Arrangement.spacedBy(8.dp)){
-        NotebookCover.entries.forEach{style->OutlinedButton(onClick={choose(style)},border=BorderStroke(if(style==selected)2.dp else 1.dp,if(style==selected)Forest else Line),contentPadding=PaddingValues(8.dp),modifier=Modifier.heightIn(min=48.dp).testTag("cover-choice-${style.key}")){Text(style.label(),fontSize=14.sp)}}
+        NotebookCover.entries.filter{it!=NotebookCover.CUSTOM}.forEach{style->OutlinedButton(onClick={choose(style)},border=BorderStroke(if(style==selected)2.dp else 1.dp,if(style==selected)Forest else Line),contentPadding=PaddingValues(8.dp),modifier=Modifier.heightIn(min=48.dp).testTag("cover-choice-${style.key}")){Text(style.label(),fontSize=14.sp)}}
     }
 }

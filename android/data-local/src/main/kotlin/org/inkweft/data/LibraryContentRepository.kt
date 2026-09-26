@@ -42,6 +42,7 @@ class LibraryContentRepository(private val db:NoteDatabase,
             val title=(source.title.take(115)+" · 副本").take(120)
             val target=create(command.destinationId,title,source.text,metadata.world,pages.first().paper,
                 metadata.copy(coverKey=NotebookCover.fromKey(metadata.coverKey).resolved(source.id).key))
+            db.covers().get(source.id)?.let{require(db.covers().otherBytes(target.id)+it.payload.size<=32_000_000){"COVER_LIBRARY_BUDGET"};db.covers().put(it.copy(noteId=target.id))}
             var encodedBytes=0L
             pages.forEachIndexed { index,page ->
                 val state=InkRepository(db).read(page.id)

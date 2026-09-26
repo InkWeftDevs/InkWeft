@@ -38,14 +38,16 @@ class WorkspaceRepository(private val db:NoteDatabase) {
         checkNotNull(db.notes().note(id))
         db.workspace().get(id)?:WorkspaceRow(id).also { db.workspace().insert(it) }
     }
-    suspend fun create(title:String,world:Boolean,paper:PaperStyle,cover:NotebookCover=NotebookCover.AUTO,operationId:String?=null):Note=db.withTransaction {
+    suspend fun create(title:String,world:Boolean,paper:PaperStyle,cover:NotebookCover=NotebookCover.AUTO,operationId:String?=null,customCover:ByteArray?=null):Note=db.withTransaction {
+        val coverBytes=customCover?.copyOf();require((cover==NotebookCover.CUSTOM)==(coverBytes!=null));coverBytes?.let(::validateCoverPayload)
         val clean=title.trim();require(RenameNote.validTitle(clean))
         operationId?.let{UUID.fromString(it)}
-        val digest=ContentTransfer.hash(listOf("create.v1",clean,world.toString(),paper.name,cover.key).joinToString("\u0000").toByteArray())
+        val digest=ContentTransfer.hash((listOf("create.v1",clean,world.toString(),paper.name,cover.key)+if(coverBytes==null)emptyList()else listOf(ContentTransfer.hash(coverBytes))).joinToString("\u0000").toByteArray())
         operationId?.let{op->db.libraryContent().receipt(op)?.let{r->require(r.kind=="CREATE"&&r.digest==digest);return@withTransaction checkNotNull(NoteRepository(db).read(r.noteId))}}
         val id=operationId?:UUID.randomUUID().toString();val at=System.currentTimeMillis()
         db.notes().insertNote(NoteRow(id,1,clean,"",at));db.notes().insertRevision(NoteRevisionRow(id,1,clean,"",at))
         db.workspace().insert(WorkspaceRow(id,world,paper.ordinal,centerX=if(world)0.0 else 500.0,centerY=if(world)0.0 else 707.0,coverKey=cover.key))
+        coverBytes?.let{require(db.covers().otherBytes(id)+it.size<=32_000_000){"COVER_LIBRARY_BUDGET"};db.covers().put(NotebookCoverRow(id,it))}
         db.pages().insert(NotebookPageRow(id,id,0,world,paper.ordinal,centerX=if(world)0.0 else 500.0,centerY=if(world)0.0 else 707.0))
         if(operationId!=null)db.libraryContent().insert(LibraryContentReceipt(operationId,"CREATE",digest,id))
         Note(id,1,clean,"")
@@ -62,10 +64,14 @@ class WorkspaceRepository(private val db:NoteDatabase) {
         true
     }
     /** Desired-state assignment; same cover is idempotent, stale different choice conflicts. */
-    suspend fun changeCover(id:String,expected:Long,cover:NotebookCover):Boolean=db.withTransaction {
+    suspend fun customCover(id:String):ByteArray?=db.covers().get(id)?.payload?.also(::validateCoverPayload)
+    suspend fun changeCover(id:String,expected:Long,cover:NotebookCover,custom:ByteArray?=null):Boolean=db.withTransaction {
+        val bytes=custom?.copyOf();require((cover==NotebookCover.CUSTOM)==(bytes!=null));bytes?.let(::validateCoverPayload)
         val row=get(id)
-        if(row.coverKey==cover.key)return@withTransaction true
-        if(row.revision!=expected || row.trashedAt!=null)return@withTransaction false
+        if(row.trashedAt!=null)return@withTransaction false
+        if(row.coverKey==cover.key&&(bytes==null||db.covers().get(id)?.payload?.contentEquals(bytes)==true))return@withTransaction true
+        if(row.revision!=expected)return@withTransaction false
+        bytes?.let{require(db.covers().otherBytes(id)+it.size<=32_000_000){"COVER_LIBRARY_BUDGET"};db.covers().put(NotebookCoverRow(id,it))}
         check(db.workspace().update(row.copy(coverKey=cover.key,revision=row.revision+1))==1)
         true
     }

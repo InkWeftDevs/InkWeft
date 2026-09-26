@@ -60,6 +60,7 @@ fun NotebookApp(vm:NotebookViewModel=viewModel(),onDiagnostics:()->Unit={}){
     }
     var showCreate by rememberSaveable{mutableStateOf(false)};var newTitle by rememberSaveable{mutableStateOf("")}
     var newWorld by rememberSaveable{mutableStateOf(false)};var newPaper by rememberSaveable{mutableStateOf(PaperStyle.RULED)};var newCover by rememberSaveable{mutableStateOf(NotebookCover.AUTO)}
+    var newCustomCover by rememberSaveable{mutableStateOf<ByteArray?>(null)}
     var inkMode by rememberSaveable(ui.selectedId){mutableStateOf(true)}
     SideEffect{if(!inkMode)app.navigationReady.value=true}
     var confirmExport by remember{mutableStateOf(false)};var exportText by remember{mutableStateOf<String?>(null)}
@@ -74,7 +75,7 @@ fun NotebookApp(vm:NotebookViewModel=viewModel(),onDiagnostics:()->Unit={}){
     // Compose focus does not discard the NoteDraft; it prevents the body IME from
     // reopening behind the rename dialog when that dialog is dismissed.
     fun beginRename(note:Note){focus.clearFocus(force=true);keyboard?.hide();vm.openRename(note)}
-    fun openCreate(){if(pendingCreate!=null)return;newTitle="";newWorld=defaults.getBoolean("world",false);newPaper=runCatching{PaperStyle.valueOf(defaults.getString("paper","RULED")!!)}.getOrDefault(PaperStyle.RULED);newCover=NotebookCover.fromKey(defaults.getString("cover","auto")!!);showCreate=true}
+    fun openCreate(){if(pendingCreate!=null)return;newTitle="";newWorld=defaults.getBoolean("world",false);newPaper=runCatching{PaperStyle.valueOf(defaults.getString("paper","RULED")!!)}.getOrDefault(PaperStyle.RULED);newCover=NotebookCover.fromKey(defaults.getString("cover","auto")!!).let{if(it==NotebookCover.CUSTOM)NotebookCover.AUTO else it};newCustomCover=null;showCreate=true}
     BackHandler(enabled=ui.selectedId!=null){vm.back()}
     LaunchedEffect(ui.selectedId,inkMode){if(ui.selectedId!=null&&inkMode){focus.clearFocus(force=true);keyboard?.hide()}}
     Column(Modifier.fillMaxSize().background(Color.White).statusBarsPadding().navigationBarsPadding().imePadding()){
@@ -101,9 +102,9 @@ fun NotebookApp(vm:NotebookViewModel=viewModel(),onDiagnostics:()->Unit={}){
         }
     }
     if(showCreate)NewNotebookScreen(newTitle,{newTitle=it},newWorld,{newWorld=it;if(it&&newPaper.ordinal>=4)newPaper=PaperStyle.DOTS},
-        newPaper,{newPaper=it},newCover,{newCover=it},busy,{showCreate=false}){
+        newPaper,{newPaper=it},newCover,{newCover=it},newCustomCover,{newCustomCover=it},busy,{showCreate=false}){
         focus.clearFocus(force=true);keyboard?.hide()
-        workspace.create(newTitle.ifBlank{"未命名笔记"},newWorld,newPaper,newCover){defaults.edit().putBoolean("world",newWorld).putString("paper",newPaper.name).putString("cover",newCover.key).apply();vm.select(it)}
+        workspace.create(newTitle.ifBlank{"未命名笔记"},newWorld,newPaper,newCover,if(newCover==NotebookCover.CUSTOM)newCustomCover else null){defaults.edit().putBoolean("world",newWorld).putString("paper",newPaper.name).putString("cover",newCover.key).apply();vm.select(it)}
         showCreate=false
     }
     if(confirmExport)AlertDialog(onDismissRequest={confirmExport=false},title={Text("导出文字")},text={Text("明文文字副本，不包含手写、封面、历史或回执。所选位置可能由云盘提供方管理。")},confirmButton={TextButton(onClick={confirmExport=false;ui.current?.let{exportText=it.title+"\n\n"+it.text;textExport.launch("墨织笔记.txt")}}){Text("选择位置")}},dismissButton={TextButton(onClick={confirmExport=false}){Text("取消")}})

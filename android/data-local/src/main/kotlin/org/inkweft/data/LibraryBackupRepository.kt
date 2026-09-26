@@ -56,7 +56,7 @@ class LibraryBackupRepository(private val context:Context,private val db:NoteDat
                     // Schema6 has no tombstone column; promote to live/default null.
                     val promoted=if(table==4&&row.size==SCHEMA[table].columns.size-1)row+listOf(null)else row
                     insert(sql,table,promoted)
-                },legacySchema=SCHEMA_V6,otherLegacySchemas=listOf(SCHEMA_V7,SCHEMA_V8)){ctx.ensureActive()}
+                },legacySchema=SCHEMA_V6,otherLegacySchemas=listOf(SCHEMA_V7,SCHEMA_V8,SCHEMA_V9)){ctx.ensureActive()}
             }
             validate(stage)
             val sql=stage.openHelper.writableDatabase
@@ -92,6 +92,7 @@ class LibraryBackupRepository(private val context:Context,private val db:NoteDat
                         require(!collision){"BACKUP_COMMAND_IDENTITY_CONFLICT"}
                     }
                 }
+                require(db.covers().otherBytes("")+preview.stage.covers().otherBytes("")<=32_000_000){"COVER_LIBRARY_BUDGET"}
                 val ctx=currentCoroutineContext()
                 SCHEMA.indices.forEach{index->SqlRows(source).visit(index){row->ctx.ensureActive();insert(target,index,row)}}
                 check(target.query("PRAGMA foreign_key_check").use{!it.moveToFirst()})
@@ -130,6 +131,9 @@ class LibraryBackupRepository(private val context:Context,private val db:NoteDat
         noRows("SELECT 1 FROM page_edit_receipts r LEFT JOIN notebook_pages p ON p.id=r.pageId LEFT JOIN notebook_pages q ON q.id=r.resultPageId WHERE p.id IS NULL OR q.id IS NULL OR p.notebookId!=r.notebookId OR q.notebookId!=r.notebookId")
         noRows("SELECT 1 FROM knowledge_records WHERE removed NOT IN (0,1) OR revision<1")
         noRows("SELECT 1 FROM knowledge_revisions r JOIN knowledge_records k ON k.id=r.id WHERE r.removed NOT IN (0,1) OR r.revision<1 OR r.revision>k.revision OR r.notebookId!=k.notebookId")
+        require(sql.query("SELECT COALESCE(SUM(length(payload)),0) FROM notebook_covers").use{it.moveToFirst();it.getLong(0)}<=32_000_000){"COVER_LIBRARY_BUDGET"}
+        sql.query("SELECT payload FROM notebook_covers").use{c->while(c.moveToNext())validateCoverPayload(c.getBlob(0))}
+        noRows("SELECT 1 FROM notebook_workspace w LEFT JOIN notebook_covers c ON c.noteId=w.noteId WHERE w.coverKey='custom' AND c.noteId IS NULL")
         KnowledgeRepository(stage).validateArchive()
         sql.query("SELECT notebookId,payload FROM knowledge_revisions").use{c->while(c.moveToNext())KnowledgeRepository(stage).validateData(c.getString(0),KnowledgeCodec.decode(c.getBlob(1)),false)}
         sql.query("SELECT operationId,digest,resultId FROM knowledge_receipts").use{c->while(c.moveToNext()){UUID.fromString(c.getString(0));require(c.getString(1).matches(Regex("[0-9a-f]{64}")));require(stage.knowledge().get(c.getString(2))!=null)}}
@@ -229,12 +233,14 @@ class LibraryBackupRepository(private val context:Context,private val db:NoteDat
             table("study_receipts","id",col("id",'S'),col("notebookId",'S'),col("digest",'S'),col("resultId",'S')),
             table("knowledge_records","id",col("id",'S'),col("notebookId",'S'),col("revision",'I'),col("payload",'B'),col("removed",'I')),
             table("knowledge_revisions","id,revision",col("id",'S'),col("revision",'I'),col("notebookId",'S'),col("payload",'B'),col("removed",'I')),
-            table("knowledge_receipts","operationId",col("operationId",'S'),col("notebookId",'S'),col("digest",'S'),col("resultId",'S'))
+            table("knowledge_receipts","operationId",col("operationId",'S'),col("notebookId",'S'),col("digest",'S'),col("resultId",'S')),
+            table("notebook_covers","noteId",col("noteId",'S'),col("payload",'B'))
         )
+        val SCHEMA_V9=SCHEMA.take(21)
         val SCHEMA_V8=SCHEMA.take(18)
         val SCHEMA_V7=SCHEMA.take(13)
         val SCHEMA_V6=SCHEMA.take(12).mapIndexed{i,t->if(i==4)t.copy(columns=t.columns.dropLast(1))else t}
-        private val OWNERS=listOf("id","noteId","noteId","noteId","notebookId","@ink","@ink","@ink","@ink","@search","notebookId","noteId","notebookId","notebookId","@cards","@cards","notebookId","notebookId","notebookId","notebookId","notebookId")
+        private val OWNERS=listOf("id","noteId","noteId","noteId","notebookId","@ink","@ink","@ink","@ink","@search","notebookId","noteId","notebookId","notebookId","@cards","@cards","notebookId","notebookId","notebookId","notebookId","notebookId","noteId")
         private fun count(sql:SupportSQLiteDatabase,table:String)=sql.query("SELECT COUNT(*) FROM `$table`").use{it.moveToFirst();it.getLong(0)}
         private fun insert(sql:SupportSQLiteDatabase,table:Int,row:List<Any?>){
             val t=SCHEMA[table]

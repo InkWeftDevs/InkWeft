@@ -9,7 +9,7 @@ import java.util.UUID
 /** Stable presentation keys, not page templates or identity. No image assets. */
 enum class NotebookCover(val key:String) {
     AUTO("auto"), CONTENT("content"), FOREST("forest"), INK("ink"), SAND("sand"),
-    ROSE("rose"), LILAC("lilac"), GRID("grid"), WAVE("wave");
+    ROSE("rose"), LILAC("lilac"), GRID("grid"), WAVE("wave"), CUSTOM("custom");
     fun resolved(noteId:String):NotebookCover = if(this!=AUTO)this else
         listOf(FOREST,INK,SAND,ROSE,LILAC)[Math.floorMod(noteId.hashCode(),5)]
     companion object {

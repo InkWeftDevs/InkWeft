@@ -13,6 +13,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.testTag
@@ -26,7 +27,7 @@ import org.inkweft.core.*
 
 internal fun NotebookCover.label()=when(this){
     NotebookCover.AUTO->"自动配色";NotebookCover.CONTENT->"页面预览";NotebookCover.FOREST->"松绿";NotebookCover.INK->"深海";
-    NotebookCover.SAND->"砂岩";NotebookCover.ROSE->"烟粉";NotebookCover.LILAC->"暮紫";NotebookCover.GRID->"格线";NotebookCover.WAVE->"山岚"
+    NotebookCover.SAND->"砂岩";NotebookCover.ROSE->"烟粉";NotebookCover.LILAC->"暮紫";NotebookCover.GRID->"格线";NotebookCover.WAVE->"山岚";NotebookCover.CUSTOM->"自定义"
 }
 
 /** Original vector-only jackets. No downloaded images, font files or paper mutation. */
@@ -34,7 +35,9 @@ internal fun NotebookCover.label()=when(this){
 internal fun NotebookCoverArt(style:NotebookCover,noteId:String,title:String,world:Boolean,modifier:Modifier=Modifier){
     val resolved=style.resolved(noteId)
     val base=when(resolved){NotebookCover.FOREST->Color(0xffdceae0);NotebookCover.INK->Color(0xffe5eaf4);NotebookCover.SAND->Color(0xffefe9dc);NotebookCover.ROSE->Color(0xfff0e5e5);NotebookCover.LILAC->Color(0xffeae6f5);NotebookCover.GRID->Color(0xffe4e9e5);NotebookCover.WAVE->Color(0xffdae7e3);else->Color(0xffeef2ef)}
-    val dark=resolved in listOf(NotebookCover.GRID,NotebookCover.WAVE,NotebookCover.CONTENT)
+    if(resolved in listOf(NotebookCover.FOREST,NotebookCover.INK,NotebookCover.SAND,NotebookCover.ROSE,NotebookCover.LILAC)){
+        CustomCoverArt(CustomCover(color=base.toArgb()),title,modifier);return
+    }
     val ink=when(resolved){NotebookCover.INK->Color(0xff354b69);NotebookCover.SAND->Color(0xff635946);NotebookCover.ROSE->Color(0xff704e50);NotebookCover.LILAC->Color(0xff5c547b);else->Color(0xff27483e)}
     Box(modifier.clip(RoundedCornerShape(7.dp)).background(base).clearAndSetSemantics{}){
         Canvas(Modifier.fillMaxSize()){
@@ -62,7 +65,7 @@ internal fun NotebookCoverArt(style:NotebookCover,noteId:String,title:String,wor
 @Composable
 internal fun CoverChoices(selected:NotebookCover,title:String,world:Boolean,onSelected:(NotebookCover)->Unit){
     Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),horizontalArrangement=Arrangement.spacedBy(12.dp)){
-        NotebookCover.entries.forEach { style ->
+        NotebookCover.entries.filter{it!=NotebookCover.CUSTOM}.forEach { style ->
             Column(Modifier.width(92.dp).selectable(selected==style,role=Role.RadioButton,onClick={onSelected(style)}).testTag("cover-choice-${style.key}").padding(3.dp),horizontalAlignment=Alignment.CenterHorizontally){
                 Box(Modifier.height(120.dp).fillMaxWidth().border(if(selected==style)2.dp else 1.dp,if(selected==style)Forest else Line,RoundedCornerShape(8.dp)).padding(3.dp)){
                     NotebookCoverArt(style,"preview",title,world,Modifier.fillMaxSize())
@@ -84,18 +87,4 @@ internal fun RenameNoteDialog(state:RenameUi,edit:(String)->Unit,save:()->Unit,d
             if(busy)LinearProgressIndicator(Modifier.fillMaxWidth())
         }
     },confirmButton={TextButton(onClick=save,enabled=state.phase in listOf(SavePhase.EDITING,SavePhase.UNKNOWN)&&RenameNote.validTitle(state.value.trim()),modifier=Modifier.testTag("confirm-rename")){Text(if(unknown)"核对重试"else"保存名称")}},dismissButton={TextButton(onClick=dismiss,enabled=!busy&&!unknown,modifier=Modifier.testTag("cancel-rename")){Text("取消")}})
-}
-
-@Composable
-internal fun CoverPickerDialog(title:String,world:Boolean,current:NotebookCover,saving:Boolean,error:String?,dismiss:()->Unit,save:(NotebookCover)->Unit){
-    var choice by remember{mutableStateOf(current)}
-    AlertDialog(onDismissRequest={if(!saving)dismiss()},modifier=Modifier.testTag("cover-dialog"),title={Text("更换封面")},text={
-        Column(Modifier.verticalScroll(rememberScrollState()),verticalArrangement=Arrangement.spacedBy(14.dp)){
-            Text("封面只是书架外观，不插入一页，不盖住原来的手写。选择“页面预览”可以继续显示笔迹缩略图。",fontSize=12.sp,lineHeight=20.sp,color=Quiet)
-            Box(Modifier.fillMaxWidth(),contentAlignment=Alignment.Center){NotebookCoverArt(choice,"preview",title,world,Modifier.width(136.dp).height(185.dp))}
-            CoverChoices(choice,title,world){if(!saving)choice=it}
-            if(error!=null)Text(error,color=Color(0xff9a5128),fontSize=12.sp,modifier=Modifier.testTag("cover-error"))
-            if(saving)LinearProgressIndicator(Modifier.fillMaxWidth())
-        }
-    },confirmButton={TextButton(onClick={save(choice)},enabled=!saving,modifier=Modifier.testTag("confirm-cover")){Text("使用此封面")}},dismissButton={TextButton(onClick=dismiss,enabled=!saving,modifier=Modifier.testTag("cancel-cover")){Text("取消")}})
 }

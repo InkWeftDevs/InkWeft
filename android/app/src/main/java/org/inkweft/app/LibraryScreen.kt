@@ -46,7 +46,9 @@ fun LibraryScreen(ui:NotebookUi,workspace:WorkspaceViewModel,open:(Note)->Unit,c
     val focus=LocalFocusManager.current;val keyboard=LocalSoftwareKeyboardController.current
     var drawerJob by remember{mutableStateOf<Job?>(null)}
     var editing by remember{mutableStateOf<WorkspaceRow?>(null)};var removing by remember{mutableStateOf<WorkspaceRow?>(null)}
-    var coverTarget by remember{mutableStateOf<Pair<Note,WorkspaceRow>?>(null)}
+    var coverTargetId by rememberSaveable{mutableStateOf<String?>(null)}
+    var coverExpected by rememberSaveable{mutableLongStateOf(0)}
+    val coverTarget=coverTargetId?.let{id->ui.notes.find{it.id==id}?.let{it to (entries[id]?:WorkspaceRow(id)).copy(revision=coverExpected)}}
     var coverBusy by remember{mutableStateOf(false)};var coverError by remember{mutableStateOf<String?>(null)}
     fun closeDrawer(){drawerJob?.cancel();drawerJob=scope.launch{drawer.close()}}
     fun choose(value:String){filter=value;closeDrawer()}
@@ -135,7 +137,7 @@ fun LibraryScreen(ui:NotebookUi,workspace:WorkspaceViewModel,open:(Note)->Unit,c
                     if(filter=="trash")Text("笔记内容与封面仍保留，可从菜单恢复。",fontSize=12.sp,color=Quiet,modifier=Modifier.padding(vertical=12.dp))
                     val itemContent:@Composable (Note)->Unit={n->val meta=row(n)
                         NoteTile(n,meta,counts[n.id]?.modifiedRevision?:0,counts[n.id]?.visibleCount?:0,grid,
-                            {if(meta.trashedAt==null){val hit=searchRows.firstOrNull{it.notebookId==n.id&&query.isNotBlank()&&it.text.contains(query,true)};if(hit!=null)workspace.openSearchPage(n.id,hit.pageId){open(n)}else if(query.isNotBlank()&&summaries.any{it.notebookId==n.id&&it.trashedAt==null&&(it.title.contains(query,true)||it.body.contains(query,true))}){learningQuery=query;learningNote=n}else open(n)}},{rename(n)},{coverError=null;coverTarget=n to meta},
+                            {if(meta.trashedAt==null){val hit=searchRows.firstOrNull{it.notebookId==n.id&&query.isNotBlank()&&it.text.contains(query,true)};if(hit!=null)workspace.openSearchPage(n.id,hit.pageId){open(n)}else if(query.isNotBlank()&&summaries.any{it.notebookId==n.id&&it.trashedAt==null&&(it.title.contains(query,true)||it.body.contains(query,true))}){learningQuery=query;learningNote=n}else open(n)}},{rename(n)},{coverError=null;coverExpected=meta.revision;coverTargetId=n.id},
                             {workspace.organize(meta,favorite=!meta.favorite)},{editing=meta},{if(meta.trashedAt!=null)workspace.organize(meta,trash=false)else removing=meta},
                             {duplicate(n)},{export(n)},{workspace.pin(meta,!meta.pinned)})
                     }
@@ -157,10 +159,15 @@ fun LibraryScreen(ui:NotebookUi,workspace:WorkspaceViewModel,open:(Note)->Unit,c
         if(destination=="review")KnowledgeWorkspace(n.id,TargetRef(TargetKind.NOTE,n.id),initialTab=4,dismiss={learningNote=null}){target->app.openKnowledgeTarget.value=target;learningNote=null;destination=""}
         else StudyWorkspace(NoteDraft(n),null,{learningNote=null},initialQuery=learningQuery){source->workspace.openSearchPage(n.id,source.pageId){open(n)};learningNote=null;destination="";true}
     }
-    coverTarget?.let{(n,r)->key(n.id){CoverPickerDialog(n.title,r.world,NotebookCover.fromKey(r.coverKey),coverBusy,coverError,{coverTarget=null}){choice->
+    coverTarget?.let{(n,r)->key(n.id){
+        var coverLoading by remember{mutableStateOf(true)};var storedCover by remember{mutableStateOf<ByteArray?>(null)}
+        var coverReadFailed by remember{mutableStateOf(false)}
+        LaunchedEffect(n.id){try{storedCover=withContext(Dispatchers.IO){app.workspaceRepository.customCover(n.id)}}catch(c:CancellationException){throw c}catch(_:Exception){coverReadFailed=true;coverError="封面读取失败，请关闭后重试。"}finally{coverLoading=false}}
+        if(coverLoading||coverReadFailed)AlertDialog(onDismissRequest={coverTargetId=null},title={Text("读取封面")},text={Text(if(coverReadFailed)"封面读取失败，请关闭后重试。"else"正在读取已保存的设计…")},confirmButton={TextButton(onClick={coverTargetId=null}){Text("关闭")}})
+        else CoverPickerDialog(n.title,r.world,NotebookCover.fromKey(r.coverKey),coverBusy,coverError,{coverTargetId=null},storedCover){choice,custom->
         coverBusy=true
-        scope.launch{try{if(workspace.cover(r,choice))coverTarget=null else coverError="设置已被其他操作更新，未覆盖。请关闭并重新打开，查看最新封面。"}
-        catch(c:CancellationException){throw c}catch(_:Exception){coverError="封面结果待核对；可以重试相同选择。笔记正文与笔迹不受影响。"}finally{coverBusy=false}}
+        scope.launch{try{if(workspace.cover(r,choice,custom))coverTargetId=null else coverError="设置已被其他操作更新，未覆盖。请关闭并重新打开，查看最新封面。"}
+        catch(c:CancellationException){throw c}catch(e:IllegalArgumentException){coverError=if(e.message=="COVER_LIBRARY_BUDGET")"封面图片空间已达 32 MB；请先移除不需要的图片封面。"else"封面数据无效，未保存。请重新选择图片或样式。"}catch(_:Exception){coverError="封面结果待核对；可以重试相同选择。笔记正文与笔迹不受影响。"}finally{coverBusy=false}}
     }}}
     editing?.let{r->
         var folder by remember(r.noteId){mutableStateOf(r.folder)};var label by remember(r.noteId){mutableStateOf(r.tags.replace('\n',','))}
@@ -200,12 +207,16 @@ private fun NoteTile(note:Note,row:WorkspaceRow,inkRevision:Long,count:Int,grid:
             first?.let{it to InkSession(app.inkRepository.read(it.id)).visibleDraft()}
         }}catch(c:CancellationException){throw c}catch(_:Exception){null}
     }
+    val customCover by produceState<CustomCover?>(null,note.id,row.revision,style){
+        value=if(style!=NotebookCover.CUSTOM)null else try{withContext(Dispatchers.IO){app.workspaceRepository.customCover(note.id)?.let(CustomCoverCodec::decode)}}catch(c:CancellationException){throw c}catch(_:Exception){null}
+    }
     val strokes=pagePreview?.second
     val date by produceState("",note.id,inkRevision,note.revision){val at=withContext(Dispatchers.IO){runCatching{app.workspaceRepository.modifiedAt(note.id)}.getOrDefault(0L)};value=if(at>0)SimpleDateFormat("yyyy/MM/dd",Locale.getDefault()).format(Date(at))else""}
     val art:@Composable (Modifier)->Unit={m->
         Surface(m,shape=RoundedCornerShape(7.dp),color=Color.White,border=BorderStroke(1.dp,Line),shadowElevation=1.dp){
             Box(Modifier.fillMaxSize().clickable(onClick=open).testTag("note-cover-${note.id}").describedAs("打开笔记：${note.title}；封面：${style.label()}")){
-                if(style!=NotebookCover.CONTENT)NotebookCoverArt(style,note.id,note.title,row.world,Modifier.fillMaxSize())
+                if(style==NotebookCover.CUSTOM){customCover?.let{CustomCoverArt(it,note.title,Modifier.fillMaxSize())}?:Text("封面暂不可用",fontSize=11.sp,color=Quiet,modifier=Modifier.padding(8.dp))}
+                else if(style!=NotebookCover.CONTENT)NotebookCoverArt(style,note.id,note.title,row.world,Modifier.fillMaxSize())
                 else{
                     val loaded=strokes
                     if(loaded!=null&&loaded.isNotEmpty())AndroidView(factory={c->InkCanvasView(c).apply{preview=true;importantForAccessibility=android.view.View.IMPORTANT_FOR_ACCESSIBILITY_NO}},update={v->v.configure(row.world,PaperStyle.entries.getOrElse(pagePreview?.first?.paper?:row.paper){PaperStyle.RULED},null);v.showStrokes(loaded)},modifier=Modifier.fillMaxSize())
