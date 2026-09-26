@@ -76,16 +76,21 @@ object LibraryArchive {
     /** onRow may write only to an isolated staging transaction. Footer validation
      * happens after rows; never call this with the live library as the sink. */
     fun read(input:InputStream,schema:List<Table>,onRow:(Int,List<Any?>)->Unit,
-             checkActive:()->Unit={}):Summary {
+             legacySchema:List<Table>?=null, checkActive:()->Unit={}):Summary {
         validateSchema(schema)
         val counter=CountIn(input);val hash=MessageDigest.getInstance("SHA-256")
         val hashed=DigestInputStream(counter,hash);val d=DataInputStream(hashed)
         require(d.readInt()==MAGIC&&d.readInt()==1){"BACKUP_FORMAT_UNSUPPORTED"}
         val at=d.readLong();require(at>=0)
-        val sig=ByteArray(32);d.readFully(sig);require(MessageDigest.isEqual(sig,signature(schema))){"BACKUP_SCHEMA_UNSUPPORTED"}
-        require(d.readInt()==schema.size){"BACKUP_SCHEMA_UNSUPPORTED"}
+        val sig=ByteArray(32);d.readFully(sig)
+        val actualSchema=when {
+            MessageDigest.isEqual(sig,signature(schema))->schema
+            legacySchema!=null&&MessageDigest.isEqual(sig,signature(legacySchema))->legacySchema
+            else->throw IllegalArgumentException("BACKUP_SCHEMA_UNSUPPORTED")
+        }
+        require(d.readInt()==actualSchema.size){"BACKUP_SCHEMA_UNSUPPORTED"}
         var total=0L;val counts=mutableListOf<Long>()
-        schema.forEachIndexed{index,t->
+        actualSchema.forEachIndexed{index,t->
             checkActive();val n=d.readLong();require(n>=0&&n<=MAX_ROWS-total){"BACKUP_ROW_LIMIT"};total+=n;counts+=n
             repeat(n.toInt()){
                 checkActive();val row=t.columns.map{c->

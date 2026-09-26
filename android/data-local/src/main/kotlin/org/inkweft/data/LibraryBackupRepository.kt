@@ -17,7 +17,7 @@ class LibraryBackupRepository(private val context:Context,private val db:NoteDat
     enum class BackupFault { BEFORE_RESTORE_COMMIT, AFTER_RESTORE_COMMIT }
     enum class RestoreResult { RESTORED, ALREADY_PRESENT, IDENTITY_CONFLICT }
     class Preview internal constructor(internal val stage:NoteDatabase,internal val root:File,
-        val summary:LibraryArchive.Summary,val notes:Int,val pages:Int,val trashed:Int,
+        val summary:LibraryArchive.Summary,val notes:Int,val pages:Int,val trashed:Int,val recycledPages:Int,
         internal val canonical:String):Closeable {
         private var closed=false
         internal fun requireOpen(){check(!closed){"BACKUP_PREVIEW_CLOSED"}}
@@ -53,14 +53,17 @@ class LibraryBackupRepository(private val context:Context,private val db:NoteDat
                 var count=0
                 LibraryArchive.read(input,SCHEMA,{table,row->
                     if(++count%128==0)reserve()
-                    insert(sql,table,row)
-                }){ctx.ensureActive()}
+                    // Schema6 has no tombstone column; promote to live/default null.
+                    val promoted=if(table==4&&row.size==SCHEMA[table].columns.size-1)row+listOf(null)else row
+                    insert(sql,table,promoted)
+                },legacySchema=SCHEMA_V6){ctx.ensureActive()}
             }
             validate(stage)
             val sql=stage.openHelper.writableDatabase
             val notes=count(sql,"notes").toInt();val pages=count(sql,"notebook_pages").toInt()
             val trash=sql.query("SELECT COUNT(*) FROM notebook_workspace WHERE trashedAt IS NOT NULL").use{it.moveToFirst();it.getInt(0)}
-            Preview(stage,root,parsed,notes,pages,trash,fingerprint(sql))
+            val recycled=sql.query("SELECT COUNT(*) FROM notebook_pages WHERE trashedAt IS NOT NULL").use{it.moveToFirst();it.getInt(0)}
+            Preview(stage,root,parsed,notes,pages,trash,recycled,fingerprint(sql))
         }catch(t:Throwable){stage.close();root.deleteRecursively();throw t}
     }
     suspend fun restore(preview:Preview):RestoreResult=withContext(Dispatchers.IO){
@@ -115,6 +118,9 @@ class LibraryBackupRepository(private val context:Context,private val db:NoteDat
         noRows("SELECT 1 FROM notebook_workspace WHERE world NOT IN (0,1) OR favorite NOT IN (0,1) OR pinned NOT IN (0,1) OR paper NOT BETWEEN 0 AND 3")
         noRows("SELECT 1 FROM ink_receipts WHERE visible NOT IN (0,1)")
         noRows("SELECT 1 FROM library_content_receipts WHERE kind NOT IN ('COPY','IMPORT')")
+        noRows("SELECT 1 FROM notebook_pages WHERE trashedAt<0")
+        noRows("SELECT 1 FROM page_edit_receipts WHERE kind NOT IN ('MOVE','COPY','TRASH','RESTORE')")
+        noRows("SELECT 1 FROM page_edit_receipts r LEFT JOIN notebook_pages p ON p.id=r.pageId LEFT JOIN notebook_pages q ON q.id=r.resultPageId WHERE p.id IS NULL OR q.id IS NULL OR p.notebookId!=r.notebookId OR q.notebookId!=r.notebookId")
         for(id in notes){
             currentCoroutineContext().ensureActive();UUID.fromString(id)
             val n=checkNotNull(stage.notes().note(id));require(n.revision>=1&&RenameNote.validTitle(n.title)&&n.text.length<=100_000)
@@ -122,10 +128,12 @@ class LibraryBackupRepository(private val context:Context,private val db:NoteDat
             val w=checkNotNull(stage.workspace().get(id));require(w.revision>=0&&NotebookCover.validKey(w.coverKey))
             require(w.folder.length<=48&&w.tags.length<=320&&w.paper in PaperStyle.entries.indices)
             CanvasViewport(w.centerX,w.centerY,if(w.zoom==0.0).7 else w.zoom)
-            val pages=stage.pages().list(id)
-            require(pages.size in 1..500&&pages.any{it.id==id}&&pages.withIndex().all{(i,p)->p.position==i&&p.world==w.world})
+            val pages=stage.pages().allPages(id)
+            val active=pages.filter{it.trashedAt==null}.sortedBy{it.position}
+            require(pages.size in 1..500&&pages.any{it.id==id}&&pages.all{it.world==w.world})
+            require(active.isNotEmpty()&&active.withIndex().all{(i,p)->p.position==i})
             require(!w.world||pages.size==1)
-            require(w.selectedPageId.isEmpty()||pages.any{it.id==w.selectedPageId})
+            require(w.selectedPageId.isEmpty()||active.any{it.id==w.selectedPageId})
             for(p in pages){
                 UUID.fromString(p.id);require(p.paper in PaperStyle.entries.indices)
                 CanvasViewport(p.centerX,p.centerY,if(p.zoom==0.0).7 else p.zoom)
@@ -140,7 +148,7 @@ class LibraryBackupRepository(private val context:Context,private val db:NoteDat
         noRows("SELECT 1 FROM ink_strokes s LEFT JOIN ink_pages p ON p.noteId=s.noteId WHERE p.noteId IS NULL OR s.createdRevision<1 OR s.createdRevision>p.revision OR s.visible NOT IN (0,1)")
         noRows("SELECT 1 FROM ink_cuts s LEFT JOIN ink_pages p ON p.noteId=s.noteId WHERE p.noteId IS NULL OR s.createdRevision<1 OR s.createdRevision>p.revision OR s.visible NOT IN (0,1)")
         noRows("SELECT 1 FROM notebook_workspace WHERE world NOT IN (0,1) OR favorite NOT IN (0,1) OR pinned NOT IN (0,1)")
-        for(t in listOf("command_receipts","ink_receipts","page_insert_receipts","library_content_receipts")){
+        for(t in listOf("command_receipts","ink_receipts","page_insert_receipts","library_content_receipts","page_edit_receipts")){
             sql.query("SELECT commandId,digest FROM $t").use{c->while(c.moveToNext()){UUID.fromString(c.getString(0));require(c.getString(1).matches(Regex("[0-9a-f]{64}")))}}
         }
         sql.query("SELECT notebookId,pageIds FROM page_insert_receipts").use{c->while(c.moveToNext()){
@@ -171,22 +179,24 @@ class LibraryBackupRepository(private val context:Context,private val db:NoteDat
     companion object {
         private fun col(name:String,kind:Char,nullable:Boolean=false)=LibraryArchive.Column(name,kind,nullable)
         private fun table(name:String,keys:String,vararg cols:LibraryArchive.Column)=LibraryArchive.Table(name,cols.toList(),keys.split(','))
-        // Frozen author schema6. Coverage validation fails closed when new tables appear.
+        // Frozen author schema7; only the explicitly compiled schema6 is also readable.
         val SCHEMA=listOf(
             table("notes","id",col("id",'S'),col("revision",'I'),col("title",'S'),col("text",'S'),col("updatedAt",'I')),
             table("note_revisions","noteId,revision",col("noteId",'S'),col("revision",'I'),col("title",'S'),col("text",'S'),col("committedAt",'I')),
             table("command_receipts","commandId",col("commandId",'S'),col("noteId",'S'),col("digest",'S'),col("committedRevision",'I')),
             table("notebook_workspace","noteId",col("noteId",'S'),col("world",'I'),col("paper",'I'),col("folder",'S'),col("tags",'S'),col("favorite",'I'),col("trashedAt",'I',true),col("centerX",'F'),col("centerY",'F'),col("zoom",'F'),col("revision",'I'),col("coverKey",'S'),col("selectedPageId",'S'),col("pinned",'I')),
-            table("notebook_pages","id",col("id",'S'),col("notebookId",'S'),col("position",'I'),col("world",'I'),col("paper",'I'),col("centerX",'F'),col("centerY",'F'),col("zoom",'F'),col("createdAfterId",'S',true)),
+            table("notebook_pages","id",col("id",'S'),col("notebookId",'S'),col("position",'I'),col("world",'I'),col("paper",'I'),col("centerX",'F'),col("centerY",'F'),col("zoom",'F'),col("createdAfterId",'S',true),col("trashedAt",'I',true)),
             table("ink_pages","noteId",col("noteId",'S'),col("revision",'I')),
             table("ink_strokes","id",col("id",'S'),col("noteId",'S'),col("payload",'B'),col("pointCount",'I'),col("visible",'I'),col("createdRevision",'I')),
             table("ink_receipts","commandId",col("commandId",'S'),col("noteId",'S'),col("digest",'S'),col("committedRevision",'I'),col("strokeIds",'S'),col("visible",'I')),
             table("ink_cuts","id",col("id",'S'),col("noteId",'S'),col("payload",'B'),col("strokeIds",'S'),col("visible",'I'),col("createdRevision",'I')),
             table("page_search_text","pageId",col("pageId",'S'),col("inkRevision",'I'),col("text",'S'),col("method",'S')),
             table("page_insert_receipts","commandId",col("commandId",'S'),col("notebookId",'S'),col("digest",'S'),col("pageIds",'S')),
-            table("library_content_receipts","commandId",col("commandId",'S'),col("kind",'S'),col("digest",'S'),col("noteId",'S'))
+            table("library_content_receipts","commandId",col("commandId",'S'),col("kind",'S'),col("digest",'S'),col("noteId",'S')),
+            table("page_edit_receipts","commandId",col("commandId",'S'),col("notebookId",'S'),col("digest",'S'),col("kind",'S'),col("pageId",'S'),col("resultPageId",'S'))
         )
-        private val OWNERS=listOf("id","noteId","noteId","noteId","notebookId","@ink","@ink","@ink","@ink","@search","notebookId","noteId")
+        val SCHEMA_V6=SCHEMA.take(12).mapIndexed{i,t->if(i==4)t.copy(columns=t.columns.dropLast(1))else t}
+        private val OWNERS=listOf("id","noteId","noteId","noteId","notebookId","@ink","@ink","@ink","@ink","@search","notebookId","noteId","notebookId")
         private fun count(sql:SupportSQLiteDatabase,table:String)=sql.query("SELECT COUNT(*) FROM `$table`").use{it.moveToFirst();it.getLong(0)}
         private fun insert(sql:SupportSQLiteDatabase,table:Int,row:List<Any?>){
             val t=SCHEMA[table]

@@ -65,7 +65,7 @@ class LibraryBackupViewModel(app:Application):AndroidViewModel(app){
         viewModelScope.launch{try{
             preview=withContext(Dispatchers.IO){checkNotNull(owner.contentResolver.openInputStream(uri)).use{repo.inspect(it)}}
             val p=preview!!
-            state.value=BackupUi(BackupMode.RESTORE_READY,"${p.notes} 本笔记、${p.pages} 页，其中回收站 ${p.trashed} 本；${p.summary.bytes} 字节。\n校验通过：完整摘要、数据表、引用及笔迹格式。\n恢复保留原身份，不覆盖已有同一身份的笔记；发生冲突时整批停止。完全相同的备份重复恢复不会产生副本。")
+            state.value=BackupUi(BackupMode.RESTORE_READY,"${p.notes} 本笔记、${p.pages} 页；笔记回收站 ${p.trashed} 本，页面回收区 ${p.recycledPages} 页；${p.summary.bytes} 字节。\n校验通过：完整摘要、数据表、引用及笔迹格式。\n恢复保留原身份，不覆盖已有同一身份的笔记；发生冲突时整批停止。完全相同的备份重复恢复不会产生副本。")
         }catch(c:CancellationException){throw c}catch(_:Exception){dispose();state.value=BackupUi(BackupMode.RESULT,"备份校验失败，可能损坏、超出预算、引用不完整或版本不兼容。未写入现有资料库。")}}
     }
     fun restore(){
@@ -111,7 +111,7 @@ fun LibraryBackupHost(content:@Composable ()->Unit){
             text={Column(Modifier.verticalScroll(rememberScrollState()),verticalArrangement=Arrangement.spacedBy(12.dp)){
                 when(ui.mode){
                     BackupMode.HOME->{
-                        Text("备份已保存的笔记、页面、原笔迹、局部擦除、回收站、分类、封面、阅读位置、人工索引、修订与操作回执。")
+                        Text("备份已保存的笔记、页面、原笔迹、局部擦除、笔记及页面回收区、分类、封面、阅读位置、人工索引、修订与操作回执。")
                         Text("不含未保存草稿、尚未抬笔的内容、内存撤销栈、笔盒设置、缓存或密钥。不是诊断包，也不同于仅可见内容副本。")
                         OutlinedButton(onClick=vm::confirmExport,modifier=Modifier.fillMaxWidth().testTag("backup-create")){Text("创建资料库备份")}
                         OutlinedButton(onClick={open.launch(arrayOf("application/octet-stream","*/*"))},modifier=Modifier.fillMaxWidth().testTag("backup-select")){Text("选择备份并校验")}

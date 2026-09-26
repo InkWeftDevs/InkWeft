@@ -51,6 +51,7 @@ class InkRepository(private val db:NoteDatabase,private val fault:(InkFaultPoint
             if(old!=null)return@withTransaction if(old.noteId==command.noteId&&old.digest==digest)InkCommitResult.Committed(old.committedRevision)else InkCommitResult.Rejected
             if(db.pages().get(command.noteId)==null&&db.notes().note(command.noteId)==null)return@withTransaction InkCommitResult.Conflict
             val owner=owner(command.noteId);val current=dao.page(command.noteId)
+            if(owner.trashedAt!=null || db.workspace().get(owner.notebookId)?.trashedAt!=null)return@withTransaction InkCommitResult.Conflict
             if((current?.revision?:0)!=command.expectedRevision)return@withTransaction InkCommitResult.Conflict
             val next=command.expectedRevision+1
             val visible=when(val change=command.mutation){

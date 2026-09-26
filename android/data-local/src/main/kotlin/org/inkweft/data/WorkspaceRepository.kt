@@ -26,7 +26,7 @@ interface WorkspaceDao {
     @Query("UPDATE notebook_workspace SET centerX=:x,centerY=:y,zoom=:zoom WHERE noteId=:id")
     suspend fun viewport(id:String,x:Double,y:Double,zoom:Double):Int
     @Query("UPDATE notebook_workspace SET selectedPageId=:pageId WHERE noteId=:id") suspend fun selectPage(id:String,pageId:String):Int
-    @Query("SELECT n.id AS noteId,COALESCE((SELECT COUNT(*) FROM notebook_pages p JOIN ink_strokes s ON s.noteId=p.id WHERE p.notebookId=n.id AND s.visible=1),0) AS visibleCount,COALESCE((SELECT SUM(h.revision) FROM notebook_pages p JOIN ink_pages h ON h.noteId=p.id WHERE p.notebookId=n.id),0) AS modifiedRevision FROM notes n")
+    @Query("SELECT n.id AS noteId,COALESCE((SELECT COUNT(*) FROM notebook_pages p JOIN ink_strokes s ON s.noteId=p.id WHERE p.notebookId=n.id AND p.trashedAt IS NULL AND s.visible=1),0) AS visibleCount,COALESCE((SELECT SUM(h.revision) FROM notebook_pages p JOIN ink_pages h ON h.noteId=p.id WHERE p.notebookId=n.id),0) AS modifiedRevision FROM notes n")
     fun observeInkCounts():Flow<List<LibraryInkCount>>
     @Query("SELECT updatedAt FROM notes WHERE id=:id") suspend fun updatedAt(id:String):Long?
 }
@@ -76,11 +76,13 @@ class WorkspaceRepository(private val db:NoteDatabase) {
     }
     suspend fun changePaper(id:String,paper:PaperStyle)=db.withTransaction {
         val page=db.pages().get(id)?:NotebookPages(db).ensureFirst(id)
+        require(page.trashedAt==null)
         check(db.pages().paper(id,paper.ordinal)==1)
         if(id==page.notebookId){val row=get(id);check(db.workspace().update(row.copy(paper=paper.ordinal,revision=row.revision+1))==1)}
     }
     suspend fun saveViewport(id:String,v:CanvasViewport)=db.withTransaction {
         val page=db.pages().get(id)?:NotebookPages(db).ensureFirst(id)
+        if(page.trashedAt!=null)return@withTransaction
         check(db.pages().viewport(id,v.centerX,v.centerY,v.zoom)==1)
         if(id==page.notebookId){get(id);check(db.workspace().viewport(id,v.centerX,v.centerY,v.zoom)==1)}
     }

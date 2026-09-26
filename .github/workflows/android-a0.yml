@@ -55,10 +55,10 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p build/evidence
-          cp app/build/outputs/apk/debug/app-debug.apk build/evidence/inkweft-a3.3-backup-debug.apk
-          sha256sum build/evidence/inkweft-a3.3-backup-debug.apk > build/evidence/APK-SHA256.txt
-          "$ANDROID_HOME/build-tools/36.0.0/apksigner" verify --verbose --print-certs build/evidence/inkweft-a3.3-backup-debug.apk > build/evidence/apk-signature.txt
-          "$ANDROID_HOME/build-tools/36.0.0/zipalign" -c -P 16 -v 4 build/evidence/inkweft-a3.3-backup-debug.apk > build/evidence/zip-alignment.txt
+          cp app/build/outputs/apk/debug/app-debug.apk build/evidence/inkweft-a3.4-pages-debug.apk
+          sha256sum build/evidence/inkweft-a3.4-pages-debug.apk > build/evidence/APK-SHA256.txt
+          "$ANDROID_HOME/build-tools/36.0.0/apksigner" verify --verbose --print-certs build/evidence/inkweft-a3.4-pages-debug.apk > build/evidence/apk-signature.txt
+          "$ANDROID_HOME/build-tools/36.0.0/zipalign" -c -P 16 -v 4 build/evidence/inkweft-a3.4-pages-debug.apk > build/evidence/zip-alignment.txt
           python3 - <<'PY'
           import json, os, platform
           from pathlib import Path
@@ -66,7 +66,7 @@ jobs:
           assert metadata['applicationId']=='org.inkweft.app.a0.insertion'
           Path("build/evidence/build.json").write_text(json.dumps({
             "commit": os.environ["BUILD_COMMIT"], "pr_head": os.environ["HEAD_COMMIT"],
-            "scope": "A3_3_LIBRARY_BACKUP_NO_CONFLICT_OVERWRITE_NOT_FULL_G1_OR_S1",
+            "scope": "A3_4_PAGE_ORGANIZATION_AND_BACKUP_COMPATIBILITY_NOT_FULL_G1_OR_S1",
             "compileSdk": 36, "targetSdk": 36, "minSdk": 31,
             "applicationId": metadata['applicationId'], "versionName": metadata['elements'][0]['versionName'],
             "inkVersion": "1.0.0", "runner": platform.platform(), "instrumented_tests": "SEE_RUNTIME_REPORT",
@@ -79,7 +79,7 @@ jobs:
       - name: Upload built APK and schema before device checks
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: inkweft-a3.3-backup-${{ github.sha }}
+          name: inkweft-a3.4-pages-${{ github.sha }}
           retention-days: 7
           if-no-files-found: error
           path: |
@@ -121,7 +121,7 @@ jobs:
           python3 - <<'PY'
           import glob, sys
           import xml.etree.ElementTree as ET
-          expected_totals = {":data-local": 73, ":app": 32}
+          expected_totals = {":data-local": 91, ":app": 36}
           roots = {
               ":data-local": glob.glob("data-local/build/outputs/androidTest-results/**/*.xml", recursive=True),
               ":app": glob.glob("app/build/outputs/androidTest-results/**/*.xml", recursive=True),
@@ -161,11 +161,11 @@ jobs:
           import re
           text=Path('build/evidence/evidence-capture-instrumentation.txt').read_text()
           match=re.search(r'^OK \((\d+) tests?\)\s*$',text,re.M)
-          assert match and int(match.group(1)) >= 32, 'Missing successful complete repeat run'
+          assert match and int(match.group(1)) >= 36, 'Missing successful complete repeat run'
           assert 'FAILURES!!!' not in text
           PY
           adb pull "/sdcard/Android/data/org.inkweft.app.a0.insertion/files/." "build/evidence/"
-          for name in ink-ui-emulator.png diagnostics-emulator.zip workspace-library.png workspace-board.png workspace-page.png workspace-narrow.png insert-pages-options.png page-directory-insertion.png pen-presets-popover.png shelf-note-menu.png library-complete-menu.png library-export-preview.png library-backup-export.png library-backup-restore.png; do
+          for name in ink-ui-emulator.png diagnostics-emulator.zip workspace-library.png workspace-board.png workspace-page.png workspace-narrow.png insert-pages-options.png page-directory-insertion.png pen-presets-popover.png shelf-note-menu.png library-complete-menu.png library-export-preview.png library-backup-export.png library-backup-restore.png page-move-options.png page-recycle-directory.png; do
             test -f "build/evidence/$name"
           done
           ls -1 build/evidence | sort > build/evidence/evidence-file-list.txt
@@ -183,7 +183,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: android-a3.3-reports-${{ github.run_id }}
+          name: android-a3.4-reports-${{ github.run_id }}
           retention-days: 7
           if-no-files-found: warn
           path: |

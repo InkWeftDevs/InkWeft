@@ -26,7 +26,7 @@ import org.inkweft.data.NotebookPageRow
 import org.inkweft.data.WorkspaceRow
 
 @Composable
-fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:NotebookPageRow,onCanNavigate:(Boolean)->Unit,onSearch:(Long)->Unit){
+fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:NotebookPageRow,onCanNavigate:(Boolean)->Unit,onSearch:(Long)->Unit,externalEnabled:Boolean=true){
     val context=LocalContext.current;val app=context.applicationContext as InkWeftApplication
     val vm:InkViewModel=viewModel(key="ink-${page.id}",factory=InkViewModel.Factory(page.id,app.inkRepository))
     val ui by vm.ui.collectAsStateWithLifecycle()
@@ -122,7 +122,7 @@ fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:NotebookPageR
                 v.onViewport={workspace.viewport(page.id,it)};v.onScale={zoom=it}
             }},update={v->
                 v.configure(row.world,PaperStyle.entries.getOrElse(row.paper){PaperStyle.RULED},initial)
-                v.allowInput=if(tool==3)!ui.loading&&!ui.readFailed&&ui.blocked==null&&!ui.processing&&ui.queued<16 else ui.canStart;v.eraserWhole=eraser.whole;v.eraserHighlighterOnly=eraser.onlyHighlighter;v.eraserDiameterDp=eraser.diameterDp;v.fingerWrites=finger;v.eraseMode=tool==3;v.pen=if(tool==2)InkPen.HIGHLIGHTER else InkPen.PEN
+                v.allowInput=externalEnabled&&(if(tool==3)!ui.loading&&!ui.readFailed&&ui.blocked==null&&!ui.processing&&ui.queued<16 else ui.canStart);v.eraserWhole=eraser.whole;v.eraserHighlighterOnly=eraser.onlyHighlighter;v.eraserDiameterDp=eraser.diameterDp;v.fingerWrites=finger;v.eraseMode=tool==3;v.pen=if(tool==2)InkPen.HIGHLIGHTER else InkPen.PEN
                 v.penWidth=widths[tool.coerceAtMost(2)];v.penColor=colors[tool.coerceAtMost(2)]
                 v.showStrokes(ui.strokes)
             },modifier=Modifier.fillMaxWidth().weight(1f).testTag("ink-surface"))

@@ -166,7 +166,13 @@ private fun NoteTile(note:Note,row:WorkspaceRow,inkRevision:Long,count:Int,grid:
     val context=LocalContext.current;val app=context.applicationContext as InkWeftApplication
     val style=NotebookCover.fromKey(row.coverKey)
     // Decorated covers do not load or decode the author's strokes just to draw the shelf.
-    val strokes by produceState<List<InkStroke>?>(null,note.id,inkRevision,style){value=if(style!=NotebookCover.CONTENT)null else try{withContext(Dispatchers.IO){InkSession(app.inkRepository.read(note.id)).visibleDraft()}}catch(c:CancellationException){throw c}catch(_:Exception){null}}
+    val pagePreview by produceState<Pair<NotebookPageRow,List<InkStroke>>?>(null,note.id,inkRevision,style,row.revision){
+        value=if(style!=NotebookCover.CONTENT)null else try{withContext(Dispatchers.IO){
+            val first=app.pages.activePages(note.id).firstOrNull()
+            first?.let{it to InkSession(app.inkRepository.read(it.id)).visibleDraft()}
+        }}catch(c:CancellationException){throw c}catch(_:Exception){null}
+    }
+    val strokes=pagePreview?.second
     val date by produceState("",note.id,inkRevision,note.revision){val at=withContext(Dispatchers.IO){runCatching{app.workspaceRepository.modifiedAt(note.id)}.getOrDefault(0L)};value=if(at>0)SimpleDateFormat("yyyy/MM/dd",Locale.getDefault()).format(Date(at))else""}
     val art:@Composable (Modifier)->Unit={m->
         Surface(m,shape=RoundedCornerShape(7.dp),color=Color.White,border=BorderStroke(1.dp,Line),shadowElevation=1.dp){
@@ -174,8 +180,8 @@ private fun NoteTile(note:Note,row:WorkspaceRow,inkRevision:Long,count:Int,grid:
                 if(style!=NotebookCover.CONTENT)NotebookCoverArt(style,note.id,note.title,row.world,Modifier.fillMaxSize())
                 else{
                     val loaded=strokes
-                    if(loaded!=null&&loaded.isNotEmpty())AndroidView(factory={c->InkCanvasView(c).apply{preview=true;importantForAccessibility=android.view.View.IMPORTANT_FOR_ACCESSIBILITY_NO}},update={v->v.configure(row.world,PaperStyle.entries.getOrElse(row.paper){PaperStyle.RULED},null);v.showStrokes(loaded)},modifier=Modifier.fillMaxSize())
-                    else PaperThumbnail(row.world,PaperStyle.entries.getOrElse(row.paper){PaperStyle.RULED})
+                    if(loaded!=null&&loaded.isNotEmpty())AndroidView(factory={c->InkCanvasView(c).apply{preview=true;importantForAccessibility=android.view.View.IMPORTANT_FOR_ACCESSIBILITY_NO}},update={v->v.configure(row.world,PaperStyle.entries.getOrElse(pagePreview?.first?.paper?:row.paper){PaperStyle.RULED},null);v.showStrokes(loaded)},modifier=Modifier.fillMaxSize())
+                    else PaperThumbnail(row.world,PaperStyle.entries.getOrElse(pagePreview?.first?.paper?:row.paper){PaperStyle.RULED})
                     if(loaded?.isEmpty()!=false&&note.text.isNotBlank())Text(note.text,fontSize=8.sp,lineHeight=13.sp,maxLines=10,color=Quiet,modifier=Modifier.padding(12.dp))
                 }
                 if(row.favorite)Box(Modifier.align(Alignment.TopEnd).padding(7.dp).background(Color.White,RoundedCornerShape(6.dp)).padding(3.dp)){Glyph("star",Forest,Modifier.size(14.dp))}

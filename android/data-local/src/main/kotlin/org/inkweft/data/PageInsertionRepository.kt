@@ -15,7 +15,7 @@ interface PageInsertionDao {
     suspend fun receipt(id: String): PageInsertReceiptRow?
     @Insert(onConflict = OnConflictStrategy.ABORT)
     suspend fun record(row: PageInsertReceiptRow)
-    @Query("UPDATE notebook_pages SET position=position+:amount WHERE notebookId=:bookId AND position>=:index")
+    @Query("UPDATE notebook_pages SET position=position+:amount WHERE notebookId=:bookId AND trashedAt IS NULL AND position>=:index")
     suspend fun shift(bookId: String, index: Int, amount: Int): Int
 }
 
@@ -43,7 +43,7 @@ class PageInsertionRepository(private val db: NoteDatabase, private val fault: (
             check(pages.isNotEmpty() && pages.withIndex().all { (index, page) -> page.position == index && !page.world })
             if (InsertPages.orderHash(pages.map { it.id }) != command.expectedOrder)
                 return@withTransaction InsertPagesResult.OrderChanged
-            if (pages.size + command.pageIds.size > InsertPages.MAX_PAGES)
+            if (db.pages().allPages(book.id).size + command.pageIds.size > InsertPages.MAX_PAGES)
                 return@withTransaction InsertPagesResult.CapacityReached
             if (command.pageIds.any { db.pages().get(it) != null })
                 return@withTransaction InsertPagesResult.CommandReused

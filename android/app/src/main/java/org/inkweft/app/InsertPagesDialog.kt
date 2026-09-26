@@ -20,7 +20,7 @@ import org.inkweft.data.NotebookPageRow
 @Composable
 internal fun InsertPagesDialog(
     pages: List<NotebookPageRow>, initialAnchor: String, initialLocation: PageInsertLocation,
-    onDismiss: () -> Unit, onInsert: (PageInsertLocation, String?, PaperStyle, Int, Boolean, String) -> Unit,
+    onDismiss: () -> Unit, recycledCount:Int=0, onInsert: (PageInsertLocation, String?, PaperStyle, Int, Boolean, String) -> Unit,
 ) {
     var location by remember { mutableStateOf(initialLocation) }
     var anchorId by remember { mutableStateOf(initialAnchor) }
@@ -36,7 +36,7 @@ internal fun InsertPagesDialog(
         PageInsertLocation.AFTER -> anchor?.position?.plus(1) ?: -1
     }
     val selectedStyle = if (inherited) PaperStyle.entries.getOrElse(anchor?.paper ?: 1) { PaperStyle.RULED } else style
-    val valid = index >= 0 && pages.size + count <= InsertPages.MAX_PAGES && pages.none { it.world }
+    val valid = index >= 0 && pages.size + recycledCount + count <= InsertPages.MAX_PAGES && pages.none { it.world }
     AlertDialog(onDismissRequest = onDismiss, modifier = Modifier.testTag("insert-pages-dialog"),
         title = { Text("添加页面") },
         text = {
@@ -74,7 +74,7 @@ internal fun InsertPagesDialog(
                     Text("数量",Modifier.weight(1f),fontSize=14.sp)
                     OutlinedButton(onClick={count--},enabled=count>1,modifier=Modifier.testTag("insert-count-minus")){Text("−")}
                     Text(count.toString(),Modifier.padding(horizontal=14.dp).testTag("insert-count"))
-                    OutlinedButton(onClick={count++},enabled=count<InsertPages.MAX_BATCH&&pages.size+count<InsertPages.MAX_PAGES,modifier=Modifier.testTag("insert-count-plus")){Text("＋")}
+                    OutlinedButton(onClick={count++},enabled=count<InsertPages.MAX_BATCH&&pages.size+recycledCount+count<InsertPages.MAX_PAGES,modifier=Modifier.testTag("insert-count-plus")){Text("＋")}
                 }
                 Surface(color=Leaf,shape=RoundedCornerShape(8.dp)) {
                     Text(if(valid) "将在第 ${index+1} 页位置插入 $count 页 · ${paperLabel(selectedStyle)}。" +
