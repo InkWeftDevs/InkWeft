@@ -31,8 +31,9 @@ class NotebookShelfUiTest {
         val n=create();assertEquals("forest",runBlocking{app.workspaceRepository.get(n.id).coverKey});compose.onNodeWithTag("back-library").performClick();ready()
         compose.onNodeWithTag("note-menu-${n.id}").performClick();compose.onNodeWithTag("rename-note-${n.id}").performClick()
         compose.onNodeWithTag("rename-title").performTextReplacement("   ");compose.onNodeWithTag("confirm-rename").assertIsNotEnabled();compose.onNodeWithTag("cancel-rename").performClick();assertEquals(n.title,runBlocking{app.repository.read(n.id)?.title})
-        compose.onNodeWithTag("note-menu-${n.id}").performClick();compose.onNodeWithTag("rename-note-${n.id}").performClick();rename("高数 · 公式与推导")
-        assertEquals("高数 · 公式与推导",runBlocking{app.repository.read(n.id)?.title});compose.onNodeWithTag("library-search").performTextInput("公式与推导");compose.onNodeWithText("高数 · 公式与推导").assertExists();compose.onNodeWithTag("library-search").performTextClearance();noKeyboard()
+        val renamed="高数 · 公式与推导-${n.id.take(8)}"
+        compose.onNodeWithTag("note-menu-${n.id}").performClick();compose.onNodeWithTag("rename-note-${n.id}").performClick();rename(renamed)
+        assertEquals(renamed,runBlocking{app.repository.read(n.id)?.title});compose.onNodeWithTag("library-search").performTextInput("公式与推导");compose.onNodeWithText(renamed).assertExists();compose.onNodeWithTag("library-search").performTextClearance();noKeyboard()
         runBlocking{for((i,c) in listOf(NotebookCover.INK,NotebookCover.SAND,NotebookCover.ROSE,NotebookCover.GRID,NotebookCover.WAVE).withIndex())app.workspaceRepository.create(listOf("英语 · 阅读积累","专业课 · 知识整理","每日复习","数学 · 易错题","灵感与草稿")[i],i==4,PaperStyle.DOTS,c)}
         compose.waitUntil(10_000){compose.onAllNodesWithText("英语 · 阅读积累").fetchSemanticsNodes().isNotEmpty()};shot("shelf-covers-emulator.png")
     }
