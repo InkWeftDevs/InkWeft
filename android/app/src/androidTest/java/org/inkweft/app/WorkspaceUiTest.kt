@@ -117,9 +117,11 @@ class WorkspaceUiTest {
             compose.waitUntil(10_000){compose.onAllNodesWithText("$prefix 思维草稿").fetchSemanticsNodes().isNotEmpty()}
             compose.onNodeWithTag("library-search").performTextInput(prefix)
             compose.onNodeWithTag("library-type-board").performClick();compose.onNodeWithText("$prefix 思维草稿").assertExists();compose.onNodeWithText("$prefix 原文笔记").assertDoesNotExist()
-            compose.onNodeWithTag("note-menu-${b.id}").performClick()
-            // A focusable popup owns a different window. The inactive Activity can retain
-            // old IME insets on API 35; verify the user's interactive keyboard window instead.
+            compose.onNodeWithTag("note-menu-${b.id}").performScrollTo().assertIsDisplayed().performClick()
+            compose.waitUntil(5_000){compose.onAllNodesWithTag("notebook-actions-menu").fetchSemanticsNodes().isNotEmpty()}
+            compose.onNodeWithTag("notebook-actions-menu").assertIsDisplayed()
+            // The keyboard can shrink the grid so the menu button requires scrolling.
+            // Check the actual popup and interactive windows after reaching that button.
             compose.waitUntil(10_000){val windows=automation.windows
                 windows.any{it.type==android.view.accessibility.AccessibilityWindowInfo.TYPE_APPLICATION}&&
                     windows.none{it.type==android.view.accessibility.AccessibilityWindowInfo.TYPE_INPUT_METHOD}}
@@ -130,7 +132,7 @@ class WorkspaceUiTest {
             assertFalse("Input method still shown: $inputMethod",Regex("mInputShown\\s*[=:]\\s*true").containsMatchIn(inputMethod))
             compose.onNodeWithTag("favorite-note-${b.id}").performScrollTo().assertIsDisplayed().performClick()
             compose.waitUntil(10_000){runBlocking{app.workspaceRepository.get(b.id).favorite}}
-            compose.onNodeWithTag("note-menu-${b.id}").performClick()
+            compose.onNodeWithTag("note-menu-${b.id}").performScrollTo().assertIsDisplayed().performClick()
             compose.waitUntil(10_000){compose.onAllNodesWithText("取消收藏",useUnmergedTree=true).fetchSemanticsNodes().isNotEmpty()}
             compose.onNodeWithTag("trash-note-${b.id}").performScrollTo().assertIsDisplayed().performClick()
             compose.onNodeWithTag("trash-note-dialog").assertIsDisplayed()
