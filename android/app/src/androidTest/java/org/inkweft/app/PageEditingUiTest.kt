@@ -44,15 +44,19 @@ class PageEditingUiTest {
     }
     private fun menu(number:Int){compose.onNodeWithTag("page-directory").performClick();compose.onNodeWithTag("page-menu-$number").performClick()}
     private fun editReady(){
+        var lastFailure:Throwable?=null
         try{
             compose.waitUntil(15_000){runCatching{
                 compose.onNodeWithTag("page-edit-version",useUnmergedTree=true).assertTextEquals("页面版本已核对")
                 compose.onNodeWithTag("confirm-page-edit").assertIsEnabled()
-            }.isSuccess}
+            }.onFailure{lastFailure=it}.isSuccess}
         }catch(error:Throwable){
             runCatching{shot("page-edit-confirm-failure.png")}
-            runCatching{println(compose.onRoot(useUnmergedTree=true).printToString())}
-            throw error
+            // AlertDialog and Activity are distinct roots. A single onRoot()
+            // would itself fail and hide the diagnostic behind runCatching.
+            val roots=runCatching{compose.onAllNodes(isRoot(),useUnmergedTree=true).printToString()}
+                .getOrElse{"Root dump failed: ${it.message}"}
+            throw AssertionError("Page preview did not become ready. Last assertion: ${lastFailure?.message}\n$roots",error)
         }
     }
     private fun confirm(){editReady();compose.onNodeWithTag("confirm-page-edit").performClick()}
