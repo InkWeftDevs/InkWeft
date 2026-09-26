@@ -67,7 +67,9 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
         val ok=vm.selectedEdit(revision,change)
         if(ok&&change is InkMutation.Replace){
             val bounds=change.added.map{it.bounds()}.reduce{a,b->a.union(b)}.padded(2.0)
-            pendingSelection=InkRegion(listOf(EraserPoint(bounds.left.toFloat(),bounds.top.toFloat()),EraserPoint(bounds.right.toFloat(),bounds.bottom.toFloat()))) to change.added.map{it.id}
+            pendingSelection=runCatching{InkRegion(listOf(
+                EraserPoint(bounds.left.toFloat().coerceIn(-BoardLimits.WORLD,BoardLimits.WORLD),bounds.top.toFloat().coerceIn(-BoardLimits.WORLD,BoardLimits.WORLD)),
+                EraserPoint(bounds.right.toFloat().coerceIn(-BoardLimits.WORLD,BoardLimits.WORLD),bounds.bottom.toFloat().coerceIn(-BoardLimits.WORLD,BoardLimits.WORLD)))) to change.added.map{it.id}}.getOrNull()
         };return ok
     }
 
@@ -152,7 +154,7 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
             if(tool==4)AndroidView(factory={SelectionOverlayView(it)},update={v->
                 v.canvasView=view;v.region=selected?.region;v.selected=selected?.strokes.orEmpty();v.freehand=freehand;v.enabledInput=editable
                 v.onActive={gesture=it};v.onRegion={region->selected=region?.let{SelectedInk(it,ui.revision,ui.strokes.filter{stroke->it.selects(stroke)})}}
-                v.onShift={dx,dy->selected?.let{current->runCatching{InkSelectionEdit.copy(current.strokes,dx,dy)}.onSuccess{changed->if(applySelected(current.revision,InkMutation.Replace(current.strokes.map{it.id},changed)))selected=null}.onFailure{notice="移动超出画布或编辑预算，原笔迹保留。"}}
+                v.onShift={dx,dy->selected?.let{current->runCatching{InkSelectionEdit.copy(current.strokes,dx,dy)}.onSuccess{changed->if(applySelected(current.revision,InkMutation.Replace(current.strokes.map{it.id},changed)))selected=null}.onFailure{notice="移动超出画布或编辑预算，原笔迹保留。"}}}
                 v.invalidate()
             },modifier=Modifier.fillMaxSize().testTag("selection-overlay"))
             }
