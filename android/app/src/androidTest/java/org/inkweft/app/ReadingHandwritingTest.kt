@@ -16,11 +16,11 @@ import java.util.zip.*
 class ReadingHandwritingTest {
     private val app get()=ApplicationProvider.getApplicationContext<InkWeftApplication>()
     @Test fun bundledModelActuallyRecognizesChineseAndEnglishOffline()=runBlocking {
-        val text="墨织手写查找";val paint=Paint(Paint.ANTI_ALIAS_FLAG).apply{textSize=48f;typeface=TextStyles.face(TextFont.WENKAI);color=Color.BLACK}
+        for(text in listOf("墨织手写查找","Bilingual notes 2026")){val paint=Paint(Paint.ANTI_ALIAS_FLAG).apply{textSize=48f;typeface=TextStyles.face(TextFont.WENKAI);color=Color.BLACK}
         val bitmap=Bitmap.createBitmap(paint.measureText(text).toInt()+24,72,Bitmap.Config.ARGB_8888)
         try{val c=Canvas(bitmap);c.drawColor(Color.WHITE);c.drawText(text,12f,54f,paint)
             val result=app.handwriting.recognizeBitmap(bitmap);assertEquals(text,result.text);assertTrue(result.confidence>.7f)
-        }finally{bitmap.recycle()}
+        }finally{bitmap.recycle()}}
     }
     @Test fun nativeRecognitionHandlesEmptyInkWithoutLoadingOrInventingWords()=runBlocking {
         val result=app.handwriting.recognize(emptyList());assertEquals("",result.text);assertEquals(0,result.lines)

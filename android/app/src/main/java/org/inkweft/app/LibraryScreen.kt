@@ -130,7 +130,7 @@ fun LibraryScreen(ui:NotebookUi,workspace:WorkspaceViewModel,open:(Note)->Unit,c
                         }
                         Button(onClick=create,enabled=!ui.loading&&!ui.readFailed,modifier=Modifier.testTag("new-note"),contentPadding=PaddingValues(horizontal=if(compact)12.dp else 18.dp,vertical=10.dp)){Glyph("add");Spacer(Modifier.width(6.dp));Text("新建",maxLines=1)}
                     }
-                    OutlinedTextField(query,{query=it},singleLine=true,placeholder={Text("搜索标题、文字、人工索引和摘要",fontSize=12.sp)},leadingIcon={Glyph("search")},modifier=Modifier.fillMaxWidth().testTag("library-search"))
+                    OutlinedTextField(query,{query=it},singleLine=true,placeholder={Text("搜索标题、文字、手写和摘要",fontSize=12.sp)},leadingIcon={Glyph("search")},modifier=Modifier.fillMaxWidth().testTag("library-search"))
                     Row(Modifier.fillMaxWidth().padding(vertical=5.dp),verticalAlignment=Alignment.CenterVertically){
                         listOf("all" to "全部","page" to "纸张笔记","board" to "无界笔记").forEach{(id,label)->Column(Modifier.heightIn(min=48.dp).clickable{type=id}.padding(end=20.dp).testTag("library-type-$id"),horizontalAlignment=Alignment.CenterHorizontally){Text(label,color=if(type==id)Forest else Quiet,fontSize=13.sp,modifier=Modifier.padding(vertical=13.dp));HorizontalDivider(Modifier.width(if(id=="all")28.dp else 60.dp),thickness=if(type==id)2.dp else 0.dp,color=if(type==id)Forest else Color.Transparent)}}
                         Spacer(Modifier.weight(1f));Text("${shown.size} 份",fontSize=11.sp,color=Quiet)
@@ -146,7 +146,7 @@ fun LibraryScreen(ui:NotebookUi,workspace:WorkspaceViewModel,open:(Note)->Unit,c
                     if(grid)LazyVerticalGrid(columns=GridCells.Adaptive(165.dp),modifier=Modifier.weight(1f).testTag("library-grid"),contentPadding=PaddingValues(top=21.dp,bottom=30.dp),horizontalArrangement=Arrangement.spacedBy(20.dp),verticalArrangement=Arrangement.spacedBy(24.dp)){
                         if(filter!="trash"&&query.isBlank())item(key="new-tile"){NewTile(create)}
                         items(shown,key={it.id}){itemContent(it)}
-                        if(shown.isEmpty())item(span={GridItemSpan(maxLineSpan)}){Text(if(query.isNotBlank())"没有匹配的标题或文字。覆盖标题、键入文字、人工索引和独立摘要；自动手写识别尚未接入，旧索引不参与搜索。"else if(filter=="trash")"回收站为空。"else"新建一份纸张或无界笔记，开始记录。",color=Quiet,fontSize=13.sp,modifier=Modifier.padding(vertical=28.dp))}
+                        if(shown.isEmpty())item(span={GridItemSpan(maxLineSpan)}){Text(if(query.isNotBlank())"没有匹配内容。可在笔记的“整本手写查找”中建立索引，或识别单页后保存；已失效的旧索引不参与搜索。"else if(filter=="trash")"回收站为空。"else"新建一份纸张或无界笔记，开始记录。",color=Quiet,fontSize=13.sp,modifier=Modifier.padding(vertical=28.dp))}
                     }else LazyColumn(Modifier.weight(1f).testTag("library-list"),contentPadding=PaddingValues(vertical=18.dp),verticalArrangement=Arrangement.spacedBy(12.dp)){
                         if(filter!="trash"&&query.isBlank())item{OutlinedButton(onClick=create,modifier=Modifier.fillMaxWidth()){Glyph("add");Text("新建笔记")}}
                         items(shown,key={it.id}){itemContent(it)}

@@ -56,9 +56,14 @@ class ReadingHandwritingUiTest {
         try{compose.runOnIdle{ViewModelProvider(compose.activity)[LibraryTransfersViewModel::class.java].readUri(Uri.fromFile(file))}
             compose.waitUntil(15_000){compose.onAllNodesWithTag("confirm-content-import").fetchSemanticsNodes().isNotEmpty()}
             compose.onNodeWithTag("confirm-content-import").performClick();compose.waitUntil(15_000){compose.onAllNodesWithTag("open-transfer-result").fetchSemanticsNodes().isNotEmpty()}
+            val noteId=runBlocking{ViewModelProvider(compose.activity)[LibraryTransfersViewModel::class.java].ui.value.result!!.id}
             file.delete();compose.onNodeWithTag("open-transfer-result").performClick();saved();compose.onNodeWithTag("fit-page").performScrollTo().performClick()
             fun awaitBlue(){compose.waitUntil(10_000){var blue=false;compose.runOnIdle{val v=nativeCanvas();val bitmap=Bitmap.createBitmap(v.width,v.height,Bitmap.Config.ARGB_8888);try{v.draw(Canvas(bitmap));val p=v.snapshotViewport().worldToScreen(400.0,650.0,v.width.toDouble(),v.height.toDouble(),v.resources.displayMetrics.density.toDouble());if(p.x>=0&&p.x<v.width&&p.y>=0&&p.y<v.height){val pixel=bitmap.getPixel(p.x.toInt(),p.y.toInt());blue=Color.blue(pixel)>200&&Color.red(pixel)<50}}finally{bitmap.recycle()}};blue}}
-            awaitBlue();shot("pdf-reading.png");compose.onNodeWithTag("zoom-in").performScrollTo().performClick();awaitBlue()
+            awaitBlue();shot("pdf-reading.png")
+            val source=runBlocking{app.documents.read(noteId)}!!
+            val cached=File(app.cacheDir,"document-render/${source.document.sha256}.pdf");assertTrue(cached.delete())
+            compose.onNodeWithTag("zoom-in").performScrollTo().performClick()
+            compose.waitUntil(10_000){cached.isFile};awaitBlue()
             compose.activityRule.scenario.recreate();saved();awaitBlue()
         }finally{file.delete()}
     }

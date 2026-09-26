@@ -21,6 +21,7 @@ internal class DocumentRendering(context:Context,private val repo:DocumentReposi
     private val lock=Mutex()
     suspend fun render(pageId:String,bounds:CanvasBounds,pixels:Int):DocumentTile?=withContext(Dispatchers.IO){lock.withLock {
         ensureActive()
+        cache[pageId]?.let{if(!it.file.isFile)cache.remove(pageId)}
         val local=if(cache.containsKey(pageId))cache[pageId]else {
             repo.read(pageId)?.let{s->
                 val file=File(folder,s.document.sha256+".pdf")
