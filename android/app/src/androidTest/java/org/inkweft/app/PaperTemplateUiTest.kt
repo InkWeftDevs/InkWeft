@@ -6,6 +6,8 @@ import android.graphics.Color
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.lifecycle.ViewModelProvider
+import android.view.WindowInsets
+import android.view.inspector.WindowInspector
 import androidx.test.platform.app.InstrumentationRegistry
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.flow.first
@@ -25,8 +27,24 @@ class PaperTemplateUiTest {
     @Test fun createSearchesAndPersistsARealHabitPage(){
         ready();compose.onNodeWithTag("new-note").performClick();compose.onNodeWithTag("create-page").performClick()
         compose.onNodeWithTag("new-paper-search").performScrollTo().performTextInput("打卡")
+        // Finish IME viewport changes before scrolling a lazy-grid result into view.
+        compose.runOnIdle {
+            WindowInspector.getGlobalWindowViews().filter { it.hasWindowFocus() }.forEach {
+                it.findFocus()?.clearFocus()
+                it.windowInsetsController?.hide(WindowInsets.Type.ime())
+            }
+        }
+        compose.waitUntil(5000) {
+            var imeVisible=false
+            compose.runOnUiThread {
+                imeVisible=WindowInspector.getGlobalWindowViews().any {
+                    it.rootWindowInsets?.isVisible(WindowInsets.Type.ime())==true
+                }
+            }
+            !imeVisible
+        }
         compose.onNode(hasScrollToIndexAction() and hasAnyAncestor(hasTestTag("new-notebook-screen"))).performScrollToKey("HABIT")
-        compose.onNodeWithTag("template-habit").performClick();compose.onNodeWithTag("create-note").performClick()
+        compose.onNodeWithTag("template-habit").assertIsDisplayed().performClick();compose.onNodeWithTag("create-note").performClick()
         compose.waitUntil(10000){runCatching{compose.onNodeWithTag("ink-status").assertTextContains("已提交",substring=true)}.isSuccess}
         val note=runBlocking{app.repository.observeNotes().first()}.first()
         assertEquals(PaperStyle.HABIT.ordinal,runBlocking{app.pages.activePages(note.id)}.single().paper)
