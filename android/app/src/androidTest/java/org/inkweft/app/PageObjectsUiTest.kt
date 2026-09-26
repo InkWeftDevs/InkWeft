@@ -2,6 +2,7 @@ package org.inkweft.app
 
 import android.graphics.*
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.toPixelMap
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.core.view.WindowCompat
@@ -101,6 +102,16 @@ class PageObjectsUiTest {
             val id=create();runBlocking{app.pageObjects.save(id,0,UUID.randomUUID().toString(),listOf(o,tape))}
             assertEquals(listOf(o,tape),objects(id))
             val exported=runBlocking{app.pages.exportBook(id)};assertEquals(o.image,NotebookFile.decode(exported.encode()).pages.single().objects.first().image)
+            runBlocking{val row=app.workspaceRepository.get(id);assertTrue(app.workspaceRepository.changeCover(id,row.revision,NotebookCover.CONTENT))}
+            compose.onNodeWithTag("back-library").performClick()
+            compose.waitUntil(10_000){runCatching{compose.onNodeWithTag("note-cover-$id").assertIsDisplayed()}.isSuccess}
+            fun previewContainsRed():Boolean {
+                val pixels=compose.onNodeWithTag("note-cover-$id").captureToImage().toPixelMap()
+                var red=0
+                for(y in 0 until pixels.height)for(x in 0 until pixels.width){val c=pixels[x,y];if(c.red>.85f&&c.green<.2f&&c.blue<.2f)red++}
+                return red>20
+            }
+            compose.waitUntil(10_000){previewContainsRed()}
         }finally{painter.clear();result.recycle()}
     }
 }
