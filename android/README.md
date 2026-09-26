@@ -6,6 +6,8 @@
 
 实机验收请使用 [真机测试清单与反馈模板](DEVICE-TEST-CHECKLIST.md)，按用例操作并记录设备、版本与结果。
 
+[竞品实际体验记录](COMPETITOR-HANDS-ON.md) 包含 vivo 平板上的 StarNote 与模拟器上的 Goodnotes 等：分别标记实际完成的操作、仅查看的入口和受阻项目，作为下一组页面对象编辑的依据。
+
 ## A0 — 原生基础切片（历史）
 
 这是安卓主工程的第一笔实现，不是把网页放进 WebView，也**不是完整 A0.1 书写版**。旧 `src/`、`index.html` 和 Web 自检均保持原样，原计划37条应用验收仍为 NOT_RUN。
