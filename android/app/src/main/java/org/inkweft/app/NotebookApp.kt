@@ -56,6 +56,10 @@ fun NotebookApp(vm:NotebookViewModel=viewModel(),onDiagnostics:()->Unit={}){
     val pageImport=rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()){uri->
         if(uri!=null)transfers.readUri(uri)
     }
+    // Leave the previous text field before opening another input window. Clearing
+    // Compose focus does not discard the NoteDraft; it prevents the body IME from
+    // reopening behind the rename dialog when that dialog is dismissed.
+    fun beginRename(note:Note){focus.clearFocus(force=true);keyboard?.hide();vm.openRename(note)}
     fun openCreate(){newTitle="";newWorld=false;newPaper=PaperStyle.RULED;newCover=NotebookCover.AUTO;showCreate=true}
     BackHandler(enabled=ui.selectedId!=null){vm.back()}
     LaunchedEffect(ui.selectedId,inkMode){if(ui.selectedId!=null&&inkMode){focus.clearFocus(force=true);keyboard?.hide()}}
@@ -64,12 +68,12 @@ fun NotebookApp(vm:NotebookViewModel=viewModel(),onDiagnostics:()->Unit={}){
         if(workspaceError!=null)Surface(color=Color(0xfffff4e3)){Row(Modifier.fillMaxWidth().padding(horizontal=16.dp),verticalAlignment=Alignment.CenterVertically){Text(workspaceError!!,Modifier.weight(1f),fontSize=12.sp);TextButton(onClick=workspace::clearError){Text("知道了")}}}
         if(transferUi.busy||busy)LinearProgressIndicator(Modifier.fillMaxWidth())
         val draft=ui.current
-        if(draft==null)Box(Modifier.weight(1f)){LibraryScreen(ui,workspace,vm::select,::openCreate,{pageImport.launch(arrayOf("application/octet-stream","*/*"))},onDiagnostics,vm::openRename,{transfers.requestCopy(it.id)},{transfers.export(it.id)})}
+        if(draft==null)Box(Modifier.weight(1f)){LibraryScreen(ui,workspace,vm::select,::openCreate,{pageImport.launch(arrayOf("application/octet-stream","*/*"))},onDiagnostics,::beginRename,{transfers.requestCopy(it.id)},{transfers.export(it.id)})}
         else{
             Row(Modifier.fillMaxWidth().heightIn(min=58.dp).padding(horizontal=12.dp),verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(8.dp)){
                 TextButton(onClick=vm::back,modifier=Modifier.testTag("back-library")){Glyph("back");Spacer(Modifier.width(5.dp));Text("资料库",fontSize=13.sp)}
                 VerticalDivider(Modifier.height(23.dp),color=Line)
-                Row(Modifier.weight(1f).heightIn(min=48.dp).clickable(enabled=draft.base.revision>0){vm.openRename(draft.base)}.testTag("rename-from-editor").describedAs("重命名笔记"),verticalAlignment=Alignment.CenterVertically){
+                Row(Modifier.weight(1f).heightIn(min=48.dp).clickable(enabled=draft.base.revision>0){beginRename(draft.base)}.testTag("rename-from-editor").describedAs("重命名笔记"),verticalAlignment=Alignment.CenterVertically){
                     Text(draft.title,fontSize=17.sp,fontWeight=FontWeight.Medium,modifier=Modifier.weight(1f,false),maxLines=1,overflow=TextOverflow.Ellipsis);Spacer(Modifier.width(7.dp));Glyph("pen",Quiet,Modifier.size(14.dp))
                 }
                 FilterChip(selected=inkMode,onClick={inkMode=true},enabled=draft.base.revision>0,label={Text("手写",fontSize=12.sp)},modifier=Modifier.testTag("mode-ink"))
