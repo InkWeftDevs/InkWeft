@@ -94,7 +94,10 @@ class SelectionStudyUiTest {
         addCard("拉格朗日中值定理","先核对连续与可导条件")
         val card=runBlocking{app.study.cards(n.id).first()}.single();val snapshot=runBlocking{app.study.source(card.id)}!!
         assertEquals(s.id,InkPageFile.decode(snapshot.snapshot).strokes.single().id)
-        compose.onNodeWithTag("study-card-${card.id}").performClick();compose.onNodeWithTag("study-open-source").performScrollTo().performClick();saved(1)
+        compose.onNodeWithTag("study-card-${card.id}").performScrollTo().performClick()
+        // Source snapshots load on Dispatchers.IO after the details dialog opens.
+        compose.waitUntil(10_000){compose.onAllNodesWithTag("study-open-source").fetchSemanticsNodes().isNotEmpty()}
+        compose.onNodeWithTag("study-open-source").performScrollTo().assertIsDisplayed().performClick();saved(1)
         compose.onAllNodesWithTag("study-card-details").assertCountEquals(0);assertEquals(n.id,snapshot.pageId)
     }
     @Test fun outlineAndMapReuseSingleEditableCard(){
