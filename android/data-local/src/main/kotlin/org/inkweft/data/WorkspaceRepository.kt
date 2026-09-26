@@ -38,12 +38,16 @@ class WorkspaceRepository(private val db:NoteDatabase) {
         checkNotNull(db.notes().note(id))
         db.workspace().get(id)?:WorkspaceRow(id).also { db.workspace().insert(it) }
     }
-    suspend fun create(title:String,world:Boolean,paper:PaperStyle,cover:NotebookCover=NotebookCover.AUTO):Note=db.withTransaction {
+    suspend fun create(title:String,world:Boolean,paper:PaperStyle,cover:NotebookCover=NotebookCover.AUTO,operationId:String?=null):Note=db.withTransaction {
         val clean=title.trim();require(RenameNote.validTitle(clean))
-        val id=UUID.randomUUID().toString();val at=System.currentTimeMillis()
+        operationId?.let{UUID.fromString(it)}
+        val digest=ContentTransfer.hash(listOf("create.v1",clean,world.toString(),paper.name,cover.key).joinToString("\u0000").toByteArray())
+        operationId?.let{op->db.libraryContent().receipt(op)?.let{r->require(r.kind=="CREATE"&&r.digest==digest);return@withTransaction checkNotNull(NoteRepository(db).read(r.noteId))}}
+        val id=operationId?:UUID.randomUUID().toString();val at=System.currentTimeMillis()
         db.notes().insertNote(NoteRow(id,1,clean,"",at));db.notes().insertRevision(NoteRevisionRow(id,1,clean,"",at))
         db.workspace().insert(WorkspaceRow(id,world,paper.ordinal,centerX=if(world)0.0 else 500.0,centerY=if(world)0.0 else 707.0,coverKey=cover.key))
         db.pages().insert(NotebookPageRow(id,id,0,world,paper.ordinal,centerX=if(world)0.0 else 500.0,centerY=if(world)0.0 else 707.0))
+        if(operationId!=null)db.libraryContent().insert(LibraryContentReceipt(operationId,"CREATE",digest,id))
         Note(id,1,clean,"")
     }
     suspend fun organize(id:String,expected:Long,folder:String,tags:String,favorite:Boolean,trash:Boolean):Boolean=db.withTransaction {

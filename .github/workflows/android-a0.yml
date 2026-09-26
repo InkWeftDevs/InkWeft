@@ -126,7 +126,7 @@ jobs:
           adb shell settings put global transition_animation_scale 0
           adb shell settings put global animator_duration_scale 0
           adb shell getprop > android/build/evidence/emulator-properties.txt
-      - name: Verify no-uninstall version9 to version10 data-preserving upgrade
+      - name: 核对同签名版本 9 到 11 的保留资料升级
         working-directory: android
         run: |
           set -euo pipefail
@@ -145,7 +145,7 @@ jobs:
           python3 - <<'PY'
           import glob, sys
           import xml.etree.ElementTree as ET
-          expected_totals = {":data-local": 109, ":app": 46}
+          expected_totals = {":data-local": 125, ":app": 53}
           roots = {
               ":data-local": glob.glob("data-local/build/outputs/androidTest-results/**/*.xml", recursive=True),
               ":app": glob.glob("app/build/outputs/androidTest-results/**/*.xml", recursive=True),
@@ -185,7 +185,7 @@ jobs:
           import re
           text=Path('build/evidence/evidence-capture-instrumentation.txt').read_text()
           match=re.search(r'^OK \((\d+) tests?\)\s*$',text,re.M)
-          assert match and int(match.group(1)) >= 46, 'Missing successful complete repeat run'
+          assert match and int(match.group(1)) >= 53, 'Missing successful complete repeat run'
           assert 'FAILURES!!!' not in text
           PY
           adb pull "/sdcard/Android/data/org.inkweft.app.a0.insertion/files/." "build/evidence/"

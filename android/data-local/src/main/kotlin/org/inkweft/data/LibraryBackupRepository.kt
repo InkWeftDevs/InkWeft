@@ -56,7 +56,7 @@ class LibraryBackupRepository(private val context:Context,private val db:NoteDat
                     // Schema6 has no tombstone column; promote to live/default null.
                     val promoted=if(table==4&&row.size==SCHEMA[table].columns.size-1)row+listOf(null)else row
                     insert(sql,table,promoted)
-                },legacySchema=SCHEMA_V6,otherLegacySchemas=listOf(SCHEMA_V7)){ctx.ensureActive()}
+                },legacySchema=SCHEMA_V6,otherLegacySchemas=listOf(SCHEMA_V7,SCHEMA_V8)){ctx.ensureActive()}
             }
             validate(stage)
             val sql=stage.openHelper.writableDatabase
@@ -114,10 +114,10 @@ class LibraryBackupRepository(private val context:Context,private val db:NoteDat
         // Reject raw integers before Room narrows them to Int/Boolean. Otherwise
         // a corrupt 2^32 page ordinal can wrap to zero and look valid in Kotlin.
         fun noRows(query:String){require(sql.query(query).use{!it.moveToFirst()}){"BACKUP_REFERENCE_INVALID"}}
-        noRows("SELECT 1 FROM notebook_pages WHERE world NOT IN (0,1) OR position NOT BETWEEN 0 AND 499 OR paper NOT BETWEEN 0 AND 3")
-        noRows("SELECT 1 FROM notebook_workspace WHERE world NOT IN (0,1) OR favorite NOT IN (0,1) OR pinned NOT IN (0,1) OR paper NOT BETWEEN 0 AND 3")
+        noRows("SELECT 1 FROM notebook_pages WHERE world NOT IN (0,1) OR position NOT BETWEEN 0 AND 499 OR paper NOT BETWEEN 0 AND ${PaperStyle.entries.lastIndex}")
+        noRows("SELECT 1 FROM notebook_workspace WHERE world NOT IN (0,1) OR favorite NOT IN (0,1) OR pinned NOT IN (0,1) OR paper NOT BETWEEN 0 AND ${PaperStyle.entries.lastIndex}")
         noRows("SELECT 1 FROM ink_receipts WHERE visible NOT IN (0,1)")
-        noRows("SELECT 1 FROM library_content_receipts WHERE kind NOT IN ('COPY','IMPORT')")
+        noRows("SELECT 1 FROM library_content_receipts WHERE kind NOT IN ('COPY','IMPORT','CREATE')")
         noRows("SELECT 1 FROM notebook_pages WHERE trashedAt<0")
         noRows("SELECT 1 FROM study_nodes WHERE removed NOT IN (0,1)")
         require(sql.query("SELECT COALESCE(SUM(length(snapshot)),0) FROM study_sources").use{it.moveToFirst();it.getLong(0)}<=32_000_000){"STUDY_SNAPSHOT_BUDGET"}
@@ -128,6 +128,11 @@ class LibraryBackupRepository(private val context:Context,private val db:NoteDat
         noRows("SELECT 1 FROM study_sources s JOIN study_cards c ON c.id=s.cardId JOIN notebook_pages p ON p.id=s.pageId WHERE c.notebookId!=p.notebookId")
         noRows("SELECT 1 FROM page_edit_receipts WHERE kind NOT IN ('MOVE','COPY','TRASH','RESTORE')")
         noRows("SELECT 1 FROM page_edit_receipts r LEFT JOIN notebook_pages p ON p.id=r.pageId LEFT JOIN notebook_pages q ON q.id=r.resultPageId WHERE p.id IS NULL OR q.id IS NULL OR p.notebookId!=r.notebookId OR q.notebookId!=r.notebookId")
+        noRows("SELECT 1 FROM knowledge_records WHERE removed NOT IN (0,1) OR revision<1")
+        noRows("SELECT 1 FROM knowledge_revisions r JOIN knowledge_records k ON k.id=r.id WHERE r.removed NOT IN (0,1) OR r.revision<1 OR r.revision>k.revision OR r.notebookId!=k.notebookId")
+        KnowledgeRepository(stage).validateArchive()
+        sql.query("SELECT notebookId,payload FROM knowledge_revisions").use{c->while(c.moveToNext())KnowledgeRepository(stage).validateData(c.getString(0),KnowledgeCodec.decode(c.getBlob(1)),false)}
+        sql.query("SELECT operationId,digest,resultId FROM knowledge_receipts").use{c->while(c.moveToNext()){UUID.fromString(c.getString(0));require(c.getString(1).matches(Regex("[0-9a-f]{64}")));require(stage.knowledge().get(c.getString(2))!=null)}}
         for(id in notes){
             currentCoroutineContext().ensureActive();UUID.fromString(id)
             val n=checkNotNull(stage.notes().note(id));require(n.revision>=1&&RenameNote.validTitle(n.title)&&n.text.length<=100_000)
@@ -221,11 +226,15 @@ class LibraryBackupRepository(private val context:Context,private val db:NoteDat
             table("study_card_revisions","cardId,revision",col("cardId",'S'),col("revision",'I'),col("title",'S'),col("body",'S'),col("trashedAt",'I',true)),
             table("study_sources","cardId",col("cardId",'S'),col("pageId",'S'),col("inkRevision",'I'),col("left",'F'),col("top",'F'),col("right",'F'),col("bottom",'F'),col("strokeIds",'S'),col("snapshot",'B')),
             table("study_nodes","id",col("id",'S'),col("notebookId",'S'),col("cardId",'S'),col("parentId",'S',true),col("x",'F'),col("y",'F'),col("revision",'I'),col("removed",'I')),
-            table("study_receipts","id",col("id",'S'),col("notebookId",'S'),col("digest",'S'),col("resultId",'S'))
+            table("study_receipts","id",col("id",'S'),col("notebookId",'S'),col("digest",'S'),col("resultId",'S')),
+            table("knowledge_records","id",col("id",'S'),col("notebookId",'S'),col("revision",'I'),col("payload",'B'),col("removed",'I')),
+            table("knowledge_revisions","id,revision",col("id",'S'),col("revision",'I'),col("notebookId",'S'),col("payload",'B'),col("removed",'I')),
+            table("knowledge_receipts","operationId",col("operationId",'S'),col("notebookId",'S'),col("digest",'S'),col("resultId",'S'))
         )
+        val SCHEMA_V8=SCHEMA.take(18)
         val SCHEMA_V7=SCHEMA.take(13)
         val SCHEMA_V6=SCHEMA.take(12).mapIndexed{i,t->if(i==4)t.copy(columns=t.columns.dropLast(1))else t}
-        private val OWNERS=listOf("id","noteId","noteId","noteId","notebookId","@ink","@ink","@ink","@ink","@search","notebookId","noteId","notebookId","notebookId","@cards","@cards","notebookId","notebookId")
+        private val OWNERS=listOf("id","noteId","noteId","noteId","notebookId","@ink","@ink","@ink","@ink","@search","notebookId","noteId","notebookId","notebookId","@cards","@cards","notebookId","notebookId","notebookId","notebookId","notebookId")
         private fun count(sql:SupportSQLiteDatabase,table:String)=sql.query("SELECT COUNT(*) FROM `$table`").use{it.moveToFirst();it.getLong(0)}
         private fun insert(sql:SupportSQLiteDatabase,table:Int,row:List<Any?>){
             val t=SCHEMA[table]

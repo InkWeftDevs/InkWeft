@@ -61,9 +61,9 @@ internal fun InsertPagesDialog(
                 }
                 Text("纸面",fontSize=14.sp)
                 FilterChip(selected=inherited,onClick={inherited=true},label={Text("沿用所选页纸面",fontSize=12.sp)},modifier=Modifier.testTag("insert-paper-inherit"))
-                Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.spacedBy(6.dp)) {
+                Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),horizontalArrangement=Arrangement.spacedBy(6.dp)) {
                     PaperStyle.entries.forEach { paper ->
-                        Column(Modifier.weight(1f).clipForPageSelection(!inherited&&style==paper).clickable{inherited=false;style=paper}.padding(5.dp)
+                        Column(Modifier.width(100.dp).clipForPageSelection(!inherited&&style==paper).clickable{inherited=false;style=paper}.padding(5.dp)
                             .testTag("insert-paper-${paper.name.lowercase()}"),horizontalAlignment=Alignment.CenterHorizontally) {
                             Box(Modifier.fillMaxWidth().height(54.dp)) { PaperThumbnail(false,paper) }
                             Text(paperLabel(paper),fontSize=11.sp,modifier=Modifier.padding(top=5.dp))
@@ -93,4 +93,4 @@ internal fun InsertPagesDialog(
         dismissButton={TextButton(onClick=onDismiss){Text("取消")}})
 }
 private fun Modifier.clipForPageSelection(selected:Boolean)=this.border(if(selected)2.dp else 1.dp,if(selected)Forest else Line,RoundedCornerShape(7.dp)).background(Color.White,RoundedCornerShape(7.dp))
-internal fun paperLabel(paper:PaperStyle)=when(paper){PaperStyle.BLANK->"空白";PaperStyle.RULED->"横线";PaperStyle.GRID->"方格";PaperStyle.DOTS->"点阵"}
+internal fun paperLabel(paper:PaperStyle)=PaperTemplates.title(paper)

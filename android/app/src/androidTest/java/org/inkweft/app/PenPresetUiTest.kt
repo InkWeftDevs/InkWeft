@@ -23,15 +23,15 @@ class PenPresetUiTest {
     private fun create():String {
         compose.waitUntil(10_000){runCatching{compose.onNodeWithTag("new-note").assertIsEnabled()}.isSuccess}
         val title="预设测试-"+UUID.randomUUID().toString().take(6)
-        compose.onNodeWithTag("new-note").performClick();compose.onNodeWithTag("new-title").performTextInput(title);compose.onNodeWithTag("create-note").performClick();saved(0)
+        compose.onNodeWithTag("new-note").performClick();compose.onNodeWithTag("create-page").performClick();compose.onNodeWithTag("new-title").performTextInput(title);compose.onNodeWithTag("create-note").performClick();saved(0)
         compose.activityRule.scenario.onActivity{a->a.currentFocus?.clearFocus();WindowCompat.getInsetsController(a.window,a.window.decorView).hide(WindowInsetsCompat.Type.ime())}
         compose.waitUntil(10_000){androidx.core.view.ViewCompat.getRootWindowInsets(compose.activity.window.decorView)?.isVisible(WindowInsetsCompat.Type.ime())==false}
         return runBlocking{app.repository.observeNotes().first()}.single{it.title==title}.id
     }
     private fun draw(){compose.onNodeWithTag("ink-surface").performTouchInput{swipe(Offset(width*.25f,height*.3f),Offset(width*.5f,height*.5f),200)}}
     @Test fun panelSavesColorAndWidthWithoutChangingEarlierStroke(){
-        val id=create();val previous=PenWidthStore(compose.activity).readColors()[0]
-        compose.onNodeWithTag("ink-finger").performScrollTo().performClick();draw();saved(1)
+        val id=create();val previous=PenWidthStore(compose.activity,"inkweft-pen-widths-book-"+id).readColors()[0]
+        compose.onNodeWithTag("ink-more").performScrollTo().performClick();compose.onNodeWithTag("ink-finger").performScrollTo().performClick();draw();saved(1)
         val original=runBlocking{app.inkRepository.read(id).strokes.single().stroke}
         assertEquals(previous,original.color)
         compose.onNodeWithTag("pen-width-open").performScrollTo().performClick()
@@ -40,7 +40,7 @@ class PenPresetUiTest {
         val bmp=checkNotNull(InstrumentationRegistry.getInstrumentation().uiAutomation.takeScreenshot())
         try{File(compose.activity.getExternalFilesDir(null),"pen-presets-popover.png").outputStream().use{bmp.compress(Bitmap.CompressFormat.PNG,100,it)}}finally{bmp.recycle()}
         compose.onNodeWithTag("apply-pen-width").performScrollTo().performClick()
-        compose.waitUntil(10_000){val s=PenWidthStore(compose.activity);s.read()[0]==6f&&s.readColors()[0]==PenWidthStore.colors(0)[2]}
+        compose.waitUntil(10_000){val s=PenWidthStore(compose.activity,"inkweft-pen-widths-book-"+id);s.read()[0]==6f&&s.readColors()[0]==PenWidthStore.colors(0)[2]}
         draw();saved(2)
         val paths=runBlocking{app.inkRepository.read(id).strokes.map{it.stroke}}
         assertEquals(original.samples,paths[0].samples);assertEquals(original.color,paths[0].color)
@@ -50,10 +50,10 @@ class PenPresetUiTest {
         compose.onNodeWithTag("cancel-pen-preset").performScrollTo().performClick()
     }
     @Test fun cancelDoesNotPersistOrMakeAnInkStroke(){
-        val id=create();val before=PenWidthStore(compose.activity).read();val colors=PenWidthStore(compose.activity).readColors()
+        val id=create();val before=PenWidthStore(compose.activity,"inkweft-pen-widths-book-"+id).read();val colors=PenWidthStore(compose.activity,"inkweft-pen-widths-book-"+id).readColors()
         compose.onNodeWithTag("pen-width-open").performScrollTo().performClick();compose.onNodeWithTag("width-preset-0").performClick();compose.onNodeWithTag("pen-color-3").performScrollTo().performClick()
         compose.onNodeWithTag("cancel-pen-preset").performScrollTo().performClick();saved(0)
-        assertEquals(before,PenWidthStore(compose.activity).read());assertEquals(colors,PenWidthStore(compose.activity).readColors())
+        assertEquals(before,PenWidthStore(compose.activity,"inkweft-pen-widths-book-"+id).read());assertEquals(colors,PenWidthStore(compose.activity,"inkweft-pen-widths-book-"+id).readColors())
         assertTrue(runBlocking{app.inkRepository.read(id).strokes}.isEmpty())
     }
     @Test fun settingsRoundTripKeepsSlotsIndependentAndRejectsTransparentPen(){

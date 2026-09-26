@@ -24,7 +24,7 @@ class NotebookShelfUiTest {
     private fun ready(){compose.waitUntil(10_000){runCatching{compose.onNodeWithTag("new-note").assertIsEnabled()}.isSuccess}}
     private fun noKeyboard(){compose.activityRule.scenario.onActivity{a->a.currentFocus?.clearFocus();WindowCompat.getInsetsController(a.window,a.window.decorView).hide(WindowInsetsCompat.Type.ime())};compose.waitUntil(10_000){androidx.core.view.ViewCompat.getRootWindowInsets(compose.activity.window.decorView)?.isVisible(WindowInsetsCompat.Type.ime())==false};compose.waitForIdle()}
     private fun saved(n:Int){compose.waitUntil(10_000){runCatching{compose.onNodeWithTag("ink-status").assertTextContains("已提交",substring=true).assertTextContains("$n 笔",substring=true)}.isSuccess}}
-    private fun create():Note{ready();val title="封面测试-"+UUID.randomUUID().toString().take(6);compose.onNodeWithTag("new-note").performClick();compose.onNodeWithTag("new-title").performTextInput(title);compose.onNodeWithTag("cover-choice-forest").performScrollTo().performClick();compose.onNodeWithTag("create-note").performClick();saved(0);noKeyboard();return runBlocking{app.repository.observeNotes().first()}.single{it.title==title}}
+    private fun create():Note{ready();val title="封面测试-"+UUID.randomUUID().toString().take(6);compose.onNodeWithTag("new-note").performClick();compose.onNodeWithTag("create-page").performClick();compose.onNodeWithTag("new-title").performTextInput(title);compose.onNodeWithTag("cover-choice-forest").performScrollTo().performClick();compose.onNodeWithTag("create-note").performClick();saved(0);noKeyboard();return runBlocking{app.repository.observeNotes().first()}.single{it.title==title}}
     private fun shot(name:String){compose.waitForIdle();val b=checkNotNull(InstrumentationRegistry.getInstrumentation().uiAutomation.takeScreenshot());try{File(compose.activity.getExternalFilesDir(null),name).outputStream().use{b.compress(Bitmap.CompressFormat.PNG,100,it)}}finally{b.recycle()}}
     private fun rename(value:String){compose.onNodeWithTag("rename-title").performTextReplacement(value);compose.onNodeWithTag("confirm-rename").performClick();compose.waitUntil(10_000){compose.onAllNodesWithTag("rename-dialog").fetchSemanticsNodes().isEmpty()};noKeyboard()}
     @Test fun shelfRenameCancelBlankAndPersistedIdentity(){
@@ -38,7 +38,7 @@ class NotebookShelfUiTest {
         compose.waitUntil(10_000){compose.onAllNodesWithText("英语 · 阅读积累").fetchSemanticsNodes().isNotEmpty()};shot("shelf-covers-emulator.png")
     }
     @Test fun coverChangesPersistWithoutChangingInkAndCanReturnToContentPreview(){
-        val n=create();compose.onNodeWithTag("ink-finger").performScrollTo().performClick();compose.onNodeWithTag("ink-surface").performTouchInput{swipe(Offset(width*.2f,height*.3f),Offset(width*.45f,height*.55f),230)};saved(1)
+        val n=create();compose.onNodeWithTag("ink-more").performScrollTo().performClick();compose.onNodeWithTag("ink-finger").performScrollTo().performClick();compose.onNodeWithTag("ink-surface").performTouchInput{swipe(Offset(width*.2f,height*.3f),Offset(width*.45f,height*.55f),230)};saved(1)
         val before=runBlocking{app.inkRepository.read(n.id).strokes.single().stroke};compose.onNodeWithTag("back-library").performClick();ready()
         fun pick(){compose.onNodeWithTag("note-menu-${n.id}").performClick();compose.onNodeWithTag("change-cover-${n.id}").performClick()}
         pick();compose.onNodeWithTag("cover-choice-wave").performScrollTo().performClick();noKeyboard();shot("cover-picker-emulator.png");compose.onNodeWithTag("confirm-cover").performClick()
@@ -48,7 +48,7 @@ class NotebookShelfUiTest {
         compose.waitUntil(10_000){runBlocking{app.workspaceRepository.get(n.id).coverKey}=="content"};assertEquals(before.id,runBlocking{app.inkRepository.read(n.id).strokes.single().stroke.id})
     }
     @Test fun editorRenameKeepsUnsavedBodyUntilExplicitTextSave(){
-        val n=create();compose.onNodeWithTag("mode-text").performClick();compose.onNodeWithTag("note-body").performTextInput("未保存的个人理解，不随改名提交")
+        val n=create();compose.onNodeWithTag("document-more").performClick();compose.onNodeWithTag("mode-text").performClick();compose.onNodeWithTag("note-body").performTextInput("未保存的个人理解，不随改名提交")
         compose.onNodeWithTag("rename-from-editor").performClick();rename("新的标题但保留草稿")
         assertEquals("",runBlocking{app.repository.read(n.id)?.text});compose.onNodeWithTag("note-body").assertTextEquals("未保存的个人理解，不随改名提交")
         compose.onNodeWithTag("save-text").performClick();compose.waitUntil(10_000){runBlocking{app.repository.read(n.id)?.text}=="未保存的个人理解，不随改名提交"}

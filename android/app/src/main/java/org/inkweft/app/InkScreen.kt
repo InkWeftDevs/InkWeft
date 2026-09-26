@@ -26,7 +26,7 @@ import org.inkweft.data.NotebookPageRow
 import org.inkweft.data.WorkspaceRow
 
 @Composable
-internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:NotebookPageRow,onCanNavigate:(Boolean)->Unit,onSearch:(Long)->Unit,externalEnabled:Boolean=true,onExcerpt:(SelectedInk)->Unit={},focusRegion:CanvasBounds?=null,onFocusConsumed:()->Unit={}){
+internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:NotebookPageRow,onCanNavigate:(Boolean)->Unit,onSearch:(Long)->Unit,externalEnabled:Boolean=true,onExcerpt:(SelectedInk)->Unit={},onAssociate:(SelectedInk)->Unit={},focusRegion:CanvasBounds?=null,onFocusConsumed:()->Unit={},pageNavigation:@Composable ()->Unit={}){
     val context=LocalContext.current;val app=context.applicationContext as InkWeftApplication
     val vm:InkViewModel=viewModel(key="ink-${page.id}",factory=InkViewModel.Factory(page.id,app.inkRepository))
     val ui by vm.ui.collectAsStateWithLifecycle()
@@ -35,7 +35,7 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
     var tool by rememberSaveable(page.id){mutableIntStateOf(0)}
     var finger by rememberSaveable(page.id){mutableStateOf(false)}
     var dockBottom by rememberSaveable(page.id){mutableStateOf(false)}
-    val penStore=remember(context){PenWidthStore(context)}
+    val penStore=remember(context){PenWidthStore(context,"inkweft-pen-widths-book-"+note.base.id)}
     var widths by remember(page.id){mutableStateOf(penStore.read())}
     var colors by remember(page.id){mutableStateOf(penStore.readColors())}
     var gesture by remember{mutableStateOf(false)}
@@ -92,50 +92,47 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
             if(!saved)notice="常用笔已用于本次书写，但设置未保存；原笔迹未改动。"}
     }
     val toolbar:@Composable ()->Unit={
-        Row(Modifier.fillMaxWidth().background(Color.White).horizontalScroll(rememberScrollState()).padding(horizontal=12.dp,vertical=5.dp),horizontalArrangement=Arrangement.spacedBy(7.dp),verticalAlignment=Alignment.CenterVertically){
-            FilterChip(selected=tool==4,onClick={tool=4},enabled=!busy,label={Text("框选",fontSize=12.sp)},leadingIcon={Glyph("select")},modifier=Modifier.testTag("ink-select"))
-            (0..2).forEach{i->
-                val label=PenWidthStore.name(i)
-                val color=Color(colors[i] or 0xff000000.toInt())
-                Surface(onClick={if(tool==i)settings=true else tool=i},enabled=!busy,color=if(tool==i)Leaf else Color.White,shape=RoundedCornerShape(9.dp),border=BorderStroke(1.dp,if(tool==i)Color(0xff95b7a5)else Line),modifier=Modifier.heightIn(min=48.dp).testTag("ink-tool-$i")){
-                    Row(Modifier.padding(horizontal=11.dp,vertical=7.dp),verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(8.dp)){
-                        Glyph("pen",color);Column{Text(label,fontSize=12.sp);Text("线宽 "+PenWidthStore.label(widths[i]),fontSize=10.sp,color=Quiet)}
+        BoxWithConstraints(Modifier.fillMaxWidth().background(Color.White)){
+            val compact=maxWidth<600.dp
+            Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()).padding(horizontal=8.dp),verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(4.dp)){
+                val visiblePens=if(compact)listOf(if(tool in 0..2)tool else 0)else listOf(0,1,2)
+                visiblePens.forEach{i->Box{
+                    IconButton(onClick={if(tool==i)settings=true else tool=i},enabled=!busy,modifier=Modifier.background(if(tool==i)Leaf else Color.Transparent,RoundedCornerShape(8.dp)).testTag("ink-tool-$i").describedAs(PenWidthStore.name(i))){Glyph("pen",Color(colors[i] or 0xff000000.toInt()))}
+                }}
+                IconButton(onClick={if(tool==3)eraserDialog=true else tool=3},enabled=!busy,modifier=Modifier.testTag("ink-tool-3").describedAs(if(eraser.whole)"整笔橡皮"else"局部橡皮")){Glyph("eraser",if(tool==3)Forest else Quiet)}
+                IconButton(onClick={tool=4},enabled=!busy,modifier=Modifier.testTag("ink-select").describedAs("框选与套索")){Glyph("select",if(tool==4)Forest else Quiet)}
+                IconButton(onClick=vm::undo,enabled=ui.canUndo&&!busy,modifier=Modifier.testTag("ink-undo").describedAs("撤销")){Glyph("undo")}
+                if(!compact)IconButton(onClick=vm::redo,enabled=ui.canRedo&&!busy,modifier=Modifier.testTag("ink-redo").describedAs("重做")){Glyph("redo")}
+                Box{
+                    IconButton(onClick={if(tool==3)eraserDialog=true else settings=true},enabled=!busy&&tool<4,modifier=Modifier.testTag("pen-width-open").describedAs("颜色与线宽参数")){Glyph("settings")}
+                    if(tool<3)PenPresetMenu(settings,tool,widths[tool],colors[tool],{settings=false}){width,color->savePreset(tool,width,color);settings=false}
+                }
+                if(!compact){Text(if(tool<3)PenWidthStore.name(tool)+" · "+PenWidthStore.label(widths[tool])else if(tool==3)"橡皮"else"选择",fontSize=12.sp,color=Quiet);Spacer(Modifier.weight(1f))}
+                Box{IconButton(onClick={more=true},enabled=!busy,modifier=Modifier.testTag("ink-more").describedAs("更多编辑选项")){Glyph("more")}
+                    DropdownMenu(more,{more=false}){
+                        if(compact){(0..2).forEach{i->DropdownMenuItem(text={Text(PenWidthStore.name(i))},onClick={tool=i;more=false},modifier=Modifier.testTag("choose-pen-$i"))}
+                            DropdownMenuItem(text={Text("重做")},onClick={vm.redo();more=false},enabled=ui.canRedo,modifier=Modifier.testTag("ink-redo"))}
+                        DropdownMenuItem(text={Text(if(finger)"关闭手指书写"else"开启手指书写")},onClick={finger=!finger;more=false},modifier=Modifier.testTag("ink-finger"))
+                        DropdownMenuItem(text={Text("本页手写检索文字")},onClick={more=false;onSearch(ui.revision)},enabled=ui.queued==0&&ui.blocked==null&&!ui.loading)
+                        DropdownMenuItem(text={Text("导出页面副本")},onClick={more=false;confirmExport=true},enabled=!ui.loading)
+                        DropdownMenuItem(text={Text("设为默认笔盒")},onClick={more=false;scope.launch{try{val defaults=PenWidthStore(context);val ok=(0..2).map{defaults.savePreset(it,widths[it],colors[it])}.all{it};notice=if(ok)"已设为新笔记的默认笔盒"else"默认笔盒未完全保存，请重试。"}catch(c:CancellationException){throw c}catch(_:Exception){notice="默认笔盒未保存"}}})
+                        PaperStyle.entries.filter{!page.world||it.ordinal<4}.forEach{style->DropdownMenuItem(text={Text("纸面 · "+PaperTemplates.title(style))},onClick={workspace.paper(page.id,style);more=false})}
+                        DropdownMenuItem(text={Text("查看输入与容量说明")},onClick={more=false;notice="$axes。最多 ${InkLimits.MAX_STROKES} 笔／${InkLimits.MAX_PAGE_POINTS} 个采样点；抬笔后提交，撤销历史暂不跨进程恢复。"})
                     }
                 }
             }
-            Box{
-                OutlinedButton(onClick={if(tool==3)eraserDialog=true else settings=true},enabled=!busy&&tool<4,modifier=Modifier.heightIn(min=48.dp).testTag("pen-width-open")){
-                    Text(if(tool<3)"颜色 / 线宽 ▾"else"橡皮 ${eraser.diameterDp.toInt()} ▾",fontSize=12.sp)
-                }
-                if(tool<3)PenPresetMenu(settings,tool,widths[tool],colors[tool],{settings=false}){width,color->
-                    savePreset(tool,width,color);settings=false
-                }
-            }
-            VerticalDivider(Modifier.height(28.dp),color=Line)
-            FilterChip(selected=tool==3,onClick={if(tool==3)eraserDialog=true else tool=3},enabled=!busy,label={Text(if(eraser.whole)"整笔橡皮"else"局部橡皮",fontSize=12.sp)},leadingIcon={Glyph("eraser")},modifier=Modifier.testTag("ink-tool-3"))
-            IconButton(onClick=vm::undo,enabled=ui.canUndo&&!busy,modifier=Modifier.testTag("ink-undo").describedAs("撤销")){Glyph("undo")}
-            IconButton(onClick=vm::redo,enabled=ui.canRedo&&!busy,modifier=Modifier.testTag("ink-redo").describedAs("重做")){Glyph("redo")}
-            VerticalDivider(Modifier.height(28.dp),color=Line)
-            FilterChip(selected=finger,onClick={finger=!finger},enabled=!busy,label={Text("手指书写",fontSize=12.sp)},modifier=Modifier.testTag("ink-finger"))
-            Box{IconButton(onClick={more=true},enabled=!busy,modifier=Modifier.testTag("ink-more").describedAs("更多编辑选项")){Glyph("more")};DropdownMenu(expanded=more,onDismissRequest={more=false}){
-                DropdownMenuItem(text={Text("本页手写检索文字")},onClick={more=false;onSearch(ui.revision)},enabled=ui.queued==0&&ui.blocked==null&&!ui.loading)
-                DropdownMenuItem(text={Text("导出页面副本")},onClick={more=false;confirmExport=true},enabled=!ui.loading&&row!=null)
-                DropdownMenuItem(text={Text(if(dockBottom)"笔盒放到顶部"else"笔盒放到底部")},onClick={dockBottom=!dockBottom;more=false})
-                PaperStyle.entries.forEach{style->DropdownMenuItem(text={Text("纸面 · "+when(style){PaperStyle.BLANK->"空白";PaperStyle.RULED->"横线";PaperStyle.GRID->"方格";PaperStyle.DOTS->"点阵"})},onClick={workspace.paper(page.id,style);more=false})}
-                DropdownMenuItem(text={Text("查看输入与容量说明")},onClick={more=false;notice="$axes。最多 ${InkLimits.MAX_STROKES} 笔／${InkLimits.MAX_PAGE_POINTS} 个采样点；正在书写的一笔抬笔后才提交。撤销历史暂不跨进程恢复。"})
-            }}
         }
     }
     Column(Modifier.fillMaxSize()){
         if(!dockBottom){toolbar();HorizontalDivider(color=Line)}
         val status=when{ui.readFailed->"无法读取笔迹，原数据不会被空页覆盖";ui.loading||row==null->"正在读取笔迹和视图…";ui.blocked==InkCommitResult.Unknown->"保存结果待核对，未确认笔迹保留";ui.blocked!=null->"版本冲突或容量限制，未确认笔迹保留";gesture->"本笔尚未保存，抬笔后提交";ui.processing->"正在计算整笔擦除…";ui.queued>0->"正在提交 ${ui.queued} 项操作…";!ui.canStart->"达到采样预算，请导出或新建笔记继续";else->"已提交 · ${ui.strokes.size} 笔 · 修订 ${ui.revision}"}
-        Row(Modifier.fillMaxWidth().background(Color.White).padding(horizontal=17.dp,vertical=4.dp),verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(8.dp)){
-            Text(status,Modifier.weight(1f).testTag("ink-status"),fontSize=11.sp,color=if(ui.blocked!=null||ui.readFailed)Color(0xff984c24)else Forest)
+        if(ui.blocked!=null||ui.readFailed)Row(Modifier.fillMaxWidth().background(Color.White).padding(horizontal=17.dp,vertical=4.dp),verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(8.dp)){
+            Text(status,Modifier.weight(1f),fontSize=11.sp,color=if(ui.blocked!=null||ui.readFailed)Color(0xff984c24)else Forest)
             if(ui.blocked==InkCommitResult.Unknown)TextButton(onClick=vm::retry,enabled=!busy){Text("核对重试")}
             if(ui.blocked in listOf(InkCommitResult.Conflict,InkCommitResult.Rejected))TextButton(onClick={discard=true},enabled=!busy){Text("读取已保存页")}
             if(ui.readFailed&&ui.blocked==null)TextButton(onClick=vm::load){Text("重试")}
         }
-        if(tool==4)SelectionActions(selected,ui.strokes,editable,freehand,{freehand=it},::applySelected,{selected=null},onExcerpt)
+        if(tool==4)SelectionActions(selected,ui.strokes,editable,freehand,{freehand=it},::applySelected,{selected=null},onExcerpt,onAssociate)
         if(notice!=null)Row(Modifier.fillMaxWidth().background(Color(0xfffff5e5)).padding(start=16.dp),verticalAlignment=Alignment.CenterVertically){Text(notice!!,Modifier.weight(1f),fontSize=12.sp);IconButton(onClick={notice=null},modifier=Modifier.describedAs("关闭提示")){Glyph("close")}}
         if(row!=null){
             val initial=remember(page.id){workspace.cachedViewport(page.id)?:row.takeIf{it.zoom>0}?.let{runCatching{CanvasViewport(it.centerX,it.centerY,it.zoom)}.getOrNull()}}
@@ -162,7 +159,8 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
         if(dockBottom){HorizontalDivider(color=Line);toolbar()}
         HorizontalDivider(color=Line)
         Row(Modifier.fillMaxWidth().background(Color.White).horizontalScroll(rememberScrollState()).padding(horizontal=12.dp),verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(6.dp)){
-            Glyph(if(row?.world==true)"board"else"note",Quiet,Modifier.size(16.dp));Text(if(row?.world==true)"无界画布"else"纸张笔记",fontSize=11.sp,color=Quiet)
+            pageNavigation()
+            Text(status,fontSize=12.sp,color=Forest,modifier=Modifier.testTag("ink-status"))
             Spacer(Modifier.width(10.dp));TextButton(onClick={view?.zoomBy(1/1.2)},enabled=!busy,modifier=Modifier.testTag("zoom-out")){Text("−")}
             Text("${(zoom*100).toInt()}%",fontSize=11.sp,color=Quiet,modifier=Modifier.testTag("ink-zoom"))
             TextButton(onClick={view?.zoomBy(1.2)},enabled=!busy,modifier=Modifier.testTag("zoom-in")){Text("＋")}

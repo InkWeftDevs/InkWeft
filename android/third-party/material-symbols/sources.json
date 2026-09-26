@@ -1,0 +1,198 @@
+[
+  {
+    "name": "add",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/android/add/materialsymbolsoutlined/add_24px.xml",
+    "upstream_sha256": "784176dc9c204f9d2724d41e1b6fc10020780424364d246de2237875467c6980",
+    "packaged_sha256": "5a44d336c5480190baf668ede4f536a1cbc90ee67f3f9eae80d1ed3d9045c489",
+    "adaptation": "Replace AppCompat colorControlNormal tint with neutral color; Compose supplies state tint."
+  },
+  {
+    "name": "back",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/android/arrow_back/materialsymbolsoutlined/arrow_back_24px.xml",
+    "upstream_sha256": "cd1f5a1109c07c79ac3e52a9a1ae8ab14be7a3bff7f7bc3559f7088d60eca3aa",
+    "packaged_sha256": "e30f50df559bb26b90d3e110a5c262e32514e41ca41d12ca24c7f7258a8b0d44",
+    "adaptation": "Replace AppCompat colorControlNormal tint with neutral color; Compose supplies state tint."
+  },
+  {
+    "name": "close",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/android/close/materialsymbolsoutlined/close_24px.xml",
+    "upstream_sha256": "31644025d94b5a5637d75660ebdcb93c398f2620bfc12f7a7a9362965e271288",
+    "packaged_sha256": "cf3e0e37e5bffbbe7c6eae512618b88738a6d12b5329a81c1b130b0b1f1bb9f6",
+    "adaptation": "Replace AppCompat colorControlNormal tint with neutral color; Compose supplies state tint."
+  },
+  {
+    "name": "search",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/android/search/materialsymbolsoutlined/search_24px.xml",
+    "upstream_sha256": "e99d075e9867ec5347fc850eb629a6bbef1819cf393c39eaa06b43251f96ecd3",
+    "packaged_sha256": "29f80410306bf446ff2a20874ac59f6628c2eb3dc2408bcd505ccd1387e74677",
+    "adaptation": "Replace AppCompat colorControlNormal tint with neutral color; Compose supplies state tint."
+  },
+  {
+    "name": "grid",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/android/grid_view/materialsymbolsoutlined/grid_view_24px.xml",
+    "upstream_sha256": "668aecefe58f30533e9917cb49e13cfc27c1bdac4648452d3140d9a33bd94acf",
+    "packaged_sha256": "51495ea8c9658ca55c2b8d97beca07a7a5b130eccfb814832b7dab9f7c35ef19",
+    "adaptation": "Replace AppCompat colorControlNormal tint with neutral color; Compose supplies state tint."
+  },
+  {
+    "name": "list",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/android/view_list/materialsymbolsoutlined/view_list_24px.xml",
+    "upstream_sha256": "2353b4cb2026df01ff569fef89967505a4309e0ed03da2cd7fa9ac5aa1e61c85",
+    "packaged_sha256": "3f8c2c0d9a6284e47b7057f63ef57cf70e5d2fc1a9f363f5fb2e7a718a10b245",
+    "adaptation": "Replace AppCompat colorControlNormal tint with neutral color; Compose supplies state tint."
+  },
+  {
+    "name": "menu",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/android/menu/materialsymbolsoutlined/menu_24px.xml",
+    "upstream_sha256": "3c8ddb8d745291cd7ec0cc707c9f106bcf5729ede5a42df0409374702342e048",
+    "packaged_sha256": "e7beb7e0ad19c9f597c3aa867c6d8f8e74bf16f9701bf6f6e00bff3e750504f8",
+    "adaptation": "Replace AppCompat colorControlNormal tint with neutral color; Compose supplies state tint."
+  },
+  {
+    "name": "folder",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/android/folder/materialsymbolsoutlined/folder_24px.xml",
+    "upstream_sha256": "527c6a7dd741753f91cd8f33894aa2cfac375138c852b1ebfc2b43195ebaa313",
+    "packaged_sha256": "a9604cd767673dc3e0f843405999d2c0e7943c835cc797e6f1e16046e0bd850e",
+    "adaptation": "Replace AppCompat colorControlNormal tint with neutral color; Compose supplies state tint."
+  },
+  {
+    "name": "trash",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/android/delete/materialsymbolsoutlined/delete_24px.xml",
+    "upstream_sha256": "8589dfd0ab9c15182ba5698bd38c4502ad8f476dbd983e840a709a24281211fa",
+    "packaged_sha256": "dd69b4b413331e784ba5673888569d65cdba1c6ea33bf751aac61950f0a08178",
+    "adaptation": "Replace AppCompat colorControlNormal tint with neutral color; Compose supplies state tint."
+  },
+  {
+    "name": "star",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/android/star/materialsymbolsoutlined/star_24px.xml",
+    "upstream_sha256": "49d8cf2a439f18bcafc0c9e765ac04cf52edc7105f82c637c50b4e8890fd00b2",
+    "packaged_sha256": "1b906115510ebf8832126437b98cc9fbbe2f18c170d3b8516a2d542113034253",
+    "adaptation": "Replace AppCompat colorControlNormal tint with neutral color; Compose supplies state tint."
+  },
+  {
+    "name": "board",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/android/all_inclusive/materialsymbolsoutlined/all_inclusive_24px.xml",
+    "upstream_sha256": "8685a2adc11e84ed88a663ced4cdc3a9086a41918d0c7f0cdd156e8b5abede03",
+    "packaged_sha256": "5e426698414a63be5816b9b8263282306a3b52748e2aee3d913992412bb6e890",
+    "adaptation": "Replace AppCompat colorControlNormal tint with neutral color; Compose supplies state tint."
+  },
+  {
+    "name": "pen",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/android/edit/materialsymbolsoutlined/edit_24px.xml",
+    "upstream_sha256": "935389edf0589ea1228e1b4a21ed80f8760f5aaa81675a58d627fb4e2ab60b7a",
+    "packaged_sha256": "09cf2c86dc2d31360ca5592ca965e90af8b14c34a7d6d1e573ee1de23ecab0a1",
+    "adaptation": "Replace AppCompat colorControlNormal tint with neutral color; Compose supplies state tint."
+  },
+  {
+    "name": "eraser",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/android/ink_eraser/materialsymbolsoutlined/ink_eraser_24px.xml",
+    "upstream_sha256": "18838e0993842fd535a1f9c20b3cd8e92cb0cf27bc5bec372b03113fd90c07b0",
+    "packaged_sha256": "6643ec4724071565913b818f7ea47949600ce85516f268f10595c981c164e51a",
+    "adaptation": "Replace AppCompat colorControlNormal tint with neutral color; Compose supplies state tint."
+  },
+  {
+    "name": "undo",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/android/undo/materialsymbolsoutlined/undo_24px.xml",
+    "upstream_sha256": "640246df692878d51ba94ab4da16f144376ae64014bc79fbcba17d2ae690629f",
+    "packaged_sha256": "5cbef2744469f311ca7847496d0181914ac8a563f0259c9093603a3815936375",
+    "adaptation": "Replace AppCompat colorControlNormal tint with neutral color; Compose supplies state tint."
+  },
+  {
+    "name": "redo",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/android/redo/materialsymbolsoutlined/redo_24px.xml",
+    "upstream_sha256": "b61356a746701adae68cb1ede79d865fe5b089ed0b9971b4f4953ffb2fe56c22",
+    "packaged_sha256": "ce483cff87a5b9761d3688ebcf12477032cb3a66af74dcec0b892cf242d2a436",
+    "adaptation": "Replace AppCompat colorControlNormal tint with neutral color; Compose supplies state tint."
+  },
+  {
+    "name": "more",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/android/more_horiz/materialsymbolsoutlined/more_horiz_24px.xml",
+    "upstream_sha256": "3654901c8808ac4209d8c0aa820a1cf64fca7dbd3a815a8faa5898881d2bf941",
+    "packaged_sha256": "1b0dde1a5c0079ecca139b54a8a3d2b00525b716d80585f46fba28bc37546b13",
+    "adaptation": "Replace AppCompat colorControlNormal tint with neutral color; Compose supplies state tint."
+  },
+  {
+    "name": "tag",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/android/tag/materialsymbolsoutlined/tag_24px.xml",
+    "upstream_sha256": "cb170a15c1d244a84c1e4efb8ffc06105475b4f6e2a8b6eebd484bd64b960ab7",
+    "packaged_sha256": "31548724353e71318948615b9295e5e6f6c97b34246b544ecd18db154d5bb87b",
+    "adaptation": "Replace AppCompat colorControlNormal tint with neutral color; Compose supplies state tint."
+  },
+  {
+    "name": "sort",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/android/sort/materialsymbolsoutlined/sort_24px.xml",
+    "upstream_sha256": "fbff69ee4e51528dd3d7fa5878512a55d481357b70172d3f726f494505fbe6b1",
+    "packaged_sha256": "7b1e9d1becb1d805721ff8d2e9ca7f7c67edc2a20a2699f5b28f08f6e8bd814e",
+    "adaptation": "Replace AppCompat colorControlNormal tint with neutral color; Compose supplies state tint."
+  },
+  {
+    "name": "diagnostics",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/android/info/materialsymbolsoutlined/info_24px.xml",
+    "upstream_sha256": "b105df7f824e7eafbd0a73ebc55085134409161d606894c97685ba1cd38cbcc2",
+    "packaged_sha256": "14dbc8565199559d94b5f04a52ee71e2e3956a93149ebc1e63dd83410b9e4ede",
+    "adaptation": "Replace AppCompat colorControlNormal tint with neutral color; Compose supplies state tint."
+  },
+  {
+    "name": "check",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/android/check/materialsymbolsoutlined/check_24px.xml",
+    "upstream_sha256": "b38c518aa15e88cb9f2eda91aa5617427530ae9359a1b2c8ab96f7d16bffabe7",
+    "packaged_sha256": "766fa7b99aa2324d09ddff92e9e9b7c7f311cab595abce754971914c014764f5",
+    "adaptation": "Replace AppCompat colorControlNormal tint with neutral color; Compose supplies state tint."
+  },
+  {
+    "name": "export",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/android/ios_share/materialsymbolsoutlined/ios_share_24px.xml",
+    "upstream_sha256": "8a0b1a7816a68f24d78d96b57a4d64494db8689bd1490e2c7138969913e7fce0",
+    "packaged_sha256": "3c14472b8a840df549e167a2b39b117a76590777655c3fb6f8e75503558fff3f",
+    "adaptation": "Replace AppCompat colorControlNormal tint with neutral color; Compose supplies state tint."
+  },
+  {
+    "name": "note",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/android/description/materialsymbolsoutlined/description_24px.xml",
+    "upstream_sha256": "5b98cf8276cf644fa1e5c8a1e06ee5e1dc1e421454c66f7f6f77de416498bdc4",
+    "packaged_sha256": "2a4ae8fcc2d826c4941bff14ad8569872defb04b3a66c040d78ad8fac5a776c3",
+    "adaptation": "Replace AppCompat colorControlNormal tint with neutral color; Compose supplies state tint."
+  },
+  {
+    "name": "select",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/android/select/materialsymbolsoutlined/select_24px.xml",
+    "upstream_sha256": "a64c874af07f606330a7e413a4b6bd70c1b3cc21993645d8dafc2788fd00e0c3",
+    "packaged_sha256": "24e545ea6278ef08b407f01ee46f9165292eaa188cdf38e5d8999489d8151e81",
+    "adaptation": "Replace AppCompat colorControlNormal tint with neutral color; Compose supplies state tint."
+  },
+  {
+    "name": "link",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/android/link/materialsymbolsoutlined/link_24px.xml",
+    "upstream_sha256": "c1aad36fbc2f5857731304472eb30c26b81b385e05852be9d3f6575848b1f35e",
+    "packaged_sha256": "2ae490bec2bc3f034b0075f70016f7b012cd0e67a3e00d85d6ed821b5529c6f0",
+    "adaptation": "Replace AppCompat colorControlNormal tint with neutral color; Compose supplies state tint."
+  },
+  {
+    "name": "learn",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/android/menu_book/materialsymbolsoutlined/menu_book_24px.xml",
+    "upstream_sha256": "dee98ed93ca585e7df061f23e9a8583f5b79bfbd38586083e5b9f84d8d0f7966",
+    "packaged_sha256": "3d7dc81bb9da367509c1264323191b02f897b055708dd3ea3d8c506800cff28c",
+    "adaptation": "Replace AppCompat colorControlNormal tint with neutral color; Compose supplies state tint."
+  },
+  {
+    "name": "review",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/android/fact_check/materialsymbolsoutlined/fact_check_24px.xml",
+    "upstream_sha256": "ba68d5bf7b808ec2d5f38b869711924017567d8f1be4beb2109aff0f76e073b8",
+    "packaged_sha256": "5a2db998f272d32d2215bcbd34cf0fc8e9da9e07cda6f2e3f42b1d421c984367",
+    "adaptation": "Replace AppCompat colorControlNormal tint with neutral color; Compose supplies state tint."
+  },
+  {
+    "name": "settings",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/android/tune/materialsymbolsoutlined/tune_24px.xml",
+    "upstream_sha256": "7620ffcecd323ed28d0479a615129efd1202701bc66e58d28e55395b58614014",
+    "packaged_sha256": "9a704553c5c26f444cb108d5d6a083aa3f584b4d21de59de2d77a076719ca55f",
+    "adaptation": "Replace AppCompat colorControlNormal tint with neutral color; Compose supplies state tint."
+  },
+  {
+    "name": "pin",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/android/push_pin/materialsymbolsoutlined/push_pin_24px.xml",
+    "upstream_sha256": "300d4aeefaaab9a7de7d780df164eadd11be28196c7ff09a7007207edf98e6ff",
+    "packaged_sha256": "ac3ed88d75b606098783e876e63d6b8fdf3001a8d644f5c49ae6790b2fd0a594",
+    "adaptation": "Replace AppCompat colorControlNormal tint with neutral color; Compose supplies state tint."
+  }
+]

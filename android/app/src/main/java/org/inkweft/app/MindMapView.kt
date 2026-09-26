@@ -14,6 +14,8 @@ internal class MindMapView(context:Context):View(context){
     var onMove:(StudyNodeRow,Double,Double)->Unit={_,_,_->}
     var onActive:(Boolean)->Unit={}
     private var nodes=emptyList<StudyNodeRow>();private var titles=emptyMap<String,String>()
+    private var relationEdges=emptyList<Pair<String,String>>()
+    private var relationMode=false
     private val paint=Paint(Paint.ANTI_ALIAS_FLAG)
     private var scale=.8f;private var tx=20f;private var ty=20f
     private var active:StudyNodeRow?=null;private var moving=false;private var multi=false
@@ -25,9 +27,15 @@ internal class MindMapView(context:Context):View(context){
     })
     init{contentDescription="可缩放思维导图，拖动节点移动；需要无障碍浏览时切换大纲视图。"}
     fun show(items:List<StudyNodeRow>,cards:List<StudyCardRow>){
+        relationMode=false;relationEdges=emptyList()
         val oldEmpty=nodes.isEmpty();nodes=items.filter{!it.removed};titles=cards.associate{it.id to it.title}
         if(oldEmpty&&nodes.isNotEmpty()&&width>0)fit();invalidate()
     }
+    fun showRelations(items:List<StudyNodeRow>,labels:Map<String,String>,edges:List<Pair<String,String>>){
+        val empty=nodes.isEmpty();nodes=items;relationMode=true;relationEdges=edges;titles=labels
+        if(empty&&nodes.isNotEmpty()&&width>0)fit();invalidate()
+    }
+    fun decorations(edges:List<Pair<String,String>>){relationEdges=edges;invalidate()}
     fun fit(){if(nodes.isEmpty()||width==0||height==0)return
         val left=nodes.minOf{it.x};val right=nodes.maxOf{it.x}+216;val top=nodes.minOf{it.y};val bottom=nodes.maxOf{it.y}+84
         scale=min((width-40*d)/((right-left)*d).toFloat(),(height-40*d)/((bottom-top)*d).toFloat()).coerceIn(.15f,1.3f)
@@ -43,14 +51,22 @@ internal class MindMapView(context:Context):View(context){
     override fun onDraw(c:Canvas){super.onDraw(c);c.drawColor(Color.rgb(248,250,249));val save=c.save();c.translate(tx,ty);c.scale(scale*d,scale*d)
         val lookup=nodes.associateBy{it.id};paint.style=Paint.Style.STROKE;paint.strokeWidth=2f;paint.color=0xff92aaa1.toInt()
         for(n in nodes){val p=lookup[n.parentId]?:continue;val path=Path();path.moveTo(x(p)+216,y(p)+42);path.cubicTo(x(p)+244,y(p)+42,x(n)-28,y(n)+42,x(n),y(n)+42);c.drawPath(path,paint)}
+        for((a,b) in relationEdges){val start=lookup[a]?:continue;val end=lookup[b]?:continue
+            val horizontal=abs(x(end)-x(start))>=abs(y(end)-y(start));val forward=if(horizontal)x(end)>=x(start)else y(end)>=y(start)
+            val sx=x(start)+if(horizontal){if(forward)216 else 0}else 108;val ex=x(end)+if(horizontal){if(forward)0 else 216}else 108
+            val sy=y(start)+if(horizontal)42 else if(forward)84 else 0;val ey=y(end)+if(horizontal)42 else if(forward)0 else 84
+            c.drawLine(sx,sy,ex,ey,paint)
+            val angle=atan2(ey-sy,ex-sx);val ax=sx+(ex-sx)*.7f;val ay=sy+(ey-sy)*.7f
+            if(relationMode){c.drawLine(ax,ay,ax-12*cos(angle-.45f),ay-12*sin(angle-.45f),paint);c.drawLine(ax,ay,ax-12*cos(angle+.45f),ay-12*sin(angle+.45f),paint)}
+        }
         for(n in nodes){val left=x(n);val top=y(n);val box=RectF(left,top,left+216,top+84)
             paint.style=Paint.Style.FILL;paint.color=if(n.id==active?.id)0xffe0f0e8.toInt()else Color.WHITE;c.drawRoundRect(box,12f,12f,paint)
             paint.style=Paint.Style.STROKE;paint.strokeWidth=if(n.id==active?.id)2f else 1f;paint.color=0xff73a38e.toInt();c.drawRoundRect(box,12f,12f,paint)
             paint.style=Paint.Style.FILL;paint.color=0xff20342c.toInt();paint.textSize=16f;paint.typeface=Typeface.create(Typeface.DEFAULT,Typeface.BOLD)
-            val text=titles[n.cardId].orEmpty().replace('\n',' ');val n1=paint.breakText(text,true,188f,null)
+            val text=titles[if(relationMode)n.id else n.cardId].orEmpty().replace('\n',' ');val n1=paint.breakText(text,true,188f,null)
             c.drawText(text.take(n1),left+14,top+30,paint);val rest=text.drop(n1);val n2=paint.breakText(rest,true,176f,null)
             c.drawText(rest.take(n2)+(if(rest.length>n2)"…"else""),left+14,top+53,paint)
-            paint.typeface=Typeface.DEFAULT;paint.textSize=10f;paint.color=0xff637b70.toInt();c.drawText("摘要卡 · 点击编辑 / 拖动移动",left+14,top+73,paint)
+            paint.typeface=Typeface.DEFAULT;paint.textSize=10f;paint.color=0xff637b70.toInt();c.drawText(if(relationMode)"点击聚焦 · 拖动不改关系"else"摘要卡 · 点击查看 / 拖动移动",left+14,top+73,paint)
         };c.restoreToCount(save)
     }
     override fun onTouchEvent(e:MotionEvent):Boolean{

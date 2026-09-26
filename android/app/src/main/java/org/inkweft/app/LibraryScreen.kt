@@ -34,6 +34,10 @@ import java.util.Locale
 
 @Composable
 fun LibraryScreen(ui:NotebookUi,workspace:WorkspaceViewModel,open:(Note)->Unit,create:()->Unit,importPage:()->Unit,diagnostics:()->Unit,rename:(Note)->Unit,duplicate:(Note)->Unit,export:(Note)->Unit){
+    val app=LocalContext.current.applicationContext as InkWeftApplication
+    val summaryFlow=remember(app){app.knowledge.cards()};val summaries by summaryFlow.collectAsState(initial=emptyList())
+    var destination by rememberSaveable{mutableStateOf("")};var learningNote by remember{mutableStateOf<Note?>(null)}
+    var learningQuery by remember{mutableStateOf("")}
     val entries by workspace.entries.collectAsState();val counts by workspace.inkCounts.collectAsState()
     val searchRows by workspace.searchable.collectAsState()
     var filter by rememberSaveable{mutableStateOf("all")};var type by rememberSaveable{mutableStateOf("all")}
@@ -56,7 +60,7 @@ fun LibraryScreen(ui:NotebookUi,workspace:WorkspaceViewModel,open:(Note)->Unit,c
     val shown=all.filter{n->val r=row(n)
         (if(filter=="trash")r.trashedAt!=null else r.trashedAt==null)&&
         when{filter=="favorite"->r.favorite;filter=="unfiled"->r.folder.isBlank();filter.startsWith("folder:")->r.folder==filter.removePrefix("folder:");filter.startsWith("tag:")->filter.removePrefix("tag:") in r.tags.split('\n');else->true}&&
-        (type=="all"||(type=="board")==r.world)&&(query.isBlank()||n.title.contains(query,true)||n.text.contains(query,true)||r.tags.contains(query,true)||searchRows.any{it.notebookId==n.id&&it.text.contains(query,true)})}.let{ShelfOrder.arrange(it,{n->row(n).pinned},{n->n.title},byTitle)}
+        (type=="all"||(type=="board")==r.world)&&(query.isBlank()||n.title.contains(query,true)||n.text.contains(query,true)||r.tags.contains(query,true)||summaries.any{it.notebookId==n.id&&it.trashedAt==null&&(it.title.contains(query,true)||it.body.contains(query,true))}||searchRows.any{it.notebookId==n.id&&it.text.contains(query,true)})}.let{ShelfOrder.arrange(it,{n->row(n).pinned},{n->n.title},byTitle)}
     val title=when{filter=="favorite"->"已收藏";filter=="trash"->"回收站";filter=="unfiled"->"未分类";filter.startsWith("folder:")->filter.removePrefix("folder:");filter.startsWith("tag:")->"标签 · "+filter.removePrefix("tag:");else->"全部笔记"}
     val nav:@Composable (Boolean)->Unit={search->
         Column(Modifier.fillMaxHeight().width(224.dp).background(Side).padding(horizontal=12.dp).verticalScroll(rememberScrollState())){
@@ -64,8 +68,11 @@ fun LibraryScreen(ui:NotebookUi,workspace:WorkspaceViewModel,open:(Note)->Unit,c
                 Surface(color=Forest,shape=RoundedCornerShape(10.dp)){Box(Modifier.size(34.dp),contentAlignment=Alignment.Center){Text("墨",color=Color.White,fontWeight=FontWeight.Bold,fontSize=18.sp)}}
                 Spacer(Modifier.width(12.dp));Column{Text("墨织",fontSize=19.sp,fontWeight=FontWeight.SemiBold);Text("你的本地学习资料库",fontSize=10.sp,color=Quiet)}
             }
-            if(search)OutlinedTextField(query,{query=it},singleLine=true,placeholder={Text("搜索标题、文字、已确认索引",fontSize=12.sp)},leadingIcon={Glyph("search")},modifier=Modifier.fillMaxWidth().testTag("library-search"))
             Spacer(Modifier.height(20.dp))
+            NavigationLine("资料库","note",null,destination.isEmpty()){destination="";choose("all")}
+            NavigationLine("学习","learn",null,false){closeDrawer();destination="learn"}
+            NavigationLine("复习","review",null,false){closeDrawer();destination="review"}
+            HorizontalDivider(Modifier.padding(vertical=12.dp),color=Line)
             NavigationLine("全部笔记","note",active.size,filter=="all"){choose("all")}
             NavigationLine("已收藏","star",active.count{row(it).favorite},filter=="favorite"){choose("favorite")}
             NavigationLine("未分类","folder",active.count{row(it).folder.isBlank()},filter=="unfiled"){choose("unfiled")}
@@ -79,12 +86,15 @@ fun LibraryScreen(ui:NotebookUi,workspace:WorkspaceViewModel,open:(Note)->Unit,c
             if(tags.isEmpty())Text("从笔记菜单添加标签",fontSize=11.sp,color=Quiet,modifier=Modifier.padding(12.dp,8.dp))
             tags.forEach{tag->NavigationLine(tag,"tag",null,filter=="tag:$tag"){choose("tag:$tag")}}
             Spacer(Modifier.height(30.dp))
+            NavigationLine("设置与数据","settings",null,false){closeDrawer();destination="settings"}
             TextButton(onClick={closeDrawer();diagnostics()},modifier=Modifier.fillMaxWidth().testTag(if(search)"open-diagnostics"else"drawer-diagnostics")){Glyph("diagnostics");Spacer(Modifier.width(8.dp));Text("诊断与导出",fontSize=12.sp)}
             Text("本地优先 · 无账号要求",fontSize=10.sp,color=Quiet,modifier=Modifier.padding(12.dp,10.dp))
         }
     }
     BoxWithConstraints(Modifier.fillMaxSize().background(Color.White)){
         val wide=maxWidth>=840.dp
+        val compact=maxWidth<600.dp
+        var headerMore by remember{mutableStateOf(false)}
         LaunchedEffect(wide){if(wide)drawer.close()}
         // Platform motion settings remain authoritative. No custom loop, no forced animation scale.
         ModalNavigationDrawer(drawerState=drawer,gesturesEnabled=!wide&&drawer.isOpen,drawerContent={
@@ -98,13 +108,25 @@ fun LibraryScreen(ui:NotebookUi,workspace:WorkspaceViewModel,open:(Note)->Unit,c
                     Row(Modifier.fillMaxWidth().heightIn(min=76.dp),verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(5.dp)){
                         if(!wide)IconButton(onClick={focus.clearFocus();keyboard?.hide();if(drawer.targetValue==DrawerValue.Closed){drawerJob?.cancel();drawerJob=scope.launch{drawer.open()}}},modifier=Modifier.testTag("open-library-drawer").describedAs("展开分类")){Glyph("menu")}
                         Text(title,fontSize=22.sp,fontWeight=FontWeight.SemiBold,modifier=Modifier.weight(1f),maxLines=1,overflow=TextOverflow.Ellipsis)
-                        IconButton(onClick={grid=!grid},modifier=Modifier.testTag("library-layout").describedAs(if(grid)"切换列表视图"else"切换网格视图")){Glyph(if(grid)"list"else"grid")}
-                        IconButton(onClick={byTitle=!byTitle},modifier=Modifier.testTag("library-sort").describedAs(if(byTitle)"改按最近修改排序"else"改按标题排序")){Glyph("sort",if(byTitle)Forest else Quiet)}
-                        if(!wide)IconButton(onClick=diagnostics,modifier=Modifier.testTag("open-diagnostics").describedAs("诊断与导出")){Glyph("diagnostics")}
-                        TextButton(onClick=importPage,enabled=!ui.readFailed){Text("导入副本",fontSize=12.sp)}
-                        Button(onClick=create,enabled=!ui.loading&&!ui.readFailed,modifier=Modifier.testTag("new-note"),contentPadding=PaddingValues(horizontal=18.dp,vertical=10.dp)){Glyph("add");Spacer(Modifier.width(6.dp));Text("新建")}
+                        if(compact){
+                            Box{
+                                IconButton(onClick={headerMore=true},modifier=Modifier.testTag("library-more").describedAs("资料库更多操作")){Glyph("more")}
+                                DropdownMenu(expanded=headerMore,onDismissRequest={headerMore=false}){
+                                    DropdownMenuItem(text={Text(if(grid)"切换列表视图"else"切换网格视图")},onClick={grid=!grid;headerMore=false},modifier=Modifier.testTag("library-layout"))
+                                    DropdownMenuItem(text={Text(if(byTitle)"按最近修改排序"else"按标题排序")},onClick={byTitle=!byTitle;headerMore=false},modifier=Modifier.testTag("library-sort"))
+                                    DropdownMenuItem(text={Text("导入副本")},enabled=!ui.readFailed,onClick={headerMore=false;importPage()})
+                                    DropdownMenuItem(text={Text("诊断与导出")},onClick={headerMore=false;diagnostics()},modifier=Modifier.testTag("open-diagnostics"))
+                                }
+                            }
+                        }else{
+                            IconButton(onClick={grid=!grid},modifier=Modifier.testTag("library-layout").describedAs(if(grid)"切换列表视图"else"切换网格视图")){Glyph(if(grid)"list"else"grid")}
+                            IconButton(onClick={byTitle=!byTitle},modifier=Modifier.testTag("library-sort").describedAs(if(byTitle)"改按最近修改排序"else"改按标题排序")){Glyph("sort",if(byTitle)Forest else Quiet)}
+                            if(!wide)IconButton(onClick=diagnostics,modifier=Modifier.testTag("open-diagnostics").describedAs("诊断与导出")){Glyph("diagnostics")}
+                            TextButton(onClick=importPage,enabled=!ui.readFailed){Text("导入副本",fontSize=12.sp)}
+                        }
+                        Button(onClick=create,enabled=!ui.loading&&!ui.readFailed,modifier=Modifier.testTag("new-note"),contentPadding=PaddingValues(horizontal=if(compact)12.dp else 18.dp,vertical=10.dp)){Glyph("add");Spacer(Modifier.width(6.dp));Text("新建",maxLines=1)}
                     }
-                    if(!wide)OutlinedTextField(query,{query=it},singleLine=true,placeholder={Text("搜索标题、文字及人工手写索引",fontSize=12.sp)},leadingIcon={Glyph("search")},modifier=Modifier.fillMaxWidth().testTag("library-search"))
+                    OutlinedTextField(query,{query=it},singleLine=true,placeholder={Text("搜索标题、文字、人工索引和摘要",fontSize=12.sp)},leadingIcon={Glyph("search")},modifier=Modifier.fillMaxWidth().testTag("library-search"))
                     Row(Modifier.fillMaxWidth().padding(vertical=5.dp),verticalAlignment=Alignment.CenterVertically){
                         listOf("all" to "全部","page" to "纸张笔记","board" to "无界笔记").forEach{(id,label)->Column(Modifier.heightIn(min=48.dp).clickable{type=id}.padding(end=20.dp).testTag("library-type-$id"),horizontalAlignment=Alignment.CenterHorizontally){Text(label,color=if(type==id)Forest else Quiet,fontSize=13.sp,modifier=Modifier.padding(vertical=13.dp));HorizontalDivider(Modifier.width(if(id=="all")28.dp else 60.dp),thickness=if(type==id)2.dp else 0.dp,color=if(type==id)Forest else Color.Transparent)}}
                         Spacer(Modifier.weight(1f));Text("${shown.size} 份",fontSize=11.sp,color=Quiet)
@@ -113,14 +135,14 @@ fun LibraryScreen(ui:NotebookUi,workspace:WorkspaceViewModel,open:(Note)->Unit,c
                     if(filter=="trash")Text("笔记内容与封面仍保留，可从菜单恢复。",fontSize=12.sp,color=Quiet,modifier=Modifier.padding(vertical=12.dp))
                     val itemContent:@Composable (Note)->Unit={n->val meta=row(n)
                         NoteTile(n,meta,counts[n.id]?.modifiedRevision?:0,counts[n.id]?.visibleCount?:0,grid,
-                            {if(meta.trashedAt==null){val hit=searchRows.firstOrNull{it.notebookId==n.id&&query.isNotBlank()&&it.text.contains(query,true)};if(hit!=null)workspace.openSearchPage(n.id,hit.pageId){open(n)}else open(n)}},{rename(n)},{coverError=null;coverTarget=n to meta},
+                            {if(meta.trashedAt==null){val hit=searchRows.firstOrNull{it.notebookId==n.id&&query.isNotBlank()&&it.text.contains(query,true)};if(hit!=null)workspace.openSearchPage(n.id,hit.pageId){open(n)}else if(query.isNotBlank()&&summaries.any{it.notebookId==n.id&&it.trashedAt==null&&(it.title.contains(query,true)||it.body.contains(query,true))}){learningQuery=query;learningNote=n}else open(n)}},{rename(n)},{coverError=null;coverTarget=n to meta},
                             {workspace.organize(meta,favorite=!meta.favorite)},{editing=meta},{if(meta.trashedAt!=null)workspace.organize(meta,trash=false)else removing=meta},
                             {duplicate(n)},{export(n)},{workspace.pin(meta,!meta.pinned)})
                     }
                     if(grid)LazyVerticalGrid(columns=GridCells.Adaptive(165.dp),modifier=Modifier.weight(1f).testTag("library-grid"),contentPadding=PaddingValues(top=21.dp,bottom=30.dp),horizontalArrangement=Arrangement.spacedBy(20.dp),verticalArrangement=Arrangement.spacedBy(24.dp)){
                         if(filter!="trash"&&query.isBlank())item(key="new-tile"){NewTile(create)}
                         items(shown,key={it.id}){itemContent(it)}
-                        if(shown.isEmpty())item(span={GridItemSpan(maxLineSpan)}){Text(if(query.isNotBlank())"没有匹配的标题或文字。自动手写识别尚未接入，改动后的旧索引不参与搜索。"else if(filter=="trash")"回收站为空。"else"新建一份纸张或无界笔记，开始记录。",color=Quiet,fontSize=13.sp,modifier=Modifier.padding(vertical=28.dp))}
+                        if(shown.isEmpty())item(span={GridItemSpan(maxLineSpan)}){Text(if(query.isNotBlank())"没有匹配的标题或文字。覆盖标题、键入文字、人工索引和独立摘要；自动手写识别尚未接入，旧索引不参与搜索。"else if(filter=="trash")"回收站为空。"else"新建一份纸张或无界笔记，开始记录。",color=Quiet,fontSize=13.sp,modifier=Modifier.padding(vertical=28.dp))}
                     }else LazyColumn(Modifier.weight(1f).testTag("library-list"),contentPadding=PaddingValues(vertical=18.dp),verticalArrangement=Arrangement.spacedBy(12.dp)){
                         if(filter!="trash"&&query.isBlank())item{OutlinedButton(onClick=create,modifier=Modifier.fillMaxWidth()){Glyph("add");Text("新建笔记")}}
                         items(shown,key={it.id}){itemContent(it)}
@@ -128,6 +150,12 @@ fun LibraryScreen(ui:NotebookUi,workspace:WorkspaceViewModel,open:(Note)->Unit,c
                 }
             }
         }
+    }
+    if(destination in listOf("learn","review"))LearningLibrary(active,destination=="review",{destination=""}){learningQuery="";learningNote=it}
+    if(destination=="settings")WorkspaceSettings({destination=""}){destination="";diagnostics()}
+    learningNote?.let{n->
+        if(destination=="review")KnowledgeWorkspace(n.id,TargetRef(TargetKind.NOTE,n.id),initialTab=4,dismiss={learningNote=null}){target->app.openKnowledgeTarget.value=target;learningNote=null;destination=""}
+        else StudyWorkspace(NoteDraft(n),null,{learningNote=null},initialQuery=learningQuery){source->workspace.openSearchPage(n.id,source.pageId){open(n)};learningNote=null;destination="";true}
     }
     coverTarget?.let{(n,r)->key(n.id){CoverPickerDialog(n.title,r.world,NotebookCover.fromKey(r.coverKey),coverBusy,coverError,{coverTarget=null}){choice->
         coverBusy=true
@@ -223,9 +251,10 @@ private fun NoteTile(note:Note,row:WorkspaceRow,inkRevision:Long,count:Int,grid:
 @Composable
 internal fun PaperThumbnail(board:Boolean,style:PaperStyle){
     Canvas(Modifier.fillMaxSize().background(Color.White)){
-        val c=Color(0xffe7ede9);val gap=if(board)16.dp.toPx()else 11.dp.toPx();val inset=if(board)0f else 10.dp.toPx()
-        if(style==PaperStyle.RULED||style==PaperStyle.GRID){var y=inset+gap;while(y<size.height-inset){drawLine(c,Offset(inset,y),Offset(size.width-inset,y),1f);y+=gap}}
-        if(style==PaperStyle.GRID){var x=inset+gap;while(x<size.width-inset){drawLine(c,Offset(x,inset),Offset(x,size.height-inset),1f);x+=gap}}
-        if(style==PaperStyle.DOTS){var y=inset+gap;while(y<size.height-inset){var x=inset+gap;while(x<size.width-inset){drawCircle(c,1.dp.toPx(),Offset(x,y));x+=gap};y+=gap}}
+        val sx=size.width/1000f;val sy=size.height/1414f
+        val guides=PaperTemplates.guides(style,CanvasBounds(0.0,0.0,1000.0,1414.0),board,.7)
+        val c=Color(0xffd8e0dc)
+        guides.lines.forEach{drawLine(c,Offset(it.x1*sx,it.y1*sy),Offset(it.x2*sx,it.y2*sy),1f)}
+        guides.dots.forEach{drawCircle(c,1f,Offset(it.x.toFloat()*sx,it.y.toFloat()*sy))}
     }
 }

@@ -35,7 +35,7 @@ class WorkspaceUiTest {
         compose.waitUntil(10_000){androidx.core.view.ViewCompat.getRootWindowInsets(compose.activity.window.decorView)?.isVisible(WindowInsetsCompat.Type.ime())==false}
         compose.waitForIdle()
     }
-    private fun create(world:Boolean){waitForShelf();compose.onNodeWithTag("new-note").performClick();compose.onNodeWithTag("new-title").performTextInput((if(world)"知识草稿 · 无界"else"微积分 · 随手推导")+" · "+UUID.randomUUID().toString().take(6));if(world)compose.onNodeWithTag("create-world").performClick();compose.onNodeWithTag("create-note").performClick();saved(0)
+    private fun create(world:Boolean){waitForShelf();compose.onNodeWithTag("new-note").performClick();compose.onNodeWithTag("create-page").performClick();compose.onNodeWithTag("new-title").performTextInput((if(world)"知识草稿 · 无界"else"微积分 · 随手推导")+" · "+UUID.randomUUID().toString().take(6));if(world)compose.onNodeWithTag("create-world").performClick();compose.onNodeWithTag("create-note").performClick();saved(0)
         settleKeyboard()
         createdId=runBlocking{app.repository.observeNotes().first()}.first().id
     }
@@ -88,8 +88,8 @@ class WorkspaceUiTest {
         }finally{image.recycle()}
     }
     @Test fun realBoardNegativeCoordinatesPanZoomAndReopen(){
-        create(true);assertViewportClip(true);compose.onNodeWithTag("ink-finger").performScrollTo().performClick();draw();saved(1)
-        compose.onNodeWithTag("ink-finger").performScrollTo().performClick()
+        create(true);assertViewportClip(true);compose.onNodeWithTag("ink-more").performScrollTo().performClick();compose.onNodeWithTag("ink-finger").performScrollTo().performClick();draw();saved(1)
+        compose.onNodeWithTag("ink-more").performScrollTo().performClick();compose.onNodeWithTag("ink-finger").performScrollTo().performClick()
         compose.onNodeWithTag("ink-surface").performTouchInput{swipe(Offset(width*.3f,height*.4f),Offset(width*.7f,height*.65f),250)}
         compose.onNodeWithTag("zoom-in").performClick()
         var before=CanvasViewport();compose.runOnIdle{before=canvas().snapshotViewport()}
@@ -136,7 +136,7 @@ class WorkspaceUiTest {
         }
     }
     @Test fun fitModesAndPaperChangesDoNotRewriteSamples(){
-        create(false);assertViewportClip(false);compose.onNodeWithTag("ink-finger").performScrollTo().performClick();draw();saved(1)
+        create(false);assertViewportClip(false);compose.onNodeWithTag("ink-more").performScrollTo().performClick();compose.onNodeWithTag("ink-finger").performScrollTo().performClick();draw();saved(1)
         val n=runBlocking{app.repository.observeNotes().first()}.first{it.id==createdId}
         val before=runBlocking{app.inkRepository.read(n.id).strokes.single().stroke.samples}
         compose.onNodeWithTag("fit-page").performClick();var small=0.0;compose.runOnIdle{small=canvas().snapshotViewport().zoom}
@@ -150,8 +150,8 @@ class WorkspaceUiTest {
         fun shell(command:String){automation.executeShellCommand(command).use{android.os.ParcelFileDescriptor.AutoCloseInputStream(it).use{input->input.readBytes()}}}
         try {
             shell("wm size 900x1500");Thread.sleep(900);waitForShelf();create(true)
-            compose.onNodeWithTag("open-diagnostics").performClick();compose.onNodeWithTag("diagnostics-dialog").assertExists();compose.onNodeWithText("关闭").performClick()
-            compose.onNodeWithTag("ink-finger").performScrollTo().performClick();draw();saved(1);shot("workspace-narrow.png")
+            compose.onNodeWithTag("document-more").performClick();compose.onNodeWithTag("open-diagnostics").performClick();compose.onNodeWithTag("diagnostics-dialog").assertExists();compose.onNodeWithText("关闭").performClick()
+            compose.onNodeWithTag("ink-more").performScrollTo().performClick();compose.onNodeWithTag("ink-finger").performScrollTo().performClick();draw();saved(1);shot("workspace-narrow.png")
             compose.onNodeWithTag("back-library").performClick()
         }finally{shell("wm size 1920x1200");Thread.sleep(700)}
     }

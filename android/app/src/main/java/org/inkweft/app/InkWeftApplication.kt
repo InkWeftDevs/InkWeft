@@ -7,6 +7,8 @@ import org.inkweft.core.CloudServicePort
 import org.inkweft.core.DisabledCloudServices
 
 class InkWeftApplication:Application(){
+    val openKnowledgeTarget=kotlinx.coroutines.flow.MutableStateFlow<org.inkweft.core.TargetRef?>(null)
+    val navigationReady=kotlinx.coroutines.flow.MutableStateFlow(true)
     val diagnostics by lazy{AppDiagnostics(this)}
     private val database by lazy{NoteDatabase.open(this)}
     val repository by lazy{NoteRepository(database)}
@@ -15,6 +17,7 @@ class InkWeftApplication:Application(){
     val pages by lazy{NotebookPages(database)}
     val libraryContent by lazy{LibraryContentRepository(database)}
     val libraryBackup by lazy{LibraryBackupRepository(this,database)}
+    val knowledge by lazy{KnowledgeRepository(database)}
     val study by lazy{StudyRepository(database)}
     val cloudServices:CloudServicePort=DisabledCloudServices
     override fun onCreate(){super.onCreate();diagnostics}

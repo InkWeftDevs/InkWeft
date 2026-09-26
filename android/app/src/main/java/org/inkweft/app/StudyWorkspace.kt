@@ -60,19 +60,24 @@ internal class StudyViewModel(val book:String,val repo:StudyRepository,private v
 }
 private data class CardEditor(val card:StudyCardRow?=null,val parent:StudyNodeRow?=null,val source:StudySourceDraft?=null)
 @Composable
-internal fun StudyWorkspace(note:NoteDraft,initialSource:StudySourceDraft?,dismiss:()->Unit,openSource:(StudySourceRow)->Boolean){
+internal fun StudyWorkspace(note:NoteDraft,initialSource:StudySourceDraft?,dismiss:()->Unit,initialQuery:String="",initialCardId:String?=null,openSource:(StudySourceRow)->Boolean){
     val context=LocalContext.current;val app=context.applicationContext as InkWeftApplication
     val focus=LocalFocusManager.current
     val vm:StudyViewModel=viewModel(key="study-${note.base.id}",factory=StudyViewModel.Factory(note.base.id,app.study))
     val ui by vm.ui.collectAsStateWithLifecycle();val scope=rememberCoroutineScope()
-    var query by remember{mutableStateOf("")}
+    val extraFlow=remember(app){app.knowledge.observe()};val extraRows by extraFlow.collectAsStateWithLifecycle(initialValue=emptyList())
+    fun extraOccurrences(cardId:String)=extraRows.count{r->!r.removed&&r.notebookId==note.base.id&&when(val d=r.data()){is KnowledgeData.Placement->d.cardId==cardId;is KnowledgeData.MapOccurrence->d.cardId==cardId;else->false}}
+
+    var query by remember{mutableStateOf(initialQuery)}
     var tab by remember{mutableIntStateOf(0)};var showTrash by remember{mutableStateOf(false)}
     var editor by remember(initialSource){mutableStateOf(if(initialSource!=null)CardEditor(source=initialSource)else null)}
     var chosenNode by remember{mutableStateOf<StudyNodeRow?>(null)};var chosenCard by remember{mutableStateOf<StudyCardRow?>(null)}
     var source by remember{mutableStateOf<StudySourceRow?>(null)};var stale by remember{mutableStateOf(false)}
     var map by remember{mutableStateOf<MindMapView?>(null)};var dragging by remember{mutableStateOf(false)}
     var pendingExport by remember{mutableStateOf<String?>(null)};var localMessage by remember{mutableStateOf<String?>(null)}
+    var knowledgeCard by remember{mutableStateOf<StudyCardRow?>(null)}
     var reparent by remember{mutableStateOf<StudyNodeRow?>(null)}
+    LaunchedEffect(initialCardId,ui.loading){if(initialCardId!=null&&!ui.loading)chosenCard=ui.cards.find{it.id==initialCardId&&it.trashedAt==null}}
     val id={UUID.randomUUID().toString()}
     val export=rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("text/markdown")){uri->
         val text=pendingExport;pendingExport=null;if(uri!=null&&text!=null)scope.launch{try{withContext(Dispatchers.IO){checkNotNull(context.contentResolver.openOutputStream(uri,"wt")).bufferedWriter(Charsets.UTF_8).use{it.write(text)}};localMessage="大纲与摘要已导出，共享卡片正文只保留一份。图形布局与来源原迹请用资料库备份保存。"}catch(c:CancellationException){throw c}catch(_:Exception){localMessage="导出未确认；卡片仍保留在本机。"}}
@@ -106,7 +111,7 @@ internal fun StudyWorkspace(note:NoteDraft,initialSource:StudySourceDraft?,dismi
             if(tab==2)AndroidView(factory={MindMapView(it).also{v->map=v}},update={v->v.enabledInput=!ui.busy&&!ui.unknown;v.show(active,ui.cards);v.onActive={dragging=it};v.onOpen={n->cardById[n.cardId]?.let{openCard(it,n)}};v.onMove={n,x,y->if(!ui.busy&&!ui.unknown)vm.submit(StudyCommand(id(),note.base.id,StudyAction.MOVE,nodeId=n.id,expectedRevision=n.revision,x=x,y=y))}},modifier=Modifier.fillMaxWidth().weight(1f).testTag("study-map"))
             else LazyColumn(Modifier.fillMaxWidth().weight(1f),verticalArrangement=Arrangement.spacedBy(10.dp),contentPadding=PaddingValues(vertical=12.dp)){
                 if(tab==0){items(cards,key={it.id}){card->OutlinedCard(onClick={openCard(card)},modifier=Modifier.fillMaxWidth().testTag("study-card-${card.id}")){
-                    Column(Modifier.padding(16.dp)){Text(card.title,fontWeight=FontWeight.SemiBold);if(card.body.isNotBlank())Text(card.body,maxLines=4,fontSize=14.sp,modifier=Modifier.padding(top=8.dp));Text("摘要卡 · ${active.count{it.cardId==card.id}} 个脑图位置",fontSize=11.sp,color=Quiet)}}}
+                    Column(Modifier.padding(16.dp)){Text(card.title,fontWeight=FontWeight.SemiBold);if(card.body.isNotBlank())Text(card.body,maxLines=4,fontSize=14.sp,modifier=Modifier.padding(top=8.dp));Text("摘要卡 · ${active.count{it.cardId==card.id}+extraOccurrences(card.id)} 个展示位置",fontSize=11.sp,color=Quiet)}}}
                     if(cards.isEmpty())item{Text(if(query.isNotBlank())"没有匹配的摘要卡"else if(showTrash)"卡片回收区为空"else"框选手写摘录，或新建摘要卡。摘要由你填写，不会自动发送到云端。",color=Quiet)}}
                 else{val ordered=outline(active);items(ordered,key={it.first.id}){(node,depth)->val card=cardById[node.cardId]
                     if(card!=null)OutlinedCard(onClick={openCard(card,node)},modifier=Modifier.fillMaxWidth().padding(start=(depth.coerceAtMost(10)*20).dp).testTag("outline-node-${node.id}")){
@@ -137,6 +142,7 @@ internal fun StudyWorkspace(note:NoteDraft,initialSource:StudySourceDraft?,dismi
                 AndroidView(factory={InkCanvasView(it).apply{preview=true}},update={it.configure(true,PaperStyle.BLANK,null);it.showStrokes(strokes)},modifier=Modifier.fillMaxWidth().height(150.dp))
                 TextButton(onClick={if(openSource(s)){chosenCard=null;chosenNode=null;dismiss()}else localMessage="来源页已回收或不可用；原迹快照仍保留。"},modifier=Modifier.testTag("study-open-source")){Text("返回来源区域")}}
             if(card.trashedAt==null){
+                TextButton(onClick={knowledgeCard=card;chosenCard=null}){Text("关联、属性与回忆题")}
                 TextButton(onClick={editor=CardEditor(card);chosenCard=null},modifier=Modifier.testTag("study-edit-card")){Text("编辑内容（全部引用同步）")}
                 TextButton(onClick={vm.submit(StudyCommand(id(),note.base.id,StudyAction.REUSE,cardId=card.id,nodeId=id(),y=ui.nodes.count{!it.removed}*128.0+80))},modifier=Modifier.testTag("study-reuse-card")){Text("复用到脑图新位置")}
                 if(node!=null){
@@ -144,10 +150,11 @@ internal fun StudyWorkspace(note:NoteDraft,initialSource:StudySourceDraft?,dismi
                     TextButton(onClick={reparent=node;chosenCard=null}){Text("修改上级主题")}
                     TextButton(onClick={vm.submit(StudyCommand(id(),note.base.id,StudyAction.REMOVE_NODE,nodeId=node.id,expectedRevision=node.revision))},modifier=Modifier.testTag("study-remove-node")){Text("移除此节点（保留摘要卡）")}
                 }
-                TextButton(onClick={vm.submit(StudyCommand(id(),note.base.id,StudyAction.TRASH_CARD,cardId=card.id,expectedRevision=card.revision))},enabled=ui.nodes.none{it.cardId==card.id&&!it.removed}){Text("移入卡片回收区")}
+                TextButton(onClick={vm.submit(StudyCommand(id(),note.base.id,StudyAction.TRASH_CARD,cardId=card.id,expectedRevision=card.revision))},enabled=ui.nodes.none{it.cardId==card.id&&!it.removed}&&extraOccurrences(card.id)==0){Text("移入卡片回收区")}
             }else TextButton(onClick={vm.submit(StudyCommand(id(),note.base.id,StudyAction.RESTORE_CARD,cardId=card.id,expectedRevision=card.revision))}){Text("恢复卡片")}
         }},confirmButton={TextButton(onClick={chosenCard=null;chosenNode=null}){Text("关闭")}})
     }
+    knowledgeCard?.let{card->KnowledgeWorkspace(note.base.id,TargetRef(TargetKind.CARD,card.id),dismiss={knowledgeCard=null}){target->app.openKnowledgeTarget.value=target;knowledgeCard=null;dismiss()}}
     reparent?.let{node->AlertDialog(onDismissRequest={reparent=null},title={Text("选择上级主题")},text={Column(Modifier.heightIn(max=350.dp).verticalScroll(rememberScrollState())){
         val active=ui.nodes.filter{!it.removed&&it.id!=node.id};val options=listOf<StudyNodeRow?>(null)+active
         options.forEach{p->TextButton(onClick={vm.submit(StudyCommand(id(),note.base.id,StudyAction.REPARENT,nodeId=node.id,expectedRevision=node.revision,parentId=p?.id))}){Text(p?.let{n->ui.cards.find{it.id==n.cardId}?.title}?:"无上级（根主题）")}}

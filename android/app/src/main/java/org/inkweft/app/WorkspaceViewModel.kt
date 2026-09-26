@@ -12,7 +12,10 @@ import org.inkweft.core.*
 import org.inkweft.data.*
 
 /** Shelf state never replaces an active text or ink draft. */
-class WorkspaceViewModel(app:Application):AndroidViewModel(app){
+class WorkspaceViewModel(app:Application,private val saved:androidx.lifecycle.SavedStateHandle):AndroidViewModel(app){
+    val pendingCreate=saved.getStateFlow<ArrayList<String>?>("create.request",null)
+    val studyCardRequest=MutableStateFlow<String?>(null)
+    val focusAnchor=MutableStateFlow<KnowledgeData.Anchor?>(null)
     private val repo=(app as InkWeftApplication).workspaceRepository
     private val pages=(app as InkWeftApplication).pages
     private val pageNavigation=MutableStateFlow<Map<String,String>>(emptyMap());val pendingPageNavigation=pageNavigation.asStateFlow()
@@ -34,9 +37,19 @@ class WorkspaceViewModel(app:Application):AndroidViewModel(app){
     fun openSearchPage(bookId:String,pageId:String,open:()->Unit){viewModelScope.launch{try{withContext(Dispatchers.IO){pages.select(bookId,pageId)};pageNavigation.update{it+(bookId to pageId)};open()}catch(c:CancellationException){throw c}catch(_:Exception){failure.value="搜索位置已变化，请从页目录打开。"}}}
     fun clearError(){failure.value=null}
     fun create(title:String,world:Boolean,paper:PaperStyle,cover:NotebookCover=NotebookCover.AUTO,onCreated:(Note)->Unit){
-        if(working.value)return;working.value=true
-        viewModelScope.launch{try{onCreated(withContext(Dispatchers.IO){repo.create(title,world,paper,cover)})}catch(c:CancellationException){throw c}catch(_:Exception){failure.value="新建结果待核对。请先检查资料库，勿重复点击；原笔记未改动。"}finally{working.value=false}}
+        if(working.value||pendingCreate.value!=null)return
+        saved["create.request"]=arrayListOf(java.util.UUID.randomUUID().toString(),title,world.toString(),paper.name,cover.key)
+        retryCreate(onCreated)
     }
+    fun retryCreate(onCreated:(Note)->Unit){
+        val request=pendingCreate.value?:return;if(working.value)return;working.value=true
+        viewModelScope.launch{try{
+            val note=withContext(Dispatchers.IO){repo.create(request[1],request[2].toBooleanStrict(),PaperStyle.valueOf(request[3]),NotebookCover.fromKey(request[4]),request[0])}
+            saved.set<ArrayList<String>?>("create.request",null);failure.value=null;onCreated(note)
+        }catch(c:CancellationException){throw c}catch(_:IllegalArgumentException){saved.set<ArrayList<String>?>("create.request",null);failure.value="未创建：标题、模板或操作身份无效。"}
+        catch(_:Exception){failure.value="新建结果待核对，请核对原创建请求，不会重复创建。"}finally{working.value=false}}
+    }
+
     suspend fun cover(row:WorkspaceRow,style:NotebookCover):Boolean=withContext(Dispatchers.IO){repo.changeCover(row.noteId,row.revision,style)}
     fun organize(row:WorkspaceRow,folder:String=row.folder,tags:String=row.tags,favorite:Boolean=row.favorite,trash:Boolean=row.trashedAt!=null){
         viewModelScope.launch{try{if(!withContext(Dispatchers.IO){repo.organize(row.noteId,row.revision,folder,tags,favorite,trash)})failure.value="分类已被其他操作修改，请检查最新状态后重试。"}catch(c:CancellationException){throw c}catch(_:Exception){failure.value="未能确认分类操作，请检查当前状态。笔记内容没有被删除。"}}

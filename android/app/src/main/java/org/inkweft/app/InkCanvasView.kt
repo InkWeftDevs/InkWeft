@@ -147,15 +147,15 @@ class InkCanvasView(context:Context):View(context){
         canvas.restoreToCount(save)
         // Draw cursor in screen space, outside the paper clip. Its diameter is
         // identical to the preview and does not vary with zoom or pen pressure.
-        if((eraseMode||gestureErase)&&cursor!=null&&!preview){val p=checkNotNull(cursor);paint.style=Paint.Style.FILL;paint.color=0x183f7d67;val radius=(eraserDiameterDp*density/2).toFloat();canvas.drawCircle(p.x.toFloat(),p.y.toFloat(),radius,paint);paint.style=Paint.Style.STROKE;paint.strokeWidth=density.toFloat();paint.color=0xff35634f.toInt();canvas.drawCircle(p.x.toFloat(),p.y.toFloat(),radius,paint);paint.style=Paint.Style.FILL}
+        if((eraseMode||gestureErase)&&cursor!=null&&!preview){val p=checkNotNull(cursor);paint.style=Paint.Style.FILL;paint.color=0x183f7d67;val radius=(eraserDiameterDp*density/2).toFloat();canvas.drawCircle(p.x.toFloat(),p.y.toFloat(),radius,paint);paint.style=Paint.Style.STROKE;paint.strokeWidth=(3*density).toFloat();paint.color=Color.WHITE;canvas.drawCircle(p.x.toFloat(),p.y.toFloat(),radius,paint);paint.strokeWidth=density.toFloat();paint.color=0xff22272e.toInt();canvas.drawCircle(p.x.toFloat(),p.y.toFloat(),radius,paint);paint.style=Paint.Style.FILL}
     }
     private fun drawGuide(c:Canvas,v:CanvasBounds){
-        if(paper==PaperStyle.BLANK)return
-        val f=viewport.zoom*density;var gap=if(paper==PaperStyle.RULED)55.0 else 40.0;while(gap*f<18)gap*=2
-        paint.style=Paint.Style.FILL;paint.color=if(world)Color.rgb(226,233,230)else Color.rgb(232,236,234);paint.strokeWidth=(1/f).toFloat()
-        val l=if(world)v.left else max(40.0,v.left);val r=if(world)v.right else min(960.0,v.right);val t=if(world)v.top else max(80.0,v.top);val b=if(world)v.bottom else min(1334.0,v.bottom);if(l>r||t>b)return
-        val sx=floor(l/gap)*gap;val sy=floor(t/gap)*gap;val nx=ceil((r-sx)/gap).toInt().coerceIn(0,240);val ny=ceil((b-sy)/gap).toInt().coerceIn(0,240)
-        if(paper==PaperStyle.DOTS){for(y in 0..ny)for(x in 0..nx)c.drawCircle((sx+x*gap).toFloat(),(sy+y*gap).toFloat(),(1/f).toFloat(),paint)}else{for(y in 0..ny)c.drawLine(l.toFloat(),(sy+y*gap).toFloat(),r.toFloat(),(sy+y*gap).toFloat(),paint);if(paper==PaperStyle.GRID)for(x in 0..nx)c.drawLine((sx+x*gap).toFloat(),t.toFloat(),(sx+x*gap).toFloat(),b.toFloat(),paint)}
+        val f=viewport.zoom*density
+        val guides=PaperTemplates.guides(paper,v,world,f)
+        paint.style=Paint.Style.STROKE;paint.color=Color.rgb(216,224,220);paint.strokeWidth=(1/f).toFloat()
+        guides.lines.forEach{c.drawLine(it.x1,it.y1,it.x2,it.y2,paint)}
+        paint.style=Paint.Style.FILL
+        guides.dots.forEach{c.drawCircle(it.x.toFloat(),it.y.toFloat(),(1/f).toFloat(),paint)}
     }
     override fun onHoverEvent(e:MotionEvent):Boolean {if(preview||!eraseMode)return super.onHoverEvent(e);cursor=if(e.actionMasked==MotionEvent.ACTION_HOVER_EXIT)null else CanvasPoint(e.x.toDouble(),e.y.toDouble());invalidate();return true}
     override fun onTouchEvent(e:MotionEvent):Boolean{

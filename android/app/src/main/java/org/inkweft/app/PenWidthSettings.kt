@@ -25,24 +25,26 @@ import kotlin.math.roundToInt
 /** Global pen presets, not author data. Existing A3 width keys stay valid. */
 internal class PenWidthStore(context:Context,name:String="inkweft-pen-widths") {
     private val preferences=context.applicationContext.getSharedPreferences(name,Context.MODE_PRIVATE)
+    private val global=if(name.startsWith("inkweft-pen-widths-book-"))PenWidthStore(context)else null
     fun read():List<Float> = (0..2).map { tool ->
-        val fallback=if(tool==2)22f else 3f
+        val fallback=global?.read()?.get(tool)?:if(tool==2)22f else 3f
         val width=runCatching{preferences.getFloat("width-$tool",fallback)}.getOrDefault(fallback)
         if(width.isFinite() && width in range(tool))width else fallback
     }
     fun readColors():List<Int> = (0..2).map { tool ->
-        val fallback=colors(tool)[if(tool==1)1 else if(tool==2)4 else 0]
-        runCatching{preferences.getInt("color-$tool",fallback)}.getOrDefault(fallback).takeIf{it in colors(tool)}?:fallback
+        val fallback=global?.readColors()?.get(tool)?:colors(tool)[if(tool==1)1 else if(tool==2)4 else 0]
+        runCatching{preferences.getInt("color-$tool",fallback)}.getOrDefault(fallback).takeIf{validColor(tool,it)}?:fallback
     }
     suspend fun save(tool:Int,width:Float):Boolean {
         require(tool in 0..2 && width.isFinite() && width in range(tool))
         return writes.withLock { withContext(Dispatchers.IO){preferences.edit().putFloat("width-$tool",width).commit()} }
     }
     suspend fun savePreset(tool:Int,width:Float,color:Int):Boolean {
-        require(tool in 0..2 && width.isFinite() && width in range(tool) && color in colors(tool))
+        require(tool in 0..2 && width.isFinite() && width in range(tool) && validColor(tool,color))
         return writes.withLock { withContext(Dispatchers.IO){preferences.edit().putFloat("width-$tool",width).putInt("color-$tool",color).commit()} }
     }
     companion object {
+        fun validColor(tool:Int,color:Int)=(color ushr 24)==(if(tool==2)0x66 else 0xff)
         private val writes=Mutex()
         fun range(tool:Int)=if(tool==2)6f..40f else .5f..12f
         fun presets(tool:Int)=if(tool==2)listOf(12f,22f,34f)else listOf(1.5f,3f,6f)
@@ -79,6 +81,9 @@ internal fun PenPresetMenu(expanded:Boolean,tool:Int,current:Float,currentColor:
                     }
                 }
             }
+            var hex by remember(color){mutableStateOf(String.format(Locale.ROOT,"%06X",color and 0xffffff))}
+            OutlinedTextField(hex,{value->if(value.length<=6)hex=value.uppercase(Locale.ROOT)},label={Text("自定义颜色 · 六位十六进制")},isError=!hex.matches(Regex("[0-9A-F]{6}")),singleLine=true,modifier=Modifier.fillMaxWidth().testTag("pen-custom-color"))
+            TextButton(onClick={color=hex.toInt(16) or (if(tool==2)0x66000000 else 0xff000000.toInt())},enabled=hex.matches(Regex("[0-9A-F]{6}"))){Text("使用自定义颜色")}
             Canvas(Modifier.fillMaxWidth().height(38.dp).background(Color.White)) {
                 drawLine(Color(color),Offset(8.dp.toPx(),size.height/2),Offset(size.width-8.dp.toPx(),size.height/2),
                     strokeWidth=draft.coerceAtMost(24f).dp.toPx(),cap=StrokeCap.Round)

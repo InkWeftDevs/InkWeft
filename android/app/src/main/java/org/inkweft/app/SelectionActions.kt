@@ -18,9 +18,10 @@ internal data class SelectedInk(val region:InkRegion,val revision:Long,val strok
 @Composable
 internal fun SelectionActions(selection:SelectedInk?,all:List<InkStroke>,enabled:Boolean,
     freehand:Boolean,onMode:(Boolean)->Unit,apply:(Long,InkMutation)->Boolean,
-    clear:()->Unit,excerpt:(SelectedInk)->Unit){
+    clear:()->Unit,excerpt:(SelectedInk)->Unit,associate:(SelectedInk)->Unit={}){
     var beauty by remember{mutableStateOf(false)};var color by remember{mutableStateOf(false)}
     val s=selection;val count=s?.strokes?.size?:0
+    androidx.activity.compose.BackHandler(enabled=selection!=null){clear()}
     Column(Modifier.background(androidx.compose.ui.graphics.Color.White)){
         Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()).padding(horizontal=12.dp),horizontalArrangement=Arrangement.spacedBy(8.dp)){
             FilterChip(selected=!freehand,onClick={onMode(false);clear()},label={Text("矩形框选")},modifier=Modifier.testTag("selection-rectangle"))
@@ -32,6 +33,7 @@ internal fun SelectionActions(selection:SelectedInk?,all:List<InkStroke>,enabled
                 TextButton(onClick={beauty=true},enabled=enabled&&count in 1..256&&s.strokes.all{it.pen==InkPen.PEN&&it.cuts.isEmpty()},modifier=Modifier.testTag("selection-beautify")){Text("稳线美化")}
                 TextButton(onClick={color=true},enabled=enabled&&count in 1..256,modifier=Modifier.testTag("selection-recolor")){Text("改色")}
                 TextButton(onClick={excerpt(s)},enabled=enabled&&count in 1..256,modifier=Modifier.testTag("selection-excerpt")){Text("摘录为摘要卡")}
+                TextButton(onClick={associate(s)},enabled=enabled&&count in 1..256,modifier=Modifier.testTag("selection-associate")){Text("关联 / 区域链接")}
                 TextButton(onClick=clear){Text("取消选择")}
             }
         }

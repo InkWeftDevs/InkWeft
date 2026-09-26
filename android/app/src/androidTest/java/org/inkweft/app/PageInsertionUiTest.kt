@@ -25,7 +25,7 @@ class PageInsertionUiTest {
     private fun create():String{
         compose.waitUntil(10_000){runCatching{compose.onNodeWithTag("new-note").assertIsEnabled()}.isSuccess}
         val title="分页回归-"+UUID.randomUUID().toString().take(6)
-        compose.onNodeWithTag("new-note").performClick();compose.onNodeWithTag("new-title").performTextInput(title);compose.onNodeWithTag("create-note").performClick();saved()
+        compose.onNodeWithTag("new-note").performClick();compose.onNodeWithTag("create-page").performClick();compose.onNodeWithTag("new-title").performTextInput(title);compose.onNodeWithTag("create-note").performClick();saved()
         compose.activityRule.scenario.onActivity{a->a.currentFocus?.clearFocus();WindowCompat.getInsetsController(a.window,a.window.decorView).hide(WindowInsetsCompat.Type.ime())}
         compose.waitUntil(10_000){androidx.core.view.ViewCompat.getRootWindowInsets(compose.activity.window.decorView)?.isVisible(WindowInsetsCompat.Type.ime())==false}
         return runBlocking{app.repository.observeNotes().first()}.single{it.title==title}.id
@@ -34,11 +34,11 @@ class PageInsertionUiTest {
     private fun shot(name:String){compose.waitForIdle();val image=checkNotNull(InstrumentationRegistry.getInstrumentation().uiAutomation.takeScreenshot());try{File(compose.activity.getExternalFilesDir(null),name).outputStream().use{image.compress(Bitmap.CompressFormat.PNG,100,it)}}finally{image.recycle()}}
     private fun insert(){compose.onNodeWithTag("confirm-insert-pages").performClick();compose.waitUntil(10_000){compose.onAllNodesWithTag("insert-pages-dialog").fetchSemanticsNodes().isEmpty()};saved()}
     @Test fun beginningBatchKeepsOriginalInkAndPageIdentity(){
-        val book=create();compose.onNodeWithTag("ink-finger").performScrollTo().performClick()
+        val book=create();compose.onNodeWithTag("ink-more").performScrollTo().performClick();compose.onNodeWithTag("ink-finger").performScrollTo().performClick()
         compose.onNodeWithTag("ink-surface").performTouchInput{swipe(Offset(width*.3f,height*.3f),Offset(width*.5f,height*.5f),200)}
         compose.waitUntil(10_000){runBlocking{app.inkRepository.read(book).strokes.size}==1};saved()
         val stroke=runBlocking{app.inkRepository.read(book).strokes.single().stroke}
-        compose.onNodeWithTag("add-page").performScrollTo().performClick()
+        compose.onNodeWithTag("add-page").performClick()
         compose.onNodeWithTag("insert-start").performScrollTo().performClick();compose.onNodeWithTag("insert-count-plus").performScrollTo().performClick()
         compose.onNodeWithTag("insert-paper-grid").performScrollTo().performClick();compose.onNodeWithTag("insert-preview").performScrollTo().assertTextContains("插入 2 页",substring=true)
         shot("insert-pages-options.png");insert()

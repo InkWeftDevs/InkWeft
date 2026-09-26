@@ -19,12 +19,12 @@ class InkUiTest {
     @get:Rule val compose=createAndroidComposeRule<MainActivity>()
     private fun newNote() {
         compose.waitUntil(10_000){runCatching { compose.onNodeWithTag("new-note").assertIsEnabled() }.isSuccess}
-        compose.onNodeWithTag("new-note").performClick()
+        compose.onNodeWithTag("new-note").performClick();compose.onNodeWithTag("create-page").performClick()
         compose.onNodeWithTag("new-title").performTextInput("手写测试 "+UUID.randomUUID().toString().take(8))
         compose.onNodeWithTag("create-note").performClick()
         compose.waitUntil(10_000){compose.onAllNodesWithTag("ink-surface").fetchSemanticsNodes().isNotEmpty()}
         compose.waitUntil(10_000){runCatching { compose.onNodeWithTag("ink-status").assertTextContains("已提交",substring=true) }.isSuccess}
-        compose.onNodeWithTag("ink-finger").performScrollTo().performClick()
+        compose.onNodeWithTag("ink-more").performScrollTo().performClick();compose.onNodeWithTag("ink-finger").performScrollTo().performClick()
     }
     private fun count(n: Int) {
         compose.waitUntil(10_000){runCatching { compose.onNodeWithTag("ink-status").assertTextContains("$n 笔",substring=true) }.isSuccess}

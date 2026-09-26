@@ -24,7 +24,7 @@ import org.inkweft.core.*
 import org.inkweft.data.NotebookPageRow
 
 @Composable
-fun InkScreen(note:NoteDraft,workspace:WorkspaceViewModel=viewModel()){
+fun InkScreen(note:NoteDraft,workspace:WorkspaceViewModel=viewModel(),onBack:()->Unit={},onRename:()->Unit={},onText:()->Unit={},onDiagnostics:()->Unit={}){
     val context=LocalContext.current;val app=context.applicationContext as InkWeftApplication
     val vm:BookPagesViewModel=viewModel(key="book-${note.base.id}",factory=BookPagesViewModel.Factory(note.base.id,app.pages,app.workspaceRepository))
     val ui by vm.ui.collectAsStateWithLifecycle();val scope=rememberCoroutineScope()
@@ -36,6 +36,10 @@ fun InkScreen(note:NoteDraft,workspace:WorkspaceViewModel=viewModel()){
         }
     }
     var canNavigate by remember{mutableStateOf(false)};var directory by remember{mutableStateOf(false)}
+    SideEffect{app.navigationReady.value=canNavigate&&!ui.busy&&!ui.actionUnknown&&!ui.insertionUnknown}
+    androidx.activity.compose.BackHandler(enabled=!canNavigate||ui.busy||ui.actionUnknown||ui.insertionUnknown){
+        Toast.makeText(context,"请先抬笔或核对当前操作，笔记仍保持在当前页。",Toast.LENGTH_SHORT).show()
+    }
     var searchTarget by remember{mutableStateOf<Pair<String,Long>?>(null)}
     var exportBytes by remember{mutableStateOf<ByteArray?>(null)};var exporting by remember{mutableStateOf(false)}
     var confirmBook by remember{mutableStateOf(false)}
@@ -43,9 +47,18 @@ fun InkScreen(note:NoteDraft,workspace:WorkspaceViewModel=viewModel()){
     var pageActionId by rememberSaveable{mutableStateOf<String?>(null)}
     var pageActionKind by rememberSaveable{mutableStateOf(PageEditKind.MOVE.name)}
     var showRecycled by rememberSaveable{mutableStateOf(false)}
+    var knowledgeOpen by remember{mutableStateOf(false)}
+    var knowledgeAnchor by remember{mutableStateOf<KnowledgeData.Anchor?>(null)}
+    var documentMore by remember{mutableStateOf(false)}
+    var initialStudyCard by remember{mutableStateOf<String?>(null)}
     var studyOpen by remember{mutableStateOf(false)}
     var studySource by remember{mutableStateOf<StudySourceDraft?>(null)}
     var sourceFocus by remember{mutableStateOf<Pair<String,CanvasBounds>?>(null)}
+
+    val requestedCard by workspace.studyCardRequest.collectAsStateWithLifecycle()
+    LaunchedEffect(requestedCard){requestedCard?.let{initialStudyCard=it;studyOpen=true;workspace.studyCardRequest.value=null}}
+    val externalAnchor by workspace.focusAnchor.collectAsStateWithLifecycle()
+    LaunchedEffect(externalAnchor,ui.loading,ui.selectedId){externalAnchor?.let{anchor->if(ui.selectedId==anchor.pageId&&!ui.loading){sourceFocus=anchor.pageId to anchor.bounds;workspace.focusAnchor.value=null}}}
 
     fun requestAction(p:NotebookPageRow,kind:PageEditKind){directory=false;pageActionKind=kind.name;pageActionId=p.id}
     val export=rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("application/octet-stream")){uri->
@@ -54,7 +67,25 @@ fun InkScreen(note:NoteDraft,workspace:WorkspaceViewModel=viewModel()){
     }
     val page=ui.pages.firstOrNull{it.id==ui.selectedId}
     Column(Modifier.fillMaxSize()){
-        Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.End){TextButton(onClick={studySource=null;studyOpen=true},enabled=canNavigate&&!ui.busy&&!ui.actionUnknown&&!ui.insertionUnknown,modifier=Modifier.testTag("study-open")){Text("摘要卡 · 大纲 · 脑图")}}
+        val navigationEnabled=canNavigate&&!ui.busy&&!ui.actionUnknown&&!ui.insertionUnknown
+        Row(Modifier.fillMaxWidth().heightIn(min=60.dp).padding(horizontal=8.dp),verticalAlignment=Alignment.CenterVertically){
+            IconButton(onClick=onBack,enabled=navigationEnabled,modifier=Modifier.testTag("back-library").describedAs("返回资料库")){Glyph("back")}
+            TextButton(onClick=onRename,enabled=navigationEnabled,modifier=Modifier.weight(1f).testTag("rename-from-editor")){Text(note.title,modifier=Modifier.fillMaxWidth(),maxLines=1,overflow=androidx.compose.ui.text.style.TextOverflow.Ellipsis,fontSize=20.sp)}
+            if(page!=null&&!page.world){
+                IconButton(onClick={directory=true},enabled=navigationEnabled,modifier=Modifier.testTag("page-directory").describedAs("页目录")){Glyph("list")}
+                IconButton(onClick={insertion=page.id to PageInsertLocation.AFTER},enabled=navigationEnabled&&ui.pages.size+ui.recycled.size<500,modifier=Modifier.testTag("add-page").describedAs("添加页面")){Glyph("add")}
+            }
+            IconButton(onClick={knowledgeAnchor=null;knowledgeOpen=true},enabled=navigationEnabled,modifier=Modifier.testTag("knowledge-open").describedAs("知识关联")){Glyph("link")}
+            IconButton(onClick={studySource=null;studyOpen=true},enabled=navigationEnabled,modifier=Modifier.testTag("study-open").describedAs("摘要卡、大纲与脑图")){Glyph("learn")}
+            Box{IconButton(onClick={documentMore=true},enabled=navigationEnabled,modifier=Modifier.testTag("document-more").describedAs("文档选项")){Glyph("more")}
+                DropdownMenu(documentMore,{documentMore=false}){
+                    DropdownMenuItem(text={Text("编辑键入文字")},onClick={documentMore=false;onText()},modifier=Modifier.testTag("mode-text"))
+                    if(page!=null&&!page.world)DropdownMenuItem(text={Text("导出整本内容副本")},onClick={documentMore=false;confirmBook=true},enabled=!exporting,modifier=Modifier.testTag("export-book"))
+                    DropdownMenuItem(text={Text("诊断与导出")},onClick={documentMore=false;onDiagnostics()},modifier=Modifier.testTag("open-diagnostics"))
+                }
+            }
+        }
+        HorizontalDivider(color=Line)
         if(ui.error!=null)Row(Modifier.fillMaxWidth().padding(horizontal=12.dp),verticalAlignment=Alignment.CenterVertically){Text(ui.error!!,Modifier.weight(1f),fontSize=12.sp);if(!ui.insertionUnknown&&!ui.actionUnknown)TextButton(onClick=vm::clearError){Text("知道了")}}
         if(ui.actionUnknown)Surface(color=androidx.compose.ui.graphics.Color(0xfffff4e3)){
             Row(Modifier.fillMaxWidth().padding(horizontal=12.dp),verticalAlignment=Alignment.CenterVertically){
@@ -68,19 +99,22 @@ fun InkScreen(note:NoteDraft,workspace:WorkspaceViewModel=viewModel()){
                 TextButton(onClick=vm::retryInsertion,enabled=!ui.busy,modifier=Modifier.testTag("retry-page-insertion")){Text("核对原插页")}
             }
         }
-        if(page!=null&&!page.world)Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()).padding(horizontal=12.dp),verticalAlignment=Alignment.CenterVertically){
-            TextButton(onClick={directory=true},enabled=canNavigate&&!ui.busy&&!ui.insertionUnknown&&!ui.actionUnknown,modifier=Modifier.testTag("page-directory")){Text("第 ${page.position+1} / ${ui.pages.size} 页",modifier=Modifier.testTag("page-counter"))}
-            TextButton(onClick={ui.pages.getOrNull(page.position-1)?.let{vm.select(it.id)}},enabled=canNavigate&&page.position>0&&!ui.busy&&!ui.insertionUnknown&&!ui.actionUnknown,modifier=Modifier.testTag("previous-page")){Text("上一页")}
-            TextButton(onClick={ui.pages.getOrNull(page.position+1)?.let{vm.select(it.id)}},enabled=canNavigate&&page.position<ui.pages.lastIndex&&!ui.busy&&!ui.insertionUnknown&&!ui.actionUnknown,modifier=Modifier.testTag("next-page")){Text("下一页")}
-            OutlinedButton(onClick={insertion=page.id to PageInsertLocation.AFTER},enabled=canNavigate&&!ui.busy&&!ui.insertionUnknown&&!ui.actionUnknown&&ui.pages.size+ui.recycled.size<500,modifier=Modifier.testTag("add-page")){Text(if(ui.busy)"正在核对…"else"＋ 添加页 ▾")}
-            TextButton(onClick={confirmBook=true},enabled=canNavigate&&!ui.busy&&!ui.insertionUnknown&&!ui.actionUnknown&&!exporting,modifier=Modifier.testTag("export-book")){Text("导出整本")}
-        }
         if(page==null)Box(Modifier.weight(1f).fillMaxWidth(),contentAlignment=Alignment.Center){if(ui.loading)CircularProgressIndicator()else Text("页面未能载入，原数据保留")}
         else Box(Modifier.weight(1f)){key(page.id){InkPageScreen(note,workspace,page,{canNavigate=it},{rev->searchTarget=page.id to rev},!ui.busy&&!ui.actionUnknown&&!ui.insertionUnknown&&pageActionId==null,
+            onAssociate={selection->knowledgeAnchor=KnowledgeData.Anchor(page.id,selection.revision,selection.region.bounds,selection.strokes.map{it.id});knowledgeOpen=true},
             onExcerpt={selection->studySource=StudySourceDraft(page.id,selection.revision,selection.region.bounds,selection.strokes.map{it.id});studyOpen=true},
-            focusRegion=sourceFocus?.takeIf{it.first==page.id}?.second,onFocusConsumed={sourceFocus=null})}}
+            focusRegion=sourceFocus?.takeIf{it.first==page.id}?.second,onFocusConsumed={sourceFocus=null},pageNavigation={
+                if(!page.world){
+                    TextButton(onClick={ui.pages.getOrNull(page.position-1)?.let{vm.select(it.id)}},enabled=navigationEnabled&&page.position>0,modifier=Modifier.testTag("previous-page")){Text("‹")}
+                    Text("第 ${page.position+1} / ${ui.pages.size} 页",fontSize=12.sp,modifier=Modifier.testTag("page-counter"))
+                    TextButton(onClick={ui.pages.getOrNull(page.position+1)?.let{vm.select(it.id)}},enabled=navigationEnabled&&page.position<ui.pages.lastIndex,modifier=Modifier.testTag("next-page")){Text("›")}
+                }
+            })}}
     }
-    if(studyOpen)StudyWorkspace(note,studySource,{studyOpen=false;studySource=null}){source->
+    if(knowledgeOpen)KnowledgeWorkspace(note.base.id,page?.let{TargetRef(TargetKind.PAGE,it.id)}?:TargetRef(TargetKind.NOTE,note.base.id),knowledgeAnchor,dismiss={knowledgeOpen=false}){target->
+        app.openKnowledgeTarget.value=target;knowledgeOpen=false
+    }
+    if(studyOpen)StudyWorkspace(note,studySource,{studyOpen=false;studySource=null;initialStudyCard=null},initialCardId=initialStudyCard){source->
         if(ui.pages.any{it.id==source.pageId}){vm.select(source.pageId);sourceFocus=source.pageId to CanvasBounds(source.left,source.top,source.right,source.bottom);true}else false
     }
     if(directory)AlertDialog(onDismissRequest={directory=false},modifier=Modifier.testTag("pages-directory-dialog"),title={Text("页面 · ${ui.pages.size} 页")},text={
@@ -152,7 +186,7 @@ private fun PageSearchDialog(pageId:String,revision:Long,dismiss:()->Unit){
     AlertDialog(onDismissRequest={if(!busy)dismiss()},modifier=Modifier.testTag("page-search-dialog"),title={Text("本页手写检索文字")},text={Column(verticalArrangement=Arrangement.spacedBy(10.dp)){
         Text("当前没有自动手写识别模型。可手动填入本页关键词或转录内容，保存后可从资料库搜索并定位本页。",fontSize=12.sp,color=Quiet)
         OutlinedTextField(text,{if(it.length<=20_000)text=it},enabled=!loading&&!busy,modifier=Modifier.fillMaxWidth().heightIn(min=120.dp).testTag("page-search-text"),label={Text("关键词 / 人工转录")})
-        Text("任何擦写或撤销都会让此版本的索引失效，旧文字不继续冒充当前手写；需重新核对并保存。原笔迹不被转换或上传。",fontSize=12.sp,color=Quiet)
+        Text("普通笔迹擦写或撤销会让此版本的索引失效；只改荧光标注时保留有效索引，旧文字不继续冒充当前手写；需重新核对并保存。原笔迹不被转换或上传。",fontSize=12.sp,color=Quiet)
         message?.let{Text(it,fontSize=12.sp)}
     }},confirmButton={TextButton(onClick={busy=true;scope.launch{try{if(withContext(Dispatchers.IO){app.pages.saveSearchText(pageId,revision,text)})dismiss()else message="笔迹已更新，没有套用到新版本。请关闭后重新核对。"}catch(c:CancellationException){throw c}catch(_:Exception){message="索引保存待核对，原笔迹保留。"}finally{busy=false}}},enabled=!loading&&!busy,modifier=Modifier.testTag("save-page-search")){Text("保存检索文字")}},dismissButton={TextButton(onClick=dismiss,enabled=!busy){Text("取消")}})
 }

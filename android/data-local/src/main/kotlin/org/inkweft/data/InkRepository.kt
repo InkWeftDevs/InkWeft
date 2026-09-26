@@ -103,6 +103,18 @@ class InkRepository(private val db:NoteDatabase,private val fault:(InkFaultPoint
                 is InkMutation.Cut->dao.insertCut(InkCutRow(change.selection.cut.id,command.noteId,InkCutCodec.encode(change.selection.cut),change.selection.strokeIds.joinToString(","),true,next))
                 is InkMutation.CutVisibility->check(dao.cutVisibility(change.cutId,command.noteId,change.visible)==1)
             }
+            // Pure annotation changes do not change the transcribed underlying handwriting.
+            // Advance only an already-valid index; never resurrect a stale revision.
+            suspend fun highlights(ids:List<String>):Boolean{for(id in ids){val r=dao.stroke(id)?:return false;if(InkStrokeCodec.decode(r.payload).pen!=InkPen.HIGHLIGHTER)return false};return ids.isNotEmpty()}
+            val annotationOnly=when(val m=command.mutation){
+                is InkMutation.Add->m.stroke.pen==InkPen.HIGHLIGHTER
+                is InkMutation.Visibility->highlights(m.ids)
+                is InkMutation.Cut->highlights(m.selection.strokeIds)
+                is InkMutation.CutVisibility->dao.cut(m.cutId)?.strokeIds?.split(',')?.let{highlights(it)}?:false
+                is InkMutation.Replace->m.added.all{it.pen==InkPen.HIGHLIGHTER}&&(m.hidden.isEmpty()||highlights(m.hidden))
+                is InkMutation.Swap->highlights(m.hide+m.show)
+            }
+            if(annotationOnly)db.pages().carrySearch(command.noteId,command.expectedRevision,next)
             fault(InkFaultPoint.BEFORE_RECEIPT)
             dao.insertReceipt(InkReceiptRow(command.commandId,command.noteId,digest,next,command.strokeIds.joinToString(","),visible))
             // Search query joins this exact page head, so stale text becomes

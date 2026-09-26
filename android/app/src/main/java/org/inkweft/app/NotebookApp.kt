@@ -45,9 +45,23 @@ fun NotebookApp(vm:NotebookViewModel=viewModel(),onDiagnostics:()->Unit={}){
     val context=LocalContext.current;val app=context.applicationContext as InkWeftApplication
     val transfers:LibraryTransfersViewModel=viewModel();val transferUi by transfers.ui.collectAsStateWithLifecycle()
     val keyboard=LocalSoftwareKeyboardController.current;val focus=LocalFocusManager.current;val scope=rememberCoroutineScope()
-    var showCreate by remember{mutableStateOf(false)};var newTitle by remember{mutableStateOf("")}
-    var newWorld by remember{mutableStateOf(false)};var newPaper by remember{mutableStateOf(PaperStyle.RULED)};var newCover by remember{mutableStateOf(NotebookCover.AUTO)}
+    val pendingCreate by workspace.pendingCreate.collectAsStateWithLifecycle()
+    val defaults=remember(context){context.getSharedPreferences("inkweft-new-notebook",android.content.Context.MODE_PRIVATE)}
+    val target by app.openKnowledgeTarget.collectAsStateWithLifecycle()
+    val navigationReady by app.navigationReady.collectAsStateWithLifecycle()
+    SideEffect{if(ui.selectedId==null)app.navigationReady.value=true}
+    LaunchedEffect(target,navigationReady){val ref=target?:return@LaunchedEffect;if(!navigationReady)return@LaunchedEffect
+        try{val (destination,anchor)=withContext(Dispatchers.IO){app.knowledge.resolve(ref)}
+            if(ref.kind==TargetKind.CARD)workspace.studyCardRequest.value=ref.id
+            if(anchor!=null){workspace.focusAnchor.value=anchor;workspace.openSearchPage(destination.id,anchor.pageId){vm.select(destination)}}
+            else if(ref.kind==TargetKind.PAGE)workspace.openSearchPage(destination.id,ref.id){vm.select(destination)}else vm.select(destination)
+        }catch(c:CancellationException){throw c}catch(_:Exception){Toast.makeText(context,"来源已回收或无法读取，未切换到其他页面。",Toast.LENGTH_LONG).show()}
+        finally{app.openKnowledgeTarget.value=null}
+    }
+    var showCreate by rememberSaveable{mutableStateOf(false)};var newTitle by rememberSaveable{mutableStateOf("")}
+    var newWorld by rememberSaveable{mutableStateOf(false)};var newPaper by rememberSaveable{mutableStateOf(PaperStyle.RULED)};var newCover by rememberSaveable{mutableStateOf(NotebookCover.AUTO)}
     var inkMode by rememberSaveable(ui.selectedId){mutableStateOf(true)}
+    SideEffect{if(!inkMode)app.navigationReady.value=true}
     var confirmExport by remember{mutableStateOf(false)};var exportText by remember{mutableStateOf<String?>(null)}
     val textExport=rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("text/plain")){uri->
         val text=exportText;exportText=null
@@ -60,17 +74,18 @@ fun NotebookApp(vm:NotebookViewModel=viewModel(),onDiagnostics:()->Unit={}){
     // Compose focus does not discard the NoteDraft; it prevents the body IME from
     // reopening behind the rename dialog when that dialog is dismissed.
     fun beginRename(note:Note){focus.clearFocus(force=true);keyboard?.hide();vm.openRename(note)}
-    fun openCreate(){newTitle="";newWorld=false;newPaper=PaperStyle.RULED;newCover=NotebookCover.AUTO;showCreate=true}
+    fun openCreate(){if(pendingCreate!=null)return;newTitle="";newWorld=defaults.getBoolean("world",false);newPaper=runCatching{PaperStyle.valueOf(defaults.getString("paper","RULED")!!)}.getOrDefault(PaperStyle.RULED);newCover=NotebookCover.fromKey(defaults.getString("cover","auto")!!);showCreate=true}
     BackHandler(enabled=ui.selectedId!=null){vm.back()}
     LaunchedEffect(ui.selectedId,inkMode){if(ui.selectedId!=null&&inkMode){focus.clearFocus(force=true);keyboard?.hide()}}
     Column(Modifier.fillMaxSize().background(Color.White).statusBarsPadding().navigationBarsPadding().imePadding()){
         if(ui.readFailed)Surface(color=Color(0xffffeee7)){Row(Modifier.fillMaxWidth().padding(12.dp),verticalAlignment=Alignment.CenterVertically){Text("资料读取失败，原数据不会被空库覆盖。",Modifier.weight(1f),fontSize=13.sp);TextButton(onClick=vm::retryRead){Text("重试")};if(ui.current!=null)TextButton(onClick=onDiagnostics,modifier=Modifier.testTag("open-diagnostics-error")){Text("诊断")}}}
         if(workspaceError!=null)Surface(color=Color(0xfffff4e3)){Row(Modifier.fillMaxWidth().padding(horizontal=16.dp),verticalAlignment=Alignment.CenterVertically){Text(workspaceError!!,Modifier.weight(1f),fontSize=12.sp);TextButton(onClick=workspace::clearError){Text("知道了")}}}
+        if(pendingCreate!=null&&!busy)TextButton(onClick={workspace.retryCreate{vm.select(it)}},modifier=Modifier.testTag("retry-create-notebook")){Text("核对原创建请求")}
         if(transferUi.busy||busy)LinearProgressIndicator(Modifier.fillMaxWidth())
         val draft=ui.current
         if(draft==null)Box(Modifier.weight(1f)){LibraryScreen(ui,workspace,vm::select,::openCreate,{pageImport.launch(arrayOf("application/octet-stream","*/*"))},onDiagnostics,::beginRename,{transfers.requestCopy(it.id)},{transfers.export(it.id)})}
         else{
-            Row(Modifier.fillMaxWidth().heightIn(min=58.dp).padding(horizontal=12.dp),verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(8.dp)){
+            if(!inkMode)Row(Modifier.fillMaxWidth().heightIn(min=58.dp).padding(horizontal=12.dp),verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(8.dp)){
                 TextButton(onClick=vm::back,modifier=Modifier.testTag("back-library")){Glyph("back");Spacer(Modifier.width(5.dp));Text("资料库",fontSize=13.sp)}
                 VerticalDivider(Modifier.height(23.dp),color=Line)
                 Row(Modifier.weight(1f).heightIn(min=48.dp).clickable(enabled=draft.base.revision>0){beginRename(draft.base)}.testTag("rename-from-editor").describedAs("重命名笔记"),verticalAlignment=Alignment.CenterVertically){
@@ -81,31 +96,16 @@ fun NotebookApp(vm:NotebookViewModel=viewModel(),onDiagnostics:()->Unit={}){
                 IconButton(onClick=onDiagnostics,modifier=Modifier.testTag("open-diagnostics").describedAs("诊断与导出")){Glyph("diagnostics",Quiet)}
             }
             HorizontalDivider(color=Line)
-            if(inkMode&&draft.base.revision>0)Box(Modifier.weight(1f)){key(draft.base.id){InkScreen(draft,workspace)}}
+            if(inkMode&&draft.base.revision>0)Box(Modifier.weight(1f)){key(draft.base.id){InkScreen(draft,workspace,vm::back,{beginRename(draft.base)},{inkMode=false},onDiagnostics)}}
             else TextPage(draft,vm,Modifier.weight(1f)){confirmExport=true}
         }
     }
-    if(showCreate)AlertDialog(onDismissRequest={if(!busy)showCreate=false},title={Text("新建笔记")},text={
-        Column(Modifier.verticalScroll(rememberScrollState()),verticalArrangement=Arrangement.spacedBy(14.dp)){
-            OutlinedTextField(newTitle,{if(it.length<=120)newTitle=it},singleLine=true,label={Text("笔记标题")},placeholder={Text("未命名笔记")},modifier=Modifier.fillMaxWidth().testTag("new-title"))
-            Text("笔记形式",fontSize=13.sp,color=Quiet)
-            Row(horizontalArrangement=Arrangement.spacedBy(12.dp)){
-                FilterChip(selected=!newWorld,onClick={newWorld=false},label={Text("纸张笔记")},leadingIcon={Glyph("note")},modifier=Modifier.testTag("create-page"))
-                FilterChip(selected=newWorld,onClick={newWorld=true;newPaper=PaperStyle.DOTS},label={Text("无界笔记")},leadingIcon={Glyph("board")},modifier=Modifier.testTag("create-world"))
-            }
-            Text(if(newWorld)"向四周展开，支持负坐标、平移和缩放。"else"分页笔记本，创建后可插入新页，逐页书写和导出整本。",fontSize=12.sp,color=Quiet,lineHeight=20.sp)
-            Text("纸面样式",fontSize=13.sp,color=Quiet)
-            Row(horizontalArrangement=Arrangement.spacedBy(9.dp)){
-                PaperStyle.entries.forEach{style->Column(Modifier.weight(1f).clickable{newPaper=style},horizontalAlignment=Alignment.CenterHorizontally){
-                    Box(Modifier.fillMaxWidth().height(70.dp).border(if(newPaper==style)2.dp else 1.dp,if(newPaper==style)Forest else Line,androidx.compose.foundation.shape.RoundedCornerShape(6.dp)).padding(5.dp)){PaperThumbnail(newWorld,style)}
-                    Text(when(style){PaperStyle.BLANK->"空白";PaperStyle.RULED->"横线";PaperStyle.GRID->"方格";PaperStyle.DOTS->"点阵"},fontSize=11.sp,color=if(newPaper==style)Forest else Quiet,modifier=Modifier.padding(top=6.dp))
-                }}
-            }
-            Text("封面 · 可横向滑动选择",fontSize=13.sp,color=Quiet)
-            CoverChoices(newCover,newTitle.ifBlank{"我的笔记"},newWorld){newCover=it}
-            Text("封面不占一页，可在笔记菜单中更换；未选择时按笔记身份自动配色。",fontSize=11.sp,color=Quiet)
-        }
-    },confirmButton={Button(onClick={focus.clearFocus(force=true);keyboard?.hide();workspace.create(newTitle.ifBlank{"未命名笔记"},newWorld,newPaper,newCover){vm.select(it)};showCreate=false},enabled=!busy,modifier=Modifier.testTag("create-note")){Text("创建")}},dismissButton={TextButton(onClick={showCreate=false},enabled=!busy){Text("取消")}})
+    if(showCreate)NewNotebookScreen(newTitle,{newTitle=it},newWorld,{newWorld=it;if(it&&newPaper.ordinal>=4)newPaper=PaperStyle.DOTS},
+        newPaper,{newPaper=it},newCover,{newCover=it},busy,{showCreate=false}){
+        focus.clearFocus(force=true);keyboard?.hide()
+        workspace.create(newTitle.ifBlank{"未命名笔记"},newWorld,newPaper,newCover){defaults.edit().putBoolean("world",newWorld).putString("paper",newPaper.name).putString("cover",newCover.key).apply();vm.select(it)}
+        showCreate=false
+    }
     if(confirmExport)AlertDialog(onDismissRequest={confirmExport=false},title={Text("导出文字")},text={Text("明文文字副本，不包含手写、封面、历史或回执。所选位置可能由云盘提供方管理。")},confirmButton={TextButton(onClick={confirmExport=false;ui.current?.let{exportText=it.title+"\n\n"+it.text;textExport.launch("墨织笔记.txt")}}){Text("选择位置")}},dismissButton={TextButton(onClick={confirmExport=false}){Text("取消")}})
     rename?.let{RenameNoteDialog(it,vm::editRename,vm::saveRename,vm::closeRename)}
     LibraryTransferDialog(transfers,{pageImport.launch(arrayOf("application/octet-stream","*/*"))},vm::select)

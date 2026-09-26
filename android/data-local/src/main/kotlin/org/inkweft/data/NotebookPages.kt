@@ -17,6 +17,7 @@ data class PageSearchRow(@PrimaryKey val pageId:String,val inkRevision:Long,val 
 data class PageSearchHit(val notebookId:String,val pageId:String,val position:Int,val text:String)
 @Dao
 interface NotebookPageDao {
+    @Query("SELECT * FROM notebook_pages ORDER BY notebookId,position,id") fun observeLibraryPages():Flow<List<NotebookPageRow>>
     @Query("SELECT * FROM notebook_pages WHERE notebookId=:id ORDER BY position,id") suspend fun allPages(id:String):List<NotebookPageRow>
     @Query("SELECT * FROM notebook_pages WHERE notebookId=:id ORDER BY position,id") fun observeAll(id:String):Flow<List<NotebookPageRow>>
     @Query("UPDATE notebook_pages SET position=:position,trashedAt=:trashedAt WHERE id=:id") suspend fun arrange(id:String,position:Int,trashedAt:Long?):Int
@@ -28,6 +29,7 @@ interface NotebookPageDao {
     @Query("UPDATE notebook_pages SET centerX=:x,centerY=:y,zoom=:zoom WHERE id=:id") suspend fun viewport(id:String,x:Double,y:Double,zoom:Double):Int
     @Query("UPDATE notebook_pages SET paper=:paper WHERE id=:id") suspend fun paper(id:String,paper:Int):Int
     @Query("SELECT * FROM page_search_text WHERE pageId=:id") suspend fun search(id:String):PageSearchRow?
+    @Query("UPDATE page_search_text SET inkRevision=:next WHERE pageId=:id AND inkRevision=:expected") suspend fun carrySearch(id:String,expected:Long,next:Long):Int
     @Insert(onConflict=OnConflictStrategy.REPLACE) suspend fun putSearch(row:PageSearchRow)
     @Query("SELECT p.notebookId AS notebookId,p.id AS pageId,p.position AS position,s.text AS text FROM page_search_text s JOIN notebook_pages p ON p.id=s.pageId LEFT JOIN ink_pages h ON h.noteId=p.id WHERE p.trashedAt IS NULL AND s.inkRevision=COALESCE(h.revision,0)")
     fun observeSearch():Flow<List<PageSearchHit>>

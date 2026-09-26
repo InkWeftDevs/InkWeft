@@ -33,9 +33,9 @@ internal fun NotebookCover.label()=when(this){
 @Composable
 internal fun NotebookCoverArt(style:NotebookCover,noteId:String,title:String,world:Boolean,modifier:Modifier=Modifier){
     val resolved=style.resolved(noteId)
-    val base=when(resolved){NotebookCover.FOREST->Color(0xff315d50);NotebookCover.INK->Color(0xff344d67);NotebookCover.SAND->Color(0xffc3a583);NotebookCover.ROSE->Color(0xffbc8f92);NotebookCover.LILAC->Color(0xff9083a9);NotebookCover.GRID->Color(0xffe4e9e5);NotebookCover.WAVE->Color(0xffdae7e3);else->Color(0xffeef2ef)}
+    val base=when(resolved){NotebookCover.FOREST->Color(0xffdceae0);NotebookCover.INK->Color(0xffe5eaf4);NotebookCover.SAND->Color(0xffefe9dc);NotebookCover.ROSE->Color(0xfff0e5e5);NotebookCover.LILAC->Color(0xffeae6f5);NotebookCover.GRID->Color(0xffe4e9e5);NotebookCover.WAVE->Color(0xffdae7e3);else->Color(0xffeef2ef)}
     val dark=resolved in listOf(NotebookCover.GRID,NotebookCover.WAVE,NotebookCover.CONTENT)
-    val ink=if(dark)Color(0xff27483e)else Color(0xfffffcf4)
+    val ink=when(resolved){NotebookCover.INK->Color(0xff354b69);NotebookCover.SAND->Color(0xff635946);NotebookCover.ROSE->Color(0xff704e50);NotebookCover.LILAC->Color(0xff5c547b);else->Color(0xff27483e)}
     Box(modifier.clip(RoundedCornerShape(7.dp)).background(base).clearAndSetSemantics{}){
         Canvas(Modifier.fillMaxSize()){
             val w=size.width;val h=size.height

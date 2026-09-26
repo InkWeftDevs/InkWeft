@@ -17,6 +17,8 @@ data class StudyNodeRow(@PrimaryKey val id:String,val notebookId:String,val card
 data class StudyReceiptRow(@PrimaryKey val id:String,val notebookId:String,val digest:String,val resultId:String)
 @Dao
 interface StudyDao {
+    @Query("SELECT * FROM study_cards ORDER BY id") fun observeAllCards():Flow<List<StudyCardRow>>
+    @Query("SELECT * FROM study_card_revisions WHERE cardId=:id AND revision=:revision") suspend fun cardVersion(id:String,revision:Long):StudyCardRevisionRow?
     @Query("SELECT * FROM study_cards WHERE notebookId=:book ORDER BY id") fun observeCards(book:String):Flow<List<StudyCardRow>>
     @Query("SELECT * FROM study_nodes WHERE notebookId=:book ORDER BY id") fun observeNodes(book:String):Flow<List<StudyNodeRow>>
     @Query("SELECT * FROM study_cards WHERE notebookId=:book ORDER BY id") suspend fun cards(book:String):List<StudyCardRow>
@@ -73,7 +75,9 @@ class StudyRepository(private val db:NoteDatabase,private val fault:(StudyFault)
                 }
                 StudyAction.EDIT,StudyAction.TRASH_CARD,StudyAction.RESTORE_CARD->{
                     val old=ownedCard();require(old.revision==c.expectedRevision){"CARD_VERSION_CHANGED"}
-                    if(c.action==StudyAction.TRASH_CARD)require(nodes.none{it.cardId==old.id&&!it.removed}){"REMOVE_OCCURRENCES_FIRST"}
+                    if(c.action==StudyAction.TRASH_CARD){require(nodes.none{it.cardId==old.id&&!it.removed}){"REMOVE_OCCURRENCES_FIRST"}
+                        require(db.knowledge().all().none{r->!r.removed&&when(val d=r.data()){is KnowledgeData.Placement->d.cardId==old.id;is KnowledgeData.MapOccurrence->d.cardId==old.id;else->false}}){"REMOVE_OTHER_VIEW_OCCURRENCES_FIRST"}
+                    }
                     if(c.action==StudyAction.EDIT)require(old.trashedAt==null)
                     val row=old.copy(revision=old.revision+1,title=if(c.action==StudyAction.EDIT)c.title else old.title,body=if(c.action==StudyAction.EDIT)c.body else old.body,
                         trashedAt=when(c.action){StudyAction.TRASH_CARD->System.currentTimeMillis();StudyAction.RESTORE_CARD->null;else->old.trashedAt})

@@ -22,11 +22,11 @@ class DiagnosticsUiTest {
     @Test fun entryAndRedactedZipFromActualApp() {
         compose.waitUntil(10_000) { runCatching { compose.onNodeWithTag("new-note").assertIsEnabled() }.isSuccess }
         val privateTitle = "DO_NOT_EXPORT_PRIVATE_NOTE_3791"
-        compose.onNodeWithTag("new-note").performClick()
+        compose.onNodeWithTag("new-note").performClick();compose.onNodeWithTag("create-page").performClick()
         compose.onNodeWithTag("new-title").performTextInput(privateTitle)
         compose.onNodeWithTag("create-note").performClick()
         compose.waitUntil(10_000) { compose.onAllNodesWithTag("ink-surface").fetchSemanticsNodes().isNotEmpty() }
-        compose.onNodeWithTag("open-diagnostics").performClick()
+        compose.onNodeWithTag("document-more").performClick();compose.onNodeWithTag("open-diagnostics").performClick()
         compose.onNodeWithTag("diagnostics-dialog").assertExists()
         compose.onNodeWithTag("diagnostics-mark").performScrollTo().performClick()
         compose.onNodeWithTag("diagnostics-status").assertTextContains("已加时间标记", substring = true)

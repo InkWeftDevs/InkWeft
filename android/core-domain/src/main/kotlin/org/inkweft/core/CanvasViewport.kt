@@ -6,7 +6,8 @@ import kotlin.math.min
 
 /** A board has no paper edge, but finite coordinates/resource budgets still apply. */
 object BoardLimits { const val WORLD = 1_000_000f }
-enum class PaperStyle { BLANK, RULED, GRID, DOTS }
+// Persisted ordinals: append only; old readers reject unknown templates explicitly.
+enum class PaperStyle { BLANK, RULED, GRID, DOTS, CORNELL, CORNELL_WIDE, CORNELL_BLANK, MISTAKES, DERIVATION, DAILY }
 
 data class CanvasPoint(val x: Double, val y: Double)
 data class CanvasBounds(val left: Double, val top: Double, val right: Double, val bottom: Double) {
