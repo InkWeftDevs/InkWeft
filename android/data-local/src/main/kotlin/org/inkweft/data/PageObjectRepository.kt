@@ -27,27 +27,36 @@ class PageObjectRepository(private val db:NoteDatabase,private val afterCommit:(
         return db.objects().get(id)?.let{require(it.revision>0);ObjectSnapshot(it.revision,PageObjectCodec.decode(it.payload))}?:ObjectSnapshot()
     }
     fun observe(id:String)=db.objects().observe(id)
-    suspend fun save(pageId:String,expected:Long,command:String,objects:List<PageObject>):Long {
+    suspend fun save(pageId:String,expected:Long,command:String,objects:List<PageObject>,expectedInk:Long?=null):Long {
         UUID.fromString(command);require(expected>=0)
         val bytes=PageObjectCodec.encode(objects)
-        val digest=MessageDigest.getInstance("SHA-256").digest((pageId+":"+expected+":").toByteArray()+bytes).joinToString(""){"%02x".format(it.toInt()and 255)}
+        val digest=MessageDigest.getInstance("SHA-256").digest((pageId+":"+expected+":"+expectedInk+":").toByteArray()+bytes).joinToString(""){"%02x".format(it.toInt()and 255)}
         val next=db.withTransaction {
             db.objects().receipt(command)?.let{require(it.pageId==pageId&&it.digest==digest){"OBJECT_COMMAND_REUSED"};return@withTransaction it.revision}
             val owner=checkNotNull(db.pages().get(pageId))
             require(owner.trashedAt==null&&db.workspace().get(owner.notebookId)?.trashedAt==null)
             require((db.objects().get(pageId)?.revision?:0)==expected){"OBJECT_CONFLICT"}
+            if(expectedInk!=null)require((db.ink().page(pageId)?.revision?:0)==expectedInk){"INK_CONFLICT"}
+            validateSources(pageId,objects)
             validateBounds(objects,owner.world);validateImages(objects)
+            db.pages().invalidateSearch(pageId)
             db.objects().put(PageObjectRow(pageId,expected+1,bytes))
             db.objects().record(ObjectReceiptRow(command,pageId,digest,expected+1))
             db.notes().touch(owner.notebookId,System.currentTimeMillis());expected+1
         }
         afterCommit();return next
     }
-    internal suspend fun import(pageId:String,objects:List<PageObject>) {
+    private suspend fun validateSources(pageId:String,objects:List<PageObject>){
+        val refs=objects.flatMap{it.sourceStrokeIds};require(refs.distinct().size==refs.size)
+        if(refs.isNotEmpty()){val owned=db.ink().strokes(pageId).map{it.id}.toSet();require(refs.all{it in owned})}
+    }
+    internal suspend fun import(pageId:String,objects:List<PageObject>,strokeIds:Map<String,String> = emptyMap()) {
         if(objects.isEmpty())return
         require(db.objects().get(pageId)==null)
         validateBounds(objects,checkNotNull(db.pages().get(pageId)).world);validateImages(objects)
-        db.objects().put(PageObjectRow(pageId,1,PageObjectCodec.encode(objects.map{it.copy(id=UUID.randomUUID().toString())})))
+        val mapped=objects.map{it.copy(id=UUID.randomUUID().toString(),sourceStrokeIds=it.sourceStrokeIds.mapNotNull(strokeIds::get))}
+        validateSources(pageId,mapped)
+        db.objects().put(PageObjectRow(pageId,1,PageObjectCodec.encode(mapped)))
     }
     companion object {
         fun validateImages(objects:List<PageObject>) {

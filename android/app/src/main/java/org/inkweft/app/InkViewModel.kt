@@ -16,6 +16,7 @@ data class InkUi(val strokes:List<InkStroke> = emptyList(),val loading:Boolean=t
 class InkViewModel(private val noteId:String,private val repository:InkRepository):ViewModel(){
     private val mutable=MutableStateFlow(InkUi());val ui=mutable.asStateFlow()
     private var session:InkSession?=null
+    var suppressedIds:Set<String> = emptySet()
     private var writing=false;private var reading=false;private var erasing=false
     init{load()}
     fun load(){if(session!=null||reading)return;reading=true;mutable.value=InkUi();viewModelScope.launch{try{val p=withContext(Dispatchers.IO){repository.read(noteId)};session=InkSession(p);publish()}catch(c:CancellationException){throw c}catch(_:Exception){mutable.value=InkUi(loading=false,readFailed=true)}finally{reading=false}}}
@@ -26,7 +27,7 @@ class InkViewModel(private val noteId:String,private val repository:InkRepositor
     fun erase(ids:List<String>){if(ids.isEmpty())return;val s=session?:return;s.enqueue(InkMutation.Visibility(ids,false),finishInFlight=true);publish();pump()}
     fun erasePath(path:List<InkSample>,radius:Float=12f,whole:Boolean=true,onlyHighlighter:Boolean=false){
         val s=session?:return;if(erasing||path.isEmpty()||s.blocked!=null)return
-        val snapshot=s.visibleDraft().filter{!onlyHighlighter||it.pen==InkPen.HIGHLIGHTER}
+        val snapshot=s.visibleDraft().filter{it.id !in suppressedIds&&(!onlyHighlighter||it.pen==InkPen.HIGHLIGHTER)}
         if(!whole){
             // Only bounded AABB filtering is synchronous; the exact subtraction
             // is the immutable mask used by rendering and export, not a raster.

@@ -12,6 +12,7 @@ class InkWeftApplication:Application(){
     val diagnostics by lazy{AppDiagnostics(this)}
     private val database by lazy{NoteDatabase.open(this)}
     val repository by lazy{NoteRepository(database)}
+    val documents by lazy{DocumentRepository(database)}
     val pageObjects by lazy{PageObjectRepository(database)}
     val inkRepository by lazy{InkRepository(database)}
     val workspaceRepository by lazy{WorkspaceRepository(database)}
@@ -21,5 +22,7 @@ class InkWeftApplication:Application(){
     val knowledge by lazy{KnowledgeRepository(database)}
     val study by lazy{StudyRepository(database)}
     val cloudServices:CloudServicePort=DisabledCloudServices
-    override fun onCreate(){super.onCreate();diagnostics}
+    internal val documentRendering by lazy{DocumentRendering(this,documents)}
+    internal val handwriting by lazy{HandwritingRecognizer(this)}
+    override fun onCreate(){super.onCreate();TextStyles.initialize(this);diagnostics}
 }

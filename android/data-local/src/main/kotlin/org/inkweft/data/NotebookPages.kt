@@ -30,6 +30,7 @@ interface NotebookPageDao {
     @Query("UPDATE notebook_pages SET paper=:paper WHERE id=:id") suspend fun paper(id:String,paper:Int):Int
     @Query("SELECT * FROM page_search_text WHERE pageId=:id") suspend fun search(id:String):PageSearchRow?
     @Query("UPDATE page_search_text SET inkRevision=:next WHERE pageId=:id AND inkRevision=:expected") suspend fun carrySearch(id:String,expected:Long,next:Long):Int
+    @Query("DELETE FROM page_search_text WHERE pageId=:id") suspend fun invalidateSearch(id:String)
     @Insert(onConflict=OnConflictStrategy.REPLACE) suspend fun putSearch(row:PageSearchRow)
     @Query("SELECT p.notebookId AS notebookId,p.id AS pageId,p.position AS position,s.text AS text FROM page_search_text s JOIN notebook_pages p ON p.id=s.pageId LEFT JOIN ink_pages h ON h.noteId=p.id WHERE p.trashedAt IS NULL AND s.inkRevision=COALESCE(h.revision,0)")
     fun observeSearch():Flow<List<PageSearchHit>>
@@ -66,18 +67,20 @@ class NotebookPages(private val db:NoteDatabase) {
         check(db.workspace().selectPage(notebookId,pageId)==1)
     }
     suspend fun searchText(pageId:String):PageSearchRow?=db.pages().search(pageId)
-    /** Explicit transcription, not an OCR claim. It becomes non-searchable after
-     * ANY ink revision change, including erase/undo, until the user updates it. */
-    suspend fun saveSearchText(pageId:String,expectedInkRevision:Long,text:String):Boolean=db.withTransaction {
+    /** Version-bound derived text. OCR checks both ink and object snapshots; object writes invalidate the index. */
+    suspend fun saveSearchText(pageId:String,expectedInkRevision:Long,text:String,expectedObjects:Long?=null,method:String="MANUAL"):Boolean=db.withTransaction {
         require(db.pages().get(pageId)?.trashedAt==null && db.pages().get(pageId)!=null);require(text.length<=20_000)
         if((db.ink().page(pageId)?.revision?:0)!=expectedInkRevision)return@withTransaction false
-        db.pages().putSearch(PageSearchRow(pageId,expectedInkRevision,text));true
+        if(expectedObjects!=null&&(db.objects().get(pageId)?.revision?:0)!=expectedObjects)return@withTransaction false
+        require(method in listOf("MANUAL","OCR"))
+        db.pages().putSearch(PageSearchRow(pageId,expectedInkRevision,text,method));true
     }
     suspend fun exportBook(notebookId:String):NotebookFile=db.withTransaction {
         val n=checkNotNull(db.notes().note(notebookId));ensureFirst(notebookId)
         val pages=db.pages().list(notebookId)
         var bytes=0L
-        val copies=pages.map{p->InkPageFile(n.title,"",InkSession(InkRepository(db).read(p.id)).visibleDraft(),p.world,PaperStyle.entries[p.paper],PageObjectRepository(db).read(p.id).objects).also{bytes+=it.encode().size;require(bytes<NotebookFile.MAX_BYTES-500_000)}}
+        val documents=mutableMapOf<String,PdfDocumentSource>()
+        val copies=pages.map{p->InkPageFile(n.title,"",InkSession(InkRepository(db).read(p.id)).visibleDraft(),p.world,PaperStyle.entries[p.paper],PageObjectRepository(db).read(p.id).objects,DocumentRepository(db).read(p.id,documents)).also{bytes+=it.encode(false).size;require(bytes<NotebookFile.MAX_BYTES-500_000)}}
         NotebookFile(n.title,n.text,copies)
     }
     suspend fun importBook(file:NotebookFile):Note=db.withTransaction {

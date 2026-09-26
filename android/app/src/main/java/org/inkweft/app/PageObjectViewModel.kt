@@ -15,7 +15,7 @@ internal class PageObjectViewModel(private val pageId:String,private val repo:Pa
     private var snapshot=ObjectSnapshot()
     private val undo=ArrayDeque<List<PageObject>>()
     private val redo=ArrayDeque<List<PageObject>>()
-    private data class Pending(val id:String,val before:ObjectSnapshot,val after:List<PageObject>,val direction:Int)
+    private data class Pending(val id:String,val before:ObjectSnapshot,val after:List<PageObject>,val direction:Int,val expectedInk:Long?=null)
     private var pending:Pending?=null
     private var reading=false
     init{reload()}
@@ -25,16 +25,16 @@ internal class PageObjectViewModel(private val pageId:String,private val repo:Pa
         catch(c:CancellationException){throw c}catch(_:Exception){state.value=state.value.copy(loading=false,error="对象读取失败，请重试。",pending=true)}finally{reading=false}
     }}
     private fun publish(error:String?=null){state.value=ObjectsUi(pending?.after?:snapshot.objects,false,false,error,pending!=null,undo.isNotEmpty(),redo.isNotEmpty())}
-    fun change(objects:List<PageObject>,direction:Int=0){
+    fun change(objects:List<PageObject>,direction:Int=0,expectedInk:Long?=null){
         if(state.value.loading||state.value.busy||state.value.pending||objects==snapshot.objects)return
         try{PageObjectCodec.encode(objects)}catch(_:Exception){publish("对象超过容量：每页最多 32 项、图片与对象总计约 1.6 MB。请减少图片后重试。");return}
-        pending=Pending(UUID.randomUUID().toString(),snapshot,objects.toList(),direction);retry()
+        pending=Pending(UUID.randomUUID().toString(),snapshot,objects.toList(),direction,expectedInk);retry()
     }
     fun retry(){val p=pending?:return;if(state.value.busy)return
         state.value=state.value.copy(objects=p.after,busy=true,pending=true,error=null)
         viewModelScope.launch{
             try{
-                val revision=withContext(Dispatchers.IO){repo.save(pageId,p.before.revision,p.id,p.after)}
+                val revision=withContext(Dispatchers.IO){repo.save(pageId,p.before.revision,p.id,p.after,p.expectedInk)}
                 when(p.direction){-1->{undo.removeLast();redo.addLast(p.before.objects)};1->{redo.removeLast();undo.addLast(p.before.objects)};else->{undo.addLast(p.before.objects);redo.clear()}}
                 while(undo.size>10)undo.removeFirst()
                 snapshot=ObjectSnapshot(revision,p.after);pending=null;publish()

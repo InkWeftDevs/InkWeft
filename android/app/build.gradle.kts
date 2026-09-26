@@ -12,8 +12,8 @@ android {
         applicationId = if (insertionPreview) "org.inkweft.app.a0.insertion" else if (diagnosticBuild) "org.inkweft.app.a0.workspace" else "org.inkweft.app.a0"
         minSdk = 31
         targetSdk = 36
-        versionCode = 16
-        versionName = "0.0.16-page-objects"
+        versionCode = 17
+        versionName = "0.0.17-reading-handwriting"
         manifestPlaceholders["appLabel"] = if (insertionPreview) "墨织整合预览" else if (diagnosticBuild) "墨织工作台预览" else "墨织"
         buildConfigField("String", "BUILD_COMMIT", "\"${commitValue("GITHUB_SHA")}\"")
         buildConfigField("String", "SOURCE_COMMIT", "\"${commitValue("INKWEFT_HEAD_SHA")}\"")
@@ -34,6 +34,8 @@ android {
         }
         buildTypes.getByName("debug").signingConfig = signingConfigs.getByName("ownerPreview")
     }
+    // Compress native libraries in sideload APKs; Android extracts the selected ABI at install time.
+    packaging { jniLibs.useLegacyPackaging = true }
     buildFeatures { compose = true; buildConfig = true }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
@@ -42,6 +44,8 @@ android {
 }
 dependencies {
     implementation(project(":core-domain"))
+    implementation(libs.onnxruntime)
+    implementation(libs.mupdf)
     implementation(project(":data-local"))
     implementation(platform(libs.compose.bom))
     implementation(libs.compose.ui)

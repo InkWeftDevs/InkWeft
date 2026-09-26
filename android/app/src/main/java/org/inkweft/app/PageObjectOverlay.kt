@@ -56,7 +56,7 @@ internal class PageObjectOverlay(context:Context):View(context) {
                     if(o.kind==PageObjectKind.IMAGE){val ratio=o.height/o.width;val w=(o.width+dx).coerceIn(max(24f,24f/ratio),min(maxW,maxH/ratio));o.copy(width=w,height=w*ratio)}
                     else if(o.kind==PageObjectKind.TEXT){
                         val w=(o.width+dx).coerceIn(24f,maxW)
-                        val layout=android.text.StaticLayout.Builder.obtain(o.text,0,o.text.length,android.text.TextPaint().apply{textSize=o.fontSize},w.toInt()).setIncludePad(false).build()
+                        val layout=TextStyles.layout(o,w)
                         val h=max(24f,layout.height.toFloat()+8f)
                         if(h<=maxH)o.copy(width=w,height=h)else o
                     }else o.copy(width=(o.width+dx).coerceIn(24f,maxW),height=(o.height+dy).coerceIn(24f,maxH))

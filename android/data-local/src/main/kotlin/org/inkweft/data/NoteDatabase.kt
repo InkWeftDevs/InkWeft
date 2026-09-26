@@ -27,9 +27,10 @@ interface NoteDao {
     @Insert(onConflict=OnConflictStrategy.ABORT) suspend fun insertRevision(row:NoteRevisionRow)
     @Insert(onConflict=OnConflictStrategy.ABORT) suspend fun insertReceipt(row:ReceiptRow)
 }
-@Database(entities=[NoteRow::class,NoteRevisionRow::class,ReceiptRow::class,InkPageRow::class,InkStrokeRow::class,InkReceiptRow::class,WorkspaceRow::class,NotebookPageRow::class,InkCutRow::class,PageSearchRow::class,PageInsertReceiptRow::class,LibraryContentReceipt::class,PageEditReceiptRow::class,StudyCardRow::class,StudyCardRevisionRow::class,StudySourceRow::class,StudyNodeRow::class,StudyReceiptRow::class,KnowledgeRow::class,KnowledgeRevisionRow::class,KnowledgeReceiptRow::class,NotebookCoverRow::class,PageObjectRow::class,ObjectReceiptRow::class],
-    version=11,exportSchema=true,autoMigrations=[AutoMigration(from=1,to=2)])
+@Database(entities=[NoteRow::class,NoteRevisionRow::class,ReceiptRow::class,InkPageRow::class,InkStrokeRow::class,InkReceiptRow::class,WorkspaceRow::class,NotebookPageRow::class,InkCutRow::class,PageSearchRow::class,PageInsertReceiptRow::class,LibraryContentReceipt::class,PageEditReceiptRow::class,StudyCardRow::class,StudyCardRevisionRow::class,StudySourceRow::class,StudyNodeRow::class,StudyReceiptRow::class,KnowledgeRow::class,KnowledgeRevisionRow::class,KnowledgeReceiptRow::class,NotebookCoverRow::class,PageObjectRow::class,ObjectReceiptRow::class,DocumentSourceRow::class,DocumentChunkRow::class,DocumentPageRow::class],
+    version=12,exportSchema=true,autoMigrations=[AutoMigration(from=1,to=2)])
 abstract class NoteDatabase:RoomDatabase() {
+    internal var documentScratch:java.io.File?=null
     abstract fun notes():NoteDao
     abstract fun ink():InkDao
     abstract fun workspace():WorkspaceDao
@@ -40,6 +41,7 @@ abstract class NoteDatabase:RoomDatabase() {
     abstract fun study():StudyDao
     abstract fun knowledge():KnowledgeDao
     abstract fun objects():PageObjectDao
+    abstract fun documents():DocumentDao
     abstract fun covers():NotebookCoverDao
     companion object {
         val MIGRATION_2_3=object:Migration(2,3){
@@ -124,12 +126,19 @@ abstract class NoteDatabase:RoomDatabase() {
             db.execSQL("CREATE TABLE IF NOT EXISTS object_receipts (commandId TEXT NOT NULL, pageId TEXT NOT NULL, digest TEXT NOT NULL, revision INTEGER NOT NULL, PRIMARY KEY(commandId), FOREIGN KEY(pageId) REFERENCES notebook_pages(id) ON UPDATE NO ACTION ON DELETE NO ACTION)")
             db.execSQL("CREATE INDEX IF NOT EXISTS index_object_receipts_pageId ON object_receipts(pageId)")
         }}
+        val MIGRATION_11_12=object:Migration(11,12){override fun migrate(db:SupportSQLiteDatabase){
+            db.execSQL("CREATE TABLE document_sources (id TEXT NOT NULL, notebookId TEXT NOT NULL, digest TEXT NOT NULL, pageCount INTEGER NOT NULL, byteCount INTEGER NOT NULL, PRIMARY KEY(id), FOREIGN KEY(notebookId) REFERENCES notes(id) ON UPDATE NO ACTION ON DELETE NO ACTION)")
+            db.execSQL("CREATE INDEX index_document_sources_notebookId ON document_sources(notebookId)")
+            db.execSQL("CREATE TABLE document_chunks (documentId TEXT NOT NULL, position INTEGER NOT NULL, payload BLOB NOT NULL, PRIMARY KEY(documentId,position), FOREIGN KEY(documentId) REFERENCES document_sources(id) ON UPDATE NO ACTION ON DELETE NO ACTION)")
+            db.execSQL("CREATE TABLE document_pages (pageId TEXT NOT NULL, documentId TEXT NOT NULL, sourcePage INTEGER NOT NULL, PRIMARY KEY(pageId), FOREIGN KEY(pageId) REFERENCES notebook_pages(id) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY(documentId) REFERENCES document_sources(id) ON UPDATE NO ACTION ON DELETE NO ACTION)")
+            db.execSQL("CREATE INDEX index_document_pages_documentId ON document_pages(documentId)")
+        }}
         fun open(context:Context,name:String="inkweft-a0.db"):NoteDatabase=
             Room.databaseBuilder(context.applicationContext,NoteDatabase::class.java,name)
                 .openHelperFactory(PreservingOpenHelperFactory())
                 .setJournalMode(JournalMode.WRITE_AHEAD_LOGGING)
-                .addMigrations(MIGRATION_2_3,MIGRATION_3_4,MIGRATION_4_5,MIGRATION_5_6,MIGRATION_6_7,MIGRATION_7_8,MIGRATION_8_9,MIGRATION_9_10,MIGRATION_10_11)
+                .addMigrations(MIGRATION_2_3,MIGRATION_3_4,MIGRATION_4_5,MIGRATION_5_6,MIGRATION_6_7,MIGRATION_7_8,MIGRATION_8_9,MIGRATION_9_10,MIGRATION_10_11,MIGRATION_11_12)
                 .addCallback(object:Callback(){override fun onOpen(db:SupportSQLiteDatabase){db.execSQL("PRAGMA synchronous=FULL")}})
-                .build()
+                .build().also{it.documentScratch=context.cacheDir}
     }
 }

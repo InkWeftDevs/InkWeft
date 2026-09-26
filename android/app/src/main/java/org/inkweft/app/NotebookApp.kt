@@ -41,6 +41,7 @@ fun WorkspaceApp(){
 
 @Composable
 fun NotebookApp(vm:NotebookViewModel=viewModel(),onDiagnostics:()->Unit={}){
+    var importGuide by remember{mutableStateOf(false)}
     val ui by vm.ui.collectAsStateWithLifecycle();val rename by vm.renaming.collectAsStateWithLifecycle()
     val workspace:WorkspaceViewModel=viewModel();val workspaceError by workspace.error.collectAsStateWithLifecycle();val busy by workspace.busy.collectAsStateWithLifecycle()
     val context=LocalContext.current;val app=context.applicationContext as InkWeftApplication
@@ -88,7 +89,7 @@ fun NotebookApp(vm:NotebookViewModel=viewModel(),onDiagnostics:()->Unit={}){
         if(ui.current!=null)NotebookTabs(ui,navigationReady&&!busy&&!transferUi.busy,{id->focus.clearFocus(force=true);keyboard?.hide();vm.selectTab(id)},
             {id->if(vm.closeTab(id))notebookStates.removeState(id)else Toast.makeText(context,"这份笔记有未保存文字或待核对操作，请先处理后再关闭标签。",Toast.LENGTH_SHORT).show()},vm::back)
         val draft=ui.current
-        if(draft==null)Box(Modifier.weight(1f)){LibraryScreen(ui,workspace,vm::select,::openCreate,{pageImport.launch(arrayOf("application/octet-stream","*/*"))},onDiagnostics,::beginRename,{transfers.requestCopy(it.id)},{transfers.export(it.id)})}
+        if(draft==null)Box(Modifier.weight(1f)){LibraryScreen(ui,workspace,vm::select,::openCreate,{importGuide=true},onDiagnostics,::beginRename,{transfers.requestCopy(it.id)},{transfers.export(it.id)})}
         else{
             if(!inkMode)Row(Modifier.fillMaxWidth().heightIn(min=58.dp).padding(horizontal=12.dp),verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(8.dp)){
                 TextButton(onClick=vm::back,modifier=Modifier.testTag("back-library")){Glyph("back");Spacer(Modifier.width(5.dp));Text("资料库",fontSize=13.sp)}
@@ -113,6 +114,7 @@ fun NotebookApp(vm:NotebookViewModel=viewModel(),onDiagnostics:()->Unit={}){
     }
     if(confirmExport)AlertDialog(onDismissRequest={confirmExport=false},title={Text("导出文字")},text={Text("明文文字副本，不包含手写、封面、历史或回执。所选位置可能由云盘提供方管理。")},confirmButton={TextButton(onClick={confirmExport=false;ui.current?.let{exportText=it.title+"\n\n"+it.text;textExport.launch("墨织笔记.txt")}}){Text("选择位置")}},dismissButton={TextButton(onClick={confirmExport=false}){Text("取消")}})
     rename?.let{RenameNoteDialog(it,vm::editRename,vm::saveRename,vm::closeRename)}
+    if(importGuide)AlertDialog(onDismissRequest={importGuide=false},title={Text("导入文档")},text={Column(Modifier.verticalScroll(rememberScrollState())){Text(DocumentImports.HELP);Text("也支持墨织 .iwpage / .iwbook 内容副本。转换后请核对分页、字体和表格。")}},confirmButton={TextButton(onClick={importGuide=false;pageImport.launch(arrayOf("*/*"))}){Text("选择文件")}},dismissButton={TextButton(onClick={importGuide=false}){Text("取消")}})
     LibraryTransferDialog(transfers,{pageImport.launch(arrayOf("application/octet-stream","*/*"))},vm::select)
 }
 

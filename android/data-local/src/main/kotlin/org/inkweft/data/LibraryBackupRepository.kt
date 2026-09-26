@@ -56,7 +56,7 @@ class LibraryBackupRepository(private val context:Context,private val db:NoteDat
                     // Schema6 has no tombstone column; promote to live/default null.
                     val promoted=if(table==4&&row.size==SCHEMA[table].columns.size-1)row+listOf(null)else row
                     insert(sql,table,promoted)
-                },legacySchema=SCHEMA_V6,otherLegacySchemas=listOf(SCHEMA_V7,SCHEMA_V8,SCHEMA_V9,SCHEMA_V10)){ctx.ensureActive()}
+                },legacySchema=SCHEMA_V6,otherLegacySchemas=listOf(SCHEMA_V7,SCHEMA_V8,SCHEMA_V9,SCHEMA_V10,SCHEMA_V11)){ctx.ensureActive()}
             }
             validate(stage)
             val sql=stage.openHelper.writableDatabase
@@ -92,6 +92,7 @@ class LibraryBackupRepository(private val context:Context,private val db:NoteDat
                         require(!collision){"BACKUP_COMMAND_IDENTITY_CONFLICT"}
                     }
                 }
+                require(db.documents().totalBytes()+preview.stage.documents().totalBytes()<=80_000_000){"DOCUMENT_LIBRARY_BUDGET"}
                 require(db.covers().otherBytes("")+preview.stage.covers().otherBytes("")<=32_000_000){"COVER_LIBRARY_BUDGET"}
                 val ctx=currentCoroutineContext()
                 SCHEMA.indices.forEach{index->SqlRows(source).visit(index){row->ctx.ensureActive();insert(target,index,row)}}
@@ -110,6 +111,8 @@ class LibraryBackupRepository(private val context:Context,private val db:NoteDat
         check(sql.query("PRAGMA integrity_check").use{it.moveToFirst()&&it.getString(0)=="ok"&&!it.moveToNext()})
         check(sql.query("PRAGMA foreign_key_check").use{!it.moveToFirst()})
         require(count(sql,"notes")<=500 && count(sql,"notebook_pages")<=20_000){"BACKUP_LIBRARY_BUDGET"}
+        require(stage.documents().totalBytes()<=80_000_000)
+        val documentCache=mutableMapOf<String,PdfDocumentSource>()
         val notes=sql.query("SELECT id FROM notes ORDER BY id").use{c->buildList{while(c.moveToNext())add(c.getString(0))}}
         require(count(sql,"notebook_workspace")==notes.size.toLong())
         // Reject raw integers before Room narrows them to Int/Boolean. Otherwise
@@ -134,6 +137,9 @@ class LibraryBackupRepository(private val context:Context,private val db:NoteDat
         require(sql.query("SELECT COALESCE(SUM(length(payload)),0) FROM notebook_covers").use{it.moveToFirst();it.getLong(0)}<=32_000_000){"COVER_LIBRARY_BUDGET"}
         sql.query("SELECT payload FROM notebook_covers").use{c->while(c.moveToNext())validateCoverPayload(c.getBlob(0))}
         noRows("SELECT 1 FROM notebook_workspace w LEFT JOIN notebook_covers c ON c.noteId=w.noteId WHERE w.coverKey='custom' AND c.noteId IS NULL")
+        noRows("SELECT 1 FROM document_sources WHERE pageCount NOT BETWEEN 1 AND 500 OR byteCount NOT BETWEEN 8 AND 32000000")
+        noRows("SELECT 1 FROM document_pages p JOIN document_sources s ON s.id=p.documentId WHERE sourcePage<0 OR sourcePage>=s.pageCount")
+        noRows("SELECT 1 FROM document_chunks WHERE position NOT BETWEEN 0 AND 62 OR length(payload) NOT BETWEEN 1 AND 512000")
         KnowledgeRepository(stage).validateArchive()
         sql.query("SELECT notebookId,payload FROM knowledge_revisions").use{c->while(c.moveToNext())KnowledgeRepository(stage).validateData(c.getString(0),KnowledgeCodec.decode(c.getBlob(1)),false)}
         sql.query("SELECT operationId,digest,resultId FROM knowledge_receipts").use{c->while(c.moveToNext()){UUID.fromString(c.getString(0));require(c.getString(1).matches(Regex("[0-9a-f]{64}")));require(stage.knowledge().get(c.getString(2))!=null)}}
@@ -169,11 +175,15 @@ class LibraryBackupRepository(private val context:Context,private val db:NoteDat
                 CanvasViewport(p.centerX,p.centerY,if(p.zoom==0.0).7 else p.zoom)
                 require(p.createdAfterId==null||pages.any{it.id==p.createdAfterId})
                 val ink=InkRepository(stage).read(p.id);require(ink.revision>=0)
+                DocumentRepository(stage).read(p.id,documentCache)
                 val objects=PageObjectRepository(stage).read(p.id).objects
+                val refs=objects.flatMap{it.sourceStrokeIds};require(refs.distinct().size==refs.size);val owned=stage.ink().strokes(p.id).map{it.id}.toSet();require(refs.all{it in owned})
                 PageObjectRepository.validateBounds(objects,p.world);PageObjectRepository.validateImages(objects)
-                stage.pages().search(p.id)?.let{s->require(s.inkRevision in 0..ink.revision&&s.text.length<=20_000&&s.method=="MANUAL")}
+                stage.pages().search(p.id)?.let{s->require(s.inkRevision in 0..ink.revision&&s.text.length<=20_000&&s.method in listOf("MANUAL","OCR"))}
             }
         }
+        documentCache.values.forEach{DocumentRepository.validatePdf(it,checkNotNull(stage.documentScratch))}
+        noRows("SELECT 1 FROM document_sources s WHERE NOT EXISTS (SELECT 1 FROM document_pages p WHERE p.documentId=s.id)")
         noRows("SELECT 1 FROM note_revisions r LEFT JOIN notes n ON n.id=r.noteId WHERE n.id IS NULL OR r.revision<1 OR r.revision>n.revision OR length(r.title)>120 OR length(r.text)>100000")
         noRows("SELECT 1 FROM command_receipts r LEFT JOIN notes n ON n.id=r.noteId WHERE n.id IS NULL OR r.committedRevision<1 OR r.committedRevision>n.revision")
         noRows("SELECT 1 FROM ink_receipts r LEFT JOIN ink_pages p ON p.noteId=r.noteId WHERE p.noteId IS NULL OR r.committedRevision<1 OR r.committedRevision>p.revision")
@@ -198,6 +208,7 @@ class LibraryBackupRepository(private val context:Context,private val db:NoteDat
             val col=OWNERS[table]
             return if(col=="@ink")" WHERE noteId IN (SELECT id FROM notebook_pages WHERE notebookId IN ($marks))"
                 else if(col=="@search")" WHERE pageId IN (SELECT id FROM notebook_pages WHERE notebookId IN ($marks))"
+                else if(col=="@documents")" WHERE documentId IN (SELECT id FROM document_sources WHERE notebookId IN ($marks))"
                 else if(col=="@cards")" WHERE cardId IN (SELECT id FROM study_cards WHERE notebookId IN ($marks))"
                 else " WHERE `$col` IN ($marks)"
         }
@@ -240,14 +251,18 @@ class LibraryBackupRepository(private val context:Context,private val db:NoteDat
             table("knowledge_receipts","operationId",col("operationId",'S'),col("notebookId",'S'),col("digest",'S'),col("resultId",'S')),
             table("notebook_covers","noteId",col("noteId",'S'),col("payload",'B')),
             table("page_objects","pageId",col("pageId",'S'),col("revision",'I'),col("payload",'B')),
-            table("object_receipts","commandId",col("commandId",'S'),col("pageId",'S'),col("digest",'S'),col("revision",'I'))
+            table("object_receipts","commandId",col("commandId",'S'),col("pageId",'S'),col("digest",'S'),col("revision",'I')),
+            table("document_sources","id",col("id",'S'),col("notebookId",'S'),col("digest",'S'),col("pageCount",'I'),col("byteCount",'I')),
+            table("document_chunks","documentId,position",col("documentId",'S'),col("position",'I'),col("payload",'B')),
+            table("document_pages","pageId",col("pageId",'S'),col("documentId",'S'),col("sourcePage",'I'))
         )
+        val SCHEMA_V11=SCHEMA.take(24)
         val SCHEMA_V10=SCHEMA.take(22)
         val SCHEMA_V9=SCHEMA.take(21)
         val SCHEMA_V8=SCHEMA.take(18)
         val SCHEMA_V7=SCHEMA.take(13)
         val SCHEMA_V6=SCHEMA.take(12).mapIndexed{i,t->if(i==4)t.copy(columns=t.columns.dropLast(1))else t}
-        private val OWNERS=listOf("id","noteId","noteId","noteId","notebookId","@ink","@ink","@ink","@ink","@search","notebookId","noteId","notebookId","notebookId","@cards","@cards","notebookId","notebookId","notebookId","notebookId","notebookId","noteId","@search","@search")
+        private val OWNERS=listOf("id","noteId","noteId","noteId","notebookId","@ink","@ink","@ink","@ink","@search","notebookId","noteId","notebookId","notebookId","@cards","@cards","notebookId","notebookId","notebookId","notebookId","notebookId","noteId","@search","@search","notebookId","@documents","@search")
         private fun count(sql:SupportSQLiteDatabase,table:String)=sql.query("SELECT COUNT(*) FROM `$table`").use{it.moveToFirst();it.getLong(0)}
         private fun insert(sql:SupportSQLiteDatabase,table:Int,row:List<Any?>){
             val t=SCHEMA[table]

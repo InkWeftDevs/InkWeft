@@ -37,7 +37,7 @@ class ContentTransferTest {
             List(8192) { i -> InkSample(30f+(i%800),40f+(i%1200),(i+n).toLong()) }) }
         val first = InkPageFile("大样本", "", strokes)
         val book = NotebookFile("三页", "正文", listOf(first,first,first))
-        val bytes = book.encode(); assertTrue(bytes.size>InkPageFile.MAX_BYTES)
+        val bytes = book.encode(); assertTrue(bytes.size>4_000_000)
         val parsed = ContentTransfer.read(ByteArrayInputStream(bytes))
         assertEquals(ContentTransfer.Kind.BOOK,parsed.kind)
         val content=parsed.content as ContentTransfer.Content.Book

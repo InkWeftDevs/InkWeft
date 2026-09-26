@@ -44,11 +44,12 @@ class LibraryContentRepository(private val db:NoteDatabase,
                 metadata.copy(coverKey=NotebookCover.fromKey(metadata.coverKey).resolved(source.id).key))
             db.covers().get(source.id)?.let{require(db.covers().otherBytes(target.id)+it.payload.size<=32_000_000){"COVER_LIBRARY_BUDGET"};db.covers().put(it.copy(noteId=target.id))}
             var encodedBytes=0L
+            val documents=mutableMapOf<String,PdfDocumentSource>()
             pages.forEachIndexed { index,page ->
                 val state=InkRepository(db).read(page.id)
                 val visible=InkSession(state).visibleDraft()
-                val copy=InkPageFile(title,"",visible,page.world,PaperStyle.entries[page.paper],PageObjectRepository(db).read(page.id).objects)
-                encodedBytes+=copy.encode().size
+                val copy=InkPageFile(title,"",visible,page.world,PaperStyle.entries[page.paper],PageObjectRepository(db).read(page.id).objects,DocumentRepository(db).read(page.id,documents))
+                encodedBytes+=copy.encode(false).size
                 require(encodedBytes<NotebookFile.MAX_BYTES-500_000){"COPY_SIZE_LIMIT"}
                 val pageId=if(index==0)target.id else UUID.randomUUID().toString()
                 if(index>0)db.pages().insert(NotebookPageRow(pageId,target.id,index,page.world,page.paper))
@@ -123,14 +124,16 @@ class LibraryContentRepository(private val db:NoteDatabase,
         return Note(id,1,title,text)
     }
     private suspend fun populate(pageId:String,page:InkPageFile){
+        DocumentRepository(db).attach(pageId,page.source)
         require(db.ink().page(pageId)==null)
-        PageObjectRepository(db).import(pageId,page.objects)
+        val strokeIds=page.strokes.associate{it.id to UUID.randomUUID().toString()}
         val cuts=mutableMapOf<String,String>()
         db.ink().insertPage(InkPageRow(pageId,page.strokes.size.toLong()))
         page.strokes.forEachIndexed{index,old->
             val masks=old.cuts.map{c->InkCut(cuts.getOrPut(c.id){UUID.randomUUID().toString()},c.radius,c.points,c.shape)}
-            val stroke=InkStroke(UUID.randomUUID().toString(),old.pen,old.color,old.width,old.tool,old.samples,old.world,masks)
+            val stroke=InkStroke(checkNotNull(strokeIds[old.id]),old.pen,old.color,old.width,old.tool,old.samples,old.world,masks)
             db.ink().insertStroke(InkStrokeRow(stroke.id,pageId,InkStrokeCodec.encode(stroke),stroke.samples.size,true,index.toLong()+1))
         }
+        PageObjectRepository(db).import(pageId,page.objects,strokeIds)
     }
 }

@@ -118,7 +118,7 @@ fun LibraryScreen(ui:NotebookUi,workspace:WorkspaceViewModel,open:(Note)->Unit,c
                                 DropdownMenu(expanded=headerMore,onDismissRequest={headerMore=false}){
                                     DropdownMenuItem(text={Text(if(grid)"切换列表视图"else"切换网格视图")},onClick={grid=!grid;headerMore=false},modifier=Modifier.testTag("library-layout"))
                                     DropdownMenuItem(text={Text(if(byTitle)"按最近修改排序"else"按标题排序")},onClick={byTitle=!byTitle;headerMore=false},modifier=Modifier.testTag("library-sort"))
-                                    DropdownMenuItem(text={Text("导入副本")},enabled=!ui.readFailed,onClick={headerMore=false;importPage()})
+                                    DropdownMenuItem(text={Text("导入文档 / 副本")},enabled=!ui.readFailed,onClick={headerMore=false;importPage()})
                                     DropdownMenuItem(text={Text("诊断与导出")},onClick={headerMore=false;diagnostics()},modifier=Modifier.testTag("open-diagnostics"))
                                 }
                             }
@@ -126,7 +126,7 @@ fun LibraryScreen(ui:NotebookUi,workspace:WorkspaceViewModel,open:(Note)->Unit,c
                             IconButton(onClick={grid=!grid},modifier=Modifier.testTag("library-layout").describedAs(if(grid)"切换列表视图"else"切换网格视图")){Glyph(if(grid)"list"else"grid")}
                             IconButton(onClick={byTitle=!byTitle},modifier=Modifier.testTag("library-sort").describedAs(if(byTitle)"改按最近修改排序"else"改按标题排序")){Glyph("sort",if(byTitle)Forest else Quiet)}
                             if(!wide)IconButton(onClick=diagnostics,modifier=Modifier.testTag("open-diagnostics").describedAs("诊断与导出")){Glyph("diagnostics")}
-                            TextButton(onClick=importPage,enabled=!ui.readFailed){Text("导入副本",fontSize=12.sp)}
+                            TextButton(onClick=importPage,enabled=!ui.readFailed){Text("导入文档 / 副本",fontSize=12.sp)}
                         }
                         Button(onClick=create,enabled=!ui.loading&&!ui.readFailed,modifier=Modifier.testTag("new-note"),contentPadding=PaddingValues(horizontal=if(compact)12.dp else 18.dp,vertical=10.dp)){Glyph("add");Spacer(Modifier.width(6.dp));Text("新建",maxLines=1)}
                     }
@@ -231,7 +231,7 @@ private fun NoteTile(note:Note,row:WorkspaceRow,inkRevision:Long,count:Int,grid:
                 else if(style!=NotebookCover.CONTENT)NotebookCoverArt(style,note.id,note.title,row.world,Modifier.fillMaxSize())
                 else{
                     val loaded=strokes
-                    if(!loaded.isNullOrEmpty()||previewObjects.isNotEmpty())AndroidView(factory={c->InkCanvasView(c).apply{preview=true;importantForAccessibility=android.view.View.IMPORTANT_FOR_ACCESSIBILITY_NO}},update={v->v.configure(row.world,PaperStyle.entries.getOrElse(pagePreview?.first?.paper?:row.paper){PaperStyle.RULED},null);v.showStrokes(loaded.orEmpty());v.showObjects(previewObjects)},modifier=Modifier.fillMaxSize())
+                    if(pagePreview?.first!=null||!loaded.isNullOrEmpty()||previewObjects.isNotEmpty())AndroidView(factory={c->InkCanvasView(c).apply{preview=true;importantForAccessibility=android.view.View.IMPORTANT_FOR_ACCESSIBILITY_NO}},update={v->v.configure(row.world,PaperStyle.entries.getOrElse(pagePreview?.first?.paper?:row.paper){PaperStyle.RULED},null);v.showDocument(pagePreview?.first?.id);v.showStrokes(loaded.orEmpty());v.showObjects(previewObjects)},modifier=Modifier.fillMaxSize())
                     else PaperThumbnail(row.world,PaperStyle.entries.getOrElse(pagePreview?.first?.paper?:row.paper){PaperStyle.RULED})
                     if(loaded?.isEmpty()!=false&&previewObjects.isEmpty()&&note.text.isNotBlank())Text(note.text,fontSize=8.sp,lineHeight=13.sp,maxLines=10,color=Quiet,modifier=Modifier.padding(12.dp))
                 }

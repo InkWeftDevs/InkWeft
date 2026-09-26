@@ -13,6 +13,7 @@ import androidx.ink.rendering.android.canvas.CanvasStrokeRenderer
 import androidx.ink.strokes.*
 import org.inkweft.core.*
 import java.util.UUID
+import kotlinx.coroutines.*
 import kotlin.math.*
 
 /** A bounded viewport. Partial erase clips ink, never paints the paper colour. */
@@ -49,11 +50,37 @@ class InkCanvasView(context:Context):View(context){
     private var restored=false
     private var viewport=CanvasViewport()
     private var objects=emptyList<PageObject>()
+    private var suppressedStrokeIds=emptySet<String>()
+    private val documentPaint=Paint(Paint.FILTER_BITMAP_FLAG)
+    private val documentRect=RectF()
     private var objectDraft:PageObject?=null
     private val objectPainter=PageObjectPainter()
-    fun showObjects(next:List<PageObject>){if(objects==next)return;objects=next;if(preview&&world&&width>0&&height>0)fitContent(false);invalidate()}
+    fun showObjects(next:List<PageObject>){if(objects==next)return;objects=next;suppressedStrokeIds=next.flatMap{it.sourceStrokeIds}.toSet();if(preview&&world&&width>0&&height>0)fitContent(false);invalidate()}
     fun previewObject(value:PageObject?){objectDraft=value;invalidate()}
     private fun drawnObjects()=objects.map{if(it.id==objectDraft?.id)objectDraft!! else it}
+    private var documentId:String?=null
+    private var documentTile:DocumentTile?=null
+    private var documentJob:Job?=null
+    private var documentRequest:String?=null
+    private var documentKnownAbsent=false
+    private var documentError=false
+    fun showDocument(id:String?){if(documentId==id)return;documentId=id;documentTile=null;documentRequest=null;documentKnownAbsent=false;documentError=false;requestDocument();invalidate()}
+    private fun requestDocument(){
+        val id=documentId?:return;if(documentKnownAbsent||width<=0||height<=0||!isAttachedToWindow)return
+        val visible=viewport.visible(width.toDouble(),height.toDouble(),density)
+        val left=visible.left.coerceIn(0.0,999.0);val top=visible.top.coerceIn(0.0,1413.0)
+        val rect=CanvasBounds(left,top,visible.right.coerceIn(left+1,1000.0),visible.bottom.coerceIn(top+1,1414.0))
+        val pixels=if(preview)256 else max(width,height).coerceAtMost(2048)
+        val request="$id:$rect:$pixels";if(documentRequest==request)return;documentRequest=request;documentJob?.cancel()
+        documentJob=CoroutineScope(Dispatchers.Main.immediate).launch {
+            delay(80)
+            try{val tile=(context.applicationContext as InkWeftApplication).documentRendering.render(id,rect,pixels)
+                ensureActive();if(documentRequest==request){documentTile=tile;documentKnownAbsent=tile==null;documentError=false;invalidate()}
+            }catch(c:CancellationException){throw c}catch(_:Exception){if(documentRequest==request){documentError=true;invalidate();onNotice("文档页面读取失败，请离开后重新打开；原文件保留。")}}
+        }
+    }
+    override fun onAttachedToWindow(){super.onAttachedToWindow();documentRequest=null;requestDocument()}
+
     private var content=emptyList<InkStroke>()
     private val bounds=mutableMapOf<String,CanvasBounds>()
     private val meshes=object:LinkedHashMap<String,Stroke>(128,.75f,true){override fun removeEldestEntry(eldest:MutableMap.MutableEntry<String,Stroke>?)=size>128}
@@ -111,7 +138,7 @@ class InkCanvasView(context:Context):View(context){
         invalidate()
     }
     private fun toInk(s:InkStroke):Stroke=InkBrushes.stroke(s)
-    private fun transform(){val f=(viewport.zoom*density).toFloat();matrix.setScale(f,f);matrix.postTranslate((width/2-viewport.centerX*f).toFloat(),(height/2-viewport.centerY*f).toFloat());onScale(viewport.zoom)}
+    private fun transform(){val f=(viewport.zoom*density).toFloat();matrix.setScale(f,f);matrix.postTranslate((width/2-viewport.centerX*f).toFloat(),(height/2-viewport.centerY*f).toFloat());onScale(viewport.zoom);requestDocument()}
     private fun initialFit(){viewport=if(world)CanvasViewport(0.0,0.0,.8)else CanvasViewport.pageWidth(width/density,height/density);if(preview||embeddedPage)fitPage(false);transform()}
     fun fitPage(publish:Boolean=true){cancelGesture();viewport=CanvasViewport.fit(CanvasBounds(0.0,0.0,1000.0,1414.0),width/density,height/density);transform();invalidate();if(publish)onViewport(viewport)}
     fun fitWidth(){cancelGesture();viewport=CanvasViewport.pageWidth(width/density,height/density);transform();invalidate();onViewport(viewport)}
@@ -137,10 +164,13 @@ class InkCanvasView(context:Context):View(context){
         canvas.drawColor(if(world)Color.WHITE else Color.rgb(241,243,244))
         val visible=viewport.visible(width.toDouble(),height.toDouble(),density);val save=canvas.save();canvas.concat(matrix)
         if(!world){paint.style=Paint.Style.FILL;paint.color=Color.WHITE;canvas.drawRect(0f,0f,1000f,1414f,paint);canvas.clipRect(0f,0f,1000f,1414f)}
-        drawGuide(canvas,visible)
+        if(documentId==null||documentKnownAbsent)drawGuide(canvas,visible)
+        documentTile?.let{tile->val b=tile.bounds;documentRect.set(b.left.toFloat(),b.top.toFloat(),b.right.toFloat(),b.bottom.toFloat());canvas.drawBitmap(tile.bitmap,null,documentRect,documentPaint)}
+        if(documentId!=null&&!documentKnownAbsent&&(documentTile==null||documentError)){paint.color=Color.DKGRAY;paint.textSize=24f;canvas.drawText(if(documentError)"文档载入失败"else"正在载入文档…",80f,100f,paint)}
         objectPainter.draw(canvas,drawnObjects(),false,visible)
         val activeMask=if(inputId!=-1&&gestureErase&&!gestureWhole&&raw.isNotEmpty())sweptPath(raw.map{EraserPoint(it.x,it.y)},gestureRadius)else null
         for(s in content){
+            if(s.id in suppressedStrokeIds)continue
             if(bounds[s.id]?.intersects(visible)!=true)continue
             val clipped=canvas.save();if(s.id in selectedIds)canvas.translate(selectedDx,selectedDy);s.cuts.forEach{canvas.clipOutPath(cutPath(it))}
             if(activeMask!=null&&s.id in eraseTargets)canvas.clipOutPath(activeMask)
@@ -168,14 +198,14 @@ class InkCanvasView(context:Context):View(context){
         if(e.actionMasked==MotionEvent.ACTION_POINTER_DOWN){if(inputKind!=InkTool.STYLUS)cancelGesture();panPointer=-1;return true}
         if(e.actionMasked==MotionEvent.ACTION_DOWN){
             if(inputId!=-1)cancelGesture();val type=e.getToolType(0);inputKind=when(type){MotionEvent.TOOL_TYPE_STYLUS,MotionEvent.TOOL_TYPE_ERASER->InkTool.STYLUS;MotionEvent.TOOL_TYPE_MOUSE->InkTool.MOUSE;else->InkTool.TOUCH}
-            if(inputKind==InkTool.TOUCH&&!fingerWrites){panPointer=e.getPointerId(0);panLastX=e.x;panLastY=e.y;return true};if(!allowInput)return true
+            if(inputKind==InkTool.TOUCH&&!fingerWrites){panPointer=e.getPointerId(0);panLastX=e.x;panLastY=e.y;return true};if(!allowInput||(documentId!=null&&!documentKnownAbsent&&(documentTile==null||documentError)))return true
             val p=viewport.screenToWorld(e.x.toDouble(),e.y.toDouble(),width.toDouble(),height.toDouble(),density)
             if(!world&&(p.x !in 0.0..1000.0||p.y !in 0.0..1414.0))return true
             if(abs(p.x)>BoardLimits.WORLD||abs(p.y)>BoardLimits.WORLD){onNotice("已到达画布数值安全边界，请返回内容区域。");return true}
             parent?.requestDisallowInterceptTouchEvent(true);requestFocus();inputId=e.getPointerId(0);startTime=e.eventTime
             gesturePen=pen;gestureColor=penColor;gestureWidth=penWidth;gestureErase=eraseMode||type==MotionEvent.TOOL_TYPE_ERASER
             gestureWhole=eraserWhole;gestureOnlyHighlighter=eraserHighlighterOnly;gestureRadius=(eraserDiameterDp/(2*viewport.zoom)).toFloat()
-            eraseTargets=content.filter{!gestureOnlyHighlighter||it.pen==InkPen.HIGHLIGHTER}.map{it.id}.toSet();cursor=CanvasPoint(e.x.toDouble(),e.y.toDouble())
+            eraseTargets=content.filter{it.id !in suppressedStrokeIds&&(!gestureOnlyHighlighter||it.pen==InkPen.HIGHLIGHTER)}.map{it.id}.toSet();cursor=CanvasPoint(e.x.toDouble(),e.y.toDouble())
             raw=ArrayList();val device=e.device;val pressure=device?.getMotionRange(MotionEvent.AXIS_PRESSURE,e.source)
             hasPressure=inputKind==InkTool.STYLUS&&pressure!=null&&pressure.max>pressure.min;pressureMin=pressure?.min?:0f;pressureSpan=(pressure?.range?:1f).coerceAtLeast(.001f)
             hasTilt=inputKind==InkTool.STYLUS&&device?.getMotionRange(MotionEvent.AXIS_TILT,e.source)!=null;hasOrientation=inputKind==InkTool.STYLUS&&device?.getMotionRange(MotionEvent.AXIS_ORIENTATION,e.source)!=null
@@ -214,6 +244,6 @@ class InkCanvasView(context:Context):View(context){
     }
     private fun finishViewport(){if(movingViewport){movingViewport=false;onViewport(viewport)}}
     fun cancelGesture(){val active=inputId!=-1;inputId=-1;raw.clear();gestureErase=false;cursor=null;parent?.requestDisallowInterceptTouchEvent(false);if(active)onGesture(false);invalidate()}
-    override fun onDetachedFromWindow(){objectPainter.clear();cancelGesture();if(configured&&!preview)onViewport(viewport);super.onDetachedFromWindow()}
+    override fun onDetachedFromWindow(){documentJob?.cancel();documentTile=null;documentRequest=null;objectPainter.clear();cancelGesture();if(configured&&!preview)onViewport(viewport);super.onDetachedFromWindow()}
     override fun performClick():Boolean{super.performClick();return true}
 }

@@ -25,8 +25,8 @@ object ContentTransfer {
         require(header.size >= 4) { "CONTENT_HEADER_MISSING" }
         val magic = header.take(4).fold(0) { n, b -> (n shl 8) or (b.toInt() and 255) }
         return when (magic) {
-            0x49575031, 0x49575032, 0x49575033, 0x49575034, 0x49575035 -> Kind.PAGE
-            0x49574231 -> Kind.BOOK
+            0x49575031, 0x49575032, 0x49575033, 0x49575034, 0x49575035, 0x49575036 -> Kind.PAGE
+            0x49574231, 0x49574232 -> Kind.BOOK
             else -> throw IllegalArgumentException("CONTENT_FORMAT_UNSUPPORTED")
         }
     }
@@ -72,6 +72,12 @@ object ContentTransfer {
         }
         checkActive()
         return Prepared(type, content, hash(bytes), bytes.size)
+    }
+    /** Stable import intent uses original document identity, independent of converter PDF metadata. */
+    fun document(title:String,pdf:PdfDocumentSource,originalHash:String):Prepared {
+        require(originalHash.matches(Regex("[0-9a-f]{64}")))
+        val book=NotebookFile(title,"",List(pdf.pages){i->InkPageFile(title,"",emptyList(),paper=PaperStyle.BLANK,source=PdfPageSource(pdf,i))})
+        return Prepared(Kind.BOOK,Content.Book(book),hash(("InkWeft.Document/1\n"+originalHash+"\n"+title).toByteArray()),pdf.size)
     }
     fun hash(bytes: ByteArray) = MessageDigest.getInstance("SHA-256").digest(bytes)
         .joinToString("") { "%02x".format(it.toInt() and 255) }

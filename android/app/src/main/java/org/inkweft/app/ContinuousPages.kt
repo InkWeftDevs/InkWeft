@@ -51,19 +51,19 @@ internal data class ContinuousTools(val pen:InkPen,val color:Int,val width:Float
             val ui by model.ui.collectAsStateWithLifecycle()
             val objectModel:PageObjectViewModel=viewModel(key="objects-${page.id}",factory=PageObjectViewModel.Factory(page.id,app.pageObjects))
             val objectUi by objectModel.ui.collectAsStateWithLifecycle()
-            SideEffect{models[page.id]=model}
+            SideEffect{models[page.id]=model;model.suppressedIds=objectUi.objects.flatMap{it.sourceStrokeIds}.toSet()}
             Column(Modifier.widthIn(max=760.dp).fillMaxWidth().padding(horizontal=16.dp)){
                 Text("第 ${page.position+1} 页 · "+PaperTemplates.title(PaperStyle.entries[page.paper]),fontSize=11.sp,color=Quiet,modifier=Modifier.padding(bottom=6.dp))
                 Box(Modifier.fillMaxWidth().aspectRatio(1000f/1414f).background(Color.White).testTag("continuous-page-${page.position+1}")){
                     AndroidView(factory={ctx->InkCanvasView(ctx).apply{embeddedPage=true;tag="ink-page-${page.id}"}},update={v->
                         v.configure(false,PaperStyle.entries[page.paper],null)
-                        v.allowInput=tools.enabled&&(if(tools.erasing)!ui.loading&&!ui.readFailed&&ui.blocked==null&&!ui.processing&&ui.queued<16 else ui.canStart)&&(gestureOwner==null||gestureOwner==page.id)
+                        v.allowInput=tools.enabled&&!objectUi.loading&&!objectUi.pending&&!objectUi.busy&&(if(tools.erasing)!ui.loading&&!ui.readFailed&&ui.blocked==null&&!ui.processing&&ui.queued<16 else ui.canStart)&&(gestureOwner==null||gestureOwner==page.id)
                         v.pen=tools.pen;v.penColor=tools.color;v.penWidth=tools.width
                         v.eraseMode=tools.erasing;v.eraserWhole=tools.whole;v.eraserHighlighterOnly=tools.highlighterOnly;v.eraserDiameterDp=tools.diameter
                         v.onStroke=model::accept;v.onErase=model::erasePath
                         v.onGesture={active->if(active){gestureOwner=page.id;reported=page.id;latestSelect(page.id)}else if(gestureOwner==page.id)gestureOwner=null;onGesture(active)}
                         v.onAxes=app.diagnostics::inputAxes;v.onNotice=onNotice
-                        v.showStrokes(ui.strokes);v.showObjects(objectUi.objects)
+                        v.showDocument(page.id);v.showStrokes(ui.strokes);v.showObjects(objectUi.objects)
                     },modifier=Modifier.fillMaxSize().testTag("continuous-ink-${page.position+1}"))
                     if(ui.loading)CircularProgressIndicator(Modifier.align(Alignment.Center))
                     if(objectUi.error!=null)TextButton(onClick=objectModel::reload,modifier=Modifier.align(Alignment.BottomCenter)){Text("对象读取失败，重试")}

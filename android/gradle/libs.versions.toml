@@ -13,6 +13,8 @@ androidx-junit = "1.3.0"
 ink = "1.1.0-alpha09"
 
 [libraries]
+mupdf = { module = "com.artifex.mupdf:fitz", version = "1.28.5" }
+onnxruntime = { module = "com.microsoft.onnxruntime:onnxruntime-android", version = "1.30.0" }
 compose-bom = { module = "androidx.compose:compose-bom", version.ref = "compose-bom" }
 compose-ui = { module = "androidx.compose.ui:ui" }
 compose-material3 = { module = "androidx.compose.material3:material3" }

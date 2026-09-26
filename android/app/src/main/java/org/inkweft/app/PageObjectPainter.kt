@@ -29,8 +29,7 @@ internal class PageObjectPainter {
                     else {paint.color=Color.LTGRAY;canvas.drawRect(o.x,o.y,o.x+o.width,o.y+o.height,paint)}
                 }
                 PageObjectKind.TEXT->{
-                    val layout=layouts[o]?:StaticLayout.Builder.obtain(o.text,0,o.text.length,TextPaint(Paint.ANTI_ALIAS_FLAG).apply{color=o.color;textSize=o.fontSize},o.width.toInt().coerceAtLeast(1))
-                        .setAlignment(Layout.Alignment.ALIGN_NORMAL).setIncludePad(false).build().also{layouts[o]=it}
+                    val layout=layouts[o]?:TextStyles.layout(o).also{layouts[o]=it}
                     canvas.translate(o.x,o.y);layout.draw(canvas)
                 }
                 PageObjectKind.TAPE->{

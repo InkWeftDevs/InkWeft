@@ -6,6 +6,8 @@ import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -58,8 +60,7 @@ class LibraryTransfersViewModel(app:Application,private val saved:SavedStateHand
         viewModelScope.launch{
             try{
                 val parsed=withContext(Dispatchers.IO){
-                    val ctx=currentCoroutineContext()
-                    checkNotNull(ownerApp.contentResolver.openInputStream(uri)).use{ContentTransfer.read(it){ctx.ensureActive()}}
+                    DocumentImports.read(ownerApp,uri)
                 }
                 if(hasPending())require(value("sha")==parsed.sha256){"IMPORT_CONTENT_CHANGED"}
                 else remember("IMPORT",sha=parsed.sha256)
@@ -67,7 +68,7 @@ class LibraryTransfersViewModel(app:Application,private val saved:SavedStateHand
                 val count=when(val c=parsed.content){is ContentTransfer.Content.Page->1;is ContentTransfer.Content.Book->c.value.pages.size}
                 mutable.value=LibraryTransferUi("IMPORT",message="已校验 ${parsed.byteCount} 字节、$count 页。将导入为新笔记，不覆盖现有资料。副本不是完整资料库备份；不包含账号或云服务配置。")
             }catch(c:CancellationException){throw c}
-            catch(_:Exception){mutable.value=LibraryTransferUi("ERROR",message="无法读取副本：文件损坏、不受支持或超出上限。页面上限4MB，整本上限32MB；原资料未覆盖。待核对导入须重新选择同一份文件。",needsFile=hasPending())}
+            catch(e:Exception){mutable.value=LibraryTransferUi("ERROR",message=(e as? DocumentImportException)?.explanation?:"无法完整导入：文件损坏、已加密或超出上限。源文档最多 32 MB / 500 页，页面副本 36 MB、整本副本 64 MB。原资料未改动。待核对导入请选择同一文件。",needsFile=hasPending())}
         }
     }
     fun commit(){
@@ -142,7 +143,7 @@ internal fun LibraryTransferDialog(vm:LibraryTransfersViewModel,pickImport:()->U
     if(ui.mode.isBlank())return
     AlertDialog(onDismissRequest=vm::dismiss,modifier=Modifier.testTag("library-transfer-dialog"),
         title={Text(when(ui.mode){"COPY"->"复制笔记";"IMPORT"->"导入内容副本";"EXPORT"->"导出内容副本";"DONE"->"操作完成";else->"资料操作"})},
-        text={Column(verticalArrangement=Arrangement.spacedBy(12.dp)){
+        text={Column(Modifier.verticalScroll(rememberScrollState()),verticalArrangement=Arrangement.spacedBy(12.dp)){
             Text(ui.message,modifier=Modifier.testTag("library-transfer-message"))
             if(ui.busy)LinearProgressIndicator(Modifier.fillMaxWidth())
         }},

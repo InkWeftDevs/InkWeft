@@ -82,7 +82,7 @@ class LibraryContentRepositoryTest {
         val paths=List(10){InkStroke(id(),InkPen.PEN,0xff000000.toInt(),2f,InkTool.STYLUS,
             List(8192){i->InkSample(20f+i%800,30f+i%1200,i.toLong())})}
         val page=InkPageFile("长页","",paths);val bytes=NotebookFile("大副本","",List(3){page}).encode()
-        assertTrue(bytes.size>InkPageFile.MAX_BYTES)
+        assertTrue(bytes.size>4_000_000)
         val parsed=ContentTransfer.read(ByteArrayInputStream(bytes))
         val n=LibraryContentRepository(db).import(ImportNotebook(id(),id(),parsed.sha256),parsed)
         assertEquals(3,db.pages().list(n.id).size)

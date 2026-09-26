@@ -123,10 +123,12 @@ class InkRepository(private val db:NoteDatabase,private val fault:(InkFaultPoint
         };fault(InkFaultPoint.AFTER_TRANSACTION);return result
     }
     internal suspend fun populateImportedPage(id:String,file:InkPageFile){
+        DocumentRepository(db).attach(id,file.source)
         check(db.ink().page(id)==null);db.pages().paper(id,file.paper.ordinal)
-        PageObjectRepository(db).import(id,file.objects)
+        val strokeIds=file.strokes.associate{it.id to UUID.randomUUID().toString()}
         dao.insertPage(InkPageRow(id,file.strokes.size.toLong()))
-        file.strokes.forEachIndexed{index,old->val s=InkStroke(UUID.randomUUID().toString(),old.pen,old.color,old.width,old.tool,old.samples,old.world,old.cuts);dao.insertStroke(InkStrokeRow(s.id,id,InkStrokeCodec.encode(s),s.samples.size,true,index.toLong()+1))}
+        file.strokes.forEachIndexed{index,old->val s=InkStroke(checkNotNull(strokeIds[old.id]),old.pen,old.color,old.width,old.tool,old.samples,old.world,old.cuts);dao.insertStroke(InkStrokeRow(s.id,id,InkStrokeCodec.encode(s),s.samples.size,true,index.toLong()+1))}
+        PageObjectRepository(db).import(id,file.objects,strokeIds)
     }
     suspend fun importCopy(file:InkPageFile):Note=db.withTransaction {
         val title=(file.title.take(115)+" · 副本").take(120)

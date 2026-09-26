@@ -18,7 +18,7 @@ internal data class SelectedInk(val region:InkRegion,val revision:Long,val strok
 @Composable
 internal fun SelectionActions(selection:SelectedInk?,all:List<InkStroke>,enabled:Boolean,
     freehand:Boolean,onMode:(Boolean)->Unit,apply:(Long,InkMutation)->Boolean,
-    clear:()->Unit,excerpt:(SelectedInk)->Unit,associate:(SelectedInk)->Unit={}){
+    clear:()->Unit,excerpt:(SelectedInk)->Unit,associate:(SelectedInk)->Unit={},fontBeauty:(SelectedInk)->Unit={}){
     var beauty by remember{mutableStateOf(false)};var color by remember{mutableStateOf(false)}
     val s=selection;val count=s?.strokes?.size?:0
     androidx.activity.compose.BackHandler(enabled=selection!=null){clear()}
@@ -30,6 +30,7 @@ internal fun SelectionActions(selection:SelectedInk?,all:List<InkStroke>,enabled
                 TextButton(onClick={if(apply(s.revision,InkMutation.Visibility(s.strokes.map{it.id},false)))clear()},enabled=enabled&&count>0,modifier=Modifier.testTag("selection-delete")){Text("删除选中 $count 笔")}
                 TextButton(onClick={val ids=all.filter{it.bounds().intersects(s.region.bounds)}.map{it.id};if(ids.isNotEmpty()&&apply(s.revision,InkMutation.Cut(EraseSelection(s.region.mask(),ids))))clear()},enabled=enabled,modifier=Modifier.testTag("selection-erase-inside")){Text("只擦框内部分")}
                 TextButton(onClick={runCatching{InkSelectionEdit.copy(s.strokes,0f,0f)}.getOrNull()?.let{if(apply(s.revision,InkMutation.Replace(emptyList(),it)))clear()}},enabled=enabled&&count in 1..256,modifier=Modifier.testTag("selection-copy")){Text("原位复制")}
+                TextButton(onClick={fontBeauty(s)},enabled=enabled&&count in 1..256&&s.strokes.none{it.pen==InkPen.HIGHLIGHTER},modifier=Modifier.testTag("selection-font-beauty")){Text("字体美化")}
                 TextButton(onClick={beauty=true},enabled=enabled&&count in 1..256&&s.strokes.all{it.pen!=InkPen.HIGHLIGHTER&&it.cuts.isEmpty()},modifier=Modifier.testTag("selection-beautify")){Text("稳线美化")}
                 TextButton(onClick={color=true},enabled=enabled&&count in 1..256,modifier=Modifier.testTag("selection-recolor")){Text("改色")}
                 TextButton(onClick={excerpt(s)},enabled=enabled&&count in 1..256,modifier=Modifier.testTag("selection-excerpt")){Text("摘录为摘要卡")}
