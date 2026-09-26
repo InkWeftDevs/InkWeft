@@ -154,7 +154,7 @@ class WorkspaceUiTest {
         val before=runBlocking{app.inkRepository.read(n.id).strokes.single().stroke.samples}
         compose.onNodeWithTag("fit-page").performClick();var small=0.0;compose.runOnIdle{small=canvas().snapshotViewport().zoom}
         compose.onNodeWithTag("fit-width").performClick();compose.runOnIdle{assertTrue(canvas().snapshotViewport().zoom>=small)}
-        compose.onNodeWithTag("ink-more").performScrollTo().performClick();compose.onNodeWithText("纸面 · 方格",useUnmergedTree=true).performClick()
+        compose.onNodeWithTag("ink-more").performScrollTo().performClick();compose.onNodeWithTag("change-paper").performClick();compose.onNodeWithTag("paper-option-grid").performScrollTo().performClick();compose.onNodeWithTag("paper-picker-confirm").performClick()
         compose.waitUntil(10_000){runBlocking{app.workspaceRepository.get(n.id).paper==PaperStyle.GRID.ordinal}}
         assertEquals(before,runBlocking{app.inkRepository.read(n.id).strokes.single().stroke.samples});assertToolbarPixels();shot("workspace-page.png");compose.onNodeWithTag("back-library").performClick()
     }

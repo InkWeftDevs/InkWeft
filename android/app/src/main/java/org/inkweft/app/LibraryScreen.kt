@@ -14,6 +14,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.platform.LocalContext
@@ -276,8 +277,6 @@ internal fun PaperThumbnail(board:Boolean,style:PaperStyle){
     Canvas(Modifier.fillMaxSize().background(Color.White)){
         val sx=size.width/1000f;val sy=size.height/1414f
         val guides=PaperTemplates.guides(style,CanvasBounds(0.0,0.0,1000.0,1414.0),board,.7)
-        val c=Color(0xffd8e0dc)
-        guides.lines.forEach{drawLine(c,Offset(it.x1*sx,it.y1*sy),Offset(it.x2*sx,it.y2*sy),1f)}
-        guides.dots.forEach{drawCircle(c,1f,Offset(it.x.toFloat()*sx,it.y.toFloat()*sy))}
+        drawContext.canvas.nativeCanvas.let{c->val saved=c.save();c.scale(sx,sy);PaperPainter.draw(c,guides,minOf(sx,sy).toDouble());c.restoreToCount(saved)}
     }
 }

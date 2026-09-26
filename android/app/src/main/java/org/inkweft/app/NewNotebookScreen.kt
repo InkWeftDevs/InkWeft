@@ -24,6 +24,7 @@ internal fun NewNotebookScreen(title:String,onTitle:(String)->Unit,world:Boolean
     paper:PaperStyle,onPaper:(PaperStyle)->Unit,cover:NotebookCover,onCover:(NotebookCover)->Unit,
     custom:ByteArray?,onCustom:(ByteArray?)->Unit,busy:Boolean,cancel:()->Unit,create:()->Unit){
     var editCover by rememberSaveable{mutableStateOf(false)}
+    var templateQuery by rememberSaveable{mutableStateOf("")}
     var category by rememberSaveable{mutableStateOf("全部")}
     Dialog(onDismissRequest={if(!busy)cancel()},properties=DialogProperties(usePlatformDefaultWidth=false)){
         Surface(Modifier.fillMaxSize().testTag("new-notebook-screen"),color=Color.White){Column(Modifier.safeDrawingPadding().imePadding()){
@@ -45,7 +46,7 @@ internal fun NewNotebookScreen(title:String,onTitle:(String)->Unit,world:Boolean
                             OutlinedTextField(title,{if(it.length<=120)onTitle(it)},enabled=!busy,singleLine=true,label={Text("笔记标题 · 可以稍后再改")},placeholder={Text("未命名笔记")},modifier=Modifier.fillMaxWidth().testTag("new-title"))
                             Row(Modifier.horizontalScroll(rememberScrollState()),horizontalArrangement=Arrangement.spacedBy(12.dp)){
                                 FilterChip(!world,{onWorld(false)},enabled=!busy,label={Text("普通多页笔记")},modifier=Modifier.testTag("create-page"))
-                                FilterChip(world,{onWorld(true)},enabled=!busy,label={Text("无界笔记")},modifier=Modifier.testTag("create-world"))
+                                FilterChip(world,{onWorld(true);category="全部";templateQuery=""},enabled=!busy,label={Text("无界笔记")},modifier=Modifier.testTag("create-world"))
                             }
                             Text(if(world)"向四周展开，手指导航，触控笔书写。"else"标准竖页 · 封面与正文分开，创建后可插页。",fontSize=14.sp,color=Quiet)
                             CoverSwatches(cover,onCover)
@@ -56,12 +57,15 @@ internal fun NewNotebookScreen(title:String,onTitle:(String)->Unit,world:Boolean
                     }
                     item(span={GridItemSpan(maxLineSpan)}){Column(verticalArrangement=Arrangement.spacedBy(12.dp)){
                         HorizontalDivider(color=Line)
-                        Row(Modifier.horizontalScroll(rememberScrollState()),horizontalArrangement=Arrangement.spacedBy(12.dp)){listOf("全部","基础","学习","计划").forEach{c->FilterChip(category==c,{category=c},label={Text(c)})}}
-                        Text("选择纸面",fontSize=20.sp);Text("预览和内页共用同一纸面定义。",fontSize=12.sp,color=Quiet)
+                        Row(Modifier.horizontalScroll(rememberScrollState()),horizontalArrangement=Arrangement.spacedBy(12.dp)){(if(world)listOf("全部","基础")else PaperTemplates.categories).forEach{c->FilterChip(category==c,{category=c},label={Text(c)})}}
+                        Text("选择纸面",fontSize=20.sp)
+                        OutlinedTextField(templateQuery,{templateQuery=it},singleLine=true,placeholder={Text("搜索纸面：计划、会议、阅读…")},modifier=Modifier.fillMaxWidth().testTag("new-paper-search"))
+                        Text(PaperTemplates.description(paper),fontSize=12.sp,color=Quiet)
                     }}
-                    items(PaperStyle.entries.filter{(!world||it.ordinal<4)&&(category=="全部"||PaperTemplates.category(it)==category)},key={it.name}){style->
+                    if(PaperStyle.entries.none{(!world||it.ordinal<4)&&PaperTemplates.matches(it,category,templateQuery)})item(span={GridItemSpan(maxLineSpan)}){Text("没有匹配的纸面，试试其他关键词或分类。",color=Quiet)}
+                    items(PaperStyle.entries.filter{(!world||it.ordinal<4)&&PaperTemplates.matches(it,category,templateQuery)},key={it.name}){style->
                         Surface(onClick={onPaper(style)},enabled=!busy,color=if(paper==style)Leaf else Color.White,shape=RoundedCornerShape(12.dp),border=BorderStroke(if(paper==style)2.dp else 1.dp,if(paper==style)Forest else Line),modifier=Modifier.testTag("template-${style.name.lowercase()}")){
-                            Column(Modifier.padding(12.dp),horizontalAlignment=Alignment.CenterHorizontally){Box(Modifier.fillMaxWidth().height(150.dp).border(1.dp,Line)){PaperThumbnail(world,style)};Text(PaperTemplates.title(style),Modifier.padding(top=12.dp),fontSize=14.sp)}
+                            Column(Modifier.padding(12.dp),horizontalAlignment=Alignment.CenterHorizontally){Box(Modifier.fillMaxWidth().aspectRatio(1000f/1414f).border(1.dp,Line)){PaperThumbnail(world,style)};Text(PaperTemplates.title(style),Modifier.padding(top=12.dp),fontSize=14.sp)}
                         }
                     }
                 }

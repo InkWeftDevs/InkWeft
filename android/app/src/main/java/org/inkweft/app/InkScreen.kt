@@ -32,6 +32,7 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
     val ui by vm.ui.collectAsStateWithLifecycle()
     val row=WorkspaceRow(page.id,page.world,page.paper,centerX=page.centerX,centerY=page.centerY,zoom=page.zoom)
     val scope=rememberCoroutineScope()
+    var showPaperPicker by remember { mutableStateOf(false) }
     var tool by rememberSaveable(page.id){mutableIntStateOf(0)}
     var finger by rememberSaveable(page.id){mutableStateOf(false)}
     var dockBottom by rememberSaveable(page.id){mutableStateOf(false)}
@@ -116,7 +117,7 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
                         DropdownMenuItem(text={Text("本页手写检索文字")},onClick={more=false;onSearch(ui.revision)},enabled=ui.queued==0&&ui.blocked==null&&!ui.loading)
                         DropdownMenuItem(text={Text("导出页面副本")},onClick={more=false;confirmExport=true},enabled=!ui.loading)
                         DropdownMenuItem(text={Text("设为默认笔盒")},onClick={more=false;scope.launch{try{val defaults=PenWidthStore(context);val ok=(0..2).map{defaults.savePreset(it,widths[it],colors[it])}.all{it};notice=if(ok)"已设为新笔记的默认笔盒"else"默认笔盒未完全保存，请重试。"}catch(c:CancellationException){throw c}catch(_:Exception){notice="默认笔盒未保存"}}})
-                        PaperStyle.entries.filter{!page.world||it.ordinal<4}.forEach{style->DropdownMenuItem(text={Text("纸面 · "+PaperTemplates.title(style))},onClick={workspace.paper(page.id,style);more=false})}
+                        DropdownMenuItem(text={Text("更换纸面…")},onClick={more=false;showPaperPicker=true},modifier=Modifier.testTag("change-paper"))
                         DropdownMenuItem(text={Text("查看输入与容量说明")},onClick={more=false;notice="$axes。最多 ${InkLimits.MAX_STROKES} 笔／${InkLimits.MAX_PAGE_POINTS} 个采样点；抬笔后提交，撤销历史暂不跨进程恢复。"})
                     }
                 }
@@ -169,6 +170,7 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
         }
     }
     if(eraserDialog)EraserDialog(eraser,{eraserDialog=false}){next->eraser=next;eraserDialog=false;scope.launch{val saved=try{eraserStore.save(next)}catch(c:CancellationException){throw c}catch(_:Exception){false};if(!saved)notice="本次橡皮已应用，但设置未保存。"}}
+    if(showPaperPicker)PaperPickerDialog(PaperStyle.entries.getOrElse(row.paper){PaperStyle.RULED},row.world,{showPaperPicker=false}){style->workspace.paper(row.noteId,style);showPaperPicker=false}
     if(confirmExport)AlertDialog(onDismissRequest={confirmExport=false},title={Text("导出可编辑页面副本")},text={Text("包括可见笔迹、纸张/无界形式、纸面样式和当前文字（可能含未确认内容）。明文 .iwpage，不是整库备份，不包含隐藏笔迹、撤销历史、分类、视图位置和回执。所选位置可能属于云盘。")},confirmButton={TextButton(onClick={confirmExport=false;val r=row?:return@TextButton;exportPending=InkPageFile(note.title.ifBlank{"笔记"},note.text,ui.strokes,r.world,PaperStyle.entries.getOrElse(r.paper){PaperStyle.RULED});launcher.launch("墨织页面.iwpage")}){Text("选择保存位置")}},dismissButton={TextButton(onClick={confirmExport=false}){Text("取消")}})
     if(discard)AlertDialog(onDismissRequest={discard=false},title={Text("放弃未确认笔迹？")},text={Text("只重新读取已保存内容。建议先导出副本，已保存笔迹不会删除。")},confirmButton={TextButton(onClick={discard=false;vm.discardRejectedDraft()}){Text("放弃草稿并读取")}},dismissButton={TextButton(onClick={discard=false}){Text("取消")}})
 }

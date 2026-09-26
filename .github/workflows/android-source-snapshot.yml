@@ -2,10 +2,10 @@ name: Android source snapshot
 on:
   pull_request:
     branches: ["main"]
-    paths: ["android/**", ".github/workflows/**"]
+    paths: ["android/**", ".github/workflows/**", "ci/**"]
   push:
     branches: ["main"]
-    paths: ["android/**", ".github/workflows/**"]
+    paths: ["android/**", ".github/workflows/**", "ci/**"]
 permissions:
   contents: read
 jobs:
@@ -22,7 +22,7 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p "$RUNNER_TEMP/inkweft-source"
-          git archive --format=zip --prefix=InkWeft-source/ HEAD android .github > "$RUNNER_TEMP/inkweft-source/source.zip"
+          git archive --format=zip --prefix=InkWeft-source/ HEAD android .github ci > "$RUNNER_TEMP/inkweft-source/source.zip"
           git rev-parse HEAD > "$RUNNER_TEMP/inkweft-source/build-commit.txt"
           printf '%s\n' "$SOURCE_HEAD" > "$RUNNER_TEMP/inkweft-source/source-head.txt"
           cd "$RUNNER_TEMP/inkweft-source"

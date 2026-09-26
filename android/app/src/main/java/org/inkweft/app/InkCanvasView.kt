@@ -152,10 +152,7 @@ class InkCanvasView(context:Context):View(context){
     private fun drawGuide(c:Canvas,v:CanvasBounds){
         val f=viewport.zoom*density
         val guides=PaperTemplates.guides(paper,v,world,f)
-        paint.style=Paint.Style.STROKE;paint.color=Color.rgb(216,224,220);paint.strokeWidth=(1/f).toFloat()
-        guides.lines.forEach{c.drawLine(it.x1,it.y1,it.x2,it.y2,paint)}
-        paint.style=Paint.Style.FILL
-        guides.dots.forEach{c.drawCircle(it.x.toFloat(),it.y.toFloat(),(1/f).toFloat(),paint)}
+        PaperPainter.draw(c,guides,f)
     }
     override fun onHoverEvent(e:MotionEvent):Boolean {if(preview||!eraseMode)return super.onHoverEvent(e);cursor=if(e.actionMasked==MotionEvent.ACTION_HOVER_EXIT)null else CanvasPoint(e.x.toDouble(),e.y.toDouble());invalidate();return true}
     override fun onTouchEvent(e:MotionEvent):Boolean{

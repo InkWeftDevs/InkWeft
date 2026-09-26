@@ -26,6 +26,7 @@ internal fun InsertPagesDialog(
     var anchorId by remember { mutableStateOf(initialAnchor) }
     var count by remember { mutableIntStateOf(1) }
     var inherited by remember { mutableStateOf(true) }
+    var category by remember { mutableStateOf("全部") }
     var style by remember { mutableStateOf(PaperStyle.RULED) }
     var openNew by remember { mutableStateOf(true) }
     val anchor = pages.firstOrNull { it.id == anchorId }
@@ -61,8 +62,9 @@ internal fun InsertPagesDialog(
                 }
                 Text("纸面",fontSize=14.sp)
                 FilterChip(selected=inherited,onClick={inherited=true},label={Text("沿用所选页纸面",fontSize=12.sp)},modifier=Modifier.testTag("insert-paper-inherit"))
+                Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),horizontalArrangement=Arrangement.spacedBy(6.dp)){PaperTemplates.categories.forEach{c->FilterChip(category==c,{category=c},label={Text(c)})}}
                 Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),horizontalArrangement=Arrangement.spacedBy(6.dp)) {
-                    PaperStyle.entries.forEach { paper ->
+                    PaperStyle.entries.filter{PaperTemplates.matches(it,category,"")}.forEach { paper ->
                         Column(Modifier.width(100.dp).clipForPageSelection(!inherited&&style==paper).clickable{inherited=false;style=paper}.padding(5.dp)
                             .testTag("insert-paper-${paper.name.lowercase()}"),horizontalAlignment=Alignment.CenterHorizontally) {
                             Box(Modifier.fillMaxWidth().height(54.dp)) { PaperThumbnail(false,paper) }
