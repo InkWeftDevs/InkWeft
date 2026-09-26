@@ -20,7 +20,7 @@ class UpgradeTransitionTest {
     private val node="11000000-0000-4000-8000-000000000005"
     private val bytes get()=Base64.decode("SVdTMQAkMTEwMDAwMDAtMDAwMC00MDAwLTgwMDAtMDAwMDAwMDAwMDAyAP8AAABAQAAAAQAAAANCyAAAQtwAAAAAAAAAAAAAPwAAAL+AAAC/gAAAQxYAAELcAAAAAAAAAAAAHj8AAAC/gAAAv4AAAENIAABC3AAAAAAAAAAAADw/AAAAv4AAAL+AAAA=",Base64.DEFAULT)
     @Test fun seedBaseline(){
-        assertEquals(if(baseSchema==4)5L else if(baseSchema==7)9L else if(baseSchema==8)10L else if(baseSchema>=9)11L else 12L,ctx.packageManager.getPackageInfo(ctx.packageName,0).longVersionCode)
+        assertEquals(when(baseSchema){4->5L;7->9L;8->10L;9->11L;10->12L;else->error("BASE_SCHEMA")},ctx.packageManager.getPackageInfo(ctx.packageName,0).longVersionCode)
         val path=ctx.getDatabasePath("inkweft-a0.db");path.parentFile!!.mkdirs()
         val sql=SQLiteDatabase.openOrCreateDatabase(path,null)
         val text=InstrumentationRegistry.getInstrumentation().context.assets.open("upgrade-schema$baseSchema.json").bufferedReader().use{it.readText()}
