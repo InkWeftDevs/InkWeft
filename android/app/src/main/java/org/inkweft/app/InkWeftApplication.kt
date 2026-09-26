@@ -2,10 +2,27 @@
 package org.inkweft.app
 
 import android.app.Application
-import org.inkweft.data.NoteDatabase
-import org.inkweft.data.NoteRepository
+import org.inkweft.data.*
+import org.inkweft.core.CloudServicePort
+import org.inkweft.core.DisabledCloudServices
 
-class InkWeftApplication : Application() {
-    private val database by lazy { NoteDatabase.open(this) }
-    val repository by lazy { NoteRepository(database) }
+class InkWeftApplication:Application(){
+    val openKnowledgeTarget=kotlinx.coroutines.flow.MutableStateFlow<org.inkweft.core.TargetRef?>(null)
+    val navigationReady=kotlinx.coroutines.flow.MutableStateFlow(true)
+    val diagnostics by lazy{AppDiagnostics(this)}
+    private val database by lazy{NoteDatabase.open(this)}
+    val repository by lazy{NoteRepository(database)}
+    val documents by lazy{DocumentRepository(database)}
+    val pageObjects by lazy{PageObjectRepository(database)}
+    val inkRepository by lazy{InkRepository(database)}
+    val workspaceRepository by lazy{WorkspaceRepository(database)}
+    val pages by lazy{NotebookPages(database)}
+    val libraryContent by lazy{LibraryContentRepository(database)}
+    val libraryBackup by lazy{LibraryBackupRepository(this,database)}
+    val knowledge by lazy{KnowledgeRepository(database)}
+    val study by lazy{StudyRepository(database)}
+    val cloudServices:CloudServicePort=DisabledCloudServices
+    internal val documentRendering by lazy{DocumentRendering(this,documents)}
+    internal val handwriting by lazy{HandwritingRecognizer(this)}
+    override fun onCreate(){super.onCreate();TextStyles.initialize(this);diagnostics}
 }

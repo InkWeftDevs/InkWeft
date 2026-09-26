@@ -1,4 +1,16 @@
-# 墨织 Android A0 — 原生基础切片
+# 墨织 Android
+
+当前测试版：**文档阅读与手写识别 0.0.17（17）**，新增离线字体美化、手写查找、PDF 阅读批注与电子书固定分页。见 [功能与格式说明](READING-HANDWRITING.md)、[修改日志](CHANGELOG.md) 和 [实机测试清单 T38—T43](DEVICE-TEST-CHECKLIST.md)。以下历史阶段记录保留当时验证范围。
+
+当前为 **书写工作台测试版**（`0.0.15-writing-workspace`）：圆珠笔、钢笔、毛笔、马克笔和荧光笔；多笔记标签页；上下连续翻页；阅读设置、文档标签与工具栏位置。保留 24 种纸面、自定义封面、选区编辑、摘要卡和脑图。连续模式用手指滚动、触控笔书写，精确缩放和套索使用单页模式。页内图片、拍照、文本框、胶带和图层尚未实现，下一组按统一页面对象推进。范围见 [功能对照与路线](FEATURE-ROADMAP.md)、[修改日志](CHANGELOG.md)、[待实现内容](TODO.md)。诊断反馈的实际边界见 [版本 14 用户反馈](DEVICE-REPORT-20260926.md)。
+
+以下内容保留各早期阶段的历史记录；其中“未完成”和测试数字描述的是当时状态，不代表 UI-R2 的现状。
+
+实机验收请使用 [真机测试清单与反馈模板](DEVICE-TEST-CHECKLIST.md)，按用例操作并记录设备、版本与结果。
+
+[竞品实际体验记录](COMPETITOR-HANDS-ON.md) 包含 vivo 平板上的 StarNote 与模拟器上的 Goodnotes 等：分别标记实际完成的操作、仅查看的入口和受阻项目，作为下一组页面对象编辑的依据。
+
+## A0 — 原生基础切片（历史）
 
 这是安卓主工程的第一笔实现，不是把网页放进 WebView，也**不是完整 A0.1 书写版**。旧 `src/`、`index.html` 和 Web 自检均保持原样，原计划37条应用验收仍为 NOT_RUN。
 
@@ -26,12 +38,11 @@
 
 固定：JDK 17、Gradle 9.4.1、AGP 9.2.1、Kotlin/Compose plugin 2.3.10、compile/target 36、min 31。直接依赖版本见 `gradle/libs.versions.toml`。AGP 9 使用 built-in Kotlin；Android模块不再重复应用 kotlin-android。
 
-首次引导需要官方 Gradle 9.4.1（CI使用固定提交的setup-gradle）。**源码暂未携带wrapper JAR**：先使用一次已安装的固定Gradle生成标准wrapper，CI同时输出生成的wrapper文件供审阅；没有另写下载执行器或伪造JAR。这是开发基础版的明确构建前置，后续应提交完整标准wrapper；不声称现在仅靠git clone即可运行gradlew。
+**标准 wrapper 已入库**：`gradlew`、`gradlew.bat`、`gradle/wrapper/gradle-wrapper.jar` 与 `gradle-wrapper.properties` 已提交。JAR 由官方 Gradle 9.4.1 的 `wrapper` 任务生成，本地重建后 SHA-256 与下列官方校验值逐字节一致（不是手写或用下载器伪造的 JAR）：
 
 ```powershell
 Set-Location android
-gradle wrapper
-.\gradlew.bat :core-domain:test :app:lintDebug :app:assembleDebug :data-local:assembleDebugAndroidTest
+.\gradlew.bat :core-domain:test :app:lintDebug :app:assembleDebug :app:assembleDebugAndroidTest :data-local:assembleDebugAndroidTest
 ```
 
 标准wrapper生成任务固定官方分发SHA-256：
@@ -55,6 +66,21 @@ CI分别编译 Debug APK、运行纯Kotlin JUnit、lint，并编译（不执行�
 - data-local/androidTest：幂等、陈旧版本、重开、旧回执固定版本。仅定义/编译不等于运行。
 
 调试APK使用当前构建环境debug key，不是正式签名；不同环境证书不保证兼容覆盖安装，禁止脚本自动卸载清库。没有自动合并、Release或上传商店。
+
+## A3 局部橡皮 / 多页 / 封面改名（本轮实测）
+
+本节的数字来自本地实际执行并保留原始日志与报告，不是计划值，也不是把定义中的用例算作通过。
+
+- 编译：`:core-domain:test :app:lintDebug :app:assembleDebug :app:assembleDebugAndroidTest :data-local:assembleDebugAndroidTest` 全部成功（153 个任务）。
+- JVM 单元测试：**104 项通过，0 失败 / 0 错误 / 0 跳过**（CanvasViewport20、DiagnosticLog14、DraftReload8、InkEditing12、InkModels26、NotebookAppearance12、NoteDraft12）。本地与 CI 两次独立执行数字一致。
+- lint：本地 0 错误/40 警告，CI 0 错误/49 警告（规则集合差异）；未关闭规则、未用 `continue-on-error`。
+- Room schema4 由真实 KSP 生成并提交，`identityHash=43aaa681e66f431ce083dc510f59cbe8`。用宿主 SQLite 独立复核：3→4 迁移后的结构与 Room 期望的 schema4 逐表逐索引一致，2→3→4 链式升级结果同样一致；原笔迹 `payload` 字节在迁移前后完全相同，第一页保留原 UUID 身份。CI 生成的 4.json 与本地生成逐字节相同。
+- CI（run 36144792720，head `62e5e4e`）整体 success，实际 JUnit XML 统计：**app 仪器测试 18/18 通过，data-local 仪器测试 31/31 通过，0 失败 / 0 错误 / 0 跳过**。其中包含 `migration3To4PreservesAllOriginalInkBytesAndReferences`。
+- 本地另用 MuMu Android 12（API 32，x86_64）独立复跑：data-local 31 项全部通过；app 侧 17/18 通过，两项抽屉用例需要窄于 840dp 的宽度，而该 VM 的虚拟显示被锁定为横屏，提高密度后这两项亦通过。该 VM 的限制属于本地模拟器环境，不代表用例有问题——CI 的 API35 模拟器上 18 项全部通过。
+- 构件：`org.inkweft.app.a0.workspace`，versionCode 5 / `0.0.5-a3-editing`，minSdk 31 / target 36，四种 ABI。
+  - CI 构件 APK SHA-256 `125e390b7b3ef4192d5fac0a6bf9d695f42c9a2e1479877d83856b36de9398ca`（35,248,119 bytes），签名 v2 通过，证书 SHA-256 `ea2d4ed2ddfda316f001195d379d129ef47b3a07df05723462611b912f4b082c`。
+  - 本地同源构建 APK SHA-256 `CBDC7B6FD92E157B78559D45B39DFB39141018794AFB8994B6BAFE6403D25BA0`，证书 SHA-256 `18e67dbce88152dbe4d4821b5a3a513a409a3df4eac9261f4c11126c36e43969`。两者都是 diagnostic 变体（applicationId `org.inkweft.app.a0.workspace`，应用名“墨织工作台预览”），字节不同只因为调试签名证书不同；版本、包名、schema 与内容一致。本轮未单独产出非 diagnostic 的 `org.inkweft.app.a0` 包。
+- 仍然 NOT_RUN：真机 iQOO/Pencil3、真实掌拒与笔身按钮、光学延迟、温升/掉电、系统分享目标、16KiB 设备、自动手写识别（当前仅为人工转录索引）。上面通过的是模拟器与宿主检查，不等于这些项目已验收。
 
 ## 后续最短路径
 

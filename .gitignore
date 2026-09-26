@@ -7,3 +7,5 @@ __pycache__/
 # generated hosting output is intentionally NOT ignored:
 #   index.html is the shippable single-file artifact
 #   evidence/*.txt|json are the raw self-check outputs referenced by sample-REPORT.md
+
+/android-plan.json

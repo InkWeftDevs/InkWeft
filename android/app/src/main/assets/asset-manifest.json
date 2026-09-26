@@ -1,0 +1,22 @@
+[
+  {
+    "asset": "ocr/characters.json",
+    "bytes": 129163,
+    "sha256": "c9007c1e471102735d65ed5e6bf2c197f4c3b926f7005c61143ac9c37c25adce"
+  },
+  {
+    "asset": "ocr/inference.yml",
+    "bytes": 148345,
+    "sha256": "5dfeb2777f6d0db8177d8128a8acfcf6e6276dc4ac73ea3bf0dc06d6a5e85d8e"
+  },
+  {
+    "asset": "ocr/recognition.onnx",
+    "bytes": 16534782,
+    "sha256": "da72dc72ca4dc220df0dfde68c1dedc31c58d3e76a25871122e5056227d50092"
+  },
+  {
+    "asset": "fonts/LXGWWenKaiLite-Regular.ttf",
+    "bytes": 13872424,
+    "sha256": "140c99ba4e28e817cec49bf82a0c5fcdc4fe633fb9dfda16d0ee8d59a8545f15"
+  }
+]

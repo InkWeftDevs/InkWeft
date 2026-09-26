@@ -1,92 +1,145 @@
-name: Android A0 foundation
+name: Android 按改动验证
 on:
   push:
     branches: ["main"]
-    paths: ["android/**", ".github/workflows/android-a0.yml"]
+    paths: ["android/**", "ci/**", ".github/workflows/android-a0.yml"]
   pull_request:
     branches: ["main"]
-    paths: ["android/**", ".github/workflows/android-a0.yml"]
+    paths: ["android/**", "ci/**", ".github/workflows/android-a0.yml"]
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 验证范围
+        type: choice
+        options: [full]
+        default: full
 permissions:
   contents: read
+  actions: read
 concurrency:
   group: android-a0-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 jobs:
   build:
+    name: Android 验证
     runs-on: ubuntu-24.04
-    timeout-minutes: 25
+    timeout-minutes: 30
+    env:
+      ORG_GRADLE_PROJECT_inkweftDiagnosticBuild: "true"
+      ORG_GRADLE_PROJECT_inkweftInsertionPreview: "true"
+      INKWEFT_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           persist-credentials: false
+          fetch-depth: 0
+      - name: 验证检查选择规则
+        run: python3 -m unittest discover -s ci -p 'test_*.py'
+      - name: 选择本次验证范围
+        id: plan
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 ci/select_android_scope.py
       - uses: actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3
+        if: steps.plan.outputs.build == 'true'
         with:
           distribution: temurin
           java-version: "17"
       - uses: gradle/actions/setup-gradle@ed408507eac070d1f99cc633dbcf757c94c7933a
+        if: steps.plan.outputs.build == 'true'
         with:
           gradle-version: "9.4.1"
-          cache-read-only: true
-      - name: Provision SDK tools explicitly
-        uses: android-actions/setup-android@9fc6c4e9069bf8d3d10b2204b1fb8f6ef7065407
+          cache-read-only: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository }}
+      - uses: android-actions/setup-android@9fc6c4e9069bf8d3d10b2204b1fb8f6ef7065407
+        if: steps.plan.outputs.build == 'true'
         with:
           packages: "platform-tools"
           log-accepted-android-sdk-licenses: false
-      - name: Install declared SDK
+      - name: 安装编译 SDK
+        if: steps.plan.outputs.build == 'true'
         run: sdkmanager "platforms;android-36" "build-tools;36.0.0"
-      - name: Generate verified standard wrapper and build
-        working-directory: android
+      - name: 按范围构建与静态检查
+        if: steps.plan.outputs.build == 'true'
         run: |
           set -euo pipefail
+          cd android
           gradle --no-daemon wrapper
           printf '%s  %s\n' '55243ef57851f12b070ad14f7f5bb8302daceeebc5bce5ece5fa6edb23e1145c' 'gradle/wrapper/gradle-wrapper.jar' | sha256sum --check -
-          ./gradlew --no-daemon :core-domain:test :app:lintDebug :app:assembleDebug :data-local:assembleDebugAndroidTest
-          git diff --exit-code -- data-local/schemas
-      - name: Record actual APK provenance
-        working-directory: android
+          cd ..
+          python3 - <<'PY'
+          import json, subprocess
+          p=json.load(open('android-plan.json'))
+          tasks=[]
+          if p['core']: tasks+=[':core-domain:test']
+          if p['lint']: tasks+=[':app:lintDebug']
+          if p['app']: tasks+=[':app:assembleDebug',':app:assembleDebugAndroidTest']
+          if p['room']: tasks+=[':data-local:assembleDebugAndroidTest']
+          subprocess.run(['./gradlew','--no-daemon','--build-cache',*tasks],cwd='android',check=True)
+          PY
+          git diff --exit-code -- android/data-local/schemas
+          test -z "$(git ls-files --others --exclude-standard -- android/data-local/schemas)"
+      - name: Install emulator test image
+        if: steps.plan.outputs.device == 'true'
+        run: sdkmanager "emulator" "system-images;android-35;google_apis;x86_64"
+      - name: Start disposable tablet emulator
+        if: steps.plan.outputs.device == 'true'
         env:
-          BUILD_COMMIT: ${{ github.sha }}
+          ANDROID_AVD_HOME: ${{ runner.temp }}/inkweft-avd
+          ANDROID_USER_HOME: ${{ runner.temp }}/inkweft-android-user
+          ANDROID_EMULATOR_HOME: ${{ runner.temp }}/inkweft-android-user
         run: |
           set -euo pipefail
-          mkdir -p build/evidence
-          cp app/build/outputs/apk/debug/app-debug.apk build/evidence/inkweft-a0-text-debug.apk
-          sha256sum build/evidence/inkweft-a0-text-debug.apk > build/evidence/APK-SHA256.txt
-          "$ANDROID_HOME/build-tools/36.0.0/apksigner" verify --verbose --print-certs build/evidence/inkweft-a0-text-debug.apk > build/evidence/apk-signature.txt
-          python3 - <<'PY'
-          import json, os, platform
-          from pathlib import Path
-          Path("build/evidence/build.json").write_text(json.dumps({
-            "commit": os.environ["BUILD_COMMIT"],
-            "scope": "A0_NATIVE_TEXT_FOUNDATION_NOT_HANDWRITING",
-            "compileSdk": 36, "targetSdk": 36, "minSdk": 31,
-            "applicationId": "org.inkweft.app.a0",
-            "runner": platform.platform(),
-            "apk_install": "NOT_RUN",
-            "instrumented_tests": "COMPILED_NOT_RUN",
-            "pencil3": "NOT_RUN",
-            "plan_37_acceptance_cases": "NOT_RUN"
-          }, indent=2) + "\n")
-          PY
-      - name: Upload successfully built APK and bootstrap outputs
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+          test -e /dev/kvm
+          sudo chmod 666 /dev/kvm
+          mkdir -p "$ANDROID_AVD_HOME" "$ANDROID_USER_HOME" android/build/evidence
+          printf 'no\n' | avdmanager create avd --force --name inkweft-ci --path "$ANDROID_AVD_HOME/inkweft-ci.avd" --package "system-images;android-35;google_apis;x86_64" --device pixel_2
+          "$ANDROID_HOME/emulator/emulator" -list-avds | tee android/build/evidence/avd-list.txt
+          grep -Fx inkweft-ci android/build/evidence/avd-list.txt
+          nohup "$ANDROID_HOME/emulator/emulator" -avd inkweft-ci -no-window -no-snapshot -noaudio -no-boot-anim -gpu swiftshader_indirect -accel on > android/build/evidence/emulator.log 2>&1 &
+          echo $! > android/build/evidence/emulator.pid
+          timeout 240 bash -c 'until [ "$(adb shell getprop sys.boot_completed 2>/dev/null | tr -d "\r")" = "1" ]; do sleep 3; done'
+          adb shell input keyevent 82
+          adb shell wm size 1920x1200
+          adb shell wm density 240
+          adb shell settings put global window_animation_scale 0
+          adb shell settings put global transition_animation_scale 0
+          adb shell settings put global animator_duration_scale 0
+          adb shell getprop > android/build/evidence/emulator-properties.txt
+      - name: 单次运行选定测试并保存证据
+        if: steps.plan.outputs.device == 'true'
+        run: python3 ci/run_android_tests.py
+      - name: 记录构件与签名
+        if: steps.plan.outputs.build == 'true'
+        run: |
+          set -euo pipefail
+          mkdir -p android/build/evidence
+          if [ -f android/app/build/outputs/apk/debug/app-debug.apk ]; then
+            apk=android/app/build/outputs/apk/debug/app-debug.apk
+            sha256sum "$apk" > android/build/evidence/APK-SHA256.txt
+            "$ANDROID_HOME/build-tools/36.0.0/apksigner" verify --print-certs "$apk" > android/build/evidence/apk-signature.txt
+            "$ANDROID_HOME/build-tools/36.0.0/zipalign" -c -P 16 4 "$apk" > android/build/evidence/zip-alignment.txt
+            cp android/app/build/outputs/apk/debug/output-metadata.json android/build/evidence/
+          fi
+          git rev-parse HEAD > android/build/evidence/build-commit.txt
+          printf '%s\n' "$INKWEFT_HEAD_SHA" > android/build/evidence/source-commit.txt
+      - name: 收集失败线索并关闭模拟器
+        if: always() && steps.plan.outputs.device == 'true'
+        run: |
+          mkdir -p android/build/evidence
+          if adb get-state >/dev/null 2>&1; then
+            adb logcat -d -t 1500 > android/build/evidence/emulator-logcat.txt
+            adb pull /sdcard/Android/data/org.inkweft.app.a0.insertion/files/. android/build/evidence/ || true
+            adb emu kill || true
+          fi
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
         with:
-          name: inkweft-a0-text-${{ github.sha }}
+          name: android-verification-${{ github.run_id }}
           retention-days: 7
           if-no-files-found: error
           path: |
-            android/build/evidence/
-            android/gradlew
-            android/gradlew.bat
-            android/gradle/wrapper/
-            android/data-local/schemas/
-      - name: Upload existing test and lint reports
-        if: always()
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
-        with:
-          name: android-a0-reports-${{ github.run_id }}
-          retention-days: 7
-          if-no-files-found: warn
-          path: |
+            android-plan.json
             android/core-domain/build/test-results/
-            android/core-domain/build/reports/tests/
             android/app/build/reports/lint-results*
+            android/app/build/outputs/apk/debug/app-debug.apk
+            android/build/evidence/

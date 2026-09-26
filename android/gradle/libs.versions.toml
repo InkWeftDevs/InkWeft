@@ -10,12 +10,17 @@ coroutines = "1.10.2"
 junit = "4.13.2"
 androidx-test = "1.7.0"
 androidx-junit = "1.3.0"
+ink = "1.1.0-alpha09"
 
 [libraries]
+mupdf = { module = "com.artifex.mupdf:fitz", version = "1.28.5" }
+onnxruntime = { module = "com.microsoft.onnxruntime:onnxruntime-android", version = "1.30.0" }
 compose-bom = { module = "androidx.compose:compose-bom", version.ref = "compose-bom" }
 compose-ui = { module = "androidx.compose.ui:ui" }
 compose-material3 = { module = "androidx.compose.material3:material3" }
 compose-foundation = { module = "androidx.compose.foundation:foundation" }
+compose-ui-test = { module = "androidx.compose.ui:ui-test-junit4" }
+compose-ui-test-manifest = { module = "androidx.compose.ui:ui-test-manifest" }
 activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activity" }
 lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycle" }
 lifecycle-runtime-compose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "lifecycle" }
@@ -27,6 +32,9 @@ junit = { module = "junit:junit", version.ref = "junit" }
 androidx-test-core = { module = "androidx.test:core-ktx", version.ref = "androidx-test" }
 androidx-test-runner = { module = "androidx.test:runner", version.ref = "androidx-test" }
 androidx-test-junit = { module = "androidx.test.ext:junit", version.ref = "androidx-junit" }
+ink-brush = { module = "androidx.ink:ink-brush", version.ref = "ink" }
+ink-strokes = { module = "androidx.ink:ink-strokes", version.ref = "ink" }
+ink-rendering = { module = "androidx.ink:ink-rendering", version.ref = "ink" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
