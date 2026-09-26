@@ -106,20 +106,34 @@ class WorkspaceUiTest {
         compose.onNodeWithTag("back-library").performClick()
     }
     @Test fun libraryHasRealSearchFilterFavoriteAndRecycle(){
-        waitForShelf()
-        val prefix="A2-"+UUID.randomUUID().toString().take(5)
-        val a=runBlocking{app.workspaceRepository.create("$prefix 原文笔记",false,PaperStyle.RULED)}
-        val b=runBlocking{app.workspaceRepository.create("$prefix 思维草稿",true,PaperStyle.DOTS)}
-        compose.waitUntil(10_000){compose.onAllNodesWithText("$prefix 思维草稿").fetchSemanticsNodes().isNotEmpty()}
-        compose.onNodeWithTag("library-search").performTextInput(prefix)
-        compose.onNodeWithTag("library-type-board").performClick();compose.onNodeWithText("$prefix 思维草稿").assertExists();compose.onNodeWithText("$prefix 原文笔记").assertDoesNotExist()
-        compose.onNodeWithTag("note-menu-${b.id}").performClick();compose.onNodeWithText("收藏",useUnmergedTree=true).performClick()
-        compose.waitUntil(10_000){runBlocking{app.workspaceRepository.get(b.id).favorite}}
-        compose.onNodeWithTag("note-menu-${b.id}").performClick();compose.onNodeWithText("移入回收站",useUnmergedTree=true).performClick();compose.onNodeWithText("移入回收站",useUnmergedTree=true).performClick()
-        compose.waitUntil(10_000){runBlocking{app.workspaceRepository.get(b.id).trashedAt!=null}}
-        runBlocking{val row=app.workspaceRepository.get(b.id);assertTrue(app.workspaceRepository.organize(b.id,row.revision,"数学","复习",true,false))}
-        compose.onNodeWithTag("library-search").performTextClearance();compose.onNodeWithTag("library-type-all").performClick();settleKeyboard();shot("workspace-library.png")
-        assertNotNull(runBlocking{app.repository.read(a.id)})
+        try{
+            waitForShelf()
+            val prefix="A2-"+UUID.randomUUID().toString().take(5)
+            val a=runBlocking{app.workspaceRepository.create("$prefix 原文笔记",false,PaperStyle.RULED)}
+            val b=runBlocking{app.workspaceRepository.create("$prefix 思维草稿",true,PaperStyle.DOTS)}
+            compose.waitUntil(10_000){compose.onAllNodesWithText("$prefix 思维草稿").fetchSemanticsNodes().isNotEmpty()}
+            compose.onNodeWithTag("library-search").performTextInput(prefix)
+            compose.onNodeWithTag("library-type-board").performClick();compose.onNodeWithText("$prefix 思维草稿").assertExists();compose.onNodeWithText("$prefix 原文笔记").assertDoesNotExist()
+            compose.onNodeWithTag("note-menu-${b.id}").performClick()
+            // The product menu, not a test shell command, dismisses the search IME.
+            compose.waitUntil(10_000){androidx.core.view.ViewCompat.getRootWindowInsets(compose.activity.window.decorView)?.isVisible(WindowInsetsCompat.Type.ime())==false}
+            compose.onNodeWithTag("favorite-note-${b.id}").performScrollTo().assertIsDisplayed().performClick()
+            compose.waitUntil(10_000){runBlocking{app.workspaceRepository.get(b.id).favorite}}
+            compose.onNodeWithTag("note-menu-${b.id}").performClick()
+            compose.waitUntil(10_000){compose.onAllNodesWithText("取消收藏",useUnmergedTree=true).fetchSemanticsNodes().isNotEmpty()}
+            compose.onNodeWithTag("trash-note-${b.id}").performScrollTo().assertIsDisplayed().performClick()
+            compose.onNodeWithTag("trash-note-dialog").assertIsDisplayed()
+            // Distinct confirmation target: never click the same menu label twice.
+            compose.onNodeWithTag("confirm-trash-${b.id}").assertIsDisplayed().performClick()
+            compose.waitUntil(10_000){runBlocking{app.workspaceRepository.get(b.id).trashedAt!=null}}
+            runBlocking{val row=app.workspaceRepository.get(b.id);assertTrue(app.workspaceRepository.organize(b.id,row.revision,"数学","复习",true,false))}
+            compose.onNodeWithTag("library-search").performTextClearance();compose.onNodeWithTag("library-type-all").performClick();settleKeyboard();shot("workspace-library.png")
+            assertNotNull(runBlocking{app.repository.read(a.id)})
+        }catch(error:Throwable){
+            runCatching{shot("shelf-menu-failure.png")}
+            runCatching{File(compose.activity.getExternalFilesDir(null),"shelf-menu-semantics.txt").writeText(compose.onRoot(useUnmergedTree=true).printToString())}
+            throw error
+        }
     }
     @Test fun fitModesAndPaperChangesDoNotRewriteSamples(){
         create(false);assertViewportClip(false);compose.onNodeWithTag("ink-finger").performScrollTo().performClick();draw();saved(1)

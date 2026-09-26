@@ -142,7 +142,7 @@ fun LibraryScreen(ui:NotebookUi,workspace:WorkspaceViewModel,open:(Note)->Unit,c
             Text("现有内容不移动、不复制。一个文件夹，多枚标签。",fontSize=12.sp,color=Quiet)
         }},confirmButton={TextButton(onClick={workspace.organize(r,folder=folder,tags=label);editing=null}){Text("保存")}},dismissButton={TextButton(onClick={editing=null}){Text("取消")}})
     }
-    removing?.let{r->AlertDialog(onDismissRequest={removing=null},title={Text("移入回收站？")},text={Text("笔迹、文字和封面都会保留，可随时恢复。不会清空数据库。")},confirmButton={TextButton(onClick={workspace.organize(r,trash=true);removing=null}){Text("移入回收站")}},dismissButton={TextButton(onClick={removing=null}){Text("取消")}})}
+    removing?.let{r->AlertDialog(onDismissRequest={removing=null},modifier=Modifier.testTag("trash-note-dialog"),title={Text("移入回收站？")},text={Text("笔迹、文字和封面都会保留，可随时恢复。不会清空数据库。")},confirmButton={TextButton(onClick={workspace.organize(r,trash=true);removing=null},modifier=Modifier.testTag("confirm-trash-${r.noteId}")){Text("移入回收站")}},dismissButton={TextButton(onClick={removing=null}){Text("取消")}})}
 }
 
 @Composable
@@ -161,6 +161,8 @@ private fun NewTile(create:()->Unit){
 @Composable
 private fun NoteTile(note:Note,row:WorkspaceRow,inkRevision:Long,count:Int,grid:Boolean,open:()->Unit,rename:()->Unit,cover:()->Unit,favorite:()->Unit,classify:()->Unit,trash:()->Unit,duplicate:()->Unit,export:()->Unit,pin:()->Unit){
     var menu by remember{mutableStateOf(false)}
+    val menuFocus=LocalFocusManager.current
+    val menuKeyboard=LocalSoftwareKeyboardController.current
     val context=LocalContext.current;val app=context.applicationContext as InkWeftApplication
     val style=NotebookCover.fromKey(row.coverKey)
     // Decorated covers do not load or decode the author's strokes just to draw the shelf.
@@ -183,7 +185,7 @@ private fun NoteTile(note:Note,row:WorkspaceRow,inkRevision:Long,count:Int,grid:
     }
     val info:@Composable ()->Unit={
         Row(verticalAlignment=Alignment.CenterVertically){Text(note.title,maxLines=1,overflow=TextOverflow.Ellipsis,fontSize=14.sp,modifier=Modifier.weight(1f).clickable(onClick=open));Box{
-            IconButton(onClick={menu=true},modifier=Modifier.size(48.dp).testTag("note-menu-${note.id}").describedAs("笔记菜单：${note.title}")){Glyph("more",Quiet,Modifier.size(17.dp))}
+            IconButton(onClick={menuFocus.clearFocus(force=true);menuKeyboard?.hide();menu=true},modifier=Modifier.size(48.dp).testTag("note-menu-${note.id}").describedAs("笔记菜单：${note.title}")){Glyph("more",Quiet,Modifier.size(17.dp))}
             DropdownMenu(expanded=menu,onDismissRequest={menu=false},modifier=Modifier.width(240.dp).testTag("notebook-actions-menu")){
                 Text(note.title,fontSize=12.sp,color=Quiet,maxLines=1,overflow=TextOverflow.Ellipsis,
                     modifier=Modifier.padding(horizontal=16.dp,vertical=9.dp))
@@ -196,12 +198,12 @@ private fun NoteTile(note:Note,row:WorkspaceRow,inkRevision:Long,count:Int,grid:
                     DropdownMenuItem(text={Text("导出内容副本")},leadingIcon={Glyph("export")},onClick={menu=false;export()},modifier=Modifier.testTag("export-note-${note.id}"))
                     HorizontalDivider(color=Line)
                     DropdownMenuItem(text={Text(if(row.pinned)"取消置顶"else"置顶笔记")},leadingIcon={Glyph("sort")},onClick={menu=false;pin()},modifier=Modifier.testTag("pin-note-${note.id}"))
-                    DropdownMenuItem(text={Text(if(row.favorite)"取消收藏"else"收藏")},leadingIcon={Glyph("star")},onClick={menu=false;favorite()})
+                    DropdownMenuItem(text={Text(if(row.favorite)"取消收藏"else"收藏")},leadingIcon={Glyph("star")},onClick={menu=false;favorite()},modifier=Modifier.testTag("favorite-note-${note.id}"))
                     DropdownMenuItem(text={Text("文件夹与标签")},leadingIcon={Glyph("folder")},onClick={menu=false;classify()})
                     HorizontalDivider(color=Line)
                 }
                 DropdownMenuItem(text={Text(if(row.trashedAt!=null)"恢复笔记"else"移入回收站",color=if(row.trashedAt!=null)Forest else Color(0xffab3939))},
-                    leadingIcon={Glyph(if(row.trashedAt!=null)"undo"else"trash",if(row.trashedAt!=null)Forest else Color(0xffab3939))},onClick={menu=false;trash()})
+                    leadingIcon={Glyph(if(row.trashedAt!=null)"undo"else"trash",if(row.trashedAt!=null)Forest else Color(0xffab3939))},onClick={menu=false;trash()},modifier=Modifier.testTag("trash-note-${note.id}"))
             }
         }}
         if(row.pinned)Text("置顶",fontSize=10.sp,color=Forest,modifier=Modifier.testTag("pinned-${note.id}"))
