@@ -20,7 +20,21 @@ class PageEditingUiTest {
     private val app get()=compose.activity.application as InkWeftApplication
     private fun id()=UUID.randomUUID().toString()
     private fun ready(){compose.waitUntil(15_000){runCatching{compose.onNodeWithTag("new-note").assertIsEnabled()}.isSuccess}}
-    private fun counter(text:String){compose.waitUntil(15_000){runCatching{compose.onNodeWithTag("page-counter").assertTextEquals(text)}.isSuccess}}
+    private fun counter(text:String){
+        try{
+            // The count Text is a descendant of a merging TextButton. Match the
+            // same unmerged node used by the existing insertion regression suite.
+            compose.waitUntil(15_000){runCatching{
+                compose.onNodeWithTag("page-counter",useUnmergedTree=true).assertTextEquals(text)
+                compose.onNodeWithTag("page-directory").assertIsEnabled()
+            }.isSuccess}
+        }catch(error:Throwable){
+            runCatching{shot("page-edit-failure.png")}
+            runCatching{val tree=compose.onRoot(useUnmergedTree=true).printToString();println(tree)
+                File(compose.activity.getExternalFilesDir(null),"page-edit-failure-semantics.txt").writeText(tree)}
+            throw error
+        }
+    }
     private fun seed(count:Int=3):Pair<Note,List<String>>{
         ready();val n=runBlocking{app.workspaceRepository.create("整理页面-${id().take(8)}",false,PaperStyle.GRID)}
         val ids=mutableListOf(n.id);repeat(count-1){ids+=runBlocking{app.pages.addAfter(n.id,ids.last(),id())}.id}
