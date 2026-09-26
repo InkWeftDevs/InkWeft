@@ -60,7 +60,7 @@ class EditorAffordanceTest {
         val id=create()
         fun choose(index:Int){
             compose.onNodeWithTag("pen-width-open").performScrollTo().performClick();compose.onNodeWithTag("pen-width-dialog").assertIsDisplayed()
-            compose.onNodeWithTag("width-preset-$index").performClick();compose.onNodeWithTag("apply-pen-width").performClick();compose.waitForIdle()
+            compose.onNodeWithTag("width-preset-$index").performScrollTo().performClick();compose.onNodeWithTag("apply-pen-width").performScrollTo().performClick();compose.waitForIdle()
         }
         choose(2)
         compose.waitUntil(10_000){PenWidthStore(compose.activity,"inkweft-pen-widths-book-"+id).read()[0]==6f}
@@ -71,7 +71,7 @@ class EditorAffordanceTest {
         assertEquals(6f,paths[0].width,0f);assertEquals(1.5f,paths[1].width,0f);assertEquals(first.samples,paths[0].samples)
         compose.activityRule.scenario.recreate();saved(2)
         compose.onNodeWithTag("pen-width-open").performScrollTo().performClick();compose.onNodeWithTag("pen-width-value").assertTextEquals("线宽 1.5");shot("pen-width-emulator.png")
-        compose.onNodeWithTag("apply-pen-width").performClick()
+        compose.onNodeWithTag("apply-pen-width").performScrollTo().performClick()
     }
     @Test fun widthSettingsHaveIndependentSlotsAndRealFileRoundTrip(){
         val context=InstrumentationRegistry.getInstrumentation().targetContext
