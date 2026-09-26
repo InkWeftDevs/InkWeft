@@ -26,7 +26,7 @@ import org.inkweft.data.NotebookPageRow
 import org.inkweft.data.WorkspaceRow
 
 @Composable
-fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:NotebookPageRow,onCanNavigate:(Boolean)->Unit,onSearch:(Long)->Unit,externalEnabled:Boolean=true){
+internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:NotebookPageRow,onCanNavigate:(Boolean)->Unit,onSearch:(Long)->Unit,externalEnabled:Boolean=true,onExcerpt:(SelectedInk)->Unit={},focusRegion:CanvasBounds?=null,onFocusConsumed:()->Unit={}){
     val context=LocalContext.current;val app=context.applicationContext as InkWeftApplication
     val vm:InkViewModel=viewModel(key="ink-${page.id}",factory=InkViewModel.Factory(page.id,app.inkRepository))
     val ui by vm.ui.collectAsStateWithLifecycle()
@@ -51,6 +51,26 @@ fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:NotebookPageR
     var exportPending by remember{mutableStateOf<InkPageFile?>(null)}
     var confirmExport by remember{mutableStateOf(false)}
     var discard by remember{mutableStateOf(false)}
+    var selected by remember(page.id){mutableStateOf<SelectedInk?>(null)}
+    var pendingSelection by remember(page.id){mutableStateOf<Pair<InkRegion,List<String>>?>(null)}
+    var freehand by remember{mutableStateOf(false)}
+    val editable=externalEnabled&&!ui.loading&&!ui.readFailed&&ui.queued==0&&ui.blocked==null&&!ui.processing
+    LaunchedEffect(ui.revision,ui.queued){
+        if(ui.queued==0){
+            pendingSelection?.let{(region,ids)->val found=ui.strokes.filter{it.id in ids};if(found.size==ids.size){selected=SelectedInk(region,ui.revision,found);pendingSelection=null}}
+            if(selected?.revision!=ui.revision)selected=null
+        }
+    }
+    LaunchedEffect(tool){if(tool!=4){selected=null;view?.selectionPreview(emptySet())}}
+    LaunchedEffect(focusRegion,view,ui.loading){if(focusRegion!=null&&!ui.loading){view?.post{view?.focusRegion(focusRegion);onFocusConsumed()}}}
+    fun applySelected(revision:Long,change:InkMutation):Boolean{
+        val ok=vm.selectedEdit(revision,change)
+        if(ok&&change is InkMutation.Replace){
+            val bounds=change.added.map{it.bounds()}.reduce{a,b->a.union(b)}.padded(2.0)
+            pendingSelection=InkRegion(listOf(EraserPoint(bounds.left.toFloat(),bounds.top.toFloat()),EraserPoint(bounds.right.toFloat(),bounds.bottom.toFloat()))) to change.added.map{it.id}
+        };return ok
+    }
+
     val diagnosticState=when{ui.readFailed->DiagnosticResult.READ_FAILED;ui.loading->DiagnosticResult.LOADING;ui.blocked==InkCommitResult.Unknown->DiagnosticResult.UNKNOWN;ui.blocked==InkCommitResult.Conflict->DiagnosticResult.CONFLICT;ui.blocked!=null->DiagnosticResult.REJECTED;gesture->DiagnosticResult.EDITING;ui.queued>0||ui.processing->DiagnosticResult.SAVING;else->DiagnosticResult.SAVED}
     SideEffect{app.diagnostics.ink(ui.loading,ui.readFailed,ui.strokes.size,ui.queued,ui.revision,gesture,diagnosticState)}
     val launcher=rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("application/octet-stream")){uri->
@@ -71,6 +91,7 @@ fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:NotebookPageR
     }
     val toolbar:@Composable ()->Unit={
         Row(Modifier.fillMaxWidth().background(Color.White).horizontalScroll(rememberScrollState()).padding(horizontal=12.dp,vertical=5.dp),horizontalArrangement=Arrangement.spacedBy(7.dp),verticalAlignment=Alignment.CenterVertically){
+            FilterChip(selected=tool==4,onClick={tool=4},enabled=!busy,label={Text("框选",fontSize=12.sp)},leadingIcon={Glyph("select")},modifier=Modifier.testTag("ink-select"))
             (0..2).forEach{i->
                 val label=PenWidthStore.name(i)
                 val color=Color(colors[i] or 0xff000000.toInt())
@@ -81,7 +102,7 @@ fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:NotebookPageR
                 }
             }
             Box{
-                OutlinedButton(onClick={if(tool==3)eraserDialog=true else settings=true},enabled=!busy,modifier=Modifier.heightIn(min=48.dp).testTag("pen-width-open")){
+                OutlinedButton(onClick={if(tool==3)eraserDialog=true else settings=true},enabled=!busy&&tool<4,modifier=Modifier.heightIn(min=48.dp).testTag("pen-width-open")){
                     Text(if(tool<3)"颜色 / 线宽 ▾"else"橡皮 ${eraser.diameterDp.toInt()} ▾",fontSize=12.sp)
                 }
                 if(tool<3)PenPresetMenu(settings,tool,widths[tool],colors[tool],{settings=false}){width,color->
@@ -112,9 +133,11 @@ fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:NotebookPageR
             if(ui.blocked in listOf(InkCommitResult.Conflict,InkCommitResult.Rejected))TextButton(onClick={discard=true},enabled=!busy){Text("读取已保存页")}
             if(ui.readFailed&&ui.blocked==null)TextButton(onClick=vm::load){Text("重试")}
         }
+        if(tool==4)SelectionActions(selected,ui.strokes,editable,freehand,{freehand=it},::applySelected,{selected=null},onExcerpt)
         if(notice!=null)Row(Modifier.fillMaxWidth().background(Color(0xfffff5e5)).padding(start=16.dp),verticalAlignment=Alignment.CenterVertically){Text(notice!!,Modifier.weight(1f),fontSize=12.sp);IconButton(onClick={notice=null},modifier=Modifier.describedAs("关闭提示")){Glyph("close")}}
         if(row!=null){
             val initial=remember(page.id){workspace.cachedViewport(page.id)?:row.takeIf{it.zoom>0}?.let{runCatching{CanvasViewport(it.centerX,it.centerY,it.zoom)}.getOrNull()}}
+            Box(Modifier.fillMaxWidth().weight(1f)){
             AndroidView(factory={ctx->InkCanvasView(ctx).also{v->
                 view=v;v.onStroke=vm::accept;v.onErase={path,radius,whole,only->vm.erasePath(path,radius,whole,only)};v.onGesture={gesture=it}
                 v.onNotice={notice=it;app.diagnostics.event(DiagnosticCode.INK_UI,DiagnosticResult.REJECTED)}
@@ -122,10 +145,17 @@ fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:NotebookPageR
                 v.onViewport={workspace.viewport(page.id,it)};v.onScale={zoom=it}
             }},update={v->
                 v.configure(row.world,PaperStyle.entries.getOrElse(row.paper){PaperStyle.RULED},initial)
-                v.allowInput=externalEnabled&&(if(tool==3)!ui.loading&&!ui.readFailed&&ui.blocked==null&&!ui.processing&&ui.queued<16 else ui.canStart);v.eraserWhole=eraser.whole;v.eraserHighlighterOnly=eraser.onlyHighlighter;v.eraserDiameterDp=eraser.diameterDp;v.fingerWrites=finger;v.eraseMode=tool==3;v.pen=if(tool==2)InkPen.HIGHLIGHTER else InkPen.PEN
+                v.allowInput=externalEnabled&&tool!=4&&(if(tool==3)!ui.loading&&!ui.readFailed&&ui.blocked==null&&!ui.processing&&ui.queued<16 else ui.canStart);v.eraserWhole=eraser.whole;v.eraserHighlighterOnly=eraser.onlyHighlighter;v.eraserDiameterDp=eraser.diameterDp;v.fingerWrites=finger;v.eraseMode=tool==3;v.pen=if(tool==2)InkPen.HIGHLIGHTER else InkPen.PEN
                 v.penWidth=widths[tool.coerceAtMost(2)];v.penColor=colors[tool.coerceAtMost(2)]
                 v.showStrokes(ui.strokes)
-            },modifier=Modifier.fillMaxWidth().weight(1f).testTag("ink-surface"))
+            },modifier=Modifier.fillMaxSize().testTag("ink-surface"))
+            if(tool==4)AndroidView(factory={SelectionOverlayView(it)},update={v->
+                v.canvasView=view;v.region=selected?.region;v.selected=selected?.strokes.orEmpty();v.freehand=freehand;v.enabledInput=editable
+                v.onActive={gesture=it};v.onRegion={region->selected=region?.let{SelectedInk(it,ui.revision,ui.strokes.filter{stroke->it.selects(stroke)})}}
+                v.onShift={dx,dy->selected?.let{current->runCatching{InkSelectionEdit.copy(current.strokes,dx,dy)}.onSuccess{changed->if(applySelected(current.revision,InkMutation.Replace(current.strokes.map{it.id},changed)))selected=null}.onFailure{notice="移动超出画布或编辑预算，原笔迹保留。"}}
+                v.invalidate()
+            },modifier=Modifier.fillMaxSize().testTag("selection-overlay"))
+            }
         }else Box(Modifier.weight(1f).fillMaxWidth(),contentAlignment=Alignment.Center){CircularProgressIndicator()}
         if(dockBottom){HorizontalDivider(color=Line);toolbar()}
         HorizontalDivider(color=Line)

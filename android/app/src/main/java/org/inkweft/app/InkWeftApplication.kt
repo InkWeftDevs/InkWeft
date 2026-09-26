@@ -15,6 +15,7 @@ class InkWeftApplication:Application(){
     val pages by lazy{NotebookPages(database)}
     val libraryContent by lazy{LibraryContentRepository(database)}
     val libraryBackup by lazy{LibraryBackupRepository(this,database)}
+    val study by lazy{StudyRepository(database)}
     val cloudServices:CloudServicePort=DisabledCloudServices
     override fun onCreate(){super.onCreate();diagnostics}
 }

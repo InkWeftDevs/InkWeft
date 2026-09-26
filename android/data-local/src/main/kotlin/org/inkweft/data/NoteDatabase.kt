@@ -26,8 +26,8 @@ interface NoteDao {
     @Insert(onConflict=OnConflictStrategy.ABORT) suspend fun insertRevision(row:NoteRevisionRow)
     @Insert(onConflict=OnConflictStrategy.ABORT) suspend fun insertReceipt(row:ReceiptRow)
 }
-@Database(entities=[NoteRow::class,NoteRevisionRow::class,ReceiptRow::class,InkPageRow::class,InkStrokeRow::class,InkReceiptRow::class,WorkspaceRow::class,NotebookPageRow::class,InkCutRow::class,PageSearchRow::class,PageInsertReceiptRow::class,LibraryContentReceipt::class,PageEditReceiptRow::class],
-    version=7,exportSchema=true,autoMigrations=[AutoMigration(from=1,to=2)])
+@Database(entities=[NoteRow::class,NoteRevisionRow::class,ReceiptRow::class,InkPageRow::class,InkStrokeRow::class,InkReceiptRow::class,WorkspaceRow::class,NotebookPageRow::class,InkCutRow::class,PageSearchRow::class,PageInsertReceiptRow::class,LibraryContentReceipt::class,PageEditReceiptRow::class,StudyCardRow::class,StudyCardRevisionRow::class,StudySourceRow::class,StudyNodeRow::class,StudyReceiptRow::class],
+    version=8,exportSchema=true,autoMigrations=[AutoMigration(from=1,to=2)])
 abstract class NoteDatabase:RoomDatabase() {
     abstract fun notes():NoteDao
     abstract fun ink():InkDao
@@ -36,6 +36,7 @@ abstract class NoteDatabase:RoomDatabase() {
     abstract fun pageInsertions():PageInsertionDao
     abstract fun libraryContent():LibraryContentDao
     abstract fun pageEdits():PageEditingDao
+    abstract fun study():StudyDao
     companion object {
         val MIGRATION_2_3=object:Migration(2,3){
             override fun migrate(db:SupportSQLiteDatabase){
@@ -90,11 +91,24 @@ abstract class NoteDatabase:RoomDatabase() {
                 db.execSQL("CREATE INDEX IF NOT EXISTS index_page_edit_receipts_notebookId ON page_edit_receipts(notebookId)")
             }
         }
+        val MIGRATION_7_8=object:Migration(7,8){override fun migrate(db:SupportSQLiteDatabase){
+            db.execSQL("CREATE TABLE IF NOT EXISTS study_cards (id TEXT NOT NULL, notebookId TEXT NOT NULL, revision INTEGER NOT NULL, title TEXT NOT NULL, body TEXT NOT NULL, trashedAt INTEGER, PRIMARY KEY(id), FOREIGN KEY(notebookId) REFERENCES notes(id) ON UPDATE NO ACTION ON DELETE NO ACTION)")
+            db.execSQL("CREATE INDEX IF NOT EXISTS index_study_cards_notebookId ON study_cards(notebookId)")
+            db.execSQL("CREATE TABLE IF NOT EXISTS study_card_revisions (cardId TEXT NOT NULL, revision INTEGER NOT NULL, title TEXT NOT NULL, body TEXT NOT NULL, trashedAt INTEGER, PRIMARY KEY(cardId,revision), FOREIGN KEY(cardId) REFERENCES study_cards(id) ON UPDATE NO ACTION ON DELETE NO ACTION)")
+            db.execSQL("CREATE TABLE IF NOT EXISTS study_sources (cardId TEXT NOT NULL, pageId TEXT NOT NULL, inkRevision INTEGER NOT NULL, `left` REAL NOT NULL, `top` REAL NOT NULL, `right` REAL NOT NULL, `bottom` REAL NOT NULL, strokeIds TEXT NOT NULL, snapshot BLOB NOT NULL, PRIMARY KEY(cardId), FOREIGN KEY(cardId) REFERENCES study_cards(id) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY(pageId) REFERENCES notebook_pages(id) ON UPDATE NO ACTION ON DELETE NO ACTION)")
+            db.execSQL("CREATE INDEX IF NOT EXISTS index_study_sources_pageId ON study_sources(pageId)")
+            db.execSQL("CREATE TABLE IF NOT EXISTS study_nodes (id TEXT NOT NULL, notebookId TEXT NOT NULL, cardId TEXT NOT NULL, parentId TEXT, x REAL NOT NULL, y REAL NOT NULL, revision INTEGER NOT NULL, removed INTEGER NOT NULL, PRIMARY KEY(id), FOREIGN KEY(notebookId) REFERENCES notes(id) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY(cardId) REFERENCES study_cards(id) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY(parentId) REFERENCES study_nodes(id) ON UPDATE NO ACTION ON DELETE NO ACTION DEFERRABLE INITIALLY DEFERRED)")
+            db.execSQL("CREATE INDEX IF NOT EXISTS index_study_nodes_notebookId ON study_nodes(notebookId)")
+            db.execSQL("CREATE INDEX IF NOT EXISTS index_study_nodes_cardId ON study_nodes(cardId)")
+            db.execSQL("CREATE INDEX IF NOT EXISTS index_study_nodes_parentId ON study_nodes(parentId)")
+            db.execSQL("CREATE TABLE IF NOT EXISTS study_receipts (id TEXT NOT NULL, notebookId TEXT NOT NULL, digest TEXT NOT NULL, resultId TEXT NOT NULL, PRIMARY KEY(id), FOREIGN KEY(notebookId) REFERENCES notes(id) ON UPDATE NO ACTION ON DELETE NO ACTION)")
+            db.execSQL("CREATE INDEX IF NOT EXISTS index_study_receipts_notebookId ON study_receipts(notebookId)")
+        }}
         fun open(context:Context,name:String="inkweft-a0.db"):NoteDatabase=
             Room.databaseBuilder(context.applicationContext,NoteDatabase::class.java,name)
                 .openHelperFactory(PreservingOpenHelperFactory())
                 .setJournalMode(JournalMode.WRITE_AHEAD_LOGGING)
-                .addMigrations(MIGRATION_2_3,MIGRATION_3_4,MIGRATION_4_5,MIGRATION_5_6,MIGRATION_6_7)
+                .addMigrations(MIGRATION_2_3,MIGRATION_3_4,MIGRATION_4_5,MIGRATION_5_6,MIGRATION_6_7,MIGRATION_7_8)
                 .addCallback(object:Callback(){override fun onOpen(db:SupportSQLiteDatabase){db.execSQL("PRAGMA synchronous=FULL")}})
                 .build()
     }

@@ -34,9 +34,10 @@ data class EraserPoint(val x:Float,val y:Float) {
 }
 /** A genuine subtractive author-space mask, not a white stroke. Original ink is
  * retained for undo. Masks belong only to the strokes selected at erase time. */
-class InkCut(val id:String,val radius:Float,points:List<EraserPoint>) {
+enum class InkCutShape { ROUND, RECTANGLE, POLYGON }
+class InkCut(val id:String,val radius:Float,points:List<EraserPoint>,val shape:InkCutShape=InkCutShape.ROUND) {
     val points:List<EraserPoint> = Collections.unmodifiableList(ArrayList(points))
-    init {UUID.fromString(id);require(radius.isFinite()&&radius in .01f..5000f);require(points.size in 1..InkLimits.MAX_POINTS)}
+    init {UUID.fromString(id);require(radius.isFinite()&&radius in .01f..5000f);require(points.size in 1..InkLimits.MAX_POINTS);when(shape){InkCutShape.RECTANGLE->require(points.size==2&&points[0].x<points[1].x&&points[0].y<points[1].y);InkCutShape.POLYGON->require(points.size in 3..512);else->Unit}}
 }
 class EraseSelection(val cut:InkCut,strokeIds:List<String>) {
     val strokeIds:List<String> = Collections.unmodifiableList(strokeIds.sorted())
@@ -58,8 +59,8 @@ class InkStroke(val id:String,val pen:InkPen,val color:Int,val width:Float,val t
     fun withCuts(extra:List<InkCut>):InkStroke = if(extra.isEmpty())this else InkStroke(id,pen,color,width,tool,samples,world,cuts+extra)
 }
 object InkCutCodec {
-    fun write(out:DataOutputStream,cut:InkCut){out.writeUTF(cut.id);out.writeFloat(cut.radius);out.writeInt(cut.points.size);cut.points.forEach{out.writeFloat(it.x);out.writeFloat(it.y)}}
-    fun read(input:DataInputStream):InkCut {val id=input.readUTF();val radius=input.readFloat();val count=input.readInt();require(count in 1..InkLimits.MAX_POINTS&&count.toLong()*8<=input.available());return InkCut(id,radius,List(count){EraserPoint(input.readFloat(),input.readFloat())})}
+    fun write(out:DataOutputStream,cut:InkCut){if(cut.shape!=InkCutShape.ROUND){out.writeUTF("IW-CUT-2");out.writeByte(cut.shape.ordinal)};out.writeUTF(cut.id);out.writeFloat(cut.radius);out.writeInt(cut.points.size);cut.points.forEach{out.writeFloat(it.x);out.writeFloat(it.y)}}
+    fun read(input:DataInputStream):InkCut {val token=input.readUTF();val shape=if(token=="IW-CUT-2")InkCutShape.entries.getOrNull(input.readUnsignedByte())?:error("Unsupported cut shape")else InkCutShape.ROUND;val id=if(token=="IW-CUT-2")input.readUTF()else token;val radius=input.readFloat();val count=input.readInt();require(count in 1..InkLimits.MAX_POINTS&&count.toLong()*8<=input.available());return InkCut(id,radius,List(count){EraserPoint(input.readFloat(),input.readFloat())},shape)}
     fun encode(cut:InkCut):ByteArray=ByteArrayOutputStream().also{b->DataOutputStream(b).use{write(it,cut)}}.toByteArray()
     fun decode(bytes:ByteArray):InkCut {require(bytes.size<=70_000);return DataInputStream(ByteArrayInputStream(bytes)).use{val cut=read(it);require(it.available()==0);cut}}
 }
@@ -67,8 +68,9 @@ object InkStrokeCodec {
     private const val PAGE=0x49575331
     private const val WORLD=0x49575332
     private const val MASKED=0x49575333
+    private const val SHAPED=0x49575334
     fun encode(stroke:InkStroke):ByteArray=ByteArrayOutputStream().also{b->DataOutputStream(b).use{out->
-        out.writeInt(if(stroke.cuts.isEmpty())if(stroke.world)WORLD else PAGE else MASKED)
+        out.writeInt(if(stroke.cuts.any{it.shape!=InkCutShape.ROUND})SHAPED else if(stroke.cuts.isEmpty())if(stroke.world)WORLD else PAGE else MASKED)
         if(stroke.cuts.isNotEmpty())out.writeBoolean(stroke.world)
         out.writeUTF(stroke.id);out.writeByte(stroke.pen.ordinal);out.writeInt(stroke.color);out.writeFloat(stroke.width)
         out.writeByte(stroke.tool.ordinal);out.writeInt(stroke.samples.size)
@@ -78,18 +80,33 @@ object InkStrokeCodec {
     fun decode(bytes:ByteArray):InkStroke {
         require(bytes.size in 1..InkLimits.MAX_STROKE_BYTES)
         return DataInputStream(ByteArrayInputStream(bytes)).use{input->
-            val magic=input.readInt();require(magic in listOf(PAGE,WORLD,MASKED)){"Unsupported ink format; retain original bytes"}
-            val world=if(magic==MASKED)input.readBoolean()else magic==WORLD
+            val magic=input.readInt();require(magic in listOf(PAGE,WORLD,MASKED,SHAPED)){"Unsupported ink format; retain original bytes"}
+            val world=if(magic==MASKED||magic==SHAPED)input.readBoolean()else magic==WORLD
             val id=input.readUTF();val pen=InkPen.entries.getOrNull(input.readUnsignedByte())?:error("Unknown pen")
             val color=input.readInt();val width=input.readFloat();val tool=InkTool.entries.getOrNull(input.readUnsignedByte())?:error("Unknown tool")
             val count=input.readInt();require(count in 1..InkLimits.MAX_POINTS&&count.toLong()*28<=input.available())
             val points=List(count){InkSample(input.readFloat(),input.readFloat(),input.readLong(),input.readFloat(),input.readFloat(),input.readFloat(),world)}
-            val cuts=if(magic==MASKED){val n=input.readInt();require(n in 1..InkLimits.MAX_CUTS);var total=0;List(n){InkCutCodec.read(input).also{total+=it.points.size;require(total<=InkLimits.MAX_CUT_POINTS)}}}else emptyList()
+            val cuts=if(magic==MASKED||magic==SHAPED){val n=input.readInt();require(n in 1..InkLimits.MAX_CUTS);var total=0;List(n){InkCutCodec.read(input).also{total+=it.points.size;require(total<=InkLimits.MAX_CUT_POINTS)}}}else emptyList()
             require(input.available()==0){"Trailing ink data"};InkStroke(id,pen,color,width,tool,points,world,cuts)
         }
     }
 }
 sealed interface InkMutation {
+    /** New immutable versions; original strokes stay available for undo/history.
+     * Empty hidden is a duplicate. No caller can mutate the frozen payload lists. */
+    class Replace(hidden:List<String>,added:List<InkStroke>):InkMutation {
+        val hidden:List<String> = Collections.unmodifiableList(hidden.sorted())
+        val added:List<InkStroke> = Collections.unmodifiableList(ArrayList(added))
+        init{require(added.isNotEmpty()&&added.size<=256&&hidden.size<=256)
+            require(hidden.distinct().size==hidden.size&&added.map{it.id}.distinct().size==added.size)
+            hidden.forEach{UUID.fromString(it)};require(added.none{it.id in hidden})}
+    }
+    class Swap(hide:List<String>,show:List<String>):InkMutation {
+        val hide:List<String> = Collections.unmodifiableList(hide.sorted())
+        val show:List<String> = Collections.unmodifiableList(show.sorted())
+        init{require(hide.size+show.size in 1..512);require((hide+show).distinct().size==hide.size+show.size);(hide+show).forEach{UUID.fromString(it)}}
+    }
+
     class Add(val stroke:InkStroke):InkMutation
     class Visibility(ids:List<String>,val visible:Boolean):InkMutation {
         val ids:List<String> = Collections.unmodifiableList(ids.sorted())
@@ -100,7 +117,7 @@ sealed interface InkMutation {
 }
 class CommitInk(val commandId:String,val noteId:String,val expectedRevision:Long,val mutation:InkMutation) {
     init{UUID.fromString(commandId);UUID.fromString(noteId);require(expectedRevision in 0 until Long.MAX_VALUE-1)}
-    val strokeIds:List<String> get()=when(val m=mutation){is InkMutation.Add->listOf(m.stroke.id);is InkMutation.Visibility->m.ids;is InkMutation.Cut->m.selection.strokeIds;is InkMutation.CutVisibility->emptyList()}
+    val strokeIds:List<String> get()=when(val m=mutation){is InkMutation.Add->listOf(m.stroke.id);is InkMutation.Visibility->m.ids;is InkMutation.Cut->m.selection.strokeIds;is InkMutation.CutVisibility->emptyList();is InkMutation.Replace->m.hidden+m.added.map{it.id};is InkMutation.Swap->m.hide+m.show}
     fun digest():String {
         val out=ByteArrayOutputStream();DataOutputStream(out).use{d->
             d.writeUTF("inkweft.ink-command.v1");d.writeUTF(commandId);d.writeUTF(noteId);d.writeLong(expectedRevision)
@@ -109,6 +126,8 @@ class CommitInk(val commandId:String,val noteId:String,val expectedRevision:Long
                 is InkMutation.Visibility->{d.writeByte(2);d.writeBoolean(m.visible);d.writeInt(m.ids.size);m.ids.forEach(d::writeUTF)}
                 is InkMutation.Cut->{d.writeByte(3);InkCutCodec.write(d,m.selection.cut);d.writeInt(m.selection.strokeIds.size);m.selection.strokeIds.forEach(d::writeUTF)}
                 is InkMutation.CutVisibility->{d.writeByte(4);d.writeUTF(m.cutId);d.writeBoolean(m.visible)}
+                is InkMutation.Replace->{d.writeByte(5);d.writeInt(m.hidden.size);m.hidden.forEach(d::writeUTF);d.writeInt(m.added.size);m.added.forEach{val b=InkStrokeCodec.encode(it);d.writeInt(b.size);d.write(b)}}
+                is InkMutation.Swap->{d.writeByte(6);d.writeInt(m.hide.size);m.hide.forEach(d::writeUTF);d.writeInt(m.show.size);m.show.forEach(d::writeUTF)}
             }
         };return MessageDigest.getInstance("SHA-256").digest(out.toByteArray()).joinToString(""){"%02x".format(it.toInt() and 255)}
     }

@@ -34,6 +34,14 @@ class InkCanvasView(context:Context):View(context){
     var pen=InkPen.PEN
     var penColor=0xff24342f.toInt()
     var penWidth=3f
+    private var selectedIds=emptySet<String>()
+    private var selectedDx=0f
+    private var selectedDy=0f
+    fun selectionPreview(ids:Set<String>,dx:Float=0f,dy:Float=0f){
+        if(ids==selectedIds&&dx==selectedDx&&dy==selectedDy)return
+        selectedIds=ids;selectedDx=dx;selectedDy=dy;invalidate()
+    }
+    fun focusRegion(bounds:CanvasBounds){cancelGesture();viewport=CanvasViewport.fit(bounds.padded(60.0),width/density,height/density);transform();invalidate()}
     private var world=false
     private var paper=PaperStyle.RULED
     private var configured=false
@@ -109,7 +117,11 @@ class InkCanvasView(context:Context):View(context){
     fun zoomBy(ratio:Double){cancelGesture();viewport=viewport.zoomAt(ratio,width/2.0,height/2.0,width.toDouble(),height.toDouble(),density);transform();invalidate();onViewport(viewport)}
     override fun onSizeChanged(w:Int,h:Int,oldw:Int,oldh:Int){cancelGesture();if(configured&&oldw==0&&!restored)initialFit();if(preview)if(world)fitContent(false)else fitPage(false);transform()}
     override fun draw(c:Canvas){val save=c.save();try{c.clipRect(0,0,width,height);super.draw(c)}finally{c.restoreToCount(save)}}
-    internal fun cutPath(cut:InkCut):Path=maskPaths[cut]?:sweptPath(cut.points,cut.radius).also{maskPaths[cut]=it}
+    internal fun cutPath(cut:InkCut):Path=maskPaths[cut]?:when(cut.shape){
+        InkCutShape.ROUND->sweptPath(cut.points,cut.radius)
+        InkCutShape.RECTANGLE->Path().apply{addRect(cut.points[0].x,cut.points[0].y,cut.points[1].x,cut.points[1].y,Path.Direction.CW)}
+        InkCutShape.POLYGON->Path().apply{moveTo(cut.points[0].x,cut.points[0].y);cut.points.drop(1).forEach{lineTo(it.x,it.y)};close()}
+    }.also{maskPaths[cut]=it}
     private fun sweptPath(points:List<EraserPoint>,radius:Float):Path{
         val result=Path();if(points.isEmpty())return result
         if(points.size==1){result.addCircle(points[0].x,points[0].y,radius,Path.Direction.CW);return result}
@@ -126,7 +138,7 @@ class InkCanvasView(context:Context):View(context){
         val activeMask=if(inputId!=-1&&gestureErase&&!gestureWhole&&raw.isNotEmpty())sweptPath(raw.map{EraserPoint(it.x,it.y)},gestureRadius)else null
         for(s in content){
             if(bounds[s.id]?.intersects(visible)!=true)continue
-            val clipped=canvas.save();s.cuts.forEach{canvas.clipOutPath(cutPath(it))}
+            val clipped=canvas.save();if(s.id in selectedIds)canvas.translate(selectedDx,selectedDy);s.cuts.forEach{canvas.clipOutPath(cutPath(it))}
             if(activeMask!=null&&s.id in eraseTargets)canvas.clipOutPath(activeMask)
             val mesh=meshes[s.id]?:toInk(s).also{meshes[s.id]=it};renderer.draw(canvas,mesh,matrix);canvas.restoreToCount(clipped)
         }

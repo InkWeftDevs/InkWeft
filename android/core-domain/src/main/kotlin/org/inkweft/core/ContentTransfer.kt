@@ -25,7 +25,7 @@ object ContentTransfer {
         require(header.size >= 4) { "CONTENT_HEADER_MISSING" }
         val magic = header.take(4).fold(0) { n, b -> (n shl 8) or (b.toInt() and 255) }
         return when (magic) {
-            0x49575031, 0x49575032, 0x49575033 -> Kind.PAGE
+            0x49575031, 0x49575032, 0x49575033, 0x49575034 -> Kind.PAGE
             0x49574231 -> Kind.BOOK
             else -> throw IllegalArgumentException("CONTENT_FORMAT_UNSUPPORTED")
         }

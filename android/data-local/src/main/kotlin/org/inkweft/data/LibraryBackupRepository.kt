@@ -56,7 +56,7 @@ class LibraryBackupRepository(private val context:Context,private val db:NoteDat
                     // Schema6 has no tombstone column; promote to live/default null.
                     val promoted=if(table==4&&row.size==SCHEMA[table].columns.size-1)row+listOf(null)else row
                     insert(sql,table,promoted)
-                },legacySchema=SCHEMA_V6){ctx.ensureActive()}
+                },legacySchema=SCHEMA_V6,otherLegacySchemas=listOf(SCHEMA_V7)){ctx.ensureActive()}
             }
             validate(stage)
             val sql=stage.openHelper.writableDatabase
@@ -119,6 +119,13 @@ class LibraryBackupRepository(private val context:Context,private val db:NoteDat
         noRows("SELECT 1 FROM ink_receipts WHERE visible NOT IN (0,1)")
         noRows("SELECT 1 FROM library_content_receipts WHERE kind NOT IN ('COPY','IMPORT')")
         noRows("SELECT 1 FROM notebook_pages WHERE trashedAt<0")
+        noRows("SELECT 1 FROM study_nodes WHERE removed NOT IN (0,1)")
+        require(sql.query("SELECT COALESCE(SUM(length(snapshot)),0) FROM study_sources").use{it.moveToFirst();it.getLong(0)}<=32_000_000){"STUDY_SNAPSHOT_BUDGET"}
+        noRows("SELECT 1 FROM study_nodes n JOIN study_cards c ON c.id=n.cardId WHERE c.notebookId!=n.notebookId OR (c.trashedAt IS NOT NULL AND n.removed=0)")
+        noRows("SELECT 1 FROM study_nodes n JOIN study_nodes p ON p.id=n.parentId WHERE n.notebookId!=p.notebookId")
+        noRows("SELECT 1 FROM study_card_revisions r JOIN study_cards c ON c.id=r.cardId WHERE r.revision<1 OR r.revision>c.revision OR length(r.title)>120 OR length(r.body)>20000")
+        noRows("SELECT 1 FROM study_cards c LEFT JOIN study_card_revisions r ON r.cardId=c.id AND r.revision=c.revision WHERE r.cardId IS NULL OR r.title!=c.title OR r.body!=c.body OR r.trashedAt IS NOT c.trashedAt")
+        noRows("SELECT 1 FROM study_sources s JOIN study_cards c ON c.id=s.cardId JOIN notebook_pages p ON p.id=s.pageId WHERE c.notebookId!=p.notebookId")
         noRows("SELECT 1 FROM page_edit_receipts WHERE kind NOT IN ('MOVE','COPY','TRASH','RESTORE')")
         noRows("SELECT 1 FROM page_edit_receipts r LEFT JOIN notebook_pages p ON p.id=r.pageId LEFT JOIN notebook_pages q ON q.id=r.resultPageId WHERE p.id IS NULL OR q.id IS NULL OR p.notebookId!=r.notebookId OR q.notebookId!=r.notebookId")
         for(id in notes){
@@ -128,6 +135,20 @@ class LibraryBackupRepository(private val context:Context,private val db:NoteDat
             val w=checkNotNull(stage.workspace().get(id));require(w.revision>=0&&NotebookCover.validKey(w.coverKey))
             require(w.folder.length<=48&&w.tags.length<=320&&w.paper in PaperStyle.entries.indices)
             CanvasViewport(w.centerX,w.centerY,if(w.zoom==0.0).7 else w.zoom)
+            val cards=stage.study().cards(id);val nodes=stage.study().nodes(id)
+            require(cards.size<=200);StudyGraph.validate(nodes.map{it.model()})
+            for(c in cards){
+                UUID.fromString(c.id);require(c.revision>=1&&c.title.isNotBlank()&&c.title.length<=120&&c.body.length<=20000&&(c.trashedAt==null||c.trashedAt>=0))
+                stage.study().source(c.id)?.let{source->
+                    val ids=source.strokeIds.split(',');val bounds=CanvasBounds(source.left,source.top,source.right,source.bottom)
+                    StudySourceDraft(source.pageId,source.inkRevision,bounds,ids)
+                    require(source.snapshot.size<=1800000);val snapshot=InkPageFile.decode(source.snapshot)
+                    require(snapshot.strokes.map{it.id}.toSet()==ids.toSet())
+                    for(strokeId in ids)require(stage.ink().stroke(strokeId)?.noteId==source.pageId)
+                    require(snapshot.world==stage.pages().get(source.pageId)?.world)
+                    require(source.inkRevision<=(stage.ink().page(source.pageId)?.revision?:0))
+                }
+            }
             val pages=stage.pages().allPages(id)
             val active=pages.filter{it.trashedAt==null}.sortedBy{it.position}
             require(pages.size in 1..500&&pages.any{it.id==id}&&pages.all{it.world==w.world})
@@ -151,6 +172,7 @@ class LibraryBackupRepository(private val context:Context,private val db:NoteDat
         for(t in listOf("command_receipts","ink_receipts","page_insert_receipts","library_content_receipts","page_edit_receipts")){
             sql.query("SELECT commandId,digest FROM $t").use{c->while(c.moveToNext()){UUID.fromString(c.getString(0));require(c.getString(1).matches(Regex("[0-9a-f]{64}")))}}
         }
+        sql.query("SELECT id,digest,resultId FROM study_receipts").use{c->while(c.moveToNext()){UUID.fromString(c.getString(0));require(c.getString(1).matches(Regex("[0-9a-f]{64}")));UUID.fromString(c.getString(2))}}
         sql.query("SELECT notebookId,pageIds FROM page_insert_receipts").use{c->while(c.moveToNext()){
             val ids=c.getString(1).split(',');require(ids.size in 1..20&&ids.distinct().size==ids.size)
             for(page in ids){UUID.fromString(page);require(stage.pages().get(page)?.notebookId==c.getString(0))}
@@ -163,6 +185,7 @@ class LibraryBackupRepository(private val context:Context,private val db:NoteDat
             val col=OWNERS[table]
             return if(col=="@ink")" WHERE noteId IN (SELECT id FROM notebook_pages WHERE notebookId IN ($marks))"
                 else if(col=="@search")" WHERE pageId IN (SELECT id FROM notebook_pages WHERE notebookId IN ($marks))"
+                else if(col=="@cards")" WHERE cardId IN (SELECT id FROM study_cards WHERE notebookId IN ($marks))"
                 else " WHERE `$col` IN ($marks)"
         }
         private fun query(sql:String)=if(ids==null)db.query(sql)else db.query(sql,ids.toTypedArray<Any?>())
@@ -179,7 +202,7 @@ class LibraryBackupRepository(private val context:Context,private val db:NoteDat
     companion object {
         private fun col(name:String,kind:Char,nullable:Boolean=false)=LibraryArchive.Column(name,kind,nullable)
         private fun table(name:String,keys:String,vararg cols:LibraryArchive.Column)=LibraryArchive.Table(name,cols.toList(),keys.split(','))
-        // Frozen author schema7; only the explicitly compiled schema6 is also readable.
+        // Frozen author schema8; only explicitly compiled schema6/7 variants are also readable.
         val SCHEMA=listOf(
             table("notes","id",col("id",'S'),col("revision",'I'),col("title",'S'),col("text",'S'),col("updatedAt",'I')),
             table("note_revisions","noteId,revision",col("noteId",'S'),col("revision",'I'),col("title",'S'),col("text",'S'),col("committedAt",'I')),
@@ -193,10 +216,16 @@ class LibraryBackupRepository(private val context:Context,private val db:NoteDat
             table("page_search_text","pageId",col("pageId",'S'),col("inkRevision",'I'),col("text",'S'),col("method",'S')),
             table("page_insert_receipts","commandId",col("commandId",'S'),col("notebookId",'S'),col("digest",'S'),col("pageIds",'S')),
             table("library_content_receipts","commandId",col("commandId",'S'),col("kind",'S'),col("digest",'S'),col("noteId",'S')),
-            table("page_edit_receipts","commandId",col("commandId",'S'),col("notebookId",'S'),col("digest",'S'),col("kind",'S'),col("pageId",'S'),col("resultPageId",'S'))
+            table("page_edit_receipts","commandId",col("commandId",'S'),col("notebookId",'S'),col("digest",'S'),col("kind",'S'),col("pageId",'S'),col("resultPageId",'S')),
+            table("study_cards","id",col("id",'S'),col("notebookId",'S'),col("revision",'I'),col("title",'S'),col("body",'S'),col("trashedAt",'I',true)),
+            table("study_card_revisions","cardId,revision",col("cardId",'S'),col("revision",'I'),col("title",'S'),col("body",'S'),col("trashedAt",'I',true)),
+            table("study_sources","cardId",col("cardId",'S'),col("pageId",'S'),col("inkRevision",'I'),col("left",'F'),col("top",'F'),col("right",'F'),col("bottom",'F'),col("strokeIds",'S'),col("snapshot",'B')),
+            table("study_nodes","id",col("id",'S'),col("notebookId",'S'),col("cardId",'S'),col("parentId",'S',true),col("x",'F'),col("y",'F'),col("revision",'I'),col("removed",'I')),
+            table("study_receipts","id",col("id",'S'),col("notebookId",'S'),col("digest",'S'),col("resultId",'S'))
         )
+        val SCHEMA_V7=SCHEMA.take(13)
         val SCHEMA_V6=SCHEMA.take(12).mapIndexed{i,t->if(i==4)t.copy(columns=t.columns.dropLast(1))else t}
-        private val OWNERS=listOf("id","noteId","noteId","noteId","notebookId","@ink","@ink","@ink","@ink","@search","notebookId","noteId","notebookId")
+        private val OWNERS=listOf("id","noteId","noteId","noteId","notebookId","@ink","@ink","@ink","@ink","@search","notebookId","noteId","notebookId","notebookId","@cards","@cards","notebookId","notebookId")
         private fun count(sql:SupportSQLiteDatabase,table:String)=sql.query("SELECT COUNT(*) FROM `$table`").use{it.moveToFirst();it.getLong(0)}
         private fun insert(sql:SupportSQLiteDatabase,table:Int,row:List<Any?>){
             val t=SCHEMA[table]

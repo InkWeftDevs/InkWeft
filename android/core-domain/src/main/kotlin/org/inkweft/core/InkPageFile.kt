@@ -10,7 +10,7 @@ class InkPageFile(val title:String,val text:String,strokes:List<InkStroke>,val w
     init{require(title.isNotBlank()&&title.length<=120&&text.length<=100_000);require(strokes.size<=InkLimits.MAX_STROKES&&strokes.map{it.id}.distinct().size==strokes.size);require(strokes.sumOf{it.samples.size}<=InkLimits.MAX_PAGE_POINTS);require(strokes.all{it.world==world})}
     fun encode():ByteArray {
         val body=ByteArrayOutputStream();DataOutputStream(body).use{out->
-            out.writeInt(if(strokes.any{it.cuts.isNotEmpty()})0x49575033 else 0x49575032);out.writeBoolean(world);out.writeByte(paper.ordinal)
+            out.writeInt(if(strokes.any{s->s.cuts.any{it.shape!=InkCutShape.ROUND}})0x49575034 else if(strokes.any{it.cuts.isNotEmpty()})0x49575033 else 0x49575032);out.writeBoolean(world);out.writeByte(paper.ordinal)
             fun field(t:String){val b=t.toByteArray(Charsets.UTF_8);out.writeInt(b.size);out.write(b)}
             field(title);field(text);out.writeInt(strokes.size)
             strokes.forEach{val b=InkStrokeCodec.encode(it);require(body.size().toLong()+b.size+36<=MAX_BYTES);out.writeInt(b.size);out.write(b)}
@@ -22,7 +22,7 @@ class InkPageFile(val title:String,val text:String,strokes:List<InkStroke>,val w
             require(bytes.size in 48..MAX_BYTES);val body=bytes.copyOfRange(0,bytes.size-32)
             require(MessageDigest.isEqual(MessageDigest.getInstance("SHA-256").digest(body),bytes.copyOfRange(bytes.size-32,bytes.size)))
             return DataInputStream(ByteArrayInputStream(body)).use{input->
-                val magic=input.readInt();require(magic in listOf(0x49575031,0x49575032,0x49575033)){"Unknown page copy version"}
+                val magic=input.readInt();require(magic in listOf(0x49575031,0x49575032,0x49575033,0x49575034)){"Unknown page copy version"}
                 val world=if(magic!=0x49575031)input.readBoolean()else false
                 val paper=if(magic!=0x49575031)PaperStyle.entries.getOrNull(input.readUnsignedByte())?:error("Unknown paper")else PaperStyle.RULED
                 fun field(limit:Int):String{val n=input.readInt();require(n in 0..limit&&n<=input.available());val b=ByteArray(n);input.readFully(b);val s=b.toString(Charsets.UTF_8);require(s.toByteArray(Charsets.UTF_8).contentEquals(b));return s}

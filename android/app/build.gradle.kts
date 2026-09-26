@@ -12,12 +12,27 @@ android {
         applicationId = if (insertionPreview) "org.inkweft.app.a0.insertion" else if (diagnosticBuild) "org.inkweft.app.a0.workspace" else "org.inkweft.app.a0"
         minSdk = 31
         targetSdk = 36
-        versionCode = 9
-        versionName = "0.0.9-a3.4-pages"
+        versionCode = 10
+        versionName = "0.0.10-a3.5-learning"
         manifestPlaceholders["appLabel"] = if (insertionPreview) "墨织整合预览" else if (diagnosticBuild) "墨织工作台预览" else "墨织"
         buildConfigField("String", "BUILD_COMMIT", "\"${commitValue("GITHUB_SHA")}\"")
         buildConfigField("String", "SOURCE_COMMIT", "\"${commitValue("INKWEFT_HEAD_SHA")}\"")
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
+    // Optional owner-controlled developer signing. Never put a private key into Git.
+    // CI without these variables uses its isolated test key; delivery may be re-signed
+    // locally with the owner-held key and must carry its own certificate/hash receipt.
+    val keyPath = System.getenv("INKWEFT_SIGNING_STORE")
+    if (!keyPath.isNullOrBlank()) {
+        val password = requireNotNull(System.getenv("INKWEFT_SIGNING_PASSWORD")) { "Signing password missing" }
+        val alias = requireNotNull(System.getenv("INKWEFT_SIGNING_ALIAS")) { "Signing alias missing" }
+        signingConfigs.create("ownerPreview") {
+            storeFile = file(keyPath)
+            storePassword = password
+            keyAlias = alias
+            keyPassword = password
+        }
+        buildTypes.getByName("debug").signingConfig = signingConfigs.getByName("ownerPreview")
     }
     buildFeatures { compose = true; buildConfig = true }
     compileOptions {

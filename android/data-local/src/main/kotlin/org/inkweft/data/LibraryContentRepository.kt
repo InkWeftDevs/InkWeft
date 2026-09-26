@@ -126,7 +126,7 @@ class LibraryContentRepository(private val db:NoteDatabase,
         val cuts=mutableMapOf<String,String>()
         db.ink().insertPage(InkPageRow(pageId,page.strokes.size.toLong()))
         page.strokes.forEachIndexed{index,old->
-            val masks=old.cuts.map{c->InkCut(cuts.getOrPut(c.id){UUID.randomUUID().toString()},c.radius,c.points)}
+            val masks=old.cuts.map{c->InkCut(cuts.getOrPut(c.id){UUID.randomUUID().toString()},c.radius,c.points,c.shape)}
             val stroke=InkStroke(UUID.randomUUID().toString(),old.pen,old.color,old.width,old.tool,old.samples,old.world,masks)
             db.ink().insertStroke(InkStrokeRow(stroke.id,pageId,InkStrokeCodec.encode(stroke),stroke.samples.size,true,index.toLong()+1))
         }

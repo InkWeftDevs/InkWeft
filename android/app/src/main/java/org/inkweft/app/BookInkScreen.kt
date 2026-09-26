@@ -43,6 +43,10 @@ fun InkScreen(note:NoteDraft,workspace:WorkspaceViewModel=viewModel()){
     var pageActionId by rememberSaveable{mutableStateOf<String?>(null)}
     var pageActionKind by rememberSaveable{mutableStateOf(PageEditKind.MOVE.name)}
     var showRecycled by rememberSaveable{mutableStateOf(false)}
+    var studyOpen by remember{mutableStateOf(false)}
+    var studySource by remember{mutableStateOf<StudySourceDraft?>(null)}
+    var sourceFocus by remember{mutableStateOf<Pair<String,CanvasBounds>?>(null)}
+
     fun requestAction(p:NotebookPageRow,kind:PageEditKind){directory=false;pageActionKind=kind.name;pageActionId=p.id}
     val export=rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("application/octet-stream")){uri->
         val bytes=exportBytes;exportBytes=null
@@ -50,6 +54,7 @@ fun InkScreen(note:NoteDraft,workspace:WorkspaceViewModel=viewModel()){
     }
     val page=ui.pages.firstOrNull{it.id==ui.selectedId}
     Column(Modifier.fillMaxSize()){
+        Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.End){TextButton(onClick={studySource=null;studyOpen=true},enabled=canNavigate&&!ui.busy&&!ui.actionUnknown&&!ui.insertionUnknown,modifier=Modifier.testTag("study-open")){Text("摘要卡 · 大纲 · 脑图")}}
         if(ui.error!=null)Row(Modifier.fillMaxWidth().padding(horizontal=12.dp),verticalAlignment=Alignment.CenterVertically){Text(ui.error!!,Modifier.weight(1f),fontSize=12.sp);if(!ui.insertionUnknown&&!ui.actionUnknown)TextButton(onClick=vm::clearError){Text("知道了")}}
         if(ui.actionUnknown)Surface(color=androidx.compose.ui.graphics.Color(0xfffff4e3)){
             Row(Modifier.fillMaxWidth().padding(horizontal=12.dp),verticalAlignment=Alignment.CenterVertically){
@@ -71,7 +76,12 @@ fun InkScreen(note:NoteDraft,workspace:WorkspaceViewModel=viewModel()){
             TextButton(onClick={confirmBook=true},enabled=canNavigate&&!ui.busy&&!ui.insertionUnknown&&!ui.actionUnknown&&!exporting,modifier=Modifier.testTag("export-book")){Text("导出整本")}
         }
         if(page==null)Box(Modifier.weight(1f).fillMaxWidth(),contentAlignment=Alignment.Center){if(ui.loading)CircularProgressIndicator()else Text("页面未能载入，原数据保留")}
-        else Box(Modifier.weight(1f)){key(page.id){InkPageScreen(note,workspace,page,{canNavigate=it},{rev->searchTarget=page.id to rev},!ui.busy&&!ui.actionUnknown&&!ui.insertionUnknown&&pageActionId==null)}}
+        else Box(Modifier.weight(1f)){key(page.id){InkPageScreen(note,workspace,page,{canNavigate=it},{rev->searchTarget=page.id to rev},!ui.busy&&!ui.actionUnknown&&!ui.insertionUnknown&&pageActionId==null,
+            onExcerpt={selection->studySource=StudySourceDraft(page.id,selection.revision,selection.region.bounds,selection.strokes.map{it.id});studyOpen=true},
+            focusRegion=sourceFocus?.takeIf{it.first==page.id}?.second,onFocusConsumed={sourceFocus=null})}}
+    }
+    if(studyOpen)StudyWorkspace(note,studySource,{studyOpen=false;studySource=null}){source->
+        if(ui.pages.any{it.id==source.pageId}){vm.select(source.pageId);sourceFocus=source.pageId to CanvasBounds(source.left,source.top,source.right,source.bottom);true}else false
     }
     if(directory)AlertDialog(onDismissRequest={directory=false},modifier=Modifier.testTag("pages-directory-dialog"),title={Text("页面 · ${ui.pages.size} 页")},text={
         Column(verticalArrangement=Arrangement.spacedBy(10.dp)){
@@ -121,7 +131,7 @@ fun InkScreen(note:NoteDraft,workspace:WorkspaceViewModel=viewModel()){
             if(canNavigate&&!ui.busy&&!ui.insertionUnknown&&!ui.actionUnknown)vm.insert(where,id,paper,count,open,order)
         }
     }
-    if(confirmBook)AlertDialog(onDismissRequest={confirmBook=false},title={Text("导出整本内容副本")},text={Text("包括本笔记所有可用页面、局部擦除效果和已保存键入文字；不含页面回收区。明文 .iwbook，不含撤销历史、账号或密钥；不是完整资料库备份。目标可能由云盘提供。")},confirmButton={TextButton(onClick={confirmBook=false;exporting=true;scope.launch{try{val bytes=withContext(Dispatchers.IO){app.pages.exportBook(note.base.id).encode()};exportBytes=bytes;export.launch("墨织笔记本.iwbook")}catch(c:CancellationException){throw c}catch(_:Exception){Toast.makeText(context,"无法导出整本内容，原数据保留；可尝试逐页导出",Toast.LENGTH_LONG).show()}finally{exporting=false}}}){Text("选择位置")}},dismissButton={TextButton(onClick={confirmBook=false}){Text("取消")}})
+    if(confirmBook)AlertDialog(onDismissRequest={confirmBook=false},title={Text("导出整本内容副本")},text={Text("包括本笔记所有可用页面、局部擦除效果和已保存键入文字；不含页面回收区。明文 .iwbook，不含摘要卡/脑图、撤销历史、账号或密钥；不是完整资料库备份。目标可能由云盘提供。")},confirmButton={TextButton(onClick={confirmBook=false;exporting=true;scope.launch{try{val bytes=withContext(Dispatchers.IO){app.pages.exportBook(note.base.id).encode()};exportBytes=bytes;export.launch("墨织笔记本.iwbook")}catch(c:CancellationException){throw c}catch(_:Exception){Toast.makeText(context,"无法导出整本内容，原数据保留；可尝试逐页导出",Toast.LENGTH_LONG).show()}finally{exporting=false}}}){Text("选择位置")}},dismissButton={TextButton(onClick={confirmBook=false}){Text("取消")}})
     searchTarget?.let{(id,revision)->PageSearchDialog(id,revision){searchTarget=null}}
 }
 @Composable

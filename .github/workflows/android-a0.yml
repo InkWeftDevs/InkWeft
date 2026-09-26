@@ -55,10 +55,12 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p build/evidence
-          cp app/build/outputs/apk/debug/app-debug.apk build/evidence/inkweft-a3.4-pages-debug.apk
-          sha256sum build/evidence/inkweft-a3.4-pages-debug.apk > build/evidence/APK-SHA256.txt
-          "$ANDROID_HOME/build-tools/36.0.0/apksigner" verify --verbose --print-certs build/evidence/inkweft-a3.4-pages-debug.apk > build/evidence/apk-signature.txt
-          "$ANDROID_HOME/build-tools/36.0.0/zipalign" -c -P 16 -v 4 build/evidence/inkweft-a3.4-pages-debug.apk > build/evidence/zip-alignment.txt
+          cp "$ANDROID_HOME/build-tools/36.0.0/lib/apksigner.jar" build/evidence/apksigner.jar
+          sha256sum build/evidence/apksigner.jar > build/evidence/APKSIGNER-SHA256.txt
+          cp app/build/outputs/apk/debug/app-debug.apk build/evidence/inkweft-a3.5-learning-debug.apk
+          sha256sum build/evidence/inkweft-a3.5-learning-debug.apk > build/evidence/APK-SHA256.txt
+          "$ANDROID_HOME/build-tools/36.0.0/apksigner" verify --verbose --print-certs build/evidence/inkweft-a3.5-learning-debug.apk > build/evidence/apk-signature.txt
+          "$ANDROID_HOME/build-tools/36.0.0/zipalign" -c -P 16 -v 4 build/evidence/inkweft-a3.5-learning-debug.apk > build/evidence/zip-alignment.txt
           python3 - <<'PY'
           import json, os, platform
           from pathlib import Path
@@ -66,7 +68,7 @@ jobs:
           assert metadata['applicationId']=='org.inkweft.app.a0.insertion'
           Path("build/evidence/build.json").write_text(json.dumps({
             "commit": os.environ["BUILD_COMMIT"], "pr_head": os.environ["HEAD_COMMIT"],
-            "scope": "A3_4_PAGE_ORGANIZATION_AND_BACKUP_COMPATIBILITY_NOT_FULL_G1_OR_S1",
+            "scope": "A3_5_SELECTION_SMOOTHING_MANUAL_STUDY_NOT_FULL_G1_OR_S1",
             "compileSdk": 36, "targetSdk": 36, "minSdk": 31,
             "applicationId": metadata['applicationId'], "versionName": metadata['elements'][0]['versionName'],
             "inkVersion": "1.0.0", "runner": platform.platform(), "instrumented_tests": "SEE_RUNTIME_REPORT",
@@ -79,7 +81,7 @@ jobs:
       - name: Upload built APK and schema before device checks
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: inkweft-a3.4-pages-${{ github.sha }}
+          name: inkweft-a3.5-learning-${{ github.sha }}
           retention-days: 7
           if-no-files-found: error
           path: |
@@ -88,6 +90,17 @@ jobs:
             android/gradlew.bat
             android/gradle/wrapper/
             android/data-local/schemas/
+      - name: Build pinned A3.4 upgrade baseline with the same CI signing identity
+        run: |
+          set -euo pipefail
+          base=d350cc36d81b4e63022fefec68740fdba2e89fc1
+          git fetch --no-tags --depth=1 origin "$base"
+          git worktree add --detach "$RUNNER_TEMP/inkweft-upgrade-base" "$base"
+          cd "$RUNNER_TEMP/inkweft-upgrade-base/android"
+          INKWEFT_HEAD_SHA="$base" GITHUB_SHA="$base" "$GITHUB_WORKSPACE/android/gradlew" --no-daemon :app:assembleDebug
+          mkdir -p "$GITHUB_WORKSPACE/android/build/evidence"
+          cp app/build/outputs/apk/debug/app-debug.apk "$GITHUB_WORKSPACE/android/build/evidence/upgrade-base.apk"
+          "$ANDROID_HOME/build-tools/36.0.0/apksigner" verify --print-certs app/build/outputs/apk/debug/app-debug.apk > "$GITHUB_WORKSPACE/android/build/evidence/upgrade-base-certificate.txt"
       - name: Install emulator test image
         run: sdkmanager "emulator" "system-images;android-35;google_apis;x86_64"
       - name: Start disposable tablet emulator
@@ -113,15 +126,26 @@ jobs:
           adb shell settings put global transition_animation_scale 0
           adb shell settings put global animator_duration_scale 0
           adb shell getprop > android/build/evidence/emulator-properties.txt
+      - name: Verify no-uninstall version9 to version10 data-preserving upgrade
+        working-directory: android
+        run: |
+          set -euo pipefail
+          adb install -r build/evidence/upgrade-base.apk
+          adb install -r app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk
+          adb shell am instrument -w -e class org.inkweft.app.UpgradeTransitionTest#seedBaseline org.inkweft.app.a0.insertion.test/androidx.test.runner.AndroidJUnitRunner | tr -d '\r' | tee build/evidence/upgrade-seed.txt
+          grep -Fx 'OK (1 test)' build/evidence/upgrade-seed.txt
+          adb install -r app/build/outputs/apk/debug/app-debug.apk
+          adb shell am instrument -w -e class org.inkweft.app.UpgradeTransitionTest#verifyAfterUpgrade org.inkweft.app.a0.insertion.test/androidx.test.runner.AndroidJUnitRunner | tr -d '\r' | tee build/evidence/upgrade-verify.txt
+          grep -Fx 'OK (1 test)' build/evidence/upgrade-verify.txt
       - name: Run real Room and Compose instrumented tests
         working-directory: android
         run: |
           set -euo pipefail
-          ./gradlew --no-daemon :data-local:connectedDebugAndroidTest :app:connectedDebugAndroidTest
+          ./gradlew --no-daemon :data-local:connectedDebugAndroidTest :app:connectedDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.notClass=org.inkweft.app.UpgradeTransitionTest
           python3 - <<'PY'
           import glob, sys
           import xml.etree.ElementTree as ET
-          expected_totals = {":data-local": 91, ":app": 36}
+          expected_totals = {":data-local": 109, ":app": 42}
           roots = {
               ":data-local": glob.glob("data-local/build/outputs/androidTest-results/**/*.xml", recursive=True),
               ":app": glob.glob("app/build/outputs/androidTest-results/**/*.xml", recursive=True),
@@ -155,17 +179,17 @@ jobs:
           # These are disposable CI installs, never user-device uninstall/clear operations.
           adb install -r app/build/outputs/apk/debug/app-debug.apk
           adb install -r app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk
-          timeout 420 adb shell am instrument -w org.inkweft.app.a0.insertion.test/androidx.test.runner.AndroidJUnitRunner | tr -d '\r' | tee build/evidence/evidence-capture-instrumentation.txt
+          timeout 600 adb shell am instrument -w -e notClass org.inkweft.app.UpgradeTransitionTest org.inkweft.app.a0.insertion.test/androidx.test.runner.AndroidJUnitRunner | tr -d '\r' | tee build/evidence/evidence-capture-instrumentation.txt
           python3 - <<'PY'
           from pathlib import Path
           import re
           text=Path('build/evidence/evidence-capture-instrumentation.txt').read_text()
           match=re.search(r'^OK \((\d+) tests?\)\s*$',text,re.M)
-          assert match and int(match.group(1)) >= 36, 'Missing successful complete repeat run'
+          assert match and int(match.group(1)) >= 42, 'Missing successful complete repeat run'
           assert 'FAILURES!!!' not in text
           PY
           adb pull "/sdcard/Android/data/org.inkweft.app.a0.insertion/files/." "build/evidence/"
-          for name in ink-ui-emulator.png diagnostics-emulator.zip workspace-library.png workspace-board.png workspace-page.png workspace-narrow.png insert-pages-options.png page-directory-insertion.png pen-presets-popover.png shelf-note-menu.png library-complete-menu.png library-export-preview.png library-backup-export.png library-backup-restore.png page-move-options.png page-recycle-directory.png; do
+          for name in ink-ui-emulator.png diagnostics-emulator.zip workspace-library.png workspace-board.png workspace-page.png workspace-narrow.png insert-pages-options.png page-directory-insertion.png pen-presets-popover.png shelf-note-menu.png library-complete-menu.png library-export-preview.png library-backup-export.png library-backup-restore.png page-move-options.png page-recycle-directory.png selection-actions.png beautify-preview.png study-outline.png study-mindmap.png; do
             test -f "build/evidence/$name"
           done
           ls -1 build/evidence | sort > build/evidence/evidence-file-list.txt
@@ -183,7 +207,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: android-a3.4-reports-${{ github.run_id }}
+          name: android-a3.5-reports-${{ github.run_id }}
           retention-days: 7
           if-no-files-found: warn
           path: |

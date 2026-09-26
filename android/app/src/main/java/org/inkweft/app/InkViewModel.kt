@@ -43,6 +43,16 @@ class InkViewModel(private val noteId:String,private val repository:InkRepositor
         }catch(c:CancellationException){throw c}catch(_:Exception){mutable.value=mutable.value.copy(message="擦除未被接收，已保存笔迹不变；请检查容量。")}
         finally{erasing=false;publish()}}
     }
+    /** All selected edits are a single undo unit at the revision actually shown. */
+    fun selectedEdit(expectedRevision:Long,change:InkMutation):Boolean {
+        val s=session?:return false
+        if(reading||erasing||s.queued!=0||s.blocked!=null||s.page.revision!=expectedRevision){
+            mutable.value=mutable.value.copy(message="页面已更新，请重新框选；未修改原笔迹。");return false
+        }
+        return try{s.enqueue(change);publish();pump();true}
+        catch(_:IllegalArgumentException){mutable.value=mutable.value.copy(message="本次选择超出笔迹或空间预算，原件保留。可减少选区后重试。");false}
+        catch(_:IllegalStateException){false}
+    }
     fun undo(){val s=session?:return;if(!s.canUndo||erasing)return;s.requestUndo();publish();pump()}
     fun redo(){val s=session?:return;if(!s.canRedo||erasing)return;s.requestRedo();publish();pump()}
     fun retry(){session?.retry();publish();pump()}

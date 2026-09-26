@@ -12,12 +12,24 @@ class InkSession(initial:InkPage) {
     private val redo=ArrayDeque<InkMutation>()
     private var historyMove:Boolean?=null
     val queued get()=queue.size+if(pending==null)0 else 1
-    private fun additions()=(listOfNotNull(pending?.mutation)+queue).filterIsInstance<InkMutation.Add>()
+    private fun additions()=(listOfNotNull(pending?.mutation)+queue).flatMap{when(it){is InkMutation.Add->listOf(it.stroke);is InkMutation.Replace->it.added;else->emptyList()}}
     val canStart get()=blocked==null&&queued<16&&page.strokes.size+additions().size<InkLimits.MAX_STROKES&&
-        page.strokes.sumOf{it.stroke.samples.size}+additions().sumOf{it.stroke.samples.size}+InkLimits.MAX_POINTS<=InkLimits.MAX_PAGE_POINTS
+        page.strokes.sumOf{it.stroke.samples.size}+additions().sumOf{it.samples.size}+InkLimits.MAX_POINTS<=InkLimits.MAX_PAGE_POINTS
     val canUndo get()=queued==0&&blocked==null&&undo.isNotEmpty()
     val canRedo get()=queued==0&&blocked==null&&redo.isNotEmpty()
     private fun apply(change:InkMutation,revision:Long,rows:LinkedHashMap<String,StoredInk>,cuts:LinkedHashMap<String,StoredCut>):InkMutation=when(change){
+        is InkMutation.Replace->{
+            require(change.hidden.all{rows[it]?.visible==true});require(change.added.none{rows.containsKey(it.id)})
+            change.hidden.forEach{rows[it]=checkNotNull(rows[it]).copy(visible=false)}
+            change.added.forEach{rows[it.id]=StoredInk(it,true,revision)}
+            InkMutation.Swap(change.added.map{it.id},change.hidden)
+        }
+        is InkMutation.Swap->{
+            require(change.hide.all{rows[it]?.visible==true}&&change.show.all{rows[it]?.visible==false})
+            change.hide.forEach{rows[it]=checkNotNull(rows[it]).copy(visible=false)}
+            change.show.forEach{rows[it]=checkNotNull(rows[it]).copy(visible=true)}
+            InkMutation.Swap(change.show,change.hide)
+        }
         is InkMutation.Add->{rows[change.stroke.id]=StoredInk(change.stroke,true,revision);InkMutation.Visibility(listOf(change.stroke.id),false)}
         is InkMutation.Visibility->{require(change.ids.all{rows[it]?.visible==!change.visible});change.ids.forEach{rows[it]=checkNotNull(rows[it]).copy(visible=change.visible)};InkMutation.Visibility(change.ids,!change.visible)}
         is InkMutation.Cut->{require(change.selection.strokeIds.all{rows[it]?.visible==true});cuts[change.selection.cut.id]=StoredCut(change.selection,true,revision);InkMutation.CutVisibility(change.selection.cut.id,false)}
@@ -32,9 +44,15 @@ class InkSession(initial:InkPage) {
         return rows.values.filter{it.visible}.map{it.stroke.withCuts(byStroke[it.stroke.id].orEmpty())}
     }
     fun enqueue(change:InkMutation,finishInFlight:Boolean=false){
-        check(canStart||(finishInFlight&&queued<17&&blocked==null)){"Resolve pending storage before more input"}
+        check(canStart||(finishInFlight&&queued<17&&blocked==null)||(change !is InkMutation.Add&&queued==0&&blocked==null)){"Resolve pending storage before more input"}
         when(change){
-            is InkMutation.Add->{val current=visibleDraft();require(page.strokes.size+additions().size<InkLimits.MAX_STROKES);require(page.strokes.sumOf{it.stroke.samples.size}+additions().sumOf{it.stroke.samples.size}+change.stroke.samples.size<=InkLimits.MAX_PAGE_POINTS);require(page.strokes.none{it.stroke.id==change.stroke.id}&&current.none{it.id==change.stroke.id})}
+            is InkMutation.Replace->{
+                require(queued==0);require(page.strokes.size+change.added.size<=InkLimits.MAX_STROKES)
+                require(page.strokes.sumOf{it.stroke.samples.size}+change.added.sumOf{it.samples.size}<=InkLimits.MAX_PAGE_POINTS)
+                require(change.hidden.all{id->page.strokes.any{it.stroke.id==id&&it.visible}})
+                require(change.added.none{s->page.strokes.any{it.stroke.id==s.id}})
+            }
+            is InkMutation.Add->{val current=visibleDraft();require(page.strokes.size+additions().size<InkLimits.MAX_STROKES);require(page.strokes.sumOf{it.stroke.samples.size}+additions().sumOf{it.samples.size}+change.stroke.samples.size<=InkLimits.MAX_PAGE_POINTS);require(page.strokes.none{it.stroke.id==change.stroke.id}&&current.none{it.id==change.stroke.id})}
             is InkMutation.Cut->{val current=visibleDraft().associateBy{it.id};require(page.cuts.size+(listOfNotNull(pending?.mutation)+queue).count{it is InkMutation.Cut}<InkLimits.MAX_CUTS);change.selection.strokeIds.forEach{id->val s=checkNotNull(current[id]);require(s.cuts.size<InkLimits.MAX_CUTS&&s.cuts.sumOf{it.points.size}+change.selection.cut.points.size<=InkLimits.MAX_CUT_POINTS)}}
             else->Unit
         };queue.add(change)
