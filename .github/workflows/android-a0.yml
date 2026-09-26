@@ -121,7 +121,7 @@ jobs:
           python3 - <<'PY'
           import glob, sys
           import xml.etree.ElementTree as ET
-          expected_totals = {":data-local": 69, ":app": 32}
+          expected_totals = {":data-local": 73, ":app": 32}
           roots = {
               ":data-local": glob.glob("data-local/build/outputs/androidTest-results/**/*.xml", recursive=True),
               ":app": glob.glob("app/build/outputs/androidTest-results/**/*.xml", recursive=True),
