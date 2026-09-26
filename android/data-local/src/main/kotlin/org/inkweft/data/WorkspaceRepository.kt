@@ -12,7 +12,8 @@ data class WorkspaceRow(@PrimaryKey val noteId:String,val world:Boolean=false,va
     val folder:String="",val tags:String="",val favorite:Boolean=false,val trashedAt:Long?=null,
     val centerX:Double=500.0,val centerY:Double=707.0,val zoom:Double=0.0,val revision:Long=0,
     @ColumnInfo(defaultValue="'auto'") val coverKey:String="auto",
-    @ColumnInfo(defaultValue="''") val selectedPageId:String="")
+    @ColumnInfo(defaultValue="''") val selectedPageId:String="",
+    @ColumnInfo(defaultValue="0") val pinned:Boolean=false)
 
 data class LibraryInkCount(val noteId:String,val visibleCount:Int,val modifiedRevision:Long)
 
@@ -62,6 +63,15 @@ class WorkspaceRepository(private val db:NoteDatabase) {
         if(row.coverKey==cover.key)return@withTransaction true
         if(row.revision!=expected || row.trashedAt!=null)return@withTransaction false
         check(db.workspace().update(row.copy(coverKey=cover.key,revision=row.revision+1))==1)
+        true
+    }
+    /** Desired state, not a toggle: a repeated save cannot unpin a pinned note. */
+    suspend fun setPinned(id:String,expected:Long,pinned:Boolean):Boolean=db.withTransaction {
+        val row=get(id)
+        if(row.trashedAt!=null)return@withTransaction false
+        if(row.pinned==pinned)return@withTransaction true
+        if(row.revision!=expected)return@withTransaction false
+        check(db.workspace().update(row.copy(pinned=pinned,revision=row.revision+1))==1)
         true
     }
     suspend fun changePaper(id:String,paper:PaperStyle)=db.withTransaction {

@@ -33,7 +33,7 @@ import java.util.Date
 import java.util.Locale
 
 @Composable
-fun LibraryScreen(ui:NotebookUi,workspace:WorkspaceViewModel,open:(Note)->Unit,create:()->Unit,importPage:()->Unit,diagnostics:()->Unit,rename:(Note)->Unit){
+fun LibraryScreen(ui:NotebookUi,workspace:WorkspaceViewModel,open:(Note)->Unit,create:()->Unit,importPage:()->Unit,diagnostics:()->Unit,rename:(Note)->Unit,duplicate:(Note)->Unit,export:(Note)->Unit){
     val entries by workspace.entries.collectAsState();val counts by workspace.inkCounts.collectAsState()
     val searchRows by workspace.searchable.collectAsState()
     var filter by rememberSaveable{mutableStateOf("all")};var type by rememberSaveable{mutableStateOf("all")}
@@ -56,7 +56,7 @@ fun LibraryScreen(ui:NotebookUi,workspace:WorkspaceViewModel,open:(Note)->Unit,c
     val shown=all.filter{n->val r=row(n)
         (if(filter=="trash")r.trashedAt!=null else r.trashedAt==null)&&
         when{filter=="favorite"->r.favorite;filter=="unfiled"->r.folder.isBlank();filter.startsWith("folder:")->r.folder==filter.removePrefix("folder:");filter.startsWith("tag:")->filter.removePrefix("tag:") in r.tags.split('\n');else->true}&&
-        (type=="all"||(type=="board")==r.world)&&(query.isBlank()||n.title.contains(query,true)||n.text.contains(query,true)||r.tags.contains(query,true)||searchRows.any{it.notebookId==n.id&&it.text.contains(query,true)})}.let{if(byTitle)it.sortedBy{n->n.title.lowercase(Locale.ROOT)}else it}
+        (type=="all"||(type=="board")==r.world)&&(query.isBlank()||n.title.contains(query,true)||n.text.contains(query,true)||r.tags.contains(query,true)||searchRows.any{it.notebookId==n.id&&it.text.contains(query,true)})}.let{ShelfOrder.arrange(it,{n->row(n).pinned},{n->n.title},byTitle)}
     val title=when{filter=="favorite"->"已收藏";filter=="trash"->"回收站";filter=="unfiled"->"未分类";filter.startsWith("folder:")->filter.removePrefix("folder:");filter.startsWith("tag:")->"标签 · "+filter.removePrefix("tag:");else->"全部笔记"}
     val nav:@Composable (Boolean)->Unit={search->
         Column(Modifier.fillMaxHeight().width(224.dp).background(Side).padding(horizontal=12.dp).verticalScroll(rememberScrollState())){
@@ -114,7 +114,8 @@ fun LibraryScreen(ui:NotebookUi,workspace:WorkspaceViewModel,open:(Note)->Unit,c
                     val itemContent:@Composable (Note)->Unit={n->val meta=row(n)
                         NoteTile(n,meta,counts[n.id]?.modifiedRevision?:0,counts[n.id]?.visibleCount?:0,grid,
                             {if(meta.trashedAt==null){val hit=searchRows.firstOrNull{it.notebookId==n.id&&query.isNotBlank()&&it.text.contains(query,true)};if(hit!=null)workspace.openSearchPage(n.id,hit.pageId){open(n)}else open(n)}},{rename(n)},{coverError=null;coverTarget=n to meta},
-                            {workspace.organize(meta,favorite=!meta.favorite)},{editing=meta},{if(meta.trashedAt!=null)workspace.organize(meta,trash=false)else removing=meta})
+                            {workspace.organize(meta,favorite=!meta.favorite)},{editing=meta},{if(meta.trashedAt!=null)workspace.organize(meta,trash=false)else removing=meta},
+                            {duplicate(n)},{export(n)},{workspace.pin(meta,!meta.pinned)})
                     }
                     if(grid)LazyVerticalGrid(columns=GridCells.Adaptive(165.dp),modifier=Modifier.weight(1f).testTag("library-grid"),contentPadding=PaddingValues(top=21.dp,bottom=30.dp),horizontalArrangement=Arrangement.spacedBy(20.dp),verticalArrangement=Arrangement.spacedBy(24.dp)){
                         if(filter!="trash"&&query.isBlank())item(key="new-tile"){NewTile(create)}
@@ -158,7 +159,7 @@ private fun NewTile(create:()->Unit){
     }
 }
 @Composable
-private fun NoteTile(note:Note,row:WorkspaceRow,inkRevision:Long,count:Int,grid:Boolean,open:()->Unit,rename:()->Unit,cover:()->Unit,favorite:()->Unit,classify:()->Unit,trash:()->Unit){
+private fun NoteTile(note:Note,row:WorkspaceRow,inkRevision:Long,count:Int,grid:Boolean,open:()->Unit,rename:()->Unit,cover:()->Unit,favorite:()->Unit,classify:()->Unit,trash:()->Unit,duplicate:()->Unit,export:()->Unit,pin:()->Unit){
     var menu by remember{mutableStateOf(false)}
     val context=LocalContext.current;val app=context.applicationContext as InkWeftApplication
     val style=NotebookCover.fromKey(row.coverKey)
@@ -191,7 +192,10 @@ private fun NoteTile(note:Note,row:WorkspaceRow,inkRevision:Long,count:Int,grid:
                     DropdownMenuItem(text={Text("打开笔记")},leadingIcon={Glyph("note")},onClick={menu=false;open()})
                     DropdownMenuItem(text={Text("重命名")},leadingIcon={Glyph("pen")},onClick={menu=false;rename()},modifier=Modifier.testTag("rename-note-${note.id}"))
                     DropdownMenuItem(text={Text("更换封面")},leadingIcon={Glyph("note")},onClick={menu=false;cover()},modifier=Modifier.testTag("change-cover-${note.id}"))
+                    DropdownMenuItem(text={Text("复制笔记")},leadingIcon={Glyph("note")},onClick={menu=false;duplicate()},modifier=Modifier.testTag("duplicate-note-${note.id}"))
+                    DropdownMenuItem(text={Text("导出内容副本")},leadingIcon={Glyph("export")},onClick={menu=false;export()},modifier=Modifier.testTag("export-note-${note.id}"))
                     HorizontalDivider(color=Line)
+                    DropdownMenuItem(text={Text(if(row.pinned)"取消置顶"else"置顶笔记")},leadingIcon={Glyph("sort")},onClick={menu=false;pin()},modifier=Modifier.testTag("pin-note-${note.id}"))
                     DropdownMenuItem(text={Text(if(row.favorite)"取消收藏"else"收藏")},leadingIcon={Glyph("star")},onClick={menu=false;favorite()})
                     DropdownMenuItem(text={Text("文件夹与标签")},leadingIcon={Glyph("folder")},onClick={menu=false;classify()})
                     HorizontalDivider(color=Line)
@@ -200,6 +204,7 @@ private fun NoteTile(note:Note,row:WorkspaceRow,inkRevision:Long,count:Int,grid:
                     leadingIcon={Glyph(if(row.trashedAt!=null)"undo"else"trash",if(row.trashedAt!=null)Forest else Color(0xffab3939))},onClick={menu=false;trash()})
             }
         }}
+        if(row.pinned)Text("置顶",fontSize=10.sp,color=Forest,modifier=Modifier.testTag("pinned-${note.id}"))
         Text(date+(if(count>0)" · $count 笔"else""),fontSize=10.sp,color=Quiet)
         if(row.folder.isNotBlank())Text(row.folder,fontSize=10.sp,color=Quiet,modifier=Modifier.padding(top=5.dp))
     }

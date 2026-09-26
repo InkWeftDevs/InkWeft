@@ -43,21 +43,18 @@ fun NotebookApp(vm:NotebookViewModel=viewModel(),onDiagnostics:()->Unit={}){
     val ui by vm.ui.collectAsStateWithLifecycle();val rename by vm.renaming.collectAsStateWithLifecycle()
     val workspace:WorkspaceViewModel=viewModel();val workspaceError by workspace.error.collectAsStateWithLifecycle();val busy by workspace.busy.collectAsStateWithLifecycle()
     val context=LocalContext.current;val app=context.applicationContext as InkWeftApplication
+    val transfers:LibraryTransfersViewModel=viewModel();val transferUi by transfers.ui.collectAsStateWithLifecycle()
     val keyboard=LocalSoftwareKeyboardController.current;val focus=LocalFocusManager.current;val scope=rememberCoroutineScope()
     var showCreate by remember{mutableStateOf(false)};var newTitle by remember{mutableStateOf("")}
     var newWorld by remember{mutableStateOf(false)};var newPaper by remember{mutableStateOf(PaperStyle.RULED)};var newCover by remember{mutableStateOf(NotebookCover.AUTO)}
     var inkMode by rememberSaveable(ui.selectedId){mutableStateOf(true)}
-    var confirmExport by remember{mutableStateOf(false)};var exportText by remember{mutableStateOf<String?>(null)};var importing by remember{mutableStateOf(false)}
+    var confirmExport by remember{mutableStateOf(false)};var exportText by remember{mutableStateOf<String?>(null)}
     val textExport=rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("text/plain")){uri->
         val text=exportText;exportText=null
         if(uri!=null&&text!=null)scope.launch{val ok=try{withContext(Dispatchers.IO){checkNotNull(context.contentResolver.openOutputStream(uri,"wt")).bufferedWriter(Charsets.UTF_8).use{it.write(text)}};true}catch(c:CancellationException){throw c}catch(_:Exception){false};Toast.makeText(context,if(ok)"文字已写入所选位置"else"导出失败，原文仍保留",Toast.LENGTH_LONG).show()}
     }
     val pageImport=rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()){uri->
-        if(uri!=null&&!importing)scope.launch{
-            importing=true
-            try{val n=withContext(Dispatchers.IO){val bytes=checkNotNull(context.contentResolver.openInputStream(uri)).use{input->val out=java.io.ByteArrayOutputStream();val buffer=ByteArray(8192);while(true){val size=input.read(buffer);if(size<0)break;require(out.size()+size<=InkPageFile.MAX_BYTES);out.write(buffer,0,size)};out.toByteArray()};if(NotebookFile.isBook(bytes))app.pages.importBook(NotebookFile.decode(bytes))else app.inkRepository.importCopy(InkPageFile.decode(bytes))};if(vm.ui.value.selectedId==null)vm.select(n)}
-            catch(c:CancellationException){throw c}catch(_:Exception){Toast.makeText(context,"无法导入此页面副本；原资料未覆盖",Toast.LENGTH_LONG).show()}finally{importing=false}
-        }
+        if(uri!=null)transfers.readUri(uri)
     }
     fun openCreate(){newTitle="";newWorld=false;newPaper=PaperStyle.RULED;newCover=NotebookCover.AUTO;showCreate=true}
     BackHandler(enabled=ui.selectedId!=null){vm.back()}
@@ -65,9 +62,9 @@ fun NotebookApp(vm:NotebookViewModel=viewModel(),onDiagnostics:()->Unit={}){
     Column(Modifier.fillMaxSize().background(Color.White).statusBarsPadding().navigationBarsPadding().imePadding()){
         if(ui.readFailed)Surface(color=Color(0xffffeee7)){Row(Modifier.fillMaxWidth().padding(12.dp),verticalAlignment=Alignment.CenterVertically){Text("资料读取失败，原数据不会被空库覆盖。",Modifier.weight(1f),fontSize=13.sp);TextButton(onClick=vm::retryRead){Text("重试")};if(ui.current!=null)TextButton(onClick=onDiagnostics,modifier=Modifier.testTag("open-diagnostics-error")){Text("诊断")}}}
         if(workspaceError!=null)Surface(color=Color(0xfffff4e3)){Row(Modifier.fillMaxWidth().padding(horizontal=16.dp),verticalAlignment=Alignment.CenterVertically){Text(workspaceError!!,Modifier.weight(1f),fontSize=12.sp);TextButton(onClick=workspace::clearError){Text("知道了")}}}
-        if(importing||busy)LinearProgressIndicator(Modifier.fillMaxWidth())
+        if(transferUi.busy||busy)LinearProgressIndicator(Modifier.fillMaxWidth())
         val draft=ui.current
-        if(draft==null)Box(Modifier.weight(1f)){LibraryScreen(ui,workspace,vm::select,::openCreate,{pageImport.launch(arrayOf("application/octet-stream","*/*"))},onDiagnostics,vm::openRename)}
+        if(draft==null)Box(Modifier.weight(1f)){LibraryScreen(ui,workspace,vm::select,::openCreate,{pageImport.launch(arrayOf("application/octet-stream","*/*"))},onDiagnostics,vm::openRename,{transfers.requestCopy(it.id)},{transfers.export(it.id)})}
         else{
             Row(Modifier.fillMaxWidth().heightIn(min=58.dp).padding(horizontal=12.dp),verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(8.dp)){
                 TextButton(onClick=vm::back,modifier=Modifier.testTag("back-library")){Glyph("back");Spacer(Modifier.width(5.dp));Text("资料库",fontSize=13.sp)}
@@ -107,6 +104,7 @@ fun NotebookApp(vm:NotebookViewModel=viewModel(),onDiagnostics:()->Unit={}){
     },confirmButton={Button(onClick={focus.clearFocus(force=true);keyboard?.hide();workspace.create(newTitle.ifBlank{"未命名笔记"},newWorld,newPaper,newCover){vm.select(it)};showCreate=false},enabled=!busy,modifier=Modifier.testTag("create-note")){Text("创建")}},dismissButton={TextButton(onClick={showCreate=false},enabled=!busy){Text("取消")}})
     if(confirmExport)AlertDialog(onDismissRequest={confirmExport=false},title={Text("导出文字")},text={Text("明文文字副本，不包含手写、封面、历史或回执。所选位置可能由云盘提供方管理。")},confirmButton={TextButton(onClick={confirmExport=false;ui.current?.let{exportText=it.title+"\n\n"+it.text;textExport.launch("墨织笔记.txt")}}){Text("选择位置")}},dismissButton={TextButton(onClick={confirmExport=false}){Text("取消")}})
     rename?.let{RenameNoteDialog(it,vm::editRename,vm::saveRename,vm::closeRename)}
+    LibraryTransferDialog(transfers,{pageImport.launch(arrayOf("application/octet-stream","*/*"))},vm::select)
 }
 
 @Composable

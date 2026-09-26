@@ -41,6 +41,9 @@ class WorkspaceViewModel(app:Application):AndroidViewModel(app){
     fun organize(row:WorkspaceRow,folder:String=row.folder,tags:String=row.tags,favorite:Boolean=row.favorite,trash:Boolean=row.trashedAt!=null){
         viewModelScope.launch{try{if(!withContext(Dispatchers.IO){repo.organize(row.noteId,row.revision,folder,tags,favorite,trash)})failure.value="分类已被其他操作修改，请检查最新状态后重试。"}catch(c:CancellationException){throw c}catch(_:Exception){failure.value="未能确认分类操作，请检查当前状态。笔记内容没有被删除。"}}
     }
+    fun pin(row:WorkspaceRow,pinned:Boolean){
+        viewModelScope.launch{try{if(!withContext(Dispatchers.IO){repo.setPinned(row.noteId,row.revision,pinned)})failure.value="置顶设置已有变化，请检查最新状态。"}catch(c:CancellationException){throw c}catch(_:Exception){failure.value="置顶结果待核对；请检查列表，重复保存同一状态不会反转。"}}
+    }
     fun paper(id:String,style:PaperStyle){viewModelScope.launch{try{withContext(Dispatchers.IO){repo.changePaper(id,style)}}catch(c:CancellationException){throw c}catch(_:Exception){failure.value="未能保存纸张设置"}}}
     fun viewport(id:String,v:CanvasViewport){
         liveViews[id]=v;val token=(viewGeneration[id]?:0)+1;viewGeneration[id]=token
