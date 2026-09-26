@@ -31,3 +31,8 @@ PR 后续提交仅在**上一个准确 head 已通过该工作流且仍是祖先
 仍需验证当前版本保存／重开、笔迹身份、取消、备份和导出完整性；允许格式变化不意味着允许当前版本静默丢数据。
 
 参考：[GitHub 缓存规则](https://docs.github.com/en/actions/reference/workflows-and-actions/dependency-caching)、[Gradle setup action](https://github.com/gradle/actions/blob/main/docs/setup-gradle.md)。实际耗时以每次 Actions 运行记录为准，不承诺固定提速倍数。
+
+
+## 首次实际运行
+
+[16929b0 整合验证](https://github.com/InkWeftDevs/InkWeft/actions/runs/36245903203)全部通过：核心 205、数据库 129、界面 60 项；数据库和界面各执行一次并保存同次截图。该次冷构建作业耗时 737 秒（含 SDK、模拟器和缓存保存）。它用于验证流程改动，不代表小改动的固定耗时；后续文档变更应不进入 Android 构建。
