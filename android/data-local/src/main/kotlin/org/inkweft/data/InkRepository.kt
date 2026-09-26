@@ -124,6 +124,7 @@ class InkRepository(private val db:NoteDatabase,private val fault:(InkFaultPoint
     }
     internal suspend fun populateImportedPage(id:String,file:InkPageFile){
         check(db.ink().page(id)==null);db.pages().paper(id,file.paper.ordinal)
+        PageObjectRepository(db).import(id,file.objects)
         dao.insertPage(InkPageRow(id,file.strokes.size.toLong()))
         file.strokes.forEachIndexed{index,old->val s=InkStroke(UUID.randomUUID().toString(),old.pen,old.color,old.width,old.tool,old.samples,old.world,old.cuts);dao.insertStroke(InkStrokeRow(s.id,id,InkStrokeCodec.encode(s),s.samples.size,true,index.toLong()+1))}
     }

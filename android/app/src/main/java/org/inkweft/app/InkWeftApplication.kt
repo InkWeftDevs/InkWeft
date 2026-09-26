@@ -12,6 +12,7 @@ class InkWeftApplication:Application(){
     val diagnostics by lazy{AppDiagnostics(this)}
     private val database by lazy{NoteDatabase.open(this)}
     val repository by lazy{NoteRepository(database)}
+    val pageObjects by lazy{PageObjectRepository(database)}
     val inkRepository by lazy{InkRepository(database)}
     val workspaceRepository by lazy{WorkspaceRepository(database)}
     val pages by lazy{NotebookPages(database)}

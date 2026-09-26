@@ -10,14 +10,14 @@ import java.nio.ByteBuffer
 
 internal object CoverImages {
     /** Decode at cover resolution, honour EXIF, flatten alpha, omit original metadata. */
-    fun read(context:Context,uri:Uri):ByteArray {
+    fun read(context:Context,uri:Uri,maxBytes:Int=CustomCoverCodec.MAX_IMAGE):ByteArray {
         val bytes=requireNotNull(context.contentResolver.openInputStream(uri)).use{input->
             val out=ByteArrayOutputStream();val buffer=ByteArray(8192)
             while(true){val n=input.read(buffer);if(n<0)break;require(out.size()+n<=20*1024*1024){"图片超过 20 MB，请先缩小。"};out.write(buffer,0,n)};out.toByteArray()
         }
-        return normalize(bytes)
+        return normalize(bytes,maxBytes)
     }
-    fun normalize(bytes:ByteArray):ByteArray{
+    fun normalize(bytes:ByteArray,maxBytes:Int=CustomCoverCodec.MAX_IMAGE):ByteArray{
         require(bytes.isNotEmpty()&&bytes.size<=20*1024*1024)
         val bitmap=ImageDecoder.decodeBitmap(ImageDecoder.createSource(ByteBuffer.wrap(bytes))){decoder,info,_->
             require(info.mimeType in listOf("image/jpeg","image/png","image/webp","image/heif","image/heic")){"请选择 JPG、PNG、WebP 或 HEIF 静态图片。"}
@@ -32,7 +32,7 @@ internal object CoverImages {
                 Canvas(flattened).apply{drawColor(Color.WHITE);drawBitmap(bitmap,0f,0f,null)}
                 for(quality in listOf(88,75,60,45,30)){
                     val out=ByteArrayOutputStream();check(flattened.compress(Bitmap.CompressFormat.JPEG,quality,out))
-                    if(out.size()<=CustomCoverCodec.MAX_IMAGE)return out.toByteArray()
+                    if(out.size()<=maxBytes)return out.toByteArray()
                 }
                 error("图片细节过多，请裁剪后重试。")
             }finally{flattened.recycle()}

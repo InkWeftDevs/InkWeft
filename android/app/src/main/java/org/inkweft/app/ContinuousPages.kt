@@ -49,6 +49,8 @@ internal data class ContinuousTools(val pen:InkPen,val color:Int,val width:Float
         items(pages,key={it.id}){page->
             val model:InkViewModel=viewModel(key="ink-${page.id}",factory=InkViewModel.Factory(page.id,app.inkRepository))
             val ui by model.ui.collectAsStateWithLifecycle()
+            val objectModel:PageObjectViewModel=viewModel(key="objects-${page.id}",factory=PageObjectViewModel.Factory(page.id,app.pageObjects))
+            val objectUi by objectModel.ui.collectAsStateWithLifecycle()
             SideEffect{models[page.id]=model}
             Column(Modifier.widthIn(max=760.dp).fillMaxWidth().padding(horizontal=16.dp)){
                 Text("第 ${page.position+1} 页 · "+PaperTemplates.title(PaperStyle.entries[page.paper]),fontSize=11.sp,color=Quiet,modifier=Modifier.padding(bottom=6.dp))
@@ -61,9 +63,10 @@ internal data class ContinuousTools(val pen:InkPen,val color:Int,val width:Float
                         v.onStroke=model::accept;v.onErase=model::erasePath
                         v.onGesture={active->if(active){gestureOwner=page.id;reported=page.id;latestSelect(page.id)}else if(gestureOwner==page.id)gestureOwner=null;onGesture(active)}
                         v.onAxes=app.diagnostics::inputAxes;v.onNotice=onNotice
-                        v.showStrokes(ui.strokes)
+                        v.showStrokes(ui.strokes);v.showObjects(objectUi.objects)
                     },modifier=Modifier.fillMaxSize().testTag("continuous-ink-${page.position+1}"))
                     if(ui.loading)CircularProgressIndicator(Modifier.align(Alignment.Center))
+                    if(objectUi.error!=null)TextButton(onClick=objectModel::reload,modifier=Modifier.align(Alignment.BottomCenter)){Text("对象读取失败，重试")}
                     if(ui.readFailed)TextButton(onClick=model::load,modifier=Modifier.align(Alignment.Center)){Text("读取失败，重试此页")}
                 }
                 if(ui.blocked!=null)TextButton(onClick={onRepair(page.id)},enabled=!writing){Text("此页保存待核对 · 打开处理",fontSize=12.sp,color=Color(0xff984c24))}

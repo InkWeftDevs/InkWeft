@@ -47,7 +47,7 @@ class LibraryContentRepository(private val db:NoteDatabase,
             pages.forEachIndexed { index,page ->
                 val state=InkRepository(db).read(page.id)
                 val visible=InkSession(state).visibleDraft()
-                val copy=InkPageFile(title,"",visible,page.world,PaperStyle.entries[page.paper])
+                val copy=InkPageFile(title,"",visible,page.world,PaperStyle.entries[page.paper],PageObjectRepository(db).read(page.id).objects)
                 encodedBytes+=copy.encode().size
                 require(encodedBytes<NotebookFile.MAX_BYTES-500_000){"COPY_SIZE_LIMIT"}
                 val pageId=if(index==0)target.id else UUID.randomUUID().toString()
@@ -103,7 +103,7 @@ class LibraryContentRepository(private val db:NoteDatabase,
         if(metadata.world){
             val p=rows.single()
             val file=InkPageFile(note.title,note.text,InkSession(InkRepository(db).read(p.id)).visibleDraft(),
-                true,PaperStyle.entries[p.paper])
+                true,PaperStyle.entries[p.paper],PageObjectRepository(db).read(p.id).objects)
             ContentExport(note.title,"iwpage",file.encode())
         }else ContentExport(note.title,"iwbook",NotebookPages(db).exportBook(notebookId).encode())
     }
@@ -124,6 +124,7 @@ class LibraryContentRepository(private val db:NoteDatabase,
     }
     private suspend fun populate(pageId:String,page:InkPageFile){
         require(db.ink().page(pageId)==null)
+        PageObjectRepository(db).import(pageId,page.objects)
         val cuts=mutableMapOf<String,String>()
         db.ink().insertPage(InkPageRow(pageId,page.strokes.size.toLong()))
         page.strokes.forEachIndexed{index,old->

@@ -48,6 +48,12 @@ class InkCanvasView(context:Context):View(context){
     private var configured=false
     private var restored=false
     private var viewport=CanvasViewport()
+    private var objects=emptyList<PageObject>()
+    private var objectDraft:PageObject?=null
+    private val objectPainter=PageObjectPainter()
+    fun showObjects(next:List<PageObject>){if(objects==next)return;objects=next;if(preview&&world&&width>0&&height>0)fitContent(false);invalidate()}
+    fun previewObject(value:PageObject?){objectDraft=value;invalidate()}
+    private fun drawnObjects()=objects.map{if(it.id==objectDraft?.id)objectDraft!! else it}
     private var content=emptyList<InkStroke>()
     private val bounds=mutableMapOf<String,CanvasBounds>()
     private val meshes=object:LinkedHashMap<String,Stroke>(128,.75f,true){override fun removeEldestEntry(eldest:MutableMap.MutableEntry<String,Stroke>?)=size>128}
@@ -110,7 +116,7 @@ class InkCanvasView(context:Context):View(context){
     fun fitPage(publish:Boolean=true){cancelGesture();viewport=CanvasViewport.fit(CanvasBounds(0.0,0.0,1000.0,1414.0),width/density,height/density);transform();invalidate();if(publish)onViewport(viewport)}
     fun fitWidth(){cancelGesture();viewport=CanvasViewport.pageWidth(width/density,height/density);transform();invalidate();onViewport(viewport)}
     fun origin(){cancelGesture();viewport=if(world)CanvasViewport(0.0,0.0,.8)else CanvasViewport.pageWidth(width/density,height/density);transform();invalidate();onViewport(viewport)}
-    fun fitContent(publish:Boolean=true){cancelGesture();if(content.isEmpty()){if(world)viewport=CanvasViewport(0.0,0.0,.8)else fitPage(false)}else viewport=CanvasViewport.fit(bounds.values.reduce{a,b->a.union(b)}.padded(40.0),width/density,height/density);transform();invalidate();if(publish)onViewport(viewport)}
+    fun fitContent(publish:Boolean=true){cancelGesture();val allBounds=bounds.values+objects.map{it.bounds()};if(allBounds.isEmpty()){if(world)viewport=CanvasViewport(0.0,0.0,.8)else fitPage(false)}else viewport=CanvasViewport.fit(allBounds.reduce{a,b->a.union(b)}.padded(40.0),width/density,height/density);transform();invalidate();if(publish)onViewport(viewport)}
     fun zoomBy(ratio:Double){cancelGesture();viewport=viewport.zoomAt(ratio,width/2.0,height/2.0,width.toDouble(),height.toDouble(),density);transform();invalidate();onViewport(viewport)}
     override fun onSizeChanged(w:Int,h:Int,oldw:Int,oldh:Int){cancelGesture();if(configured&&oldw==0&&!restored)initialFit();if(embeddedPage&&configured)fitPage(false);if(preview)if(world)fitContent(false)else fitPage(false);transform()}
     override fun draw(c:Canvas){val save=c.save();try{c.clipRect(0,0,width,height);super.draw(c)}finally{c.restoreToCount(save)}}
@@ -132,6 +138,7 @@ class InkCanvasView(context:Context):View(context){
         val visible=viewport.visible(width.toDouble(),height.toDouble(),density);val save=canvas.save();canvas.concat(matrix)
         if(!world){paint.style=Paint.Style.FILL;paint.color=Color.WHITE;canvas.drawRect(0f,0f,1000f,1414f,paint);canvas.clipRect(0f,0f,1000f,1414f)}
         drawGuide(canvas,visible)
+        objectPainter.draw(canvas,drawnObjects(),false,visible)
         val activeMask=if(inputId!=-1&&gestureErase&&!gestureWhole&&raw.isNotEmpty())sweptPath(raw.map{EraserPoint(it.x,it.y)},gestureRadius)else null
         for(s in content){
             if(bounds[s.id]?.intersects(visible)!=true)continue
@@ -141,6 +148,7 @@ class InkCanvasView(context:Context):View(context){
         }
         transient.values.forEach{renderer.draw(canvas,it,matrix)}
         if(inputId!=-1&&!gestureErase&&raw.isNotEmpty()){live.updateShape();renderer.draw(canvas,live,matrix)}
+        objectPainter.draw(canvas,drawnObjects(),true,visible)
         canvas.restoreToCount(save)
         // Draw cursor in screen space, outside the paper clip. Its diameter is
         // identical to the preview and does not vary with zoom or pen pressure.
@@ -206,6 +214,6 @@ class InkCanvasView(context:Context):View(context){
     }
     private fun finishViewport(){if(movingViewport){movingViewport=false;onViewport(viewport)}}
     fun cancelGesture(){val active=inputId!=-1;inputId=-1;raw.clear();gestureErase=false;cursor=null;parent?.requestDisallowInterceptTouchEvent(false);if(active)onGesture(false);invalidate()}
-    override fun onDetachedFromWindow(){cancelGesture();if(configured&&!preview)onViewport(viewport);super.onDetachedFromWindow()}
+    override fun onDetachedFromWindow(){objectPainter.clear();cancelGesture();if(configured&&!preview)onViewport(viewport);super.onDetachedFromWindow()}
     override fun performClick():Boolean{super.performClick();return true}
 }

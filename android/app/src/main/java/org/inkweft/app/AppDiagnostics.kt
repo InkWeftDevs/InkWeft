@@ -33,6 +33,9 @@ class AppDiagnostics(private val context: Context) {
     @Volatile private var historyStatus = "LOADING"
     @Volatile private var journalStatus = "NOT_WRITTEN"
     private var notebookState: List<Long> = emptyList()
+    private var objectState: List<Long> = emptyList()
+    private var objectResult = DiagnosticResult.NOT_AVAILABLE
+    private var objectObservedAt = 0L
     private var inkState: List<Long> = emptyList()
     private var notebookResult = DiagnosticResult.NOT_AVAILABLE
     private var inkResult = DiagnosticResult.NOT_AVAILABLE
@@ -80,6 +83,10 @@ class AppDiagnostics(private val context: Context) {
             event(DiagnosticCode.INK_UI, result, visible.toLong(), queued.toLong())
         }
     }
+    @Synchronized fun pageObjects(loading:Boolean,busy:Boolean,pending:Boolean,count:Int,result:DiagnosticResult) {
+        val values=listOf(if(loading)1L else 0L,if(busy)1L else 0L,if(pending)1L else 0L,count.toLong())
+        if(values!=objectState||result!=objectResult){objectState=values;objectResult=result;objectObservedAt=System.currentTimeMillis();event(DiagnosticCode.PAGE_OBJECT_UI,result,count.toLong(),if(pending)1 else 0)}
+    }
     @Synchronized fun inputAxes(pressure: Boolean, tilt: Boolean) {
         val value = pressure to tilt
         if (value != axes) { axes = value; event(DiagnosticCode.INPUT_AXES, count = if (pressure) 1 else 0, auxiliary = if (tilt) 1 else 0) }
@@ -97,6 +104,8 @@ class AppDiagnostics(private val context: Context) {
         initialized.await(); fileMutex.withLock { log.clear(); persist() }
     }
     @Synchronized private fun observations() = JSONObject().apply {
+        put("page_objects_status",objectResult.name);put("page_objects_utc_ms",objectObservedAt)
+        put("page_objects_counts_fields",JSONArray(listOf("loading","busy","pending","objects")));put("page_objects_counts",JSONArray(objectState))
         put("scope", "LATEST_UI_OBSERVATIONS_NOT_TRANSACTION_AUDIT")
         put("notebook_status", notebookResult.name); put("notebook_utc_ms", notebookObservedAt)
         put("notebook_counts_fields", JSONArray(listOf("loading", "read_failed", "visible_notes", "drafts", "dirty_drafts")))
@@ -134,7 +143,9 @@ class AppDiagnostics(private val context: Context) {
                 put("font_scale", context.resources.configuration.fontScale.toDouble()); put("orientation", context.resources.configuration.orientation)
             })
             put("resources_snapshot", JSONObject().apply {
-                put("scope", "POINT_IN_TIME_NOT_THERMAL_OR_POWER_BENCHMARK")
+                put("page_objects_status",objectResult.name);put("page_objects_utc_ms",objectObservedAt)
+        put("page_objects_counts_fields",JSONArray(listOf("loading","busy","pending","objects")));put("page_objects_counts",JSONArray(objectState))
+        put("scope", "POINT_IN_TIME_NOT_THERMAL_OR_POWER_BENCHMARK")
                 put("pss_kib", optional { Debug.getPss() }); put("native_heap_allocated_bytes", optional { Debug.getNativeHeapAllocatedSize() })
                 put("java_used_bytes", Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory())
                 put("app_volume_available_bytes", optional { context.filesDir.usableSpace })

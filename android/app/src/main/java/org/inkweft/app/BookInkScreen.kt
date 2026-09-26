@@ -189,17 +189,18 @@ fun InkScreen(note:NoteDraft,workspace:WorkspaceViewModel=viewModel(),onBack:()-
             if(canNavigate&&!ui.busy&&!ui.insertionUnknown&&!ui.actionUnknown)vm.insert(where,id,paper,count,open,order)
         }
     }
-    if(confirmBook)AlertDialog(onDismissRequest={confirmBook=false},title={Text("导出整本内容副本")},text={Text("包括本笔记所有可用页面、局部擦除效果和已保存键入文字；不含页面回收区。明文 .iwbook，不含摘要卡/脑图、撤销历史、账号或密钥；不是完整资料库备份。目标可能由云盘提供。")},confirmButton={TextButton(onClick={confirmBook=false;exporting=true;scope.launch{try{val bytes=withContext(Dispatchers.IO){app.pages.exportBook(note.base.id).encode()};exportBytes=bytes;export.launch("墨织笔记本.iwbook")}catch(c:CancellationException){throw c}catch(_:Exception){Toast.makeText(context,"无法导出整本内容，原数据保留；可尝试逐页导出",Toast.LENGTH_LONG).show()}finally{exporting=false}}}){Text("选择位置")}},dismissButton={TextButton(onClick={confirmBook=false}){Text("取消")}})
+    if(confirmBook)AlertDialog(onDismissRequest={confirmBook=false},title={Text("导出整本内容副本")},text={Text("包括本笔记所有可用页面、图片、文本框、胶带状态、局部擦除效果和已保存键入文字；不含页面回收区。明文 .iwbook，不含摘要卡/脑图、撤销历史、账号或密钥；不是完整资料库备份。目标可能由云盘提供。")},confirmButton={TextButton(onClick={confirmBook=false;exporting=true;scope.launch{try{val bytes=withContext(Dispatchers.IO){app.pages.exportBook(note.base.id).encode()};exportBytes=bytes;export.launch("墨织笔记本.iwbook")}catch(c:CancellationException){throw c}catch(_:Exception){Toast.makeText(context,"无法导出整本内容，原数据保留；可尝试逐页导出",Toast.LENGTH_LONG).show()}finally{exporting=false}}}){Text("选择位置")}},dismissButton={TextButton(onClick={confirmBook=false}){Text("取消")}})
     searchTarget?.let{(id,revision)->PageSearchDialog(id,revision){searchTarget=null}}
 }
 @Composable
 internal fun PageThumb(page:NotebookPageRow){
     val app=LocalContext.current.applicationContext as InkWeftApplication
     val strokes by produceState<List<InkStroke>?>(null,page.id){value=withContext(Dispatchers.IO){runCatching{InkSession(app.inkRepository.read(page.id)).visibleDraft()}.getOrNull()}}
+    val objects by produceState<List<PageObject>>(emptyList(),page.id){value=withContext(Dispatchers.IO){runCatching{app.pageObjects.read(page.id).objects}.getOrDefault(emptyList())}}
     Box(Modifier.size(84.dp,110.dp)){
         val loaded=strokes
-        if(loaded==null||loaded.isEmpty())PaperThumbnail(false,PaperStyle.entries[page.paper])
-        else AndroidView(factory={InkCanvasView(it).apply{preview=true}},update={it.configure(false,PaperStyle.entries[page.paper],null);it.showStrokes(loaded)},modifier=Modifier.fillMaxSize())
+        if((loaded==null||loaded.isEmpty())&&objects.isEmpty())PaperThumbnail(false,PaperStyle.entries[page.paper])
+        else AndroidView(factory={InkCanvasView(it).apply{preview=true}},update={it.configure(false,PaperStyle.entries[page.paper],null);it.showStrokes(loaded.orEmpty());it.showObjects(objects)},modifier=Modifier.fillMaxSize())
     }
 }
 @Composable

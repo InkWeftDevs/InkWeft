@@ -56,7 +56,7 @@ class LibraryBackupRepository(private val context:Context,private val db:NoteDat
                     // Schema6 has no tombstone column; promote to live/default null.
                     val promoted=if(table==4&&row.size==SCHEMA[table].columns.size-1)row+listOf(null)else row
                     insert(sql,table,promoted)
-                },legacySchema=SCHEMA_V6,otherLegacySchemas=listOf(SCHEMA_V7,SCHEMA_V8,SCHEMA_V9)){ctx.ensureActive()}
+                },legacySchema=SCHEMA_V6,otherLegacySchemas=listOf(SCHEMA_V7,SCHEMA_V8,SCHEMA_V9,SCHEMA_V10)){ctx.ensureActive()}
             }
             validate(stage)
             val sql=stage.openHelper.writableDatabase
@@ -169,6 +169,8 @@ class LibraryBackupRepository(private val context:Context,private val db:NoteDat
                 CanvasViewport(p.centerX,p.centerY,if(p.zoom==0.0).7 else p.zoom)
                 require(p.createdAfterId==null||pages.any{it.id==p.createdAfterId})
                 val ink=InkRepository(stage).read(p.id);require(ink.revision>=0)
+                val objects=PageObjectRepository(stage).read(p.id).objects
+                PageObjectRepository.validateBounds(objects,p.world);PageObjectRepository.validateImages(objects)
                 stage.pages().search(p.id)?.let{s->require(s.inkRevision in 0..ink.revision&&s.text.length<=20_000&&s.method=="MANUAL")}
             }
         }
@@ -176,6 +178,8 @@ class LibraryBackupRepository(private val context:Context,private val db:NoteDat
         noRows("SELECT 1 FROM command_receipts r LEFT JOIN notes n ON n.id=r.noteId WHERE n.id IS NULL OR r.committedRevision<1 OR r.committedRevision>n.revision")
         noRows("SELECT 1 FROM ink_receipts r LEFT JOIN ink_pages p ON p.noteId=r.noteId WHERE p.noteId IS NULL OR r.committedRevision<1 OR r.committedRevision>p.revision")
         noRows("SELECT 1 FROM ink_strokes s LEFT JOIN ink_pages p ON p.noteId=s.noteId WHERE p.noteId IS NULL OR s.createdRevision<1 OR s.createdRevision>p.revision OR s.visible NOT IN (0,1)")
+        noRows("SELECT 1 FROM object_receipts r LEFT JOIN page_objects p ON r.pageId=p.pageId WHERE p.pageId IS NULL OR r.revision<1 OR r.revision>p.revision")
+        sql.query("SELECT commandId,digest FROM object_receipts").use{c->while(c.moveToNext()){UUID.fromString(c.getString(0));require(c.getString(1).matches(Regex("[0-9a-f]{64}")))}}
         noRows("SELECT 1 FROM ink_cuts s LEFT JOIN ink_pages p ON p.noteId=s.noteId WHERE p.noteId IS NULL OR s.createdRevision<1 OR s.createdRevision>p.revision OR s.visible NOT IN (0,1)")
         noRows("SELECT 1 FROM notebook_workspace WHERE world NOT IN (0,1) OR favorite NOT IN (0,1) OR pinned NOT IN (0,1)")
         for(t in listOf("command_receipts","ink_receipts","page_insert_receipts","library_content_receipts","page_edit_receipts")){
@@ -234,13 +238,16 @@ class LibraryBackupRepository(private val context:Context,private val db:NoteDat
             table("knowledge_records","id",col("id",'S'),col("notebookId",'S'),col("revision",'I'),col("payload",'B'),col("removed",'I')),
             table("knowledge_revisions","id,revision",col("id",'S'),col("revision",'I'),col("notebookId",'S'),col("payload",'B'),col("removed",'I')),
             table("knowledge_receipts","operationId",col("operationId",'S'),col("notebookId",'S'),col("digest",'S'),col("resultId",'S')),
-            table("notebook_covers","noteId",col("noteId",'S'),col("payload",'B'))
+            table("notebook_covers","noteId",col("noteId",'S'),col("payload",'B')),
+            table("page_objects","pageId",col("pageId",'S'),col("revision",'I'),col("payload",'B')),
+            table("object_receipts","commandId",col("commandId",'S'),col("pageId",'S'),col("digest",'S'),col("revision",'I'))
         )
+        val SCHEMA_V10=SCHEMA.take(22)
         val SCHEMA_V9=SCHEMA.take(21)
         val SCHEMA_V8=SCHEMA.take(18)
         val SCHEMA_V7=SCHEMA.take(13)
         val SCHEMA_V6=SCHEMA.take(12).mapIndexed{i,t->if(i==4)t.copy(columns=t.columns.dropLast(1))else t}
-        private val OWNERS=listOf("id","noteId","noteId","noteId","notebookId","@ink","@ink","@ink","@ink","@search","notebookId","noteId","notebookId","notebookId","@cards","@cards","notebookId","notebookId","notebookId","notebookId","notebookId","noteId")
+        private val OWNERS=listOf("id","noteId","noteId","noteId","notebookId","@ink","@ink","@ink","@ink","@search","notebookId","noteId","notebookId","notebookId","@cards","@cards","notebookId","notebookId","notebookId","notebookId","notebookId","noteId","@search","@search")
         private fun count(sql:SupportSQLiteDatabase,table:String)=sql.query("SELECT COUNT(*) FROM `$table`").use{it.moveToFirst();it.getLong(0)}
         private fun insert(sql:SupportSQLiteDatabase,table:Int,row:List<Any?>){
             val t=SCHEMA[table]

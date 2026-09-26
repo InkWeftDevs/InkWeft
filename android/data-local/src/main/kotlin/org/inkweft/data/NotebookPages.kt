@@ -77,7 +77,7 @@ class NotebookPages(private val db:NoteDatabase) {
         val n=checkNotNull(db.notes().note(notebookId));ensureFirst(notebookId)
         val pages=db.pages().list(notebookId)
         var bytes=0L
-        val copies=pages.map{p->InkPageFile(n.title,"",InkSession(InkRepository(db).read(p.id)).visibleDraft(),p.world,PaperStyle.entries[p.paper]).also{bytes+=it.encode().size;require(bytes<NotebookFile.MAX_BYTES-500_000)}}
+        val copies=pages.map{p->InkPageFile(n.title,"",InkSession(InkRepository(db).read(p.id)).visibleDraft(),p.world,PaperStyle.entries[p.paper],PageObjectRepository(db).read(p.id).objects).also{bytes+=it.encode().size;require(bytes<NotebookFile.MAX_BYTES-500_000)}}
         NotebookFile(n.title,n.text,copies)
     }
     suspend fun importBook(file:NotebookFile):Note=db.withTransaction {

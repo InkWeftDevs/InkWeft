@@ -9,7 +9,7 @@ import java.util.zip.ZipEntry
 import java.util.zip.ZipOutputStream
 
 /** Strict allow-list: never pass exception messages, note identifiers or text. */
-enum class DiagnosticCode { APP_START, ACTIVITY_START, ACTIVITY_STOP, NOTEBOOK_UI, INK_UI, INPUT_AXES, USER_MARK, EXPORT, HISTORY }
+enum class DiagnosticCode { APP_START, ACTIVITY_START, ACTIVITY_STOP, NOTEBOOK_UI, INK_UI, INPUT_AXES, USER_MARK, EXPORT, HISTORY, PAGE_OBJECT_UI }
 enum class DiagnosticResult { OBSERVED, LOADING, EDITING, SAVING, SAVED, UNKNOWN, CONFLICT, REJECTED, READ_FAILED, CANCELLED, OK, IO_FAILED, INVALID_DATA, NOT_AVAILABLE }
 data class DiagnosticEvent(val session: String, val wallMillis: Long, val elapsedMillis: Long,
     val code: DiagnosticCode, val result: DiagnosticResult, val count: Long = -1, val auxiliary: Long = -1) {

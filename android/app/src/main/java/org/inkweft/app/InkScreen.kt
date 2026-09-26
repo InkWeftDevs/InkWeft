@@ -30,6 +30,12 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
     val context=LocalContext.current;val app=context.applicationContext as InkWeftApplication
     val vm:InkViewModel=viewModel(key="ink-${page.id}",factory=InkViewModel.Factory(page.id,app.inkRepository))
     val ui by vm.ui.collectAsStateWithLifecycle()
+    val objectsVm:PageObjectViewModel=viewModel(key="objects-${page.id}",factory=PageObjectViewModel.Factory(page.id,app.pageObjects))
+    val objectsUi by objectsVm.ui.collectAsStateWithLifecycle()
+    var selectedObject by remember(page.id){mutableStateOf<String?>(null)}
+    var objectInteraction by remember{mutableStateOf(false)}
+    val objectsBlocked=objectsUi.loading||objectsUi.busy||objectsUi.pending||objectInteraction
+    SideEffect{app.diagnostics.pageObjects(objectsUi.loading,objectsUi.busy,objectsUi.pending,objectsUi.objects.size,when{objectsUi.loading->DiagnosticResult.LOADING;objectsUi.busy->DiagnosticResult.SAVING;objectsUi.pending->DiagnosticResult.UNKNOWN;objectsUi.error!=null->DiagnosticResult.REJECTED;else->DiagnosticResult.SAVED})}
     val row=WorkspaceRow(page.id,page.world,page.paper,centerX=page.centerX,centerY=page.centerY,zoom=page.zoom)
     val scope=rememberCoroutineScope()
     var showPaperPicker by remember { mutableStateOf(false) }
@@ -86,8 +92,8 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
             Toast.makeText(context,if(ok)"页面副本已写入所选位置"else"导出失败；原笔迹仍保留",Toast.LENGTH_LONG).show()
         }
     }
-    LaunchedEffect(continuousPages==null){if(continuousPages==null)continuousBlocked=false else if(tool==4)tool=0}
-    val busy=gesture||ui.processing
+    LaunchedEffect(continuousPages==null){if(continuousPages==null)continuousBlocked=false else if(tool>=4)tool=0}
+    val busy=gesture||ui.processing||objectsBlocked
     SideEffect{onCanNavigate(!busy&&!ui.loading&&!ui.readFailed&&ui.queued==0&&ui.blocked==null&&!continuousBlocked)}
     LaunchedEffect(ui.message){if(ui.message!=null){notice=ui.message;vm.clearMessage()}}
     fun savePreset(selected:Int,width:Float,color:Int,kind:InkPen){
@@ -107,13 +113,14 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
                 }}
                 IconButton(onClick={if(tool==3)eraserDialog=true else tool=3},enabled=!busy,modifier=Modifier.testTag("ink-tool-3").describedAs(if(eraser.whole)"整笔橡皮"else"局部橡皮")){Glyph("eraser",if(tool==3)Forest else Quiet)}
                 IconButton(onClick={if(continuousPages!=null)leaveContinuous();tool=4},enabled=!busy&&!continuousBlocked,modifier=Modifier.testTag("ink-select").describedAs("框选与套索")){Glyph("select",if(tool==4)Forest else Quiet)}
-                IconButton(onClick=vm::undo,enabled=ui.canUndo&&!busy,modifier=Modifier.testTag("ink-undo").describedAs("撤销")){Glyph("undo")}
-                if(!compact)IconButton(onClick=vm::redo,enabled=ui.canRedo&&!busy,modifier=Modifier.testTag("ink-redo").describedAs("重做")){Glyph("redo")}
+                IconButton(onClick={if(continuousPages!=null)leaveContinuous();tool=5},enabled=!busy&&!continuousBlocked,modifier=Modifier.testTag("page-objects").describedAs("图片、拍照、文本框与胶带")){Glyph("add",if(tool==5)Forest else Quiet)}
+                IconButton(onClick={if(tool==5)objectsVm.undo()else vm.undo()},enabled=(if(tool==5)objectsUi.undo else ui.canUndo)&&!busy,modifier=Modifier.testTag("ink-undo").describedAs("撤销")){Glyph("undo")}
+                if(!compact)IconButton(onClick={if(tool==5)objectsVm.redo()else vm.redo()},enabled=(if(tool==5)objectsUi.redo else ui.canRedo)&&!busy,modifier=Modifier.testTag("ink-redo").describedAs("重做")){Glyph("redo")}
                 Box{
                     IconButton(onClick={if(tool==3)eraserDialog=true else settings=true},enabled=!busy&&tool<4,modifier=Modifier.testTag("pen-width-open").describedAs("笔型、颜色与线宽")){Glyph("settings")}
                     if(tool<3)PenPresetMenu(settings,tool,widths[tool],colors[tool],kinds[tool],{settings=false}){width,color,kind->savePreset(tool,width,color,kind);settings=false}
                 }
-                if(!compact){Text(if(tool<3)PenWidthStore.name(tool,kinds[tool])+" · "+PenWidthStore.label(widths[tool])else if(tool==3)"橡皮"else"选择",fontSize=12.sp,color=Quiet);Spacer(Modifier.weight(1f))}
+                if(!compact){Text(if(tool<3)PenWidthStore.name(tool,kinds[tool])+" · "+PenWidthStore.label(widths[tool])else if(tool==3)"橡皮"else if(tool==5)"页内对象"else"选择",fontSize=12.sp,color=Quiet);Spacer(Modifier.weight(1f))}
                 Box{IconButton(onClick={more=true},enabled=!busy,modifier=Modifier.testTag("ink-more").describedAs("更多编辑选项")){Glyph("more")}
                     DropdownMenu(more,{more=false}){
                         if(compact){(0..2).forEach{i->DropdownMenuItem(text={Text(PenWidthStore.name(i,kinds[i]))},onClick={tool=i;more=false},modifier=Modifier.testTag("choose-pen-$i"))}
@@ -140,11 +147,12 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
             if(ui.blocked in listOf(InkCommitResult.Conflict,InkCommitResult.Rejected))TextButton(onClick={discard=true},enabled=!busy){Text("读取已保存页")}
             if(ui.readFailed&&ui.blocked==null)TextButton(onClick=vm::load){Text("重试")}
         }
+        PageObjectTools(objectsVm,objectsUi,page.id,page.world,tool==5,editable&&!gesture,selectedObject,{selectedObject=it},{objectInteraction=it},{view?.snapshotViewport()},{notice=it})
         if(tool==4)SelectionActions(selected,ui.strokes,editable,freehand,{freehand=it},::applySelected,{selected=null},onExcerpt,onAssociate)
         if(notice!=null)Row(Modifier.fillMaxWidth().background(Color(0xfffff5e5)).padding(start=16.dp),verticalAlignment=Alignment.CenterVertically){Text(notice!!,Modifier.weight(1f),fontSize=12.sp);IconButton(onClick={notice=null},modifier=Modifier.describedAs("关闭提示")){Glyph("close")}}
         if(continuousPages!=null){
             Box(Modifier.fillMaxWidth().weight(1f)){ContinuousPages(continuousPages,page.id,
-                ContinuousTools(kinds[tool.coerceIn(0,2)],colors[tool.coerceIn(0,2)],widths[tool.coerceIn(0,2)],tool==3,eraser.whole,eraser.onlyHighlighter,eraser.diameterDp,externalEnabled&&tool!=4),
+                ContinuousTools(kinds[tool.coerceIn(0,2)],colors[tool.coerceIn(0,2)],widths[tool.coerceIn(0,2)],tool==3,eraser.whole,eraser.onlyHighlighter,eraser.diameterDp,externalEnabled&&tool<4&&!objectsBlocked),
                 gesture,onContinuousPage,{gesture=it},{continuousBlocked=it},{notice=it},{id->onContinuousPage(id);leaveContinuous()})}
         }else if(row!=null){
             val initial=remember(page.id){workspace.cachedViewport(page.id)?:row.takeIf{it.zoom>0}?.let{runCatching{CanvasViewport(it.centerX,it.centerY,it.zoom)}.getOrNull()}}
@@ -156,10 +164,15 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
                 v.onViewport={workspace.viewport(page.id,it)};v.onScale={zoom=it}
             }},update={v->
                 v.configure(row.world,PaperStyle.entries.getOrElse(row.paper){PaperStyle.RULED},initial)
-                v.allowInput=externalEnabled&&tool!=4&&(if(tool==3)!ui.loading&&!ui.readFailed&&ui.blocked==null&&!ui.processing&&ui.queued<16 else ui.canStart);v.eraserWhole=eraser.whole;v.eraserHighlighterOnly=eraser.onlyHighlighter;v.eraserDiameterDp=eraser.diameterDp;v.fingerWrites=finger;v.eraseMode=tool==3;v.pen=kinds[tool.coerceIn(0,2)]
+                v.allowInput=externalEnabled&&tool<4&&!objectsBlocked&&(if(tool==3)!ui.loading&&!ui.readFailed&&ui.blocked==null&&!ui.processing&&ui.queued<16 else ui.canStart);v.eraserWhole=eraser.whole;v.eraserHighlighterOnly=eraser.onlyHighlighter;v.eraserDiameterDp=eraser.diameterDp;v.fingerWrites=finger;v.eraseMode=tool==3;v.pen=kinds[tool.coerceIn(0,2)]
                 v.penWidth=widths[tool.coerceAtMost(2)];v.penColor=colors[tool.coerceAtMost(2)]
-                v.showStrokes(ui.strokes)
+                v.showStrokes(ui.strokes);v.showObjects(objectsUi.objects)
             },modifier=Modifier.fillMaxSize().testTag("ink-surface"))
+            if(tool==5)AndroidView(factory={PageObjectOverlay(it)},update={v->
+                v.canvasView=view;v.objects=objectsUi.objects;v.selected=selectedObject;v.world=page.world
+                v.enabledInput=editable&&!objectsUi.loading&&!objectsUi.busy&&!objectsUi.pending&&!objectInteraction
+                v.onSelect={selectedObject=it};v.onChange=objectsVm::put;v.onActive={gesture=it};v.invalidate()
+            },modifier=Modifier.fillMaxSize().testTag("object-overlay"))
             if(tool==4)AndroidView(factory={SelectionOverlayView(it)},update={v->
                 v.canvasView=view;v.region=selected?.region;v.selected=selected?.strokes.orEmpty();v.freehand=freehand;v.enabledInput=editable
                 v.onActive={gesture=it};v.onRegion={region->selected=region?.let{SelectedInk(it,ui.revision,ui.strokes.filter{stroke->it.selects(stroke)})}}
@@ -184,6 +197,6 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
     }
     if(eraserDialog)EraserDialog(eraser,{eraserDialog=false}){next->eraser=next;eraserDialog=false;scope.launch{val saved=try{eraserStore.save(next)}catch(c:CancellationException){throw c}catch(_:Exception){false};if(!saved)notice="本次橡皮已应用，但设置未保存。"}}
     if(showPaperPicker)PaperPickerDialog(PaperStyle.entries.getOrElse(row.paper){PaperStyle.RULED},row.world,{showPaperPicker=false}){style->workspace.paper(row.noteId,style);showPaperPicker=false}
-    if(confirmExport)AlertDialog(onDismissRequest={confirmExport=false},title={Text("导出可编辑页面副本")},text={Text("包括可见笔迹、纸张/无界形式、纸面样式和当前文字（可能含未确认内容）。明文 .iwpage，不是整库备份，不包含隐藏笔迹、撤销历史、分类、视图位置和回执。所选位置可能属于云盘。")},confirmButton={TextButton(onClick={confirmExport=false;val r=row?:return@TextButton;exportPending=InkPageFile(note.title.ifBlank{"笔记"},note.text,ui.strokes,r.world,PaperStyle.entries.getOrElse(r.paper){PaperStyle.RULED});launcher.launch("墨织页面.iwpage")}){Text("选择保存位置")}},dismissButton={TextButton(onClick={confirmExport=false}){Text("取消")}})
+    if(confirmExport)AlertDialog(onDismissRequest={confirmExport=false},title={Text("导出可编辑页面副本")},text={Text("包括图片、文本框、胶带状态、可见笔迹、纸张/无界形式、纸面样式和当前文字（可能含未确认内容）。明文 .iwpage，不是整库备份，不包含隐藏笔迹、撤销历史、分类、视图位置和回执。所选位置可能属于云盘。")},confirmButton={TextButton(onClick={confirmExport=false;val r=row?:return@TextButton;exportPending=InkPageFile(note.title.ifBlank{"笔记"},note.text,ui.strokes,r.world,PaperStyle.entries.getOrElse(r.paper){PaperStyle.RULED},objectsUi.objects);launcher.launch("墨织页面.iwpage")}){Text("选择保存位置")}},dismissButton={TextButton(onClick={confirmExport=false}){Text("取消")}})
     if(discard)AlertDialog(onDismissRequest={discard=false},title={Text("放弃未确认笔迹？")},text={Text("只重新读取已保存内容。建议先导出副本，已保存笔迹不会删除。")},confirmButton={TextButton(onClick={discard=false;vm.discardRejectedDraft()}){Text("放弃草稿并读取")}},dismissButton={TextButton(onClick={discard=false}){Text("取消")}})
 }
