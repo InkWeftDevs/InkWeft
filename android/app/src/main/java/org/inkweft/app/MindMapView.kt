@@ -16,6 +16,7 @@ internal class MindMapView(context:Context):View(context){
     private var nodes=emptyList<StudyNodeRow>();private var titles=emptyMap<String,String>()
     private var relationEdges=emptyList<Pair<String,String>>()
     private var relationMode=false
+    private var hiddenCounts=emptyMap<String,Int>()
     private val paint=Paint(Paint.ANTI_ALIAS_FLAG)
     private var scale=.8f;private var tx=20f;private var ty=20f
     private var active:StudyNodeRow?=null;private var moving=false;private var multi=false
@@ -26,13 +27,14 @@ internal class MindMapView(context:Context):View(context){
         override fun onScale(s:ScaleGestureDetector):Boolean{val old=scale;scale=(scale*s.scaleFactor).coerceIn(.15f,2.5f);tx=s.focusX-(s.focusX-tx)*scale/old;ty=s.focusY-(s.focusY-ty)*scale/old;invalidate();return true}
     })
     init{contentDescription="可缩放思维导图，拖动节点移动；需要无障碍浏览时切换大纲视图。"}
-    fun show(items:List<StudyNodeRow>,cards:List<StudyCardRow>){
+    fun show(items:List<StudyNodeRow>,cards:List<StudyCardRow>,collapsed:Map<String,Int> = emptyMap()){
         relationMode=false;relationEdges=emptyList()
+        hiddenCounts=collapsed
         val oldEmpty=nodes.isEmpty();nodes=items.filter{!it.removed};titles=cards.associate{it.id to it.title}
         if(oldEmpty&&nodes.isNotEmpty()&&width>0)fit();invalidate()
     }
     fun showRelations(items:List<StudyNodeRow>,labels:Map<String,String>,edges:List<Pair<String,String>>){
-        val empty=nodes.isEmpty();nodes=items;relationMode=true;relationEdges=edges;titles=labels
+        val empty=nodes.isEmpty();nodes=items;relationMode=true;relationEdges=edges;titles=labels;hiddenCounts=emptyMap()
         if(empty&&nodes.isNotEmpty()&&width>0)fit();invalidate()
     }
     fun decorations(edges:List<Pair<String,String>>){relationEdges=edges;invalidate()}
@@ -66,7 +68,7 @@ internal class MindMapView(context:Context):View(context){
             val text=titles[if(relationMode)n.id else n.cardId].orEmpty().replace('\n',' ');val n1=paint.breakText(text,true,188f,null)
             c.drawText(text.take(n1),left+14,top+30,paint);val rest=text.drop(n1);val n2=paint.breakText(rest,true,176f,null)
             c.drawText(rest.take(n2)+(if(rest.length>n2)"…"else""),left+14,top+53,paint)
-            paint.typeface=Typeface.DEFAULT;paint.textSize=10f;paint.color=0xff637b70.toInt();c.drawText(if(relationMode)"点击聚焦 · 拖动不改关系"else"摘要卡 · 点击查看 / 拖动移动",left+14,top+73,paint)
+            paint.typeface=Typeface.DEFAULT;paint.textSize=10f;paint.color=0xff637b70.toInt();c.drawText(if(relationMode)"点击聚焦 · 拖动不改关系"else if((hiddenCounts[n.id]?:0)>0)"已收起 ${hiddenCounts[n.id]} 个下级 · 点击展开菜单"else"摘要卡 · 点击查看 / 拖动移动",left+14,top+73,paint)
         };c.restoreToCount(save)
     }
     override fun onTouchEvent(e:MotionEvent):Boolean{

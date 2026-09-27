@@ -9,6 +9,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
@@ -77,6 +79,18 @@ internal fun StudyWorkspace(note:NoteDraft,initialSource:StudySourceDraft?,dismi
     var pendingExport by remember{mutableStateOf<String?>(null)};var localMessage by remember{mutableStateOf<String?>(null)}
     var knowledgeCard by remember{mutableStateOf<StudyCardRow?>(null)}
     var reparent by remember{mutableStateOf<StudyNodeRow?>(null)}
+    var collapsed by rememberSaveable(note.base.id){mutableStateOf(arrayListOf<String>())}
+    var focusId by rememberSaveable(note.base.id){mutableStateOf<String?>(null)}
+    val active=ui.nodes.filter{!it.removed}
+    val nodeById=active.associateBy{it.id};val cardById=ui.cards.associateBy{it.id}
+    val projection=StudyOutline.project(active.map{it.model()},collapsed.toSet(),focusId)
+    val shown=projection.rows.mapNotNull{nodeById[it.node.id]}
+    val hiddenCounts=projection.rows.filter{it.node.id in collapsed}.associate{it.node.id to it.descendants}
+    val editable=!ui.loading&&!ui.busy&&!ui.unknown
+    fun toggleBranch(nodeId:String){collapsed=ArrayList(if(nodeId in collapsed)collapsed-nodeId else collapsed+nodeId)}
+    fun focusBranch(nodeId:String?){focus.clearFocus();focusId=nodeId}
+    LaunchedEffect(ui.loading,active.map{it.id}){if(!ui.loading&&focusId!=null&&focusId !in nodeById)focusId=null}
+    LaunchedEffect(map,tab,focusId,collapsed.toList()){if(tab==2)map?.let{v->v.post{v.fit()}}}
     LaunchedEffect(initialCardId,ui.loading){if(initialCardId!=null&&!ui.loading)chosenCard=ui.cards.find{it.id==initialCardId&&it.trashedAt==null}}
     val id={UUID.randomUUID().toString()}
     val export=rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("text/markdown")){uri->
@@ -85,21 +99,36 @@ internal fun StudyWorkspace(note:NoteDraft,initialSource:StudySourceDraft?,dismi
     LaunchedEffect(chosenCard?.id){source=null;stale=false;val card=chosenCard?:return@LaunchedEffect
         try{source=withContext(Dispatchers.IO){app.study.source(card.id)};source?.let{s->stale=withContext(Dispatchers.IO){app.pages.inkRevision(s.pageId)!=s.inkRevision}}}
         catch(c:CancellationException){throw c}catch(_:Exception){localMessage="来源快照读取失败，卡片文字仍保留。"}}
-    LaunchedEffect(ui.completed){if(ui.completed!=null){editor=null;chosenNode=null;chosenCard=null;reparent=null;vm.clear()}}
+    LaunchedEffect(ui.completed){if(ui.completed!=null){
+        editor?.takeIf{it.card==null}?.let{e->
+            e.parent?.id?.let{collapsed=ArrayList(collapsed-it)}
+            if(focusId!=null)focusId=e.parent?.id
+        }
+        editor=null;chosenNode=null;chosenCard=null;reparent=null;vm.clear()
+    }}
     fun openCard(card:StudyCardRow,node:StudyNodeRow?=null){focus.clearFocus();chosenNode=node;chosenCard=card}
     Dialog(onDismissRequest={if(!ui.busy&&!ui.unknown)dismiss()},properties=DialogProperties(usePlatformDefaultWidth=false)){
         Surface(Modifier.fillMaxWidth(.96f).fillMaxHeight(.95f),color=androidx.compose.ui.graphics.Color.White){Column(Modifier.fillMaxSize().padding(16.dp)){
             Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.spacedBy(8.dp)){
                 Text("学习工作台",fontSize=21.sp,fontWeight=FontWeight.SemiBold,modifier=Modifier.weight(1f))
                 TextButton(onClick={editor=CardEditor()},enabled=!ui.busy&&!ui.unknown,modifier=Modifier.testTag("study-add-card")){Text("＋ 新摘要卡")}
-                TextButton(onClick={pendingExport=StudyText.markdown(note.title,ui.cards.filter{it.trashedAt==null}.map{StudyTextCard(it.id,it.title,it.body)},ui.nodes.map{it.model()});export.launch("墨织摘要.md")},enabled=!ui.busy&&ui.cards.isNotEmpty()){Text("导出大纲与摘要")}
+                TextButton(onClick={pendingExport=StudyText.markdown(note.title,ui.cards.filter{it.trashedAt==null}.map{StudyTextCard(it.id,it.title,it.body)},ui.nodes.map{it.model()});export.launch("墨织摘要.md")},enabled=!ui.busy&&ui.cards.isNotEmpty()){Text("导出完整大纲")}
                 TextButton(onClick=dismiss,enabled=!ui.busy&&!ui.unknown,modifier=Modifier.testTag("study-close")){Text("返回笔记")}
+            }
+            if(tab!=0){
+                Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),verticalAlignment=Alignment.CenterVertically){
+                    TextButton(onClick={focusBranch(null)},enabled=focusId!=null,modifier=Modifier.testTag("study-focus-all")){Text("全部主题")}
+                    projection.path.forEach{n->Text("›",color=Quiet);TextButton(onClick={focusBranch(n.id)},modifier=Modifier.testTag("study-breadcrumb-${n.id}")){Text(cardById[n.cardId]?.title.orEmpty(),maxLines=1)}}
+                    Text("${shown.size} / ${active.size} 个主题",fontSize=12.sp,color=Quiet)
+                    TextButton(onClick={collapsed=arrayListOf()},enabled=collapsed.isNotEmpty(),modifier=Modifier.testTag("study-expand-all")){Text("展开全部")}
+                    TextButton(onClick={collapsed=ArrayList(active.mapNotNull{it.parentId}.distinct())},enabled=active.any{it.parentId!=null},modifier=Modifier.testTag("study-collapse-all")){Text("收起分支")}
+                }
             }
             Row(horizontalArrangement=Arrangement.spacedBy(8.dp)){
                 listOf("摘要卡","大纲","思维导图").forEachIndexed{i,label->FilterChip(selected=tab==i,onClick={focus.clearFocus();tab=i},label={Text(label)},modifier=Modifier.testTag("study-tab-$i"))}
                 if(tab==0)FilterChip(selected=showTrash,onClick={showTrash=!showTrash},label={Text("卡片回收区")})
-                if(tab==2){TextButton(onClick={map?.fit()}){Text("适配全部")};TextButton(onClick={map?.zoom(1.2f)}){Text("＋")};TextButton(onClick={map?.zoom(1/1.2f)}){Text("−")}
-                    TextButton(onClick={vm.submit(StudyCommand(id(),note.base.id,StudyAction.ARRANGE,expectedGraph=StudyGraph.orderHash(ui.nodes.map{it.model()})))},enabled=!ui.busy&&!ui.unknown&&!dragging,modifier=Modifier.testTag("study-arrange")){Text("自动排布")}}
+                if(tab==2){TextButton(onClick={map?.fit()}){Text("适配当前")};TextButton(onClick={map?.zoom(1.2f)}){Text("＋")};TextButton(onClick={map?.zoom(1/1.2f)}){Text("−")}
+                    TextButton(onClick={vm.submit(StudyCommand(id(),note.base.id,StudyAction.ARRANGE,expectedGraph=StudyGraph.orderHash(ui.nodes.map{it.model()})))},enabled=!ui.busy&&!ui.unknown&&!dragging,modifier=Modifier.testTag("study-arrange")){Text("排布全部主题")}}
             }
             val msg=ui.message?:localMessage
             if(msg!=null)Text(msg,fontSize=12.sp,color=Forest,modifier=Modifier.testTag("study-message"))
@@ -107,15 +136,26 @@ internal fun StudyWorkspace(note:NoteDraft,initialSource:StudySourceDraft?,dismi
             if(ui.loading||ui.busy)LinearProgressIndicator(Modifier.fillMaxWidth())
             if(tab==0)OutlinedTextField(query,{query=it},singleLine=true,label={Text("搜索摘要标题或正文")},
                 trailingIcon={if(query.isNotEmpty())TextButton(onClick={query=""}){Text("清除")}},modifier=Modifier.fillMaxWidth().testTag("study-search"))
-            val cards=ui.cards.filter{(it.trashedAt!=null)==showTrash&&StudyText.matches(StudyTextCard(it.id,it.title,it.body),query)};val active=ui.nodes.filter{!it.removed};val cardById=ui.cards.associateBy{it.id}
-            if(tab==2)AndroidView(factory={MindMapView(it).also{v->map=v}},update={v->v.enabledInput=!ui.busy&&!ui.unknown;v.show(active,ui.cards);v.onActive={dragging=it};v.onOpen={n->cardById[n.cardId]?.let{openCard(it,n)}};v.onMove={n,x,y->if(!ui.busy&&!ui.unknown)vm.submit(StudyCommand(id(),note.base.id,StudyAction.MOVE,nodeId=n.id,expectedRevision=n.revision,x=x,y=y))}},modifier=Modifier.fillMaxWidth().weight(1f).testTag("study-map"))
+            val cards=ui.cards.filter{(it.trashedAt!=null)==showTrash&&StudyText.matches(StudyTextCard(it.id,it.title,it.body),query)}
+            if(tab==2)AndroidView(factory={MindMapView(it).also{v->map=v}},update={v->v.enabledInput=editable;v.show(shown,ui.cards,hiddenCounts);v.onActive={dragging=it};v.onOpen={n->cardById[n.cardId]?.let{openCard(it,n)}};v.onMove={n,x,y->if(editable)vm.submit(StudyCommand(id(),note.base.id,StudyAction.MOVE,nodeId=n.id,expectedRevision=n.revision,x=x,y=y))}},modifier=Modifier.fillMaxWidth().weight(1f).testTag("study-map"))
             else LazyColumn(Modifier.fillMaxWidth().weight(1f),verticalArrangement=Arrangement.spacedBy(10.dp),contentPadding=PaddingValues(vertical=12.dp)){
                 if(tab==0){items(cards,key={it.id}){card->OutlinedCard(onClick={openCard(card)},modifier=Modifier.fillMaxWidth().testTag("study-card-${card.id}")){
                     Column(Modifier.padding(16.dp)){Text(card.title,fontWeight=FontWeight.SemiBold);if(card.body.isNotBlank())Text(card.body,maxLines=4,fontSize=14.sp,modifier=Modifier.padding(top=8.dp));Text("摘要卡 · ${active.count{it.cardId==card.id}+extraOccurrences(card.id)} 个展示位置",fontSize=11.sp,color=Quiet)}}}
                     if(cards.isEmpty())item{Text(if(query.isNotBlank())"没有匹配的摘要卡"else if(showTrash)"卡片回收区为空"else"框选手写摘录，或新建摘要卡。摘要由你填写，不会自动发送到云端。",color=Quiet)}}
-                else{val ordered=outline(active);items(ordered,key={it.first.id}){(node,depth)->val card=cardById[node.cardId]
+                else{items(projection.rows,key={it.node.id}){row->val node=nodeById.getValue(row.node.id);val depth=row.depth;val card=cardById[node.cardId]
                     if(card!=null)OutlinedCard(onClick={openCard(card,node)},modifier=Modifier.fillMaxWidth().padding(start=(depth.coerceAtMost(10)*20).dp).testTag("outline-node-${node.id}")){
-                        Column(Modifier.padding(12.dp)){Text(card.title,fontWeight=FontWeight.Medium);if(card.body.isNotBlank())Text(card.body,maxLines=2,fontSize=12.sp,color=Quiet)}}
+                        Column(Modifier.padding(12.dp)){
+                            Row(verticalAlignment=Alignment.CenterVertically){
+                                if(row.descendants>0)TextButton(onClick={toggleBranch(node.id)},modifier=Modifier.testTag("outline-fold-${node.id}")){Text(if(node.id in collapsed)"展开 ${row.descendants}"else"收起")}
+                                Text(card.title,fontWeight=FontWeight.Medium,modifier=Modifier.weight(1f))
+                            }
+                            if(card.body.isNotBlank())Text(card.body,maxLines=2,fontSize=12.sp,color=Quiet)
+                            Row(Modifier.horizontalScroll(rememberScrollState())){
+                                TextButton(onClick={editor=CardEditor(parent=node)},enabled=editable,modifier=Modifier.testTag("outline-child-${node.id}")){Text("＋ 子主题")}
+                                TextButton(onClick={editor=CardEditor(parent=nodeById[node.parentId])},enabled=editable,modifier=Modifier.testTag("outline-sibling-${node.id}")){Text("＋ 同级")}
+                                TextButton(onClick={focusBranch(node.id)},modifier=Modifier.testTag("outline-focus-${node.id}")){Text("聚焦")}
+                            }
+                        }}
                 };if(active.isEmpty())item{Text("大纲与脑图使用同一组节点和摘要卡，不另存一份正文。",color=Quiet)}}
             }
         }}
@@ -146,7 +186,10 @@ internal fun StudyWorkspace(note:NoteDraft,initialSource:StudySourceDraft?,dismi
                 TextButton(onClick={editor=CardEditor(card);chosenCard=null},modifier=Modifier.testTag("study-edit-card")){Text("编辑内容（全部引用同步）")}
                 TextButton(onClick={vm.submit(StudyCommand(id(),note.base.id,StudyAction.REUSE,cardId=card.id,nodeId=id(),y=ui.nodes.count{!it.removed}*128.0+80))},modifier=Modifier.testTag("study-reuse-card")){Text("复用到脑图新位置")}
                 if(node!=null){
+                    TextButton(onClick={focusBranch(node.id);chosenCard=null;chosenNode=null},modifier=Modifier.testTag("study-focus-branch")){Text("聚焦此分支")}
+                    if(active.any{it.parentId==node.id})TextButton(onClick={toggleBranch(node.id);chosenCard=null;chosenNode=null},modifier=Modifier.testTag("study-toggle-branch")){Text(if(node.id in collapsed)"展开下级主题"else"收起下级主题")}
                     TextButton(onClick={editor=CardEditor(parent=node);chosenCard=null},modifier=Modifier.testTag("study-add-child")){Text("添加子主题")}
+                    TextButton(onClick={editor=CardEditor(parent=nodeById[node.parentId]);chosenCard=null},modifier=Modifier.testTag("study-add-sibling")){Text("添加同级主题")}
                     TextButton(onClick={reparent=node;chosenCard=null}){Text("修改上级主题")}
                     TextButton(onClick={vm.submit(StudyCommand(id(),note.base.id,StudyAction.REMOVE_NODE,nodeId=node.id,expectedRevision=node.revision))},modifier=Modifier.testTag("study-remove-node")){Text("移除此节点（保留摘要卡）")}
                 }
@@ -159,9 +202,4 @@ internal fun StudyWorkspace(note:NoteDraft,initialSource:StudySourceDraft?,dismi
         val active=ui.nodes.filter{!it.removed&&it.id!=node.id};val options=listOf<StudyNodeRow?>(null)+active
         options.forEach{p->TextButton(onClick={vm.submit(StudyCommand(id(),note.base.id,StudyAction.REPARENT,nodeId=node.id,expectedRevision=node.revision,parentId=p?.id))}){Text(p?.let{n->ui.cards.find{it.id==n.cardId}?.title}?:"无上级（根主题）")}}
     }},confirmButton={TextButton(onClick={reparent=null}){Text("取消")}})}
-}
-private fun outline(nodes:List<StudyNodeRow>):List<Pair<StudyNodeRow,Int>>{
-    val groups=nodes.groupBy{it.parentId};val out=ArrayList<Pair<StudyNodeRow,Int>>();val seen=mutableSetOf<String>()
-    fun walk(parent:String?,depth:Int){if(depth>128)return;groups[parent].orEmpty().forEach{n->if(seen.add(n.id)){out+=n to depth;walk(n.id,depth+1)}}}
-    walk(null,0);return out
 }

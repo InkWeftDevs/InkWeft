@@ -120,6 +120,37 @@ class SelectionStudyUiTest {
         compose.waitUntil(10_000){runBlocking{app.study.nodes(n.id).first().single{it.id==child.id}.removed}}
         assertEquals(2,runBlocking{app.study.cards(n.id).first().size})
     }
+    @Test fun outlineFoldFocusAndQuickAddShareOneGraph(){
+        val(n,_)=seed()
+        val root=id();val child=id();val leaf=id();val other=id()
+        runBlocking{
+            for((node,parent,title) in listOf(Triple(root,null,"总论"),Triple(child,root,"条件"),Triple(leaf,child,"例子"),Triple(other,null,"另一主题"))){
+                app.study.submit(StudyCommand(id(),n.id,StudyAction.CREATE,cardId=id(),nodeId=node,parentId=parent,title=title))
+            }
+        }
+        compose.onNodeWithTag("study-open").performClick();compose.onNodeWithTag("study-tab-1").performClick()
+        compose.onNodeWithTag("outline-fold-$root").performScrollTo().performClick()
+        compose.onNodeWithTag("outline-node-$child").assertDoesNotExist()
+        compose.onNodeWithTag("outline-focus-$root").performClick()
+        compose.onNodeWithTag("outline-node-$other").assertDoesNotExist()
+        compose.onNodeWithTag("study-tab-2").performClick();compose.onNodeWithText("1 / 4 个主题").assertExists();shot("study-folded-map.png")
+        compose.onNodeWithTag("study-expand-all").performScrollTo().performClick()
+        compose.onNodeWithText("3 / 4 个主题").assertExists()
+        compose.onNodeWithTag("study-tab-1").performClick()
+        compose.onNodeWithTag("outline-focus-$child").performScrollTo().performClick()
+        compose.onNodeWithTag("outline-node-$root").assertDoesNotExist()
+        compose.onNodeWithTag("study-breadcrumb-$root").assertExists()
+        compose.onNodeWithTag("outline-child-$child").performScrollTo().performClick();addCard("新子主题","")
+        val newChild=runBlocking{app.study.cards(n.id).first()}.single{it.title=="新子主题"}
+        assertEquals(child,runBlocking{app.study.nodes(n.id).first()}.single{it.cardId==newChild.id}.parentId)
+        compose.onNodeWithTag("study-focus-all").performScrollTo().performClick()
+        compose.onNodeWithTag("outline-sibling-$child").performScrollTo().performClick();addCard("同级主题","")
+        val sibling=runBlocking{app.study.cards(n.id).first()}.single{it.title=="同级主题"}
+        val nodes=runBlocking{app.study.nodes(n.id).first()}
+        assertEquals(root,nodes.single{it.cardId==sibling.id}.parentId)
+        assertEquals(6,nodes.size);assertEquals(1L,nodes.single{it.id==root}.revision)
+        shot("study-branch-navigation.png")
+    }
     @Test fun cardSearchFindsBodyAndClearRestoresCards(){
         val(n,_)=seed();compose.onNodeWithTag("study-open").performClick()
         compose.onNodeWithTag("study-add-card").performClick();addCard("概率","先验条件")

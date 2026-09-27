@@ -9,14 +9,21 @@ import android.provider.OpenableColumns
 import com.artifex.mupdf.fitz.Document
 import com.artifex.mupdf.fitz.DocumentWriter
 import com.artifex.mupdf.fitz.Matrix
+import com.artifex.mupdf.fitz.PDFDocument
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.*
 import org.inkweft.core.*
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.util.zip.ZipInputStream
+import java.util.zip.ZipOutputStream
+import java.util.zip.ZipEntry
+import java.util.UUID
 
 internal class DocumentImportException(val explanation:String):Exception(explanation)
 internal object DocumentImports {
+    private val conversionLock=Mutex()
     const val HELP="直接导入 PDF、无加密 EPUB 和 PalmDOC MOBI。PDF 保留原版页面；电子书按固定页面排版后批注。DOC/DOCX、PPT/PPTX 请用 Office 或 LibreOffice 导出 PDF；AZW3/HUFF MOBI 用 calibre 转 PDF；CAJ 用本机 CAJ 阅读器或 caj2pdf 转 PDF，再导入。单个源文件最多 32 MB、500 页；不支持密码和 DRM 文件。"
     suspend fun read(context:Context,uri:Uri):ContentTransfer.Prepared=withContext(Dispatchers.IO){
         val name=context.contentResolver.query(uri,arrayOf(OpenableColumns.DISPLAY_NAME),null,null,null)?.use{if(it.moveToFirst())it.getString(0)else null}.orEmpty()
@@ -38,7 +45,7 @@ internal object DocumentImports {
         val title=name.substringBeforeLast('.',name).filter{!it.isISOControl()}.trim().take(120).ifBlank{"导入文档"}
         ContentTransfer.document(title,PdfDocumentSource(pdf,count),ContentTransfer.hash(bytes))
     }
-    internal suspend fun convert(context:Context,bytes:ByteArray,extension:String):ByteArray {
+    internal suspend fun convert(context:Context,bytes:ByteArray,extension:String):ByteArray = conversionLock.withLock {
         require(extension in listOf("epub","mobi"))
         if(extension=="epub"){
             var expanded=0L;var entries=0
@@ -51,18 +58,47 @@ internal object DocumentImports {
             val record=u32(78).toInt();require(record>=0&&record+40<=bytes.size)
             if(u16(record) !in listOf(1,2)||u16(record+12)!=0||u32(record+36)>=8)throw DocumentImportException("此 MOBI 的压缩、加密或 KF8 版本暂不能直接导入。无 DRM 文件可先用 calibre 转 PDF。")
         }
-        val document=Document.openDocument(bytes,extension)
+        // Embed a default serif face in a temporary EPUB. Keep document CSS and
+        // embedded fonts; avoid device-specific full CJK collections for defaults.
+        val source=if(extension=="epub")File.createTempFile("ebook-font-",".epub",context.cacheDir)else null
+        try{
+        if(source!=null){
+            val fontName="inkweft-${UUID.randomUUID()}.ttf"
+            ZipOutputStream(source.outputStream()).use{out->
+                ZipInputStream(bytes.inputStream()).use{input->
+                    var entry=input.nextEntry
+                    while(entry!=null){
+                        currentCoroutineContext().ensureActive()
+                        out.putNextEntry(ZipEntry(entry.name));input.copyTo(out);out.closeEntry();entry=input.nextEntry
+                    }
+                }
+                out.putNextEntry(ZipEntry(fontName));context.assets.open("fonts/LXGWWenKaiLite-Regular.ttf").use{it.copyTo(out)};out.closeEntry()
+            }
+            com.artifex.mupdf.fitz.Context.setUserCSS("@font-face { font-family: serif; src: url('/$fontName'); }")
+        }
+        val document=if(source!=null)Document.openDocument(source.absolutePath)else Document.openDocument(bytes,extension)
         val output=File.createTempFile("ebook-fixed-",".pdf",context.cacheDir)
         try {
             if(document.needsPassword())throw DocumentImportException("文档已加密，请先取得可阅读的无加密副本。")
             if(document.isReflowable)document.layout(595f,842f,14f)
             val count=document.countPages();require(count in 1..500)
-            val writer=DocumentWriter(output.absolutePath,"pdf","")
+            // Default PDF output embeds uncompressed CJK font streams. Flate keeps
+            // text and vector geometry intact while avoiding multi-megabyte bloat.
+            val writer=DocumentWriter(output.absolutePath,"pdf","compress,compress-fonts,compress-images,garbage=deduplicate")
             try{repeat(count){i->currentCoroutineContext().ensureActive();val page=document.loadPage(i)
                 try{val device=writer.beginPage(page.bounds);try{page.run(device,Matrix())}finally{writer.endPage();device.destroy()}}finally{page.destroy()}
                 require(output.length()<=PdfDocumentSource.MAX_BYTES)
             };writer.close()}finally{writer.destroy()}
-            require(output.length() in 8..PdfDocumentSource.MAX_BYTES.toLong());return output.readBytes()
+            currentCoroutineContext().ensureActive()
+            // Keep only glyphs actually used by this fixed-layout ebook. Compressing
+            // a complete Android fallback CJK font alone still costs about 19 MB.
+            val compact=File.createTempFile("ebook-subset-",".pdf",context.cacheDir)
+            try{
+                val pdf=Document.openDocument(output.absolutePath) as PDFDocument
+                try{pdf.subsetFonts();currentCoroutineContext().ensureActive();pdf.save(compact.absolutePath,"compress,compress-fonts,compress-images,garbage=deduplicate")}finally{pdf.destroy()}
+                require(compact.length() in 8..PdfDocumentSource.MAX_BYTES.toLong());return@withLock compact.readBytes()
+            }finally{compact.delete()}
         }finally{document.destroy();output.delete()}
+        }finally{com.artifex.mupdf.fitz.Context.setUserCSS("");source?.delete()}
     }
 }
