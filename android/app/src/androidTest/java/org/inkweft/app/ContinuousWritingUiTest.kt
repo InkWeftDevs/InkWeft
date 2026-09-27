@@ -112,7 +112,7 @@ class ContinuousWritingUiTest {
             try{for(y in origin[1]+v.height-1..origin[1]+v.height){val color=image.getPixel((origin[0]+p.x).toInt(),y);assertTrue("Paper seam must not punch a white row through ink",android.graphics.Color.red(color)<120)}}finally{image.recycle()}
         }
         compose.onNodeWithTag("ink-tool-3").performScrollTo().performClick()
-        fun erased(value:Boolean){compose.waitUntil(10_000){runBlocking{pages.all{p->app.pageObjects.read(p.id).objects.single().hidden==value&&app.inkRepository.read(p.id).strokes.count{it.visible}==if(value)1 else 2}}}}
+        fun erased(value:Boolean){compose.waitUntil(10_000){runBlocking{pages.all{p->app.pageObjects.read(p.id).objects.single().glyphs.any{it.hidden}==value&&app.inkRepository.read(p.id).strokes.count{it.visible}==if(value)1 else 2}}}}
         compose.runOnIdle{line(canvas(pages[0].id),listOf(430f to 1300f,430f to 1500f))};erased(true);shot("v20-cross-erase-after.png")
         compose.onNodeWithTag("ink-undo").performScrollTo().performClick();erased(false);shot("v20-cross-erase-undo.png")
         compose.onNodeWithTag("ink-redo").performScrollTo().performClick();erased(true)
@@ -145,7 +145,7 @@ class ContinuousWritingUiTest {
         compose.waitUntil(10_000){runBlocking{app.pageObjects.read(note.id).objects.none{it.hidden}}}
     }
     @Test fun automaticBeautyIsInlineErasableUndoableAndPersistent(){
-        val note=open();compose.onNodeWithTag("auto-beauty-toggle").performScrollTo().performClick()
+        val note=open();compose.openBeautySettings();compose.onNodeWithTag("beauty-enabled").performClick();compose.onNodeWithTag("beauty-close").performClick()
         hi(note.id)
         compose.waitUntil(45_000){runBlocking{app.pageObjects.read(note.id).objects.any{!it.hidden}}}
         val beauty=runBlocking{app.pageObjects.read(note.id).objects.single()}
@@ -153,13 +153,13 @@ class ContinuousWritingUiTest {
         compose.onNodeWithTag("font-beauty-dialog").assertDoesNotExist();shot("v20-auto-beauty.png")
         compose.onNodeWithTag("ink-tool-3").performScrollTo().performClick()
         compose.runOnIdle{line(canvas(note.id),listOf((beauty.x+8) to (beauty.y+12),(beauty.x+beauty.width-8) to (beauty.y+12)))}
-        compose.waitUntil(10_000){runBlocking{app.pageObjects.read(note.id).objects.single().hidden}}
+        compose.waitUntil(10_000){runBlocking{app.pageObjects.read(note.id).objects.single().erasures.isNotEmpty()}}
         compose.onNodeWithTag("ink-undo").performScrollTo().performClick()
-        compose.waitUntil(10_000){runBlocking{!app.pageObjects.read(note.id).objects.single().hidden}}
+        compose.waitUntil(10_000){runBlocking{!app.pageObjects.read(note.id).objects.single().erasures.isNotEmpty()}}
         compose.onNodeWithTag("ink-redo").performScrollTo().performClick()
-        compose.waitUntil(10_000){runBlocking{app.pageObjects.read(note.id).objects.single().hidden}}
+        compose.waitUntil(10_000){runBlocking{app.pageObjects.read(note.id).objects.single().erasures.isNotEmpty()}}
         compose.activityRule.scenario.recreate();compose.waitForIdle()
-        assertTrue(runBlocking{app.pageObjects.read(note.id).objects.single().hidden})
+        assertTrue(runBlocking{app.pageObjects.read(note.id).objects.single().erasures.isNotEmpty()})
         assertEquals(6,runBlocking{app.inkRepository.read(note.id).strokes.size})
     }
     @Test fun floatingCaseMovesAndPageBoundsStayFinite(){
@@ -184,7 +184,7 @@ class ContinuousWritingUiTest {
     @Test fun manualSelectionUsesChosenFontWithoutConfirmationDialog(){
         val note=open();hi(note.id)
         compose.waitUntil(10_000){runBlocking{app.inkRepository.read(note.id).strokes.size}==6}
-        compose.onNodeWithTag("ink-beauty").performScrollTo().performClick();compose.onNodeWithTag("font-SERIF").performClick()
+        compose.openBeautySettings();compose.onNodeWithTag("beauty-font-picker").performClick();compose.onNodeWithTag("font-SERIF").performClick()
         compose.onNodeWithTag("beauty-select").performScrollTo().performClick();compose.waitForIdle()
         val strokes=runBlocking{InkSession(app.inkRepository.read(note.id)).visibleDraft()}
         val region=InkRegion(listOf(EraserPoint(150f,250f),EraserPoint(400f,450f)))

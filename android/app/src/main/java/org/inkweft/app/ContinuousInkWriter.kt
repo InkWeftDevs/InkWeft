@@ -35,7 +35,7 @@ internal class ContinuousInkWriter:ViewModel() {
             try {
                 val ink=withContext(Dispatchers.Default){targets.mapIndexedNotNull{i,t->ensureActive();t.ink.eraseChange(snapshots[i].strokes,t.path,radius,whole,onlyHighlighter)?.let{t.ink to it}}}
                 check(targets.indices.all{i->targets[i].ink.ui.value.revision==snapshots[i].revision&&targets[i].ink.ui.value.queued==0&&targets[i].objects.ui.value.objects==originals[i]})
-                val objects=if(onlyHighlighter)emptyList()else targets.mapNotNull{t->t.objects.erasedBeauty(t.path,radius).takeIf{it!=t.objects.ui.value.objects}?.let{t.objects to it}}
+                val objects=if(onlyHighlighter)emptyList()else targets.mapNotNull{t->t.objects.erasedBeauty(t.path,radius,whole).takeIf{it!=t.objects.ui.value.objects}?.let{t.objects to it}}
                 running=false;mutable.value=false;prepare(ink,objects,repo)
             }catch(c:CancellationException){throw c}
             catch(_:Exception){running=false;mutable.value=false;onNotice("页面已变化，本次擦除未应用，请重试。")}

@@ -15,3 +15,6 @@ internal fun ComposeTestRule.openCurrentPen(){
     val node=onAllNodes(isOn() and (hasTestTag("ink-tool-0") or hasTestTag("ink-tool-1") or hasTestTag("ink-tool-2")))
     node[0].performScrollTo().performClick()
 }
+
+internal fun ComposeTestRule.closePenSettings(){onNodeWithTag("close-pen-settings").performScrollTo().performClick()}
+internal fun ComposeTestRule.openBeautySettings(){onNodeWithTag("auto-beauty-toggle").performScrollTo().performClick()}

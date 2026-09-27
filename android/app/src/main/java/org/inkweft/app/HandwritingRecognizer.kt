@@ -12,7 +12,9 @@ import org.json.JSONArray
 import java.nio.FloatBuffer
 import kotlin.math.*
 
-internal data class RecognizedWriting(val text:String,val confidence:Float,val lines:Int)
+internal data class RecognizedToken(val text:String,val center:Float)
+internal data class RecognizedLine(val text:String,val bounds:CanvasBounds,val strokeIds:List<String>,val tokens:List<RecognizedToken>)
+internal data class RecognizedWriting(val text:String,val confidence:Float,val lines:Int,val regions:List<RecognizedLine> = emptyList(),val tokens:List<RecognizedToken> = emptyList())
 
 /** Bundled Apache-2.0 model; no network, telemetry, screenshots, or author text in diagnostics. */
 internal class HandwritingRecognizer(context:Context) {
@@ -24,18 +26,20 @@ internal class HandwritingRecognizer(context:Context) {
             env.createSession(app.assets.open("ocr/recognition.onnx").use{it.readBytes()},options)}
     }
     private val chars by lazy{JSONArray(app.assets.open("ocr/characters.json").bufferedReader().use{it.readText()}).let{a->listOf("")+List(a.length()){a.getString(it)}+listOf(" ")}}
-    suspend fun recognize(strokes:List<InkStroke>,progress:(Int,Int)->Unit={_,_->}):RecognizedWriting=withContext(Dispatchers.Default){
-        val lines=HandwritingLines.split(strokes);val texts=mutableListOf<String>();var total=0f
+    private val englishAllowed by lazy{BooleanArray(chars.size){index->chars[index].all{it.code in 32..126}}}
+    suspend fun recognize(strokes:List<InkStroke>,language:BeautyLanguage=BeautyLanguage.MIXED,progress:(Int,Int)->Unit={_,_->}):RecognizedWriting=withContext(Dispatchers.Default){
+        val lines=HandwritingLines.split(strokes);val texts=mutableListOf<String>();val regions=mutableListOf<RecognizedLine>();var total=0f
         for((i,line)in lines.withIndex()){
             ensureActive();progress(i,lines.size)
             val bitmap=raster(line)
-            val r=try{recognizeBitmap(bitmap)}finally{bitmap.recycle()}
+            val r=try{recognizeBitmap(bitmap,language)}finally{bitmap.recycle()}
             ensureActive();texts.add(r.text);total+=r.confidence
+            if(r.text.isNotBlank())regions.add(RecognizedLine(r.text,line.bounds,line.strokes.map{it.id},r.tokens))
         }
         progress(lines.size,lines.size)
-        RecognizedWriting(texts.joinToString("\n").trim(),if(lines.isEmpty())0f else total/lines.size,lines.size)
+        RecognizedWriting(texts.joinToString("\n").trim(),if(lines.isEmpty())0f else total/lines.size,lines.size,regions)
     }
-    internal suspend fun recognizeBitmap(bitmap:Bitmap):RecognizedWriting=withContext(Dispatchers.Default){lock.withLock {
+    internal suspend fun recognizeBitmap(bitmap:Bitmap,language:BeautyLanguage=BeautyLanguage.MIXED):RecognizedWriting=withContext(Dispatchers.Default){lock.withLock {
         ensureActive()
         val scaledWidth=ceil(bitmap.width*48.0/bitmap.height).toInt().coerceAtLeast(1)
         require(scaledWidth<=2048){"文字行过长，请缩小选区后识别"}
@@ -47,17 +51,19 @@ internal class HandwritingRecognizer(context:Context) {
             data[48*width+y*width+x]=((pixel shr 8)and 255)/127.5f-1
             data[96*width+y*width+x]=((pixel shr 16)and 255)/127.5f-1
         }
+        val allowed=if(language==BeautyLanguage.MIXED)null else englishAllowed
         OnnxTensor.createTensor(env,FloatBuffer.wrap(data),longArrayOf(1,3,48,width.toLong())).use{input->
             session.run(mapOf("x" to input)).use{result->
                 ensureActive()
                 val tensor=result[0] as OnnxTensor;val shape=tensor.info.shape
                 require(shape.size==3&&shape[0]==1L&&shape[2]==chars.size.toLong())
                 val scores=checkNotNull(tensor.floatBuffer);val text=StringBuilder();var previous=-1;var confidence=0f;var count=0
-                repeat(shape[1].toInt()) {var best=0;var probability=-Float.MAX_VALUE
-                    repeat(chars.size){index->val score=scores.get();if(score>probability){best=index;probability=score}}
-                    if(best!=0&&best!=previous){text.append(chars[best]);confidence+=probability;count++};previous=best
+                val tokens=mutableListOf<RecognizedToken>()
+                repeat(shape[1].toInt()) {step->var best=0;var probability=-Float.MAX_VALUE
+                    repeat(chars.size){index->val score=scores.get();if((index==0||allowed==null||allowed[index])&&score>probability){best=index;probability=score}}
+                    if(best!=0&&best!=previous){text.append(chars[best]);confidence+=probability;count++;tokens.add(RecognizedToken(chars[best],((step+.5f)*width/(shape[1]*scaledWidth)).coerceIn(0f,1f)))};previous=best
                 }
-                RecognizedWriting(text.toString().trim(),if(count==0)0f else confidence/count,1)
+                RecognizedWriting(text.toString().trim(),if(count==0)0f else confidence/count,1,tokens=tokens.dropWhile{it.text.isBlank()}.dropLastWhile{it.text.isBlank()})
             }
         }
     }}

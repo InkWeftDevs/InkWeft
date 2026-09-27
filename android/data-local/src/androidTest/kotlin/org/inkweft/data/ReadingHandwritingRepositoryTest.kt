@@ -38,7 +38,9 @@ class ReadingHandwritingRepositoryTest {
     @Test fun beautyPreservesInkRemapsCopiesAndInvalidatesSearch()=fixture{db->
         val ink=stroke();val note=InkRepository(db).importCopy(InkPageFile("原迹","",listOf(ink)))
         val source=InkSession(InkRepository(db).read(note.id)).visibleDraft().single()
-        val repo=PageObjectRepository(db);val text=PageObject(id(),PageObjectKind.TEXT,text="墨织",font=TextFont.WENKAI,sourceStrokeIds=listOf(source.id))
+        val repo=PageObjectRepository(db);val text=PageObject(id(),PageObjectKind.TEXT,text="墨织",font=TextFont.WENKAI,sourceStrokeIds=listOf(source.id),
+            glyphs=listOf(TextGlyph(0,1,0f,0f,40f,40f),TextGlyph(1,2,50f,0f,40f,40f)),
+            erasures=listOf(TextErasePath(0,2,4f,listOf(TextErasePoint(20f,0f),TextErasePoint(20f,40f)))))
         assertTrue(NotebookPages(db).saveSearchText(note.id,1,"旧索引",0,"OCR"))
         repo.save(note.id,0,id(),listOf(text),1)
         assertNull(NotebookPages(db).searchText(note.id))
@@ -47,6 +49,13 @@ class ReadingHandwritingRepositoryTest {
         val copy=LibraryContentRepository(db).duplicate(CopyNotebook(id(),note.id,id()))
         val copied=repo.read(copy.id).objects.single();val copiedInk=InkSession(InkRepository(db).read(copy.id)).visibleDraft().single()
         assertEquals(listOf(copiedInk.id),copied.sourceStrokeIds);assertNotEquals(source.id,copiedInk.id)
+        assertEquals(text.glyphs,copied.glyphs);assertEquals(text.erasures,copied.erasures)
+        val exported=NotebookFile.decode(NotebookPages(db).exportBook(note.id).encode()).pages.single().objects.single()
+        assertEquals(text.glyphs,exported.glyphs);assertEquals(text.erasures,exported.erasures)
+        val restoreName="beauty-restore-${id()}.db";val restored=NoteDatabase.open(context,restoreName)
+        try{LibraryBackupRepository(context,db).snapshot().use{snapshot->val target=LibraryBackupRepository(context,restored);snapshot.file.inputStream().use{target.inspect(it)}.use{assertEquals(LibraryBackupRepository.RestoreResult.RESTORED,target.restore(it))}}
+            assertEquals(text,PageObjectRepository(restored).read(note.id).objects.single())
+        }finally{restored.close();context.deleteDatabase(restoreName)}
         repo.save(note.id,1,id(),emptyList());assertArrayEquals(InkStrokeCodec.encode(source),InkStrokeCodec.encode(InkSession(InkRepository(db).read(note.id)).visibleDraft().single()))
     }
     @Test fun staleBeautyDoesNotApplyAndForeignOriginalIsRejected()=fixture{db->

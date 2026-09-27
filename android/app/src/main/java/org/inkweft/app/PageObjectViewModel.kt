@@ -47,7 +47,7 @@ internal class PageObjectViewModel(private val pageId:String,private val repo:Pa
             val previous=snapshot.objects.find{it.id==lastAutomatic&&!it.hidden}
             val freshBounds=fresh.map{it.bounds()}.reduce{a,b->a.union(b)}
             val merge=previous?.takeIf{it.bounds().padded(options.size*2.0).intersects(freshBounds)}
-            val sources=(if(merge==null)emptyList()else ink.strokes.filter{it.id in merge.sourceStrokeIds})+fresh
+            val sources=fresh
             if(sources.size>256){beautyState.value="这段字较长，可分段框选美化";return@launch}
             convertBeauty(sources,ink.revision,options,world,app,merge?.id,true)
         }
@@ -61,16 +61,20 @@ internal class PageObjectViewModel(private val pageId:String,private val repo:Pa
         val objectRevision=snapshot.revision
         beautyState.value="正在美化…"
         try{
-            val result=app.handwriting.recognize(strokes){_,_->}
+            val result=app.handwriting.recognize(strokes,language=options.language){_,_->}
             if(snapshot.revision!=objectRevision||state.value.busy||state.value.pending||latestInk.queued>0||latestInk.revision!=revision){beautyState.value=null;return}
             if(result.text.isBlank()){beautyState.value="未识别到文字，已保留原迹";return}
-            val o=beautyObject(strokes,result.text,options,world,replace?:UUID.randomUUID().toString())
-            change(snapshot.objects.filterNot{it.id==replace}+o,expectedInk=revision)
+            val fresh=beautyObject(strokes,result,options,world,appId())
+            val previous=snapshot.objects.find{it.id==replace&&!it.hidden}
+            val combined=previous?.let{appendBeauty(it,fresh)}
+            val o=combined?:fresh
+            change(snapshot.objects.filterNot{combined!=null&&it.id==replace}+o,expectedInk=revision)
             if(automatic){lastAutomatic=o.id;beautyKnown=beautyKnown.orEmpty()+strokes.map{it.id}}
             beautyState.value=null
         }catch(c:CancellationException){beautyState.value=null;throw c}
         catch(_:Exception){beautyState.value="这段字暂未美化，已保留原迹"}
     }
+    private fun appId()=UUID.randomUUID().toString()
     init{reload()}
     fun reload(){if(state.value.busy||reading)return;reading=true;viewModelScope.launch{
         state.value=state.value.copy(loading=true)
@@ -115,18 +119,32 @@ internal class PageObjectViewModel(private val pageId:String,private val repo:Pa
     fun delete(id:String)=deleteObjects(setOf(id))
     fun deleteObjects(ids:Set<String>){change(snapshot.objects.mapNotNull{if(it.id !in ids)it else if(it.sourceStrokeIds.isNotEmpty())it.copy(hidden=true)else null})}
     fun restoreOriginal(id:String)=change(snapshot.objects.filterNot{it.id==id})
-    fun eraseBeauty(path:List<InkSample>,radius:Float){
-        if(path.isNotEmpty())change(erasedBeauty(path,radius))
+    fun eraseBeauty(path:List<InkSample>,radius:Float,whole:Boolean){
+        if(path.isNotEmpty())change(erasedBeauty(path,radius,whole))
     }
-    internal fun erasedBeauty(path:List<InkSample>,radius:Float):List<PageObject>{
-        val ids=snapshot.objects.filter{!it.hidden&&it.sourceStrokeIds.isNotEmpty()&&path.zipWithNext().ifEmpty{listOf(path[0] to path[0])}.any{(a,b)->
+    internal fun erasedBeauty(path:List<InkSample>,radius:Float,whole:Boolean):List<PageObject>{
+        if(path.isEmpty())return snapshot.objects
+        fun hits(bounds:CanvasBounds)=path.zipWithNext().ifEmpty{listOf(path[0] to path[0])}.any{(a,b)->
             // Segment/rectangle intersection, not the bounding box of an entire winding gesture.
-            val box=it.bounds().padded(radius.toDouble())
+            val box=bounds.padded(radius.toDouble())
             var lo=0.0;var hi=1.0
             fun slab(start:Double,delta:Double,min:Double,max:Double):Boolean{if(delta==0.0)return start in min..max;val a=(min-start)/delta;val b=(max-start)/delta;lo=maxOf(lo,minOf(a,b));hi=minOf(hi,maxOf(a,b));return lo<=hi}
             slab(a.x.toDouble(),(b.x-a.x).toDouble(),box.left,box.right)&&slab(a.y.toDouble(),(b.y-a.y).toDouble(),box.top,box.bottom)
-        }}.map{it.id}.toSet()
-        return snapshot.objects.map{if(it.id in ids)it.copy(hidden=true)else it}
+        }
+        if(!whole&&snapshot.objects.any{!it.hidden&&(it.sourceStrokeIds.isNotEmpty()||it.glyphs.isNotEmpty())&&hits(it.bounds())&&(it.erasures.size>=InkLimits.MAX_CUTS||it.erasures.sumOf{c->c.points.size}+path.size>InkLimits.MAX_CUT_POINTS)}){
+            publish("这段文字的局部擦除次数已达上限，可撤销一次擦除或使用整字擦除。");return snapshot.objects
+        }
+        return snapshot.objects.mapNotNull{o->
+            if(o.hidden||(o.sourceStrokeIds.isEmpty()&&o.glyphs.isEmpty())||!hits(o.bounds()))o else {
+                val before=TextStyles.positioned(o)
+                val after=before.map{g->if(g.hidden||!hits(CanvasBounds((o.x+g.x).toDouble(),(o.y+g.y).toDouble(),(o.x+g.x+g.width).toDouble(),(o.y+g.y+g.height).toDouble())))g else g.copy(hidden=true)}
+                if(after==before)o else if(whole){if(after.all{it.hidden}&&o.sourceStrokeIds.isEmpty())null else o.copy(glyphs=after,hidden=after.all{it.hidden})} else {
+                    // Keep author text and geometry; only subtract the swept area from existing glyphs.
+                    val cut=TextErasePath(0,o.text.length,radius,path.map{TextErasePoint(it.x-o.x,it.y-o.y)})
+                    o.copy(glyphs=before,erasures=o.erasures+cut)
+                }
+            }
+        }
     }
     /** The ViewModel owns decoding so rotation cannot cancel an accepted camera result. */
     fun importImage(context:android.content.Context,uri:android.net.Uri,world:Boolean,viewport:CanvasViewport,

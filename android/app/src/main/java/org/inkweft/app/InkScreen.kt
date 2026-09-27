@@ -18,6 +18,8 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.compose.ui.semantics.*
+import androidx.compose.ui.state.ToggleableState
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.*
@@ -25,6 +27,7 @@ import org.inkweft.core.*
 import org.inkweft.data.NotebookPageRow
 import org.inkweft.data.WorkspaceRow
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:NotebookPageRow,onCanNavigate:(Boolean)->Unit,onSearch:(Long)->Unit,externalEnabled:Boolean=true,onExcerpt:(SelectedInk)->Unit={},onAssociate:(SelectedInk)->Unit={},focusRegion:CanvasBounds?=null,onFocusConsumed:()->Unit={},pageNavigation:@Composable ()->Unit={},continuousPages:List<NotebookPageRow>?=null,onContinuousPage:(String)->Unit={},leaveContinuous:()->Unit={}){
     val context=LocalContext.current;val app=context.applicationContext as InkWeftApplication
@@ -58,6 +61,9 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
     var colors by remember(note.base.id){mutableStateOf(penStore.readColors())}
     val favoriteStore=remember{FavoritePenStore(context)}
     var favorites by remember{mutableStateOf(favoriteStore.read())}
+    var favoriteSettings by remember{mutableStateOf<String?>(null)}
+    var objectRequest by remember{mutableStateOf<String?>(null)}
+    var insertMore by remember{mutableStateOf(false)}
     var favoriteBusy by remember{mutableStateOf(false)}
     val casePrefs=remember{context.getSharedPreferences("inkweft-editor",0)}
     var favoritesOpen by remember{mutableStateOf(casePrefs.getBoolean("favorites-open",false))}
@@ -115,8 +121,7 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
         kinds=kinds.mapIndexed{i,p->if(i==selected)kind else p}
         widths=widths.mapIndexed{i,w->if(i==selected)width else w}
         colors=colors.mapIndexed{i,c->if(i==selected)color else c}
-        scope.launch{val saved=try{penStore.savePreset(selected,width,color,kind)}catch(c:CancellationException){throw c}catch(_:Exception){false}
-            if(!saved)notice="常用笔已用于本次书写，但设置未保存；原笔迹未改动。"}
+        penStore.applyPreset(selected,width,color,kind)
     }
     fun beautify(selection:SelectedInk){
         val writing=selection.strokes.filterNot{it.pen==InkPen.HIGHLIGHTER}
@@ -135,8 +140,7 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
         val match=favorites.firstOrNull{it.matches(kind,width,color)}
         if(match==null&&favorites.size>=12){notice="收藏笔盒已满，可在参数卡片取消已有收藏。";return}
         val next=if(match!=null)favorites.filterNot{it.id==match.id} else favorites+FavoritePen(java.util.UUID.randomUUID().toString(),kind,width,color)
-        favoriteBusy=true
-        scope.launch{try{if(favoriteStore.save(next)){favorites=next;if(match==null)showFavorites(true)}else notice="收藏未保存，请重试。"}catch(c:CancellationException){throw c}catch(_:Exception){notice="收藏未保存，请重试。"}finally{favoriteBusy=false}}
+        favoriteStore.apply(next);favorites=next;if(match==null)showFavorites(true)
     }
     if(continuousPages==null)AutomaticBeautyBinding(objectsVm,ui,gesture,beautyOptions,page.world,app)
     val toolbar:@Composable ()->Unit={
@@ -146,29 +150,19 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
                     IconToggleButton(tool==i,{if(tool==i)settings=true else tool=i},enabled=!busy,modifier=Modifier.size(64.dp,48.dp).testTag("ink-tool-$i").describedAs(PenWidthStore.name(i,kinds[i])+"，再点调整")){
                         PenSilhouette(kinds[i],colors[i],Modifier.background(if(tool==i)Leaf else Color.Transparent,RoundedCornerShape(8.dp)))
                     }
-                    if(tool==i)PenPresetMenu(settings,i,widths[i],colors[i],kinds[i],{settings=false},favorites,favoriteBusy,::toggleFavorite){width,color,kind->savePreset(i,width,color,kind);settings=false}
+                    if(tool==i)PenPresetMenu(settings,i,widths[i],colors[i],kinds[i],{settings=false},favorites,favoriteBusy,::toggleFavorite){width,color,kind->savePreset(i,width,color,kind)}
                 }
             }
             HorizontalDivider(Modifier.width(36.dp),color=Line)
             IconToggleButton(favoritesOpen,{showFavorites(it)},modifier=Modifier.size(48.dp).testTag("favorite-pens-toggle").describedAs("收藏笔盒")){Glyph(if(favoritesOpen)"star-filled"else"star",if(favoritesOpen)Forest else Quiet)}
             IconToggleButton(tool==3,{if(tool==3)eraserDialog=true else tool=3},enabled=!busy,modifier=Modifier.size(48.dp).testTag("ink-tool-3").describedAs("橡皮，再点调整")){Glyph("eraser")}
             IconToggleButton(tool==4,{if(continuousPages!=null)leaveContinuous();tool=4},enabled=!busy&&!continuousBlocked,modifier=Modifier.size(48.dp).testTag("ink-select").describedAs("套索")){Glyph("select")}
-            IconToggleButton(beautyOptions.enabled,{saveBeauty(beautyOptions.copy(enabled=it))},enabled=!gesture,modifier=Modifier.size(56.dp).testTag("auto-beauty-toggle").describedAs("自动美化")){
-                Column(horizontalAlignment=Alignment.CenterHorizontally){Glyph("beauty",if(beautyOptions.enabled)Forest else Quiet);Text("自动美化",fontSize=10.sp,color=if(beautyOptions.enabled)Forest else Quiet)}
-            }
             Box{
-                IconButton(onClick={beautySettings=true},enabled=!busy,modifier=Modifier.size(48.dp).testTag("ink-beauty").describedAs("美化字体与框选美化")){Glyph("settings")}
-                DropdownMenu(beautySettings,{beautySettings=false},modifier=Modifier.width(292.dp).testTag("beauty-settings")){
-                    Column(Modifier.padding(horizontal=16.dp)){
-                        Row(verticalAlignment=Alignment.CenterVertically){Text("自动美化",Modifier.weight(1f));Switch(beautyOptions.enabled,{saveBeauty(beautyOptions.copy(enabled=it))})}
-                        FontControls(beautyOptions.font,{saveBeauty(beautyOptions.copy(font=it))},beautyOptions.bold,{saveBeauty(beautyOptions.copy(bold=it))},beautyOptions.spacing,{saveBeauty(beautyOptions.copy(spacing=it))})
-                        Row(verticalAlignment=Alignment.CenterVertically){Text("字号 ${beautyOptions.size.toInt()}");Slider(beautyOptions.size,{saveBeauty(beautyOptions.copy(size=it))},valueRange=12f..96f,modifier=Modifier.weight(1f).testTag("beauty-font-size"))}
-                    }
-                    DropdownMenuItem(text={Text("框选美化")},onClick={beautySettings=false;beautyFont=true;enterBeauty()},modifier=Modifier.testTag("beauty-select"))
-                    DropdownMenuItem(text={Text("笔形润色")},onClick={beautySettings=false;beautyFont=false;enterBeauty()})
+                IconButton(onClick={beautySettings=true},enabled=!gesture,modifier=Modifier.size(56.dp).testTag("auto-beauty-toggle").semantics{contentDescription="自动美化参数";stateDescription=if(beautyOptions.enabled)"已开启"else"已关闭"}){
+                    Column(horizontalAlignment=Alignment.CenterHorizontally){Glyph("beauty",if(beautyOptions.enabled)Forest else Quiet);Text("自动美化",fontSize=10.sp,color=if(beautyOptions.enabled)Forest else Quiet)}
                 }
+                BeautySettingsMenu(beautySettings,{beautySettings=false},beautyOptions,::saveBeauty,{beautySettings=false;beautyFont=true;enterBeauty()},{beautySettings=false;beautyFont=false;enterBeauty()})
             }
-            IconToggleButton(tool==5,{if(continuousPages!=null)leaveContinuous();selectedObject=null;tool=5},enabled=!busy&&!continuousBlocked,modifier=Modifier.size(48.dp).testTag("page-objects").describedAs("图片、拍照与文本框")){Glyph("add")}
             Box{
                 IconButton(onClick={more=true},enabled=!busy,modifier=Modifier.size(48.dp).testTag("ink-more").describedAs("更多工具")){Glyph("more")}
                 DropdownMenu(more,{more=false}){
@@ -200,7 +194,7 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
             val initial=remember(page.id){workspace.cachedViewport(page.id)?:row.takeIf{it.zoom>0}?.let{runCatching{CanvasViewport(it.centerX,it.centerY,it.zoom)}.getOrNull()}}
             Box(Modifier.fillMaxWidth().weight(1f)){
             key(page.id){AndroidView(factory={ctx->InkCanvasView(ctx).also{v->
-                view=v;v.onStroke=vm::accept;v.onErase={path,radius,whole,only->vm.erasePath(path,radius,whole,only);if(!only)objectsVm.eraseBeauty(path,radius)};v.onGesture={gesture=it}
+                view=v;v.onStroke=vm::accept;v.onErase={path,radius,whole,only->vm.erasePath(path,radius,whole,only);if(!only)objectsVm.eraseBeauty(path,radius,whole)};v.onGesture={gesture=it}
                 v.onNotice={notice=it;app.diagnostics.event(DiagnosticCode.INK_UI,DiagnosticResult.REJECTED)}
                 v.onAxes={pressure,tilt->app.diagnostics.inputAxes(pressure,tilt);axes="本次输入：压力${if(pressure)"已上报"else"未上报"} · 倾斜${if(tilt)"已上报"else"未上报"}"}
                 v.onViewport={workspace.viewport(page.id,it)};v.onScale={zoom=it}
@@ -213,7 +207,7 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
             if(tool==5)AndroidView(factory={PageObjectOverlay(it)},update={v->
                 v.canvasView=view;v.objects=objectsUi.objects.filterNot{it.hidden};v.selected=selectedObject;v.world=page.world
                 v.enabledInput=editable&&!objectsUi.loading&&!objectsUi.busy&&!objectsUi.pending&&!objectInteraction
-                v.onSelect={selectedObject=it};v.onChange=objectsVm::put;v.onActive={gesture=it};v.invalidate()
+                v.onSelect={selectedObject=it;if(it==null)tool=0};v.onChange=objectsVm::put;v.onActive={gesture=it};v.invalidate()
             },modifier=Modifier.fillMaxSize().testTag("object-overlay"))
             if(tool==4||tool==6)AndroidView(factory={SelectionOverlayView(it)},update={v->
                 v.selectedObjects=objectsUi.objects.filter{!it.hidden&&it.sourceStrokeIds.isNotEmpty()&&selected?.region?.selects(it.bounds())==true}.map{it.bounds()};v.canvasView=view;v.region=selected?.region;v.selected=selected?.strokes.orEmpty();v.freehand=freehand;v.enabledInput=editable
@@ -227,8 +221,6 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
         HorizontalDivider(color=Line)
         Row(Modifier.fillMaxWidth().background(Color.White).horizontalScroll(rememberScrollState()).padding(horizontal=12.dp),verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(6.dp)){
             pageNavigation()
-            IconButton(onClick={if(historyHeads.undo==EditDomain.OBJECT)objectsVm.undo()else vm.undo()},enabled=(if(historyHeads.undo==EditDomain.OBJECT)objectsUi.undo else ui.canUndo)&&!busy,modifier=Modifier.testTag("ink-undo").describedAs("撤销")){Glyph("undo")}
-            IconButton(onClick={if(historyHeads.redo==EditDomain.OBJECT)objectsVm.redo()else vm.redo()},enabled=(if(historyHeads.redo==EditDomain.OBJECT)objectsUi.redo else ui.canRedo)&&!busy,modifier=Modifier.testTag("ink-redo").describedAs("重做")){Glyph("redo")}
             Text(beautyStatus?:if(gesture)"书写中 · 抬笔保存"else if(ui.queued>0)"保存中"else "已保存 · ${ui.strokes.size} 笔",fontSize=11.sp,color=Forest,modifier=Modifier.testTag("ink-status"))
             if(continuousPages!=null)TextButton(onClick=leaveContinuous,enabled=!busy&&!continuousBlocked){Text("单页缩放")}else{
             Spacer(Modifier.width(10.dp));TextButton(onClick={view?.zoomBy(1/1.2)},enabled=!busy,modifier=Modifier.testTag("zoom-out")){Text("−")}
@@ -239,17 +231,39 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
             }
         }
     }
+        Surface(Modifier.align(Alignment.TopCenter).padding(top=4.dp).widthIn(max=360.dp),shape=RoundedCornerShape(26.dp),color=Color.White,shadowElevation=3.dp,border=BorderStroke(1.dp,Line)){
+            Row(Modifier.horizontalScroll(rememberScrollState()).padding(horizontal=4.dp),verticalAlignment=Alignment.CenterVertically){
+            IconButton(onClick={if(historyHeads.undo==EditDomain.OBJECT)objectsVm.undo()else vm.undo()},enabled=(if(historyHeads.undo==EditDomain.OBJECT)objectsUi.undo else ui.canUndo)&&!busy,modifier=Modifier.testTag("ink-undo").describedAs("撤销")){Glyph("undo")}
+            IconButton(onClick={if(historyHeads.redo==EditDomain.OBJECT)objectsVm.redo()else vm.redo()},enabled=(if(historyHeads.redo==EditDomain.OBJECT)objectsUi.redo else ui.canRedo)&&!busy,modifier=Modifier.testTag("ink-redo").describedAs("重做")){Glyph("redo")}
+                IconButton(onClick={selectedObject=null;tool=0},enabled=!busy,modifier=Modifier.testTag("top-draw").describedAs("书写")){Glyph("pen",if(tool<3)Forest else Quiet)}
+                IconButton(onClick={if(continuousPages!=null)leaveContinuous();tool=5;objectRequest="text"},enabled=!busy&&!continuousBlocked,modifier=Modifier.testTag("object-text").describedAs("文本框")){Glyph("text")}
+                IconButton(onClick={if(continuousPages!=null)leaveContinuous();tool=5;objectRequest="image"},enabled=!busy&&!continuousBlocked,modifier=Modifier.testTag("object-image").describedAs("插入图片")){Glyph("image")}
+                IconToggleButton(tool==5,{if(continuousPages!=null)leaveContinuous();selectedObject=null;tool=if(tool==5)0 else 5},enabled=!busy&&!continuousBlocked,modifier=Modifier.testTag("page-objects").describedAs("选择图片与文字")){Glyph("select")}
+                Box{
+                    IconButton(onClick={insertMore=true},enabled=!busy,modifier=Modifier.testTag("insert-more").describedAs("更多插入")){Glyph("more")}
+                    DropdownMenu(insertMore,{insertMore=false}){
+                        listOf("camera" to "拍照","tape" to "胶带").forEach{(action,label)->DropdownMenuItem(text={Text(label)},onClick={insertMore=false;if(continuousPages!=null)leaveContinuous();tool=5;objectRequest=action},enabled=!continuousBlocked,modifier=Modifier.testTag("object-$action"))}
+                    }
+                }
+            }
+        }
         toolbar()
         if(favoritesOpen)FloatingPenCase("favorites",wide=true){
             if(favorites.isEmpty())Text("在笔参数卡片点星号收藏",Modifier.padding(16.dp),style=MaterialTheme.typography.bodySmall,color=Quiet)
             else Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()).padding(start=8.dp,end=8.dp,bottom=12.dp)){
-                favorites.forEach{p->Column(horizontalAlignment=Alignment.CenterHorizontally){
-                    IconToggleButton(tool==p.slot&&kinds[p.slot]==p.kind&&widths[p.slot]==p.width&&colors[p.slot]==p.color,{savePreset(p.slot,p.width,p.color,p.kind);tool=p.slot},enabled=!busy,modifier=Modifier.size(64.dp,48.dp).testTag("favorite-pen-${p.id}").describedAs("${PenKinds.title(p.kind)}，${PenWidthStore.label(p.width)}")){PenSilhouette(p.kind,p.color)}
+                favorites.forEach{p->Box{Column(horizontalAlignment=Alignment.CenterHorizontally){
+                    val active=tool==p.slot&&kinds[p.slot]==p.kind&&widths[p.slot]==p.width&&colors[p.slot]==p.color
+                    Box(Modifier.size(64.dp,48.dp).testTag("favorite-pen-${p.id}").semantics{contentDescription="${PenKinds.title(p.kind)}，${PenWidthStore.label(p.width)}，长按调整";toggleableState=ToggleableState(active)}
+                        .combinedClickable(enabled=!busy,onClick={if(active)favoriteSettings=p.id else{savePreset(p.slot,p.width,p.color,p.kind);tool=p.slot}},onLongClickLabel="调整收藏笔",onLongClick={savePreset(p.slot,p.width,p.color,p.kind);tool=p.slot;favoriteSettings=p.id}),contentAlignment=Alignment.Center){PenSilhouette(p.kind,p.color)}
                     Text(PenWidthStore.label(p.width),style=MaterialTheme.typography.labelSmall,color=Quiet)
+                }
+                    if(favoriteSettings==p.id)PenPresetMenu(true,p.slot,p.width,p.color,p.kind,{favoriteSettings=null},favorites,onFavorite={_,_,_->favorites=favorites.filterNot{it.id==p.id};favoriteStore.apply(favorites);favoriteSettings=null},favoriteSelected=true){width,color,kind->
+                        val updated=p.copy(kind=kind,width=width,color=color);favorites=favorites.map{if(it.id==p.id)updated else it};favoriteStore.apply(favorites);savePreset(updated.slot,width,color,kind);tool=updated.slot
+                    }
                 }}
             }
         }
-        if(tool in 4..6||objectsUi.error!=null||objectsUi.pending)Surface(Modifier.align(Alignment.TopCenter).padding(start=72.dp,end=8.dp).widthIn(max=620.dp),shape=RoundedCornerShape(12.dp),shadowElevation=3.dp){
+        Surface(Modifier.align(Alignment.TopCenter).padding(start=72.dp,end=8.dp,top=56.dp).widthIn(max=620.dp),shape=RoundedCornerShape(12.dp),shadowElevation=3.dp){
             Column {
                 if(tool==4){
                     SelectionActions(selected,selectable,editable&&!objectsBlocked,freehand,{freehand=it},::applySelected,{selected=null},onExcerpt,onAssociate,{beautify(it)})
@@ -261,7 +275,7 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
                     TextButton(onClick={freehand=!freehand}){Text(if(freehand)"自由圈选"else"矩形框选")}
                     TextButton(onClick={tool=0}){Text("完成")}
                 }
-                PageObjectTools(objectsVm,objectsUi,page.id,page.world,tool==5,editable&&!gesture,selectedObject,{selectedObject=it},{objectInteraction=it},{view?.snapshotViewport()},{notice=it})
+                PageObjectTools(objectsVm,objectsUi,page.id,page.world,tool==5,editable&&!gesture,selectedObject,{selectedObject=it},{objectInteraction=it},{view?.snapshotViewport()},{notice=it},request=objectRequest.takeIf{continuousPages==null},onRequestConsumed={objectRequest=null},onDone={selectedObject=null;tool=0})
             }
         }
     }

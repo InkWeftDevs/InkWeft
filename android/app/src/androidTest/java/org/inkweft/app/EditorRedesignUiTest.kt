@@ -32,12 +32,12 @@ class EditorRedesignUiTest {
         compose.onNodeWithTag("ink-tool-2").performClick()
         val store=PenWidthStore(compose.activity,"inkweft-pen-widths-book-"+note.id)
         for(i in 0..4){
-            compose.openCurrentPen();compose.onNodeWithTag("pen-color-$i").performScrollTo().performClick();compose.onNodeWithTag("apply-pen-width").performScrollTo().performClick()
+            compose.openCurrentPen();compose.onNodeWithTag("pen-color-$i").performScrollTo().performClick();compose.closePenSettings()
             compose.waitUntil(10_000){store.readColors()[2]==PenWidthStore.colors(2)[i]}
             assertEquals(0x66,store.readColors()[2] ushr 24)
         }
         for(i in 0..2){
-            compose.openCurrentPen();compose.onNodeWithTag("width-preset-$i").performScrollTo().performClick();compose.onNodeWithTag("apply-pen-width").performScrollTo().performClick()
+            compose.openCurrentPen();compose.onNodeWithTag("width-preset-$i").performScrollTo().performClick();compose.closePenSettings()
             compose.waitUntil(10_000){store.read()[2]==PenWidthStore.presets(2)[i]}
         }
         shot("redesign-highlighter.png");compose.activityRule.scenario.recreate();saved()
@@ -59,8 +59,8 @@ class EditorRedesignUiTest {
         ready();val note=runBlocking{app.workspaceRepository.create("美化设置验收",false,PaperStyle.GRID)};open(note)
         compose.onNodeWithTag("auto-beauty-toggle").performScrollTo().assertExists()
         val before=compose.onNodeWithTag("ink-surface").fetchSemanticsNode().boundsInRoot
-        compose.onNodeWithTag("ink-beauty").performScrollTo().performClick()
-        compose.onNodeWithTag("font-WENKAI").assertIsDisplayed();compose.onNodeWithTag("beauty-select").assertIsDisplayed()
+        compose.openBeautySettings()
+        compose.onNodeWithTag("beauty-font-picker").assertIsDisplayed();compose.onNodeWithTag("beauty-select").performScrollTo().assertIsDisplayed()
         shot("redesign-font-panel.png")
         androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().uiAutomation.performGlobalAction(android.accessibilityservice.AccessibilityService.GLOBAL_ACTION_BACK)
         compose.waitForIdle();assertEquals(before,compose.onNodeWithTag("ink-surface").fetchSemanticsNode().boundsInRoot)

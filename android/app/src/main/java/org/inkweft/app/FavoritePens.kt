@@ -21,9 +21,11 @@ internal class FavoritePenStore(context:Context,name:String="inkweft-favorite-pe
             UUID.fromString(p.id);require(p.width.isFinite()&&p.width in PenWidthStore.range(p.slot)&&PenWidthStore.validColor(p.slot,p.color));p
         }.getOrNull()}.distinctBy{it.id}
     }.getOrDefault(emptyList())
-    suspend fun save(pens:List<FavoritePen>):Boolean=withContext(Dispatchers.IO){
+    fun apply(pens:List<FavoritePen>){prefs.edit().putString("pens",encode(pens)).apply()}
+    suspend fun save(pens:List<FavoritePen>):Boolean=withContext(Dispatchers.IO){prefs.edit().putString("pens",encode(pens)).commit()}
+    private fun encode(pens:List<FavoritePen>):String {
         require(pens.size<=12&&pens.map{it.id}.distinct().size==pens.size)
         val rows=JSONArray();pens.forEach{p->UUID.fromString(p.id);require(p.width.isFinite()&&p.width in PenWidthStore.range(p.slot)&&PenWidthStore.validColor(p.slot,p.color));rows.put(JSONObject().put("id",p.id).put("kind",p.kind.name).put("width",p.width).put("color",p.color))}
-        prefs.edit().putString("pens",rows.toString()).commit()
+        return rows.toString()
     }
 }

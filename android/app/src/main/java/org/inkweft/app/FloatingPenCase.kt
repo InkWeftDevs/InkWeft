@@ -34,7 +34,7 @@ internal val LocalPenPointsLeft=compositionLocalOf{false}
     val density=LocalDensity.current
     val tag=if(wide)"favorite-pen-case"else"floating-pen-case"
     fun persist(){prefs.edit().putFloat("$storageKey-x",x).putFloat("$storageKey-y",y).putBoolean("$storageKey-collapsed",collapsed).apply()}
-    Box(Modifier.fillMaxSize().onSizeChanged{host=it}){
+    Box(Modifier.fillMaxSize().padding(top=56.dp).onSizeChanged{host=it}){
         val maxX=(host.width-size.width).coerceAtLeast(0).toFloat()
         val maxY=(host.height-size.height).coerceAtLeast(0).toFloat()
         Surface(Modifier.offset{IntOffset((x.coerceIn(0f,1f)*maxX).roundToInt(),(y.coerceIn(0f,1f)*maxY).roundToInt())}

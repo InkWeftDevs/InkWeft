@@ -20,6 +20,8 @@ internal val Side=InkTheme.Navigation
 /** Packaged Material Symbols; unknown names must not silently draw an unrelated icon. */
 @Composable internal fun Glyph(kind:String,tint:Color=LocalContentColor.current,modifier:Modifier=Modifier){
     val resource=when(kind){
+        "text"->R.drawable.ic_text
+        "image"->R.drawable.ic_image
         "add"->R.drawable.ic_add
         "back"->R.drawable.ic_back
         "close"->R.drawable.ic_close

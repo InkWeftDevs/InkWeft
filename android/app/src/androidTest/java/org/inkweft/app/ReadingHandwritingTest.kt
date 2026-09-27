@@ -19,7 +19,7 @@ class ReadingHandwritingTest {
         for(text in listOf("墨织手写查找","Bilingual notes 2026")){val paint=Paint(Paint.ANTI_ALIAS_FLAG).apply{textSize=48f;typeface=TextStyles.face(TextFont.WENKAI);color=Color.BLACK}
         val bitmap=Bitmap.createBitmap(paint.measureText(text).toInt()+24,72,Bitmap.Config.ARGB_8888)
         try{val c=Canvas(bitmap);c.drawColor(Color.WHITE);c.drawText(text,12f,54f,paint)
-            val result=app.handwriting.recognizeBitmap(bitmap);assertEquals(text,result.text);assertTrue(result.confidence>.7f)
+            val result=app.handwriting.recognizeBitmap(bitmap);assertEquals(text,result.text);assertTrue(result.confidence>.7f);if(text.startsWith("Bilingual"))assertEquals(text,app.handwriting.recognizeBitmap(bitmap,BeautyLanguage.ENGLISH).text)
         }finally{bitmap.recycle()}}
     }
     @Test fun nativeRecognitionHandlesEmptyInkWithoutLoadingOrInventingWords()=runBlocking {

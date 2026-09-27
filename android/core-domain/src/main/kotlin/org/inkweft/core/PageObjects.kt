@@ -8,6 +8,21 @@ import java.util.UUID
 enum class PageObjectKind { IMAGE, TEXT, TAPE }
 enum class TextFont { SYSTEM, WENKAI, SERIF }
 
+/** A grapheme's ink box, relative to its text object. Erasure never reflows its neighbours. */
+data class TextGlyph(val start:Int,val end:Int,val x:Float,val y:Float,val width:Float,val height:Float,val hidden:Boolean=false,val weight:Float=0f) {
+    init { require(weight.isFinite()&&weight in 0f..1f);require(start>=0&&end>start);require(listOf(x,y,width,height).all{it.isFinite()});require(x>=0&&y>=0&&width>0&&height>0) }
+}
+
+data class TextErasePoint(val x:Float,val y:Float) {
+    init { require(x.isFinite()&&y.isFinite()&&kotlin.math.abs(x)<=BoardLimits.WORLD*2&&kotlin.math.abs(y)<=BoardLimits.WORLD*2) }
+}
+/** Subtractive local-space mask, scoped to characters that existed when erased. */
+data class TextErasePath(val start:Int,val end:Int,val radius:Float,val points:List<TextErasePoint>) {
+    init { require(start>=0&&end>start);require(radius.isFinite()&&radius in .01f..5000f);require(points.size in 1..InkLimits.MAX_POINTS) }
+    fun transformed(dx:Float=0f,dy:Float=0f,scale:Float=1f,offset:Int=0)=copy(start=start+offset,end=end+offset,radius=radius*scale,
+        points=points.map{TextErasePoint(it.x*scale+dx,it.y*scale+dy)})
+}
+
 /** Immutable author data. List order is object stacking order; ink sits above images/text. */
 data class PageObject(
     val id:String, val kind:PageObjectKind,
@@ -15,7 +30,8 @@ data class PageObject(
     val text:String="", val image:String="", val color:Int=0xff24342f.toInt(),
     val fontSize:Float=28f, val revealed:Boolean=false,
     val font:TextFont=TextFont.SYSTEM,val lineSpacing:Float=1f,val bold:Boolean=false,
-    val sourceStrokeIds:List<String> = emptyList(),val hidden:Boolean=false
+    val sourceStrokeIds:List<String> = emptyList(),val hidden:Boolean=false,
+    val glyphs:List<TextGlyph> = emptyList(),val erasures:List<TextErasePath> = emptyList()
 ) {
     init {
         UUID.fromString(id)
@@ -26,11 +42,23 @@ data class PageObject(
         sourceStrokeIds.forEach{UUID.fromString(it)}
         require(sourceStrokeIds.isEmpty()||kind==PageObjectKind.TEXT)
         require(!hidden||sourceStrokeIds.isNotEmpty())
+        require(glyphs.isEmpty()||kind==PageObjectKind.TEXT)
+        require(erasures.isEmpty()||kind==PageObjectKind.TEXT&&glyphs.isNotEmpty())
+        require(erasures.size<=InkLimits.MAX_CUTS&&erasures.sumOf{it.points.size}<=InkLimits.MAX_CUT_POINTS)
+        require(erasures.all{it.end<=text.length})
+        require(glyphs.size<=4000&&glyphs.zipWithNext().all{(a,b)->a.end<=b.start})
+        require(glyphs.all{it.end<=text.length&&it.x+it.width<=width+.01f&&it.y+it.height<=height+.01f})
         require(kotlin.math.abs(x)+width<=BoardLimits.WORLD && kotlin.math.abs(y)+height<=BoardLimits.WORLD)
         require(text.length<=4000 && image.length<=PageObjectCodec.MAX_IMAGE*4/3+4)
         require(when(kind){PageObjectKind.IMAGE->image.isNotEmpty()&&text.isEmpty();PageObjectKind.TEXT->text.isNotBlank()&&image.isEmpty();PageObjectKind.TAPE->text.isEmpty()&&image.isEmpty()})
     }
     fun bounds()=CanvasBounds(x.toDouble(),y.toDouble(),(x+width).toDouble(),(y+height).toDouble())
+    fun visibleText():String {
+        if(hidden)return ""
+        if(glyphs.none{it.hidden})return text
+        val removed=BooleanArray(text.length);glyphs.filter{it.hidden}.forEach{g->for(i in g.start until g.end)removed[i]=true}
+        return text.filterIndexed{i,_->!removed[i]}
+    }
 }
 
 object PageObjectCodec {
@@ -42,7 +70,7 @@ object PageObjectCodec {
         require(objects.count{!it.hidden}<=MAX_OBJECTS && objects.size<=MAX_RECORDS && objects.map{it.id}.distinct().size==objects.size)
         val buffer=ByteArrayOutputStream()
         DataOutputStream(buffer).use { out ->
-            out.writeInt(0x49574f33);out.writeInt(objects.size)
+            out.writeInt(0x49574f34);out.writeInt(objects.size)
             objects.forEach { o ->
                 out.writeUTF(o.id);out.writeByte(o.kind.ordinal)
                 listOf(o.x,o.y,o.width,o.height,o.fontSize).forEach(out::writeFloat)
@@ -50,6 +78,13 @@ object PageObjectCodec {
                 out.writeByte(o.font.ordinal);out.writeFloat(o.lineSpacing);out.writeBoolean(o.bold)
                 out.writeInt(o.sourceStrokeIds.size);o.sourceStrokeIds.forEach(out::writeUTF)
                 out.writeBoolean(o.hidden)
+                out.writeInt(o.glyphs.size);o.glyphs.forEach{g->
+                    out.writeInt(g.start);out.writeInt(g.end);listOf(g.x,g.y,g.width,g.height).forEach(out::writeFloat);out.writeBoolean(g.hidden);out.writeFloat(g.weight)
+                }
+                out.writeInt(o.erasures.size);o.erasures.forEach{cut->
+                    out.writeInt(cut.start);out.writeInt(cut.end);out.writeFloat(cut.radius);out.writeInt(cut.points.size)
+                    cut.points.forEach{out.writeFloat(it.x);out.writeFloat(it.y)}
+                }
                 val image=if(o.image.isEmpty())byteArrayOf()else Base64.getDecoder().decode(o.image)
                 require(image.size<=MAX_IMAGE)
                 if(image.isNotEmpty())require(image.size>4&&image[0]==0xff.toByte()&&image[1]==0xd8.toByte())
@@ -62,7 +97,7 @@ object PageObjectCodec {
     fun decode(bytes:ByteArray):List<PageObject> {
         require(bytes.size in 8..MAX_BYTES)
         return DataInputStream(ByteArrayInputStream(bytes)).use { input ->
-            val version=input.readInt();require(version in listOf(0x49574f31,0x49574f32,0x49574f33))
+            val version=input.readInt();require(version in listOf(0x49574f31,0x49574f32,0x49574f33,0x49574f34))
             val count=input.readInt();require(count in 0..MAX_RECORDS)
             val objects=List(count) {
                 val id=input.readUTF();val kind=PageObjectKind.entries.getOrNull(input.readUnsignedByte())?:error("Object kind")
@@ -73,9 +108,16 @@ object PageObjectCodec {
                 val bold=version>=0x49574f32&&input.readBoolean()
                 val source=if(version>=0x49574f32){val n=input.readInt();require(n in 0..256);List(n){input.readUTF()}}else emptyList()
                 val hidden=version>=0x49574f33&&input.readBoolean()
+                val glyphs=if(version>=0x49574f34){val n=input.readInt();require(n in 0..4000);List(n){TextGlyph(input.readInt(),input.readInt(),input.readFloat(),input.readFloat(),input.readFloat(),input.readFloat(),input.readBoolean(),input.readFloat())}}else emptyList()
+                val erasures=if(version>=0x49574f34){
+                    val n=input.readInt();require(n in 0..InkLimits.MAX_CUTS);var total=0
+                    List(n){val start=input.readInt();val end=input.readInt();val radius=input.readFloat();val points=input.readInt()
+                        require(points in 1..InkLimits.MAX_POINTS);total+=points;require(total<=InkLimits.MAX_CUT_POINTS&&points.toLong()*8<=input.available())
+                        TextErasePath(start,end,radius,List(points){TextErasePoint(input.readFloat(),input.readFloat())})}
+                }else emptyList()
                 val size=input.readInt();require(size in 0..MAX_IMAGE && size<=input.available())
                 val image=ByteArray(size);input.readFully(image)
-                PageObject(id,kind,x,y,w,h,text,if(size==0)""else Base64.getEncoder().encodeToString(image),color,fontSize,revealed,font,spacing,bold,source,hidden)
+                PageObject(id,kind,x,y,w,h,text,if(size==0)""else Base64.getEncoder().encodeToString(image),color,fontSize,revealed,font,spacing,bold,source,hidden,glyphs,erasures)
             }
             require(input.available()==0);encode(objects);objects
         }

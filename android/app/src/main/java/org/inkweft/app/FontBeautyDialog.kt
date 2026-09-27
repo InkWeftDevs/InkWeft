@@ -16,13 +16,13 @@ import org.inkweft.core.*
 import java.util.UUID
 
 @OptIn(ExperimentalLayoutApi::class)
-@Composable internal fun FontControls(font:TextFont,onFont:(TextFont)->Unit,bold:Boolean,onBold:(Boolean)->Unit,spacing:Float,onSpacing:(Float)->Unit){
+@Composable internal fun FontControls(font:TextFont,onFont:(TextFont)->Unit,bold:Boolean,onBold:(Boolean)->Unit,spacing:Float,onSpacing:(Float)->Unit,showSpacing:Boolean=true){
     FlowRow(horizontalArrangement=Arrangement.spacedBy(6.dp)){
         TextFont.entries.forEach{f->FilterChip(font==f,{onFont(f)},label={Text(TextStyles.name(f))},modifier=Modifier.testTag("font-${f.name}"))}
     }
     Row(verticalAlignment=androidx.compose.ui.Alignment.CenterVertically){
-        FilterChip(bold,{onBold(!bold)},label={Text("加粗")});Spacer(Modifier.width(8.dp));Text("行距 %.1f".format(spacing),style=MaterialTheme.typography.bodySmall)
-        Slider(spacing,onSpacing,valueRange=1f..2f,modifier=Modifier.weight(1f).testTag("text-spacing"))
+        FilterChip(bold,{onBold(!bold)},label={Text("加粗")});if(showSpacing){Spacer(Modifier.width(8.dp));Text("行距 %.1f".format(spacing),style=MaterialTheme.typography.bodySmall)
+        Slider(spacing,onSpacing,valueRange=1f..2f,modifier=Modifier.weight(1f).testTag("text-spacing"))}
     }
 }
 

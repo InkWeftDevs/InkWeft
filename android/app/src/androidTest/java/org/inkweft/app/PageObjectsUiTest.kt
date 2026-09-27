@@ -34,7 +34,7 @@ class PageObjectsUiTest {
         return runBlocking{app.repository.observeNotes().first()}.single{it.title==title}.id
     }
     private fun objects(id:String)=runBlocking{app.pageObjects.read(id).objects}
-    private fun count(id:String,n:Int){compose.waitUntil(10_000){objects(id).size==n};compose.waitUntil(10_000){app.navigationReady.value}}
+    private fun count(id:String,n:Int){try{compose.waitUntil(10_000){objects(id).size==n};compose.waitUntil(10_000){app.navigationReady.value}}catch(t:Throwable){capture("object-count-failure.png");println("Expected=$n actual=${objects(id).size}");throw t}}
     private fun capture(name:String){val b=checkNotNull(InstrumentationRegistry.getInstrumentation().uiAutomation.takeScreenshot());try{File(compose.activity.getExternalFilesDir(null),name).outputStream().use{b.compress(Bitmap.CompressFormat.PNG,100,it)}}finally{b.recycle()}}
     private fun position(o:PageObject,corner:Boolean=false):Offset {
         var result=Offset.Zero
@@ -66,7 +66,7 @@ class PageObjectsUiTest {
         compose.onNodeWithTag("object-delete").performScrollTo().performClick();count(id,1)
         compose.onNodeWithTag("ink-undo").performScrollTo().performClick();count(id,2)
         compose.onNodeWithTag("ink-redo").performScrollTo().performClick();count(id,1)
-        compose.onNodeWithTag("object-tape").performScrollTo().performClick();count(id,2)
+        compose.onNodeWithTag("insert-more").performClick();compose.onNodeWithTag("object-tape").performScrollTo().performClick();count(id,2)
         assertFalse(objects(id).last().revealed)
         compose.onNodeWithTag("object-reveal").performClick();compose.waitUntil(10_000){objects(id).last().revealed}
         compose.waitForIdle()
@@ -104,7 +104,9 @@ class PageObjectsUiTest {
             val exported=runBlocking{app.pages.exportBook(id)};assertEquals(o.image,NotebookFile.decode(exported.encode()).pages.single().objects.first().image)
             runBlocking{val row=app.workspaceRepository.get(id);assertTrue(app.workspaceRepository.changeCover(id,row.revision,NotebookCover.CONTENT))}
             compose.onNodeWithTag("back-library").performClick()
-            compose.waitUntil(10_000){runCatching{compose.onNodeWithTag("note-cover-$id").assertIsDisplayed()}.isSuccess}
+            compose.waitUntil(10_000){compose.onAllNodesWithTag("library-grid").fetchSemanticsNodes().isNotEmpty()}
+            compose.onNodeWithTag("library-grid").performScrollToNode(hasTestTag("note-cover-$id"))
+            compose.onNodeWithTag("note-cover-$id").assertIsDisplayed()
             fun previewContainsRed():Boolean {
                 val pixels=compose.onNodeWithTag("note-cover-$id").captureToImage().toPixelMap()
                 var red=0

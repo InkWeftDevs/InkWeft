@@ -52,6 +52,10 @@ internal class PenWidthStore(context:Context,name:String="inkweft-pen-widths") {
         require(tool in 0..2 && width.isFinite() && width in range(tool) && validColor(tool,color) && allowed(tool,kind))
         return writes.withLock { withContext(Dispatchers.IO){preferences.edit().putFloat("width-$tool",width).putInt("color-$tool",color).putString("kind-$tool",kind.name).commit()} }
     }
+    fun applyPreset(tool:Int,width:Float,color:Int,kind:InkPen) {
+        require(tool in 0..2&&width.isFinite()&&width in range(tool)&&validColor(tool,color)&&allowed(tool,kind))
+        preferences.edit().putFloat("width-$tool",width).putInt("color-$tool",color).putString("kind-$tool",kind.name).apply()
+    }
     companion object {
         fun validColor(tool:Int,color:Int)=(color ushr 24)==(if(tool==2)0x66 else 0xff)
         private val writes=Mutex()
@@ -68,38 +72,39 @@ internal class PenWidthStore(context:Context,name:String="inkweft-pen-widths") {
 /** Anchored to the toolbar. Outside taps dismiss without passing into ink. */
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
-internal fun PenPresetMenu(expanded:Boolean,tool:Int,current:Float,currentColor:Int,currentKind:InkPen,onDismiss:()->Unit,favorites:List<FavoritePen> = emptyList(),favoriteBusy:Boolean=false,onFavorite:(InkPen,Float,Int)->Unit={_,_,_->},onApply:(Float,Int,InkPen)->Unit) {
+internal fun PenPresetMenu(expanded:Boolean,tool:Int,current:Float,currentColor:Int,currentKind:InkPen,onDismiss:()->Unit,favorites:List<FavoritePen> = emptyList(),favoriteBusy:Boolean=false,onFavorite:(InkPen,Float,Int)->Unit={_,_,_->},favoriteSelected:Boolean?=null,onApply:(Float,Int,InkPen)->Unit) {
     DropdownMenu(expanded=expanded,onDismissRequest=onDismiss,offset=DpOffset(if(LocalPenPointsLeft.current)(-320).dp else 72.dp,0.dp),shape=RoundedCornerShape(20.dp),containerColor=Color.White,tonalElevation=0.dp,shadowElevation=6.dp,border=BorderStroke(1.dp,Line),modifier=Modifier.width(320.dp).testTag("pen-width-dialog")) {
         var kind by remember(expanded,tool,currentKind){mutableStateOf(currentKind)}
         var draft by remember(expanded,tool,current){mutableFloatStateOf(current)}
         var color by remember(expanded,tool,currentColor){mutableIntStateOf(currentColor)}
         Column(Modifier.padding(horizontal=20.dp,vertical=8.dp),verticalArrangement=Arrangement.spacedBy(8.dp)) {
             Row(verticalAlignment=Alignment.CenterVertically){Text(PenKinds.title(kind),Modifier.weight(1f),fontSize=22.sp,fontWeight=FontWeight.SemiBold,color=TextInk)
-                val saved=favorites.any{it.matches(kind,draft,color)}
+                val saved=favoriteSelected?:favorites.any{it.matches(kind,draft,color)}
                 IconToggleButton(saved,{onFavorite(kind,draft,color)},enabled=!favoriteBusy,modifier=Modifier.size(48.dp).testTag("pen-favorite").describedAs(if(saved)"取消收藏这支笔"else"收藏这支笔")){Glyph(if(saved)"star-filled"else"star",if(saved)Color(0xffbd8100)else Quiet)}
+                IconButton(onClick=onDismiss,modifier=Modifier.size(48.dp).testTag("close-pen-settings").describedAs("关闭笔参数")){Glyph("close")}
             }
             PenStrokePreview(kind,color,draft)
             if(tool!=2)Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.SpaceBetween){PenKinds.writing.forEach{p->
                 Column(horizontalAlignment=Alignment.CenterHorizontally){
-                    IconToggleButton(kind==p,{kind=p;draft=PenKinds.defaultWidth(p)},modifier=Modifier.size(60.dp,48.dp).background(if(kind==p)Leaf else Color.Transparent,RoundedCornerShape(12.dp)).testTag("pen-kind-${p.name.lowercase()}").describedAs(PenKinds.title(p))){PenSilhouette(p,color)}
+                    IconToggleButton(kind==p,{kind=p;draft=PenKinds.defaultWidth(p);onApply(draft,color,kind)},modifier=Modifier.size(60.dp,48.dp).background(if(kind==p)Leaf else Color.Transparent,RoundedCornerShape(12.dp)).testTag("pen-kind-${p.name.lowercase()}").describedAs(PenKinds.title(p))){PenSilhouette(p,color)}
                     Text(PenKinds.title(p),fontSize=12.sp,color=if(kind==p)Forest else Quiet)
                 }
             }}
             HorizontalDivider(color=Line)
             Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.spacedBy(6.dp)) {
                 PenWidthStore.presets(tool).forEachIndexed { index,width ->
-                    FilterChip(selected=draft==width,onClick={draft=width},label={Text(listOf("细","中","粗")[index],fontSize=12.sp)},
+                    FilterChip(selected=draft==width,onClick={draft=width;onApply(draft,color,kind)},label={Text(listOf("细","中","粗")[index],fontSize=12.sp)},
                         modifier=Modifier.weight(1f).heightIn(min=48.dp).testTag("width-preset-$index"))
                 }
             }
             Row{Text("笔刷粗细",Modifier.weight(1f));Text(PenWidthStore.label(draft),modifier=Modifier.testTag("pen-width-value"),style=MaterialTheme.typography.bodyMedium)}
-            Slider(value=draft,onValueChange={draft=(it*10).roundToInt()/10f},valueRange=PenWidthStore.range(tool),modifier=Modifier.fillMaxWidth().testTag("pen-width-slider"),
+            Slider(value=draft,onValueChange={draft=(it*10).roundToInt()/10f;onApply(draft,color,kind)},valueRange=PenWidthStore.range(tool),modifier=Modifier.fillMaxWidth().testTag("pen-width-slider"),
                 thumb={Surface(Modifier.size(24.dp),shape=CircleShape,color=Color.White,shadowElevation=3.dp,border=BorderStroke(1.dp,Line)){}},
                 track={Canvas(Modifier.fillMaxWidth().height(20.dp)){val path=Path().apply{moveTo(0f,size.height*.5f);lineTo(size.width,size.height*.1f);quadraticBezierTo(size.width+size.height*.3f,size.height*.5f,size.width,size.height*.9f);close()};drawPath(path,Color(color or 0xff000000.toInt()))}})
             Row(horizontalArrangement=Arrangement.spacedBy(4.dp)) {
                 PenWidthStore.colors(tool).forEachIndexed { index,value ->
                     Box(Modifier.size(48.dp).border(if(color==value)2.dp else 1.dp,if(color==value)Forest else Color.Transparent,CircleShape)
-                        .clickable{color=value}.testTag("pen-color-$index").describedAs("颜色："+listOf("墨黑","红色","蓝色","绿色","黄色")[index]),contentAlignment=Alignment.Center) {
+                        .clickable{color=value;onApply(draft,color,kind)}.testTag("pen-color-$index").describedAs("颜色："+listOf("墨黑","红色","蓝色","绿色","黄色")[index]),contentAlignment=Alignment.Center) {
                         Box(Modifier.size(25.dp).background(Color(value or 0xff000000.toInt()),CircleShape))
                     }
                 }
@@ -107,12 +112,7 @@ internal fun PenPresetMenu(expanded:Boolean,tool:Int,current:Float,currentColor:
             var hex by remember(color){mutableStateOf(String.format(Locale.ROOT,"%06X",color and 0xffffff))}
             var custom by remember{mutableStateOf(false)}
             TextButton(onClick={custom=!custom},modifier=Modifier.testTag("pen-custom-open")){Text("自定义颜色")}
-            if(custom){OutlinedTextField(hex,{value->if(value.length<=6)hex=value.uppercase(Locale.ROOT)},label={Text("自定义颜色 · 六位十六进制")},isError=!hex.matches(Regex("[0-9A-F]{6}")),singleLine=true,modifier=Modifier.fillMaxWidth().testTag("pen-custom-color"))
-            TextButton(onClick={color=hex.toInt(16) or (if(tool==2)0x66000000 else 0xff000000.toInt())},enabled=hex.matches(Regex("[0-9A-F]{6}"))){Text("使用自定义颜色")}}
-            Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.End) {
-                TextButton(onClick=onDismiss,modifier=Modifier.testTag("cancel-pen-preset")){Text("取消")}
-                Button(onClick={onApply(draft,color,kind)},modifier=Modifier.testTag("apply-pen-width")){Text("使用这支笔")}
-            }
+            if(custom)OutlinedTextField(hex,{value->if(value.length<=6){hex=value.uppercase(Locale.ROOT);if(hex.matches(Regex("[0-9A-F]{6}"))){color=hex.toInt(16) or (if(tool==2)0x66000000 else 0xff000000.toInt());onApply(draft,color,kind)}}},label={Text("颜色 · 六位十六进制")},isError=!hex.matches(Regex("[0-9A-F]{6}")),singleLine=true,modifier=Modifier.fillMaxWidth().testTag("pen-custom-color"))
         }
     }
 }

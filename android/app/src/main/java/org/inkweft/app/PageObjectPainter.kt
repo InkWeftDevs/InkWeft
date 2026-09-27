@@ -29,8 +29,25 @@ internal class PageObjectPainter {
                     else {paint.color=Color.LTGRAY;canvas.drawRect(o.x,o.y,o.x+o.width,o.y+o.height,paint)}
                 }
                 PageObjectKind.TEXT->{
-                    val layout=layouts[o]?:TextStyles.layout(o).also{layouts[o]=it}
-                    canvas.translate(o.x,o.y);layout.draw(canvas)
+                    if(o.glyphs.isEmpty()){
+                        val layout=layouts[o]?:TextStyles.layout(o).also{layouts[o]=it}
+                        canvas.translate(o.x,o.y);layout.draw(canvas)
+                    }else{
+                        val textPaint=TextStyles.paint(o);val ink=Rect()
+                        val masks=o.erasures.map{cut->cut to erasePath(cut,o.x,o.y)}
+                        for(g in o.glyphs.filterNot{it.hidden}){
+                            textPaint.style=if(g.weight>0)Paint.Style.FILL_AND_STROKE else Paint.Style.FILL
+                            textPaint.isFakeBoldText=o.bold&&g.weight==0f;textPaint.strokeWidth=o.fontSize*.04f*g.weight;textPaint.strokeJoin=Paint.Join.ROUND
+                            val value=o.text.substring(g.start,g.end);textPaint.getTextBounds(value,0,value.length,ink)
+                            if(ink.width()==0||ink.height()==0)continue
+                            val glyphSave=canvas.save()
+                            masks.filter{(cut,_)->cut.start<g.end&&cut.end>g.start}.forEach{(_,path)->canvas.clipOutPath(path)}
+                            canvas.translate(o.x+g.x,o.y+g.y)
+                            val pad=if(g.weight>0)textPaint.strokeWidth/2 else 0f
+                            canvas.scale(g.width/(ink.width()+pad*2),g.height/(ink.height()+pad*2));canvas.translate(-ink.left.toFloat()+pad,-ink.top.toFloat()+pad)
+                            canvas.drawText(value,0f,0f,textPaint);canvas.restoreToCount(glyphSave)
+                        }
+                    }
                 }
                 PageObjectKind.TAPE->{
                     paint.color=o.color or 0xff000000.toInt();paint.style=if(o.revealed)Paint.Style.STROKE else Paint.Style.FILL;paint.strokeWidth=2f
@@ -39,4 +56,12 @@ internal class PageObjectPainter {
             };canvas.restoreToCount(save)
         }
     }
+    private fun erasePath(cut:TextErasePath,x:Float,y:Float):Path {
+        val result=Path();val first=cut.points.first()
+        if(cut.points.size==1){result.addCircle(x+first.x,y+first.y,cut.radius,Path.Direction.CW);return result}
+        val center=Path().apply{moveTo(x+first.x,y+first.y);cut.points.drop(1).forEach{lineTo(x+it.x,y+it.y)}}
+        Paint(Paint.ANTI_ALIAS_FLAG).apply{style=Paint.Style.STROKE;strokeWidth=cut.radius*2;strokeCap=Paint.Cap.ROUND;strokeJoin=Paint.Join.ROUND}.getFillPath(center,result)
+        return result
+    }
+
 }
