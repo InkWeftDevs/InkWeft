@@ -42,6 +42,11 @@ class ContinuousWritingTest {
         assertEquals(setOf(1),ContinuousInk.split(stroke(1414f),0,2).keys)
         assertEquals(setOf(1),ContinuousInk.split(stroke(1414f,1414f),0,2).keys)
     }
+    @Test fun splittingPreservesExactInteriorSensorSamples(){
+        val samples=listOf(InkSample(600.2f,770.1f,460,.39131f,.21671f,.43752f,true),InkSample(610.605f,774.094f,463,.713491f,.312113f,.918732f,true),InkSample(620.31f,780.28f,480,.516497f,.378212f,.796513f,true))
+        val source=InkStroke(id(),InkPen.PEN,0xff222222.toInt(),3f,InkTool.STYLUS,samples,true)
+        assertEquals(samples.map{it.copy(world=false)},ContinuousInk.split(source,0,2)[0]!!.single().samples)
+    }
     @Test fun finitePageCannotBePannedAwayAtAnyZoom(){
         for(z in listOf(.02,.5,2.0,8.0))for(sign in listOf(-1,1)){
             val v=CanvasViewport(sign*90000.0,sign*90000.0,z).constrainedToPaper(800.0,600.0)

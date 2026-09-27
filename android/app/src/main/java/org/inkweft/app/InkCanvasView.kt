@@ -243,7 +243,7 @@ class InkCanvasView(context:Context):View(context){
         // These gesture samples are never persisted as author InkStroke points.
         val freeGesture=world||gestureErase||seamWriting
         val point=InkSample(if(freeGesture)w.x.toFloat()else w.x.toFloat().coerceIn(0f,1000f),if(freeGesture)w.y.toFloat()else w.y.toFloat().coerceIn(0f,1414f),time,pressure,tilt,orientation,freeGesture)
-        if(raw.lastOrNull()?.let{it==point||it.elapsedMs>time}==true)return
+        if(raw.lastOrNull()?.let{(it.x==point.x&&it.y==point.y&&it.elapsedMs==time)||it.elapsedMs>time}==true)return
         try{if(!gestureErase){incremental.clear();InkBrushes.add(incremental,point,inputKind,gesturePen);live.enqueueInputs(incremental,empty)};raw.add(point);if(seamWriting&&!gestureErase)onLiveSamples(raw);if(raw.size==InkLimits.MAX_POINTS)onNotice("达到单笔采样上限，请抬笔提交后继续。")}catch(_:IllegalArgumentException){onNotice("无效设备采样未进入笔迹。")}
     }
     private fun finishGesture(){

@@ -30,6 +30,8 @@ object ContinuousInk {
                 for(edge in first..last){val t=(edge*1414f-a.y)/(b.y-a.y);if(t>0f&&t<1f)ts.add(t)}
             }
             fun lerp(t:Float):InkSample {
+                if(t==0f)return a
+                if(t==1f)return b
                 fun f(x:Float,y:Float)=if(x<0f)-1f else x+(y-x)*t
                 return InkSample(a.x+(b.x-a.x)*t,a.y+(b.y-a.y)*t,a.elapsedMs+((b.elapsedMs-a.elapsedMs)*t).toLong(),f(a.pressure,b.pressure),f(a.tilt,b.tilt),f(a.orientation,b.orientation),true)
             }

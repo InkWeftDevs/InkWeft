@@ -54,6 +54,18 @@ class ContinuousWritingUiTest {
     }
     private fun shot(name:String){compose.waitForIdle();val b=checkNotNull(InstrumentationRegistry.getInstrumentation().uiAutomation.takeScreenshot());try{File(app.getExternalFilesDir(null),name).outputStream().use{b.compress(Bitmap.CompressFormat.PNG,100,it)}}finally{b.recycle()}}
 
+    @Test fun pressureOnlyDuplicateSamplesReopenWithoutChangingAuthorData(){
+        val samples=listOf(InkSample(610.605f,774.094f,463,.3f,.2f,.1f),InkSample(610.605f,774.094f,463,.31f,.2f,.1f),InkSample(620f,780f,480,.5f,.2f,.1f))
+        val original=InkStroke(id(),InkPen.PEN,0xff222222.toInt(),3f,InkTool.STYLUS,samples)
+        val bytes=InkStrokeCodec.encode(original)
+        InkPen.entries.forEach{pen->InkBrushes.stroke(InkStroke(id(),pen,0xff222222.toInt(),3f,InkTool.STYLUS,samples))}
+        val note=open{n->app.inkRepository.save(CommitInk(id(),n.id,0,InkMutation.Add(original)))}
+        compose.waitForIdle();compose.activityRule.scenario.recreate()
+        compose.waitUntil(10_000){app.navigationReady.value&&compose.onAllNodesWithTag("continuous-pages").fetchSemanticsNodes().isNotEmpty()}
+        compose.waitForIdle();single();compose.waitForIdle()
+        assertArrayEquals(bytes,InkStrokeCodec.encode(runBlocking{app.inkRepository.read(note.id).strokes.single().stroke}))
+    }
+
     @Test fun continuousSeamHasNoGapAndOneGesturePersistsOnBothSides(){
         val note=open(2);val pages=runBlocking{app.pages.activePages(note.id)}
         compose.onNodeWithTag("continuous-pages").performScrollToIndex(1)
