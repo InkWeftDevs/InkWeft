@@ -46,6 +46,9 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
     var beautySettings by remember{mutableStateOf(false)}
     fun saveBeauty(value:BeautyOptions){beautyOptions=value;beautyStore.save(value)}
     val beautyStatus by objectsVm.beautyStatus.collectAsStateWithLifecycle()
+    val visibleGeometry=remember{VisibleInkGeometry()}
+    var pendingObject by remember(note.base.id){mutableStateOf<Pair<String,String>?>(null)}
+    var penOpenRequest by remember{mutableIntStateOf(0)}
     var selectedObject by remember(page.id){mutableStateOf<String?>(null)}
     var objectInteraction by remember{mutableStateOf(false)}
     val objectsBlocked=objectsUi.loading||objectsUi.busy||objectsUi.pending||objectInteraction||smoothSelection!=null
@@ -92,6 +95,7 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
             if(selected?.revision!=ui.revision)selected=null
         }
     }
+    LaunchedEffect(page.id,continuousPages==null,pendingObject){pendingObject?.let{(target,id)->if(target==page.id&&continuousPages==null){selectedObject=id;tool=5;pendingObject=null}}}
     LaunchedEffect(tool){if(tool!=4&&tool!=6){selected=null;view?.selectionPreview(emptySet())}}
     LaunchedEffect(focusRegion,view,ui.loading){if(focusRegion!=null&&!ui.loading){view?.post{view?.focusRegion(focusRegion);onFocusConsumed()}}}
     fun applySelected(revision:Long,change:InkMutation):Boolean{
@@ -144,7 +148,7 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
     }
     if(continuousPages==null)AutomaticBeautyBinding(objectsVm,ui,gesture,beautyOptions,page.world,app)
     val toolbar:@Composable ()->Unit={
-        FloatingPenCase {
+        FloatingPenCase(expandRequest=penOpenRequest) {
             (0..2).forEach{i->
                 Box{
                     IconToggleButton(tool==i,{if(tool==i)settings=true else tool=i},enabled=!busy,modifier=Modifier.size(64.dp,48.dp).testTag("ink-tool-$i").describedAs(PenWidthStore.name(i,kinds[i])+"，再点调整")){
@@ -189,7 +193,7 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
         if(continuousPages!=null){
             Box(Modifier.fillMaxWidth().weight(1f)){ContinuousPages(continuousPages,page.id,
                 ContinuousTools(kinds[tool.coerceIn(0,2)],colors[tool.coerceIn(0,2)],widths[tool.coerceIn(0,2)],tool==3,eraser.whole,eraser.onlyHighlighter,eraser.diameterDp,externalEnabled&&tool<4&&!objectsBlocked,beautyOptions),
-                gesture,onContinuousPage,{gesture=it},{continuousBlocked=it},{notice=it},{id->onContinuousPage(id);leaveContinuous()})}
+                gesture,onContinuousPage,{gesture=it},{continuousBlocked=it},{notice=it},{id->onContinuousPage(id);leaveContinuous()},onObjectTap={pageId,id->pendingObject=pageId to id;onContinuousPage(pageId);leaveContinuous()})}
         }else if(row!=null){
             val initial=remember(page.id){workspace.cachedViewport(page.id)?:row.takeIf{it.zoom>0}?.let{runCatching{CanvasViewport(it.centerX,it.centerY,it.zoom)}.getOrNull()}}
             Box(Modifier.fillMaxWidth().weight(1f)){
@@ -197,7 +201,7 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
                 view=v;v.onStroke=vm::accept;v.onErase={path,radius,whole,only->vm.erasePath(path,radius,whole,only);if(!only)objectsVm.eraseBeauty(path,radius,whole)};v.onGesture={gesture=it}
                 v.onNotice={notice=it;app.diagnostics.event(DiagnosticCode.INK_UI,DiagnosticResult.REJECTED)}
                 v.onAxes={pressure,tilt->app.diagnostics.inputAxes(pressure,tilt);axes="本次输入：压力${if(pressure)"已上报"else"未上报"} · 倾斜${if(tilt)"已上报"else"未上报"}"}
-                v.onViewport={workspace.viewport(page.id,it)};v.onScale={zoom=it}
+                v.onObjectTap={selectedObject=it;tool=5};v.onViewport={workspace.viewport(page.id,it)};v.onScale={zoom=it}
             }},update={v->
                 v.configure(row.world,PaperStyle.entries.getOrElse(row.paper){PaperStyle.RULED},initial)
                 v.allowInput=externalEnabled&&tool<4&&!objectsBlocked&&(if(tool==3)!ui.loading&&!ui.readFailed&&ui.blocked==null&&!ui.processing&&ui.queued<16 else ui.canStart);v.eraserWhole=eraser.whole;v.eraserHighlighterOnly=eraser.onlyHighlighter;v.eraserDiameterDp=eraser.diameterDp;v.fingerWrites=finger;v.eraseMode=tool==3;v.pen=kinds[tool.coerceIn(0,2)]
@@ -210,8 +214,8 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
                 v.onSelect={selectedObject=it;if(it==null)tool=0};v.onChange=objectsVm::put;v.onActive={gesture=it};v.invalidate()
             },modifier=Modifier.fillMaxSize().testTag("object-overlay"))
             if(tool==4||tool==6)AndroidView(factory={SelectionOverlayView(it)},update={v->
-                v.selectedObjects=objectsUi.objects.filter{!it.hidden&&it.sourceStrokeIds.isNotEmpty()&&selected?.region?.selects(it.bounds())==true}.map{it.bounds()};v.canvasView=view;v.region=selected?.region;v.selected=selected?.strokes.orEmpty();v.freehand=freehand;v.enabledInput=editable
-                v.onActive={gesture=it};v.onRegion={region->selected=region?.let{SelectedInk(it,ui.revision,selectable.filter{stroke->it.selects(stroke)})};if(tool==6)selected?.let{beautify(it)}}
+                v.geometry=visibleGeometry;v.selectedObjects=objectsUi.objects.filter{!it.hidden&&it.sourceStrokeIds.isNotEmpty()&&selected?.region?.let{r->visibleGeometry.selects(r,it)}==true}.map{it.bounds()};v.canvasView=view;v.region=selected?.region;v.selected=selected?.strokes.orEmpty();v.freehand=freehand;v.enabledInput=editable
+                v.onActive={gesture=it};v.onRegion={region->selected=region?.let{SelectedInk(it,ui.revision,selectable.filter{stroke->visibleGeometry.selects(it,stroke)})};if(tool==6)selected?.let{beautify(it)}}
                 v.onShift={dx,dy->selected?.let{current->runCatching{InkSelectionEdit.copy(current.strokes,dx,dy)}.onSuccess{changed->if(applySelected(current.revision,InkMutation.Replace(current.strokes.map{it.id},changed)))selected=null}.onFailure{notice="移动超出画布或编辑预算，原笔迹保留。"}}}
                 v.invalidate()
             },modifier=Modifier.fillMaxSize().testTag("selection-overlay"))
@@ -235,7 +239,7 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
             Row(Modifier.horizontalScroll(rememberScrollState()).padding(horizontal=4.dp),verticalAlignment=Alignment.CenterVertically){
             IconButton(onClick={if(historyHeads.undo==EditDomain.OBJECT)objectsVm.undo()else vm.undo()},enabled=(if(historyHeads.undo==EditDomain.OBJECT)objectsUi.undo else ui.canUndo)&&!busy,modifier=Modifier.testTag("ink-undo").describedAs("撤销")){Glyph("undo")}
             IconButton(onClick={if(historyHeads.redo==EditDomain.OBJECT)objectsVm.redo()else vm.redo()},enabled=(if(historyHeads.redo==EditDomain.OBJECT)objectsUi.redo else ui.canRedo)&&!busy,modifier=Modifier.testTag("ink-redo").describedAs("重做")){Glyph("redo")}
-                IconButton(onClick={selectedObject=null;tool=0},enabled=!busy,modifier=Modifier.testTag("top-draw").describedAs("书写")){Glyph("pen",if(tool<3)Forest else Quiet)}
+                IconButton(onClick={selectedObject=null;if(tool !in 0..2)tool=0;penOpenRequest++;settings=true},enabled=!busy,modifier=Modifier.testTag("top-draw").describedAs("笔参数")){Glyph("pen",if(tool<3)Forest else Quiet)}
                 IconButton(onClick={if(continuousPages!=null)leaveContinuous();tool=5;objectRequest="text"},enabled=!busy&&!continuousBlocked,modifier=Modifier.testTag("object-text").describedAs("文本框")){Glyph("text")}
                 IconButton(onClick={if(continuousPages!=null)leaveContinuous();tool=5;objectRequest="image"},enabled=!busy&&!continuousBlocked,modifier=Modifier.testTag("object-image").describedAs("插入图片")){Glyph("image")}
                 IconToggleButton(tool==5,{if(continuousPages!=null)leaveContinuous();selectedObject=null;tool=if(tool==5)0 else 5},enabled=!busy&&!continuousBlocked,modifier=Modifier.testTag("page-objects").describedAs("选择图片与文字")){Glyph("select")}
@@ -267,7 +271,7 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
             Column {
                 if(tool==4){
                     SelectionActions(selected,selectable,editable&&!objectsBlocked,freehand,{freehand=it},::applySelected,{selected=null},onExcerpt,onAssociate,{beautify(it)})
-                    val chosen=objectsUi.objects.filter{!it.hidden&&it.sourceStrokeIds.isNotEmpty()&&selected?.region?.selects(it.bounds())==true}
+                    val chosen=objectsUi.objects.filter{!it.hidden&&it.sourceStrokeIds.isNotEmpty()&&selected?.region?.let{r->visibleGeometry.selects(r,it)}==true}
                     if(chosen.isNotEmpty())TextButton(onClick={objectsVm.deleteObjects(chosen.map{it.id}.toSet());selected=null},enabled=editable&&!objectsBlocked,modifier=Modifier.testTag("selection-delete-beauty")){Text("删除选中的美化文字")}
                 }
                 if(tool==6)Row(Modifier.horizontalScroll(rememberScrollState()),verticalAlignment=Alignment.CenterVertically){

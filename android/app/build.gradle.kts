@@ -12,8 +12,8 @@ android {
         applicationId = if (insertionPreview) "org.inkweft.app.a0.insertion" else if (diagnosticBuild) "org.inkweft.app.a0.workspace" else "org.inkweft.app.a0"
         minSdk = 31
         targetSdk = 36
-        versionCode = 23
-        versionName = "0.0.23-direct-writing"
+        versionCode = 24
+        versionName = "0.0.24-visible-editing"
         manifestPlaceholders["appLabel"] = if (insertionPreview) "墨织整合预览" else if (diagnosticBuild) "墨织工作台预览" else "墨织"
         buildConfigField("String", "BUILD_COMMIT", "\"${commitValue("GITHUB_SHA")}\"")
         buildConfigField("String", "SOURCE_COMMIT", "\"${commitValue("INKWEFT_HEAD_SHA")}\"")
@@ -57,6 +57,7 @@ dependencies {
     implementation(libs.kotlinx.coroutines)
     implementation(libs.ink.brush)
     implementation(libs.ink.strokes)
+    implementation(libs.ink.geometry)
     implementation(libs.ink.rendering)
     androidTestImplementation(platform(libs.compose.bom))
     androidTestImplementation(libs.compose.ui.test)

@@ -84,6 +84,7 @@ internal fun PenPresetMenu(expanded:Boolean,tool:Int,current:Float,currentColor:
                 IconButton(onClick=onDismiss,modifier=Modifier.size(48.dp).testTag("close-pen-settings").describedAs("关闭笔参数")){Glyph("close")}
             }
             PenStrokePreview(kind,color,draft)
+            Text(PenKinds.description(kind),style=MaterialTheme.typography.bodySmall,color=Quiet)
             if(tool!=2)Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.SpaceBetween){PenKinds.writing.forEach{p->
                 Column(horizontalAlignment=Alignment.CenterHorizontally){
                     IconToggleButton(kind==p,{kind=p;draft=PenKinds.defaultWidth(p);onApply(draft,color,kind)},modifier=Modifier.size(60.dp,48.dp).background(if(kind==p)Leaf else Color.Transparent,RoundedCornerShape(12.dp)).testTag("pen-kind-${p.name.lowercase()}").describedAs(PenKinds.title(p))){PenSilhouette(p,color)}

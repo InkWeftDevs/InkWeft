@@ -153,18 +153,15 @@ class InkCanvasView(context:Context):View(context){
     fun zoomBy(ratio:Double){cancelGesture();viewport=viewport.zoomAt(ratio,width/2.0,height/2.0,width.toDouble(),height.toDouble(),density);transform();invalidate();onViewport(viewport)}
     override fun onSizeChanged(w:Int,h:Int,oldw:Int,oldh:Int){cancelGesture();if(configured&&oldw==0&&!restored)initialFit();if(embeddedPage&&configured)fitPage(false);if(preview)if(world)fitContent(false)else fitPage(false);transform()}
     override fun draw(c:Canvas){val save=c.save();try{c.clipRect(0,0,width,height);super.draw(c)}finally{c.restoreToCount(save)}}
-    internal fun cutPath(cut:InkCut):Path=maskPaths[cut]?:when(cut.shape){
-        InkCutShape.ROUND->sweptPath(cut.points,cut.radius)
-        InkCutShape.RECTANGLE->Path().apply{addRect(cut.points[0].x,cut.points[0].y,cut.points[1].x,cut.points[1].y,Path.Direction.CW)}
-        InkCutShape.POLYGON->Path().apply{moveTo(cut.points[0].x,cut.points[0].y);cut.points.drop(1).forEach{lineTo(it.x,it.y)};close()}
-    }.also{maskPaths[cut]=it}
-    private fun sweptPath(points:List<EraserPoint>,radius:Float):Path{
-        val result=Path();if(points.isEmpty())return result
-        if(points.size==1){result.addCircle(points[0].x,points[0].y,radius,Path.Direction.CW);return result}
-        val center=Path();center.moveTo(points[0].x,points[0].y);points.drop(1).forEach{center.lineTo(it.x,it.y)}
-        val stroke=Paint(Paint.ANTI_ALIAS_FLAG).apply{style=Paint.Style.STROKE;strokeWidth=radius*2;strokeCap=Paint.Cap.ROUND;strokeJoin=Paint.Join.ROUND}
-        stroke.getFillPath(center,result);return result
+    internal fun cutPath(cut:InkCut):Path=maskPaths[cut]?:VisibleInkGeometry.cutPath(cut).also{maskPaths[cut]=it}
+    private fun sweptPath(points:List<EraserPoint>,radius:Float)=VisibleInkGeometry.sweptPath(points,radius)
+    var onObjectTap:(String)->Unit={}
+    internal fun imageAt(x:Float,y:Float):String? {
+        val p=viewport.screenToWorld(x.toDouble(),y.toDouble(),width.toDouble(),height.toDouble(),density)
+        return objects.asReversed().firstOrNull{!it.hidden&&it.kind==PageObjectKind.IMAGE&&p.x>=it.x&&p.x<=it.x+it.width&&p.y>=it.y&&p.y<=it.y+it.height}?.id
     }
+    private var tapImage:String?=null
+    private var tapX=0f;private var tapY=0f
     override fun onDraw(canvas:Canvas){
         super.onDraw(canvas);if(!configured)return
         canvas.drawColor(Color.WHITE)
@@ -202,13 +199,13 @@ class InkCanvasView(context:Context):View(context){
     override fun onHoverEvent(e:MotionEvent):Boolean {if(preview||!eraseMode)return super.onHoverEvent(e);cursor=if(e.actionMasked==MotionEvent.ACTION_HOVER_EXIT)null else CanvasPoint(e.x.toDouble(),e.y.toDouble());invalidate();return true}
     override fun onTouchEvent(e:MotionEvent):Boolean{
         if(preview)return false;if(!configured)return true
-        if(e.actionMasked==MotionEvent.ACTION_CANCEL||(e.flags and MotionEvent.FLAG_CANCELED)!=0){cancelGesture();panPointer=-1;finishViewport();return true}
+        if(e.actionMasked==MotionEvent.ACTION_CANCEL||(e.flags and MotionEvent.FLAG_CANCELED)!=0){tapImage=null;cancelGesture();panPointer=-1;finishViewport();return true}
         if(embeddedPage&&inputId==-1&&e.getToolType(0)==MotionEvent.TOOL_TYPE_FINGER)return false
         if(inputId==-1||inputKind!=InkTool.STYLUS)scaleDetector.onTouchEvent(e)
-        if(e.actionMasked==MotionEvent.ACTION_POINTER_DOWN){if(inputKind!=InkTool.STYLUS)cancelGesture();panPointer=-1;return true}
+        if(e.actionMasked==MotionEvent.ACTION_POINTER_DOWN){tapImage=null;if(inputKind!=InkTool.STYLUS)cancelGesture();panPointer=-1;return true}
         if(e.actionMasked==MotionEvent.ACTION_DOWN){
             if(inputId!=-1)cancelGesture();val type=e.getToolType(0);inputKind=when(type){MotionEvent.TOOL_TYPE_STYLUS,MotionEvent.TOOL_TYPE_ERASER->InkTool.STYLUS;MotionEvent.TOOL_TYPE_MOUSE->InkTool.MOUSE;else->InkTool.TOUCH}
-            if(inputKind==InkTool.TOUCH&&!fingerWrites){panPointer=e.getPointerId(0);panLastX=e.x;panLastY=e.y;return true};if(!allowInput||(documentId!=null&&!documentKnownAbsent&&(documentTile==null||documentError)))return true
+            if(inputKind==InkTool.TOUCH&&!fingerWrites){tapImage=if(allowInput&&!eraseMode)imageAt(e.x,e.y)else null;tapX=e.x;tapY=e.y;panPointer=e.getPointerId(0);panLastX=e.x;panLastY=e.y;return true};if(!allowInput||(documentId!=null&&!documentKnownAbsent&&(documentTile==null||documentError)))return true
             val p=viewport.screenToWorld(e.x.toDouble(),e.y.toDouble(),width.toDouble(),height.toDouble(),density)
             if(!world&&(p.x !in 0.0..1000.0||p.y !in 0.0..1414.0))return true
             if(abs(p.x)>BoardLimits.WORLD||abs(p.y)>BoardLimits.WORLD){onNotice("已到达画布数值安全边界，请返回内容区域。");return true}
@@ -221,7 +218,7 @@ class InkCanvasView(context:Context):View(context){
             hasTilt=inputKind==InkTool.STYLUS&&device?.getMotionRange(MotionEvent.AXIS_TILT,e.source)!=null;hasOrientation=inputKind==InkTool.STYLUS&&device?.getMotionRange(MotionEvent.AXIS_ORIENTATION,e.source)!=null
             onAxes(hasPressure,hasTilt);onGesture(true);if(!gestureErase)live.start(InkBrushes.brush(gesturePen,gestureColor,gestureWidth,hasPressure));append(e,0,-1);postInvalidateOnAnimation();return true
         }
-        if(inputId==-1){if(e.actionMasked==MotionEvent.ACTION_MOVE&&panPointer!=-1&&e.pointerCount==1&&!scaleDetector.isInProgress){viewport=viewport.pan((e.x-panLastX).toDouble(),(e.y-panLastY).toDouble(),density);panLastX=e.x;panLastY=e.y;movingViewport=true;transform();invalidate()};if(e.actionMasked==MotionEvent.ACTION_UP){panPointer=-1;finishViewport();performClick()};return true}
+        if(inputId==-1){if(e.actionMasked==MotionEvent.ACTION_MOVE&&panPointer!=-1&&e.pointerCount==1&&!scaleDetector.isInProgress){if(hypot(e.x-tapX,e.y-tapY)>android.view.ViewConfiguration.get(context).scaledTouchSlop)tapImage=null;viewport=viewport.pan((e.x-panLastX).toDouble(),(e.y-panLastY).toDouble(),density);panLastX=e.x;panLastY=e.y;movingViewport=true;transform();invalidate()};if(e.actionMasked==MotionEvent.ACTION_UP){val hit=tapImage;tapImage=null;panPointer=-1;finishViewport();if(hit!=null)onObjectTap(hit);performClick()};return true}
         val index=e.findPointerIndex(inputId);if(index<0){cancelGesture();return true}
         when(e.actionMasked){MotionEvent.ACTION_MOVE->{if(scaleDetector.isInProgress&&inputKind!=InkTool.STYLUS){cancelGesture();return true};for(i in 0 until e.historySize)append(e,index,i);append(e,index,-1);postInvalidateOnAnimation()};MotionEvent.ACTION_UP,MotionEvent.ACTION_POINTER_UP->{if(e.getPointerId(e.actionIndex)!=inputId)return true;append(e,index,-1);finishGesture();performClick()}}
         return true

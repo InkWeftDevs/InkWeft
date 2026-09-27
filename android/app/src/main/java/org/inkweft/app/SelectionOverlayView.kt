@@ -11,6 +11,7 @@ import kotlin.math.*
 /** Selection-only input surface. Never creates pen samples or writes storage. */
 internal class SelectionOverlayView(context:Context):View(context){
     var canvasView:InkCanvasView?=null
+    var geometry=VisibleInkGeometry()
     var region:InkRegion?=null
     var selected:List<InkStroke> = emptyList()
     var selectedObjects:List<CanvasBounds> = emptyList()
@@ -42,7 +43,7 @@ internal class SelectionOverlayView(context:Context):View(context){
         if(r!=null){val path=shape(r);paint.style=Paint.Style.FILL;paint.color=0x10216b59;c.drawPath(path,paint)
             paint.style=Paint.Style.STROKE;paint.strokeWidth=(1.5*density).toFloat();paint.color=0xff216b59.toInt();paint.pathEffect=DashPathEffect(floatArrayOf((6*density).toFloat(),(4*density).toFloat()),0f);c.drawPath(path,paint);paint.pathEffect=null}
         paint.style=Paint.Style.STROKE;paint.strokeWidth=density.toFloat();paint.color=0x77216b59
-        selected.forEach{s->val b=s.bounds();val a=screen(EraserPoint(b.left.toFloat()+dx,b.top.toFloat()+dy));val z=screen(EraserPoint(b.right.toFloat()+dx,b.bottom.toFloat()+dy));c.drawRect(a.x.toFloat(),a.y.toFloat(),z.x.toFloat(),z.y.toFloat(),paint)}
+        selected.forEach{s->val b=geometry.bounds(s)?:return@forEach;val a=screen(EraserPoint(b.left.toFloat()+dx,b.top.toFloat()+dy));val z=screen(EraserPoint(b.right.toFloat()+dx,b.bottom.toFloat()+dy));c.drawRect(a.x.toFloat(),a.y.toFloat(),z.x.toFloat(),z.y.toFloat(),paint)}
         selectedObjects.forEach{b->val a=screen(EraserPoint(b.left.toFloat(),b.top.toFloat()));val z=screen(EraserPoint(b.right.toFloat(),b.bottom.toFloat()));c.drawRect(a.x.toFloat(),a.y.toFloat(),z.x.toFloat(),z.y.toFloat(),paint)}
     }
     override fun onTouchEvent(e:MotionEvent):Boolean{

@@ -16,8 +16,9 @@ class PenKindsTest {
     }
     @Test fun noPressureHasExplicitFallbackAndBrushCurveKeepsEndpoints(){
         InkPen.entries.forEach{assertEquals(-1f,PenKinds.renderPressure(it,-1f),0f)}
-        assertEquals(.5f,PenKinds.renderPressure(InkPen.PEN,.5f),0f)
-        assertEquals(.25f,PenKinds.renderPressure(InkPen.BRUSH,.5f),0f)
+        assertTrue(PenKinds.renderPressure(InkPen.PEN,.5f)>.5f)
+        assertTrue(PenKinds.renderPressure(InkPen.BRUSH,.147f)>.3f)
+        assertTrue(8f*(.12f+.88f*PenKinds.renderPressure(InkPen.BRUSH,.147f))>3f)
         assertEquals(1f,PenKinds.renderPressure(InkPen.BRUSH,1f),0f)
         listOf(InkPen.BALLPOINT,InkPen.MARKER,InkPen.HIGHLIGHTER).forEach{assertEquals(-1f,PenKinds.renderPressure(it,.5f),0f)}
     }

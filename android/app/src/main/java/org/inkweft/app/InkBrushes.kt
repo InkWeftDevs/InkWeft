@@ -15,18 +15,23 @@ import org.inkweft.core.*
 /** Live ink, reopened strokes and the preset preview share one render policy. */
 internal object InkBrushes {
     private val round=StockBrushes.marker()
-    private val pressure=StockBrushes.pressurePen()
     private val chisel=StockBrushes.highlighter()
-    private val calligraphy=BrushFamily(BrushTip(cornerRounding=1f,behaviors=listOf(
-        BrushBehavior(TargetNode(TargetNode.Target.SIZE_MULTIPLIER,.12f,1f,
-            SourceNode(SourceNode.Source.NORMALIZED_PRESSURE,0f,1f)),
-            developerComment="Round calligraphy tip: squared author pressure maps to 12–100% width.")
-    )))
+    private fun response(pressure:Boolean,minimum:Float)=BrushBehavior(
+        TargetNode(TargetNode.Target.SIZE_MULTIPLIER,if(pressure)minimum else 1f,if(pressure)1f else minimum,
+            SourceNode(if(pressure)SourceNode.Source.NORMALIZED_PRESSURE else SourceNode.Source.SPEED_IN_MULTIPLES_OF_BRUSH_SIZE_PER_SECOND,
+                0f,if(pressure)1f else 180f)))
+    private fun fountain(pressure:Boolean)=BrushFamily(BrushTip(scaleX=1f,scaleY=.7f,rotationDegrees=-35f,cornerRounding=.8f,
+        behaviors=listOf(response(pressure,.55f))))
+    private fun brushPen(pressure:Boolean)=BrushFamily(BrushTip(cornerRounding=1f,behaviors=listOf(response(pressure,.12f))))
+    private val fountainPressure=fountain(true)
+    private val fountainSpeed=fountain(false)
+    private val brushPressure=brushPen(true)
+    private val brushSpeed=brushPen(false)
     fun brush(pen:InkPen,color:Int,width:Float,hasPressure:Boolean):Brush {
         val family=when {
             pen==InkPen.HIGHLIGHTER||pen==InkPen.MARKER->chisel
-            pen==InkPen.BRUSH&&hasPressure->calligraphy
-            PenKinds.pressureSensitive(pen)&&hasPressure->pressure
+            pen==InkPen.BRUSH->if(hasPressure)brushPressure else brushSpeed
+            pen==InkPen.PEN->if(hasPressure)fountainPressure else fountainSpeed
             else->round
         }
         return Brush.createWithColorIntArgb(family,color,width,.1f)

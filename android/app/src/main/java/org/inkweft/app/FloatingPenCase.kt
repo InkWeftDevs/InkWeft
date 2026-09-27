@@ -21,7 +21,7 @@ import kotlin.math.roundToInt
 
 internal val LocalPenPointsLeft=compositionLocalOf{false}
 
-@Composable internal fun FloatingPenCase(storageKey:String="case",wide:Boolean=false,content:@Composable ColumnScope.()->Unit){
+@Composable internal fun FloatingPenCase(storageKey:String="case",wide:Boolean=false,expandRequest:Int=0,content:@Composable ColumnScope.()->Unit){
     val context=LocalContext.current
     val prefs=remember{context.getSharedPreferences("inkweft-editor",0)}
     // App-wide persisted preferences outrank a notebook tab's saved composition.
@@ -34,6 +34,7 @@ internal val LocalPenPointsLeft=compositionLocalOf{false}
     val density=LocalDensity.current
     val tag=if(wide)"favorite-pen-case"else"floating-pen-case"
     fun persist(){prefs.edit().putFloat("$storageKey-x",x).putFloat("$storageKey-y",y).putBoolean("$storageKey-collapsed",collapsed).apply()}
+    LaunchedEffect(expandRequest){if(expandRequest>0){collapsed=false;persist()}}
     Box(Modifier.fillMaxSize().padding(top=56.dp).onSizeChanged{host=it}){
         val maxX=(host.width-size.width).coerceAtLeast(0).toFloat()
         val maxY=(host.height-size.height).coerceAtLeast(0).toFloat()

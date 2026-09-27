@@ -53,7 +53,7 @@ internal class PageObjectOverlay(context:Context):View(context) {
                 val maxX=if(world)BoardLimits.WORLD else 1000f;val maxY=if(world)BoardLimits.WORLD else 1414f
                 draft=if(resize){
                     val maxW=min(4000f,maxX-o.x);val maxH=min(4000f,maxY-o.y)
-                    if(o.kind==PageObjectKind.IMAGE){val ratio=o.height/o.width;val w=(o.width+dx).coerceIn(max(24f,24f/ratio),min(maxW,maxH/ratio));o.copy(width=w,height=w*ratio)}
+                    if(o.kind==PageObjectKind.IMAGE)o.copy(width=(o.width+dx).coerceIn(24f,maxW),height=(o.height+dy).coerceIn(24f,maxH))
                     else if(o.kind==PageObjectKind.TEXT&&o.glyphs.isNotEmpty()){
                         val ratio=o.height/o.width;val w=(o.width+dx).coerceIn(max(24f,24f/ratio),min(maxW,maxH/ratio));val scale=w/o.width
                         o.copy(width=w,height=w*ratio,glyphs=o.glyphs.map{it.copy(x=it.x*scale,y=it.y*scale,width=it.width*scale,height=it.height*scale)},erasures=o.erasures.map{it.transformed(scale=scale)})

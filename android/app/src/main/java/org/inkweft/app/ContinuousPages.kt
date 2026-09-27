@@ -2,6 +2,8 @@
 package org.inkweft.app
 
 import androidx.compose.foundation.*
+import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
 import androidx.compose.material3.*
@@ -25,7 +27,7 @@ internal data class ContinuousTools(val pen:InkPen,val color:Int,val width:Float
 
 /** Only visible pages have native views. Visited writers remain observed until their saves settle. */
 @Composable internal fun ContinuousPages(pages:List<NotebookPageRow>,selected:String,tools:ContinuousTools,
-    writing:Boolean,onSelect:(String)->Unit,onGesture:(Boolean)->Unit,onBlocked:(Boolean)->Unit,onNotice:(String)->Unit,onRepair:(String)->Unit){
+    writing:Boolean,onSelect:(String)->Unit,onGesture:(Boolean)->Unit,onBlocked:(Boolean)->Unit,onNotice:(String)->Unit,onRepair:(String)->Unit,onObjectTap:(String,String)->Unit={_,_->}){
     val app=LocalContext.current.applicationContext as InkWeftApplication
     val state=rememberLazyListState(initialFirstVisibleItemIndex=pages.indexOfFirst{it.id==selected}.coerceAtLeast(0))
     val models=remember{mutableStateMapOf<String,InkViewModel>()}
@@ -62,7 +64,7 @@ internal data class ContinuousTools(val pen:InkPen,val color:Int,val width:Float
             AutomaticBeautyBinding(objectModel,ui,writing,tools.beauty,false,app)
             Column(Modifier.fillMaxWidth()){
 
-                Box(Modifier.fillMaxWidth().aspectRatio(1000f/1414f).background(Color.White).testTag("continuous-page-${page.position+1}")){
+                Box(Modifier.fillMaxWidth().aspectRatio(1000f/1414f).background(Color.White).testTag("continuous-page-${page.position+1}").pointerInput(page.id,tools.enabled,tools.erasing){detectTapGestures{point->if(tools.enabled&&!tools.erasing)views[page.id]?.imageAt(point.x,point.y)?.let{onObjectTap(page.id,it)}}}){
                     AndroidView(factory={ctx->InkCanvasView(ctx).apply{embeddedPage=true;seamWriting=true;tag="ink-page-${page.id}"}},update={v->
                         v.configure(false,PaperStyle.entries[page.paper],null)
                         views[page.id]=v
