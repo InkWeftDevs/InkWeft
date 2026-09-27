@@ -9,6 +9,9 @@ import android.view.ViewGroup
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.test.platform.app.InstrumentationRegistry
 import kotlinx.coroutines.runBlocking
@@ -58,7 +61,15 @@ class SelectionStudyUiTest {
         compose.onNodeWithTag("selection-overlay").performTouchInput{swipe(a,b,300)};compose.waitForIdle()
     }
     private fun shot(name:String){compose.waitForIdle();val b=checkNotNull(InstrumentationRegistry.getInstrumentation().uiAutomation.takeScreenshot());try{File(compose.activity.getExternalFilesDir(null),name).outputStream().use{b.compress(Bitmap.CompressFormat.PNG,100,it)}}finally{b.recycle()}}
-    private fun addCard(title:String,body:String){compose.onNodeWithTag("study-card-title").performTextInput(title);compose.onNodeWithTag("study-card-body").performTextInput(body);compose.onNodeWithTag("study-save-card").performClick();compose.waitUntil(15_000){compose.onAllNodesWithTag("study-card-editor").fetchSemanticsNodes().isEmpty()}}
+    private fun addCard(title:String,body:String){
+        compose.onNodeWithTag("study-card-title").performTextInput(title);compose.onNodeWithTag("study-card-body").performTextInput(body);compose.onNodeWithTag("study-save-card").performClick()
+        compose.waitUntil(15_000){compose.onAllNodesWithTag("study-card-editor").fetchSemanticsNodes().isEmpty()}
+        // The dialog can leave the semantics tree before the platform IME finishes
+        // resizing the card list. Wait for that real input transition before tapping.
+        compose.activityRule.scenario.onActivity{a->a.currentFocus?.clearFocus();WindowCompat.getInsetsController(a.window,a.window.decorView).hide(WindowInsetsCompat.Type.ime())}
+        compose.waitUntil(10_000){ViewCompat.getRootWindowInsets(compose.activity.window.decorView)?.isVisible(WindowInsetsCompat.Type.ime())==false}
+        compose.waitForIdle()
+    }
     @Test fun regionEraseCutsOnlyInsideAndUndoRestoresOnRealCanvas(){
         val(n,s)=seed();select(380.0,570.0,420.0,640.0)
         compose.onNodeWithTag("selection-erase-inside").performScrollTo().assertIsEnabled().performClick();saved(1)
@@ -96,7 +107,14 @@ class SelectionStudyUiTest {
         assertEquals(s.id,InkPageFile.decode(snapshot.snapshot).strokes.single().id)
         compose.onNodeWithTag("study-card-${card.id}").performScrollTo().performClick()
         // Source snapshots load on Dispatchers.IO after the details dialog opens.
-        compose.waitUntil(10_000){compose.onAllNodesWithTag("study-open-source").fetchSemanticsNodes().isNotEmpty()}
+        try{
+            compose.waitUntil(10_000){compose.onAllNodesWithTag("study-card-details").fetchSemanticsNodes().isNotEmpty()}
+            compose.waitUntil(10_000){compose.onAllNodesWithTag("study-open-source").fetchSemanticsNodes().isNotEmpty()}
+        }catch(error:Throwable){
+            runCatching{shot("excerpt-source-failure.png")}
+            compose.onAllNodes(isRoot(),useUnmergedTree=true).fetchSemanticsNodes().indices.forEach{i->runCatching{println(compose.onAllNodes(isRoot(),useUnmergedTree=true)[i].printToString())}}
+            throw error
+        }
         compose.onNodeWithTag("study-open-source").performScrollTo().assertIsDisplayed().performClick();saved(1)
         compose.onAllNodesWithTag("study-card-details").assertCountEquals(0);assertEquals(n.id,snapshot.pageId)
     }
