@@ -26,6 +26,8 @@ class CustomCoverUiTest {
         ready();val n=runBlocking{app.workspaceRepository.create("自定义封面 ${id().take(5)}",false,PaperStyle.CORNELL)}
         compose.waitUntil(10000){compose.onAllNodesWithTag("note-menu-${n.id}").fetchSemanticsNodes().isNotEmpty()}
         open(n);compose.onNodeWithTag("cover-custom").performScrollTo().performClick();compose.onNodeWithTag("cover-title").performScrollTo().performTextReplacement("数学手册")
+        // Recreate after the edited state has reached composition and its saveable provider.
+        compose.onNodeWithTag("cover-title").assertTextContains("数学手册");compose.waitForIdle()
         compose.activityRule.scenario.recreate();compose.waitUntil(10000){compose.onAllNodesWithTag("cover-title").fetchSemanticsNodes().isNotEmpty()}
         compose.onNodeWithTag("cover-title").performScrollTo().assertTextContains("数学手册")
         compose.onNodeWithTag("cancel-cover").performClick();assertEquals("auto",runBlocking{app.workspaceRepository.get(n.id).coverKey});assertNull(runBlocking{app.workspaceRepository.customCover(n.id)})
