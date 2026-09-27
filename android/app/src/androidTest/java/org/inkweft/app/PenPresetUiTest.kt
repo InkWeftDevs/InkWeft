@@ -20,7 +20,7 @@ import java.util.UUID
 class PenPresetUiTest {
     @get:Rule val compose=createAndroidComposeRule<MainActivity>()
     private val app get()=compose.activity.application as InkWeftApplication
-    private fun saved(n:Int){compose.waitUntil(10_000){runCatching{compose.onNodeWithTag("ink-status").assertTextContains("已提交",substring=true).assertTextContains("$n 笔",substring=true)}.isSuccess}}
+    private fun saved(n:Int){compose.waitUntil(10_000){runCatching{compose.onNodeWithTag("ink-status").assertTextContains("已保存",substring=true).assertTextContains("$n 笔",substring=true)}.isSuccess}}
     private fun create():String {
         compose.waitUntil(10_000){runCatching{compose.onNodeWithTag("new-note").assertIsEnabled()}.isSuccess}
         val title="预设测试-"+UUID.randomUUID().toString().take(6)
@@ -32,7 +32,7 @@ class PenPresetUiTest {
     private fun draw(){compose.onNodeWithTag("ink-surface").performTouchInput{swipe(Offset(width*.25f,height*.3f),Offset(width*.5f,height*.5f),200)}}
     @Test fun panelSavesColorAndWidthWithoutChangingEarlierStroke(){
         val id=create();val previous=PenWidthStore(compose.activity,"inkweft-pen-widths-book-"+id).readColors()[0]
-        compose.onNodeWithTag("ink-more").performScrollTo().performClick();compose.onNodeWithTag("ink-finger").performScrollTo().performClick();draw();saved(1)
+        compose.onNodeWithTag("ink-more").performClick();compose.onNodeWithTag("ink-finger").performScrollTo().performClick();draw();saved(1)
         val original=runBlocking{app.inkRepository.read(id).strokes.single().stroke}
         assertEquals(previous,original.color)
         compose.onNodeWithTag("pen-width-open").performScrollTo().performClick()

@@ -114,7 +114,18 @@ fun NotebookApp(vm:NotebookViewModel=viewModel(),onDiagnostics:()->Unit={}){
     }
     if(confirmExport)AlertDialog(onDismissRequest={confirmExport=false},title={Text("导出文字")},text={Text("明文文字副本，不包含手写、封面、历史或回执。所选位置可能由云盘提供方管理。")},confirmButton={TextButton(onClick={confirmExport=false;ui.current?.let{exportText=it.title+"\n\n"+it.text;textExport.launch("墨织笔记.txt")}}){Text("选择位置")}},dismissButton={TextButton(onClick={confirmExport=false}){Text("取消")}})
     rename?.let{RenameNoteDialog(it,vm::editRename,vm::saveRename,vm::closeRename)}
-    if(importGuide)AlertDialog(onDismissRequest={importGuide=false},title={Text("导入文档")},text={Column(Modifier.verticalScroll(rememberScrollState())){Text(DocumentImports.HELP);Text("也支持墨织 .iwpage / .iwbook 内容副本。转换后请核对分页、字体和表格。")}},confirmButton={TextButton(onClick={importGuide=false;pageImport.launch(arrayOf("*/*"))}){Text("选择文件")}},dismissButton={TextButton(onClick={importGuide=false}){Text("取消")}})
+    if(importGuide){
+        var formats by remember{mutableStateOf(false)}
+        EditorPanel("导入文档","",{importGuide=false},"import-guide",footer={Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.End){
+            TextButton(onClick={importGuide=false}){Text("取消")}
+            Button(onClick={importGuide=false;pageImport.launch(arrayOf("*/*"))},modifier=Modifier.testTag("choose-import-file")){Text("选择文件")}
+        }}){Column(Modifier.verticalScroll(rememberScrollState()),verticalArrangement=Arrangement.spacedBy(8.dp)){
+            Text("PDF、EPUB、传统 MOBI，以及墨织内容副本。",style=MaterialTheme.typography.bodyMedium)
+            Text("源文档最多 32 MB / 500 页，需为无密码文件。",style=MaterialTheme.typography.bodySmall,color=Quiet)
+            TextButton(onClick={formats=!formats},modifier=Modifier.testTag("import-format-help")){Text(if(formats)"收起格式说明"else"其他格式与转换方法")}
+            if(formats)Text(DocumentImports.HELP,style=MaterialTheme.typography.bodySmall,color=Quiet,modifier=Modifier.testTag("import-format-details"))
+        }}
+    }
     LibraryTransferDialog(transfers,{pageImport.launch(arrayOf("application/octet-stream","*/*"))},vm::select)
 }
 

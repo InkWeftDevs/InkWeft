@@ -29,8 +29,8 @@ class PageObjectsUiTest {
         val title="页内对象-"+UUID.randomUUID().toString().take(6)
         compose.onNodeWithTag("new-note").performClick();compose.onNodeWithTag("create-page").performClick()
         compose.onNodeWithTag("new-title").performTextInput(title);compose.onNodeWithTag("create-note").performClick()
-        compose.waitUntil(10_000){runCatching{compose.onNodeWithTag("ink-status").assertTextContains("已提交",substring=true)}.isSuccess}
-        hideKeyboard();compose.onNodeWithTag("page-objects").performScrollTo().performClick()
+        compose.waitUntil(10_000){runCatching{compose.onNodeWithTag("ink-status").assertTextContains("已保存",substring=true)}.isSuccess}
+        hideKeyboard();compose.onNodeWithTag("page-objects").performClick()
         return runBlocking{app.repository.observeNotes().first()}.single{it.title==title}.id
     }
     private fun objects(id:String)=runBlocking{app.pageObjects.read(id).objects}
@@ -73,7 +73,7 @@ class PageObjectsUiTest {
         capture("page-objects-editor.png")
         val expected=objects(id)
         compose.activityRule.scenario.recreate()
-        compose.waitUntil(10_000){runCatching{compose.onNodeWithTag("ink-status").assertTextContains("已提交",substring=true)}.isSuccess}
+        compose.waitUntil(10_000){runCatching{compose.onNodeWithTag("ink-status").assertTextContains("已保存",substring=true)}.isSuccess}
         assertEquals(expected,objects(id));assertTrue(runBlocking{app.inkRepository.read(id).strokes.isEmpty()})
     }
     @Test fun normalizedImageIsSelfContainedAndTapeActuallyCoversIt(){

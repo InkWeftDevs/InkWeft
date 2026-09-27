@@ -32,6 +32,7 @@ internal val Side=InkTheme.Navigation
         "star"->R.drawable.ic_star
         "board"->R.drawable.ic_board
         "pen"->R.drawable.ic_pen
+        "beauty"->R.drawable.ic_beauty
         "eraser"->R.drawable.ic_eraser
         "undo"->R.drawable.ic_undo
         "redo"->R.drawable.ic_redo

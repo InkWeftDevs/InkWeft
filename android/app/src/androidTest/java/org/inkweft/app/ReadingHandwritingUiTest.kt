@@ -24,7 +24,7 @@ class ReadingHandwritingUiTest {
     private val app get()=compose.activity.application as InkWeftApplication
     private fun id()=UUID.randomUUID().toString()
     private fun ready(){compose.waitUntil(15_000){runCatching{compose.onNodeWithTag("new-note").assertIsEnabled()}.isSuccess}}
-    private fun saved(){compose.waitUntil(15_000){runCatching{compose.onNodeWithTag("ink-status").assertTextContains("已提交",substring=true)}.isSuccess}}
+    private fun saved(){compose.waitUntil(15_000){runCatching{compose.onNodeWithTag("ink-status").assertTextContains("已保存",substring=true)}.isSuccess}}
     private fun nativeCanvas():InkCanvasView{fun find(v:View):InkCanvasView?{if(v is InkCanvasView&&!v.preview)return v;if(v is ViewGroup)for(i in 0 until v.childCount)find(v.getChildAt(i))?.let{return it};return null};return checkNotNull(find(compose.activity.window.decorView))}
     private fun hideKeyboard(){compose.activityRule.scenario.onActivity{a->a.currentFocus?.clearFocus();WindowCompat.getInsetsController(a.window,a.window.decorView).hide(WindowInsetsCompat.Type.ime())};compose.waitForIdle()}
     private fun shot(name:String){compose.waitForIdle();val bitmap=checkNotNull(InstrumentationRegistry.getInstrumentation().uiAutomation.takeScreenshot());try{File(app.getExternalFilesDir(null),name).outputStream().use{bitmap.compress(Bitmap.CompressFormat.PNG,100,it)}}finally{bitmap.recycle()}}
@@ -33,11 +33,12 @@ class ReadingHandwritingUiTest {
         val stroke=InkStroke(id(),InkPen.PEN,Color.BLACK,4f,InkTool.STYLUS,listOf(InkSample(200f,600f,0),InkSample(400f,600f,30)))
         runBlocking{app.inkRepository.save(CommitInk(id(),n.id,0,InkMutation.Add(stroke)))}
         compose.runOnIdle{ViewModelProvider(compose.activity)[NotebookViewModel::class.java].select(n)};saved()
-        compose.onNodeWithTag("fit-page").performScrollTo().performClick();compose.onNodeWithTag("ink-select").performScrollTo().performClick();compose.waitForIdle()
+        compose.onNodeWithTag("fit-page").performScrollTo().performClick();compose.onNodeWithTag("ink-select").performClick();compose.waitForIdle()
         var a=Offset.Zero;var b=Offset.Zero
         compose.runOnIdle{val v=nativeCanvas();val d=v.resources.displayMetrics.density.toDouble();fun point(x:Double,y:Double):Offset{val p=v.snapshotViewport().worldToScreen(x,y,v.width.toDouble(),v.height.toDouble(),d);return Offset(p.x.toFloat(),p.y.toFloat())};a=point(170.0,560.0);b=point(440.0,640.0)}
         compose.onNodeWithTag("selection-overlay").performTouchInput{swipe(a,b,300)}
         compose.onNodeWithTag("selection-font-beauty").performScrollTo().performClick()
+        compose.onNodeWithTag("beauty-edit-text").performClick()
         compose.waitUntil(30_000){runCatching{compose.onNodeWithTag("beauty-recognized-text").assertIsEnabled()}.isSuccess}
         compose.onNodeWithTag("beauty-recognized-text").performTextReplacement("墨织手写美化\nBilingual notes")
         hideKeyboard();compose.onNodeWithTag("font-SERIF").performScrollTo().performClick();compose.onNodeWithTag("font-WENKAI").performScrollTo().performClick();shot("font-beauty-preview.png")

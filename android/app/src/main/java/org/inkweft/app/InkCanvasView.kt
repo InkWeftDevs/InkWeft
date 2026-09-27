@@ -143,7 +143,8 @@ class InkCanvasView(context:Context):View(context){
     fun fitPage(publish:Boolean=true){cancelGesture();viewport=CanvasViewport.fit(CanvasBounds(0.0,0.0,1000.0,1414.0),width/density,height/density);transform();invalidate();if(publish)onViewport(viewport)}
     fun fitWidth(){cancelGesture();viewport=CanvasViewport.pageWidth(width/density,height/density);transform();invalidate();onViewport(viewport)}
     fun origin(){cancelGesture();viewport=if(world)CanvasViewport(0.0,0.0,.8)else CanvasViewport.pageWidth(width/density,height/density);transform();invalidate();onViewport(viewport)}
-    fun fitContent(publish:Boolean=true){cancelGesture();val allBounds=bounds.values+objects.map{it.bounds()};if(allBounds.isEmpty()){if(world)viewport=CanvasViewport(0.0,0.0,.8)else fitPage(false)}else viewport=CanvasViewport.fit(allBounds.reduce{a,b->a.union(b)}.padded(40.0),width/density,height/density);transform();invalidate();if(publish)onViewport(viewport)}
+    internal var previewPadding=40.0
+    fun fitContent(publish:Boolean=true){cancelGesture();val allBounds=bounds.values+objects.map{it.bounds()};if(allBounds.isEmpty()){if(world)viewport=CanvasViewport(0.0,0.0,.8)else fitPage(false)}else viewport=CanvasViewport.fit(allBounds.reduce{a,b->a.union(b)}.padded(if(preview)previewPadding else 40.0),width/density,height/density);transform();invalidate();if(publish)onViewport(viewport)}
     fun zoomBy(ratio:Double){cancelGesture();viewport=viewport.zoomAt(ratio,width/2.0,height/2.0,width.toDouble(),height.toDouble(),density);transform();invalidate();onViewport(viewport)}
     override fun onSizeChanged(w:Int,h:Int,oldw:Int,oldh:Int){cancelGesture();if(configured&&oldw==0&&!restored)initialFit();if(embeddedPage&&configured)fitPage(false);if(preview)if(world)fitContent(false)else fitPage(false);transform()}
     override fun draw(c:Canvas){val save=c.save();try{c.clipRect(0,0,width,height);super.draw(c)}finally{c.restoreToCount(save)}}

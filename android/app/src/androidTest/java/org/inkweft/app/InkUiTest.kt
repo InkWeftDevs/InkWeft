@@ -23,8 +23,8 @@ class InkUiTest {
         compose.onNodeWithTag("new-title").performTextInput("手写测试 "+UUID.randomUUID().toString().take(8))
         compose.onNodeWithTag("create-note").performClick()
         compose.waitUntil(10_000){compose.onAllNodesWithTag("ink-surface").fetchSemanticsNodes().isNotEmpty()}
-        compose.waitUntil(10_000){runCatching { compose.onNodeWithTag("ink-status").assertTextContains("已提交",substring=true) }.isSuccess}
-        compose.onNodeWithTag("ink-more").performScrollTo().performClick();compose.onNodeWithTag("ink-finger").performScrollTo().performClick()
+        compose.waitUntil(10_000){runCatching { compose.onNodeWithTag("ink-status").assertTextContains("已保存",substring=true) }.isSuccess}
+        compose.onNodeWithTag("ink-more").performClick();compose.onNodeWithTag("ink-finger").performScrollTo().performClick()
     }
     private fun count(n: Int) {
         compose.waitUntil(10_000){runCatching { compose.onNodeWithTag("ink-status").assertTextContains("$n 笔",substring=true) }.isSuccess}

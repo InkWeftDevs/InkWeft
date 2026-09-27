@@ -68,23 +68,22 @@ internal fun PenPresetMenu(expanded:Boolean,tool:Int,current:Float,currentColor:
         var kind by remember(expanded,tool,currentKind){mutableStateOf(currentKind)}
         var draft by remember(expanded,tool,current){mutableFloatStateOf(current)}
         var color by remember(expanded,tool,currentColor){mutableIntStateOf(currentColor)}
-        Column(Modifier.padding(horizontal=16.dp,vertical=10.dp),verticalArrangement=Arrangement.spacedBy(10.dp)) {
+        Column(Modifier.padding(horizontal=16.dp,vertical=4.dp),verticalArrangement=Arrangement.spacedBy(4.dp)) {
             Text("笔盒 · "+PenKinds.title(kind),fontSize=17.sp,color=TextInk)
             if(tool!=2)PenKinds.writing.chunked(2).forEach{row->Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.spacedBy(8.dp)){row.forEach{p->
                 FilterChip(selected=kind==p,onClick={kind=p;draft=PenKinds.defaultWidth(p)},label={Text(PenKinds.title(p))},modifier=Modifier.weight(1f).testTag("pen-kind-${p.name.lowercase()}"))
             }}}
-            Text(PenKinds.description(kind),fontSize=12.sp,color=Quiet)
             HorizontalDivider(color=Line)
-            Text("粗细",fontSize=13.sp)
             Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.spacedBy(6.dp)) {
                 PenWidthStore.presets(tool).forEachIndexed { index,width ->
                     FilterChip(selected=draft==width,onClick={draft=width},label={Text(listOf("细","中","粗")[index],fontSize=12.sp)},
                         modifier=Modifier.weight(1f).heightIn(min=48.dp).testTag("width-preset-$index"))
                 }
             }
-            Text("线宽 ${PenWidthStore.label(draft)}",modifier=Modifier.testTag("pen-width-value"),fontSize=15.sp)
-            Slider(value=draft,onValueChange={draft=(it*10).roundToInt()/10f},valueRange=PenWidthStore.range(tool),modifier=Modifier.testTag("pen-width-slider"))
-            Text("颜色",fontSize=13.sp)
+            Row(verticalAlignment=Alignment.CenterVertically){
+                Text("线宽 ${PenWidthStore.label(draft)}",modifier=Modifier.width(80.dp).testTag("pen-width-value"),style=MaterialTheme.typography.bodyMedium)
+                Slider(value=draft,onValueChange={draft=(it*10).roundToInt()/10f},valueRange=PenWidthStore.range(tool),modifier=Modifier.weight(1f).testTag("pen-width-slider"))
+            }
             Row(horizontalArrangement=Arrangement.spacedBy(4.dp)) {
                 PenWidthStore.colors(tool).forEachIndexed { index,value ->
                     Box(Modifier.size(48.dp).border(if(color==value)2.dp else 1.dp,if(color==value)Forest else Color.Transparent,CircleShape)
@@ -94,11 +93,11 @@ internal fun PenPresetMenu(expanded:Boolean,tool:Int,current:Float,currentColor:
                 }
             }
             var hex by remember(color){mutableStateOf(String.format(Locale.ROOT,"%06X",color and 0xffffff))}
-            OutlinedTextField(hex,{value->if(value.length<=6)hex=value.uppercase(Locale.ROOT)},label={Text("自定义颜色 · 六位十六进制")},isError=!hex.matches(Regex("[0-9A-F]{6}")),singleLine=true,modifier=Modifier.fillMaxWidth().testTag("pen-custom-color"))
-            TextButton(onClick={color=hex.toInt(16) or (if(tool==2)0x66000000 else 0xff000000.toInt())},enabled=hex.matches(Regex("[0-9A-F]{6}"))){Text("使用自定义颜色")}
+            var custom by remember{mutableStateOf(false)}
+            TextButton(onClick={custom=!custom},modifier=Modifier.testTag("pen-custom-open")){Text("自定义颜色")}
+            if(custom){OutlinedTextField(hex,{value->if(value.length<=6)hex=value.uppercase(Locale.ROOT)},label={Text("自定义颜色 · 六位十六进制")},isError=!hex.matches(Regex("[0-9A-F]{6}")),singleLine=true,modifier=Modifier.fillMaxWidth().testTag("pen-custom-color"))
+            TextButton(onClick={color=hex.toInt(16) or (if(tool==2)0x66000000 else 0xff000000.toInt())},enabled=hex.matches(Regex("[0-9A-F]{6}"))){Text("使用自定义颜色")}}
             PenStrokePreview(kind,color,draft)
-            Text(if(PenKinds.pressureSensitive(kind))"模拟轻 → 重 → 轻。实际粗细取决于笔的压力；无压感输入按定宽书写。"else"实际笔刷示意；线宽不随压力变化。",fontSize=11.sp,lineHeight=17.sp,color=Quiet)
-            Text("只影响之后的笔迹。笔型、颜色和线宽一起保存；线宽使用画布单位。",fontSize=11.sp,lineHeight=17.sp,color=Quiet)
             Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.End) {
                 TextButton(onClick=onDismiss,modifier=Modifier.testTag("cancel-pen-preset")){Text("取消")}
                 Button(onClick={onApply(draft,color,kind)},modifier=Modifier.testTag("apply-pen-width")){Text("保存到此笔")}

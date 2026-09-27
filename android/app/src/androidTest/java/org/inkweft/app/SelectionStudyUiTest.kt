@@ -39,7 +39,7 @@ class SelectionStudyUiTest {
         }
     }
     private fun ready(){compose.waitUntil(15_000){runCatching{compose.onNodeWithTag("new-note").assertIsEnabled()}.isSuccess}}
-    private fun saved(n:Int){compose.waitUntil(15_000){runCatching{compose.onNodeWithTag("ink-status").assertTextContains("已提交",substring=true).assertTextContains("$n 笔",substring=true)}.isSuccess}}
+    private fun saved(n:Int){compose.waitUntil(15_000){runCatching{compose.onNodeWithTag("ink-status").assertTextContains("已保存",substring=true).assertTextContains("$n 笔",substring=true)}.isSuccess}}
     private fun seed():Pair<Note,InkStroke>{
         ready();val n=runBlocking{app.workspaceRepository.create("学习整合-${id().take(6)}",false,PaperStyle.BLANK)}
         val s=InkStroke(id(),InkPen.PEN,0xff000000.toInt(),3f,InkTool.STYLUS,listOf(InkSample(200f,600f,0,.5f),InkSample(300f,600.6f,30,.5f),InkSample(400f,600f,60,.5f),InkSample(600f,600f,100,.5f)))
@@ -52,7 +52,7 @@ class SelectionStudyUiTest {
         return checkNotNull(find(compose.activity.window.decorView))
     }
     private fun select(left:Double=170.0,top:Double=570.0,right:Double=630.0,bottom:Double=635.0){
-        compose.onNodeWithTag("ink-select").performScrollTo().performClick();compose.waitForIdle()
+        compose.onNodeWithTag("ink-select").performClick();compose.waitForIdle()
         var a=Offset.Zero;var b=Offset.Zero
         compose.runOnIdle{val v=nativeCanvas();val vp=v.snapshotViewport();val d=v.resources.displayMetrics.density.toDouble();val p=vp.worldToScreen(left,top,v.width.toDouble(),v.height.toDouble(),d);val q=vp.worldToScreen(right,bottom,v.width.toDouble(),v.height.toDouble(),d);a=Offset(p.x.toFloat(),p.y.toFloat());b=Offset(q.x.toFloat(),q.y.toFloat())}
         compose.onNodeWithTag("selection-overlay").performTouchInput{swipe(a,b,300)};compose.waitForIdle()

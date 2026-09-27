@@ -52,7 +52,7 @@ class UiR2Test {
         compose.onNode(hasScrollToIndexAction() and hasAnyAncestor(hasTestTag("new-notebook-screen"))).performScrollToKey("CORNELL");compose.onNodeWithTag("template-cornell").performClick();shot("new-notebook")
         compose.onNodeWithText("取消",useUnmergedTree=true).performClick();ready();assertEquals(before,runBlocking{app.repository.observeNotes().first().size})
         compose.onNodeWithTag("new-note").performClick();compose.onNodeWithTag("create-page").performClick();compose.onNode(hasScrollToIndexAction() and hasAnyAncestor(hasTestTag("new-notebook-screen"))).performScrollToKey("CORNELL");compose.onNodeWithTag("template-cornell").performClick();compose.onNodeWithTag("create-note").performClick()
-        compose.waitUntil(15000){runCatching{compose.onNodeWithTag("ink-status").assertTextContains("已提交",substring=true)}.isSuccess}
+        compose.waitUntil(15000){runCatching{compose.onNodeWithTag("ink-status").assertTextContains("已保存",substring=true)}.isSuccess}
         val n=ViewModelProvider(compose.activity)[NotebookViewModel::class.java].ui.value.current!!.base
         assertEquals(PaperStyle.CORNELL.ordinal,runBlocking{app.pages.activePages(n.id).single().paper});shot("editor")
     }

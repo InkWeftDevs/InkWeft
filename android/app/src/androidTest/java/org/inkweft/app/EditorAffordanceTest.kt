@@ -23,7 +23,7 @@ class EditorAffordanceTest {
     @get:Rule val compose=createAndroidComposeRule<MainActivity>()
     private val app get()=compose.activity.application as InkWeftApplication
     private fun ready(){compose.waitUntil(10_000){runCatching{compose.onNodeWithTag("new-note").assertIsEnabled()}.isSuccess}}
-    private fun saved(count:Int){compose.waitUntil(10_000){runCatching{compose.onNodeWithTag("ink-status").assertTextContains("已提交",substring=true).assertTextContains("$count 笔",substring=true)}.isSuccess}}
+    private fun saved(count:Int){compose.waitUntil(10_000){runCatching{compose.onNodeWithTag("ink-status").assertTextContains("已保存",substring=true).assertTextContains("$count 笔",substring=true)}.isSuccess}}
     private fun create():String{
         ready();val title="AFFORDANCE-"+UUID.randomUUID().toString().take(8)
         compose.onNodeWithTag("new-note").performClick();compose.onNodeWithTag("create-page").performClick();compose.onNodeWithTag("new-title").performTextInput(title);compose.onNodeWithTag("cover-choice-content").performScrollTo().performClick();compose.onNodeWithTag("create-note").performClick();saved(0)
@@ -43,7 +43,7 @@ class EditorAffordanceTest {
         try{
             // 1256px / 1.5 = 837.3dp, close to the reported portrait width.
             shell("wm size 1256x1920");Thread.sleep(600)
-            create();compose.onNodeWithTag("ink-more").performScrollTo().performClick();compose.onNodeWithTag("ink-finger").performScrollTo().performClick();draw();saved(1);compose.onNodeWithTag("back-library").performClick();ready()
+            create();compose.onNodeWithTag("ink-more").performClick();compose.onNodeWithTag("ink-finger").performScrollTo().performClick();draw();saved(1);compose.onNodeWithTag("back-library").performClick();ready()
             var initial=emptySet<Int>();compose.waitUntil(10_000){compose.runOnIdle{initial=previews()};initial.isNotEmpty()}
             repeat(5){
                 compose.onNodeWithTag("open-library-drawer").performClick();compose.waitForIdle()
@@ -64,7 +64,7 @@ class EditorAffordanceTest {
         }
         choose(2)
         compose.waitUntil(10_000){PenWidthStore(compose.activity,"inkweft-pen-widths-book-"+id).read()[0]==6f}
-        compose.onNodeWithTag("ink-more").performScrollTo().performClick();compose.onNodeWithTag("ink-finger").performScrollTo().performClick();draw();saved(1)
+        compose.onNodeWithTag("ink-more").performClick();compose.onNodeWithTag("ink-finger").performScrollTo().performClick();draw();saved(1)
         val first=runBlocking{app.inkRepository.read(id).strokes.single().stroke};assertEquals(6f,first.width,0f)
         choose(0);compose.waitUntil(10_000){PenWidthStore(compose.activity,"inkweft-pen-widths-book-"+id).read()[0]==1.5f};draw();saved(2)
         val paths=runBlocking{app.inkRepository.read(id).strokes.map{it.stroke}}

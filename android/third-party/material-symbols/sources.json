@@ -194,5 +194,12 @@
     "upstream_sha256": "300d4aeefaaab9a7de7d780df164eadd11be28196c7ff09a7007207edf98e6ff",
     "packaged_sha256": "ac3ed88d75b606098783e876e63d6b8fdf3001a8d644f5c49ae6790b2fd0a594",
     "adaptation": "Replace AppCompat colorControlNormal tint with neutral color; Compose supplies state tint."
+  },
+  {
+    "name": "beauty",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/android/auto_fix_high/materialsymbolsoutlined/auto_fix_high_24px.xml",
+    "upstream_sha256": "3c3136bc3b7a5a68be098266a5ad87cfd389c2d97acc2bd97669a009f8f45382",
+    "packaged_sha256": "75a8618f932a06ae7ad7b1eedb61fad62d62212d28dd62c0395c2275ba3663d2",
+    "adaptation": "Replace AppCompat colorControlNormal tint with neutral color; Compose supplies state tint."
   }
 ]

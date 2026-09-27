@@ -22,7 +22,7 @@ import java.util.UUID
 class WritingWorkspaceUiTest {
     @get:Rule val compose=createAndroidComposeRule<MainActivity>()
     private val app get()=compose.activity.application as InkWeftApplication
-    private fun saved(n:Int?=null){compose.waitUntil(10_000){runCatching{val node=compose.onNodeWithTag("ink-status");node.assertTextContains("已提交",substring=true);if(n!=null)node.assertTextContains("$n 笔",substring=true)}.isSuccess}}
+    private fun saved(n:Int?=null){compose.waitUntil(10_000){runCatching{val node=compose.onNodeWithTag("ink-status");node.assertTextContains("已保存",substring=true);if(n!=null)node.assertTextContains("$n 笔",substring=true)}.isSuccess}}
     private fun create():String {
         compose.waitUntil(10_000){runCatching{compose.onNodeWithTag("new-note").assertIsEnabled()}.isSuccess}
         val name="书写工作台-"+UUID.randomUUID().toString().take(6)
@@ -31,9 +31,9 @@ class WritingWorkspaceUiTest {
         compose.waitUntil(10_000){androidx.core.view.ViewCompat.getRootWindowInsets(compose.activity.window.decorView)?.isVisible(WindowInsetsCompat.Type.ime())==false}
         return runBlocking{app.repository.observeNotes().first()}.single{it.title==name}.id
     }
-    private fun finger(){compose.onNodeWithTag("ink-more").performScrollTo().performClick();compose.onNodeWithTag("ink-finger").performScrollTo().performClick()}
+    private fun finger(){compose.onNodeWithTag("ink-more").performClick();compose.onNodeWithTag("ink-finger").performScrollTo().performClick()}
     private fun draw(){compose.onNodeWithTag("ink-surface").performTouchInput{swipe(Offset(width*.3f,height*.3f),Offset(width*.5f,height*.5f),200)}}
-    private fun mode(){compose.onNodeWithTag("document-more").performClick();compose.onNodeWithTag("toggle-continuous").performClick();compose.waitForIdle()}
+    private fun mode(){compose.onNodeWithTag("toggle-continuous").performClick();compose.waitForIdle()}
     private fun shot(name:String){val bmp=checkNotNull(InstrumentationRegistry.getInstrumentation().uiAutomation.takeScreenshot());try{File(compose.activity.getExternalFilesDir(null),name).outputStream().use{bmp.compress(Bitmap.CompressFormat.PNG,100,it)}}finally{bmp.recycle()}}
     @Test fun tabsKeepInkAndClosingOnlyClosesTheTab(){
         val a=create();finger();draw();saved(1)
@@ -83,12 +83,12 @@ class WritingWorkspaceUiTest {
         compose.onNodeWithTag("settings-tags").performScrollTo().performClick();compose.onNodeWithTag("notebook-tags").performTextInput("课程,复习");compose.onNodeWithTag("save-notebook-tags").performClick()
         compose.waitUntil(10_000){runBlocking{app.workspaceRepository.get(id).tags}.contains("复习")}
         compose.onNodeWithTag("continuous-pages").assertExists()
-        compose.onNodeWithTag("ink-more").performScrollTo().performClick();compose.onNodeWithTag("selection-tools").performClick()
+        compose.onNodeWithTag("ink-more").performClick();compose.onNodeWithTag("selection-tools").performClick()
         compose.onNodeWithTag("selection-lasso").assertIsSelected();compose.onNodeWithTag("continuous-pages").assertDoesNotExist()
         compose.onNodeWithTag("ink-tool-0").performClick();compose.onNodeWithTag("ink-more").performClick();compose.onNodeWithTag("toolbar-position").performClick()
         assertTrue(compose.activity.getSharedPreferences("inkweft-editor",0).getBoolean("toolbar-bottom",false))
         // Restore the shared preference used by subsequent tests.
-        compose.onNodeWithTag("ink-more").performScrollTo().performClick();compose.onNodeWithTag("toolbar-position").performClick()
+        compose.onNodeWithTag("ink-more").performClick();compose.onNodeWithTag("toolbar-position").performClick()
     }
     @Test fun closingDirtyTextTabPreservesTheDraft(){
         val id=create();compose.onNodeWithTag("document-more").performClick();compose.onNodeWithTag("mode-text").performClick()

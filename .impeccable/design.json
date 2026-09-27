@@ -1,0 +1,260 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-27T02:50:55.520Z",
+  "title": "Design System: 墨织 Android 编辑器",
+  "extensions": {
+    "colorMeta": {
+      "surface": {
+        "role": "neutral",
+        "displayName": "白纸色",
+        "tonalRamp": [
+          "oklch(15.00% 0.00000 89.88)",
+          "oklch(26.43% 0.00000 89.88)",
+          "oklch(37.86% 0.00000 89.88)",
+          "oklch(49.29% 0.00000 89.88)",
+          "oklch(60.71% 0.00000 89.88)",
+          "oklch(72.14% 0.00000 89.88)",
+          "oklch(83.57% 0.00000 89.88)",
+          "oklch(95.00% 0.00000 89.88)"
+        ]
+      },
+      "navigation": {
+        "role": "neutral",
+        "displayName": "导航浅灰",
+        "tonalRamp": [
+          "oklch(15.00% 0.00287 264.54)",
+          "oklch(26.43% 0.00287 264.54)",
+          "oklch(37.86% 0.00287 264.54)",
+          "oklch(49.29% 0.00287 264.54)",
+          "oklch(60.71% 0.00287 264.54)",
+          "oklch(72.14% 0.00287 264.54)",
+          "oklch(83.57% 0.00287 264.54)",
+          "oklch(95.00% 0.00287 264.54)"
+        ]
+      },
+      "workspace": {
+        "role": "neutral",
+        "displayName": "工作区灰",
+        "tonalRamp": [
+          "oklch(15.00% 0.00343 247.86)",
+          "oklch(26.43% 0.00343 247.86)",
+          "oklch(37.86% 0.00343 247.86)",
+          "oklch(49.29% 0.00343 247.86)",
+          "oklch(60.71% 0.00343 247.86)",
+          "oklch(72.14% 0.00343 247.86)",
+          "oklch(83.57% 0.00343 247.86)",
+          "oklch(95.00% 0.00343 247.86)"
+        ]
+      },
+      "text": {
+        "role": "neutral",
+        "displayName": "石墨文字",
+        "tonalRamp": [
+          "oklch(15.00% 0.01490 256.80)",
+          "oklch(26.43% 0.01490 256.80)",
+          "oklch(37.86% 0.01490 256.80)",
+          "oklch(49.29% 0.01490 256.80)",
+          "oklch(60.71% 0.01490 256.80)",
+          "oklch(72.14% 0.01490 256.80)",
+          "oklch(83.57% 0.01490 256.80)",
+          "oklch(95.00% 0.01490 256.80)"
+        ]
+      },
+      "secondary": {
+        "role": "neutral",
+        "displayName": "次要灰",
+        "tonalRamp": [
+          "oklch(15.00% 0.01872 254.01)",
+          "oklch(26.43% 0.01872 254.01)",
+          "oklch(37.86% 0.01872 254.01)",
+          "oklch(49.29% 0.01872 254.01)",
+          "oklch(60.71% 0.01872 254.01)",
+          "oklch(72.14% 0.01872 254.01)",
+          "oklch(83.57% 0.01872 254.01)",
+          "oklch(95.00% 0.01872 254.01)"
+        ]
+      },
+      "accent": {
+        "role": "primary",
+        "displayName": "森林绿",
+        "tonalRamp": [
+          "oklch(15.00% 0.07440 171.00)",
+          "oklch(26.43% 0.07440 171.00)",
+          "oklch(37.86% 0.07440 171.00)",
+          "oklch(49.29% 0.07440 171.00)",
+          "oklch(60.71% 0.07440 171.00)",
+          "oklch(72.14% 0.07440 171.00)",
+          "oklch(83.57% 0.07440 171.00)",
+          "oklch(95.00% 0.07440 171.00)"
+        ]
+      },
+      "selected": {
+        "role": "primary",
+        "displayName": "浅叶绿",
+        "tonalRamp": [
+          "oklch(15.00% 0.01160 162.05)",
+          "oklch(26.43% 0.01160 162.05)",
+          "oklch(37.86% 0.01160 162.05)",
+          "oklch(49.29% 0.01160 162.05)",
+          "oklch(60.71% 0.01160 162.05)",
+          "oklch(72.14% 0.01160 162.05)",
+          "oklch(83.57% 0.01160 162.05)",
+          "oklch(95.00% 0.01160 162.05)"
+        ]
+      },
+      "divider": {
+        "role": "neutral",
+        "displayName": "分隔灰",
+        "tonalRamp": [
+          "oklch(15.00% 0.00696 247.90)",
+          "oklch(26.43% 0.00696 247.90)",
+          "oklch(37.86% 0.00696 247.90)",
+          "oklch(49.29% 0.00696 247.90)",
+          "oklch(60.71% 0.00696 247.90)",
+          "oklch(72.14% 0.00696 247.90)",
+          "oklch(83.57% 0.00696 247.90)",
+          "oklch(95.00% 0.00696 247.90)"
+        ]
+      },
+      "control-border": {
+        "role": "neutral",
+        "displayName": "控件灰",
+        "tonalRamp": [
+          "oklch(15.00% 0.01970 253.41)",
+          "oklch(26.43% 0.01970 253.41)",
+          "oklch(37.86% 0.01970 253.41)",
+          "oklch(49.29% 0.01970 253.41)",
+          "oklch(60.71% 0.01970 253.41)",
+          "oklch(72.14% 0.01970 253.41)",
+          "oklch(83.57% 0.01970 253.41)",
+          "oklch(95.00% 0.01970 253.41)"
+        ]
+      },
+      "danger": {
+        "role": "error",
+        "displayName": "警示红",
+        "tonalRamp": [
+          "oklch(15.00% 0.18205 29.51)",
+          "oklch(26.43% 0.18205 29.51)",
+          "oklch(37.86% 0.18205 29.51)",
+          "oklch(49.29% 0.18205 29.51)",
+          "oklch(60.71% 0.18205 29.51)",
+          "oklch(72.14% 0.18205 29.51)",
+          "oklch(83.57% 0.18205 29.51)",
+          "oklch(95.00% 0.18205 29.51)"
+        ]
+      }
+    },
+    "shadows": [
+      {
+        "name": "typed-page-surface",
+        "value": "shadowElevation = 1.dp",
+        "purpose": "仅用于 NotebookApp 的键入文字页；不是 EditorPanel 的阴影令牌。"
+      }
+    ],
+    "platform": {
+      "name": "Android / Jetpack Compose",
+      "units": "DESIGN.md 使用 dp 与 sp。下面 HTML/CSS 只供 sidecar 面板展示，是原生组件结构与颜色的示意；不是新增网页或实现契约。",
+      "previewStates": "hover、focus-visible、active 仅使浏览器示意可交互，不能证明 Android 实现这些 CSS 状态。",
+      "ramps": "tonalRamp 为按源色转换后固定色相、色度生成的展示辅助色阶；未用于应用，不构成规范令牌。超出显示色域的颜色由预览环境处理。",
+      "defaults": "未显式覆盖的 Button、FilterChip、OutlinedTextField 参数由 Material 3 提供。示意中的浏览器默认尺寸和圆角不能用来覆盖 Compose。",
+      "layout": "EditorPanel 最大 380dp × 600dp，外留 12dp，右侧居中，safeDrawing + imePadding；PenPresetMenu 宽 320dp。未定义独立响应式断点。"
+    }
+  },
+  "components": [
+    {
+      "name": "主按钮",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "提交当前任务；示意采用主题颜色，原生尺寸与状态以 Material 3 为准。",
+      "html": "<div class=\"ds-example\"><button class=\"ds-primary\">应用美化</button></div>",
+      "css": ".ds-example{font-family:system-ui,sans-serif;color:#22272e}.ds-example button{font:inherit;cursor:pointer}.ds-example button:focus-visible,.ds-example input:focus-visible{outline:2px solid #236653;outline-offset:2px}.ds-example button:hover{filter:brightness(.97)}.ds-example button:active{filter:brightness(.93)}.ds-primary{border:0;border-radius:24px;padding:8px 16px;background:#236653;color:#fff}"
+    },
+    {
+      "name": "文字按钮",
+      "kind": "button",
+      "refersTo": "button-text",
+      "description": "说明和次要动作；浏览器交互仅用于预览。",
+      "html": "<div class=\"ds-example\"><button class=\"ds-text\">说明</button></div>",
+      "css": ".ds-example{font-family:system-ui,sans-serif;color:#22272e}.ds-example button{font:inherit;cursor:pointer}.ds-example button:focus-visible,.ds-example input:focus-visible{outline:2px solid #236653;outline-offset:2px}.ds-example button:hover{filter:brightness(.97)}.ds-example button:active{filter:brightness(.93)}.ds-text{border:0;background:transparent;color:#236653;padding:8px 16px}"
+    },
+    {
+      "name": "查找字段",
+      "kind": "input",
+      "description": "查找输入框的语义与色彩示意，不实现自动识别。",
+      "html": "<label class=\"ds-example ds-field\">输入关键词<input aria-label=\"输入关键词\" placeholder=\"输入关键词\"></label>",
+      "css": ".ds-example{font-family:system-ui,sans-serif;color:#22272e}.ds-example button{font:inherit;cursor:pointer}.ds-example button:focus-visible,.ds-example input:focus-visible{outline:2px solid #236653;outline-offset:2px}.ds-example button:hover{filter:brightness(.97)}.ds-example button:active{filter:brightness(.93)}.ds-field{display:flex;flex-direction:column;gap:4px;font-size:14px}.ds-field input{font:inherit;padding:12px;border:1px solid #7e8792;border-radius:4px;background:#fff;color:#22272e}"
+    },
+    {
+      "name": "文档动作",
+      "kind": "nav",
+      "description": "复现图标配中文动作的层级；示意图标内联，不加载外部素材。",
+      "html": "<nav class=\"ds-example ds-nav\" aria-label=\"文档动作\"><button><svg viewBox=\"0 0 24 24\" width=\"20\" height=\"20\" aria-hidden=\"true\"><path d=\"M4 4h16v16H4zM8 4v16M4 9h16M4 14h16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"/></svg>页面</button><button>＋ 加页</button></nav>",
+      "css": ".ds-example{font-family:system-ui,sans-serif;color:#22272e}.ds-example button{font:inherit;cursor:pointer}.ds-example button:focus-visible,.ds-example input:focus-visible{outline:2px solid #236653;outline-offset:2px}.ds-example button:hover{filter:brightness(.97)}.ds-example button:active{filter:brightness(.93)}.ds-nav{display:flex;background:#f7f8fa}.ds-nav button{display:flex;align-items:center;gap:6px;min-height:48px;padding:0 10px;color:#236653;border:0;background:transparent}"
+    },
+    {
+      "name": "选项芯片",
+      "kind": "chip",
+      "description": "预设选态示意；原生使用 FilterChip。",
+      "html": "<div class=\"ds-example ds-chips\"><button aria-pressed=\"false\">细</button><button aria-pressed=\"true\">中</button><button aria-pressed=\"false\">粗</button></div>",
+      "css": ".ds-example{font-family:system-ui,sans-serif;color:#22272e}.ds-example button{font:inherit;cursor:pointer}.ds-example button:focus-visible,.ds-example input:focus-visible{outline:2px solid #236653;outline-offset:2px}.ds-example button:hover{filter:brightness(.97)}.ds-example button:active{filter:brightness(.93)}.ds-chips{display:flex;gap:6px}.ds-chips button{padding:6px 12px;border:1px solid #7e8792;border-radius:8px;background:#fff;color:#5e6670}.ds-chips button[aria-pressed=true]{background:#eaf3ee;color:#236653;border-color:#eaf3ee}"
+    },
+    {
+      "name": "紧凑参数浮层",
+      "kind": "custom",
+      "refersTo": "editor-panel",
+      "description": "原生 EditorPanel 结构示意：标题、内容、底部动作。网页示意没有 Android 安全区和键盘行为。",
+      "html": "<section class=\"ds-example ds-panel\"><header>橡皮<button aria-label=\"关闭橡皮\">×</button></header><div class=\"ds-panel-content\">擦除直径 28 dp</div><footer><button>取消</button><button>使用此橡皮</button></footer></section>",
+      "css": ".ds-example{font-family:system-ui,sans-serif;color:#22272e}.ds-example button{font:inherit;cursor:pointer}.ds-example button:focus-visible,.ds-example input:focus-visible{outline:2px solid #236653;outline-offset:2px}.ds-example button:hover{filter:brightness(.97)}.ds-example button:active{filter:brightness(.93)}.ds-panel{max-width:380px;border-radius:16px;background:#fff;border:1px solid #dee2e6;overflow:hidden}.ds-panel header{display:flex;align-items:center;justify-content:space-between;padding:2px 4px 2px 16px;font-size:20px;font-weight:500;border-bottom:1px solid #dee2e6}.ds-panel button{border:0;background:transparent;color:#236653;padding:8px 12px}.ds-panel-content{padding:8px 16px;font-size:14px}.ds-panel footer{display:flex;justify-content:flex-end;padding:4px 12px;background:#f7f8fa}"
+    },
+    {
+      "name": "选中工具",
+      "kind": "custom",
+      "refersTo": "editor-tool-selected",
+      "description": "工具图标、中文名称与选态；示意尺寸对应 Compose 的 dp 数字，不声称物理像素等价。",
+      "html": "<div class=\"ds-example\"><button class=\"ds-tool\" aria-pressed=\"true\"><svg viewBox=\"0 0 24 24\" width=\"24\" height=\"24\" aria-hidden=\"true\"><path d=\"m5 16-1 4 4-1L20 7l-3-3L5 16zm10-10 3 3\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"/></svg><span>书写</span></button></div>",
+      "css": ".ds-example{font-family:system-ui,sans-serif;color:#22272e}.ds-example button{font:inherit;cursor:pointer}.ds-example button:focus-visible,.ds-example input:focus-visible{outline:2px solid #236653;outline-offset:2px}.ds-example button:hover{filter:brightness(.97)}.ds-example button:active{filter:brightness(.93)}.ds-tool{display:flex;flex-direction:column;align-items:center;gap:2px;min-height:56px;border:0;border-radius:12px;padding:5px 4px;background:#eaf3ee;color:#236653;font-weight:600}"
+    }
+  ],
+  "narrative": {
+    "northStar": "紧凑书写工作台",
+    "overview": "白纸承担内容，石墨色承担阅读，森林绿指明当前工具与主要动作，浅灰区分工具和纸面。手写记录与 PDF 批注同等重要；编辑器首先让用户找到工具、在纸面操作、查看结果，再回到书写。\n\n参数靠近任务，以随内容收缩的浮层呈现。常用工具保留中文名称，说明按需展开，避免解释文字和空白挤占纸面。这一方向来自 `EditorControls.kt` 的方向契约与 `PRODUCT.md` 的已确认偏好。\n\n本文件记录当前 Android 原生实现，颜色与字阶来源为 `android/app/src/main/java/org/inkweft/app/ui/designsystem/InkTheme.kt`。前置字段中的尺寸使用 Android 的 dp／sp，不应直接当作网页 px。未显式覆盖的组件外观和交互采用项目所用 Material 3 默认值；不在这里补造一套数值。范围为应用界面，不覆盖用户文档的配色与排版。",
+    "keyCharacteristics": [
+      "白纸与浅灰工具区分层。",
+      "森林绿选态配合图标和中文名称。",
+      "常用入口可见，参数浮层紧凑。",
+      "先预览再应用，错误就地给出下一步。"
+    ],
+    "rules": [
+      {
+        "name": "文档颜色独立",
+        "body": "主题颜色只控制应用界面，不重写已保存的笔迹、PDF、图片或文本框颜色。笔盒色板是内容颜色，不是界面主题。",
+        "section": "colors"
+      },
+      {
+        "name": "保留纸面",
+        "body": "参数内容能收缩就收缩，解释按需展开；增加选项时优先复用当前工具行或浮层，不长期占用新的纸面区域。",
+        "section": "layout"
+      },
+      {
+        "name": "如实预览",
+        "body": "字体美化是选区 OCR 后换字，不能写成实时自动换字。应用保留原迹关联；通过插入模式选择转换后的文字，可执行“恢复原迹”。",
+        "section": "components"
+      }
+    ],
+    "dos": [
+      "**Do** 保留六个常用工具的中文名称，让美化和查找入口直接可见。",
+      "**Do** 复用紧凑浮层、当前工具选项行与按需展开的帮助。",
+      "**Do** 在预览、忙碌、空结果、错误和待核对状态给出符合真实行为的反馈。",
+      "**Do** 区分界面主题与用户内容样式，保持保存、撤销和原迹恢复边界。",
+      "**Do** 将新增真机验证需求维护到 `android/DEVICE-TEST-CHECKLIST.md`，按设备与版本记录结果。"
+    ],
+    "donts": [
+      "**Don't** 把内部索引、派生数据或存储术语作为主要操作名称。",
+      "**Don't** 用常驻长说明和空白扩张参数面板。",
+      "**Don't** 将选区换字体描述为实时自动美化，或将当前查找描述为 PDF 全文搜索。",
+      "**Don't** 将系统夜间模式下可读描述为已提供深色主题。",
+      "**Don't** 将局部界面复核、模拟输入或截图检查扩大成全功能、压感、掌拒或笔感认证。"
+    ]
+  }
+}

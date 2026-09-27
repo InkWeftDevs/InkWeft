@@ -43,7 +43,7 @@ fun InkScreen(note:NoteDraft,workspace:WorkspaceViewModel=viewModel(),onBack:()-
     androidx.activity.compose.BackHandler(enabled=!canNavigate||ui.busy||ui.actionUnknown||ui.insertionUnknown){
         Toast.makeText(context,"请先抬笔或核对当前操作，笔记仍保持在当前页。",Toast.LENGTH_SHORT).show()
     }
-    var searchTarget by remember{mutableStateOf<Pair<String,Long>?>(null)}
+    var searchTarget by remember{mutableStateOf<PageSearchDraft?>(null)}
     var exportBytes by remember{mutableStateOf<ByteArray?>(null)};var exporting by remember{mutableStateOf(false)}
     var confirmBook by remember{mutableStateOf(false)}
     var insertion by remember{mutableStateOf<Pair<String,PageInsertLocation>?>(null)}
@@ -52,7 +52,7 @@ fun InkScreen(note:NoteDraft,workspace:WorkspaceViewModel=viewModel(),onBack:()-
     var showRecycled by rememberSaveable{mutableStateOf(false)}
     var knowledgeOpen by remember{mutableStateOf(false)}
     var knowledgeAnchor by remember{mutableStateOf<KnowledgeData.Anchor?>(null)}
-    var recognizeBook by remember{mutableStateOf(false)}
+    var searchOpen by remember{mutableStateOf(false)}
     var documentMore by remember{mutableStateOf(false)}
     var documentSettings by remember{mutableStateOf(false)}
     var classify by remember{mutableStateOf(false)}
@@ -78,22 +78,24 @@ fun InkScreen(note:NoteDraft,workspace:WorkspaceViewModel=viewModel(),onBack:()-
         Row(Modifier.fillMaxWidth().heightIn(min=60.dp).padding(horizontal=8.dp),verticalAlignment=Alignment.CenterVertically){
             IconButton(onClick=onBack,enabled=navigationEnabled,modifier=Modifier.testTag("back-library").describedAs("返回资料库")){Glyph("back")}
             TextButton(onClick=onRename,enabled=navigationEnabled,modifier=Modifier.weight(1f).testTag("rename-from-editor")){Text(note.title,modifier=Modifier.fillMaxWidth(),maxLines=1,overflow=androidx.compose.ui.text.style.TextOverflow.Ellipsis,fontSize=20.sp)}
-            if(page!=null&&!page.world){
-                IconButton(onClick={directory=true},enabled=navigationEnabled,modifier=Modifier.testTag("page-directory").describedAs("页目录")){Glyph("list")}
-                IconButton(onClick={insertion=page.id to PageInsertLocation.AFTER},enabled=navigationEnabled&&ui.pages.size+ui.recycled.size<500,modifier=Modifier.testTag("add-page").describedAs("添加页面")){Glyph("add")}
-            }
-            IconButton(onClick={knowledgeAnchor=null;knowledgeOpen=true},enabled=navigationEnabled,modifier=Modifier.testTag("knowledge-open").describedAs("知识关联")){Glyph("link")}
-            IconButton(onClick={studySource=null;studyOpen=true},enabled=navigationEnabled,modifier=Modifier.testTag("study-open").describedAs("摘要卡、大纲与脑图")){Glyph("learn")}
+            EditorAction("查找","search",navigationEnabled,"book-search"){searchOpen=true}
             Box{IconButton(onClick={documentMore=true},enabled=navigationEnabled,modifier=Modifier.testTag("document-more").describedAs("文档选项")){Glyph("more")}
                 DropdownMenu(documentMore,{documentMore=false}){
-                    DropdownMenuItem(text={Text("整本手写查找")},onClick={documentMore=false;recognizeBook=true},modifier=Modifier.testTag("recognize-book"))
                     DropdownMenuItem(text={Text("阅读与笔记设置")},onClick={documentMore=false;documentSettings=true},modifier=Modifier.testTag("document-settings"))
-                    if(page!=null&&!page.world)DropdownMenuItem(text={Text(if(continuous)"切换为单页"else"上下连续翻页")},onClick={documentMore=false;readingMode(!continuous)},modifier=Modifier.testTag("toggle-continuous"))
                     DropdownMenuItem(text={Text("编辑键入文字")},onClick={documentMore=false;onText()},modifier=Modifier.testTag("mode-text"))
                     if(page!=null&&!page.world)DropdownMenuItem(text={Text("导出整本内容副本")},onClick={documentMore=false;confirmBook=true},enabled=!exporting,modifier=Modifier.testTag("export-book"))
                     DropdownMenuItem(text={Text("诊断与导出")},onClick={documentMore=false;onDiagnostics()},modifier=Modifier.testTag("open-diagnostics"))
                 }
             }
+        }
+        Row(Modifier.fillMaxWidth().background(Side).horizontalScroll(rememberScrollState()).padding(horizontal=8.dp),verticalAlignment=Alignment.CenterVertically){
+            if(page!=null&&!page.world){
+                EditorAction("页面","list",navigationEnabled,"page-directory"){directory=true}
+                EditorAction("加页","add",navigationEnabled&&ui.pages.size+ui.recycled.size<500,"add-page"){insertion=page.id to PageInsertLocation.AFTER}
+                EditorAction(if(continuous)"连续阅读 ✓"else"连续阅读","note",navigationEnabled,"toggle-continuous"){readingMode(!continuous)}
+            }
+            EditorAction("整理","learn",navigationEnabled,"study-open"){studySource=null;studyOpen=true}
+            EditorAction("关联","link",navigationEnabled,"knowledge-open"){knowledgeAnchor=null;knowledgeOpen=true}
         }
         HorizontalDivider(color=Line)
         if(ui.error!=null)Row(Modifier.fillMaxWidth().padding(horizontal=12.dp),verticalAlignment=Alignment.CenterVertically){Text(ui.error!!,Modifier.weight(1f),fontSize=12.sp);if(!ui.insertionUnknown&&!ui.actionUnknown)TextButton(onClick=vm::clearError){Text("知道了")}}
@@ -110,7 +112,7 @@ fun InkScreen(note:NoteDraft,workspace:WorkspaceViewModel=viewModel(),onBack:()-
             }
         }
         if(page==null)Box(Modifier.weight(1f).fillMaxWidth(),contentAlignment=Alignment.Center){if(ui.loading)CircularProgressIndicator()else Text("页面未能载入，原数据保留")}
-        else Box(Modifier.weight(1f)){InkPageScreen(note,workspace,page,{canNavigate=it},{rev->searchTarget=page.id to rev},!ui.busy&&!ui.actionUnknown&&!ui.insertionUnknown&&pageActionId==null,
+        else Box(Modifier.weight(1f)){InkPageScreen(note,workspace,page,{canNavigate=it},{_->searchOpen=true},!ui.busy&&!ui.actionUnknown&&!ui.insertionUnknown&&pageActionId==null,
             onAssociate={selection->knowledgeAnchor=KnowledgeData.Anchor(page.id,selection.revision,selection.region.bounds,selection.strokes.map{it.id});knowledgeOpen=true},
             onExcerpt={selection->studySource=StudySourceDraft(page.id,selection.revision,selection.region.bounds,selection.strokes.map{it.id});studyOpen=true},
             focusRegion=sourceFocus?.takeIf{it.first==page.id}?.second,onFocusConsumed={sourceFocus=null},pageNavigation={
@@ -121,19 +123,18 @@ fun InkScreen(note:NoteDraft,workspace:WorkspaceViewModel=viewModel(),onBack:()-
                 }
             },continuousPages=if(continuous&&!page.world)ui.pages else null,onContinuousPage={if(it!=ui.selectedId)vm.select(it)},leaveContinuous={readingMode(false)})}
     }
-    if(recognizeBook)BookRecognitionDialog(note.base.id){recognizeBook=false}
+    if(searchOpen)BookSearchPanel(note.base.id,note.title,page?.id,{searchOpen=false},{id->
+        if(ui.pages.any{it.id==id}){vm.select(id);searchOpen=false}
+    },{draft->searchTarget=draft;searchOpen=false})
     if(documentSettings)AlertDialog(onDismissRequest={documentSettings=false},modifier=Modifier.testTag("document-settings-dialog"),title={Text("阅读与笔记设置")},text={
         Column(Modifier.verticalScroll(rememberScrollState()),verticalArrangement=Arrangement.spacedBy(8.dp)){
-            Text("当前笔记",color=Quiet,fontSize=12.sp)
+
             if(page!=null&&!page.world){
                 Row(verticalAlignment=Alignment.CenterVertically){Text("上下连续翻页",Modifier.weight(1f));Switch(continuous,{readingMode(it)},modifier=Modifier.testTag("continuous-setting"))}
-                Text("连续模式用手指滚动、触控笔书写。精确缩放和套索可切回单页；每本笔记分别记住阅读方式。",fontSize=12.sp,color=Quiet)
                 TextButton(onClick={documentSettings=false;directory=true},modifier=Modifier.testTag("settings-page-directory")){Text("跳转页面与页面整理")}
             }
             TextButton(onClick={documentSettings=false;classify=true},enabled=entries[note.base.id]!=null,modifier=Modifier.testTag("settings-tags")){Text("文件夹与标签")}
             HorizontalDivider()
-            Text("编辑工具",color=Quiet,fontSize=12.sp)
-            Text("点选当前常用笔，可切换笔型、颜色和粗细。工具栏的选择工具支持自由套索、圈选擦除和摘录为摘要卡。工具栏位置在编辑工具的更多菜单中调整。",fontSize=13.sp)
             TextButton(onClick={documentSettings=false;onDiagnostics()}){Text("诊断与导出")}
         }
     },confirmButton={TextButton(onClick={documentSettings=false}){Text("完成")}})
@@ -193,7 +194,7 @@ fun InkScreen(note:NoteDraft,workspace:WorkspaceViewModel=viewModel(),onBack:()-
         }
     }
     if(confirmBook)AlertDialog(onDismissRequest={confirmBook=false},title={Text("导出整本内容副本")},text={Text("包括本笔记所有可用页面、图片、文本框、胶带状态、局部擦除效果和已保存键入文字；不含页面回收区。明文 .iwbook，不含摘要卡/脑图、撤销历史、账号或密钥；不是完整资料库备份。目标可能由云盘提供。")},confirmButton={TextButton(onClick={confirmBook=false;exporting=true;scope.launch{try{val bytes=withContext(Dispatchers.IO){app.pages.exportBook(note.base.id).encode()};exportBytes=bytes;export.launch("墨织笔记本.iwbook")}catch(c:CancellationException){throw c}catch(_:Exception){Toast.makeText(context,"无法导出整本内容，原数据保留；可尝试逐页导出",Toast.LENGTH_LONG).show()}finally{exporting=false}}}){Text("选择位置")}},dismissButton={TextButton(onClick={confirmBook=false}){Text("取消")}})
-    searchTarget?.let{(id,revision)->PageSearchDialog(id,revision){searchTarget=null}}
+    searchTarget?.let{draft->PageSearchDialog(draft){searchTarget=null}}
 }
 @Composable
 internal fun PageThumb(page:NotebookPageRow){
@@ -206,13 +207,14 @@ internal fun PageThumb(page:NotebookPageRow){
     }
 }
 @Composable
-private fun PageSearchDialog(pageId:String,revision:Long,dismiss:()->Unit){
+private fun PageSearchDialog(draft:PageSearchDraft,dismiss:()->Unit){
+    val pageId=draft.pageId;val revision=draft.inkRevision
     val app=LocalContext.current.applicationContext as InkWeftApplication;val scope=rememberCoroutineScope()
-    var objectRevision by remember{mutableLongStateOf(0)};var ocr by remember{mutableStateOf(false)}
-    var text by remember{mutableStateOf("")};var loading by remember{mutableStateOf(true)};var busy by remember{mutableStateOf(false)};var message by remember{mutableStateOf<String?>(null)}
-    LaunchedEffect(pageId){try{objectRevision=withContext(Dispatchers.IO){app.pageObjects.read(pageId).revision};val old=withContext(Dispatchers.IO){app.pages.searchText(pageId)};text=old?.text.orEmpty();if(old!=null&&old.inkRevision!=revision)message="本页笔迹已变，旧检索文字已失效；确认修改后重新保存。"}catch(c:CancellationException){throw c}catch(_:Exception){message="读取检索文字失败；原笔迹没有改变。"}finally{loading=false}}
-    AlertDialog(onDismissRequest={if(!busy)dismiss()},modifier=Modifier.testTag("page-search-dialog"),title={Text("本页手写检索文字")},text={Column(verticalArrangement=Arrangement.spacedBy(10.dp)){
-        Text("离线识别本页手写；核对文字后保存，即可在资料库搜索并跳转本页。复杂分栏、公式和潦草字可能识别不准。",fontSize=12.sp,color=Quiet)
+    var objectRevision by remember(draft){mutableLongStateOf(draft.objectRevision)};var ocr by remember{mutableStateOf(false)}
+    var text by remember(draft){mutableStateOf(draft.text)};var busy by remember{mutableStateOf(false)}
+    var message by remember(draft){mutableStateOf(if(draft.stale)"本页手写已有变化，请重新识别并校对。"else null)}
+    EditorPanel("校对手写识别","",{if(!busy)dismiss()},"page-search-dialog",footer={Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.End){TextButton(onClick=dismiss,enabled=!busy){Text("取消")};TextButton(onClick={busy=true;scope.launch{try{if(withContext(Dispatchers.IO){app.pages.saveSearchText(pageId,revision,text,objectRevision,if(ocr)"OCR"else"MANUAL")})dismiss()else message="笔迹已更新，没有套用到新版本。请关闭后重新核对。"}catch(c:CancellationException){throw c}catch(_:Exception){message="校对尚未保存，请重试。"}finally{busy=false}}},enabled=!busy,modifier=Modifier.testTag("save-page-search")){Text("保存校对")}}}){Column(Modifier.verticalScroll(rememberScrollState()),verticalArrangement=Arrangement.spacedBy(4.dp)){
+        Text("只修正查找用的文字，保留纸面手写。",fontSize=12.sp,color=Quiet)
         TextButton(onClick={busy=true;message="正在离线识别…";scope.launch{try{
             val pair=withContext(Dispatchers.IO){app.inkRepository.read(pageId) to app.pageObjects.read(pageId)}
             check(pair.first.revision==revision);objectRevision=pair.second.revision
@@ -220,10 +222,10 @@ private fun PageSearchDialog(pageId:String,revision:Long,dismiss:()->Unit){
             val result=app.handwriting.recognize(InkSession(pair.first).visibleDraft().filterNot{it.id in suppressed})
             text=(listOf(result.text)+pair.second.objects.filter{it.kind==PageObjectKind.TEXT}.map{it.text}).filter{it.isNotBlank()}.joinToString("\n").also{require(it.length<=20000)}
             ocr=true;message=if(text.isBlank())"未识别到文字，可手动补充关键词。"else"识别完成，请核对后保存。"
-        }catch(c:CancellationException){throw c}catch(_:Exception){message="识别未完成或页面已经变化。原笔迹保留，可关闭后重试。"}finally{busy=false}}},enabled=!loading&&!busy,modifier=Modifier.testTag("recognize-page")){Text("识别本页手写")}
+        }catch(c:CancellationException){throw c}catch(_:Exception){message="识别未完成或页面已经变化。原笔迹保留，可关闭后重试。"}finally{busy=false}}},enabled=!busy,modifier=Modifier.testTag("recognize-page")){Text("识别本页手写")}
         if(busy)LinearProgressIndicator(Modifier.fillMaxWidth())
-        OutlinedTextField(text,{if(it.length<=20_000)text=it},enabled=!loading&&!busy,modifier=Modifier.fillMaxWidth().heightIn(min=120.dp).testTag("page-search-text"),label={Text("识别文字 / 关键词")})
-        Text("普通笔迹擦写或撤销会让此版本的索引失效；只改荧光标注时保留有效索引，旧文字不继续冒充当前手写；需重新核对并保存。原笔迹不被转换或上传。",fontSize=12.sp,color=Quiet)
+        OutlinedTextField(text,{if(it.length<=20_000)text=it},enabled=!busy,modifier=Modifier.fillMaxWidth().heightIn(min=96.dp,max=160.dp).testTag("page-search-text"),label={Text("识别出的文字")})
         message?.let{Text(it,fontSize=12.sp)}
-    }},confirmButton={TextButton(onClick={busy=true;scope.launch{try{if(withContext(Dispatchers.IO){app.pages.saveSearchText(pageId,revision,text,objectRevision,if(ocr)"OCR"else"MANUAL")})dismiss()else message="笔迹已更新，没有套用到新版本。请关闭后重新核对。"}catch(c:CancellationException){throw c}catch(_:Exception){message="索引保存待核对，原笔迹保留。"}finally{busy=false}}},enabled=!loading&&!busy,modifier=Modifier.testTag("save-page-search")){Text("保存检索文字")}},dismissButton={TextButton(onClick=dismiss,enabled=!busy){Text("取消")}})
+    }
+    }
 }

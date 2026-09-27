@@ -15,12 +15,15 @@ import kotlinx.coroutines.*
 import org.inkweft.core.*
 import java.util.UUID
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable internal fun FontControls(font:TextFont,onFont:(TextFont)->Unit,bold:Boolean,onBold:(Boolean)->Unit,spacing:Float,onSpacing:(Float)->Unit){
-    Row(Modifier.horizontalScroll(rememberScrollState()),horizontalArrangement=Arrangement.spacedBy(6.dp)){
+    FlowRow(horizontalArrangement=Arrangement.spacedBy(6.dp)){
         TextFont.entries.forEach{f->FilterChip(font==f,{onFont(f)},label={Text(TextStyles.name(f))},modifier=Modifier.testTag("font-${f.name}"))}
     }
-    Row {FilterChip(bold,{onBold(!bold)},label={Text("加粗")});Spacer(Modifier.width(10.dp));Text("行距 %.1f 倍".format(spacing))}
-    Slider(spacing,onSpacing,valueRange=1f..2f,modifier=Modifier.testTag("text-spacing"))
+    Row(verticalAlignment=androidx.compose.ui.Alignment.CenterVertically){
+        FilterChip(bold,{onBold(!bold)},label={Text("加粗")});Spacer(Modifier.width(8.dp));Text("行距 %.1f".format(spacing),style=MaterialTheme.typography.bodySmall)
+        Slider(spacing,onSpacing,valueRange=1f..2f,modifier=Modifier.weight(1f).testTag("text-spacing"))
+    }
 }
 
 @Composable internal fun FontBeautyDialog(selection:SelectedInk,world:Boolean,dismiss:()->Unit,apply:(PageObject)->Unit){
@@ -29,6 +32,7 @@ import java.util.UUID
     var size by remember{mutableFloatStateOf(28f)};var spacing by remember{mutableFloatStateOf(1.2f)};var bold by remember{mutableStateOf(false)}
     var loading by remember{mutableStateOf(true)};var error by remember{mutableStateOf<String?>(null)};var status by remember{mutableStateOf("正在离线识别…")}
     var attempt by remember{mutableIntStateOf(0)}
+    var showText by remember{mutableStateOf(false)};var help by remember{mutableStateOf(false)}
     val id=remember{UUID.randomUUID().toString()}
     LaunchedEffect(attempt){loading=true;error=null
         try{val result=app.handwriting.recognize(selection.strokes){i,n->status="正在离线识别 ${i+1}/$n 行"};require(result.text.length<=4000);text=result.text;status="识别完成，请核对错字、标点和分行";if(text.isBlank())error="未识别出文字，请缩小选区或手动输入。"}
@@ -43,17 +47,46 @@ import java.util.UUID
         val height=(TextStyles.layout(o).height+8f).coerceAtLeast(48f)
         require(height<=4000&&(world||height<=1414-y));o.copy(height=height)
     }.getOrNull()
-    AlertDialog(onDismissRequest=dismiss,modifier=Modifier.testTag("font-beauty-dialog"),title={Text("字体美化")},text={
-        Column(Modifier.verticalScroll(rememberScrollState()),verticalArrangement=Arrangement.spacedBy(8.dp)){
-            Text("先核对识别结果，再应用字体。原迹保留；在对象工具中选择“恢复原迹”可还原。公式、图形和复杂分栏请单独选择。",fontSize=12.sp)
-            Text(status,fontSize=12.sp);if(loading)LinearProgressIndicator(Modifier.fillMaxWidth())
-            error?.let{Text(it,fontSize=12.sp)}
-            OutlinedTextField(text,{if(it.length<=4000){text=it;error=null}},enabled=!loading,label={Text("核对文字")},modifier=Modifier.fillMaxWidth().heightIn(min=100.dp,max=200.dp).testTag("beauty-recognized-text"))
-            FontControls(font,{font=it},bold,{bold=it},spacing,{spacing=it})
-            Text("字号 ${size.toInt()}");Slider(size,{size=it},valueRange=12f..96f)
-            candidate?.let{o->AndroidView(factory={InkCanvasView(it).apply{preview=true}},update={it.configure(true,PaperStyle.BLANK,null);it.showObjects(listOf(o));it.fitContent()},modifier=Modifier.fillMaxWidth().height(160.dp).testTag("font-preview"))}
-            if(text.isNotBlank()&&candidate==null)Text("文字超出页面，请减少字号或分段美化。",fontSize=12.sp)
-            TextButton(onClick={attempt++},enabled=!loading){Text("重新识别")}
+    EditorPanel("美化字迹","",dismiss,"font-beauty-dialog",footer={
+        Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.spacedBy(12.dp)){
+            OutlinedButton(onClick=dismiss,modifier=Modifier.weight(1f)){Text("保留原样")}
+            Button(onClick={candidate?.let(apply)},enabled=!loading&&candidate!=null,modifier=Modifier.weight(1f).testTag("apply-font-beauty")){Text("应用美化")}
         }
-    },confirmButton={TextButton(onClick={candidate?.let(apply)},enabled=!loading&&candidate!=null,modifier=Modifier.testTag("apply-font-beauty")){Text("应用字体")}},dismissButton={TextButton(onClick=dismiss){Text("取消")}})
+    }){
+        Column(Modifier.fillMaxWidth().verticalScroll(rememberScrollState()),verticalArrangement=Arrangement.spacedBy(4.dp)){
+            if(loading){Text(status,style=MaterialTheme.typography.bodySmall,color=Quiet);LinearProgressIndicator(Modifier.fillMaxWidth())}
+            error?.let{Text(it,style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.error)}
+            candidate?.let{o->
+                AndroidView(factory={InkCanvasView(it).apply{preview=true;previewPadding=8.0}},update={it.configure(true,PaperStyle.BLANK,null);it.showObjects(listOf(o));it.fitContent()},modifier=Modifier.fillMaxWidth().height(96.dp).testTag("font-preview"))
+            }
+            @OptIn(ExperimentalLayoutApi::class)
+            FlowRow(horizontalArrangement=Arrangement.spacedBy(4.dp)){
+                TextFont.entries.forEach{f->FilterChip(font==f,{font=f},label={Text(TextStyles.name(f))},modifier=Modifier.testTag("font-${f.name}"))}
+            }
+            Row(Modifier.fillMaxWidth(),verticalAlignment=androidx.compose.ui.Alignment.CenterVertically){
+                Text("加粗",Modifier.weight(1f),style=MaterialTheme.typography.bodyMedium)
+                Switch(bold,{bold=it},modifier=Modifier.testTag("beauty-bold"))
+            }
+            Row(verticalAlignment=androidx.compose.ui.Alignment.CenterVertically){
+                Text("字号 ${size.toInt()}",Modifier.width(78.dp),style=MaterialTheme.typography.bodyMedium)
+                Slider(size,{size=it},valueRange=12f..96f,modifier=Modifier.weight(1f).testTag("beauty-font-size"))
+            }
+            Row(verticalAlignment=androidx.compose.ui.Alignment.CenterVertically){
+                Text("行距 %.1f".format(spacing),Modifier.width(78.dp),style=MaterialTheme.typography.bodyMedium)
+                Slider(spacing,{spacing=it},valueRange=1f..2f,modifier=Modifier.weight(1f).testTag("text-spacing"))
+            }
+            HorizontalDivider(color=Line)
+            Row(verticalAlignment=androidx.compose.ui.Alignment.CenterVertically){
+                Text(text.replace('\n',' ').ifBlank{"未识别到文字"},Modifier.weight(1f),maxLines=1,overflow=androidx.compose.ui.text.style.TextOverflow.Ellipsis,style=MaterialTheme.typography.bodySmall,color=Quiet)
+                TextButton(onClick={showText=!showText},modifier=Modifier.testTag("beauty-edit-text")){Text(if(showText)"收起"else"校对")}
+                TextButton(onClick={help=!help}){Text("说明")}
+            }
+            if(showText)OutlinedTextField(text,{if(it.length<=4000){text=it;error=null}},enabled=!loading,label={Text("识别文字")},modifier=Modifier.fillMaxWidth().heightIn(min=96.dp,max=160.dp).testTag("beauty-recognized-text"))
+            if(text.isNotBlank()&&candidate==null)Text("放不下这段字，请调小字号或分段美化。",color=MaterialTheme.colorScheme.error,style=MaterialTheme.typography.bodySmall)
+            if(help){
+                Text("选区识别后换字体，公式与图形请避开。原迹保留：点插入，选中文字，再点恢复原迹。",style=MaterialTheme.typography.bodySmall,color=Quiet)
+                TextButton(onClick={attempt++},enabled=!loading){Text("重新识别")}
+            }
+        }
+    }
 }

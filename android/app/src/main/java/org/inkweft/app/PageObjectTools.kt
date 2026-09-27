@@ -31,6 +31,8 @@ import java.util.UUID
     var cameraPath by rememberSaveable(pageId){mutableStateOf<String?>(null)}
     var editing by rememberSaveable(stateSaver=Saver<PageObject?,String>(save={o->o?.let{Base64.getEncoder().encodeToString(PageObjectCodec.encode(listOf(it)))}?:""},restore={s->if(s.isEmpty())null else PageObjectCodec.decode(Base64.getDecoder().decode(s)).single()})){mutableStateOf<PageObject?>(null)}
     var reload by remember{mutableStateOf(false)}
+    var dismissedError by remember{mutableStateOf<String?>(null)}
+    LaunchedEffect(ui.error){if(ui.error==null)dismissedError=null}
     val available=enabled&&!ui.loading&&!ui.busy&&!ui.pending&&cameraPath==null&&!picking
     SideEffect{onBlocked(picking||cameraPath!=null||editing!=null)}
     fun newObject(kind:PageObjectKind):PageObject {
@@ -60,24 +62,22 @@ import java.util.UUID
                 },enabled=available,modifier=Modifier.testTag("object-camera")){Text("拍照")}
                 TextButton(onClick={editing=newObject(PageObjectKind.TEXT)},enabled=available,modifier=Modifier.testTag("object-text")){Text("文本框")}
                 TextButton(onClick={val o=newObject(PageObjectKind.TAPE).copy(height=70f);vm.put(o);onSelect(o.id)},enabled=available,modifier=Modifier.testTag("object-tape")){Text("胶带")}
-                TextButton(onClick=vm::undo,enabled=available&&ui.undo,modifier=Modifier.testTag("object-undo")){Text("撤销对象")}
-                TextButton(onClick=vm::redo,enabled=available&&ui.redo,modifier=Modifier.testTag("object-redo")){Text("重做对象")}
-            }
-            val item=ui.objects.find{it.id==selected}
-            if(item!=null)Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()).padding(horizontal=8.dp),verticalAlignment=Alignment.CenterVertically) {
+                TextButton(onClick=vm::undo,enabled=available&&ui.undo,modifier=Modifier.testTag("object-undo")){Text("撤销插入")}
+                TextButton(onClick=vm::redo,enabled=available&&ui.redo,modifier=Modifier.testTag("object-redo")){Text("重做插入")}
+                val item=ui.objects.find{it.id==selected}
+                if(item!=null){
                 if(item.kind==PageObjectKind.TEXT)TextButton(onClick={editing=item},enabled=available,modifier=Modifier.testTag("object-edit-text")){Text("编辑文字")}
                 if(item.kind==PageObjectKind.TAPE)TextButton(onClick={vm.put(item.copy(revealed=!item.revealed))},enabled=available,modifier=Modifier.testTag("object-reveal")){Text(if(item.revealed)"盖上胶带"else"揭开胶带")}
                 TextButton(onClick={val x=if(world)item.x+24 else (item.x+24).coerceAtMost(1000-item.width);val y=if(world)item.y+24 else (item.y+24).coerceAtMost(1414-item.height);val o=item.copy(id=UUID.randomUUID().toString(),x=x,y=y,sourceStrokeIds=emptyList());vm.put(o);onSelect(o.id)},enabled=available,modifier=Modifier.testTag("object-copy")){Text("复制")}
                 TextButton(onClick={vm.change(ui.objects.filterNot{it.id==item.id}+item)},enabled=available,modifier=Modifier.testTag("object-front")){Text("移到同类前方")}
                 TextButton(onClick={vm.delete(item.id);onSelect(null)},enabled=available,modifier=Modifier.testTag("object-delete")){Text(if(item.sourceStrokeIds.isEmpty())"删除"else"恢复原迹",color=Color(0xffab3939))}
             }
-            Text(if(ui.busy)"正在保存对象…"else "点选对象后拖动；右下圆点缩放。图片和文字在笔迹下方，胶带覆盖笔迹。",fontSize=11.sp,color=Quiet,modifier=Modifier.padding(horizontal=12.dp,vertical=4.dp).testTag("object-status"))
+            }
         }
     }
-    if(ui.error!=null)Row(Modifier.fillMaxWidth().padding(8.dp),verticalAlignment=Alignment.CenterVertically){
-        Text(ui.error,Modifier.weight(1f),fontSize=12.sp)
-        if(ui.pending){TextButton(onClick=vm::retry,enabled=!ui.busy){Text("核对重试")};TextButton(onClick={reload=true},enabled=!ui.busy){Text("重新读取")}}
-    }
+    if(ui.error!=null&&dismissedError!=ui.error)AlertDialog(onDismissRequest={if(!ui.pending)dismissedError=ui.error},title={Text("内容未保存")},text={Text(ui.error)},confirmButton={
+        if(ui.pending)TextButton(onClick=vm::retry,enabled=!ui.busy){Text("核对重试")}else TextButton(onClick={dismissedError=ui.error}){Text("知道了")}
+    },dismissButton={if(ui.pending)TextButton(onClick={reload=true},enabled=!ui.busy){Text("重新读取")}})
     if(reload)AlertDialog(onDismissRequest={reload=false},title={Text("重新读取已保存对象？")},text={Text("未确认的对象修改将被放弃，已保存的笔迹和对象保留。")},confirmButton={TextButton(onClick={reload=false;vm.reload()}){Text("读取已保存内容")}},dismissButton={TextButton(onClick={reload=false}){Text("取消")}})
     editing?.let { original ->
         var text by rememberSaveable(original.id){mutableStateOf(if(ui.objects.any{it.id==original.id})original.text else "")}
@@ -87,19 +87,19 @@ import java.util.UUID
         var bold by rememberSaveable(original.id){mutableStateOf(original.bold)}
         var color by rememberSaveable(original.id){mutableIntStateOf(original.color)}
         var textError by remember{mutableStateOf<String?>(null)}
-        AlertDialog(onDismissRequest={editing=null},modifier=Modifier.testTag("object-text-dialog"),title={Text("页内文本框")},text={Column(Modifier.verticalScroll(rememberScrollState()),verticalArrangement=Arrangement.spacedBy(8.dp)){
-            OutlinedTextField(text,{if(it.length<=4000)text=it},modifier=Modifier.fillMaxWidth().heightIn(min=120.dp,max=260.dp).testTag("object-text-input"),label={Text("文字内容")})
-            textError?.let{Text(it,color=Color(0xffab3939),fontSize=12.sp)}
-            FontControls(family,{family=it},bold,{bold=it},spacing,{spacing=it})
-            Text("字号 ${font.toInt()} · ${text.length}/4000",fontSize=12.sp)
-            Slider(font,{font=it},valueRange=12f..96f,modifier=Modifier.testTag("object-font"))
-            Row(horizontalArrangement=Arrangement.spacedBy(8.dp)){listOf(0xff24342f.toInt(),0xffb64035.toInt(),0xff305ca2.toInt(),0xff7355a2.toInt()).forEach{c->FilterChip(color==c,{color=c},label={Text("●",color=Color(c))})}}
-        }},confirmButton={TextButton(onClick={
+        EditorPanel("文本框","",{editing=null},"object-text-dialog",footer={Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.End){TextButton(onClick={editing=null}){Text("取消")};TextButton(onClick={
             val o=original.copy(text=text,fontSize=font,color=color,font=family,lineSpacing=spacing,bold=bold)
             val layout=TextStyles.layout(o)
             val height=maxOf(48f,layout.height.toFloat()+8f)
             if(height>4000||(!world&&height>1414-o.y))textError="文字超出当前页可用高度，请减少文字或字号后保存。"
             else {vm.put(o.copy(height=height));onSelect(o.id);editing=null}
-        },enabled=text.isNotBlank(),modifier=Modifier.testTag("object-text-save")){Text("保存")}},dismissButton={TextButton(onClick={editing=null}){Text("取消")}})
+        },enabled=text.isNotBlank(),modifier=Modifier.testTag("object-text-save")){Text("保存")}}}){Column(Modifier.verticalScroll(rememberScrollState()),verticalArrangement=Arrangement.spacedBy(4.dp)){
+            OutlinedTextField(text,{if(it.length<=4000)text=it},modifier=Modifier.fillMaxWidth().heightIn(min=96.dp,max=150.dp).testTag("object-text-input"),label={Text("文字内容")})
+            textError?.let{Text(it,color=Color(0xffab3939),fontSize=12.sp)}
+            FontControls(family,{family=it},bold,{bold=it},spacing,{spacing=it})
+            Row(verticalAlignment=Alignment.CenterVertically){Text("字号 ${font.toInt()}",Modifier.width(78.dp));Slider(font,{font=it},valueRange=12f..96f,modifier=Modifier.weight(1f).testTag("object-font"))}
+            Row(horizontalArrangement=Arrangement.spacedBy(4.dp)){listOf(0xff24342f.toInt(),0xffb64035.toInt(),0xff305ca2.toInt(),0xff7355a2.toInt()).forEach{c->FilterChip(color==c,{color=c},label={Text("●",color=Color(c))})}}
+        }
+        }
     }
 }
