@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.*
 import androidx.compose.ui.geometry.*
 import androidx.compose.ui.graphics.*
@@ -25,9 +24,10 @@ internal val LocalPenPointsLeft=compositionLocalOf{false}
 @Composable internal fun FloatingPenCase(storageKey:String="case",wide:Boolean=false,content:@Composable ColumnScope.()->Unit){
     val context=LocalContext.current
     val prefs=remember{context.getSharedPreferences("inkweft-editor",0)}
-    var x by rememberSaveable(storageKey){mutableFloatStateOf(prefs.getFloat("$storageKey-x",if(wide).5f else 0f))}
-    var y by rememberSaveable(storageKey){mutableFloatStateOf(prefs.getFloat("$storageKey-y",if(wide).92f else .3f))}
-    var collapsed by rememberSaveable(storageKey){mutableStateOf(prefs.getBoolean("$storageKey-collapsed",false))}
+    // App-wide persisted preferences outrank a notebook tab's saved composition.
+    var x by remember(storageKey){mutableFloatStateOf(prefs.getFloat("$storageKey-x",if(wide).5f else 0f))}
+    var y by remember(storageKey){mutableFloatStateOf(prefs.getFloat("$storageKey-y",if(wide).92f else .3f))}
+    var collapsed by remember(storageKey){mutableStateOf(prefs.getBoolean("$storageKey-collapsed",false))}
     var positionMenu by remember{mutableStateOf(false)}
     var host by remember{mutableStateOf(IntSize.Zero)}
     var size by remember{mutableStateOf(IntSize.Zero)}

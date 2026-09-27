@@ -70,7 +70,7 @@ class EditorAffordanceTest {
         val paths=runBlocking{app.inkRepository.read(id).strokes.map{it.stroke}}
         assertEquals(6f,paths[0].width,0f);assertEquals(1.5f,paths[1].width,0f);assertEquals(first.samples,paths[0].samples)
         compose.activityRule.scenario.recreate();saved(2)
-        compose.openCurrentPen();compose.onNodeWithTag("pen-width-value").assertTextEquals("线宽 1.5");shot("pen-width-emulator.png")
+        compose.openCurrentPen();compose.onNodeWithTag("pen-width-value").assertTextEquals("1.5");shot("pen-width-emulator.png")
         compose.onNodeWithTag("apply-pen-width").performScrollTo().performClick()
     }
     @Test fun widthSettingsHaveIndependentSlotsAndRealFileRoundTrip(){

@@ -69,8 +69,11 @@ class ModernWorkspaceUiTest {
         }finally{app.deleteSharedPreferences(key)}
     }
     @Test fun settingsCanChangeWritingPreferencesAndResetOnlyPalettePlacement(){
+        val note=open()
+        compose.onNodeWithTag("pen-case-handle").performClick();compose.onNodeWithText("放到右侧").performClick();compose.onNodeWithTag("case-collapse").performClick()
+        compose.onNodeWithTag("back-library").performClick()
         compose.waitUntil(15_000){compose.onAllNodesWithTag("new-note").fetchSemanticsNodes().isNotEmpty()}
-        val prefs=app.getSharedPreferences("inkweft-editor",0);prefs.edit().putFloat("case-x",.8f).putBoolean("case-collapsed",true).commit()
+        val prefs=app.getSharedPreferences("inkweft-editor",0)
         if(compose.onAllNodesWithTag("open-library-drawer").fetchSemanticsNodes().isNotEmpty())compose.onNodeWithTag("open-library-drawer").performClick()
         compose.onNodeWithText("设置与数据").assertIsDisplayed().performClick()
         compose.onNodeWithTag("settings-favorite-pens").performScrollTo().performClick();compose.onNodeWithTag("settings-auto-beauty").performScrollTo().performClick()
@@ -78,5 +81,10 @@ class ModernWorkspaceUiTest {
         compose.onNodeWithTag("settings-reset-case").performScrollTo().performClick()
         assertFalse(prefs.contains("case-x"));assertFalse(prefs.contains("case-collapsed"));assertTrue(prefs.getBoolean("favorites-open",false))
         shot("v21-settings.png")
+        compose.onNodeWithContentDescription("关闭设置").performScrollTo().performClick()
+        compose.runOnIdle{ViewModelProvider(compose.activity)[NotebookViewModel::class.java].select(note)}
+        compose.waitUntil(15_000){compose.onAllNodesWithTag("floating-pen-case").fetchSemanticsNodes().isNotEmpty()}
+        compose.onNodeWithTag("floating-pen-case").assert(SemanticsMatcher.expectValue(SemanticsProperties.StateDescription,"笔尖朝右"))
+        compose.onNodeWithTag("favorite-pen-case").assertExists();compose.onNodeWithTag("auto-beauty-toggle").assertIsOn()
     }
 }

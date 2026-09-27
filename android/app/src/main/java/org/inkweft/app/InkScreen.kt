@@ -60,7 +60,7 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
     var favorites by remember{mutableStateOf(favoriteStore.read())}
     var favoriteBusy by remember{mutableStateOf(false)}
     val casePrefs=remember{context.getSharedPreferences("inkweft-editor",0)}
-    var favoritesOpen by rememberSaveable{mutableStateOf(casePrefs.getBoolean("favorites-open",false))}
+    var favoritesOpen by remember{mutableStateOf(casePrefs.getBoolean("favorites-open",false))}
     fun showFavorites(value:Boolean){favoritesOpen=value;casePrefs.edit().putBoolean("favorites-open",value).apply()}
     var continuousBlocked by remember{mutableStateOf(false)}
     var gesture by remember{mutableStateOf(false)}
