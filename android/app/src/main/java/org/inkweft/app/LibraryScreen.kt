@@ -40,6 +40,7 @@ import java.util.Date
 import java.util.Locale
 
 @Composable
+@OptIn(ExperimentalLayoutApi::class)
 fun LibraryScreen(ui:NotebookUi,workspace:WorkspaceViewModel,open:(Note)->Unit,create:()->Unit,importPage:()->Unit,diagnostics:()->Unit,rename:(Note)->Unit,duplicate:(Note)->Unit,export:(Note)->Unit){
     val app=LocalContext.current.applicationContext as InkWeftApplication
     val summaryFlow=remember(app){app.knowledge.cards()};val summaries by summaryFlow.collectAsState(initial=emptyList())
@@ -140,8 +141,10 @@ fun LibraryScreen(ui:NotebookUi,workspace:WorkspaceViewModel,open:(Note)->Unit,c
                     }
                     OutlinedTextField(query,{query=it},singleLine=true,shape=RoundedCornerShape(12.dp),colors=OutlinedTextFieldDefaults.colors(unfocusedBorderColor=Line,focusedBorderColor=Forest,unfocusedContainerColor=Color.White,focusedContainerColor=Color.White),placeholder={Text("搜索笔记、手写和摘要",fontSize=14.sp)},leadingIcon={Glyph("search",Quiet)},modifier=Modifier.fillMaxWidth().testTag("library-search"))
                     Row(Modifier.fillMaxWidth().padding(vertical=5.dp),verticalAlignment=Alignment.CenterVertically){
-                        listOf("all" to "全部","page" to "纸张笔记","board" to "无界笔记").forEach{(id,label)->FilterChip(selected=type==id,onClick={type=id},label={Text(label,fontSize=13.sp)},shape=RoundedCornerShape(10.dp),border=BorderStroke(1.dp,if(type==id)Forest else Line),colors=FilterChipDefaults.filterChipColors(containerColor=Color.White,selectedContainerColor=Leaf,selectedLabelColor=Forest),modifier=Modifier.heightIn(min=48.dp).padding(end=8.dp).testTag("library-type-$id"))}
-                        Spacer(Modifier.weight(1f));Text("${shown.size} 份",fontSize=11.sp,color=Quiet)
+                        FlowRow(Modifier.weight(1f),horizontalArrangement=Arrangement.spacedBy(8.dp)){
+                        listOf("all" to "全部","page" to "纸张笔记","board" to "无界笔记").forEach{(id,label)->FilterChip(selected=type==id,onClick={type=id},label={Text(label,fontSize=13.sp,maxLines=1)},shape=RoundedCornerShape(10.dp),border=BorderStroke(1.dp,if(type==id)Forest else Line),colors=FilterChipDefaults.filterChipColors(containerColor=Color.White,selectedContainerColor=Leaf,selectedLabelColor=Forest),modifier=Modifier.heightIn(min=48.dp).testTag("library-type-$id"))}
+                        }
+                        if(!compact)Text("${shown.size} 份",fontSize=11.sp,color=Quiet,maxLines=1)
                     }
                     if(ui.loading)LinearProgressIndicator(Modifier.fillMaxWidth())
                     if(filter=="trash")Text("笔记内容与封面仍保留，可从菜单恢复。",fontSize=12.sp,color=Quiet,modifier=Modifier.padding(vertical=12.dp))
