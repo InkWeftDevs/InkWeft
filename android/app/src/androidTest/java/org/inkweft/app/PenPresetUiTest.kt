@@ -47,7 +47,7 @@ class PenPresetUiTest {
         assertEquals(original.samples,paths[0].samples);assertEquals(original.color,paths[0].color)
         assertEquals(InkPen.BRUSH,paths[1].pen);assertEquals(InkPen.BALLPOINT,original.pen);assertEquals(6f,paths[1].width,0f);assertEquals(PenWidthStore.colors(0)[2],paths[1].color)
         compose.activityRule.scenario.recreate();saved(2)
-        compose.openCurrentPen();compose.onNodeWithTag("pen-width-value").assertTextEquals("线宽 6.0")
+        compose.openCurrentPen();compose.onNodeWithTag("pen-width-value").assertTextEquals("6.0")
         compose.onNodeWithTag("cancel-pen-preset").performScrollTo().performClick()
     }
     @Test fun cancelDoesNotPersistOrMakeAnInkStroke(){

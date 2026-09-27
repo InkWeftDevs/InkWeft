@@ -1,16 +1,16 @@
 ---
 name: 墨织 Android 编辑器
-description: 白纸、石墨文字与森林绿选态组成的紧凑书写工作台
+description: 白纸、石墨文字与交互蓝选态组成的紧凑书写工作台
 colors:
   surface: "#ffffff"
-  navigation: "#f7f8fa"
-  workspace: "#f1f3f5"
-  text: "#22272e"
-  secondary: "#5e6670"
-  accent: "#236653"
-  selected: "#eaf3ee"
-  divider: "#dee2e6"
-  control-border: "#7e8792"
+  navigation: "#f3f5f9"
+  workspace: "#f6f7fb"
+  text: "#20242d"
+  secondary: "#626b79"
+  accent: "#0066cc"
+  selected: "#e8f1ff"
+  divider: "#e0e4ec"
+  control-border: "#7b8595"
   danger: "#b42318"
 typography:
   title-large:
@@ -32,9 +32,11 @@ typography:
     fontSize: "14sp"
     fontWeight: 500
 rounded:
-  small: "8dp"
-  medium: "12dp"
-  large: "16dp"
+  small: "12dp"
+  medium: "18dp"
+  large: "24dp"
+  panel: "16dp"
+  pen: "8dp"
 spacing:
   compact: "4dp"
   inline: "6dp"
@@ -48,21 +50,22 @@ components:
   floating-pen-case:
     backgroundColor: "{colors.surface}"
     rounded: "{rounded.large}"
-    width: "64dp"
+    width: "72dp"
   pen-tool:
-    size: "48dp"
+    width: "64dp"
+    height: "48dp"
   pen-tool-selected:
     backgroundColor: "{colors.selected}"
-    rounded: "{rounded.small}"
+    rounded: "{rounded.pen}"
   auto-beauty:
     size: "56dp"
     textColor: "{colors.accent}"
   editor-panel:
     backgroundColor: "{colors.surface}"
-    rounded: "{rounded.large}"
+    rounded: "{rounded.panel}"
   selection-panel:
     backgroundColor: "{colors.surface}"
-    rounded: "{rounded.medium}"
+    rounded: "{rounded.small}"
   button-primary:
     backgroundColor: "{colors.accent}"
     textColor: "{colors.surface}"
@@ -76,27 +79,27 @@ components:
 
 **Creative North Star: "紧凑书写工作台"**
 
-白纸承担内容，石墨色承担阅读，森林绿指明当前工具与主要动作，浅灰区分工具和纸面。手写记录与 PDF 批注同等重要；编辑器先让用户落笔，再在需要时展开参数与整理工具。
+白纸承担内容，石墨色承担阅读，交互蓝指明当前工具与主要动作，浅灰区分工具和纸面。手写记录与 PDF 批注同等重要；编辑器先让用户落笔，再在需要时展开参数与整理工具。
 
-当前编辑器采用小型顶部导航、可自由拖动的图示笔盒和底部页码／历史状态。常用笔以可辨认的笔形呈现，参数靠近入口展开，纸面连续铺开。此布局替换此前固定多行工具区；界面文字保留清楚的中文任务名称，纯图标补充中文可访问名称。
+当前编辑器采用圆角文档标签、小型顶部导航、可收起和自由拖动的图示笔盒和底部页码／历史状态。常用笔以可辨认的笔形呈现，参数靠近入口展开，纸面连续铺开。此布局替换此前固定多行工具区；界面文字保留清楚的中文任务名称，纯图标补充中文可访问名称。
 
 本文件记录当前 Android 原生实现。颜色与字阶来自 InkTheme.kt，布局与行为以 BookInkScreen.kt、InkScreen.kt、FloatingPenCase.kt 等当前代码为准。尺寸使用 dp／sp；未显式覆盖的组件外观采用 Material 3 默认值。范围为应用界面，不重写用户文档的配色与排版。
 
 **Key Characteristics:**
 
 - 白纸连续铺开，常用操作围绕纸面。
-- 森林绿选态配合笔形、图标与中文可访问名称。
+- 交互蓝选态配合笔形、图标与中文可访问名称。
 - 笔盒自由拖动，参数按需展开。
 - 字体转换直接执行，状态就地反馈，原迹可恢复。
 
 ## Colors
 
-界面采用低干扰的浅色中性色，森林绿集中承担操作与选态。
+界面采用低干扰的浅色中性色，交互蓝集中承担操作与选态。
 
 ### Primary
 
-- **森林绿**（accent）：主按钮、自动美化开启状态、查找页码与可操作文字。
-- **浅叶绿**（selected）：常用笔和选项的选中背景、查找命中片段。与图形或文字共同表达状态。
+- **交互蓝**（accent）：主按钮、自动美化开启状态、查找页码与可操作文字。
+- **浅蓝**（selected）：常用笔和选项的选中背景、查找命中片段。与图形或文字共同表达状态。
 
 ### Neutral
 
@@ -134,26 +137,27 @@ components:
 
 ### 浮动笔盒与参数
 
-- FloatingPenCase 宽 64dp、圆角 16dp、阴影高度 4dp。顶部拖动柄为 48dp；笔盒高度不超过承载区域，内容超高可纵向滚动。
-- 位置按可移动空间的横纵比例保存。初始横向为 0、纵向为 0.35；拖动和重排始终约束在承载区域内，结束拖动后保存。可拖到任意可用位置，不吸附固定边缘；尚无避让选区面板的自动规则。
-- 三支常用笔各占 48dp，笔形画布 32 × 42dp；选中笔形使用 8dp 圆角浅叶绿背景。橡皮、套索、字体设置、插入与更多按钮各 48dp；自动美化开关为 56dp。笔盒分隔线宽 36dp。
-- 再点当前笔展开 320dp 的笔参数菜单；再点橡皮展开其参数。字体设置菜单宽 292dp、内容水平内边距 16dp。菜单关闭后归还纸面，不常驻颜色、线宽、字体和说明行。
+- 主笔盒宽 72dp，圆角 24dp、阴影 8dp；笔图示横向绘制，靠左时笔尖朝右，靠右时朝左。笔按钮为 64 × 48dp、图示为 56 × 32dp。顶部拖动柄与底部收起按钮各为 48dp，内容独立滚动，收起控制保持可达。
+- 位置和收起状态保存在本机；默认位于左侧、纵向可移动空间的 0.3。点拖动柄可选“放到左侧／右侧”，作为拖动的替代操作。收起后仍可移动并恢复。
+- 收藏笔盒为独立浮层，宽 224dp，默认居中偏下，可单独移动、收起。横向列表保留笔型、颜色、粗细；最多 12 支。主笔盒星号负责打开／关闭，参数卡片星号负责收藏／取消当前配置。
+- 再点当前笔展开 320dp 参数卡片，尽量放在笔盒朝向纸面的一侧；卡片圆角 24dp、阴影 12dp。头部为笔型与收藏星号，随后是实际笔迹预览、图示笔型、粗细预设、渐粗轨道及颜色。自定义颜色按需展开，使用与取消保持明确。暂不呈现尚未实现的压感曲线、出墨速度、稳定性或一笔成形开关。
+- 橡皮、套索、字体设置、插入与更多保持 48dp 触摸范围；自动美化为 56dp。字体设置宽 292dp、水平内边距 16dp。
 - 选择／对象操作表面位于顶部居中，左侧留 72dp、右侧留 8dp，最大宽 620dp；只在相应模式、对象错误或待核对状态出现。长操作行横向滚动。
 - 通用 EditorPanel 外留 12dp，最大 380 × 600dp，右侧居中，随内容收缩；保留 safeDrawing 与 imePadding。标题、内容和底部动作分层，内容水平留 16dp、垂直留 8dp。
 
 **The 保留纸面 Rule.** 常用工具留在浮动笔盒，参数与说明按需展开；新增选项优先进入对应菜单或任务面板，不恢复固定多行工具区。
 
-当前适配使用尺寸上限、权重、流式换行和滚动，没有单独的手机／平板断点。
+编辑器使用尺寸上限、权重、换行与滚动。资料库在 600dp 以下合并次要操作，840dp 起展开侧栏；搜索框为圆角白色表面，分类为圆角选择项，书架使用柔和灰底与独立封面。设置与诊断固定在分类栏底部。设置页用分组信息卡和原生开关，提供收藏区显示、自动美化及笔盒位置重置。
 
 ## Elevation & Depth
 
-纸面与导航主要以中性色和细分隔线分层。浮动笔盒使用 4dp 阴影，选择／对象操作表面使用 3dp 阴影，使临时操作悬在纸面上。独立键入文字页使用 1dp 阴影。
+纸面与导航主要以中性色和细分隔线分层。浮动笔盒使用 8dp 阴影，选择／对象操作表面使用 3dp 阴影，使临时操作悬在纸面上。独立键入文字页使用 1dp 阴影。
 
-通用 EditorPanel 使用原生 Dialog 遮罩，未显式设置阴影高度；参数菜单使用 Material 下拉菜单默认表面与阴影。未定义统一动效时长或缓动曲线，不将原生默认效果推定为品牌令牌。
+通用 EditorPanel 使用原生 Dialog 遮罩，未显式设置阴影高度；笔参数使用白色表面、24dp 圆角与 12dp 阴影；其他参数菜单沿用统一的浅色 Material 表面。未定义统一动效时长或缓动曲线，不将原生默认效果推定为品牌令牌。
 
 ## Shapes
 
-主题使用 8／12／16dp 圆角。笔形选态、选择操作表面、笔盒与任务面板分别复用对应层级；笔形以笔尖、笔杆和颜色区分类型，色样使用圆形。
+主题使用 10／12／18／24／28dp 圆角。笔形选态、选择操作表面、笔盒与任务面板分别复用对应层级；笔形以笔尖、笔杆和颜色区分类型，色样使用圆形。
 
 Button、OutlinedButton、FilterChip、OutlinedTextField 的其余形状与状态继承 Material 3。浏览器 sidecar 示意不作为原生尺寸、阴影或命中区域的实现来源。
 

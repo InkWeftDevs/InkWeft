@@ -67,12 +67,13 @@ fun LibraryScreen(ui:NotebookUi,workspace:WorkspaceViewModel,open:(Note)->Unit,c
         (type=="all"||(type=="board")==r.world)&&(query.isBlank()||n.title.contains(query,true)||n.text.contains(query,true)||r.tags.contains(query,true)||summaries.any{it.notebookId==n.id&&it.trashedAt==null&&(it.title.contains(query,true)||it.body.contains(query,true))}||searchRows.any{it.notebookId==n.id&&it.text.contains(query,true)})}.let{ShelfOrder.arrange(it,{n->row(n).pinned},{n->n.title},byTitle)}
     val title=when{filter=="favorite"->"已收藏";filter=="trash"->"回收站";filter=="unfiled"->"未分类";filter.startsWith("folder:")->filter.removePrefix("folder:");filter.startsWith("tag:")->"标签 · "+filter.removePrefix("tag:");else->"全部笔记"}
     val nav:@Composable (Boolean)->Unit={search->
-        Column(Modifier.fillMaxHeight().width(224.dp).background(Side).padding(horizontal=12.dp).verticalScroll(rememberScrollState())){
+        Column(Modifier.fillMaxHeight().width(224.dp).background(Side).padding(horizontal=12.dp)){
+            Column(Modifier.weight(1f).verticalScroll(rememberScrollState())){
             Row(Modifier.fillMaxWidth().height(82.dp).padding(horizontal=12.dp),verticalAlignment=Alignment.CenterVertically){
                 Surface(color=Forest,shape=RoundedCornerShape(10.dp)){Box(Modifier.size(34.dp),contentAlignment=Alignment.Center){Text("墨",color=Color.White,fontWeight=FontWeight.Bold,fontSize=18.sp)}}
-                Spacer(Modifier.width(12.dp));Column{Text("墨织",fontSize=19.sp,fontWeight=FontWeight.SemiBold);Text("你的本地学习资料库",fontSize=10.sp,color=Quiet)}
+                Spacer(Modifier.width(12.dp));Column{Text("墨织",fontSize=21.sp,fontWeight=FontWeight.SemiBold);Text("记录 · 思考 · 连接",fontSize=12.sp,color=Quiet)}
             }
-            Spacer(Modifier.height(20.dp))
+            Spacer(Modifier.height(8.dp))
             NavigationLine("资料库","note",null,destination.isEmpty()){destination="";choose("all")}
             NavigationLine("学习","learn",null,false){closeDrawer();destination="learn"}
             NavigationLine("复习","review",null,false){closeDrawer();destination="review"}
@@ -89,13 +90,15 @@ fun LibraryScreen(ui:NotebookUi,workspace:WorkspaceViewModel,open:(Note)->Unit,c
             Text("标签",fontSize=11.sp,color=Quiet,modifier=Modifier.padding(12.dp,6.dp))
             if(tags.isEmpty())Text("从笔记菜单添加标签",fontSize=11.sp,color=Quiet,modifier=Modifier.padding(12.dp,8.dp))
             tags.forEach{tag->NavigationLine(tag,"tag",null,filter=="tag:$tag"){choose("tag:$tag")}}
-            Spacer(Modifier.height(30.dp))
+            Spacer(Modifier.height(12.dp))
+            }
+            HorizontalDivider(color=Line)
             NavigationLine("设置与数据","settings",null,false){closeDrawer();destination="settings"}
             TextButton(onClick={closeDrawer();diagnostics()},modifier=Modifier.fillMaxWidth().testTag(if(search)"open-diagnostics"else"drawer-diagnostics")){Glyph("diagnostics");Spacer(Modifier.width(8.dp));Text("诊断与导出",fontSize=12.sp)}
             Text("本地优先 · 无账号要求",fontSize=10.sp,color=Quiet,modifier=Modifier.padding(12.dp,10.dp))
         }
     }
-    BoxWithConstraints(Modifier.fillMaxSize().background(Color.White)){
+    BoxWithConstraints(Modifier.fillMaxSize().background(org.inkweft.app.ui.designsystem.InkTheme.Workspace)){
         val wide=maxWidth>=840.dp
         val compact=maxWidth<600.dp
         var headerMore by remember{mutableStateOf(false)}
@@ -111,7 +114,7 @@ fun LibraryScreen(ui:NotebookUi,workspace:WorkspaceViewModel,open:(Note)->Unit,c
                 Column(Modifier.weight(1f).fillMaxHeight().padding(horizontal=if(wide)26.dp else 16.dp)){
                     Row(Modifier.fillMaxWidth().heightIn(min=76.dp),verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(5.dp)){
                         if(!wide)IconButton(onClick={focus.clearFocus();keyboard?.hide();if(drawer.targetValue==DrawerValue.Closed){drawerJob?.cancel();drawerJob=scope.launch{drawer.open()}}},modifier=Modifier.testTag("open-library-drawer").describedAs("展开分类")){Glyph("menu")}
-                        Text(title,fontSize=22.sp,fontWeight=FontWeight.SemiBold,modifier=Modifier.weight(1f),maxLines=1,overflow=TextOverflow.Ellipsis)
+                        Text(title,fontSize=28.sp,fontWeight=FontWeight.Bold,modifier=Modifier.weight(1f),maxLines=1,overflow=TextOverflow.Ellipsis)
                         if(compact){
                             Box{
                                 IconButton(onClick={headerMore=true},modifier=Modifier.testTag("library-more").describedAs("资料库更多操作")){Glyph("more")}
@@ -130,9 +133,9 @@ fun LibraryScreen(ui:NotebookUi,workspace:WorkspaceViewModel,open:(Note)->Unit,c
                         }
                         Button(onClick=create,enabled=!ui.loading&&!ui.readFailed,modifier=Modifier.testTag("new-note"),contentPadding=PaddingValues(horizontal=if(compact)12.dp else 18.dp,vertical=10.dp)){Glyph("add");Spacer(Modifier.width(6.dp));Text("新建",maxLines=1)}
                     }
-                    OutlinedTextField(query,{query=it},singleLine=true,placeholder={Text("搜索标题、文字、手写和摘要",fontSize=12.sp)},leadingIcon={Glyph("search")},modifier=Modifier.fillMaxWidth().testTag("library-search"))
+                    OutlinedTextField(query,{query=it},singleLine=true,shape=RoundedCornerShape(18.dp),colors=OutlinedTextFieldDefaults.colors(unfocusedBorderColor=Color.Transparent,focusedBorderColor=Forest,unfocusedContainerColor=Color.White,focusedContainerColor=Color.White),placeholder={Text("搜索笔记、手写和摘要",fontSize=14.sp)},leadingIcon={Glyph("search",Quiet)},modifier=Modifier.fillMaxWidth().testTag("library-search"))
                     Row(Modifier.fillMaxWidth().padding(vertical=5.dp),verticalAlignment=Alignment.CenterVertically){
-                        listOf("all" to "全部","page" to "纸张笔记","board" to "无界笔记").forEach{(id,label)->Column(Modifier.heightIn(min=48.dp).clickable{type=id}.padding(end=20.dp).testTag("library-type-$id"),horizontalAlignment=Alignment.CenterHorizontally){Text(label,color=if(type==id)Forest else Quiet,fontSize=13.sp,modifier=Modifier.padding(vertical=13.dp));HorizontalDivider(Modifier.width(if(id=="all")28.dp else 60.dp),thickness=if(type==id)2.dp else 0.dp,color=if(type==id)Forest else Color.Transparent)}}
+                        listOf("all" to "全部","page" to "纸张笔记","board" to "无界笔记").forEach{(id,label)->FilterChip(selected=type==id,onClick={type=id},label={Text(label,fontSize=13.sp)},shape=RoundedCornerShape(50),border=BorderStroke(0.dp,Color.Transparent),modifier=Modifier.heightIn(min=48.dp).padding(end=8.dp).testTag("library-type-$id"))}
                         Spacer(Modifier.weight(1f));Text("${shown.size} 份",fontSize=11.sp,color=Quiet)
                     }
                     if(ui.loading)LinearProgressIndicator(Modifier.fillMaxWidth())
@@ -177,14 +180,14 @@ fun LibraryScreen(ui:NotebookUi,workspace:WorkspaceViewModel,open:(Note)->Unit,c
 
 @Composable
 private fun NavigationLine(title:String,icon:String,count:Int?,selected:Boolean,onClick:()->Unit){
-    Row(Modifier.fillMaxWidth().heightIn(min=48.dp).clip(RoundedCornerShape(7.dp)).background(if(selected)Leaf else Color.Transparent).clickable(onClick=onClick).padding(horizontal=12.dp),verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(11.dp)){
+    Row(Modifier.fillMaxWidth().heightIn(min=48.dp).clip(RoundedCornerShape(14.dp)).background(if(selected)Leaf else Color.Transparent).clickable(onClick=onClick).padding(horizontal=12.dp),verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(11.dp)){
         Glyph(icon,if(selected)Forest else Quiet);Text(title,fontSize=14.sp,color=if(selected)Forest else TextInk,modifier=Modifier.weight(1f),maxLines=1,overflow=TextOverflow.Ellipsis);if(count!=null)Text(count.toString(),fontSize=11.sp,color=Quiet)
     }
 }
 @Composable
 private fun NewTile(create:()->Unit){
     Column(Modifier.fillMaxWidth(),horizontalAlignment=Alignment.CenterHorizontally){
-        Box(Modifier.height(185.dp).width(136.dp).border(1.dp,Color(0xff91b3a3),RoundedCornerShape(9.dp)).background(Color(0xfff8fbf9),RoundedCornerShape(9.dp)).clickable(onClick=create).testTag("new-note-tile").describedAs("新建纸张或无界笔记"),contentAlignment=Alignment.Center){Glyph("add",Forest,Modifier.size(34.dp))}
+        Box(Modifier.height(185.dp).width(136.dp).clip(RoundedCornerShape(16.dp)).background(Leaf).clickable(onClick=create).testTag("new-note-tile").describedAs("新建纸张或无界笔记"),contentAlignment=Alignment.Center){Glyph("add",Forest,Modifier.size(34.dp))}
         Text("新建",color=Forest,fontSize=14.sp,modifier=Modifier.padding(top=14.dp));Text("纸张 / 无界画布",fontSize=10.sp,color=Quiet,modifier=Modifier.padding(top=5.dp))
     }
 }
@@ -225,7 +228,7 @@ private fun NoteTile(note:Note,row:WorkspaceRow,inkRevision:Long,count:Int,grid:
     val strokes=pagePreview?.second
     val date by produceState("",note.id,inkRevision,note.revision){val at=withContext(Dispatchers.IO){runCatching{app.workspaceRepository.modifiedAt(note.id)}.getOrDefault(0L)};value=if(at>0)SimpleDateFormat("yyyy/MM/dd",Locale.getDefault()).format(Date(at))else""}
     val art:@Composable (Modifier)->Unit={m->
-        Surface(m,shape=RoundedCornerShape(7.dp),color=Color.White,border=BorderStroke(1.dp,Line),shadowElevation=1.dp){
+        Surface(m,shape=RoundedCornerShape(14.dp),color=Color.White,shadowElevation=4.dp){
             Box(Modifier.fillMaxSize().clickable(onClick=open).testTag("note-cover-${note.id}").describedAs("打开笔记：${note.title}；封面：${style.label()}")){
                 if(style==NotebookCover.CUSTOM){customCover?.let{CustomCoverArt(it,note.title,Modifier.fillMaxSize())}?:Text("封面暂不可用",fontSize=11.sp,color=Quiet,modifier=Modifier.padding(8.dp))}
                 else if(style!=NotebookCover.CONTENT)NotebookCoverArt(style,note.id,note.title,row.world,Modifier.fillMaxSize())
@@ -241,7 +244,7 @@ private fun NoteTile(note:Note,row:WorkspaceRow,inkRevision:Long,count:Int,grid:
         }
     }
     val info:@Composable ()->Unit={
-        Row(verticalAlignment=Alignment.CenterVertically){Text(note.title,maxLines=1,overflow=TextOverflow.Ellipsis,fontSize=14.sp,modifier=Modifier.weight(1f).clickable(onClick=open));Box{
+        Row(verticalAlignment=Alignment.CenterVertically){Text(note.title,maxLines=1,overflow=TextOverflow.Ellipsis,fontSize=15.sp,fontWeight=FontWeight.Medium,modifier=Modifier.weight(1f).clickable(onClick=open));Box{
             IconButton(onClick=::openMenu,enabled=!menuOpening,modifier=Modifier.size(48.dp).testTag("note-menu-${note.id}").describedAs("笔记菜单：${note.title}")){Glyph("more",Quiet,Modifier.size(17.dp))}
             DropdownMenu(expanded=menu,onDismissRequest={menu=false},modifier=Modifier.width(240.dp).testTag("notebook-actions-menu")){
                 Text(note.title,fontSize=12.sp,color=Quiet,maxLines=1,overflow=TextOverflow.Ellipsis,
@@ -264,7 +267,7 @@ private fun NoteTile(note:Note,row:WorkspaceRow,inkRevision:Long,count:Int,grid:
             }
         }}
         if(row.pinned)Text("置顶",fontSize=10.sp,color=Forest,modifier=Modifier.testTag("pinned-${note.id}"))
-        Text(date+(if(count>0)" · $count 笔"else""),fontSize=10.sp,color=Quiet)
+        Text(date+(if(count>0)" · $count 笔"else""),fontSize=12.sp,color=Quiet)
         if(row.folder.isNotBlank())Text(row.folder,fontSize=10.sp,color=Quiet,modifier=Modifier.padding(top=5.dp))
     }
     if(grid)Column(Modifier.fillMaxWidth(),horizontalAlignment=Alignment.CenterHorizontally){art(Modifier.width(136.dp).height(185.dp));Column(Modifier.fillMaxWidth().padding(top=7.dp)){info()}}

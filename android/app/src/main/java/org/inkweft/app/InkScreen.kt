@@ -56,6 +56,12 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
     var widths by remember(note.base.id){mutableStateOf(penStore.read())}
     var kinds by remember(note.base.id){mutableStateOf(penStore.readKinds())}
     var colors by remember(note.base.id){mutableStateOf(penStore.readColors())}
+    val favoriteStore=remember{FavoritePenStore(context)}
+    var favorites by remember{mutableStateOf(favoriteStore.read())}
+    var favoriteBusy by remember{mutableStateOf(false)}
+    val casePrefs=remember{context.getSharedPreferences("inkweft-editor",0)}
+    var favoritesOpen by rememberSaveable{mutableStateOf(casePrefs.getBoolean("favorites-open",false))}
+    fun showFavorites(value:Boolean){favoritesOpen=value;casePrefs.edit().putBoolean("favorites-open",value).apply()}
     var continuousBlocked by remember{mutableStateOf(false)}
     var gesture by remember{mutableStateOf(false)}
     var notice by remember{mutableStateOf<String?>(null)}
@@ -124,18 +130,27 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
         tool=6
         if(selected?.strokes?.isNotEmpty()==true)beautify(selected!!)else{selected=null;freehand=false}
     }
+    fun toggleFavorite(kind:InkPen,width:Float,color:Int){
+        if(favoriteBusy)return
+        val match=favorites.firstOrNull{it.matches(kind,width,color)}
+        if(match==null&&favorites.size>=12){notice="收藏笔盒已满，可在参数卡片取消已有收藏。";return}
+        val next=if(match!=null)favorites.filterNot{it.id==match.id} else favorites+FavoritePen(java.util.UUID.randomUUID().toString(),kind,width,color)
+        favoriteBusy=true
+        scope.launch{try{if(favoriteStore.save(next)){favorites=next;if(match==null)showFavorites(true)}else notice="收藏未保存，请重试。"}catch(c:CancellationException){throw c}catch(_:Exception){notice="收藏未保存，请重试。"}finally{favoriteBusy=false}}
+    }
     if(continuousPages==null)AutomaticBeautyBinding(objectsVm,ui,gesture,beautyOptions,page.world,app)
     val toolbar:@Composable ()->Unit={
         FloatingPenCase {
             (0..2).forEach{i->
                 Box{
-                    IconToggleButton(tool==i,{if(tool==i)settings=true else tool=i},enabled=!busy,modifier=Modifier.size(48.dp).testTag("ink-tool-$i").describedAs(PenWidthStore.name(i,kinds[i])+"，再点调整")){
+                    IconToggleButton(tool==i,{if(tool==i)settings=true else tool=i},enabled=!busy,modifier=Modifier.size(64.dp,48.dp).testTag("ink-tool-$i").describedAs(PenWidthStore.name(i,kinds[i])+"，再点调整")){
                         PenSilhouette(kinds[i],colors[i],Modifier.background(if(tool==i)Leaf else Color.Transparent,RoundedCornerShape(8.dp)))
                     }
-                    if(tool==i)PenPresetMenu(settings,i,widths[i],colors[i],kinds[i],{settings=false}){width,color,kind->savePreset(i,width,color,kind);settings=false}
+                    if(tool==i)PenPresetMenu(settings,i,widths[i],colors[i],kinds[i],{settings=false},favorites,favoriteBusy,::toggleFavorite){width,color,kind->savePreset(i,width,color,kind);settings=false}
                 }
             }
             HorizontalDivider(Modifier.width(36.dp),color=Line)
+            IconToggleButton(favoritesOpen,{showFavorites(it)},modifier=Modifier.size(48.dp).testTag("favorite-pens-toggle").describedAs("收藏笔盒")){Glyph(if(favoritesOpen)"star-filled"else"star",if(favoritesOpen)Forest else Quiet)}
             IconToggleButton(tool==3,{if(tool==3)eraserDialog=true else tool=3},enabled=!busy,modifier=Modifier.size(48.dp).testTag("ink-tool-3").describedAs("橡皮，再点调整")){Glyph("eraser")}
             IconToggleButton(tool==4,{if(continuousPages!=null)leaveContinuous();tool=4},enabled=!busy&&!continuousBlocked,modifier=Modifier.size(48.dp).testTag("ink-select").describedAs("套索")){Glyph("select")}
             IconToggleButton(beautyOptions.enabled,{saveBeauty(beautyOptions.copy(enabled=it))},enabled=!gesture,modifier=Modifier.size(56.dp).testTag("auto-beauty-toggle").describedAs("自动美化")){
@@ -225,6 +240,15 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
         }
     }
         toolbar()
+        if(favoritesOpen)FloatingPenCase("favorites",wide=true){
+            if(favorites.isEmpty())Text("在笔参数卡片点星号收藏",Modifier.padding(16.dp),style=MaterialTheme.typography.bodySmall,color=Quiet)
+            else Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()).padding(start=8.dp,end=8.dp,bottom=12.dp)){
+                favorites.forEach{p->Column(horizontalAlignment=Alignment.CenterHorizontally){
+                    IconToggleButton(tool==p.slot&&kinds[p.slot]==p.kind&&widths[p.slot]==p.width&&colors[p.slot]==p.color,{savePreset(p.slot,p.width,p.color,p.kind);tool=p.slot},enabled=!busy,modifier=Modifier.size(64.dp,48.dp).testTag("favorite-pen-${p.id}").describedAs("${PenKinds.title(p.kind)}，${PenWidthStore.label(p.width)}")){PenSilhouette(p.kind,p.color)}
+                    Text(PenWidthStore.label(p.width),style=MaterialTheme.typography.labelSmall,color=Quiet)
+                }}
+            }
+        }
         if(tool in 4..6||objectsUi.error!=null||objectsUi.pending)Surface(Modifier.align(Alignment.TopCenter).padding(start=72.dp,end=8.dp).widthIn(max=620.dp),shape=RoundedCornerShape(12.dp),shadowElevation=3.dp){
             Column {
                 if(tool==4){

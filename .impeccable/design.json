@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-09-27T04:32:38.9695556Z",
+  "generatedAt": "2026-09-27T05:44:26.099449+00:00",
   "title": "Design System: 墨织 Android 编辑器",
   "extensions": {
     "colorMeta": {
@@ -22,112 +22,112 @@
         "role": "neutral",
         "displayName": "导航浅灰",
         "tonalRamp": [
-          "oklch(15.00% 0.00287 264.54)",
-          "oklch(26.43% 0.00287 264.54)",
-          "oklch(37.86% 0.00287 264.54)",
-          "oklch(49.29% 0.00287 264.54)",
-          "oklch(60.71% 0.00287 264.54)",
-          "oklch(72.14% 0.00287 264.54)",
-          "oklch(83.57% 0.00287 264.54)",
-          "oklch(95.00% 0.00287 264.54)"
+          "oklch(15.00% 0.00575 264.53)",
+          "oklch(26.43% 0.00575 264.53)",
+          "oklch(37.86% 0.00575 264.53)",
+          "oklch(49.29% 0.00575 264.53)",
+          "oklch(60.71% 0.00575 264.53)",
+          "oklch(72.14% 0.00575 264.53)",
+          "oklch(83.57% 0.00575 264.53)",
+          "oklch(95.00% 0.00575 264.53)"
         ]
       },
       "workspace": {
         "role": "neutral",
         "displayName": "工作区灰",
         "tonalRamp": [
-          "oklch(15.00% 0.00343 247.86)",
-          "oklch(26.43% 0.00343 247.86)",
-          "oklch(37.86% 0.00343 247.86)",
-          "oklch(49.29% 0.00343 247.86)",
-          "oklch(60.71% 0.00343 247.86)",
-          "oklch(72.14% 0.00343 247.86)",
-          "oklch(83.57% 0.00343 247.86)",
-          "oklch(95.00% 0.00343 247.86)"
+          "oklch(15.00% 0.00542 274.97)",
+          "oklch(26.43% 0.00542 274.97)",
+          "oklch(37.86% 0.00542 274.97)",
+          "oklch(49.29% 0.00542 274.97)",
+          "oklch(60.71% 0.00542 274.97)",
+          "oklch(72.14% 0.00542 274.97)",
+          "oklch(83.57% 0.00542 274.97)",
+          "oklch(95.00% 0.00542 274.97)"
         ]
       },
       "text": {
         "role": "neutral",
         "displayName": "石墨文字",
         "tonalRamp": [
-          "oklch(15.00% 0.01490 256.80)",
-          "oklch(26.43% 0.01490 256.80)",
-          "oklch(37.86% 0.01490 256.80)",
-          "oklch(49.29% 0.01490 256.80)",
-          "oklch(60.71% 0.01490 256.80)",
-          "oklch(72.14% 0.01490 256.80)",
-          "oklch(83.57% 0.01490 256.80)",
-          "oklch(95.00% 0.01490 256.80)"
+          "oklch(15.00% 0.01792 266.28)",
+          "oklch(26.43% 0.01792 266.28)",
+          "oklch(37.86% 0.01792 266.28)",
+          "oklch(49.29% 0.01792 266.28)",
+          "oklch(60.71% 0.01792 266.28)",
+          "oklch(72.14% 0.01792 266.28)",
+          "oklch(83.57% 0.01792 266.28)",
+          "oklch(95.00% 0.01792 266.28)"
         ]
       },
       "secondary": {
         "role": "neutral",
         "displayName": "次要灰",
         "tonalRamp": [
-          "oklch(15.00% 0.01872 254.01)",
-          "oklch(26.43% 0.01872 254.01)",
-          "oklch(37.86% 0.01872 254.01)",
-          "oklch(49.29% 0.01872 254.01)",
-          "oklch(60.71% 0.01872 254.01)",
-          "oklch(72.14% 0.01872 254.01)",
-          "oklch(83.57% 0.01872 254.01)",
-          "oklch(95.00% 0.01872 254.01)"
+          "oklch(15.00% 0.02467 259.19)",
+          "oklch(26.43% 0.02467 259.19)",
+          "oklch(37.86% 0.02467 259.19)",
+          "oklch(49.29% 0.02467 259.19)",
+          "oklch(60.71% 0.02467 259.19)",
+          "oklch(72.14% 0.02467 259.19)",
+          "oklch(83.57% 0.02467 259.19)",
+          "oklch(95.00% 0.02467 259.19)"
         ]
       },
       "accent": {
         "role": "primary",
-        "displayName": "森林绿",
+        "displayName": "交互蓝",
         "tonalRamp": [
-          "oklch(15.00% 0.07440 171.00)",
-          "oklch(26.43% 0.07440 171.00)",
-          "oklch(37.86% 0.07440 171.00)",
-          "oklch(49.29% 0.07440 171.00)",
-          "oklch(60.71% 0.07440 171.00)",
-          "oklch(72.14% 0.07440 171.00)",
-          "oklch(83.57% 0.07440 171.00)",
-          "oklch(95.00% 0.07440 171.00)"
+          "oklch(15.00% 0.17709 255.83)",
+          "oklch(26.43% 0.17709 255.83)",
+          "oklch(37.86% 0.17709 255.83)",
+          "oklch(49.29% 0.17709 255.83)",
+          "oklch(60.71% 0.17709 255.83)",
+          "oklch(72.14% 0.17709 255.83)",
+          "oklch(83.57% 0.17709 255.83)",
+          "oklch(95.00% 0.17709 255.83)"
         ]
       },
       "selected": {
         "role": "primary",
-        "displayName": "浅叶绿",
+        "displayName": "浅蓝",
         "tonalRamp": [
-          "oklch(15.00% 0.01160 162.05)",
-          "oklch(26.43% 0.01160 162.05)",
-          "oklch(37.86% 0.01160 162.05)",
-          "oklch(49.29% 0.01160 162.05)",
-          "oklch(60.71% 0.01160 162.05)",
-          "oklch(72.14% 0.01160 162.05)",
-          "oklch(83.57% 0.01160 162.05)",
-          "oklch(95.00% 0.01160 162.05)"
+          "oklch(15.00% 0.02117 259.19)",
+          "oklch(26.43% 0.02117 259.19)",
+          "oklch(37.86% 0.02117 259.19)",
+          "oklch(49.29% 0.02117 259.19)",
+          "oklch(60.71% 0.02117 259.19)",
+          "oklch(72.14% 0.02117 259.19)",
+          "oklch(83.57% 0.02117 259.19)",
+          "oklch(95.00% 0.02117 259.19)"
         ]
       },
       "divider": {
         "role": "neutral",
         "displayName": "分隔灰",
         "tonalRamp": [
-          "oklch(15.00% 0.00696 247.90)",
-          "oklch(26.43% 0.00696 247.90)",
-          "oklch(37.86% 0.00696 247.90)",
-          "oklch(49.29% 0.00696 247.90)",
-          "oklch(60.71% 0.00696 247.90)",
-          "oklch(72.14% 0.00696 247.90)",
-          "oklch(83.57% 0.00696 247.90)",
-          "oklch(95.00% 0.00696 247.90)"
+          "oklch(15.00% 0.01168 264.51)",
+          "oklch(26.43% 0.01168 264.51)",
+          "oklch(37.86% 0.01168 264.51)",
+          "oklch(49.29% 0.01168 264.51)",
+          "oklch(60.71% 0.01168 264.51)",
+          "oklch(72.14% 0.01168 264.51)",
+          "oklch(83.57% 0.01168 264.51)",
+          "oklch(95.00% 0.01168 264.51)"
         ]
       },
       "control-border": {
         "role": "neutral",
         "displayName": "控件灰",
         "tonalRamp": [
-          "oklch(15.00% 0.01970 253.41)",
-          "oklch(26.43% 0.01970 253.41)",
-          "oklch(37.86% 0.01970 253.41)",
-          "oklch(49.29% 0.01970 253.41)",
-          "oklch(60.71% 0.01970 253.41)",
-          "oklch(72.14% 0.01970 253.41)",
-          "oklch(83.57% 0.01970 253.41)",
-          "oklch(95.00% 0.01970 253.41)"
+          "oklch(15.00% 0.02696 259.81)",
+          "oklch(26.43% 0.02696 259.81)",
+          "oklch(37.86% 0.02696 259.81)",
+          "oklch(49.29% 0.02696 259.81)",
+          "oklch(60.71% 0.02696 259.81)",
+          "oklch(72.14% 0.02696 259.81)",
+          "oklch(83.57% 0.02696 259.81)",
+          "oklch(95.00% 0.02696 259.81)"
         ]
       },
       "danger": {
@@ -180,7 +180,7 @@
       "refersTo": "button-primary",
       "description": "保存笔预设等需要提交的任务；自动与框选字体转换直接执行，不使用该确认按钮。",
       "html": "<div class=\"ds-example\"><button class=\"ds-primary\">保存到此笔</button></div>",
-      "css": ".ds-example{font-family:system-ui,sans-serif;color:#22272e}.ds-example button{font:inherit;cursor:pointer}.ds-example button:focus-visible,.ds-example input:focus-visible{outline:2px solid #236653;outline-offset:2px}.ds-example button:hover{filter:brightness(.97)}.ds-example button:active{filter:brightness(.93)}.ds-primary{border:0;border-radius:24px;padding:8px 16px;background:#236653;color:#fff}"
+      "css": ".ds-example{font-family:system-ui,sans-serif;color:#20242d}.ds-example button{font:inherit;cursor:pointer}.ds-example button:focus-visible,.ds-example input:focus-visible{outline:2px solid #0066cc;outline-offset:2px}.ds-example button:hover{filter:brightness(.97)}.ds-example button:active{filter:brightness(.93)}.ds-primary{border:0;border-radius:24px;padding:8px 16px;background:#0066cc;color:#fff}"
     },
     {
       "name": "文字按钮",
@@ -188,28 +188,28 @@
       "refersTo": "button-text",
       "description": "说明和次要动作；浏览器交互仅用于预览。",
       "html": "<div class=\"ds-example\"><button class=\"ds-text\">说明</button></div>",
-      "css": ".ds-example{font-family:system-ui,sans-serif;color:#22272e}.ds-example button{font:inherit;cursor:pointer}.ds-example button:focus-visible,.ds-example input:focus-visible{outline:2px solid #236653;outline-offset:2px}.ds-example button:hover{filter:brightness(.97)}.ds-example button:active{filter:brightness(.93)}.ds-text{border:0;background:transparent;color:#236653;padding:8px 16px}"
+      "css": ".ds-example{font-family:system-ui,sans-serif;color:#20242d}.ds-example button{font:inherit;cursor:pointer}.ds-example button:focus-visible,.ds-example input:focus-visible{outline:2px solid #0066cc;outline-offset:2px}.ds-example button:hover{filter:brightness(.97)}.ds-example button:active{filter:brightness(.93)}.ds-text{border:0;background:transparent;color:#0066cc;padding:8px 16px}"
     },
     {
       "name": "查找字段",
       "kind": "input",
       "description": "查找输入框的语义与色彩示意，不实现自动识别。",
       "html": "<label class=\"ds-example ds-field\">输入关键词<input aria-label=\"输入关键词\" placeholder=\"输入关键词\"></label>",
-      "css": ".ds-example{font-family:system-ui,sans-serif;color:#22272e}.ds-example button{font:inherit;cursor:pointer}.ds-example button:focus-visible,.ds-example input:focus-visible{outline:2px solid #236653;outline-offset:2px}.ds-example button:hover{filter:brightness(.97)}.ds-example button:active{filter:brightness(.93)}.ds-field{display:flex;flex-direction:column;gap:4px;font-size:14px}.ds-field input{font:inherit;padding:12px;border:1px solid #7e8792;border-radius:4px;background:#fff;color:#22272e}"
+      "css": ".ds-example{font-family:system-ui,sans-serif;color:#20242d}.ds-example button{font:inherit;cursor:pointer}.ds-example button:focus-visible,.ds-example input:focus-visible{outline:2px solid #0066cc;outline-offset:2px}.ds-example button:hover{filter:brightness(.97)}.ds-example button:active{filter:brightness(.93)}.ds-field{display:flex;flex-direction:column;gap:4px;font-size:14px}.ds-field input{font:inherit;padding:12px;border:1px solid #7b8595;border-radius:4px;background:#fff;color:#20242d}"
     },
     {
       "name": "文档动作",
       "kind": "nav",
       "description": "小型顶部文档导航示意：图标配中文可访问名称，标题单行省略；顶部原生最小高度 48dp。",
       "html": "<nav class=\"ds-example ds-nav\" aria-label=\"文档导航\"><button aria-label=\"返回资料库\">←</button><span>课堂笔记</span><button aria-label=\"页面\"><svg viewBox=\"0 0 24 24\" width=\"24\" height=\"24\" aria-hidden=\"true\"><path d=\"M4 4h16v16H4zM8 4v16M4 9h16M4 14h16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"/></svg></button><button aria-label=\"加页\">＋</button><button aria-label=\"查找\"><svg viewBox=\"0 0 24 24\" width=\"24\" height=\"24\" aria-hidden=\"true\"><circle cx=\"10\" cy=\"10\" r=\"6\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"/><path d=\"m15 15 6 6\" stroke=\"currentColor\" stroke-width=\"2\"/></svg></button><button aria-label=\"文档选项\">⋯</button></nav>",
-      "css": ".ds-example{font-family:system-ui,sans-serif;color:#22272e}.ds-nav{display:flex;align-items:center;gap:4px;background:#fff;min-height:48px;padding:0 8px;border-bottom:1px solid #dee2e6}.ds-nav span{flex:1;min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;color:#236653}.ds-nav button{display:flex;align-items:center;justify-content:center;min-width:40px;min-height:48px;border:0;background:transparent;color:#22272e;font:inherit;cursor:pointer}.ds-nav button:hover{background:#f7f8fa}.ds-nav button:active{background:#eaf3ee}.ds-nav button:focus-visible{outline:2px solid #236653;outline-offset:2px}"
+      "css": ".ds-example{font-family:system-ui,sans-serif;color:#20242d}.ds-nav{display:flex;align-items:center;gap:4px;background:#fff;min-height:48px;padding:0 8px;border-bottom:1px solid #e0e4ec}.ds-nav span{flex:1;min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;color:#0066cc}.ds-nav button{display:flex;align-items:center;justify-content:center;min-width:40px;min-height:48px;border:0;background:transparent;color:#20242d;font:inherit;cursor:pointer}.ds-nav button:hover{background:#f3f5f9}.ds-nav button:active{background:#e8f1ff}.ds-nav button:focus-visible{outline:2px solid #0066cc;outline-offset:2px}"
     },
     {
       "name": "字体选项",
       "kind": "chip",
       "description": "字体采用 FilterChip 流式换行；选态对应内容字体，不改变界面字体。",
       "html": "<div class=\"ds-example ds-chips\"><button aria-pressed=\"false\">系统黑体</button><button aria-pressed=\"true\">霞鹜文楷</button><button aria-pressed=\"false\">系统衬线</button></div>",
-      "css": ".ds-example{font-family:system-ui,sans-serif;color:#22272e}.ds-example button{font:inherit;cursor:pointer}.ds-example button:focus-visible,.ds-example input:focus-visible{outline:2px solid #236653;outline-offset:2px}.ds-example button:hover{filter:brightness(.97)}.ds-example button:active{filter:brightness(.93)}.ds-chips{display:flex;flex-wrap:wrap;gap:6px}.ds-chips button{padding:6px 12px;border:1px solid #7e8792;border-radius:8px;background:#fff;color:#5e6670}.ds-chips button[aria-pressed=true]{background:#eaf3ee;color:#236653;border-color:#eaf3ee}"
+      "css": ".ds-example{font-family:system-ui,sans-serif;color:#20242d}.ds-example button{font:inherit;cursor:pointer}.ds-example button:focus-visible,.ds-example input:focus-visible{outline:2px solid #0066cc;outline-offset:2px}.ds-example button:hover{filter:brightness(.97)}.ds-example button:active{filter:brightness(.93)}.ds-chips{display:flex;flex-wrap:wrap;gap:6px}.ds-chips button{padding:6px 12px;border:1px solid #7b8595;border-radius:8px;background:#fff;color:#626b79}.ds-chips button[aria-pressed=true]{background:#e8f1ff;color:#0066cc;border-color:#e8f1ff}"
     },
     {
       "name": "紧凑参数浮层",
@@ -217,15 +217,15 @@
       "refersTo": "editor-panel",
       "description": "原生 EditorPanel 结构示意：标题、内容、底部动作。网页示意没有 Android 安全区和键盘行为。",
       "html": "<section class=\"ds-example ds-panel\"><header>橡皮<button aria-label=\"关闭橡皮\">×</button></header><div class=\"ds-panel-content\">擦除直径 28 dp</div><footer><button>取消</button><button>使用此橡皮</button></footer></section>",
-      "css": ".ds-example{font-family:system-ui,sans-serif;color:#22272e}.ds-example button{font:inherit;cursor:pointer}.ds-example button:focus-visible,.ds-example input:focus-visible{outline:2px solid #236653;outline-offset:2px}.ds-example button:hover{filter:brightness(.97)}.ds-example button:active{filter:brightness(.93)}.ds-panel{max-width:380px;border-radius:16px;background:#fff;border:1px solid #dee2e6;overflow:hidden}.ds-panel header{display:flex;align-items:center;justify-content:space-between;padding:2px 4px 2px 16px;font-size:20px;font-weight:500;border-bottom:1px solid #dee2e6}.ds-panel button{border:0;background:transparent;color:#236653;padding:8px 12px}.ds-panel-content{padding:8px 16px;font-size:14px}.ds-panel footer{display:flex;justify-content:flex-end;padding:4px 12px;background:#f7f8fa}"
+      "css": ".ds-example{font-family:system-ui,sans-serif;color:#20242d}.ds-example button{font:inherit;cursor:pointer}.ds-example button:focus-visible,.ds-example input:focus-visible{outline:2px solid #0066cc;outline-offset:2px}.ds-example button:hover{filter:brightness(.97)}.ds-example button:active{filter:brightness(.93)}.ds-panel{max-width:380px;border-radius:16px;background:#fff;border:1px solid #e0e4ec;overflow:hidden}.ds-panel header{display:flex;align-items:center;justify-content:space-between;padding:2px 4px 2px 16px;font-size:20px;font-weight:500;border-bottom:1px solid #e0e4ec}.ds-panel button{border:0;background:transparent;color:#0066cc;padding:8px 12px}.ds-panel-content{padding:8px 16px;font-size:14px}.ds-panel footer{display:flex;justify-content:flex-end;padding:4px 12px;background:#f3f5f9}"
     },
     {
       "name": "图示浮动笔盒",
       "kind": "custom",
       "refersTo": "floating-pen-case",
-      "description": "原生笔盒宽 64dp、拖动柄与笔按钮 48dp、笔形 32 × 42dp。此示意展示形状与选态，不实现拖动、保存或原生阴影。",
+      "description": "可收起、可拖动且笔尖朝向纸面的主笔盒；收藏笔使用独立浮层。",
       "html": "<aside class=\"ds-case\" aria-label=\"笔盒\"><button class=\"ds-handle\" aria-label=\"拖动笔盒\"><svg viewBox=\"0 0 24 16\" width=\"24\" height=\"16\" aria-hidden=\"true\"><g fill=\"currentColor\"><circle cx=\"4\" cy=\"4\" r=\"1.7\"/><circle cx=\"12\" cy=\"4\" r=\"1.7\"/><circle cx=\"20\" cy=\"4\" r=\"1.7\"/><circle cx=\"4\" cy=\"12\" r=\"1.7\"/><circle cx=\"12\" cy=\"12\" r=\"1.7\"/><circle cx=\"20\" cy=\"12\" r=\"1.7\"/></g></svg></button><button aria-label=\"常用笔，再点调整\" aria-pressed=\"true\"><svg class=\"ds-pen\" width=\"32\" height=\"42\" viewBox=\"0 0 32 42\" aria-hidden=\"true\"><path d=\"m16 2 6 13-6 5-6-5z\" fill=\"#d4dbd8\" stroke=\"#263e34\"/><path d=\"M16 3v12\" stroke=\"#263e34\"/><rect x=\"11\" y=\"20\" width=\"10\" height=\"22\" rx=\"3\" fill=\"#24342f\"/></svg></button><button aria-label=\"橡皮\"><svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"m3 15 11-11 7 7-10 10H7zM11 21h10\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"/></svg></button><button class=\"ds-auto\" aria-pressed=\"false\" aria-label=\"自动美化\"><svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"m4 20 12-12 4 4L8 24zM6 2v8M2 6h8M19 1v6M16 4h6\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\"/></svg><span>自动美化</span></button><button aria-label=\"美化字体与框选美化\"><svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M3 6h18M3 12h18M3 18h18M8 3v6M16 9v6M10 15v6\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"/></svg></button><button aria-label=\"图片、拍照与文本框\">＋</button><button aria-label=\"更多工具\">⋯</button></aside>",
-      "css": ".ds-case{display:flex;flex-direction:column;align-items:center;width:64px;max-height:520px;overflow:auto;background:#fff;color:#22272e;border:1px solid #dee2e6;border-radius:16px;font-family:system-ui,sans-serif}.ds-case button{display:flex;align-items:center;justify-content:center;flex-shrink:0;width:48px;height:48px;border:0;background:transparent;color:inherit;cursor:pointer;font-size:20px}.ds-case .ds-handle{color:#596963;cursor:grab}.ds-case .ds-pen{border-radius:8px;background:#eaf3ee}.ds-case .ds-auto{width:56px;height:56px;flex-direction:column;color:#5e6670}.ds-auto span{font-size:10px}.ds-case button:hover{background:#f7f8fa}.ds-case button:active{background:#eaf3ee}.ds-case button:focus-visible{outline:2px solid #236653;outline-offset:-2px}"
+      "css": ".ds-case{display:flex;flex-direction:column;align-items:center;width:72px;max-height:520px;overflow:auto;background:#fff;color:#20242d;border:1px solid #e0e4ec;border-radius:24px;font-family:system-ui,sans-serif}.ds-case button{display:flex;align-items:center;justify-content:center;flex-shrink:0;width:48px;height:48px;border:0;background:transparent;color:inherit;cursor:pointer;font-size:20px}.ds-case .ds-handle{color:#596963;cursor:grab}.ds-case .ds-pen{border-radius:8px;background:#e8f1ff}.ds-case .ds-auto{width:56px;height:56px;flex-direction:column;color:#626b79}.ds-auto span{font-size:10px}.ds-case button:hover{background:#f3f5f9}.ds-case button:active{background:#e8f1ff}.ds-case button:focus-visible{outline:2px solid #0066cc;outline-offset:-2px}"
     },
     {
       "name": "选择反馈",
@@ -233,15 +233,15 @@
       "refersTo": "selection-panel",
       "description": "实际套索边界使用浅绿填充与虚线，选中对象另有细框。示意不执行删除；删除对象以完整包围为准。",
       "html": "<section class=\"ds-selection\"><div class=\"ds-selection-actions\"><span>自由套索</span><button>删除选中的美化文字</button></div><svg viewBox=\"0 0 300 160\" width=\"300\" height=\"160\" aria-label=\"套索内文字 IN 已选中，OUT 位于圈外\"><path d=\"M10 10H280L10 150Z\" fill=\"#216b5910\" stroke=\"#216b59\" stroke-width=\"1.5\" stroke-dasharray=\"6 4\"/><rect x=\"30\" y=\"30\" width=\"55\" height=\"42\" fill=\"none\" stroke=\"#216b5977\"/><text x=\"35\" y=\"61\" font-size=\"24\">IN</text><text x=\"185\" y=\"138\" font-size=\"24\">OUT</text></svg></section>",
-      "css": ".ds-selection{font-family:system-ui,sans-serif;color:#22272e;max-width:620px}.ds-selection-actions{display:flex;gap:8px;align-items:center;overflow:auto;padding:8px 12px;border:1px solid #dee2e6;border-radius:12px;background:#fff;white-space:nowrap}.ds-selection-actions span{padding:6px 12px;background:#eaf3ee;color:#236653;border-radius:8px}.ds-selection-actions button{font:inherit;border:0;background:transparent;color:#236653;min-height:48px;cursor:pointer}.ds-selection-actions button:hover{background:#f7f8fa}.ds-selection-actions button:active{background:#eaf3ee}.ds-selection-actions button:focus-visible{outline:2px solid #236653;outline-offset:2px}.ds-selection svg{max-width:100%;fill:#22272e}"
+      "css": ".ds-selection{font-family:system-ui,sans-serif;color:#20242d;max-width:620px}.ds-selection-actions{display:flex;gap:8px;align-items:center;overflow:auto;padding:8px 12px;border:1px solid #e0e4ec;border-radius:12px;background:#fff;white-space:nowrap}.ds-selection-actions span{padding:6px 12px;background:#e8f1ff;color:#0066cc;border-radius:8px}.ds-selection-actions button{font:inherit;border:0;background:transparent;color:#0066cc;min-height:48px;cursor:pointer}.ds-selection-actions button:hover{background:#f3f5f9}.ds-selection-actions button:active{background:#e8f1ff}.ds-selection-actions button:focus-visible{outline:2px solid #0066cc;outline-offset:2px}.ds-selection svg{max-width:100%;fill:#20242d}"
     }
   ],
   "narrative": {
     "northStar": "紧凑书写工作台",
-    "overview": "白纸承担内容，石墨色承担阅读，森林绿指明当前工具与主要动作，浅灰区分工具和纸面。手写记录与 PDF 批注同等重要；编辑器先让用户落笔，再在需要时展开参数与整理工具。\n\n当前编辑器采用小型顶部导航、可自由拖动的图示笔盒和底部页码／历史状态。常用笔以可辨认的笔形呈现，参数靠近入口展开，纸面连续铺开。此布局替换此前固定多行工具区；界面文字保留清楚的中文任务名称，纯图标补充中文可访问名称。\n\n本文件记录当前 Android 原生实现。颜色与字阶来自 InkTheme.kt，布局与行为以 BookInkScreen.kt、InkScreen.kt、FloatingPenCase.kt 等当前代码为准。尺寸使用 dp／sp；未显式覆盖的组件外观采用 Material 3 默认值。范围为应用界面，不重写用户文档的配色与排版。",
+    "overview": "白纸承担内容，石墨色承担阅读，交互蓝指明当前工具与主要动作，浅灰区分工具和纸面。手写记录与 PDF 批注同等重要；编辑器先让用户落笔，再在需要时展开参数与整理工具。\n\n当前编辑器采用圆角文档标签、小型顶部导航、可收起和自由拖动的图示笔盒和底部页码／历史状态。常用笔以可辨认的笔形呈现，参数靠近入口展开，纸面连续铺开。此布局替换此前固定多行工具区；界面文字保留清楚的中文任务名称，纯图标补充中文可访问名称。\n\n本文件记录当前 Android 原生实现。颜色与字阶来自 InkTheme.kt，布局与行为以 BookInkScreen.kt、InkScreen.kt、FloatingPenCase.kt 等当前代码为准。尺寸使用 dp／sp；未显式覆盖的组件外观采用 Material 3 默认值。范围为应用界面，不重写用户文档的配色与排版。",
     "keyCharacteristics": [
       "白纸连续铺开，常用操作围绕纸面。",
-      "森林绿选态配合笔形、图标与中文可访问名称。",
+      "交互蓝选态配合笔形、图标与中文可访问名称。",
       "笔盒自由拖动，参数按需展开。",
       "字体转换直接执行，状态就地反馈，原迹可恢复。"
     ],

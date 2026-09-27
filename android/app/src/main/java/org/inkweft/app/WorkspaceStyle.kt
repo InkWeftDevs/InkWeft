@@ -23,6 +23,7 @@ internal val Side=InkTheme.Navigation
         "add"->R.drawable.ic_add
         "back"->R.drawable.ic_back
         "close"->R.drawable.ic_close
+        "collapse"->R.drawable.ic_collapse
         "search"->R.drawable.ic_search
         "grid"->R.drawable.ic_grid
         "list"->R.drawable.ic_list
@@ -30,6 +31,7 @@ internal val Side=InkTheme.Navigation
         "folder"->R.drawable.ic_folder
         "trash"->R.drawable.ic_trash
         "star"->R.drawable.ic_star
+        "star-filled"->R.drawable.ic_star_filled
         "board"->R.drawable.ic_board
         "pen"->R.drawable.ic_pen
         "beauty"->R.drawable.ic_beauty

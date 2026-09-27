@@ -19,6 +19,7 @@ import kotlin.math.*
         (0..80).map{i->val t=i/80f;InkSample(20+360*t,48+18*sin(t*4*PI).toFloat(),i*8L,.08f+.92f*sin(t*PI).toFloat())}))}
     Canvas(Modifier.fillMaxWidth().height(80.dp).background(Color.White)){
         val matrix=Matrix().apply{setScale(size.width/400f,size.height/96f)}
-        renderer.draw(drawContext.canvas.nativeCanvas,stroke,matrix)
+        val canvas=drawContext.canvas.nativeCanvas;val saved=canvas.save()
+        try{canvas.concat(matrix);renderer.draw(canvas,stroke,matrix)}finally{canvas.restoreToCount(saved)}
     }
 }

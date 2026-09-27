@@ -8,6 +8,12 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.graphics.Color
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
@@ -16,11 +22,11 @@ import org.inkweft.core.*
 
 @Composable internal fun LearningLibrary(notes:List<Note>,review:Boolean,dismiss:()->Unit,choose:(Note)->Unit){
     Dialog(onDismissRequest=dismiss,properties=DialogProperties(usePlatformDefaultWidth=false)){
-        Surface(Modifier.fillMaxSize()){Column(Modifier.safeDrawingPadding().padding(24.dp),verticalArrangement=Arrangement.spacedBy(16.dp)){
-            Row{Text(if(review)"手动回忆"else"学习资料",Modifier.weight(1f),fontSize=24.sp);TextButton(onClick=dismiss){Text("返回资料库")}}
+        Surface(Modifier.fillMaxSize(),color=Side){Column(Modifier.safeDrawingPadding().padding(24.dp),verticalArrangement=Arrangement.spacedBy(16.dp)){
+            Row(verticalAlignment=Alignment.CenterVertically){IconButton(onClick=dismiss,modifier=Modifier.describedAs("返回资料库")){Glyph("back")};Text(if(review)"手动回忆"else"学习资料",Modifier.weight(1f),fontSize=28.sp,fontWeight=FontWeight.Bold)}
             Text("选择笔记范围，继续整理共享卡片与知识。加入学习不会复制原笔记。",fontSize=14.sp,color=Quiet)
             if(notes.isEmpty())Text("先在资料库新建笔记，或在笔记中摘录一张摘要卡。")
-            LazyColumn(verticalArrangement=Arrangement.spacedBy(12.dp)){items(notes,key={it.id}){n->OutlinedCard(onClick={choose(n)},modifier=Modifier.fillMaxWidth()){
+            LazyColumn(verticalArrangement=Arrangement.spacedBy(12.dp)){items(notes,key={it.id}){n->Card(onClick={choose(n)},colors=CardDefaults.cardColors(containerColor=Color.White),modifier=Modifier.fillMaxWidth()){
                 Column(Modifier.padding(16.dp)){Text(n.title,fontSize=18.sp);Text(if(review)"查看问题与手工复习"else"摘要卡 · 大纲 · 思维导图",fontSize=12.sp,color=Quiet)}
             }}}
         }}
@@ -28,11 +34,39 @@ import org.inkweft.core.*
 }
 
 @Composable internal fun WorkspaceSettings(dismiss:()->Unit,diagnostics:()->Unit){
-    AlertDialog(onDismissRequest=dismiss,title={Text("设置与数据")},text={Column(Modifier.verticalScroll(rememberScrollState()),verticalArrangement=Arrangement.spacedBy(16.dp)){
-        Text("外观",fontSize=18.sp);Text("统一浅色界面；文档纸面与笔迹颜色独立。系统字号与显示大小可在系统设置中调整。")
-        Text("书写",fontSize=18.sp);Text("在文档工具栏设置笔盒、橡皮和手指书写。参数只影响之后的笔迹。")
-        Text("数据与扩展",fontSize=18.sp);Text("完整备份与恢复在资料库底部。当前支持内置声明式模板；代码插件、自动识别和云服务尚未启用。")
-        Text("图标：Google Material Symbols，Apache 2.0。",fontSize=12.sp,color=Quiet)
-        OutlinedButton(onClick=diagnostics){Text("诊断与导出")}
-    }},confirmButton={TextButton(onClick=dismiss){Text("关闭")}})
+    val context=LocalContext.current
+    val prefs=remember{context.getSharedPreferences("inkweft-editor",0)}
+    val beautyStore=remember{BeautyStore(context)}
+    var favorites by remember{mutableStateOf(prefs.getBoolean("favorites-open",false))}
+    var beauty by remember{mutableStateOf(beautyStore.read())}
+    var reset by remember{mutableStateOf(false)}
+    Dialog(onDismissRequest=dismiss,properties=DialogProperties(usePlatformDefaultWidth=false)){
+        Surface(Modifier.padding(16.dp).widthIn(max=560.dp).fillMaxWidth().heightIn(max=680.dp).testTag("workspace-settings"),shape=RoundedCornerShape(28.dp),color=Side){
+            Column(Modifier.verticalScroll(rememberScrollState()).padding(20.dp),verticalArrangement=Arrangement.spacedBy(16.dp)){
+                Row(verticalAlignment=Alignment.CenterVertically){Text("设置与数据",Modifier.weight(1f),fontSize=24.sp,fontWeight=FontWeight.SemiBold);IconButton(onClick=dismiss,modifier=Modifier.describedAs("关闭设置")){Glyph("close")}}
+                SettingsGroup("外观","note","浅色工作台","跟随系统字号，保留文档原有纸面与颜色。")
+                Text("书写",color=Quiet,style=MaterialTheme.typography.labelLarge,modifier=Modifier.padding(start=12.dp))
+                Surface(shape=RoundedCornerShape(18.dp),color=Color.White){Column(Modifier.padding(horizontal=16.dp)){
+                    Row(verticalAlignment=Alignment.CenterVertically){Text("显示收藏笔盒",Modifier.weight(1f));Switch(favorites,{favorites=it;prefs.edit().putBoolean("favorites-open",it).apply()},modifier=Modifier.testTag("settings-favorite-pens").describedAs("显示收藏笔盒"))}
+                    HorizontalDivider(color=Line)
+                    Row(verticalAlignment=Alignment.CenterVertically){Text("自动美化",Modifier.weight(1f));Switch(beauty.enabled,{beauty=beauty.copy(enabled=it);beautyStore.save(beauty)},modifier=Modifier.testTag("settings-auto-beauty").describedAs("自动美化"))}
+                    Text("停笔后美化新笔迹，字体在笔盒中选择。",color=Quiet,style=MaterialTheme.typography.bodySmall)
+                    TextButton(onClick={prefs.edit().remove("case-x").remove("case-y").remove("case-collapsed").remove("favorites-x").remove("favorites-y").remove("favorites-collapsed").apply();reset=true},modifier=Modifier.testTag("settings-reset-case")){Text(if(reset)"笔盒位置已重置"else"重置笔盒位置")}
+                }}
+                SettingsGroup("数据","folder","本地保存","完整备份与恢复位于资料库底部。导出副本可保留笔迹、图片与文档。")
+                Button(onClick=diagnostics,modifier=Modifier.fillMaxWidth().heightIn(min=48.dp)){Glyph("diagnostics");Spacer(Modifier.width(8.dp));Text("诊断与导出")}
+            }
+        }
+    }
+}
+
+@Composable private fun SettingsGroup(section:String,icon:String,title:String,detail:String){
+    Column(verticalArrangement=Arrangement.spacedBy(8.dp)){
+        Text(section,color=Quiet,style=MaterialTheme.typography.labelLarge,modifier=Modifier.padding(start=12.dp))
+        Surface(shape=RoundedCornerShape(18.dp),color=Color.White){
+            Row(Modifier.fillMaxWidth().padding(16.dp),horizontalArrangement=Arrangement.spacedBy(12.dp)){
+                Glyph(icon,Forest);Column(verticalArrangement=Arrangement.spacedBy(4.dp)){Text(title,fontWeight=FontWeight.Medium);Text(detail,color=Quiet,style=MaterialTheme.typography.bodySmall)}
+            }
+        }
+    }
 }
