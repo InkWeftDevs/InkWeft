@@ -18,9 +18,11 @@ class LocalEraserRenderTest {
     @Test fun clippingRemovesOnlyCenterNotWhitePaintOrEntireStroke(){
         InstrumentationRegistry.getInstrumentation().runOnMainSync{
             val context=InstrumentationRegistry.getInstrumentation().targetContext;val density=context.resources.displayMetrics.density
-            val v=InkCanvasView(context);v.configure(false,PaperStyle.GRID,CanvasViewport(100.0,120.0,1.0));v.layout(0,0,600,400)
-            val s=InkStroke(UUID.randomUUID().toString(),InkPen.PEN,Color.BLACK,12f,InkTool.TOUCH,listOf(InkSample(50f,120f,0),InkSample(150f,120f,100)))
-            val cut=InkCut(UUID.randomUUID().toString(),14f,listOf(EraserPoint(100f,120f)))
+            // Keep the fixture inside finite paper bounds so clipping, not viewport
+            // clamping, determines the center pixels under test.
+            val v=InkCanvasView(context);v.configure(false,PaperStyle.GRID,CanvasViewport(480.0,720.0,1.0));v.layout(0,0,600,400)
+            val s=InkStroke(UUID.randomUUID().toString(),InkPen.PEN,Color.BLACK,12f,InkTool.TOUCH,listOf(InkSample(430f,720f,0),InkSample(530f,720f,100)))
+            val cut=InkCut(UUID.randomUUID().toString(),14f,listOf(EraserPoint(480f,720f)))
             val paper=Bitmap.createBitmap(600,400,Bitmap.Config.ARGB_8888);val before=Bitmap.createBitmap(600,400,Bitmap.Config.ARGB_8888);val after=Bitmap.createBitmap(600,400,Bitmap.Config.ARGB_8888)
             try{
                 v.showStrokes(emptyList());v.draw(Canvas(paper));check(paper.getPixel(300,200)!=Color.WHITE)
@@ -30,7 +32,7 @@ class LocalEraserRenderTest {
                 assertTrue(Color.red(after.getPixel((300-30*density).roundToInt(),200))<180)
                 assertTrue(Color.red(after.getPixel((300+30*density).roundToInt(),200))<180)
                 // No author point was moved by display clipping.
-                assertEquals(50f,s.samples.first().x,0f)
+                assertEquals(430f,s.samples.first().x,0f)
             }finally{paper.recycle();before.recycle();after.recycle()}
         }
     }
