@@ -79,7 +79,7 @@ internal fun StudyWorkspace(note:NoteDraft,initialSource:StudySourceDraft?,dismi
     var pendingExport by remember{mutableStateOf<String?>(null)};var localMessage by remember{mutableStateOf<String?>(null)}
     var knowledgeCard by remember{mutableStateOf<StudyCardRow?>(null)}
     var reparent by remember{mutableStateOf<StudyNodeRow?>(null)}
-    var collapsed by rememberSaveable(note.base.id){mutableStateOf(arrayListOf<String>())}
+    var collapsed by rememberSaveable(note.base.id){mutableStateOf<List<String>>(emptyList())}
     var focusId by rememberSaveable(note.base.id){mutableStateOf<String?>(null)}
     val active=ui.nodes.filter{!it.removed}
     val nodeById=active.associateBy{it.id};val cardById=ui.cards.associateBy{it.id}
@@ -87,7 +87,7 @@ internal fun StudyWorkspace(note:NoteDraft,initialSource:StudySourceDraft?,dismi
     val shown=projection.rows.mapNotNull{nodeById[it.node.id]}
     val hiddenCounts=projection.rows.filter{it.node.id in collapsed}.associate{it.node.id to it.descendants}
     val editable=!ui.loading&&!ui.busy&&!ui.unknown
-    fun toggleBranch(nodeId:String){collapsed=ArrayList(if(nodeId in collapsed)collapsed-nodeId else collapsed+nodeId)}
+    fun toggleBranch(nodeId:String){collapsed=if(nodeId in collapsed)collapsed-nodeId else collapsed+nodeId}
     fun focusBranch(nodeId:String?){focus.clearFocus();focusId=nodeId}
     LaunchedEffect(ui.loading,active.map{it.id}){if(!ui.loading&&focusId!=null&&focusId !in nodeById)focusId=null}
     LaunchedEffect(map,tab,focusId,collapsed.toList()){if(tab==2)map?.let{v->v.post{v.fit()}}}
@@ -101,7 +101,7 @@ internal fun StudyWorkspace(note:NoteDraft,initialSource:StudySourceDraft?,dismi
         catch(c:CancellationException){throw c}catch(_:Exception){localMessage="来源快照读取失败，卡片文字仍保留。"}}
     LaunchedEffect(ui.completed){if(ui.completed!=null){
         editor?.takeIf{it.card==null}?.let{e->
-            e.parent?.id?.let{collapsed=ArrayList(collapsed-it)}
+            e.parent?.id?.let{collapsed=collapsed-it}
             if(focusId!=null)focusId=e.parent?.id
         }
         editor=null;chosenNode=null;chosenCard=null;reparent=null;vm.clear()
@@ -120,8 +120,8 @@ internal fun StudyWorkspace(note:NoteDraft,initialSource:StudySourceDraft?,dismi
                     TextButton(onClick={focusBranch(null)},enabled=focusId!=null,modifier=Modifier.testTag("study-focus-all")){Text("全部主题")}
                     projection.path.forEach{n->Text("›",color=Quiet);TextButton(onClick={focusBranch(n.id)},modifier=Modifier.testTag("study-breadcrumb-${n.id}")){Text(cardById[n.cardId]?.title.orEmpty(),maxLines=1)}}
                     Text("${shown.size} / ${active.size} 个主题",fontSize=12.sp,color=Quiet)
-                    TextButton(onClick={collapsed=arrayListOf()},enabled=collapsed.isNotEmpty(),modifier=Modifier.testTag("study-expand-all")){Text("展开全部")}
-                    TextButton(onClick={collapsed=ArrayList(active.mapNotNull{it.parentId}.distinct())},enabled=active.any{it.parentId!=null},modifier=Modifier.testTag("study-collapse-all")){Text("收起分支")}
+                    TextButton(onClick={collapsed=emptyList()},enabled=collapsed.isNotEmpty(),modifier=Modifier.testTag("study-expand-all")){Text("展开全部")}
+                    TextButton(onClick={collapsed=active.mapNotNull{it.parentId}.distinct()},enabled=active.any{it.parentId!=null},modifier=Modifier.testTag("study-collapse-all")){Text("收起分支")}
                 }
             }
             Row(horizontalArrangement=Arrangement.spacedBy(8.dp)){
