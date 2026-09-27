@@ -24,7 +24,7 @@ class PenPresetUiTest {
     private fun create():String {
         compose.waitUntil(10_000){runCatching{compose.onNodeWithTag("new-note").assertIsEnabled()}.isSuccess}
         val title="预设测试-"+UUID.randomUUID().toString().take(6)
-        compose.onNodeWithTag("new-note").performClick();compose.onNodeWithTag("create-page").performClick();compose.onNodeWithTag("new-title").performTextInput(title);compose.onNodeWithTag("create-note").performClick();saved(0)
+        compose.onNodeWithTag("new-note").performClick();compose.onNodeWithTag("create-page").performClick();compose.onNodeWithTag("new-title").performTextInput(title);compose.onNodeWithTag("create-note").performClick();compose.singlePageEditor();saved(0)
         compose.activityRule.scenario.onActivity{a->a.currentFocus?.clearFocus();WindowCompat.getInsetsController(a.window,a.window.decorView).hide(WindowInsetsCompat.Type.ime())}
         compose.waitUntil(10_000){androidx.core.view.ViewCompat.getRootWindowInsets(compose.activity.window.decorView)?.isVisible(WindowInsetsCompat.Type.ime())==false}
         return runBlocking{app.repository.observeNotes().first()}.single{it.title==title}.id
@@ -35,7 +35,7 @@ class PenPresetUiTest {
         compose.onNodeWithTag("ink-more").performClick();compose.onNodeWithTag("ink-finger").performScrollTo().performClick();draw();saved(1)
         val original=runBlocking{app.inkRepository.read(id).strokes.single().stroke}
         assertEquals(previous,original.color)
-        compose.onNodeWithTag("pen-width-open").performScrollTo().performClick()
+        compose.openCurrentPen()
         compose.onNodeWithTag("pen-kind-brush").performScrollTo().performClick();compose.onNodeWithTag("width-preset-2").performScrollTo().performClick();compose.onNodeWithTag("pen-color-2").performScrollTo().performClick()
         compose.onNodeWithTag("pen-width-dialog").assertIsDisplayed()
         val bmp=checkNotNull(InstrumentationRegistry.getInstrumentation().uiAutomation.takeScreenshot())
@@ -47,12 +47,12 @@ class PenPresetUiTest {
         assertEquals(original.samples,paths[0].samples);assertEquals(original.color,paths[0].color)
         assertEquals(InkPen.BRUSH,paths[1].pen);assertEquals(InkPen.BALLPOINT,original.pen);assertEquals(6f,paths[1].width,0f);assertEquals(PenWidthStore.colors(0)[2],paths[1].color)
         compose.activityRule.scenario.recreate();saved(2)
-        compose.onNodeWithTag("pen-width-open").performScrollTo().performClick();compose.onNodeWithTag("pen-width-value").assertTextEquals("线宽 6.0")
+        compose.openCurrentPen();compose.onNodeWithTag("pen-width-value").assertTextEquals("线宽 6.0")
         compose.onNodeWithTag("cancel-pen-preset").performScrollTo().performClick()
     }
     @Test fun cancelDoesNotPersistOrMakeAnInkStroke(){
         val id=create();val before=PenWidthStore(compose.activity,"inkweft-pen-widths-book-"+id).read();val colors=PenWidthStore(compose.activity,"inkweft-pen-widths-book-"+id).readColors()
-        compose.onNodeWithTag("pen-width-open").performScrollTo().performClick();compose.onNodeWithTag("pen-kind-marker").performScrollTo().performClick();compose.onNodeWithTag("width-preset-0").performScrollTo().performClick();compose.onNodeWithTag("pen-color-3").performScrollTo().performClick()
+        compose.openCurrentPen();compose.onNodeWithTag("pen-kind-marker").performScrollTo().performClick();compose.onNodeWithTag("width-preset-0").performScrollTo().performClick();compose.onNodeWithTag("pen-color-3").performScrollTo().performClick()
         compose.onNodeWithTag("cancel-pen-preset").performScrollTo().performClick();saved(0)
         assertEquals(before,PenWidthStore(compose.activity,"inkweft-pen-widths-book-"+id).read());assertEquals(colors,PenWidthStore(compose.activity,"inkweft-pen-widths-book-"+id).readColors())
         assertEquals(InkPen.BALLPOINT,PenWidthStore(compose.activity,"inkweft-pen-widths-book-"+id).readKinds()[0]);assertTrue(runBlocking{app.inkRepository.read(id).strokes}.isEmpty())

@@ -41,6 +41,16 @@ data class CanvasViewport(val centerX: Double=500.0, val centerY: Double=707.0, 
         val a=screenToWorld(0.0,0.0,w,h,density);val b=screenToWorld(w,h,w,h,density)
         return CanvasBounds(a.x,a.y,b.x,b.y)
     }
+    /** A finite sheet stays reachable; empty space cannot be panned indefinitely. */
+    fun constrainedToPaper(wDp:Double,hDp:Double):CanvasViewport {
+        if(wDp<=0||hDp<=0)return this
+        val z=zoom.coerceAtLeast(min(wDp/1000.0,hDp/1414.0).coerceIn(.02,8.0))
+        fun center(value:Double,extent:Double,screen:Double):Double {
+            val half=screen/(2*z)
+            return if(half*2>=extent)extent/2 else value.coerceIn(half,extent-half)
+        }
+        return safe(center(centerX,1000.0,wDp),center(centerY,1414.0,hDp),z)
+    }
     companion object {
         fun safe(x: Double,y: Double,z: Double): CanvasViewport {
             require(x.isFinite() && y.isFinite() && z.isFinite())

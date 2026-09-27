@@ -35,7 +35,7 @@ class WorkspaceUiTest {
         compose.waitUntil(10_000){androidx.core.view.ViewCompat.getRootWindowInsets(compose.activity.window.decorView)?.isVisible(WindowInsetsCompat.Type.ime())==false}
         compose.waitForIdle()
     }
-    private fun create(world:Boolean){waitForShelf();compose.onNodeWithTag("new-note").performClick();compose.onNodeWithTag("create-page").performClick();compose.onNodeWithTag("new-title").performTextInput((if(world)"知识草稿 · 无界"else"微积分 · 随手推导")+" · "+UUID.randomUUID().toString().take(6));if(world)compose.onNodeWithTag("create-world").performClick();compose.onNodeWithTag("create-note").performClick();saved(0)
+    private fun create(world:Boolean){waitForShelf();compose.onNodeWithTag("new-note").performClick();compose.onNodeWithTag("create-page").performClick();compose.onNodeWithTag("new-title").performTextInput((if(world)"知识草稿 · 无界"else"微积分 · 随手推导")+" · "+UUID.randomUUID().toString().take(6));if(world)compose.onNodeWithTag("create-world").performClick();compose.onNodeWithTag("create-note").performClick();compose.singlePageEditor();saved(0)
         settleKeyboard()
         createdId=runBlocking{app.repository.observeNotes().first()}.first().id
     }

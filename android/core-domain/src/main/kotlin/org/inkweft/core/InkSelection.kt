@@ -24,6 +24,20 @@ class InkRegion(points:List<EraserPoint>,val rectangle:Boolean=true) {
         };return inside
     }
     /** Full containment avoids silently deleting a neighbouring long stroke. */
+    fun selects(box:CanvasBounds):Boolean {
+        if(box.left<bounds.left||box.right>bounds.right||box.top<bounds.top||box.bottom>bounds.bottom)return false
+        if(rectangle)return true
+        val corners=listOf(box.left to box.top,box.right to box.top,box.right to box.bottom,box.left to box.bottom)
+        if(corners.any{!contains(it.first,it.second)})return false
+        // A concave notch may cross the object even when all four corners lie inside.
+        if(points.any{it.x>box.left&&it.x<box.right&&it.y>box.top&&it.y<box.bottom})return false
+        fun side(a:Pair<Double,Double>,b:Pair<Double,Double>,p:Pair<Double,Double>)=(b.first-a.first)*(p.second-a.second)-(b.second-a.second)*(p.first-a.first)
+        val polygon=points.map{it.x.toDouble() to it.y.toDouble()}
+        return polygon.indices.none{i->val a=polygon[i];val b=polygon[(i+1)%polygon.size];corners.indices.any{j->
+            val c=corners[j];val d=corners[(j+1)%4]
+            side(a,b,c)*side(a,b,d)<0&&side(c,d,a)*side(c,d,b)<0
+        }}
+    }
     fun selects(stroke:InkStroke):Boolean {
         val b=stroke.bounds()
         if(rectangle)return b.left>=bounds.left&&b.right<=bounds.right&&b.top>=bounds.top&&b.bottom<=bounds.bottom

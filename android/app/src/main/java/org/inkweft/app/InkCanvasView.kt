@@ -19,6 +19,11 @@ import kotlin.math.*
 /** A bounded viewport. Partial erase clips ink, never paints the paper colour. */
 class InkCanvasView(context:Context):View(context){
     var onStroke:(InkStroke)->Unit={}
+    internal val inputReady get()=allowInput&&(documentId==null||documentKnownAbsent||(documentTile!=null&&!documentError))
+    var seamWriting=false
+    var onLiveSamples:(List<InkSample>)->Unit={}
+    var seamDraft:List<InkSample> = emptyList()
+        set(value){field=value;invalidate()}
     var onErase:(List<InkSample>,Float,Boolean,Boolean)->Unit={_,_,_,_->}
     var onGesture:(Boolean)->Unit={}
     var onNotice:(String)->Unit={}
@@ -138,9 +143,9 @@ class InkCanvasView(context:Context):View(context){
         invalidate()
     }
     private fun toInk(s:InkStroke):Stroke=InkBrushes.stroke(s)
-    private fun transform(){val f=(viewport.zoom*density).toFloat();matrix.setScale(f,f);matrix.postTranslate((width/2-viewport.centerX*f).toFloat(),(height/2-viewport.centerY*f).toFloat());onScale(viewport.zoom);requestDocument()}
+    private fun transform(){if(!world&&!preview&&!embeddedPage)viewport=viewport.constrainedToPaper(width/density,height/density);val f=(viewport.zoom*density).toFloat();matrix.setScale(f,f);matrix.postTranslate((width/2-viewport.centerX*f).toFloat(),(height/2-viewport.centerY*f).toFloat());onScale(viewport.zoom);requestDocument()}
     private fun initialFit(){viewport=if(world)CanvasViewport(0.0,0.0,.8)else CanvasViewport.pageWidth(width/density,height/density);if(preview||embeddedPage)fitPage(false);transform()}
-    fun fitPage(publish:Boolean=true){cancelGesture();viewport=CanvasViewport.fit(CanvasBounds(0.0,0.0,1000.0,1414.0),width/density,height/density);transform();invalidate();if(publish)onViewport(viewport)}
+    fun fitPage(publish:Boolean=true){cancelGesture();viewport=if(embeddedPage)CanvasViewport(500.0,707.0,(width/density/1000.0).coerceIn(.02,8.0))else CanvasViewport.fit(CanvasBounds(0.0,0.0,1000.0,1414.0),width/density,height/density);transform();invalidate();if(publish)onViewport(viewport)}
     fun fitWidth(){cancelGesture();viewport=CanvasViewport.pageWidth(width/density,height/density);transform();invalidate();onViewport(viewport)}
     fun origin(){cancelGesture();viewport=if(world)CanvasViewport(0.0,0.0,.8)else CanvasViewport.pageWidth(width/density,height/density);transform();invalidate();onViewport(viewport)}
     internal var previewPadding=40.0
@@ -162,9 +167,9 @@ class InkCanvasView(context:Context):View(context){
     }
     override fun onDraw(canvas:Canvas){
         super.onDraw(canvas);if(!configured)return
-        canvas.drawColor(if(world)Color.WHITE else Color.rgb(241,243,244))
+        canvas.drawColor(if(world||embeddedPage)Color.WHITE else Color.rgb(241,243,244))
         val visible=viewport.visible(width.toDouble(),height.toDouble(),density);val save=canvas.save();canvas.concat(matrix)
-        if(!world){paint.style=Paint.Style.FILL;paint.color=Color.WHITE;canvas.drawRect(0f,0f,1000f,1414f,paint);canvas.clipRect(0f,0f,1000f,1414f)}
+        if(!world){paint.style=Paint.Style.FILL;paint.color=Color.WHITE;canvas.drawRect(0f,0f,1000f,1414f,paint);if(!embeddedPage)canvas.clipRect(0f,0f,1000f,1414f)}
         if(documentId==null||documentKnownAbsent)drawGuide(canvas,visible)
         documentTile?.let{tile->val b=tile.bounds;documentRect.set(b.left.toFloat(),b.top.toFloat(),b.right.toFloat(),b.bottom.toFloat());canvas.drawBitmap(tile.bitmap,null,documentRect,documentPaint)}
         if(documentId!=null&&!documentKnownAbsent&&(documentTile==null||documentError)){paint.color=Color.DKGRAY;paint.textSize=24f;canvas.drawText(if(documentError)"文档载入失败"else"正在载入文档…",80f,100f,paint)}
@@ -179,6 +184,10 @@ class InkCanvasView(context:Context):View(context){
         }
         transient.values.forEach{renderer.draw(canvas,it,matrix)}
         if(inputId!=-1&&!gestureErase&&raw.isNotEmpty()){live.updateShape();renderer.draw(canvas,live,matrix)}
+        if(seamDraft.isNotEmpty()){
+            val p=Path();seamDraft.forEachIndexed{i,s->if(i==0)p.moveTo(s.x,s.y)else p.lineTo(s.x,s.y)}
+            paint.color=penColor;paint.strokeWidth=penWidth;paint.style=Paint.Style.STROKE;paint.strokeCap=Paint.Cap.ROUND;canvas.drawPath(p,paint);paint.style=Paint.Style.FILL
+        }
         objectPainter.draw(canvas,drawnObjects(),true,visible)
         canvas.restoreToCount(save)
         // Draw cursor in screen space, outside the paper clip. Its diameter is
@@ -232,19 +241,19 @@ class InkCanvasView(context:Context):View(context){
         // An eraser crossing the paper edge keeps its actual world center;
         // clamping it to the paper edge would disagree with the screen cursor.
         // These gesture samples are never persisted as author InkStroke points.
-        val freeGesture=world||gestureErase
+        val freeGesture=world||gestureErase||seamWriting
         val point=InkSample(if(freeGesture)w.x.toFloat()else w.x.toFloat().coerceIn(0f,1000f),if(freeGesture)w.y.toFloat()else w.y.toFloat().coerceIn(0f,1414f),time,pressure,tilt,orientation,freeGesture)
         if(raw.lastOrNull()?.let{it==point||it.elapsedMs>time}==true)return
-        try{if(!gestureErase){incremental.clear();InkBrushes.add(incremental,point,inputKind,gesturePen);live.enqueueInputs(incremental,empty)};raw.add(point);if(raw.size==InkLimits.MAX_POINTS)onNotice("达到单笔采样上限，请抬笔提交后继续。")}catch(_:IllegalArgumentException){onNotice("无效设备采样未进入笔迹。")}
+        try{if(!gestureErase){incremental.clear();InkBrushes.add(incremental,point,inputKind,gesturePen);live.enqueueInputs(incremental,empty)};raw.add(point);if(seamWriting&&!gestureErase)onLiveSamples(raw);if(raw.size==InkLimits.MAX_POINTS)onNotice("达到单笔采样上限，请抬笔提交后继续。")}catch(_:IllegalArgumentException){onNotice("无效设备采样未进入笔迹。")}
     }
     private fun finishGesture(){
         if(inputId==-1)return
-        try{if(raw.isNotEmpty()){if(gestureErase)onErase(raw.toList(),gestureRadius,gestureWhole,gestureOnlyHighlighter)else{live.finishInput();live.updateShape();val s=InkStroke(UUID.randomUUID().toString(),gesturePen,gestureColor,gestureWidth,inputKind,raw,world);transient[s.id]=live.toImmutable();try{onStroke(s)}catch(e:Exception){transient.remove(s.id);throw e}}}}
+        try{if(raw.isNotEmpty()){if(gestureErase)onErase(raw.toList(),gestureRadius,gestureWhole,gestureOnlyHighlighter)else{live.finishInput();live.updateShape();val s=InkStroke(UUID.randomUUID().toString(),gesturePen,gestureColor,gestureWidth,inputKind,raw,world||seamWriting);if(!seamWriting)transient[s.id]=live.toImmutable();try{onStroke(s)}catch(e:Exception){transient.remove(s.id);throw e}}}}
         catch(_:Exception){onNotice("本次操作未接收；已确认内容不变，请先导出副本并检查容量。")}
-        finally{inputId=-1;raw.clear();gestureErase=false;onGesture(false);parent?.requestDisallowInterceptTouchEvent(false);invalidate()}
+        finally{onLiveSamples(emptyList());inputId=-1;raw.clear();gestureErase=false;onGesture(false);parent?.requestDisallowInterceptTouchEvent(false);invalidate()}
     }
     private fun finishViewport(){if(movingViewport){movingViewport=false;onViewport(viewport)}}
-    fun cancelGesture(){val active=inputId!=-1;inputId=-1;raw.clear();gestureErase=false;cursor=null;parent?.requestDisallowInterceptTouchEvent(false);if(active)onGesture(false);invalidate()}
+    fun cancelGesture(){onLiveSamples(emptyList());val active=inputId!=-1;inputId=-1;raw.clear();gestureErase=false;cursor=null;parent?.requestDisallowInterceptTouchEvent(false);if(active)onGesture(false);invalidate()}
     override fun onDetachedFromWindow(){documentJob?.cancel();documentTile=null;documentRequest=null;objectPainter.clear();cancelGesture();if(configured&&!preview)onViewport(viewport);super.onDetachedFromWindow()}
     override fun performClick():Boolean{super.performClick();return true}
 }

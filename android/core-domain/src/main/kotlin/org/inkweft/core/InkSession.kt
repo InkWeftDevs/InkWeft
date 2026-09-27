@@ -17,6 +17,8 @@ class InkSession(initial:InkPage) {
         page.strokes.sumOf{it.stroke.samples.size}+additions().sumOf{it.samples.size}+InkLimits.MAX_POINTS<=InkLimits.MAX_PAGE_POINTS
     val canUndo get()=queued==0&&blocked==null&&undo.isNotEmpty()
     val canRedo get()=queued==0&&blocked==null&&redo.isNotEmpty()
+    val undoIdentity:InkMutation? get()=undo.lastOrNull()
+    val redoIdentity:InkMutation? get()=redo.lastOrNull()
     private fun apply(change:InkMutation,revision:Long,rows:LinkedHashMap<String,StoredInk>,cuts:LinkedHashMap<String,StoredCut>):InkMutation=when(change){
         is InkMutation.Replace->{
             require(change.hidden.all{rows[it]?.visible==true});require(change.added.none{rows.containsKey(it.id)})

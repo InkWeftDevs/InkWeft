@@ -15,7 +15,7 @@ internal class PageObjectPainter {
     private val paint=Paint(Paint.ANTI_ALIAS_FLAG or Paint.FILTER_BITMAP_FLAG)
     fun clear(){images.clear();layouts.clear()}
     fun draw(canvas:Canvas,objects:List<PageObject>,tapes:Boolean,visible:CanvasBounds) {
-        objects.filter{(it.kind==PageObjectKind.TAPE)==tapes&&it.bounds().intersects(visible)}.forEach { o ->
+        objects.filter{!it.hidden&&(it.kind==PageObjectKind.TAPE)==tapes&&it.bounds().intersects(visible)}.forEach { o ->
             val save=canvas.save();canvas.clipRect(o.x,o.y,o.x+o.width,o.y+o.height)
             when(o.kind) {
                 PageObjectKind.IMAGE->{

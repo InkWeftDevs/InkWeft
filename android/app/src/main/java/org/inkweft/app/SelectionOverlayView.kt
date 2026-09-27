@@ -13,6 +13,7 @@ internal class SelectionOverlayView(context:Context):View(context){
     var canvasView:InkCanvasView?=null
     var region:InkRegion?=null
     var selected:List<InkStroke> = emptyList()
+    var selectedObjects:List<CanvasBounds> = emptyList()
     var enabledInput=true
     var freehand=false
     var onRegion:(InkRegion?)->Unit={}
@@ -42,6 +43,7 @@ internal class SelectionOverlayView(context:Context):View(context){
             paint.style=Paint.Style.STROKE;paint.strokeWidth=(1.5*density).toFloat();paint.color=0xff216b59.toInt();paint.pathEffect=DashPathEffect(floatArrayOf((6*density).toFloat(),(4*density).toFloat()),0f);c.drawPath(path,paint);paint.pathEffect=null}
         paint.style=Paint.Style.STROKE;paint.strokeWidth=density.toFloat();paint.color=0x77216b59
         selected.forEach{s->val b=s.bounds();val a=screen(EraserPoint(b.left.toFloat()+dx,b.top.toFloat()+dy));val z=screen(EraserPoint(b.right.toFloat()+dx,b.bottom.toFloat()+dy));c.drawRect(a.x.toFloat(),a.y.toFloat(),z.x.toFloat(),z.y.toFloat(),paint)}
+        selectedObjects.forEach{b->val a=screen(EraserPoint(b.left.toFloat(),b.top.toFloat()));val z=screen(EraserPoint(b.right.toFloat(),b.bottom.toFloat()));c.drawRect(a.x.toFloat(),a.y.toFloat(),z.x.toFloat(),z.y.toFloat(),paint)}
     }
     override fun onTouchEvent(e:MotionEvent):Boolean{
         val view=canvasView?:return true

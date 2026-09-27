@@ -53,6 +53,16 @@ import java.util.UUID
     if(active) {
         Column(Modifier.fillMaxWidth().background(Color.White)) {
             Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()).padding(horizontal=8.dp),verticalAlignment=Alignment.CenterVertically) {
+                val item=ui.objects.find{it.id==selected&&!it.hidden}
+                if(item!=null){
+                if(item.kind==PageObjectKind.TEXT)TextButton(onClick={editing=item},enabled=available,modifier=Modifier.testTag("object-edit-text")){Text("编辑文字")}
+                if(item.kind==PageObjectKind.TAPE)TextButton(onClick={vm.put(item.copy(revealed=!item.revealed))},enabled=available,modifier=Modifier.testTag("object-reveal")){Text(if(item.revealed)"盖上胶带"else"揭开胶带")}
+                TextButton(onClick={val x=if(world)item.x+24 else (item.x+24).coerceAtMost(1000-item.width);val y=if(world)item.y+24 else (item.y+24).coerceAtMost(1414-item.height);val o=item.copy(id=UUID.randomUUID().toString(),x=x,y=y,sourceStrokeIds=emptyList());vm.put(o);onSelect(o.id)},enabled=available,modifier=Modifier.testTag("object-copy")){Text("复制")}
+                TextButton(onClick={vm.change(ui.objects.filterNot{it.id==item.id}+item)},enabled=available,modifier=Modifier.testTag("object-front")){Text("移到同类前方")}
+                TextButton(onClick={vm.delete(item.id);onSelect(null)},enabled=available,modifier=Modifier.testTag("object-delete")){Text("删除",color=Color(0xffab3939))}
+                if(item.sourceStrokeIds.isNotEmpty())TextButton(onClick={vm.restoreOriginal(item.id);onSelect(null)},enabled=available,modifier=Modifier.testTag("object-restore-original")){Text("恢复原迹")}
+                TextButton(onClick={onSelect(null)},modifier=Modifier.testTag("object-deselect")){Text("完成")}
+                }else{
                 TextButton(onClick={try{picking=true;picker.launch("image/*")}catch(_:Exception){picking=false;onNotice("无法打开图片选择器。")}},enabled=available,modifier=Modifier.testTag("object-image")){Text("图片")}
                 TextButton(onClick={
                     val folder=File(context.cacheDir,"page-camera").apply{mkdirs()}
@@ -62,15 +72,7 @@ import java.util.UUID
                 },enabled=available,modifier=Modifier.testTag("object-camera")){Text("拍照")}
                 TextButton(onClick={editing=newObject(PageObjectKind.TEXT)},enabled=available,modifier=Modifier.testTag("object-text")){Text("文本框")}
                 TextButton(onClick={val o=newObject(PageObjectKind.TAPE).copy(height=70f);vm.put(o);onSelect(o.id)},enabled=available,modifier=Modifier.testTag("object-tape")){Text("胶带")}
-                TextButton(onClick=vm::undo,enabled=available&&ui.undo,modifier=Modifier.testTag("object-undo")){Text("撤销插入")}
-                TextButton(onClick=vm::redo,enabled=available&&ui.redo,modifier=Modifier.testTag("object-redo")){Text("重做插入")}
-                val item=ui.objects.find{it.id==selected}
-                if(item!=null){
-                if(item.kind==PageObjectKind.TEXT)TextButton(onClick={editing=item},enabled=available,modifier=Modifier.testTag("object-edit-text")){Text("编辑文字")}
-                if(item.kind==PageObjectKind.TAPE)TextButton(onClick={vm.put(item.copy(revealed=!item.revealed))},enabled=available,modifier=Modifier.testTag("object-reveal")){Text(if(item.revealed)"盖上胶带"else"揭开胶带")}
-                TextButton(onClick={val x=if(world)item.x+24 else (item.x+24).coerceAtMost(1000-item.width);val y=if(world)item.y+24 else (item.y+24).coerceAtMost(1414-item.height);val o=item.copy(id=UUID.randomUUID().toString(),x=x,y=y,sourceStrokeIds=emptyList());vm.put(o);onSelect(o.id)},enabled=available,modifier=Modifier.testTag("object-copy")){Text("复制")}
-                TextButton(onClick={vm.change(ui.objects.filterNot{it.id==item.id}+item)},enabled=available,modifier=Modifier.testTag("object-front")){Text("移到同类前方")}
-                TextButton(onClick={vm.delete(item.id);onSelect(null)},enabled=available,modifier=Modifier.testTag("object-delete")){Text(if(item.sourceStrokeIds.isEmpty())"删除"else"恢复原迹",color=Color(0xffab3939))}
+
             }
             }
         }

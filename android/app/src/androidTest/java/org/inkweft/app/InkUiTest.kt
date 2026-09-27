@@ -21,7 +21,7 @@ class InkUiTest {
         compose.waitUntil(10_000){runCatching { compose.onNodeWithTag("new-note").assertIsEnabled() }.isSuccess}
         compose.onNodeWithTag("new-note").performClick();compose.onNodeWithTag("create-page").performClick()
         compose.onNodeWithTag("new-title").performTextInput("手写测试 "+UUID.randomUUID().toString().take(8))
-        compose.onNodeWithTag("create-note").performClick()
+        compose.onNodeWithTag("create-note").performClick();compose.singlePageEditor()
         compose.waitUntil(10_000){compose.onAllNodesWithTag("ink-surface").fetchSemanticsNodes().isNotEmpty()}
         compose.waitUntil(10_000){runCatching { compose.onNodeWithTag("ink-status").assertTextContains("已保存",substring=true) }.isSuccess}
         compose.onNodeWithTag("ink-more").performClick();compose.onNodeWithTag("ink-finger").performScrollTo().performClick()

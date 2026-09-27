@@ -6,7 +6,7 @@ import java.util.Collections
 
 /** Visible content copy, including effective masks; not vault or undo history. */
 class InkPageFile(val title:String,val text:String,strokes:List<InkStroke>,val world:Boolean=false,val paper:PaperStyle=PaperStyle.RULED,objects:List<PageObject> = emptyList(),val source:PdfPageSource?=null){
-    val objects:List<PageObject> = Collections.unmodifiableList(objects.map{o->o.copy(sourceStrokeIds=o.sourceStrokeIds.filter{id->strokes.any{it.id==id}})})
+    val objects:List<PageObject> = Collections.unmodifiableList(objects.mapNotNull{o->val refs=o.sourceStrokeIds.filter{id->strokes.any{it.id==id}};if(o.hidden&&refs.isEmpty())null else o.copy(sourceStrokeIds=refs)})
     val strokes:List<InkStroke> = Collections.unmodifiableList(ArrayList(strokes))
     init{require(source==null||!world);PageObjectCodec.encode(objects);require(title.isNotBlank()&&title.length<=120&&text.length<=100_000);require(strokes.size<=InkLimits.MAX_STROKES&&strokes.map{it.id}.distinct().size==strokes.size);require(strokes.sumOf{it.samples.size}<=InkLimits.MAX_PAGE_POINTS);require(strokes.all{it.world==world})}
     fun encode(includeSource:Boolean=true):ByteArray {

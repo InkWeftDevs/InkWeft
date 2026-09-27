@@ -23,7 +23,7 @@ class EditorRedesignUiTest {
     private fun id()=UUID.randomUUID().toString()
     private fun ready(){compose.waitUntil(15_000){runCatching{compose.onNodeWithTag("new-note").assertIsEnabled()}.isSuccess}}
     private fun saved(){compose.waitUntil(15_000){runCatching{compose.onNodeWithTag("ink-status").assertTextContains("已保存",substring=true)}.isSuccess}}
-    private fun open(note:Note){compose.runOnIdle{ViewModelProvider(compose.activity)[NotebookViewModel::class.java].select(note)};saved()}
+    private fun open(note:Note){compose.runOnIdle{ViewModelProvider(compose.activity)[NotebookViewModel::class.java].select(note)};compose.singlePageEditor();saved()}
     private fun shot(name:String){compose.waitForIdle();val b=checkNotNull(InstrumentationRegistry.getInstrumentation().uiAutomation.takeScreenshot());try{File(app.getExternalFilesDir(null),name).outputStream().use{b.compress(Bitmap.CompressFormat.PNG,100,it)}}finally{b.recycle()}}
     private fun canvas():InkCanvasView{fun find(v:View):InkCanvasView?{if(v is InkCanvasView&&!v.preview)return v;if(v is ViewGroup)for(i in 0 until v.childCount)find(v.getChildAt(i))?.let{return it};return null};return checkNotNull(find(compose.activity.window.decorView))}
 
@@ -32,12 +32,12 @@ class EditorRedesignUiTest {
         compose.onNodeWithTag("ink-tool-2").performClick()
         val store=PenWidthStore(compose.activity,"inkweft-pen-widths-book-"+note.id)
         for(i in 0..4){
-            compose.onNodeWithTag("quick-color-$i").performScrollTo().performClick()
+            compose.openCurrentPen();compose.onNodeWithTag("pen-color-$i").performScrollTo().performClick();compose.onNodeWithTag("apply-pen-width").performScrollTo().performClick()
             compose.waitUntil(10_000){store.readColors()[2]==PenWidthStore.colors(2)[i]}
             assertEquals(0x66,store.readColors()[2] ushr 24)
         }
         for(i in 0..2){
-            compose.onNodeWithTag("quick-width-$i").performScrollTo().performClick()
+            compose.openCurrentPen();compose.onNodeWithTag("width-preset-$i").performScrollTo().performClick();compose.onNodeWithTag("apply-pen-width").performScrollTo().performClick()
             compose.waitUntil(10_000){store.read()[2]==PenWidthStore.presets(2)[i]}
         }
         shot("redesign-highlighter.png");compose.activityRule.scenario.recreate();saved()
@@ -55,26 +55,16 @@ class EditorRedesignUiTest {
         compose.onNodeWithTag("import-format-help").performClick();compose.onNodeWithTag("import-format-details").assertIsDisplayed();compose.onNodeWithTag("choose-import-file").assertIsDisplayed();shot("redesign-import-expanded.png")
     }
 
-    @Test fun beautyIsVisibleBeforeSelectionAndCancelKeepsInkAndPaperPosition(){
-        ready();val note=runBlocking{app.workspaceRepository.create("界面验收 · 手写与美化",false,PaperStyle.GRID)}
-        val stroke=InkStroke(id(),InkPen.PEN,0xff24342f.toInt(),4f,InkTool.STYLUS,listOf(InkSample(200f,600f,0),InkSample(400f,600f,30)))
-        runBlocking{app.inkRepository.save(CommitInk(id(),note.id,0,InkMutation.Add(stroke)))};open(note)
-        compose.onNodeWithTag("ink-beauty").assertIsDisplayed();compose.onNodeWithTag("book-search").assertIsDisplayed()
-        compose.onNodeWithTag("fit-page").performScrollTo().performClick();val before=compose.onNodeWithTag("ink-surface").fetchSemanticsNode().boundsInRoot
-        for(tag in listOf("ink-select","page-objects","ink-tool-3","ink-beauty")){
-            compose.onNodeWithTag(tag).performClick();compose.waitForIdle()
-            assertEquals(before,compose.onNodeWithTag("ink-surface").fetchSemanticsNode().boundsInRoot)
-        }
-        compose.onNodeWithTag("beauty-mode-font").assertIsDisplayed();shot("redesign-beauty-entry.png")
-        var a=Offset.Zero;var b=Offset.Zero
-        compose.runOnIdle{val v=canvas();val d=v.resources.displayMetrics.density.toDouble();fun point(x:Double,y:Double):Offset{val p=v.snapshotViewport().worldToScreen(x,y,v.width.toDouble(),v.height.toDouble(),d);return Offset(p.x.toFloat(),p.y.toFloat())};a=point(170.0,560.0);b=point(440.0,640.0)}
-        compose.onNodeWithTag("selection-overlay").performTouchInput{swipe(a,b,300)}
-        compose.onNodeWithTag("beauty-edit-text").performClick()
-        compose.waitUntil(30_000){runCatching{compose.onNodeWithTag("beauty-recognized-text").assertIsEnabled()}.isSuccess}
-        compose.onNodeWithTag("font-WENKAI").assertIsDisplayed();shot("redesign-font-panel.png")
-        compose.onNodeWithText("保留原样").performClick();saved()
-        assertEquals(1L,runBlocking{app.inkRepository.read(note.id).revision});assertTrue(runBlocking{app.pageObjects.read(note.id).objects.isEmpty()})
-        assertEquals(before,compose.onNodeWithTag("ink-surface").fetchSemanticsNode().boundsInRoot)
+    @Test fun beautySettingsStayCompactAndDoNotMovePaper(){
+        ready();val note=runBlocking{app.workspaceRepository.create("美化设置验收",false,PaperStyle.GRID)};open(note)
+        compose.onNodeWithTag("auto-beauty-toggle").performScrollTo().assertExists()
+        val before=compose.onNodeWithTag("ink-surface").fetchSemanticsNode().boundsInRoot
+        compose.onNodeWithTag("ink-beauty").performScrollTo().performClick()
+        compose.onNodeWithTag("font-WENKAI").assertIsDisplayed();compose.onNodeWithTag("beauty-select").assertIsDisplayed()
+        shot("redesign-font-panel.png")
+        androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().uiAutomation.performGlobalAction(android.accessibilityservice.AccessibilityService.GLOBAL_ACTION_BACK)
+        compose.waitForIdle();assertEquals(before,compose.onNodeWithTag("ink-surface").fetchSemanticsNode().boundsInRoot)
+        assertTrue(runBlocking{app.pageObjects.read(note.id).objects.isEmpty()})
     }
 
     @Test fun searchAutomaticallyPreparesTextAndResultOpensTheRightPage(){

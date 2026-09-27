@@ -44,7 +44,7 @@ class SelectionStudyUiTest {
         ready();val n=runBlocking{app.workspaceRepository.create("学习整合-${id().take(6)}",false,PaperStyle.BLANK)}
         val s=InkStroke(id(),InkPen.PEN,0xff000000.toInt(),3f,InkTool.STYLUS,listOf(InkSample(200f,600f,0,.5f),InkSample(300f,600.6f,30,.5f),InkSample(400f,600f,60,.5f),InkSample(600f,600f,100,.5f)))
         runBlocking{app.inkRepository.save(CommitInk(id(),n.id,0,InkMutation.Add(s)))}
-        compose.runOnIdle{ViewModelProvider(compose.activity)[NotebookViewModel::class.java].select(n)};saved(1)
+        compose.runOnIdle{ViewModelProvider(compose.activity)[NotebookViewModel::class.java].select(n)};compose.singlePageEditor();saved(1)
         compose.onNodeWithTag("fit-page").performScrollTo().performClick();return n to s
     }
     private fun nativeCanvas():InkCanvasView{
@@ -101,7 +101,7 @@ class SelectionStudyUiTest {
         compose.onAllNodesWithTag("study-card-details").assertCountEquals(0);assertEquals(n.id,snapshot.pageId)
     }
     @Test fun outlineAndMapReuseSingleEditableCard(){
-        val(n,_)=seed();compose.onNodeWithTag("study-open").performClick();compose.onNodeWithTag("study-add-card").performClick();addCard("条件概率","按定义推导")
+        val(n,_)=seed();compose.onNodeWithTag("document-more").performClick();compose.onNodeWithTag("study-open").performClick();compose.onNodeWithTag("study-add-card").performClick();addCard("条件概率","按定义推导")
         val card=runBlocking{app.study.cards(n.id).first()}.single()
         compose.onNodeWithTag("study-card-${card.id}").performClick();compose.onNodeWithTag("study-reuse-card").performScrollTo().performClick()
         compose.waitUntil(10_000){runBlocking{app.study.nodes(n.id).first().size}==2}
@@ -113,7 +113,7 @@ class SelectionStudyUiTest {
         shot("study-outline.png");compose.onNodeWithTag("study-tab-2").performClick();compose.onNodeWithTag("study-map").assertIsDisplayed();shot("study-mindmap.png")
     }
     @Test fun childThemeAndRemovingLeafKeepsCard(){
-        val(n,_)=seed();compose.onNodeWithTag("study-open").performClick();compose.onNodeWithTag("study-add-card").performClick();addCard("总论","根节点")
+        val(n,_)=seed();compose.onNodeWithTag("document-more").performClick();compose.onNodeWithTag("study-open").performClick();compose.onNodeWithTag("study-add-card").performClick();addCard("总论","根节点")
         val root=runBlocking{app.study.nodes(n.id).first()}.single();compose.onNodeWithTag("study-tab-1").performClick();compose.onNodeWithTag("outline-node-${root.id}").performClick();compose.onNodeWithTag("study-add-child").performScrollTo().performClick();addCard("必要条件","检查假设")
         val child=runBlocking{app.study.nodes(n.id).first()}.single{it.parentId==root.id}
         compose.onNodeWithTag("outline-node-${child.id}").performClick();compose.onNodeWithTag("study-remove-node").performScrollTo().performClick()
@@ -128,7 +128,7 @@ class SelectionStudyUiTest {
                 app.study.submit(StudyCommand(id(),n.id,StudyAction.CREATE,cardId=id(),nodeId=node,parentId=parent,title=title))
             }
         }
-        compose.onNodeWithTag("study-open").performClick();compose.onNodeWithTag("study-tab-1").performClick()
+        compose.onNodeWithTag("document-more").performClick();compose.onNodeWithTag("study-open").performClick();compose.onNodeWithTag("study-tab-1").performClick()
         compose.onNodeWithTag("outline-fold-$root").performScrollTo().performClick()
         compose.onNodeWithTag("outline-node-$child").assertDoesNotExist()
         compose.onNodeWithTag("outline-focus-$root").performClick()
@@ -152,7 +152,7 @@ class SelectionStudyUiTest {
         shot("study-branch-navigation.png")
     }
     @Test fun cardSearchFindsBodyAndClearRestoresCards(){
-        val(n,_)=seed();compose.onNodeWithTag("study-open").performClick()
+        val(n,_)=seed();compose.onNodeWithTag("document-more").performClick();compose.onNodeWithTag("study-open").performClick()
         compose.onNodeWithTag("study-add-card").performClick();addCard("概率","先验条件")
         compose.onNodeWithTag("study-add-card").performClick();addCard("微积分","连续可导")
         val cards=runBlocking{app.study.cards(n.id).first()}

@@ -26,14 +26,14 @@ class WritingWorkspaceUiTest {
     private fun create():String {
         compose.waitUntil(10_000){runCatching{compose.onNodeWithTag("new-note").assertIsEnabled()}.isSuccess}
         val name="书写工作台-"+UUID.randomUUID().toString().take(6)
-        compose.onNodeWithTag("new-note").performClick();compose.onNodeWithTag("create-page").performClick();compose.onNodeWithTag("new-title").performTextInput(name);compose.onNodeWithTag("create-note").performClick();saved(0)
+        compose.onNodeWithTag("new-note").performClick();compose.onNodeWithTag("create-page").performClick();compose.onNodeWithTag("new-title").performTextInput(name);compose.onNodeWithTag("create-note").performClick();compose.singlePageEditor();saved(0)
         compose.activityRule.scenario.onActivity{a->a.currentFocus?.clearFocus();WindowCompat.getInsetsController(a.window,a.window.decorView).hide(WindowInsetsCompat.Type.ime())}
         compose.waitUntil(10_000){androidx.core.view.ViewCompat.getRootWindowInsets(compose.activity.window.decorView)?.isVisible(WindowInsetsCompat.Type.ime())==false}
         return runBlocking{app.repository.observeNotes().first()}.single{it.title==name}.id
     }
     private fun finger(){compose.onNodeWithTag("ink-more").performClick();compose.onNodeWithTag("ink-finger").performScrollTo().performClick()}
     private fun draw(){compose.onNodeWithTag("ink-surface").performTouchInput{swipe(Offset(width*.3f,height*.3f),Offset(width*.5f,height*.5f),200)}}
-    private fun mode(){compose.onNodeWithTag("toggle-continuous").performClick();compose.waitForIdle()}
+    private fun mode(){compose.onNodeWithTag("document-more").performClick();compose.onNodeWithTag("toggle-continuous").performClick();compose.waitForIdle()}
     private fun shot(name:String){val bmp=checkNotNull(InstrumentationRegistry.getInstrumentation().uiAutomation.takeScreenshot());try{File(compose.activity.getExternalFilesDir(null),name).outputStream().use{bmp.compress(Bitmap.CompressFormat.PNG,100,it)}}finally{bmp.recycle()}}
     @Test fun tabsKeepInkAndClosingOnlyClosesTheTab(){
         val a=create();finger();draw();saved(1)
@@ -85,10 +85,11 @@ class WritingWorkspaceUiTest {
         compose.onNodeWithTag("continuous-pages").assertExists()
         compose.onNodeWithTag("ink-more").performClick();compose.onNodeWithTag("selection-tools").performClick()
         compose.onNodeWithTag("selection-lasso").assertIsSelected();compose.onNodeWithTag("continuous-pages").assertDoesNotExist()
-        compose.onNodeWithTag("ink-tool-0").performClick();compose.onNodeWithTag("ink-more").performClick();compose.onNodeWithTag("toolbar-position").performClick()
-        assertTrue(compose.activity.getSharedPreferences("inkweft-editor",0).getBoolean("toolbar-bottom",false))
-        // Restore the shared preference used by subsequent tests.
-        compose.onNodeWithTag("ink-more").performClick();compose.onNodeWithTag("toolbar-position").performClick()
+        compose.onNodeWithTag("ink-tool-0").performClick()
+        val before=compose.onNodeWithTag("floating-pen-case").fetchSemanticsNode().boundsInRoot
+        compose.onNodeWithTag("pen-case-handle").performTouchInput{swipe(center,center+Offset(150f,20f),400)}
+        assertTrue(compose.onNodeWithTag("floating-pen-case").fetchSemanticsNode().boundsInRoot.left>before.left)
+
     }
     @Test fun closingDirtyTextTabPreservesTheDraft(){
         val id=create();compose.onNodeWithTag("document-more").performClick();compose.onNodeWithTag("mode-text").performClick()

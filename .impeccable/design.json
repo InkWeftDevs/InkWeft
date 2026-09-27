@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-09-27T02:50:55.520Z",
+  "generatedAt": "2026-09-27T04:32:38.9695556Z",
   "title": "Design System: 墨织 Android 编辑器",
   "extensions": {
     "colorMeta": {
@@ -147,9 +147,19 @@
     },
     "shadows": [
       {
+        "name": "floating-pen-case",
+        "value": "shadowElevation = 4.dp",
+        "purpose": "可拖动笔盒悬在纸面上。"
+      },
+      {
+        "name": "selection-panel",
+        "value": "shadowElevation = 3.dp",
+        "purpose": "临时选择与对象操作表面。"
+      },
+      {
         "name": "typed-page-surface",
         "value": "shadowElevation = 1.dp",
-        "purpose": "仅用于 NotebookApp 的键入文字页；不是 EditorPanel 的阴影令牌。"
+        "purpose": "独立键入文字页的编辑表面。"
       }
     ],
     "platform": {
@@ -158,7 +168,9 @@
       "previewStates": "hover、focus-visible、active 仅使浏览器示意可交互，不能证明 Android 实现这些 CSS 状态。",
       "ramps": "tonalRamp 为按源色转换后固定色相、色度生成的展示辅助色阶；未用于应用，不构成规范令牌。超出显示色域的颜色由预览环境处理。",
       "defaults": "未显式覆盖的 Button、FilterChip、OutlinedTextField 参数由 Material 3 提供。示意中的浏览器默认尺寸和圆角不能用来覆盖 Compose。",
-      "layout": "EditorPanel 最大 380dp × 600dp，外留 12dp，右侧居中，safeDrawing + imePadding；PenPresetMenu 宽 320dp。未定义独立响应式断点。"
+      "layout": "顶部文档导航最小 48dp；笔盒宽 64dp，高度不超过承载区域，超高可滚动。48dp 拖动柄与常用工具，56dp 自动美化开关；位置按可移动空间比例保存并限制在边界内。笔参数菜单 320dp，字体菜单 292dp。EditorPanel 最大 380dp × 600dp，外留 12dp，safeDrawing + imePadding。选择表面最大 620dp。无独立手机／平板断点。",
+      "behavior": "有限纸张默认连续，正常页间距为零，接缝可书写和擦除；精确套索、框选美化、对象编辑回单页。自动美化默认关闭，停止书写且提交稳定后等待 750ms 本地 OCR；框选字体转换直接执行。识别可能出错，保留原迹与恢复入口。单页缩放／拖动受纸面边界限制。",
+      "verificationScope": "设计说明来自当前源码与已有平板、窄屏／放大字号、选择和擦除截图核对；截图和自动化结果不等同于真实压力、掌拒、延迟或笔感验收。"
     }
   },
   "components": [
@@ -166,8 +178,8 @@
       "name": "主按钮",
       "kind": "button",
       "refersTo": "button-primary",
-      "description": "提交当前任务；示意采用主题颜色，原生尺寸与状态以 Material 3 为准。",
-      "html": "<div class=\"ds-example\"><button class=\"ds-primary\">应用美化</button></div>",
+      "description": "保存笔预设等需要提交的任务；自动与框选字体转换直接执行，不使用该确认按钮。",
+      "html": "<div class=\"ds-example\"><button class=\"ds-primary\">保存到此笔</button></div>",
       "css": ".ds-example{font-family:system-ui,sans-serif;color:#22272e}.ds-example button{font:inherit;cursor:pointer}.ds-example button:focus-visible,.ds-example input:focus-visible{outline:2px solid #236653;outline-offset:2px}.ds-example button:hover{filter:brightness(.97)}.ds-example button:active{filter:brightness(.93)}.ds-primary{border:0;border-radius:24px;padding:8px 16px;background:#236653;color:#fff}"
     },
     {
@@ -188,16 +200,16 @@
     {
       "name": "文档动作",
       "kind": "nav",
-      "description": "复现图标配中文动作的层级；示意图标内联，不加载外部素材。",
-      "html": "<nav class=\"ds-example ds-nav\" aria-label=\"文档动作\"><button><svg viewBox=\"0 0 24 24\" width=\"20\" height=\"20\" aria-hidden=\"true\"><path d=\"M4 4h16v16H4zM8 4v16M4 9h16M4 14h16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"/></svg>页面</button><button>＋ 加页</button></nav>",
-      "css": ".ds-example{font-family:system-ui,sans-serif;color:#22272e}.ds-example button{font:inherit;cursor:pointer}.ds-example button:focus-visible,.ds-example input:focus-visible{outline:2px solid #236653;outline-offset:2px}.ds-example button:hover{filter:brightness(.97)}.ds-example button:active{filter:brightness(.93)}.ds-nav{display:flex;background:#f7f8fa}.ds-nav button{display:flex;align-items:center;gap:6px;min-height:48px;padding:0 10px;color:#236653;border:0;background:transparent}"
+      "description": "小型顶部文档导航示意：图标配中文可访问名称，标题单行省略；顶部原生最小高度 48dp。",
+      "html": "<nav class=\"ds-example ds-nav\" aria-label=\"文档导航\"><button aria-label=\"返回资料库\">←</button><span>课堂笔记</span><button aria-label=\"页面\"><svg viewBox=\"0 0 24 24\" width=\"24\" height=\"24\" aria-hidden=\"true\"><path d=\"M4 4h16v16H4zM8 4v16M4 9h16M4 14h16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"/></svg></button><button aria-label=\"加页\">＋</button><button aria-label=\"查找\"><svg viewBox=\"0 0 24 24\" width=\"24\" height=\"24\" aria-hidden=\"true\"><circle cx=\"10\" cy=\"10\" r=\"6\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"/><path d=\"m15 15 6 6\" stroke=\"currentColor\" stroke-width=\"2\"/></svg></button><button aria-label=\"文档选项\">⋯</button></nav>",
+      "css": ".ds-example{font-family:system-ui,sans-serif;color:#22272e}.ds-nav{display:flex;align-items:center;gap:4px;background:#fff;min-height:48px;padding:0 8px;border-bottom:1px solid #dee2e6}.ds-nav span{flex:1;min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;color:#236653}.ds-nav button{display:flex;align-items:center;justify-content:center;min-width:40px;min-height:48px;border:0;background:transparent;color:#22272e;font:inherit;cursor:pointer}.ds-nav button:hover{background:#f7f8fa}.ds-nav button:active{background:#eaf3ee}.ds-nav button:focus-visible{outline:2px solid #236653;outline-offset:2px}"
     },
     {
-      "name": "选项芯片",
+      "name": "字体选项",
       "kind": "chip",
-      "description": "预设选态示意；原生使用 FilterChip。",
-      "html": "<div class=\"ds-example ds-chips\"><button aria-pressed=\"false\">细</button><button aria-pressed=\"true\">中</button><button aria-pressed=\"false\">粗</button></div>",
-      "css": ".ds-example{font-family:system-ui,sans-serif;color:#22272e}.ds-example button{font:inherit;cursor:pointer}.ds-example button:focus-visible,.ds-example input:focus-visible{outline:2px solid #236653;outline-offset:2px}.ds-example button:hover{filter:brightness(.97)}.ds-example button:active{filter:brightness(.93)}.ds-chips{display:flex;gap:6px}.ds-chips button{padding:6px 12px;border:1px solid #7e8792;border-radius:8px;background:#fff;color:#5e6670}.ds-chips button[aria-pressed=true]{background:#eaf3ee;color:#236653;border-color:#eaf3ee}"
+      "description": "字体采用 FilterChip 流式换行；选态对应内容字体，不改变界面字体。",
+      "html": "<div class=\"ds-example ds-chips\"><button aria-pressed=\"false\">系统黑体</button><button aria-pressed=\"true\">霞鹜文楷</button><button aria-pressed=\"false\">系统衬线</button></div>",
+      "css": ".ds-example{font-family:system-ui,sans-serif;color:#22272e}.ds-example button{font:inherit;cursor:pointer}.ds-example button:focus-visible,.ds-example input:focus-visible{outline:2px solid #236653;outline-offset:2px}.ds-example button:hover{filter:brightness(.97)}.ds-example button:active{filter:brightness(.93)}.ds-chips{display:flex;flex-wrap:wrap;gap:6px}.ds-chips button{padding:6px 12px;border:1px solid #7e8792;border-radius:8px;background:#fff;color:#5e6670}.ds-chips button[aria-pressed=true]{background:#eaf3ee;color:#236653;border-color:#eaf3ee}"
     },
     {
       "name": "紧凑参数浮层",
@@ -208,22 +220,30 @@
       "css": ".ds-example{font-family:system-ui,sans-serif;color:#22272e}.ds-example button{font:inherit;cursor:pointer}.ds-example button:focus-visible,.ds-example input:focus-visible{outline:2px solid #236653;outline-offset:2px}.ds-example button:hover{filter:brightness(.97)}.ds-example button:active{filter:brightness(.93)}.ds-panel{max-width:380px;border-radius:16px;background:#fff;border:1px solid #dee2e6;overflow:hidden}.ds-panel header{display:flex;align-items:center;justify-content:space-between;padding:2px 4px 2px 16px;font-size:20px;font-weight:500;border-bottom:1px solid #dee2e6}.ds-panel button{border:0;background:transparent;color:#236653;padding:8px 12px}.ds-panel-content{padding:8px 16px;font-size:14px}.ds-panel footer{display:flex;justify-content:flex-end;padding:4px 12px;background:#f7f8fa}"
     },
     {
-      "name": "选中工具",
+      "name": "图示浮动笔盒",
       "kind": "custom",
-      "refersTo": "editor-tool-selected",
-      "description": "工具图标、中文名称与选态；示意尺寸对应 Compose 的 dp 数字，不声称物理像素等价。",
-      "html": "<div class=\"ds-example\"><button class=\"ds-tool\" aria-pressed=\"true\"><svg viewBox=\"0 0 24 24\" width=\"24\" height=\"24\" aria-hidden=\"true\"><path d=\"m5 16-1 4 4-1L20 7l-3-3L5 16zm10-10 3 3\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"/></svg><span>书写</span></button></div>",
-      "css": ".ds-example{font-family:system-ui,sans-serif;color:#22272e}.ds-example button{font:inherit;cursor:pointer}.ds-example button:focus-visible,.ds-example input:focus-visible{outline:2px solid #236653;outline-offset:2px}.ds-example button:hover{filter:brightness(.97)}.ds-example button:active{filter:brightness(.93)}.ds-tool{display:flex;flex-direction:column;align-items:center;gap:2px;min-height:56px;border:0;border-radius:12px;padding:5px 4px;background:#eaf3ee;color:#236653;font-weight:600}"
+      "refersTo": "floating-pen-case",
+      "description": "原生笔盒宽 64dp、拖动柄与笔按钮 48dp、笔形 32 × 42dp。此示意展示形状与选态，不实现拖动、保存或原生阴影。",
+      "html": "<aside class=\"ds-case\" aria-label=\"笔盒\"><button class=\"ds-handle\" aria-label=\"拖动笔盒\"><svg viewBox=\"0 0 24 16\" width=\"24\" height=\"16\" aria-hidden=\"true\"><g fill=\"currentColor\"><circle cx=\"4\" cy=\"4\" r=\"1.7\"/><circle cx=\"12\" cy=\"4\" r=\"1.7\"/><circle cx=\"20\" cy=\"4\" r=\"1.7\"/><circle cx=\"4\" cy=\"12\" r=\"1.7\"/><circle cx=\"12\" cy=\"12\" r=\"1.7\"/><circle cx=\"20\" cy=\"12\" r=\"1.7\"/></g></svg></button><button aria-label=\"常用笔，再点调整\" aria-pressed=\"true\"><svg class=\"ds-pen\" width=\"32\" height=\"42\" viewBox=\"0 0 32 42\" aria-hidden=\"true\"><path d=\"m16 2 6 13-6 5-6-5z\" fill=\"#d4dbd8\" stroke=\"#263e34\"/><path d=\"M16 3v12\" stroke=\"#263e34\"/><rect x=\"11\" y=\"20\" width=\"10\" height=\"22\" rx=\"3\" fill=\"#24342f\"/></svg></button><button aria-label=\"橡皮\"><svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"m3 15 11-11 7 7-10 10H7zM11 21h10\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"/></svg></button><button class=\"ds-auto\" aria-pressed=\"false\" aria-label=\"自动美化\"><svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"m4 20 12-12 4 4L8 24zM6 2v8M2 6h8M19 1v6M16 4h6\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\"/></svg><span>自动美化</span></button><button aria-label=\"美化字体与框选美化\"><svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M3 6h18M3 12h18M3 18h18M8 3v6M16 9v6M10 15v6\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"/></svg></button><button aria-label=\"图片、拍照与文本框\">＋</button><button aria-label=\"更多工具\">⋯</button></aside>",
+      "css": ".ds-case{display:flex;flex-direction:column;align-items:center;width:64px;max-height:520px;overflow:auto;background:#fff;color:#22272e;border:1px solid #dee2e6;border-radius:16px;font-family:system-ui,sans-serif}.ds-case button{display:flex;align-items:center;justify-content:center;flex-shrink:0;width:48px;height:48px;border:0;background:transparent;color:inherit;cursor:pointer;font-size:20px}.ds-case .ds-handle{color:#596963;cursor:grab}.ds-case .ds-pen{border-radius:8px;background:#eaf3ee}.ds-case .ds-auto{width:56px;height:56px;flex-direction:column;color:#5e6670}.ds-auto span{font-size:10px}.ds-case button:hover{background:#f7f8fa}.ds-case button:active{background:#eaf3ee}.ds-case button:focus-visible{outline:2px solid #236653;outline-offset:-2px}"
+    },
+    {
+      "name": "选择反馈",
+      "kind": "custom",
+      "refersTo": "selection-panel",
+      "description": "实际套索边界使用浅绿填充与虚线，选中对象另有细框。示意不执行删除；删除对象以完整包围为准。",
+      "html": "<section class=\"ds-selection\"><div class=\"ds-selection-actions\"><span>自由套索</span><button>删除选中的美化文字</button></div><svg viewBox=\"0 0 300 160\" width=\"300\" height=\"160\" aria-label=\"套索内文字 IN 已选中，OUT 位于圈外\"><path d=\"M10 10H280L10 150Z\" fill=\"#216b5910\" stroke=\"#216b59\" stroke-width=\"1.5\" stroke-dasharray=\"6 4\"/><rect x=\"30\" y=\"30\" width=\"55\" height=\"42\" fill=\"none\" stroke=\"#216b5977\"/><text x=\"35\" y=\"61\" font-size=\"24\">IN</text><text x=\"185\" y=\"138\" font-size=\"24\">OUT</text></svg></section>",
+      "css": ".ds-selection{font-family:system-ui,sans-serif;color:#22272e;max-width:620px}.ds-selection-actions{display:flex;gap:8px;align-items:center;overflow:auto;padding:8px 12px;border:1px solid #dee2e6;border-radius:12px;background:#fff;white-space:nowrap}.ds-selection-actions span{padding:6px 12px;background:#eaf3ee;color:#236653;border-radius:8px}.ds-selection-actions button{font:inherit;border:0;background:transparent;color:#236653;min-height:48px;cursor:pointer}.ds-selection-actions button:hover{background:#f7f8fa}.ds-selection-actions button:active{background:#eaf3ee}.ds-selection-actions button:focus-visible{outline:2px solid #236653;outline-offset:2px}.ds-selection svg{max-width:100%;fill:#22272e}"
     }
   ],
   "narrative": {
     "northStar": "紧凑书写工作台",
-    "overview": "白纸承担内容，石墨色承担阅读，森林绿指明当前工具与主要动作，浅灰区分工具和纸面。手写记录与 PDF 批注同等重要；编辑器首先让用户找到工具、在纸面操作、查看结果，再回到书写。\n\n参数靠近任务，以随内容收缩的浮层呈现。常用工具保留中文名称，说明按需展开，避免解释文字和空白挤占纸面。这一方向来自 `EditorControls.kt` 的方向契约与 `PRODUCT.md` 的已确认偏好。\n\n本文件记录当前 Android 原生实现，颜色与字阶来源为 `android/app/src/main/java/org/inkweft/app/ui/designsystem/InkTheme.kt`。前置字段中的尺寸使用 Android 的 dp／sp，不应直接当作网页 px。未显式覆盖的组件外观和交互采用项目所用 Material 3 默认值；不在这里补造一套数值。范围为应用界面，不覆盖用户文档的配色与排版。",
+    "overview": "白纸承担内容，石墨色承担阅读，森林绿指明当前工具与主要动作，浅灰区分工具和纸面。手写记录与 PDF 批注同等重要；编辑器先让用户落笔，再在需要时展开参数与整理工具。\n\n当前编辑器采用小型顶部导航、可自由拖动的图示笔盒和底部页码／历史状态。常用笔以可辨认的笔形呈现，参数靠近入口展开，纸面连续铺开。此布局替换此前固定多行工具区；界面文字保留清楚的中文任务名称，纯图标补充中文可访问名称。\n\n本文件记录当前 Android 原生实现。颜色与字阶来自 InkTheme.kt，布局与行为以 BookInkScreen.kt、InkScreen.kt、FloatingPenCase.kt 等当前代码为准。尺寸使用 dp／sp；未显式覆盖的组件外观采用 Material 3 默认值。范围为应用界面，不重写用户文档的配色与排版。",
     "keyCharacteristics": [
-      "白纸与浅灰工具区分层。",
-      "森林绿选态配合图标和中文名称。",
-      "常用入口可见，参数浮层紧凑。",
-      "先预览再应用，错误就地给出下一步。"
+      "白纸连续铺开，常用操作围绕纸面。",
+      "森林绿选态配合笔形、图标与中文可访问名称。",
+      "笔盒自由拖动，参数按需展开。",
+      "字体转换直接执行，状态就地反馈，原迹可恢复。"
     ],
     "rules": [
       {
@@ -233,28 +253,28 @@
       },
       {
         "name": "保留纸面",
-        "body": "参数内容能收缩就收缩，解释按需展开；增加选项时优先复用当前工具行或浮层，不长期占用新的纸面区域。",
+        "body": "常用工具留在浮动笔盒，参数与说明按需展开；新增选项优先进入对应菜单或任务面板，不恢复固定多行工具区。",
         "section": "layout"
       },
       {
-        "name": "如实预览",
-        "body": "字体美化是选区 OCR 后换字，不能写成实时自动换字。应用保留原迹关联；通过插入模式选择转换后的文字，可执行“恢复原迹”。",
+        "name": "原迹可恢复",
+        "body": "自动与框选字体美化保留来源笔迹关联；识别仍可能出错。用户可在单页插入／对象模式选择美化文字后编辑，或执行“恢复原迹”；转换、删除与恢复遵循现有撤销历史。",
         "section": "components"
       }
     ],
     "dos": [
-      "**Do** 保留六个常用工具的中文名称，让美化和查找入口直接可见。",
-      "**Do** 复用紧凑浮层、当前工具选项行与按需展开的帮助。",
-      "**Do** 在预览、忙碌、空结果、错误和待核对状态给出符合真实行为的反馈。",
-      "**Do** 区分界面主题与用户内容样式，保持保存、撤销和原迹恢复边界。",
-      "**Do** 将新增真机验证需求维护到 `android/DEVICE-TEST-CHECKLIST.md`，按设备与版本记录结果。"
+      "**Do** 用图示常用笔、中文可访问名称与可辨认的选态保持工具清晰。",
+      "**Do** 保留笔盒拖动柄、位置边界和超高滚动，字体与笔参数按需展开。",
+      "**Do** 在识别、保存、错误和待核对状态给出实际可用的下一步。",
+      "**Do** 保留原迹关联、明确恢复入口以及跨页操作的成组历史。",
+      "**Do** 将硬件能力与设备实测结果维护到真机测试清单。"
     ],
     "donts": [
-      "**Don't** 把内部索引、派生数据或存储术语作为主要操作名称。",
-      "**Don't** 用常驻长说明和空白扩张参数面板。",
-      "**Don't** 将选区换字体描述为实时自动美化，或将当前查找描述为 PDF 全文搜索。",
-      "**Don't** 将系统夜间模式下可读描述为已提供深色主题。",
-      "**Don't** 将局部界面复核、模拟输入或截图检查扩大成全功能、压感、掌拒或笔感认证。"
+      "**Don't** 恢复固定多行工具与参数区，长期压缩纸面。",
+      "**Don't** 给自动或框选字体转换增加逐次预览确认，也不要将停笔 OCR 宣称为逐点实时字形生成。",
+      "**Don't** 用选区外接矩形代替自由套索形状删除对象，或把整项文字擦除描述为局部字符擦除。",
+      "**Don't** 将查找描述为 PDF 全文搜索，或将现有浅色主题描述为完整深色主题。",
+      "**Don't** 将截图、模拟输入或局部自动化通过扩大成全功能、压感、掌拒或笔感认证。"
     ]
   }
 }

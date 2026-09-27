@@ -25,7 +25,7 @@ class NotebookMenuUiTest {
         compose.onAllNodesWithText("云同步").assertCountEquals(0);compose.onAllNodesWithText("添加锁").assertCountEquals(0)
         val bmp=checkNotNull(InstrumentationRegistry.getInstrumentation().uiAutomation.takeScreenshot())
         try{File(compose.activity.getExternalFilesDir(null),"shelf-note-menu.png").outputStream().use{bmp.compress(Bitmap.CompressFormat.PNG,100,it)}}finally{bmp.recycle()}
-        compose.onNodeWithText("打开笔记").performClick()
+        compose.onNodeWithText("打开笔记").performClick();compose.singlePageEditor()
         compose.waitUntil(10_000){compose.onAllNodesWithTag("ink-surface").fetchSemanticsNodes().isNotEmpty()}
         assertEquals(n.id,runBlocking{app.repository.read(n.id)}?.id)
     }

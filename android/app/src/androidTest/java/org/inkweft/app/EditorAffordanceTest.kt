@@ -26,7 +26,7 @@ class EditorAffordanceTest {
     private fun saved(count:Int){compose.waitUntil(10_000){runCatching{compose.onNodeWithTag("ink-status").assertTextContains("已保存",substring=true).assertTextContains("$count 笔",substring=true)}.isSuccess}}
     private fun create():String{
         ready();val title="AFFORDANCE-"+UUID.randomUUID().toString().take(8)
-        compose.onNodeWithTag("new-note").performClick();compose.onNodeWithTag("create-page").performClick();compose.onNodeWithTag("new-title").performTextInput(title);compose.onNodeWithTag("cover-choice-content").performScrollTo().performClick();compose.onNodeWithTag("create-note").performClick();saved(0)
+        compose.onNodeWithTag("new-note").performClick();compose.onNodeWithTag("create-page").performClick();compose.onNodeWithTag("new-title").performTextInput(title);compose.onNodeWithTag("cover-choice-content").performScrollTo().performClick();compose.onNodeWithTag("create-note").performClick();compose.singlePageEditor();saved(0)
         compose.activityRule.scenario.onActivity{a->a.currentFocus?.clearFocus();WindowCompat.getInsetsController(a.window,a.window.decorView).hide(WindowInsetsCompat.Type.ime())}
         compose.waitUntil(10_000){androidx.core.view.ViewCompat.getRootWindowInsets(compose.activity.window.decorView)?.isVisible(WindowInsetsCompat.Type.ime())==false};compose.waitForIdle()
         return runBlocking{app.repository.observeNotes().first()}.single{it.title==title}.id
@@ -59,7 +59,7 @@ class EditorAffordanceTest {
     @Test fun visibleWidthPresetsAffectOnlyNewStrokesAndSurviveRecreate(){
         val id=create()
         fun choose(index:Int){
-            compose.onNodeWithTag("pen-width-open").performScrollTo().performClick();compose.onNodeWithTag("pen-width-dialog").assertIsDisplayed()
+            compose.openCurrentPen();compose.onNodeWithTag("pen-width-dialog").assertIsDisplayed()
             compose.onNodeWithTag("width-preset-$index").performScrollTo().performClick();compose.onNodeWithTag("apply-pen-width").performScrollTo().performClick();compose.waitForIdle()
         }
         choose(2)
@@ -70,7 +70,7 @@ class EditorAffordanceTest {
         val paths=runBlocking{app.inkRepository.read(id).strokes.map{it.stroke}}
         assertEquals(6f,paths[0].width,0f);assertEquals(1.5f,paths[1].width,0f);assertEquals(first.samples,paths[0].samples)
         compose.activityRule.scenario.recreate();saved(2)
-        compose.onNodeWithTag("pen-width-open").performScrollTo().performClick();compose.onNodeWithTag("pen-width-value").assertTextEquals("线宽 1.5");shot("pen-width-emulator.png")
+        compose.openCurrentPen();compose.onNodeWithTag("pen-width-value").assertTextEquals("线宽 1.5");shot("pen-width-emulator.png")
         compose.onNodeWithTag("apply-pen-width").performScrollTo().performClick()
     }
     @Test fun widthSettingsHaveIndependentSlotsAndRealFileRoundTrip(){

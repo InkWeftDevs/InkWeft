@@ -28,13 +28,13 @@ class PageObjectsUiTest {
         compose.waitUntil(10_000){runCatching{compose.onNodeWithTag("new-note").assertIsEnabled()}.isSuccess}
         val title="页内对象-"+UUID.randomUUID().toString().take(6)
         compose.onNodeWithTag("new-note").performClick();compose.onNodeWithTag("create-page").performClick()
-        compose.onNodeWithTag("new-title").performTextInput(title);compose.onNodeWithTag("create-note").performClick()
+        compose.onNodeWithTag("new-title").performTextInput(title);compose.onNodeWithTag("create-note").performClick();compose.singlePageEditor()
         compose.waitUntil(10_000){runCatching{compose.onNodeWithTag("ink-status").assertTextContains("已保存",substring=true)}.isSuccess}
         hideKeyboard();compose.onNodeWithTag("page-objects").performClick()
         return runBlocking{app.repository.observeNotes().first()}.single{it.title==title}.id
     }
     private fun objects(id:String)=runBlocking{app.pageObjects.read(id).objects}
-    private fun count(id:String,n:Int){compose.waitUntil(10_000){objects(id).size==n};compose.waitUntil(10_000){runCatching{compose.onNodeWithTag("object-text").assertIsEnabled()}.isSuccess}}
+    private fun count(id:String,n:Int){compose.waitUntil(10_000){objects(id).size==n};compose.waitUntil(10_000){app.navigationReady.value}}
     private fun capture(name:String){val b=checkNotNull(InstrumentationRegistry.getInstrumentation().uiAutomation.takeScreenshot());try{File(compose.activity.getExternalFilesDir(null),name).outputStream().use{b.compress(Bitmap.CompressFormat.PNG,100,it)}}finally{b.recycle()}}
     private fun position(o:PageObject,corner:Boolean=false):Offset {
         var result=Offset.Zero
@@ -63,9 +63,9 @@ class PageObjectsUiTest {
         compose.onNodeWithTag("object-edit-text").performClick();compose.onNodeWithTag("object-text-input").performTextReplacement("修改后文字\n独立保存")
         compose.onNodeWithTag("object-text-save").performClick();compose.waitUntil(10_000){objects(id).single().text.startsWith("修改后")};hideKeyboard()
         compose.onNodeWithTag("object-copy").performClick();count(id,2)
-        compose.onNodeWithTag("object-delete").performClick();count(id,1)
-        compose.onNodeWithTag("object-undo").performScrollTo().performClick();count(id,2)
-        compose.onNodeWithTag("object-redo").performScrollTo().performClick();count(id,1)
+        compose.onNodeWithTag("object-delete").performScrollTo().performClick();count(id,1)
+        compose.onNodeWithTag("ink-undo").performScrollTo().performClick();count(id,2)
+        compose.onNodeWithTag("ink-redo").performScrollTo().performClick();count(id,1)
         compose.onNodeWithTag("object-tape").performScrollTo().performClick();count(id,2)
         assertFalse(objects(id).last().revealed)
         compose.onNodeWithTag("object-reveal").performClick();compose.waitUntil(10_000){objects(id).last().revealed}

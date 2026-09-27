@@ -32,7 +32,31 @@ interface InkDao {
     @Query("UPDATE ink_strokes SET visible=:visible WHERE noteId=:noteId AND id IN (:ids)") suspend fun setVisibility(noteId:String,ids:List<String>,visible:Boolean):Int
 }
 enum class InkFaultPoint { BEFORE_RECEIPT,AFTER_TRANSACTION }
+data class ObjectWrite(val pageId:String,val expected:Long,val commandId:String,val objects:List<PageObject>)
+data class CanvasBatchResult(val ink:List<InkCommitResult> = emptyList(),val objects:List<Long> = emptyList(),val failure:InkCommitResult?=null)
 class InkRepository(private val db:NoteDatabase,private val fault:(InkFaultPoint)->Unit={}) {
+    private class GroupAbort(val result:InkCommitResult):RuntimeException()
+    /** A seam gesture either commits on every sheet or on none; receipts make a retry idempotent. */
+    suspend fun saveGroup(commands:List<CommitInk>):List<InkCommitResult> {
+        require(commands.isNotEmpty()&&commands.map{it.noteId}.distinct().size==commands.size)
+        return try {db.withTransaction {commands.map { command ->
+            val result=save(command)
+            if(result !is InkCommitResult.Committed)throw GroupAbort(result)
+            result
+        }}}catch(e:GroupAbort){commands.map{e.result}}
+    }
+    suspend fun saveCanvasBatch(commands:List<CommitInk>,objects:List<ObjectWrite>):CanvasBatchResult {
+        require(commands.isNotEmpty()||objects.isNotEmpty())
+        require(objects.map{it.pageId}.distinct().size==objects.size)
+        return try{db.withTransaction {
+            val ink=if(commands.isEmpty())emptyList()else saveGroup(commands)
+            ink.firstOrNull{it !is InkCommitResult.Committed}?.let{throw GroupAbort(it)}
+            val objectRepo=PageObjectRepository(db)
+            val revisions=objects.map{objectRepo.save(it.pageId,it.expected,it.commandId,it.objects)}
+            CanvasBatchResult(ink,revisions)
+        }}catch(e:GroupAbort){CanvasBatchResult(failure=e.result)}
+        catch(_:IllegalArgumentException){CanvasBatchResult(failure=InkCommitResult.Conflict)}
+    }
     private val dao=db.ink()
     private suspend fun owner(id:String)=db.pages().get(id)?:NotebookPages(db).ensureFirst(id)
     suspend fun read(noteId:String):InkPage=db.withTransaction {

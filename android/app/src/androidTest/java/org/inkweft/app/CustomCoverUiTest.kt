@@ -43,7 +43,7 @@ class CustomCoverUiTest {
         ready();compose.onNodeWithTag("new-note").performClick();compose.onNodeWithTag("create-page").performClick()
         compose.onNodeWithTag("new-custom-cover").performScrollTo().performClick();compose.onNodeWithTag("cover-custom").performScrollTo().performClick()
         compose.onNodeWithTag("cover-title").performScrollTo().performTextReplacement("新建时的封面")
-        compose.onNodeWithTag("confirm-cover").performClick();compose.onNodeWithTag("create-note").performClick()
+        compose.onNodeWithTag("confirm-cover").performClick();compose.onNodeWithTag("create-note").performClick();compose.singlePageEditor()
         compose.waitUntil(15000){runCatching{compose.onNodeWithTag("ink-status").assertTextContains("已保存",substring=true)}.isSuccess}
         val n=androidx.lifecycle.ViewModelProvider(compose.activity)[NotebookViewModel::class.java].ui.value.current!!.base
         val c=runBlocking{app.workspaceRepository.customCover(n.id)}!!;assertEquals("新建时的封面",CustomCoverCodec.decode(c).title)

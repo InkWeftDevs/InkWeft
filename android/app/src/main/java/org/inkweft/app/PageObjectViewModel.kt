@@ -17,7 +17,60 @@ internal class PageObjectViewModel(private val pageId:String,private val repo:Pa
     private val redo=ArrayDeque<List<PageObject>>()
     private data class Pending(val id:String,val before:ObjectSnapshot,val after:List<PageObject>,val direction:Int,val expectedInk:Long?=null)
     private var pending:Pending?=null
+    private var external=false
+    private val groupUndo=java.util.IdentityHashMap<List<PageObject>,()->Unit>()
+    private val groupRedo=java.util.IdentityHashMap<List<PageObject>,()->Unit>()
     private var reading=false
+    var history:EditorHistory?=null
+    private var beautyJob:Job?=null
+    private var beautyKnown:Set<String>?=null
+    private var beautyKey:String?=null
+    private var latestInk=InkUi()
+    private var lastAutomatic:String?=null
+    private val beautyState=MutableStateFlow<String?>(null)
+    val beautyStatus=beautyState.asStateFlow()
+    fun observeBeauty(ink:InkUi,writing:Boolean,options:BeautyOptions,world:Boolean,app:InkWeftApplication){
+        latestInk=ink
+        if(!options.enabled){beautyJob?.cancel();beautyJob=null;beautyKnown=null;beautyKey=null;beautyState.value=null;return}
+        if(ink.loading)return
+        if(beautyKnown==null){beautyKnown=ink.strokes.map{it.id}.toSet();return}
+        if(writing||ink.queued>0||ink.processing){beautyJob?.cancel();beautyJob=null;beautyKey=null;beautyState.value=null;return}
+        if(ink.blocked!=null||ink.readFailed||state.value.loading||state.value.busy||state.value.pending)return
+        val suppressed=snapshot.objects.flatMap{it.sourceStrokeIds}.toSet()
+        val fresh=ink.strokes.filter{it.id !in beautyKnown!!&&it.id !in suppressed&&it.pen!=InkPen.HIGHLIGHTER}
+        if(fresh.isEmpty())return
+        val key="${ink.revision}:$options"
+        if(key==beautyKey)return
+        beautyKey=key;beautyJob?.cancel()
+        beautyJob=viewModelScope.launch {
+            delay(750)
+            val previous=snapshot.objects.find{it.id==lastAutomatic&&!it.hidden}
+            val freshBounds=fresh.map{it.bounds()}.reduce{a,b->a.union(b)}
+            val merge=previous?.takeIf{it.bounds().padded(options.size*2.0).intersects(freshBounds)}
+            val sources=(if(merge==null)emptyList()else ink.strokes.filter{it.id in merge.sourceStrokeIds})+fresh
+            if(sources.size>256){beautyState.value="这段字较长，可分段框选美化";return@launch}
+            convertBeauty(sources,ink.revision,options,world,app,merge?.id,true)
+        }
+    }
+    fun beautify(selection:SelectedInk,options:BeautyOptions,world:Boolean,app:InkWeftApplication){
+        beautyJob?.cancel()
+        beautyJob=viewModelScope.launch{convertBeauty(selection.strokes.filter{it.pen!=InkPen.HIGHLIGHTER},selection.revision,options,world,app,null,false)}
+    }
+    private suspend fun convertBeauty(strokes:List<InkStroke>,revision:Long,options:BeautyOptions,world:Boolean,app:InkWeftApplication,replace:String?,automatic:Boolean){
+        if(strokes.isEmpty()||strokes.size>256)return
+        val objectRevision=snapshot.revision
+        beautyState.value="正在美化…"
+        try{
+            val result=app.handwriting.recognize(strokes){_,_->}
+            if(snapshot.revision!=objectRevision||state.value.busy||state.value.pending||latestInk.queued>0||latestInk.revision!=revision){beautyState.value=null;return}
+            if(result.text.isBlank()){beautyState.value="未识别到文字，已保留原迹";return}
+            val o=beautyObject(strokes,result.text,options,world,replace?:UUID.randomUUID().toString())
+            change(snapshot.objects.filterNot{it.id==replace}+o,expectedInk=revision)
+            if(automatic){lastAutomatic=o.id;beautyKnown=beautyKnown.orEmpty()+strokes.map{it.id}}
+            beautyState.value=null
+        }catch(c:CancellationException){beautyState.value=null;throw c}
+        catch(_:Exception){beautyState.value="这段字暂未美化，已保留原迹"}
+    }
     init{reload()}
     fun reload(){if(state.value.busy||reading)return;reading=true;viewModelScope.launch{
         state.value=state.value.copy(loading=true)
@@ -30,21 +83,51 @@ internal class PageObjectViewModel(private val pageId:String,private val repo:Pa
         try{PageObjectCodec.encode(objects)}catch(_:Exception){publish("对象超过容量：每页最多 32 项、图片与对象总计约 1.6 MB。请减少图片后重试。");return}
         pending=Pending(UUID.randomUUID().toString(),snapshot,objects.toList(),direction,expectedInk);retry()
     }
-    fun retry(){val p=pending?:return;if(state.value.busy)return
+    fun retry(){val p=pending?:return;if(state.value.busy||external)return
         state.value=state.value.copy(objects=p.after,busy=true,pending=true,error=null)
         viewModelScope.launch{
             try{
                 val revision=withContext(Dispatchers.IO){repo.save(pageId,p.before.revision,p.id,p.after,p.expectedInk)}
-                when(p.direction){-1->{undo.removeLast();redo.addLast(p.before.objects)};1->{redo.removeLast();undo.addLast(p.before.objects)};else->{undo.addLast(p.before.objects);redo.clear()}}
-                while(undo.size>10)undo.removeFirst()
-                snapshot=ObjectSnapshot(revision,p.after);pending=null;publish()
+                completeExternal(revision)
             }catch(c:CancellationException){throw c}catch(_:Exception){publish("对象保存尚未确认。请核对重试；如有版本冲突，可重新读取已保存对象。")}
         }
     }
-    fun undo(){if(undo.isNotEmpty())change(undo.last(),-1)}
-    fun redo(){if(redo.isNotEmpty())change(redo.last(),1)}
+    internal fun validateExternal(objects:List<PageObject>){check(!state.value.loading&&!state.value.busy&&!state.value.pending);PageObjectCodec.encode(objects)}
+    internal fun prepareExternal(objects:List<PageObject>,direction:Int=0):ObjectWrite {
+        validateExternal(objects);val p=Pending(UUID.randomUUID().toString(),snapshot,objects.toList(),direction)
+        pending=p;external=true;state.value=state.value.copy(objects=p.after,busy=true,pending=true,error=null)
+        return ObjectWrite(pageId,p.before.revision,p.id,p.after)
+    }
+    internal fun completeExternal(revision:Long){
+        val p=checkNotNull(pending)
+        when(p.direction){-1->{undo.removeLast();redo.addLast(p.before.objects)};1->{redo.removeLast();undo.addLast(p.before.objects)};else->{undo.addLast(p.before.objects);redo.clear()}}
+        while(undo.size>10)undo.removeFirst()
+        snapshot=ObjectSnapshot(revision,p.after);pending=null;external=false;history?.committed(EditDomain.OBJECT,p.direction);publish()
+    }
+    internal fun discardExternal(){external=false;state.value=state.value.copy(busy=false);reload()}
+    internal fun historyIdentity(back:Boolean)=if(back)undo.lastOrNull()else redo.lastOrNull()
+    internal fun historyReady(back:Boolean)=!state.value.loading&&!state.value.busy&&!state.value.pending&&if(back)undo.isNotEmpty()else redo.isNotEmpty()
+    internal fun prepareHistoryGroup(back:Boolean)=prepareExternal(checkNotNull(historyIdentity(back)),if(back)-1 else 1)
+    internal fun registerGroupHistory(back:Boolean,action:()->Unit){historyIdentity(back)?.let{(if(back)groupUndo else groupRedo)[it]=action}}
+    fun undo(){if(undo.isNotEmpty()){groupUndo[undo.last()]?.let{it();return};change(undo.last(),-1)}}
+    fun redo(){if(redo.isNotEmpty()){groupRedo[redo.last()]?.let{it();return};change(redo.last(),1)}}
     fun put(value:PageObject){val old=snapshot.objects;change(if(old.any{it.id==value.id})old.map{if(it.id==value.id)value else it}else old+value)}
-    fun delete(id:String)=change(snapshot.objects.filterNot{it.id==id})
+    fun delete(id:String)=deleteObjects(setOf(id))
+    fun deleteObjects(ids:Set<String>){change(snapshot.objects.mapNotNull{if(it.id !in ids)it else if(it.sourceStrokeIds.isNotEmpty())it.copy(hidden=true)else null})}
+    fun restoreOriginal(id:String)=change(snapshot.objects.filterNot{it.id==id})
+    fun eraseBeauty(path:List<InkSample>,radius:Float){
+        if(path.isNotEmpty())change(erasedBeauty(path,radius))
+    }
+    internal fun erasedBeauty(path:List<InkSample>,radius:Float):List<PageObject>{
+        val ids=snapshot.objects.filter{!it.hidden&&it.sourceStrokeIds.isNotEmpty()&&path.zipWithNext().ifEmpty{listOf(path[0] to path[0])}.any{(a,b)->
+            // Segment/rectangle intersection, not the bounding box of an entire winding gesture.
+            val box=it.bounds().padded(radius.toDouble())
+            var lo=0.0;var hi=1.0
+            fun slab(start:Double,delta:Double,min:Double,max:Double):Boolean{if(delta==0.0)return start in min..max;val a=(min-start)/delta;val b=(max-start)/delta;lo=maxOf(lo,minOf(a,b));hi=minOf(hi,maxOf(a,b));return lo<=hi}
+            slab(a.x.toDouble(),(b.x-a.x).toDouble(),box.left,box.right)&&slab(a.y.toDouble(),(b.y-a.y).toDouble(),box.top,box.bottom)
+        }}.map{it.id}.toSet()
+        return snapshot.objects.map{if(it.id in ids)it.copy(hidden=true)else it}
+    }
     /** The ViewModel owns decoding so rotation cannot cancel an accepted camera result. */
     fun importImage(context:android.content.Context,uri:android.net.Uri,world:Boolean,viewport:CanvasViewport,
         cleanup:java.io.File?=null,onSelected:(String)->Unit={}) {
