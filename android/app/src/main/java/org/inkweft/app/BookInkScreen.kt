@@ -97,13 +97,13 @@ fun InkScreen(note:NoteDraft,workspace:WorkspaceViewModel=viewModel(),onBack:()-
         }
         HorizontalDivider(color=Line)
         if(ui.error!=null)Row(Modifier.fillMaxWidth().padding(horizontal=12.dp),verticalAlignment=Alignment.CenterVertically){Text(ui.error!!,Modifier.weight(1f),fontSize=12.sp);if(!ui.insertionUnknown&&!ui.actionUnknown)TextButton(onClick=vm::clearError){Text("知道了")}}
-        if(ui.actionUnknown)Surface(color=androidx.compose.ui.graphics.Color(0xfffff4e3)){
+        if(ui.actionUnknown)Surface(color=androidx.compose.ui.graphics.Color.White){
             Row(Modifier.fillMaxWidth().padding(horizontal=12.dp),verticalAlignment=Alignment.CenterVertically){
                 Text("页面整理结果尚待核对，原操作身份已保留。",Modifier.weight(1f),fontSize=12.sp)
                 TextButton(onClick=vm::retryPageEdit,enabled=!ui.busy,modifier=Modifier.testTag("retry-page-edit")){Text("核对页面操作")}
             }
         }
-        if(ui.insertionUnknown)Surface(color=androidx.compose.ui.graphics.Color(0xfffff4e3)){
+        if(ui.insertionUnknown)Surface(color=androidx.compose.ui.graphics.Color.White){
             Row(Modifier.fillMaxWidth().padding(horizontal=12.dp),verticalAlignment=Alignment.CenterVertically){
                 Text("上次插页尚待核对；先核对原操作，勿另建一批。",Modifier.weight(1f),fontSize=12.sp)
                 TextButton(onClick=vm::retryInsertion,enabled=!ui.busy,modifier=Modifier.testTag("retry-page-insertion")){Text("核对原插页")}

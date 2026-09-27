@@ -6,6 +6,8 @@ import android.graphics.*
 import android.view.*
 import org.inkweft.data.*
 import kotlin.math.*
+import androidx.compose.ui.graphics.toArgb
+import org.inkweft.app.ui.designsystem.InkTheme
 
 /** Bounded native map canvas. Cards own text; this view owns only temporary drag/pan. */
 internal class MindMapView(context:Context):View(context){
@@ -50,9 +52,10 @@ internal class MindMapView(context:Context):View(context){
     // AndroidView can share a Compose canvas with surrounding controls. A background
     // drawColor and transformed nodes must never paint outside this viewport.
     override fun draw(canvas:Canvas){val save=canvas.save();try{canvas.clipRect(0,0,width,height);super.draw(canvas)}finally{canvas.restoreToCount(save)}}
-    override fun onDraw(c:Canvas){super.onDraw(c);c.drawColor(Color.rgb(248,250,249));val save=c.save();c.translate(tx,ty);c.scale(scale*d,scale*d)
-        val lookup=nodes.associateBy{it.id};paint.style=Paint.Style.STROKE;paint.strokeWidth=2f;paint.color=0xff92aaa1.toInt()
+    override fun onDraw(c:Canvas){super.onDraw(c);c.drawColor(InkTheme.Workspace.toArgb());val save=c.save();c.translate(tx,ty);c.scale(scale*d,scale*d)
+        val lookup=nodes.associateBy{it.id};paint.style=Paint.Style.STROKE;paint.strokeWidth=1.5f;paint.color=InkTheme.Divider.toArgb()
         for(n in nodes){val p=lookup[n.parentId]?:continue;val path=Path();path.moveTo(x(p)+216,y(p)+42);path.cubicTo(x(p)+244,y(p)+42,x(n)-28,y(n)+42,x(n),y(n)+42);c.drawPath(path,paint)}
+        paint.color=InkTheme.Accent.toArgb()
         for((a,b) in relationEdges){val start=lookup[a]?:continue;val end=lookup[b]?:continue
             val horizontal=abs(x(end)-x(start))>=abs(y(end)-y(start));val forward=if(horizontal)x(end)>=x(start)else y(end)>=y(start)
             val sx=x(start)+if(horizontal){if(forward)216 else 0}else 108;val ex=x(end)+if(horizontal){if(forward)0 else 216}else 108
@@ -62,13 +65,14 @@ internal class MindMapView(context:Context):View(context){
             if(relationMode){c.drawLine(ax,ay,ax-12*cos(angle-.45f),ay-12*sin(angle-.45f),paint);c.drawLine(ax,ay,ax-12*cos(angle+.45f),ay-12*sin(angle+.45f),paint)}
         }
         for(n in nodes){val left=x(n);val top=y(n);val box=RectF(left,top,left+216,top+84)
-            paint.style=Paint.Style.FILL;paint.color=if(n.id==active?.id)0xffe0f0e8.toInt()else Color.WHITE;c.drawRoundRect(box,12f,12f,paint)
-            paint.style=Paint.Style.STROKE;paint.strokeWidth=if(n.id==active?.id)2f else 1f;paint.color=0xff73a38e.toInt();c.drawRoundRect(box,12f,12f,paint)
-            paint.style=Paint.Style.FILL;paint.color=0xff20342c.toInt();paint.textSize=16f;paint.typeface=Typeface.create(Typeface.DEFAULT,Typeface.BOLD)
+            val rootNode=!relationMode&&n.parentId==null
+            paint.style=Paint.Style.FILL;paint.color=if(rootNode)InkTheme.Accent.toArgb()else if(n.id==active?.id)InkTheme.Selected.toArgb()else Color.WHITE;c.drawRoundRect(box,12f,12f,paint)
+            paint.style=Paint.Style.STROKE;paint.strokeWidth=if(n.id==active?.id)2f else 1f;paint.color=if(n.id==active?.id||rootNode)InkTheme.Accent.toArgb()else InkTheme.ControlBorder.toArgb();c.drawRoundRect(box,12f,12f,paint)
+            paint.style=Paint.Style.FILL;paint.color=if(rootNode)Color.WHITE else InkTheme.Text.toArgb();paint.textSize=16f;paint.typeface=Typeface.create(Typeface.DEFAULT,Typeface.BOLD)
             val text=titles[if(relationMode)n.id else n.cardId].orEmpty().replace('\n',' ');val n1=paint.breakText(text,true,188f,null)
             c.drawText(text.take(n1),left+14,top+30,paint);val rest=text.drop(n1);val n2=paint.breakText(rest,true,176f,null)
             c.drawText(rest.take(n2)+(if(rest.length>n2)"…"else""),left+14,top+53,paint)
-            paint.typeface=Typeface.DEFAULT;paint.textSize=10f;paint.color=0xff637b70.toInt();c.drawText(if(relationMode)"点击聚焦 · 拖动不改关系"else if((hiddenCounts[n.id]?:0)>0)"已收起 ${hiddenCounts[n.id]} 个下级 · 点击展开菜单"else"摘要卡 · 点击查看 / 拖动移动",left+14,top+73,paint)
+            paint.typeface=Typeface.DEFAULT;paint.textSize=12f;paint.color=if(rootNode)Color.WHITE else InkTheme.Secondary.toArgb();c.drawText(if((hiddenCounts[n.id]?:0)>0)"已收起 ${hiddenCounts[n.id]} 个下级"else"",left+14,top+73,paint)
         };c.restoreToCount(save)
     }
     override fun onTouchEvent(e:MotionEvent):Boolean{

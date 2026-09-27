@@ -51,7 +51,7 @@ internal data class ContinuousTools(val pen:InkPen,val color:Int,val width:Float
         info.visibleItemsInfo.minByOrNull{kotlin.math.abs(it.offset+it.size/2-mid)}?.key as? String
     }.distinctUntilChanged().collect{id->if(id!=null&&gestureOwner==null&&latestPages.any{it.id==id}){reported=id;latestSelect(id)}}}
     Box(Modifier.fillMaxSize()){
-    LazyColumn(state=state,userScrollEnabled=!writing,modifier=Modifier.fillMaxSize().background(Color(0xffeef1f3)).testTag("continuous-pages"),
+    LazyColumn(state=state,userScrollEnabled=!writing,modifier=Modifier.fillMaxSize().background(Color.White).testTag("continuous-pages"),
         contentPadding=PaddingValues(0.dp),verticalArrangement=Arrangement.spacedBy(0.dp),horizontalAlignment=Alignment.CenterHorizontally){
         items(pages,key={it.id}){page->
             val model:InkViewModel=viewModel(key="ink-${page.id}",factory=InkViewModel.Factory(page.id,app.inkRepository))

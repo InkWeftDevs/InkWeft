@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.sp
         LazyRow(state=state,modifier=Modifier.weight(1f),horizontalArrangement=Arrangement.spacedBy(2.dp)){
             items(ui.openIds,key={it}){id->
                 val draft=ui.drafts[id];val name=draft?.title?:ui.notes.firstOrNull{it.id==id}?.title?:"笔记"
-                Column(Modifier.widthIn(min=140.dp,max=240.dp).clip(RoundedCornerShape(14.dp)).background(if(ui.selectedId==id)Color.White else Color.Transparent)){
+                Column(Modifier.widthIn(min=140.dp,max=240.dp).clip(RoundedCornerShape(14.dp)).background(if(ui.selectedId==id)Leaf else Color.White)){
                     Row(verticalAlignment=Alignment.CenterVertically){
                         TextButton(onClick={open(id)},enabled=enabled,modifier=Modifier.weight(1f).heightIn(min=48.dp).testTag("notebook-tab-$id")){
                             Text(name+(if(draft?.dirty==true)" *"else""),maxLines=1,overflow=TextOverflow.Ellipsis,fontSize=13.sp)

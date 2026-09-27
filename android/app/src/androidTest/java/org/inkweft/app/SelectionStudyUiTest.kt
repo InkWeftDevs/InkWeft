@@ -128,7 +128,8 @@ class SelectionStudyUiTest {
         compose.onNodeWithTag("study-card-title").performTextReplacement("概率公式整理");compose.onNodeWithTag("study-save-card").performClick()
         compose.waitUntil(10_000){compose.onAllNodesWithTag("study-card-editor").fetchSemanticsNodes().isEmpty()}
         assertEquals("概率公式整理",runBlocking{app.study.cards(n.id).first().single().title});assertEquals(2,runBlocking{app.study.nodes(n.id).first().count{it.cardId==card.id}})
-        shot("study-outline.png");compose.onNodeWithTag("study-tab-2").performClick();compose.onNodeWithTag("study-map").assertIsDisplayed();shot("study-mindmap.png")
+        shot("study-outline.png");compose.onNodeWithTag("study-tab-2").performClick();compose.onNodeWithTag("study-map").assertIsDisplayed()
+        compose.onNodeWithTag("study-close").assertIsDisplayed();shot("study-mindmap.png")
     }
     @Test fun childThemeAndRemovingLeafKeepsCard(){
         val(n,_)=seed();compose.onNodeWithTag("document-more").performClick();compose.onNodeWithTag("study-open").performClick();compose.onNodeWithTag("study-add-card").performClick();addCard("总论","根节点")

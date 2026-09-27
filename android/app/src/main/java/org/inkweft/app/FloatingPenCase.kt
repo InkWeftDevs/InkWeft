@@ -40,7 +40,7 @@ internal val LocalPenPointsLeft=compositionLocalOf{false}
         Surface(Modifier.offset{IntOffset((x.coerceIn(0f,1f)*maxX).roundToInt(),(y.coerceIn(0f,1f)*maxY).roundToInt())}
             .width(if(wide&&!collapsed)224.dp else 72.dp).heightIn(max=with(density){host.height.coerceAtLeast(1).toDp()}).onSizeChanged{size=it}.testTag(tag)
             .semantics{stateDescription=if(collapsed)"已收起"else if(x>.5f)"笔尖朝左"else"笔尖朝右"},
-            shape=RoundedCornerShape(24.dp),color=MaterialTheme.colorScheme.surface,shadowElevation=8.dp,border=BorderStroke(1.dp,Line.copy(alpha=.6f))){
+            shape=RoundedCornerShape(20.dp),color=MaterialTheme.colorScheme.surface,shadowElevation=4.dp,border=BorderStroke(1.dp,Line)){
             Column(horizontalAlignment=Alignment.CenterHorizontally){
                 Row(Modifier.fillMaxWidth(),verticalAlignment=Alignment.CenterVertically,horizontalArrangement=if(wide&&!collapsed)Arrangement.Start else Arrangement.Center){
                 Box{

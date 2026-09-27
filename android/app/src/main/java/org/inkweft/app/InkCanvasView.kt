@@ -167,7 +167,7 @@ class InkCanvasView(context:Context):View(context){
     }
     override fun onDraw(canvas:Canvas){
         super.onDraw(canvas);if(!configured)return
-        canvas.drawColor(if(world||embeddedPage)Color.WHITE else Color.rgb(241,243,244))
+        canvas.drawColor(Color.WHITE)
         val visible=viewport.visible(width.toDouble(),height.toDouble(),density);val save=canvas.save();canvas.concat(matrix)
         if(!world){paint.style=Paint.Style.FILL;paint.color=Color.WHITE;canvas.drawRect(0f,0f,1000f,1414f,paint);if(!embeddedPage)canvas.clipRect(0f,0f,1000f,1414f)}
         if(documentId==null||documentKnownAbsent)drawGuide(canvas,visible)

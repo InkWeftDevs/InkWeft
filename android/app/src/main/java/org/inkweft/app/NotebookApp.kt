@@ -82,8 +82,8 @@ fun NotebookApp(vm:NotebookViewModel=viewModel(),onDiagnostics:()->Unit={}){
     BackHandler(enabled=ui.selectedId!=null){vm.back()}
     LaunchedEffect(ui.selectedId,inkMode){if(ui.selectedId!=null&&inkMode){focus.clearFocus(force=true);keyboard?.hide()}}
     Column(Modifier.fillMaxSize().background(Color.White).statusBarsPadding().navigationBarsPadding().imePadding()){
-        if(ui.readFailed)Surface(color=Color(0xffffeee7)){Row(Modifier.fillMaxWidth().padding(12.dp),verticalAlignment=Alignment.CenterVertically){Text("资料读取失败，原数据不会被空库覆盖。",Modifier.weight(1f),fontSize=13.sp);TextButton(onClick=vm::retryRead){Text("重试")};if(ui.current!=null)TextButton(onClick=onDiagnostics,modifier=Modifier.testTag("open-diagnostics-error")){Text("诊断")}}}
-        if(workspaceError!=null)Surface(color=Color(0xfffff4e3)){Row(Modifier.fillMaxWidth().padding(horizontal=16.dp),verticalAlignment=Alignment.CenterVertically){Text(workspaceError!!,Modifier.weight(1f),fontSize=12.sp);TextButton(onClick=workspace::clearError){Text("知道了")}}}
+        if(ui.readFailed)Surface(color=Color.White){Row(Modifier.fillMaxWidth().padding(12.dp),verticalAlignment=Alignment.CenterVertically){Text("资料读取失败，原数据不会被空库覆盖。",Modifier.weight(1f),fontSize=13.sp);TextButton(onClick=vm::retryRead){Text("重试")};if(ui.current!=null)TextButton(onClick=onDiagnostics,modifier=Modifier.testTag("open-diagnostics-error")){Text("诊断")}}}
+        if(workspaceError!=null)Surface(color=Color.White){Row(Modifier.fillMaxWidth().padding(horizontal=16.dp),verticalAlignment=Alignment.CenterVertically){Text(workspaceError!!,Modifier.weight(1f),fontSize=12.sp);TextButton(onClick=workspace::clearError){Text("知道了")}}}
         if(pendingCreate!=null&&!busy)TextButton(onClick={workspace.retryCreate{vm.select(it)}},modifier=Modifier.testTag("retry-create-notebook")){Text("核对原创建请求")}
         if(transferUi.busy||busy)LinearProgressIndicator(Modifier.fillMaxWidth())
         if(ui.current!=null)NotebookTabs(ui,navigationReady&&!busy&&!transferUi.busy,{id->focus.clearFocus(force=true);keyboard?.hide();vm.selectTab(id)},
@@ -132,7 +132,7 @@ fun NotebookApp(vm:NotebookViewModel=viewModel(),onDiagnostics:()->Unit={}){
 @Composable
 private fun TextPage(d:NoteDraft,vm:NotebookViewModel,modifier:Modifier,export:()->Unit){
     val status=when(d.phase){SavePhase.SAVING->"正在保存…";SavePhase.UNKNOWN->"保存结果待核对，草稿仍保留";SavePhase.CONFLICT->"内容已有更新，请保留草稿后处理";SavePhase.REJECTED->"保存被拒绝，草稿仍保留";SavePhase.EDITING->if(d.dirty)"文字草稿待保存"else"已提交至本机数据库"}
-    Column(modifier.fillMaxWidth().background(Color(0xfff2f4f3))){
+    Column(modifier.fillMaxWidth().background(Color.White)){
         Row(Modifier.fillMaxWidth().background(Color.White).padding(horizontal=20.dp),verticalAlignment=Alignment.CenterVertically){
             Text(status,Modifier.weight(1f),fontSize=12.sp,color=if(d.dirty)Color(0xff8a4a1b)else Forest);TextButton(onClick=export){Text("导出文字")}
             Button(onClick=vm::save,enabled=d.dirty&&d.title.isNotBlank()&&d.phase in listOf(SavePhase.EDITING,SavePhase.UNKNOWN),modifier=Modifier.testTag("save-text")){Text(if(d.phase==SavePhase.UNKNOWN)"核对重试"else"保存")}

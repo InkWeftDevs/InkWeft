@@ -47,7 +47,7 @@ fun DiagnosticsApp() {
     }
     SideEffect { app.diagnostics.notebook(ui.loading, ui.readFailed, ui.notes.size, ui.drafts.size, ui.drafts.values.count { it.dirty }, result) }
     var open by remember { mutableStateOf(false) }
-    MaterialTheme(colorScheme = lightColorScheme(primary = Color(0xff236653))) {
+    InkWeftTheme {
         Column(Modifier.fillMaxSize()) {
             Box(Modifier.weight(1f)) { NotebookApp(vm) }
             Surface(tonalElevation = 2.dp) {
@@ -126,7 +126,7 @@ fun DiagnosticDialog(onClose: () -> Unit) {
             Column(Modifier.verticalScroll(rememberScrollState()).testTag("diagnostics-dialog"), verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 Text("${BuildConfig.VERSION_NAME}\n构建：${BuildConfig.BUILD_COMMIT.take(12)}", fontSize = 12.sp)
                 Text("包含：应用版本、设备型号/系统、内存/电量/热状态快照、最近200条固定类型事件、当前已观察的保存状态和数量。")
-                Text("不包含：笔记标题与正文、笔迹坐标、PDF、图片、数据库、系统logcat、异常正文、文件路径/URI、密码、API Key、设备序列号或账号。", color = Color(0xff236653))
+                Text("不包含：笔记标题与正文、笔迹坐标、PDF、图片、数据库、系统logcat、异常正文、文件路径/URI、密码、API Key、设备序列号或账号。", color = Forest)
                 Text("文件是明文，仅你主动保存或分享。系统选择的位置可能是云盘。不能补录旧版本日志，也不等于自动运行Gradle、Room、Compose或Pencil3测试。", fontSize = 12.sp)
                 Text(status, modifier = Modifier.testTag("diagnostics-status"), fontSize = 13.sp)
                 if (busy) LinearProgressIndicator(Modifier.fillMaxWidth())

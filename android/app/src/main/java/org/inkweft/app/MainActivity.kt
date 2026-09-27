@@ -4,9 +4,13 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.SystemBarStyle
 import org.inkweft.core.DiagnosticCode
 class MainActivity:ComponentActivity(){
-    override fun onCreate(savedInstanceState:Bundle?){super.onCreate(savedInstanceState);enableEdgeToEdge();acceptRegion(intent);setContent{LibraryBackupHost{WorkspaceApp()}}}
+    override fun onCreate(savedInstanceState:Bundle?){super.onCreate(savedInstanceState)
+        val bars=SystemBarStyle.light(android.graphics.Color.TRANSPARENT,android.graphics.Color.TRANSPARENT)
+        enableEdgeToEdge(statusBarStyle=bars,navigationBarStyle=bars)
+        acceptRegion(intent);setContent{LibraryBackupHost{WorkspaceApp()}}}
     override fun onNewIntent(intent:android.content.Intent){super.onNewIntent(intent);setIntent(intent);acceptRegion(intent)}
     private fun acceptRegion(intent:android.content.Intent?){
         val uri=intent?.data?:return
