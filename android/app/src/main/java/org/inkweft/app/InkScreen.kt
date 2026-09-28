@@ -350,7 +350,7 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
                 val o=objectsUi.objects.find{it.id==selectedObject}
                 val region=o?.let{InkRegion(listOf(EraserPoint(it.x,it.y),EraserPoint(it.x+it.width,it.y+it.height)))}
                 SelectionToolbar(region,selectionViewport){
-                PageObjectTools(objectsVm,objectsUi,page.id,page.world,tool==5,editable&&!gesture,selectedObject,{selectedObject=it},{objectInteraction=it},{view?.snapshotViewport()},{notice=it},request=objectRequest.takeIf{continuousPages==null},onRequestConsumed={objectRequest=null},onDone={selectedObject=null;tool=lastWritingTool},onEditMap=onEditMap)
+                PageObjectTools(objectsVm,objectsUi,page.id,page.world,tool==5,editable&&!gesture,selectedObject,{selectedObject=it},{objectInteraction=it},{view?.snapshotViewport()},{notice=it},request=objectRequest.takeIf{continuousPages==null},onRequestConsumed={objectRequest=null},onDone={selectedObject=null;tool=lastWritingTool},onEditMap={selectedObject=null;onEditMap(it)})
                 }
             }
             if(tool!=5)PageObjectTools(objectsVm,objectsUi,page.id,page.world,false,editable&&!gesture,null,{selectedObject=it},{objectInteraction=it},{view?.snapshotViewport()},{notice=it})

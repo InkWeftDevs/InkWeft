@@ -14,7 +14,7 @@ internal object MapScenePainter {
                 c.drawPath(Path().apply{moveTo(sx,p.y.toFloat()+42);cubicTo(sx+28*sign,p.y.toFloat()+42,ex-28*sign,n.y.toFloat()+42,ex,n.y.toFloat()+42)},paint)}}}
         nodes.forEach{n->
             val left=n.x.toFloat();val top=n.y.toFloat();val root=hierarchy&&n.parentId !in lookup
-            paint.style=Paint.Style.FILL;paint.color=if(root)0xff176eb1.toInt()else if(n.id==selected)0xffe8f2fb.toInt()else Color.WHITE
+            paint.style=Paint.Style.FILL;paint.color=if(root&&n.id==selected)0xff0c4a78.toInt()else if(root)0xff176eb1.toInt()else if(n.id==selected)0xffe8f2fb.toInt()else Color.WHITE
             c.drawRoundRect(left,top,left+216,top+84,12f,12f,paint)
             paint.style=Paint.Style.STROKE;paint.strokeWidth=if(n.id==selected)2.5f else 1f;paint.color=if(root||n.id==selected)0xff176eb1.toInt()else 0xff929cac.toInt();c.drawRoundRect(left,top,left+216,top+84,12f,12f,paint)
             paint.style=Paint.Style.FILL;paint.color=if(root)Color.WHITE else 0xff242b36.toInt();paint.typeface=Typeface.create(Typeface.DEFAULT,Typeface.BOLD);paint.textSize=16f*fontScale
