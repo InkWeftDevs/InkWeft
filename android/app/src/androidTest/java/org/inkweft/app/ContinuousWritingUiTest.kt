@@ -147,7 +147,7 @@ class ContinuousWritingUiTest {
         compose.runOnIdle{points=listOf(200.0 to 200.0,600.0 to 200.0,200.0 to 600.0,200.0 to 200.0).map{(x,y)->val p=v.snapshotViewport().worldToScreen(x,y,v.width.toDouble(),v.height.toDouble(),v.resources.displayMetrics.density.toDouble());Offset(p.x.toFloat(),p.y.toFloat())}}
         compose.onNodeWithTag("selection-overlay").performTouchInput{down(points[0]);points.drop(1).forEach{moveTo(it)};up()}
         shot("v20-lasso-contained.png")
-        compose.onNodeWithTag("selection-delete-beauty").assertIsDisplayed().performClick()
+        compose.onNodeWithTag("mixed-delete").assertIsDisplayed().performClick()
         compose.waitUntil(10_000){runBlocking{app.pageObjects.read(note.id).objects.first{it.id==inside}.hidden}}
         assertFalse(runBlocking{app.pageObjects.read(note.id).objects.first{it.id==outside}.hidden})
         shot("v20-lasso-deleted.png")
@@ -155,7 +155,7 @@ class ContinuousWritingUiTest {
         compose.waitUntil(10_000){runBlocking{app.pageObjects.read(note.id).objects.none{it.hidden}}}
     }
     @Test fun automaticBeautyIsInlineErasableUndoableAndPersistent(){
-        val note=open();compose.openBeautySettings();compose.onNodeWithTag("beauty-enabled").performClick();compose.onNodeWithTag("beauty-close").performClick()
+        val note=open();compose.openBeautySettings();compose.onNodeWithTag("beauty-replace-font").performClick();compose.onNodeWithTag("beauty-enabled").performClick();compose.onNodeWithTag("beauty-close").performClick()
         hi(note.id)
         compose.waitUntil(45_000){runBlocking{app.pageObjects.read(note.id).objects.any{!it.hidden}}}
         val beauty=runBlocking{app.pageObjects.read(note.id).objects.single()}
@@ -194,7 +194,7 @@ class ContinuousWritingUiTest {
     @Test fun manualSelectionUsesChosenFontWithoutConfirmationDialog(){
         val note=open();hi(note.id)
         compose.waitUntil(10_000){runBlocking{app.inkRepository.read(note.id).strokes.size}==6}
-        compose.openBeautySettings();compose.onNodeWithTag("beauty-font-picker").performClick();compose.onNodeWithTag("font-SERIF").performClick()
+        compose.openBeautySettings();compose.onNodeWithTag("beauty-replace-font").performClick();compose.onNodeWithTag("beauty-font-picker").performClick();compose.onNodeWithTag("font-SERIF").performClick()
         compose.onNodeWithTag("beauty-select").performScrollTo().performClick();compose.waitForIdle()
         val strokes=runBlocking{InkSession(app.inkRepository.read(note.id)).visibleDraft()}
         val region=InkRegion(listOf(EraserPoint(150f,250f),EraserPoint(400f,450f)))
@@ -207,7 +207,7 @@ class ContinuousWritingUiTest {
         compose.onNodeWithTag("font-beauty-dialog").assertDoesNotExist()
     }
     @Test fun pencilAutomaticallyConvertsWithSelectedFont(){
-        val note=open();compose.selectPen("pencil");compose.openBeautySettings();compose.onNodeWithTag("beauty-enabled").performClick();compose.onNodeWithTag("beauty-close").performClick()
+        val note=open();compose.selectPen("pencil");compose.openBeautySettings();compose.onNodeWithTag("beauty-replace-font").performClick();compose.onNodeWithTag("beauty-enabled").performClick();compose.onNodeWithTag("beauty-close").performClick()
         hi(note.id)
         compose.waitUntil(45000){runBlocking{app.pageObjects.read(note.id).objects.any{!it.hidden}}}
         val result=runBlocking{app.pageObjects.read(note.id).objects.single()}

@@ -10,11 +10,12 @@ import java.util.Base64
 
 /** Bounded caches; decoded media is shared by transformed copies until the view is detached. */
 internal class PageObjectPainter {
-    private val images=object:LinkedHashMap<String,Bitmap?>(8,.75f,true){override fun removeEldestEntry(eldest:MutableMap.MutableEntry<String,Bitmap?>?)=size>8}
+    private val resourceOwner="objects-"+java.util.UUID.randomUUID()
+    private val images=object:LinkedHashMap<String,Bitmap?>(8,.75f,true){override fun removeEldestEntry(eldest:MutableMap.MutableEntry<String,Bitmap?>?):Boolean{if(size<=8)return false;eldest?.value?.let{RenderResources.release(it,resourceOwner)};return true}}
     private val layouts=object:LinkedHashMap<PageObject,StaticLayout>(32,.75f,true){override fun removeEldestEntry(eldest:MutableMap.MutableEntry<PageObject,StaticLayout>?)=size>32}
     private val graphite=object:LinkedHashMap<Int,BitmapShader>(8,.75f,true){override fun removeEldestEntry(eldest:MutableMap.MutableEntry<Int,BitmapShader>?)=size>8}
     private val paint=Paint(Paint.ANTI_ALIAS_FLAG or Paint.FILTER_BITMAP_FLAG)
-    fun clear(){images.clear();layouts.clear();graphite.clear()}
+    fun clear(){RenderResources.releaseOwner(resourceOwner);images.clear();layouts.clear();graphite.clear()}
     fun draw(canvas:Canvas,objects:List<PageObject>,tapes:Boolean,visible:CanvasBounds,liveErase:Path?=null,wholeErase:Boolean=false) {
         objects.filter{!it.hidden&&(it.kind==PageObjectKind.TAPE)==tapes&&it.bounds().intersects(visible)}.forEach { source ->
             val o=if(liveErase!=null&&source.sourceStrokeIds.isNotEmpty()&&source.glyphs.isEmpty())source.copy(glyphs=TextStyles.positioned(source))else source
@@ -22,12 +23,13 @@ internal class PageObjectPainter {
             val save=canvas.save();canvas.clipRect(o.x,o.y,o.x+o.width,o.y+o.height)
             when(o.kind) {
                 PageObjectKind.IMAGE->{
-                    val bitmap=if(images.containsKey(o.image))images[o.image]else runCatching{
+                    val bitmap=if(images.containsKey(o.image))images[o.image]else try{
                         val bytes=Base64.getDecoder().decode(o.image)
                         val opts=BitmapFactory.Options().apply{inJustDecodeBounds=true};BitmapFactory.decodeByteArray(bytes,0,bytes.size,opts)
                         require(opts.outWidth in 1..1024&&opts.outHeight in 1..1024)
-                        BitmapFactory.decodeByteArray(bytes,0,bytes.size)
-                    }.getOrNull().also{images[o.image]=it}
+                        RenderResources.admit(opts.outWidth.toLong()*opts.outHeight*4)
+                        BitmapFactory.decodeByteArray(bytes,0,bytes.size)?.also{RenderResources.track(it,it.allocationByteCount.toLong(),"image",resourceOwner,RenderResources.Role.ACTIVE)}.also{images[o.image]=it}
+                    }catch(_:RenderBudgetBusy){null}catch(_:Exception){images[o.image]=null;null}
                     if(bitmap!=null)canvas.drawBitmap(bitmap,null,RectF(o.x,o.y,o.x+o.width,o.y+o.height),paint)
                     else {paint.color=Color.LTGRAY;canvas.drawRect(o.x,o.y,o.x+o.width,o.y+o.height,paint)}
                 }

@@ -26,7 +26,7 @@ class DiagnosticsUiTest {
         compose.onNodeWithTag("new-title").performTextInput(privateTitle)
         compose.onNodeWithTag("create-note").performClick();compose.singlePageEditor()
         compose.waitUntil(10_000) { compose.onAllNodesWithTag("ink-surface").fetchSemanticsNodes().isNotEmpty() }
-        compose.onNodeWithTag("document-more").performClick();compose.onNodeWithTag("open-diagnostics").performClick()
+        compose.waitForSavedInk();compose.onNodeWithTag("quick-settings").performClick();compose.onNodeWithTag("settings-diagnostics").performScrollTo().performClick()
         compose.onNodeWithTag("diagnostics-dialog").assertExists()
         compose.onNodeWithTag("diagnostics-mark").performScrollTo().performClick()
         compose.onNodeWithTag("diagnostics-status").assertTextContains("已加时间标记", substring = true)

@@ -84,19 +84,27 @@ fun InkScreen(note:NoteDraft,workspace:WorkspaceViewModel=viewModel(),onBack:()-
     val marks by marksModel.marks.collectAsStateWithLifecycle()
     val marksBusy by marksModel.busy.collectAsStateWithLifecycle()
     val marksError by marksModel.error.collectAsStateWithLifecycle()
-    val panelOpen=directory||documentSettings
+    val studyCanLeave=if(studyOpen){
+        val studySession:StudyViewModel=viewModel(key="study-${note.base.id}",factory=StudyViewModel.Factory(note.base.id,app.study))
+        val studyState by studySession.ui.collectAsStateWithLifecycle()
+        val mapWriter:KnowledgeViewModel=viewModel(key="study-map-writer-${note.base.id}",factory=KnowledgeViewModel.Factory(app.knowledge))
+        val mapWrite by mapWriter.ui.collectAsStateWithLifecycle()
+        !studyState.busy&&!studyState.unknown&&!mapWrite.busy&&!mapWrite.unknown
+    }else true
+    val panelOpen=directory||documentSettings||studyOpen
     val docked=LocalConfiguration.current.screenWidthDp>=700
-    val panelWidth=minOf(320.dp,(LocalConfiguration.current.screenWidthDp-24).dp)
-    val pageActionsReady=canNavigate&&!ui.busy&&!ui.actionUnknown&&!ui.insertionUnknown
-    androidx.activity.compose.BackHandler(panelOpen&&pageActionsReady){directory=false;documentSettings=false}
+    val panelWidth=if(studyOpen&&docked)minOf(480.dp,(LocalConfiguration.current.screenWidthDp*.46f).dp)else minOf(320.dp,(LocalConfiguration.current.screenWidthDp-24).dp)
+    val pageActionsReady=canNavigate&&!ui.busy&&!ui.actionUnknown&&!ui.insertionUnknown&&(!studyOpen||studyCanLeave)
+    androidx.activity.compose.BackHandler(panelOpen&&pageActionsReady){directory=false;documentSettings=false;studyOpen=false}
     Box(Modifier.fillMaxSize()){
     Column(Modifier.fillMaxSize().padding(end=if(panelOpen&&docked)panelWidth else 0.dp)){
-        val navigationEnabled=canNavigate&&!ui.busy&&!ui.actionUnknown&&!ui.insertionUnknown
+        val navigationEnabled=pageActionsReady
         if(!fullScreen)Row(Modifier.fillMaxWidth().heightIn(min=40.dp).padding(horizontal=4.dp),verticalAlignment=Alignment.CenterVertically){
             IconButton(onBack,enabled=navigationEnabled,modifier=Modifier.size(40.dp).testTag("back-library").describedAs("返回资料库")){Glyph("back")}
             Spacer(Modifier.weight(1f))
-            IconButton({directory=!directory;documentSettings=false},enabled=navigationEnabled,modifier=Modifier.size(40.dp).testTag("quick-overview").describedAs("文档概览")){Glyph("overview")}
-            IconButton({documentSettings=!documentSettings;directory=false},enabled=navigationEnabled,modifier=Modifier.size(40.dp).testTag("quick-settings").describedAs("其他设置")){Glyph("settings")}
+            IconButton({directory=!directory;documentSettings=false;studyOpen=false},enabled=navigationEnabled,modifier=Modifier.size(40.dp).testTag("quick-overview").describedAs("文档概览")){Glyph("overview")}
+            IconButton({documentSettings=!documentSettings;directory=false;studyOpen=false},enabled=navigationEnabled,modifier=Modifier.size(40.dp).testTag("quick-settings").describedAs("其他设置")){Glyph("settings")}
+            IconButton({studyOpen=!studyOpen;studySource=null;directory=false;documentSettings=false},enabled=navigationEnabled,modifier=Modifier.size(40.dp).testTag("quick-study").describedAs("笔记导图")){Glyph("mindmap")}
             IconButton({searchOpen=true},enabled=navigationEnabled,modifier=Modifier.size(40.dp).testTag("book-search").describedAs("查找")){Glyph("search")}
         }
         if(ui.error!=null)Row(Modifier.fillMaxWidth().padding(horizontal=12.dp),verticalAlignment=Alignment.CenterVertically){Text(ui.error!!,Modifier.weight(1f),fontSize=12.sp);if(!ui.insertionUnknown&&!ui.actionUnknown)TextButton(onClick=vm::clearError){Text("知道了")}}
@@ -146,7 +154,7 @@ fun InkScreen(note:NoteDraft,workspace:WorkspaceViewModel=viewModel(),onBack:()-
             DocumentAction("整理与复习","study-open",pageActionsReady){documentSettings=false;studySource=null;studyOpen=true}
             DocumentAction("编辑键入文字","mode-text",pageActionsReady){documentSettings=false;onText()}
             DocumentAction("查找笔记","settings-search",pageActionsReady){documentSettings=false;searchOpen=true}
-            DocumentAction("大纲与思维导图","settings-knowledge",pageActionsReady){documentSettings=false;knowledgeAnchor=null;knowledgeOpen=true}
+            DocumentAction("知识与关联","settings-knowledge",pageActionsReady){documentSettings=false;knowledgeAnchor=null;knowledgeOpen=true}
             if(page!=null&&!page.world)DocumentAction("导出整本内容副本","settings-export",pageActionsReady&&!exporting){documentSettings=false;confirmBook=true}
             HorizontalDivider(Modifier.padding(horizontal=16.dp),color=Line)
             DocumentSection("阅读与操作")
@@ -162,9 +170,9 @@ fun InkScreen(note:NoteDraft,workspace:WorkspaceViewModel=viewModel(),onBack:()-
     if(knowledgeOpen)KnowledgeWorkspace(note.base.id,page?.let{TargetRef(TargetKind.PAGE,it.id)}?:TargetRef(TargetKind.NOTE,note.base.id),knowledgeAnchor,dismiss={knowledgeOpen=false}){target->
         app.openKnowledgeTarget.value=target;knowledgeOpen=false
     }
-    if(studyOpen)StudyWorkspace(note,studySource,{studyOpen=false;studySource=null;initialStudyCard=null},initialCardId=initialStudyCard){source->
-        if(ui.pages.any{it.id==source.pageId}){readingMode(false);vm.select(source.pageId);sourceFocus=source.pageId to CanvasBounds(source.left,source.top,source.right,source.bottom);true}else false
-    }
+    if(studyOpen)Box(Modifier.align(Alignment.CenterEnd).width(if(docked)panelWidth else LocalConfiguration.current.screenWidthDp.dp).fillMaxHeight().testTag("study-panel")){StudyContent(note,studySource,{studyOpen=false;studySource=null;initialStudyCard=null},initialCardId=initialStudyCard){source->
+        if(ui.pages.any{it.id==source.pageId}){readingMode(false);vm.select(source.pageId);sourceFocus=source.pageId to CanvasBounds(source.left,source.top,source.right,source.bottom);if(!docked)studyOpen=false;true}else false
+    }}
     if(directory)DocumentSidePanel("文档概览","pages-directory-dialog",{directory=false},Modifier.align(Alignment.CenterEnd).width(panelWidth)){
         Row(Modifier.fillMaxWidth().padding(horizontal=8.dp)){
             listOf("页面" to "overview","大纲" to "list","页签" to "bookmark","摘录" to "excerpt").forEachIndexed{i,(label,icon)->
@@ -174,7 +182,7 @@ fun InkScreen(note:NoteDraft,workspace:WorkspaceViewModel=viewModel(),onBack:()-
                 }
             }
         }
-        if(overviewTab==0&&marksError!=null)Row(Modifier.padding(horizontal=12.dp)){Text(marksError!!,Modifier.weight(1f));TextButton(marksModel::retry){Text("重试")}}
+        if(overviewTab==0)OverviewRecovery(marksModel)
         if(overviewTab!=0)OverviewCollections(note.base.id,overviewTab,ui.pages,page,pageActionsReady,app,
             openPage={vm.select(it)},openExcerpt={item->readingMode(false);vm.select(item.pageId);sourceFocus=item.pageId to CanvasBounds(item.left,item.top,item.right,item.bottom)},
             editExcerpt={initialStudyCard=it;studyOpen=true;directory=false},newExcerpt={directory=false;readingMode(false);excerptRequest++})

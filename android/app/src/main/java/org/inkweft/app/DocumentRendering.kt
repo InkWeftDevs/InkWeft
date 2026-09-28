@@ -31,8 +31,10 @@ internal class DocumentRendering(context:Context,private val repo:DocumentReposi
         }?:return@withLock null
         val w=bounds.right-bounds.left;val h=bounds.bottom-bounds.top
         val scale=pixels.coerceIn(128,2048)/max(w,h)
+        RenderResources.admit((ceil(w*scale).toLong().coerceAtLeast(1))*(ceil(h*scale).toLong().coerceAtLeast(1))*4)
         val bitmap=Bitmap.createBitmap(ceil(w*scale).toInt().coerceAtLeast(1),ceil(h*scale).toInt().coerceAtLeast(1),Bitmap.Config.ARGB_8888)
         try {
+            RenderResources.track(bitmap,bitmap.allocationByteCount.toLong(),"pdf",pageId,RenderResources.Role.IN_FLIGHT)
             bitmap.eraseColor(Color.WHITE)
             ParcelFileDescriptor.open(local.file,ParcelFileDescriptor.MODE_READ_ONLY).use{fd->PdfRenderer(fd).use{pdf->pdf.openPage(local.page).use{page->
                 val fit=min(1000f/page.width,1414f/page.height)
@@ -40,7 +42,7 @@ internal class DocumentRendering(context:Context,private val repo:DocumentReposi
                 val matrix=Matrix().apply{setScale((fit*scale).toFloat(),(fit*scale).toFloat());postTranslate(((left-bounds.left)*scale).toFloat(),((top-bounds.top)*scale).toFloat())}
                 page.render(bitmap,null,matrix,PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY)
             }}}
-            ensureActive();DocumentTile(bitmap,bounds)
-        }catch(t:Throwable){bitmap.recycle();throw t}
+            ensureActive();RenderResources.track(bitmap,bitmap.allocationByteCount.toLong(),"pdf",pageId,RenderResources.Role.ACTIVE);DocumentTile(bitmap,bounds)
+        }catch(t:Throwable){RenderResources.release(bitmap,pageId);bitmap.recycle();throw t}
     }}
 }

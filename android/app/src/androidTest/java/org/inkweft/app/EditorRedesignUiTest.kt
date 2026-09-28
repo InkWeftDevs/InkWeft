@@ -22,7 +22,7 @@ class EditorRedesignUiTest {
     private val app get()=compose.activity.application as InkWeftApplication
     private fun id()=UUID.randomUUID().toString()
     private fun ready(){compose.waitUntil(15_000){runCatching{compose.onNodeWithTag("new-note").assertIsEnabled()}.isSuccess}}
-    private fun saved(){compose.waitUntil(15_000){runCatching{compose.onNodeWithTag("ink-status").assertTextContains("已保存",substring=true)}.isSuccess}}
+    private fun saved(){compose.waitForSavedInk()}
     private fun open(note:Note){compose.runOnIdle{ViewModelProvider(compose.activity)[NotebookViewModel::class.java].select(note)};compose.singlePageEditor();saved()}
     private fun shot(name:String){compose.waitForIdle();val b=checkNotNull(InstrumentationRegistry.getInstrumentation().uiAutomation.takeScreenshot());try{File(app.getExternalFilesDir(null),name).outputStream().use{b.compress(Bitmap.CompressFormat.PNG,100,it)}}finally{b.recycle()}}
     private fun canvas():InkCanvasView{fun find(v:View):InkCanvasView?{if(v is InkCanvasView&&!v.preview)return v;if(v is ViewGroup)for(i in 0 until v.childCount)find(v.getChildAt(i))?.let{return it};return null};return checkNotNull(find(compose.activity.window.decorView))}
@@ -42,7 +42,7 @@ class EditorRedesignUiTest {
         }
         shot("redesign-highlighter.png");compose.activityRule.scenario.recreate();saved()
         assertEquals(34f,store.read()[2],0f);assertEquals(PenWidthStore.colors(2)[4],store.readColors()[2])
-        compose.onNodeWithTag("ink-more").performScrollTo().performClick();compose.onNodeWithTag("ink-finger").performScrollTo().performClick()
+        compose.openEditorAction("quick-finger")
         compose.onNodeWithTag("ink-surface").performTouchInput{swipe(Offset(width*.3f,height*.3f),Offset(width*.6f,height*.3f),300)}
         compose.waitUntil(10_000){runBlocking{app.inkRepository.read(note.id).strokes.size}==1}
         val stroke=runBlocking{app.inkRepository.read(note.id).strokes.single().stroke}
@@ -59,7 +59,7 @@ class EditorRedesignUiTest {
         ready();val note=runBlocking{app.workspaceRepository.create("美化设置验收",false,PaperStyle.GRID)};open(note)
         compose.onNodeWithTag("auto-beauty-toggle").performScrollTo().assertExists()
         val before=compose.onNodeWithTag("ink-surface").fetchSemanticsNode().boundsInRoot
-        compose.openBeautySettings()
+        compose.openBeautySettings();compose.onNodeWithTag("beauty-replace-font").performScrollTo().performClick()
         compose.onNodeWithTag("beauty-font-picker").assertIsDisplayed();compose.onNodeWithTag("beauty-select").performScrollTo().assertIsDisplayed()
         shot("redesign-font-panel.png")
         androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().uiAutomation.performGlobalAction(android.accessibilityservice.AccessibilityService.GLOBAL_ACTION_BACK)
@@ -76,7 +76,7 @@ class EditorRedesignUiTest {
         compose.waitUntil(15_000){runBlocking{app.pages.searchText(note.id)}!=null}
         assertEquals("MANUAL",runBlocking{app.pages.searchText(page)}!!.method)
         shot("redesign-search-results.png");compose.onNodeWithTag("book-search-hit-$page").performClick();saved()
-        compose.onNodeWithTag("page-counter").assertTextContains("第 2 / 2 页")
+        compose.assertCurrentPage("第 2 / 2 页")
         compose.onNodeWithTag("book-search").performClick();compose.onNodeWithTag("search-correct-page").performClick()
         compose.onNodeWithText("校对手写识别").assertIsDisplayed();try{compose.waitUntil(10_000){runCatching{compose.onNodeWithTag("page-search-text").assertIsEnabled().assertTextContains("细胞",substring=true)}.isSuccess}}catch(t:Throwable){
             shot("redesign-correction-failure.png");println("CORRECTION_PAGE="+page+" ROW="+runBlocking{app.pages.searchText(page)})

@@ -13,7 +13,14 @@ internal fun ComposeTestRule.singlePageEditor(){
         waitUntil(10_000){onAllNodesWithTag("ink-surface").fetchSemanticsNodes().isNotEmpty()}
     }
 }
-internal fun ComposeTestRule.openCurrentPen(){onNodeWithTag("top-draw").performScrollTo().performClick()}
+internal fun ComposeTestRule.openCurrentPen(){
+    if(onAllNodesWithTag("pen-kind-pen").fetchSemanticsNodes().isEmpty())onNodeWithTag("case-collapse").performClick()
+    val active=org.inkweft.core.InkPen.entries.firstOrNull{runCatching{onNodeWithTag("pen-kind-${it.name.lowercase()}").assertIsOn()}.isSuccess}
+    val node=onNodeWithTag("pen-kind-${(active?:org.inkweft.core.InkPen.PEN).name.lowercase()}")
+    if(active==null)node.performScrollTo().performClick()
+    node.performScrollTo().performClick()
+}
+
 internal fun ComposeTestRule.selectPen(kind:String){
     if(onAllNodesWithTag("close-pen-settings").fetchSemanticsNodes().isNotEmpty())closePenSettings()
     if(onAllNodesWithTag("pen-kind-$kind").fetchSemanticsNodes().isEmpty())onNodeWithTag("case-collapse").performClick()
@@ -36,3 +43,58 @@ internal fun SemanticsNodeInteraction.assertInkCount(expected:Int):SemanticsNode
 
 internal fun ComposeTestRule.closePenSettings(){onNodeWithTag("close-pen-settings").performScrollTo().performClick()}
 internal fun ComposeTestRule.openBeautySettings(){onNodeWithTag("auto-beauty-toggle").performScrollTo().performClick()}
+
+internal fun ComposeTestRule.openEditorAction(tag:String){
+    val actual=if(tag=="add-page")"quick-add-page"else tag
+    val actions=mapOf("add-page" to "add-page","object-shape" to "shape","page-objects" to "objects","object-sticker" to "sticker","top-area-erase" to "area","object-camera" to "camera","quick-finger" to "finger")
+    if(onAllNodesWithTag(actual).fetchSemanticsNodes().isEmpty()){
+        val action=actions[tag]?:error("Unknown hidden action $tag")
+        onNodeWithTag("toolbar-customize").performClick()
+        onNodeWithTag("toolbar-visible-$action").performScrollTo().performClick()
+        onNodeWithTag("toolbar-done").performClick()
+    }
+    onNodeWithTag(actual).performScrollTo().performClick()
+}
+
+internal fun ComposeTestRule.waitForSavedInk(){waitUntil(15000){
+    val app=androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().targetContext.applicationContext as InkWeftApplication
+    app.navigationReady.value&&onAllNodesWithTag("ink-surface").fetchSemanticsNodes().isNotEmpty()
+}}
+internal fun ComposeTestRule.openOverviewGrid(){
+    onNodeWithTag("quick-overview").performClick()
+    if(onAllNodesWithTag("page-grid").fetchSemanticsNodes().isEmpty())onNodeWithTag("overview-layout").performClick()
+}
+/** Fixture framing for pixel assertions; the editor no longer has a permanent fit button. */
+internal fun ComposeTestRule.frameCanvasFixture(content:Boolean=false){
+    waitForSavedInk()
+    androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().runOnMainSync{
+        val a=androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry.getInstance().getActivitiesInStage(androidx.test.runner.lifecycle.Stage.RESUMED).filterIsInstance<MainActivity>().single()
+        fun find(v:android.view.View):InkCanvasView?{if(v is InkCanvasView&&!v.preview&&!v.embeddedPage&&v.isShown)return v;if(v is android.view.ViewGroup)for(i in 0 until v.childCount)find(v.getChildAt(i))?.let{return it};return null}
+        checkNotNull(find(a.window.decorView)).let{if(content)it.fitContent()else it.fitPage()}
+    }
+    waitForIdle()
+}
+internal fun ComposeTestRule.pinchCanvasOut(){
+    onNodeWithTag("ink-surface").performTouchInput{
+        val y=height*.55f;val x=width*.5f
+        down(0,androidx.compose.ui.geometry.Offset(x-width*.12f,y));down(1,androidx.compose.ui.geometry.Offset(x+width*.12f,y))
+        for(i in 1..8){val d=width*(.12f+i*.008f);moveTo(0,androidx.compose.ui.geometry.Offset(x-d,y),16);moveTo(1,androidx.compose.ui.geometry.Offset(x+d,y),16)}
+        up(0);up(1)
+    };waitForIdle()
+}
+
+internal fun SemanticsNodeInteraction.assertSavedInkCount(expected:Int):SemanticsNodeInteraction {
+    val app=androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().targetContext.applicationContext as InkWeftApplication
+    org.junit.Assert.assertTrue("Ink is not yet durably settled",app.navigationReady.value)
+    return assertInkCount(expected)
+}
+internal fun ComposeTestRule.assertCurrentPage(text:String){
+    var actual=""
+    androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().runOnMainSync{
+        val a=androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry.getInstance().getActivitiesInStage(androidx.test.runner.lifecycle.Stage.RESUMED).filterIsInstance<MainActivity>().single()
+        val provider=androidx.lifecycle.ViewModelProvider(a);val book=checkNotNull(provider[NotebookViewModel::class.java].ui.value.selectedId)
+        val pages=provider["book-$book",BookPagesViewModel::class.java].ui.value
+        actual="第 ${pages.pages.first{it.id==pages.selectedId}.position+1} / ${pages.pages.size} 页"
+    }
+    org.junit.Assert.assertEquals(text,actual)
+}

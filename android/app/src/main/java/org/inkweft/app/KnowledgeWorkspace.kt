@@ -43,9 +43,12 @@ internal class KnowledgeViewModel(private val repo:KnowledgeRepository,private v
     private fun persist(){saved["knowledge.request"]=pending?.let{arrayListOf(it.operationId,it.notebookId,it.id,it.expectedRevision.toString(),it.removed.toString())};saved["knowledge.payload"]=pending?.payload}
     fun submit(book:String,data:KnowledgeData,old:KnowledgeRow?=null,remove:Boolean=false){if(state.value.busy||pending!=null)return;pending=KnowledgeCommand(UUID.randomUUID().toString(),book,old?.id?:UUID.randomUUID().toString(),old?.revision?:0,data,remove);pendingUndo=if(data is KnowledgeData.Properties)KnowledgeCommand(UUID.randomUUID().toString(),book,pending!!.id,(old?.revision?:0)+1,old?.data()?:data,old==null)else null;persist();retry()}
     fun retry(){val c=pending?:return;if(state.value.busy)return;state.update{it.copy(busy=true,message=null,completed=null)}
-        viewModelScope.launch{try{val id=withContext(Dispatchers.IO){repo.submit(c)};pending=null;persist();pendingUndo?.let{undoRequest=it};pendingUndo=null;state.update{it.copy(busy=false,unknown=false,completed=id,message="已保存",canUndoProperties=undoRequest!=null)}}
+        viewModelScope.launch{try{when(val result=withContext(Dispatchers.IO){repo.outcome(c)}){
+            is KnowledgeOutcome.Success->{pending=null;persist();pendingUndo?.let{undoRequest=it};pendingUndo=null;state.update{it.copy(busy=false,unknown=false,completed=result.id,message="已保存",canUndoProperties=undoRequest!=null)}}
+            is KnowledgeOutcome.Rejected->{pending=null;pendingUndo=null;persist();state.update{it.copy(busy=false,unknown=false,message="未提交：来源、版本或引用已变化，或内容重复。请重新核对。")}}
+            KnowledgeOutcome.Unknown->state.update{it.copy(busy=false,unknown=true,message="结果待核对，请重试原操作。")}
+        }}
         catch(c:CancellationException){state.update{it.copy(busy=false,unknown=true)};throw c}
-        catch(_:IllegalArgumentException){pending=null;persist();state.update{it.copy(busy=false,unknown=false,message="未提交：来源、版本或引用已变化，或内容重复。请重新核对。")}}
         catch(_:Exception){state.update{it.copy(busy=false,unknown=true,message="结果待核对，请重试原操作。")}}}
     }
     fun consumed(){state.update{it.copy(completed=null)}}

@@ -32,7 +32,7 @@ internal class HandwritingRecognizer(context:Context) {
         for((i,line)in lines.withIndex()){
             ensureActive();progress(i,lines.size)
             val bitmap=raster(line)
-            val r=try{recognizeBitmap(bitmap,language)}finally{bitmap.recycle()}
+            val r=try{recognizeBitmap(bitmap,language)}finally{RenderResources.release(bitmap,"ocr");bitmap.recycle()}
             ensureActive();texts.add(r.text);total+=r.confidence
             if(r.text.isNotBlank())regions.add(RecognizedLine(r.text,line.bounds,line.strokes.map{it.id},r.tokens))
         }
@@ -71,7 +71,9 @@ internal class HandwritingRecognizer(context:Context) {
         val b=line.bounds;val scale=min(3.0,96.0/(b.bottom-b.top).coerceAtLeast(1.0))
         val width=ceil((b.right-b.left)*scale).toInt().coerceAtLeast(1);val height=ceil((b.bottom-b.top)*scale).toInt().coerceAtLeast(1)
         require(width<=4096&&height<=512){"文字行过长，请缩小选区后识别"}
+        RenderResources.admit(width.toLong()*height*4)
         return Bitmap.createBitmap(width,height,Bitmap.Config.ARGB_8888).also{bitmap->
+            RenderResources.track(bitmap,bitmap.allocationByteCount.toLong(),"ocr","ocr",RenderResources.Role.IN_FLIGHT)
             val canvas=Canvas(bitmap);canvas.drawColor(Color.WHITE);canvas.scale(scale.toFloat(),scale.toFloat());canvas.translate(-b.left.toFloat(),-b.top.toFloat())
             val paint=Paint(Paint.ANTI_ALIAS_FLAG).apply{color=Color.BLACK;style=Paint.Style.STROKE;strokeCap=Paint.Cap.ROUND;strokeJoin=Paint.Join.ROUND}
             val geometry=VisibleInkGeometry()

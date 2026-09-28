@@ -10,8 +10,15 @@ import androidx.compose.ui.graphics.toArgb
 import org.inkweft.app.ui.designsystem.InkTheme
 
 /** Bounded native map canvas. Cards own text; this view owns only temporary drag/pan. */
+internal data class MapViewport(val scale:Float,val x:Float,val y:Float)
 internal class MindMapView(context:Context):View(context){
     var enabledInput=true
+    var selectedNodeId:String?=null
+    var onViewport:(MapViewport)->Unit={}
+    private var positioned=false
+    fun snapshotViewport()=MapViewport(scale,tx,ty)
+    fun restoreViewport(v:MapViewport){scale=v.scale;tx=v.x;ty=v.y;positioned=true;invalidate()}
+    private fun changedViewport(){positioned=true;onViewport(snapshotViewport())}
     var onOpen:(StudyNodeRow)->Unit={}
     var onMove:(StudyNodeRow,Double,Double)->Unit={_,_,_->}
     var onActive:(Boolean)->Unit={}
@@ -26,14 +33,14 @@ internal class MindMapView(context:Context):View(context){
     private var dx=0f;private var dy=0f
     private val d get()=resources.displayMetrics.density
     private val detector=ScaleGestureDetector(context,object:ScaleGestureDetector.SimpleOnScaleGestureListener(){
-        override fun onScale(s:ScaleGestureDetector):Boolean{val old=scale;scale=(scale*s.scaleFactor).coerceIn(.15f,2.5f);tx=s.focusX-(s.focusX-tx)*scale/old;ty=s.focusY-(s.focusY-ty)*scale/old;invalidate();return true}
+        override fun onScale(s:ScaleGestureDetector):Boolean{val old=scale;scale=(scale*s.scaleFactor).coerceIn(.15f,2.5f);tx=s.focusX-(s.focusX-tx)*scale/old;ty=s.focusY-(s.focusY-ty)*scale/old;changedViewport();invalidate();return true}
     })
     init{contentDescription="可缩放思维导图，拖动节点移动；需要无障碍浏览时切换大纲视图。"}
     fun show(items:List<StudyNodeRow>,cards:List<StudyCardRow>,collapsed:Map<String,Int> = emptyMap()){
         relationMode=false;relationEdges=emptyList()
         hiddenCounts=collapsed
         val oldEmpty=nodes.isEmpty();nodes=items.filter{!it.removed};titles=cards.associate{it.id to it.title}
-        if(oldEmpty&&nodes.isNotEmpty()&&width>0)fit();invalidate()
+        if(!positioned&&oldEmpty&&nodes.isNotEmpty()&&width>0)fit();invalidate()
     }
     fun showRelations(items:List<StudyNodeRow>,labels:Map<String,String>,edges:List<Pair<String,String>>){
         val empty=nodes.isEmpty();nodes=items;relationMode=true;relationEdges=edges;titles=labels;hiddenCounts=emptyMap()
@@ -43,12 +50,12 @@ internal class MindMapView(context:Context):View(context){
     fun fit(){if(nodes.isEmpty()||width==0||height==0)return
         val left=nodes.minOf{it.x};val right=nodes.maxOf{it.x}+216;val top=nodes.minOf{it.y};val bottom=nodes.maxOf{it.y}+84
         scale=min((width-40*d)/((right-left)*d).toFloat(),(height-40*d)/((bottom-top)*d).toFloat()).coerceIn(.15f,1.3f)
-        tx=width/2-((left+right)/2*d*scale).toFloat();ty=height/2-((top+bottom)/2*d*scale).toFloat();invalidate()
+        tx=width/2-((left+right)/2*d*scale).toFloat();ty=height/2-((top+bottom)/2*d*scale).toFloat();changedViewport();invalidate()
     }
-    fun zoom(f:Float){val old=scale;scale=(scale*f).coerceIn(.15f,2.5f);tx=width/2-(width/2-tx)*scale/old;ty=height/2-(height/2-ty)*scale/old;invalidate()}
+    fun zoom(f:Float){val old=scale;scale=(scale*f).coerceIn(.15f,2.5f);tx=width/2-(width/2-tx)*scale/old;ty=height/2-(height/2-ty)*scale/old;changedViewport();invalidate()}
     private fun x(n:StudyNodeRow)=n.x.toFloat()+if(n.id==active?.id)dx else 0f
     private fun y(n:StudyNodeRow)=n.y.toFloat()+if(n.id==active?.id)dy else 0f
-    override fun onSizeChanged(w:Int,h:Int,oldw:Int,oldh:Int){super.onSizeChanged(w,h,oldw,oldh);if(oldw==0)fit()}
+    override fun onSizeChanged(w:Int,h:Int,oldw:Int,oldh:Int){super.onSizeChanged(w,h,oldw,oldh);if(oldw==0&&!positioned)fit()}
     // AndroidView can share a Compose canvas with surrounding controls. A background
     // drawColor and transformed nodes must never paint outside this viewport.
     override fun draw(canvas:Canvas){val save=canvas.save();try{canvas.clipRect(0,0,width,height);super.draw(canvas)}finally{canvas.restoreToCount(save)}}
@@ -66,8 +73,8 @@ internal class MindMapView(context:Context):View(context){
         }
         for(n in nodes){val left=x(n);val top=y(n);val box=RectF(left,top,left+216,top+84)
             val rootNode=!relationMode&&n.parentId==null
-            paint.style=Paint.Style.FILL;paint.color=if(rootNode)InkTheme.Accent.toArgb()else if(n.id==active?.id)InkTheme.Selected.toArgb()else Color.WHITE;c.drawRoundRect(box,12f,12f,paint)
-            paint.style=Paint.Style.STROKE;paint.strokeWidth=if(n.id==active?.id)2f else 1f;paint.color=if(n.id==active?.id||rootNode)InkTheme.Accent.toArgb()else InkTheme.ControlBorder.toArgb();c.drawRoundRect(box,12f,12f,paint)
+            paint.style=Paint.Style.FILL;paint.color=if(rootNode)InkTheme.Accent.toArgb()else if((n.id==active?.id||n.id==selectedNodeId))InkTheme.Selected.toArgb()else Color.WHITE;c.drawRoundRect(box,12f,12f,paint)
+            paint.style=Paint.Style.STROKE;paint.strokeWidth=if(n.id==active?.id||n.id==selectedNodeId)2f else 1f;paint.color=if(n.id==active?.id||n.id==selectedNodeId||rootNode)InkTheme.Accent.toArgb()else InkTheme.ControlBorder.toArgb();c.drawRoundRect(box,12f,12f,paint)
             paint.style=Paint.Style.FILL;paint.color=if(rootNode)Color.WHITE else InkTheme.Text.toArgb();paint.textSize=16f;paint.typeface=Typeface.create(Typeface.DEFAULT,Typeface.BOLD)
             val text=titles[if(relationMode)n.id else n.cardId].orEmpty().replace('\n',' ');val n1=paint.breakText(text,true,188f,null)
             c.drawText(text.take(n1),left+14,top+30,paint);val rest=text.drop(n1);val n2=paint.breakText(rest,true,176f,null)
@@ -86,7 +93,7 @@ internal class MindMapView(context:Context):View(context){
             MotionEvent.ACTION_MOVE->{if(multi)return true
                 if(hypot(e.x-startX,e.y-startY)>ViewConfiguration.get(context).scaledTouchSlop)moving=true
                 if(active!=null){dx=(e.x-startX)/(scale*d);dy=(e.y-startY)/(scale*d)}else {tx+=e.x-lastX;ty+=e.y-lastY}
-                lastX=e.x;lastY=e.y;invalidate()}
+                lastX=e.x;lastY=e.y;if(active==null)changedViewport();invalidate()}
             MotionEvent.ACTION_UP->{val n=active;val mx=dx;val my=dy;active=null;dx=0f;dy=0f;onActive(false);parent?.requestDisallowInterceptTouchEvent(false)
                 if(!multi&&n!=null){if(moving)onMove(n,(n.x+mx).coerceIn(-40000.0,40000.0),(n.y+my).coerceIn(-40000.0,40000.0))else onOpen(n)};invalidate();performClick()}
             MotionEvent.ACTION_CANCEL->{active=null;dx=0f;dy=0f;onActive(false);invalidate()}

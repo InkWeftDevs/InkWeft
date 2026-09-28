@@ -11,27 +11,39 @@ import kotlin.math.*
  * The previous 96-tile limit evicted the start of a fast stroke every frame. */
 internal object PencilRenderer {
     private val live=PencilTileRenderer()
+    init{RenderResources.onTrim{live.clear()}}
     internal val tileBuilds get()=live.tileBuilds
     fun draw(canvas:Canvas,stroke:InkStroke)=live.draw(canvas,stroke)
     fun forget(ids:Set<String>)=live.forget(ids)
 }
 /** Each raster worker owns its engine; background generation never locks live input. */
-internal class PencilTileRenderer(private val unit:Float=.5f,private val checkpoint:()->Unit={}) {
+internal class PencilTileRenderer(private val unit:Float=.5f,private val live:Boolean=true,private val checkpoint:()->Unit={}) {
     internal var tileBuilds=0L; private set
     companion object {private const val SIDE=64}
     private val UNIT=unit.coerceAtLeast(.5f);private val TILE=SIDE*UNIT
     private data class Key(val id:String,val appearance:StrokeAppearance,val color:Int,val width:Float,val x:Int,val y:Int)
+    private val owner="pencil-"+java.util.UUID.randomUUID()
+    private val bitmapAllocation=Any();private val coverageAllocation=Any();private var ownedTiles=0
+    private fun account(){val role=if(live)RenderResources.Role.LIVE_INK else RenderResources.Role.IN_FLIGHT
+        if(ownedTiles==0){RenderResources.release(bitmapAllocation,owner);RenderResources.release(coverageAllocation,owner)}else{
+            RenderResources.track(bitmapAllocation,ownedTiles.toLong()*SIDE*SIDE*4,"pencil-tile",owner,role)
+            RenderResources.track(coverageAllocation,ownedTiles.toLong()*SIDE*SIDE*4,"pencil-deposition",owner,role)
+        }
+    }
     private inner class Tile {
-        init { tileBuilds++ }
+        init { RenderResources.admit(SIDE.toLong()*SIDE*8,live);tileBuilds++ }
         val coverage=FloatArray(SIDE*SIDE)
         val bitmap=Bitmap.createBitmap(SIDE,SIDE,Bitmap.Config.ARGB_8888)
+        init{ownedTiles++;account()}
         var count=0
         var last:InkSample?=null
     }
-    private val tiles=object:LinkedHashMap<Key,Tile>(256,.75f,true){override fun removeEldestEntry(eldest:MutableMap.MutableEntry<Key,Tile>?)=size>2048}
+    private val tiles=object:LinkedHashMap<Key,Tile>(256,.75f,true){override fun removeEldestEntry(eldest:MutableMap.MutableEntry<Key,Tile>?):Boolean{if(size<=2048)return false;eldest?.value?.let(::release);return true}}
     private val grain=GraphiteMaterial.alpha()
     private val paint=Paint(Paint.FILTER_BITMAP_FLAG)
-    @Synchronized fun forget(ids:Set<String>){tiles.keys.removeAll{it.id in ids}}
+    private fun release(tile:Tile){ownedTiles--;account()}
+    @Synchronized fun clear(){tiles.clear();ownedTiles=0;account()}
+    @Synchronized fun forget(ids:Set<String>){val it=tiles.iterator();while(it.hasNext()){val entry=it.next();if(entry.key.id in ids){release(entry.value);it.remove()}}}
     private fun pressure(s:InkSample)=sqrt(if(s.pressure<0).5f else s.pressure)
     private fun tilt(s:InkSample,stroke:InkStroke)=if(s.tilt<0||!stroke.appearance.recipe.tiltShading)1f else 1+3*((s.tilt-(PI/6).toFloat())/(PI/6).toFloat()).coerceIn(0f,1f)
     private fun segmentRadius(p:InkSample,q:InkSample,s:InkStroke)=s.width*.5f*(.85f+.15f*max(pressure(p),pressure(q)))*max(tilt(p,s),tilt(q,s))
@@ -61,7 +73,7 @@ internal class PencilTileRenderer(private val unit:Float=.5f,private val checkpo
             checkpoint()
             val (tx,ty)=position;val key=Key(stroke.id,a,stroke.color,stroke.width,tx,ty)
             var tile=tiles[key]
-            if(tile==null||tile.count>source.size||tile.count>0&&source[tile.count-1].copy(world=tile.last!!.world)!=tile.last){tile=Tile();tiles[key]=tile}
+            if(tile==null||tile.count>source.size||tile.count>0&&source[tile.count-1].copy(world=tile.last!!.world)!=tile.last){tile?.let(::release);tile=Tile();tiles[key]=tile}
             val ox=a.originX+tx*TILE;val oy=a.originY+ty*TILE
             var dirty=false
             for(i in segments){if(i<tile.count)continue;dirty=true

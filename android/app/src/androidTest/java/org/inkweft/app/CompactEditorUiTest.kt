@@ -10,7 +10,7 @@ import org.junit.Assert.*
 class CompactEditorUiTest {
  @get:Rule val compose=createAndroidComposeRule<MainActivity>()
  private val app get()=compose.activity.application as InkWeftApplication
- private fun tap(tag:String){val n=compose.onNodeWithTag(tag);runCatching{n.performScrollTo()};n.performClick()}
+ private fun tap(tag:String){if(tag in setOf("add-page","object-shape","page-objects","object-sticker","top-area-erase","object-camera")){compose.openEditorAction(tag);return};if(tag=="top-draw"){compose.openCurrentPen();return};val n=compose.onNodeWithTag(tag);runCatching{n.performScrollTo()};n.performClick()}
  private fun ready(){compose.waitUntil(15000){app.navigationReady.value};compose.waitForIdle()}
  @Test fun compactEditorBookmarksTagsAndLiveEraser(){
   compose.waitUntil(15000){compose.onAllNodesWithTag("new-note").fetchSemanticsNodes().isNotEmpty()}

@@ -23,11 +23,11 @@ class InkUiTest {
         compose.onNodeWithTag("new-title").performTextInput("手写测试 "+UUID.randomUUID().toString().take(8))
         compose.onNodeWithTag("create-note").performClick();compose.singlePageEditor()
         compose.waitUntil(10_000){compose.onAllNodesWithTag("ink-surface").fetchSemanticsNodes().isNotEmpty()}
-        compose.waitUntil(10_000){runCatching { compose.onNodeWithTag("ink-status").assertTextContains("已保存",substring=true) }.isSuccess}
-        compose.onNodeWithTag("ink-more").performScrollTo().performClick();compose.onNodeWithTag("ink-finger").performScrollTo().performClick()
+        compose.waitForSavedInk()
+        compose.openEditorAction("quick-finger")
     }
     private fun count(n: Int) {
-        compose.waitUntil(10_000){runCatching { compose.onNodeWithTag("ink-status").assertInkCount(n) }.isSuccess}
+        compose.waitUntil(10_000){runCatching { compose.onNodeWithTag("ink-surface").assertInkCount(n) }.isSuccess}
     }
     private fun draw() {
         compose.onNodeWithTag("ink-surface").performTouchInput {

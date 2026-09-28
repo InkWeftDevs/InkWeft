@@ -36,6 +36,7 @@ internal val Side=InkTheme.Navigation
         "star"->R.drawable.ic_star
         "star-filled"->R.drawable.ic_star_filled
         "board"->R.drawable.ic_board
+        "mindmap"->R.drawable.ic_mindmap
         "pen"->R.drawable.ic_pen
         "beauty"->R.drawable.ic_beauty
         "eraser"->R.drawable.ic_eraser

@@ -29,8 +29,8 @@ class PageObjectsUiTest {
         val title="页内对象-"+UUID.randomUUID().toString().take(6)
         compose.onNodeWithTag("new-note").performClick();compose.onNodeWithTag("create-page").performClick()
         compose.onNodeWithTag("new-title").performTextInput(title);compose.onNodeWithTag("create-note").performClick();compose.singlePageEditor()
-        compose.waitUntil(10_000){runCatching{compose.onNodeWithTag("ink-status").assertTextContains("已保存",substring=true)}.isSuccess}
-        hideKeyboard();compose.onNodeWithTag("page-objects").performClick()
+        compose.waitForSavedInk()
+        hideKeyboard();compose.openEditorAction("page-objects")
         return runBlocking{app.repository.observeNotes().first()}.single{it.title==title}.id
     }
     private fun objects(id:String)=runBlocking{app.pageObjects.read(id).objects}
@@ -67,14 +67,14 @@ class PageObjectsUiTest {
         compose.onNodeWithTag("ink-undo").performScrollTo().performClick();count(id,2)
         compose.onNodeWithTag("ink-redo").performScrollTo().performClick();count(id,1)
         compose.onNodeWithTag("object-tape").performScrollTo().performClick();compose.onNodeWithTag("tape-overlay").performTouchInput{swipe(Offset(width*.3f,height*.3f),Offset(width*.6f,height*.3f),250)};count(id,2)
-        compose.onNodeWithTag("page-objects").performClick();val tapePosition=position(objects(id).last());compose.onNodeWithTag("object-overlay").performTouchInput{click(tapePosition)}
+        compose.openEditorAction("page-objects");val tapePosition=position(objects(id).last());compose.onNodeWithTag("object-overlay").performTouchInput{click(tapePosition)}
         assertFalse(objects(id).last().revealed)
         compose.onNodeWithTag("object-reveal").performClick();compose.waitUntil(10_000){objects(id).last().revealed}
         compose.waitForIdle()
         capture("page-objects-editor.png")
         val expected=objects(id)
         compose.activityRule.scenario.recreate()
-        compose.waitUntil(10_000){runCatching{compose.onNodeWithTag("ink-status").assertTextContains("已保存",substring=true)}.isSuccess}
+        compose.waitForSavedInk()
         assertEquals(expected,objects(id));assertTrue(runBlocking{app.inkRepository.read(id).strokes.isEmpty()})
     }
     @Test fun normalizedImageIsSelfContainedAndTapeActuallyCoversIt(){
@@ -89,7 +89,8 @@ class PageObjectsUiTest {
             painter.draw(canvas,listOf(o,tape),false,visible);painter.draw(canvas,listOf(o,tape),true,visible)
             assertTrue(Color.blue(result.getPixel(50,50))>240);assertTrue(Color.red(result.getPixel(50,50))<180)
             painter.draw(canvas,listOf(o,tape.copy(revealed=true)),false,visible);painter.draw(canvas,listOf(o,tape.copy(revealed=true)),true,visible)
-            assertTrue(Color.red(result.getPixel(50,50))>245);assertTrue(Color.blue(result.getPixel(50,50))<10)
+            // Revealed tape keeps a 25/255 colour hint so it can be found and covered again.
+            assertTrue(Color.red(result.getPixel(50,50)) in 225..235);assertTrue(Color.blue(result.getPixel(50,50)) in 20..30)
             InstrumentationRegistry.getInstrumentation().runOnMainSync {
                 val view=InkCanvasView(compose.activity)
                 view.configure(false,PaperStyle.BLANK,CanvasViewport(200.0,100.0,1.0/compose.activity.resources.displayMetrics.density))

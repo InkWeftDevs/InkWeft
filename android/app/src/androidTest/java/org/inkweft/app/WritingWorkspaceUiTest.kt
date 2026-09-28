@@ -13,6 +13,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.test.platform.app.InstrumentationRegistry
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
+import org.inkweft.core.InkSession
 import org.junit.Assert.*
 import org.junit.Rule
 import org.junit.Test
@@ -22,7 +23,11 @@ import java.util.UUID
 class WritingWorkspaceUiTest {
     @get:Rule val compose=createAndroidComposeRule<MainActivity>()
     private val app get()=compose.activity.application as InkWeftApplication
-    private fun saved(n:Int?=null){compose.waitUntil(10_000){runCatching{val node=compose.onNodeWithTag("ink-status");node.assertTextContains("已保存",substring=true);if(n!=null)node.assertInkCount(n)}.isSuccess}}
+    private fun saved(n:Int?=null){compose.waitForIdle();compose.waitUntil(15000){runCatching{
+        assertTrue(app.navigationReady.value)
+        if(n!=null){val provider=androidx.lifecycle.ViewModelProvider(compose.activity);val book=provider[NotebookViewModel::class.java].ui.value.selectedId!!;val page=provider["book-$book",BookPagesViewModel::class.java].ui.value.selectedId!!
+            assertEquals(n,InkSession(runBlocking{app.inkRepository.read(page)}).visibleDraft().size)}
+    }.isSuccess}}
     private fun create():String {
         compose.waitUntil(10_000){runCatching{compose.onNodeWithTag("new-note").assertIsEnabled()}.isSuccess}
         val name="书写工作台-"+UUID.randomUUID().toString().take(6)
@@ -31,13 +36,13 @@ class WritingWorkspaceUiTest {
         compose.waitUntil(10_000){androidx.core.view.ViewCompat.getRootWindowInsets(compose.activity.window.decorView)?.isVisible(WindowInsetsCompat.Type.ime())==false}
         return runBlocking{app.repository.observeNotes().first()}.single{it.title==name}.id
     }
-    private fun finger(){compose.onNodeWithTag("ink-more").performScrollTo().performClick();compose.onNodeWithTag("ink-finger").performScrollTo().performClick()}
+    private fun finger(){compose.openEditorAction("quick-finger")}
     private fun draw(){compose.onNodeWithTag("ink-surface").performTouchInput{swipe(Offset(width*.3f,height*.3f),Offset(width*.5f,height*.5f),200)}}
-    private fun mode(){compose.onNodeWithTag("document-more").performClick();compose.onNodeWithTag("toggle-continuous").performClick();compose.waitForIdle()}
+    private fun mode(){if(compose.onAllNodesWithTag("continuous-setting").fetchSemanticsNodes().isEmpty())compose.onNodeWithTag("quick-settings").performClick();compose.onNodeWithTag("continuous-setting").performScrollTo().performClick();compose.onNodeWithTag("document-settings-dialog-close").performClick();compose.waitForIdle()}
     private fun shot(name:String){val bmp=checkNotNull(InstrumentationRegistry.getInstrumentation().uiAutomation.takeScreenshot());try{File(compose.activity.getExternalFilesDir(null),name).outputStream().use{bmp.compress(Bitmap.CompressFormat.PNG,100,it)}}finally{bmp.recycle()}}
     @Test fun tabsKeepInkAndClosingOnlyClosesTheTab(){
         val a=create();finger();draw();saved(1)
-        compose.onNodeWithTag("tabs-open-library").performClick();val b=create();finger();draw();draw();saved(2)
+        compose.onNodeWithTag("tabs-list").performClick();compose.onNodeWithTag("tabs-open-library").performClick();val b=create();finger();draw();draw();saved(2)
         compose.onNodeWithTag("notebook-tab-$a").performScrollTo().performClick();saved(1)
         compose.onNodeWithTag("notebook-tab-$b").performScrollTo().performClick();saved(2)
         shot("notebook-tabs.png")
@@ -47,9 +52,10 @@ class WritingWorkspaceUiTest {
         compose.activityRule.scenario.recreate();saved(1)
     }
     @Test fun continuousFingerScrollAndStylusWriteStayOnTheirOwnPage(){
-        val book=create();compose.onNodeWithTag("add-page").performClick();compose.onNodeWithTag("insert-count-plus").performScrollTo().performClick();compose.onNodeWithTag("confirm-insert-pages").performClick();saved()
+        val book=create();compose.openEditorAction("add-page");compose.onNodeWithTag("insert-count-plus").performScrollTo().performClick();compose.onNodeWithTag("confirm-insert-pages").performClick();saved()
+        compose.waitUntil(15000){runBlocking{app.pages.observe(book).first().size}==3}
         val pages=runBlocking{app.pages.observe(book).first()};assertEquals(3,pages.size)
-        compose.onNodeWithTag("page-directory").performClick();compose.onNodeWithTag("jump-page-1").performClick();saved();mode()
+        compose.openOverviewGrid();compose.onNodeWithTag("jump-page-1").performClick();saved();compose.onNodeWithTag("pages-directory-dialog-close").performClick();mode()
         compose.onNodeWithTag("continuous-pages").performTouchInput{swipeUp(durationMillis=450)}
         compose.waitForIdle();pages.forEach{assertTrue(runBlocking{app.inkRepository.read(it.id).strokes}.isEmpty())}
         // Put the boundary into view: both pages must coexist, instead of replacing one canvas.
@@ -73,17 +79,17 @@ class WritingWorkspaceUiTest {
         assertTrue(runBlocking{app.inkRepository.read(pages[0].id).strokes}.isEmpty());assertTrue(runBlocking{app.inkRepository.read(pages[2].id).strokes}.isEmpty())
         compose.onNodeWithTag("ink-undo").performScrollTo().performClick();saved(0)
         compose.onNodeWithTag("ink-redo").performScrollTo().performClick();saved(1)
-        mode();saved(1);compose.onNodeWithTag("next-page").performClick();saved(0);finger();draw();saved(1)
+        mode();saved(1);compose.openOverviewGrid();compose.onNodeWithTag("page-grid").performScrollToNode(hasTestTag("jump-page-3"));compose.onNodeWithTag("jump-page-3").performClick();compose.onNodeWithTag("pages-directory-dialog-close").performClick();saved(0);finger();draw();saved(1)
         assertEquals(1,runBlocking{app.inkRepository.read(pages[2].id).strokes.size});assertEquals(1,runBlocking{app.inkRepository.read(page.id).strokes.size})
         mode();compose.activityRule.scenario.recreate();compose.onNodeWithTag("continuous-pages").assertExists()
     }
     @Test fun settingsSaveTagsAndExposeLassoAndToolbarPlacement(){
-        val id=create();compose.onNodeWithTag("document-more").performClick();compose.onNodeWithTag("document-settings").performClick()
-        compose.onNodeWithTag("continuous-setting").performClick();shot("document-reading-settings.png")
-        compose.onNodeWithTag("settings-tags").performScrollTo().performClick();compose.onNodeWithTag("notebook-tags").performTextInput("课程,复习");compose.onNodeWithTag("save-notebook-tags").performClick()
+        val id=create();compose.onNodeWithTag("quick-settings").performClick()
+        compose.onNodeWithTag("continuous-setting").performScrollTo().performClick();shot("document-reading-settings.png")
+        compose.onNodeWithTag("settings-tags").performScrollTo().performClick();compose.onNodeWithTag("notebook-tags").performTextInput("课程");compose.onNodeWithTag("tag-add").performClick();compose.onNodeWithTag("notebook-tags").performTextInput("复习");compose.onNodeWithTag("save-notebook-tags").performClick()
         compose.waitUntil(10_000){runBlocking{app.workspaceRepository.get(id).tags}.contains("复习")}
         compose.onNodeWithTag("continuous-pages").assertExists()
-        compose.onNodeWithTag("ink-more").performScrollTo().performClick();compose.onNodeWithTag("selection-tools").performClick()
+        compose.onNodeWithTag("ink-select").performScrollTo().performClick()
         compose.onNodeWithTag("selection-lasso").assertIsSelected();compose.onNodeWithTag("continuous-pages").assertDoesNotExist()
         compose.onNodeWithTag("pen-kind-ballpoint").performClick()
         val before=compose.onNodeWithTag("floating-pen-case").fetchSemanticsNode().boundsInRoot
@@ -92,7 +98,7 @@ class WritingWorkspaceUiTest {
 
     }
     @Test fun closingDirtyTextTabPreservesTheDraft(){
-        val id=create();compose.onNodeWithTag("document-more").performClick();compose.onNodeWithTag("mode-text").performClick()
+        val id=create();compose.onNodeWithTag("quick-settings").performClick();compose.onNodeWithTag("mode-text").performClick()
         compose.onNodeWithTag("note-body").performTextInput("保留未保存草稿")
         compose.onNodeWithTag("close-tab-$id").performScrollTo().performClick()
         compose.onNodeWithTag("notebook-tab-$id").assertExists();compose.onNodeWithTag("note-body").assertTextContains("保留未保存草稿",substring=true)

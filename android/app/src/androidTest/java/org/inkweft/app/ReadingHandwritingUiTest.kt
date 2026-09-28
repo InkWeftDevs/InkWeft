@@ -24,7 +24,7 @@ class ReadingHandwritingUiTest {
     private val app get()=compose.activity.application as InkWeftApplication
     private fun id()=UUID.randomUUID().toString()
     private fun ready(){compose.waitUntil(15_000){runCatching{compose.onNodeWithTag("new-note").assertIsEnabled()}.isSuccess}}
-    private fun saved(){compose.waitUntil(15_000){runCatching{compose.onNodeWithTag("ink-status").assertTextContains("已保存",substring=true)}.isSuccess}}
+    private fun saved(){compose.waitForSavedInk()}
     private fun nativeCanvas():InkCanvasView{fun find(v:View):InkCanvasView?{if(v is InkCanvasView&&!v.preview)return v;if(v is ViewGroup)for(i in 0 until v.childCount)find(v.getChildAt(i))?.let{return it};return null};return checkNotNull(find(compose.activity.window.decorView))}
     private fun hideKeyboard(){compose.activityRule.scenario.onActivity{a->a.currentFocus?.clearFocus();WindowCompat.getInsetsController(a.window,a.window.decorView).hide(WindowInsetsCompat.Type.ime())};compose.waitForIdle()}
     private fun shot(name:String){compose.waitForIdle();val bitmap=checkNotNull(InstrumentationRegistry.getInstrumentation().uiAutomation.takeScreenshot());try{File(app.getExternalFilesDir(null),name).outputStream().use{bitmap.compress(Bitmap.CompressFormat.PNG,100,it)}}finally{bitmap.recycle()}}
@@ -49,12 +49,12 @@ class ReadingHandwritingUiTest {
             compose.waitUntil(15_000){compose.onAllNodesWithTag("confirm-content-import").fetchSemanticsNodes().isNotEmpty()}
             compose.onNodeWithTag("confirm-content-import").performClick();compose.waitUntil(15_000){compose.onAllNodesWithTag("open-transfer-result").fetchSemanticsNodes().isNotEmpty()}
             val noteId=runBlocking{ViewModelProvider(compose.activity)[LibraryTransfersViewModel::class.java].ui.value.result!!.id}
-            file.delete();compose.onNodeWithTag("open-transfer-result").performClick();compose.singlePageEditor();saved();compose.onNodeWithTag("fit-page").performScrollTo().performClick()
+            file.delete();compose.onNodeWithTag("open-transfer-result").performClick();compose.singlePageEditor();saved();compose.frameCanvasFixture()
             fun awaitBlue(){compose.waitUntil(10_000){var blue=false;compose.runOnIdle{val v=nativeCanvas();val bitmap=Bitmap.createBitmap(v.width,v.height,Bitmap.Config.ARGB_8888);try{v.draw(Canvas(bitmap));val p=v.snapshotViewport().worldToScreen(400.0,650.0,v.width.toDouble(),v.height.toDouble(),v.resources.displayMetrics.density.toDouble());if(p.x>=0&&p.x<v.width&&p.y>=0&&p.y<v.height){val pixel=bitmap.getPixel(p.x.toInt(),p.y.toInt());blue=Color.blue(pixel)>200&&Color.red(pixel)<50}}finally{bitmap.recycle()}};blue}}
             awaitBlue();shot("pdf-reading.png")
             val source=runBlocking{app.documents.read(noteId)}!!
             val cached=File(app.cacheDir,"document-render/${source.document.sha256}.pdf");assertTrue(cached.delete())
-            compose.onNodeWithTag("zoom-in").performScrollTo().performClick()
+            compose.pinchCanvasOut()
             compose.waitUntil(10_000){cached.isFile};awaitBlue()
             compose.activityRule.scenario.recreate();saved();awaitBlue()
         }finally{file.delete()}

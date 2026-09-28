@@ -45,18 +45,18 @@ class PaperTemplateUiTest {
         }
         compose.onNode(hasScrollToIndexAction() and hasAnyAncestor(hasTestTag("new-notebook-screen"))).performScrollToKey("HABIT")
         compose.onNodeWithTag("template-habit").assertIsDisplayed().performClick();compose.onNodeWithTag("create-note").performClick();compose.singlePageEditor()
-        compose.waitUntil(10000){runCatching{compose.onNodeWithTag("ink-status").assertTextContains("已保存",substring=true)}.isSuccess}
+        compose.waitForSavedInk()
         val note=runBlocking{app.repository.observeNotes().first()}.first()
         assertEquals(PaperStyle.HABIT.ordinal,runBlocking{app.pages.activePages(note.id)}.single().paper)
-        compose.onNodeWithTag("fit-page").performScrollTo().performClick();shot("paper-habit-page.png")
+        compose.frameCanvasFixture();shot("paper-habit-page.png")
     }
     @Test fun changingAndCancellingTemplatePreservesInkAndPageIdentity(){
         ready();val n=runBlocking{app.workspaceRepository.create("纸面验证",false,PaperStyle.GRID)}
         val stroke=InkStroke(UUID.randomUUID().toString(),InkPen.PEN,0xff111111.toInt(),3f,InkTool.STYLUS,listOf(InkSample(200f,300f,0,.5f),InkSample(600f,700f,50,.5f)))
         runBlocking{app.inkRepository.save(CommitInk(UUID.randomUUID().toString(),n.id,0,InkMutation.Add(stroke)))}
         compose.runOnIdle{ViewModelProvider(compose.activity)[NotebookViewModel::class.java].select(n)};compose.singlePageEditor()
-        compose.waitUntil(10000){runCatching{compose.onNodeWithTag("ink-status").assertTextContains("已保存",substring=true)}.isSuccess}
-        fun picker(){compose.onNodeWithTag("ink-more").performScrollTo().performClick();compose.onNodeWithTag("change-paper").performClick()}
+        compose.waitForSavedInk()
+        fun picker(){if(compose.onAllNodesWithTag("settings-paper").fetchSemanticsNodes().isEmpty())compose.onNodeWithTag("quick-settings").performClick();compose.onNodeWithTag("settings-paper").performScrollTo().performClick()}
         picker();compose.onNodeWithTag("paper-search").performTextInput("会议")
         compose.onNodeWithTag("paper-option-meeting").performScrollTo().performClick();compose.onNodeWithTag("paper-picker-cancel").performClick()
         assertEquals(PaperStyle.GRID.ordinal,runBlocking{app.pages.activePages(n.id)}.single().paper)
@@ -66,10 +66,10 @@ class PaperTemplateUiTest {
         assertEquals(stroke.samples,runBlocking{app.inkRepository.read(n.id)}.strokes.single().stroke.samples)
         compose.waitUntil(5000){compose.onAllNodesWithTag("paper-picker").fetchSemanticsNodes().isEmpty()}
         compose.activityRule.scenario.recreate()
-        compose.waitUntil(10000){runCatching{compose.onNodeWithTag("fit-page").assertExists()}.isSuccess}
+        compose.waitForSavedInk()
         compose.waitUntil(5000){compose.onAllNodesWithTag("paper-picker").fetchSemanticsNodes().isEmpty()}
         assertEquals(n.id,runBlocking{app.pages.activePages(n.id)}.single().id)
-        compose.onNodeWithTag("fit-page").performScrollTo().performClick();shot("paper-daily-page.png")
+        compose.frameCanvasFixture();shot("paper-daily-page.png")
     }
     @Test fun renderEveryTemplateWithTheProductionPainter(){
         val bounds=CanvasBounds(0.0,0.0,1000.0,1414.0)

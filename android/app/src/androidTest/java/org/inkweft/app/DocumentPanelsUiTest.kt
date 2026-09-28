@@ -11,7 +11,7 @@ import org.junit.Assert.*
 class DocumentPanelsUiTest {
  @get:Rule val compose=createAndroidComposeRule<MainActivity>()
  private val app get()=compose.activity.application as InkWeftApplication
- private fun tap(tag:String){val n=compose.onNodeWithTag(tag);runCatching{n.performScrollTo()};n.performClick()}
+ private fun tap(tag:String){if(tag in setOf("add-page","object-shape","page-objects","object-sticker","top-area-erase","object-camera")){compose.openEditorAction(tag);return};if(tag=="top-draw"){compose.openCurrentPen();return};val n=compose.onNodeWithTag(tag);runCatching{n.performScrollTo()};n.performClick()}
  private lateinit var oldEditor:Map<String,*>
  @Before fun isolate(){val p=app.getSharedPreferences("inkweft-editor",0);oldEditor=p.all;p.edit().clear().commit()}
  @After fun restore(){val e=app.getSharedPreferences("inkweft-editor",0).edit().clear();oldEditor.forEach{(k,v)->when(v){is String->e.putString(k,v);is Float->e.putFloat(k,v);is Boolean->e.putBoolean(k,v);is Int->e.putInt(k,v);is Long->e.putLong(k,v);is Set<*>->e.putStringSet(k,v.filterIsInstance<String>().toSet())}};e.commit()}
@@ -33,9 +33,9 @@ class DocumentPanelsUiTest {
  }
  @Test fun overviewSwitchesPagesWithoutClosingAndSettingsActionsReachTheRealFlows(){
   val n=open();tap("add-page");tap("insert-count-plus");tap("confirm-insert-pages");compose.waitUntil(15000){runBlocking{app.pages.observe(n.id).first().size}==3};ready()
-  tap("quick-overview");tap("overview-layout");compose.onNodeWithTag("page-grid").performScrollToNode(hasTestTag("jump-page-1"));tap("jump-page-1");ready();compose.onNodeWithTag("pages-directory-dialog").assertIsDisplayed();compose.onNodeWithTag("page-counter",useUnmergedTree=true).assertTextEquals("第 1 / 3 页")
+  tap("quick-overview");tap("overview-layout");compose.onNodeWithTag("page-grid").performScrollToNode(hasTestTag("jump-page-1"));tap("jump-page-1");ready();compose.onNodeWithTag("pages-directory-dialog").assertIsDisplayed();compose.assertCurrentPage("第 1 / 3 页")
   tap("pages-directory-dialog-close");tap("quick-settings");shot("v30-settings-responsive.png");compose.onNodeWithTag("document-page-number").performTextInput("9");tap("document-page-go");compose.onNodeWithText("请输入1到3之间的页码").assertExists()
-  compose.onNodeWithTag("document-page-number").performTextReplacement("2");tap("document-page-go");ready();compose.onNodeWithTag("page-counter",useUnmergedTree=true).assertTextEquals("第 2 / 3 页")
+  compose.onNodeWithTag("document-page-number").performTextReplacement("2");tap("document-page-go");ready();compose.assertCurrentPage("第 2 / 3 页")
   tap("settings-paper");compose.onNodeWithTag("paper-picker").assertIsDisplayed();tap("paper-picker-cancel")
   tap("settings-copy-page");compose.onNodeWithTag("page-edit-dialog").assertExists();compose.onNodeWithText("取消").performClick()
   tap("quick-settings");tap("settings-deleted-pages");compose.onNodeWithTag("pages-directory-dialog").assertIsDisplayed();compose.onNodeWithText("没有已删除页面").assertExists();tap("pages-directory-dialog-close")

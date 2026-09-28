@@ -31,7 +31,7 @@ class EditorToolsUiTest {
     private fun strokes(n:Note)=runBlocking{InkSession(app.inkRepository.read(n.id)).visibleDraft()}
     private fun objects(n:Note)=runBlocking{app.pageObjects.read(n.id).objects}
     private fun ready(){compose.waitUntil(15000){app.navigationReady.value}}
-    private fun tap(tag:String){val node=compose.onNodeWithTag(tag);runCatching{node.performScrollTo()};node.performClick()}
+    private fun tap(tag:String){if(tag in setOf("add-page","object-shape","page-objects","object-sticker","top-area-erase","object-camera")){compose.openEditorAction(tag);return};if(tag=="top-draw"){compose.openCurrentPen();return};val node=compose.onNodeWithTag(tag);runCatching{node.performScrollTo()};node.performClick()}
     private fun screenshot(name:String){compose.waitForIdle();val b=checkNotNull(InstrumentationRegistry.getInstrumentation().uiAutomation.takeScreenshot());try{File(app.getExternalFilesDir(null),name).outputStream().use{b.compress(Bitmap.CompressFormat.PNG,100,it)}}finally{b.recycle()}}
     @Test fun distinctPensRememberRecipesAndPaletteDoesNotRewriteOtherPens(){
         val n=open();val store=PenWidthStore(app,"inkweft-pen-widths-book-${n.id}")
@@ -53,7 +53,7 @@ class EditorToolsUiTest {
         screenshot("v26-pen-case.png")
     }
     @Test fun toolbarHidingAndOrderPersistAndAlwaysRemainRecoverable(){
-        open();tap("toolbar-customize");compose.onNodeWithTag("toolbar-drag-camera").performScrollTo().performTouchInput{swipe(center,center-Offset(0f,height*1.6f),400)};tap("toolbar-visible-camera")
+        open();tap("toolbar-customize");tap("toolbar-visible-camera");compose.onNodeWithTag("toolbar-drag-camera").performScrollTo().performTouchInput{swipe(center,center-Offset(0f,height*1.6f),400)};tap("toolbar-visible-camera")
         val order=EditorToolOrder.read(app);assertTrue(order.indexOf("camera")<order.indexOf("image"))
         screenshot("v26-toolbar-settings.png");tap("toolbar-done");compose.onNodeWithTag("object-camera").assertDoesNotExist()
         compose.activityRule.scenario.recreate();ready();compose.onNodeWithTag("object-camera").assertDoesNotExist();assertEquals(order,EditorToolOrder.read(app))
@@ -112,7 +112,7 @@ class EditorToolsUiTest {
         tap("quick-beauty");compose.onNodeWithTag("beauty-enabled").assertExists()
     }
     @Test fun compactCustomizationSupportsLargeText(){
-        open();tap("toolbar-customize");compose.onNodeWithTag("toolbar-done").assertIsDisplayed()
+        open();tap("toolbar-customize");compose.onNodeWithTag("toolbar-done").assertIsDisplayed();tap("toolbar-visible-camera")
         tap("toolbar-visible-camera");screenshot("v26-compact-large-type.png")
         tap("toolbar-drag-image");compose.onNodeWithText("上移").performClick()
         tap("toolbar-done");compose.onNodeWithTag("object-camera").assertDoesNotExist()

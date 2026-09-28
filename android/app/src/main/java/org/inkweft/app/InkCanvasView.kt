@@ -78,7 +78,8 @@ class InkCanvasView(context:Context):View(context){
     private var documentRequest:String?=null
     private var documentKnownAbsent=false
     private var documentError=false
-    fun showDocument(id:String?){if(documentId==id)return;documentId=id;documentTile=null;documentRequest=null;documentKnownAbsent=false;documentError=false;requestDocument();invalidate()}
+    private fun releaseDocumentTile(){documentTile?.let{tile->documentId?.let{RenderResources.release(tile.bitmap,it)}};documentTile=null}
+    fun showDocument(id:String?){if(documentId==id)return;releaseDocumentTile();documentId=id;documentRequest=null;documentKnownAbsent=false;documentError=false;requestDocument();invalidate()}
     private fun requestDocument(){
         val id=documentId?:return;if(documentKnownAbsent||width<=0||height<=0||!isAttachedToWindow)return
         val visible=viewport.visible(width.toDouble(),height.toDouble(),density)
@@ -89,8 +90,9 @@ class InkCanvasView(context:Context):View(context){
         documentJob=CoroutineScope(Dispatchers.Main.immediate).launch {
             delay(80)
             try{val tile=(context.applicationContext as InkWeftApplication).documentRendering.render(id,rect,pixels)
-                ensureActive();if(documentRequest==request){documentTile=tile;documentKnownAbsent=tile==null;documentError=false;invalidate()}
-            }catch(c:CancellationException){throw c}catch(_:Exception){if(documentRequest==request){documentError=true;invalidate();onNotice("文档页面读取失败，请离开后重新打开；原文件保留。")}}
+                ensureActive();if(documentRequest==request){releaseDocumentTile();documentTile=tile;documentKnownAbsent=tile==null;documentError=false;invalidate()}
+            }catch(c:CancellationException){throw c}catch(_:RenderBudgetBusy){delay(500);if(documentRequest==request){documentRequest=null;documentJob=null;requestDocument()}}
+            catch(_:Exception){if(documentRequest==request){documentError=true;invalidate();onNotice("文档页面读取失败，请离开后重新打开；原文件保留。")}}
         }
     }
     override fun onAttachedToWindow(){super.onAttachedToWindow();documentRequest=null;requestDocument()}
@@ -307,6 +309,6 @@ class InkCanvasView(context:Context):View(context){
     }
     private fun finishViewport(){if(movingViewport){movingViewport=false;onViewport(viewport)}}
     fun cancelGesture(){tapImage=null;onLiveSamples(emptyList());val active=inputId!=-1;inputId=-1;raw.clear();gestureErase=false;cursor=null;parent?.requestDisallowInterceptTouchEvent(false);if(active)onGesture(false);invalidate()}
-    override fun onDetachedFromWindow(){PencilRenderer.forget(content.filter{it.pen==InkPen.PENCIL}.map{it.id}.toSet()+gestureId);pageRaster.clear();asyncRaster.clear();documentJob?.cancel();documentTile=null;documentRequest=null;objectPainter.clear();cancelGesture();if(configured&&!preview)onViewport(viewport);super.onDetachedFromWindow()}
+    override fun onDetachedFromWindow(){PencilRenderer.forget(content.filter{it.pen==InkPen.PENCIL}.map{it.id}.toSet()+gestureId);pageRaster.clear();asyncRaster.clear();documentJob?.cancel();releaseDocumentTile();documentRequest=null;objectPainter.clear();cancelGesture();if(configured&&!preview)onViewport(viewport);super.onDetachedFromWindow()}
     override fun performClick():Boolean{super.performClick();return true}
 }

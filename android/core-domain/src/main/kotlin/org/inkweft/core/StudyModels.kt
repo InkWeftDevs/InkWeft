@@ -38,8 +38,8 @@ object StudyGraph {
 }
 class StudyCommand(val id:String,val notebookId:String,val action:StudyAction,val cardId:String?=null,
     val nodeId:String?=null,val expectedRevision:Long=0,val parentId:String?=null,val title:String="",val body:String="",
-    val x:Double=40.0,val y:Double=80.0,val source:StudySourceDraft?=null,val expectedGraph:String="") {
-    init{UUID.fromString(id);UUID.fromString(notebookId);listOfNotNull(cardId,nodeId,parentId).forEach{UUID.fromString(it)}
+    val x:Double=40.0,val y:Double=80.0,val source:StudySourceDraft?=null,val expectedGraph:String="",val mapId:String?=null) {
+    init{UUID.fromString(id);UUID.fromString(notebookId);listOfNotNull(cardId,nodeId,parentId,mapId).forEach{UUID.fromString(it)}
         require(expectedRevision in 0 until Long.MAX_VALUE);require(title.length<=120&&body.length<=20_000)
         require(x.isFinite()&&y.isFinite()&&x in -40000.0..40000.0&&y in -40000.0..40000.0)
         when(action){
@@ -56,6 +56,7 @@ class StudyCommand(val id:String,val notebookId:String,val action:StudyAction,va
             d.writeUTF("inkweft.study.v1");listOf(id,notebookId,action.name,cardId.orEmpty(),nodeId.orEmpty(),parentId.orEmpty(),title,expectedGraph).forEach(d::writeUTF)
             val text=body.toByteArray(Charsets.UTF_8);d.writeInt(text.size);d.write(text);d.writeLong(expectedRevision);d.writeDouble(x);d.writeDouble(y)
             d.writeBoolean(source!=null);source?.let{s->d.writeUTF(s.pageId);d.writeLong(s.inkRevision);listOf(s.bounds.left,s.bounds.top,s.bounds.right,s.bounds.bottom).forEach(d::writeDouble);d.writeInt(s.strokeIds.size);s.strokeIds.forEach(d::writeUTF)}
+            mapId?.let{d.writeUTF("map");d.writeUTF(it)}
         };return ContentTransfer.hash(b.toByteArray())
     }
 }

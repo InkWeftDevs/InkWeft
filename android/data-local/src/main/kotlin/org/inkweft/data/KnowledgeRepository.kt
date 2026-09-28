@@ -24,6 +24,13 @@ data class KnowledgeReceiptRow(@PrimaryKey val operationId:String,val notebookId
     @Insert(onConflict=OnConflictStrategy.ABORT) suspend fun receipt(row:KnowledgeReceiptRow)
 }
 
+enum class KnowledgeRejection { CONFLICT, DUPLICATE, UNAVAILABLE, INVALID }
+class KnowledgeRejected(val reason:KnowledgeRejection):IllegalArgumentException(reason.name)
+sealed interface KnowledgeOutcome {
+    data class Success(val id:String):KnowledgeOutcome
+    data class Rejected(val reason:KnowledgeRejection):KnowledgeOutcome
+    data object Unknown:KnowledgeOutcome
+}
 enum class KnowledgeFault { BEFORE_RECEIPT, AFTER_COMMIT }
 class KnowledgeRepository(private val db:NoteDatabase,private val fault:(KnowledgeFault)->Unit={}){
     fun observe()=db.knowledge().observe()
@@ -37,11 +44,21 @@ class KnowledgeRepository(private val db:NoteDatabase,private val fault:(Knowled
     }
     suspend fun cardVersion(id:String,revision:Long)=db.study().cardVersion(id,revision)
     suspend fun lookup(c:KnowledgeCommand):String?=db.withTransaction{db.knowledge().receipt(c.operationId)?.let{require(it.notebookId==c.notebookId&&it.digest==c.digest());it.resultId}}
+    suspend fun outcome(c:KnowledgeCommand):KnowledgeOutcome = try { KnowledgeOutcome.Success(submit(c)) }
+    catch(cancel:kotlinx.coroutines.CancellationException){throw cancel}
+    catch(rejected:KnowledgeRejected){KnowledgeOutcome.Rejected(rejected.reason)}
+    catch(_:Exception){
+        try { lookup(c)?.let{KnowledgeOutcome.Success(it)}?:KnowledgeOutcome.Unknown }
+        catch(cancel:kotlinx.coroutines.CancellationException){throw cancel}
+        catch(_:Exception){KnowledgeOutcome.Unknown}
+    }
     suspend fun submit(c:KnowledgeCommand):String{
         val result=db.withTransaction{
             lookup(c)?.let{return@withTransaction it}
+            val dao=db.knowledge()
+            val (old,next)=try {
             require(db.workspace().get(c.notebookId)?.trashedAt==null&&db.notes().note(c.notebookId)!=null){"BOOK_UNAVAILABLE"}
-            val dao=db.knowledge();val old=dao.get(c.id);require((old?.revision?:0)==c.expectedRevision){"KNOWLEDGE_VERSION_CHANGED"}
+            val old=dao.get(c.id);require((old?.revision?:0)==c.expectedRevision){"KNOWLEDGE_VERSION_CHANGED"}
             require(old==null||old.notebookId==c.notebookId&&old.data()::class==c.data::class)
             require(!c.removed||old!=null)
             if(c.removed)require(old!!.payload.contentEquals(c.payload)){"REMOVE_MUST_PRESERVE_PAYLOAD"}
@@ -56,6 +73,15 @@ class KnowledgeRepository(private val db:NoteDatabase,private val fault:(Knowled
             if(c.data is KnowledgeData.Link&&!c.removed)require(records.none{it.id!=c.id&&!it.removed&&it.data()==c.data}){"LINK_EXISTS"}
             val next=KnowledgeRow(c.id,c.notebookId,c.expectedRevision+1,c.payload,c.removed)
             validateMaps(records.filter{it.id!=c.id}+next)
+            old to next
+            }catch(e:IllegalArgumentException){
+                throw KnowledgeRejected(when(e.message){
+                    "KNOWLEDGE_VERSION_CHANGED","SOURCE_CHANGED"->KnowledgeRejection.CONFLICT
+                    "BOOKMARK_EXISTS","PROPERTY_EXISTS","LINK_EXISTS"->KnowledgeRejection.DUPLICATE
+                    "BOOK_UNAVAILABLE"->KnowledgeRejection.UNAVAILABLE
+                    else->KnowledgeRejection.INVALID
+                })
+            }
             if(old==null)dao.insert(next)else check(dao.update(next)==1)
             dao.revision(KnowledgeRevisionRow(next.id,next.revision,next.notebookId,next.payload,next.removed))
             fault(KnowledgeFault.BEFORE_RECEIPT);dao.receipt(KnowledgeReceiptRow(c.operationId,c.notebookId,c.digest(),c.id));db.notes().touch(c.notebookId,System.currentTimeMillis());c.id

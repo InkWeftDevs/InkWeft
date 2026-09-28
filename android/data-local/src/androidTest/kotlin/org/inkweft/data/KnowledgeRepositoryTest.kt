@@ -14,6 +14,52 @@ class KnowledgeRepositoryTest {
     private fun fixture(block:suspend(NoteDatabase,String)->Unit)=runBlocking{val name="knowledge-${id()}.db";val db=NoteDatabase.open(context,name);try{block(db,WorkspaceRepository(db).create("关联测试",false,PaperStyle.CORNELL).id)}finally{db.close();context.deleteDatabase(name)}}
     private suspend fun card(db:NoteDatabase,book:String):String{val c=StudyCommand(id(),book,StudyAction.CREATE,id(),id(),title="知识甲",body="原答案");StudyRepository(db).submit(c);return c.cardId!!}
     private fun command(book:String,data:KnowledgeData,id:String=id(),revision:Long=0)=KnowledgeCommand(id(),book,id,revision,data)
+    @Test fun sourceCardAndIndependentMapOccurrenceCommitAtomicallyAndRestore()=fixture{db,book->
+        val ink=InkStroke(id(),InkPen.PEN,0xff123456.toInt(),3f,InkTool.STYLUS,listOf(InkSample(100f,100f,0),InkSample(200f,110f,30)))
+        InkRepository(db).save(CommitInk(id(),book,0,InkMutation.Add(ink)))
+        val kr=KnowledgeRepository(db);val m1=command(book,KnowledgeData.MapDefinition("甲图"));val m2=command(book,KnowledgeData.MapDefinition("乙图"));kr.submit(m1);kr.submit(m2)
+        val c=StudyCommand(id(),book,StudyAction.CREATE,cardId=id(),nodeId=id(),title="原迹",source=StudySourceDraft(book,1,ink.bounds(),listOf(ink.id)),mapId=m1.id)
+        val before=StudyRepository(db){if(it==StudyFault.BEFORE_RECEIPT)error("rollback")}
+        assertEquals(StudyOutcome.Unknown,before.outcome(c));assertNull(db.study().card(c.cardId!!));assertNull(db.study().source(c.cardId!!));assertNull(db.knowledge().get(c.nodeId!!))
+        assertTrue(StudyRepository(db){if(it==StudyFault.AFTER_COMMIT)error("lost response")}.outcome(c) is StudyOutcome.Success)
+        val repo=StudyRepository(db);repo.submit(c);assertEquals(1,db.study().cards(book).size);assertTrue(db.study().nodes(book).isEmpty())
+        val reuse=StudyCommand(id(),book,StudyAction.REUSE,cardId=c.cardId,nodeId=id(),mapId=m2.id);repo.submit(reuse)
+        repo.submit(StudyCommand(id(),book,StudyAction.EDIT,cardId=c.cardId,expectedRevision=1,title="共同标题",body="独立理解",mapId=m1.id))
+        repo.submit(StudyCommand(id(),book,StudyAction.REMOVE_NODE,nodeId=c.nodeId,expectedRevision=1,mapId=m1.id))
+        assertNotNull(db.study().card(c.cardId!!));assertFalse(db.knowledge().get(reuse.nodeId!!)!!.removed);assertEquals("共同标题",db.study().card(c.cardId!!)!!.title)
+        NotebookPages(db).addAfter(book,book,id())
+        suspend fun edit(kind:PageEditKind)=EditPage(id(),book,book,kind,InsertPages.orderHash(db.pages().list(book).map{it.id}),db.ink().page(book)!!.revision,PageInsertLocation.END,null,null,null,book)
+        assertTrue(PageEditingRepository(db).apply(edit(PageEditKind.MOVE)) is EditPageResult.Applied)
+        assertEquals(1,db.pages().get(book)!!.position)
+        assertEquals(book,repo.source(c.cardId!!)!!.pageId)
+        InkRepository(db).save(CommitInk(id(),book,1,InkMutation.Visibility(listOf(ink.id),false)))
+        assertEquals(1L,repo.source(c.cardId!!)!!.inkRevision)
+        assertTrue(InkSession(InkRepository(db).read(book)).visibleDraft().isEmpty())
+        assertTrue(PageEditingRepository(db).apply(edit(PageEditKind.TRASH)) is EditPageResult.Applied)
+        assertNotNull(db.pages().get(book)!!.trashedAt)
+        assertEquals(ink.id,InkPageFile.decode(repo.source(c.cardId!!)!!.snapshot).strokes.single().id)
+        val targetName="m1-restore-${id()}.db";val target=NoteDatabase.open(context,targetName)
+        try{LibraryBackupRepository(context,db).snapshot().use{snap->val restore=LibraryBackupRepository(context,target)
+            snap.file.inputStream().use{restore.inspect(it)}.use{preview->assertEquals(LibraryBackupRepository.RestoreResult.RESTORED,restore.restore(preview))}
+            assertEquals(book,target.study().source(c.cardId!!)!!.pageId);assertEquals(ink.id,InkPageFile.decode(target.study().source(c.cardId!!)!!.snapshot).strokes.single().id)
+            assertEquals("共同标题",target.study().card(c.cardId!!)!!.title);assertFalse(target.knowledge().get(reuse.nodeId!!)!!.removed)
+            assertNotNull(target.pages().get(book)!!.trashedAt)
+            assertTrue(InkSession(InkRepository(target).read(book)).visibleDraft().isEmpty())
+        }}finally{target.close();context.deleteDatabase(targetName)}
+    }
+    @Test fun overviewOutcomesSeparateConflictDuplicateAndUnknown()=fixture{db,book->
+        val repo=KnowledgeRepository(db);val c=command(book,KnowledgeData.PageMark(book,"原页签",true));assertTrue(repo.outcome(c) is KnowledgeOutcome.Success)
+        val conflict=KnowledgeCommand(id(),book,c.id,0,KnowledgeData.PageMark(book,"过期",true))
+        assertEquals(KnowledgeRejection.CONFLICT,(repo.outcome(conflict) as KnowledgeOutcome.Rejected).reason)
+        assertEquals(KnowledgeRejection.DUPLICATE,(repo.outcome(command(book,KnowledgeData.PageMark(book,"重复",true))) as KnowledgeOutcome.Rejected).reason)
+        val before=command(book,KnowledgeData.PageMark(book,"目录",false))
+        val injected=KnowledgeRepository(db){if(it==KnowledgeFault.BEFORE_RECEIPT)throw IllegalArgumentException("fault outside validation")}
+        assertEquals(KnowledgeOutcome.Unknown,injected.outcome(before));assertNull(db.knowledge().get(before.id))
+        assertTrue(repo.outcome(before) is KnowledgeOutcome.Success);assertEquals(2,db.knowledge().all().size)
+        val after=command(book,KnowledgeData.PageMark(book,"另一个目录",false))
+        assertTrue(KnowledgeRepository(db){if(it==KnowledgeFault.AFTER_COMMIT)error("response lost")}.outcome(after) is KnowledgeOutcome.Success)
+        repo.outcome(after);assertEquals(3,db.knowledge().all().size)
+    }
     @Test fun pageMarksAreOwnedUniqueAndIncludedInBackup()=fixture{db,book->
         val repo=KnowledgeRepository(db);val page=db.pages().get(book)!!
         val c=command(book,KnowledgeData.PageMark(page.id,"重点",true));repo.submit(c);repo.submit(c)

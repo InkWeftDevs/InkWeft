@@ -12,8 +12,8 @@ android {
         applicationId = if (insertionPreview) "org.inkweft.app.a0.insertion" else if (diagnosticBuild) "org.inkweft.app.a0.workspace" else "org.inkweft.app.a0"
         minSdk = 31
         targetSdk = 36
-        versionCode = 34
-        versionName = "0.0.34-selection-refinement"
+        versionCode = 35
+        versionName = "0.0.35-integrated-mindmap"
         manifestPlaceholders["appLabel"] = if (insertionPreview) "墨织整合预览" else if (diagnosticBuild) "墨织工作台预览" else "墨织"
         buildConfigField("String", "BUILD_COMMIT", "\"${commitValue("GITHUB_SHA")}\"")
         buildConfigField("String", "SOURCE_COMMIT", "\"${commitValue("INKWEFT_HEAD_SHA")}\"")

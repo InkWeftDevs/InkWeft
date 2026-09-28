@@ -10,7 +10,7 @@ import org.junit.Assert.*
 class TapeStylesUiTest {
  @get:Rule val compose=createAndroidComposeRule<MainActivity>()
  private val app get()=compose.activity.application as InkWeftApplication
- private fun tap(tag:String){val n=compose.onNodeWithTag(tag);runCatching{n.performScrollTo()};n.performClick()}
+ private fun tap(tag:String){if(tag in setOf("add-page","object-shape","page-objects","object-sticker","top-area-erase","object-camera")){compose.openEditorAction(tag);return};if(tag=="top-draw"){compose.openCurrentPen();return};val n=compose.onNodeWithTag(tag);runCatching{n.performScrollTo()};n.performClick()}
  @Test fun fixedNavigationAndTapeStylesAreImmediatelyReachableAndPersistent(){
   compose.waitUntil(15000){compose.onAllNodesWithTag("new-note").fetchSemanticsNodes().isNotEmpty()}
   val note=runBlocking{app.workspaceRepository.create("V29 胶带设置",false,PaperStyle.BLANK)}

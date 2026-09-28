@@ -52,7 +52,7 @@ class VisibleEditingUiTest {
         compose.waitUntil(10_000){app.navigationReady.value};assertEquals(moved,item(note))
     }
     @Test fun topPenExpandsCollapsedCaseAndEditsCurrentPreset(){
-        val note=fixture();compose.onNodeWithTag("top-draw").performClick()
+        val note=fixture();compose.openCurrentPen()
         compose.onNodeWithTag("pen-width-dialog").assertIsDisplayed()
         compose.selectPen("brush");compose.openCurrentPen()
         assertEquals(InkPen.BRUSH,PenWidthStore(app,"inkweft-pen-widths-book-"+note.id).readKinds()[0])

@@ -25,8 +25,8 @@ class PageEditingUiTest {
             // The count Text is a descendant of a merging TextButton. Match the
             // same unmerged node used by the existing insertion regression suite.
             compose.waitUntil(15_000){runCatching{
-                compose.onNodeWithTag("page-counter",useUnmergedTree=true).assertTextEquals(text)
-                compose.onNodeWithTag("page-directory").assertIsEnabled()
+                compose.assertCurrentPage(text)
+                compose.onNodeWithTag("quick-overview").assertIsEnabled()
             }.isSuccess}
         }catch(error:Throwable){
             runCatching{shot("page-edit-failure.png")}
@@ -39,10 +39,10 @@ class PageEditingUiTest {
         ready();val n=runBlocking{app.workspaceRepository.create("整理页面-${id().take(8)}",false,PaperStyle.GRID)}
         val ids=mutableListOf(n.id);repeat(count-1){ids+=runBlocking{app.pages.addAfter(n.id,ids.last(),id())}.id}
         compose.runOnIdle{ViewModelProvider(compose.activity)[NotebookViewModel::class.java].select(n)}
-        counter("第 1 / $count 页");compose.waitUntil(15_000){runCatching{compose.onNodeWithTag("page-directory").assertIsEnabled()}.isSuccess}
+        counter("第 1 / $count 页");compose.waitUntil(15_000){runCatching{compose.onNodeWithTag("quick-overview").assertIsEnabled()}.isSuccess}
         return n to ids
     }
-    private fun menu(number:Int){compose.onNodeWithTag("page-directory").performClick();compose.onNodeWithTag("page-grid").performScrollToNode(hasTestTag("page-menu-$number"));compose.onNodeWithTag("page-menu-$number").performClick()}
+    private fun menu(number:Int){compose.openOverviewGrid();compose.onNodeWithTag("page-grid").performScrollToNode(hasTestTag("page-menu-$number"));compose.onNodeWithTag("page-menu-$number").performClick()}
     private fun editReady(){
         var lastFailure:Throwable?=null
         try{
@@ -76,7 +76,7 @@ class PageEditingUiTest {
     @Test fun pageRecycleAndChosenRestoreUseActualDirectory(){
         val (n,ids)=seed();menu(2);compose.onNodeWithTag("recycle-page-2").performClick();confirm();counter("第 1 / 2 页")
         assertEquals(listOf(ids[0],ids[2]),runBlocking{app.pages.activePages(n.id)}.map{it.id})
-        compose.onNodeWithTag("page-directory").performClick();compose.onNodeWithTag("pages-recycled").performClick()
+        compose.openOverviewGrid();compose.onNodeWithTag("pages-recycled").performClick()
         compose.onNodeWithTag("recycled-page-${ids[1]}").assertIsDisplayed();shot("page-recycle-directory.png")
         compose.onNodeWithTag("restore-page-${ids[1]}").performClick();compose.onNodeWithTag("page-edit-start").performClick();confirm();counter("第 1 / 3 页")
         assertEquals(listOf(ids[1],ids[0],ids[2]),runBlocking{app.pages.activePages(n.id)}.map{it.id})

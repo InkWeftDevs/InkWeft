@@ -39,7 +39,7 @@ class WorkspaceUiTest {
         settleKeyboard()
         createdId=runBlocking{app.repository.observeNotes().first()}.first().id
     }
-    private fun saved(n:Int){try{compose.waitUntil(10_000){runCatching{compose.onNodeWithTag("ink-status").assertTextContains("已保存",substring=true).assertInkCount(n)}.isSuccess}}catch(error:Throwable){
+    private fun saved(n:Int){try{compose.waitUntil(10_000){runCatching{compose.onNodeWithTag("ink-surface").assertSavedInkCount(n)}.isSuccess}}catch(error:Throwable){
         runCatching{shot("workspace-failure.png")}
         runCatching{val data=runBlocking{app.diagnostics.bundle()};File(compose.activity.getExternalFilesDir(null),"workspace-failure-diagnostics.zip").writeBytes(data)}
         throw error
@@ -88,10 +88,10 @@ class WorkspaceUiTest {
         }finally{image.recycle()}
     }
     @Test fun realBoardNegativeCoordinatesPanZoomAndReopen(){
-        create(true);assertViewportClip(true);compose.onNodeWithTag("ink-more").performScrollTo().performClick();compose.onNodeWithTag("ink-finger").performScrollTo().performClick();draw();saved(1)
-        compose.onNodeWithTag("ink-more").performScrollTo().performClick();compose.onNodeWithTag("ink-finger").performScrollTo().performClick()
+        create(true);assertViewportClip(true);compose.openEditorAction("quick-finger");draw();saved(1)
+        compose.openEditorAction("quick-finger")
         compose.onNodeWithTag("ink-surface").performTouchInput{swipe(Offset(width*.3f,height*.4f),Offset(width*.7f,height*.65f),250)}
-        compose.onNodeWithTag("zoom-in").performClick()
+        compose.pinchCanvasOut()
         var before=CanvasViewport();compose.runOnIdle{before=canvas().snapshotViewport()}
         val notes=runBlocking{app.repository.observeNotes().first()}
         val note=notes.first{it.id==createdId}
@@ -100,7 +100,7 @@ class WorkspaceUiTest {
         compose.waitUntil(10_000){runBlocking{app.workspaceRepository.get(note.id).zoom>0}}
         compose.activityRule.scenario.recreate();saved(1)
         compose.runOnIdle{assertEquals(before,canvas().snapshotViewport())}
-        compose.onNodeWithTag("fit-content").performClick();assertToolbarPixels();shot("workspace-board.png")
+        compose.frameCanvasFixture(true);assertToolbarPixels();shot("workspace-board.png")
         val reread=runBlocking{app.inkRepository.read(note.id).strokes.map{it.stroke}}
         assertEquals(paths.single().samples,reread.single().samples)
         compose.onNodeWithTag("back-library").performClick()
@@ -149,12 +149,12 @@ class WorkspaceUiTest {
         }finally{automation.serviceInfo=automation.serviceInfo.apply{flags=previousFlags}}
     }
     @Test fun fitModesAndPaperChangesDoNotRewriteSamples(){
-        create(false);assertViewportClip(false);compose.onNodeWithTag("ink-more").performScrollTo().performClick();compose.onNodeWithTag("ink-finger").performScrollTo().performClick();draw();saved(1)
+        create(false);assertViewportClip(false);compose.openEditorAction("quick-finger");draw();saved(1)
         val n=runBlocking{app.repository.observeNotes().first()}.first{it.id==createdId}
         val before=runBlocking{app.inkRepository.read(n.id).strokes.single().stroke.samples}
-        compose.onNodeWithTag("fit-page").performClick();var small=0.0;compose.runOnIdle{small=canvas().snapshotViewport().zoom}
-        compose.onNodeWithTag("fit-width").performClick();compose.runOnIdle{assertTrue(canvas().snapshotViewport().zoom>=small)}
-        compose.onNodeWithTag("ink-more").performScrollTo().performClick();compose.onNodeWithTag("change-paper").performClick();compose.onNodeWithTag("paper-option-grid").performScrollTo().performClick();compose.onNodeWithTag("paper-picker-confirm").performClick()
+        compose.frameCanvasFixture();var small=0.0;compose.runOnIdle{small=canvas().snapshotViewport().zoom}
+        compose.runOnIdle{canvas().fitWidth();assertTrue(canvas().snapshotViewport().zoom>=small)}
+        compose.onNodeWithTag("quick-settings").performClick();compose.onNodeWithTag("settings-paper").performScrollTo().performClick();compose.onNodeWithTag("paper-option-grid").performScrollTo().performClick();compose.onNodeWithTag("paper-picker-confirm").performClick()
         compose.waitUntil(10_000){runBlocking{app.workspaceRepository.get(n.id).paper==PaperStyle.GRID.ordinal}}
         assertEquals(before,runBlocking{app.inkRepository.read(n.id).strokes.single().stroke.samples});assertToolbarPixels();shot("workspace-page.png");compose.onNodeWithTag("back-library").performClick()
     }
@@ -163,8 +163,8 @@ class WorkspaceUiTest {
         fun shell(command:String){automation.executeShellCommand(command).use{android.os.ParcelFileDescriptor.AutoCloseInputStream(it).use{input->input.readBytes()}}}
         try {
             shell("wm size 900x1500");Thread.sleep(900);waitForShelf();create(true)
-            compose.onNodeWithTag("document-more").performClick();compose.onNodeWithTag("open-diagnostics").performClick();compose.onNodeWithTag("diagnostics-dialog").assertExists();compose.onNodeWithText("关闭").performClick()
-            compose.onNodeWithTag("ink-more").performScrollTo().performClick();compose.onNodeWithTag("ink-finger").performScrollTo().performClick();draw();saved(1);shot("workspace-narrow.png")
+            compose.onNodeWithTag("quick-settings").performClick();compose.onNodeWithTag("settings-diagnostics").performClick();compose.onNodeWithTag("diagnostics-dialog").assertExists();compose.onNodeWithText("关闭").performClick()
+            compose.openEditorAction("quick-finger");draw();saved(1);shot("workspace-narrow.png")
             compose.onNodeWithTag("back-library").performClick()
         }finally{shell("wm size 1920x1200");Thread.sleep(700)}
     }

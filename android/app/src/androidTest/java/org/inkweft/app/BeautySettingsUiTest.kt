@@ -13,7 +13,7 @@ class BeautySettingsUiTest {
     @get:Rule val compose=createAndroidComposeRule<MainActivity>()
     private val app get()=compose.activity.application as InkWeftApplication
     private var old:BeautyOptions?=null
-    @Before fun prepare(){old=BeautyStore(app).read();BeautyStore(app).save(BeautyOptions())}
+    @Before fun prepare(){old=BeautyStore(app).read();BeautyStore(app).save(BeautyOptions(keepInk=false))}
     @After fun restore(){old?.let{BeautyStore(app).save(it)}}
     private fun id()=UUID.randomUUID().toString()
     @Test fun clickOpensCardWithoutTogglingAndParametersPersist(){

@@ -21,7 +21,7 @@ import java.util.UUID
 class PageInsertionUiTest {
     @get:Rule val compose=createAndroidComposeRule<MainActivity>()
     private val app get()=compose.activity.application as InkWeftApplication
-    private fun saved(){compose.waitUntil(10_000){runCatching{compose.onNodeWithTag("ink-status").assertTextContains("已保存",substring=true)}.isSuccess}}
+    private fun saved(){compose.waitForSavedInk()}
     private fun create():String{
         compose.waitUntil(10_000){runCatching{compose.onNodeWithTag("new-note").assertIsEnabled()}.isSuccess}
         val title="分页回归-"+UUID.randomUUID().toString().take(6)
@@ -34,37 +34,37 @@ class PageInsertionUiTest {
     private fun shot(name:String){compose.waitForIdle();val image=checkNotNull(InstrumentationRegistry.getInstrumentation().uiAutomation.takeScreenshot());try{File(compose.activity.getExternalFilesDir(null),name).outputStream().use{image.compress(Bitmap.CompressFormat.PNG,100,it)}}finally{image.recycle()}}
     private fun insert(){compose.onNodeWithTag("confirm-insert-pages").performClick();compose.waitUntil(10_000){compose.onAllNodesWithTag("insert-pages-dialog").fetchSemanticsNodes().isEmpty()};saved()}
     @Test fun beginningBatchKeepsOriginalInkAndPageIdentity(){
-        val book=create();compose.onNodeWithTag("ink-more").performScrollTo().performClick();compose.onNodeWithTag("ink-finger").performScrollTo().performClick()
+        val book=create();compose.openEditorAction("quick-finger")
         compose.onNodeWithTag("ink-surface").performTouchInput{swipe(Offset(width*.3f,height*.3f),Offset(width*.5f,height*.5f),200)}
         compose.waitUntil(10_000){runBlocking{app.inkRepository.read(book).strokes.size}==1};saved()
         val stroke=runBlocking{app.inkRepository.read(book).strokes.single().stroke}
-        compose.onNodeWithTag("add-page").performClick()
+        compose.openEditorAction("add-page")
         compose.onNodeWithTag("insert-start").performScrollTo().performClick();compose.onNodeWithTag("insert-count-plus").performScrollTo().performClick()
         compose.onNodeWithTag("insert-paper-grid").performScrollTo().performClick();compose.onNodeWithTag("insert-preview").performScrollTo().assertTextContains("插入 2 页",substring=true)
         shot("insert-pages-options.png");insert()
         compose.waitUntil(10_000){rows(book).size==3}
         assertEquals(book,rows(book).last().id);assertTrue(rows(book).take(2).all{it.paper==PaperStyle.GRID.ordinal})
         assertEquals(stroke.samples,runBlocking{app.inkRepository.read(book).strokes.single().stroke.samples})
-        compose.onNodeWithTag("page-counter",useUnmergedTree=true).assertTextEquals("第 1 / 3 页")
-        compose.onNodeWithTag("page-directory").performClick();shot("page-directory-insertion.png")
-        compose.onNodeWithTag("page-grid").performScrollToNode(hasTestTag("jump-page-3"));compose.onNodeWithTag("jump-page-3").performClick();saved();compose.onNodeWithTag("ink-status").assertInkCount(1)
+        compose.assertCurrentPage("第 1 / 3 页")
+        compose.openOverviewGrid();shot("page-directory-insertion.png")
+        compose.onNodeWithTag("page-grid").performScrollToNode(hasTestTag("jump-page-3"));compose.onNodeWithTag("jump-page-3").performClick();saved();compose.onNodeWithTag("ink-surface").assertInkCount(1)
     }
     @Test fun thumbnailBeforeMenuDoesNotRequireNavigatingToTarget(){
-        val book=create();compose.onNodeWithTag("add-page").performClick();compose.onNodeWithTag("insert-count-plus").performScrollTo().performClick();insert()
+        val book=create();compose.openEditorAction("add-page");compose.onNodeWithTag("insert-count-plus").performScrollTo().performClick();insert()
         compose.waitUntil(10_000){rows(book).size==3};val previous=rows(book)
-        compose.onNodeWithTag("page-directory").performClick();compose.onNodeWithTag("page-menu-1").performClick()
+        compose.openOverviewGrid();compose.onNodeWithTag("page-menu-1").performClick()
         compose.onNodeWithText("在此页之前插入").performClick()
         compose.onNodeWithTag("insert-open-new").performScrollTo().performClick();insert()
         compose.waitUntil(10_000){rows(book).size==4};val actual=rows(book)
         assertEquals(previous.map{it.id},actual.drop(1).map{it.id})
-        compose.onNodeWithTag("page-counter",useUnmergedTree=true).assertTextEquals("第 3 / 4 页")
-        compose.activityRule.scenario.recreate();saved();compose.onNodeWithTag("page-counter",useUnmergedTree=true).assertTextEquals("第 3 / 4 页")
+        compose.assertCurrentPage("第 3 / 4 页")
+        compose.activityRule.scenario.recreate();saved();compose.assertCurrentPage("第 3 / 4 页")
     }
     @Test fun cancelledDialogDoesNotAddPagesAndEndKeepsOrder(){
         val book=create();val first=rows(book)
-        compose.onNodeWithTag("add-page").performClick();compose.onNodeWithTag("insert-count-plus").performScrollTo().performClick();compose.onNodeWithText("取消").performClick()
-        assertEquals(first,rows(book));compose.onNodeWithTag("add-page").performClick();compose.onNodeWithTag("insert-end").performScrollTo().performClick();insert()
+        compose.openEditorAction("add-page");compose.onNodeWithTag("insert-count-plus").performScrollTo().performClick();compose.onNodeWithText("取消").performClick()
+        assertEquals(first,rows(book));compose.openEditorAction("add-page");compose.onNodeWithTag("insert-end").performScrollTo().performClick();insert()
         compose.waitUntil(10_000){rows(book).size==2};assertEquals(book,rows(book).first().id)
-        compose.onNodeWithTag("page-counter",useUnmergedTree=true).assertTextEquals("第 2 / 2 页")
+        compose.assertCurrentPage("第 2 / 2 页")
     }
 }
