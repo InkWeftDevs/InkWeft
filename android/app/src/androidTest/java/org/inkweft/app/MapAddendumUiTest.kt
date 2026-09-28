@@ -81,7 +81,7 @@ class MapAddendumUiTest {
   compose.waitUntil(15000){runBlocking{app.pageObjects.read(book).objects}.any{it.kind==PageObjectKind.MAP}};shot("embedded-live")
   val embed=runBlocking{app.pageObjects.read(book).objects}.single{it.kind==PageObjectKind.MAP};assertEquals(MapEmbedPolicy.LIVE,embed.mapEmbed!!.policy)
   var paper:CanvasViewport?=null;compose.runOnIdle{paper=find<InkCanvasView>().snapshotViewport()}
-  tap("object-edit-map");compose.onNodeWithTag("object-edit-map").assertDoesNotExist();compose.onAllNodesWithTag("study-panel").assertCountEquals(1);compose.onNodeWithTag("study-map").assertIsDisplayed();tap("study-close")
+  compose.onNodeWithTag("object-edit-map").performTouchInput{click()};compose.waitForIdle();compose.onNodeWithTag("object-edit-map").assertDoesNotExist();compose.onNodeWithTag("selection-context-menu").assertDoesNotExist();compose.onAllNodesWithTag("study-panel").assertCountEquals(1);compose.onNodeWithTag("study-map").assertIsDisplayed();tap("study-close")
   compose.runOnIdle{assertEquals(paper,find<InkCanvasView>().snapshotViewport())};assertEquals(1L,runBlocking{app.inkRepository.read(book).revision})
  }
 }
