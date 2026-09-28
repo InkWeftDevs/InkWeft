@@ -18,6 +18,23 @@ class IntegratedMapUiTest {
  private fun tap(tag:String){if(tag in setOf("add-page","object-shape","page-objects","object-sticker","top-area-erase","object-camera")){compose.openEditorAction(tag);return};if(tag=="top-draw"){compose.openCurrentPen();return};val node=compose.onNodeWithTag(tag);runCatching{node.performScrollTo()};node.performClick()}
  private fun ready(){compose.waitUntil(15000){app.navigationReady.value};compose.waitForIdle()}
  private inline fun <reified T:View> find(v:View):T? {val queue=java.util.ArrayDeque<View>();queue.add(v);while(queue.isNotEmpty()){val current=queue.removeFirst();if(current is T&&current.isShown)return current;if(current is ViewGroup)for(i in 0 until current.childCount)queue.add(current.getChildAt(i))};return null}
+ @Test fun liveWritingKeepsDocumentSizeUntilPenUp(){
+  compose.waitUntil(15000){compose.onAllNodesWithTag("new-note").fetchSemanticsNodes().isNotEmpty()}
+  val note=runBlocking{app.workspaceRepository.create("导图落笔保护",false,PaperStyle.BLANK)}
+  compose.runOnIdle{ViewModelProvider(compose.activity)[NotebookViewModel::class.java].select(note)};compose.singlePageEditor();ready();tap("quick-study")
+  val bounds=compose.onNodeWithTag("ink-surface").fetchSemanticsNode().boundsInRoot
+  var view:InkCanvasView?=null;val time=android.os.SystemClock.uptimeMillis()
+  compose.waitUntil(10000){var inputReady=false;compose.runOnIdle{view=find<InkCanvasView>(compose.activity.window.decorView);inputReady=view?.inputReady==true};inputReady}
+  fun send(action:Int,dx:Float){val v=checkNotNull(view);val prop=android.view.MotionEvent.PointerProperties().apply{id=0;toolType=android.view.MotionEvent.TOOL_TYPE_STYLUS};val point=android.view.MotionEvent.PointerCoords().apply{x=v.width*.5f+dx;y=v.height*.45f;pressure=.5f}
+   val e=android.view.MotionEvent.obtain(time,android.os.SystemClock.uptimeMillis(),action,1,arrayOf(prop),arrayOf(point),0,0,1f,1f,0,0,android.view.InputDevice.SOURCE_STYLUS,0);try{assertTrue(v.dispatchTouchEvent(e))}finally{e.recycle()}}
+  compose.runOnIdle{view=find<InkCanvasView>(compose.activity.window.decorView);send(android.view.MotionEvent.ACTION_DOWN,0f)}
+  compose.waitForIdle();compose.onNodeWithTag("study-close").assertIsNotEnabled();compose.onNodeWithTag("quick-study").assertIsNotEnabled();compose.onNodeWithTag("study-add-card").assertIsNotEnabled()
+  assertEquals(bounds,compose.onNodeWithTag("ink-surface").fetchSemanticsNode().boundsInRoot)
+  compose.runOnIdle{send(android.view.MotionEvent.ACTION_MOVE,30f);send(android.view.MotionEvent.ACTION_UP,60f)};ready()
+  compose.waitUntil(10000){runBlocking{app.inkRepository.read(note.id).strokes.size}==1}
+  tap("study-close");compose.onNodeWithTag("study-panel").assertDoesNotExist()
+  assertEquals(1,runBlocking{app.inkRepository.read(note.id).strokes.size})
+ }
  @Test fun selectedInkTargetsMapAndBranchThenSharesCardWithoutMovingSource(){
   compose.waitUntil(15000){compose.onAllNodesWithTag("new-note").fetchSemanticsNodes().isNotEmpty()}
   val note=runBlocking{app.workspaceRepository.create("M1完整流程",false,PaperStyle.BLANK)}

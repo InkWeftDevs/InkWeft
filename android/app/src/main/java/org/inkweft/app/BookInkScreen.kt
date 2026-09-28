@@ -170,7 +170,7 @@ fun InkScreen(note:NoteDraft,workspace:WorkspaceViewModel=viewModel(),onBack:()-
     if(knowledgeOpen)KnowledgeWorkspace(note.base.id,page?.let{TargetRef(TargetKind.PAGE,it.id)}?:TargetRef(TargetKind.NOTE,note.base.id),knowledgeAnchor,dismiss={knowledgeOpen=false}){target->
         app.openKnowledgeTarget.value=target;knowledgeOpen=false
     }
-    if(studyOpen)Box(Modifier.align(Alignment.CenterEnd).width(if(docked)panelWidth else LocalConfiguration.current.screenWidthDp.dp).fillMaxHeight().testTag("study-panel")){StudyContent(note,studySource,{studyOpen=false;studySource=null;initialStudyCard=null},initialCardId=initialStudyCard){source->
+    if(studyOpen)Box(Modifier.align(Alignment.CenterEnd).width(if(docked)panelWidth else LocalConfiguration.current.screenWidthDp.dp).fillMaxHeight().testTag("study-panel")){StudyContent(note,studySource,{studyOpen=false;studySource=null;initialStudyCard=null},initialCardId=initialStudyCard,documentReady=pageActionsReady){source->
         if(ui.pages.any{it.id==source.pageId}){readingMode(false);vm.select(source.pageId);sourceFocus=source.pageId to CanvasBounds(source.left,source.top,source.right,source.bottom);if(!docked)studyOpen=false;true}else false
     }}
     if(directory)DocumentSidePanel("文档概览","pages-directory-dialog",{directory=false},Modifier.align(Alignment.CenterEnd).width(panelWidth)){
