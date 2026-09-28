@@ -31,24 +31,25 @@ import kotlin.math.roundToInt
         }
         if(section=="font")TextFont.entries.forEach{font->
             DropdownMenuItem(text={Text(TextStyles.name(font),fontFamily=FontFamily(TextStyles.face(font)))},trailingIcon={if(value.font==font)Glyph("check",Forest)},
-                onClick={change(value.copy(font=font));section=null},modifier=Modifier.testTag("font-${font.name}"))
+                onClick={change(value.copy(font=font,keepInk=false));section=null},modifier=Modifier.testTag("font-${font.name}"))
         }else if(section=="language")BeautyLanguage.entries.forEach{language->
             DropdownMenuItem(text={Text(language.title)},trailingIcon={if(value.language==language)Glyph("check",Forest)},onClick={change(value.copy(language=language));section=null},modifier=Modifier.testTag("beauty-language-${language.name}"))
         }else{
             Column(Modifier.padding(horizontal=16.dp)){
                 BeautySwitch("实时美化字迹",value.enabled,"beauty-enabled"){change(value.copy(enabled=it))}
+                TextButton(onClick={section="font"},contentPadding=PaddingValues(0.dp),modifier=Modifier.fillMaxWidth().heightIn(min=48.dp).testTag("beauty-font-picker")){
+                    Text("美化字体",color=TextInk);Spacer(Modifier.weight(1f));Text(if(value.keepInk)"选择字体"else TextStyles.name(value.font),fontSize=13.sp,color=Quiet);Text("  ›",color=Quiet)
+                }
                 HorizontalDivider(color=Line)
                 Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.spacedBy(8.dp)){
                     FilterChip(value.keepInk,{change(value.copy(keepInk=true))},label={Text("保留笔形")},modifier=Modifier.testTag("beauty-keep-ink"))
-                    FilterChip(!value.keepInk,{change(value.copy(keepInk=false))},label={Text("替换字体")},modifier=Modifier.testTag("beauty-replace-font"))
+                    FilterChip(!value.keepInk,{change(value.copy(keepInk=false))},label={Text("字体美化")},modifier=Modifier.testTag("beauty-replace-font"))
                 }
                 if(value.keepInk){
-                    Text("适合公式与手写，保留粗细和位置",fontSize=12.sp,color=Quiet)
+                    Text("只整理原迹，不换字体；适合公式",fontSize=12.sp,color=Quiet)
                     BeautySlider("整理强度","${(value.inkStrength*100).roundToInt()}%",value.inkStrength,0f..1f,true,"beauty-ink-strength"){change(value.copy(inkStrength=it))}
                 }else{
-                TextButton(onClick={section="font"},contentPadding=PaddingValues(0.dp),modifier=Modifier.fillMaxWidth().heightIn(min=48.dp).testTag("beauty-font-picker")){
-                    Text("美化字体",color=TextInk);Spacer(Modifier.weight(1f));Text(TextStyles.name(value.font),fontSize=13.sp,color=Quiet);Text("  ›",color=Quiet)
-                }
+                Text("新写字迹停笔后换成所选字体",fontSize=12.sp,color=Quiet)
                 BeautySwitch("动态加粗",value.bold,"beauty-dynamic-bold"){change(value.copy(bold=it))}
                 TextButton(onClick={section="language"},contentPadding=PaddingValues(0.dp),modifier=Modifier.fillMaxWidth().heightIn(min=48.dp).testTag("beauty-language-picker")){
                     Text("书写语言",color=TextInk);Spacer(Modifier.weight(1f));Text(value.language.title,fontSize=13.sp,color=Quiet);Text("  ›",color=Quiet)

@@ -42,6 +42,23 @@ class BeautySettingsUiTest {
         compose.onNodeWithTag("beauty-close").performScrollTo().performClick()
         assertTrue(runBlocking{app.inkRepository.read(note.id).strokes.isEmpty()})
     }
+    @Test fun fontEntryRemainsReachableFromSavedInkMode(){
+        BeautyStore(app).save(BeautyOptions(enabled=true,keepInk=true,font=TextFont.SERIF))
+        compose.waitUntil(15_000){compose.onAllNodesWithTag("new-note").fetchSemanticsNodes().isNotEmpty()}
+        val note=runBlocking{app.workspaceRepository.create("美化字体入口回归",false,PaperStyle.BLANK)}
+        compose.runOnIdle{ViewModelProvider(compose.activity)[NotebookViewModel::class.java].select(note)}
+        compose.singlePageEditor();compose.openBeautySettings()
+        compose.onNodeWithTag("beauty-font-picker").assertIsDisplayed().performTouchInput{click()}
+        compose.onNodeWithTag("font-WENKAI").performTouchInput{click()}
+        compose.waitForIdle()
+        val saved=BeautyStore(app).read();assertTrue(saved.enabled);assertFalse(saved.keepInk);assertEquals(TextFont.WENKAI,saved.font)
+        compose.onNodeWithTag("beauty-replace-font").assertIsSelected()
+        compose.onNodeWithTag("beauty-keep-ink").performClick()
+        compose.onNodeWithTag("beauty-font-picker").assertIsDisplayed()
+        compose.onNodeWithTag("beauty-close").performClick()
+        compose.activityRule.scenario.recreate();compose.waitForIdle();compose.openBeautySettings()
+        compose.onNodeWithTag("beauty-font-picker").assertIsDisplayed();compose.onNodeWithTag("beauty-keep-ink").assertIsSelected()
+    }
     @Test fun pressureWeightsAndLayoutAttractionChangeOnlyTheNewRun(){
         fun stroke(x:Float,p:Float)=InkStroke(id(),InkPen.PEN,0xff222222.toInt(),2f,InkTool.STYLUS,listOf(InkSample(x,500f,0,p),InkSample(x+20,540f,20,p)))
         val strokes=listOf(stroke(100f,.1f),stroke(180f,.9f))

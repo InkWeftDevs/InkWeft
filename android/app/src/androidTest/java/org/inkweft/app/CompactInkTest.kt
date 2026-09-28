@@ -23,7 +23,7 @@ class CompactInkTest {
   val cut=InkCut(id(),.01f,listOf(EraserPoint(160f,180f),EraserPoint(190f,220f)),InkCutShape.RECTANGLE)
   val erased=InkStroke(source.id,source.pen,source.color,source.width,source.tool,source.samples,false,listOf(cut),source.appearance)
   assertFalse(g.selects(crossing,erased))
-  val polished=polishNewStroke(source,BeautyOptions(true));val masked=InkStroke(polished.id,polished.pen,polished.color,polished.width,polished.tool,polished.samples,false,listOf(cut),polished.appearance)
+  val polished=polishNewStroke(source,BeautyOptions(true,keepInk=true));val masked=InkStroke(polished.id,polished.pen,polished.color,polished.width,polished.tool,polished.samples,false,listOf(cut),polished.appearance)
   assertFalse(g.selects(crossing,masked));assertNotNull(g.bounds(masked))
  }
  @Test fun reflectionAndScalingRetainCuts(){

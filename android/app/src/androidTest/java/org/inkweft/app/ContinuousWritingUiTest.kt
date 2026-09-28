@@ -22,9 +22,9 @@ class ContinuousWritingUiTest {
     private val app get()=compose.activity.application as InkWeftApplication
     @After fun restorePreferences(){BeautyStore(app).save(BeautyOptions());app.getSharedPreferences("inkweft-editor",0).edit().remove("case-x").remove("case-y").commit()}
     private fun id()=UUID.randomUUID().toString()
-    private fun open(pages:Int=1,seed:suspend(Note)->Unit={}):Note {
+    private fun open(pages:Int=1,beauty:BeautyOptions=BeautyOptions(),seed:suspend(Note)->Unit={}):Note {
         compose.waitUntil(15_000){runCatching{compose.onNodeWithTag("new-note").assertIsEnabled()}.isSuccess}
-        compose.runOnIdle{BeautyStore(app).save(BeautyOptions())}
+        compose.runOnIdle{BeautyStore(app).save(beauty)}
         val note=runBlocking{app.workspaceRepository.create("连续书写验收",false,PaperStyle.BLANK).also{n->var previous=n.id;repeat(pages-1){previous=app.pages.addAfter(n.id,previous,id()).id};app.pages.select(n.id,n.id);seed(n)}}
         compose.runOnIdle{ViewModelProvider(compose.activity)[NotebookViewModel::class.java].select(note)}
         compose.waitUntil(15_000){app.navigationReady.value&&compose.onAllNodesWithTag("continuous-pages").fetchSemanticsNodes().isNotEmpty()}
@@ -206,6 +206,21 @@ class ContinuousWritingUiTest {
         assertEquals(TextFont.SERIF,runBlocking{app.pageObjects.read(note.id).objects.single().font})
         compose.onNodeWithTag("font-beauty-dialog").assertDoesNotExist()
     }
+    @Test fun choosingFontFromInkModeStartsAutomaticConversion(){
+        val note=open(beauty=BeautyOptions(enabled=true,keepInk=true,font=TextFont.WENKAI))
+        compose.selectPen("pencil");compose.openBeautySettings()
+        compose.onNodeWithTag("beauty-font-picker").assertIsDisplayed().performTouchInput{click()}
+        compose.onNodeWithTag("font-SERIF").performTouchInput{click()}
+        compose.onNodeWithTag("beauty-close").performClick();compose.waitForIdle()
+        hi(note.id)
+        compose.waitUntil(45000){runBlocking{app.pageObjects.read(note.id).objects.any{!it.hidden}}}
+        val result=runBlocking{app.pageObjects.read(note.id).objects.single()}
+        assertTrue(result.text.isNotBlank());assertEquals(TextFont.SERIF,result.font)
+        assertEquals(6,result.sourceStrokeIds.size);assertTrue(result.glyphs.isNotEmpty())
+        assertTrue(runBlocking{app.inkRepository.read(note.id).strokes.all{it.stroke.pen==InkPen.PENCIL}})
+        shot("v40-font-conversion.png")
+    }
+
     @Test fun pencilAutomaticallyConvertsWithSelectedFont(){
         val note=open();compose.selectPen("pencil");compose.openBeautySettings();compose.onNodeWithTag("beauty-replace-font").performClick();compose.onNodeWithTag("beauty-enabled").performClick();compose.onNodeWithTag("beauty-close").performClick()
         hi(note.id)
