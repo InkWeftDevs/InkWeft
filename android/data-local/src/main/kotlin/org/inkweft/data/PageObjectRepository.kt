@@ -37,6 +37,7 @@ class PageObjectRepository(private val db:NoteDatabase,private val afterCommit:(
             require(owner.trashedAt==null&&db.workspace().get(owner.notebookId)?.trashedAt==null)
             require((db.objects().get(pageId)?.revision?:0)==expected){"OBJECT_CONFLICT"}
             if(expectedInk!=null)require((db.ink().page(pageId)?.revision?:0)==expectedInk){"INK_CONFLICT"}
+            MapEmbedRepository(db).validateReferences(owner.notebookId,objects)
             validateSources(pageId,objects)
             validateBounds(objects,owner.world);validateImages(objects)
             db.pages().invalidateSearch(pageId)
@@ -55,6 +56,7 @@ class PageObjectRepository(private val db:NoteDatabase,private val afterCommit:(
         require(db.objects().get(pageId)==null)
         validateBounds(objects,checkNotNull(db.pages().get(pageId)).world);validateImages(objects)
         val mapped=objects.map{it.copy(id=UUID.randomUUID().toString(),sourceStrokeIds=it.sourceStrokeIds.mapNotNull(strokeIds::get))}
+        MapEmbedRepository(db).validateReferences(checkNotNull(db.pages().get(pageId)).notebookId,mapped)
         validateSources(pageId,mapped)
         db.objects().put(PageObjectRow(pageId,1,PageObjectCodec.encode(mapped)))
     }

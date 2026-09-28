@@ -63,8 +63,8 @@ class SelectionStudyUiTest {
     }
     private fun shot(name:String){compose.waitForIdle();val b=checkNotNull(InstrumentationRegistry.getInstrumentation().uiAutomation.takeScreenshot());try{File(compose.activity.getExternalFilesDir(null),name).outputStream().use{b.compress(Bitmap.CompressFormat.PNG,100,it)}}finally{b.recycle()}}
     private fun addCard(title:String,body:String){
-        if(compose.onAllNodesWithTag("study-source-target").fetchSemanticsNodes().isNotEmpty()){
-            compose.onNodeWithTag("study-add-source").performClick()
+        if(compose.onAllNodesWithTag("capture-destination").fetchSemanticsNodes().isNotEmpty()){
+            compose.onNodeWithTag("capture-map-main").performClick();compose.onNodeWithTag("capture-send").performClick();compose.waitUntil(10000){compose.onAllNodesWithTag("capture-result").fetchSemanticsNodes().isNotEmpty()};compose.onNodeWithText("查看").performClick()
             compose.revealAction("study-tab-0");compose.onNodeWithTag("study-tab-0").performClick()
             compose.waitUntil(10000){runBlocking{app.study.cards(ViewModelProvider(compose.activity)[NotebookViewModel::class.java].ui.value.selectedId!!).first()}.isNotEmpty()}
             val currentBook=ViewModelProvider(compose.activity)[NotebookViewModel::class.java].ui.value.selectedId!!

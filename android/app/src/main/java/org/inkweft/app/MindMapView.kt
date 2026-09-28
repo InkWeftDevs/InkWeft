@@ -61,6 +61,7 @@ internal class MindMapView(context:Context):View(context){
     var onMove:(StudyNodeRow,Double,Double)->Unit={_,_,_->}
     var onActive:(Boolean)->Unit={}
     private var nodes=emptyList<StudyNodeRow>();private var titles=emptyMap<String,String>()
+    private var bodies=emptyMap<String,String>()
     private var relationEdges=emptyList<Pair<String,String>>()
     private var relationMode=false
     private var hiddenCounts=emptyMap<String,Int>()
@@ -77,20 +78,25 @@ internal class MindMapView(context:Context):View(context){
     fun show(items:List<StudyNodeRow>,cards:List<StudyCardRow>,collapsed:Map<String,Int> = emptyMap()){
         relationMode=false;relationEdges=emptyList()
         hiddenCounts=collapsed
-        val oldEmpty=nodes.isEmpty();nodes=items.filter{!it.removed};titles=cards.associate{it.id to it.title}
+        val oldEmpty=nodes.isEmpty();nodes=items.filter{!it.removed};titles=cards.associate{it.id to it.title};bodies=cards.associate{it.id to it.body}
         if(!positioned&&oldEmpty&&nodes.isNotEmpty()&&width>0)fit();invalidate()
     }
     fun showRelations(items:List<StudyNodeRow>,labels:Map<String,String>,edges:List<Pair<String,String>>){
-        val empty=nodes.isEmpty();nodes=items;relationMode=true;relationEdges=edges;titles=labels;hiddenCounts=emptyMap()
+        val empty=nodes.isEmpty();nodes=items;relationMode=true;relationEdges=edges;titles=labels;bodies=emptyMap();hiddenCounts=emptyMap()
         if(empty&&nodes.isNotEmpty()&&width>0)fit();invalidate()
     }
     fun decorations(edges:List<Pair<String,String>>){relationEdges=edges;invalidate()}
-    fun fit(){if(nodes.isEmpty()||width==0||height==0)return
+    fun fitOverview(){fit(.08f)}
+    fun fit(minScale:Float=.8f){if(nodes.isEmpty()||width==0||height==0)return
         val left=nodes.minOf{it.x};val right=nodes.maxOf{it.x}+216;val top=nodes.minOf{it.y};val bottom=nodes.maxOf{it.y}+84
-        scale=min((width-40*d)/((right-left)*d).toFloat(),(height-40*d)/((bottom-top)*d).toFloat()).coerceIn(.8f,1.3f)
+        scale=min((width-40*d)/((right-left)*d).toFloat(),(height-40*d)/((bottom-top)*d).toFloat()).coerceIn(minScale,1.3f)
         // Keep the leading nodes whole when readable scaling requires panning.
         tx=max(width/2-((left+right)/2*d*scale).toFloat(),20*d-(left*d*scale).toFloat())
         ty=max(height/2-((top+bottom)/2*d*scale).toFloat(),20*d-(top*d*scale).toFloat());changedViewport();invalidate()
+    }
+    fun focusNode(id:String):Boolean{
+        val node=nodes.find{it.id==id}?:return false;if(width<=0||height<=0)return false
+        scale=scale.coerceIn(.8f,1.3f);tx=width/2-((node.x+108)*d*scale).toFloat();ty=height/2-((node.y+42)*d*scale).toFloat();changedViewport();invalidate();return true
     }
     fun revealNode(id:String):Boolean{
         val node=nodes.find{it.id==id}?:return false
@@ -109,8 +115,9 @@ internal class MindMapView(context:Context):View(context){
     // drawColor and transformed nodes must never paint outside this viewport.
     override fun draw(canvas:Canvas){val save=canvas.save();try{canvas.clipRect(0,0,width,height);super.draw(canvas)}finally{canvas.restoreToCount(save)}}
     override fun onDraw(c:Canvas){super.onDraw(c);c.drawColor(InkTheme.Workspace.toArgb());val save=c.save();c.translate(tx,ty);c.scale(scale*d,scale*d)
-        val lookup=nodes.associateBy{it.id};paint.style=Paint.Style.STROKE;paint.strokeWidth=1.5f;paint.color=InkTheme.Divider.toArgb()
-        for(n in nodes){val p=lookup[n.parentId]?:continue;val right=x(n)>=x(p);val start=x(p)+if(right)216 else 0;val end=x(n)+if(right)0 else 216;val direction=if(right)1 else -1;val path=Path();path.moveTo(start,y(p)+42);path.cubicTo(start+28*direction,y(p)+42,end-28*direction,y(n)+42,end,y(n)+42);c.drawPath(path,paint)}
+        val lookup=nodes.associateBy{it.id}
+        MapScenePainter.draw(c,nodes.map{n->org.inkweft.core.MapSceneNode(n.id,n.parentId,n.cardId,titles[if(relationMode)n.id else n.cardId].orEmpty(),bodies[n.cardId].orEmpty(),x(n).toDouble(),y(n).toDouble(),n.revision,n.revision)},active?.id?:selectedNodeId,hiddenCounts,resources.configuration.fontScale,scale>=.35f,!relationMode)
+        paint.style=Paint.Style.STROKE;paint.strokeWidth=1.5f
         paint.color=InkTheme.Accent.toArgb()
         for((a,b) in relationEdges){val start=lookup[a]?:continue;val end=lookup[b]?:continue
             val horizontal=abs(x(end)-x(start))>=abs(y(end)-y(start));val forward=if(horizontal)x(end)>=x(start)else y(end)>=y(start)
@@ -119,16 +126,6 @@ internal class MindMapView(context:Context):View(context){
             c.drawLine(sx,sy,ex,ey,paint)
             val angle=atan2(ey-sy,ex-sx);val ax=sx+(ex-sx)*.7f;val ay=sy+(ey-sy)*.7f
             if(relationMode){c.drawLine(ax,ay,ax-12*cos(angle-.45f),ay-12*sin(angle-.45f),paint);c.drawLine(ax,ay,ax-12*cos(angle+.45f),ay-12*sin(angle+.45f),paint)}
-        }
-        for(n in nodes){val left=x(n);val top=y(n);val box=RectF(left,top,left+216,top+84)
-            val rootNode=!relationMode&&n.parentId==null
-            paint.style=Paint.Style.FILL;paint.color=if(rootNode)InkTheme.Accent.toArgb()else if((n.id==active?.id||n.id==selectedNodeId))InkTheme.Selected.toArgb()else Color.WHITE;c.drawRoundRect(box,12f,12f,paint)
-            paint.style=Paint.Style.STROKE;paint.strokeWidth=if(n.id==active?.id||n.id==selectedNodeId)2f else 1f;paint.color=if(n.id==active?.id||n.id==selectedNodeId||rootNode)InkTheme.Accent.toArgb()else InkTheme.ControlBorder.toArgb();c.drawRoundRect(box,12f,12f,paint)
-            paint.style=Paint.Style.FILL;paint.color=if(rootNode)Color.WHITE else InkTheme.Text.toArgb();paint.textSize=16f*resources.configuration.fontScale;paint.typeface=Typeface.create(Typeface.DEFAULT,Typeface.BOLD)
-            val text=titles[if(relationMode)n.id else n.cardId].orEmpty().replace('\n',' ');val n1=paint.breakText(text,true,188f,null)
-            c.drawText(text.take(n1),left+14,top+30,paint);val rest=text.drop(n1);val n2=paint.breakText(rest,true,176f,null)
-            c.drawText(rest.take(n2)+(if(rest.length>n2)"…"else""),left+14,top+53,paint)
-            paint.typeface=Typeface.DEFAULT;paint.textSize=12f;paint.color=if(rootNode)Color.WHITE else InkTheme.Secondary.toArgb();c.drawText(if((hiddenCounts[n.id]?:0)>0)"已收起 ${hiddenCounts[n.id]} 个下级"else"",left+14,top+73,paint)
         }
         dropPoint?.let{point->
             paint.style=Paint.Style.STROKE;paint.color=InkTheme.Accent.toArgb();paint.strokeWidth=2f/scale

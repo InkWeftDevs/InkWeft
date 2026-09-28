@@ -56,6 +56,7 @@ fun InkScreen(note:NoteDraft,workspace:WorkspaceViewModel=viewModel(),onBack:()-
     var showRecycled by rememberSaveable{mutableStateOf(false)}
     var knowledgeOpen by remember{mutableStateOf(false)}
     var knowledgeAnchor by remember{mutableStateOf<KnowledgeData.Anchor?>(null)}
+    var mapSearchOpen by remember{mutableStateOf(false)}
     var searchOpen by remember{mutableStateOf(false)}
     var documentMore by remember{mutableStateOf(false)}
     var documentSettings by remember{mutableStateOf(false)}
@@ -88,13 +89,21 @@ fun InkScreen(note:NoteDraft,workspace:WorkspaceViewModel=viewModel(),onBack:()-
     val marks by marksModel.marks.collectAsStateWithLifecycle()
     val marksBusy by marksModel.busy.collectAsStateWithLifecycle()
     val marksError by marksModel.error.collectAsStateWithLifecycle()
+    val studySession:StudyViewModel=viewModel(key="study-${note.base.id}",factory=StudyViewModel.Factory(note.base.id,app.study))
+    val studyState by studySession.ui.collectAsStateWithLifecycle()
+    val selectedMapId by studySession.mapId.collectAsStateWithLifecycle()
     val studyCanLeave=if(studyOpen){
-        val studySession:StudyViewModel=viewModel(key="study-${note.base.id}",factory=StudyViewModel.Factory(note.base.id,app.study))
-        val studyState by studySession.ui.collectAsStateWithLifecycle()
         val mapWriter:KnowledgeViewModel=viewModel(key="study-map-writer-${note.base.id}",factory=KnowledgeViewModel.Factory(app.knowledge))
         val mapWrite by mapWriter.ui.collectAsStateWithLifecycle()
         !studyState.busy&&!studyState.unknown&&!mapWrite.busy&&!mapWrite.unknown
-    }else true
+    }else !studyState.busy&&!studyState.unknown
+    LaunchedEffect(studySession.captureGeneration){if(studyPanel.captureDraft.value!=null&&studySession.captureGeneration>0){
+        studyPanel.captureResult.value=studyPanel.captureTarget.value;studyPanel.captureDraft.value=null
+        studyPanel.captureResult.value?.takeIf{it.second!="inbox"}?.let{(target,parent)->
+            val prefs=context.getSharedPreferences("inkweft-map-destinations",0);val recent=prefs.getString("${note.base.id}-recent","").orEmpty().split(',').filter{it.isNotBlank()&&it!=target.key}
+            prefs.edit().putString("${note.base.id}-last",target.key).putString("${note.base.id}-parent",parent).putString("${note.base.id}-recent",(listOf(target.key)+recent).take(8).joinToString(",")).apply()
+        }
+    }}
     var excerptsOpen by rememberSaveable(note.base.id){mutableStateOf(false)}
     val excerptsVm:StudyViewModel=viewModel(key="excerpt-${note.base.id}",factory=StudyViewModel.Factory(note.base.id,app.study))
     val excerptsState by excerptsVm.ui.collectAsStateWithLifecycle()
@@ -102,13 +111,14 @@ fun InkScreen(note:NoteDraft,workspace:WorkspaceViewModel=viewModel(),onBack:()-
     val panelOpen=directory||documentSettings||excerptsOpen
     var mapDocked by rememberSaveable(note.base.id){mutableStateOf(false)}
     val docked=maxWidth>=700.dp
-    val panelWidth=if(studyOpen&&docked)minOf(480.dp,maxWidth*.46f)else minOf(320.dp,maxWidth-24.dp)
-    val pageActionsReady=canNavigate&&!ui.busy&&!ui.actionUnknown&&!ui.insertionUnknown&&(!studyOpen||studyCanLeave)&&excerptReady
+    val panelWidth=minOf(320.dp,maxWidth-24.dp)
+    val mapDockWidth=minOf(480.dp,maxWidth*.46f)
+    val pageActionsReady=canNavigate&&!ui.busy&&!ui.actionUnknown&&!ui.insertionUnknown&&studyCanLeave&&excerptReady
     SideEffect{app.navigationReady.value=pageActionsReady}
     androidx.activity.compose.BackHandler(panelOpen&&pageActionsReady){directory=false;documentSettings=false;mapMinimized=true;excerptsOpen=false}
     var toolbarRequest by remember{mutableIntStateOf(0)}
-    val compactHeader=(paneWidth-(if((panelOpen||studyOpen&&mapDocked&&!mapMinimized)&&docked)panelWidth else 0.dp))<400.dp
-    val inlineHeader=(paneWidth-(if((panelOpen||studyOpen&&mapDocked&&!mapMinimized)&&docked)panelWidth else 0.dp))>=700.dp&&androidx.compose.ui.platform.LocalDensity.current.fontScale<=1.3f
+    val compactHeader=(paneWidth-(if(panelOpen&&docked)panelWidth else if(studyOpen&&mapDocked&&!mapMinimized&&docked)mapDockWidth else 0.dp))<400.dp
+    val inlineHeader=(paneWidth-(if(panelOpen&&docked)panelWidth else if(studyOpen&&mapDocked&&!mapMinimized&&docked)mapDockWidth else 0.dp))>=700.dp&&androidx.compose.ui.platform.LocalDensity.current.fontScale<=1.3f
     val documentBar:@Composable ()->Unit={Row(Modifier.fillMaxWidth().heightIn(min=40.dp).padding(horizontal=4.dp),verticalAlignment=Alignment.CenterVertically){
             IconButton(onBack,enabled=pageActionsReady,modifier=Modifier.size(48.dp).testTag("back-library").describedAs("返回资料库")){Glyph("back")}
             if(compactHeader)IconButton({toolbarRequest++},enabled=pageActionsReady,modifier=Modifier.size(48.dp).testTag("toolbar-more").describedAs("更多工具")){Glyph("more")}
@@ -120,7 +130,7 @@ fun InkScreen(note:NoteDraft,workspace:WorkspaceViewModel=viewModel(),onBack:()-
         }
     }
     Box(Modifier.fillMaxSize()){
-    Column(Modifier.fillMaxSize().padding(end=if((panelOpen||studyOpen&&mapDocked&&!mapMinimized)&&docked)panelWidth else 0.dp)){
+    Column(Modifier.fillMaxSize().padding(end=if(panelOpen&&docked)panelWidth else if(studyOpen&&mapDocked&&!mapMinimized&&docked)mapDockWidth else 0.dp)){
         val navigationEnabled=pageActionsReady
         if(!fullScreen&&!inlineHeader)documentBar()
         if(ui.error!=null)Row(Modifier.fillMaxWidth().padding(horizontal=12.dp),verticalAlignment=Alignment.CenterVertically){Text(ui.error!!,Modifier.weight(1f),fontSize=12.sp);if(!ui.insertionUnknown&&!ui.actionUnknown)TextButton(onClick=vm::clearError){Text("知道了")}}
@@ -138,7 +148,9 @@ fun InkScreen(note:NoteDraft,workspace:WorkspaceViewModel=viewModel(),onBack:()-
         }
         if(page==null)Box(Modifier.weight(1f).fillMaxWidth(),contentAlignment=Alignment.Center){if(ui.loading)CircularProgressIndicator()else Text("页面未能载入，原数据保留")}
         else Box(Modifier.weight(1f)){InkPageScreen(note,workspace,page,{canNavigate=it},{_->searchOpen=true},!ui.busy&&!ui.actionUnknown&&!ui.insertionUnknown&&pageActionId==null,
-            onMapExcerpt={selection->studySource=StudySourceDraft(page.id,selection.revision,selection.region.bounds,selection.strokes.map{it.id},selection.preview,selection.objectRevision);studyPanel.captureRequest.longValue++;studyOpen=true;mapMinimized=false;excerptsOpen=false},
+            embedRequest=studyPanel.embedInsertion.value?.takeIf{it.pageId==page.id},onEmbedConsumed={studyPanel.embedInsertion.value=null},
+            onEditMap={embed->studySession.selectMap(embed.target.mapId);studySession.selectTab(2);studySession.focusedByMap[embed.target.key]=embed.branchId;studyOpen=true;mapMinimized=false;directory=false;documentSettings=false;excerptsOpen=false},
+            onMapExcerpt={selection->studySession.clear();studyPanel.captureResult.value=null;studyPanel.captureDraft.value=CaptureDraft(note.base.id,StudySourceDraft(page.id,selection.revision,selection.region.bounds,selection.strokes.map{it.id},selection.preview,selection.objectRevision),selection.excerptText)},
             onAssociate={selection->knowledgeAnchor=KnowledgeData.Anchor(page.id,selection.revision,selection.region.bounds,selection.strokes.map{it.id});knowledgeOpen=true},
             onExcerpt={selection->
                 if(excerptReady){excerptsVm.submit(StudyCommand(java.util.UUID.randomUUID().toString(),note.base.id,StudyAction.CREATE_EXCERPT,cardId=java.util.UUID.randomUUID().toString(),title="第${page.position+1}页摘录",body=selection.excerptText,source=StudySourceDraft(page.id,selection.revision,selection.region.bounds,selection.strokes.map{it.id},selection.preview,selection.objectRevision)));excerptsOpen=true;directory=false;documentSettings=false;mapMinimized=true}
@@ -154,7 +166,8 @@ fun InkScreen(note:NoteDraft,workspace:WorkspaceViewModel=viewModel(),onBack:()-
     }
     if(searchOpen)BookSearchPanel(note.base.id,note.title,page?.id,{searchOpen=false},{id->
         if(ui.pages.any{it.id==id}){vm.select(id);searchOpen=false}
-    },{draft->searchTarget=draft;searchOpen=false})
+    },{draft->searchTarget=draft;searchOpen=false},onMapSearch={searchOpen=false;mapSearchOpen=true})
+    if(mapSearchOpen)MapSearchPanel(MapRef(note.base.id,selectedMapId),{mapSearchOpen=false}){query,all,hit->mapSearchOpen=false;studySession.selectTab(2);studySession.beginSearch(query,all,hit);studyOpen=true;mapMinimized=false}
     if(documentSettings)DocumentSidePanel("其他设置","document-settings-dialog",{documentSettings=false},Modifier.align(Alignment.CenterEnd).width(panelWidth)){
         Column(Modifier.verticalScroll(rememberScrollState())){
             DocumentAction(note.title,"settings-rename",pageActionsReady){documentSettings=false;onRename()}
@@ -193,9 +206,18 @@ fun InkScreen(note:NoteDraft,workspace:WorkspaceViewModel=viewModel(),onBack:()-
     if(knowledgeOpen)KnowledgeWorkspace(note.base.id,page?.let{TargetRef(TargetKind.PAGE,it.id)}?:TargetRef(TargetKind.NOTE,note.base.id),knowledgeAnchor,dismiss={knowledgeOpen=false}){target->
         app.openKnowledgeTarget.value=target;knowledgeOpen=false
     }
+    studyPanel.captureDraft.value?.let{draft->CaptureDestination(draft,studySession,{studyPanel.captureDraft.value=null}){target,parent->studyPanel.captureTarget.value=target to parent}}
+    studyPanel.captureResult.value?.let{(target,parent)->Surface(Modifier.align(Alignment.BottomCenter).padding(12.dp).testTag("capture-result"),color=Color.White,shape=androidx.compose.foundation.shape.RoundedCornerShape(14.dp),shadowElevation=6.dp){
+        Row(verticalAlignment=Alignment.CenterVertically){Text(if(parent=="inbox")"已存入待整理"else"已添加到导图",Modifier.padding(12.dp))
+            if(parent!="inbox"){TextButton({studySession.selectMap(target.mapId);studySession.selectTab(2);studyOpen=true;mapMinimized=false;studyPanel.captureResult.value=null}){Text("查看")};TextButton({studySession.undoCaptureAt(target.mapId);studyPanel.captureResult.value=null},enabled=studyCanLeave){Text("撤销")}}
+            IconButton({studyPanel.captureResult.value=null},modifier=Modifier.describedAs("关闭添加结果")){Glyph("close")}
+        }
+    }}
     if(studyOpen)studyUiState.SaveableStateProvider(note.base.id){FloatingStudyWindow(note.base.id,enabled=pageActionsReady,minimized=mapMinimized,
         onMinimize={mapMinimized=it},docked=mapDocked,onDock={mapDocked=it},close={studyOpen=false}){
-        StudyContent(note,studySource,{studyOpen=false},initialCardId=initialStudyCard,documentReady=pageActionsReady,compactWindow=true,sourceRequest=studyPanel.captureRequest.longValue){source->
+        StudyContent(note,studySource,{studyOpen=false},initialCardId=initialStudyCard,documentReady=pageActionsReady,compactWindow=true,sourceRequest=studyPanel.captureRequest.longValue,onInsertEmbed={embed->
+            page?.let{p->readingMode(false);studyPanel.embedInsertion.value=EmbedInsertion(p.id,java.util.UUID.randomUUID().toString(),embed);mapMinimized=true}
+        }){source->
             if(ui.pages.any{it.id==source.pageId}){readingMode(false);vm.select(source.pageId);sourceFocus=source.pageId to CanvasBounds(source.left,source.top,source.right,source.bottom);true}else false
         }
     }
@@ -270,7 +292,7 @@ fun InkScreen(note:NoteDraft,workspace:WorkspaceViewModel=viewModel(),onBack:()-
             if(canNavigate&&!ui.busy&&!ui.insertionUnknown&&!ui.actionUnknown)vm.insert(where,id,paper,count,open,order)
         }
     }
-    if(confirmBook)AlertDialog(onDismissRequest={confirmBook=false},title={Text("导出整本内容副本")},text={Text("包括本笔记所有可用页面、图片、文本框、胶带状态、局部擦除效果和已保存键入文字；不含页面回收区。明文 .iwbook，不含摘要卡/脑图、撤销历史、账号或密钥；不是完整资料库备份。目标可能由云盘提供。")},confirmButton={TextButton(onClick={confirmBook=false;exporting=true;scope.launch{try{val bytes=withContext(Dispatchers.IO){app.pages.exportBook(note.base.id).encode()};exportBytes=bytes;export.launch("墨织笔记本.iwbook")}catch(c:CancellationException){throw c}catch(_:Exception){Toast.makeText(context,"无法导出整本内容，原数据保留；可尝试逐页导出",Toast.LENGTH_LONG).show()}finally{exporting=false}}}){Text("选择位置")}},dismissButton={TextButton(onClick={confirmBook=false}){Text("取消")}})
+    if(confirmBook)AlertDialog(onDismissRequest={confirmBook=false},title={Text("导出整本内容副本")},text={Text("包括本笔记所有可用页面、图片、文本框、胶带状态、局部擦除效果和已保存键入文字；不含页面回收区。明文 .iwbook，不含摘要卡/脑图、撤销历史、账号或密钥；不是完整资料库备份。目标可能由云盘提供。")},confirmButton={TextButton(onClick={confirmBook=false;exporting=true;scope.launch{try{val bytes=withContext(Dispatchers.IO){app.pages.exportBook(note.base.id).encode()};exportBytes=bytes;export.launch("墨织笔记本.iwbook")}catch(c:CancellationException){throw c}catch(e:Exception){Toast.makeText(context,e.mapExportExplanation()?:"无法导出整本内容，原数据保留；可尝试逐页导出",Toast.LENGTH_LONG).show()}finally{exporting=false}}}){Text("选择位置")}},dismissButton={TextButton(onClick={confirmBook=false}){Text("取消")}})
     searchTarget?.let{draft->PageSearchDialog(draft){searchTarget=null}}
     }
     }

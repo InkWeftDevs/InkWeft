@@ -179,6 +179,7 @@ class LibraryBackupRepository(private val context:Context,private val db:NoteDat
                 DocumentRepository(stage).read(p.id,documentCache)
                 val objects=PageObjectRepository(stage).read(p.id).objects
                 val refs=objects.flatMap{it.sourceStrokeIds};require(refs.distinct().size==refs.size);val owned=stage.ink().strokes(p.id).map{it.id}.toSet();require(refs.all{it in owned})
+                MapEmbedRepository(stage).validateReferences(p.notebookId,objects)
                 PageObjectRepository.validateBounds(objects,p.world);PageObjectRepository.validateImages(objects)
                 stage.pages().search(p.id)?.let{s->require(s.inkRevision in 0..ink.revision&&s.text.length<=20_000&&s.method in listOf("MANUAL","OCR"))}
             }

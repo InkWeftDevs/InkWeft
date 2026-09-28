@@ -21,7 +21,7 @@ class NoteFirstUiTest {
  private fun id()=UUID.randomUUID().toString()
  private fun ready(){compose.waitUntil(20000){app.navigationReady.value};compose.waitForIdle()}
  private inline fun<reified T:View> find():T {val queue=java.util.ArrayDeque<View>();queue.add(compose.activity.window.decorView);while(queue.isNotEmpty()){val v=queue.removeFirst();if(v is T&&v.isShown)return v;if(v is ViewGroup)for(i in 0 until v.childCount)queue.add(v.getChildAt(i))};error("missing ${T::class.java}")}
- private fun tap(tag:String){val target=compose.onNodeWithTag(tag);runCatching{target.performScrollTo()};target.performClick();compose.waitForIdle()}
+ private fun tap(tag:String){compose.revealAction(tag);val target=compose.onNodeWithTag(tag);runCatching{target.performScrollTo()};target.performClick();compose.waitForIdle()}
  private fun screenshot(name:String){compose.waitForIdle();android.os.SystemClock.sleep(350);val bitmap=androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().uiAutomation.takeScreenshot()!!;java.io.File(app.getExternalFilesDir(null),"nf-$name.png").outputStream().use{bitmap.compress(Bitmap.CompressFormat.PNG,100,it)};bitmap.recycle()}
  private fun fixture():String {
   compose.waitUntil(15000){compose.onAllNodesWithTag("new-note").fetchSemanticsNodes().isNotEmpty()}
@@ -67,9 +67,9 @@ class NoteFirstUiTest {
   compose.runOnIdle{val v=find<SelectionOverlayView>();val vp=v.canvasView!!.snapshotViewport();val d=v.resources.displayMetrics.density.toDouble();val a=vp.worldToScreen(140.0,300.0,v.width.toDouble(),v.height.toDouble(),d);val b=vp.worldToScreen(650.0,400.0,v.width.toDouble(),v.height.toDouble(),d);first=Offset(a.x.toFloat(),a.y.toFloat());last=Offset(b.x.toFloat(),b.y.toFloat())}
   compose.onNodeWithTag("selection-overlay").performTouchInput{swipe(first,last,500)}
   screenshot("fullscreen-capture")
-  compose.waitUntil(10000){compose.onAllNodesWithTag("study-add-source").fetchSemanticsNodes().isNotEmpty()}
-  compose.onNodeWithTag("study-add-source").assertIsDisplayed();assertTrue(runBlocking{app.study.cards(book).first()}.isEmpty())
-  tap("study-close");tap("exit-fullscreen")
+  compose.waitUntil(10000){compose.onAllNodesWithTag("capture-confirm").fetchSemanticsNodes().isNotEmpty()}
+  compose.onNodeWithTag("capture-confirm").assertIsDisplayed();assertTrue(runBlocking{app.study.cards(book).first()}.isEmpty())
+  tap("exit-fullscreen")
   compose.onNodeWithTag("notebook-tabs").assertIsDisplayed()
  }
  @Test fun reducedWindowKeepsCardEditorUsable(){
@@ -98,9 +98,9 @@ class NoteFirstUiTest {
  @Test fun selectionPreviewMakesNoCardUntilExplicitAdd(){
   val book=fixture();tap("top-excerpt")
   compose.runOnIdle{find<SelectionOverlayView>().onRegion(InkRegion(listOf(EraserPoint(100f,260f),EraserPoint(700f,400f))))}
-  compose.waitForIdle();assertTrue(runBlocking{app.study.cards(book).first()}.isEmpty());compose.onNodeWithTag("study-add-source").assertIsDisplayed()
-  screenshot("capture-ready");tap("study-add-source")
-  compose.waitUntil(15000){runBlocking{app.study.cards(book).first()}.size==1};ready();tap("study-undo-capture")
+  compose.waitForIdle();assertTrue(runBlocking{app.study.cards(book).first()}.isEmpty());compose.onNodeWithTag("capture-confirm").assertIsDisplayed()
+  screenshot("capture-ready");tap("capture-confirm");tap("capture-map-main");tap("capture-send")
+  compose.waitUntil(15000){runBlocking{app.study.cards(book).first()}.size==1};ready();compose.onNodeWithText("撤销").performClick()
   compose.waitUntil(15000){runBlocking{app.study.cards(book).first()}.single().trashedAt!=null}
   assertEquals(12L,runBlocking{app.inkRepository.read(book).revision})
  }

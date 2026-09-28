@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.dp
         Surface(modifier.fillMaxSize(),color=Color.White){Column(Modifier.fillMaxSize().padding(12.dp)){
             title()
             Box(Modifier.weight(1f).fillMaxWidth().padding(vertical=8.dp)){text()}
-            Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.End){dismissButton();confirmButton()}
+            Row(Modifier.fillMaxWidth().padding(end=36.dp),horizontalArrangement=Arrangement.End){dismissButton();confirmButton()}
         }}
     }
 }

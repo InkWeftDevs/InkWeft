@@ -21,7 +21,7 @@ import org.inkweft.core.*
 internal data class PageSearchDraft(val pageId:String,val inkRevision:Long,val objectRevision:Long,val text:String,val stale:Boolean)
 
 @Composable internal fun BookSearchPanel(bookId:String,title:String,currentPageId:String?,dismiss:()->Unit,
-    openPage:(String)->Unit,correctPage:(PageSearchDraft)->Unit){
+    openPage:(String)->Unit,correctPage:(PageSearchDraft)->Unit,onMapSearch:(()->Unit)?=null){
     val app=LocalContext.current.applicationContext as InkWeftApplication
     val scope=rememberCoroutineScope()
     val searchFlow=remember(app){app.pages.observeSearch()}
@@ -88,6 +88,7 @@ internal data class PageSearchDraft(val pageId:String,val inkRevision:Long,val o
             }
         }
     }){
+        onMapSearch?.let{TextButton(it,modifier=Modifier.testTag("book-map-search")){Glyph("mindmap");Text("查找导图内容")}}
         OutlinedTextField(query,{query=it},singleLine=true,label={Text("输入关键词")},leadingIcon={Glyph("search")},
             trailingIcon={if(query.isNotEmpty())IconButton(onClick={query=""},modifier=Modifier.describedAs("清空搜索")){Glyph("close")}},
             modifier=Modifier.fillMaxWidth().testTag("book-search-query"))

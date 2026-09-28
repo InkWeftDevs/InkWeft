@@ -20,6 +20,8 @@ class InkWeftApplication:Application(){
     val libraryContent by lazy{LibraryContentRepository(database)}
     val libraryBackup by lazy{LibraryBackupRepository(this,database)}
     val knowledge by lazy{KnowledgeRepository(database)}
+    val mapEmbeds by lazy{MapEmbedRepository(database)}
+    val mapGraphs by lazy{MapGraphAccess(database)}
     val study by lazy{StudyRepository(database)}
     val cloudServices:CloudServicePort=DisabledCloudServices
     internal val documentRendering by lazy{DocumentRendering(this,documents)}

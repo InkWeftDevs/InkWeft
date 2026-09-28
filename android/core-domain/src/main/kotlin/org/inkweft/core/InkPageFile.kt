@@ -10,6 +10,7 @@ class InkPageFile(val title:String,val text:String,strokes:List<InkStroke>,val w
     val strokes:List<InkStroke> = Collections.unmodifiableList(ArrayList(strokes))
     init{require(source==null||!world);PageObjectCodec.encode(objects);require(title.isNotBlank()&&title.length<=120&&text.length<=100_000);require(strokes.size<=InkLimits.MAX_STROKES&&strokes.map{it.id}.distinct().size==strokes.size);require(strokes.sumOf{it.samples.size}<=InkLimits.MAX_PAGE_POINTS);require(strokes.all{it.world==world})}
     fun encode(includeSource:Boolean=true):ByteArray {
+        require(objects.none{it.mapEmbed?.policy==MapEmbedPolicy.LIVE}){"LIVE_MAP_REQUIRES_FULL_BACKUP_OR_SNAPSHOT"}
         val body=ByteArrayOutputStream();DataOutputStream(body).use{out->
             val withSource=includeSource&&source!=null
             out.writeInt(if(withSource)0x49575036 else if(objects.isNotEmpty())0x49575035 else if(strokes.any{s->s.cuts.any{it.shape!=InkCutShape.ROUND}})0x49575034 else if(strokes.any{it.cuts.isNotEmpty()})0x49575033 else 0x49575032);out.writeBoolean(world);out.writeByte(paper.ordinal)

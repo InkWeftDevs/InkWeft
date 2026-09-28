@@ -41,11 +41,11 @@ internal object EditorToolOrder {
     BoxWithConstraints{
     val visiblePrimary=EditorToolOrder.primary+if(maxWidth>=528.dp)setOf("image","text")else emptySet()
     FlowRow(Modifier.testTag("editor-toolbar")){
-        order.filter{it in visiblePrimary&&it !in hidden}.forEach{key(it){content(it)}}
+        order.filter{it in visiblePrimary&&it !in hidden}.forEach{key(it){EditorToolSlot(it){content(it)}}}
         Box {
             if(!externalMore)IconButton(onClick={more=true},modifier=Modifier.testTag("toolbar-more").describedAs("更多工具")){Glyph("more")}
             DropdownMenu(more,{more=false},containerColor=androidx.compose.ui.graphics.Color.White){
-                Row(Modifier.widthIn(max=320.dp).horizontalScroll(rememberScrollState())){order.filter{it !in visiblePrimary&&it !in hidden}.forEach{id->Box(Modifier.pointerInput(id){awaitEachGesture{awaitFirstDown(requireUnconsumed=false,pass=PointerEventPass.Initial);do{val event=awaitPointerEvent(PointerEventPass.Final)}while(event.changes.any{it.pressed});more=false}}){content(id)}}}
+                Row(Modifier.widthIn(max=320.dp).horizontalScroll(rememberScrollState())){order.filter{it !in visiblePrimary&&it !in hidden}.forEach{id->Box(Modifier.pointerInput(id){awaitEachGesture{awaitFirstDown(requireUnconsumed=false,pass=PointerEventPass.Initial);do{val event=awaitPointerEvent(PointerEventPass.Final)}while(event.changes.any{it.pressed});more=false}}){EditorToolSlot(id){content(id)}}}}
                 DropdownMenuItem(text={Text("自定义快捷栏")},onClick={more=false;customizing=true},modifier=Modifier.testTag("toolbar-customize"))
             }
         }
@@ -99,5 +99,14 @@ internal object EditorToolOrder {
                 TextButton(onClick={order=EditorToolOrder.labels.keys.toList();hidden=EditorToolOrder.defaultHidden;save()},modifier=Modifier.padding(start=16.dp,bottom=8.dp).testTag("toolbar-reset")){Text("恢复默认")}
             }
         }
+    }
+}
+
+/** Same visual/hit-area contract for every tool; names remain available on long press. */
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable internal fun EditorToolSlot(id:String,content:@Composable ()->Unit){
+    TooltipBox(positionProvider=TooltipDefaults.rememberPlainTooltipPositionProvider(),
+        tooltip={PlainTooltip{Text(EditorToolOrder.labels[id].orEmpty())}},state=rememberTooltipState()){
+        Box(Modifier.size(48.dp),contentAlignment=Alignment.Center){content()}
     }
 }

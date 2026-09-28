@@ -22,10 +22,12 @@ import org.inkweft.core.*
 import java.io.File
 import java.util.Base64
 import java.util.UUID
+import kotlinx.coroutines.*
 
 @Composable internal fun PageObjectTools(vm:PageObjectViewModel,ui:ObjectsUi,pageId:String,world:Boolean,
     active:Boolean,enabled:Boolean,selected:String?,onSelect:(String?)->Unit,onBlocked:(Boolean)->Unit,
-    viewport:()->CanvasViewport?,onNotice:(String)->Unit,request:String?=null,onRequestConsumed:()->Unit={},onDone:()->Unit={}) {
+    viewport:()->CanvasViewport?,onNotice:(String)->Unit,request:String?=null,onRequestConsumed:()->Unit={},onDone:()->Unit={},onEditMap:(MapEmbed)->Unit={}) {
+    val scope=rememberCoroutineScope()
     val context=LocalContext.current
     var picking by rememberSaveable(pageId){mutableStateOf(false)}
     var cameraPath by rememberSaveable(pageId){mutableStateOf<String?>(null)}
@@ -66,6 +68,12 @@ import java.util.UUID
             Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()).padding(horizontal=8.dp),verticalAlignment=Alignment.CenterVertically) {
                 val item=ui.objects.find{it.id==selected&&!it.hidden}
                 if(item!=null){
+                item.mapEmbed?.let{embed->
+                    if(embed.policy==MapEmbedPolicy.LIVE){
+                        TextButton({onEditMap(embed)},enabled=available,modifier=Modifier.testTag("object-edit-map")){Text("编辑导图")}
+                        TextButton({scope.launch{try{val app=context.applicationContext as InkWeftApplication;val scene=withContext(Dispatchers.IO){app.mapGraphs.read(embed.target.notebookId).first{it.ref==embed.target&&it.available}};vm.put(item.copy(mapEmbed=embed.copy(policy=MapEmbedPolicy.PINNED,snapshot=scene)))}catch(c:CancellationException){throw c}catch(_:Exception){onNotice("源图不可用，未改变实时视图")}}},enabled=available,modifier=Modifier.testTag("object-freeze-map")){Text("固定此视图")}
+                    }else Text("固定快照",modifier=Modifier.padding(horizontal=8.dp),style=MaterialTheme.typography.bodySmall)
+                }
                 if(item.kind==PageObjectKind.TEXT)TextButton(onClick={editing=item},enabled=available,modifier=Modifier.testTag("object-edit-text")){Text("编辑文字")}
                 if(item.kind==PageObjectKind.TAPE)TextButton(onClick={vm.put(item.copy(revealed=!item.revealed))},enabled=available,modifier=Modifier.testTag("object-reveal")){Text(if(item.revealed)"盖上胶带"else"揭开胶带")}
                 TextButton(onClick={val x=if(world)item.x+24 else (item.x+24).coerceAtMost(1000-item.width);val y=if(world)item.y+24 else (item.y+24).coerceAtMost(1414-item.height);val o=item.copy(id=UUID.randomUUID().toString(),x=x,y=y,sourceStrokeIds=emptyList());vm.put(o);onSelect(o.id)},enabled=available,modifier=Modifier.testTag("object-copy")){Text("复制")}

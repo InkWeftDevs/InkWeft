@@ -45,7 +45,7 @@ class IntegratedMapUiTest {
   fun send(action:Int,dx:Float){val v=checkNotNull(view);val prop=android.view.MotionEvent.PointerProperties().apply{id=0;toolType=android.view.MotionEvent.TOOL_TYPE_STYLUS};val point=android.view.MotionEvent.PointerCoords().apply{x=v.width*.5f+dx;y=v.height*.45f;pressure=.5f}
    val e=android.view.MotionEvent.obtain(time,android.os.SystemClock.uptimeMillis(),action,1,arrayOf(prop),arrayOf(point),0,0,1f,1f,0,0,android.view.InputDevice.SOURCE_STYLUS,0);try{assertTrue(v.dispatchTouchEvent(e))}finally{e.recycle()}}
   compose.runOnIdle{view=find<InkCanvasView>(compose.activity.window.decorView);send(android.view.MotionEvent.ACTION_DOWN,0f)}
-  compose.waitForIdle();compose.onNodeWithTag("study-close").assertIsNotEnabled();compose.onNodeWithTag("quick-study").assertIsNotEnabled();compose.onNodeWithTag("study-new-map").assertIsNotEnabled()
+  compose.waitForIdle();compose.onNodeWithTag("study-close").assertIsNotEnabled();compose.onNodeWithTag("quick-study").assertIsNotEnabled();compose.onNodeWithTag("study-map-picker").assertIsNotEnabled()
   assertEquals(bounds,compose.onNodeWithTag("ink-surface").fetchSemanticsNode().boundsInRoot)
   compose.runOnIdle{send(android.view.MotionEvent.ACTION_MOVE,30f);send(android.view.MotionEvent.ACTION_UP,60f)};ready()
   compose.waitUntil(10000){runBlocking{app.inkRepository.read(note.id).strokes.size}==1}
@@ -65,14 +65,13 @@ class IntegratedMapUiTest {
   }
   compose.runOnIdle{ViewModelProvider(compose.activity)[NotebookViewModel::class.java].select(note)};compose.singlePageEditor();ready()
   tap("ink-select");compose.runOnIdle{checkNotNull(find<SelectionOverlayView>(compose.activity.window.decorView)).onRegion(InkRegion(listOf(EraserPoint(150f,200f),EraserPoint(400f,400f))))}
-  tap("selection-more");tap("selection-map");compose.onNodeWithTag("study-panel").assertExists()
-  tap("study-map-picker");tap("study-map-$mapA");compose.waitUntil(10000){runCatching{compose.onNodeWithTag("study-add-source").assertIsEnabled()}.isSuccess}
-  tap("study-source-branch");tap("study-source-parent-$root");tap("study-add-source")
+  tap("selection-more");tap("selection-map");compose.onNodeWithTag("study-panel").assertDoesNotExist()
+  tap("capture-map-$mapA");tap("capture-branch-$root");tap("capture-send")
   fun cards()=runBlocking{app.study.cards(note.id).first()}
   compose.waitUntil(10000){cards().size==2};val card=cards().first{it.id!=rootCard}
   val source=runBlocking{app.study.source(card.id)}!!;assertEquals(note.id,source.pageId);assertEquals(stroke.id,InkPageFile.decode(source.snapshot).strokes.single().id)
   val placement=runBlocking{app.knowledge.observe().first()}.first{(it.data() as? KnowledgeData.MapOccurrence)?.cardId==card.id};assertEquals(root,(placement.data() as KnowledgeData.MapOccurrence).parentId)
-  tap("study-tab-2");var viewport:MapViewport?=null
+  compose.onNodeWithText("查看").performClick();tap("study-tab-2");var viewport:MapViewport?=null
   compose.runOnIdle{val map=checkNotNull(find<MindMapView>(compose.activity.window.decorView));map.zoom(.7f);viewport=map.snapshotViewport()}
   tap("study-close");ready();tap("quick-study");compose.waitForIdle()
   compose.runOnIdle{val v=find<MindMapView>(compose.activity.window.decorView)

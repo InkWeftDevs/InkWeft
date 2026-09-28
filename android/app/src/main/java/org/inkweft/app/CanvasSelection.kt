@@ -17,7 +17,7 @@ import java.util.UUID
 internal enum class SelectionType(val title:String){INK("手写"),HIGHLIGHTER("荧光笔"),IMAGE("图片"),TEXT("文字／符号"),SHAPE("图形"),TAPE("胶带")}
 internal data class SelectionOptions(val types:Set<SelectionType> = SelectionType.entries.toSet(),val precise:Boolean=false,val freehand:Boolean=true){
     fun accepts(s:InkStroke)=(if(s.pen==InkPen.HIGHLIGHTER)SelectionType.HIGHLIGHTER else SelectionType.INK) in types
-    fun accepts(o:PageObject)=when(o.kind){PageObjectKind.IMAGE->SelectionType.IMAGE;PageObjectKind.TEXT->SelectionType.TEXT;PageObjectKind.SHAPE->SelectionType.SHAPE;PageObjectKind.TAPE->SelectionType.TAPE} in types
+    fun accepts(o:PageObject)=when(o.kind){PageObjectKind.IMAGE,PageObjectKind.MAP->SelectionType.IMAGE;PageObjectKind.TEXT->SelectionType.TEXT;PageObjectKind.SHAPE->SelectionType.SHAPE;PageObjectKind.TAPE->SelectionType.TAPE} in types
 }
 internal class SelectionStore(context:Context){
     private val prefs=context.getSharedPreferences("inkweft-selection",0)

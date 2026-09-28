@@ -23,6 +23,9 @@ import org.inkweft.core.*
 import org.inkweft.data.*
 import java.util.UUID
 
+internal fun Throwable.mapExportExplanation():String? = if(message=="LIVE_MAP_REQUIRES_FULL_BACKUP_OR_SNAPSHOT")
+    "笔记含实时导图，请使用完整资料库备份，或先选中页内导图并固定此视图后再复制或导出。原资料未改动。" else null
+
 internal data class LibraryTransferUi(val mode:String="",val busy:Boolean=false,
     val message:String="",val needsFile:Boolean=false,val result:Note?=null,val export:ContentExport?=null)
 
@@ -86,7 +89,7 @@ class LibraryTransfersViewModel(app:Application,private val saved:SavedStateHand
                 val note=withContext(Dispatchers.IO){if(copy!=null)repo.duplicate(copy)else repo.import(checkNotNull(imported),checkNotNull(content))}
                 completed(note)
             }catch(c:CancellationException){throw c}
-            catch(_:IllegalArgumentException){mutable.value=LibraryTransferUi("REJECTED",message="未完成复制或导入：源状态、容量或内容校验未通过。原资料保持不变，可取消后重新检查。")}
+            catch(e:IllegalArgumentException){mutable.value=LibraryTransferUi("REJECTED",message=e.mapExportExplanation()?:"未完成复制或导入：源状态、容量或内容校验未通过。原资料保持不变，可取消后重新检查。")}
             catch(_:Exception){mutable.value=LibraryTransferUi("UNKNOWN",message="提交结果待核对，原操作身份已保留。请点核对，不要重复创建另一份副本。")}
         }
     }
@@ -118,7 +121,7 @@ class LibraryTransfersViewModel(app:Application,private val saved:SavedStateHand
                 val content=withContext(Dispatchers.IO){repo.export(noteId)}
                 mutable.value=LibraryTransferUi("EXPORT",message="导出已保存可见内容。${if(content.extension=="iwbook")"整本所有页面"else"无界页面"}，${content.bytes.size} 字节。明文，不含摘要卡/脑图、历史、分类、搜索索引或未保存草稿；不是完整备份。你选择的文件提供方可能是云盘。",export=content)
             }catch(c:CancellationException){throw c}
-            catch(_:Exception){mutable.value=LibraryTransferUi("ERROR",message="无法生成内容副本，可能超出容量或存在读取错误。原资料保留；可尝试逐页导出。")}
+            catch(e:Exception){mutable.value=LibraryTransferUi("ERROR",message=e.mapExportExplanation()?:"无法生成内容副本，可能超出容量或存在读取错误。原资料保留；可尝试逐页导出。")}
         }
     }
     fun writeExport(uri:Uri?){

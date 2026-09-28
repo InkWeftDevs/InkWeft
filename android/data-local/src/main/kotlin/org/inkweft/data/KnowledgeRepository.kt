@@ -13,6 +13,8 @@ data class KnowledgeRevisionRow(val id:String,val revision:Long,val notebookId:S
 @Entity(tableName="knowledge_receipts",indices=[Index("notebookId")],foreignKeys=[ForeignKey(entity=NoteRow::class,parentColumns=["id"],childColumns=["notebookId"])])
 data class KnowledgeReceiptRow(@PrimaryKey val operationId:String,val notebookId:String,val digest:String,val resultId:String)
 @Dao interface KnowledgeDao {
+    @Query("SELECT * FROM knowledge_records WHERE notebookId=:book ORDER BY id") fun observeBook(book:String):Flow<List<KnowledgeRow>>
+    @Query("SELECT * FROM knowledge_records WHERE notebookId=:book ORDER BY id") suspend fun forBook(book:String):List<KnowledgeRow>
     @Query("SELECT * FROM knowledge_records ORDER BY id") fun observe():Flow<List<KnowledgeRow>>
     @Query("SELECT * FROM knowledge_records ORDER BY id") suspend fun all():List<KnowledgeRow>
     @Query("SELECT * FROM knowledge_records WHERE id=:id") suspend fun get(id:String):KnowledgeRow?
@@ -34,6 +36,7 @@ sealed interface KnowledgeOutcome {
 enum class KnowledgeFault { BEFORE_RECEIPT, AFTER_COMMIT }
 class KnowledgeRepository(private val db:NoteDatabase,private val fault:(KnowledgeFault)->Unit={}){
     fun observe()=db.knowledge().observe()
+    fun observeBook(book:String)=db.knowledge().observeBook(book)
     fun cards()=db.study().observeAllCards()
     fun pages()=db.pages().observeLibraryPages()
     fun notes()=db.notes().observeAvailableNotes()

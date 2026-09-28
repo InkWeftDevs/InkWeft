@@ -10,18 +10,27 @@ import java.util.Base64
 
 /** Bounded caches; decoded media is shared by transformed copies until the view is detached. */
 internal class PageObjectPainter {
+    var mapScenes:Map<MapRef,MapScene> = emptyMap()
+    private val mapScenesResolved=object:LinkedHashMap<String,MapScene?>(16,.75f,true){override fun removeEldestEntry(e:MutableMap.MutableEntry<String,MapScene?>?)=size>32}
     private val resourceOwner="objects-"+java.util.UUID.randomUUID()
     private val images=object:LinkedHashMap<String,Bitmap?>(8,.75f,true){override fun removeEldestEntry(eldest:MutableMap.MutableEntry<String,Bitmap?>?):Boolean{if(size<=8)return false;eldest?.value?.let{RenderResources.release(it,resourceOwner)};return true}}
     private val layouts=object:LinkedHashMap<PageObject,StaticLayout>(32,.75f,true){override fun removeEldestEntry(eldest:MutableMap.MutableEntry<PageObject,StaticLayout>?)=size>32}
     private val graphite=object:LinkedHashMap<Int,BitmapShader>(8,.75f,true){override fun removeEldestEntry(eldest:MutableMap.MutableEntry<Int,BitmapShader>?)=size>8}
     private val paint=Paint(Paint.ANTI_ALIAS_FLAG or Paint.FILTER_BITMAP_FLAG)
-    fun clear(){RenderResources.releaseOwner(resourceOwner);images.clear();layouts.clear();graphite.clear()}
+    fun clear(){RenderResources.releaseOwner(resourceOwner);images.clear();layouts.clear();graphite.clear();mapScenesResolved.clear();mapScenes=emptyMap()}
     fun draw(canvas:Canvas,objects:List<PageObject>,tapes:Boolean,visible:CanvasBounds,liveErase:Path?=null,wholeErase:Boolean=false) {
         objects.filter{!it.hidden&&(it.kind==PageObjectKind.TAPE)==tapes&&it.bounds().intersects(visible)}.forEach { source ->
             val o=if(liveErase!=null&&source.sourceStrokeIds.isNotEmpty()&&source.glyphs.isEmpty())source.copy(glyphs=TextStyles.positioned(source))else source
             paint.alpha=255;paint.style=Paint.Style.FILL;paint.pathEffect=null
             val save=canvas.save();canvas.clipRect(o.x,o.y,o.x+o.width,o.y+o.height)
             when(o.kind) {
+                PageObjectKind.MAP->{
+                    val embed=checkNotNull(o.mapEmbed)
+                    val live=embed.snapshot?:mapScenes[embed.target]?:if(mapScenes.keys.any{it.notebookId==embed.target.notebookId})MapScene(embed.target,"",emptyList(),"",false)else null
+                    val key=embed.cacheKey(live,o.width.toInt(),o.height.toInt())
+                    val scene=if(mapScenesResolved.containsKey(key))mapScenesResolved[key]else live?.branch(embed.branchId,embed.depth).also{mapScenesResolved[key]=it}
+                    MapScenePainter.embed(canvas,scene,o)
+                }
                 PageObjectKind.IMAGE->{
                     val bitmap=if(images.containsKey(o.image))images[o.image]else try{
                         val bytes=Base64.getDecoder().decode(o.image)

@@ -14,6 +14,7 @@ import androidx.ink.strokes.*
 import org.inkweft.core.*
 import java.util.UUID
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.*
 import kotlin.math.*
 
 /** A bounded viewport. Partial erase clips ink, never paints the paper colour. */
@@ -67,7 +68,20 @@ class InkCanvasView(context:Context):View(context){
     private var objectDx=0f;private var objectDy=0f
     fun previewSelectionObjects(ids:Set<String>,dx:Float=0f,dy:Float=0f){selectionObjects=ids;objectDx=dx;objectDy=dy;invalidate()}
     private val objectPainter=PageObjectPainter()
-    fun showObjects(next:List<PageObject>){if(objects==next)return;objects=next;restoreAppearance();suppressedStrokeIds=next.flatMap{it.sourceStrokeIds}.toSet();if(preview&&world&&width>0&&height>0)fitContent(false);invalidate()}
+    private var mapSceneJob:Job?=null
+    private var mapBook:String?=null
+    private fun observeMapScenes(){
+        val book=objects.firstOrNull{it.mapEmbed?.policy==MapEmbedPolicy.LIVE}?.mapEmbed?.target?.notebookId
+        if(book==mapBook&&mapSceneJob?.isActive==true)return
+        mapSceneJob?.cancel();mapSceneJob=null;mapBook=book
+        if(book==null){objectPainter.mapScenes=emptyMap();return}
+        if(!isAttachedToWindow)return
+        val app=context.applicationContext as? InkWeftApplication?:return
+        mapSceneJob=CoroutineScope(Dispatchers.Main.immediate).launch{
+            app.mapGraphs.observe(book).flowOn(Dispatchers.IO).catch{if(it is CancellationException)throw it;emit(listOf(MapScene(MapRef(book),"",emptyList(),"",false)))}.collect{scenes->objectPainter.mapScenes=scenes.associateBy{it.ref};invalidate()}
+        }
+    }
+    fun showObjects(next:List<PageObject>){if(objects==next)return;objects=next;observeMapScenes();restoreAppearance();suppressedStrokeIds=next.flatMap{it.sourceStrokeIds}.toSet();if(preview&&world&&width>0&&height>0)fitContent(false);invalidate()}
     fun previewObject(value:PageObject?){objectDraft=value;invalidate()}
     private var appearanceObjects=emptyList<PageObject>()
     private fun restoreAppearance(){val sources=content.associateBy{it.id};appearanceObjects=objects.map{BeautyAppearance.restore(it,sources)}}
@@ -95,7 +109,7 @@ class InkCanvasView(context:Context):View(context){
             catch(_:Exception){if(documentRequest==request){documentError=true;invalidate();onNotice("文档页面读取失败，请离开后重新打开；原文件保留。")}}
         }
     }
-    override fun onAttachedToWindow(){super.onAttachedToWindow();documentRequest=null;requestDocument()}
+    override fun onAttachedToWindow(){super.onAttachedToWindow();observeMapScenes();documentRequest=null;requestDocument()}
 
     private var content=emptyList<InkStroke>()
     internal val displayedStrokeCount get()=content.size
@@ -179,7 +193,7 @@ class InkCanvasView(context:Context):View(context){
     var onObjectTap:(String)->Unit={}
     internal fun imageAt(x:Float,y:Float):String? {
         val p=viewport.screenToWorld(x.toDouble(),y.toDouble(),width.toDouble(),height.toDouble(),density)
-        val candidates=objects.asReversed().filter{!it.hidden&&it.kind in listOf(PageObjectKind.IMAGE,PageObjectKind.SHAPE,PageObjectKind.TAPE)}
+        val candidates=objects.asReversed().filter{!it.hidden&&it.kind in listOf(PageObjectKind.IMAGE,PageObjectKind.MAP,PageObjectKind.SHAPE,PageObjectKind.TAPE)}
         return (candidates.filter{it.kind==PageObjectKind.TAPE}+candidates.filter{it.kind!=PageObjectKind.TAPE}).firstOrNull{ObjectGeometry.hit(it,p.x.toFloat(),p.y.toFloat())}?.id
     }
     private var tapImage:String?=null
@@ -328,6 +342,6 @@ class InkCanvasView(context:Context):View(context){
     }
     private fun finishViewport(){if(movingViewport){movingViewport=false;onViewport(viewport)}}
     fun cancelGesture(){tapImage=null;onLiveSamples(emptyList());val active=inputId!=-1;inputId=-1;raw.clear();gestureErase=false;cursor=null;parent?.requestDisallowInterceptTouchEvent(false);if(active)onGesture(false);invalidate()}
-    override fun onDetachedFromWindow(){PencilRenderer.forget(content.filter{it.pen==InkPen.PENCIL}.map{it.id}.toSet()+gestureId);pageRaster.clear();asyncRaster.clear();documentJob?.cancel();releaseDocumentTile();documentRequest=null;objectPainter.clear();cancelGesture();if(configured&&!preview)onViewport(viewport);super.onDetachedFromWindow()}
+    override fun onDetachedFromWindow(){mapSceneJob?.cancel();mapSceneJob=null;PencilRenderer.forget(content.filter{it.pen==InkPen.PENCIL}.map{it.id}.toSet()+gestureId);pageRaster.clear();asyncRaster.clear();documentJob?.cancel();releaseDocumentTile();documentRequest=null;objectPainter.clear();cancelGesture();if(configured&&!preview)onViewport(viewport);super.onDetachedFromWindow()}
     override fun performClick():Boolean{super.performClick();return true}
 }

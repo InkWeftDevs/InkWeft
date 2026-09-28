@@ -6,7 +6,7 @@ import android.view.View
 import org.inkweft.core.StudySourceDraft
 
 /** Process-local drag payload. The clipboard contains neither text nor private source images. */
-internal data class CaptureTransfer(val book:String,val source:StudySourceDraft,val text:String="")
+internal typealias CaptureTransfer=org.inkweft.core.CaptureDraft
 internal class CaptureShadow(view:View):View.DragShadowBuilder(view){
     private val d=view.resources.displayMetrics.density
     override fun onProvideShadowMetrics(size:Point,touch:Point){size.set((136*d).toInt(),(48*d).toInt());touch.set(size.x/2,size.y/2)}
