@@ -46,7 +46,7 @@ class MixedSelectionUiTest {
   compose.onNodeWithText("3 项").assertExists();tap("mixed-more");tap("mixed-enlarge")
   compose.waitUntil(10000){runBlocking{app.pageObjects.read(n.id).objects.first().width}>175f};ready();compose.onNodeWithText("3 项").assertExists()
   tap("ink-undo");compose.waitUntil(10000){runBlocking{app.pageObjects.read(n.id).objects.first().width}==160f};ready()
-  tap("selection-all");compose.onNodeWithText("3 项").assertExists();tap("mixed-copy")
+  tap("ink-select");tap("selection-all");compose.onNodeWithText("3 项").assertExists();tap("mixed-copy")
   fun ink()=runBlocking{InkSession(app.inkRepository.read(n.id)).visibleDraft()}
   fun objects()=runBlocking{app.pageObjects.read(n.id).objects}
   compose.waitUntil(10000){ink().size==2&&objects().size==4};ready();compose.onNodeWithText("3 项").assertExists()
@@ -54,7 +54,7 @@ class MixedSelectionUiTest {
   tap("ink-undo");compose.waitUntil(10000){ink().size==2&&objects().size==4};ready()
   tap("ink-undo");compose.waitUntil(10000){ink().size==1&&objects().size==2};ready()
   tap("ink-select");tap("lasso-filter-TAPE");compose.onNodeWithContentDescription("关闭套索").performClick()
-  tap("selection-all");compose.onNodeWithText("2 项").assertExists();tap("mixed-dismiss")
+  tap("ink-select");tap("selection-all");compose.onNodeWithText("2 项").assertExists();tap("mixed-dismiss")
   tap("ink-select");tap("lasso-filter-TAPE");tap("lasso-rectangle");assertFalse(SelectionStore(app).read().freehand)
   compose.onNodeWithContentDescription("关闭套索").performClick()
   tap("ink-tool-3");tap("ink-select");tap("ink-select");compose.onNodeWithTag("lasso-rectangle").assertIsSelected()

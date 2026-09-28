@@ -109,9 +109,9 @@ fun InkScreen(note:NoteDraft,workspace:WorkspaceViewModel=viewModel(),onBack:()-
         if(!fullScreen)Row(Modifier.fillMaxWidth().heightIn(min=40.dp).padding(horizontal=4.dp),verticalAlignment=Alignment.CenterVertically){
             IconButton(onBack,enabled=navigationEnabled,modifier=Modifier.size(40.dp).testTag("back-library").describedAs("返回资料库")){Glyph("back")}
             Spacer(Modifier.weight(1f))
-            IconButton({directory=!directory;documentSettings=false;studyOpen=false},enabled=navigationEnabled,modifier=Modifier.size(40.dp).testTag("quick-overview").describedAs("文档概览")){Glyph("overview")}
-            IconButton({documentSettings=!documentSettings;directory=false;studyOpen=false},enabled=navigationEnabled,modifier=Modifier.size(40.dp).testTag("quick-settings").describedAs("其他设置")){Glyph("settings")}
-            IconButton({studyOpen=!studyOpen;studySource=null;directory=false;documentSettings=false},enabled=navigationEnabled,modifier=Modifier.size(40.dp).testTag("quick-study").describedAs("笔记导图")){Glyph("mindmap")}
+            IconButton({excerptsOpen=false;directory=!directory;documentSettings=false;studyOpen=false},enabled=navigationEnabled,modifier=Modifier.size(40.dp).testTag("quick-overview").describedAs("文档概览")){Glyph("overview")}
+            IconButton({excerptsOpen=false;documentSettings=!documentSettings;directory=false;studyOpen=false},enabled=navigationEnabled,modifier=Modifier.size(40.dp).testTag("quick-settings").describedAs("其他设置")){Glyph("settings")}
+            IconButton({excerptsOpen=false;studyOpen=!studyOpen;studySource=null;directory=false;documentSettings=false},enabled=navigationEnabled,modifier=Modifier.size(40.dp).testTag("quick-study").describedAs("笔记导图")){Glyph("mindmap")}
             IconButton({searchOpen=true},enabled=navigationEnabled,modifier=Modifier.size(40.dp).testTag("book-search").describedAs("查找")){Glyph("search")}
         }
         if(ui.error!=null)Row(Modifier.fillMaxWidth().padding(horizontal=12.dp),verticalAlignment=Alignment.CenterVertically){Text(ui.error!!,Modifier.weight(1f),fontSize=12.sp);if(!ui.insertionUnknown&&!ui.actionUnknown)TextButton(onClick=vm::clearError){Text("知道了")}}
@@ -137,7 +137,7 @@ fun InkScreen(note:NoteDraft,workspace:WorkspaceViewModel=viewModel(),onBack:()-
             focusRegion=sourceFocus?.takeIf{it.first==page.id}?.second,onFocusConsumed={sourceFocus=null},pageNavigation={
                 if(!page.world)Text("${page.position+1} / ${ui.pages.size}",fontSize=12.sp,modifier=Modifier.testTag("page-counter"))
             },continuousPages=if(continuous&&!page.world)ui.pages else null,onContinuousPage={if(it!=ui.selectedId)vm.select(it)},leaveContinuous={readingMode(false)},onTags={classify=true},fullScreen=fullScreen,onFullScreen=onFullScreen,canAddPage=!page.world&&ui.pages.size+ui.recycled.size<500,
-            excerptRequest=excerptRequest,onDocumentAction={action->when(action){"excerpts"->{excerptsOpen=true;directory=false;documentSettings=false;studyOpen=false};"overview"->{excerptsOpen=false;directory=!directory;documentSettings=false};"settings"->{documentSettings=!documentSettings;directory=false};"add-page"->insertion=page.id to PageInsertLocation.AFTER;"export"->confirmBook=true}})}
+            excerptRequest=excerptRequest,onDocumentAction={action->when(action){"excerpts"->{excerptsOpen=true;directory=false;documentSettings=false;studyOpen=false};"overview"->{excerptsOpen=false;studyOpen=false;directory=!directory;documentSettings=false};"settings"->{excerptsOpen=false;studyOpen=false;documentSettings=!documentSettings;directory=false};"add-page"->insertion=page.id to PageInsertLocation.AFTER;"export"->confirmBook=true}})}
     }
     if(excerptsOpen)DocumentSidePanel("摘录","excerpt-panel",{if(excerptReady)excerptsOpen=false},Modifier.align(Alignment.CenterEnd).width(panelWidth)){
         ExcerptCollection(excerptsVm,ui.pages,pageActionsReady,{source->readingMode(false);vm.select(source.pageId);sourceFocus=source.pageId to CanvasBounds(source.left,source.top,source.right,source.bottom)}, {card->initialStudyCard=card;studySource=null;excerptsOpen=false;studyOpen=true})

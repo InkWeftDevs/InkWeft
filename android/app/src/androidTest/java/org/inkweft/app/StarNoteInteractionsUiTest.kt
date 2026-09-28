@@ -68,6 +68,39 @@ class StarNoteInteractionsUiTest {
   compose.waitUntil(10000){runBlocking{app.study.cards(note.id).first().single()}.trashedAt!=null}
   assertEquals(1,runBlocking{app.inkRepository.read(note.id)}.strokes.size)
  }
+ @Test fun inlineCommentAndEightHandleRecropCancelSaveAndReopenKeepOriginalInk(){
+  val note=create();compose.frameCanvasFixture()
+  val ink=InkStroke(id(),InkPen.BALLPOINT,0xff2464bb.toInt(),6f,InkTool.STYLUS,listOf(InkSample(200f,220f,0),InkSample(400f,250f,80)))
+  compose.runOnIdle{find<InkCanvasView>()!!.onStroke(ink)};ready()
+  compose.waitUntil(15000){runBlocking{app.inkRepository.read(note.id)}.strokes.size==1}
+  compose.waitUntil(15000){var pending=true;compose.runOnIdle{pending=find<InkCanvasView>()!!.rasterPending};!pending}
+  tap("top-excerpt");compose.runOnIdle{find<SelectionOverlayView>()!!.onRegion(InkRegion(listOf(EraserPoint(150f,180f),EraserPoint(450f,290f))))}
+  compose.waitUntil(15000){runBlocking{app.study.cards(note.id).first()}.size==1};ready()
+  val card=runBlocking{app.study.cards(note.id).first().single()};val original=runBlocking{app.study.source(card.id)}!!
+  compose.onNodeWithContentDescription("关闭摘录").performClick()
+  compose.runOnIdle{find<SelectionOverlayView>()!!.onTap(200f,220f)}
+  tap("excerpt-inline-comment");compose.onNode(isDialog()).assertDoesNotExist()
+  compose.onNodeWithTag("excerpt-inline-input").performTextInput("页面内备注");compose.activityRule.scenario.recreate();compose.waitForIdle()
+  compose.onNodeWithTag("excerpt-inline-input").assertTextContains("页面内备注");tap("excerpt-inline-save")
+  compose.waitUntil(10000){runBlocking{app.study.cards(note.id).first().single()}.body=="页面内备注"};ready()
+  tap("excerpt-resize")
+  fun drag(){
+   var start=androidx.compose.ui.geometry.Offset.Zero
+   compose.runOnIdle{val v=find<ExcerptResizeOverlay>()!!;val b=v.bounds;val p=v.canvasView!!.snapshotViewport().worldToScreen(b.right,b.bottom,v.width.toDouble(),v.height.toDouble(),v.resources.displayMetrics.density.toDouble());start=androidx.compose.ui.geometry.Offset(p.x.toFloat(),p.y.toFloat())}
+   compose.onNodeWithTag("excerpt-edit-overlay").performTouchInput{swipe(start,start+androidx.compose.ui.geometry.Offset(90f,55f),400)}
+  }
+  drag();tap("excerpt-resize-cancel");ready()
+  assertEquals(original.right,runBlocking{app.study.source(card.id)}!!.right,0.0)
+  tap("excerpt-resize");drag();compose.activityRule.scenario.recreate();compose.waitForIdle();shot("v37-excerpt-resize.png");tap("excerpt-resize-save")
+  compose.waitUntil(15000){runBlocking{app.study.cards(note.id).first().single()}.revision==3L};ready()
+  val resized=runBlocking{app.study.source(card.id)}!!;assertTrue(resized.right>original.right);assertTrue(resized.bottom>original.bottom)
+  assertEquals(original.left,resized.left,0.0);assertEquals(original.top,resized.top,0.0)
+  compose.onNodeWithContentDescription("取消摘录选择").performClick();compose.activityRule.scenario.recreate();ready()
+  assertEquals("页面内备注",runBlocking{app.study.cards(note.id).first().single()}.body)
+  assertEquals(resized.right,runBlocking{app.study.source(card.id)}!!.right,0.0)
+  assertEquals(ink.samples,runBlocking{app.inkRepository.read(note.id)}.strokes.single().stroke.samples)
+  assertEquals(1L,runBlocking{app.inkRepository.read(note.id)}.revision)
+ }
  @Test fun pdfTextExcerptKeepsOriginalPictureAndSelectedText(){
   compose.waitUntil(15000){compose.onAllNodesWithTag("new-note").fetchSemanticsNodes().isNotEmpty()}
   val pdf=android.graphics.pdf.PdfDocument();val page=pdf.startPage(android.graphics.pdf.PdfDocument.PageInfo.Builder(1000,1414,1).create())

@@ -19,7 +19,8 @@ import java.util.UUID
 
 @Composable internal fun SourceThumbnail(card:String,modifier:Modifier=Modifier){
     val app=LocalContext.current.applicationContext as InkWeftApplication
-    val snapshot by produceState<InkPageFile?>(null,card){value=withContext(Dispatchers.IO){runCatching{app.study.source(card)?.let{InkPageFile.decode(it.snapshot)}}.getOrNull()}}
+    val source by remember(card){app.study.observeSource(card)}.collectAsStateWithLifecycle(initialValue=null)
+    val snapshot by produceState<InkPageFile?>(null,source){value=withContext(Dispatchers.IO){runCatching{source?.let{InkPageFile.decode(it.snapshot)}}.getOrNull()}}
     Box(modifier){snapshot?.let{file->AndroidView(factory={InkCanvasView(it).apply{preview=true}},update={v->v.configure(true,PaperStyle.BLANK,null);v.showStrokes(file.strokes);v.showObjects(file.objects)},modifier=Modifier.fillMaxSize().testTag("excerpt-preview-$card"))}}
 }
 
@@ -42,7 +43,7 @@ import java.util.UUID
     LazyColumn(Modifier.weight(1f).testTag("excerpt-list"),contentPadding=PaddingValues(8.dp),verticalArrangement=Arrangement.spacedBy(12.dp)){
         if(cards.isEmpty())item{Text(if(query.isBlank())"使用摘要笔框选页面区域"else"没有匹配的摘录",color=Quiet,modifier=Modifier.padding(12.dp))}
         items(cards,key={it.id}){card->
-            val source by produceState<StudySourceRow?>(null,card.id){value=withContext(Dispatchers.IO){vm.repo.source(card.id)}}
+            val source by produceState<StudySourceRow?>(null,card.id,card.revision){value=withContext(Dispatchers.IO){vm.repo.source(card.id)}}
             source?.let{original->
                 Surface(shape=androidx.compose.foundation.shape.RoundedCornerShape(12.dp),border=BorderStroke(1.dp,Line),color=androidx.compose.ui.graphics.Color.White){Column(Modifier.padding(10.dp).testTag("excerpt-item-${card.id}")){
                     SourceThumbnail(card.id,Modifier.fillMaxWidth().height(150.dp).clickable(enabled=enabled&&pages.any{it.id==original.pageId}){open(original)})

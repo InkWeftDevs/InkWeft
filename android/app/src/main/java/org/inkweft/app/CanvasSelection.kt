@@ -83,7 +83,7 @@ internal object CanvasSelectionEdit {
         return (s.strokes.takeIf{it.isNotEmpty()}?.let{InkMutation.Visibility(it.map{v->v.id},false)}) to s.snapshot.mapNotNull{if(it.id !in ids)it else if(it.sourceStrokeIds.isNotEmpty())it.copy(hidden=true)else null}
     }
 }
-@Composable internal fun SelectionSettings(value:SelectionOptions,freehand:Boolean,dismiss:()->Unit,change:(SelectionOptions,Boolean)->Unit){
+@Composable internal fun SelectionSettings(value:SelectionOptions,freehand:Boolean,dismiss:()->Unit,all:()->Unit,change:(SelectionOptions,Boolean)->Unit){
     EditorPanel("套索","",dismiss,"selection-settings"){
         Column(Modifier.verticalScroll(rememberScrollState())){
             Row(horizontalArrangement=Arrangement.spacedBy(6.dp)){
@@ -93,6 +93,7 @@ internal object CanvasSelectionEdit {
             }
             Text(if(value.precise)"完整圈住才选中"else"碰到一部分即可选中整项",style=MaterialTheme.typography.bodySmall,color=Quiet)
             HorizontalDivider(Modifier.padding(vertical=8.dp),color=Line)
+            TextButton(all,modifier=Modifier.testTag("selection-all")){Text("全选本页")}
             SelectionType.entries.forEach{type->Row(Modifier.fillMaxWidth().heightIn(min=48.dp),verticalAlignment=Alignment.CenterVertically){
                 Text(type.title,Modifier.weight(1f));Switch(type in value.types,{on->change(value.copy(types=if(on)value.types+type else value.types-type),freehand)},modifier=Modifier.testTag("lasso-filter-${type.name}"))
             }}

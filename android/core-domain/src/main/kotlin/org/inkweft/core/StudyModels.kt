@@ -4,13 +4,13 @@ package org.inkweft.core
 import java.io.*
 import java.util.UUID
 
-enum class StudyAction { CREATE, CREATE_EXCERPT, EDIT, REUSE, MOVE, REPARENT, REMOVE_NODE, TRASH_CARD, RESTORE_CARD, ARRANGE }
+enum class StudyAction { CREATE, CREATE_EXCERPT, RECROP_EXCERPT, EDIT, REUSE, MOVE, REPARENT, REMOVE_NODE, TRASH_CARD, RESTORE_CARD, ARRANGE }
 class StudySourceDraft(val pageId:String,val inkRevision:Long,val bounds:CanvasBounds,ids:List<String>,preview:ByteArray?=null,val objectRevision:Long?=null){
     private val image=preview?.clone()
     fun previewBytes()=image?.clone()
     val strokeIds:List<String> = java.util.Collections.unmodifiableList(ids.sorted())
     init{UUID.fromString(pageId);require(inkRevision>=0);require(ids.size in (if(image==null)1 else 0)..256&&ids.distinct().size==ids.size);ids.forEach{UUID.fromString(it)}
-        require(image==null||(image.size in 5..240_000&&image[0]==0xff.toByte()&&image[1]==0xd8.toByte()));require(objectRevision==null||objectRevision>=0)
+        require(image==null||(bounds.right>bounds.left&&bounds.bottom>bounds.top));require(image==null||(image.size in 5..240_000&&image[0]==0xff.toByte()&&image[1]==0xd8.toByte()));require(objectRevision==null||objectRevision>=0)
         require(bounds.left>=-BoardLimits.WORLD&&bounds.right<=BoardLimits.WORLD&&bounds.top>=-BoardLimits.WORLD&&bounds.bottom<=BoardLimits.WORLD)}
 }
 data class StudyNode(val id:String,val cardId:String,val parentId:String?,val x:Double,val y:Double,val revision:Long=1,val removed:Boolean=false)
@@ -48,6 +48,7 @@ class StudyCommand(val id:String,val notebookId:String,val action:StudyAction,va
         when(action){
             StudyAction.CREATE->{require(cardId!=null&&nodeId!=null&&title.isNotBlank()&&expectedRevision==0L)}
             StudyAction.CREATE_EXCERPT->{require(cardId!=null&&nodeId==null&&title.isNotBlank()&&source!=null&&expectedRevision==0L&&mapId==null)}
+            StudyAction.RECROP_EXCERPT->{require(cardId!=null&&nodeId==null&&expectedRevision>0&&source?.previewBytes()!=null&&mapId==null)}
             StudyAction.EDIT->{require(cardId!=null&&expectedRevision>0&&title.isNotBlank()&&source==null)}
             StudyAction.REUSE->{require(cardId!=null&&nodeId!=null&&source==null)}
             StudyAction.MOVE,StudyAction.REPARENT,StudyAction.REMOVE_NODE->{require(nodeId!=null&&expectedRevision>0&&source==null)}

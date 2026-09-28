@@ -33,6 +33,8 @@ interface StudyDao {
     @Insert(onConflict=OnConflictStrategy.ABORT) suspend fun addCard(row:StudyCardRow)
     @Update suspend fun updateCard(row:StudyCardRow):Int
     @Insert(onConflict=OnConflictStrategy.ABORT) suspend fun revision(row:StudyCardRevisionRow)
+    @Update suspend fun updateSource(row:StudySourceRow):Int
+    @Query("SELECT * FROM study_sources WHERE cardId=:id") fun observeSource(id:String):Flow<StudySourceRow?>
     @Insert(onConflict=OnConflictStrategy.ABORT) suspend fun source(row:StudySourceRow)
     @Insert(onConflict=OnConflictStrategy.ABORT) suspend fun addNode(row:StudyNodeRow)
     @Update suspend fun updateNode(row:StudyNodeRow):Int
@@ -51,6 +53,7 @@ class StudyRepository(private val db:NoteDatabase,private val fault:(StudyFault)
     private fun mapNodes(book:String,mapId:String,rows:List<KnowledgeRow>)=rows.filter{it.notebookId==book}.mapNotNull{r->
         (r.data() as? KnowledgeData.MapOccurrence)?.takeIf{it.mapId==mapId}?.let{StudyNodeRow(r.id,book,it.cardId,it.parentId,it.x,it.y,r.revision,r.removed)}
     }
+    fun observeSource(card:String)=db.study().observeSource(card)
     suspend fun source(card:String)=db.study().source(card)
     suspend fun lookup(c:StudyCommand):String?=db.withTransaction{
         db.study().receipt(c.id)?.let{studyRequire(it.notebookId==c.notebookId&&it.digest==c.digest());it.resultId}
@@ -83,29 +86,40 @@ class StudyRepository(private val db:NoteDatabase,private val fault:(StudyFault)
                 validParent();val n=StudyNodeRow(studyNotNull(c.nodeId),c.notebookId,studyNotNull(c.cardId),c.parentId,c.x,c.y)
                 validateStudyGraph((nodes+ n).map{it.model()});writeNode(n,0)
             }
+            suspend fun captureSource(s:StudySourceDraft,replacedBytes:Int=0):StudySourceRow {
+                val p=studyNotNull(db.pages().get(s.pageId));studyRequire(p.notebookId==c.notebookId&&p.trashedAt==null)
+                val ink=InkRepository(db).read(s.pageId);studyRequire(ink.revision==s.inkRevision){"SOURCE_VERSION_CHANGED"}
+                val visible=InkSession(ink).visibleDraft().associateBy{it.id};val selected=s.strokeIds.map{studyNotNull(visible[it])}
+                val picture=s.previewBytes()
+                studyRequire(picture==null||p.world||(s.bounds.left>=0&&s.bounds.top>=0&&s.bounds.right<=1000&&s.bounds.bottom<=1414)){"EXCERPT_OUTSIDE_PAGE"}
+                if(picture!=null){studyRequire(s.objectRevision==(db.objects().get(s.pageId)?.revision?:0L)){"OBJECT_VERSION_CHANGED"}}
+                studyRequire(picture!=null||selected.all{val b=it.bounds();b.left>=s.bounds.left-1&&b.top>=s.bounds.top-1&&b.right<=s.bounds.right+1&&b.bottom<=s.bounds.bottom+1})
+                val bytes=if(picture==null)InkPageFile("摘录原迹","",selected,p.world,PaperStyle.entries[p.paper]).encode()else {
+                    val w=s.bounds.right-s.bounds.left;val h=s.bounds.bottom-s.bounds.top
+                    val scale=maxOf(24.0/minOf(w,h),minOf(1.0,1000.0/maxOf(w,h)))
+                    studyRequire(maxOf(w,h)*scale<=4000){"EXCERPT_TOO_NARROW"}
+                    InkPageFile("区域摘录","",emptyList(),true,PaperStyle.BLANK,listOf(PageObject(java.util.UUID.randomUUID().toString(),PageObjectKind.IMAGE,0f,0f,(w*scale).toFloat(),(h*scale).toFloat(),image=java.util.Base64.getEncoder().encodeToString(picture)))).encode()
+                };studyRequire(bytes.size<=1_800_000)
+                val used=db.openHelper.writableDatabase.query("SELECT COALESCE(SUM(length(snapshot)),0) FROM study_sources").use{it.moveToFirst();it.getLong(0)}
+                studyRequire(used-replacedBytes+bytes.size<=32_000_000){"STUDY_SNAPSHOT_BUDGET"}
+                return StudySourceRow(studyNotNull(c.cardId),p.id,ink.revision,s.bounds.left,s.bounds.top,s.bounds.right,s.bounds.bottom,s.strokeIds.joinToString(","),bytes)
+            }
             val id=when(c.action){
                 StudyAction.CREATE,StudyAction.CREATE_EXCERPT->{
                     studyRequire(cards.size<200){"STUDY_CARD_BUDGET"}
                     var snap:StudySourceRow?=null
-                    c.source?.let{s->
-                        val p=studyNotNull(db.pages().get(s.pageId));studyRequire(p.notebookId==c.notebookId&&p.trashedAt==null)
-                        val ink=InkRepository(db).read(s.pageId);studyRequire(ink.revision==s.inkRevision){"SOURCE_VERSION_CHANGED"}
-                        val visible=InkSession(ink).visibleDraft().associateBy{it.id};val selected=s.strokeIds.map{studyNotNull(visible[it])}
-                        val picture=s.previewBytes()
-                        if(picture!=null){studyRequire(s.objectRevision==(db.objects().get(s.pageId)?.revision?:0L)){"OBJECT_VERSION_CHANGED"}}
-                        studyRequire(picture!=null||selected.all{val b=it.bounds();b.left>=s.bounds.left-1&&b.top>=s.bounds.top-1&&b.right<=s.bounds.right+1&&b.bottom<=s.bounds.bottom+1})
-                        val bytes=if(picture==null)InkPageFile("摘录原迹","",selected,p.world,PaperStyle.entries[p.paper]).encode()else {
-                            val w=s.bounds.right-s.bounds.left;val h=s.bounds.bottom-s.bounds.top
-                            val scale=maxOf(24.0/minOf(w,h),minOf(1.0,1000.0/maxOf(w,h)))
-                            studyRequire(maxOf(w,h)*scale<=4000){"EXCERPT_TOO_NARROW"}
-                            InkPageFile("区域摘录","",emptyList(),true,PaperStyle.BLANK,listOf(PageObject(java.util.UUID.randomUUID().toString(),PageObjectKind.IMAGE,0f,0f,(w*scale).toFloat(),(h*scale).toFloat(),image=java.util.Base64.getEncoder().encodeToString(picture)))).encode()
-                        };studyRequire(bytes.size<=1_800_000)
-                        val used=db.openHelper.writableDatabase.query("SELECT COALESCE(SUM(length(snapshot)),0) FROM study_sources").use{it.moveToFirst();it.getLong(0)}
-                        studyRequire(used+bytes.size<=32_000_000){"STUDY_SNAPSHOT_BUDGET"}
-                        snap=StudySourceRow(studyNotNull(c.cardId),p.id,ink.revision,s.bounds.left,s.bounds.top,s.bounds.right,s.bounds.bottom,s.strokeIds.joinToString(","),bytes)
-                    }
+                    c.source?.let{snap=captureSource(it)}
                     val row=StudyCardRow(studyNotNull(c.cardId),c.notebookId,1,c.title,c.body)
                     dao.addCard(row);dao.revision(StudyCardRevisionRow(row.id,1,row.title,row.body,null));snap?.let{dao.source(it)};if(c.action==StudyAction.CREATE)newNode();row.id
+                }
+                StudyAction.RECROP_EXCERPT->{
+                    val old=ownedCard();studyRequire(old.trashedAt==null&&old.revision==c.expectedRevision){"CARD_VERSION_CHANGED"}
+                    val previous=studyNotNull(dao.source(old.id));val draft=studyNotNull(c.source)
+                    studyRequire(draft.pageId==previous.pageId){"EXCERPT_PAGE_CHANGED"}
+                    val next=captureSource(draft,previous.snapshot.size)
+                    check(dao.updateSource(next)==1)
+                    val row=old.copy(revision=old.revision+1)
+                    check(dao.updateCard(row)==1);dao.revision(StudyCardRevisionRow(row.id,row.revision,row.title,row.body,row.trashedAt));row.id
                 }
                 StudyAction.EDIT,StudyAction.TRASH_CARD,StudyAction.RESTORE_CARD->{
                     val old=ownedCard();studyRequire(old.revision==c.expectedRevision){"CARD_VERSION_CHANGED"}

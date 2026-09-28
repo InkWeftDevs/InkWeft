@@ -55,7 +55,7 @@ internal class StudyViewModel(val book:String,val repo:StudyRepository,private v
         combine(repo.cards(book),repo.nodes(book,m),repo.nodes(book)){c,n,main->Triple(c,n,main)}
             .catch{e->if(e is CancellationException)throw e;state.update{it.copy(loading=false,readFailed=true)}}
     }.collect{(c,n,main)->state.update{it.copy(cards=c,nodes=n,mainNodes=main,loading=false,readFailed=false)}}}}
-    fun submit(c:StudyCommand){if(ui.value.busy||pending!=null)return;pending=StudyCommand(c.id,c.notebookId,c.action,c.cardId,c.nodeId,c.expectedRevision,c.parentId,c.title,c.body,c.x,c.y,c.source,c.expectedGraph,if(c.action==StudyAction.CREATE_EXCERPT)null else mapId.value);persistPending();execute()}
+    fun submit(c:StudyCommand){if(ui.value.busy||pending!=null)return;pending=StudyCommand(c.id,c.notebookId,c.action,c.cardId,c.nodeId,c.expectedRevision,c.parentId,c.title,c.body,c.x,c.y,c.source,c.expectedGraph,if(c.action in setOf(StudyAction.CREATE_EXCERPT,StudyAction.RECROP_EXCERPT))null else mapId.value);persistPending();execute()}
     fun retry(){if(!ui.value.busy&&pending!=null)execute()}
     private fun execute(){val c=pending?:return;state.update{it.copy(busy=true,message=null,completed=null)}
         viewModelScope.launch{try{when(val result=withContext(Dispatchers.IO){repo.outcome(c)}){

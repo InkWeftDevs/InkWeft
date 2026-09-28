@@ -41,6 +41,34 @@ class StudyAndSelectionRepositoryTest {
         val stale=StudyCommand(id(),page,StudyAction.CREATE_EXCERPT,cardId=id(),title="过期对象",source=StudySourceDraft(page,0,source.bounds,emptyList(),bytes,PageObjectRepository(db).read(page).revision+1))
         assertTrue(repo.outcome(stale) is StudyOutcome.Rejected);assertEquals(1,db.study().cards(page).size)
     }
+    @Test fun recropKeepsIdentityReferencesAndCommentAndRejectsStaleWrites()=fixture{db,page->
+        val bitmap=android.graphics.Bitmap.createBitmap(40,40,android.graphics.Bitmap.Config.ARGB_8888)
+        fun jpeg(color:Int):ByteArray{bitmap.eraseColor(color);return java.io.ByteArrayOutputStream().also{bitmap.compress(android.graphics.Bitmap.CompressFormat.JPEG,85,it)}.toByteArray()}
+        val blue=jpeg(android.graphics.Color.BLUE);val red=jpeg(android.graphics.Color.RED);bitmap.recycle()
+        val repo=StudyRepository(db);val c=StudyCommand(id(),page,StudyAction.CREATE_EXCERPT,cardId=id(),title="原摘录",body="保留备注",source=StudySourceDraft(page,0,CanvasBounds(10.0,20.0,100.0,120.0),emptyList(),blue,0))
+        repo.submit(c);repo.submit(StudyCommand(id(),page,StudyAction.REUSE,cardId=c.cardId,nodeId=id()))
+        val nodes=db.study().nodes(page);val old=repo.source(c.cardId!!)!!
+        val draft=StudySourceDraft(page,0,CanvasBounds(50.0,60.0,240.0,300.0),emptyList(),red,0)
+        val command=StudyCommand(id(),page,StudyAction.RECROP_EXCERPT,cardId=c.cardId,expectedRevision=1,source=draft)
+        try{StudyRepository(db){if(it==StudyFault.BEFORE_RECEIPT)error("synthetic")}.submit(command);fail()}catch(_:IllegalStateException){}
+        assertArrayEquals(old.snapshot,repo.source(c.cardId!!)!!.snapshot);assertEquals(1L,db.study().card(c.cardId!!)!!.revision);assertNull(db.study().receipt(command.id))
+        assertTrue(StudyRepository(db){if(it==StudyFault.AFTER_COMMIT)error("synthetic")}.outcome(command) is StudyOutcome.Success)
+        assertEquals(c.cardId,repo.submit(command));assertEquals(2L,db.study().card(c.cardId!!)!!.revision)
+        assertEquals("保留备注",db.study().card(c.cardId!!)!!.body);assertEquals(nodes,db.study().nodes(page))
+        val updated=repo.source(c.cardId!!)!!;assertEquals(50.0,updated.left,0.0);assertFalse(old.snapshot.contentEquals(updated.snapshot))
+        val stale=StudyCommand(id(),page,StudyAction.RECROP_EXCERPT,cardId=c.cardId,expectedRevision=1,source=c.source)
+        assertTrue(repo.outcome(stale) is StudyOutcome.Rejected);assertArrayEquals(updated.snapshot,repo.source(c.cardId!!)!!.snapshot)
+        val other=WorkspaceRepository(db).create("其他资料",false,PaperStyle.BLANK)
+        val wrong=StudyCommand(id(),page,StudyAction.RECROP_EXCERPT,cardId=c.cardId,expectedRevision=2,source=StudySourceDraft(other.id,0,draft.bounds,emptyList(),red,0))
+        assertTrue(repo.outcome(wrong) is StudyOutcome.Rejected)
+        val badObjects=StudyCommand(id(),page,StudyAction.RECROP_EXCERPT,cardId=c.cardId,expectedRevision=2,source=StudySourceDraft(page,0,draft.bounds,emptyList(),red,1))
+        assertTrue(repo.outcome(badObjects) is StudyOutcome.Rejected);assertEquals(0L,InkRepository(db).read(page).revision)
+        val name="restore-recrop-${id()}.db";val target=NoteDatabase.open(context,name)
+        try{LibraryBackupRepository(context,db).snapshot().use{snap->snap.file.inputStream().use{LibraryBackupRepository(context,target).inspect(it)}.use{prepared->
+            assertEquals(LibraryBackupRepository.RestoreResult.RESTORED,LibraryBackupRepository(context,target).restore(prepared))}}
+            assertArrayEquals(updated.snapshot,target.study().source(c.cardId!!)!!.snapshot);assertEquals(2L,target.study().card(c.cardId!!)!!.revision)
+        }finally{target.close();context.deleteDatabase(name)}
+    }
     @Test fun replacingInkPreservesOriginalBytesAndCanAtomicallyUndo()=fixture{db,page->
         val s=seed(db,page);val before=db.ink().stroke(s.id)!!.payload;val ink=InkRepository(db)
         val moved=InkSelectionEdit.copy(listOf(s),30f,40f).single();val c=CommitInk(id(),page,1,InkMutation.Replace(listOf(s.id),listOf(moved)))

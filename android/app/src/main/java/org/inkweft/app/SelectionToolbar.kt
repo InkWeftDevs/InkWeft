@@ -15,7 +15,7 @@ import org.inkweft.core.*
 import kotlin.math.roundToInt
 
 /** Same canvas coordinates as the selection, in a non-modal window above the pen case. */
-@Composable internal fun SelectionToolbar(region:InkRegion?,viewport:CanvasViewport,content:@Composable ()->Unit){
+@Composable internal fun SelectionToolbar(region:InkRegion?,viewport:CanvasViewport,focusable:Boolean=false,content:@Composable ()->Unit){
     val density=LocalDensity.current.density
     val position=remember(region,viewport,density){object:PopupPositionProvider{
         override fun calculatePosition(anchorBounds:IntRect,windowSize:IntSize,layoutDirection:LayoutDirection,popupContentSize:IntSize):IntOffset{
@@ -34,7 +34,7 @@ import kotlin.math.roundToInt
         }
     }}
     Box(Modifier.fillMaxSize()){
-        Popup(popupPositionProvider=position,properties=PopupProperties(focusable=false,dismissOnBackPress=false,dismissOnClickOutside=false)){
+        Popup(popupPositionProvider=position,properties=PopupProperties(focusable=focusable,dismissOnBackPress=false,dismissOnClickOutside=false)){
             Surface(Modifier.widthIn(max=460.dp).testTag("selection-context-menu"),color=Color.White,shape=RoundedCornerShape(12.dp),
                 shadowElevation=4.dp,border=BorderStroke(1.dp,Line),content=content)
         }
