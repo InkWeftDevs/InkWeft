@@ -382,7 +382,7 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
         if(viewportHint!=0)Surface(Modifier.align(Alignment.BottomCenter).padding(bottom=12.dp),shape=RoundedCornerShape(20.dp),color=Color.White.copy(alpha=.9f),border=BorderStroke(1.dp,Line)){
             Row(Modifier.padding(horizontal=14.dp,vertical=6.dp)){if(viewportHint==2)Text("${(zoom*100).toInt()}%",fontSize=12.sp,modifier=Modifier.testTag("ink-zoom"))else pageNavigation()}
         }
-        Surface(Modifier.align(Alignment.TopCenter).padding(start=100.dp,end=8.dp,top=0.dp).widthIn(max=660.dp).fillMaxWidth(),shape=RoundedCornerShape(26.dp),color=Color.White,shadowElevation=3.dp,border=BorderStroke(1.dp,Line)){
+        Surface(Modifier.align(Alignment.TopCenter).padding(start=100.dp,end=8.dp,top=0.dp).widthIn(max=432.dp).fillMaxWidth(),shape=RoundedCornerShape(26.dp),color=Color.White,shadowElevation=3.dp,border=BorderStroke(1.dp,Line)){
             EditorToolbar { action -> when(action){
                 "undo" -> IconButton(onClick={if(historyHeads.undo==EditDomain.OBJECT)objectsVm.undo()else vm.undo()},enabled=(if(historyHeads.undo==EditDomain.OBJECT)objectsUi.undo else ui.canUndo)&&!editingBlocked,modifier=Modifier.testTag("ink-undo").describedAs("撤销")){Glyph("undo")}
                 "redo" -> IconButton(onClick={if(historyHeads.redo==EditDomain.OBJECT)objectsVm.redo()else vm.redo()},enabled=(if(historyHeads.redo==EditDomain.OBJECT)objectsUi.redo else ui.canRedo)&&!editingBlocked,modifier=Modifier.testTag("ink-redo").describedAs("重做")){Glyph("redo")}
