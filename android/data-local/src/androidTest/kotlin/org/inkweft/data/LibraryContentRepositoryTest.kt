@@ -19,8 +19,8 @@ class LibraryContentRepositoryTest {
         val name="transfer-${id()}.db";val db=NoteDatabase.open(context,name)
         try{block(db,WorkspaceRepository(db).create("原笔记",false,PaperStyle.RULED,NotebookCover.FOREST).id)}finally{db.close();context.deleteDatabase(name)}
     }
-    private fun stroke(world:Boolean=false)=InkStroke(id(),InkPen.PEN,0xff234567.toInt(),4f,InkTool.STYLUS,
-        listOf(InkSample(if(world)-70f else 10f,80f,0,world=world),InkSample(180f,80f,100,world=world)),world)
+    private fun stroke(world:Boolean=false)=InkStroke(id(),InkPen.PENCIL,0xff234567.toInt(),4f,InkTool.STYLUS,
+        listOf(InkSample(if(world)-70f else 10f,80f,0,world=world),InkSample(180f,80f,100,world=world)),world,appearance=StrokeAppearance(BrushRecipe(density=.7f,grain=1.6f),54321))
     @Test fun copyRetainsPagesMasksCoverTagsAndValidManualIndexWithNewIdentity()=fixture{db,source->
         val pages=NotebookPages(db);val second=pages.addAfter(source,source,id());val ink=InkRepository(db);val s=stroke()
         ink.save(CommitInk(id(),second.id,0,InkMutation.Add(s)))
@@ -33,7 +33,7 @@ class LibraryContentRepositoryTest {
         val copied=db.pages().list(n.id);assertEquals(2,copied.size);assertEquals(listOf(0,1),copied.map{it.position})
         assertTrue(copied.none{it.id in listOf(source,second.id)})
         val next=InkSession(ink.read(copied[1].id)).visibleDraft().single()
-        assertEquals(s.samples,next.samples);assertNotEquals(s.id,next.id)
+        assertEquals(s.samples,next.samples);assertEquals(s.appearance,next.appearance);assertNotEquals(s.id,next.id)
         assertEquals(cut.points,next.cuts.single().points);assertNotEquals(cut.id,next.cuts.single().id)
         assertEquals("数学",db.workspace().get(n.id)?.folder);assertEquals("复习",db.workspace().get(n.id)?.tags)
         assertEquals("forest",db.workspace().get(n.id)?.coverKey);assertFalse(db.workspace().get(n.id)!!.favorite)

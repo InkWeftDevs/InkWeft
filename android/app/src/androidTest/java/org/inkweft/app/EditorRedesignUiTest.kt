@@ -29,7 +29,7 @@ class EditorRedesignUiTest {
 
     @Test fun highlighterQuickPresetsKeepTransparencyAndSurviveReopen(){
         ready();val note=runBlocking{app.workspaceRepository.create("荧光快捷项验收",false,PaperStyle.BLANK)};open(note)
-        compose.onNodeWithTag("ink-tool-2").performClick()
+        compose.onNodeWithTag("pen-kind-highlighter").performClick()
         val store=PenWidthStore(compose.activity,"inkweft-pen-widths-book-"+note.id)
         for(i in 0..4){
             compose.openCurrentPen();compose.onNodeWithTag("pen-color-$i").performScrollTo().performClick();compose.closePenSettings()
@@ -42,7 +42,7 @@ class EditorRedesignUiTest {
         }
         shot("redesign-highlighter.png");compose.activityRule.scenario.recreate();saved()
         assertEquals(34f,store.read()[2],0f);assertEquals(PenWidthStore.colors(2)[4],store.readColors()[2])
-        compose.onNodeWithTag("ink-more").performClick();compose.onNodeWithTag("ink-finger").performScrollTo().performClick()
+        compose.onNodeWithTag("ink-more").performScrollTo().performClick();compose.onNodeWithTag("ink-finger").performScrollTo().performClick()
         compose.onNodeWithTag("ink-surface").performTouchInput{swipe(Offset(width*.3f,height*.3f),Offset(width*.6f,height*.3f),300)}
         compose.waitUntil(10_000){runBlocking{app.inkRepository.read(note.id).strokes.size}==1}
         val stroke=runBlocking{app.inkRepository.read(note.id).strokes.single().stroke}

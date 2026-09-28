@@ -15,8 +15,10 @@ data class StudySourceRow(@PrimaryKey val cardId:String,val pageId:String,val in
 data class StudyNodeRow(@PrimaryKey val id:String,val notebookId:String,val cardId:String,val parentId:String?,val x:Double,val y:Double,val revision:Long=1,val removed:Boolean=false){fun model()=StudyNode(id,cardId,parentId,x,y,revision,removed)}
 @Entity(tableName="study_receipts",indices=[Index("notebookId")],foreignKeys=[ForeignKey(entity=NoteRow::class,parentColumns=["id"],childColumns=["notebookId"])])
 data class StudyReceiptRow(@PrimaryKey val id:String,val notebookId:String,val digest:String,val resultId:String)
+data class ExcerptRow(val id:String,val title:String,val body:String,val pageId:String,val left:Double,val top:Double,val right:Double,val bottom:Double)
 @Dao
 interface StudyDao {
+    @Query("SELECT c.id,c.title,c.body,s.pageId,s.`left`,s.`top`,s.`right`,s.`bottom` FROM study_cards c JOIN study_sources s ON s.cardId=c.id WHERE c.notebookId=:book AND c.trashedAt IS NULL ORDER BY c.id") fun excerpts(book:String):Flow<List<ExcerptRow>>
     @Query("SELECT * FROM study_cards ORDER BY id") fun observeAllCards():Flow<List<StudyCardRow>>
     @Query("SELECT * FROM study_card_revisions WHERE cardId=:id AND revision=:revision") suspend fun cardVersion(id:String,revision:Long):StudyCardRevisionRow?
     @Query("SELECT * FROM study_cards WHERE notebookId=:book ORDER BY id") fun observeCards(book:String):Flow<List<StudyCardRow>>
@@ -37,6 +39,7 @@ interface StudyDao {
 }
 enum class StudyFault { BEFORE_RECEIPT, AFTER_COMMIT }
 class StudyRepository(private val db:NoteDatabase,private val fault:(StudyFault)->Unit={}) {
+    fun excerpts(book:String)=db.study().excerpts(book)
     fun cards(book:String)=db.study().observeCards(book)
     fun nodes(book:String)=db.study().observeNodes(book)
     suspend fun source(card:String)=db.study().source(card)

@@ -42,7 +42,7 @@ class PageEditingUiTest {
         counter("第 1 / $count 页");compose.waitUntil(15_000){runCatching{compose.onNodeWithTag("page-directory").assertIsEnabled()}.isSuccess}
         return n to ids
     }
-    private fun menu(number:Int){compose.onNodeWithTag("page-directory").performClick();compose.onNodeWithTag("page-menu-$number").performClick()}
+    private fun menu(number:Int){compose.onNodeWithTag("page-directory").performClick();compose.onNodeWithTag("page-grid").performScrollToNode(hasTestTag("page-menu-$number"));compose.onNodeWithTag("page-menu-$number").performClick()}
     private fun editReady(){
         var lastFailure:Throwable?=null
         try{

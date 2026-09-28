@@ -66,7 +66,8 @@ class PageObjectsUiTest {
         compose.onNodeWithTag("object-delete").performScrollTo().performClick();count(id,1)
         compose.onNodeWithTag("ink-undo").performScrollTo().performClick();count(id,2)
         compose.onNodeWithTag("ink-redo").performScrollTo().performClick();count(id,1)
-        compose.onNodeWithTag("insert-more").performClick();compose.onNodeWithTag("object-tape").performScrollTo().performClick();count(id,2)
+        compose.onNodeWithTag("object-tape").performScrollTo().performClick();compose.onNodeWithTag("tape-overlay").performTouchInput{swipe(Offset(width*.3f,height*.3f),Offset(width*.6f,height*.3f),250)};count(id,2)
+        compose.onNodeWithTag("page-objects").performClick();val tapePosition=position(objects(id).last());compose.onNodeWithTag("object-overlay").performTouchInput{click(tapePosition)}
         assertFalse(objects(id).last().revealed)
         compose.onNodeWithTag("object-reveal").performClick();compose.waitUntil(10_000){objects(id).last().revealed}
         compose.waitForIdle()
@@ -86,7 +87,7 @@ class PageObjectsUiTest {
         try{
             val visible=CanvasBounds(0.0,0.0,400.0,200.0)
             painter.draw(canvas,listOf(o,tape),false,visible);painter.draw(canvas,listOf(o,tape),true,visible)
-            assertEquals(Color.BLUE,result.getPixel(50,50))
+            assertTrue(Color.blue(result.getPixel(50,50))>240);assertTrue(Color.red(result.getPixel(50,50))<180)
             painter.draw(canvas,listOf(o,tape.copy(revealed=true)),false,visible);painter.draw(canvas,listOf(o,tape.copy(revealed=true)),true,visible)
             assertTrue(Color.red(result.getPixel(50,50))>245);assertTrue(Color.blue(result.getPixel(50,50))<10)
             InstrumentationRegistry.getInstrumentation().runOnMainSync {

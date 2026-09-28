@@ -23,7 +23,7 @@ class LibraryBackupRepositoryTest {
         val repo=WorkspaceRepository(db);val n=repo.create("备份原笔记",false,PaperStyle.GRID,NotebookCover.WAVE)
         NoteRepository(db).save(SaveNote(id(),n.id,1,n.title,"已保存正文"))
         val page=NotebookPages(db).addAfter(n.id,n.id,id())
-        val s=InkStroke(id(),InkPen.PEN,0xff112233.toInt(),3f,InkTool.STYLUS,listOf(InkSample(10f,80f,0),InkSample(180f,80f,100)))
+        val s=InkStroke(id(),InkPen.PENCIL,0xff112233.toInt(),3f,InkTool.STYLUS,listOf(InkSample(10f,80f,0),InkSample(180f,80f,100)),appearance=StrokeAppearance(BrushRecipe(hardness=0,density=.75f),7654321))
         val ink=InkRepository(db)
         ink.save(CommitInk(id(),page.id,0,InkMutation.Add(s)))
         ink.save(CommitInk(id(),page.id,1,InkMutation.Cut(EraseSelection(InkCut(id(),12f,listOf(EraserPoint(90f,70f),EraserPoint(90f,90f))),listOf(s.id)))))

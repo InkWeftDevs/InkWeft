@@ -10,6 +10,7 @@ enum class RelationKind(val label:String){REFERENCE("内容引用"),PREREQUISITE
 enum class ManualState(val label:String){INBOX("待整理"),REVIEW("待复习"),UNDERSTOOD("已理解")}
 
 sealed interface KnowledgeData {
+    data class PageMark(val pageId:String,val title:String,val bookmark:Boolean=false,val depth:Int=0):KnowledgeData
     data class Anchor(val pageId:String,val inkRevision:Long,val bounds:CanvasBounds,val strokeIds:List<String>):KnowledgeData
     data class Link(val source:TargetRef,val target:TargetRef,val relation:RelationKind=RelationKind.REFERENCE,val pinnedRevision:Long?=null):KnowledgeData
     data class Properties(val cardId:String,val state:ManualState=ManualState.INBOX,val tags:List<String> = emptyList()):KnowledgeData
@@ -28,6 +29,7 @@ object KnowledgeCodec {
     fun validate(v:KnowledgeData){
         fun id(s:String){UUID.fromString(s)}
         when(v){
+            is KnowledgeData.PageMark->{id(v.pageId);require(v.title.isNotBlank()&&v.title.length<=120);require(v.depth in 0..3&&(!v.bookmark||v.depth==0))}
             is KnowledgeData.Anchor->{id(v.pageId);require(v.inkRevision>=0);require(v.strokeIds.size in 1..256&&v.strokeIds.distinct().size==v.strokeIds.size);v.strokeIds.forEach(::id)
                 require(v.bounds.left>=-BoardLimits.WORLD&&v.bounds.right<=BoardLimits.WORLD&&v.bounds.top>=-BoardLimits.WORLD&&v.bounds.bottom<=BoardLimits.WORLD)}
             is KnowledgeData.Link->{require(v.pinnedRevision==null||v.target.kind==TargetKind.CARD&&v.pinnedRevision>0);require(v.source!=v.target)}
@@ -47,6 +49,7 @@ object KnowledgeCodec {
             d.writeInt(0x49574b31)
             fun ref(r:TargetRef){d.writeUTF(r.kind.name);d.writeUTF(r.id)}
             when(v){
+                is KnowledgeData.PageMark->{d.writeUTF("PAGE_MARK");d.writeUTF(v.pageId);d.writeUTF(v.title);d.writeBoolean(v.bookmark);d.writeInt(v.depth)}
                 is KnowledgeData.Anchor->{d.writeUTF("ANCHOR");d.writeUTF(v.pageId);d.writeLong(v.inkRevision);listOf(v.bounds.left,v.bounds.top,v.bounds.right,v.bounds.bottom).forEach(d::writeDouble);d.writeInt(v.strokeIds.size);v.strokeIds.forEach(d::writeUTF)}
                 is KnowledgeData.Link->{d.writeUTF("LINK");ref(v.source);ref(v.target);d.writeUTF(v.relation.name);d.writeLong(v.pinnedRevision?:0)}
                 is KnowledgeData.Properties->{d.writeUTF("PROPERTIES");d.writeUTF(v.cardId);d.writeUTF(v.state.name);d.writeInt(v.tags.size);v.tags.forEach(d::writeUTF)}
@@ -67,6 +70,7 @@ object KnowledgeCodec {
             fun ref()=TargetRef(TargetKind.valueOf(d.readUTF()),d.readUTF())
             fun list(max:Int):List<String>{val n=d.readInt();require(n in 0..max);return List(n){d.readUTF()}}
             val value=when(d.readUTF()){
+                "PAGE_MARK"->KnowledgeData.PageMark(d.readUTF(),d.readUTF(),d.readBoolean(),d.readInt())
                 "ANCHOR"->KnowledgeData.Anchor(d.readUTF(),d.readLong(),CanvasBounds(d.readDouble(),d.readDouble(),d.readDouble(),d.readDouble()),list(256))
                 "LINK"->KnowledgeData.Link(ref(),ref(),RelationKind.valueOf(d.readUTF()),d.readLong().let{require(it>=0);if(it==0L)null else it})
                 "PROPERTIES"->KnowledgeData.Properties(d.readUTF(),ManualState.valueOf(d.readUTF()),list(12))

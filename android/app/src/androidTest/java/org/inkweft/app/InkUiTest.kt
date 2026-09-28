@@ -24,10 +24,10 @@ class InkUiTest {
         compose.onNodeWithTag("create-note").performClick();compose.singlePageEditor()
         compose.waitUntil(10_000){compose.onAllNodesWithTag("ink-surface").fetchSemanticsNodes().isNotEmpty()}
         compose.waitUntil(10_000){runCatching { compose.onNodeWithTag("ink-status").assertTextContains("已保存",substring=true) }.isSuccess}
-        compose.onNodeWithTag("ink-more").performClick();compose.onNodeWithTag("ink-finger").performScrollTo().performClick()
+        compose.onNodeWithTag("ink-more").performScrollTo().performClick();compose.onNodeWithTag("ink-finger").performScrollTo().performClick()
     }
     private fun count(n: Int) {
-        compose.waitUntil(10_000){runCatching { compose.onNodeWithTag("ink-status").assertTextContains("$n 笔",substring=true) }.isSuccess}
+        compose.waitUntil(10_000){runCatching { compose.onNodeWithTag("ink-status").assertInkCount(n) }.isSuccess}
     }
     private fun draw() {
         compose.onNodeWithTag("ink-surface").performTouchInput {
@@ -36,7 +36,7 @@ class InkUiTest {
     }
     @Test fun realTouchUndoRedoAndActivityRecreation() {
         newNote();draw();count(1)
-        compose.onNodeWithTag("ink-tool-1").performScrollTo().performClick();draw();count(2)
+        compose.onNodeWithTag("pen-kind-pen").performScrollTo().performClick();draw();count(2)
         compose.onNodeWithTag("ink-undo").performScrollTo().performClick();count(1)
         compose.onNodeWithTag("ink-redo").performScrollTo().performClick();count(2)
         compose.activityRule.scenario.recreate();count(2)

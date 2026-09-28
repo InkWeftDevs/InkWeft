@@ -2,6 +2,7 @@
 package org.inkweft.app
 
 import androidx.compose.foundation.*
+import androidx.compose.foundation.interaction.collectIsDraggedAsState
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.foundation.layout.*
@@ -23,19 +24,22 @@ import org.inkweft.core.*
 import org.inkweft.data.NotebookPageRow
 
 internal data class ContinuousTools(val pen:InkPen,val color:Int,val width:Float,val erasing:Boolean,
-    val whole:Boolean,val highlighterOnly:Boolean,val diameter:Float,val enabled:Boolean,val beauty:BeautyOptions=BeautyOptions())
+    val whole:Boolean,val highlighterOnly:Boolean,val diameter:Float,val enabled:Boolean,val beauty:BeautyOptions=BeautyOptions(),val recipe:BrushRecipe=BrushRecipe(),val onlyTape:Boolean=false)
 
 /** Only visible pages have native views. Visited writers remain observed until their saves settle. */
 @Composable internal fun ContinuousPages(pages:List<NotebookPageRow>,selected:String,tools:ContinuousTools,
-    writing:Boolean,onSelect:(String)->Unit,onGesture:(Boolean)->Unit,onBlocked:(Boolean)->Unit,onNotice:(String)->Unit,onRepair:(String)->Unit,onObjectTap:(String,String)->Unit={_,_->}){
+    writing:Boolean,onSelect:(String)->Unit,onGesture:(Boolean)->Unit,onBlocked:(Boolean)->Unit,onNotice:(String)->Unit,onRepair:(String)->Unit,onObjectTap:(String,String)->Unit={_,_->},onScroll:()->Unit={}){
     val app=LocalContext.current.applicationContext as InkWeftApplication
     val state=rememberLazyListState(initialFirstVisibleItemIndex=pages.indexOfFirst{it.id==selected}.coerceAtLeast(0))
+    val dragged by state.interactionSource.collectIsDraggedAsState()
     val models=remember{mutableStateMapOf<String,InkViewModel>()}
     val objectModels=remember{mutableStateMapOf<String,PageObjectViewModel>()}
     val views=remember{mutableMapOf<String,InkCanvasView>()}
     val writer:ContinuousInkWriter=viewModel(key="continuous-writer-${pages.firstOrNull()?.notebookId}")
     val groupBlocked by writer.blocked.collectAsStateWithLifecycle()
     val groupRetry by writer.needsRetry.collectAsStateWithLifecycle()
+    val drawingReady by writer.canWrite.collectAsStateWithLifecycle()
+    val drafts by writer.drafts.collectAsStateWithLifecycle()
     var gestureOwner by remember{mutableStateOf<String?>(null)}
     var reported by remember{mutableStateOf(selected)}
     val latestSelect by rememberUpdatedState(onSelect)
@@ -48,6 +52,7 @@ internal data class ContinuousTools(val pen:InkPen,val color:Int,val width:Float
         val index=pages.indexOfFirst{it.id==selected}
         if(index>=0&&selected!=reported&&!writing){reported=selected;state.animateScrollToItem(index)}
     }
+    LaunchedEffect(state){snapshotFlow{Triple(state.isScrollInProgress,state.firstVisibleItemIndex,state.firstVisibleItemScrollOffset)}.distinctUntilChanged().collect{if(it.first&&dragged)onScroll()}}
     LaunchedEffect(state){snapshotFlow{
         val info=state.layoutInfo;val mid=(info.viewportStartOffset+info.viewportEndOffset)/2
         info.visibleItemsInfo.minByOrNull{kotlin.math.abs(it.offset+it.size/2-mid)}?.key as? String
@@ -61,25 +66,31 @@ internal data class ContinuousTools(val pen:InkPen,val color:Int,val width:Float
             val objectModel:PageObjectViewModel=viewModel(key="objects-${page.id}",factory=PageObjectViewModel.Factory(page.id,app.pageObjects))
             val objectUi by objectModel.ui.collectAsStateWithLifecycle()
             SideEffect{models[page.id]=model;objectModels[page.id]=objectModel;objectModel.history=model.history;model.suppressedIds=objectUi.objects.flatMap{it.sourceStrokeIds}.toSet()}
-            AutomaticBeautyBinding(objectModel,ui,writing,tools.beauty,false,app)
+            AutomaticBeautyBinding(objectModel,ui,writing||groupBlocked,tools.beauty,false,app)
             Column(Modifier.fillMaxWidth()){
 
-                Box(Modifier.fillMaxWidth().aspectRatio(1000f/1414f).background(Color.White).testTag("continuous-page-${page.position+1}").pointerInput(page.id,tools.enabled,tools.erasing){detectTapGestures{point->if(tools.enabled&&!tools.erasing)views[page.id]?.imageAt(point.x,point.y)?.let{onObjectTap(page.id,it)}}}){
+                Box(Modifier.fillMaxWidth().aspectRatio(1000f/1414f).background(Color.White).testTag("continuous-page-${page.position+1}").pointerInput(page.id,tools.enabled,tools.erasing){detectTapGestures{point->if(tools.enabled&&!tools.erasing)views[page.id]?.imageAt(point.x,point.y)?.let{id->val o=objectModel.ui.value.objects.find{it.id==id};if(o?.kind==PageObjectKind.TAPE)objectModel.put(o.copy(revealed=!o.revealed))else onObjectTap(page.id,id)}}}){
                     AndroidView(factory={ctx->InkCanvasView(ctx).apply{embeddedPage=true;seamWriting=true;tag="ink-page-${page.id}"}},update={v->
                         v.configure(false,PaperStyle.entries[page.paper],null)
                         views[page.id]=v
-                        v.allowInput=!groupBlocked&&tools.enabled&&!objectUi.loading&&!objectUi.pending&&!objectUi.busy&&(if(tools.erasing)!ui.loading&&!ui.readFailed&&ui.blocked==null&&!ui.processing&&ui.queued<16 else ui.canStart)&&(gestureOwner==null||gestureOwner==page.id)
-                        v.pen=tools.pen;v.penColor=tools.color;v.penWidth=tools.width
-                        v.eraseMode=tools.erasing;v.eraserWhole=tools.whole;v.eraserHighlighterOnly=tools.highlighterOnly;v.eraserDiameterDp=tools.diameter
+                        v.allowInput=(if(tools.erasing)!groupBlocked else drawingReady)&&tools.enabled&&!objectUi.loading&&!objectUi.pending&&!objectUi.busy&&(if(tools.erasing)!ui.loading&&!ui.readFailed&&ui.blocked==null&&!ui.processing&&ui.queued<16 else ui.canStart)&&(gestureOwner==null||gestureOwner==page.id)
+                        v.finishStroke={polishNewStroke(it,tools.beauty)}
+                        v.pen=tools.pen;v.penColor=tools.color;v.penWidth=tools.width;v.brushRecipe=tools.recipe
+                        v.eraserTapeOnly=tools.onlyTape;v.eraseMode=tools.erasing;v.eraserWhole=tools.whole;v.eraserHighlighterOnly=tools.highlighterOnly;v.eraserDiameterDp=tools.diameter
+                        v.onObjectTap={id->val o=objectModel.ui.value.objects.find{it.id==id};if(o?.kind==PageObjectKind.TAPE)objectModel.put(o.copy(revealed=!o.revealed))else onObjectTap(page.id,id)}
                         v.onStroke={stroke->
                             val origin=pages.indexOfFirst{it.id==page.id}
                             val pieces=ContinuousInk.split(stroke,origin,pages.size)
                             val targets=pieces.map{(index,ink)->checkNotNull(models[pages[index].id]) to ink}
                             writer.accept(targets,app.inkRepository)
+                            targets.forEach{(model,strokes)->models.entries.firstOrNull{it.value===model}?.key?.let{target->strokes.forEach{views[target]?.retainLiveStroke(it)}}}
                         }
                         v.onLiveSamples={samples->
                             val origin=pages.indexOfFirst{it.id==page.id}
-                            views.forEach{(id,other)->if(id!=page.id){val index=pages.indexOfFirst{it.id==id};other.seamDraft=if(samples.isEmpty())emptyList()else samples.map{it.copy(y=it.y+(origin-index)*1414f,world=true)}}}
+                            views.forEach{(id,other)->if(id!=page.id){val index=pages.indexOfFirst{it.id==id};val offset=(origin-index)*1414f
+                                val crosses=samples.isNotEmpty()&&samples.any{it.y+offset in -tools.width*3..1414f+tools.width*3}
+                                if(crosses)other.seamDraft=v.liveStroke(samples.map{it.copy(y=it.y+offset,world=true)},offset)
+                                else if(other.seamDraft!=null)other.seamDraft=null}}
                         }
                         v.onErase={path,radius,whole,only->
                             val origin=pages.indexOfFirst{it.id==page.id}
@@ -90,11 +101,11 @@ internal data class ContinuousTools(val pen:InkPen,val color:Int,val width:Float
                                 if(shifted.maxOf{it.y}+radius<0||shifted.minOf{it.y}-radius>1414f)null
                                 else PageEraseTarget(checkNotNull(models[target.id]),checkNotNull(objectModels[target.id]),shifted)
                             }
-                            writer.erase(targets,radius,whole,only,app.inkRepository)
+                            writer.erase(targets,radius,whole,only,app.inkRepository,tools.onlyTape)
                         }
                         v.onGesture={active->if(active){gestureOwner=page.id;reported=page.id;latestSelect(page.id)}else if(gestureOwner==page.id)gestureOwner=null;onGesture(active)}
                         v.onAxes=app.diagnostics::inputAxes;v.onNotice=onNotice
-                        v.showDocument(page.id);v.showStrokes(ui.strokes);v.showObjects(objectUi.objects)
+                        v.showDocument(page.id);v.showStrokes(ui.strokes+drafts[model].orEmpty());v.showObjects(objectUi.objects)
                     },modifier=Modifier.fillMaxSize().testTag("continuous-ink-${page.position+1}"))
                     DisposableEffect(page.id){onDispose{views.remove(page.id)}}
                     if(ui.loading)CircularProgressIndicator(Modifier.align(Alignment.Center))

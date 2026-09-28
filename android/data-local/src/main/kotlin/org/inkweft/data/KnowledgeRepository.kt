@@ -51,6 +51,7 @@ class KnowledgeRepository(private val db:NoteDatabase,private val fault:(Knowled
                 val visible=InkSession(InkRepository(db).read(a.pageId)).visibleDraft().associateBy{it.id}
                 a.strokeIds.forEach{id->val b=requireNotNull(visible[id]).bounds();require(b.left>=a.bounds.left-1&&b.right<=a.bounds.right+1&&b.top>=a.bounds.top-1&&b.bottom<=a.bounds.bottom+1)}
             }
+            if(c.data is KnowledgeData.PageMark&&!c.removed){val d=c.data as KnowledgeData.PageMark;if(d.bookmark)require(records.none{it.id!=c.id&&!it.removed&&(it.data() as? KnowledgeData.PageMark)?.let{m->m.bookmark&&m.pageId==d.pageId}==true}){"BOOKMARK_EXISTS"}}
             if(c.data is KnowledgeData.Properties){val d=c.data as KnowledgeData.Properties;require(records.none{it.id!=c.id&&!it.removed&&(it.data() as? KnowledgeData.Properties)?.cardId==d.cardId}){"PROPERTY_EXISTS"}}
             if(c.data is KnowledgeData.Link&&!c.removed)require(records.none{it.id!=c.id&&!it.removed&&it.data()==c.data}){"LINK_EXISTS"}
             val next=KnowledgeRow(c.id,c.notebookId,c.expectedRevision+1,c.payload,c.removed)
@@ -75,6 +76,7 @@ class KnowledgeRepository(private val db:NoteDatabase,private val fault:(Knowled
         KnowledgeCodec.validate(data)
         suspend fun card(id:String){require(owner(TargetRef(TargetKind.CARD,id),active)==book)}
         when(data){
+            is KnowledgeData.PageMark->require(owner(TargetRef(TargetKind.PAGE,data.pageId),active)==book)
             is KnowledgeData.Anchor->{require(owner(TargetRef(TargetKind.PAGE,data.pageId),active)==book);require(data.inkRevision<=(db.ink().page(data.pageId)?.revision?:0));data.strokeIds.forEach{require(db.ink().stroke(it)?.noteId==data.pageId)}}
             is KnowledgeData.Link->{require(owner(data.source,active)==book);owner(data.target,active);data.pinnedRevision?.let{require(db.study().cardVersion(data.target.id,it)!=null)}}
             is KnowledgeData.Properties->card(data.cardId)

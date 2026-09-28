@@ -37,7 +37,7 @@ class UiR2Test {
         compose.onNodeWithText("取消",useUnmergedTree=true).performClick();ready()
     }
     @Test fun systemBackWaitsForLiveStrokeAndKeepsPageIdentity(){
-        val(n,_)=seed();compose.onNodeWithTag("ink-more").performClick();compose.onNodeWithTag("ink-finger").performClick()
+        val(n,_)=seed();compose.onNodeWithTag("ink-more").performScrollTo().performClick();compose.onNodeWithTag("ink-finger").performClick()
         compose.onNodeWithTag("ink-surface").performTouchInput{down(center);moveBy(Offset(30f,10f))}
         compose.waitUntil(5000){runCatching{compose.onNodeWithTag("ink-status").assertTextContains("抬笔",substring=true)}.isSuccess}
         compose.activityRule.scenario.onActivity{it.onBackPressedDispatcher.onBackPressed()}

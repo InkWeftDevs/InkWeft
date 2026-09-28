@@ -28,6 +28,7 @@ import java.util.Locale
 import kotlin.math.roundToInt
 
 /** Global pen presets, not author data. Existing A3 width keys stay valid. */
+internal data class PenSettings(val width:Float,val color:Int,val recipe:BrushRecipe)
 internal class PenWidthStore(context:Context,name:String="inkweft-pen-widths") {
     private val preferences=context.applicationContext.getSharedPreferences(name,Context.MODE_PRIVATE)
     private val global=if(name.startsWith("inkweft-pen-widths-book-"))PenWidthStore(context)else null
@@ -44,6 +45,14 @@ internal class PenWidthStore(context:Context,name:String="inkweft-pen-widths") {
         val fallback=global?.readKinds()?.get(tool)?:defaultKind(tool)
         runCatching{InkPen.valueOf(preferences.getString("kind-$tool",fallback.name)!!)}.getOrDefault(fallback).takeIf{allowed(tool,it)}?:fallback
     }
+    fun readRecipes():List<BrushRecipe> = (0..2).map{tool->runCatching{preferences.getString("recipe-$tool",null)?.let{BrushRecipe.decode(android.util.Base64.decode(it,android.util.Base64.NO_WRAP))}?:global?.readRecipes()?.get(tool)?:BrushRecipe()}.getOrDefault(BrushRecipe())}
+    fun applyRecipe(tool:Int,recipe:BrushRecipe){require(tool in 0..2&&recipe.version==1);preferences.edit().putString("recipe-$tool",android.util.Base64.encodeToString(recipe.encode(),android.util.Base64.NO_WRAP)).apply()}
+    fun readPen(kind:InkPen):PenSettings {
+        val slot=readKinds().indexOf(kind)
+        val fallback=if(slot>=0)PenSettings(read()[slot],readColors()[slot],readRecipes()[slot])else global?.readPen(kind)?:PenSettings(PenKinds.defaultWidth(kind),colors(if(kind==InkPen.HIGHLIGHTER)2 else 0)[0],BrushRecipe())
+        return runCatching{val key="pen-${kind.name}";PenSettings(preferences.getFloat("$key-width",fallback.width),preferences.getInt("$key-color",fallback.color),preferences.getString("$key-recipe",null)?.let{BrushRecipe.decode(android.util.Base64.decode(it,android.util.Base64.NO_WRAP))}?:fallback.recipe).also{require(it.width in range(if(kind==InkPen.HIGHLIGHTER)2 else 0));require(validColor(if(kind==InkPen.HIGHLIGHTER)2 else 0,it.color))}}.getOrDefault(fallback)
+    }
+    fun savePen(kind:InkPen,value:PenSettings){require(value.width in range(if(kind==InkPen.HIGHLIGHTER)2 else 0)&&validColor(if(kind==InkPen.HIGHLIGHTER)2 else 0,value.color)&&value.recipe.version==1);val key="pen-${kind.name}";preferences.edit().putFloat("$key-width",value.width).putInt("$key-color",value.color).putString("$key-recipe",android.util.Base64.encodeToString(value.recipe.encode(),android.util.Base64.NO_WRAP)).apply()}
     suspend fun save(tool:Int,width:Float):Boolean {
         require(tool in 0..2 && width.isFinite() && width in range(tool))
         return writes.withLock { withContext(Dispatchers.IO){preferences.edit().putFloat("width-$tool",width).commit()} }
@@ -72,25 +81,21 @@ internal class PenWidthStore(context:Context,name:String="inkweft-pen-widths") {
 /** Anchored to the toolbar. Outside taps dismiss without passing into ink. */
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
-internal fun PenPresetMenu(expanded:Boolean,tool:Int,current:Float,currentColor:Int,currentKind:InkPen,onDismiss:()->Unit,favorites:List<FavoritePen> = emptyList(),favoriteBusy:Boolean=false,onFavorite:(InkPen,Float,Int)->Unit={_,_,_->},favoriteSelected:Boolean?=null,onApply:(Float,Int,InkPen)->Unit) {
-    DropdownMenu(expanded=expanded,onDismissRequest=onDismiss,offset=DpOffset(if(LocalPenPointsLeft.current)(-320).dp else 72.dp,0.dp),shape=RoundedCornerShape(20.dp),containerColor=Color.White,tonalElevation=0.dp,shadowElevation=6.dp,border=BorderStroke(1.dp,Line),modifier=Modifier.width(320.dp).testTag("pen-width-dialog")) {
+internal fun PenPresetMenu(expanded:Boolean,tool:Int,current:Float,currentColor:Int,currentKind:InkPen,onDismiss:()->Unit,favorites:List<FavoritePen> = emptyList(),favoriteBusy:Boolean=false,onFavorite:(InkPen,Float,Int)->Unit={_,_,_->},favoriteSelected:Boolean?=null,recipe:BrushRecipe=BrushRecipe(),onRecipe:(BrushRecipe)->Unit={},onApply:(Float,Int,InkPen)->Unit) {
+    DropdownMenu(expanded=expanded,onDismissRequest=onDismiss,offset=DpOffset(if(LocalPenPointsLeft.current)(-320).dp else 104.dp,0.dp),shape=RoundedCornerShape(20.dp),containerColor=Color.White,tonalElevation=0.dp,shadowElevation=6.dp,border=BorderStroke(1.dp,Line),modifier=Modifier.width(320.dp).testTag("pen-width-dialog")) {
         var kind by remember(expanded,tool,currentKind){mutableStateOf(currentKind)}
         var draft by remember(expanded,tool,current){mutableFloatStateOf(current)}
         var color by remember(expanded,tool,currentColor){mutableIntStateOf(currentColor)}
         Column(Modifier.padding(horizontal=20.dp,vertical=8.dp),verticalArrangement=Arrangement.spacedBy(8.dp)) {
             Row(verticalAlignment=Alignment.CenterVertically){Text(PenKinds.title(kind),Modifier.weight(1f),fontSize=22.sp,fontWeight=FontWeight.SemiBold,color=TextInk)
-                val saved=favoriteSelected?:favorites.any{it.matches(kind,draft,color)}
+                val saved=favoriteSelected?:favorites.any{it.matches(kind,draft,color,recipe)}
                 IconToggleButton(saved,{onFavorite(kind,draft,color)},enabled=!favoriteBusy,modifier=Modifier.size(48.dp).testTag("pen-favorite").describedAs(if(saved)"取消收藏这支笔"else"收藏这支笔")){Glyph(if(saved)"star-filled"else"star",if(saved)Color(0xffbd8100)else Quiet)}
                 IconButton(onClick=onDismiss,modifier=Modifier.size(48.dp).testTag("close-pen-settings").describedAs("关闭笔参数")){Glyph("close")}
             }
-            PenStrokePreview(kind,color,draft)
+            PenStrokePreview(kind,color,draft,recipe)
+            Text("模拟压力样例",style=MaterialTheme.typography.labelSmall,color=Quiet)
             Text(PenKinds.description(kind),style=MaterialTheme.typography.bodySmall,color=Quiet)
-            if(tool!=2)Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.SpaceBetween){PenKinds.writing.forEach{p->
-                Column(horizontalAlignment=Alignment.CenterHorizontally){
-                    IconToggleButton(kind==p,{kind=p;draft=PenKinds.defaultWidth(p);onApply(draft,color,kind)},modifier=Modifier.size(60.dp,48.dp).background(if(kind==p)Leaf else Color.Transparent,RoundedCornerShape(12.dp)).testTag("pen-kind-${p.name.lowercase()}").describedAs(PenKinds.title(p))){PenSilhouette(p,color)}
-                    Text(PenKinds.title(p),fontSize=12.sp,color=if(kind==p)Forest else Quiet)
-                }
-            }}
+            BrushParameterControls(kind,recipe,onRecipe)
             HorizontalDivider(color=Line)
             Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.spacedBy(6.dp)) {
                 PenWidthStore.presets(tool).forEachIndexed { index,width ->

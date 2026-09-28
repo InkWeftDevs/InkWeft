@@ -41,8 +41,8 @@ class VisibleEditingTest {
         assertTrue(height(InkPen.PEN,.8f)>height(InkPen.PEN,.1f)*1.2)
         assertTrue(height(InkPen.BRUSH,.147f)>3.0)
         val noPressure=PenKinds.writing.map{geometry.path(line(it)).let{p->val values=FloatArray(p.approximate(.1f).size);p.approximate(.1f).copyInto(values);values.toList()}}
-        assertEquals(4,noPressure.distinct().size)
-        val image=Bitmap.createBitmap(800,480,Bitmap.Config.ARGB_8888);val canvas=Canvas(image);canvas.drawColor(Color.WHITE)
+        assertEquals(PenKinds.writing.size,noPressure.distinct().size)
+        val image=Bitmap.createBitmap(800,600,Bitmap.Config.ARGB_8888);val canvas=Canvas(image);canvas.drawColor(Color.WHITE)
         val paint=Paint(Paint.ANTI_ALIAS_FLAG).apply{color=Color.BLACK;textSize=22f}
         PenKinds.writing.forEachIndexed{i,pen->
             canvas.drawText(PenKinds.title(pen),20f,50f+i*110f,paint)

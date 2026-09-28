@@ -30,11 +30,12 @@ import java.util.UUID
     var picking by rememberSaveable(pageId){mutableStateOf(false)}
     var cameraPath by rememberSaveable(pageId){mutableStateOf<String?>(null)}
     var editing by rememberSaveable(stateSaver=Saver<PageObject?,String>(save={o->o?.let{Base64.getEncoder().encodeToString(PageObjectCodec.encode(listOf(it)))}?:""},restore={s->if(s.isEmpty())null else PageObjectCodec.decode(Base64.getDecoder().decode(s)).single()})){mutableStateOf<PageObject?>(null)}
+    var stickerPicker by remember{mutableStateOf(false)}
     var reload by remember{mutableStateOf(false)}
     var dismissedError by remember{mutableStateOf<String?>(null)}
     LaunchedEffect(ui.error){if(ui.error==null)dismissedError=null}
     val available=enabled&&!ui.loading&&!ui.busy&&!ui.pending&&cameraPath==null&&!picking
-    SideEffect{onBlocked(picking||cameraPath!=null||editing!=null)}
+    SideEffect{onBlocked(picking||cameraPath!=null||editing!=null||stickerPicker)}
     fun newObject(kind:PageObjectKind):PageObject {
         val v=viewport()?:CanvasViewport();val x=(v.centerX-200).toFloat();val y=(v.centerY-100).toFloat()
         return PageObject(UUID.randomUUID().toString(),kind,if(world)x else x.coerceIn(0f,600f),if(world)y else y.coerceIn(0f,1194f),
@@ -55,6 +56,7 @@ import java.util.UUID
         "camera"->{val folder=File(context.cacheDir,"page-camera").apply{mkdirs()};val file=File(folder,"capture-${UUID.randomUUID()}.jpg")
             try{check(folder.usableSpace>32L*1024*1024);cameraPath=file.absolutePath;camera.launch(FileProvider.getUriForFile(context,context.packageName+".diagnostics.files",file))}
             catch(_:Exception){cameraPath=null;file.delete();onNotice("无法打开系统相机，请使用图片导入。");onDone()}}
+        "sticker"->{stickerPicker=true}
         "text"->editing=newObject(PageObjectKind.TEXT)
         "tape"->{val o=newObject(PageObjectKind.TAPE).copy(height=70f);vm.put(o);onSelect(o.id)}
     }}
@@ -80,6 +82,9 @@ import java.util.UUID
         if(ui.pending)TextButton(onClick=vm::retry,enabled=!ui.busy){Text("核对重试")}else TextButton(onClick={dismissedError=ui.error}){Text("知道了")}
     },dismissButton={if(ui.pending)TextButton(onClick={reload=true},enabled=!ui.busy){Text("重新读取")}})
     if(reload)AlertDialog(onDismissRequest={reload=false},title={Text("重新读取已保存对象？")},text={Text("未确认的对象修改将被放弃，已保存的笔迹和对象保留。")},confirmButton={TextButton(onClick={reload=false;vm.reload()}){Text("读取已保存内容")}},dismissButton={TextButton(onClick={reload=false}){Text("取消")}})
+    if(stickerPicker)EditorPanel("贴纸与符号","",{stickerPicker=false;onDone()},"sticker-picker"){
+        Column { listOf("⭐","❤️","✅","❗","💡","📌","😊","🎯","📚").chunked(3).forEach{row->Row{row.forEach{symbol->TextButton(onClick={val o=newObject(PageObjectKind.TEXT).copy(text=symbol,fontSize=80f,width=140f,height=140f);vm.put(o);onSelect(o.id);stickerPicker=false},modifier=Modifier.size(72.dp).testTag("sticker-$symbol")){Text(symbol,fontSize=28.sp)}}}} }
+    }
     editing?.let { original ->
         var text by rememberSaveable(original.id){mutableStateOf(if(ui.objects.any{it.id==original.id})original.visibleText() else "")}
         var font by rememberSaveable(original.id){mutableFloatStateOf(original.fontSize)}
@@ -90,7 +95,7 @@ import java.util.UUID
         var textError by remember{mutableStateOf<String?>(null)}
         EditorPanel("文本框","",{editing=null;if(selected==null)onDone()},"object-text-dialog",footer={Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.End){TextButton(onClick={editing=null;if(selected==null)onDone()}){Text("取消")};TextButton(onClick={
             if(original.glyphs.isNotEmpty()&&text==original.visibleText()){
-                vm.put(original.copy(color=color,font=family,bold=bold));editing=null
+                vm.put(original.copy(color=color,font=family,bold=bold,glyphs=if(color==original.color)original.glyphs else original.glyphs.map{g->g.copy(color=if(g.grain>0)((g.color?:original.color) and 0xff000000.toInt())or(color and 0xffffff)else color)}));editing=null
                 return@TextButton
             }
             val o=original.copy(text=text,fontSize=font,color=color,font=family,lineSpacing=spacing,bold=bold,glyphs=emptyList(),erasures=emptyList())

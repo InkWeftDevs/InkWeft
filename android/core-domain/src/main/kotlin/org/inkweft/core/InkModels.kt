@@ -27,7 +27,7 @@ data class InkSample(val x:Float,val y:Float,val elapsedMs:Long,val pressure:Flo
         require(orientation==-1f||(orientation.isFinite()&&orientation in 0f..2*Math.PI.toFloat()))
     }
 }
-enum class InkPen { PEN,HIGHLIGHTER,BALLPOINT,BRUSH,MARKER }
+enum class InkPen(val wireId:Int) { PEN(0),HIGHLIGHTER(1),BALLPOINT(2),BRUSH(3),MARKER(4),PENCIL(5) }
 enum class InkTool { TOUCH,STYLUS,MOUSE }
 data class EraserPoint(val x:Float,val y:Float) {
     init {require(x.isFinite()&&y.isFinite()&&x in -BoardLimits.WORLD..BoardLimits.WORLD&&y in -BoardLimits.WORLD..BoardLimits.WORLD)}
@@ -44,7 +44,7 @@ class EraseSelection(val cut:InkCut,strokeIds:List<String>) {
     init {require(strokeIds.size in 1..InkLimits.MAX_STROKES&&strokeIds.distinct().size==strokeIds.size);strokeIds.forEach{UUID.fromString(it)}}
 }
 class InkStroke(val id:String,val pen:InkPen,val color:Int,val width:Float,val tool:InkTool,
-    samples:List<InkSample>,val world:Boolean=false,cuts:List<InkCut> = emptyList()) {
+    samples:List<InkSample>,val world:Boolean=false,cuts:List<InkCut> = emptyList(),val appearance:StrokeAppearance=if(pen==InkPen.PENCIL)StrokeAppearance(BrushRecipe())else StrokeAppearance()) {
     val samples:List<InkSample> = Collections.unmodifiableList(ArrayList(samples))
     val cuts:List<InkCut> = Collections.unmodifiableList(ArrayList(cuts))
     init {
@@ -52,11 +52,15 @@ class InkStroke(val id:String,val pen:InkPen,val color:Int,val width:Float,val t
         require(samples.size in 1..InkLimits.MAX_POINTS)
         require(cuts.size<=InkLimits.MAX_CUTS&&cuts.sumOf{it.points.size}<=InkLimits.MAX_CUT_POINTS&&cuts.map{it.id}.distinct().size==cuts.size)
         val first=samples.first()
+        require(pen!=InkPen.PENCIL||appearance.recipe.version==1)
+        listOfNotNull(appearance.leading,appearance.trailing).forEach{p->require(p.world);require((p.pressure>=0)==(first.pressure>=0)&&(p.tilt>=0)==(first.tilt>=0)&&(p.orientation>=0)==(first.orientation>=0))}
+        require(appearance.leading==null||appearance.leading.elapsedMs<=first.elapsedMs)
+        require(appearance.trailing==null||appearance.trailing.elapsedMs>=samples.last().elapsedMs)
         samples.forEachIndexed{i,p->require(p.world==world);if(!world)require(p.x in 0f..InkLimits.WIDTH&&p.y in 0f..InkLimits.HEIGHT)
             require((p.pressure>=0)==(first.pressure>=0)&&(p.tilt>=0)==(first.tilt>=0)&&(p.orientation>=0)==(first.orientation>=0))
             if(i>0){require(p.elapsedMs>=samples[i-1].elapsedMs);require(p!=samples[i-1])}}
     }
-    fun withCuts(extra:List<InkCut>):InkStroke = if(extra.isEmpty())this else InkStroke(id,pen,color,width,tool,samples,world,cuts+extra)
+    fun withCuts(extra:List<InkCut>):InkStroke = if(extra.isEmpty())this else InkStroke(id,pen,color,width,tool,samples,world,cuts+extra,appearance)
 }
 object InkCutCodec {
     fun write(out:DataOutputStream,cut:InkCut){if(cut.shape!=InkCutShape.ROUND){out.writeUTF("IW-CUT-2");out.writeByte(cut.shape.ordinal)};out.writeUTF(cut.id);out.writeFloat(cut.radius);out.writeInt(cut.points.size);cut.points.forEach{out.writeFloat(it.x);out.writeFloat(it.y)}}
@@ -69,25 +73,29 @@ object InkStrokeCodec {
     private const val WORLD=0x49575332
     private const val MASKED=0x49575333
     private const val SHAPED=0x49575334
+    private const val RECIPE=0x49575335
     fun encode(stroke:InkStroke):ByteArray=ByteArrayOutputStream().also{b->DataOutputStream(b).use{out->
-        out.writeInt(if(stroke.cuts.any{it.shape!=InkCutShape.ROUND})SHAPED else if(stroke.cuts.isEmpty())if(stroke.world)WORLD else PAGE else MASKED)
-        if(stroke.cuts.isNotEmpty())out.writeBoolean(stroke.world)
-        out.writeUTF(stroke.id);out.writeByte(stroke.pen.ordinal);out.writeInt(stroke.color);out.writeFloat(stroke.width)
+        val recipe=stroke.appearance.recipe.version!=0||stroke.pen==InkPen.PENCIL
+        out.writeInt(if(recipe)RECIPE else if(stroke.cuts.any{it.shape!=InkCutShape.ROUND})SHAPED else if(stroke.cuts.isEmpty())if(stroke.world)WORLD else PAGE else MASKED)
+        if(recipe||stroke.cuts.isNotEmpty())out.writeBoolean(stroke.world)
+        out.writeUTF(stroke.id);out.writeByte(stroke.pen.wireId);out.writeInt(stroke.color);out.writeFloat(stroke.width)
         out.writeByte(stroke.tool.ordinal);out.writeInt(stroke.samples.size)
         stroke.samples.forEach{p->out.writeFloat(p.x);out.writeFloat(p.y);out.writeLong(p.elapsedMs);out.writeFloat(p.pressure);out.writeFloat(p.tilt);out.writeFloat(p.orientation)}
-        if(stroke.cuts.isNotEmpty()){out.writeInt(stroke.cuts.size);stroke.cuts.forEach{InkCutCodec.write(out,it)}}
+        if(recipe||stroke.cuts.isNotEmpty()){out.writeInt(stroke.cuts.size);stroke.cuts.forEach{InkCutCodec.write(out,it)}}
+        if(recipe)stroke.appearance.write(out)
     }}.toByteArray()
     fun decode(bytes:ByteArray):InkStroke {
         require(bytes.size in 1..InkLimits.MAX_STROKE_BYTES)
         return DataInputStream(ByteArrayInputStream(bytes)).use{input->
-            val magic=input.readInt();require(magic in listOf(PAGE,WORLD,MASKED,SHAPED)){"Unsupported ink format; retain original bytes"}
-            val world=if(magic==MASKED||magic==SHAPED)input.readBoolean()else magic==WORLD
-            val id=input.readUTF();val pen=InkPen.entries.getOrNull(input.readUnsignedByte())?:error("Unknown pen")
+            val magic=input.readInt();require(magic in listOf(PAGE,WORLD,MASKED,SHAPED,RECIPE)){"Unsupported ink format; retain original bytes"}
+            val world=if(magic==MASKED||magic==SHAPED||magic==RECIPE)input.readBoolean()else magic==WORLD
+            val id=input.readUTF();val penId=input.readUnsignedByte();val pen=InkPen.entries.find{it.wireId==penId&&(magic==RECIPE||it!=InkPen.PENCIL)}?:error("Unknown pen")
             val color=input.readInt();val width=input.readFloat();val tool=InkTool.entries.getOrNull(input.readUnsignedByte())?:error("Unknown tool")
             val count=input.readInt();require(count in 1..InkLimits.MAX_POINTS&&count.toLong()*28<=input.available())
             val points=List(count){InkSample(input.readFloat(),input.readFloat(),input.readLong(),input.readFloat(),input.readFloat(),input.readFloat(),world)}
-            val cuts=if(magic==MASKED||magic==SHAPED){val n=input.readInt();require(n in 1..InkLimits.MAX_CUTS);var total=0;List(n){InkCutCodec.read(input).also{total+=it.points.size;require(total<=InkLimits.MAX_CUT_POINTS)}}}else emptyList()
-            require(input.available()==0){"Trailing ink data"};InkStroke(id,pen,color,width,tool,points,world,cuts)
+            val cuts=if(magic==MASKED||magic==SHAPED||magic==RECIPE){val n=input.readInt();require(n in (if(magic==RECIPE)0 else 1)..InkLimits.MAX_CUTS);var total=0;List(n){InkCutCodec.read(input).also{total+=it.points.size;require(total<=InkLimits.MAX_CUT_POINTS)}}}else emptyList()
+            val appearance=if(magic==RECIPE)StrokeAppearance.read(input)else StrokeAppearance()
+            require(input.available()==0){"Trailing ink data"};InkStroke(id,pen,color,width,tool,points,world,cuts,appearance)
         }
     }
 }
@@ -151,7 +159,7 @@ object InkHitTest {
         require(radius.isFinite()&&radius>0)
         val er=CanvasBounds(eraser.minOf{it.x}.toDouble(),eraser.minOf{it.y}.toDouble(),eraser.maxOf{it.x}.toDouble(),eraser.maxOf{it.y}.toDouble()).padded(radius.toDouble())
         if(!stroke.bounds().intersects(er))return false
-        val s=stroke.samples;val r=radius+stroke.width/2
+        val s=stroke.samples;val r=radius+stroke.coverageRadius()
         for(i in s.indices)for(j in eraser.indices)if(near(s[i],s[(i+1).coerceAtMost(s.lastIndex)],eraser[j],eraser[(j+1).coerceAtMost(eraser.lastIndex)],r))return true
         return false
     }

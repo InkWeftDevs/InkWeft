@@ -26,25 +26,25 @@ class ModernWorkspaceUiTest {
         compose.waitUntil(15_000){compose.onAllNodesWithTag("new-note").fetchSemanticsNodes().isNotEmpty()}
         val n=runBlocking{app.workspaceRepository.create("笔盒与收藏验收",false,PaperStyle.GRID)}
         compose.runOnIdle{ViewModelProvider(compose.activity)[NotebookViewModel::class.java].select(n)}
-        compose.waitUntil(15_000){compose.onAllNodesWithTag("ink-tool-0").fetchSemanticsNodes().isNotEmpty()&&app.navigationReady.value}
+        compose.waitUntil(15_000){compose.onAllNodesWithTag("pen-kind-ballpoint").fetchSemanticsNodes().isNotEmpty()&&app.navigationReady.value}
         return n
     }
     private fun shot(name:String){compose.waitForIdle();val b=checkNotNull(InstrumentationRegistry.getInstrumentation().uiAutomation.takeScreenshot());try{File(app.getExternalFilesDir(null),name).outputStream().use{b.compress(Bitmap.CompressFormat.PNG,100,it)}}finally{b.recycle()}}
     @Test fun favoriteEditsApplyImmediatelyAndKeepTheSameIdentityAfterReopen(){
         val n=open();val presets=PenWidthStore(app,"inkweft-pen-widths-book-"+n.id);val initial=presets.readKinds()
-        compose.openCurrentPen();compose.onNodeWithTag("pen-kind-pen").performScrollTo().performClick()
+        compose.openCurrentPen();compose.selectPen("pen");compose.openCurrentPen()
         compose.onNodeWithTag("width-preset-2").performScrollTo().performClick();compose.onNodeWithTag("pen-color-2").performScrollTo().performClick()
         shot("v21-pen-card.png")
         compose.onNodeWithTag("pen-favorite").performScrollTo().performClick()
         compose.waitUntil(10_000){FavoritePenStore(app).read().size==1}
         val favorite=FavoritePenStore(app).read().single()
         compose.closePenSettings()
-        assertEquals(InkPen.PEN,presets.readKinds()[0])
+        assertEquals(InkPen.PEN,presets.readKinds()[1])
         compose.onNodeWithTag("favorite-pen-${favorite.id}").performScrollTo().performTouchInput{longClick()}
         compose.onNodeWithTag("width-preset-0").performScrollTo().performClick()
-        assertEquals(favorite.id,FavoritePenStore(app).read().single().id);assertEquals(1.5f,presets.read()[0])
+        assertEquals(favorite.id,FavoritePenStore(app).read().single().id);assertEquals(1.5f,presets.read()[1])
         compose.onNodeWithTag("width-preset-2").performScrollTo().performClick();compose.closePenSettings()
-        compose.waitUntil(10_000){presets.readKinds()[0]==InkPen.PEN&&presets.read()[0]==6f&&presets.readColors()[0]==PenWidthStore.colors(0)[2]}
+        compose.waitUntil(10_000){presets.readKinds()[1]==InkPen.PEN&&presets.read()[1]==6f&&presets.readColors()[1]==PenWidthStore.colors(0)[2]}
         shot("v21-favorites.png");compose.activityRule.scenario.recreate()
         compose.waitUntil(15_000){compose.onAllNodesWithTag("favorite-pen-${favorite.id}").fetchSemanticsNodes().isNotEmpty()}
         compose.openCurrentPen();compose.onNodeWithTag("pen-favorite").performScrollTo().assertIsOn().performClick()
@@ -54,7 +54,7 @@ class ModernWorkspaceUiTest {
     }
     @Test fun paletteCollapsesRestoresAndPointsIntoPaperOnBothSides(){
         open();val full=compose.onNodeWithTag("floating-pen-case").fetchSemanticsNode().boundsInRoot.height
-        compose.onNodeWithTag("case-collapse").performClick();compose.onNodeWithTag("ink-tool-0").assertDoesNotExist()
+        compose.onNodeWithTag("case-collapse").performClick();compose.onNodeWithTag("pen-kind-ballpoint").assertDoesNotExist()
         assertTrue(compose.onNodeWithTag("floating-pen-case").fetchSemanticsNode().boundsInRoot.height<full)
         shot("v21-collapsed.png");compose.activityRule.scenario.recreate()
         compose.waitUntil(15_000){compose.onAllNodesWithTag("case-collapse").fetchSemanticsNodes().isNotEmpty()}

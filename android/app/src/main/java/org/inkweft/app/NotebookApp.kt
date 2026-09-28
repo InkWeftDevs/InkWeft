@@ -64,6 +64,14 @@ fun NotebookApp(vm:NotebookViewModel=viewModel(),onDiagnostics:()->Unit={}){
     var showCreate by rememberSaveable{mutableStateOf(false)};var newTitle by rememberSaveable{mutableStateOf("")}
     var newWorld by rememberSaveable{mutableStateOf(false)};var newPaper by rememberSaveable{mutableStateOf(PaperStyle.RULED)};var newCover by rememberSaveable{mutableStateOf(NotebookCover.AUTO)}
     var newCustomCover by rememberSaveable{mutableStateOf<ByteArray?>(null)}
+    var immersive by rememberSaveable(ui.selectedId){mutableStateOf(false)}
+    DisposableEffect(immersive){
+        val activity=context as? android.app.Activity
+        val controls=activity?.let{androidx.core.view.WindowCompat.getInsetsController(it.window,it.window.decorView)}
+        if(immersive){controls?.systemBarsBehavior=androidx.core.view.WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE;controls?.hide(androidx.core.view.WindowInsetsCompat.Type.systemBars())}
+        else controls?.show(androidx.core.view.WindowInsetsCompat.Type.systemBars())
+        onDispose{controls?.show(androidx.core.view.WindowInsetsCompat.Type.systemBars())}
+    }
     var inkMode by rememberSaveable(ui.selectedId){mutableStateOf(true)}
     SideEffect{if(!inkMode)app.navigationReady.value=true}
     var confirmExport by remember{mutableStateOf(false)};var exportText by remember{mutableStateOf<String?>(null)}
@@ -79,14 +87,14 @@ fun NotebookApp(vm:NotebookViewModel=viewModel(),onDiagnostics:()->Unit={}){
     // reopening behind the rename dialog when that dialog is dismissed.
     fun beginRename(note:Note){focus.clearFocus(force=true);keyboard?.hide();vm.openRename(note)}
     fun openCreate(){if(pendingCreate!=null)return;newTitle="";newWorld=defaults.getBoolean("world",false);newPaper=runCatching{PaperStyle.valueOf(defaults.getString("paper","RULED")!!)}.getOrDefault(PaperStyle.RULED);newCover=NotebookCover.fromKey(defaults.getString("cover","auto")!!).let{if(it==NotebookCover.CUSTOM)NotebookCover.AUTO else it};newCustomCover=null;showCreate=true}
-    BackHandler(enabled=ui.selectedId!=null){vm.back()}
+    BackHandler(enabled=ui.selectedId!=null){if(immersive)immersive=false else vm.back()}
     LaunchedEffect(ui.selectedId,inkMode){if(ui.selectedId!=null&&inkMode){focus.clearFocus(force=true);keyboard?.hide()}}
     Column(Modifier.fillMaxSize().background(Color.White).statusBarsPadding().navigationBarsPadding().imePadding()){
         if(ui.readFailed)Surface(color=Color.White){Row(Modifier.fillMaxWidth().padding(12.dp),verticalAlignment=Alignment.CenterVertically){Text("资料读取失败，原数据不会被空库覆盖。",Modifier.weight(1f),fontSize=13.sp);TextButton(onClick=vm::retryRead){Text("重试")};if(ui.current!=null)TextButton(onClick=onDiagnostics,modifier=Modifier.testTag("open-diagnostics-error")){Text("诊断")}}}
         if(workspaceError!=null)Surface(color=Color.White){Row(Modifier.fillMaxWidth().padding(horizontal=16.dp),verticalAlignment=Alignment.CenterVertically){Text(workspaceError!!,Modifier.weight(1f),fontSize=12.sp);TextButton(onClick=workspace::clearError){Text("知道了")}}}
         if(pendingCreate!=null&&!busy)TextButton(onClick={workspace.retryCreate{vm.select(it)}},modifier=Modifier.testTag("retry-create-notebook")){Text("核对原创建请求")}
         if(transferUi.busy||busy)LinearProgressIndicator(Modifier.fillMaxWidth())
-        if(ui.current!=null)NotebookTabs(ui,navigationReady&&!busy&&!transferUi.busy,{id->focus.clearFocus(force=true);keyboard?.hide();vm.selectTab(id)},
+        if(ui.current!=null&&!immersive)NotebookTabs(ui,navigationReady&&!busy&&!transferUi.busy,{id->focus.clearFocus(force=true);keyboard?.hide();vm.selectTab(id)},
             {id->if(vm.closeTab(id))notebookStates.removeState(id)else Toast.makeText(context,"这份笔记有未保存文字或待核对操作，请先处理后再关闭标签。",Toast.LENGTH_SHORT).show()},vm::back)
         val draft=ui.current
         if(draft==null)Box(Modifier.weight(1f)){LibraryScreen(ui,workspace,vm::select,::openCreate,{importGuide=true},onDiagnostics,::beginRename,{transfers.requestCopy(it.id)},{transfers.export(it.id)})}
@@ -102,7 +110,7 @@ fun NotebookApp(vm:NotebookViewModel=viewModel(),onDiagnostics:()->Unit={}){
                 IconButton(onClick=onDiagnostics,modifier=Modifier.testTag("open-diagnostics").describedAs("诊断与导出")){Glyph("diagnostics",Quiet)}
             }
             HorizontalDivider(color=Line)
-            if(inkMode&&draft.base.revision>0)Box(Modifier.weight(1f)){notebookStates.SaveableStateProvider(draft.base.id){InkScreen(draft,workspace,vm::back,{beginRename(draft.base)},{inkMode=false},onDiagnostics)}}
+            if(inkMode&&draft.base.revision>0)Box(Modifier.weight(1f)){notebookStates.SaveableStateProvider(draft.base.id){InkScreen(draft,workspace,vm::back,{beginRename(draft.base)},{inkMode=false;immersive=false},onDiagnostics,immersive,{immersive=it})}}
             else TextPage(draft,vm,Modifier.weight(1f)){confirmExport=true}
         }
     }

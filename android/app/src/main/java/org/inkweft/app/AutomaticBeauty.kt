@@ -8,13 +8,13 @@ import java.util.UUID
 
 internal enum class BeautyLanguage(val title:String){MIXED("中文（含英文）"),ENGLISH("English")}
 internal data class BeautyOptions(val enabled:Boolean=false,val font:TextFont=TextFont.WENKAI,
-    val size:Float=28f,val spacing:Float=1.2f,val bold:Boolean=false,val preserveLayout:Boolean=true,val snap:Float=.5f,val language:BeautyLanguage=BeautyLanguage.MIXED)
+    val size:Float=28f,val spacing:Float=1.2f,val bold:Boolean=false,val preserveLayout:Boolean=true,val snap:Float=.5f,val language:BeautyLanguage=BeautyLanguage.MIXED,val keepInk:Boolean=true,val inkStrength:Float=.5f)
 internal class BeautyStore(context:Context){
     private val prefs=context.getSharedPreferences("inkweft-beauty",Context.MODE_PRIVATE)
     fun read()=BeautyOptions(prefs.getBoolean("enabled",false),TextFont.entries.getOrElse(prefs.getInt("font",1)){TextFont.WENKAI},
-        prefs.getFloat("size",28f).coerceIn(12f,96f),prefs.getFloat("spacing",1.2f).coerceIn(1f,2f),prefs.getBoolean("bold",false),prefs.getBoolean("preserve-layout",true),prefs.getFloat("snap",.5f).coerceIn(0f,1f),BeautyLanguage.entries.getOrElse(prefs.getInt("language",0)){BeautyLanguage.MIXED})
+        prefs.getFloat("size",28f).coerceIn(12f,96f),prefs.getFloat("spacing",1.2f).coerceIn(1f,2f),prefs.getBoolean("bold",false),prefs.getBoolean("preserve-layout",true),prefs.getFloat("snap",.5f).coerceIn(0f,1f),BeautyLanguage.entries.getOrElse(prefs.getInt("language",0)){BeautyLanguage.MIXED},prefs.getBoolean("keep-ink",true),prefs.getFloat("ink-strength",.5f).coerceIn(0f,1f))
     fun save(value:BeautyOptions){prefs.edit().putBoolean("enabled",value.enabled).putInt("font",value.font.ordinal)
-        .putFloat("size",value.size).putFloat("spacing",value.spacing).putBoolean("bold",value.bold).putBoolean("preserve-layout",value.preserveLayout).putFloat("snap",value.snap).putInt("language",value.language.ordinal).apply()}
+        .putFloat("size",value.size).putFloat("spacing",value.spacing).putBoolean("bold",value.bold).putBoolean("preserve-layout",value.preserveLayout).putFloat("snap",value.snap).putInt("language",value.language.ordinal).putBoolean("keep-ink",value.keepInk).putFloat("ink-strength",value.inkStrength).apply()}
 }
 
 @Composable internal fun AutomaticBeautyBinding(model:PageObjectViewModel,ink:InkUi,writing:Boolean,options:BeautyOptions,world:Boolean,app:InkWeftApplication){
@@ -60,7 +60,7 @@ internal fun beautyObject(strokes:List<InkStroke>,result:RecognizedWriting,optio
                 val gx=maxOf(left,ink.left,x.toDouble());val gy=maxOf(ink.top,y.toDouble())
                 val gr=minOf(right,ink.right,(x+width).toDouble());val gb=minOf(ink.bottom,(y+height).toDouble())
                 val pressure=writing.filter{it.bounds().right>left&&it.bounds().left<right}.flatMap{it.samples}.map{it.pressure}.filter{it>=0}.average().takeUnless{it.isNaN()}?.toFloat()?:.5f
-                if(gr>gx&&gb>gy)glyphs.add(TextGlyph(offset+range.first,offset+range.last+1,(gx-x).toFloat(),(gy-y).toFloat(),(gr-gx).toFloat(),(gb-gy).toFloat(),weight=if(options.bold).25f+.75f*pressure else 0f))
+                if(gr>gx&&gb>gy)glyphs.add(TextGlyph(offset+range.first,offset+range.last+1,(gx-x).toFloat(),(gy-y).toFloat(),(gr-gx).toFloat(),(gb-gy).toFloat(),weight=if(options.bold).25f+.75f*pressure else 0f).let{g->BeautyAppearance.apply(g,writing,CanvasBounds(gx,gy,gr,gb))})
             }
             offset+=line.text.length+1
         }
@@ -91,3 +91,10 @@ internal fun appendBeauty(previous:PageObject,next:PageObject):PageObject?=runCa
         glyphs=shift(previous,0)+shift(next,previous.text.length+1),
         erasures=previous.erasures.map{it.transformed(previous.x-x,previous.y-y)}+next.erasures.map{it.transformed(next.x-x,next.y-y,offset=previous.text.length+1)})
 }.getOrNull()
+
+/** Polish at pen-up, before persistence and page splitting; never re-typeset a formula. */
+internal fun polishNewStroke(stroke:InkStroke,options:BeautyOptions):InkStroke {
+    if(!options.enabled||!options.keepInk||stroke.pen==InkPen.HIGHLIGHTER||stroke.cuts.isNotEmpty())return stroke
+    val polished=InkSelectionEdit.beautify(listOf(stroke),options.inkStrength).single()
+    return InkStroke(stroke.id,stroke.pen,stroke.color,stroke.width,stroke.tool,polished.samples,stroke.world,stroke.cuts,stroke.appearance)
+}

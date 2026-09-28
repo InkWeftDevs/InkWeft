@@ -41,7 +41,7 @@ internal class PageObjectOverlay(context:Context):View(context) {
                 start=author(e.x,e.y)
                 val old=objects.find{it.id==selected}
                 resize=old?.let{val p=screen(it.x+it.width,it.y+it.height);hypot(e.x-p.x,e.y-p.y)<=24*density}?:false
-                original=if(resize)old else (objects.filter{!it.hidden&&it.kind!=PageObjectKind.TAPE}+objects.filter{!it.hidden&&it.kind==PageObjectKind.TAPE}).asReversed().find{start.x>=it.x&&start.x<=it.x+it.width&&start.y>=it.y&&start.y<=it.y+it.height}
+                original=if(resize)old else (objects.filter{!it.hidden&&it.kind!=PageObjectKind.TAPE}+objects.filter{!it.hidden&&it.kind==PageObjectKind.TAPE}).asReversed().find{ObjectGeometry.hit(it,start.x.toFloat(),start.y.toFloat())}
                 draft=original;onSelect(original?.id)
                 if(original!=null){parent?.requestDisallowInterceptTouchEvent(true);onActive(true)}else v.onTouchEvent(e)
                 invalidate()
@@ -62,11 +62,12 @@ internal class PageObjectOverlay(context:Context):View(context) {
                         val layout=TextStyles.layout(o,w)
                         val h=max(24f,layout.height.toFloat()+8f)
                         if(h<=maxH)o.copy(width=w,height=h)else o
-                    }else o.copy(width=(o.width+dx).coerceIn(24f,maxW),height=(o.height+dy).coerceIn(24f,maxH))
+                    }else {val w=(o.width+dx).coerceIn(24f,maxW);val h=(o.height+dy).coerceIn(24f,maxH)
+                        o.copy(width=w,height=h,tapePoints=o.tapePoints.map{TapePoint(it.x*w/o.width,it.y*h/o.height)})}
                 }else o.copy(x=(o.x+dx).coerceIn(if(world)-BoardLimits.WORLD+o.width else 0f,maxX-o.width),y=(o.y+dy).coerceIn(if(world)-BoardLimits.WORLD+o.height else 0f,maxY-o.height))
                 v.previewObject(draft);invalidate()
             }
-            MotionEvent.ACTION_UP->{val result=draft;val changed=result!=original;val active=original!=null;cancel();if(changed&&result!=null)onChange(result);if(!active)v.onTouchEvent(e);performClick()}
+            MotionEvent.ACTION_UP->{if(original!=null){val move=MotionEvent.obtain(e);move.action=MotionEvent.ACTION_MOVE;onTouchEvent(move);move.recycle()};val result=draft;val changed=result!=original;val active=original!=null;cancel();if(changed&&result!=null)onChange(result);if(!active)v.onTouchEvent(e);performClick()}
             MotionEvent.ACTION_CANCEL->cancel()
         };return true
     }

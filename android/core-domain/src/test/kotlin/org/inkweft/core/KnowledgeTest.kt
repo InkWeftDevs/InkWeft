@@ -14,7 +14,7 @@ class KnowledgeTest {
         assertEquals(2,PaperTemplates.guides(PaperStyle.CORNELL_BLANK,bounds,false,.7).lines.size)}
     @Test fun farAwayBoardGuidesAreBounded(){val g=PaperTemplates.guides(PaperStyle.DOTS,CanvasBounds(-1000000.0,-1000000.0,1000000.0,1000000.0),true,.02);assertTrue(g.dots.size<=4096)}
     @Test fun everyKnowledgeKindRoundTrips(){val card=id();val ref=TargetRef(TargetKind.CARD,card)
-        val values=listOf(KnowledgeData.Anchor(id(),3,CanvasBounds(2.0,3.0,30.0,40.0),listOf(id())),KnowledgeData.Link(ref,TargetRef(TargetKind.CARD,id()),RelationKind.CONTRAST,2),
+        val values=listOf(KnowledgeData.PageMark(id(),"章节",false,2),KnowledgeData.PageMark(id(),"重点",true),KnowledgeData.Anchor(id(),3,CanvasBounds(2.0,3.0,30.0,40.0),listOf(id())),KnowledgeData.Link(ref,TargetRef(TargetKind.CARD,id()),RelationKind.CONTRAST,2),
             KnowledgeData.Properties(card,ManualState.REVIEW,listOf("数学")),KnowledgeData.Collection("待整理","数学",ManualState.INBOX,true),KnowledgeData.Question(card,"解释什么是条件概率？"),KnowledgeData.Placement(card,-25.0,80.0),KnowledgeData.Alias(card,"贝叶斯"),
             KnowledgeData.MapDefinition("第二张图"),KnowledgeData.MapOccurrence(id(),card,null,40.0,80.0),KnowledgeData.Decoration(id(),id()))
         values.forEach{assertEquals(it,KnowledgeCodec.decode(KnowledgeCodec.encode(it)))}}

@@ -72,7 +72,7 @@ class PageEditingRepository(private val db:NoteDatabase,private val fault:(PageE
                     db.ink().insertPage(InkPageRow(resultId,visible.size.toLong()))
                     visible.forEachIndexed{i,s->
                         val masks=s.cuts.map{cut->InkCut(cuts.getOrPut(cut.id){UUID.randomUUID().toString()},cut.radius,cut.points,cut.shape)}
-                        val copied=InkStroke(checkNotNull(strokeIds[s.id]),s.pen,s.color,s.width,s.tool,s.samples,s.world,masks)
+                        val copied=InkStroke(checkNotNull(strokeIds[s.id]),s.pen,s.color,s.width,s.tool,s.samples,s.world,masks,s.appearance)
                         db.ink().insertStroke(InkStrokeRow(copied.id,resultId,InkStrokeCodec.encode(copied),copied.samples.size,true,i+1L))
                     }
                     db.pages().search(source.id)?.takeIf{it.inkRevision==head&&it.method=="MANUAL"}?.let{

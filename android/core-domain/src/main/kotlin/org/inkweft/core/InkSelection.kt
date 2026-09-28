@@ -58,7 +58,7 @@ object InkSelectionEdit {
         val cuts=mutableMapOf<String,String>()
         return strokes.map{s->InkStroke(UUID.randomUUID().toString(),s.pen,s.color,s.width,s.tool,
             s.samples.map{it.copy(x=it.x+dx,y=it.y+dy)},s.world,
-            s.cuts.map{c->InkCut(cuts.getOrPut(c.id){UUID.randomUUID().toString()},c.radius,c.points.map{EraserPoint(it.x+dx,it.y+dy)},c.shape)})}
+            s.cuts.map{c->InkCut(cuts.getOrPut(c.id){UUID.randomUUID().toString()},c.radius,c.points.map{EraserPoint(it.x+dx,it.y+dy)},c.shape)},s.appearance.translated(dx,dy))}
     }
     /** Geometric stabilisation, NOT handwriting recognition or a generated font.
      * Endpoints, timing, axes and sharp turns are retained; masked strokes are
@@ -81,11 +81,27 @@ object InkSelectionEdit {
             }
             // De-duplicate exact consecutive transformed samples, not time stamps.
             val unique=ArrayList<InkSample>();samples.forEach{if(unique.lastOrNull()!=it)unique.add(it)}
-            InkStroke(UUID.randomUUID().toString(),s.pen,s.color,s.width,s.tool,unique,s.world)
+            InkStroke(UUID.randomUUID().toString(),s.pen,s.color,s.width,s.tool,unique,s.world,appearance=s.appearance)
+        }
+    }
+    /** Uniform resize/reflection keeps pressure and moves erase masks with their ink. */
+    fun transform(strokes:List<InkStroke>,scale:Float=1f,flipX:Boolean=false,flipY:Boolean=false):List<InkStroke>{
+        require(strokes.size in 1..MAX_SELECTED&&scale in .1f..10f)
+        val points=strokes.flatMap{it.samples};val cx=(points.minOf{it.x}+points.maxOf{it.x})/2;val cy=(points.minOf{it.y}+points.maxOf{it.y})/2
+        fun point(x:Float,y:Float)=EraserPoint(cx+(x-cx)*scale*(if(flipX)-1 else 1),cy+(y-cy)*scale*(if(flipY)-1 else 1))
+        fun sample(p:InkSample):InkSample {val q=point(p.x,p.y);return p.copy(x=q.x,y=q.y)}
+        val cuts=mutableMapOf<String,String>()
+        return strokes.map{s->
+            val origin=point(s.appearance.originX,s.appearance.originY)
+            val masks=s.cuts.map{c->var ps=c.points.map{point(it.x,it.y)}
+                if(c.shape==InkCutShape.RECTANGLE)ps=listOf(EraserPoint(ps.minOf{it.x},ps.minOf{it.y}),EraserPoint(ps.maxOf{it.x},ps.maxOf{it.y}))
+                InkCut(cuts.getOrPut(c.id){UUID.randomUUID().toString()},(c.radius*scale).coerceAtLeast(.01f),ps,c.shape)}
+            InkStroke(UUID.randomUUID().toString(),s.pen,s.color,s.width*scale,s.tool,s.samples.map(::sample),s.world,masks,
+                s.appearance.copy(originX=origin.x,originY=origin.y,leading=s.appearance.leading?.let(::sample),trailing=s.appearance.trailing?.let(::sample)))
         }
     }
     fun recolor(strokes:List<InkStroke>,color:Int)=strokes.map{s->
         val c=if(s.pen==InkPen.HIGHLIGHTER)(color and 0xffffff) or (s.color and 0xff000000.toInt()) else color or 0xff000000.toInt()
-        InkStroke(UUID.randomUUID().toString(),s.pen,c,s.width,s.tool,s.samples,s.world,s.cuts)
+        InkStroke(UUID.randomUUID().toString(),s.pen,c,s.width,s.tool,s.samples,s.world,s.cuts,s.appearance)
     }
 }

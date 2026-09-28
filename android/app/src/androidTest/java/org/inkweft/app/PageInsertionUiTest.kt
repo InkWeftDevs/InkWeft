@@ -34,7 +34,7 @@ class PageInsertionUiTest {
     private fun shot(name:String){compose.waitForIdle();val image=checkNotNull(InstrumentationRegistry.getInstrumentation().uiAutomation.takeScreenshot());try{File(compose.activity.getExternalFilesDir(null),name).outputStream().use{image.compress(Bitmap.CompressFormat.PNG,100,it)}}finally{image.recycle()}}
     private fun insert(){compose.onNodeWithTag("confirm-insert-pages").performClick();compose.waitUntil(10_000){compose.onAllNodesWithTag("insert-pages-dialog").fetchSemanticsNodes().isEmpty()};saved()}
     @Test fun beginningBatchKeepsOriginalInkAndPageIdentity(){
-        val book=create();compose.onNodeWithTag("ink-more").performClick();compose.onNodeWithTag("ink-finger").performScrollTo().performClick()
+        val book=create();compose.onNodeWithTag("ink-more").performScrollTo().performClick();compose.onNodeWithTag("ink-finger").performScrollTo().performClick()
         compose.onNodeWithTag("ink-surface").performTouchInput{swipe(Offset(width*.3f,height*.3f),Offset(width*.5f,height*.5f),200)}
         compose.waitUntil(10_000){runBlocking{app.inkRepository.read(book).strokes.size}==1};saved()
         val stroke=runBlocking{app.inkRepository.read(book).strokes.single().stroke}
@@ -47,7 +47,7 @@ class PageInsertionUiTest {
         assertEquals(stroke.samples,runBlocking{app.inkRepository.read(book).strokes.single().stroke.samples})
         compose.onNodeWithTag("page-counter",useUnmergedTree=true).assertTextEquals("第 1 / 3 页")
         compose.onNodeWithTag("page-directory").performClick();shot("page-directory-insertion.png")
-        compose.onNodeWithTag("jump-page-3").performClick();saved();compose.onNodeWithTag("ink-status").assertTextContains("1 笔",substring=true)
+        compose.onNodeWithTag("page-grid").performScrollToNode(hasTestTag("jump-page-3"));compose.onNodeWithTag("jump-page-3").performClick();saved();compose.onNodeWithTag("ink-status").assertInkCount(1)
     }
     @Test fun thumbnailBeforeMenuDoesNotRequireNavigatingToTarget(){
         val book=create();compose.onNodeWithTag("add-page").performClick();compose.onNodeWithTag("insert-count-plus").performScrollTo().performClick();insert()

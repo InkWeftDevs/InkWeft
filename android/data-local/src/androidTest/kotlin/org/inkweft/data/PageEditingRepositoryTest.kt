@@ -25,7 +25,7 @@ class PageEditingRepositoryTest {
     private suspend fun cmd(db:NoteDatabase,book:String,page:String,kind:PageEditKind,where:PageInsertLocation=PageInsertLocation.END,anchor:String?=null,stay:String?=null)=
         EditPage(id(),book,page,kind,InsertPages.orderHash(db.pages().list(book).map{it.id}),db.ink().page(page)?.revision?:0,
             where,anchor,if(kind==PageEditKind.COPY)id()else null,db.pages().get(page)?.trashedAt,stay?:db.pages().list(book).first().id)
-    private fun stroke()=InkStroke(id(),InkPen.PEN,0xff123456.toInt(),3f,InkTool.STYLUS,listOf(InkSample(10f,80f,0),InkSample(180f,80f,100)))
+    private fun stroke()=InkStroke(id(),InkPen.PENCIL,0xff123456.toInt(),3f,InkTool.STYLUS,listOf(InkSample(10f,80f,0),InkSample(180f,80f,100)),appearance=StrokeAppearance(BrushRecipe(hardness=2,grain=1.7f),97531))
     private suspend fun seed(db:NoteDatabase,page:String):InkStroke {
         val s=stroke();val r=InkRepository(db);r.save(CommitInk(id(),page,0,InkMutation.Add(s)))
         r.save(CommitInk(id(),page,1,InkMutation.Cut(EraseSelection(InkCut(id(),12f,listOf(EraserPoint(90f,70f),EraserPoint(90f,90f))),listOf(s.id)))))
@@ -58,7 +58,7 @@ class PageEditingRepositoryTest {
     @Test fun copyHasIndependentIdsAndPreservesEffectiveCuts()=fixture{db,b,ids->
         val original=seed(db,ids[1]);val r=PageEditingRepository(db).apply(cmd(db,b,ids[1],PageEditKind.COPY,PageInsertLocation.AFTER,ids[1])) as EditPageResult.Applied
         val copied=InkSession(InkRepository(db).read(r.resultPageId)).visibleDraft().single()
-        assertNotEquals(original.id,copied.id);assertEquals(original.samples,copied.samples);assertEquals(1,copied.cuts.size)
+        assertNotEquals(original.id,copied.id);assertEquals(original.samples,copied.samples);assertEquals(original.appearance,copied.appearance);assertEquals(1,copied.cuts.size)
         assertNotEquals(db.ink().cuts(ids[1]).single().id,copied.cuts.single().id)
         assertEquals("条件概率",db.pages().search(r.resultPageId)?.text)
         InkRepository(db).save(CommitInk(id(),r.resultPageId,1,InkMutation.Visibility(listOf(copied.id),false)))

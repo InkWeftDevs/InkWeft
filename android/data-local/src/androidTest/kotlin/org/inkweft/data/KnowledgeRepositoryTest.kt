@@ -14,6 +14,16 @@ class KnowledgeRepositoryTest {
     private fun fixture(block:suspend(NoteDatabase,String)->Unit)=runBlocking{val name="knowledge-${id()}.db";val db=NoteDatabase.open(context,name);try{block(db,WorkspaceRepository(db).create("关联测试",false,PaperStyle.CORNELL).id)}finally{db.close();context.deleteDatabase(name)}}
     private suspend fun card(db:NoteDatabase,book:String):String{val c=StudyCommand(id(),book,StudyAction.CREATE,id(),id(),title="知识甲",body="原答案");StudyRepository(db).submit(c);return c.cardId!!}
     private fun command(book:String,data:KnowledgeData,id:String=id(),revision:Long=0)=KnowledgeCommand(id(),book,id,revision,data)
+    @Test fun pageMarksAreOwnedUniqueAndIncludedInBackup()=fixture{db,book->
+        val repo=KnowledgeRepository(db);val page=db.pages().get(book)!!
+        val c=command(book,KnowledgeData.PageMark(page.id,"重点",true));repo.submit(c);repo.submit(c)
+        assertEquals(1,db.knowledge().all().count{it.data() is KnowledgeData.PageMark})
+        try{repo.submit(command(book,KnowledgeData.PageMark(page.id,"重复",true)));fail()}catch(_:IllegalArgumentException){}
+        repo.submit(command(book,KnowledgeData.PageMark(page.id,"第一章",false,1)))
+        repo.validateArchive()
+        LibraryBackupRepository(context,db).snapshot().use{snapshot->snapshot.file.inputStream().use{LibraryBackupRepository(context,db).inspect(it)}.use{preview->assertEquals(LibraryBackupRepository.RestoreResult.ALREADY_PRESENT,LibraryBackupRepository(context,db).restore(preview))}}
+        repo.submit(KnowledgeCommand(id(),book,c.id,1,c.data,true));assertTrue(db.knowledge().get(c.id)!!.removed)
+    }
     @Test fun creationReplaysSameIdentityWithoutHalfNotebook()=fixture{db,_->val op=id();val repo=WorkspaceRepository(db)
         val n=repo.create("新建一次",false,PaperStyle.CORNELL,operationId=op);val again=repo.create("新建一次",false,PaperStyle.CORNELL,operationId=op)
         assertEquals(n.id,again.id);assertEquals(1,db.pages().allPages(n.id).size)
@@ -79,7 +89,7 @@ class KnowledgeRepositoryTest {
         val w=db.workspace().get(other.id)!!;WorkspaceRepository(db).organize(other.id,w.revision,w.folder,w.tags,w.favorite,true)
         assertFalse(repo.available(TargetRef(TargetKind.NOTE,other.id)));assertEquals(1,db.knowledge().all().size);repo.validateArchive()}
     @Test fun backupRestoresEveryKnowledgeKindAndRejectsConflict()=fixture{db,book->val c=card(db,book);val repo=KnowledgeRepository(db)
-        val values=listOf(KnowledgeData.Link(TargetRef(TargetKind.PAGE,book),TargetRef(TargetKind.CARD,c),pinnedRevision=1),KnowledgeData.Properties(c,ManualState.REVIEW,listOf("数学")),KnowledgeData.Collection("数学复习","数学",ManualState.REVIEW),KnowledgeData.Question(c,"说明理由"),KnowledgeData.Placement(c,80.0,200.0),KnowledgeData.Alias(c,"同义名"))
+        val values=listOf(KnowledgeData.PageMark(book,"章节",false,2),KnowledgeData.PageMark(book,"重点",true),KnowledgeData.Link(TargetRef(TargetKind.PAGE,book),TargetRef(TargetKind.CARD,c),pinnedRevision=1),KnowledgeData.Properties(c,ManualState.REVIEW,listOf("数学")),KnowledgeData.Collection("数学复习","数学",ManualState.REVIEW),KnowledgeData.Question(c,"说明理由"),KnowledgeData.Placement(c,80.0,200.0),KnowledgeData.Alias(c,"同义名"))
         values.forEach{repo.submit(command(book,it))};val name="restore-${id()}.db";val target=NoteDatabase.open(context,name)
         try{val backup=LibraryBackupRepository(context,db);backup.snapshot().use{snap->val restore=LibraryBackupRepository(context,target)
             snap.file.inputStream().use{restore.inspect(it)}.use{preview->assertEquals(LibraryBackupRepository.RestoreResult.RESTORED,restore.restore(preview))}

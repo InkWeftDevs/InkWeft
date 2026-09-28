@@ -69,7 +69,7 @@ data class CanvasViewport(val centerX: Double=500.0, val centerY: Double=707.0, 
 }
 
 fun InkStroke.bounds(): CanvasBounds {
-    val pad=width.toDouble()/2
+    val pad=coverageRadius().toDouble()
     return CanvasBounds(samples.minOf { it.x }.toDouble()-pad,samples.minOf { it.y }.toDouble()-pad,
         samples.maxOf { it.x }.toDouble()+pad,samples.maxOf { it.y }.toDouble()+pad)
 }

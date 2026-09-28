@@ -19,28 +19,44 @@ internal data class SelectedInk(val region:InkRegion,val revision:Long,val strok
 internal fun SelectionActions(selection:SelectedInk?,all:List<InkStroke>,enabled:Boolean,
     freehand:Boolean,onMode:(Boolean)->Unit,apply:(Long,InkMutation)->Boolean,
     clear:()->Unit,excerpt:(SelectedInk)->Unit,associate:(SelectedInk)->Unit={},fontBeauty:(SelectedInk)->Unit={}){
+    var more by remember{mutableStateOf(false)}
+    var transformError by remember{mutableStateOf(false)}
     var beauty by remember{mutableStateOf(false)};var color by remember{mutableStateOf(false)}
     val s=selection;val count=s?.strokes?.size?:0
     androidx.activity.compose.BackHandler(enabled=selection!=null){clear()}
     Column(Modifier.background(androidx.compose.ui.graphics.Color.White)){
-        Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()).padding(horizontal=12.dp),horizontalArrangement=Arrangement.spacedBy(8.dp)){
+        Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()).padding(horizontal=4.dp),horizontalArrangement=Arrangement.spacedBy(4.dp)){
+            if(count==0){
             FilterChip(selected=!freehand,onClick={onMode(false);clear()},label={Text("矩形框选")},modifier=Modifier.testTag("selection-rectangle"))
             FilterChip(selected=freehand,onClick={onMode(true);clear()},label={Text("自由套索")},modifier=Modifier.testTag("selection-lasso"))
-            if(count>0)Text("已选 $count 笔",modifier=Modifier.padding(top=14.dp),fontSize=12.sp,color=Quiet)
-            if(s!=null){
-                TextButton(onClick={fontBeauty(s)},enabled=enabled&&count in 1..256&&s.strokes.none{it.pen==InkPen.HIGHLIGHTER},modifier=Modifier.testTag("selection-font-beauty")){Text("字体美化")}
-                TextButton(onClick={if(apply(s.revision,InkMutation.Visibility(s.strokes.map{it.id},false)))clear()},enabled=enabled&&count>0,modifier=Modifier.testTag("selection-delete")){Text("删除选中 $count 笔")}
+            }
+            if(s!=null&&count==0&&all.any{it.bounds().intersects(s.region.bounds)}){
                 TextButton(onClick={val ids=all.filter{it.bounds().intersects(s.region.bounds)}.map{it.id};if(ids.isNotEmpty()&&apply(s.revision,InkMutation.Cut(EraseSelection(s.region.mask(),ids))))clear()},enabled=enabled,modifier=Modifier.testTag("selection-erase-inside")){Text("只擦框内部分")}
-                TextButton(onClick={runCatching{InkSelectionEdit.copy(s.strokes,0f,0f)}.getOrNull()?.let{if(apply(s.revision,InkMutation.Replace(emptyList(),it)))clear()}},enabled=enabled&&count in 1..256,modifier=Modifier.testTag("selection-copy")){Text("原位复制")}
-
-                TextButton(onClick={beauty=true},enabled=enabled&&count in 1..256&&s.strokes.all{it.pen!=InkPen.HIGHLIGHTER&&it.cuts.isEmpty()},modifier=Modifier.testTag("selection-beautify")){Text("笔形润色")}
+            }
+            if(s!=null&&count>0){
+                TextButton(onClick={if(apply(s.revision,InkMutation.Visibility(s.strokes.map{it.id},false)))clear()},enabled=enabled&&count>0,modifier=Modifier.testTag("selection-delete")){Text("删除")}
+                TextButton(onClick={runCatching{InkSelectionEdit.copy(s.strokes,0f,0f)}.getOrNull()?.let{if(apply(s.revision,InkMutation.Replace(emptyList(),it)))clear()}},enabled=enabled&&count in 1..256,modifier=Modifier.testTag("selection-copy")){Text("复制")}
                 TextButton(onClick={color=true},enabled=enabled&&count in 1..256,modifier=Modifier.testTag("selection-recolor")){Text("改色")}
-                TextButton(onClick={excerpt(s)},enabled=enabled&&count in 1..256,modifier=Modifier.testTag("selection-excerpt")){Text("摘录为摘要卡")}
-                TextButton(onClick={associate(s)},enabled=enabled&&count in 1..256,modifier=Modifier.testTag("selection-associate")){Text("关联 / 区域链接")}
-                TextButton(onClick=clear){Text("取消选择")}
+                TextButton(onClick={fontBeauty(s)},enabled=enabled&&count in 1..256&&s.strokes.none{it.pen==InkPen.HIGHLIGHTER},modifier=Modifier.testTag("selection-font-beauty")){Text("美化字迹")}
+                Box {
+                    TextButton(onClick={more=true},modifier=Modifier.testTag("selection-more")){Text("更多")}
+                    DropdownMenu(more,{more=false}){
+                        listOf("放大 10%","缩小 10%","水平翻转","垂直翻转").forEachIndexed{i,title->
+                            DropdownMenuItem(text={Text(title)},enabled=enabled&&count in 1..256,onClick={more=false
+                                runCatching{InkSelectionEdit.transform(s.strokes,if(i==0)1.1f else if(i==1).9f else 1f,i==2,i==3)}.onSuccess{changed->if(apply(s.revision,InkMutation.Replace(s.strokes.map{it.id},changed)))clear()}.onFailure{transformError=true}
+                            },modifier=Modifier.testTag("selection-transform-$i"))
+                        }
+                        DropdownMenuItem(text={Text("摘录")},onClick={more=false;excerpt(s)},enabled=enabled&&count in 1..256,modifier=Modifier.testTag("selection-excerpt"))
+                        DropdownMenuItem(text={Text("笔形润色")},onClick={more=false;beauty=true},enabled=enabled&&count in 1..256&&s.strokes.all{it.pen!=InkPen.HIGHLIGHTER&&it.cuts.isEmpty()},modifier=Modifier.testTag("selection-beautify"))
+                        DropdownMenuItem(text={Text("只擦框内部分")},onClick={more=false;val ids=all.filter{it.bounds().intersects(s.region.bounds)}.map{it.id};if(ids.isNotEmpty()&&apply(s.revision,InkMutation.Cut(EraseSelection(s.region.mask(),ids))))clear()},enabled=enabled,modifier=Modifier.testTag("selection-erase-inside"))
+                        DropdownMenuItem(text={Text("关联")},onClick={more=false;associate(s)},enabled=enabled&&count in 1..256,modifier=Modifier.testTag("selection-associate"))
+                    }
+                }
+                IconButton(onClick=clear,modifier=Modifier.describedAs("取消选择")){Glyph("close")}
             }
         }
     }
+    if(transformError)AlertDialog(onDismissRequest={transformError=false},text={Text("调整超出页面或笔宽范围，原笔迹保留。")},confirmButton={TextButton({transformError=false}){Text("知道了")}})
     if(beauty&&s!=null)BeautifyDialog(s.strokes,{beauty=false}){changed->if(apply(s.revision,InkMutation.Replace(s.strokes.map{it.id},changed))){clear();beauty=false}}
     if(color&&s!=null)AlertDialog(onDismissRequest={color=false},title={Text("修改选中笔迹颜色")},text={Row(horizontalArrangement=Arrangement.spacedBy(8.dp)){
         listOf(0xff24342f,0xffb83239,0xff3159b8,0xff14735d,0xffa57605).forEach{c->Button(onClick={if(apply(s.revision,InkMutation.Replace(s.strokes.map{it.id},InkSelectionEdit.recolor(s.strokes,c.toInt())))){clear();color=false}},colors=ButtonDefaults.buttonColors(containerColor=androidx.compose.ui.graphics.Color(c)),modifier=Modifier.size(48.dp),contentPadding=PaddingValues(0.dp)){Text("●")}}

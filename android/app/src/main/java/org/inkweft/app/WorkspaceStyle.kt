@@ -29,6 +29,7 @@ internal val Side=InkTheme.Navigation
         "search"->R.drawable.ic_search
         "grid"->R.drawable.ic_grid
         "list"->R.drawable.ic_list
+        "bookmark"->R.drawable.ic_bookmark
         "menu"->R.drawable.ic_menu
         "folder"->R.drawable.ic_folder
         "trash"->R.drawable.ic_trash
@@ -53,6 +54,23 @@ internal val Side=InkTheme.Navigation
         "review"->R.drawable.ic_review
         "settings"->R.drawable.ic_settings
         "pin"->R.drawable.ic_pin
+        "tape"->R.drawable.ic_tape
+        "area-erase"->R.drawable.ic_area_erase
+        "camera"->R.drawable.ic_camera
+        "excerpt"->R.drawable.ic_excerpt
+        "shape"->R.drawable.ic_shape
+        "sticker"->R.drawable.ic_sticker
+        "objects"->R.drawable.ic_objects
+        "favorite-pens"->R.drawable.ic_favorite_pens
+        "eye"->R.drawable.ic_eye
+        "eye-off"->R.drawable.ic_eye_off
+        "drag-handle"->R.drawable.ic_drag_handle
+        "overview"->R.drawable.ic_overview
+        "add-page"->R.drawable.ic_add_page
+        "readonly"->R.drawable.ic_readonly
+        "finger"->R.drawable.ic_finger
+        "fullscreen"->R.drawable.ic_fullscreen
+        "timer"->R.drawable.ic_timer
         else->error("Unknown icon: $kind")
     }
     Icon(painterResource(resource),null,modifier.size(24.dp),tint)

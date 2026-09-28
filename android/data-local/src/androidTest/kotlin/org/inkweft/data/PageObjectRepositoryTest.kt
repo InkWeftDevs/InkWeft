@@ -36,7 +36,7 @@ class PageObjectRepositoryTest {
         assertEquals(item.text,repo.read(imported.id).objects.single().text)
     }
     @Test fun backupRestoresObjectsAndReceipts()=fixture{db->
-        val note=WorkspaceRepository(db).create("备份",false,PaperStyle.BLANK);val content=listOf(text(),PageObject(id(),PageObjectKind.TAPE,revealed=true))
+        val note=WorkspaceRepository(db).create("备份",false,PaperStyle.BLANK);val content=listOf(text(),PageObject(id(),PageObjectKind.TAPE,revealed=true,tapePoints=listOf(TapePoint(20f,20f),TapePoint(180f,90f)),lineWidth=30f),PageObject(id(),PageObjectKind.SHAPE,shape=ObjectShape.ARROW,lineWidth=4f))
         val command=id();PageObjectRepository(db).save(note.id,0,command,content)
         val name="restore-${id()}.db";var target=NoteDatabase.open(context,name)
         try{

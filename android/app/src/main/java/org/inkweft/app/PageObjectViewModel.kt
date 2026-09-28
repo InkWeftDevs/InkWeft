@@ -31,7 +31,7 @@ internal class PageObjectViewModel(private val pageId:String,private val repo:Pa
     val beautyStatus=beautyState.asStateFlow()
     fun observeBeauty(ink:InkUi,writing:Boolean,options:BeautyOptions,world:Boolean,app:InkWeftApplication){
         latestInk=ink
-        if(!options.enabled){beautyJob?.cancel();beautyJob=null;beautyKnown=null;beautyKey=null;beautyState.value=null;return}
+        if(!options.enabled||options.keepInk){beautyJob?.cancel();beautyJob=null;beautyKnown=null;beautyKey=null;beautyState.value=null;return}
         if(ink.loading)return
         if(beautyKnown==null){beautyKnown=ink.strokes.map{it.id}.toSet();return}
         if(writing||ink.queued>0||ink.processing){beautyJob?.cancel();beautyJob=null;beautyKey=null;beautyState.value=null;return}
@@ -119,6 +119,8 @@ internal class PageObjectViewModel(private val pageId:String,private val repo:Pa
     fun delete(id:String)=deleteObjects(setOf(id))
     fun deleteObjects(ids:Set<String>){change(snapshot.objects.mapNotNull{if(it.id !in ids)it else if(it.sourceStrokeIds.isNotEmpty())it.copy(hidden=true)else null})}
     fun restoreOriginal(id:String)=change(snapshot.objects.filterNot{it.id==id})
+    fun eraseTapes(path:List<InkSample>,radius:Float){change(erasedTapes(path,radius))}
+    internal fun erasedTapes(path:List<InkSample>,radius:Float)=snapshot.objects.filterNot{ObjectGeometry.intersectsTape(it,path,radius)}
     fun eraseBeauty(path:List<InkSample>,radius:Float,whole:Boolean){
         if(path.isNotEmpty())change(erasedBeauty(path,radius,whole))
     }

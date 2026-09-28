@@ -38,6 +38,14 @@ import kotlin.math.roundToInt
             Column(Modifier.padding(horizontal=16.dp)){
                 BeautySwitch("实时美化字迹",value.enabled,"beauty-enabled"){change(value.copy(enabled=it))}
                 HorizontalDivider(color=Line)
+                Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.spacedBy(8.dp)){
+                    FilterChip(value.keepInk,{change(value.copy(keepInk=true))},label={Text("保留笔形")},modifier=Modifier.testTag("beauty-keep-ink"))
+                    FilterChip(!value.keepInk,{change(value.copy(keepInk=false))},label={Text("替换字体")},modifier=Modifier.testTag("beauty-replace-font"))
+                }
+                if(value.keepInk){
+                    Text("适合公式与手写，保留粗细和位置",fontSize=12.sp,color=Quiet)
+                    BeautySlider("整理强度","${(value.inkStrength*100).roundToInt()}%",value.inkStrength,0f..1f,true,"beauty-ink-strength"){change(value.copy(inkStrength=it))}
+                }else{
                 TextButton(onClick={section="font"},contentPadding=PaddingValues(0.dp),modifier=Modifier.fillMaxWidth().heightIn(min=48.dp).testTag("beauty-font-picker")){
                     Text("美化字体",color=TextInk);Spacer(Modifier.weight(1f));Text(TextStyles.name(value.font),fontSize=13.sp,color=Quiet);Text("  ›",color=Quiet)
                 }
@@ -50,6 +58,7 @@ import kotlin.math.roundToInt
                 BeautySlider("字号",value.size.toInt().toString(),value.size,12f..96f,!value.preserveLayout,"beauty-font-size"){change(value.copy(size=it.roundToInt().toFloat()))}
                 BeautySlider("行间距","%.1f×".format(value.spacing),value.spacing,1f..2f,!value.preserveLayout,"beauty-line-spacing"){change(value.copy(spacing=(it*10).roundToInt()/10f))}
                 BeautySlider("吸附强度","${(value.snap*100).roundToInt()}%",value.snap,0f..1f,!value.preserveLayout,"beauty-snap"){change(value.copy(snap=(it*100).roundToInt()/100f))}
+                }
             }
             HorizontalDivider(color=Line)
             DropdownMenuItem(text={Text("框选美化")},onClick=select,modifier=Modifier.testTag("beauty-select"))

@@ -6,6 +6,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.lazy.grid.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -13,6 +14,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -24,7 +27,7 @@ import org.inkweft.core.*
 import org.inkweft.data.NotebookPageRow
 
 @Composable
-fun InkScreen(note:NoteDraft,workspace:WorkspaceViewModel=viewModel(),onBack:()->Unit={},onRename:()->Unit={},onText:()->Unit={},onDiagnostics:()->Unit={}){
+fun InkScreen(note:NoteDraft,workspace:WorkspaceViewModel=viewModel(),onBack:()->Unit={},onRename:()->Unit={},onText:()->Unit={},onDiagnostics:()->Unit={},fullScreen:Boolean=false,onFullScreen:(Boolean)->Unit={}){
     val context=LocalContext.current;val app=context.applicationContext as InkWeftApplication
     val vm:BookPagesViewModel=viewModel(key="book-${note.base.id}",factory=BookPagesViewModel.Factory(note.base.id,app.pages,app.workspaceRepository))
     val ui by vm.ui.collectAsStateWithLifecycle();val scope=rememberCoroutineScope()
@@ -73,29 +76,29 @@ fun InkScreen(note:NoteDraft,workspace:WorkspaceViewModel=viewModel(),onBack:()-
         if(uri!=null&&bytes!=null)scope.launch{val ok=try{withContext(Dispatchers.IO){checkNotNull(context.contentResolver.openOutputStream(uri,"wt")).use{it.write(bytes)}};true}catch(c:CancellationException){throw c}catch(_:Exception){false};Toast.makeText(context,if(ok)"整本内容副本已导出"else"导出失败，原笔记保留",Toast.LENGTH_LONG).show()}
     }
     val page=ui.pages.firstOrNull{it.id==ui.selectedId}
-    Column(Modifier.fillMaxSize()){
+    var paperPicker by remember{mutableStateOf(false)}
+    var gridView by rememberSaveable{mutableStateOf(false)}
+    var overviewTab by rememberSaveable(note.base.id){mutableIntStateOf(0)}
+    var excerptRequest by remember{mutableIntStateOf(0)}
+    val marksModel:OverviewViewModel=viewModel(key="overview-${note.base.id}",factory=OverviewViewModel.Factory(note.base.id,app))
+    val marks by marksModel.marks.collectAsStateWithLifecycle()
+    val marksBusy by marksModel.busy.collectAsStateWithLifecycle()
+    val marksError by marksModel.error.collectAsStateWithLifecycle()
+    val panelOpen=directory||documentSettings
+    val docked=LocalConfiguration.current.screenWidthDp>=700
+    val panelWidth=minOf(320.dp,(LocalConfiguration.current.screenWidthDp-24).dp)
+    val pageActionsReady=canNavigate&&!ui.busy&&!ui.actionUnknown&&!ui.insertionUnknown
+    androidx.activity.compose.BackHandler(panelOpen&&pageActionsReady){directory=false;documentSettings=false}
+    Box(Modifier.fillMaxSize()){
+    Column(Modifier.fillMaxSize().padding(end=if(panelOpen&&docked)panelWidth else 0.dp)){
         val navigationEnabled=canNavigate&&!ui.busy&&!ui.actionUnknown&&!ui.insertionUnknown
-        Row(Modifier.fillMaxWidth().heightIn(min=48.dp).padding(horizontal=8.dp),verticalAlignment=Alignment.CenterVertically){
-            IconButton(onClick=onBack,enabled=navigationEnabled,modifier=Modifier.testTag("back-library").describedAs("返回资料库")){Glyph("back")}
-            TextButton(onClick=onRename,enabled=navigationEnabled,modifier=Modifier.weight(1f).testTag("rename-from-editor")){Text(note.title,modifier=Modifier.fillMaxWidth(),maxLines=1,overflow=androidx.compose.ui.text.style.TextOverflow.Ellipsis,fontSize=16.sp)}
-            if(page!=null&&!page.world){
-                IconButton(onClick={directory=true},enabled=navigationEnabled,modifier=Modifier.testTag("page-directory").describedAs("页面")){Glyph("list")}
-                IconButton(onClick={insertion=page.id to PageInsertLocation.AFTER},enabled=navigationEnabled&&ui.pages.size+ui.recycled.size<500,modifier=Modifier.testTag("add-page").describedAs("加页")){Glyph("add")}
-            }
-            IconButton(onClick={searchOpen=true},enabled=navigationEnabled,modifier=Modifier.testTag("book-search").describedAs("查找")){Glyph("search")}
-            Box{IconButton(onClick={documentMore=true},enabled=navigationEnabled,modifier=Modifier.testTag("document-more").describedAs("文档选项")){Glyph("more")}
-                DropdownMenu(documentMore,{documentMore=false}){
-                    if(page!=null&&!page.world)DropdownMenuItem(text={Text(if(continuous)"切换单页"else"连续书写")},onClick={documentMore=false;readingMode(!continuous)},modifier=Modifier.testTag("toggle-continuous"))
-                    DropdownMenuItem(text={Text("整理与复习")},onClick={documentMore=false;studySource=null;studyOpen=true},modifier=Modifier.testTag("study-open"))
-                    DropdownMenuItem(text={Text("关联与思维导图")},onClick={documentMore=false;knowledgeAnchor=null;knowledgeOpen=true},modifier=Modifier.testTag("knowledge-open"))
-                    DropdownMenuItem(text={Text("阅读与笔记设置")},onClick={documentMore=false;documentSettings=true},modifier=Modifier.testTag("document-settings"))
-                    DropdownMenuItem(text={Text("编辑键入文字")},onClick={documentMore=false;onText()},modifier=Modifier.testTag("mode-text"))
-                    if(page!=null&&!page.world)DropdownMenuItem(text={Text("导出整本内容副本")},onClick={documentMore=false;confirmBook=true},enabled=!exporting,modifier=Modifier.testTag("export-book"))
-                    DropdownMenuItem(text={Text("诊断与导出")},onClick={documentMore=false;onDiagnostics()},modifier=Modifier.testTag("open-diagnostics"))
-                }
-            }
+        if(!fullScreen)Row(Modifier.fillMaxWidth().heightIn(min=40.dp).padding(horizontal=4.dp),verticalAlignment=Alignment.CenterVertically){
+            IconButton(onBack,enabled=navigationEnabled,modifier=Modifier.size(40.dp).testTag("back-library").describedAs("返回资料库")){Glyph("back")}
+            Spacer(Modifier.weight(1f))
+            IconButton({directory=!directory;documentSettings=false},enabled=navigationEnabled,modifier=Modifier.size(40.dp).testTag("quick-overview").describedAs("文档概览")){Glyph("overview")}
+            IconButton({documentSettings=!documentSettings;directory=false},enabled=navigationEnabled,modifier=Modifier.size(40.dp).testTag("quick-settings").describedAs("其他设置")){Glyph("settings")}
+            IconButton({searchOpen=true},enabled=navigationEnabled,modifier=Modifier.size(40.dp).testTag("book-search").describedAs("查找")){Glyph("search")}
         }
-        HorizontalDivider(color=Line)
         if(ui.error!=null)Row(Modifier.fillMaxWidth().padding(horizontal=12.dp),verticalAlignment=Alignment.CenterVertically){Text(ui.error!!,Modifier.weight(1f),fontSize=12.sp);if(!ui.insertionUnknown&&!ui.actionUnknown)TextButton(onClick=vm::clearError){Text("知道了")}}
         if(ui.actionUnknown)Surface(color=androidx.compose.ui.graphics.Color.White){
             Row(Modifier.fillMaxWidth().padding(horizontal=12.dp),verticalAlignment=Alignment.CenterVertically){
@@ -114,69 +117,110 @@ fun InkScreen(note:NoteDraft,workspace:WorkspaceViewModel=viewModel(),onBack:()-
             onAssociate={selection->knowledgeAnchor=KnowledgeData.Anchor(page.id,selection.revision,selection.region.bounds,selection.strokes.map{it.id});knowledgeOpen=true},
             onExcerpt={selection->studySource=StudySourceDraft(page.id,selection.revision,selection.region.bounds,selection.strokes.map{it.id});studyOpen=true},
             focusRegion=sourceFocus?.takeIf{it.first==page.id}?.second,onFocusConsumed={sourceFocus=null},pageNavigation={
-                if(!page.world){
-                    TextButton(onClick={ui.pages.getOrNull(page.position-1)?.let{vm.select(it.id)}},enabled=navigationEnabled&&page.position>0,modifier=Modifier.testTag("previous-page")){Text("‹")}
-                    Text("第 ${page.position+1} / ${ui.pages.size} 页",fontSize=12.sp,modifier=Modifier.testTag("page-counter"))
-                    TextButton(onClick={ui.pages.getOrNull(page.position+1)?.let{vm.select(it.id)}},enabled=navigationEnabled&&page.position<ui.pages.lastIndex,modifier=Modifier.testTag("next-page")){Text("›")}
-                }
-            },continuousPages=if(continuous&&!page.world)ui.pages else null,onContinuousPage={if(it!=ui.selectedId)vm.select(it)},leaveContinuous={readingMode(false)})}
+                if(!page.world)Text("${page.position+1} / ${ui.pages.size}",fontSize=12.sp,modifier=Modifier.testTag("page-counter"))
+            },continuousPages=if(continuous&&!page.world)ui.pages else null,onContinuousPage={if(it!=ui.selectedId)vm.select(it)},leaveContinuous={readingMode(false)},onTags={classify=true},fullScreen=fullScreen,onFullScreen=onFullScreen,canAddPage=!page.world&&ui.pages.size+ui.recycled.size<500,
+            excerptRequest=excerptRequest,onDocumentAction={action->when(action){"overview"->{directory=!directory;documentSettings=false};"settings"->{documentSettings=!documentSettings;directory=false};"add-page"->insertion=page.id to PageInsertLocation.AFTER;"export"->confirmBook=true}})}
     }
     if(searchOpen)BookSearchPanel(note.base.id,note.title,page?.id,{searchOpen=false},{id->
         if(ui.pages.any{it.id==id}){vm.select(id);searchOpen=false}
     },{draft->searchTarget=draft;searchOpen=false})
-    if(documentSettings)AlertDialog(onDismissRequest={documentSettings=false},modifier=Modifier.testTag("document-settings-dialog"),title={Text("阅读与笔记设置")},text={
-        Column(Modifier.verticalScroll(rememberScrollState()),verticalArrangement=Arrangement.spacedBy(8.dp)){
-
-            if(page!=null&&!page.world){
-                Row(verticalAlignment=Alignment.CenterVertically){Text("上下连续翻页",Modifier.weight(1f));Switch(continuous,{readingMode(it)},modifier=Modifier.testTag("continuous-setting"))}
-                TextButton(onClick={documentSettings=false;directory=true},modifier=Modifier.testTag("settings-page-directory")){Text("跳转页面与页面整理")}
+    if(documentSettings)DocumentSidePanel("其他设置","document-settings-dialog",{documentSettings=false},Modifier.align(Alignment.CenterEnd).width(panelWidth)){
+        Column(Modifier.verticalScroll(rememberScrollState())){
+            DocumentAction(note.title,"settings-rename",pageActionsReady){documentSettings=false;onRename()}
+            DocumentAction("文件夹与标签","settings-tags",pageActionsReady&&entries[note.base.id]!=null){documentSettings=false;classify=true}
+            HorizontalDivider(Modifier.padding(horizontal=16.dp),color=Line)
+            DocumentSection("页面设置",page?.let{"第${it.position+1}页"}.orEmpty())
+            if(page!=null){
+                DocumentAction("更换模板","settings-paper",pageActionsReady,value=PaperTemplates.title(PaperStyle.entries[page.paper])){paperPicker=true}
+                if(!page.world){
+                    PageJumpRow(ui.pages.size,page.position,pageActionsReady){vm.select(ui.pages[it].id)}
+                    DocumentAction("添加页面","settings-add-page",pageActionsReady&&ui.pages.size+ui.recycled.size<500){documentSettings=false;insertion=page.id to PageInsertLocation.AFTER}
+                    DocumentAction("移动当前页","settings-move-page",pageActionsReady&&ui.pages.size>1){documentSettings=false;requestAction(page,PageEditKind.MOVE)}
+                    DocumentAction("复制当前页","settings-copy-page",pageActionsReady){documentSettings=false;requestAction(page,PageEditKind.COPY)}
+                    DocumentAction("删除当前页","settings-delete-page",pageActionsReady&&ui.pages.size>1,danger=true){documentSettings=false;requestAction(page,PageEditKind.TRASH)}
+                    DocumentAction("已删除页面","settings-deleted-pages",pageActionsReady,value=ui.recycled.size.toString()){overviewTab=0;showRecycled=true;documentSettings=false;directory=true}
+                }
             }
-            TextButton(onClick={documentSettings=false;classify=true},enabled=entries[note.base.id]!=null,modifier=Modifier.testTag("settings-tags")){Text("文件夹与标签")}
-            HorizontalDivider()
-            TextButton(onClick={documentSettings=false;onDiagnostics()}){Text("诊断与导出")}
+            HorizontalDivider(Modifier.padding(horizontal=16.dp),color=Line)
+            DocumentSection("文档")
+            DocumentAction("整理与复习","study-open",pageActionsReady){documentSettings=false;studySource=null;studyOpen=true}
+            DocumentAction("编辑键入文字","mode-text",pageActionsReady){documentSettings=false;onText()}
+            DocumentAction("查找笔记","settings-search",pageActionsReady){documentSettings=false;searchOpen=true}
+            DocumentAction("大纲与思维导图","settings-knowledge",pageActionsReady){documentSettings=false;knowledgeAnchor=null;knowledgeOpen=true}
+            if(page!=null&&!page.world)DocumentAction("导出整本内容副本","settings-export",pageActionsReady&&!exporting){documentSettings=false;confirmBook=true}
+            HorizontalDivider(Modifier.padding(horizontal=16.dp),color=Line)
+            DocumentSection("阅读与操作")
+            if(page!=null&&!page.world)Row(Modifier.fillMaxWidth().padding(horizontal=16.dp).heightIn(min=52.dp),verticalAlignment=Alignment.CenterVertically){Text("上下连续翻页",Modifier.weight(1f),style=MaterialTheme.typography.bodyMedium);Switch(continuous,{readingMode(it)},enabled=pageActionsReady,modifier=Modifier.testTag("continuous-setting"))}
+            Row(Modifier.fillMaxWidth().padding(horizontal=16.dp).heightIn(min=52.dp),verticalAlignment=Alignment.CenterVertically){Text("全屏专注",Modifier.weight(1f),style=MaterialTheme.typography.bodyMedium);Switch(fullScreen,onFullScreen,enabled=pageActionsReady,modifier=Modifier.testTag("settings-fullscreen"))}
+            DocumentAction("页面整理","settings-page-directory",pageActionsReady){documentSettings=false;showRecycled=false;directory=true}
+            DocumentAction("诊断与导出","settings-diagnostics",pageActionsReady){documentSettings=false;onDiagnostics()}
+            Spacer(Modifier.height(12.dp))
         }
-    },confirmButton={TextButton(onClick={documentSettings=false}){Text("完成")}})
-    if(classify)entries[note.base.id]?.let{row->NotebookClassificationDialog(row,{classify=false}){folder,tags->workspace.organize(row,folder=folder,tags=tags);classify=false}}
+    }
+    if(paperPicker&&page!=null)PaperPickerDialog(PaperStyle.entries[page.paper],page.world,{paperPicker=false}){style->workspace.paper(page.id,style);paperPicker=false}
+    if(classify)entries[note.base.id]?.let{row->NotebookClassificationDialog(row,{classify=false},entries.values.flatMap{it.tags.lines()}.filter{it.isNotBlank()}){folder,tags->workspace.organize(row,folder=folder,tags=tags);classify=false}}
     if(knowledgeOpen)KnowledgeWorkspace(note.base.id,page?.let{TargetRef(TargetKind.PAGE,it.id)}?:TargetRef(TargetKind.NOTE,note.base.id),knowledgeAnchor,dismiss={knowledgeOpen=false}){target->
         app.openKnowledgeTarget.value=target;knowledgeOpen=false
     }
     if(studyOpen)StudyWorkspace(note,studySource,{studyOpen=false;studySource=null;initialStudyCard=null},initialCardId=initialStudyCard){source->
         if(ui.pages.any{it.id==source.pageId}){readingMode(false);vm.select(source.pageId);sourceFocus=source.pageId to CanvasBounds(source.left,source.top,source.right,source.bottom);true}else false
     }
-    if(directory)AlertDialog(onDismissRequest={directory=false},modifier=Modifier.testTag("pages-directory-dialog"),title={Text("页面 · ${ui.pages.size} 页")},text={
-        Column(verticalArrangement=Arrangement.spacedBy(10.dp)){
-            Row(horizontalArrangement=Arrangement.spacedBy(8.dp)){
-                FilterChip(selected=!showRecycled,onClick={showRecycled=false},label={Text("可用页面")},modifier=Modifier.testTag("pages-active"))
-                FilterChip(selected=showRecycled,onClick={showRecycled=true},label={Text("页面回收区 ${ui.recycled.size}")},modifier=Modifier.testTag("pages-recycled"))
+    if(directory)DocumentSidePanel("文档概览","pages-directory-dialog",{directory=false},Modifier.align(Alignment.CenterEnd).width(panelWidth)){
+        Row(Modifier.fillMaxWidth().padding(horizontal=8.dp)){
+            listOf("页面" to "overview","大纲" to "list","页签" to "bookmark","摘录" to "excerpt").forEachIndexed{i,(label,icon)->
+                Column(Modifier.weight(1f).selectable(selected=overviewTab==i,onClick={overviewTab=i;showRecycled=false},role=androidx.compose.ui.semantics.Role.Tab).heightIn(min=64.dp).padding(vertical=8.dp).testTag("overview-tab-$i"),horizontalAlignment=Alignment.CenterHorizontally){
+                    Glyph(icon,if(overviewTab==i)Forest else Quiet);Text(label,style=MaterialTheme.typography.labelMedium,color=if(overviewTab==i)Forest else Quiet)
+                    if(overviewTab==i)HorizontalDivider(Modifier.width(24.dp).padding(top=4.dp),color=Forest,thickness=2.dp)
+                }
             }
-            if(showRecycled)Text("回收页不参与阅读、搜索和内容副本导出；资料库备份仍会保留。这里的回收不是永久删除。",fontSize=12.sp,color=Quiet)
-            LazyVerticalGrid(columns=GridCells.Adaptive(100.dp),modifier=Modifier.heightIn(max=400.dp).testTag("page-grid"),horizontalArrangement=Arrangement.spacedBy(10.dp),verticalArrangement=Arrangement.spacedBy(12.dp)){
-                items(if(showRecycled)ui.recycled else ui.pages,key={it.id}){p->
-                    var menu by remember{mutableStateOf(false)}
-                    Column(horizontalAlignment=Alignment.CenterHorizontally){
-                        Column(Modifier.clickable(enabled=!showRecycled&&canNavigate&&!ui.busy&&!ui.insertionUnknown&&!ui.actionUnknown){directory=false;vm.select(p.id)}.testTag(if(showRecycled)"recycled-page-${p.id}"else"jump-page-${p.position+1}"),horizontalAlignment=Alignment.CenterHorizontally){
-                            PageThumb(p);Text(if(showRecycled)"原第 ${p.position+1} 页"else"第 ${p.position+1} 页",fontSize=12.sp)
+        }
+        if(overviewTab==0&&marksError!=null)Row(Modifier.padding(horizontal=12.dp)){Text(marksError!!,Modifier.weight(1f));TextButton(marksModel::retry){Text("重试")}}
+        if(overviewTab!=0)OverviewCollections(note.base.id,overviewTab,ui.pages,page,pageActionsReady,app,
+            openPage={vm.select(it)},openExcerpt={item->readingMode(false);vm.select(item.pageId);sourceFocus=item.pageId to CanvasBounds(item.left,item.top,item.right,item.bottom)},
+            editExcerpt={initialStudyCard=it;studyOpen=true;directory=false},newExcerpt={directory=false;readingMode(false);excerptRequest++})
+        else {
+        Row(Modifier.fillMaxWidth().padding(horizontal=12.dp),verticalAlignment=Alignment.CenterVertically){
+            Text(if(showRecycled)"回收区 ${ui.recycled.size}"else"全部 ${ui.pages.size} 页",Modifier.weight(1f),style=MaterialTheme.typography.labelMedium,color=Quiet)
+            if(showRecycled)TextButton({showRecycled=false},modifier=Modifier.testTag("pages-active")){Text("返回页面")}
+            else IconButton({showRecycled=true},modifier=Modifier.testTag("pages-recycled").describedAs("已删除页面")){Glyph("trash")}
+            IconButton({directory=false;searchOpen=true},modifier=Modifier.testTag("overview-search").describedAs("查找笔记")){Glyph("search")}
+            IconButton({gridView=!gridView},modifier=Modifier.testTag("overview-layout").describedAs(if(gridView)"列表视图"else"平铺视图")){Glyph(if(gridView)"list"else"grid")}
+        }
+        LazyVerticalGrid(columns=GridCells.Fixed(if(gridView)2 else 1),modifier=Modifier.weight(1f).testTag("page-grid"),contentPadding=PaddingValues(16.dp),horizontalArrangement=Arrangement.spacedBy(16.dp),verticalArrangement=Arrangement.spacedBy(16.dp)){
+            items(if(showRecycled)ui.recycled else ui.pages,key={it.id}){p->
+                var menu by remember{mutableStateOf(false)}
+                Column(horizontalAlignment=Alignment.CenterHorizontally){
+                    Box(Modifier.widthIn(max=if(gridView)128.dp else 156.dp).fillMaxWidth().border(if(p.id==ui.selectedId&&!showRecycled)2.dp else 1.dp,if(p.id==ui.selectedId&&!showRecycled)Forest else Line).clickable(enabled=!showRecycled&&pageActionsReady){vm.select(p.id)}.testTag(if(showRecycled)"recycled-page-${p.id}"else"jump-page-${p.position+1}")){
+                        PageThumb(p,Modifier.fillMaxWidth().aspectRatio(1000f/1414f))
+                        if(!showRecycled){
+                            val mark=marks.firstOrNull{val m=it.data() as KnowledgeData.PageMark;m.bookmark&&m.pageId==p.id}
+                            IconToggleButton(mark!=null,{marksModel.save(mark,mark?.data() as? KnowledgeData.PageMark?:KnowledgeData.PageMark(p.id,"第${p.position+1}页",true),mark!=null)},
+                                enabled=pageActionsReady&&!marksBusy&&marksError==null,modifier=Modifier.align(Alignment.TopEnd).size(48.dp).testTag("page-bookmark-${p.position+1}").describedAs(if(mark==null)"添加页签"else"移除页签")){
+                                Glyph("bookmark",if(mark!=null)Forest else Quiet)
+                            }
                         }
-                        if(showRecycled)TextButton(onClick={requestAction(p,PageEditKind.RESTORE)},modifier=Modifier.testTag("restore-page-${p.id}")){Text("恢复到…",fontSize=12.sp)}
+                    }
+                    Row(Modifier.fillMaxWidth(),verticalAlignment=Alignment.CenterVertically){
+                        Text(if(showRecycled)"原第${p.position+1}页"else"第${p.position+1}页",Modifier.weight(1f),fontSize=12.sp,color=if(p.id==ui.selectedId)Forest else TextInk)
+                        if(showRecycled)TextButton({requestAction(p,PageEditKind.RESTORE)},enabled=pageActionsReady,modifier=Modifier.testTag("restore-page-${p.id}")){Text("恢复")}
                         else Box{
-                            TextButton(onClick={menu=true},enabled=canNavigate&&!ui.busy&&!ui.insertionUnknown&&!ui.actionUnknown,modifier=Modifier.testTag("page-menu-${p.position+1}")){Text("页面操作 ⋯",fontSize=11.sp)}
-                            DropdownMenu(expanded=menu,onDismissRequest={menu=false}){
+                            IconButton({menu=true},enabled=pageActionsReady,modifier=Modifier.testTag("page-menu-${p.position+1}").describedAs("第${p.position+1}页操作")){Glyph("more")}
+                            DropdownMenu(menu,{menu=false}){
                                 DropdownMenuItem(text={Text("在此页之前插入")},onClick={menu=false;directory=false;insertion=p.id to PageInsertLocation.BEFORE})
                                 DropdownMenuItem(text={Text("在此页之后插入")},onClick={menu=false;directory=false;insertion=p.id to PageInsertLocation.AFTER})
-                                HorizontalDivider()
                                 DropdownMenuItem(text={Text("移动页面…")},onClick={menu=false;requestAction(p,PageEditKind.MOVE)},modifier=Modifier.testTag("move-page-${p.position+1}"))
                                 DropdownMenuItem(text={Text("复制此页…")},onClick={menu=false;requestAction(p,PageEditKind.COPY)},modifier=Modifier.testTag("copy-page-${p.position+1}"))
-                                HorizontalDivider()
-                                DropdownMenuItem(text={Text("移入页面回收区",color=androidx.compose.ui.graphics.Color(0xffab3939))},enabled=ui.pages.size>1,
-                                    onClick={menu=false;requestAction(p,PageEditKind.TRASH)},modifier=Modifier.testTag("recycle-page-${p.position+1}"))
+                                DropdownMenuItem(text={Text("移入页面回收区")},enabled=ui.pages.size>1,onClick={menu=false;requestAction(p,PageEditKind.TRASH)},modifier=Modifier.testTag("recycle-page-${p.position+1}"))
                             }
                         }
                     }
                 }
             }
-            if(showRecycled&&ui.recycled.isEmpty())Text("页面回收区为空",fontSize=13.sp,color=Quiet)
         }
-    },confirmButton={TextButton(onClick={directory=false}){Text("关闭")}})
+        if(showRecycled&&ui.recycled.isEmpty())Text("没有已删除页面",Modifier.padding(16.dp),color=Quiet)
+        if(!showRecycled&&page!=null&&!page.world)TextButton({directory=false;insertion=page.id to PageInsertLocation.AFTER},enabled=pageActionsReady&&ui.pages.size+ui.recycled.size<500,modifier=Modifier.fillMaxWidth().padding(8.dp).testTag("overview-add-page")){Glyph("add-page");Text("添加页面",Modifier.padding(start=8.dp))}
+    }
+    }
     pageActionId?.let{id->
         val source=(ui.pages+ui.recycled).firstOrNull{it.id==id}
         if(source==null)LaunchedEffect(id){pageActionId=null}
@@ -193,13 +237,14 @@ fun InkScreen(note:NoteDraft,workspace:WorkspaceViewModel=viewModel(),onBack:()-
     }
     if(confirmBook)AlertDialog(onDismissRequest={confirmBook=false},title={Text("导出整本内容副本")},text={Text("包括本笔记所有可用页面、图片、文本框、胶带状态、局部擦除效果和已保存键入文字；不含页面回收区。明文 .iwbook，不含摘要卡/脑图、撤销历史、账号或密钥；不是完整资料库备份。目标可能由云盘提供。")},confirmButton={TextButton(onClick={confirmBook=false;exporting=true;scope.launch{try{val bytes=withContext(Dispatchers.IO){app.pages.exportBook(note.base.id).encode()};exportBytes=bytes;export.launch("墨织笔记本.iwbook")}catch(c:CancellationException){throw c}catch(_:Exception){Toast.makeText(context,"无法导出整本内容，原数据保留；可尝试逐页导出",Toast.LENGTH_LONG).show()}finally{exporting=false}}}){Text("选择位置")}},dismissButton={TextButton(onClick={confirmBook=false}){Text("取消")}})
     searchTarget?.let{draft->PageSearchDialog(draft){searchTarget=null}}
+    }
 }
 @Composable
-internal fun PageThumb(page:NotebookPageRow){
+internal fun PageThumb(page:NotebookPageRow,modifier:Modifier=Modifier.size(84.dp,110.dp)){
     val app=LocalContext.current.applicationContext as InkWeftApplication
     val strokes by produceState<List<InkStroke>?>(null,page.id){value=withContext(Dispatchers.IO){runCatching{InkSession(app.inkRepository.read(page.id)).visibleDraft()}.getOrNull()}}
     val objects by produceState<List<PageObject>>(emptyList(),page.id){value=withContext(Dispatchers.IO){runCatching{app.pageObjects.read(page.id).objects}.getOrDefault(emptyList())}}
-    Box(Modifier.size(84.dp,110.dp)){
+    Box(modifier){
         val loaded=strokes
         AndroidView(factory={InkCanvasView(it).apply{preview=true}},update={it.configure(false,PaperStyle.entries[page.paper],null);it.showDocument(page.id);it.showStrokes(loaded.orEmpty());it.showObjects(objects)},modifier=Modifier.fillMaxSize())
     }

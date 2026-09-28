@@ -5,12 +5,15 @@ import java.io.*
 import java.util.Base64
 import java.util.UUID
 
-enum class PageObjectKind { IMAGE, TEXT, TAPE }
+enum class PageObjectKind { IMAGE, TEXT, TAPE, SHAPE }
+enum class TapePattern { STRIPES, SPARKLES, GRID, SOLID, DOTS, WAVES }
+enum class ObjectShape { RECTANGLE, ELLIPSE, TRIANGLE, LINE, ARROW, TABLE }
+data class TapePoint(val x:Float,val y:Float) { init { require(x.isFinite()&&y.isFinite()&&x>=0&&y>=0) } }
 enum class TextFont { SYSTEM, WENKAI, SERIF }
 
 /** A grapheme's ink box, relative to its text object. Erasure never reflows its neighbours. */
-data class TextGlyph(val start:Int,val end:Int,val x:Float,val y:Float,val width:Float,val height:Float,val hidden:Boolean=false,val weight:Float=0f) {
-    init { require(weight.isFinite()&&weight in 0f..1f);require(start>=0&&end>start);require(listOf(x,y,width,height).all{it.isFinite()});require(x>=0&&y>=0&&width>0&&height>0) }
+data class TextGlyph(val start:Int,val end:Int,val x:Float,val y:Float,val width:Float,val height:Float,val hidden:Boolean=false,val weight:Float=0f,val color:Int?=null,val grain:Float=0f) {
+    init { require(grain.isFinite()&&grain in 0f..10f);require(weight.isFinite()&&weight in 0f..1f);require(start>=0&&end>start);require(listOf(x,y,width,height).all{it.isFinite()});require(x>=0&&y>=0&&width>0&&height>0) }
 }
 
 data class TextErasePoint(val x:Float,val y:Float) {
@@ -31,10 +34,14 @@ data class PageObject(
     val fontSize:Float=28f, val revealed:Boolean=false,
     val font:TextFont=TextFont.SYSTEM,val lineSpacing:Float=1f,val bold:Boolean=false,
     val sourceStrokeIds:List<String> = emptyList(),val hidden:Boolean=false,
-    val glyphs:List<TextGlyph> = emptyList(),val erasures:List<TextErasePath> = emptyList()
+    val glyphs:List<TextGlyph> = emptyList(),val erasures:List<TextErasePath> = emptyList(),
+    val tapePoints:List<TapePoint> = emptyList(),val lineWidth:Float=24f,val shape:ObjectShape=ObjectShape.RECTANGLE,val tapePattern:TapePattern=TapePattern.STRIPES
 ) {
     init {
         UUID.fromString(id)
+        require(lineWidth.isFinite()&&lineWidth in .5f..192f)
+        require(tapePoints.isEmpty()||kind==PageObjectKind.TAPE)
+        require(tapePoints.size<=2048&&tapePoints.all{it.x<=width&&it.y<=height})
         require(listOf(x,y,width,height,fontSize).all{it.isFinite()})
         require(width in 24f..4000f && height in 24f..4000f && fontSize in 12f..96f)
         require(lineSpacing.isFinite()&&lineSpacing in 1f..2f)
@@ -50,7 +57,7 @@ data class PageObject(
         require(glyphs.all{it.end<=text.length&&it.x+it.width<=width+.01f&&it.y+it.height<=height+.01f})
         require(kotlin.math.abs(x)+width<=BoardLimits.WORLD && kotlin.math.abs(y)+height<=BoardLimits.WORLD)
         require(text.length<=4000 && image.length<=PageObjectCodec.MAX_IMAGE*4/3+4)
-        require(when(kind){PageObjectKind.IMAGE->image.isNotEmpty()&&text.isEmpty();PageObjectKind.TEXT->text.isNotBlank()&&image.isEmpty();PageObjectKind.TAPE->text.isEmpty()&&image.isEmpty()})
+        require(when(kind){PageObjectKind.IMAGE->image.isNotEmpty()&&text.isEmpty();PageObjectKind.TEXT->text.isNotBlank()&&image.isEmpty();PageObjectKind.TAPE,PageObjectKind.SHAPE->text.isEmpty()&&image.isEmpty()})
     }
     fun bounds()=CanvasBounds(x.toDouble(),y.toDouble(),(x+width).toDouble(),(y+height).toDouble())
     fun visibleText():String {
@@ -70,7 +77,7 @@ object PageObjectCodec {
         require(objects.count{!it.hidden}<=MAX_OBJECTS && objects.size<=MAX_RECORDS && objects.map{it.id}.distinct().size==objects.size)
         val buffer=ByteArrayOutputStream()
         DataOutputStream(buffer).use { out ->
-            out.writeInt(0x49574f34);out.writeInt(objects.size)
+            out.writeInt(0x49574f37);out.writeInt(objects.size)
             objects.forEach { o ->
                 out.writeUTF(o.id);out.writeByte(o.kind.ordinal)
                 listOf(o.x,o.y,o.width,o.height,o.fontSize).forEach(out::writeFloat)
@@ -79,12 +86,14 @@ object PageObjectCodec {
                 out.writeInt(o.sourceStrokeIds.size);o.sourceStrokeIds.forEach(out::writeUTF)
                 out.writeBoolean(o.hidden)
                 out.writeInt(o.glyphs.size);o.glyphs.forEach{g->
-                    out.writeInt(g.start);out.writeInt(g.end);listOf(g.x,g.y,g.width,g.height).forEach(out::writeFloat);out.writeBoolean(g.hidden);out.writeFloat(g.weight)
+                    out.writeInt(g.start);out.writeInt(g.end);listOf(g.x,g.y,g.width,g.height).forEach(out::writeFloat);out.writeBoolean(g.hidden);out.writeFloat(g.weight);out.writeBoolean(g.color!=null);g.color?.let(out::writeInt);out.writeFloat(g.grain)
                 }
                 out.writeInt(o.erasures.size);o.erasures.forEach{cut->
                     out.writeInt(cut.start);out.writeInt(cut.end);out.writeFloat(cut.radius);out.writeInt(cut.points.size)
                     cut.points.forEach{out.writeFloat(it.x);out.writeFloat(it.y)}
                 }
+                out.writeFloat(o.lineWidth);out.writeByte(o.shape.ordinal);out.writeByte(o.tapePattern.ordinal);out.writeInt(o.tapePoints.size)
+                o.tapePoints.forEach{out.writeFloat(it.x);out.writeFloat(it.y)}
                 val image=if(o.image.isEmpty())byteArrayOf()else Base64.getDecoder().decode(o.image)
                 require(image.size<=MAX_IMAGE)
                 if(image.isNotEmpty())require(image.size>4&&image[0]==0xff.toByte()&&image[1]==0xd8.toByte())
@@ -97,7 +106,7 @@ object PageObjectCodec {
     fun decode(bytes:ByteArray):List<PageObject> {
         require(bytes.size in 8..MAX_BYTES)
         return DataInputStream(ByteArrayInputStream(bytes)).use { input ->
-            val version=input.readInt();require(version in listOf(0x49574f31,0x49574f32,0x49574f33,0x49574f34))
+            val version=input.readInt();require(version in listOf(0x49574f31,0x49574f32,0x49574f33,0x49574f34,0x49574f35,0x49574f36,0x49574f37))
             val count=input.readInt();require(count in 0..MAX_RECORDS)
             val objects=List(count) {
                 val id=input.readUTF();val kind=PageObjectKind.entries.getOrNull(input.readUnsignedByte())?:error("Object kind")
@@ -108,16 +117,20 @@ object PageObjectCodec {
                 val bold=version>=0x49574f32&&input.readBoolean()
                 val source=if(version>=0x49574f32){val n=input.readInt();require(n in 0..256);List(n){input.readUTF()}}else emptyList()
                 val hidden=version>=0x49574f33&&input.readBoolean()
-                val glyphs=if(version>=0x49574f34){val n=input.readInt();require(n in 0..4000);List(n){TextGlyph(input.readInt(),input.readInt(),input.readFloat(),input.readFloat(),input.readFloat(),input.readFloat(),input.readBoolean(),input.readFloat())}}else emptyList()
+                val glyphs=if(version>=0x49574f34){val n=input.readInt();require(n in 0..4000);List(n){TextGlyph(input.readInt(),input.readInt(),input.readFloat(),input.readFloat(),input.readFloat(),input.readFloat(),input.readBoolean(),input.readFloat(),if(version>=0x49574f37&&input.readBoolean())input.readInt()else null,if(version>=0x49574f37)input.readFloat()else 0f)}}else emptyList()
                 val erasures=if(version>=0x49574f34){
                     val n=input.readInt();require(n in 0..InkLimits.MAX_CUTS);var total=0
                     List(n){val start=input.readInt();val end=input.readInt();val radius=input.readFloat();val points=input.readInt()
                         require(points in 1..InkLimits.MAX_POINTS);total+=points;require(total<=InkLimits.MAX_CUT_POINTS&&points.toLong()*8<=input.available())
                         TextErasePath(start,end,radius,List(points){TextErasePoint(input.readFloat(),input.readFloat())})}
                 }else emptyList()
+                val lineWidth=if(version>=0x49574f35)input.readFloat()else 24f
+                val shape=if(version>=0x49574f35)ObjectShape.entries.getOrNull(input.readUnsignedByte())?:error("Shape")else ObjectShape.RECTANGLE
+                val tapePattern=if(version>=0x49574f36)TapePattern.entries.getOrNull(input.readUnsignedByte())?:error("Tape pattern")else TapePattern.STRIPES
+                val tapePoints=if(version>=0x49574f35){val n=input.readInt();require(n in 0..2048&&n.toLong()*8<=input.available());List(n){TapePoint(input.readFloat(),input.readFloat())}}else emptyList()
                 val size=input.readInt();require(size in 0..MAX_IMAGE && size<=input.available())
                 val image=ByteArray(size);input.readFully(image)
-                PageObject(id,kind,x,y,w,h,text,if(size==0)""else Base64.getEncoder().encodeToString(image),color,fontSize,revealed,font,spacing,bold,source,hidden,glyphs,erasures)
+                PageObject(id,kind,x,y,w,h,text,if(size==0)""else Base64.getEncoder().encodeToString(image),color,fontSize,revealed,font,spacing,bold,source,hidden,glyphs,erasures,tapePoints,lineWidth,shape,tapePattern)
             }
             require(input.available()==0);encode(objects);objects
         }

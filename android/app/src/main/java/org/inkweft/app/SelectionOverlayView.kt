@@ -15,10 +15,13 @@ internal class SelectionOverlayView(context:Context):View(context){
     var region:InkRegion?=null
     var selected:List<InkStroke> = emptyList()
     var selectedObjects:List<CanvasBounds> = emptyList()
+    var objectIds:Set<String> = emptySet()
+    var worldSelection=false
     var enabledInput=true
     var freehand=false
     var onRegion:(InkRegion?)->Unit={}
     var onShift:(Float,Float)->Unit={_,_->}
+    var onTap:(Float,Float)->Unit={_,_->}
     var onActive:(Boolean)->Unit={}
     private var pointer=-1
     private var start=EraserPoint(0f,0f)
@@ -40,11 +43,12 @@ internal class SelectionOverlayView(context:Context):View(context){
     }
     override fun onDraw(c:Canvas){super.onDraw(c);if(canvasView==null)return
         val r=if(pointer!=-1&&!moving&&trail.size>=2)runCatching{InkRegion(if(freehand)trail.toList()else listOf(start,trail.last()),!freehand)}.getOrNull()else region
-        if(r!=null){val path=shape(r);paint.style=Paint.Style.FILL;paint.color=0x10216b59;c.drawPath(path,paint)
+        if(r!=null&&(selected.isEmpty()&&selectedObjects.isEmpty()||pointer!=-1&&!moving)){val path=shape(r);paint.style=Paint.Style.FILL;paint.color=0x10216b59;c.drawPath(path,paint)
             paint.style=Paint.Style.STROKE;paint.strokeWidth=(1.5*density).toFloat();paint.color=0xff216b59.toInt();paint.pathEffect=DashPathEffect(floatArrayOf((6*density).toFloat(),(4*density).toFloat()),0f);c.drawPath(path,paint);paint.pathEffect=null}
         paint.style=Paint.Style.STROKE;paint.strokeWidth=density.toFloat();paint.color=0x77216b59
-        selected.forEach{s->val b=geometry.bounds(s)?:return@forEach;val a=screen(EraserPoint(b.left.toFloat()+dx,b.top.toFloat()+dy));val z=screen(EraserPoint(b.right.toFloat()+dx,b.bottom.toFloat()+dy));c.drawRect(a.x.toFloat(),a.y.toFloat(),z.x.toFloat(),z.y.toFloat(),paint)}
-        selectedObjects.forEach{b->val a=screen(EraserPoint(b.left.toFloat(),b.top.toFloat()));val z=screen(EraserPoint(b.right.toFloat(),b.bottom.toFloat()));c.drawRect(a.x.toFloat(),a.y.toFloat(),z.x.toFloat(),z.y.toFloat(),paint)}
+        selected.forEach{s->val vp=canvasView!!.snapshotViewport();val f=(vp.zoom*density).toFloat()
+            val outline=Path(geometry.path(s));outline.transform(Matrix().apply{setScale(f,f);postTranslate((width/2-vp.centerX*f+dx*f).toFloat(),(height/2-vp.centerY*f+dy*f).toFloat())});c.drawPath(outline,paint)}
+        selectedObjects.forEach{b->val a=screen(EraserPoint(b.left.toFloat()+dx,b.top.toFloat()+dy));val z=screen(EraserPoint(b.right.toFloat()+dx,b.bottom.toFloat()+dy));c.drawRect(a.x.toFloat(),a.y.toFloat(),z.x.toFloat(),z.y.toFloat(),paint)}
     }
     override fun onTouchEvent(e:MotionEvent):Boolean{
         val view=canvasView?:return true
@@ -54,15 +58,21 @@ internal class SelectionOverlayView(context:Context):View(context){
         if(e.actionMasked==MotionEvent.ACTION_CANCEL){cancel();view.onTouchEvent(e);return true}
         when(e.actionMasked){
             MotionEvent.ACTION_DOWN->{pointer=e.getPointerId(0);start=author(e.x,e.y);trail.clear();trail+=start;dx=0f;dy=0f
-                moving=selected.isNotEmpty()&&region?.contains(start.x.toDouble(),start.y.toDouble())==true
+                moving=(selected.mapNotNull{geometry.bounds(it)}+selectedObjects).reduceOrNull{a,b->a.union(b)}?.padded(8.0)?.let{start.x>=it.left&&start.x<=it.right&&start.y>=it.top&&start.y<=it.bottom}==true
                 if(moving){
                     // Cache translation bounds once, not a page-sized allocation at every move.
                     val samples=selected.asSequence().flatMap{it.samples.asSequence()}.toList()
-                    val world=selected.first().world
-                    minDx=(if(world)-BoardLimits.WORLD else 0f)-samples.minOf{it.x}
-                    maxDx=(if(world)BoardLimits.WORLD else InkLimits.WIDTH)-samples.maxOf{it.x}
-                    minDy=(if(world)-BoardLimits.WORLD else 0f)-samples.minOf{it.y}
-                    maxDy=(if(world)BoardLimits.WORLD else InkLimits.HEIGHT)-samples.maxOf{it.y}
+                    val world=worldSelection
+                    val xs=samples.map{it.x}+selectedObjects.flatMap{listOf(it.left.toFloat(),it.right.toFloat())}
+                    val ys=samples.map{it.y}+selectedObjects.flatMap{listOf(it.top.toFloat(),it.bottom.toFloat())}
+                    minDx=(if(world)-BoardLimits.WORLD else 0f)-xs.min()
+                    maxDx=(if(world)BoardLimits.WORLD else InkLimits.WIDTH)-xs.max()
+                    minDy=(if(world)-BoardLimits.WORLD else 0f)-ys.min()
+                    maxDy=(if(world)BoardLimits.WORLD else InkLimits.HEIGHT)-ys.max()
+                    if(world)selectedObjects.forEach{b->
+                        minDx=maxOf(minDx,(-BoardLimits.WORLD+(b.right-b.left)-b.left).toFloat())
+                        minDy=maxOf(minDy,(-BoardLimits.WORLD+(b.bottom-b.top)-b.top).toFloat())
+                    }
                     activeIds=selected.map{it.id}.toSet()
                 }
                 parent?.requestDisallowInterceptTouchEvent(true);onActive(true);invalidate()}
@@ -70,16 +80,25 @@ internal class SelectionOverlayView(context:Context):View(context){
                 val index=e.findPointerIndex(pointer);if(index<0){cancel();return true};val p=author(e.getX(index),e.getY(index))
                 if(moving){dx=p.x-start.x;dy=p.y-start.y
                     dx=dx.coerceIn(minDx,maxDx);dy=dy.coerceIn(minDy,maxDy)
-                    view.selectionPreview(activeIds,dx,dy)
-                }else if(freehand){if(trail.size<512&&hypot(p.x-trail.last().x,p.y-trail.last().y)>1)trail+=p}else {if(trail.size==1)trail+=p else trail[1]=p};invalidate()}
+                    view.selectionPreview(activeIds,dx,dy);view.previewSelectionObjects(objectIds,dx,dy)
+                }else if(freehand){
+                    for(h in 0 until e.historySize){val q=author(e.getHistoricalX(index,h),e.getHistoricalY(index,h));appendTrail(q)}
+                    appendTrail(p)
+                }else {if(trail.size==1)trail+=p else trail[1]=p};invalidate()}
             MotionEvent.ACTION_UP->{if(pointer==-1){view.onTouchEvent(e);return true}
-                val shiftX=dx;val shiftY=dy
+                val release=author(e.x,e.y);if(freehand&&!moving)appendTrail(release)
+                val shiftX=if(moving)(release.x-start.x).coerceIn(minDx,maxDx)else dx
+                val shiftY=if(moving)(release.y-start.y).coerceIn(minDy,maxDy)else dy
                 val next=if(moving)null else runCatching{val end=author(e.x,e.y);InkRegion(if(freehand)trail.toList()else listOf(start,end),!freehand)}.getOrNull()
-                val wasMoving=moving;view.onTouchEvent(e);cancel();if(wasMoving){if(abs(shiftX)+abs(shiftY)>.01f)onShift(shiftX,shiftY)}else onRegion(next)
+                val end=author(e.x,e.y)
+                val tapRadius=(12/(view.snapshotViewport().zoom*density))
+                val tapped=!moving&&hypot(end.x-start.x,end.y-start.y)<tapRadius&&trail.all{hypot(it.x-start.x,it.y-start.y)<tapRadius}
+                val wasMoving=moving;view.onTouchEvent(e);cancel();if(wasMoving){if(abs(shiftX)+abs(shiftY)>.01f)onShift(shiftX,shiftY)}else if(tapped)onTap(end.x,end.y)else onRegion(next)
                 performClick()}
         };return true
     }
-    private fun cancel(){val active=pointer!=-1;pointer=-1;moving=false;dx=0f;dy=0f;trail.clear();canvasView?.selectionPreview(emptySet());if(active)onActive(false);parent?.requestDisallowInterceptTouchEvent(false);invalidate()}
+    private fun appendTrail(p:EraserPoint){if(hypot(p.x-trail.last().x,p.y-trail.last().y)<.5f)return;if(trail.size>=510){val reduced=trail.filterIndexed{i,_->i%2==0};trail.clear();trail.addAll(reduced)};trail+=p}
+    private fun cancel(){val active=pointer!=-1;pointer=-1;moving=false;dx=0f;dy=0f;trail.clear();canvasView?.selectionPreview(emptySet());canvasView?.previewSelectionObjects(emptySet());if(active)onActive(false);parent?.requestDisallowInterceptTouchEvent(false);invalidate()}
     override fun onDetachedFromWindow(){cancel();super.onDetachedFromWindow()}
     override fun performClick():Boolean{super.performClick();return true}
 }

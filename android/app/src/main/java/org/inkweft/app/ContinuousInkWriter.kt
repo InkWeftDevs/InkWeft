@@ -17,35 +17,60 @@ internal class ContinuousInkWriter:ViewModel() {
     private var pendingObjects:List<Pair<PageObjectViewModel,ObjectWrite>> = emptyList()
     private var running=false
     private var direction=0
+    private var erasing=false
+    private val waiting=ArrayDeque<List<Pair<InkViewModel,List<InkStroke>>>>()
+    private val accepting=MutableStateFlow(true);val canWrite=accepting.asStateFlow()
+    private val provisional=MutableStateFlow<Map<InkViewModel,List<InkStroke>>>(emptyMap());val drafts=provisional.asStateFlow()
+    private fun refresh(){
+        mutable.value=!empty()||waiting.isNotEmpty()||running
+        accepting.value=!failure.value&&!erasing&&direction==0&&pendingObjects.isEmpty()&&waiting.size<16
+        provisional.value=waiting.flatMap{it}.groupBy({it.first},{it.second}).mapValues{it.value.flatten()}
+    }
     var onNotice:(String)->Unit={}
     private fun empty()=pending.isEmpty()&&pendingObjects.isEmpty()
-    fun accept(parts:List<Pair<InkViewModel,List<InkStroke>>>,repo:InkRepository)=prepare(parts.map{it.first to InkMutation.Replace(emptyList(),it.second)},emptyList(),repo)
+    fun accept(parts:List<Pair<InkViewModel,List<InkStroke>>>,repo:InkRepository){
+        check(accepting.value&&waiting.size<16){"Writing queue is full"}
+        parts.forEach{(model,strokes)->model.validateQueued(strokes+waiting.flatMap{it}.filter{it.first===model}.flatMap{it.second})}
+        waiting.addLast(parts);refresh();drain(repo)
+    }
+    private fun drain(repo:InkRepository){
+        if(running||!empty()||failure.value||waiting.isEmpty()){refresh();return}
+        val next=waiting.first()
+        prepare(next.map{it.first to InkMutation.Replace(emptyList(),it.second)},emptyList(),repo)
+        waiting.removeFirst();refresh()
+    }
+    fun edit(ink:InkViewModel,objects:PageObjectViewModel,revision:Long,before:List<PageObject>,change:InkMutation?,after:List<PageObject>,repo:InkRepository):Boolean{
+        if(running||!empty()||failure.value||waiting.isNotEmpty()||ink.ui.value.revision!=revision||ink.ui.value.queued!=0||objects.ui.value.objects!=before){onNotice("内容已变化，请重新选择");return false}
+        return try{prepare(if(change==null)emptyList()else listOf(ink to change),if(after==before)emptyList()else listOf(objects to after),repo);true}
+        catch(_:Exception){onNotice("超出页面或容量限制，原内容保留");false}
+    }
     private fun prepare(ink:List<Pair<InkViewModel,InkMutation>>,objects:List<Pair<PageObjectViewModel,List<PageObject>>>,repo:InkRepository){
         check(empty())
         ink.forEach{it.first.validateChange(it.second)};objects.forEach{it.first.validateExternal(it.second)}
         pending=ink.map{it.first to it.first.prepareChange(it.second)}
         pendingObjects=objects.map{it.first to it.first.prepareExternal(it.second)}
-        direction=0;mutable.value=!empty();if(!empty())retry(repo)
+        direction=0;if(empty())erasing=false;refresh();if(!empty())retry(repo)
     }
-    fun erase(targets:List<PageEraseTarget>,radius:Float,whole:Boolean,onlyHighlighter:Boolean,repo:InkRepository){
-        if(running||!empty())return
+    fun erase(targets:List<PageEraseTarget>,radius:Float,whole:Boolean,onlyHighlighter:Boolean,repo:InkRepository,onlyTape:Boolean=false){
+        if(running||!empty()||waiting.isNotEmpty())return
+        erasing=true
         val snapshots=targets.map{it.ink.ui.value};val originals=targets.map{it.objects.ui.value.objects}
-        running=true;mutable.value=true
+        running=true;refresh()
         viewModelScope.launch {
             try {
-                val ink=withContext(Dispatchers.Default){targets.mapIndexedNotNull{i,t->ensureActive();t.ink.eraseChange(snapshots[i].strokes,t.path,radius,whole,onlyHighlighter)?.let{t.ink to it}}}
+                val ink=if(onlyTape)emptyList()else withContext(Dispatchers.Default){targets.mapIndexedNotNull{i,t->ensureActive();t.ink.eraseChange(snapshots[i].strokes,t.path,radius,whole,onlyHighlighter)?.let{t.ink to it}}}
                 check(targets.indices.all{i->targets[i].ink.ui.value.revision==snapshots[i].revision&&targets[i].ink.ui.value.queued==0&&targets[i].objects.ui.value.objects==originals[i]})
-                val objects=if(onlyHighlighter)emptyList()else targets.mapNotNull{t->t.objects.erasedBeauty(t.path,radius,whole).takeIf{it!=t.objects.ui.value.objects}?.let{t.objects to it}}
+                val objects=if(onlyHighlighter)emptyList()else targets.mapNotNull{t->(if(onlyTape)t.objects.erasedTapes(t.path,radius)else t.objects.erasedBeauty(t.path,radius,whole)).takeIf{it!=t.objects.ui.value.objects}?.let{t.objects to it}}
                 running=false;mutable.value=false;prepare(ink,objects,repo)
             }catch(c:CancellationException){throw c}
-            catch(_:Exception){running=false;mutable.value=false;onNotice("页面已变化，本次擦除未应用，请重试。")}
+            catch(_:Exception){running=false;erasing=false;refresh();onNotice("页面已变化，本次擦除未应用，请重试。")}
         }
     }
     private data class Member(val history:EditorHistory,val identity:(Boolean)->Any?,val ready:(Boolean)->Boolean,
         val prepare:(Boolean)->Unit,val register:(Boolean,()->Unit)->Unit)
     fun retry(repo:InkRepository){
         if(running||empty())return
-        running=true;failure.value=false
+        running=true;failure.value=false;refresh()
         viewModelScope.launch {
             val captured=pending;val capturedObjects=pendingObjects
             val result=try{withContext(Dispatchers.IO){repo.saveCanvasBatch(captured.map{it.second},capturedObjects.map{it.second})}}
@@ -71,7 +96,7 @@ internal class ContinuousInkWriter:ViewModel() {
                 }
                 pending=emptyList();pendingObjects=emptyList();mutable.value=false
             }else failure.value=true
-            running=false
+            running=false;erasing=false;direction=0;refresh();if(result.failure==null)drain(repo)
         }
     }
     /** Called only after the user confirms reading the durable pages instead of retaining this draft. */
@@ -79,6 +104,6 @@ internal class ContinuousInkWriter:ViewModel() {
         if(running||!failure.value)return
         pending.forEach{(m,c)->m.completeGroup(c,InkCommitResult.Conflict);m.discardRejectedDraft()}
         pendingObjects.forEach{it.first.discardExternal()}
-        pending=emptyList();pendingObjects=emptyList();failure.value=false;mutable.value=false
+        pending=emptyList();pendingObjects=emptyList();waiting.clear();failure.value=false;erasing=false;direction=0;refresh()
     }
 }

@@ -282,7 +282,7 @@ private fun NoteTile(note:Note,row:WorkspaceRow,inkRevision:Long,count:Int,grid:
             }
         }}
         if(row.pinned)Text("置顶",fontSize=10.sp,color=Forest,modifier=Modifier.testTag("pinned-${note.id}"))
-        Text(date+(if(count>0)" · $count 笔"else""),fontSize=12.sp,color=Quiet)
+        Text(date,fontSize=12.sp,color=Quiet)
         if(row.folder.isNotBlank())Text(row.folder,fontSize=10.sp,color=Quiet,modifier=Modifier.padding(top=5.dp))
     }
     if(grid)Column(Modifier.fillMaxWidth().padding(horizontal=8.dp),horizontalAlignment=Alignment.CenterHorizontally){art(Modifier.width(136.dp).height(185.dp));Column(Modifier.fillMaxWidth().padding(top=8.dp),horizontalAlignment=Alignment.CenterHorizontally){info()}}

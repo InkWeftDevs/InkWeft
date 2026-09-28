@@ -20,7 +20,7 @@ import java.util.UUID
 class PenPresetUiTest {
     @get:Rule val compose=createAndroidComposeRule<MainActivity>()
     private val app get()=compose.activity.application as InkWeftApplication
-    private fun saved(n:Int){compose.waitUntil(10_000){runCatching{compose.onNodeWithTag("ink-status").assertTextContains("已保存",substring=true).assertTextContains("$n 笔",substring=true)}.isSuccess}}
+    private fun saved(n:Int){compose.waitUntil(10_000){runCatching{compose.onNodeWithTag("ink-status").assertTextContains("已保存",substring=true).assertInkCount(n)}.isSuccess}}
     private fun create():String {
         compose.waitUntil(10_000){runCatching{compose.onNodeWithTag("new-note").assertIsEnabled()}.isSuccess}
         val title="预设测试-"+UUID.randomUUID().toString().take(6)
@@ -32,11 +32,11 @@ class PenPresetUiTest {
     private fun draw(){compose.onNodeWithTag("ink-surface").performTouchInput{swipe(Offset(width*.25f,height*.3f),Offset(width*.5f,height*.5f),200)}}
     @Test fun panelSavesColorAndWidthWithoutChangingEarlierStroke(){
         val id=create();val previous=PenWidthStore(compose.activity,"inkweft-pen-widths-book-"+id).readColors()[0]
-        compose.onNodeWithTag("ink-more").performClick();compose.onNodeWithTag("ink-finger").performScrollTo().performClick();draw();saved(1)
+        compose.onNodeWithTag("ink-more").performScrollTo().performClick();compose.onNodeWithTag("ink-finger").performScrollTo().performClick();draw();saved(1)
         val original=runBlocking{app.inkRepository.read(id).strokes.single().stroke}
         assertEquals(previous,original.color)
         compose.openCurrentPen()
-        compose.onNodeWithTag("pen-kind-brush").performScrollTo().performClick();compose.onNodeWithTag("width-preset-2").performScrollTo().performClick();compose.onNodeWithTag("pen-color-2").performScrollTo().performClick()
+        compose.selectPen("brush");compose.openCurrentPen();compose.onNodeWithTag("width-preset-2").performScrollTo().performClick();compose.onNodeWithTag("pen-color-2").performScrollTo().performClick()
         compose.onNodeWithTag("pen-width-dialog").assertIsDisplayed()
         val bmp=checkNotNull(InstrumentationRegistry.getInstrumentation().uiAutomation.takeScreenshot())
         try{File(compose.activity.getExternalFilesDir(null),"pen-presets-popover.png").outputStream().use{bmp.compress(Bitmap.CompressFormat.PNG,100,it)}}finally{bmp.recycle()}
@@ -52,7 +52,7 @@ class PenPresetUiTest {
     }
     @Test fun closingKeepsLiveParametersWithoutMakingAnInkStroke(){
         val id=create();val before=PenWidthStore(compose.activity,"inkweft-pen-widths-book-"+id).read();val colors=PenWidthStore(compose.activity,"inkweft-pen-widths-book-"+id).readColors()
-        compose.openCurrentPen();compose.onNodeWithTag("pen-kind-marker").performScrollTo().performClick();compose.onNodeWithTag("width-preset-0").performScrollTo().performClick();compose.onNodeWithTag("pen-color-3").performScrollTo().performClick()
+        compose.openCurrentPen();compose.selectPen("marker");compose.openCurrentPen();compose.onNodeWithTag("width-preset-0").performScrollTo().performClick();compose.onNodeWithTag("pen-color-3").performScrollTo().performClick()
         compose.closePenSettings();saved(0)
         assertEquals(1.5f,PenWidthStore(compose.activity,"inkweft-pen-widths-book-"+id).read()[0]);assertEquals(PenWidthStore.colors(0)[3],PenWidthStore(compose.activity,"inkweft-pen-widths-book-"+id).readColors()[0])
         assertEquals(InkPen.MARKER,PenWidthStore(compose.activity,"inkweft-pen-widths-book-"+id).readKinds()[0]);assertTrue(runBlocking{app.inkRepository.read(id).strokes}.isEmpty())

@@ -25,10 +25,20 @@ internal class VisibleInkGeometry {
         cache[stroke]=result
     }
     fun bounds(stroke:InkStroke)=bounds(path(stroke))
-    fun selects(region:InkRegion,stroke:InkStroke)=stroke.bounds().intersects(region.bounds)&&contains(region,path(stroke))
-    fun selects(region:InkRegion,obj:PageObject):Boolean {
+    fun hits(stroke:InkStroke,eraser:List<InkSample>,radius:Float):Boolean {
+        if(!InkHitTest.hits(stroke,eraser,radius))return false
+        val overlap=Path(path(stroke));overlap.op(sweptPath(eraser.map{EraserPoint(it.x,it.y)},radius),Path.Op.INTERSECT)
+        return !overlap.isEmpty
+    }
+    fun selects(region:InkRegion,stroke:InkStroke,precise:Boolean=false)=stroke.bounds().intersects(region.bounds)&&overlaps(region,path(stroke),precise)
+    fun selects(region:InkRegion,obj:PageObject,precise:Boolean=false):Boolean {
         if(obj.hidden||!obj.bounds().intersects(region.bounds))return false
-        if(obj.glyphs.isEmpty())return region.selects(obj.bounds())
+        if(obj.glyphs.isEmpty()){
+            val outline=ObjectGeometry.path(obj,if(obj.kind==PageObjectKind.SHAPE)obj.lineWidth/2 else 0f)
+            val painted=if(obj.kind==PageObjectKind.SHAPE)Path().also{Paint(Paint.ANTI_ALIAS_FLAG).apply{style=Paint.Style.STROKE;strokeWidth=obj.lineWidth;strokeCap=Paint.Cap.ROUND;strokeJoin=Paint.Join.ROUND}.getFillPath(outline,it)}else outline
+            painted.op(Path().apply{addRect(obj.x,obj.y,obj.x+obj.width,obj.y+obj.height,Path.Direction.CW)},Path.Op.INTERSECT)
+            return overlaps(region,painted,precise)
+        }
         val result=Path();val paint=TextStyles.paint(obj);val box=Rect()
         obj.glyphs.filterNot{it.hidden}.forEach{g->
             paint.style=if(g.weight>0)Paint.Style.FILL_AND_STROKE else Paint.Style.FILL
@@ -47,13 +57,12 @@ internal class VisibleInkGeometry {
             }
         }
         result.op(Path().apply{addRect(obj.x,obj.y,obj.x+obj.width,obj.y+obj.height,Path.Direction.CW)},Path.Op.INTERSECT)
-        return contains(region,result)
+        return overlaps(region,result,precise)
     }
-    private fun contains(region:InkRegion,path:Path):Boolean {
-        val box=bounds(path)?:return false
-        if(region.rectangle)return region.selects(box)
-        val outside=Path(path);outside.op(cutPath(region.mask()),Path.Op.DIFFERENCE)
-        return outside.isEmpty
+    private fun overlaps(region:InkRegion,path:Path,precise:Boolean=false):Boolean {
+        if(bounds(path)==null)return false
+        val inside=Path(path);inside.op(cutPath(region.mask()),if(precise)Path.Op.DIFFERENCE else Path.Op.INTERSECT)
+        return if(precise)inside.isEmpty else !inside.isEmpty
     }
     companion object {
         private fun bounds(path:Path):CanvasBounds? {

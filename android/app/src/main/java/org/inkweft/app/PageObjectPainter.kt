@@ -12,10 +12,13 @@ import java.util.Base64
 internal class PageObjectPainter {
     private val images=object:LinkedHashMap<String,Bitmap?>(8,.75f,true){override fun removeEldestEntry(eldest:MutableMap.MutableEntry<String,Bitmap?>?)=size>8}
     private val layouts=object:LinkedHashMap<PageObject,StaticLayout>(32,.75f,true){override fun removeEldestEntry(eldest:MutableMap.MutableEntry<PageObject,StaticLayout>?)=size>32}
+    private val graphite=object:LinkedHashMap<Int,BitmapShader>(8,.75f,true){override fun removeEldestEntry(eldest:MutableMap.MutableEntry<Int,BitmapShader>?)=size>8}
     private val paint=Paint(Paint.ANTI_ALIAS_FLAG or Paint.FILTER_BITMAP_FLAG)
-    fun clear(){images.clear();layouts.clear()}
-    fun draw(canvas:Canvas,objects:List<PageObject>,tapes:Boolean,visible:CanvasBounds) {
-        objects.filter{!it.hidden&&(it.kind==PageObjectKind.TAPE)==tapes&&it.bounds().intersects(visible)}.forEach { o ->
+    fun clear(){images.clear();layouts.clear();graphite.clear()}
+    fun draw(canvas:Canvas,objects:List<PageObject>,tapes:Boolean,visible:CanvasBounds,liveErase:Path?=null,wholeErase:Boolean=false) {
+        objects.filter{!it.hidden&&(it.kind==PageObjectKind.TAPE)==tapes&&it.bounds().intersects(visible)}.forEach { source ->
+            val o=if(liveErase!=null&&source.sourceStrokeIds.isNotEmpty()&&source.glyphs.isEmpty())source.copy(glyphs=TextStyles.positioned(source))else source
+            paint.alpha=255;paint.style=Paint.Style.FILL;paint.pathEffect=null
             val save=canvas.save();canvas.clipRect(o.x,o.y,o.x+o.width,o.y+o.height)
             when(o.kind) {
                 PageObjectKind.IMAGE->{
@@ -36,23 +39,36 @@ internal class PageObjectPainter {
                         val textPaint=TextStyles.paint(o);val ink=Rect()
                         val masks=o.erasures.map{cut->cut to erasePath(cut,o.x,o.y)}
                         for(g in o.glyphs.filterNot{it.hidden}){
+                            textPaint.shader=null;textPaint.color=g.color?:o.color
                             textPaint.style=if(g.weight>0)Paint.Style.FILL_AND_STROKE else Paint.Style.FILL
                             textPaint.isFakeBoldText=o.bold&&g.weight==0f;textPaint.strokeWidth=o.fontSize*.04f*g.weight;textPaint.strokeJoin=Paint.Join.ROUND
                             val value=o.text.substring(g.start,g.end);textPaint.getTextBounds(value,0,value.length,ink)
                             if(ink.width()==0||ink.height()==0)continue
+                            if(liveErase!=null&&wholeErase){val overlap=Path(liveErase);overlap.op(Path().apply{addRect(o.x+g.x,o.y+g.y,o.x+g.x+g.width,o.y+g.y+g.height,Path.Direction.CW)},Path.Op.INTERSECT);if(!overlap.isEmpty)continue}
                             val glyphSave=canvas.save()
+                            if(liveErase!=null&&!wholeErase)canvas.clipOutPath(liveErase)
                             masks.filter{(cut,_)->cut.start<g.end&&cut.end>g.start}.forEach{(_,path)->canvas.clipOutPath(path)}
                             canvas.translate(o.x+g.x,o.y+g.y)
                             val pad=if(g.weight>0)textPaint.strokeWidth/2 else 0f
                             canvas.scale(g.width/(ink.width()+pad*2),g.height/(ink.height()+pad*2));canvas.translate(-ink.left.toFloat()+pad,-ink.top.toFloat()+pad)
+                            if(g.grain>0){
+                                val tint=g.color?:o.color
+                                val shader=graphite.getOrPut(tint){
+                                    val bitmap=Bitmap.createBitmap(64,64,Bitmap.Config.ARGB_8888)
+                                    val pixels=GraphiteMaterial.alpha().map{a->((((a.toInt()and 255)*(tint ushr 24)/255) shl 24)or(tint and 0xffffff))}.toIntArray()
+                                    bitmap.setPixels(pixels,0,64,0,0,64,64);BitmapShader(bitmap,Shader.TileMode.REPEAT,Shader.TileMode.REPEAT)
+                                }
+                                shader.setLocalMatrix(Matrix().apply{setScale(.5f*g.grain*(ink.width()+pad*2)/g.width,.5f*g.grain*(ink.height()+pad*2)/g.height)})
+                                textPaint.alpha=255;textPaint.shader=shader
+                            }
                             canvas.drawText(value,0f,0f,textPaint);canvas.restoreToCount(glyphSave)
                         }
                     }
                 }
-                PageObjectKind.TAPE->{
-                    paint.color=o.color or 0xff000000.toInt();paint.style=if(o.revealed)Paint.Style.STROKE else Paint.Style.FILL;paint.strokeWidth=2f
-                    canvas.drawRect(o.x+1,o.y+1,o.x+o.width-1,o.y+o.height-1,paint);paint.style=Paint.Style.FILL
-                }
+                PageObjectKind.TAPE->TapeArt.draw(canvas,o)
+                PageObjectKind.SHAPE->{paint.color=o.color;paint.style=Paint.Style.STROKE;paint.strokeWidth=o.lineWidth;paint.strokeJoin=Paint.Join.ROUND;paint.strokeCap=Paint.Cap.ROUND
+                    // Inset a half stroke so borders survive object clipping.
+                    canvas.drawPath(ObjectGeometry.path(o,o.lineWidth/2),paint);paint.style=Paint.Style.FILL}
             };canvas.restoreToCount(save)
         }
     }

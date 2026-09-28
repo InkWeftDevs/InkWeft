@@ -16,7 +16,7 @@ class PenKindsRenderTest {
         (0..60).map{InkSample(30f+it*4,70f+25*kotlin.math.sin(it/6f),it*12L,(pressure*2*it/60f).coerceIn(0f,1f))})
     private fun pixels(stroke:InkStroke):IntArray {
         val bitmap=Bitmap.createBitmap(320,140,Bitmap.Config.ARGB_8888)
-        return try{CanvasStrokeRenderer.create().draw(Canvas(bitmap),InkBrushes.stroke(stroke),Matrix())
+        return try{InkBrushes.renderer().draw(Canvas(bitmap),InkBrushes.stroke(stroke),Matrix())
             IntArray(320*140).also{bitmap.getPixels(it,0,320,0,0,320,140)}}finally{bitmap.recycle()}
     }
     @Test fun actualNativeBrushesDifferAndUniformPensIgnorePressure(){
@@ -34,9 +34,9 @@ class PenKindsRenderTest {
     }
     @Test fun saveFiveBrushComparisonFromNativeRenderer(){
         InstrumentationRegistry.getInstrumentation().runOnMainSync{
-            val bitmap=Bitmap.createBitmap(700,550,Bitmap.Config.ARGB_8888);val canvas=Canvas(bitmap);canvas.drawColor(Color.WHITE)
+            val bitmap=Bitmap.createBitmap(700,650,Bitmap.Config.ARGB_8888);val canvas=Canvas(bitmap);canvas.drawColor(Color.WHITE)
             val paint=Paint(Paint.ANTI_ALIAS_FLAG).apply{color=Color.DKGRAY;textSize=22f}
-            val renderer=CanvasStrokeRenderer.create()
+            val renderer=InkBrushes.renderer()
             try{(PenKinds.writing+InkPen.HIGHLIGHTER).forEachIndexed{i,pen->
                 canvas.drawText(PenKinds.title(pen),20f,55f+i*100,paint)
                 val s=InkStroke(UUID.randomUUID().toString(),pen,if(pen==InkPen.HIGHLIGHTER)0x66d1a200 else 0xff15533f.toInt(),18f,InkTool.STYLUS,

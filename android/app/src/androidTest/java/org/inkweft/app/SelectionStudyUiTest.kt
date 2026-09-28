@@ -42,7 +42,7 @@ class SelectionStudyUiTest {
         }
     }
     private fun ready(){compose.waitUntil(15_000){runCatching{compose.onNodeWithTag("new-note").assertIsEnabled()}.isSuccess}}
-    private fun saved(n:Int){compose.waitUntil(15_000){runCatching{compose.onNodeWithTag("ink-status").assertTextContains("已保存",substring=true).assertTextContains("$n 笔",substring=true)}.isSuccess}}
+    private fun saved(n:Int){compose.waitUntil(15_000){runCatching{compose.onNodeWithTag("ink-status").assertTextContains("已保存",substring=true).assertInkCount(n)}.isSuccess}}
     private fun seed():Pair<Note,InkStroke>{
         ready();val n=runBlocking{app.workspaceRepository.create("学习整合-${id().take(6)}",false,PaperStyle.BLANK)}
         val s=InkStroke(id(),InkPen.PEN,0xff000000.toInt(),3f,InkTool.STYLUS,listOf(InkSample(200f,600f,0,.5f),InkSample(300f,600.6f,30,.5f),InkSample(400f,600f,60,.5f),InkSample(600f,600f,100,.5f)))
@@ -82,10 +82,10 @@ class SelectionStudyUiTest {
         compose.onNodeWithTag("ink-undo").performScrollTo().performClick();saved(1);compose.waitUntil(10_000){runBlocking{app.inkRepository.read(n.id).revision}==3L};assertTrue(InkSession(runBlocking{app.inkRepository.read(n.id)}).visibleDraft().single().cuts.isEmpty())
     }
     @Test fun beautifyPreviewCancelThenApplyIsReversible(){
-        val(n,s)=seed();select();compose.onNodeWithTag("selection-beautify").performScrollTo().assertIsEnabled().performClick()
+        val(n,s)=seed();select();compose.onNodeWithTag("selection-more").performClick();compose.onNodeWithTag("selection-beautify").performScrollTo().assertIsEnabled().performClick()
         compose.onNodeWithTag("beautify-dialog").assertIsDisplayed();awaitBeauty();shot("beautify-preview.png")
         compose.onNodeWithText("取消",useUnmergedTree=true).performClick();assertEquals(1L,runBlocking{app.inkRepository.read(n.id).revision})
-        compose.onNodeWithTag("selection-beautify").performScrollTo().performClick();awaitBeauty()
+        compose.onNodeWithTag("selection-more").performClick();compose.onNodeWithTag("selection-beautify").performScrollTo().performClick();awaitBeauty()
         compose.onNodeWithTag("beautify-strength").performSemanticsAction(androidx.compose.ui.semantics.SemanticsActions.SetProgress){it(.2f)}
         compose.onNodeWithTag("beautify-strength").performSemanticsAction(androidx.compose.ui.semantics.SemanticsActions.SetProgress){it(.8f)}
         awaitBeauty();compose.onNodeWithTag("apply-beautify").performClick();saved(1)
@@ -101,7 +101,7 @@ class SelectionStudyUiTest {
         assertEquals(s.id,InkSession(runBlocking{app.inkRepository.read(n.id)}).visibleDraft().single().id)
     }
     @Test fun excerptCreatesSharedCardAndReturnsToSource(){
-        val(n,s)=seed();select();compose.onNodeWithTag("selection-excerpt").performScrollTo().performClick()
+        val(n,s)=seed();select();compose.onNodeWithTag("selection-more").performClick();compose.onNodeWithTag("selection-excerpt").performScrollTo().performClick()
         addCard("拉格朗日中值定理","先核对连续与可导条件")
         val card=runBlocking{app.study.cards(n.id).first()}.single();val snapshot=runBlocking{app.study.source(card.id)}!!
         assertEquals(s.id,InkPageFile.decode(snapshot.snapshot).strokes.single().id)

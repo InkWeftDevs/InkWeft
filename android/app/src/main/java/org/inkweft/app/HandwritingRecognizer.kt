@@ -74,7 +74,9 @@ internal class HandwritingRecognizer(context:Context) {
         return Bitmap.createBitmap(width,height,Bitmap.Config.ARGB_8888).also{bitmap->
             val canvas=Canvas(bitmap);canvas.drawColor(Color.WHITE);canvas.scale(scale.toFloat(),scale.toFloat());canvas.translate(-b.left.toFloat(),-b.top.toFloat())
             val paint=Paint(Paint.ANTI_ALIAS_FLAG).apply{color=Color.BLACK;style=Paint.Style.STROKE;strokeCap=Paint.Cap.ROUND;strokeJoin=Paint.Join.ROUND}
+            val geometry=VisibleInkGeometry()
             for(s in line.strokes){val save=canvas.save()
+                if(s.pen==InkPen.PENCIL){paint.style=Paint.Style.FILL;canvas.drawPath(geometry.path(s),paint);paint.style=Paint.Style.STROKE;canvas.restoreToCount(save);continue}
                 for(cut in s.cuts){val path=Path();val first=cut.points.first();path.moveTo(first.x,first.y);cut.points.drop(1).forEach{path.lineTo(it.x,it.y)}
                     if(cut.shape==InkCutShape.RECTANGLE){val last=cut.points.last();path.reset();path.addRect(first.x,first.y,last.x,last.y,Path.Direction.CW);canvas.clipOutPath(path)}
                     else if(cut.shape==InkCutShape.POLYGON){path.close();canvas.clipOutPath(path)}

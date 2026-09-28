@@ -33,8 +33,8 @@ class ContinuousWritingUiTest {
     }
     private fun canvas(page:String):InkCanvasView=checkNotNull(compose.activity.window.decorView.findViewWithTag("ink-page-$page"))
     private fun single():InkCanvasView {
-        compose.onNodeWithText("单页缩放").performScrollTo().performClick();compose.waitForIdle()
-        fun find(v:View):InkCanvasView?{if(v is InkCanvasView&&!v.preview)return v;if(v is ViewGroup)for(i in 0 until v.childCount)find(v.getChildAt(i))?.let{return it};return null}
+        compose.singlePageEditor();compose.waitForIdle()
+        fun find(v:View):InkCanvasView?{if(v is InkCanvasView&&!v.preview&&!v.embeddedPage)return v;if(v is ViewGroup)for(i in 0 until v.childCount)find(v.getChildAt(i))?.let{return it};return null}
         return checkNotNull(find(compose.activity.window.decorView))
     }
     private fun line(v:InkCanvasView,points:List<Pair<Float,Float>>){
@@ -53,6 +53,16 @@ class ContinuousWritingUiTest {
             listOf(290f to 300f,340f to 300f),listOf(315f to 300f,315f to 400f),listOf(290f to 400f,340f to 400f)).forEachIndexed{index,points->compose.runOnIdle{line(canvas(page),points)};compose.waitUntil(10_000){runBlocking{app.inkRepository.read(page).strokes.size}==index+1}}
     }
     private fun shot(name:String){compose.waitForIdle();val b=checkNotNull(InstrumentationRegistry.getInstrumentation().uiAutomation.takeScreenshot());try{File(app.getExternalFilesDir(null),name).outputStream().use{b.compress(Bitmap.CompressFormat.PNG,100,it)}}finally{b.recycle()}}
+
+    @Test fun tapeTapInContinuousPagesTogglesExactlyOnceForFingerAndStylus(){
+        val tape=PageObject(id(),PageObjectKind.TAPE,300f,100f,400f,80f)
+        val n=open{app.pageObjects.save(it.id,0,id(),listOf(tape))}
+        compose.onNodeWithTag("continuous-page-1").performTouchInput{click(Offset(width*.5f,width*.14f))}
+        compose.waitUntil(10000){runBlocking{app.pageObjects.read(n.id).objects.single().revealed}};compose.waitForIdle()
+        compose.runOnIdle{line(canvas(n.id),listOf(500f to 140f,500f to 140f))}
+        compose.waitUntil(10000){!runBlocking{app.pageObjects.read(n.id).objects.single().revealed}}
+        assertTrue(runBlocking{app.inkRepository.read(n.id).strokes.isEmpty()})
+    }
 
     @Test fun pressureOnlyDuplicateSamplesReopenWithoutChangingAuthorData(){
         val samples=listOf(InkSample(610.605f,774.094f,463,.3f,.2f,.1f),InkSample(610.605f,774.094f,463,.31f,.2f,.1f),InkSample(620f,780f,480,.5f,.2f,.1f))
@@ -175,7 +185,7 @@ class ContinuousWritingUiTest {
             val move=MotionEvent.obtain(now,now+30,MotionEvent.ACTION_MOVE,-50000f,-50000f,0);v.dispatchTouchEvent(move);move.recycle()
             val up=MotionEvent.obtain(now,now+40,MotionEvent.ACTION_UP,-50000f,-50000f,0);v.dispatchTouchEvent(up);up.recycle()
             val bounds=v.snapshotViewport().visible(v.width.toDouble(),v.height.toDouble(),v.resources.displayMetrics.density.toDouble())
-            assertTrue(bounds.right<=1000.01);assertTrue(bounds.bottom<=1414.01)
+            assertTrue("right=$bounds viewport=${v.snapshotViewport()} embedded=${v.embeddedPage} size=${v.width}x${v.height}",bounds.right<=1000.01);assertTrue("bottom=$bounds viewport=${v.snapshotViewport()} embedded=${v.embeddedPage} size=${v.width}x${v.height}",bounds.bottom<=1414.01)
         }
         compose.activityRule.scenario.recreate();compose.waitForIdle()
         val restored=compose.onNodeWithTag("floating-pen-case").fetchSemanticsNode().boundsInRoot
@@ -196,4 +206,29 @@ class ContinuousWritingUiTest {
         assertEquals(TextFont.SERIF,runBlocking{app.pageObjects.read(note.id).objects.single().font})
         compose.onNodeWithTag("font-beauty-dialog").assertDoesNotExist()
     }
+    @Test fun pencilAutomaticallyConvertsWithSelectedFont(){
+        val note=open();compose.selectPen("pencil");compose.openBeautySettings();compose.onNodeWithTag("beauty-enabled").performClick();compose.onNodeWithTag("beauty-close").performClick()
+        hi(note.id)
+        compose.waitUntil(45000){runBlocking{app.pageObjects.read(note.id).objects.any{!it.hidden}}}
+        val result=runBlocking{app.pageObjects.read(note.id).objects.single()}
+        assertTrue(result.text.isNotBlank());assertEquals(6,result.sourceStrokeIds.size);assertEquals(TextFont.WENKAI,result.font)
+        assertTrue(runBlocking{app.inkRepository.read(note.id).strokes.all{it.stroke.pen==InkPen.PENCIL}})
+    }
+
+    @Test fun rapidSuccessiveStrokesRemainQueuedUntilAllAreSaved(){
+        val note=open(2)
+        compose.runOnIdle{repeat(6){i->line(canvas(note.id),listOf(200f+i*40 to 300f,200f+i*40 to 450f))}}
+        compose.waitUntil(15000){runBlocking{app.inkRepository.read(note.id).strokes.size}==6&&app.navigationReady.value}
+        compose.onNodeWithTag("ink-undo").performClick();compose.waitUntil(10000){runBlocking{InkSession(app.inkRepository.read(note.id)).visibleDraft().size}==5}
+        compose.onNodeWithTag("ink-redo").performClick();compose.waitUntil(10000){runBlocking{InkSession(app.inkRepository.read(note.id)).visibleDraft().size}==6}
+    }
+
+    @Test fun erasingEmptyPaperDoesNotBlockTheNextStroke(){
+        val note=open()
+        compose.runOnIdle{canvas(note.id).eraseMode=true;line(canvas(note.id),listOf(200f to 300f,300f to 400f))}
+        compose.waitUntil(10000){app.navigationReady.value}
+        compose.runOnIdle{canvas(note.id).eraseMode=false;line(canvas(note.id),listOf(400f to 300f,500f to 400f))}
+        compose.waitUntil(10000){runBlocking{app.inkRepository.read(note.id).strokes.size}==1}
+    }
+
 }

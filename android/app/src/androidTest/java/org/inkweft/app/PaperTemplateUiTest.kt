@@ -56,7 +56,7 @@ class PaperTemplateUiTest {
         runBlocking{app.inkRepository.save(CommitInk(UUID.randomUUID().toString(),n.id,0,InkMutation.Add(stroke)))}
         compose.runOnIdle{ViewModelProvider(compose.activity)[NotebookViewModel::class.java].select(n)};compose.singlePageEditor()
         compose.waitUntil(10000){runCatching{compose.onNodeWithTag("ink-status").assertTextContains("已保存",substring=true)}.isSuccess}
-        fun picker(){compose.onNodeWithTag("ink-more").performClick();compose.onNodeWithTag("change-paper").performClick()}
+        fun picker(){compose.onNodeWithTag("ink-more").performScrollTo().performClick();compose.onNodeWithTag("change-paper").performClick()}
         picker();compose.onNodeWithTag("paper-search").performTextInput("会议")
         compose.onNodeWithTag("paper-option-meeting").performScrollTo().performClick();compose.onNodeWithTag("paper-picker-cancel").performClick()
         assertEquals(PaperStyle.GRID.ordinal,runBlocking{app.pages.activePages(n.id)}.single().paper)
