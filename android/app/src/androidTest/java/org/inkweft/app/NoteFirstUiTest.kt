@@ -55,6 +55,23 @@ class NoteFirstUiTest {
   tap("study-close");compose.openCurrentPen();screenshot("pen-basic");tap("pen-advanced");screenshot("pen-advanced");tap("pen-custom-open");compose.onNodeWithTag("pen-custom-color").performScrollTo().assertIsDisplayed();compose.closePenSettings()
   assertEquals(12L,runBlocking{app.inkRepository.read(book).revision})
  }
+ @Test fun fullscreenKeepsMapAndCaptureReachable(){
+  val book=fixture();tap("toolbar-more");tap("toolbar-customize")
+  compose.onNodeWithTag("toolbar-visible-fullscreen").performScrollTo().performClick();tap("toolbar-done")
+  tap("toolbar-more");compose.onNodeWithTag("quick-fullscreen").performScrollTo().performClick();ready()
+  compose.onNodeWithTag("notebook-tabs").assertDoesNotExist()
+  listOf("ink-undo","ink-redo","top-draw","top-eraser","ink-select","top-excerpt","quick-study").forEach{compose.onNodeWithTag(it).assertIsDisplayed()}
+  tap("quick-study");compose.onNodeWithTag("study-window-drag").assertIsDisplayed();screenshot("fullscreen-map")
+  tap("study-close");tap("top-excerpt")
+  var first=Offset.Zero;var last=Offset.Zero
+  compose.runOnIdle{val v=find<SelectionOverlayView>();val vp=v.canvasView!!.snapshotViewport();val d=v.resources.displayMetrics.density.toDouble();val a=vp.worldToScreen(140.0,300.0,v.width.toDouble(),v.height.toDouble(),d);val b=vp.worldToScreen(650.0,400.0,v.width.toDouble(),v.height.toDouble(),d);first=Offset(a.x.toFloat(),a.y.toFloat());last=Offset(b.x.toFloat(),b.y.toFloat())}
+  compose.onNodeWithTag("selection-overlay").performTouchInput{swipe(first,last,500)}
+  screenshot("fullscreen-capture")
+  compose.waitUntil(10000){compose.onAllNodesWithTag("study-add-source").fetchSemanticsNodes().isNotEmpty()}
+  compose.onNodeWithTag("study-add-source").assertIsDisplayed();assertTrue(runBlocking{app.study.cards(book).first()}.isEmpty())
+  tap("study-close");tap("exit-fullscreen")
+  compose.onNodeWithTag("notebook-tabs").assertIsDisplayed()
+ }
  @Test fun selectionPreviewMakesNoCardUntilExplicitAdd(){
   val book=fixture();tap("top-excerpt")
   compose.runOnIdle{find<SelectionOverlayView>().onRegion(InkRegion(listOf(EraserPoint(100f,260f),EraserPoint(700f,400f))))}
@@ -98,12 +115,15 @@ class NoteFirstUiTest {
  private fun responsive(width:Int,font:Float){
   val automation=androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().uiAutomation
   fun shell(command:String){automation.executeShellCommand(command).use{android.os.ParcelFileDescriptor.AutoCloseInputStream(it).use{input->input.readBytes()}}}
-  shell("wm size ${width*2}x1600");shell("wm density 320");shell("settings put system font_scale $font")
+  // MuMu caps physical width at 2160px; use mdpi for wider logical windows.
+  val pixelsPerDp=if(width>1080)1 else 2
+  shell("wm size ${width*pixelsPerDp}x${800*pixelsPerDp}");shell("wm density ${160*pixelsPerDp}");shell("settings put system font_scale $font")
   android.os.SystemClock.sleep(800);compose.activityRule.scenario.recreate();val book=fixture()
+  assertTrue("Requested logical width was not applied",kotlin.math.abs(compose.activity.resources.configuration.screenWidthDp-width)<=4)
   runBlocking{val root=id();app.study.submit(StudyCommand(id(),book,StudyAction.CREATE,cardId=id(),nodeId=root,title="条件概率",x=40.0,y=100.0));app.study.submit(StudyCommand(id(),book,StudyAction.CREATE,cardId=id(),nodeId=id(),parentId=root,title="公式与方法",x=300.0,y=60.0));app.study.submit(StudyCommand(id(),book,StudyAction.CREATE,cardId=id(),nodeId=id(),parentId=root,title="独立与互斥",x=300.0,y=188.0))}
   listOf("ink-undo","ink-redo","top-draw","top-eraser","ink-select","top-excerpt","quick-study").forEach{tag->
    val b=compose.onNodeWithTag(tag).assertIsDisplayed().fetchSemanticsNode().boundsInRoot
-   assertTrue("$tag clipped horizontally",b.left>=0&&b.right<=width*2+1);assertTrue("$tag too small",b.width>=95&&b.height>=95)
+   assertTrue("$tag clipped horizontally",b.left>=0&&b.right<=width*pixelsPerDp+1);assertTrue("$tag too small",b.width>=48*pixelsPerDp-1&&b.height>=48*pixelsPerDp-1)
   }
   screenshot("layout-$width-$font-writing");tap("quick-study");compose.onNodeWithTag("study-window-drag").assertIsDisplayed();screenshot("layout-$width-$font-map")
   tap("study-close");compose.openCurrentPen();compose.onNodeWithTag("pen-advanced").assertIsDisplayed();screenshot("layout-$width-$font-pen")

@@ -90,6 +90,7 @@ internal class StudyViewModel(val book:String,val repo:StudyRepository,private v
 internal class StudyPanelSession:ViewModel(){
     val opened=mutableStateOf(false)
     val source=mutableStateOf<StudySourceDraft?>(null)
+    val captureRequest=mutableLongStateOf(0L)
     val card=mutableStateOf<String?>(null)
 }
 internal data class CardEditor(val card:StudyCardRow?=null,val parent:StudyNodeRow?=null,val source:StudySourceDraft?=null)
@@ -100,7 +101,7 @@ internal fun StudyWorkspace(note:NoteDraft,initialSource:StudySourceDraft?,dismi
     }
 }
 @Composable
-internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss:()->Unit,initialQuery:String="",initialCardId:String?=null,documentReady:Boolean=true,compactWindow:Boolean=false,openSource:(StudySourceRow)->Boolean){
+internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss:()->Unit,initialQuery:String="",initialCardId:String?=null,documentReady:Boolean=true,compactWindow:Boolean=false,sourceRequest:Long=0L,openSource:(StudySourceRow)->Boolean){
     val context=LocalContext.current;val app=context.applicationContext as InkWeftApplication
     val focus=LocalFocusManager.current
     val vm:StudyViewModel=viewModel(key="study-${note.base.id}",factory=StudyViewModel.Factory(note.base.id,app.study))
@@ -155,6 +156,9 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
     SideEffect{vm.collapsedByMap[mapKey]=collapsed;vm.focusedByMap[mapKey]=focusId}
     DisposableEffect(vm,mapKey){onDispose{vm.collapsedByMap[mapKey]=collapsed;vm.focusedByMap[mapKey]=focusId}}
     var sourcePending by rememberSaveable(initialSource){mutableStateOf(initialSource!=null)}
+    var sourceSeen by rememberSaveable{mutableLongStateOf(sourceRequest)}
+    // Restoring a closed window must not restore an old dismissal over a fresh capture.
+    LaunchedEffect(sourceRequest){if(sourceSeen!=sourceRequest){sourceSeen=sourceRequest;sourcePending=initialSource!=null}}
     var sourceParent by rememberSaveable(mapKey){mutableStateOf<String?>(null)}
     LaunchedEffect(mapKey){chosenNode=null;chosenCard=null}
 

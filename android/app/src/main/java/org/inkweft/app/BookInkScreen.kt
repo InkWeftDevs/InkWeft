@@ -138,7 +138,7 @@ fun InkScreen(note:NoteDraft,workspace:WorkspaceViewModel=viewModel(),onBack:()-
         }
         if(page==null)Box(Modifier.weight(1f).fillMaxWidth(),contentAlignment=Alignment.Center){if(ui.loading)CircularProgressIndicator()else Text("页面未能载入，原数据保留")}
         else Box(Modifier.weight(1f)){InkPageScreen(note,workspace,page,{canNavigate=it},{_->searchOpen=true},!ui.busy&&!ui.actionUnknown&&!ui.insertionUnknown&&pageActionId==null,
-            onMapExcerpt={selection->studySource=StudySourceDraft(page.id,selection.revision,selection.region.bounds,selection.strokes.map{it.id},selection.preview,selection.objectRevision);studyOpen=true;mapMinimized=false;excerptsOpen=false},
+            onMapExcerpt={selection->studySource=StudySourceDraft(page.id,selection.revision,selection.region.bounds,selection.strokes.map{it.id},selection.preview,selection.objectRevision);studyPanel.captureRequest.longValue++;studyOpen=true;mapMinimized=false;excerptsOpen=false},
             onAssociate={selection->knowledgeAnchor=KnowledgeData.Anchor(page.id,selection.revision,selection.region.bounds,selection.strokes.map{it.id});knowledgeOpen=true},
             onExcerpt={selection->
                 if(excerptReady){excerptsVm.submit(StudyCommand(java.util.UUID.randomUUID().toString(),note.base.id,StudyAction.CREATE_EXCERPT,cardId=java.util.UUID.randomUUID().toString(),title="第${page.position+1}页摘录",body=selection.excerptText,source=StudySourceDraft(page.id,selection.revision,selection.region.bounds,selection.strokes.map{it.id},selection.preview,selection.objectRevision)));excerptsOpen=true;directory=false;documentSettings=false;mapMinimized=true}
@@ -195,7 +195,7 @@ fun InkScreen(note:NoteDraft,workspace:WorkspaceViewModel=viewModel(),onBack:()-
     }
     if(studyOpen)studyUiState.SaveableStateProvider(note.base.id){FloatingStudyWindow(note.base.id,enabled=pageActionsReady,minimized=mapMinimized,
         onMinimize={mapMinimized=it},docked=mapDocked,onDock={mapDocked=it},close={studyOpen=false}){
-        StudyContent(note,studySource,{studyOpen=false},initialCardId=initialStudyCard,documentReady=pageActionsReady,compactWindow=true){source->
+        StudyContent(note,studySource,{studyOpen=false},initialCardId=initialStudyCard,documentReady=pageActionsReady,compactWindow=true,sourceRequest=studyPanel.captureRequest.longValue){source->
             if(ui.pages.any{it.id==source.pageId}){readingMode(false);vm.select(source.pageId);sourceFocus=source.pageId to CanvasBounds(source.left,source.top,source.right,source.bottom);true}else false
         }
     }
