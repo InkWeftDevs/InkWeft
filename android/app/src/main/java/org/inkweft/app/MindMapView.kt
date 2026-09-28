@@ -121,7 +121,6 @@ internal class MindMapView(context:Context):View(context){
             paint.pathEffect=DashPathEffect(floatArrayOf(6f/scale,4f/scale),0f)
             dropParent?.let{parent->c.drawRoundRect(parent.x.toFloat()-3,parent.y.toFloat()-3,parent.x.toFloat()+219,parent.y.toFloat()+87,12f,12f,paint);c.drawLine(parent.x.toFloat()+216,parent.y.toFloat()+42,point.x,point.y,paint)}
             c.drawRoundRect(point.x,point.y,point.x+168,point.y+52,8f,8f,paint);paint.pathEffect=null
-            paint.style=Paint.Style.FILL;paint.textSize=13f;paint.color=InkTheme.Text.toArgb();c.drawText(if(dropParent!=null)"松手：新增子主题"else if(candidate!=null)"靠近目标…"else"松手：放到根层",point.x+8,point.y+30,paint)
         }
         c.restoreToCount(save)
         if(dropPoint!=null){
