@@ -52,6 +52,8 @@ internal val LocalEditorAnchor=staticCompositionLocalOf<IntRect?>{null}
 /** Bounded floating panel: settings stay compact while the paper remains visible. */
 @Composable internal fun EditorPanel(title:String,subtitle:String,dismiss:()->Unit,tag:String,
     footer:@Composable ()->Unit={},content:@Composable ColumnScope.()->Unit){
+    val small=tag in setOf("eraser-settings","selection-settings","excerpt-settings","beauty-settings")
+    val maxPanelHeight=if(small)minOf(360.dp,LocalConfiguration.current.screenHeightDp.dp*.55f)else minOf(600.dp,LocalConfiguration.current.screenHeightDp.dp-64.dp)
     val anchor=LocalEditorAnchor.current
     val density=LocalDensity.current.density
     val position=remember(anchor,density){object:PopupPositionProvider{
@@ -66,8 +68,8 @@ internal val LocalEditorAnchor=staticCompositionLocalOf<IntRect?>{null}
         }
     }}
     Popup(position,onDismissRequest=dismiss,properties=PopupProperties(focusable=true)){
-        Box(Modifier.widthIn(max=380.dp).padding(4.dp)){
-            Surface(Modifier.widthIn(max=380.dp).fillMaxWidth().heightIn(max=minOf(600.dp,LocalConfiguration.current.screenHeightDp.dp-64.dp)).testTag(tag),color=MaterialTheme.colorScheme.surface,
+        Box(Modifier.widthIn(max=320.dp).padding(4.dp)){
+            Surface(Modifier.widthIn(max=320.dp).fillMaxWidth().heightIn(max=maxPanelHeight).testTag(tag),color=MaterialTheme.colorScheme.surface,
                 shape=RoundedCornerShape(16.dp),shadowElevation=8.dp,border=BorderStroke(1.dp,Line)){
                 Column(Modifier.fillMaxWidth()){
                     Row(Modifier.fillMaxWidth().padding(start=16.dp,end=4.dp,top=2.dp,bottom=2.dp),verticalAlignment=Alignment.CenterVertically){

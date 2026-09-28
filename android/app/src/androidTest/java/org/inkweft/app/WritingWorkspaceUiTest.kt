@@ -77,8 +77,8 @@ class WritingWorkspaceUiTest {
         }
         compose.waitUntil(10_000){runBlocking{app.inkRepository.read(page.id).strokes.size}==1};saved(1)
         assertTrue(runBlocking{app.inkRepository.read(pages[0].id).strokes}.isEmpty());assertTrue(runBlocking{app.inkRepository.read(pages[2].id).strokes}.isEmpty())
-        compose.onNodeWithTag("ink-undo").performScrollTo().performClick();saved(0)
-        compose.onNodeWithTag("ink-redo").performScrollTo().performClick();saved(1)
+        compose.onNodeWithTag("ink-undo").performClick();saved(0)
+        compose.onNodeWithTag("ink-redo").performClick();saved(1)
         mode();saved(1);compose.openOverviewGrid();compose.onNodeWithTag("page-grid").performScrollToNode(hasTestTag("jump-page-3"));compose.onNodeWithTag("jump-page-3").performClick();compose.onNodeWithTag("pages-directory-dialog-close").performClick();saved(0);finger();draw();saved(1)
         assertEquals(1,runBlocking{app.inkRepository.read(pages[2].id).strokes.size});assertEquals(1,runBlocking{app.inkRepository.read(page.id).strokes.size})
         mode();compose.activityRule.scenario.recreate();compose.onNodeWithTag("continuous-pages").assertExists()
@@ -89,7 +89,7 @@ class WritingWorkspaceUiTest {
         compose.onNodeWithTag("settings-tags").performScrollTo().performClick();compose.onNodeWithTag("notebook-tags").performTextInput("课程");compose.onNodeWithTag("tag-add").performClick();compose.onNodeWithTag("notebook-tags").performTextInput("复习");compose.onNodeWithTag("save-notebook-tags").performClick()
         compose.waitUntil(10_000){runBlocking{app.workspaceRepository.get(id).tags}.contains("复习")}
         compose.onNodeWithTag("continuous-pages").assertExists()
-        compose.onNodeWithTag("ink-select").performScrollTo().performClick()
+        compose.onNodeWithTag("ink-select").performClick()
         compose.onNodeWithTag("selection-context-menu").assertDoesNotExist();compose.onNodeWithTag("ink-select").performClick();compose.onNodeWithTag("lasso-free").assertIsSelected();compose.onNodeWithContentDescription("关闭套索").performClick();compose.onNodeWithTag("continuous-pages").assertDoesNotExist()
         compose.onNodeWithTag("pen-kind-ballpoint").performClick()
         val before=compose.onNodeWithTag("floating-pen-case").fetchSemanticsNode().boundsInRoot

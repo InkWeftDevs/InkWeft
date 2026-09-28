@@ -13,6 +13,39 @@ import org.inkweft.app.ui.designsystem.InkTheme
 internal data class MapViewport(val scale:Float,val x:Float,val y:Float)
 internal class MindMapView(context:Context):View(context){
     var enabledInput=true
+    var captureBook=""
+    var captureMapKey=""
+    private var capturedMap=""
+    var captureGraph=""
+    var onCapture:(CaptureTransfer,StudyNodeRow?,Double,Double,String)->Unit={_,_,_,_,_->}
+    private var capturedGraph=""
+    private var dropPoint:PointF?=null
+    private var dropParent:StudyNodeRow?=null
+    private var candidate:String?=null
+    private var candidateSince=0L
+    override fun onDragEvent(e:DragEvent):Boolean{
+        val transfer=e.localState as? CaptureTransfer?:return false
+        if(transfer.book!=captureBook)return false
+        when(e.action){
+            DragEvent.ACTION_DRAG_STARTED->{capturedGraph=captureGraph;capturedMap=captureMapKey;dropParent=null;candidate=null;return true}
+            DragEvent.ACTION_DRAG_LOCATION,DragEvent.ACTION_DROP->{
+                if(!enabledInput||capturedMap!=captureMapKey){dropPoint=null;dropParent=null;invalidate();return true}
+                val p=PointF((e.x-tx)/(scale*d),(e.y-ty)/(scale*d));dropPoint=p
+                fun distance(n:StudyNodeRow):Float{val sx=(n.x*d*scale+tx).toFloat();val sy=(n.y*d*scale+ty).toFloat();return hypot((sx-e.x).coerceAtLeast(0f)+(e.x-sx-216*d*scale).coerceAtLeast(0f),(sy-e.y).coerceAtLeast(0f)+(e.y-sy-84*d*scale).coerceAtLeast(0f))}
+                val nearest=dropParent?.takeIf{distance(it)<=36*d}?:nodes.minByOrNull{distance(it)}?.takeIf{distance(it)<=24*d}
+                val now=android.os.SystemClock.uptimeMillis()
+                if(candidate!=nearest?.id){candidate=nearest?.id;candidateSince=now}
+                if(nearest==null)dropParent=null else if(now-candidateSince>=120)dropParent=nearest
+                if(e.action==DragEvent.ACTION_DROP){
+                    // An unstable near-node target is rejected, never silently changed to a root.
+                    if(nearest==null||dropParent?.id==nearest.id)onCapture(transfer,dropParent,p.x.toDouble().coerceIn(-40000.0,40000.0),p.y.toDouble().coerceIn(-40000.0,40000.0),capturedGraph)
+                    dropPoint=null;dropParent=null
+                }
+                invalidate()
+            }
+            DragEvent.ACTION_DRAG_EXITED,DragEvent.ACTION_DRAG_ENDED->{dropPoint=null;dropParent=null;candidate=null;invalidate()}
+        };return true
+    }
     var selectedNodeId:String?=null
     var onViewport:(MapViewport)->Unit={}
     private var positioned=false
@@ -49,8 +82,10 @@ internal class MindMapView(context:Context):View(context){
     fun decorations(edges:List<Pair<String,String>>){relationEdges=edges;invalidate()}
     fun fit(){if(nodes.isEmpty()||width==0||height==0)return
         val left=nodes.minOf{it.x};val right=nodes.maxOf{it.x}+216;val top=nodes.minOf{it.y};val bottom=nodes.maxOf{it.y}+84
-        scale=min((width-40*d)/((right-left)*d).toFloat(),(height-40*d)/((bottom-top)*d).toFloat()).coerceIn(.15f,1.3f)
-        tx=width/2-((left+right)/2*d*scale).toFloat();ty=height/2-((top+bottom)/2*d*scale).toFloat();changedViewport();invalidate()
+        scale=min((width-40*d)/((right-left)*d).toFloat(),(height-40*d)/((bottom-top)*d).toFloat()).coerceIn(.8f,1.3f)
+        // Keep the leading nodes whole when readable scaling requires panning.
+        tx=max(width/2-((left+right)/2*d*scale).toFloat(),20*d-(left*d*scale).toFloat())
+        ty=max(height/2-((top+bottom)/2*d*scale).toFloat(),20*d-(top*d*scale).toFloat());changedViewport();invalidate()
     }
     fun zoom(f:Float){val old=scale;scale=(scale*f).coerceIn(.15f,2.5f);tx=width/2-(width/2-tx)*scale/old;ty=height/2-(height/2-ty)*scale/old;changedViewport();invalidate()}
     private fun x(n:StudyNodeRow)=n.x.toFloat()+if(n.id==active?.id)dx else 0f
@@ -61,7 +96,7 @@ internal class MindMapView(context:Context):View(context){
     override fun draw(canvas:Canvas){val save=canvas.save();try{canvas.clipRect(0,0,width,height);super.draw(canvas)}finally{canvas.restoreToCount(save)}}
     override fun onDraw(c:Canvas){super.onDraw(c);c.drawColor(InkTheme.Workspace.toArgb());val save=c.save();c.translate(tx,ty);c.scale(scale*d,scale*d)
         val lookup=nodes.associateBy{it.id};paint.style=Paint.Style.STROKE;paint.strokeWidth=1.5f;paint.color=InkTheme.Divider.toArgb()
-        for(n in nodes){val p=lookup[n.parentId]?:continue;val path=Path();path.moveTo(x(p)+216,y(p)+42);path.cubicTo(x(p)+244,y(p)+42,x(n)-28,y(n)+42,x(n),y(n)+42);c.drawPath(path,paint)}
+        for(n in nodes){val p=lookup[n.parentId]?:continue;val right=x(n)>=x(p);val start=x(p)+if(right)216 else 0;val end=x(n)+if(right)0 else 216;val direction=if(right)1 else -1;val path=Path();path.moveTo(start,y(p)+42);path.cubicTo(start+28*direction,y(p)+42,end-28*direction,y(n)+42,end,y(n)+42);c.drawPath(path,paint)}
         paint.color=InkTheme.Accent.toArgb()
         for((a,b) in relationEdges){val start=lookup[a]?:continue;val end=lookup[b]?:continue
             val horizontal=abs(x(end)-x(start))>=abs(y(end)-y(start));val forward=if(horizontal)x(end)>=x(start)else y(end)>=y(start)
@@ -75,12 +110,26 @@ internal class MindMapView(context:Context):View(context){
             val rootNode=!relationMode&&n.parentId==null
             paint.style=Paint.Style.FILL;paint.color=if(rootNode)InkTheme.Accent.toArgb()else if((n.id==active?.id||n.id==selectedNodeId))InkTheme.Selected.toArgb()else Color.WHITE;c.drawRoundRect(box,12f,12f,paint)
             paint.style=Paint.Style.STROKE;paint.strokeWidth=if(n.id==active?.id||n.id==selectedNodeId)2f else 1f;paint.color=if(n.id==active?.id||n.id==selectedNodeId||rootNode)InkTheme.Accent.toArgb()else InkTheme.ControlBorder.toArgb();c.drawRoundRect(box,12f,12f,paint)
-            paint.style=Paint.Style.FILL;paint.color=if(rootNode)Color.WHITE else InkTheme.Text.toArgb();paint.textSize=16f;paint.typeface=Typeface.create(Typeface.DEFAULT,Typeface.BOLD)
+            paint.style=Paint.Style.FILL;paint.color=if(rootNode)Color.WHITE else InkTheme.Text.toArgb();paint.textSize=16f*resources.configuration.fontScale;paint.typeface=Typeface.create(Typeface.DEFAULT,Typeface.BOLD)
             val text=titles[if(relationMode)n.id else n.cardId].orEmpty().replace('\n',' ');val n1=paint.breakText(text,true,188f,null)
             c.drawText(text.take(n1),left+14,top+30,paint);val rest=text.drop(n1);val n2=paint.breakText(rest,true,176f,null)
             c.drawText(rest.take(n2)+(if(rest.length>n2)"…"else""),left+14,top+53,paint)
             paint.typeface=Typeface.DEFAULT;paint.textSize=12f;paint.color=if(rootNode)Color.WHITE else InkTheme.Secondary.toArgb();c.drawText(if((hiddenCounts[n.id]?:0)>0)"已收起 ${hiddenCounts[n.id]} 个下级"else"",left+14,top+73,paint)
-        };c.restoreToCount(save)
+        }
+        dropPoint?.let{point->
+            paint.style=Paint.Style.STROKE;paint.color=InkTheme.Accent.toArgb();paint.strokeWidth=2f/scale
+            paint.pathEffect=DashPathEffect(floatArrayOf(6f/scale,4f/scale),0f)
+            dropParent?.let{parent->c.drawRoundRect(parent.x.toFloat()-3,parent.y.toFloat()-3,parent.x.toFloat()+219,parent.y.toFloat()+87,12f,12f,paint);c.drawLine(parent.x.toFloat()+216,parent.y.toFloat()+42,point.x,point.y,paint)}
+            c.drawRoundRect(point.x,point.y,point.x+168,point.y+52,8f,8f,paint);paint.pathEffect=null
+            paint.style=Paint.Style.FILL;paint.textSize=13f;paint.color=InkTheme.Text.toArgb();c.drawText(if(dropParent!=null)"松手：新增子主题"else if(candidate!=null)"靠近目标…"else"松手：放到根层",point.x+8,point.y+30,paint)
+        }
+        c.restoreToCount(save)
+        if(dropPoint!=null){
+            paint.style=Paint.Style.FILL;paint.color=Color.WHITE;c.drawRoundRect(8*d,8*d,width-8*d,44*d,8*d,8*d,paint)
+            paint.color=InkTheme.Accent.toArgb();paint.textSize=13*d*resources.configuration.fontScale
+            val label=dropParent?.let{"松手：添加到 "+titles[it.cardId].orEmpty()}?:if(candidate!=null)"停留以选择分支"else"松手：放到根层"
+            val end=paint.breakText(label,true,width-32*d,null);c.drawText(label.take(end),16*d,32*d,paint)
+        }
     }
     override fun onTouchEvent(e:MotionEvent):Boolean{
         if(!enabledInput){active=null;dx=0f;dy=0f;onActive(false);invalidate();return true}

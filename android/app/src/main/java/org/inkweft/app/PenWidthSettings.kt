@@ -82,7 +82,8 @@ internal class PenWidthStore(context:Context,name:String="inkweft-pen-widths") {
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 internal fun PenPresetMenu(expanded:Boolean,tool:Int,current:Float,currentColor:Int,currentKind:InkPen,onDismiss:()->Unit,favorites:List<FavoritePen> = emptyList(),favoriteBusy:Boolean=false,onFavorite:(InkPen,Float,Int)->Unit={_,_,_->},favoriteSelected:Boolean?=null,recipe:BrushRecipe=BrushRecipe(),onRecipe:(BrushRecipe)->Unit={},onApply:(Float,Int,InkPen)->Unit) {
-    DropdownMenu(expanded=expanded,onDismissRequest=onDismiss,offset=DpOffset(if(LocalPenPointsLeft.current)(-320).dp else 104.dp,0.dp),shape=RoundedCornerShape(20.dp),containerColor=Color.White,tonalElevation=0.dp,shadowElevation=6.dp,border=BorderStroke(1.dp,Line),modifier=Modifier.width(320.dp).testTag("pen-width-dialog")) {
+    DropdownMenu(expanded=expanded,onDismissRequest=onDismiss,offset=DpOffset(if(LocalPenPointsLeft.current)(-320).dp else 104.dp,0.dp),shape=RoundedCornerShape(20.dp),containerColor=Color.White,tonalElevation=0.dp,shadowElevation=6.dp,border=BorderStroke(1.dp,Line),modifier=Modifier.width(320.dp).heightIn(max=minOf(360.dp,androidx.compose.ui.platform.LocalConfiguration.current.screenHeightDp.dp*.55f)).testTag("pen-width-dialog")) {
+        var advanced by remember{mutableStateOf(false)}
         var kind by remember(expanded,tool,currentKind){mutableStateOf(currentKind)}
         var draft by remember(expanded,tool,current){mutableFloatStateOf(current)}
         var color by remember(expanded,tool,currentColor){mutableIntStateOf(currentColor)}
@@ -92,17 +93,17 @@ internal fun PenPresetMenu(expanded:Boolean,tool:Int,current:Float,currentColor:
                 IconToggleButton(saved,{onFavorite(kind,draft,color)},enabled=!favoriteBusy,modifier=Modifier.size(48.dp).testTag("pen-favorite").describedAs(if(saved)"取消收藏这支笔"else"收藏这支笔")){Glyph(if(saved)"star-filled"else"star",if(saved)Color(0xffbd8100)else Quiet)}
                 IconButton(onClick=onDismiss,modifier=Modifier.size(48.dp).testTag("close-pen-settings").describedAs("关闭笔参数")){Glyph("close")}
             }
-            PenStrokePreview(kind,color,draft,recipe)
-            Text("模拟压力样例",style=MaterialTheme.typography.labelSmall,color=Quiet)
-            Text(PenKinds.description(kind),style=MaterialTheme.typography.bodySmall,color=Quiet)
-            BrushParameterControls(kind,recipe,onRecipe)
-            HorizontalDivider(color=Line)
+            Row{TextButton({advanced=false},modifier=Modifier.testTag("pen-basic")){Text("常用")};TextButton({advanced=true},modifier=Modifier.testTag("pen-advanced")){Text("高级")}}
+            if(advanced){
             Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.spacedBy(6.dp)) {
                 PenWidthStore.presets(tool).forEachIndexed { index,width ->
                     FilterChip(selected=draft==width,onClick={draft=width;onApply(draft,color,kind)},label={Text(listOf("细","中","粗")[index],fontSize=12.sp)},
                         modifier=Modifier.weight(1f).heightIn(min=48.dp).testTag("width-preset-$index"))
                 }
             }
+BrushParameterControls(kind,recipe,onRecipe)}else {
+            PenStrokePreview(kind,color,draft,recipe,compact=true)
+            HorizontalDivider(color=Line)
             Row{Text("笔刷粗细",Modifier.weight(1f));Text(PenWidthStore.label(draft),modifier=Modifier.testTag("pen-width-value"),style=MaterialTheme.typography.bodyMedium)}
             Slider(value=draft,onValueChange={draft=(it*10).roundToInt()/10f;onApply(draft,color,kind)},valueRange=PenWidthStore.range(tool),modifier=Modifier.fillMaxWidth().testTag("pen-width-slider"),
                 thumb={Surface(Modifier.size(24.dp),shape=CircleShape,color=Color.White,shadowElevation=3.dp,border=BorderStroke(1.dp,Line)){}},
@@ -115,10 +116,11 @@ internal fun PenPresetMenu(expanded:Boolean,tool:Int,current:Float,currentColor:
                     }
                 }
             }
+            }
             var hex by remember(color){mutableStateOf(String.format(Locale.ROOT,"%06X",color and 0xffffff))}
             var custom by remember{mutableStateOf(false)}
-            TextButton(onClick={custom=!custom},modifier=Modifier.testTag("pen-custom-open")){Text("自定义颜色")}
-            if(custom)OutlinedTextField(hex,{value->if(value.length<=6){hex=value.uppercase(Locale.ROOT);if(hex.matches(Regex("[0-9A-F]{6}"))){color=hex.toInt(16) or (if(tool==2)0x66000000 else 0xff000000.toInt());onApply(draft,color,kind)}}},label={Text("颜色 · 六位十六进制")},isError=!hex.matches(Regex("[0-9A-F]{6}")),singleLine=true,modifier=Modifier.fillMaxWidth().testTag("pen-custom-color"))
+            if(advanced)TextButton(onClick={custom=!custom},modifier=Modifier.testTag("pen-custom-open")){Text("自定义颜色")}
+            if(advanced&&custom)OutlinedTextField(hex,{value->if(value.length<=6){hex=value.uppercase(Locale.ROOT);if(hex.matches(Regex("[0-9A-F]{6}"))){color=hex.toInt(16) or (if(tool==2)0x66000000 else 0xff000000.toInt());onApply(draft,color,kind)}}},label={Text("颜色 · 六位十六进制")},isError=!hex.matches(Regex("[0-9A-F]{6}")),singleLine=true,modifier=Modifier.fillMaxWidth().testTag("pen-custom-color"))
         }
     }
 }

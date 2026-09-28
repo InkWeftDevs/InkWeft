@@ -18,7 +18,8 @@ sealed interface KnowledgeData {
     data class Question(val cardId:String,val prompt:String,val state:ManualState=ManualState.REVIEW):KnowledgeData
     data class Placement(val cardId:String,val x:Double,val y:Double):KnowledgeData
     data class Alias(val cardId:String,val name:String):KnowledgeData
-    data class MapDefinition(val title:String):KnowledgeData
+    data class MapDefinition(val title:String,val layout:String="right",val structures:List<MapStructure> = emptyList()):KnowledgeData
+    data class MapTemplate(val title:String,val version:Int=1,val layout:String="right",val nodes:List<TemplateNode> = emptyList()):KnowledgeData
     data class MapOccurrence(val mapId:String,val cardId:String,val parentId:String?,val x:Double,val y:Double):KnowledgeData
     data class Decoration(val from:String,val to:String,val label:String="装饰线"):KnowledgeData
 }
@@ -38,7 +39,8 @@ object KnowledgeCodec {
             is KnowledgeData.Question->{id(v.cardId);require(v.prompt.isNotBlank()&&v.prompt.length<=2000)}
             is KnowledgeData.Placement->{id(v.cardId);require(v.x.isFinite()&&v.y.isFinite()&&v.x in -40000.0..40000.0&&v.y in -40000.0..40000.0)}
             is KnowledgeData.Alias->{id(v.cardId);require(v.name.isNotBlank()&&v.name.length<=120)}
-            is KnowledgeData.MapDefinition->require(v.title.isNotBlank()&&v.title.length<=120)
+            is KnowledgeData.MapDefinition->{require(v.title.isNotBlank()&&v.title.length<=120);MapTemplates.validate(v.layout,v.structures.map{TemplateNode(it.title,it.parentId?.let{parent->v.structures.indexOfFirst{n->n.id==parent}},it.x,it.y)});require(v.structures.map{it.id}.distinct().size==v.structures.size);v.structures.forEach{n->id(n.id);n.parentId?.let(::id)}}
+            is KnowledgeData.MapTemplate->{require(v.title.isNotBlank()&&v.title.length<=120&&v.version==1);MapTemplates.validate(v.layout,v.nodes)}
             is KnowledgeData.MapOccurrence->{id(v.mapId);id(v.cardId);v.parentId?.let(::id);require(v.x.isFinite()&&v.y.isFinite()&&v.x in -40000.0..40000.0&&v.y in -40000.0..40000.0)}
             is KnowledgeData.Decoration->{id(v.from);id(v.to);require(v.from!=v.to&&v.label.length<=120)}
         }
@@ -57,7 +59,8 @@ object KnowledgeCodec {
                 is KnowledgeData.Question->{d.writeUTF("QUESTION");d.writeUTF(v.cardId);d.writeUTF(v.prompt);d.writeUTF(v.state.name)}
                 is KnowledgeData.Placement->{d.writeUTF("PLACEMENT");d.writeUTF(v.cardId);d.writeDouble(v.x);d.writeDouble(v.y)}
                 is KnowledgeData.Alias->{d.writeUTF("ALIAS");d.writeUTF(v.cardId);d.writeUTF(v.name)}
-                is KnowledgeData.MapDefinition->{d.writeUTF("MAP");d.writeUTF(v.title)}
+                is KnowledgeData.MapDefinition->{d.writeUTF("MAP_V2");d.writeUTF(v.title);d.writeUTF(v.layout);d.writeInt(v.structures.size);v.structures.forEach{n->d.writeUTF(n.id);d.writeUTF(n.parentId.orEmpty());d.writeUTF(n.title);d.writeDouble(n.x);d.writeDouble(n.y)}}
+                is KnowledgeData.MapTemplate->{d.writeUTF("MAP_TEMPLATE_V1");d.writeUTF(v.title);d.writeInt(v.version);d.writeUTF(v.layout);d.writeInt(v.nodes.size);v.nodes.forEach{n->d.writeUTF(n.title);d.writeInt(n.parent?:-1);d.writeDouble(n.x);d.writeDouble(n.y)}}
                 is KnowledgeData.MapOccurrence->{d.writeUTF("MAP_NODE");d.writeUTF(v.mapId);d.writeUTF(v.cardId);d.writeUTF(v.parentId.orEmpty());d.writeDouble(v.x);d.writeDouble(v.y)}
                 is KnowledgeData.Decoration->{d.writeUTF("DECORATION");d.writeUTF(v.from);d.writeUTF(v.to);d.writeUTF(v.label)}
             }
@@ -79,6 +82,8 @@ object KnowledgeCodec {
                 "PLACEMENT"->KnowledgeData.Placement(d.readUTF(),d.readDouble(),d.readDouble())
                 "ALIAS"->KnowledgeData.Alias(d.readUTF(),d.readUTF())
                 "MAP"->KnowledgeData.MapDefinition(d.readUTF())
+                "MAP_V2"->{val title=d.readUTF();val layout=d.readUTF();val count=d.readInt();require(count in 0..128);KnowledgeData.MapDefinition(title,layout,List(count){MapStructure(d.readUTF(),d.readUTF().ifEmpty{null},d.readUTF(),d.readDouble(),d.readDouble())})}
+                "MAP_TEMPLATE_V1"->{val title=d.readUTF();val version=d.readInt();val layout=d.readUTF();val count=d.readInt();require(count in 0..128);KnowledgeData.MapTemplate(title,version,layout,List(count){TemplateNode(d.readUTF(),d.readInt().let{require(it>=-1);it.takeIf{it>=0}},d.readDouble(),d.readDouble())})}
                 "MAP_NODE"->KnowledgeData.MapOccurrence(d.readUTF(),d.readUTF(),d.readUTF().ifEmpty{null},d.readDouble(),d.readDouble())
                 "DECORATION"->KnowledgeData.Decoration(d.readUTF(),d.readUTF(),d.readUTF())
                 else->error("UNKNOWN_KNOWLEDGE_KIND")

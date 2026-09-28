@@ -4,6 +4,9 @@ package org.inkweft.app
 import android.content.Context
 import androidx.compose.foundation.*
 import androidx.compose.foundation.gestures.detectDragGestures
+import androidx.compose.foundation.gestures.awaitEachGesture
+import androidx.compose.foundation.gestures.awaitFirstDown
+import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.semantics.*
 import androidx.compose.foundation.layout.*
@@ -15,14 +18,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 internal object EditorToolOrder {
-    val labels=linkedMapOf("undo" to "撤销","redo" to "重做","eraser" to "橡皮","lasso" to "套索","area" to "圈选擦除","image" to "图片","camera" to "拍照","text" to "文本框","excerpt" to "摘录","tag" to "标签","shape" to "图形","sticker" to "贴纸","objects" to "对象选择","beauty" to "实时字迹调整","readonly" to "只读模式","finger" to "手指书写","add-page" to "添加页面","fullscreen" to "全屏专注","export" to "导出文档","timer" to "计时器")
+    val labels=linkedMapOf("undo" to "撤销","redo" to "重做","pen" to "笔","map" to "导图","eraser" to "橡皮","lasso" to "套索","area" to "圈选擦除","image" to "图片","camera" to "拍照","text" to "文本框","excerpt" to "摘录","tag" to "标签","shape" to "图形","sticker" to "贴纸","objects" to "对象选择","beauty" to "实时字迹调整","readonly" to "只读模式","finger" to "手指书写","add-page" to "添加页面","fullscreen" to "全屏专注","export" to "导出文档","timer" to "计时器")
     val fixed=emptySet<String>()
+    val primary=setOf("undo","redo","pen","eraser","lasso","excerpt","map")
     val defaultHidden=setOf("shape","sticker","objects","camera","tag","area","beauty","readonly","finger","add-page","fullscreen","export","timer")
-    fun icon(id:String)=when(id){"lasso"->"select";"area"->"area-erase";"favorites"->"favorite-pens";else->id}
+    fun icon(id:String)=when(id){"map"->"mindmap";"lasso"->"select";"area"->"area-erase";"favorites"->"favorite-pens";else->id}
     fun read(context:Context):List<String>{val raw=context.getSharedPreferences("inkweft-editor",0).getString("toolbar-order-v32","").orEmpty().split(',').filter{it in labels}.distinct();return raw+labels.keys.filterNot{it in raw}}
 }
 /** Stable identifiers preserve visibility when new tools are added. Changes apply immediately. */
-@Composable internal fun EditorToolbar(content:@Composable (String)->Unit){
+@Composable internal fun EditorToolbar(externalMore:Boolean=false,moreRequest:Int=0,content:@Composable (String)->Unit){
     val context=LocalContext.current;val prefs=remember{context.getSharedPreferences("inkweft-editor",0)}
     var order by remember{mutableStateOf(EditorToolOrder.read(context))}
     var hidden by remember{mutableStateOf((prefs.getStringSet("toolbar-hidden-v32",EditorToolOrder.defaultHidden).orEmpty()+EditorToolOrder.defaultHidden.filter{it !in prefs.getString("toolbar-order-v32","").orEmpty().split(',')})-EditorToolOrder.fixed)}
@@ -32,12 +36,22 @@ internal object EditorToolOrder {
         val group=order;val next=group.indexOf(id)+delta
         if(next in group.indices){val from=order.indexOf(id);val target=order.indexOf(group[next]);order=order.toMutableList().apply{removeAt(from);add(target,id)};save()}
     }
-    Row(verticalAlignment=Alignment.CenterVertically){
-        Row(Modifier.weight(1f).horizontalScroll(rememberScrollState()).testTag("editor-toolbar"),verticalAlignment=Alignment.CenterVertically){order.filterNot{it in hidden||it in EditorToolOrder.fixed}.forEach{key(it){content(it)}}}
-        order.filter{it in EditorToolOrder.fixed}.forEach{content(it)}
-        IconButton(onClick={customizing=true},modifier=Modifier.testTag("toolbar-customize").describedAs("自定义快捷栏")){Glyph("more")}
+    var more by remember{mutableStateOf(false)}
+    LaunchedEffect(moreRequest){if(moreRequest>0)more=true}
+    BoxWithConstraints{
+    val visiblePrimary=EditorToolOrder.primary+if(maxWidth>=528.dp)setOf("image","text")else emptySet()
+    FlowRow(Modifier.testTag("editor-toolbar")){
+        order.filter{it in visiblePrimary&&it !in hidden}.forEach{key(it){content(it)}}
+        Box {
+            if(!externalMore)IconButton(onClick={more=true},modifier=Modifier.testTag("toolbar-more").describedAs("更多工具")){Glyph("more")}
+            DropdownMenu(more,{more=false},containerColor=androidx.compose.ui.graphics.Color.White){
+                Row(Modifier.widthIn(max=320.dp).horizontalScroll(rememberScrollState())){order.filter{it !in visiblePrimary&&it !in hidden}.forEach{id->Box(Modifier.pointerInput(id){awaitEachGesture{awaitFirstDown(requireUnconsumed=false,pass=PointerEventPass.Initial);do{val event=awaitPointerEvent(PointerEventPass.Final)}while(event.changes.any{it.pressed});more=false}}){content(id)}}}
+                DropdownMenuItem(text={Text("自定义快捷栏")},onClick={more=false;customizing=true},modifier=Modifier.testTag("toolbar-customize"))
+            }
+        }
     }
-    if(customizing)androidx.compose.ui.window.Dialog(onDismissRequest={customizing=false},properties=androidx.compose.ui.window.DialogProperties(usePlatformDefaultWidth=false)){
+    }
+    if(customizing)androidx.compose.ui.window.Popup(alignment=Alignment.TopEnd,onDismissRequest={customizing=false},properties=androidx.compose.ui.window.PopupProperties(focusable=true)){
         val height=LocalConfiguration.current.screenHeightDp.dp*.86f
         val rowPixels=with(LocalDensity.current){56.dp.toPx()}
         Surface(Modifier.padding(16.dp).widthIn(max=520.dp).fillMaxWidth().heightIn(max=height).testTag("toolbar-customize-panel"),shape=androidx.compose.foundation.shape.RoundedCornerShape(24.dp),color=androidx.compose.ui.graphics.Color.White){

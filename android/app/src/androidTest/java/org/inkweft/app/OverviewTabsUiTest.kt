@@ -12,7 +12,7 @@ class OverviewTabsUiTest {
  @get:Rule val compose=createAndroidComposeRule<MainActivity>()
  private val app get()=compose.activity.application as InkWeftApplication
  private fun id()=UUID.randomUUID().toString()
- private fun tap(tag:String){if(tag in setOf("add-page","object-shape","page-objects","object-sticker","top-area-erase","object-camera")){compose.openEditorAction(tag);return};if(tag=="top-draw"){compose.openCurrentPen();return};val node=compose.onNodeWithTag(tag);runCatching{node.performScrollTo()};node.performClick()}
+ private fun tap(tag:String){compose.revealAction(tag);if(tag in setOf("add-page","object-shape","page-objects","object-sticker","top-area-erase","object-camera")){compose.openEditorAction(tag);return};if(tag=="top-draw"){compose.openCurrentPen();return};val node=compose.onNodeWithTag(tag);runCatching{node.performScrollTo()};node.performClick()}
  private fun ready(){compose.waitUntil(15000){app.navigationReady.value};compose.waitForIdle()}
  @Test fun fourTabsPersistMarksAndLocateExistingExcerpts(){
   compose.waitUntil(15000){compose.onAllNodesWithTag("new-note").fetchSemanticsNodes().isNotEmpty()}

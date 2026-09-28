@@ -32,12 +32,12 @@ class EditorRedesignUiTest {
         compose.onNodeWithTag("pen-kind-highlighter").performClick()
         val store=PenWidthStore(compose.activity,"inkweft-pen-widths-book-"+note.id)
         for(i in 0..4){
-            compose.openCurrentPen();compose.onNodeWithTag("pen-color-$i").performScrollTo().performClick();compose.closePenSettings()
+            compose.openCurrentPen();compose.revealAction("pen-color-$i");compose.onNodeWithTag("pen-color-$i").performScrollTo().performClick();compose.closePenSettings()
             compose.waitUntil(10_000){store.readColors()[2]==PenWidthStore.colors(2)[i]}
             assertEquals(0x66,store.readColors()[2] ushr 24)
         }
         for(i in 0..2){
-            compose.openCurrentPen();compose.onNodeWithTag("width-preset-$i").performScrollTo().performClick();compose.closePenSettings()
+            compose.openCurrentPen();compose.revealAction("width-preset-$i");compose.onNodeWithTag("width-preset-$i").performScrollTo().performClick();compose.closePenSettings()
             compose.waitUntil(10_000){store.read()[2]==PenWidthStore.presets(2)[i]}
         }
         shot("redesign-highlighter.png");compose.activityRule.scenario.recreate();saved()

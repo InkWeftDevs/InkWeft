@@ -60,7 +60,7 @@ class EditorAffordanceTest {
         val id=create()
         fun choose(index:Int){
             compose.openCurrentPen();compose.onNodeWithTag("pen-width-dialog").assertIsDisplayed()
-            compose.onNodeWithTag("width-preset-$index").performScrollTo().performClick();compose.closePenSettings();compose.waitForIdle()
+            compose.revealAction("width-preset-$index");compose.onNodeWithTag("width-preset-$index").performScrollTo().performClick();compose.closePenSettings();compose.waitForIdle()
         }
         choose(2)
         compose.waitUntil(10_000){PenWidthStore(compose.activity,"inkweft-pen-widths-book-"+id).read()[0]==6f}

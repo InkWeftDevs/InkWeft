@@ -109,7 +109,7 @@ class KnowledgeRepository(private val db:NoteDatabase,private val fault:(Knowled
             is KnowledgeData.Question->card(data.cardId)
             is KnowledgeData.Placement->card(data.cardId)
             is KnowledgeData.Alias->card(data.cardId)
-            is KnowledgeData.MapDefinition->Unit
+            is KnowledgeData.MapDefinition,is KnowledgeData.MapTemplate->Unit
             is KnowledgeData.MapOccurrence->{card(data.cardId);val map=requireNotNull(db.knowledge().get(data.mapId));require(map.notebookId==book&&map.data() is KnowledgeData.MapDefinition);if(active)require(!map.removed)}
             is KnowledgeData.Decoration->{for(id in listOf(data.from,data.to)){val p=requireNotNull(db.knowledge().get(id));require(p.notebookId==book&&p.data() is KnowledgeData.Placement);if(active)require(!p.removed)}}
             is KnowledgeData.Collection->Unit
@@ -133,7 +133,7 @@ class KnowledgeRepository(private val db:NoteDatabase,private val fault:(Knowled
         val nodes=rows.mapNotNull{r->(r.data() as? KnowledgeData.MapOccurrence)?.let{r to it}}
         for((mapId,items) in nodes.groupBy{it.second.mapId}){
             val map=requireNotNull(maps[mapId]);require(items.all{it.first.notebookId==map.notebookId});if(map.removed)require(items.all{it.first.removed})
-            StudyGraph.validate(items.map{(r,n)->StudyNode(r.id,n.cardId,n.parentId,n.x,n.y,r.revision,r.removed)})
+            StudyGraph.validate((map.data() as KnowledgeData.MapDefinition).structures.map{StudyNode(it.id,it.id,it.parentId,it.x,it.y,map.revision)}+items.map{(r,n)->StudyNode(r.id,n.cardId,n.parentId,n.x,n.y,r.revision,r.removed)})
         }
     }
 }

@@ -28,7 +28,7 @@ class StarNoteInteractionsUiTest {
   compose.runOnIdle{ViewModelProvider(compose.activity)[NotebookViewModel::class.java].select(note)}
   compose.singlePageEditor();ready();return note
  }
- private fun tap(tag:String){val n=compose.onNodeWithTag(tag);runCatching{n.performScrollTo()};n.performClick();compose.waitForIdle()}
+ private fun tap(tag:String){compose.revealAction(tag);val n=compose.onNodeWithTag(tag);runCatching{n.performScrollTo()};n.performClick();compose.waitForIdle()}
  private inline fun<reified T:View> find():T?{
   val queue=java.util.ArrayDeque<View>();queue.add(compose.activity.window.decorView)
   while(queue.isNotEmpty()){val v=queue.removeFirst();if(v is T&&v.isShown)return v;if(v is ViewGroup)for(i in 0 until v.childCount)queue.add(v.getChildAt(i))};return null
@@ -51,8 +51,9 @@ class StarNoteInteractionsUiTest {
   compose.runOnIdle{find<InkCanvasView>()!!.onStroke(InkStroke(id(),InkPen.BALLPOINT,0xff2464bb.toInt(),6f,InkTool.STYLUS,listOf(InkSample(200f,220f,0),InkSample(400f,250f,80))))}
   ready();compose.waitUntil(15000){runBlocking{app.inkRepository.read(note.id)}.strokes.size==1}
   compose.waitUntil(15000){var pending=true;compose.runOnIdle{pending=find<InkCanvasView>()!!.rasterPending};!pending}
-  tap("top-excerpt")
+  compose.selectInboxCapture()
   compose.runOnIdle{find<SelectionOverlayView>()!!.onRegion(InkRegion(listOf(EraserPoint(150f,180f),EraserPoint(450f,290f))))}
+  compose.waitUntil(15000){compose.onAllNodesWithTag("capture-confirm").fetchSemanticsNodes().isNotEmpty()};tap("capture-confirm")
   try{compose.waitUntil(15000){runBlocking{app.study.cards(note.id).first()}.size==1}}catch(e:Throwable){
    compose.onRoot(useUnmergedTree=true).printToLog("ExcerptFailure")
    val b=androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().uiAutomation.takeScreenshot()
@@ -74,7 +75,8 @@ class StarNoteInteractionsUiTest {
   compose.runOnIdle{find<InkCanvasView>()!!.onStroke(ink)};ready()
   compose.waitUntil(15000){runBlocking{app.inkRepository.read(note.id)}.strokes.size==1}
   compose.waitUntil(15000){var pending=true;compose.runOnIdle{pending=find<InkCanvasView>()!!.rasterPending};!pending}
-  tap("top-excerpt");compose.runOnIdle{find<SelectionOverlayView>()!!.onRegion(InkRegion(listOf(EraserPoint(150f,180f),EraserPoint(450f,290f))))}
+  compose.selectInboxCapture();compose.runOnIdle{find<SelectionOverlayView>()!!.onRegion(InkRegion(listOf(EraserPoint(150f,180f),EraserPoint(450f,290f))))}
+  if(compose.onAllNodesWithTag("capture-confirm").fetchSemanticsNodes().isNotEmpty())tap("capture-confirm")
   compose.waitUntil(15000){runBlocking{app.study.cards(note.id).first()}.size==1};ready()
   val card=runBlocking{app.study.cards(note.id).first().single()};val original=runBlocking{app.study.source(card.id)}!!
   compose.onNodeWithContentDescription("关闭摘录").performClick()
@@ -112,8 +114,10 @@ class StarNoteInteractionsUiTest {
   val note=runBlocking{app.libraryContent.import(ImportNotebook(id(),id(),prepared.sha256),prepared)}
   compose.runOnIdle{ViewModelProvider(compose.activity)[NotebookViewModel::class.java].select(note)};compose.singlePageEditor();ready();compose.frameCanvasFixture()
   compose.waitUntil(15000){var loaded=false;compose.runOnIdle{loaded=find<InkCanvasView>()!!.inputReady};loaded}
-  tap("top-excerpt");tap("top-excerpt");tap("excerpt-text-mode");compose.onNodeWithContentDescription("关闭摘要笔").performClick()
+  tap("top-excerpt");tap("top-excerpt");tap("excerpt-text-mode");tap("capture-destination-inbox");compose.onNodeWithContentDescription("关闭摘要笔").performClick()
   compose.runOnIdle{find<SelectionOverlayView>()!!.onRegion(InkRegion(listOf(EraserPoint(50f,50f),EraserPoint(650f,600f))))}
+  compose.waitUntil(15000){compose.onAllNodesWithTag("capture-confirm").fetchSemanticsNodes().isNotEmpty()};tap("capture-confirm")
+  if(compose.onAllNodesWithTag("capture-confirm").fetchSemanticsNodes().isNotEmpty())tap("capture-confirm")
   compose.waitUntil(15000){runBlocking{app.study.cards(note.id).first()}.size==1};ready()
   val card=runBlocking{app.study.cards(note.id).first().single()};assertTrue(card.body.contains("Extract me"));assertFalse(card.body.contains("Outside"))
   val image=InkPageFile.decode(runBlocking{app.study.source(card.id)}!!.snapshot).objects.single().image

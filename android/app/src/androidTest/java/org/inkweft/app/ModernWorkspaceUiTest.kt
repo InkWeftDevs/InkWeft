@@ -33,7 +33,7 @@ class ModernWorkspaceUiTest {
     @Test fun favoriteEditsApplyImmediatelyAndKeepTheSameIdentityAfterReopen(){
         val n=open();val presets=PenWidthStore(app,"inkweft-pen-widths-book-"+n.id);val initial=presets.readKinds()
         compose.openCurrentPen();compose.selectPen("pen");compose.openCurrentPen()
-        compose.onNodeWithTag("width-preset-2").performScrollTo().performClick();compose.onNodeWithTag("pen-color-2").performScrollTo().performClick()
+        compose.revealAction("width-preset-2");compose.onNodeWithTag("width-preset-2").performScrollTo().performClick();compose.revealAction("pen-color-2");compose.onNodeWithTag("pen-color-2").performScrollTo().performClick()
         shot("v21-pen-card.png")
         compose.onNodeWithTag("pen-favorite").performScrollTo().performClick()
         compose.waitUntil(10_000){FavoritePenStore(app).read().size==1}
@@ -41,9 +41,9 @@ class ModernWorkspaceUiTest {
         compose.closePenSettings()
         assertEquals(InkPen.PEN,presets.readKinds()[1])
         compose.onNodeWithTag("favorite-pen-${favorite.id}").performScrollTo().performTouchInput{longClick()}
-        compose.onNodeWithTag("width-preset-0").performScrollTo().performClick()
+        compose.revealAction("width-preset-0");compose.onNodeWithTag("width-preset-0").performScrollTo().performClick()
         assertEquals(favorite.id,FavoritePenStore(app).read().single().id);assertEquals(1.5f,presets.read()[1])
-        compose.onNodeWithTag("width-preset-2").performScrollTo().performClick();compose.closePenSettings()
+        compose.revealAction("width-preset-2");compose.onNodeWithTag("width-preset-2").performScrollTo().performClick();compose.closePenSettings()
         compose.waitUntil(10_000){presets.readKinds()[1]==InkPen.PEN&&presets.read()[1]==6f&&presets.readColors()[1]==PenWidthStore.colors(0)[2]}
         shot("v21-favorites.png");compose.activityRule.scenario.recreate()
         compose.waitUntil(15_000){compose.onAllNodesWithTag("favorite-pen-${favorite.id}").fetchSemanticsNodes().isNotEmpty()}

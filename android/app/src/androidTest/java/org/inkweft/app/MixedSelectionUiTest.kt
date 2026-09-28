@@ -14,7 +14,7 @@ class MixedSelectionUiTest {
  @get:Rule val compose=createAndroidComposeRule<MainActivity>()
  private val app get()=compose.activity.application as InkWeftApplication
  private fun id()=UUID.randomUUID().toString()
- private fun tap(tag:String){if(tag in setOf("add-page","object-shape","page-objects","object-sticker","top-area-erase","object-camera")){compose.openEditorAction(tag);return};if(tag=="top-draw"){compose.openCurrentPen();return};val n=compose.onNodeWithTag(tag);runCatching{n.performScrollTo()};n.performClick()}
+ private fun tap(tag:String){compose.revealAction(tag);if(tag in setOf("add-page","object-shape","page-objects","object-sticker","top-area-erase","object-camera")){compose.openEditorAction(tag);return};if(tag=="top-draw"){compose.openCurrentPen();return};val n=compose.onNodeWithTag(tag);runCatching{n.performScrollTo()};n.performClick()}
  private fun ready(){compose.waitUntil(15000){app.navigationReady.value};compose.waitForIdle()}
  private fun overlay(v:View):SelectionOverlayView?{if(v is SelectionOverlayView&&v.isShown)return v;if(v is ViewGroup)for(i in 0 until v.childCount)overlay(v.getChildAt(i))?.let{return it};return null}
  @Test fun circleEraserHonoursHighlighterOnly(){

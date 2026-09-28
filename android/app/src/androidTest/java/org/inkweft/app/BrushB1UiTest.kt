@@ -24,7 +24,7 @@ class BrushB1UiTest {
         compose.onNodeWithTag("new-title").performTextInput(title);compose.onNodeWithTag("create-note").performClick();compose.singlePageEditor()
         val id=runBlocking{app.repository.observeNotes().first()}.single{it.title==title}.id
         compose.selectPen("pencil");compose.openCurrentPen()
-        compose.onNodeWithTag("pencil-hardness-2").performScrollTo().performClick()
+        compose.revealAction("pencil-hardness-2");compose.onNodeWithTag("pencil-hardness-2").performScrollTo().performClick()
         compose.onNodeWithTag("pencil-advanced").performScrollTo().performClick()
         compose.onNodeWithTag("pencil-tilt").performScrollTo().performClick()
         val preset=PenWidthStore(compose.activity,"inkweft-pen-widths-book-$id")

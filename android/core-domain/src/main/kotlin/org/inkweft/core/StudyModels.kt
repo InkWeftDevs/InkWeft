@@ -4,7 +4,7 @@ package org.inkweft.core
 import java.io.*
 import java.util.UUID
 
-enum class StudyAction { CREATE, CREATE_EXCERPT, RECROP_EXCERPT, EDIT, REUSE, MOVE, REPARENT, REMOVE_NODE, TRASH_CARD, RESTORE_CARD, ARRANGE }
+enum class StudyAction { CREATE, UNDO_CAPTURE, CREATE_EXCERPT, RECROP_EXCERPT, EDIT, REUSE, MOVE, REPARENT, REMOVE_NODE, TRASH_CARD, RESTORE_CARD, ARRANGE }
 class StudySourceDraft(val pageId:String,val inkRevision:Long,val bounds:CanvasBounds,ids:List<String>,preview:ByteArray?=null,val objectRevision:Long?=null){
     private val image=preview?.clone()
     fun previewBytes()=image?.clone()
@@ -47,6 +47,7 @@ class StudyCommand(val id:String,val notebookId:String,val action:StudyAction,va
         require(x.isFinite()&&y.isFinite()&&x in -40000.0..40000.0&&y in -40000.0..40000.0)
         when(action){
             StudyAction.CREATE->{require(cardId!=null&&nodeId!=null&&title.isNotBlank()&&expectedRevision==0L)}
+            StudyAction.UNDO_CAPTURE->{require(cardId!=null&&nodeId!=null&&expectedRevision>0&&source==null)}
             StudyAction.CREATE_EXCERPT->{require(cardId!=null&&nodeId==null&&title.isNotBlank()&&source!=null&&expectedRevision==0L&&mapId==null)}
             StudyAction.RECROP_EXCERPT->{require(cardId!=null&&nodeId==null&&expectedRevision>0&&source?.previewBytes()!=null&&mapId==null)}
             StudyAction.EDIT->{require(cardId!=null&&expectedRevision>0&&title.isNotBlank()&&source==null)}

@@ -65,8 +65,11 @@ class SelectionStudyUiTest {
     private fun addCard(title:String,body:String){
         if(compose.onAllNodesWithTag("study-source-target").fetchSemanticsNodes().isNotEmpty()){
             compose.onNodeWithTag("study-add-source").performClick()
-            compose.waitUntil(10000){compose.onAllNodesWithText("手写摘录").fetchSemanticsNodes().isNotEmpty()}
-            compose.onNodeWithText("手写摘录").performClick();compose.onNodeWithTag("study-edit-card").performClick()
+            compose.revealAction("study-tab-0");compose.onNodeWithTag("study-tab-0").performClick()
+            compose.waitUntil(10000){runBlocking{app.study.cards(ViewModelProvider(compose.activity)[NotebookViewModel::class.java].ui.value.selectedId!!).first()}.isNotEmpty()}
+            val currentBook=ViewModelProvider(compose.activity)[NotebookViewModel::class.java].ui.value.selectedId!!
+            val cardId=runBlocking{app.study.cards(currentBook).first()}.single().id
+            compose.onNodeWithTag("study-card-$cardId").performClick();compose.onNodeWithTag("study-edit-card").performScrollTo().performClick()
         }
         compose.onNodeWithTag("study-card-title").performTextReplacement(title);compose.onNodeWithTag("study-card-body").performTextReplacement(body);compose.onNodeWithTag("study-save-card").performClick()
         compose.waitUntil(15_000){compose.onAllNodesWithTag("study-card-editor").fetchSemanticsNodes().isEmpty()}
@@ -86,7 +89,7 @@ class SelectionStudyUiTest {
             val v=InkCanvasView(compose.activity);v.configure(false,PaperStyle.BLANK,null);v.layout(0,0,800,1000);v.showStrokes(InkSession(result).visibleDraft())
             val image=Bitmap.createBitmap(800,1000,Bitmap.Config.ARGB_8888);try{v.draw(Canvas(image));val d=v.resources.displayMetrics.density.toDouble();val p=v.snapshotViewport().worldToScreen(400.0,600.0,800.0,1000.0,d);val c=image.getPixel(p.x.toInt(),p.y.toInt());assertTrue(Color.red(c)>220&&Color.green(c)>220&&Color.blue(c)>220)}finally{image.recycle()}
         }
-        compose.onNodeWithTag("ink-undo").performScrollTo().performClick();saved(1);compose.waitUntil(10_000){runBlocking{app.inkRepository.read(n.id).revision}==3L};assertTrue(InkSession(runBlocking{app.inkRepository.read(n.id)}).visibleDraft().single().cuts.isEmpty())
+        compose.onNodeWithTag("ink-undo").performClick();saved(1);compose.waitUntil(10_000){runBlocking{app.inkRepository.read(n.id).revision}==3L};assertTrue(InkSession(runBlocking{app.inkRepository.read(n.id)}).visibleDraft().single().cuts.isEmpty())
     }
     @Test fun beautifyPreviewCancelThenApplyIsReversible(){
         val(n,s)=seed();select();compose.onNodeWithTag("selection-more").performClick();compose.onNodeWithTag("selection-beautify").performScrollTo().assertIsEnabled().performClick()
@@ -98,7 +101,7 @@ class SelectionStudyUiTest {
         awaitBeauty();compose.onNodeWithTag("apply-beautify").performClick();saved(1)
         compose.waitUntil(10_000){runBlocking{app.inkRepository.read(n.id).revision}==2L}
         assertEquals(InkSelectionEdit.beautify(listOf(s),.8f).single().samples,InkSession(runBlocking{app.inkRepository.read(n.id)}).visibleDraft().single().samples)
-        assertEquals(2,runBlocking{app.inkRepository.read(n.id).strokes.size});compose.onNodeWithTag("ink-undo").performScrollTo().performClick();saved(1)
+        assertEquals(2,runBlocking{app.inkRepository.read(n.id).strokes.size});compose.onNodeWithTag("ink-undo").performClick();saved(1)
         assertEquals(s.samples,InkSession(runBlocking{app.inkRepository.read(n.id)}).visibleDraft().single().samples)
     }
     @Test fun selectionDuplicateThenDeleteDoesNotChangeOriginal(){
@@ -128,21 +131,21 @@ class SelectionStudyUiTest {
         compose.onAllNodesWithTag("study-card-details").assertCountEquals(0);assertEquals(n.id,snapshot.pageId)
     }
     @Test fun outlineAndMapReuseSingleEditableCard(){
-        val(n,_)=seed();compose.onNodeWithTag("quick-settings").performClick();compose.onNodeWithTag("study-open").performScrollTo().performClick();compose.onNodeWithTag("study-add-card").performClick();addCard("条件概率","按定义推导")
+        val(n,_)=seed();compose.onNodeWithTag("quick-settings").performClick();compose.onNodeWithTag("study-open").performScrollTo().performClick();compose.revealAction("study-add-card");compose.onNodeWithTag("study-add-card").performClick();addCard("条件概率","按定义推导")
         val card=runBlocking{app.study.cards(n.id).first()}.single()
         compose.onNodeWithTag("study-card-${card.id}").performClick();compose.onNodeWithTag("study-reuse-card").performScrollTo().performClick()
         compose.waitUntil(10_000){runBlocking{app.study.nodes(n.id).first().size}==2}
-        compose.onNodeWithTag("study-tab-1").performClick();val nodes=runBlocking{app.study.nodes(n.id).first()}
-        compose.onNodeWithTag("outline-node-${nodes.first().id}").performClick();compose.onNodeWithTag("study-edit-card").performScrollTo().performClick()
+        compose.revealAction("study-tab-1");compose.onNodeWithTag("study-tab-1").performClick();val nodes=runBlocking{app.study.nodes(n.id).first()}
+        compose.onNodeWithTag("outline-node-${nodes.first().id}").performScrollTo().performClick();compose.onNodeWithTag("study-edit-card").performScrollTo().performClick()
         compose.onNodeWithTag("study-card-title").performTextReplacement("概率公式整理");compose.onNodeWithTag("study-save-card").performClick()
         compose.waitUntil(10_000){compose.onAllNodesWithTag("study-card-editor").fetchSemanticsNodes().isEmpty()}
         assertEquals("概率公式整理",runBlocking{app.study.cards(n.id).first().single().title});assertEquals(2,runBlocking{app.study.nodes(n.id).first().count{it.cardId==card.id}})
-        shot("study-outline.png");compose.onNodeWithTag("study-tab-2").performClick();compose.onNodeWithTag("study-map").assertIsDisplayed()
+        shot("study-outline.png");compose.revealAction("study-tab-2");compose.onNodeWithTag("study-tab-2").performClick();compose.onNodeWithTag("study-map").assertIsDisplayed()
         compose.onNodeWithTag("study-close").assertIsDisplayed();shot("study-mindmap.png")
     }
     @Test fun childThemeAndRemovingLeafKeepsCard(){
-        val(n,_)=seed();compose.onNodeWithTag("quick-settings").performClick();compose.onNodeWithTag("study-open").performScrollTo().performClick();compose.onNodeWithTag("study-add-card").performClick();addCard("总论","根节点")
-        val root=runBlocking{app.study.nodes(n.id).first()}.single();compose.onNodeWithTag("study-tab-1").performClick();compose.onNodeWithTag("outline-node-${root.id}").performClick();compose.onNodeWithTag("study-add-child").performScrollTo().performClick();addCard("必要条件","检查假设")
+        val(n,_)=seed();compose.onNodeWithTag("quick-settings").performClick();compose.onNodeWithTag("study-open").performScrollTo().performClick();compose.revealAction("study-add-card");compose.onNodeWithTag("study-add-card").performClick();addCard("总论","根节点")
+        val root=runBlocking{app.study.nodes(n.id).first()}.single();compose.revealAction("study-tab-1");compose.onNodeWithTag("study-tab-1").performClick();compose.onNodeWithTag("outline-node-${root.id}").performScrollTo().performClick();compose.onNodeWithTag("study-add-child").performScrollTo().performClick();addCard("必要条件","检查假设")
         val child=runBlocking{app.study.nodes(n.id).first()}.single{it.parentId==root.id}
         compose.onNodeWithText("必要条件",useUnmergedTree=true).performScrollTo().performClick()
         try{compose.onNodeWithTag("study-card-details").assertExists()}catch(e:Throwable){shot("child-node-failure.png");throw e}
@@ -158,23 +161,26 @@ class SelectionStudyUiTest {
                 app.study.submit(StudyCommand(id(),n.id,StudyAction.CREATE,cardId=id(),nodeId=node,parentId=parent,title=title))
             }
         }
-        compose.onNodeWithTag("quick-settings").performClick();compose.onNodeWithTag("study-open").performScrollTo().performClick();compose.onNodeWithTag("study-tab-1").performClick()
+        compose.onNodeWithTag("quick-settings").performClick();compose.onNodeWithTag("study-open").performScrollTo().performClick();compose.revealAction("study-tab-1");compose.onNodeWithTag("study-tab-1").performClick()
         compose.onNodeWithTag("outline-fold-$root").performScrollTo().performClick()
         compose.onNodeWithTag("outline-node-$child").assertDoesNotExist()
-        compose.onNodeWithTag("outline-focus-$root").performClick()
+        compose.onNodeWithTag("outline-focus-$root").performScrollTo().performClick()
         compose.onNodeWithTag("outline-node-$other").assertDoesNotExist()
-        compose.onNodeWithTag("study-tab-2").performClick();compose.onNodeWithText("1 / 4 个主题").assertExists();shot("study-folded-map.png")
-        compose.onNodeWithTag("study-expand-all").performScrollTo().performClick()
+        compose.revealAction("study-tab-2");compose.onNodeWithTag("study-tab-2").performClick();compose.onNodeWithText("1 / 4 个主题").assertExists();shot("study-folded-map.png")
+        compose.revealAction("study-expand-all");compose.onNodeWithTag("study-expand-all").performScrollTo().performClick()
         compose.onNodeWithText("3 / 4 个主题").assertExists()
-        compose.onNodeWithTag("study-tab-1").performClick()
-        compose.onNodeWithTag("outline-focus-$child").performScrollTo().performClick()
+        compose.revealAction("study-tab-1");compose.onNodeWithTag("study-tab-1").performClick()
+        compose.onNodeWithTag("study-list").performScrollToIndex(1)
+        compose.onNodeWithTag("outline-focus-$child").performScrollTo()
+        compose.onNodeWithTag("outline-focus-$child").assertIsDisplayed().performClick()
         compose.onNodeWithTag("outline-node-$root").assertDoesNotExist()
         compose.onNodeWithTag("study-breadcrumb-$root").assertExists()
         compose.onNodeWithTag("outline-child-$child").performScrollTo().performClick();addCard("新子主题","")
         val newChild=runBlocking{app.study.cards(n.id).first()}.single{it.title=="新子主题"}
         assertEquals(child,runBlocking{app.study.nodes(n.id).first()}.single{it.cardId==newChild.id}.parentId)
-        compose.onNodeWithTag("study-focus-all").performScrollTo().performClick()
-        compose.onNodeWithTag("outline-sibling-$child").performScrollTo().performClick();addCard("同级主题","")
+        compose.revealAction("study-focus-all");compose.onNodeWithTag("study-focus-all").performScrollTo().performClick()
+        compose.onNodeWithTag("study-list").performScrollToIndex(1)
+        compose.onNodeWithTag("outline-sibling-$child").performScrollTo().assertIsDisplayed().performClick();addCard("同级主题","")
         val sibling=runBlocking{app.study.cards(n.id).first()}.single{it.title=="同级主题"}
         val nodes=runBlocking{app.study.nodes(n.id).first()}
         assertEquals(root,nodes.single{it.cardId==sibling.id}.parentId)
@@ -183,8 +189,8 @@ class SelectionStudyUiTest {
     }
     @Test fun cardSearchFindsBodyAndClearRestoresCards(){
         val(n,_)=seed();compose.onNodeWithTag("quick-settings").performClick();compose.onNodeWithTag("study-open").performScrollTo().performClick()
-        compose.onNodeWithTag("study-add-card").performClick();addCard("概率","先验条件")
-        compose.onNodeWithTag("study-add-card").performClick();addCard("微积分","连续可导")
+        compose.revealAction("study-add-card");compose.onNodeWithTag("study-add-card").performClick();addCard("概率","先验条件")
+        compose.revealAction("study-add-card");compose.onNodeWithTag("study-add-card").performClick();addCard("微积分","连续可导")
         val cards=runBlocking{app.study.cards(n.id).first()}
         val probability=cards.single{it.title=="概率"};val calculus=cards.single{it.title=="微积分"}
         compose.onNodeWithTag("study-search").performTextInput("先验")

@@ -15,7 +15,7 @@ class IntegratedMapUiTest {
  @get:Rule val compose=createAndroidComposeRule<MainActivity>()
  private val app get()=compose.activity.application as InkWeftApplication
  private fun id()=UUID.randomUUID().toString()
- private fun tap(tag:String){if(tag in setOf("add-page","object-shape","page-objects","object-sticker","top-area-erase","object-camera")){compose.openEditorAction(tag);return};if(tag=="top-draw"){compose.openCurrentPen();return};val node=compose.onNodeWithTag(tag);runCatching{node.performScrollTo()};node.performClick()}
+ private fun tap(tag:String){compose.revealAction(tag);if(tag in setOf("add-page","object-shape","page-objects","object-sticker","top-area-erase","object-camera")){compose.openEditorAction(tag);return};if(tag=="top-draw"){compose.openCurrentPen();return};val node=compose.onNodeWithTag(tag);runCatching{node.performScrollTo()};node.performClick()}
  private fun ready(){compose.waitUntil(15000){app.navigationReady.value};compose.waitForIdle()}
  private inline fun <reified T:View> find(v:View):T? {val queue=java.util.ArrayDeque<View>();queue.add(v);while(queue.isNotEmpty()){val current=queue.removeFirst();if(current is T&&current.isShown)return current;if(current is ViewGroup)for(i in 0 until current.childCount)queue.add(current.getChildAt(i))};return null}
  @Test fun recreationKeepsOpenMapViewportAndUnsavedCardDraft(){
@@ -45,7 +45,7 @@ class IntegratedMapUiTest {
   fun send(action:Int,dx:Float){val v=checkNotNull(view);val prop=android.view.MotionEvent.PointerProperties().apply{id=0;toolType=android.view.MotionEvent.TOOL_TYPE_STYLUS};val point=android.view.MotionEvent.PointerCoords().apply{x=v.width*.5f+dx;y=v.height*.45f;pressure=.5f}
    val e=android.view.MotionEvent.obtain(time,android.os.SystemClock.uptimeMillis(),action,1,arrayOf(prop),arrayOf(point),0,0,1f,1f,0,0,android.view.InputDevice.SOURCE_STYLUS,0);try{assertTrue(v.dispatchTouchEvent(e))}finally{e.recycle()}}
   compose.runOnIdle{view=find<InkCanvasView>(compose.activity.window.decorView);send(android.view.MotionEvent.ACTION_DOWN,0f)}
-  compose.waitForIdle();compose.onNodeWithTag("study-close").assertIsNotEnabled();compose.onNodeWithTag("quick-study").assertIsNotEnabled();compose.onNodeWithTag("study-add-card").assertIsNotEnabled()
+  compose.waitForIdle();compose.onNodeWithTag("study-close").assertIsNotEnabled();compose.onNodeWithTag("quick-study").assertIsNotEnabled();compose.onNodeWithTag("study-new-map").assertIsNotEnabled()
   assertEquals(bounds,compose.onNodeWithTag("ink-surface").fetchSemanticsNode().boundsInRoot)
   compose.runOnIdle{send(android.view.MotionEvent.ACTION_MOVE,30f);send(android.view.MotionEvent.ACTION_UP,60f)};ready()
   compose.waitUntil(10000){runBlocking{app.inkRepository.read(note.id).strokes.size}==1}

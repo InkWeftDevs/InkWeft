@@ -33,7 +33,7 @@ import org.inkweft.data.WorkspaceRow
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:NotebookPageRow,onCanNavigate:(Boolean)->Unit,onSearch:(Long)->Unit,externalEnabled:Boolean=true,onExcerpt:(SelectedInk)->Unit={},onMapExcerpt:(SelectedInk)->Unit={},onAssociate:(SelectedInk)->Unit={},focusRegion:CanvasBounds?=null,onFocusConsumed:()->Unit={},pageNavigation:@Composable ()->Unit={},continuousPages:List<NotebookPageRow>?=null,onContinuousPage:(String)->Unit={},leaveContinuous:()->Unit={},onTags:()->Unit={},onDocumentAction:(String)->Unit={},canAddPage:Boolean=false,excerptRequest:Int=0,fullScreen:Boolean=false,onFullScreen:(Boolean)->Unit={}){
+internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:NotebookPageRow,onCanNavigate:(Boolean)->Unit,onSearch:(Long)->Unit,externalEnabled:Boolean=true,onExcerpt:(SelectedInk)->Unit={},onMapExcerpt:(SelectedInk)->Unit={},onAssociate:(SelectedInk)->Unit={},focusRegion:CanvasBounds?=null,onFocusConsumed:()->Unit={},pageNavigation:@Composable ()->Unit={},continuousPages:List<NotebookPageRow>?=null,onContinuousPage:(String)->Unit={},leaveContinuous:()->Unit={},onTags:()->Unit={},onDocumentAction:(String)->Unit={},canAddPage:Boolean=false,excerptRequest:Int=0,fullScreen:Boolean=false,inlineDocumentBar:Boolean=false,externalToolbarMore:Boolean=false,toolbarRequest:Int=0,onFullScreen:(Boolean)->Unit={}){
     val context=LocalContext.current;val app=context.applicationContext as InkWeftApplication
     val vm:InkViewModel=viewModel(key="ink-${page.id}",factory=InkViewModel.Factory(page.id,app.inkRepository))
     val ui by vm.ui.collectAsStateWithLifecycle()
@@ -75,10 +75,14 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
     var favoriteSettings by remember{mutableStateOf<String?>(null)}
     var objectRequest by remember{mutableStateOf<String?>(null)}
     var selectedExcerpt by rememberSaveable(page.id){mutableStateOf<String?>(null)}
+    var localToolbarRequest by remember{mutableIntStateOf(0)}
     var excerptDraft by remember{mutableStateOf(false)}
     val excerptVm:StudyViewModel=viewModel(key="excerpt-${note.base.id}",factory=StudyViewModel.Factory(note.base.id,app.study))
+    val mapSession:StudyViewModel=viewModel(key="study-${note.base.id}",factory=StudyViewModel.Factory(note.base.id,app.study))
     var excerptMode by rememberSaveable{mutableStateOf(false)}
     val excerptPrefs=remember{context.getSharedPreferences("inkweft-excerpts",0)}
+    var excerptMarkMode by rememberSaveable{mutableStateOf(false)}
+    var captureToMap by rememberSaveable{mutableStateOf(excerptPrefs.getBoolean("to-map",true))}
     var excerptTextMode by rememberSaveable{mutableStateOf(excerptPrefs.getBoolean("text",false))}
     var capturingExcerpt by remember{mutableStateOf(false)}
     var showExcerptMarkers by rememberSaveable{mutableStateOf(excerptPrefs.getBoolean("markers",true))}
@@ -141,6 +145,7 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
     }
     fun moveMixed(s:CanvasSelection,dx:Float,dy:Float,copy:Boolean=false){runCatching{CanvasSelectionEdit.moved(s,dx,dy,copy,page.world)}.onSuccess{editMixed(s,it)}.onFailure{notice="调整超出页面或容量限制，原内容保留"}}
     var selected by remember(page.id){mutableStateOf<SelectedInk?>(null)}
+    LaunchedEffect(mapSession.captureGeneration){if(mapSession.captureGeneration>0)selected=null}
     var pendingSelection by remember(page.id){mutableStateOf<Pair<InkRegion,List<String>>?>(null)}
     var freehand by remember{mutableStateOf(selectionOptions.freehand)}
     val editable=!mixedBlocked&&externalEnabled&&!readOnly&&!ui.loading&&!ui.readFailed&&ui.queued==0&&ui.blocked==null&&!ui.processing
@@ -217,7 +222,7 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
             if(found.objects.isNotEmpty())mixedSelection=found.copy(region=tight)else selected=SelectedInk(tight,found.revision,found.strokes)
         }
     }
-    fun chooseSelection(free:Boolean=selectionOptions.freehand,excerpt:Boolean=false,erase:Boolean=false){selectedExcerpt=null;mixedSelection=null;areaEraseMode=erase;if(continuousPages!=null)leaveContinuous();tool=4;freehand=free;excerptMode=excerpt;selected=null;if(excerpt)freehand=false}
+    fun chooseSelection(free:Boolean=selectionOptions.freehand,excerpt:Boolean=false,erase:Boolean=false){selectedExcerpt=null;mixedSelection=null;areaEraseMode=erase;if(continuousPages!=null)leaveContinuous();tool=4;freehand=free;excerptMode=excerpt;selected=null;if(excerpt)freehand=excerptMarkMode}
     LaunchedEffect(excerptRequest){if(excerptRequest>0)chooseSelection(excerpt=true)}
     fun insertObject(action:String){if(continuousPages!=null)leaveContinuous();if(action=="shape"){shapePicker=true}else{tool=5;objectRequest=action}}
     fun beautify(selection:SelectedInk){
@@ -228,11 +233,12 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
         if(beautyOptions.keepInk){val source=writing.filter{it.cuts.isEmpty()};if(source.isNotEmpty()){applySelected(selection.revision,InkMutation.Replace(source.map{it.id},InkSelectionEdit.beautify(source,beautyOptions.inkStrength)));selected=null;tool=0}}else if(beautyFont){objectsVm.beautify(target,beautyOptions,page.world,app);selected=null;tool=0} else if(writing.any{it.cuts.isNotEmpty()})notice="已局部擦除的笔迹暂不能润色，可以选择换字体。"else smoothSelection=target
     }
     fun captureExcerpt(selection:SelectedInk){
+        fun prepared(value:SelectedInk){selected=value;if(captureToMap)onMapExcerpt(value)}
         val picture=runCatching{checkNotNull(view).excerptPreview(selection.region.bounds)}.getOrElse{notice=it.message?:"摘录未完成，请稍后重试";return}
         val revision=objectsVm.revision
         val strokes=selectable.filter{it.bounds().intersects(selection.region.bounds)}
-        if(!excerptTextMode){onExcerpt(selection.copy(preview=picture,objectRevision=revision));return}
-        if(strokes.size>256){onExcerpt(selection.copy(preview=picture,objectRevision=revision));notice="选区笔迹较多，已保留原貌；提取文字请缩小范围";return}
+        if(!excerptTextMode){prepared(selection.copy(preview=picture,objectRevision=revision));return}
+        if(strokes.size>256){prepared(selection.copy(preview=picture,objectRevision=revision));notice="选区笔迹较多，已保留原貌；提取文字请缩小范围";return}
         capturingExcerpt=true
         scope.launch{
             try{
@@ -240,9 +246,9 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
                 val objectText=objectsUi.objects.filter{!it.hidden&&it.kind==PageObjectKind.TEXT&&it.bounds().intersects(selection.region.bounds)}.joinToString("\n"){it.visibleText()}
                 val inkText=if(strokes.isEmpty())""else app.handwriting.recognize(strokes).text
                 val text=listOf(pdfText,objectText,inkText).filter{it.isNotBlank()}.joinToString("\n").take(20000)
-                onExcerpt(selection.copy(preview=picture,objectRevision=revision,excerptText=text))
+                prepared(selection.copy(preview=picture,objectRevision=revision,excerptText=text))
                 if(text.isBlank())notice="未提取到文字，已保留框选原貌，可添加备注"
-            }catch(c:CancellationException){throw c}catch(_:Exception){onExcerpt(selection.copy(preview=picture,objectRevision=revision));notice="文字提取未完成，已保留框选原貌"}finally{capturingExcerpt=false}
+            }catch(c:CancellationException){throw c}catch(_:Exception){prepared(selection.copy(preview=picture,objectRevision=revision));notice="文字提取未完成，已保留框选原貌"}finally{capturingExcerpt=false}
         }
     }
     fun enterBeauty(){
@@ -340,7 +346,8 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
             }
             if(tool!=5)PageObjectTools(objectsVm,objectsUi,page.id,page.world,false,editable&&!gesture,null,{selectedObject=it},{objectInteraction=it},{view?.snapshotViewport()},{notice=it})
             if((tool==4||tool==6)&&selectedExcerpt==null)AndroidView(factory={SelectionOverlayView(it)},update={v->
-                v.geometry=visibleGeometry;v.selectedObjects=mixedSelection?.objects.orEmpty().map{it.bounds()};v.objectIds=mixedSelection?.objects.orEmpty().map{it.id}.toSet();v.worldSelection=page.world;v.canvasView=view;v.region=mixedSelection?.region?:selected?.region;v.selected=mixedSelection?.strokes?:selected?.strokes.orEmpty();v.freehand=freehand;v.enabledInput=editable
+                v.geometry=visibleGeometry;v.selectedObjects=mixedSelection?.objects.orEmpty().map{it.bounds()};v.objectIds=mixedSelection?.objects.orEmpty().map{it.id}.toSet();v.worldSelection=page.world;v.canvasView=view;v.region=mixedSelection?.region?:selected?.region;v.selected=mixedSelection?.strokes?:selected?.strokes.orEmpty();v.freehand=freehand;v.marker=excerptMode&&excerptMarkMode;v.enabledInput=editable
+                v.onCaptureDrag=if(excerptMode&&captureToMap){{selected?.takeIf{it.preview!=null}?.let{s->CaptureTransfer(note.base.id,StudySourceDraft(page.id,s.revision,s.region.bounds,s.strokes.map{it.id},s.preview,s.objectRevision),s.excerptText)}}}else null
                 v.onActive={gesture=it};v.onRegion={region->if(excerptMode&&region!=null){
                     val b=region.bounds;val clipped=runCatching{CanvasBounds(b.left.coerceAtLeast(if(page.world)-BoardLimits.WORLD.toDouble() else 0.0),b.top.coerceAtLeast(if(page.world)-BoardLimits.WORLD.toDouble() else 0.0),b.right.coerceAtMost(if(page.world)BoardLimits.WORLD.toDouble() else 1000.0),b.bottom.coerceAtMost(if(page.world)BoardLimits.WORLD.toDouble() else 1414.0))}.getOrNull()
                     if(clipped!=null&&clipped.right>clipped.left&&clipped.bottom>clipped.top){
@@ -368,6 +375,9 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
             if(tool==4&&excerptMode&&!readOnly)selectedExcerpt?.let{id->
                 ExcerptEditor(id,excerptVm,view,selectionViewport,page.world,ui.revision,objectsVm.revision,editable&&!objectsBlocked,{selectedExcerpt=null},{gesture=it},{excerptDraft=it})
             }
+            if(tool==4&&excerptMode&&selected?.preview!=null&&!readOnly)SelectionToolbar(selected?.region,selectionViewport){
+                Row{TextButton({selected?.let{if(captureToMap)onMapExcerpt(it)else{onExcerpt(it);selected=null}}},enabled=editable,modifier=Modifier.testTag("capture-confirm")){Text(if(captureToMap)"添加到导图"else"存入摘录匣")};TextButton({selected=null}){Text("取消")}}
+            }
             if(tool==4&&!excerptMode&&!areaEraseMode&&!readOnly&&(selected!=null||mixedSelection!=null))SelectionToolbar(mixedSelection?.region?:selected?.region,selectionViewport){
                 Column {
 
@@ -388,18 +398,19 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
         if(viewportHint!=0)Surface(Modifier.align(Alignment.BottomCenter).padding(bottom=12.dp),shape=RoundedCornerShape(20.dp),color=Color.White.copy(alpha=.9f),border=BorderStroke(1.dp,Line)){
             Row(Modifier.padding(horizontal=14.dp,vertical=6.dp)){if(viewportHint==2)Text("${(zoom*100).toInt()}%",fontSize=12.sp,modifier=Modifier.testTag("ink-zoom"))else pageNavigation()}
         }
-        Surface(Modifier.align(Alignment.TopCenter).padding(start=100.dp,end=8.dp,top=0.dp).widthIn(max=432.dp).fillMaxWidth(),shape=RoundedCornerShape(26.dp),color=Color.White,shadowElevation=3.dp,border=BorderStroke(1.dp,Line)){
-            EditorToolbar { action -> when(action){
-                "undo" -> IconButton(onClick={if(historyHeads.undo==EditDomain.OBJECT)objectsVm.undo()else vm.undo()},enabled=(if(historyHeads.undo==EditDomain.OBJECT)objectsUi.undo else ui.canUndo)&&!editingBlocked,modifier=Modifier.testTag("ink-undo").describedAs("撤销")){Glyph("undo")}
-                "redo" -> IconButton(onClick={if(historyHeads.redo==EditDomain.OBJECT)objectsVm.redo()else vm.redo()},enabled=(if(historyHeads.redo==EditDomain.OBJECT)objectsUi.redo else ui.canRedo)&&!editingBlocked,modifier=Modifier.testTag("ink-redo").describedAs("重做")){Glyph("redo")}
-                "pen" -> IconButton(onClick={readOnly=false;selectedObject=null;if(tool !in 0..2)tool=lastWritingTool;penOpenRequest++;settings=true},enabled=!busy,modifier=Modifier.testTag("top-draw").describedAs("笔参数")){Glyph("pen",if(tool<3&&!readOnly)Forest else Quiet)}
-                "eraser" -> IconToggleButton(tool==3,{if(tool==3){anchorFor("eraser");eraserDialog=true}else tool=3},enabled=!editingBlocked,modifier=Modifier.toolAnchor("eraser").testTag("top-eraser").describedAs("橡皮")){Glyph("eraser")}
-                "lasso" -> IconToggleButton(tool==4&&!excerptMode&&!areaEraseMode,{if(tool==4&&!excerptMode&&!areaEraseMode){anchorFor("lasso");selectionSettings=true}else chooseSelection()},enabled=!editingBlocked&&!continuousBlocked,modifier=Modifier.toolAnchor("lasso").testTag("ink-select").describedAs("套索")){Glyph("select")}
+        Surface(Modifier.align(Alignment.TopCenter).padding(start=if(inlineDocumentBar)64.dp else 4.dp,end=if(inlineDocumentBar)208.dp else 4.dp).widthIn(max=560.dp).fillMaxWidth(),shape=RoundedCornerShape(26.dp),color=Color.White,shadowElevation=3.dp,border=BorderStroke(1.dp,Line)){
+            EditorToolbar(externalMore=externalToolbarMore,moreRequest=toolbarRequest+localToolbarRequest) { action -> when(action){
+                "undo" -> IconButton(onClick={if(historyHeads.undo==EditDomain.OBJECT)objectsVm.undo()else vm.undo()},enabled=(if(historyHeads.undo==EditDomain.OBJECT)objectsUi.undo else ui.canUndo)&&!editingBlocked,modifier=Modifier.size(48.dp).testTag("ink-undo").describedAs("撤销")){Glyph("undo")}
+                "redo" -> IconButton(onClick={if(historyHeads.redo==EditDomain.OBJECT)objectsVm.redo()else vm.redo()},enabled=(if(historyHeads.redo==EditDomain.OBJECT)objectsUi.redo else ui.canRedo)&&!editingBlocked,modifier=Modifier.size(48.dp).testTag("ink-redo").describedAs("重做")){Glyph("redo")}
+                "pen" -> IconButton(onClick={readOnly=false;selectedObject=null;if(tool in 0..2){settings=true;penOpenRequest++}else{tool=lastWritingTool;penOpenRequest++}},enabled=!busy,modifier=Modifier.size(48.dp).testTag("top-draw").describedAs("笔参数")){Glyph("pen",if(tool<3&&!readOnly)Forest else Quiet)}
+                "eraser" -> IconToggleButton(tool==3,{if(tool==3){anchorFor("eraser");eraserDialog=true}else tool=3},enabled=!editingBlocked,modifier=Modifier.size(48.dp).toolAnchor("eraser").testTag("top-eraser").describedAs("橡皮")){Glyph("eraser")}
+                "lasso" -> IconToggleButton(tool==4&&!excerptMode&&!areaEraseMode,{if(tool==4&&!excerptMode&&!areaEraseMode){anchorFor("lasso");selectionSettings=true}else chooseSelection()},enabled=!editingBlocked&&!continuousBlocked,modifier=Modifier.size(48.dp).toolAnchor("lasso").testTag("ink-select").describedAs("套索")){Glyph("select")}
                 "area" -> IconButton(onClick={chooseSelection(true,erase=true)},enabled=!editingBlocked&&!continuousBlocked,modifier=Modifier.testTag("top-area-erase").describedAs("圈选擦除")){Glyph("area-erase")}
                 "image" -> IconButton(onClick={insertObject("image")},enabled=!editingBlocked&&!continuousBlocked,modifier=Modifier.testTag("object-image").describedAs("插入图片")){Glyph("image")}
                 "camera" -> IconButton(onClick={insertObject("camera")},enabled=!editingBlocked&&!continuousBlocked,modifier=Modifier.testTag("object-camera").describedAs("拍照")){Glyph("camera")}
                 "text" -> IconButton(onClick={insertObject("text")},enabled=!editingBlocked&&!continuousBlocked,modifier=Modifier.testTag("object-text").describedAs("文本框")){Glyph("text")}
-                "excerpt" -> IconButton(onClick={if(tool==4&&excerptMode){anchorFor("excerpt");excerptSettings=true}else chooseSelection(excerpt=true)},enabled=!editingBlocked&&!continuousBlocked,modifier=Modifier.toolAnchor("excerpt").testTag("top-excerpt").describedAs("摘录")){Glyph("excerpt",if(excerptMode)Forest else TextInk)}
+                "map" -> IconButton(onClick={onDocumentAction("map")},enabled=!busy,modifier=Modifier.size(48.dp).testTag("quick-study").describedAs("笔记导图")){Column(horizontalAlignment=Alignment.CenterHorizontally){Glyph("mindmap",modifier=Modifier.size(20.dp));Text("导图",fontSize=12.sp,maxLines=1)}}
+                "excerpt" -> IconButton(onClick={if(tool==4&&excerptMode){anchorFor("excerpt");excerptSettings=true}else chooseSelection(excerpt=true)},enabled=!editingBlocked&&!continuousBlocked,modifier=Modifier.size(48.dp).toolAnchor("excerpt").testTag("top-excerpt").describedAs("摘录")){Column(horizontalAlignment=Alignment.CenterHorizontally){Glyph("excerpt",if(excerptMode)Forest else TextInk,modifier=Modifier.size(20.dp));Text("摘录",fontSize=12.sp,maxLines=1)}}
                 "tag" -> IconButton(onClick=onTags,enabled=!editingBlocked,modifier=Modifier.testTag("top-tags").describedAs("笔记标签")){Glyph("tag")}
                 "shape" -> IconButton(onClick={insertObject("shape")},enabled=!editingBlocked&&!continuousBlocked,modifier=Modifier.testTag("object-shape").describedAs("图形")){Glyph("shape")}
                 "sticker" -> IconButton(onClick={insertObject("sticker")},enabled=!editingBlocked&&!continuousBlocked,modifier=Modifier.testTag("object-sticker").describedAs("贴纸与符号")){Glyph("sticker")}
@@ -419,7 +430,8 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
         if(readOnly)Surface(Modifier.align(Alignment.TopCenter).padding(top=58.dp),shape=RoundedCornerShape(24.dp),color=Color.White,shadowElevation=3.dp,border=BorderStroke(1.dp,Line)){
             TextButton(onClick={readOnly=false},modifier=Modifier.testTag("exit-readonly")){Glyph("pen");Spacer(Modifier.width(8.dp));Text("只读浏览 · 返回书写")}
         }
-        if(fullScreen)TextButton(onClick={onFullScreen(false)},modifier=Modifier.align(Alignment.TopStart).padding(top=if(readOnly)48.dp else 0.dp).testTag("exit-fullscreen")){Text("退出全屏")}
+        if(fullScreen)TextButton(onClick={onFullScreen(false)},modifier=Modifier.align(Alignment.BottomEnd).padding(8.dp).testTag("exit-fullscreen")){Text("退出全屏")}
+        if(fullScreen&&externalToolbarMore)IconButton({localToolbarRequest++},modifier=Modifier.align(Alignment.TopEnd).padding(top=56.dp).size(48.dp).testTag("toolbar-more").describedAs("更多工具")){Glyph("more")}
         if(!readOnly)toolbar()
         if(favoritesOpen&&!readOnly)FloatingPenCase("favorites",wide=true){
             if(favorites.isEmpty())Text("在笔参数卡片点星号收藏",Modifier.padding(16.dp),style=MaterialTheme.typography.bodySmall,color=Quiet)
@@ -461,10 +473,19 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
     }
     smoothSelection?.let{s->BeautifyDialog(s.strokes,{smoothSelection=null;selected=null}){changed->if(applySelected(s.revision,InkMutation.Replace(s.strokes.map{it.id},changed))){smoothSelection=null;selected=null;tool=0}}}
     CompositionLocalProvider(LocalEditorAnchor provides parameterAnchor){
-    if(excerptSettings)EditorPanel("摘要笔","",{excerptSettings=false},"excerpt-settings"){Row(horizontalArrangement=Arrangement.spacedBy(8.dp)){
-        FilterChip(excerptTextMode,{excerptTextMode=true;excerptPrefs.edit().putBoolean("text",true).apply()},label={Text("文本摘录")},modifier=Modifier.testTag("excerpt-text-mode"))
-        FilterChip(!excerptTextMode,{excerptTextMode=false;excerptPrefs.edit().putBoolean("text",false).apply()},label={Text("框选摘录")},modifier=Modifier.testTag("excerpt-region-mode"))
-    };Row(verticalAlignment=Alignment.CenterVertically){Text("显示摘录标记",Modifier.weight(1f));Switch(showExcerptMarkers,{showExcerptMarkers=it;excerptPrefs.edit().putBoolean("markers",it).apply()},modifier=Modifier.testTag("excerpt-markers"))};Text(if(excerptTextMode)"框选 PDF 文字、文本框或手写内容，提取结果可在备注中修改"else"框选页面区域，保存原貌并添加备注",style=MaterialTheme.typography.bodySmall);TextButton({excerptSettings=false;onDocumentAction("excerpts")},modifier=Modifier.testTag("excerpt-open-list")){Text("查看本笔记摘录")}}
+    if(excerptSettings)EditorPanel("摘要笔","",{excerptSettings=false},"excerpt-settings"){
+        Column(Modifier.verticalScroll(rememberScrollState())){
+            Row{FilterChip(captureToMap,{captureToMap=true;excerptPrefs.edit().putBoolean("to-map",true).apply()},label={Text("导图")},modifier=Modifier.heightIn(min=48.dp).testTag("capture-destination-map"));FilterChip(!captureToMap,{captureToMap=false;excerptPrefs.edit().putBoolean("to-map",false).apply()},label={Text("摘录匣")},modifier=Modifier.heightIn(min=48.dp).testTag("capture-destination-inbox"))}
+            FlowRow(horizontalArrangement=Arrangement.spacedBy(4.dp)){
+                FilterChip(!excerptTextMode&&!excerptMarkMode,{excerptTextMode=false;excerptMarkMode=false;freehand=false;excerptPrefs.edit().putBoolean("text",false).apply()},label={Text("圈选")},modifier=Modifier.heightIn(min=48.dp).testTag("excerpt-region-mode"))
+                FilterChip(excerptMarkMode,{excerptTextMode=false;excerptMarkMode=true;freehand=true;excerptPrefs.edit().putBoolean("text",false).apply()},label={Text("标记")},modifier=Modifier.heightIn(min=48.dp).testTag("excerpt-mark-mode"))
+                FilterChip(excerptTextMode,{excerptTextMode=true;excerptMarkMode=false;freehand=false;excerptPrefs.edit().putBoolean("text",true).apply()},label={Text("文字")},modifier=Modifier.heightIn(min=48.dp).testTag("excerpt-text-mode"))
+            }
+            Row(verticalAlignment=Alignment.CenterVertically){Text("显示摘录标记",Modifier.weight(1f));Switch(showExcerptMarkers,{showExcerptMarkers=it;excerptPrefs.edit().putBoolean("markers",it).apply()},modifier=Modifier.testTag("excerpt-markers"))}
+            TextButton({excerptSettings=false;onDocumentAction("excerpts")},modifier=Modifier.testTag("excerpt-open-list")){Text("查看本笔记摘录")}
+        }
+    }
+
     if(selectionSettings)SelectionSettings(selectionOptions,freehand,{selectionSettings=false},all={selectAll()}){value,free->selectionOptions=value.copy(freehand=free);selectionStore.save(selectionOptions);freehand=free;selected=null;mixedSelection=null}
     if(mixedRetry)AlertDialog(onDismissRequest={},title={Text("编辑保存待核对")},text={Text("原操作已保留，请先核对保存结果。")},confirmButton={TextButton({mixedWriter.retry(app.inkRepository)}){Text("核对重试")}},dismissButton={TextButton({discardMixed=true}){Text("读取已保存页")}})
     if(discardMixed)AlertDialog(onDismissRequest={discardMixed=false},text={Text("放弃未确认的编辑草稿，重新读取已保存内容？")},confirmButton={TextButton({discardMixed=false;pendingMixed=null;mixedSelection=null;mixedWriter.readSaved()}){Text("读取")}},dismissButton={TextButton({discardMixed=false}){Text("取消")}})

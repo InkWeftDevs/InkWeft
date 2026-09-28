@@ -50,8 +50,10 @@ class StudyRepository(private val db:NoteDatabase,private val fault:(StudyFault)
     fun excerpts(book:String)=db.study().excerpts(book)
     fun cards(book:String)=db.study().observeCards(book)
     fun nodes(book:String,mapId:String?=null):Flow<List<StudyNodeRow>> = if(mapId==null)db.study().observeNodes(book)else db.knowledge().observe().map{rows->mapNodes(book,mapId,rows)}
-    private fun mapNodes(book:String,mapId:String,rows:List<KnowledgeRow>)=rows.filter{it.notebookId==book}.mapNotNull{r->
-        (r.data() as? KnowledgeData.MapOccurrence)?.takeIf{it.mapId==mapId}?.let{StudyNodeRow(r.id,book,it.cardId,it.parentId,it.x,it.y,r.revision,r.removed)}
+    private fun mapNodes(book:String,mapId:String,rows:List<KnowledgeRow>):List<StudyNodeRow>{
+        val definition=rows.find{it.id==mapId&&it.notebookId==book&&!it.removed}
+        val structures=(definition?.data() as? KnowledgeData.MapDefinition)?.structures.orEmpty().map{StudyNodeRow(it.id,book,it.id,it.parentId,it.x,it.y,definition!!.revision)}
+        return structures+rows.filter{it.notebookId==book}.mapNotNull{r->(r.data() as? KnowledgeData.MapOccurrence)?.takeIf{it.mapId==mapId}?.let{StudyNodeRow(r.id,book,it.cardId,it.parentId,it.x,it.y,r.revision,r.removed)}}
     }
     fun observeSource(card:String)=db.study().observeSource(card)
     suspend fun source(card:String)=db.study().source(card)
@@ -72,10 +74,16 @@ class StudyRepository(private val db:NoteDatabase,private val fault:(StudyFault)
                 val map=studyNotNull(db.knowledge().get(selectedMap));studyRequire(map.notebookId==c.notebookId&&!map.removed&&map.data() is KnowledgeData.MapDefinition){"MAP_UNAVAILABLE"}
                 mapNodes(c.notebookId,selectedMap,db.knowledge().all())
             }
+            if(c.expectedGraph.isNotEmpty())studyRequire(c.expectedGraph==StudyGraph.orderHash(nodes.map{it.model()})){"MAP_VERSION_CHANGED"}
             suspend fun writeNode(n:StudyNodeRow,expected:Long){
                 if(selectedMap==null){if(expected==0L)dao.addNode(n)else check(dao.updateNode(n)==1)}else {
                     val op=java.util.UUID.nameUUIDFromBytes((c.id+":"+n.id).toByteArray()).toString()
-                    KnowledgeRepository(db).submit(KnowledgeCommand(op,c.notebookId,n.id,expected,KnowledgeData.MapOccurrence(selectedMap,n.cardId,n.parentId,n.x,n.y),n.removed))
+                    val map=studyNotNull(db.knowledge().get(selectedMap));val definition=map.data() as KnowledgeData.MapDefinition
+                    val structural=definition.structures.find{it.id==n.id}
+                    if(structural!=null){
+                        val next=definition.copy(structures=definition.structures.mapNotNull{if(it.id!=n.id)it else if(n.removed)null else it.copy(parentId=n.parentId,x=n.x,y=n.y)})
+                        KnowledgeRepository(db).submit(KnowledgeCommand(op,c.notebookId,selectedMap,map.revision,next))
+                    }else KnowledgeRepository(db).submit(KnowledgeCommand(op,c.notebookId,n.id,expected,KnowledgeData.MapOccurrence(selectedMap,n.cardId,n.parentId,n.x,n.y),n.removed))
                 }
             }
             fun ownedCard():StudyCardRow=studyNotNull(cards.find{it.id==c.cardId})
@@ -112,6 +120,14 @@ class StudyRepository(private val db:NoteDatabase,private val fault:(StudyFault)
                     val row=StudyCardRow(studyNotNull(c.cardId),c.notebookId,1,c.title,c.body)
                     dao.addCard(row);dao.revision(StudyCardRevisionRow(row.id,1,row.title,row.body,null));snap?.let{dao.source(it)};if(c.action==StudyAction.CREATE)newNode();row.id
                 }
+                StudyAction.UNDO_CAPTURE->{
+                    val old=ownedNode();studyRequire(old.cardId==c.cardId&&old.revision==c.expectedRevision){"CAPTURE_ALREADY_CHANGED"}
+                    studyRequire(nodes.none{it.parentId==old.id&&!it.removed}){"REMOVE_CHILDREN_FIRST"}
+                    writeNode(old.copy(removed=true,revision=old.revision+1),old.revision)
+                    val card=ownedCard()
+                    val used=dao.nodes(c.notebookId).any{!it.removed&&it.cardId==card.id}||db.knowledge().all().any{r->!r.removed&&when(val d=r.data()){is KnowledgeData.MapOccurrence->d.cardId==card.id;is KnowledgeData.Placement->d.cardId==card.id;is KnowledgeData.Properties->d.cardId==card.id;is KnowledgeData.Question->d.cardId==card.id;is KnowledgeData.Alias->d.cardId==card.id;is KnowledgeData.Link->d.source==TargetRef(TargetKind.CARD,card.id)||d.target==TargetRef(TargetKind.CARD,card.id);else->false}}
+                    if(!used&&card.revision==1L&&card.trashedAt==null){val next=card.copy(revision=2,trashedAt=System.currentTimeMillis());check(dao.updateCard(next)==1);dao.revision(StudyCardRevisionRow(next.id,next.revision,next.title,next.body,next.trashedAt))};old.id
+                }
                 StudyAction.RECROP_EXCERPT->{
                     val old=ownedCard();studyRequire(old.trashedAt==null&&old.revision==c.expectedRevision){"CARD_VERSION_CHANGED"}
                     val previous=studyNotNull(dao.source(old.id));val draft=studyNotNull(c.source)
@@ -142,7 +158,7 @@ class StudyRepository(private val db:NoteDatabase,private val fault:(StudyFault)
                 }
                 StudyAction.ARRANGE->{
                     studyRequire(c.expectedGraph==StudyGraph.orderHash(nodes.map{it.model()})){"MAP_VERSION_CHANGED"}
-                    val positions=StudyGraph.arrange(nodes.map{it.model()});nodes.filter{!it.removed}.forEach{n->val p=positions.getValue(n.id);writeNode(n.copy(x=p.x,y=p.y,revision=n.revision+1),n.revision)};c.notebookId
+                    val layout=selectedMap?.let{(db.knowledge().get(it)?.data() as? KnowledgeData.MapDefinition)?.layout}?:"right";val positions=MapTemplates.arrange(nodes.map{it.model()},layout);nodes.filter{!it.removed}.forEach{n->val p=positions.getValue(n.id);writeNode(n.copy(x=p.x,y=p.y,revision=n.revision+1),n.revision)};c.notebookId
                 }
             }
             fault(StudyFault.BEFORE_RECEIPT);dao.receipt(StudyReceiptRow(c.id,c.notebookId,c.digest(),id));db.notes().touch(c.notebookId,System.currentTimeMillis());id

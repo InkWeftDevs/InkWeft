@@ -37,8 +37,8 @@ class InkUiTest {
     @Test fun realTouchUndoRedoAndActivityRecreation() {
         newNote();draw();count(1)
         compose.onNodeWithTag("pen-kind-pen").performScrollTo().performClick();draw();count(2)
-        compose.onNodeWithTag("ink-undo").performScrollTo().performClick();count(1)
-        compose.onNodeWithTag("ink-redo").performScrollTo().performClick();count(2)
+        compose.onNodeWithTag("ink-undo").performClick();count(1)
+        compose.onNodeWithTag("ink-redo").performClick();count(2)
         compose.activityRule.scenario.recreate();count(2)
         compose.waitForIdle()
         val bitmap=checkNotNull(InstrumentationRegistry.getInstrumentation().uiAutomation.takeScreenshot())

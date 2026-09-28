@@ -11,7 +11,7 @@ import org.junit.Assert.*
 class DocumentPanelsUiTest {
  @get:Rule val compose=createAndroidComposeRule<MainActivity>()
  private val app get()=compose.activity.application as InkWeftApplication
- private fun tap(tag:String){if(tag in setOf("add-page","object-shape","page-objects","object-sticker","top-area-erase","object-camera")){compose.openEditorAction(tag);return};if(tag=="top-draw"){compose.openCurrentPen();return};val n=compose.onNodeWithTag(tag);runCatching{n.performScrollTo()};n.performClick()}
+ private fun tap(tag:String){compose.revealAction(tag);if(tag in setOf("add-page","object-shape","page-objects","object-sticker","top-area-erase","object-camera")){compose.openEditorAction(tag);return};if(tag=="top-draw"){compose.openCurrentPen();return};val n=compose.onNodeWithTag(tag);runCatching{n.performScrollTo()};n.performClick()}
  private lateinit var oldEditor:Map<String,*>
  @Before fun isolate(){val p=app.getSharedPreferences("inkweft-editor",0);oldEditor=p.all;p.edit().clear().commit()}
  @After fun restore(){val e=app.getSharedPreferences("inkweft-editor",0).edit().clear();oldEditor.forEach{(k,v)->when(v){is String->e.putString(k,v);is Float->e.putFloat(k,v);is Boolean->e.putBoolean(k,v);is Int->e.putInt(k,v);is Long->e.putLong(k,v);is Set<*>->e.putStringSet(k,v.filterIsInstance<String>().toSet())}};e.commit()}

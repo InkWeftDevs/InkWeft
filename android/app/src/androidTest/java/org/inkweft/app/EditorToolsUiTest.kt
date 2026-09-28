@@ -31,7 +31,7 @@ class EditorToolsUiTest {
     private fun strokes(n:Note)=runBlocking{InkSession(app.inkRepository.read(n.id)).visibleDraft()}
     private fun objects(n:Note)=runBlocking{app.pageObjects.read(n.id).objects}
     private fun ready(){compose.waitUntil(15000){app.navigationReady.value}}
-    private fun tap(tag:String){if(tag in setOf("add-page","object-shape","page-objects","object-sticker","top-area-erase","object-camera")){compose.openEditorAction(tag);return};if(tag=="top-draw"){compose.openCurrentPen();return};val node=compose.onNodeWithTag(tag);runCatching{node.performScrollTo()};node.performClick()}
+    private fun tap(tag:String){compose.revealAction(tag);if(tag in setOf("add-page","object-shape","page-objects","object-sticker","top-area-erase","object-camera")){compose.openEditorAction(tag);return};if(tag=="top-draw"){compose.openCurrentPen();return};val node=compose.onNodeWithTag(tag);runCatching{node.performScrollTo()};node.performClick()}
     private fun screenshot(name:String){compose.waitForIdle();val b=checkNotNull(InstrumentationRegistry.getInstrumentation().uiAutomation.takeScreenshot());try{File(app.getExternalFilesDir(null),name).outputStream().use{b.compress(Bitmap.CompressFormat.PNG,100,it)}}finally{b.recycle()}}
     @Test fun distinctPensRememberRecipesAndPaletteDoesNotRewriteOtherPens(){
         val n=open();val store=PenWidthStore(app,"inkweft-pen-widths-book-${n.id}")

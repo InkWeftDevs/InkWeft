@@ -64,8 +64,8 @@ class PageObjectsUiTest {
         compose.onNodeWithTag("object-text-save").performClick();compose.waitUntil(10_000){objects(id).single().text.startsWith("修改后")};hideKeyboard()
         compose.onNodeWithTag("object-copy").performClick();count(id,2)
         compose.onNodeWithTag("object-delete").performScrollTo().performClick();count(id,1)
-        compose.onNodeWithTag("ink-undo").performScrollTo().performClick();count(id,2)
-        compose.onNodeWithTag("ink-redo").performScrollTo().performClick();count(id,1)
+        compose.onNodeWithTag("ink-undo").performClick();count(id,2)
+        compose.onNodeWithTag("ink-redo").performClick();count(id,1)
         compose.onNodeWithTag("object-tape").performScrollTo().performClick();compose.onNodeWithTag("tape-overlay").performTouchInput{swipe(Offset(width*.3f,height*.3f),Offset(width*.6f,height*.3f),250)};count(id,2)
         compose.openEditorAction("page-objects");val tapePosition=position(objects(id).last());compose.onNodeWithTag("object-overlay").performTouchInput{click(tapePosition)}
         assertFalse(objects(id).last().revealed)

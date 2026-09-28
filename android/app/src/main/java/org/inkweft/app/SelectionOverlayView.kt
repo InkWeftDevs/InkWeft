@@ -19,6 +19,9 @@ internal class SelectionOverlayView(context:Context):View(context){
     var worldSelection=false
     var enabledInput=true
     var freehand=false
+    var marker=false
+    var onCaptureDrag:(()->CaptureTransfer?)?=null
+    private var captureStart=false
     var onRegion:(InkRegion?)->Unit={}
     var onShift:(Float,Float)->Unit={_,_->}
     var onTap:(Float,Float)->Unit={_,_->}
@@ -42,6 +45,10 @@ internal class SelectionOverlayView(context:Context):View(context){
         else{r.points.forEachIndexed{i,p->val s=screen(EraserPoint(p.x+dx,p.y+dy));if(i==0)moveTo(s.x.toFloat(),s.y.toFloat())else lineTo(s.x.toFloat(),s.y.toFloat())};close()}
     }
     override fun onDraw(c:Canvas){super.onDraw(c);if(canvasView==null)return
+        if(marker&&pointer!=-1&&trail.size>=2){
+            val path=Path();trail.forEachIndexed{i,p->val point=screen(p);if(i==0)path.moveTo(point.x.toFloat(),point.y.toFloat())else path.lineTo(point.x.toFloat(),point.y.toFloat())}
+            paint.style=Paint.Style.STROKE;paint.color=0x553b82f6;paint.strokeWidth=(24*canvasView!!.snapshotViewport().zoom*density).toFloat();paint.strokeCap=Paint.Cap.ROUND;c.drawPath(path,paint);return
+        }
         val r=if(pointer!=-1&&!moving&&trail.size>=2)runCatching{InkRegion(if(freehand)trail.toList()else listOf(start,trail.last()),!freehand)}.getOrNull()else region
         if(r!=null&&(selected.isEmpty()&&selectedObjects.isEmpty()||pointer!=-1&&!moving)){val path=shape(r);paint.style=Paint.Style.FILL;paint.color=0x10216b59;c.drawPath(path,paint)
             paint.style=Paint.Style.STROKE;paint.strokeWidth=(1.5*density).toFloat();paint.color=0xff216b59.toInt();paint.pathEffect=DashPathEffect(floatArrayOf((6*density).toFloat(),(4*density).toFloat()),0f);c.drawPath(path,paint);paint.pathEffect=null}
@@ -58,6 +65,7 @@ internal class SelectionOverlayView(context:Context):View(context){
         if(e.actionMasked==MotionEvent.ACTION_CANCEL){cancel();view.onTouchEvent(e);return true}
         when(e.actionMasked){
             MotionEvent.ACTION_DOWN->{pointer=e.getPointerId(0);start=author(e.x,e.y);trail.clear();trail+=start;dx=0f;dy=0f
+                captureStart=onCaptureDrag!=null&&region?.bounds?.let{start.x>=it.left&&start.x<=it.right&&start.y>=it.top&&start.y<=it.bottom}==true
                 moving=(selected.mapNotNull{geometry.bounds(it)}+selectedObjects).reduceOrNull{a,b->a.union(b)}?.padded(8.0)?.let{start.x>=it.left&&start.x<=it.right&&start.y>=it.top&&start.y<=it.bottom}==true
                 if(moving){
                     // Cache translation bounds once, not a page-sized allocation at every move.
@@ -78,6 +86,10 @@ internal class SelectionOverlayView(context:Context):View(context){
                 parent?.requestDisallowInterceptTouchEvent(true);onActive(true);invalidate()}
             MotionEvent.ACTION_MOVE->{if(pointer==-1)return true
                 val index=e.findPointerIndex(pointer);if(index<0){cancel();return true};val p=author(e.getX(index),e.getY(index))
+                if(captureStart&&kotlin.math.hypot(p.x-start.x,p.y-start.y)>8){
+                    val transfer=onCaptureDrag?.invoke()
+                    if(transfer!=null){cancel();startDragAndDrop(android.content.ClipData.newPlainText("摘录",""),CaptureShadow(this),transfer,0);return true}
+                }
                 if(moving){dx=p.x-start.x;dy=p.y-start.y
                     dx=dx.coerceIn(minDx,maxDx);dy=dy.coerceIn(minDy,maxDy)
                     view.selectionPreview(activeIds,dx,dy);view.previewSelectionObjects(objectIds,dx,dy)
@@ -89,7 +101,7 @@ internal class SelectionOverlayView(context:Context):View(context){
                 val release=author(e.x,e.y);if(freehand&&!moving)appendTrail(release)
                 val shiftX=if(moving)(release.x-start.x).coerceIn(minDx,maxDx)else dx
                 val shiftY=if(moving)(release.y-start.y).coerceIn(minDy,maxDy)else dy
-                val next=if(moving)null else runCatching{val end=author(e.x,e.y);InkRegion(if(freehand)trail.toList()else listOf(start,end),!freehand)}.getOrNull()
+                val next=if(moving)null else runCatching{val end=author(e.x,e.y);if(marker){val xs=trail.map{it.x}+end.x;val ys=trail.map{it.y}+end.y;InkRegion(listOf(EraserPoint((xs.min()-12).coerceAtLeast(-BoardLimits.WORLD),(ys.min()-12).coerceAtLeast(-BoardLimits.WORLD)),EraserPoint((xs.max()+12).coerceAtMost(BoardLimits.WORLD),(ys.max()+12).coerceAtMost(BoardLimits.WORLD))))}else InkRegion(if(freehand)trail.toList()else listOf(start,end),!freehand)}.getOrNull()
                 val end=author(e.x,e.y)
                 val tapRadius=(12/(view.snapshotViewport().zoom*density))
                 val tapped=!moving&&hypot(end.x-start.x,end.y-start.y)<tapRadius&&trail.all{hypot(it.x-start.x,it.y-start.y)<tapRadius}

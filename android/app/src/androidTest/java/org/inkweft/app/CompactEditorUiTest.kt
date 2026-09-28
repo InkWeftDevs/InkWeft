@@ -10,7 +10,7 @@ import org.junit.Assert.*
 class CompactEditorUiTest {
  @get:Rule val compose=createAndroidComposeRule<MainActivity>()
  private val app get()=compose.activity.application as InkWeftApplication
- private fun tap(tag:String){if(tag in setOf("add-page","object-shape","page-objects","object-sticker","top-area-erase","object-camera")){compose.openEditorAction(tag);return};if(tag=="top-draw"){compose.openCurrentPen();return};val n=compose.onNodeWithTag(tag);runCatching{n.performScrollTo()};n.performClick()}
+ private fun tap(tag:String){compose.revealAction(tag);if(tag in setOf("add-page","object-shape","page-objects","object-sticker","top-area-erase","object-camera")){compose.openEditorAction(tag);return};if(tag=="top-draw"){compose.openCurrentPen();return};val n=compose.onNodeWithTag(tag);runCatching{n.performScrollTo()};n.performClick()}
  private fun ready(){compose.waitUntil(15000){app.navigationReady.value};compose.waitForIdle()}
  @Test fun compactEditorBookmarksTagsAndLiveEraser(){
   compose.waitUntil(15000){compose.onAllNodesWithTag("new-note").fetchSemanticsNodes().isNotEmpty()}
@@ -27,6 +27,6 @@ class CompactEditorUiTest {
   tap("quick-settings");tap("settings-tags");compose.onNodeWithTag("tag-chip-复习").assertExists();compose.onNodeWithTag("tag-chip-公式").assertDoesNotExist();tap("save-notebook-tags")
   tap("ink-tool-3");tap("ink-tool-3");tap("eraser-whole");assertTrue(EraserSettingsStore(app).read().whole);compose.onNodeWithText("使用此橡皮").assertDoesNotExist();tap("eraser-local");tap("eraser-circle");compose.onNodeWithTag("selection-overlay").assertExists()
   tap("auto-beauty-toggle");tap("beauty-keep-ink");compose.onNodeWithTag("beauty-ink-strength").assertExists();tap("beauty-replace-font");compose.onNodeWithTag("beauty-font-picker").assertExists();tap("beauty-keep-ink");tap("beauty-close")
-  tap("toolbar-customize");compose.onNodeWithTag("toolbar-row-pen").assertDoesNotExist();compose.onNodeWithTag("toolbar-row-favorites").assertDoesNotExist();tap("toolbar-done");compose.onNodeWithTag("notebook-tab-${n.id}").assertIsDisplayed()
+  tap("toolbar-customize");compose.onNodeWithTag("toolbar-row-pen").assertExists();compose.onNodeWithTag("toolbar-row-favorites").assertDoesNotExist();tap("toolbar-done");compose.onNodeWithTag("notebook-tab-${n.id}").assertIsDisplayed()
  }
 }

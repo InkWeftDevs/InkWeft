@@ -45,6 +45,8 @@ internal fun ComposeTestRule.closePenSettings(){onNodeWithTag("close-pen-setting
 internal fun ComposeTestRule.openBeautySettings(){onNodeWithTag("auto-beauty-toggle").performScrollTo().performClick()}
 
 internal fun ComposeTestRule.openEditorAction(tag:String){
+    revealAction("toolbar-more")
+    if(onAllNodesWithTag(tag).fetchSemanticsNodes().isEmpty())onNodeWithTag("toolbar-more").performClick()
     val actual=if(tag=="add-page")"quick-add-page"else tag
     val actions=mapOf("add-page" to "add-page","object-shape" to "shape","page-objects" to "objects","object-sticker" to "sticker","top-area-erase" to "area","object-camera" to "camera","quick-finger" to "finger")
     if(onAllNodesWithTag(actual).fetchSemanticsNodes().isEmpty()){
@@ -53,6 +55,7 @@ internal fun ComposeTestRule.openEditorAction(tag:String){
         onNodeWithTag("toolbar-visible-$action").performScrollTo().performClick()
         onNodeWithTag("toolbar-done").performClick()
     }
+    if(onAllNodesWithTag(actual).fetchSemanticsNodes().isEmpty())onNodeWithTag("toolbar-more").performClick()
     onNodeWithTag(actual).performScrollTo().performClick()
 }
 
@@ -97,4 +100,21 @@ internal fun ComposeTestRule.assertCurrentPage(text:String){
         actual="第 ${pages.pages.first{it.id==pages.selectedId}.position+1} / ${pages.pages.size} 页"
     }
     org.junit.Assert.assertEquals(text,actual)
+}
+
+internal fun ComposeTestRule.revealAction(tag:String){
+    if(onAllNodesWithTag(tag).fetchSemanticsNodes().isNotEmpty())return
+    when {
+        (tag.startsWith("study-card-")||tag.startsWith("outline-"))&&onAllNodesWithTag("study-list").fetchSemanticsNodes().isNotEmpty()->onNodeWithTag("study-list").performScrollToNode(hasTestTag(tag))
+        tag=="toolbar-customize"->onNodeWithTag("toolbar-more").performClick()
+        tag.startsWith("study-tab-")||tag in setOf("study-add-card","study-expand-all","study-focus-all","study-collapse-all","study-arrange")->onNodeWithTag("study-management").performClick()
+        tag.startsWith("width-preset-")||tag.startsWith("pencil-hardness-")->onNodeWithTag("pen-advanced").performScrollTo().performClick()
+        tag.startsWith("pen-color-")->onNodeWithTag("pen-basic").performScrollTo().performClick()
+        tag in setOf("quick-readonly","quick-fullscreen","quick-timer","quick-add-page","quick-export","quick-beauty","quick-finger","object-image","object-text","top-tags")->onNodeWithTag("toolbar-more").performClick()
+    }
+}
+
+internal fun ComposeTestRule.selectInboxCapture(){
+    onNodeWithTag("top-excerpt").performClick();onNodeWithTag("top-excerpt").performClick()
+    onNodeWithTag("capture-destination-inbox").performClick();onNodeWithContentDescription("关闭摘要笔").performClick()
 }
