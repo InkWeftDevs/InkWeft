@@ -24,7 +24,7 @@ internal val LocalStudyResizeAllowed=staticCompositionLocalOf<MutableState<Boole
 /** App-owned surface: only its rectangle participates in hit testing. Paper is never resized. */
 @Composable internal fun FloatingStudyWindow(book:String,enabled:Boolean,minimized:Boolean,
     onMinimize:(Boolean)->Unit,docked:Boolean,onDock:(Boolean)->Unit,close:()->Unit,content:@Composable ()->Unit){
-    val resizeAllowed=remember{mutableStateOf(true)}
+    val resizeAllowed=remember{mutableStateOf(false)}
     val holder=androidx.compose.runtime.saveable.rememberSaveableStateHolder()
     val prefs=LocalContext.current.getSharedPreferences("inkweft-study-window",0)
     val density=LocalDensity.current.density
@@ -37,7 +37,7 @@ internal val LocalStudyResizeAllowed=staticCompositionLocalOf<MutableState<Boole
     BoxWithConstraints(Modifier.fillMaxSize()){
         val availableW=(maxWidth.value-16).coerceAtLeast(1f)
         val availableH=(maxHeight.value-112).coerceAtLeast(48f)
-        val collapsed=minimized||availableH<300
+        val collapsed=minimized||availableH<180||(availableH<300&&resizeAllowed.value)
         val w=if(collapsed)minOf(availableW,320f)else if(maximized)availableW else if(docked)minOf(480f,availableW*.46f).coerceAtLeast(minOf(320f,availableW))else width.coerceIn(minOf(320f,availableW),availableW)
         val h=if(collapsed)48f else if(maximized||docked)availableH else height.coerceIn(minOf(300f,availableH),availableH)
         val travelX=(availableW-w).coerceAtLeast(0f);val travelY=(availableH-h).coerceAtLeast(0f)

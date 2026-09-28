@@ -7,6 +7,7 @@ import android.graphics.Color
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.core.view.WindowCompat
@@ -70,17 +71,14 @@ class WorkspaceUiTest {
     }
     private fun assertToolbarPixels(){
         // Semantics can remain clickable under an overflowing AndroidView. Inspect
-        // actual screen pixels above its viewport as well as asserting controls.
+        // actual pixels inside the current toolbar as well as asserting controls.
         compose.onNodeWithTag("back-library").assertIsDisplayed()
         compose.onNodeWithTag("pen-kind-ballpoint").assertIsDisplayed()
         compose.waitForIdle()
-        var top=0;var left=0;var right=0
-        compose.runOnIdle{val v=canvas();val location=IntArray(2);v.getLocationOnScreen(location);top=location[1];left=location[0];right=left+v.width}
-        val image=checkNotNull(InstrumentationRegistry.getInstrumentation().uiAutomation.takeScreenshot())
+        val image=compose.onNodeWithTag("editor-toolbar").captureToImage().asAndroidBitmap()
         try{
-            val y0=(top-110).coerceAtLeast(35);val y1=(top-4).coerceAtMost(image.height)
             var dark=0
-            for(y in y0 until y1)for(x in left.coerceAtLeast(0) until right.coerceAtMost(image.width)){
+            for(y in 0 until image.height)for(x in 0 until image.width){
                 val color=image.getPixel(x,y)
                 if(Color.red(color)<150 && Color.green(color)<165 && Color.blue(color)<160)dark++
             }

@@ -72,6 +72,19 @@ class NoteFirstUiTest {
   tap("study-close");tap("exit-fullscreen")
   compose.onNodeWithTag("notebook-tabs").assertIsDisplayed()
  }
+ @Test fun reducedWindowKeepsCardEditorUsable(){
+  val book=fixture();tap("quick-study");tap("study-management");tap("study-add-card")
+  compose.onNodeWithTag("study-card-title").performTextInput("小窗口草稿")
+  val automation=androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().uiAutomation
+  fun resize(value:String){automation.executeShellCommand("wm size $value").use{android.os.ParcelFileDescriptor.AutoCloseInputStream(it).use{input->input.readBytes()}}}
+  try{
+   resize("1920x720");compose.activityRule.scenario.recreate();ready()
+   compose.onNodeWithTag("study-card-body").performScrollTo().assertIsDisplayed().performTextInput("键盘占用空间后继续输入")
+   compose.onNodeWithTag("study-card-title").performScrollTo().assertTextContains("小窗口草稿")
+   screenshot("compact-editor");tap("study-save-card")
+   compose.waitUntil(10000){runBlocking{app.study.cards(book).first()}.any{it.title=="小窗口草稿"&&it.body=="键盘占用空间后继续输入"}}
+  }finally{resize("1920x1200")}
+ }
  @Test fun selectionPreviewMakesNoCardUntilExplicitAdd(){
   val book=fixture();tap("top-excerpt")
   compose.runOnIdle{find<SelectionOverlayView>().onRegion(InkRegion(listOf(EraserPoint(100f,260f),EraserPoint(700f,400f))))}
@@ -156,11 +169,17 @@ class NoteFirstUiTest {
   compose.runOnIdle{val v=find<InkCanvasView>();val location=IntArray(2);v.getLocationOnScreen(location);val p=v.snapshotViewport().worldToScreen(260.0,700.0,v.width.toDouble(),v.height.toDouble(),v.resources.displayMetrics.density.toDouble());point=Offset(location[0]+p.x.toFloat(),location[1]+p.y.toFloat())}
   val window=compose.onNodeWithTag("study-panel").fetchSemanticsNode().boundsInRoot
   val automation=androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().uiAutomation
+  automation.waitForIdle(200,5000)
+  val events=java.util.concurrent.CopyOnWriteArrayList<String>()
+  compose.runOnIdle{find<InkCanvasView>().setOnTouchListener{_,e->events.add("${e.actionMasked}:${e.getToolType(0)}:${e.x},${e.y}");false}}
+  screenshot("input-before")
   val down=android.os.SystemClock.uptimeMillis()
   fun send(action:Int,dx:Float){val property=android.view.MotionEvent.PointerProperties().apply{id=0;toolType=android.view.MotionEvent.TOOL_TYPE_STYLUS};val coords=android.view.MotionEvent.PointerCoords().apply{x=point.x+dx;y=point.y;pressure=.5f}
    val event=android.view.MotionEvent.obtain(down,android.os.SystemClock.uptimeMillis(),action,1,arrayOf(property),arrayOf(coords),0,0,1f,1f,0,0,android.view.InputDevice.SOURCE_STYLUS,0);try{check(automation.injectInputEvent(event,true))}finally{event.recycle()}}
-  send(android.view.MotionEvent.ACTION_DOWN,0f);android.os.SystemClock.sleep(40);send(android.view.MotionEvent.ACTION_MOVE,30f);send(android.view.MotionEvent.ACTION_UP,60f)
-  compose.waitUntil(15000){runBlocking{app.inkRepository.read(book).revision}==13L}
+  send(android.view.MotionEvent.ACTION_DOWN,0f)
+  for(i in 1..8){android.os.SystemClock.sleep(25);send(android.view.MotionEvent.ACTION_MOVE,i*8f)}
+  android.os.SystemClock.sleep(25);send(android.view.MotionEvent.ACTION_UP,72f)
+  try{compose.waitUntil(15000){runBlocking{app.inkRepository.read(book).revision}==13L}}catch(e:Throwable){screenshot("input-failure");java.io.File(app.getExternalFilesDir(null),"input-failure.txt").writeText("point=$point; window=$window; events=$events; revision="+runBlocking{app.inkRepository.read(book).revision});throw AssertionError("Window input failed: $events",e)}finally{compose.runOnIdle{find<InkCanvasView>().setOnTouchListener(null)}}
   assertEquals(window,compose.onNodeWithTag("study-panel").fetchSemanticsNode().boundsInRoot);screenshot("write-outside-window")
  }
 
