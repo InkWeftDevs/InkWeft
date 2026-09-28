@@ -321,7 +321,7 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
                 v.showDocument(page.id);v.showStrokes(ui.strokes);v.showObjects(objectsUi.objects)
                 if(!gesture)v.selectionPreview((pendingSelection?.second?:selected?.strokes?.map{it.id}).orEmpty().toSet())
             },modifier=Modifier.fillMaxSize().testTag("ink-surface"))
-            if(showExcerptMarkers)ExcerptMarkers(excerptRows.filter{it.pageId==page.id},selectionViewport)
+            if(showExcerptMarkers)ExcerptMarkers(excerptRows.filter{it.pageId==page.id&&(tool!=4||!excerptMode||it.id!=selectedExcerpt)},selectionViewport)
             if(tool==7)AndroidView(factory={TapeOverlay(it)},update={v->
                 v.canvasView=view;v.objects=objectsUi.objects;v.world=page.world;v.enabledInput=editable&&!objectsUi.loading&&!objectsUi.busy&&!objectsUi.pending
                 v.pattern=TapePattern.entries[tapePatternIndex];v.mode=tapeMode;v.tapeWidth=tapeWidth;v.tapeColor=tapeColor;v.onActive={gesture=it};v.onCreate=objectsVm::put;v.onToggle={objectsVm.put(it.copy(revealed=!it.revealed))}
