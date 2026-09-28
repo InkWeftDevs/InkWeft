@@ -88,6 +88,13 @@ class StarNoteInteractionsUiTest {
   try{val color=bitmap.getPixel(bitmap.width/3,bitmap.height*2/3);assertTrue(android.graphics.Color.blue(color)>180);assertTrue(android.graphics.Color.red(color)<60)}finally{bitmap.recycle()}
   shot("v36-pdf-excerpt.png")
  }
+ @Test fun splitSwitchEditingUsesThePageShownInReferencePane(){
+  val note=create();val second=runBlocking{app.pages.addAfter(note.id,note.id,id())}
+  tap("tabs-list");tap("tabs-actions-${note.id}");tap("tab-split-horizontal")
+  compose.onNodeWithText("下一页").performClick();tap("split-edit")
+  compose.waitUntil(10000){var selected:String?=null;compose.runOnIdle{selected=ViewModelProvider(compose.activity)["book-${note.id}",BookPagesViewModel::class.java].ui.value.selectedId};selected==second.id}
+  assertEquals(second.id,runBlocking{app.workspaceRepository.get(note.id)}.selectedPageId)
+ }
  @Test fun notebookListPinsActionsAndOffersBothSplitDirections(){
   val note=create();val notes=runBlocking{(1..14).map{app.workspaceRepository.create("分屏测试$it",false,PaperStyle.BLANK)}}
   compose.runOnIdle{val vm=ViewModelProvider(compose.activity)[NotebookViewModel::class.java];notes.forEach(vm::select);vm.select(note)};ready();tap("tabs-list")

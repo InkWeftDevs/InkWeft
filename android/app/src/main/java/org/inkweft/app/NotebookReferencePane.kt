@@ -15,7 +15,7 @@ import kotlinx.coroutines.*
 import org.inkweft.core.*
 
 /** Independent reading position; switching the editing side never duplicates a writer. */
-@Composable internal fun NotebookReferencePane(id:String,title:String,enabled:Boolean,vertical:Boolean,rotate:()->Unit,edit:()->Unit,close:()->Unit){
+@Composable internal fun NotebookReferencePane(id:String,title:String,enabled:Boolean,vertical:Boolean,rotate:()->Unit,edit:(String)->Unit,close:()->Unit){
     val app=LocalContext.current.applicationContext as InkWeftApplication
     val pages by remember(id){app.pages.observe(id)}.collectAsStateWithLifecycle(initialValue=emptyList())
     var index by rememberSaveable(id){mutableIntStateOf(0)}
@@ -23,7 +23,7 @@ import org.inkweft.core.*
     Column(Modifier.fillMaxSize().testTag("reference-pane")){
         Row(Modifier.fillMaxWidth(),verticalAlignment=Alignment.CenterVertically){
             Text(title,Modifier.weight(1f).padding(start=8.dp),maxLines=1,style=MaterialTheme.typography.labelLarge)
-            TextButton(edit,enabled=enabled,modifier=Modifier.testTag("split-edit")){Text("切换编辑")}
+            TextButton({page?.id?.let(edit)},enabled=enabled&&page!=null,modifier=Modifier.testTag("split-edit")){Text("切换编辑")}
             IconButton(rotate,enabled=enabled,modifier=Modifier.testTag("split-rotate").describedAs(if(vertical)"改为左右分屏"else"改为上下分屏")){Glyph("grid")}
             IconButton(close,enabled=enabled,modifier=Modifier.testTag("split-close").describedAs("结束分屏")){Glyph("close")}
         }

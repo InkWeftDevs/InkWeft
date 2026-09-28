@@ -213,8 +213,9 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
     fun captureExcerpt(selection:SelectedInk){
         val picture=runCatching{checkNotNull(view).excerptPreview(selection.region.bounds)}.getOrElse{notice=it.message?:"摘录未完成，请稍后重试";return}
         val revision=objectsVm.revision
-        val strokes=selectable.filter{it.bounds().intersects(selection.region.bounds)}.take(256)
+        val strokes=selectable.filter{it.bounds().intersects(selection.region.bounds)}
         if(!excerptTextMode){onExcerpt(selection.copy(preview=picture,objectRevision=revision));return}
+        if(strokes.size>256){onExcerpt(selection.copy(preview=picture,objectRevision=revision));notice="选区笔迹较多，已保留原貌；提取文字请缩小范围";return}
         capturingExcerpt=true
         scope.launch{
             try{

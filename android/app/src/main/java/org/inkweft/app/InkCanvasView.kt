@@ -235,6 +235,7 @@ class InkCanvasView(context:Context):View(context){
         val a=viewport.worldToScreen(region.left,region.top,width.toDouble(),height.toDouble(),density)
         val b=viewport.worldToScreen(region.right,region.bottom,width.toDouble(),height.toDouble(),density)
         check(a.x>=-1&&a.y>=-1&&b.x<=width+1&&b.y<=height+1){"请将摘录区域完整移到屏幕内"}
+        check(max(b.x-a.x,b.y-a.y)/min(b.x-a.x,b.y-a.y)<=160){"选区过窄，请扩大一些再摘录"}
         val scale=min(1.0,800.0/max(b.x-a.x,b.y-a.y))
         val bitmap=Bitmap.createBitmap(max(1,((b.x-a.x)*scale).toInt()),max(1,((b.y-a.y)*scale).toInt()),Bitmap.Config.ARGB_8888)
         try{

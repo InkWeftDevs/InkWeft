@@ -95,8 +95,10 @@ class StudyRepository(private val db:NoteDatabase,private val fault:(StudyFault)
                         if(picture!=null){studyRequire(s.objectRevision==(db.objects().get(s.pageId)?.revision?:0L)){"OBJECT_VERSION_CHANGED"}}
                         studyRequire(picture!=null||selected.all{val b=it.bounds();b.left>=s.bounds.left-1&&b.top>=s.bounds.top-1&&b.right<=s.bounds.right+1&&b.bottom<=s.bounds.bottom+1})
                         val bytes=if(picture==null)InkPageFile("摘录原迹","",selected,p.world,PaperStyle.entries[p.paper]).encode()else {
-                            val height=(1000*(s.bounds.bottom-s.bounds.top)/(s.bounds.right-s.bounds.left)).coerceIn(24.0,4000.0).toFloat()
-                            InkPageFile("区域摘录","",emptyList(),true,PaperStyle.BLANK,listOf(PageObject(java.util.UUID.randomUUID().toString(),PageObjectKind.IMAGE,0f,0f,1000f,height,image=java.util.Base64.getEncoder().encodeToString(picture)))).encode()
+                            val w=s.bounds.right-s.bounds.left;val h=s.bounds.bottom-s.bounds.top
+                            val scale=maxOf(24.0/minOf(w,h),minOf(1.0,1000.0/maxOf(w,h)))
+                            studyRequire(maxOf(w,h)*scale<=4000){"EXCERPT_TOO_NARROW"}
+                            InkPageFile("区域摘录","",emptyList(),true,PaperStyle.BLANK,listOf(PageObject(java.util.UUID.randomUUID().toString(),PageObjectKind.IMAGE,0f,0f,(w*scale).toFloat(),(h*scale).toFloat(),image=java.util.Base64.getEncoder().encodeToString(picture)))).encode()
                         };studyRequire(bytes.size<=1_800_000)
                         val used=db.openHelper.writableDatabase.query("SELECT COALESCE(SUM(length(snapshot)),0) FROM study_sources").use{it.moveToFirst();it.getLong(0)}
                         studyRequire(used+bytes.size<=32_000_000){"STUDY_SNAPSHOT_BUDGET"}
