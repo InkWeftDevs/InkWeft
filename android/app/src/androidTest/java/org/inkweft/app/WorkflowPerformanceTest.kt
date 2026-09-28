@@ -70,6 +70,18 @@ class WorkflowPerformanceTest {
    report.put("panelOpenMs",(System.nanoTime()-started)/1e6)
    started=System.nanoTime();compose.onNodeWithTag("study-close").performClick();compose.onNodeWithTag("study-panel").assertDoesNotExist();compose.waitForIdle();report.put("panelCloseMs",(System.nanoTime()-started)/1e6)
    compose.runOnIdle{ViewModelProvider(compose.activity)[NotebookViewModel::class.java].back()};compose.waitForIdle();open("hotReopen")
+   fun measureViewport(label:String, gesture:()->Unit){
+    var before:CanvasViewport?=null;compose.runOnIdle{before=checkNotNull(canvas()).snapshotViewport()}
+    val start=System.nanoTime();Trace.beginAsyncSection("InkWeft.workflow.$label",2);gesture();compose.waitForIdle()
+    report.put(label+"GestureMs",(System.nanoTime()-start)/1e6)
+    compose.waitUntil(15000){var done=false;compose.runOnIdle{done=canvas()?.let{!it.rasterPending}==true};done}
+    compose.runOnIdle{assertNotEquals("Viewport gesture must move the actual document",before,checkNotNull(canvas()).snapshotViewport())}
+    report.put(label+"SettledMs",(System.nanoTime()-start)/1e6);Trace.endAsyncSection("InkWeft.workflow.$label",2)
+    assertEquals(3L,runBlocking{app.inkRepository.read(n.id).revision})
+   }
+   measureViewport("scroll"){compose.onNodeWithTag("ink-surface").performTouchInput{swipe(androidx.compose.ui.geometry.Offset(width*.7f,height*.65f),androidx.compose.ui.geometry.Offset(width*.7f,height*.35f),300)}}
+   measureViewport("pinch"){compose.pinchCanvasOut()}
+   compose.runOnIdle{checkNotNull(canvas()).fitWidth()};compose.waitForIdle()
    started=System.nanoTime();compose.runOnIdle{ViewModelProvider(compose.activity)["ink-${n.id}",InkViewModel::class.java].erase(listOf(strokes.first().id))}
    compose.waitUntil(15000){runBlocking{app.inkRepository.read(n.id).revision}==4L}
    report.put("eraseCommandCommittedMs",(System.nanoTime()-started)/1e6)
