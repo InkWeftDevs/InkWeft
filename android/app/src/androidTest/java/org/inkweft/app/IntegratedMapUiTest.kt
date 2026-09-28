@@ -18,6 +18,23 @@ class IntegratedMapUiTest {
  private fun tap(tag:String){if(tag in setOf("add-page","object-shape","page-objects","object-sticker","top-area-erase","object-camera")){compose.openEditorAction(tag);return};if(tag=="top-draw"){compose.openCurrentPen();return};val node=compose.onNodeWithTag(tag);runCatching{node.performScrollTo()};node.performClick()}
  private fun ready(){compose.waitUntil(15000){app.navigationReady.value};compose.waitForIdle()}
  private inline fun <reified T:View> find(v:View):T? {val queue=java.util.ArrayDeque<View>();queue.add(v);while(queue.isNotEmpty()){val current=queue.removeFirst();if(current is T&&current.isShown)return current;if(current is ViewGroup)for(i in 0 until current.childCount)queue.add(current.getChildAt(i))};return null}
+ @Test fun recreationKeepsOpenMapViewportAndUnsavedCardDraft(){
+  compose.waitUntil(15000){compose.onAllNodesWithTag("new-note").fetchSemanticsNodes().isNotEmpty()}
+  val note=runBlocking{app.workspaceRepository.create("导图旋转草稿",false,PaperStyle.BLANK)}
+  val mapId=id();val card=id();val node=id()
+  runBlocking{app.knowledge.submit(KnowledgeCommand(id(),note.id,mapId,0,KnowledgeData.MapDefinition("旋转验收图")));app.study.submit(StudyCommand(id(),note.id,StudyAction.CREATE,cardId=card,nodeId=node,title="章节",mapId=mapId))}
+  compose.runOnIdle{ViewModelProvider(compose.activity)[NotebookViewModel::class.java].select(note)};compose.singlePageEditor();ready();tap("quick-study")
+  tap("study-map-picker");tap("study-map-$mapId");tap("study-tab-2");compose.waitForIdle()
+  var viewport:MapViewport?=null
+  compose.runOnIdle{val map=checkNotNull(find<MindMapView>(compose.activity.window.decorView));map.zoom(.7f);viewport=map.snapshotViewport()}
+  tap("study-add-card");compose.onNodeWithTag("study-card-title").performTextInput("旋转后的草稿");compose.onNodeWithTag("study-card-body").performTextInput("尚未提交的理解")
+  compose.activityRule.scenario.recreate();compose.waitForIdle()
+  compose.onNodeWithTag("study-card-editor").assertExists();compose.onNodeWithTag("study-card-title").assertTextEquals("标题","旋转后的草稿");compose.onNodeWithTag("study-card-body").assertTextEquals("我的理解 / 摘要","尚未提交的理解")
+  compose.onNodeWithText("取消",useUnmergedTree=true).performClick();compose.onNodeWithTag("study-panel").assertIsDisplayed()
+  compose.runOnIdle{assertEquals(viewport,checkNotNull(find<MindMapView>(compose.activity.window.decorView)).snapshotViewport());assertEquals(mapId,ViewModelProvider(compose.activity)["study-${note.id}",StudyViewModel::class.java].mapId.value)}
+  assertEquals(1,runBlocking{app.study.cards(note.id).first()}.size)
+  tap("study-close");ready();assertEquals(0L,runBlocking{app.inkRepository.read(note.id).revision})
+ }
  @Test fun liveWritingKeepsDocumentSizeUntilPenUp(){
   compose.waitUntil(15000){compose.onAllNodesWithTag("new-note").fetchSemanticsNodes().isNotEmpty()}
   val note=runBlocking{app.workspaceRepository.create("导图落笔保护",false,PaperStyle.BLANK)}

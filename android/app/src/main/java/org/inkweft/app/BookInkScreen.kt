@@ -60,9 +60,10 @@ fun InkScreen(note:NoteDraft,workspace:WorkspaceViewModel=viewModel(),onBack:()-
     var documentSettings by remember{mutableStateOf(false)}
     var classify by remember{mutableStateOf(false)}
     val entries by workspace.entries.collectAsStateWithLifecycle()
-    var initialStudyCard by remember{mutableStateOf<String?>(null)}
-    var studyOpen by remember{mutableStateOf(false)}
-    var studySource by remember{mutableStateOf<StudySourceDraft?>(null)}
+    val studyPanel:StudyPanelSession=viewModel(key="study-panel-${note.base.id}")
+    var initialStudyCard by studyPanel.card
+    var studyOpen by studyPanel.opened
+    var studySource by studyPanel.source
     var sourceFocus by remember{mutableStateOf<Pair<String,CanvasBounds>?>(null)}
 
     val requestedCard by workspace.studyCardRequest.collectAsStateWithLifecycle()

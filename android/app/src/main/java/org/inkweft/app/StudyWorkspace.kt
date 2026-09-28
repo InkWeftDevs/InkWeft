@@ -38,6 +38,7 @@ internal data class StudyUi(val cards:List<StudyCardRow> = emptyList(),val nodes
 @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
 internal class StudyViewModel(val book:String,val repo:StudyRepository,private val saved:SavedStateHandle):ViewModel(){
     val mapId=MutableStateFlow<String?>(saved["study.map"])
+    val editorState=mutableStateOf<CardEditor?>(null)
     val viewports=mutableMapOf<String,MapViewport>()
     val collapsedByMap=mutableMapOf<String,List<String>>()
     val focusedByMap=mutableMapOf<String,String?>()
@@ -80,7 +81,12 @@ internal class StudyViewModel(val book:String,val repo:StudyRepository,private v
     }
     class Factory(val book:String,val repo:StudyRepository):ViewModelProvider.Factory{override fun<T:ViewModel>create(c:Class<T>,extras:CreationExtras):T{require(c.isAssignableFrom(StudyViewModel::class.java));@Suppress("UNCHECKED_CAST")return StudyViewModel(book,repo,extras.createSavedStateHandle()) as T}}
 }
-private data class CardEditor(val card:StudyCardRow?=null,val parent:StudyNodeRow?=null,val source:StudySourceDraft?=null)
+internal class StudyPanelSession:ViewModel(){
+    val opened=mutableStateOf(false)
+    val source=mutableStateOf<StudySourceDraft?>(null)
+    val card=mutableStateOf<String?>(null)
+}
+internal data class CardEditor(val card:StudyCardRow?=null,val parent:StudyNodeRow?=null,val source:StudySourceDraft?=null)
 @Composable
 internal fun StudyWorkspace(note:NoteDraft,initialSource:StudySourceDraft?,dismiss:()->Unit,initialQuery:String="",initialCardId:String?=null,openSource:(StudySourceRow)->Boolean){
     Dialog(onDismissRequest=dismiss,properties=DialogProperties(usePlatformDefaultWidth=false)){
@@ -108,7 +114,7 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
     fun occurrenceCount(cardId:String)=mainNodes.count{!it.removed&&it.cardId==cardId}+extraOccurrences(cardId)
     var query by remember{mutableStateOf(initialQuery)}
     val tab=vm.lastTab;var showTrash by remember{mutableStateOf(false)}
-    var editor by remember(initialSource){mutableStateOf<CardEditor?>(null)}
+    var editor by vm.editorState
     var chosenNode by remember{mutableStateOf<StudyNodeRow?>(null)};var chosenCard by remember{mutableStateOf<StudyCardRow?>(null)}
     var source by remember{mutableStateOf<StudySourceRow?>(null)};var stale by remember{mutableStateOf(false)}
     var map by remember{mutableStateOf<MindMapView?>(null)};var dragging by remember{mutableStateOf(false)}
@@ -129,8 +135,8 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
     LaunchedEffect(ui.loading,active.map{it.id}){if(!ui.loading&&focusId!=null&&focusId !in nodeById)focusId=null}
     SideEffect{vm.collapsedByMap[mapKey]=collapsed;vm.focusedByMap[mapKey]=focusId}
     DisposableEffect(vm,mapKey){onDispose{vm.collapsedByMap[mapKey]=collapsed;vm.focusedByMap[mapKey]=focusId}}
-    var sourcePending by remember(initialSource){mutableStateOf(initialSource!=null)}
-    var sourceParent by remember(mapKey){mutableStateOf<String?>(null)}
+    var sourcePending by rememberSaveable(initialSource){mutableStateOf(initialSource!=null)}
+    var sourceParent by rememberSaveable(mapKey){mutableStateOf<String?>(null)}
     LaunchedEffect(mapKey){chosenNode=null;chosenCard=null}
 
     LaunchedEffect(initialCardId,ui.loading){if(initialCardId!=null&&!ui.loading)chosenCard=ui.cards.find{it.id==initialCardId&&it.trashedAt==null}}
@@ -249,7 +255,7 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
         mapWrite.message?.let{Text(it)}
     }},confirmButton={TextButton({if(mapWrite.unknown)mapWriter.retry()else mapWriter.submit(note.base.id,KnowledgeData.MapDefinition(title.trim()))},enabled=!mapWrite.busy&&title.isNotBlank(),modifier=Modifier.testTag("study-new-map-save")){Text(if(mapWrite.unknown)"核对原操作"else"创建")}},dismissButton={TextButton({newMapTitle=null},enabled=!mapSaving){Text("取消")}})}
     editor?.let{e->key(e.card?.id,e.parent?.id,e.source?.pageId){
-        var title by remember{mutableStateOf(e.card?.title.orEmpty())};var text by remember{mutableStateOf(e.card?.body.orEmpty())}
+        var title by rememberSaveable{mutableStateOf(e.card?.title.orEmpty())};var text by rememberSaveable{mutableStateOf(e.card?.body.orEmpty())}
         AlertDialog(onDismissRequest={if(!ui.busy&&!ui.unknown)editor=null},modifier=Modifier.testTag("study-card-editor"),title={Text(if(e.card!=null)"编辑共享摘要卡"else"新建摘要卡")},text={Column(verticalArrangement=Arrangement.spacedBy(10.dp)){
             if(e.source!=null)Text("保留框选原迹快照及回源位置。下方是你的摘要，不是自动识别或 AI 生成。",fontSize=12.sp,color=Quiet)
             OutlinedTextField(title,{if(it.length<=120)title=it},label={Text("标题")},modifier=Modifier.fillMaxWidth().testTag("study-card-title"))
