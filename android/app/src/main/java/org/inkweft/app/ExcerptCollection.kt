@@ -8,6 +8,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.*
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.platform.*
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
@@ -72,7 +73,7 @@ import java.util.UUID
 
 @Composable internal fun ExcerptMarkers(rows:List<ExcerptRow>,viewport:CanvasViewport){
     val density=LocalDensity.current.density.toDouble()
-    Canvas(Modifier.fillMaxSize().testTag("excerpt-markers-overlay")){
+    Canvas(Modifier.fillMaxSize().clipToBounds().testTag("excerpt-markers-overlay")){
         rows.forEach{r->
             val a=viewport.worldToScreen(r.left,r.top,size.width.toDouble(),size.height.toDouble(),density)
             val b=viewport.worldToScreen(r.right,r.bottom,size.width.toDouble(),size.height.toDouble(),density)

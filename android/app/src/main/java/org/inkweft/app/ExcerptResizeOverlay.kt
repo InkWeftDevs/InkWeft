@@ -28,6 +28,7 @@ internal class ExcerptResizeOverlay(context:Context):View(context) {
     private fun point(h:ExcerptHandle,b:CanvasBounds)=screen(when(h.x){-1->b.left;1->b.right;else->(b.left+b.right)/2},when(h.y){-1->b.top;1->b.bottom;else->(b.top+b.bottom)/2})
     override fun onDraw(c:Canvas){
         super.onDraw(c);if(canvasView==null)return
+        c.clipRect(0,0,width,height)
         val a=screen(bounds.left,bounds.top);val b=screen(bounds.right,bounds.bottom)
         paint.color=0xffd15ba8.toInt();paint.style=Paint.Style.STROKE;paint.strokeWidth=(2*density).toFloat()
         c.drawRect(a.x.toFloat(),a.y.toFloat(),b.x.toFloat(),b.y.toFloat(),paint)
