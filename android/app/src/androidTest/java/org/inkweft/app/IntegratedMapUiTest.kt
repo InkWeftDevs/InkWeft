@@ -77,10 +77,10 @@ class IntegratedMapUiTest {
   compose.runOnIdle{val v=find<MindMapView>(compose.activity.window.decorView)
     if(v==null){val image=androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().uiAutomation.takeScreenshot()!!;java.io.File(app.getExternalFilesDir(null),"map-reopen-failure.png").outputStream().use{image.compress(android.graphics.Bitmap.CompressFormat.PNG,100,it)};image.recycle();println("MAP_TAB="+ViewModelProvider(compose.activity)["study-${note.id}",StudyViewModel::class.java].lastTab)}
     assertEquals(viewport,checkNotNull(v).snapshotViewport())}
-  tap("study-tab-0");tap("study-card-${card.id}");compose.waitUntil(10000){compose.onAllNodesWithTag("study-open-source").fetchSemanticsNodes().isNotEmpty()};tap("study-open-source");ready()
+  tap("study-tab-0");tap("study-card-${card.id}");compose.waitUntil(10000){compose.onAllNodesWithTag("card-source-section").fetchSemanticsNodes().isNotEmpty()};tap("card-source-section");compose.waitUntil(10000){compose.onAllNodesWithTag("study-open-source").fetchSemanticsNodes().isNotEmpty()};tap("study-open-source");ready()
   assertEquals(1L,runBlocking{app.inkRepository.read(note.id).revision})
   if(compose.onAllNodesWithTag("study-panel").fetchSemanticsNodes().isEmpty())tap("quick-study")
-  tap("study-map-picker");tap("study-map-$mapB");compose.waitForIdle();tap("study-card-${card.id}");tap("study-reuse-card")
+  tap("study-map-picker");tap("study-map-$mapB");compose.waitForIdle();tap("study-card-${card.id}");tap("card-management-actions");tap("study-reuse-card")
   compose.waitUntil(10000){runBlocking{app.study.nodes(note.id,mapB).first()}.size==1};assertEquals(2,cards().size)
   tap("study-card-${card.id}");tap("study-edit-card");compose.onNodeWithTag("study-card-title").performTextReplacement("共享理解");tap("study-save-card")
   compose.waitUntil(10000){cards().first{it.id==card.id}.title=="共享理解"}

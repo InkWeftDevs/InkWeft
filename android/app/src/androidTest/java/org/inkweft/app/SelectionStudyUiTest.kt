@@ -119,6 +119,7 @@ class SelectionStudyUiTest {
         assertEquals(s.id,InkPageFile.decode(snapshot.snapshot).strokes.single().id)
         compose.onNodeWithTag("study-card-${card.id}").performScrollTo().performClick()
         // Source snapshots load on Dispatchers.IO after the details dialog opens.
+        compose.waitUntil(10000){compose.onAllNodesWithTag("card-source-section").fetchSemanticsNodes().isNotEmpty()};compose.onNodeWithTag("card-source-section").performScrollTo().performClick()
         try{
             compose.waitUntil(10_000){compose.onAllNodesWithTag("study-card-details").fetchSemanticsNodes().isNotEmpty()}
             compose.waitUntil(10_000){compose.onAllNodesWithTag("study-open-source").fetchSemanticsNodes().isNotEmpty()}
@@ -133,7 +134,7 @@ class SelectionStudyUiTest {
     @Test fun outlineAndMapReuseSingleEditableCard(){
         val(n,_)=seed();compose.onNodeWithTag("quick-settings").performClick();compose.onNodeWithTag("study-open").performScrollTo().performClick();compose.revealAction("study-add-card");compose.onNodeWithTag("study-add-card").performClick();addCard("条件概率","按定义推导")
         val card=runBlocking{app.study.cards(n.id).first()}.single()
-        compose.onNodeWithTag("study-card-${card.id}").performClick();compose.onNodeWithTag("study-reuse-card").performScrollTo().performClick()
+        compose.onNodeWithTag("study-card-${card.id}").performClick();compose.onNodeWithTag("card-management-actions").performClick();compose.onNodeWithTag("study-reuse-card").performScrollTo().performClick()
         compose.waitUntil(10_000){runBlocking{app.study.nodes(n.id).first().size}==2}
         compose.revealAction("study-tab-1");compose.onNodeWithTag("study-tab-1").performClick();val nodes=runBlocking{app.study.nodes(n.id).first()}
         compose.onNodeWithTag("outline-node-${nodes.first().id}").performScrollTo().performClick();compose.onNodeWithTag("study-edit-card").performScrollTo().performClick()
@@ -145,11 +146,11 @@ class SelectionStudyUiTest {
     }
     @Test fun childThemeAndRemovingLeafKeepsCard(){
         val(n,_)=seed();compose.onNodeWithTag("quick-settings").performClick();compose.onNodeWithTag("study-open").performScrollTo().performClick();compose.revealAction("study-add-card");compose.onNodeWithTag("study-add-card").performClick();addCard("总论","根节点")
-        val root=runBlocking{app.study.nodes(n.id).first()}.single();compose.revealAction("study-tab-1");compose.onNodeWithTag("study-tab-1").performClick();compose.onNodeWithTag("outline-node-${root.id}").performScrollTo().performClick();compose.onNodeWithTag("study-add-child").performScrollTo().performClick();addCard("必要条件","检查假设")
+        val root=runBlocking{app.study.nodes(n.id).first()}.single();compose.revealAction("study-tab-1");compose.onNodeWithTag("study-tab-1").performClick();compose.onNodeWithTag("outline-node-${root.id}").performScrollTo().performClick();compose.onNodeWithTag("card-node-actions").performScrollTo().performClick();compose.onNodeWithTag("study-add-child").performScrollTo().performClick();addCard("必要条件","检查假设")
         val child=runBlocking{app.study.nodes(n.id).first()}.single{it.parentId==root.id}
         compose.onNodeWithText("必要条件",useUnmergedTree=true).performScrollTo().performClick()
         try{compose.onNodeWithTag("study-card-details").assertExists()}catch(e:Throwable){shot("child-node-failure.png");throw e}
-        compose.onNodeWithTag("study-remove-node").performScrollTo().performClick()
+        compose.onNodeWithTag("card-node-actions").performScrollTo().performClick();compose.onNodeWithTag("study-remove-node").performScrollTo().performClick()
         compose.waitUntil(10_000){runBlocking{app.study.nodes(n.id).first().single{it.id==child.id}.removed}}
         assertEquals(2,runBlocking{app.study.cards(n.id).first().size})
     }

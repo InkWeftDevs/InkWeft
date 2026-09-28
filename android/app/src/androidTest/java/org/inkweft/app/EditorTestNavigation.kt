@@ -107,7 +107,11 @@ internal fun ComposeTestRule.revealAction(tag:String){
     when {
         (tag.startsWith("study-card-")||tag.startsWith("outline-"))&&onAllNodesWithTag("study-list").fetchSemanticsNodes().isNotEmpty()->onNodeWithTag("study-list").performScrollToNode(hasTestTag(tag))
         tag=="toolbar-customize"->onNodeWithTag("toolbar-more").performClick()
-        tag.startsWith("study-tab-")||tag in setOf("study-new-map","study-insert-map","study-save-template","study-add-card","study-expand-all","study-focus-all","study-collapse-all","study-arrange")->onNodeWithTag("study-management").performClick()
+        tag.startsWith("study-tab-")||tag in setOf("study-new-map","study-insert-map","study-save-template","study-add-card","study-expand-all","study-focus-all","study-collapse-all","study-arrange")->{
+            if(onAllNodesWithTag("map-menu").fetchSemanticsNodes().isEmpty())onNodeWithTag("study-management").performClick()
+            val group=if(tag.startsWith("study-tab-"))0 else if(tag in setOf("study-insert-map","study-save-template"))2 else 1
+            onNodeWithTag("map-menu-group-$group").performClick()
+        }
         tag.startsWith("width-preset-")||tag.startsWith("pencil-hardness-")->onNodeWithTag("pen-advanced").performScrollTo().performClick()
         tag.startsWith("pen-color-")->onNodeWithTag("pen-basic").performScrollTo().performClick()
         tag in setOf("quick-readonly","quick-fullscreen","quick-timer","quick-add-page","quick-export","quick-beauty","quick-finger","object-image","object-text","top-tags")->onNodeWithTag("toolbar-more").performClick()

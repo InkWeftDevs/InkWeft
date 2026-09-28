@@ -38,7 +38,7 @@ internal class StudyViewModel(val book:String,val repo:StudyRepository,private v
     val revealByMap=mutableMapOf<String,String>()
     fun undoCapture(){undoCaptureAt(mapId.value)}
     fun undoCaptureAt(target:String?){val c=captureUndo[target?:"main"]?:return;submit(c)}
-    val selectedByMap=mutableMapOf<String,String?>()
+    val selectedByMap=mutableStateMapOf<String,String?>()
     fun selectMap(id:String?,userInitiated:Boolean=true){if(id!=mapId.value&&!ui.value.busy&&!ui.value.unknown){if(userInitiated)searchSession?.changedByUser=true;saved["study.map"]=id;mapId.value=id;state.update{it.copy(loading=true,nodes=emptyList())}}}
     private var pending:StudyCommand?=restorePending()
     private val state=MutableStateFlow(StudyUi(unknown=pending!=null,message=if(pending!=null)"上次摘要操作待核对，请重试原操作。"else null));val ui=state.asStateFlow()
