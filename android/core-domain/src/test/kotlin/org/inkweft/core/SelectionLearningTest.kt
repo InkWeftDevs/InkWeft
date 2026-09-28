@@ -23,6 +23,14 @@ class SelectionLearningTest {
     @Test fun smoothingRejectsErasedInkAndZeroStrengthLeavesSamples(){val s=stroke();assertEquals(s.samples,InkSelectionEdit.beautify(listOf(s),0f).single().samples);reject{InkSelectionEdit.beautify(listOf(s.withCuts(listOf(InkCut(id(),3f,listOf(EraserPoint(10f,20f)))))),.5f)}}
     @Test fun recolorPreservesMasksAndHighlighterAlpha(){val s=InkStroke(id(),InkPen.HIGHLIGHTER,0x55ffff00,15f,InkTool.TOUCH,stroke().samples);val recolored=InkSelectionEdit.recolor(listOf(s),0xff334499.toInt()).single();assertEquals(0x55334499,recolored.color);assertEquals(s.samples,recolored.samples)}
     @Test fun sourceIdentityDefensivelyCopiesLists(){val ids=mutableListOf(id());val source=StudySourceDraft(id(),2,CanvasBounds(0.0,0.0,10.0,10.0),ids);ids.clear();assertEquals(1,source.strokeIds.size)}
+    @Test fun excerptPreviewIsImmutableAndBindsObjectVersionToReceipt(){
+        val page=id();val b=CanvasBounds(0.0,0.0,20.0,30.0);val picture=byteArrayOf(-1,-40,1,2,3)
+        val source=StudySourceDraft(page,0,b,emptyList(),picture,0)
+        picture[2]=9;val copy=source.previewBytes()!!;assertEquals(1.toByte(),copy[2]);copy[2]=8;assertEquals(1.toByte(),source.previewBytes()!![2])
+        val op=id();val card=id();val a=StudyCommand(op,page,StudyAction.CREATE_EXCERPT,cardId=card,title="摘录",source=source)
+        val changed=StudyCommand(op,page,StudyAction.CREATE_EXCERPT,cardId=card,title="摘录",source=StudySourceDraft(page,0,b,emptyList(),source.previewBytes(),1))
+        assertNotEquals(a.digest(),changed.digest());reject{StudySourceDraft(page,0,b,emptyList())}
+    }
     @Test fun graphRejectsCyclesMissingParentAndInvalidNumbers(){val a=StudyNode(id(),id(),null,0.0,0.0);val b=StudyNode(id(),id(),a.id,100.0,0.0);reject{StudyGraph.validate(listOf(a.copy(parentId=b.id),b))};reject{StudyGraph.validate(listOf(a.copy(parentId=id())))};reject{StudyGraph.validate(listOf(a.copy(x=Double.NaN)))}}
     @Test fun multipleOccurrencesShareOneCardAndLayoutDoesNotChangeIdentity(){val card=id();val a=StudyNode(id(),card,null,0.0,0.0);val b=StudyNode(id(),card,a.id,0.0,0.0);StudyGraph.validate(listOf(a,b));val layout=StudyGraph.arrange(listOf(a,b));assertEquals(setOf(a.id,b.id),layout.keys);assertTrue(layout.getValue(b.id).x>layout.getValue(a.id).x);assertEquals(card,b.cardId)}
     @Test fun removedParentCannotOwnVisibleChild(){val a=StudyNode(id(),id(),null,0.0,0.0,removed=true);val b=StudyNode(id(),id(),a.id,10.0,10.0);reject{StudyGraph.validate(listOf(a,b))}}

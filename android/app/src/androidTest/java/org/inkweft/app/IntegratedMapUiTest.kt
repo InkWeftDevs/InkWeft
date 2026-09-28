@@ -65,7 +65,7 @@ class IntegratedMapUiTest {
   }
   compose.runOnIdle{ViewModelProvider(compose.activity)[NotebookViewModel::class.java].select(note)};compose.singlePageEditor();ready()
   tap("ink-select");compose.runOnIdle{checkNotNull(find<SelectionOverlayView>(compose.activity.window.decorView)).onRegion(InkRegion(listOf(EraserPoint(150f,200f),EraserPoint(400f,400f))))}
-  tap("selection-more");tap("selection-excerpt");compose.onNodeWithTag("study-panel").assertExists()
+  tap("selection-more");tap("selection-map");compose.onNodeWithTag("study-panel").assertExists()
   tap("study-map-picker");tap("study-map-$mapA");compose.waitUntil(10000){runCatching{compose.onNodeWithTag("study-add-source").assertIsEnabled()}.isSuccess}
   tap("study-source-branch");tap("study-source-parent-$root");tap("study-add-source")
   fun cards()=runBlocking{app.study.cards(note.id).first()}

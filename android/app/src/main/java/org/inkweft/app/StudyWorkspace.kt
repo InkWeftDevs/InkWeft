@@ -55,7 +55,7 @@ internal class StudyViewModel(val book:String,val repo:StudyRepository,private v
         combine(repo.cards(book),repo.nodes(book,m),repo.nodes(book)){c,n,main->Triple(c,n,main)}
             .catch{e->if(e is CancellationException)throw e;state.update{it.copy(loading=false,readFailed=true)}}
     }.collect{(c,n,main)->state.update{it.copy(cards=c,nodes=n,mainNodes=main,loading=false,readFailed=false)}}}}
-    fun submit(c:StudyCommand){if(ui.value.busy||pending!=null)return;pending=StudyCommand(c.id,c.notebookId,c.action,c.cardId,c.nodeId,c.expectedRevision,c.parentId,c.title,c.body,c.x,c.y,c.source,c.expectedGraph,mapId.value);persistPending();execute()}
+    fun submit(c:StudyCommand){if(ui.value.busy||pending!=null)return;pending=StudyCommand(c.id,c.notebookId,c.action,c.cardId,c.nodeId,c.expectedRevision,c.parentId,c.title,c.body,c.x,c.y,c.source,c.expectedGraph,if(c.action==StudyAction.CREATE_EXCERPT)null else mapId.value);persistPending();execute()}
     fun retry(){if(!ui.value.busy&&pending!=null)execute()}
     private fun execute(){val c=pending?:return;state.update{it.copy(busy=true,message=null,completed=null)}
         viewModelScope.launch{try{when(val result=withContext(Dispatchers.IO){repo.outcome(c)}){
@@ -71,12 +71,13 @@ internal class StudyViewModel(val book:String,val repo:StudyRepository,private v
     private fun persistPending(){
         val c=pending
         saved.set<ArrayList<String>?>("study.command",c?.let{arrayListOf(it.id,it.notebookId,it.action.name,it.cardId.orEmpty(),it.nodeId.orEmpty(),it.expectedRevision.toString(),it.parentId.orEmpty(),it.title,it.body,it.x.toString(),it.y.toString(),it.expectedGraph,it.mapId.orEmpty())})
+        saved["study.preview"]=c?.source?.previewBytes();saved["study.objectRevision"]=c?.source?.objectRevision
         saved.set<ArrayList<String>?>("study.source",c?.source?.let{arrayListOf(it.pageId,it.inkRevision.toString(),it.bounds.left.toString(),it.bounds.top.toString(),it.bounds.right.toString(),it.bounds.bottom.toString(),*it.strokeIds.toTypedArray())})
     }
     private fun restorePending():StudyCommand?{
         val values=saved.get<ArrayList<String>>("study.command")?:return null
         require(values.size in 12..13&&values[1]==book)
-        val s=saved.get<ArrayList<String>>("study.source")?.let{require(it.size in 7..262);StudySourceDraft(it[0],it[1].toLong(),CanvasBounds(it[2].toDouble(),it[3].toDouble(),it[4].toDouble(),it[5].toDouble()),it.drop(6))}
+        val s=saved.get<ArrayList<String>>("study.source")?.let{require(it.size in 6..262);StudySourceDraft(it[0],it[1].toLong(),CanvasBounds(it[2].toDouble(),it[3].toDouble(),it[4].toDouble(),it[5].toDouble()),it.drop(6),saved["study.preview"],saved["study.objectRevision"])}
         return StudyCommand(values[0],book,StudyAction.valueOf(values[2]),values[3].ifEmpty{null},values[4].ifEmpty{null},values[5].toLong(),values[6].ifEmpty{null},values[7],values[8],values[9].toDouble(),values[10].toDouble(),s,values[11],values.getOrNull(12)?.ifEmpty{null})
     }
     class Factory(val book:String,val repo:StudyRepository):ViewModelProvider.Factory{override fun<T:ViewModel>create(c:Class<T>,extras:CreationExtras):T{require(c.isAssignableFrom(StudyViewModel::class.java));@Suppress("UNCHECKED_CAST")return StudyViewModel(book,repo,extras.createSavedStateHandle()) as T}}
@@ -285,7 +286,7 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
             }
             source?.let{s->val strokes by produceState<List<InkStroke>>(emptyList(),s.cardId){value=withContext(Dispatchers.Default){InkPageFile.decode(s.snapshot).strokes}}
                 Text(if(stale)"来源页面已变化，下方保留摘录时快照。"else"摘录时的原迹快照",fontSize=12.sp,color=Quiet)
-                AndroidView(factory={InkCanvasView(it).apply{preview=true}},update={it.configure(true,PaperStyle.BLANK,null);it.showStrokes(strokes)},modifier=Modifier.fillMaxWidth().height(150.dp))
+                SourceThumbnail(s.cardId,Modifier.fillMaxWidth().height(150.dp))
                 TextButton(onClick={if(openSource(s)){chosenCard=null;vm.selectedByMap[mapKey]=node?.id}else localMessage="来源页已回收或不可用；原迹快照仍保留。"},enabled=editable,modifier=Modifier.testTag("study-open-source")){Text("返回来源区域")}}
             if(card.trashedAt==null){
                 TextButton(onClick={knowledgeCard=card;chosenCard=null}){Text("关联、属性与回忆题")}

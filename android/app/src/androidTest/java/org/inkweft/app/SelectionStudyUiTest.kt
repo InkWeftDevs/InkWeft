@@ -56,7 +56,7 @@ class SelectionStudyUiTest {
     }
     private fun select(left:Double=170.0,top:Double=570.0,right:Double=630.0,bottom:Double=635.0){
         compose.onNodeWithTag("ink-select").performClick();compose.waitForIdle()
-        compose.onNodeWithTag("selection-rectangle").performScrollTo().performClick()
+        compose.onNodeWithTag("ink-select").performClick();compose.onNodeWithTag("lasso-rectangle").performClick();compose.onNodeWithContentDescription("关闭套索").performClick()
         var a=Offset.Zero;var b=Offset.Zero
         compose.runOnIdle{val v=nativeCanvas();val vp=v.snapshotViewport();val d=v.resources.displayMetrics.density.toDouble();val p=vp.worldToScreen(left,top,v.width.toDouble(),v.height.toDouble(),d);val q=vp.worldToScreen(right,bottom,v.width.toDouble(),v.height.toDouble(),d);a=Offset(p.x.toFloat(),p.y.toFloat());b=Offset(q.x.toFloat(),q.y.toFloat())}
         compose.onNodeWithTag("selection-overlay").performTouchInput{swipe(a,b,300)};compose.waitForIdle()
@@ -110,7 +110,7 @@ class SelectionStudyUiTest {
         assertEquals(s.id,InkSession(runBlocking{app.inkRepository.read(n.id)}).visibleDraft().single().id)
     }
     @Test fun excerptCreatesSharedCardAndReturnsToSource(){
-        val(n,s)=seed();select();compose.onNodeWithTag("selection-more").performClick();compose.onNodeWithTag("selection-excerpt").performScrollTo().performClick()
+        val(n,s)=seed();select();compose.onNodeWithTag("selection-more").performClick();compose.onNodeWithTag("selection-map").performScrollTo().performClick()
         addCard("拉格朗日中值定理","先核对连续与可导条件")
         val card=runBlocking{app.study.cards(n.id).first()}.single();val snapshot=runBlocking{app.study.source(card.id)}!!
         assertEquals(s.id,InkPageFile.decode(snapshot.snapshot).strokes.single().id)

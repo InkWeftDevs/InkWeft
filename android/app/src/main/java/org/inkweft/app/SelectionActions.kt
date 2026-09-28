@@ -14,11 +14,11 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.*
 import org.inkweft.core.*
 
-internal data class SelectedInk(val region:InkRegion,val revision:Long,val strokes:List<InkStroke>)
+internal data class SelectedInk(val region:InkRegion,val revision:Long,val strokes:List<InkStroke>,val preview:ByteArray?=null,val objectRevision:Long?=null,val excerptText:String="")
 @Composable
 internal fun SelectionActions(selection:SelectedInk?,all:List<InkStroke>,enabled:Boolean,
     freehand:Boolean,onMode:(Boolean)->Unit,apply:(Long,InkMutation)->Boolean,
-    clear:()->Unit,excerpt:(SelectedInk)->Unit,associate:(SelectedInk)->Unit={},fontBeauty:(SelectedInk)->Unit={}){
+    clear:()->Unit,excerpt:(SelectedInk)->Unit,associate:(SelectedInk)->Unit={},fontBeauty:(SelectedInk)->Unit={},mapExcerpt:(SelectedInk)->Unit={}){
     var more by remember{mutableStateOf(false)}
     var transformError by remember{mutableStateOf(false)}
     var beauty by remember{mutableStateOf(false)};var color by remember{mutableStateOf(false)}
@@ -47,6 +47,7 @@ internal fun SelectionActions(selection:SelectedInk?,all:List<InkStroke>,enabled
                             },modifier=Modifier.testTag("selection-transform-$i"))
                         }
                         DropdownMenuItem(text={Text("摘录")},onClick={more=false;excerpt(s)},enabled=enabled&&count in 1..256,modifier=Modifier.testTag("selection-excerpt"))
+                        DropdownMenuItem(text={Text("加入导图")},onClick={more=false;mapExcerpt(s)},enabled=enabled&&count in 1..256,modifier=Modifier.testTag("selection-map"))
                         DropdownMenuItem(text={Text("笔形润色")},onClick={more=false;beauty=true},enabled=enabled&&count in 1..256&&s.strokes.all{it.pen!=InkPen.HIGHLIGHTER&&it.cuts.isEmpty()},modifier=Modifier.testTag("selection-beautify"))
                         DropdownMenuItem(text={Text("只擦框内部分")},onClick={more=false;val ids=all.filter{it.bounds().intersects(s.region.bounds)}.map{it.id};if(ids.isNotEmpty()&&apply(s.revision,InkMutation.Cut(EraseSelection(s.region.mask(),ids))))clear()},enabled=enabled,modifier=Modifier.testTag("selection-erase-inside"))
                         DropdownMenuItem(text={Text("关联")},onClick={more=false;associate(s)},enabled=enabled&&count in 1..256,modifier=Modifier.testTag("selection-associate"))

@@ -229,6 +229,24 @@ class InkCanvasView(context:Context):View(context){
         // identical to the preview and does not vary with zoom or pen pressure.
         if((eraseMode||gestureErase)&&cursor!=null&&!preview){val p=checkNotNull(cursor);paint.style=Paint.Style.FILL;paint.color=0x183f7d67;val radius=(eraserDiameterDp*density/2).toFloat();canvas.drawCircle(p.x.toFloat(),p.y.toFloat(),radius,paint);paint.style=Paint.Style.STROKE;paint.strokeWidth=(3*density).toFloat();paint.color=Color.WHITE;canvas.drawCircle(p.x.toFloat(),p.y.toFloat(),radius,paint);paint.strokeWidth=density.toFloat();paint.color=0xff22272e.toInt();canvas.drawCircle(p.x.toFloat(),p.y.toFloat(),radius,paint);paint.style=Paint.Style.FILL}
     }
+    /** Capture only the rendered paper, never toolbars or selection decorations. */
+    internal fun excerptPreview(region:CanvasBounds):ByteArray {
+        check(!rasterPending&&(documentId==null||documentKnownAbsent||documentTile!=null&&!documentError)){"页面仍在呈现，请稍后重试"}
+        val a=viewport.worldToScreen(region.left,region.top,width.toDouble(),height.toDouble(),density)
+        val b=viewport.worldToScreen(region.right,region.bottom,width.toDouble(),height.toDouble(),density)
+        check(a.x>=-1&&a.y>=-1&&b.x<=width+1&&b.y<=height+1){"请将摘录区域完整移到屏幕内"}
+        val scale=min(1.0,800.0/max(b.x-a.x,b.y-a.y))
+        val bitmap=Bitmap.createBitmap(max(1,((b.x-a.x)*scale).toInt()),max(1,((b.y-a.y)*scale).toInt()),Bitmap.Config.ARGB_8888)
+        try{
+            val canvas=Canvas(bitmap);canvas.scale(scale.toFloat(),scale.toFloat());canvas.translate(-a.x.toFloat(),-a.y.toFloat())
+            draw(canvas)
+            for(quality in listOf(90,75,55,35)){
+                val stream=java.io.ByteArrayOutputStream();bitmap.compress(Bitmap.CompressFormat.JPEG,quality,stream)
+                val bytes=stream.toByteArray();if(bytes.size<=240_000)return bytes
+            }
+            error("摘录区域过于复杂，请缩小范围")
+        }finally{bitmap.recycle()}
+    }
     private fun drawSavedStroke(canvas:Canvas,s:InkStroke){
         val n=canvas.save();s.cuts.forEach{canvas.clipOutPath(cutPath(it))}
         if(s.pen==InkPen.PENCIL)PencilRenderer.draw(canvas,s)

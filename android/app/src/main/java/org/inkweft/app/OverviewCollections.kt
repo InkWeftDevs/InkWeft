@@ -91,6 +91,7 @@ internal class OverviewViewModel(val book:String,val repo:KnowledgeRepository,pr
         LazyColumn(Modifier.weight(1f).testTag("overview-excerpts"),contentPadding=PaddingValues(horizontal=12.dp)){
             items(list,key={it.id}){item->val page=pages.find{it.id==item.pageId}
                 Column(Modifier.fillMaxWidth().clickable(enabled=enabled&&page!=null){openExcerpt(item)}.padding(vertical=8.dp).testTag("overview-excerpt-${item.id}")){
+                    SourceThumbnail(item.id,Modifier.fillMaxWidth().height(120.dp))
                     Row(verticalAlignment=Alignment.CenterVertically){Text(item.title,Modifier.weight(1f),maxLines=2,overflow=TextOverflow.Ellipsis);TextButton({editExcerpt(item.id)},enabled=enabled,modifier=Modifier.testTag("excerpt-edit-${item.id}")){Text("编辑")}}
                     if(item.body.isNotBlank())Text(item.body,maxLines=2,overflow=TextOverflow.Ellipsis,style=MaterialTheme.typography.bodySmall,color=Quiet)
                     Text(page?.let{"第${it.position+1}页"}?:"原页已回收",style=MaterialTheme.typography.labelSmall,color=Quiet)

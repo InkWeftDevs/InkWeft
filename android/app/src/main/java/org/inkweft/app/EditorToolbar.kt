@@ -29,11 +29,11 @@ internal object EditorToolOrder {
     var customizing by remember{mutableStateOf(false)}
     fun save(){prefs.edit().putString("toolbar-order-v32",order.joinToString(",")).putStringSet("toolbar-hidden-v32",hidden).apply()}
     fun move(id:String,delta:Int){
-        val group=order.filter{(it in hidden)==(id in hidden)};val next=group.indexOf(id)+delta
+        val group=order;val next=group.indexOf(id)+delta
         if(next in group.indices){val from=order.indexOf(id);val target=order.indexOf(group[next]);order=order.toMutableList().apply{removeAt(from);add(target,id)};save()}
     }
     Row(verticalAlignment=Alignment.CenterVertically){
-        Row(Modifier.weight(1f,fill=false).horizontalScroll(rememberScrollState()).testTag("editor-toolbar"),verticalAlignment=Alignment.CenterVertically){order.filterNot{it in hidden||it in EditorToolOrder.fixed}.forEach{key(it){content(it)}}}
+        Row(Modifier.weight(1f).horizontalScroll(rememberScrollState()).testTag("editor-toolbar"),verticalAlignment=Alignment.CenterVertically){order.filterNot{it in hidden||it in EditorToolOrder.fixed}.forEach{key(it){content(it)}}}
         order.filter{it in EditorToolOrder.fixed}.forEach{content(it)}
         IconButton(onClick={customizing=true},modifier=Modifier.testTag("toolbar-customize").describedAs("自定义快捷栏")){Glyph("more")}
     }
@@ -49,13 +49,14 @@ internal object EditorToolOrder {
                 }
                 Text("点眼睛显示或隐藏，拖动右侧把手排序",Modifier.padding(horizontal=24.dp,vertical=8.dp),style=MaterialTheme.typography.bodyMedium,color=Quiet)
                 Column(Modifier.weight(1f,fill=false).verticalScroll(rememberScrollState()).padding(horizontal=24.dp),verticalArrangement=Arrangement.spacedBy(12.dp)){
-                    listOf(false,true).forEach{hideGroup->
-                        val group=order.filter{(it in hidden)==hideGroup}
-                        Text(if(hideGroup)"更多操作"else"快捷栏",Modifier.padding(top=8.dp),style=MaterialTheme.typography.titleMedium)
+                    listOf(false).forEach{hideGroup->
+                        val group=order
+                        Text("工具",Modifier.padding(top=8.dp),style=MaterialTheme.typography.titleMedium)
                         Surface(shape=androidx.compose.foundation.shape.RoundedCornerShape(16.dp),border=BorderStroke(1.dp,Line),color=androidx.compose.ui.graphics.Color.White){
                             Column {
                                 if(group.isEmpty())Text(if(hideGroup)"全部工具已显示"else"从更多操作中添加工具",Modifier.padding(16.dp),color=Quiet)
                                 group.forEachIndexed{index,id->key(id){
+                                    val hideGroup=id in hidden
                                     Row(Modifier.fillMaxWidth().heightIn(min=56.dp).padding(horizontal=4.dp).testTag("toolbar-row-$id"),verticalAlignment=Alignment.CenterVertically){
                                         if(id in EditorToolOrder.fixed)Spacer(Modifier.size(48.dp))else IconToggleButton(!hideGroup,{show->hidden=if(show)hidden-id else hidden+id;save()},modifier=Modifier.size(48.dp).testTag("toolbar-visible-$id").describedAs((if(hideGroup)"显示"else"隐藏")+EditorToolOrder.labels.getValue(id))){Glyph(if(hideGroup)"eye-off"else"eye",if(hideGroup)Quiet else TextInk)}
                                         Glyph(EditorToolOrder.icon(id),if(hideGroup)Quiet else TextInk)

@@ -48,6 +48,8 @@ fun NotebookApp(vm:NotebookViewModel=viewModel(),onDiagnostics:()->Unit={}){
     val transfers:LibraryTransfersViewModel=viewModel();val transferUi by transfers.ui.collectAsStateWithLifecycle()
     val keyboard=LocalSoftwareKeyboardController.current;val focus=LocalFocusManager.current;val scope=rememberCoroutineScope()
     val notebookStates=rememberSaveableStateHolder()
+    var splitId by rememberSaveable{mutableStateOf<String?>(null)}
+    var splitVertical by rememberSaveable{mutableStateOf(false)}
     val pendingCreate by workspace.pendingCreate.collectAsStateWithLifecycle()
     val defaults=remember(context){context.getSharedPreferences("inkweft-new-notebook",android.content.Context.MODE_PRIVATE)}
     val target by app.openKnowledgeTarget.collectAsStateWithLifecycle()
@@ -95,7 +97,7 @@ fun NotebookApp(vm:NotebookViewModel=viewModel(),onDiagnostics:()->Unit={}){
         if(pendingCreate!=null&&!busy)TextButton(onClick={workspace.retryCreate{vm.select(it)}},modifier=Modifier.testTag("retry-create-notebook")){Text("核对原创建请求")}
         if(transferUi.busy||busy)LinearProgressIndicator(Modifier.fillMaxWidth())
         if(ui.current!=null&&!immersive)NotebookTabs(ui,navigationReady&&!busy&&!transferUi.busy,{id->focus.clearFocus(force=true);keyboard?.hide();vm.selectTab(id)},
-            {id->if(vm.closeTab(id))notebookStates.removeState(id)else Toast.makeText(context,"这份笔记有未保存文字或待核对操作，请先处理后再关闭标签。",Toast.LENGTH_SHORT).show()},vm::back)
+            {id->if(vm.closeTab(id)){notebookStates.removeState(id);if(splitId==id)splitId=null}else Toast.makeText(context,"这份笔记有未保存文字或待核对操作，请先处理后再关闭标签。",Toast.LENGTH_SHORT).show()},{splitId=null;vm.back()},{id,vertical->splitId=id;splitVertical=vertical})
         val draft=ui.current
         if(draft==null)Box(Modifier.weight(1f)){LibraryScreen(ui,workspace,vm::select,::openCreate,{importGuide=true},onDiagnostics,::beginRename,{transfers.requestCopy(it.id)},{transfers.export(it.id)})}
         else{
@@ -110,7 +112,14 @@ fun NotebookApp(vm:NotebookViewModel=viewModel(),onDiagnostics:()->Unit={}){
                 IconButton(onClick=onDiagnostics,modifier=Modifier.testTag("open-diagnostics").describedAs("诊断与导出")){Glyph("diagnostics",Quiet)}
             }
             HorizontalDivider(color=Line)
-            if(inkMode&&draft.base.revision>0)Box(Modifier.weight(1f)){notebookStates.SaveableStateProvider(draft.base.id){InkScreen(draft,workspace,vm::back,{beginRename(draft.base)},{inkMode=false;immersive=false},onDiagnostics,immersive,{immersive=it})}}
+            if(inkMode&&draft.base.revision>0)Box(Modifier.weight(1f)){
+                val editor:@Composable ()->Unit={notebookStates.SaveableStateProvider(draft.base.id){InkScreen(draft,workspace,{splitId=null;vm.back()},{beginRename(draft.base)},{inkMode=false;immersive=false},onDiagnostics,immersive,{immersive=it})}}
+                val other=splitId?.let{id->ui.notes.find{it.id==id}}
+                val reference:@Composable ()->Unit={if(other!=null)NotebookReferencePane(other.id,other.title,navigationReady,splitVertical,{splitVertical=!splitVertical},{val previous=draft.base.id;vm.select(other);splitId=previous},{splitId=null})}
+                if(other==null)editor()
+                else if(splitVertical)Column{Box(Modifier.weight(1f)){editor()};HorizontalDivider(color=Line,thickness=2.dp);Box(Modifier.weight(1f)){reference()}}
+                else Row{Box(Modifier.weight(1f)){editor()};VerticalDivider(color=Line,thickness=2.dp);Box(Modifier.weight(1f)){reference()}}
+            }
             else TextPage(draft,vm,Modifier.weight(1f)){confirmExport=true}
         }
     }

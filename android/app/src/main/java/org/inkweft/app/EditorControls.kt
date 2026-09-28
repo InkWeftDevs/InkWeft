@@ -14,7 +14,12 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
+import androidx.compose.ui.unit.*
+import androidx.compose.ui.window.*
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
@@ -42,13 +47,28 @@ import androidx.compose.ui.window.DialogProperties
     }
 }
 
+internal val LocalEditorAnchor=staticCompositionLocalOf<IntRect?>{null}
+
 /** Bounded floating panel: settings stay compact while the paper remains visible. */
 @Composable internal fun EditorPanel(title:String,subtitle:String,dismiss:()->Unit,tag:String,
     footer:@Composable ()->Unit={},content:@Composable ColumnScope.()->Unit){
-    Dialog(onDismissRequest=dismiss,properties=DialogProperties(usePlatformDefaultWidth=false,decorFitsSystemWindows=false)){
-        Box(Modifier.fillMaxSize().windowInsetsPadding(WindowInsets.safeDrawing).imePadding().padding(12.dp),contentAlignment=Alignment.CenterEnd){
-            Surface(Modifier.widthIn(max=380.dp).fillMaxWidth().heightIn(max=600.dp).testTag(tag),color=MaterialTheme.colorScheme.surface,
-                shape=RoundedCornerShape(16.dp)){
+    val anchor=LocalEditorAnchor.current
+    val density=LocalDensity.current.density
+    val position=remember(anchor,density){object:PopupPositionProvider{
+        override fun calculatePosition(a:IntRect,w:IntSize,d:LayoutDirection,p:IntSize):IntOffset{
+            val margin=(8*density).toInt();val origin=anchor?:a
+            val maxX=(w.width-p.width-margin).coerceAtLeast(margin);val maxY=(w.height-p.height-margin).coerceAtLeast(margin)
+            val below=origin.bottom+margin
+            val side=anchor!=null&&origin.width>origin.height*1.5f
+            val x=if(anchor==null)maxX else if(side){if(origin.right+margin+p.width<=w.width-margin)origin.right+margin else origin.left-margin-p.width}else (origin.left+origin.right-p.width)/2
+            val y=if(anchor==null)margin+(48*density).toInt() else if(side)(origin.top+origin.bottom-p.height)/2 else if(below+p.height<=w.height-margin)below else origin.top-p.height-margin
+            return IntOffset(x.coerceIn(margin,maxX),y.coerceIn(margin,maxY))
+        }
+    }}
+    Popup(position,onDismissRequest=dismiss,properties=PopupProperties(focusable=true)){
+        Box(Modifier.widthIn(max=380.dp).padding(4.dp)){
+            Surface(Modifier.widthIn(max=380.dp).fillMaxWidth().heightIn(max=minOf(600.dp,LocalConfiguration.current.screenHeightDp.dp-64.dp)).testTag(tag),color=MaterialTheme.colorScheme.surface,
+                shape=RoundedCornerShape(16.dp),shadowElevation=8.dp,border=BorderStroke(1.dp,Line)){
                 Column(Modifier.fillMaxWidth()){
                     Row(Modifier.fillMaxWidth().padding(start=16.dp,end=4.dp,top=2.dp,bottom=2.dp),verticalAlignment=Alignment.CenterVertically){
                         Column(Modifier.weight(1f)){Text(title,style=MaterialTheme.typography.titleMedium);if(subtitle.isNotBlank())Text(subtitle,style=MaterialTheme.typography.bodySmall,color=Quiet,modifier=Modifier.padding(top=4.dp))}

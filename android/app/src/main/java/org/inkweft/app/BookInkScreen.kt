@@ -28,6 +28,8 @@ import org.inkweft.data.NotebookPageRow
 
 @Composable
 fun InkScreen(note:NoteDraft,workspace:WorkspaceViewModel=viewModel(),onBack:()->Unit={},onRename:()->Unit={},onText:()->Unit={},onDiagnostics:()->Unit={},fullScreen:Boolean=false,onFullScreen:(Boolean)->Unit={}){
+    BoxWithConstraints {
+    val paneWidth=maxWidth
     val context=LocalContext.current;val app=context.applicationContext as InkWeftApplication
     val vm:BookPagesViewModel=viewModel(key="book-${note.base.id}",factory=BookPagesViewModel.Factory(note.base.id,app.pages,app.workspaceRepository))
     val ui by vm.ui.collectAsStateWithLifecycle();val scope=rememberCoroutineScope()
@@ -42,7 +44,6 @@ fun InkScreen(note:NoteDraft,workspace:WorkspaceViewModel=viewModel(),onBack:()-
     var continuous by rememberSaveable(note.base.id){mutableStateOf(readingPrefs.getBoolean("continuous-v20-${note.base.id}",true))}
     fun readingMode(value:Boolean){continuous=value;readingPrefs.edit().putBoolean("continuous-v20-${note.base.id}",value).apply()}
     var canNavigate by remember{mutableStateOf(false)};var directory by remember{mutableStateOf(false)}
-    SideEffect{app.navigationReady.value=canNavigate&&!ui.busy&&!ui.actionUnknown&&!ui.insertionUnknown}
     androidx.activity.compose.BackHandler(enabled=!canNavigate||ui.busy||ui.actionUnknown||ui.insertionUnknown){
         Toast.makeText(context,"请先抬笔或核对当前操作，笔记仍保持在当前页。",Toast.LENGTH_SHORT).show()
     }
@@ -92,11 +93,16 @@ fun InkScreen(note:NoteDraft,workspace:WorkspaceViewModel=viewModel(),onBack:()-
         val mapWrite by mapWriter.ui.collectAsStateWithLifecycle()
         !studyState.busy&&!studyState.unknown&&!mapWrite.busy&&!mapWrite.unknown
     }else true
-    val panelOpen=directory||documentSettings||studyOpen
-    val docked=LocalConfiguration.current.screenWidthDp>=700
-    val panelWidth=if(studyOpen&&docked)minOf(480.dp,(LocalConfiguration.current.screenWidthDp*.46f).dp)else minOf(320.dp,(LocalConfiguration.current.screenWidthDp-24).dp)
-    val pageActionsReady=canNavigate&&!ui.busy&&!ui.actionUnknown&&!ui.insertionUnknown&&(!studyOpen||studyCanLeave)
-    androidx.activity.compose.BackHandler(panelOpen&&pageActionsReady){directory=false;documentSettings=false;studyOpen=false}
+    var excerptsOpen by rememberSaveable(note.base.id){mutableStateOf(false)}
+    val excerptsVm:StudyViewModel=viewModel(key="excerpt-${note.base.id}",factory=StudyViewModel.Factory(note.base.id,app.study))
+    val excerptsState by excerptsVm.ui.collectAsStateWithLifecycle()
+    val excerptReady=!excerptsState.busy&&!excerptsState.unknown
+    val panelOpen=directory||documentSettings||studyOpen||excerptsOpen
+    val docked=maxWidth>=700.dp
+    val panelWidth=if(studyOpen&&docked)minOf(480.dp,maxWidth*.46f)else minOf(320.dp,maxWidth-24.dp)
+    val pageActionsReady=canNavigate&&!ui.busy&&!ui.actionUnknown&&!ui.insertionUnknown&&(!studyOpen||studyCanLeave)&&excerptReady
+    SideEffect{app.navigationReady.value=pageActionsReady}
+    androidx.activity.compose.BackHandler(panelOpen&&pageActionsReady){directory=false;documentSettings=false;studyOpen=false;excerptsOpen=false}
     Box(Modifier.fillMaxSize()){
     Column(Modifier.fillMaxSize().padding(end=if(panelOpen&&docked)panelWidth else 0.dp)){
         val navigationEnabled=pageActionsReady
@@ -123,12 +129,18 @@ fun InkScreen(note:NoteDraft,workspace:WorkspaceViewModel=viewModel(),onBack:()-
         }
         if(page==null)Box(Modifier.weight(1f).fillMaxWidth(),contentAlignment=Alignment.Center){if(ui.loading)CircularProgressIndicator()else Text("页面未能载入，原数据保留")}
         else Box(Modifier.weight(1f)){InkPageScreen(note,workspace,page,{canNavigate=it},{_->searchOpen=true},!ui.busy&&!ui.actionUnknown&&!ui.insertionUnknown&&pageActionId==null,
+            onMapExcerpt={selection->studySource=StudySourceDraft(page.id,selection.revision,selection.region.bounds,selection.strokes.map{it.id});studyOpen=true;excerptsOpen=false},
             onAssociate={selection->knowledgeAnchor=KnowledgeData.Anchor(page.id,selection.revision,selection.region.bounds,selection.strokes.map{it.id});knowledgeOpen=true},
-            onExcerpt={selection->studySource=StudySourceDraft(page.id,selection.revision,selection.region.bounds,selection.strokes.map{it.id});studyOpen=true},
+            onExcerpt={selection->
+                if(excerptReady){excerptsVm.submit(StudyCommand(java.util.UUID.randomUUID().toString(),note.base.id,StudyAction.CREATE_EXCERPT,cardId=java.util.UUID.randomUUID().toString(),title="第${page.position+1}页摘录",body=selection.excerptText,source=StudySourceDraft(page.id,selection.revision,selection.region.bounds,selection.strokes.map{it.id},selection.preview,selection.objectRevision)));excerptsOpen=true;directory=false;documentSettings=false;studyOpen=false}
+            },
             focusRegion=sourceFocus?.takeIf{it.first==page.id}?.second,onFocusConsumed={sourceFocus=null},pageNavigation={
                 if(!page.world)Text("${page.position+1} / ${ui.pages.size}",fontSize=12.sp,modifier=Modifier.testTag("page-counter"))
             },continuousPages=if(continuous&&!page.world)ui.pages else null,onContinuousPage={if(it!=ui.selectedId)vm.select(it)},leaveContinuous={readingMode(false)},onTags={classify=true},fullScreen=fullScreen,onFullScreen=onFullScreen,canAddPage=!page.world&&ui.pages.size+ui.recycled.size<500,
-            excerptRequest=excerptRequest,onDocumentAction={action->when(action){"overview"->{directory=!directory;documentSettings=false};"settings"->{documentSettings=!documentSettings;directory=false};"add-page"->insertion=page.id to PageInsertLocation.AFTER;"export"->confirmBook=true}})}
+            excerptRequest=excerptRequest,onDocumentAction={action->when(action){"excerpts"->{excerptsOpen=true;directory=false;documentSettings=false;studyOpen=false};"overview"->{excerptsOpen=false;directory=!directory;documentSettings=false};"settings"->{documentSettings=!documentSettings;directory=false};"add-page"->insertion=page.id to PageInsertLocation.AFTER;"export"->confirmBook=true}})}
+    }
+    if(excerptsOpen)DocumentSidePanel("摘录","excerpt-panel",{if(excerptReady)excerptsOpen=false},Modifier.align(Alignment.CenterEnd).width(panelWidth)){
+        ExcerptCollection(excerptsVm,ui.pages,pageActionsReady,{source->readingMode(false);vm.select(source.pageId);sourceFocus=source.pageId to CanvasBounds(source.left,source.top,source.right,source.bottom)}, {card->initialStudyCard=card;studySource=null;excerptsOpen=false;studyOpen=true})
     }
     if(searchOpen)BookSearchPanel(note.base.id,note.title,page?.id,{searchOpen=false},{id->
         if(ui.pages.any{it.id==id}){vm.select(id);searchOpen=false}
@@ -171,7 +183,7 @@ fun InkScreen(note:NoteDraft,workspace:WorkspaceViewModel=viewModel(),onBack:()-
     if(knowledgeOpen)KnowledgeWorkspace(note.base.id,page?.let{TargetRef(TargetKind.PAGE,it.id)}?:TargetRef(TargetKind.NOTE,note.base.id),knowledgeAnchor,dismiss={knowledgeOpen=false}){target->
         app.openKnowledgeTarget.value=target;knowledgeOpen=false
     }
-    if(studyOpen)Box(Modifier.align(Alignment.CenterEnd).width(if(docked)panelWidth else LocalConfiguration.current.screenWidthDp.dp).fillMaxHeight().testTag("study-panel")){StudyContent(note,studySource,{studyOpen=false;studySource=null;initialStudyCard=null},initialCardId=initialStudyCard,documentReady=pageActionsReady){source->
+    if(studyOpen)Box(Modifier.align(Alignment.CenterEnd).width(if(docked)panelWidth else paneWidth).fillMaxHeight().testTag("study-panel")){StudyContent(note,studySource,{studyOpen=false;studySource=null;initialStudyCard=null},initialCardId=initialStudyCard,documentReady=pageActionsReady){source->
         if(ui.pages.any{it.id==source.pageId}){readingMode(false);vm.select(source.pageId);sourceFocus=source.pageId to CanvasBounds(source.left,source.top,source.right,source.bottom);if(!docked)studyOpen=false;true}else false
     }}
     if(directory)DocumentSidePanel("文档概览","pages-directory-dialog",{directory=false},Modifier.align(Alignment.CenterEnd).width(panelWidth)){
@@ -186,7 +198,7 @@ fun InkScreen(note:NoteDraft,workspace:WorkspaceViewModel=viewModel(),onBack:()-
         if(overviewTab==0)OverviewRecovery(marksModel)
         if(overviewTab!=0)OverviewCollections(note.base.id,overviewTab,ui.pages,page,pageActionsReady,app,
             openPage={vm.select(it)},openExcerpt={item->readingMode(false);vm.select(item.pageId);sourceFocus=item.pageId to CanvasBounds(item.left,item.top,item.right,item.bottom)},
-            editExcerpt={initialStudyCard=it;studyOpen=true;directory=false},newExcerpt={directory=false;readingMode(false);excerptRequest++})
+            editExcerpt={excerptsOpen=true;directory=false},newExcerpt={directory=false;readingMode(false);excerptRequest++})
         else {
         Row(Modifier.fillMaxWidth().padding(horizontal=12.dp),verticalAlignment=Alignment.CenterVertically){
             Text(if(showRecycled)"回收区 ${ui.recycled.size}"else"全部 ${ui.pages.size} 页",Modifier.weight(1f),style=MaterialTheme.typography.labelMedium,color=Quiet)
@@ -246,6 +258,7 @@ fun InkScreen(note:NoteDraft,workspace:WorkspaceViewModel=viewModel(),onBack:()-
     }
     if(confirmBook)AlertDialog(onDismissRequest={confirmBook=false},title={Text("导出整本内容副本")},text={Text("包括本笔记所有可用页面、图片、文本框、胶带状态、局部擦除效果和已保存键入文字；不含页面回收区。明文 .iwbook，不含摘要卡/脑图、撤销历史、账号或密钥；不是完整资料库备份。目标可能由云盘提供。")},confirmButton={TextButton(onClick={confirmBook=false;exporting=true;scope.launch{try{val bytes=withContext(Dispatchers.IO){app.pages.exportBook(note.base.id).encode()};exportBytes=bytes;export.launch("墨织笔记本.iwbook")}catch(c:CancellationException){throw c}catch(_:Exception){Toast.makeText(context,"无法导出整本内容，原数据保留；可尝试逐页导出",Toast.LENGTH_LONG).show()}finally{exporting=false}}}){Text("选择位置")}},dismissButton={TextButton(onClick={confirmBook=false}){Text("取消")}})
     searchTarget?.let{draft->PageSearchDialog(draft){searchTarget=null}}
+    }
     }
 }
 @Composable

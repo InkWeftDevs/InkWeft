@@ -13,6 +13,7 @@ internal data class ObjectsUi(val objects:List<PageObject> = emptyList(),val loa
 internal class PageObjectViewModel(private val pageId:String,private val repo:PageObjectRepository):ViewModel() {
     private val state=MutableStateFlow(ObjectsUi());val ui=state.asStateFlow()
     private var snapshot=ObjectSnapshot()
+    internal val revision get()=snapshot.revision
     private val undo=ArrayDeque<List<PageObject>>()
     private val redo=ArrayDeque<List<PageObject>>()
     private data class Pending(val id:String,val before:ObjectSnapshot,val after:List<PageObject>,val direction:Int,val expectedInk:Long?=null)

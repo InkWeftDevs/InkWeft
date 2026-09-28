@@ -84,21 +84,26 @@ class StudyRepository(private val db:NoteDatabase,private val fault:(StudyFault)
                 validateStudyGraph((nodes+ n).map{it.model()});writeNode(n,0)
             }
             val id=when(c.action){
-                StudyAction.CREATE->{
+                StudyAction.CREATE,StudyAction.CREATE_EXCERPT->{
                     studyRequire(cards.size<200){"STUDY_CARD_BUDGET"}
                     var snap:StudySourceRow?=null
                     c.source?.let{s->
                         val p=studyNotNull(db.pages().get(s.pageId));studyRequire(p.notebookId==c.notebookId&&p.trashedAt==null)
                         val ink=InkRepository(db).read(s.pageId);studyRequire(ink.revision==s.inkRevision){"SOURCE_VERSION_CHANGED"}
                         val visible=InkSession(ink).visibleDraft().associateBy{it.id};val selected=s.strokeIds.map{studyNotNull(visible[it])}
-                        studyRequire(selected.all{val b=it.bounds();b.left>=s.bounds.left-1&&b.top>=s.bounds.top-1&&b.right<=s.bounds.right+1&&b.bottom<=s.bounds.bottom+1})
-                        val bytes=InkPageFile("摘录原迹","",selected,p.world,PaperStyle.entries[p.paper]).encode();studyRequire(bytes.size<=1_800_000)
+                        val picture=s.previewBytes()
+                        if(picture!=null){studyRequire(s.objectRevision==(db.objects().get(s.pageId)?.revision?:0L)){"OBJECT_VERSION_CHANGED"}}
+                        studyRequire(picture!=null||selected.all{val b=it.bounds();b.left>=s.bounds.left-1&&b.top>=s.bounds.top-1&&b.right<=s.bounds.right+1&&b.bottom<=s.bounds.bottom+1})
+                        val bytes=if(picture==null)InkPageFile("摘录原迹","",selected,p.world,PaperStyle.entries[p.paper]).encode()else {
+                            val height=(1000*(s.bounds.bottom-s.bounds.top)/(s.bounds.right-s.bounds.left)).coerceIn(24.0,4000.0).toFloat()
+                            InkPageFile("区域摘录","",emptyList(),true,PaperStyle.BLANK,listOf(PageObject(java.util.UUID.randomUUID().toString(),PageObjectKind.IMAGE,0f,0f,1000f,height,image=java.util.Base64.getEncoder().encodeToString(picture)))).encode()
+                        };studyRequire(bytes.size<=1_800_000)
                         val used=db.openHelper.writableDatabase.query("SELECT COALESCE(SUM(length(snapshot)),0) FROM study_sources").use{it.moveToFirst();it.getLong(0)}
                         studyRequire(used+bytes.size<=32_000_000){"STUDY_SNAPSHOT_BUDGET"}
                         snap=StudySourceRow(studyNotNull(c.cardId),p.id,ink.revision,s.bounds.left,s.bounds.top,s.bounds.right,s.bounds.bottom,s.strokeIds.joinToString(","),bytes)
                     }
                     val row=StudyCardRow(studyNotNull(c.cardId),c.notebookId,1,c.title,c.body)
-                    dao.addCard(row);dao.revision(StudyCardRevisionRow(row.id,1,row.title,row.body,null));snap?.let{dao.source(it)};newNode();row.id
+                    dao.addCard(row);dao.revision(StudyCardRevisionRow(row.id,1,row.title,row.body,null));snap?.let{dao.source(it)};if(c.action==StudyAction.CREATE)newNode();row.id
                 }
                 StudyAction.EDIT,StudyAction.TRASH_CARD,StudyAction.RESTORE_CARD->{
                     val old=ownedCard();studyRequire(old.revision==c.expectedRevision){"CARD_VERSION_CHANGED"}

@@ -155,12 +155,13 @@ class LibraryBackupRepository(private val context:Context,private val db:NoteDat
             for(c in cards){
                 UUID.fromString(c.id);require(c.revision>=1&&c.title.isNotBlank()&&c.title.length<=120&&c.body.length<=20000&&(c.trashedAt==null||c.trashedAt>=0))
                 stage.study().source(c.id)?.let{source->
-                    val ids=source.strokeIds.split(',');val bounds=CanvasBounds(source.left,source.top,source.right,source.bottom)
-                    StudySourceDraft(source.pageId,source.inkRevision,bounds,ids)
+                    val ids=source.strokeIds.split(',').filter{it.isNotBlank()};val bounds=CanvasBounds(source.left,source.top,source.right,source.bottom)
                     require(source.snapshot.size<=1800000);val snapshot=InkPageFile.decode(source.snapshot)
-                    require(snapshot.strokes.map{it.id}.toSet()==ids.toSet())
+                    val regionPreview=snapshot.objects.singleOrNull()?.takeIf{it.kind==PageObjectKind.IMAGE&&snapshot.strokes.isEmpty()}?.let{java.util.Base64.getDecoder().decode(it.image)}
+                    StudySourceDraft(source.pageId,source.inkRevision,bounds,ids,regionPreview)
+                    if(regionPreview==null)require(snapshot.strokes.map{it.id}.toSet()==ids.toSet())
                     for(strokeId in ids)require(stage.ink().stroke(strokeId)?.noteId==source.pageId)
-                    require(snapshot.world==stage.pages().get(source.pageId)?.world)
+                    if(regionPreview==null)require(snapshot.world==stage.pages().get(source.pageId)?.world)
                     require(source.inkRevision<=(stage.ink().page(source.pageId)?.revision?:0))
                 }
             }

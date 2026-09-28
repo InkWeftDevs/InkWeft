@@ -142,7 +142,7 @@ class ContinuousWritingUiTest {
                 val current=app.pageObjects.read(n.id);app.pageObjects.save(n.id,current.revision,id(),current.objects+o)
             }
         }
-        val v=single();compose.onNodeWithTag("ink-select").performScrollTo().performClick();compose.onNodeWithTag("selection-lasso").performClick()
+        val v=single();compose.onNodeWithTag("ink-select").performScrollTo().performClick();compose.onNodeWithTag("ink-select").performClick();compose.onNodeWithTag("lasso-free").performClick();compose.onNodeWithContentDescription("关闭套索").performClick()
         var points=emptyList<Offset>()
         compose.runOnIdle{points=listOf(200.0 to 200.0,600.0 to 200.0,200.0 to 600.0,200.0 to 200.0).map{(x,y)->val p=v.snapshotViewport().worldToScreen(x,y,v.width.toDouble(),v.height.toDouble(),v.resources.displayMetrics.density.toDouble());Offset(p.x.toFloat(),p.y.toFloat())}}
         compose.onNodeWithTag("selection-overlay").performTouchInput{down(points[0]);points.drop(1).forEach{moveTo(it)};up()}

@@ -90,7 +90,7 @@ class WritingWorkspaceUiTest {
         compose.waitUntil(10_000){runBlocking{app.workspaceRepository.get(id).tags}.contains("复习")}
         compose.onNodeWithTag("continuous-pages").assertExists()
         compose.onNodeWithTag("ink-select").performScrollTo().performClick()
-        compose.onNodeWithTag("selection-lasso").assertIsSelected();compose.onNodeWithTag("continuous-pages").assertDoesNotExist()
+        compose.onNodeWithTag("selection-context-menu").assertDoesNotExist();compose.onNodeWithTag("ink-select").performClick();compose.onNodeWithTag("lasso-free").assertIsSelected();compose.onNodeWithContentDescription("关闭套索").performClick();compose.onNodeWithTag("continuous-pages").assertDoesNotExist()
         compose.onNodeWithTag("pen-kind-ballpoint").performClick()
         val before=compose.onNodeWithTag("floating-pen-case").fetchSemanticsNode().boundsInRoot
         compose.onNodeWithTag("pen-case-handle").performTouchInput{swipe(center,center+Offset(150f,20f),400)}

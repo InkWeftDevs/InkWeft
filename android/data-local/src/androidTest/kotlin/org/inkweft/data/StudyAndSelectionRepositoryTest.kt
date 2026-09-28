@@ -18,6 +18,29 @@ class StudyAndSelectionRepositoryTest {
     private fun stroke()=InkStroke(id(),InkPen.PEN,0xff24342f.toInt(),3f,InkTool.STYLUS,listOf(InkSample(100f,110f,0,.5f),InkSample(150f,110.5f,30,.7f),InkSample(200f,110f,60,.7f)))
     private suspend fun seed(db:NoteDatabase,page:String):InkStroke{val s=stroke();assertTrue(InkRepository(db).save(CommitInk(id(),page,0,InkMutation.Add(s))) is InkCommitResult.Committed);return s}
     private fun create(book:String,title:String="我的理解",source:StudySourceDraft?=null,parent:String?=null)=StudyCommand(id(),book,StudyAction.CREATE,id(),id(),title=title,body="人工摘要",source=source,parentId=parent)
+    @Test fun regionExcerptHasNoMapNodeAndReplayPreservesSnapshot()=fixture{db,page->
+        val bitmap=android.graphics.Bitmap.createBitmap(40,40,android.graphics.Bitmap.Config.ARGB_8888)
+        bitmap.eraseColor(android.graphics.Color.BLUE)
+        val bytes=java.io.ByteArrayOutputStream().also{bitmap.compress(android.graphics.Bitmap.CompressFormat.JPEG,85,it)}.toByteArray();bitmap.recycle()
+        val source=StudySourceDraft(page,0,CanvasBounds(10.0,20.0,100.0,120.0),emptyList(),bytes,PageObjectRepository(db).read(page).revision)
+        val c=StudyCommand(id(),page,StudyAction.CREATE_EXCERPT,cardId=id(),title="区域摘录",source=source)
+        val repo=StudyRepository(db)
+        assertEquals(c.cardId,repo.submit(c));assertEquals(c.cardId,repo.submit(c))
+        assertEquals(1,db.study().cards(page).size);assertTrue(db.study().nodes(page).isEmpty())
+        val snapshot=repo.source(c.cardId!!)!!.snapshot
+        assertEquals(PageObjectKind.IMAGE,InkPageFile.decode(snapshot).objects.single().kind)
+        repo.submit(StudyCommand(id(),page,StudyAction.EDIT,cardId=c.cardId,expectedRevision=1,title="区域摘录",body="备注"))
+        repo.submit(StudyCommand(id(),page,StudyAction.TRASH_CARD,cardId=c.cardId,expectedRevision=2))
+        assertTrue(repo.excerpts(page).first().isEmpty());assertArrayEquals(snapshot,repo.source(c.cardId!!)!!.snapshot)
+        assertEquals(0L,InkRepository(db).read(page).revision)
+        val name="restore-region-${id()}.db";val target=NoteDatabase.open(context,name)
+        try{val backup=LibraryBackupRepository(context,db);val restore=LibraryBackupRepository(context,target)
+            backup.snapshot().use{snap->snap.file.inputStream().use{restore.inspect(it)}.use{prepared->assertEquals(LibraryBackupRepository.RestoreResult.RESTORED,restore.restore(prepared))}}
+            assertArrayEquals(snapshot,target.study().source(c.cardId!!)!!.snapshot)
+        }finally{target.close();context.deleteDatabase(name)}
+        val stale=StudyCommand(id(),page,StudyAction.CREATE_EXCERPT,cardId=id(),title="过期对象",source=StudySourceDraft(page,0,source.bounds,emptyList(),bytes,PageObjectRepository(db).read(page).revision+1))
+        assertTrue(repo.outcome(stale) is StudyOutcome.Rejected);assertEquals(1,db.study().cards(page).size)
+    }
     @Test fun replacingInkPreservesOriginalBytesAndCanAtomicallyUndo()=fixture{db,page->
         val s=seed(db,page);val before=db.ink().stroke(s.id)!!.payload;val ink=InkRepository(db)
         val moved=InkSelectionEdit.copy(listOf(s),30f,40f).single();val c=CommitInk(id(),page,1,InkMutation.Replace(listOf(s.id),listOf(moved)))
