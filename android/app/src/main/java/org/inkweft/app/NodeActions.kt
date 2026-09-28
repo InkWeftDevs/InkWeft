@@ -67,3 +67,10 @@ internal data class NodeTitleDraft(val token:String,val mapId:String?,val nodeId
     Text(label,Modifier.padding(horizontal=16.dp,vertical=6.dp),style=MaterialTheme.typography.labelMedium,color=Quiet)
     Column(content=content)
 }
+
+/** Keep optional 48dp affordances outside node text and the primary toolbar. */
+internal fun mapAccessoryBounds(node:android.graphics.RectF,blocked:List<android.graphics.RectF>,width:Float,height:Float,edge:Float,gap:Float,leftFirst:Boolean):android.graphics.RectF?{
+    val sides=listOf(node.left-edge-gap to node.centerY()-edge/2,node.right+gap to node.centerY()-edge/2)
+    val candidates=(if(leftFirst)sides else sides.reversed())+listOf(node.left to node.top-edge-gap,node.right-edge to node.top-edge-gap,node.left to node.bottom+gap,node.right-edge to node.bottom+gap)
+    return candidates.map{(x,y)->android.graphics.RectF(x,y,x+edge,y+edge)}.firstOrNull{b->b.left>=0&&b.top>=0&&b.right<=width&&b.bottom<=height&&blocked.none{android.graphics.RectF.intersects(b,it)}}
+}

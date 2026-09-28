@@ -296,6 +296,7 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
                 val selected=nodeById[vm.selectedByMap[mapKey]]
                 val density=LocalDensity.current
                 var overlaySize by remember{mutableStateOf(IntSize.Zero)}
+                var actionBounds by remember{mutableStateOf<android.graphics.RectF?>(null)}
                 val bounds=selectedBounds
                 if(selected!=null&&bounds!=null&&!dragging){
                     val w=with(density){maxWidth.toPx()};val h=with(density){maxHeight.toPx()}
@@ -305,6 +306,7 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
                     val px=(bounds.left).coerceIn(8*density.density,(w-panelW-8*density.density).coerceAtLeast(8*density.density))
                     val below=bounds.bottom+8*density.density
                     val py=(if(below+panelH<=h-56*density.density)below else bounds.top-panelH-8*density.density).coerceIn(0f,(h-panelH-56*density.density).coerceAtLeast(0f))
+                    SideEffect{actionBounds=android.graphics.RectF(px,py,px+panelW,py+panelH)}
                     Box(Modifier.offset{IntOffset(px.roundToInt(),py.roundToInt())}.onSizeChanged{overlaySize=it}){
                         val draft=titleDraft
                         if(draft!=null)NodeTitleEditor(draft,occurrenceCount(draft.cardId),ui.busy||mapWrite.busy,ui.unknown||mapWrite.unknown,
@@ -320,6 +322,7 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
                                 }
                                 HorizontalDivider()
                                 MapMenuSection("组织"){
+                                    if(active.any{it.parentId==selected.id})DropdownMenuItem(text={Text(if(selected.id in collapsed)"展开下级主题"else"收起下级主题")},onClick={nodeMenu=false;toggleBranch(selected.id)},enabled=editable,modifier=Modifier.testTag("node-menu-fold"))
                                     DropdownMenuItem(text={Text("变更上级")},onClick={nodeMenu=false;reparent=selected},enabled=editable)
                                     DropdownMenuItem(text={Text("聚焦此分支")},onClick={nodeMenu=false;focusBranch(selected.id)},enabled=editable)
                                     if(selected.cardId !in structureCards.map{it.id})DropdownMenuItem(text={Text("复用到此图")},onClick={nodeMenu=false;vm.submit(StudyCommand(id(),note.base.id,StudyAction.REUSE,mapId=currentMap,cardId=selected.cardId,nodeId=id(),y=active.size*128.0+80))},enabled=editable)
@@ -348,13 +351,15 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
                 }
                 if(selected!=null&&bounds!=null&&!dragging&&titleDraft==null){
                     val edge=48*density.density;val w=with(density){maxWidth.toPx()};val h=with(density){maxHeight.toPx()}
-                    val cy=(bounds.centerY()-edge/2).coerceIn(0f,(h-edge).coerceAtLeast(0f))
-                    if(active.any{it.parentId==selected.id})Surface(Modifier.offset{IntOffset((bounds.right+4*density.density).coerceIn(0f,(w-edge).coerceAtLeast(0f)).roundToInt(),cy.roundToInt())},color=Color.White,shape=RoundedCornerShape(24.dp),border=BorderStroke(1.dp,Line)){
+                    val blocked=shown.mapNotNull{map?.nodeBounds(it.id)}+listOfNotNull(actionBounds)
+                    val fold=if(active.any{it.parentId==selected.id})mapAccessoryBounds(bounds,blocked,w,h,edge,4*density.density,false)else null
+                    val sourceBox=mapAccessoryBounds(bounds,blocked+listOfNotNull(fold),w,h,edge,4*density.density,true)
+                    fold?.let{b->Surface(Modifier.offset{IntOffset(b.left.roundToInt(),b.top.roundToInt())},color=Color.White,shape=RoundedCornerShape(24.dp),border=BorderStroke(1.dp,Line)){
                         MapActionIcon(if(selected.id in collapsed)"展开下级主题"else"收起下级主题","collapse","node-fold",editable){toggleBranch(selected.id)}
-                    }
-                    if(scenes.find{it.ref.mapId==currentMap}?.nodes?.any{it.id==selected.id&&it.sourceState!="无来源"}==true)Surface(Modifier.offset{IntOffset((bounds.left-edge-4*density.density).coerceIn(0f,(w-edge).coerceAtLeast(0f)).roundToInt(),cy.roundToInt())},color=Color.White,shape=RoundedCornerShape(24.dp),border=BorderStroke(1.dp,Line)){
+                    }}
+                    if(scenes.find{it.ref.mapId==currentMap}?.nodes?.any{it.id==selected.id&&it.sourceState!="无来源"}==true)sourceBox?.let{b->Surface(Modifier.offset{IntOffset(b.left.roundToInt(),b.top.roundToInt())},color=Color.White,shape=RoundedCornerShape(24.dp),border=BorderStroke(1.dp,Line)){
                         MapActionIcon("查看来源","link","node-source",editable){inspectSource=true;openCard(cardById.getValue(selected.cardId),selected)}
-                    }
+                    }}
                 }
                 if(active.isEmpty()&&!ui.loading&&!sourcePending)Column(Modifier.align(Alignment.Center),horizontalAlignment=Alignment.CenterHorizontally){TextButton({templatePicker=true},enabled=editable,modifier=Modifier.testTag("study-empty-create")){Text("新建图 · 选择模板")};Text("也可拖入摘录",style=MaterialTheme.typography.bodySmall,color=Quiet)}
             }

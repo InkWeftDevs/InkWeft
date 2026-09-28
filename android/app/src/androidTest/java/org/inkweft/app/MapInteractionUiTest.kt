@@ -120,5 +120,17 @@ class MapInteractionUiTest {
   java.io.File(app.getExternalFilesDir(null),"mui-title-layout.png").outputStream().use{a.compress(Bitmap.CompressFormat.PNG,100,it)};a.recycle();b.recycle()
  }
 
+ @Test fun edgeAffordancesAvoidTitlesAndPrimaryActions(){
+  val f=fixture();tap("study-fit-readable")
+  var p=Offset.Zero;compose.runOnIdle{val b=map().nodeBounds(f.root)!!;p=Offset(b.centerX(),b.centerY())};compose.onNodeWithTag("study-map").performTouchInput{click(p)};compose.waitForIdle()
+  val canvas=compose.onNodeWithTag("study-map").fetchSemanticsNode().boundsInRoot;val toolbar=compose.onNodeWithTag("node-actions").fetchSemanticsNode().boundsInRoot
+  val nodeRects=mutableListOf<android.graphics.RectF>();compose.runOnIdle{vm(f.book).ui.value.nodes.filter{!it.removed}.forEach{n->map().nodeBounds(n.id)?.let{nodeRects+=android.graphics.RectF(it).apply{offset(canvas.left,canvas.top)}}}}
+  for(tag in listOf("node-source","node-fold"))for(n in compose.onAllNodesWithTag(tag).fetchSemanticsNodes()){
+   val b=n.boundsInRoot;val actual=android.graphics.RectF(b.left,b.top,b.right,b.bottom)
+   assertTrue(b.left>=canvas.left&&b.right<=canvas.right);assertFalse(nodeRects.any{android.graphics.RectF.intersects(it,actual)});assertFalse(b.overlaps(toolbar))
+  }
+  shot("edge-affordances")
+ }
+
 }
 
