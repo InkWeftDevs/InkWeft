@@ -66,7 +66,11 @@ import java.util.UUID
             }else{
                 Row{
                     TextButton({revision=card.revision;text=card.body;mode="comment";vm.clear()},enabled=enabled,modifier=Modifier.testTag("excerpt-inline-comment")){Text("备注")}
-                    TextButton({revision=card.revision;setDraft(b);mode="resize";vm.clear()},enabled=enabled,modifier=Modifier.testTag("excerpt-resize")){Text("调整范围")}
+                    TextButton({
+                        val clipped=if(world)b else ExcerptBounds.inside(b,CanvasBounds(0.0,0.0,1000.0,1414.0))
+                        if(clipped==null)message="来源范围不在当前纸张内，请重新摘录"
+                        else{revision=card.revision;setDraft(clipped);mode="resize";vm.clear()}
+                    },enabled=enabled,modifier=Modifier.testTag("excerpt-resize")){Text("调整范围")}
                     TextButton({submitted=true;vm.submit(StudyCommand(UUID.randomUUID().toString(),vm.book,StudyAction.TRASH_CARD,cardId=id,expectedRevision=card.revision))},enabled=enabled,modifier=Modifier.testTag("excerpt-inline-delete")){Text("删除")}
                     IconButton(dismiss,enabled=!waiting,modifier=Modifier.describedAs("取消摘录选择")){Glyph("close")}
                 }

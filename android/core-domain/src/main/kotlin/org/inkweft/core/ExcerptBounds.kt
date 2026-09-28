@@ -7,6 +7,11 @@ enum class ExcerptHandle(val x:Int,val y:Int) {
     BOTTOM_RIGHT(1,1), BOTTOM(0,1), BOTTOM_LEFT(-1,1), LEFT(-1,0), MOVE(0,0)
 }
 object ExcerptBounds {
+    fun inside(b:CanvasBounds,limit:CanvasBounds):CanvasBounds? {
+        val left=maxOf(b.left,limit.left);val top=maxOf(b.top,limit.top)
+        val right=minOf(b.right,limit.right);val bottom=minOf(b.bottom,limit.bottom)
+        return if(right>left&&bottom>top)CanvasBounds(left,top,right,bottom)else null
+    }
     fun drag(b:CanvasBounds,handle:ExcerptHandle,dx:Double,dy:Double,limit:CanvasBounds,minSize:Double=8.0):CanvasBounds {
         require(dx.isFinite()&&dy.isFinite()&&minSize>0)
         require(b.left>=limit.left&&b.top>=limit.top&&b.right<=limit.right&&b.bottom<=limit.bottom)

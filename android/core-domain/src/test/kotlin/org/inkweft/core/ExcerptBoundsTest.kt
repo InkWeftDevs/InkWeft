@@ -25,4 +25,12 @@ class ExcerptBoundsTest {
         val tiny=CanvasBounds(4.0,5.0,6.0,7.0)
         assertEquals(tiny,ExcerptBounds.drag(tiny,ExcerptHandle.TOP_LEFT,20.0,20.0,page))
     }
+    @Test fun strokeOutlinesAtPaperEdgeCanBeSafelyAdjusted(){
+        val source=CanvasBounds(-3.0,-4.0,30.0,50.0)
+        val clipped=ExcerptBounds.inside(source,page)!!
+        assertEquals(CanvasBounds(0.0,0.0,30.0,50.0),clipped)
+        assertEquals(CanvasBounds(0.0,0.0,40.0,65.0),ExcerptBounds.drag(clipped,ExcerptHandle.BOTTOM_RIGHT,10.0,15.0,page))
+        assertNull(ExcerptBounds.inside(CanvasBounds(-50.0,-20.0,-1.0,-1.0),page))
+        assertEquals(-3.0,source.left,0.0)
+    }
 }
