@@ -6,6 +6,7 @@ import re
 import subprocess
 import urllib.request
 from android_plan import plan
+from android_shards import shard_count
 
 event=json.loads(Path(os.environ["GITHUB_EVENT_PATH"]).read_text())
 head=event.get("pull_request",{}).get("head",{}).get("sha",os.environ["GITHUB_SHA"])
@@ -33,6 +34,9 @@ result=plan(paths,full)
 result.update(base=base,head=head,selection_reason=reason)
 Path("android-plan.json").write_text(json.dumps(result,ensure_ascii=False,indent=2),encoding="utf-8")
 with open(os.environ["GITHUB_OUTPUT"],"a") as out:
+    count=shard_count(result["expected_app"])
+    out.write(f"shard_count={count}\n")
+    out.write("shards="+json.dumps(list(range(count)))+"\n")
     for key in ["build","device"]:out.write(f"{key}={str(result[key]).lower()}\n")
 with open(os.environ["GITHUB_STEP_SUMMARY"],"a") as out:
     out.write("## 本次验证范围\n\n```json\n"+json.dumps(result,ensure_ascii=False,indent=2)+"\n```\n")
