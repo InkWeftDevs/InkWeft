@@ -19,8 +19,8 @@
   "finalApkUiRecheck": 1,
   "lintErrors": 0,
   "lintWarnings": 102,
-  "githubRun": 36390164513,
-  "githubStatus": "TIMED_OUT",
+  "githubRun": 36393562815,
+  "githubStatus": "SUCCESS",
   "productionCommit": "9df81b523a012c60493ef7cacdc80c5a3f4ef2af",
   "githubPreviousResult": {
     "run": 36390164513,
@@ -28,8 +28,14 @@
     "appPlanned": 175,
     "assertionFailures": 0,
     "reason": "30 minute job timeout"
-  }
+  },
+  "githubUrl": "https://github.com/InkWeftDevs/InkWeft/actions/runs/36393562815",
+  "githubHead": "42865bdf1a5f2bdfe51971d62a0d32d0df43b837",
+  "githubAppPassed": 175,
+  "githubRoomPassed": 146,
+  "ciRuleTests": 12,
+  "githubDurationSeconds": 1173
 }
 ```
 
-生产代码9df81b5与构建187cc03之间仅有文档变更。原远端运行在173项界面通过后超时；分组重跑结果完成后追加，未完成前不记为通过。实机见 [实机报告](DEVICE-REPORT-V37.md)。
+生产代码9df81b5与构建187cc03之间仅有文档变更。[GitHub整合回归已通过](https://github.com/InkWeftDevs/InkWeft/actions/runs/36393562815)。实机操作与未测范围见 [实机报告](DEVICE-REPORT-V37.md)。

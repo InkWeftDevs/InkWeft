@@ -28,3 +28,5 @@
 - 本地证据目录：`E:/Inkweft/archives/2026-09-28/Excerpt-Editing/`。私人数据库与截图不上传 GitHub。
 
 测试结果见 [实机报告](DEVICE-REPORT-V37.md)，操作步骤见 [独立实机清单](DEVICE-TEST-CHECKLIST.md)。
+
+[GitHub 整合回归已通过](https://github.com/InkWeftDevs/InkWeft/actions/runs/36393562815)，应用生产代码同9df81b5，与交付构件一致。
