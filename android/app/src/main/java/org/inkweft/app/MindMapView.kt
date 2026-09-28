@@ -38,7 +38,12 @@ internal class MindMapView(context:Context):View(context){
                 if(nearest==null)dropParent=null else if(now-candidateSince>=120)dropParent=nearest
                 if(e.action==DragEvent.ACTION_DROP){
                     // An unstable near-node target is rejected, never silently changed to a root.
-                    if(nearest==null||dropParent?.id==nearest.id)onCapture(transfer,dropParent,p.x.toDouble().coerceIn(-40000.0,40000.0),p.y.toDouble().coerceIn(-40000.0,40000.0),capturedGraph)
+                    if(nearest==null||dropParent?.id==nearest.id){
+                        val parent=dropParent
+                        val childX=parent?.let{if(it.x<=39740.0)it.x+260 else it.x-260}?:p.x.toDouble()
+                        val childY=parent?.let{n->nodes.filter{it.parentId==n.id}.maxOfOrNull{it.y+128}?:n.y}?:p.y.toDouble()
+                        onCapture(transfer,parent,childX.coerceIn(-40000.0,40000.0),childY.coerceIn(-40000.0,40000.0),capturedGraph)
+                    }
                     dropPoint=null;dropParent=null
                 }
                 invalidate()
@@ -86,6 +91,15 @@ internal class MindMapView(context:Context):View(context){
         // Keep the leading nodes whole when readable scaling requires panning.
         tx=max(width/2-((left+right)/2*d*scale).toFloat(),20*d-(left*d*scale).toFloat())
         ty=max(height/2-((top+bottom)/2*d*scale).toFloat(),20*d-(top*d*scale).toFloat());changedViewport();invalidate()
+    }
+    fun revealNode(id:String):Boolean{
+        val node=nodes.find{it.id==id}?:return false
+        if(width<=0||height<=0)return false
+        val left=(node.x*d*scale+tx).toFloat();val top=(node.y*d*scale+ty).toFloat()
+        val right=left+216*d*scale;val bottom=top+84*d*scale;val pad=12*d
+        tx+=if(right>width-pad)width-pad-right else if(left<pad)pad-left else 0f
+        ty+=if(bottom>height-pad)height-pad-bottom else if(top<pad)pad-top else 0f
+        changedViewport();invalidate();return true
     }
     fun zoom(f:Float){val old=scale;scale=(scale*f).coerceIn(.15f,2.5f);tx=width/2-(width/2-tx)*scale/old;ty=height/2-(height/2-ty)*scale/old;changedViewport();invalidate()}
     private fun x(n:StudyNodeRow)=n.x.toFloat()+if(n.id==active?.id)dx else 0f

@@ -88,7 +88,9 @@ class NoteFirstUiTest {
   screenshot("drag-preview");assertEquals(1,runBlocking{app.study.cards(book).first()}.size)
   if(!commit)compose.runOnIdle{find<SelectionOverlayView>().cancelDragAndDrop()}
   send(android.view.MotionEvent.ACTION_UP,to)
-  if(commit){compose.waitUntil(15000){runBlocking{app.study.cards(book).first()}.size==2};val nodes=runBlocking{app.study.nodes(book).first()};assertEquals(parent,nodes.single{it.id!=parent}.parentId)}
+  if(commit){compose.waitUntil(15000){runBlocking{app.study.cards(book).first()}.size==2};val nodes=runBlocking{app.study.nodes(book).first()};val added=nodes.single{it.id!=parent};assertEquals(parent,added.parentId);assertTrue(added.x>=nodes.single{it.id==parent}.x+240)
+   compose.waitForIdle();compose.runOnIdle{val map=find<MindMapView>();val vp=map.snapshotViewport();val d=map.resources.displayMetrics.density;val left=added.x*d*vp.scale+vp.x;val top=added.y*d*vp.scale+vp.y;assertTrue(left>=0&&top>=0);assertTrue(left+216*d*vp.scale<=map.width&&top+84*d*vp.scale<=map.height)}
+  }
   else{compose.waitForIdle();assertEquals(1,runBlocking{app.study.cards(book).first()}.size);assertEquals(1,runBlocking{app.study.nodes(book).first()}.size)}
   assertEquals(12L,runBlocking{app.inkRepository.read(book).revision});screenshot("drag-saved")
  }

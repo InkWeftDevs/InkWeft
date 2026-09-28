@@ -48,6 +48,7 @@ internal class StudyViewModel(val book:String,val repo:StudyRepository,private v
     var captureGeneration by mutableLongStateOf(0L)
     var compactInitialized=false
     val captureUndo=mutableStateMapOf<String,StudyCommand>()
+    val revealByMap=mutableMapOf<String,String>()
     fun undoCapture(){val c=captureUndo.remove(mapId.value?:"main")?:return;submit(c)}
     val selectedByMap=mutableMapOf<String,String?>()
     fun selectMap(id:String?){if(id!=mapId.value&&!ui.value.busy&&!ui.value.unknown){saved["study.map"]=id;mapId.value=id;state.update{it.copy(loading=true,nodes=emptyList())}}}
@@ -63,7 +64,7 @@ internal class StudyViewModel(val book:String,val repo:StudyRepository,private v
     fun retry(){if(!ui.value.busy&&pending!=null)execute()}
     private fun execute(){val c=pending?:return;state.update{it.copy(busy=true,message=null,completed=null)}
         viewModelScope.launch{try{when(val result=withContext(Dispatchers.IO){repo.outcome(c)}){
-            is StudyOutcome.Success->{if(c.action==StudyAction.CREATE&&c.source!=null)captureGeneration++;if(c.action==StudyAction.CREATE&&c.source!=null)captureUndo[c.mapId?:"main"]=StudyCommand(UUID.randomUUID().toString(),book,StudyAction.UNDO_CAPTURE,cardId=c.cardId,nodeId=c.nodeId,expectedRevision=1,mapId=c.mapId);pending=null;persistPending();state.update{it.copy(busy=false,unknown=false,completed=result.id)}}
+            is StudyOutcome.Success->{if(c.action==StudyAction.CREATE&&c.source!=null){captureGeneration++;c.nodeId?.let{revealByMap[c.mapId?:"main"]=it;selectedByMap[c.mapId?:"main"]=it}};if(c.action==StudyAction.CREATE&&c.source!=null)captureUndo[c.mapId?:"main"]=StudyCommand(UUID.randomUUID().toString(),book,StudyAction.UNDO_CAPTURE,cardId=c.cardId,nodeId=c.nodeId,expectedRevision=1,mapId=c.mapId);pending=null;persistPending();state.update{it.copy(busy=false,unknown=false,completed=result.id)}}
             is StudyOutcome.Rejected->{pending=null;persistPending();state.update{it.copy(busy=false,unknown=false,message="未提交：来源或内容已变化，请核对当前图和分支后重新保存（${result.reason}）。")}}
             StudyOutcome.Unknown->state.update{it.copy(busy=false,unknown=true,message="操作结果待核对。重试核对同一操作，不重复建卡。")}
         }}catch(cancel:CancellationException){state.update{it.copy(busy=false,unknown=true)};throw cancel}}
@@ -266,7 +267,7 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
             val cards=ui.cards.filter{(it.trashedAt!=null)==showTrash&&StudyText.matches(StudyTextCard(it.id,it.title,it.body),query)}
             if(tab==2)Box(Modifier.fillMaxWidth().weight(1f)){key(mapKey){AndroidView(factory={MindMapView(it).also{v->map=v;vm.viewports[mapKey]?.let(v::restoreViewport);v.onViewport={vp->vm.viewports[mapKey]=vp}}},update={v->v.captureBook=note.base.id;v.captureMapKey=mapKey;v.captureGraph=StudyGraph.orderHash(ui.nodes.map{it.model()});v.onCapture={transfer,parent,x,y,graph->
                 if(editable)vm.submit(StudyCommand(id(),note.base.id,StudyAction.CREATE,cardId=id(),nodeId=id(),parentId=parent?.id,title="摘录",body=transfer.text,x=x,y=y,source=transfer.source,expectedGraph=graph))
-            };v.selectedNodeId=vm.selectedByMap[mapKey];v.enabledInput=editable;v.show(shown,displayCards,hiddenCounts);v.onActive={dragging=it};v.onOpen={n->cardById[n.cardId]?.let{openCard(it,n)}};v.onMove={n,x,y->if(editable)vm.submit(StudyCommand(id(),note.base.id,StudyAction.MOVE,nodeId=n.id,expectedRevision=n.revision,x=x,y=y))}},modifier=Modifier.fillMaxSize().clip(RoundedCornerShape(14.dp)).border(1.dp,Line,RoundedCornerShape(14.dp)).testTag("study-map"))}
+            };v.selectedNodeId=vm.selectedByMap[mapKey];v.enabledInput=editable;v.show(shown,displayCards,hiddenCounts);vm.revealByMap[mapKey]?.let{if(v.revealNode(it))vm.revealByMap.remove(mapKey)};v.onActive={dragging=it};v.onOpen={n->cardById[n.cardId]?.let{openCard(it,n)}};v.onMove={n,x,y->if(editable)vm.submit(StudyCommand(id(),note.base.id,StudyAction.MOVE,nodeId=n.id,expectedRevision=n.revision,x=x,y=y))}},modifier=Modifier.fillMaxSize().clip(RoundedCornerShape(14.dp)).border(1.dp,Line,RoundedCornerShape(14.dp)).testTag("study-map"))}
                 if(active.isEmpty()&&!ui.loading&&!sourcePending)Column(Modifier.align(Alignment.Center),horizontalAlignment=Alignment.CenterHorizontally){TextButton({templatePicker=true},enabled=editable,modifier=Modifier.testTag("study-empty-create")){Text("新建图 · 选择模板")};Text("也可拖入摘录",style=MaterialTheme.typography.bodySmall,color=Quiet)}
             }
             else LazyColumn(Modifier.fillMaxWidth().weight(1f).testTag("study-list"),verticalArrangement=Arrangement.spacedBy(10.dp),contentPadding=PaddingValues(vertical=12.dp)){
@@ -289,12 +290,13 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
                         }}
                 };if(active.isEmpty())item{Text("大纲与脑图使用同一组节点和摘要卡，不另存一份正文。",color=Quiet)}}
             }
-            if(vm.captureUndo[mapKey]!=null)TextButton(vm::undoCapture,enabled=editable,modifier=Modifier.testTag("study-undo-capture")){Text("撤销此次摘录添加")}
+            if(tab!=2&&vm.captureUndo[mapKey]!=null)TextButton(vm::undoCapture,enabled=editable,modifier=Modifier.testTag("study-undo-capture")){Text("撤销此次摘录添加")}
             if(tab==2)Row(Modifier.fillMaxWidth().heightIn(min=48.dp).padding(end=if(compactWindow)48.dp else 0.dp),verticalAlignment=Alignment.CenterVertically){
                 IconButton({map?.zoom(1/1.2f)},modifier=Modifier.describedAs("缩小思维导图")){Text("−")}
                 TextButton({map?.fit()}){Text("适配")}
                 IconButton({map?.zoom(1.2f)},modifier=Modifier.describedAs("放大思维导图")){Text("＋")}
-                if(focusId==null)Text("${shown.size} / ${active.size} 个主题",Modifier.weight(1f),style=MaterialTheme.typography.labelSmall,color=Quiet)
+                if(vm.captureUndo[mapKey]!=null)IconButton(vm::undoCapture,enabled=editable,modifier=Modifier.size(48.dp).testTag("study-undo-capture").describedAs("撤销此次摘录添加")){Glyph("undo")}
+                else if(focusId==null)Text("${shown.size} / ${active.size} 个主题",Modifier.weight(1f),style=MaterialTheme.typography.labelSmall,color=Quiet)
             }
         }}
     }

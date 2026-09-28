@@ -37,9 +37,9 @@ internal val LocalStudyResizeAllowed=staticCompositionLocalOf<MutableState<Boole
     BoxWithConstraints(Modifier.fillMaxSize()){
         val availableW=(maxWidth.value-16).coerceAtLeast(1f)
         val availableH=(maxHeight.value-112).coerceAtLeast(48f)
-        val collapsed=minimized||availableH<240
+        val collapsed=minimized||availableH<300
         val w=if(collapsed)minOf(availableW,320f)else if(maximized)availableW else if(docked)minOf(480f,availableW*.46f).coerceAtLeast(minOf(320f,availableW))else width.coerceIn(minOf(320f,availableW),availableW)
-        val h=if(collapsed)48f else if(maximized||docked)availableH else height.coerceIn(minOf(240f,availableH),availableH)
+        val h=if(collapsed)48f else if(maximized||docked)availableH else height.coerceIn(minOf(300f,availableH),availableH)
         val travelX=(availableW-w).coerceAtLeast(0f);val travelY=(availableH-h).coerceAtLeast(0f)
         val left=8+if(docked||maximized)travelX else x.coerceIn(0f,1f)*travelX
         val top=104+if(maximized||docked)0f else y.coerceIn(0f,1f)*travelY
@@ -64,7 +64,7 @@ internal val LocalStudyResizeAllowed=staticCompositionLocalOf<MutableState<Boole
                     holder.SaveableStateProvider(book){CompositionLocalProvider(LocalStudyResizeAllowed provides resizeAllowed){content()}}
                     if(resizeAllowed.value)Box(Modifier.align(Alignment.BottomEnd).size(48.dp).testTag("study-window-resize").describedAs("拖动调整导图窗口大小")
                         .pointerInput(availableW,availableH,docked,maximized){detectDragGestures(onDragEnd={save()},onDragCancel={save()}){change,delta->
-                            change.consume();if(currentEnabled&&!docked&&!maximized){val oldW=width.coerceIn(minOf(320f,availableW),availableW);val oldH=height.coerceIn(minOf(240f,availableH),availableH);val oldX=x*(availableW-oldW);val oldY=y*(availableH-oldH);width=(oldW+delta.x/density).coerceIn(minOf(320f,availableW),availableW);height=(oldH+delta.y/density).coerceIn(minOf(240f,availableH),availableH);x=if(availableW>width)(oldX/(availableW-width)).coerceIn(0f,1f)else 0f;y=if(availableH>height)(oldY/(availableH-height)).coerceIn(0f,1f)else 0f}
+                            change.consume();if(currentEnabled&&!docked&&!maximized){val oldW=width.coerceIn(minOf(320f,availableW),availableW);val oldH=height.coerceIn(minOf(300f,availableH),availableH);val oldX=x*(availableW-oldW);val oldY=y*(availableH-oldH);width=(oldW+delta.x/density).coerceIn(minOf(320f,availableW),availableW);height=(oldH+delta.y/density).coerceIn(minOf(300f,availableH),availableH);x=if(availableW>width)(oldX/(availableW-width)).coerceIn(0f,1f)else 0f;y=if(availableH>height)(oldY/(availableH-height)).coerceIn(0f,1f)else 0f}
                         }},contentAlignment=Alignment.BottomEnd){Text("⌟",Modifier.padding(8.dp),color=Quiet)}
                 }
             }
