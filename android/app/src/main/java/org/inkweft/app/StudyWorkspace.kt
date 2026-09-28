@@ -325,7 +325,7 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
         StudyDialog(compactWindow,onDismissRequest={if(!ui.busy&&!ui.unknown){editor=null;returnTab?.let(vm::selectTab);returnTab=null}},modifier=Modifier.testTag("study-card-editor"),title={Text(if(e.card!=null)"编辑共享摘要卡"else"新建摘要卡")},text={Column(Modifier.verticalScroll(rememberScrollState()),verticalArrangement=Arrangement.spacedBy(10.dp)){
             if(e.source!=null)Text("保留框选原迹快照及回源位置。下方是你的摘要，不是自动识别或 AI 生成。",fontSize=12.sp,color=Quiet)
             OutlinedTextField(title,{if(it.length<=120)title=it},label={Text("标题")},modifier=Modifier.fillMaxWidth().testTag("study-card-title"))
-            if(e.card?.id !in structureCards.map{it.id})OutlinedTextField(text,{if(it.length<=20000)text=it},label={Text("我的理解 / 摘要")},modifier=Modifier.fillMaxWidth().heightIn(min=160.dp).testTag("study-card-body"))
+            if(e.card?.id !in structureCards.map{it.id})OutlinedTextField(text,{if(it.length<=20000)text=it},label={Text("我的理解 / 摘要")},minLines=2,maxLines=if(compactWindow)4 else Int.MAX_VALUE,modifier=Modifier.fillMaxWidth().heightIn(min=if(compactWindow)96.dp else 160.dp).testTag("study-card-body"))
             if(ui.message!=null)Text(ui.message!!,fontSize=12.sp)
             localMessage?.let{Text(it,fontSize=12.sp)}
         }},confirmButton={TextButton(onClick={val old=e.card;val parent=e.parent

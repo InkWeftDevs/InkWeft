@@ -36,13 +36,16 @@ internal val LocalStudyResizeAllowed=staticCompositionLocalOf<MutableState<Boole
     fun save(){prefs.edit().putFloat("$book-x",x).putFloat("$book-y",y).putFloat("$book-width",width).putFloat("$book-height",height).apply()}
     BoxWithConstraints(Modifier.fillMaxSize()){
         val availableW=(maxWidth.value-16).coerceAtLeast(1f)
-        val availableH=(maxHeight.value-112).coerceAtLeast(48f)
+        // Keep room for readable form controls when the IME reduces the viewport.
+        // Moving the window above the toolbar is preferable to shrinking its targets.
+        val topInset=if(!resizeAllowed.value&&maxHeight.value<412f)8f else 104f
+        val availableH=(maxHeight.value-topInset-8).coerceAtLeast(48f)
         val collapsed=minimized||availableH<180||(availableH<300&&resizeAllowed.value)
         val w=if(collapsed)minOf(availableW,320f)else if(maximized)availableW else if(docked)minOf(480f,availableW*.46f).coerceAtLeast(minOf(320f,availableW))else width.coerceIn(minOf(320f,availableW),availableW)
         val h=if(collapsed)48f else if(maximized||docked)availableH else height.coerceIn(minOf(300f,availableH),availableH)
         val travelX=(availableW-w).coerceAtLeast(0f);val travelY=(availableH-h).coerceAtLeast(0f)
         val left=8+if(docked||maximized)travelX else x.coerceIn(0f,1f)*travelX
-        val top=104+if(maximized||docked)0f else y.coerceIn(0f,1f)*travelY
+        val top=topInset+if(maximized||docked)0f else y.coerceIn(0f,1f)*travelY
         val currentEnabled by rememberUpdatedState(enabled)
         Surface(Modifier.offset{IntOffset((left*density).roundToInt(),(top*density).roundToInt())}
             .size(w.dp,h.dp).testTag("study-panel"),color=Color.White,shape=RoundedCornerShape(16.dp),

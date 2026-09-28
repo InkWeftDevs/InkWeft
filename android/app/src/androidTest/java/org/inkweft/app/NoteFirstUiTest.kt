@@ -78,7 +78,7 @@ class NoteFirstUiTest {
   val automation=androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().uiAutomation
   fun resize(value:String){automation.executeShellCommand("wm size $value").use{android.os.ParcelFileDescriptor.AutoCloseInputStream(it).use{input->input.readBytes()}}}
   try{
-   resize("1920x720");compose.activityRule.scenario.recreate();ready()
+   resize("1920x720");compose.activityRule.scenario.recreate();ready();screenshot("compact-editor-before-input")
    compose.onNodeWithTag("study-card-body").performScrollTo().assertIsDisplayed().performTextInput("键盘占用空间后继续输入")
    compose.onNodeWithTag("study-card-title").performScrollTo().assertTextContains("小窗口草稿")
    screenshot("compact-editor");tap("study-save-card")
