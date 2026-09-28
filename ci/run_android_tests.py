@@ -3,6 +3,7 @@ import json
 from pathlib import Path
 import re
 import subprocess
+from android_device import prepare_case
 
 root=Path(__file__).resolve().parents[1]
 plan=json.loads((root/"android-plan.json").read_text())
@@ -31,13 +32,21 @@ for module,key,runner in [("data-local","room","org.inkweft.data.test/androidx.t
         if len(cases)!=plan["expected_app"]: raise SystemExit("Test inventory mismatch")
     else: cases=[(",".join(classes),plan["expected_room"])]
     failures=[];total=0
+    infrastructure=[]
+    def summary():
+        (out/f"{key}-summary.json").write_text(json.dumps({"expected":plan[f"expected_{key}"],"passed":total,"failures":failures,"infrastructure":infrastructure},indent=2),encoding="utf-8")
+    summary()
     for index,(selection,expected) in enumerate(cases):
         case_dir=out/f"{key}-{index:03d}";case_dir.mkdir(exist_ok=True)
         if key=="app":
-            subprocess.run(["adb","shell","pm","clear","org.inkweft.app.a0.insertion"],check=True)
-            subprocess.run(["adb","shell","settings","put","system","font_scale","1.0"],check=True)
-            subprocess.run(["adb","shell","wm","size","1920x1200"],check=True)
-            subprocess.run(["adb","shell","wm","density","240"],check=True)
+            setup=[]
+            try:
+                prepare_case(serial,"org.inkweft.app.a0.insertion",setup.append)
+            except (RuntimeError,subprocess.SubprocessError) as error:
+                infrastructure.append({"before":selection,"error":str(error)});summary()
+                raise
+            finally:
+                (case_dir/"setup.txt").write_text("\n".join(setup),encoding="utf-8")
         try:
             result=adb("shell","am","instrument","-w","-e","class",selection,runner)
         except subprocess.TimeoutExpired as error:
@@ -51,8 +60,9 @@ for module,key,runner in [("data-local","room","org.inkweft.data.test/androidx.t
         print(f"{selection}: {'PASS' if passed else 'FAIL'}",flush=True)
         if passed: total+=expected
         else: failures.append(selection);print(result)
+        summary()
         if key=="app": subprocess.run(["adb","pull","/sdcard/Android/data/org.inkweft.app.a0.insertion/files/.",str(case_dir)],stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
-    (out/f"{key}-summary.json").write_text(json.dumps({"expected":plan[f"expected_{key}"],"passed":total,"failures":failures},indent=2),encoding="utf-8")
+    summary()
     if failures: raise SystemExit(f"{key}: {len(failures)} failing selections; original assertions and logs retained")
 
 (out/"scope.json").write_text(json.dumps(plan,ensure_ascii=False,indent=2),encoding="utf-8")

@@ -193,6 +193,7 @@ class SelectionStudyUiTest {
         compose.onNodeWithTag("study-search").performTextReplacement("未命中")
         compose.onNodeWithText("没有匹配的摘要卡").assertExists()
         compose.onNodeWithTag("study-search").performTextClearance()
+        compose.onNode(hasScrollToIndexAction() and hasAnyAncestor(hasTestTag("study-panel"))).performScrollToNode(hasTestTag("study-card-${calculus.id}"))
         compose.onNodeWithTag("study-card-${calculus.id}").assertExists()
         assertEquals(2,runBlocking{app.study.cards(n.id).first().size})
     }
