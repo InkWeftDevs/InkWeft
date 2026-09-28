@@ -78,12 +78,22 @@ class NoteFirstUiTest {
   val automation=androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().uiAutomation
   fun resize(value:String){automation.executeShellCommand("wm size $value").use{android.os.ParcelFileDescriptor.AutoCloseInputStream(it).use{input->input.readBytes()}}}
   try{
-   resize("1920x720");compose.activityRule.scenario.recreate();ready();screenshot("compact-editor-before-input")
+   // IME/configuration changes can briefly leave no usable editing area.
+   compose.runOnIdle{compose.activity.window.setLayout(-1,360)}
+   compose.waitUntil(10000){compose.onAllNodesWithTag("study-card-body").fetchSemanticsNodes().isEmpty()}
+   compose.runOnIdle{compose.activity.window.setLayout(-1,720)};ready()
+   compose.waitUntil(10000){compose.onAllNodesWithTag("study-card-body").fetchSemanticsNodes().isNotEmpty()}
+   compose.runOnIdle{compose.activity.window.setLayout(-1,-1)}
+   resize("1920x720")
+   compose.waitUntil(10000){compose.activity.resources.configuration.screenHeightDp in 350..480}
+   automation.waitForIdle(200,5000);ready()
+   compose.activityRule.scenario.recreate();ready();screenshot("compact-editor-before-input")
+   compose.runOnIdle{val model=ViewModelProvider(compose.activity,StudyViewModel.Factory(book,app.study))["study-$book",StudyViewModel::class.java];assertNotNull("Card editor must survive the configuration change",model.editorState.value)}
    compose.onNodeWithTag("study-card-body").performScrollTo().assertIsDisplayed().performTextInput("键盘占用空间后继续输入")
    compose.onNodeWithTag("study-card-title").performScrollTo().assertTextContains("小窗口草稿")
    screenshot("compact-editor");tap("study-save-card")
    compose.waitUntil(10000){runBlocking{app.study.cards(book).first()}.any{it.title=="小窗口草稿"&&it.body=="键盘占用空间后继续输入"}}
-  }finally{resize("1920x1200")}
+  }finally{compose.runOnIdle{compose.activity.window.setLayout(-1,-1)};resize("1920x1200")}
  }
  @Test fun selectionPreviewMakesNoCardUntilExplicitAdd(){
   val book=fixture();tap("top-excerpt")

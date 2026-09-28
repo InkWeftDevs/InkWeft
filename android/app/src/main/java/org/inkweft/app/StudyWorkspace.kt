@@ -142,7 +142,7 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
     var collapsed by remember(mapKey){mutableStateOf(vm.collapsedByMap[mapKey].orEmpty())}
     var focusId by remember(mapKey){mutableStateOf(vm.focusedByMap[mapKey])}
     val resizeAllowed=LocalStudyResizeAllowed.current
-    DisposableEffect(tab,editor,chosenCard,reparent,newMapTitle,templatePicker,management,saveTemplate){resizeAllowed?.value=tab==2&&editor==null&&chosenCard==null&&reparent==null&&newMapTitle==null&&!templatePicker&&!management&&!saveTemplate;onDispose{resizeAllowed?.value=true}}
+    SideEffect{resizeAllowed?.value=tab==2&&editor==null&&chosenCard==null&&reparent==null&&newMapTitle==null&&!templatePicker&&!management&&!saveTemplate}
     val active=ui.nodes.filter{!it.removed}
     val nodeById=active.associateBy{it.id};val cardById=displayCards.associateBy{it.id}
     val projection=StudyOutline.project(active.map{it.model()},collapsed.toSet(),focusId)

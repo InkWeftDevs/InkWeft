@@ -24,7 +24,7 @@ internal val LocalStudyResizeAllowed=staticCompositionLocalOf<MutableState<Boole
 /** App-owned surface: only its rectangle participates in hit testing. Paper is never resized. */
 @Composable internal fun FloatingStudyWindow(book:String,enabled:Boolean,minimized:Boolean,
     onMinimize:(Boolean)->Unit,docked:Boolean,onDock:(Boolean)->Unit,close:()->Unit,content:@Composable ()->Unit){
-    val resizeAllowed=remember{mutableStateOf(false)}
+    val resizeAllowed=rememberSaveable(book){mutableStateOf(false)}
     val holder=androidx.compose.runtime.saveable.rememberSaveableStateHolder()
     val prefs=LocalContext.current.getSharedPreferences("inkweft-study-window",0)
     val density=LocalDensity.current.density
