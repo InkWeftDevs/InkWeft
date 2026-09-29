@@ -54,7 +54,7 @@ internal val LocalEditorAnchor=staticCompositionLocalOf<IntRect?>{null}
     footer:@Composable ()->Unit={},content:@Composable ColumnScope.()->Unit){
     val reviewBottom=tag=="beauty-review"&&LocalConfiguration.current.screenWidthDp<720
     val small=reviewBottom||tag in setOf("eraser-settings","selection-settings","excerpt-settings","beauty-settings")
-    val maxPanelHeight=if(small)minOf(360.dp,LocalConfiguration.current.screenHeightDp.dp*.55f)else minOf(600.dp,LocalConfiguration.current.screenHeightDp.dp-64.dp)
+    val maxPanelHeight=if(reviewBottom)minOf(480.dp,LocalConfiguration.current.screenHeightDp.dp*.55f)else if(small)minOf(360.dp,LocalConfiguration.current.screenHeightDp.dp*.55f)else minOf(600.dp,LocalConfiguration.current.screenHeightDp.dp-64.dp)
     val anchor=LocalEditorAnchor.current
     val density=LocalDensity.current.density
     val position=remember(anchor,density,reviewBottom){object:PopupPositionProvider{
