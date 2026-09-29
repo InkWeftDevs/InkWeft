@@ -234,9 +234,8 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 25
     env:
-      ANDROID_AVD_HOME: ${{ runner.temp }}/tls-avd
-      ANDROID_USER_HOME: ${{ runner.temp }}/tls-user
       ORG_GRADLE_PROJECT_inkweftInsertionPreview: "true"
+      INKWEFT_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
@@ -261,6 +260,10 @@ jobs:
           "$RUNNER_TEMP/tls-venv/bin/python" backup-server/tls_fixture.py --directory "$RUNNER_TEMP/tls-fixture" --generate-only
           gradle -p android --no-daemon -PinkweftTlsFixture="$RUNNER_TEMP/tls-fixture/res" :app:assembleTlsProbe :app:assembleTlsProbeAndroidTest
       - name: 启动隔离证书夹具与干净系统
+        env:
+          ANDROID_AVD_HOME: ${{ runner.temp }}/tls-avd
+          ANDROID_USER_HOME: ${{ runner.temp }}/tls-user
+          ANDROID_EMULATOR_HOME: ${{ runner.temp }}/tls-user
         run: |
           set -euo pipefail
           mkdir -p "$ANDROID_AVD_HOME" "$ANDROID_USER_HOME" android/build/tls-evidence
