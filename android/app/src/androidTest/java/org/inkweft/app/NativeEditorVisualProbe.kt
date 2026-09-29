@@ -94,6 +94,12 @@ class NativeEditorVisualProbe {
         File(app.getExternalFilesDir(null),"vis-$stage-ime.json").writeText(JSONObject().put("bottomPixels",keyboardHeight).toString())
         compose.onNodeWithTag("node-title-save").assertIsDisplayed();compose.onNodeWithTag("node-title-cancel").assertIsDisplayed();shot(stage,"05-title-ime");tap("node-title-cancel")
         compose.runOnIdle{compose.activity.window.decorView.clearFocus();compose.activity.window.insetsController?.hide(WindowInsets.Type.ime())}
+        if(compose.activity.resources.configuration.screenWidthDp<600){
+            // Keep the source reachable before starting a real drag on a narrow window.
+            compose.onNodeWithTag("study-window-drag").performTouchInput{swipe(center,center+Offset(0f,800f),400)}
+            compose.waitForIdle()
+            compose.runOnIdle{view<InkCanvasView>().fitWidth()}
+        }
         tap("top-excerpt")
         compose.runOnIdle{view<SelectionOverlayView>().onRegion(InkRegion(listOf(EraserPoint(100f,260f),EraserPoint(700f,400f))))}
         compose.waitForIdle()

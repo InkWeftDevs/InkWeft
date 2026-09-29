@@ -3,6 +3,8 @@ package org.inkweft.app
 
 import android.content.ContextWrapper
 import android.os.StatFs
+import android.os.Process
+import android.os.SystemClock
 import android.system.ErrnoException
 import android.system.Os
 import android.system.OsConstants
@@ -26,6 +28,24 @@ class AndroidTemporarySpaceProbe {
         require(app.packageName in setOf("org.inkweft.app.a0.insertion","org.inkweft.app.a0.workspace"))
         val limited=File(checkNotNull(args.getString("spaceRoot"))).canonicalFile
         require(limited.parentFile==app.cacheDir.canonicalFile&&limited.name.matches(Regex("v47-space-[0-9a-f-]{36}"))){"Unapproved fault directory"}
+        val run=UUID.fromString(limited.name.removePrefix("v47-space-")).toString()
+        fun marker(suffix:String)=File(limited.parentFile,limited.name+"."+suffix)
+        fun publish(suffix:String,value:String){
+            val pending=marker(suffix+".tmp");pending.writeText(value);check(pending.renameTo(marker(suffix)))
+        }
+        fun awaitMarker(suffix:String):String{
+            val deadline=SystemClock.elapsedRealtime()+120_000
+            while(SystemClock.elapsedRealtime()<deadline){
+                if(marker(suffix).exists())return marker(suffix).readText()
+                SystemClock.sleep(50)
+            }
+            error("Namespace runner handshake timed out: $suffix")
+        }
+        check(listOf("hello","ready","done","release").none{marker(it).exists()}){"Stale namespace handshake"}
+        publish("hello",JSONObject().put("pid",Process.myPid()).put("uid",Process.myUid())
+            .put("path",limited.path).put("run",run).toString())
+        try{
+        check(awaitMarker("ready")==run){"Namespace runner aborted mount"}
         val mount=File("/proc/mounts").readLines().map{it.split(' ')}.singleOrNull{it.size>=4&&it[1]==limited.path}
         require(mount!=null&&mount[2]=="tmpfs"&&"rw" in mount[3].split(',')){"A dedicated writable tmpfs is required"}
         val stats=StatFs(limited.path);val capacity=stats.blockCountLong*stats.blockSizeLong
@@ -83,8 +103,17 @@ class AndroidTemporarySpaceProbe {
             key.fill(0);filler.delete();output.delete();clear.delete()
             val staging=File(limited,"library-backup");check(staging.listFiles()?.isEmpty()!=false);staging.delete()
             snapshot?.close();source.close();restored.close()
-            check(root.canonicalFile.parentFile==app.cacheDir.canonicalFile);root.deleteRecursively()
+            check(root.canonicalFile.parentFile==app.cacheDir.canonicalFile);check(root.deleteRecursively())
+            check(limited.listFiles()?.isEmpty()==true){"Fault files remain in isolated tmpfs"}
+            report.put("faultFilesCleaned",true).put("appPid",Process.myPid()).put("appUid",Process.myUid())
             File(app.getExternalFilesDir(null),"v47-android-space.json").writeText(report.toString(2))
+        }
+        }finally{
+            // Keep this process and its mount namespace alive until the runner unmounts.
+            publish("done",run)
+            check(awaitMarker("release")==run){"Namespace runner did not release probe"}
+            check(!limited.exists()){"Runner did not remove the isolated mount directory"}
+            listOf("hello","ready","done","release").forEach{check(marker(it).delete())}
         }
     }
 }
