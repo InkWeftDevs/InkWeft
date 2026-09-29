@@ -1,0 +1,30 @@
+[
+  {
+    "cut": "before-prefix",
+    "passed": true
+  },
+  {
+    "cut": "after-prefix",
+    "passed": true
+  },
+  {
+    "cut": "before-first-fragment",
+    "passed": true
+  },
+  {
+    "cut": "before-group-commit",
+    "passed": true
+  },
+  {
+    "cut": "after-group-commit",
+    "passed": true
+  },
+  {
+    "cut": "after-group-marker",
+    "passed": true
+  },
+  {
+    "cut": "after-cancel",
+    "passed": true
+  }
+]

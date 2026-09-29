@@ -1,0 +1,17 @@
+[
+  {
+    "cut": "after-prefix",
+    "variation": "reorder",
+    "passed": true
+  },
+  {
+    "cut": "after-prefix",
+    "variation": "recycle",
+    "passed": true
+  },
+  {
+    "cut": "after-prefix",
+    "variation": "revision",
+    "passed": true
+  }
+]

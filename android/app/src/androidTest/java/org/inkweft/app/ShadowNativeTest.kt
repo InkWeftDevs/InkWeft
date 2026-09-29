@@ -58,7 +58,22 @@ class ShadowNativeTest{
                 for(action in listOf(android.view.MotionEvent.ACTION_DOWN,android.view.MotionEvent.ACTION_UP)){val e=android.view.MotionEvent.obtain(now,now+20,action,box.centerX(),box.centerY(),0);view.dispatchTouchEvent(e);e.recycle()}}
             compose.waitUntil(10000){compose.onAllNodesWithTag("shadow-card-source").fetchSemanticsNodes().isNotEmpty()}
             compose.onNodeWithTag("shadow-card-source").performClick();compose.onNodeWithTag("review-source").assertExists()
-            compose.waitUntil(10000){compose.onAllNodesWithTag("review-source-canvas").fetchSemanticsNodes().isNotEmpty()};shot("v46-shadow-source.png")
+            compose.waitUntil(10000){compose.onAllNodesWithTag("review-source-canvas").fetchSemanticsNodes().isNotEmpty()}
+            compose.waitUntil(15000){
+                var ready=false
+                compose.runOnIdle{
+                    fun readyView(v:android.view.View):Boolean {
+                        return when(v){
+                            is InkCanvasView -> v.documentContentReady
+                            is android.view.ViewGroup -> (0 until v.childCount).any{readyView(v.getChildAt(it))}
+                            else -> false
+                        }
+                    }
+                    ready=android.view.inspector.WindowInspector.getGlobalWindowViews().any{readyView(it)}
+                }
+                ready
+            }
+            shot("v46-shadow-source.png")
             compose.onNodeWithTag("return-to-review").performClick()
             compose.onNodeWithTag("shadow-card-title").performTextReplacement("B 端原生修改")
             compose.onNodeWithTag("shadow-card-body").performTextReplacement("在接收端核对来源后修订，返回创作库。")
@@ -85,6 +100,7 @@ class ShadowNativeTest{
             }
             val historical=runBlocking{session.study.source(cardId)!!}
             compose.activity.setContent{InkTheme.Content{ReviewSourceDialog(historical,{},session)}}
+            compose.waitForIdle()
             compose.waitUntil(10000){compose.onAllNodesWithText("来源页已回收",substring=true).fetchSemanticsNodes().isNotEmpty()}
             assertFalse(runBlocking{session.pages.activePages(book)}.any{it.id==historical.pageId});assertNotNull(runBlocking{b.db.study().card(cardId)})
             shot("v46-shadow-retired-source.png")

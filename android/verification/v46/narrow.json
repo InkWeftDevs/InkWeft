@@ -1,0 +1,7 @@
+[
+  {
+    "test": "org.inkweft.app.ShadowNativeTest#relayReceiverRendersSourceEditsCardAndReturnsToAuthor",
+    "passed": true,
+    "seconds": 8.14
+  }
+]

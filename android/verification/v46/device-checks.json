@@ -1,0 +1,21 @@
+{
+  "font": {
+    "count": 6,
+    "passed": true
+  },
+  "shadowRelay": {
+    "count": 1,
+    "passed": true
+  },
+  "shadowReopen": {
+    "count": 1,
+    "passed": true
+  },
+  "physicalDevice": "vivo iPA2673 API36",
+  "oldRows": 2374,
+  "missingRows": 0,
+  "changedOldRows": 0,
+  "hardwareHandwriting": "NOT_RUN",
+  "oldClassLaunchTimeoutPreserved": true,
+  "freshFixtureAfterLibraryCap": true
+}

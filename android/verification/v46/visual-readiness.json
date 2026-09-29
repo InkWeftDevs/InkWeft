@@ -1,0 +1,8 @@
+{
+  "baseTestCommit": "74b5a3dd90f558ca345f5134c2369ca64c3d14b2",
+  "applicationUnchanged": true,
+  "testSourceSha256": "022ae4e9527fc3bb8ca59fe0621de8f5d0916360cf69f37a6c5159fab346831e",
+  "testPatchSha256": "d4f5b0db23609a97eb6e63327ab18939f2fbfcbdbbdc19226f5b3428918a60fc",
+  "testApkSha256": "89b25c7e65e0d12896c54464ec84a3dd828dd2e91aa7d88ae3d97ec3e9f4b026",
+  "purpose": "Wait for actual source PDF rendering and settle composition before retired-source assertion. Same frozen user APK."
+}

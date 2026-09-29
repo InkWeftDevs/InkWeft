@@ -1,0 +1,12 @@
+{
+  "performance": {
+    "path": "E:/Inkweft/recon/android/app/build/outputs/apk/performance/app-performance.apk",
+    "bytes": 127501088,
+    "sha256": "edbb795ed1756c7948f8f426b9eb3bef7b06e92224538f25cb25c30bf13eb530"
+  },
+  "performance-test": {
+    "path": "E:/Inkweft/recon/android/app/build/outputs/apk/androidTest/performance/app-performance-androidTest.apk",
+    "bytes": 3550005,
+    "sha256": "2fad8e53319cfa1bf4633a9ec68526116109733ea8228c2f35f2d7eec3984098"
+  }
+}
