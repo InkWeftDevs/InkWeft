@@ -133,7 +133,7 @@ internal class MindMapView(context:Context):View(context){
     override fun onDraw(c:Canvas){super.onDraw(c);c.drawColor(InkTheme.Workspace.toArgb());val save=c.save();c.translate(tx,ty);c.scale(scale*d,scale*d)
         val lookup=nodes.associateBy{it.id}
         MapScenePainter.draw(c,nodes.map{n->org.inkweft.core.MapSceneNode(n.id,n.parentId,n.cardId,titles[if(relationMode)n.id else n.cardId].orEmpty(),bodies[n.cardId].orEmpty(),x(n).toDouble(),y(n).toDouble(),n.revision,n.revision)},active?.id?:selectedNodeId,hiddenCounts,resources.configuration.fontScale,scale>=.35f,!relationMode,
-            MapViewStyle(InkTheme.Accent.toArgb(),InkTheme.Selected.toArgb(),0xffafc2d8.toInt()))
+            viewStyle)
         paint.style=Paint.Style.STROKE;paint.strokeWidth=1.5f
         paint.color=InkTheme.Accent.toArgb()
         for((a,b) in relationEdges){val start=lookup[a]?:continue;val end=lookup[b]?:continue
