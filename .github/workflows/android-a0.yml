@@ -38,6 +38,13 @@ jobs:
         with:
           persist-credentials: false
           fetch-depth: 0
+      - name: 验证 GitHub Actions 工作流语义
+        run: |
+          set -euo pipefail
+          curl --fail --location --retry 3 https://github.com/rhysd/actionlint/releases/download/v1.7.12/actionlint_1.7.12_linux_amd64.tar.gz --output "$RUNNER_TEMP/actionlint.tar.gz"
+          printf '%s  %s\n' '8aca8db96f1b94770f1b0d72b6dddcb1ebb8123cb3712530b08cc387b349a3d8' "$RUNNER_TEMP/actionlint.tar.gz" | sha256sum --check -
+          tar -xzf "$RUNNER_TEMP/actionlint.tar.gz" -C "$RUNNER_TEMP" actionlint
+          "$RUNNER_TEMP/actionlint" -shellcheck= -pyflakes=
       - name: 验证检查选择规则
         run: python3 -m unittest discover -s ci -p 'test_*.py'
       - name: 选择本次验证范围

@@ -16,9 +16,12 @@ with httpx.Client(base_url='http://127.0.0.1:18751',timeout=15,follow_redirects=
             client.request('PUT',f'/uploads/{op}/chunks/0',content=chunks[0]);assert client.request('GET','/uploads/'+op).json()['received']==[0]
             queue=t/'queue';queue.write_text(json.dumps({'binding':client.binding,'manifest':manifest,'operation':op}))
             receipt=client.upload(cipher,queue);assert receipt['state']=='PUBLISHED';assert client.upload(cipher,queue)==receipt
-            state.update(operation=op,receipt=receipt,server=identity['server'],issuer=identity['issuer'],user=identity['user']);(root/'probe.json').write_text(json.dumps(state))
+            state.update(operation=op,receipt=receipt,cipher_sha256=sha(data),server=identity['server'],issuer=identity['issuer'],user=identity['user']);(root/'probe.json').write_text(json.dumps(state))
         else:
             assert all(state[k]==identity[k] for k in ('server','issuer','user'))
             assert client.request('GET','/operations/'+state['operation']).json()==state['receipt']
-            cipher=t/'download';client.download(state['operation'],cipher);plain=t/'restored';decrypt(cipher,plain,state['library'],unb64(state['key']));assert sha(plain.read_bytes())==state['plain_sha256']
-    print(json.dumps({'status':'PASS','phase':mode,'identity_preserved':mode!='prepare','operation':state['operation']}))
+            versions=client.request('GET','/versions').json();assert len(versions)==1
+            assert all(versions[0][key]==value for key,value in state['receipt'].items())
+            cipher=t/'download';client.download(state['operation'],cipher);assert sha(cipher.read_bytes())==state['cipher_sha256']
+            plain=t/'restored';decrypt(cipher,plain,state['library'],unb64(state['key']));assert sha(plain.read_bytes())==state['plain_sha256']
+    print(json.dumps({'status':'PASS','phase':mode,'identity_preserved':mode!='prepare','receipt_and_version_preserved':mode!='prepare','cipher_sha256':state['cipher_sha256'],'operation':state['operation']}))

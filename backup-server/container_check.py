@@ -6,7 +6,7 @@ def run(*args):return subprocess.check_output(['docker',*args],text=True).strip(
 def main(output):
     root=Path(__file__).resolve().parent
     name='inkweft-check-'+uuid.uuid4().hex[:12];volume=name+'-data';recovery_volume=name+'-recovery';recovery_name=name+'-restored'
-    report={'status':'RUNNING','scope':'isolated encrypted business and independent-volume recovery; no TLS','schema':1}
+    report={'status':'RUNNING','scope':'isolated encrypted business and independent-volume recovery; no TLS','schema':2}
     try:
         with tempfile.TemporaryDirectory() as tmp:
             iid=Path(tmp)/'image-id';run('build','--iidfile',str(iid),str(root));image=iid.read_text().strip();report['image']=image
@@ -26,6 +26,12 @@ def main(output):
         identity=lambda:run('exec',name,'python','-c',"import urllib.request; print(urllib.request.urlopen('http://127.0.0.1:18751/v1/identity').read().decode())")
         probe=(root/'container_business.py').read_text()
         def business(container,mode):return json.loads(subprocess.check_output(['docker','exec','-i',container,'python','-',mode],input=probe,text=True))
+        faults=(root/'container_faults.py').read_text()
+        def fault(key,mode,*arguments):
+            result=subprocess.run(['docker',*arguments,'python','-',mode],input=faults,text=True,stdout=subprocess.PIPE)
+            if result.stdout.strip():report[key]=json.loads(result.stdout)
+            result.check_returncode()
+            return report[key]
         report['encrypted_upload']=business(name,'prepare')
         before=identity();run('restart',name)
         for i in range(30):
@@ -33,32 +39,14 @@ def main(output):
             except subprocess.CalledProcessError:time.sleep(1)
         assert before==after;report['persistent_identity']=json.loads(before)
         run('exec',name,'python','server.py','--db','/state/backup.db','--backup-to','/state/recovery.db')
+        sealed=fault('sealed_snapshot','seal','exec','-i',name)
+        report['live_journal_mode']=run('exec',name,'python','-c',"import sqlite3; c=sqlite3.connect('/state/backup.db'); print(c.execute('PRAGMA journal_mode').fetchone()[0]); c.close()")
+        assert report['live_journal_mode']=='wal'
         report['restart_download']=business(name,'verify')
-        readonly="""import sqlite3,json
-c=sqlite3.connect('/source/recovery.db')
-assert c.execute('PRAGMA integrity_check').fetchone()[0]=='ok'
-try:
- c.execute('CREATE TABLE blocked_write(x)');raise AssertionError('readonly mount was writable')
-except sqlite3.OperationalError as e:assert 'readonly' in str(e).lower()
-print(json.dumps({'status':'PASS','mount':'read-only','original_database_readable':True}))
-"""
-        report['readonly_volume']=json.loads(run('run','--rm','--read-only','--cap-drop=ALL','-v',volume+':/source:ro',image,'python','-c',readonly))
-        full="""import sqlite3,shutil,os,json
-shutil.copyfile('/source/recovery.db','/limited/backup.db')
-c=sqlite3.connect('/limited/backup.db');before=c.execute('SELECT COUNT(*) FROM operations').fetchone()[0]
-try:
- with open('/limited/fill','wb') as f:
-  while True:f.write(bytes(65536))
-except OSError as e:assert e.errno==28
-try:
- c.execute('CREATE TABLE must_not_commit(x)');c.commit();raise AssertionError('full mount accepted write')
-except sqlite3.OperationalError:c.rollback()
-os.unlink('/limited/fill')
-assert c.execute('PRAGMA integrity_check').fetchone()[0]=='ok'
-assert c.execute('SELECT COUNT(*) FROM operations').fetchone()[0]==before
-print(json.dumps({'status':'PASS','scope':'8 MiB private tmpfs only','published_operations_preserved':True}))
-"""
-        report['full_private_volume']=json.loads(run('run','--rm','--read-only','--cap-drop=ALL','--tmpfs','/limited:size=8m,uid=10001,gid=10001,mode=0700','-v',volume+':/source:ro',image,'python','-c',full))
+        readonly=fault('readonly_volume','readonly','run','--rm','-i','--read-only','--cap-drop=ALL','--security-opt=no-new-privileges','-v',volume+':/source:ro',image)
+        assert readonly['contents']==sealed['contents']
+        full=fault('full_private_volume','full','run','--rm','-i','--read-only','--cap-drop=ALL','--security-opt=no-new-privileges','--tmpfs','/limited:size=8m,uid=10001,gid=10001,mode=0700','-v',volume+':/source:ro',image)
+        assert full['contents']==sealed['contents']
         report['original_after_faults']=business(name,'verify')
         run('volume','create',recovery_volume)
         run('run','--rm','--read-only','--cap-drop=ALL','-v',volume+':/source:ro','-v',recovery_volume+':/state',image,'python','-c',"import shutil; shutil.copyfile('/source/recovery.db','/state/backup.db'); shutil.copyfile('/source/probe.json','/state/probe.json')")
