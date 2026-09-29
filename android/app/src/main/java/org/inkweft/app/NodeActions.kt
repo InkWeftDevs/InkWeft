@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 package org.inkweft.app
 
+import org.inkweft.app.ui.designsystem.InkTheme
+
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -34,7 +36,7 @@ internal data class NodeTitleDraft(val token:String,val mapId:String?,val nodeId
     }
 }
 @Composable internal fun NodeActions(enabled:Boolean,rename:()->Unit,child:()->Unit,sibling:()->Unit,more:()->Unit){
-    Surface(shape=RoundedCornerShape(12.dp),color=Color.White,border=BorderStroke(1.dp,Line),shadowElevation=3.dp,modifier=Modifier.testTag("node-actions")){
+    Surface(shape=InkTheme.ToolShape,color=InkTheme.Surface,shadowElevation=InkTheme.ToolElevation,modifier=Modifier.testTag("node-actions")){
         Row{
             MapActionIcon("修改标题","pen","node-rename",enabled,rename)
             MapActionIcon("添加子主题","node-child","node-add-child",enabled,child)
@@ -50,7 +52,7 @@ internal data class NodeTitleDraft(val token:String,val mapId:String?,val nodeId
     LaunchedEffect(draft.token){requester.requestFocus();keyboard?.show()}
     fun commit(){if(!busy&&!unknown&&text.composition==null&&text.text.isNotBlank())submit(text.text.trim())}
     androidx.activity.compose.BackHandler{if(!busy&&!unknown)cancel()}
-    Surface(modifier.testTag("node-title-editor"),shape=RoundedCornerShape(12.dp),color=Color.White,border=BorderStroke(1.dp,Forest),shadowElevation=4.dp){
+    Surface(modifier.testTag("node-title-editor"),shape=InkTheme.ToolShape,color=InkTheme.Surface,shadowElevation=InkTheme.FloatingElevation){
         Column(Modifier.padding(8.dp).verticalScroll(rememberScrollState())){
             OutlinedTextField(text,{if(it.text.length<=120)onText(it)},enabled=!busy&&!unknown,label={Text(if(draft.creating)"新主题标题"else"修改标题")},singleLine=true,
                 keyboardOptions=KeyboardOptions(imeAction=ImeAction.Done),keyboardActions=KeyboardActions(onDone={commit()}),modifier=Modifier.fillMaxWidth().focusRequester(requester).testTag("node-title-input"))

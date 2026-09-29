@@ -11,18 +11,23 @@ import kotlin.math.*
 
 internal object MapNodeMetrics { const val WIDTH=216;const val HEIGHT=84;const val HALF_WIDTH=108;const val HALF_HEIGHT=42 }
 
+/** Transient interaction only. Never serialized or supplied to document/embed/export painting. */
+internal data class MapViewStyle(val selection:Int,val selectionFill:Int,val connector:Int)
+
 /** Pure drawing shared by interactive maps and page occurrences. Never follows source pages. */
 internal object MapScenePainter {
-    fun draw(c:Canvas,nodes:List<MapSceneNode>,selected:String?=null,collapsed:Map<String,Int> = emptyMap(),fontScale:Float=1f,detail:Boolean=true,hierarchy:Boolean=true){
+    fun draw(c:Canvas,nodes:List<MapSceneNode>,selected:String?=null,collapsed:Map<String,Int> = emptyMap(),fontScale:Float=1f,detail:Boolean=true,hierarchy:Boolean=true,viewStyle:MapViewStyle?=null){
         val paint=Paint(Paint.ANTI_ALIAS_FLAG);val lookup=nodes.associateBy{it.id}
-        if(hierarchy){paint.style=Paint.Style.STROKE;paint.strokeWidth=1.5f;paint.color=0xffd9dee7.toInt()
+        if(hierarchy){paint.style=Paint.Style.STROKE;paint.strokeWidth=1.5f;paint.color=viewStyle?.connector?:0xffd9dee7.toInt()
             nodes.forEach{n->lookup[n.parentId]?.let{p->val right=n.x>=p.x;val sx=p.x.toFloat()+if(right)MapNodeMetrics.WIDTH else 0;val ex=n.x.toFloat()+if(right)0 else MapNodeMetrics.WIDTH;val sign=if(right)1 else -1
                 c.drawPath(Path().apply{moveTo(sx,p.y.toFloat()+MapNodeMetrics.HALF_HEIGHT);cubicTo(sx+28*sign,p.y.toFloat()+MapNodeMetrics.HALF_HEIGHT,ex-28*sign,n.y.toFloat()+MapNodeMetrics.HALF_HEIGHT,ex,n.y.toFloat()+MapNodeMetrics.HALF_HEIGHT)},paint)}}}
         nodes.forEach{n->
             val left=n.x.toFloat();val top=n.y.toFloat();val root=hierarchy&&n.parentId !in lookup
-            paint.style=Paint.Style.FILL;paint.color=if(root&&n.id==selected)0xff0c4a78.toInt()else if(root)0xff176eb1.toInt()else if(n.id==selected)0xffe8f2fb.toInt()else Color.WHITE
+            val highlight=viewStyle!=null&&n.id==selected
+            paint.style=Paint.Style.FILL;paint.color=if(root)0xff176eb1.toInt()else if(highlight)viewStyle.selectionFill else Color.WHITE
             c.drawRoundRect(left,top,left+MapNodeMetrics.WIDTH,top+MapNodeMetrics.HEIGHT,12f,12f,paint)
-            paint.style=Paint.Style.STROKE;paint.strokeWidth=if(n.id==selected)2.5f else 1f;paint.color=if(root||n.id==selected)0xff176eb1.toInt()else 0xff929cac.toInt();c.drawRoundRect(left,top,left+MapNodeMetrics.WIDTH,top+MapNodeMetrics.HEIGHT,12f,12f,paint)
+            paint.style=Paint.Style.STROKE;paint.strokeWidth=1f;paint.color=if(root)0xff176eb1.toInt()else 0xff929cac.toInt();c.drawRoundRect(left,top,left+MapNodeMetrics.WIDTH,top+MapNodeMetrics.HEIGHT,12f,12f,paint)
+            if(highlight){paint.color=viewStyle.selection;paint.strokeWidth=2f;c.drawRoundRect(left-4,top-4,left+MapNodeMetrics.WIDTH+4,top+MapNodeMetrics.HEIGHT+4,16f,16f,paint)}
             paint.style=Paint.Style.FILL;paint.color=if(root)Color.WHITE else 0xff242b36.toInt();paint.typeface=Typeface.create(Typeface.DEFAULT,Typeface.BOLD);paint.textSize=16f*fontScale
             if(detail){
                 val tp=TextPaint(paint)

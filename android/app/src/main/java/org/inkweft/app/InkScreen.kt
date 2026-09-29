@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 package org.inkweft.app
 
+import org.inkweft.app.ui.designsystem.InkTheme
+
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -408,19 +410,19 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
         if(viewportHint!=0)Surface(Modifier.align(Alignment.BottomCenter).padding(bottom=12.dp),shape=RoundedCornerShape(20.dp),color=Color.White.copy(alpha=.9f),border=BorderStroke(1.dp,Line)){
             Row(Modifier.padding(horizontal=14.dp,vertical=6.dp)){if(viewportHint==2)Text("${(zoom*100).toInt()}%",fontSize=12.sp,modifier=Modifier.testTag("ink-zoom"))else pageNavigation()}
         }
-        Surface(Modifier.align(Alignment.TopCenter).padding(start=if(inlineDocumentBar)64.dp else 4.dp,end=if(inlineDocumentBar)208.dp else 4.dp).widthIn(max=560.dp).fillMaxWidth(),shape=RoundedCornerShape(26.dp),color=Color.White,shadowElevation=3.dp,border=BorderStroke(1.dp,Line)){
+        Surface(Modifier.align(Alignment.TopCenter).padding(start=if(inlineDocumentBar)64.dp else 4.dp,end=if(inlineDocumentBar)208.dp else 4.dp).widthIn(max=560.dp).fillMaxWidth(),shape=InkTheme.FloatingShape,color=InkTheme.Navigation,shadowElevation=InkTheme.ToolElevation){
             EditorToolbar(externalMore=externalToolbarMore,moreRequest=toolbarRequest+localToolbarRequest) { action,closeOverflow -> when(action){
                 "undo" -> IconButton(onClick={closeOverflow();if(historyHeads.undo==EditDomain.OBJECT)objectsVm.undo()else vm.undo()},enabled=(if(historyHeads.undo==EditDomain.OBJECT)objectsUi.undo else ui.canUndo)&&!editingBlocked,modifier=Modifier.size(48.dp).testTag("ink-undo").describedAs("撤销")){Glyph("undo")}
                 "redo" -> IconButton(onClick={closeOverflow();if(historyHeads.redo==EditDomain.OBJECT)objectsVm.redo()else vm.redo()},enabled=(if(historyHeads.redo==EditDomain.OBJECT)objectsUi.redo else ui.canRedo)&&!editingBlocked,modifier=Modifier.size(48.dp).testTag("ink-redo").describedAs("重做")){Glyph("redo")}
-                "pen" -> IconButton(onClick={closeOverflow();readOnly=false;selectedObject=null;if(tool in 0..2){settings=true;penOpenRequest++}else{tool=lastWritingTool;penOpenRequest++}},enabled=!busy,modifier=Modifier.size(48.dp).testTag("top-draw").describedAs("笔参数")){Glyph("pen",if(tool<3&&!readOnly)Forest else Quiet)}
-                "eraser" -> IconToggleButton(tool==3,{closeOverflow();if(tool==3){anchorFor("eraser");eraserDialog=true}else tool=3},enabled=!editingBlocked,modifier=Modifier.size(48.dp).toolAnchor("eraser").testTag("top-eraser").describedAs("橡皮")){Glyph("eraser")}
-                "lasso" -> IconToggleButton(tool==4&&!excerptMode&&!areaEraseMode,{closeOverflow();if(tool==4&&!excerptMode&&!areaEraseMode){anchorFor("lasso");selectionSettings=true}else chooseSelection()},enabled=!editingBlocked&&!continuousBlocked,modifier=Modifier.size(48.dp).toolAnchor("lasso").testTag("ink-select").describedAs("套索")){Glyph("select")}
+                "pen" -> IconButton(onClick={closeOverflow();readOnly=false;selectedObject=null;if(tool in 0..2){settings=true;penOpenRequest++}else{tool=lastWritingTool;penOpenRequest++}},enabled=!busy,modifier=Modifier.size(48.dp).editorSelected(tool<3&&!readOnly).testTag("top-draw").describedAs("笔参数")){Glyph("pen",if(tool<3&&!readOnly)Forest else Quiet)}
+                "eraser" -> IconToggleButton(tool==3,{closeOverflow();if(tool==3){anchorFor("eraser");eraserDialog=true}else tool=3},enabled=!editingBlocked,modifier=Modifier.size(48.dp).toolAnchor("eraser").editorSelected(tool==3).testTag("top-eraser").describedAs("橡皮")){Glyph("eraser")}
+                "lasso" -> IconToggleButton(tool==4&&!excerptMode&&!areaEraseMode,{closeOverflow();if(tool==4&&!excerptMode&&!areaEraseMode){anchorFor("lasso");selectionSettings=true}else chooseSelection()},enabled=!editingBlocked&&!continuousBlocked,modifier=Modifier.size(48.dp).toolAnchor("lasso").editorSelected(tool==4&&!excerptMode&&!areaEraseMode).testTag("ink-select").describedAs("套索")){Glyph("select")}
                 "area" -> IconButton(onClick={closeOverflow();chooseSelection(true,erase=true)},enabled=!editingBlocked&&!continuousBlocked,modifier=Modifier.testTag("top-area-erase").describedAs("圈选擦除")){Glyph("area-erase")}
                 "image" -> IconButton(onClick={closeOverflow();insertObject("image")},enabled=!editingBlocked&&!continuousBlocked,modifier=Modifier.testTag("object-image").describedAs("插入图片")){Glyph("image")}
                 "camera" -> IconButton(onClick={closeOverflow();insertObject("camera")},enabled=!editingBlocked&&!continuousBlocked,modifier=Modifier.testTag("object-camera").describedAs("拍照")){Glyph("camera")}
                 "text" -> IconButton(onClick={closeOverflow();insertObject("text")},enabled=!editingBlocked&&!continuousBlocked,modifier=Modifier.testTag("object-text").describedAs("文本框")){Glyph("text")}
                 "map" -> IconButton(onClick={closeOverflow();onDocumentAction("map")},enabled=!busy,modifier=Modifier.size(48.dp).testTag("quick-study").describedAs("笔记导图")){Glyph("mindmap",modifier=Modifier.size(24.dp))}
-                "excerpt" -> IconButton(onClick={closeOverflow();if(tool==4&&excerptMode){anchorFor("excerpt");excerptSettings=true}else chooseSelection(excerpt=true)},enabled=!editingBlocked&&!continuousBlocked,modifier=Modifier.size(48.dp).toolAnchor("excerpt").testTag("top-excerpt").describedAs("摘录")){Glyph("excerpt",if(excerptMode)Forest else TextInk,modifier=Modifier.size(24.dp))}
+                "excerpt" -> IconButton(onClick={closeOverflow();if(tool==4&&excerptMode){anchorFor("excerpt");excerptSettings=true}else chooseSelection(excerpt=true)},enabled=!editingBlocked&&!continuousBlocked,modifier=Modifier.size(48.dp).toolAnchor("excerpt").editorSelected(tool==4&&excerptMode).testTag("top-excerpt").describedAs("摘录")){Glyph("excerpt",if(excerptMode)Forest else TextInk,modifier=Modifier.size(24.dp))}
                 "tag" -> IconButton(onClick=onTags,enabled=!editingBlocked,modifier=Modifier.testTag("top-tags").describedAs("笔记标签")){Glyph("tag")}
                 "shape" -> IconButton(onClick={closeOverflow();insertObject("shape")},enabled=!editingBlocked&&!continuousBlocked,modifier=Modifier.testTag("object-shape").describedAs("图形")){Glyph("shape")}
                 "sticker" -> IconButton(onClick={closeOverflow();insertObject("sticker")},enabled=!editingBlocked&&!continuousBlocked,modifier=Modifier.testTag("object-sticker").describedAs("贴纸与符号")){Glyph("sticker")}
@@ -485,7 +487,7 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
     }
     smoothSelection?.let{s->BeautifyDialog(s.strokes,{smoothSelection=null;selected=null}){changed->if(applySelected(s.revision,InkMutation.Replace(s.strokes.map{it.id},changed))){smoothSelection=null;selected=null;tool=0}}}
     CompositionLocalProvider(LocalEditorAnchor provides parameterAnchor){
-    if(excerptSettings)EditorPanel("摘要笔","",{excerptSettings=false},"excerpt-settings"){
+    if(excerptSettings)EditorPanel("摘要笔","",{excerptSettings=false},"excerpt-settings",kind=PanelKind.SETTINGS){
         Column(Modifier.verticalScroll(rememberScrollState())){
             Row{FilterChip(captureToMap,{captureToMap=true;excerptPrefs.edit().putBoolean("to-map",true).apply()},label={Text("导图")},modifier=Modifier.heightIn(min=48.dp).testTag("capture-destination-map"));FilterChip(!captureToMap,{captureToMap=false;excerptPrefs.edit().putBoolean("to-map",false).apply()},label={Text("摘录匣")},modifier=Modifier.heightIn(min=48.dp).testTag("capture-destination-inbox"))}
             FlowRow(horizontalArrangement=Arrangement.spacedBy(4.dp)){

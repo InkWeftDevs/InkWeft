@@ -1,5 +1,7 @@
 package org.inkweft.app
 
+import org.inkweft.app.ui.designsystem.InkTheme
+
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
@@ -29,7 +31,7 @@ import androidx.compose.ui.unit.sp
     var filter by remember{mutableStateOf("")}
     var hidden by rememberSaveable{mutableStateOf(false)}
     LaunchedEffect(ui.selectedId,ui.openIds,availableWidth){val index=ui.openIds.indexOf(ui.selectedId);if(index>=0)state.animateScrollToItem(index)}
-    Row(Modifier.fillMaxWidth().background(Side).padding(horizontal=8.dp,vertical=0.dp).testTag("notebook-tabs"),verticalAlignment=Alignment.CenterVertically){
+    Row(Modifier.fillMaxWidth().background(InkTheme.Navigation).padding(horizontal=8.dp,vertical=0.dp).testTag("notebook-tabs"),verticalAlignment=Alignment.CenterVertically){
         if(!hidden)LazyRow(state=state,modifier=Modifier.weight(1f).onSizeChanged{availableWidth=it.width},horizontalArrangement=Arrangement.spacedBy(2.dp)){
             items(ui.openIds,key={it}){id->
                 val draft=ui.drafts[id];val name=draft?.title?:ui.notes.firstOrNull{it.id==id}?.title?:"笔记"
@@ -38,7 +40,7 @@ import androidx.compose.ui.unit.sp
                         TextButton(onClick={open(id)},enabled=enabled,modifier=Modifier.weight(1f).heightIn(min=36.dp).testTag("notebook-tab-$id")){
                             Text(name+(if(draft?.dirty==true)" *"else""),maxLines=1,overflow=TextOverflow.Ellipsis,fontSize=13.sp)
                         }
-                        IconButton(onClick={close(id)},enabled=enabled,modifier=Modifier.size(36.dp).testTag("close-tab-$id").describedAs("关闭标签：$name")){Glyph("close",Quiet,Modifier.size(16.dp))}
+                        IconButton(onClick={close(id)},enabled=enabled,modifier=Modifier.size(48.dp).testTag("close-tab-$id").describedAs("关闭标签：$name")){Glyph("close",Quiet,Modifier.size(16.dp))}
                     }
                 }
             }

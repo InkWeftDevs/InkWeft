@@ -85,7 +85,7 @@ internal object CanvasSelectionEdit {
     }
 }
 @Composable internal fun SelectionSettings(value:SelectionOptions,freehand:Boolean,dismiss:()->Unit,all:()->Unit,change:(SelectionOptions,Boolean)->Unit){
-    EditorPanel("套索","",dismiss,"selection-settings"){
+    EditorPanel("套索","",dismiss,"selection-settings",kind=PanelKind.SETTINGS){
         Column(Modifier.verticalScroll(rememberScrollState())){
             Row(horizontalArrangement=Arrangement.spacedBy(6.dp)){
                 FilterChip(freehand&&!value.precise,{change(value.copy(precise=false),true)},label={Text("自由")},modifier=Modifier.testTag("lasso-free"))

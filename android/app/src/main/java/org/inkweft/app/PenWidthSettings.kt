@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 package org.inkweft.app
 
+import org.inkweft.app.ui.designsystem.InkTheme
+
 import android.content.Context
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -82,18 +84,18 @@ internal class PenWidthStore(context:Context,name:String="inkweft-pen-widths") {
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 internal fun PenPresetMenu(expanded:Boolean,tool:Int,current:Float,currentColor:Int,currentKind:InkPen,onDismiss:()->Unit,favorites:List<FavoritePen> = emptyList(),favoriteBusy:Boolean=false,onFavorite:(InkPen,Float,Int)->Unit={_,_,_->},favoriteSelected:Boolean?=null,recipe:BrushRecipe=BrushRecipe(),onRecipe:(BrushRecipe)->Unit={},onApply:(Float,Int,InkPen)->Unit) {
-    DropdownMenu(expanded=expanded,onDismissRequest=onDismiss,offset=DpOffset(if(LocalPenPointsLeft.current)(-320).dp else 104.dp,0.dp),shape=RoundedCornerShape(20.dp),containerColor=Color.White,tonalElevation=0.dp,shadowElevation=6.dp,border=BorderStroke(1.dp,Line),modifier=Modifier.width(320.dp).heightIn(max=minOf(360.dp,androidx.compose.ui.platform.LocalConfiguration.current.screenHeightDp.dp*.55f)).testTag("pen-width-dialog")) {
+    DropdownMenu(expanded=expanded,onDismissRequest=onDismiss,offset=DpOffset(if(LocalPenPointsLeft.current)(-320).dp else 104.dp,0.dp),shape=InkTheme.FloatingShape,containerColor=InkTheme.Surface,tonalElevation=0.dp,shadowElevation=InkTheme.FloatingElevation,modifier=Modifier.width(320.dp).heightIn(max=minOf(360.dp,androidx.compose.ui.platform.LocalConfiguration.current.screenHeightDp.dp*.55f)).testTag("pen-width-dialog")) {
         var advanced by remember{mutableStateOf(false)}
         var kind by remember(expanded,tool,currentKind){mutableStateOf(currentKind)}
         var draft by remember(expanded,tool,current){mutableFloatStateOf(current)}
         var color by remember(expanded,tool,currentColor){mutableIntStateOf(currentColor)}
-        Column(Modifier.padding(horizontal=20.dp,vertical=8.dp),verticalArrangement=Arrangement.spacedBy(8.dp)) {
-            Row(verticalAlignment=Alignment.CenterVertically){Text(PenKinds.title(kind),Modifier.weight(1f),fontSize=22.sp,fontWeight=FontWeight.SemiBold,color=TextInk)
+        Column(Modifier.padding(horizontal=InkTheme.PanelInset,vertical=4.dp),verticalArrangement=Arrangement.spacedBy(8.dp)) {
+            Row(verticalAlignment=Alignment.CenterVertically){Text(PenKinds.title(kind),Modifier.weight(1f),style=InkTheme.PanelTitle,color=TextInk)
                 val saved=favoriteSelected?:favorites.any{it.matches(kind,draft,color,recipe)}
                 IconToggleButton(saved,{onFavorite(kind,draft,color)},enabled=!favoriteBusy,modifier=Modifier.size(48.dp).testTag("pen-favorite").describedAs(if(saved)"取消收藏这支笔"else"收藏这支笔")){Glyph(if(saved)"star-filled"else"star",if(saved)Color(0xffbd8100)else Quiet)}
                 IconButton(onClick=onDismiss,modifier=Modifier.size(48.dp).testTag("close-pen-settings").describedAs("关闭笔参数")){Glyph("close")}
             }
-            Row{TextButton({advanced=false},modifier=Modifier.testTag("pen-basic")){Text("常用")};TextButton({advanced=true},modifier=Modifier.testTag("pen-advanced")){Text("高级")}}
+            EditorSegments(listOf("常用","高级"),if(advanced)1 else 0,listOf("pen-basic","pen-advanced")){advanced=it==1}
             if(advanced){
             Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.spacedBy(6.dp)) {
                 PenWidthStore.presets(tool).forEachIndexed { index,width ->

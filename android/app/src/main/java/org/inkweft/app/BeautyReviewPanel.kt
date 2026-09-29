@@ -13,7 +13,7 @@ import org.inkweft.core.TextFont
 @OptIn(ExperimentalLayoutApi::class)
 @Composable internal fun BeautyReviewPanel(value:BeautyReview,vm:PageObjectViewModel){
     var text by remember(value.inkRevision,value.objectRevision){mutableStateOf(value.result.text)}
-    EditorPanel("校对美化",if(value.options.preserveLayout)"原位换字体"else"段落整理",vm::dismissBeauty,"beauty-review",footer={
+    EditorPanel("校对美化",if(value.options.preserveLayout)"原位换字体"else"段落整理",vm::dismissBeauty,"beauty-review",kind=PanelKind.BEAUTY_REVIEW,footer={
         Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.End){
             TextButton(vm::dismissBeauty,modifier=Modifier.testTag("beauty-review-cancel")){Text("保留原迹")}
             TextButton(vm::acceptBeauty,enabled=value.candidate!=null,modifier=Modifier.testTag("beauty-review-apply")){Text("应用")}

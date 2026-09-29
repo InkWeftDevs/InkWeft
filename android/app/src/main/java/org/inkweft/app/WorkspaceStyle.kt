@@ -15,7 +15,7 @@ internal val Leaf=InkTheme.Selected
 internal val TextInk=InkTheme.Text
 internal val Quiet=InkTheme.Secondary
 internal val Line=InkTheme.Divider
-internal val Side=InkTheme.Navigation
+internal val Side=InkTheme.Surface
 @Composable fun InkWeftTheme(content:@Composable ()->Unit){InkTheme.Content(content)}
 /** Packaged Material Symbols; unknown names must not silently draw an unrelated icon. */
 @Composable internal fun Glyph(kind:String,tint:Color=LocalContentColor.current,modifier:Modifier=Modifier){

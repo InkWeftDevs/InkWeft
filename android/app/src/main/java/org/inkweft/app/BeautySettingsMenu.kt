@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 package org.inkweft.app
 
+import org.inkweft.app.ui.designsystem.InkTheme
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.shape.CircleShape
@@ -23,11 +24,11 @@ import kotlin.math.roundToInt
 
 @Composable internal fun BeautySettingsMenu(expanded:Boolean,dismiss:()->Unit,value:BeautyOptions,change:(BeautyOptions)->Unit,select:()->Unit,smooth:()->Unit){
     var section by remember(expanded){mutableStateOf<String?>(null)}
-    DropdownMenu(expanded,dismiss,shape=RoundedCornerShape(20.dp),containerColor=Color.White,tonalElevation=0.dp,
-        shadowElevation=6.dp,border=BorderStroke(1.dp,Line),modifier=Modifier.width(320.dp).testTag("beauty-settings")){
+    DropdownMenu(expanded,dismiss,shape=InkTheme.FloatingShape,containerColor=InkTheme.Surface,tonalElevation=0.dp,
+        shadowElevation=InkTheme.FloatingElevation,modifier=Modifier.width(320.dp).testTag("beauty-settings")){
         Row(Modifier.fillMaxWidth().padding(horizontal=8.dp),verticalAlignment=Alignment.CenterVertically){
             IconButton(onClick={if(section==null)dismiss()else section=null},modifier=Modifier.testTag("beauty-close").describedAs(if(section==null)"关闭美化参数"else"返回美化参数")){Glyph("back")}
-            Text(when(section){"font"->"美化字体";"language"->"书写语言";else->"实时美化字迹"},fontWeight=FontWeight.SemiBold,fontSize=17.sp)
+            Text(when(section){"font"->"美化字体";"language"->"书写语言";else->"实时美化字迹"},style=InkTheme.PanelTitle)
         }
         if(section=="font")TextFont.entries.forEach{font->
             DropdownMenuItem(text={Text(TextStyles.name(font),fontFamily=FontFamily(TextStyles.face(font)))},trailingIcon={if(value.font==font)Glyph("check",Forest)},

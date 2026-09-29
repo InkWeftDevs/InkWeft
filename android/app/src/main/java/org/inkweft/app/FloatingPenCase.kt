@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 package org.inkweft.app
 
+import org.inkweft.app.ui.designsystem.InkTheme
+
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.*
@@ -45,7 +47,7 @@ internal val LocalPenPointsLeft=compositionLocalOf{false}
         Surface(Modifier.offset{IntOffset((x.coerceIn(0f,1f)*maxX).roundToInt(),(y.coerceIn(0f,1f)*maxY).roundToInt())}
             .width(if(wide&&!collapsed)224.dp else if(collapsed)56.dp else 104.dp).heightIn(max=with(density){host.height.coerceAtLeast(1).toDp()}).onSizeChanged{size=it}.testTag(tag)
             .semantics{stateDescription=if(collapsed)"已收起"else if(x>.5f)"笔尖朝左"else"笔尖朝右"},
-            shape=RoundedCornerShape(20.dp),color=MaterialTheme.colorScheme.surface,shadowElevation=4.dp,border=BorderStroke(1.dp,Line)){
+            shape=InkTheme.FloatingShape,color=InkTheme.Surface,shadowElevation=InkTheme.FloatingElevation){
             Column(horizontalAlignment=Alignment.CenterHorizontally){
                 Row(Modifier.fillMaxWidth(),verticalAlignment=Alignment.CenterVertically,horizontalArrangement=if(wide&&!collapsed)Arrangement.Start else Arrangement.Center){
                 Box{
@@ -74,7 +76,7 @@ internal val LocalPenPointsLeft=compositionLocalOf{false}
 /** Original vector artwork. The side-docked nib points toward the writing area. */
 @Composable private fun toolAdvance(selected:Boolean):Modifier {
     val left=LocalPenPointsLeft.current
-    val advance by animateDpAsState(if(selected)8.dp else 0.dp,tween(150),label="工具向纸面前移")
+    val advance by animateDpAsState(if(selected)8.dp else 0.dp,tween(InkTheme.MotionMillis),label="工具向纸面前移")
     val pixels=with(LocalDensity.current){advance.toPx()}
     return Modifier.graphicsLayer{translationX=if(left)-pixels else pixels}
 }

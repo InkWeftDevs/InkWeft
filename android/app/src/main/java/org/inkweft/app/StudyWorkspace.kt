@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 package org.inkweft.app
 
+import org.inkweft.app.ui.designsystem.InkTheme
+
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.*
@@ -311,7 +313,7 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
             val cards=ui.cards.filter{(it.trashedAt!=null)==showTrash&&StudyText.matches(StudyTextCard(it.id,it.title,it.body),query)}
             if(tab==2)BoxWithConstraints(Modifier.fillMaxWidth().weight(1f)){key(mapKey){AndroidView(factory={MindMapView(it).also{v->map=v;vm.viewports[mapKey]?.let(v::restoreViewport);v.onViewport={vp->vm.viewports[mapKey]=vp}}},update={v->v.captureBook=note.base.id;v.captureMapKey=mapKey;v.captureGraph=StudyGraph.orderHash(ui.nodes.map{it.model()});v.onCapture={transfer,parent,x,y,graph->
                 if(editable)vm.submit(transfer.command(MapRef(note.base.id,currentMap),parent?.id,graph,x,y))
-            };v.selectedNodeId=vm.selectedByMap[mapKey];v.branchIds=active.mapNotNull{it.parentId}.toSet();v.onToggleBranch=::toggleBranch;v.enabledInput=editable;v.editingTitle=titleDraft!=null;v.onSelectionBounds={selectedBounds=it};v.show(shown,displayCards,hiddenCounts);vm.revealByMap[mapKey]?.let{if(if(vm.searchHit?.nodeId==it)v.focusNode(it)else v.revealNode(it))vm.revealByMap.remove(mapKey)};v.onActive={dragging=it;controlPulse++;if(it)vm.searchSession?.changedByUser=true};v.onSelect={n->vm.selectedByMap[mapKey]=n?.id;nodeMenu=false};v.onEditTitle={n->editTitle(n)};v.onOpenDetails={n->cardById[n.cardId]?.let{openCard(it,n)}};v.onMove={n,x,y->if(editable)vm.submit(StudyCommand(id(),note.base.id,StudyAction.MOVE,mapId=currentMap,nodeId=n.id,expectedRevision=n.revision,x=x,y=y))}},modifier=Modifier.fillMaxSize().clip(RoundedCornerShape(14.dp)).border(1.dp,Line,RoundedCornerShape(14.dp)).testTag("study-map"))}
+            };v.selectedNodeId=vm.selectedByMap[mapKey];v.branchIds=active.mapNotNull{it.parentId}.toSet();v.onToggleBranch=::toggleBranch;v.enabledInput=editable;v.editingTitle=titleDraft!=null;v.onSelectionBounds={selectedBounds=it};v.show(shown,displayCards,hiddenCounts);vm.revealByMap[mapKey]?.let{if(if(vm.searchHit?.nodeId==it)v.focusNode(it)else v.revealNode(it))vm.revealByMap.remove(mapKey)};v.onActive={dragging=it;controlPulse++;if(it)vm.searchSession?.changedByUser=true};v.onSelect={n->vm.selectedByMap[mapKey]=n?.id;nodeMenu=false};v.onEditTitle={n->editTitle(n)};v.onOpenDetails={n->cardById[n.cardId]?.let{openCard(it,n)}};v.onMove={n,x,y->if(editable)vm.submit(StudyCommand(id(),note.base.id,StudyAction.MOVE,mapId=currentMap,nodeId=n.id,expectedRevision=n.revision,x=x,y=y))}},modifier=Modifier.fillMaxSize().then(if(compactWindow)Modifier else Modifier.clip(InkTheme.ToolShape)).testTag("study-map"))}
                 val selected=nodeById[vm.selectedByMap[mapKey]]
                 val density=LocalDensity.current
                 var overlaySize by remember{mutableStateOf(IntSize.Zero)}
@@ -352,7 +354,7 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
                         }
                     }
                 }
-                if(compactWindow)Surface(Modifier.align(Alignment.BottomStart).padding(8.dp).alpha(if(controlsAwake||vm.searchSession!=null)1f else .65f),shape=RoundedCornerShape(12.dp),color=Color.White.copy(alpha=.94f),border=BorderStroke(1.dp,Line)){
+                if(compactWindow)Surface(Modifier.align(Alignment.BottomStart).padding(8.dp).alpha(if(controlsAwake||vm.searchSession!=null)1f else .65f),shape=InkTheme.ToolShape,color=InkTheme.Surface,shadowElevation=InkTheme.ToolElevation){
                     Row(verticalAlignment=Alignment.CenterVertically){
                         val search=vm.searchSession
                         if(search!=null){

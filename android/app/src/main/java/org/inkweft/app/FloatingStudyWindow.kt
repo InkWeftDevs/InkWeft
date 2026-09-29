@@ -1,7 +1,11 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 package org.inkweft.app
 
-import androidx.compose.foundation.BorderStroke
+import org.inkweft.app.ui.designsystem.InkTheme
+
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.snap
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -38,6 +42,7 @@ internal enum class StudyWindowMode(val title:String,val width:Float,val height:
     var width by rememberSaveable(book,modeName){mutableFloatStateOf(prefs.getFloat("$book-$modeName-width",if(mode==StudyWindowMode.COLLECT)prefs.getFloat("$book-width",mode.width)else mode.width))}
     var height by rememberSaveable(book,modeName){mutableFloatStateOf(prefs.getFloat("$book-$modeName-height",if(mode==StudyWindowMode.COLLECT)prefs.getFloat("$book-height",mode.height)else mode.height))}
     var modeMenu by remember{mutableStateOf(false)}
+    var dragging by remember{mutableStateOf(false)}
     fun save(){prefs.edit().putString("$book-mode",mode.name).putFloat("$book-x",x).putFloat("$book-y",y)
         .putFloat("$book-${mode.name}-width",width).putFloat("$book-${mode.name}-height",height).apply()}
     fun choose(next:StudyWindowMode){save();modeName=next.name;prefs.edit().putString("$book-mode",next.name).apply();modeMenu=false;onMinimize(false)}
@@ -52,9 +57,13 @@ internal enum class StudyWindowMode(val title:String,val width:Float,val height:
         val travelX=(availableW-w).coerceAtLeast(0f);val travelY=(availableH-h).coerceAtLeast(0f)
         val left=8+if(docked||maximized)travelX else x.coerceIn(0f,1f)*travelX
         val top=topInset+if(maximized||docked)0f else y.coerceIn(0f,1f)*travelY
+        // Animate frame travel only. Native map viewport and author geometry stay unchanged.
+        val motion=if(dragging)snap() else tween<androidx.compose.ui.unit.Dp>(InkTheme.MotionMillis)
+        val frameLeft by animateDpAsState(left.dp,motion,label="study-frame-left")
+        val frameTop by animateDpAsState(top.dp,motion,label="study-frame-top")
         val currentEnabled by rememberUpdatedState(enabled)
         val drag=Modifier.testTag("study-window-drag").pointerInput(travelX,travelY,docked,maximized){
-            detectDragGestures(onDragEnd={save()},onDragCancel={save()}){change,delta->
+            detectDragGestures(onDragStart={dragging=true},onDragEnd={save();dragging=false},onDragCancel={save();dragging=false}){change,delta->
                 change.consume();if(currentEnabled&&!docked&&!maximized){if(travelX>0)x=(x+delta.x/density/travelX).coerceIn(0f,1f);if(travelY>0)y=(y+delta.y/density/travelY).coerceIn(0f,1f)}
             }
         }
@@ -69,16 +78,16 @@ internal enum class StudyWindowMode(val title:String,val width:Float,val height:
             IconButton({onMinimize(!collapsed)},enabled=enabled,modifier=Modifier.size(48.dp).testTag("study-window-minimize").describedAs(if(collapsed)"恢复导图"else"最小化导图")){Text(if(collapsed)"□"else"−")}
             IconButton(close,enabled=enabled,modifier=Modifier.size(48.dp).testTag("study-close").describedAs("关闭导图")){Glyph("close")}
         }
-        Surface(Modifier.offset{IntOffset((left*density).roundToInt(),(top*density).roundToInt())}
-            .size(w.dp,h.dp).testTag("study-panel"),color=Color.White,shape=RoundedCornerShape(16.dp),
-            shadowElevation=8.dp,border=BorderStroke(1.dp,Line)){
-            Box(Modifier.fillMaxSize().clip(RoundedCornerShape(16.dp))){
+        Surface(Modifier.offset{IntOffset((frameLeft.value*density).roundToInt(),(frameTop.value*density).roundToInt())}
+            .size(w.dp,h.dp).testTag("study-panel"),color=Color.White,shape=InkTheme.FloatingShape,
+            shadowElevation=InkTheme.FloatingElevation){
+            Box(Modifier.fillMaxSize().clip(InkTheme.FloatingShape)){
                 if(collapsed)Row(Modifier.fillMaxWidth().height(48.dp),verticalAlignment=Alignment.CenterVertically){
                     Box(drag.weight(1f).fillMaxHeight(),contentAlignment=Alignment.CenterStart){Text("⠿ 导图",Modifier.padding(start=12.dp))};controls()
                 }else {
                     holder.SaveableStateProvider(book){CompositionLocalProvider(LocalStudyWindowChrome provides StudyWindowChrome(drag,controls)){content()}}
                     Box(Modifier.align(Alignment.BottomEnd).size(48.dp).testTag("study-window-resize").describedAs("拖动调整导图窗口大小")
-                        .pointerInput(availableW,availableH,docked,maximized){detectDragGestures(onDragEnd={save()},onDragCancel={save()}){change,delta->
+                        .pointerInput(availableW,availableH,docked,maximized){detectDragGestures(onDragStart={dragging=true},onDragEnd={save();dragging=false},onDragCancel={save();dragging=false}){change,delta->
                             change.consume();if(currentEnabled&&!docked&&!maximized){val oldW=width.coerceIn(minOf(320f,availableW),availableW);val oldH=height.coerceIn(minOf(300f,availableH),availableH);val oldX=x*(availableW-oldW);val oldY=y*(availableH-oldH)
                                 width=(oldW+delta.x/density).coerceIn(minOf(320f,availableW),availableW);height=(oldH+delta.y/density).coerceIn(minOf(300f,availableH),availableH)
                                 x=if(availableW>width)(oldX/(availableW-width)).coerceIn(0f,1f)else 0f;y=if(availableH>height)(oldY/(availableH-height)).coerceIn(0f,1f)else 0f}

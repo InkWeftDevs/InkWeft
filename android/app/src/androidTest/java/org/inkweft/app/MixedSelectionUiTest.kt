@@ -59,7 +59,7 @@ class MixedSelectionUiTest {
   compose.onNodeWithContentDescription("关闭套索").performClick()
   tap("ink-tool-3");tap("ink-select");tap("ink-select");compose.onNodeWithTag("lasso-rectangle").assertIsSelected()
   tap("lasso-free");compose.onNodeWithContentDescription("关闭套索").performClick()
-  tap("ink-tool-3");tap("ink-tool-3");tap("erase-tape-only");assertTrue(EraserSettingsStore(app).read().onlyTape);compose.onNodeWithTag("eraser-local").assertIsNotEnabled();tap("erase-highlighter-only");assertFalse(EraserSettingsStore(app).read().onlyTape);tap("erase-highlighter-only")
+  tap("ink-tool-3");tap("ink-tool-3");tap("eraser-advanced");tap("erase-tape-only");assertTrue(EraserSettingsStore(app).read().onlyTape);tap("eraser-basic");compose.onNodeWithTag("eraser-local").assertIsNotEnabled();tap("eraser-advanced");tap("erase-highlighter-only");assertFalse(EraserSettingsStore(app).read().onlyTape);tap("erase-highlighter-only")
   compose.onNodeWithContentDescription("关闭橡皮").performClick()
  }
 }

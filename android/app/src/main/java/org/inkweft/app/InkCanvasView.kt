@@ -1,6 +1,9 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 package org.inkweft.app
 
+import androidx.compose.ui.graphics.toArgb
+import org.inkweft.app.ui.designsystem.InkTheme
+
 import android.content.Context
 import android.graphics.*
 import android.view.MotionEvent
@@ -207,7 +210,7 @@ class InkCanvasView(context:Context):View(context){
     private var tapX=0f;private var tapY=0f
     override fun onDraw(canvas:Canvas){
         super.onDraw(canvas);if(!configured)return
-        canvas.drawColor(Color.WHITE)
+        canvas.drawColor(if(world||preview||embeddedPage)Color.WHITE else InkTheme.Workspace.toArgb())
         val visible=viewport.visible(width.toDouble(),height.toDouble(),density);val save=canvas.save();canvas.concat(matrix)
         if(!world){paint.style=Paint.Style.FILL;paint.color=Color.WHITE;canvas.drawRect(0f,0f,1000f,1414f,paint);if(!embeddedPage)canvas.clipRect(0f,0f,1000f,1414f)}
         if(documentId==null||documentKnownAbsent)drawGuide(canvas,visible)

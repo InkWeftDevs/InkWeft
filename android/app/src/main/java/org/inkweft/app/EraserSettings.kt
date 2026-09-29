@@ -28,21 +28,28 @@ internal class EraserSettingsStore(context:Context){
 @Composable
 internal fun EraserDialog(current:EraserSettings,dismiss:()->Unit,circle:()->Unit={},apply:(EraserSettings)->Unit){
     var draft by remember{mutableStateOf(current)}
+    var advanced by remember{mutableStateOf(false)}
     fun update(value:EraserSettings){draft=value;apply(value)}
-    EditorPanel("橡皮","",dismiss,"eraser-dialog"){
+    EditorPanel("橡皮","",dismiss,"eraser-dialog",kind=PanelKind.SETTINGS){
 
     Column(Modifier.verticalScroll(rememberScrollState()),verticalArrangement=Arrangement.spacedBy(4.dp)){
+        EditorSegments(listOf("常用","高级"),if(advanced)1 else 0,listOf("eraser-basic","eraser-advanced")){advanced=it==1}
+        if(!advanced){
         Row(horizontalArrangement=Arrangement.spacedBy(10.dp)){
             FilterChip(!draft.whole&&!draft.onlyTape,{update(draft.copy(whole=false))},label={Text("局部擦除")},enabled=!draft.onlyTape,modifier=Modifier.testTag("eraser-local"))
             FilterChip(draft.whole&&!draft.onlyTape,{update(draft.copy(whole=true))},label={Text("整笔擦除")},enabled=!draft.onlyTape,modifier=Modifier.testTag("eraser-whole"))
         }
-        TextButton(circle,enabled=!draft.onlyTape,modifier=Modifier.testTag("eraser-circle")){Glyph("area-erase");Text("圈选擦除")}
-        Row(horizontalArrangement=Arrangement.spacedBy(8.dp)){listOf(14f,28f,56f).forEachIndexed{i,size->FilterChip(draft.diameterDp==size,{update(draft.copy(diameterDp=size))},label={Text(listOf("小","中","大")[i])},modifier=Modifier.weight(1f).testTag("eraser-size-$i"))}}
-        Text("擦除直径 ${draft.diameterDp.toInt()} dp",fontSize=14.sp,modifier=Modifier.testTag("eraser-size-value"))
-        Canvas(Modifier.fillMaxWidth().height(64.dp).testTag("eraser-preview")){drawCircle(Forest.copy(alpha=.09f),radius=draft.diameterDp.dp.toPx()/2);drawCircle(Forest,radius=draft.diameterDp.dp.toPx()/2,style=Stroke(1.dp.toPx()))}
+        Row(Modifier.fillMaxWidth(),verticalAlignment=androidx.compose.ui.Alignment.CenterVertically){
+            Text("擦除直径",Modifier.weight(1f),style=MaterialTheme.typography.bodyMedium)
+            Text("${draft.diameterDp.toInt()} dp",style=MaterialTheme.typography.bodyMedium,modifier=Modifier.testTag("eraser-size-value"))
+        }
         Slider(draft.diameterDp,{update(draft.copy(diameterDp=it.roundToInt().toFloat()))},valueRange=8f..96f,modifier=Modifier.testTag("eraser-size-slider"))
-        Row{Checkbox(draft.onlyHighlighter,{update(draft.copy(onlyHighlighter=it,onlyTape=false))},modifier=Modifier.testTag("erase-highlighter-only"));Text("只擦荧光笔，保留普通笔",fontSize=13.sp,modifier=Modifier.padding(top=12.dp))}
-        Row{Checkbox(draft.onlyTape,{update(draft.copy(onlyTape=it,onlyHighlighter=false))},modifier=Modifier.testTag("erase-tape-only"));Text("只擦胶带（整条）",fontSize=13.sp,modifier=Modifier.padding(top=12.dp))}
-        Row{Switch(draft.returnToPen,{update(draft.copy(returnToPen=it))},modifier=Modifier.testTag("eraser-return-pen"));Text("擦除后自动切回笔",modifier=Modifier.padding(start=8.dp,top=12.dp))}
+        TextButton(circle,enabled=!draft.onlyTape,modifier=Modifier.heightIn(min=48.dp).testTag("eraser-circle")){Glyph("area-erase");Spacer(Modifier.width(8.dp));Text("圈选擦除")}
+        }else{
+            Row(horizontalArrangement=Arrangement.spacedBy(8.dp)){listOf(14f,28f,56f).forEachIndexed{i,size->FilterChip(draft.diameterDp==size,{update(draft.copy(diameterDp=size))},label={Text(listOf("小","中","大")[i])},modifier=Modifier.weight(1f).heightIn(min=48.dp).testTag("eraser-size-$i"))}}
+            Row(verticalAlignment=androidx.compose.ui.Alignment.CenterVertically){Text("只擦荧光笔",Modifier.weight(1f));Checkbox(draft.onlyHighlighter,{update(draft.copy(onlyHighlighter=it,onlyTape=false))},modifier=Modifier.testTag("erase-highlighter-only"))}
+            Row(verticalAlignment=androidx.compose.ui.Alignment.CenterVertically){Text("只擦胶带（整条）",Modifier.weight(1f));Checkbox(draft.onlyTape,{update(draft.copy(onlyTape=it,onlyHighlighter=false))},modifier=Modifier.testTag("erase-tape-only"))}
+            Row(verticalAlignment=androidx.compose.ui.Alignment.CenterVertically){Text("擦除后切回笔",Modifier.weight(1f));Switch(draft.returnToPen,{update(draft.copy(returnToPen=it))},modifier=Modifier.testTag("eraser-return-pen"))}
+        }
     }}
 }
