@@ -162,16 +162,21 @@ class InkCanvasView(context:Context):View(context){
     private var panPointer=-1
     private var panLastX=0f
     private var panLastY=0f
+    private var multiPanIds=emptySet<Int>()
+    private var multiPanX=0f
+    private var multiPanY=0f
     private var movingViewport=false
     private val density get()=resources.displayMetrics.density.toDouble()
     private val scaleDetector=ScaleGestureDetector(context,object:ScaleGestureDetector.SimpleOnScaleGestureListener(){
         override fun onScale(detector:ScaleGestureDetector):Boolean{
             if(inputId!=-1&&inputKind==InkTool.STYLUS)return false
-            viewport=viewport.zoomAt(detector.scaleFactor.toDouble(),detector.focusX.toDouble(),detector.focusY.toDouble(),width.toDouble(),height.toDouble(),density)
+            val focusX=if(multiPanIds.isEmpty())detector.focusX else multiPanX
+            val focusY=if(multiPanIds.isEmpty())detector.focusY else multiPanY
+            viewport=viewport.zoomAt(detector.scaleFactor.toDouble(),focusX.toDouble(),focusY.toDouble(),width.toDouble(),height.toDouble(),density)
             movingViewport=true;onViewportGesture(true);transform();invalidate();return true
         }
     })
-    init{isFocusable=true;importantForAccessibility=IMPORTANT_FOR_ACCESSIBILITY_YES;contentDescription="手写画布，双指缩放。橡皮圆圈为实际屏幕擦除范围。"}
+    init{isFocusable=true;importantForAccessibility=IMPORTANT_FOR_ACCESSIBILITY_YES;contentDescription="手写画布，双指移动和缩放。橡皮圆圈为实际屏幕擦除范围。"}
     fun configure(board:Boolean,style:PaperStyle,saved:CanvasViewport?){
         paper=style
         if(preview&&configured&&world!=board){configured=false;restored=false;meshes.clear()}
@@ -287,13 +292,19 @@ class InkCanvasView(context:Context):View(context){
     override fun onTouchEvent(e:MotionEvent):Boolean{
         BackgroundBudget.lastInput=android.os.SystemClock.elapsedRealtime()
         if(preview)return false;if(!configured)return true
-        if(e.actionMasked==MotionEvent.ACTION_CANCEL||(e.flags and MotionEvent.FLAG_CANCELED)!=0){tapImage=null;cancelGesture();panPointer=-1;finishViewport();return true}
-        if(embeddedPage&&inputId==-1&&e.actionMasked!=MotionEvent.ACTION_POINTER_DOWN&&e.getToolType(0)==MotionEvent.TOOL_TYPE_FINGER)return false
-        if(inputId==-1||inputKind!=InkTool.STYLUS)scaleDetector.onTouchEvent(e)
+        if(e.actionMasked==MotionEvent.ACTION_CANCEL||(e.flags and MotionEvent.FLAG_CANCELED)!=0){tapImage=null;cancelGesture();panPointer=-1;multiPanIds=emptySet();finishViewport();return true}
+        if(embeddedPage&&!fingerWrites&&inputId==-1&&e.actionMasked!=MotionEvent.ACTION_POINTER_DOWN&&e.getToolType(0)==MotionEvent.TOOL_TYPE_FINGER)return false
+        // Embedded sheets share one parent viewport; scaling a child would break the seam.
+        if(!embeddedPage&&(inputId==-1||inputKind!=InkTool.STYLUS))scaleDetector.onTouchEvent(e)
         val downIndex=if(e.actionMasked==MotionEvent.ACTION_POINTER_DOWN)e.actionIndex else 0
         val stylusDown=e.actionMasked==MotionEvent.ACTION_POINTER_DOWN&&(e.getToolType(downIndex)==MotionEvent.TOOL_TYPE_STYLUS||e.getToolType(downIndex)==MotionEvent.TOOL_TYPE_ERASER)
-        if(e.actionMasked==MotionEvent.ACTION_POINTER_DOWN&&!stylusDown){tapImage=null;if(inputKind!=InkTool.STYLUS)cancelGesture();panPointer=-1;return true}
+        if(e.actionMasked==MotionEvent.ACTION_POINTER_DOWN&&!stylusDown){
+            tapImage=null
+            if(inputId==-1||inputKind!=InkTool.STYLUS){cancelGesture();if(!embeddedPage)trackMultiPan(e,false)}
+            panPointer=-1;return true
+        }
         if(e.actionMasked==MotionEvent.ACTION_DOWN||stylusDown){
+            multiPanIds=emptySet()
             if(stylusDown&&inputId!=-1&&inputKind==InkTool.STYLUS)return true
             if(inputId!=-1)cancelGesture();val type=e.getToolType(downIndex);inputKind=when(type){MotionEvent.TOOL_TYPE_STYLUS,MotionEvent.TOOL_TYPE_ERASER->InkTool.STYLUS;MotionEvent.TOOL_TYPE_MOUSE->InkTool.MOUSE;else->InkTool.TOUCH}
             if(inputKind==InkTool.TOUCH&&!fingerWrites){tapImage=if(allowInput&&!eraseMode)imageAt(e.x,e.y)else null;tapX=e.x;tapY=e.y;panPointer=e.getPointerId(0);panLastX=e.x;panLastY=e.y;return true};if(!allowInput||(documentId!=null&&!documentKnownAbsent&&(documentTile==null||documentError)))return true
@@ -311,10 +322,26 @@ class InkCanvasView(context:Context):View(context){
             hasTilt=inputKind==InkTool.STYLUS&&device?.getMotionRange(MotionEvent.AXIS_TILT,e.source)!=null;hasOrientation=inputKind==InkTool.STYLUS&&device?.getMotionRange(MotionEvent.AXIS_ORIENTATION,e.source)!=null
             onAxes(hasPressure,hasTilt);BackgroundBudget.input(this,true);onGesture(true);if(!gestureErase&&gesturePen!=InkPen.PENCIL)live.start(InkBrushes.brush(gesturePen,gestureColor,gestureWidth,hasPressure,gestureAppearance));append(e,downIndex,-1);if(seamWriting&&!gestureErase)onLiveSamples(raw);postInvalidateOnAnimation();return true
         }
-        if(inputId==-1){if(e.actionMasked==MotionEvent.ACTION_MOVE&&panPointer!=-1&&e.pointerCount==1&&!scaleDetector.isInProgress){if(hypot(e.x-tapX,e.y-tapY)>android.view.ViewConfiguration.get(context).scaledTouchSlop)tapImage=null;viewport=viewport.pan((e.x-panLastX).toDouble(),(e.y-panLastY).toDouble(),density);if(kotlin.math.abs(e.y-panLastY)>1f)onViewportGesture(false);panLastX=e.x;panLastY=e.y;movingViewport=true;transform();invalidate()};if(e.actionMasked==MotionEvent.ACTION_UP){val hit=tapImage;tapImage=null;panPointer=-1;finishViewport();if(hit!=null)onObjectTap(hit);performClick()};return true}
+        if(inputId==-1){
+            if(!embeddedPage&&e.pointerCount>=2){trackMultiPan(e,e.actionMasked==MotionEvent.ACTION_MOVE);return true}
+            if(e.actionMasked==MotionEvent.ACTION_MOVE&&panPointer!=-1&&e.pointerCount==1&&!scaleDetector.isInProgress){if(hypot(e.x-tapX,e.y-tapY)>android.view.ViewConfiguration.get(context).scaledTouchSlop)tapImage=null;viewport=viewport.pan((e.x-panLastX).toDouble(),(e.y-panLastY).toDouble(),density);if(kotlin.math.abs(e.y-panLastY)>1f)onViewportGesture(false);panLastX=e.x;panLastY=e.y;movingViewport=true;transform();invalidate()}
+            if(e.actionMasked==MotionEvent.ACTION_UP){val hit=tapImage;tapImage=null;panPointer=-1;multiPanIds=emptySet();finishViewport();if(hit!=null)onObjectTap(hit);performClick()};return true
+        }
         val index=e.findPointerIndex(inputId);if(index<0){cancelGesture();return true}
         when(e.actionMasked){MotionEvent.ACTION_MOVE->{if(scaleDetector.isInProgress&&inputKind!=InkTool.STYLUS){cancelGesture();return true};for(i in 0 until e.historySize)append(e,index,i);append(e,index,-1);if(seamWriting&&!gestureErase)onLiveSamples(raw);postInvalidateOnAnimation()};MotionEvent.ACTION_UP,MotionEvent.ACTION_POINTER_UP->{if(e.getPointerId(e.actionIndex)!=inputId)return true;append(e,index,-1);finishGesture();performClick()}}
         return true
+    }
+    private fun trackMultiPan(e:MotionEvent,move:Boolean){
+        val fingers=(0 until e.pointerCount).filter{e.getToolType(it)==MotionEvent.TOOL_TYPE_FINGER&&!(e.actionMasked==MotionEvent.ACTION_POINTER_UP&&it==e.actionIndex)}
+        if(fingers.size<2){multiPanIds=emptySet();return}
+        val ids=fingers.map{e.getPointerId(it)}.toSet()
+        val x=fingers.sumOf{e.getX(it).toDouble()}.toFloat()/fingers.size
+        val y=fingers.sumOf{e.getY(it).toDouble()}.toFloat()/fingers.size
+        if(move&&ids==multiPanIds){
+            viewport=viewport.pan((x-multiPanX).toDouble(),(y-multiPanY).toDouble(),density)
+            movingViewport=true;onViewportGesture(scaleDetector.isInProgress);transform();invalidate()
+        }
+        multiPanIds=ids;multiPanX=x;multiPanY=y
     }
     private fun append(e:MotionEvent,index:Int,history:Int){
         if(raw.size>=InkLimits.MAX_POINTS)return

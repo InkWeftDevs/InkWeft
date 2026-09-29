@@ -35,7 +35,7 @@ import org.inkweft.data.WorkspaceRow
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:NotebookPageRow,onCanNavigate:(Boolean)->Unit,onSearch:(Long)->Unit,externalEnabled:Boolean=true,onExcerpt:(SelectedInk)->Unit={},onMapExcerpt:(SelectedInk)->Unit={},onAssociate:(SelectedInk)->Unit={},focusRegion:CanvasBounds?=null,onFocusConsumed:()->Unit={},pageNavigation:@Composable ()->Unit={},continuousPages:List<NotebookPageRow>?=null,onContinuousPage:(String)->Unit={},leaveContinuous:()->Unit={},onTags:()->Unit={},onDocumentAction:(String)->Unit={},canAddPage:Boolean=false,excerptRequest:Int=0,fullScreen:Boolean=false,inlineDocumentBar:Boolean=false,externalToolbarMore:Boolean=false,toolbarRequest:Int=0,embedRequest:EmbedInsertion?=null,onEmbedConsumed:()->Unit={},onEditMap:(MapEmbed)->Unit={},onFullScreen:(Boolean)->Unit={}){
+internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:NotebookPageRow,onCanNavigate:(Boolean)->Unit,onSearch:(Long)->Unit,externalEnabled:Boolean=true,onExcerpt:(SelectedInk)->Unit={},onMapExcerpt:(SelectedInk)->Unit={},onAssociate:(SelectedInk)->Unit={},focusRegion:CanvasBounds?=null,onFocusConsumed:()->Unit={},pageNavigation:@Composable ()->Unit={},continuousPages:List<NotebookPageRow>?=null,onContinuousPage:(String)->Unit={},leaveContinuous:()->Unit={},onTags:()->Unit={},onDocumentAction:(String)->Unit={},canAddPage:Boolean=false,excerptRequest:Int=0,fullScreen:Boolean=false,inlineDocumentBar:Boolean=false,externalToolbarMore:Boolean=false,toolbarRequest:Int=0,embedRequest:EmbedInsertion?=null,onEmbedConsumed:()->Unit={},onEditMap:(MapEmbed)->Unit={},onFullScreen:(Boolean)->Unit={},onAppendPage:(()->Unit)?=null){
     val context=LocalContext.current;val app=context.applicationContext as InkWeftApplication
     val vm:InkViewModel=viewModel(key="ink-${page.id}",factory=InkViewModel.Factory(page.id,app.inkRepository))
     val ui by vm.ui.collectAsStateWithLifecycle()
@@ -66,7 +66,8 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
     var tool by rememberSaveable(note.base.id){mutableIntStateOf(0)}
     var readOnly by rememberSaveable(note.base.id){mutableStateOf(false)}
     var timerOpen by remember{mutableStateOf(false)}
-    var finger by rememberSaveable(note.base.id){mutableStateOf(false)}
+    val inputPrefs=remember(context){context.getSharedPreferences("inkweft-editor",0)}
+    var finger by rememberSaveable(note.base.id){mutableStateOf(inputPrefs.getBoolean("finger-writes",false))}
     val penStore=remember(context){PenWidthStore(context,"inkweft-pen-widths-book-"+note.base.id)}
     var widths by remember(note.base.id){mutableStateOf(penStore.read())}
     var kinds by remember(note.base.id){mutableStateOf(penStore.readKinds())}
@@ -322,8 +323,8 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
         if(notice!=null)Row(Modifier.fillMaxWidth().background(Color.White).padding(start=16.dp),verticalAlignment=Alignment.CenterVertically){Text(notice!!,Modifier.weight(1f),fontSize=12.sp);IconButton(onClick={notice=null},modifier=Modifier.describedAs("关闭提示")){Glyph("close")}}
         if(continuousPages!=null){
             Box(Modifier.fillMaxWidth().weight(1f)){ContinuousPages(continuousPages,page.id,
-                ContinuousTools(kinds[tool.coerceIn(0,2)],colors[tool.coerceIn(0,2)],widths[tool.coerceIn(0,2)],tool==3,eraser.whole,eraser.onlyHighlighter,eraser.diameterDp,externalEnabled&&!readOnly&&tool<4&&!objectsBlocked,beautyOptions,recipes[tool.coerceIn(0,2)],eraser.onlyTape),
-                gesture,onContinuousPage,{gesture=it;if(!it&&tool==3&&eraser.returnToPen)tool=lastWritingTool},{continuousBlocked=it},{notice=it},{id->onContinuousPage(id);leaveContinuous()},onScroll={showViewportHint(false)},onObjectTap={pageId,id->if(!readOnly){pendingObject=pageId to id;onContinuousPage(pageId);leaveContinuous()}})}
+                ContinuousTools(kinds[tool.coerceIn(0,2)],colors[tool.coerceIn(0,2)],widths[tool.coerceIn(0,2)],tool==3,eraser.whole,eraser.onlyHighlighter,eraser.diameterDp,externalEnabled&&!readOnly&&tool<4&&!objectsBlocked,beautyOptions,recipes[tool.coerceIn(0,2)],eraser.onlyTape,finger&&!readOnly),
+                gesture,onContinuousPage,{gesture=it;if(!it&&tool==3&&eraser.returnToPen)tool=lastWritingTool},{continuousBlocked=it},{notice=it},{id->onContinuousPage(id);leaveContinuous()},onAppendPage=onAppendPage.takeIf{!readOnly},onZoom={zoom=it;showViewportHint(true)},onScroll={showViewportHint(false)},onObjectTap={pageId,id->if(!readOnly){pendingObject=pageId to id;onContinuousPage(pageId);leaveContinuous()}})}
         }else if(row!=null){
             val initial=remember(page.id){workspace.cachedViewport(page.id)?:row.takeIf{it.zoom>0}?.let{runCatching{CanvasViewport(it.centerX,it.centerY,it.zoom)}.getOrNull()}}
             Box(Modifier.fillMaxWidth().weight(1f)){
@@ -430,7 +431,7 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
                 "favorites" -> IconToggleButton(favoritesOpen,{closeOverflow();showFavorites(it)},enabled=!editingBlocked,modifier=Modifier.testTag("favorite-pens-toggle").describedAs("收藏笔")){Glyph("favorite-pens")}
                 "beauty" -> IconButton(onClick={closeOverflow();beautySettings=true;penOpenRequest++},enabled=!editingBlocked,modifier=Modifier.testTag("quick-beauty").describedAs("实时字迹调整")){Glyph("beauty")}
                 "readonly" -> IconToggleButton(readOnly,{closeOverflow();readOnly=it;selected=null;selectedObject=null;tool=lastWritingTool},enabled=!busy,modifier=Modifier.testTag("quick-readonly").describedAs("只读模式")){Glyph("readonly")}
-                "finger" -> IconToggleButton(finger,{closeOverflow();if(continuousPages!=null)leaveContinuous();finger=it;tool=lastWritingTool},enabled=!editingBlocked&&!continuousBlocked,modifier=Modifier.testTag("quick-finger").describedAs("手指书写")){Glyph("finger")}
+                "finger" -> IconToggleButton(finger,{closeOverflow();finger=it;inputPrefs.edit().putBoolean("finger-writes",it).apply();tool=lastWritingTool},enabled=!editingBlocked&&!continuousBlocked,modifier=Modifier.size(48.dp).editorSelected(finger).testTag("quick-finger").describedAs(if(finger)"手写模式，单指书写，双指移动和缩放；点击切换电容笔"else"电容笔模式，单指移动，双指缩放；点击切换手写")){Glyph("finger",if(finger)Forest else TextInk)}
                 "add-page" -> IconButton(onClick={closeOverflow();onDocumentAction("add-page")},enabled=!editingBlocked&&canAddPage,modifier=Modifier.testTag("quick-add-page").describedAs("添加页面")){Glyph("add-page")}
                 "overview" -> IconButton(onClick={closeOverflow();onDocumentAction("overview")},enabled=!busy,modifier=Modifier.size(48.dp).testTag("quick-overview").describedAs("文档概览")){Glyph("overview",modifier=Modifier.size(24.dp))}
                 "settings" -> IconButton(onClick={closeOverflow();onDocumentAction("settings")},enabled=!busy,modifier=Modifier.size(48.dp).testTag("quick-settings").describedAs("其他设置")){Glyph("settings",modifier=Modifier.size(24.dp))}

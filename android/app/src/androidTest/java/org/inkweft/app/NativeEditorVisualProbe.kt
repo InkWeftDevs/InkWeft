@@ -71,7 +71,8 @@ class NativeEditorVisualProbe {
         fixture.put("authorHash",before);marker.writeText(fixture.toString())
         val note=runBlocking{app.repository.read(book)!!}
         compose.runOnIdle{ViewModelProvider(compose.activity)[NotebookViewModel::class.java].select(note)}
-        compose.singlePageEditor();compose.waitUntil(15000){app.navigationReady.value};compose.frameCanvasFixture()
+        compose.singlePageEditor();compose.waitUntil(15000){app.navigationReady.value}
+        if(args.getString("framing")=="width")compose.runOnIdle{view<InkCanvasView>().fitWidth()}else compose.frameCanvasFixture()
         if(compose.onAllNodesWithTag("study-close").fetchSemanticsNodes().isNotEmpty())tap("study-close")
         if(compose.onAllNodesWithTag("close-pen-settings").fetchSemanticsNodes().isNotEmpty())compose.closePenSettings()
         shot(stage,"01-writing")

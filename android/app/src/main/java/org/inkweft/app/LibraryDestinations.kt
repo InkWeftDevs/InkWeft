@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 package org.inkweft.app
 
+import org.inkweft.app.ui.designsystem.InkTheme
+
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -26,7 +28,7 @@ import org.inkweft.core.*
             Row(verticalAlignment=Alignment.CenterVertically){IconButton(onClick=dismiss,modifier=Modifier.describedAs("返回资料库")){Glyph("back")};Text(if(review)"手动回忆"else"学习资料",Modifier.weight(1f),fontSize=24.sp,fontWeight=FontWeight.SemiBold)}
             Text("选择笔记范围，继续整理共享卡片与知识。加入学习不会复制原笔记。",fontSize=14.sp,color=Quiet)
             if(notes.isEmpty())Text("先在资料库新建笔记，或在笔记中摘录一张摘要卡。")
-            LazyColumn(verticalArrangement=Arrangement.spacedBy(12.dp)){items(notes,key={it.id}){n->Card(onClick={choose(n)},border=BorderStroke(1.dp,Line),shape=RoundedCornerShape(16.dp),colors=CardDefaults.cardColors(containerColor=Color.White),modifier=Modifier.fillMaxWidth()){
+            LazyColumn(verticalArrangement=Arrangement.spacedBy(12.dp)){items(notes,key={it.id}){n->Card(onClick={choose(n)},shape=InkTheme.ToolShape,colors=CardDefaults.cardColors(containerColor=InkTheme.Navigation),modifier=Modifier.fillMaxWidth()){
                 Column(Modifier.padding(16.dp)){Text(n.title,fontSize=18.sp);Text(if(review)"查看问题与手工复习"else"摘要卡 · 大纲 · 思维导图",fontSize=12.sp,color=Quiet)}
             }}}
         }}
@@ -43,16 +45,16 @@ import org.inkweft.core.*
     var backupOpen by remember{mutableStateOf(false)}
     var resourcesOpen by remember{mutableStateOf(false)}
     Dialog(onDismissRequest=dismiss,properties=DialogProperties(usePlatformDefaultWidth=false)){
-        Surface(Modifier.padding(16.dp).widthIn(max=560.dp).fillMaxWidth().heightIn(max=680.dp).testTag("workspace-settings"),shape=RoundedCornerShape(24.dp),color=Side,border=BorderStroke(1.dp,Line)){
+        Surface(Modifier.padding(16.dp).widthIn(max=560.dp).fillMaxWidth().heightIn(max=680.dp).testTag("workspace-settings"),shape=InkTheme.FloatingShape,color=Side,shadowElevation=InkTheme.FloatingElevation){
             Column(Modifier.verticalScroll(rememberScrollState()).padding(20.dp),verticalArrangement=Arrangement.spacedBy(16.dp)){
-                Row(verticalAlignment=Alignment.CenterVertically){Text("设置与数据",Modifier.weight(1f),fontSize=24.sp,fontWeight=FontWeight.SemiBold);IconButton(onClick=dismiss,modifier=Modifier.describedAs("关闭设置")){Glyph("close")}}
+                PanelHeading("设置与数据","关闭设置",dismiss)
                 SettingsGroup("外观","note","浅色工作台","跟随系统字号，保留文档原有纸面与颜色。")
                 Text("书写",color=Quiet,style=MaterialTheme.typography.labelLarge,modifier=Modifier.padding(start=12.dp))
-                Surface(shape=RoundedCornerShape(14.dp),color=Color.White,border=BorderStroke(1.dp,Line)){Column(Modifier.padding(horizontal=16.dp)){
+                Surface(shape=InkTheme.ToolShape,color=InkTheme.Navigation){Column(Modifier.padding(horizontal=16.dp)){
                     Row(verticalAlignment=Alignment.CenterVertically){Text("显示收藏笔盒",Modifier.weight(1f));Switch(favorites,{favorites=it;prefs.edit().putBoolean("favorites-open",it).apply()},modifier=Modifier.testTag("settings-favorite-pens").describedAs("显示收藏笔盒"))}
                     HorizontalDivider(color=Line)
                     Row(verticalAlignment=Alignment.CenterVertically){Text("自动美化",Modifier.weight(1f));Switch(beauty.enabled,{beauty=beauty.copy(enabled=it);beautyStore.save(beauty)},modifier=Modifier.testTag("settings-auto-beauty").describedAs("自动美化"))}
-                    Text("停笔后美化新笔迹，字体在笔盒中选择。",color=Quiet,style=MaterialTheme.typography.bodySmall)
+                    Text("在笔盒的美化参数中选择整理笔迹或字体替换，识别结果可先校对。",color=Quiet,style=MaterialTheme.typography.bodySmall)
                     TextButton(onClick={prefs.edit().remove("case-x").remove("case-y").remove("case-collapsed").remove("favorites-x").remove("favorites-y").remove("favorites-collapsed").apply();reset=true},modifier=Modifier.testTag("settings-reset-case")){Text(if(reset)"笔盒位置已重置"else"重置笔盒位置")}
                 }}
                 SettingsGroup("数据","folder","本地保存","完整备份与恢复位于资料库底部。导出副本可保留笔迹、图片与文档。")
@@ -69,7 +71,7 @@ import org.inkweft.core.*
 @Composable private fun SettingsGroup(section:String,icon:String,title:String,detail:String){
     Column(verticalArrangement=Arrangement.spacedBy(8.dp)){
         Text(section,color=Quiet,style=MaterialTheme.typography.labelLarge,modifier=Modifier.padding(start=12.dp))
-        Surface(shape=RoundedCornerShape(14.dp),color=Color.White,border=BorderStroke(1.dp,Line)){
+        Surface(shape=InkTheme.ToolShape,color=InkTheme.Navigation){
             Row(Modifier.fillMaxWidth().padding(16.dp),horizontalArrangement=Arrangement.spacedBy(12.dp)){
                 Glyph(icon,Forest);Column(verticalArrangement=Arrangement.spacedBy(4.dp)){Text(title,fontWeight=FontWeight.Medium);Text(detail,color=Quiet,style=MaterialTheme.typography.bodySmall)}
             }

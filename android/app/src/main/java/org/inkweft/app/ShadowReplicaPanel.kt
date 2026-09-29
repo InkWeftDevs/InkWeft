@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 package org.inkweft.app
 
+import org.inkweft.app.ui.designsystem.InkTheme
+
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
@@ -60,7 +62,7 @@ import java.util.UUID
                     Text("选择一份完整版本，另一份保留在同步历史中。",style=MaterialTheme.typography.bodySmall)
                     conflict.choices.forEach{choice->
                         val operation=remember(conflict.frozen,choice.revision){UUID.randomUUID().toString()}
-                        OutlinedCard(Modifier.fillMaxWidth().padding(vertical=8.dp)){
+                        Card(Modifier.fillMaxWidth().padding(vertical=8.dp),shape=InkTheme.ToolShape,colors=CardDefaults.cardColors(containerColor=InkTheme.Navigation)){
                             Column(Modifier.padding(12.dp)){
                                 Text(choice.title);if(choice.detail.isNotEmpty())Text(choice.detail)
                                 TextButton({work{session.replica.resolve(conflict,choice.revision,operation)}},enabled=!busy,modifier=Modifier.testTag("shadow-choice-${if(choice.local)"local"else"other"}")){Text(if(choice.local)"保留本机版本"else"采用另一版本")}

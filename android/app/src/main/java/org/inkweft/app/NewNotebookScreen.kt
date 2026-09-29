@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 package org.inkweft.app
 
+import org.inkweft.app.ui.designsystem.InkTheme
+
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.*
@@ -68,13 +70,13 @@ internal fun NewNotebookScreen(title:String,onTitle:(String)->Unit,world:Boolean
                     }}
                     if(category=="我的模板"){
                         items(catalog.filter{it.title.contains(templateQuery,true)},key={it.ref.hash+it.ref.id}){entry->
-                            Surface(onClick={installedHash=entry.ref.hash;installedId=entry.ref.id},enabled=!busy,color=if(chosen==entry.ref)Leaf else Color.White,shape=RoundedCornerShape(12.dp),border=BorderStroke(1.dp,if(chosen==entry.ref)Forest else Line),modifier=Modifier.testTag("installed-paper-${entry.ref.id}")){Column(Modifier.padding(12.dp)){Box(Modifier.fillMaxWidth().aspectRatio(1000f/1414f)){InstalledPaperPreview(entry.ref)};Text(entry.title);Text("${entry.source} · v${entry.version}",style=MaterialTheme.typography.labelSmall)}}
+                            Surface(onClick={installedHash=entry.ref.hash;installedId=entry.ref.id},enabled=!busy,color=if(chosen==entry.ref)Leaf else Color.White,shape=InkTheme.ToolShape,border=if(chosen==entry.ref)BorderStroke(2.dp,Forest)else null,modifier=Modifier.testTag("installed-paper-${entry.ref.id}")){Column(Modifier.padding(12.dp)){Box(Modifier.fillMaxWidth().aspectRatio(1000f/1414f)){InstalledPaperPreview(entry.ref)};Text(entry.title);Text("${entry.source} · v${entry.version}",style=MaterialTheme.typography.labelSmall)}}
                         }
                         if(catalog.isEmpty())item(span={GridItemSpan(maxLineSpan)}){Text("尚无可用模板，请在设置中导入模板包。",color=Quiet)}
                     }
                     if(category!="我的模板"&&PaperStyle.entries.none{(!world||it.ordinal<4)&&PaperTemplates.matches(it,category,templateQuery)})item(span={GridItemSpan(maxLineSpan)}){Text("没有匹配的纸面，试试其他关键词或分类。",color=Quiet)}
                     items(PaperStyle.entries.filter{category!="我的模板"&&(!world||it.ordinal<4)&&PaperTemplates.matches(it,category,templateQuery)},key={it.name}){style->
-                        Surface(onClick={installedHash=null;installedId=null;onPaper(style)},enabled=!busy,color=if(chosen==null&&paper==style)Leaf else Color.White,shape=RoundedCornerShape(12.dp),border=BorderStroke(if(chosen==null&&paper==style)2.dp else 1.dp,if(chosen==null&&paper==style)Forest else Line),modifier=Modifier.testTag("template-${style.name.lowercase()}")){
+                        Surface(onClick={installedHash=null;installedId=null;onPaper(style)},enabled=!busy,color=if(chosen==null&&paper==style)Leaf else Color.White,shape=InkTheme.ToolShape,border=if(chosen==null&&paper==style)BorderStroke(2.dp,Forest)else null,modifier=Modifier.testTag("template-${style.name.lowercase()}")){
                             Column(Modifier.padding(12.dp),horizontalAlignment=Alignment.CenterHorizontally){Box(Modifier.fillMaxWidth().aspectRatio(1000f/1414f).border(1.dp,Line)){PaperThumbnail(world,style)};Text(PaperTemplates.title(style),Modifier.padding(top=12.dp),fontSize=14.sp)}
                         }
                     }

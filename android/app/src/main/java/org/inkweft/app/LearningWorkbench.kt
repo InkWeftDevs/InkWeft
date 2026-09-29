@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 package org.inkweft.app
 
+import org.inkweft.app.ui.designsystem.InkTheme
+
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -101,7 +103,7 @@ internal fun LearningDirectoryState.resolve(target:StableTargetRef):LearningEntr
             }
         }}
     }
-    if(pinPicker&&index!=null)Dialog({pinPicker=false}){Surface(shape=RoundedCornerShape(16.dp),color=Side){Column(Modifier.padding(16.dp).heightIn(max=520.dp)){
+    if(pinPicker&&index!=null)Dialog({pinPicker=false}){Surface(shape=InkTheme.FloatingShape,color=Side,shadowElevation=InkTheme.FloatingElevation){Column(Modifier.padding(16.dp).heightIn(max=520.dp)){
         Row(verticalAlignment=Alignment.CenterVertically){Text("固定到学习",Modifier.weight(1f),style=MaterialTheme.typography.titleMedium);IconButton(onClick={pinPicker=false},modifier=Modifier.describedAs("关闭入口选择")){Glyph("close")}}
         Text("独立于收藏与资料库置顶",color=Quiet,style=MaterialTheme.typography.bodySmall)
         LazyColumn{items((index.notes.filter{it.trashedAt==null}.map{LearningEntry(StableTargetRef(LearningTargetKind.NOTE,it.id),it.title,"笔记")}+index.maps+index.collections).filter{it.available}){e->
@@ -112,7 +114,7 @@ internal fun LearningDirectoryState.resolve(target:StableTargetRef):LearningEntr
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable private fun WidgetHost(instance:WidgetInstance,definition:WidgetDefinition?,editing:Boolean,update:(WidgetInstance)->Unit,move:(Int)->Unit,content:@Composable ColumnScope.()->Unit){
-    Surface(shape=RoundedCornerShape(16.dp),color=Side,border=BorderStroke(1.dp,Line),modifier=Modifier.fillMaxWidth().testTag("widget-${definition?.key?:instance.id}")){
+    Surface(shape=InkTheme.ToolShape,color=InkTheme.Navigation,modifier=Modifier.fillMaxWidth().testTag("widget-${definition?.key?:instance.id}")){
         Column(Modifier.padding(16.dp),verticalArrangement=Arrangement.spacedBy(4.dp)){
             Row(verticalAlignment=Alignment.CenterVertically){Text(definition?.title?:instance.definition,Modifier.weight(1f),fontWeight=FontWeight.SemiBold);if(editing)Switch(instance.visible,{update(instance.copy(visible=it))})}
             if(editing){FlowRow(horizontalArrangement=Arrangement.spacedBy(4.dp)){

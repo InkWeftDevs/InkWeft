@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 package org.inkweft.app
 
+import org.inkweft.app.ui.designsystem.InkTheme
+
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -77,7 +79,7 @@ fun LibraryScreen(ui:NotebookUi,workspace:WorkspaceViewModel,open:(Note)->Unit,c
         (type=="all"||(type=="board")==r.world)&&(query.isBlank()||n.title.contains(query,true)||n.text.contains(query,true)||r.tags.contains(query,true)||summaries.any{it.notebookId==n.id&&it.trashedAt==null&&(it.title.contains(query,true)||it.body.contains(query,true))}||searchRows.any{it.notebookId==n.id&&it.text.contains(query,true)})}.let{ShelfOrder.arrange(it,{n->row(n).pinned},{n->n.title},byTitle)}
     val title=when{filter=="favorite"->"已收藏";filter=="trash"->"回收站";filter=="unfiled"->"未分类";filter.startsWith("folder:")->filter.removePrefix("folder:");filter.startsWith("tag:")->"标签 · "+filter.removePrefix("tag:");else->"全部笔记"}
     val nav:@Composable (Boolean)->Unit={search->
-        Column(Modifier.fillMaxHeight().width(224.dp).background(Color.White).padding(horizontal=12.dp)){
+        Column(Modifier.fillMaxHeight().width(224.dp).background(InkTheme.Navigation).padding(horizontal=12.dp)){
             Column(Modifier.weight(1f).verticalScroll(rememberScrollState())){
             Row(Modifier.fillMaxWidth().height(72.dp).padding(horizontal=12.dp),verticalAlignment=Alignment.CenterVertically){
                 Surface(color=Forest,shape=RoundedCornerShape(10.dp)){Box(Modifier.size(34.dp),contentAlignment=Alignment.Center){Text("墨",color=Color.White,fontWeight=FontWeight.Bold,fontSize=18.sp)}}

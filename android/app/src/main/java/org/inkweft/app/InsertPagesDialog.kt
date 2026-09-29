@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 package org.inkweft.app
 
+import org.inkweft.app.ui.designsystem.InkTheme
+
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
@@ -41,7 +43,7 @@ internal fun InsertPagesDialog(
     val selectedStyle = installed?.let{ref->catalog.find{it.ref==ref}?.resource?.paper} ?: if (inherited) PaperStyle.entries.getOrElse(anchor?.paper ?: 1) { PaperStyle.RULED } else style
     val valid = index >= 0 && pages.size + recycledCount + count <= InsertPages.MAX_PAGES && pages.none { it.world }
     AlertDialog(onDismissRequest = onDismiss, modifier = Modifier.testTag("insert-pages-dialog"),
-        title = { Text("添加页面") },
+        shape=InkTheme.FloatingShape, title = { Text("添加页面",style=InkTheme.PanelTitle) },
         text = {
             Column(Modifier.verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 Text("插入位置", fontSize = 14.sp, color = TextInk)
@@ -105,5 +107,5 @@ internal fun InsertPagesDialog(
             enabled=valid,modifier=Modifier.testTag("confirm-insert-pages")){Text("插入 $count 页")}},
         dismissButton={TextButton(onClick=onDismiss){Text("取消")}})
 }
-private fun Modifier.clipForPageSelection(selected:Boolean)=this.border(if(selected)2.dp else 1.dp,if(selected)Forest else Line,RoundedCornerShape(7.dp)).background(Color.White,RoundedCornerShape(7.dp))
+private fun Modifier.clipForPageSelection(selected:Boolean)=this.border(if(selected)2.dp else 1.dp,if(selected)Forest else Line,InkTheme.ToolShape).background(if(selected)Leaf else Color.White,InkTheme.ToolShape)
 internal fun paperLabel(paper:PaperStyle)=PaperTemplates.title(paper)

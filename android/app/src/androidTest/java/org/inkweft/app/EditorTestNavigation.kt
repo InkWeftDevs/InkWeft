@@ -107,9 +107,9 @@ internal fun ComposeTestRule.revealAction(tag:String){
     when {
         (tag.startsWith("study-card-")||tag.startsWith("outline-"))&&onAllNodesWithTag("study-list").fetchSemanticsNodes().isNotEmpty()->onNodeWithTag("study-list").performScrollToNode(hasTestTag(tag))
         tag=="toolbar-customize"->onNodeWithTag("toolbar-more").performClick()
-        tag.startsWith("study-tab-")||tag in setOf("study-new-map","study-insert-map","study-save-template","study-add-card","study-expand-all","study-focus-all","study-collapse-all","study-arrange")->{
+        tag.startsWith("study-tab-")||tag.startsWith("study-fit-")||tag in setOf("study-new-map","study-insert-map","study-save-template","study-add-card","study-expand-all","study-focus-all","study-collapse-all","study-arrange")->{
             if(onAllNodesWithTag("map-menu").fetchSemanticsNodes().isEmpty())onNodeWithTag("study-management").performClick()
-            val group=if(tag.startsWith("study-tab-"))0 else if(tag in setOf("study-insert-map","study-save-template"))2 else 1
+            val group=if(tag.startsWith("study-tab-")||tag.startsWith("study-fit-"))0 else if(tag in setOf("study-insert-map","study-save-template"))2 else 1
             onNodeWithTag("map-menu-group-$group").performClick()
         }
         tag.startsWith("width-preset-")||tag.startsWith("pencil-hardness-")->onNodeWithTag("pen-advanced").performScrollTo().performClick()

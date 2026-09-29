@@ -205,6 +205,8 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
         MapMenu(management,{management=false},managementGroup,{managementGroup=it}){
             if(managementGroup==0)MapMenuSection("视图"){
                 listOf("摘要卡","大纲","思维导图").forEachIndexed{i,label->DropdownMenuItem(text={Text(label)},onClick={vm.selectTab(i);management=false},modifier=Modifier.testTag("study-tab-$i"))}
+                DropdownMenuItem(text={Text("查看全图")},onClick={map?.fitOverview();management=false},enabled=tab==2,modifier=Modifier.testTag("study-fit-overview"))
+                DropdownMenuItem(text={Text("可读大小")},onClick={map?.fit();management=false},enabled=tab==2,modifier=Modifier.testTag("study-fit-readable"))
                 DropdownMenuItem(text={Text("查找导图内容")},onClick={contentSearch=true;management=false},modifier=Modifier.testTag("study-search-content"))
             }
             if(managementGroup==1)MapMenuSection("整理"){
@@ -323,11 +325,13 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
                     val w=with(density){maxWidth.toPx()};val h=with(density){maxHeight.toPx()}
                     val panelW=with(density){(if(titleDraft!=null)minOf(320.dp,maxWidth-16.dp)else 192.dp).toPx()}
                     val panelH=overlaySize.height.toFloat()
-                    val editorMaxHeight=(maxHeight-56.dp).coerceAtLeast(48.dp)
-                    val nearby=if(titleDraft==null)mapActionPosition(bounds,shown.mapNotNull{map?.nodeBounds(it.id)},w,h-56*density.density,panelW,panelH,8*density.density)else null
+                    val bottomSpace=if(vm.searchSession!=null||vm.captureUndo[mapKey]!=null)56.dp else 8.dp
+                    val reserved=with(density){bottomSpace.toPx()}
+                    val editorMaxHeight=(maxHeight-bottomSpace).coerceAtLeast(48.dp)
+                    val nearby=if(titleDraft==null)mapActionPosition(bounds,shown.mapNotNull{map?.nodeBounds(it.id)},w,h-reserved,panelW,panelH,8*density.density)else null
                     val px=nearby?.x?:(bounds.left).coerceIn(8*density.density,(w-panelW-8*density.density).coerceAtLeast(8*density.density))
                     val below=bounds.bottom+8*density.density
-                    val py=nearby?.y?:(if(below+panelH<=h-56*density.density)below else bounds.top-panelH-8*density.density).coerceIn(0f,(h-panelH-56*density.density).coerceAtLeast(0f))
+                    val py=nearby?.y?:(if(below+panelH<=h-reserved)below else bounds.top-panelH-8*density.density).coerceIn(0f,(h-panelH-reserved).coerceAtLeast(0f))
                     SideEffect{actionBounds=android.graphics.RectF(px,py,px+panelW,py+panelH)}
                     Box(Modifier.offset{IntOffset(px.roundToInt(),py.roundToInt())}.onSizeChanged{overlaySize=it}){
                         val draft=titleDraft
@@ -355,7 +359,7 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
                         }
                     }
                 }
-                if(compactWindow)Surface(Modifier.align(Alignment.BottomStart).padding(8.dp).alpha(if(controlsAwake||vm.searchSession!=null)1f else .65f),shape=InkTheme.ToolShape,color=InkTheme.Surface,shadowElevation=InkTheme.ToolElevation){
+                if(compactWindow&&(vm.searchSession!=null||vm.captureUndo[mapKey]!=null))Surface(Modifier.align(Alignment.BottomStart).padding(8.dp).alpha(if(controlsAwake||vm.searchSession!=null)1f else .65f),shape=InkTheme.ToolShape,color=InkTheme.Surface,shadowElevation=InkTheme.ToolElevation){
                     Row(verticalAlignment=Alignment.CenterVertically){
                         val search=vm.searchSession
                         if(search!=null){
@@ -365,8 +369,6 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
                             Text(if(index<0)"结果已更新"else"${index+1}/${hits.size}",style=MaterialTheme.typography.labelSmall)
                             IconButton({if(hits.isNotEmpty())vm.locate(hits[(index+1)%hits.size])},enabled=hits.isNotEmpty(),modifier=Modifier.size(48.dp).testTag("map-search-next").describedAs("下一个结果")){Text("›")}
                         }else{
-                        IconButton({controlPulse++;map?.fitOverview()},modifier=Modifier.size(48.dp).testTag("study-fit-overview").describedAs("查看全图")){Glyph("fullscreen")}
-                        IconButton({controlPulse++;map?.fit()},modifier=Modifier.size(48.dp).testTag("study-fit-readable").describedAs("可读大小")){Glyph("search")}
                         if(vm.captureUndo[mapKey]!=null)IconButton(vm::undoCapture,enabled=editable,modifier=Modifier.size(48.dp).testTag("study-undo-capture").describedAs("撤销此次摘录添加")){Glyph("undo")}
                         }
                     }

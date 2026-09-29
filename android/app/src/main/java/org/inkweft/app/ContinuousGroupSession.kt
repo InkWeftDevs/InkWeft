@@ -12,6 +12,11 @@ internal class ContinuousGroupSession(private val book:String,private val repo:I
     private data class Capture(val prepared:Deferred<InkGroupPrefix>,var latest:InkStroke,var job:Job?=null,var cancelled:Boolean=false)
     private val captures=mutableMapOf<String,Capture>()
     private val active=MutableStateFlow(false);val busy=active.asStateFlow()
+    private var operationActive=false
+    private val cancellations=MutableStateFlow(0)
+    private fun refreshBusy(){active.value=operationActive||cancellations.value>0}
+    private fun operation(value:Boolean){operationActive=value;refreshBusy()}
+    internal suspend fun awaitCancellationSettled(){cancellations.first{it==0}}
     private val error=MutableStateFlow<String?>(null);val problem=error.asStateFlow()
     private var frozenPages=emptyList<String>();private var origin=0;private var opened=false
     private var tail:Job?=null
@@ -35,8 +40,14 @@ internal class ContinuousGroupSession(private val book:String,private val repo:I
         }
     }
     fun cancel(id:String){
-        captures[id]?.let{it.cancelled=true;it.job?.cancel()}
-        viewModelScope.launch{try{withContext(Dispatchers.IO){repo.cancelGroup(id)};captures.remove(id)}catch(_:Exception){error.value="取消结果待核对，恢复材料仍保留"}}
+        val capture=captures[id]?:return
+        capture.cancelled=true;capture.job?.cancel()
+        cancellations.value++;refreshBusy()
+        viewModelScope.launch{
+            try{withContext(Dispatchers.IO){repo.cancelGroup(id)};captures.remove(id)}
+            catch(_:Exception){error.value="取消结果待核对，恢复材料仍保留"}
+            finally{cancellations.value--;refreshBusy()}
+        }
     }
     private suspend fun apply(group:InkGroupPrefix,finished:InkStroke?=null){
         writer.awaitSettled()
@@ -53,31 +64,36 @@ internal class ContinuousGroupSession(private val book:String,private val repo:I
         else->"跨页保存结果待核对，原页面与恢复材料保留。"
     }
     fun finish(raw:InkStroke,finished:InkStroke){
-        val c=capture(raw);c.latest=raw;active.value=true
+        val c=capture(raw);c.latest=raw;operation(true)
         val previous=tail
         tail=viewModelScope.launch{
             try{previous?.join();c.job?.join();if(c.cancelled)return@launch
                 val base=c.prepared.await();apply(base.copy(stroke=raw),finished);captures.remove(raw.id)
             }catch(c:CancellationException){throw c}catch(t:Exception){error.value=describe(t);notice(error.value!!)}
-            finally{if(tail===currentCoroutineContext()[Job])active.value=false}
+            finally{if(tail===currentCoroutineContext()[Job])operation(false)}
         }
     }
     fun open(){if(opened)return;opened=true;retry()}
     fun retry(){
-        if(active.value)return;active.value=true;error.value=null
+        if(active.value)return;operation(true);error.value=null
         tail=viewModelScope.launch{
-            try{val pending=withContext(Dispatchers.IO){repo.pendingGroups(book)}
+            try{
+                // A failed cancellation must be retried before an OPEN prefix can be recovered.
+                for(id in captures.filterValues{it.cancelled}.keys.toList()){
+                    withContext(Dispatchers.IO){repo.cancelGroup(id)};captures.remove(id)
+                }
+                val pending=withContext(Dispatchers.IO){repo.pendingGroups(book)}
                 for(group in pending){apply(group);notice("已恢复跨页整笔的已确认部分，可一次撤销。")}
             }catch(c:CancellationException){throw c}catch(t:Exception){error.value=describe(t);notice(error.value!!)}
-            finally{active.value=false}
+            finally{operation(false)}
         }
     }
     fun discard(){
-        if(active.value)return;active.value=true
+        if(active.value)return;operation(true)
         viewModelScope.launch{try{
             withContext(Dispatchers.IO){for(group in repo.pendingGroups(book)){if(!repo.cancelGroup(group.stroke.id))repo.acknowledgeGroup(group.stroke.id)}}
             error.value=null;captures.clear()
-        }catch(t:Exception){error.value=describe(t)}finally{active.value=false}}
+        }catch(t:Exception){error.value=describe(t)}finally{operation(false)}}
     }
     class Factory(private val book:String,private val repo:InkRepository):ViewModelProvider.Factory{
         override fun<T:ViewModel>create(modelClass:Class<T>):T{require(modelClass.isAssignableFrom(ContinuousGroupSession::class.java));@Suppress("UNCHECKED_CAST")return ContinuousGroupSession(book,repo) as T}

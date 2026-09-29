@@ -15,7 +15,8 @@ object InkTheme {
     val Surface=Color.White;val Navigation=Color(0xfff8f9fb);val Workspace=Color(0xfff5f6f8)
     val Text=Color(0xff20242d);val Secondary=Color(0xff626b79);val Accent=Color(0xff176bb5)
     val Selected=Color(0xffe9f2fb);val Divider=Color(0xffe0e4ec);val ControlBorder=Color(0xff7b8595);val Danger=Color(0xffb42318)
-    // Editor pilot roles; other screens keep their existing surfaces until visual review.
+    val TabBar=Color(0xffeaf1f9)
+    // Shared native chrome; document colors and authored content stay independent.
     val FloatingShape=RoundedCornerShape(18.dp)
     val ToolShape=RoundedCornerShape(12.dp)
     val FloatingElevation=6.dp

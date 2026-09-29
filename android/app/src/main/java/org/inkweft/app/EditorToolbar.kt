@@ -18,9 +18,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 internal object EditorToolOrder {
-    val labels=linkedMapOf("undo" to "撤销","redo" to "重做","pen" to "笔","map" to "导图","eraser" to "橡皮","lasso" to "套索","area" to "圈选擦除","image" to "图片","camera" to "拍照","text" to "文本框","excerpt" to "摘录","tag" to "标签","shape" to "图形","sticker" to "贴纸","objects" to "对象选择","beauty" to "实时字迹调整","readonly" to "只读模式","finger" to "手指书写","add-page" to "添加页面","fullscreen" to "全屏专注","export" to "导出文档","timer" to "计时器")
-    val fixed=emptySet<String>()
-    val primary=setOf("undo","redo","pen","eraser","lasso","excerpt","map")
+    val labels=linkedMapOf("undo" to "撤销","redo" to "重做","pen" to "笔","map" to "导图","eraser" to "橡皮","lasso" to "套索","area" to "圈选擦除","image" to "图片","camera" to "拍照","text" to "文本框","excerpt" to "摘录","tag" to "标签","shape" to "图形","sticker" to "贴纸","objects" to "对象选择","beauty" to "实时字迹调整","readonly" to "只读模式","finger" to "手写／电容笔","add-page" to "添加页面","fullscreen" to "全屏专注","export" to "导出文档","timer" to "计时器")
+    val fixed=setOf("finger")
+    val primary=setOf("undo","redo","pen","eraser","lasso","excerpt","map","finger")
     val defaultHidden=setOf("shape","sticker","objects","camera","tag","area","beauty","readonly","finger","add-page","fullscreen","export","timer")
     fun icon(id:String)=when(id){"map"->"mindmap";"lasso"->"select";"area"->"area-erase";"favorites"->"favorite-pens";else->id}
     fun read(context:Context):List<String>{val raw=context.getSharedPreferences("inkweft-editor",0).getString("toolbar-order-v32","").orEmpty().split(',').filter{it in labels}.distinct();return raw+labels.keys.filterNot{it in raw}}

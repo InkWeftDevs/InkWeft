@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 package org.inkweft.app
 
+import org.inkweft.app.ui.designsystem.InkTheme
+
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
@@ -27,10 +29,10 @@ import kotlinx.coroutines.*
     LaunchedEffect(Unit){run{}}
     val pick=rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()){uri->if(uri!=null)run{pending=store.inspect(checkNotNull(app.contentResolver.openInputStream(uri)));message="请核对来源与模板，再安装。"}}
     Dialog(dismiss,properties=DialogProperties(usePlatformDefaultWidth=false)){
-        Surface(Modifier.padding(16.dp).widthIn(max=720.dp).fillMaxWidth().heightIn(max=760.dp).testTag("resource-pack-settings"),shape=androidx.compose.foundation.shape.RoundedCornerShape(20.dp),color=Side){Column(Modifier.padding(16.dp)){
-            Row{IconButton(onClick=dismiss,modifier=Modifier.describedAs("返回设置")){Glyph("back")};Text("本地模板包",style=MaterialTheme.typography.titleLarge)}
+        Surface(Modifier.padding(16.dp).widthIn(max=720.dp).fillMaxWidth().heightIn(max=760.dp).testTag("resource-pack-settings"),shape=InkTheme.FloatingShape,color=Side,shadowElevation=InkTheme.FloatingElevation){Column(Modifier.padding(16.dp)){
+            PanelHeading("本地模板包","返回设置",dismiss,back=true)
             OutlinedButton(onClick={pick.launch(arrayOf("application/zip","application/octet-stream"))},enabled=!busy){Text("选择模板包")}
-            Text(message,color=Quiet)
+            if(message.isNotBlank())Text(message,color=Quiet)
             if(busy)LinearProgressIndicator(Modifier.fillMaxWidth())
             LazyColumn(verticalArrangement=Arrangement.spacedBy(12.dp),modifier=Modifier.weight(1f)){
                 pending?.let{pack->item{

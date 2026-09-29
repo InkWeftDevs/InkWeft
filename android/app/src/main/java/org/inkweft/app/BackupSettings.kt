@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 package org.inkweft.app
 
+import org.inkweft.app.ui.designsystem.InkTheme
+
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
@@ -43,8 +45,8 @@ import kotlinx.coroutines.*
     var removing by remember{mutableStateOf<BackupVersion?>(null)}
     LaunchedEffect(ui.auth){vm.connection()?.let{url=it.url;username=it.name};if(ui.auth==BackupAuth.REAUTHENTICATE)screen="connection"}
     Dialog(dismiss,properties=DialogProperties(usePlatformDefaultWidth=false)){
-        Surface(Modifier.padding(16.dp).widthIn(max=600.dp).fillMaxWidth().heightIn(max=760.dp).testTag("encrypted-backup-settings"),shape=androidx.compose.foundation.shape.RoundedCornerShape(20.dp),color=Side){Column(Modifier.padding(16.dp).verticalScroll(rememberScrollState()),verticalArrangement=Arrangement.spacedBy(12.dp)){
-            Row(verticalAlignment=Alignment.CenterVertically){IconButton(onClick={if(screen=="main")dismiss()else screen="main"},modifier=Modifier.describedAs("返回设置")){Glyph("back")};Text(when(screen){"connection"->"连接服务器";"key"->"恢复密钥";"versions"->"备份版本";"advanced"->"高级详情";else->"加密备份与恢复"},style=MaterialTheme.typography.titleLarge)}
+        Surface(Modifier.padding(16.dp).widthIn(max=600.dp).fillMaxWidth().heightIn(max=760.dp).testTag("encrypted-backup-settings"),shape=InkTheme.FloatingShape,color=Side,shadowElevation=InkTheme.FloatingElevation){Column(Modifier.padding(16.dp).verticalScroll(rememberScrollState()),verticalArrangement=Arrangement.spacedBy(12.dp)){
+            PanelHeading(when(screen){"connection"->"连接服务器";"key"->"恢复密钥";"versions"->"备份版本";"advanced"->"高级详情";else->"加密备份与恢复"},"返回设置",{if(screen=="main")dismiss()else screen="main"},back=true)
             if(ui.busy)LinearProgressIndicator(Modifier.fillMaxWidth())
             Text(ui.message,modifier=Modifier.testTag("backup-task-status"))
             message?.let{Text(it,color=Quiet)}

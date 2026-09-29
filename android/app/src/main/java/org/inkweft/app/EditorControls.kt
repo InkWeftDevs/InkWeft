@@ -116,3 +116,12 @@ internal fun Modifier.editorSelected(selected:Boolean)=drawBehind {
         }
     }
 }
+
+/** Shared native panel heading; body and dialog actions keep their own workflow. */
+@Composable internal fun PanelHeading(title:String,actionLabel:String,action:()->Unit,back:Boolean=false){
+    Row(Modifier.fillMaxWidth().heightIn(min=48.dp),verticalAlignment=Alignment.CenterVertically){
+        if(back)IconButton(action,modifier=Modifier.size(48.dp).describedAs(actionLabel)){Glyph("back")}
+        Text(title,Modifier.weight(1f),style=InkTheme.PanelTitle)
+        if(!back)IconButton(action,modifier=Modifier.size(48.dp).describedAs(actionLabel)){Glyph("close")}
+    }
+}

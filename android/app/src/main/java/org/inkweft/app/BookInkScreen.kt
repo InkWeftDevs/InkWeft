@@ -162,6 +162,7 @@ fun InkScreen(note:NoteDraft,workspace:WorkspaceViewModel=viewModel(),onBack:()-
             focusRegion=sourceFocus?.takeIf{it.first==page.id}?.second,onFocusConsumed={sourceFocus=null},pageNavigation={
                 if(!page.world)Text("${page.position+1} / ${ui.pages.size}",fontSize=12.sp,modifier=Modifier.testTag("page-counter"))
             },continuousPages=if(continuous&&!page.world)ui.pages else null,onContinuousPage={if(it!=ui.selectedId)vm.select(it)},leaveContinuous={readingMode(false)},onTags={classify=true},fullScreen=fullScreen,inlineDocumentBar=inlineHeader&&!fullScreen,externalToolbarMore=compactHeader,toolbarRequest=toolbarRequest,onFullScreen=onFullScreen,canAddPage=!page.world&&ui.pages.size+ui.recycled.size<500,
+            onAppendPage=if(pageActionsReady&&!page.world&&ui.pages.size+ui.recycled.size<InsertPages.MAX_PAGES)({vm.appendBlankPage(ui.pages.last().id)})else null,
             excerptRequest=excerptRequest,onDocumentAction={action->when(action){"map"->{studyOpen=true;mapMinimized=false;directory=false;documentSettings=false;excerptsOpen=false};"excerpts"->{excerptsOpen=true;directory=false;documentSettings=false;mapMinimized=true};"overview"->{excerptsOpen=false;mapMinimized=true;directory=!directory;documentSettings=false};"settings"->{excerptsOpen=false;mapMinimized=true;documentSettings=!documentSettings;directory=false};"add-page"->insertion=page.id to PageInsertLocation.AFTER;"export"->confirmBook=true}})}
     }
     if(!fullScreen&&inlineHeader)Box(Modifier.align(Alignment.TopCenter)){documentBar()}
