@@ -39,6 +39,8 @@ class LearningWorkbenchTest {
     }
     @Test fun directoryUsesStableIdentitiesAndManualInboxState()=runBlocking {
         val n=app.workspaceRepository.create("逻辑与概率",false,PaperStyle.DOTS)
+        assertTrue(app.learningDirectory.observe().first().maps.none{it.target.notebookId==n.id})
+        assertTrue(app.learningDirectory.observe().first().resolve(StableTargetRef(LearningTargetKind.MAP,n.id)).available)
         val map=id();val card=id();val node=id();val property=id()
         app.knowledge.submit(KnowledgeCommand(id(),n.id,map,0,KnowledgeData.MapDefinition("条件概率")))
         app.study.submit(StudyCommand(id(),n.id,StudyAction.CREATE,cardId=card,nodeId=node,title="P(A | B)",body="先缩小样本空间",mapId=map))

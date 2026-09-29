@@ -31,7 +31,7 @@ internal fun LearningDirectoryState.resolve(target:StableTargetRef):LearningEntr
     val e=when(target.kind){
         LearningTargetKind.NOTE->n?.let{LearningEntry(target,it.title,"笔记",it.trashedAt==null)}
         LearningTargetKind.PAGE->pages.find{it.id==target.id&&it.notebookId==target.notebookId}?.let{LearningEntry(target,n?.title.orEmpty(),"第 ${it.position+1} 页 · 上次阅读位置",it.trashedAt==null&&n?.trashedAt==null)}
-        LearningTargetKind.MAP->maps.find{it.target==target}
+        LearningTargetKind.MAP->maps.find{it.target==target}?:n?.takeIf{target.id==null}?.let{LearningEntry(target,"主图",it.title,it.trashedAt==null)}
         LearningTargetKind.BRANCH->branches.find{it.target==target}
         LearningTargetKind.COLLECTION->collections.find{it.target==target}
         LearningTargetKind.CARD->cards.find{it.id==target.id&&it.notebookId==target.notebookId}?.let{LearningEntry(target,it.title,n?.title.orEmpty(),it.trashedAt==null&&n?.trashedAt==null)}

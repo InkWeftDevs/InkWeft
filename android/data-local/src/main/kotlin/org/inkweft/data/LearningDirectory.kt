@@ -18,7 +18,8 @@ class LearningDirectory(private val db:NoteDatabase){
         db.study().observeLearningCards().distinctUntilChanged(),db.knowledge().observe(),db.pages().observeLearningPages().distinctUntilChanged(),db.study().observeLearningNodes().distinctUntilChanged()) { notes,cards,records,pages,nodes ->
         val books=notes.associateBy{it.id}
         val parsed=records.filterNot{it.removed}.mapNotNull{r->runCatching{r to r.data()}.getOrNull()}
-        val maps=notes.map{n->LearningEntry(StableTargetRef(LearningTargetKind.MAP,n.id),"主图",n.title,n.trashedAt==null)}+
+        val usedMainBooks=nodes.filterNot{it.removed}.map{it.notebookId}.toSet()
+        val maps=notes.filter{it.id in usedMainBooks}.map{n->LearningEntry(StableTargetRef(LearningTargetKind.MAP,n.id),"主图",n.title,n.trashedAt==null)}+
             parsed.mapNotNull{(r,d)->(d as? KnowledgeData.MapDefinition)?.let{LearningEntry(StableTargetRef(LearningTargetKind.MAP,r.notebookId,r.id),it.title,books[r.notebookId]?.title.orEmpty(),books[r.notebookId]?.trashedAt==null)}}
         val collections=parsed.mapNotNull{(r,d)->(d as? KnowledgeData.Collection)?.let{LearningEntry(StableTargetRef(LearningTargetKind.COLLECTION,r.notebookId,r.id),it.title,books[r.notebookId]?.title.orEmpty(),books[r.notebookId]?.trashedAt==null)}}
         val properties=parsed.mapNotNull{it.second as? KnowledgeData.Properties}.associateBy{it.cardId}
