@@ -40,6 +40,8 @@ internal object ResourcePackCodec {
             require(png.size>=24&&png.take(8)==listOf(137,80,78,71,13,10,26,10).map{it.toByte()}){"PACK_PNG"}
             val bounds=BitmapFactory.Options().apply{inJustDecodeBounds=true};BitmapFactory.decodeByteArray(png,0,png.size,bounds)
             require(bounds.outWidth in 1..2048&&bounds.outHeight in 1..2048&&bounds.outWidth.toLong()*bounds.outHeight*4<=16*1024*1024){"PACK_PIXELS"}
+            val decoded=checkNotNull(BitmapFactory.decodeByteArray(png,0,png.size,BitmapFactory.Options().apply{inPreferredConfig=Bitmap.Config.ARGB_8888;inScaled=false})){"PACK_PNG_DECODE"}
+            decoded.recycle()
         }
         val j=JSONObject(requireNotNull(files["manifest.json"]).toString(Charsets.UTF_8))
         keys(j,setOf("format","id","title","author","version","resources","files"))
