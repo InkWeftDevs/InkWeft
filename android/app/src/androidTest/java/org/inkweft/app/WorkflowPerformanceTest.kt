@@ -54,7 +54,7 @@ class WorkflowPerformanceTest {
   if(condition=="install"){
    val manifest="""{"format":"inkweft.resource-pack.v1","id":"example.perf-pack","title":"固定性能模板","author":"InkWeft","version":1,"resources":[{"id":"paper","type":"paper","title":"方格记录","paper":"GRID"}]}"""
    val bytes=java.io.ByteArrayOutputStream().also{out->java.util.zip.ZipOutputStream(out).use{z->z.putNextEntry(java.util.zip.ZipEntry("manifest.json"));z.write(manifest.toByteArray());z.closeEntry()}}.toByteArray()
-   val started=System.nanoTime();background=backgroundScope.launch{app.resourcePacks.install(ResourcePackCodec.inspect(bytes));report.put("backgroundMs",(System.nanoTime()-started)/1e6)}
+   val started=System.nanoTime();background=backgroundScope.async{app.resourcePacks.install(ResourcePackCodec.inspect(bytes));report.put("backgroundMs",(System.nanoTime()-started)/1e6)}
   }
   val cpuBefore=threadTicks()
   try{
@@ -113,8 +113,12 @@ class WorkflowPerformanceTest {
    val mixedStart=System.nanoTime();val mixedBitmap=Bitmap.createBitmap(1000,1414,Bitmap.Config.ARGB_8888)
    compose.runOnIdle{val painter=PageObjectPainter();painter.draw(android.graphics.Canvas(mixedBitmap),textObjects,false,CanvasBounds(0.0,0.0,1000.0,1414.0));painter.clear()}
    mixedBitmap.recycle();report.put("mixedTextDrawMs",(System.nanoTime()-mixedStart)/1e6).put("textFixtureSha256",ContentTransfer.hash(PageObjectCodec.encode(textObjects)))
-   runBlocking{background?.join()}
-   if(condition=="backup")compose.waitUntil(30000){!app.backupEngine.ui.value.busy}
+   runBlocking{val task=background;if(task is Deferred<*>)task.await()else task?.join()}
+   if(condition=="backup"){
+    compose.waitUntil(30000){!app.backupEngine.ui.value.busy}
+    val queue=JSONObject(File(app.filesDir,"encrypted-backup-jobs/queue.json").readText())
+    assertEquals("Background backup must really publish","PUBLISHED",queue.getString("state"));report.put("backupState","PUBLISHED")
+   }
    val ticks=android.system.Os.sysconf(android.system.OsConstants._SC_CLK_TCK).toDouble();val after=threadTicks()
    for(name in listOf("ui","render"))report.put(name+"CpuMs",if(cpuBefore[name]!=null&&after[name]!=null)(after.getValue(name)-cpuBefore.getValue(name))*1000/ticks else JSONObject.NULL)
    val memory=Debug.MemoryInfo();Debug.getMemoryInfo(memory)

@@ -20,6 +20,7 @@ import kotlin.math.*
 /** A bounded viewport. Partial erase clips ink, never paints the paper colour. */
 class InkCanvasView(context:Context):View(context){
     var onCheckpoint:(InkStroke)->Unit={}
+    var onCheckpointCancel:(String)->Unit={}
     private var checkpointAt=0L
     var onStroke:(InkStroke)->Unit={}
     var finishStroke:(InkStroke)->InkStroke={it}
@@ -347,7 +348,7 @@ class InkCanvasView(context:Context):View(context){
         finally{tapImage=null;onLiveSamples(emptyList());inputId=-1;raw.clear();gestureErase=false;onGesture(false);parent?.requestDisallowInterceptTouchEvent(false);invalidate()}
     }
     private fun finishViewport(){if(movingViewport){movingViewport=false;onViewport(viewport)}}
-    fun cancelGesture(){tapImage=null;onLiveSamples(emptyList());val active=inputId!=-1;inputId=-1;raw.clear();gestureErase=false;cursor=null;parent?.requestDisallowInterceptTouchEvent(false);if(active)onGesture(false);invalidate()}
-    override fun onDetachedFromWindow(){mapSceneJob?.cancel();mapSceneJob=null;PencilRenderer.forget(content.filter{it.pen==InkPen.PENCIL}.map{it.id}.toSet()+gestureId);pageRaster.clear();asyncRaster.clear();documentJob?.cancel();releaseDocumentTile();documentRequest=null;objectPainter.clear();cancelGesture();if(configured&&!preview)onViewport(viewport);super.onDetachedFromWindow()}
+    fun cancelGesture(discardCheckpoint:Boolean=true){if(discardCheckpoint&&inputId!=-1&&!gestureErase)onCheckpointCancel(gestureId);tapImage=null;onLiveSamples(emptyList());val active=inputId!=-1;inputId=-1;raw.clear();gestureErase=false;cursor=null;parent?.requestDisallowInterceptTouchEvent(false);if(active)onGesture(false);invalidate()}
+    override fun onDetachedFromWindow(){mapSceneJob?.cancel();mapSceneJob=null;PencilRenderer.forget(content.filter{it.pen==InkPen.PENCIL}.map{it.id}.toSet()+gestureId);pageRaster.clear();asyncRaster.clear();documentJob?.cancel();releaseDocumentTile();documentRequest=null;objectPainter.clear();cancelGesture(false);if(configured&&!preview)onViewport(viewport);super.onDetachedFromWindow()}
     override fun performClick():Boolean{super.performClick();return true}
 }

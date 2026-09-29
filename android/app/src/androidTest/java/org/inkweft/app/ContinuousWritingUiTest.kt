@@ -37,13 +37,13 @@ class ContinuousWritingUiTest {
         fun find(v:View):InkCanvasView?{if(v is InkCanvasView&&!v.preview&&!v.embeddedPage)return v;if(v is ViewGroup)for(i in 0 until v.childCount)find(v.getChildAt(i))?.let{return it};return null}
         return checkNotNull(find(compose.activity.window.decorView))
     }
-    private fun line(v:InkCanvasView,points:List<Pair<Float,Float>>){
+    private fun line(v:InkCanvasView,points:List<Pair<Float,Float>>,lastAction:Int=MotionEvent.ACTION_UP){
         val now=SystemClock.uptimeMillis();val density=v.resources.displayMetrics.density.toDouble()
         points.forEachIndexed{i,(x,y)->
             val p=v.snapshotViewport().worldToScreen(x.toDouble(),y.toDouble(),v.width.toDouble(),v.height.toDouble(),density)
             val properties=MotionEvent.PointerProperties().apply{id=0;toolType=MotionEvent.TOOL_TYPE_STYLUS}
             val coords=MotionEvent.PointerCoords().apply{this.x=p.x.toFloat();this.y=p.y.toFloat();pressure=.5f;size=.1f}
-            val action=when(i){0->MotionEvent.ACTION_DOWN;points.lastIndex->MotionEvent.ACTION_UP;else->MotionEvent.ACTION_MOVE}
+            val action=when(i){0->MotionEvent.ACTION_DOWN;points.lastIndex->lastAction;else->MotionEvent.ACTION_MOVE}
             val event=MotionEvent.obtain(now,now+i*35L,action,1,arrayOf(properties),arrayOf(coords),0,0,1f,1f,0,0,InputDevice.SOURCE_STYLUS,0)
             try{assertTrue(v.dispatchTouchEvent(event))}finally{event.recycle()}
         }
@@ -63,6 +63,18 @@ class ContinuousWritingUiTest {
         compose.onNodeWithTag("beauty-review-apply").assertIsEnabled().performClick()
         compose.waitUntil(10000){runBlocking{app.pageObjects.read(page).objects.isNotEmpty()}}
         assertEquals("HI",runBlocking{app.pageObjects.read(page).objects.single().text})
+    }
+
+    @Test fun cancellingLongGestureDoesNotResurrectItsCheckpointOnReopen(){
+        val note=open()
+        compose.runOnIdle{canvas(note.id).pen=InkPen.PENCIL;line(canvas(note.id),List(320){200f+it*.5f to 300f},MotionEvent.ACTION_MOVE)}
+        compose.waitUntil(10000){runBlocking{app.inkRepository.recoverCheckpoints(note.id).isNotEmpty()}}
+        assertTrue(runBlocking{app.inkRepository.read(note.id).strokes.isEmpty()})
+        compose.runOnIdle{canvas(note.id).cancelGesture()}
+        compose.waitUntil(10000){runBlocking{app.inkRepository.recoverCheckpoints(note.id).isEmpty()}}
+        compose.activityRule.scenario.recreate()
+        compose.waitUntil(10000){app.navigationReady.value&&compose.onAllNodesWithTag("continuous-pages").fetchSemanticsNodes().isNotEmpty()}
+        assertTrue(runBlocking{app.inkRepository.read(note.id).strokes.isEmpty()})
     }
 
     @Test fun tapeTapInContinuousPagesTogglesExactlyOnceForFingerAndStylus(){

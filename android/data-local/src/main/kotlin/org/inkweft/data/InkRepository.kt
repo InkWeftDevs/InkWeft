@@ -63,6 +63,7 @@ class InkRepository(private val db:NoteDatabase,private val fault:(InkFaultPoint
         require(stroke.world==owner(page).world)
         if(dao.stroke(stroke.id)==null)checkpoints.save(page,stroke.samples.size,stroke)
     }
+    fun discardCheckpoint(page:String,strokeId:String){if(db.checkpointRoot!=null)checkpoints.remove(page,strokeId)}
     suspend fun recoverCheckpoints(page:String):List<InkStroke> {
         if(db.checkpointRoot==null)return emptyList()
         val recovered=mutableListOf<InkStroke>()

@@ -77,6 +77,15 @@ class InkViewModel(private val noteId:String,private val repository:InkRepositor
     }
     private var checkpointJob:Job?=null
     private var checkpointLatest:InkStroke?=null
+    fun cancelCheckpoint(id:String){
+        if(checkpointLatest?.id==id)checkpointLatest=null
+        val previous=checkpointJob
+        previous?.cancel()
+        viewModelScope.launch{
+            previous?.join()
+            withContext(Dispatchers.IO){repository.discardCheckpoint(noteId,id)}
+        }
+    }
     fun checkpoint(stroke:InkStroke){
         checkpointLatest=stroke
         if(checkpointJob?.isActive==true)return

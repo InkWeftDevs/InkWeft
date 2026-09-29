@@ -27,13 +27,13 @@ def plan(paths, full=False):
     reasons = []
     for path in paths:
         p = Path(path)
+        if path.startswith(("sync-lab/","resource-packs/")) and p.suffix.lower() not in {".md",".txt"}:
+            experiments=True;reasons.append(path);continue
         if p.suffix.lower() in {".md", ".txt", ".png", ".jpg", ".svg"} and "/src/" not in path and p.name!='requirements.txt':
             continue
         if path.startswith("ci/test_") and p.suffix == ".py":
             continue
-        if path.startswith(("sync-lab/","resource-packs/")):
-            experiments=True
-        elif path.startswith("backup-server/"):
+        if path.startswith("backup-server/"):
             app.add('org.inkweft.app.EncryptedBackupIntegrationTest')
         elif path.startswith("android/core-domain/src/test/"):
             core = True

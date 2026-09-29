@@ -79,6 +79,7 @@ internal data class ContinuousTools(val pen:InkPen,val color:Int,val width:Float
                         v.pen=tools.pen;v.penColor=tools.color;v.penWidth=tools.width;v.brushRecipe=tools.recipe
                         v.eraserTapeOnly=tools.onlyTape;v.eraseMode=tools.erasing;v.eraserWhole=tools.whole;v.eraserHighlighterOnly=tools.highlighterOnly;v.eraserDiameterDp=tools.diameter
                         v.onObjectTap={id->val o=objectModel.ui.value.objects.find{it.id==id};if(o?.kind==PageObjectKind.TAPE)objectModel.put(o.copy(revealed=!o.revealed))else onObjectTap(page.id,id)}
+                        v.onCheckpointCancel=model::cancelCheckpoint
                         v.onCheckpoint={stroke->
                             // First slice: preserve the in-page prefix. Cross-page group recovery needs a separate journal contract.
                             if(stroke.samples.all{it.x in 0f..1000f&&it.y in 0f..1414f})model.checkpoint(InkStroke(stroke.id,stroke.pen,stroke.color,stroke.width,stroke.tool,stroke.samples.map{it.copy(world=false)},false,appearance=stroke.appearance))
