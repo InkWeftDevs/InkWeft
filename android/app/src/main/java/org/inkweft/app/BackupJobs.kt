@@ -79,7 +79,7 @@ internal class BackupEngine(private val app:InkWeftApplication){
         state.value=state.value.copy(auth=BackupAuth.CONNECTING)
         val value=try{BackupTransport.login(url,name,password,sessions.device)}catch(e:Exception){state.value=state.value.copy(auth=if(identity==null)BackupAuth.DISCONNECTED else BackupAuth.REAUTHENTICATE);throw e};sessions.save(value);identity=value
         preview?.close();preview=null
-        state.value=state.value.copy(connected=true,auth=BackupAuth.VALID,message="已连接。备份目标与恢复密钥独立于登录密码",versions=emptyList(),restoreNotes=null)
+        state.value=state.value.copy(connected=true,auth=BackupAuth.VALID,message="已连接。备份目标与恢复密钥独立于登录密码",versions=emptyList(),details=emptyList(),checked=emptySet(),restoreNotes=null)
     }
     fun logout(){
         pause();val old=identity

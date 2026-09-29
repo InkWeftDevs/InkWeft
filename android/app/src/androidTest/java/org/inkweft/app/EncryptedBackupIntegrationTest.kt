@@ -57,9 +57,24 @@ class EncryptedBackupIntegrationTest {
         assertNull("A failed new inspection must not leave an older restore confirmation",job.ui.value.restoreNotes)
         await(job){job.inspect(library,operation,key)};assertEquals(1,job.ui.value.restoreNotes)
         await(job){job.restore()};assertTrue(job.ui.value.message.contains("无需重复导入"))
+        assertTrue(job.ui.value.details.isNotEmpty())
+        await(job){job.login("http://127.0.0.1:18751","synthetic-bob","synthetic-bob-password-456")}
+        assertTrue("Previous account metadata leaked",job.ui.value.details.isEmpty());assertTrue(job.ui.value.checked.isEmpty())
+        await(job){job.login("http://127.0.0.1:18751","synthetic-alice","synthetic-alice-password-123")}
         await(job){job.create(library,key)};assertTrue(job.hasPendingUpload())
         await(job){job.abandonLocal()};assertFalse(job.hasPendingUpload())
         assertEquals("DELETED",JSONObject(file.readText()).getString("state"))
+        assertNull(app.getSystemService(android.app.job.JobScheduler::class.java).getPendingJob(44001))
+        // Explicit local probe: prepare a lost publication reply for an external force-stop/relaunch check.
+        if(InstrumentationRegistry.getArguments().getString("backgroundProbe")=="true"){
+            await(job){job.create(library,key)};val pending=JSONObject(file.readText())
+            await(job){job.upload()};assertEquals("PUBLISHED",JSONObject(file.readText()).getString("state"))
+            pending.put("automatic",true).put("deadline",System.currentTimeMillis()+30*60_000).put("attempts",0);file.writeText(pending.toString())
+            instrumentation.runOnMainSync{BackupScheduler.schedule(app)}
+            val scheduled=app.getSystemService(android.app.job.JobScheduler::class.java).getPendingJob(44001)!!
+            assertTrue(scheduled.isPersisted);assertTrue(scheduled.isRequireBatteryNotLow)
+            java.io.File(app.getExternalFilesDir(null),"background-probe.json").writeText(JSONObject().put("operation",pending.getString("operation")).put("state","PENDING").toString())
+        }
         instrumentation.runOnMainSync{store.clear()}
     }
     @Test fun expiredSessionCanReconnectAndOfflineDisconnectKeepsQueue()=runBlocking {
