@@ -10,6 +10,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import org.inkweft.core.TextFont
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable internal fun BeautyReviewPanel(value:BeautyReview,vm:PageObjectViewModel){
     var text by remember(value.inkRevision,value.objectRevision){mutableStateOf(value.result.text)}
     EditorPanel("校对美化",if(value.options.preserveLayout)"原位换字体"else"段落整理",vm::dismissBeauty,"beauty-review",footer={
@@ -26,7 +27,7 @@ import org.inkweft.core.TextFont
                 Spacer(Modifier.width(8.dp))
                 FilterChip(!value.options.preserveLayout,{vm.reviseBeauty(text,value.options.copy(preserveLayout=false))},label={Text("段落")},modifier=Modifier.testTag("beauty-review-paragraph"))
             }
-            Row(Modifier.horizontalScroll(rememberScrollState())){TextFont.entries.forEach{font->FilterChip(value.options.font==font,{vm.reviseBeauty(text,value.options.copy(font=font))},label={Text(TextStyles.name(font))},modifier=Modifier.testTag("beauty-review-font-${font.name}"))}}
+            FlowRow(horizontalArrangement=Arrangement.spacedBy(4.dp)){TextFont.entries.forEach{font->FilterChip(value.options.font==font,{vm.reviseBeauty(text,value.options.copy(font=font))},label={Text(TextStyles.name(font))},modifier=Modifier.testTag("beauty-review-font-${font.name}"))}}
             if(!value.options.preserveLayout){
                 Text("字号 ${value.options.size.toInt()}",style=MaterialTheme.typography.bodySmall)
                 Slider(value.options.size,{vm.reviseBeauty(text,value.options.copy(size=it))},valueRange=12f..96f,modifier=Modifier.testTag("beauty-review-size"))
