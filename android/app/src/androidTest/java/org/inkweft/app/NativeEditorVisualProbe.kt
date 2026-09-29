@@ -106,7 +106,7 @@ class NativeEditorVisualProbe {
         var from=Offset.Zero;var to=Offset.Zero
         compose.runOnIdle{
             val source=view<SelectionOverlayView>();val pos=IntArray(2);source.getLocationOnScreen(pos)
-            val p=source.canvasView!!.snapshotViewport().worldToScreen(250.0,330.0,source.width.toDouble(),source.height.toDouble(),source.resources.displayMetrics.density.toDouble());from=Offset(pos[0]+p.x.toFloat(),pos[1]+p.y.toFloat())
+            val p=source.canvasView!!.snapshotViewport().worldToScreen(500.0,330.0,source.width.toDouble(),source.height.toDouble(),source.resources.displayMetrics.density.toDouble());from=Offset(pos[0]+p.x.toFloat(),pos[1]+p.y.toFloat())
             val map=view<MindMapView>();map.getLocationOnScreen(pos);val b=map.nodeBounds(root)!!;to=Offset(pos[0]+b.centerX(),pos[1]+b.centerY())
         }
         val down=SystemClock.uptimeMillis()
