@@ -33,6 +33,7 @@ internal class VisibleInkGeometry {
     fun selects(region:InkRegion,stroke:InkStroke,precise:Boolean=false)=stroke.bounds().intersects(region.bounds)&&overlaps(region,path(stroke),precise)
     fun selects(region:InkRegion,obj:PageObject,precise:Boolean=false):Boolean {
         if(obj.hidden||!obj.bounds().intersects(region.bounds))return false
+        if(obj.textRuns.isNotEmpty())return overlaps(region,NaturalText.path(obj),precise)
         if(obj.glyphs.isEmpty()){
             val outline=ObjectGeometry.path(obj,if(obj.kind==PageObjectKind.SHAPE)obj.lineWidth/2 else 0f)
             val painted=if(obj.kind==PageObjectKind.SHAPE)Path().also{Paint(Paint.ANTI_ALIAS_FLAG).apply{style=Paint.Style.STROKE;strokeWidth=obj.lineWidth;strokeCap=Paint.Cap.ROUND;strokeJoin=Paint.Join.ROUND}.getFillPath(outline,it)}else outline

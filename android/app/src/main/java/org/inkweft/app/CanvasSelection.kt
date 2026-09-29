@@ -39,7 +39,7 @@ internal object CanvasSelectionEdit {
         val moved=s.objects.map{original->
             val o=if(copy)BeautyAppearance.restore(original,sources)else original
             val x=o.x+dx;val y=o.y+dy;require(world||x>=0&&y>=0&&x+o.width<=1000&&y+o.height<=1414)
-            o.copy(id=if(copy)UUID.randomUUID().toString()else o.id,x=x,y=y,sourceStrokeIds=if(copy)emptyList()else o.sourceStrokeIds)
+            o.copy(id=if(copy)UUID.randomUUID().toString()else o.id,x=x,y=y,sourceStrokeIds=if(copy)emptyList()else o.sourceStrokeIds,textRuns=if(copy)o.textRuns.map{it.copy(sourceIds=emptyList())}else o.textRuns)
         }
         val ids=s.objects.map{it.id}.toSet()
         val objects=if(copy)s.snapshot+moved else s.snapshot.map{o->if(o.id in ids)moved.first{it.id==o.id}else o}
@@ -69,6 +69,7 @@ internal object CanvasSelectionEdit {
             val glyphs=o.glyphs
             val changed=o.copy(x=x(o.x),y=y(o.y),width=o.width*scale,height=o.height*scale,
                 fontSize=if(o.kind==PageObjectKind.TEXT&&glyphs.isEmpty())o.fontSize*scale else o.fontSize,
+                textRuns=o.textRuns.map{it.transformed(scale=scale)},
                 glyphs=glyphs.map{it.copy(x=it.x*scale,y=it.y*scale,width=it.width*scale,height=it.height*scale,grain=it.grain*scale)},
                 erasures=o.erasures.map{cut->cut.copy(radius=(cut.radius*scale).coerceAtLeast(.01f),points=cut.points.map{TextErasePoint(it.x*scale,it.y*scale)})},
                 tapePoints=o.tapePoints.map{TapePoint(it.x*scale,it.y*scale)},

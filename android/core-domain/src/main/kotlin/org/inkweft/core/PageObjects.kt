@@ -35,10 +35,15 @@ data class PageObject(
     val font:TextFont=TextFont.SYSTEM,val lineSpacing:Float=1f,val bold:Boolean=false,
     val sourceStrokeIds:List<String> = emptyList(),val hidden:Boolean=false,
     val glyphs:List<TextGlyph> = emptyList(),val erasures:List<TextErasePath> = emptyList(),
-    val tapePoints:List<TapePoint> = emptyList(),val lineWidth:Float=24f,val shape:ObjectShape=ObjectShape.RECTANGLE,val tapePattern:TapePattern=TapePattern.STRIPES,val mapEmbed:MapEmbed?=null
+    val tapePoints:List<TapePoint> = emptyList(),val lineWidth:Float=24f,val shape:ObjectShape=ObjectShape.RECTANGLE,val tapePattern:TapePattern=TapePattern.STRIPES,val mapEmbed:MapEmbed?=null,
+    val textRuns:List<TextRun> = emptyList()
 ) {
     init {
         UUID.fromString(id)
+        require(textRuns.isEmpty()||kind==PageObjectKind.TEXT&&glyphs.isNotEmpty())
+        require(textRuns.size<=4000&&textRuns.zipWithNext().all{(a,b)->a.end<=b.start})
+        require(textRuns.all{it.end<=text.length&&it.x<=width&&it.baseline<=height+it.size})
+        require(textRuns.all{r->r.sourceIds.all{it in sourceStrokeIds}})
         require((kind==PageObjectKind.MAP)==(mapEmbed!=null));mapEmbed?.let{MapEmbedCodec.encode(it)}
         require(lineWidth.isFinite()&&lineWidth in .5f..192f)
         require(tapePoints.isEmpty()||kind==PageObjectKind.TAPE)
@@ -78,7 +83,7 @@ object PageObjectCodec {
         require(objects.count{!it.hidden}<=MAX_OBJECTS && objects.size<=MAX_RECORDS && objects.map{it.id}.distinct().size==objects.size)
         val buffer=ByteArrayOutputStream()
         DataOutputStream(buffer).use { out ->
-            out.writeInt(0x49574f38);out.writeInt(objects.size)
+            out.writeInt(0x49574f39);out.writeInt(objects.size)
             objects.forEach { o ->
                 out.writeUTF(o.id);out.writeByte(o.kind.ordinal)
                 listOf(o.x,o.y,o.width,o.height,o.fontSize).forEach(out::writeFloat)
@@ -100,6 +105,12 @@ object PageObjectCodec {
                 if(image.isNotEmpty())require(image.size>4&&image[0]==0xff.toByte()&&image[1]==0xd8.toByte())
                 out.writeInt(image.size);out.write(image)
                 val embed=o.mapEmbed?.let(MapEmbedCodec::encode);out.writeInt(embed?.size?:0);embed?.let(out::write)
+                out.writeInt(o.textRuns.size);o.textRuns.forEach{r->
+                    out.writeUTF(r.id);out.writeUTF(r.lineId);out.writeInt(r.start);out.writeInt(r.end)
+                    out.writeFloat(r.x);out.writeFloat(r.baseline);out.writeFloat(r.size);out.writeLong(r.sourceRevision)
+                    out.writeByte(r.policy.ordinal);out.writeUTF(r.model);out.writeFloat(r.score)
+                    out.writeInt(r.sourceIds.size);r.sourceIds.forEach(out::writeUTF)
+                }
                 require(buffer.size()<=MAX_BYTES)
             }
         }
@@ -108,7 +119,7 @@ object PageObjectCodec {
     fun decode(bytes:ByteArray):List<PageObject> {
         require(bytes.size in 8..MAX_BYTES)
         return DataInputStream(ByteArrayInputStream(bytes)).use { input ->
-            val version=input.readInt();require(version in listOf(0x49574f31,0x49574f32,0x49574f33,0x49574f34,0x49574f35,0x49574f36,0x49574f37,0x49574f38))
+            val version=input.readInt();require(version in listOf(0x49574f31,0x49574f32,0x49574f33,0x49574f34,0x49574f35,0x49574f36,0x49574f37,0x49574f38,0x49574f39))
             val count=input.readInt();require(count in 0..MAX_RECORDS)
             val objects=List(count) {
                 val id=input.readUTF();val kind=PageObjectKind.entries.getOrNull(input.readUnsignedByte())?:error("Object kind")
@@ -133,7 +144,14 @@ object PageObjectCodec {
                 val size=input.readInt();require(size in 0..MAX_IMAGE && size<=input.available())
                 val image=ByteArray(size);input.readFully(image)
                 val embed=if(version>=0x49574f38){val n=input.readInt();require(n in 0..MapEmbedCodec.MAX_BYTES&&n<=input.available());if(n==0)null else MapEmbedCodec.decode(ByteArray(n).also(input::readFully))}else null
-                PageObject(id,kind,x,y,w,h,text,if(size==0)""else Base64.getEncoder().encodeToString(image),color,fontSize,revealed,font,spacing,bold,source,hidden,glyphs,erasures,tapePoints,lineWidth,shape,tapePattern,embed)
+                val runs=if(version>=0x49574f39){val n=input.readInt();require(n in 0..4000);List(n){
+                    val rid=input.readUTF();val line=input.readUTF();val start=input.readInt();val end=input.readInt()
+                    val rx=input.readFloat();val baseline=input.readFloat();val size=input.readFloat();val revision=input.readLong()
+                    val policy=TextLayoutPolicy.entries.getOrNull(input.readUnsignedByte())?:error("Text layout")
+                    val model=input.readUTF();val score=input.readFloat();val count=input.readInt();require(count in 0..256)
+                    TextRun(rid,line,start,end,rx,baseline,size,List(count){input.readUTF()},revision,policy,model,score)
+                }}else emptyList()
+                PageObject(id,kind,x,y,w,h,text,if(size==0)""else Base64.getEncoder().encodeToString(image),color,fontSize,revealed,font,spacing,bold,source,hidden,glyphs,erasures,tapePoints,lineWidth,shape,tapePattern,embed,runs)
             }
             require(input.available()==0);encode(objects);objects
         }

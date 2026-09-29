@@ -55,7 +55,7 @@ class PageObjectRepository(private val db:NoteDatabase,private val afterCommit:(
         if(objects.isEmpty())return
         require(db.objects().get(pageId)==null)
         validateBounds(objects,checkNotNull(db.pages().get(pageId)).world);validateImages(objects)
-        val mapped=objects.map{it.copy(id=UUID.randomUUID().toString(),sourceStrokeIds=it.sourceStrokeIds.mapNotNull(strokeIds::get))}
+        val mapped=objects.map{it.copy(id=UUID.randomUUID().toString(),sourceStrokeIds=it.sourceStrokeIds.mapNotNull(strokeIds::get),textRuns=it.textRuns.map{r->r.copy(sourceIds=r.sourceIds.mapNotNull(strokeIds::get))})}
         MapEmbedRepository(db).validateReferences(checkNotNull(db.pages().get(pageId)).notebookId,mapped)
         validateSources(pageId,mapped)
         db.objects().put(PageObjectRow(pageId,1,PageObjectCodec.encode(mapped)))

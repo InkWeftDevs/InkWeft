@@ -25,6 +25,13 @@ internal object BeautyAppearance {
     fun restore(o:PageObject,source:Map<String,InkStroke>):PageObject {
         if(o.sourceStrokeIds.isEmpty()||o.glyphs.none{it.color==null})return o
         val strokes=o.sourceStrokeIds.mapNotNull{source[it]};if(strokes.isEmpty())return o
+        if(o.textRuns.isNotEmpty())return o.copy(glyphs=o.glyphs.map{g->
+            if(g.color!=null)g else {
+                val r=o.textRuns.first{g.start>=it.start&&g.end<=it.end}
+                val local=r.sourceIds.mapNotNull{source[it]};val b=local.map{it.bounds()}.reduceOrNull{a,v->a.union(v)}
+                if(b==null)g else {val center=b.left+(g.start-r.start+.5)/(r.end-r.start)*(b.right-b.left);apply(g,local,CanvasBounds(center-1,b.top,center+1,b.bottom))}
+            }
+        })
         val bounds=strokes.map{it.bounds()}.reduce{a,b->a.union(b)}
         val sx=(bounds.right-bounds.left)/o.width;val sy=(bounds.bottom-bounds.top)/o.height
         return o.copy(glyphs=o.glyphs.map{g->if(g.color!=null)g else apply(g,strokes,CanvasBounds(

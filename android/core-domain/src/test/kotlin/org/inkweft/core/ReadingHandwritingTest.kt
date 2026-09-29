@@ -42,4 +42,10 @@ class ReadingHandwritingTest {
         val rows=HandwritingLines.split(listOf(stroke(20f,20f),stroke(50f,20f),stroke(20f,100f),stroke(0f,0f,InkPen.HIGHLIGHTER)))
         assertEquals(2,rows.size);assertEquals(2,rows.first().strokes.size)
     }
+    @Test fun upperDotJoinsBodyWhileDistantColumnsRemainSeparate(){
+        fun stroke(x:Float,y:Float,w:Float,h:Float)=InkStroke(id(),InkPen.PEN,0xff000000.toInt(),1f,InkTool.STYLUS,listOf(InkSample(x,y,0),InkSample(x+w,y+h,20)))
+        val sources=listOf(stroke(20f,100f,25f,65f),stroke(50f,100f,25f,70f),stroke(60f,75f,3f,14f),stroke(25f,125f,20f,2f),stroke(50f,130f,20f,2f),stroke(400f,100f,30f,70f))
+        val lines=HandwritingLines.split(sources)
+        assertEquals(2,lines.size);assertEquals(5,lines.first().strokes.size)
+    }
 }

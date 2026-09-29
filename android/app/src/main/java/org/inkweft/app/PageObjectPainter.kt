@@ -15,9 +15,10 @@ internal class PageObjectPainter {
     private val resourceOwner="objects-"+java.util.UUID.randomUUID()
     private val images=object:LinkedHashMap<String,Bitmap?>(8,.75f,true){override fun removeEldestEntry(eldest:MutableMap.MutableEntry<String,Bitmap?>?):Boolean{if(size<=8)return false;eldest?.value?.let{RenderResources.release(it,resourceOwner)};return true}}
     private val layouts=object:LinkedHashMap<PageObject,StaticLayout>(32,.75f,true){override fun removeEldestEntry(eldest:MutableMap.MutableEntry<PageObject,StaticLayout>?)=size>32}
+    private val naturalLayouts=object:LinkedHashMap<PageObject,List<StaticLayout>>(16,.75f,true){override fun removeEldestEntry(e:MutableMap.MutableEntry<PageObject,List<StaticLayout>>?)=size>32}
     private val graphite=object:LinkedHashMap<Int,BitmapShader>(8,.75f,true){override fun removeEldestEntry(eldest:MutableMap.MutableEntry<Int,BitmapShader>?)=size>8}
     private val paint=Paint(Paint.ANTI_ALIAS_FLAG or Paint.FILTER_BITMAP_FLAG)
-    fun clear(){RenderResources.releaseOwner(resourceOwner);images.clear();layouts.clear();graphite.clear();mapScenesResolved.clear();mapScenes=emptyMap()}
+    fun clear(){RenderResources.releaseOwner(resourceOwner);images.clear();layouts.clear();naturalLayouts.clear();graphite.clear();mapScenesResolved.clear();mapScenes=emptyMap()}
     fun draw(canvas:Canvas,objects:List<PageObject>,tapes:Boolean,visible:CanvasBounds,liveErase:Path?=null,wholeErase:Boolean=false) {
         objects.filter{!it.hidden&&(it.kind==PageObjectKind.TAPE)==tapes&&it.bounds().intersects(visible)}.forEach { source ->
             val o=if(liveErase!=null&&source.sourceStrokeIds.isNotEmpty()&&source.glyphs.isEmpty())source.copy(glyphs=TextStyles.positioned(source))else source
@@ -43,7 +44,10 @@ internal class PageObjectPainter {
                     else {paint.color=Color.LTGRAY;canvas.drawRect(o.x,o.y,o.x+o.width,o.y+o.height,paint)}
                 }
                 PageObjectKind.TEXT->{
-                    if(o.glyphs.isEmpty()){
+                    if(o.textRuns.isNotEmpty()){
+                        val shaped=naturalLayouts[o]?:o.textRuns.map{NaturalText.layout(o,it)}.also{naturalLayouts[o]=it}
+                        NaturalText.draw(canvas,o,shaped,liveErase,wholeErase)
+                    }else if(o.glyphs.isEmpty()){
                         val layout=layouts[o]?:TextStyles.layout(o).also{layouts[o]=it}
                         canvas.translate(o.x,o.y);layout.draw(canvas)
                     }else{

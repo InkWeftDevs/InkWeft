@@ -76,7 +76,7 @@ import kotlinx.coroutines.*
                 }
                 if(item.kind==PageObjectKind.TEXT)TextButton(onClick={editing=item},enabled=available,modifier=Modifier.testTag("object-edit-text")){Text("编辑文字")}
                 if(item.kind==PageObjectKind.TAPE)TextButton(onClick={vm.put(item.copy(revealed=!item.revealed))},enabled=available,modifier=Modifier.testTag("object-reveal")){Text(if(item.revealed)"盖上胶带"else"揭开胶带")}
-                TextButton(onClick={val x=if(world)item.x+24 else (item.x+24).coerceAtMost(1000-item.width);val y=if(world)item.y+24 else (item.y+24).coerceAtMost(1414-item.height);val o=item.copy(id=UUID.randomUUID().toString(),x=x,y=y,sourceStrokeIds=emptyList());vm.put(o);onSelect(o.id)},enabled=available,modifier=Modifier.testTag("object-copy")){Text("复制")}
+                TextButton(onClick={val x=if(world)item.x+24 else (item.x+24).coerceAtMost(1000-item.width);val y=if(world)item.y+24 else (item.y+24).coerceAtMost(1414-item.height);val o=item.copy(id=UUID.randomUUID().toString(),x=x,y=y,sourceStrokeIds=emptyList(),textRuns=item.textRuns.map{it.copy(sourceIds=emptyList())});vm.put(o);onSelect(o.id)},enabled=available,modifier=Modifier.testTag("object-copy")){Text("复制")}
                 TextButton(onClick={vm.change(ui.objects.filterNot{it.id==item.id}+item)},enabled=available,modifier=Modifier.testTag("object-front")){Text("移到同类前方")}
                 TextButton(onClick={vm.delete(item.id);onSelect(null)},enabled=available,modifier=Modifier.testTag("object-delete")){Text("删除",color=Color(0xffab3939))}
                 if(item.sourceStrokeIds.isNotEmpty())TextButton(onClick={vm.restoreOriginal(item.id);onSelect(null)},enabled=available,modifier=Modifier.testTag("object-restore-original")){Text("恢复原迹")}
@@ -103,10 +103,18 @@ import kotlinx.coroutines.*
         var textError by remember{mutableStateOf<String?>(null)}
         EditorPanel("文本框","",{editing=null;if(selected==null)onDone()},"object-text-dialog",footer={Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.End){TextButton(onClick={editing=null;if(selected==null)onDone()}){Text("取消")};TextButton(onClick={
             if(original.glyphs.isNotEmpty()&&text==original.visibleText()){
+                if(original.textRuns.isNotEmpty()&&(family!=original.font||font!=original.fontSize||spacing!=original.lineSpacing||bold!=original.bold)){
+                    val changed=runCatching{NaturalText.restyle(original,family,font,spacing,bold,color,world)}
+                    changed.onSuccess{vm.put(it);editing=null}.onFailure{textError=it.message?:"样式无法应用，请恢复原迹后重试"}
+                    return@TextButton
+                }
+                if(original.textRuns.isEmpty()&&(font!=original.fontSize||spacing!=original.lineSpacing)){
+                    textError="旧版文字保留原布局；请恢复原迹后重新美化以调整排版";return@TextButton
+                }
                 vm.put(original.copy(color=color,font=family,bold=bold,glyphs=if(color==original.color)original.glyphs else original.glyphs.map{g->g.copy(color=if(g.grain>0)((g.color?:original.color) and 0xff000000.toInt())or(color and 0xffffff)else color)}));editing=null
                 return@TextButton
             }
-            val o=original.copy(text=text,fontSize=font,color=color,font=family,lineSpacing=spacing,bold=bold,glyphs=emptyList(),erasures=emptyList())
+            val o=original.copy(text=text,fontSize=font,color=color,font=family,lineSpacing=spacing,bold=bold,glyphs=emptyList(),erasures=emptyList(),textRuns=emptyList())
             val layout=TextStyles.layout(o)
             val height=maxOf(48f,layout.height.toFloat()+8f)
             if(height>4000||(!world&&height>1414-o.y))textError="文字超出当前页可用高度，请减少文字或字号后保存。"

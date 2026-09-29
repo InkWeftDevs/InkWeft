@@ -21,14 +21,15 @@ class BeautyLayoutUiTest {
             listOf(RecognizedToken("甲",((115-line.bounds.left)/range).toFloat()),RecognizedToken("乙",((192.5-line.bounds.left)/range).toFloat())))))
         val first=beautyObject(strokes,result,BeautyOptions(size=96f),false)
         assertEquals(2,first.glyphs.size)
-        first.glyphs.forEachIndexed{i,g->val b=strokes[i].bounds()
-            assertEquals(b.left,(first.x+g.x).toDouble(),.01);assertEquals(b.top,(first.y+g.y).toDouble(),.01)
-            assertEquals(b.right-b.left,g.width.toDouble(),.01);assertEquals(b.bottom-b.top,g.height.toDouble(),.01)
-        }
+        assertEquals(1,first.textRuns.size)
+        val run=first.textRuns.single();val paint=TextStyles.paint(first).apply{textSize=run.size}
+        first.glyphs.forEach{g->val b=android.graphics.Rect();paint.getTextBounds(first.text,g.start,g.end,b)
+            assertEquals(b.width().toFloat(),g.width,.01f);assertEquals(b.height().toFloat(),g.height,.01f)
+            assertEquals(run.baseline+b.top,g.y,.01f)}
         val next=beautyObject(listOf(stroke(250f,510f,28f,32f)),"丙",BeautyOptions(size=96f),false)
         val merged=checkNotNull(appendBeauty(first.copy(glyphs=first.glyphs.mapIndexed{i,g->g.copy(hidden=i==0)}),next))
         first.glyphs.forEachIndexed{i,g->assertEquals(first.x+g.x,merged.x+merged.glyphs[i].x,.01f);assertEquals(first.y+g.y,merged.y+merged.glyphs[i].y,.01f)}
-        assertTrue(merged.glyphs[0].hidden);assertEquals("乙\n丙",merged.visibleText())
+        assertTrue(merged.glyphs[0].hidden);assertEquals("乙丙",merged.visibleText())
     }
     @Test fun erasingOneLegacyCharacterKeepsOthersAndSurvivesUndoRedoAndReopen(){
         val n=runBlocking{app.workspaceRepository.create("逐字擦除验收",false,PaperStyle.BLANK)}
@@ -72,7 +73,7 @@ class BeautyLayoutUiTest {
             if(x<119||x>131){assertEquals(originalPixels[index],cutPixels[index]);if(x<160&&cutPixels[index]!=0)retained++}
         }
         assertTrue(removed>0);assertTrue(retained>0)
-        val next=beautyObject(listOf(stroke(110f,510f,30f,30f)),"甲",BeautyOptions(font=before.font,size=before.fontSize,spacing=before.lineSpacing),false)
+        val next=legacyBeautyObject(listOf(stroke(110f,510f,30f,30f)),"甲",BeautyOptions(font=before.font,size=before.fontSize,spacing=before.lineSpacing),false)
         val merged=checkNotNull(appendBeauty(after,next.copy(color=after.color)));assertEquals(before.text.length,merged.erasures.single().end)
         compose.runOnIdle{vm.undo()};compose.waitUntil(10_000){!vm.ui.value.busy&&vm.ui.value.objects.single().erasures.isEmpty()}
         assertArrayEquals(originalPixels,pixels(vm.ui.value.objects.single()))

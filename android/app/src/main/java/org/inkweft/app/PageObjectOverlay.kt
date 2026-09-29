@@ -56,7 +56,7 @@ internal class PageObjectOverlay(context:Context):View(context) {
                     if(o.kind==PageObjectKind.IMAGE||o.kind==PageObjectKind.MAP)o.copy(width=(o.width+dx).coerceIn(24f,maxW),height=(o.height+dy).coerceIn(24f,maxH))
                     else if(o.kind==PageObjectKind.TEXT&&o.glyphs.isNotEmpty()){
                         val ratio=o.height/o.width;val w=(o.width+dx).coerceIn(max(24f,24f/ratio),min(maxW,maxH/ratio));val scale=w/o.width
-                        o.copy(width=w,height=w*ratio,glyphs=o.glyphs.map{it.copy(x=it.x*scale,y=it.y*scale,width=it.width*scale,height=it.height*scale)},erasures=o.erasures.map{it.transformed(scale=scale)})
+                        o.copy(width=w,height=w*ratio,textRuns=o.textRuns.map{it.transformed(scale=scale)},glyphs=o.glyphs.map{it.copy(x=it.x*scale,y=it.y*scale,width=it.width*scale,height=it.height*scale)},erasures=o.erasures.map{it.transformed(scale=scale)})
                     }else if(o.kind==PageObjectKind.TEXT){
                         val w=(o.width+dx).coerceIn(24f,maxW)
                         val layout=TextStyles.layout(o,w)

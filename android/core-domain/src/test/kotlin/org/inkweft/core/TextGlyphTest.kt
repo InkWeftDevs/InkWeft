@@ -20,4 +20,11 @@ class TextGlyphTest {
         assertThrows(IllegalArgumentException::class.java){o.copy(glyphs=listOf(o.glyphs[1],o.glyphs[0]))}
         assertThrows(IllegalArgumentException::class.java){TextGlyph(0,1,Float.NaN,0f,30f,40f)}
     }
+    @Test fun layoutFragmentsRoundTripAndRejectUnownedSources(){
+        val base=text();val run=TextRun(UUID.randomUUID().toString(),UUID.randomUUID().toString(),0,3,0f,40f,40f,base.sourceStrokeIds,12)
+        val o=base.copy(textRuns=listOf(run));assertEquals(o,PageObjectCodec.decode(PageObjectCodec.encode(listOf(o))).single())
+        assertThrows(IllegalArgumentException::class.java){o.copy(textRuns=listOf(run.copy(sourceIds=listOf(UUID.randomUUID().toString()))))}
+        val legacy=PageObjectCodec.encode(listOf(base)).dropLast(4).toByteArray().also{it[3]=0x38}
+        assertEquals(base,PageObjectCodec.decode(legacy).single())
+    }
 }
