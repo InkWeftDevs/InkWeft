@@ -41,3 +41,11 @@
 本机归档 `E:/Inkweft/archives/2026-09-29/BeautyQuality/`：`core-summary.json`、`data-tests.log`、`final-focused/summary.json`、原生渲染对照与真实纸面截图。私人资料单独位于 `private-samples/`，未进入仓库、PR 附件或 CI 产物。
 
 公式保护、稳定性门槛和空间判断是启发式，不证明普适识别正确。真实英文长词、多作者样本、中文半字长停顿、复杂倾斜行和 FQ18 的持续笔感／功耗仍未验证。模拟器热模型单段耗时不等于平板端到端延迟。平板执行结果只列在 DEVICE-REPORT-V42.md，不用模拟器通过替代。
+
+## 下一阶段 T0：CI 纠错（2026-09-29）
+
+原远端运行 `36503393528`：核心 256 项通过；lint 1 Error／130 Warnings，设备回归 SKIPPED。App 214／Room 152 是计划数量。
+
+修复 NaturalText 使用的断行常量为 `android.graphics.text.LineBreaker.BREAK_STRATEGY_SIMPLE`。本地固定 JDK17／Gradle9.4.1 wrapper 执行核心测试、lintDebug、应用／应用测试／数据库测试 APK 构建成功，核心256项通过、lint零错误。新远端设备测试结果仍待核验；本次构建不复用旧 APK 哈希。
+
+警告分组：UseKtx53、UnusedResources32、DrawAllocation14、窗口尺寸9、依赖／版本11、VisibleForTests4、ModifierParameter3、UsableSpace2、LocalContextResourcesRead1、ModifierFactoryExtensionFunction1。尺寸警告结合分屏／大字号验证处理，绘制分配结合T3测量处理；UsableSpace是保守可用空间检查的改进建议，不放宽失败保护。未屏蔽 lint，也未用 baseline 隐藏错误。

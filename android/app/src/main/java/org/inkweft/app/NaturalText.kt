@@ -23,7 +23,7 @@ internal object NaturalText {
             }},g.start-r.start,g.end-r.start,Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         }
         return StaticLayout.Builder.obtain(text,0,text.length,paint,ceil(paint.measureText(value)+r.size*2).toInt().coerceAtLeast(1))
-            .setIncludePad(false).setBreakStrategy(android.text.Layout.BREAK_STRATEGY_SIMPLE).build()
+            .setIncludePad(false).setBreakStrategy(android.graphics.text.LineBreaker.BREAK_STRATEGY_SIMPLE).build()
     }
     private val grains=object:LinkedHashMap<Pair<Int,Float>,BitmapShader>(8,.75f,true){override fun removeEldestEntry(e:MutableMap.MutableEntry<Pair<Int,Float>,BitmapShader>?)=size>16}
     @Synchronized private fun grain(color:Int,amount:Float):BitmapShader=grains.getOrPut(color to amount){
