@@ -6,7 +6,7 @@
 
 固定包本地复验16项、窄屏三入口、48场持续负载、5＋7个原生终止切点通过；Room154项、服务15项通过。APK在 `E:/Inkweft/dist/NextStageV45/`。
 
-本轮不宣称全部出口验收：MuMu 的系统信任管理器接受未知签发者，TLS 负例 FAIL；Docker 引擎不可用，扩展容器业务与独立卷恢复 BLOCKED；平板锁屏、仍为 v43，未执行升级核对。构件和实际结果见 [v45 验证记录](VERIFICATION-V45.md)，操作见 [交付说明](DELIVERY-V45.md)，实机条件见 [独立清单](DEVICE-TEST-CHECKLIST.md)。v45 尚未推送，不能继承 v44 的远端通过数。
+本轮不宣称全部出口验收：MuMu 的系统信任管理器接受未知签发者，TLS 负例 FAIL；Docker 引擎不可用，扩展容器业务与独立卷恢复 BLOCKED；平板锁屏、仍为 v43，未执行升级核对。构件和实际结果见 [v45 验证记录](VERIFICATION-V45.md)，操作见 [交付说明](DELIVERY-V45.md)，实机条件见 [独立清单](DEVICE-TEST-CHECKLIST.md)。v45 已获用户授权上传；远端结果以本轮 [GitHub Actions](https://github.com/InkWeftDevs/InkWeft/actions/workflows/android-a0.yml) 和 PR #2 检查状态为准，不能继承 v44 的远端通过数。
 
 ---
 

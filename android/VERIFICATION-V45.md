@@ -12,7 +12,7 @@
 - APK 资源清单无 fixture_ca，aapt 解码网络配置仍只给 debug 回环 HTTP 例外，主／发布信任配置未改变。测试 CA 只在独立 insertion.tlsprobe 源集。
 - 应用仍为 schema12／IWO9；加密备份服务 schema1／协议1／IWBK1。新增隔离协议 `inkweft.shadow-rows.v1`，无生产数据库迁移或真实库同步开关。
 
-v44 基线已核对：CI 36530850668 最终 App228／228、Room153／153、领域259／259；容器基础 PASS，UID10001，重启身份及持久卷通过。该结果不代表 v45 CI、TLS 业务或独立卷恢复通过。v45 未推送，远端验证 NOT_RUN。
+v44 基线已核对：CI 36530850668 最终 App228／228、Room153／153、领域259／259；容器基础 PASS，UID10001，重启身份及持久卷通过。该结果不代表 v45 CI、TLS 业务或独立卷恢复通过。本报告本地封包时远端验证 NOT_RUN；用户随后授权上传。上传后的实际运行与最终结果见 [GitHub Actions](https://github.com/InkWeftDevs/InkWeft/actions/workflows/android-a0.yml) 和 [PR #2](https://github.com/InkWeftDevs/InkWeft/pull/2)，不将排队或启动记为通过。
 
 ## 本次实现
 
@@ -28,7 +28,7 @@ v44 基线已核对：CI 36530850668 最终 App228／228、Room153／153、领�
 
 TLS：独立 insertion.tlsprobe 构建，通过网络安全源集仅注入测试 CA。最终 TLS Probe 5 项：有效 HTTPS 加密闭包、过期拒绝、错主机名拒绝、307／远端HTTP降级拒绝共4项通过；未知 CA 拒绝1项失败。诊断直接调用平台 X509TrustManagerExtensions，同样接受 `CN=untrusted / CN=Untrusted fixture CA`。保留负例 FAIL；不能用该模拟器给出完整 TLS 通过结论，需可信 Android 系统复验。应用没有 trust-all 或关闭主机名校验。
 
-Docker：CLI 可见但引擎管道不可用，未启动或修改用户其他项目的 Docker。扩展脚本已包含密文缺块续传、发布／重启／解密及独立新卷恢复，**本机 BLOCKED，v45 CI NOT_RUN**；无新镜像摘要可报告。普通服务 schema1，没有版本迁移。
+Docker：CLI 可见但引擎管道不可用，未启动或修改用户其他项目的 Docker。扩展脚本已包含密文缺块续传、发布／重启／解密及独立新卷恢复，**本机 BLOCKED，本地封包时 v45 CI NOT_RUN**；无新镜像摘要可报告。普通服务 schema1，没有版本迁移。
 
 ## 验收边界
 
@@ -94,4 +94,4 @@ Docker：CLI 可见但引擎管道不可用，未启动或修改用户其他项�
 
 最终补充：模板原生探针初轮4项失败源于测试夹具每次生成ZIP带当前时间，重启后归档摘要变化，不能用来核对同一个模板。固定ZIP条目时间后7/7通过；历史失败留在native-resource-final，修正结果在native-resource-verified。没有改动产品摘要校验规则。窄屏脚本初轮只滚动横向分类，点击位置不在屏幕内；改为先滚动外层再横向选择，保持真实触摸操作后完整通过。
 
-收尾：源码与后续测试记录采用中文本地提交；v45尚未推送或触发远端CI。最终APK、原创示例、验证工具及SHA256保留在dist/NextStageV45；日志、截图、原始性能时间线和失败材料按本地INDEX归档。本任务3个合成服务已通过原会话正常结束，复查对应监听端口均已关闭。批量清理被自动审批以“blocked by policy”拒绝，未提供具体理由；Python缓存、专用模拟器的回环映射和隔离测试CA应用保留，未尝试绕过删除。源码、历史构件、签名与工具链保持。
+收尾：源码与后续测试记录采用中文提交；本地封包之后已获用户授权上传，远端运行结果单独核对。最终APK、原创示例、验证工具及SHA256保留在dist/NextStageV45；日志、截图、原始性能时间线和失败材料按本地INDEX归档。本任务3个合成服务已通过原会话正常结束，复查对应监听端口均已关闭。批量清理被自动审批以“blocked by policy”拒绝，未提供具体理由；Python缓存、专用模拟器的回环映射和隔离测试CA应用保留，未尝试绕过删除。源码、历史构件、签名与工具链保持。
