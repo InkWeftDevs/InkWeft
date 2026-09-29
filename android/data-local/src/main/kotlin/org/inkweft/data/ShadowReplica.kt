@@ -37,16 +37,22 @@ class ShadowReplica private constructor(private val context:Context,val director
         return result
     }
     private fun heads(key:String):List<JSONObject> = sql.query("SELECT value FROM shadow_versions WHERE entity=? ORDER BY revision",arrayOf(key)).use{c->buildList{while(c.moveToNext())add(JSONObject(c.getString(0)))}}
-    private fun chosen():Map<String,JSONObject> = sql.query("SELECT entity,revision FROM shadow_selected").use{c->buildMap{while(c.moveToNext()){
+    private val bundles by lazy{ShadowBundles(sql,schema)}
+    private fun chosen():Map<String,JSONObject> = bundles.applyTo(sql.query("SELECT entity,revision FROM shadow_selected").use{c->buildMap{while(c.moveToNext()){
         val h=heads(c.getString(0)).single{it.getString("revision")==c.getString(1)};if(!h.getBoolean("deleted"))put(c.getString(0),h)
-    }}}
+    }}}).mapValues{(key,value)->
+        // Activity timestamps are metadata, not a competing notebook title/body version.
+        if(value.getInt("table")!=0)value else JSONObject(value.toString()).also{row->
+            heads(key).filter{!it.getBoolean("deleted")}.maxOfOrNull{it.getJSONArray("row").getLong(4)}?.let{row.getJSONArray("row").put(4,it)}
+        }
+    }
     private fun guardAuthorState(){
         val actual=rows().mapValues{it.value.getJSONArray("row").toString()}
         val known=chosen().mapValues{it.value.getJSONArray("row").toString()}
         require(actual==known){"SHADOW_UNJOURNALED_WRITE"}
     }
     private fun merge(changes:JSONArray){
-        require(changes.length() in 1..2048)
+        require(changes.length() in 0..2048)
         repeat(changes.length()){i->val c=changes.getJSONObject(i)
             require(c.keys().asSequence().toSet()==setOf("table","key","row","revision","parents","origin","deleted")){"SHADOW_FIELDS"}
             val t=c.getInt("table");require(t in schema.indices);val key=c.getString("key");val rev=c.getString("revision");UUID.fromString(rev)
@@ -98,24 +104,36 @@ class ShadowReplica private constructor(private val context:Context,val director
             changes.put(c)
         }
         if(changes.length()==0)return@withTransaction null
-        val envelope=seal(changes);merge(changes);materialize()
+        val grouped=bundles.authored(before,after,origin)
+        val envelope=seal(changes,grouped);merge(changes);bundles.merge(grouped);materialize()
         sql.execSQL("INSERT INTO shadow_outbox VALUES (?,?)",arrayOf(envelope.getString("operation"),envelope.toString()))
         fault("before-author-commit");envelope.getString("operation")
     }}
     private fun header(e:JSONObject)=JSONObject().put("schema",e.getString("schema")).put("format",e.getString("format")).put("scope",e.getJSONArray("scope")).put("device",e.getString("device")).put("operation",e.getString("operation")).put("key_version",e.getInt("key_version"))
-    private fun seal(changes:JSONArray):JSONObject {
-        val h=JSONObject().put("schema",schemaHash).put("format","inkweft.shadow-rows.v1").put("scope",JSONArray(scope)).put("device",device).put("operation",id()).put("key_version",version)
+    private fun seal(changes:JSONArray,grouped:JSONArray=JSONArray()):JSONObject {
+        val h=JSONObject().put("schema",schemaHash).put("format","inkweft.shadow-rows.v2").put("scope",JSONArray(scope)).put("device",device).put("operation",id()).put("key_version",version)
         val nonce=ByteArray(12).also{java.security.SecureRandom().nextBytes(it)}
         val c=Cipher.getInstance("AES/GCM/NoPadding");c.init(Cipher.ENCRYPT_MODE,SecretKeySpec(checkNotNull(keys[version]),"AES"),GCMParameterSpec(128,nonce));c.updateAAD(h.toString().toByteArray())
-        val body=c.doFinal(changes.toString().toByteArray())
+        val body=c.doFinal(JSONObject().put("changes",changes).put("bundles",grouped).toString().toByteArray())
         h.put("nonce",Base64.getEncoder().encodeToString(nonce)).put("ciphertext",Base64.getEncoder().encodeToString(body))
         require(h.toString().toByteArray().size<=1_048_576){"SHADOW_BATCH_BUDGET"};return h
     }
-    suspend fun receive(cursor:Long,envelopes:List<String>)=withContext(Dispatchers.IO){db.withTransaction{
+    suspend fun receive(cursor:Long,envelopes:List<String>)=withContext(Dispatchers.IO){
+        require(envelopes.size<=16&&envelopes.all{it.toByteArray().size<=1_048_576})
+        val batch=JSONArray(envelopes).toString()
+        fault("before-inbox")
+        db.withTransaction{
+            sql.query("SELECT cursor,batch FROM shadow_inbox").use{c->
+                if(c.moveToFirst())require(c.getLong(0)==cursor&&c.getString(1)==batch){"SHADOW_INBOX_PENDING"}
+                else sql.execSQL("INSERT INTO shadow_inbox VALUES (?,?)",arrayOf<Any>(cursor,batch))
+            }
+        }
+        fault("after-inbox")
+        db.withTransaction{
         guardAuthorState();require(cursor>=cursor());require(envelopes.size<=16);if(envelopes.isEmpty())require(cursor==cursor())
         for(text in envelopes){require(text.toByteArray().size<=1_048_576);val e=JSONObject(text)
             require(e.keys().asSequence().toSet()==setOf("schema","format","scope","device","operation","key_version","nonce","ciphertext"))
-            require(e.getString("schema")==schemaHash&&e.getString("format")=="inkweft.shadow-rows.v1"&&e.getJSONArray("scope").toString()==JSONArray(scope).toString()){"SHADOW_SCOPE"}
+            require(e.getString("schema")==schemaHash&&e.getString("format")=="inkweft.shadow-rows.v2"&&e.getJSONArray("scope").toString()==JSONArray(scope).toString()){"SHADOW_SCOPE"}
             UUID.fromString(e.getString("device"));val op=e.getString("operation");UUID.fromString(op);val digest=hash(text)
             val previous=sql.query("SELECT digest FROM shadow_applied WHERE operation=?",arrayOf(op)).use{if(it.moveToFirst())it.getString(0)else null}
             if(previous!=null){require(previous==digest);continue}
@@ -125,16 +143,39 @@ class ShadowReplica private constructor(private val context:Context,val director
             val clear=c.doFinal(Base64.getDecoder().decode(e.getString("ciphertext")))
             // Locally authored operations already updated heads in the author transaction.
             val own=sql.query("SELECT 1 FROM shadow_outbox WHERE operation=?",arrayOf(op)).use{it.moveToFirst()}
-            if(!own)merge(JSONArray(clear.toString(Charsets.UTF_8)))
+            val payload=JSONObject(clear.toString(Charsets.UTF_8))
+            require(payload.keys().asSequence().toSet()==setOf("changes","bundles"))
+            fault("after-parse")
+            if(!own){merge(payload.getJSONArray("changes"));bundles.merge(payload.getJSONArray("bundles"))}
             sql.execSQL("INSERT INTO shadow_applied VALUES (?,?)",arrayOf(op,digest))
         }
-        materialize();fault("before-receive-commit")
+        fault("before-author-apply");materialize();fault("before-receive-commit")
         sql.execSQL("UPDATE shadow_meta SET cursor=?",arrayOf(cursor))
+        sql.execSQL("DELETE FROM shadow_inbox")
+        };fault("after-receive-commit")
+    }
+    suspend fun recoverInbox(){
+        val pending=sql.query("SELECT cursor,batch FROM shadow_inbox").use{if(it.moveToFirst())it.getLong(0) to JSONArray(it.getString(1))else null}
+        pending?.let{(cursor,a)->receive(cursor,List(a.length()){a.getString(it)})}
+    }
+    /** Explicit rejection only: relay cursor and unsent author changes remain intact. */
+    suspend fun discardRejectedInbox()=db.withTransaction{sql.execSQL("DELETE FROM shadow_inbox")}
+    suspend fun semanticConflicts()=withContext(Dispatchers.IO){db.withTransaction{bundles.conflicts()}}
+    suspend fun resolve(conflict:ShadowConflict,revision:String,operation:String):String=withContext(Dispatchers.IO){db.withTransaction{
+        UUID.fromString(operation)
+        val digest=hash(conflict.key+":"+conflict.frozen+":"+revision)
+        sql.query("SELECT digest,envelope FROM shadow_resolutions WHERE operation=?",arrayOf(operation)).use{c->if(c.moveToFirst()){require(c.getString(0)==digest);return@withTransaction c.getString(1)}}
+        guardAuthorState();val resolution=bundles.resolve(conflict.key,conflict.frozen,revision);val grouped=JSONArray().put(resolution)
+        val envelope=seal(JSONArray(),grouped);bundles.merge(grouped);materialize()
+        sql.execSQL("INSERT INTO shadow_outbox VALUES (?,?)",arrayOf(envelope.getString("operation"),envelope.toString()))
+        sql.execSQL("INSERT INTO shadow_resolutions VALUES (?,?,?)",arrayOf(operation,digest,envelope.getString("operation")))
+        fault("before-resolution-commit");envelope.getString("operation")
     }}
     fun cursor()=sql.query("SELECT cursor FROM shadow_meta").use{it.moveToFirst();it.getLong(0)}
     fun outgoing():List<String> = sql.query("SELECT envelope FROM shadow_outbox ORDER BY rowid").use{c->buildList{while(c.moveToNext())add(c.getString(0))}}
-    suspend fun acknowledged(operation:String)=db.withTransaction{require(sql.query("SELECT 1 FROM shadow_applied WHERE operation=?",arrayOf(operation)).use{it.moveToFirst()}){"SHADOW_PULL_BEFORE_ACK"};sql.execSQL("DELETE FROM shadow_outbox WHERE operation=?",arrayOf(operation))}
-    fun conflicts():Int=sql.query("SELECT COUNT(*) FROM (SELECT entity FROM shadow_versions GROUP BY entity HAVING COUNT(*)>1)").use{it.moveToFirst();it.getInt(0)}
+    suspend fun acknowledged(operation:String){fault("before-outbox-ack");db.withTransaction{require(sql.query("SELECT 1 FROM shadow_applied WHERE operation=?",arrayOf(operation)).use{it.moveToFirst()}){"SHADOW_PULL_BEFORE_ACK"};sql.execSQL("DELETE FROM shadow_outbox WHERE operation=?",arrayOf(operation))};fault("after-outbox-ack")}
+    fun unsupportedConflicts():Int=sql.query("SELECT entity FROM shadow_versions GROUP BY entity HAVING COUNT(*)>1").use{c->var count=0;while(c.moveToNext())if(bundles.group(heads(c.getString(0)).first())==null)count++;count}
+    fun conflicts():Int=unsupportedConflicts()+bundles.conflicts().size
     suspend fun authorFingerprint():String=withContext(Dispatchers.IO){db.withTransaction{hash(JSONArray(rows().values.toList()).toString())}}
     override fun close()=db.close()
     companion object {
@@ -153,7 +194,9 @@ class ShadowReplica private constructor(private val context:Context,val director
             sql.execSQL("CREATE TABLE IF NOT EXISTS shadow_selected (entity TEXT PRIMARY KEY, revision TEXT NOT NULL)")
             sql.execSQL("CREATE TABLE IF NOT EXISTS shadow_outbox (operation TEXT PRIMARY KEY, envelope TEXT NOT NULL)")
             sql.execSQL("CREATE TABLE IF NOT EXISTS shadow_applied (operation TEXT PRIMARY KEY, digest TEXT NOT NULL)")
-            return ShadowReplica(context,target,db,scope,device,keys,version,fault)
+            sql.execSQL("CREATE TABLE IF NOT EXISTS shadow_inbox (cursor INTEGER NOT NULL,batch TEXT NOT NULL)")
+            sql.execSQL("CREATE TABLE IF NOT EXISTS shadow_resolutions (operation TEXT PRIMARY KEY,digest TEXT NOT NULL,envelope TEXT NOT NULL)")
+            return ShadowReplica(context,target,db,scope,device,keys,version,fault).also{it.bundles}
             }catch(t:Throwable){db.close();throw t}
         }
     }

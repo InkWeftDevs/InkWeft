@@ -6,7 +6,9 @@
 
 固定包本地复验16项、窄屏三入口、48场持续负载、5＋7个原生终止切点通过；Room154项、服务15项通过。APK在 `E:/Inkweft/dist/NextStageV45/`。
 
-本轮不宣称全部出口验收：MuMu 的系统信任管理器接受未知签发者，TLS 负例 FAIL；Docker 引擎不可用，扩展容器业务与独立卷恢复 BLOCKED；平板锁屏、仍为 v43，未执行升级核对。构件和实际结果见 [v45 验证记录](VERIFICATION-V45.md)，操作见 [交付说明](DELIVERY-V45.md)，实机条件见 [独立清单](DEVICE-TEST-CHECKLIST.md)。v45 已获用户授权上传；远端结果以本轮 [GitHub Actions](https://github.com/InkWeftDevs/InkWeft/actions/workflows/android-a0.yml) 和 PR #2 检查状态为准，不能继承 v44 的远端通过数。
+本轮不宣称全部出口验收：MuMu 的系统信任管理器接受未知签发者，TLS 负例 FAIL；本地 Docker 引擎不可用；后续 CI 扩展容器业务与独立卷恢复已 PASS；平板锁屏、仍为 v43，未执行升级核对。构件和实际结果见 [v45 验证记录](VERIFICATION-V45.md)，操作见 [交付说明](DELIVERY-V45.md)，实机条件见 [独立清单](DEVICE-TEST-CHECKLIST.md)。v45 已获用户授权上传；远端结果以本轮 [GitHub Actions](https://github.com/InkWeftDevs/InkWeft/actions/workflows/android-a0.yml) 和 PR #2 检查状态为准，不能继承 v44 的远端通过数。
+
+2026-09-29 补核：v45 CI 36547758943（源码 9807d15）已完成成功；已下载两个分片原始报告，App 238/238、Room 154/154，核心259项，lint零Error／139Warning。容器密文上传、重启下载与独立新卷恢复均PASS，镜像sha256:63189078c079978a994d1c28797e1e83104086a1a4f845f57538cc5ec8a0e592；范围不含TLS。证据：NextStageV46/ci-v45。保留下文封包时的历史失败与本地Docker限制。
 
 ---
 

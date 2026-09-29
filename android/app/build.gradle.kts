@@ -4,6 +4,7 @@ plugins {
 }
 val diagnosticBuild = providers.gradleProperty("inkweftDiagnosticBuild").orNull == "true"
 val tlsFixture = providers.gradleProperty("inkweftTlsFixture").orNull
+val performanceProbe = providers.gradleProperty("inkweftPerformanceProbe").orNull == "true"
 val insertionPreview = providers.gradleProperty("inkweftInsertionPreview").orNull == "true"
 fun commitValue(name: String): String = System.getenv(name)?.takeIf { it.matches(Regex("[0-9a-f]{40}")) } ?: "local-unknown"
 android {
@@ -13,8 +14,8 @@ android {
         applicationId = if (insertionPreview) "org.inkweft.app.a0.insertion" else if (diagnosticBuild) "org.inkweft.app.a0.workspace" else "org.inkweft.app.a0"
         minSdk = 31
         targetSdk = 36
-        versionCode = 45
-        versionName = "0.0.45-creation-shadow"
+        versionCode = 46
+        versionName = "0.0.46-trusted-continuity"
         manifestPlaceholders["appLabel"] = if (insertionPreview) "墨织整合预览" else if (diagnosticBuild) "墨织工作台预览" else "墨织"
         buildConfigField("String", "BUILD_COMMIT", "\"${commitValue("GITHUB_SHA")}\"")
         buildConfigField("String", "SOURCE_COMMIT", "\"${commitValue("INKWEFT_HEAD_SHA")}\"")
@@ -40,6 +41,14 @@ android {
         applicationIdSuffix = ".tlsprobe"
         matchingFallbacks += listOf("debug")
     }
+    buildTypes.create("performance") {
+        initWith(buildTypes.getByName("release"))
+        signingConfig = buildTypes.getByName("debug").signingConfig
+        applicationIdSuffix = ".performance"
+        matchingFallbacks += listOf("release")
+        isDebuggable = false
+    }
+    if(performanceProbe){require(tlsFixture==null);testBuildType="performance"}
     if (tlsFixture != null) {
         require(insertionPreview) { "TLS fixture requires the isolated insertion application" }
         sourceSets.getByName("tlsProbe").res.srcDir(tlsFixture)

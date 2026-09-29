@@ -121,7 +121,7 @@ class LibraryBackupRepository(private val context:Context,private val db:NoteDat
         noRows("SELECT 1 FROM notebook_pages WHERE world NOT IN (0,1) OR position NOT BETWEEN 0 AND 499 OR paper NOT BETWEEN 0 AND ${PaperStyle.entries.lastIndex}")
         noRows("SELECT 1 FROM notebook_workspace WHERE world NOT IN (0,1) OR favorite NOT IN (0,1) OR pinned NOT IN (0,1) OR paper NOT BETWEEN 0 AND ${PaperStyle.entries.lastIndex}")
         noRows("SELECT 1 FROM ink_receipts WHERE visible NOT IN (0,1)")
-        noRows("SELECT 1 FROM library_content_receipts WHERE kind NOT IN ('COPY','IMPORT','CREATE','RESOURCE')")
+        noRows("SELECT 1 FROM library_content_receipts WHERE kind NOT IN ('COPY','IMPORT','CREATE','RESOURCE','INK_GROUP')")
         noRows("SELECT 1 FROM notebook_pages WHERE trashedAt<0")
         noRows("SELECT 1 FROM study_nodes WHERE removed NOT IN (0,1)")
         require(sql.query("SELECT COALESCE(SUM(length(snapshot)),0) FROM study_sources").use{it.moveToFirst();it.getLong(0)}<=32_000_000){"STUDY_SNAPSHOT_BUDGET"}

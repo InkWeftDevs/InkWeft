@@ -70,5 +70,10 @@ class InkSession(initial:InkPage) {
         while(undo.size>50)undo.removeFirst();historyMove=null;pending=null;blocked=null
     }
     fun requestUndo(){check(canUndo);historyMove=true;queue.add(undo.last())}
+    /** Reconstruct only the just-recovered logical stroke, not an invented full history. */
+    fun rememberRecoveredAddition(ids:List<String>){
+        check(queued==0&&blocked==null);require(ids.isNotEmpty()&&ids.distinct()==ids&&ids.all{id->page.strokes.any{it.stroke.id==id&&it.visible}})
+        undo.add(InkMutation.Visibility(ids,false));redo.clear()
+    }
     fun requestRedo(){check(canRedo);historyMove=false;queue.add(redo.last())}
 }

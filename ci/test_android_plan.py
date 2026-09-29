@@ -2,9 +2,16 @@ import unittest
 from android_plan import plan, inventory
 
 class PlanTest(unittest.TestCase):
+    def test_tls_has_explicit_gate_and_full_run(self):
+        for path in ['backup-server/tls_fixture.py','android/app/src/main/java/org/inkweft/app/BackupTransport.kt','android/app/src/tlsProbe/res/xml/network_security_config.xml','android/app/build.gradle.kts','ci/run_tls_probe.py']:
+            self.assertTrue(plan([path])['tls'],path)
+        self.assertTrue(plan([],True)['tls'])
+        self.assertFalse(plan(['android/CHANGELOG.md'])['tls'])
+        self.assertFalse(plan(['android/app/src/main/java/org/inkweft/app/PaperPickerDialog.kt'])['tls'])
+        self.assertFalse(plan(['ci/run_tls_probe.py'])['device'])
     def test_backup_protocol_and_dependency_changes_run_real_roundtrip(self):
         for path in ['backup-server/server.py','backup-server/requirements.txt']:
-            p=plan([path]);self.assertTrue(p['backup']);self.assertEqual(['org.inkweft.app.EncryptedBackupIntegrationTest'],p['app']);self.assertEqual([],p['room'])
+            p=plan([path]);self.assertTrue(p['backup']);self.assertEqual(['org.inkweft.app.EncryptedBackupIntegrationTest','org.inkweft.app.ShadowNativeTest','org.inkweft.app.ShadowSyncTest'],p['app']);self.assertEqual([],p['room'])
     def test_synthetic_protocol_only_does_not_build_android(self):
         p=plan(['sync-lab/model.py','resource-packs/pack.py','resource-packs/paper/planner.png'])
         self.assertTrue(p['experiments']);self.assertFalse(p['build']);self.assertFalse(p['device'])

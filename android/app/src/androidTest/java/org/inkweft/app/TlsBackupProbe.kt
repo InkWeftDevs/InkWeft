@@ -5,16 +5,20 @@ import kotlinx.coroutines.runBlocking
 import org.junit.Test
 import org.junit.Assert.*
 import java.util.UUID
+import org.json.JSONObject
 
 /** Explicit isolated build only. Not selected by the ordinary *Test discovery. */
 class TlsBackupProbe {
     private fun isolated(){require(InstrumentationRegistry.getInstrumentation().targetContext.packageName.endsWith(".tlsprobe"))}
+    private fun counts()=JSONObject(java.net.URL("https://127.0.0.1:18761/__fixture__/counts").readText()).getJSONObject("endpoints")
     @Test fun trustedHttpsPreservesAuthorClosure()=runBlocking{isolated();EncryptedBackupIntegrationTest().roundTrip("https://127.0.0.1:18761")}
     @Test fun expiredCertificateIsRejected()=rejected(18762)
     @Test fun wrongHostnameIsRejected()=rejected(18763)
     @Test fun unknownIssuerIsRejected()=rejected(18764)
     private fun rejected(port:Int)=runBlocking<Unit>{
         isolated()
+            val endpoint=mapOf(18762 to "expired",18763 to "wrong",18764 to "untrusted").getValue(port)
+            val before=counts().getJSONObject(endpoint)
             if(port==18764){
                 val connection=java.net.URL("https://127.0.0.1:$port/v1/identity").openConnection() as javax.net.ssl.HttpsURLConnection
                 try{connection.connect();val chain=connection.serverCertificates.map{it as java.security.cert.X509Certificate}.toTypedArray()
@@ -28,11 +32,19 @@ class TlsBackupProbe {
             }
             try{BackupTransport.login("https://127.0.0.1:$port","synthetic-alice","synthetic-alice-password-123",UUID.randomUUID().toString());fail("Untrusted TLS accepted at $port")}
             catch(_:javax.net.ssl.SSLException){}
+            val synthetic=BackupIdentity("https://127.0.0.1:$port","synthetic","synthetic",UUID.randomUUID().toString(),UUID.randomUUID().toString(),"synthetic-tls-canary")
+            try{BackupTransport(synthetic).request("PUT",UUID.randomUUID().toString(),bytes=byteArrayOf(1,2,3));fail("Sensitive TLS request accepted")}
+            catch(_:javax.net.ssl.SSLException){}
+            val after=counts().getJSONObject(endpoint)
+            assertEquals(before.getInt("requests"),after.getInt("requests"))
+            assertEquals(0,after.getInt("sensitive"))
+            println("$endpoint: received HTTP=0; sensitive=0")
     }
     @Test fun redirectAndRemoteHttpCannotDowngrade()=runBlocking<Unit>{
         isolated()
         try{BackupTransport.login("https://127.0.0.1:18765","synthetic-alice","synthetic-alice-password-123",UUID.randomUUID().toString());fail("Redirect followed")}
         catch(e:BackupHttpError){assertEquals(307,e.status)}
+        val observed=counts();assertEquals(0,observed.getJSONObject("redirect").getInt("sensitive"));assertEquals(0,observed.getJSONObject("sink").getInt("requests"))
         assertThrows(IllegalArgumentException::class.java){BackupTransport.normalize("http://backup.example.com")}
     }
 }

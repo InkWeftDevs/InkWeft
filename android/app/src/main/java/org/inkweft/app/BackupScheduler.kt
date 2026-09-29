@@ -32,7 +32,7 @@ class BackupJobService:JobService(){
         return true
     }
     override fun onStopJob(params:JobParameters):Boolean {
-        observer?.cancel();transfer?.cancel()
+        observer?.cancel();transfer?.cancel(CancellationException("SYSTEM_STOP"))
         return (application as InkWeftApplication).backupEngine.mayResume()
     }
     override fun onDestroy(){scope.cancel();super.onDestroy()}

@@ -218,7 +218,7 @@ internal class KnowledgeViewModel(private val repo:KnowledgeRepository,private v
             }
         }}
     }
-    if(sourceOpen)source?.let{ReviewSourceDialog(it){sourceOpen=false}}
+    if(sourceOpen)source?.let{ReviewSourceDialog(it,dismiss={sourceOpen=false})}
 }
 
 private suspend fun knowledgeMarkdown(app:InkWeftApplication,book:String,notes:List<NoteRow>,cards:List<StudyCardRow>,rows:List<KnowledgeRow>):String {

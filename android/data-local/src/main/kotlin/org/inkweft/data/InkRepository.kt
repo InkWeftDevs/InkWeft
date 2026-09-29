@@ -4,6 +4,7 @@ package org.inkweft.data
 import androidx.room.*
 import org.inkweft.core.*
 import java.util.UUID
+import kotlinx.coroutines.sync.withLock
 
 @Entity(tableName="ink_pages",foreignKeys=[ForeignKey(entity=NotebookPageRow::class,parentColumns=["id"],childColumns=["noteId"],onDelete=ForeignKey.NO_ACTION)])
 data class InkPageRow(@PrimaryKey val noteId:String,val revision:Long)
@@ -34,6 +35,7 @@ interface InkDao {
 enum class InkFaultPoint { BEFORE_RECEIPT,AFTER_TRANSACTION }
 data class ObjectWrite(val pageId:String,val expected:Long,val commandId:String,val objects:List<PageObject>)
 data class CanvasBatchResult(val ink:List<InkCommitResult> = emptyList(),val objects:List<Long> = emptyList(),val failure:InkCommitResult?=null)
+data class InkGroupCommit(val group:InkGroupPrefix,val results:List<InkCommitResult.Committed>,val replayed:Boolean)
 class InkRepository(private val db:NoteDatabase,private val fault:(InkFaultPoint)->Unit={}) {
     private class GroupAbort(val result:InkCommitResult):RuntimeException()
     /** A seam gesture either commits on every sheet or on none; receipts make a retry idempotent. */
@@ -59,7 +61,58 @@ class InkRepository(private val db:NoteDatabase,private val fault:(InkFaultPoint
     }
     private val dao=db.ink()
     private val checkpoints by lazy{InkCheckpoints(checkNotNull(db.checkpointRoot))}
-    fun hasUnsealedInput():Boolean=db.checkpointRoot?.walkTopDown()?.any{it.isFile&&(it.name.endsWith(".inkpart")||it.name.endsWith(".inkpart.bak")||it.name.endsWith(".inkgroup"))}?:false
+    var groupFaultForTest:(String)->Unit={}
+    private val groups by lazy{InkGroupCheckpoints(java.io.File(checkNotNull(db.checkpointRoot),"groups")){groupFaultForTest("journal-$it")}}
+    private fun groupOperation(id:String)=UUID.nameUUIDFromBytes("ink-group:$id".toByteArray()).toString()
+    fun hasUnsealedInput():Boolean=db.checkpointRoot?.let{root->root.walkTopDown().any{it.isFile&&(it.name.endsWith(".inkpart")||it.name.endsWith(".inkpart.bak"))}||groups.hasUnsealed()}?:false
+    suspend fun captureGroup(book:String,pages:List<String>,origin:Int,stroke:InkStroke):InkGroupPrefix=db.withTransaction{
+        require(db.workspace().get(book)?.trashedAt==null&&db.notes().note(book)!=null){"GROUP_BOOK_UNAVAILABLE"}
+        pages.forEach{id->val p=checkNotNull(db.pages().get(id));require(p.notebookId==book&&!p.world&&p.trashedAt==null){"GROUP_PAGE_UNAVAILABLE"}}
+        InkGroupPrefix(book,pages,pages.map{dao.page(it)?.revision?:0L},origin,stroke)
+    }
+    suspend fun checkpointGroup(group:InkGroupPrefix):Boolean=db.inkGroupMutex.withLock{
+        if(db.libraryContent().receipt(groupOperation(group.stroke.id))!=null)return@withLock false
+        groupFaultForTest("before-prefix");val saved=groups.save(group);groupFaultForTest("after-prefix");saved
+    }
+    suspend fun pendingGroups(book:String):List<InkGroupPrefix> = db.inkGroupMutex.withLock{groups.pending(book)}
+    suspend fun cancelGroup(id:String):Boolean=db.inkGroupMutex.withLock{
+        if(db.libraryContent().receipt(groupOperation(id))!=null)return@withLock false
+        groups.cancel(id);groupFaultForTest("after-cancel");groups.discard(id);true
+    }
+    suspend fun acknowledgeGroup(id:String)=db.inkGroupMutex.withLock{
+        check(db.libraryContent().receipt(groupOperation(id))?.kind=="INK_GROUP")
+        groups.discard(id)
+    }
+    /** Journal intent first; every fragment and the logical receipt share one author transaction. */
+    suspend fun sealGroup(value:InkGroupPrefix,finished:InkStroke?=null):InkGroupCommit=db.inkGroupMutex.withLock{
+        val stored=groups.read(value.stroke.id)
+        val group=if(stored?.state in listOf("SEALING","SEALED"))stored!! else value.copy(state="SEALING",finished=finished?:value.finished)
+        require(stored?.state!="CANCELLED"){"GROUP_CANCELLED"}
+        val operation=groupOperation(group.stroke.id);val digest=group.digest();val commands=group.commands()
+        val replay=db.libraryContent().receipt(operation)
+        if(replay==null&&stored?.state!="SEALING")require(groups.save(group)){"GROUP_CANCELLED"}
+        groupFaultForTest("before-group-transaction")
+        val results=db.withTransaction{
+            val receipt=db.libraryContent().receipt(operation)
+            if(receipt!=null){
+                require(receipt.kind=="INK_GROUP"&&receipt.digest==digest&&receipt.noteId==group.book){"GROUP_RECEIPT_CHANGED"}
+                commands.map{c->val r=checkNotNull(dao.receipt(c.commandId));require(r.digest==c.digest()&&r.noteId==c.noteId);InkCommitResult.Committed(r.committedRevision)}
+            }else{
+                require(db.workspace().get(group.book)?.trashedAt==null){"GROUP_BOOK_UNAVAILABLE"}
+                commands.forEach{c->val page=db.pages().get(c.noteId);require(page!=null&&page.notebookId==group.book&&page.trashedAt==null&&!page.world){"GROUP_PAGE_UNAVAILABLE"}}
+                groupFaultForTest("before-first-fragment")
+                val saved=saveGroup(commands);require(saved.all{it is InkCommitResult.Committed}){"GROUP_REVISION_CONFLICT"}
+                groupFaultForTest("after-fragments")
+                db.libraryContent().insert(LibraryContentReceipt(operation,"INK_GROUP",digest,group.book))
+                groupFaultForTest("before-group-commit")
+                saved.map{it as InkCommitResult.Committed}
+            }
+        }
+        groupFaultForTest("after-group-commit")
+        if(group.state!="SEALED")groups.save(group.copy(state="SEALED"))
+        groupFaultForTest("after-group-marker")
+        InkGroupCommit(group.copy(state="SEALED"),results,replay!=null)
+    }
     suspend fun checkpoint(page:String,stroke:InkStroke){
         require(stroke.world==owner(page).world)
         if(dao.stroke(stroke.id)==null)checkpoints.save(page,stroke.samples.size,stroke)

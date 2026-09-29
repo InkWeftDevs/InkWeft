@@ -17,7 +17,7 @@
       "expected": "按实际CI结果更新状态，容器基础PASS不冒充TLS业务通过",
       "previous_requirement": "V44-11/12",
       "status": "PASS",
-      "evidence": "v44远端原始两分片App228、Room153与基础容器PASS已纠正；v45远端未运行。"
+      "evidence": "v44远端原始两分片App228、Room153与基础容器PASS已纠正；v45远端未运行。；后续v45已完成：App238/238、Room154/154、核心259，扩展容器业务/独立卷恢复PASS，见follow_up_verification。"
     },
     {
       "id": "A03",
@@ -244,5 +244,16 @@
       "evidence": "USB可读但平板锁屏，未覆盖v45或核对真实资料；真实笔/独立多作者未运行。"
     }
   ],
-  "source_commit": "2395d22e149064fa311a13a5b65c40b490caae65"
+  "source_commit": "2395d22e149064fa311a13a5b65c40b490caae65",
+  "follow_up_verification": {
+    "date": "2026-09-29",
+    "run": 36547758943,
+    "source": "9807d15d4dd18b545dfaf8bb3b9fc043a9504e3f",
+    "app": 238,
+    "room": 154,
+    "core": 259,
+    "container": "PASS: encrypted business, restart and independent-volume recovery; no TLS",
+    "evidence": "E:/Inkweft/archives/2026-09-29/NextStageV46/ci-v45",
+    "historical_results_retained": true
+  }
 }

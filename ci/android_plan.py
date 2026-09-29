@@ -22,11 +22,16 @@ def inventory(module):
 def plan(paths, full=False):
     core = lint = full
     experiments = full
+    tls = full
     app = set(inventory("app")) if full else set()
     room = set(inventory("data-local")) if full else set()
     reasons = []
     for path in paths:
         p = Path(path)
+        if (path.startswith('backup-server/') and p.suffix not in {'.md','.txt'}) or p.name in {'BackupTransport.kt','TlsBackupProbe.kt','EncryptedBackupIntegrationTest.kt','network_security_config.xml','AndroidManifest.xml','build.gradle.kts'} or path in {'ci/run_tls_probe.py','.github/workflows/android-a0.yml'}:
+            tls = True
+        if p.name=='TlsBackupProbe.kt' or path=='ci/run_tls_probe.py':
+            reasons.append(path);continue
         if path.startswith(("sync-lab/","resource-packs/")) and p.suffix.lower() not in {".md",".txt"}:
             experiments=True;reasons.append(path);continue
         if p.suffix.lower() in {".md", ".txt", ".png", ".jpg", ".svg"} and "/src/" not in path and p.name!='requirements.txt':
@@ -34,7 +39,7 @@ def plan(paths, full=False):
         if path.startswith("ci/test_") and p.suffix == ".py":
             continue
         if path.startswith("backup-server/"):
-            app.add('org.inkweft.app.EncryptedBackupIntegrationTest')
+            app.update(['org.inkweft.app.EncryptedBackupIntegrationTest','org.inkweft.app.ShadowSyncTest','org.inkweft.app.ShadowNativeTest'])
         elif path.startswith("android/core-domain/src/test/"):
             core = True
         elif "/src/androidTest/" in path and p.suffix == ".kt":
@@ -54,8 +59,8 @@ def plan(paths, full=False):
             core = lint = True
             room.update(inventory("data-local")); app.update(inventory("app"))
         reasons.append(path)
-    return {"experiments":experiments,"core": core, "lint": lint, "app": sorted(app), "room": sorted(room),
-            "backup": 'org.inkweft.app.EncryptedBackupIntegrationTest' in app,
+    return {"tls":tls,"experiments":experiments,"core": core, "lint": lint, "app": sorted(app), "room": sorted(room),
+            "backup": bool(app & {'org.inkweft.app.EncryptedBackupIntegrationTest','org.inkweft.app.ShadowSyncTest','org.inkweft.app.ShadowNativeTest','org.inkweft.app.BackupReliabilityUiTest'}),
             "build": bool(core or lint or app or room), "device": bool(app or room),
             "expected_app": sum(inventory("app")[c] for c in app),
             "expected_room": sum(inventory("data-local")[c] for c in room),

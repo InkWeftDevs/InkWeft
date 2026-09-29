@@ -19,13 +19,16 @@ import kotlin.math.*
 
 /** A bounded viewport. Partial erase clips ink, never paints the paper colour. */
 class InkCanvasView(context:Context):View(context){
+    internal var authorSession:ShadowAuthorSession?=null
+        set(value){check(!isAttachedToWindow){"Bind author session before attaching canvas"};field=value}
     var onCheckpoint:(InkStroke)->Unit={}
     var onCheckpointCancel:(String)->Unit={}
     private var checkpointAt=0L
     var onStroke:(InkStroke)->Unit={}
     var finishStroke:(InkStroke)->InkStroke={it}
     var onViewportGesture:(Boolean)->Unit={}
-    internal val inputReady get()=allowInput&&(documentId==null||documentKnownAbsent||(documentTile!=null&&!documentError))
+    internal val documentContentReady get()=documentId==null||documentKnownAbsent||(documentTile!=null&&!documentError)
+    internal val inputReady get()=allowInput&&documentContentReady
     var seamWriting=false
     var onLiveSamples:(List<InkSample>)->Unit={}
     var seamDraft:InkStroke? = null
@@ -79,9 +82,9 @@ class InkCanvasView(context:Context):View(context){
         mapSceneJob?.cancel();mapSceneJob=null;mapBook=book
         if(book==null){objectPainter.mapScenes=emptyMap();return}
         if(!isAttachedToWindow)return
-        val app=context.applicationContext as? InkWeftApplication?:return
+        val maps=authorSession?.maps?:(context.applicationContext as? InkWeftApplication)?.mapGraphs?:return
         mapSceneJob=CoroutineScope(Dispatchers.Main.immediate).launch{
-            app.mapGraphs.observe(book).flowOn(Dispatchers.IO).catch{if(it is CancellationException)throw it;emit(listOf(MapScene(MapRef(book),"",emptyList(),"",false)))}.collect{scenes->objectPainter.mapScenes=scenes.associateBy{it.ref};invalidate()}
+            maps.observe(book).flowOn(Dispatchers.IO).catch{if(it is CancellationException)throw it;emit(listOf(MapScene(MapRef(book),"",emptyList(),"",false)))}.collect{scenes->objectPainter.mapScenes=scenes.associateBy{it.ref};invalidate()}
         }
     }
     fun showObjects(next:List<PageObject>){if(objects==next)return;objects=next;observeMapScenes();restoreAppearance();suppressedStrokeIds=next.flatMap{it.sourceStrokeIds}.toSet();if(preview&&world&&width>0&&height>0)fitContent(false);invalidate()}
@@ -106,7 +109,7 @@ class InkCanvasView(context:Context):View(context){
         val request="$id:$rect:$pixels";if(documentRequest==request)return;documentRequest=request;documentJob?.cancel()
         documentJob=CoroutineScope(Dispatchers.Main.immediate).launch {
             delay(80)
-            try{val tile=(context.applicationContext as InkWeftApplication).documentRendering.render(id,rect,pixels)
+            try{val tile=(authorSession?.rendering?:(context.applicationContext as InkWeftApplication).documentRendering).render(id,rect,pixels)
                 ensureActive();if(documentRequest==request){releaseDocumentTile();documentTile=tile;documentKnownAbsent=tile==null;documentError=false;invalidate()}
             }catch(c:CancellationException){throw c}catch(_:RenderBudgetBusy){delay(500);if(documentRequest==request){documentRequest=null;documentJob=null;requestDocument()}}
             catch(_:Exception){if(documentRequest==request){documentError=true;invalidate();onNotice("文档页面读取失败，请离开后重新打开；原文件保留。")}}
@@ -139,6 +142,7 @@ class InkCanvasView(context:Context):View(context){
     private var gestureAppearance=StrokeAppearance()
     private var gestureId=UUID.randomUUID().toString()
     fun liveStroke(samples:List<InkSample>,dy:Float=0f)=InkStroke(gestureId,gesturePen,gestureColor,gestureWidth,inputKind,samples.map{it.copy(world=true)},true,appearance=gestureAppearance.translated(0f,dy))
+    fun capturedStroke()=liveStroke(raw.toList())
     private var gestureErase=false
     private var gestureWhole=false
     private var gestureOnlyHighlighter=false

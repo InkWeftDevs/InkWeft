@@ -151,7 +151,12 @@ class EncryptedBackupIntegrationTest {
             val manifest=JSONObject().put("bytes",encrypted.length()).put("chunks",JSONArray(chunks.map(EncryptedBackupFile::hex))).put("format","inkweft.encrypted-backup.v1")
             val operation=id();transport.json("PUT",library,"/uploads/$operation",manifest)
             try{transport.json("POST",library,"/uploads/$operation/publish");fail("missing chunks published")}catch(e:BackupHttpError){assertEquals(409,e.status)}
-            chunks.forEachIndexed{i,b->transport.request("PUT",library,"/uploads/$operation/chunks/$i",bytes=b)}
+            // Recreate the transport after a confirmed first block; resume only server-reported gaps.
+            transport.request("PUT",library,"/uploads/$operation/chunks/0",bytes=chunks.first())
+            val resumed=BackupTransport(alice)
+            val received=resumed.json("GET",library,"/uploads/$operation").getJSONArray("received")
+            val existing=(0 until received.length()).map{received.getInt(it)}.toSet();assertTrue(0 in existing)
+            chunks.indices.filterNot{it in existing}.forEach{i->resumed.request("PUT",library,"/uploads/$operation/chunks/$i",bytes=chunks[i])}
             val receipt=transport.json("POST",library,"/uploads/$operation/publish")
             assertEquals("PUBLISHED",receipt.getString("state"));assertEquals(receipt.toString(),transport.json("GET",library,"/operations/$operation").toString())
             val bob=BackupTransport(BackupTransport.login(alice.url,"synthetic-bob","synthetic-bob-password-456",id()))

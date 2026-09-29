@@ -34,7 +34,7 @@ class ShadowTest(unittest.TestCase):
     with httpx.Client(base_url=f'http://127.0.0.1:{port}',timeout=3) as c:
      device=str(uuid.uuid4());library=str(uuid.uuid4());identity=c.post('/v1/sessions',json={'username':'synthetic','password':'synthetic-password-123','device':device}).json();headers={'Authorization':'Bearer '+identity['token']}
      self.assertEqual(200,c.put('/v1/libraries/'+library,headers=headers).status_code)
-     e={'schema':'a'*64,'format':'inkweft.shadow-rows.v1','scope':[identity['server'],identity['issuer'],identity['user'],library],'device':device,'operation':str(uuid.uuid4()),'key_version':1,'nonce':base64.b64encode(b'0'*12).decode(),'ciphertext':base64.b64encode(b'1'*32).decode()}
+     e={'schema':'a'*64,'format':'inkweft.shadow-rows.v2','scope':[identity['server'],identity['issuer'],identity['user'],library],'device':device,'operation':str(uuid.uuid4()),'key_version':1,'nonce':base64.b64encode(b'0'*12).decode(),'ciphertext':base64.b64encode(b'1'*32).decode()}
      body=json.dumps(e).encode();url='/v1/libraries/'+library+'/shadow/events';first=c.post(url,headers=headers,content=body);self.assertEqual(200,first.status_code)
      expected=c.get(url,headers=headers).json();stop();start()
      self.assertEqual(expected,c.get(url,headers=headers).json())
@@ -48,7 +48,7 @@ class ShadowTest(unittest.TestCase):
    with TestClient(create_app(store.path,enable_shadow=True)) as c:
     identity=c.post('/v1/sessions',json={'username':'synthetic','password':'synthetic-password-123','device':device}).json();headers={'Authorization':'Bearer '+identity['token']}
     self.assertEqual(200,c.put('/v1/libraries/'+library,headers=headers).status_code)
-    envelope={'schema':'a'*64,'format':'inkweft.shadow-rows.v1','scope':[identity['server'],identity['issuer'],identity['user'],library],'device':device,'operation':str(uuid.uuid4()),'key_version':1,'nonce':base64.b64encode(b'0'*12).decode(),'ciphertext':base64.b64encode(b'1'*32).decode()}
+    envelope={'schema':'a'*64,'format':'inkweft.shadow-rows.v2','scope':[identity['server'],identity['issuer'],identity['user'],library],'device':device,'operation':str(uuid.uuid4()),'key_version':1,'nonce':base64.b64encode(b'0'*12).decode(),'ciphertext':base64.b64encode(b'1'*32).decode()}
     url='/v1/libraries/'+library+'/shadow/events';body=json.dumps(envelope).encode()
     first=c.post(url,headers=headers,content=body);self.assertEqual(200,first.status_code);self.assertEqual(first.json(),c.post(url,headers=headers,content=body).json())
     self.assertEqual(409,c.post(url,headers=headers,json=envelope|{'future':1}).status_code)

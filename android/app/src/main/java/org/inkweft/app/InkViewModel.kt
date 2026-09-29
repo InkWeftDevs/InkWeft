@@ -68,6 +68,18 @@ class InkViewModel(private val noteId:String,private val repository:InkRepositor
     internal fun completeGroup(command:CommitInk,result:InkCommitResult){
         checkNotNull(session).complete(command,result);if(result is InkCommitResult.Committed){history.committed(EditDomain.INK,historyDirection);historyDirection=0};writing=false;publish()
     }
+    private val recoveredGroups=mutableSetOf<String>()
+    internal fun adoptRecovered(command:CommitInk,result:InkCommitResult.Committed){
+        if(command.commandId in recoveredGroups)return
+        val s=checkNotNull(session);check(!writing&&!erasing&&s.queued==0&&s.blocked==null)
+        if(s.page.revision==command.expectedRevision){
+            s.enqueue(command.mutation);val pending=checkNotNull(s.nextCommand{command.commandId});s.complete(pending,result)
+        }else{
+            require(s.page.revision==result.revision){"GROUP_REVISION_CONFLICT"}
+            s.rememberRecoveredAddition((command.mutation as InkMutation.Replace).added.map{it.id})
+        }
+        recoveredGroups.add(command.commandId);history.committed(EditDomain.INK);publish()
+    }
     internal fun validateQueued(strokes:List<InkStroke>){
         val s=checkNotNull(session);check(s.blocked==null&&!erasing)
         val existing=(s.page.strokes.map{it.stroke}+ui.value.strokes).associateBy{it.id}

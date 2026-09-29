@@ -27,6 +27,12 @@ internal class ContinuousInkWriter:ViewModel() {
         provisional.value=waiting.flatMap{it}.groupBy({it.first},{it.second}).mapValues{it.value.flatten()}
     }
     var onNotice:(String)->Unit={}
+    suspend fun awaitSettled(){blocked.first{!it}}
+    fun adoptRecovered(parts:List<Pair<InkViewModel,CommitInk>>,results:List<InkCommitResult.Committed>,repo:InkRepository){
+        check(!running&&empty()&&waiting.isEmpty())
+        parts.zip(results).forEach{(entry,result)->entry.first.adoptRecovered(entry.second,result)}
+        linkHistory(parts,emptyList(),true,repo)
+    }
     private fun empty()=pending.isEmpty()&&pendingObjects.isEmpty()
     fun accept(parts:List<Pair<InkViewModel,List<InkStroke>>>,repo:InkRepository){
         check(accepting.value&&waiting.size<16){"Writing queue is full"}
@@ -68,6 +74,20 @@ internal class ContinuousInkWriter:ViewModel() {
     }
     private data class Member(val history:EditorHistory,val identity:(Boolean)->Any?,val ready:(Boolean)->Boolean,
         val prepare:(Boolean)->Unit,val register:(Boolean,()->Unit)->Unit)
+    private fun linkHistory(captured:List<Pair<InkViewModel,CommitInk>>,capturedObjects:List<Pair<PageObjectViewModel,ObjectWrite>>,back:Boolean,repo:InkRepository){
+        val members=captured.map{(m,_)->Member(m.history,m::historyIdentity,{undo->m.ui.value.let{if(undo)it.canUndo else it.canRedo}},
+            {undo->pending=pending+(m to m.prepareHistoryGroup(undo))},m::registerGroupHistory)}+
+            capturedObjects.map{(m,_)->Member(checkNotNull(m.history),m::historyIdentity,m::historyReady,
+                {undo->pendingObjects=pendingObjects+(m to m.prepareHistoryGroup(undo))},m::registerGroupHistory)}
+        if(members.size<=1)return
+        val identities=members.map{it.identity(back)};val heads=members.associate{it.history to it.history.state.value}
+        val action:()->Unit={
+            if(empty()&&members.zip(identities).all{(m,key)->m.identity(back)===key&&m.ready(back)&&(if(back)m.history.state.value.undo==heads[m.history]?.undo else m.history.state.value.redo==heads[m.history]?.redo)}){
+                members.forEach{it.prepare(back)};direction=if(back)-1 else 1;mutable.value=true;retry(repo)
+            }else onNotice("请先撤销相关页上较新的编辑，再撤销这次跨页操作。")
+        }
+        members.forEach{it.register(back,action)}
+    }
     fun retry(repo:InkRepository){
         if(running||empty())return
         running=true;failure.value=false;refresh()
@@ -80,20 +100,7 @@ internal class ContinuousInkWriter:ViewModel() {
                 fun finishObjects(){capturedObjects.zip(result.objects).forEach{(pair,r)->pair.first.completeExternal(r)}}
                 // The inverse unwinds the domain history in the opposite order.
                 if(direction==-1){finishObjects();finishInk()}else{finishInk();finishObjects()}
-                val members=captured.map{(m,_)->Member(m.history,m::historyIdentity,{back->m.ui.value.let{if(back)it.canUndo else it.canRedo}},
-                    {back->pending=pending+(m to m.prepareHistoryGroup(back))},m::registerGroupHistory)}+
-                    capturedObjects.map{(m,_)->Member(checkNotNull(m.history),m::historyIdentity,m::historyReady,
-                        {back->pendingObjects=pendingObjects+(m to m.prepareHistoryGroup(back))},m::registerGroupHistory)}
-                if(members.size>1){
-                    val back=direction!=-1;val identities=members.map{it.identity(back)}
-                    val heads=members.associate{it.history to it.history.state.value}
-                    val action:()->Unit={
-                        if(empty()&&members.zip(identities).all{(m,key)->m.identity(back)===key&&m.ready(back)&&(if(back)m.history.state.value.undo==heads[m.history]?.undo else m.history.state.value.redo==heads[m.history]?.redo)}){
-                            members.forEach{it.prepare(back)};direction=if(back)-1 else 1;mutable.value=true;retry(repo)
-                        }else onNotice("请先撤销相关页上较新的编辑，再撤销这次跨页操作。")
-                    }
-                    members.forEach{it.register(back,action)}
-                }
+                linkHistory(captured,capturedObjects,direction!=-1,repo)
                 pending=emptyList();pendingObjects=emptyList();mutable.value=false
             }else failure.value=true
             running=false;erasing=false;direction=0;refresh();if(result.failure==null)drain(repo)

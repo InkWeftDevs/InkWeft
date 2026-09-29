@@ -30,20 +30,20 @@ class ShadowSyncTest {
                 ResourceTemplates(db).instantiate("c".repeat(64),"真实PDF格式",PaperStyle.BLANK,PdfPageSource(PdfDocumentSource(bytes,1),0),null)
             }
             val original=a.outgoing().single();val before=b.authorFingerprint()
-            suspend fun rejects(replica:ShadowReplica,text:String){try{replica.receive(1,listOf(text));fail("Invalid batch accepted")}catch(_:IllegalArgumentException){}catch(_:IllegalStateException){};assertEquals(0L,replica.cursor())}
+            suspend fun rejects(replica:ShadowReplica,text:String){try{replica.receive(1,listOf(text));fail("Invalid batch accepted")}catch(_:IllegalArgumentException){}catch(_:IllegalStateException){};assertEquals(0L,replica.cursor());replica.discardRejectedInbox()}
             rejects(missing,original)
             rejects(b,JSONObject(original).put("format","unknown.v9").toString())
             rejects(b,JSONObject(original).put("schema","f".repeat(64)).toString())
             rejects(b,JSONObject(original).put("scope",org.json.JSONArray(listOf("other","issuer","account","library"))).toString())
             val e=JSONObject(original);val header=JSONObject(original).apply{remove("nonce");remove("ciphertext")};val nonce=java.util.Base64.getDecoder().decode(e.getString("nonce"))
             val cipher=javax.crypto.Cipher.getInstance("AES/GCM/NoPadding");cipher.init(javax.crypto.Cipher.DECRYPT_MODE,javax.crypto.spec.SecretKeySpec(keys.getValue(1),"AES"),javax.crypto.spec.GCMParameterSpec(128,nonce));cipher.updateAAD(header.toString().toByteArray())
-            val changes=org.json.JSONArray(cipher.doFinal(java.util.Base64.getDecoder().decode(e.getString("ciphertext"))).toString(Charsets.UTF_8))
+            val payload=JSONObject(cipher.doFinal(java.util.Base64.getDecoder().decode(e.getString("ciphertext"))).toString(Charsets.UTF_8));val changes=payload.getJSONArray("changes")
             val cut=org.json.JSONArray();repeat(changes.length()){i->val change=changes.getJSONObject(i);if(change.getInt("table")!=25)cut.put(change)}
             assertTrue(cut.length()<changes.length())
             val fresh=EncryptedBackupFile.random(12);cipher.init(javax.crypto.Cipher.ENCRYPT_MODE,javax.crypto.spec.SecretKeySpec(keys.getValue(1),"AES"),javax.crypto.spec.GCMParameterSpec(128,fresh));cipher.updateAAD(header.toString().toByteArray())
-            e.put("nonce",java.util.Base64.getEncoder().encodeToString(fresh)).put("ciphertext",java.util.Base64.getEncoder().encodeToString(cipher.doFinal(cut.toString().toByteArray())))
+            e.put("nonce",java.util.Base64.getEncoder().encodeToString(fresh)).put("ciphertext",java.util.Base64.getEncoder().encodeToString(cipher.doFinal(payload.put("changes",cut).toString().toByteArray())))
             try{b.receive(1,listOf(e.toString()));fail("Missing document chunk accepted")}catch(_:Exception){}
-            assertEquals(0L,b.cursor());assertEquals(before,b.authorFingerprint())
+            assertEquals(0L,b.cursor());assertEquals(before,b.authorFingerprint());b.discardRejectedInbox()
             b.receive(1,listOf(original));assertEquals(a.authorFingerprint(),b.authorFingerprint())
             WorkspaceRepository(b.db).create("未纳入发件箱的写入",false,PaperStyle.BLANK)
             try{b.receive(1,emptyList());fail("Unjournaled author data overwritten")}catch(e:IllegalArgumentException){assertEquals("SHADOW_UNJOURNALED_WRITE",e.message)}

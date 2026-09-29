@@ -36,6 +36,8 @@ import kotlinx.coroutines.*
         require(j.getString("format")=="inkweft.recovery-key.v1");val value=j.getString("key");require(EncryptedBackupFile.unb64(value).size==32);java.util.UUID.fromString(j.getString("library"))
         recovery=value;library=j.getString("library");recoverySaved=true;message="恢复密钥已读取"
     }catch(c:CancellationException){throw c}catch(_:Exception){message="密钥文件无效"}}}
+    var shadowLab by remember{mutableStateOf(false)}
+    if(shadowLab)vm.connection()?.let{ShadowLabDialog(it){shadowLab=false}}
     var metered by remember{mutableStateOf(vm.sessions.meteredAllowed)}
     var screen by rememberSaveable{mutableStateOf("main")}
     var removing by remember{mutableStateOf<BackupVersion?>(null)}
@@ -50,6 +52,8 @@ import kotlinx.coroutines.*
                 "main"->{
                     if(vm.identityLabel().isNotBlank())Text(vm.identityLabel())
                     Text("实验功能 · 自建服务器",style=MaterialTheme.typography.labelLarge,color=Quiet)
+                    if(BuildConfig.DEBUG&&vm.connection()?.url?.let{java.net.URI(it).host in setOf("127.0.0.1","localhost")}==true)
+                        TextButton({shadowLab=true},enabled=!ui.busy){Text("隔离同步实验 · 合成资料")}
                     TextButton(onClick={screen="connection"}){Text(if(ui.connected)"连接设置"else"连接服务器")}
                     TextButton(onClick={screen="key"}){Text(if(recoverySaved)"恢复密钥已就绪"else"设置恢复密钥")}
                     Button(onClick={vm.backup(library,recovery)},enabled=ui.connected&&!ui.busy&&recoverySaved){Text("立即备份")}

@@ -34,6 +34,32 @@ def main(output):
         assert before==after;report['persistent_identity']=json.loads(before)
         run('exec',name,'python','server.py','--db','/state/backup.db','--backup-to','/state/recovery.db')
         report['restart_download']=business(name,'verify')
+        readonly="""import sqlite3,json
+c=sqlite3.connect('/source/recovery.db')
+assert c.execute('PRAGMA integrity_check').fetchone()[0]=='ok'
+try:
+ c.execute('CREATE TABLE blocked_write(x)');raise AssertionError('readonly mount was writable')
+except sqlite3.OperationalError as e:assert 'readonly' in str(e).lower()
+print(json.dumps({'status':'PASS','mount':'read-only','original_database_readable':True}))
+"""
+        report['readonly_volume']=json.loads(run('run','--rm','--read-only','--cap-drop=ALL','-v',volume+':/source:ro',image,'python','-c',readonly))
+        full="""import sqlite3,shutil,os,json
+shutil.copyfile('/source/recovery.db','/limited/backup.db')
+c=sqlite3.connect('/limited/backup.db');before=c.execute('SELECT COUNT(*) FROM operations').fetchone()[0]
+try:
+ with open('/limited/fill','wb') as f:
+  while True:f.write(bytes(65536))
+except OSError as e:assert e.errno==28
+try:
+ c.execute('CREATE TABLE must_not_commit(x)');c.commit();raise AssertionError('full mount accepted write')
+except sqlite3.OperationalError:c.rollback()
+os.unlink('/limited/fill')
+assert c.execute('PRAGMA integrity_check').fetchone()[0]=='ok'
+assert c.execute('SELECT COUNT(*) FROM operations').fetchone()[0]==before
+print(json.dumps({'status':'PASS','scope':'8 MiB private tmpfs only','published_operations_preserved':True}))
+"""
+        report['full_private_volume']=json.loads(run('run','--rm','--read-only','--cap-drop=ALL','--tmpfs','/limited:size=8m,uid=10001,gid=10001,mode=0700','-v',volume+':/source:ro',image,'python','-c',full))
+        report['original_after_faults']=business(name,'verify')
         run('volume','create',recovery_volume)
         run('run','--rm','--read-only','--cap-drop=ALL','-v',volume+':/source:ro','-v',recovery_volume+':/state',image,'python','-c',"import shutil; shutil.copyfile('/source/recovery.db','/state/backup.db'); shutil.copyfile('/source/probe.json','/state/probe.json')")
         run('run','-d','--name',recovery_name,'--read-only','--cap-drop=ALL','--security-opt=no-new-privileges','--tmpfs','/tmp:size=16m','-v',recovery_volume+':/state',image)

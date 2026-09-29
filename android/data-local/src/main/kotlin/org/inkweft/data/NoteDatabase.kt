@@ -31,6 +31,7 @@ interface NoteDao {
 @Database(entities=[NoteRow::class,NoteRevisionRow::class,ReceiptRow::class,InkPageRow::class,InkStrokeRow::class,InkReceiptRow::class,WorkspaceRow::class,NotebookPageRow::class,InkCutRow::class,PageSearchRow::class,PageInsertReceiptRow::class,LibraryContentReceipt::class,PageEditReceiptRow::class,StudyCardRow::class,StudyCardRevisionRow::class,StudySourceRow::class,StudyNodeRow::class,StudyReceiptRow::class,KnowledgeRow::class,KnowledgeRevisionRow::class,KnowledgeReceiptRow::class,NotebookCoverRow::class,PageObjectRow::class,ObjectReceiptRow::class,DocumentSourceRow::class,DocumentChunkRow::class,DocumentPageRow::class],
     version=12,exportSchema=true,autoMigrations=[AutoMigration(from=1,to=2)])
 abstract class NoteDatabase:RoomDatabase() {
+    internal val inkGroupMutex=kotlinx.coroutines.sync.Mutex()
     internal var documentScratch:java.io.File?=null
     internal var checkpointRoot:java.io.File?=null
     abstract fun notes():NoteDao

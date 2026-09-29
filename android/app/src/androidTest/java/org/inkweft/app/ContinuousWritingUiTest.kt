@@ -68,10 +68,10 @@ class ContinuousWritingUiTest {
     @Test fun cancellingLongGestureDoesNotResurrectItsCheckpointOnReopen(){
         val note=open()
         compose.runOnIdle{canvas(note.id).pen=InkPen.PENCIL;line(canvas(note.id),List(320){200f+it*.5f to 300f},MotionEvent.ACTION_MOVE)}
-        compose.waitUntil(10000){runBlocking{app.inkRepository.recoverCheckpoints(note.id).isNotEmpty()}}
+        compose.waitUntil(10000){runBlocking{app.inkRepository.pendingGroups(note.id).isNotEmpty()}}
         assertTrue(runBlocking{app.inkRepository.read(note.id).strokes.isEmpty()})
         compose.runOnIdle{canvas(note.id).cancelGesture()}
-        compose.waitUntil(10000){runBlocking{app.inkRepository.recoverCheckpoints(note.id).isEmpty()}}
+        compose.waitUntil(10000){runBlocking{app.inkRepository.pendingGroups(note.id).isEmpty()}}
         compose.activityRule.scenario.recreate()
         compose.waitUntil(10000){app.navigationReady.value&&compose.onAllNodesWithTag("continuous-pages").fetchSemanticsNodes().isNotEmpty()}
         assertTrue(runBlocking{app.inkRepository.read(note.id).strokes.isEmpty()})

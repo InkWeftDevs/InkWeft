@@ -23,6 +23,7 @@ jobs:
   build:
     name: 构建与静态检查
     outputs:
+      tls: ${{ steps.plan.outputs.tls }}
       device: ${{ steps.plan.outputs.device }}
       shards: ${{ steps.plan.outputs.shards }}
       shard_count: ${{ steps.plan.outputs.shard_count }}
@@ -113,6 +114,8 @@ jobs:
             "$ANDROID_HOME/build-tools/36.0.0/apksigner" verify --print-certs "$apk" > android/build/evidence/apk-signature.txt
             "$ANDROID_HOME/build-tools/36.0.0/zipalign" -c -P 16 4 "$apk" > android/build/evidence/zip-alignment.txt
             cp android/app/build/outputs/apk/debug/output-metadata.json android/build/evidence/
+            "$ANDROID_HOME/build-tools/36.0.0/aapt" dump xmltree "$apk" res/xml/network_security_config.xml > android/build/evidence/network-security-config.txt
+            python3 -c 'import zipfile; z=zipfile.ZipFile("android/app/build/outputs/apk/debug/app-debug.apk"); assert not any("fixture_ca" in n for n in z.namelist()); assert b"fixture_ca" not in z.read("resources.arsc")'
           fi
           git rev-parse HEAD > android/build/evidence/build-commit.txt
           printf '%s\n' "$INKWEFT_HEAD_SHA" > android/build/evidence/source-commit.txt
@@ -195,7 +198,7 @@ jobs:
         env:
           BACKUP_FIXTURE_ROOT: ${{ runner.temp }}/backup-fixture
         run: |
-          if python3 -c 'import json,sys; sys.exit(0 if "org.inkweft.app.EncryptedBackupIntegrationTest" in json.load(open("android-plan.json"))["app"] else 1)'; then
+          if python3 -c 'import json,sys; sys.exit(0 if json.load(open("android-plan.json"))["backup"] else 1)'; then
             python3 -m venv "$RUNNER_TEMP/backup-venv"
             "$RUNNER_TEMP/backup-venv/bin/pip" install -r backup-server/requirements.txt
             nohup "$RUNNER_TEMP/backup-venv/bin/python" backup-server/fixture.py --directory "$BACKUP_FIXTURE_ROOT" > "$RUNNER_TEMP/backup-service.log" 2>&1 &
@@ -223,3 +226,62 @@ jobs:
           path: |
             android-plan.json
             android/build/evidence/
+
+  tls:
+    name: 官方 Android 隔离 TLS 门禁
+    needs: build
+    if: needs.build.outputs.tls == 'true'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    env:
+      ANDROID_AVD_HOME: ${{ runner.temp }}/tls-avd
+      ANDROID_USER_HOME: ${{ runner.temp }}/tls-user
+      ORG_GRADLE_PROJECT_inkweftInsertionPreview: "true"
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3
+        with:
+          distribution: temurin
+          java-version: "17"
+      - uses: gradle/actions/setup-gradle@ed408507eac070d1f99cc633dbcf757c94c7933a
+        with:
+          gradle-version: "9.4.1"
+      - uses: android-actions/setup-android@9fc6c4e9069bf8d3d10b2204b1fb8f6ef7065407
+        with:
+          packages: "platform-tools"
+          log-accepted-android-sdk-licenses: false
+      - name: 构建专用信任源集
+        run: |
+          set -euo pipefail
+          sdkmanager "platforms;android-36" "build-tools;36.0.0" "emulator" "system-images;android-35;google_apis;x86_64"
+          python3 -m venv "$RUNNER_TEMP/tls-venv"
+          "$RUNNER_TEMP/tls-venv/bin/pip" install -r backup-server/requirements.txt
+          "$RUNNER_TEMP/tls-venv/bin/python" backup-server/tls_fixture.py --directory "$RUNNER_TEMP/tls-fixture" --generate-only
+          gradle -p android --no-daemon -PinkweftTlsFixture="$RUNNER_TEMP/tls-fixture/res" :app:assembleTlsProbe :app:assembleTlsProbeAndroidTest
+      - name: 启动隔离证书夹具与干净系统
+        run: |
+          set -euo pipefail
+          mkdir -p "$ANDROID_AVD_HOME" "$ANDROID_USER_HOME" android/build/tls-evidence
+          sudo chmod 666 /dev/kvm
+          printf 'no\n' | avdmanager create avd --force --name inkweft-tls --package "system-images;android-35;google_apis;x86_64" --device pixel_2
+          nohup "$ANDROID_HOME/emulator/emulator" -avd inkweft-tls -port 5554 -no-window -no-snapshot -noaudio -no-boot-anim -gpu swiftshader_indirect -accel on > "$RUNNER_TEMP/tls-emulator.log" 2>&1 &
+          nohup "$RUNNER_TEMP/tls-venv/bin/python" backup-server/tls_fixture.py --directory "$RUNNER_TEMP/tls-fixture" > "$RUNNER_TEMP/tls-service.log" 2>&1 &
+          echo $! > "$RUNNER_TEMP/tls-service.pid"
+          timeout 240 bash -c 'until [ "$(adb -s emulator-5554 shell getprop sys.boot_completed 2>/dev/null | tr -d "\r")" = "1" ]; do sleep 3; done'
+          adb -s emulator-5554 shell input keyevent 82
+      - name: 运行五项正负例并核对服务端计数
+        run: '"$RUNNER_TEMP/tls-venv/bin/python" ci/run_tls_probe.py --serial emulator-5554 --fixture "$RUNNER_TEMP/tls-fixture" --output android/build/tls-evidence'
+      - name: 关闭本任务服务
+        if: always()
+        run: |
+          if [ -f "$RUNNER_TEMP/tls-service.pid" ]; then kill "$(cat "$RUNNER_TEMP/tls-service.pid")" || true; fi
+          adb -s emulator-5554 emu kill || true
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: android-tls-verification-${{ github.run_id }}
+          retention-days: 7
+          if-no-files-found: error
+          path: android/build/tls-evidence/

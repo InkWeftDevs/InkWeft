@@ -7,6 +7,27 @@ from cryptography.hazmat.primitives.asymmetric import rsa
 from cryptography.x509.oid import NameOID
 from server import Store,create_app
 import uvicorn
+from starlette.responses import JSONResponse,RedirectResponse
+
+# Counts only; credentials, bodies and identifiers never enter evidence or access logs.
+counts={name:{'requests':0,'sensitive':0} for name in ('valid','expired','wrong','untrusted','redirect','sink')}
+paths={}
+counter_lock=threading.Lock()
+
+def observed(app,name):
+    @app.middleware('http')
+    async def count(request,call_next):
+        if name=='valid' and request.url.path=='/__fixture__/counts':
+            with counter_lock:return JSONResponse({'endpoints':{k:dict(v) for k,v in counts.items()},'paths':dict(paths)})
+        with counter_lock:
+            counts[name]['requests']+=1
+            counts[name]['sensitive']+=int(bool(request.headers.get('authorization')) or int(request.headers.get('content-length','0'))>0)
+            if name=='valid':
+                key=request.method+' '+request.url.path;paths[key]=paths.get(key,0)+1
+        if name=='redirect':return RedirectResponse('http://127.0.0.1:18766/blocked',status_code=307)
+        if name=='sink':return JSONResponse({'unexpected':True},status_code=400)
+        return await call_next(request)
+    return app
 
 def generate(root):
     root.mkdir(parents=True,exist_ok=True)
@@ -36,12 +57,10 @@ if __name__=='__main__':
     if not db.exists():
         store=Store(db);store.add_user('synthetic-alice','synthetic-alice-password-123');store.add_user('synthetic-bob','synthetic-bob-password-456')
     for offset,name in enumerate(('valid','expired','wrong','untrusted','redirect')):
-        app=create_app(db,enable_shadow=True)
-        if name=='redirect':
-            from starlette.responses import RedirectResponse
-            @app.middleware('http')
-            async def redirect(request,call_next):return RedirectResponse('http://127.0.0.1:18766/blocked',status_code=307)
+        app=observed(create_app(db,enable_shadow=True),name)
         certname='valid' if name=='redirect' else name
         config=uvicorn.Config(app,host='127.0.0.1',port=18761+offset,ssl_keyfile=str(root/(certname+'.key')),ssl_certfile=str(root/(certname+'.pem')),access_log=False)
         threading.Thread(target=uvicorn.Server(config).run,daemon=True).start()
+    sink=uvicorn.Config(observed(create_app(db),'sink'),host='127.0.0.1',port=18766,access_log=False)
+    threading.Thread(target=uvicorn.Server(sink).run,daemon=True).start()
     while True:time.sleep(1)

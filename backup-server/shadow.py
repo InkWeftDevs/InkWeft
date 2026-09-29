@@ -13,7 +13,7 @@ class ShadowRelay:
         if len(raw)>1048576:raise ValueError('SHADOW_BUDGET')
         text=raw.decode();e=json.loads(text)
         if set(e)!={'schema','format','scope','device','operation','key_version','nonce','ciphertext'}:raise ValueError('SHADOW_FIELDS')
-        if e['format']!='inkweft.shadow-rows.v1' or e['scope']!=[server,'urn:inkweft:server:'+server,owner,library] or e['device']!=device:raise PermissionError('SHADOW_SCOPE')
+        if e['format']!='inkweft.shadow-rows.v2' or e['scope']!=[server,'urn:inkweft:server:'+server,owner,library] or e['device']!=device:raise PermissionError('SHADOW_SCOPE')
         if not isinstance(e['schema'],str) or not re.fullmatch('[0-9a-f]{64}',e['schema']) or type(e['key_version']) is not int or not 1<=e['key_version']<=1000000:raise ValueError('SHADOW_HEADER')
         if len(base64.b64decode(e['nonce'],validate=True))!=12 or len(base64.b64decode(e['ciphertext'],validate=True))<16:raise ValueError('SHADOW_CIPHER')
         uuid.UUID(e['operation']);fingerprint=hashlib.sha256(raw).hexdigest()

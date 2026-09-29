@@ -14,8 +14,8 @@ import java.io.File
 import kotlin.math.*
 
 internal data class DocumentTile(val bitmap:Bitmap,val bounds:CanvasBounds)
-internal class DocumentRendering(context:Context,private val repo:DocumentRepository) {
-    private val folder=File(context.cacheDir,"document-render").apply{mkdirs()}
+internal class DocumentRendering(context:Context,private val repo:DocumentRepository,root:File=File(context.cacheDir,"document-render")) {
+    private val folder=root.apply{mkdirs()}
     private data class Local(val file:File,val page:Int)
     private val cache=mutableMapOf<String,Local?>()
     private val lock=Mutex()

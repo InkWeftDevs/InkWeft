@@ -51,6 +51,22 @@ class BackupReliabilityUiTest {
             compose.onNodeWithText("刷新").performScrollTo().performClick();await()
             compose.onNodeWithText("放弃上传",substring=false).performScrollTo().performClick();compose.onNodeWithText("确认删除").performClick();await()
             assertEquals("DELETED",queue().getString("state"));assertEquals(9,app.backupEngine.ui.value.details.size)
+            // The confirmation was opened while pending; another actor publishes before confirming.
+            compose.runOnIdle{job=app.backupEngine.create(library,key)};runBlocking{job?.join()}
+            val racing=queue();val transport=BackupTransport(identity);val operation=racing.getString("operation")
+            runBlocking{transport.json("PUT",library,"/uploads/$operation",racing.getJSONObject("manifest"))}
+            compose.onNodeWithText("刷新").performScrollTo().performClick();await()
+            compose.onNodeWithText("放弃上传",substring=false).performScrollTo().performClick()
+            runBlocking{File(app.filesDir,"encrypted-backup-jobs/${racing.getString("file")}").inputStream().use{input->var ordinal=0;while(true){val bytes=input.readBackupChunk(EncryptedBackupFile.WIRE_BLOCK);if(bytes.isEmpty())break;transport.request("PUT",library,"/uploads/$operation/chunks/${ordinal++}",bytes=bytes)}};transport.json("POST",library,"/uploads/$operation/publish")}
+            compose.onNodeWithText("确认删除").performClick();await();assertTrue(app.backupEngine.ui.value.message.contains("已发布"))
+            assertEquals("PUBLISHED",runBlocking{transport.json("GET",library,"/operations/$operation").getString("state")})
+            // Model a received server delete with the final acknowledgement lost, then recover through UI.
+            val deletion=java.util.UUID.randomUUID().toString()
+            runBlocking{transport.json("DELETE",library,"/versions/$operation?operation_id=$deletion")}
+            File(app.filesDir,"encrypted-backup-jobs/delete.json").writeText(JSONObject().put("library",library).put("target",operation).put("operation",deletion).put("binding",identity.binding(library)).toString())
+            compose.onNodeWithText("刷新").performScrollTo().performClick();await()
+            compose.onNodeWithText("继续确认上一次删除").performScrollTo().performClick();await()
+            assertFalse(app.backupEngine.hasPendingDeletion());assertEquals("DELETED",queue().getString("state"))
             runBlocking{app.libraryBackup.snapshot().use{s->s.file.inputStream().use{app.libraryBackup.inspect(it)}.use{assertEquals(1,it.notes)}}}
             val bundle=runBlocking{app.diagnostics.bundle()};val entries=java.util.zip.ZipInputStream(bundle.inputStream())
             entries.use{z->while(z.nextEntry!=null){val text=z.readBytes().toString(Charsets.UTF_8);for(secret in listOf(key,identity.token,"synthetic-alice-password-123","合成配额验收"))assertFalse("Diagnostic disclosure",text.contains(secret))}}

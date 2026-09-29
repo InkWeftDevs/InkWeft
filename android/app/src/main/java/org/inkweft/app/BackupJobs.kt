@@ -60,12 +60,12 @@ internal class BackupEngine(private val app:InkWeftApplication,private val fault
     private var preview:LibraryBackupRepository.Preview?=null
     fun identityLabel()=identity?.let{"${it.url}\n${it.name.ifBlank{it.user.take(8)}}"}.orEmpty()
     fun connection()=identity
-    fun mayResume()=!manuallyPaused && identity!=null && !sessions.expired && runCatching{val q=readQueue();q.optBoolean("automatic")&&q.optLong("deadline")>System.currentTimeMillis()&&q.optInt("attempts")<5&&q.getString("binding")==identity!!.binding(q.getString("library"))}.getOrDefault(false)
+    fun mayResume()=!manuallyPaused && identity!=null && !sessions.expired && runCatching{val q=readQueue();q.optBoolean("automatic")&&!q.optBoolean("paused")&&q.optLong("deadline")>System.currentTimeMillis()&&q.optLong("operationDeadline")>System.currentTimeMillis()&&q.optInt("attempts")<5&&q.getString("binding")==identity!!.binding(q.getString("library"))}.getOrDefault(false)
     @Synchronized private fun readQueue()=JSONObject(journal.openRead().bufferedReader().use{it.readText()})
     @Synchronized private fun writeQueue(j:JSONObject){if(manuallyPaused)j.put("automatic",false);val stream=journal.startWrite();try{stream.write(j.toString().toByteArray());journal.finishWrite(stream)}catch(t:Throwable){journal.failWrite(stream);throw t}}
     private fun work(message:String,action:suspend CoroutineScope.()->Unit):Job?{if(ui.value.busy)return null
         state.value=state.value.copy(busy=true,message=message)
-        running=scope.launch{try{withTimeout(120_000){withContext(Dispatchers.IO){BackgroundBudget.memory(4L*1024*1024){action()}}}}catch(c:CancellationException){state.value=state.value.copy(message=if(c is TimeoutCancellationException)"本次任务已超时，待办与本地资料保留，可手动继续"else"任务已暂停，可继续；本地资料保留");throw c}
+        running=scope.launch{try{withTimeout(120_000){withContext(Dispatchers.IO){BackgroundBudget.memory(4L*1024*1024){action()}}}}catch(c:CancellationException){state.value=state.value.copy(message=when{c is TimeoutCancellationException->"本次任务已超时，待办与本地资料保留，可手动继续";c.message=="SYSTEM_STOP"->"系统暂缓任务，条件恢复后继续；本地资料保留";c.message=="SLICE_COMPLETE"->"本段执行已结束，后台按原期限继续";else->"任务已暂停，可继续；本地资料保留"});throw c}
             catch(e:BackupHttpError){
                 if(e.status==401){sessions.markExpired();state.value=state.value.copy(auth=BackupAuth.REAUTHENTICATE,connected=false)}
                 if(e.status==429){BackupScheduler.cancel(app);runCatching{readQueue().put("automatic",false).put("notBefore",(e.retryAfterMillis?:30_000).let{wait->if(wait>Long.MAX_VALUE-System.currentTimeMillis())Long.MAX_VALUE else System.currentTimeMillis()+wait}).also(::writeQueue)}}
@@ -97,7 +97,7 @@ internal class BackupEngine(private val app:InkWeftApplication,private val fault
     fun pause(){
         manuallyPaused=true
         BackupScheduler.cancel(app)
-        if(journal.baseFile.exists())runCatching{readQueue().put("automatic",false).also(::writeQueue)}
+        if(journal.baseFile.exists())runCatching{readQueue().put("automatic",false).put("paused",true).also(::writeQueue)}
         running?.cancel()
     }
     fun create(library:String,recovery:String)=work("正在生成已确认资料的一致备份…"){
@@ -143,19 +143,21 @@ internal class BackupEngine(private val app:InkWeftApplication,private val fault
         }
         val library=queue.getString("library");val who=checkNotNull(identity)
         require(queue.getString("binding")==who.binding(library)){"QUEUE_BINDING"}
-        if(!background){queue.put("automatic",true).put("deadline",System.currentTimeMillis()+30*60_000).put("attempts",0);writeQueue(queue);BackupScheduler.schedule(app)}
+        if(!background){queue.put("automatic",true).put("paused",false).put("deadline",System.currentTimeMillis()+30*60_000).put("operationDeadline",System.currentTimeMillis()+120_000).put("attempts",0);writeQueue(queue);BackupScheduler.schedule(app)}
         if(!sessions.meteredAllowed&&app.getSystemService(android.net.ConnectivityManager::class.java).isActiveNetworkMetered){
             state.value=state.value.copy(message="等待非计量网络，可在连接设置允许计量网络");return@work
         }
         if(app.getSystemService(android.os.BatteryManager::class.java).getIntProperty(android.os.BatteryManager.BATTERY_PROPERTY_CAPACITY) in 0..14){
             state.value=state.value.copy(message="电量较低，备份等待充电后继续");return@work
         }
+        val remaining=queue.optLong("operationDeadline")-System.currentTimeMillis();require(remaining>0){"TASK_LIMIT"}
+        withTimeout(remaining){
         val transport=BackupTransport(who);transport.verifyServer();val operation=queue.getString("operation");UUID.fromString(operation)
         val manifest=queue.getJSONObject("manifest");val canonical="{\"bytes\":${manifest.getLong("bytes")},\"chunks\":${manifest.getJSONArray("chunks")},\"format\":\"inkweft.encrypted-backup.v1\"}"
         val fingerprint=EncryptedBackupFile.hex(canonical.toByteArray())
         fun verified(j:JSONObject):Boolean {require(j.getString("digest")==fingerprint&&j.getString("kind")=="UPLOAD");return j.getString("state")=="PUBLISHED"}
         val prior=try{transport.json("GET",library,"/operations/$operation")}catch(e:BackupHttpError){if(e.status!=404)throw e;null}
-        if(prior!=null&&verified(prior)){queue.put("state","PUBLISHED").put("automatic",false);writeQueue(queue);BackupScheduler.cancel(app);state.value=state.value.copy(message="服务器已确认此备份，无需重复上传");return@work}
+        if(prior!=null&&verified(prior)){queue.put("state","PUBLISHED").put("automatic",false);writeQueue(queue);BackupScheduler.cancel(app);state.value=state.value.copy(message="服务器已确认此备份，无需重复上传");return@withTimeout}
         val cipherFile=cipherFile(queue);require(cipherFile.length()==manifest.getLong("bytes"));transport.json("PUT",library);transport.json("PUT",library,"/uploads/$operation",manifest)
         val remote=transport.json("GET",library,"/uploads/$operation")
         verified(remote);require(remote.getString("state")=="PENDING"){"QUEUE_STATE"}
@@ -169,6 +171,7 @@ internal class BackupEngine(private val app:InkWeftApplication,private val fault
         };require(input.read()==-1)}
         currentCoroutineContext().ensureActive();check(verified(transport.json("POST",library,"/uploads/$operation/publish")))
         queue.put("state","PUBLISHED").put("automatic",false);writeQueue(queue);BackupScheduler.cancel(app);state.value=state.value.copy(message="加密备份已发布，可在其他设备用恢复密钥导入")
+        }
     }
     }
     fun list(library:String)=work("读取备份版本…"){
