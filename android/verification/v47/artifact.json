@@ -1,0 +1,32 @@
+{
+  "versionCode": 47,
+  "versionName": "0.0.47-native-editor-preview",
+  "package": "org.inkweft.app.a0.workspace",
+  "source": "411ccf9a9eebde1264fd49529d2147fcdf465598",
+  "tree": "46441450daba0972a2817f17f8bdf9d146d51a5e",
+  "apkSha256": "2e317da82cd1c38a238c0073ec783d91e97976c2ca3830879a82dcbb5dee0b82",
+  "bytes": 149989924,
+  "signatureSha256": "18e67dbce88152dbe4d4821b5a3a513a409a3df4eac9261f4c11126c36e43969",
+  "stage": "原生编辑器、连续书写与末页追加整合候选",
+  "testApks": {
+    "visualAndGesture": {
+      "source": "411ccf9a9eebde1264fd49529d2147fcdf465598",
+      "sha256": "cbbb032159a0556d7cb56dcd93094980ce51150b411617419cdde1886593f35b"
+    },
+    "serialAndPrivacy": {
+      "source": "b21c517f05475201ab875310378e98606e90b072",
+      "sha256": "4dd4085c086aacf0e167da09f7faf61c5a75e6fa83c139e26f0d46116ecb0197"
+    },
+    "androidSpace": {
+      "source": "b21c517 with namespace probe changes committed as 80c880c",
+      "sha256": "d6348b8b0a07d74afe6e75d037e11a70aca7423d17f0ab99e1ed933eae133891"
+    },
+    "narrowPreview": {
+      "source": "641f62548e1be474961fd26f8e31366ed6ded27c",
+      "sha256": "3f887dd5d06a2db7df76ed9e700e1624bdb3db848c97597e275dc824ce332660"
+    }
+  },
+  "performanceApkSha256": "e049245996eac87c4c40157a967bae0877cd6b7dd139075b0e473c03375041fb",
+  "performanceTestSha256": "081f5b494322c1d040b6b3bcc98f7e2d33011928f6782bd812b2ed0e6968edb0",
+  "userApkContainsTestCa": false
+}

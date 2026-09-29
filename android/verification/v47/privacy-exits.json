@@ -1,0 +1,95 @@
+{
+  "format": "inkweft.privacy-exits.v1",
+  "runId": "f7766e8e-81c5-44ad-aefc-a5a8715d36d6",
+  "status": "PASS",
+  "checks": [
+    {
+      "outlet": "encrypted-backup",
+      "bytes": 2468,
+      "hitTypes": []
+    },
+    {
+      "outlet": "backup-error-state",
+      "bytes": 169,
+      "hitTypes": []
+    },
+    {
+      "outlet": "backup-error-ui",
+      "bytes": 12786,
+      "hitTypes": []
+    },
+    {
+      "outlet": "restore-confirmation-state",
+      "bytes": 352,
+      "hitTypes": []
+    },
+    {
+      "outlet": "restore-confirmation-ui",
+      "bytes": 8522,
+      "hitTypes": []
+    },
+    {
+      "outlet": "restore-error-state",
+      "bytes": 160,
+      "hitTypes": []
+    },
+    {
+      "outlet": "restore-error-ui",
+      "bytes": 5784,
+      "hitTypes": []
+    },
+    {
+      "outlet": "resource-error-ui",
+      "bytes": 10510,
+      "hitTypes": []
+    },
+    {
+      "outlet": "anonymous-layout",
+      "bytes": 271,
+      "hitTypes": []
+    },
+    {
+      "outlet": "diagnostic-zip-entry-0",
+      "bytes": 1214,
+      "hitTypes": []
+    },
+    {
+      "outlet": "diagnostic-zip-entry-1",
+      "bytes": 3391,
+      "hitTypes": []
+    },
+    {
+      "outlet": "diagnostic-zip-entry-2",
+      "bytes": 4534,
+      "hitTypes": []
+    },
+    {
+      "outlet": "diagnostic-zip-entry-3",
+      "bytes": 380,
+      "hitTypes": []
+    },
+    {
+      "outlet": "diagnostic-journal",
+      "bytes": 2022,
+      "hitTypes": []
+    },
+    {
+      "outlet": "current-process-logcat",
+      "bytes": 11075,
+      "hitTypes": []
+    }
+  ],
+  "syntheticSecretTypes": [
+    "password",
+    "token",
+    "recovery-key",
+    "title",
+    "body",
+    "target-id",
+    "widget-id"
+  ],
+  "rawPayloadsExported": false,
+  "logScope": "current process logcat buffer; not complete system/kernel history",
+  "authorDatabaseUnchanged": true,
+  "cleanupFailures": []
+}

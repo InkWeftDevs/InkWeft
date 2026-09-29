@@ -1,0 +1,154 @@
+{
+  "details-regression-04": [
+    {
+      "case": "NotebookNavigationUiTest#realEditorAppendPersistsOneBlankPageAndRejectsStaleTail",
+      "passed": true
+    }
+  ],
+  "details-regression-05": [
+    {
+      "case": "BrushB1InputTest#singlePaperPencilDrawsWhileDownAndPersistsPageCoordinates",
+      "passed": true
+    },
+    {
+      "case": "BrushB1InputTest#fingerFirstThenStylusUsesActivePointerAndFreezesRecipe",
+      "passed": true
+    },
+    {
+      "case": "ContinuousWritingUiTest#cancellingLongGestureDoesNotResurrectItsCheckpointOnReopen",
+      "passed": true
+    },
+    {
+      "case": "ContinuousWritingUiTest#tapeTapInContinuousPagesTogglesExactlyOnceForFingerAndStylus",
+      "passed": true
+    },
+    {
+      "case": "ContinuousWritingUiTest#pressureOnlyDuplicateSamplesReopenWithoutChangingAuthorData",
+      "passed": true
+    },
+    {
+      "case": "ContinuousWritingUiTest#continuousSeamHasNoGapAndOneGesturePersistsOnBothSides",
+      "passed": true
+    },
+    {
+      "case": "ContinuousWritingUiTest#crossPageEraserGroupsInkAndBeautyInBothDirections",
+      "passed": true
+    },
+    {
+      "case": "ContinuousWritingUiTest#polygonSelectionHighlightsAndDeletesOnlyContainedBeauty",
+      "passed": true
+    },
+    {
+      "case": "ContinuousWritingUiTest#automaticBeautyReviewIsInlineErasableUndoableAndPersistent",
+      "passed": true
+    },
+    {
+      "case": "ContinuousWritingUiTest#floatingCaseMovesAndPageBoundsStayFinite",
+      "passed": true
+    },
+    {
+      "case": "ContinuousWritingUiTest#manualSelectionPreviewsChosenFontBeforeApplying",
+      "passed": true
+    },
+    {
+      "case": "ContinuousWritingUiTest#choosingFontFromInkModePreservesAutoSettingAndOffersReview",
+      "passed": true
+    },
+    {
+      "case": "ContinuousWritingUiTest#pencilAutomaticallyPreparesChosenFontForReview",
+      "passed": true
+    },
+    {
+      "case": "ContinuousWritingUiTest#rapidSuccessiveStrokesRemainQueuedUntilAllAreSaved",
+      "passed": true
+    },
+    {
+      "case": "ContinuousWritingUiTest#erasingEmptyPaperDoesNotBlockTheNextStroke",
+      "passed": true
+    },
+    {
+      "case": "TemplateCreationUiTest#installedTemplatesAreUsableInExistingCreationFlows",
+      "passed": true
+    },
+    {
+      "case": "BackupResourceUiTest#backupMainKeepsAdvancedIdentifiersBehindDetailsAndKeyStepsReachable",
+      "passed": true
+    },
+    {
+      "case": "BackupResourceUiTest#installedMapResourceCanCreateIndependentNoteWithoutReviewCards",
+      "passed": true
+    },
+    {
+      "case": "LearningWorkbenchTest#narrowLargeTextKeepsDirectoryAndConfigurationReachable",
+      "passed": true
+    },
+    {
+      "case": "LearningWorkbenchTest#directoryUsesStableIdentitiesAndManualInboxState",
+      "passed": true
+    },
+    {
+      "case": "LearningWorkbenchTest#learningOpensMapWithoutOpeningNoteAndKeepsHostConfiguration",
+      "passed": true
+    },
+    {
+      "case": "EditorVisualContractTest#changingLocatorCannotMoveOrResizePanel",
+      "passed": true
+    },
+    {
+      "case": "EditorVisualContractTest#parameterSegmentsKeepSeparateTouchTargetsAndSelection",
+      "passed": true
+    },
+    {
+      "case": "EditorVisualContractTest#viewSelectionIsAbsentFromDocumentPainting",
+      "passed": true
+    },
+    {
+      "case": "EditorVisualContractTest#narrowMapActionsAvoidTheNeighbouringBranch",
+      "passed": true
+    }
+  ],
+  "details-regression-06": [
+    {
+      "case": "ContinuousPageGestureUiTest#shortTwoFingerNavigationDoesNotCreateCancellationFiles",
+      "passed": true
+    },
+    {
+      "case": "ContinuousPageGestureUiTest#longFingerCancellationBlocksAppendUntilItsJournalSettles",
+      "passed": true
+    },
+    {
+      "case": "ContinuousPageGestureUiTest#failedLongFingerCancellationRetriesCancelWithoutRevivingInk",
+      "passed": true
+    },
+    {
+      "case": "ContinuousPageGestureUiTest#fingerModeWritesAndTwoFingerTakeoverPreservesOnlyCommittedInk",
+      "passed": true
+    },
+    {
+      "case": "ContinuousPageGestureUiTest#endPullAppendsOnceAndIgnoresWritingDisabledBusyAndCancelledGestures",
+      "passed": true
+    },
+    {
+      "case": "NotebookNavigationUiTest#realEditorAppendPersistsOneBlankPageAndRejectsStaleTail",
+      "passed": true
+    },
+    {
+      "case": "ContinuousWritingUiTest#cancellingLongGestureDoesNotResurrectItsCheckpointOnReopen",
+      "passed": true
+    },
+    {
+      "case": "ContinuousWritingUiTest#continuousSeamHasNoGapAndOneGesturePersistsOnBothSides",
+      "passed": true
+    }
+  ],
+  "details-regression-07": [
+    {
+      "case": "EditorVisualContractTest#narrowToolbarKeepsInputModeVisibleWithoutWrapping",
+      "passed": true
+    },
+    {
+      "case": "NotebookNavigationUiTest#realEditorAppendPersistsOneBlankPageAndRejectsStaleTail",
+      "passed": true
+    }
+  ]
+}

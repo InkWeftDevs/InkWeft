@@ -1,0 +1,40 @@
+{
+  "package": "org.inkweft.app.a0.workspace",
+  "applicationSource": "411ccf9a9eebde1264fd49529d2147fcdf465598",
+  "userApkSha256": "2e317da82cd1c38a238c0073ec783d91e97976c2ca3830879a82dcbb5dee0b82",
+  "device": "vivo iPA2673 API36",
+  "input": "USB synthetic gestures; not physical stylus latency",
+  "install": "signed replacement; no uninstall or clear",
+  "originalV46Rows": 2374,
+  "missingOriginalRows": 0,
+  "changedOriginalRows": 0,
+  "latestBeforeRows": 2427,
+  "latestAfterRows": 2445,
+  "missingLatestRows": 0,
+  "expectedChangedRows": 2,
+  "expectedChanges": "Only the owned visual fixture notebook/page centerY and zoom were changed to fit width.",
+  "newRows": 18,
+  "physicalChecks": [
+    {
+      "case": "NativeEditorVisualProbe",
+      "status": "PASS",
+      "evidence": "private-device-final-visual/visual-instrumentation.txt"
+    },
+    {
+      "case": "NotebookNavigationUiTest",
+      "status": "PASS",
+      "evidence": "private-device-navigation-02/instrumentation.log"
+    },
+    {
+      "case": "ContinuousPageGestureUiTest#fingerModeWritesAndTwoFingerTakeoverPreservesOnlyCommittedInk",
+      "status": "PASS",
+      "evidence": "private-device-gestures/instrumentation.log"
+    }
+  ],
+  "settingsRestored": {
+    "stay_on_while_plugged_in": "0",
+    "accelerometer_rotation": "1",
+    "user_rotation": "0"
+  },
+  "privateArtifactsPublished": false
+}
