@@ -180,6 +180,8 @@ class NoteFirstUiTest {
   val window=compose.onNodeWithTag("study-panel").fetchSemanticsNode().boundsInRoot
   val automation=androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().uiAutomation
   automation.waitForIdle(200,5000)
+  compose.waitUntil(10000){compose.activity.window.decorView.hasWindowFocus()}
+  assertFalse("Probe must stay outside the map",window.contains(point))
   val events=java.util.concurrent.CopyOnWriteArrayList<String>()
   compose.runOnIdle{find<InkCanvasView>().setOnTouchListener{_,e->events.add("${e.actionMasked}:${e.getToolType(0)}:${e.x},${e.y}");false}}
   screenshot("input-before")

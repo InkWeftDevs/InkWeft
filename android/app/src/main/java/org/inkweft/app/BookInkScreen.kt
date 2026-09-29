@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.*
 import org.inkweft.core.*
@@ -81,6 +82,7 @@ fun InkScreen(note:NoteDraft,workspace:WorkspaceViewModel=viewModel(),onBack:()-
         if(uri!=null&&bytes!=null)scope.launch{val ok=try{withContext(Dispatchers.IO){checkNotNull(context.contentResolver.openOutputStream(uri,"wt")).use{it.write(bytes)}};true}catch(c:CancellationException){throw c}catch(_:Exception){false};Toast.makeText(context,if(ok)"整本内容副本已导出"else"导出失败，原笔记保留",Toast.LENGTH_LONG).show()}
     }
     val page=ui.pages.firstOrNull{it.id==ui.selectedId}
+    LaunchedEffect(note.base.id,page?.id){page?.let{app.learningStore.visit(StableTargetRef(LearningTargetKind.PAGE,note.base.id,it.id))}}
     var paperPicker by remember{mutableStateOf(false)}
     var gridView by rememberSaveable{mutableStateOf(false)}
     var overviewTab by rememberSaveable(note.base.id){mutableIntStateOf(0)}
@@ -90,6 +92,8 @@ fun InkScreen(note:NoteDraft,workspace:WorkspaceViewModel=viewModel(),onBack:()-
     val marksBusy by marksModel.busy.collectAsStateWithLifecycle()
     val marksError by marksModel.error.collectAsStateWithLifecycle()
     val studySession:StudyViewModel=viewModel(key="study-${note.base.id}",factory=StudyViewModel.Factory(note.base.id,app.study))
+    val studyLifecycle=androidx.lifecycle.compose.LocalLifecycleOwner.current
+    LaunchedEffect(studySession,studyLifecycle){studyLifecycle.lifecycle.repeatOnLifecycle(androidx.lifecycle.Lifecycle.State.STARTED){studySession.attach();try{awaitCancellation()}finally{studySession.detach()}}}
     val studyState by studySession.ui.collectAsStateWithLifecycle()
     val selectedMapId by studySession.mapId.collectAsStateWithLifecycle()
     val studyCanLeave=if(studyOpen){

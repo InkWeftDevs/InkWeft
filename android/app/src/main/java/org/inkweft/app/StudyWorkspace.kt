@@ -41,16 +41,21 @@ import org.inkweft.data.*
 import java.util.UUID
 
 @Composable
-internal fun StudyWorkspace(note:NoteDraft,initialSource:StudySourceDraft?,dismiss:()->Unit,initialQuery:String="",initialCardId:String?=null,openSource:(StudySourceRow)->Boolean){
+internal fun StudyWorkspace(note:NoteDraft,initialSource:StudySourceDraft?,dismiss:()->Unit,initialQuery:String="",initialCardId:String?=null,initialMap:MapRef?=null,initialBranch:String?=null,openSource:(StudySourceRow)->Boolean){
     Dialog(onDismissRequest=dismiss,properties=DialogProperties(usePlatformDefaultWidth=false)){
-        Box(Modifier.fillMaxWidth(.96f).fillMaxHeight(.95f)){StudyContent(note,initialSource,dismiss,initialQuery,initialCardId,openSource=openSource)}
+        val chrome=StudyWindowChrome(Modifier){IconButton(onClick=dismiss,modifier=Modifier.size(48.dp).testTag("study-close").describedAs("返回学习")){Glyph("close")}}
+        Surface(Modifier.fillMaxSize().safeDrawingPadding(),color=Color.White){CompositionLocalProvider(LocalStudyWindowChrome provides chrome){Column(Modifier.fillMaxSize()){
+            StudyContent(note,initialSource,dismiss,initialQuery,initialCardId,compactWindow=true,initialMap=initialMap,initialBranch=initialBranch,openSource=openSource)
+        }}}
     }
 }
 @Composable
-internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss:()->Unit,initialQuery:String="",initialCardId:String?=null,documentReady:Boolean=true,compactWindow:Boolean=false,sourceRequest:Long=0L,initialCaptureText:String="",onInsertEmbed:((MapEmbed)->Unit)?=null,openSource:(StudySourceRow)->Boolean){
+internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss:()->Unit,initialQuery:String="",initialCardId:String?=null,documentReady:Boolean=true,compactWindow:Boolean=false,sourceRequest:Long=0L,initialCaptureText:String="",onInsertEmbed:((MapEmbed)->Unit)?=null,initialMap:MapRef?=null,initialBranch:String?=null,openSource:(StudySourceRow)->Boolean){
     val context=LocalContext.current;val app=context.applicationContext as InkWeftApplication
     val focus=LocalFocusManager.current
     val vm:StudyViewModel=viewModel(key="study-${note.base.id}",factory=StudyViewModel.Factory(note.base.id,app.study))
+    val lifecycleOwner=androidx.lifecycle.compose.LocalLifecycleOwner.current
+    LaunchedEffect(vm,lifecycleOwner){lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED){vm.attach();try{awaitCancellation()}finally{vm.detach()}}}
     val ui by vm.ui.collectAsStateWithLifecycle();val scope=rememberCoroutineScope()
     var titleDraft by rememberSaveable(stateSaver=NodeTitleDraft.Saver){mutableStateOf<NodeTitleDraft?>(null)}
     var titleInput by rememberSaveable(stateSaver=androidx.compose.ui.text.input.TextFieldValue.Saver){mutableStateOf(androidx.compose.ui.text.input.TextFieldValue())}
@@ -69,6 +74,8 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
     fun extraOccurrences(cardId:String)=extraRows.count{r->!r.removed&&r.notebookId==note.base.id&&when(val d=r.data()){is KnowledgeData.Placement->d.cardId==cardId;is KnowledgeData.MapOccurrence->d.cardId==cardId;else->false}}
 
     val currentMap by vm.mapId.collectAsStateWithLifecycle()
+    LaunchedEffect(initialMap,initialBranch){initialMap?.let{ref->require(ref.notebookId==note.base.id);vm.selectMap(ref.mapId);vm.selectTab(2);initialBranch?.let{vm.revealByMap[ref.mapId?:"main"]=it;vm.selectedByMap[ref.mapId?:"main"]=it}}}
+    LaunchedEffect(currentMap,ui.loading,vm.lastTab){if(!ui.loading&&vm.lastTab==2)app.learningStore.visit(StableTargetRef(LearningTargetKind.MAP,note.base.id,currentMap))}
     val mapKey=currentMap?:"main"
     val maps=extraRows.filter{!it.removed&&it.notebookId==note.base.id&&it.data() is KnowledgeData.MapDefinition}
     var mapMenu by remember{mutableStateOf(false)};var newMapTitle by rememberSaveable{mutableStateOf<String?>(null)}
@@ -96,6 +103,8 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
     var chosenNode by remember{mutableStateOf<StudyNodeRow?>(null)};var chosenCard by remember{mutableStateOf<StudyCardRow?>(null)}
     var source by remember{mutableStateOf<StudySourceRow?>(null)};var stale by remember{mutableStateOf(false)}
     var map by remember{mutableStateOf<MindMapView?>(null)};var dragging by remember{mutableStateOf(false)}
+    LaunchedEffect(mapKey,map){if(vm.viewports[mapKey]==null)app.learningStore.viewport(MapRef(note.base.id,currentMap))?.let{vm.viewports[mapKey]=it;map?.restoreViewport(it)}}
+    DisposableEffect(vm,mapKey){val ref=MapRef(note.base.id,currentMap);onDispose{vm.viewports[mapKey]?.let{app.learningStore.viewport(ref,it)}}}
     var pendingExport by remember{mutableStateOf<String?>(null)};var localMessage by remember{mutableStateOf<String?>(null)}
     var knowledgeCard by remember{mutableStateOf<StudyCardRow?>(null)}
     var reparent by remember{mutableStateOf<StudyNodeRow?>(null)}
@@ -195,6 +204,8 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
                 DropdownMenuItem(text={Text("查找导图内容")},onClick={contentSearch=true;management=false},modifier=Modifier.testTag("study-search-content"))
             }
             if(managementGroup==1)MapMenuSection("整理"){
+                DropdownMenuItem(text={Text("固定当前图到学习")},onClick={app.learningStore.shortcut(StableTargetRef(LearningTargetKind.MAP,note.base.id,currentMap),true);management=false},modifier=Modifier.testTag("study-pin-map"))
+                if(vm.selectedByMap[mapKey]!=null)DropdownMenuItem(text={Text("固定所选分支到学习")},onClick={app.learningStore.shortcut(StableTargetRef(LearningTargetKind.BRANCH,note.base.id,vm.selectedByMap[mapKey],currentMap),true);management=false})
                 DropdownMenuItem(text={Text("新建导图")},onClick={templatePicker=true;management=false},enabled=editable,modifier=Modifier.testTag("study-new-map"))
                 DropdownMenuItem(text={Text("新建摘要卡")},onClick={returnTab=tab;editor=CardEditor();vm.selectTab(0);management=false},enabled=editable,modifier=Modifier.testTag("study-add-card"))
                 DropdownMenuItem(text={Text("展开全部")},onClick={collapsed=emptyList();management=false},enabled=editable&&collapsed.isNotEmpty(),modifier=Modifier.testTag("study-expand-all"))
@@ -221,6 +232,7 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
     }else Box(Modifier.fillMaxSize()){
         Surface(Modifier.fillMaxSize(),shape=RoundedCornerShape(if(compactWindow)0.dp else 20.dp),color=Color.White,border=if(compactWindow)null else BorderStroke(1.dp,Line)){Column(Modifier.fillMaxSize().padding(if(compactWindow)4.dp else 16.dp)){
             val studyActions:@Composable RowScope.()->Unit={
+                TextButton(onClick={app.learningStore.shortcut(vm.selectedByMap[mapKey]?.let{StableTargetRef(LearningTargetKind.BRANCH,note.base.id,it,currentMap)}?:StableTargetRef(LearningTargetKind.MAP,note.base.id,currentMap),true);localMessage="已固定到学习快捷入口"},enabled=editable,modifier=Modifier.testTag("study-pin-map")){Text(if(vm.selectedByMap[mapKey]!=null)"固定分支"else"固定到学习")}
                 TextButton(onClick={editor=CardEditor()},enabled=editable,modifier=Modifier.testTag("study-add-card")){Text("＋ 新摘要卡")}
                 TextButton(onClick={saveTemplate=true},enabled=editable,modifier=Modifier.testTag("study-save-template")){Text("另存为模板")}
                 TextButton(onClick={pendingExport=StudyText.markdown(note.title,ui.cards.filter{it.trashedAt==null}.map{StudyTextCard(it.id,it.title,it.body)},ui.nodes.map{it.model()});export.launch("墨织摘要.md")},enabled=editable&&ui.cards.isNotEmpty()){Text("导出完整大纲")}

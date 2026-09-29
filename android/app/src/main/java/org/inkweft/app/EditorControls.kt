@@ -17,7 +17,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.unit.*
 import androidx.compose.ui.window.*
-import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.ui.Alignment
@@ -52,9 +52,12 @@ internal val LocalEditorAnchor=staticCompositionLocalOf<IntRect?>{null}
 /** Bounded floating panel: settings stay compact while the paper remains visible. */
 @Composable internal fun EditorPanel(title:String,subtitle:String,dismiss:()->Unit,tag:String,
     footer:@Composable ()->Unit={},content:@Composable ColumnScope.()->Unit){
-    val reviewBottom=tag=="beauty-review"&&LocalConfiguration.current.screenWidthDp<720
+    val window=LocalWindowInfo.current.containerSize
+    val windowWidth=with(LocalDensity.current){window.width.toDp()}
+    val windowHeight=with(LocalDensity.current){window.height.toDp()}
+    val reviewBottom=tag=="beauty-review"&&windowWidth<720.dp
     val small=reviewBottom||tag in setOf("eraser-settings","selection-settings","excerpt-settings","beauty-settings")
-    val maxPanelHeight=if(reviewBottom)minOf(480.dp,LocalConfiguration.current.screenHeightDp.dp*.55f)else if(small)minOf(360.dp,LocalConfiguration.current.screenHeightDp.dp*.55f)else minOf(600.dp,LocalConfiguration.current.screenHeightDp.dp-64.dp)
+    val maxPanelHeight=if(reviewBottom)minOf(480.dp,windowHeight*.55f)else if(small)minOf(360.dp,windowHeight*.55f)else minOf(600.dp,(windowHeight-64.dp).coerceAtLeast(48.dp))
     val anchor=LocalEditorAnchor.current
     val density=LocalDensity.current.density
     val position=remember(anchor,density,reviewBottom){object:PopupPositionProvider{

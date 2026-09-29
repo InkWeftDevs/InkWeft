@@ -19,6 +19,8 @@ data class StudyReceiptRow(@PrimaryKey val id:String,val notebookId:String,val d
 data class ExcerptRow(val id:String,val title:String,val body:String,val pageId:String,val left:Double,val top:Double,val right:Double,val bottom:Double)
 @Dao
 interface StudyDao {
+    @Query("SELECT id,notebookId,cardId,removed FROM study_nodes ORDER BY id") fun observeLearningNodes():Flow<List<LearningNodeRow>>
+    @Query("SELECT id,notebookId,title,trashedAt FROM study_cards ORDER BY id") fun observeLearningCards():Flow<List<LearningCardRow>>
     @Query("SELECT s.cardId FROM study_sources s JOIN study_cards c ON c.id=s.cardId WHERE c.notebookId=:book") fun observeSourceIds(book:String):Flow<List<String>>
     @Query("SELECT s.cardId FROM study_sources s JOIN study_cards c ON c.id=s.cardId WHERE c.notebookId=:book") suspend fun sourceIds(book:String):List<String>
     @Query("SELECT c.id,c.title,c.body,s.pageId,s.`left`,s.`top`,s.`right`,s.`bottom` FROM study_cards c JOIN study_sources s ON s.cardId=c.id WHERE c.notebookId=:book AND c.trashedAt IS NULL ORDER BY c.id") fun excerpts(book:String):Flow<List<ExcerptRow>>

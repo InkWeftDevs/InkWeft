@@ -40,6 +40,7 @@ import org.inkweft.core.*
     var favorites by remember{mutableStateOf(prefs.getBoolean("favorites-open",false))}
     var beauty by remember{mutableStateOf(beautyStore.read())}
     var reset by remember{mutableStateOf(false)}
+    var backupOpen by remember{mutableStateOf(false)}
     Dialog(onDismissRequest=dismiss,properties=DialogProperties(usePlatformDefaultWidth=false)){
         Surface(Modifier.padding(16.dp).widthIn(max=560.dp).fillMaxWidth().heightIn(max=680.dp).testTag("workspace-settings"),shape=RoundedCornerShape(24.dp),color=Side,border=BorderStroke(1.dp,Line)){
             Column(Modifier.verticalScroll(rememberScrollState()).padding(20.dp),verticalArrangement=Arrangement.spacedBy(16.dp)){
@@ -54,10 +55,12 @@ import org.inkweft.core.*
                     TextButton(onClick={prefs.edit().remove("case-x").remove("case-y").remove("case-collapsed").remove("favorites-x").remove("favorites-y").remove("favorites-collapsed").apply();reset=true},modifier=Modifier.testTag("settings-reset-case")){Text(if(reset)"笔盒位置已重置"else"重置笔盒位置")}
                 }}
                 SettingsGroup("数据","folder","本地保存","完整备份与恢复位于资料库底部。导出副本可保留笔迹、图片与文档。")
+                OutlinedButton(onClick={backupOpen=true},modifier=Modifier.fillMaxWidth().heightIn(min=48.dp).testTag("open-encrypted-backup")){Text("加密备份与恢复（实验）")}
                 Button(onClick=diagnostics,modifier=Modifier.fillMaxWidth().heightIn(min=48.dp)){Glyph("diagnostics");Spacer(Modifier.width(8.dp));Text("诊断与导出")}
             }
         }
     }
+    if(backupOpen)BackupSettings{backupOpen=false}
 }
 
 @Composable private fun SettingsGroup(section:String,icon:String,title:String,detail:String){

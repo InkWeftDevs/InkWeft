@@ -55,7 +55,7 @@ internal class KnowledgeViewModel(private val repo:KnowledgeRepository,private v
     class Factory(private val repo:KnowledgeRepository):ViewModelProvider.Factory{override fun<T:ViewModel>create(modelClass:Class<T>,extras:CreationExtras):T{require(modelClass.isAssignableFrom(KnowledgeViewModel::class.java));@Suppress("UNCHECKED_CAST")return KnowledgeViewModel(repo,extras.createSavedStateHandle()) as T}}
 }
 
-@Composable internal fun KnowledgeWorkspace(book:String,initialFocus:TargetRef,initialAnchor:KnowledgeData.Anchor?=null,initialTab:Int=0,dismiss:()->Unit,openTarget:(TargetRef)->Unit){
+@Composable internal fun KnowledgeWorkspace(book:String,initialFocus:TargetRef,initialAnchor:KnowledgeData.Anchor?=null,initialTab:Int=0,initialCollection:String?=null,dismiss:()->Unit,openTarget:(TargetRef)->Unit){
     val context=LocalContext.current;val app=context.applicationContext as InkWeftApplication;val scope=rememberCoroutineScope()
     val vm:KnowledgeViewModel=viewModel(key="knowledge-$book",factory=KnowledgeViewModel.Factory(app.knowledge));val ui by vm.ui.collectAsStateWithLifecycle()
     var tab by remember{mutableIntStateOf(initialTab)};var focus by remember{mutableStateOf(initialFocus)}
@@ -69,6 +69,7 @@ internal class KnowledgeViewModel(private val repo:KnowledgeRepository,private v
     val activeBooks=ui.notes.map{it.id}.toSet()
     val rows=ui.rows.filter{!it.removed&&it.notebookId in activeBooks};val cards=ui.cards.filter{it.trashedAt==null&&it.notebookId in activeBooks}
     val values=rows.associate{it.id to it.data()};val links=rows.mapNotNull{r->(values[r.id] as? KnowledgeData.Link)?.let{r to it}}
+    LaunchedEffect(initialCollection,values[initialCollection]){if(initialCollection!=null)chosenCollection=values[initialCollection] as? KnowledgeData.Collection}
     val properties=values.values.filterIsInstance<KnowledgeData.Properties>().associateBy{it.cardId}
     val bookCards=cards.filter{it.notebookId==book}
     val focusBook=when(focus.kind){TargetKind.NOTE->focus.id;TargetKind.PAGE->ui.pages.find{it.id==focus.id}?.notebookId;TargetKind.CARD->cards.find{it.id==focus.id}?.notebookId;TargetKind.ANCHOR->rows.find{it.id==focus.id}?.notebookId}?:book

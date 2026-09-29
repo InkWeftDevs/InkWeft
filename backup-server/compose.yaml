@@ -1,0 +1,20 @@
+services:
+  backup:
+    build: .
+    ports:
+      - "127.0.0.1:18751:18751"
+    volumes:
+      - inkweft-backup:/state
+    read_only: true
+    tmpfs:
+      - /tmp:size=16m
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    restart: unless-stopped
+    healthcheck:
+      test: [CMD, python, -c, "import urllib.request; urllib.request.urlopen('http://127.0.0.1:18751/v1/identity', timeout=3)"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+volumes:
+  inkweft-backup:

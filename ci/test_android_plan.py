@@ -2,6 +2,9 @@ import unittest
 from android_plan import plan, inventory
 
 class PlanTest(unittest.TestCase):
+    def test_backup_protocol_and_dependency_changes_run_real_roundtrip(self):
+        for path in ['backup-server/server.py','backup-server/requirements.txt']:
+            p=plan([path]);self.assertTrue(p['backup']);self.assertEqual(['org.inkweft.app.EncryptedBackupIntegrationTest'],p['app']);self.assertEqual([],p['room'])
     def test_docs_do_not_boot_emulator(self):
         self.assertFalse(plan(["android/CHANGELOG.md", "android/DEVICE-TEST-CHECKLIST.md"])["build"])
     def test_one_ui_test_only_runs_that_class(self):

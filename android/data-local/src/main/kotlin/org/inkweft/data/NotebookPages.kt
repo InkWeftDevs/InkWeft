@@ -17,6 +17,7 @@ data class PageSearchRow(@PrimaryKey val pageId:String,val inkRevision:Long,val 
 data class PageSearchHit(val notebookId:String,val pageId:String,val position:Int,val text:String)
 @Dao
 interface NotebookPageDao {
+    @Query("SELECT id,notebookId,position,trashedAt FROM notebook_pages ORDER BY notebookId,position,id") fun observeLearningPages():Flow<List<LearningPageRow>>
     @Query("SELECT * FROM notebook_pages ORDER BY notebookId,position,id") fun observeLibraryPages():Flow<List<NotebookPageRow>>
     @Query("SELECT * FROM notebook_pages WHERE notebookId=:id ORDER BY position,id") suspend fun allPages(id:String):List<NotebookPageRow>
     @Query("SELECT * FROM notebook_pages WHERE notebookId=:id ORDER BY position,id") fun observeAll(id:String):Flow<List<NotebookPageRow>>

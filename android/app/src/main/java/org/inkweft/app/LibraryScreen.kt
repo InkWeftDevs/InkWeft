@@ -11,6 +11,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.saveable.rememberSaveableStateHolder
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -46,6 +47,9 @@ fun LibraryScreen(ui:NotebookUi,workspace:WorkspaceViewModel,open:(Note)->Unit,c
     val summaryFlow=remember(app){app.knowledge.cards()};val summaries by summaryFlow.collectAsState(initial=emptyList())
     var destination by rememberSaveable{mutableStateOf("")};var learningNote by remember{mutableStateOf<Note?>(null)}
     var learningQuery by remember{mutableStateOf("")}
+    var learningTarget by remember{mutableStateOf<StableTargetRef?>(null)}
+    val learningDirectory=remember(app){app.learningDirectory.observe()}
+    val learningState=rememberSaveableStateHolder()
     val entries by workspace.entries.collectAsState();val counts by workspace.inkCounts.collectAsState()
     val searchRows by workspace.searchable.collectAsState()
     var filter by rememberSaveable{mutableStateOf("all")};var type by rememberSaveable{mutableStateOf("all")}
@@ -150,7 +154,7 @@ fun LibraryScreen(ui:NotebookUi,workspace:WorkspaceViewModel,open:(Note)->Unit,c
                     if(filter=="trash")Text("笔记内容与封面仍保留，可从菜单恢复。",fontSize=12.sp,color=Quiet,modifier=Modifier.padding(vertical=12.dp))
                     val itemContent:@Composable (Note)->Unit={n->val meta=row(n)
                         NoteTile(n,meta,counts[n.id]?.modifiedRevision?:0,counts[n.id]?.visibleCount?:0,grid,
-                            {if(meta.trashedAt==null){val hit=searchRows.firstOrNull{it.notebookId==n.id&&query.isNotBlank()&&it.text.contains(query,true)};if(hit!=null)workspace.openSearchPage(n.id,hit.pageId){open(n)}else if(query.isNotBlank()&&summaries.any{it.notebookId==n.id&&it.trashedAt==null&&(it.title.contains(query,true)||it.body.contains(query,true))}){learningQuery=query;learningNote=n}else open(n)}},{rename(n)},{coverError=null;coverExpected=meta.revision;coverTargetId=n.id},
+                            {if(meta.trashedAt==null){val hit=searchRows.firstOrNull{it.notebookId==n.id&&query.isNotBlank()&&it.text.contains(query,true)};if(hit!=null)workspace.openSearchPage(n.id,hit.pageId){open(n)}else if(query.isNotBlank()&&summaries.any{it.notebookId==n.id&&it.trashedAt==null&&(it.title.contains(query,true)||it.body.contains(query,true))}){learningTarget=null;learningQuery=query;learningNote=n}else open(n)}},{rename(n)},{coverError=null;coverExpected=meta.revision;coverTargetId=n.id},
                             {workspace.organize(meta,favorite=!meta.favorite)},{editing=meta},{if(meta.trashedAt!=null)workspace.organize(meta,trash=false)else removing=meta},
                             {duplicate(n)},{export(n)},{workspace.pin(meta,!meta.pinned)})
                     }
@@ -166,11 +170,23 @@ fun LibraryScreen(ui:NotebookUi,workspace:WorkspaceViewModel,open:(Note)->Unit,c
             }
         }
     }
-    if(destination in listOf("learn","review"))LearningLibrary(active,destination=="review",{destination=""}){learningQuery="";learningNote=it}
+    if(destination=="learn"&&learningNote==null)learningState.SaveableStateProvider("learning"){LearningWorkbench(learningDirectory,app.learningStore,{destination=""}){target->
+        val n=active.find{it.id==target.notebookId}
+        if(n!=null)when(target.kind){
+            LearningTargetKind.NOTE->{open(n);destination=""}
+            LearningTargetKind.PAGE->workspace.openSearchPage(n.id,checkNotNull(target.id)){open(n);destination=""}
+            else->{learningTarget=target;learningQuery="";learningNote=n}
+        }
+    }}
+    if(destination=="review")LearningLibrary(active,true,{destination=""}){learningQuery="";learningTarget=null;learningNote=it}
     if(destination=="settings")WorkspaceSettings({destination=""}){destination="";diagnostics()}
     learningNote?.let{n->
         if(destination=="review")KnowledgeWorkspace(n.id,TargetRef(TargetKind.NOTE,n.id),initialTab=4,dismiss={learningNote=null}){target->app.openKnowledgeTarget.value=target;learningNote=null;destination=""}
-        else StudyWorkspace(NoteDraft(n),null,{learningNote=null},initialQuery=learningQuery){source->workspace.openSearchPage(n.id,source.pageId){open(n)};learningNote=null;destination="";true}
+        else if(learningTarget?.kind==LearningTargetKind.COLLECTION)KnowledgeWorkspace(n.id,TargetRef(TargetKind.NOTE,n.id),initialTab=1,initialCollection=learningTarget?.id,dismiss={learningNote=null}){target->app.openKnowledgeTarget.value=target;learningNote=null;destination=""}
+        else StudyWorkspace(NoteDraft(n),null,{learningNote=null},initialQuery=learningQuery,
+            initialCardId=learningTarget?.takeIf{it.kind==LearningTargetKind.CARD}?.id,
+            initialMap=learningTarget?.takeIf{it.kind in listOf(LearningTargetKind.MAP,LearningTargetKind.BRANCH)}?.let{MapRef(it.notebookId,if(it.kind==LearningTargetKind.BRANCH)it.mapId else it.id)},
+            initialBranch=learningTarget?.takeIf{it.kind==LearningTargetKind.BRANCH}?.id){source->workspace.openSearchPage(n.id,source.pageId){open(n)};learningNote=null;destination="";true}
     }
     coverTarget?.let{(n,r)->key(n.id){
         var coverLoading by remember{mutableStateOf(true)};var storedCover by remember{mutableStateOf<ByteArray?>(null)}

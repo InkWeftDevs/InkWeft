@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- No network, storage, microphone, camera, account or logcat permissions. -->
+    <!-- Network is used only after opting into an owner-hosted encrypted backup server. -->
+    <uses-permission android:name="android.permission.INTERNET" />
     <application
         android:name=".InkWeftApplication"
         android:label="${appLabel}"
@@ -9,6 +10,7 @@
         android:fullBackupContent="@xml/backup_rules"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:usesCleartextTraffic="false"
+        android:networkSecurityConfig="@xml/network_security_config"
         android:supportsRtl="true"
         android:theme="@style/Theme.InkWeft">
         <provider android:name="androidx.core.content.FileProvider"

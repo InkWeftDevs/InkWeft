@@ -44,10 +44,15 @@ internal class StudyViewModel(val book:String,val repo:StudyRepository,private v
     private val state=MutableStateFlow(StudyUi(unknown=pending!=null,message=if(pending!=null)"上次摘要操作待核对，请重试原操作。"else null));val ui=state.asStateFlow()
     private val reload=MutableStateFlow(0)
     fun refresh(){state.update{it.copy(loading=true)};reload.value++}
-    init{viewModelScope.launch{combine(mapId,reload){m,_->m}.flatMapLatest{m->
+    private var observation:Job?=null
+    private var visibleOwners=0
+    fun attach(){visibleOwners++;startObservation()}
+    fun detach(){visibleOwners=(visibleOwners-1).coerceAtLeast(0);if(visibleOwners==0){observation?.cancel();observation=null}}
+    private fun startObservation(){if(observation?.isActive==true)return;observation=viewModelScope.launch{combine(mapId,reload){m,_->m}.flatMapLatest{m->
         combine(repo.cards(book),repo.nodes(book,m),repo.nodes(book)){c,n,main->Triple(c,n,main)}
             .catch{e->if(e is CancellationException)throw e;state.update{it.copy(loading=false,readFailed=true)}}
     }.collect{(c,n,main)->state.update{it.copy(cards=c,nodes=n,mainNodes=main,loading=false,readFailed=false)}}}}
+    init{startObservation()}
     fun submit(c:StudyCommand){require(c.notebookId==book);if(ui.value.busy||pending!=null)return;pending=c;persistPending();execute()}
     fun retry(){if(!ui.value.busy&&pending!=null)execute()}
     private fun execute(){val c=pending?:return;state.update{it.copy(busy=true,message=null,completed=null)}

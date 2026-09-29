@@ -2,10 +2,10 @@ name: Android 按改动验证
 on:
   push:
     branches: ["main"]
-    paths: ["android/**", "ci/**", ".github/workflows/android-a0.yml"]
+    paths: ["android/**", "ci/**", "backup-server/**", ".github/workflows/android-a0.yml"]
   pull_request:
     branches: ["main"]
-    paths: ["android/**", "ci/**", ".github/workflows/android-a0.yml"]
+    paths: ["android/**", "ci/**", "backup-server/**", ".github/workflows/android-a0.yml"]
   workflow_dispatch:
     inputs:
       mode:
@@ -49,6 +49,13 @@ jobs:
         with:
           distribution: temurin
           java-version: "17"
+      - name: 验证合成备份协议与账号隔离
+        if: steps.plan.outputs.backup == 'true'
+        run: |
+          python3 -m venv "$RUNNER_TEMP/backup-venv"
+          "$RUNNER_TEMP/backup-venv/bin/pip" install -r backup-server/requirements.txt
+          cd backup-server
+          "$RUNNER_TEMP/backup-venv/bin/python" -m unittest -v test_backup
       - uses: gradle/actions/setup-gradle@ed408507eac070d1f99cc633dbcf757c94c7933a
         if: steps.plan.outputs.build == 'true'
         with:
@@ -171,11 +178,24 @@ jobs:
           adb shell settings put global animator_duration_scale 0
           adb shell getprop > android/build/evidence/emulator-properties.txt
       - name: 单次运行选定测试并保存证据
-        run: python3 ci/run_android_tests.py --shard-index ${{ matrix.shard }} --shard-count ${{ needs.build.outputs.shard_count }}
+        # Each shard owns a loopback-only, synthetic service. No repository/private library is uploaded.
+        env:
+          BACKUP_FIXTURE_ROOT: ${{ runner.temp }}/backup-fixture
+        run: |
+          if python3 -c 'import json,sys; sys.exit(0 if "org.inkweft.app.EncryptedBackupIntegrationTest" in json.load(open("android-plan.json"))["app"] else 1)'; then
+            python3 -m venv "$RUNNER_TEMP/backup-venv"
+            "$RUNNER_TEMP/backup-venv/bin/pip" install -r backup-server/requirements.txt
+            nohup "$RUNNER_TEMP/backup-venv/bin/python" backup-server/fixture.py --directory "$BACKUP_FIXTURE_ROOT" > "$RUNNER_TEMP/backup-service.log" 2>&1 &
+            echo $! > "$RUNNER_TEMP/backup-service.pid"
+            python3 -c 'import time,urllib.request; exec("for i in range(40):\n try:\n  urllib.request.urlopen(\"http://127.0.0.1:18751/v1/identity\",timeout=1);break\n except Exception:\n  time.sleep(.25)\nelse: raise RuntimeError(\"backup fixture unavailable\")")'
+            adb reverse tcp:18751 tcp:18751
+          fi
+          python3 ci/run_android_tests.py --shard-index ${{ matrix.shard }} --shard-count ${{ needs.build.outputs.shard_count }}
       - name: 收集失败线索并关闭模拟器
         if: always()
         run: |
           mkdir -p android/build/evidence
+          if [ -f "$RUNNER_TEMP/backup-service.pid" ]; then kill "$(cat "$RUNNER_TEMP/backup-service.pid")" || true; fi
           if adb get-state >/dev/null 2>&1; then
             adb logcat -d -t 1500 > android/build/evidence/emulator-logcat.txt
             adb pull /sdcard/Android/data/org.inkweft.app.a0.insertion/files/. android/build/evidence/ || true

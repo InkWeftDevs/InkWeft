@@ -37,7 +37,7 @@ with open(os.environ["GITHUB_OUTPUT"],"a") as out:
     count=shard_count(result["expected_app"])
     out.write(f"shard_count={count}\n")
     out.write("shards="+json.dumps(list(range(count)))+"\n")
-    for key in ["build","device"]:out.write(f"{key}={str(result[key]).lower()}\n")
+    for key in ["build","device","backup"]:out.write(f"{key}={str(result[key]).lower()}\n")
 with open(os.environ["GITHUB_STEP_SUMMARY"],"a") as out:
     out.write("## 本次验证范围\n\n```json\n"+json.dumps(result,ensure_ascii=False,indent=2)+"\n```\n")
 print(json.dumps(result,ensure_ascii=False))

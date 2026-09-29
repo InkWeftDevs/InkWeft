@@ -26,7 +26,7 @@ internal object EditorToolOrder {
     fun read(context:Context):List<String>{val raw=context.getSharedPreferences("inkweft-editor",0).getString("toolbar-order-v32","").orEmpty().split(',').filter{it in labels}.distinct();return raw+labels.keys.filterNot{it in raw}}
 }
 /** Stable identifiers preserve visibility when new tools are added. Changes apply immediately. */
-@Composable internal fun EditorToolbar(externalMore:Boolean=false,moreRequest:Int=0,content:@Composable (String)->Unit){
+@Composable internal fun EditorToolbar(externalMore:Boolean=false,moreRequest:Int=0,content:@Composable (String,()->Unit)->Unit){
     val context=LocalContext.current;val prefs=remember{context.getSharedPreferences("inkweft-editor",0)}
     var order by remember{mutableStateOf(EditorToolOrder.read(context))}
     var hidden by remember{mutableStateOf((prefs.getStringSet("toolbar-hidden-v32",EditorToolOrder.defaultHidden).orEmpty()+EditorToolOrder.defaultHidden.filter{it !in prefs.getString("toolbar-order-v32","").orEmpty().split(',')})-EditorToolOrder.fixed)}
@@ -41,11 +41,11 @@ internal object EditorToolOrder {
     BoxWithConstraints{
     val visiblePrimary=EditorToolOrder.primary+if(maxWidth>=528.dp)setOf("image","text")else emptySet()
     FlowRow(Modifier.testTag("editor-toolbar")){
-        order.filter{it in visiblePrimary&&it !in hidden}.forEach{key(it){EditorToolSlot(it){content(it)}}}
+        order.filter{it in visiblePrimary&&it !in hidden}.forEach{key(it){EditorToolSlot(it){content(it){}}}}
         Box {
             if(!externalMore)IconButton(onClick={more=true},modifier=Modifier.testTag("toolbar-more").describedAs("更多工具")){Glyph("more")}
             DropdownMenu(more,{more=false},containerColor=androidx.compose.ui.graphics.Color.White){
-                Row(Modifier.widthIn(max=320.dp).horizontalScroll(rememberScrollState())){order.filter{it !in visiblePrimary&&it !in hidden}.forEach{id->Box(Modifier.pointerInput(id){awaitEachGesture{awaitFirstDown(requireUnconsumed=false,pass=PointerEventPass.Initial);do{val event=awaitPointerEvent(PointerEventPass.Final)}while(event.changes.any{it.pressed});more=false}}){EditorToolSlot(id){content(id)}}}}
+                Row(Modifier.widthIn(max=320.dp).horizontalScroll(rememberScrollState())){order.filter{it !in visiblePrimary&&it !in hidden}.forEach{id->EditorToolSlot(id){content(id){more=false}}}}
                 DropdownMenuItem(text={Text("自定义快捷栏")},onClick={more=false;customizing=true},modifier=Modifier.testTag("toolbar-customize"))
             }
         }

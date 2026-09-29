@@ -26,11 +26,13 @@ def plan(paths, full=False):
     reasons = []
     for path in paths:
         p = Path(path)
-        if p.suffix.lower() in {".md", ".txt", ".png", ".jpg", ".svg"} and "/src/" not in path:
+        if p.suffix.lower() in {".md", ".txt", ".png", ".jpg", ".svg"} and "/src/" not in path and p.name!='requirements.txt':
             continue
         if path.startswith("ci/test_") and p.suffix == ".py":
             continue
-        if path.startswith("android/core-domain/src/test/"):
+        if path.startswith("backup-server/"):
+            app.add('org.inkweft.app.EncryptedBackupIntegrationTest')
+        elif path.startswith("android/core-domain/src/test/"):
             core = True
         elif "/src/androidTest/" in path and p.suffix == ".kt":
             module = path.split("/")[1]
@@ -50,6 +52,7 @@ def plan(paths, full=False):
             room.update(inventory("data-local")); app.update(inventory("app"))
         reasons.append(path)
     return {"core": core, "lint": lint, "app": sorted(app), "room": sorted(room),
+            "backup": 'org.inkweft.app.EncryptedBackupIntegrationTest' in app,
             "build": bool(core or lint or app or room), "device": bool(app or room),
             "expected_app": sum(inventory("app")[c] for c in app),
             "expected_room": sum(inventory("data-local")[c] for c in room),

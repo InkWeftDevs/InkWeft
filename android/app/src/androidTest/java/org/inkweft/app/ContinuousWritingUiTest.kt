@@ -53,6 +53,17 @@ class ContinuousWritingUiTest {
             listOf(290f to 300f,340f to 300f),listOf(315f to 300f,315f to 400f),listOf(290f to 400f,340f to 400f)).forEachIndexed{index,points->compose.runOnIdle{line(canvas(page),points)};compose.waitUntil(10_000){runBlocking{app.inkRepository.read(page).strokes.size}==index+1}}
     }
     private fun shot(name:String){compose.waitForIdle();val b=checkNotNull(InstrumentationRegistry.getInstrumentation().uiAutomation.takeScreenshot());try{File(app.getExternalFilesDir(null),name).outputStream().use{b.compress(Bitmap.CompressFormat.PNG,100,it)}}finally{b.recycle()}}
+    private fun approveHiReview(page:String,automatic:Boolean=true){
+        val vm=ViewModelProvider(compose.activity)["objects-$page",PageObjectViewModel::class.java]
+        compose.waitUntil(45000){vm.beautyReview.value!=null}
+        assertTrue(runBlocking{app.pageObjects.read(page).objects.isEmpty()})
+        assertEquals(6,runBlocking{app.inkRepository.read(page).strokes.size})
+        if(automatic){compose.onNodeWithTag("beauty-review").assertDoesNotExist();compose.onNodeWithTag("beauty-review-open").performClick()}
+        compose.onNodeWithTag("beauty-review-text").performTextReplacement("HI")
+        compose.onNodeWithTag("beauty-review-apply").assertIsEnabled().performClick()
+        compose.waitUntil(10000){runBlocking{app.pageObjects.read(page).objects.isNotEmpty()}}
+        assertEquals("HI",runBlocking{app.pageObjects.read(page).objects.single().text})
+    }
 
     @Test fun tapeTapInContinuousPagesTogglesExactlyOnceForFingerAndStylus(){
         val tape=PageObject(id(),PageObjectKind.TAPE,300f,100f,400f,80f)
@@ -154,10 +165,10 @@ class ContinuousWritingUiTest {
         compose.onNodeWithTag("ink-undo").performClick()
         compose.waitUntil(10_000){runBlocking{app.pageObjects.read(note.id).objects.none{it.hidden}}}
     }
-    @Test fun automaticBeautyIsInlineErasableUndoableAndPersistent(){
+    @Test fun automaticBeautyReviewIsInlineErasableUndoableAndPersistent(){
         val note=open();compose.openBeautySettings();compose.onNodeWithTag("beauty-replace-font").performClick();compose.onNodeWithTag("beauty-enabled").performClick();compose.onNodeWithTag("beauty-close").performClick()
         hi(note.id)
-        compose.waitUntil(45_000){runBlocking{app.pageObjects.read(note.id).objects.any{!it.hidden}}}
+        approveHiReview(note.id)
         val beauty=runBlocking{app.pageObjects.read(note.id).objects.single()}
         assertEquals(6,beauty.sourceStrokeIds.size);assertTrue(beauty.text.isNotBlank());assertEquals(TextFont.WENKAI,beauty.font)
         compose.onNodeWithTag("font-beauty-dialog").assertDoesNotExist();shot("v20-auto-beauty.png")
@@ -191,7 +202,7 @@ class ContinuousWritingUiTest {
         val restored=compose.onNodeWithTag("floating-pen-case").fetchSemanticsNode().boundsInRoot
         assertEquals(moved.left,restored.left,3f)
     }
-    @Test fun manualSelectionUsesChosenFontWithoutConfirmationDialog(){
+    @Test fun manualSelectionPreviewsChosenFontBeforeApplying(){
         val note=open();hi(note.id)
         compose.waitUntil(10_000){runBlocking{app.inkRepository.read(note.id).strokes.size}==6}
         compose.openBeautySettings();compose.onNodeWithTag("beauty-replace-font").performClick();compose.onNodeWithTag("beauty-font-picker").performClick();compose.onNodeWithTag("font-SERIF").performClick()
@@ -202,18 +213,18 @@ class ContinuousWritingUiTest {
             val vm=ViewModelProvider(compose.activity,PageObjectViewModel.Factory(note.id,app.pageObjects))["objects-${note.id}",PageObjectViewModel::class.java]
             vm.beautify(SelectedInk(region,6,strokes),BeautyStore(app).read(),false,app)
         }
-        compose.waitUntil(45_000){runBlocking{app.pageObjects.read(note.id).objects.isNotEmpty()}}
+        approveHiReview(note.id,false)
         assertEquals(TextFont.SERIF,runBlocking{app.pageObjects.read(note.id).objects.single().font})
         compose.onNodeWithTag("font-beauty-dialog").assertDoesNotExist()
     }
-    @Test fun choosingFontFromInkModeStartsAutomaticConversion(){
+    @Test fun choosingFontFromInkModePreservesAutoSettingAndOffersReview(){
         val note=open(beauty=BeautyOptions(enabled=true,keepInk=true,font=TextFont.WENKAI))
         compose.selectPen("pencil");compose.openBeautySettings()
         compose.onNodeWithTag("beauty-font-picker").assertIsDisplayed().performTouchInput{click()}
         compose.onNodeWithTag("font-SERIF").performTouchInput{click()}
         compose.onNodeWithTag("beauty-close").performClick();compose.waitForIdle()
         hi(note.id)
-        compose.waitUntil(45000){runBlocking{app.pageObjects.read(note.id).objects.any{!it.hidden}}}
+        approveHiReview(note.id)
         val result=runBlocking{app.pageObjects.read(note.id).objects.single()}
         assertTrue(result.text.isNotBlank());assertEquals(TextFont.SERIF,result.font)
         assertEquals(6,result.sourceStrokeIds.size);assertTrue(result.glyphs.isNotEmpty())
@@ -221,10 +232,10 @@ class ContinuousWritingUiTest {
         shot("v40-font-conversion.png")
     }
 
-    @Test fun pencilAutomaticallyConvertsWithSelectedFont(){
+    @Test fun pencilAutomaticallyPreparesChosenFontForReview(){
         val note=open();compose.selectPen("pencil");compose.openBeautySettings();compose.onNodeWithTag("beauty-replace-font").performClick();compose.onNodeWithTag("beauty-enabled").performClick();compose.onNodeWithTag("beauty-close").performClick()
         hi(note.id)
-        compose.waitUntil(45000){runBlocking{app.pageObjects.read(note.id).objects.any{!it.hidden}}}
+        approveHiReview(note.id)
         val result=runBlocking{app.pageObjects.read(note.id).objects.single()}
         assertTrue(result.text.isNotBlank());assertEquals(6,result.sourceStrokeIds.size);assertEquals(TextFont.WENKAI,result.font)
         assertTrue(runBlocking{app.inkRepository.read(note.id).strokes.all{it.stroke.pen==InkPen.PENCIL}})
