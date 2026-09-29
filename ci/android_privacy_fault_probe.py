@@ -40,11 +40,11 @@ def main():
     parser.add_argument('--package', choices=PACKAGES, default=PACKAGE)
     parser.add_argument('--output', required=True)
     parser.add_argument('--probe', choices=('all', 'privacy', 'space'), default='all')
-    parser.add_argument('--mumu-manager'); parser.add_argument('--mumu-index', default='5')
+    parser.add_argument('--avd-name', choices=('InkWeft-Test', 'InkWeft-TrustedTLS'), default='InkWeft-Test'); parser.add_argument('--mumu-manager'); parser.add_argument('--mumu-index', default='5')
     parser.add_argument('--root-mode', choices=('su', 'adbd'), default='su', help='adbd requires adb root to be enabled already')
     args = parser.parse_args(); package = args.package
     adb = [args.adb, '-s', args.serial]
-    require_disposable(adb, args.serial, args.mumu_manager, args.mumu_index)
+    require_disposable(adb, args.serial, args.mumu_manager, args.mumu_index, args.avd_name)
 
     def command(*words, timeout=30):
         return subprocess.check_output(adb + list(words), text=True, encoding='utf-8', timeout=timeout).strip()
@@ -63,7 +63,7 @@ def main():
     def invoke(name, flags, report_name):
         # Remove only this probe's previous sanitized report, preventing stale success.
         report_path = f'/sdcard/Android/data/{package}/files/{report_name}.json'
-        command('shell', 'run-as', package, 'rm', '-f', report_path)
+        command('shell', 'rm', '-f', report_path)
         words = ['shell', 'am', 'instrument', '-w', '-e', 'class', 'org.inkweft.app.' + name,
                  '-e', 'deviceGuard', 'verified-disposable-emulator']
         for key, value in flags.items():
@@ -73,7 +73,7 @@ def main():
         # Probe assertions suppress raw trees/values; scan results contain only outlet and hit type.
         (output / (report_name + '.log')).write_bytes(call.stdout + call.stderr)
         passed = call.returncode == 0 and re.search(rb'OK \(1 test\)', call.stdout) is not None
-        data = command('shell', 'run-as', package, 'cat', report_path)
+        data = command('shell', 'cat', report_path)
         report = json.loads(data)
         (output / (report_name + '.json')).write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding='utf-8')
         result['checks'].append({'probe': name, 'passed': passed and report.get('status') == 'PASS', 'report': report_name + '.json'})

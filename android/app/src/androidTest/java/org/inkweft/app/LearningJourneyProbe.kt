@@ -33,6 +33,7 @@ class LearningJourneyProbe {
         return checkNotNull(find(compose.activity.window.decorView))
     }
     private fun draw(v:InkCanvasView,points:List<Pair<Float,Float>>){
+        assertTrue("Canvas input is disabled; finish object selection and choose the intended tool",v.inputReady)
         val now=SystemClock.uptimeMillis();val vp=v.snapshotViewport();val d=v.resources.displayMetrics.density.toDouble()
         points.forEachIndexed{i,(x,y)->
             val p=vp.worldToScreen(x.toDouble(),y.toDouble(),v.width.toDouble(),v.height.toDouble(),d)
@@ -93,9 +94,12 @@ class LearningJourneyProbe {
         compose.runOnIdle{ViewModelProvider(compose.activity)["study-panel-$book",StudyPanelSession::class.java].embedInsertion.value=EmbedInsertion(book,embedId,embed)}
         compose.waitUntil(10000){runBlocking{app.pageObjects.read(book).objects.any{it.id==embedId}}};m.put("embed",embedId);step(m,"insert-live-map")
         if(compose.onAllNodesWithTag("study-window-minimize").fetchSemanticsNodes().isNotEmpty())compose.onNodeWithTag("study-window-minimize").performClick()
+        // Insertion deliberately leaves the map selected; changing a native pen field does not change that tool mode.
+        compose.onNodeWithTag("object-deselect").performClick();compose.selectPen("pen");ready();compose.frameCanvasFixture()
+        compose.runOnIdle{assertEquals(InkPen.PEN,canvas().pen);assertFalse(canvas().eraseMode)}
         val hi=listOf(listOf(200f to 250f,200f to 350f),listOf(250f to 250f,250f to 350f),listOf(200f to 300f,250f to 300f),listOf(290f to 250f,340f to 250f),listOf(315f to 250f,315f to 350f),listOf(290f to 350f,340f to 350f))
         val oldIds=runBlocking{app.inkRepository.read(book).strokes.map{it.stroke.id}}.toSet()
-        hi.forEach{points->compose.runOnIdle{canvas().pen=InkPen.PEN;draw(canvas(),points)};ready()}
+        hi.forEach{points->compose.runOnIdle{draw(canvas(),points)};ready()}
         compose.waitUntil(15000){runBlocking{app.inkRepository.read(book).strokes.count{it.stroke.id !in oldIds}}==6}
         val ink=runBlocking{app.inkRepository.read(book)};val written=InkSession(ink).visibleDraft().filter{it.id !in oldIds}
         val objects=ViewModelProvider(compose.activity)["objects-$book",PageObjectViewModel::class.java]
@@ -103,9 +107,10 @@ class LearningJourneyProbe {
         compose.waitUntil(45000){objects.beautyReview.value!=null};compose.onNodeWithTag("beauty-review-text").performTextReplacement("HI");compose.onNodeWithTag("beauty-review-apply").performClick()
         compose.waitUntil(10000){runBlocking{app.pageObjects.read(book).objects.any{it.sourceStrokeIds.isNotEmpty()}}};val beauty=runBlocking{app.pageObjects.read(book).objects.single{it.sourceStrokeIds.isNotEmpty()}}
         m.put("beauty",beauty.id);step(m,"review-and-apply-beauty")
-        compose.runOnIdle{val v=canvas();v.eraseMode=true;v.eraserWhole=false;v.eraserDiameterDp=8f;draw(v,listOf((beauty.x+beauty.width*.2f) to beauty.y,(beauty.x+beauty.width*.2f) to (beauty.y+beauty.height)))}
+        ready();compose.onNodeWithTag("top-eraser").performClick();ready()
+        compose.runOnIdle{val v=canvas();assertTrue(v.eraseMode);v.eraserWhole=false;v.eraserDiameterDp=8f;draw(v,listOf((beauty.x+beauty.width*.2f) to beauty.y,(beauty.x+beauty.width*.2f) to (beauty.y+beauty.height)))}
         compose.waitUntil(10000){runBlocking{app.pageObjects.read(book).objects.first{it.id==beauty.id}.erasures.isNotEmpty()}}
-        compose.onNodeWithTag("ink-undo").performClick();compose.waitUntil(10000){runBlocking{app.pageObjects.read(book).objects.first{it.id==beauty.id}.erasures.isEmpty()}};ready();shot("before-backup");step(m,"local-erase-and-undo")
+        ready();compose.onNodeWithTag("ink-undo").performClick();compose.waitUntil(10000){runBlocking{app.pageObjects.read(book).objects.first{it.id==beauty.id}.erasures.isEmpty()}};ready();shot("before-backup");step(m,"local-erase-and-undo")
         val root=File(app.filesDir,"learning-journey-restore").apply{check(mkdirs())};val key=EncryptedBackupFile.random(32);val library=id();val encrypted=File(root,"encrypted.iwbk");val clear=File(root,"verified.iwbackup")
         val before=runBlocking{app.libraryBackup.snapshot()};before.use{EncryptedBackupFile.encrypt(it.file,encrypted,library,key)};EncryptedBackupFile.decrypt(encrypted,clear,library,key);step(m,"encrypted-backup")
         val restoredDb=NoteDatabase.open(app,File(root,"empty-restored.db").absolutePath)

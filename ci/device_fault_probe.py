@@ -1,12 +1,12 @@
 """Native kill/offline probes, only on an explicitly identified disposable emulator."""
 import argparse,json,pathlib,re,subprocess
 
-def require_disposable(adb,serial,manager=None,index='5'):
+def require_disposable(adb,serial,manager=None,index='5',avd_name='InkWeft-Test'):
  if manager:
   info=json.loads(subprocess.check_output([manager,'info','-v',index]));assert info['name']=='InkWeft-Test' and serial==f"{info['adb_host_ip']}:{info['adb_port']}"
  else:
   assert subprocess.check_output(adb+['shell','getprop','ro.kernel.qemu'],text=True).strip()=='1'
-  assert subprocess.check_output(adb+['emu','avd','name'],text=True).splitlines()[0]=='InkWeft-Test'
+  assert subprocess.check_output(adb+['emu','avd','name'],text=True).splitlines()[0]==avd_name
 
 def main():
  p=argparse.ArgumentParser();p.add_argument('--adb',default='adb');p.add_argument('--serial',required=True);p.add_argument('--output',required=True);p.add_argument('--mumu-manager');p.add_argument('--mumu-index',default='5');p.add_argument('--probe',choices=['cipher','offline','resource'],required=True);p.add_argument('--package',default='org.inkweft.app.a0.workspace');a=p.parse_args()

@@ -19,7 +19,7 @@ import java.util.UUID
 
 /** The runner must create a private bounded tmpfs. This probe never fills the parent filesystem. */
 class AndroidTemporarySpaceProbe {
-    @Test fun realEnospcDropsPartialFilesAndOldCipherRemainsRestorable()=runBlocking{
+    @Test fun realEnospcDropsPartialFilesAndOldCipherRemainsRestorable():Unit=runBlocking{
         val app=InstrumentationRegistry.getInstrumentation().targetContext.applicationContext as InkWeftApplication
         val args=InstrumentationRegistry.getArguments()
         require(args.getString("spaceProbe")=="dedicated-emulator"&&args.getString("deviceGuard")=="verified-disposable-emulator")

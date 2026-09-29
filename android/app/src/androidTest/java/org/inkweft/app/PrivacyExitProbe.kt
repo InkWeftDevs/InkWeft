@@ -128,7 +128,9 @@ class PrivacyExitProbe {
             app.contentResolver.openOutputStream(picked!!)!!.use{it.write(pack)}
             picker=ins.addMonitor(IntentFilter(Intent.ACTION_OPEN_DOCUMENT).apply{addCategory(Intent.CATEGORY_OPENABLE);addCategory(Intent.CATEGORY_DEFAULT);addDataType("*/*")},Instrumentation.ActivityResult(Activity.RESULT_OK,Intent().setData(picked).addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)),true)
             compose.activity.setContent{InkTheme.Content{ResourcePackSettings{}}};compose.waitForIdle()
-            compose.onNodeWithText("选择模板包").performClick()
+            compose.waitUntil(10000){compose.onAllNodes(hasText("选择模板包") and isEnabled()).fetchSemanticsNodes().isNotEmpty()}
+            compose.onNodeWithText("选择模板包").assertIsEnabled().performClick()
+            check(picker!!.hits==1){"Synthetic document picker was not reached"}
             compose.waitUntil(15000){compose.onAllNodesWithText("资源包无效、空间不足或操作未完成；已安装版本与笔记保留。").fetchSemanticsNodes().isNotEmpty()}
             scanUi("resource-error-ui")
             check(beforePacks==runBlocking{app.resourcePacks.installed().map{it.pack.hash to it.enabled}}){"Failed resource changed installed versions"}
