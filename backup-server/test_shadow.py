@@ -1,11 +1,47 @@
 from contextlib import closing
 import base64,json,sqlite3,tempfile,unittest,uuid,subprocess,sys
+import socket,time,httpx
 from pathlib import Path
 from fastapi.testclient import TestClient
 from server import Store,create_app
 from shadow import ShadowRelay
 
 class ShadowTest(unittest.TestCase):
+ def test_http_process_restart_keeps_session_sequence_and_replay(self):
+  with tempfile.TemporaryDirectory() as tmp:
+   db=Path(tmp)/'backup.db';store=Store(db);store.add_user('synthetic','synthetic-password-123')
+   with socket.socket() as s:s.bind(('127.0.0.1',0));port=s.getsockname()[1]
+   process=None
+   def start():
+    nonlocal process
+    code="import sys,uvicorn;from server import create_app;uvicorn.run(create_app(sys.argv[1],enable_shadow=True),host='127.0.0.1',port=int(sys.argv[2]),log_level='error')"
+    process=subprocess.Popen([sys.executable,'-c',code,str(db),str(port)],cwd=Path(__file__).parent,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
+    deadline=time.monotonic()+10
+    while time.monotonic()<deadline:
+     try:
+      if httpx.get(f'http://127.0.0.1:{port}/health/ready',timeout=.3).status_code==200:return
+     except httpx.TransportError:pass
+     if process.poll() is not None:raise AssertionError('Fixture exited')
+     time.sleep(.05)
+    raise AssertionError('Fixture did not become ready')
+   def stop():
+    if process is not None and process.poll() is None:
+     process.terminate()
+     try:process.wait(timeout=5)
+     except subprocess.TimeoutExpired:process.kill();process.wait(timeout=5)
+   try:
+    start()
+    with httpx.Client(base_url=f'http://127.0.0.1:{port}',timeout=3) as c:
+     device=str(uuid.uuid4());library=str(uuid.uuid4());identity=c.post('/v1/sessions',json={'username':'synthetic','password':'synthetic-password-123','device':device}).json();headers={'Authorization':'Bearer '+identity['token']}
+     self.assertEqual(200,c.put('/v1/libraries/'+library,headers=headers).status_code)
+     e={'schema':'a'*64,'format':'inkweft.shadow-rows.v1','scope':[identity['server'],identity['issuer'],identity['user'],library],'device':device,'operation':str(uuid.uuid4()),'key_version':1,'nonce':base64.b64encode(b'0'*12).decode(),'ciphertext':base64.b64encode(b'1'*32).decode()}
+     body=json.dumps(e).encode();url='/v1/libraries/'+library+'/shadow/events';first=c.post(url,headers=headers,content=body);self.assertEqual(200,first.status_code)
+     expected=c.get(url,headers=headers).json();stop();start()
+     self.assertEqual(expected,c.get(url,headers=headers).json())
+     self.assertEqual(first.json(),c.post(url,headers=headers,content=body).json())
+     self.assertEqual(expected,c.get(url,headers=headers).json())
+   finally:stop()
+
  def test_persistent_replay_cursor_and_closed_default(self):
   with tempfile.TemporaryDirectory() as tmp:
    root=Path(tmp);store=Store(root/'backup.db');store.add_user('synthetic','synthetic-password-123');device=str(uuid.uuid4());library=str(uuid.uuid4())

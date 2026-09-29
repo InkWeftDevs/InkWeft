@@ -21,6 +21,14 @@ class TemplateCreationUiTest {
     }
     private fun shot(name:String){compose.waitForIdle();val b=InstrumentationRegistry.getInstrumentation().uiAutomation.takeScreenshot()!!;File(app.getExternalFilesDir(null),"v45-$name.png").outputStream().use{b.compress(android.graphics.Bitmap.CompressFormat.PNG,100,it)};b.recycle()}
     private fun choose(){compose.onNode(hasScrollToIndexAction() and hasAnyAncestor(hasTestTag("new-notebook-screen"))).performScrollToIndex(1);compose.onNodeWithText("我的模板").performScrollTo().performClick();compose.waitUntil(10000){compose.onAllNodesWithTag("installed-paper-paper").fetchSemanticsNodes().isNotEmpty()};compose.onNodeWithTag("installed-paper-paper").performScrollTo().performClick()}
+    private fun chooseInsert(){
+        compose.onNodeWithText("我的模板").onParent().performScrollTo()
+        compose.onNodeWithText("我的模板").performScrollTo().performClick()
+        try{compose.waitUntil(10000){compose.onAllNodesWithTag("insert-installed-paper").fetchSemanticsNodes().isNotEmpty()}}
+        catch(t:Throwable){shot("insert-failure");File(app.getExternalFilesDir(null),"insert-failure.txt").writeText(compose.onNodeWithTag("insert-pages-dialog",useUnmergedTree=true).printToString());throw t}
+        compose.onNodeWithTag("insert-installed-paper").onParent().performScrollTo()
+        compose.onNodeWithTag("insert-installed-paper").performScrollTo().performClick()
+    }
     @Test fun installedTemplatesAreUsableInExistingCreationFlows(){
         install();compose.waitUntil(10000){compose.onAllNodesWithTag("new-note").fetchSemanticsNodes().isNotEmpty()}
         compose.onNodeWithTag("new-note").performClick();choose();shot("new-template");compose.onNodeWithText("取消").performClick()
@@ -28,9 +36,9 @@ class TemplateCreationUiTest {
         compose.onNodeWithTag("new-note").performClick();choose();compose.onNodeWithTag("create-note").performClick();compose.singlePageEditor();compose.waitForSavedInk()
         val note=runBlocking{app.repository.observeNotes().first()}.single()
         assertEquals(PaperStyle.CORNELL.ordinal,runBlocking{app.pages.activePages(note.id)}.single().paper)
-        compose.openEditorAction("add-page");compose.onNodeWithText("我的模板").performScrollTo().performClick();compose.onNodeWithTag("insert-installed-paper").performScrollTo().performClick();shot("insert-template");compose.onNodeWithText("取消").performClick()
+        compose.openEditorAction("add-page");chooseInsert();shot("insert-template");compose.onNodeWithText("取消").performClick()
         assertEquals(1,runBlocking{app.pages.activePages(note.id)}.size)
-        compose.openEditorAction("add-page");compose.onNodeWithText("我的模板").performScrollTo().performClick();compose.onNodeWithTag("insert-installed-paper").performScrollTo().performClick();compose.onNodeWithTag("insert-count-plus").performScrollTo().performClick();compose.onNodeWithTag("confirm-insert-pages").performClick()
+        compose.openEditorAction("add-page");chooseInsert();compose.onNodeWithTag("insert-count-plus").performScrollTo().performClick();compose.onNodeWithTag("confirm-insert-pages").performClick()
         compose.waitUntil(10000){runBlocking{app.pages.activePages(note.id)}.size==3};compose.waitForSavedInk()
         compose.onNodeWithTag("quick-study").performClick();compose.revealAction("study-new-map");compose.onNodeWithTag("study-new-map").performClick();compose.onNodeWithTag("installed-map-map").performScrollTo().performClick();compose.onNodeWithTag("study-new-map-save").performClick()
         try{compose.waitUntil(10000){runBlocking{app.mapGraphs.read(note.id)}.any{it.nodes.size==2}}}catch(t:Throwable){

@@ -20,9 +20,10 @@
 ```sh
 python ci/device_fault_probe.py --serial <专用模拟器> --output <新目录> --probe cipher
 python ci/device_fault_probe.py --serial <专用模拟器> --output <另一新目录> --probe offline
+python ci/device_fault_probe.py --serial <专用模拟器> --output <第三个新目录> --probe resource
 ```
 
-MuMu 额外传入 `--mumu-manager <MuMuManager.exe绝对路径> --mumu-index <实例编号>`；非 PATH 中的 adb 使用 `--adb <绝对路径>`。cipher 在 5 个切点结束测试应用进程后重新验证队列；offline 真正撤去 18751 的反向映射再恢复，不能在其他任务使用同一模拟器时运行。
+MuMu 额外传入 `--mumu-manager <MuMuManager.exe绝对路径> --mumu-index <实例编号>`；非 PATH 中的 adb 使用 `--adb <绝对路径>`。cipher 在 5 个切点结束测试应用进程后重新验证队列，resource 在7个安装／作者实例切点重开验证；offline 真正撤去 18751 的反向映射再恢复，不能在其他任务使用同一模拟器时运行。
 
 持续负载先另开 `fixture.py --directory <新目录> --port 18754 --upload-delay 4`，固定屏幕和字号，然后运行：
 

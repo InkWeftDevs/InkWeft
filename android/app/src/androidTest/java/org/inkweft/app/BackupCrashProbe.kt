@@ -25,10 +25,14 @@ class BackupCrashProbe {
             val library=UUID.randomUUID().toString();val key=EncryptedBackupFile.b64(EncryptedBackupFile.random(32))
             await{engine.backup(library,key)};assertEquals("PUBLISHED",JSONObject(queue.readText()).getString("state"))
             marker.writeText(JSONObject().put("cut",args.getString("cut")).put("old",JSONObject(queue.readText())).toString())
-            val faulty=BackupEngine(app){point->if(point==args.getString("cut"))android.os.Process.killProcess(android.os.Process.myPid())}
+            val faulty=BackupEngine(app){point->if(point==args.getString("cut")){
+                val reached=JSONObject(marker.readText()).put("reached",point).toString().toByteArray();java.io.FileOutputStream(marker).use{it.write(reached);it.fd.sync()}
+                android.os.Process.killProcess(android.os.Process.myPid())
+            }}
             await{faulty.create(library,key)};fail("Expected process termination at selected cut")
         }else{
             val m=JSONObject(marker.readText());val current=JSONObject(queue.readText());val cut=m.getString("cut")
+            assertEquals(cut,m.getString("reached"))
             if(cut in listOf("after-cipher","after-fsync","before-pointer"))assertEquals(m.getJSONObject("old").getString("operation"),current.getString("operation"))
             else assertNotEquals(m.getJSONObject("old").getString("operation"),current.getString("operation"))
             val cipher=File(queue.parentFile,current.getString("file"));val manifest=current.getJSONObject("manifest");assertEquals(manifest.getLong("bytes"),cipher.length())

@@ -4,6 +4,8 @@
 
 隔离影子同步已使用实际编码、两个一次性 Room 库、事务发件箱／接收游标和持久加密 Relay，真实资料库入口保持关闭。作者数据库仍 schema12／IWO9，服务仍 schema1。
 
+固定包本地复验16项、窄屏三入口、48场持续负载、5＋7个原生终止切点通过；Room154项、服务15项通过。APK在 `E:/Inkweft/dist/NextStageV45/`。
+
 本轮不宣称全部出口验收：MuMu 的系统信任管理器接受未知签发者，TLS 负例 FAIL；Docker 引擎不可用，扩展容器业务与独立卷恢复 BLOCKED；平板锁屏、仍为 v43，未执行升级核对。构件和实际结果见 [v45 验证记录](VERIFICATION-V45.md)，操作见 [交付说明](DELIVERY-V45.md)，实机条件见 [独立清单](DEVICE-TEST-CHECKLIST.md)。v45 尚未推送，不能继承 v44 的远端通过数。
 
 ---
