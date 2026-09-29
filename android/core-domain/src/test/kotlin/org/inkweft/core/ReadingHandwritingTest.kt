@@ -48,4 +48,9 @@ class ReadingHandwritingTest {
         val lines=HandwritingLines.split(sources)
         assertEquals(2,lines.size);assertEquals(5,lines.first().strokes.size)
     }
+    @Test fun splittingColumnsCannotBypassRecognitionBudget(){
+        val source=List(101){i->InkStroke(id(),InkPen.PEN,0xff000000.toInt(),1f,InkTool.STYLUS,
+            listOf(InkSample(100f+i*300,100f,0,world=true),InkSample(110f+i*300,120f,20,world=true)),world=true)}
+        assertThrows(IllegalArgumentException::class.java){HandwritingLines.split(source)}
+    }
 }

@@ -38,7 +38,7 @@ object HandwritingLines {
             if(target!=null){groups[target].addAll(groups[i]);boxes[target]=boxes[target].union(b);groups[i].clear()}
         }
         require(groups.size<=100){"HANDWRITING_LINE_BUDGET"}
-        return groups.indices.filter{groups[it].isNotEmpty()}.sortedBy{boxes[it].top}.flatMap{i->
+        val lines=groups.indices.filter{groups[it].isNotEmpty()}.sortedBy{boxes[it].top}.flatMap{i->
             val parts=mutableListOf<MutableList<InkStroke>>();var right=Double.NEGATIVE_INFINITY
             for(s in groups[i].sortedBy{it.bounds().left}){
                 val b=s.bounds()
@@ -47,5 +47,7 @@ object HandwritingLines {
             }
             parts.map{p->HandwritingLine(p,p.map{it.bounds()}.reduce{a,b->a.union(b)}.padded(5.0))}
         }
+        require(lines.size<=100){"HANDWRITING_LINE_BUDGET"}
+        return lines
     }
 }
