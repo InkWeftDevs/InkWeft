@@ -52,6 +52,9 @@ class EncryptedBackupIntegrationTest {
         await(job){job.upload()};assertTrue(job.ui.value.message.contains("无需重复上传"))
         await(job){job.list(library)};assertEquals(listOf(operation),job.ui.value.versions)
         await(job){job.inspect(library,operation,key)};assertEquals(1,job.ui.value.restoreNotes)
+        await(job){job.inspect(library,operation,EncryptedBackupFile.b64(EncryptedBackupFile.random(32)))}
+        assertNull("A failed new inspection must not leave an older restore confirmation",job.ui.value.restoreNotes)
+        await(job){job.inspect(library,operation,key)};assertEquals(1,job.ui.value.restoreNotes)
         await(job){job.restore()};assertTrue(job.ui.value.message.contains("无需重复导入"))
         instrumentation.runOnMainSync{store.clear()}
     }

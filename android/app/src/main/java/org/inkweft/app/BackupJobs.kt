@@ -82,6 +82,7 @@ internal class BackupJobs(application:Application):AndroidViewModel(application)
         state.value=state.value.copy(versions=List(versions.length()){versions.getJSONObject(it).getString("operation")},message="共 ${versions.length()} 个已发布版本")
     }
     fun inspect(library:String,operation:String,recovery:String)=work("正在下载并隔离校验…"){
+        preview?.close();preview=null;state.value=state.value.copy(restoreNotes=null)
         UUID.fromString(operation);val transport=BackupTransport(checkNotNull(identity));transport.verifyServer()
         val key=EncryptedBackupFile.unb64(recovery);require(key.size==32){"KEY_REQUIRED"}
         val encrypted=File(directory,"download-${UUID.randomUUID()}.iwbk");val clear=File(directory,"restore-${UUID.randomUUID()}.iwbackup")
@@ -95,7 +96,7 @@ internal class BackupJobs(application:Application):AndroidViewModel(application)
     }
     fun restore()=work("正在导入已校验备份…"){
         val p=checkNotNull(preview)
-        try{val result=app.libraryBackup.restore(p);state.value=state.value.copy(restoreNotes=null,message=when(result){LibraryBackupRepository.RestoreResult.RESTORED->"恢复完成";LibraryBackupRepository.RestoreResult.ALREADY_PRESENT->"相同资料已存在，无需重复导入";LibraryBackupRepository.RestoreResult.IDENTITY_CONFLICT->"资料身份存在冲突，已停止；请使用空白资料库恢复"})}finally{p.close();preview=null}
+        try{val result=app.libraryBackup.restore(p);state.value=state.value.copy(restoreNotes=null,message=when(result){LibraryBackupRepository.RestoreResult.RESTORED->"恢复完成";LibraryBackupRepository.RestoreResult.ALREADY_PRESENT->"相同资料已存在，无需重复导入";LibraryBackupRepository.RestoreResult.IDENTITY_CONFLICT->"资料身份存在冲突，已停止；请使用空白资料库恢复"})}finally{p.close();preview=null;state.value=state.value.copy(restoreNotes=null)}
     }
     fun cancelRestore(){if(!ui.value.busy){preview?.close();preview=null;state.value=state.value.copy(restoreNotes=null,message="已取消恢复，原资料未改变")}}
     override fun onCleared(){
