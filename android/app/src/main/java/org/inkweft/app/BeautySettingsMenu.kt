@@ -49,16 +49,16 @@ import kotlin.math.roundToInt
                     Text("只整理原迹，不换字体；适合公式",fontSize=12.sp,color=Quiet)
                     BeautySlider("整理强度","${(value.inkStrength*100).roundToInt()}%",value.inkStrength,0f..1f,true,"beauty-ink-strength"){change(value.copy(inkStrength=it))}
                 }else{
-                Text("新写字迹停笔后换成所选字体",fontSize=12.sp,color=Quiet)
+                Text("稳定片段自动转换，含糊内容可校对",fontSize=12.sp,color=Quiet)
                 BeautySwitch("动态加粗",value.bold,"beauty-dynamic-bold"){change(value.copy(bold=it))}
                 TextButton(onClick={section="language"},contentPadding=PaddingValues(0.dp),modifier=Modifier.fillMaxWidth().heightIn(min=48.dp).testTag("beauty-language-picker")){
                     Text("书写语言",color=TextInk);Spacer(Modifier.weight(1f));Text(value.language.title,fontSize=13.sp,color=Quiet);Text("  ›",color=Quiet)
                 }
                 HorizontalDivider(color=Line)
-                BeautySwitch("字号与行间距",!value.preserveLayout,"beauty-arrange"){change(value.copy(preserveLayout=!it))}
+                BeautySwitch("段落整理",!value.preserveLayout,"beauty-arrange"){change(value.copy(preserveLayout=!it))}
+                Text(if(value.preserveLayout)"原位换字体 · 字号随原行，保留基线"else"按选区宽度排版，应用前预览",fontSize=12.sp,color=Quiet)
                 BeautySlider("字号",value.size.toInt().toString(),value.size,12f..96f,!value.preserveLayout,"beauty-font-size"){change(value.copy(size=it.roundToInt().toFloat()))}
                 BeautySlider("行间距","%.1f×".format(value.spacing),value.spacing,1f..2f,!value.preserveLayout,"beauty-line-spacing"){change(value.copy(spacing=(it*10).roundToInt()/10f))}
-                BeautySlider("吸附强度","${(value.snap*100).roundToInt()}%",value.snap,0f..1f,!value.preserveLayout,"beauty-snap"){change(value.copy(snap=(it*100).roundToInt()/100f))}
                 }
             }
             HorizontalDivider(color=Line)

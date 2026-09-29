@@ -50,12 +50,13 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
     var beautySettings by remember{mutableStateOf(false)}
     fun saveBeauty(value:BeautyOptions){beautyOptions=value;beautyStore.save(value)}
     val beautyStatus by objectsVm.beautyStatus.collectAsStateWithLifecycle()
+    val beautyReview by objectsVm.beautyReview.collectAsStateWithLifecycle()
     val visibleGeometry=remember{VisibleInkGeometry()}
     var pendingObject by remember(note.base.id){mutableStateOf<Pair<String,String>?>(null)}
     var penOpenRequest by remember{mutableIntStateOf(0)}
     var selectedObject by remember(page.id){mutableStateOf<String?>(null)}
     var objectInteraction by remember{mutableStateOf(false)}
-    val objectsBlocked=objectsUi.loading||objectsUi.busy||objectsUi.pending||objectInteraction||smoothSelection!=null
+    val objectsBlocked=objectsUi.loading||objectsUi.busy||objectsUi.pending||objectInteraction||smoothSelection!=null||beautyReview?.open==true
     SideEffect{app.diagnostics.pageObjects(objectsUi.loading,objectsUi.busy,objectsUi.pending,objectsUi.objects.size,when{objectsUi.loading->DiagnosticResult.LOADING;objectsUi.busy->DiagnosticResult.SAVING;objectsUi.pending->DiagnosticResult.UNKNOWN;objectsUi.error!=null->DiagnosticResult.REJECTED;else->DiagnosticResult.SAVED})}
     val row=WorkspaceRow(page.id,page.world,page.paper,centerX=page.centerX,centerY=page.centerY,zoom=page.zoom)
     val scope=rememberCoroutineScope()
@@ -333,7 +334,7 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
                 v.configure(row.world,PaperStyle.entries.getOrElse(row.paper){PaperStyle.RULED},initial)
                 v.allowInput=externalEnabled&&!readOnly&&tool<4&&!objectsBlocked&&(if(tool==3)!ui.loading&&!ui.readFailed&&ui.blocked==null&&!ui.processing&&ui.queued<16 else ui.canStart);v.eraserTapeOnly=eraser.onlyTape;v.eraserWhole=eraser.whole;v.eraserHighlighterOnly=eraser.onlyHighlighter;v.eraserDiameterDp=eraser.diameterDp;v.fingerWrites=finger&&!readOnly;v.eraseMode=tool==3;v.pen=kinds[tool.coerceIn(0,2)]
                 v.brushRecipe=recipes[tool.coerceAtMost(2)];v.penWidth=widths[tool.coerceAtMost(2)];v.penColor=colors[tool.coerceAtMost(2)]
-                v.showDocument(page.id);v.showStrokes(ui.strokes);v.showObjects(objectsUi.objects)
+                v.showDocument(page.id);v.showStrokes(ui.strokes);v.showObjects(beautyPreviewObjects(objectsUi.objects,beautyReview))
                 if(!gesture)v.selectionPreview((pendingSelection?.second?:selected?.strokes?.map{it.id}).orEmpty().toSet())
             },modifier=Modifier.fillMaxSize().testTag("ink-surface"))
             if(showExcerptMarkers)ExcerptMarkers(excerptRows.filter{it.pageId==page.id&&(tool!=4||!excerptMode||it.id!=selectedExcerpt)},selectionViewport)
@@ -459,6 +460,7 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
         }
         Surface(Modifier.align(Alignment.TopCenter).padding(start=72.dp,end=8.dp,top=56.dp).widthIn(max=620.dp),shape=RoundedCornerShape(12.dp),shadowElevation=3.dp){
             Column {
+                if(beautyReview!=null&&beautyReview?.open!=true)TextButton(objectsVm::openBeauty,modifier=Modifier.testTag("beauty-review-open")){Text("美化待校对")}
                 if(tool==4&&areaEraseMode)Row(verticalAlignment=Alignment.CenterVertically){Text("圈住手写笔迹即可擦除",Modifier.padding(horizontal=12.dp));TextButton(onClick={tool=lastWritingTool}){Text("完成")}}
                 if(tool==6)Row(Modifier.horizontalScroll(rememberScrollState()),verticalAlignment=Alignment.CenterVertically){
                     Text("框选文字即可美化",Modifier.padding(horizontal=12.dp),style=MaterialTheme.typography.bodySmall)
@@ -470,6 +472,7 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
         }
     }
     if(timerOpen)NotebookTimer(note.base.id){timerOpen=false}
+    beautyReview?.takeIf{it.open}?.let{BeautyReviewPanel(it,objectsVm)}
     if(shapePicker)ShapePicker({shapePicker=false}){kind->
         shapePicker=false
         val viewport=view?.snapshotViewport()?:CanvasViewport()

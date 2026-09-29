@@ -10,13 +10,14 @@ import java.util.UUID
 
 internal data class ObjectsUi(val objects:List<PageObject> = emptyList(),val loading:Boolean=true,
     val busy:Boolean=false,val error:String?=null,val pending:Boolean=false,val undo:Boolean=false,val redo:Boolean=false)
-internal class PageObjectViewModel(private val pageId:String,private val repo:PageObjectRepository):ViewModel() {
+internal class PageObjectViewModel(private val pageId:String,private val repo:PageObjectRepository,
+    private val recognition:(suspend (List<InkStroke>,BeautyLanguage,Boolean)->RecognizedWriting)?=null):ViewModel() {
     private val state=MutableStateFlow(ObjectsUi());val ui=state.asStateFlow()
     private var snapshot=ObjectSnapshot()
     internal val revision get()=snapshot.revision
     private val undo=ArrayDeque<List<PageObject>>()
     private val redo=ArrayDeque<List<PageObject>>()
-    private data class Pending(val id:String,val before:ObjectSnapshot,val after:List<PageObject>,val direction:Int,val expectedInk:Long?=null)
+    private data class Pending(val id:String,val before:ObjectSnapshot,val after:List<PageObject>,val direction:Int,val expectedInk:Long?=null,val accepted:(()->Unit)?=null)
     private var pending:Pending?=null
     private var external=false
     private val groupUndo=java.util.IdentityHashMap<List<PageObject>,()->Unit>()
@@ -30,10 +31,35 @@ internal class PageObjectViewModel(private val pageId:String,private val repo:Pa
     private var lastAutomatic:String?=null
     private val beautyState=MutableStateFlow<String?>(null)
     val beautyStatus=beautyState.asStateFlow()
+    private val reviewState=MutableStateFlow<BeautyReview?>(null)
+    val beautyReview=reviewState.asStateFlow()
+    private fun current(ink:Long,objects:Long)=latestInk.revision==ink&&snapshot.revision==objects&&!state.value.loading&&!state.value.busy&&!state.value.pending&&latestInk.queued==0&&!latestInk.processing
+    fun dismissBeauty(){reviewState.value=null;beautyState.value=null}
+    fun openBeauty(){reviewState.value=reviewState.value?.copy(open=true)}
+    fun previewBeauty(show:Boolean){reviewState.value=reviewState.value?.copy(preview=show)}
+    fun reviseBeauty(text:String,options:BeautyOptions){
+        val r=reviewState.value?:return
+        if(!current(r.inkRevision,r.objectRevision)){dismissBeauty();return}
+        reviewState.value=prepareBeautyReview(r.strokes,r.result.corrected(text),options,r.world,r.inkRevision,r.objectRevision,r.previous,r.affected,r.automatic,latestInk.strokes,snapshot.objects).copy(open=true,preview=r.preview)
+    }
+    fun acceptBeauty(){
+        val r=reviewState.value?:return;val o=r.candidate?:return
+        if(!current(r.inkRevision,r.objectRevision)){dismissBeauty();return}
+        commitBeauty(r,o)
+    }
+    private fun commitBeauty(r:BeautyReview,o:PageObject){
+        val replaced=r.previous?.id?.takeIf{it==o.id}
+        change(snapshot.objects.filterNot{it.id==replaced}+o,expectedInk=r.inkRevision,accepted={
+            beautyKnown=beautyKnown.orEmpty()+r.strokes.map{it.id};if(r.automatic)lastAutomatic=o.id
+            reviewState.value=null;beautyState.value=null
+        })
+    }
     fun observeBeauty(ink:InkUi,writing:Boolean,options:BeautyOptions,world:Boolean,app:InkWeftApplication){
         latestInk=ink
+        reviewState.value?.let{if(it.inkRevision!=ink.revision||it.objectRevision!=snapshot.revision)reviewState.value=null}
         if(!options.enabled||options.keepInk){beautyJob?.cancel();beautyJob=null;beautyKnown=null;beautyKey=null;beautyState.value=null;return}
         if(ink.loading)return
+        if(reviewState.value?.open==true)return
         if(beautyKnown==null){beautyKnown=ink.strokes.map{it.id}.toSet();return}
         if(writing||ink.queued>0||ink.processing){beautyJob?.cancel();beautyJob=null;beautyKey=null;beautyState.value=null;return}
         if(ink.blocked!=null||ink.readFailed||state.value.loading||state.value.busy||state.value.pending)return
@@ -45,48 +71,52 @@ internal class PageObjectViewModel(private val pageId:String,private val repo:Pa
         beautyKey=key;beautyJob?.cancel()
         beautyJob=viewModelScope.launch {
             delay(750)
-            val previous=snapshot.objects.find{it.id==lastAutomatic&&!it.hidden}
             val freshBounds=fresh.map{it.bounds()}.reduce{a,b->a.union(b)}
+            // A late dot/radical can touch an older fragment, not only the last converted word.
+            val touched=snapshot.objects.filter{!it.hidden&&it.textRuns.isNotEmpty()}.firstOrNull{o->o.textRuns.any{r->r.sourceIds.mapNotNull{id->ink.strokes.find{it.id==id}}.any{it.bounds().padded(5.0).intersects(freshBounds)}}}
+            val previous=touched?:snapshot.objects.find{it.id==lastAutomatic&&!it.hidden}
             val merge=previous?.takeIf{it.bounds().padded(options.size*2.0).intersects(freshBounds)}
-            val sources=fresh
+            val affected=touched?.textRuns?.filter{r->r.sourceIds.mapNotNull{id->ink.strokes.find{it.id==id}}.any{it.bounds().padded(5.0).intersects(freshBounds)}}?.map{it.id}?.toSet().orEmpty()
+            val context=touched?.textRuns?.filter{it.id in affected}?.flatMap{it.sourceIds}?.toSet().orEmpty()
+            val sources=(ink.strokes.filter{it.id in context}+fresh).distinctBy{it.id}
             if(sources.size>256){beautyState.value="这段字较长，可分段框选美化";return@launch}
-            convertBeauty(sources,ink.revision,options,world,app,merge?.id,true)
+            convertBeauty(sources,ink.revision,options,world,app,touched?:merge,true,affected)
         }
     }
     fun beautify(selection:SelectedInk,options:BeautyOptions,world:Boolean,app:InkWeftApplication){
         beautyJob?.cancel()
         beautyJob=viewModelScope.launch{convertBeauty(selection.strokes.filter{it.pen!=InkPen.HIGHLIGHTER},selection.revision,options,world,app,null,false)}
     }
-    private suspend fun convertBeauty(strokes:List<InkStroke>,revision:Long,options:BeautyOptions,world:Boolean,app:InkWeftApplication,replace:String?,automatic:Boolean){
+    private suspend fun convertBeauty(strokes:List<InkStroke>,revision:Long,options:BeautyOptions,world:Boolean,app:InkWeftApplication,previous:PageObject?,automatic:Boolean,affected:Set<String> = emptySet()){
         if(strokes.isEmpty()||strokes.size>256)return
         val objectRevision=snapshot.revision
         beautyState.value="正在美化…"
         try{
-            val result=app.handwriting.recognize(strokes,language=options.language){_,_->}
-            if(snapshot.revision!=objectRevision||state.value.busy||state.value.pending||latestInk.queued>0||latestInk.revision!=revision){beautyState.value=null;return}
+            val result=recognition?.invoke(strokes,options.language,false)?:app.handwriting.recognize(strokes,language=options.language)
+            if(!current(revision,objectRevision)){beautyState.value=null;return}
             if(result.text.isBlank()){beautyState.value="未识别到文字，已保留原迹";return}
-            val fresh=beautyObject(strokes,result,options,world,appId())
-            val previous=snapshot.objects.find{it.id==replace&&!it.hidden}
-            val combined=previous?.let{appendBeauty(it,fresh)}
-            val o=combined?:fresh
-            change(snapshot.objects.filterNot{combined!=null&&it.id==replace}+o,expectedInk=revision)
-            if(automatic){lastAutomatic=o.id;beautyKnown=beautyKnown.orEmpty()+strokes.map{it.id}}
-            beautyState.value=null
+            // Quiet time is only scheduling. Compare a second raster margin after checking author versions.
+            delay(250)
+            val variant=recognition?.invoke(strokes,options.language,true)?:app.handwriting.recognize(strokes,language=options.language,padded=true)
+            if(!current(revision,objectRevision)){beautyState.value=null;return}
+            val quality=BeautyQuality.decide(strokes,result,variant,true)
+            val r=prepareBeautyReview(strokes,result,options,world,revision,objectRevision,previous,affected,automatic,latestInk.strokes,snapshot.objects)
+            if(automatic&&quality.automatic&&r.candidate!=null&&r.reason==null&&options.preserveLayout)commitBeauty(r,r.candidate)
+            else {reviewState.value=r.copy(reason=r.reason?:quality.reason,open=!automatic);beautyState.value="美化待校对"}
         }catch(c:CancellationException){beautyState.value=null;throw c}
         catch(_:Exception){beautyState.value="这段字暂未美化，已保留原迹"}
     }
-    private fun appId()=UUID.randomUUID().toString()
     init{reload()}
     fun reload(){if(state.value.busy||reading)return;reading=true;viewModelScope.launch{
         state.value=state.value.copy(loading=true)
-        try{snapshot=withContext(Dispatchers.IO){repo.read(pageId)};pending=null;undo.clear();redo.clear();publish()}
+        try{snapshot=withContext(Dispatchers.IO){repo.read(pageId)};pending=null;beautyKey=null;undo.clear();redo.clear();publish()}
         catch(c:CancellationException){throw c}catch(_:Exception){state.value=state.value.copy(loading=false,error="对象读取失败，请重试。",pending=true)}finally{reading=false}
     }}
     private fun publish(error:String?=null){state.value=ObjectsUi(pending?.after?:snapshot.objects,false,false,error,pending!=null,undo.isNotEmpty(),redo.isNotEmpty())}
-    fun change(objects:List<PageObject>,direction:Int=0,expectedInk:Long?=null){
+    fun change(objects:List<PageObject>,direction:Int=0,expectedInk:Long?=null,accepted:(()->Unit)?=null){
         if(state.value.loading||state.value.busy||state.value.pending||objects==snapshot.objects)return
         try{PageObjectCodec.encode(objects)}catch(_:Exception){publish("对象超过容量：每页最多 32 项、图片与对象总计约 1.6 MB。请减少图片后重试。");return}
-        pending=Pending(UUID.randomUUID().toString(),snapshot,objects.toList(),direction,expectedInk);retry()
+        pending=Pending(UUID.randomUUID().toString(),snapshot,objects.toList(),direction,expectedInk,accepted);retry()
     }
     fun retry(){val p=pending?:return;if(state.value.busy||external)return
         state.value=state.value.copy(objects=p.after,busy=true,pending=true,error=null)
@@ -108,6 +138,7 @@ internal class PageObjectViewModel(private val pageId:String,private val repo:Pa
         when(p.direction){-1->{undo.removeLast();redo.addLast(p.before.objects)};1->{redo.removeLast();undo.addLast(p.before.objects)};else->{undo.addLast(p.before.objects);redo.clear()}}
         while(undo.size>10)undo.removeFirst()
         snapshot=ObjectSnapshot(revision,p.after);pending=null;external=false;history?.committed(EditDomain.OBJECT,p.direction);publish()
+        p.accepted?.invoke()
     }
     internal fun discardExternal(){external=false;state.value=state.value.copy(busy=false);reload()}
     internal fun historyIdentity(back:Boolean)=if(back)undo.lastOrNull()else redo.lastOrNull()
@@ -144,7 +175,17 @@ internal class PageObjectViewModel(private val pageId:String,private val repo:Pa
                 if(after==before)o else if(whole){if(after.all{it.hidden}&&o.sourceStrokeIds.isEmpty())null else o.copy(glyphs=after,hidden=after.all{it.hidden})} else {
                     // Keep author text and geometry; only subtract the swept area from existing glyphs.
                     val cut=TextErasePath(0,o.text.length,radius,path.map{TextErasePoint(it.x-o.x,it.y-o.y)})
-                    o.copy(glyphs=before,erasures=o.erasures+cut)
+                    val cutObject=o.copy(glyphs=before,erasures=o.erasures+cut)
+                    if(o.textRuns.isEmpty())cutObject else {
+                        // Keep partially erased text searchable; remove a cluster only when no outline remains.
+                        val outline=NaturalText.path(cutObject)
+                        val visible=before.map{g->if(g.hidden)g else {
+                            val part=android.graphics.Path(outline)
+                            part.op(android.graphics.Path().apply{addRect(o.x+g.x,o.y+g.y,o.x+g.x+g.width,o.y+g.y+g.height,android.graphics.Path.Direction.CW)},android.graphics.Path.Op.INTERSECT)
+                            if(part.isEmpty)g.copy(hidden=true)else g
+                        }}
+                        cutObject.copy(glyphs=visible,hidden=visible.all{it.hidden}&&o.sourceStrokeIds.isNotEmpty())
+                    }
                 }
             }
         }

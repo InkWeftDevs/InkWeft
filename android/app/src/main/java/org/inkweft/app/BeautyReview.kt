@@ -1,0 +1,34 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+package org.inkweft.app
+
+import org.inkweft.core.*
+
+internal data class BeautyReview(
+    val strokes:List<InkStroke>,val result:RecognizedWriting,val options:BeautyOptions,val world:Boolean,
+    val inkRevision:Long,val objectRevision:Long,val previous:PageObject?,val affected:Set<String>,val automatic:Boolean,
+    val candidate:PageObject?,val reason:String?,val open:Boolean=false,val preview:Boolean=true
+)
+
+internal fun RecognizedWriting.corrected(text:String):RecognizedWriting {
+    val lines=text.lines()
+    return copy(text=text,regions=if(lines.size==regions.size)regions.zip(lines){r,s->r.copy(text=s,tokens=emptyList(),score=-1f)}else emptyList(),tokens=emptyList(),confidence=-1f)
+}
+
+internal fun prepareBeautyReview(strokes:List<InkStroke>,result:RecognizedWriting,options:BeautyOptions,world:Boolean,
+    inkRevision:Long,objectRevision:Long,previous:PageObject?,affected:Set<String>,automatic:Boolean,ink:List<InkStroke>,objects:List<PageObject>):BeautyReview {
+    var reason:String?=null
+    val candidate=runCatching{
+        val fresh=beautyObject(strokes,result,options,world,revision=inkRevision)
+        val combined=when{previous==null->fresh;affected.isNotEmpty()->replaceBeautyFragment(previous,fresh,affected)
+            ?:error("FRAGMENT_EDITED");else->appendBeauty(previous,fresh)?:fresh}
+        if(BeautyQuality.collision(combined,strokes,ink,objects,combined.id))reason="结果与邻近内容相交，请缩小字号或保留原迹"
+        combined
+    }.getOrElse{reason=when(it.message){"FRAGMENT_EDITED"->"这段结果已有擦除或样式修改，请恢复原迹后重新选择";"LINE_MAPPING_CHANGED"->"分行已改变，请选择段落整理预览";else->"结果超出可用范围，请调整字号或保留原迹"};null}
+    return BeautyReview(strokes,result,options,world,inkRevision,objectRevision,previous,affected,automatic,candidate,reason)
+}
+
+/** Preview is displayed in the same world coordinates as the eventual persisted object. */
+internal fun beautyPreviewObjects(objects:List<PageObject>,review:BeautyReview?):List<PageObject>{
+    val o=review?.takeIf{it.open&&it.preview}?.candidate?:return objects
+    return objects.filterNot{it.id==o.id}+o
+}

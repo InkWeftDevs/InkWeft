@@ -10,7 +10,7 @@ class BeautyColorTest {
  private fun stroke(x:Float,color:Int,pen:InkPen=InkPen.PEN)=InkStroke(UUID.randomUUID().toString(),pen,color,3f,InkTool.STYLUS,
     listOf(InkSample(x,100f,0,pressure=.4f),InkSample(x+40,100f,10,pressure=.4f),InkSample(x+40,150f,20,pressure=.4f),InkSample(x,150f,30,pressure=.4f)),appearance=StrokeAppearance(recipe=BrushRecipe()))
  private fun pixels(o:PageObject):IntArray {val b=Bitmap.createBitmap(400,250,Bitmap.Config.ARGB_8888);val c=Canvas(b);PageObjectPainter().draw(c,listOf(o),false,CanvasBounds(0.0,0.0,400.0,250.0));return IntArray(100000).also{b.getPixels(it,0,400,0,0,400,250);b.recycle()}}
- @Test fun automaticRecognitionCommitsPenAndPencilAppearance(){runBlocking{
+ @Test fun recognitionAndReviewedCommitKeepPenAndPencilAppearance(){runBlocking{
     val ins=InstrumentationRegistry.getInstrumentation();val app=ins.targetContext.applicationContext as InkWeftApplication
     val note=app.workspaceRepository.create("V31 自动美化验收",false,PaperStyle.BLANK)
     lateinit var vm:PageObjectViewModel
@@ -22,7 +22,9 @@ class BeautyColorTest {
     for((index,source) in sources.withIndex()){
         app.inkRepository.save(CommitInk(UUID.randomUUID().toString(),note.id,index.toLong(),InkMutation.Add(source)))
         ins.runOnMainSync{vm.observeBeauty(InkUi(strokes=sources.take(index+1),loading=false,revision=index+1L),false,options,false,app)}
-        withTimeout(30000){while(vm.ui.value.objects.none{source.id in it.sourceStrokeIds}||vm.ui.value.busy)delay(100)}
+        withTimeout(30000){while(vm.ui.value.objects.none{source.id in it.sourceStrokeIds}&&vm.beautyReview.value==null)delay(100)}
+        if(vm.beautyReview.value!=null)ins.runOnMainSync{vm.acceptBeauty()}
+        withTimeout(15000){while(vm.ui.value.objects.none{source.id in it.sourceStrokeIds}||vm.ui.value.busy)delay(100)}
         val saved=app.pageObjects.read(note.id).objects.first{source.id in it.sourceStrokeIds}
         assertTrue(saved.glyphs.isNotEmpty());assertTrue(saved.glyphs.all{(it.color!! and 0xffffff)==(source.color and 0xffffff)})
         if(source.pen==InkPen.PENCIL)assertTrue(saved.glyphs.all{it.grain>0&&(it.color!! ushr 24)<255})
@@ -38,7 +40,7 @@ class BeautyColorTest {
     val read=PageObjectCodec.decode(PageObjectCodec.encode(listOf(o))).single();assertEquals(o,read)
     val before=pixels(read);assertTrue(before.any{Color.alpha(it)>128&&Color.red(it)>200&&Color.blue(it)<100});assertTrue(before.any{Color.alpha(it)>128&&Color.blue(it)>160&&Color.red(it)<80})
     val erased=read.copy(glyphs=read.glyphs.mapIndexed{i,g->if(i==0)g.copy(hidden=true)else g})
-    val after=pixels(erased);for(y in 0 until 250)for(x in 150 until 300)assertEquals(before[y*400+x],after[y*400+x])
+    val after=pixels(erased);val g=o.glyphs[1];for(y in (o.y+g.y).toInt() until (o.y+g.y+g.height).toInt())for(x in (o.x+g.x).toInt() until (o.x+g.x+g.width).toInt())assertEquals(before[y*400+x],after[y*400+x])
     val legacy=o.copy(color=Color.BLACK,glyphs=o.glyphs.map{it.copy(color=null,grain=0f)})
     val repaired=BeautyAppearance.restore(legacy,source.associateBy{it.id});assertEquals(o.glyphs,repaired.glyphs);assertArrayEquals(before,pixels(repaired))
  }

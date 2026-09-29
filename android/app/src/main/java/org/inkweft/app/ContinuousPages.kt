@@ -65,6 +65,7 @@ internal data class ContinuousTools(val pen:InkPen,val color:Int,val width:Float
             val ui by model.ui.collectAsStateWithLifecycle()
             val objectModel:PageObjectViewModel=viewModel(key="objects-${page.id}",factory=PageObjectViewModel.Factory(page.id,app.pageObjects))
             val objectUi by objectModel.ui.collectAsStateWithLifecycle()
+            val beautyReview by objectModel.beautyReview.collectAsStateWithLifecycle()
             SideEffect{models[page.id]=model;objectModels[page.id]=objectModel;objectModel.history=model.history;model.suppressedIds=objectUi.objects.flatMap{it.sourceStrokeIds}.toSet()}
             AutomaticBeautyBinding(objectModel,ui,writing||groupBlocked,tools.beauty,false,app)
             Column(Modifier.fillMaxWidth()){
@@ -105,7 +106,7 @@ internal data class ContinuousTools(val pen:InkPen,val color:Int,val width:Float
                         }
                         v.onGesture={active->if(active){gestureOwner=page.id;reported=page.id;latestSelect(page.id)}else if(gestureOwner==page.id)gestureOwner=null;onGesture(active)}
                         v.onAxes=app.diagnostics::inputAxes;v.onNotice=onNotice
-                        v.showDocument(page.id);v.showStrokes(ui.strokes+drafts[model].orEmpty());v.showObjects(objectUi.objects)
+                        v.showDocument(page.id);v.showStrokes(ui.strokes+drafts[model].orEmpty());v.showObjects(beautyPreviewObjects(objectUi.objects,beautyReview))
                     },modifier=Modifier.fillMaxSize().testTag("continuous-ink-${page.position+1}"))
                     DisposableEffect(page.id){onDispose{views.remove(page.id)}}
                     if(ui.loading)CircularProgressIndicator(Modifier.align(Alignment.Center))
