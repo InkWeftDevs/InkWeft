@@ -76,3 +76,15 @@ internal fun mapAccessoryBounds(node:android.graphics.RectF,blocked:List<android
     val candidates=(if(leftFirst)sides else sides.reversed())+listOf(node.left to node.top-edge-gap,node.right-edge to node.top-edge-gap,node.left to node.bottom+gap,node.right-edge to node.bottom+gap)
     return candidates.map{(x,y)->android.graphics.RectF(x,y,x+edge,y+edge)}.firstOrNull{b->b.left>=0&&b.top>=0&&b.right<=width&&b.bottom<=height&&blocked.none{android.graphics.RectF.intersects(b,it)}}
 }
+
+/** Prefer nearby free space; keep the full action row without covering adjacent titles. */
+internal fun mapActionPosition(node:android.graphics.RectF,nodes:List<android.graphics.RectF>,width:Float,height:Float,panelWidth:Float,panelHeight:Float,gap:Float):android.graphics.PointF {
+    val maxX=(width-panelWidth).coerceAtLeast(0f);val maxY=(height-panelHeight).coerceAtLeast(0f)
+    val xs=listOf(node.left,node.centerX()-panelWidth/2,node.right-panelWidth,0f,maxX).map{it.coerceIn(0f,maxX)}.distinct()
+    val ys=listOf(node.bottom+gap,node.top-panelHeight-gap,0f,maxY).map{it.coerceIn(0f,maxY)}.distinct()
+    for(y in ys)for(x in xs){
+        val rect=android.graphics.RectF(x,y,x+panelWidth,y+panelHeight)
+        if(nodes.none{android.graphics.RectF.intersects(it,rect)})return android.graphics.PointF(x,y)
+    }
+    return android.graphics.PointF(xs.first(),ys.first())
+}

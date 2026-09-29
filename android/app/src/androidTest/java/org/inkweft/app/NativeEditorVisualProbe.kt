@@ -37,8 +37,8 @@ class NativeEditorVisualProbe {
         try{File(app.getExternalFilesDir(null),"vis-$stage-$name.png").outputStream().use{bitmap.compress(Bitmap.CompressFormat.PNG,100,it)}}finally{bitmap.recycle()}
     }
     private fun seed():JSONObject=runBlocking {
-        require(app.repository.observeNotes().first().isEmpty()){"Dedicated empty emulator required"}
-        val book=app.workspaceRepository.create("概率论 · 课堂与推导",false,PaperStyle.DOTS).id
+        require(InstrumentationRegistry.getArguments().getString("visualProbe")=="synthetic-tablet"||app.repository.observeNotes().first().isEmpty()){"Dedicated empty emulator required"}
+        val book=app.workspaceRepository.create("V47 视觉样板 · 概率论",false,PaperStyle.DOTS).id
         val text=listOf("第二章  条件概率与独立性","01  已知信息怎样改变概率？","在事件 B 已经发生时，样本空间缩小到 B。\n先明确条件，再观察 A 与 B 的交集。","P(A | B) = P(A ∩ B) / P(B)","02  例题：连续两次不放回取球","袋中有 3 个红球、2 个白球。第一次取出红球后，\n第二次仍取红球的概率：2 / 4 = 1 / 2。","03  独立与互斥","独立：一个事件不改变另一个事件的概率。\n互斥：两个事件不能同时发生。","复习时检查：条件概率非零 → 交集 → 分母")
         app.pageObjects.save(book,0,id(),text.mapIndexed{i,s->PageObject(id(),PageObjectKind.TEXT,100f,90f+i*132,800f,125f,text=s,fontSize=if(i==0)32f else 23f,bold=i in listOf(0,1,4,6),color=if(i==3)0xff176bb5.toInt()else 0xff20242d.toInt())})
         repeat(12){i->val s=InkStroke(id(),InkPen.PEN,if(i%3==0)0xffb54d48.toInt()else 0xff286bb5.toInt(),2.5f,InkTool.STYLUS,List(25){j->InkSample(112f+j*20f,330f+i*66f+kotlin.math.sin(j*.4f)*4,j*8L,.5f)})
@@ -55,13 +55,13 @@ class NativeEditorVisualProbe {
         digest.digest().joinToString(""){"%02x".format(it)}
     }
     @Test fun fiveStatesOnTheSameAuthorContent(){
-        val args=InstrumentationRegistry.getArguments();require(args.getString("visualProbe")=="dedicated-emulator")
+        val args=InstrumentationRegistry.getArguments();require(args.getString("visualProbe") in listOf("dedicated-emulator","synthetic-tablet"))
         val stage=args.getString("stage")?:"candidate"
         val marker=File(app.filesDir,"native-visual-probe.json")
         val fixture=if(marker.exists())JSONObject(marker.readText())else seed().also{marker.writeText(it.toString())}
         val book=fixture.getString("book");val root=fixture.getString("root")
         if(!fixture.optBoolean("shapeAdded")){
-            require(stage=="baseline"){"Regenerate the paired baseline first"}
+            require(stage=="baseline"||args.getString("visualProbe")=="synthetic-tablet"){"Regenerate the paired baseline first"}
             runBlocking{val revision=app.inkRepository.read(book).revision
                 val points=listOf(760f to 580f,870f to 470f,920f to 580f,760f to 580f)
                 app.inkRepository.save(CommitInk(id(),book,revision,InkMutation.Add(InkStroke(id(),InkPen.PEN,0xff278c69.toInt(),3f,InkTool.STYLUS,points.mapIndexed{i,p->InkSample(p.first,p.second,i*100L,.5f)}))))}
@@ -84,6 +84,13 @@ class NativeEditorVisualProbe {
         compose.runOnIdle{val b=view<MindMapView>().nodeBounds(root)!!;point=Offset(b.centerX(),b.centerY())}
         compose.onNodeWithTag("study-map").performTouchInput{click(point)};compose.waitForIdle();shot(stage,"04-map-node")
         tap("node-rename");compose.onNodeWithTag("node-title-input").performTextReplacement("限定条件后再判断概率")
+        compose.onNodeWithTag("node-title-input").performTouchInput{click()}
+        compose.runOnIdle{val target=compose.activity.currentFocus!!;val imm=compose.activity.getSystemService(android.content.Context.INPUT_METHOD_SERVICE) as android.view.inputmethod.InputMethodManager;imm.showSoftInput(target,android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT)}
+        compose.waitUntil(8000){val insets=compose.activity.window.decorView.rootWindowInsets;insets?.isVisible(WindowInsets.Type.ime())==true&&insets.getInsets(WindowInsets.Type.ime()).bottom>150}
+        SystemClock.sleep(900)
+        val keyboardHeight=compose.activity.window.decorView.rootWindowInsets.getInsets(WindowInsets.Type.ime()).bottom
+        assertTrue("Soft keyboard needs an occupied screen region",keyboardHeight>150)
+        File(app.getExternalFilesDir(null),"vis-$stage-ime.json").writeText(JSONObject().put("bottomPixels",keyboardHeight).toString())
         compose.onNodeWithTag("node-title-save").assertIsDisplayed();compose.onNodeWithTag("node-title-cancel").assertIsDisplayed();shot(stage,"05-title-ime");tap("node-title-cancel")
         compose.runOnIdle{compose.activity.window.decorView.clearFocus();compose.activity.window.insetsController?.hide(WindowInsets.Type.ime())}
         tap("top-excerpt")

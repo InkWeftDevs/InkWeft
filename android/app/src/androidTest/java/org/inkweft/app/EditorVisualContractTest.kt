@@ -52,4 +52,13 @@ class EditorVisualContractTest {
             assertEquals("概率条件",nodes.single().title);assertEquals(216,MapNodeMetrics.WIDTH);assertEquals(84,MapNodeMetrics.HEIGHT)
         }finally{listOf(document,selectedWithoutView,interactive,after).forEach{it.recycle()}}
     }
+
+    @Test fun narrowMapActionsAvoidTheNeighbouringBranch(){
+        val root=android.graphics.RectF(34f,307f,314f,423f)
+        val neighbour=android.graphics.RectF(390f,386f,670f,501f)
+        val at=mapActionPosition(root,listOf(root,neighbour),702f,610f,384f,96f,16f)
+        val bar=android.graphics.RectF(at.x,at.y,at.x+384f,at.y+96f)
+        assertFalse(android.graphics.RectF.intersects(bar,root));assertFalse(android.graphics.RectF.intersects(bar,neighbour))
+        assertTrue(bar.left>=0f&&bar.right<=702f&&bar.top>=0f&&bar.bottom<=610f)
+    }
 }

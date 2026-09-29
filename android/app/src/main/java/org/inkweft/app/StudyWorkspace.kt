@@ -324,9 +324,10 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
                     val panelW=with(density){(if(titleDraft!=null)minOf(320.dp,maxWidth-16.dp)else 192.dp).toPx()}
                     val panelH=overlaySize.height.toFloat()
                     val editorMaxHeight=(maxHeight-56.dp).coerceAtLeast(48.dp)
-                    val px=(bounds.left).coerceIn(8*density.density,(w-panelW-8*density.density).coerceAtLeast(8*density.density))
+                    val nearby=if(titleDraft==null)mapActionPosition(bounds,shown.mapNotNull{map?.nodeBounds(it.id)},w,h-56*density.density,panelW,panelH,8*density.density)else null
+                    val px=nearby?.x?:(bounds.left).coerceIn(8*density.density,(w-panelW-8*density.density).coerceAtLeast(8*density.density))
                     val below=bounds.bottom+8*density.density
-                    val py=(if(below+panelH<=h-56*density.density)below else bounds.top-panelH-8*density.density).coerceIn(0f,(h-panelH-56*density.density).coerceAtLeast(0f))
+                    val py=nearby?.y?:(if(below+panelH<=h-56*density.density)below else bounds.top-panelH-8*density.density).coerceIn(0f,(h-panelH-56*density.density).coerceAtLeast(0f))
                     SideEffect{actionBounds=android.graphics.RectF(px,py,px+panelW,py+panelH)}
                     Box(Modifier.offset{IntOffset(px.roundToInt(),py.roundToInt())}.onSizeChanged{overlaySize=it}){
                         val draft=titleDraft
