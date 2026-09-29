@@ -985,10 +985,12 @@
   "legacy_reference": "ACCEPTANCE-V46.json; unchanged cases retained at their actual v46 evidence version",
   "private_evidence_root": "E:\\Inkweft\\archives\\2026-09-29\\NextStageV47",
   "publication": {
-    "current_ui_pushed": false,
     "remote_ci_source": "970df3dd616f2c9266bc9e0dd1c6161fd4ed54c1",
     "release": false,
-    "pr_merged": false
+    "pr_merged": false,
+    "upload_authorized": true,
+    "target": "existing branch codex/android-a1-ink-20260924 and draft PR #2",
+    "current_remote_ci": "See exact uploaded revision checks on PR #2; previous 970df3d success is historical"
   },
   "counts": {
     "PASS": 39,
