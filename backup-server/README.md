@@ -71,7 +71,7 @@ python server.py --db state/backup.db --backup-to saved-server.db
 
 客户端四个学习模块使用 `WidgetDefinition / WidgetInstance / WidgetHost`，定义命名空间、版本、尺寸及稳定目标引用；未知提供者保留实例并显示占位。分享布局只输出受信内置结构，移除目标、历史和所有外部元数据。移除快捷入口或隐藏组件不会删除作者内容。
 
-v44 纸张／导图资源包只允许声明式JSON及静态PNG，单包压缩8 MiB、解压32 MiB、至多256条目、单文件8 MiB、展开比最多20。禁止绝对路径、盘符、`..`、符号链接、重复路径和嵌套压缩包；manifest必须声明命名空间、格式版本、每文件大小和SHA-256。安装仅从用户明确选择的本地文件开始，发布市场前增加签名信任目录；暂不下载执行DEX、脚本或任意网络组件。资源包安装器、升级回滚与卸载用例属于后续独立批次，本轮未宣称实现。
+v44 纸张／导图资源包只允许声明式JSON及静态PNG，单包压缩8 MiB、解压32 MiB、至多256条目、单文件8 MiB、展开比最多20。禁止绝对路径、盘符、`..`、符号链接、重复路径和嵌套压缩包；manifest必须声明命名空间、格式版本、每文件大小和SHA-256。安装仅从用户明确选择的本地文件开始，发布市场前增加签名信任目录；暂不下载执行DEX、脚本或任意网络组件。v44 已实现本地安装器、升级、禁用与卸载；v45 接入创作入口。任意代码插件与公开市场仍后续。
 
 ## 验证
 
@@ -79,7 +79,7 @@ v44 纸张／导图资源包只允许声明式JSON及静态PNG，单包压缩8 M
 python -m unittest -v test_backup
 ```
 
-本机7项测试覆盖两个隔离账号、多个设备会话、真实HTTP应用往返、重启读取、越权块下载、撤销／过期／切换、未知结果重复查询、缺块、篡改、磁盘失败注入及幂等删除。`fixture.py` 只创建新的合成数据库供Android回环测试，拒绝复用已有数据库；不可用作真实服务初始化方式。
+早期基础测试覆盖两个隔离账号、多个设备会话、真实HTTP应用往返、重启读取、越权块下载、撤销／过期／切换、未知结果重复查询、缺块、篡改、磁盘失败注入及幂等删除。`fixture.py` 只创建新的合成数据库供Android回环测试，拒绝复用已有数据库；不可用作真实服务初始化方式。
 
 
 ## v44 可靠性补充
@@ -98,6 +98,26 @@ Android 采用一项持久 JobScheduler 任务与应用级执行器。点击上�
 
 本机 Docker 引擎未运行；未改动用户 Docker、主机端口、防火墙、DNS 或代理。`container_check.py --output result.json` 会在已有 Docker 环境内建立随机命名的独立容器和卷，检查非 root、只读根文件系统、健康、服务重启身份与数据库备份，再清理自建资源。CI 已接入该脚本；执行结果以当次产物为准，不将配置文件当运行证据。
 
-`Caddyfile.example` 供获准主机使用，域名必须由管理员替换，后端保留回环端口。正式部署前检查证书链、主机名、自动续期及过期告警；客户端不跳过证书验证，不接受重定向。当前没有真实 TLS 往返或公网试用通过记录。
+`Caddyfile.example` 供获准主机使用，域名必须由管理员替换，后端保留回环端口。正式部署前检查证书链、主机名、自动续期及过期告警；客户端不跳过证书验证，不接受重定向。公网未验收；隔离 TLS 的实际状态见 Android 的 VERIFICATION-V45.md。
 
 升级前记录 `docker image inspect` 的镜像身份并保留旧镜像；先执行 `server.py --db /state/backup.db --backup-to /state/before-upgrade.db`，把完整 SQLite 备份复制到独立存储。停服务后升级，在隔离卷使用备份运行同版本镜像，核对服务器 identity、账号、版本与回执；新版本健康失败时停新容器，用升级前数据库与旧镜像恢复。不要直接拷贝正在写的 `.db` 或把同版本重启当迁移测试。本轮未知 schema 拒绝测试覆盖不覆盖升级兼容保证。
+
+## v45 隔离验证工具
+
+服务 schema 仍为 1。`python -m unittest discover -v -p 'test_*.py'` 包括只读 SQLite、限容 SQLITE_FULL、原版本恢复和持久影子服务。测试使用合成账号；不向已有资料目录注入故障。
+
+`container_check.py` 现在增加真实 2 MiB 随机明文加密、预先接收块 0 后续传、重复发布回执、重启解密校验，以及服务在线快照复制到独立新卷后的身份／回执／解密核对。测试密钥仅保存在它自己的临时卷，结束后清理随机命名的容器与卷。v44 容器基础 PASS 不代表这份扩展脚本已通过；必须看当次输出。此工具不配置公网，也不建立 TLS。
+
+TLS 使用另外的、只绑定回环的进程：
+
+```sh
+python tls_fixture.py --directory /absolute/disposable/tls
+```
+
+生成器建立有效、过期、错主机名、未知 CA 和重定向五个端点（18761–18765）。证书有效期仅三天，过期后换新的测试目录。将对应端口以 `adb -s <专用模拟器> reverse tcp:端口 tcp:端口` 映射；以 `-PinkweftDiagnosticBuild=true -PinkweftInsertionPreview=true -PinkweftTlsFixture=/absolute/disposable/tls/res` 构建 `:app:assembleTlsProbe :app:assembleTlsProbeAndroidTest`。只安装到专用测试设备，再显式运行 `org.inkweft.app.TlsBackupProbe`。包名为 `org.inkweft.app.a0.insertion.tlsprobe`，不能覆盖用户 workspace 包。
+
+普通 debug/release 源集不包含该 CA。使用 Android [独立网络安全配置](https://developer.android.com/privacy-and-security/security-config)，不安装系统 CA、不使用 trust-all。若测试系统默认信任管理器接受未知签发者，负例应保持 FAIL 并换可信系统复验，不能降低断言。
+
+故障与持续负载工具在 `ci/device_fault_probe.py`、`ci/concurrent_writing.py`，命令见 [v45 交付说明](../android/DELIVERY-V45.md)。`fixture.py --upload-delay 4 --port 18754` 为持续备份测量提供实际上传期间的受控延迟。
+
+影子同步仅供隔离测试调用 `create_app(db, enable_shadow=True)`，普通服务默认不挂载其路由。其 `.shadow.db` 与备份数据库分离，普通备份快照不包含它；实验重启须保留该文件。真实格式、限制和未开启能力见 [影子同步合同](../sync-lab/ANDROID-SHADOW.md)。

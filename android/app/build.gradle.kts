@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
 }
 val diagnosticBuild = providers.gradleProperty("inkweftDiagnosticBuild").orNull == "true"
+val tlsFixture = providers.gradleProperty("inkweftTlsFixture").orNull
 val insertionPreview = providers.gradleProperty("inkweftInsertionPreview").orNull == "true"
 fun commitValue(name: String): String = System.getenv(name)?.takeIf { it.matches(Regex("[0-9a-f]{40}")) } ?: "local-unknown"
 android {
@@ -12,8 +13,8 @@ android {
         applicationId = if (insertionPreview) "org.inkweft.app.a0.insertion" else if (diagnosticBuild) "org.inkweft.app.a0.workspace" else "org.inkweft.app.a0"
         minSdk = 31
         targetSdk = 36
-        versionCode = 44
-        versionName = "0.0.44-reliable-backup-templates"
+        versionCode = 45
+        versionName = "0.0.45-creation-shadow"
         manifestPlaceholders["appLabel"] = if (insertionPreview) "墨织整合预览" else if (diagnosticBuild) "墨织工作台预览" else "墨织"
         buildConfigField("String", "BUILD_COMMIT", "\"${commitValue("GITHUB_SHA")}\"")
         buildConfigField("String", "SOURCE_COMMIT", "\"${commitValue("INKWEFT_HEAD_SHA")}\"")
@@ -33,6 +34,16 @@ android {
             keyPassword = password
         }
         buildTypes.getByName("debug").signingConfig = signingConfigs.getByName("ownerPreview")
+    }
+    buildTypes.create("tlsProbe") {
+        initWith(buildTypes.getByName("debug"))
+        applicationIdSuffix = ".tlsprobe"
+        matchingFallbacks += listOf("debug")
+    }
+    if (tlsFixture != null) {
+        require(insertionPreview) { "TLS fixture requires the isolated insertion application" }
+        sourceSets.getByName("tlsProbe").res.srcDir(tlsFixture)
+        testBuildType = "tlsProbe"
     }
     // Compress native libraries in sideload APKs; Android extracts the selected ABI at install time.
     packaging { jniLibs.useLegacyPackaging = true }

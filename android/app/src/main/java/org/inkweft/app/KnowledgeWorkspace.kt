@@ -33,17 +33,17 @@ import java.util.UUID
 
 internal data class KnowledgeUi(val rows:List<KnowledgeRow> = emptyList(),val cards:List<StudyCardRow> = emptyList(),val notes:List<NoteRow> = emptyList(),val pages:List<NotebookPageRow> = emptyList(),
     val busy:Boolean=false,val unknown:Boolean=false,val message:String?=null,val completed:String?=null,val canUndoProperties:Boolean=false)
-internal class KnowledgeViewModel(private val repo:KnowledgeRepository,private val saved:SavedStateHandle):ViewModel(){
+internal class KnowledgeViewModel(private val repo:KnowledgeRepository,private val saved:SavedStateHandle,private val packs:ResourcePacks):ViewModel(){
     private fun restored():KnowledgeCommand?{val fields=saved.get<ArrayList<String>>("knowledge.request")?:return null;require(fields.size==5);return KnowledgeCommand(fields[0],fields[1],fields[2],fields[3].toLong(),KnowledgeCodec.decode(requireNotNull(saved.get<ByteArray>("knowledge.payload"))),fields[4].toBooleanStrict())}
     private var pending=restored();private val state=MutableStateFlow(KnowledgeUi(unknown=pending!=null));val ui=state.asStateFlow()
     init{viewModelScope.launch{try{combine(repo.observe(),repo.cards(),repo.notes(),repo.pages()){r,c,n,p->KnowledgeUi(rows=r,cards=c,notes=n,pages=p)}.collect{snapshot->state.update{it.copy(rows=snapshot.rows,cards=snapshot.cards,notes=snapshot.notes,pages=snapshot.pages)}}}catch(c:CancellationException){throw c}catch(_:Exception){state.update{it.copy(message="知识资料读取失败，请关闭后重试；没有清空原资料。")}}}}
     private var pendingUndo:KnowledgeCommand?=null
     private var undoRequest:KnowledgeCommand?=null
     fun undoProperties(){if(ui.value.busy||pending!=null)return;pending=undoRequest?:return;undoRequest=null;pendingUndo=null;state.update{it.copy(canUndoProperties=false)};persist();retry()}
-    private fun persist(){saved["knowledge.request"]=pending?.let{arrayListOf(it.operationId,it.notebookId,it.id,it.expectedRevision.toString(),it.removed.toString())};saved["knowledge.payload"]=pending?.payload}
-    fun submit(book:String,data:KnowledgeData,old:KnowledgeRow?=null,remove:Boolean=false){if(state.value.busy||pending!=null)return;pending=KnowledgeCommand(UUID.randomUUID().toString(),book,old?.id?:UUID.randomUUID().toString(),old?.revision?:0,data,remove);pendingUndo=if(data is KnowledgeData.Properties)KnowledgeCommand(UUID.randomUUID().toString(),book,pending!!.id,(old?.revision?:0)+1,old?.data()?:data,old==null)else null;persist();retry()}
+    private fun persist(){if(pending==null)saved.set<ArrayList<String>?>("knowledge.template",null);saved["knowledge.request"]=pending?.let{arrayListOf(it.operationId,it.notebookId,it.id,it.expectedRevision.toString(),it.removed.toString())};saved["knowledge.payload"]=pending?.payload}
+    fun submit(book:String,data:KnowledgeData,old:KnowledgeRow?=null,remove:Boolean=false,template:TemplateRef?=null){if(state.value.busy||pending!=null)return;saved["knowledge.template"]=template?.let{arrayListOf(it.hash,it.id)};pending=KnowledgeCommand(UUID.randomUUID().toString(),book,old?.id?:UUID.randomUUID().toString(),old?.revision?:0,data,remove);pendingUndo=if(data is KnowledgeData.Properties)KnowledgeCommand(UUID.randomUUID().toString(),book,pending!!.id,(old?.revision?:0)+1,old?.data()?:data,old==null)else null;persist();retry()}
     fun retry(){val c=pending?:return;if(state.value.busy)return;state.update{it.copy(busy=true,message=null,completed=null)}
-        viewModelScope.launch{try{when(val result=withContext(Dispatchers.IO){repo.outcome(c)}){
+        viewModelScope.launch{try{when(val result=withContext(Dispatchers.IO){val ref=saved.get<ArrayList<String>>("knowledge.template");if(ref==null)repo.outcome(c)else try{KnowledgeOutcome.Success(packs.map(TemplateRef(ref[0],ref[1]),c))}catch(e:KnowledgeRejected){KnowledgeOutcome.Rejected(e.reason)}catch(e:IllegalArgumentException){KnowledgeOutcome.Rejected(KnowledgeRejection.INVALID)}}){
             is KnowledgeOutcome.Success->{pending=null;persist();pendingUndo?.let{undoRequest=it};pendingUndo=null;state.update{it.copy(busy=false,unknown=false,completed=result.id,message="已保存",canUndoProperties=undoRequest!=null)}}
             is KnowledgeOutcome.Rejected->{pending=null;pendingUndo=null;persist();state.update{it.copy(busy=false,unknown=false,message="未提交：来源、版本或引用已变化，或内容重复。请重新核对。")}}
             KnowledgeOutcome.Unknown->state.update{it.copy(busy=false,unknown=true,message="结果待核对，请重试原操作。")}
@@ -52,12 +52,12 @@ internal class KnowledgeViewModel(private val repo:KnowledgeRepository,private v
         catch(_:Exception){state.update{it.copy(busy=false,unknown=true,message="结果待核对，请重试原操作。")}}}
     }
     fun consumed(){state.update{it.copy(completed=null)}}
-    class Factory(private val repo:KnowledgeRepository):ViewModelProvider.Factory{override fun<T:ViewModel>create(modelClass:Class<T>,extras:CreationExtras):T{require(modelClass.isAssignableFrom(KnowledgeViewModel::class.java));@Suppress("UNCHECKED_CAST")return KnowledgeViewModel(repo,extras.createSavedStateHandle()) as T}}
+    class Factory(private val repo:KnowledgeRepository,private val packs:ResourcePacks):ViewModelProvider.Factory{override fun<T:ViewModel>create(modelClass:Class<T>,extras:CreationExtras):T{require(modelClass.isAssignableFrom(KnowledgeViewModel::class.java));@Suppress("UNCHECKED_CAST")return KnowledgeViewModel(repo,extras.createSavedStateHandle(),packs) as T}}
 }
 
 @Composable internal fun KnowledgeWorkspace(book:String,initialFocus:TargetRef,initialAnchor:KnowledgeData.Anchor?=null,initialTab:Int=0,initialCollection:String?=null,dismiss:()->Unit,openTarget:(TargetRef)->Unit){
     val context=LocalContext.current;val app=context.applicationContext as InkWeftApplication;val scope=rememberCoroutineScope()
-    val vm:KnowledgeViewModel=viewModel(key="knowledge-$book",factory=KnowledgeViewModel.Factory(app.knowledge));val ui by vm.ui.collectAsStateWithLifecycle()
+    val vm:KnowledgeViewModel=viewModel(key="knowledge-$book",factory=KnowledgeViewModel.Factory(app.knowledge,app.resourcePacks));val ui by vm.ui.collectAsStateWithLifecycle()
     var tab by remember{mutableIntStateOf(initialTab)};var focus by remember{mutableStateOf(initialFocus)}
     var query by remember{mutableStateOf("")};var picker by remember{mutableStateOf(false)};var preview by remember{mutableStateOf<Pair<TargetRef,Long?>?>(null)}
     var relation by remember{mutableStateOf(RelationKind.REFERENCE)};var pinned by remember{mutableStateOf(false)}

@@ -126,7 +126,8 @@ class EncryptedBackupIntegrationTest {
         }finally{server.close();future.cancel(true);executor.shutdownNow()}
     }
 
-    @Test fun encryptedBackupRoundTripPreservesAuthorClosureAndRejectsAnotherAccount()=runBlocking {
+    @Test fun encryptedBackupRoundTripPreservesAuthorClosureAndRejectsAnotherAccount()=runBlocking {roundTrip("http://127.0.0.1:18751")}
+    internal suspend fun roundTrip(base:String) {
         val context=InstrumentationRegistry.getInstrumentation().targetContext
         val root=File(context.cacheDir,"encrypted-protocol-${id()}").apply{check(mkdirs())}
         val first=NoteDatabase.open(context,File(root,"source.db").absolutePath)
@@ -144,7 +145,7 @@ class EncryptedBackupIntegrationTest {
             StudyRepository(first).submit(StudyCommand(id(),n.id,StudyAction.CREATE,cardId=card,nodeId=node,title="样本空间",body="P(A | B) = P(A ∩ B) / P(B)",mapId=map))
             val library=id();val recovery=EncryptedBackupFile.random(32);val encrypted=File(root,"source.iwbk")
             source.snapshot().use{EncryptedBackupFile.encrypt(it.file,encrypted,library,recovery)}
-            val alice=BackupTransport.login("http://127.0.0.1:18751","synthetic-alice","synthetic-alice-password-123",id())
+            val alice=BackupTransport.login(base,"synthetic-alice","synthetic-alice-password-123",id())
             val transport=BackupTransport(alice);transport.verifyServer();transport.json("PUT",library)
             val chunks=encrypted.inputStream().use{input->buildList{while(true){val b=input.readBackupChunk(EncryptedBackupFile.WIRE_BLOCK);if(b.isEmpty())break;add(b)}}}
             val manifest=JSONObject().put("bytes",encrypted.length()).put("chunks",JSONArray(chunks.map(EncryptedBackupFile::hex))).put("format","inkweft.encrypted-backup.v1")

@@ -42,7 +42,7 @@ internal class BackupJobs(application:Application):AndroidViewModel(application)
     fun connection()=engine.connection()
 }
 
-internal class BackupEngine(private val app:InkWeftApplication){
+internal class BackupEngine(private val app:InkWeftApplication,private val fault:(String)->Unit={}){
     private val scope=CoroutineScope(SupervisorJob()+Dispatchers.Main.immediate)
     val sessions=BackupSessionStore(app)
     private var identity=sessions.read()
@@ -53,25 +53,27 @@ internal class BackupEngine(private val app:InkWeftApplication){
         require(name=="upload.iwbk" || name.matches(Regex("[0-9a-f-]{36}\\.iwbk")))
         return File(directory,name)
     }
+    @Volatile private var manuallyPaused=false
     private val deletion=AtomicFile(File(directory,"delete.json"))
     private val state=MutableStateFlow(BackupTaskState(identity!=null&&!sessions.expired,auth=if(identity==null)BackupAuth.DISCONNECTED else if(sessions.expired)BackupAuth.REAUTHENTICATE else BackupAuth.VALID,message=if(journal.baseFile.exists())"有可继续的备份任务"else if(identity!=null)"已连接，可创建加密备份"else"尚未连接服务器"));val ui=state.asStateFlow()
     private var running:Job?=null
     private var preview:LibraryBackupRepository.Preview?=null
     fun identityLabel()=identity?.let{"${it.url}\n${it.name.ifBlank{it.user.take(8)}}"}.orEmpty()
     fun connection()=identity
-    fun mayResume()=identity!=null && !sessions.expired && runCatching{val q=readQueue();q.optBoolean("automatic")&&q.optLong("deadline")>System.currentTimeMillis()&&q.optInt("attempts")<5&&q.getString("binding")==identity!!.binding(q.getString("library"))}.getOrDefault(false)
+    fun mayResume()=!manuallyPaused && identity!=null && !sessions.expired && runCatching{val q=readQueue();q.optBoolean("automatic")&&q.optLong("deadline")>System.currentTimeMillis()&&q.optInt("attempts")<5&&q.getString("binding")==identity!!.binding(q.getString("library"))}.getOrDefault(false)
     @Synchronized private fun readQueue()=JSONObject(journal.openRead().bufferedReader().use{it.readText()})
-    @Synchronized private fun writeQueue(j:JSONObject){val stream=journal.startWrite();try{stream.write(j.toString().toByteArray());journal.finishWrite(stream)}catch(t:Throwable){journal.failWrite(stream);throw t}}
+    @Synchronized private fun writeQueue(j:JSONObject){if(manuallyPaused)j.put("automatic",false);val stream=journal.startWrite();try{stream.write(j.toString().toByteArray());journal.finishWrite(stream)}catch(t:Throwable){journal.failWrite(stream);throw t}}
     private fun work(message:String,action:suspend CoroutineScope.()->Unit):Job?{if(ui.value.busy)return null
         state.value=state.value.copy(busy=true,message=message)
         running=scope.launch{try{withTimeout(120_000){withContext(Dispatchers.IO){BackgroundBudget.memory(4L*1024*1024){action()}}}}catch(c:CancellationException){state.value=state.value.copy(message=if(c is TimeoutCancellationException)"本次任务已超时，待办与本地资料保留，可手动继续"else"任务已暂停，可继续；本地资料保留");throw c}
             catch(e:BackupHttpError){
                 if(e.status==401){sessions.markExpired();state.value=state.value.copy(auth=BackupAuth.REAUTHENTICATE,connected=false)}
+                if(e.status==429){BackupScheduler.cancel(app);runCatching{readQueue().put("automatic",false).put("notBefore",(e.retryAfterMillis?:30_000).let{wait->if(wait>Long.MAX_VALUE-System.currentTimeMillis())Long.MAX_VALUE else System.currentTimeMillis()+wait}).also(::writeQueue)}}
                 if(e.status in setOf(401,403,404,409,507)){BackupScheduler.cancel(app);runCatching{readQueue().put("automatic",false).also(::writeQueue)}}
                 state.value=state.value.copy(message=when(e.status){401->"会话失效，请重新连接同一账号后继续";403,404->"目标不可用，请核对原服务器与账号";409->"任务内容或状态冲突，请查看版本后处理";429->"服务器繁忙，已有限重试，请稍后继续";507->"配额或空间不足，请管理旧版本或释放服务器空间";else->"服务器未确认（${e.status}），保留原任务"})
             }
             catch(e:javax.net.ssl.SSLException){state.value=state.value.copy(message="TLS 证书校验失败，请核对服务器证书与地址；待办保留");BackupScheduler.cancel(app);runCatching{readQueue().put("automatic",false).also(::writeQueue)}}
-            catch(e:Exception){state.value=state.value.copy(message=when(e.message){"QUEUE_BINDING"->"此任务属于另一账号、服务器或资料库，请切回原目标继续";"KEY_REQUIRED"->"请先保存或输入有效的恢复密钥";"QUEUE_PENDING"->"先继续或完成已有任务，再创建新备份";"DELETE_PENDING"->"先继续确认上一次删除，再删除其他版本";"TASK_LIMIT"->"自动续传已达到时限或重试上限，请手动继续";else->"操作未确认：请检查连接、密钥与剩余空间后重试。原资料保留"})}
+            catch(e:Exception){state.value=state.value.copy(message=when(e.message){"INPUT_UNSEALED"->"仍有未完成书写，请抬笔并等待保存；中断的笔迹请先打开原笔记恢复或确认，再创建备份";"QUEUE_BINDING"->"此任务属于另一账号、服务器或资料库，请切回原目标继续";"KEY_REQUIRED"->"请先保存或输入有效的恢复密钥";"QUEUE_PENDING"->"先继续或完成已有任务，再创建新备份";"DELETE_PENDING"->"先继续确认上一次删除，再删除其他版本";"TASK_LIMIT"->"自动续传已达到时限或重试上限，请手动继续";else->"操作未确认：请检查连接、密钥与剩余空间后重试。原资料保留"})}
             finally{state.value=state.value.copy(busy=false,connected=identity!=null&&state.value.auth==BackupAuth.VALID);if(mayResume())BackupScheduler.schedule(app)}}
         return running
     }
@@ -93,11 +95,13 @@ internal class BackupEngine(private val app:InkWeftApplication){
         }
     }
     fun pause(){
+        manuallyPaused=true
         BackupScheduler.cancel(app)
         if(journal.baseFile.exists())runCatching{readQueue().put("automatic",false).also(::writeQueue)}
         running?.cancel()
     }
     fun create(library:String,recovery:String)=work("正在生成已确认资料的一致备份…"){
+        require(!BackgroundBudget.writing()&&!app.inkRepository.hasUnsealedInput()){"INPUT_UNSEALED"}
         BackgroundBudget.await(app)
         UUID.fromString(library);val who=checkNotNull(identity);val key=EncryptedBackupFile.unb64(recovery);require(key.size==32){"KEY_REQUIRED"}
         if(journal.baseFile.exists())require(readQueue().optString("state") in listOf("PUBLISHED","DELETED")){"QUEUE_PENDING"}
@@ -108,14 +112,14 @@ internal class BackupEngine(private val app:InkWeftApplication){
         try{
             val context=currentCoroutineContext()
             app.libraryBackup.snapshot().use{snapshot->EncryptedBackupFile.encrypt(snapshot.file,candidate,library,key){context.ensureActive()}}
-            val hashes=JSONArray();candidate.inputStream().use{input->while(true){context.ensureActive();val bytes=input.readBackupChunk(EncryptedBackupFile.WIRE_BLOCK);if(bytes.isEmpty())break;hashes.put(EncryptedBackupFile.hex(bytes))}}
+            fault("after-cipher");val hashes=JSONArray();candidate.inputStream().use{input->while(true){context.ensureActive();val bytes=input.readBackupChunk(EncryptedBackupFile.WIRE_BLOCK);if(bytes.isEmpty())break;hashes.put(EncryptedBackupFile.hex(bytes))}}
             val manifest=JSONObject().put("bytes",candidate.length()).put("chunks",hashes).put("format","inkweft.encrypted-backup.v1")
             val queue=JSONObject().put("binding",who.binding(library)).put("library",library).put("operation",UUID.randomUUID().toString()).put("manifest",manifest).put("state","PENDING").put("file",candidate.name).put("automatic",false)
             // Immutable generation first, atomic pointer second. A crash leaves only an unreferenced file.
-            java.io.RandomAccessFile(candidate,"rw").use{it.fd.sync()}
+            java.io.RandomAccessFile(candidate,"rw").use{it.fd.sync()};fault("after-fsync")
             val previous=if(journal.baseFile.exists())cipherFile(readQueue())else null
-            writeQueue(queue);registered=true
-            if(previous!=candidate)previous?.delete()
+            fault("before-pointer");writeQueue(queue);registered=true;fault("after-pointer")
+            if(previous!=candidate)previous?.delete();fault("after-retire")
             state.value=state.value.copy(message="加密快照已就绪，点“继续上传”。书写可继续")
         }finally{key.fill(0);if(!registered)candidate.delete()}
     }
@@ -128,9 +132,11 @@ internal class BackupEngine(private val app:InkWeftApplication){
     }
     fun upload(background:Boolean=false):Job? {
         if(ui.value.busy)return null
+        if(!background)manuallyPaused=false
         return work("正在核对备份任务…"){
         val started=android.os.SystemClock.elapsedRealtime()
         val queue=readQueue()
+        if(queue.optLong("notBefore")>System.currentTimeMillis()){state.value=state.value.copy(message="服务器要求稍后重试，原任务保留；请等待后再继续");return@work}
         if(background){
             require(mayResume()){"TASK_LIMIT"}
             queue.put("attempts",queue.optInt("attempts")+1);writeQueue(queue)

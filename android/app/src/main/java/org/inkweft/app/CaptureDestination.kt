@@ -28,7 +28,7 @@ import org.inkweft.data.*
     val graphFlow=remember(draft.notebookId){app.mapGraphs.observe(draft.notebookId)}
     val scenes by graphFlow.collectAsStateWithLifecycle(initialValue=emptyList())
     val state by writer.ui.collectAsStateWithLifecycle()
-    val mapWriter:KnowledgeViewModel=viewModel(key="destination-map-${draft.notebookId}",factory=KnowledgeViewModel.Factory(app.knowledge))
+    val mapWriter:KnowledgeViewModel=viewModel(key="destination-map-${draft.notebookId}",factory=KnowledgeViewModel.Factory(app.knowledge,app.resourcePacks))
     val mapWrite by mapWriter.ui.collectAsStateWithLifecycle()
     var selected by rememberSaveable(draft){mutableStateOf<String?>(null)}
     var parent by rememberSaveable(draft){mutableStateOf<String?>(null)}

@@ -85,7 +85,7 @@ class Manifest(BaseModel):
     bytes: int = Field(gt=0, le=LIBRARY_LIMIT)
 
 
-def create_app(path, before_publish=lambda: None):
+def create_app(path, before_publish=lambda: None, enable_shadow=False):
     store = Store(path)
     app = FastAPI(title='墨织加密备份实验服务', version='0.1.0', docs_url=None, redoc_url=None)
     app.state.store = store
@@ -310,6 +310,9 @@ def create_app(path, before_publish=lambda: None):
             c.execute('DELETE FROM chunks WHERE library=? AND operation=?',(str(library),str(target)))
             c.execute('INSERT INTO operations VALUES(?,?,?,?,?,?,?)',(str(operation_id),str(library),'DELETE',fingerprint,payload,'DELETED',int(time.time())))
             return receipt(operation(c,library,operation_id,user))
+    if enable_shadow:
+        from shadow import mount
+        mount(app,store,session,authorize)
     return app
 
 

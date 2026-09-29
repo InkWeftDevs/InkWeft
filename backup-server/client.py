@@ -115,9 +115,16 @@ class BackupClient:
             if lookup.json()['state']=='PUBLISHED': return lookup.json()
         self.request('PUT','')
         self.request('PUT','/uploads/'+op,json=manifest)
+        inventory=self.request('GET','/uploads/'+op).json()
+        expected=sha(json.dumps(manifest,sort_keys=True,separators=(',',':')).encode())
+        if inventory['digest']!=expected or inventory['state']!='PENDING':raise ValueError('Upload inventory mismatch')
+        present=set(inventory['received'])
+        if any(i not in range(len(chunks)) for i in present):raise ValueError('Invalid chunk index')
         with path.open('rb') as stream:
             for i in range(len(chunks)):
-                self.request('PUT',f'/uploads/{op}/chunks/{i}',content=stream.read(WIRE_BLOCK))
+                data=stream.read(WIRE_BLOCK)
+                if sha(data)!=chunks[i]:raise ValueError('Cipher file changed')
+                if i not in present:self.request('PUT',f'/uploads/{op}/chunks/{i}',content=data)
         return self.request('POST',f'/uploads/{op}/publish').json()
 
     def download(self,op,path):

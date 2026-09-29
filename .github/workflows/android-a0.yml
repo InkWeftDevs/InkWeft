@@ -55,7 +55,7 @@ jobs:
           python3 -m venv "$RUNNER_TEMP/backup-venv"
           "$RUNNER_TEMP/backup-venv/bin/pip" install -r backup-server/requirements.txt
           cd backup-server
-          "$RUNNER_TEMP/backup-venv/bin/python" -m unittest -v test_backup
+          "$RUNNER_TEMP/backup-venv/bin/python" -m unittest discover -v -p 'test_*.py'
       - name: 验证声明式资源与合成同步实验
         if: steps.plan.outputs.experiments == 'true'
         run: |

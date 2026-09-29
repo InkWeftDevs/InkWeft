@@ -106,7 +106,7 @@ class LibraryBackupRepository(private val context:Context,private val db:NoteDat
         db.invalidationTracker.refreshVersionsAsync()
         result
     }
-    private suspend fun validate(stage:NoteDatabase){
+    internal suspend fun validate(stage:NoteDatabase){
         val sql=stage.openHelper.writableDatabase
         check(sql.query("PRAGMA integrity_check").use{it.moveToFirst()&&it.getString(0)=="ok"&&!it.moveToNext()})
         check(sql.query("PRAGMA foreign_key_check").use{!it.moveToFirst()})

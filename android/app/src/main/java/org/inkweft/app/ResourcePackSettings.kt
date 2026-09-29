@@ -42,15 +42,16 @@ import kotlinx.coroutines.*
                 }}
                 items(installed,key={it.pack.hash}){entry->val pack=entry.pack
                     HorizontalDivider(color=Line);Text("${pack.title} · v${pack.version}",style=MaterialTheme.typography.titleMedium)
-                    Text("${pack.author} · 本地未认证来源",color=Quiet)
+                    Text("作者声明：${pack.author} · 本地未认证来源",color=Quiet)
+                    if(entry.damaged)Text("归档损坏：重新导入原包可修复，已有笔记仍保留。",color=Quiet)
                     Row{
-                        TextButton(onClick={run{store.enable(pack.hash,!entry.enabled)}},enabled=!busy){Text(if(entry.enabled)"禁用"else"启用")}
+                        TextButton(onClick={run{store.enable(pack.hash,!entry.enabled)}},enabled=!busy&&!entry.damaged){Text(if(entry.enabled)"禁用"else"启用")}
                         TextButton(onClick={run{store.uninstall(pack.hash);message=if(entry.copies.isEmpty())"已卸载"else"已停用，保留已有内容使用的版本"}},enabled=!busy){Text("卸载")}
                     }
                     if(entry.copies.isNotEmpty())Text("使用此版本："+entry.copies.joinToString("、"){copyTitles[it].orEmpty()},style=MaterialTheme.typography.bodySmall,color=Quiet)
                     pack.resources.forEach{r->OutlinedButton(onClick={run{val note=store.instantiate(pack.hash,r.id);message="已新建「${note.title}」，可回资料库打开。"}},enabled=entry.enabled&&!busy){Text("从${if(r.map==null)"纸张"else"导图"}新建 · ${r.title}")}}
                 }
-                if(installed.isEmpty()&&pending==null)item{Text("安装纸张或导图结构模板后，从这里新建笔记。模板不会改动已有笔记。",color=Quiet)}
+                if(installed.isEmpty()&&pending==null)item{Text("安装纸张或导图结构模板后，在新建笔记、添加页面或新建导图时选择“我的模板”。模板不会改动已有笔记。",color=Quiet)}
             }
         }}
     }

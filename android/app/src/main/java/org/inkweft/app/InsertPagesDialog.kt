@@ -20,8 +20,10 @@ import org.inkweft.data.NotebookPageRow
 @Composable
 internal fun InsertPagesDialog(
     pages: List<NotebookPageRow>, initialAnchor: String, initialLocation: PageInsertLocation,
-    onDismiss: () -> Unit, recycledCount:Int=0, onInsert: (PageInsertLocation, String?, PaperStyle, Int, Boolean, String) -> Unit,
+    onDismiss: () -> Unit, recycledCount:Int=0, onInsert: (PageInsertLocation, String?, PaperStyle, Int, Boolean, String, TemplateRef?) -> Unit,
 ) {
+    var installed by remember{mutableStateOf<TemplateRef?>(null)}
+    val catalog=rememberTemplateCatalog().filter{it.resource.map==null}
     var location by remember { mutableStateOf(initialLocation) }
     var anchorId by remember { mutableStateOf(initialAnchor) }
     var count by remember { mutableIntStateOf(1) }
@@ -36,7 +38,7 @@ internal fun InsertPagesDialog(
         PageInsertLocation.BEFORE -> anchor?.position ?: -1
         PageInsertLocation.AFTER -> anchor?.position?.plus(1) ?: -1
     }
-    val selectedStyle = if (inherited) PaperStyle.entries.getOrElse(anchor?.paper ?: 1) { PaperStyle.RULED } else style
+    val selectedStyle = installed?.let{ref->catalog.find{it.ref==ref}?.resource?.paper} ?: if (inherited) PaperStyle.entries.getOrElse(anchor?.paper ?: 1) { PaperStyle.RULED } else style
     val valid = index >= 0 && pages.size + recycledCount + count <= InsertPages.MAX_PAGES && pages.none { it.world }
     AlertDialog(onDismissRequest = onDismiss, modifier = Modifier.testTag("insert-pages-dialog"),
         title = { Text("添加页面") },
@@ -61,16 +63,25 @@ internal fun InsertPagesDialog(
                     }
                 }
                 Text("纸面",fontSize=14.sp)
-                FilterChip(selected=inherited,onClick={inherited=true},label={Text("沿用所选页纸面",fontSize=12.sp)},modifier=Modifier.testTag("insert-paper-inherit"))
-                Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),horizontalArrangement=Arrangement.spacedBy(6.dp)){PaperTemplates.categories.forEach{c->FilterChip(category==c,{category=c},label={Text(c)})}}
+                FilterChip(selected=inherited,onClick={inherited=true;installed=null},label={Text("沿用所选页纸面",fontSize=12.sp)},modifier=Modifier.testTag("insert-paper-inherit"))
+                Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),horizontalArrangement=Arrangement.spacedBy(6.dp)){(PaperTemplates.categories+"我的模板").forEach{c->FilterChip(category==c,{category=c},label={Text(c)})}}
                 Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),horizontalArrangement=Arrangement.spacedBy(6.dp)) {
-                    PaperStyle.entries.filter{PaperTemplates.matches(it,category,"")}.forEach { paper ->
-                        Column(Modifier.width(100.dp).clipForPageSelection(!inherited&&style==paper).clickable{inherited=false;style=paper}.padding(5.dp)
+                    PaperStyle.entries.filter{category!="我的模板"&&PaperTemplates.matches(it,category,"")}.forEach { paper ->
+                        Column(Modifier.width(100.dp).clipForPageSelection(!inherited&&style==paper).clickable{inherited=false;installed=null;style=paper}.padding(5.dp)
                             .testTag("insert-paper-${paper.name.lowercase()}"),horizontalAlignment=Alignment.CenterHorizontally) {
                             Box(Modifier.fillMaxWidth().height(54.dp)) { PaperThumbnail(false,paper) }
                             Text(paperLabel(paper),fontSize=11.sp,modifier=Modifier.padding(top=5.dp))
                         }
                     }
+                }
+                if(category=="我的模板"){
+                    if(catalog.isEmpty())Text("尚无可用纸张模板",color=Quiet)
+                    Row(Modifier.horizontalScroll(rememberScrollState()),horizontalArrangement=Arrangement.spacedBy(8.dp)){catalog.forEach{entry->
+                        Column(Modifier.width(120.dp).clipForPageSelection(installed==entry.ref).clickable{installed=entry.ref;inherited=false}.padding(8.dp).testTag("insert-installed-${entry.ref.id}")){
+                            Box(Modifier.fillMaxWidth().aspectRatio(1000f/1414f)){InstalledPaperPreview(entry.ref)};Text(entry.title)
+                        }
+                    }}
+                    Text("图片等比居中，留白补足标准竖页",style=MaterialTheme.typography.bodySmall)
                 }
                 Row(Modifier.fillMaxWidth(),verticalAlignment=Alignment.CenterVertically) {
                     Text("数量",Modifier.weight(1f),fontSize=14.sp)
@@ -79,7 +90,7 @@ internal fun InsertPagesDialog(
                     OutlinedButton(onClick={count++},enabled=count<InsertPages.MAX_BATCH&&pages.size+recycledCount+count<InsertPages.MAX_PAGES,modifier=Modifier.testTag("insert-count-plus")){Text("＋")}
                 }
                 Surface(color=Leaf,shape=RoundedCornerShape(8.dp)) {
-                    Text(if(valid) "将在第 ${index+1} 页位置插入 $count 页 · ${paperLabel(selectedStyle)}。" +
+                    Text(if(valid) "将在第 ${index+1} 页位置插入 $count 页 · ${catalog.find{it.ref==installed}?.title?:paperLabel(selectedStyle)}。" +
                         (if(index<pages.size) "原第 ${index+1} 页起顺延至第 ${index+count+1} 页。" else "原有页面不变。")
                         else "目标或页数已变化，请重新选择。",fontSize=12.sp,lineHeight=20.sp,color=Forest,
                         modifier=Modifier.padding(12.dp).testTag("insert-preview"))
@@ -90,7 +101,7 @@ internal fun InsertPagesDialog(
                 }
             }
         },
-        confirmButton={Button(onClick={onInsert(location,if(location in listOf(PageInsertLocation.BEFORE,PageInsertLocation.AFTER))anchorId else null,selectedStyle,count,openNew,InsertPages.orderHash(pages.map { it.id }))},
+        confirmButton={Button(onClick={onInsert(location,if(location in listOf(PageInsertLocation.BEFORE,PageInsertLocation.AFTER))anchorId else null,selectedStyle,count,openNew,InsertPages.orderHash(pages.map { it.id }),installed)},
             enabled=valid,modifier=Modifier.testTag("confirm-insert-pages")){Text("插入 $count 页")}},
         dismissButton={TextButton(onClick=onDismiss){Text("取消")}})
 }

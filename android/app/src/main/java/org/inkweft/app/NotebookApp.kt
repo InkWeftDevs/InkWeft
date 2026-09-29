@@ -124,9 +124,9 @@ fun NotebookApp(vm:NotebookViewModel=viewModel(),onDiagnostics:()->Unit={}){
         }
     }
     if(showCreate)NewNotebookScreen(newTitle,{newTitle=it},newWorld,{newWorld=it;if(it&&newPaper.ordinal>=4)newPaper=PaperStyle.DOTS},
-        newPaper,{newPaper=it},newCover,{newCover=it},newCustomCover,{newCustomCover=it},busy,{showCreate=false}){
+        newPaper,{newPaper=it},newCover,{newCover=it},newCustomCover,{newCustomCover=it},busy,{showCreate=false}){installed->
         focus.clearFocus(force=true);keyboard?.hide()
-        workspace.create(newTitle.ifBlank{"未命名笔记"},newWorld,newPaper,newCover,if(newCover==NotebookCover.CUSTOM)newCustomCover else null){defaults.edit().putBoolean("world",newWorld).putString("paper",newPaper.name).putString("cover",newCover.key).apply();vm.select(it)}
+        workspace.create(newTitle.ifBlank{"未命名笔记"},newWorld,newPaper,newCover,if(newCover==NotebookCover.CUSTOM)newCustomCover else null,installed){defaults.edit().putBoolean("world",newWorld).putString("paper",newPaper.name).putString("cover",newCover.key).apply();vm.select(it)}
         showCreate=false
     }
     if(confirmExport)AlertDialog(onDismissRequest={confirmExport=false},title={Text("导出文字")},text={Text("明文文字副本，不包含手写、封面、历史或回执。所选位置可能由云盘提供方管理。")},confirmButton={TextButton(onClick={confirmExport=false;ui.current?.let{exportText=it.title+"\n\n"+it.text;textExport.launch("墨织笔记.txt")}}){Text("选择位置")}},dismissButton={TextButton(onClick={confirmExport=false}){Text("取消")}})

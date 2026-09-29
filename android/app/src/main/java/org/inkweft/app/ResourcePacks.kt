@@ -17,7 +17,9 @@ import java.util.zip.ZipInputStream
 
 internal data class PackResource(val id:String,val title:String,val paper:PaperStyle?,val image:String?,val map:KnowledgeData.MapTemplate?)
 internal data class ResourcePack(val id:String,val title:String,val author:String,val version:Int,val hash:String,val bytes:ByteArray,val files:Map<String,ByteArray>,val resources:List<PackResource>)
-internal data class InstalledPack(val pack:ResourcePack,val enabled:Boolean,val copies:List<String>)
+internal data class TemplateRef(val hash:String,val id:String)
+internal data class CatalogTemplate(val ref:TemplateRef,val title:String,val source:String,val version:Int,val resource:PackResource)
+internal data class InstalledPack(val pack:ResourcePack,val enabled:Boolean,val copies:List<String>,val damaged:Boolean=false)
 
 /** Closed JSON + PNG format. No code, network, path resolution or trust claimed by package metadata. */
 internal object ResourcePackCodec {
@@ -104,10 +106,30 @@ internal object ResourcePackCodec {
     }
 }
 
-internal class ResourcePacks(private val app:InkWeftApplication,private val fault:(String)->Unit={}){
+internal class ResourcePacks(private val app:InkWeftApplication,private val freeBytes:()->Long={app.filesDir.usableSpace},private val fault:(String)->Unit={}){
     private val root=File(app.filesDir,"resource-packs").apply{mkdirs()}
     private val registry=AtomicFile(File(root,"registry.json"))
     private val mutex=Mutex()
+    private val metadata=mutableMapOf<String,ResourcePack>()
+    internal var validations=0;private set
+    private suspend fun verified(hash:String,full:Boolean=false):ResourcePack {
+        require(hash.matches(Regex("[0-9a-f]{64}")))
+        BackgroundBudget.await(app)
+        return BackgroundBudget.memory(48L*1024*1024){
+            val ctx=currentCoroutineContext()
+            val bytes=File(root,"$hash.iwpack").inputStream().use{it.readBytesLimited(ResourcePackCodec.COMPRESSED)}
+            require(ContentTransfer.hash(bytes)==hash){"PACK_ARCHIVE_CHANGED"};ctx.ensureActive()
+            if(!full&&metadata.containsKey(hash))metadata.getValue(hash)
+            else ResourcePackCodec.inspect(bytes){ctx.ensureActive()}.also{validations++;metadata[hash]=it.copy(bytes=byteArrayOf(),files=emptyMap())}
+        }
+    }
+    suspend fun catalog():List<CatalogTemplate> = installed().filter{it.enabled&&!it.damaged}.flatMap{entry->entry.pack.resources.map{
+        CatalogTemplate(TemplateRef(entry.pack.hash,it.id),it.title,entry.pack.title,entry.pack.version,it)
+    }}
+    suspend fun resource(ref:TemplateRef):PackResource=withContext(Dispatchers.IO){mutex.withLock{verified(ref.hash).resources.single{it.id==ref.id}}}
+    suspend fun preview(ref:TemplateRef):ByteArray?=withContext(Dispatchers.IO){mutex.withLock{
+        val p=verified(ref.hash,true);p.resources.single{it.id==ref.id}.image?.let{p.files.getValue(it)}
+    }}
     private fun read()=if(registry.baseFile.exists())JSONObject(registry.openRead().bufferedReader().use{it.readText()})else JSONObject()
     private fun write(j:JSONObject){val stream=registry.startWrite();try{stream.write(j.toString().toByteArray());registry.finishWrite(stream)}catch(t:Throwable){registry.failWrite(stream);throw t}}
     suspend fun inspect(input:InputStream)=withContext(Dispatchers.IO){BackgroundBudget.await(app);BackgroundBudget.memory(48L*1024*1024){val ctx=currentCoroutineContext();input.use{ResourcePackCodec.inspect(it.readBytesLimited(ResourcePackCodec.COMPRESSED)){ctx.ensureActive()}}}}
@@ -117,37 +139,58 @@ internal class ResourcePacks(private val app:InkWeftApplication,private val faul
             if(file.name.matches(Regex("staging-[0-9a-f-]{36}")))file.delete()
             else if(file.name.matches(Regex("[0-9a-f]{64}\\.iwpack"))&&!j.has(file.nameWithoutExtension)&&app.resourceTemplates.copies(file.nameWithoutExtension).isEmpty())file.delete()
         }
-        j.keys().asSequence().toList().map{hash->val entry=j.getJSONObject(hash);val pack=ResourcePackCodec.inspect(File(root,"$hash.iwpack").readBytes())
-            InstalledPack(pack.copy(bytes=byteArrayOf(),files=emptyMap()),entry.getBoolean("enabled"),app.resourceTemplates.copies(hash))}.toList()
+        j.keys().asSequence().toList().map{hash->val entry=j.getJSONObject(hash);val copies=app.resourceTemplates.copies(hash)
+            try{val pack=verified(hash);InstalledPack(pack.copy(bytes=byteArrayOf(),files=emptyMap()),entry.getBoolean("enabled"),copies)}
+            catch(c:CancellationException){throw c}
+            catch(_:Exception){InstalledPack(ResourcePack(entry.getString("id"),entry.getString("id"),"来源待核对",entry.getInt("version"),hash,byteArrayOf(),emptyMap(),emptyList()),false,copies,true)}
+        }.toList()
     }}
     suspend fun install(pack:ResourcePack)=withContext(Dispatchers.IO){mutex.withLock{
-        BackgroundBudget.await(app);require(root.usableSpace>pack.bytes.size*2L+16*1024*1024){"PACK_SPACE"}
+        BackgroundBudget.await(app);require(freeBytes()>pack.bytes.size*2L+16*1024*1024){"PACK_SPACE"}
         // Validate again: only a complete immutable archive is registered. Orphans are inert.
-        val ctx=currentCoroutineContext();val verified=ResourcePackCodec.inspect(pack.bytes){ctx.ensureActive()};require(verified.hash==pack.hash)
+        val ctx=currentCoroutineContext();val verified=BackgroundBudget.memory(48L*1024*1024){ResourcePackCodec.inspect(pack.bytes){ctx.ensureActive()}};require(verified.hash==pack.hash)
         val j=read();require(j.length()<32||j.has(pack.hash)){"PACK_COUNT"};require(root.listFiles().orEmpty().filter{it.extension=="iwpack"}.sumOf{it.length()}+pack.bytes.size<=64L*1024*1024){"PACK_STORAGE"};val entries=j.keys().asSequence().map{j.getJSONObject(it)}.filter{it.getString("id")==pack.id}.toList()
         require(entries.none{it.getInt("version")>pack.version}){"PACK_DOWNGRADE"}
         require(j.keys().asSequence().none{h->val e=j.getJSONObject(h);e.getString("id")==pack.id&&e.getInt("version")==pack.version&&h!=pack.hash}){"PACK_VERSION_CHANGED"}
         val target=File(root,"${pack.hash}.iwpack");val staging=File(root,"staging-${UUID.randomUUID()}")
         try{
-            if(!target.exists()){FileOutputStream(staging).use{it.write(pack.bytes);it.fd.sync()};check(staging.renameTo(target))}
+            if(!target.exists()||runCatching{target.inputStream().use{ContentTransfer.hash(it.readBytesLimited(ResourcePackCodec.COMPRESSED))}}.getOrNull()!=pack.hash){
+                val atomic=AtomicFile(target);val output=atomic.startWrite();try{output.write(pack.bytes);output.fd.sync();atomic.finishWrite(output)}catch(t:Throwable){atomic.failWrite(output);throw t}
+            }
             fault("after-file")
             entries.forEach{it.put("enabled",false)}
-            j.put(pack.hash,JSONObject().put("id",pack.id).put("version",pack.version).put("enabled",true));fault("before-registry");ctx.ensureActive();write(j);fault("after-registry")
+            j.put(pack.hash,JSONObject().put("id",pack.id).put("version",pack.version).put("enabled",true));fault("before-registry");ctx.ensureActive();write(j);metadata[pack.hash]=verified.copy(bytes=byteArrayOf(),files=emptyMap());fault("after-registry")
         }finally{staging.delete()}
     }}
     suspend fun enable(hash:String,enabled:Boolean)=withContext(Dispatchers.IO){mutex.withLock{val j=read();j.getJSONObject(hash).put("enabled",enabled);write(j)}}
     suspend fun uninstall(hash:String)=withContext(Dispatchers.IO){mutex.withLock{val j=read();j.getJSONObject(hash).put("enabled",false)
         if(app.resourceTemplates.copies(hash).isEmpty()){j.remove(hash);write(j);File(root,"$hash.iwpack").delete()}else write(j)
     }}
-    suspend fun instantiate(hash:String,resource:String):Note=withContext(Dispatchers.IO){mutex.withLock{
-        BackgroundBudget.await(app);require(read().getJSONObject(hash).getBoolean("enabled"))
-        val pack=ResourcePackCodec.inspect(File(root,"$hash.iwpack").readBytes());val r=pack.resources.single{it.id==resource}
-        val document=r.image?.let{path->
-            val bitmap=checkNotNull(BitmapFactory.decodeByteArray(pack.files.getValue(path),0,pack.files.getValue(path).size))
-            val pdf=PdfDocument();try{val page=pdf.startPage(PdfDocument.PageInfo.Builder(1000,1414,1).create())
-                page.canvas.drawColor(Color.WHITE);page.canvas.drawBitmap(bitmap,null,Rect(0,0,1000,1414),Paint(Paint.FILTER_BITMAP_FLAG));pdf.finishPage(page)
-                val out=ByteArrayOutputStream();pdf.writeTo(out);PdfPageSource(PdfDocumentSource(out.toByteArray(),1),0)}finally{pdf.close();bitmap.recycle()}
-        }
-        app.resourceTemplates.instantiate(hash,r.title,r.paper?:PaperStyle.BLANK,document,r.map)
+    private suspend fun selected(ref:TemplateRef):Pair<ResourcePack,PackResource>{
+        require(read().getJSONObject(ref.hash).getBoolean("enabled")){"PACK_DISABLED"}
+        val pack=verified(ref.hash,true);return pack to pack.resources.single{it.id==ref.id}
+    }
+    private fun document(pack:ResourcePack,r:PackResource):PdfPageSource?=r.image?.let{path->
+        val png=pack.files.getValue(path);val bitmap=checkNotNull(BitmapFactory.decodeByteArray(png,0,png.size))
+        val pdf=PdfDocument();try{val page=pdf.startPage(PdfDocument.PageInfo.Builder(1000,1414,1).create())
+            val scale=minOf(1000f/bitmap.width,1414f/bitmap.height)
+            val w=bitmap.width*scale;val h=bitmap.height*scale
+            page.canvas.drawColor(Color.WHITE);page.canvas.drawBitmap(bitmap,null,RectF((1000-w)/2,(1414-h)/2,(1000+w)/2,(1414+h)/2),Paint(Paint.FILTER_BITMAP_FLAG));pdf.finishPage(page)
+            val out=ByteArrayOutputStream();pdf.writeTo(out);PdfPageSource(PdfDocumentSource(out.toByteArray(),1),0)
+        }finally{pdf.close();bitmap.recycle()}
+    }
+    suspend fun instantiate(hash:String,resource:String,title:String?=null,operation:String=UUID.randomUUID().toString(),cover:NotebookCover=NotebookCover.AUTO,custom:ByteArray?=null):Note=withContext(Dispatchers.IO){mutex.withLock{
+        app.resourceTemplates.created(operation,hash)?.let{return@withLock it}
+        val(pack,r)=selected(TemplateRef(hash,resource))
+        BackgroundBudget.memory(48L*1024*1024){app.resourceTemplates.instantiate(hash,title?:r.title,r.paper?:PaperStyle.BLANK,document(pack,r),r.map,operation,cover,custom)}
+    }}
+    suspend fun insert(ref:TemplateRef,command:InsertPages):InsertPagesResult=withContext(Dispatchers.IO){mutex.withLock{
+        app.resourceTemplates.inserted(ref.hash,command)?.let{return@withLock it}
+        val(pack,r)=selected(ref);require(r.map==null)
+        BackgroundBudget.memory(48L*1024*1024){app.resourceTemplates.insert(ref.hash,command,document(pack,r))}
+    }}
+    suspend fun map(ref:TemplateRef,command:KnowledgeCommand):String=withContext(Dispatchers.IO){mutex.withLock{
+        if(!app.resourceTemplates.hasReceipt(command.operationId,ref.hash)){val(_,r)=selected(ref);require(r.map!=null)}
+        app.resourceTemplates.map(ref.hash,command)
     }}
 }

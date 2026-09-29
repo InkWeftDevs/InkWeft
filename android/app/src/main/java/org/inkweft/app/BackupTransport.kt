@@ -13,7 +13,7 @@ import java.util.UUID
 internal data class BackupIdentity(val url:String,val server:String,val issuer:String,val user:String,val device:String,val token:String,val name:String="",val expires:Long=0){
     fun binding(library:String)=listOf(url,server,issuer,user,device,library).joinToString("|")
 }
-internal class BackupHttpError(val status:Int):java.io.IOException("BACKUP_HTTP_$status")
+internal class BackupHttpError(val status:Int,val retryAfterMillis:Long?=null):java.io.IOException("BACKUP_HTTP_$status")
 
 /** Separate from page-scoped CloudServicePort. No redirects, global credentials or author body access. */
 internal class BackupTransport(val identity:BackupIdentity){
@@ -40,6 +40,11 @@ internal class BackupTransport(val identity:BackupIdentity){
             require(result.getString("server")==discovery.getString("server")&&result.getString("issuer")==discovery.getString("issuer"))
             return BackupIdentity(base,result.getString("server"),result.getString("issuer"),result.getString("user"),device,result.getString("token"),username,result.getLong("expires"))
         }
+        internal fun retryAfter(value:String?,now:Long=System.currentTimeMillis()):Long? {
+            value?:return null
+            if(value.trim().matches(Regex("[0-9]+")))return (value.trim().toLongOrNull()?:Long.MAX_VALUE).coerceAtMost(Long.MAX_VALUE/1000)*1000
+            return runCatching{(java.time.ZonedDateTime.parse(value,java.time.format.DateTimeFormatter.RFC_1123_DATE_TIME).toInstant().toEpochMilli()-now).coerceAtLeast(0)}.getOrNull()
+        }
         // Cancellation disconnects the actual socket; retries keep the caller's operation identity.
         private val network = java.util.concurrent.Executors.newFixedThreadPool(2)
         private suspend fun raw(base:String,method:String,path:String,body:ByteArray?=null,token:String?=null,type:String="application/json"):ByteArray {
@@ -50,7 +55,9 @@ internal class BackupTransport(val identity:BackupIdentity){
                     val retry = (e is BackupHttpError && (e.status==429 || e.status in 500..504)) ||
                         (e is java.io.IOException && e !is BackupHttpError && e !is javax.net.ssl.SSLException)
                     if(!retry || attempt==2) throw e
-                    delay(1000L shl attempt)
+                    val wait=(e as? BackupHttpError)?.retryAfterMillis ?: (1000L shl attempt)
+                    if(wait>30_000)throw e // Preserve the server deadline; never retry earlier by clamping it.
+                    delay(wait)
                 }
             }
             error("Unreachable")
@@ -63,7 +70,7 @@ internal class BackupTransport(val identity:BackupIdentity){
                     connection.requestMethod=method;connection.instanceFollowRedirects=false;connection.connectTimeout=5000;connection.readTimeout=5000
                     token?.let{connection.setRequestProperty("Authorization","Bearer $it")}
                     if(body!=null){require(body.size<=EncryptedBackupFile.WIRE_BLOCK);connection.doOutput=true;connection.setRequestProperty("Content-Type",type);connection.setFixedLengthStreamingMode(body.size);connection.outputStream.use{it.write(body)}}
-                    val status=connection.responseCode;if(status !in 200..299)throw BackupHttpError(status)
+                    val status=connection.responseCode;if(status !in 200..299)throw BackupHttpError(status,retryAfter(connection.getHeaderField("Retry-After")))
                     val bytes=connection.inputStream.use{input->val out=java.io.ByteArrayOutputStream();val buffer=ByteArray(8192)
                         while(true){if(!continuation.isActive)throw CancellationException();val n=input.read(buffer);if(n<0)break;require(out.size()+n<=EncryptedBackupFile.WIRE_BLOCK+32768){"RESPONSE_BUDGET"};out.write(buffer,0,n)};out.toByteArray()}
                     if(continuation.isActive)continuation.resume(bytes)

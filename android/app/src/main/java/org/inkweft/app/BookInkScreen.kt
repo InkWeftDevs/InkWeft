@@ -32,7 +32,7 @@ fun InkScreen(note:NoteDraft,workspace:WorkspaceViewModel=viewModel(),onBack:()-
     BoxWithConstraints {
     val paneWidth=maxWidth
     val context=LocalContext.current;val app=context.applicationContext as InkWeftApplication
-    val vm:BookPagesViewModel=viewModel(key="book-${note.base.id}",factory=BookPagesViewModel.Factory(note.base.id,app.pages,app.workspaceRepository))
+    val vm:BookPagesViewModel=viewModel(key="book-${note.base.id}",factory=BookPagesViewModel.Factory(note.base.id,app.pages,app.workspaceRepository,app.resourcePacks))
     val ui by vm.ui.collectAsStateWithLifecycle();val scope=rememberCoroutineScope()
     val requestedPages by workspace.pendingPageNavigation.collectAsStateWithLifecycle()
     val requested=requestedPages[note.base.id]
@@ -97,7 +97,7 @@ fun InkScreen(note:NoteDraft,workspace:WorkspaceViewModel=viewModel(),onBack:()-
     val studyState by studySession.ui.collectAsStateWithLifecycle()
     val selectedMapId by studySession.mapId.collectAsStateWithLifecycle()
     val studyCanLeave=if(studyOpen){
-        val mapWriter:KnowledgeViewModel=viewModel(key="study-map-writer-${note.base.id}",factory=KnowledgeViewModel.Factory(app.knowledge))
+        val mapWriter:KnowledgeViewModel=viewModel(key="study-map-writer-${note.base.id}",factory=KnowledgeViewModel.Factory(app.knowledge,app.resourcePacks))
         val mapWrite by mapWriter.ui.collectAsStateWithLifecycle()
         !studyState.busy&&!studyState.unknown&&!mapWrite.busy&&!mapWrite.unknown
     }else !studyState.busy&&!studyState.unknown
@@ -291,9 +291,9 @@ fun InkScreen(note:NoteDraft,workspace:WorkspaceViewModel=viewModel(),onBack:()-
         }
     }
     insertion?.let{(anchor,location)->
-        InsertPagesDialog(ui.pages,anchor,location,{insertion=null},ui.recycled.size){where,id,paper,count,open,order->
+        InsertPagesDialog(ui.pages,anchor,location,{insertion=null},ui.recycled.size){where,id,paper,count,open,order,installed->
             insertion=null
-            if(canNavigate&&!ui.busy&&!ui.insertionUnknown&&!ui.actionUnknown)vm.insert(where,id,paper,count,open,order)
+            if(canNavigate&&!ui.busy&&!ui.insertionUnknown&&!ui.actionUnknown)vm.insert(where,id,paper,count,open,order,installed)
         }
     }
     if(confirmBook)AlertDialog(onDismissRequest={confirmBook=false},title={Text("导出整本内容副本")},text={Text("包括本笔记所有可用页面、图片、文本框、胶带状态、局部擦除效果和已保存键入文字；不含页面回收区。明文 .iwbook，不含摘要卡/脑图、撤销历史、账号或密钥；不是完整资料库备份。目标可能由云盘提供。")},confirmButton={TextButton(onClick={confirmBook=false;exporting=true;scope.launch{try{val bytes=withContext(Dispatchers.IO){app.pages.exportBook(note.base.id).encode()};exportBytes=bytes;export.launch("墨织笔记本.iwbook")}catch(c:CancellationException){throw c}catch(e:Exception){Toast.makeText(context,e.mapExportExplanation()?:"无法导出整本内容，原数据保留；可尝试逐页导出",Toast.LENGTH_LONG).show()}finally{exporting=false}}}){Text("选择位置")}},dismissButton={TextButton(onClick={confirmBook=false}){Text("取消")}})

@@ -40,6 +40,9 @@ class BackupJobService:JobService(){
 /** Foreground ink gets first use of the existing memory budget. */
 internal object BackgroundBudget {
     @Volatile var lastInput=0L
+    private val inputs=java.util.Collections.synchronizedSet(mutableSetOf<Any>())
+    fun input(owner:Any,active:Boolean){if(active)inputs.add(owner)else inputs.remove(owner)}
+    fun writing()=inputs.isNotEmpty()
     suspend fun <T> memory(bytes:Long,action:suspend ()->T):T {
         val lease=Any();val owner="background-${System.identityHashCode(lease)}"
         RenderResources.admit(bytes);RenderResources.track(lease,bytes,"background-work",owner,RenderResources.Role.IN_FLIGHT)

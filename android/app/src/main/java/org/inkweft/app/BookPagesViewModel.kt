@@ -17,9 +17,9 @@ data class BookPagesUi(
     val recycled:List<NotebookPageRow> = emptyList(),
 )
 
-class BookPagesViewModel(
+internal class BookPagesViewModel(
     private val bookId: String, private val repo: NotebookPages,
-    private val workspace: WorkspaceRepository, private val savedState: SavedStateHandle = SavedStateHandle(),
+    private val workspace: WorkspaceRepository, private val savedState: SavedStateHandle = SavedStateHandle(), private val packs:ResourcePacks?=null,
 ) : ViewModel() {
     private var pending: InsertPages? = restorePending()
     private var pendingEdit:EditPage?=savedState.get<ArrayList<String>>("page.edit")?.let{EditPage.fromFields(it).also{c->require(c.notebookId==bookId)}}
@@ -59,13 +59,14 @@ class BookPagesViewModel(
             }
         }
     }
-    fun insert(location: PageInsertLocation, anchorId: String?, paper: PaperStyle, count: Int, openNew: Boolean, previewOrder: String) {
+    fun insert(location: PageInsertLocation, anchorId: String?, paper: PaperStyle, count: Int, openNew: Boolean, previewOrder: String,template:TemplateRef?=null) {
         if (ui.value.loading || ui.value.busy || pending != null || pendingEdit != null || count !in 1..InsertPages.MAX_BATCH) return
         val rows = ui.value.pages
         if (rows.isEmpty() || rows.any { it.world } || rows.size + ui.value.recycled.size + count > InsertPages.MAX_PAGES) return
         if (previewOrder != InsertPages.orderHash(rows.map { it.id })) {
             mutable.update { it.copy(error = "页面顺序已变化，没有插入。请重新核对插页预览。") }; return
         }
+        savedState["insert.template"]=template?.let{arrayListOf(it.hash,it.id)}
         pending = InsertPages(UUID.randomUUID().toString(), bookId, previewOrder,
             location, anchorId, paper, List(count) { UUID.randomUUID().toString() }, openNew,
             if (openNew) null else ui.value.selectedId)
@@ -78,7 +79,7 @@ class BookPagesViewModel(
         ++selectGeneration // Queued older page-selection writes are no longer authoritative.
         viewModelScope.launch {
             try {
-                val outcome = selectionLock.withLock { withContext(Dispatchers.IO) { repo.insert(command) } }
+                val outcome = selectionLock.withLock { withContext(Dispatchers.IO) { savedState.get<ArrayList<String>>("insert.template")?.let{checkNotNull(packs).insert(TemplateRef(it[0],it[1]),command)}?:repo.insert(command) } }
                 when (val result = outcome) {
                     is InsertPagesResult.Applied -> {
                         // Reading position is part of that SAME transaction, not a
@@ -158,11 +159,11 @@ class BookPagesViewModel(
             values[4].ifEmpty { null }, PaperStyle.valueOf(values[5]), values.drop(7), values[6].toBooleanStrict(),
             savedState.get<String>("insert.stay"))
     }
-    class Factory(private val id: String, private val repo: NotebookPages, private val workspace: WorkspaceRepository) : ViewModelProvider.Factory {
+    class Factory(private val id: String, private val repo: NotebookPages, private val workspace: WorkspaceRepository,private val packs:ResourcePacks?=null) : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
             require(modelClass.isAssignableFrom(BookPagesViewModel::class.java))
             @Suppress("UNCHECKED_CAST")
-            return BookPagesViewModel(id, repo, workspace, extras.createSavedStateHandle()) as T
+            return BookPagesViewModel(id, repo, workspace, extras.createSavedStateHandle(),packs) as T
         }
     }
 }

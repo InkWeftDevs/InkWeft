@@ -55,6 +55,55 @@ class ResourcePackTest {
             assertEquals(listOf(note.id),org.inkweft.data.ResourceTemplates(isolated).copies(pack.hash))
         }finally{isolated.close();check(root.canonicalPath.startsWith(app.cacheDir.canonicalPath+java.io.File.separator));root.deleteRecursively()}
     }
+    @Test fun lowSpaceAndInstanceFaultCutsKeepOldVersionAndReceipt()=runBlocking {
+        val app=InstrumentationRegistry.getInstrumentation().targetContext.applicationContext as InkWeftApplication
+        val first=ResourcePackCodec.inspect(bytes());app.resourcePacks.install(first)
+        try{ResourcePacks(app,freeBytes={0}).install(ResourcePackCodec.inspect(bytes(2)));fail("No space accepted")}catch(_:IllegalArgumentException){}
+        assertTrue(app.resourcePacks.installed().single().enabled)
+        val directory=java.io.File(app.cacheDir,"resource-fault-${java.util.UUID.randomUUID()}").apply{mkdirs()}
+        val db=org.inkweft.data.NoteDatabase.open(app,java.io.File(directory,"library.db").absolutePath)
+        try{
+            for(cut in listOf("after-author","after-document","before-reference","after-commit")){
+                val op=java.util.UUID.randomUUID().toString();val faulty=org.inkweft.data.ResourceTemplates(db){if(it==cut)error("injected")}
+                try{faulty.instantiate(first.hash,"实例验收",PaperStyle.CORNELL,null,first.resources.last().map,op);fail("Fault ignored")}catch(_:IllegalStateException){}
+                val healthy=org.inkweft.data.ResourceTemplates(db);assertEquals(cut=="after-commit",healthy.created(op,first.hash)!=null)
+                val recovered=healthy.instantiate(first.hash,"实例验收",PaperStyle.CORNELL,null,first.resources.last().map,op)
+                assertEquals(recovered.id,healthy.instantiate(first.hash,"实例验收",PaperStyle.CORNELL,null,first.resources.last().map,op).id)
+            }
+            assertEquals(4,org.inkweft.data.ResourceTemplates(db).copies(first.hash).size)
+        }finally{db.close();require(directory.canonicalFile.parentFile==app.cacheDir.canonicalFile);directory.deleteRecursively()}
+    }
+    @Test fun catalogReusesVerifiedMetadataButRejectsChangedArchive()=runBlocking{
+        val app=InstrumentationRegistry.getInstrumentation().targetContext.applicationContext as InkWeftApplication
+        val pack=ResourcePackCodec.inspect(bytes());val store=ResourcePacks(app);store.install(pack)
+        repeat(3){assertEquals(2,store.catalog().size)};assertEquals(0,store.validations)
+        val restarted=ResourcePacks(app);restarted.catalog();val validations=restarted.validations
+        repeat(3){restarted.catalog()};assertEquals(validations,restarted.validations)
+        val file=java.io.File(app.filesDir,"resource-packs/${pack.hash}.iwpack");val original=file.readBytes()
+        try{file.writeBytes(original.copyOf().also{it[it.lastIndex]=(it.last().toInt() xor 1).toByte()})
+            assertTrue(restarted.catalog().isEmpty());assertTrue(restarted.installed().single().damaged)
+            restarted.install(pack);assertFalse(restarted.installed().single().damaged)
+        }finally{file.writeBytes(original)}
+    }
+    @Test fun templatesInsertIntoCurrentBookAndMapWithoutChangingOldContent()=runBlocking{
+        fun id()=java.util.UUID.randomUUID().toString()
+        val app=InstrumentationRegistry.getInstrumentation().targetContext.applicationContext as InkWeftApplication
+        val pack=ResourcePackCodec.inspect(bytes());val store=app.resourcePacks;store.install(pack)
+        val note=app.workspaceRepository.create("原笔记",false,PaperStyle.RULED)
+        val command=InsertPages(id(),note.id,InsertPages.orderHash(listOf(note.id)),PageInsertLocation.AFTER,note.id,PaperStyle.CORNELL,listOf(id(),id()),false,note.id)
+        assertTrue(store.insert(TemplateRef(pack.hash,"cornell"),command) is InsertPagesResult.Applied)
+        val rows=app.pages.activePages(note.id);assertEquals(3,rows.size);assertEquals(PaperStyle.RULED.ordinal,rows.first().paper)
+        assertEquals(listOf(PaperStyle.CORNELL.ordinal,PaperStyle.CORNELL.ordinal),rows.drop(1).map{it.paper})
+        val map=KnowledgeCommand(id(),note.id,id(),0,MapTemplates.instantiate(pack.resources.last().map!!,"当前本导图"))
+        store.map(TemplateRef(pack.hash,"review"),map)
+        store.uninstall(pack.hash)
+        assertTrue((store.insert(TemplateRef(pack.hash,"cornell"),command) as InsertPagesResult.Applied).replayed)
+        assertEquals(map.id,store.map(TemplateRef(pack.hash,"review"),map))
+        assertEquals(3,app.pages.activePages(note.id).size)
+        assertEquals(listOf(note.id),app.resourceTemplates.copies(pack.hash).distinct())
+        assertTrue(app.mapGraphs.read(note.id).any{it.nodes.isNotEmpty()})
+        app.libraryBackup.snapshot().use{snapshot->snapshot.file.inputStream().use{app.libraryBackup.inspect(it)}.use{assertEquals(1,it.notes)}}
+    }
     @Test fun hostileArchivePathsBudgetsAndNamespacesFailBeforeInstall(){
         val valid=manifest().toString().toByteArray()
         for(path in listOf("../x.json","/x.json","C:/x.json","a/../x.json","a//x.json","nested.zip","script.js")){

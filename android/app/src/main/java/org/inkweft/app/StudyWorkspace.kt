@@ -82,7 +82,7 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
     var saveTemplate by rememberSaveable{mutableStateOf(false)}
     var keepTemplateTitles by rememberSaveable{mutableStateOf(false)}
     var templateTitle by rememberSaveable{mutableStateOf("我的结构模板")}
-    val mapWriter:KnowledgeViewModel=viewModel(key="study-map-writer-${note.base.id}",factory=KnowledgeViewModel.Factory(app.knowledge))
+    val mapWriter:KnowledgeViewModel=viewModel(key="study-map-writer-${note.base.id}",factory=KnowledgeViewModel.Factory(app.knowledge,app.resourcePacks))
     val mapWrite by mapWriter.ui.collectAsStateWithLifecycle()
     val mapSaving=mapWrite.busy||mapWrite.unknown
     LaunchedEffect(mapWrite.completed){mapWrite.completed?.let{if(newMapTitle!=null)vm.selectMap(it);newMapTitle=null;saveTemplate=false;if(titleSubmitted&&titleDraft?.structural==true){titleDraft=null;titleSubmitted=false;focus.clearFocus()};mapWriter.consumed()}}
@@ -91,6 +91,8 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
     val structureCards=definition?.structures.orEmpty().map{StudyCardRow(it.id,note.base.id,maps.find{m->m.id==currentMap}!!.revision,it.title,"")}
     val displayCards=ui.cards+structureCards
     var template by rememberSaveable(stateSaver=androidx.compose.runtime.saveable.Saver<KnowledgeData.MapTemplate,ByteArray>({KnowledgeCodec.encode(it)},{KnowledgeCodec.decode(it) as KnowledgeData.MapTemplate})){mutableStateOf(MapTemplates.builtins.first())}
+    var installedMapHash by rememberSaveable{mutableStateOf<String?>(null)}
+    var installedMapId by rememberSaveable{mutableStateOf<String?>(null)}
     var templatePicker by rememberSaveable{mutableStateOf(false)}
     fun occurrenceCount(cardId:String)=mainNodes.count{!it.removed&&it.cardId==cardId}+extraOccurrences(cardId)
     var query by remember{mutableStateOf(initialQuery)}
@@ -223,11 +225,15 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
     }
     Box(Modifier.weight(1f)){
     if(templatePicker){
+        val installedMaps=rememberTemplateCatalog().filter{it.resource.map!=null}
         Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(12.dp)){
             Row(verticalAlignment=Alignment.CenterVertically){Text("新建导图",Modifier.weight(1f));TextButton({templatePicker=false}){Text("返回")}}
             (MapTemplates.builtins+extraRows.filter{!it.removed&&it.notebookId==note.base.id}.mapNotNull{it.data() as? KnowledgeData.MapTemplate}).forEachIndexed{i,t->
-                TextButton({template=t;templatePicker=false;newMapTitle=t.title},modifier=Modifier.fillMaxWidth().heightIn(min=48.dp).testTag("map-template-$i")){Text(t.title,Modifier.weight(1f));Text("${t.nodes.size} 个结构主题",style=MaterialTheme.typography.labelSmall)}
+                TextButton({installedMapHash=null;installedMapId=null;template=t;templatePicker=false;newMapTitle=t.title},modifier=Modifier.fillMaxWidth().heightIn(min=48.dp).testTag("map-template-$i")){Text(t.title,Modifier.weight(1f));Text("${t.nodes.size} 个结构主题",style=MaterialTheme.typography.labelSmall)}
             }
+            if(installedMaps.isNotEmpty())Text("我的模板",style=MaterialTheme.typography.labelLarge,color=Quiet)
+            installedMaps.forEach{entry->TextButton({template=checkNotNull(entry.resource.map);installedMapHash=entry.ref.hash;installedMapId=entry.ref.id;templatePicker=false;newMapTitle=entry.title},modifier=Modifier.fillMaxWidth().heightIn(min=48.dp).testTag("installed-map-${entry.ref.id}")){Text(entry.title,Modifier.weight(1f));Text("v${entry.version}",style=MaterialTheme.typography.labelSmall)}}
+
         }
     }else Box(Modifier.fillMaxSize()){
         Surface(Modifier.fillMaxSize(),shape=RoundedCornerShape(if(compactWindow)0.dp else 20.dp),color=Color.White,border=if(compactWindow)null else BorderStroke(1.dp,Line)){Column(Modifier.fillMaxSize().padding(if(compactWindow)4.dp else 16.dp)){
@@ -237,6 +243,7 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
                 TextButton(onClick={saveTemplate=true},enabled=editable,modifier=Modifier.testTag("study-save-template")){Text("另存为模板")}
                 TextButton(onClick={pendingExport=StudyText.markdown(note.title,ui.cards.filter{it.trashedAt==null}.map{StudyTextCard(it.id,it.title,it.body)},ui.nodes.map{it.model()});export.launch("墨织摘要.md")},enabled=editable&&ui.cards.isNotEmpty()){Text("导出完整大纲")}
             }
+
             if(!compactWindow)BoxWithConstraints(Modifier.fillMaxWidth()){
                 val compact=maxWidth<600.dp||androidx.compose.ui.platform.LocalDensity.current.fontScale>1.3f
                 Column{
@@ -420,7 +427,7 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
         Text("${template.nodes.size} 个结构主题",style=MaterialTheme.typography.labelMedium)
         template.nodes.take(6).forEach{Text(it.title,style=MaterialTheme.typography.bodySmall)}
         mapWrite.message?.let{Text(it)}
-    }},confirmButton={TextButton({if(mapWrite.unknown)mapWriter.retry()else mapWriter.submit(note.base.id,MapTemplates.instantiate(template,title.trim()))},enabled=!mapWrite.busy&&title.isNotBlank(),modifier=Modifier.testTag("study-new-map-save")){Text(if(mapWrite.unknown)"核对原操作"else"创建")}},dismissButton={TextButton({newMapTitle=null},enabled=!mapSaving){Text("取消")}})}
+    }},confirmButton={TextButton({if(mapWrite.unknown)mapWriter.retry()else mapWriter.submit(note.base.id,MapTemplates.instantiate(template,title.trim()),template=installedMapHash?.let{h->installedMapId?.let{TemplateRef(h,it)}})},enabled=!mapWrite.busy&&title.isNotBlank(),modifier=Modifier.testTag("study-new-map-save")){Text(if(mapWrite.unknown)"核对原操作"else"创建")}},dismissButton={TextButton({newMapTitle=null},enabled=!mapSaving){Text("取消")}})}
     editor?.let{e->key(e.card?.id,e.parent?.id,e.source?.pageId){
         var title by rememberSaveable{mutableStateOf(e.card?.title.orEmpty())};var text by rememberSaveable{mutableStateOf(e.card?.body.orEmpty())}
         StudyDialog(compactWindow,onDismissRequest={if(!ui.busy&&!ui.unknown){editor=null;returnTab?.let(vm::selectTab);returnTab=null}},modifier=Modifier.testTag("study-card-editor"),title={Text(if(e.card!=null)"编辑共享摘要卡"else"新建摘要卡")},text={Column(Modifier.verticalScroll(rememberScrollState()),verticalArrangement=Arrangement.spacedBy(10.dp)){

@@ -59,6 +59,7 @@ class InkRepository(private val db:NoteDatabase,private val fault:(InkFaultPoint
     }
     private val dao=db.ink()
     private val checkpoints by lazy{InkCheckpoints(checkNotNull(db.checkpointRoot))}
+    fun hasUnsealedInput():Boolean=db.checkpointRoot?.walkTopDown()?.any{it.isFile&&(it.name.endsWith(".inkpart")||it.name.endsWith(".inkpart.bak")||it.name.endsWith(".inkgroup"))}?:false
     suspend fun checkpoint(page:String,stroke:InkStroke){
         require(stroke.world==owner(page).world)
         if(dao.stroke(stroke.id)==null)checkpoints.save(page,stroke.samples.size,stroke)

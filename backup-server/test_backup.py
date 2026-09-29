@@ -36,6 +36,26 @@ class BackupProtocolTest(unittest.TestCase):
         key=os.urandom(32);encrypted=self.root/'encrypted.iwbk';encrypt(clear,encrypted,self.library,key)
         return clear,encrypted,key
 
+    def test_readonly_and_bounded_sqlite_full_preserve_published_bytes(self):
+        from unittest.mock import patch
+        clear,encrypted,key=self.fixture();published=self.client.upload(encrypted,self.root/'queue.json');op=published['operation']
+        expected=self.client.request('GET',f'/versions/{op}/chunks/0').content
+        original=sqlite3.connect
+        def readonly(path,*args,**kwargs):
+            return original('file:'+str(Path(path).resolve()).replace('\\','/')+'?mode=ro',uri=True,timeout=15)
+        headers={'Authorization':'Bearer '+self.alice['token']}
+        with patch('server.sqlite3.connect',side_effect=readonly):
+            self.assertEqual(507,self.http.delete(f'/v1/libraries/{self.library}/versions/{op}?operation_id={uuid.uuid4()}',headers=headers).status_code)
+            self.assertEqual(expected,self.client.request('GET',f'/versions/{op}/chunks/0').content)
+        payload=os.urandom(CHUNK_LIMIT);new=str(uuid.uuid4());manifest={'format':'inkweft.encrypted-backup.v1','bytes':len(payload),'chunks':[hashlib.sha256(payload).hexdigest()]}
+        self.client.request('PUT','/uploads/'+new,json=manifest)
+        def capped(path,*args,**kwargs):
+            c=original(path,*args,**kwargs);pages=c.execute('PRAGMA page_count').fetchone()[0];c.execute('PRAGMA max_page_count='+str(pages));return c
+        with patch('server.sqlite3.connect',side_effect=capped):
+            self.assertEqual(507,self.http.put(f'/v1/libraries/{self.library}/uploads/{new}/chunks/0',headers=headers,content=payload).status_code)
+        self.assertEqual([],self.client.request('GET','/uploads/'+new).json()['received'])
+        self.assertEqual(expected,self.client.request('GET',f'/versions/{op}/chunks/0').content)
+
     def test_roundtrip_restart_second_device_unknown_receipt_and_acl(self):
         clear,encrypted,key=self.fixture();queue=self.root/'queue.json'
         first=self.client.upload(encrypted,queue)

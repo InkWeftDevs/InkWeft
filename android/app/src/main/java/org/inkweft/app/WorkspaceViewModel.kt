@@ -36,16 +36,17 @@ class WorkspaceViewModel(app:Application,private val saved:androidx.lifecycle.Sa
     fun ensure(id:String){viewModelScope.launch{try{val row=withContext(Dispatchers.IO){repo.get(id)};mutable.update{it+(id to row)}}catch(c:CancellationException){throw c}catch(_:Exception){failure.value="无法读取页面设置"}}}
     fun openSearchPage(bookId:String,pageId:String,open:()->Unit){viewModelScope.launch{try{withContext(Dispatchers.IO){pages.select(bookId,pageId)};pageNavigation.update{it+(bookId to pageId)};open()}catch(c:CancellationException){throw c}catch(_:Exception){failure.value="搜索位置已变化，请从页目录打开。"}}}
     fun clearError(){failure.value=null}
-    fun create(title:String,world:Boolean,paper:PaperStyle,cover:NotebookCover=NotebookCover.AUTO,customCover:ByteArray?=null,onCreated:(Note)->Unit){
+    internal fun create(title:String,world:Boolean,paper:PaperStyle,cover:NotebookCover=NotebookCover.AUTO,customCover:ByteArray?=null,template:TemplateRef?=null,onCreated:(Note)->Unit){
         if(working.value||pendingCreate.value!=null)return
         saved["create.cover"]=customCover?.copyOf()
+        saved["create.template"]=template?.let{arrayListOf(it.hash,it.id)}
         saved["create.request"]=arrayListOf(java.util.UUID.randomUUID().toString(),title,world.toString(),paper.name,cover.key)
         retryCreate(onCreated)
     }
     fun retryCreate(onCreated:(Note)->Unit){
         val request=pendingCreate.value?:return;if(working.value)return;working.value=true
         viewModelScope.launch{try{
-            val note=withContext(Dispatchers.IO){repo.create(request[1],request[2].toBooleanStrict(),PaperStyle.valueOf(request[3]),NotebookCover.fromKey(request[4]),request[0],saved.get<ByteArray>("create.cover"))}
+            val note=withContext(Dispatchers.IO){val resource=saved.get<ArrayList<String>>("create.template");if(resource!=null)getApplication<InkWeftApplication>().resourcePacks.instantiate(resource[0],resource[1],request[1],request[0],NotebookCover.fromKey(request[4]),saved.get<ByteArray>("create.cover"))else repo.create(request[1],request[2].toBooleanStrict(),PaperStyle.valueOf(request[3]),NotebookCover.fromKey(request[4]),request[0],saved.get<ByteArray>("create.cover"))}
             saved.set<ArrayList<String>?>("create.request",null);saved.set<ByteArray?>("create.cover",null);failure.value=null;onCreated(note)
         }catch(c:CancellationException){throw c}catch(_:IllegalArgumentException){saved.set<ArrayList<String>?>("create.request",null);saved.set<ByteArray?>("create.cover",null);failure.value="未创建：标题、模板或操作身份无效。"}
         catch(_:Exception){failure.value="新建结果待核对，请核对原创建请求，不会重复创建。"}finally{working.value=false}}
