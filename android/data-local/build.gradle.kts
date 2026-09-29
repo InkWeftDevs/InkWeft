@@ -14,6 +14,13 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
 }
+androidComponents {
+    onVariants(selector().all()) { variant ->
+        variant.deviceTests.values.forEach { test ->
+            test.sources.assets?.addStaticSourceDirectory("schemas")
+        }
+    }
+}
 ksp { arg("room.schemaLocation", "$projectDir/schemas") }
 dependencies {
     implementation(project(":core-domain"))

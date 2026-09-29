@@ -1,0 +1,34 @@
+[
+  {
+    "cut": "before-inbox",
+    "passed": true
+  },
+  {
+    "cut": "after-inbox",
+    "passed": true
+  },
+  {
+    "cut": "after-parse",
+    "passed": true
+  },
+  {
+    "cut": "before-author-apply",
+    "passed": true
+  },
+  {
+    "cut": "before-receive-commit",
+    "passed": true
+  },
+  {
+    "cut": "after-receive-commit",
+    "passed": true
+  },
+  {
+    "cut": "before-outbox-ack",
+    "passed": true
+  },
+  {
+    "cut": "after-outbox-ack",
+    "passed": true
+  }
+]

@@ -1,0 +1,259 @@
+{
+  "baseline": "8d30f13d31d6e1e1d55acb496bcb0997bdcc04a6",
+  "schema_version": 1,
+  "note": "v45 本机执行记录；PASS仅指明示环境与切片。PARTIAL不等于整项验收。",
+  "cases": [
+    {
+      "id": "A01",
+      "task": "N0",
+      "expected": "当前HEAD/源码/构建/证书/包身份一致，区分CI与本机固定签名",
+      "previous_requirement": "V44-31",
+      "status": "PASS",
+      "evidence": "源码2395d22；固定签名workspace v45，artifact.json。后续仅测试/文档可独立记身份。"
+    },
+    {
+      "id": "A02",
+      "task": "N0",
+      "expected": "按实际CI结果更新状态，容器基础PASS不冒充TLS业务通过",
+      "previous_requirement": "V44-11/12",
+      "status": "PASS",
+      "evidence": "v44远端原始两分片App228、Room153与基础容器PASS已纠正；v45远端未运行。；后续v45已完成：App238/238、Room154/154、核心259，扩展容器业务/独立卷恢复PASS，见follow_up_verification。"
+    },
+    {
+      "id": "A03",
+      "task": "N1",
+      "expected": "断网断开本机、远端撤销未确认与重连原任务",
+      "previous_requirement": "V44-02/03",
+      "status": "PASS",
+      "evidence": "native-offline真实撤去ADB网络映射；本机凭据清除、远端撤销未知、原任务重连。仅专用模拟器。"
+    },
+    {
+      "id": "A04",
+      "task": "N1",
+      "expected": "十版本UI闭环及发布/放弃/删除并发、回应丢失",
+      "previous_requirement": "V44-05/06",
+      "status": "PARTIAL",
+      "evidence": "UI连续10版本、删除后恢复、放弃待办通过；发布/放弃竞态及回应丢失有服务/客户端分开证据，不是全部同一UI并发。"
+    },
+    {
+      "id": "A05",
+      "task": "N1",
+      "expected": "429/整体超时/慢流/暂停/系统停止的重试边界",
+      "previous_requirement": "V44-08/10",
+      "status": "PARTIAL",
+      "evidence": "实际TCP429两次等待>=Retry-After、超大值不早重试、慢socket取消通过；完整120秒超时和厂商配额待测。"
+    },
+    {
+      "id": "A06",
+      "task": "N1",
+      "expected": "密文代际文件和原子指针各终止切点恢复",
+      "previous_requirement": "V44-09",
+      "status": "PASS",
+      "evidence": "5个密文代际切点实际Process.killProcess后核对完整指针、哈希、原任务发布。"
+    },
+    {
+      "id": "A07",
+      "task": "N1",
+      "expected": "安装登记及作者实例化低空间/进程终止不破坏旧版",
+      "previous_requirement": "V44-21",
+      "status": "PASS",
+      "evidence": "native-resource-verified安装3切点、作者/文档/引用/提交4切点，实际终止并重开7/7；ResourcePackTest低空间适配器、原作者副本与原操作重试保持。"
+    },
+    {
+      "id": "A08",
+      "task": "N1",
+      "expected": "服务满盘/只读/慢请求及原版本继续可恢复",
+      "previous_requirement": "V44-15",
+      "status": "PARTIAL",
+      "evidence": "真实SQLite只读连接与限容SQLITE_FULL，原版本可恢复；容器卷故障未运行。"
+    },
+    {
+      "id": "A09",
+      "task": "N1",
+      "expected": "诊断/分享/日志凭据与私人标记泄漏扫描",
+      "previous_requirement": "V44-32",
+      "status": "PARTIAL",
+      "evidence": "合成标记密钥/token/密码/笔记标题扫描诊断ZIP与匿名布局通过；未声称完整系统日志或全部UI错误路径。"
+    },
+    {
+      "id": "A10",
+      "task": "N1",
+      "expected": "跨页长笔已确认片段整组恢复、去重、准确目标页",
+      "previous_requirement": "V44-26",
+      "status": "NOT_IMPLEMENTED",
+      "evidence": "按任务允许保留跨页组存储安全切片及故障测试；完整连续UI组恢复未接入。"
+    },
+    {
+      "id": "A11",
+      "task": "N1",
+      "expected": "跨页封笔未知结果及持久取消后不复活、一次撤销整笔",
+      "previous_requirement": "V44-26/27",
+      "status": "PARTIAL",
+      "evidence": "存储切片取消终态拒绝迟到前缀、原命令重放与组撤销通过；跨页重启UI撤销栈未完成。"
+    },
+    {
+      "id": "A12",
+      "task": "N1",
+      "expected": "测量窗口真实并发、保存优先和可回收资源预算",
+      "previous_requirement": "V44-24/25",
+      "status": "PASS",
+      "evidence": "performance-final 48/48，固定APK三轮四内容四负载，逐保存断言完整时间窗重叠。受控PUT延迟与纯声明模板批量安装，含测试等待开销，非真实笔尖延迟。"
+    },
+    {
+      "id": "A13",
+      "task": "N1",
+      "expected": "已安装列表不会每次无预算全量解码，损坏检测仍有效",
+      "previous_requirement": "V44-20/25",
+      "status": "PASS",
+      "evidence": "不可变摘要缓存，连续目录读取不重新inspect/解码；篡改归档仍拒绝并可重导修复。"
+    },
+    {
+      "id": "A14",
+      "task": "N2",
+      "expected": "新建笔记直接使用已安装模板，预览与纸面一致",
+      "previous_requirement": "V44-18",
+      "status": "PASS",
+      "evidence": "实际新建UI选择安装纸张，PNG复制为原生文档及备份恢复；等比居中策略明确。"
+    },
+    {
+      "id": "A15",
+      "task": "N2",
+      "expected": "原加页流程选安装纸张和位置、数量、取消零写入",
+      "previous_requirement": "V44-18",
+      "status": "PASS",
+      "evidence": "原插页UI选择模板/数量/取消，已有页身份保留；位置整合回归通过。"
+    },
+    {
+      "id": "A16",
+      "task": "N2",
+      "expected": "浮窗新图使用安装结构，不意外创建新笔记或覆盖原树",
+      "previous_requirement": "V44-18",
+      "status": "PASS",
+      "evidence": "当前本浮窗新图2节点，旧本数不增加，原图保留；共享模型缺依赖已修。"
+    },
+    {
+      "id": "A17",
+      "task": "N2",
+      "expected": "升级/禁用/卸载/恢复后已有实例与来源保留",
+      "previous_requirement": "V44-22/23",
+      "status": "PASS",
+      "evidence": "安装生命周期、独立实例、来源回执、卸载后重试及整库恢复通过。"
+    },
+    {
+      "id": "A18",
+      "task": "N2",
+      "expected": "大字号与窄屏模板可达，不挤占书写区、不新增常驻栏",
+      "previous_requirement": "UI-NF1",
+      "status": "PASS",
+      "evidence": "375dp/字号1.6真实滚动三入口完成并检查截图；不压缩字号/触控。测试先滚动外层再横向分类。"
+    },
+    {
+      "id": "A19",
+      "task": "N3",
+      "expected": "正常证书链与主机名的隔离Android HTTPS往返",
+      "previous_requirement": "V44-12",
+      "status": "PARTIAL",
+      "evidence": "隔离Android HTTPS实际加密闭包往返通过，但MuMu错误接受未知CA，不能据此认证平台信任链。"
+    },
+    {
+      "id": "A20",
+      "task": "N3",
+      "expected": "错域名/过期/不可信CA/HTTP降级/重定向均拒绝",
+      "previous_requirement": "V44-12/32",
+      "status": "FAIL",
+      "evidence": "5项TLS Probe中未知CA拒绝失败；平台X509TrustManagerExtensions也接受该未知签发者。过期/错主机名/HTTP降级及307拒绝通过。保留失败，待可信Android复验。"
+    },
+    {
+      "id": "A21",
+      "task": "N3",
+      "expected": "容器中真实加密上传/缺块续传/发布/重启/下载",
+      "previous_requirement": "V44-11/13",
+      "status": "BLOCKED",
+      "evidence": "扩展真实密文/缺块/重启/下载容器脚本已交付；本机Docker引擎不可用，v45 CI未运行。"
+    },
+    {
+      "id": "A22",
+      "task": "N3",
+      "expected": "独立新卷服务快照恢复身份、账号、版本和回执一致",
+      "previous_requirement": "V44-13/14",
+      "status": "BLOCKED",
+      "evidence": "独立新卷在线快照恢复脚本已交付；无Docker运行证据，不继承v44基础容器PASS。"
+    },
+    {
+      "id": "A23",
+      "task": "N3",
+      "expected": "普通/发布构建不含测试CA和测试专用信任放宽",
+      "previous_requirement": "V44-12/32",
+      "status": "PASS",
+      "evidence": "普通workspace APK无fixture_ca，主/发布源集未改变测试信任。CA仅isolated tlsProbe源集。"
+    },
+    {
+      "id": "A24",
+      "task": "N4",
+      "expected": "两个隔离Room库按实际编码往返笔迹/擦除/附件/卡/图/资源",
+      "previous_requirement": "V44-30",
+      "status": "PARTIAL",
+      "evidence": "两个隔离Room库正式笔迹/擦除/JPEG/PDF/卡来源/图实时引用/资源全列往返及语义/字节一致通过；独立接收库完整渲染/回源UI未全覆盖。"
+    },
+    {
+      "id": "A25",
+      "task": "N4",
+      "expected": "持久发件箱、接收提交和游标在崩溃后不丢不重放",
+      "previous_requirement": "V44-29/30",
+      "status": "PARTIAL",
+      "evidence": "持久发件箱重开、原操作重放、接收事务故障回滚/游标不动通过；同步接收所有原生进程终止切点未执行。"
+    },
+    {
+      "id": "A26",
+      "task": "N4",
+      "expected": "离线并发、人工/派生优先与删除编辑冲突保留",
+      "previous_requirement": "V44-29",
+      "status": "PASS",
+      "evidence": "实际离线人工并发、回收删除/编辑冲突保留本地人工头；派生修改不能替代人工，未宣称冲突已自动收敛。"
+    },
+    {
+      "id": "A27",
+      "task": "N4",
+      "expected": "缺附件/未知类型/历史来源失效有明确不同处理",
+      "previous_requirement": "V44-30",
+      "status": "PARTIAL",
+      "evidence": "缺PDF块/未知schema/格式/字段防线及保留回收来源通过；任意历史来源失效组合待专项。"
+    },
+    {
+      "id": "A28",
+      "task": "N4",
+      "expected": "错误身份/设备撤销/未知密钥/过期游标不串库",
+      "previous_requirement": "V44-29/30",
+      "status": "PASS",
+      "evidence": "真实Room缺密钥/身份不匹配游标不推进；服务越权/设备撤销/过期游标拒绝，未实现自动重建。"
+    },
+    {
+      "id": "A29",
+      "task": "N4",
+      "expected": "禁用真实用户库入口、持久Relay重启与断连恢复",
+      "previous_requirement": "S1",
+      "status": "PASS",
+      "evidence": "工厂限制一次性cache/shadow-sync路径与调试构建；独立HTTP Relay进程实际终止/重启后会话、序列、同操作回执保持，普通服务器默认不挂路由。"
+    },
+    {
+      "id": "A30",
+      "task": "N0",
+      "expected": "获准后同包平板升级数据核对；人工测试缺条件仍未运行",
+      "previous_requirement": "V44-28/31",
+      "status": "BLOCKED",
+      "evidence": "USB可读但平板锁屏，未覆盖v45或核对真实资料；真实笔/独立多作者未运行。"
+    }
+  ],
+  "source_commit": "2395d22e149064fa311a13a5b65c40b490caae65",
+  "follow_up_verification": {
+    "date": "2026-09-29",
+    "run": 36547758943,
+    "source": "9807d15d4dd18b545dfaf8bb3b9fc043a9504e3f",
+    "app": 238,
+    "room": 154,
+    "core": 259,
+    "container": "PASS: encrypted business, restart and independent-volume recovery; no TLS",
+    "evidence": "E:/Inkweft/archives/2026-09-29/NextStageV46/ci-v45",
+    "historical_results_retained": true
+  }
+}

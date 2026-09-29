@@ -1,0 +1,36 @@
+{
+  "runId": "b66034f8-41b4-49ce-afa9-a19057b02f80",
+  "source": "411ccf9a9eebde1264fd49529d2147fcdf465598",
+  "steps": [
+    "install-template",
+    "create-from-template",
+    "insert-pages",
+    "terminated-after-group-commit",
+    "reopen-group-undo-redo",
+    "excerpt-into-main-map",
+    "rename-same-card",
+    "search-and-return-to-source",
+    "insert-live-map",
+    "review-and-apply-beauty",
+    "local-erase-and-undo",
+    "encrypted-backup",
+    "restore-empty-isolated-library-and-verify-closure"
+  ],
+  "template": "38e2597d2e6b8d5539c747aa9efdac96d08b5084731f4ec0f1d13ec4e0c36ac3",
+  "book": "40c39e36-21b0-47b1-8a5e-bf6348bf6b68",
+  "pages": [
+    "40c39e36-21b0-47b1-8a5e-bf6348bf6b68",
+    "f750faeb-fe4a-477e-8f66-ef1b62de605c",
+    "95cc8e6f-8472-4678-97fd-5b40f7d32132"
+  ],
+  "crossPageInk": [
+    "0cb56f9b-2baf-4a68-b9a1-33d0e0497f84",
+    "4b94f0df-e456-31d4-b5b2-5b7cf53a40f5",
+    "e40e89a3-aec3-347b-8b44-9416c186314c"
+  ],
+  "card": "8e915c02-f4f7-4c20-a199-d537fcd2666d",
+  "node": "8f84a6af-5dc2-44e0-a0ce-211df9df7556",
+  "embed": "4e43b9ca-81ca-4188-9594-b86836239ac3",
+  "beauty": "bdb1c1da-6a35-496d-8650-291790a66604",
+  "result": "PASS"
+}

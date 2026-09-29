@@ -1,0 +1,16 @@
+{
+  "package": "org.inkweft.app.a0.workspace",
+  "versionCode": 46,
+  "versionName": "0.0.46-trusted-continuity",
+  "sourceCommit": "74b5a3dd90f558ca345f5134c2369ca64c3d14b2",
+  "testCommit": "74b5a3dd90f558ca345f5134c2369ca64c3d14b2",
+  "buildCommit": "74b5a3dd90f558ca345f5134c2369ca64c3d14b2",
+  "sourceTree": "0e492a562b74d4cc3b331eb1bd784f3c2f1abc95",
+  "file": "E:/Inkweft/dist/NextStageV46/InkWeft-v46-workspace-preview.apk",
+  "bytes": 149888628,
+  "sha256": "44edc049c24fb9ab580376d642cef3e4cb0fd0ec10124952a32d1af213e11fba",
+  "certificateSha256": "18e67dbce88152dbe4d4821b5a3a513a409a3df4eac9261f4c11126c36e43969",
+  "testApkSha256": "e55e79205312e53fbf562c9948c9c543129bc22fa6a3205002d45d384e42346e",
+  "normalTestCaPresent": false,
+  "supplementalTestMetadata": "E:/Inkweft/recon/android/verification/v46/visual-readiness.json"
+}

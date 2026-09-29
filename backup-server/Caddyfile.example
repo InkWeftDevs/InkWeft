@@ -1,0 +1,13 @@
+# Replace only on an explicitly authorized host. Caddy obtains/renews certificates.
+# Backend remains loopback-only. Never expose :18751 directly to the Internet.
+backup.example.com {
+    request_body {
+        max_size 1050KB
+    }
+    reverse_proxy 127.0.0.1:18751 {
+        transport http {
+            dial_timeout 5s
+            response_header_timeout 35s
+        }
+    }
+}

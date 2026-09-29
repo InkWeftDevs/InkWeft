@@ -1,0 +1,42 @@
+{
+  "sameCandidate": "411ccf9a9eebde1264fd49529d2147fcdf465598",
+  "sameFixture": {
+    "baseline-width": {
+      "runId": "1f3a00be-29e4-4a5f-8394-54074ac4b8c6",
+      "book": "e72af840-a42c-4114-9db1-8b830efb8799",
+      "authorHash": "6a65d0e8bfe638b0bb28de0bde3f0bdecf76a746ebaecb5e9a45f7d7771322dd",
+      "unchanged": true,
+      "stage": "baseline-width"
+    },
+    "normal": {
+      "runId": "1f3a00be-29e4-4a5f-8394-54074ac4b8c6",
+      "book": "e72af840-a42c-4114-9db1-8b830efb8799",
+      "authorHash": "6a65d0e8bfe638b0bb28de0bde3f0bdecf76a746ebaecb5e9a45f7d7771322dd",
+      "unchanged": true,
+      "stage": "normal"
+    },
+    "narrow": {
+      "runId": "1f3a00be-29e4-4a5f-8394-54074ac4b8c6",
+      "book": "e72af840-a42c-4114-9db1-8b830efb8799",
+      "authorHash": "6a65d0e8bfe638b0bb28de0bde3f0bdecf76a746ebaecb5e9a45f7d7771322dd",
+      "unchanged": true,
+      "stage": "narrow"
+    },
+    "portrait": {
+      "runId": "1f3a00be-29e4-4a5f-8394-54074ac4b8c6",
+      "book": "e72af840-a42c-4114-9db1-8b830efb8799",
+      "authorHash": "6a65d0e8bfe638b0bb28de0bde3f0bdecf76a746ebaecb5e9a45f7d7771322dd",
+      "unchanged": true,
+      "stage": "portrait"
+    },
+    "narrow-preview-02": {
+      "runId": "1f3a00be-29e4-4a5f-8394-54074ac4b8c6",
+      "book": "e72af840-a42c-4114-9db1-8b830efb8799",
+      "authorHash": "6a65d0e8bfe638b0bb28de0bde3f0bdecf76a746ebaecb5e9a45f7d7771322dd",
+      "unchanged": true,
+      "stage": "narrow-preview-02"
+    }
+  },
+  "pixelReview": "normal five states reviewed; narrow typography/controls and portrait real IME reviewed",
+  "narrowDragPreview": "PASS after moving the existing floating map to the bottom and dragging from the visible selection outside the pen case; actual dashed target screenshot reviewed. Earlier occluded-source screenshot retained as insufficient evidence."
+}

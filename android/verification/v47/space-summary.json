@@ -1,0 +1,24 @@
+{
+  "format": "inkweft.android-fault-privacy.v1",
+  "apk_sha256": {
+    "org.inkweft.app.a0.workspace": "2e317da82cd1c38a238c0073ec783d91e97976c2ca3830879a82dcbb5dee0b82",
+    "org.inkweft.app.a0.workspace.test": "d6348b8b0a07d74afe6e75d037e11a70aca7423d17f0ab99e1ed933eae133891"
+  },
+  "checks": [
+    {
+      "probe": "AndroidTemporarySpaceProbe",
+      "passed": true,
+      "report": "v47-android-space.json"
+    }
+  ],
+  "package_cleared": false,
+  "raw_private_payloads_exported": false,
+  "space_mount_cleanup": "unmounted-and-directory-removed",
+  "space_namespace": {
+    "pid": 16392,
+    "uid": 10213,
+    "mount_namespace": "mnt:[4026532982]",
+    "capacity_limit_bytes": 8388608
+  },
+  "status": "PASS"
+}

@@ -1,0 +1,19 @@
+{
+  "format": "inkweft.android-space.v1",
+  "capacityBytes": 8388608,
+  "filesystem": "tmpfs",
+  "status": "PASS",
+  "backupReserve": "BACKUP_LOW_SPACE",
+  "filesystemWrite": "ENOSPC",
+  "encryptedTemporaryWrite": "ENOSPC",
+  "decryptedTemporaryWrite": "ENOSPC",
+  "filledBytes": 8388608,
+  "partialCipherAbsent": true,
+  "partialPlaintextAbsent": true,
+  "oldCipherUnchanged": true,
+  "isolatedRestore": "RESTORED",
+  "parentFilesystemFilled": false,
+  "faultFilesCleaned": true,
+  "appPid": 16392,
+  "appUid": 10213
+}

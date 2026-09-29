@@ -1,0 +1,28 @@
+{
+  "format": "inkweft.resource-pack.v1",
+  "id": "examples.inkweft.paper",
+  "title": "学习纸张 · 原创示例",
+  "author": "InkWeft · CC0",
+  "version": 1,
+  "resources": [
+    {
+      "id": "cornell",
+      "type": "paper",
+      "title": "课堂记录",
+      "paper": "CORNELL"
+    },
+    {
+      "id": "planner",
+      "type": "paper",
+      "title": "三栏计划",
+      "paper": "BLANK",
+      "image": "planner.png"
+    }
+  ],
+  "files": {
+    "planner.png": {
+      "bytes": 12673,
+      "sha256": "a36d6e7b6c2789cba4545e868693295950b6b92612dd27f688e738fe9a131e9d"
+    }
+  }
+}

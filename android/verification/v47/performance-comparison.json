@@ -1,0 +1,1971 @@
+{
+  "format": "inkweft.editor-frame-comparison.v1",
+  "verification_status": "PASS",
+  "performance_verdict": "OBSERVATIONS_ONLY_NO_SLO",
+  "rounds_per_condition_per_build": 3,
+  "conditions": {
+    "writing": {
+      "baseline": {
+        "frame_p95_ms_by_round": [
+          7.137014,
+          8.58704,
+          7.704925
+        ],
+        "median_round_frame_p95_ms": 7.704925,
+        "frame_count_by_round": [
+          224,
+          224,
+          222
+        ],
+        "deadline_misses_by_round": [
+          0,
+          2,
+          0
+        ],
+        "frame_max_ms_by_round": [
+          11.613262,
+          24.754968,
+          12.870051
+        ],
+        "work_calls_in_window_by_round": [
+          0,
+          0,
+          0
+        ],
+        "work_call_overlap_inputs_by_round": [
+          0,
+          0,
+          0
+        ],
+        "background_operation_overlap_inputs_by_round": [
+          0,
+          0,
+          0
+        ],
+        "median_cpu_percent_of_window": {
+          "main": 14.675337507504057,
+          "render": 6.40258005771773,
+          "other": 49.983485479227596
+        }
+      },
+      "candidate": {
+        "frame_p95_ms_by_round": [
+          7.179972,
+          8.524669,
+          7.76095
+        ],
+        "median_round_frame_p95_ms": 7.76095,
+        "frame_count_by_round": [
+          222,
+          218,
+          220
+        ],
+        "deadline_misses_by_round": [
+          0,
+          2,
+          0
+        ],
+        "frame_max_ms_by_round": [
+          11.985149,
+          31.421108,
+          15.330658
+        ],
+        "work_calls_in_window_by_round": [
+          0,
+          0,
+          0
+        ],
+        "work_call_overlap_inputs_by_round": [
+          0,
+          0,
+          0
+        ],
+        "background_operation_overlap_inputs_by_round": [
+          0,
+          0,
+          0
+        ],
+        "median_cpu_percent_of_window": {
+          "main": 14.156559910517474,
+          "render": 5.890566888731349,
+          "other": 46.54828836210762
+        }
+      },
+      "delta_ms": 0.05602499999999999,
+      "delta_percent": 0.7271323212101333
+    },
+    "map": {
+      "baseline": {
+        "frame_p95_ms_by_round": [
+          8.600222,
+          7.195904,
+          10.602331
+        ],
+        "median_round_frame_p95_ms": 8.600222,
+        "frame_count_by_round": [
+          226,
+          222,
+          225
+        ],
+        "deadline_misses_by_round": [
+          0,
+          0,
+          2
+        ],
+        "frame_max_ms_by_round": [
+          12.264644,
+          13.161593,
+          22.199169
+        ],
+        "work_calls_in_window_by_round": [
+          0,
+          0,
+          0
+        ],
+        "work_call_overlap_inputs_by_round": [
+          0,
+          0,
+          0
+        ],
+        "background_operation_overlap_inputs_by_round": [
+          0,
+          0,
+          0
+        ],
+        "median_cpu_percent_of_window": {
+          "main": 14.36307624271933,
+          "render": 7.754079566511926,
+          "other": 51.51534659783395
+        }
+      },
+      "candidate": {
+        "frame_p95_ms_by_round": [
+          8.25645,
+          9.773398,
+          8.063829
+        ],
+        "median_round_frame_p95_ms": 8.25645,
+        "frame_count_by_round": [
+          221,
+          218,
+          220
+        ],
+        "deadline_misses_by_round": [
+          0,
+          2,
+          0
+        ],
+        "frame_max_ms_by_round": [
+          10.321105,
+          22.397219,
+          12.777821
+        ],
+        "work_calls_in_window_by_round": [
+          0,
+          0,
+          0
+        ],
+        "work_call_overlap_inputs_by_round": [
+          0,
+          0,
+          0
+        ],
+        "background_operation_overlap_inputs_by_round": [
+          0,
+          0,
+          0
+        ],
+        "median_cpu_percent_of_window": {
+          "main": 14.663440484629792,
+          "render": 7.7064490527783605,
+          "other": 51.03641065658442
+        }
+      },
+      "delta_ms": -0.3437720000000013,
+      "delta_percent": -3.997245652495962
+    },
+    "encryption": {
+      "baseline": {
+        "frame_p95_ms_by_round": [
+          8.056286,
+          6.309159,
+          13.034688
+        ],
+        "median_round_frame_p95_ms": 8.056286,
+        "frame_count_by_round": [
+          219,
+          221,
+          228
+        ],
+        "deadline_misses_by_round": [
+          2,
+          1,
+          11
+        ],
+        "frame_max_ms_by_round": [
+          40.371663,
+          18.079278,
+          30.789255
+        ],
+        "work_calls_in_window_by_round": [
+          109,
+          104,
+          96
+        ],
+        "work_call_overlap_inputs_by_round": [
+          24,
+          24,
+          24
+        ],
+        "background_operation_overlap_inputs_by_round": [
+          24,
+          24,
+          24
+        ],
+        "median_cpu_percent_of_window": {
+          "main": 13.125968821392753,
+          "render": 5.592600042850004,
+          "other": 148.657585380805
+        }
+      },
+      "candidate": {
+        "frame_p95_ms_by_round": [
+          6.800131,
+          6.72064,
+          7.045038
+        ],
+        "median_round_frame_p95_ms": 6.800131,
+        "frame_count_by_round": [
+          219,
+          219,
+          221
+        ],
+        "deadline_misses_by_round": [
+          0,
+          1,
+          0
+        ],
+        "frame_max_ms_by_round": [
+          8.882759,
+          16.821108,
+          10.514283
+        ],
+        "work_calls_in_window_by_round": [
+          115,
+          108,
+          107
+        ],
+        "work_call_overlap_inputs_by_round": [
+          24,
+          24,
+          24
+        ],
+        "background_operation_overlap_inputs_by_round": [
+          24,
+          24,
+          24
+        ],
+        "median_cpu_percent_of_window": {
+          "main": 12.889167825453299,
+          "render": 5.610280655715496,
+          "other": 150.3814344778816
+        }
+      },
+      "delta_ms": -1.2561549999999997,
+      "delta_percent": -15.592234436562947
+    },
+    "png": {
+      "baseline": {
+        "frame_p95_ms_by_round": [
+          7.475451,
+          7.200819,
+          8.180353
+        ],
+        "median_round_frame_p95_ms": 7.475451,
+        "frame_count_by_round": [
+          221,
+          220,
+          223
+        ],
+        "deadline_misses_by_round": [
+          2,
+          0,
+          0
+        ],
+        "frame_max_ms_by_round": [
+          21.649617,
+          13.568246,
+          9.90277
+        ],
+        "work_calls_in_window_by_round": [
+          2,
+          2,
+          2
+        ],
+        "work_call_overlap_inputs_by_round": [
+          1,
+          1,
+          1
+        ],
+        "background_operation_overlap_inputs_by_round": [
+          24,
+          24,
+          24
+        ],
+        "median_cpu_percent_of_window": {
+          "main": 14.012925034354945,
+          "render": 5.861543838710532,
+          "other": 50.29519088397449
+        }
+      },
+      "candidate": {
+        "frame_p95_ms_by_round": [
+          9.873334,
+          7.529722,
+          7.548037
+        ],
+        "median_round_frame_p95_ms": 7.548037,
+        "frame_count_by_round": [
+          219,
+          218,
+          217
+        ],
+        "deadline_misses_by_round": [
+          7,
+          1,
+          0
+        ],
+        "frame_max_ms_by_round": [
+          31.460262,
+          29.717435,
+          12.723161
+        ],
+        "work_calls_in_window_by_round": [
+          2,
+          2,
+          2
+        ],
+        "work_call_overlap_inputs_by_round": [
+          1,
+          1,
+          1
+        ],
+        "background_operation_overlap_inputs_by_round": [
+          24,
+          24,
+          24
+        ],
+        "median_cpu_percent_of_window": {
+          "main": 14.199791671831614,
+          "render": 5.90558657782153,
+          "other": 48.24226946024325
+        }
+      },
+      "delta_ms": 0.07258600000000026,
+      "delta_percent": 0.9709915829827498
+    }
+  },
+  "builds": {
+    "baseline": {
+      "source": "74b5a3dd90f558ca345f5134c2369ca64c3d14b2",
+      "apk_sha256": {
+        "org.inkweft.app.a0.workspace.performance": "edbb795ed1756c7948f8f426b9eb3bef7b06e92224538f25cb25c30bf13eb530",
+        "org.inkweft.app.a0.workspace.performance.test": "081f5b494322c1d040b6b3bcc98f7e2d33011928f6782bd812b2ed0e6968edb0"
+      },
+      "device": {
+        "serial": "127.0.0.1:16544",
+        "build": "Samsung/SM-S9260/SM-S9260:12/V417IR/2639:user/release-keys",
+        "size": "Physical size: 1080x1920\nOverride size: 1920x1200",
+        "density": "Physical density: 280\nOverride density: 240",
+        "animation_scales": {
+          "window_animation_scale": "0",
+          "transition_animation_scale": "0",
+          "animator_duration_scale": "0"
+        }
+      },
+      "samples": [
+        {
+          "run_id": "baseline-1-writing-0262c540",
+          "round": 1,
+          "condition": "writing",
+          "frame_metrics": {
+            "frame_count": 224,
+            "frame_p50_ms": 5.208626,
+            "frame_p95_ms": 7.137014,
+            "frame_max_ms": 11.613262,
+            "deadline_frame_count": 224,
+            "deadline_misses": 0,
+            "dropped_reports": 0,
+            "input_save_count": 24,
+            "input_save_p50_ms": 187.525735,
+            "input_save_p95_ms": 199.446618,
+            "work_call_kind": "writing",
+            "work_calls_in_window": 0,
+            "work_call_overlap_inputs": 0,
+            "background_operation_overlap_inputs": 0
+          },
+          "cpu_percent_of_window": {
+            "main": 14.675337507504057,
+            "render": 6.161176744765896,
+            "other": 49.983485479227596
+          },
+          "concurrent_gc_slices": [
+            {
+              "name": "Background concurrent copying GC",
+              "count": "3",
+              "duration_ms": "73.623000"
+            },
+            {
+              "name": "Background young concurrent copying GC",
+              "count": "6",
+              "duration_ms": "70.433000"
+            }
+          ],
+          "invalid_gpu_frames": 224,
+          "trace_sha256": "2140ba4f5819dbb5226924b7dd987ffada0a6945f546abe419c58a82f8ba689d",
+          "seed_sha256": "7c41bb8e514bb9587da33d09edbfb89a5fd2193f5ee3ae88280636b6be5c24f9",
+          "comparable": {
+            "fixtureSha256": "4d60f4d5b9c816ac6eeb1bad812147863e19a5b012b9ddb72eb1f2a96934fb7a",
+            "pngSha256": "d146a91cc0c07935c6b45a1689ab18c2be8b644b89bd0ea8d08b5972c556fd3b",
+            "pngBytes": 431159,
+            "pngPixels": 2560000,
+            "encryptedPlainBytes": 16777216,
+            "seedStrokes": 600,
+            "naturalObjects": 16,
+            "authorMapNodes": 64,
+            "viewport": {
+              "centerX": 500,
+              "centerY": 707,
+              "zoom": 0.5139085337105139
+            },
+            "canvasWidthPx": 1920,
+            "canvasHeightPx": 1090,
+            "windowWidthPx": 1920,
+            "windowHeightPx": 1200,
+            "density": 1.5,
+            "fontScale": 1,
+            "refreshRate": 60.000004
+          }
+        },
+        {
+          "run_id": "baseline-1-map-e7c571d3",
+          "round": 1,
+          "condition": "map",
+          "frame_metrics": {
+            "frame_count": 226,
+            "frame_p50_ms": 5.336345,
+            "frame_p95_ms": 8.600222,
+            "frame_max_ms": 12.264644,
+            "deadline_frame_count": 226,
+            "deadline_misses": 0,
+            "dropped_reports": 0,
+            "input_save_count": 24,
+            "input_save_p50_ms": 193.516666,
+            "input_save_p95_ms": 209.814249,
+            "work_call_kind": "map",
+            "work_calls_in_window": 0,
+            "work_call_overlap_inputs": 0,
+            "background_operation_overlap_inputs": 0
+          },
+          "cpu_percent_of_window": {
+            "main": 14.36307624271933,
+            "render": 7.302065698737355,
+            "other": 49.06226803444152
+          },
+          "concurrent_gc_slices": [
+            {
+              "name": "Background concurrent copying GC",
+              "count": "3",
+              "duration_ms": "60.668000"
+            },
+            {
+              "name": "Background young concurrent copying GC",
+              "count": "6",
+              "duration_ms": "47.281000"
+            }
+          ],
+          "invalid_gpu_frames": 226,
+          "trace_sha256": "5429e445a80743ab16b522e5ddfd1d2313121807279ecd3a98612bc00e1f59ac",
+          "seed_sha256": "7c41bb8e514bb9587da33d09edbfb89a5fd2193f5ee3ae88280636b6be5c24f9",
+          "comparable": {
+            "fixtureSha256": "4d60f4d5b9c816ac6eeb1bad812147863e19a5b012b9ddb72eb1f2a96934fb7a",
+            "pngSha256": "d146a91cc0c07935c6b45a1689ab18c2be8b644b89bd0ea8d08b5972c556fd3b",
+            "pngBytes": 431159,
+            "pngPixels": 2560000,
+            "encryptedPlainBytes": 16777216,
+            "seedStrokes": 600,
+            "naturalObjects": 16,
+            "authorMapNodes": 64,
+            "viewport": {
+              "centerX": 500,
+              "centerY": 707,
+              "zoom": 0.5139085337105139
+            },
+            "canvasWidthPx": 1920,
+            "canvasHeightPx": 1090,
+            "windowWidthPx": 1920,
+            "windowHeightPx": 1200,
+            "density": 1.5,
+            "fontScale": 1,
+            "refreshRate": 60.000004
+          }
+        },
+        {
+          "run_id": "baseline-1-encryption-70d7b486",
+          "round": 1,
+          "condition": "encryption",
+          "frame_metrics": {
+            "frame_count": 219,
+            "frame_p50_ms": 4.9389,
+            "frame_p95_ms": 8.056286,
+            "frame_max_ms": 40.371663,
+            "deadline_frame_count": 219,
+            "deadline_misses": 2,
+            "dropped_reports": 0,
+            "input_save_count": 24,
+            "input_save_p50_ms": 191.829351,
+            "input_save_p95_ms": 216.672227,
+            "work_call_kind": "encryption",
+            "work_calls_in_window": 109,
+            "work_call_overlap_inputs": 24,
+            "background_operation_overlap_inputs": 24
+          },
+          "cpu_percent_of_window": {
+            "main": 13.125968821392753,
+            "render": 5.435227783454532,
+            "other": 148.657585380805
+          },
+          "concurrent_gc_slices": [
+            {
+              "name": "Background concurrent copying GC",
+              "count": "85",
+              "duration_ms": "1545.309000"
+            },
+            {
+              "name": "Background young concurrent copying GC",
+              "count": "85",
+              "duration_ms": "683.990000"
+            }
+          ],
+          "invalid_gpu_frames": 219,
+          "trace_sha256": "a479c96a1b83b81715ec3b6a816d9b8b631fe6d3326078b4d8edd320b828f7e7",
+          "seed_sha256": "7c41bb8e514bb9587da33d09edbfb89a5fd2193f5ee3ae88280636b6be5c24f9",
+          "comparable": {
+            "fixtureSha256": "4d60f4d5b9c816ac6eeb1bad812147863e19a5b012b9ddb72eb1f2a96934fb7a",
+            "pngSha256": "d146a91cc0c07935c6b45a1689ab18c2be8b644b89bd0ea8d08b5972c556fd3b",
+            "pngBytes": 431159,
+            "pngPixels": 2560000,
+            "encryptedPlainBytes": 16777216,
+            "seedStrokes": 600,
+            "naturalObjects": 16,
+            "authorMapNodes": 64,
+            "viewport": {
+              "centerX": 500,
+              "centerY": 707,
+              "zoom": 0.5139085337105139
+            },
+            "canvasWidthPx": 1920,
+            "canvasHeightPx": 1090,
+            "windowWidthPx": 1920,
+            "windowHeightPx": 1200,
+            "density": 1.5,
+            "fontScale": 1,
+            "refreshRate": 60.000004
+          }
+        },
+        {
+          "run_id": "baseline-1-png-d989ad37",
+          "round": 1,
+          "condition": "png",
+          "frame_metrics": {
+            "frame_count": 221,
+            "frame_p50_ms": 4.821828,
+            "frame_p95_ms": 7.475451,
+            "frame_max_ms": 21.649617,
+            "deadline_frame_count": 221,
+            "deadline_misses": 2,
+            "dropped_reports": 0,
+            "input_save_count": 24,
+            "input_save_p50_ms": 182.150222,
+            "input_save_p95_ms": 206.887088,
+            "work_call_kind": "png-decode-verify",
+            "work_calls_in_window": 2,
+            "work_call_overlap_inputs": 1,
+            "background_operation_overlap_inputs": 24
+          },
+          "cpu_percent_of_window": {
+            "main": 13.327452957255176,
+            "render": 5.861543838710532,
+            "other": 49.063582535268154
+          },
+          "concurrent_gc_slices": [
+            {
+              "name": "Background concurrent copying GC",
+              "count": "2",
+              "duration_ms": "50.693000"
+            },
+            {
+              "name": "Background young concurrent copying GC",
+              "count": "7",
+              "duration_ms": "47.269000"
+            }
+          ],
+          "invalid_gpu_frames": 221,
+          "trace_sha256": "b9e36ee6bf8f439895a431f129e136b4a4d2d3e1444f498a5a255a58c9ee67fb",
+          "seed_sha256": "7c41bb8e514bb9587da33d09edbfb89a5fd2193f5ee3ae88280636b6be5c24f9",
+          "comparable": {
+            "fixtureSha256": "4d60f4d5b9c816ac6eeb1bad812147863e19a5b012b9ddb72eb1f2a96934fb7a",
+            "pngSha256": "d146a91cc0c07935c6b45a1689ab18c2be8b644b89bd0ea8d08b5972c556fd3b",
+            "pngBytes": 431159,
+            "pngPixels": 2560000,
+            "encryptedPlainBytes": 16777216,
+            "seedStrokes": 600,
+            "naturalObjects": 16,
+            "authorMapNodes": 64,
+            "viewport": {
+              "centerX": 500,
+              "centerY": 707,
+              "zoom": 0.5139085337105139
+            },
+            "canvasWidthPx": 1920,
+            "canvasHeightPx": 1090,
+            "windowWidthPx": 1920,
+            "windowHeightPx": 1200,
+            "density": 1.5,
+            "fontScale": 1,
+            "refreshRate": 60.000004
+          }
+        },
+        {
+          "run_id": "baseline-2-map-83e349eb",
+          "round": 2,
+          "condition": "map",
+          "frame_metrics": {
+            "frame_count": 222,
+            "frame_p50_ms": 5.647517,
+            "frame_p95_ms": 7.195904,
+            "frame_max_ms": 13.161593,
+            "deadline_frame_count": 222,
+            "deadline_misses": 0,
+            "dropped_reports": 0,
+            "input_save_count": 24,
+            "input_save_p50_ms": 192.007183,
+            "input_save_p95_ms": 201.801628,
+            "work_call_kind": "map",
+            "work_calls_in_window": 0,
+            "work_call_overlap_inputs": 0,
+            "background_operation_overlap_inputs": 0
+          },
+          "cpu_percent_of_window": {
+            "main": 13.989945677625022,
+            "render": 7.754079566511926,
+            "other": 51.51534659783395
+          },
+          "concurrent_gc_slices": [
+            {
+              "name": "Background young concurrent copying GC",
+              "count": "9",
+              "duration_ms": "73.375000"
+            },
+            {
+              "name": "Background concurrent copying GC",
+              "count": "1",
+              "duration_ms": "26.177000"
+            }
+          ],
+          "invalid_gpu_frames": 222,
+          "trace_sha256": "c06e7bd88488f1643ae525199adbee3be90076273c8d9610cbe3aa4815b3841c",
+          "seed_sha256": "7c41bb8e514bb9587da33d09edbfb89a5fd2193f5ee3ae88280636b6be5c24f9",
+          "comparable": {
+            "fixtureSha256": "4d60f4d5b9c816ac6eeb1bad812147863e19a5b012b9ddb72eb1f2a96934fb7a",
+            "pngSha256": "d146a91cc0c07935c6b45a1689ab18c2be8b644b89bd0ea8d08b5972c556fd3b",
+            "pngBytes": 431159,
+            "pngPixels": 2560000,
+            "encryptedPlainBytes": 16777216,
+            "seedStrokes": 600,
+            "naturalObjects": 16,
+            "authorMapNodes": 64,
+            "viewport": {
+              "centerX": 500,
+              "centerY": 707,
+              "zoom": 0.5139085337105139
+            },
+            "canvasWidthPx": 1920,
+            "canvasHeightPx": 1090,
+            "windowWidthPx": 1920,
+            "windowHeightPx": 1200,
+            "density": 1.5,
+            "fontScale": 1,
+            "refreshRate": 60.000004
+          }
+        },
+        {
+          "run_id": "baseline-2-encryption-87490459",
+          "round": 2,
+          "condition": "encryption",
+          "frame_metrics": {
+            "frame_count": 221,
+            "frame_p50_ms": 4.641342,
+            "frame_p95_ms": 6.309159,
+            "frame_max_ms": 18.079278,
+            "deadline_frame_count": 221,
+            "deadline_misses": 1,
+            "dropped_reports": 0,
+            "input_save_count": 24,
+            "input_save_p50_ms": 191.283091,
+            "input_save_p95_ms": 205.763651,
+            "work_call_kind": "encryption",
+            "work_calls_in_window": 104,
+            "work_call_overlap_inputs": 24,
+            "background_operation_overlap_inputs": 24
+          },
+          "cpu_percent_of_window": {
+            "main": 12.545172696577009,
+            "render": 5.592600042850004,
+            "other": 147.1318477561526
+          },
+          "concurrent_gc_slices": [
+            {
+              "name": "Background concurrent copying GC",
+              "count": "81",
+              "duration_ms": "1662.923000"
+            },
+            {
+              "name": "Background young concurrent copying GC",
+              "count": "82",
+              "duration_ms": "690.545000"
+            }
+          ],
+          "invalid_gpu_frames": 221,
+          "trace_sha256": "c3c8fde9fb11bd742e0391e45341e9d52c101a02256a78de190a8c47b0709cc3",
+          "seed_sha256": "7c41bb8e514bb9587da33d09edbfb89a5fd2193f5ee3ae88280636b6be5c24f9",
+          "comparable": {
+            "fixtureSha256": "4d60f4d5b9c816ac6eeb1bad812147863e19a5b012b9ddb72eb1f2a96934fb7a",
+            "pngSha256": "d146a91cc0c07935c6b45a1689ab18c2be8b644b89bd0ea8d08b5972c556fd3b",
+            "pngBytes": 431159,
+            "pngPixels": 2560000,
+            "encryptedPlainBytes": 16777216,
+            "seedStrokes": 600,
+            "naturalObjects": 16,
+            "authorMapNodes": 64,
+            "viewport": {
+              "centerX": 500,
+              "centerY": 707,
+              "zoom": 0.5139085337105139
+            },
+            "canvasWidthPx": 1920,
+            "canvasHeightPx": 1090,
+            "windowWidthPx": 1920,
+            "windowHeightPx": 1200,
+            "density": 1.5,
+            "fontScale": 1,
+            "refreshRate": 60.000004
+          }
+        },
+        {
+          "run_id": "baseline-2-png-2fda3241",
+          "round": 2,
+          "condition": "png",
+          "frame_metrics": {
+            "frame_count": 220,
+            "frame_p50_ms": 4.919964,
+            "frame_p95_ms": 7.200819,
+            "frame_max_ms": 13.568246,
+            "deadline_frame_count": 220,
+            "deadline_misses": 0,
+            "dropped_reports": 0,
+            "input_save_count": 24,
+            "input_save_p50_ms": 187.410525,
+            "input_save_p95_ms": 193.122055,
+            "work_call_kind": "png-decode-verify",
+            "work_calls_in_window": 2,
+            "work_call_overlap_inputs": 1,
+            "background_operation_overlap_inputs": 24
+          },
+          "cpu_percent_of_window": {
+            "main": 14.012925034354945,
+            "render": 5.829683163590721,
+            "other": 50.29519088397449
+          },
+          "concurrent_gc_slices": [
+            {
+              "name": "Background concurrent copying GC",
+              "count": "3",
+              "duration_ms": "65.979000"
+            },
+            {
+              "name": "Background young concurrent copying GC",
+              "count": "6",
+              "duration_ms": "47.926000"
+            }
+          ],
+          "invalid_gpu_frames": 220,
+          "trace_sha256": "8d8910cb46405fb5d2fe15c3a54686fe4bf546381675f5a8bf4a75336e50bd06",
+          "seed_sha256": "7c41bb8e514bb9587da33d09edbfb89a5fd2193f5ee3ae88280636b6be5c24f9",
+          "comparable": {
+            "fixtureSha256": "4d60f4d5b9c816ac6eeb1bad812147863e19a5b012b9ddb72eb1f2a96934fb7a",
+            "pngSha256": "d146a91cc0c07935c6b45a1689ab18c2be8b644b89bd0ea8d08b5972c556fd3b",
+            "pngBytes": 431159,
+            "pngPixels": 2560000,
+            "encryptedPlainBytes": 16777216,
+            "seedStrokes": 600,
+            "naturalObjects": 16,
+            "authorMapNodes": 64,
+            "viewport": {
+              "centerX": 500,
+              "centerY": 707,
+              "zoom": 0.5139085337105139
+            },
+            "canvasWidthPx": 1920,
+            "canvasHeightPx": 1090,
+            "windowWidthPx": 1920,
+            "windowHeightPx": 1200,
+            "density": 1.5,
+            "fontScale": 1,
+            "refreshRate": 60.000004
+          }
+        },
+        {
+          "run_id": "baseline-2-writing-46d7a7b0",
+          "round": 2,
+          "condition": "writing",
+          "frame_metrics": {
+            "frame_count": 224,
+            "frame_p50_ms": 5.540641,
+            "frame_p95_ms": 8.58704,
+            "frame_max_ms": 24.754968,
+            "deadline_frame_count": 224,
+            "deadline_misses": 2,
+            "dropped_reports": 0,
+            "input_save_count": 24,
+            "input_save_p50_ms": 191.450543,
+            "input_save_p95_ms": 206.09124,
+            "work_call_kind": "writing",
+            "work_calls_in_window": 0,
+            "work_call_overlap_inputs": 0,
+            "background_operation_overlap_inputs": 0
+          },
+          "cpu_percent_of_window": {
+            "main": 14.766831102040678,
+            "render": 6.554196050725817,
+            "other": 49.663863355085816
+          },
+          "concurrent_gc_slices": [
+            {
+              "name": "Background young concurrent copying GC",
+              "count": "6",
+              "duration_ms": "59.928000"
+            },
+            {
+              "name": "Background concurrent copying GC",
+              "count": "2",
+              "duration_ms": "46.256000"
+            }
+          ],
+          "invalid_gpu_frames": 224,
+          "trace_sha256": "a5fca010286fcdd2dab4e652c090441a2d93ecd3f1920e32d72921a610de84ed",
+          "seed_sha256": "7c41bb8e514bb9587da33d09edbfb89a5fd2193f5ee3ae88280636b6be5c24f9",
+          "comparable": {
+            "fixtureSha256": "4d60f4d5b9c816ac6eeb1bad812147863e19a5b012b9ddb72eb1f2a96934fb7a",
+            "pngSha256": "d146a91cc0c07935c6b45a1689ab18c2be8b644b89bd0ea8d08b5972c556fd3b",
+            "pngBytes": 431159,
+            "pngPixels": 2560000,
+            "encryptedPlainBytes": 16777216,
+            "seedStrokes": 600,
+            "naturalObjects": 16,
+            "authorMapNodes": 64,
+            "viewport": {
+              "centerX": 500,
+              "centerY": 707,
+              "zoom": 0.5139085337105139
+            },
+            "canvasWidthPx": 1920,
+            "canvasHeightPx": 1090,
+            "windowWidthPx": 1920,
+            "windowHeightPx": 1200,
+            "density": 1.5,
+            "fontScale": 1,
+            "refreshRate": 60.000004
+          }
+        },
+        {
+          "run_id": "baseline-3-encryption-2b02ca52",
+          "round": 3,
+          "condition": "encryption",
+          "frame_metrics": {
+            "frame_count": 228,
+            "frame_p50_ms": 6.517352,
+            "frame_p95_ms": 13.034688,
+            "frame_max_ms": 30.789255,
+            "deadline_frame_count": 228,
+            "deadline_misses": 11,
+            "dropped_reports": 0,
+            "input_save_count": 24,
+            "input_save_p50_ms": 204.088405,
+            "input_save_p95_ms": 226.066848,
+            "work_call_kind": "encryption",
+            "work_calls_in_window": 96,
+            "work_call_overlap_inputs": 24,
+            "background_operation_overlap_inputs": 24
+          },
+          "cpu_percent_of_window": {
+            "main": 15.705384045799844,
+            "render": 6.63591231752994,
+            "other": 156.38630032584604
+          },
+          "concurrent_gc_slices": [
+            {
+              "name": "Background concurrent copying GC",
+              "count": "79",
+              "duration_ms": "1928.266000"
+            },
+            {
+              "name": "Background young concurrent copying GC",
+              "count": "79",
+              "duration_ms": "833.418000"
+            }
+          ],
+          "invalid_gpu_frames": 228,
+          "trace_sha256": "d3beea659b7afbd8b87fdee2e4922468345df6e47faeddbea98daf8cfbbae89e",
+          "seed_sha256": "7c41bb8e514bb9587da33d09edbfb89a5fd2193f5ee3ae88280636b6be5c24f9",
+          "comparable": {
+            "fixtureSha256": "4d60f4d5b9c816ac6eeb1bad812147863e19a5b012b9ddb72eb1f2a96934fb7a",
+            "pngSha256": "d146a91cc0c07935c6b45a1689ab18c2be8b644b89bd0ea8d08b5972c556fd3b",
+            "pngBytes": 431159,
+            "pngPixels": 2560000,
+            "encryptedPlainBytes": 16777216,
+            "seedStrokes": 600,
+            "naturalObjects": 16,
+            "authorMapNodes": 64,
+            "viewport": {
+              "centerX": 500,
+              "centerY": 707,
+              "zoom": 0.5139085337105139
+            },
+            "canvasWidthPx": 1920,
+            "canvasHeightPx": 1090,
+            "windowWidthPx": 1920,
+            "windowHeightPx": 1200,
+            "density": 1.5,
+            "fontScale": 1,
+            "refreshRate": 60.000004
+          }
+        },
+        {
+          "run_id": "baseline-3-png-d00dfbe2",
+          "round": 3,
+          "condition": "png",
+          "frame_metrics": {
+            "frame_count": 223,
+            "frame_p50_ms": 5.773222,
+            "frame_p95_ms": 8.180353,
+            "frame_max_ms": 9.90277,
+            "deadline_frame_count": 223,
+            "deadline_misses": 0,
+            "dropped_reports": 0,
+            "input_save_count": 24,
+            "input_save_p50_ms": 193.321345,
+            "input_save_p95_ms": 212.085938,
+            "work_call_kind": "png-decode-verify",
+            "work_calls_in_window": 2,
+            "work_call_overlap_inputs": 1,
+            "background_operation_overlap_inputs": 24
+          },
+          "cpu_percent_of_window": {
+            "main": 15.211685395802146,
+            "render": 6.427852217183807,
+            "other": 55.02332341905297
+          },
+          "concurrent_gc_slices": [
+            {
+              "name": "Background concurrent copying GC",
+              "count": "3",
+              "duration_ms": "74.299000"
+            },
+            {
+              "name": "Background young concurrent copying GC",
+              "count": "6",
+              "duration_ms": "57.809000"
+            }
+          ],
+          "invalid_gpu_frames": 223,
+          "trace_sha256": "0774164c72b13baac546ae7bf836910c10401b033a34b8aacc663e03a33f0f4d",
+          "seed_sha256": "7c41bb8e514bb9587da33d09edbfb89a5fd2193f5ee3ae88280636b6be5c24f9",
+          "comparable": {
+            "fixtureSha256": "4d60f4d5b9c816ac6eeb1bad812147863e19a5b012b9ddb72eb1f2a96934fb7a",
+            "pngSha256": "d146a91cc0c07935c6b45a1689ab18c2be8b644b89bd0ea8d08b5972c556fd3b",
+            "pngBytes": 431159,
+            "pngPixels": 2560000,
+            "encryptedPlainBytes": 16777216,
+            "seedStrokes": 600,
+            "naturalObjects": 16,
+            "authorMapNodes": 64,
+            "viewport": {
+              "centerX": 500,
+              "centerY": 707,
+              "zoom": 0.5139085337105139
+            },
+            "canvasWidthPx": 1920,
+            "canvasHeightPx": 1090,
+            "windowWidthPx": 1920,
+            "windowHeightPx": 1200,
+            "density": 1.5,
+            "fontScale": 1,
+            "refreshRate": 60.000004
+          }
+        },
+        {
+          "run_id": "baseline-3-writing-7f709400",
+          "round": 3,
+          "condition": "writing",
+          "frame_metrics": {
+            "frame_count": 222,
+            "frame_p50_ms": 5.359231,
+            "frame_p95_ms": 7.704925,
+            "frame_max_ms": 12.870051,
+            "deadline_frame_count": 222,
+            "deadline_misses": 0,
+            "dropped_reports": 0,
+            "input_save_count": 24,
+            "input_save_p50_ms": 196.058544,
+            "input_save_p95_ms": 206.721641,
+            "work_call_kind": "writing",
+            "work_calls_in_window": 0,
+            "work_call_overlap_inputs": 0,
+            "background_operation_overlap_inputs": 0
+          },
+          "cpu_percent_of_window": {
+            "main": 13.957392127274462,
+            "render": 6.40258005771773,
+            "other": 52.932247176533
+          },
+          "concurrent_gc_slices": [
+            {
+              "name": "Background concurrent copying GC",
+              "count": "3",
+              "duration_ms": "64.456000"
+            },
+            {
+              "name": "Background young concurrent copying GC",
+              "count": "6",
+              "duration_ms": "49.721000"
+            }
+          ],
+          "invalid_gpu_frames": 222,
+          "trace_sha256": "fa1fc98764677e018b2339a7115bd63a95c96ec64accc9c1f27a806601015eb3",
+          "seed_sha256": "7c41bb8e514bb9587da33d09edbfb89a5fd2193f5ee3ae88280636b6be5c24f9",
+          "comparable": {
+            "fixtureSha256": "4d60f4d5b9c816ac6eeb1bad812147863e19a5b012b9ddb72eb1f2a96934fb7a",
+            "pngSha256": "d146a91cc0c07935c6b45a1689ab18c2be8b644b89bd0ea8d08b5972c556fd3b",
+            "pngBytes": 431159,
+            "pngPixels": 2560000,
+            "encryptedPlainBytes": 16777216,
+            "seedStrokes": 600,
+            "naturalObjects": 16,
+            "authorMapNodes": 64,
+            "viewport": {
+              "centerX": 500,
+              "centerY": 707,
+              "zoom": 0.5139085337105139
+            },
+            "canvasWidthPx": 1920,
+            "canvasHeightPx": 1090,
+            "windowWidthPx": 1920,
+            "windowHeightPx": 1200,
+            "density": 1.5,
+            "fontScale": 1,
+            "refreshRate": 60.000004
+          }
+        },
+        {
+          "run_id": "baseline-3-map-56f3f523",
+          "round": 3,
+          "condition": "map",
+          "frame_metrics": {
+            "frame_count": 225,
+            "frame_p50_ms": 7.173565,
+            "frame_p95_ms": 10.602331,
+            "frame_max_ms": 22.199169,
+            "deadline_frame_count": 225,
+            "deadline_misses": 2,
+            "dropped_reports": 0,
+            "input_save_count": 24,
+            "input_save_p50_ms": 203.850568,
+            "input_save_p95_ms": 227.488706,
+            "work_call_kind": "map",
+            "work_calls_in_window": 0,
+            "work_call_overlap_inputs": 0,
+            "background_operation_overlap_inputs": 0
+          },
+          "cpu_percent_of_window": {
+            "main": 17.519135263558244,
+            "render": 8.876530066071618,
+            "other": 55.264036378266255
+          },
+          "concurrent_gc_slices": [
+            {
+              "name": "Background young concurrent copying GC",
+              "count": "7",
+              "duration_ms": "71.690000"
+            },
+            {
+              "name": "Background concurrent copying GC",
+              "count": "2",
+              "duration_ms": "47.600000"
+            }
+          ],
+          "invalid_gpu_frames": 225,
+          "trace_sha256": "e24666e352eb06940a16a632f0b9872aed04dc1e99a7ef192ea6e4cf7e69c017",
+          "seed_sha256": "7c41bb8e514bb9587da33d09edbfb89a5fd2193f5ee3ae88280636b6be5c24f9",
+          "comparable": {
+            "fixtureSha256": "4d60f4d5b9c816ac6eeb1bad812147863e19a5b012b9ddb72eb1f2a96934fb7a",
+            "pngSha256": "d146a91cc0c07935c6b45a1689ab18c2be8b644b89bd0ea8d08b5972c556fd3b",
+            "pngBytes": 431159,
+            "pngPixels": 2560000,
+            "encryptedPlainBytes": 16777216,
+            "seedStrokes": 600,
+            "naturalObjects": 16,
+            "authorMapNodes": 64,
+            "viewport": {
+              "centerX": 500,
+              "centerY": 707,
+              "zoom": 0.5139085337105139
+            },
+            "canvasWidthPx": 1920,
+            "canvasHeightPx": 1090,
+            "windowWidthPx": 1920,
+            "windowHeightPx": 1200,
+            "density": 1.5,
+            "fontScale": 1,
+            "refreshRate": 60.000004
+          }
+        }
+      ],
+      "analysis": "performance-baseline-formal-01/analysis.json",
+      "summary": "performance-baseline-formal-01/summary.json"
+    },
+    "candidate": {
+      "source": "411ccf9a9eebde1264fd49529d2147fcdf465598",
+      "apk_sha256": {
+        "org.inkweft.app.a0.workspace.performance": "e049245996eac87c4c40157a967bae0877cd6b7dd139075b0e473c03375041fb",
+        "org.inkweft.app.a0.workspace.performance.test": "081f5b494322c1d040b6b3bcc98f7e2d33011928f6782bd812b2ed0e6968edb0"
+      },
+      "device": {
+        "serial": "127.0.0.1:16544",
+        "build": "Samsung/SM-S9260/SM-S9260:12/V417IR/2639:user/release-keys",
+        "size": "Physical size: 1080x1920\nOverride size: 1920x1200",
+        "density": "Physical density: 280\nOverride density: 240",
+        "animation_scales": {
+          "window_animation_scale": "0",
+          "transition_animation_scale": "0",
+          "animator_duration_scale": "0"
+        }
+      },
+      "samples": [
+        {
+          "run_id": "candidate-1-writing-c0e95102",
+          "round": 1,
+          "condition": "writing",
+          "frame_metrics": {
+            "frame_count": 222,
+            "frame_p50_ms": 4.313442,
+            "frame_p95_ms": 7.179972,
+            "frame_max_ms": 11.985149,
+            "deadline_frame_count": 222,
+            "deadline_misses": 0,
+            "dropped_reports": 0,
+            "input_save_count": 24,
+            "input_save_p50_ms": 157.009046,
+            "input_save_p95_ms": 172.08964,
+            "work_call_kind": "writing",
+            "work_calls_in_window": 0,
+            "work_call_overlap_inputs": 0,
+            "background_operation_overlap_inputs": 0
+          },
+          "cpu_percent_of_window": {
+            "main": 14.156559910517474,
+            "render": 7.719444762272968,
+            "other": 37.09772991197791
+          },
+          "concurrent_gc_slices": [
+            {
+              "name": "Background concurrent copying GC",
+              "count": "3",
+              "duration_ms": "67.076000"
+            },
+            {
+              "name": "Background young concurrent copying GC",
+              "count": "6",
+              "duration_ms": "57.606000"
+            }
+          ],
+          "invalid_gpu_frames": 222,
+          "trace_sha256": "ce7bf28ab9920b37139ec18b8e969eeb74453264ac948a7cd6c41827ff4d3c27",
+          "seed_sha256": "7c41bb8e514bb9587da33d09edbfb89a5fd2193f5ee3ae88280636b6be5c24f9",
+          "comparable": {
+            "fixtureSha256": "4d60f4d5b9c816ac6eeb1bad812147863e19a5b012b9ddb72eb1f2a96934fb7a",
+            "pngSha256": "d146a91cc0c07935c6b45a1689ab18c2be8b644b89bd0ea8d08b5972c556fd3b",
+            "pngBytes": 431159,
+            "pngPixels": 2560000,
+            "encryptedPlainBytes": 16777216,
+            "seedStrokes": 600,
+            "naturalObjects": 16,
+            "authorMapNodes": 64,
+            "viewport": {
+              "centerX": 500,
+              "centerY": 707,
+              "zoom": 0.5139085337105139
+            },
+            "canvasWidthPx": 1920,
+            "canvasHeightPx": 1090,
+            "windowWidthPx": 1920,
+            "windowHeightPx": 1200,
+            "density": 1.5,
+            "fontScale": 1,
+            "refreshRate": 60.000004
+          }
+        },
+        {
+          "run_id": "candidate-1-map-187b44de",
+          "round": 1,
+          "condition": "map",
+          "frame_metrics": {
+            "frame_count": 221,
+            "frame_p50_ms": 5.737043,
+            "frame_p95_ms": 8.25645,
+            "frame_max_ms": 10.321105,
+            "deadline_frame_count": 221,
+            "deadline_misses": 0,
+            "dropped_reports": 0,
+            "input_save_count": 24,
+            "input_save_p50_ms": 191.454769,
+            "input_save_p95_ms": 202.009762,
+            "work_call_kind": "map",
+            "work_calls_in_window": 0,
+            "work_call_overlap_inputs": 0,
+            "background_operation_overlap_inputs": 0
+          },
+          "cpu_percent_of_window": {
+            "main": 14.663440484629792,
+            "render": 7.9176538653006165,
+            "other": 51.03641065658442
+          },
+          "concurrent_gc_slices": [
+            {
+              "name": "Background concurrent copying GC",
+              "count": "3",
+              "duration_ms": "68.469000"
+            },
+            {
+              "name": "Background young concurrent copying GC",
+              "count": "7",
+              "duration_ms": "53.376000"
+            }
+          ],
+          "invalid_gpu_frames": 221,
+          "trace_sha256": "9dfce260d1dbafa8cdc3b5a56463b464a48902ee603b05cff7d11934790b100a",
+          "seed_sha256": "7c41bb8e514bb9587da33d09edbfb89a5fd2193f5ee3ae88280636b6be5c24f9",
+          "comparable": {
+            "fixtureSha256": "4d60f4d5b9c816ac6eeb1bad812147863e19a5b012b9ddb72eb1f2a96934fb7a",
+            "pngSha256": "d146a91cc0c07935c6b45a1689ab18c2be8b644b89bd0ea8d08b5972c556fd3b",
+            "pngBytes": 431159,
+            "pngPixels": 2560000,
+            "encryptedPlainBytes": 16777216,
+            "seedStrokes": 600,
+            "naturalObjects": 16,
+            "authorMapNodes": 64,
+            "viewport": {
+              "centerX": 500,
+              "centerY": 707,
+              "zoom": 0.5139085337105139
+            },
+            "canvasWidthPx": 1920,
+            "canvasHeightPx": 1090,
+            "windowWidthPx": 1920,
+            "windowHeightPx": 1200,
+            "density": 1.5,
+            "fontScale": 1,
+            "refreshRate": 60.000004
+          }
+        },
+        {
+          "run_id": "candidate-1-encryption-96b3530d",
+          "round": 1,
+          "condition": "encryption",
+          "frame_metrics": {
+            "frame_count": 219,
+            "frame_p50_ms": 4.713419,
+            "frame_p95_ms": 6.800131,
+            "frame_max_ms": 8.882759,
+            "deadline_frame_count": 219,
+            "deadline_misses": 0,
+            "dropped_reports": 0,
+            "input_save_count": 24,
+            "input_save_p50_ms": 190.329525,
+            "input_save_p95_ms": 198.381268,
+            "work_call_kind": "encryption",
+            "work_calls_in_window": 115,
+            "work_call_overlap_inputs": 24,
+            "background_operation_overlap_inputs": 24
+          },
+          "cpu_percent_of_window": {
+            "main": 12.133656190966882,
+            "render": 5.428415130517178,
+            "other": 150.3814344778816
+          },
+          "concurrent_gc_slices": [
+            {
+              "name": "Background concurrent copying GC",
+              "count": "88",
+              "duration_ms": "1712.362000"
+            },
+            {
+              "name": "Background young concurrent copying GC",
+              "count": "88",
+              "duration_ms": "713.213000"
+            }
+          ],
+          "invalid_gpu_frames": 219,
+          "trace_sha256": "48739775ae64ede36e22b638827fd3fc9fc875417bd3afabbd37d4312c87063f",
+          "seed_sha256": "7c41bb8e514bb9587da33d09edbfb89a5fd2193f5ee3ae88280636b6be5c24f9",
+          "comparable": {
+            "fixtureSha256": "4d60f4d5b9c816ac6eeb1bad812147863e19a5b012b9ddb72eb1f2a96934fb7a",
+            "pngSha256": "d146a91cc0c07935c6b45a1689ab18c2be8b644b89bd0ea8d08b5972c556fd3b",
+            "pngBytes": 431159,
+            "pngPixels": 2560000,
+            "encryptedPlainBytes": 16777216,
+            "seedStrokes": 600,
+            "naturalObjects": 16,
+            "authorMapNodes": 64,
+            "viewport": {
+              "centerX": 500,
+              "centerY": 707,
+              "zoom": 0.5139085337105139
+            },
+            "canvasWidthPx": 1920,
+            "canvasHeightPx": 1090,
+            "windowWidthPx": 1920,
+            "windowHeightPx": 1200,
+            "density": 1.5,
+            "fontScale": 1,
+            "refreshRate": 60.000004
+          }
+        },
+        {
+          "run_id": "candidate-1-png-6be06835",
+          "round": 1,
+          "condition": "png",
+          "frame_metrics": {
+            "frame_count": 219,
+            "frame_p50_ms": 4.819465,
+            "frame_p95_ms": 9.873334,
+            "frame_max_ms": 31.460262,
+            "deadline_frame_count": 219,
+            "deadline_misses": 7,
+            "dropped_reports": 0,
+            "input_save_count": 24,
+            "input_save_p50_ms": 184.286824,
+            "input_save_p95_ms": 195.881815,
+            "work_call_kind": "png-decode-verify",
+            "work_calls_in_window": 2,
+            "work_call_overlap_inputs": 1,
+            "background_operation_overlap_inputs": 24
+          },
+          "cpu_percent_of_window": {
+            "main": 14.121043700576363,
+            "render": 5.905495269990251,
+            "other": 49.12812414420527
+          },
+          "concurrent_gc_slices": [
+            {
+              "name": "Background concurrent copying GC",
+              "count": "4",
+              "duration_ms": "95.604000"
+            },
+            {
+              "name": "Background young concurrent copying GC",
+              "count": "5",
+              "duration_ms": "51.919000"
+            }
+          ],
+          "invalid_gpu_frames": 219,
+          "trace_sha256": "300148747b23cf8b8b32fcd84342e16a590b6e30510f12a8899598653c1b4517",
+          "seed_sha256": "7c41bb8e514bb9587da33d09edbfb89a5fd2193f5ee3ae88280636b6be5c24f9",
+          "comparable": {
+            "fixtureSha256": "4d60f4d5b9c816ac6eeb1bad812147863e19a5b012b9ddb72eb1f2a96934fb7a",
+            "pngSha256": "d146a91cc0c07935c6b45a1689ab18c2be8b644b89bd0ea8d08b5972c556fd3b",
+            "pngBytes": 431159,
+            "pngPixels": 2560000,
+            "encryptedPlainBytes": 16777216,
+            "seedStrokes": 600,
+            "naturalObjects": 16,
+            "authorMapNodes": 64,
+            "viewport": {
+              "centerX": 500,
+              "centerY": 707,
+              "zoom": 0.5139085337105139
+            },
+            "canvasWidthPx": 1920,
+            "canvasHeightPx": 1090,
+            "windowWidthPx": 1920,
+            "windowHeightPx": 1200,
+            "density": 1.5,
+            "fontScale": 1,
+            "refreshRate": 60.000004
+          }
+        },
+        {
+          "run_id": "candidate-2-map-ccae13b1",
+          "round": 2,
+          "condition": "map",
+          "frame_metrics": {
+            "frame_count": 218,
+            "frame_p50_ms": 6.205407,
+            "frame_p95_ms": 9.773398,
+            "frame_max_ms": 22.397219,
+            "deadline_frame_count": 218,
+            "deadline_misses": 2,
+            "dropped_reports": 0,
+            "input_save_count": 24,
+            "input_save_p50_ms": 194.025049,
+            "input_save_p95_ms": 201.247238,
+            "work_call_kind": "map",
+            "work_calls_in_window": 0,
+            "work_call_overlap_inputs": 0,
+            "background_operation_overlap_inputs": 0
+          },
+          "cpu_percent_of_window": {
+            "main": 15.987306890406744,
+            "render": 7.7064490527783605,
+            "other": 51.10636157929911
+          },
+          "concurrent_gc_slices": [
+            {
+              "name": "Background concurrent copying GC",
+              "count": "4",
+              "duration_ms": "94.496000"
+            },
+            {
+              "name": "Background young concurrent copying GC",
+              "count": "5",
+              "duration_ms": "53.379000"
+            }
+          ],
+          "invalid_gpu_frames": 218,
+          "trace_sha256": "de3fb4216710ccc694adb1d4ad407ac662426e21a33505285eacfaf4cdbb585d",
+          "seed_sha256": "7c41bb8e514bb9587da33d09edbfb89a5fd2193f5ee3ae88280636b6be5c24f9",
+          "comparable": {
+            "fixtureSha256": "4d60f4d5b9c816ac6eeb1bad812147863e19a5b012b9ddb72eb1f2a96934fb7a",
+            "pngSha256": "d146a91cc0c07935c6b45a1689ab18c2be8b644b89bd0ea8d08b5972c556fd3b",
+            "pngBytes": 431159,
+            "pngPixels": 2560000,
+            "encryptedPlainBytes": 16777216,
+            "seedStrokes": 600,
+            "naturalObjects": 16,
+            "authorMapNodes": 64,
+            "viewport": {
+              "centerX": 500,
+              "centerY": 707,
+              "zoom": 0.5139085337105139
+            },
+            "canvasWidthPx": 1920,
+            "canvasHeightPx": 1090,
+            "windowWidthPx": 1920,
+            "windowHeightPx": 1200,
+            "density": 1.5,
+            "fontScale": 1,
+            "refreshRate": 60.000004
+          }
+        },
+        {
+          "run_id": "candidate-2-encryption-57e04a0f",
+          "round": 2,
+          "condition": "encryption",
+          "frame_metrics": {
+            "frame_count": 219,
+            "frame_p50_ms": 4.945949,
+            "frame_p95_ms": 6.72064,
+            "frame_max_ms": 16.821108,
+            "deadline_frame_count": 219,
+            "deadline_misses": 1,
+            "dropped_reports": 0,
+            "input_save_count": 24,
+            "input_save_p50_ms": 189.041771,
+            "input_save_p95_ms": 199.151274,
+            "work_call_kind": "encryption",
+            "work_calls_in_window": 108,
+            "work_call_overlap_inputs": 24,
+            "background_operation_overlap_inputs": 24
+          },
+          "cpu_percent_of_window": {
+            "main": 12.93038853221901,
+            "render": 5.648168000282839,
+            "other": 151.47126601232281
+          },
+          "concurrent_gc_slices": [
+            {
+              "name": "Background concurrent copying GC",
+              "count": "84",
+              "duration_ms": "1600.243000"
+            },
+            {
+              "name": "Background young concurrent copying GC",
+              "count": "83",
+              "duration_ms": "670.167000"
+            }
+          ],
+          "invalid_gpu_frames": 219,
+          "trace_sha256": "54d50c8f83a9b84262d939f83cbbc757926903b4af92121270b21136496e1965",
+          "seed_sha256": "7c41bb8e514bb9587da33d09edbfb89a5fd2193f5ee3ae88280636b6be5c24f9",
+          "comparable": {
+            "fixtureSha256": "4d60f4d5b9c816ac6eeb1bad812147863e19a5b012b9ddb72eb1f2a96934fb7a",
+            "pngSha256": "d146a91cc0c07935c6b45a1689ab18c2be8b644b89bd0ea8d08b5972c556fd3b",
+            "pngBytes": 431159,
+            "pngPixels": 2560000,
+            "encryptedPlainBytes": 16777216,
+            "seedStrokes": 600,
+            "naturalObjects": 16,
+            "authorMapNodes": 64,
+            "viewport": {
+              "centerX": 500,
+              "centerY": 707,
+              "zoom": 0.5139085337105139
+            },
+            "canvasWidthPx": 1920,
+            "canvasHeightPx": 1090,
+            "windowWidthPx": 1920,
+            "windowHeightPx": 1200,
+            "density": 1.5,
+            "fontScale": 1,
+            "refreshRate": 60.000004
+          }
+        },
+        {
+          "run_id": "candidate-2-png-1f6777bd",
+          "round": 2,
+          "condition": "png",
+          "frame_metrics": {
+            "frame_count": 218,
+            "frame_p50_ms": 5.007743,
+            "frame_p95_ms": 7.529722,
+            "frame_max_ms": 29.717435,
+            "deadline_frame_count": 218,
+            "deadline_misses": 1,
+            "dropped_reports": 0,
+            "input_save_count": 24,
+            "input_save_p50_ms": 182.615056,
+            "input_save_p95_ms": 199.55405,
+            "work_call_kind": "png-decode-verify",
+            "work_calls_in_window": 2,
+            "work_call_overlap_inputs": 1,
+            "background_operation_overlap_inputs": 24
+          },
+          "cpu_percent_of_window": {
+            "main": 14.472453167436761,
+            "render": 5.90558657782153,
+            "other": 48.24226946024325
+          },
+          "concurrent_gc_slices": [
+            {
+              "name": "Background concurrent copying GC",
+              "count": "2",
+              "duration_ms": "59.096000"
+            },
+            {
+              "name": "Background young concurrent copying GC",
+              "count": "7",
+              "duration_ms": "44.131000"
+            }
+          ],
+          "invalid_gpu_frames": 218,
+          "trace_sha256": "56778af1eb260f23d21508782e803346afe15548bc2feb2e258c1e147a83feda",
+          "seed_sha256": "7c41bb8e514bb9587da33d09edbfb89a5fd2193f5ee3ae88280636b6be5c24f9",
+          "comparable": {
+            "fixtureSha256": "4d60f4d5b9c816ac6eeb1bad812147863e19a5b012b9ddb72eb1f2a96934fb7a",
+            "pngSha256": "d146a91cc0c07935c6b45a1689ab18c2be8b644b89bd0ea8d08b5972c556fd3b",
+            "pngBytes": 431159,
+            "pngPixels": 2560000,
+            "encryptedPlainBytes": 16777216,
+            "seedStrokes": 600,
+            "naturalObjects": 16,
+            "authorMapNodes": 64,
+            "viewport": {
+              "centerX": 500,
+              "centerY": 707,
+              "zoom": 0.5139085337105139
+            },
+            "canvasWidthPx": 1920,
+            "canvasHeightPx": 1090,
+            "windowWidthPx": 1920,
+            "windowHeightPx": 1200,
+            "density": 1.5,
+            "fontScale": 1,
+            "refreshRate": 60.000004
+          }
+        },
+        {
+          "run_id": "candidate-2-writing-c7c33bca",
+          "round": 2,
+          "condition": "writing",
+          "frame_metrics": {
+            "frame_count": 218,
+            "frame_p50_ms": 4.888994,
+            "frame_p95_ms": 8.524669,
+            "frame_max_ms": 31.421108,
+            "deadline_frame_count": 218,
+            "deadline_misses": 2,
+            "dropped_reports": 0,
+            "input_save_count": 24,
+            "input_save_p50_ms": 183.158775,
+            "input_save_p95_ms": 219.76357,
+            "work_call_kind": "writing",
+            "work_calls_in_window": 0,
+            "work_call_overlap_inputs": 0,
+            "background_operation_overlap_inputs": 0
+          },
+          "cpu_percent_of_window": {
+            "main": 14.589674901858224,
+            "render": 5.843924284953496,
+            "other": 46.87370971552631
+          },
+          "concurrent_gc_slices": [
+            {
+              "name": "Background concurrent copying GC",
+              "count": "2",
+              "duration_ms": "62.820000"
+            },
+            {
+              "name": "Background young concurrent copying GC",
+              "count": "8",
+              "duration_ms": "55.587000"
+            }
+          ],
+          "invalid_gpu_frames": 218,
+          "trace_sha256": "78ec73456a0fd70fb80c137befd9d6a4c3b42ddf360574cbdbd44af7b706af7c",
+          "seed_sha256": "7c41bb8e514bb9587da33d09edbfb89a5fd2193f5ee3ae88280636b6be5c24f9",
+          "comparable": {
+            "fixtureSha256": "4d60f4d5b9c816ac6eeb1bad812147863e19a5b012b9ddb72eb1f2a96934fb7a",
+            "pngSha256": "d146a91cc0c07935c6b45a1689ab18c2be8b644b89bd0ea8d08b5972c556fd3b",
+            "pngBytes": 431159,
+            "pngPixels": 2560000,
+            "encryptedPlainBytes": 16777216,
+            "seedStrokes": 600,
+            "naturalObjects": 16,
+            "authorMapNodes": 64,
+            "viewport": {
+              "centerX": 500,
+              "centerY": 707,
+              "zoom": 0.5139085337105139
+            },
+            "canvasWidthPx": 1920,
+            "canvasHeightPx": 1090,
+            "windowWidthPx": 1920,
+            "windowHeightPx": 1200,
+            "density": 1.5,
+            "fontScale": 1,
+            "refreshRate": 60.000004
+          }
+        },
+        {
+          "run_id": "candidate-3-encryption-ee457059",
+          "round": 3,
+          "condition": "encryption",
+          "frame_metrics": {
+            "frame_count": 221,
+            "frame_p50_ms": 4.756923,
+            "frame_p95_ms": 7.045038,
+            "frame_max_ms": 10.514283,
+            "deadline_frame_count": 221,
+            "deadline_misses": 0,
+            "dropped_reports": 0,
+            "input_save_count": 24,
+            "input_save_p50_ms": 184.649306,
+            "input_save_p95_ms": 201.550678,
+            "work_call_kind": "encryption",
+            "work_calls_in_window": 107,
+            "work_call_overlap_inputs": 24,
+            "background_operation_overlap_inputs": 24
+          },
+          "cpu_percent_of_window": {
+            "main": 12.889167825453299,
+            "render": 5.610280655715496,
+            "other": 146.7363427138464
+          },
+          "concurrent_gc_slices": [
+            {
+              "name": "Background concurrent copying GC",
+              "count": "79",
+              "duration_ms": "1462.403000"
+            },
+            {
+              "name": "Background young concurrent copying GC",
+              "count": "79",
+              "duration_ms": "678.582000"
+            }
+          ],
+          "invalid_gpu_frames": 221,
+          "trace_sha256": "44e909e1a2d39e2459cf10c606f333d3d9b19a661d9ef45a36a7575bf9faff0f",
+          "seed_sha256": "7c41bb8e514bb9587da33d09edbfb89a5fd2193f5ee3ae88280636b6be5c24f9",
+          "comparable": {
+            "fixtureSha256": "4d60f4d5b9c816ac6eeb1bad812147863e19a5b012b9ddb72eb1f2a96934fb7a",
+            "pngSha256": "d146a91cc0c07935c6b45a1689ab18c2be8b644b89bd0ea8d08b5972c556fd3b",
+            "pngBytes": 431159,
+            "pngPixels": 2560000,
+            "encryptedPlainBytes": 16777216,
+            "seedStrokes": 600,
+            "naturalObjects": 16,
+            "authorMapNodes": 64,
+            "viewport": {
+              "centerX": 500,
+              "centerY": 707,
+              "zoom": 0.5139085337105139
+            },
+            "canvasWidthPx": 1920,
+            "canvasHeightPx": 1090,
+            "windowWidthPx": 1920,
+            "windowHeightPx": 1200,
+            "density": 1.5,
+            "fontScale": 1,
+            "refreshRate": 60.000004
+          }
+        },
+        {
+          "run_id": "candidate-3-png-de42fe57",
+          "round": 3,
+          "condition": "png",
+          "frame_metrics": {
+            "frame_count": 217,
+            "frame_p50_ms": 4.830065,
+            "frame_p95_ms": 7.548037,
+            "frame_max_ms": 12.723161,
+            "deadline_frame_count": 217,
+            "deadline_misses": 0,
+            "dropped_reports": 0,
+            "input_save_count": 24,
+            "input_save_p50_ms": 179.995617,
+            "input_save_p95_ms": 192.093086,
+            "work_call_kind": "png-decode-verify",
+            "work_calls_in_window": 2,
+            "work_call_overlap_inputs": 1,
+            "background_operation_overlap_inputs": 24
+          },
+          "cpu_percent_of_window": {
+            "main": 14.199791671831614,
+            "render": 6.012409366258739,
+            "other": 47.48846596910836
+          },
+          "concurrent_gc_slices": [
+            {
+              "name": "Background concurrent copying GC",
+              "count": "3",
+              "duration_ms": "50.275000"
+            },
+            {
+              "name": "Background young concurrent copying GC",
+              "count": "5",
+              "duration_ms": "41.150000"
+            }
+          ],
+          "invalid_gpu_frames": 217,
+          "trace_sha256": "79b1d7b6feef372b2f16343892fb164b89f3337b2350653a9b76c0a6c48c55a6",
+          "seed_sha256": "7c41bb8e514bb9587da33d09edbfb89a5fd2193f5ee3ae88280636b6be5c24f9",
+          "comparable": {
+            "fixtureSha256": "4d60f4d5b9c816ac6eeb1bad812147863e19a5b012b9ddb72eb1f2a96934fb7a",
+            "pngSha256": "d146a91cc0c07935c6b45a1689ab18c2be8b644b89bd0ea8d08b5972c556fd3b",
+            "pngBytes": 431159,
+            "pngPixels": 2560000,
+            "encryptedPlainBytes": 16777216,
+            "seedStrokes": 600,
+            "naturalObjects": 16,
+            "authorMapNodes": 64,
+            "viewport": {
+              "centerX": 500,
+              "centerY": 707,
+              "zoom": 0.5139085337105139
+            },
+            "canvasWidthPx": 1920,
+            "canvasHeightPx": 1090,
+            "windowWidthPx": 1920,
+            "windowHeightPx": 1200,
+            "density": 1.5,
+            "fontScale": 1,
+            "refreshRate": 60.000004
+          }
+        },
+        {
+          "run_id": "candidate-3-writing-0a04c578",
+          "round": 3,
+          "condition": "writing",
+          "frame_metrics": {
+            "frame_count": 220,
+            "frame_p50_ms": 4.580193,
+            "frame_p95_ms": 7.76095,
+            "frame_max_ms": 15.330658,
+            "deadline_frame_count": 220,
+            "deadline_misses": 0,
+            "dropped_reports": 0,
+            "input_save_count": 24,
+            "input_save_p50_ms": 182.572361,
+            "input_save_p95_ms": 205.649813,
+            "work_call_kind": "writing",
+            "work_calls_in_window": 0,
+            "work_call_overlap_inputs": 0,
+            "background_operation_overlap_inputs": 0
+          },
+          "cpu_percent_of_window": {
+            "main": 13.472485422942299,
+            "render": 5.890566888731349,
+            "other": 46.54828836210762
+          },
+          "concurrent_gc_slices": [
+            {
+              "name": "Background concurrent copying GC",
+              "count": "5",
+              "duration_ms": "88.027000"
+            },
+            {
+              "name": "Background young concurrent copying GC",
+              "count": "4",
+              "duration_ms": "35.767000"
+            }
+          ],
+          "invalid_gpu_frames": 220,
+          "trace_sha256": "53cf9671982e47d4c5f5cf18b9970a8745b716316cf142eb95233caa2eee7bd9",
+          "seed_sha256": "7c41bb8e514bb9587da33d09edbfb89a5fd2193f5ee3ae88280636b6be5c24f9",
+          "comparable": {
+            "fixtureSha256": "4d60f4d5b9c816ac6eeb1bad812147863e19a5b012b9ddb72eb1f2a96934fb7a",
+            "pngSha256": "d146a91cc0c07935c6b45a1689ab18c2be8b644b89bd0ea8d08b5972c556fd3b",
+            "pngBytes": 431159,
+            "pngPixels": 2560000,
+            "encryptedPlainBytes": 16777216,
+            "seedStrokes": 600,
+            "naturalObjects": 16,
+            "authorMapNodes": 64,
+            "viewport": {
+              "centerX": 500,
+              "centerY": 707,
+              "zoom": 0.5139085337105139
+            },
+            "canvasWidthPx": 1920,
+            "canvasHeightPx": 1090,
+            "windowWidthPx": 1920,
+            "windowHeightPx": 1200,
+            "density": 1.5,
+            "fontScale": 1,
+            "refreshRate": 60.000004
+          }
+        },
+        {
+          "run_id": "candidate-3-map-d84d6225",
+          "round": 3,
+          "condition": "map",
+          "frame_metrics": {
+            "frame_count": 220,
+            "frame_p50_ms": 5.412702,
+            "frame_p95_ms": 8.063829,
+            "frame_max_ms": 12.777821,
+            "deadline_frame_count": 220,
+            "deadline_misses": 0,
+            "dropped_reports": 0,
+            "input_save_count": 24,
+            "input_save_p50_ms": 191.848424,
+            "input_save_p95_ms": 204.178421,
+            "work_call_kind": "map",
+            "work_calls_in_window": 0,
+            "work_call_overlap_inputs": 0,
+            "background_operation_overlap_inputs": 0
+          },
+          "cpu_percent_of_window": {
+            "main": 13.884431935363569,
+            "render": 7.397562462208039,
+            "other": 50.14346664609582
+          },
+          "concurrent_gc_slices": [
+            {
+              "name": "Background concurrent copying GC",
+              "count": "3",
+              "duration_ms": "65.838000"
+            },
+            {
+              "name": "Background young concurrent copying GC",
+              "count": "6",
+              "duration_ms": "45.195000"
+            }
+          ],
+          "invalid_gpu_frames": 220,
+          "trace_sha256": "d5610848b88122c3ce8a39ef2ef6b8fef073d4279573a2b125b90e0cd1598e80",
+          "seed_sha256": "7c41bb8e514bb9587da33d09edbfb89a5fd2193f5ee3ae88280636b6be5c24f9",
+          "comparable": {
+            "fixtureSha256": "4d60f4d5b9c816ac6eeb1bad812147863e19a5b012b9ddb72eb1f2a96934fb7a",
+            "pngSha256": "d146a91cc0c07935c6b45a1689ab18c2be8b644b89bd0ea8d08b5972c556fd3b",
+            "pngBytes": 431159,
+            "pngPixels": 2560000,
+            "encryptedPlainBytes": 16777216,
+            "seedStrokes": 600,
+            "naturalObjects": 16,
+            "authorMapNodes": 64,
+            "viewport": {
+              "centerX": 500,
+              "centerY": 707,
+              "zoom": 0.5139085337105139
+            },
+            "canvasWidthPx": 1920,
+            "canvasHeightPx": 1090,
+            "windowWidthPx": 1920,
+            "windowHeightPx": 1200,
+            "density": 1.5,
+            "fontScale": 1,
+            "refreshRate": 60.000004
+          }
+        }
+      ],
+      "analysis": "performance-candidate-411ccf9-01/analysis.json",
+      "summary": "performance-candidate-411ccf9-01/summary.json"
+    }
+  },
+  "trace_integrity": {
+    "runs": 24,
+    "errors": 0,
+    "data_loss": 0,
+    "dropped_frame_reports": 0,
+    "window_markers_per_run": 1,
+    "input_markers_per_run": 192,
+    "save_markers_per_run": 24,
+    "seed_content_preserved_all_runs": true,
+    "fixture_and_viewport_match_all_pairs": true
+  },
+  "png_first_round_outlier": {
+    "run_id": "candidate-1-png-6be06835",
+    "frame_total_ms": 31.460262,
+    "frame_draw_ms": 21.867554,
+    "trace_record_view_draw_wall_ms": 21.833,
+    "trace_main_running_in_frame_ms": 24.263,
+    "trace_classlinker_contention_wall_ms": 1.207,
+    "concurrent_gc_overlaps": true,
+    "seconds_since_last_decode": 2.514855968,
+    "deadline_misses": 7,
+    "deadline_misses_overlapping_decode": 0,
+    "sql": "performance-candidate-411ccf9-01/candidate-1-png-6be06835/png-outlier.sql",
+    "query_results": "performance-candidate-411ccf9-01/candidate-1-png-6be06835/png-outlier.csv",
+    "attribution": "Main-thread drawing and concurrent GC coincide; this does not identify a production-code cause or a GC pause. No late frame overlaps actual PNG decode."
+  },
+  "cleanup": {
+    "performance_package": "org.inkweft.app.a0.workspace.performance",
+    "app_process_stopped": true,
+    "own_trace_sessions_active": 0,
+    "own_remote_trace_and_config_files_remaining": 0,
+    "own_remote_report_files_removed": true,
+    "local_raw_traces_hash_verified": 12,
+    "ordinary_workspace_or_tablet_touched": false,
+    "performance_fixture_data_retained_in_dedicated_package": true
+  },
+  "limitations": [
+    "Three observations per condition, one emulator, sequential build batches; no statistical confidence or product SLO claim.",
+    "Automated injected input, seven 16 ms pacing intervals plus save polling; not real-pen latency.",
+    "PNG whole-operation overlap is 24/24, but real decode overlaps 1/24 inputs and only two decode calls cross each measured window.",
+    "All in-window GPU_DURATION values are negative platform data and are excluded. SurfaceFlinger FrameTimeline was omitted after a producer clock failure in smoke testing.",
+    "CPU percentages sum scheduled time divided by elapsed window; other threads can exceed 100% on multiple cores. Concurrent GC slice wall time is not stop-the-world pause duration.",
+    "Encryption includes cryptography, allocation and file I/O; aggregate worker CPU alone does not isolate a code hotspot.",
+    "Functional/trace PASS does not mean no performance regression. Preserve PNG round 1 and deadline misses as observed tail degradation."
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "beforeVersion": 43,
+  "afterVersion": 46,
+  "phase": "after-device-native-tests",
+  "oldRows": 2374,
+  "missingRows": 0,
+  "changedOldRows": 0,
+  "samePrimaryKeysAndFields": true
+}

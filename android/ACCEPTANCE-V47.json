@@ -1,0 +1,1117 @@
+{
+  "schema_version": 1,
+  "version": "0.0.47-native-editor-preview",
+  "date": "2026-09-29",
+  "application_source": "411ccf9a9eebde1264fd49529d2147fcdf465598",
+  "artifact_sha256": "2e317da82cd1c38a238c0073ec783d91e97976c2ca3830879a82dcbb5dee0b82",
+  "cases": [
+    {
+      "id": "NEXT45-01",
+      "task_id": "Q0",
+      "title": "构件身份与新基线",
+      "extends_v45_cases": [
+        "A01",
+        "A02"
+      ],
+      "setup": "已取最新分支及现有交付包元数据。",
+      "steps": [
+        "比较应用源码、测试源码、CI合成提交和APK摘要；已前移则先重新调和。"
+      ],
+      "expected": [
+        "身份对应；不沿用旧APK测试结论。"
+      ],
+      "required_environment": "metadata",
+      "status": "PASS",
+      "evidence": [
+        "artifact.json",
+        "test-artifacts/visual-readiness.json"
+      ],
+      "implementation_status": "Implemented",
+      "environment": "metadata",
+      "actual_result": "构件身份分别登记；用户APK源码与后续测试补丁分开。",
+      "evidence_version": "v46 retained reference; not rerun wholesale in v47"
+    },
+    {
+      "id": "NEXT45-02",
+      "task_id": "Q0",
+      "title": "CI与容器范围",
+      "extends_v45_cases": [
+        "A02",
+        "A21",
+        "A22"
+      ],
+      "setup": "当前CI和container-check原始JSON可读。",
+      "steps": [
+        "核对最终jobs、实际测试数和容器分阶段结果。"
+      ],
+      "expected": [
+        "运行中不报通过；容器HTTP业务通过不代替TLS。"
+      ],
+      "required_environment": "ci",
+      "status": "PASS",
+      "evidence": [
+        "ci-v45/"
+      ],
+      "implementation_status": "Implemented",
+      "environment": "GitHub v45 CI",
+      "actual_result": "36547758943最终成功；App238、Room154；容器HTTP业务与独立卷恢复PASS，非TLS。",
+      "evidence_version": "v46 retained reference; not rerun wholesale in v47"
+    },
+    {
+      "id": "NEXT45-03",
+      "task_id": "Q0",
+      "title": "不重复已完成模块",
+      "extends_v45_cases": [
+        "A01"
+      ],
+      "setup": "三个模板入口、会话恢复和隔离同步已存在。",
+      "steps": [
+        "列任务差异；新增实现前检查对应代码路径。"
+      ],
+      "expected": [
+        "只修缺口；不重置工作树和既有功能。"
+      ],
+      "required_environment": "static_review",
+      "status": "PASS",
+      "evidence": [
+        "../NextStageV45/",
+        "build-final.log"
+      ],
+      "implementation_status": "Implemented",
+      "environment": "working diff",
+      "actual_result": "沿用原模板入口、会话执行器、白色UI与现有画布；无工作树重置。",
+      "evidence_version": "v46 retained reference; not rerun wholesale in v47"
+    },
+    {
+      "id": "NEXT45-04",
+      "task_id": "Q1",
+      "title": "可信系统HTTPS完整往返",
+      "extends_v45_cases": [
+        "A19"
+      ],
+      "setup": "干净Android系统、独立TLS测试构建与合成库。",
+      "steps": [
+        "上传密文、中断、续传、发布、下载、隔离恢复。"
+      ],
+      "expected": [
+        "有效链和主机名通过；原库未改。"
+      ],
+      "required_environment": "trusted_android",
+      "status": "PASS",
+      "evidence": [
+        "final-tls/"
+      ],
+      "implementation_status": "Implemented",
+      "environment": "Official Android API35 / isolated TLS APK",
+      "actual_result": "真实加密闭包经可信TLS首块中断、新Transport缺块续传、发布、下载、隔离恢复。",
+      "evidence_version": "v46 retained reference; not rerun wholesale in v47"
+    },
+    {
+      "id": "NEXT45-05",
+      "task_id": "Q1",
+      "title": "证书和降级负例",
+      "extends_v45_cases": [
+        "A20"
+      ],
+      "setup": "分别配置未知CA、过期、错域名、重定向和HTTP降级。",
+      "steps": [
+        "逐条用正式Transport建立请求。"
+      ],
+      "expected": [
+        "禁止路径拒绝；未知CA不再被接受。"
+      ],
+      "required_environment": "trusted_android",
+      "status": "PASS",
+      "evidence": [
+        "final-tls/",
+        "trusted-baseline-tls.log"
+      ],
+      "implementation_status": "Implemented",
+      "environment": "Official Android API35 / isolated TLS APK",
+      "actual_result": "未知CA、过期、错域名、307及远端HTTP降级拒绝；旧MuMu失败保留。",
+      "evidence_version": "v46 retained reference; not rerun wholesale in v47"
+    },
+    {
+      "id": "NEXT45-06",
+      "task_id": "Q1",
+      "title": "失败握手不发送敏感请求",
+      "extends_v45_cases": [
+        "A20",
+        "A09"
+      ],
+      "setup": "服务端合成计数可核对，禁止记录秘密正文。",
+      "steps": [
+        "对各负例尝试认证和备份，再检查计数。"
+      ],
+      "expected": [
+        "密码、token与密文业务请求均未抵达被拒绝目标。"
+      ],
+      "required_environment": "trusted_android",
+      "status": "PASS",
+      "evidence": [
+        "final-tls/tls-report.json"
+      ],
+      "implementation_status": "Implemented",
+      "environment": "Official Android + local TLS counters",
+      "actual_result": "失败目标认证/密文敏感请求计数0；计数不含秘密正文。",
+      "evidence_version": "v46 retained reference; not rerun wholesale in v47"
+    },
+    {
+      "id": "NEXT45-07",
+      "task_id": "Q1",
+      "title": "交付信任配置隔离",
+      "extends_v45_cases": [
+        "A23"
+      ],
+      "setup": "普通workspace、TLS探针和拟发布配置。",
+      "steps": [
+        "解析合并manifest和资源、检查信任来源。"
+      ],
+      "expected": [
+        "普通包无测试CA及放宽验证；测试包身份独立。"
+      ],
+      "required_environment": "build",
+      "status": "PASS",
+      "evidence": [
+        "normal-network-security-config.txt",
+        "apk-signature.txt"
+      ],
+      "implementation_status": "Implemented",
+      "environment": "frozen APK resources",
+      "actual_result": "普通workspace无测试CA及放宽信任，独立TLS包身份单列。",
+      "evidence_version": "v46 retained reference; not rerun wholesale in v47"
+    },
+    {
+      "id": "NEXT45-08",
+      "task_id": "Q1",
+      "title": "TLS进入自动验证",
+      "extends_v45_cases": [
+        "A20"
+      ],
+      "setup": "网络安全相关路径已定义选择规则。",
+      "steps": [
+        "模拟命中与不命中变更，运行专用探针任务。"
+      ],
+      "expected": [
+        "相关变更实际执行全部正负例；不能因Probe命名漏测。"
+      ],
+      "required_environment": "ci",
+      "status": "PASS",
+      "evidence": [
+        "verification/v47/ci-970df3d.json"
+      ],
+      "implementation_status": "Implemented",
+      "environment": "local CI planner + official emulator",
+      "actual_result": "970df3d精确CI四job完整通过，TLS5/5；后续411ccf9 UI本机受影响验证，未运行新远端CI。",
+      "evidence_version": "v47 P0 exact CI source970df3d"
+    },
+    {
+      "id": "NEXT45-09",
+      "task_id": "Q2",
+      "title": "连续两页整笔恢复",
+      "extends_v45_cases": [
+        "A10"
+      ],
+      "setup": "正常连续编辑界面和两页以上合成本。",
+      "steps": [
+        "真实输入跨接缝并在抬笔前终止，再重开。"
+      ],
+      "expected": [
+        "已确认前缀在正确页；同一逻辑笔无重复。"
+      ],
+      "required_environment": "android_process_kill",
+      "status": "PASS",
+      "evidence": [
+        "final-group-native/"
+      ],
+      "implementation_status": "Implemented",
+      "environment": "dedicated MuMu API32 / native injected stylus",
+      "actual_result": "连续编辑器跨三页真实MotionEvent；确认前缀前后终止，重开正确页恢复无重复。",
+      "evidence_version": "v46 retained reference; not rerun wholesale in v47"
+    },
+    {
+      "id": "NEXT45-10",
+      "task_id": "Q2",
+      "title": "多页与页序变化",
+      "extends_v45_cases": [
+        "A10"
+      ],
+      "setup": "三页长笔有确认前缀，存在测试用重排时机。",
+      "steps": [
+        "移动／插页后恢复未封笔组。"
+      ],
+      "expected": [
+        "绑定稳定页ID；不按新页码错放片段。"
+      ],
+      "required_environment": "android_process_kill",
+      "status": "PASS",
+      "evidence": [
+        "final-group-variations/reorder.json"
+      ],
+      "implementation_status": "Implemented",
+      "environment": "dedicated MuMu API32",
+      "actual_result": "原生恢复前重排并插页；按冻结ID恢复，逐片字节核对。",
+      "evidence_version": "v46 retained reference; not rerun wholesale in v47"
+    },
+    {
+      "id": "NEXT45-11",
+      "task_id": "Q2",
+      "title": "页面回收与版本冲突",
+      "extends_v45_cases": [
+        "A10",
+        "A11"
+      ],
+      "setup": "恢复目标页已回收或出现不兼容的新修改。",
+      "steps": [
+        "尝试恢复并检查原页、临时前缀和提示。"
+      ],
+      "expected": [
+        "不复活页、不覆盖新内容；保留可解释恢复材料。"
+      ],
+      "required_environment": "android",
+      "status": "PASS",
+      "evidence": [
+        "final-group-variations/recycle.json",
+        "final-group-variations/revision.json"
+      ],
+      "implementation_status": "Implemented",
+      "environment": "dedicated MuMu API32",
+      "actual_result": "目标回收及版本变化保留原始恢复组，不复活页、不覆盖新内容。",
+      "evidence_version": "v46 retained reference; not rerun wholesale in v47"
+    },
+    {
+      "id": "NEXT45-12",
+      "task_id": "Q2",
+      "title": "持久终态拒绝迟到前缀",
+      "extends_v45_cases": [
+        "A11"
+      ],
+      "setup": "可控封笔／取消／回调调度。",
+      "steps": [
+        "先取消后迟到写入，或封笔后重放前缀；跨进程重试。"
+      ],
+      "expected": [
+        "终态持久；取消内容不复活。"
+      ],
+      "required_environment": "android_process_kill",
+      "status": "PASS",
+      "evidence": [
+        "room-all.log",
+        "final-group-native/"
+      ],
+      "implementation_status": "Implemented",
+      "environment": "Room + dedicated process kill",
+      "actual_result": "取消先到与迟到回调、封笔后前缀重放跨重开拒绝。",
+      "evidence_version": "v46 retained reference; not rerun wholesale in v47"
+    },
+    {
+      "id": "NEXT45-13",
+      "task_id": "Q2",
+      "title": "整组事务和未知确认",
+      "extends_v45_cases": [
+        "A11"
+      ],
+      "setup": "组有多页正式提交及稳定操作身份。",
+      "steps": [
+        "在正式事务确认前后、完成标记前后终止。"
+      ],
+      "expected": [
+        "整组一致、同操作可核对，无重复片段或半完成显示。"
+      ],
+      "required_environment": "android_process_kill",
+      "status": "PASS",
+      "evidence": [
+        "final-group-native/"
+      ],
+      "implementation_status": "Implemented",
+      "environment": "Room + dedicated process kill",
+      "actual_result": "片段及组回执同事务；提交/完成标记前后未知确认可按组核对。",
+      "evidence_version": "v46 retained reference; not rerun wholesale in v47"
+    },
+    {
+      "id": "NEXT45-14",
+      "task_id": "Q2",
+      "title": "恢复后一次撤销整组",
+      "extends_v45_cases": [
+        "A11"
+      ],
+      "setup": "跨页组已从检查点恢复为可用笔迹。",
+      "steps": [
+        "执行撤销并重新打开相关页面。"
+      ],
+      "expected": [
+        "整组撤销；其他笔迹和既有擦除保留。"
+      ],
+      "required_environment": "android",
+      "status": "PASS",
+      "evidence": [
+        "final-group-native/",
+        "final-ui/"
+      ],
+      "implementation_status": "Implemented",
+      "environment": "dedicated native UI",
+      "actual_result": "恢复后三页整组一次undo/redo，原片段字节与擦除身份保持；不含完整历史撤销。",
+      "evidence_version": "v46 retained reference; not rerun wholesale in v47"
+    },
+    {
+      "id": "NEXT45-15",
+      "task_id": "Q2",
+      "title": "备份对未完成输入的范围",
+      "extends_v45_cases": [
+        "A10"
+      ],
+      "setup": "存在尚未封笔的确认前缀。",
+      "steps": [
+        "发起备份并恢复到隔离库。"
+      ],
+      "expected": [
+        "UI及回执准确反映已提交快照；不把未封笔输入冒充已备份。"
+      ],
+      "required_environment": "android",
+      "status": "PASS",
+      "evidence": [
+        "room-all.log",
+        "final-ui/"
+      ],
+      "implementation_status": "Implemented",
+      "environment": "Room + app integration",
+      "actual_result": "未封笔组参与输入未确认检查，拒绝将其冒充已备份快照；已提交闭包恢复通过。",
+      "evidence_version": "v46 retained reference; not rerun wholesale in v47"
+    },
+    {
+      "id": "NEXT45-16",
+      "task_id": "Q3",
+      "title": "接收库进入原生页面",
+      "extends_v45_cases": [
+        "A24"
+      ],
+      "setup": "两个一次性Room库和真实Relay。",
+      "steps": [
+        "A经正式写入和网络同步到B，用原生页面查看。"
+      ],
+      "expected": [
+        "图片、PDF、笔刷、擦除、自然字体和资源正确；未切回主库。"
+      ],
+      "required_environment": "isolated_android",
+      "status": "PASS",
+      "evidence": [
+        "final-ui-retry/",
+        "device-safe-single/relay.log",
+        "narrow-readiness/"
+      ],
+      "implementation_status": "Implemented",
+      "environment": "MuMu + physical vivo API36 / synthetic only",
+      "actual_result": "A真实Relay到B，原生PDF/图片/石墨/擦除/自然字体可看；显式会话不回落主库。",
+      "evidence_version": "v46 retained reference; not rerun wholesale in v47"
+    },
+    {
+      "id": "NEXT45-17",
+      "task_id": "Q3",
+      "title": "接收后回源与再编辑",
+      "extends_v45_cases": [
+        "A24"
+      ],
+      "setup": "B已接收共享卡、图和实时页内引用。",
+      "steps": [
+        "在B点来源、改卡、看实时图，再同步回A。"
+      ],
+      "expected": [
+        "位置与内容一致；两边正常打开而非仅JSON相等。"
+      ],
+      "required_environment": "isolated_android",
+      "status": "PASS",
+      "evidence": [
+        "device-safe-single/relay.log",
+        "narrow-readiness/"
+      ],
+      "implementation_status": "Implemented",
+      "environment": "MuMu + physical vivo / synthetic only",
+      "actual_result": "B点图回源、改卡、看实时嵌图并同步回A，原生页面和作者指纹均核对。",
+      "evidence_version": "v46 retained reference; not rerun wholesale in v47"
+    },
+    {
+      "id": "NEXT45-18",
+      "task_id": "Q3",
+      "title": "接收原生终止矩阵",
+      "extends_v45_cases": [
+        "A25"
+      ],
+      "setup": "发件箱、接收作者变更、游标和回执均可观测。",
+      "steps": [
+        "于应用前／提交前后／清除发件箱前后杀进程再重放。"
+      ],
+      "expected": [
+        "未提交不前推，已提交不重复；本机未上传数据保留。"
+      ],
+      "required_environment": "android_process_kill",
+      "status": "PASS",
+      "evidence": [
+        "final-shadow-native/"
+      ],
+      "implementation_status": "Implemented",
+      "environment": "dedicated MuMu process kills",
+      "actual_result": "inbox前后、解析后、作者前、事务前后、outbox确认前后共8切点重开。",
+      "evidence_version": "v46 retained reference; not rerun wholesale in v47"
+    },
+    {
+      "id": "NEXT45-19",
+      "task_id": "Q3",
+      "title": "有限冲突选择界面",
+      "extends_v45_cases": [
+        "A26"
+      ],
+      "setup": "支持的笔记标题／知识卡／页面存在并发版本。",
+      "steps": [
+        "打开冲突、选择本机或另一版本。"
+      ],
+      "expected": [
+        "显示知识对象而非SQL行；解决版本同步后收敛。"
+      ],
+      "required_environment": "isolated_android",
+      "status": "PASS",
+      "evidence": [
+        "final-ui/",
+        "device-safe-single/relay.log"
+      ],
+      "implementation_status": "Implemented",
+      "environment": "Room semantics + native conflict UI",
+      "actual_result": "标题/卡/页面选完整版本，生成有全部父版本的新解决操作并收敛。",
+      "evidence_version": "v46 retained reference; not rerun wholesale in v47"
+    },
+    {
+      "id": "NEXT45-20",
+      "task_id": "Q3",
+      "title": "保留双方与引用一致性",
+      "extends_v45_cases": [
+        "A26",
+        "A27"
+      ],
+      "setup": "知识卡涉及正文块、修订和来源。",
+      "steps": [
+        "按支持范围保留为副本；对不支持组合取消。"
+      ],
+      "expected": [
+        "新身份及引用正确；不支持时不生成残缺副本。"
+      ],
+      "required_environment": "isolated_android",
+      "status": "PASS",
+      "evidence": [
+        "final-ui/",
+        "narrow-readiness/"
+      ],
+      "implementation_status": "LimitedSupportedScope",
+      "environment": "isolated Android",
+      "actual_result": "完整引用重映射副本尚不支持，界面不提供半复制；支持范围仅整分支选择，旧版留历史。",
+      "evidence_version": "v46 retained reference; not rerun wholesale in v47"
+    },
+    {
+      "id": "NEXT45-21",
+      "task_id": "Q3",
+      "title": "解决期间收到新修改",
+      "extends_v45_cases": [
+        "A26"
+      ],
+      "setup": "冲突窗口打开并冻结当前版本。",
+      "steps": [
+        "另一客户端提交新版本后尝试确认旧选择。"
+      ],
+      "expected": [
+        "要求复核或明确拒绝；取消零写入。"
+      ],
+      "required_environment": "isolated_android",
+      "status": "PASS",
+      "evidence": [
+        "final-ui/"
+      ],
+      "implementation_status": "Implemented",
+      "environment": "isolated Room / ShadowSemanticTest",
+      "actual_result": "冻结集合变化时旧选择拒绝；取消未提交；同操作重复返回原回执。",
+      "evidence_version": "v46 retained reference; not rerun wholesale in v47"
+    },
+    {
+      "id": "NEXT45-22",
+      "task_id": "Q3",
+      "title": "必需依赖与历史来源区别",
+      "extends_v45_cases": [
+        "A27"
+      ],
+      "setup": "一例缺PDF块，一例来源已回收。",
+      "steps": [
+        "分别同步并查看接收状态。"
+      ],
+      "expected": [
+        "必需缺失不应用；历史失效不强制复活或删除摘要。"
+      ],
+      "required_environment": "isolated_android",
+      "status": "PASS",
+      "evidence": [
+        "final-ui/",
+        "narrow-readiness/",
+        "device-safe-single/relay.log"
+      ],
+      "implementation_status": "Implemented",
+      "environment": "isolated Android",
+      "actual_result": "缺必需PDF拒绝且游标不推进；来源回收提示不可用并保留卡和快照。",
+      "evidence_version": "v46 retained reference; not rerun wholesale in v47"
+    },
+    {
+      "id": "NEXT45-23",
+      "task_id": "Q3",
+      "title": "实验范围与恢复边界",
+      "extends_v45_cases": [
+        "A28",
+        "A29"
+      ],
+      "setup": "使用错误scope／设备、未知key／schema、过期cursor和超限数据。",
+      "steps": [
+        "逐条提交或尝试打开既有主库路径。"
+      ],
+      "expected": [
+        "拒绝且游标不越过数据；不清零、不提高预算、不打开真实库。"
+      ],
+      "required_environment": "isolated_android",
+      "status": "PASS",
+      "evidence": [
+        "final-ui-retry/",
+        "server-tests.log"
+      ],
+      "implementation_status": "Implemented",
+      "environment": "isolated Room + Relay tests",
+      "actual_result": "错误scope/设备/key/schema/cursor/预算/主库路径均拒绝，未删除本地待发内容或提高上限。",
+      "evidence_version": "v46 retained reference; not rerun wholesale in v47"
+    },
+    {
+      "id": "NEXT45-24",
+      "task_id": "Q4",
+      "title": "全局超时和暂停跨重建",
+      "extends_v45_cases": [
+        "A05"
+      ],
+      "setup": "120秒整体期限、慢流、429及持久调度。",
+      "steps": [
+        "持续返回少量字节；重建页面／任务；手动暂停。"
+      ],
+      "expected": [
+        "总期限有效；Retry-After不提前；用户暂停不自动解除。"
+      ],
+      "required_environment": "fault_integration",
+      "status": "PASS",
+      "evidence": [
+        "final-deadline/",
+        "final-ui/"
+      ],
+      "implementation_status": "Implemented",
+      "environment": "dedicated MuMu + controlled trickle",
+      "actual_result": "20秒慢流，重建后总截止不变，120004ms到期；暂停跨新引擎保持；Retry-After另有重建回归。",
+      "evidence_version": "v46 retained reference; not rerun wholesale in v47"
+    },
+    {
+      "id": "NEXT45-25",
+      "task_id": "Q4",
+      "title": "配额和并发操作UI闭环",
+      "extends_v45_cases": [
+        "A04"
+      ],
+      "setup": "十版本及待发布任务可在实际UI操作。",
+      "steps": [
+        "执行发布／删除／放弃竞争和回应丢失。"
+      ],
+      "expected": [
+        "同操作回执恢复，不误删其他版本或自动删最后备份。"
+      ],
+      "required_environment": "fault_integration",
+      "status": "PASS",
+      "evidence": [
+        "final-ui/BackupReliabilityUiTest#tenVersionsCanBeManagedFromUiWithoutDeletingLocalNotes.log"
+      ],
+      "implementation_status": "Implemented",
+      "environment": "BackupReliabilityUiTest",
+      "actual_result": "10版本、删除/继续/放弃、确认后被发布、删除回执丢失恢复走真实UI与服务。",
+      "evidence_version": "v46 retained reference; not rerun wholesale in v47"
+    },
+    {
+      "id": "NEXT45-26",
+      "task_id": "Q4",
+      "title": "空间故障与隐私出口",
+      "extends_v45_cases": [
+        "A08",
+        "A09"
+      ],
+      "setup": "隔离限容／只读卷及合成敏感标记。",
+      "steps": [
+        "触发故障、恢复旧版、检查日志诊断分享与错误路径。"
+      ],
+      "expected": [
+        "旧密文可恢复；公开材料不含秘密或私人正文。"
+      ],
+      "required_environment": "fault_integration",
+      "status": "PASS",
+      "evidence": [
+        "verification/v47/ci-970df3d.json",
+        "verification/v47/privacy-exits.json",
+        "verification/v47/space-summary.json",
+        "verification/v47/space-v47-android-space.json"
+      ],
+      "implementation_status": "ImplementedFaultHarness",
+      "environment": "local fault tests; Docker engine unavailable",
+      "actual_result": "容器只读/限容/新卷CI + Android应用namespace独立8MiB ENOSPC/旧密文恢复 + 15隐私出口/7秘密类别实际通过。",
+      "evidence_version": "v47 fixed user411ccf9; test identities separately listed"
+    },
+    {
+      "id": "NEXT45-27",
+      "task_id": "Q4",
+      "title": "复杂实际计算负载",
+      "extends_v45_cases": [
+        "A12"
+      ],
+      "setup": "固定APK、笔迹／字体/PDF样本、复杂导图与合法大PNG。",
+      "steps": [
+        "多轮记录加密、解码、导图和保存重叠区间及帧指标。"
+      ],
+      "expected": [
+        "区别CPU／IO等待／测试开销；保留慢样本，预算与可读性不退步。"
+      ],
+      "required_environment": "performance",
+      "status": "PASS",
+      "evidence": [
+        "verification/v47/performance-comparison.json",
+        "verification/v47/performance-comparison.md"
+      ],
+      "implementation_status": "ImplementedMeasurementHarness",
+      "environment": "official emulator / profileable nondebug performance APK",
+      "actual_result": "相同probe、设备设置与seed，旧/新各12场实测帧/trace完整；每场24新增/624持久化。PASS表示测量闭合，不表示稳定性能改善；PNG尾部恶化和GPU异常值明确保留。",
+      "evidence_version": "v46 and v47 exact profileable APK paired with 081f5b49 test"
+    },
+    {
+      "id": "NEXT45-28",
+      "task_id": "Q5",
+      "title": "完整学习与备份链路",
+      "extends_v45_cases": [
+        "A14",
+        "A15",
+        "A16",
+        "A17",
+        "A24"
+      ],
+      "setup": "最终候选及合成资料。",
+      "steps": [
+        "模板创建→跨页恢复→摘录导图→美化擦除→备份恢复；同步链另列。"
+      ],
+      "expected": [
+        "全部使用实际路径和同构件，原引用及作者副本保留。"
+      ],
+      "required_environment": "android_integration",
+      "status": "PASS",
+      "evidence": [
+        "verification/v47/learning-journey.json"
+      ],
+      "implementation_status": "ImplementedFeatures",
+      "environment": "same frozen APK / independent integration scenarios",
+      "actual_result": "同一候选、同一本资料13步骤串行闭环含指定点真实终止、稳定引用、空隔离库加密恢复；正式API和原生UI组合，不声称全部人工点击。",
+      "evidence_version": "v47 user411ccf9 and test b21c517"
+    },
+    {
+      "id": "NEXT45-29",
+      "task_id": "Q5",
+      "title": "真实旧包覆盖与数据核对",
+      "extends_v45_cases": [
+        "A30"
+      ],
+      "setup": "平板已解锁并获准，实际旧包已确认。",
+      "steps": [
+        "先备份后固定签名覆盖，按主键字段比较。"
+      ],
+      "expected": [
+        "旧资料与引用保留；无权限／锁屏则BLOCKED，不能卸载假升级。"
+      ],
+      "required_environment": "authorized_physical_device",
+      "status": "PASS",
+      "evidence": [
+        "verification/v47/device-summary.json"
+      ],
+      "implementation_status": "Implemented",
+      "environment": "authorized vivo iPA2673 API36",
+      "actual_result": "最终候选原签名覆盖平板，2374原记录完全不变，2条自建视觉样板视野更新，新增专用测试本。",
+      "evidence_version": "v47 physical411ccf9"
+    },
+    {
+      "id": "NEXT45-30",
+      "task_id": "Q5",
+      "title": "能力声明与人工证据",
+      "extends_v45_cases": [
+        "A30"
+      ],
+      "setup": "各测试实际结果、不同构件身份均可查。",
+      "steps": [
+        "核对报告、菜单与同步开关；记录真人测试条件。"
+      ],
+      "expected": [
+        "未验项目准确标注；真实库同步关闭；不将模拟器替代真实笔感。"
+      ],
+      "required_environment": "release_review",
+      "status": "PASS",
+      "evidence": [
+        "artifact.json",
+        "compute-final/artifacts.json",
+        "device-final-data-report.json"
+      ],
+      "implementation_status": "Implemented",
+      "environment": "delivery review",
+      "actual_result": "报告区分构件/环境/局限；真实库同步关闭；15分钟手持笔/温升/多作者识别明确NOT_RUN。",
+      "evidence_version": "v46 retained reference; not rerun wholesale in v47"
+    },
+    {
+      "id": "VIS-01",
+      "status": "PASS",
+      "actual_result": "默认白纸、冷浅衬底和浮层层次，同条件原生像素检查",
+      "evidence": [
+        "VERIFICATION-V47.md",
+        "DEVICE-REPORT-V47.md",
+        "verification/v47/affected-ui-tests.json",
+        "verification/v47/visual-results.json"
+      ],
+      "evidence_version": "v47 scoped evidence; user aesthetic acceptance separate",
+      "task_id": "V47-UI"
+    },
+    {
+      "id": "VIS-02",
+      "status": "PASS",
+      "actual_result": "常用参数分层与真正浮层阴影，输入/焦点保留",
+      "evidence": [
+        "VERIFICATION-V47.md",
+        "DEVICE-REPORT-V47.md",
+        "verification/v47/affected-ui-tests.json",
+        "verification/v47/visual-results.json"
+      ],
+      "evidence_version": "v47 scoped evidence; user aesthetic acceptance separate",
+      "task_id": "V47-UI"
+    },
+    {
+      "id": "VIS-03",
+      "status": "PASS",
+      "actual_result": "48dp纯图标，窄屏模式按钮固定单行，其余工具滚动",
+      "evidence": [
+        "VERIFICATION-V47.md",
+        "DEVICE-REPORT-V47.md",
+        "verification/v47/affected-ui-tests.json",
+        "verification/v47/visual-results.json"
+      ],
+      "evidence_version": "v47 scoped evidence; user aesthetic acceptance separate",
+      "task_id": "V47-UI"
+    },
+    {
+      "id": "VIS-04",
+      "status": "PASS",
+      "actual_result": "笔和橡皮常用/高级，同页即时调节",
+      "evidence": [
+        "VERIFICATION-V47.md",
+        "DEVICE-REPORT-V47.md",
+        "verification/v47/affected-ui-tests.json",
+        "verification/v47/visual-results.json"
+      ],
+      "evidence_version": "v47 scoped evidence; user aesthetic acceptance separate",
+      "task_id": "V47-UI"
+    },
+    {
+      "id": "VIS-05",
+      "status": "PASS",
+      "actual_result": "正常/实机虚线预览、取消零作者写入、真实IME可取消",
+      "evidence": [
+        "VERIFICATION-V47.md",
+        "DEVICE-REPORT-V47.md",
+        "verification/v47/affected-ui-tests.json",
+        "verification/v47/visual-results.json"
+      ],
+      "evidence_version": "v47 scoped evidence; user aesthetic acceptance separate",
+      "task_id": "V47-UI"
+    },
+    {
+      "id": "VIS-06",
+      "status": "PASS",
+      "actual_result": "同合成作者摘要保持，存储/固定快照回归沿用已有定向证据",
+      "evidence": [
+        "VERIFICATION-V47.md",
+        "DEVICE-REPORT-V47.md",
+        "verification/v47/affected-ui-tests.json",
+        "verification/v47/visual-results.json"
+      ],
+      "evidence_version": "v47 scoped evidence; user aesthetic acceptance separate",
+      "task_id": "V47-UI"
+    },
+    {
+      "id": "VIS-07",
+      "status": "PASS",
+      "actual_result": "PanelKind明确语义，testTag不决定尺寸",
+      "evidence": [
+        "VERIFICATION-V47.md",
+        "DEVICE-REPORT-V47.md",
+        "verification/v47/affected-ui-tests.json",
+        "verification/v47/visual-results.json"
+      ],
+      "evidence_version": "v47 scoped evidence; user aesthetic acceptance separate",
+      "task_id": "V47-UI"
+    },
+    {
+      "id": "VIS-08",
+      "status": "PASS",
+      "actual_result": "节点四图标操作条与邻节点避让；标题编辑保存/取消保持目标",
+      "evidence": [
+        "VERIFICATION-V47.md",
+        "DEVICE-REPORT-V47.md",
+        "verification/v47/affected-ui-tests.json",
+        "verification/v47/visual-results.json"
+      ],
+      "evidence_version": "v47 scoped evidence; user aesthetic acceptance separate",
+      "task_id": "V47-UI"
+    },
+    {
+      "id": "VIS-09",
+      "status": "PARTIAL",
+      "actual_result": "375dp/1.6字号和横竖屏原生像素已查；物理分屏大字号/真人触控待测",
+      "evidence": [
+        "VERIFICATION-V47.md",
+        "DEVICE-REPORT-V47.md",
+        "verification/v47/affected-ui-tests.json",
+        "verification/v47/visual-results.json"
+      ],
+      "evidence_version": "v47 scoped evidence; user aesthetic acceptance separate",
+      "task_id": "V47-UI"
+    },
+    {
+      "id": "VIS-10",
+      "status": "PASS",
+      "actual_result": "已认可组件复用，模板/学习/备份受影响类通过",
+      "evidence": [
+        "VERIFICATION-V47.md",
+        "DEVICE-REPORT-V47.md",
+        "verification/v47/affected-ui-tests.json",
+        "verification/v47/visual-results.json"
+      ],
+      "evidence_version": "v47 scoped evidence; user aesthetic acceptance separate",
+      "task_id": "V47-UI"
+    },
+    {
+      "id": "VIS-11",
+      "status": "PARTIAL",
+      "actual_result": "录屏保留开合与浮窗移动；系统关闭动画实际组合未单独执行",
+      "evidence": [
+        "VERIFICATION-V47.md",
+        "DEVICE-REPORT-V47.md",
+        "verification/v47/affected-ui-tests.json",
+        "verification/v47/visual-results.json"
+      ],
+      "evidence_version": "v47 scoped evidence; user aesthetic acceptance separate",
+      "task_id": "V47-UI"
+    },
+    {
+      "id": "VIS-12",
+      "status": "PARTIAL",
+      "actual_result": "用户已认可样板方向；同本链路通过，最终细节审美仍待用户",
+      "evidence": [
+        "VERIFICATION-V47.md",
+        "DEVICE-REPORT-V47.md",
+        "verification/v47/affected-ui-tests.json",
+        "verification/v47/visual-results.json"
+      ],
+      "evidence_version": "v47 scoped evidence; user aesthetic acceptance separate",
+      "task_id": "V47-UI"
+    },
+    {
+      "id": "VIS-13",
+      "status": "PARTIAL",
+      "actual_result": "USB真机末页追加/保存/重开通过；完整真人手势矩阵待测",
+      "evidence": [
+        "VERIFICATION-V47.md",
+        "DEVICE-REPORT-V47.md",
+        "verification/v47/affected-ui-tests.json",
+        "verification/v47/visual-results.json"
+      ],
+      "evidence_version": "v47 scoped evidence; user aesthetic acceptance separate",
+      "task_id": "V47-UI"
+    },
+    {
+      "id": "VIS-14",
+      "status": "PARTIAL",
+      "actual_result": "USB真机单指写、模式保持、双指接管通过；真实笔感待测",
+      "evidence": [
+        "VERIFICATION-V47.md",
+        "DEVICE-REPORT-V47.md",
+        "verification/v47/affected-ui-tests.json",
+        "verification/v47/visual-results.json"
+      ],
+      "evidence_version": "v47 scoped evidence; user aesthetic acceptance separate",
+      "task_id": "V47-UI"
+    },
+    {
+      "id": "VIS-15",
+      "status": "PARTIAL",
+      "actual_result": "跨页恢复/撤销与双指模拟事件通过；真人跨页组合待测",
+      "evidence": [
+        "VERIFICATION-V47.md",
+        "DEVICE-REPORT-V47.md",
+        "verification/v47/affected-ui-tests.json",
+        "verification/v47/visual-results.json"
+      ],
+      "evidence_version": "v47 scoped evidence; user aesthetic acceptance separate",
+      "task_id": "V47-UI"
+    },
+    {
+      "id": "VIS-16",
+      "status": "PARTIAL",
+      "actual_result": "标签色/图窗重复按钮/窄屏固定工具已查看；实机分屏组合待测",
+      "evidence": [
+        "VERIFICATION-V47.md",
+        "DEVICE-REPORT-V47.md",
+        "verification/v47/affected-ui-tests.json",
+        "verification/v47/visual-results.json"
+      ],
+      "evidence_version": "v47 scoped evidence; user aesthetic acceptance separate",
+      "task_id": "V47-UI"
+    },
+    {
+      "id": "VIS-17",
+      "status": "PARTIAL",
+      "actual_result": "自动化禁用/忙碌/取消门禁通过；只读/无界实机组合待测",
+      "evidence": [
+        "VERIFICATION-V47.md",
+        "DEVICE-REPORT-V47.md",
+        "verification/v47/affected-ui-tests.json",
+        "verification/v47/visual-results.json"
+      ],
+      "evidence_version": "v47 scoped evidence; user aesthetic acceptance separate",
+      "task_id": "V47-UI"
+    }
+  ],
+  "legacy_reference": "ACCEPTANCE-V46.json; unchanged cases retained at their actual v46 evidence version",
+  "private_evidence_root": "E:\\Inkweft\\archives\\2026-09-29\\NextStageV47",
+  "publication": {
+    "remote_ci_source": "970df3dd616f2c9266bc9e0dd1c6161fd4ed54c1",
+    "release": false,
+    "pr_merged": false,
+    "upload_authorized": true,
+    "target": "existing branch codex/android-a1-ink-20260924 and draft PR #2",
+    "current_remote_ci": "See exact uploaded revision checks on PR #2; previous 970df3d success is historical"
+  },
+  "counts": {
+    "PASS": 39,
+    "PARTIAL": 8
+  },
+  "tasks": [
+    {
+      "id": "Q0",
+      "priority": "P0",
+      "title": "基线与证据调和",
+      "depends_on": [],
+      "case_ids": [
+        "NEXT45-01",
+        "NEXT45-02",
+        "NEXT45-03"
+      ]
+    },
+    {
+      "id": "Q1",
+      "priority": "P0_NETWORK_GATE",
+      "title": "可信TLS与自动门禁",
+      "depends_on": [
+        "Q0"
+      ],
+      "case_ids": [
+        "NEXT45-04",
+        "NEXT45-05",
+        "NEXT45-06",
+        "NEXT45-07",
+        "NEXT45-08"
+      ]
+    },
+    {
+      "id": "Q2",
+      "priority": "P0_DATA",
+      "title": "跨页整笔原生恢复",
+      "depends_on": [
+        "Q0"
+      ],
+      "case_ids": [
+        "NEXT45-09",
+        "NEXT45-10",
+        "NEXT45-11",
+        "NEXT45-12",
+        "NEXT45-13",
+        "NEXT45-14",
+        "NEXT45-15"
+      ]
+    },
+    {
+      "id": "Q3",
+      "priority": "P1_ISOLATED",
+      "title": "同步接收原生展示与有限冲突处理",
+      "depends_on": [
+        "Q0"
+      ],
+      "case_ids": [
+        "NEXT45-16",
+        "NEXT45-17",
+        "NEXT45-18",
+        "NEXT45-19",
+        "NEXT45-20",
+        "NEXT45-21",
+        "NEXT45-22",
+        "NEXT45-23"
+      ]
+    },
+    {
+      "id": "Q4",
+      "priority": "P1",
+      "title": "剩余故障与性能",
+      "depends_on": [
+        "Q0"
+      ],
+      "case_ids": [
+        "NEXT45-24",
+        "NEXT45-25",
+        "NEXT45-26",
+        "NEXT45-27"
+      ]
+    },
+    {
+      "id": "Q5",
+      "priority": "INTEGRATION_GATE",
+      "title": "同构件集成交付",
+      "depends_on": [
+        "Q0",
+        "Q1",
+        "Q2",
+        "Q3",
+        "Q4"
+      ],
+      "case_ids": [
+        "NEXT45-28",
+        "NEXT45-29",
+        "NEXT45-30"
+      ]
+    },
+    {
+      "id": "V47-UI",
+      "title": "原生组件与连续书写",
+      "case_ids": [
+        "VIS-01",
+        "VIS-02",
+        "VIS-03",
+        "VIS-04",
+        "VIS-05",
+        "VIS-06",
+        "VIS-07",
+        "VIS-08",
+        "VIS-09",
+        "VIS-10",
+        "VIS-11",
+        "VIS-12",
+        "VIS-13",
+        "VIS-14",
+        "VIS-15",
+        "VIS-16",
+        "VIS-17"
+      ]
+    }
+  ],
+  "summary": "P0 CI repaired; native editor and approved component reuse complete; NEXT45-26/27/28 executed within documented scope. Final user aesthetic acceptance and physical handwriting combinations remain partial."
+}

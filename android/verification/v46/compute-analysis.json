@@ -1,0 +1,539 @@
+{
+  "0-baseline": {
+    "condition": "baseline",
+    "peakTrackedMiB": 25.99578857421875,
+    "events": {
+      "automation-dispatch-wait": {
+        "wallMedianMs": 0.3603805,
+        "wallMaxMs": 61.487852,
+        "cpuMedianMs": null
+      },
+      "author-queue-wait": {
+        "wallMedianMs": 0.2093075,
+        "wallMaxMs": 8.837665,
+        "cpuMedianMs": null
+      },
+      "main-input-draw": {
+        "wallMedianMs": 13.4287745,
+        "wallMaxMs": 30.072674,
+        "cpuMedianMs": 10.7071965
+      },
+      "baseline": {
+        "wallMedianMs": 11.512119,
+        "wallMaxMs": 18.045211,
+        "cpuMedianMs": null
+      },
+      "author-read": {
+        "wallMedianMs": 18.9833845,
+        "wallMaxMs": 41.327667,
+        "cpuMedianMs": null
+      },
+      "author-transaction": {
+        "wallMedianMs": 5.2622395,
+        "wallMaxMs": 41.766672,
+        "cpuMedianMs": null
+      },
+      "automation-pacing": {
+        "wallMedianMs": 38.0238605,
+        "wallMaxMs": 95.287865,
+        "cpuMedianMs": null
+      }
+    }
+  },
+  "0-encryption": {
+    "condition": "encryption",
+    "peakTrackedMiB": 25.99578857421875,
+    "events": {
+      "automation-dispatch-wait": {
+        "wallMedianMs": 0.823089,
+        "wallMaxMs": 103.603327,
+        "cpuMedianMs": null
+      },
+      "main-input-draw": {
+        "wallMedianMs": 11.322982,
+        "wallMaxMs": 27.65642,
+        "cpuMedianMs": 9.4781
+      },
+      "author-queue-wait": {
+        "wallMedianMs": 79.10144650000001,
+        "wallMaxMs": 144.408197,
+        "cpuMedianMs": null
+      },
+      "automation-pacing": {
+        "wallMedianMs": 35.379692500000004,
+        "wallMaxMs": 135.473903,
+        "cpuMedianMs": null
+      },
+      "author-read": {
+        "wallMedianMs": 28.031757,
+        "wallMaxMs": 157.838558,
+        "cpuMedianMs": null
+      },
+      "author-transaction": {
+        "wallMedianMs": 8.575225499999998,
+        "wallMaxMs": 16.386342,
+        "cpuMedianMs": null
+      },
+      "encryption": {
+        "wallMedianMs": 288.65608499999996,
+        "wallMaxMs": 357.711259,
+        "cpuMedianMs": 124.77870999999999
+      }
+    }
+  },
+  "0-map": {
+    "condition": "map",
+    "peakTrackedMiB": 28.64129638671875,
+    "events": {
+      "automation-dispatch-wait": {
+        "wallMedianMs": 0.45038900000000004,
+        "wallMaxMs": 117.141039,
+        "cpuMedianMs": null
+      },
+      "author-queue-wait": {
+        "wallMedianMs": 0.3429225,
+        "wallMaxMs": 7.746474,
+        "cpuMedianMs": null
+      },
+      "map": {
+        "wallMedianMs": 11.635035,
+        "wallMaxMs": 82.462154,
+        "cpuMedianMs": null
+      },
+      "main-input-draw": {
+        "wallMedianMs": 23.916234,
+        "wallMaxMs": 33.756084,
+        "cpuMedianMs": 18.7932335
+      },
+      "author-read": {
+        "wallMedianMs": 19.37905,
+        "wallMaxMs": 33.941997,
+        "cpuMedianMs": null
+      },
+      "automation-pacing": {
+        "wallMedianMs": 47.311732,
+        "wallMaxMs": 165.584742,
+        "cpuMedianMs": null
+      },
+      "author-transaction": {
+        "wallMedianMs": 5.483045000000001,
+        "wallMaxMs": 27.506757,
+        "cpuMedianMs": null
+      }
+    }
+  },
+  "0-png": {
+    "condition": "png",
+    "peakTrackedMiB": 51.0517578125,
+    "events": {
+      "automation-dispatch-wait": {
+        "wallMedianMs": 2.2158595,
+        "wallMaxMs": 99.353287,
+        "cpuMedianMs": null
+      },
+      "main-input-draw": {
+        "wallMedianMs": 12.1007225,
+        "wallMaxMs": 18.167133,
+        "cpuMedianMs": 8.6791
+      },
+      "author-queue-wait": {
+        "wallMedianMs": 0.876223,
+        "wallMaxMs": 15.124117,
+        "cpuMedianMs": null
+      },
+      "automation-pacing": {
+        "wallMedianMs": 34.2927935,
+        "wallMaxMs": 137.583014,
+        "cpuMedianMs": null
+      },
+      "author-read": {
+        "wallMedianMs": 20.7395555,
+        "wallMaxMs": 31.943477,
+        "cpuMedianMs": null
+      },
+      "png-decode-verify": {
+        "wallMedianMs": 50.022884,
+        "wallMaxMs": 50.022884,
+        "cpuMedianMs": 32.357474
+      },
+      "author-transaction": {
+        "wallMedianMs": 5.8473275000000005,
+        "wallMaxMs": 13.637592,
+        "cpuMedianMs": null
+      },
+      "resource-yield": {
+        "wallMedianMs": 1261.461617,
+        "wallMaxMs": 1261.461617,
+        "cpuMedianMs": null
+      },
+      "install-verify-io": {
+        "wallMedianMs": 28.526552,
+        "wallMaxMs": 28.526552,
+        "cpuMedianMs": null
+      },
+      "png": {
+        "wallMedianMs": 1340.016165,
+        "wallMaxMs": 1340.016165,
+        "cpuMedianMs": null
+      }
+    }
+  },
+  "1-baseline": {
+    "condition": "baseline",
+    "peakTrackedMiB": 25.99578857421875,
+    "events": {
+      "automation-dispatch-wait": {
+        "wallMedianMs": 0.5013745,
+        "wallMaxMs": 121.027309,
+        "cpuMedianMs": null
+      },
+      "author-queue-wait": {
+        "wallMedianMs": 0.465334,
+        "wallMaxMs": 41.312218,
+        "cpuMedianMs": null
+      },
+      "baseline": {
+        "wallMedianMs": 11.816457,
+        "wallMaxMs": 44.669618,
+        "cpuMedianMs": null
+      },
+      "main-input-draw": {
+        "wallMedianMs": 12.9086535,
+        "wallMaxMs": 20.499615,
+        "cpuMedianMs": 10.328601500000001
+      },
+      "automation-pacing": {
+        "wallMedianMs": 35.4509915,
+        "wallMaxMs": 157.135446,
+        "cpuMedianMs": null
+      },
+      "author-read": {
+        "wallMedianMs": 20.9611275,
+        "wallMaxMs": 62.486103,
+        "cpuMedianMs": null
+      },
+      "author-transaction": {
+        "wallMedianMs": 6.3742365,
+        "wallMaxMs": 17.244769,
+        "cpuMedianMs": null
+      }
+    }
+  },
+  "1-encryption": {
+    "condition": "encryption",
+    "peakTrackedMiB": 25.99578857421875,
+    "events": {
+      "automation-dispatch-wait": {
+        "wallMedianMs": 0.5432669999999999,
+        "wallMaxMs": 4.92264,
+        "cpuMedianMs": null
+      },
+      "author-queue-wait": {
+        "wallMedianMs": 40.9464275,
+        "wallMaxMs": 63.466628,
+        "cpuMedianMs": null
+      },
+      "main-input-draw": {
+        "wallMedianMs": 18.425874999999998,
+        "wallMaxMs": 144.882469,
+        "cpuMedianMs": 11.286473
+      },
+      "automation-pacing": {
+        "wallMedianMs": 43.23815999999999,
+        "wallMaxMs": 166.752667,
+        "cpuMedianMs": null
+      },
+      "author-read": {
+        "wallMedianMs": 37.401028,
+        "wallMaxMs": 174.761101,
+        "cpuMedianMs": null
+      },
+      "author-transaction": {
+        "wallMedianMs": 8.6917875,
+        "wallMaxMs": 23.414731,
+        "cpuMedianMs": null
+      },
+      "encryption": {
+        "wallMedianMs": 181.420834,
+        "wallMaxMs": 400.120792,
+        "cpuMedianMs": 75.190515
+      }
+    }
+  },
+  "1-map": {
+    "condition": "map",
+    "peakTrackedMiB": 28.20379638671875,
+    "events": {
+      "automation-dispatch-wait": {
+        "wallMedianMs": 0.37126099999999995,
+        "wallMaxMs": 7.254255,
+        "cpuMedianMs": null
+      },
+      "author-queue-wait": {
+        "wallMedianMs": 1.98014,
+        "wallMaxMs": 27.411289,
+        "cpuMedianMs": null
+      },
+      "map": {
+        "wallMedianMs": 11.681326,
+        "wallMaxMs": 151.499136,
+        "cpuMedianMs": null
+      },
+      "main-input-draw": {
+        "wallMedianMs": 24.9355915,
+        "wallMaxMs": 139.206924,
+        "cpuMedianMs": 18.438239
+      },
+      "author-read": {
+        "wallMedianMs": 22.9662305,
+        "wallMaxMs": 180.418642,
+        "cpuMedianMs": null
+      },
+      "automation-pacing": {
+        "wallMedianMs": 46.979862,
+        "wallMaxMs": 161.525811,
+        "cpuMedianMs": null
+      },
+      "author-transaction": {
+        "wallMedianMs": 6.928516,
+        "wallMaxMs": 17.313646,
+        "cpuMedianMs": null
+      }
+    }
+  },
+  "1-png": {
+    "condition": "png",
+    "peakTrackedMiB": 51.0517578125,
+    "events": {
+      "automation-dispatch-wait": {
+        "wallMedianMs": 0.3089925,
+        "wallMaxMs": 104.29694,
+        "cpuMedianMs": null
+      },
+      "author-queue-wait": {
+        "wallMedianMs": 0.9210615,
+        "wallMaxMs": 12.551368,
+        "cpuMedianMs": null
+      },
+      "main-input-draw": {
+        "wallMedianMs": 13.720082999999999,
+        "wallMaxMs": 18.831069,
+        "cpuMedianMs": 9.5570545
+      },
+      "automation-pacing": {
+        "wallMedianMs": 35.483736,
+        "wallMaxMs": 144.083518,
+        "cpuMedianMs": null
+      },
+      "author-read": {
+        "wallMedianMs": 23.008134,
+        "wallMaxMs": 35.642048,
+        "cpuMedianMs": null
+      },
+      "author-transaction": {
+        "wallMedianMs": 6.0031455,
+        "wallMaxMs": 17.393326,
+        "cpuMedianMs": null
+      },
+      "png-decode-verify": {
+        "wallMedianMs": 62.738298,
+        "wallMaxMs": 62.738298,
+        "cpuMedianMs": 35.585276
+      },
+      "resource-yield": {
+        "wallMedianMs": 1257.510387,
+        "wallMaxMs": 1257.510387,
+        "cpuMedianMs": null
+      },
+      "install-verify-io": {
+        "wallMedianMs": 49.482804,
+        "wallMaxMs": 49.482804,
+        "cpuMedianMs": null
+      },
+      "png": {
+        "wallMedianMs": 1369.745906,
+        "wallMaxMs": 1369.745906,
+        "cpuMedianMs": null
+      }
+    }
+  },
+  "2-baseline": {
+    "condition": "baseline",
+    "peakTrackedMiB": 25.99578857421875,
+    "events": {
+      "automation-dispatch-wait": {
+        "wallMedianMs": 0.430931,
+        "wallMaxMs": 106.078562,
+        "cpuMedianMs": null
+      },
+      "author-queue-wait": {
+        "wallMedianMs": 0.436707,
+        "wallMaxMs": 8.989091,
+        "cpuMedianMs": null
+      },
+      "baseline": {
+        "wallMedianMs": 11.990693,
+        "wallMaxMs": 65.053607,
+        "cpuMedianMs": null
+      },
+      "main-input-draw": {
+        "wallMedianMs": 11.9700105,
+        "wallMaxMs": 20.140715,
+        "cpuMedianMs": 9.1685835
+      },
+      "author-read": {
+        "wallMedianMs": 22.450367999999997,
+        "wallMaxMs": 29.080849,
+        "cpuMedianMs": null
+      },
+      "automation-pacing": {
+        "wallMedianMs": 35.197238,
+        "wallMaxMs": 140.966396,
+        "cpuMedianMs": null
+      },
+      "author-transaction": {
+        "wallMedianMs": 7.2427805,
+        "wallMaxMs": 14.489517,
+        "cpuMedianMs": null
+      }
+    }
+  },
+  "2-encryption": {
+    "condition": "encryption",
+    "peakTrackedMiB": 25.99578857421875,
+    "events": {
+      "automation-dispatch-wait": {
+        "wallMedianMs": 0.4011655,
+        "wallMaxMs": 6.005322,
+        "cpuMedianMs": null
+      },
+      "author-queue-wait": {
+        "wallMedianMs": 31.0703315,
+        "wallMaxMs": 54.27964,
+        "cpuMedianMs": null
+      },
+      "main-input-draw": {
+        "wallMedianMs": 15.708323,
+        "wallMaxMs": 151.48238,
+        "cpuMedianMs": 9.865378
+      },
+      "automation-pacing": {
+        "wallMedianMs": 38.257535000000004,
+        "wallMaxMs": 178.591022,
+        "cpuMedianMs": null
+      },
+      "author-read": {
+        "wallMedianMs": 28.599391,
+        "wallMaxMs": 188.652151,
+        "cpuMedianMs": null
+      },
+      "author-transaction": {
+        "wallMedianMs": 6.1420195,
+        "wallMaxMs": 31.023755,
+        "cpuMedianMs": null
+      },
+      "encryption": {
+        "wallMedianMs": 307.417387,
+        "wallMaxMs": 404.6777,
+        "cpuMedianMs": 69.050036
+      }
+    }
+  },
+  "2-map": {
+    "condition": "map",
+    "peakTrackedMiB": 25.99578857421875,
+    "events": {
+      "automation-dispatch-wait": {
+        "wallMedianMs": 0.31176950000000003,
+        "wallMaxMs": 96.298941,
+        "cpuMedianMs": null
+      },
+      "author-queue-wait": {
+        "wallMedianMs": 0.49474250000000003,
+        "wallMaxMs": 12.894796,
+        "cpuMedianMs": null
+      },
+      "map": {
+        "wallMedianMs": 11.741651,
+        "wallMaxMs": 70.792997,
+        "cpuMedianMs": null
+      },
+      "main-input-draw": {
+        "wallMedianMs": 24.299060500000003,
+        "wallMaxMs": 39.307814,
+        "cpuMedianMs": 17.548094
+      },
+      "author-read": {
+        "wallMedianMs": 26.6455375,
+        "wallMaxMs": 128.988276,
+        "cpuMedianMs": null
+      },
+      "automation-pacing": {
+        "wallMedianMs": 46.3579175,
+        "wallMaxMs": 160.350224,
+        "cpuMedianMs": null
+      },
+      "author-transaction": {
+        "wallMedianMs": 9.2604685,
+        "wallMaxMs": 13.881281,
+        "cpuMedianMs": null
+      }
+    }
+  },
+  "2-png": {
+    "condition": "png",
+    "peakTrackedMiB": 51.0517578125,
+    "events": {
+      "automation-dispatch-wait": {
+        "wallMedianMs": 0.8260265,
+        "wallMaxMs": 105.336734,
+        "cpuMedianMs": null
+      },
+      "author-queue-wait": {
+        "wallMedianMs": 20.525071,
+        "wallMaxMs": 35.469041,
+        "cpuMedianMs": null
+      },
+      "main-input-draw": {
+        "wallMedianMs": 13.0123775,
+        "wallMaxMs": 17.921006,
+        "cpuMedianMs": 10.3931115
+      },
+      "png-decode-verify": {
+        "wallMedianMs": 40.326685,
+        "wallMaxMs": 40.326685,
+        "cpuMedianMs": 34.489842
+      },
+      "automation-pacing": {
+        "wallMedianMs": 36.2031935,
+        "wallMaxMs": 140.579441,
+        "cpuMedianMs": null
+      },
+      "author-read": {
+        "wallMedianMs": 27.5196025,
+        "wallMaxMs": 117.228674,
+        "cpuMedianMs": null
+      },
+      "author-transaction": {
+        "wallMedianMs": 9.810993,
+        "wallMaxMs": 14.607583,
+        "cpuMedianMs": null
+      },
+      "resource-yield": {
+        "wallMedianMs": 1264.082144,
+        "wallMaxMs": 1264.082144,
+        "cpuMedianMs": null
+      },
+      "install-verify-io": {
+        "wallMedianMs": 43.400668,
+        "wallMaxMs": 43.400668,
+        "cpuMedianMs": null
+      },
+      "png": {
+        "wallMedianMs": 1347.816098,
+        "wallMaxMs": 1347.816098,
+        "cpuMedianMs": null
+      }
+    }
+  }
+}

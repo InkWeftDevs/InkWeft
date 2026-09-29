@@ -1,0 +1,85 @@
+{
+  "passed": true,
+  "executed": 5,
+  "fingerprint": "google/sdk_gphone64_x86_64/emu64xa:15/AE3A.240806.043/12960925:userdebug/dev-keys",
+  "package": "org.inkweft.app.a0.insertion.tlsprobe",
+  "artifacts": [
+    {
+      "file": "app-tlsProbe.apk",
+      "sha256": "02093dc56d68bcee5d7553be6de8b3d7444829aaea656055742636b62a99fe1a"
+    },
+    {
+      "file": "app-tlsProbe-androidTest.apk",
+      "sha256": "72567262e22c3567fc8b56833115dce33f5f8f50ab62e66d90c6baa2bd2df01c"
+    }
+  ],
+  "certificates": [
+    {
+      "file": "ca.pem",
+      "sha256": "820a7094036ecd9f86eed39aa070b0c2943e2b009c67c8c95c05de41560e19af",
+      "pemSha256": "9fe8c31979981c046a76a474b858c621b615356ded1a1b2c793eb712e2232bf0",
+      "issuer": "CN=InkWeft isolated test CA",
+      "from": "2026-09-28 07:10:37+00:00",
+      "until": "2026-10-02 07:10:37+00:00"
+    },
+    {
+      "file": "expired.pem",
+      "sha256": "59af45e917ff617f43a6a9b46db1ebcb518aa69e1c406acf15b5ffdb8f0bca45",
+      "pemSha256": "4c7d0ff4551ed8f1e2cb05f139c2ef2f18f4016e6996b966282dd72929256a66",
+      "issuer": "CN=InkWeft isolated test CA",
+      "from": "2026-09-27 07:10:37+00:00",
+      "until": "2026-09-28 07:10:37+00:00"
+    },
+    {
+      "file": "untrusted.pem",
+      "sha256": "abc2edacd6ff77d7ea90375d07a5506ea2ae5d05d8e319a8815912c272d07e26",
+      "pemSha256": "829f6f3adbc554e709e18aad37faced944c6bd45b6f3978d51c1b1403a279f42",
+      "issuer": "CN=Untrusted fixture CA",
+      "from": "2026-09-27 07:10:37+00:00",
+      "until": "2026-10-01 07:10:37+00:00"
+    },
+    {
+      "file": "valid.pem",
+      "sha256": "522b26a104ae66db6379a7bed20306983d10de35754a859d1e28682f71e5ed80",
+      "pemSha256": "4de550c2c6d42614962872652e783783012a94e6ded4aa87b381666230c0c501",
+      "issuer": "CN=InkWeft isolated test CA",
+      "from": "2026-09-27 07:10:37+00:00",
+      "until": "2026-10-01 07:10:37+00:00"
+    },
+    {
+      "file": "wrong.pem",
+      "sha256": "0db5ec846be1ca0e45ad963af66672aa1767e4c17008c6af41667e3e0d1a3d9a",
+      "pemSha256": "52cea5830f136dbcc6c22e33e5c76249ba8c430b5e7cb64fba967eeb89801cd7",
+      "issuer": "CN=InkWeft isolated test CA",
+      "from": "2026-09-27 07:10:37+00:00",
+      "until": "2026-10-01 07:10:37+00:00"
+    }
+  ],
+  "counts": {
+    "valid": {
+      "requests": 32,
+      "sensitive": 24
+    },
+    "expired": {
+      "requests": 0,
+      "sensitive": 0
+    },
+    "wrong": {
+      "requests": 0,
+      "sensitive": 0
+    },
+    "untrusted": {
+      "requests": 0,
+      "sensitive": 0
+    },
+    "redirect": {
+      "requests": 2,
+      "sensitive": 0
+    },
+    "sink": {
+      "requests": 0,
+      "sensitive": 0
+    }
+  },
+  "proxy": "null"
+}
