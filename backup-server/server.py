@@ -1,5 +1,8 @@
 """InkWeft experimental encrypted backup directory. No plaintext keys or author documents."""
 import argparse
+import asyncio
+import logging
+import threading
 from contextlib import contextmanager
 import getpass
 import hashlib
@@ -18,6 +21,10 @@ from pwdlib import PasswordHash
 
 CHUNK_LIMIT = 1024 * 1024
 LIBRARY_LIMIT = 512 * CHUNK_LIMIT
+ACCOUNT_LIMIT = 2 * 1024**3
+GLOBAL_LIMIT = 8 * 1024**3
+PENDING_SECONDS = 7 * 86400
+logger = logging.getLogger("inkweft.backup")
 HASHER = PasswordHash.recommended()
 SCHEMA = '''
 CREATE TABLE IF NOT EXISTS identity(id TEXT PRIMARY KEY);
@@ -83,17 +90,55 @@ def create_app(path, before_publish=lambda: None):
     app = FastAPI(title='墨织加密备份实验服务', version='0.1.0', docs_url=None, redoc_url=None)
     app.state.store = store
     security = HTTPBearer(auto_error=False)
+    password_slots=threading.BoundedSemaphore(4)
+
+    # Bounded body readers; SQLite BEGIN IMMEDIATE serializes quota, publish and delete.
+    # Receipts are retained indefinitely in v1; payload GC never removes operation identity.
+    active_requests = 0
 
     @app.middleware('http')
     async def size_limit(request, call_next):
-        # Enforce real streamed size, including requests without Content-Length.
-        body = bytearray()
-        async for chunk in request.stream():
-            if len(body)+len(chunk) > CHUNK_LIMIT + 32768: return Response(status_code=413)
-            body.extend(chunk)
-        request._body = bytes(body)
-        try: return await call_next(request)
-        except sqlite3.OperationalError: return Response('storage unavailable', status_code=507)
+        nonlocal active_requests
+        correlation = str(uuid.uuid4())
+        if active_requests >= 32:
+            return Response(status_code=429, headers={'Retry-After': '2', 'X-Request-ID': correlation})
+        active_requests += 1
+        try:
+            async with asyncio.timeout(30):
+                body = bytearray()
+                async for chunk in request.stream():
+                    if len(body)+len(chunk) > CHUNK_LIMIT + 32768:
+                        return Response(status_code=413, headers={'X-Request-ID': correlation})
+                    body.extend(chunk)
+                request._body = bytes(body)
+                result = await call_next(request)
+        except TimeoutError:
+            result = Response(status_code=408)
+        except sqlite3.OperationalError:
+            result = Response('storage unavailable', status_code=507)
+        finally:
+            active_requests -= 1
+        result.headers['X-Request-ID'] = correlation
+        # No URL, title, request body, account name or credentials in diagnostics.
+        logger.info('request=%s phase=http status=%s', correlation, result.status_code)
+        return result
+
+    def expire_pending(c):
+        expired = c.execute("SELECT library,id FROM operations WHERE kind='UPLOAD' AND state='PENDING' AND created<?",
+                            (int(time.time())-PENDING_SECONDS,)).fetchall()
+        for row in expired:
+            c.execute("UPDATE operations SET state='EXPIRED' WHERE library=? AND id=?", tuple(row))
+            c.execute('DELETE FROM chunks WHERE library=? AND operation=?', tuple(row))
+
+    @app.get('/health/live')
+    def live(): return {'alive': True}
+
+    @app.get('/health/ready')
+    def ready():
+        with store.db() as c:
+            c.execute('BEGIN IMMEDIATE')
+            c.execute('UPDATE identity SET id=id')
+        return {'writable': True, 'schema': 1}
 
     def session(credentials: HTTPAuthorizationCredentials | None = Depends(security)):
         if not credentials or credentials.scheme.lower() != 'bearer': raise HTTPException(401, 'Session required')
@@ -127,7 +172,10 @@ def create_app(path, before_publish=lambda: None):
             if c.execute('SELECT COUNT(*) FROM attempts WHERE name=?', (request.username,)).fetchone()[0] >= 5: raise HTTPException(429, 'Try later')
             c.execute('INSERT INTO attempts VALUES(?,?)', (request.username, now))
             row = c.execute('SELECT * FROM users WHERE name=?', (request.username,)).fetchone()
-        if row is None or not HASHER.verify(request.password, row['password']): raise HTTPException(401, 'Login failed')
+        if not password_slots.acquire(blocking=False):raise HTTPException(429,'Try later')
+        try:
+            if row is None or not HASHER.verify(request.password, row['password']): raise HTTPException(401,'Login failed')
+        finally:password_slots.release()
         token = secrets.token_urlsafe(32)
         with store.db() as c:
             c.execute('DELETE FROM attempts WHERE name=?', (request.username,))
@@ -150,7 +198,10 @@ def create_app(path, before_publish=lambda: None):
             c.execute('BEGIN IMMEDIATE')
             exists=c.execute('SELECT * FROM libraries WHERE id=?', (str(library),)).fetchone()
             if exists: authorize(c, library, user)
-            else: c.execute('INSERT INTO libraries VALUES(?,?)', (str(library), user['user']))
+            else:
+                if c.execute('SELECT COUNT(*) FROM libraries WHERE owner=?',(user['user'],)).fetchone()[0]>=16:
+                    raise HTTPException(507,'Library quota reached')
+                c.execute('INSERT INTO libraries VALUES(?,?)', (str(library), user['user']))
         return {'library': str(library)}
 
     @app.put('/v1/libraries/{library}/uploads/{op}')
@@ -165,8 +216,15 @@ def create_app(path, before_publish=lambda: None):
             if existing:
                 if existing['digest']!=fingerprint or existing['kind']!='UPLOAD': raise HTTPException(409, 'Operation payload changed')
                 return receipt(existing)
+            expire_pending(c)
             count=c.execute("SELECT COUNT(*) FROM operations WHERE library=? AND kind='UPLOAD' AND state IN ('PENDING','PUBLISHED')",(str(library),)).fetchone()[0]
             if count>=10: raise HTTPException(507, 'Version quota reached; explicitly delete an old version')
+            reserved=c.execute("SELECT o.manifest,l.owner,o.state FROM operations o JOIN libraries l ON l.id=o.library WHERE o.kind='UPLOAD' AND o.state IN ('PENDING','PUBLISHED')").fetchall()
+            if sum(json.loads(r['manifest'])['bytes'] for r in reserved)+value['bytes']>GLOBAL_LIMIT:
+                raise HTTPException(507,'Server storage budget reached')
+            own=[r for r in reserved if r['owner']==user['user']]
+            if sum(json.loads(r['manifest'])['bytes'] for r in own)+value['bytes']>ACCOUNT_LIMIT or sum(r['state']=='PENDING' for r in own)>=4:
+                raise HTTPException(507,'Account storage or pending upload budget reached')
             c.execute('INSERT INTO operations VALUES(?,?,?,?,?,?,?)',(str(op),str(library),'UPLOAD',fingerprint,encoded,'PENDING',int(time.time())))
             return receipt(operation(c,library,op,user))
 
@@ -175,7 +233,7 @@ def create_app(path, before_publish=lambda: None):
         data=await request.body()
         with store.db() as c:
             c.execute('BEGIN IMMEDIATE');row=operation(c,library,op,user);m=json.loads(row['manifest'])
-            if row['kind']!='UPLOAD' or row['state']=='DELETED': raise HTTPException(409,'Upload unavailable')
+            if row['kind']!='UPLOAD' or row['state'] not in ('PENDING','PUBLISHED'): raise HTTPException(409,'Upload unavailable')
             if not 0<=ordinal<len(m['chunks']): raise HTTPException(422,'Chunk index')
             expected=CHUNK_LIMIT if ordinal<len(m['chunks'])-1 else m['bytes']-ordinal*CHUNK_LIMIT
             if len(data)!=expected or digest(data)!=m['chunks'][ordinal]: raise HTTPException(422,'Chunk integrity')
@@ -190,7 +248,7 @@ def create_app(path, before_publish=lambda: None):
     def publish(library:uuid.UUID,op:uuid.UUID,user=Depends(session)):
         with store.db() as c:
             c.execute('BEGIN IMMEDIATE');row=operation(c,library,op,user)
-            if row['kind']!='UPLOAD' or row['state']=='DELETED': raise HTTPException(409,'Upload unavailable')
+            if row['kind']!='UPLOAD' or row['state'] not in ('PENDING','PUBLISHED'): raise HTTPException(409,'Upload unavailable')
             if row['state']=='PENDING':
                 m=json.loads(row['manifest']);count=0;total=0
                 for chunk in c.execute('SELECT ordinal,data FROM chunks WHERE library=? AND operation=? ORDER BY ordinal',(str(library),str(op))):
@@ -205,11 +263,19 @@ def create_app(path, before_publish=lambda: None):
     def lookup(library:uuid.UUID,op:uuid.UUID,user=Depends(session)):
         with store.db() as c: return receipt(operation(c,library,op,user))
 
+    @app.get('/v1/libraries/{library}/uploads/{op}')
+    def uploaded_chunks(library:uuid.UUID,op:uuid.UUID,user=Depends(session)):
+        with store.db() as c:
+            row=operation(c,library,op,user)
+            if row['kind']!='UPLOAD': raise HTTPException(409,'Not an upload')
+            return receipt(row)|{'manifest':json.loads(row['manifest']), 'received':[
+                r['ordinal'] for r in c.execute('SELECT ordinal FROM chunks WHERE library=? AND operation=? ORDER BY ordinal',(str(library),str(op)))]}
+
     @app.get('/v1/libraries/{library}/versions')
-    def versions(library:uuid.UUID,user=Depends(session)):
+    def versions(library:uuid.UUID,include_pending:bool=False,user=Depends(session)):
         with store.db() as c:
             authorize(c,library,user)
-            return [receipt(r)|{'created':r['created']} for r in c.execute("SELECT * FROM operations WHERE library=? AND kind='UPLOAD' AND state='PUBLISHED' ORDER BY created DESC,id",(str(library),))]
+            return [receipt(r)|{'created':r['created'],'bytes':json.loads(r['manifest'])['bytes'],'format':json.loads(r['manifest'])['format']} for r in c.execute("SELECT * FROM operations WHERE library=? AND kind='UPLOAD' AND (state='PUBLISHED' OR (? AND state='PENDING')) ORDER BY created DESC,id",(str(library),include_pending))]
 
     @app.get('/v1/libraries/{library}/versions/{op}')
     def manifest(library:uuid.UUID,op:uuid.UUID,user=Depends(session)):
@@ -228,8 +294,9 @@ def create_app(path, before_publish=lambda: None):
             return Response(chunk['data'],media_type='application/octet-stream')
 
     @app.delete('/v1/libraries/{library}/versions/{target}')
-    def delete(library:uuid.UUID,target:uuid.UUID,operation_id:uuid.UUID,user=Depends(session)):
-        payload=canonical({'target':str(target)});fingerprint=digest(payload.encode())
+    def delete(library:uuid.UUID,target:uuid.UUID,operation_id:uuid.UUID,expected_state:str|None=None,user=Depends(session)):
+        if expected_state not in (None,'PENDING'):raise HTTPException(422,'Invalid precondition')
+        payload=canonical({'target':str(target)}|({'expected':'PENDING'} if expected_state else {}));fingerprint=digest(payload.encode())
         with store.db() as c:
             c.execute('BEGIN IMMEDIATE');authorize(c,library,user)
             prior=c.execute('SELECT * FROM operations WHERE library=? AND id=?',(str(library),str(operation_id))).fetchone()
@@ -238,6 +305,7 @@ def create_app(path, before_publish=lambda: None):
                 return receipt(prior)
             row=operation(c,library,target,user)
             if row['kind']!='UPLOAD': raise HTTPException(409,'Invalid target')
+            if expected_state and row['state']!=expected_state:raise HTTPException(409,'Upload already completed; confirm version deletion')
             c.execute("UPDATE operations SET state='DELETED' WHERE library=? AND id=?",(str(library),str(target)))
             c.execute('DELETE FROM chunks WHERE library=? AND operation=?',(str(library),str(target)))
             c.execute('INSERT INTO operations VALUES(?,?,?,?,?,?,?)',(str(operation_id),str(library),'DELETE',fingerprint,payload,'DELETED',int(time.time())))

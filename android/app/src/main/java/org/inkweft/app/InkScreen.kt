@@ -326,7 +326,7 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
             val initial=remember(page.id){workspace.cachedViewport(page.id)?:row.takeIf{it.zoom>0}?.let{runCatching{CanvasViewport(it.centerX,it.centerY,it.zoom)}.getOrNull()}}
             Box(Modifier.fillMaxWidth().weight(1f)){
             key(page.id){AndroidView(factory={ctx->InkCanvasView(ctx).also{v->
-                view=v;v.onStroke=vm::accept;v.onErase={path,radius,whole,only->if(eraser.onlyTape)objectsVm.eraseTapes(path,radius)else{vm.erasePath(path,radius,whole,only);if(!only)objectsVm.eraseBeauty(path,radius,whole)}};v.onGesture={gesture=it;if(!it&&tool==3&&eraser.returnToPen)tool=lastWritingTool}
+                view=v;v.onStroke=vm::accept;v.onCheckpoint=vm::checkpoint;v.onErase={path,radius,whole,only->if(eraser.onlyTape)objectsVm.eraseTapes(path,radius)else{vm.erasePath(path,radius,whole,only);if(!only)objectsVm.eraseBeauty(path,radius,whole)}};v.onGesture={gesture=it;if(!it&&tool==3&&eraser.returnToPen)tool=lastWritingTool}
                 v.onNotice={notice=it;app.diagnostics.event(DiagnosticCode.INK_UI,DiagnosticResult.REJECTED)}
                 v.finishStroke={polishNewStroke(it,beautyOptions)};v.onViewportGesture={showViewportHint(it)};v.onAxes={pressure,tilt->app.diagnostics.inputAxes(pressure,tilt);axes="本次输入：压力${if(pressure)"已上报"else"未上报"} · 倾斜${if(tilt)"已上报"else"未上报"}"}
                 v.onObjectTap={id->if(!readOnly){val o=objectsVm.ui.value.objects.find{it.id==id};if(o?.kind==PageObjectKind.TAPE)objectsVm.put(o.copy(revealed=!o.revealed))else{selectedObject=id;tool=5}}};v.onViewport={workspace.viewport(page.id,it)};v.onScale={zoom=it;selectionViewport=v.snapshotViewport()}

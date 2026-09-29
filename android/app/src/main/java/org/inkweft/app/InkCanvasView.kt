@@ -19,6 +19,8 @@ import kotlin.math.*
 
 /** A bounded viewport. Partial erase clips ink, never paints the paper colour. */
 class InkCanvasView(context:Context):View(context){
+    var onCheckpoint:(InkStroke)->Unit={}
+    private var checkpointAt=0L
     var onStroke:(InkStroke)->Unit={}
     var finishStroke:(InkStroke)->InkStroke={it}
     var onViewportGesture:(Boolean)->Unit={}
@@ -275,6 +277,7 @@ class InkCanvasView(context:Context):View(context){
     }
     override fun onHoverEvent(e:MotionEvent):Boolean {if(preview||!eraseMode)return super.onHoverEvent(e);cursor=if(e.actionMasked==MotionEvent.ACTION_HOVER_EXIT)null else CanvasPoint(e.x.toDouble(),e.y.toDouble());invalidate();return true}
     override fun onTouchEvent(e:MotionEvent):Boolean{
+        BackgroundBudget.lastInput=android.os.SystemClock.elapsedRealtime()
         if(preview)return false;if(!configured)return true
         if(e.actionMasked==MotionEvent.ACTION_CANCEL||(e.flags and MotionEvent.FLAG_CANCELED)!=0){tapImage=null;cancelGesture();panPointer=-1;finishViewport();return true}
         if(embeddedPage&&inputId==-1&&e.actionMasked!=MotionEvent.ACTION_POINTER_DOWN&&e.getToolType(0)==MotionEvent.TOOL_TYPE_FINGER)return false
@@ -295,7 +298,7 @@ class InkCanvasView(context:Context):View(context){
             gesturePen=pen;gestureColor=penColor;gestureWidth=penWidth;gestureErase=eraseMode||type==MotionEvent.TOOL_TYPE_ERASER
             gestureOnlyTape=eraserTapeOnly;gestureWhole=eraserWhole||gestureOnlyTape;gestureOnlyHighlighter=eraserHighlighterOnly&&!gestureOnlyTape;gestureRadius=(eraserDiameterDp/(2*viewport.zoom)).toFloat()
             eraseTargets=content.filter{it.id !in suppressedStrokeIds&&(!gestureOnlyHighlighter||it.pen==InkPen.HIGHLIGHTER)}.map{it.id}.toSet();cursor=CanvasPoint(e.x.toDouble(),e.y.toDouble())
-            raw=ArrayList();val device=e.device;val pressure=device?.getMotionRange(MotionEvent.AXIS_PRESSURE,e.source)
+            raw=ArrayList();checkpointAt=0;val device=e.device;val pressure=device?.getMotionRange(MotionEvent.AXIS_PRESSURE,e.source)
             hasPressure=inputKind==InkTool.STYLUS&&pressure!=null&&pressure.max>pressure.min;pressureMin=pressure?.min?:0f;pressureSpan=(pressure?.range?:1f).coerceAtLeast(.001f)
             hasTilt=inputKind==InkTool.STYLUS&&device?.getMotionRange(MotionEvent.AXIS_TILT,e.source)!=null;hasOrientation=inputKind==InkTool.STYLUS&&device?.getMotionRange(MotionEvent.AXIS_ORIENTATION,e.source)!=null
             onAxes(hasPressure,hasTilt);onGesture(true);if(!gestureErase&&gesturePen!=InkPen.PENCIL)live.start(InkBrushes.brush(gesturePen,gestureColor,gestureWidth,hasPressure,gestureAppearance));append(e,downIndex,-1);if(seamWriting&&!gestureErase)onLiveSamples(raw);postInvalidateOnAnimation();return true
@@ -329,7 +332,10 @@ class InkCanvasView(context:Context):View(context){
             if(!gestureErase&&gesturePen!=InkPen.PENCIL){live.start(InkBrushes.brush(gesturePen,gestureColor,gestureWidth,hasPressure,gestureAppearance));incremental.clear();raw.forEach{InkBrushes.add(incremental,it,inputKind,gesturePen,gestureAppearance)};live.enqueueInputs(incremental,empty)}
             return
         }
-        try{if(!gestureErase&&gesturePen!=InkPen.PENCIL){incremental.clear();InkBrushes.add(incremental,point,inputKind,gesturePen,gestureAppearance);live.enqueueInputs(incremental,empty)};raw.add(point);if(raw.size==InkLimits.MAX_POINTS)onNotice("达到单笔采样上限，请抬笔提交后继续。")}catch(_:IllegalArgumentException){onNotice("无效设备采样未进入笔迹。")}
+        try{if(!gestureErase&&gesturePen!=InkPen.PENCIL){incremental.clear();InkBrushes.add(incremental,point,inputKind,gesturePen,gestureAppearance);live.enqueueInputs(incremental,empty)};raw.add(point)
+            if(!gestureErase&&raw.size>=128&&(raw.size%256==0||time-checkpointAt>=1000)){
+                checkpointAt=time;onCheckpoint(InkStroke(gestureId,gesturePen,gestureColor,gestureWidth,inputKind,raw.toList(),world||seamWriting,appearance=gestureAppearance))
+            };if(raw.size==InkLimits.MAX_POINTS)onNotice("达到单笔采样上限，请抬笔提交后继续。")}catch(_:IllegalArgumentException){onNotice("无效设备采样未进入笔迹。")}
     }
     internal fun retainLiveStroke(s:InkStroke){if(s.pen==InkPen.PENCIL)transientPencils[s.id]=s else transient[s.id]=InkBrushes.stroke(s);invalidate()}
     private fun finishGesture(){

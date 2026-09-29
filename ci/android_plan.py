@@ -21,6 +21,7 @@ def inventory(module):
 
 def plan(paths, full=False):
     core = lint = full
+    experiments = full
     app = set(inventory("app")) if full else set()
     room = set(inventory("data-local")) if full else set()
     reasons = []
@@ -30,7 +31,9 @@ def plan(paths, full=False):
             continue
         if path.startswith("ci/test_") and p.suffix == ".py":
             continue
-        if path.startswith("backup-server/"):
+        if path.startswith(("sync-lab/","resource-packs/")):
+            experiments=True
+        elif path.startswith("backup-server/"):
             app.add('org.inkweft.app.EncryptedBackupIntegrationTest')
         elif path.startswith("android/core-domain/src/test/"):
             core = True
@@ -51,7 +54,7 @@ def plan(paths, full=False):
             core = lint = True
             room.update(inventory("data-local")); app.update(inventory("app"))
         reasons.append(path)
-    return {"core": core, "lint": lint, "app": sorted(app), "room": sorted(room),
+    return {"experiments":experiments,"core": core, "lint": lint, "app": sorted(app), "room": sorted(room),
             "backup": 'org.inkweft.app.EncryptedBackupIntegrationTest' in app,
             "build": bool(core or lint or app or room), "device": bool(app or room),
             "expected_app": sum(inventory("app")[c] for c in app),

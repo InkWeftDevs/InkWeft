@@ -58,6 +58,19 @@ class InkRepository(private val db:NoteDatabase,private val fault:(InkFaultPoint
         catch(_:IllegalArgumentException){CanvasBatchResult(failure=InkCommitResult.Conflict)}
     }
     private val dao=db.ink()
+    private val checkpoints by lazy{InkCheckpoints(checkNotNull(db.checkpointRoot))}
+    suspend fun checkpoint(page:String,stroke:InkStroke){
+        require(stroke.world==owner(page).world)
+        if(dao.stroke(stroke.id)==null)checkpoints.save(page,stroke.samples.size,stroke)
+    }
+    suspend fun recoverCheckpoints(page:String):List<InkStroke> {
+        if(db.checkpointRoot==null)return emptyList()
+        val recovered=mutableListOf<InkStroke>()
+        for(stroke in checkpoints.read(page)){
+            if(dao.stroke(stroke.id)!=null)checkpoints.remove(page,stroke.id) else recovered+=stroke
+        };return recovered
+    }
+
     private suspend fun owner(id:String)=db.pages().get(id)?:NotebookPages(db).ensureFirst(id)
     suspend fun read(noteId:String):InkPage=db.withTransaction {
         val owner=owner(noteId);val page=dao.page(noteId);val rows=dao.strokes(noteId)
@@ -144,7 +157,11 @@ class InkRepository(private val db:NoteDatabase,private val fault:(InkFaultPoint
             // Search query joins this exact page head, so stale text becomes
             // unsearchable in the same transaction, even before an OCR worker runs.
             db.notes().touch(owner.notebookId,System.currentTimeMillis());InkCommitResult.Committed(next)
-        };fault(InkFaultPoint.AFTER_TRANSACTION);return result
+        };fault(InkFaultPoint.AFTER_TRANSACTION)
+        if(result is InkCommitResult.Committed){
+            val sealed=when(val m=command.mutation){is InkMutation.Add->listOf(m.stroke.id);is InkMutation.Replace->m.added.map{it.id};else->emptyList()}
+            if(db.checkpointRoot!=null)sealed.forEach{checkpoints.remove(command.noteId,it)}
+        };return result
     }
     internal suspend fun populateImportedPage(id:String,file:InkPageFile){
         DocumentRepository(db).attach(id,file.source)

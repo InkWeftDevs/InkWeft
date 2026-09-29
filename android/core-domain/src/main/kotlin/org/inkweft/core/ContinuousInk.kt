@@ -9,9 +9,10 @@ object ContinuousInk {
     fun split(stroke:InkStroke,origin:Int,pageCount:Int):Map<Int,List<InkStroke>> {
         require(origin in 0 until pageCount && stroke.cuts.isEmpty())
         val result=linkedMapOf<Int,MutableList<InkStroke>>()
+        var part=0
         var current=-1;var points=mutableListOf<InkSample>();var leading:InkSample?=null;var trailing:InkSample?=null
         fun flush(){if(points.isNotEmpty()){
-            result.getOrPut(current){mutableListOf()}.add(InkStroke(UUID.randomUUID().toString(),stroke.pen,stroke.color,stroke.width,stroke.tool,points.toList(),appearance=stroke.appearance.translated(0f,(origin-current)*1414f).let{a->if(a.recipe.version==0)a else a.copy(leading=leading?.copy(y=leading!!.y-current*1414f,world=true),trailing=trailing?.copy(y=trailing!!.y-current*1414f,world=true))}))
+            result.getOrPut(current){mutableListOf()}.add(InkStroke(if(part++==0)stroke.id else UUID.nameUUIDFromBytes("${stroke.id}:$part".toByteArray()).toString(),stroke.pen,stroke.color,stroke.width,stroke.tool,points.toList(),appearance=stroke.appearance.translated(0f,(origin-current)*1414f).let{a->if(a.recipe.version==0)a else a.copy(leading=leading?.copy(y=leading!!.y-current*1414f,world=true),trailing=trailing?.copy(y=trailing!!.y-current*1414f,world=true))}))
             points=mutableListOf()
         }}
         fun emit(page:Int,p:InkSample,before:InkSample?=null,after:InkSample?=null){

@@ -13,6 +13,7 @@ data class LibraryContentReceipt(@PrimaryKey val commandId:String,val kind:Strin
 interface LibraryContentDao {
     @Query("SELECT * FROM library_content_receipts WHERE commandId=:id")
     suspend fun receipt(id:String):LibraryContentReceipt?
+    @Query("SELECT noteId FROM library_content_receipts WHERE kind='RESOURCE' AND digest=:hash") suspend fun resourceCopies(hash:String):List<String>
     @Insert(onConflict=OnConflictStrategy.ABORT) suspend fun insert(row:LibraryContentReceipt)
 }
 enum class LibraryContentFault { BEFORE_RECEIPT, AFTER_TRANSACTION }

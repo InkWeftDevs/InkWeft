@@ -34,7 +34,10 @@ class InkViewModel(private val noteId:String,private val repository:InkRepositor
     var suppressedIds:Set<String> = emptySet()
     private var writing=false;private var reading=false;private var erasing=false
     init{load()}
-    fun load(){if(session!=null||reading)return;reading=true;mutable.value=InkUi();viewModelScope.launch{try{val p=withContext(Dispatchers.IO){repository.read(noteId)};session=InkSession(p);publish()}catch(c:CancellationException){throw c}catch(_:Exception){mutable.value=InkUi(loading=false,readFailed=true)}finally{reading=false}}}
+    fun load(){if(session!=null||reading)return;reading=true;mutable.value=InkUi();viewModelScope.launch{try{val p=withContext(Dispatchers.IO){repository.read(noteId)};session=InkSession(p)
+        val recovered=try{withContext(Dispatchers.IO){repository.recoverCheckpoints(noteId)}}catch(c:CancellationException){throw c}catch(_:Exception){mutable.value=mutable.value.copy(message="长笔检查点待核对；已保存笔迹保留");emptyList()}
+        recovered.forEach{session!!.enqueue(InkMutation.Add(it))};publish();if(recovered.isNotEmpty()){mutable.value=mutable.value.copy(message="已恢复长笔的已确认采样，可一次撤销整笔");pump()}
+        }catch(c:CancellationException){throw c}catch(_:Exception){mutable.value=InkUi(loading=false,readFailed=true)}finally{reading=false}}}
     fun discardRejectedDraft(){val captured=session?:return;if(reading||erasing||captured.blocked !in listOf(InkCommitResult.Conflict,InkCommitResult.Rejected))return;reading=true;viewModelScope.launch{try{val p=withContext(Dispatchers.IO){repository.read(noteId)};if(session===captured){session=InkSession(p);historyDirection=0;groupUndo.clear();groupRedo.clear()};publish()}catch(c:CancellationException){throw c}catch(_:Exception){mutable.value=mutable.value.copy(readFailed=true)}finally{reading=false}}}
     private fun publish(){val s=session?:return;mutable.value=InkUi(s.visibleDraft(),false,false,s.blocked,s.queued,s.canStart&&!erasing,s.canUndo&&!erasing,s.canRedo&&!erasing,s.page.revision,erasing,mutable.value.message)}
     fun clearMessage(){mutable.value=mutable.value.copy(message=null)}
@@ -71,6 +74,19 @@ class InkViewModel(private val noteId:String,private val repository:InkRepositor
         require(existing.size+strokes.size<=InkLimits.MAX_STROKES)
         require(existing.values.sumOf{it.samples.size}+strokes.sumOf{it.samples.size}<=InkLimits.MAX_PAGE_POINTS)
         require(strokes.map{it.id}.distinct().size==strokes.size&&strokes.none{it.id in existing})
+    }
+    private var checkpointJob:Job?=null
+    private var checkpointLatest:InkStroke?=null
+    fun checkpoint(stroke:InkStroke){
+        checkpointLatest=stroke
+        if(checkpointJob?.isActive==true)return
+        checkpointJob=viewModelScope.launch{
+            while(checkpointLatest!=null){val latest=checkpointLatest!!;checkpointLatest=null
+                try{withContext(Dispatchers.IO){repository.checkpoint(noteId,latest)}}
+                catch(c:CancellationException){throw c}
+                catch(_:Exception){mutable.value=mutable.value.copy(message="长笔检查点未确认；请尽快抬笔保存")}
+            }
+        }
     }
     fun accept(stroke:InkStroke){val s=session?:return;s.enqueue(InkMutation.Add(stroke),finishInFlight=true);publish();pump()}
     fun erase(ids:List<String>){if(ids.isEmpty())return;val s=session?:return;s.enqueue(InkMutation.Visibility(ids,false),finishInFlight=true);publish();pump()}

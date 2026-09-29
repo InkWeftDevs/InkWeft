@@ -1,11 +1,12 @@
 package org.inkweft.app
 
 import android.os.*
+import android.graphics.Bitmap
 import android.view.*
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.lifecycle.ViewModelProvider
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.*
 import org.inkweft.core.*
 import org.json.*
 import org.junit.*
@@ -39,6 +40,22 @@ class WorkflowPerformanceTest {
   val listener=Window.OnFrameMetricsAvailableListener{_,m,_->frames.add(m.getMetric(FrameMetrics.TOTAL_DURATION)/1e6);val v=m.getMetric(FrameMetrics.GPU_DURATION);if(v>=0)gpu.add(v/1e6)}
   compose.runOnIdle{compose.activity.window.addOnFrameMetricsAvailableListener(listener,Handler(handler.looper))}
   val report=JSONObject().put("mode","debug-actual-document-session").put("sha256",ContentTransfer.hash(fixture)).put("strokes",600).put("points",19200).put("pages",1)
+  val condition=androidx.test.platform.app.InstrumentationRegistry.getArguments().getString("perfCondition")?:"writing"
+  report.put("condition",condition)
+  var background:kotlinx.coroutines.Job?=null
+  val backgroundScope=CoroutineScope(SupervisorJob()+Dispatchers.IO)
+  if(condition=="backup"){
+   runBlocking{app.libraryBackup.snapshot().use{snapshot->snapshot.file.inputStream().use{app.libraryBackup.inspect(it)}.use{require(it.notes==1){"Synthetic library required"}}}}
+   var login:Job?=null;compose.runOnIdle{app.backupEngine.sessions.meteredAllowed=true;login=app.backupEngine.login("http://127.0.0.1:18751","synthetic-alice","synthetic-alice-password-123")};runBlocking{login?.join()}
+   assertTrue(app.backupEngine.ui.value.connected)
+   val started=System.nanoTime();compose.runOnIdle{background=app.backupEngine.backup(UUID.randomUUID().toString(),EncryptedBackupFile.b64(EncryptedBackupFile.random(32)))}
+   background?.invokeOnCompletion{report.put("backgroundMs",(System.nanoTime()-started)/1e6)}
+  }
+  if(condition=="install"){
+   val manifest="""{"format":"inkweft.resource-pack.v1","id":"example.perf-pack","title":"固定性能模板","author":"InkWeft","version":1,"resources":[{"id":"paper","type":"paper","title":"方格记录","paper":"GRID"}]}"""
+   val bytes=java.io.ByteArrayOutputStream().also{out->java.util.zip.ZipOutputStream(out).use{z->z.putNextEntry(java.util.zip.ZipEntry("manifest.json"));z.write(manifest.toByteArray());z.closeEntry()}}.toByteArray()
+   val started=System.nanoTime();background=backgroundScope.launch{app.resourcePacks.install(ResourcePackCodec.inspect(bytes));report.put("backgroundMs",(System.nanoTime()-started)/1e6)}
+  }
   val cpuBefore=threadTicks()
   try{
    fun open(prefix:String){
@@ -81,18 +98,29 @@ class WorkflowPerformanceTest {
    }
    measureViewport("scroll"){compose.onNodeWithTag("ink-surface").performTouchInput{swipe(androidx.compose.ui.geometry.Offset(width*.7f,height*.65f),androidx.compose.ui.geometry.Offset(width*.7f,height*.35f),300)}}
    measureViewport("pinch"){compose.pinchCanvasOut()}
+   if(condition=="map"){compose.onNodeWithTag("quick-study").performClick();compose.onNodeWithTag("study-panel").assertIsDisplayed()}
    compose.runOnIdle{checkNotNull(canvas()).fitWidth()};compose.waitForIdle()
    started=System.nanoTime();compose.runOnIdle{ViewModelProvider(compose.activity)["ink-${n.id}",InkViewModel::class.java].erase(listOf(strokes.first().id))}
    compose.waitUntil(15000){runBlocking{app.inkRepository.read(n.id).revision}==4L}
    report.put("eraseCommandCommittedMs",(System.nanoTime()-started)/1e6)
    compose.waitUntil(15000){var visible=false;compose.runOnIdle{canvas()?.let{visible=it.displayedStrokeCount==599&&!it.rasterPending}};visible}
    report.put("eraseVisibleMs",(System.nanoTime()-started)/1e6)
+   val saveStart=System.nanoTime();val extra=InkStroke(id("workflow-save"),InkPen.PEN,0xff314159.toInt(),3f,InkTool.STYLUS,listOf(InkSample(100f,100f,0),InkSample(150f,150f,20)))
+   val revision=runBlocking{app.inkRepository.read(n.id).revision}
+   assertTrue(runBlocking{app.inkRepository.save(CommitInk(id("workflow-save-command"),n.id,revision,InkMutation.Add(extra)))} is InkCommitResult.Committed)
+   report.put("saveConfirmedMs",(System.nanoTime()-saveStart)/1e6)
+   val textObjects=List(8){i->PageObject(id("workflow-text-$i"),PageObjectKind.TEXT,100f,100f+i*120,600f,100f,text="条件概率 P(A | B) · 第 ${i+1} 节学习记录")}
+   val mixedStart=System.nanoTime();val mixedBitmap=Bitmap.createBitmap(1000,1414,Bitmap.Config.ARGB_8888)
+   compose.runOnIdle{val painter=PageObjectPainter();painter.draw(android.graphics.Canvas(mixedBitmap),textObjects,false,CanvasBounds(0.0,0.0,1000.0,1414.0));painter.clear()}
+   mixedBitmap.recycle();report.put("mixedTextDrawMs",(System.nanoTime()-mixedStart)/1e6).put("textFixtureSha256",ContentTransfer.hash(PageObjectCodec.encode(textObjects)))
+   runBlocking{background?.join()}
+   if(condition=="backup")compose.waitUntil(30000){!app.backupEngine.ui.value.busy}
    val ticks=android.system.Os.sysconf(android.system.OsConstants._SC_CLK_TCK).toDouble();val after=threadTicks()
    for(name in listOf("ui","render"))report.put(name+"CpuMs",if(cpuBefore[name]!=null&&after[name]!=null)(after.getValue(name)-cpuBefore.getValue(name))*1000/ticks else JSONObject.NULL)
    val memory=Debug.MemoryInfo();Debug.getMemoryInfo(memory)
    report.put("pssKb",memory.totalPss).put("javaHeapBytes",Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory()).put("nativeHeapBytes",Debug.getNativeHeapAllocatedSize()).put("gpuMemoryBytes",JSONObject.NULL)
    report.put("frameTotalMs",JSONArray(frames)).put("frameGpuDurationMs",JSONArray(gpu)).put("refreshRate",compose.activity.display?.refreshRate?:JSONObject.NULL)
    File(app.getExternalFilesDir(null),"workflow-performance.json").writeText(report.toString(2))
-  }finally{compose.runOnIdle{compose.activity.window.removeOnFrameMetricsAvailableListener(listener)};handler.quitSafely()}
+  }finally{backgroundScope.cancel();compose.runOnIdle{compose.activity.window.removeOnFrameMetricsAvailableListener(listener)};handler.quitSafely()}
  }
 }

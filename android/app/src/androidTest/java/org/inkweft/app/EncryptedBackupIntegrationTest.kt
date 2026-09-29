@@ -2,6 +2,7 @@ package org.inkweft.app
 
 import androidx.test.platform.app.InstrumentationRegistry
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.launch
 import org.inkweft.core.*
 import org.inkweft.data.*
 import org.json.JSONArray
@@ -56,8 +57,60 @@ class EncryptedBackupIntegrationTest {
         assertNull("A failed new inspection must not leave an older restore confirmation",job.ui.value.restoreNotes)
         await(job){job.inspect(library,operation,key)};assertEquals(1,job.ui.value.restoreNotes)
         await(job){job.restore()};assertTrue(job.ui.value.message.contains("无需重复导入"))
+        await(job){job.create(library,key)};assertTrue(job.hasPendingUpload())
+        await(job){job.abandonLocal()};assertFalse(job.hasPendingUpload())
+        assertEquals("DELETED",JSONObject(file.readText()).getString("state"))
         instrumentation.runOnMainSync{store.clear()}
     }
+    @Test fun expiredSessionCanReconnectAndOfflineDisconnectKeepsQueue()=runBlocking {
+        val instrumentation=InstrumentationRegistry.getInstrumentation()
+        val app=instrumentation.targetContext.applicationContext as InkWeftApplication
+        app.libraryBackup.snapshot().use{snapshot->snapshot.file.inputStream().use{app.libraryBackup.inspect(it)}.use{require(it.notes==0)}}
+        val engine=app.backupEngine
+        suspend fun await(action:()->kotlinx.coroutines.Job?){var job:kotlinx.coroutines.Job?=null;instrumentation.runOnMainSync{job=action()};job?.join()}
+        await{engine.login("http://127.0.0.1:18751","synthetic-alice","synthetic-alice-password-123")}
+        val library=id();await{engine.create(library,EncryptedBackupFile.b64(EncryptedBackupFile.random(32)))}
+        val queue=File(app.filesDir,"encrypted-backup-jobs/queue.json");val before=JSONObject(queue.readText()).getString("operation")
+        val queued=JSONObject(queue.readText());val transport=BackupTransport(engine.connection()!!)
+        transport.json("PUT",library);transport.json("PUT",library,"/uploads/$before",queued.getJSONObject("manifest"))
+        val cipher=File(queue.parentFile,queued.getString("file"))
+        val first=cipher.inputStream().use{it.readBackupChunk(EncryptedBackupFile.WIRE_BLOCK)}
+        transport.request("PUT",library,"/uploads/$before/chunks/0",bytes=first)
+        val identity=engine.connection()!!;BackupTransport(identity).logout()
+        await{engine.list(library)}
+        assertEquals(BackupAuth.REAUTHENTICATE,engine.ui.value.auth);assertFalse(engine.ui.value.connected)
+        await{engine.login(identity.url,"synthetic-alice","synthetic-alice-password-123")}
+        await{engine.upload()};assertEquals(before,JSONObject(queue.readText()).getString("operation"))
+        assertEquals("PUBLISHED",JSONObject(queue.readText()).getString("state"))
+        await{engine.list(library)};assertEquals(1,engine.ui.value.details.size)
+        val counts=JSONObject(java.net.URL("http://127.0.0.1:18751/__fixture__/counts").readText())
+        assertEquals("Already received block was resent",1,counts.getInt("PUT /v1/libraries/$library/uploads/$before/chunks/0"))
+        val refreshed=engine.connection()!!
+        val deleteId=id();BackupTransport(refreshed).json("DELETE",library,"/versions/$before?operation_id=$deleteId")
+        File(queue.parentFile,"delete.json").writeText(JSONObject().put("library",library).put("target",before).put("operation",deleteId).put("binding",refreshed.binding(library)).toString())
+        await{engine.delete(library,before)};assertFalse(File(queue.parentFile,"delete.json").exists())
+        assertFalse(cipher.exists());BackupTransport(refreshed).logout()
+        instrumentation.runOnMainSync{engine.logout()}
+        val until=System.currentTimeMillis()+10_000
+        while(engine.ui.value.busy&&System.currentTimeMillis()<until)Thread.sleep(25)
+        assertFalse(engine.ui.value.connected);assertNull(engine.sessions.read())
+        assertTrue(engine.ui.value.message.contains("远端撤销未确认"));assertTrue(queue.exists())
+        assertEquals(before,JSONObject(queue.readText()).getString("operation"))
+    }
+
+    @Test fun cancellationInterruptsSlowSocketWithinBound()=runBlocking {
+        val server=java.net.ServerSocket(0,8,java.net.InetAddress.getByName("127.0.0.1"))
+        val accepted=java.util.concurrent.CountDownLatch(1)
+        val executor=java.util.concurrent.Executors.newSingleThreadExecutor()
+        val future=executor.submit {server.accept().use{socket->accepted.countDown();Thread.sleep(5000)}}
+        try{
+            val job=launch {BackupTransport.login("http://127.0.0.1:${server.localPort}","a","b",id())}
+            kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO){assertTrue(accepted.await(2,java.util.concurrent.TimeUnit.SECONDS))}
+            val start=System.nanoTime();job.cancel();job.join()
+            assertTrue("Cancel waited on socket",(System.nanoTime()-start)/1_000_000<1500)
+        }finally{server.close();future.cancel(true);executor.shutdownNow()}
+    }
+
     @Test fun encryptedBackupRoundTripPreservesAuthorClosureAndRejectsAnotherAccount()=runBlocking {
         val context=InstrumentationRegistry.getInstrumentation().targetContext
         val root=File(context.cacheDir,"encrypted-protocol-${id()}").apply{check(mkdirs())}

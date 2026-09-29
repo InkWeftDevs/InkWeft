@@ -1,3 +1,4 @@
+from contextlib import closing
 import hashlib
 import json
 import os
@@ -116,6 +117,75 @@ class BackupProtocolTest(unittest.TestCase):
             c.execute('UPDATE sessions SET revoked=1 WHERE user=?',(self.a,))
         identity=self.login('alice','new-alice-password-789');self.assertEqual(self.a,identity['user'])
         with self.assertRaises(Exception):decrypt(encrypted,self.root/'wrong-key',self.library,os.urandom(32))
+
+    def test_chunk_inventory_quota_and_pending_delete_preserve_receipts(self):
+        data=b'cipher';m={'format':'inkweft.encrypted-backup.v1','chunks':[hashlib.sha256(data).hexdigest()],'bytes':len(data)}
+        ids=[]
+        for i in range(10):
+            op=str(uuid.uuid4());ids.append(op)
+            self.client.request('PUT','/uploads/'+op,json=m)
+            self.assertEqual([],self.client.request('GET','/uploads/'+op).json()['received'])
+            self.client.request('PUT',f'/uploads/{op}/chunks/0',content=data)
+            self.assertEqual([0],self.client.request('GET','/uploads/'+op).json()['received'])
+            self.client.request('POST',f'/uploads/{op}/publish')
+        blocked=self.http.put('/v1/libraries/'+self.library+'/uploads/'+str(uuid.uuid4()),headers=self.client.headers,json=m)
+        self.assertEqual(507,blocked.status_code)
+        removal=str(uuid.uuid4());path=f'/versions/{ids[0]}?operation_id={removal}'
+        receipt=self.client.request('DELETE',path).json()
+        self.assertEqual(receipt,self.client.request('GET','/operations/'+removal).json())
+        op=str(uuid.uuid4());self.client.request('PUT','/uploads/'+op,json=m)
+        rows=self.client.request('GET','/versions?include_pending=true').json()
+        self.assertEqual(10,len(rows));self.assertEqual(1,sum(r['state']=='PENDING' for r in rows))
+        self.assertTrue(all(r['bytes']==len(data) and r['created']>0 for r in rows))
+        self.client.request('DELETE',f'/versions/{op}?operation_id={uuid.uuid4()}')
+        self.assertEqual('DELETED',self.client.request('GET','/uploads/'+op).json()['state'])
+        self.assertEqual(receipt,self.client.request('DELETE',path).json())
+
+    def test_health_pending_expiry_and_account_budget(self):
+        self.assertEqual({'writable':True,'schema':1},self.http.get('/health/ready').json())
+        self.assertEqual(200,self.http.get('/health/live').status_code)
+        data=b'x';m={'format':'inkweft.encrypted-backup.v1','chunks':[hashlib.sha256(data).hexdigest()],'bytes':1}
+        ops=[]
+        for i in range(4):
+            op=str(uuid.uuid4());ops.append(op);self.client.request('PUT','/uploads/'+op,json=m)
+        path='/v1/libraries/'+self.library+'/uploads/'+str(uuid.uuid4())
+        self.assertEqual(507,self.http.put(path,headers=self.client.headers,json=m).status_code)
+        with Store(self.db).db() as c:c.execute('UPDATE operations SET created=0 WHERE id=?',(ops[0],))
+        self.assertEqual(200,self.http.put(path,headers=self.client.headers,json=m).status_code)
+        self.assertEqual('EXPIRED',self.client.request('GET','/operations/'+ops[0]).json()['state'])
+        self.assertEqual(409,self.http.post('/v1/libraries/'+self.library+'/uploads/'+ops[0]+'/publish',headers=self.client.headers).status_code)
+
+    def test_pending_abandon_cannot_delete_a_concurrently_published_version(self):
+        from concurrent.futures import ThreadPoolExecutor
+        import threading
+        entered=threading.Event();release=threading.Event()
+        data=b'synthetic';op=str(uuid.uuid4())
+        m={'format':'inkweft.encrypted-backup.v1','chunks':[hashlib.sha256(data).hexdigest()],'bytes':len(data)}
+        self.client.request('PUT','/uploads/'+op,json=m);self.client.request('PUT',f'/uploads/{op}/chunks/0',content=data)
+        def before():entered.set();assert release.wait(5)
+        racing=TestClient(create_app(self.db,before_publish=before));base='/v1/libraries/'+self.library
+        try:
+            with ThreadPoolExecutor(max_workers=2) as pool:
+                publishing=pool.submit(racing.post,base+f'/uploads/{op}/publish',headers=self.client.headers)
+                self.assertTrue(entered.wait(5))
+                removing=pool.submit(self.http.delete,base+f'/versions/{op}?operation_id={uuid.uuid4()}&expected_state=PENDING',headers=self.client.headers)
+                release.set();self.assertEqual(200,publishing.result().status_code);self.assertEqual(409,removing.result().status_code)
+            self.assertEqual('PUBLISHED',self.client.request('GET','/operations/'+op).json()['state'])
+        finally:release.set();racing.close()
+
+    def test_account_and_global_reserved_bytes_budget(self):
+        from unittest.mock import patch
+        data=b'12345';m={'format':'inkweft.encrypted-backup.v1','chunks':[hashlib.sha256(data).hexdigest()],'bytes':len(data)}
+        for name in ['ACCOUNT_LIMIT','GLOBAL_LIMIT']:
+            with patch('server.'+name,4):
+                response=self.http.put('/v1/libraries/'+self.library+'/uploads/'+str(uuid.uuid4()),headers=self.client.headers,json=m)
+                self.assertEqual(507,response.status_code)
+        self.assertEqual([],self.client.request('GET','/versions?include_pending=true').json())
+
+    def test_unknown_schema_is_rejected_without_rewriting_it(self):
+        with closing(sqlite3.connect(self.db)) as c:c.execute('PRAGMA user_version=99')
+        with self.assertRaises(RuntimeError):Store(self.db)
+        with closing(sqlite3.connect(self.db)) as c:self.assertEqual(99,c.execute('PRAGMA user_version').fetchone()[0])
 
 
 if __name__=='__main__': unittest.main()

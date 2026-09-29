@@ -1,0 +1,47 @@
+{
+  "format": "inkweft.resource-pack.v1",
+  "id": "examples.inkweft.maps",
+  "title": "章节整理 · 原创示例",
+  "author": "InkWeft · CC0",
+  "version": 1,
+  "resources": [
+    {
+      "id": "chapter",
+      "type": "map",
+      "title": "章节梳理",
+      "layout": "right",
+      "nodes": [
+        {
+          "title": "章节主题",
+          "parent": null,
+          "x": 40,
+          "y": 220
+        },
+        {
+          "title": "关键概念",
+          "parent": 0,
+          "x": 320,
+          "y": 80
+        },
+        {
+          "title": "推导过程",
+          "parent": 0,
+          "x": 320,
+          "y": 220
+        },
+        {
+          "title": "典型题目",
+          "parent": 0,
+          "x": 320,
+          "y": 360
+        },
+        {
+          "title": "待核对问题",
+          "parent": 0,
+          "x": 320,
+          "y": 500
+        }
+      ]
+    }
+  ]
+}

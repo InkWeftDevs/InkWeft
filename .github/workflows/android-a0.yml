@@ -2,10 +2,10 @@ name: Android 按改动验证
 on:
   push:
     branches: ["main"]
-    paths: ["android/**", "ci/**", "backup-server/**", ".github/workflows/android-a0.yml"]
+    paths: ["android/**", "ci/**", "backup-server/**", "sync-lab/**", "resource-packs/**", ".github/workflows/android-a0.yml"]
   pull_request:
     branches: ["main"]
-    paths: ["android/**", "ci/**", "backup-server/**", ".github/workflows/android-a0.yml"]
+    paths: ["android/**", "ci/**", "backup-server/**", "sync-lab/**", "resource-packs/**", ".github/workflows/android-a0.yml"]
   workflow_dispatch:
     inputs:
       mode:
@@ -56,6 +56,19 @@ jobs:
           "$RUNNER_TEMP/backup-venv/bin/pip" install -r backup-server/requirements.txt
           cd backup-server
           "$RUNNER_TEMP/backup-venv/bin/python" -m unittest -v test_backup
+      - name: 验证声明式资源与合成同步实验
+        if: steps.plan.outputs.experiments == 'true'
+        run: |
+          python3 -m venv "$RUNNER_TEMP/experiments-venv"
+          "$RUNNER_TEMP/experiments-venv/bin/pip" install -r backup-server/requirements.txt
+          "$RUNNER_TEMP/experiments-venv/bin/python" -m unittest discover -s sync-lab -v
+          python3 resource-packs/pack.py resource-packs/paper --output "$RUNNER_TEMP/paper.iwpack"
+          python3 resource-packs/pack.py resource-packs/map --output "$RUNNER_TEMP/map.iwpack"
+      - name: 隔离容器权限与持久卷核验
+        if: steps.plan.outputs.backup == 'true'
+        run: |
+          mkdir -p android/build/evidence
+          python3 backup-server/container_check.py --output android/build/evidence/container-check.json
       - uses: gradle/actions/setup-gradle@ed408507eac070d1f99cc633dbcf757c94c7933a
         if: steps.plan.outputs.build == 'true'
         with:
