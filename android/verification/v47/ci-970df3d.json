@@ -1,0 +1,154 @@
+{
+  "schema": 1,
+  "status": "PASS",
+  "verified_at": "2026-09-29",
+  "source_commit": "970df3dd616f2c9266bc9e0dd1c6161fd4ed54c1",
+  "source_url": "https://github.com/InkWeftDevs/InkWeft/tree/970df3dd616f2c9266bc9e0dd1c6161fd4ed54c1",
+  "workflow_run": "https://github.com/InkWeftDevs/InkWeft/actions/runs/36567769505",
+  "completed_at": "2026-09-29T12:51:26Z",
+  "scope": "本记录仅对应此提交的远端验证；后续原生界面与性能构件分别绑定各自源码和证据。",
+  "jobs": [
+    {
+      "name": "构建与静态检查",
+      "status": "success",
+      "url": "https://github.com/InkWeftDevs/InkWeft/actions/runs/36567769505/job/109403859214"
+    },
+    {
+      "name": "设备回归 0",
+      "status": "success",
+      "url": "https://github.com/InkWeftDevs/InkWeft/actions/runs/36567769505/job/109406967259"
+    },
+    {
+      "name": "设备回归 1",
+      "status": "success",
+      "url": "https://github.com/InkWeftDevs/InkWeft/actions/runs/36567769505/job/109406967266"
+    },
+    {
+      "name": "官方 Android 隔离 TLS 门禁",
+      "status": "success",
+      "url": "https://github.com/InkWeftDevs/InkWeft/actions/runs/36567769505/job/109406967292"
+    }
+  ],
+  "checks": {
+    "scope_selector": {
+      "executed": 19,
+      "passed": 19
+    },
+    "backup_protocol_and_snapshot": {
+      "executed": 18,
+      "passed": 18
+    },
+    "sync_model": {
+      "executed": 4,
+      "passed": 4
+    },
+    "core_domain": {
+      "executed": 259,
+      "passed": 259,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "app": {
+      "executed": 241,
+      "passed": 241,
+      "planned": 241,
+      "shards": [
+        121,
+        120
+      ],
+      "failures": 0,
+      "infrastructure_failures": 0
+    },
+    "room": {
+      "executed": 157,
+      "passed": 157,
+      "planned": 157,
+      "failures": 0,
+      "infrastructure_failures": 0
+    },
+    "tls": {
+      "executed": 5,
+      "passed": 5,
+      "planned": 5,
+      "package": "org.inkweft.app.a0.insertion.tlsprobe",
+      "expired_wrong_untrusted_sensitive_requests": 0,
+      "redirect_target_requests": 0
+    },
+    "workflow_semantics": {
+      "status": "PASS",
+      "tool": "actionlint",
+      "version": "1.7.12",
+      "release": "https://github.com/rhysd/actionlint/releases/tag/v1.7.12",
+      "linux_amd64_sha256": "8aca8db96f1b94770f1b0d72b6dddcb1ebb8123cb3712530b08cc387b349a3d8"
+    },
+    "android_lint": {
+      "status": "PASS"
+    },
+    "container": {
+      "status": "PASS",
+      "uid": 10001,
+      "sqlite_version": "3.46.1",
+      "sealed_snapshot": {
+        "status": "PASS",
+        "before": "WAL，无独立 WAL/SHM 文件",
+        "after": "DELETE",
+        "data_operation_ciphertext_digests_preserved": true,
+        "live_database_journal_mode": "WAL"
+      },
+      "readonly_mount": {
+        "status": "PASS",
+        "filesystem_error": "EROFS",
+        "sqlite_error": "SQLITE_READONLY",
+        "sealed_snapshot_unchanged": true
+      },
+      "private_tmpfs_full": {
+        "status": "PASS",
+        "limit_mib": 8,
+        "filesystem_error": "ENOSPC",
+        "sqlite_error": "SQLITE_FULL",
+        "transaction_not_committed": true,
+        "reopened_content_preserved": true
+      },
+      "independent_volume_restore": {
+        "status": "PASS",
+        "account_identity_version_receipt_ciphertext_preserved": true
+      }
+    }
+  },
+  "evidence_method": "逐项核对 job 完成状态、JUnit XML、每次 instrumentation 输出和分片摘要；已下载构件均匹配 GitHub 公布的 SHA-256。",
+  "verified_artifacts": [
+    {
+      "name": "android-device-verification-36567769505-1",
+      "metadata_url": "https://api.github.com/repos/InkWeftDevs/InkWeft/actions/artifacts/11033068931",
+      "sha256": "4f5351adbbbe04fd4a1ffb90eb7b048f12ccc8f56b644d750508b1d2b7dc4f02",
+      "bytes": 7355183
+    },
+    {
+      "name": "android-device-verification-36567769505-0",
+      "metadata_url": "https://api.github.com/repos/InkWeftDevs/InkWeft/actions/artifacts/11033029133",
+      "sha256": "5e9f579c83a11e04e314db628372fc32bbc43b0bb3aba3aca462511d15683bc5",
+      "bytes": 8436776
+    },
+    {
+      "name": "android-build-verification-36567769505",
+      "metadata_url": "https://api.github.com/repos/InkWeftDevs/InkWeft/actions/artifacts/11032583643",
+      "sha256": "590ee4fe69591aa9bba2fa02d6019f0006c4fde672d25e1ab77aed1d10706d95",
+      "bytes": 118804007
+    },
+    {
+      "name": "android-tls-verification-36567769505",
+      "metadata_url": "https://api.github.com/repos/InkWeftDevs/InkWeft/actions/artifacts/11032464744",
+      "sha256": "c6b6d9e0460424c298801eb3d248b37258a61b75892b16e31032a19ac0b67e75",
+      "bytes": 1303
+    }
+  ],
+  "source_snapshot": {
+    "status": "success",
+    "url": "https://github.com/InkWeftDevs/InkWeft/actions/runs/36567769635"
+  },
+  "earlier_runs": {
+    "workflow_context_failure": "https://github.com/InkWeftDevs/InkWeft/actions/runs/36563610199",
+    "readonly_snapshot_failure": "https://github.com/InkWeftDevs/InkWeft/actions/runs/36564068371"
+  }
+}
