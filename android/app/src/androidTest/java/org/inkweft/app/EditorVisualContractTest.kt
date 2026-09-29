@@ -5,6 +5,8 @@ import android.graphics.Canvas
 import android.graphics.Color
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Text
+import androidx.compose.material3.IconToggleButton
+import androidx.compose.ui.platform.testTag
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.test.*
@@ -61,4 +63,16 @@ class EditorVisualContractTest {
         assertFalse(android.graphics.RectF.intersects(bar,root));assertFalse(android.graphics.RectF.intersects(bar,neighbour))
         assertTrue(bar.left>=0f&&bar.right<=702f&&bar.top>=0f&&bar.bottom<=610f)
     }
+    @Test fun narrowToolbarKeepsInputModeVisibleWithoutWrapping(){
+        var hand by mutableStateOf(false)
+        compose.setContent{InkTheme.Content{Box(Modifier.width(340.dp)){
+            EditorToolbar{tool,_->IconToggleButton(hand,{hand=it},modifier=Modifier.size(48.dp).testTag("slot-$tool")){Text(if(tool=="finger")if(hand)"手"else"笔"else "·")}}
+        }}}
+        compose.onNodeWithTag("editor-toolbar").assertHeightIsEqualTo(48.dp)
+        val mode=compose.onNodeWithTag("slot-finger");mode.assertIsDisplayed().assertWidthIsAtLeast(48.dp).assertHeightIsAtLeast(48.dp)
+        val before=mode.fetchSemanticsNode().boundsInRoot;mode.performClick().assertIsOn()
+        assertEquals(before,mode.fetchSemanticsNode().boundsInRoot)
+        assertFalse(before.overlaps(compose.onNodeWithTag("toolbar-more").fetchSemanticsNode().boundsInRoot))
+    }
+
 }

@@ -33,6 +33,7 @@ internal object EditorToolOrder {
     var customizing by remember{mutableStateOf(false)}
     fun save(){prefs.edit().putString("toolbar-order-v32",order.joinToString(",")).putStringSet("toolbar-hidden-v32",hidden).apply()}
     fun move(id:String,delta:Int){
+        if(id in EditorToolOrder.fixed)return
         val group=order;val next=group.indexOf(id)+delta
         if(next in group.indices){val from=order.indexOf(id);val target=order.indexOf(group[next]);order=order.toMutableList().apply{removeAt(from);add(target,id)};save()}
     }
@@ -40,8 +41,11 @@ internal object EditorToolOrder {
     LaunchedEffect(moreRequest){if(moreRequest>0)more=true}
     BoxWithConstraints{
     val visiblePrimary=EditorToolOrder.primary+if(maxWidth>=528.dp)setOf("image","text")else emptySet()
-    FlowRow(Modifier.testTag("editor-toolbar")){
-        order.filter{it in visiblePrimary&&it !in hidden}.forEach{key(it){EditorToolSlot(it){content(it){}}}}
+    Row(Modifier.testTag("editor-toolbar"),verticalAlignment=Alignment.CenterVertically){
+        Row(Modifier.weight(1f,fill=false).horizontalScroll(rememberScrollState())){
+            order.filter{it in visiblePrimary&&it !in hidden&&it !in EditorToolOrder.fixed}.forEach{key(it){EditorToolSlot(it){content(it){}}}}
+        }
+        EditorToolSlot("finger"){content("finger"){}}
         Box {
             if(!externalMore)IconButton(onClick={more=true},modifier=Modifier.testTag("toolbar-more").describedAs("更多工具")){Glyph("more")}
             DropdownMenu(more,{more=false},containerColor=androidx.compose.ui.graphics.Color.White){
@@ -76,7 +80,7 @@ internal object EditorToolOrder {
                                         Glyph(EditorToolOrder.icon(id),if(hideGroup)Quiet else TextInk)
                                         Text(EditorToolOrder.labels.getValue(id),Modifier.weight(1f).padding(horizontal=12.dp),color=if(hideGroup)Quiet else TextInk)
                                         var menu by remember{mutableStateOf(false)}
-                                        Box {
+                                        if(id in EditorToolOrder.fixed)Spacer(Modifier.size(48.dp))else Box {
                                             IconButton(onClick={menu=true},modifier=Modifier.size(48.dp).testTag("toolbar-drag-$id").describedAs("拖动${EditorToolOrder.labels[id]}排序，点按更多排序方式")
                                                 .semantics{customActions=listOf(CustomAccessibilityAction("上移"){move(id,-1);true},CustomAccessibilityAction("下移"){move(id,1);true})}
                                                 .pointerInput(id){var accumulated=0f;detectDragGestures(onDragStart={accumulated=0f},onDragEnd={accumulated=0f},onDragCancel={accumulated=0f}){change,amount->
