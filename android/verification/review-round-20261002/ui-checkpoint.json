@@ -1,0 +1,92 @@
+{
+  "recorded_utc": "2026-10-02T15:50:19.602282+00:00",
+  "scope": "本轮结果与精确再练 UI 整合；会话级，不含永久成绩、DB/schema 或新依赖",
+  "base_commit": "75051f748784fbdbf45092eca939205a1bc0088d",
+  "domain_parent_commit": "51b8eaa592a6585b9dc4fefbff5f1d0001e53fe2",
+  "branch": "codex/cloud/review-round-20261002",
+  "draft_pr": "https://github.com/InkWeftDevs/InkWeft/pull/3",
+  "owner": {
+    "cloud": "BranchReviewRound、BranchReviewRepository、BranchReviewDialog、KnowledgeViewModel review 入口与本批对应测试",
+    "local": "尚未接手；真实设备、原签名、完整 OS/备份恢复仍须明确目标和授权"
+  },
+  "checks": {
+    "core_jvm": {
+      "unique_tests": 306,
+      "failed": 0,
+      "skipped": 0,
+      "status": "PASS"
+    },
+    "app_main_sources": "COMPILE_PASS",
+    "app_android_test_sources": "COMPILE_PASS",
+    "data_android_test_sources": "COMPILE_PASS",
+    "lint": {
+      "app": {
+        "Error": 0,
+        "Fatal": 0,
+        "Warning": 133
+      },
+      "data-local": {
+        "Error": 0,
+        "Fatal": 0,
+        "Warning": 2
+      }
+    },
+    "room_runtime": {
+      "class": "org.inkweft.data.BranchReviewRoundRepositoryTest",
+      "methods": [
+        "exactReceiptsCountIndependentSameCardQuestionsOnceWithZeroReadSideWrites",
+        "unknownRollbackCannotCountOrSkipUntilTheSameOperationActuallyCommits",
+        "missingWrongOperationBookDigestResultOrRequestedStateNeverConfirms",
+        "causalRevisionMustExistAndMatchOnlyTheRequestedStateChange",
+        "originalQuestionAndCardHistoryAreRequiredRatherThanCurrentRows",
+        "laterQuestionCardEditsAndRecyclingNeverRebaseAnAlreadyCommittedResult",
+        "skippedUnderstoodQuestionRetainsAllFourRefsAndDoesNotUseGlobalStateFiltering",
+        "aMissingSelectedHistoryRejectsTheEntireRetryWithoutDroppingThatQuestion",
+        "completedReviewLedgerStillRequiresItsOriginalReceiptForRetry",
+        "wrongFrozenNotebookCannotBorrowAValidReceiptOrAnswer",
+        "rejectedSkipRetriesOriginalRefsButNeverPretendsToHaveAReceipt",
+        "noCandidateAndRecycledBookCannotStartANewRoundButOldReceiptStillCounts"
+      ],
+      "status": "NOT_RUN"
+    },
+    "ui_runtime": {
+      "class": "org.inkweft.app.BranchReviewRoundUiTest",
+      "methods": [
+        "mixedExactResultsRetryOnlyTheConfirmedQuestionAndNeverMixANewSibling",
+        "pureSkipWithIdenticalRefsStartsAtFirstQuestionWithNoOldPermissionAndRestoresItsOwnRound",
+        "unknownOriginalOperationSurvivesActivityAndWriterRecreationBeforeCountingExactlyOnce",
+        "committedButUnverifiedResultStaysLockedAcrossRecreationAndRetriesReadOnlyProof",
+        "completedRoundRecoveryConsumesOnlyItsOwnOperationBeforeRetryAndClose"
+      ],
+      "status": "NOT_RUN"
+    },
+    "v66_ui_regression": "11 方法仍 NOT_RUN；未以本批静态检查替代",
+    "full_os_death": "NOT_RUN",
+    "real_backup_restore": "NOT_VERIFIED"
+  },
+  "measured_gradle_times": {
+    "targeted_core": "57s",
+    "initial_data_compile": "1m16s; 混合 SQL bind 数组类型错误",
+    "data_compile_lint_retry": "2m3s; 显式 arrayOf<Any> 修正后通过",
+    "initial_ui_compile": "2m34s; 测试 SQL bind 数组类型错误，主源码已编译",
+    "ui_compile_lint_retry": "9m14s; 修正后通过",
+    "core_batch_regression": "17s; 本批单次完整 core 回归 306 项",
+    "recovery_test_incremental": "3m22s; 78 tasks: 3 executed / 75 up-to-date; 只改第五项恢复测试，主源码编译和主 lint 复用"
+  },
+  "validation_policy": "按模块受影响检查，完整核心回归只在本批边界执行；编译/lint 不当作 Android runtime。未重新打包 APK，V66 已归档产物不代表本批候选。",
+  "public_evidence": "仅合成测试方法、统计与源码摘要；原始日志、设备材料、APK、密钥不提交",
+  "files": [
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/BranchReviewDialog.kt",
+      "sha256": "c0c30bb1758cf153095600bb4e60c8f5f2855235c889c51687160540af05d79e"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/KnowledgeWorkspace.kt",
+      "sha256": "a729dd85ed88c677f44f6056d024d348ea59c49b8a59b282a18549030d4082e2"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/BranchReviewRoundUiTest.kt",
+      "sha256": "cccd1cc0adf6a33c444fe300b47b4a4848a386a35f10dbb034c1dff80969537d"
+    }
+  ]
+}
