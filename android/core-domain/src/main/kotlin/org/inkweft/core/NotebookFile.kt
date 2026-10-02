@@ -17,7 +17,7 @@ class NotebookFile(val title:String,val text:String,pages:List<InkPageFile>) {
             d.writeInt(if(sources.isEmpty())MAGIC else MAGIC2);for(t in listOf(title,text)){val b=t.toByteArray(Charsets.UTF_8);d.writeInt(b.size);d.write(b)}
             if(sources.isNotEmpty()){d.writeInt(sources.size);for(source in sources){val bytes=source.bytes();require(body.size().toLong()+bytes.size<MAX_BYTES);d.writeInt(source.pages);d.writeInt(bytes.size);d.write(bytes)}}
             d.writeInt(pages.size)
-            for(p in pages){val b=p.encode(false);require(body.size().toLong()+b.size+36<=MAX_BYTES);d.writeInt(b.size);d.write(b);if(sources.isNotEmpty()){d.writeInt(p.source?.let{s->sources.indexOfFirst{it.sha256==s.document.sha256}}?:-1);d.writeInt(p.source?.page?:0)}}
+            for(p in pages){val b=p.encode(false);require(body.size().toLong()+4+b.size+(if(sources.isEmpty())0 else 8)+32<=MAX_BYTES);d.writeInt(b.size);d.write(b);if(sources.isNotEmpty()){d.writeInt(p.source?.let{s->sources.indexOfFirst{it.sha256==s.document.sha256}}?:-1);d.writeInt(p.source?.page?:0)}}
         }
         val data=body.toByteArray();return data+MessageDigest.getInstance("SHA-256").digest(data)
     }
