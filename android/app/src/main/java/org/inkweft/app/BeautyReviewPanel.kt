@@ -21,6 +21,7 @@ import org.inkweft.core.TextFont
     }){
         Column(Modifier.verticalScroll(rememberScrollState()),verticalArrangement=Arrangement.spacedBy(4.dp)){
             value.reason?.let{Text(it,style=MaterialTheme.typography.bodySmall,color=Quiet)}
+            Text(if(value.preview)"正在对比未应用候选；原迹仍保留"else"纸面显示原迹；候选尚未应用",style=MaterialTheme.typography.bodySmall,modifier=Modifier.testTag("beauty-review-unapplied"))
             OutlinedTextField(text,{if(it.length<=4000){text=it;vm.reviseBeauty(it,value.options)}},label={Text("核对文字")},modifier=Modifier.fillMaxWidth().heightIn(min=88.dp,max=144.dp).testTag("beauty-review-text"))
             Row{
                 FilterChip(value.options.preserveLayout,{vm.reviseBeauty(text,value.options.copy(preserveLayout=true))},label={Text("原位")},modifier=Modifier.testTag("beauty-review-in-place"))
@@ -34,7 +35,7 @@ import org.inkweft.core.TextFont
                 Text("行距 %.1f×".format(value.options.spacing),style=MaterialTheme.typography.bodySmall)
                 Slider(value.options.spacing,{vm.reviseBeauty(text,value.options.copy(spacing=it))},valueRange=1f..2f,modifier=Modifier.testTag("beauty-review-spacing"))
             }
-            TextButton({vm.previewBeauty(!value.preview)},modifier=Modifier.testTag("beauty-review-compare")){Text(if(value.preview)"查看原迹"else"查看纸面结果")}
+            TextButton({vm.previewBeauty(!value.preview)},modifier=Modifier.testTag("beauty-review-compare")){Text(if(value.preview)"查看原迹"else"对比未应用候选")}
         }
     }
 }

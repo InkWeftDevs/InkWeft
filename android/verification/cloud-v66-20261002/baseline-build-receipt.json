@@ -1,0 +1,56 @@
+{
+  "recorded_utc": "2026-10-02T14:20:29.165778+00:00",
+  "source_zip_sha256": "4062a5f697a15a6f586c3a4906566d618e9e69608074760bcc0de3d9f5fdc308",
+  "baseline_manifest_files_verified": 725,
+  "build_inputs": 449,
+  "source_changes": [],
+  "tools": {
+    "jdk": "Temurin 17.0.20.1+1",
+    "gradle": "9.4.1",
+    "agp": "9.2.1",
+    "compile_sdk": 36,
+    "build_tools": "36.0.0"
+  },
+  "properties": {
+    "inkweftDiagnosticBuild": true,
+    "inkweftInsertionPreview": false
+  },
+  "core_domain_tests": {
+    "unique_tests": 292,
+    "failed": 0,
+    "skipped": 0,
+    "result": "PASS"
+  },
+  "debug_app_compilation": "PASS",
+  "debug_android_test_compilation": "PASS",
+  "lint_debug": {
+    "result": "PASS",
+    "Error": 0,
+    "Fatal": 0,
+    "Warning": 132
+  },
+  "unsigned_release": {
+    "result": "PASS",
+    "file": "app-release-unsigned.apk",
+    "bytes": 128356420,
+    "sha256": "872146b4cdf2d908d362a7e78ef46ded64dfbb01ff48611ce7cdc6d021e89b82",
+    "application_id": "org.inkweft.app.a0.workspace",
+    "version_code": 66,
+    "version_name": "0.0.66-local-motion",
+    "signature": "UNSIGNED: apksigner verification exits 1 with Missing META-INF/MANIFEST.MF",
+    "zipalign_check": "PASS"
+  },
+  "first_combined_build": "FAILED: Gradle daemon disappeared during release DEX merge; exact cause not established",
+  "recovery": "Separate serial compile/lint and release runs succeeded; checks not skipped",
+  "key_created": false,
+  "v66_repaired_ui_3": "NOT_RUN",
+  "v66_affected_ui_8": "NOT_RUN",
+  "physical_device": "NOT_RUN",
+  "ui_note": "Unsigned release is not installable and does not replace the V66 debug UI acceptance variant",
+  "cloud_ui_environment": {
+    "kvm_device": false,
+    "emulator_installed": false,
+    "system_image_installed": false,
+    "vm_started": false
+  }
+}

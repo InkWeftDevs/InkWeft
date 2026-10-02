@@ -136,7 +136,10 @@ class StarNoteInteractionsUiTest {
   val note=create();val notes=runBlocking{(1..14).map{app.workspaceRepository.create("分屏测试$it",false,PaperStyle.BLANK)}}
   compose.runOnIdle{val vm=ViewModelProvider(compose.activity)[NotebookViewModel::class.java];notes.forEach(vm::select);vm.select(note)};ready();tap("tabs-list")
   val fixed=compose.onNodeWithTag("tabs-hide").fetchSemanticsNode().boundsInRoot
-  compose.onNodeWithTag("tabs-scroll").performScrollToIndex(14)
+  val targetIndex=compose.runOnIdle{ViewModelProvider(compose.activity)[NotebookViewModel::class.java].ui.value.openIds.indexOf(notes.last().id)}
+  assertTrue(targetIndex>=14)
+  compose.onNodeWithTag("tabs-scroll").performScrollToIndex(targetIndex)
+  compose.waitUntil(15000){compose.onAllNodesWithTag("tabs-actions-${notes.last().id}").fetchSemanticsNodes().isNotEmpty()}
   assertEquals(fixed,compose.onNodeWithTag("tabs-hide").fetchSemanticsNode().boundsInRoot)
   tap("tabs-actions-${notes.last().id}");tap("tab-split-horizontal")
   compose.onNodeWithTag("reference-pane").assertIsDisplayed()

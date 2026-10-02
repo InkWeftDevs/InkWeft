@@ -1,0 +1,19 @@
+{
+  "status": "NOT_RUN_AFTER_TEST_REPAIR; LOCAL_PAUSED_FOR_AUTHORIZED_CLOUD_MIGRATION",
+  "runs": [
+    {
+      "label": "ui-local-motion-cloud-retry1",
+      "mode": "ui",
+      "classes": "org.inkweft.app.LocalMotionUiTest",
+      "tests": 3,
+      "new": true
+    },
+    {
+      "label": "ui-regression-cloud",
+      "mode": "ui",
+      "classes": "org.inkweft.app.CardSourceNavigationUiTest#collapsedSourceFooterReturnsToExactPaperAndKeepsReadOnlyMapContext,org.inkweft.app.SourceFocusVisibilityUiTest#movedResizedFloatingCollectOrganizeAndFocusExposeExactSourceThenRestoreOriginalWindow,org.inkweft.app.SourceFocusVisibilityUiTest#narrow375LargeFontRetainsSourceRegionThroughRecreationAndRestoresItsFocusFrame,org.inkweft.app.SourceFocusVisibilityUiTest#splitPaneRefitsRetainedSourceAcrossBothDirectionsWithoutChangingReferenceOrGraph,org.inkweft.app.RecallMaskUiTest#narrowRotationSourceReturnAndNextQuestionResetPermissions,org.inkweft.app.RecallMaskUiTest#explicitKnownAndUnknownRatingRetainOriginalCasAndReceiptIdentity,org.inkweft.app.RecallMaskUiTest#mapHintGatesNativeTopologyTitlesBodiesAndFoldedDescendants,org.inkweft.app.ReadLockUiTest#summaryOutlineAndMapRejectActualAuthorIntents",
+      "tests": 8,
+      "new": false
+    }
+  ]
+}

@@ -34,7 +34,17 @@ class WorkspaceViewModel(app:Application,private val saved:androidx.lifecycle.Sa
     }
     fun cachedViewport(id:String)=liveViews[id]
     fun ensure(id:String){viewModelScope.launch{try{val row=withContext(Dispatchers.IO){repo.get(id)};mutable.update{it+(id to row)}}catch(c:CancellationException){throw c}catch(_:Exception){failure.value="无法读取页面设置"}}}
-    fun openSearchPage(bookId:String,pageId:String,open:()->Unit){viewModelScope.launch{try{withContext(Dispatchers.IO){pages.select(bookId,pageId)};pageNavigation.update{it+(bookId to pageId)};open()}catch(c:CancellationException){throw c}catch(_:Exception){failure.value="搜索位置已变化，请从页目录打开。"}}}
+    // Await in the caller's scope: closing/recreating the source card cancels publication.
+    suspend fun openPageAwait(bookId:String,pageId:String,anchor:KnowledgeData.Anchor?=null,open:()->Unit):Boolean{
+        return try{
+            withContext(Dispatchers.IO){require(repo.get(bookId).trashedAt==null);pages.select(bookId,pageId)}
+            currentCoroutineContext().ensureActive()
+            pageNavigation.update{it+(bookId to pageId)}
+            if(anchor!=null)focusAnchor.value=anchor
+            open();true
+        }catch(c:CancellationException){throw c}catch(_:Exception){currentCoroutineContext().ensureActive();failure.value="搜索位置已变化，请从页目录打开。";false}
+    }
+    fun openSearchPage(bookId:String,pageId:String,open:()->Unit){viewModelScope.launch{openPageAwait(bookId,pageId,open=open)}}
     fun clearError(){failure.value=null}
     internal fun create(title:String,world:Boolean,paper:PaperStyle,cover:NotebookCover=NotebookCover.AUTO,customCover:ByteArray?=null,template:TemplateRef?=null,onCreated:(Note)->Unit){
         if(working.value||pendingCreate.value!=null)return

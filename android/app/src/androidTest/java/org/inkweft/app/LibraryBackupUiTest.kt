@@ -20,7 +20,13 @@ import java.util.UUID
 class LibraryBackupUiTest {
     @get:Rule val compose=createAndroidComposeRule<MainActivity>()
     private val app get()=compose.activity.application as InkWeftApplication
-    private fun ready(){compose.waitUntil(15_000){runCatching{compose.onNodeWithTag("library-backup-open").assertIsDisplayed()}.isSuccess}}
+    private fun ready(){
+        compose.waitUntil(15_000){compose.onAllNodesWithTag("new-note").fetchSemanticsNodes().isNotEmpty()}
+        if(compose.onAllNodesWithTag("open-library-drawer").fetchSemanticsNodes().isNotEmpty())compose.onNodeWithTag("open-library-drawer").performClick()
+        compose.onNodeWithText("设置与数据",useUnmergedTree=true).assertIsDisplayed().performClick()
+        compose.waitUntil(15_000){compose.onAllNodesWithTag("workspace-settings").fetchSemanticsNodes().isNotEmpty()}
+        compose.onNodeWithTag("library-backup-open").performScrollTo().assertIsDisplayed()
+    }
     private fun vm()=ViewModelProvider(compose.activity)[LibraryBackupViewModel::class.java]
     private fun shot(name:String){compose.waitForIdle();val b=checkNotNull(InstrumentationRegistry.getInstrumentation().uiAutomation.takeScreenshot());try{File(compose.activity.getExternalFilesDir(null),name).outputStream().use{b.compress(Bitmap.CompressFormat.PNG,100,it)}}finally{b.recycle()}}
     @Test fun backupRequiresConsentThenSavesActualLibraryArchive(){

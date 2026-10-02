@@ -109,7 +109,7 @@ class MapInteractionUiTest {
   compose.runOnIdle{map().focusNode(f.root);val b=map().nodeBounds(f.root)!!;p=Offset(b.right+12*app.resources.displayMetrics.density,b.centerY())}
   compose.onNodeWithTag("study-map").performTouchInput{click(p)};compose.waitForIdle();compose.runOnIdle{assertTrue(f.root in vm(f.book).collapsedByMap["main"].orEmpty())};compose.onNodeWithTag("study-card-details").assertDoesNotExist()
   select(f.root);tap("node-fold");compose.runOnIdle{assertFalse(f.root in vm(f.book).collapsedByMap["main"].orEmpty())};tap("node-source")
-  compose.waitUntil(10000){compose.onAllNodesWithTag("study-open-source").fetchSemanticsNodes().isNotEmpty()};compose.onNodeWithTag("study-open-source").performScrollTo().assertIsDisplayed();compose.onNodeWithTag("card-full-body").assertDoesNotExist();tap("card-back")
+  compose.waitUntil(10000){compose.onAllNodesWithTag("study-open-source").fetchSemanticsNodes().isNotEmpty()};compose.onNodeWithTag("study-open-source").assertIsDisplayed();compose.onNodeWithTag("card-full-body").assertDoesNotExist();tap("card-back")
  }
 
  @Test fun titleRenderingNeverSubstitutesBodyForSecondLine(){

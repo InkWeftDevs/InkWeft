@@ -128,7 +128,7 @@ class SelectionStudyUiTest {
             compose.onAllNodes(isRoot(),useUnmergedTree=true).fetchSemanticsNodes().indices.forEach{i->runCatching{println(compose.onAllNodes(isRoot(),useUnmergedTree=true)[i].printToString())}}
             throw error
         }
-        compose.onNodeWithTag("study-open-source").performScrollTo().assertIsDisplayed().performClick();saved(1)
+        compose.onNodeWithTag("study-open-source").assertIsDisplayed().performTouchInput{click()};saved(1)
         compose.onAllNodesWithTag("study-card-details").assertCountEquals(0);assertEquals(n.id,snapshot.pageId)
     }
     @Test fun outlineAndMapReuseSingleEditableCard(){

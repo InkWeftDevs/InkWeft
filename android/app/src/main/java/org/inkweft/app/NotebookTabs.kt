@@ -24,6 +24,9 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -38,11 +41,12 @@ import androidx.compose.ui.unit.sp
         if(!hidden)LazyRow(state=state,modifier=Modifier.weight(1f).onSizeChanged{availableWidth=it.width},horizontalArrangement=Arrangement.spacedBy(2.dp)){
             items(ui.openIds,key={it}){id->
                 val draft=ui.drafts[id];val name=draft?.title?:ui.notes.firstOrNull{it.id==id}?.title?:"笔记"
-                Column(Modifier.width(168.dp).clip(RoundedCornerShape(topStart=10.dp,topEnd=10.dp)).background(if(ui.selectedId==id)InkTheme.Surface else InkTheme.TabBar)
+                Column(Modifier.width(if(ui.selectedId==id)220.dp else 168.dp).clip(RoundedCornerShape(topStart=10.dp,topEnd=10.dp)).background(if(ui.selectedId==id)InkTheme.Surface else InkTheme.TabBar)
                     .drawBehind{if(ui.selectedId==id)drawRect(InkTheme.Accent,Offset(0f,size.height-2.dp.toPx()),Size(size.width,2.dp.toPx()))}){
                     Row(verticalAlignment=Alignment.CenterVertically){
-                        TextButton(onClick={open(id)},enabled=enabled,modifier=Modifier.weight(1f).heightIn(min=36.dp).testTag("notebook-tab-$id")){
-                            Text(name+(if(draft?.dirty==true)" *"else""),maxLines=1,overflow=TextOverflow.Ellipsis,fontSize=13.sp,color=if(ui.selectedId==id)InkTheme.Accent else InkTheme.Secondary)
+                        TextButton(onClick={open(id)},enabled=enabled,modifier=Modifier.weight(1f).heightIn(min=48.dp).testTag("notebook-tab-$id")
+                            .semantics{selected=ui.selectedId==id}.describedAs("笔记：$name"+(if(ui.selectedId==id)"，当前笔记"else"")+(if(draft?.dirty==true)"，未保存"else""))){
+                            Text(name+(if(draft?.dirty==true)" *"else""),maxLines=1,overflow=TextOverflow.MiddleEllipsis,fontSize=13.sp,color=if(ui.selectedId==id)InkTheme.Accent else InkTheme.Secondary)
                         }
                         IconButton(onClick={close(id)},enabled=enabled,modifier=Modifier.size(48.dp).testTag("close-tab-$id").describedAs("关闭标签：$name")){Glyph("close",Quiet,Modifier.size(16.dp))}
                     }
@@ -51,9 +55,9 @@ import androidx.compose.ui.unit.sp
         }
         if(hidden)Spacer(Modifier.weight(1f))
         Box{
-            TextButton({menu=true},enabled=enabled,modifier=Modifier.heightIn(min=36.dp).testTag("tabs-list")){Text("${ui.openIds.size} ⌄",fontSize=13.sp)}
+            TextButton({menu=true},enabled=enabled,modifier=Modifier.heightIn(min=48.dp).testTag("tabs-list").describedAs("已打开 ${ui.openIds.size} 份笔记，查看完整名称")){Text("已打开 ${ui.openIds.size} ⌄",fontSize=13.sp)}
             if(menu)Popup(alignment=Alignment.TopEnd,offset=IntOffset(0,with(LocalDensity.current){40.dp.roundToPx()}),onDismissRequest={menu=false},properties=PopupProperties(focusable=true)){
-                Surface(Modifier.width(320.dp).heightIn(max=minOf(520.dp,LocalConfiguration.current.screenHeightDp.dp-80.dp)).testTag("tabs-popup"),shape=RoundedCornerShape(16.dp),color=Color.White,shadowElevation=8.dp,border=BorderStroke(1.dp,Line)){
+                Surface(Modifier.widthIn(max=(LocalConfiguration.current.screenWidthDp-24).dp).width(360.dp).heightIn(max=minOf(520.dp,LocalConfiguration.current.screenHeightDp.dp-80.dp)).testTag("tabs-popup"),shape=RoundedCornerShape(16.dp),color=Color.White,shadowElevation=8.dp,border=BorderStroke(1.dp,Line)){
                     Column(Modifier.padding(8.dp)){
                         TextButton({hidden=!hidden;menu=false},enabled=enabled,modifier=Modifier.fillMaxWidth().testTag("tabs-hide")){Text(if(hidden)"显示笔记栏"else"隐藏笔记栏")}
                         TextButton({ui.openIds.filter{it!=ui.selectedId}.forEach(close);menu=false},enabled=enabled&&ui.openIds.size>1,modifier=Modifier.fillMaxWidth().testTag("tabs-close-others")){Text("关闭其他笔记",color=Color(0xffc13c43))}
@@ -64,7 +68,7 @@ import androidx.compose.ui.unit.sp
                                 var actions by remember{mutableStateOf(false)}
                                 Surface(shape=RoundedCornerShape(9.dp),color=Color.White,border=BorderStroke(1.dp,if(id==ui.selectedId)Forest else Line)){
                                     Row(verticalAlignment=Alignment.CenterVertically){
-                                        TextButton({open(id);menu=false},enabled=enabled,modifier=Modifier.weight(1f).heightIn(min=48.dp).testTag("tabs-list-$id")){Text(name,maxLines=2,overflow=TextOverflow.Ellipsis)}
+                                        TextButton({open(id);menu=false},enabled=enabled,shape=RoundedCornerShape(8.dp),modifier=Modifier.weight(1f).heightIn(min=48.dp).testTag("tabs-list-$id").semantics{selected=id==ui.selectedId}){Text(name,Modifier.fillMaxWidth().testTag("tabs-full-name-$id"),fontSize=14.sp,textAlign=TextAlign.Start)}
                                         Box{
                                             IconButton({actions=true},enabled=enabled,modifier=Modifier.size(48.dp).testTag("tabs-actions-$id").describedAs("$name 的更多操作")){Glyph("more")}
                                             DropdownMenu(actions,{actions=false},containerColor=Color.White){

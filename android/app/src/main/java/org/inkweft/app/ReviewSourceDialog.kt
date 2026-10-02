@@ -18,17 +18,22 @@ import org.inkweft.data.*
 private data class ReviewPage(val title:String,val page:NotebookPageRow,val ink:InkPage,val objects:List<PageObject>)
 
 /** Read the actual source through existing repositories; return keeps the same review session. */
-@Composable internal fun ReviewSourceDialog(source:StudySourceRow,dismiss:()->Unit,session:ShadowAuthorSession?=null){
+@Composable internal fun ReviewSourceDialog(source:StudySourceRow,dismiss:()->Unit,session:ShadowAuthorSession?=null,recallNotebookId:String?=null){
     val app=LocalContext.current.applicationContext as InkWeftApplication
-    var loaded by remember{mutableStateOf<ReviewPage?>(null)};var error by remember{mutableStateOf<String?>(null)}
+    var loaded by remember(source,recallNotebookId){mutableStateOf<ReviewPage?>(null)};var error by remember(source,recallNotebookId){mutableStateOf<String?>(null)}
     var view by remember{mutableStateOf<InkCanvasView?>(null)}
-    LaunchedEffect(source){try{loaded=withContext(Dispatchers.IO){
+    LaunchedEffect(source,recallNotebookId){try{loaded=withContext(Dispatchers.IO){
         val (note,_)= (session?.knowledge?:app.knowledge).resolve(TargetRef(TargetKind.PAGE,source.pageId))
+        require(recallNotebookId==null||note.id==recallNotebookId){"REVIEW_SOURCE_SCOPE_CHANGED"}
         val page=requireNotNull((session?.pages?:app.pages).activePages(note.id).find{it.id==source.pageId})
-        ReviewPage(note.title,page,(session?.ink?:app.inkRepository).read(page.id),(session?.objects?:app.pageObjects).read(page.id).objects)
+        val objects=(session?.objects?:app.pageObjects).read(page.id).objects.let{items->
+            if(recallNotebookId==null)items else items.filter{it.mapEmbed?.target?.notebookId?.let{book->book==recallNotebookId}!=false}
+        }
+        ReviewPage(note.title,page,(session?.ink?:app.inkRepository).read(page.id),objects)
     }}catch(c:CancellationException){throw c}catch(_:Exception){error="来源页已回收、不可用或读取失败；已保存的摘录快照仍保留。"}}
     LaunchedEffect(loaded,view){if(loaded!=null)view?.post{view?.focusRegion(CanvasBounds(source.left,source.top,source.right,source.bottom))}}
     Dialog(onDismissRequest=dismiss,properties=DialogProperties(usePlatformDefaultWidth=false)){
+        RecallWindowPermit()
         Surface(Modifier.fillMaxSize().testTag("review-source")){Column(Modifier.safeDrawingPadding()){
             Row(Modifier.fillMaxWidth().padding(horizontal=16.dp)){
                 Text("来源页 · 只读",Modifier.weight(1f));TextButton(onClick=dismiss,modifier=Modifier.testTag("return-to-review")){Text(if(session==null)"返回此题"else"返回知识卡")}

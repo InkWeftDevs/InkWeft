@@ -40,18 +40,21 @@ internal data class ContinuousTools(val pen:InkPen,val color:Int,val width:Float
 
 /** Only visible pages have native views. Visited writers remain observed until their saves settle. */
 @Composable internal fun ContinuousPages(pages:List<NotebookPageRow>,selected:String,tools:ContinuousTools,
-    writing:Boolean,onSelect:(String)->Unit,onGesture:(Boolean)->Unit,onBlocked:(Boolean)->Unit,onNotice:(String)->Unit,onRepair:(String)->Unit,onObjectTap:(String,String)->Unit={_,_->},onScroll:()->Unit={},onAppendPage:(()->Unit)?=null,onZoom:(Double)->Unit={}){
+    writing:Boolean,onSelect:(String)->Unit,onGesture:(Boolean)->Unit,onBlocked:(Boolean)->Unit,onNotice:(String)->Unit,onRepair:(String)->Unit,onObjectTap:(String,String)->Unit={_,_->},onScroll:()->Unit={},onAppendPage:(()->Unit)?=null,onZoom:(Double)->Unit={},authorAllowed:()->Boolean={true}){
     if(pages.isEmpty())return
     val app=LocalContext.current.applicationContext as InkWeftApplication
     val state=rememberLazyListState(initialFirstVisibleItemIndex=pages.indexOfFirst{it.id==selected}.coerceAtLeast(0))
     val dragged by state.interactionSource.collectIsDraggedAsState()
+    val currentAuthorAllowed by rememberUpdatedState(authorAllowed)
     val models=remember{mutableStateMapOf<String,InkViewModel>()}
     val objectModels=remember{mutableStateMapOf<String,PageObjectViewModel>()}
     val views=remember{mutableMapOf<String,InkCanvasView>()}
     val writer:ContinuousInkWriter=viewModel(key="continuous-writer-${pages.firstOrNull()?.notebookId}")
     val book=pages.first().notebookId
+    val readLock=rememberBookReadLock(book)
+    val readOnly by readLock.readOnly.collectAsStateWithLifecycle()
     val owner=checkNotNull(LocalViewModelStoreOwner.current)
-    fun modelFor(id:String):InkViewModel=models.getOrPut(id){ViewModelProvider(owner,InkViewModel.Factory(id,app.inkRepository))["ink-$id",InkViewModel::class.java]}
+    fun modelFor(id:String):InkViewModel=models.getOrPut(id){ViewModelProvider(owner,InkViewModel.Factory(id,app.inkRepository))["ink-$id",InkViewModel::class.java]}.also{it.authorAllowed={currentAuthorAllowed()}}
     val recovery:ContinuousGroupSession=viewModel(key="continuous-recovery-$book",factory=ContinuousGroupSession.Factory(book,app.inkRepository))
     val recovering by recovery.busy.collectAsStateWithLifecycle()
     val recoveryProblem by recovery.problem.collectAsStateWithLifecycle()
@@ -163,10 +166,11 @@ internal data class ContinuousTools(val pen:InkPen,val color:Int,val width:Float
             val model:InkViewModel=viewModel(key="ink-${page.id}",factory=InkViewModel.Factory(page.id,app.inkRepository))
             val ui by model.ui.collectAsStateWithLifecycle()
             val objectModel:PageObjectViewModel=viewModel(key="objects-${page.id}",factory=PageObjectViewModel.Factory(page.id,app.pageObjects))
+            SideEffect{model.authorAllowed={currentAuthorAllowed()};objectModel.authorAllowed={currentAuthorAllowed()};readLock.observeObjects(page.id,objectModel)}
             val objectUi by objectModel.ui.collectAsStateWithLifecycle()
             val beautyReview by objectModel.beautyReview.collectAsStateWithLifecycle()
             SideEffect{models[page.id]=model;objectModels[page.id]=objectModel;objectModel.history=model.history;model.suppressedIds=objectUi.objects.flatMap{it.sourceStrokeIds}.toSet()}
-            AutomaticBeautyBinding(objectModel,ui,writing||groupBlocked||recovering||recoveryProblem!=null,tools.beauty,false,app)
+            if(!readOnly)AutomaticBeautyBinding(objectModel,ui,writing||groupBlocked||recovering||recoveryProblem!=null,tools.beauty,false,app)
             Column(Modifier.fillMaxWidth()){
 
                 Box(Modifier.fillMaxWidth().aspectRatio(1000f/1414f).background(Color.White).testTag("continuous-page-${page.position+1}").pointerInput(page.id,tools.enabled,tools.erasing,tools.fingerWrites){detectTapGestures{point->if(tools.enabled&&!tools.erasing&&!tools.fingerWrites)views[page.id]?.imageAt(point.x,point.y)?.let{id->val o=objectModel.ui.value.objects.find{it.id==id};if(o?.kind==PageObjectKind.TAPE)objectModel.put(o.copy(revealed=!o.revealed))else onObjectTap(page.id,id)}}}){
@@ -174,14 +178,15 @@ internal data class ContinuousTools(val pen:InkPen,val color:Int,val width:Float
                         v.configure(false,PaperStyle.entries[page.paper],null)
                         v.fingerWrites=tools.fingerWrites
                         views[page.id]=v
-                        v.allowInput=!recovering&&recoveryProblem==null&&(if(tools.erasing)!groupBlocked else drawingReady)&&tools.enabled&&!objectUi.loading&&!objectUi.pending&&!objectUi.busy&&(if(tools.erasing)!ui.loading&&!ui.readFailed&&ui.blocked==null&&!ui.processing&&ui.queued<16 else ui.canStart)&&(gestureOwner==null||gestureOwner==page.id)
+                        v.allowInput=!recovering&&recoveryProblem==null&&(if(tools.erasing)!groupBlocked else drawingReady)&&tools.enabled&&!objectUi.loading&&(!(objectUi.pending||objectUi.busy)||(!tools.erasing&&objectUi.automaticPending))&&(if(tools.erasing)!ui.loading&&!ui.readFailed&&ui.blocked==null&&!ui.processing&&ui.queued<16 else ui.canStart)&&(gestureOwner==null||gestureOwner==page.id)
                         v.finishStroke={polishNewStroke(it,tools.beauty)}
                         v.pen=tools.pen;v.penColor=tools.color;v.penWidth=tools.width;v.brushRecipe=tools.recipe
                         v.eraserTapeOnly=tools.onlyTape;v.eraseMode=tools.erasing;v.eraserWhole=tools.whole;v.eraserHighlighterOnly=tools.highlighterOnly;v.eraserDiameterDp=tools.diameter
-                        v.onObjectTap={id->val o=objectModel.ui.value.objects.find{it.id==id};if(o?.kind==PageObjectKind.TAPE)objectModel.put(o.copy(revealed=!o.revealed))else onObjectTap(page.id,id)}
+                        v.onObjectTap={id->if(currentAuthorAllowed()){val o=objectModel.ui.value.objects.find{it.id==id};if(o?.kind==PageObjectKind.TAPE)objectModel.put(o.copy(revealed=!o.revealed))else onObjectTap(page.id,id)}}
                         v.onCheckpointCancel={id->model.cancelCheckpoint(id);recovery.cancel(id)}
-                        v.onCheckpoint=recovery::checkpoint
-                        v.onStroke={stroke->
+                        v.onCheckpoint={if(currentAuthorAllowed())recovery.checkpoint(it)}
+                        v.onStroke=stroke@{stroke->
+                            if(!currentAuthorAllowed())return@stroke
                             val origin=pages.indexOfFirst{it.id==page.id}
                             val pieces=ContinuousInk.split(stroke,origin,pages.size)
                             if(pieces.size>1||stroke.samples.size>=128){recovery.finish(v.capturedStroke(),stroke)}
@@ -195,7 +200,8 @@ internal data class ContinuousTools(val pen:InkPen,val color:Int,val width:Float
                                 if(crosses)other.seamDraft=v.liveStroke(samples.map{it.copy(y=it.y+offset,world=true)},offset)
                                 else if(other.seamDraft!=null)other.seamDraft=null}}
                         }
-                        v.onErase={path,radius,whole,only->
+                        v.onErase=erase@{path,radius,whole,only->
+                            if(!currentAuthorAllowed())return@erase
                             val origin=pages.indexOfFirst{it.id==page.id}
                             val first=kotlin.math.floor((origin*1414f+path.minOf{it.y}-radius)/1414f).toInt().coerceIn(0,pages.lastIndex)
                             val last=kotlin.math.floor((origin*1414f+path.maxOf{it.y}+radius)/1414f).toInt().coerceIn(0,pages.lastIndex)

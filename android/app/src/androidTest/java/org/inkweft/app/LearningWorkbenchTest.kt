@@ -38,6 +38,7 @@ class LearningWorkbenchTest {
         }finally{shell("wm size 1920x1200");shell("settings put system font_scale 1.0")}
     }
     @Test fun directoryUsesStableIdentitiesAndManualInboxState()=runBlocking {
+        val originalShortcuts=app.learningStore.read().shortcuts
         val n=app.workspaceRepository.create("逻辑与概率",false,PaperStyle.DOTS)
         assertTrue(app.learningDirectory.observe().first().maps.none{it.target.notebookId==n.id})
         assertTrue(app.learningDirectory.observe().first().resolve(StableTargetRef(LearningTargetKind.MAP,n.id)).available)
@@ -55,12 +56,13 @@ class LearningWorkbenchTest {
         val row=app.workspaceRepository.get(n.id)
         app.workspaceRepository.organize(n.id,row.revision,row.folder,row.tags,true,true)
         assertFalse(app.learningDirectory.observe().first().resolve(ref).available)
-        assertEquals(listOf(ref),app.learningStore.read().shortcuts)
+        assertEquals((originalShortcuts+ref).distinct(),app.learningStore.read().shortcuts)
         val trashed=app.workspaceRepository.get(n.id)
         app.workspaceRepository.organize(n.id,trashed.revision,trashed.folder,trashed.tags,false,false)
         assertTrue(app.learningDirectory.observe().first().resolve(ref).available)
-        assertEquals(listOf(ref),app.learningStore.read().shortcuts)
+        assertEquals((originalShortcuts+ref).distinct(),app.learningStore.read().shortcuts)
         app.learningStore.shortcut(ref,false)
+        assertEquals(originalShortcuts,app.learningStore.read().shortcuts)
         assertTrue(app.learningDirectory.observe().first().resolve(ref).available)
         val shared=app.learningStore.sharedLayout();assertFalse(shared.contains(n.id));assertFalse(shared.contains(map));assertFalse(shared.contains("条件概率"))
     }

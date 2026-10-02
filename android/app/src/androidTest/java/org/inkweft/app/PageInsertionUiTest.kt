@@ -34,7 +34,10 @@ class PageInsertionUiTest {
     private fun shot(name:String){compose.waitForIdle();val image=checkNotNull(InstrumentationRegistry.getInstrumentation().uiAutomation.takeScreenshot());try{File(compose.activity.getExternalFilesDir(null),name).outputStream().use{image.compress(Bitmap.CompressFormat.PNG,100,it)}}finally{image.recycle()}}
     private fun insert(){compose.onNodeWithTag("confirm-insert-pages").performClick();compose.waitUntil(10_000){compose.onAllNodesWithTag("insert-pages-dialog").fetchSemanticsNodes().isEmpty()};saved()}
     @Test fun beginningBatchKeepsOriginalInkAndPageIdentity(){
-        val book=create();compose.openEditorAction("quick-finger")
+        val book=create()
+        // New pages read the persisted input mode. Enable writing only if it is off;
+        // preceding UI fixtures may already have enabled it.
+        if(!app.getSharedPreferences("inkweft-editor",0).getBoolean("finger-writes",false))compose.openEditorAction("quick-finger")
         compose.onNodeWithTag("ink-surface").performTouchInput{swipe(Offset(width*.3f,height*.3f),Offset(width*.5f,height*.5f),200)}
         compose.waitUntil(10_000){runBlocking{app.inkRepository.read(book).strokes.size}==1};saved()
         val stroke=runBlocking{app.inkRepository.read(book).strokes.single().stroke}

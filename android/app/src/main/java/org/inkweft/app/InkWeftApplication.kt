@@ -10,6 +10,7 @@ class InkWeftApplication:Application(){
     val openKnowledgeTarget=kotlinx.coroutines.flow.MutableStateFlow<org.inkweft.core.TargetRef?>(null)
     val navigationReady=kotlinx.coroutines.flow.MutableStateFlow(true)
     val diagnostics by lazy{AppDiagnostics(this)}
+    internal val beautyDiagnostics by lazy{BeautyDiagnostics()}
     private val database by lazy{NoteDatabase.open(this)}
     internal val backupEngine by lazy{BackupEngine(this)}
     val repository by lazy{NoteRepository(database)}
@@ -23,6 +24,9 @@ class InkWeftApplication:Application(){
     val libraryContent by lazy{LibraryContentRepository(database)}
     val libraryBackup by lazy{LibraryBackupRepository(this,database)}
     val knowledge by lazy{KnowledgeRepository(database)}
+    val branchReview by lazy{BranchReviewRepository(database)}
+    val knowledgeText by lazy{KnowledgeTextRepository(database)}
+    val mapPortals by lazy{MapPortalRepository(database)}
     val mapEmbeds by lazy{MapEmbedRepository(database)}
     val mapGraphs by lazy{MapGraphAccess(database)}
     val learningDirectory by lazy{LearningDirectory(database)}

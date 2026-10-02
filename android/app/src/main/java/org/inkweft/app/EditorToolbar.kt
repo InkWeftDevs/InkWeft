@@ -38,7 +38,8 @@ internal object EditorToolOrder {
         if(next in group.indices){val from=order.indexOf(id);val target=order.indexOf(group[next]);order=order.toMutableList().apply{removeAt(from);add(target,id)};save()}
     }
     var more by remember{mutableStateOf(false)}
-    LaunchedEffect(moreRequest){if(moreRequest>0)more=true}
+    var consumedMoreRequest by remember{mutableIntStateOf(moreRequest)}
+    LaunchedEffect(moreRequest){if(moreRequest>consumedMoreRequest)more=true;consumedMoreRequest=moreRequest}
     BoxWithConstraints{
     val visiblePrimary=EditorToolOrder.primary+if(maxWidth>=528.dp)setOf("image","text")else emptySet()
     Row(Modifier.testTag("editor-toolbar"),verticalAlignment=Alignment.CenterVertically){

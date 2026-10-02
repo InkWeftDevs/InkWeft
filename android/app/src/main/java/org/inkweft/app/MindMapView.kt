@@ -14,6 +14,9 @@ internal data class MapViewport(val scale:Float,val x:Float,val y:Float)
 internal class MindMapView(context:Context):View(context){
     private val viewStyle=MapViewStyle(InkTheme.Accent.toArgb(),InkTheme.Selected.toArgb(),0xffafc2d8.toInt())
     var enabledInput=true
+    /** Browsing remains enabled while author movement, capture and title editing are locked. */
+    var authorEditing=true
+        set(value){if(field!=value){field=value;dx=0f;dy=0f;dropPoint=null;dropParent=null;candidate=null;lastTapId=null;if(!value)onActive(false);invalidate()}}
     var captureBook=""
     var captureMapKey=""
     private var capturedMap=""
@@ -26,11 +29,13 @@ internal class MindMapView(context:Context):View(context){
     private var candidateSince=0L
     override fun onDragEvent(e:DragEvent):Boolean{
         val transfer=e.localState as? CaptureTransfer?:return false
-        if(transfer.book!=captureBook||editingTitle)return false
+        if(transfer.book!=captureBook)return false
+        if(e.action==DragEvent.ACTION_DRAG_ENDED){dropPoint=null;dropParent=null;candidate=null;onActive(false);invalidate();return true}
+        if(editingTitle||!enabledInput||!authorEditing)return false
         when(e.action){
-            DragEvent.ACTION_DRAG_STARTED->{capturedGraph=captureGraph;capturedMap=captureMapKey;dropParent=null;candidate=null;return true}
+            DragEvent.ACTION_DRAG_STARTED->{capturedGraph=captureGraph;capturedMap=captureMapKey;dropParent=null;candidate=null;onActive(true);return true}
             DragEvent.ACTION_DRAG_LOCATION,DragEvent.ACTION_DROP->{
-                if(!enabledInput||capturedMap!=captureMapKey){dropPoint=null;dropParent=null;invalidate();return true}
+                if(!enabledInput||!authorEditing||capturedMap!=captureMapKey){dropPoint=null;dropParent=null;invalidate();return true}
                 val p=PointF((e.x-tx)/(scale*d),(e.y-ty)/(scale*d));dropPoint=p
                 fun distance(n:StudyNodeRow):Float{val sx=(n.x*d*scale+tx).toFloat();val sy=(n.y*d*scale+ty).toFloat();return hypot((sx-e.x).coerceAtLeast(0f)+(e.x-sx-MapNodeMetrics.WIDTH*d*scale).coerceAtLeast(0f),(sy-e.y).coerceAtLeast(0f)+(e.y-sy-MapNodeMetrics.HEIGHT*d*scale).coerceAtLeast(0f))}
                 val nearest=dropParent?.takeIf{distance(it)<=36*d}?:nodes.minByOrNull{distance(it)}?.takeIf{distance(it)<=24*d}
@@ -56,9 +61,31 @@ internal class MindMapView(context:Context):View(context){
         set(value){field=value;publishBounds();invalidate()}
     var onViewport:(MapViewport)->Unit={}
     private var positioned=false
+    // The source dock has a temporary camera; returning restores the user's exact original viewport.
+    private var sourceReadingViewport:MapViewport?=null
+    private var sourceFocusPending=false
+    fun setSourceReading(enabled:Boolean){
+        if(enabled){
+            if(sourceReadingViewport==null){sourceReadingViewport=snapshotViewport();sourceFocusPending=true}
+            focusSourceSelection()
+        }else sourceReadingViewport?.let{original->
+            sourceReadingViewport=null;sourceFocusPending=false;restoreViewport(original)
+        }
+    }
+    private fun focusSourceSelection(){
+        if(sourceReadingViewport!=null&&sourceFocusPending&&width>0&&height>0&&nodes.isNotEmpty()){
+            if(selectedNodeId?.let(::focusNode)!=true)fit()
+            sourceFocusPending=false
+        }
+    }
     fun snapshotViewport()=MapViewport(scale,tx,ty)
-    fun restoreViewport(v:MapViewport){scale=v.scale;tx=v.x;ty=v.y;positioned=true;publishBounds();invalidate()}
-    private fun changedViewport(){positioned=true;onViewport(snapshotViewport());publishBounds()}
+    fun restoreViewport(v:MapViewport){
+        if(sourceReadingViewport!=null){
+            sourceReadingViewport=v;sourceFocusPending=true;focusSourceSelection();return
+        }
+        scale=v.scale;tx=v.x;ty=v.y;positioned=true;publishBounds();invalidate()
+    }
+    private fun changedViewport(){positioned=true;if(sourceReadingViewport==null)onViewport(snapshotViewport());publishBounds()}
     var onOpen:(StudyNodeRow)->Unit={} // Other knowledge canvases retain their own activation contract.
     var onSelect:((StudyNodeRow?)->Unit)?=null
     var onEditTitle:(StudyNodeRow)->Unit={}
@@ -104,11 +131,11 @@ internal class MindMapView(context:Context):View(context){
     fun decorations(edges:List<Pair<String,String>>){relationEdges=edges;invalidate()}
     fun fitOverview(){fit(.08f)}
     fun fit(minScale:Float=.8f){if(nodes.isEmpty()||width==0||height==0)return
-        val left=nodes.minOf{it.x};val right=nodes.maxOf{it.x}+MapNodeMetrics.WIDTH;val top=nodes.minOf{it.y};val bottom=nodes.maxOf{it.y}+MapNodeMetrics.HEIGHT
-        scale=min((width-40*d)/((right-left)*d).toFloat(),(height-40*d)/((bottom-top)*d).toFloat()).coerceIn(minScale,1.3f)
+        val left=nodes.minOf{it.x};val right=nodes.maxOf{it.x}+MapNodeMetrics.WIDTH+24;val top=nodes.minOf{it.y};val bottom=nodes.maxOf{it.y}+MapNodeMetrics.HEIGHT
+        scale=min((width-48*d)/((right-left)*d).toFloat(),(height-48*d)/((bottom-top)*d).toFloat()).coerceIn(minScale,1.3f)
         // Keep the leading nodes whole when readable scaling requires panning.
-        tx=max(width/2-((left+right)/2*d*scale).toFloat(),20*d-(left*d*scale).toFloat())
-        ty=max(height/2-((top+bottom)/2*d*scale).toFloat(),20*d-(top*d*scale).toFloat());changedViewport();invalidate()
+        tx=max(width/2-((left+right)/2*d*scale).toFloat(),24*d-(left*d*scale).toFloat())
+        ty=max(height/2-((top+bottom)/2*d*scale).toFloat(),24*d-(top*d*scale).toFloat());changedViewport();invalidate()
     }
     fun focusNode(id:String):Boolean{
         val node=nodes.find{it.id==id}?:return false;if(width<=0||height<=0)return false
@@ -126,7 +153,12 @@ internal class MindMapView(context:Context):View(context){
     fun zoom(f:Float){val old=scale;scale=(scale*f).coerceIn(.15f,2.5f);tx=width/2-(width/2-tx)*scale/old;ty=height/2-(height/2-ty)*scale/old;changedViewport();invalidate()}
     private fun x(n:StudyNodeRow)=n.x.toFloat()+if(n.id==active?.id)dx else 0f
     private fun y(n:StudyNodeRow)=n.y.toFloat()+if(n.id==active?.id)dy else 0f
-    override fun onSizeChanged(w:Int,h:Int,oldw:Int,oldh:Int){super.onSizeChanged(w,h,oldw,oldh);if(oldw==0&&!positioned)fit();publishBounds()}
+    override fun onSizeChanged(w:Int,h:Int,oldw:Int,oldh:Int){
+        super.onSizeChanged(w,h,oldw,oldh)
+        if(sourceReadingViewport!=null){sourceFocusPending=true;focusSourceSelection()}
+        else if(oldw==0&&!positioned)fit()
+        publishBounds()
+    }
     // AndroidView can share a Compose canvas with surrounding controls. A background
     // drawColor and transformed nodes must never paint outside this viewport.
     override fun draw(canvas:Canvas){val save=canvas.save();try{canvas.clipRect(0,0,width,height);super.draw(canvas)}finally{canvas.restoreToCount(save)}}
@@ -175,15 +207,15 @@ internal class MindMapView(context:Context):View(context){
                 parent?.requestDisallowInterceptTouchEvent(true);onActive(true)}
             MotionEvent.ACTION_MOVE->{if(multi)return true
                 if(hypot(e.x-startX,e.y-startY)>ViewConfiguration.get(context).scaledTouchSlop)moving=true
-                if(moving&&pressedBranch==null){lastTapId=null;if(active!=null){dx=(e.x-startX)/(scale*d);dy=(e.y-startY)/(scale*d)}else {tx+=e.x-lastX;ty+=e.y-lastY}}
-                lastX=e.x;lastY=e.y;if(active==null)changedViewport();invalidate()}
+                if(moving&&pressedBranch==null){lastTapId=null;if(active!=null&&authorEditing){dx=(e.x-startX)/(scale*d);dy=(e.y-startY)/(scale*d)}else {tx+=e.x-lastX;ty+=e.y-lastY}}
+                lastX=e.x;lastY=e.y;if(active==null||!authorEditing)changedViewport();invalidate()}
             MotionEvent.ACTION_UP->{val n=active;val mx=dx;val my=dy;active=null;dx=0f;dy=0f;onActive(false);parent?.requestDisallowInterceptTouchEvent(false)
                 val branch=pressedBranch;pressedBranch=null
-                if(branch!=null){lastTapId=null;if(!multi&&!moving)onToggleBranch(branch)}else if(!multi){if(n!=null&&moving)onMove(n,(n.x+mx).coerceIn(-40000.0,40000.0),(n.y+my).coerceIn(-40000.0,40000.0))
+                if(branch!=null){lastTapId=null;if(!multi&&!moving)onToggleBranch(branch)}else if(!multi){if(n!=null&&moving){if(authorEditing)onMove(n,(n.x+mx).coerceIn(-40000.0,40000.0),(n.y+my).coerceIn(-40000.0,40000.0))}
                 else if(!moving){if(n==null){lastTapId=null;onSelect?.invoke(null)}else if(onSelect==null)onOpen(n)else{
                     val twice=lastTapId==n.id&&e.eventTime-lastTapTime<=ViewConfiguration.getDoubleTapTimeout()&&hypot(e.x-lastTapX,e.y-lastTapY)<ViewConfiguration.get(context).scaledDoubleTapSlop
                     selectedNodeId=n.id;onSelect?.invoke(n)
-                    if(twice){lastTapId=null;onEditTitle(n)}else{lastTapId=n.id;lastTapTime=e.eventTime;lastTapX=e.x;lastTapY=e.y}
+                    if(twice){lastTapId=null;if(authorEditing)onEditTitle(n)else onOpenDetails(n)}else{lastTapId=n.id;lastTapTime=e.eventTime;lastTapX=e.x;lastTapY=e.y}
                 }}}else lastTapId=null;invalidate();performClick()}
             MotionEvent.ACTION_CANCEL->{pressedBranch=null;lastTapId=null;parent?.requestDisallowInterceptTouchEvent(false);active=null;dx=0f;dy=0f;onActive(false);invalidate()}
         };return true

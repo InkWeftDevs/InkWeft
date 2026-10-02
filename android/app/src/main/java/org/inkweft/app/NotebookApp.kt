@@ -48,6 +48,8 @@ fun NotebookApp(vm:NotebookViewModel=viewModel(),onDiagnostics:()->Unit={}){
     val transfers:LibraryTransfersViewModel=viewModel();val transferUi by transfers.ui.collectAsStateWithLifecycle()
     val keyboard=LocalSoftwareKeyboardController.current;val focus=LocalFocusManager.current;val scope=rememberCoroutineScope()
     val notebookStates=rememberSaveableStateHolder()
+    // Move the same editor between split hosts so temporary source and window state survive.
+    val editorSlot=remember{movableContentOf<@Composable ()->Unit>{content->content()}}
     var splitId by rememberSaveable{mutableStateOf<String?>(null)}
     var splitVertical by rememberSaveable{mutableStateOf(false)}
     val pendingCreate by workspace.pendingCreate.collectAsStateWithLifecycle()
@@ -116,9 +118,9 @@ fun NotebookApp(vm:NotebookViewModel=viewModel(),onDiagnostics:()->Unit={}){
                 val editor:@Composable ()->Unit={notebookStates.SaveableStateProvider(draft.base.id){InkScreen(draft,workspace,{splitId=null;vm.back()},{beginRename(draft.base)},{inkMode=false;immersive=false},onDiagnostics,immersive,{immersive=it})}}
                 val other=splitId?.let{id->ui.notes.find{it.id==id}}
                 val reference:@Composable ()->Unit={if(other!=null)NotebookReferencePane(other.id,other.title,navigationReady,splitVertical,{splitVertical=!splitVertical},{pageId->val previous=draft.base.id;workspace.openSearchPage(other.id,pageId){vm.select(other);splitId=previous}},{splitId=null})}
-                if(other==null)editor()
-                else if(splitVertical)Column{Box(Modifier.weight(1f)){editor()};HorizontalDivider(color=Line,thickness=2.dp);Box(Modifier.weight(1f)){reference()}}
-                else Row{Box(Modifier.weight(1f)){editor()};VerticalDivider(color=Line,thickness=2.dp);Box(Modifier.weight(1f)){reference()}}
+                if(other==null)editorSlot(editor)
+                else if(splitVertical)Column{Box(Modifier.weight(1f)){editorSlot(editor)};HorizontalDivider(color=Line,thickness=2.dp);Box(Modifier.weight(1f)){reference()}}
+                else Row{Box(Modifier.weight(1f)){editorSlot(editor)};VerticalDivider(color=Line,thickness=2.dp);Box(Modifier.weight(1f)){reference()}}
             }
             else TextPage(draft,vm,Modifier.weight(1f)){confirmExport=true}
         }

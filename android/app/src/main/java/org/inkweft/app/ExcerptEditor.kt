@@ -20,6 +20,10 @@ import java.util.UUID
     inkRevision:Long,objectRevision:Long,ready:Boolean,dismiss:()->Unit,onActive:(Boolean)->Unit,onDraft:(Boolean)->Unit
 ){
     val ui by vm.ui.collectAsStateWithLifecycle()
+    val readLock=rememberBookReadLock(vm.book)
+    val readOnly by readLock.readOnly.collectAsStateWithLifecycle()
+    SideEffect{vm.authorAllowed={readLock.canWrite}}
+    val guardKey=remember(vm,id){"excerpt-editor-${UUID.randomUUID()}"}
     val source by remember(id){vm.repo.observeSource(id)}.collectAsStateWithLifecycle(initialValue=null)
     val card=ui.cards.find{it.id==id&&it.trashedAt==null}
     var mode by rememberSaveable(id){mutableStateOf("actions")}
@@ -31,9 +35,10 @@ import java.util.UUID
     var message by remember(id){mutableStateOf<String?>(null)}
     var submitted by rememberSaveable(id){mutableStateOf(false)}
     val waiting=ui.busy||ui.unknown
-    val enabled=ready&&!waiting&&!ui.loading&&!ui.readFailed
-    SideEffect{onDraft(mode!="actions"||waiting)}
-    DisposableEffect(Unit){onDispose{onDraft(false)}}
+    val enabled=ready&&!readOnly&&!waiting&&!ui.loading&&!ui.readFailed
+    ReadLockGuard(readLock,guardKey,blocked=waiting||mode!="actions",draft=mode!="actions")
+    SideEffect{onDraft(mode!="actions")}
+    DisposableEffect(readLock,guardKey){onDispose{onDraft(false);onActive(false);readLock.guard("$guardKey-gesture",false)}}
     LaunchedEffect(ui.completed,ui.busy,card?.revision){if(submitted&&!waiting&&ui.message==null&&(ui.completed==id||(card?.revision?:0)>revision)){submitted=false;mode="actions";setDraft(null);vm.clear()}}
     LaunchedEffect(card,ui.loading){if(card==null&&!ui.loading&&!ui.readFailed&&!waiting)dismiss()}
     fun cancel(){if(!waiting){mode="actions";setDraft(null);message=null;vm.clear()}}
@@ -44,7 +49,7 @@ import java.util.UUID
     val region=InkRegion(listOf(EraserPoint(b.left.toFloat(),b.top.toFloat()),EraserPoint(b.right.toFloat(),b.bottom.toFloat())))
     AndroidView(factory={ExcerptResizeOverlay(it)},update={overlay->
         overlay.canvasView=view;overlay.bounds=b;overlay.world=world;overlay.editing=mode=="resize";overlay.enabledInput=enabled
-        overlay.onChange={setDraft(it)};overlay.onActive=onActive;overlay.onDismiss=dismiss;overlay.invalidate()
+        overlay.onChange={if(readLock.canWrite)setDraft(it)};overlay.onActive={active->readLock.guard("$guardKey-gesture",active);onActive(active)};overlay.onDismiss={if(!waiting&&mode=="actions")dismiss()};overlay.invalidate()
     },modifier=Modifier.fillMaxSize().testTag("excerpt-edit-overlay"))
     SelectionToolbar(region,viewport,focusable=mode=="comment"){
         Column(Modifier.widthIn(max=320.dp)){

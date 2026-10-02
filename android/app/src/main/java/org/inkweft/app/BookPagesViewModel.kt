@@ -21,6 +21,7 @@ internal class BookPagesViewModel(
     private val bookId: String, private val repo: NotebookPages,
     private val workspace: WorkspaceRepository, private val savedState: SavedStateHandle = SavedStateHandle(), private val packs:ResourcePacks?=null,
 ) : ViewModel() {
+    var authorAllowed:()->Boolean={true}
     private var pending: InsertPages? = restorePending()
     private var pendingEdit:EditPage?=savedState.get<ArrayList<String>>("page.edit")?.let{EditPage.fromFields(it).also{c->require(c.notebookId==bookId)}}
     private val mutable = MutableStateFlow(BookPagesUi(insertionUnknown = pending != null,actionUnknown=pendingEdit!=null))
@@ -49,6 +50,7 @@ internal class BookPagesViewModel(
     }
     fun select(id: String) {
         if (ui.value.busy || pending != null || pendingEdit != null || ui.value.pages.none { it.id == id }) return
+        requestedSelection = null
         mutable.update { it.copy(selectedId = id) }
         val generation = ++selectGeneration
         viewModelScope.launch {
@@ -59,8 +61,35 @@ internal class BookPagesViewModel(
             }
         }
     }
+    /** Caller-owned reading navigation. Keep final publication in the caller's Main segment. */
+    suspend fun selectAwait(id: String): Boolean {
+        check(android.os.Looper.myLooper() == android.os.Looper.getMainLooper()) { "selectAwait requires Main" }
+        currentCoroutineContext().ensureActive()
+        fun available() = !ui.value.loading && !ui.value.busy && pending == null && pendingEdit == null && ui.value.pages.any { it.id == id }
+        if (!available()) return false
+        val generation = ++selectGeneration
+        fun ensureCurrent() {
+            if (selectGeneration != generation) throw CancellationException("Page selection was superseded")
+        }
+        return try {
+            selectionLock.withLock {
+                currentCoroutineContext().ensureActive(); ensureCurrent()
+                if (!available()) return@withLock false
+                withContext(Dispatchers.IO) { repo.select(bookId, id) }
+                currentCoroutineContext().ensureActive(); ensureCurrent()
+                if (!available()) return@withLock false
+                requestedSelection = null
+                mutable.update { it.copy(selectedId = id) }
+                true
+            }
+        } catch (c: CancellationException) { throw c
+        } catch (_: Exception) {
+            currentCoroutineContext().ensureActive(); ensureCurrent()
+            false
+        }
+    }
     fun insert(location: PageInsertLocation, anchorId: String?, paper: PaperStyle, count: Int, openNew: Boolean, previewOrder: String,template:TemplateRef?=null) {
-        if (ui.value.loading || ui.value.busy || pending != null || pendingEdit != null || count !in 1..InsertPages.MAX_BATCH) return
+        if (!authorAllowed() || ui.value.loading || ui.value.busy || pending != null || pendingEdit != null || count !in 1..InsertPages.MAX_BATCH) return
         val rows = ui.value.pages
         if (rows.isEmpty() || rows.any { it.world } || rows.size + ui.value.recycled.size + count > InsertPages.MAX_PAGES) return
         if (previewOrder != InsertPages.orderHash(rows.map { it.id })) {
@@ -120,7 +149,7 @@ internal class BookPagesViewModel(
     fun clearError() { if (pending == null && pendingEdit==null) mutable.update { it.copy(error = null) } }
 
     fun editPage(kind:PageEditKind,pageId:String,where:PageInsertLocation,anchor:String?,order:String,sourceRevision:Long,trashAt:Long?) {
-        if(ui.value.loading||ui.value.busy||pending!=null||pendingEdit!=null)return
+        if(!authorAllowed()||ui.value.loading||ui.value.busy||pending!=null||pendingEdit!=null)return
         val selected=ui.value.selectedId?:return
         pendingEdit=EditPage(UUID.randomUUID().toString(),bookId,pageId,kind,order,sourceRevision,
             where,anchor,if(kind==PageEditKind.COPY)UUID.randomUUID().toString()else null,trashAt,selected)

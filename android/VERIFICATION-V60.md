@@ -1,0 +1,46 @@
+# V60 验证记录 · 2026-10-02
+
+实际候选/安装APK SHA-256 `35121d4d48d2e7046d5a3a515d4d9c7a5fe784a4ab3d0f0a154cd45bc3edb60e`；测试APK `4414745e9d2b02467e78ceda511c58e2b577ea9ad229833626b802e5e72c9029`。package、version60及原证书和设备base.apk摘要一致。独有AVD `InkWeft-SelectAwait-V60`、Android35、ADB5038/emulator-5556；原ADB5037未查询设备或改变服务。
+
+**19个唯一用例通过：新增实际UI3＋retained VM2，共5；旧回归14。** lint 0错误/0致命/132警告。
+
+|类|用例|结果|原日志|
+|---|---|---|---|
+|BookSourceSelectAwaitUiTest|cancelBackRecreateAndOrdinaryPageOverrideCannotPublishAnOldSource|PASS|ui-select-await-2|
+|BookSourceSelectAwaitUiTest|genuinelyRecycledSourcePageOrBookKeepsDetailsAndSnapshotWithoutFocus|PASS|ui-select-await-2|
+|BookSourceSelectAwaitUiTest|sourceWaitsForRealDifferentPageSelectionBeforeDismissingAndFocusing|PASS|ui-select-await-2|
+|BookPagesSelectAwaitUiTest|recycledBookIsRejectedEvenWhenTheCachedPageDirectoryStillContainsTarget|PASS|ui-select-await-2|
+|BookPagesSelectAwaitUiTest|canceledOrSupersededAwaitCannotOverrideImmediateOrdinarySelection|PASS|ui-select-await-2|
+|SourceFocusVisibilityUiTest|originalRightDockAndOriginalMinimizedSurviveTemporarySourcePresentation|PASS|ui-select-await-protection-final2|
+|SourceFocusVisibilityUiTest|narrow375LargeFontRetainsSourceRegionThroughRecreationAndRestoresItsFocusFrame|PASS|ui-select-await-protection-final2|
+|SourceFocusVisibilityUiTest|movedResizedFloatingCollectOrganizeAndFocusExposeExactSourceThenRestoreOriginalWindow|PASS|ui-select-await-protection-final2|
+|SourceFocusVisibilityUiTest|splitPaneRefitsRetainedSourceAcrossBothDirectionsWithoutChangingReferenceOrGraph|PASS|ui-select-await-protection-final2|
+|CardSourceNavigationUiTest|missingAndRecycledSourcesStayScopedWhileStaleSnapshotReturnsToCurrentPaper|PASS|ui-select-await-protection-final2|
+|CardSourceNavigationUiTest|collapsedSourceFooterReturnsToExactPaperAndKeepsReadOnlyMapContext|PASS|ui-select-await-protection-final2|
+|CardSourceNavigationUiTest|narrowLargeFontKeepsFooterReachableAfterLongBodyScrollAndRecreation|PASS|ui-select-await-protection-final2|
+|ReadLockUiTest|readNavigationSearchSourceAndPortalReturnKeepAuthorRows|PASS|ui-select-await-protection-final2|
+|LibrarySourceNavigationUiTest|learningSourceAwaitsRealPageSelectionThenFocusesOriginalBoundsWithReadLock|PASS|ui-select-await-protection-final2|
+|LibrarySourceNavigationUiTest|closingOrRecreatingPendingLibrarySourceCannotJumpOrCloseAnotherCard|PASS|ui-select-await-protection-final2|
+|LibrarySourceNavigationUiTest|recycledLibrarySourceRetainsCurrentCardSnapshotAndMapWithoutNavigating|PASS|ui-select-await-protection-final2|
+|PageInsertionUiTest|beginningBatchKeepsOriginalInkAndPageIdentity|PASS|ui-select-await-protection-final2|
+|PageEditingUiTest|movingCurrentPageKeepsItsIdentityAndReadingPosition|PASS|ui-select-await-protection-final2|
+|MapAddendumUiTest|windowModesKeepCanvasAndEmbeddedEditUsesSameWindow|PASS|ui-select-await-protection-final2|
+
+新增测试使用真实MainActivity、原BookPagesViewModel和同一个app Room。门持有实际withTransaction，源请求进入真实selection Mutex后，才检查原页/详情/相机保持；放行成功后核对真实持久页及原生源区域的完整投影。页/本回收在门持有的原事务上下文里通过实际repo实施；回收后的预期作者指纹在排队导航运行前取样，不把夹具刻意变化计为导航写入。
+
+实际触控覆盖卡片返回、系统Back与Activity重建；普通select覆盖通过真实VM执行，且保持即时发布，旧await以取消结束。每个门放行并等待事务/job完成，再经Mutex和同DB队列fence检查27类作者/历史/回执、BLOB原迹及另一资料本。没有独立连接、数据库关闭、模拟repo、SQLite重试或以合成数据冒充真实手写。
+
+旧回归覆盖V59四项真实源/节点几何和双向分屏、固定回源入口、阅读锁、Library三个来源流程，以及加页/编辑后的普通选择和窗口模式。四张重跑后的未修改原生截图保存在evidence/native-ui，设备/本地摘要与视觉检查另存；原SF59夹具名不改变本轮实际version60的包身份。
+
+所有原始尝试保留，不将失败改记为通过：
+
+- ui-select-await-1：完成5，PASS 5 / FAIL 0，crash=False；原日志SHA `84f456170f6cb54823d1092a1726bef0b0348deca686809a0c85544ac0291e72`。
+- ui-select-await-2：完成5，PASS 5 / FAIL 0，crash=False；原日志SHA `d4a276e3434d1128c3e1f876e7c0215fa4633167e78f93921fd501db2f6b0083`。
+- ui-select-await-protection-final：完成14，PASS 13 / FAIL 1，crash=False；原日志SHA `b5c600754d480cd860be78d1586d695823c57855a9e1589829fee7f7e39c7896`。
+- ui-select-await-protection-final2：完成14，PASS 14 / FAIL 0，crash=False；原日志SHA `d747aab445004ac84618a5406a4c64001f8ae23c3a3afee309a2fbf41359c5ac`。
+
+首轮受影响回归13/14通过：加页用例在旧导航助手对已显示的固定按钮执行performScrollTo时失败，尚未进入加页/笔迹断言。修正仅先检查显示，必要时滚动，再assertIsDisplayed并点击；全部原断言保留。失败时完整测试APK、442项输入清单、原助手字节和日志摘要保存在failed-protection-preimage及test-navigation-fix.json。首轮完整构建和lint已通过；助手修正只重建测试包，生产APK摘要一致。修正后的同一最终测试APK重跑新增5项与受影响14项均通过。
+
+442个已测输入与候选摘要最终绑定。静态双人复核核对Main成功段、Job身份、退出取消、generation/Mutex、同事务本册校验及旧requestedSelection覆盖修正。准备阶段两个C-only摘要/版本文本匹配门禁停止记录在preparation-guards.json，未在停止期间修改E。
+
+未测：真实硬件、真人笔迹/原故障、物理窗口管理和人工无障碍验收NOT_RUN，真实备份恢复NOT_VERIFIED。浮窗按钮在pending详情遮挡时未用semantics click伪造触控；该退出边界仅静态覆盖。Library两事务和提交后跨连接回收竞争保留；取消不会回滚已提交阅读元数据。

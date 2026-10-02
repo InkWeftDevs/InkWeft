@@ -62,6 +62,20 @@ internal object NaturalText {
         require(world||o.x+w<=1000&&o.y+h<=1414){"新样式超出页面，请减小字号"}
         return base.copy(width=w,height=h,glyphs=glyphs,textRuns=runs)
     }
+    /** Newly appended ink adopts the settled line; existing glyphs are never reshaped. */
+    fun alignToLine(previous:PageObject,next:PageObject,strokes:List<InkStroke>):PageObject {
+        val old=previous.textRuns.lastOrNull()?:return next
+        val fresh=next.textRuns.singleOrNull()?:return next
+        if(old.policy!=TextLayoutPolicy.IN_PLACE||fresh.policy!=TextLayoutPolicy.IN_PLACE||previous.font!=next.font||previous.bold!=next.bold||
+            next.x<previous.x||abs(previous.y+old.baseline-next.y-fresh.baseline)>maxOf(old.size,fresh.size)*.45f)return next
+        val baseline=previous.y+old.baseline
+        val paint=TextStyles.paint(next).apply{textSize=old.size};val box=Rect();paint.getTextBounds(next.text,fresh.start,fresh.end,box)
+        val y=minOf(next.y,baseline+box.top-old.size*.02f)
+        val run=fresh.copy(size=old.size,baseline=baseline-y,lineId=old.lineId)
+        val base=next.copy(y=y,width=4000f,height=4000f,glyphs=emptyList(),textRuns=emptyList())
+        val glyphs=glyphs(base,run,strokes).map{g->next.glyphs.firstOrNull{it.start==g.start&&it.end==g.end}?.let{oldGlyph->g.copy(weight=oldGlyph.weight,color=oldGlyph.color,grain=oldGlyph.grain)}?:g}
+        return base.copy(width=maxOf(24f,glyphs.maxOf{it.x+it.width}+1),height=maxOf(24f,glyphs.maxOf{it.y+it.height}+1),glyphs=glyphs,textRuns=listOf(run))
+    }
     fun draw(canvas:Canvas,o:PageObject,layouts:List<StaticLayout>,live:Path?,whole:Boolean){
         for((index,r) in o.textRuns.withIndex()){
             val save=canvas.save()
@@ -104,6 +118,8 @@ internal object NaturalText {
         require(strokes.isNotEmpty());val bounds=strokes.map{it.bounds()}.reduce{a,b->a.union(b)}
         require(!options.preserveLayout||result.regions.isNotEmpty()||!result.text.contains('\n')){"LINE_MAPPING_CHANGED"}
         val regions=result.regions.ifEmpty{listOf(RecognizedLine(result.text,bounds,strokes.map{it.id},emptyList()))}
+        val sourceIds=regions.flatMap{it.strokeIds}
+        require(regions.all{it.text.isNotBlank()&&it.strokeIds.isNotEmpty()}&&sourceIds.distinct().size==sourceIds.size&&sourceIds.toSet()==strokes.map{it.id}.toSet()){"SOURCE_MAPPING_INCOMPLETE"}
         val text=regions.joinToString("\n"){it.text};require(text.isNotBlank()&&text.length<=4000)
         val x=bounds.left.toFloat();val y=bounds.top.toFloat();require(world||x>=0&&y>=0)
         val base=PageObject(id,PageObjectKind.TEXT,x,y,4000f,4000f,text=text,font=options.font,fontSize=options.size,lineSpacing=options.spacing,bold=options.bold,color=strokes.first().color,sourceStrokeIds=strokes.map{it.id})

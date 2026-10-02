@@ -37,14 +37,16 @@ class BeautyReviewUiTest {
         shot("fq-paper-before.png")
         compose.runOnIdle{vm.beautify(SelectedInk(InkRegion(listOf(EraserPoint(170f,400f),EraserPoint(480f,460f))),5,source),BeautyOptions(),false,app)}
         compose.waitUntil(10000){vm.beautyReview.value!=null}
-        compose.onNodeWithTag("beauty-review").assertIsDisplayed();shot("fq-paper-preview.png")
+        compose.onNodeWithTag("beauty-review").assertIsDisplayed();assertFalse(vm.beautyReview.value!!.preview);shot("fq-paper-unapplied-original.png")
         val candidate=vm.beautyReview.value!!.candidate!!
         // Ink bounds include the 1-unit radius of the two-unit pen.
         assertEquals(179f,candidate.x,.01f);assertEquals(409f,candidate.y,.01f)
         assertEquals(listOf(neighbour),runBlocking{app.pageObjects.read(note.id).objects})
-        compose.onNodeWithTag("beauty-review-compare").performScrollTo().performClick();assertFalse(vm.beautyReview.value!!.preview)
-        shot("fq-paper-original-comparison.png")
+        compose.onNodeWithTag("beauty-review-compare").performScrollTo().performClick();assertTrue(vm.beautyReview.value!!.preview)
+        shot("fq-paper-explicit-preview.png")
         compose.onNodeWithTag("beauty-review-compare").performClick()
+        assertFalse(vm.beautyReview.value!!.preview)
+        shot("fq-paper-original-comparison.png")
         compose.onNodeWithTag("beauty-review-font-SERIF").performScrollTo().performClick()
         assertEquals(TextFont.SERIF,vm.beautyReview.value!!.candidate!!.font)
         compose.onNodeWithTag("beauty-review-apply").performClick()

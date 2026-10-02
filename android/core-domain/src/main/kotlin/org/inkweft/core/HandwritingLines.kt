@@ -13,7 +13,7 @@ object HandwritingLines {
         if(writing.isEmpty())return emptyList()
         val heights=writing.map{(it.bounds().bottom-it.bounds().top).coerceAtLeast(2.0)}.sorted()
         // Short horizontal strokes dominate many Han characters; the median is not a line height.
-        val typical=heights[(heights.lastIndex*.75).toInt()].coerceIn(12.0,100.0)
+        val typical=heights[ceil(heights.lastIndex*.75).toInt()].coerceIn(12.0,100.0)
         val groups=mutableListOf<MutableList<InkStroke>>()
         val boxes=mutableListOf<CanvasBounds>()
         for(stroke in writing.sortedBy{(it.bounds().top+it.bounds().bottom)/2}) {

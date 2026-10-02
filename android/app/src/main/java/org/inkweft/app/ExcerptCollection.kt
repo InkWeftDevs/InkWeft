@@ -28,10 +28,17 @@ import java.util.UUID
 /** Excerpts keep their source image; map placement is an optional follow-up. */
 @Composable internal fun ColumnScope.ExcerptCollection(vm:StudyViewModel,pages:List<NotebookPageRow>,ready:Boolean,open:(StudySourceRow)->Unit,map:(String)->Unit){
     val ui by vm.ui.collectAsStateWithLifecycle()
+    val readLock=rememberBookReadLock(vm.book)
+    val readOnly by readLock.readOnly.collectAsStateWithLifecycle()
+    SideEffect{vm.authorAllowed={readLock.canWrite}}
     val regions by remember(vm){vm.repo.excerpts(vm.book)}.collectAsStateWithLifecycle(initialValue=emptyList())
     var query by rememberSaveable{mutableStateOf("")}
     var editing by rememberSaveable{mutableStateOf<String?>(null)}
-    val enabled=ready&&!ui.busy&&!ui.unknown&&!ui.loading&&!ui.readFailed
+    var editRevision by rememberSaveable{mutableLongStateOf(0L)}
+    val browseReady=ready&&!ui.busy&&!ui.unknown&&!ui.loading&&!ui.readFailed
+    val enabled=browseReady&&!readOnly
+    val guardKey=remember(vm){"excerpt-collection-${UUID.randomUUID()}"}
+    ReadLockGuard(readLock,guardKey,blocked=ui.busy||ui.unknown||editing!=null,draft=editing!=null)
     LaunchedEffect(ui.completed){if(ui.completed!=null){editing=null;vm.clear()}}
     OutlinedTextField(query,{query=it},placeholder={Text("查找摘录或备注")},singleLine=true,modifier=Modifier.fillMaxWidth().padding(8.dp).testTag("excerpt-search"))
     if(ui.busy||ui.loading)LinearProgressIndicator(Modifier.fillMaxWidth())
@@ -41,29 +48,33 @@ import java.util.UUID
     val positions=regions.associateBy{it.id}
     val cards=ui.cards.filter{it.id in positions&&it.trashedAt==null&&(it.title.contains(query,true)||it.body.contains(query,true))}
         .sortedWith(compareBy<StudyCardRow>{c->pages.find{it.id==positions[c.id]?.pageId}?.position?:Int.MAX_VALUE}.thenBy{positions[it.id]?.top}.thenBy{positions[it.id]?.left})
+    if(editing!=null&&cards.none{it.id==editing})TextButton({editing=null},enabled=!ui.busy&&!ui.unknown,modifier=Modifier.testTag("excerpt-comment-cancel")){Text("取消当前备注编辑")}
     LazyColumn(Modifier.weight(1f).testTag("excerpt-list"),contentPadding=PaddingValues(8.dp),verticalArrangement=Arrangement.spacedBy(12.dp)){
         if(cards.isEmpty())item{Text(if(query.isBlank())"使用摘要笔框选页面区域"else"没有匹配的摘录",color=Quiet,modifier=Modifier.padding(12.dp))}
         items(cards,key={it.id}){card->
             val source by produceState<StudySourceRow?>(null,card.id,card.revision){value=withContext(Dispatchers.IO){vm.repo.source(card.id)}}
             source?.let{original->
                 Surface(shape=androidx.compose.foundation.shape.RoundedCornerShape(12.dp),border=BorderStroke(1.dp,Line),color=androidx.compose.ui.graphics.Color.White){Column(Modifier.padding(10.dp).testTag("excerpt-item-${card.id}")){
-                    SourceThumbnail(card.id,Modifier.fillMaxWidth().height(150.dp).clickable(enabled=enabled&&pages.any{it.id==original.pageId}){open(original)})
+                    SourceThumbnail(card.id,Modifier.fillMaxWidth().height(150.dp).clickable(enabled=browseReady&&editing==null&&pages.any{it.id==original.pageId}){open(original)})
                     Row(verticalAlignment=Alignment.CenterVertically){
                         Text(pages.find{it.id==original.pageId}?.let{"第${it.position+1}页"}?:"来源页已回收",Modifier.weight(1f),style=MaterialTheme.typography.labelMedium,color=Quiet)
-                        TextButton({editing=if(editing==card.id)null else card.id},enabled=enabled,modifier=Modifier.testTag("excerpt-comment-${card.id}")){Text("备注")}
+                        TextButton({if(editing==card.id)editing=null else{editing=card.id;editRevision=card.revision}},enabled=enabled,modifier=Modifier.testTag("excerpt-comment-${card.id}")){Text("备注")}
                         var menu by remember{mutableStateOf(false)}
-                        Box{IconButton({menu=true},enabled=enabled,modifier=Modifier.testTag("excerpt-menu-${card.id}").describedAs("摘录操作")){Glyph("more")}
+                        Box{IconButton({menu=true},enabled=browseReady,modifier=Modifier.testTag("excerpt-menu-${card.id}").describedAs("摘录操作")){Glyph("more")}
                             DropdownMenu(menu,{menu=false}){
-                                DropdownMenuItem(text={Text("返回原文")},enabled=pages.any{it.id==original.pageId},onClick={menu=false;open(original)})
-                                DropdownMenuItem(text={Text("整理到导图")},onClick={menu=false;map(card.id)})
-                                DropdownMenuItem(text={Text("删除摘录")},onClick={menu=false;vm.submit(StudyCommand(UUID.randomUUID().toString(),vm.book,StudyAction.TRASH_CARD,cardId=card.id,expectedRevision=card.revision))},modifier=Modifier.testTag("excerpt-delete"))
+                                DropdownMenuItem(text={Text("返回原文")},enabled=editing==null&&pages.any{it.id==original.pageId},onClick={menu=false;open(original)})
+                                DropdownMenuItem(text={Text("整理到导图")},enabled=editing==null,onClick={menu=false;map(card.id)})
+                                DropdownMenuItem(text={Text("删除摘录")},enabled=enabled&&editing==null,onClick={menu=false;vm.submit(StudyCommand(UUID.randomUUID().toString(),vm.book,StudyAction.TRASH_CARD,cardId=card.id,expectedRevision=card.revision))},modifier=Modifier.testTag("excerpt-delete"))
                             }
                         }
                     }
                     if(editing==card.id){
-                        var draft by rememberSaveable(card.id,card.revision){mutableStateOf(card.body)}
+                        var draft by rememberSaveable(card.id,editRevision){mutableStateOf(card.body)}
                         OutlinedTextField(draft,{if(it.length<=20000)draft=it},enabled=enabled,placeholder={Text("添加备注")},modifier=Modifier.fillMaxWidth().testTag("excerpt-comment-input"))
-                        TextButton({vm.submit(StudyCommand(UUID.randomUUID().toString(),vm.book,StudyAction.EDIT,cardId=card.id,expectedRevision=card.revision,title=card.title,body=draft))},enabled=enabled,modifier=Modifier.testTag("excerpt-comment-save")){Text("保存备注")}
+                        Row{
+                            TextButton({editing=null},enabled=!ui.busy&&!ui.unknown,modifier=Modifier.testTag("excerpt-comment-cancel")){Text("取消")}
+                            TextButton({vm.submit(StudyCommand(UUID.randomUUID().toString(),vm.book,StudyAction.EDIT,cardId=card.id,expectedRevision=editRevision,title=card.title,body=draft))},enabled=enabled,modifier=Modifier.testTag("excerpt-comment-save")){Text("保存备注")}
+                        }
                     }else if(card.body.isNotBlank())Text(card.body,modifier=Modifier.padding(top=4.dp),style=MaterialTheme.typography.bodyMedium)
                 }}
             }

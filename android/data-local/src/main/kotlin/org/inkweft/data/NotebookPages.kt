@@ -64,6 +64,7 @@ class NotebookPages(private val db:NoteDatabase) {
         db.pages().insert(next);db.notes().touch(notebookId,System.currentTimeMillis());next
     }
     suspend fun select(notebookId:String,pageId:String)=db.withTransaction {
+        val book=checkNotNull(db.workspace().get(notebookId));check(book.trashedAt==null)
         val p=checkNotNull(db.pages().get(pageId));require(p.notebookId==notebookId&&p.trashedAt==null)
         check(db.workspace().selectPage(notebookId,pageId)==1)
     }

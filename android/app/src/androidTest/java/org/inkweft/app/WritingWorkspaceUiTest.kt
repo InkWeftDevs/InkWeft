@@ -36,7 +36,7 @@ class WritingWorkspaceUiTest {
         compose.waitUntil(10_000){androidx.core.view.ViewCompat.getRootWindowInsets(compose.activity.window.decorView)?.isVisible(WindowInsetsCompat.Type.ime())==false}
         return runBlocking{app.repository.observeNotes().first()}.single{it.title==name}.id
     }
-    private fun finger(){compose.openEditorAction("quick-finger")}
+    private fun finger(){compose.revealAction("quick-finger");val node=compose.onNodeWithTag("quick-finger").assertIsDisplayed().assertIsEnabled();if(runCatching{node.assertIsOff()}.isSuccess)node.performClick();node.assertIsOn()}
     private fun draw(){compose.onNodeWithTag("ink-surface").performTouchInput{swipe(Offset(width*.3f,height*.3f),Offset(width*.5f,height*.5f),200)}}
     private fun mode(){if(compose.onAllNodesWithTag("continuous-setting").fetchSemanticsNodes().isEmpty())compose.onNodeWithTag("quick-settings").performClick();compose.onNodeWithTag("continuous-setting").performScrollTo().performClick();compose.onNodeWithTag("document-settings-dialog-close").performClick();compose.waitForIdle()}
     private fun shot(name:String){val bmp=checkNotNull(InstrumentationRegistry.getInstrumentation().uiAutomation.takeScreenshot());try{File(compose.activity.getExternalFilesDir(null),name).outputStream().use{bmp.compress(Bitmap.CompressFormat.PNG,100,it)}}finally{bmp.recycle()}}

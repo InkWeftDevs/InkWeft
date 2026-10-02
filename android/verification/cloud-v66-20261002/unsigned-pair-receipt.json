@@ -1,0 +1,41 @@
+{
+  "status": "BUILD_PASS_UI_NOT_RUN",
+  "base_source_zip_sha256": "4062a5f697a15a6f586c3a4906566d618e9e69608074760bcc0de3d9f5fdc308",
+  "source_change": "Only explicit unsigned build option; V66 production UI and repaired test source unchanged",
+  "build_input_manifest_sha256": "058e127e8233f0a99bd6e8ed7491ebe471f202d83d75f5a121cdbbb2ebd38162",
+  "options": {
+    "inkweftDiagnosticBuild": true,
+    "inkweftInsertionPreview": false,
+    "inkweftUnsignedBuild": true,
+    "android.experimental.useDefaultDebugSigningConfigForProfileableBuildtypes": false
+  },
+  "artifacts": [
+    {
+      "path": "app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk",
+      "bytes": 6813121,
+      "sha256": "736cc2ae9e4654665ae78092e72e510452e81c7b011eaae217f88099141197df",
+      "identity": "package: name='org.inkweft.app.a0.workspace.test' versionCode='' versionName='' platformBuildVersionName='16' platformBuildVersionCode='36' compileSdkVersion='36' compileSdkVersionCodename='16'",
+      "instrumentation": [],
+      "signature": "UNSIGNED",
+      "zipalign": "PASS",
+      "instrumentation_target_package": "org.inkweft.app.a0.workspace",
+      "instrumentation_runner": "androidx.test.runner.AndroidJUnitRunner"
+    },
+    {
+      "path": "app/build/outputs/apk/debug/app-debug-unsigned.apk",
+      "bytes": 144566006,
+      "sha256": "3e4b2a4aecf22181c2f367e435f46ab23ac748fe4f180e96737f33110ea21504",
+      "identity": "package: name='org.inkweft.app.a0.workspace' versionCode='66' versionName='0.0.66-local-motion' platformBuildVersionName='16' platformBuildVersionCode='36' compileSdkVersion='36' compileSdkVersionCodename='16'",
+      "instrumentation": [],
+      "signature": "UNSIGNED",
+      "zipalign": "PASS"
+    }
+  ],
+  "lint": {
+    "Warning": 133
+  },
+  "signing_or_adb_keys_created": false,
+  "v66_new_ui_3": "NOT_RUN",
+  "v66_affected_ui_8": "NOT_RUN",
+  "lint_note": "One additional NewerVersionAvailable notice for Compose plugin 2.4.20; pinned 2.3.10 retained. Error/Fatal remain zero."
+}

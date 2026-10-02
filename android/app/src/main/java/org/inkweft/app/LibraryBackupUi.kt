@@ -91,20 +91,7 @@ fun LibraryBackupHost(content:@Composable ()->Unit){
     val vm:LibraryBackupViewModel=viewModel();val ui by vm.ui.collectAsStateWithLifecycle()
     val open=rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()){uri->uri?.let(vm::inspect)}
     val save=rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("application/octet-stream"),vm::save)
-    val notebook:NotebookViewModel=viewModel()
-    val notebookUi by notebook.ui.collectAsStateWithLifecycle()
-    InkWeftTheme {
-        Column(Modifier.fillMaxSize()) {
-            Box(Modifier.weight(1f)) { content() }
-            if(notebookUi.selectedId==null)Surface(color=androidx.compose.ui.graphics.Color.White){
-                Row(Modifier.fillMaxWidth().navigationBarsPadding().padding(horizontal=12.dp)){
-                    TextButton(onClick=vm::open,modifier=Modifier.testTag("library-backup-open")){
-                        Glyph("export");Spacer(Modifier.width(8.dp));Text("资料库备份与恢复")
-                    }
-                }
-            }
-        }
-    }
+    InkWeftTheme { content() }
     if(ui.mode==BackupMode.CLOSED)return
     InkWeftTheme{
         AlertDialog(onDismissRequest=vm::close,modifier=Modifier.testTag("library-backup-dialog"),title={Text("资料库备份与恢复")},

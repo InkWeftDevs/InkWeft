@@ -21,6 +21,8 @@ sealed interface KnowledgeData {
     data class MapDefinition(val title:String,val layout:String="right",val structures:List<MapStructure> = emptyList()):KnowledgeData
     data class MapTemplate(val title:String,val version:Int=1,val layout:String="right",val nodes:List<TemplateNode> = emptyList()):KnowledgeData
     data class MapOccurrence(val mapId:String,val cardId:String,val parentId:String?,val x:Double,val y:Double):KnowledgeData
+    /** A same-notebook entry to a map or exact branch occurrence; null mapId denotes its main map. */
+    data class MapPortal(val sourceMapId:String?,val sourceNodeId:String,val targetMapId:String?,val targetBranchId:String?=null):KnowledgeData
     data class Decoration(val from:String,val to:String,val label:String="装饰线"):KnowledgeData
 }
 
@@ -42,6 +44,7 @@ object KnowledgeCodec {
             is KnowledgeData.MapDefinition->{require(v.title.isNotBlank()&&v.title.length<=120);MapTemplates.validate(v.layout,v.structures.map{TemplateNode(it.title,it.parentId?.let{parent->v.structures.indexOfFirst{n->n.id==parent}},it.x,it.y)});require(v.structures.map{it.id}.distinct().size==v.structures.size);v.structures.forEach{n->id(n.id);n.parentId?.let(::id)}}
             is KnowledgeData.MapTemplate->{require(v.title.isNotBlank()&&v.title.length<=120&&v.version==1);MapTemplates.validate(v.layout,v.nodes)}
             is KnowledgeData.MapOccurrence->{id(v.mapId);id(v.cardId);v.parentId?.let(::id);require(v.x.isFinite()&&v.y.isFinite()&&v.x in -40000.0..40000.0&&v.y in -40000.0..40000.0)}
+            is KnowledgeData.MapPortal->{v.sourceMapId?.let(::id);id(v.sourceNodeId);v.targetMapId?.let(::id);v.targetBranchId?.let(::id);require(v.sourceMapId!=v.targetMapId)}
             is KnowledgeData.Decoration->{id(v.from);id(v.to);require(v.from!=v.to&&v.label.length<=120)}
         }
     }
@@ -62,6 +65,7 @@ object KnowledgeCodec {
                 is KnowledgeData.MapDefinition->{d.writeUTF("MAP_V2");d.writeUTF(v.title);d.writeUTF(v.layout);d.writeInt(v.structures.size);v.structures.forEach{n->d.writeUTF(n.id);d.writeUTF(n.parentId.orEmpty());d.writeUTF(n.title);d.writeDouble(n.x);d.writeDouble(n.y)}}
                 is KnowledgeData.MapTemplate->{d.writeUTF("MAP_TEMPLATE_V1");d.writeUTF(v.title);d.writeInt(v.version);d.writeUTF(v.layout);d.writeInt(v.nodes.size);v.nodes.forEach{n->d.writeUTF(n.title);d.writeInt(n.parent?:-1);d.writeDouble(n.x);d.writeDouble(n.y)}}
                 is KnowledgeData.MapOccurrence->{d.writeUTF("MAP_NODE");d.writeUTF(v.mapId);d.writeUTF(v.cardId);d.writeUTF(v.parentId.orEmpty());d.writeDouble(v.x);d.writeDouble(v.y)}
+                is KnowledgeData.MapPortal->{d.writeUTF(if(v.targetBranchId==null)"MAP_PORTAL_V1"else"MAP_PORTAL_V2");d.writeUTF(v.sourceMapId.orEmpty());d.writeUTF(v.sourceNodeId);d.writeUTF(v.targetMapId.orEmpty());v.targetBranchId?.let(d::writeUTF)}
                 is KnowledgeData.Decoration->{d.writeUTF("DECORATION");d.writeUTF(v.from);d.writeUTF(v.to);d.writeUTF(v.label)}
             }
         };return bytes.toByteArray().also{require(it.size<=MAX_BYTES)}
@@ -85,6 +89,8 @@ object KnowledgeCodec {
                 "MAP_V2"->{val title=d.readUTF();val layout=d.readUTF();val count=d.readInt();require(count in 0..128);KnowledgeData.MapDefinition(title,layout,List(count){MapStructure(d.readUTF(),d.readUTF().ifEmpty{null},d.readUTF(),d.readDouble(),d.readDouble())})}
                 "MAP_TEMPLATE_V1"->{val title=d.readUTF();val version=d.readInt();val layout=d.readUTF();val count=d.readInt();require(count in 0..128);KnowledgeData.MapTemplate(title,version,layout,List(count){TemplateNode(d.readUTF(),d.readInt().let{require(it>=-1);it.takeIf{it>=0}},d.readDouble(),d.readDouble())})}
                 "MAP_NODE"->KnowledgeData.MapOccurrence(d.readUTF(),d.readUTF(),d.readUTF().ifEmpty{null},d.readDouble(),d.readDouble())
+                "MAP_PORTAL_V1"->KnowledgeData.MapPortal(d.readUTF().ifEmpty{null},d.readUTF(),d.readUTF().ifEmpty{null})
+                "MAP_PORTAL_V2"->KnowledgeData.MapPortal(d.readUTF().ifEmpty{null},d.readUTF(),d.readUTF().ifEmpty{null},d.readUTF())
                 "DECORATION"->KnowledgeData.Decoration(d.readUTF(),d.readUTF(),d.readUTF())
                 else->error("UNKNOWN_KNOWLEDGE_KIND")
             };require(d.read()==-1);validate(value);value

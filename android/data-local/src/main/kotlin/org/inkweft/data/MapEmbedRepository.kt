@@ -11,6 +11,7 @@ class MapEmbedRepository(private val db:NoteDatabase){
         UUID.fromString(operationId)
         val digest=ContentTransfer.hash("duplicate-map-v1|$ref|$expectedSignature".toByteArray())
         db.knowledge().receipt(operationId)?.let{require(it.notebookId==ref.notebookId&&it.digest==digest);return@withTransaction MapRef(ref.notebookId,it.resultId)}
+        require(db.knowledge().forBook(ref.notebookId).none{row->!row.removed&&(row.data() as? KnowledgeData.MapPortal)?.let{it.sourceMapId==ref.mapId}==true}){"MAP_PORTAL_COPY_UNSUPPORTED"}
         val scene=MapGraphAccess(db).read(ref.notebookId).firstOrNull{it.ref==ref&&it.available}?:error("MAP_UNAVAILABLE")
         require(scene.signature()==expectedSignature){"MAP_CONTENT_CHANGED"}
         val originals=scene.nodes.mapNotNull{it.cardId}.distinct()

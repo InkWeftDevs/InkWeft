@@ -2,6 +2,7 @@
 package org.inkweft.app
 
 import android.graphics.*
+import android.graphics.text.LineBreaker
 import android.text.StaticLayout
 import android.text.TextPaint
 import android.text.TextUtils
@@ -9,13 +10,21 @@ import android.text.Layout
 import org.inkweft.core.*
 import kotlin.math.*
 
-internal object MapNodeMetrics { const val WIDTH=216;const val HEIGHT=84;const val HALF_WIDTH=108;const val HALF_HEIGHT=42 }
+internal object MapNodeMetrics { const val WIDTH=232;const val HEIGHT=84;const val HALF_WIDTH=116;const val HALF_HEIGHT=42 }
 
 /** Transient interaction only. Never serialized or supplied to document/embed/export painting. */
 internal data class MapViewStyle(val selection:Int,val selectionFill:Int,val connector:Int)
 
 /** Pure drawing shared by interactive maps and page occurrences. Never follows source pages. */
 internal object MapScenePainter {
+    internal fun titleLayout(title:String,fontScale:Float=1f):StaticLayout {
+        val text=title.replace('\n',' ')
+        val paint=TextPaint(Paint.ANTI_ALIAS_FLAG).apply{typeface=Typeface.create(Typeface.DEFAULT,Typeface.BOLD);textSize=16f*fontScale}
+        return StaticLayout.Builder.obtain(text,0,text.length,paint,MapNodeMetrics.WIDTH-28)
+            .setAlignment(Layout.Alignment.ALIGN_NORMAL).setIncludePad(false).setMaxLines(2)
+            .setBreakStrategy(LineBreaker.BREAK_STRATEGY_BALANCED).setHyphenationFrequency(Layout.HYPHENATION_FREQUENCY_NONE)
+            .setEllipsize(TextUtils.TruncateAt.END).setEllipsizedWidth(MapNodeMetrics.WIDTH-28).build()
+    }
     fun draw(c:Canvas,nodes:List<MapSceneNode>,selected:String?=null,collapsed:Map<String,Int> = emptyMap(),fontScale:Float=1f,detail:Boolean=true,hierarchy:Boolean=true,viewStyle:MapViewStyle?=null){
         val paint=Paint(Paint.ANTI_ALIAS_FLAG);val lookup=nodes.associateBy{it.id}
         if(hierarchy){paint.style=Paint.Style.STROKE;paint.strokeWidth=1.5f;paint.color=viewStyle?.connector?:0xffd9dee7.toInt()
@@ -30,10 +39,7 @@ internal object MapScenePainter {
             if(highlight){paint.color=viewStyle.selection;paint.strokeWidth=2f;c.drawRoundRect(left-4,top-4,left+MapNodeMetrics.WIDTH+4,top+MapNodeMetrics.HEIGHT+4,16f,16f,paint)}
             paint.style=Paint.Style.FILL;paint.color=if(root)Color.WHITE else 0xff242b36.toInt();paint.typeface=Typeface.create(Typeface.DEFAULT,Typeface.BOLD);paint.textSize=16f*fontScale
             if(detail){
-                val tp=TextPaint(paint)
-                val layout=StaticLayout.Builder.obtain(n.title.replace('\n',' '),0,n.title.length,tp,188)
-                    .setAlignment(Layout.Alignment.ALIGN_NORMAL).setIncludePad(false).setMaxLines(2)
-                    .setEllipsize(TextUtils.TruncateAt.END).setEllipsizedWidth(188).build()
+                val layout=titleLayout(n.title,fontScale).also{it.paint.color=paint.color}
                 val saved=c.save();c.translate(left+14,top+(MapNodeMetrics.HEIGHT-layout.height)/2f);layout.draw(c);c.restoreToCount(saved)
             }else{paint.alpha=160;c.drawRoundRect(left+14,top+26,left+170,top+34,4f,4f,paint);paint.alpha=255}
         }

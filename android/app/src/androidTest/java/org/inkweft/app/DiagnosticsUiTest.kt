@@ -19,6 +19,29 @@ import java.util.zip.ZipInputStream
 /** Real Android component checks; not an automated test of a user's share target. */
 class DiagnosticsUiTest {
     @get:Rule val compose = createAndroidComposeRule<MainActivity>()
+    @Test fun beautyCaptureRequiresExplicitStartAndPrivateAttachmentsStayOptional() {
+        compose.waitUntil(10000){compose.onAllNodesWithTag("new-note").fetchSemanticsNodes().isNotEmpty()}
+        compose.onNodeWithTag("new-note").performClick();compose.onNodeWithTag("create-page").performClick()
+        compose.onNodeWithTag("new-title").performTextInput("ABF 诊断开关")
+        compose.onNodeWithTag("create-note").performClick();compose.singlePageEditor();compose.waitForSavedInk()
+        compose.onNodeWithTag("quick-settings").performClick();compose.onNodeWithTag("settings-diagnostics").performScrollTo().performClick()
+        val capture=(compose.activity.application as InkWeftApplication).beautyDiagnostics
+        assertFalse(capture.state.value.active)
+        compose.onNodeWithTag("beauty-diagnostics-save").performScrollTo().assertIsNotEnabled()
+        compose.onNodeWithTag("beauty-diagnostics-record").performScrollTo().performClick()
+        assertTrue(capture.state.value.active);assertFalse(capture.state.value.privateAttachments)
+        compose.onNodeWithTag("beauty-diagnostics-private").performScrollTo().assertIsNotEnabled()
+        compose.onNodeWithTag("beauty-diagnostics-record").performScrollTo().performClick()
+        assertFalse(capture.state.value.active)
+        compose.onNodeWithTag("beauty-diagnostics-private").performScrollTo().performClick()
+        compose.onNodeWithTag("beauty-diagnostics-record").performScrollTo().performClick()
+        assertTrue(capture.state.value.active);assertTrue(capture.state.value.privateAttachments)
+        compose.onNodeWithTag("beauty-diagnostics-record").assertTextContains("停止美化诊断")
+        compose.waitForIdle()
+        val screenshot=checkNotNull(InstrumentationRegistry.getInstrumentation().uiAutomation.takeScreenshot())
+        File(compose.activity.getExternalFilesDir(null),"abf-diagnostics-opt-in.png").outputStream().use{screenshot.compress(android.graphics.Bitmap.CompressFormat.PNG,100,it)}
+        screenshot.recycle();capture.stop();capture.clear()
+    }
     @Test fun entryAndRedactedZipFromActualApp() {
         compose.waitUntil(10_000) { runCatching { compose.onNodeWithTag("new-note").assertIsEnabled() }.isSuccess }
         val privateTitle = "DO_NOT_EXPORT_PRIVATE_NOTE_3791"

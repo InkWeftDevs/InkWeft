@@ -22,12 +22,13 @@ internal object KnowledgeCanvasExport {
                     edges.put(JSONObject().apply{put("id",r.id);put("fromNode",d.source.id);put("toNode",d.target.id);put("toEnd","arrow");put("label",d.relation.label)})
                 else omitted.put(JSONObject().apply{put("id",r.id);put("source",d.source.kind.name+"/"+d.source.id);put("target",d.target.kind.name+"/"+d.target.id);put("reason",if(d.pinnedRevision!=null)"固定修订引用需关联 Markdown 或完整备份保存"else"页面、区域或当前文件之外的目标不转换为虚假卡片")})
             }
+            is KnowledgeData.MapPortal->omitted.put(JSONObject().apply{put("id",r.id);put("sourceMap",d.sourceMapId?:JSONObject.NULL);put("sourceNode",d.sourceNodeId);put("targetMap",d.targetMapId?:JSONObject.NULL);put("reason","跨图入口保留稳定身份说明；节点快照不还原入口关系，完整恢复使用资料库备份")})
             else->Unit
         }}
         return JSONObject().apply{put("nodes",nodes);put("edges",edges);put("inkweft",JSONObject().apply{
             put("format","snapshot/1");put("scopeNotebookId",book);put("omittedLinks",omitted)
             put("omittedMaps",JSONArray(active.filter{it.data() is KnowledgeData.MapDefinition}.map{r->JSONObject().put("id",r.id).put("title",(r.data() as KnowledgeData.MapDefinition).title)}))
-            put("limitations",JSONArray(listOf("同一卡片多次摆放合并为一份文本节点","独立脑图层级、白板装饰线及多视图布局保留在完整备份，此文件不还原它们","不含原始笔迹、回收历史、来源快照和复习记录","不启用外部目录双向写入；完整迁移使用资料库备份")))
+            put("limitations",JSONArray(listOf("同一卡片多次摆放合并为一份文本节点","独立脑图层级、跨图入口、白板装饰线及多视图布局保留在完整备份，此文件不还原它们","不含原始笔迹、回收历史、来源快照和复习记录","不启用外部目录双向写入；完整迁移使用资料库备份")))
         })}.toString(2)
     }
 }

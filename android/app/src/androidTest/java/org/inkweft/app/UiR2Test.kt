@@ -37,7 +37,7 @@ class UiR2Test {
         compose.onNodeWithText("取消",useUnmergedTree=true).performClick();ready()
     }
     @Test fun systemBackWaitsForLiveStrokeAndKeepsPageIdentity(){
-        val(n,_)=seed();compose.openEditorAction("quick-finger")
+        val(n,_)=seed();compose.revealAction("quick-finger");compose.onNodeWithTag("quick-finger").assertIsDisplayed().performClick()
         compose.onNodeWithTag("ink-surface").performTouchInput{down(center);moveBy(Offset(30f,10f))}
         compose.waitUntil(5000){!app.navigationReady.value}
         compose.activityRule.scenario.onActivity{it.onBackPressedDispatcher.onBackPressed()}
@@ -67,6 +67,7 @@ class UiR2Test {
     @Test fun manualRecallDoesNotShowAnswerBeforeExplicitReveal(){
         val(n,card)=seed();runBlocking{app.knowledge.submit(KnowledgeCommand(id(),n.id,id(),0,KnowledgeData.Question(card,"说出条件概率的定义")))}
         compose.onNodeWithTag("quick-settings").performClick();compose.onNodeWithTag("settings-knowledge").performScrollTo().performClick();compose.onNodeWithTag("knowledge-tab-4").performScrollTo().performClick();compose.onNodeWithTag("manual-review-start").performClick()
+        compose.waitUntil(15000){compose.onAllNodesWithTag("review-question").fetchSemanticsNodes().isNotEmpty()}
         compose.onNodeWithTag("review-question").assertTextEquals("说出条件概率的定义");compose.onAllNodesWithTag("review-answer").assertCountEquals(0)
         compose.onAllNodesWithText("答案专用暗号 7654321",substring=true).assertCountEquals(0);shot("review-hidden")
         compose.onNodeWithTag("reveal-answer").performClick();compose.onNodeWithTag("review-answer").assertTextContains("答案专用暗号 7654321",substring=true)
@@ -82,6 +83,7 @@ class UiR2Test {
             app.knowledge.submit(KnowledgeCommand(id(),n.id,question,0,KnowledgeData.Question(card,"原题保持不变")))
         }
         compose.onNodeWithTag("quick-settings").performClick();compose.onNodeWithTag("settings-knowledge").performScrollTo().performClick();compose.onNodeWithTag("knowledge-tab-4").performScrollTo().performClick();compose.onNodeWithTag("manual-review-start").performClick()
+        compose.waitUntil(15000){compose.onAllNodesWithTag("review-question").fetchSemanticsNodes().isNotEmpty()}
         compose.onNodeWithTag("reveal-answer").performClick();compose.waitUntil(10000){compose.onAllNodesWithTag("review-open-source").fetchSemanticsNodes().isNotEmpty()}
         compose.onNodeWithTag("review-open-source").performClick();compose.waitUntil(10000){compose.onAllNodesWithTag("review-source-canvas").fetchSemanticsNodes().isNotEmpty()};shot("review-source")
         compose.onNodeWithTag("return-to-review").performClick();compose.onNodeWithTag("review-question").assertTextEquals("原题保持不变")

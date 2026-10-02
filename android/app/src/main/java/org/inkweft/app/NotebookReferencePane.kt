@@ -21,11 +21,19 @@ import org.inkweft.core.*
     var index by rememberSaveable(id){mutableIntStateOf(0)}
     val page=pages.filter{it.trashedAt==null}.getOrNull(index.coerceAtMost((pages.size-1).coerceAtLeast(0)))
     Column(Modifier.fillMaxSize().testTag("reference-pane")){
-        Row(Modifier.fillMaxWidth(),verticalAlignment=Alignment.CenterVertically){
-            Text(title,Modifier.weight(1f).padding(start=8.dp),maxLines=1,style=MaterialTheme.typography.labelLarge)
+        val referenceActions:@Composable ()->Unit={
             TextButton({page?.id?.let(edit)},enabled=enabled&&page!=null,modifier=Modifier.testTag("split-edit")){Text("切换编辑")}
             IconButton(rotate,enabled=enabled,modifier=Modifier.testTag("split-rotate").describedAs(if(vertical)"改为左右分屏"else"改为上下分屏")){Glyph("grid")}
             IconButton(close,enabled=enabled,modifier=Modifier.testTag("split-close").describedAs("结束分屏")){Glyph("close")}
+        }
+        BoxWithConstraints(Modifier.fillMaxWidth()){
+            if(maxWidth<248.dp)Column{
+                Text(title,Modifier.fillMaxWidth().padding(horizontal=8.dp),maxLines=1,style=MaterialTheme.typography.labelLarge)
+                FlowRow(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.SpaceBetween){referenceActions()}
+            }else Row(Modifier.fillMaxWidth(),verticalAlignment=Alignment.CenterVertically){
+                Text(title,Modifier.weight(1f).padding(start=8.dp),maxLines=1,style=MaterialTheme.typography.labelLarge)
+                referenceActions()
+            }
         }
         if(page!=null)key(page.id){
             val inkVm:InkViewModel=viewModel(key="ink-${page.id}",factory=InkViewModel.Factory(page.id,app.inkRepository))
@@ -35,7 +43,7 @@ import org.inkweft.core.*
             val content=remember(objects){objects?.let{PageObjectCodec.decode(it.payload)}.orEmpty()}
             AndroidView(factory={InkCanvasView(it)},update={v->v.configure(page.world,PaperStyle.entries[page.paper],null);v.allowInput=false;v.showDocument(page.id);v.showStrokes(strokes);v.showObjects(content)},modifier=Modifier.weight(1f).fillMaxWidth().testTag("reference-canvas"))
         }else Box(Modifier.weight(1f).fillMaxWidth(),contentAlignment=Alignment.Center){Text("正在载入笔记…")}
-        Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.Center,verticalAlignment=Alignment.CenterVertically){
+        FlowRow(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.Center){
             TextButton({index--},enabled=index>0){Text("上一页")};Text("${index+1} / ${pages.size}")
             TextButton({index++},enabled=index<pages.lastIndex){Text("下一页")}
         }

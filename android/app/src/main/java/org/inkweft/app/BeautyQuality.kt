@@ -12,20 +12,42 @@ internal object BeautyQuality {
         fun review(reason:String)=BeautyDecision(false,reason)
         if(!stable)return review("片段仍在变化，等待补写")
         if(a.text.isBlank())return review("没有可靠文字候选")
+        if(!completeSources(strokes,a)||!completeSources(strokes,b))return review("候选未覆盖全部原迹，请校对")
         if(a.text!=b.text)return review("两次候选不同，请校对")
         if(Regex("[=+*/^_√∫∑<>≤≥²³]").containsMatchIn(a.text))return review("疑似公式，原迹保留")
         if(Regex("[A-Za-z][\\p{IsHan}]|[\\p{IsHan}][A-Za-z]").containsMatchIn(a.text)&&a.text.replace(" ","").length<=3)return review("短词中英混淆，请校对")
         val tokens=a.regions.flatMap{it.tokens}.ifEmpty{a.tokens}
         val variantTokens=b.regions.flatMap{it.tokens}.ifEmpty{b.tokens}
+        if((tokens+variantTokens).any{!it.center.isFinite()||it.center !in 0f..1f})return review("候选超出实际输入范围，请校对")
         // Deliberately not exposed as accuracy; low-score and competing-token cases are reviewable.
         if(a.confidence<.60f||b.confidence<.60f||(tokens+variantTokens).any{it.score<.45f||it.score-it.alternativeScore<.12f})return review("候选含糊，请校对")
         if(strokes.isEmpty())return review("原迹不可用")
         val heights=strokes.map{(it.bounds().bottom-it.bounds().top).coerceAtLeast(1.0)}.sorted()
-        val typical=heights[(heights.lastIndex*.75).toInt()].coerceAtLeast(8.0)
+        val typical=heights[ceil(heights.lastIndex*.75).toInt()].coerceAtLeast(8.0)
         if(strokes.any{val v=it.bounds();v.right-v.left>typical*3&&v.bottom-v.top<typical*.22})return review("含长横线或分式结构，请选择文字范围")
         if(a.regions.any{r->r.bounds.bottom-r.bounds.top>typical*2.8})return review("分行位置不确定，请缩小范围")
         if(tokens.zipWithNext().any{(x,y)->x.center>=y.center}&&a.regions.size<=1)return review("文字位置不确定，请校对")
         return BeautyDecision(true,null)
+    }
+    fun completeSources(strokes:List<InkStroke>,result:RecognizedWriting):Boolean {
+        val ids=result.regions.flatMap{it.strokeIds}
+        return result.regions.isNotEmpty()&&result.lines==result.regions.size&&result.regions.all{it.text.isNotBlank()&&it.strokeIds.isNotEmpty()}&&
+            ids.size==ids.distinct().size&&ids.toSet()==strokes.map{it.id}.toSet()
+    }
+    /** Compare source extent to natural type advance, never count strokes as characters. */
+    fun layoutReason(candidate:PageObject,strokes:List<InkStroke>):String? {
+        for(runs in candidate.textRuns.groupBy{it.sourceIds.toSet()}.values){
+            val source=strokes.filter{it.id in runs.first().sourceIds}.map{it.bounds()}.reduceOrNull{a,b->a.union(b)}?:return "原迹映射不完整，请校对"
+            val text=runs.joinToString(""){candidate.text.substring(it.start,it.end)}
+            val paint=TextStyles.paint(candidate).apply{textSize=runs.first().size;isFakeBoldText=false}
+            val box=android.graphics.Rect();paint.getTextBounds(text,0,text.length,box)
+            // Normalize to the input's height even when paragraph size/wrapping was chosen
+            // explicitly. Layout policy cannot turn a short candidate into full source coverage.
+            val advance=paint.measureText(text)*(source.bottom-source.top)/box.height().coerceAtLeast(1)
+            if(source.right-source.left>maxOf(advance,source.bottom-source.top)*1.8)
+                return "候选跨度明显小于原迹，请校对"
+        }
+        return null
     }
     fun collision(candidate:PageObject,sources:List<InkStroke>,ink:List<InkStroke>,objects:List<PageObject>,replaced:String?):Boolean {
         val ids=sources.map{it.id}.toSet();val suppressed=objects.flatMap{it.sourceStrokeIds}.toSet()

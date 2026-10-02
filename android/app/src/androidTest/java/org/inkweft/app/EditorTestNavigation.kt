@@ -56,7 +56,9 @@ internal fun ComposeTestRule.openEditorAction(tag:String){
         onNodeWithTag("toolbar-done").performClick()
     }
     if(onAllNodesWithTag(actual).fetchSemanticsNodes().isEmpty())onNodeWithTag("toolbar-more").performClick()
-    onNodeWithTag(actual).performScrollTo().performClick()
+    val node=onNodeWithTag(actual)
+    if(runCatching{node.assertIsDisplayed()}.isFailure)node.performScrollTo()
+    node.assertIsDisplayed().performClick()
 }
 
 internal fun ComposeTestRule.waitForSavedInk(){waitUntil(15000){

@@ -8,9 +8,18 @@ import kotlinx.coroutines.flow.*
 import org.inkweft.core.*
 import org.inkweft.data.*
 import java.util.UUID
+import org.json.JSONArray
+import org.json.JSONObject
+internal data class PortalReturn(val mapId:String?,val title:String,val selected:String?,val viewport:MapViewport?,val collapsed:List<String>,val focus:String?) {
+    fun saved()=JSONObject().apply{put("map",mapId.orEmpty());put("title",title);put("selected",selected.orEmpty());put("collapsed",JSONArray(collapsed));put("focus",focus.orEmpty());viewport?.let{put("scale",it.scale);put("x",it.x);put("y",it.y)}}.toString()
+    companion object {
+        fun restore(value:String):PortalReturn?=runCatching{val v=JSONObject(value);val ids=v.getJSONArray("collapsed");PortalReturn(v.getString("map").ifEmpty{null},v.getString("title"),v.getString("selected").ifEmpty{null},if(v.has("scale"))MapViewport(v.getDouble("scale").toFloat(),v.getDouble("x").toFloat(),v.getDouble("y").toFloat())else null,List(ids.length()){ids.getString(it)},v.getString("focus").ifEmpty{null})}.getOrNull()
+    }
+}
 internal data class StudyUi(val cards:List<StudyCardRow> = emptyList(),val nodes:List<StudyNodeRow> = emptyList(),val mainNodes:List<StudyNodeRow> = emptyList(),val loading:Boolean=true,val readFailed:Boolean=false,val busy:Boolean=false,val message:String?=null,val unknown:Boolean=false,val completed:String?=null)
 @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
 internal class StudyViewModel(val book:String,val repo:StudyRepository,private val saved:SavedStateHandle):ViewModel(){
+    var authorAllowed:()->Boolean={true}
     data class SearchSession(val query:String,val allMaps:Boolean,val initialMap:String?,val viewports:Map<String,MapViewport>,val collapsed:Map<String,List<String>>,val focus:Map<String,String?>,var changedByUser:Boolean=false)
     var searchSession by mutableStateOf<SearchSession?>(null)
     var searchHit by mutableStateOf<MapSearchHit?>(null)
@@ -29,6 +38,7 @@ internal class StudyViewModel(val book:String,val repo:StudyRepository,private v
     val viewports=mutableMapOf<String,MapViewport>()
     val collapsedByMap=mutableMapOf<String,List<String>>()
     val focusedByMap=mutableMapOf<String,String?>()
+    val portalBranches=mutableStateMapOf<String,String>()
     var lastTab by mutableIntStateOf(saved["study.tab"]?:0)
         private set
     fun selectTab(value:Int){lastTab=value;saved["study.tab"]=value}
@@ -39,7 +49,34 @@ internal class StudyViewModel(val book:String,val repo:StudyRepository,private v
     fun undoCapture(){undoCaptureAt(mapId.value)}
     fun undoCaptureAt(target:String?){val c=captureUndo[target?:"main"]?:return;submit(c)}
     val selectedByMap=mutableStateMapOf<String,String?>()
-    fun selectMap(id:String?,userInitiated:Boolean=true){if(id!=mapId.value&&!ui.value.busy&&!ui.value.unknown){if(userInitiated)searchSession?.changedByUser=true;saved["study.map"]=id;mapId.value=id;state.update{it.copy(loading=true,nodes=emptyList())}}}
+    val portalReturns=mutableStateListOf<PortalReturn>().also{list->saved.get<ArrayList<String>>("study.portalReturns").orEmpty().takeLast(32).mapNotNull(PortalReturn::restore).forEach(list::add)}
+    private fun savePortalReturns(){saved["study.portalReturns"]=ArrayList(portalReturns.map{it.saved()})}
+    fun selectMap(id:String?,userInitiated:Boolean=true){if(id!=mapId.value&&!ui.value.busy&&!ui.value.unknown){if(userInitiated){searchSession?.changedByUser=true;portalReturns.clear();portalBranches.clear();savePortalReturns()};saved["study.map"]=id;mapId.value=id;state.update{it.copy(loading=true,nodes=emptyList())}}}
+    fun openPortal(preview:MapPortalPreview,viewport:MapViewport?,collapsed:List<String>,focus:String?):Boolean {
+        if(!preview.canOpen||preview.source.notebookId!=book||preview.target.notebookId!=book||preview.source.mapId!=mapId.value||ui.value.busy||ui.value.unknown)return false
+        val key=mapId.value?:"main"
+        viewport?.let{viewports[key]=it};collapsedByMap[key]=collapsed;focusedByMap[key]=focus
+        portalReturns.add(PortalReturn(mapId.value,preview.sourceMapTitle,selectedByMap[key],viewport,collapsed,focus))
+        if(portalReturns.size>32)portalReturns.removeAt(0)
+        portalBranches.remove(preview.target.key)
+        preview.targetBranchId?.let{branch->
+            val targetKey=preview.target.key
+            portalBranches[targetKey]=branch
+            focusedByMap[targetKey]=branch;selectedByMap[targetKey]=branch
+            collapsedByMap[targetKey]=collapsedByMap[targetKey].orEmpty()-branch
+            revealByMap[targetKey]=branch
+        }
+        savePortalReturns();searchSession?.changedByUser=true;searchHit=null;selectMap(preview.target.mapId,false);selectTab(2);viewportRestore++
+        return true
+    }
+    fun returnPortal(nodes:Set<String>):Boolean {
+        val back=portalReturns.lastOrNull()?:return false
+        if(ui.value.busy||ui.value.unknown)return false
+        val key=back.mapId?:"main"
+        back.viewport?.let{viewports[key]=it};collapsedByMap[key]=back.collapsed.filter{it in nodes};focusedByMap[key]=back.focus?.takeIf{it in nodes||portalBranches[key]==it};selectedByMap[key]=back.selected?.takeIf{it in nodes}
+        portalReturns.removeAt(portalReturns.lastIndex);savePortalReturns();searchHit=null;selectMap(back.mapId,false);selectTab(2);viewportRestore++
+        return true
+    }
     private var pending:StudyCommand?=restorePending()
     private val state=MutableStateFlow(StudyUi(unknown=pending!=null,message=if(pending!=null)"上次摘要操作待核对，请重试原操作。"else null));val ui=state.asStateFlow()
     private val reload=MutableStateFlow(0)
@@ -53,7 +90,7 @@ internal class StudyViewModel(val book:String,val repo:StudyRepository,private v
             .catch{e->if(e is CancellationException)throw e;state.update{it.copy(loading=false,readFailed=true)}}
     }.collect{(c,n,main)->state.update{it.copy(cards=c,nodes=n,mainNodes=main,loading=false,readFailed=false)}}}}
     init{startObservation()}
-    fun submit(c:StudyCommand){require(c.notebookId==book);if(ui.value.busy||pending!=null)return;pending=c;persistPending();execute()}
+    fun submit(c:StudyCommand){require(c.notebookId==book);if(ui.value.busy||pending!=null)return;if(!authorAllowed()){state.update{it.copy(message="当前为阅读模式，请返回书写后编辑。")};return};pending=c;persistPending();execute()}
     fun retry(){if(!ui.value.busy&&pending!=null)execute()}
     private fun execute(){val c=pending?:return;state.update{it.copy(busy=true,message=null,completed=null)}
         viewModelScope.launch{try{when(val result=withContext(Dispatchers.IO){repo.outcome(c)}){

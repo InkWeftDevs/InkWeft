@@ -48,6 +48,12 @@ class ReadingHandwritingTest {
         val lines=HandwritingLines.split(sources)
         assertEquals(2,lines.size);assertEquals(5,lines.first().strokes.size)
     }
+    @Test fun oneShortMarkDoesNotBecomeTheHeightOfASingleTallBody(){
+        val body=InkStroke(id(),InkPen.PEN,0xff000000.toInt(),2f,InkTool.STYLUS,listOf(InkSample(100f,200f,0),InkSample(125f,260f,20)))
+        val dot=InkStroke(id(),InkPen.PEN,0xff000000.toInt(),2f,InkTool.STYLUS,listOf(InkSample(112f,176f,0),InkSample(115f,179f,20)))
+        val lines=HandwritingLines.split(listOf(body,dot))
+        assertEquals(1,lines.size);assertEquals(setOf(body.id,dot.id),lines.single().strokes.map{it.id}.toSet())
+    }
     @Test fun splittingColumnsCannotBypassRecognitionBudget(){
         val source=List(101){i->InkStroke(id(),InkPen.PEN,0xff000000.toInt(),1f,InkTool.STYLUS,
             listOf(InkSample(100f+i*300,100f,0,world=true),InkSample(110f+i*300,120f,20,world=true)),world=true)}

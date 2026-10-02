@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import androidx.lifecycle.viewmodel.compose.viewModel
 import org.inkweft.core.*
 
 @Composable internal fun LearningLibrary(notes:List<Note>,review:Boolean,dismiss:()->Unit,choose:(Note)->Unit){
@@ -37,6 +38,7 @@ import org.inkweft.core.*
 
 @Composable internal fun WorkspaceSettings(dismiss:()->Unit,diagnostics:()->Unit){
     val context=LocalContext.current
+    val libraryBackup:LibraryBackupViewModel=viewModel()
     val prefs=remember{context.getSharedPreferences("inkweft-editor",0)}
     val beautyStore=remember{BeautyStore(context)}
     var favorites by remember{mutableStateOf(prefs.getBoolean("favorites-open",false))}
@@ -57,7 +59,8 @@ import org.inkweft.core.*
                     Text("在笔盒的美化参数中选择整理笔迹或字体替换，识别结果可先校对。",color=Quiet,style=MaterialTheme.typography.bodySmall)
                     TextButton(onClick={prefs.edit().remove("case-x").remove("case-y").remove("case-collapsed").remove("favorites-x").remove("favorites-y").remove("favorites-collapsed").apply();reset=true},modifier=Modifier.testTag("settings-reset-case")){Text(if(reset)"笔盒位置已重置"else"重置笔盒位置")}
                 }}
-                SettingsGroup("数据","folder","本地保存","完整备份与恢复位于资料库底部。导出副本可保留笔迹、图片与文档。")
+                SettingsGroup("数据","folder","本地保存","完整备份保留已保存的资料与历史。导出副本可保留笔迹、图片与文档。")
+                OutlinedButton(onClick=libraryBackup::open,modifier=Modifier.fillMaxWidth().heightIn(min=48.dp).testTag("library-backup-open")){Glyph("export");Spacer(Modifier.width(8.dp));Text("资料库备份与恢复")}
                 OutlinedButton(onClick={backupOpen=true},modifier=Modifier.fillMaxWidth().heightIn(min=48.dp).testTag("open-encrypted-backup")){Text("加密备份与恢复（实验）")}
                 OutlinedButton(onClick={resourcesOpen=true},modifier=Modifier.fillMaxWidth().heightIn(min=48.dp).testTag("open-resource-packs")){Text("本地模板包")}
                 Button(onClick=diagnostics,modifier=Modifier.fillMaxWidth().heightIn(min=48.dp)){Glyph("diagnostics");Spacer(Modifier.width(8.dp));Text("诊断与导出")}

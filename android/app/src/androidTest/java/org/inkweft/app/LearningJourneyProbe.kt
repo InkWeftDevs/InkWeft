@@ -89,7 +89,7 @@ class LearningJourneyProbe {
         compose.onNodeWithTag("quick-study").performClick();compose.onNodeWithTag("study-content-search").performClick();compose.onNodeWithTag("map-content-query").performTextReplacement("独立性")
         val hit="map-hit-${MapRef(book).key}-$node";compose.waitUntil(15000){compose.onAllNodesWithTag(hit).fetchSemanticsNodes().isNotEmpty()};compose.onNodeWithTag(hit).performScrollTo().performClick()
         compose.waitUntil(10000){compose.onAllNodesWithTag("node-source").fetchSemanticsNodes().isNotEmpty()};compose.onNodeWithTag("node-source").performClick()
-        compose.waitUntil(10000){compose.onAllNodesWithTag("study-open-source").fetchSemanticsNodes().isNotEmpty()};compose.onNodeWithTag("study-open-source").performScrollTo().performClick();ready();step(m,"search-and-return-to-source")
+        compose.waitUntil(10000){compose.onAllNodesWithTag("study-open-source").fetchSemanticsNodes().isNotEmpty()};compose.onNodeWithTag("study-open-source").assertIsDisplayed().performTouchInput{click()};ready();step(m,"search-and-return-to-source")
         val ref=MapRef(book);val embed=MapEmbed(ref);val embedId=id()
         compose.runOnIdle{ViewModelProvider(compose.activity)["study-panel-$book",StudyPanelSession::class.java].embedInsertion.value=EmbedInsertion(book,embedId,embed)}
         compose.waitUntil(10000){runBlocking{app.pageObjects.read(book).objects.any{it.id==embedId}}};m.put("embed",embedId);step(m,"insert-live-map")

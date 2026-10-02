@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
 }
 val diagnosticBuild = providers.gradleProperty("inkweftDiagnosticBuild").orNull == "true"
+val unsignedBuild = providers.gradleProperty("inkweftUnsignedBuild").orNull == "true"
 val tlsFixture = providers.gradleProperty("inkweftTlsFixture").orNull
 val performanceProbe = providers.gradleProperty("inkweftPerformanceProbe").orNull == "true"
 val insertionPreview = providers.gradleProperty("inkweftInsertionPreview").orNull == "true"
@@ -14,8 +15,8 @@ android {
         applicationId = if (insertionPreview) "org.inkweft.app.a0.insertion" else if (diagnosticBuild) "org.inkweft.app.a0.workspace" else "org.inkweft.app.a0"
         minSdk = 31
         targetSdk = 36
-        versionCode = 47
-        versionName = "0.0.47-native-editor-preview"
+        versionCode = 66
+        versionName = "0.0.66-local-motion"
         manifestPlaceholders["appLabel"] = if (insertionPreview) "墨织整合预览" else if (diagnosticBuild) "墨织工作台预览" else "墨织"
         buildConfigField("String", "BUILD_COMMIT", "\"${commitValue("GITHUB_SHA")}\"")
         buildConfigField("String", "SOURCE_COMMIT", "\"${commitValue("INKWEFT_HEAD_SHA")}\"")
@@ -25,6 +26,7 @@ android {
     // CI without these variables uses its isolated test key; delivery may be re-signed
     // locally with the owner-held key and must carry its own certificate/hash receipt.
     val keyPath = System.getenv("INKWEFT_SIGNING_STORE")
+    require(!unsignedBuild || keyPath.isNullOrBlank()) { "Unsigned build cannot use owner signing" }
     if (!keyPath.isNullOrBlank()) {
         val password = requireNotNull(System.getenv("INKWEFT_SIGNING_PASSWORD")) { "Signing password missing" }
         val alias = requireNotNull(System.getenv("INKWEFT_SIGNING_ALIAS")) { "Signing alias missing" }
@@ -35,6 +37,12 @@ android {
             keyPassword = password
         }
         buildTypes.getByName("debug").signingConfig = signingConfigs.getByName("ownerPreview")
+    }
+    if (unsignedBuild) {
+        require(providers.gradleProperty("android.experimental.useDefaultDebugSigningConfigForProfileableBuildtypes").orNull?.toBoolean() != true) {
+            "Unsigned build requires default debug signing fallback to remain disabled"
+        }
+        buildTypes.getByName("debug").signingConfig = null
     }
     buildTypes.create("tlsProbe") {
         initWith(buildTypes.getByName("debug"))

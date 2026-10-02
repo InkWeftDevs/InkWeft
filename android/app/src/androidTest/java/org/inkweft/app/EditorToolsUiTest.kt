@@ -98,8 +98,8 @@ class EditorToolsUiTest {
     @Test fun documentActionsReadOnlyFullScreenAndTimerAreOperational(){
         val n=open();tap("quick-overview");compose.onNodeWithTag("pages-directory-dialog").assertIsDisplayed();tap("pages-directory-dialog-close")
         tap("quick-settings");compose.onNodeWithTag("document-settings-dialog").assertIsDisplayed();tap("document-settings-dialog-close")
-        tap("toolbar-customize");listOf("readonly","fullscreen","timer","add-page","export","beauty","finger").forEach{tap("toolbar-visible-$it")};tap("toolbar-done")
-        tap("quick-readonly");compose.onNodeWithTag("floating-pen-case").assertDoesNotExist();compose.onNodeWithTag("top-eraser").assertIsNotEnabled()
+        tap("toolbar-customize");listOf("readonly","fullscreen","timer","add-page","export","beauty","finger").filterNot{it in EditorToolOrder.fixed}.forEach{tap("toolbar-visible-$it")};tap("toolbar-done")
+        tap("quick-readonly");compose.onNodeWithTag("floating-pen-case").assertDoesNotExist();compose.onNodeWithTag("top-eraser").assertDoesNotExist()
         compose.onNodeWithTag("ink-surface").performTouchInput{swipe(Offset(width*.3f,height*.4f),Offset(width*.6f,height*.5f),250)}
         assertTrue(strokes(n).isEmpty());tap("exit-readonly");compose.onNodeWithTag("floating-pen-case").assertExists()
         tap("quick-fullscreen");compose.onNodeWithTag("notebook-tabs").assertDoesNotExist();compose.onNodeWithTag("rename-from-editor").assertDoesNotExist()

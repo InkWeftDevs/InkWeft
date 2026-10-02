@@ -1,0 +1,247 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+package org.inkweft.app
+
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.Saver
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import org.inkweft.core.*
+import org.inkweft.data.*
+import java.io.*
+
+/** Only bounded identities and revisions enter the saved-state Bundle, never answer bodies. */
+internal val BranchReviewPlanSaver = Saver<BranchReviewPlan?, ByteArray>(
+    save = { plan -> plan?.let {
+        ByteArrayOutputStream().also { output -> DataOutputStream(output).use { d ->
+            d.writeInt(2); d.writeUTF(it.ref.notebookId); d.writeUTF(it.ref.mapId.orEmpty())
+            d.writeUTF(it.branchId.orEmpty()); d.writeUTF(it.title)
+            d.writeInt(it.cardCount); d.writeInt(it.withoutQuestionCount); d.writeInt(it.entries.size)
+            it.entries.forEach { entry ->
+                d.writeUTF(entry.questionId); d.writeLong(entry.questionRevision)
+                d.writeUTF(entry.cardId); d.writeLong(entry.cardRevision)
+            }
+            d.writeUTF(it.scope.name); d.writeInt(it.totalQuestionCount); d.writeInt(it.otherStateOnlyCardCount)
+        } }.toByteArray().also { bytes -> require(bytes.size <= 256 * 1024) }
+    } },
+    restore = { bytes -> runCatching {
+        require(bytes.size <= 256 * 1024)
+        DataInputStream(ByteArrayInputStream(bytes)).use { d ->
+            val version = d.readInt(); require(version in 1..2)
+            val ref = MapRef(d.readUTF(), d.readUTF().ifEmpty { null })
+            val branch = d.readUTF().ifEmpty { null }; val title = d.readUTF()
+            val cards = d.readInt(); val unasked = d.readInt(); val count = d.readInt()
+            require(count in 0..2000)
+            val entries = List(count) { BranchReviewEntryRef(d.readUTF(), d.readLong(), d.readUTF(), d.readLong()) }
+            val scope = if(version == 2) ReviewQuestionScope.valueOf(d.readUTF()) else ReviewQuestionScope.ALL
+            val total = if(version == 2) d.readInt() else count
+            val otherStates = if(version == 2) d.readInt() else 0
+            require(d.read() == -1)
+            BranchReviewPlan(ref, branch, title, cards, unasked, entries, scope, total, otherStates)
+        }
+    }.getOrNull() }
+)
+
+/** The four recall entries share labels and touch sizes; the chosen scope belongs to their workspace. */
+@OptIn(ExperimentalLayoutApi::class)
+@Composable internal fun ReviewScopeSelector(scope:ReviewQuestionScope,enabled:Boolean,prefix:String,choose:(ReviewQuestionScope)->Unit) {
+    Column(Modifier.fillMaxWidth(),verticalArrangement=Arrangement.spacedBy(4.dp)) {
+        FlowRow(horizontalArrangement=Arrangement.spacedBy(8.dp),verticalArrangement=Arrangement.spacedBy(4.dp)) {
+            FilterChip(scope==ReviewQuestionScope.ALL,{choose(ReviewQuestionScope.ALL)},enabled=enabled,
+                label={Text("全部问题")},modifier=Modifier.heightIn(min=48.dp).testTag("$prefix-scope-all"))
+            FilterChip(scope==ReviewQuestionScope.REVIEW_ONLY,{choose(ReviewQuestionScope.REVIEW_ONLY)},enabled=enabled,
+                label={Text("仅待复习")},modifier=Modifier.heightIn(min=48.dp).testTag("$prefix-scope-review"))
+        }
+        Text(if(scope==ReviewQuestionScope.REVIEW_ONLY)"仅复习标为「待复习」的问题"else"复习这个范围内的全部问题",
+            style=MaterialTheme.typography.bodySmall,color=Quiet,modifier=Modifier.testTag("$prefix-scope-description"))
+    }
+}
+
+/** Fixed recall identities with session-only permission to inspect related clues. */
+@Composable internal fun BranchReviewDialog(plan:BranchReviewPlan, dismiss:()->Unit, showSummary:Boolean=true,showCollectionScope:Boolean=false) {
+    val sessionKey=remember(plan){plan.entries.joinToString(";"){"${it.questionId}:${it.questionRevision}:${it.cardId}:${it.cardRevision}"}}
+    key(plan.ref.notebookId,plan.ref.mapId,plan.branchId,plan.scope,sessionKey){
+        RecallWindowIsolation { BranchReviewContent(plan,dismiss,showSummary,showCollectionScope) }
+    }
+}
+
+@Composable private fun BranchReviewContent(plan:BranchReviewPlan,dismiss:()->Unit,showSummary:Boolean,showCollectionScope:Boolean) {
+    val context=LocalContext.current
+    val app=context.applicationContext as InkWeftApplication
+    val vm:KnowledgeViewModel=viewModel(key="branch-review-${plan.ref.notebookId}",
+        factory=KnowledgeViewModel.Factory(app.knowledge,app.resourcePacks))
+    BindKnowledgeReadLock(vm)
+    val readLock=rememberBookReadLock(plan.ref.notebookId)
+    val ui by vm.ui.collectAsStateWithLifecycle()
+    ReadLockGuard(readLock,"branch-review-${plan.ref.notebookId}",ui.busy||ui.unknown)
+    var started by rememberSaveable { mutableStateOf(!showSummary) }
+    var index by rememberSaveable { mutableIntStateOf(0) }
+    var revealed by rememberSaveable { mutableStateOf(false) }
+    var answerEnterEvent by remember(index){mutableIntStateOf(0)}
+    var answerEnterPending by remember(index){mutableStateOf(false)}
+    var hints by rememberSaveable { mutableStateOf(false) }
+    var sourceOpen by rememberSaveable { mutableStateOf(false) }
+    var pendingQuestion by rememberSaveable { mutableStateOf<String?>(null) }
+    var rejected by rememberSaveable { mutableStateOf(false) }
+    var loaded by remember { mutableStateOf<List<FrozenBranchReviewQuestion>?>(null) }
+    var loadError by remember { mutableStateOf(false) }
+    var loadAttempt by remember { mutableIntStateOf(0) }
+    val busy=ui.busy||ui.unknown
+    fun requestDismiss(){val live=vm.ui.value;if(!live.busy&&!live.unknown)dismiss()}
+    fun advance() { index++;revealed=false;hints=false;sourceOpen=false;rejected=false;pendingQuestion=null }
+    val shield=LocalRecallWindowShield.current
+    SideEffect { shield?.setActive(plan.entries.isNotEmpty()&&(!started||index<plan.entries.size)) }
+
+    LaunchedEffect(plan,started,loadAttempt) {
+        if(!started)return@LaunchedEffect
+        loaded=null;loadError=false
+        try { loaded=withContext(Dispatchers.IO){app.branchReview.load(plan)} }
+        catch(c:CancellationException){throw c}
+        catch(_:Exception){loadError=true}
+    }
+    LaunchedEffect(ui.completed,pendingQuestion) {
+        if(pendingQuestion!=null&&ui.completed==pendingQuestion){vm.consumed();advance()}
+    }
+    LaunchedEffect(ui.busy,ui.unknown,ui.message,pendingQuestion) {
+        if(pendingQuestion!=null&&!busy&&ui.message?.startsWith("未提交")==true){pendingQuestion=null;rejected=true}
+    }
+    val current=loaded?.getOrNull(index)
+    val cluesVisible=hints||revealed
+    var source by remember { mutableStateOf<StudySourceRow?>(null) }
+    LaunchedEffect(current?.reference?.cardId) {
+        source=null
+        if(current!=null)try { source=withContext(Dispatchers.IO){app.study.source(current.reference.cardId)} }
+        catch(c:CancellationException){throw c}
+        catch(_:Exception){source=null}
+    }
+
+    Dialog(onDismissRequest={requestDismiss()},properties=DialogProperties(usePlatformDefaultWidth=false)) {
+        RecallWindowPermit()
+        Surface(Modifier.fillMaxSize().testTag("manual-review")) {
+            Column(Modifier.safeDrawingPadding().padding(16.dp),verticalArrangement=Arrangement.spacedBy(12.dp)) {
+                Row(Modifier.fillMaxWidth()) {
+                    Text(if(started)"手动回忆 · ${(index+1).coerceAtMost(plan.entries.size)} / ${plan.entries.size}" else "复习范围",
+                        Modifier.weight(1f),style=MaterialTheme.typography.titleLarge)
+                    TextButton(onClick={requestDismiss()},enabled=!busy,modifier=Modifier.testTag("branch-review-close")){Text("退出回忆")}
+                }
+                key(started,index) {
+                    val questionContent:@Composable ColumnScope.()->Unit={
+                        if(ui.busy)LinearProgressIndicator(Modifier.fillMaxWidth())
+                        if(ui.unknown){
+                            Text("标记结果待核对，仍保留此题。")
+                            TextButton(onClick=vm::retry,enabled=!ui.busy,modifier=Modifier.testTag("branch-review-retry")){Text("核对原操作")}
+                        }
+                        if(!started){
+                            Column(Modifier.fillMaxWidth(),verticalArrangement=Arrangement.spacedBy(16.dp)) {
+                                Text("本轮回忆范围",style=MaterialTheme.typography.headlineSmall)
+                                if(showCollectionScope)Text(plan.title,modifier=Modifier.testTag("branch-review-scope"),style=MaterialTheme.typography.titleMedium)
+                                Text(if(plan.scope==ReviewQuestionScope.REVIEW_ONLY)"仅复习标为「待复习」的问题"else"全部问题",
+                                    modifier=Modifier.testTag("branch-review-filter"))
+                                Text("${plan.cardCount} 张卡片 · ${plan.entries.size} 道问题 · ${plan.withoutQuestionCount} 张未设题卡片",
+                                    modifier=Modifier.testTag("branch-review-counts"))
+                                Text("范围内共 ${plan.totalQuestionCount} 道问题",modifier=Modifier.testTag("branch-review-total-questions"))
+                                Text("仅有已理解或待整理问题：${plan.otherStateOnlyCardCount} 张卡片",modifier=Modifier.testTag("branch-review-other-state-cards"))
+                                Text(if(showCollectionScope)"相同问题只出现一次，同一卡片的不同问题分别保留。"else"包含折叠下级。相同问题只出现一次，同一卡片的不同问题分别保留。")
+                                Text("本轮固定问题与答案版本。标题、原页和图中文字先遮挡；查看提示可能包含答案。",color=Quiet)
+                                Text("查看提示、显示答案均不写标记；手工标记不安排到期时间。",color=Quiet)
+                                if(plan.entries.isEmpty()){
+                                    if(plan.totalQuestionCount>0)Text("本轮没有待复习问题。可退出后选择“全部问题”。",
+                                        modifier=Modifier.testTag("branch-review-empty-filter"))
+                                    else Text("这部分尚无问题。可从摘要卡的“属性与回忆”添加问题，原内容不变。")
+                                }
+                            }
+                            Button(onClick={started=true},enabled=plan.entries.isNotEmpty()&&!busy,
+                                modifier=Modifier.fillMaxWidth().heightIn(min=48.dp).testTag("branch-review-start")){Text("开始回忆")}
+                        }else if(loadError){
+                            Text("本轮固定版本读取失败，未替换成新题或新答案。")
+                            TextButton(onClick={loadAttempt++},modifier=Modifier.testTag("branch-review-load-retry")){Text("重试读取此轮")}
+                        }else if(loaded==null){
+                            Box(Modifier.heightIn(min=120.dp)){CircularProgressIndicator()}
+                        }else if(current==null){
+                            Text("本轮已结束",Modifier.testTag("branch-review-ended"))
+                        }else{
+                            val question=current.question.data() as KnowledgeData.Question
+                            Text(question.prompt,fontSize=24.sp,modifier=Modifier.testTag("review-question"))
+                            if(cluesVisible)Text(current.card.title,style=MaterialTheme.typography.titleMedium,
+                                modifier=Modifier.testTag("review-card-title"))
+                            else Text("线索已隐藏",color=Quiet,modifier=Modifier.testTag("review-clues-hidden"))
+                            if(revealed){
+                                val enterEvent=answerEnterEvent
+                                ClickEnterContent(enterEvent,answerEnterPending,{if(answerEnterEvent==enterEvent)answerEnterPending=false},
+                                    Modifier.testTag("review-answer-enter")){
+                                    Text(current.card.body,fontSize=18.sp,modifier=Modifier.testTag("review-answer"))
+                                }
+                            }
+                            if(!revealed){
+                                if(hints){
+                                    Text("提示已开放 · 可能含答案，未写标记",
+                                        color=Quiet,modifier=Modifier.testTag("review-hint-status"))
+                                }
+                                Button(onClick={answerEnterEvent++;answerEnterPending=true;revealed=true},enabled=!busy,
+                                    modifier=Modifier.widthIn(max=260.dp).fillMaxWidth().heightIn(min=48.dp).testTag("reveal-answer")){Text("显示答案")}
+                            }
+                            if(rejected)Text("题目或答案版本已变化，或资料不可用，标记未提交。本轮仍显示固定版本，可跳过此题。",
+                                modifier=Modifier.testTag("branch-review-conflict"))
+                            if(cluesVisible&&source!=null)OutlinedButton(onClick={sourceOpen=true},enabled=!busy,
+                                modifier=Modifier.fillMaxWidth().heightIn(min=48.dp).testTag("review-open-source")){Text("查看当前原页 · 返回此题")}
+                            if(revealed){
+                                Text("手工标记，不安排到期时间",style=MaterialTheme.typography.bodySmall,color=Quiet)
+                                Column(Modifier.fillMaxWidth(),verticalArrangement=Arrangement.spacedBy(4.dp)) {
+                                    listOf(ManualState.REVIEW to "仍需复习",ManualState.UNDERSTOOD to "本次已理解").forEach { (state,label)->
+                                        OutlinedButton(onClick={pendingQuestion=current.reference.questionId;vm.submitReview(plan.ref.notebookId,current.question,
+                                            question.copy(state=state),current.reference.cardRevision)},enabled=!busy&&!rejected&&pendingQuestion==null,
+                                            modifier=Modifier.fillMaxWidth().heightIn(min=48.dp).testTag("branch-review-mark-${state.name}")){Text(label)}
+                                    }
+                                }
+                            }
+                            Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.spacedBy(8.dp),verticalAlignment=Alignment.CenterVertically){
+                                if(!revealed){
+                                    if(hints)TextButton(onClick={hints=false;sourceOpen=false},enabled=!busy,
+                                        modifier=Modifier.weight(1f,fill=false).heightIn(min=48.dp).testTag("review-hide-hint")){Text("收起提示")}
+                                    else TextButton(onClick={hints=true},enabled=!busy,
+                                        modifier=Modifier.weight(1f,fill=false).heightIn(min=48.dp).testTag("review-show-hint")){Text("查看提示（可能含答案）")}
+                                }
+                                TextButton(onClick={advance()},enabled=!busy&&pendingQuestion==null,
+                                    modifier=Modifier.heightIn(min=48.dp).testTag("branch-review-skip")){Text("跳过此题")}
+                            }
+                        }
+                    }
+                    BoxWithConstraints(Modifier.weight(1f).fillMaxWidth()) {
+                        val wide=maxWidth>=840.dp&&LocalDensity.current.fontScale<1.5f
+                        if(wide&&started&&current!=null){
+                            Row(Modifier.fillMaxSize(),horizontalArrangement=Arrangement.spacedBy(20.dp)) {
+                                Column(Modifier.weight(1f).fillMaxHeight().verticalScroll(rememberScrollState()),
+                                    verticalArrangement=Arrangement.spacedBy(12.dp),content=questionContent)
+                                RecallContextPanel(plan,current,cluesVisible,source,
+                                    Modifier.weight(1.1f).fillMaxHeight())
+                            }
+                        }else{
+                            Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()),verticalArrangement=Arrangement.spacedBy(12.dp)) {
+                                questionContent()
+                                if(started&&current!=null)RecallContextPanel(plan,current,cluesVisible,source,
+                                    Modifier.fillMaxWidth().height(460.dp))
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    if(sourceOpen&&cluesVisible)source?.let{ReviewSourceDialog(it,dismiss={sourceOpen=false},recallNotebookId=plan.ref.notebookId)}
+}

@@ -25,6 +25,7 @@ import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -47,9 +48,12 @@ import java.util.Locale
 fun LibraryScreen(ui:NotebookUi,workspace:WorkspaceViewModel,open:(Note)->Unit,create:()->Unit,importPage:()->Unit,diagnostics:()->Unit,rename:(Note)->Unit,duplicate:(Note)->Unit,export:(Note)->Unit){
     val app=LocalContext.current.applicationContext as InkWeftApplication
     val summaryFlow=remember(app){app.knowledge.cards()};val summaries by summaryFlow.collectAsState(initial=emptyList())
-    var destination by rememberSaveable{mutableStateOf("")};var learningNote by remember{mutableStateOf<Note?>(null)}
-    var learningQuery by remember{mutableStateOf("")}
-    var learningTarget by remember{mutableStateOf<StableTargetRef?>(null)}
+    var destination by rememberSaveable{mutableStateOf("")};var learningNoteId by rememberSaveable{mutableStateOf<String?>(null)}
+    var sourceNavigation by remember{mutableStateOf<Job?>(null)}
+    var learningQuery by rememberSaveable{mutableStateOf("")}
+    var learningTarget by rememberSaveable(stateSaver=androidx.compose.runtime.saveable.Saver<StableTargetRef?,ArrayList<String>>(
+        {it?.let{r->arrayListOf(r.kind.name,r.notebookId,r.id.orEmpty(),r.mapId.orEmpty())}},
+        {runCatching{require(it.size==4);StableTargetRef(LearningTargetKind.valueOf(it[0]),it[1],it[2].ifEmpty{null},it[3].ifEmpty{null})}.getOrNull()})){mutableStateOf<StableTargetRef?>(null)}
     val learningDirectory=remember(app){app.learningDirectory.observe()}
     val learningState=rememberSaveableStateHolder()
     val entries by workspace.entries.collectAsState();val counts by workspace.inkCounts.collectAsState()
@@ -71,6 +75,7 @@ fun LibraryScreen(ui:NotebookUi,workspace:WorkspaceViewModel,open:(Note)->Unit,c
     val all=display.values.toList()
     fun row(n:Note)=entries[n.id]?:WorkspaceRow(n.id)
     val active=all.filter{row(it).trashedAt==null}
+    val learningNote=active.find{it.id==learningNoteId}
     val folders=active.map{row(it).folder}.filter{it.isNotBlank()}.distinct().sorted()
     val tags=active.flatMap{row(it).tags.split('\n')}.filter{it.isNotBlank()}.distinct().sorted()
     val shown=all.filter{n->val r=row(n)
@@ -156,7 +161,7 @@ fun LibraryScreen(ui:NotebookUi,workspace:WorkspaceViewModel,open:(Note)->Unit,c
                     if(filter=="trash")Text("笔记内容与封面仍保留，可从菜单恢复。",fontSize=12.sp,color=Quiet,modifier=Modifier.padding(vertical=12.dp))
                     val itemContent:@Composable (Note)->Unit={n->val meta=row(n)
                         NoteTile(n,meta,counts[n.id]?.modifiedRevision?:0,counts[n.id]?.visibleCount?:0,grid,
-                            {if(meta.trashedAt==null){val hit=searchRows.firstOrNull{it.notebookId==n.id&&query.isNotBlank()&&it.text.contains(query,true)};if(hit!=null)workspace.openSearchPage(n.id,hit.pageId){open(n)}else if(query.isNotBlank()&&summaries.any{it.notebookId==n.id&&it.trashedAt==null&&(it.title.contains(query,true)||it.body.contains(query,true))}){learningTarget=null;learningQuery=query;learningNote=n}else open(n)}},{rename(n)},{coverError=null;coverExpected=meta.revision;coverTargetId=n.id},
+                            {if(meta.trashedAt==null){val hit=searchRows.firstOrNull{it.notebookId==n.id&&query.isNotBlank()&&it.text.contains(query,true)};if(hit!=null)workspace.openSearchPage(n.id,hit.pageId){open(n)}else if(query.isNotBlank()&&summaries.any{it.notebookId==n.id&&it.trashedAt==null&&(it.title.contains(query,true)||it.body.contains(query,true))}){learningTarget=null;learningQuery=query;learningNoteId=n.id}else open(n)}},{rename(n)},{coverError=null;coverExpected=meta.revision;coverTargetId=n.id},
                             {workspace.organize(meta,favorite=!meta.favorite)},{editing=meta},{if(meta.trashedAt!=null)workspace.organize(meta,trash=false)else removing=meta},
                             {duplicate(n)},{export(n)},{workspace.pin(meta,!meta.pinned)})
                     }
@@ -177,19 +182,27 @@ fun LibraryScreen(ui:NotebookUi,workspace:WorkspaceViewModel,open:(Note)->Unit,c
         if(n!=null)when(target.kind){
             LearningTargetKind.NOTE->{open(n);destination=""}
             LearningTargetKind.PAGE->workspace.openSearchPage(n.id,checkNotNull(target.id)){open(n);destination=""}
-            else->{learningTarget=target;learningQuery="";learningNote=n}
+            else->{learningTarget=target;learningQuery="";learningNoteId=n.id}
         }
     }}
-    if(destination=="review")LearningLibrary(active,true,{destination=""}){learningQuery="";learningTarget=null;learningNote=it}
+    if(destination=="review")LearningLibrary(active,true,{destination=""}){learningQuery="";learningTarget=null;learningNoteId=it.id}
     if(destination=="settings")WorkspaceSettings({destination=""}){destination="";diagnostics()}
-    learningNote?.let{n->
-        if(destination=="review")KnowledgeWorkspace(n.id,TargetRef(TargetKind.NOTE,n.id),initialTab=4,dismiss={learningNote=null}){target->app.openKnowledgeTarget.value=target;learningNote=null;destination=""}
-        else if(learningTarget?.kind==LearningTargetKind.COLLECTION)KnowledgeWorkspace(n.id,TargetRef(TargetKind.NOTE,n.id),initialTab=1,initialCollection=learningTarget?.id,dismiss={learningNote=null}){target->app.openKnowledgeTarget.value=target;learningNote=null;destination=""}
-        else StudyWorkspace(NoteDraft(n),null,{learningNote=null},initialQuery=learningQuery,
+    learningNote?.let{n->learningState.SaveableStateProvider("learning-note-${n.id}"){
+        if(destination=="review")KnowledgeWorkspace(n.id,TargetRef(TargetKind.NOTE,n.id),initialTab=4,dismiss={learningNoteId=null}){target->app.openKnowledgeTarget.value=target;learningNoteId=null;destination=""}
+        else if(learningTarget?.kind==LearningTargetKind.COLLECTION)KnowledgeWorkspace(n.id,TargetRef(TargetKind.NOTE,n.id),initialTab=1,initialCollection=learningTarget?.id,dismiss={learningNoteId=null}){target->app.openKnowledgeTarget.value=target;learningNoteId=null;destination=""}
+        else StudyWorkspace(NoteDraft(n),null,{sourceNavigation?.cancel();learningNoteId=null},initialQuery=learningQuery,
             initialCardId=learningTarget?.takeIf{it.kind==LearningTargetKind.CARD}?.id,
             initialMap=learningTarget?.takeIf{it.kind in listOf(LearningTargetKind.MAP,LearningTargetKind.BRANCH)}?.let{MapRef(it.notebookId,if(it.kind==LearningTargetKind.BRANCH)it.mapId else it.id)},
-            initialBranch=learningTarget?.takeIf{it.kind==LearningTargetKind.BRANCH}?.id){source->workspace.openSearchPage(n.id,source.pageId){open(n)};learningNote=null;destination="";true}
-    }
+            initialBranch=learningTarget?.takeIf{it.kind==LearningTargetKind.BRANCH}?.id){source->
+                if(learningNoteId!=n.id)false else{
+                    val request=currentCoroutineContext().job;sourceNavigation=request
+                    try{
+                        val anchor=KnowledgeData.Anchor(source.pageId,source.inkRevision,CanvasBounds(source.left,source.top,source.right,source.bottom),source.strokeIds.split(',').filter{it.isNotBlank()})
+                        workspace.openPageAwait(n.id,source.pageId,anchor){open(n);learningNoteId=null;destination=""}
+                    }finally{if(sourceNavigation===request)sourceNavigation=null}
+                }
+            }
+    }}
     coverTarget?.let{(n,r)->key(n.id){
         var coverLoading by remember{mutableStateOf(true)};var storedCover by remember{mutableStateOf<ByteArray?>(null)}
         var coverReadFailed by remember{mutableStateOf(false)}
@@ -277,11 +290,11 @@ private fun NoteTile(note:Note,row:WorkspaceRow,inkRevision:Long,count:Int,grid:
         }
     }
     val info:@Composable ()->Unit={
-        Row(Modifier.fillMaxWidth(),verticalAlignment=Alignment.CenterVertically,horizontalArrangement=if(grid)Arrangement.Center else Arrangement.Start){Text(note.title,maxLines=if(grid)2 else 1,overflow=TextOverflow.Ellipsis,fontSize=15.sp,fontWeight=FontWeight.Medium,textAlign=if(grid)TextAlign.Center else TextAlign.Start,modifier=Modifier.weight(1f,fill=!grid).clickable(onClick=open));Box{
+        Row(Modifier.fillMaxWidth().heightIn(min=48.dp),verticalAlignment=Alignment.CenterVertically,horizontalArrangement=if(grid)Arrangement.Center else Arrangement.Start){Text(note.title,maxLines=if(grid)2 else 1,minLines=if(grid)2 else 1,lineHeight=22.sp,overflow=TextOverflow.Ellipsis,fontSize=15.sp,fontWeight=FontWeight.Medium,textAlign=if(grid)TextAlign.Center else TextAlign.Start,modifier=Modifier.weight(1f).clickable(onClick=open).testTag("note-title-${note.id}"));Box{
             IconButton(onClick=::openMenu,enabled=!menuOpening,modifier=Modifier.size(48.dp).testTag("note-menu-${note.id}").describedAs("笔记菜单：${note.title}")){Glyph("more",Quiet,Modifier.size(17.dp))}
-            DropdownMenu(expanded=menu,onDismissRequest={menu=false},modifier=Modifier.width(240.dp).testTag("notebook-actions-menu")){
-                Text(note.title,fontSize=12.sp,color=Quiet,maxLines=1,overflow=TextOverflow.Ellipsis,
-                    modifier=Modifier.padding(horizontal=16.dp,vertical=9.dp))
+            DropdownMenu(expanded=menu,onDismissRequest={menu=false},modifier=Modifier.width(280.dp).testTag("notebook-actions-menu")){
+                Text(note.title,fontSize=13.sp,lineHeight=20.sp,color=Quiet,
+                    modifier=Modifier.padding(horizontal=16.dp,vertical=9.dp).testTag("note-menu-title-${note.id}"))
                 HorizontalDivider(color=Line)
                 if(row.trashedAt==null){
                     DropdownMenuItem(text={Text("打开笔记")},leadingIcon={Glyph("note")},onClick={menu=false;open()})
@@ -299,11 +312,13 @@ private fun NoteTile(note:Note,row:WorkspaceRow,inkRevision:Long,count:Int,grid:
                     leadingIcon={Glyph(if(row.trashedAt!=null)"undo"else"trash",if(row.trashedAt!=null)Forest else Color(0xffab3939))},onClick={menu=false;trash()},modifier=Modifier.testTag("trash-note-${note.id}"))
             }
         }}
-        if(row.pinned)Text("置顶",fontSize=10.sp,color=Forest,modifier=Modifier.testTag("pinned-${note.id}"))
-        Text(date,fontSize=12.sp,color=Quiet)
-        if(row.folder.isNotBlank())Text(row.folder,fontSize=10.sp,color=Quiet,modifier=Modifier.padding(top=5.dp))
+        Text(date,fontSize=12.sp,lineHeight=18.sp,color=Quiet)
+        Row(Modifier.fillMaxWidth().heightIn(min=with(LocalDensity.current){16.sp.toDp()}),horizontalArrangement=Arrangement.spacedBy(6.dp)){
+            if(row.pinned)Text("置顶",fontSize=10.sp,lineHeight=16.sp,color=Forest,modifier=Modifier.testTag("pinned-${note.id}"))
+            if(row.folder.isNotBlank())Text(row.folder,fontSize=10.sp,lineHeight=16.sp,maxLines=1,overflow=TextOverflow.Ellipsis,color=Quiet)
+        }
     }
-    if(grid)Column(Modifier.fillMaxWidth().padding(horizontal=8.dp),horizontalAlignment=Alignment.CenterHorizontally){art(Modifier.width(136.dp).height(185.dp));Column(Modifier.fillMaxWidth().padding(top=8.dp),horizontalAlignment=Alignment.CenterHorizontally){info()}}
+    if(grid)Column(Modifier.fillMaxWidth().padding(horizontal=8.dp).testTag("note-tile-${note.id}"),horizontalAlignment=Alignment.CenterHorizontally){art(Modifier.width(136.dp).height(185.dp));Column(Modifier.fillMaxWidth().padding(top=8.dp),horizontalAlignment=Alignment.CenterHorizontally){info()}}
     else Column{Row(Modifier.fillMaxWidth().padding(vertical=12.dp),verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(18.dp)){art(Modifier.size(61.dp,79.dp));Column(Modifier.weight(1f)){info()}};HorizontalDivider(color=Line)}
 }
 

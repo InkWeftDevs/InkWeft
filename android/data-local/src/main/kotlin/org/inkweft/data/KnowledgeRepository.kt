@@ -19,6 +19,7 @@ data class KnowledgeReceiptRow(@PrimaryKey val operationId:String,val notebookId
     @Query("SELECT * FROM knowledge_records ORDER BY id") suspend fun all():List<KnowledgeRow>
     @Query("SELECT * FROM knowledge_records WHERE id=:id") suspend fun get(id:String):KnowledgeRow?
     @Query("SELECT * FROM knowledge_revisions WHERE id=:id AND revision=:revision") suspend fun revision(id:String,revision:Long):KnowledgeRevisionRow?
+    @Query("SELECT * FROM knowledge_revisions WHERE id=:id ORDER BY revision DESC") suspend fun revisions(id:String):List<KnowledgeRevisionRow>
     @Query("SELECT * FROM knowledge_receipts WHERE operationId=:id") suspend fun receipt(id:String):KnowledgeReceiptRow?
     @Insert(onConflict=OnConflictStrategy.ABORT) suspend fun insert(row:KnowledgeRow)
     @Update suspend fun update(row:KnowledgeRow):Int
@@ -47,7 +48,12 @@ class KnowledgeRepository(private val db:NoteDatabase,private val fault:(Knowled
     }
     suspend fun cardVersion(id:String,revision:Long)=db.study().cardVersion(id,revision)
     suspend fun lookup(c:KnowledgeCommand):String?=db.withTransaction{db.knowledge().receipt(c.operationId)?.let{require(it.notebookId==c.notebookId&&it.digest==c.digest());it.resultId}}
-    suspend fun outcome(c:KnowledgeCommand):KnowledgeOutcome = try { KnowledgeOutcome.Success(submit(c)) }
+    suspend fun outcome(c:KnowledgeCommand):KnowledgeOutcome = commandOutcome(c,null)
+    suspend fun reviewOutcome(c:KnowledgeCommand,expectedCardRevision:Long):KnowledgeOutcome {
+        require(expectedCardRevision>0&&c.data is KnowledgeData.Question&&!c.removed)
+        return commandOutcome(c,expectedCardRevision)
+    }
+    private suspend fun commandOutcome(c:KnowledgeCommand,expectedCardRevision:Long?):KnowledgeOutcome = try { KnowledgeOutcome.Success(submit(c,expectedCardRevision)) }
     catch(cancel:kotlinx.coroutines.CancellationException){throw cancel}
     catch(rejected:KnowledgeRejected){KnowledgeOutcome.Rejected(rejected.reason)}
     catch(_:Exception){
@@ -55,12 +61,18 @@ class KnowledgeRepository(private val db:NoteDatabase,private val fault:(Knowled
         catch(cancel:kotlinx.coroutines.CancellationException){throw cancel}
         catch(_:Exception){KnowledgeOutcome.Unknown}
     }
-    suspend fun submit(c:KnowledgeCommand):String{
+    suspend fun submit(c:KnowledgeCommand,expectedReviewCardRevision:Long?=null):String{
         val result=db.withTransaction{
             lookup(c)?.let{return@withTransaction it}
             val dao=db.knowledge()
             val (old,next)=try {
             require(db.workspace().get(c.notebookId)?.trashedAt==null&&db.notes().note(c.notebookId)!=null){"BOOK_UNAVAILABLE"}
+            if(expectedReviewCardRevision!=null){
+                val question=c.data as? KnowledgeData.Question
+                require(question!=null&&!c.removed&&expectedReviewCardRevision>0){"INVALID_REVIEW_COMMAND"}
+                val card=db.study().card(question.cardId)
+                require(card!=null&&card.trashedAt==null&&card.revision==expectedReviewCardRevision){"REVIEW_CARD_CHANGED"}
+            }
             val old=dao.get(c.id);require((old?.revision?:0)==c.expectedRevision){"KNOWLEDGE_VERSION_CHANGED"}
             require(old==null||old.notebookId==c.notebookId&&old.data()::class==c.data::class)
             require(!c.removed||old!=null)
@@ -74,14 +86,15 @@ class KnowledgeRepository(private val db:NoteDatabase,private val fault:(Knowled
             if(c.data is KnowledgeData.PageMark&&!c.removed){val d=c.data as KnowledgeData.PageMark;if(d.bookmark)require(records.none{it.id!=c.id&&!it.removed&&(it.data() as? KnowledgeData.PageMark)?.let{m->m.bookmark&&m.pageId==d.pageId}==true}){"BOOKMARK_EXISTS"}}
             if(c.data is KnowledgeData.Properties){val d=c.data as KnowledgeData.Properties;require(records.none{it.id!=c.id&&!it.removed&&(it.data() as? KnowledgeData.Properties)?.cardId==d.cardId}){"PROPERTY_EXISTS"}}
             if(c.data is KnowledgeData.Link&&!c.removed)require(records.none{it.id!=c.id&&!it.removed&&it.data()==c.data}){"LINK_EXISTS"}
+            if(c.data is KnowledgeData.MapPortal&&!c.removed)require(records.none{it.id!=c.id&&it.notebookId==c.notebookId&&!it.removed&&it.data()==c.data}){"MAP_PORTAL_EXISTS"}
             val next=KnowledgeRow(c.id,c.notebookId,c.expectedRevision+1,c.payload,c.removed)
             validateMaps(records.filter{it.id!=c.id}+next)
             old to next
             }catch(e:IllegalArgumentException){
                 throw KnowledgeRejected(when(e.message){
-                    "KNOWLEDGE_VERSION_CHANGED","SOURCE_CHANGED"->KnowledgeRejection.CONFLICT
-                    "BOOKMARK_EXISTS","PROPERTY_EXISTS","LINK_EXISTS"->KnowledgeRejection.DUPLICATE
-                    "BOOK_UNAVAILABLE"->KnowledgeRejection.UNAVAILABLE
+                    "KNOWLEDGE_VERSION_CHANGED","SOURCE_CHANGED","REVIEW_CARD_CHANGED"->KnowledgeRejection.CONFLICT
+                    "BOOKMARK_EXISTS","PROPERTY_EXISTS","LINK_EXISTS","MAP_PORTAL_EXISTS"->KnowledgeRejection.DUPLICATE
+                    "BOOK_UNAVAILABLE","MAP_PORTAL_SOURCE_UNAVAILABLE","MAP_PORTAL_TARGET_UNAVAILABLE"->KnowledgeRejection.UNAVAILABLE
                     else->KnowledgeRejection.INVALID
                 })
             }
@@ -114,6 +127,7 @@ class KnowledgeRepository(private val db:NoteDatabase,private val fault:(Knowled
             is KnowledgeData.Alias->card(data.cardId)
             is KnowledgeData.MapDefinition,is KnowledgeData.MapTemplate->Unit
             is KnowledgeData.MapOccurrence->{card(data.cardId);val map=requireNotNull(db.knowledge().get(data.mapId));require(map.notebookId==book&&map.data() is KnowledgeData.MapDefinition);if(active)require(!map.removed)}
+            is KnowledgeData.MapPortal->MapPortalRepository(db).validateData(book,data,active)
             is KnowledgeData.Decoration->{for(id in listOf(data.from,data.to)){val p=requireNotNull(db.knowledge().get(id));require(p.notebookId==book&&p.data() is KnowledgeData.Placement);if(active)require(!p.removed)}}
             is KnowledgeData.Collection->Unit
         }
@@ -129,6 +143,8 @@ class KnowledgeRepository(private val db:NoteDatabase,private val fault:(Knowled
         }
         val props=rows.filter{!it.removed}.mapNotNull{it.data() as? KnowledgeData.Properties}
         require(props.map{it.cardId}.distinct().size==props.size)
+        val portals=rows.filter{!it.removed}.mapNotNull{row->(row.data() as? KnowledgeData.MapPortal)?.let{row.notebookId to it}}
+        require(portals.distinct().size==portals.size){"MAP_PORTAL_EXISTS"}
         validateMaps(rows)
     }
     private fun validateMaps(rows:List<KnowledgeRow>){

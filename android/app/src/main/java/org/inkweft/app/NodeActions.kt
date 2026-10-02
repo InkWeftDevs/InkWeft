@@ -35,13 +35,13 @@ internal data class NodeTitleDraft(val token:String,val mapId:String?,val nodeId
         IconButton(click,enabled=enabled,modifier=Modifier.size(48.dp).testTag(tag).describedAs(label)){Glyph(icon)}
     }
 }
-@Composable internal fun NodeActions(enabled:Boolean,rename:()->Unit,child:()->Unit,sibling:()->Unit,more:()->Unit){
+@Composable internal fun NodeActions(enabled:Boolean,rename:()->Unit,child:()->Unit,sibling:()->Unit,more:()->Unit,moreEnabled:Boolean=enabled){
     Surface(shape=InkTheme.ToolShape,color=InkTheme.Surface,shadowElevation=InkTheme.ToolElevation,modifier=Modifier.testTag("node-actions")){
         Row{
             MapActionIcon("修改标题","pen","node-rename",enabled,rename)
             MapActionIcon("添加子主题","node-child","node-add-child",enabled,child)
             MapActionIcon("添加同级主题","node-sibling","node-add-sibling",enabled,sibling)
-            MapActionIcon("更多","more","node-more",enabled,more)
+            MapActionIcon("更多","more","node-more",moreEnabled,more)
         }
     }
 }
@@ -49,12 +49,20 @@ internal data class NodeTitleDraft(val token:String,val mapId:String?,val nodeId
     modifier:Modifier=Modifier,text:TextFieldValue,onText:(TextFieldValue)->Unit,cancel:()->Unit,submit:(String)->Unit,retry:()->Unit){
     val requester=remember{FocusRequester()}
     val keyboard=androidx.compose.ui.platform.LocalSoftwareKeyboardController.current
+    val lifecycle=androidx.lifecycle.compose.LocalLifecycleOwner.current.lifecycle
     LaunchedEffect(draft.token){requester.requestFocus();keyboard?.show()}
     fun commit(){if(!busy&&!unknown&&text.composition==null&&text.text.isNotBlank())submit(text.text.trim())}
     androidx.activity.compose.BackHandler{if(!busy&&!unknown)cancel()}
     Surface(modifier.testTag("node-title-editor"),shape=InkTheme.ToolShape,color=InkTheme.Surface,shadowElevation=InkTheme.FloatingElevation){
         Column(Modifier.padding(8.dp).verticalScroll(rememberScrollState())){
-            OutlinedTextField(text,{if(it.text.length<=120)onText(it)},enabled=!busy&&!unknown,label={Text(if(draft.creating)"新主题标题"else"修改标题")},singleLine=true,
+            OutlinedTextField(text,{value->if(value.text.length<=120){
+                // CoreTextField deselects to the range end while the old Activity
+                // loses focus. Keep the saved range at that lifecycle boundary;
+                // active edits and composition updates still pass through.
+                val exitingDeselect=!lifecycle.currentState.isAtLeast(androidx.lifecycle.Lifecycle.State.RESUMED)&&
+                    value.text==text.text&&!text.selection.collapsed&&value.selection==TextRange(text.selection.max)
+                onText(if(exitingDeselect)value.copy(selection=text.selection)else value)
+            }},enabled=!busy&&!unknown,label={Text(if(draft.creating)"新主题标题"else"修改标题")},singleLine=true,
                 keyboardOptions=KeyboardOptions(imeAction=ImeAction.Done),keyboardActions=KeyboardActions(onDone={commit()}),modifier=Modifier.fillMaxWidth().focusRequester(requester).testTag("node-title-input"))
             if(!draft.creating&&!draft.structural)Text("共享标题 · $sharedCount 个引用位置",style=MaterialTheme.typography.labelSmall,color=Quiet)
             message?.let{Text(it,style=MaterialTheme.typography.bodySmall,modifier=Modifier.testTag("node-title-error"))}

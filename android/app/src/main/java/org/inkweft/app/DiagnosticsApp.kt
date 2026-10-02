@@ -65,12 +65,15 @@ fun DiagnosticsApp() {
 fun DiagnosticDialog(onClose: () -> Unit) {
     val context = LocalContext.current
     val diagnostics = (context.applicationContext as InkWeftApplication).diagnostics
+    val beauty = (context.applicationContext as InkWeftApplication).beautyDiagnostics
+    val capture by beauty.state.collectAsStateWithLifecycle()
     val scope = rememberCoroutineScope()
     var busy by remember { mutableStateOf(false) }
     var pending by remember { mutableStateOf<ByteArray?>(null) }
     var status by remember { mutableStateOf("先重现问题，再导出；不需要找项目目录里的日志。") }
     var clearConfirm by remember { mutableStateOf(false) }
-    fun exportName() = "墨织诊断-" + DateTimeFormatter.ofPattern("uuuuMMdd-HHmmss").withZone(ZoneOffset.UTC).format(Instant.now()) + ".zip"
+    var privateCapture by remember { mutableStateOf(false) }
+    fun exportName(beautyCapture:Boolean=false) = (if(beautyCapture)"墨织美化诊断-"else"墨织诊断-") + DateTimeFormatter.ofPattern("uuuuMMdd-HHmmss").withZone(ZoneOffset.UTC).format(Instant.now()) + ".zip"
     val save = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("application/zip")) { uri ->
         val data = pending; pending = null
         if (uri == null) { busy = false; status = "已取消保存，笔记和诊断记录未删除。"; diagnostics.event(DiagnosticCode.EXPORT, DiagnosticResult.CANCELLED) }
@@ -85,14 +88,14 @@ fun DiagnosticDialog(onClose: () -> Unit) {
             } finally { busy = false }
         }
     }
-    fun startExport(share: Boolean) {
+    fun startExport(share: Boolean,beautyCapture:Boolean=false) {
         if (busy) return
         busy = true; status = "正在整理受限诊断数据…"
         scope.launch {
             try {
                 diagnostics.event(DiagnosticCode.EXPORT)
-                val bytes = diagnostics.bundle()
-                if (!share) { pending = bytes; save.launch(exportName()) }
+                val bytes = if(beautyCapture)beauty.bundle(diagnostics.bundle())else diagnostics.bundle()
+                if (!share) { pending = bytes; save.launch(exportName(beautyCapture)) }
                 else {
                     val exported = withContext(Dispatchers.IO) {
                         val dir = File(context.cacheDir, "diagnostics-export")
@@ -125,14 +128,27 @@ fun DiagnosticDialog(onClose: () -> Unit) {
         text = {
             Column(Modifier.verticalScroll(rememberScrollState()).testTag("diagnostics-dialog"), verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 Text("${BuildConfig.VERSION_NAME}\n构建：${BuildConfig.BUILD_COMMIT.take(12)}", fontSize = 12.sp)
-                Text("包含：应用版本、设备型号/系统、内存/电量/热状态快照、最近200条固定类型事件、当前已观察的保存状态和数量。")
-                Text("不包含：笔记标题与正文、笔迹坐标、PDF、图片、数据库、系统logcat、异常正文、文件路径/URI、密码、API Key、设备序列号或账号。", color = Forest)
+                Text("基础诊断包含：应用版本、设备型号/系统、内存/电量/热状态快照、最近200条固定类型事件、当前已观察的保存状态和数量；美化仅记录尝试、待校对、已保存的数量。")
+                Text("基础诊断不包含：笔记标题与正文、笔迹坐标、PDF、图片、数据库、系统logcat、异常正文、文件路径/URI、密码、API Key、设备序列号或账号。", color = Forest)
                 Text("文件是明文，仅你主动保存或分享。系统选择的位置可能是云盘。不能补录旧版本日志，也不等于自动运行Gradle、Room、Compose或Pencil3测试。", fontSize = 12.sp)
                 Text(status, modifier = Modifier.testTag("diagnostics-status"), fontSize = 13.sp)
                 if (busy) LinearProgressIndicator(Modifier.fillMaxWidth())
                 Button(onClick = { startExport(false) }, enabled = !busy, modifier = Modifier.fillMaxWidth().testTag("diagnostics-save")) { Text("保存诊断 ZIP") }
                 OutlinedButton(onClick = { startExport(true) }, enabled = !busy, modifier = Modifier.fillMaxWidth().testTag("diagnostics-share")) { Text("直接分享诊断 ZIP") }
                 TextButton(onClick = { diagnostics.event(DiagnosticCode.USER_MARK); status = "已加时间标记。关闭此页重现问题，再回来导出。" }, enabled = !busy, modifier = Modifier.testTag("diagnostics-mark")) { Text("标记现在，开始重现问题") }
+                HorizontalDivider()
+                Text("美化问题诊断",style=MaterialTheme.typography.titleSmall)
+                Text("主动开始后，只记录后续最多3次美化的来源、分行、输入范围、分数与提交状态。页面和笔划标识只在这个独立诊断包中。记录留在内存，重启会丢失；请复现后及时保存。",fontSize=12.sp)
+                Row {
+                    Checkbox(checked=if(capture.active)capture.privateAttachments else privateCapture,onCheckedChange={privateCapture=it},enabled=!busy&&!capture.active,modifier=Modifier.testTag("beauty-diagnostics-private"))
+                    Text("另含本次原始区域笔迹、模型输入图像与候选文字（含私人内容）",modifier=Modifier.weight(1f),fontSize=12.sp)
+                }
+                Text("美化诊断是明文，仅保存到你选择的位置；可能由云盘提供方处理。只交给获准的接收者。基础诊断 ZIP 不附带这些内容。",fontSize=12.sp)
+                OutlinedButton(onClick={if(capture.active)beauty.stop()else beauty.start(privateCapture);diagnostics.event(DiagnosticCode.USER_MARK)},enabled=!busy,modifier=Modifier.fillMaxWidth().testTag("beauty-diagnostics-record")){
+                    Text(if(capture.active)"停止美化诊断"else"开始美化诊断")
+                }
+                Text("已记录 ${capture.attempts} 次${if(capture.truncated)"；部分附件达到上限，未完整捕获"else""}",modifier=Modifier.testTag("beauty-diagnostics-count"),fontSize=12.sp)
+                Button(onClick={startExport(false,true)},enabled=!busy&&capture.attempts>0,modifier=Modifier.fillMaxWidth().testTag("beauty-diagnostics-save")){Text("保存美化诊断 ZIP")}
                 TextButton(onClick = { clearConfirm = true }, enabled = !busy) { Text("清空本机诊断记录（不删笔记）") }
             }
         }, confirmButton = { TextButton(onClick = onClose, enabled = !busy) { Text("关闭") } })
@@ -140,6 +156,6 @@ fun DiagnosticDialog(onClose: () -> Unit) {
         text = { Text("不会删除或修改笔记。已经导出/分享的 ZIP 不会撤回。") },
         confirmButton = { TextButton(onClick = {
             clearConfirm = false; busy = true
-            scope.launch { try { diagnostics.clear(); status = "内存中的诊断记录已清空。后续活动会继续产生新记录；落盘状态会写入下次诊断包。" } finally { busy = false } }
+            scope.launch { try { diagnostics.clear();beauty.clear(); status = "内存中的诊断记录已清空。后续活动会继续产生新记录；落盘状态会写入下次诊断包。" } finally { busy = false } }
         }) { Text("清空诊断") } }, dismissButton = { TextButton(onClick = { clearConfirm = false }) { Text("取消") } })
 }
