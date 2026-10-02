@@ -1,0 +1,37 @@
+{
+  "recorded_utc": "2026-10-02T16:11:18.361614+00:00",
+  "scope": "SourceThumbnail 永久释放时清空自身笔迹、对象及由其索引的局部 bounds/meshes；复用 RecallContextPanel 现有方式",
+  "base_commit": "75051f748784fbdbf45092eca939205a1bc0088d",
+  "branch": "codex/cloud/thumbnail-release-20261002",
+  "owner": "cloud：SourceThumbnail 与 LocalMotionUiTest 同一用例；未触碰普通编辑画布 detach、全局 LRU、学习闭环或作者存储",
+  "changes": {
+    "production": "既有 AndroidView 增加 onRelease，调用 showObjects(emptyList()) 与 showStrokes(emptyList())",
+    "test": "原 LM66-01 用例增加正控制和释放断言23行，方法总数不增加",
+    "not_claimed": "未声称 mask/global LRU 全清；未修改通用编辑画布生命周期"
+  },
+  "checks": {
+    "app_main_sources": "COMPILE_PASS",
+    "app_android_test_sources": "COMPILE_PASS",
+    "app_lint": {
+      "Error": 0,
+      "Fatal": 0,
+      "Warning": 133
+    },
+    "device_method": "org.inkweft.app.LocalMotionUiTest#cardSectionsEnterOnceAndDisposeCollapsedSourceAtTheNextRealFrame",
+    "device_runtime": "NOT_RUN",
+    "v66_affected_ui_regression": "原3+8项均仍NOT_RUN；不以编译代运行",
+    "core_domain_storage_build_config": "与75051f7逐字节相同，本批未重复核心测试",
+    "apk": "本独立分支未重打包；原归档V66 APK不含本修复"
+  },
+  "measured_gradle": "9m52s; 79 tasks: 40 executed, 39 from cache; one invocation, no retry",
+  "files": [
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/ExcerptCollection.kt",
+      "sha256": "97c043a2755d465379f7921b60c073a4a2b99ecd86665f6f4bc424d58f87f555"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/LocalMotionUiTest.kt",
+      "sha256": "3eb2f4c055abee367f5e90a9073f1ca95681288301fedd2868b5e009f41be617"
+    }
+  ]
+}
