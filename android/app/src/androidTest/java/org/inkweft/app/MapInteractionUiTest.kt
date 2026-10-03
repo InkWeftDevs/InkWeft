@@ -133,9 +133,11 @@ class MapInteractionUiTest {
   val child=nodes().single{it.id !in beforeNodes.map{n->n.id}};assertEquals(occurrence,child.parentId);assertEquals("大纲子主题",cards().single{it.id==child.cardId}.title)
   compose.waitUntil(10000){compose.onAllNodesWithTag("node-title-editor",useUnmergedTree=true).fetchSemanticsNodes().isEmpty()}
   tap("outline-sibling-${child.id}");compose.onNodeWithTag("node-title-input").performTextInput("硬件 Enter 同级")
+  // Native key injection must wait until the preceding text edit is applied by Compose.
+  compose.onNodeWithTag("node-title-input").assertTextContains("硬件 Enter 同级").assertIsFocused()
   // Synthetic key dispatch covers repeat handling, not a real IME composition session.
   val instrumentation=androidx.test.platform.app.InstrumentationRegistry.getInstrumentation();val time=android.os.SystemClock.uptimeMillis()
-  // Dispatch to the focused Dialog window, not the Activity behind the study workspace.
+  // Dispatch through Android to the focused input window.
   listOf(KeyEvent(time,time,KeyEvent.ACTION_DOWN,KeyEvent.KEYCODE_ENTER,0),KeyEvent(time,time+40,KeyEvent.ACTION_DOWN,KeyEvent.KEYCODE_ENTER,1),KeyEvent(time,time+80,KeyEvent.ACTION_UP,KeyEvent.KEYCODE_ENTER,0),KeyEvent(time,time+100,KeyEvent.ACTION_UP,KeyEvent.KEYCODE_ENTER,0)).forEach{instrumentation.sendKeySync(it)}
   compose.waitUntil(10000){nodes().size==beforeNodes.size+2}
   compose.waitUntil(10000){runCatching{compose.onNodeWithTag("node-title-input").assert(blank)}.isSuccess}
