@@ -373,7 +373,8 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
         if(tab==1&&d.mapId==currentMap){
             val index=projection.rows.indexOfFirst{it.node.id==d.anchorId&&cardById[it.node.cardId]!=null}.let{if(it<0)projection.rows.size else it}
             snapshotFlow{outlineListState.layoutInfo.totalItemsCount}.first{it>index}
-            outlineListState.scrollToItem(index)
+            // The item-count flow can resume during layout; scroll on the next measure pass.
+            outlineListState.requestScrollToItem(index)
         }
     }
     Column(Modifier.fillMaxSize()){
