@@ -599,8 +599,7 @@ class LocalMotionUiTest {
         // real source-only entry for first-frame restoration: scrolling after recreation
         // would advance the same clock as the fade and could hide an unwanted restart.
         touch("card-back")
-        support.tap("node-more"); support.tap("node-view-source")
-        support.waitFor("card-source-content")
+        support.openSource(f)
         if (compose.onAllNodesWithTag("card-reference-content").fetchSemanticsNodes().isNotEmpty()) {
             touch("card-positions")
         }
