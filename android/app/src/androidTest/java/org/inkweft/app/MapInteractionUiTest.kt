@@ -5,6 +5,7 @@ import android.view.KeyEvent
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.semantics.SemanticsActions
 import androidx.compose.ui.semantics.SemanticsProperties
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.test.*
@@ -23,11 +24,16 @@ class MapInteractionUiTest {
  private val app get()=compose.activity.application as InkWeftApplication
  private fun id()=UUID.randomUUID().toString()
  private fun tap(tag:String){
-  // Outline buttons sit in a horizontal scroller; reveal their row vertically first.
-  if(tag.startsWith("outline-")&&compose.onAllNodesWithTag("study-list").fetchSemanticsNodes().isNotEmpty())
-   compose.onNodeWithTag("study-list").performScrollToNode(hasTestTag(tag))
-  else compose.revealAction(tag)
+  val outline=tag.startsWith("outline-")&&compose.onAllNodesWithTag("study-list").fetchSemanticsNodes().isNotEmpty()
+  if(outline)compose.onNodeWithTag("study-list").performScrollToNode(hasTestTag(tag))else compose.revealAction(tag)
   val n=compose.onNodeWithTag(tag);runCatching{n.performScrollTo()}
+  if(outline){
+   // ScrollToNode still chooses the nearest scroller, which is this button's horizontal Row.
+   val list=compose.onNodeWithTag("study-list");val viewport=list.fetchSemanticsNode().boundsInRoot
+   val target=n.fetchSemanticsNode();val top=target.positionInRoot.y;val bottom=top+target.size.height
+   val dy=when{top<viewport.top->top-viewport.top;bottom>viewport.bottom->bottom-viewport.bottom;else->0f}
+   if(dy!=0f)list.performSemanticsAction(SemanticsActions.ScrollBy){it(0f,dy)}
+  }
   n.assertIsDisplayed().performTouchInput{click()};compose.waitForIdle()
  }
  private fun map():MindMapView{val q=java.util.ArrayDeque<View>();q.add(compose.activity.window.decorView);while(q.isNotEmpty()){val v=q.removeFirst();if(v is MindMapView&&v.isShown)return v;if(v is ViewGroup)for(i in 0 until v.childCount)q.add(v.getChildAt(i))};error("Map missing")}

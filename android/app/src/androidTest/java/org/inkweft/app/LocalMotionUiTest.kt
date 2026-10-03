@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 package org.inkweft.app
 
+import android.accessibilityservice.AccessibilityServiceInfo
 import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.graphics.Color
@@ -53,9 +54,14 @@ class LocalMotionUiTest {
     private var preferences = emptyMap<String, Map<String, *>>()
     private var display: Triple<String?, String?, String>? = null
     private var oldScale: String? = null
+    private var oldAccessibilityFlags: Int? = null
     private fun id() = UUID.randomUUID().toString()
 
     @Before fun captureOwnedState() {
+        val info = automation.serviceInfo
+        oldAccessibilityFlags = info.flags
+        info.flags = info.flags or AccessibilityServiceInfo.FLAG_RETRIEVE_INTERACTIVE_WINDOWS
+        automation.serviceInfo = info
         support.captureSettings()
         preferences = preferenceNames.associateWith { app.getSharedPreferences(it, 0).all.toMap() }
         display = Triple(Regex("""Override size:\s*(\d+x\d+)""").find(shell("wm size"))?.groupValues?.get(1),
@@ -68,6 +74,11 @@ class LocalMotionUiTest {
         compose.mainClock.autoAdvance = true
         try { support.closeAndRestoreSettings() }
         finally {
+            oldAccessibilityFlags?.let { flags ->
+                val info = automation.serviceInfo
+                info.flags = flags
+                automation.serviceInfo = info
+            }
             preferences.forEach { (name, values) ->
                 val edit = app.getSharedPreferences(name, 0).edit().clear()
                 values.forEach { (key, value) -> preference(edit, key, value) }
@@ -161,11 +172,15 @@ class LocalMotionUiTest {
         for (list in listOf("notebook-review-panel", "excerpt-list")) {
             if (compose.onAllNodesWithTag(tag).fetchSemanticsNodes().isEmpty() &&
                 compose.onAllNodesWithTag(list).fetchSemanticsNodes().isNotEmpty()) {
+                assertTrue("Prepare lazy-list targets before pausing the animation clock: " + tag,
+                    compose.mainClock.autoAdvance)
                 compose.onNodeWithTag(list).performScrollToNode(hasTestTag(tag))
             }
         }
         val target = compose.onNodeWithTag(tag)
-        runCatching { target.performScrollTo() }
+        if (compose.mainClock.autoAdvance) runCatching { target.performScrollTo() }
+        else assertTrue("Prepare the complete touch target before pausing the animation clock: " + tag,
+            completeTargetVisible(tag))
         target.assertIsDisplayed().assertIsEnabled()
         val node = target.fetchSemanticsNode()
         val density = compose.activity.resources.displayMetrics.density
@@ -389,7 +404,12 @@ class LocalMotionUiTest {
         compose.onNodeWithTag("review-answer").assertDoesNotExist()
         compose.onNodeWithTag("review-answer-enter").assertDoesNotExist()
         val semantics = semanticText(compose.onNodeWithTag("manual-review", useUnmergedTree = true).fetchSemanticsNode())
-        val platform = platformText()
+        var platform = emptyList<String>()
+        // Compose semantics can appear before the OS accessibility window/cache is updated.
+        compose.waitUntil(5_000) {
+            platform = platformText()
+            platform.any { it.contains(prompt) }
+        }
         assertTrue("OS positive control must contain the actual current prompt", platform.any { it.contains(prompt) })
         all.forEach { q ->
             assertFalse("Frozen answer leaked in review semantics", semantics.any { it.contains(q.card.body) })
@@ -478,9 +498,9 @@ class LocalMotionUiTest {
         val source = support.source(f.card)
         val own = support.authorStamp(f.note.id); val other = support.authorStamp(f.unrelated.id)
         support.openBody(f)
+        prepareTouch("card-positions")
         compose.mainClock.autoAdvance = false
         touch("card-positions"); tick(3)
-        compose.onNodeWithTag("card-reference-content").performScrollTo()
         val early = capture("card-reference-content")
         assertEquals("Two real saved occurrences", 2, semanticTags(compose.onNodeWithTag(
             "card-reference-content", useUnmergedTree = true).fetchSemanticsNode())
@@ -489,7 +509,6 @@ class LocalMotionUiTest {
         compose.onNodeWithTag("card-reference-content").assertDoesNotExist()
         compose.onNodeWithTag("study-position-" + f.node).assertDoesNotExist()
         touch("card-positions"); tick(12)
-        compose.onNodeWithTag("card-reference-content").performScrollTo()
         val opaque = capture("card-reference-content")
         try {
             assertTrue("Real enter frame must precede the opaque endpoint", dark(early) < dark(opaque))
@@ -548,11 +567,22 @@ class LocalMotionUiTest {
         compose.onNodeWithTag("card-source-content").performScrollTo()
         prepareTouch("card-source-section"); prepareTouch("study-open-source"); prepareTouch("card-back")
         compose.onNodeWithTag("card-source-content").performScrollTo()
+        compose.onNodeWithTag("card-full-body").assertTextEquals(f.body)
+        // Keep the long-body narrow-window reachability checks above. Use the same card's
+        // real source-only entry for first-frame restoration: scrolling after recreation
+        // would advance the same clock as the fade and could hide an unwanted restart.
+        touch("card-back")
+        support.tap("node-more"); support.tap("node-view-source")
+        support.waitFor("card-source-content")
+        if (compose.onAllNodesWithTag("card-reference-content").fetchSemanticsNodes().isNotEmpty()) {
+            touch("card-positions")
+        }
+        compose.onNodeWithTag("card-source-content").performScrollTo()
         val (captionBeforeRestore, beforeRestore) = captureSourceCaption()
         compose.mainClock.autoAdvance = false
         compose.activityRule.scenario.recreate()
         awaitFrames { compose.onAllNodesWithTag("card-source-content").fetchSemanticsNodes().isNotEmpty() }
-        compose.onNodeWithTag("card-source-content").performScrollTo(); tick()
+        tick()
         val (captionRestored, restored) = captureSourceCaption()
         try {
             assertEquals("Compare the same real source caption across recreation", captionBeforeRestore, captionRestored)
@@ -562,10 +592,11 @@ class LocalMotionUiTest {
                 dark(restored) >= dark(beforeRestore) * .9)
         } finally { beforeRestore.recycle(); restored.recycle() }
         awaitFrames { compose.onAllNodesWithTag("excerpt-preview-" + f.card).fetchSemanticsNodes().isNotEmpty() }
-        compose.onNodeWithTag("card-source-content").performScrollTo()
         assertTrue("Successful source capture requires actual nonempty native preview", main {
             views().filterIsInstance<InkCanvasView>().first { it.preview && it.isShown }.displayedStrokeCount > 0
         })
+        compose.mainClock.autoAdvance = true
+        touch("card-back"); support.openBody(f)
         compose.onNodeWithTag("card-full-body").assertTextEquals(f.body)
         support.assertReadOnly(f); support.assertAuthors(f, own, other, source)
         shot("lm66-card-sections.png")
@@ -584,7 +615,6 @@ class LocalMotionUiTest {
         compose.mainClock.autoAdvance = false
         touch("reveal-answer"); tick(3)
         compose.onNodeWithTag("review-answer").assertTextEquals(review.questions[0].card.body)
-        compose.onNodeWithTag("review-answer-enter").performScrollTo()
         val early = capture("review-answer-enter")
         touch("branch-review-skip"); tick()
         hidden(review.questions[1], review.questions)
@@ -610,7 +640,6 @@ class LocalMotionUiTest {
         }
         hidden(review.questions[1], review.questions)
         touch("reveal-answer"); tick(3)
-        compose.onNodeWithTag("review-answer-enter").performScrollTo()
         val secondEarly = capture("review-answer-enter")
         tick(12)
         compose.onNodeWithTag("review-answer").assertTextEquals(review.questions[1].card.body)
