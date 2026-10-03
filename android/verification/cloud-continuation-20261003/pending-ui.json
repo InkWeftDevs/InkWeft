@@ -1,0 +1,217 @@
+{
+  "recorded_utc": "2026-10-03",
+  "source_commit": "378ea7e38cf5021d1fb666ea7386bde6c7eed5ef",
+  "source_branch": "codex/cloud/page-outline-folding-20261003",
+  "scope": "Frozen code snapshot containing PR7 question search, PR8 result details and PR9 outline folding; documentation-only commits may follow",
+  "counts": {
+    "app_unique": 20,
+    "pass_current_source": 0,
+    "not_run_current_source": 20
+  },
+  "build_contract": "Build the application and app AndroidTest runner from this same frozen source and parameters. No APK was produced for these three slices. A later source commit requires a refreshed scope; do not mix old V68 binaries with this list.",
+  "app": {
+    "package": "org.inkweft.app.a0.workspace",
+    "test_package": "org.inkweft.app.a0.workspace.test",
+    "runner": "androidx.test.runner.AndroidJUnitRunner"
+  },
+  "prior_evidence": {
+    "source_commit": "15f167ed1d1270617e51e0aacd21b5b7caa9bb18",
+    "pull_request": "https://github.com/InkWeftDevs/InkWeft/pull/6",
+    "room_unique_pass": 12,
+    "app_environment_blocked": 2,
+    "app_not_run": 14,
+    "note": "These are V68 historical results only. No PASS/FAIL is carried forward to the current source. Storage/domain were unchanged by these UI slices and were not rerun."
+  },
+  "diagnostic_control": {
+    "method": "org.inkweft.app.RenderResourcesTest#immutableEqualityMemoDoesNotHideNewErasures",
+    "status": "NOT_RUN",
+    "included_in_20": false,
+    "purpose": "Optional separately authorized same-runner control to narrow the device freeze before resuming UI methods; it is not acceptance coverage."
+  },
+  "manual_unverified": [
+    "375dp and 1.65-font window interactions",
+    "complete OS process death",
+    "real backup and empty-library restore",
+    "real handwriting and original-ink visual upgrade",
+    "complete current-code import/write/excerpt-map/review/export journey"
+  ],
+  "methods": [
+    {
+      "module": "app",
+      "group": "LM66",
+      "method": "org.inkweft.app.LocalMotionUiTest#cardSectionsEnterOnceAndDisposeCollapsedSourceAtTheNextRealFrame",
+      "source": "android/app/src/androidTest/java/org/inkweft/app/LocalMotionUiTest.kt",
+      "source_sha256": "3eb2f4c055abee367f5e90a9073f1ca95681288301fedd2868b5e009f41be617",
+      "status": "NOT_RUN",
+      "historical_v68_status": "FAIL"
+    },
+    {
+      "module": "app",
+      "group": "LM66",
+      "method": "org.inkweft.app.LocalMotionUiTest#answerEnterCannotRetainPreviousQuestionCluesAcrossSkipHideAndExit",
+      "source": "android/app/src/androidTest/java/org/inkweft/app/LocalMotionUiTest.kt",
+      "source_sha256": "3eb2f4c055abee367f5e90a9073f1ca95681288301fedd2868b5e009f41be617",
+      "status": "NOT_RUN",
+      "historical_v68_status": "FAIL"
+    },
+    {
+      "module": "app",
+      "group": "LM66",
+      "method": "org.inkweft.app.LocalMotionUiTest#latestPassiveSourceHighlightKeepsExactPaperAndNativeCaptureAtSystemZeroScale",
+      "source": "android/app/src/androidTest/java/org/inkweft/app/LocalMotionUiTest.kt",
+      "source_sha256": "3eb2f4c055abee367f5e90a9073f1ca95681288301fedd2868b5e009f41be617",
+      "status": "NOT_RUN",
+      "historical_v68_status": "NOT_RUN"
+    },
+    {
+      "module": "app",
+      "group": "LM66",
+      "method": "org.inkweft.app.CardSourceNavigationUiTest#collapsedSourceFooterReturnsToExactPaperAndKeepsReadOnlyMapContext",
+      "source": "android/app/src/androidTest/java/org/inkweft/app/CardSourceNavigationUiTest.kt",
+      "source_sha256": "ec00cb5695bc41e42fa5f1f048479eea844c6128f9b20be3fda93773951a7616",
+      "status": "NOT_RUN",
+      "historical_v68_status": "NOT_RUN"
+    },
+    {
+      "module": "app",
+      "group": "LM66",
+      "method": "org.inkweft.app.SourceFocusVisibilityUiTest#movedResizedFloatingCollectOrganizeAndFocusExposeExactSourceThenRestoreOriginalWindow",
+      "source": "android/app/src/androidTest/java/org/inkweft/app/SourceFocusVisibilityUiTest.kt",
+      "source_sha256": "8e3ff0f11b86263602be1e0f5e0e150ef72f6f2f9f2d6af7ca2a655749787fb4",
+      "status": "NOT_RUN",
+      "historical_v68_status": "NOT_RUN"
+    },
+    {
+      "module": "app",
+      "group": "LM66",
+      "method": "org.inkweft.app.SourceFocusVisibilityUiTest#narrow375LargeFontRetainsSourceRegionThroughRecreationAndRestoresItsFocusFrame",
+      "source": "android/app/src/androidTest/java/org/inkweft/app/SourceFocusVisibilityUiTest.kt",
+      "source_sha256": "8e3ff0f11b86263602be1e0f5e0e150ef72f6f2f9f2d6af7ca2a655749787fb4",
+      "status": "NOT_RUN",
+      "historical_v68_status": "NOT_RUN"
+    },
+    {
+      "module": "app",
+      "group": "LM66",
+      "method": "org.inkweft.app.SourceFocusVisibilityUiTest#splitPaneRefitsRetainedSourceAcrossBothDirectionsWithoutChangingReferenceOrGraph",
+      "source": "android/app/src/androidTest/java/org/inkweft/app/SourceFocusVisibilityUiTest.kt",
+      "source_sha256": "8e3ff0f11b86263602be1e0f5e0e150ef72f6f2f9f2d6af7ca2a655749787fb4",
+      "status": "NOT_RUN",
+      "historical_v68_status": "NOT_RUN"
+    },
+    {
+      "module": "app",
+      "group": "LM66",
+      "method": "org.inkweft.app.RecallMaskUiTest#narrowRotationSourceReturnAndNextQuestionResetPermissions",
+      "source": "android/app/src/androidTest/java/org/inkweft/app/RecallMaskUiTest.kt",
+      "source_sha256": "306572c127df30937c6bf94eaf58dd740c4f1441b161f02c0a2012cf0b9d698e",
+      "status": "NOT_RUN",
+      "historical_v68_status": "NOT_RUN"
+    },
+    {
+      "module": "app",
+      "group": "LM66",
+      "method": "org.inkweft.app.RecallMaskUiTest#explicitKnownAndUnknownRatingRetainOriginalCasAndReceiptIdentity",
+      "source": "android/app/src/androidTest/java/org/inkweft/app/RecallMaskUiTest.kt",
+      "source_sha256": "306572c127df30937c6bf94eaf58dd740c4f1441b161f02c0a2012cf0b9d698e",
+      "status": "NOT_RUN",
+      "historical_v68_status": "NOT_RUN"
+    },
+    {
+      "module": "app",
+      "group": "LM66",
+      "method": "org.inkweft.app.RecallMaskUiTest#mapHintGatesNativeTopologyTitlesBodiesAndFoldedDescendants",
+      "source": "android/app/src/androidTest/java/org/inkweft/app/RecallMaskUiTest.kt",
+      "source_sha256": "306572c127df30937c6bf94eaf58dd740c4f1441b161f02c0a2012cf0b9d698e",
+      "status": "NOT_RUN",
+      "historical_v68_status": "NOT_RUN"
+    },
+    {
+      "module": "app",
+      "group": "LM66",
+      "method": "org.inkweft.app.ReadLockUiTest#summaryOutlineAndMapRejectActualAuthorIntents",
+      "source": "android/app/src/androidTest/java/org/inkweft/app/ReadLockUiTest.kt",
+      "source_sha256": "ebac8cac77106a0e1b9e5751e8944f1c03ec96c9c17bb6f6b30b2b53b0a4f4bf",
+      "status": "NOT_RUN",
+      "historical_v68_status": "NOT_RUN"
+    },
+    {
+      "module": "app",
+      "group": "ReviewRound UI",
+      "method": "org.inkweft.app.BranchReviewRoundUiTest#mixedExactResultsRetryOnlyTheConfirmedQuestionAndNeverMixANewSibling",
+      "source": "android/app/src/androidTest/java/org/inkweft/app/BranchReviewRoundUiTest.kt",
+      "source_sha256": "2264ca954934715f49998055d461cdcf423559aeae62b2145e69a826cdab3c4b",
+      "status": "NOT_RUN",
+      "historical_v68_status": "NOT_RUN",
+      "current_change": "PR8 extends this existing method; counted once"
+    },
+    {
+      "module": "app",
+      "group": "ReviewRound UI",
+      "method": "org.inkweft.app.BranchReviewRoundUiTest#pureSkipWithIdenticalRefsStartsAtFirstQuestionWithNoOldPermissionAndRestoresItsOwnRound",
+      "source": "android/app/src/androidTest/java/org/inkweft/app/BranchReviewRoundUiTest.kt",
+      "source_sha256": "2264ca954934715f49998055d461cdcf423559aeae62b2145e69a826cdab3c4b",
+      "status": "NOT_RUN",
+      "historical_v68_status": "NOT_RUN"
+    },
+    {
+      "module": "app",
+      "group": "ReviewRound UI",
+      "method": "org.inkweft.app.BranchReviewRoundUiTest#unknownOriginalOperationSurvivesActivityAndWriterRecreationBeforeCountingExactlyOnce",
+      "source": "android/app/src/androidTest/java/org/inkweft/app/BranchReviewRoundUiTest.kt",
+      "source_sha256": "2264ca954934715f49998055d461cdcf423559aeae62b2145e69a826cdab3c4b",
+      "status": "NOT_RUN",
+      "historical_v68_status": "NOT_RUN"
+    },
+    {
+      "module": "app",
+      "group": "ReviewRound UI",
+      "method": "org.inkweft.app.BranchReviewRoundUiTest#committedButUnverifiedResultStaysLockedAcrossRecreationAndRetriesReadOnlyProof",
+      "source": "android/app/src/androidTest/java/org/inkweft/app/BranchReviewRoundUiTest.kt",
+      "source_sha256": "2264ca954934715f49998055d461cdcf423559aeae62b2145e69a826cdab3c4b",
+      "status": "NOT_RUN",
+      "historical_v68_status": "NOT_RUN"
+    },
+    {
+      "module": "app",
+      "group": "ReviewRound UI",
+      "method": "org.inkweft.app.BranchReviewRoundUiTest#completedRoundRecoveryConsumesOnlyItsOwnOperationBeforeRetryAndClose",
+      "source": "android/app/src/androidTest/java/org/inkweft/app/BranchReviewRoundUiTest.kt",
+      "source_sha256": "2264ca954934715f49998055d461cdcf423559aeae62b2145e69a826cdab3c4b",
+      "status": "NOT_RUN",
+      "historical_v68_status": "NOT_RUN"
+    },
+    {
+      "module": "app",
+      "group": "question-search",
+      "method": "org.inkweft.app.QuestionMaintenanceUiTest#longQuestionSearchKeepsDraftsAndIdentityAcrossRecreationAndEditing",
+      "source": "android/app/src/androidTest/java/org/inkweft/app/QuestionMaintenanceUiTest.kt",
+      "source_sha256": "f13b9b7567d9b83134b471d0f7838f1ac48b505530cd217227a4d71c7b9b5267",
+      "status": "NOT_RUN"
+    },
+    {
+      "module": "app",
+      "group": "question-search",
+      "method": "org.inkweft.app.QuestionMaintenanceUiTest#actualReadOnlyEntryShowsSavedQuestionsButCannotEditRemoveOrSaveAuthors",
+      "source": "android/app/src/androidTest/java/org/inkweft/app/QuestionMaintenanceUiTest.kt",
+      "source_sha256": "f13b9b7567d9b83134b471d0f7838f1ac48b505530cd217227a4d71c7b9b5267",
+      "status": "NOT_RUN"
+    },
+    {
+      "module": "app",
+      "group": "review-details",
+      "method": "org.inkweft.app.BranchReviewRoundUiTest#missingFrozenResultDetailsKeepTheLedgerAndRetryWithoutCurrentQuestionSubstitution",
+      "source": "android/app/src/androidTest/java/org/inkweft/app/BranchReviewRoundUiTest.kt",
+      "source_sha256": "2264ca954934715f49998055d461cdcf423559aeae62b2145e69a826cdab3c4b",
+      "status": "NOT_RUN"
+    },
+    {
+      "module": "app",
+      "group": "outline-folding",
+      "method": "org.inkweft.app.OverviewTabsUiTest#outlineFoldsFollowStableRowsThroughSearchRestoreAndStructureChanges",
+      "source": "android/app/src/androidTest/java/org/inkweft/app/OverviewTabsUiTest.kt",
+      "source_sha256": "23bc59373f5148f7807f6c11ec5cd92739b6e2f8ccf708764b6d1f3dea22d365",
+      "status": "NOT_RUN"
+    }
+  ]
+}

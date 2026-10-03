@@ -1,0 +1,12 @@
+Source: working tree
+Extracted production state:
+    private val restoredTab=(saved.get<Any?>("study.tab") as? Int)?.takeIf{it in 0..2}
+    var lastTab by mutableIntStateOf(restoredTab?:0)
+        private set
+    fun selectTab(value:Int){lastTab=value;saved["study.tab"]=value;compactInitialized=true}
+    var compactInitialized=restoredTab!=null
+Extracted compact effect:
+if(compactWindow&&!vm.compactInitialized){vm.selectTab(2);vm.compactInitialized=true}
+PASS restored tab=1 survives compact initialization
+PASS restored 0/1/2, fresh/default, invalid range/type, explicit selection, new state instances
+Android ViewModel, Compose runtime/UI, SavedStateRegistry and device execution: NOT_RUN

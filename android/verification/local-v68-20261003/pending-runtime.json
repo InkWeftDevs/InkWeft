@@ -1,0 +1,759 @@
+{
+  "source_commit": "15f167ed1d1270617e51e0aacd21b5b7caa9bb18",
+  "version_code": 68,
+  "version_name": "0.0.68-cloud-candidate",
+  "target_device": {
+    "alias": "physical-iPA2673-20261003",
+    "kind": "PHYSICAL_DEVICE",
+    "manufacturer": "vivo",
+    "model": "iPA2673",
+    "android_version": "16",
+    "sdk": 36
+  },
+  "authorization": "GRANTED_PHYSICAL_DEVICE_SIGN_INSTALL_AND_28_SYNTHETIC_METHODS",
+  "counts": {
+    "app": 16,
+    "data_local": 12,
+    "total_unique": 28
+  },
+  "source_evidence": [
+    "android/verification/cloud-v66-20261002/pending-ui-runs.json",
+    "android/verification/review-round-20261002/ui-checkpoint.json",
+    "本commit内@Test方法定义"
+  ],
+  "app": {
+    "package": "org.inkweft.app.a0.workspace",
+    "test_package": "org.inkweft.app.a0.workspace.test",
+    "runner": "androidx.test.runner.AndroidJUnitRunner"
+  },
+  "data_local": {
+    "artifact": "LOCAL_BUILD_ORIGINAL_CERTIFICATE_VERIFIED; NOT_INSTALLED_NOT_RUN",
+    "note": "独立Room runner不在交付ZIP；需同一固定源码构建，签名行为与实际manifest分别核对，不能用app runner成功代替",
+    "local_build_receipt": "local-build-receipt.json"
+  },
+  "attempt_template": {
+    "recorded_at": null,
+    "source_commit": "15f167ed1d1270617e51e0aacd21b5b7caa9bb18",
+    "device_alias": null,
+    "android_version": null,
+    "app_before_sha256": null,
+    "apk_unsigned_sha256": null,
+    "apk_signed_sha256": null,
+    "runner_unsigned_sha256": null,
+    "runner_signed_sha256": null,
+    "app_certificate_sha256": null,
+    "runner_certificate_sha256": null,
+    "method": null,
+    "case_ids": [],
+    "fixture": null,
+    "settings_before": null,
+    "settings_during": null,
+    "settings_restored": null,
+    "status": "NOT_RUN",
+    "actual": null,
+    "evidence": [],
+    "author_data_before": null,
+    "author_data_after": null,
+    "public_evidence_policy": "仅合成/脱敏材料；真实资料和设备原始标识走私有渠道"
+  },
+  "methods": [
+    {
+      "module": "app",
+      "group": "LM66",
+      "method": "org.inkweft.app.LocalMotionUiTest#cardSectionsEnterOnceAndDisposeCollapsedSourceAtTheNextRealFrame",
+      "source": "android/app/src/androidTest/java/org/inkweft/app/LocalMotionUiTest.kt",
+      "source_sha256": "3eb2f4c055abee367f5e90a9073f1ca95681288301fedd2868b5e009f41be617",
+      "status": "FAIL",
+      "attempts": [
+        {
+          "recorded_at": "2026-10-03T09:02:40.279468+08:00",
+          "device_alias": "physical-iPA2673-20261003",
+          "kind": "PHYSICAL_DEVICE",
+          "android_version": "16",
+          "source_commit": "15f167ed1d1270617e51e0aacd21b5b7caa9bb18",
+          "status": "FAIL",
+          "elapsed_seconds": 360.75,
+          "instrumentation_log_sha256": "b26a1827b0adbc56ff1d2913b3104bf9d78933c8ba0d11b62f8e580c655f0bd2",
+          "settings_restored": true,
+          "local_evidence": "E:\\Inkweft\\dist\\V68-Acceptance-20261003\\runtime\\physical-app-01\\01",
+          "evidence_scope": "指定目标上的合成资料方法执行；不替代真人原迹/完整OS死亡或恢复验收",
+          "classification": "ENVIRONMENT_BLOCKED_KERNEL_FREEZE",
+          "actual": "测试进程启动后内核冻结，未获得方法断言完成结果；超时不是产品断言失败。"
+        },
+        {
+          "recorded_at": "2026-10-03T09:14:54.532527+08:00",
+          "device_alias": "physical-iPA2673-20261003",
+          "kind": "PHYSICAL_DEVICE",
+          "android_version": "16",
+          "source_commit": "15f167ed1d1270617e51e0aacd21b5b7caa9bb18",
+          "status": "FAIL",
+          "elapsed_seconds": 180.77,
+          "instrumentation_log_sha256": "b26a1827b0adbc56ff1d2913b3104bf9d78933c8ba0d11b62f8e580c655f0bd2",
+          "settings_restored": true,
+          "local_evidence": "E:\\Inkweft\\dist\\V68-Acceptance-20261003\\runtime\\physical-app-background-policy-probe\\01",
+          "evidence_scope": "指定目标上的合成资料方法执行；不替代真人原迹/完整OS死亡或恢复验收",
+          "classification": "ENVIRONMENT_BLOCKED_KERNEL_FREEZE",
+          "actual": "测试进程启动后内核冻结，未获得方法断言完成结果；超时不是产品断言失败。"
+        },
+        {
+          "recorded_at": "2026-10-03T09:24:52.482309+08:00",
+          "device_alias": "physical-iPA2673-20261003",
+          "kind": "PHYSICAL_DEVICE",
+          "android_version": "16",
+          "source_commit": "15f167ed1d1270617e51e0aacd21b5b7caa9bb18",
+          "status": "FAIL",
+          "elapsed_seconds": 10.14,
+          "classification": "ENVIRONMENT_BLOCKED_KERNEL_FREEZE",
+          "instrumentation_log_sha256": "b9edfd7a9ed5558e48a00d407276ff764ebc37620aca230aaa5ad668c13c23d9",
+          "settings_restored": true,
+          "local_evidence": "E:\\Inkweft\\dist\\V68-Acceptance-20261003\\runtime\\physical-app-after-reboot-01\\01",
+          "evidence_scope": "指定目标上的合成资料方法执行；不替代真人原迹/完整OS死亡或恢复验收"
+        }
+      ],
+      "status_explanation": "环境阻塞导致本次方法未完成；没有产品断言失败结论。"
+    },
+    {
+      "module": "app",
+      "group": "LM66",
+      "method": "org.inkweft.app.LocalMotionUiTest#answerEnterCannotRetainPreviousQuestionCluesAcrossSkipHideAndExit",
+      "source": "android/app/src/androidTest/java/org/inkweft/app/LocalMotionUiTest.kt",
+      "source_sha256": "3eb2f4c055abee367f5e90a9073f1ca95681288301fedd2868b5e009f41be617",
+      "status": "FAIL",
+      "attempts": [
+        {
+          "recorded_at": "2026-10-03T09:08:49+08:00",
+          "device_alias": "physical-iPA2673-20261003",
+          "kind": "PHYSICAL_DEVICE",
+          "source_commit": "15f167ed1d1270617e51e0aacd21b5b7caa9bb18",
+          "status": "FAIL",
+          "classification": "ENVIRONMENT_BLOCKED_CONTROLLED_STOP",
+          "actual": "方法启动事件已出现，测试进程被内核冻结；为诊断停止队列，未获得断言完成结果。",
+          "local_evidence": "E:\\Inkweft\\dist\\V68-Acceptance-20261003\\runtime\\physical-app-01\\02",
+          "start_log": "E:\\Inkweft\\dist\\V68-Acceptance-20261003\\runtime\\physical-app-01\\second-method-start-logcat.txt",
+          "settings_restored": true
+        }
+      ],
+      "status_explanation": "环境阻塞导致本次方法未完成；没有产品断言失败结论。"
+    },
+    {
+      "module": "app",
+      "group": "LM66",
+      "method": "org.inkweft.app.LocalMotionUiTest#latestPassiveSourceHighlightKeepsExactPaperAndNativeCaptureAtSystemZeroScale",
+      "source": "android/app/src/androidTest/java/org/inkweft/app/LocalMotionUiTest.kt",
+      "source_sha256": "3eb2f4c055abee367f5e90a9073f1ca95681288301fedd2868b5e009f41be617",
+      "status": "NOT_RUN",
+      "attempts": []
+    },
+    {
+      "module": "app",
+      "group": "LM66",
+      "method": "org.inkweft.app.CardSourceNavigationUiTest#collapsedSourceFooterReturnsToExactPaperAndKeepsReadOnlyMapContext",
+      "source": "android/app/src/androidTest/java/org/inkweft/app/CardSourceNavigationUiTest.kt",
+      "source_sha256": "ec00cb5695bc41e42fa5f1f048479eea844c6128f9b20be3fda93773951a7616",
+      "status": "NOT_RUN",
+      "attempts": []
+    },
+    {
+      "module": "app",
+      "group": "LM66",
+      "method": "org.inkweft.app.SourceFocusVisibilityUiTest#movedResizedFloatingCollectOrganizeAndFocusExposeExactSourceThenRestoreOriginalWindow",
+      "source": "android/app/src/androidTest/java/org/inkweft/app/SourceFocusVisibilityUiTest.kt",
+      "source_sha256": "8e3ff0f11b86263602be1e0f5e0e150ef72f6f2f9f2d6af7ca2a655749787fb4",
+      "status": "NOT_RUN",
+      "attempts": []
+    },
+    {
+      "module": "app",
+      "group": "LM66",
+      "method": "org.inkweft.app.SourceFocusVisibilityUiTest#narrow375LargeFontRetainsSourceRegionThroughRecreationAndRestoresItsFocusFrame",
+      "source": "android/app/src/androidTest/java/org/inkweft/app/SourceFocusVisibilityUiTest.kt",
+      "source_sha256": "8e3ff0f11b86263602be1e0f5e0e150ef72f6f2f9f2d6af7ca2a655749787fb4",
+      "status": "NOT_RUN",
+      "attempts": []
+    },
+    {
+      "module": "app",
+      "group": "LM66",
+      "method": "org.inkweft.app.SourceFocusVisibilityUiTest#splitPaneRefitsRetainedSourceAcrossBothDirectionsWithoutChangingReferenceOrGraph",
+      "source": "android/app/src/androidTest/java/org/inkweft/app/SourceFocusVisibilityUiTest.kt",
+      "source_sha256": "8e3ff0f11b86263602be1e0f5e0e150ef72f6f2f9f2d6af7ca2a655749787fb4",
+      "status": "NOT_RUN",
+      "attempts": []
+    },
+    {
+      "module": "app",
+      "group": "LM66",
+      "method": "org.inkweft.app.RecallMaskUiTest#narrowRotationSourceReturnAndNextQuestionResetPermissions",
+      "source": "android/app/src/androidTest/java/org/inkweft/app/RecallMaskUiTest.kt",
+      "source_sha256": "306572c127df30937c6bf94eaf58dd740c4f1441b161f02c0a2012cf0b9d698e",
+      "status": "NOT_RUN",
+      "attempts": []
+    },
+    {
+      "module": "app",
+      "group": "LM66",
+      "method": "org.inkweft.app.RecallMaskUiTest#explicitKnownAndUnknownRatingRetainOriginalCasAndReceiptIdentity",
+      "source": "android/app/src/androidTest/java/org/inkweft/app/RecallMaskUiTest.kt",
+      "source_sha256": "306572c127df30937c6bf94eaf58dd740c4f1441b161f02c0a2012cf0b9d698e",
+      "status": "NOT_RUN",
+      "attempts": []
+    },
+    {
+      "module": "app",
+      "group": "LM66",
+      "method": "org.inkweft.app.RecallMaskUiTest#mapHintGatesNativeTopologyTitlesBodiesAndFoldedDescendants",
+      "source": "android/app/src/androidTest/java/org/inkweft/app/RecallMaskUiTest.kt",
+      "source_sha256": "306572c127df30937c6bf94eaf58dd740c4f1441b161f02c0a2012cf0b9d698e",
+      "status": "NOT_RUN",
+      "attempts": []
+    },
+    {
+      "module": "app",
+      "group": "LM66",
+      "method": "org.inkweft.app.ReadLockUiTest#summaryOutlineAndMapRejectActualAuthorIntents",
+      "source": "android/app/src/androidTest/java/org/inkweft/app/ReadLockUiTest.kt",
+      "source_sha256": "ebac8cac77106a0e1b9e5751e8944f1c03ec96c9c17bb6f6b30b2b53b0a4f4bf",
+      "status": "NOT_RUN",
+      "attempts": []
+    },
+    {
+      "module": "app",
+      "group": "ReviewRound UI",
+      "method": "org.inkweft.app.BranchReviewRoundUiTest#mixedExactResultsRetryOnlyTheConfirmedQuestionAndNeverMixANewSibling",
+      "source": "android/app/src/androidTest/java/org/inkweft/app/BranchReviewRoundUiTest.kt",
+      "source_sha256": "cccd1cc0adf6a33c444fe300b47b4a4848a386a35f10dbb034c1dff80969537d",
+      "status": "NOT_RUN",
+      "attempts": []
+    },
+    {
+      "module": "app",
+      "group": "ReviewRound UI",
+      "method": "org.inkweft.app.BranchReviewRoundUiTest#pureSkipWithIdenticalRefsStartsAtFirstQuestionWithNoOldPermissionAndRestoresItsOwnRound",
+      "source": "android/app/src/androidTest/java/org/inkweft/app/BranchReviewRoundUiTest.kt",
+      "source_sha256": "cccd1cc0adf6a33c444fe300b47b4a4848a386a35f10dbb034c1dff80969537d",
+      "status": "NOT_RUN",
+      "attempts": []
+    },
+    {
+      "module": "app",
+      "group": "ReviewRound UI",
+      "method": "org.inkweft.app.BranchReviewRoundUiTest#unknownOriginalOperationSurvivesActivityAndWriterRecreationBeforeCountingExactlyOnce",
+      "source": "android/app/src/androidTest/java/org/inkweft/app/BranchReviewRoundUiTest.kt",
+      "source_sha256": "cccd1cc0adf6a33c444fe300b47b4a4848a386a35f10dbb034c1dff80969537d",
+      "status": "NOT_RUN",
+      "attempts": []
+    },
+    {
+      "module": "app",
+      "group": "ReviewRound UI",
+      "method": "org.inkweft.app.BranchReviewRoundUiTest#committedButUnverifiedResultStaysLockedAcrossRecreationAndRetriesReadOnlyProof",
+      "source": "android/app/src/androidTest/java/org/inkweft/app/BranchReviewRoundUiTest.kt",
+      "source_sha256": "cccd1cc0adf6a33c444fe300b47b4a4848a386a35f10dbb034c1dff80969537d",
+      "status": "NOT_RUN",
+      "attempts": []
+    },
+    {
+      "module": "app",
+      "group": "ReviewRound UI",
+      "method": "org.inkweft.app.BranchReviewRoundUiTest#completedRoundRecoveryConsumesOnlyItsOwnOperationBeforeRetryAndClose",
+      "source": "android/app/src/androidTest/java/org/inkweft/app/BranchReviewRoundUiTest.kt",
+      "source_sha256": "cccd1cc0adf6a33c444fe300b47b4a4848a386a35f10dbb034c1dff80969537d",
+      "status": "NOT_RUN",
+      "attempts": []
+    },
+    {
+      "module": "data-local",
+      "group": "ReviewRound Room",
+      "method": "org.inkweft.data.BranchReviewRoundRepositoryTest#exactReceiptsCountIndependentSameCardQuestionsOnceWithZeroReadSideWrites",
+      "source": "android/data-local/src/androidTest/kotlin/org/inkweft/data/BranchReviewRoundRepositoryTest.kt",
+      "source_sha256": "3d3a3dd2d719e242dd0ea4f4d1e193ed5f5035710652e11fed3ac6a27fdca71a",
+      "status": "PASS",
+      "attempts": [
+        {
+          "recorded_at": "2026-10-03T09:00:07.946192+08:00",
+          "device_alias": "physical-iPA2673-20261003",
+          "kind": "PHYSICAL_DEVICE",
+          "android_version": "16",
+          "source_commit": "15f167ed1d1270617e51e0aacd21b5b7caa9bb18",
+          "status": "COLLECTION_ERROR",
+          "elapsed_seconds": 1.28,
+          "instrumentation_log_sha256": "2eaf9beb35b6c2f891e95055a895cde1e5d604ac44a75d025bdd68a8bb097dfc",
+          "settings_restored": true,
+          "local_evidence": "E:\\Inkweft\\dist\\V68-Acceptance-20261003\\runtime\\physical-room-01\\01",
+          "evidence_scope": "指定目标上的合成资料方法执行；不替代真人原迹/完整OS死亡或恢复验收",
+          "initial_collector_status": "FAIL",
+          "junit_summary": "OK (1 test)",
+          "reason": "am instrument未加-r，输出缺少原始class#method完成事件；不是产品失败，原日志保留，补采原始事件。"
+        },
+        {
+          "recorded_at": "2026-10-03T09:01:53.771352+08:00",
+          "device_alias": "physical-iPA2673-20261003",
+          "kind": "PHYSICAL_DEVICE",
+          "android_version": "16",
+          "source_commit": "15f167ed1d1270617e51e0aacd21b5b7caa9bb18",
+          "status": "PASS",
+          "elapsed_seconds": 1.25,
+          "instrumentation_log_sha256": "b5f72a30b5fb308e45c0d878b14621cf93812f2b8f6e6ea7123025b682c9cb3f",
+          "settings_restored": true,
+          "local_evidence": "E:\\Inkweft\\dist\\V68-Acceptance-20261003\\runtime\\physical-room-02\\01",
+          "evidence_scope": "指定目标上的合成资料方法执行；不替代真人原迹/完整OS死亡或恢复验收"
+        }
+      ],
+      "completion_proof": "已核对原始INSTRUMENTATION_STATUS的准确class与test、成功代码0和OK (1 test)",
+      "public_evidence": "room-method-logs/01.txt"
+    },
+    {
+      "module": "data-local",
+      "group": "ReviewRound Room",
+      "method": "org.inkweft.data.BranchReviewRoundRepositoryTest#unknownRollbackCannotCountOrSkipUntilTheSameOperationActuallyCommits",
+      "source": "android/data-local/src/androidTest/kotlin/org/inkweft/data/BranchReviewRoundRepositoryTest.kt",
+      "source_sha256": "3d3a3dd2d719e242dd0ea4f4d1e193ed5f5035710652e11fed3ac6a27fdca71a",
+      "status": "PASS",
+      "attempts": [
+        {
+          "recorded_at": "2026-10-03T09:00:13.460301+08:00",
+          "device_alias": "physical-iPA2673-20261003",
+          "kind": "PHYSICAL_DEVICE",
+          "android_version": "16",
+          "source_commit": "15f167ed1d1270617e51e0aacd21b5b7caa9bb18",
+          "status": "COLLECTION_ERROR",
+          "elapsed_seconds": 1.28,
+          "instrumentation_log_sha256": "fe1bf57e57cc8e301be8e00d1b7c2e746463e3d10fbdea2cb2840a5770c5fc8b",
+          "settings_restored": true,
+          "local_evidence": "E:\\Inkweft\\dist\\V68-Acceptance-20261003\\runtime\\physical-room-01\\02",
+          "evidence_scope": "指定目标上的合成资料方法执行；不替代真人原迹/完整OS死亡或恢复验收",
+          "initial_collector_status": "FAIL",
+          "junit_summary": "OK (1 test)",
+          "reason": "am instrument未加-r，输出缺少原始class#method完成事件；不是产品失败，原日志保留，补采原始事件。"
+        },
+        {
+          "recorded_at": "2026-10-03T09:01:55.725329+08:00",
+          "device_alias": "physical-iPA2673-20261003",
+          "kind": "PHYSICAL_DEVICE",
+          "android_version": "16",
+          "source_commit": "15f167ed1d1270617e51e0aacd21b5b7caa9bb18",
+          "status": "PASS",
+          "elapsed_seconds": 1.3,
+          "instrumentation_log_sha256": "a51fafeecfaf819de55e2fc85c8b132f6db1f63f2d614663ff40dda154040ffd",
+          "settings_restored": true,
+          "local_evidence": "E:\\Inkweft\\dist\\V68-Acceptance-20261003\\runtime\\physical-room-02\\02",
+          "evidence_scope": "指定目标上的合成资料方法执行；不替代真人原迹/完整OS死亡或恢复验收"
+        }
+      ],
+      "completion_proof": "已核对原始INSTRUMENTATION_STATUS的准确class与test、成功代码0和OK (1 test)",
+      "public_evidence": "room-method-logs/02.txt"
+    },
+    {
+      "module": "data-local",
+      "group": "ReviewRound Room",
+      "method": "org.inkweft.data.BranchReviewRoundRepositoryTest#missingWrongOperationBookDigestResultOrRequestedStateNeverConfirms",
+      "source": "android/data-local/src/androidTest/kotlin/org/inkweft/data/BranchReviewRoundRepositoryTest.kt",
+      "source_sha256": "3d3a3dd2d719e242dd0ea4f4d1e193ed5f5035710652e11fed3ac6a27fdca71a",
+      "status": "PASS",
+      "attempts": [
+        {
+          "recorded_at": "2026-10-03T09:00:19.072270+08:00",
+          "device_alias": "physical-iPA2673-20261003",
+          "kind": "PHYSICAL_DEVICE",
+          "android_version": "16",
+          "source_commit": "15f167ed1d1270617e51e0aacd21b5b7caa9bb18",
+          "status": "COLLECTION_ERROR",
+          "elapsed_seconds": 1.33,
+          "instrumentation_log_sha256": "6eacbc357e93cd67193266166760e3b04a6e6fb4b4c33636cee10974af72a237",
+          "settings_restored": true,
+          "local_evidence": "E:\\Inkweft\\dist\\V68-Acceptance-20261003\\runtime\\physical-room-01\\03",
+          "evidence_scope": "指定目标上的合成资料方法执行；不替代真人原迹/完整OS死亡或恢复验收",
+          "initial_collector_status": "FAIL",
+          "junit_summary": "OK (1 test)",
+          "reason": "am instrument未加-r，输出缺少原始class#method完成事件；不是产品失败，原日志保留，补采原始事件。"
+        },
+        {
+          "recorded_at": "2026-10-03T09:01:57.686790+08:00",
+          "device_alias": "physical-iPA2673-20261003",
+          "kind": "PHYSICAL_DEVICE",
+          "android_version": "16",
+          "source_commit": "15f167ed1d1270617e51e0aacd21b5b7caa9bb18",
+          "status": "PASS",
+          "elapsed_seconds": 1.48,
+          "instrumentation_log_sha256": "2b63f4175c27e6e8af8daf75335ee62d324782a8edbdb21ca8ce3b116a163a70",
+          "settings_restored": true,
+          "local_evidence": "E:\\Inkweft\\dist\\V68-Acceptance-20261003\\runtime\\physical-room-02\\03",
+          "evidence_scope": "指定目标上的合成资料方法执行；不替代真人原迹/完整OS死亡或恢复验收"
+        }
+      ],
+      "completion_proof": "已核对原始INSTRUMENTATION_STATUS的准确class与test、成功代码0和OK (1 test)",
+      "public_evidence": "room-method-logs/03.txt"
+    },
+    {
+      "module": "data-local",
+      "group": "ReviewRound Room",
+      "method": "org.inkweft.data.BranchReviewRoundRepositoryTest#causalRevisionMustExistAndMatchOnlyTheRequestedStateChange",
+      "source": "android/data-local/src/androidTest/kotlin/org/inkweft/data/BranchReviewRoundRepositoryTest.kt",
+      "source_sha256": "3d3a3dd2d719e242dd0ea4f4d1e193ed5f5035710652e11fed3ac6a27fdca71a",
+      "status": "PASS",
+      "attempts": [
+        {
+          "recorded_at": "2026-10-03T09:00:24.729502+08:00",
+          "device_alias": "physical-iPA2673-20261003",
+          "kind": "PHYSICAL_DEVICE",
+          "android_version": "16",
+          "source_commit": "15f167ed1d1270617e51e0aacd21b5b7caa9bb18",
+          "status": "COLLECTION_ERROR",
+          "elapsed_seconds": 1.39,
+          "instrumentation_log_sha256": "4ff0e162f30e5a07090b84423c858e644b7f506f26be41bbb22a59ddfc187dbe",
+          "settings_restored": true,
+          "local_evidence": "E:\\Inkweft\\dist\\V68-Acceptance-20261003\\runtime\\physical-room-01\\04",
+          "evidence_scope": "指定目标上的合成资料方法执行；不替代真人原迹/完整OS死亡或恢复验收",
+          "initial_collector_status": "FAIL",
+          "junit_summary": "OK (1 test)",
+          "reason": "am instrument未加-r，输出缺少原始class#method完成事件；不是产品失败，原日志保留，补采原始事件。"
+        },
+        {
+          "recorded_at": "2026-10-03T09:01:59.942581+08:00",
+          "device_alias": "physical-iPA2673-20261003",
+          "kind": "PHYSICAL_DEVICE",
+          "android_version": "16",
+          "source_commit": "15f167ed1d1270617e51e0aacd21b5b7caa9bb18",
+          "status": "PASS",
+          "elapsed_seconds": 1.44,
+          "instrumentation_log_sha256": "bada46bd58f7e29203cd834cb0706438fb4ad1c19b5fbf244c7d30689f13d06f",
+          "settings_restored": true,
+          "local_evidence": "E:\\Inkweft\\dist\\V68-Acceptance-20261003\\runtime\\physical-room-02\\04",
+          "evidence_scope": "指定目标上的合成资料方法执行；不替代真人原迹/完整OS死亡或恢复验收"
+        }
+      ],
+      "completion_proof": "已核对原始INSTRUMENTATION_STATUS的准确class与test、成功代码0和OK (1 test)",
+      "public_evidence": "room-method-logs/04.txt"
+    },
+    {
+      "module": "data-local",
+      "group": "ReviewRound Room",
+      "method": "org.inkweft.data.BranchReviewRoundRepositoryTest#originalQuestionAndCardHistoryAreRequiredRatherThanCurrentRows",
+      "source": "android/data-local/src/androidTest/kotlin/org/inkweft/data/BranchReviewRoundRepositoryTest.kt",
+      "source_sha256": "3d3a3dd2d719e242dd0ea4f4d1e193ed5f5035710652e11fed3ac6a27fdca71a",
+      "status": "PASS",
+      "attempts": [
+        {
+          "recorded_at": "2026-10-03T09:00:30.427282+08:00",
+          "device_alias": "physical-iPA2673-20261003",
+          "kind": "PHYSICAL_DEVICE",
+          "android_version": "16",
+          "source_commit": "15f167ed1d1270617e51e0aacd21b5b7caa9bb18",
+          "status": "COLLECTION_ERROR",
+          "elapsed_seconds": 1.28,
+          "instrumentation_log_sha256": "fcbee592e5933bb58cd22ce9c62fc4d00ce3673c5daf258e0999138b116e2bb5",
+          "settings_restored": true,
+          "local_evidence": "E:\\Inkweft\\dist\\V68-Acceptance-20261003\\runtime\\physical-room-01\\05",
+          "evidence_scope": "指定目标上的合成资料方法执行；不替代真人原迹/完整OS死亡或恢复验收",
+          "initial_collector_status": "FAIL",
+          "junit_summary": "OK (1 test)",
+          "reason": "am instrument未加-r，输出缺少原始class#method完成事件；不是产品失败，原日志保留，补采原始事件。"
+        },
+        {
+          "recorded_at": "2026-10-03T09:02:02.105429+08:00",
+          "device_alias": "physical-iPA2673-20261003",
+          "kind": "PHYSICAL_DEVICE",
+          "android_version": "16",
+          "source_commit": "15f167ed1d1270617e51e0aacd21b5b7caa9bb18",
+          "status": "PASS",
+          "elapsed_seconds": 1.34,
+          "instrumentation_log_sha256": "b2a576c9ca14da7ba45444c6f65f20e3c7a05dcb49d7ff888676d5f53a40a9c9",
+          "settings_restored": true,
+          "local_evidence": "E:\\Inkweft\\dist\\V68-Acceptance-20261003\\runtime\\physical-room-02\\05",
+          "evidence_scope": "指定目标上的合成资料方法执行；不替代真人原迹/完整OS死亡或恢复验收"
+        }
+      ],
+      "completion_proof": "已核对原始INSTRUMENTATION_STATUS的准确class与test、成功代码0和OK (1 test)",
+      "public_evidence": "room-method-logs/05.txt"
+    },
+    {
+      "module": "data-local",
+      "group": "ReviewRound Room",
+      "method": "org.inkweft.data.BranchReviewRoundRepositoryTest#laterQuestionCardEditsAndRecyclingNeverRebaseAnAlreadyCommittedResult",
+      "source": "android/data-local/src/androidTest/kotlin/org/inkweft/data/BranchReviewRoundRepositoryTest.kt",
+      "source_sha256": "3d3a3dd2d719e242dd0ea4f4d1e193ed5f5035710652e11fed3ac6a27fdca71a",
+      "status": "PASS",
+      "attempts": [
+        {
+          "recorded_at": "2026-10-03T09:00:37.470457+08:00",
+          "device_alias": "physical-iPA2673-20261003",
+          "kind": "PHYSICAL_DEVICE",
+          "android_version": "16",
+          "source_commit": "15f167ed1d1270617e51e0aacd21b5b7caa9bb18",
+          "status": "COLLECTION_ERROR",
+          "elapsed_seconds": 1.31,
+          "instrumentation_log_sha256": "d7e86532e81c6378da0d5a3c3b51d75a75fe8c2dfc9311db5006caa937b5bce0",
+          "settings_restored": true,
+          "local_evidence": "E:\\Inkweft\\dist\\V68-Acceptance-20261003\\runtime\\physical-room-01\\06",
+          "evidence_scope": "指定目标上的合成资料方法执行；不替代真人原迹/完整OS死亡或恢复验收",
+          "initial_collector_status": "FAIL",
+          "junit_summary": "OK (1 test)",
+          "reason": "am instrument未加-r，输出缺少原始class#method完成事件；不是产品失败，原日志保留，补采原始事件。"
+        },
+        {
+          "recorded_at": "2026-10-03T09:02:04.197359+08:00",
+          "device_alias": "physical-iPA2673-20261003",
+          "kind": "PHYSICAL_DEVICE",
+          "android_version": "16",
+          "source_commit": "15f167ed1d1270617e51e0aacd21b5b7caa9bb18",
+          "status": "PASS",
+          "elapsed_seconds": 1.25,
+          "instrumentation_log_sha256": "4f6369b404d9421455d8585dadb0023dcee2ec696d6efcf672a03b5fb1f20ce6",
+          "settings_restored": true,
+          "local_evidence": "E:\\Inkweft\\dist\\V68-Acceptance-20261003\\runtime\\physical-room-02\\06",
+          "evidence_scope": "指定目标上的合成资料方法执行；不替代真人原迹/完整OS死亡或恢复验收"
+        }
+      ],
+      "completion_proof": "已核对原始INSTRUMENTATION_STATUS的准确class与test、成功代码0和OK (1 test)",
+      "public_evidence": "room-method-logs/06.txt"
+    },
+    {
+      "module": "data-local",
+      "group": "ReviewRound Room",
+      "method": "org.inkweft.data.BranchReviewRoundRepositoryTest#skippedUnderstoodQuestionRetainsAllFourRefsAndDoesNotUseGlobalStateFiltering",
+      "source": "android/data-local/src/androidTest/kotlin/org/inkweft/data/BranchReviewRoundRepositoryTest.kt",
+      "source_sha256": "3d3a3dd2d719e242dd0ea4f4d1e193ed5f5035710652e11fed3ac6a27fdca71a",
+      "status": "PASS",
+      "attempts": [
+        {
+          "recorded_at": "2026-10-03T09:00:43.012434+08:00",
+          "device_alias": "physical-iPA2673-20261003",
+          "kind": "PHYSICAL_DEVICE",
+          "android_version": "16",
+          "source_commit": "15f167ed1d1270617e51e0aacd21b5b7caa9bb18",
+          "status": "COLLECTION_ERROR",
+          "elapsed_seconds": 1.19,
+          "instrumentation_log_sha256": "1c3ab98c0283e05e657ec30d5428e084e52b1180d1dc4f76513b3cb78e2cad0a",
+          "settings_restored": true,
+          "local_evidence": "E:\\Inkweft\\dist\\V68-Acceptance-20261003\\runtime\\physical-room-01\\07",
+          "evidence_scope": "指定目标上的合成资料方法执行；不替代真人原迹/完整OS死亡或恢复验收",
+          "initial_collector_status": "FAIL",
+          "junit_summary": "OK (1 test)",
+          "reason": "am instrument未加-r，输出缺少原始class#method完成事件；不是产品失败，原日志保留，补采原始事件。"
+        },
+        {
+          "recorded_at": "2026-10-03T09:02:06.199482+08:00",
+          "device_alias": "physical-iPA2673-20261003",
+          "kind": "PHYSICAL_DEVICE",
+          "android_version": "16",
+          "source_commit": "15f167ed1d1270617e51e0aacd21b5b7caa9bb18",
+          "status": "PASS",
+          "elapsed_seconds": 1.25,
+          "instrumentation_log_sha256": "81a456ef2e672c2736d629e8486f9deb2a18ab8314b2baf9e26337a796ace395",
+          "settings_restored": true,
+          "local_evidence": "E:\\Inkweft\\dist\\V68-Acceptance-20261003\\runtime\\physical-room-02\\07",
+          "evidence_scope": "指定目标上的合成资料方法执行；不替代真人原迹/完整OS死亡或恢复验收"
+        }
+      ],
+      "completion_proof": "已核对原始INSTRUMENTATION_STATUS的准确class与test、成功代码0和OK (1 test)",
+      "public_evidence": "room-method-logs/07.txt"
+    },
+    {
+      "module": "data-local",
+      "group": "ReviewRound Room",
+      "method": "org.inkweft.data.BranchReviewRoundRepositoryTest#aMissingSelectedHistoryRejectsTheEntireRetryWithoutDroppingThatQuestion",
+      "source": "android/data-local/src/androidTest/kotlin/org/inkweft/data/BranchReviewRoundRepositoryTest.kt",
+      "source_sha256": "3d3a3dd2d719e242dd0ea4f4d1e193ed5f5035710652e11fed3ac6a27fdca71a",
+      "status": "PASS",
+      "attempts": [
+        {
+          "recorded_at": "2026-10-03T09:00:48.490335+08:00",
+          "device_alias": "physical-iPA2673-20261003",
+          "kind": "PHYSICAL_DEVICE",
+          "android_version": "16",
+          "source_commit": "15f167ed1d1270617e51e0aacd21b5b7caa9bb18",
+          "status": "COLLECTION_ERROR",
+          "elapsed_seconds": 1.19,
+          "instrumentation_log_sha256": "94456697363e1e2e9965c7de29143a94ade5bb6b21ce94ae27c8f35cf2b98bec",
+          "settings_restored": true,
+          "local_evidence": "E:\\Inkweft\\dist\\V68-Acceptance-20261003\\runtime\\physical-room-01\\08",
+          "evidence_scope": "指定目标上的合成资料方法执行；不替代真人原迹/完整OS死亡或恢复验收",
+          "initial_collector_status": "FAIL",
+          "junit_summary": "OK (1 test)",
+          "reason": "am instrument未加-r，输出缺少原始class#method完成事件；不是产品失败，原日志保留，补采原始事件。"
+        },
+        {
+          "recorded_at": "2026-10-03T09:02:08.232987+08:00",
+          "device_alias": "physical-iPA2673-20261003",
+          "kind": "PHYSICAL_DEVICE",
+          "android_version": "16",
+          "source_commit": "15f167ed1d1270617e51e0aacd21b5b7caa9bb18",
+          "status": "PASS",
+          "elapsed_seconds": 1.36,
+          "instrumentation_log_sha256": "f19efbbba030d6591a5d15946e3cf7d36abd7246bd06f77bdc1bbe7482a99958",
+          "settings_restored": true,
+          "local_evidence": "E:\\Inkweft\\dist\\V68-Acceptance-20261003\\runtime\\physical-room-02\\08",
+          "evidence_scope": "指定目标上的合成资料方法执行；不替代真人原迹/完整OS死亡或恢复验收"
+        }
+      ],
+      "completion_proof": "已核对原始INSTRUMENTATION_STATUS的准确class与test、成功代码0和OK (1 test)",
+      "public_evidence": "room-method-logs/08.txt"
+    },
+    {
+      "module": "data-local",
+      "group": "ReviewRound Room",
+      "method": "org.inkweft.data.BranchReviewRoundRepositoryTest#completedReviewLedgerStillRequiresItsOriginalReceiptForRetry",
+      "source": "android/data-local/src/androidTest/kotlin/org/inkweft/data/BranchReviewRoundRepositoryTest.kt",
+      "source_sha256": "3d3a3dd2d719e242dd0ea4f4d1e193ed5f5035710652e11fed3ac6a27fdca71a",
+      "status": "PASS",
+      "attempts": [
+        {
+          "recorded_at": "2026-10-03T09:00:54.005401+08:00",
+          "device_alias": "physical-iPA2673-20261003",
+          "kind": "PHYSICAL_DEVICE",
+          "android_version": "16",
+          "source_commit": "15f167ed1d1270617e51e0aacd21b5b7caa9bb18",
+          "status": "COLLECTION_ERROR",
+          "elapsed_seconds": 2.62,
+          "instrumentation_log_sha256": "c5b5c946b76923c28c839f9d94bf21bf1ff95ab63e9ddfd2876b9370b24a6acc",
+          "settings_restored": true,
+          "local_evidence": "E:\\Inkweft\\dist\\V68-Acceptance-20261003\\runtime\\physical-room-01\\09",
+          "evidence_scope": "指定目标上的合成资料方法执行；不替代真人原迹/完整OS死亡或恢复验收",
+          "initial_collector_status": "FAIL",
+          "junit_summary": "OK (1 test)",
+          "reason": "am instrument未加-r，输出缺少原始class#method完成事件；不是产品失败，原日志保留，补采原始事件。"
+        },
+        {
+          "recorded_at": "2026-10-03T09:02:10.375506+08:00",
+          "device_alias": "physical-iPA2673-20261003",
+          "kind": "PHYSICAL_DEVICE",
+          "android_version": "16",
+          "source_commit": "15f167ed1d1270617e51e0aacd21b5b7caa9bb18",
+          "status": "PASS",
+          "elapsed_seconds": 1.34,
+          "instrumentation_log_sha256": "1ae42f036daa24d6e98cb2db10349182ba71a3bb9f78c324fe8d614bee863e2a",
+          "settings_restored": true,
+          "local_evidence": "E:\\Inkweft\\dist\\V68-Acceptance-20261003\\runtime\\physical-room-02\\09",
+          "evidence_scope": "指定目标上的合成资料方法执行；不替代真人原迹/完整OS死亡或恢复验收"
+        }
+      ],
+      "completion_proof": "已核对原始INSTRUMENTATION_STATUS的准确class与test、成功代码0和OK (1 test)",
+      "public_evidence": "room-method-logs/09.txt"
+    },
+    {
+      "module": "data-local",
+      "group": "ReviewRound Room",
+      "method": "org.inkweft.data.BranchReviewRoundRepositoryTest#wrongFrozenNotebookCannotBorrowAValidReceiptOrAnswer",
+      "source": "android/data-local/src/androidTest/kotlin/org/inkweft/data/BranchReviewRoundRepositoryTest.kt",
+      "source_sha256": "3d3a3dd2d719e242dd0ea4f4d1e193ed5f5035710652e11fed3ac6a27fdca71a",
+      "status": "PASS",
+      "attempts": [
+        {
+          "recorded_at": "2026-10-03T09:01:00.889273+08:00",
+          "device_alias": "physical-iPA2673-20261003",
+          "kind": "PHYSICAL_DEVICE",
+          "android_version": "16",
+          "source_commit": "15f167ed1d1270617e51e0aacd21b5b7caa9bb18",
+          "status": "COLLECTION_ERROR",
+          "elapsed_seconds": 1.2,
+          "instrumentation_log_sha256": "2087bd271556b6f1a044f6783b1f183d33cef74a81cd120b7576b01dd7a96f22",
+          "settings_restored": true,
+          "local_evidence": "E:\\Inkweft\\dist\\V68-Acceptance-20261003\\runtime\\physical-room-01\\10",
+          "evidence_scope": "指定目标上的合成资料方法执行；不替代真人原迹/完整OS死亡或恢复验收",
+          "initial_collector_status": "FAIL",
+          "junit_summary": "OK (1 test)",
+          "reason": "am instrument未加-r，输出缺少原始class#method完成事件；不是产品失败，原日志保留，补采原始事件。"
+        },
+        {
+          "recorded_at": "2026-10-03T09:02:12.438764+08:00",
+          "device_alias": "physical-iPA2673-20261003",
+          "kind": "PHYSICAL_DEVICE",
+          "android_version": "16",
+          "source_commit": "15f167ed1d1270617e51e0aacd21b5b7caa9bb18",
+          "status": "PASS",
+          "elapsed_seconds": 1.25,
+          "instrumentation_log_sha256": "832befe47626fa96103087e21d58a4311e47a67a68455a9a7f56fff62558cb1b",
+          "settings_restored": true,
+          "local_evidence": "E:\\Inkweft\\dist\\V68-Acceptance-20261003\\runtime\\physical-room-02\\10",
+          "evidence_scope": "指定目标上的合成资料方法执行；不替代真人原迹/完整OS死亡或恢复验收"
+        }
+      ],
+      "completion_proof": "已核对原始INSTRUMENTATION_STATUS的准确class与test、成功代码0和OK (1 test)",
+      "public_evidence": "room-method-logs/10.txt"
+    },
+    {
+      "module": "data-local",
+      "group": "ReviewRound Room",
+      "method": "org.inkweft.data.BranchReviewRoundRepositoryTest#rejectedSkipRetriesOriginalRefsButNeverPretendsToHaveAReceipt",
+      "source": "android/data-local/src/androidTest/kotlin/org/inkweft/data/BranchReviewRoundRepositoryTest.kt",
+      "source_sha256": "3d3a3dd2d719e242dd0ea4f4d1e193ed5f5035710652e11fed3ac6a27fdca71a",
+      "status": "PASS",
+      "attempts": [
+        {
+          "recorded_at": "2026-10-03T09:01:07.115723+08:00",
+          "device_alias": "physical-iPA2673-20261003",
+          "kind": "PHYSICAL_DEVICE",
+          "android_version": "16",
+          "source_commit": "15f167ed1d1270617e51e0aacd21b5b7caa9bb18",
+          "status": "COLLECTION_ERROR",
+          "elapsed_seconds": 1.22,
+          "instrumentation_log_sha256": "9d48eaf379c15c6171cc5617f1e6f07bf88923a6ad5e9ab4514657887a75d0a4",
+          "settings_restored": true,
+          "local_evidence": "E:\\Inkweft\\dist\\V68-Acceptance-20261003\\runtime\\physical-room-01\\11",
+          "evidence_scope": "指定目标上的合成资料方法执行；不替代真人原迹/完整OS死亡或恢复验收",
+          "initial_collector_status": "FAIL",
+          "junit_summary": "OK (1 test)",
+          "reason": "am instrument未加-r，输出缺少原始class#method完成事件；不是产品失败，原日志保留，补采原始事件。"
+        },
+        {
+          "recorded_at": "2026-10-03T09:02:14.407431+08:00",
+          "device_alias": "physical-iPA2673-20261003",
+          "kind": "PHYSICAL_DEVICE",
+          "android_version": "16",
+          "source_commit": "15f167ed1d1270617e51e0aacd21b5b7caa9bb18",
+          "status": "PASS",
+          "elapsed_seconds": 1.75,
+          "instrumentation_log_sha256": "270d86bfe11a43b2e1f4a39b8ed1f0e017afc3361357a3fc5098c9869761e21e",
+          "settings_restored": true,
+          "local_evidence": "E:\\Inkweft\\dist\\V68-Acceptance-20261003\\runtime\\physical-room-02\\11",
+          "evidence_scope": "指定目标上的合成资料方法执行；不替代真人原迹/完整OS死亡或恢复验收"
+        }
+      ],
+      "completion_proof": "已核对原始INSTRUMENTATION_STATUS的准确class与test、成功代码0和OK (1 test)",
+      "public_evidence": "room-method-logs/11.txt"
+    },
+    {
+      "module": "data-local",
+      "group": "ReviewRound Room",
+      "method": "org.inkweft.data.BranchReviewRoundRepositoryTest#noCandidateAndRecycledBookCannotStartANewRoundButOldReceiptStillCounts",
+      "source": "android/data-local/src/androidTest/kotlin/org/inkweft/data/BranchReviewRoundRepositoryTest.kt",
+      "source_sha256": "3d3a3dd2d719e242dd0ea4f4d1e193ed5f5035710652e11fed3ac6a27fdca71a",
+      "status": "PASS",
+      "attempts": [
+        {
+          "recorded_at": "2026-10-03T09:01:14.556467+08:00",
+          "device_alias": "physical-iPA2673-20261003",
+          "kind": "PHYSICAL_DEVICE",
+          "android_version": "16",
+          "source_commit": "15f167ed1d1270617e51e0aacd21b5b7caa9bb18",
+          "status": "COLLECTION_ERROR",
+          "elapsed_seconds": 1.31,
+          "instrumentation_log_sha256": "a1f07bba8ea3e742ef44058855c450cb3bea74af4b934b303532fe83fc43f21e",
+          "settings_restored": true,
+          "local_evidence": "E:\\Inkweft\\dist\\V68-Acceptance-20261003\\runtime\\physical-room-01\\12",
+          "evidence_scope": "指定目标上的合成资料方法执行；不替代真人原迹/完整OS死亡或恢复验收",
+          "initial_collector_status": "FAIL",
+          "junit_summary": "OK (1 test)",
+          "reason": "am instrument未加-r，输出缺少原始class#method完成事件；不是产品失败，原日志保留，补采原始事件。"
+        },
+        {
+          "recorded_at": "2026-10-03T09:02:16.963280+08:00",
+          "device_alias": "physical-iPA2673-20261003",
+          "kind": "PHYSICAL_DEVICE",
+          "android_version": "16",
+          "source_commit": "15f167ed1d1270617e51e0aacd21b5b7caa9bb18",
+          "status": "PASS",
+          "elapsed_seconds": 1.49,
+          "instrumentation_log_sha256": "62855acddec3105581508ece8c7b5c5417f9bc381d398ddef1fea2a4e5c08ef1",
+          "settings_restored": true,
+          "local_evidence": "E:\\Inkweft\\dist\\V68-Acceptance-20261003\\runtime\\physical-room-02\\12",
+          "evidence_scope": "指定目标上的合成资料方法执行；不替代真人原迹/完整OS死亡或恢复验收"
+        }
+      ],
+      "completion_proof": "已核对原始INSTRUMENTATION_STATUS的准确class与test、成功代码0和OK (1 test)",
+      "public_evidence": "room-method-logs/12.txt"
+    }
+  ],
+  "authorization_note": "用户明确要求在已连接ADB的真机测试；唯一USB真机iPA2673已确认，原证书匹配，旧资料先备份。",
+  "installed_build_receipt": "physical-device-report.json"
+}

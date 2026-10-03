@@ -81,7 +81,8 @@ internal enum class StudyWindowMode(val title:String,val width:Float,val height:
             IconButton({if(currentEnabled&&beforeContentExit())onMinimize(!collapsed)},enabled=enabled,modifier=Modifier.size(48.dp).testTag("study-window-minimize").describedAs(if(collapsed)"恢复导图"else"最小化导图")){Text(if(collapsed)"□"else"−")}
             IconButton({if(currentEnabled&&beforeContentExit())close()},enabled=enabled,modifier=Modifier.size(48.dp).testTag("study-close").describedAs("关闭导图")){Glyph("close")}
         }
-        Surface(Modifier.offset{IntOffset((frameLeft.value*density).roundToInt(),(frameTop.value*density).roundToInt())}
+        // Size changes apply immediately; an in-flight position must still fit the current frame.
+        Surface(Modifier.offset{IntOffset((frameLeft.value.coerceIn(8f,8f+travelX)*density).roundToInt(),(frameTop.value.coerceIn(topInset,topInset+travelY)*density).roundToInt())}
             .size(w.dp,h.dp).testTag("study-panel"),color=Color.White,shape=InkTheme.FloatingShape,
             shadowElevation=InkTheme.FloatingElevation){
             Box(Modifier.fillMaxSize().clip(InkTheme.FloatingShape)){

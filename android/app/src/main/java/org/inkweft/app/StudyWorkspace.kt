@@ -11,6 +11,7 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.alpha
@@ -90,6 +91,13 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
     var titleDraft by rememberSaveable(stateSaver=NodeTitleDraft.Saver){mutableStateOf<NodeTitleDraft?>(null)}
     var titleInput by rememberSaveable(stateSaver=androidx.compose.ui.text.input.TextFieldValue.Saver){mutableStateOf(androidx.compose.ui.text.input.TextFieldValue())}
     var titleSubmitted by rememberSaveable{mutableStateOf(false)}
+    var titleOperation by rememberSaveable{mutableStateOf<String?>(null)}
+    var titleSubmittedText by rememberSaveable{mutableStateOf("")}
+    var titleContinue by rememberSaveable{mutableStateOf(false)}
+    var titleVerified by rememberSaveable{mutableStateOf(false)}
+    var titleCheckFailed by remember{mutableStateOf(false)}
+    var titleCheckAttempt by remember{mutableIntStateOf(0)}
+    val outlineListState=rememberLazyListState()
     var nodeMenu by remember{mutableStateOf(false)}
     var portalNodeId by rememberSaveable{mutableStateOf<String?>(null)}
     var portalMapKey by rememberSaveable{mutableStateOf("main")}
@@ -129,7 +137,7 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
     BindKnowledgeReadLock(portalWriter)
     val portalWrite by portalWriter.ui.collectAsStateWithLifecycle()
     val mapSaving=mapWrite.busy||mapWrite.unknown||portalWrite.busy||portalWrite.unknown
-    LaunchedEffect(mapWrite.completed){mapWrite.completed?.let{if(newMapTitle!=null)vm.selectMap(it);newMapTitle=null;saveTemplate=false;if(titleSubmitted&&titleDraft?.structural==true){titleDraft=null;titleSubmitted=false;focus.clearFocus()};if(structuralEditorSubmitted){vm.editorState.value=null;structuralEditorSubmitted=false};mapWriter.consumed()}}
+    LaunchedEffect(mapWrite.completed){if(titleSubmitted&&titleDraft?.structural==true)return@LaunchedEffect;mapWrite.completed?.let{if(newMapTitle!=null)vm.selectMap(it);newMapTitle=null;saveTemplate=false;if(structuralEditorSubmitted){vm.editorState.value=null;structuralEditorSubmitted=false};mapWriter.consumed()}}
     val mainNodes=ui.mainNodes
     val definition=(maps.find{it.id==currentMap}?.data() as? KnowledgeData.MapDefinition)
     val structureCards=definition?.structures.orEmpty().map{StudyCardRow(it.id,note.base.id,maps.find{m->m.id==currentMap}!!.revision,it.title,"")}
@@ -175,7 +183,7 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
     val shown=projection.rows.mapNotNull{nodeById[it.node.id]}
     val hiddenCounts=projection.rows.filter{it.node.id in collapsed}.associate{it.node.id to it.descendants}
     val browseReady=documentReady&&!ui.loading&&!ui.readFailed&&!ui.busy&&!ui.unknown&&!mapSaving
-    val editable=browseReady&&!readOnly&&!missingPortalBranch
+    val editable=browseReady&&!readOnly&&!missingPortalBranch&&titleDraft==null
     val authorDraft=titleDraft!=null||editor!=null||newMapTitle!=null||saveTemplate||templatePicker||reparentId!=null||insertMap
     ReadLockGuard(readLock,guardKey,blocked=ui.busy||ui.unknown||mapSaving||authorDraft,draft=authorDraft)
     val readControl:@Composable ()->Unit={IconToggleButton(readOnly,{value->
@@ -210,8 +218,8 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
     val preparationContext=reviewPreparationContext(ui)
     DisposableEffect(note.base.id,preparationContext){onDispose{cancelReviewPreparation(preparationContext)}}
     fun chooseReviewScope(value:ReviewQuestionScope){val review=reviewWriter?.ui?.value;if(!reviewReady(vm.ui.value)||review?.busy==true||review?.unknown==true)return;if(reviewQuestionScope!=value){cancelReviewPreparation();reviewQuestionScope=value}}
-    fun chooseMap(value:String?){if(vm.mapId.value!=value)cancelReviewPreparation();vm.selectMap(value)}
-    fun chooseTab(value:Int){if(vm.lastTab!=value)cancelReviewPreparation();vm.selectTab(value)}
+    fun chooseMap(value:String?){if(titleDraft!=null)return;if(vm.mapId.value!=value)cancelReviewPreparation();vm.selectMap(value)}
+    fun chooseTab(value:Int){if(titleDraft!=null)return;if(vm.lastTab!=value)cancelReviewPreparation();vm.selectTab(value)}
     fun prepareReview(target:MapRef,branch:StudyNodeRow?){
         val live=vm.ui.value
         if(target.notebookId!=note.base.id||target.mapId!=vm.mapId.value||!reviewReady(live)||reviewPreparation!=null)return
@@ -234,8 +242,8 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
         reviewPreparation=origin to job;job.start()
     }
     androidx.activity.compose.BackHandler(ui.busy||ui.unknown||mapSaving||hasDraft){android.widget.Toast.makeText(context,"请先完成或取消草稿，并核对当前导图操作",android.widget.Toast.LENGTH_SHORT).show()}
-    fun toggleBranch(nodeId:String){vm.searchSession?.changedByUser=true;collapsed=if(nodeId in collapsed)collapsed-nodeId else collapsed+nodeId}
-    fun focusBranch(nodeId:String?){if(focusId!=nodeId)cancelReviewPreparation();vm.searchSession?.changedByUser=true;if(nodeId!=null&&vm.portalBranches.containsKey(mapKey))vm.portalBranches[mapKey]=nodeId else vm.portalBranches.remove(mapKey);focus.clearFocus();focusId=nodeId}
+    fun toggleBranch(nodeId:String){if(titleDraft!=null)return;vm.searchSession?.changedByUser=true;collapsed=if(nodeId in collapsed)collapsed-nodeId else collapsed+nodeId}
+    fun focusBranch(nodeId:String?){if(titleDraft!=null)return;if(focusId!=nodeId)cancelReviewPreparation();vm.searchSession?.changedByUser=true;if(nodeId!=null&&vm.portalBranches.containsKey(mapKey))vm.portalBranches[mapKey]=nodeId else vm.portalBranches.remove(mapKey);focus.clearFocus();focusId=nodeId}
     LaunchedEffect(ui.loading,active.map{it.id}){if(!ui.loading&&focusId!=null&&focusId !in nodeById&&vm.portalBranches[mapKey]!=focusId)focusId=null}
     SideEffect{vm.collapsedByMap[mapKey]=collapsed;vm.focusedByMap[mapKey]=focusId}
     DisposableEffect(vm,mapKey,restoreEpoch){onDispose{if(vm.viewportRestore==restoreEpoch){vm.collapsedByMap[mapKey]=collapsed;vm.focusedByMap[mapKey]=focusId}}}
@@ -268,15 +276,14 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
     LaunchedEffect(chosenCard?.id){source=null;stale=false;val card=chosenCard?:return@LaunchedEffect
         try{source=withContext(Dispatchers.IO){app.study.source(card.id)};source?.let{s->stale=withContext(Dispatchers.IO){app.pages.inkRevision(s.pageId)!=s.inkRevision}}}
         catch(c:CancellationException){throw c}catch(_:Exception){localMessage="来源快照读取失败，卡片文字仍保留。"}}
-    LaunchedEffect(ui.completed){if(ui.completed!=null){
+    LaunchedEffect(ui.completed){if(ui.completed!=null&&!titleSubmitted){
         editor?.takeIf{it.card==null}?.let{e->
             e.parent?.id?.let{collapsed=collapsed-it}
             if(focusId!=null)focusId=e.parent?.id
         }
-        if(titleSubmitted){titleDraft?.let{d->vm.selectedByMap[d.mapId?:"main"]=d.nodeId;vm.revealByMap[d.mapId?:"main"]=d.nodeId;d.parentId?.let{collapsed=collapsed-it}};titleDraft=null;titleSubmitted=false;focus.clearFocus()}
         sourcePending=false;returnTab=null;editor=null;chosenNodeId=null;chosenCardId=null;reparentId=null;vm.clear()
     }}
-    fun openCard(card:StudyCardRow,node:StudyNodeRow?=null){if(!browseReady)return;if(vm.selectedByMap[mapKey]!=node?.id)cancelReviewPreparation();focus.clearFocus();chosenNodeId=node?.id;chosenCardId=card.id;vm.selectedByMap[mapKey]=node?.id}
+    fun openCard(card:StudyCardRow,node:StudyNodeRow?=null){if(!browseReady||titleDraft!=null)return;if(vm.selectedByMap[mapKey]!=node?.id)cancelReviewPreparation();focus.clearFocus();chosenNodeId=node?.id;chosenCardId=card.id;vm.selectedByMap[mapKey]=node?.id}
     fun editTitle(node:StudyNodeRow,create:Boolean=false,sibling:Boolean=false){
         if(!editable||!readLock.canWrite||titleDraft!=null)return
         val card=cardById[node.cardId]?:return
@@ -288,16 +295,88 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
             if(create)(parent?.x?.plus(260)?:node.x).coerceIn(-40000.0,40000.0)else node.x,
             if(create)((active.filter{it.parentId==parent?.id}.maxOfOrNull{it.y}?:node.y)+128).coerceIn(-40000.0,40000.0)else node.y,
             create,!create&&card.id in structureCards.map{it.id},if(create)StudyGraph.orderHash(ui.nodes.map{it.model()})else"",node.id)
-        titleInput=androidx.compose.ui.text.input.TextFieldValue(if(create)""else card.title,androidx.compose.ui.text.TextRange(0,if(create)0 else card.title.length));titleSubmitted=false;localMessage=null;nodeMenu=false;map?.revealNode(node.id)
+        titleInput=androidx.compose.ui.text.input.TextFieldValue(if(create)""else card.title,androidx.compose.ui.text.TextRange(0,if(create)0 else card.title.length));titleSubmitted=false;titleOperation=null;titleContinue=false;titleVerified=false;titleCheckFailed=false;localMessage=null;nodeMenu=false;management=false;mapMenu=false;map?.revealNode(node.id)
     }
-    fun saveTitle(title:String){
-        if(!readLock.canWrite)return
+    fun clearTitle(){
+        focus.clearFocus();titleDraft=null;titleSubmitted=false;titleOperation=null;titleContinue=false;titleVerified=false;titleCheckFailed=false
+    }
+    fun titleCommand(d:NodeTitleDraft,operation:String,title:String)=StudyCommand(operation,note.base.id,
+        if(d.creating)StudyAction.CREATE else StudyAction.EDIT,mapId=d.mapId,cardId=d.cardId,
+        nodeId=if(d.creating)d.nodeId else null,expectedRevision=d.revision,parentId=d.parentId,
+        title=title,body=d.body,x=d.x,y=d.y,expectedGraph=d.graph)
+    fun saveTitle(title:String,continueSibling:Boolean=false){
+        if(!readLock.canWrite||titleSubmitted||vm.ui.value.busy||vm.ui.value.unknown||mapWriter.ui.value.busy||mapWriter.ui.value.unknown)return
         val d=titleDraft?:return
+        if(d.mapId!=vm.mapId.value)return
         if(d.structural){
             val row=maps.find{it.id==d.mapId};val value=row?.data() as? KnowledgeData.MapDefinition
             if(row==null||row.revision!=d.revision||value==null||value.structures.none{it.id==d.cardId}){localMessage="主题已变化，草稿保留。取消后重新核对标题。";return}
-            titleSubmitted=true;mapWriter.submit(note.base.id,value.copy(structures=value.structures.map{if(it.id==d.cardId)it.copy(title=title)else it}),row)
-        }else{titleSubmitted=true;vm.submit(StudyCommand(id(),note.base.id,if(d.creating)StudyAction.CREATE else StudyAction.EDIT,mapId=d.mapId,cardId=d.cardId,nodeId=if(d.creating)d.nodeId else null,expectedRevision=d.revision,parentId=d.parentId,title=title,body=d.body,x=d.x,y=d.y,expectedGraph=d.graph))}
+            titleOperation=mapWriter.submit(note.base.id,value.copy(structures=value.structures.map{if(it.id==d.cardId)it.copy(title=title)else it}),row)?:return
+        }else{
+            val operation=id();titleOperation=operation;vm.submit(titleCommand(d,operation,title))
+        }
+        titleSubmittedText=title;titleContinue=continueSibling;titleSubmitted=true;titleVerified=false;titleCheckFailed=false;localMessage=null
+    }
+    fun retryTitle(){
+        if(titleCheckFailed){titleCheckFailed=false;titleCheckAttempt++}
+        else if(titleDraft?.structural==true)mapWriter.retry()else vm.retry()
+    }
+    // Keep native focus and the editor transition on Main after background reads.
+    LaunchedEffect(titleOperation,titleVerified,titleCheckAttempt,ui.busy,ui.unknown,ui.completed,
+        mapWrite.busy,mapWrite.unknown,mapWrite.completedOperation,mapWrite.rejectedOperation){withContext(Dispatchers.Main.immediate){
+        val d=titleDraft?:return@withContext;val operation=titleOperation?:return@withContext
+        if(!titleSubmitted||vm.ui.value.busy||vm.ui.value.unknown||mapWriter.ui.value.busy||mapWriter.ui.value.unknown)return@withContext
+        try{
+            if(!titleVerified){
+                val saved=if(d.structural){
+                    if(mapWriter.ui.value.rejectedOperation==operation){
+                        titleSubmitted=false;titleContinue=false;titleOperation=null;return@withContext
+                    }
+                    mapWriter.ui.value.completedOperation==operation&&mapWriter.ui.value.completed==d.mapId
+                }else withContext(Dispatchers.IO){vm.repo.lookup(titleCommand(d,operation,titleSubmittedText))==d.cardId}
+                if(!saved){
+                    // No successful receipt means there is no permission to continue.
+                    if((if(d.structural)mapWriter.ui.value.message else vm.ui.value.message)==null)localMessage="未核对到成功保存，未继续；草稿保留，请核对后重试。"
+                    titleSubmitted=false;titleContinue=false;titleOperation=null;return@withContext
+                }
+                titleVerified=true;return@withContext
+            }
+            val next=if(titleContinue&&vm.mapId.value==d.mapId&&vm.lastTab==1&&readLock.canWrite){
+                // A completed write can precede the UI Flow emission. Freeze from a fresh read.
+                val nodes=withContext(Dispatchers.IO){vm.repo.nodes(note.base.id,d.mapId).first()}
+                val node=nodes.find{it.id==d.nodeId&&!it.removed}
+                val parent=nodes.find{it.id==d.parentId&&!it.removed}
+                if(node==null||node.parentId!=d.parentId||(d.parentId!=null&&parent==null)){
+                    localMessage="标题已保存；原主题或上级已变化，未继续同级主题。";null
+                }else NodeTitleDraft(id(),d.mapId,id(),id(),0,"","",d.parentId,
+                    (parent?.x?.plus(260)?:node.x).coerceIn(-40000.0,40000.0),
+                    ((nodes.filter{!it.removed&&it.parentId==d.parentId}.maxOfOrNull{it.y}?:node.y)+128).coerceIn(-40000.0,40000.0),
+                    creating=true,graph=StudyGraph.orderHash(nodes.map{it.model()}),anchorId=node.id)
+            }else null
+            if(titleDraft?.token!=d.token||titleOperation!=operation)return@withContext
+            vm.selectedByMap[d.mapId?:"main"]=d.nodeId;vm.revealByMap[d.mapId?:"main"]=d.nodeId
+            d.parentId?.let{collapsed=collapsed-it}
+            if(d.structural)mapWriter.consumed(operation)else vm.clear()
+            clearTitle()
+            if(next!=null){titleDraft=next;titleInput=androidx.compose.ui.text.input.TextFieldValue()}
+        }catch(c:CancellationException){throw c}
+        catch(_:Exception){
+            if(titleDraft?.token==d.token){
+                if(titleVerified){
+                    if(d.structural)mapWriter.consumed(operation)else vm.clear()
+                    clearTitle();localMessage="标题已保存；同级位置读取失败，未继续。请重新选择主题。"
+                }else {titleCheckFailed=true;localMessage="标题结果待核对；草稿已保留，请核对原操作。"}
+            }
+        }
+    }}
+    LaunchedEffect(tab,titleDraft?.token,projection.rows.map{it.node.id to (cardById[it.node.cardId]!=null)}){
+        val d=titleDraft?:return@LaunchedEffect
+        if(tab==1&&d.mapId==currentMap){
+            val index=projection.rows.indexOfFirst{it.node.id==d.anchorId&&cardById[it.node.cardId]!=null}.let{if(it<0)projection.rows.size else it}
+            snapshotFlow{outlineListState.layoutInfo.totalItemsCount}.first{it>index}
+            // The item-count flow can resume during layout; scroll on the next measure pass.
+            outlineListState.requestScrollToItem(index)
+        }
     }
     Column(Modifier.fillMaxSize()){
     if(compactWindow&&chrome!=null)FlowRow(Modifier.fillMaxWidth().heightIn(min=48.dp).testTag("study-shared-header"),horizontalArrangement=Arrangement.SpaceBetween){
@@ -331,8 +410,8 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
                 if(vm.selectedByMap[mapKey]!=null)DropdownMenuItem(text={Text("固定所选分支到学习")},onClick={app.learningStore.shortcut(StableTargetRef(LearningTargetKind.BRANCH,note.base.id,vm.selectedByMap[mapKey],currentMap),true);management=false})
                 DropdownMenuItem(text={Text("新建导图")},onClick={templatePicker=true;management=false},enabled=editable,modifier=Modifier.testTag("study-new-map"))
                 DropdownMenuItem(text={Text("新建摘要卡")},onClick={returnTab=tab;editor=CardEditor();vm.selectTab(0);management=false},enabled=editable,modifier=Modifier.testTag("study-add-card"))
-                DropdownMenuItem(text={Text("展开全部")},onClick={collapsed=emptyList();management=false},enabled=browseReady&&collapsed.isNotEmpty(),modifier=Modifier.testTag("study-expand-all"))
-                DropdownMenuItem(text={Text("收起分支")},onClick={collapsed=active.mapNotNull{it.parentId}.distinct();management=false},enabled=browseReady,modifier=Modifier.testTag("study-collapse-all"))
+                DropdownMenuItem(text={Text("展开全部")},onClick={collapsed=emptyList();management=false},enabled=browseReady&&titleDraft==null&&collapsed.isNotEmpty(),modifier=Modifier.testTag("study-expand-all"))
+                DropdownMenuItem(text={Text("收起分支")},onClick={collapsed=active.mapNotNull{it.parentId}.distinct();management=false},enabled=browseReady&&titleDraft==null,modifier=Modifier.testTag("study-collapse-all"))
                 DropdownMenuItem(text={Text("全部主题")},onClick={focusBranch(null);management=false},modifier=Modifier.testTag("study-focus-all"))
                 DropdownMenuItem(text={Text("重新排布")},onClick={vm.submit(StudyCommand(id(),note.base.id,StudyAction.ARRANGE,mapId=currentMap,expectedGraph=StudyGraph.orderHash(ui.nodes.map{it.model()})));management=false},enabled=editable,modifier=Modifier.testTag("study-arrange"))
             }
@@ -420,11 +499,11 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
             }
             if(tab!=0&&(!compactWindow||focusId!=null)){
                 Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),verticalAlignment=Alignment.CenterVertically){
-                    TextButton(onClick={focusBranch(null)},enabled=focusId!=null,modifier=Modifier.testTag("study-focus-all")){Text("全部主题")}
-                    projection.path.forEach{n->Text("›",color=Quiet);TextButton(onClick={focusBranch(n.id)},modifier=Modifier.testTag("study-breadcrumb-${n.id}")){Text(cardById[n.cardId]?.title.orEmpty(),maxLines=1)}}
+                    TextButton(onClick={focusBranch(null)},enabled=titleDraft==null&&focusId!=null,modifier=Modifier.testTag("study-focus-all")){Text("全部主题")}
+                    projection.path.forEach{n->Text("›",color=Quiet);TextButton(onClick={focusBranch(n.id)},enabled=titleDraft==null,modifier=Modifier.testTag("study-breadcrumb-${n.id}")){Text(cardById[n.cardId]?.title.orEmpty(),maxLines=1)}}
                     Text("${shown.size} / ${active.size} 个主题",fontSize=12.sp,color=Quiet)
-                    if(!compactWindow)TextButton(onClick={collapsed=emptyList()},enabled=collapsed.isNotEmpty(),modifier=Modifier.testTag("study-expand-all")){Text("展开全部")}
-                    if(!compactWindow)TextButton(onClick={collapsed=active.mapNotNull{it.parentId}.distinct()},enabled=active.any{it.parentId!=null},modifier=Modifier.testTag("study-collapse-all")){Text("收起分支")}
+                    if(!compactWindow)TextButton(onClick={collapsed=emptyList()},enabled=titleDraft==null&&collapsed.isNotEmpty(),modifier=Modifier.testTag("study-expand-all")){Text("展开全部")}
+                    if(!compactWindow)TextButton(onClick={collapsed=active.mapNotNull{it.parentId}.distinct()},enabled=titleDraft==null&&active.any{it.parentId!=null},modifier=Modifier.testTag("study-collapse-all")){Text("收起分支")}
                 }
             }
             if(!compactWindow)Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(8.dp)){
@@ -464,10 +543,10 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
                     SideEffect{actionBounds=android.graphics.RectF(px,py,px+panelW,py+panelH)}
                     Box(Modifier.offset{IntOffset(px.roundToInt(),py.roundToInt())}.onSizeChanged{overlaySize=it}){
                         val draft=titleDraft
-                        if(draft!=null)NodeTitleEditor(draft,occurrenceCount(draft.cardId),ui.busy||mapWrite.busy,ui.unknown||mapWrite.unknown,
+                        if(draft!=null)NodeTitleEditor(draft,occurrenceCount(draft.cardId),ui.busy||mapWrite.busy||(titleSubmitted&&!titleCheckFailed&&!ui.unknown&&!mapWrite.unknown),ui.unknown||mapWrite.unknown||titleCheckFailed,
                             localMessage?:if(draft.structural)mapWrite.message else ui.message,
                             Modifier.width(with(density){panelW.toDp()}).heightIn(max=editorMaxHeight),
-                            text=titleInput,onText={titleInput=it},cancel={titleDraft=null;titleSubmitted=false;localMessage=null;focus.clearFocus()},submit=::saveTitle,retry={if(draft.structural)mapWriter.retry()else vm.retry()})
+                            text=titleInput,onText={titleInput=it},cancel={clearTitle();localMessage=null},submit={saveTitle(it)},retry=::retryTitle)
                         else Column{
                             NodeActions(editable,{editTitle(selected)},{editTitle(selected,true)},{editTitle(selected,true,true)},{nodeMenu=true},moreEnabled=browseReady)
                             DropdownMenu(nodeMenu,{nodeMenu=false},modifier=Modifier.widthIn(max=280.dp).testTag("node-menu")){
@@ -519,25 +598,38 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
                 }
                 if(active.isEmpty()&&!ui.loading&&!sourcePending)Column(Modifier.align(Alignment.Center),horizontalAlignment=Alignment.CenterHorizontally){TextButton({templatePicker=true},enabled=editable,modifier=Modifier.testTag("study-empty-create")){Text("新建图 · 选择模板")};Text("也可拖入摘录",style=MaterialTheme.typography.bodySmall,color=Quiet)}
             }
-            else LazyColumn(Modifier.fillMaxWidth().weight(1f).testTag("study-list"),verticalArrangement=Arrangement.spacedBy(10.dp),contentPadding=PaddingValues(vertical=12.dp)){
-                if(tab==0){items(cards,key={it.id}){card->OutlinedCard(onClick={openCard(card)},enabled=browseReady,colors=CardDefaults.outlinedCardColors(containerColor=Color.White),border=BorderStroke(1.dp,Line),modifier=Modifier.fillMaxWidth().testTag("study-card-${card.id}")){
+            else BoxWithConstraints(Modifier.fillMaxWidth().weight(1f).imePadding()){
+                val editorMaxHeight=(maxHeight-16.dp).coerceAtLeast(96.dp)
+                val inlineTitle:@Composable (NodeTitleDraft)->Unit={draft->
+                    Box(Modifier.fillMaxWidth().testTag("outline-title-${draft.anchorId}")){
+                        NodeTitleEditor(draft,occurrenceCount(draft.cardId),ui.busy||mapWrite.busy||(titleSubmitted&&!titleCheckFailed&&!ui.unknown&&!mapWrite.unknown),
+                            ui.unknown||mapWrite.unknown||titleCheckFailed,localMessage?:if(draft.structural)mapWrite.message else ui.message,
+                            Modifier.fillMaxWidth().heightIn(max=editorMaxHeight),text=titleInput,onText={titleInput=it},
+                            cancel={clearTitle();localMessage=null},submit={saveTitle(it)},retry=::retryTitle,continueSibling={saveTitle(it,true)})
+                    }
+                }
+                LazyColumn(Modifier.fillMaxSize().testTag("study-list"),state=outlineListState,verticalArrangement=Arrangement.spacedBy(10.dp),contentPadding=PaddingValues(vertical=12.dp)){
+                if(tab==0){items(cards,key={it.id}){card->OutlinedCard(onClick={openCard(card)},enabled=browseReady&&titleDraft==null,colors=CardDefaults.outlinedCardColors(containerColor=Color.White),border=BorderStroke(1.dp,Line),modifier=Modifier.fillMaxWidth().testTag("study-card-${card.id}")){
                     Column(Modifier.padding(16.dp)){Text(card.title,fontWeight=FontWeight.SemiBold);if(card.body.isNotBlank())Text(card.body,maxLines=4,fontSize=14.sp,modifier=Modifier.padding(top=8.dp));Text("摘要卡 · ${occurrenceCount(card.id)} 个展示位置",fontSize=11.sp,color=Quiet)}}}
                     if(cards.isEmpty())item{Text(if(query.isNotBlank())"没有匹配的摘要卡"else if(showTrash)"卡片回收区为空"else"框选手写摘录，或新建摘要卡。摘要由你填写，不会自动发送到云端。",color=Quiet)}}
                 else{items(projection.rows,key={it.node.id}){row->val node=nodeById.getValue(row.node.id);val depth=row.depth;val card=cardById[node.cardId]
-                    if(card!=null)OutlinedCard(onClick={openCard(card,node)},enabled=browseReady,colors=CardDefaults.outlinedCardColors(containerColor=Color.White),border=BorderStroke(1.dp,Line),modifier=Modifier.fillMaxWidth().padding(start=(depth.coerceAtMost(10)*20).dp)){
+                    if(card!=null)OutlinedCard(onClick={openCard(card,node)},enabled=browseReady&&titleDraft==null,colors=CardDefaults.outlinedCardColors(containerColor=Color.White),border=BorderStroke(1.dp,Line),modifier=Modifier.fillMaxWidth().padding(start=minOf((depth.coerceAtMost(10)*20).dp,maxWidth/5)).testTag("outline-row-${node.id}")){
                         Column(Modifier.padding(12.dp)){
                             Row(verticalAlignment=Alignment.CenterVertically){
-                                if(row.descendants>0)TextButton(onClick={toggleBranch(node.id)},modifier=Modifier.testTag("outline-fold-${node.id}")){Text(if(node.id in collapsed)"展开 ${row.descendants}"else"收起")}
-                                Text(card.title,fontWeight=FontWeight.Medium,modifier=Modifier.weight(1f).heightIn(min=48.dp).clickable(enabled=browseReady){openCard(card,node)}.padding(vertical=12.dp).testTag("outline-node-${node.id}"))
+                                if(row.descendants>0)TextButton(onClick={toggleBranch(node.id)},enabled=titleDraft==null,modifier=Modifier.testTag("outline-fold-${node.id}")){Text(if(node.id in collapsed)"展开 ${row.descendants}"else"收起")}
+                                Text(card.title,fontWeight=FontWeight.Medium,modifier=Modifier.weight(1f).heightIn(min=48.dp).clickable(enabled=browseReady&&titleDraft==null){openCard(card,node)}.padding(vertical=12.dp).testTag("outline-node-${node.id}"))
                             }
                             if(card.body.isNotBlank())Text(card.body,maxLines=2,fontSize=12.sp,color=Quiet)
+                            titleDraft?.takeIf{it.mapId==currentMap&&it.anchorId==node.id}?.let{inlineTitle(it)}
                             Row(Modifier.horizontalScroll(rememberScrollState())){
-                                TextButton(onClick={editor=CardEditor(parent=node)},enabled=editable,modifier=Modifier.testTag("outline-child-${node.id}")){Text("＋ 子主题")}
-                                TextButton(onClick={editor=CardEditor(parent=nodeById[node.parentId])},enabled=editable,modifier=Modifier.testTag("outline-sibling-${node.id}")){Text("＋ 同级")}
-                                TextButton(onClick={focusBranch(node.id)},modifier=Modifier.testTag("outline-focus-${node.id}")){Text("聚焦")}
+                                TextButton(onClick={editTitle(node)},enabled=editable,modifier=Modifier.testTag("outline-rename-${node.id}")){Text("修改标题")}
+                                TextButton(onClick={editTitle(node,true)},enabled=editable,modifier=Modifier.testTag("outline-child-${node.id}")){Text("＋ 子主题")}
+                                TextButton(onClick={editTitle(node,true,true)},enabled=editable,modifier=Modifier.testTag("outline-sibling-${node.id}")){Text("＋ 同级")}
+                                TextButton(onClick={focusBranch(node.id)},enabled=titleDraft==null,modifier=Modifier.testTag("outline-focus-${node.id}")){Text("聚焦")}
                             }
                         }}
-                };if(active.isEmpty())item{Text("大纲与脑图使用同一组节点和摘要卡，不另存一份正文。",color=Quiet)}}
+                };titleDraft?.takeIf{it.mapId==currentMap&&projection.rows.none{row->row.node.id==it.anchorId&&cardById[row.node.cardId]!=null}}?.let{draft->item(key="outline-title-fallback"){inlineTitle(draft)}};if(active.isEmpty())item{Text("大纲与脑图使用同一组节点和摘要卡，不另存一份正文。",color=Quiet)}}
+            }
             }
             if(tab!=2&&vm.captureUndo[mapKey]!=null)TextButton(vm::undoCapture,enabled=editable,modifier=Modifier.testTag("study-undo-capture")){Text("撤销此次摘录添加")}
             if(tab==2&&!compactWindow)Row(Modifier.fillMaxWidth().heightIn(min=48.dp).padding(end=if(compactWindow)48.dp else 0.dp),verticalAlignment=Alignment.CenterVertically){

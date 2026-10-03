@@ -110,9 +110,20 @@ internal fun ComposeTestRule.revealAction(tag:String){
         (tag.startsWith("study-card-")||tag.startsWith("outline-"))&&onAllNodesWithTag("study-list").fetchSemanticsNodes().isNotEmpty()->onNodeWithTag("study-list").performScrollToNode(hasTestTag(tag))
         tag=="toolbar-customize"->onNodeWithTag("toolbar-more").performClick()
         tag.startsWith("study-tab-")||tag.startsWith("study-fit-")||tag in setOf("study-new-map","study-insert-map","study-save-template","study-add-card","study-expand-all","study-focus-all","study-collapse-all","study-arrange")->{
-            if(onAllNodesWithTag("map-menu").fetchSemanticsNodes().isEmpty())onNodeWithTag("study-management").performClick()
+            if(onAllNodesWithTag("map-menu").fetchSemanticsNodes().isEmpty()){
+                // Selecting a map starts a repository load that is not covered by Compose idle.
+                waitUntil("study-management is visible and enabled before revealing $tag",15_000){
+                    runCatching{onNodeWithTag("study-management").assertIsDisplayed().assertIsEnabled()}.isSuccess
+                }
+                onNodeWithTag("study-management").assertIsDisplayed().assertIsEnabled().performTouchInput{click()}
+            }
             val group=if(tag.startsWith("study-tab-")||tag.startsWith("study-fit-"))0 else if(tag in setOf("study-insert-map","study-save-template"))2 else 1
-            onNodeWithTag("map-menu-group-$group").performClick()
+            val groupTag="map-menu-group-$group"
+            waitUntil("map-menu and $groupTag are visible before revealing $tag",15_000){
+                runCatching{onNodeWithTag("map-menu").assertIsDisplayed();onNodeWithTag(groupTag).assertIsDisplayed().assertIsEnabled()}.isSuccess
+            }
+            onNodeWithTag(groupTag).assertIsDisplayed().assertIsEnabled().performTouchInput{click()}
+            waitUntil("$tag exists after choosing $groupTag",15_000){onAllNodesWithTag(tag).fetchSemanticsNodes().isNotEmpty()}
         }
         tag.startsWith("width-preset-")||tag.startsWith("pencil-hardness-")->onNodeWithTag("pen-advanced").performScrollTo().performClick()
         tag.startsWith("pen-color-")->onNodeWithTag("pen-basic").performScrollTo().performClick()

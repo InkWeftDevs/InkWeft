@@ -3,6 +3,7 @@ package org.inkweft.app
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
@@ -17,18 +18,26 @@ data class NotebookUi(val notes:List<Note> = emptyList(),val drafts:Map<String,N
 data class RenameUi(val base:Note,val titleAtRequest:String,val value:String,
     val pending:RenameNote?=null,val phase:SavePhase=SavePhase.EDITING,val message:String?=null)
 
-class NotebookViewModel(application:Application):AndroidViewModel(application) {
+class NotebookViewModel(application:Application,private val saved:SavedStateHandle):AndroidViewModel(application) {
     private val repository=(application as InkWeftApplication).repository
     private val tabPreferences=application.getSharedPreferences("inkweft-open-tabs",android.content.Context.MODE_PRIVATE)
     private val rememberedTabs=tabPreferences.getString("ids","").orEmpty().split('|').filter{runCatching{UUID.fromString(it)}.isSuccess}.distinct()
-    private val mutableUi=MutableStateFlow(NotebookUi(openIds=rememberedTabs));val ui:StateFlow<NotebookUi> = mutableUi.asStateFlow()
+    // Restore this task's route after process death; the author's note still comes from Room.
+    private val mutableUi=MutableStateFlow(NotebookUi(selectedId=saved["notebook.selected"],openIds=rememberedTabs));val ui:StateFlow<NotebookUi> = mutableUi.asStateFlow()
     private val renameState=MutableStateFlow<RenameUi?>(null);val renaming=renameState.asStateFlow()
     private var observation:Job?=null
     init{retryRead()}
     fun retryRead(){
         observation?.cancel();mutableUi.update{it.copy(loading=true,readFailed=false)}
         observation=viewModelScope.launch{try{repository.observeNotes().collect{notes->
-                mutableUi.update{it.copy(notes=notes,loading=false,readFailed=false,openIds=it.openIds.filter{id->notes.any{n->n.id==id}||id in it.drafts})}
+                mutableUi.update{old->
+                    val note=notes.firstOrNull{it.id==old.selectedId}
+                    val selected=old.selectedId?.takeIf{note!=null||it in old.drafts}
+                    old.copy(notes=notes,loading=false,readFailed=false,selectedId=selected,
+                        drafts=if(note!=null&&note.id !in old.drafts)old.drafts+(note.id to NoteDraft(note))else old.drafts,
+                        openIds=(old.openIds+listOfNotNull(note?.id)).distinct().filter{id->notes.any{n->n.id==id}||id in old.drafts})
+                }
+                saved["notebook.selected"]=ui.value.selectedId
             }}
         catch(c:CancellationException){throw c}catch(_:Exception){mutableUi.update{it.copy(loading=false,readFailed=true)}}}
     }
@@ -36,8 +45,9 @@ class NotebookViewModel(application:Application):AndroidViewModel(application) {
         if(title.isBlank()||title.length>120)return
         val n=Note(UUID.randomUUID().toString(),0,title.trim(),"")
         mutableUi.update{it.copy(drafts=it.drafts+(n.id to NoteDraft(n)),selectedId=n.id)}
+        saved["notebook.selected"]=n.id
     }
-    private fun persistTabs(){tabPreferences.edit().putString("ids",ui.value.openIds.joinToString("|")).apply()}
+    private fun persistTabs(){saved["notebook.selected"]=ui.value.selectedId;tabPreferences.edit().putString("ids",ui.value.openIds.joinToString("|")).apply()}
     fun select(note:Note){mutableUi.update{it.copy(selectedId=note.id,openIds=(it.openIds+note.id).distinct(),drafts=if(note.id in it.drafts)it.drafts else it.drafts+(note.id to NoteDraft(note)))};persistTabs()}
     fun selectTab(id:String){ui.value.notes.firstOrNull{it.id==id}?.let{select(it)}}
     fun closeTab(id:String):Boolean {

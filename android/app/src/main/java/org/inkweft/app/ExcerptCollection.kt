@@ -22,7 +22,7 @@ import java.util.UUID
     val app=LocalContext.current.applicationContext as InkWeftApplication
     val source by remember(card){app.study.observeSource(card)}.collectAsStateWithLifecycle(initialValue=null)
     val snapshot by produceState<InkPageFile?>(null,source){value=withContext(Dispatchers.IO){runCatching{source?.let{InkPageFile.decode(it.snapshot)}}.getOrNull()}}
-    Box(modifier){snapshot?.let{file->AndroidView(factory={InkCanvasView(it).apply{preview=true}},update={v->v.configure(true,PaperStyle.BLANK,null);v.showStrokes(file.strokes);v.showObjects(file.objects)},modifier=Modifier.fillMaxSize().testTag("excerpt-preview-$card"))}}
+    Box(modifier){snapshot?.let{file->AndroidView(factory={InkCanvasView(it).apply{preview=true}},onRelease={v->v.showObjects(emptyList());v.showStrokes(emptyList())},update={v->v.configure(true,PaperStyle.BLANK,null);v.showStrokes(file.strokes);v.showObjects(file.objects)},modifier=Modifier.fillMaxSize().testTag("excerpt-preview-$card"))}}
 }
 
 /** Excerpts keep their source image; map placement is an optional follow-up. */

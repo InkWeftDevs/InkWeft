@@ -1,0 +1,4094 @@
+{
+  "source_commit": "15f167ed1d1270617e51e0aacd21b5b7caa9bb18",
+  "source_branch": "codex/local/v68-acceptance-20261003",
+  "scope": "本地从固定commit独立列出；不冒充Library ZIP内原始云端输入清单",
+  "pathspecs": [
+    "android/app/src",
+    "android/core-domain/src",
+    "android/data-local/src",
+    "android/gradle",
+    "*gradle*"
+  ],
+  "count": 453,
+  "git_core_autocrlf": true,
+  "comparison": "Git对象原始字节用于云端checkpoint摘要；工作副本SHA单独保留，允许仅CRLF差异",
+  "files": [
+    {
+      "path": "android/app/build.gradle.kts",
+      "git_blob": "c421d0fba849aaef2256c1ea2dee79ca0dd5358e",
+      "commit_bytes": 5027,
+      "commit_sha256": "afe681f17f429c44f2c0e25680749e1032bb9994a7955329c634bb71098d7799",
+      "working_bytes": 5126,
+      "working_sha256": "f7a1c2f3ff5091e1c3313847f2c70d46b66e2947255205a3234d92f33431ef1d",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/assets/upgrade-schema10.json",
+      "git_blob": "bc3474c1c6a315b6826b4fcc757bfe6919fc40ff",
+      "commit_bytes": 44606,
+      "commit_sha256": "e9f3ff140263510f8858def7516ec6458ef44daf60c1585db138f01eab87e5b3",
+      "working_bytes": 44606,
+      "working_sha256": "e9f3ff140263510f8858def7516ec6458ef44daf60c1585db138f01eab87e5b3",
+      "match": "BYTE_EXACT"
+    },
+    {
+      "path": "android/app/src/androidTest/assets/upgrade-schema4.json",
+      "git_blob": "405cc395ed8cfaed669a6178733bda51f81c79c8",
+      "commit_bytes": 18772,
+      "commit_sha256": "cf5fb5a64a01a1721b4b1445821ee8111ff6dad38c56f7c9990fc015beb3f0ae",
+      "working_bytes": 18772,
+      "working_sha256": "cf5fb5a64a01a1721b4b1445821ee8111ff6dad38c56f7c9990fc015beb3f0ae",
+      "match": "BYTE_EXACT"
+    },
+    {
+      "path": "android/app/src/androidTest/assets/upgrade-schema7.json",
+      "git_blob": "bb0013a810d3b95ab8cc51a63ea16cbf7fb15d97",
+      "commit_bytes": 25006,
+      "commit_sha256": "ee2898862635107ab9eb1610f6ce91c08dcb7c4126be3c40ac6c3c7dbc5377ba",
+      "working_bytes": 25006,
+      "working_sha256": "ee2898862635107ab9eb1610f6ce91c08dcb7c4126be3c40ac6c3c7dbc5377ba",
+      "match": "BYTE_EXACT"
+    },
+    {
+      "path": "android/app/src/androidTest/assets/upgrade-schema8.json",
+      "git_blob": "a13b61a24440e50ab443ceaaeb26ead8d014e32d",
+      "commit_bytes": 37356,
+      "commit_sha256": "867a7a6c4956a05d6ca0ac03fcbdc6581376f7b176aa5e0d9413309e3e69b001",
+      "working_bytes": 37356,
+      "working_sha256": "867a7a6c4956a05d6ca0ac03fcbdc6581376f7b176aa5e0d9413309e3e69b001",
+      "match": "BYTE_EXACT"
+    },
+    {
+      "path": "android/app/src/androidTest/assets/upgrade-schema9.json",
+      "git_blob": "64a945debc798956f67068352bf48a04c8eb10b9",
+      "commit_bytes": 43553,
+      "commit_sha256": "8e4a6c021f83b6e3a056130227f89ad32e7f103810a98a943ad6c3833139ad1a",
+      "working_bytes": 43553,
+      "working_sha256": "8e4a6c021f83b6e3a056130227f89ad32e7f103810a98a943ad6c3833139ad1a",
+      "match": "BYTE_EXACT"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/AndroidTemporarySpaceProbe.kt",
+      "git_blob": "c5fc4da4857307c824c450be9aa13de2cd978895",
+      "commit_bytes": 7902,
+      "commit_sha256": "fbdde1fd5531fd1252a912b09cdd5b59ca43d98150970246a1791487f7ac088d",
+      "working_bytes": 8021,
+      "working_sha256": "b75201d11bc418e88e887491d1cc467f7ab323565da377a01dcb76e7e52a03a0",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/AsyncRasterTest.kt",
+      "git_blob": "0fc8d48f3a0390f7f7af2d829d56829233c68fc7",
+      "commit_bytes": 4147,
+      "commit_sha256": "8f28b455a008c4a80da811076dc65f8641f021d6730876b6ce71b670abbc1550",
+      "working_bytes": 4194,
+      "working_sha256": "ad57eac35330acea3d89804f06f43fce13e8c5251c23c53f016a371182f71245",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/AutomaticBeautyCanvasTest.kt",
+      "git_blob": "2148d25065f993fb66aefa1dfe498ccfda01bc51",
+      "commit_bytes": 5205,
+      "commit_sha256": "6676bea30b057fd6151c141536de99a350a852fd4f9130380e3265720ee0c302",
+      "working_bytes": 5275,
+      "working_sha256": "beac8a00db740957a7be375f01f550f1d0c6fe8cab5f5a6e35764fb00bcabc9e",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/AutomaticBeautyRegressionTest.kt",
+      "git_blob": "9069125882543549782a8a331028793141e6d741",
+      "commit_bytes": 18952,
+      "commit_sha256": "076a95d35cf58cb53f2b2e8cddad3d98e50fe13a6d02e9f45b7a56382f4daaaf",
+      "working_bytes": 19213,
+      "working_sha256": "b11895906c32e618a9ca1f88d857a068d81841e854ef3feb7f25636482429407",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/BackupCrashProbe.kt",
+      "git_blob": "c3ea39f6a8d967cdf0ef4a7287169511db18d85c",
+      "commit_bytes": 3551,
+      "commit_sha256": "8349909ff44c2f200d2f503c9aa41fa9cbac403364ae16ae73e8cbf0ae40fd3b",
+      "working_bytes": 3595,
+      "working_sha256": "0e9fa83acd87724f294f7c46470d9071ac7a8bbe94b5366cd3217c9438e4e062",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/BackupDeadlineProbe.kt",
+      "git_blob": "bca0c7416f75a6f40f3bf74550a5401791065587",
+      "commit_bytes": 3907,
+      "commit_sha256": "97dccbd7cd4820b9456f7f9f973eea0ddd596ca1ce966ecdfcbd51a74cacd828",
+      "working_bytes": 3949,
+      "working_sha256": "24ac6978e331f1717e8c28374b31193a30788a688f2bba25919de985e5ee4270",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/BackupReliabilityUiTest.kt",
+      "git_blob": "2959802c126e7dbc1a318bcf6e55d0b2a31190b6",
+      "commit_bytes": 8126,
+      "commit_sha256": "bc0da37bccfed3ab83836c3588fe2c1a19f73c0ef20f5777320499216b29a115",
+      "working_bytes": 8202,
+      "working_sha256": "a6fdcf87bc6a0a4baa2655ebcbf4d24689a3195a17c86981a8652897ba616373",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/BackupResourceUiTest.kt",
+      "git_blob": "2d0523e3f0536ceceba5d3e8a260e0aea9400ce8",
+      "commit_bytes": 3205,
+      "commit_sha256": "0bf9eb7561da14a9a1ff3a150067798975b09a561f51410588878bd9daf58416",
+      "working_bytes": 3246,
+      "working_sha256": "04e4974cc2d8675c88fe2d941f67081cd37d1251c7ef448d3dcb7b9a2d2229fe",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/BackupRetryTest.kt",
+      "git_blob": "eb22fc0d1db2a47a5fbe1be0594f525699e7c819",
+      "commit_bytes": 2036,
+      "commit_sha256": "bf4254b9adf88409ea7cb5b1440a1399098e667afc05a258a0900c980312a4ee",
+      "working_bytes": 2062,
+      "working_sha256": "21d03fcd62e5f05c9dc4c2fe5673f8972d650d20eeb92d48926f746bcafa0f3b",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/BeautyColorTest.kt",
+      "git_blob": "2c7263455b9252e2986dc35ab7156b9dbb114313",
+      "commit_bytes": 4821,
+      "commit_sha256": "348c49d35849160214d06601da402fb4df0247f27e74b032def6ccd14b4bf111",
+      "working_bytes": 4877,
+      "working_sha256": "b572bb223e85e6f1e62482f9d99ea4ab9faf89be7c8c2d8cb612a9171b3c5581",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/BeautyLayoutUiTest.kt",
+      "git_blob": "9e900938b9436145883e00332d61740fdbcc1ed0",
+      "commit_bytes": 7164,
+      "commit_sha256": "e91af80f62bb61f17e986c90325ba5041f278cb48fd8831fd5f8a48f59e16115",
+      "working_bytes": 7251,
+      "working_sha256": "157ade4770564e6d4a230a722c0ba14b8c5a45c2728d87c0236374ddc9a36813",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/BeautyNativeReplayTest.kt",
+      "git_blob": "b693a44815a5c3cf4faa6dd5c417a50bf1581a5f",
+      "commit_bytes": 9836,
+      "commit_sha256": "12259d799eccb805d23961b67800ba35e8d3fac0315c2968e8574474b852e34c",
+      "working_bytes": 9966,
+      "working_sha256": "ff0f96497a61950f3d10985f6b9228f7c86788e7a3758a948637d932ad7ff076",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/BeautyPairedEntryTest.kt",
+      "git_blob": "449acad3b041f46432af63debe2dabacba568f1b",
+      "commit_bytes": 5032,
+      "commit_sha256": "f2b6421aaaac4d3320b18ffedbef0cb6112dd32d7146f4a7016ccbc76fb24da6",
+      "working_bytes": 5102,
+      "working_sha256": "3b56965a88ef610296112568e6a91856f76579d00a21a463a67de877c74cd391",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/BeautyQualityTest.kt",
+      "git_blob": "b288cbe3df2eb7e21839eb40e20aa30f2d5d9fe2",
+      "commit_bytes": 5213,
+      "commit_sha256": "76674f59e67dbb42effa16e0eb7d021c4d6066fb384374d831b6b7e57dcfb600",
+      "working_bytes": 5283,
+      "working_sha256": "7f0c2ced678489615e5a6f9d027bc5e8caf6afc5a14129ed2609f1d17328d611",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/BeautyReviewUiTest.kt",
+      "git_blob": "1ffd965ff5410ac33ed391c822aaca86ff92fce7",
+      "commit_bytes": 4262,
+      "commit_sha256": "6797dc58ecaf77d82fea5d0fb26e66b7e3f1c538ee609e85c1b1168937e11984",
+      "working_bytes": 4320,
+      "working_sha256": "6b0b78cff17c73c41bd0e0476561e5673f4231321e5eaaea4147c739576793b5",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/BeautySettingsUiTest.kt",
+      "git_blob": "6042e7bf57b0b8a01dc75e5806f8c2c712e4d9d2",
+      "commit_bytes": 5446,
+      "commit_sha256": "6f58fa1c35ad14e4384e69a90812248a19126d3f76333fc35ec53179b3a0d577",
+      "working_bytes": 5519,
+      "working_sha256": "2bb682533f12255c1933a2515c307e5811f51d342418c17a3354e0e390e6677c",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/BookPagesSelectAwaitUiTest.kt",
+      "git_blob": "20ae7ad76f9a60a892188d7d99127eed0128a821",
+      "commit_bytes": 3955,
+      "commit_sha256": "e5cac32511812e5ebf0fcad231c760ac80992d87f6c19f407daede014704f86a",
+      "working_bytes": 4038,
+      "working_sha256": "b895b8885e1e046d756e565f927e746fef2f0fdc3db4da972af49314cc8637df",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/BookSourceSelectAwaitUiTest.kt",
+      "git_blob": "9e1f65ee61d6cc69795515003531c80140e1e9d8",
+      "commit_bytes": 8617,
+      "commit_sha256": "15f60cdafd6619edf0adb0d4b3aea5d80a4b09bdf6448123c54330aae7d91058",
+      "working_bytes": 8779,
+      "working_sha256": "38ec132d98c520852e4cf190eb0ba7b9bcdf03aea981912d4b672f7187711131",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/BranchReviewRoundUiTest.kt",
+      "git_blob": "ff83f519641accee34f464904894bee452da2cae",
+      "commit_bytes": 20317,
+      "commit_sha256": "cccd1cc0adf6a33c444fe300b47b4a4848a386a35f10dbb034c1dff80969537d",
+      "working_bytes": 20647,
+      "working_sha256": "41a05ae0b46a18fabf03cf86425a644a6ed93a599194f5035e49c4110a0d0419",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/BranchReviewUiTest.kt",
+      "git_blob": "e0be5c7044e33be8d4178bff809cf9035f2351d1",
+      "commit_bytes": 25772,
+      "commit_sha256": "7161225e4de1e75339377f6d40ff4e1d418f65cafbd32abd967571c588213b94",
+      "working_bytes": 26296,
+      "working_sha256": "3650e32f11eef34879a0dafaddb3f4bdfc3fb988e82e4953a2b883758e161367",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/BrushB1DeviceFixtureTest.kt",
+      "git_blob": "8a7bd82869832d32cd6f14b81fbb1ece24966378",
+      "commit_bytes": 1907,
+      "commit_sha256": "73a1a3a0324792e55e24dee5a23cbc8edb70c75744b25eca03195b582513604c",
+      "working_bytes": 1937,
+      "working_sha256": "95b5360b33cd5017da7fda9c061a14a6d27878b33df7b5f5ef4b1e8de0bdf15a",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/BrushB1InputTest.kt",
+      "git_blob": "dcabf18c60b1ec1264c8bc08a74d6cc668dc526d",
+      "commit_bytes": 3401,
+      "commit_sha256": "b17c5347233e5911076f3b6a9e5cb2df243bcc606e4b155d6c09ed34b65880d7",
+      "working_bytes": 3450,
+      "working_sha256": "f1aee8336cccc6f5c39f5310d5e12d35af50a4891cc5f8c6b7a0c37edf9ea335",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/BrushB1RenderTest.kt",
+      "git_blob": "f66a422c65b86b312ea0fb0fc84cee57b460c6be",
+      "commit_bytes": 7449,
+      "commit_sha256": "7d0f5b784d0c0d4facf25b06ff7f0a9beb036e5ea961da4fe0f84d74e287d868",
+      "working_bytes": 7537,
+      "working_sha256": "3fbd42bec963df5f618de658559f551cfee03e10fc23ebaeef8c0e69bad9e2d5",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/BrushB1UiTest.kt",
+      "git_blob": "8d56173beae5713255c18ece51174879f0d71f8b",
+      "commit_bytes": 2507,
+      "commit_sha256": "2d8c86a7f4820199f145774e70b60140d46e0f4cbf31098dd0700b515c2c99ed",
+      "working_bytes": 2548,
+      "working_sha256": "fa5bf2539f688f8c2aba7ddd7aff468b8471717fc46dc949dbca82a719f813ad",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/CanvasNavigationGestureTest.kt",
+      "git_blob": "1e917327b111cf4a656af13537cb6d5237de5e08",
+      "commit_bytes": 3420,
+      "commit_sha256": "e884d795c9e7a2ca537447f395e56773f17236aa72d65e7ceee1d88917b8eb52",
+      "working_bytes": 3474,
+      "working_sha256": "3175acc58f4bd56269419afbe992416fcc99e81c6d9f030f7412b0b28ef91c8a",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/CardSourceNavigationUiTest.kt",
+      "git_blob": "67cdb6f13754ad0362a17947b3744942b021dbbe",
+      "commit_bytes": 35212,
+      "commit_sha256": "ec00cb5695bc41e42fa5f1f048479eea844c6128f9b20be3fda93773951a7616",
+      "working_bytes": 35212,
+      "working_sha256": "ec00cb5695bc41e42fa5f1f048479eea844c6128f9b20be3fda93773951a7616",
+      "match": "BYTE_EXACT"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/CollectionReviewUiTest.kt",
+      "git_blob": "8cadbbfe7e18f60ad7d239558389b57733b8cb99",
+      "commit_bytes": 41438,
+      "commit_sha256": "fe78ab40bff2b9a30b551f2df7b825aac1ad127c374bf676916a8e3bbe5c55e5",
+      "working_bytes": 42133,
+      "working_sha256": "ec2bb88e38d7ba41e60abe8edc2faa39398dba465c1dddd35d9c6ead69342bda",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/CompactEditorUiTest.kt",
+      "git_blob": "1fa46582e4ebdded570477329b43fcd95c0ba863",
+      "commit_bytes": 3220,
+      "commit_sha256": "0d2a0ce972f5955aaa5240cd5c89e35681ca71aeaa7ceca1b1adb099ce1154bd",
+      "working_bytes": 3252,
+      "working_sha256": "eb771eab4b24fc16ecda26c2ad4693d2b913c7759291950e92b236ae20a53caf",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/CompactInkTest.kt",
+      "git_blob": "228d1881c954c4a82b56f569f01e4b4a09055cf9",
+      "commit_bytes": 3302,
+      "commit_sha256": "5f5501834be437cbe95c75dab66b0c4d4d3a5c28ad56a6334a943f871bd21477",
+      "working_bytes": 3342,
+      "working_sha256": "25bbaf05f3dd9cc5773a095131c5e17b60821d42f3d67791ce7db32e5e44fb6d",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/ComputePerformanceProbe.kt",
+      "git_blob": "3be888ed3881df9ed65bd5569628705b4507af63",
+      "commit_bytes": 8392,
+      "commit_sha256": "b2b8acc15126c228466450ca4a92e3d5dd2c0aefc0afcbe65f2f31589911a54f",
+      "working_bytes": 8475,
+      "working_sha256": "9713c1cdc77e6b2d26f34d1c90eafa66a112ecfa06cb59419b9b07c2e0fc76d5",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/ConcurrentWritingTest.kt",
+      "git_blob": "ca29970eeabbac2774a7f0cf3aa962414efd8dc3",
+      "commit_bytes": 8602,
+      "commit_sha256": "473011f01eb51e79270ec5a58713286972c51de70a3d934ea1b7c2681530cc8c",
+      "working_bytes": 8688,
+      "working_sha256": "e3fea6ae003bac2e3e1243f6cb7b25c40273d5f0d84f5dfd7336bb64c5a3673b",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/ContinuousCrashProbe.kt",
+      "git_blob": "a55fdc14d487180a53698c8dccf32325f5035861",
+      "commit_bytes": 7207,
+      "commit_sha256": "6b769934d8d3ff77b0510890ebe7a56f46ae989dab01dab0dc0a482fdd7ac1fe",
+      "working_bytes": 7301,
+      "working_sha256": "9e60c6fcea09196a27f3045e44d8dc7f3bf50847c7d1392b0b3b61c5859c6da8",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/ContinuousPageGestureUiTest.kt",
+      "git_blob": "7e8313911dab26fa40ca128316e979cfb50986d6",
+      "commit_bytes": 12107,
+      "commit_sha256": "5ea568485eb8d569446bb1d2172e32711b5e55b10a61ee53c4514febe31fcc46",
+      "working_bytes": 12313,
+      "working_sha256": "b987bed2ccc8419c5c461cfc775c3625fb97c36f0dc7f227b00e326bb2386597",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/ContinuousWritingUiTest.kt",
+      "git_blob": "97d10f4c798ea2fb7ce7c9d0206aaa3c66a9e987",
+      "commit_bytes": 21618,
+      "commit_sha256": "eca260511a75cb939234cbbf3530e70236b877f625aa2e6b0ed425e714ace025",
+      "working_bytes": 21890,
+      "working_sha256": "8c0ae38b86303b1474e20512d003f8981714ce71ca9df995d89323dbe26174e5",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/CustomCoverUiTest.kt",
+      "git_blob": "3614e83151601df4f78f3d86185b189ca249c123",
+      "commit_bytes": 7026,
+      "commit_sha256": "4b49bc68c117af9f032b5815bb0eba0830ad13c96ffb138189c1cdbdeea31732",
+      "working_bytes": 7026,
+      "working_sha256": "4b49bc68c117af9f032b5815bb0eba0830ad13c96ffb138189c1cdbdeea31732",
+      "match": "BYTE_EXACT"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/DenseNotesTest.kt",
+      "git_blob": "e27b36df44d35e83975c86489c12ffb9d4652b8d",
+      "commit_bytes": 2069,
+      "commit_sha256": "8ad824ca42c33a4c5b6620c28ee31f931e62ce1bd4f9c77638eada01d3dda2e2",
+      "working_bytes": 2097,
+      "working_sha256": "688440f3c42af6bebfd8d3de159e8878d11d4aebd3af2b447b3146c87ce6444e",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/DiagnosticsUiTest.kt",
+      "git_blob": "069b086210666d91d8e5d605e820db57f78b8a8e",
+      "commit_bytes": 6482,
+      "commit_sha256": "10820a41dcf65d2dcbc23c5ac62df80d372b063cf1147d2c4ce083d45d817d92",
+      "working_bytes": 6569,
+      "working_sha256": "935daa7767aba6b5b6d564a2792d8de69756894d8864d57e389bd71e2f29ff35",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/DocumentPanelsUiTest.kt",
+      "git_blob": "a1549ab8826286136b454d6f66356476a27e365f",
+      "commit_bytes": 4758,
+      "commit_sha256": "dad46c9825a6cf4d1ca306f5d1b64d4f30f5d0f4dc0c2690fd2b0e324cd9c2c3",
+      "working_bytes": 4801,
+      "working_sha256": "543b6ee76193f31d2ddf6f5a11974447367493b1da9da61384839ae805cd3317",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/EditorAffordanceTest.kt",
+      "git_blob": "5803b742356d83fb7cc744f65f385831ab6d7992",
+      "commit_bytes": 6959,
+      "commit_sha256": "c83805e43b6b0a3a1655325578e76d0c27fae902f1fa334496f390a70b06ca3e",
+      "working_bytes": 7054,
+      "working_sha256": "1e3c4b9a5a32caedce51639eb3c8555e9d1603b6691999231fc426139f27017e",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/EditorFramePerformanceProbe.kt",
+      "git_blob": "2b0af9df6b81b54c0084e25327fc0e7041a723f8",
+      "commit_bytes": 16506,
+      "commit_sha256": "f204db6ee19a45825a9f167d038774e899bfc436e44787cb1e9a1f2d796ddacf",
+      "working_bytes": 16720,
+      "working_sha256": "849f086ad9c954de9f0de3f472ee3f79509f60ed7885bfbae1a530f24eb27719",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/EditorRedesignUiTest.kt",
+      "git_blob": "0c8ccd6213c958be9c251998a8ade96b958381b3",
+      "commit_bytes": 6796,
+      "commit_sha256": "8df90c09d26ea9d22dd6efa5fdaf11989e4a1a095f31cecb8cded2d4ac0fe56a",
+      "working_bytes": 6882,
+      "working_sha256": "5aac83c82ee54bc8ac1eff8c311b4e70fe7c44de437c858d6a1b89fd426b9061",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/EditorTestNavigation.kt",
+      "git_blob": "fbcaf4df3ab996925ae0db84b42e2ead2c535cad",
+      "commit_bytes": 8749,
+      "commit_sha256": "0d5db77ead3fcea56ac06610b12dffcc4dd5024e411c9f59db88003654af501e",
+      "working_bytes": 8875,
+      "working_sha256": "555bd59bcc83f2fc15236d246028155a0361b93a404f3d127cda7389fbc37d45",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/EditorToolsUiTest.kt",
+      "git_blob": "efb69a59fc778dcc159409c915f50cc34975ad1f",
+      "commit_bytes": 13204,
+      "commit_sha256": "d1fe7adb659db4c7efc26daf8739eabe710330f068e6c1ecb3c73611bddc3d15",
+      "working_bytes": 13204,
+      "working_sha256": "d1fe7adb659db4c7efc26daf8739eabe710330f068e6c1ecb3c73611bddc3d15",
+      "match": "BYTE_EXACT"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/EditorVisualContractTest.kt",
+      "git_blob": "236263307f893aa114e0b63e072791ecaf352073",
+      "commit_bytes": 4627,
+      "commit_sha256": "aa03a1673d1eed170c1b3a883c771c89607e11b808228e01cc2dc9d2cf21f843",
+      "working_bytes": 4705,
+      "working_sha256": "a1227075bac35b6fd93a1c063e4bce12ff9dfda705570c5bd237ae729d1265e3",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/EncryptedBackupIntegrationTest.kt",
+      "git_blob": "feb190b3570e0ca37922cd9534403d1cf18fff9d",
+      "commit_bytes": 15144,
+      "commit_sha256": "529f7c0412a11414fbc5adc318ea8883254d8c2a3b363f64c048e8f5e1823ddb",
+      "working_bytes": 15320,
+      "working_sha256": "278524e23676b364d9b0d8302f59b78d71f73861cdc208698c1b7549b0428ac0",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/FastPencilTest.kt",
+      "git_blob": "097e96da06b4b7d787e18e0cd26613c94731693d",
+      "commit_bytes": 1387,
+      "commit_sha256": "90b454888bb1a6b2edf7f9128eb3fa932e9eaf2926422a9c995bb2038c8c987a",
+      "working_bytes": 1407,
+      "working_sha256": "440e33ccd76790238a6b2a124ca12c565e1e78eaaa0d0c6ef0420fc94a84a2ef",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/FontQualityLayoutTest.kt",
+      "git_blob": "b253cc5dd86848b7fba3775af79bc3b38e573426",
+      "commit_bytes": 7214,
+      "commit_sha256": "3d895a4df83899770e5a185719eb6d075528fcae846dd4ffe57a1e16af56ecb4",
+      "working_bytes": 7214,
+      "working_sha256": "3d895a4df83899770e5a185719eb6d075528fcae846dd4ffe57a1e16af56ecb4",
+      "match": "BYTE_EXACT"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/InkUiTest.kt",
+      "git_blob": "542f44a26acf31fe394c4088e7e00fc9a66207ac",
+      "commit_bytes": 3418,
+      "commit_sha256": "fc25ef04422a6d48b133d66360aeed27c6d7ce8ebe35a1c3e3a48dcd8da463df",
+      "working_bytes": 3486,
+      "working_sha256": "856b8fccedb2e2f47fdd6da97f9a5a371a035ebaa8ca1ce0ab0e59ba02ad7542",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/IntegratedMapUiTest.kt",
+      "git_blob": "d95a08c6b396a122fc587ee89a09501bb724934c",
+      "commit_bytes": 9682,
+      "commit_sha256": "9a7ea97563a48eeed7403cde149ea1314c3a661b5ab32517a93438820c416adc",
+      "working_bytes": 9773,
+      "working_sha256": "66866678a6b0610ccff961731aa2c99ad9b58d433bb6310a17ac3747bafc5ba1",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/IntegratedPerformanceTest.kt",
+      "git_blob": "5907341aa6ba25dd1d04071de6888fe790635d52",
+      "commit_bytes": 6907,
+      "commit_sha256": "123969907624fb610bfd30e6a16f497c2e323d3ea796b77b317a164b24c48e16",
+      "working_bytes": 6966,
+      "working_sha256": "07724c04c9ded18e0646735a14c3b0f409aefcd928345319d4e7cff10731d24b",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/KnowledgeTextLinksUiTest.kt",
+      "git_blob": "50e413e000e0762e5953acfcd2e79cb149285994",
+      "commit_bytes": 26449,
+      "commit_sha256": "9bc904c2765e5909a1960f0724886c4a2a0f55c631075128e5c1236893488ffd",
+      "working_bytes": 26972,
+      "working_sha256": "7c7e3bc7a27ceb6bb378275eba83ea0cb4cc3ff0ab59f1e38d34c703ba1089b2",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/LearningJourneyProbe.kt",
+      "git_blob": "b7e474ffc6a8aad9977802f9ca3077aec802bc4d",
+      "commit_bytes": 15216,
+      "commit_sha256": "ca578b27308352f0832abbc660b58a387bc859de8efc14961c2b1a8734ee619a",
+      "working_bytes": 15216,
+      "working_sha256": "ca578b27308352f0832abbc660b58a387bc859de8efc14961c2b1a8734ee619a",
+      "match": "BYTE_EXACT"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/LearningWorkbenchTest.kt",
+      "git_blob": "a8ceab53924643642ba7d845ce7612960907a9b8",
+      "commit_bytes": 7668,
+      "commit_sha256": "1496435372afceaa446587c9296c829b1f50956d6fffe7b85d30c0a64ada3103",
+      "working_bytes": 7769,
+      "working_sha256": "7e5e668f0e6e9d0bf688d41c02d149c5db5e97c74e01df08872d3d8a218ea2f7",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/LegacyBeautyFixture.kt",
+      "git_blob": "8f55cc7a553e3e5d347d2d54fa85dd7e6c342206",
+      "commit_bytes": 5166,
+      "commit_sha256": "31357c530f1590529f2e2c44d20db4778f125dd8c42367d332ade90c9b97c64e",
+      "working_bytes": 5166,
+      "working_sha256": "31357c530f1590529f2e2c44d20db4778f125dd8c42367d332ade90c9b97c64e",
+      "match": "BYTE_EXACT"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/LibraryBackupUiTest.kt",
+      "git_blob": "4c3a3d1f546609efd54ee8767bcaeec28cbbff12",
+      "commit_bytes": 5091,
+      "commit_sha256": "f30f5d038e5fe0d7796ce39d5f7991f43d53da4331b1d6398bf26567322d5f44",
+      "working_bytes": 5164,
+      "working_sha256": "2814ca345327ecab8d56047d0c1a6af177a62b5b48e5e95f8cd7ceee1ca0e739",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/LibrarySourceNavigationUiTest.kt",
+      "git_blob": "e66ba4523842ebc83a8df402379e6c97bd149995",
+      "commit_bytes": 31731,
+      "commit_sha256": "c4040392ddd738d3e15ec662f8431e30668114858d0c6071f836f33ac962c8f9",
+      "working_bytes": 31731,
+      "working_sha256": "c4040392ddd738d3e15ec662f8431e30668114858d0c6071f836f33ac962c8f9",
+      "match": "BYTE_EXACT"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/LibraryTransfersUiTest.kt",
+      "git_blob": "0f9173ca35cb608827668d6637ef08f5f84274dd",
+      "commit_bytes": 5706,
+      "commit_sha256": "3ad11b2093b5f0e5588b01f1e2114b76de0c44b362464c34d474f1784d27650d",
+      "working_bytes": 5781,
+      "working_sha256": "64acaeddb83bda068c8cd97f82a7b1c3476eafcb8a6894efe2ae454e599b0944",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/LiveBeautyEraseTest.kt",
+      "git_blob": "03e3a413128faa29161fb149e029c45ed162c5c5",
+      "commit_bytes": 2070,
+      "commit_sha256": "40335ff8aca2b5cf0e09fbffb06219b8c243cd2109fd7459a3b60e1035ed9938",
+      "working_bytes": 2099,
+      "working_sha256": "50972f9e192382f634aa637026f7286578d88b9f3a0db1bbbf24700dca8e2ecc",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/LocalBeautySamples.kt",
+      "git_blob": "9d99107214cab368f586061c05f83652739a3527",
+      "commit_bytes": 2438,
+      "commit_sha256": "8999b748a506b9cd84440d8977d0f684d9ff40c0e10cff29eaefe12eb9f5b96e",
+      "working_bytes": 2472,
+      "working_sha256": "e536c8d7602f477a94ca037ff90a23cda2f5602554af06c239cdc3ce147b1ae5",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/LocalEraserRenderTest.kt",
+      "git_blob": "115de89cb05ede107965ec75fe38697bb92946b5",
+      "commit_bytes": 3686,
+      "commit_sha256": "33f48ec28c23fbedae461e1a3f0b40cdd6dda581964baa75c6735006a446c83b",
+      "working_bytes": 3743,
+      "working_sha256": "ab748717b64fcc88f650c3fa543f93e6df010db4d34f9a59c8c579b50f265ea7",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/LocalMotionUiTest.kt",
+      "git_blob": "1ca94848003e8bb0808e8eaa492124a5eb54c57f",
+      "commit_bytes": 42391,
+      "commit_sha256": "3eb2f4c055abee367f5e90a9073f1ca95681288301fedd2868b5e009f41be617",
+      "working_bytes": 43159,
+      "working_sha256": "bf3934a2afd72048b123e027a93cd00df116f94bcafe4a60950630522db2d81e",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/MapAddendumUiTest.kt",
+      "git_blob": "aa6dba317d5cd51d10e1999b9e7dba54325bbb07",
+      "commit_bytes": 10144,
+      "commit_sha256": "f11806a1fe11cd3aab54db3ca2915c243752d28bf6627c4c8844cc5021aaa3c4",
+      "working_bytes": 10231,
+      "working_sha256": "23e4cc0cbb3539f58a9810558dd43128be6e319ead4193ba555cc276ac61abc0",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/MapInteractionUiTest.kt",
+      "git_blob": "5b0dc1b0554e1ab55869bd16090243bada0d8375",
+      "commit_bytes": 15496,
+      "commit_sha256": "e3a54bef9936bd249c7088cdb1d044d737c03f0e3571cd963e774717cc21ef91",
+      "working_bytes": 15496,
+      "working_sha256": "e3a54bef9936bd249c7088cdb1d044d737c03f0e3571cd963e774717cc21ef91",
+      "match": "BYTE_EXACT"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/MapPortalUiTest.kt",
+      "git_blob": "24c2cf4b8f47abd0f7c66a63e2a2eae54861d07a",
+      "commit_bytes": 51053,
+      "commit_sha256": "7c07f0e7f08064b5a048e0996af533dd7e6aba15e712f2c4b10f66ac0751da31",
+      "working_bytes": 52017,
+      "working_sha256": "3699d9fb9196729b7219f5013bf84a3de2419eceac8f29fa9b1fd76c263cb78b",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/MixedSelectionTest.kt",
+      "git_blob": "1bcf116e9204466f2ff44236963142ebdb36cfac",
+      "commit_bytes": 12322,
+      "commit_sha256": "a07bd2cfc23eb81bcd7a463435988e265f2dc3d313901f42a1967c0e164f5027",
+      "working_bytes": 12449,
+      "working_sha256": "e15f5bd6258fca9b590164a8f99f2c02f682e6643e4caf6cd8b5c392907dfaee",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/MixedSelectionUiTest.kt",
+      "git_blob": "37ea40b4f003fcdf75a3081c92370a7e63aacadd",
+      "commit_bytes": 5985,
+      "commit_sha256": "8a65b98b37bfee4dcd82ae8b3d5298da2e4a345f4585dff8134f4a0aae780043",
+      "working_bytes": 6050,
+      "working_sha256": "fe368aa3cb233d97cd4aa7d2fee5996353975e98f5a8edc9d9a1aa8b08615a84",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/ModernWorkspaceUiTest.kt",
+      "git_blob": "84ac4353660e73cef36b89731e4db1fb7806616c",
+      "commit_bytes": 8129,
+      "commit_sha256": "9f48dea966eccd91fc59d1d81fcec55d97286cc5475ed4423443e3b5d0a058bc",
+      "working_bytes": 8222,
+      "working_sha256": "cc4d0de78aaeeedf3df66c27b4d521752f4952498685d36822bf4930061bb2d8",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/NativeEditorVisualProbe.kt",
+      "git_blob": "6a0f8d5f58f9818ad5a2d4b2939fc714d6ad0b33",
+      "commit_bytes": 10830,
+      "commit_sha256": "8e326e1e0e8532afb29a152f0745a4daf014e57abd86255561d5191f51f9b80a",
+      "working_bytes": 10952,
+      "working_sha256": "5480df0b12f0e448c11edbb987bd03ab2699ad93bd6cf2e3b854a8b2051b0f9a",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/NoteFirstUiTest.kt",
+      "git_blob": "4cacf428a9227fef80ebd4bc2c6bc116bcc04fd9",
+      "commit_bytes": 20511,
+      "commit_sha256": "e839d2a03fd9cc2e5431de304cc49580efc70999afa03e679c6372c371b62e94",
+      "working_bytes": 20721,
+      "working_sha256": "31c3939d608c2e46650e717140e6000fac4aad0aad4908f65299e8a6e312603e",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/NotebookMenuUiTest.kt",
+      "git_blob": "741d3fa2d4a09b3070805134b9d43e91a4249af7",
+      "commit_bytes": 1918,
+      "commit_sha256": "11cbbc44b7f09a751e220971a8195371a58dd2583d9012315f46e08aec4c9f97",
+      "working_bytes": 1950,
+      "working_sha256": "32b72ede46b8bf2cb2e0cc782e4cf060bb0bd779cffc5203a1e7dae007118652",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/NotebookNavigationUiTest.kt",
+      "git_blob": "ffcdc96c6d67439714860eea5505e17b64a6b702",
+      "commit_bytes": 3032,
+      "commit_sha256": "f571f161dcb2499f7717378639ad43dd25816a19ba02f4e89c0cbcbb08eb671f",
+      "working_bytes": 3075,
+      "working_sha256": "4d74c976fff39f500a20a5a61c88cc2493857aa9d87c6d7152f182c3695311da",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/NotebookShelfUiTest.kt",
+      "git_blob": "7a38faeb9d8354764a46c552511e530f66ee5b78",
+      "commit_bytes": 7708,
+      "commit_sha256": "ef9df4f421bed0afd30e884e2932111e5cbab32e4a4d8efa6aabe89b6c2011d2",
+      "working_bytes": 7775,
+      "working_sha256": "5ae4e9a30f066bc3fc1d885a5dcf609ac6696345aed28f24dfad189f85150cbc",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/OfflineBackupProbe.kt",
+      "git_blob": "b709ef8cd57cd58b3eadcb50bc3a8ad8495ad844",
+      "commit_bytes": 2352,
+      "commit_sha256": "ddcb82443828c23eee0852149366b00008b0333242297527d49c9bc1df1b76c4",
+      "working_bytes": 2382,
+      "working_sha256": "2724dd955f3befc04debd0da11c3770a95edc33f5b4412bd2e682265b678a0c2",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/OverviewRecoveryTest.kt",
+      "git_blob": "d31320d5410d205d565b7e874dc1f8bd9205ad3a",
+      "commit_bytes": 3397,
+      "commit_sha256": "99f61955b0db8b7017354d0e3617754db2d10b222dd7dfac4d62baa755d49862",
+      "working_bytes": 3441,
+      "working_sha256": "0d718322c1acf94d2eda185f8e8318acac99f0445d49305c93af3a50d0dfa74d",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/OverviewTabsUiTest.kt",
+      "git_blob": "5e3741c6f8afd82fc94d353a9e9ee40524bf73e4",
+      "commit_bytes": 4168,
+      "commit_sha256": "d7a1600cfd1d2d9f539e949d0ab46c5564b9911fc4726464ba32a15796055354",
+      "working_bytes": 4207,
+      "working_sha256": "bf4f14debffba08f875960bcfb25154a1acb064e75cf0bb502685333822328b9",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/PageEditingUiTest.kt",
+      "git_blob": "5674a15ef6b819d8bd96356dd29b978bed849ecd",
+      "commit_bytes": 5835,
+      "commit_sha256": "9d04b900d2ae0cd6ac3d8e5438db3992888bc83c0fa14fd911b97347b13a760a",
+      "working_bytes": 5925,
+      "working_sha256": "eda8d003aef4d433960518a7e6996f800b6d96b93447d6583c6f71e84be01d2a",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/PageInsertionUiTest.kt",
+      "git_blob": "289ebf83f200e07c3103fbeec54907ccac4cac15",
+      "commit_bytes": 5661,
+      "commit_sha256": "f8f581f17c8cfa136c3d4845b371aba65846823bbb23eb0f04465e64cf7299ce",
+      "working_bytes": 5661,
+      "working_sha256": "f8f581f17c8cfa136c3d4845b371aba65846823bbb23eb0f04465e64cf7299ce",
+      "match": "BYTE_EXACT"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/PageObjectsUiTest.kt",
+      "git_blob": "b1c9519a6593c5eef5e38572f0a62904495c751e",
+      "commit_bytes": 9383,
+      "commit_sha256": "c12d5f04f816a53d1013fd9cf6fd5fcc15e1961b42cb2ead5edb625b7545ed4b",
+      "working_bytes": 9504,
+      "working_sha256": "2fa05b3c74988c4f19df7fef17131eb5220c6231ff14299aeb5015e1963141c3",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/PaperTemplateUiTest.kt",
+      "git_blob": "c2376e8e50a530129b18ea50892ad877e64e304f",
+      "commit_bytes": 6018,
+      "commit_sha256": "3703718bf2c3ea992757343f4146d883c4575e3361fef4bb1461ab1f16c0a597",
+      "working_bytes": 6104,
+      "working_sha256": "235c2cb4c44e13eaaeda33ea8c994272edbcdfe1013334049ffd8ca35967349a",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/PdfTextSearchTest.kt",
+      "git_blob": "6eba96def0629a8b74c935306fb0007a580c8c2e",
+      "commit_bytes": 26328,
+      "commit_sha256": "bd80017ce6c3ebca8e3bc94c5084b306119669dfb3e80a56a075285fc14eeab6",
+      "working_bytes": 26801,
+      "working_sha256": "fc4b5e5e18cfd94d24fcd82244ee7f6b594763ca8d9c28538071e04dd80f830f",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/PdfTextSearchUiTest.kt",
+      "git_blob": "0095b1b808076c391da5d6f3983b5e861208ee3e",
+      "commit_bytes": 27097,
+      "commit_sha256": "7f5b5ff9586efca031f82e3af7f3050414c97a341bed5ba33233f2f644e85b72",
+      "working_bytes": 27577,
+      "working_sha256": "34f8ddc2a2f980b131155fdf14fbfe567cf0c34c74bfd24fdd0a506d4968adfe",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/PenKindsRenderTest.kt",
+      "git_blob": "370e4b29100df56ef0994aca42663f81fcae2d23",
+      "commit_bytes": 3278,
+      "commit_sha256": "4d87aa375ab5cfd9c250b3c8a961240c54c4fe057821b591574061d45d6016f3",
+      "working_bytes": 3326,
+      "working_sha256": "6c80c83a3261e4fc47b4db2359e4490274bfb97deaec8ad43081013762f27826",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/PenPresetUiTest.kt",
+      "git_blob": "9e34f4eaff168bea33f5ea087b3f7a1b13e7bf5b",
+      "commit_bytes": 5771,
+      "commit_sha256": "297089f699fa6596a621bdef6b53133e44c14291927858c39c7489d91461a1cd",
+      "working_bytes": 5841,
+      "working_sha256": "129b9e94f266b9ffc02f919d152b95dbf7e73071eb36b9939e9ce623c4cebbba",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/PencilMaterialProbeTest.kt",
+      "git_blob": "20251bef26c69231b9f34fc5decfb11a752b7c37",
+      "commit_bytes": 1558,
+      "commit_sha256": "842bae2a9c86e3d335ee16172e2b846417551cf0a9537d69aa35b5e65da07032",
+      "working_bytes": 1586,
+      "working_sha256": "09cd8bed71ce4c9c8a06838b4aca29c51964d84f1e9443d07decbc77fd0d918c",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/PrivacyExitProbe.kt",
+      "git_blob": "decd34d5a7dc5136afaf41defaf91c48442100fe",
+      "commit_bytes": 13973,
+      "commit_sha256": "ab8a561418de7a08b6b803202b0ac19a7a55d4fda00863fdc815f5628fc6bb33",
+      "working_bytes": 14139,
+      "working_sha256": "95ccd3698bf473a1d6f23af2521c6cc7fa60f39a8febe90f988a503fe7064d83",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/QuestionMaintenanceUiTest.kt",
+      "git_blob": "fcdb3375c0678e72d482f4d41448e626d24cdcb3",
+      "commit_bytes": 42137,
+      "commit_sha256": "eb13b69333d09df2fda04600c06e5789738744a9b2014948429372694ef4f213",
+      "working_bytes": 42920,
+      "working_sha256": "a31113dba19ead1b2982df36c439e99e9d528fa1f80e2aefc8489151977a8a72",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/ReadLockCompatibilityTest.kt",
+      "git_blob": "73643499eca550ecd5ec02dfcdb5a3eb1f7a52b5",
+      "commit_bytes": 17374,
+      "commit_sha256": "cb242f8dd2d385317edeee5040bccc1af4817815009636933eea3c4efec79ab0",
+      "working_bytes": 17642,
+      "working_sha256": "80c467b2c08fcff176f5d209e14a9aa26f364f93564146702e791cbee241d43c",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/ReadLockUiTest.kt",
+      "git_blob": "e07defa8fbcb9cfeca49933b3aaf836b11d8c18c",
+      "commit_bytes": 45220,
+      "commit_sha256": "ebac8cac77106a0e1b9e5751e8944f1c03ec96c9c17bb6f6b30b2b53b0a4f4bf",
+      "working_bytes": 45895,
+      "working_sha256": "89c2f72aff974a038912eefa62fcd9dc390e9aede85e4503d596cfa78f93d311",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/ReadingAccessUiTest.kt",
+      "git_blob": "82229945e9d07f727032d79c673b8e27ac1d2fd0",
+      "commit_bytes": 40047,
+      "commit_sha256": "ac5004138f54ee1b0dc09a7020b7b9d99657ab31df7c1bdebc64ec766b4dc500",
+      "working_bytes": 40047,
+      "working_sha256": "ac5004138f54ee1b0dc09a7020b7b9d99657ab31df7c1bdebc64ec766b4dc500",
+      "match": "BYTE_EXACT"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/ReadingHandwritingTest.kt",
+      "git_blob": "4ab8c642c6107c6f322f590b801c2b303ae336ba",
+      "commit_bytes": 7966,
+      "commit_sha256": "dfc051d3228936bb7e4f7077b2e10e423e632f09ca134f7ab177aa4f4d66ad20",
+      "working_bytes": 8049,
+      "working_sha256": "656469dc2adf254b13550a0f5d85040ecf21c2b98553adfa8382176ea5434c71",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/ReadingHandwritingUiTest.kt",
+      "git_blob": "cb2545a4adea81d8e6aa61ce533b1d618ac6f61a",
+      "commit_bytes": 5697,
+      "commit_sha256": "5a3b55a55ad4bc5898dedf951957f605aafd291ba952a04da5b99069e52fca15",
+      "working_bytes": 5759,
+      "working_sha256": "c585fad75e5de3f2e8557a779fdbd0787fad34dca40cd8b1e5f4c179603cd1ff",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/ReadingToolsUiTest.kt",
+      "git_blob": "643e16dc9d460cd5641189c22bb14550daa3d317",
+      "commit_bytes": 34780,
+      "commit_sha256": "49354eaf9a42e774668279ad51e1af67464cca4d9df36731d0d16bea9fad5aaf",
+      "working_bytes": 34780,
+      "working_sha256": "49354eaf9a42e774668279ad51e1af67464cca4d9df36731d0d16bea9fad5aaf",
+      "match": "BYTE_EXACT"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/RecallMaskCompatibilityTest.kt",
+      "git_blob": "481a42398184e9d8a46afe11d0467e945de36371",
+      "commit_bytes": 19595,
+      "commit_sha256": "aec7e1a8a4ebc49b2ea000871f0ba79581a497d20582ed6f122aa237848c13e5",
+      "working_bytes": 19895,
+      "working_sha256": "ed1895b748d10ec0c0bfffd83fe45dbdc916e4aa5da7673e1b4fbde6d861b61a",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/RecallMaskUiTest.kt",
+      "git_blob": "480c4fe494c97ae74d6ae4b6eac9e3a3826a1d9f",
+      "commit_bytes": 72889,
+      "commit_sha256": "306572c127df30937c6bf94eaf58dd740c4f1441b161f02c0a2012cf0b9d698e",
+      "working_bytes": 73921,
+      "working_sha256": "e05e8e60d0002b06bdd9c7b2629889380f0149db294803bf2d1a268a1a782bb5",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/RenderResourcesTest.kt",
+      "git_blob": "8a1264b84801073060e4bffbbc85f68fd591ce8a",
+      "commit_bytes": 4292,
+      "commit_sha256": "fac284483de3d1d9417863a44497334e5165aec74ecae5f638107ac38887995c",
+      "working_bytes": 4343,
+      "working_sha256": "597a7489aeccb6e6d30d2d80f2c51174750d6f4a74b789ede1c91ccd6b5e548e",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/ResourceCrashProbe.kt",
+      "git_blob": "53e56a5d05bb13235c7a90984dfb9d803af27f09",
+      "commit_bytes": 4322,
+      "commit_sha256": "020b6035011a2b0a22f010d7d3764458f1c3a9d828c9ff9183ed529a331e268a",
+      "working_bytes": 4382,
+      "working_sha256": "dc425eeada4c1c360ecd170cbe6e3e98571b188eb20c8457561f047528290722",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/ResourcePackTest.kt",
+      "git_blob": "42b12703076e23d7829d6977afc272b6f2fd9a94",
+      "commit_bytes": 11037,
+      "commit_sha256": "5d0cef28b265948573fed1e16add28be5976e4e1b2561864ed42922787fa9455",
+      "working_bytes": 11157,
+      "working_sha256": "a459371741fb4a85a2a0d6c3c0211b58c712058a42a16154460cd59629ba24a8",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/ReviewStateUiTest.kt",
+      "git_blob": "527d09c0da8c9df6b595371bf3fdb905b1d5925a",
+      "commit_bytes": 56229,
+      "commit_sha256": "f15056bcb33d8c51082a5393f72656d6843c4cb5c8c794c38d599b37863765da",
+      "working_bytes": 57116,
+      "working_sha256": "23f371d364c88f66473a0d8d6f6c39b8244c119cd48645dcff32d9435c4c26bd",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/SelectAwaitTestSupport.kt",
+      "git_blob": "605a185225a25b37448c99fe8d90ebe1b806053d",
+      "commit_bytes": 24685,
+      "commit_sha256": "227188f74764d22c9eabdc9fc42cd81f063e729d67765efd346c665dee9b4741",
+      "working_bytes": 25080,
+      "working_sha256": "74a4a445ba6658400f61e3b2de0880f0e434d9f1b1d645e53dd51c2edfee7a7e",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/SelectionPerformanceTest.kt",
+      "git_blob": "ad6943c3f27d893078ccaf1b974966b512a9d2f4",
+      "commit_bytes": 3607,
+      "commit_sha256": "c9653df8db5cccc37f7a187d8aa31a2d7228ad0308dbfd0f658b6fb47a127225",
+      "working_bytes": 3660,
+      "working_sha256": "77fe7af47c47ef1b13555fbf087a149f92d4686aa3a20df59111162237d3cd22",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/SelectionStudyUiTest.kt",
+      "git_blob": "09563e14b7833878ff050cde3b9c533137e21225",
+      "commit_bytes": 21073,
+      "commit_sha256": "30eb067969ad299c60ea21533ed12aca402b334d58f32b69615e19a47ccee05f",
+      "working_bytes": 21073,
+      "working_sha256": "30eb067969ad299c60ea21533ed12aca402b334d58f32b69615e19a47ccee05f",
+      "match": "BYTE_EXACT"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/ShadowCrashProbe.kt",
+      "git_blob": "1bdf230b915545ed08c007adb9def50d0244708c",
+      "commit_bytes": 4185,
+      "commit_sha256": "90c1c76be99d75922774dca30c48e33dc1094cee9ade06b49dd52ce762c1512c",
+      "working_bytes": 4237,
+      "working_sha256": "ad3b17a4f2e1f10ebfa7ba9f3705accc3a7892acf7ac7016987b702300901d63",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/ShadowNativeTest.kt",
+      "git_blob": "4fb6433bd99e2f4f9df538aa0ef26efbe5bad4ae",
+      "commit_bytes": 9234,
+      "commit_sha256": "022ae4e9527fc3bb8ca59fe0621de8f5d0916360cf69f37a6c5159fab346831e",
+      "working_bytes": 9343,
+      "working_sha256": "2e6693419b315fb49034357294c3d64b3c532032dc709ee1125ee71587c150eb",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/ShadowSemanticTest.kt",
+      "git_blob": "4b5279d54996fe563b063740629469ec4b5cf6b4",
+      "commit_bytes": 3637,
+      "commit_sha256": "fc35eb2db91e2acb34f3da7daa0bac662f1c840801fee658aaff1398ffb643a8",
+      "working_bytes": 3681,
+      "working_sha256": "70c996df20a4c9aae3168d68712db79c301bf16122dd2f277a85b2d961e9b1d9",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/ShadowSyncTest.kt",
+      "git_blob": "924c780ea3a7f5a2006db783557bf33cb96d9434",
+      "commit_bytes": 10361,
+      "commit_sha256": "d40143c2c72fbd0778513c25f43946d8b444de6b1632a6985612da33fb93eca4",
+      "working_bytes": 10467,
+      "working_sha256": "9f35b8b9401f686cb24a427990d25d120d0747593b56b6d22fcccf3388bc7272",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/SourceFocusVisibilityUiTest.kt",
+      "git_blob": "7bea12cd9b6eb0b4cba30d0f5e1b326124165e98",
+      "commit_bytes": 43499,
+      "commit_sha256": "8e3ff0f11b86263602be1e0f5e0e150ef72f6f2f9f2d6af7ca2a655749787fb4",
+      "working_bytes": 43499,
+      "working_sha256": "8e3ff0f11b86263602be1e0f5e0e150ef72f6f2f9f2d6af7ca2a655749787fb4",
+      "match": "BYTE_EXACT"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/StarNoteInteractionsUiTest.kt",
+      "git_blob": "f0a95ea115ab0776a84a88ed49c1daddb2e80861",
+      "commit_bytes": 13566,
+      "commit_sha256": "d4b2319e53355266fa4503e7a09bb3013452ff274ca76cbe1f6565bef5248799",
+      "working_bytes": 13718,
+      "working_sha256": "94b7b054139d72d81ed4b8888b1c46691574c062975dd827014c317bb924d57d",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/TapeStylesUiTest.kt",
+      "git_blob": "33053fe10738c5cb66f9dbc18ae1131fda4be8e6",
+      "commit_bytes": 2863,
+      "commit_sha256": "f5eee240bf7b11de84ed3ce27b9fbf9481d0925e6f1665b659e6856506f8857c",
+      "working_bytes": 2892,
+      "working_sha256": "19a66143f2bafacdd44bdbc7e5bb8c58a39c5072334c72d236fc739aabd85bd6",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/TemplateCreationUiTest.kt",
+      "git_blob": "97c56cbf058dbd17d0286770582b48df32d5a872",
+      "commit_bytes": 4656,
+      "commit_sha256": "01499b51c7a3264e15389507a5e033d191782b970dacb95669a12060cde67ae7",
+      "working_bytes": 4705,
+      "working_sha256": "141216492caa567c279e26a0731b5f6dd8634c634ca74284d5e701eb9c84adc4",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/TlsBackupProbe.kt",
+      "git_blob": "7cff27d676139a41491fef4d8225c956e1eee1fa",
+      "commit_bytes": 3821,
+      "commit_sha256": "d7e82ee4f721752b137a4074b479eec397314101f1bcec1abf1bf10c6c596e09",
+      "working_bytes": 3871,
+      "working_sha256": "dc18920c98a2260ab3980df6a65f122f8da5efd7093d17e0415dd7b798198129",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/UiR2Test.kt",
+      "git_blob": "810400c0ec480650bd1e12532f5957027c5e490b",
+      "commit_bytes": 11664,
+      "commit_sha256": "32a4d76533ea9a15ca7cbe02cc19a51b6c0b56d86e4d87a0ced2fb214be6bc08",
+      "working_bytes": 11778,
+      "working_sha256": "a8e3e1611d8244dc0f92733e7897e81549d74c1a689029d529ce7bdab0662b78",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/VisibleEditingTest.kt",
+      "git_blob": "2fa1324dbca0b3dbacab553a26f55436150eb082",
+      "commit_bytes": 3712,
+      "commit_sha256": "7fae460bb8b3853376abf05f8901d8c823511457c662e9724362ab51a4c75ad3",
+      "working_bytes": 3766,
+      "working_sha256": "79c8c479d00870b8d0a31cc96730918c412c4abceb47671766d3ca2008185795",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/VisibleEditingUiTest.kt",
+      "git_blob": "73f0559bfce10e75b8db94cc3b30c80251d2a002",
+      "commit_bytes": 4834,
+      "commit_sha256": "02d57e58c2369ad2602bcc4f660958f2cd5697cf1bd021866e13fa9d33c70792",
+      "working_bytes": 4895,
+      "working_sha256": "4258db9bf8428134d2e22849aa9f29dff9140438a227dd5124d2f58883157d57",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/WorkflowPerformanceTest.kt",
+      "git_blob": "8dc54a5beefae5cf0d788e21afa9a350141cd919",
+      "commit_bytes": 11141,
+      "commit_sha256": "4752e6596f653267c08a61cc751fa88d9f60ffbbe3201b4ddcb49f9fc7483482",
+      "working_bytes": 11271,
+      "working_sha256": "2ae0b72d6173e4d023e2dd54c788d1e1cecff59fb4f005f0d07cb7201e5c7c9c",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/WorkspaceUiTest.kt",
+      "git_blob": "ca99d425ba9ef2655dc9e3fdcb518660ce994bc8",
+      "commit_bytes": 13187,
+      "commit_sha256": "7db3966913cbc8ce29e6804b052d418cca3c100309ca4a04dc9333b4b640b0f9",
+      "working_bytes": 13356,
+      "working_sha256": "d43cfa72b5422af437d167783b3a11bcc67618dba7f92679df93bb868d83e9b2",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/WritingRepairUiTest.kt",
+      "git_blob": "9411a9683592774391b132f7757fc841bb1c9149",
+      "commit_bytes": 5116,
+      "commit_sha256": "a4680bb5e7b5fad1538f229a69d4163879b3c23ae875e8815d05b11a4a194007",
+      "working_bytes": 5173,
+      "working_sha256": "44faf7e6a490d516fab634ce821bbb35ff69b5d457864e5ed4d1033e54af2ddf",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/WritingWorkspaceUiTest.kt",
+      "git_blob": "9a53ca311237d05dbc8b0df65879aaac79061243",
+      "commit_bytes": 9427,
+      "commit_sha256": "45c54f8c3429d4add89733b5d5584106d3f1aefa4752e9ec61a9c30b19792043",
+      "working_bytes": 9533,
+      "working_sha256": "b116bd527272aef75db7e83aa82eabdab6ab44d6391ec92ab45d17b42cccf304",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/debug/res/xml/network_security_config.xml",
+      "git_blob": "1db247b7c0a534fa86fa6dd129ee9a6c20b26821",
+      "commit_bytes": 417,
+      "commit_sha256": "5e7b9efc947495252c4fc5887f13f0f6524b41a310aae81e046df04bf7a7538e",
+      "working_bytes": 423,
+      "working_sha256": "a71fcc1fb90325e05f2217096278ecb2136311cbc0d2d324f3f666d988d515df",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/AndroidManifest.xml",
+      "git_blob": "c3aac1608317a87b47ed6fe4f9b2940c35cc67dd",
+      "commit_bytes": 2171,
+      "commit_sha256": "a129139b9fae14147ef2f468c820271d8c8d441c08b0e0a0cab8c5c58dd6d134",
+      "working_bytes": 2210,
+      "working_sha256": "59abd4b62615c0d733c0fc046b2974a19f654e8519f0ec04fe8cb396696d52da",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/assets/asset-manifest.json",
+      "git_blob": "39802311a58059961c8e28779cd86cd10f23f893",
+      "commit_bytes": 607,
+      "commit_sha256": "58e24189ae33b6f13199cb84c59d1b1e20882a9afeb2f4e6e907c3e27b145aa8",
+      "working_bytes": 607,
+      "working_sha256": "58e24189ae33b6f13199cb84c59d1b1e20882a9afeb2f4e6e907c3e27b145aa8",
+      "match": "BYTE_EXACT"
+    },
+    {
+      "path": "android/app/src/main/assets/fonts/LXGWWenKaiLite-Regular.ttf",
+      "git_blob": "8751570c043ae7bb9a0aa10773b031ca4ada9843",
+      "commit_bytes": 13872424,
+      "commit_sha256": "140c99ba4e28e817cec49bf82a0c5fcdc4fe633fb9dfda16d0ee8d59a8545f15",
+      "working_bytes": 13872424,
+      "working_sha256": "140c99ba4e28e817cec49bf82a0c5fcdc4fe633fb9dfda16d0ee8d59a8545f15",
+      "match": "BYTE_EXACT"
+    },
+    {
+      "path": "android/app/src/main/assets/licenses/LXGWWenKai-OFL.txt",
+      "git_blob": "44deedc1d7863c357e533e0b9cb1a2b47ad7b850",
+      "commit_bytes": 5176,
+      "commit_sha256": "0333a85fe077b6849f8e417acc44e8bd879442ceb681e271acf93e2d57fd4e2e",
+      "working_bytes": 5176,
+      "working_sha256": "0333a85fe077b6849f8e417acc44e8bd879442ceb681e271acf93e2d57fd4e2e",
+      "match": "BYTE_EXACT"
+    },
+    {
+      "path": "android/app/src/main/assets/licenses/MuPDF-AGPL-3.0.txt",
+      "git_blob": "19bae35887757f088b6c6bbad90a7dbc8791f641",
+      "commit_bytes": 34273,
+      "commit_sha256": "5132c7f0475b02c8107a2e0f0363e70423c62d2664ab927e76193226e5e05905",
+      "working_bytes": 34273,
+      "working_sha256": "5132c7f0475b02c8107a2e0f0363e70423c62d2664ab927e76193226e5e05905",
+      "match": "BYTE_EXACT"
+    },
+    {
+      "path": "android/app/src/main/assets/licenses/ONNX-Runtime-LICENSE.txt",
+      "git_blob": "48bc6bb4996ac924359e8e28b9ae88970e5ed3fc",
+      "commit_bytes": 1073,
+      "commit_sha256": "2f07c72751aed99790b8a4869cf2311df85a860b22ded05fa22803587a48922c",
+      "working_bytes": 1073,
+      "working_sha256": "2f07c72751aed99790b8a4869cf2311df85a860b22ded05fa22803587a48922c",
+      "match": "BYTE_EXACT"
+    },
+    {
+      "path": "android/app/src/main/assets/licenses/ONNX-Runtime-ThirdPartyNotices.txt",
+      "git_blob": "75af6ad7e3db5c34e9ff923734ea49056c578d5f",
+      "commit_bytes": 338088,
+      "commit_sha256": "143764b952fdb1a7c69ce653bfba74a7744d6a8a573bfb73e235fba356c83de3",
+      "working_bytes": 338088,
+      "working_sha256": "143764b952fdb1a7c69ce653bfba74a7744d6a8a573bfb73e235fba356c83de3",
+      "match": "BYTE_EXACT"
+    },
+    {
+      "path": "android/app/src/main/assets/licenses/PaddleOCR-LICENSE.txt",
+      "git_blob": "430edfa0cfcb59f15b7aa5457427d0faf2e40dac",
+      "commit_bytes": 11376,
+      "commit_sha256": "3840c5c0c61c294264d2dd77b8777be6ddd90121ef4e0e64abcd22edea581d6e",
+      "working_bytes": 11376,
+      "working_sha256": "3840c5c0c61c294264d2dd77b8777be6ddd90121ef4e0e64abcd22edea581d6e",
+      "match": "BYTE_EXACT"
+    },
+    {
+      "path": "android/app/src/main/assets/ocr/characters.json",
+      "git_blob": "b5267eefc89c7461880e3b626c4648d625dfe827",
+      "commit_bytes": 129163,
+      "commit_sha256": "c9007c1e471102735d65ed5e6bf2c197f4c3b926f7005c61143ac9c37c25adce",
+      "working_bytes": 129163,
+      "working_sha256": "c9007c1e471102735d65ed5e6bf2c197f4c3b926f7005c61143ac9c37c25adce",
+      "match": "BYTE_EXACT"
+    },
+    {
+      "path": "android/app/src/main/assets/ocr/inference.yml",
+      "git_blob": "176f6d552a120e6fa0a812089fb36c1bb983ce28",
+      "commit_bytes": 148345,
+      "commit_sha256": "5dfeb2777f6d0db8177d8128a8acfcf6e6276dc4ac73ea3bf0dc06d6a5e85d8e",
+      "working_bytes": 166771,
+      "working_sha256": "bd3e5a58a90d720345edc48dbb30b16bc39c23dac4a90aae1349bec679b0a7ab",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/assets/ocr/recognition.onnx",
+      "git_blob": "6e1f297a2ef15c987ed7374957360645cc29af74",
+      "commit_bytes": 16534782,
+      "commit_sha256": "da72dc72ca4dc220df0dfde68c1dedc31c58d3e76a25871122e5056227d50092",
+      "working_bytes": 16534782,
+      "working_sha256": "da72dc72ca4dc220df0dfde68c1dedc31c58d3e76a25871122e5056227d50092",
+      "match": "BYTE_EXACT"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/AppDiagnostics.kt",
+      "git_blob": "bbb0e68f8d3d941cee9c7b3164ab40e58f5892e9",
+      "commit_bytes": 11657,
+      "commit_sha256": "a05b2c2c96873163a717f9c0b8ac5c7a9e369b8aafd9997586dfc77617be0572",
+      "working_bytes": 11835,
+      "working_sha256": "264b4706f4a17ea6531c50bbeaa5a88cf9ef5372ffc0a4005d4e58563a02e422",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/AsyncInkRaster.kt",
+      "git_blob": "a263d1b7f7e42a7072a98011ac26cd8e97117153",
+      "commit_bytes": 9014,
+      "commit_sha256": "49ec9dd65a50f23a215b184a2767db385991e4ad79969923ee73ea90ea9b4837",
+      "working_bytes": 9126,
+      "working_sha256": "d5e51d75c2ca266c63dc07703bd3757d2a89967747e6cd40ad10ed7a263fb179",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/AutomaticBeauty.kt",
+      "git_blob": "9b21b75c571f4841fafe3ea6a9d7a88a431b3d8a",
+      "commit_bytes": 5055,
+      "commit_sha256": "e97a7a1cde59151fbf7d97bc1ca806d07878082a8bc9c8765afe5882001e05ab",
+      "working_bytes": 5109,
+      "working_sha256": "c1594c6dbb0f5e82a5b20b77f33cc96edfc5ff40ea017eeeb04b5066fcda58df",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/BackupJobs.kt",
+      "git_blob": "e794f94e177ff908bc481b595d2d032575aae1df",
+      "commit_bytes": 22840,
+      "commit_sha256": "7f9c705d7c4fbcb0c9c9155caab5f022cc396a319cc37eaa78b3aff34198aa96",
+      "working_bytes": 23072,
+      "working_sha256": "a7b0587bfe7605e999e04a41483030fbab856adff5289b24f029a9de9842584b",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/BackupScheduler.kt",
+      "git_blob": "df3a142d31ddbc8e90bcf33c52112fcfc90181f5",
+      "commit_bytes": 2894,
+      "commit_sha256": "6e4dba7d1019b7b89d422ce18143f874c3047a1ded3e692d07be22353c715756",
+      "working_bytes": 2951,
+      "working_sha256": "95e715185ae2258a3bb02961f845b5c8c57cbf13569c3365b6f040e7bf180e03",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/BackupSessionStore.kt",
+      "git_blob": "cca1ff746f9bb296edcfc98059c2ed553220e1e5",
+      "commit_bytes": 3021,
+      "commit_sha256": "d79426b4eaa48b8642c68882427b71b39acd34a94b797cec7b00c1735587e5dd",
+      "working_bytes": 3063,
+      "working_sha256": "6df45989cd177343aa1a8b9dfe84b85dc8f09abc8c08345d0b30df9f37e4a478",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/BackupSettings.kt",
+      "git_blob": "8fe8cc6beea3d3f06c6ee168c9c36694f40a8cfe",
+      "commit_bytes": 11629,
+      "commit_sha256": "4012978de4962ee1b7ebd4ab44d216f0da8cf71a33b5cd9fd89561cabe7c48e0",
+      "working_bytes": 11747,
+      "working_sha256": "9d0cc0cec243cafd6c78912f54f14faa652d7a2484894805f6ba4cb2cc06c7a7",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/BackupTransport.kt",
+      "git_blob": "d3e383254d3626d9770789146f25341a44678013",
+      "commit_bytes": 6479,
+      "commit_sha256": "71d11e408f9e34092141b4fc24b884f9c532e8c734357a93d40f6572a93f7e57",
+      "working_bytes": 6562,
+      "working_sha256": "bdab4d888bbcbbb1c0b703379c90b1536c8af2eae8c1e9b007a265eef2b1f97d",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/BeautifyPreview.kt",
+      "git_blob": "ddd5d11ec194c2f49972dad82c09aa7c06b80a49",
+      "commit_bytes": 1571,
+      "commit_sha256": "91aa17590e1a0ef82f3017a4c14a5d330d317b6abb33c03d6d1fabb440173383",
+      "working_bytes": 1609,
+      "working_sha256": "7356e86e73f5111d14c259e3db2d9c7f45bb71d333d273ef6579bc828d11868c",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/BeautyAppearance.kt",
+      "git_blob": "db3e6b4b0d59869319f9b6a027d82139c753ca1c",
+      "commit_bytes": 2486,
+      "commit_sha256": "6c21c34cb6bd1b42bf0d95a4490b819a6a57940f7da1ab5498cdab17ccd024b6",
+      "working_bytes": 2526,
+      "working_sha256": "6356baa20fe056bb7a1d3dd3833a53eb5e84704b1e3afd28df94011053d85154",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/BeautyDiagnostics.kt",
+      "git_blob": "bdaf637de71416533bbb1e752129fd6172096c4d",
+      "commit_bytes": 9749,
+      "commit_sha256": "ed933d3d32e362b71c7a32b3eb7f500df60048e927c9692d71eaa0c06e683434",
+      "working_bytes": 9864,
+      "working_sha256": "373ba620d60d9f85e671a2949e9adfa52387a99599265b204fb0e6a141b2a49a",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/BeautyQuality.kt",
+      "git_blob": "f9e8bd71bb343420af988e5985c3ecca0b204780",
+      "commit_bytes": 6487,
+      "commit_sha256": "1947eb6f277b243b53a13859308f1ac5296569fbe28df8a069ced3ff8e539d76",
+      "working_bytes": 6562,
+      "working_sha256": "5119fffda23e6bf2752bad1f7bc16365e517eb031d73fb6faff3cabfa718c47b",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/BeautyReview.kt",
+      "git_blob": "885e28577653720597f1da115837ea233da3cf7e",
+      "commit_bytes": 2658,
+      "commit_sha256": "9d68b964cd863fe789fe0afa83818fb1c9b46656b085937de1a0ecd850264eff",
+      "working_bytes": 2696,
+      "working_sha256": "e376b323e1cbdd7ad495912c3bf36bab209a01c33cbaf1ab3ff1a015118dc0d6",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/BeautyReviewPanel.kt",
+      "git_blob": "e2ceaf8d791ff9b79f09d6d5858051c793fe9bf3",
+      "commit_bytes": 3321,
+      "commit_sha256": "862c1519fa6ae951bb89157cdd06717398367fd356b8587db5b4f618f798676a",
+      "working_bytes": 3362,
+      "working_sha256": "272df81dd25c4cf5c2ea14e339712964fa3e3caf0a79b7b2cf1f13d756b50a5d",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/BeautySettingsMenu.kt",
+      "git_blob": "6563d207ce9328d8b12ee04796794168f36ab8ab",
+      "commit_bytes": 6963,
+      "commit_sha256": "a01d257efb17f6cabc877077fc8a6c4b23da640fed82fb9e2b8c153276325170",
+      "working_bytes": 7049,
+      "working_sha256": "fc4fc95bba7424785c6cd971ccc99445f7e1b4440033435a752efc60adb34d5f",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/BookInkScreen.kt",
+      "git_blob": "33b069ebfd0dc356e13fe3179a8a630a7a5fd7ae",
+      "commit_bytes": 42816,
+      "commit_sha256": "ddc7554302518578e83f59a11307d72d837d2c8f51956d3cf6340591cfe985ca",
+      "working_bytes": 42816,
+      "working_sha256": "ddc7554302518578e83f59a11307d72d837d2c8f51956d3cf6340591cfe985ca",
+      "match": "BYTE_EXACT"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/BookPagesViewModel.kt",
+      "git_blob": "b0a7094772425f60f86a55df19db41fc53f3eacd",
+      "commit_bytes": 13034,
+      "commit_sha256": "f51ef392391e0bd36fc17740a30c2951ffb506ca6d8564020f03a84009868eb7",
+      "working_bytes": 13034,
+      "working_sha256": "f51ef392391e0bd36fc17740a30c2951ffb506ca6d8564020f03a84009868eb7",
+      "match": "BYTE_EXACT"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/BookReadLockSession.kt",
+      "git_blob": "7947dc20da66f4d78d93cb41a4ac4376028c16de",
+      "commit_bytes": 2934,
+      "commit_sha256": "1e4006c37aa26ff61d540ef0b9ccaf3227db69621b694007d77c5a40aab39def",
+      "working_bytes": 2934,
+      "working_sha256": "1e4006c37aa26ff61d540ef0b9ccaf3227db69621b694007d77c5a40aab39def",
+      "match": "BYTE_EXACT"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/BookSearchPanel.kt",
+      "git_blob": "e9f06c0e7793facd4edb7f0e04d5612f10b35bc9",
+      "commit_bytes": 14058,
+      "commit_sha256": "de4c985d4889c5d75b7b0d7d20b1ec1e9a39689f781568ac2d4c4ec5e173bf0b",
+      "working_bytes": 14261,
+      "working_sha256": "3428ec019763b3ce08eee8750806c312d2d6174b16872d9c36a8872492acd603",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/BranchReviewDialog.kt",
+      "git_blob": "924a21c86f6917debd758233a3897202e5bab136",
+      "commit_bytes": 26824,
+      "commit_sha256": "c0c30bb1758cf153095600bb4e60c8f5f2855235c889c51687160540af05d79e",
+      "working_bytes": 26824,
+      "working_sha256": "c0c30bb1758cf153095600bb4e60c8f5f2855235c889c51687160540af05d79e",
+      "match": "BYTE_EXACT"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/BrushParameters.kt",
+      "git_blob": "99705452e5cf0150588784761e59dff538f4f776",
+      "commit_bytes": 2357,
+      "commit_sha256": "fcdc04fce8cc6a601d6831dc6d94bc960d7e83274eab1ddb905e151de0f993bb",
+      "working_bytes": 2394,
+      "working_sha256": "33cecde518f58c28eae8680cea5f4df3d1239fa023365474f9bddd213dd380da",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/CanvasSelection.kt",
+      "git_blob": "27f16ed28f46af82d2a654675e527af07ed68fe8",
+      "commit_bytes": 9473,
+      "commit_sha256": "f3bf3658e6cab468c0b5facfcbf21e3d9ba2e69c3f1bdfb995bfddcbc9ba25f9",
+      "working_bytes": 9594,
+      "working_sha256": "91366ed0ab9140898bc52ef822b8aca186fb52fd6ec33ff47b24b1cf79125e21",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/CaptureDestination.kt",
+      "git_blob": "9b2a0e67b179d37af35a0d234f7224cdd7c6056c",
+      "commit_bytes": 8180,
+      "commit_sha256": "3c2291c27adb96942e359fcf4c527a74b47abe0bc565b09e24bed3b8974b0069",
+      "working_bytes": 8269,
+      "working_sha256": "4ba097da625d1b017e1227a6bb8d7d6e964524b32918b929d0e216bbd6d447b3",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/CaptureTransfer.kt",
+      "git_blob": "581b7d56f1a6e14c74fff48351a4e696f78e3b1c",
+      "commit_bytes": 824,
+      "commit_sha256": "0961eafd82365badcc2d18acf191e43e97858623abb2a9822d568f243859e532",
+      "working_bytes": 838,
+      "working_sha256": "717e4901f6cc223c859658a7248d212ec3d653014205a34f203e8bfd4eccca7c",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/CardInspector.kt",
+      "git_blob": "117a3804aee56d7e82675bc3a6d3baceba7929af",
+      "commit_bytes": 1210,
+      "commit_sha256": "d295d04f97fd61690e2e9bc2b04594a48d8f5b3342a066f8e0b5e8273148af03",
+      "working_bytes": 1229,
+      "working_sha256": "8217800f70fb50acee171116912ab0b17ae47faa054521b192661d1124b428f8",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/ContinuousGroupSession.kt",
+      "git_blob": "19587c04cb89cf974bf1e4800394c6962ce84071",
+      "commit_bytes": 6051,
+      "commit_sha256": "e7b6177d5e4ad73dffce0bff9f3c053504801d9354714eec22d0701b1cbd1030",
+      "working_bytes": 6152,
+      "working_sha256": "9b4ce0058f63c41f2b4f84573cd3415eb2c9404ec0a9083f64779d104ee20311",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/ContinuousInkWriter.kt",
+      "git_blob": "f87072178341947e86a718ffd3e84f20564925d5",
+      "commit_bytes": 8291,
+      "commit_sha256": "48ad3d6a6938d2bb86435c33e3504d6ee0239dded467ea483bbb63450a296ac0",
+      "working_bytes": 8407,
+      "working_sha256": "c510597005264b0674f87db39bd6a68a2eb9fcede926d647aa36e23a6553ae41",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/ContinuousPages.kt",
+      "git_blob": "235490fa54cd9b194442e8410cbd7f1723d216ed",
+      "commit_bytes": 19872,
+      "commit_sha256": "74f968336bf3a870e69d72e07d45835dc28f0b158da69918052a5b84f7fb3c65",
+      "working_bytes": 19872,
+      "working_sha256": "74f968336bf3a870e69d72e07d45835dc28f0b158da69918052a5b84f7fb3c65",
+      "match": "BYTE_EXACT"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/CoverEditor.kt",
+      "git_blob": "59e3b91e750662fab2436f872fd97c1bc8a96e70",
+      "commit_bytes": 9883,
+      "commit_sha256": "d37f2a1ede37201f6a7e4ecf7923ac308adc66e9fd119024478261c906deec55",
+      "working_bytes": 9883,
+      "working_sha256": "d37f2a1ede37201f6a7e4ecf7923ac308adc66e9fd119024478261c906deec55",
+      "match": "BYTE_EXACT"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/CoverImages.kt",
+      "git_blob": "590c2fae47d214250a32608fe176d6d5479c3a2d",
+      "commit_bytes": 2302,
+      "commit_sha256": "efb93d2dbb8814c5af39e86d68cde83597e8cccf63dccd86e80855157a93996a",
+      "working_bytes": 2343,
+      "working_sha256": "4ecb1fa41997a2eb25504cb3ff8830b1525f71c5ee4378abcb4117bb9b78c0ec",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/CustomCoverArt.kt",
+      "git_blob": "da6d9aae807018ec93724cb37094bb72dc2a8412",
+      "commit_bytes": 3795,
+      "commit_sha256": "d0bb835d5646714eec6f36a37fab53f6dee7117bc34fa012012035e8680d83f5",
+      "working_bytes": 3795,
+      "working_sha256": "d0bb835d5646714eec6f36a37fab53f6dee7117bc34fa012012035e8680d83f5",
+      "match": "BYTE_EXACT"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/DiagnosticsApp.kt",
+      "git_blob": "3b99968eaf24caa75af31c5555e36344306441de",
+      "commit_bytes": 12299,
+      "commit_sha256": "663391ee2c553b05a5cb71c8d30c0940ef7c2169afe1acbf38db344d15bdc5b0",
+      "working_bytes": 12460,
+      "working_sha256": "810de76876f29da615920a67a8f72a80238bc6948b618335f1d262f3eb7bab89",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/DocumentImports.kt",
+      "git_blob": "5271a9459524e4062eb1851667976a643e09e46d",
+      "commit_bytes": 7829,
+      "commit_sha256": "fab96908018fd9462a518d1d83832291f84f5427605cc420b092a415fa3d348f",
+      "working_bytes": 7933,
+      "working_sha256": "3590dfa5c7f3f69923ae36f168038e0720aa2f18e85a9ad6fdd8f08c2cb098ea",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/DocumentRendering.kt",
+      "git_blob": "9eedba2d2e9a63b2ec47d6d3240d307a813294f5",
+      "commit_bytes": 8037,
+      "commit_sha256": "39c612639b55eebd71703237a9fa724eca5fd97009af9e37895106f58fa721d1",
+      "working_bytes": 8157,
+      "working_sha256": "442dc2c1958b163a29b5be7b9d8698ade3285e7d4b7f4bf93310d28e4e32c570",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/DocumentSidePanel.kt",
+      "git_blob": "596197d3c78c92920d4c2bb62188947c41de4476",
+      "commit_bytes": 3310,
+      "commit_sha256": "94078acb3ef251aa984f1f61fa2dc4370274b3b64725e0e9ce1ff20f097c77ee",
+      "working_bytes": 3355,
+      "working_sha256": "beff6dc48a0156179d748c6f79c5206e1554d29d2127d16f1655ce95253f3077",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/EditorControls.kt",
+      "git_blob": "4d31fb5ac96799b0d74377c62c3b1e02146614e3",
+      "commit_bytes": 7721,
+      "commit_sha256": "4e84f1c91f6e71d6c1b2207cf871b456811f4ae777f53b5e635293fcc3937d43",
+      "working_bytes": 7848,
+      "working_sha256": "6f78bc8ba2285334ba888adab035d7d5f28db64cb0945b59df56c5d4adbfb344",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/EditorHistory.kt",
+      "git_blob": "82a225238368a0b01d37541bc0fdf5c2cce5845b",
+      "commit_bytes": 1039,
+      "commit_sha256": "f2f0495e3d0e07421eea227887b6cde2c1b6b48a73376e3c732cca257b785c75",
+      "working_bytes": 1060,
+      "working_sha256": "69a0fd44c01486562a283d50fba60acd9356d060ab0cdd5f374cf0766a11f42f",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/EditorToolbar.kt",
+      "git_blob": "d4af3df8b5445496d669aa20e16d7d0e82239077",
+      "commit_bytes": 10612,
+      "commit_sha256": "07b11cb6b85201965ec08a9fa1dbbed2f0fceb303487e5b205234051a68330a4",
+      "working_bytes": 10729,
+      "working_sha256": "fed01cb87b1cd9549c79e1b4c8c1db5d216d5cf952e3946e29310cc987eeca2f",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/EncryptedBackupFile.kt",
+      "git_blob": "29e6114de4b5448669da247ed8c4aae9bbece25b",
+      "commit_bytes": 5250,
+      "commit_sha256": "fa64ee23a5cbc7a7107d69402f88c6243940e5ae1a9e79bdf045709676af0539",
+      "working_bytes": 5322,
+      "working_sha256": "3b6ea5fdf41b35ea08e59449549b4848c6dec1183a8ebbf2ddb62348835c15c3",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/EraserSettings.kt",
+      "git_blob": "6ad3b8874aa75a087d5aa5bacf11e4d5273ad042",
+      "commit_bytes": 4489,
+      "commit_sha256": "1b9547ef54c7d4307f5f76b7e6e9fb3ebb86ab906ffbcc3677ab22e4148d91d8",
+      "working_bytes": 4544,
+      "working_sha256": "f43610a7cd3722a780da890121e52e14e4b128da8462e3fbd48541b11a766082",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/ExcerptCollection.kt",
+      "git_blob": "f85ee25354df7bb67d1dea6e0d622eb940e98873",
+      "commit_bytes": 7888,
+      "commit_sha256": "97c043a2755d465379f7921b60c073a4a2b99ecd86665f6f4bc424d58f87f555",
+      "working_bytes": 7982,
+      "working_sha256": "42929bd6408cbd5cb14b6ffffd2fe5639d9f1d6f9a56729a638dbc7a04c225e9",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/ExcerptEditor.kt",
+      "git_blob": "f1e2528b7046b0d7174a8b042bad69304a1d43aa",
+      "commit_bytes": 6670,
+      "commit_sha256": "4a7a708421698528e97e0fc281d284faf1c213315f18d132b22bca3ebad0a3c5",
+      "working_bytes": 6759,
+      "working_sha256": "aa8698dfcb9cb029785c88bc02f15f87bccdfafdd9ca60edda155b8c8518d4d7",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/ExcerptResizeOverlay.kt",
+      "git_blob": "6f5c396dad4474484e088093b9724a52b9a99d75",
+      "commit_bytes": 4016,
+      "commit_sha256": "c3de9eb4a6f1e031c3e91ebcc0c75d163e1dc1a29cfde2b65df64732ffe21f0a",
+      "working_bytes": 4082,
+      "working_sha256": "3aa69fc1ca451800d930055c52ecf7fbe0e301ba7d9d3d5caf575340cf516dd3",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/FavoritePens.kt",
+      "git_blob": "dbfb6d07717233e639bdf33bf77f308d80abe6a8",
+      "commit_bytes": 2177,
+      "commit_sha256": "834b824594365df5072e373c900dcc3213f18cd7b2041257fa6875699e06b881",
+      "working_bytes": 2208,
+      "working_sha256": "1c9df0f8c5a2ba0ba0578f5af5b6bf4254f2229415aee30c19ccba86127753bf",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/FloatingPenCase.kt",
+      "git_blob": "5391f6f94c216c5e133e454103f95ee9ddd44517",
+      "commit_bytes": 9161,
+      "commit_sha256": "778668d71368ad96465b0a4f884d6153ca4d6fcfef46185491c974f98e5c6c4c",
+      "working_bytes": 9283,
+      "working_sha256": "1dfc22b3116325a243d96cd575bb3bd755b4a39924d07aa298ae0fb1254466cf",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/FloatingStudyWindow.kt",
+      "git_blob": "df3a3a644df13ac05b9ef1f88acb9ac90983af69",
+      "commit_bytes": 9058,
+      "commit_sha256": "0be03dbea693ed7ec76647db397b5a650e12107fc8767a4aab858b3d98e807b2",
+      "working_bytes": 9058,
+      "working_sha256": "0be03dbea693ed7ec76647db397b5a650e12107fc8767a4aab858b3d98e807b2",
+      "match": "BYTE_EXACT"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/FontBeautyDialog.kt",
+      "git_blob": "1f401b3b9508512ccf2be1217e85c9ef75579aa4",
+      "commit_bytes": 1353,
+      "commit_sha256": "81d839df2ab5bbe354def8f5c98eb390c60a96fe28b8a6d52b308710319ad1c0",
+      "working_bytes": 1380,
+      "working_sha256": "ca6076fffb55e5bb570fc73eab0089d727f4b7bc8f0c6ca871ad42ee36ecaefb",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/HandwritingRecognizer.kt",
+      "git_blob": "d850e3e82a44ea5397a6f314b7d42af6e2e8ea03",
+      "commit_bytes": 8573,
+      "commit_sha256": "1b7d2983e163abb1e68f48d6a798529f4807219260430543e5510cd50084ccb2",
+      "working_bytes": 8680,
+      "working_sha256": "929dcd770dc3fd886af8bb98c842ac0c0b71c2ef209d46ed890a8ff476b40858",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/InkBrushes.kt",
+      "git_blob": "8846f370fadf8a09593499596be556b782a335ad",
+      "commit_bytes": 6728,
+      "commit_sha256": "0a397ce7fc23d898e59bf93f799e53061d28919860728536e260bfa9ca480296",
+      "working_bytes": 6819,
+      "working_sha256": "26ed7e55168e62b4340efae892d5da770835f2c4ababbc4650acba2b7b25e6d4",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/InkCanvasView.kt",
+      "git_blob": "1bbe5661654456ecd295d9a202768e575387c916",
+      "commit_bytes": 33287,
+      "commit_sha256": "ed16ac38580abb16108691e72290db7a96409d5fd9ac56645585548d3ef444d8",
+      "working_bytes": 33675,
+      "working_sha256": "e0f2218f43b2978f2a5738345aa9868e33f0011f97b3bdb59955a3752d846016",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/InkPageRaster.kt",
+      "git_blob": "5675d280d5101bffa2d2f3d5a827c86f7693d0e2",
+      "commit_bytes": 2203,
+      "commit_sha256": "e7ffdd6f1f79b3e4a59b5e8fd2f2d104c5416cea627e8e437cd33c3a2d5e6276",
+      "working_bytes": 2238,
+      "working_sha256": "8146db4bf24291f67d79912a0394e52d56680b80f7c4e637d18e2d8d4d0ee726",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/InkScreen.kt",
+      "git_blob": "ad326d343b7fe7b179550f10367c76ad9a0c0e8d",
+      "commit_bytes": 65760,
+      "commit_sha256": "103be6043e158f076b95320bfd30df3ca7aee607ab3f7980db7edea089264ac2",
+      "working_bytes": 65760,
+      "working_sha256": "103be6043e158f076b95320bfd30df3ca7aee607ab3f7980db7edea089264ac2",
+      "match": "BYTE_EXACT"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/InkViewModel.kt",
+      "git_blob": "cf8da67b54ae4e6a2e2cb0418f0d0b1a31faf5b7",
+      "commit_bytes": 11904,
+      "commit_sha256": "b6976fad7a3271f3c0f72e3bab0c271927f5b99564f0bfc055a9eb0573154d59",
+      "working_bytes": 11904,
+      "working_sha256": "b6976fad7a3271f3c0f72e3bab0c271927f5b99564f0bfc055a9eb0573154d59",
+      "match": "BYTE_EXACT"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/InkWeftApplication.kt",
+      "git_blob": "7a5cbb66fff7f35a68f7545b49eeb263eeae5ec3",
+      "commit_bytes": 2410,
+      "commit_sha256": "a3e0437d54cf37a77ba73e8f21f60c7783321c545e863b456dfa0fe52aeda836",
+      "working_bytes": 2410,
+      "working_sha256": "a3e0437d54cf37a77ba73e8f21f60c7783321c545e863b456dfa0fe52aeda836",
+      "match": "BYTE_EXACT"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/InsertPagesDialog.kt",
+      "git_blob": "bd9b35973db98c7ce167c0c73aebf89cf89a1912",
+      "commit_bytes": 8538,
+      "commit_sha256": "a738e149fb7a9ee2e2355f35fee59f8a157e6c328a8302b36912baeebadfd2a8",
+      "working_bytes": 8649,
+      "working_sha256": "b19bfadfc3caa4de1c5be7594d2fb4d979a56df4b93cee54de14028741461a41",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/KnowledgeBoard.kt",
+      "git_blob": "750953fb9811a119cdcdf533caf3b3f748f9d858",
+      "commit_bytes": 9071,
+      "commit_sha256": "ef255ffdb882b28e8035c470b79e930ee3e67c7d7cd2bb3c69e9620902b729fb",
+      "working_bytes": 9151,
+      "working_sha256": "72ad2eefc7e85fea636f733b3fc7c077250a2b7a01771395d3b258e8bad01b1c",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/KnowledgeCanvasExport.kt",
+      "git_blob": "bd397de3bdbf690146ba96c335df9480c6d17a0e",
+      "commit_bytes": 2939,
+      "commit_sha256": "21f3eac62e3931909326bab7068d0bf5b93aa69e73ce859150f81c3133334ec1",
+      "working_bytes": 2973,
+      "working_sha256": "2de6a10340eb2e769d160c57d5dca8b7271ab7dcff5704d8cabd6d06f4879649",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/KnowledgeGraph.kt",
+      "git_blob": "d8ceb1ac20f17994df456202f0dff54672d1f9d4",
+      "commit_bytes": 2168,
+      "commit_sha256": "90b5d5f04e97d0b76c166016a2158d319716bda948f3780386b2099b74924c10",
+      "working_bytes": 2199,
+      "working_sha256": "b0f7e709befea478d56075d01b8daf132c7fadd322585cbc71b77e39df6939c4",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/KnowledgeLinkedCardBody.kt",
+      "git_blob": "0c3f1fe615aaec43366705ac509e1cb8e1a9109b",
+      "commit_bytes": 11607,
+      "commit_sha256": "76a29e3e15e26b8fc2158e8d210bc1f8f65b68e59ce9d378ff51948f780fe2a5",
+      "working_bytes": 11803,
+      "working_sha256": "5504809dc706c5f2475f1775e204b1efac5b9e7c6b793dda9be3eca4408253ec",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/KnowledgeWorkspace.kt",
+      "git_blob": "22959b132cc1941d59d48f947e0746b9f8fdf405",
+      "commit_bytes": 49887,
+      "commit_sha256": "a729dd85ed88c677f44f6056d024d348ea59c49b8a59b282a18549030d4082e2",
+      "working_bytes": 49887,
+      "working_sha256": "a729dd85ed88c677f44f6056d024d348ea59c49b8a59b282a18549030d4082e2",
+      "match": "BYTE_EXACT"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/LastPagePull.kt",
+      "git_blob": "4bbd7bef213fc475c28b8564cbc4bb719d3c9974",
+      "commit_bytes": 687,
+      "commit_sha256": "89920785fff7610221384358726913e5d2866e46c191e6f81880f5929725ae10",
+      "working_bytes": 707,
+      "working_sha256": "a28a594a69432035b3d5554e83b62f23be77574806efd96f5eb9c931f30ef56a",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/LearningStore.kt",
+      "git_blob": "ed51b027faa9dd4b54e4dd562bf597ee6b8c8edc",
+      "commit_bytes": 4173,
+      "commit_sha256": "5ad807f1c86241f4ebcf20d90d49df96aff54ed5b42d1167942f8f5fe801316f",
+      "working_bytes": 4211,
+      "working_sha256": "d4d91321a4d38e45b9c180e8edc6e58b5048a513ec8cec495dcb861a742fb671",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/LearningWorkbench.kt",
+      "git_blob": "ad3fa7aa7b2b45b20f017ffe0803bfee8dd42020",
+      "commit_bytes": 11860,
+      "commit_sha256": "d93e42c2360b8ba7801216b51cd8294c041820ddb38b26c9413b9def1e036d44",
+      "working_bytes": 11994,
+      "working_sha256": "48f1fe5d88c4bbb8aca70e52e33dd03d08538724e65f71bba4f8a8bb2a7c877e",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/LibraryBackupUi.kt",
+      "git_blob": "1fdc097837ec1992cbb88df1816bb5f2d727acaa",
+      "commit_bytes": 9864,
+      "commit_sha256": "2eac5072d634ecfda5e820a1ad9ba936fe9065f01b09d8aedf282e7f0f773cd7",
+      "working_bytes": 9986,
+      "working_sha256": "3f93914cb319c7e835b0139439c89b17e0538535023f053e902ad5fe6f5c3f3e",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/LibraryDestinations.kt",
+      "git_blob": "2ddb00395b72b1ed0263dc9542314d5269f72753",
+      "commit_bytes": 6639,
+      "commit_sha256": "8811e79a2ab2a5f04d12fde5ef9b4dedad3db845d178de2364577b4c656fb081",
+      "working_bytes": 6722,
+      "working_sha256": "54a0c7055cdb0f1bdfc3ffde230f9bb9036df743818978c71695891e00046026",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/LibraryScreen.kt",
+      "git_blob": "4a023e4c5ce0bcb7da287ad724c6a93ef1228b65",
+      "commit_bytes": 32968,
+      "commit_sha256": "64856c23a80e374dfde4db18b1eb9cadfa2cc790e16dbaf4199748f0318d2cb9",
+      "working_bytes": 32968,
+      "working_sha256": "64856c23a80e374dfde4db18b1eb9cadfa2cc790e16dbaf4199748f0318d2cb9",
+      "match": "BYTE_EXACT"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/LibraryTransfers.kt",
+      "git_blob": "4812c83b6e4c896217682aa669c94371b75d9686",
+      "commit_bytes": 11451,
+      "commit_sha256": "d0103a4d01f2c3459f169457452d7421155aac0efbe777274b3016641f04299d",
+      "working_bytes": 11615,
+      "working_sha256": "4fe19b900fc7b07494393a21e21388dbd9bae30e31112a287a8c205079b561e7",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/MainActivity.kt",
+      "git_blob": "6c67e01e5a0c1932c820eba2c7db5e80b27d4da4",
+      "commit_bytes": 1524,
+      "commit_sha256": "3e2d20bfbb9982237cc4e9d6f2914ee82299243d9bc4e488be8c0cd3212e7511",
+      "working_bytes": 1547,
+      "working_sha256": "3a8e880647034ac705b02a0b693e130f005a77874f8293de67d25da1857592fe",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/MapInsertPanel.kt",
+      "git_blob": "6878fe24a2f1f08dda545bc0d3339bcb3c1be7e1",
+      "commit_bytes": 4266,
+      "commit_sha256": "883eef4d5d8dcb912774df7b7113fab3981fc5498bfa1e28b78bb28ef539cd02",
+      "working_bytes": 4313,
+      "working_sha256": "544ca1a10833be0a8643e92d5144296a09c82a2748321033d30d99c8263ace69",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/MapMenu.kt",
+      "git_blob": "6ce57e41cd5e91731f0b64a5626a535be7a3476d",
+      "commit_bytes": 952,
+      "commit_sha256": "0eb0734b2473c00401c6dd2836d0c903304301c6dea80d22550ba3ed5ef3151b",
+      "working_bytes": 969,
+      "working_sha256": "edf188bea5f570bcdb45cac2f2a3f4121cc62d5d3884074eb1a27011d77930de",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/MapPortalPanel.kt",
+      "git_blob": "dab019fa11d194b3d7dc2a4506f330a501273c7a",
+      "commit_bytes": 13652,
+      "commit_sha256": "edc4446400c8c132510fd3e2bc964dab66bbdbb912e7cdbc7985d8c118e737bc",
+      "working_bytes": 13800,
+      "working_sha256": "14eb78aedb0b49df019cde9519116953dd2ea2bf2afef88fdc830294e9113c53",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/MapScenePainter.kt",
+      "git_blob": "c6f83f18c95def7f76ec5afcc1a7bf3cbfce7e1a",
+      "commit_bytes": 5023,
+      "commit_sha256": "3108af055dea1ad4b11a550a5643f349cbfd14549cd98a4a91b7f4d25f205c84",
+      "working_bytes": 5083,
+      "working_sha256": "03784fc1d2e056344cdfb31b4fef6d5b9c01a02c293986e939cc04c719711db9",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/MapSearchPanel.kt",
+      "git_blob": "15c38fe333893945ba665b4af7c83c2c04323a95",
+      "commit_bytes": 3678,
+      "commit_sha256": "ac8ac435269d296aa1e88fb242f944cb1f2f4d6baf6fa95cd0370af8c4b88dc6",
+      "working_bytes": 3724,
+      "working_sha256": "ee349c006af327f6c5ab0faf5bba0925eeefd17c1da92d9c50e05d6215a6fc25",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/MindMapView.kt",
+      "git_blob": "330d84ce495528801e74671305053f45d5ec6921",
+      "commit_bytes": 17138,
+      "commit_sha256": "2f08cea2d7076cde7589f8cfb3110904167eeb7f8f46bf420d52e13e0b4aea00",
+      "working_bytes": 17138,
+      "working_sha256": "2f08cea2d7076cde7589f8cfb3110904167eeb7f8f46bf420d52e13e0b4aea00",
+      "match": "BYTE_EXACT"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/NaturalText.kt",
+      "git_blob": "980453876971cb824397a9668f9532bab190ce4d",
+      "commit_bytes": 12656,
+      "commit_sha256": "dc409b4905157df654186d4e537558f3ba372e6d836ca175c5fee7636e8783d3",
+      "working_bytes": 12814,
+      "working_sha256": "2d814896500517abceb61a444541639a93e69e3214a8724d978729d0c732f131",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/NewNotebookScreen.kt",
+      "git_blob": "1a60f2ccd736a1babcadcf309ad7d45cf08c0419",
+      "commit_bytes": 9246,
+      "commit_sha256": "2af3b2a2ff9cd5758eaa61438bc07ca2195429229254e483f1281f180eb7b1c3",
+      "working_bytes": 9340,
+      "working_sha256": "53f6908e0541956d881d3a684f04588387cb4f5936a022767d7a32038c53453e",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/NodeActions.kt",
+      "git_blob": "1fb8218deb4d55f62b4d0adb100f643e9b280614",
+      "commit_bytes": 7506,
+      "commit_sha256": "152b6f24c9170664a0b1a3f13fc31382d991ce859ddc10d32df0aa1c7d301790",
+      "working_bytes": 7604,
+      "working_sha256": "94678922a517769bce73cdfc32658399ae1033d973bfc2b4828530450bc276ef",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/NotebookApp.kt",
+      "git_blob": "87e4bc2e635b742c2a4fe269ffd9a5b05b47adc7",
+      "commit_bytes": 16809,
+      "commit_sha256": "ed1cc11238ec05e703a6912e0fee6974eada8327b53ca447845d74745ae7b9de",
+      "working_bytes": 16809,
+      "working_sha256": "ed1cc11238ec05e703a6912e0fee6974eada8327b53ca447845d74745ae7b9de",
+      "match": "BYTE_EXACT"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/NotebookClassificationDialog.kt",
+      "git_blob": "db202dae91df353f7c17b82fe7962473dbbfabf2",
+      "commit_bytes": 2636,
+      "commit_sha256": "ad64fa6b814d7544d0a054e1704b14278f036927f6112bf2b76d0a0c35f0fd49",
+      "working_bytes": 2666,
+      "working_sha256": "86f285dc53c9c77320e78e8754876334149eb8ad4cbd75523067faea86fb80eb",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/NotebookCovers.kt",
+      "git_blob": "2622da00ee081340edaea5d902ba17f1d6e45d7f",
+      "commit_bytes": 6918,
+      "commit_sha256": "bace744bb0471a01098e40a35125e381a5769d7d9b622917f3dc8f97ecb075bb",
+      "working_bytes": 6918,
+      "working_sha256": "bace744bb0471a01098e40a35125e381a5769d7d9b622917f3dc8f97ecb075bb",
+      "match": "BYTE_EXACT"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/NotebookReferencePane.kt",
+      "git_blob": "dcf9f2363e1f7e27c0c0b65cdce928265472965a",
+      "commit_bytes": 3518,
+      "commit_sha256": "6d288a2084d16fd3216f5bf78fdaab62b42d75ea3db57b2981d4f5cd93380fc7",
+      "working_bytes": 3569,
+      "working_sha256": "8792a9845f380565faf918cd9eb00233912d3e073b3fbbdb2b2a479c9b26cd6f",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/NotebookTabs.kt",
+      "git_blob": "aee253ff52c08c62dd75a68efcf556bd93fcc2dd",
+      "commit_bytes": 7555,
+      "commit_sha256": "d4c85b5d0d063295ff8e144eb253322f60e16dc120697d12c6bb6d70b223c51a",
+      "working_bytes": 7645,
+      "working_sha256": "0bbd1f5405b1774461890ad40fefb5e5218b79dd0e3794c78dfe399f9a99f4b7",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/NotebookTimer.kt",
+      "git_blob": "f9f8d5adf182870e05dde3207b247742f3167443",
+      "commit_bytes": 1883,
+      "commit_sha256": "8860ce4eab7b29474c1d23e202ec0507c965e3eec5aec58256658801200157a6",
+      "working_bytes": 1914,
+      "working_sha256": "03b792770188e514d3e5d3dc82c04781764a8497d7ac0d3ad268282a6ba1b205",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/NotebookViewModel.kt",
+      "git_blob": "9f3f8c5c0e10b6847b9d944b899f308a4b52f024",
+      "commit_bytes": 8147,
+      "commit_sha256": "073d2e18a91517c649d6620be8e677db34849854c010d89fbebc69296530be00",
+      "working_bytes": 8259,
+      "working_sha256": "6abddbb8d2964b77d59a088f6cc174fd42ce7231162ee50e5105927d5f0c537b",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/ObjectGeometry.kt",
+      "git_blob": "3e6aa1f5970c0c8a429c2cfd102e9da8fbf8751c",
+      "commit_bytes": 2191,
+      "commit_sha256": "ac9d5aa06815c8af5976dd471fb5a1ff6541e58c3f202d7264bab568a9fe1520",
+      "working_bytes": 2226,
+      "working_sha256": "36e3cd324e028d98d82abcc6cde530e7629a25a64335113be07171622df32361",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/OverviewCollections.kt",
+      "git_blob": "4e607ba6f755ecb0398ed1d0cb40eef2ff3e56a8",
+      "commit_bytes": 12986,
+      "commit_sha256": "df85c2dee7518ed40c386a3d21cadea56a0ad277f2b2a8e03fc2cdbb41413879",
+      "working_bytes": 13123,
+      "working_sha256": "68d6f5f952bad45bb279156ea97f2556aa7db89f2fb0ca2052c270b96c0a5b7f",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/PageEditDialog.kt",
+      "git_blob": "c2b4133880419e9954a2d9ead11e6d58c885270c",
+      "commit_bytes": 5994,
+      "commit_sha256": "9bc2284ce0904f0854a0b46b94e241fc1ec4b9e944174a625bb05ae67cf8c904",
+      "working_bytes": 6068,
+      "working_sha256": "2b1b86b034443f0e86a00fac8eefdd406cbc07ad8f0dea8ac863e8173b71e0e8",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/PageObjectOverlay.kt",
+      "git_blob": "c29bc78532acaed8820a2bd36dae914de45a52d4",
+      "commit_bytes": 5274,
+      "commit_sha256": "bc1ee2c84eb42e6deabe78e031fd71982f87b9f3e8bb9b6d8e01e23636b3eff9",
+      "working_bytes": 5351,
+      "working_sha256": "ee66575a86511fb2d7d97a1be577d2aabadb860e0a6d354b75ff5b9d88919f2d",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/PageObjectPainter.kt",
+      "git_blob": "f0f5fc5c4d414c6484ff68d3cebec72ca5e8e33d",
+      "commit_bytes": 8212,
+      "commit_sha256": "c6b396d6001c54671d8cef644f0b50deb1e026fce2c1266a2ca64b03a25f83e2",
+      "working_bytes": 8310,
+      "working_sha256": "6133a0b557d8e366c3cc87470b21640cbd1473185dc8d2276496b42410fadac7",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/PageObjectTools.kt",
+      "git_blob": "f42dbbf3ef6fd24c8e3a1e42cc4f8167b00508d0",
+      "commit_bytes": 12048,
+      "commit_sha256": "b3ae1dfb6a2454a47467a878348ba95fc3f9a8ba014e9aab0bf11a9b7115309f",
+      "working_bytes": 12179,
+      "working_sha256": "7070aefd4f6574eea40bf9adb85752b963a0598c2112ca8a1d0682b0b044cb5c",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/PageObjectViewModel.kt",
+      "git_blob": "fc601a526d0703e2e4633986e7bc705d17bb42bd",
+      "commit_bytes": 23720,
+      "commit_sha256": "e69d061213e2f5edfc74f09a96e76ca461a3529ea353f2bb874cfd8eacdb1b8b",
+      "working_bytes": 23720,
+      "working_sha256": "e69d061213e2f5edfc74f09a96e76ca461a3529ea353f2bb874cfd8eacdb1b8b",
+      "match": "BYTE_EXACT"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/PageVersionPreview.kt",
+      "git_blob": "169e4afce057e0eb01f7ca8a4e8be2964481d19c",
+      "commit_bytes": 1240,
+      "commit_sha256": "22a09bb72e8d13289cc352f9f5b1dddb006c6348ddcd64dba08c05b757d0c372",
+      "working_bytes": 1266,
+      "working_sha256": "2defe9ad6ff6a931d598cc8a4124282c2f194d673be9f28abc751f7f37bc924c",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/PaperPainter.kt",
+      "git_blob": "526af7551c5132c890a48a663443ea624be18e5e",
+      "commit_bytes": 1179,
+      "commit_sha256": "14f0aac3b148701a03c730b7431322cf392bed7b04b9cf38524abf604e742529",
+      "working_bytes": 1204,
+      "working_sha256": "78d0f4ba0bf0be9e120255ec7415b591936af020bf7417b3ada056df9d1a0cf0",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/PaperPickerDialog.kt",
+      "git_blob": "3b6a82e8b4b131bb52cea4cab7910609f7b192a0",
+      "commit_bytes": 3589,
+      "commit_sha256": "da8bbb790bb94e1c0d6bb021df2335b4b5ddeaa6f8f708ce9cf5e191b24d8c4c",
+      "working_bytes": 3635,
+      "working_sha256": "fe8883202204991672402b6071b3c0587089f64ebfbc869707fe589fbb685449",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/PenCaseColors.kt",
+      "git_blob": "1ef6074db9676d2e99caac7ae3eaacb0e7d86f6a",
+      "commit_bytes": 2230,
+      "commit_sha256": "574c0cb65883cc43f8842d0675cfc94b3be0101e55478f71fc5c2b204dc58668",
+      "working_bytes": 2266,
+      "working_sha256": "ca2eb1cc84473a755d91f726b767d31a886d7871390a691edadead45f6684779",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/PenStrokePreview.kt",
+      "git_blob": "c4905e4ebd832286d224819b74820abbbb870ed7",
+      "commit_bytes": 1490,
+      "commit_sha256": "32d1d22d8bc97b66f6c13dd9308606d7c09ce26ed937f5fcd07e7284d0a82f1f",
+      "working_bytes": 1515,
+      "working_sha256": "4307943ecca53e3d4c315bcd1ed2276171de85e8f86abe92a4f3f3f393d222b0",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/PenWidthSettings.kt",
+      "git_blob": "8c39175c2fad3ed30517c10a44f9c42af4360a57",
+      "commit_bytes": 11033,
+      "commit_sha256": "0e0017a1b123f00ca2f1e5ef24f1a974c2bca16df6df8d899affaa9e83597ac0",
+      "working_bytes": 11161,
+      "working_sha256": "fbc5537442a42bebaedde084dc7cc0c382deae6921825bdf98e957825b335830",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/PencilRenderer.kt",
+      "git_blob": "9110ce3d5fd4b63fd9d5ee37fb67c84729782f2b",
+      "commit_bytes": 8698,
+      "commit_sha256": "4709aa18bb05a27db5ee7238790efa807a0b12118c2733f6f36e57f1a754af1c",
+      "working_bytes": 8811,
+      "working_sha256": "b01799aa38c41f96b0ec3b0dd98185ae0ce95dd49ef873c7915e887bf0f3d8c9",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/ReadingToolbar.kt",
+      "git_blob": "839bd21dec29d4fbd6885ba831322b611b49d74b",
+      "commit_bytes": 3056,
+      "commit_sha256": "bb0d39606de761597533c0e1639866c22fb3ccb1177bfe202c479b5c3a993461",
+      "working_bytes": 3096,
+      "working_sha256": "ab6b229bdcce992ea20d450fa1f33a1122ecc6ecf02d038e6d718c1aaac7c252",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/RecallContextPanel.kt",
+      "git_blob": "6f27bf939fbae4950ef3ca386432986de74431dc",
+      "commit_bytes": 17566,
+      "commit_sha256": "a73e9f0ef82cc75c5c2ce0753b5701b3cf57f4bdae8cbadd1e36264982ef3503",
+      "working_bytes": 17875,
+      "working_sha256": "303558e4ec99638f528f4af148f4710916f76e0fbea1f585326b71dcefd1a1c1",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/RecallWindowShield.kt",
+      "git_blob": "bd9131c1630a7d8a55d464a073fa70678a1fc77c",
+      "commit_bytes": 4295,
+      "commit_sha256": "9213a1e6e9a0d422fecdefbb70c6f5a70af4f8ab930b0fa543357c9c4eae871a",
+      "working_bytes": 4405,
+      "working_sha256": "77da2d6750bf647ce249c3a7ecb5bb7c7d5aab76ca0e7ee40569a12159ca01c5",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/RenderResources.kt",
+      "git_blob": "a413f28f69b5b2fd349e64ab7e5aa9c8cbaa34b1",
+      "commit_bytes": 3498,
+      "commit_sha256": "d2b5008716e210bb0f82e0184ae7e2146f2f0bc68bde7de0d87f076700a1c71f",
+      "working_bytes": 3546,
+      "working_sha256": "6e88ece4aa292507918ab256e2ad658a7905a02fe28c773c7f32c6756471d34b",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/ResourcePackSettings.kt",
+      "git_blob": "7567c5350782dd504560b50f784e5fbbd05c7b5e",
+      "commit_bytes": 5233,
+      "commit_sha256": "095ae50e94d2a14e8f9083da57ea9e513644ea0835ccf2c63633b9ac80d1bd48",
+      "working_bytes": 5293,
+      "working_sha256": "74e4da25593da840d6454320e4bcdbecc0bf7971cbb7f22ee0d2e305e8d713df",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/ResourcePacks.kt",
+      "git_blob": "579cc8d8f0aef7f3917956ed7640f6916a8458f0",
+      "commit_bytes": 15909,
+      "commit_sha256": "ac74bd502356808bfd0832c5860849c7541d5c965bfd656480243ec743a56dc4",
+      "working_bytes": 16105,
+      "working_sha256": "6e413e233d1a0b328e7fb6fce6ec63dd238447a5b61c963ee9bf5e19e224057b",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/ReviewSourceDialog.kt",
+      "git_blob": "09cc08bd08ac2fe1adf3d0b0d949d316b0622bb3",
+      "commit_bytes": 3947,
+      "commit_sha256": "405b86f26da53e32b968d1675c36e8f08d8a103f56bbcde5626fbdc55d6d27cc",
+      "working_bytes": 3999,
+      "working_sha256": "77329f0d4c6fd27a1c40440de166fbfa60a809e70fce7f6bc49dadf9e16fc7e7",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/SelectionActions.kt",
+      "git_blob": "9384674ac7189798f6f9bd2e2e03190287131062",
+      "commit_bytes": 8244,
+      "commit_sha256": "8737277d6c1e72175cfdc291a915bdab328c50327faeb3fc4ae3f336f2ff8a48",
+      "working_bytes": 8328,
+      "working_sha256": "e783d5e2de12dafeab4a45bcd71a2454c0a9893b422881bf73b82ca7809a3888",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/SelectionOverlayView.kt",
+      "git_blob": "50512da3d6f92dd58800bfcf40a76b44b12c4672",
+      "commit_bytes": 9394,
+      "commit_sha256": "a6836efe32bcb17dc3fd760d5905b8f5d31003ce14e0dd14cdedcae2b962b60f",
+      "working_bytes": 9510,
+      "working_sha256": "94c60c7b20cbcf8a3c12c903e3ebf35dca13260580c17f405dbc36e968e56e6c",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/SelectionToolbar.kt",
+      "git_blob": "bf37464edf5b16d8de809657b8ed0184d2bfe791",
+      "commit_bytes": 2666,
+      "commit_sha256": "908cfdd0d22655c6735a4a48584e643c52b5d3b3b30fbcead5eee51204b07b0d",
+      "working_bytes": 2708,
+      "working_sha256": "03ec3787bb41744c9dd050370074e91069b05d873ad35f8f7295328b35eb4813",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/ShadowAuthorSession.kt",
+      "git_blob": "811f1de9cbdf645531f2f72e76f833abc9e2c308",
+      "commit_bytes": 715,
+      "commit_sha256": "dc437c5b601ec31a64ff6c89cf92259ce0fa74969aeee1614acb55276cae0d21",
+      "working_bytes": 732,
+      "working_sha256": "771b1ec2d4cd37b41b8ebff0a99b5027698643bebc40ae1c9499692566afa199",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/ShadowLab.kt",
+      "git_blob": "7d0c76469cd4e6b6bd53be51f2af776d69a215c2",
+      "commit_bytes": 8907,
+      "commit_sha256": "3275670ed7ad57bd415a2d2ed2fc12a3bf53b7501cd2cd229845f094e5528bb9",
+      "working_bytes": 8999,
+      "working_sha256": "bfd5481b9b3b64bc0f988315efab707f24fc8f95a6de9e5e7126da20a383ec1b",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/ShadowReplicaPanel.kt",
+      "git_blob": "259ca6182643bee798ca4941f857513e08c46fe0",
+      "commit_bytes": 7772,
+      "commit_sha256": "591870980f489609a8bcc0ff15028ffb77c26e7cc17ddb2b7d7b681dda5ccbef",
+      "working_bytes": 7858,
+      "working_sha256": "6fd15de382448e3247cc411aee2351942fefbaa355a32c8b5b43cb1edb9378f2",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/ShapeInk.kt",
+      "git_blob": "c909776cc1e5d7157707b732e12c42ff2f9ef0f8",
+      "commit_bytes": 2442,
+      "commit_sha256": "a1625ea4b5e341aa8638ce35bbfbd5b1cab9fc3c1492c05f305e869cd1ac8448",
+      "working_bytes": 2486,
+      "working_sha256": "e0715968799da350775f7990b771cab46426f3aa544ad0ae611167b501499a3b",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/StudyDialog.kt",
+      "git_blob": "39c8a7fe32f69cc82d170c1c32a2063b708073a2",
+      "commit_bytes": 1220,
+      "commit_sha256": "cc4ef548c548b1dca39655eb671d0a5c26e22f052530e988de36097a6962ddc8",
+      "working_bytes": 1244,
+      "working_sha256": "aa4a4dbe627ed586bb69c799b32e68b8974949c45c7b493d955ee9b371f73834",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/StudySession.kt",
+      "git_blob": "a65c0062a4e15e666820296033b68d36d463032c",
+      "commit_bytes": 11660,
+      "commit_sha256": "c4363140f4eb90d552e275032ad1819bc91c1a63b6a846ad2241c8abed0cb2d8",
+      "working_bytes": 11790,
+      "working_sha256": "410c30b73c63d215ceb329a332faf820d4baba5755fad1d04b20b1bacecf2c01",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/StudyWorkspace.kt",
+      "git_blob": "734b6c9e9315cdf78ab7a64453ba925d19e4f144",
+      "commit_bytes": 76993,
+      "commit_sha256": "18a00359523eecb29a366150aad340fda92cfdf6a363d79ff8fbe07e199a528f",
+      "working_bytes": 76993,
+      "working_sha256": "18a00359523eecb29a366150aad340fda92cfdf6a363d79ff8fbe07e199a528f",
+      "match": "BYTE_EXACT"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/TapeArt.kt",
+      "git_blob": "f731ea694f70d5299cec040ca5636e6d2c077cc8",
+      "commit_bytes": 2074,
+      "commit_sha256": "c0205720e855355c39c390b2fcf268cde4cace49531ff77fd505036604335ddd",
+      "working_bytes": 2104,
+      "working_sha256": "8eaf4659d3ff832b0d2ceaaa2a9ddb75ba03b44f3d11eae379130e83f442b998",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/TapeOverlay.kt",
+      "git_blob": "334c72ef748217ff9d1fe041993273240cf828c2",
+      "commit_bytes": 3960,
+      "commit_sha256": "066eb1ebd4faa82a7127f1ff34b3e239ab7f6fdf9692f38ba638db8017d6fd47",
+      "working_bytes": 4022,
+      "working_sha256": "f5956c4a8a43e5725b1f124ca3af849434e1e83f298ea3a8930a8ff0b3844b18",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/TapeSettingsCard.kt",
+      "git_blob": "9bf93fed9cfb632922a76126a58d65d236890489",
+      "commit_bytes": 6177,
+      "commit_sha256": "f0b201ea38db430ddc748d368bd77e299f9e6337c56c814471c58ec9f7c3ff79",
+      "working_bytes": 6240,
+      "working_sha256": "7313d8a376395b437b7f063b3a6d99348da7c4867422b392e93143645045b578",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/TemplateCatalog.kt",
+      "git_blob": "753e56567198ad1aa003f5ac6074260c4528bfd7",
+      "commit_bytes": 2800,
+      "commit_sha256": "0a1528bdbdbfc9ca2db5caabbedc7ae8e72fd2c7dd6c30df38b269e817e71077",
+      "working_bytes": 2849,
+      "working_sha256": "b0fb2138e8541a9e1702c54f5700d7f633c6552d6500bd068da97b554cad7456",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/TextStyles.kt",
+      "git_blob": "916e9e243f3ddbc1e4ab6b6ddfc1eff706ccde90",
+      "commit_bytes": 2532,
+      "commit_sha256": "f60fbe2cc7ce7ce1327bff2609550dd07bb01811753158bce2a94d310f30b0ff",
+      "working_bytes": 2574,
+      "working_sha256": "d1d32b561103101499df228ab08c83300acc7c9b5e4a1cfde8bead4a63654329",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/VisibleInkGeometry.kt",
+      "git_blob": "563ff16f8be897257a9455790038454bee217be4",
+      "commit_bytes": 5642,
+      "commit_sha256": "592d8c68ded36600ea17fe7053ebcbe16d1e92ca6a897619fef0bc86a2caeb1a",
+      "working_bytes": 5729,
+      "working_sha256": "6851d696b96fd3dfd891aef09834f6b2bebd4f64172bdef67df5d30e3a53cbd3",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/WorkspaceStyle.kt",
+      "git_blob": "69b5e4f0f60c1ac5442c4c694d64077e6995e219",
+      "commit_bytes": 3363,
+      "commit_sha256": "05b3536deab695c37fdb4b7be1811a74139a1c73626af5e584c6408cc27ae581",
+      "working_bytes": 3444,
+      "working_sha256": "9ce105b1b4a58cacb441a3ca7351b116db22eed0e04fac8326744abc761dea19",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/WorkspaceViewModel.kt",
+      "git_blob": "3bf7f8cd8302575673b1e3c5929157dccf0aeada",
+      "commit_bytes": 7240,
+      "commit_sha256": "9aaedde37e1d3b258aa9c7b7e10c9597296e76ea3d607e630a28e998bc57f634",
+      "working_bytes": 7240,
+      "working_sha256": "9aaedde37e1d3b258aa9c7b7e10c9597296e76ea3d607e630a28e998bc57f634",
+      "match": "BYTE_EXACT"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/ui/components/ContextPanel.kt",
+      "git_blob": "e134c11b2d17c73d2e7294f805bc8450159beb96",
+      "commit_bytes": 991,
+      "commit_sha256": "f06c9f89faf76116b6fd0f9c06b60b6586c9a67e59bf73928972039607235f15",
+      "working_bytes": 1012,
+      "working_sha256": "9b2c13fcc207dae7e6ff3dd0096792d3646b4422fce68c4173d1cb7987d85850",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/ui/designsystem/InkTheme.kt",
+      "git_blob": "68f16ed53433494551f8cb2bcb292ebaedb13f5e",
+      "commit_bytes": 2669,
+      "commit_sha256": "07ae1e2b1c1fb0283e9494820b0c7a3304cd19a89aa9aaab5f1c758ef3486ea5",
+      "working_bytes": 2708,
+      "working_sha256": "9aaec2d7abc40a41c58c33fabafa9bbf604a0bf618747c3b5882195f696881b7",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/res/drawable/ic_add.xml",
+      "git_blob": "905a80390191fe01fc91dc75997544978b6894a5",
+      "commit_bytes": 421,
+      "commit_sha256": "5a44d336c5480190baf668ede4f536a1cbc90ee67f3f9eae80d1ed3d9045c489",
+      "working_bytes": 421,
+      "working_sha256": "5a44d336c5480190baf668ede4f536a1cbc90ee67f3f9eae80d1ed3d9045c489",
+      "match": "BYTE_EXACT"
+    },
+    {
+      "path": "android/app/src/main/res/drawable/ic_add_page.xml",
+      "git_blob": "fc6865792a116f53911ba1c817a81d696b31d712",
+      "commit_bytes": 466,
+      "commit_sha256": "f54f1b07d87ab69bd299a6138c9395688baaa67aea5feab7d904977ae9e5d116",
+      "working_bytes": 467,
+      "working_sha256": "f4bfeb94d8a58caad9bb8cc8ac3a05b4008cdad6d9ab41b215aa77c982c260a5",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/res/drawable/ic_area_erase.xml",
+      "git_blob": "647dfd69a6beb3426ebf79788fce55ec58e9cf96",
+      "commit_bytes": 503,
+      "commit_sha256": "725a4136f33819d208cbd270bbcb5dfd58fef9ec456e3ed484104460f19a1ce8",
+      "working_bytes": 504,
+      "working_sha256": "f79f7fa9451054cf643f20280a340888f108326587fed2342b94aa8edea0b992",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/res/drawable/ic_back.xml",
+      "git_blob": "7fc4975fb5a743c6724b5502b1154448db7dd2ca",
+      "commit_bytes": 430,
+      "commit_sha256": "e30f50df559bb26b90d3e110a5c262e32514e41ca41d12ca24c7f7258a8b0d44",
+      "working_bytes": 430,
+      "working_sha256": "e30f50df559bb26b90d3e110a5c262e32514e41ca41d12ca24c7f7258a8b0d44",
+      "match": "BYTE_EXACT"
+    },
+    {
+      "path": "android/app/src/main/res/drawable/ic_beauty.xml",
+      "git_blob": "f732b3c92eed77e3bd210d9920c10e685dfe14a5",
+      "commit_bytes": 432,
+      "commit_sha256": "090aebd552c8e4f9d9b079f1d3b4d128de6547591f5f8b275384d4c43f6b923d",
+      "working_bytes": 433,
+      "working_sha256": "f1e9922a21670efcf34e975b681ccceb4ae8e22d68f4067af3dcc88c596a320a",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/res/drawable/ic_board.xml",
+      "git_blob": "1c59ebd97f1a798ee9194fb7c42dc6c14fb6e34b",
+      "commit_bytes": 890,
+      "commit_sha256": "5e426698414a63be5816b9b8263282306a3b52748e2aee3d913992412bb6e890",
+      "working_bytes": 890,
+      "working_sha256": "5e426698414a63be5816b9b8263282306a3b52748e2aee3d913992412bb6e890",
+      "match": "BYTE_EXACT"
+    },
+    {
+      "path": "android/app/src/main/res/drawable/ic_bookmark.xml",
+      "git_blob": "8730b27b1c6dcfed7e978e4b8590863e646b084c",
+      "commit_bytes": 428,
+      "commit_sha256": "0ccd61536e286caf3c33a2fb51e54950b67804a334965ee7a5f49363dad21b82",
+      "working_bytes": 428,
+      "working_sha256": "0ccd61536e286caf3c33a2fb51e54950b67804a334965ee7a5f49363dad21b82",
+      "match": "BYTE_EXACT"
+    },
+    {
+      "path": "android/app/src/main/res/drawable/ic_camera.xml",
+      "git_blob": "6fe0446d319eee37556a3146e9c7bcc64dac6777",
+      "commit_bytes": 498,
+      "commit_sha256": "9f3c8abfbd51396bc65ae9aa50daf8de00510afcaa1c08fb6c612fefd46eb9ad",
+      "working_bytes": 499,
+      "working_sha256": "1954acdac36ee039e1ec236bc9e3e65f614ff3d72b33d94a1c40ca97e2cbd358",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/res/drawable/ic_check.xml",
+      "git_blob": "86181365d36ef5f7f65381001d933e3e3eccaac3",
+      "commit_bytes": 373,
+      "commit_sha256": "766fa7b99aa2324d09ddff92e9e9b7c7f311cab595abce754971914c014764f5",
+      "working_bytes": 373,
+      "working_sha256": "766fa7b99aa2324d09ddff92e9e9b7c7f311cab595abce754971914c014764f5",
+      "match": "BYTE_EXACT"
+    },
+    {
+      "path": "android/app/src/main/res/drawable/ic_close.xml",
+      "git_blob": "9ebf11aaf62eae16b1269af9cf375e6a1ef27531",
+      "commit_bytes": 421,
+      "commit_sha256": "cf3e0e37e5bffbbe7c6eae512618b88738a6d12b5329a81c1b130b0b1f1bb9f6",
+      "working_bytes": 421,
+      "working_sha256": "cf3e0e37e5bffbbe7c6eae512618b88738a6d12b5329a81c1b130b0b1f1bb9f6",
+      "match": "BYTE_EXACT"
+    },
+    {
+      "path": "android/app/src/main/res/drawable/ic_collapse.xml",
+      "git_blob": "9b17ace22be3301c5a6d930276fc47a9df92ccbb",
+      "commit_bytes": 349,
+      "commit_sha256": "ad79b0b764855e9a145be25651719edc1e99baa5309c1c5888c607747a41d568",
+      "working_bytes": 350,
+      "working_sha256": "c3e885c5c0bb4357a60c92d670e8bf2cfc1d65d0e13fb11595cd0cdbd67463e2",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/res/drawable/ic_diagnostics.xml",
+      "git_blob": "13ab764207539fbe6df808bd6f6f8692bcb2c769",
+      "commit_bytes": 1059,
+      "commit_sha256": "14dbc8565199559d94b5f04a52ee71e2e3956a93149ebc1e63dd83410b9e4ede",
+      "working_bytes": 1059,
+      "working_sha256": "14dbc8565199559d94b5f04a52ee71e2e3956a93149ebc1e63dd83410b9e4ede",
+      "match": "BYTE_EXACT"
+    },
+    {
+      "path": "android/app/src/main/res/drawable/ic_drag_handle.xml",
+      "git_blob": "6fe0739078ffcf9336c7f8b778fe8269bef4186a",
+      "commit_bytes": 387,
+      "commit_sha256": "3ff1c935de12de6c5ce6e4cf451ab209b3c67d2a3419df1685a07bbc7b804c8e",
+      "working_bytes": 388,
+      "working_sha256": "7796ecc7b698beb08ec3dff27b8e13b30a6c2fea888130e60f9005a2603a8509",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/res/drawable/ic_eraser.xml",
+      "git_blob": "52291ad720cb4afd3f3c97258a2f443bd1412eb6",
+      "commit_bytes": 421,
+      "commit_sha256": "e10412fc03015cd36fe6b3b2f8712b54cd59ceea3ff84730fe994460f7f894ba",
+      "working_bytes": 422,
+      "working_sha256": "8d8c477a98aea18a7a631a5fb052e57e35f26049afe8c4c61557bcf9ec4a6efa",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/res/drawable/ic_excerpt.xml",
+      "git_blob": "096611a317fff0ddc3badc3450514cead4e6a0c1",
+      "commit_bytes": 531,
+      "commit_sha256": "e521c477abf44f8e2a158f926abab08f328d00bafbfbb6000d8425fde2164764",
+      "working_bytes": 531,
+      "working_sha256": "e521c477abf44f8e2a158f926abab08f328d00bafbfbb6000d8425fde2164764",
+      "match": "BYTE_EXACT"
+    },
+    {
+      "path": "android/app/src/main/res/drawable/ic_export.xml",
+      "git_blob": "555fef36f3e8cdd700928a940da70ca2a945ea2c",
+      "commit_bytes": 459,
+      "commit_sha256": "044f085e7cd2b8413b4b4cf76966ddddbd4b2c8e10a974c07d2d87daeb2cdb6f",
+      "working_bytes": 460,
+      "working_sha256": "8e4912d81aa58b31f426502675306aef3dc817f7cd33f9e2d343a398cabdaaa6",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/res/drawable/ic_eye.xml",
+      "git_blob": "892ead798c106a8ff099f258403d96ac412e9008",
+      "commit_bytes": 423,
+      "commit_sha256": "ec3e2bd55fe611bb4ea880ee18847ac2c2956b8222ac3b58d941662c6306b9b3",
+      "working_bytes": 424,
+      "working_sha256": "a44bcf1a5793cf535a0919ca8f2d5edc065fc58c3bdb38c6665695eeaaa0555d",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/res/drawable/ic_eye_off.xml",
+      "git_blob": "bac1cd6c4e01e3e9b22c01c6feb95d303a321a1b",
+      "commit_bytes": 445,
+      "commit_sha256": "23e77fbda10205f620414b9b52e78d590238435ad24ba1ea1e22edfcfbd8bd8f",
+      "working_bytes": 446,
+      "working_sha256": "df6a3ee377c93481233f85fb38d69c7593ed9ab719ffc6d8dd8fcaf8a6592713",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/res/drawable/ic_favorite_pens.xml",
+      "git_blob": "2f8824f81fc2961f0bab43efadb7e21aabde5994",
+      "commit_bytes": 442,
+      "commit_sha256": "b1664f4b7797eb69456e29cf4d327c81263980a78b7086472383d28144ac5fd8",
+      "working_bytes": 443,
+      "working_sha256": "a8536c23e61e9bd557b0e4cb0daf44fbc1e0316f2a1fcf27364b9c5139ba894e",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/res/drawable/ic_finger.xml",
+      "git_blob": "73dd657c6c275dde18e338d3b3c19fb4228c9a65",
+      "commit_bytes": 423,
+      "commit_sha256": "83381d934a0e0b790b642410d8b540314f9084c0f2888db9e2ef9a9774db3696",
+      "working_bytes": 424,
+      "working_sha256": "2eff9623ae7670603a83e7fd3af2452263f76e13d49f9330e04189fc3bf2f14e",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/res/drawable/ic_folder.xml",
+      "git_blob": "95043c22f38b6419f1f2b0c69b1e53a11c7326c0",
+      "commit_bytes": 883,
+      "commit_sha256": "a9604cd767673dc3e0f843405999d2c0e7943c835cc797e6f1e16046e0bd850e",
+      "working_bytes": 883,
+      "working_sha256": "a9604cd767673dc3e0f843405999d2c0e7943c835cc797e6f1e16046e0bd850e",
+      "match": "BYTE_EXACT"
+    },
+    {
+      "path": "android/app/src/main/res/drawable/ic_fullscreen.xml",
+      "git_blob": "416d227fc9fb82a9ae37be51c2f1a3b9ea25cf61",
+      "commit_bytes": 446,
+      "commit_sha256": "b7cbad086aab95b13d710853bef1aa17e765c3cf01d465ef441358b4a8603c27",
+      "working_bytes": 447,
+      "working_sha256": "dd3c6fbe285528a3c7fb49bfe7c940b551b6bf2862c10bfbaff75b30b86416d3",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/res/drawable/ic_grid.xml",
+      "git_blob": "ed8dfa7eac6b4f1f98b4e8583ce3c1d730f5ac1b",
+      "commit_bytes": 501,
+      "commit_sha256": "a85dd253181935eb74b6f7fbcb7dfb985d50a932a178a7a9e604b441eca8b0b0",
+      "working_bytes": 502,
+      "working_sha256": "a34428df720dd506b3915dd2dbdcfc019bbb531b31959f3cfafd000e40f2071b",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/res/drawable/ic_image.xml",
+      "git_blob": "ff9cd68888e6b8f2c2f4e837896d52d22f703bc2",
+      "commit_bytes": 494,
+      "commit_sha256": "5cc3710b709e082749944708a549b33c9ded41bb1dfef1761850fdd65666aed2",
+      "working_bytes": 495,
+      "working_sha256": "982fee122f7ae7687535e8117881efd42b5a20e4cf78a3c603826196cd711518",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/res/drawable/ic_launcher.xml",
+      "git_blob": "2ffc79c5387d221e99858be0814a6b24e92bad6a",
+      "commit_bytes": 582,
+      "commit_sha256": "2b60bd636ef70242cf05888a1a2ac8b34ca660835ca69ec7301aaf7da9002ea4",
+      "working_bytes": 588,
+      "working_sha256": "ebfed32777669e071f2e985ca698b1ff8ca04e423d5420c5c0ad489902bfa5b3",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/res/drawable/ic_learn.xml",
+      "git_blob": "2e300421a7ccbb630a96314f5a947e1fec9bceda",
+      "commit_bytes": 1913,
+      "commit_sha256": "3d7dc81bb9da367509c1264323191b02f897b055708dd3ea3d8c506800cff28c",
+      "working_bytes": 1913,
+      "working_sha256": "3d7dc81bb9da367509c1264323191b02f897b055708dd3ea3d8c506800cff28c",
+      "match": "BYTE_EXACT"
+    },
+    {
+      "path": "android/app/src/main/res/drawable/ic_link.xml",
+      "git_blob": "8a11c50aaf170d3f3c8d801eefb9b0e81232cac9",
+      "commit_bytes": 740,
+      "commit_sha256": "2ae490bec2bc3f034b0075f70016f7b012cd0e67a3e00d85d6ed821b5529c6f0",
+      "working_bytes": 740,
+      "working_sha256": "2ae490bec2bc3f034b0075f70016f7b012cd0e67a3e00d85d6ed821b5529c6f0",
+      "match": "BYTE_EXACT"
+    },
+    {
+      "path": "android/app/src/main/res/drawable/ic_list.xml",
+      "git_blob": "04ecf9955673c7477dfbbee951890512afaa1240",
+      "commit_bytes": 904,
+      "commit_sha256": "3f8c2c0d9a6284e47b7057f63ef57cf70e5d2fc1a9f363f5fb2e7a718a10b245",
+      "working_bytes": 904,
+      "working_sha256": "3f8c2c0d9a6284e47b7057f63ef57cf70e5d2fc1a9f363f5fb2e7a718a10b245",
+      "match": "BYTE_EXACT"
+    },
+    {
+      "path": "android/app/src/main/res/drawable/ic_menu.xml",
+      "git_blob": "000f5993ff3c596f9ca8d4f9c59f9c87a941bb62",
+      "commit_bytes": 439,
+      "commit_sha256": "e7beb7e0ad19c9f597c3aa867c6d8f8e74bf16f9701bf6f6e00bff3e750504f8",
+      "working_bytes": 439,
+      "working_sha256": "e7beb7e0ad19c9f597c3aa867c6d8f8e74bf16f9701bf6f6e00bff3e750504f8",
+      "match": "BYTE_EXACT"
+    },
+    {
+      "path": "android/app/src/main/res/drawable/ic_mindmap.xml",
+      "git_blob": "3691c51146623b30ec940eccbe38f72c8f6a2861",
+      "commit_bytes": 637,
+      "commit_sha256": "47516b92cda891137aff98dd3b5ecc8d091c6a2cd1f76401edf49a8984b37802",
+      "working_bytes": 644,
+      "working_sha256": "bb7e8b45bbb87d8b3ee7b9ae55179256e9b4a32044833206ed553f43cea7773a",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/res/drawable/ic_more.xml",
+      "git_blob": "e0f84432689bd85b970e0162f977b652965db584",
+      "commit_bytes": 470,
+      "commit_sha256": "0cb0400fdc9f521172f368010b4dfb63eff0fb78725134f203ee91e81fab95f2",
+      "working_bytes": 471,
+      "working_sha256": "0132ee5badad46df66b782a35e581f846d294cb8b628d3c741e0d0ee5a4a729c",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/res/drawable/ic_node_child.xml",
+      "git_blob": "669c5b8be9c938a0313c37bc12521c994ee7674e",
+      "commit_bytes": 437,
+      "commit_sha256": "eb39a28e089d05e28ab67e0d413789002f2dfacbaa6025ba75b78a30eae3b10f",
+      "working_bytes": 437,
+      "working_sha256": "eb39a28e089d05e28ab67e0d413789002f2dfacbaa6025ba75b78a30eae3b10f",
+      "match": "BYTE_EXACT"
+    },
+    {
+      "path": "android/app/src/main/res/drawable/ic_node_sibling.xml",
+      "git_blob": "73cba41098edfd11236b2952d70e5239dadf8bc7",
+      "commit_bytes": 439,
+      "commit_sha256": "ded71db9419ca8ffb70d2f47b157676509c2c153773575c3d0bda491b786d3d6",
+      "working_bytes": 439,
+      "working_sha256": "ded71db9419ca8ffb70d2f47b157676509c2c153773575c3d0bda491b786d3d6",
+      "match": "BYTE_EXACT"
+    },
+    {
+      "path": "android/app/src/main/res/drawable/ic_note.xml",
+      "git_blob": "c7c4fb1e061fcd5f4b43847bf1a9d3dea58bcc38",
+      "commit_bytes": 882,
+      "commit_sha256": "2a4ae8fcc2d826c4941bff14ad8569872defb04b3a66c040d78ad8fac5a776c3",
+      "working_bytes": 882,
+      "working_sha256": "2a4ae8fcc2d826c4941bff14ad8569872defb04b3a66c040d78ad8fac5a776c3",
+      "match": "BYTE_EXACT"
+    },
+    {
+      "path": "android/app/src/main/res/drawable/ic_objects.xml",
+      "git_blob": "e733e402de857622344f1f9c22dd1e933443f46f",
+      "commit_bytes": 448,
+      "commit_sha256": "f8b48766a8d4434814b610b44caa6a2a68aacb920e3d4b2d2d4662d86a03c88c",
+      "working_bytes": 449,
+      "working_sha256": "fb442300e1f0b1096c4dfa321794a7a07b4175922b0c2cd4ee358dc79f179749",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/res/drawable/ic_overview.xml",
+      "git_blob": "ff525cd95817f750ab3082729c6beffee19852b2",
+      "commit_bytes": 464,
+      "commit_sha256": "e9259d16e85574d93c10f127641c93520e4dba84e83a4067dd9c413829348b5f",
+      "working_bytes": 465,
+      "working_sha256": "7a6d8e9f4bfc3ed98df214e8bd56c944d2febd6a38c808ac12c53a666c3db9ab",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/res/drawable/ic_pen.xml",
+      "git_blob": "fcc4a3d7631cc5feb2bd889a28c0a243ccf11748",
+      "commit_bytes": 408,
+      "commit_sha256": "993972a38fd167ffbb3c38259e55ec3166b231f8369bc31069096a47ab9456cf",
+      "working_bytes": 409,
+      "working_sha256": "0df1eb6c8f245400fa109e9ceb2df55bb4fdbc6ffdc4640b80859afb6db23a66",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/res/drawable/ic_pin.xml",
+      "git_blob": "f30cac05a217fccf778e7616bd3231cb687600a3",
+      "commit_bytes": 418,
+      "commit_sha256": "ac3ed88d75b606098783e876e63d6b8fdf3001a8d644f5c49ae6790b2fd0a594",
+      "working_bytes": 418,
+      "working_sha256": "ac3ed88d75b606098783e876e63d6b8fdf3001a8d644f5c49ae6790b2fd0a594",
+      "match": "BYTE_EXACT"
+    },
+    {
+      "path": "android/app/src/main/res/drawable/ic_readonly.xml",
+      "git_blob": "f141c590c802cdca2ca48f52a2822babf29a550d",
+      "commit_bytes": 420,
+      "commit_sha256": "e0e77345a333f52b113652b66c782a5801199737fc8559c17d436eb2d412d051",
+      "working_bytes": 421,
+      "working_sha256": "704275f98f395cb9594a500482295a8a8ffc5e07429699ab4653927191df966b",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/res/drawable/ic_redo.xml",
+      "git_blob": "84036edc13cbb439f0f2c07409ada32697e54004",
+      "commit_bytes": 405,
+      "commit_sha256": "fef8352906e70bdf86ae9d9f936af3f8ec5b9dc87c93e819118d61415a6d2d0f",
+      "working_bytes": 406,
+      "working_sha256": "70f6adc175cbdbe3d4661cba5be1403ac987176d4a608a1a170abb8fe6a4b78d",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/res/drawable/ic_review.xml",
+      "git_blob": "71dd71bd99a159c7707a4fb4849a732b8888c39f",
+      "commit_bytes": 1015,
+      "commit_sha256": "5a2db998f272d32d2215bcbd34cf0fc8e9da9e07cda6f2e3f42b1d421c984367",
+      "working_bytes": 1015,
+      "working_sha256": "5a2db998f272d32d2215bcbd34cf0fc8e9da9e07cda6f2e3f42b1d421c984367",
+      "match": "BYTE_EXACT"
+    },
+    {
+      "path": "android/app/src/main/res/drawable/ic_search.xml",
+      "git_blob": "bc4d8cb08713e6b367e8e2daabd6b9984b3cfb25",
+      "commit_bytes": 674,
+      "commit_sha256": "29f80410306bf446ff2a20874ac59f6628c2eb3dc2408bcd505ccd1387e74677",
+      "working_bytes": 674,
+      "working_sha256": "29f80410306bf446ff2a20874ac59f6628c2eb3dc2408bcd505ccd1387e74677",
+      "match": "BYTE_EXACT"
+    },
+    {
+      "path": "android/app/src/main/res/drawable/ic_select.xml",
+      "git_blob": "8e3a16cce6ec0c76a5ce251cdd9e511ddf302251",
+      "commit_bytes": 439,
+      "commit_sha256": "15166e77605bbd283ef86e0eecf60c5e14fb766ce63619f61246ffb4e26a56f6",
+      "working_bytes": 440,
+      "working_sha256": "1f7e91a9ff1f89a37782983545227f648da85d3e530c094bf867246f7346891d",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/res/drawable/ic_settings.xml",
+      "git_blob": "3ca69b8dc85901f029212373ccc04832cd84a444",
+      "commit_bytes": 476,
+      "commit_sha256": "fa1d6f430483d927ac09f1458097d6cb9b4301b486a383a42dddd90855d04f9b",
+      "working_bytes": 477,
+      "working_sha256": "5fd52643600975aff5068656f74513e22c0f95d8acfbb33c05f84f948352ac93",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/res/drawable/ic_shape.xml",
+      "git_blob": "378d5262e7c90c0386d0ab6f5fca2bbc65c1b897",
+      "commit_bytes": 436,
+      "commit_sha256": "3d3a7de7f03625eb8f4a059667f8abdb29129857f148b3323f49bc5e166b8775",
+      "working_bytes": 437,
+      "working_sha256": "dff8c2043f27f9d0b919d9d94b368fee7db258684ff4170920729ba5b506f121",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/res/drawable/ic_sort.xml",
+      "git_blob": "f06750b9402cc114a3ac90b472419b70a3a34bd7",
+      "commit_bytes": 472,
+      "commit_sha256": "7b1e9d1becb1d805721ff8d2e9ca7f7c67edc2a20a2699f5b28f08f6e8bd814e",
+      "working_bytes": 472,
+      "working_sha256": "7b1e9d1becb1d805721ff8d2e9ca7f7c67edc2a20a2699f5b28f08f6e8bd814e",
+      "match": "BYTE_EXACT"
+    },
+    {
+      "path": "android/app/src/main/res/drawable/ic_star.xml",
+      "git_blob": "fbdbefd018405546fd57a96531af77c13dabe441",
+      "commit_bytes": 581,
+      "commit_sha256": "1b906115510ebf8832126437b98cc9fbbe2f18c170d3b8516a2d542113034253",
+      "working_bytes": 581,
+      "working_sha256": "1b906115510ebf8832126437b98cc9fbbe2f18c170d3b8516a2d542113034253",
+      "match": "BYTE_EXACT"
+    },
+    {
+      "path": "android/app/src/main/res/drawable/ic_star_filled.xml",
+      "git_blob": "108b0ad5518483e600593138ceeba1d488496454",
+      "commit_bytes": 320,
+      "commit_sha256": "8ae8dcea1318d1e2630c3998921ecf23164ae1a4aefe1f3bf0fb48141599ee79",
+      "working_bytes": 321,
+      "working_sha256": "6724e11a2e965ef1c6d31d34cbb57571eea846f33d2ff8f5bc390d699de859a2",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/res/drawable/ic_sticker.xml",
+      "git_blob": "14b292cf5cd53ec4b7a66238e0f8b7e52319df84",
+      "commit_bytes": 424,
+      "commit_sha256": "28a8e1a1db0fc740a08dab2d303b5ad9b29d1a4d56e9940a67aa3d908358db6f",
+      "working_bytes": 425,
+      "working_sha256": "5667a8d4ff15fb3946ec1129d0e0572c4fbac8c78d2c331dc6e912bb6e7356aa",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/res/drawable/ic_tag.xml",
+      "git_blob": "704c86ed65c02bf465d04f0b43dd8f4d2743ab40",
+      "commit_bytes": 590,
+      "commit_sha256": "31548724353e71318948615b9295e5e6f6c97b34246b544ecd18db154d5bb87b",
+      "working_bytes": 590,
+      "working_sha256": "31548724353e71318948615b9295e5e6f6c97b34246b544ecd18db154d5bb87b",
+      "match": "BYTE_EXACT"
+    },
+    {
+      "path": "android/app/src/main/res/drawable/ic_tape.xml",
+      "git_blob": "4620fe7286bdf7a439ca9fd75918cc87adb963e5",
+      "commit_bytes": 414,
+      "commit_sha256": "9daf9304a4f583784bec1f96541b6b1466f1aa399d7cd287ae4fac80f88bc5d3",
+      "working_bytes": 415,
+      "working_sha256": "aa14ad5d487337b87367e3ece2f6401bcb65a09ef3740861629bf8b30fe3e3a3",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/res/drawable/ic_text.xml",
+      "git_blob": "9063d933c85897f51b1fc30496fb1fee0beda651",
+      "commit_bytes": 404,
+      "commit_sha256": "946d860aa2ec754e12d038e9fe7de04a8ba9339e4cdcc3b8227039377322a5f1",
+      "working_bytes": 404,
+      "working_sha256": "946d860aa2ec754e12d038e9fe7de04a8ba9339e4cdcc3b8227039377322a5f1",
+      "match": "BYTE_EXACT"
+    },
+    {
+      "path": "android/app/src/main/res/drawable/ic_timer.xml",
+      "git_blob": "b796c2c62986f9eef8a07d50c97b9ac269768292",
+      "commit_bytes": 425,
+      "commit_sha256": "e4bd96815d5e08130148905e58bdef38daba16d5f349987820f0faea5e023866",
+      "working_bytes": 426,
+      "working_sha256": "92040929e92df262e9d1783866f39b44d49e0ff49db21e1361a762c80109bdd3",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/res/drawable/ic_trash.xml",
+      "git_blob": "4ecbf88b754f1907919da3e61bd48170bd4aeba3",
+      "commit_bytes": 785,
+      "commit_sha256": "dd69b4b413331e784ba5673888569d65cdba1c6ea33bf751aac61950f0a08178",
+      "working_bytes": 785,
+      "working_sha256": "dd69b4b413331e784ba5673888569d65cdba1c6ea33bf751aac61950f0a08178",
+      "match": "BYTE_EXACT"
+    },
+    {
+      "path": "android/app/src/main/res/drawable/ic_undo.xml",
+      "git_blob": "24d52755805d66d669a7f32a270e3bfe6c32dd0a",
+      "commit_bytes": 406,
+      "commit_sha256": "2f4f5e13402b92528d4bb7a1a22480655d1959b75fafeb9af2d0c58416097394",
+      "working_bytes": 407,
+      "working_sha256": "6494b246b7bc5d7f9c9fcb843cafdbb9895bb4f878e4aeb01e0b680c716b5361",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/res/values/strings.xml",
+      "git_blob": "0dbf63dffc8d2fcae31fe94f7d31690e23c0c1a1",
+      "commit_bytes": 2332,
+      "commit_sha256": "d537ab93424d48ba8a54e0554c9ff94125af00fbec0ece8dec73c78bcd42c1dc",
+      "working_bytes": 2366,
+      "working_sha256": "62beb1778904f8353227e0c7940ba99bb728bc6b30ebfaa64b5b3c077576779c",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/res/values/themes.xml",
+      "git_blob": "5321738837772a5608c49a6dbbf479b8de7a70bd",
+      "commit_bytes": 424,
+      "commit_sha256": "c3fcdf672f30952c419ffcccd016ac2e73f3a7795cd1e3be5f38a544cd685454",
+      "working_bytes": 433,
+      "working_sha256": "276c720d6c06bc81944f57f79821f8a66a3b558f86944d85a4300ecfaa2e26bb",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/res/xml/backup_rules.xml",
+      "git_blob": "5d4f4014df22d542155d25d5c3f8ac111b4ea3f8",
+      "commit_bytes": 288,
+      "commit_sha256": "c89370b4f7cb2d8e1f4dc1a4c196435f4c44637dc0b623373986a5931e010365",
+      "working_bytes": 296,
+      "working_sha256": "32de08a9cc21c0d2a7a21d02eb25e21bed2307fcedccae47195d01843f8602b8",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/res/xml/data_extraction_rules.xml",
+      "git_blob": "73da1f7cfd97afe8b8b46e7e1c441f34b26a78c8",
+      "commit_bytes": 661,
+      "commit_sha256": "5a0685b25c2a1753a7b2e2c9acc8ad494575c647fcf4cebd2f9afa6d9c3334c5",
+      "working_bytes": 678,
+      "working_sha256": "1af95edf74402f05bd47fccef9a20b9bc9bb03e9f97a99758d92954dfaa35f35",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/res/xml/diagnostic_paths.xml",
+      "git_blob": "17b9479c55d391d4806199414fa423b14a77c2d6",
+      "commit_bytes": 347,
+      "commit_sha256": "259e201349bd98e06aabd64415631e1e35798076f214bba7dfa71dfb8d4e0909",
+      "working_bytes": 353,
+      "working_sha256": "72a7116b9da549eae440228e9b06afbe0b65ce3c8bbed88533dcdfadce1fb15d",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/main/res/xml/network_security_config.xml",
+      "git_blob": "7d9ff67d778cd317c689dcf9a8d683d340702f67",
+      "commit_bytes": 140,
+      "commit_sha256": "c18bc32d74fa29482a66e1c58c7d25a897c6e7ccabafafe5715e6cff959921e4",
+      "working_bytes": 142,
+      "working_sha256": "b2528934338d049097d1f0568e7f021a59ce5321ab0727ee58525c05a0e02072",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/app/src/performance/AndroidManifest.xml",
+      "git_blob": "f632635b8ce7088def26bc928fef121e40eca89e",
+      "commit_bytes": 150,
+      "commit_sha256": "65bf4d4abd108c3dab7f9c7c51ec8863cfed9f121115b6c53001e5d7be762448",
+      "working_bytes": 153,
+      "working_sha256": "2ba9f84dce99ed019808cc96981b6b4cd9a2c50eb9b350b0dae0b1d0e0811420",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/build.gradle.kts",
+      "git_blob": "74316be56a47a180f3dbe3cfcdad7d04e3522b12",
+      "commit_bytes": 451,
+      "commit_sha256": "267dc91204956dd91e3732f30c7527b3a745d6ec3670974305d1101d753c845e",
+      "working_bytes": 463,
+      "working_sha256": "99d05db552f1eff0749f5c603f492ac2c3d343d5aa9492463a9ce3ba1da01f9e",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/core-domain/build.gradle.kts",
+      "git_blob": "50779f74f2c243949207a235943e4ef3bb39f6da",
+      "commit_bytes": 119,
+      "commit_sha256": "6216873f7ef70034a8ed48a831a99f4189e47e1861b2bb15b53640e7af37fc0a",
+      "working_bytes": 122,
+      "working_sha256": "44d03ef3d61efc6173ea7084c0770f8c1e78aba5ebb07f22c43e81c3d71d5604",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/BranchReview.kt",
+      "git_blob": "ee4c54af6209efdae5bc428fc310e3ea048801d2",
+      "commit_bytes": 6861,
+      "commit_sha256": "ec62e913e902e69553aadb785c44a5948eaa5cec0575b0bf4016baea29772cec",
+      "working_bytes": 7018,
+      "working_sha256": "dbcfaddefb3e58066f57367aad095a76f138abbb5b646ff24e1552171ae058c4",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/BranchReviewRound.kt",
+      "git_blob": "df0ba56b1d7a61b75f57e257c85c043f0120d4c5",
+      "commit_bytes": 8085,
+      "commit_sha256": "6e664537769c80c268644d271a99d5e15896ceafe55a8bf1bc2110bbb1dac69d",
+      "working_bytes": 8236,
+      "working_sha256": "019ef5fe048cac559d38a380b19c95f1c2b4243407ece67d910c9d3f7c054d81",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/BrushRecipe.kt",
+      "git_blob": "4e80f20fb127976f407ed982aa516a7fcc511f94",
+      "commit_bytes": 4927,
+      "commit_sha256": "17d90a6c0e94057a08620a9a754d637e853d7a3fc40406924496444801fd63da",
+      "working_bytes": 4994,
+      "working_sha256": "5491af5d5085c17cfdb475062437aecf7a3261993dfa4e7fc413d0fd28c426f6",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/CanvasViewport.kt",
+      "git_blob": "25df5df9855f5ea921009198b2ff78379a833ec6",
+      "commit_bytes": 4481,
+      "commit_sha256": "874bc619b1361be129aa0c9b0241f4811fb295404a2e4614271fd5af2b89d975",
+      "working_bytes": 4556,
+      "working_sha256": "3fdfcaad8c7f3023ada85587f19aeabdc5d7ae587c1f52ffc8fc3565467afbee",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/CloudServicePorts.kt",
+      "git_blob": "bc65091d4c5c4a7722080fc69a7459a7a55ccc66",
+      "commit_bytes": 3208,
+      "commit_sha256": "b7ec7a70174052fa8801379033fe98ec63d78f5b14ef6ec3f3b476c99c2eba8f",
+      "working_bytes": 3263,
+      "working_sha256": "e025bf6955bcfaa4d54bb9c81e2e0b7685a5ed51e9cea07b06d06772ee7c4544",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/ContentTransfer.kt",
+      "git_blob": "c62d57d2c8c8f227b6d80923aba09e7d116bc606",
+      "commit_bytes": 5363,
+      "commit_sha256": "6c8f1c77d0e2ed36d04bcde9ca9f37ffb89859c7eefc6be178ef38f86c9c2166",
+      "working_bytes": 5472,
+      "working_sha256": "930349c8eb798618ed2e1ac24741db27a5ec478fe40623d49c5c8100e7a5dee0",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/ContinuousInk.kt",
+      "git_blob": "44c130cefadb9ff1e56efc22f0e4f8a7a8d89efb",
+      "commit_bytes": 2776,
+      "commit_sha256": "64597022665b28e35805bce6d1899d3d000684f092b59d7c8f2951bfa0f01791",
+      "working_bytes": 2821,
+      "working_sha256": "e0c59ec3da84051e1c2947c3e6823235ad16b130cafc481f37e108e8f3563bc4",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/CustomCover.kt",
+      "git_blob": "34e6fbb5d89d0d3e7e6029a95bf4ed9a18f6e9cd",
+      "commit_bytes": 2153,
+      "commit_sha256": "a3d757fd24bd7d9c2521036597b7e00a948efecf57c3a8f316e451222e038dc6",
+      "working_bytes": 2190,
+      "working_sha256": "ec2f6f0251be86b7e388d2e37a9528841f2b37bd38aa299c9ae0615dc143ac4a",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/DiagnosticLog.kt",
+      "git_blob": "964424157d4d959f986be2f2ab7fec057ef9f2b9",
+      "commit_bytes": 6135,
+      "commit_sha256": "e81c62d8b1e40409c0a00e4488e1273118475f5d410e15eeeac6e1674afa44f2",
+      "working_bytes": 6225,
+      "working_sha256": "714ac3f6c285763308451a5427ed0033573c716975ed731c1734676dd609c380",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/DraftReload.kt",
+      "git_blob": "23db69510d197846830a19fabd21c0525a08b1a6",
+      "commit_bytes": 713,
+      "commit_sha256": "4336fb8f669664063bbb694c321724c10a1bfa4fa4bd86f316bdba056e0f48b5",
+      "working_bytes": 729,
+      "working_sha256": "762545f76d3f62a6b78a220806d62ca6058dee1f15dbdd59f097e55247e70c73",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/ExcerptBounds.kt",
+      "git_blob": "8332c7a0c8afe13d26b73a82bd032ade0c196763",
+      "commit_bytes": 1658,
+      "commit_sha256": "b1ec0dfab23092f063148424c0cec131f405eb7fdd9f76bd1a3aee461e66f1ce",
+      "working_bytes": 1688,
+      "working_sha256": "d7ec924c35c00ea3a5ded9d7056bee64986e3bd7dcbc664d54a1307cf1b06d51",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/HandwritingLines.kt",
+      "git_blob": "db63287d07ca88b55eb2b04c36aac48d62ee52e5",
+      "commit_bytes": 3163,
+      "commit_sha256": "a813784c10618837a0586342bbe9074b37d14dad111a2c0b444e3d12caee51c7",
+      "working_bytes": 3216,
+      "working_sha256": "1c6c0bac057d8fda8b1d7deb38c95139f6aca42f6ec0a9fa3de4d3ba8aed884e",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/InkModels.kt",
+      "git_blob": "1db72c5af545ef3c7e7a82e05e00e83216ddcc04",
+      "commit_bytes": 13459,
+      "commit_sha256": "1b6806006462507c53d1fbfeef5ec87e10c067814a22f82032f33ed0a4af8d23",
+      "working_bytes": 13625,
+      "working_sha256": "fc4f4cd21f313e3f629c125f9718a623526e862ad5f68a4286a4199473f37a3d",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/InkPageFile.kt",
+      "git_blob": "78dd4e33b68c47c67353d064b14e5f93ea162bad",
+      "commit_bytes": 4653,
+      "commit_sha256": "1c139c2cc71a85c64d7ea70326593eeea99686a69e06c75b78578cfd84565dda",
+      "working_bytes": 4695,
+      "working_sha256": "82fbdf48c80fb1b3e7b60022c0cf91e652d758486cf3dbdb6072ae5ae1005c30",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/InkSelection.kt",
+      "git_blob": "6f6ac0cc7b843a6af62ada8c4aebc2461bc70773",
+      "commit_bytes": 7034,
+      "commit_sha256": "944bbc89d371e1721db8e778b1e20ba4102e4d99b71d985dfc0177b14dbd6d8f",
+      "working_bytes": 7141,
+      "working_sha256": "80bf267392371df9c05d7612af183eec960bf027fd80d84db78fcdc026597531",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/InkSession.kt",
+      "git_blob": "f65d4d09996e0a493ab3dd1dea0f8ca769c0e565",
+      "commit_bytes": 6766,
+      "commit_sha256": "a219d13838274d45f8aa1132fd1b0b82d53a64657ebf195bece7dbc5527d6c9f",
+      "working_bytes": 6845,
+      "working_sha256": "a71b98674f97f24ea074b221a82ff3b6f1488acb7d5854b0c92f4aca48099541",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/Knowledge.kt",
+      "git_blob": "733552bc3af4b3c13bc65a6eba9ac0852d4a7172",
+      "commit_bytes": 12011,
+      "commit_sha256": "bc89e21ab1b3d1219afa91820cedd53d67d31d6c4d830a903dc71b0dd7fe31e8",
+      "working_bytes": 12134,
+      "working_sha256": "de8ef8e8e95cbec068ffc789b5e7f1cce25a53088e21662d8d00ea53a6f64c88",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/KnowledgeTextLinks.kt",
+      "git_blob": "44b41f5c01a012f5333c3b7f45b56d836d47901b",
+      "commit_bytes": 3373,
+      "commit_sha256": "cbc3552b51b96b8e75ed5f5b0797bb4469b9f00faf802c9cb10f432e6492796f",
+      "working_bytes": 3452,
+      "working_sha256": "a9e750670366594b6b97608af0482003edb9df1a80399eead06751ed0abf9841",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/LearningWidgets.kt",
+      "git_blob": "5d9cf82d34f457ce92f94565391b995a2c1d6ba9",
+      "commit_bytes": 2398,
+      "commit_sha256": "c6ef07c1f5c02af3d88d95cc07ef21dca01910d391af7a8d1fa83f64f2af1736",
+      "working_bytes": 2437,
+      "working_sha256": "44896c17b577f44e1fd65e0aefccc9c12da83e2f6ce5c86f7938881175a6c210",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/LibraryArchive.kt",
+      "git_blob": "9820f16648ff6a102c004be16b2629473be3b30b",
+      "commit_bytes": 7281,
+      "commit_sha256": "9fa6aa9c2530cf9c5057c803f046635f9baaf9b22cb02897fcc864a43e13a91a",
+      "working_bytes": 7401,
+      "working_sha256": "1a31c821de5688162f52965123e7ce254a418b1e28270672595f8920d7b3dcfc",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/MapEmbed.kt",
+      "git_blob": "1b7e7f30a317dab2f07a50c680e7f92d9a85d6cf",
+      "commit_bytes": 3839,
+      "commit_sha256": "8efc7b3b6eb24c84a729516ea59ac724266f552022246c315adc81fe92183265",
+      "working_bytes": 3891,
+      "working_sha256": "5bbf6bffdbbdb1bb6978d70de3f9e16eb8336cb6295dc4a9111111567ec586de",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/MapScene.kt",
+      "git_blob": "49f7ee46b3a245a85bbb165ad1acdb0a40491c2b",
+      "commit_bytes": 3950,
+      "commit_sha256": "faa185983b0708e3227167dbdc56a1794f715b80d40262bddc53d0766007ce2b",
+      "working_bytes": 4010,
+      "working_sha256": "7b9edd78c90524842d179d2f4ba68008560af447d5f56db5918b03cb28144e45",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/MapTemplates.kt",
+      "git_blob": "b55602c0d7864be831d2fcc24487ff747b32e36f",
+      "commit_bytes": 3415,
+      "commit_sha256": "0894ed2012bf68f9136f717f9751b3278125b6dd322002a34d35f8711882bc8d",
+      "working_bytes": 3461,
+      "working_sha256": "9e35545963de8ec4cddbde95dcbc08796f4769db5d804c720cba9514922c33ff",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/NoteDraft.kt",
+      "git_blob": "b557f2417b53349f9e1b76c3527298c481b28807",
+      "commit_bytes": 3720,
+      "commit_sha256": "39a5df195ecb0e49b0a99fd0f9eb09def3c573f5d75b7d489345ff348af7c7e9",
+      "working_bytes": 3814,
+      "working_sha256": "7d1cb027bc3c0d099e9eb339df08ea87ff9d5c17e60a2248e669a05d9703a154",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/NotebookAppearance.kt",
+      "git_blob": "6704d99f35b84e24b34b7d78e4cff54dba328509",
+      "commit_bytes": 2363,
+      "commit_sha256": "79930b7cc2c3a462d71a1b04d17d5550b6f55b46154d8fea665cffe80f60adae",
+      "working_bytes": 2411,
+      "working_sha256": "66d8cc5e806685ed91e388f6505145defe059f6048fc73a8840915336632c248",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/NotebookFile.kt",
+      "git_blob": "d5cb7314af1e874422dcc7e86f907e9c3727ab31",
+      "commit_bytes": 3584,
+      "commit_sha256": "504fd28788ee479c9de52d11f67b27fdd8068fd04295d02db1bcf95eda76ce6d",
+      "working_bytes": 3627,
+      "working_sha256": "acb8892e89f4d66963b0dca82fdc5d7ce6d950d13c71bf4bbb7d8d354edd5bc9",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/PageEditing.kt",
+      "git_blob": "7cd65ea53fbd558e2039284003b004d08e3e3743",
+      "commit_bytes": 3691,
+      "commit_sha256": "abb20b82e46c0154a9e64035cbe642f40fcafcd755d60f96ea0246dd7e6ab1b1",
+      "working_bytes": 3763,
+      "working_sha256": "185e1317522d1d2b9aedc079fb52f4d4f17f0b1c5f06bc5ac2eb2dc33303e0e9",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/PageInsertion.kt",
+      "git_blob": "17f4ff7c8334865e45bab1726497a64af6d8896c",
+      "commit_bytes": 3506,
+      "commit_sha256": "439e0a86360a350c19d388cc95485f23a39affb0f6ff6c84cc3529e40d4e3d4b",
+      "working_bytes": 3581,
+      "working_sha256": "317b72d0945a61aa64f9f37d59d828055ef23a2a4a1bbe101dd5d22020d6c141",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/PageObjects.kt",
+      "git_blob": "36b3b4c7a5bbb1706c1156445947da6eb0490743",
+      "commit_bytes": 12362,
+      "commit_sha256": "92738a40a32b1f9450dd5d2adad250808dfeabbeeb9f74875c14eaea9a13bf2c",
+      "working_bytes": 12521,
+      "working_sha256": "ab6da3e2bc62d501136765f49d8587512444cc789e20bcefa4e9a90706d9d23d",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/PaperTemplates.kt",
+      "git_blob": "6d6318d313509372e117e8be90303dd9b99f2cbc",
+      "commit_bytes": 4467,
+      "commit_sha256": "31031e5e797ca2d6060808d09ca407bb992fbbfd2bdbbbe8334c0443225dc6f7",
+      "working_bytes": 4522,
+      "working_sha256": "f9a842fe643f01a05f4b28d7009beb4c9b308bd03aee255a21767c66a25aae19",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/PdfPageSource.kt",
+      "git_blob": "f04bd8f4c4d87d30f8e8fc9fba16a7c68ae9e3a1",
+      "commit_bytes": 820,
+      "commit_sha256": "cb61c3264b468367a3160c4ee77da1f0d928f4a023d19e5265b70056299c8d23",
+      "working_bytes": 835,
+      "working_sha256": "5f5534aa5de2d0bb6785ae500927d3480b9437ff6255bda573444e522a0f613a",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/PenKinds.kt",
+      "git_blob": "7d3b0f58cc465c24d26732c206926d827cf12646",
+      "commit_bytes": 1523,
+      "commit_sha256": "f9ce29af637d13a86f487ee74f2c4a89d847d801731a5528484694c03fa43473",
+      "working_bytes": 1547,
+      "working_sha256": "688b6536feeed50835885936e71a72917d4a4ab74b17aaef4e725db55cb3c2cf",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/PlannerTemplates.kt",
+      "git_blob": "fe108095c96d9e73bcec2074546528b040f99d83",
+      "commit_bytes": 8575,
+      "commit_sha256": "e322ff91be9b8682e9e024516d160a596d59e0bfa07e10846c6a8bcd70598f7b",
+      "working_bytes": 8695,
+      "working_sha256": "6c34e63dddb1609ddc3c7d0ef8d24adcc9d59afb846da019ffde125e9c5486c8",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/StudyModels.kt",
+      "git_blob": "e1fa5ba9dcd679720b1cc9c1b78293e5c971f2d7",
+      "commit_bytes": 5606,
+      "commit_sha256": "ca6f71b85ee9a7d15f3c248915cbb9a8e659c4b50f62a30bf53b4c8070ddd605",
+      "working_bytes": 5675,
+      "working_sha256": "070ad6ae670f25730fba6d9895d621b6aebd6726fb3583478316291d52fcd090",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/StudyOutline.kt",
+      "git_blob": "8a703d34d9d26884b3bb123695249d711dbd97be",
+      "commit_bytes": 1437,
+      "commit_sha256": "5f3732e9c5f1196e4d00ac083525a4be25a76ac2bf292ba27073a35a4248dc6d",
+      "working_bytes": 1467,
+      "working_sha256": "ac4c5e60f6d60d458ed64b564ffa722699a9845885e8956ee2227f042ef0ab73",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/StudyText.kt",
+      "git_blob": "21b41ff8b80c91c776103f358b89f25d96c01f63",
+      "commit_bytes": 1923,
+      "commit_sha256": "767acf7de3ef11f18ed185358d2fb6d67c897683bee58e2689d9f9849094b645",
+      "working_bytes": 1964,
+      "working_sha256": "eb7e60195fe3563df08bc90d0c76ef414b2229d09e84cb0ef8f18373b7d780ac",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/TextRun.kt",
+      "git_blob": "9dfd865dd66973772c55fa7cf65d277a4075a8b7",
+      "commit_bytes": 1171,
+      "commit_sha256": "d3903d3d67b27e7680ed7e469b98fe38602d651a526d0b7f3d82531f58ec4aa0",
+      "working_bytes": 1195,
+      "working_sha256": "003b20db3a55c104d3fe62936c14698e35b35ee7bc2dd15287ab0e4aae16304c",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/core-domain/src/test/kotlin/org/inkweft/core/BranchReviewRoundTest.kt",
+      "git_blob": "a0dcbc12dc7db587b8df63728a2089ac80b629a5",
+      "commit_bytes": 14035,
+      "commit_sha256": "fc894bbc5d1ebf3616d71fe34b2a2fe03ca16ce9e520c11e52f4784baeb9951c",
+      "working_bytes": 14275,
+      "working_sha256": "b67e89b71d8afddf2c19517cd0427b048c7d45249a3c0b53efe9debd6452cc21",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/core-domain/src/test/kotlin/org/inkweft/core/BranchReviewTest.kt",
+      "git_blob": "a52a0da6fe4f32738aa403e8f31185f7c6b592c6",
+      "commit_bytes": 13732,
+      "commit_sha256": "9dd8d77384332ce3130ec2e9fcf9345774cc1d682146d1288498cef2b2c09653",
+      "working_bytes": 13993,
+      "working_sha256": "9a2a7e9098aa038835da91e7f02acba2972e8ca157c724ed51cb2038f3685e42",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/core-domain/src/test/kotlin/org/inkweft/core/BrushRecipeTest.kt",
+      "git_blob": "16c3d2671e31dd6d7142e01536e3bce7e34d3684",
+      "commit_bytes": 2775,
+      "commit_sha256": "75d87eef9434c82dd82109a3816e48a0a805ad08fbe93f0b69f5e4347a060f96",
+      "working_bytes": 2815,
+      "working_sha256": "54815b8a7b7605b7df574ae38f5e0daed1aeb6aa86747a5afc01bc2a191d7ec3",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/core-domain/src/test/kotlin/org/inkweft/core/CanvasViewportTest.kt",
+      "git_blob": "6a2f17a50de3442ee578dedf6661f9f50ba8632e",
+      "commit_bytes": 4953,
+      "commit_sha256": "c7f1573bcef85fd040601e620675167fc9f882fc7465d80aa17e9651250de4c3",
+      "working_bytes": 4987,
+      "working_sha256": "813fd5f94cf13f4cf58bc6170b702eb78883e8db4d5edb2fce03fe85498a32d7",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/core-domain/src/test/kotlin/org/inkweft/core/ContentTransferTest.kt",
+      "git_blob": "9bc574bcd729bfed0e98e7e5a6df87a734c741e5",
+      "commit_bytes": 5591,
+      "commit_sha256": "439b0904793e4f5b07f189d7453eacde9b16d83ba469afc2c1a8d7c710a36e77",
+      "working_bytes": 5685,
+      "working_sha256": "16f53902f488a156bb2544dab2dd89ccdd05e7e2984e4036fc828639fedaf5c8",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/core-domain/src/test/kotlin/org/inkweft/core/ContinuousWritingTest.kt",
+      "git_blob": "d7f40426d4a258c64789403494f4e77045c9df73",
+      "commit_bytes": 4146,
+      "commit_sha256": "0f5786b8a2ce87e9e8117ca0769045b1b332f1d8df48741c5818d86e0425ee60",
+      "working_bytes": 4210,
+      "working_sha256": "f8db9343a0b2800dc23e87119014b9a1121202c14f3238c8bb472c6800a3559e",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/core-domain/src/test/kotlin/org/inkweft/core/CustomCoverTest.kt",
+      "git_blob": "0c15f6cf553bab0f7cc5d3b6c1c9fab10845777f",
+      "commit_bytes": 1536,
+      "commit_sha256": "46be5cb647df292ddf7efa24c51874ef0182f2e122476d5296f00af5861f6d98",
+      "working_bytes": 1561,
+      "working_sha256": "1e440df5b72c3ac8ad094cee7a487ebc882ad5249ab6275892caee00d2aeca27",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/core-domain/src/test/kotlin/org/inkweft/core/DiagnosticLogTest.kt",
+      "git_blob": "d028e3a7571b954561ad691395a8c3b91e61ef3e",
+      "commit_bytes": 3854,
+      "commit_sha256": "fc48a5194dd0a7162f1dd8862a26f4d6fb0d1788e6551d93eac43feb31a62e77",
+      "working_bytes": 3880,
+      "working_sha256": "e4eee8b0978b2c96188996276e589b5fdba65ef52e30a51ad6edbe7e6e032fb8",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/core-domain/src/test/kotlin/org/inkweft/core/DraftReloadTest.kt",
+      "git_blob": "2dbeb16752bafc4d4c308cd8eb597dc688e2fed3",
+      "commit_bytes": 2431,
+      "commit_sha256": "e04b811dd6529a236959e28bb1b745c13e350cbf8219d9b4ac1022069ac12e63",
+      "working_bytes": 2489,
+      "working_sha256": "dd8fd218d6c6452f9ff1a8353a51f557b09c36cf13706c0a0312e9c9fbb2ca9c",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/core-domain/src/test/kotlin/org/inkweft/core/ExcerptBoundsTest.kt",
+      "git_blob": "b21d244891c86541d1feecb32a918f9a42f00f76",
+      "commit_bytes": 1854,
+      "commit_sha256": "587f7effc473da7dff223f23273a85601ef088d4ada8fe204549da9f107a1dc8",
+      "working_bytes": 1890,
+      "working_sha256": "11c6599fba395efed9b2a76f767b697d3f5e6b1e9d04761d4bf95bc5cbe0c241",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/core-domain/src/test/kotlin/org/inkweft/core/InkEditingTest.kt",
+      "git_blob": "88008587afd8c11e8f3a5aad5a66304cbe59e61e",
+      "commit_bytes": 4838,
+      "commit_sha256": "95fb45a64b0f8aaf237bf25080dd30290ceec85a60f1414ba7a8a2ca952c0284",
+      "working_bytes": 4899,
+      "working_sha256": "141546472eae3c030fe7202afa6e2b2acf1c3fbbcceb9e25f0469a4cda9055d7",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/core-domain/src/test/kotlin/org/inkweft/core/InkModelsTest.kt",
+      "git_blob": "55009ab461f48cf03f419b91da99457f711cb19c",
+      "commit_bytes": 5894,
+      "commit_sha256": "4471d083cb76685ba4809579d79145aa1e2c26a960ffca9af88d7c83fe93cb2b",
+      "working_bytes": 5954,
+      "working_sha256": "1777f1a98d554b3e4166ba2a00ea7da5a70a47b11d26b1af221256db42a1fba1",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/core-domain/src/test/kotlin/org/inkweft/core/KnowledgeTest.kt",
+      "git_blob": "0f0aa273a4bfce02c4d3d7b43895fefe0902a3d2",
+      "commit_bytes": 4655,
+      "commit_sha256": "0c86b4a40d9c11f610e39e2ba1260940817f52e703e5ad4b344fdb58d362bf3d",
+      "working_bytes": 4687,
+      "working_sha256": "74013c4e8acc95eda54f5f2b8081d44f7c90e64191c61aca717eba7399e5d146",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/core-domain/src/test/kotlin/org/inkweft/core/KnowledgeTextLinksTest.kt",
+      "git_blob": "5be6a2af3af17e22d964adddeeeef626528cb5d7",
+      "commit_bytes": 4186,
+      "commit_sha256": "3a1a44278c0d3c86eb9951a5016ca46f5235ec42660a8971734e874b0ffe1de1",
+      "working_bytes": 4263,
+      "working_sha256": "4048e869d1de2c2fa1877a9e516cd5f733f8a8aabef4fe29d20da99031444222",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/core-domain/src/test/kotlin/org/inkweft/core/LearningWidgetsTest.kt",
+      "git_blob": "6465aeeef5caea9c25ed74f08a41485e5484d497",
+      "commit_bytes": 1641,
+      "commit_sha256": "c76739dee314b69fefb929402fc12df1bc7f8afb86c2598de26d233b267afafc",
+      "working_bytes": 1671,
+      "working_sha256": "dcf380802252a238ff3101bceb21cce9e8f4e791ef3a822325afe46e06aea6b7",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/core-domain/src/test/kotlin/org/inkweft/core/LibraryArchiveTest.kt",
+      "git_blob": "c5e7fa8a6c95734741e450e8424803657a9cb900",
+      "commit_bytes": 4337,
+      "commit_sha256": "e86506f85f838bc7de36316d83e9ce1d34a8e7bc47826565601eca263aafb442",
+      "working_bytes": 4377,
+      "working_sha256": "7ab8ce98c8c1e34c72d49539ad23dbc66a1120c8f6fc00dae25d9614e954f952",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/core-domain/src/test/kotlin/org/inkweft/core/MapAddendumTest.kt",
+      "git_blob": "13a3d0cb5d17bf9a1d03a0a336ed455dab1c18c9",
+      "commit_bytes": 3843,
+      "commit_sha256": "463530a82bebc15dfbdff857958efa1e2440c649add06ada35de54d041c937ca",
+      "working_bytes": 3889,
+      "working_sha256": "f6143248d28e6df264c37ea28793762d54a8227656c50f581fab8dd8da12e6b7",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/core-domain/src/test/kotlin/org/inkweft/core/MapPortalTest.kt",
+      "git_blob": "a261f81fa9a5c8c8bc97c4827d2ba2e7cae4c1d1",
+      "commit_bytes": 5487,
+      "commit_sha256": "818c50ccbc3e0609bdd0b2d86a25f281bcb40dd8b5a51fb8bcca462ecc9c97a7",
+      "working_bytes": 5584,
+      "working_sha256": "0f236125beccdd074dcf03c57fa37d927b99e613a051b3d8cf60abaea83b3e4b",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/core-domain/src/test/kotlin/org/inkweft/core/MapTemplatesTest.kt",
+      "git_blob": "25ad8cab36190ba362ec636fca25e1997008d05b",
+      "commit_bytes": 2669,
+      "commit_sha256": "03ce1ad946e49bd451ca594a780444c6a7b2cb01aa02aa5faba5edd660402de7",
+      "working_bytes": 2713,
+      "working_sha256": "c2a7c65aa7512b5750747b940c2b5fc75ab48b9e804f610843b38c565e2f65a2",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/core-domain/src/test/kotlin/org/inkweft/core/NoteDraftTest.kt",
+      "git_blob": "dcc67b04884fb9fa026174bdb2e72fb6fb128b13",
+      "commit_bytes": 3764,
+      "commit_sha256": "9f9c587b90ee091f97dec1cf832f974b936eaa36edc08aafcad0acebb9b87eac",
+      "working_bytes": 3842,
+      "working_sha256": "3b3cb5abadcc673a695e410fd86f450d03a1e53e439296c0d16c755556bb6837",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/core-domain/src/test/kotlin/org/inkweft/core/NotebookAppearanceTest.kt",
+      "git_blob": "49d0b5dcd7505a681c7d42f4aef8e50557351d0b",
+      "commit_bytes": 3042,
+      "commit_sha256": "ae3523982c28c7e7e554ab0b7d3390a6be59ec8abd73393faa9852d2fd433d5a",
+      "working_bytes": 3065,
+      "working_sha256": "4fe01ffe48c08407a66aad23ca40d71738cc9c9a442e301c7e333d7fdd617901",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/core-domain/src/test/kotlin/org/inkweft/core/PageEditingTest.kt",
+      "git_blob": "202968c10270da902081337770d01422233c6b16",
+      "commit_bytes": 3995,
+      "commit_sha256": "4522bab399a1ebedb2cceb4dc9cc0cfcf0136cec7a202da09d89ddddc7fe7bbb",
+      "working_bytes": 4034,
+      "working_sha256": "103d9cb29993d19737c4bf68488361d53679ca1a7618b0e0e40580950f19d980",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/core-domain/src/test/kotlin/org/inkweft/core/PageInsertionTest.kt",
+      "git_blob": "ab9e23e6088f62f3accbd5fdc178c59a4655399e",
+      "commit_bytes": 3354,
+      "commit_sha256": "64facbd76921dc5e51b458ab94afdf0d8cb56baf9b0bf9fe55776335c119696c",
+      "working_bytes": 3400,
+      "working_sha256": "ea74c97f413030555a97f59e0ef34befdf1ebbcf0421c7e3644f7a8b0d21ab44",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/core-domain/src/test/kotlin/org/inkweft/core/PageObjectTest.kt",
+      "git_blob": "ae6dde2c96b0961285d0400062cda5e8fee672c5",
+      "commit_bytes": 2985,
+      "commit_sha256": "ef63ca249c63f3f90645808fa0d3f52822f2ddfd6b4ad8ef3025841f12bf0661",
+      "working_bytes": 3032,
+      "working_sha256": "1ce35500cd5f5023f176aa4b721dbfa365f848dc08c0d5295845ce9fe10dc7bf",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/core-domain/src/test/kotlin/org/inkweft/core/PaperTemplatesTest.kt",
+      "git_blob": "a75442a5a107b5d4fb94207bd7f5db69252dd96c",
+      "commit_bytes": 2230,
+      "commit_sha256": "b5b6ff693af839c2eff4af19efbfed554174926601cb54bde7d6208897ea9698",
+      "working_bytes": 2267,
+      "working_sha256": "62bae9b55c37c941b844edb465b3e6a07810994e8517736b24f6b102c7658284",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/core-domain/src/test/kotlin/org/inkweft/core/PenKindsTest.kt",
+      "git_blob": "3d58963fc910716c58c01517da3328261e0a8e31",
+      "commit_bytes": 1753,
+      "commit_sha256": "ab9933e7be62f7c5a45c36f1841b5f24fd600e68c5a0d9a9ba0b3bca5db50280",
+      "working_bytes": 1783,
+      "working_sha256": "f995b54d1e0505ba47085ad756f390bb5159c7fb6decbeb23e681e921aa9d045",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/core-domain/src/test/kotlin/org/inkweft/core/ReadingHandwritingTest.kt",
+      "git_blob": "1b870d383a9444c72cdc56c419515e15e90e3cd9",
+      "commit_bytes": 5868,
+      "commit_sha256": "b89be16792e6dc72770d56da7d649d3acad233452dec36a3debc1b273b2a397d",
+      "working_bytes": 5951,
+      "working_sha256": "13f104829c285f8909ae2bc5a230b0b7ee99fd78b4ad2716d279e93f7a6ebd63",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/core-domain/src/test/kotlin/org/inkweft/core/SelectionLearningTest.kt",
+      "git_blob": "c7bcf1fb4c096cfc3a466f491ed1b0fe8f16ea35",
+      "commit_bytes": 7968,
+      "commit_sha256": "45acf3d8604f9056558933244c22bd567aaa4abfd541b38d4f9b8da87af8855e",
+      "working_bytes": 8007,
+      "working_sha256": "36bafad46453fffe48d48dbd4ec9ad54f80c3d146c4e7e3793c881ac69797bb1",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/core-domain/src/test/kotlin/org/inkweft/core/StudyOutlineTest.kt",
+      "git_blob": "e5778fd2eaeccbd77b5da83d6b364eb2f9b03713",
+      "commit_bytes": 2221,
+      "commit_sha256": "c5bcb378cfae8ff0de5177c1b0dfc170189aa12460ce3662683eb393a6a7c235",
+      "working_bytes": 2263,
+      "working_sha256": "0ba6c4ae42599b81bf482695347d7215dc1649b98096bf0e6363f25f526b5568",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/core-domain/src/test/kotlin/org/inkweft/core/StudyTextTest.kt",
+      "git_blob": "5d141f1f045d2ce9ff4aa4b2d2df99fecfa4f33b",
+      "commit_bytes": 1563,
+      "commit_sha256": "10021a08bb471fdbcb2bb2f6f6b20a2e4e1dada9802fc8f006d6c91b48642d0d",
+      "working_bytes": 1594,
+      "working_sha256": "fb98d5683e675c78bf99910fe9acbfbd10df497bbb313aaae021d273a6247ac4",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/core-domain/src/test/kotlin/org/inkweft/core/TextGlyphTest.kt",
+      "git_blob": "57ebde40598048102dc83db46e666d02293d2f1c",
+      "commit_bytes": 2061,
+      "commit_sha256": "762e2d42390165208656834ca22cbe587404313e8f044ad10828d4b4287ae290",
+      "working_bytes": 2091,
+      "working_sha256": "73ffafc0c31f86122ebe75db254d5eea44661ad54b88980987d75745e6aa00fc",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/data-local/build.gradle.kts",
+      "git_blob": "5c7b9c435009ce29b1f5b8f58d11a2f7ddca1d29",
+      "commit_bytes": 1083,
+      "commit_sha256": "55199e71e6ba25b5bd248c3d4d47fed3fde99599a0fd45c542d9864d4f23f7dd",
+      "working_bytes": 1118,
+      "working_sha256": "0d20ae1aa6c8820213fb6dc8bcc679929018dff3b16b612ba0644d586672fb08",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/BranchReviewRepositoryTest.kt",
+      "git_blob": "edfd62440309c5c642bd8942977c958b36e6dab9",
+      "commit_bytes": 44298,
+      "commit_sha256": "485e8abf229f44bfeb8b0491e380df75092c4be97bbfec7ca26376d210271af6",
+      "working_bytes": 44958,
+      "working_sha256": "9bf6d6628bd3d18a70147cd9b65e7ef8523a0a873bbafaf5843c35c0c8624dd3",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/BranchReviewRoundRepositoryTest.kt",
+      "git_blob": "6eb815742c1fe5d798a3dcfde7e10e37ffd91463",
+      "commit_bytes": 20896,
+      "commit_sha256": "3d3a3dd2d719e242dd0ea4f4d1e193ed5f5035710652e11fed3ac6a27fdca71a",
+      "working_bytes": 21219,
+      "working_sha256": "4107667f66e53c792adf3be58e9f521740ca36a0edd5278cd3dfbe12d8e8c9cb",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/ContinuousWritingRepositoryTest.kt",
+      "git_blob": "e622fa0f932d342d0457beba199775f6afe26394",
+      "commit_bytes": 4208,
+      "commit_sha256": "10e302ed5ab69197699dec73a3407d97cbb15b1c4d456cd83632a85ee625ffac",
+      "working_bytes": 4265,
+      "working_sha256": "c2ea517f8ed6cfcc65cad41186bd99f77ba4912539d9bbac2d805059fd70f67d",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/CustomCoverRepositoryTest.kt",
+      "git_blob": "0023dd0cd2fcb8ff4df7886cec3cbb0c0de55e0d",
+      "commit_bytes": 4240,
+      "commit_sha256": "3d7a59f327c912c7e59ecf63458289113dd51a44c416270c3e55e5f483383270",
+      "working_bytes": 4297,
+      "working_sha256": "da95fb5ecef96d3bcaf6a0402790705378dd8ed5c043968d7377c0ce6468c188",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/InkCheckpointTest.kt",
+      "git_blob": "477b10780b15edf9f1aa21a37f0f120e9f3647d1",
+      "commit_bytes": 5328,
+      "commit_sha256": "cd7540537ab3a4ccbb42a90ee12747c5c513c0bbfc17a24568470394a012250e",
+      "working_bytes": 5393,
+      "working_sha256": "b398eef0557e7ce68d3ee579eddba4907ecc27da224794abc96388c4e20bc0a5",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/InkGroupRecoveryTest.kt",
+      "git_blob": "c8f3d68aca2e63fc33eb5084944229b169609c03",
+      "commit_bytes": 5206,
+      "commit_sha256": "5cc31255aebf08273e38df1bd5b454d1b385e8ba0b859e186ab262bc8e83ee20",
+      "working_bytes": 5264,
+      "working_sha256": "57fd6e87b82f701a10b495385632b57c53cecc0138cc5124a8f038c30d0ab738",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/InkRepositoryTest.kt",
+      "git_blob": "41d254a53a0e68af0e6415532895174c924cdd28",
+      "commit_bytes": 6675,
+      "commit_sha256": "0e30bdcb4dbb5c260f1e87e8ae495a133876ca305c514bf441907eecd473389c",
+      "working_bytes": 6782,
+      "working_sha256": "cf13f6b3323ac1b826058d9af219ab2280c84afae504b35d17fa3f149533853e",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/KnowledgeRepositoryTest.kt",
+      "git_blob": "21b21bf8aa307fbe84f30ddb2443d42d0b142cd5",
+      "commit_bytes": 18068,
+      "commit_sha256": "353ab30fd4a9de0274765f4c745b6bc6dd55240d9e04a104273755f6215f50dd",
+      "working_bytes": 18215,
+      "working_sha256": "f96ab9db7fa27739656b211967f4288bd0804b7ab5a0c23da6f428ab437b747f",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/KnowledgeTextRepositoryTest.kt",
+      "git_blob": "4e35d8fcecbb70c1d63ce117da7b41a0655d440c",
+      "commit_bytes": 14563,
+      "commit_sha256": "5d1e9724ecc26f6e0626d34224d462218c2e60acb3f1d143b80a6e70c84a6baa",
+      "working_bytes": 14780,
+      "working_sha256": "f6710049bc5212072bb2bee6262dcfc78b4509e82fca1841690e0fc98dc3b6b4",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibraryBackupGuardTest.kt",
+      "git_blob": "6a9d97fc395697430cf9838fcaf51db8a0213f59",
+      "commit_bytes": 3102,
+      "commit_sha256": "63043d234753ee7ec6d6967fe81d59fb5a1d87f434d1d064b0af35aa60e35e58",
+      "working_bytes": 3150,
+      "working_sha256": "ac961a1a5f823a4760d8b1651ff34001a9e061ec82b8804ea192bc12ecd3f25d",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibraryBackupRepositoryTest.kt",
+      "git_blob": "66d664e403db215a6bcc53c38aeb46b46e586d89",
+      "commit_bytes": 9437,
+      "commit_sha256": "cfbad3ac0332d24220e60c64ae0a64a065a50257444b7bcd6525afd941a0a707",
+      "working_bytes": 9568,
+      "working_sha256": "a95d604d273d17d04014ba1aade48848556769d0b5aa2f22283e3f6a21fcf49e",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibraryContentRepositoryTest.kt",
+      "git_blob": "3ab15c624a1d82d39625f4c7fbd7517579510489",
+      "commit_bytes": 12374,
+      "commit_sha256": "ed0be57c8ec8f0139474d8095bf6242248be3a094b7c6560a8311bd49debef8d",
+      "working_bytes": 12535,
+      "working_sha256": "1c44a0d17baa826af0a45bb349565f9485a47f2c81d191398d46200c2f8d56ed",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/MapAddendumRepositoryTest.kt",
+      "git_blob": "01f59974d9f342a225606386d0cfc986b45829ab",
+      "commit_bytes": 6540,
+      "commit_sha256": "21ca3fe85091a7d31c529237c6809e5d6f7b26aa626e5bdcd2c8c866d0c8269e",
+      "working_bytes": 6596,
+      "working_sha256": "2486fbc9b870d855f8097f1e6109521772a4b25215d0d6d35f39841eb1f58fa0",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/MapPortalBranchRepositoryTest.kt",
+      "git_blob": "11b150b6cc6be6675e9b84d576e56d6803a515a2",
+      "commit_bytes": 30585,
+      "commit_sha256": "6b027fd0d103c9e77350886723c903eacd50521cac0dd6242a6387dbba82a448",
+      "working_bytes": 30585,
+      "working_sha256": "6b027fd0d103c9e77350886723c903eacd50521cac0dd6242a6387dbba82a448",
+      "match": "BYTE_EXACT"
+    },
+    {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/MapPortalRepositoryTest.kt",
+      "git_blob": "204fb10ca0e70b6c21b9ebe6141062fd90ab5ae0",
+      "commit_bytes": 21516,
+      "commit_sha256": "8d16726347db4494354acd6d6aa74da04517120fa7959150070f8cf5971a73f2",
+      "working_bytes": 21765,
+      "working_sha256": "ea8402a935382edc8f4b0ba9b11655abbd30db703ba1b84657fe44c7d262ad1b",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/NoteFirstRepositoryTest.kt",
+      "git_blob": "79dce984602a91bc2b8ed9c2d725c134648ff734",
+      "commit_bytes": 4527,
+      "commit_sha256": "40738e445786bb6eadb76f8af4dd625a527ded22ffc5bbeb48783cce5f829edc",
+      "working_bytes": 4585,
+      "working_sha256": "51e707397668404403b61c675e14702d4341fb94697e149d9decff7ea23ed70c",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/NoteRepositoryTest.kt",
+      "git_blob": "330401b03c1ce12cf341e2ff8f2c06c63270e893",
+      "commit_bytes": 2525,
+      "commit_sha256": "46b05ed501cf4f62d65ad7f178fa3f7989e3d169da5dbdc1c1a7795061d9479a",
+      "working_bytes": 2579,
+      "working_sha256": "b713d0b39246c24548471009a09aa8bba651387378296a565cae33986a50858e",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/NotebookEditingRepositoryTest.kt",
+      "git_blob": "5120989a0870b221aa14700460860c226dfbdf1f",
+      "commit_bytes": 6338,
+      "commit_sha256": "7f34d3fc3ed00fafe7425873eb7e47065831d96d9a8f34f2b7362d39ea89a112",
+      "working_bytes": 6423,
+      "working_sha256": "926aa86ededbac4b544221236df5ea27c3805a35002f917d36671f0439f422ca",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/NotebookMetadataTest.kt",
+      "git_blob": "ed507f2fbb04f0daa78a52bade0b11c971b9d791",
+      "commit_bytes": 7819,
+      "commit_sha256": "358720aeb3abdfc8d5ad70bca112823cff86457ca515b126ab9ffcecfac2c9b4",
+      "working_bytes": 7905,
+      "working_sha256": "9dcca8ebc317926443d65dd281d0bf44c61981bbd3fb4a0369498a9d8e3a041d",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/PageEditingRepositoryTest.kt",
+      "git_blob": "2015c80f3edab41b4349be7fbf714a2018117a4d",
+      "commit_bytes": 14177,
+      "commit_sha256": "2954465de078e86335918a6c2d657f594d2113bd6e2e7f166288930078a0ff8d",
+      "working_bytes": 14342,
+      "working_sha256": "dae3c284f1a7b94d175fa0de0021568d93539f299c00a1850f29f1456a0c01d9",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/PageInsertionRepositoryTest.kt",
+      "git_blob": "b4c9ea9984085639a97078afc49f202232608e63",
+      "commit_bytes": 9220,
+      "commit_sha256": "27bb5fe25dd3459e7fd299cff5985a0e96ebbae943146c55b728dde46298f2ba",
+      "working_bytes": 9343,
+      "working_sha256": "871489a61cc67e984e3fdf7cdf4b12c32eb5b1ed3de62ca243b26d84d2eb5c61",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/PageObjectRepositoryTest.kt",
+      "git_blob": "f6d7ae70ccbd4954cc9c5f631ec6038dba0816d9",
+      "commit_bytes": 3883,
+      "commit_sha256": "065443e5db3e35ad3e18acbe3c58ccf36c43b223efa0dc931e18cd146e631125",
+      "working_bytes": 3939,
+      "working_sha256": "b09298d755273c9b0c52f697c1706317d67cc19096f14cc18d8db84b837ac23a",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/PageSelectionPersistenceTest.kt",
+      "git_blob": "3cc62d4d6353e70a11bc8147cde9e68398acf1f4",
+      "commit_bytes": 1980,
+      "commit_sha256": "fbe536558e11b1ea1d782cc9ff3a6a1f6518913f93e74c3036836d18ba29f794",
+      "working_bytes": 2015,
+      "working_sha256": "a740795d3038e9901603632f6c5870babd6e03365467373f10b1b2f2b40847f3",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/ReadingHandwritingRepositoryTest.kt",
+      "git_blob": "31a3856b5bba214f9f74c8d57b62b647b08bb101",
+      "commit_bytes": 6190,
+      "commit_sha256": "e177d0c5114de0c44c78a092756fdc35a78c2ff860b9aeef77ce9bedca6782ae",
+      "working_bytes": 6262,
+      "working_sha256": "24ec7c87a26499124fbea083cfe249a681646a46638769988197a0a8145190c6",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/StudyAndSelectionRepositoryTest.kt",
+      "git_blob": "9a233d5b41b3113360fd0fa51a6a8feea6f7404d",
+      "commit_bytes": 19927,
+      "commit_sha256": "8a4cf86fdb8d37ffcab60426245a6fcda878ec8b98027ce5edf528cb0cb8267f",
+      "working_bytes": 20120,
+      "working_sha256": "a8cccee2b6cb14d7bd9ceee01d955e792859508d02aeb02952eb1eaa2325a5b5",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/WorkspaceRepositoryTest.kt",
+      "git_blob": "b43e082ceca04119f742257cdfb8f6a69373a7a6",
+      "commit_bytes": 6107,
+      "commit_sha256": "7fdf3bcf72a4b4fcf198d9a77a6a401b1a9840b6619efbc4d5755ea981437094",
+      "working_bytes": 6187,
+      "working_sha256": "3f0ee59e69d0b8a6c1b15017c128cf551eccdf5ccd2d1c0790c6b4990b107a96",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/data-local/src/main/AndroidManifest.xml",
+      "git_blob": "cc947c56799598205b8fb518f3ba95843c1bab71",
+      "commit_bytes": 13,
+      "commit_sha256": "571f2735faf5e857752ee057ac8ef63425576a721616c60b86ee5d4c0a2d682f",
+      "working_bytes": 14,
+      "working_sha256": "8bd85a8fc13f61efab68aeec94a7c3a76cd1946ba63dd01109278e817cf717e5",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/BranchReviewRepository.kt",
+      "git_blob": "3ac5b29850e944a94dddb8078e357a18897046a7",
+      "commit_bytes": 8998,
+      "commit_sha256": "6fe89fc55d0c051ec8bd29a9ab3b6849d1ff13d06b7718e2cbce5c97f1039513",
+      "working_bytes": 9153,
+      "working_sha256": "9bf495cc020fe4de667e750ef1fae854f80b9fecaf18351b482ff61d05f54690",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/DocumentRepository.kt",
+      "git_blob": "204cf97991b2746f91d1e8f1f76725034d546ed6",
+      "commit_bytes": 4909,
+      "commit_sha256": "37b1539267a9810c794616d2cd566828425ccfb951439df37e08e1e091c32472",
+      "working_bytes": 4977,
+      "working_sha256": "2008ede2d8e5d545c69a50354619cca99b8961b971e5d3e13cce872736d94666",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/InkCheckpoints.kt",
+      "git_blob": "a5b9539fd294e32400df5b33223929323edf7377",
+      "commit_bytes": 2000,
+      "commit_sha256": "401f1726f9304be0868b9c9e8626059e5a57858dbed3b644218e9c849157416b",
+      "working_bytes": 2032,
+      "working_sha256": "5c2cac0252c8df68ee0a8714c27168a79aed075bc55b0fd6b67f3f52742f58da",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/InkGroupCheckpoints.kt",
+      "git_blob": "625dad4e3ddfa413d6d30944694c12d201e6b6fb",
+      "commit_bytes": 5211,
+      "commit_sha256": "a1cd560d0194056b25cf9ca01aa5a9ea69cd0b6f95db59a93cb7d8cfdc66ec8e",
+      "working_bytes": 5270,
+      "working_sha256": "019a6d3307264cb8daa7bd89fd9028f83822bd1dfa9058855f6c739334342815",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/InkRepository.kt",
+      "git_blob": "8a582c65878f799b5508dd5b10e3c72085665d2e",
+      "commit_bytes": 19535,
+      "commit_sha256": "cb404ce4a04ed600ecc764e364302de9cf5eb3a351d17aff21e8a0bed2a7736f",
+      "working_bytes": 19770,
+      "working_sha256": "ff5cc038ba569e0f46720f8fc823b9e14ac03c0dc4290b494736b89f1b7aed67",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/KnowledgeRepository.kt",
+      "git_blob": "ab9254f59c9116fa9f3a33571fdf33ac2d54ca02",
+      "commit_bytes": 13040,
+      "commit_sha256": "764f628334290b6ae1168a04cc6429eae3bc42b2958efac035c9da639f484695",
+      "working_bytes": 13198,
+      "working_sha256": "f00b4514e58c7377dfbf30284ec5b1972cce7fe6ec57010304b03f32a776e197",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/KnowledgeTextRepository.kt",
+      "git_blob": "3f5ff240543e5dd181114e84371dacaa7919d7f7",
+      "commit_bytes": 7376,
+      "commit_sha256": "8905c4466d14a134a56e92bcd27d53ebf008d52088b497a0ccf1f884dd3644fa",
+      "working_bytes": 7507,
+      "working_sha256": "9540be1b1c92c7787f3856329aefeb2fbbb12d7f542718340378b3224ed28a0e",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/LearningDirectory.kt",
+      "git_blob": "b83eff79f766de8fe3506462d3075bae4bb4208a",
+      "commit_bytes": 3905,
+      "commit_sha256": "34276508cc19a593a28a56e4e6b337a5ee3c7b2d132897807e7efba3b2f2868d",
+      "working_bytes": 3943,
+      "working_sha256": "acf4f8685b4c8192e11c04f81feb7d9c585c3af862c5a6349eb763f6b4b8bf2e",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/LibraryBackupRepository.kt",
+      "git_blob": "a51ad6874980e9fc1ffeda74a0569ecc5fa48554",
+      "commit_bytes": 25386,
+      "commit_sha256": "0c07761d68fc9cd10329d375e3314cc366a74ab9c40c4f9e0a5d901a23724220",
+      "working_bytes": 25668,
+      "working_sha256": "2c4b06a38f396031522629d03aded6d112ac6647b5cb09f0e4bfb34602cc62db",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/LibraryContentRepository.kt",
+      "git_blob": "a74ca18a5e5102673c3654d27e4d9db384663df2",
+      "commit_bytes": 8659,
+      "commit_sha256": "7d4c9e3ca3758ad96ea19e34cd65bd2cfdf1ea1c91a1a656756d89497fe37b41",
+      "working_bytes": 8799,
+      "working_sha256": "8f775f11a30e2bf83d3283eda8dea6aced5e1459ef273a327a208165bb626eea",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/MapEmbedRepository.kt",
+      "git_blob": "8da19afdd6cf9fcf9f364b9cfaffb1159b24600e",
+      "commit_bytes": 3867,
+      "commit_sha256": "5011c69f17a402ea124643dc4d5b42fa6a8e41da6c1995b5c12a6370774565aa",
+      "working_bytes": 3917,
+      "working_sha256": "9d1edb926757b5e32f4ab24ead782e7babfa515d28f4ffd87c549e03e703ae7a",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/MapGraphAccess.kt",
+      "git_blob": "1f7939bf589f81553fe86923ce2131b722a53a9f",
+      "commit_bytes": 2247,
+      "commit_sha256": "a0e25f8fe3959e052f6bf7445c9973071f695e7d6786a0d0452fcd24ec5fe5fd",
+      "working_bytes": 2273,
+      "working_sha256": "7cbb2cf95c96508b4decaa3e2dba585195dd21811fa7eb5d09e86bbe3507c784",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/MapPortalRepository.kt",
+      "git_blob": "3bf6b0a00735ee4a699b3ff75347ff54025821d0",
+      "commit_bytes": 4946,
+      "commit_sha256": "41323d6f9df63c35ec957fda54b73ea65aa09b96d553834ac55cc1f9cb6c047b",
+      "working_bytes": 5030,
+      "working_sha256": "733a515b2d1eea0aed41b69bc955e6c367fe85446fb0b1093b8dd18e0150ed31",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/NoteDatabase.kt",
+      "git_blob": "64c1680396bb204e9f110f897b3dd5e36894df3b",
+      "commit_bytes": 17372,
+      "commit_sha256": "764ddf24854da3bf35a78f33d6ffc5aad0cbcac19808ed1aa09e651185edb0b8",
+      "working_bytes": 17519,
+      "working_sha256": "28a2a03f55a4fd8f6b42f0f4333adc819e9ccd51704e104368e6d264877ac2ed",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/NoteRepository.kt",
+      "git_blob": "5dec5ed98fa3643136a05bffa8ad1c102549e655",
+      "commit_bytes": 3423,
+      "commit_sha256": "07fd11cb54e4512bd371250a017d20fdd84c4fbff8fc39258b377166048b5155",
+      "working_bytes": 3477,
+      "working_sha256": "1a24ee8574188a152d8ccf4b8a9505fec2ae10727b887e1e8f44abc2b6ca6190",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/NotebookCoverData.kt",
+      "git_blob": "12462cacefb4ca5b9fedbb5fc67c471e47dae394",
+      "commit_bytes": 1234,
+      "commit_sha256": "8296c273a942c8d35d0d1f872dd0764fbae4de2c377435f4136cfe36b8b151a9",
+      "working_bytes": 1256,
+      "working_sha256": "8bdee8455a223cd2bc1b09148f1358cc5692e5b21305ec87cc2d0dc80e844e1b",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/NotebookPages.kt",
+      "git_blob": "d19344ab6c0423c84e26968d1f6bfb4cb13f8394",
+      "commit_bytes": 8138,
+      "commit_sha256": "80ebdeacf0729150091f836fbddd14a9e73d439f667e7ac3ae619ca98961d4ca",
+      "working_bytes": 8236,
+      "working_sha256": "b74ea7ac1a11689f9f5e6e72b478cd440f0bbfe26eaeb2e2e341699a3abe7432",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/PageEditingRepository.kt",
+      "git_blob": "5d5abcb2c7056f66b9622167311d103259818dd2",
+      "commit_bytes": 6523,
+      "commit_sha256": "d036e350d71501a9fc7a9895d9e51297a82fbc908f5cec29b54342dfa1aa336c",
+      "working_bytes": 6619,
+      "working_sha256": "ac3a8015f4745f3c97398ad389c1138bf5b6d563eda169c964e5e13efd242fbd",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/PageInsertionRepository.kt",
+      "git_blob": "7007daf5afd15d54969b08d3559eb0f4e579194b",
+      "commit_bytes": 4408,
+      "commit_sha256": "f5d27c6307e7f1fe055f1ec4b0ecfb55c4a0b9c58b96e8f4b7ceccad23342b17",
+      "working_bytes": 4477,
+      "working_sha256": "06490ffc4905364a0803b3a7ff91a9eee79756e2cd7cd065d086b5599b0119b6",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/PageObjectRepository.kt",
+      "git_blob": "6460bab96d86b00247c907380463544a5f4f8ca3",
+      "commit_bytes": 5295,
+      "commit_sha256": "5fd2e449d255616a0e3cbbf4b37316841071f7adb6a667a444f6d95f7cc68500",
+      "working_bytes": 5372,
+      "working_sha256": "d918aac7e8a79fc1defaa406e71a8876100c7c08be89228af88b9bae3fa50f01",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/PreservingOpenHelperFactory.kt",
+      "git_blob": "13a4dc8547e41d702270338f6921865c73a49189",
+      "commit_bytes": 1847,
+      "commit_sha256": "1e374a137ead11fd2c8fb80240ce686b2bd73e81c85fad84d69562b44132bc8e",
+      "working_bytes": 1880,
+      "working_sha256": "9d4fa96f5e4fd0f3547b8817c5a68e6ca6ebddf0086cd55bf395766808df96fd",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/ResourceTemplates.kt",
+      "git_blob": "a4db0105bc82e6c9ef4433692183fd4588f56f3d",
+      "commit_bytes": 3161,
+      "commit_sha256": "e5c232c091da5c4eab892e0f4f91e162f187663c2c67b10b9910dd25d6621a84",
+      "working_bytes": 3202,
+      "working_sha256": "11b3448048fd943acc67791d2de1c3cca9175cfc5f10a02a2db8159082dadf78",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/ShadowBundles.kt",
+      "git_blob": "faf7f774178dbac146640b5f8d0f903fa619af2c",
+      "commit_bytes": 6994,
+      "commit_sha256": "6f970921fc20bc71c6ac96a3ced9a73e24a14f0a9d3d2ad6984a68608b23ee17",
+      "working_bytes": 7081,
+      "working_sha256": "0355db5edc41cf475aae8c72c1fd37fe889d11c8bc5a3040ce735ce4bec18efc",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/ShadowReplica.kt",
+      "git_blob": "c6f558da980cdd95c91b5827ff6d208466221583",
+      "commit_bytes": 17012,
+      "commit_sha256": "1cc9dfaaca0dfc28883d0e54e7c890c34225fb18c8c503a0c4c2a85f2dd2f06b",
+      "working_bytes": 17215,
+      "working_sha256": "adbd4bbe51bdc1065b9c1052d3cff1f2aeda43ee1c679c5bd6b80353e4f556ae",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/StudyRepository.kt",
+      "git_blob": "c2bd59547f3f2c27fd33754eb9f8fff083c7b8cb",
+      "commit_bytes": 17710,
+      "commit_sha256": "a05c233335e0fd52f0ae7a3c6cd143aa00e159c0caa7738f249eebb443f0644b",
+      "working_bytes": 17881,
+      "working_sha256": "cdb8337f5cee069244a651450220f83604fda83848b751da31ef71bb1651e390",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/WorkspaceRepository.kt",
+      "git_blob": "7923f947b73ffc7e4a43aeabf5b1b5084956bcc2",
+      "commit_bytes": 7345,
+      "commit_sha256": "38df45f4b011b961a54a31b7ff49aefcfef9802f980e20f051eaeb9a8757c3d7",
+      "working_bytes": 7445,
+      "working_sha256": "ba648396f1eeca529bcfc7c15178c8920f7125511615e2ac59bfad4d2962b8bb",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/gradle.properties",
+      "git_blob": "a688a8eb86d92c1dbc88a235b005f289e8002c8a",
+      "commit_bytes": 164,
+      "commit_sha256": "2f047077526bffc040050df5b38bc12185a5f32de908205b3f8cc0adb3fbec43",
+      "working_bytes": 164,
+      "working_sha256": "2f047077526bffc040050df5b38bc12185a5f32de908205b3f8cc0adb3fbec43",
+      "match": "BYTE_EXACT"
+    },
+    {
+      "path": "android/gradle/libs.versions.toml",
+      "git_blob": "2179dde3bb823827b57e3e7863ff4256ef520d47",
+      "commit_bytes": 2544,
+      "commit_sha256": "7795517ae3c2fd0b3f4ff88249e07c33e5340a5cb74a3c2d1c229dfcfb1de895",
+      "working_bytes": 2589,
+      "working_sha256": "cc99537df25eaef16370119ca91ea5917e8d8e2acfcebfa8f27a6e4417fecd91",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/gradle/wrapper/gradle-wrapper.jar",
+      "git_blob": "d997cfc60f4cff0e7451d19d49a82fa986695d07",
+      "commit_bytes": 48966,
+      "commit_sha256": "55243ef57851f12b070ad14f7f5bb8302daceeebc5bce5ece5fa6edb23e1145c",
+      "working_bytes": 48966,
+      "working_sha256": "55243ef57851f12b070ad14f7f5bb8302daceeebc5bce5ece5fa6edb23e1145c",
+      "match": "BYTE_EXACT"
+    },
+    {
+      "path": "android/gradle/wrapper/gradle-wrapper.properties",
+      "git_blob": "c61a118f7ddb21223f1a2fdd05f6aec1b9863aec",
+      "commit_bytes": 252,
+      "commit_sha256": "70fa201501995e6f45c0c475def71093f8115849344c48322ca997cfddba8534",
+      "working_bytes": 259,
+      "working_sha256": "d1f446be7e5aea7ed5e9fba2870f1ad9f54f94b27014f87ad1dfca699b10f455",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/gradlew",
+      "git_blob": "739907dfd15937f032b5a46390e9d63709e87f7a",
+      "commit_bytes": 8654,
+      "commit_sha256": "aed171fb114f82e6eaea4970a245a200e0582a7dcc8ec0891ca41b6e4a62b754",
+      "working_bytes": 8902,
+      "working_sha256": "6d342d5765739fc2c34a15759035d0bc5beef0c039b7ddd68b78e7e637b8dd21",
+      "match": "CRLF_ONLY"
+    },
+    {
+      "path": "android/gradlew.bat",
+      "git_blob": "e509b2dd8fe5579a5954a2c28633ad914cd1c225",
+      "commit_bytes": 2896,
+      "commit_sha256": "fedad02c18e266ec094995a5751b7fe1eb6e74f66bf75db64fae2e50eb22c234",
+      "working_bytes": 2896,
+      "working_sha256": "fedad02c18e266ec094995a5751b7fe1eb6e74f66bf75db64fae2e50eb22c234",
+      "match": "BYTE_EXACT"
+    },
+    {
+      "path": "android/settings.gradle.kts",
+      "git_blob": "d268a2fce5388e4880353f31a72dd24673f4829d",
+      "commit_bytes": 415,
+      "commit_sha256": "6a18e6904b57d3d42b97e88495cd5777e01d0cb04167437cc282a43ad6e976f0",
+      "working_bytes": 422,
+      "working_sha256": "2500b9db1e07d94df65c324250152aa33b96a303698598f703c5a013bac7fbb8",
+      "match": "CRLF_ONLY"
+    }
+  ]
+}

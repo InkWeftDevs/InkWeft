@@ -1,8 +1,11 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 package org.inkweft.app
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.autoSaver
 import androidx.lifecycle.*
 import androidx.lifecycle.viewmodel.CreationExtras
+import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
+import androidx.lifecycle.viewmodel.compose.saveable
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import org.inkweft.core.*
@@ -39,11 +42,12 @@ internal class StudyViewModel(val book:String,val repo:StudyRepository,private v
     val collapsedByMap=mutableMapOf<String,List<String>>()
     val focusedByMap=mutableMapOf<String,String?>()
     val portalBranches=mutableStateMapOf<String,String>()
-    var lastTab by mutableIntStateOf(saved["study.tab"]?:0)
+    private val restoredTab=(saved.get<Any?>("study.tab") as? Int)?.takeIf{it in 0..2}
+    var lastTab by mutableIntStateOf(restoredTab?:0)
         private set
-    fun selectTab(value:Int){lastTab=value;saved["study.tab"]=value}
+    fun selectTab(value:Int){lastTab=value;saved["study.tab"]=value;compactInitialized=true}
     var captureGeneration by mutableLongStateOf(0L)
-    var compactInitialized=false
+    var compactInitialized=restoredTab!=null
     val captureUndo=mutableStateMapOf<String,StudyCommand>()
     val revealByMap=mutableMapOf<String,String>()
     fun undoCapture(){undoCaptureAt(mapId.value)}
@@ -117,12 +121,13 @@ internal class StudyViewModel(val book:String,val repo:StudyRepository,private v
     }
     class Factory(val book:String,val repo:StudyRepository):ViewModelProvider.Factory{override fun<T:ViewModel>create(c:Class<T>,extras:CreationExtras):T{require(c.isAssignableFrom(StudyViewModel::class.java));@Suppress("UNCHECKED_CAST")return StudyViewModel(book,repo,extras.createSavedStateHandle()) as T}}
 }
-internal class StudyPanelSession:ViewModel(){
+@OptIn(SavedStateHandleSaveableApi::class)
+internal class StudyPanelSession(saved:SavedStateHandle):ViewModel(){
     val embedInsertion=mutableStateOf<EmbedInsertion?>(null)
     val captureDraft=mutableStateOf<CaptureDraft?>(null)
     val captureTarget=mutableStateOf<Pair<MapRef,String?>?>(null)
     val captureResult=mutableStateOf<Pair<MapRef,String?>?>(null)
-    val opened=mutableStateOf(false)
+    val opened=saved.saveable("study.panel.opened",stateSaver=autoSaver<Boolean>()){mutableStateOf(false)}
     val source=mutableStateOf<StudySourceDraft?>(null)
     val captureRequest=mutableLongStateOf(0L)
     val card=mutableStateOf<String?>(null)

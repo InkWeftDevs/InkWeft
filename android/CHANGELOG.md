@@ -1,3 +1,17 @@
+# 本地接手修复 · 2026-10-03
+
+本次APK构建源码 `41e23e96e36e0bb58c394e941718e049f525ada5` / tree `3bb36b951bd87773a784bb608e2ef4eb9231083d`。从精确基线810ba729接续，NotebookViewModel恢复选中路由，StudySession保存每本学习窗口opened；已有原位标题草稿/操作身份沿用，unknown请求等待明确重试。
+
+FloatingStudyWindow在尺寸变化期间逐帧约束位置，保持关闭目标在宿主内。StudyWorkspace改用requestScrollToItem，避免大纲项目数变化时立即scrollToItem重入布局；41e23另将完整标题完成与异常清理固定Dispatchers.Main.immediate，IO读取仍在后台，同命令回执、token、unknown与取消语义保持。
+
+测试修正包括真实菜单/嵌套滚动前置等待、输入在重建/原生按键前已应用的确认，以及Map unmerged tree和正确outline-row祖先断言。Map原业务结果断言保留。LocalMotion首次恢复像素场景改走同一卡片source-only入口（强制展开来源并省略正文），裁剪仅覆盖caption；它不独立证明showSource保存恢复或长正文整个来源组的首帧像素，不能称所有业务、首帧和无障碍覆盖完全等价。
+
+实际验证分环境分源码：API35原30跨源码最新 30 PASS / 0 FAIL / 0 NOT_RUN；真机首次前台辅助业务模式 28 PASS / 0 FAIL / 2 NOT_RUN；无辅助runner仍单列阻塞。普通应用真机 OS kill 的 draft、confirmed 两切点均有独立 PASS 回执（3fbc、29表各自前后3868/3870行），范围仅新增合成笔记大纲结构标题；registry/remount与实际OS终止分开。以下为当前候选已经完成核验的构建身份；本候选标题长流程、未知回执及容器重挂载，在模拟器和真机首次启动辅助模式下各3 PASS。
+
+包名、版本和原签名沿用V68候选身份。源码/包SHA、逐方法结果、历史失败、资料保护与真人待测见 [本轮结果](STUDY-RESTORE-DEVICE-RESULTS-20261003.md) 与 [真机检查清单](DEVICE-TEST-CHECKLIST.md)。
+
+---
+
 # V65 — 仅待复习与准备取消
 
 整本、收藏集合、整图与分支复习可明确选择“全部问题”或“仅待复习”。后者仅包含题目自身标为“待复习”的活动问题，集合的卡片属性条件继续独立使用；新问题原本默认“待复习”。

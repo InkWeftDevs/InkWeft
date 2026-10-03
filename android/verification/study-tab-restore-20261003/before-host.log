@@ -1,0 +1,12 @@
+Source: working tree
+Extracted production state:
+    var lastTab by mutableIntStateOf(saved["study.tab"]?:0)
+        private set
+    fun selectTab(value:Int){lastTab=value;saved["study.tab"]=value}
+    var compactInitialized=false
+Extracted compact effect:
+if(compactWindow&&!vm.compactInitialized){vm.selectTab(2);vm.compactInitialized=true}
+Exception in thread "main" java.lang.IllegalStateException: restored tab survives compact initialization: expected=1 actual=2
+	at TabCheckKt.main$verify(TabCheck.kt:23)
+	at TabCheckKt.main(TabCheck.kt:28)
+	at TabCheckKt.main(TabCheck.kt)
