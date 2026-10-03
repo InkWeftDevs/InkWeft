@@ -21,6 +21,8 @@ import org.inkweft.core.*
 import org.inkweft.data.*
 import java.util.UUID
 
+private fun outlineFoldKey(row:KnowledgeRow,mark:KnowledgeData.PageMark)="${mark.pageId}:${row.id}"
+
 internal enum class OverviewSaveState { IDLE, SAVING, SUCCESS, REJECTED, CONFLICT, UNKNOWN }
 internal class OverviewViewModel(val book:String,val repo:KnowledgeRepository,private val study:StudyRepository,private val saved:SavedStateHandle=SavedStateHandle(),private val readRows:()->Flow<List<KnowledgeRow>> = repo::observe):ViewModel(){
     val marks=MutableStateFlow<List<KnowledgeRow>>(emptyList())
@@ -30,6 +32,13 @@ internal class OverviewViewModel(val book:String,val repo:KnowledgeRepository,pr
     val error=combine(readError,writeError){read,write->read?:write}.stateIn(viewModelScope,SharingStarted.Eagerly,null)
     val state=MutableStateFlow(OverviewSaveState.IDLE);val completed=MutableStateFlow(0);val reloads=MutableStateFlow(0)
     val draft=MutableStateFlow<KnowledgeCommand?>(null)
+    private val outlineFoldsKey="overview.outline.folds.$book"
+    val outlineFolds=saved.getStateFlow(outlineFoldsKey,arrayListOf<String>())
+    fun toggleOutlineFold(key:String){saved[outlineFoldsKey]=ArrayList(outlineFolds.value.let{if(key in it)it-key else it+key})}
+    fun pruneOutlineFolds(parentKeys:Set<String>){
+        val kept=outlineFolds.value.filter{it in parentKeys}
+        if(kept!=outlineFolds.value)saved[outlineFoldsKey]=ArrayList(kept)
+    }
     private fun restorePending():KnowledgeCommand?{val fields=saved.get<ArrayList<String>>("overview.command")?:return null;require(fields.size==5&&fields[1]==book);return KnowledgeCommand(fields[0],fields[1],fields[2],fields[3].toLong(),KnowledgeCodec.decode(checkNotNull(saved.get<ByteArray>("overview.payload"))),fields[4].toBooleanStrict())}
     private var pending:KnowledgeCommand?=restorePending()
     private fun persist(){saved["overview.command"]=pending?.let{arrayListOf(it.operationId,it.notebookId,it.id,it.expectedRevision.toString(),it.removed.toString())};saved["overview.payload"]=pending?.payload}
@@ -81,6 +90,19 @@ internal class OverviewViewModel(val book:String,val repo:KnowledgeRepository,pr
     val loading by vm.loading.collectAsStateWithLifecycle();val state by vm.state.collectAsStateWithLifecycle();val completed by vm.completed.collectAsStateWithLifecycle()
     LaunchedEffect(completed){if(completed>0)editor=null}
     val enabled=ready&&!busy&&!loading&&error==null
+    val folds by vm.outlineFolds.collectAsStateWithLifecycle()
+    val foldedKeys=remember(folds){folds.toSet()}
+    val readError by vm.readError.collectAsStateWithLifecycle()
+    val pageById=remember(pages){pages.associateBy{it.id}}
+    val orderedMarks=remember(marks,pageById){
+        marks.map{it to it.data() as KnowledgeData.PageMark}.filter{it.second.pageId in pageById}
+            .sortedWith(compareBy<Pair<KnowledgeRow,KnowledgeData.PageMark>>{pageById.getValue(it.second.pageId).position}.thenBy{it.first.id})
+    }
+    val outline=remember(orderedMarks){orderedMarks.filter{!it.second.bookmark}}
+    // The next deeper row starts a contiguous branch; no persistent parent graph is invented.
+    val foldable=remember(outline){outline.zipWithNext().filter{(parent,next)->next.second.depth>parent.second.depth}
+        .map{(parent,_)->outlineFoldKey(parent.first,parent.second)}.toSet()}
+    LaunchedEffect(vm,ready,loading,readError,foldable,foldedKeys){if(ready&&!loading&&readError==null)vm.pruneOutlineFolds(foldable)}
     OutlinedTextField(query,{query=it},singleLine=true,placeholder={Text("搜索${listOf("页面","大纲","页签","摘录")[tab]}")},
         modifier=Modifier.fillMaxWidth().padding(horizontal=12.dp,vertical=8.dp).testTag("overview-filter"))
     if(editor==null)OverviewRecovery(vm)
@@ -101,11 +123,17 @@ internal class OverviewViewModel(val book:String,val repo:KnowledgeRepository,pr
         TextButton(newExcerpt,enabled=enabled,modifier=Modifier.fillMaxWidth().testTag("overview-new-excerpt")){Glyph("excerpt");Text("添加摘录",Modifier.padding(start=8.dp))}
     }else{
         val bookmark=tab==2
-        val list=marks.filter{val m=it.data() as KnowledgeData.PageMark;m.bookmark==bookmark&&pages.any{p->p.id==m.pageId}&&m.title.contains(query,true)}
-            .sortedWith(compareBy<KnowledgeRow>{r->pages.first{it.id==(r.data() as KnowledgeData.PageMark).pageId}.position}.thenBy{it.id})
+        var hiddenBelow:Int?=null
+        val list=orderedMarks.filter{(row,m)->
+            if(m.bookmark!=bookmark)false
+            else if(query.isNotBlank())m.title.contains(query,true) // Search exposes matches without changing saved folds.
+            else if(bookmark)true
+            else if(hiddenBelow?.let{m.depth>it}==true)false
+            else {hiddenBelow=m.depth.takeIf{outlineFoldKey(row,m) in foldedKeys&&outlineFoldKey(row,m) in foldable};true}
+        }
         if(list.isEmpty()&&!loading&&error==null)Text(if(query.isNotBlank())"没有匹配项"else if(bookmark)"给常用页面添加页签"else"将当前页加入大纲目录",Modifier.padding(20.dp),color=Quiet)
         LazyColumn(Modifier.weight(1f).testTag("overview-marks"),contentPadding=PaddingValues(horizontal=12.dp)){
-            items(list,key={it.id}){row->val m=row.data() as KnowledgeData.PageMark;val page=pages.first{it.id==m.pageId};var menu by remember{mutableStateOf(false)}
+            items(list,key={it.first.id}){(row,m)->val page=pageById.getValue(m.pageId);var menu by remember{mutableStateOf(false)}
                 Row(Modifier.fillMaxWidth().heightIn(min=52.dp).clickable(enabled=enabled){openPage(m.pageId)}.padding(start=(m.depth*12).dp).testTag("overview-mark-${row.id}"),verticalAlignment=Alignment.CenterVertically){
                     Glyph(if(bookmark)"bookmark"else"list",if(page.id==current?.id)Forest else TextInk)
                     Text(m.title,Modifier.weight(1f).padding(start=8.dp),maxLines=2,overflow=TextOverflow.Ellipsis)
@@ -120,7 +148,15 @@ internal class OverviewViewModel(val book:String,val repo:KnowledgeRepository,pr
                             DropdownMenuItem(text={Text(if(bookmark)"移除页签"else"移除目录项")},onClick={menu=false;vm.save(row,m,true)},modifier=Modifier.testTag("mark-remove"))
                         }
                     }
-                };HorizontalDivider(color=Line)
+                }
+                if(!bookmark&&outlineFoldKey(row,m) in foldable){
+                    val folded=outlineFoldKey(row,m) in foldedKeys
+                    TextButton({vm.toggleOutlineFold(outlineFoldKey(row,m))},enabled=enabled&&query.isBlank(),
+                        modifier=Modifier.fillMaxWidth().heightIn(min=48.dp).testTag("outline-fold-${row.id}").describedAs("${m.title}，${if(folded)"展开"else"收起"}下级目录")){
+                        Glyph(if(folded)"add"else"collapse");Text(if(folded)"展开下级"else"收起下级",Modifier.padding(start=8.dp))
+                    }
+                }
+                HorizontalDivider(color=Line)
             }
         }
         val exists=bookmark&&marks.any{(it.data() as KnowledgeData.PageMark).let{m->m.bookmark&&m.pageId==current?.id}}
