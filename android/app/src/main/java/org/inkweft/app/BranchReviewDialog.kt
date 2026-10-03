@@ -21,10 +21,12 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.inkweft.core.*
 import org.inkweft.data.*
 import java.io.*
+import java.util.UUID
 
 /** Only bounded identities and revisions enter the saved-state Bundle, never answer bodies. */
 internal val BranchReviewPlanSaver = Saver<BranchReviewPlan?, ByteArray>(
@@ -58,6 +60,39 @@ internal val BranchReviewPlanSaver = Saver<BranchReviewPlan?, ByteArray>(
     }.getOrNull() }
 )
 
+/** Bounded refs plus a compact ledger; question/answer bodies never enter saved state. */
+internal val BranchReviewRoundSaver = Saver<BranchReviewRound, ByteArray>(
+    save = { round ->
+        val plan = checkNotNull(with(BranchReviewPlanSaver) { save(round.plan) })
+        ByteArrayOutputStream().also { output -> DataOutputStream(output).use { d ->
+            fun uuid(value:String) { val id=UUID.fromString(value);d.writeLong(id.mostSignificantBits);d.writeLong(id.leastSignificantBits) }
+            d.writeInt(1);uuid(round.roundId);d.writeInt(plan.size);d.write(plan)
+            d.writeInt(round.results.size)
+            round.results.forEach { result -> d.writeByte(result.kind.ordinal);result.operationId?.let(::uuid) }
+            d.writeBoolean(round.pending!=null)
+            round.pending?.let { pending -> uuid(pending.operationId);d.writeByte(pending.state.ordinal);d.writeBoolean(pending.rejected) }
+        } }.toByteArray().also { require(it.size<=256*1024) }
+    },
+    restore = { bytes ->
+        require(bytes.size<=256*1024)
+        DataInputStream(ByteArrayInputStream(bytes)).use { d ->
+            fun uuid()=UUID(d.readLong(),d.readLong()).toString()
+            require(d.readInt()==1);val roundId=uuid();val size=d.readInt()
+            require(size in 1..256*1024 && size<=d.available())
+            val planBytes=ByteArray(size);d.readFully(planBytes)
+            val plan=checkNotNull(BranchReviewPlanSaver.restore(planBytes))
+            val count=d.readInt();require(count in 0..plan.entries.size)
+            val results=List(count) { index ->
+                val kind=BranchReviewResultKind.entries[d.readUnsignedByte()]
+                BranchReviewResult(index,kind,if(kind==BranchReviewResultKind.SKIPPED)null else uuid())
+            }
+            val pending=if(d.readBoolean())BranchReviewPending(count,uuid(),ManualState.entries[d.readUnsignedByte()],d.readBoolean())else null
+            require(d.read()==-1)
+            BranchReviewRound(roundId,plan,results,pending)
+        }
+    }
+)
+
 /** The four recall entries share labels and touch sizes; the chosen scope belongs to their workspace. */
 @OptIn(ExperimentalLayoutApi::class)
 @Composable internal fun ReviewScopeSelector(scope:ReviewQuestionScope,enabled:Boolean,prefix:String,choose:(ReviewQuestionScope)->Unit) {
@@ -82,6 +117,23 @@ internal val BranchReviewPlanSaver = Saver<BranchReviewPlan?, ByteArray>(
 }
 
 @Composable private fun BranchReviewContent(plan:BranchReviewPlan,dismiss:()->Unit,showSummary:Boolean,showCollectionScope:Boolean) {
+    val round=rememberSaveable(stateSaver=BranchReviewRoundSaver){mutableStateOf(BranchReviewRound(UUID.randomUUID().toString(),plan))}
+    var retryKind by rememberSaveable{mutableStateOf<String?>(null)}
+    key(round.value.roundId){
+        BranchReviewRoundContent(round,dismiss,showSummary&&retryKind==null,showCollectionScope,retryKind){next,selection->
+            retryKind=selection.name
+            round.value=BranchReviewRound(UUID.randomUUID().toString(),next)
+        }
+    }
+}
+
+@Composable private fun BranchReviewRoundContent(roundState:MutableState<BranchReviewRound>,dismiss:()->Unit,
+    showSummary:Boolean,showCollectionScope:Boolean,retryKind:String?,retryReady:(BranchReviewPlan,BranchReviewRetrySelection)->Unit) {
+    var round by roundState
+    val visibleRoundId=round.roundId
+    val visiblePendingOperation=round.pending?.operationId
+    val plan=round.plan
+    val index=round.index
     val context=LocalContext.current
     val app=context.applicationContext as InkWeftApplication
     val vm:KnowledgeViewModel=viewModel(key="branch-review-${plan.ref.notebookId}",
@@ -89,37 +141,78 @@ internal val BranchReviewPlanSaver = Saver<BranchReviewPlan?, ByteArray>(
     BindKnowledgeReadLock(vm)
     val readLock=rememberBookReadLock(plan.ref.notebookId)
     val ui by vm.ui.collectAsStateWithLifecycle()
-    ReadLockGuard(readLock,"branch-review-${plan.ref.notebookId}",ui.busy||ui.unknown)
     var started by rememberSaveable { mutableStateOf(!showSummary) }
-    var index by rememberSaveable { mutableIntStateOf(0) }
     var revealed by rememberSaveable { mutableStateOf(false) }
     var answerEnterEvent by remember(index){mutableIntStateOf(0)}
     var answerEnterPending by remember(index){mutableStateOf(false)}
     var hints by rememberSaveable { mutableStateOf(false) }
     var sourceOpen by rememberSaveable { mutableStateOf(false) }
-    var pendingQuestion by rememberSaveable { mutableStateOf<String?>(null) }
-    var rejected by rememberSaveable { mutableStateOf(false) }
     var loaded by remember { mutableStateOf<List<FrozenBranchReviewQuestion>?>(null) }
     var loadError by remember { mutableStateOf(false) }
     var loadAttempt by remember { mutableIntStateOf(0) }
-    val busy=ui.busy||ui.unknown
-    fun requestDismiss(){val live=vm.ui.value;if(!live.busy&&!live.unknown)dismiss()}
-    fun advance() { index++;revealed=false;hints=false;sourceOpen=false;rejected=false;pendingQuestion=null }
+    var checking by remember{mutableStateOf(false)}
+    var checkError by remember{mutableStateOf(false)}
+    var checkAttempt by remember{mutableIntStateOf(0)}
+    var retryPreparing by remember{mutableStateOf(false)}
+    var retryError by remember{mutableStateOf(false)}
+    var resultsOpen by rememberSaveable { mutableStateOf(false) }
+    var resultSelection by rememberSaveable { mutableStateOf<BranchReviewRetrySelection?>(null) }
+    val scope=rememberCoroutineScope()
+    val unresolved=round.pending?.rejected==false
+    val rejected=round.pending?.rejected==true
+    val busy=ui.busy||ui.unknown||ui.completedOperation!=null||unresolved||checking||retryPreparing
+    ReadLockGuard(readLock,"branch-review-${plan.ref.notebookId}",busy)
+    fun requestDismiss(){val live=vm.ui.value;if(round.roundId==visibleRoundId&&!live.busy&&!live.unknown&&live.completedOperation==null&&
+        round.pending?.rejected!=false&&!checking&&!retryPreparing)dismiss()}
+    fun accept(next:BranchReviewRound){
+        if(round.roundId!=visibleRoundId||next.roundId!=visibleRoundId)return
+        if(next.index!=round.index){revealed=false;hints=false;sourceOpen=false;answerEnterPending=false}
+        round=next
+    }
+    fun retry(selection:BranchReviewRetrySelection){
+        if(round.roundId!=visibleRoundId||!round.complete||vm.ui.value.busy||vm.ui.value.unknown||vm.ui.value.completedOperation!=null||retryPreparing)return
+        val original=round;retryPreparing=true;retryError=false
+        scope.launch{
+            try{
+                val next=withContext(Dispatchers.IO){app.branchReview.prepareRetry(original,selection)}
+                if(round===original&&round.roundId==visibleRoundId)retryReady(next,selection)
+            }catch(c:CancellationException){throw c}
+            catch(_:Exception){retryError=true}
+            finally{retryPreparing=false}
+        }
+    }
     val shield=LocalRecallWindowShield.current
     SideEffect { shield?.setActive(plan.entries.isNotEmpty()&&(!started||index<plan.entries.size)) }
 
     LaunchedEffect(plan,started,loadAttempt) {
-        if(!started)return@LaunchedEffect
+        if(!started||round.complete)return@LaunchedEffect
         loaded=null;loadError=false
         try { loaded=withContext(Dispatchers.IO){app.branchReview.load(plan)} }
         catch(c:CancellationException){throw c}
         catch(_:Exception){loadError=true}
     }
-    LaunchedEffect(ui.completed,pendingQuestion) {
-        if(pendingQuestion!=null&&ui.completed==pendingQuestion){vm.consumed();advance()}
-    }
-    LaunchedEffect(ui.busy,ui.unknown,ui.message,pendingQuestion) {
-        if(pendingQuestion!=null&&!busy&&ui.message?.startsWith("未提交")==true){pendingQuestion=null;rejected=true}
+    LaunchedEffect(round.pending,ui.completedOperation,ui.rejectedOperation,ui.busy,ui.unknown,checkAttempt) {
+        if(round.roundId!=visibleRoundId)return@LaunchedEffect
+        val original=round
+        val pending=original.pending
+        // A recreation after saving a result but before consuming the writer only acknowledges that same op.
+        ui.completedOperation?.let { operation ->
+            if(original.results.any{it.operationId==operation&&(it.kind==BranchReviewResultKind.CONFIRMED_REVIEW||it.kind==BranchReviewResultKind.CONFIRMED_UNDERSTOOD)})vm.consumed(operation)
+        }
+        if(pending==null)return@LaunchedEffect
+        if(pending.rejected){vm.consumedRejection(pending.operationId);return@LaunchedEffect}
+        if(ui.busy||ui.unknown)return@LaunchedEffect
+        if(ui.rejectedOperation==pending.operationId){
+            accept(original.reject(pending.operationId));vm.consumedRejection(pending.operationId);return@LaunchedEffect
+        }
+        if(ui.completedOperation!=pending.operationId&&checkAttempt==0)return@LaunchedEffect
+        checking=true;checkError=false
+        try{
+            val confirmed=withContext(Dispatchers.IO){app.branchReview.confirmRoundResult(original)}
+            if(round===original&&round.roundId==visibleRoundId&&round.pending==pending){accept(confirmed);vm.consumed(pending.operationId)}
+        }catch(c:CancellationException){throw c}
+        catch(_:Exception){checkError=true}
+        finally{checking=false}
     }
     val current=loaded?.getOrNull(index)
     val cluesVisible=hints||revealed
@@ -140,12 +233,21 @@ internal val BranchReviewPlanSaver = Saver<BranchReviewPlan?, ByteArray>(
                         Modifier.weight(1f),style=MaterialTheme.typography.titleLarge)
                     TextButton(onClick={requestDismiss()},enabled=!busy,modifier=Modifier.testTag("branch-review-close")){Text("退出回忆")}
                 }
+                retryKind?.let{Text(if(it==BranchReviewRetrySelection.REVIEW.name)"再练本轮仍需复习 · 固定题目与答案版本"else"再练本轮跳过 · 固定题目与答案版本",
+                    style=MaterialTheme.typography.bodySmall,modifier=Modifier.testTag("branch-review-retry-origin"))}
                 key(started,index) {
                     val questionContent:@Composable ColumnScope.()->Unit={
-                        if(ui.busy)LinearProgressIndicator(Modifier.fillMaxWidth())
+                        if(ui.busy||checking||retryPreparing)LinearProgressIndicator(Modifier.fillMaxWidth())
                         if(ui.unknown){
                             Text("标记结果待核对，仍保留此题。")
-                            TextButton(onClick=vm::retry,enabled=!ui.busy,modifier=Modifier.testTag("branch-review-retry")){Text("核对原操作")}
+                            TextButton(onClick={if(round.roundId==visibleRoundId&&round.pending?.operationId==visiblePendingOperation&&
+                                vm.pendingOperationId==visiblePendingOperation)vm.retry()},
+                                enabled=!ui.busy&&vm.pendingOperationId==round.pending?.operationId,
+                                modifier=Modifier.testTag("branch-review-retry")){Text("核对原操作")}
+                        }else if(unresolved&&!ui.busy&&!checking){
+                            Text(if(checkError)"原回执或固定版本暂未核准，仍保留此题与原操作。"else"正在核对本题原结果。",
+                                modifier=Modifier.testTag("branch-review-confirm-pending"))
+                            TextButton(onClick={checkAttempt++},modifier=Modifier.heightIn(min=48.dp).testTag("branch-review-confirm-retry")){Text("重新核对原结果")}
                         }
                         if(!started){
                             Column(Modifier.fillMaxWidth(),verticalArrangement=Arrangement.spacedBy(16.dp)) {
@@ -168,13 +270,31 @@ internal val BranchReviewPlanSaver = Saver<BranchReviewPlan?, ByteArray>(
                             }
                             Button(onClick={started=true},enabled=plan.entries.isNotEmpty()&&!busy,
                                 modifier=Modifier.fillMaxWidth().heightIn(min=48.dp).testTag("branch-review-start")){Text("开始回忆")}
+                        }else if(round.complete){
+                            val counts=round.counts
+                            Text("本轮已结束",Modifier.testTag("branch-review-ended"))
+                            Text("本轮共 ${counts.total} 题",Modifier.testTag("branch-review-result-total"))
+                            Text("本次已理解 · ${counts.understood}",Modifier.testTag("branch-review-result-understood"))
+                            Text("仍需复习 · ${counts.review}",Modifier.testTag("branch-review-result-review"))
+                            Text("未标记跳过 · ${counts.unmarked}",Modifier.testTag("branch-review-result-skipped"))
+                            Text("其中普通跳过 ${counts.skipped} · 未提交后跳过 ${counts.rejectedSkipped}",
+                                Modifier.testTag("branch-review-result-rejected"))
+                            Text("仅记录这一轮的手工选择；不计算准确率，也不安排到期时间。",style=MaterialTheme.typography.bodySmall,color=Quiet)
+                            TextButton(onClick={resultsOpen=true},enabled=!busy,
+                                modifier=Modifier.heightIn(min=48.dp).testTag("branch-review-open-details")){Text("查看本轮题目与结果")}
+                            if(retryError)Text("固定题目、答案或原回执未能完整核准，保留本轮结果，请重试。",
+                                modifier=Modifier.testTag("branch-review-retry-error"))
+                            OutlinedButton(onClick={retry(BranchReviewRetrySelection.REVIEW)},enabled=!busy&&counts.review>0,
+                                modifier=Modifier.fillMaxWidth().heightIn(min=48.dp).testTag("branch-review-retry-review")){Text("再练本轮仍需复习 · ${counts.review}")}
+                            OutlinedButton(onClick={retry(BranchReviewRetrySelection.SKIPPED)},enabled=!busy&&counts.unmarked>0,
+                                modifier=Modifier.fillMaxWidth().heightIn(min=48.dp).testTag("branch-review-retry-skipped")){Text("再练本轮跳过 · ${counts.unmarked}")}
                         }else if(loadError){
                             Text("本轮固定版本读取失败，未替换成新题或新答案。")
                             TextButton(onClick={loadAttempt++},modifier=Modifier.testTag("branch-review-load-retry")){Text("重试读取此轮")}
                         }else if(loaded==null){
                             Box(Modifier.heightIn(min=120.dp)){CircularProgressIndicator()}
                         }else if(current==null){
-                            Text("本轮已结束",Modifier.testTag("branch-review-ended"))
+                            Text("本题固定版本未能读取，未将本轮标为完成。")
                         }else{
                             val question=current.question.data() as KnowledgeData.Question
                             Text(question.prompt,fontSize=24.sp,modifier=Modifier.testTag("review-question"))
@@ -204,8 +324,13 @@ internal val BranchReviewPlanSaver = Saver<BranchReviewPlan?, ByteArray>(
                                 Text("手工标记，不安排到期时间",style=MaterialTheme.typography.bodySmall,color=Quiet)
                                 Column(Modifier.fillMaxWidth(),verticalArrangement=Arrangement.spacedBy(4.dp)) {
                                     listOf(ManualState.REVIEW to "仍需复习",ManualState.UNDERSTOOD to "本次已理解").forEach { (state,label)->
-                                        OutlinedButton(onClick={pendingQuestion=current.reference.questionId;vm.submitReview(plan.ref.notebookId,current.question,
-                                            question.copy(state=state),current.reference.cardRevision)},enabled=!busy&&!rejected&&pendingQuestion==null,
+                                        OutlinedButton(onClick={
+                                            if(round.roundId==visibleRoundId&&round.index==index&&round.pending==null){
+                                                vm.submitReview(plan.ref.notebookId,current.question,question.copy(state=state),current.reference.cardRevision)?.let{operation->
+                                                    checkAttempt=0;checkError=false;round=round.begin(index,operation,state)
+                                                }
+                                            }
+                                        },enabled=!busy&&!rejected&&round.pending==null,
                                             modifier=Modifier.fillMaxWidth().heightIn(min=48.dp).testTag("branch-review-mark-${state.name}")){Text(label)}
                                     }
                                 }
@@ -217,7 +342,8 @@ internal val BranchReviewPlanSaver = Saver<BranchReviewPlan?, ByteArray>(
                                     else TextButton(onClick={hints=true},enabled=!busy,
                                         modifier=Modifier.weight(1f,fill=false).heightIn(min=48.dp).testTag("review-show-hint")){Text("查看提示（可能含答案）")}
                                 }
-                                TextButton(onClick={advance()},enabled=!busy&&pendingQuestion==null,
+                                TextButton(onClick={if(round.roundId==visibleRoundId&&!vm.ui.value.busy&&!vm.ui.value.unknown&&
+                                    round.pending?.rejected!=false&&!checking&&!retryPreparing)accept(round.skip(index))},enabled=!busy,
                                     modifier=Modifier.heightIn(min=48.dp).testTag("branch-review-skip")){Text("跳过此题")}
                             }
                         }
@@ -243,5 +369,6 @@ internal val BranchReviewPlanSaver = Saver<BranchReviewPlan?, ByteArray>(
             }
         }
     }
+    if(resultsOpen&&round.complete)BranchReviewDetailsDialog(round,resultSelection,{resultSelection=it}){resultsOpen=false}
     if(sourceOpen&&cluesVisible)source?.let{ReviewSourceDialog(it,dismiss={sourceOpen=false},recallNotebookId=plan.ref.notebookId)}
 }
