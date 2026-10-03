@@ -1,0 +1,153 @@
+{
+  "recorded_at": "2026-10-03T08:50:44.435104+08:00",
+  "source_commit": "15f167ed1d1270617e51e0aacd21b5b7caa9bb18",
+  "branch": "codex/local/v68-acceptance-20261003",
+  "status": "BUILD_VERIFIED; PHYSICAL_RUNTIME_RESULTS_IN_physical-device-report.json",
+  "authorization": {
+    "scope": "已授权本机签名、安装及指定真机合成资料方法验收",
+    "target": "physical-iPA2673-20261003"
+  },
+  "environment": {
+    "java": "Temurin 17.0.20.1+1",
+    "gradle": "project wrapper 9.4.1",
+    "compile_sdk": 36,
+    "build_tools": "36.0.0",
+    "worker_count": 1,
+    "parallel": false,
+    "kotlin_compiler_execution_strategy": "in-process"
+  },
+  "flags": {
+    "inkweftDiagnosticBuild": true,
+    "inkweftInsertionPreview": false,
+    "inkweftUnsignedBuild": true,
+    "useDefaultDebugSigningConfigForProfileableBuildtypes": false
+  },
+  "commit_environment": {
+    "INKWEFT_HEAD_SHA": "15f167ed1d1270617e51e0aacd21b5b7caa9bb18",
+    "GITHUB_SHA": "15f167ed1d1270617e51e0aacd21b5b7caa9bb18"
+  },
+  "tasks": {
+    "app_pair": [
+      ":app:assembleDebug",
+      ":app:assembleDebugAndroidTest"
+    ],
+    "room": [
+      ":data-local:assembleDebugAndroidTest"
+    ]
+  },
+  "build_attempts": [
+    {
+      "log": "build-logs/app-unsigned-pair-01.log",
+      "log_sha256": "59cac6354a58120789081c22b213506c5d72414012982209abd8e31ca2870e16",
+      "exit_code": 1,
+      "elapsed_seconds": 33.44,
+      "failure_cause": "离线缓存缺少Kotlin编译器依赖"
+    },
+    {
+      "log": "build-logs/app-unsigned-pair-02.log",
+      "log_sha256": "7535d819a06fbe4bd75e36ca974c1afd4213bf47efd434d0010d84126c29ca87",
+      "exit_code": 0,
+      "elapsed_seconds": 483.81,
+      "failure_cause": null
+    },
+    {
+      "log": "build-logs/room-unsigned-01.log",
+      "log_sha256": "2069fb4e38cbf0236328d76961ca7079c84e805facd18f1e1b9a0d5cd2126694",
+      "exit_code": 1,
+      "elapsed_seconds": 21.69,
+      "failure_cause": "离线缓存缺少lifecycle-common 2.3.1"
+    },
+    {
+      "log": "build-logs/room-unsigned-02.log",
+      "log_sha256": "1d562685c27deddd3168cc360bba24ea13114cc868d44e89bc5e9efd22f4efc3",
+      "exit_code": 0,
+      "elapsed_seconds": 79.78,
+      "failure_cause": null
+    }
+  ],
+  "additional_room_input": {
+    "path": "build-logs/inputs/room-unsigned.init.gradle",
+    "sha256": "656b2a16648dcf3bd7db264225f96a9688a04367ad9efe0257055f480c131500",
+    "effect": "AGP库测试仍带已有默认签名；不能把此配置称为未签名构建保证"
+  },
+  "artifacts": [
+    {
+      "source_commit": "15f167ed1d1270617e51e0aacd21b5b7caa9bb18",
+      "origin": "LOCAL_REBUILD_NOT_LIBRARY_APK",
+      "kind": "app",
+      "package": "org.inkweft.app.a0.workspace",
+      "target_package": null,
+      "artifact": "InkWeft-V68-local-candidate-unsigned.apk",
+      "bytes": 144630602,
+      "sha256": "680c9e78e545073b21972fc485434876bc78cdf2c1be90cd51361e7995f75230",
+      "signature": "UNSIGNED",
+      "zip_crc": "PASS",
+      "zipalign_16k": "PASS",
+      "packaged_dex_contains_source_commit": true,
+      "build_tools": "36.0.0",
+      "version_code": 68,
+      "version_name": "0.0.68-cloud-candidate"
+    },
+    {
+      "source_commit": "15f167ed1d1270617e51e0aacd21b5b7caa9bb18",
+      "origin": "LOCAL_REBUILD_NOT_LIBRARY_APK",
+      "kind": "app-test",
+      "package": "org.inkweft.app.a0.workspace.test",
+      "target_package": "org.inkweft.app.a0.workspace",
+      "artifact": "InkWeft-V68-local-candidate-androidTest-unsigned.apk",
+      "bytes": 6870561,
+      "sha256": "3c5c23cb35dcd28f32a29e3dac2699a373190669b669732026949df1c0df321f",
+      "signature": "UNSIGNED",
+      "zip_crc": "PASS",
+      "zipalign_16k": "PASS",
+      "packaged_dex_contains_source_commit": true,
+      "build_tools": "36.0.0",
+      "version_code": null,
+      "version_name": null
+    },
+    {
+      "source_commit": "15f167ed1d1270617e51e0aacd21b5b7caa9bb18",
+      "origin": "LOCAL_REBUILD",
+      "kind": "room-test",
+      "package": "org.inkweft.data.test",
+      "target_package": "org.inkweft.data.test",
+      "artifact": "InkWeft-V68-local-candidate-data-local-androidTest.apk",
+      "bytes": 9898684,
+      "sha256": "aa905b4de50848f12f7ee0054fc9f861b23eca2f86b972201671f3efde6bbff5",
+      "signature": "SIGNED_BY_EXISTING_ORIGINAL_CERTIFICATE_DURING_GRADLE_BUILD",
+      "certificate_sha256": "18e67dbce88152dbe4d4821b5a3a513a409a3df4eac9261f4c11126c36e43969",
+      "signature_verified": true,
+      "zip_crc": "PASS",
+      "zipalign_16k": "PASS",
+      "exact_12_methods_present_in_packaged_dex": true,
+      "build_tools": "36.0.0",
+      "note": "AGP对library测试runner采用已有默认调试签名；finalizeDsl清空buildType.signingConfig没有产出unsigned。此包未安装或运行；未生成新key。"
+    }
+  ],
+  "inputs": {
+    "count": 453,
+    "unchanged_after_build": true,
+    "manifest_sha256": "b249158be5e6ae20890dabba744d9de4f4c44a3926d45202aef5513a1f82774b"
+  },
+  "cloud_comparison": {
+    "zip": "NOT_FETCHED",
+    "cloud_main_apk": "NOT_FETCHED; 本地主包SHA不同，仅作为同commit本地重建产物交付",
+    "app_test_apk_sha256_matches_user_handoff": true
+  },
+  "local_execution": {
+    "signing": "Room runner由Gradle自动使用本机已有原证书；主包及app runner仍unsigned",
+    "installed": false,
+    "runtime_unique_passed": 0,
+    "runtime_unique_failed": 0,
+    "runtime_unique_not_run": 28,
+    "core_jvm": "本轮未重跑；307通过为云端交接结果"
+  },
+  "delivery_directory": "E:\\Inkweft\\dist\\V68-Acceptance-20261003",
+  "notes": [
+    "所有APK经ZIP CRC、16KB zipalign、manifest核对；Room签名经apksigner验证",
+    "主包DEX包含指定完整commit；app runner SHA与用户提供的云端摘要一致，两个app产物仍从同一本地构建生成",
+    "原签名私钥与口令仅本机读取；不进入报告/Git/云端；未生成新key",
+    "没有创建或修改模拟器，没有安装、卸载、清数据或运行测试；不宣称真实设备验收通过"
+  ],
+  "follow_up": "physical-device-report.json；签后身份、安装及真实运行以该报告为准"
+}
