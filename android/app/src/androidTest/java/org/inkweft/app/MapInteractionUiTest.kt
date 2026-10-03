@@ -26,6 +26,22 @@ class MapInteractionUiTest {
  private fun map():MindMapView{val q=java.util.ArrayDeque<View>();q.add(compose.activity.window.decorView);while(q.isNotEmpty()){val v=q.removeFirst();if(v is MindMapView&&v.isShown)return v;if(v is ViewGroup)for(i in 0 until v.childCount)q.add(v.getChildAt(i))};error("Map missing")}
  private fun vm(book:String)=ViewModelProvider(compose.activity)["study-$book",StudyViewModel::class.java]
  private fun shot(name:String){compose.waitForIdle();android.os.SystemClock.sleep(350);val b=androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().uiAutomation.takeScreenshot()!!;java.io.File(app.getExternalFilesDir(null),"mui-$name.png").outputStream().use{b.compress(Bitmap.CompressFormat.PNG,100,it)};b.recycle()}
+ // Temporary failure-only evidence; retain the original merged-tree assertion until diagnosed.
+ private fun dumpOutlineTitleFailure(anchor:String){
+  runCatching{
+   val directory=java.io.File(app.getExternalFilesDir(null),"outline-title-failure-$anchor").apply{check(isDirectory||mkdirs())}
+   for(unmerged in listOf(false,true))runCatching{
+    val roots=compose.onAllNodes(isRoot(),useUnmergedTree=unmerged)
+    val tree=roots.fetchSemanticsNodes().indices.joinToString("\n\n"){index->roots[index].printToString(maxDepth=Int.MAX_VALUE)}
+    java.io.File(directory,if(unmerged)"unmerged.txt"else"merged.txt").writeText(tree)
+   }.onFailure{println("Outline title semantics capture failed: ${it.javaClass.simpleName}")}
+   runCatching{
+    val image=checkNotNull(androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().uiAutomation.takeScreenshot())
+    try{java.io.File(directory,"screen.png").outputStream().use{image.compress(Bitmap.CompressFormat.PNG,100,it)}}finally{image.recycle()}
+   }.onFailure{println("Outline title screenshot capture failed: ${it.javaClass.simpleName}")}
+   println("OUTLINE_TITLE_FAILURE_EVIDENCE=${directory.absolutePath}")
+  }.onFailure{println("Outline title evidence capture failed: ${it.javaClass.simpleName}")}
+ }
  private data class Fixture(val book:String,val root:String,val card:String,val otherMap:String,val body:String)
  private fun fixture():Fixture{
   compose.waitUntil(15000){compose.onAllNodesWithTag("new-note").fetchSemanticsNodes().isNotEmpty()}
@@ -86,7 +102,9 @@ class MapInteractionUiTest {
   tap("study-tab-1");tap("outline-node-$occurrence")
   compose.onNodeWithTag("card-full-body").assertTextEquals(f.body);tap("card-back")
   tap("outline-rename-$occurrence")
-  compose.onNodeWithTag("node-title-input").assert(hasAnyAncestor(hasTestTag("outline-title-$occurrence")))
+  try{
+   compose.onNodeWithTag("node-title-input").assert(hasAnyAncestor(hasTestTag("outline-title-$occurrence")))
+  }catch(failure:AssertionError){dumpOutlineTitleFailure(occurrence);throw failure}
   compose.onNodeWithTag("outline-title-${f.root}").assertDoesNotExist();compose.onAllNodesWithTag("node-title-editor").assertCountEquals(1)
   compose.onNodeWithTag("study-card-body").assertDoesNotExist()
   compose.onNodeWithTag("node-title-input").performTextReplacement("重建后仍是草稿")

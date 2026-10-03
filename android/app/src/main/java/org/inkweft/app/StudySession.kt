@@ -1,8 +1,11 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 package org.inkweft.app
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.autoSaver
 import androidx.lifecycle.*
 import androidx.lifecycle.viewmodel.CreationExtras
+import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
+import androidx.lifecycle.viewmodel.compose.saveable
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import org.inkweft.core.*
@@ -118,12 +121,13 @@ internal class StudyViewModel(val book:String,val repo:StudyRepository,private v
     }
     class Factory(val book:String,val repo:StudyRepository):ViewModelProvider.Factory{override fun<T:ViewModel>create(c:Class<T>,extras:CreationExtras):T{require(c.isAssignableFrom(StudyViewModel::class.java));@Suppress("UNCHECKED_CAST")return StudyViewModel(book,repo,extras.createSavedStateHandle()) as T}}
 }
-internal class StudyPanelSession:ViewModel(){
+@OptIn(SavedStateHandleSaveableApi::class)
+internal class StudyPanelSession(saved:SavedStateHandle):ViewModel(){
     val embedInsertion=mutableStateOf<EmbedInsertion?>(null)
     val captureDraft=mutableStateOf<CaptureDraft?>(null)
     val captureTarget=mutableStateOf<Pair<MapRef,String?>?>(null)
     val captureResult=mutableStateOf<Pair<MapRef,String?>?>(null)
-    val opened=mutableStateOf(false)
+    val opened=saved.saveable("study.panel.opened",stateSaver=autoSaver<Boolean>()){mutableStateOf(false)}
     val source=mutableStateOf<StudySourceDraft?>(null)
     val captureRequest=mutableLongStateOf(0L)
     val card=mutableStateOf<String?>(null)
