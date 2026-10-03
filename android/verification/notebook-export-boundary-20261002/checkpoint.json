@@ -1,0 +1,66 @@
+{
+  "recorded_utc": "2026-10-02T16:47:20.000245+00:00",
+  "scope": "单本可见内容导出 IWB2 的编码总长度与自身解码上限一致；不涉及全库恢复实现",
+  "base_commit": "75051f748784fbdbf45092eca939205a1bc0088d",
+  "branch": "codex/cloud/notebook-export-boundary-20261002",
+  "owner": "cloud：NotebookFile.encode 与 ReadingHandwritingTest 的单个边界回归",
+  "production_call_chain": [
+    "LibraryContentRepository.export",
+    "NotebookPages.exportBook",
+    "NotebookFile.encode"
+  ],
+  "pre_fix_reproduction": {
+    "runtime": "现成 Temurin JDK17 与候选真实 core-domain.jar，非另写 codec",
+    "class_contract_input": "两页/两个只带 PDF 头的合成来源；不声称真实 PDF 可渲染或 Android 导入已验",
+    "output_bytes": 64000008,
+    "max_bytes": 64000000,
+    "footer_sha256_valid": true,
+    "self_decode": "REJECTED at NotebookFile.kt:30",
+    "positive_control_bytes": 64000000,
+    "positive_control_decode": "PASS; exact source lengths and page count retained",
+    "source_jar_sha256": "1504b8fe2f2aeb8182ccee95634a4e23ecac843beb126b3f8bbbcf59f896b4a1"
+  },
+  "fix": "页预算明确计入4字节长度、页面字节、整本有来源时每页8字节引用和32字节摘要；条件基于整本 sources，不是当前 p.source",
+  "format_api_dependencies_schema_changed": false,
+  "checks": {
+    "ReadingHandwritingTest": {
+      "tests": 10,
+      "failed": 0,
+      "skipped": 0
+    },
+    "ContentTransferTest": {
+      "tests": 13,
+      "failed": 0,
+      "skipped": 0
+    },
+    "unique_targeted_tests": 23,
+    "new_method": "sourceBookByteLimitIncludesReferencesAndChecksum",
+    "new_cases": [
+      "64,000,000 字节精确回环",
+      "64,000,001 字节 encode 拒绝",
+      "64,000,008 字节 encode 拒绝",
+      "最后一页无来源仍需 IWB2 引用字段预算"
+    ],
+    "ordinary_no_source_book": "既有 ContentTransferTest.actualBookOverFourMegabytesRoundTrips 通过",
+    "elapsed": "1m16s; 4 tasks executed, one invocation, no retry",
+    "full_core_regression": "NOT_RUN for this narrow arithmetic change",
+    "android_build_ui_room_real_pdf": "NOT_RUN; this JVM result does not replace real PDF or restore acceptance",
+    "apk": "NOT_REBUILT"
+  },
+  "frozen_candidate": {
+    "commit": "63239341f4fc984267fad162e5a37b227af4fc94",
+    "unchanged": true,
+    "contains_this_fix": false,
+    "note": "已交付V67仍有该已知大文件边界问题；本分支修复仅供后续集成，不混入固定验收包"
+  },
+  "files": [
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/NotebookFile.kt",
+      "sha256": "504fd28788ee479c9de52d11f67b27fdd8068fd04295d02db1bcf95eda76ce6d"
+    },
+    {
+      "path": "android/core-domain/src/test/kotlin/org/inkweft/core/ReadingHandwritingTest.kt",
+      "sha256": "b89be16792e6dc72770d56da7d649d3acad233452dec36a3debc1b273b2a397d"
+    }
+  ]
+}

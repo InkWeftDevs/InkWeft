@@ -1,0 +1,242 @@
+{
+  "recorded_at": "2026-10-03T09:30:05.810344+08:00",
+  "status": "PARTIAL_ACCEPTANCE_ROOM_PASS_UI_ENVIRONMENT_BLOCKED",
+  "source_commit": "15f167ed1d1270617e51e0aacd21b5b7caa9bb18",
+  "branch": "codex/local/v68-acceptance-20261003",
+  "device": {
+    "alias": "physical-iPA2673-20261003",
+    "kind": "PHYSICAL_DEVICE",
+    "manufacturer": "vivo",
+    "model": "iPA2673",
+    "android_version": "16",
+    "sdk": 36
+  },
+  "build": {
+    "version_code": 68,
+    "version_name": "0.0.68-cloud-candidate",
+    "main_package": "org.inkweft.app.a0.workspace",
+    "app_runner": "org.inkweft.app.a0.workspace.test/androidx.test.runner.AndroidJUnitRunner",
+    "room_runner": "org.inkweft.data.test/androidx.test.runner.AndroidJUnitRunner",
+    "certificate_sha256": "18e67dbce88152dbe4d4821b5a3a513a409a3df4eac9261f4c11126c36e43969",
+    "artifacts": [
+      {
+        "kind": "app",
+        "artifact": "InkWeft-V68-local-candidate.apk",
+        "bytes": 144657359,
+        "unsigned_sha256": "680c9e78e545073b21972fc485434876bc78cdf2c1be90cd51361e7995f75230",
+        "sha256": "b4660e08053086646de4bc5b47098f41938b5a3b35d0ada651e590ee8951e355",
+        "certificate_sha256": "18e67dbce88152dbe4d4821b5a3a513a409a3df4eac9261f4c11126c36e43969",
+        "source_commit": "15f167ed1d1270617e51e0aacd21b5b7caa9bb18",
+        "signature_verified": true,
+        "zipalign_16k": "PASS"
+      },
+      {
+        "kind": "app-test",
+        "artifact": "InkWeft-V68-local-candidate-androidTest.apk",
+        "bytes": 6884869,
+        "unsigned_sha256": "3c5c23cb35dcd28f32a29e3dac2699a373190669b669732026949df1c0df321f",
+        "sha256": "568fbc1feab392a9e46ccca61169a64bc172945be7e697dfb58e645fd228e86b",
+        "certificate_sha256": "18e67dbce88152dbe4d4821b5a3a513a409a3df4eac9261f4c11126c36e43969",
+        "source_commit": "15f167ed1d1270617e51e0aacd21b5b7caa9bb18",
+        "signature_verified": true,
+        "zipalign_16k": "PASS"
+      },
+      {
+        "source_commit": "15f167ed1d1270617e51e0aacd21b5b7caa9bb18",
+        "origin": "LOCAL_REBUILD",
+        "kind": "room-test",
+        "package": "org.inkweft.data.test",
+        "target_package": "org.inkweft.data.test",
+        "artifact": "InkWeft-V68-local-candidate-data-local-androidTest.apk",
+        "bytes": 9898684,
+        "sha256": "aa905b4de50848f12f7ee0054fc9f861b23eca2f86b972201671f3efde6bbff5",
+        "signature": "SIGNED_BY_EXISTING_ORIGINAL_CERTIFICATE_DURING_GRADLE_BUILD",
+        "certificate_sha256": "18e67dbce88152dbe4d4821b5a3a513a409a3df4eac9261f4c11126c36e43969",
+        "signature_verified": true,
+        "zip_crc": "PASS",
+        "zipalign_16k": "PASS",
+        "exact_12_methods_present_in_packaged_dex": true,
+        "build_tools": "36.0.0",
+        "note": "AGP对library测试runner采用已有默认调试签名；finalizeDsl清空buildType.signingConfig没有产出unsigned。此包未安装或运行；未生成新key。"
+      }
+    ],
+    "installed_apk_hashes_verified": true,
+    "hashes_reverified_after_reboot": true,
+    "inputs_453_unchanged": true
+  },
+  "unique_method_results": {
+    "total": 28,
+    "pass": 12,
+    "fail": 2,
+    "not_run": 14,
+    "fail_classification": "两项均为环境冻结阻塞；未取得UI断言完成结果，不能算产品断言失败或通过"
+  },
+  "room": {
+    "unique_pass": 12,
+    "unique_fail": 0,
+    "unique_not_run": 0,
+    "database_scope": "每个方法使用独立合成临时数据库，源码负责关闭和删除各自数据库",
+    "methods": [
+      {
+        "method": "org.inkweft.data.BranchReviewRoundRepositoryTest#exactReceiptsCountIndependentSameCardQuestionsOnceWithZeroReadSideWrites",
+        "status": "PASS",
+        "public_log": "room-method-logs/01.txt",
+        "public_log_sha256": "4aa3d1c906e10324c42545f054b2c79c5c22569958c0afa5a4f680e55dd5135c",
+        "private_raw_log_sha256": "b5f72a30b5fb308e45c0d878b14621cf93812f2b8f6e6ea7123025b682c9cb3f"
+      },
+      {
+        "method": "org.inkweft.data.BranchReviewRoundRepositoryTest#unknownRollbackCannotCountOrSkipUntilTheSameOperationActuallyCommits",
+        "status": "PASS",
+        "public_log": "room-method-logs/02.txt",
+        "public_log_sha256": "19474e5170f348b02e243c8a01a1a90f7f1e0c5f3a4b0899c24dde1b158398ab",
+        "private_raw_log_sha256": "a51fafeecfaf819de55e2fc85c8b132f6db1f63f2d614663ff40dda154040ffd"
+      },
+      {
+        "method": "org.inkweft.data.BranchReviewRoundRepositoryTest#missingWrongOperationBookDigestResultOrRequestedStateNeverConfirms",
+        "status": "PASS",
+        "public_log": "room-method-logs/03.txt",
+        "public_log_sha256": "472ba674001c8eaeb7d133df090ecb2798fff503f67feb04d7a53aa955982b3e",
+        "private_raw_log_sha256": "2b63f4175c27e6e8af8daf75335ee62d324782a8edbdb21ca8ce3b116a163a70"
+      },
+      {
+        "method": "org.inkweft.data.BranchReviewRoundRepositoryTest#causalRevisionMustExistAndMatchOnlyTheRequestedStateChange",
+        "status": "PASS",
+        "public_log": "room-method-logs/04.txt",
+        "public_log_sha256": "deff01d63004ce4b2894d15eaadc9272a4be6f8346a603b1d6fa003f26894359",
+        "private_raw_log_sha256": "bada46bd58f7e29203cd834cb0706438fb4ad1c19b5fbf244c7d30689f13d06f"
+      },
+      {
+        "method": "org.inkweft.data.BranchReviewRoundRepositoryTest#originalQuestionAndCardHistoryAreRequiredRatherThanCurrentRows",
+        "status": "PASS",
+        "public_log": "room-method-logs/05.txt",
+        "public_log_sha256": "1cac72d2a39c844baef57483ff5761531ffb573d87297406098ba19950ffa8e6",
+        "private_raw_log_sha256": "b2a576c9ca14da7ba45444c6f65f20e3c7a05dcb49d7ff888676d5f53a40a9c9"
+      },
+      {
+        "method": "org.inkweft.data.BranchReviewRoundRepositoryTest#laterQuestionCardEditsAndRecyclingNeverRebaseAnAlreadyCommittedResult",
+        "status": "PASS",
+        "public_log": "room-method-logs/06.txt",
+        "public_log_sha256": "bd66f0790df7d6ce06623715f9b69c70cf2591a38b3e03792cfdf57944e7a12b",
+        "private_raw_log_sha256": "4f6369b404d9421455d8585dadb0023dcee2ec696d6efcf672a03b5fb1f20ce6"
+      },
+      {
+        "method": "org.inkweft.data.BranchReviewRoundRepositoryTest#skippedUnderstoodQuestionRetainsAllFourRefsAndDoesNotUseGlobalStateFiltering",
+        "status": "PASS",
+        "public_log": "room-method-logs/07.txt",
+        "public_log_sha256": "21e39eccc8192605a7aa3d51b51698494699a7261528983224b42a96d339ba12",
+        "private_raw_log_sha256": "81a456ef2e672c2736d629e8486f9deb2a18ab8314b2baf9e26337a796ace395"
+      },
+      {
+        "method": "org.inkweft.data.BranchReviewRoundRepositoryTest#aMissingSelectedHistoryRejectsTheEntireRetryWithoutDroppingThatQuestion",
+        "status": "PASS",
+        "public_log": "room-method-logs/08.txt",
+        "public_log_sha256": "6fbe6eaea7526b9aea75d9ea934ec40d52ddc0b193c68ac29747929a1513ecb1",
+        "private_raw_log_sha256": "f19efbbba030d6591a5d15946e3cf7d36abd7246bd06f77bdc1bbe7482a99958"
+      },
+      {
+        "method": "org.inkweft.data.BranchReviewRoundRepositoryTest#completedReviewLedgerStillRequiresItsOriginalReceiptForRetry",
+        "status": "PASS",
+        "public_log": "room-method-logs/09.txt",
+        "public_log_sha256": "964a59c952cea64536d5ec6ab273f94e27d4271deed9ab063cb35fe5f9e1cf72",
+        "private_raw_log_sha256": "1ae42f036daa24d6e98cb2db10349182ba71a3bb9f78c324fe8d614bee863e2a"
+      },
+      {
+        "method": "org.inkweft.data.BranchReviewRoundRepositoryTest#wrongFrozenNotebookCannotBorrowAValidReceiptOrAnswer",
+        "status": "PASS",
+        "public_log": "room-method-logs/10.txt",
+        "public_log_sha256": "7efa075b73089895f75b3dadde37457d6694063a22625ae7973f7489c8aa8906",
+        "private_raw_log_sha256": "832befe47626fa96103087e21d58a4311e47a67a68455a9a7f56fff62558cb1b"
+      },
+      {
+        "method": "org.inkweft.data.BranchReviewRoundRepositoryTest#rejectedSkipRetriesOriginalRefsButNeverPretendsToHaveAReceipt",
+        "status": "PASS",
+        "public_log": "room-method-logs/11.txt",
+        "public_log_sha256": "d81379312630786b825562904130d2b6a25008e208b5a87d56ff8f4acf68fd3f",
+        "private_raw_log_sha256": "270d86bfe11a43b2e1f4a39b8ed1f0e017afc3361357a3fc5098c9869761e21e"
+      },
+      {
+        "method": "org.inkweft.data.BranchReviewRoundRepositoryTest#noCandidateAndRecycledBookCannotStartANewRoundButOldReceiptStillCounts",
+        "status": "PASS",
+        "public_log": "room-method-logs/12.txt",
+        "public_log_sha256": "eda176264049c3300c727dce44a966326476f8d6bf696edc2957fed2ea6c7b40",
+        "private_raw_log_sha256": "62855acddec3105581508ece8c7b5c5417f9bc381d398ddef1fea2a4e5c08ef1"
+      }
+    ],
+    "collector_correction": "首次使用精简输出，采集器因缺少方法事件误记失败；12个JUnit摘要均OK。保留原日志并标COLLECTION_ERROR，改用-r后12个唯一方法原始成功事件全部核对；只计12个通过。"
+  },
+  "app_ui": {
+    "lm66": {
+      "unique_total": 11,
+      "environment_blocked_attempts": 2,
+      "not_run": 9
+    },
+    "review_round": {
+      "unique_total": 5,
+      "pass": 0,
+      "not_run": 5
+    },
+    "blocked_methods": [
+      "org.inkweft.app.LocalMotionUiTest#cardSectionsEnterOnceAndDisposeCollapsedSourceAtTheNextRealFrame",
+      "org.inkweft.app.LocalMotionUiTest#answerEnterCannotRetainPreviousQuestionCluesAcrossSkipHideAndExit"
+    ],
+    "observations": [
+      "方法启动事件已出现，但未到达可核准的UI完成结果；应用未自动进入前台。",
+      "内核cgroup.freeze=1及cgroup.events frozen=1；系统进程记录中AOSP冻结字段与额外冻结字段不一致。",
+      "am unfreeze --sticky、普通前台启动、临时允许后台耗电未解除等待；允许后台耗电已恢复为智能控制。",
+      "使用系统freeze/unfreeze进行受控诊断后进程仍再次冻结，未改变全局冻结策略。",
+      "经用户授权重启、解锁和重新授权ADB后，原包重跑仍连续三次观察到内核冻结；监测器终止该轮。"
+    ],
+    "conclusion": "当前设备环境阻止完成这些instrumentation UI方法；触发冻结的具体来源尚未确定。没有修改生产代码或既有测试来绕开断言。",
+    "normal_launch": {
+      "cold_launch_reported_ms": 369,
+      "foreground_activity": "org.inkweft.app.MainActivity",
+      "kernel_frozen_samples_0_to_3_seconds": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "scope": "普通启动和短时进程观察；不是UI功能验收通过"
+    }
+  },
+  "data_protection": {
+    "previous_version": 47,
+    "current_version": 68,
+    "schema_version": 12,
+    "original_tables": 29,
+    "original_rows": 2535,
+    "integrity_check": "ok",
+    "original_rows_missing_or_changed_after_first_launch": 0,
+    "original_rows_missing_or_changed_after_ui_probes": 0,
+    "original_rows_missing_or_changed_after_reboot": 0,
+    "backup": "旧主包、旧runner、完整内部/外部应用数据快照仅保存在本机私有目录；归档可读和逐文件摘要已核验，未演练恢复。",
+    "uninstall_or_clear_used": false,
+    "claim_boundary": "本机具体V47到V68安装/启动和原始行保留检查；不等于所有旧库升级、完整备份恢复或原迹视觉验收",
+    "final_original_rows_missing_or_changed": 0,
+    "final_integrity_check": "ok"
+  },
+  "settings": {
+    "display_font_animation_rotation_restored": true,
+    "original_background_policy": "智能控制后台耗电",
+    "temporary_background_policy": "允许后台耗电",
+    "background_policy_restored": true,
+    "process_lifetime_freeze_diagnostics_ended": true,
+    "adb_server_or_other_devices_modified": false,
+    "final_system_settings_verified": true
+  },
+  "still_unverified": [
+    "V68完整导入→写入→摘录/导图→复习→导出链路",
+    "真实PDF渲染及大文件IWB2运行边界",
+    "完整OS进程死亡故障切点恢复",
+    "真实完整备份/空库恢复",
+    "原有笔记的逐页视觉与原迹升级验收",
+    "真人手写、压感、倾斜、掌拒、笔感和长时温升"
+  ],
+  "source_and_evidence_policy": {
+    "production_and_existing_test_changes": false,
+    "core_307": "云端交接结果，本轮未重跑",
+    "public_evidence": "仅合成Room方法事件、摘要、构建身份和脱敏统计",
+    "private_evidence": "原始系统日志、设备唯一标识、真实资料和备份、原始截图、签名材料均不上传Git/PR",
+    "next_action": "解除真机instrumentation进程冻结来源后，使用同一候选成对产物继续16个UI方法；如果修复源码，先交接路径所有权并建立新构建身份。"
+  }
+}
