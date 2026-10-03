@@ -50,4 +50,3 @@ import org.inkweft.data.*
         }}
     }},confirmButton={TextButton(onClick={val values=tags.split(',', '，').map{it.trim()}.filter{it.isNotEmpty()}.distinct();save(KnowledgeData.Properties(card.id,state,values))},enabled=enabled&&tags.split(',', '，').filter{it.isNotBlank()}.let{it.size<=12&&it.all{tag->tag.trim().length<=24}},modifier=Modifier.testTag("card-properties-save")){Text("保存属性")}},dismissButton={TextButton(onClick=dismiss,enabled=canClose,modifier=Modifier.testTag("card-properties-cancel")){Text(if(enabled)"取消"else"关闭")}})
 }
-

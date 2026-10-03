@@ -19,7 +19,7 @@
 - 新增 `QuestionMaintenanceUiTest#longQuestionSearchKeepsDraftsAndIdentityAcrossRecreationAndEditing`：21题、大小写／首尾空白、重建、清空／无匹配、编辑后退出匹配、准确作者写入边界。
 - 既有 `actualReadOnlyEntryShowsSavedQuestionsButCannotEditRemoveOrSaveAuthors` 补查只读搜索及清空；不另建重复场景。
 - `:app:compileDebugKotlin`、`:app:compileDebugAndroidTestKotlin`、`:app:lintDebug`：2026-10-03 云端同次执行 **PASS**，退出码0，冷环境构建耗时12分12秒。JDK17、项目固定Gradle9.4.1、SDK36/build-tools36.0.0，单worker、关闭并行及SDK自动下载；未生成签名或安装包。
-- lint XML：0 Error、0 Fatal、133 Warning；没有指向新弹窗或本次题目维护测试的lint项。
+- lint XML：0 Error、0 Fatal、133 Warning；没有指向新弹窗或本次题目维护测试的lint项。末尾空行规范化后的同三项增量复核亦PASS（4分47秒）；该纯格式变更实际上只需差异／字节核对，后续不为格式重复编译或lint。
 - 两条上述 UI 方法当前均 **NOT_RUN**；没有模拟器／设备执行和新界面截图，不能把编译当行为验收。本批不重跑未改变的核心和Room全套。此前SDK元数据和Java21缺少javac导致的工具链失败已修正，保留原日志，不算源码测试失败。
 
 ## V68 真机冻结的下一最小实验
