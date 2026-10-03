@@ -104,6 +104,8 @@ class MapInteractionUiTest {
   compose.onNodeWithTag("outline-title-${f.root}",useUnmergedTree=true).assertDoesNotExist();compose.onAllNodesWithTag("node-title-editor",useUnmergedTree=true).assertCountEquals(1)
   compose.onNodeWithTag("study-card-body").assertDoesNotExist()
   compose.onNodeWithTag("node-title-input").performTextReplacement("重建后仍是草稿")
+  // Confirm the edit reached Compose before crossing the Activity lifecycle boundary.
+  compose.onNodeWithTag("node-title-input").assertTextContains("重建后仍是草稿")
   compose.activityRule.scenario.recreate();compose.waitForIdle()
   compose.onNodeWithTag("node-title-input").assertTextContains("重建后仍是草稿")
   compose.onNodeWithTag("node-title-input",useUnmergedTree=true).assert(hasAnyAncestor(hasTestTag("outline-title-$occurrence")))
@@ -124,6 +126,7 @@ class MapInteractionUiTest {
   assertEquals(updated.title,shared.nodes.single().title);assertEquals(beforeCards.size,cards().size)
 
   tap("outline-child-$occurrence");compose.onNodeWithTag("node-title-input").performTextInput("大纲子主题")
+  compose.onNodeWithTag("node-title-input").assertTextContains("大纲子主题")
   compose.activityRule.scenario.recreate();compose.waitForIdle();compose.onNodeWithTag("node-title-input").assertTextContains("大纲子主题")
   assertEquals(beforeNodes,nodes());assertEquals(beforeCards.size,cards().size);tap("node-title-save")
   compose.waitUntil(10000){nodes().size==beforeNodes.size+1}
