@@ -44,7 +44,8 @@ class KnowledgeTextRepositoryTest {
             "(SELECT COALESCE(SUM(revision),0) FROM knowledge_records)," +
             "(SELECT COUNT(*) FROM command_receipts),(SELECT COUNT(*) FROM study_receipts)," +
             "(SELECT COUNT(*) FROM knowledge_receipts),(SELECT COUNT(*) FROM note_revisions)," +
-            "(SELECT COUNT(*) FROM study_card_revisions),(SELECT COUNT(*) FROM knowledge_revisions)"
+            "(SELECT COUNT(*) FROM study_card_revisions),(SELECT COUNT(*) FROM knowledge_revisions)," +
+            "(SELECT COALESCE(SUM(revision),0) FROM ink_pages),(SELECT COUNT(*) FROM ink_receipts)"
     ).use { cursor -> cursor.moveToFirst(); List(cursor.columnCount) { cursor.getLong(it) } }
 
     @Test fun onlyConfirmedLinksForExactSourceAndOwnerAppearWithoutAuthorWrites() = fixture { db, book ->
@@ -214,4 +215,153 @@ class KnowledgeTextRepositoryTest {
         assertTrue(repository.preview(source, anchorLink.id, 1).body.contains("打开来源区域"))
         assertEquals(afterAuthors, authorState(db))
     }
+
+    @Test fun incomingCrossNotebookPreviewReadsCurrentSourceRatherThanPinnedTarget() = fixture { db, book ->
+        val targetBook = WorkspaceRepository(db).create("目标册", false, PaperStyle.DOTS).id
+        val source = TargetRef(TargetKind.CARD, checkNotNull(card(db, book, "引用来源", "来源旧正文").cardId))
+        val target = TargetRef(TargetKind.CARD, checkNotNull(card(db, targetBook, "被引用知识", "目标固定正文").cardId))
+        val confirmed = link(db, book, target, pinned = 1, source = source)
+        StudyRepository(db).submit(StudyCommand(id(), book, StudyAction.EDIT, cardId = source.id,
+            expectedRevision = 1, title = "引用来源新版", body = "来源当前正文"))
+        StudyRepository(db).submit(StudyCommand(id(), targetBook, StudyAction.EDIT, cardId = target.id,
+            expectedRevision = 1, title = "被引用知识新版", body = "目标当前正文"))
+        val repository = KnowledgeTextRepository(db)
+        val before = authorState(db)
+        val incoming = repository.preview(target, confirmed.id, 1, incoming = true)
+        assertEquals(source, incoming.target)
+        assertEquals("引用来源新版", incoming.title)
+        assertEquals("来源当前正文", incoming.body)
+        assertNull(incoming.pinnedRevision)
+        assertTrue(incoming.canOpen)
+        val outgoing = repository.preview(source, confirmed.id, 1)
+        assertEquals(target, outgoing.target)
+        assertEquals("目标固定正文", outgoing.body)
+        assertEquals(1L, outgoing.pinnedRevision)
+        assertEquals(before, authorState(db))
+    }
+
+    @Test fun incomingRequiresExactTargetKindReferenceRelationAndSourceOwner() = fixture { db, book ->
+        val targetBook = WorkspaceRepository(db).create("目标本与首页共用身份", false, PaperStyle.DOTS).id
+        val source = TargetRef(TargetKind.NOTE, book)
+        val target = TargetRef(TargetKind.NOTE, targetBook)
+        val confirmed = link(db, book, target)
+        val semantic = KnowledgeCommand(id(), book, id(), 0,
+            KnowledgeData.Link(source, target, RelationKind.CONTRAST))
+        KnowledgeRepository(db).submit(semantic)
+        // A target-owned row is invalid when the author source belongs to another notebook.
+        val foreign = KnowledgeRow(id(), targetBook, 1, KnowledgeCodec.encode(KnowledgeData.Link(source, target)))
+        db.knowledge().insert(foreign)
+        val repository = KnowledgeTextRepository(db)
+        val before = authorState(db)
+        assertEquals(source, repository.preview(target, confirmed.id, 1, incoming = true).target)
+        reject(KnowledgeRejection.CONFLICT) {
+            repository.preview(TargetRef(TargetKind.PAGE, targetBook), confirmed.id, 1, incoming = true)
+        }
+        reject(KnowledgeRejection.CONFLICT) { repository.preview(target, semantic.id, 1, incoming = true) }
+        reject(KnowledgeRejection.CONFLICT) { repository.preview(target, foreign.id, 1, incoming = true) }
+        assertEquals(target, repository.preview(source, semantic.id, 1).target)
+        assertEquals(before, authorState(db))
+    }
+
+    @Test fun incomingRejectsStaleRemovedAndRetypedRelationshipsWithoutWriting() = fixture { db, book ->
+        val source = TargetRef(TargetKind.NOTE, book)
+        val original = TargetRef(TargetKind.CARD, checkNotNull(card(db, book, "原目标").cardId))
+        val replacement = TargetRef(TargetKind.CARD, checkNotNull(card(db, book, "替换目标").cardId))
+        val confirmed = link(db, book, original)
+        val author = KnowledgeRepository(db)
+        author.submit(KnowledgeCommand(id(), book, confirmed.id, 1, KnowledgeData.Link(source, replacement)))
+        val repository = KnowledgeTextRepository(db)
+        var before = authorState(db)
+        reject(KnowledgeRejection.CONFLICT) { repository.preview(original, confirmed.id, 1, incoming = true) }
+        reject(KnowledgeRejection.CONFLICT) { repository.preview(original, confirmed.id, 2, incoming = true) }
+        assertEquals(source, repository.preview(replacement, confirmed.id, 2, incoming = true).target)
+        assertEquals(before, authorState(db))
+        val changed = checkNotNull(db.knowledge().get(confirmed.id))
+        author.submit(KnowledgeCommand(id(), book, confirmed.id, changed.revision, changed.data(), true))
+        before = authorState(db)
+        reject(KnowledgeRejection.UNAVAILABLE) { repository.preview(replacement, confirmed.id, 2, incoming = true) }
+        reject(KnowledgeRejection.UNAVAILABLE) { repository.preview(replacement, id(), 1, incoming = true) }
+        assertEquals(before, authorState(db))
+        val retyped = link(db, book, original)
+        val row = checkNotNull(db.knowledge().get(retyped.id))
+        // Synthetic damaged input cannot be produced by the regular author command API.
+        assertEquals(1, db.knowledge().update(row.copy(payload = KnowledgeCodec.encode(KnowledgeData.Collection("已变成集合")))))
+        before = authorState(db)
+        reject(KnowledgeRejection.INVALID) { repository.preview(original, retyped.id, 1, incoming = true) }
+        assertEquals(before, authorState(db))
+    }
+
+    @Test fun observedPreviewsRefreshBodyOnlyEditsAndSourceAvailabilityWithoutAuthorWrites() = fixture { db, book -> coroutineScope {
+        val targetBook = WorkspaceRepository(db).create("预览目标册", false, PaperStyle.DOTS).id
+        val source = TargetRef(TargetKind.CARD, checkNotNull(card(db, book, "来源标题不变", "来源第一版").cardId))
+        val target = TargetRef(TargetKind.CARD, checkNotNull(card(db, targetBook, "目标标题不变", "目标第一版").cardId))
+        val confirmed = link(db, book, target, source = source)
+        val repository = KnowledgeTextRepository(db)
+        val incoming = Channel<KnowledgeTextPreview>(Channel.UNLIMITED)
+        val outgoing = Channel<KnowledgeTextPreview>(Channel.UNLIMITED)
+        val incomingJob = launch { repository.observePreview(target, confirmed.id, 1, incoming = true).collect { incoming.send(it) } }
+        val outgoingJob = launch { repository.observePreview(source, confirmed.id, 1).collect { outgoing.send(it) } }
+        suspend fun await(events: Channel<KnowledgeTextPreview>, body: String, available: Boolean = true): KnowledgeTextPreview = withTimeout(10_000) {
+            var next = events.receive()
+            while (next.body != body || next.canOpen != available) next = events.receive()
+            next
+        }
+        try {
+            var before = authorState(db)
+            assertEquals(source, await(incoming, "来源第一版").target)
+            assertEquals(target, await(outgoing, "目标第一版").target)
+            assertEquals(before, authorState(db))
+            val dictionary = repository.observe(source).first()
+            StudyRepository(db).submit(StudyCommand(id(), targetBook, StudyAction.EDIT, cardId = target.id,
+                expectedRevision = 1, title = "目标标题不变", body = "目标仅正文变化"))
+            before = authorState(db)
+            assertEquals(target, await(outgoing, "目标仅正文变化").target)
+            assertEquals("A body-only edit does not need a changed dictionary entry", dictionary, repository.observe(source).first())
+            assertEquals(before, authorState(db))
+            StudyRepository(db).submit(StudyCommand(id(), book, StudyAction.EDIT, cardId = source.id,
+                expectedRevision = 1, title = "来源标题不变", body = "来源仅正文变化"))
+            before = authorState(db)
+            assertEquals(source, await(incoming, "来源仅正文变化").target)
+            assertEquals(before, authorState(db))
+            val workspace = checkNotNull(db.workspace().get(book))
+            assertTrue(WorkspaceRepository(db).organize(book, workspace.revision, workspace.folder, workspace.tags, workspace.favorite, true))
+            before = authorState(db)
+            assertEquals(source, await(incoming, "来源仅正文变化", available = false).target)
+            assertEquals(before, authorState(db))
+        } finally {
+            incomingJob.cancelAndJoin(); outgoingJob.cancelAndJoin()
+            incoming.close(); outgoing.close()
+        }
+    } }
+
+    @Test fun observedAnchorPreviewWarnsWhenOriginalInkRevisionChanges() = fixture { db, book -> coroutineScope {
+        fun stroke(y: Float) = InkStroke(id(), InkPen.PEN, 0xff000000.toInt(), 3f, InkTool.STYLUS,
+            listOf(InkSample(100f, y, 0), InkSample(200f, y, 10)))
+        val original = stroke(100f)
+        InkRepository(db).save(CommitInk(id(), book, 0, InkMutation.Add(original)))
+        val anchor = KnowledgeCommand(id(), book, id(), 0,
+            KnowledgeData.Anchor(book, 1, CanvasBounds(95.0, 95.0, 205.0, 105.0), listOf(original.id)))
+        KnowledgeRepository(db).submit(anchor)
+        val source = TargetRef(TargetKind.ANCHOR, anchor.id)
+        val target = TargetRef(TargetKind.CARD, checkNotNull(card(db, book, "区域引用目标").cardId))
+        val confirmed = link(db, book, target, source = source)
+        val events = Channel<KnowledgeTextPreview>(Channel.UNLIMITED)
+        val job = launch { KnowledgeTextRepository(db).observePreview(target, confirmed.id, 1, incoming = true).collect { events.send(it) } }
+        try {
+            val before = authorState(db)
+            assertEquals("打开来源区域查看。", withTimeout(10_000) { events.receive() }.body)
+            assertEquals(before, authorState(db))
+            InkRepository(db).save(CommitInk(id(), book, 1, InkMutation.Add(stroke(140f))))
+            val afterEdit = authorState(db)
+            val changed = withTimeout(10_000) {
+                var next = events.receive()
+                while (!next.body.contains("来源已变化")) next = events.receive()
+                next
+            }
+            assertEquals(source, changed.target)
+            assertTrue(changed.canOpen)
+            assertNull(changed.pinnedRevision)
+            assertEquals(afterEdit, authorState(db))
+        } finally { job.cancelAndJoin(); events.close() }
+    } }
 }

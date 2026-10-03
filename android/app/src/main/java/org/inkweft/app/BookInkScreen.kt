@@ -254,7 +254,7 @@ fun InkScreen(note:NoteDraft,workspace:WorkspaceViewModel=viewModel(),onBack:()-
             DocumentAction("整理与复习","study-open",pageActionsReady){documentSettings=false;studySource=null;studyOpen=true;mapMinimized=false}
             DocumentAction("编辑键入文字","mode-text",pageAuthorReady){documentSettings=false;onText()}
             DocumentAction("查找笔记","settings-search",pageActionsReady){documentSettings=false;searchOpen=true}
-            DocumentAction("知识与关联","settings-knowledge",pageActionsReady){documentSettings=false;knowledgeAnchor=null;knowledgeOpen=true}
+            DocumentAction("链接与反向引用","settings-knowledge",pageActionsReady){documentSettings=false;knowledgeAnchor=null;knowledgeOpen=true}
             if(page!=null&&!page.world)DocumentAction("导出整本内容副本","settings-export",pageActionsReady&&!exporting){documentSettings=false;confirmBook=true}
             HorizontalDivider(Modifier.padding(horizontal=16.dp),color=Line)
             DocumentSection("阅读与操作")

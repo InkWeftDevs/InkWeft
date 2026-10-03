@@ -165,6 +165,7 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
     DisposableEffect(vm,mapKey){val ref=MapRef(note.base.id,currentMap);onDispose{vm.viewports[mapKey]?.let{app.learningStore.viewport(ref,it)}}}
     var pendingExport by remember{mutableStateOf<String?>(null)};var localMessage by remember{mutableStateOf<String?>(null)}
     var knowledgeCardId by rememberSaveable{mutableStateOf<String?>(null)}
+    var knowledgeBacklinks by rememberSaveable{mutableStateOf(false)}
     val knowledgeCard=ui.cards.find{it.id==knowledgeCardId&&it.trashedAt==null}
     val knowledgeState=androidx.compose.runtime.saveable.rememberSaveableStateHolder()
     var reparentId by rememberSaveable{mutableStateOf<String?>(null)}
@@ -744,7 +745,7 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
                     }
                 }
             }
-            TextButton(onClick={knowledgeCardId=card.id;sourceJob?.cancel();chosenCardId=null},enabled=card.id !in structureCards.map{it.id},modifier=Modifier.testTag("card-properties")){Text("属性与回忆")}
+            TextButton(onClick={knowledgeBacklinks=false;knowledgeCardId=card.id;sourceJob?.cancel();chosenCardId=null},enabled=card.id !in structureCards.map{it.id},modifier=Modifier.testTag("card-properties")){Text("属性与回忆")}
             if(node!=null)TextButton({moreActions=!moreActions},modifier=Modifier.testTag("card-node-actions")){Text("组织此主题")}
             if(card.trashedAt==null&&moreActions){
                 if(card.id !in structureCards.map{it.id})TextButton(onClick={vm.submit(StudyCommand(id(),note.base.id,StudyAction.REUSE,mapId=currentMap,cardId=card.id,nodeId=id(),y=ui.nodes.count{!it.removed}*128.0+80))},enabled=editable,modifier=Modifier.testTag("study-reuse-card")){Text("复用到脑图新位置")}
@@ -759,6 +760,8 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
                 if(node==null&&card.id !in structureCards.map{it.id})TextButton(onClick={vm.submit(StudyCommand(id(),note.base.id,StudyAction.TRASH_CARD,mapId=currentMap,cardId=card.id,expectedRevision=card.revision))},enabled=editable&&occurrenceCount(card.id)==0){Text("移入卡片回收区")}
             }else if(card.trashedAt!=null)TextButton(onClick={vm.submit(StudyCommand(id(),note.base.id,StudyAction.RESTORE_CARD,mapId=currentMap,cardId=card.id,expectedRevision=card.revision))},enabled=editable){Text("恢复卡片")}
         }},confirmButton={FlowRow(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.End){
+            if(card.id !in structureCards.map{it.id})TextButton(onClick={knowledgeBacklinks=true;knowledgeCardId=card.id;sourceJob?.cancel()},enabled=browseReady,
+                modifier=Modifier.heightIn(min=48.dp).testTag("card-backlinks")){Text("查看反向引用")}
             cardSource?.let{s->TextButton(onClick={
                 if(!sourceOpening){sourceOpening=true;sourceJob=sourceScope.launch{try{
                     val opened=openSource(s);currentCoroutineContext().ensureActive()
@@ -778,7 +781,11 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
         if(!browseReady||titleDraft!=null)false else {cancelReviewPreparation();vm.openPortal(preview,if(chrome?.sourceReading==true)vm.viewports[mapKey]else map?.snapshotViewport(),collapsed,focusId)}
     }}}
     reviewPlan?.let{plan->BranchReviewDialog(plan,{reviewPlan=null})}
-    knowledgeCard?.let{card->knowledgeState.SaveableStateProvider(card.id){KnowledgeWorkspace(note.base.id,TargetRef(TargetKind.CARD,card.id),dismiss={knowledgeCardId=null}){target->if(leaveReviewContext()){app.openKnowledgeTarget.value=target;knowledgeCardId=null;dismiss()}}}}
+    knowledgeCard?.let{card->
+        val openKnowledgeTarget:(TargetRef)->Unit={target->if(leaveReviewContext()){app.openKnowledgeTarget.value=target;knowledgeCardId=null;chosenCardId=null;chosenNodeId=null;inspectSource=false;dismiss()}}
+        if(knowledgeBacklinks)KnowledgeWorkspace(note.base.id,TargetRef(TargetKind.CARD,card.id),initialBacklinks=true,dismiss={knowledgeCardId=null},openTarget=openKnowledgeTarget)
+        else knowledgeState.SaveableStateProvider(card.id){KnowledgeWorkspace(note.base.id,TargetRef(TargetKind.CARD,card.id),dismiss={knowledgeCardId=null},openTarget=openKnowledgeTarget)}
+    }
     reparent?.let{node->StudyDialog(compactWindow,onDismissRequest={if(!ui.busy&&!ui.unknown)reparentId=null},title={Text("选择上级主题")},text={Column(Modifier.heightIn(max=350.dp).verticalScroll(rememberScrollState())){
         val active=ui.nodes.filter{!it.removed&&it.id!=node.id};val options=listOf<StudyNodeRow?>(null)+active
         options.forEach{p->TextButton(onClick={vm.submit(StudyCommand(id(),note.base.id,StudyAction.REPARENT,mapId=reparentMap,nodeId=node.id,expectedRevision=node.revision,parentId=p?.id))},enabled=editable){Text(p?.let{n->ui.cards.find{it.id==n.cardId}?.title}?:"无上级（根主题）")}}

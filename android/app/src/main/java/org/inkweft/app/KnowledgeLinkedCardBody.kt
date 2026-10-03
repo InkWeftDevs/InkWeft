@@ -6,7 +6,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.selection.SelectionContainer
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -31,8 +30,6 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.isActive
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.inkweft.core.*
 import org.inkweft.data.*
@@ -40,10 +37,6 @@ import org.inkweft.data.*
 private data class CardTextProjection(
     val text:String, val targets:List<KnowledgeTextTarget>, val spans:List<KnowledgeTextSpan>
 )
-
-private fun previewTrace(id:Long,event:String){
-    if(BuildConfig.DEBUG)android.util.Log.d("InkWeftLinks","$id $event")
-}
 
 /** A read-only view of confirmed links. The author's plain text is never rewritten. */
 @Composable
@@ -132,65 +125,8 @@ internal fun KnowledgeLinkedCardBody(source:TargetRef,body:String,enabled:Boolea
     }
     selected?.let{linkId->selectedRevision?.let{revision->
         key(source,linkId,revision){
-            val readId=remember{android.os.SystemClock.elapsedRealtimeNanos()}
-            DisposableEffect(Unit){previewTrace(readId,"mounted");onDispose{previewTrace(readId,"disposed")}}
-            var preview by remember{mutableStateOf<KnowledgeTextPreview?>(null)}
-            var failure by remember{mutableStateOf<String?>(null)}
-            var reading by remember{mutableStateOf(true)}
-            var opening by remember{mutableStateOf(false)}
-            var attempt by remember{mutableIntStateOf(0)}
-            val scope=rememberCoroutineScope()
-            fun failed(error:Exception){
-                failure=if(error is KnowledgeRejected)"关联已变化，请返回摘要重新选择。"else"预览读取失败，请重试。"
-                preview=null
-            }
-            LaunchedEffect(targets,attempt){
-                previewTrace(readId,"read-start targets=${targets.size} attempt=$attempt")
-                withContext(Dispatchers.Main.immediate){reading=true;failure=null;preview=null}
-                try{
-                    val value=withContext(Dispatchers.IO){previewTrace(readId,"io-enter");app.knowledgeText.preview(source,linkId,revision)}
-                    previewTrace(readId,"read-return")
-                    withContext(Dispatchers.Main.immediate){
-                        preview=value;reading=false
-                        previewTrace(readId,"published loading=$reading value=${preview!=null} main=${android.os.Looper.myLooper()==android.os.Looper.getMainLooper()}")
-                    }
-                }
-                catch(c:CancellationException){previewTrace(readId,"read-cancel");throw c}
-                catch(e:Exception){withContext(Dispatchers.Main.immediate){failed(e);reading=false};previewTrace(readId,"read-failed ${e.javaClass.simpleName}")}
-            }
-            fun close(){if(!opening){selected=null;selectedRevision=null}}
-            AlertDialog(
-                onDismissRequest={close()},
-                modifier=Modifier.fillMaxWidth(.96f).widthIn(max=640.dp).testTag("card-link-preview"),
-                properties=DialogProperties(usePlatformDefaultWidth=false),
-                title={Text(preview?.title?:"知识预览")},
-                text={Column(Modifier.heightIn(max=contentHeight).verticalScroll(rememberScrollState()),
-                    verticalArrangement=Arrangement.spacedBy(8.dp)){
-                    SideEffect{previewTrace(readId,"render loading=$reading value=${preview!=null} error=${failure!=null}")}
-                    Text(preview?.pinnedRevision?.let{"固定版本 $it"}?:"当前内容",fontSize=12.sp,color=Quiet)
-                    if(reading)CircularProgressIndicator(Modifier.size(24.dp))
-                    preview?.let{value->
-                        SelectionContainer{Text(value.body.ifBlank{"尚未填写内容"},modifier=Modifier.testTag("card-link-preview-body"))}
-                        if(value.pinnedRevision!=null&&value.canOpen)Text("此处预览固定版本；打开目标会查看当前卡片。",fontSize=12.sp,color=Quiet)
-                        if(!value.canOpen)Text("目标不可打开，预览仍保留可读取的内容。",fontSize=12.sp,color=Quiet)
-                    }
-                    failure?.let{Text(it,modifier=Modifier.testTag("card-link-preview-error"))
-                        TextButton(onClick={attempt++},enabled=!opening){Text("重试预览")}}
-                }},
-                confirmButton={TextButton(onClick={
-                    if(!opening&&enabled){opening=true;scope.launch{
-                        try{
-                            val checked=withContext(Dispatchers.IO){app.knowledgeText.preview(source,linkId,revision)}
-                            withContext(Dispatchers.Main.immediate){preview=checked;if(checked.canOpen)onOpenTarget(checked.target)}
-                        }catch(c:CancellationException){throw c}
-                        catch(e:Exception){withContext(Dispatchers.Main.immediate){failed(e)}}
-                        finally{if(kotlinx.coroutines.currentCoroutineContext().isActive)withContext(Dispatchers.Main.immediate){opening=false}}
-                    }}
-                },enabled=enabled&&!reading&&!opening&&failure==null&&preview?.canOpen==true,
-                    modifier=Modifier.testTag("card-link-open-target")){Text("打开目标")}},
-                dismissButton={TextButton(onClick={close()},enabled=!opening,
-                    modifier=Modifier.testTag("card-link-close-preview")){Text("返回摘要")}}
-            )
+            KnowledgeLinkPreview(source,linkId,revision,enabled=enabled,
+                dismiss={selected=null;selectedRevision=null},onOpenTarget=onOpenTarget)
         }
     }}
 }
