@@ -146,8 +146,10 @@ class LocalMotionUiTest {
     }
 
     /** Match the actual semantics owner, including a separate CardInspector/Dialog window. */
-    private fun screenRect(tag: String): RectF {
-        val node = compose.onNodeWithTag(tag, useUnmergedTree = true).fetchSemanticsNode()
+    private fun screenRect(tag: String): RectF =
+        screenRect(compose.onNodeWithTag(tag, useUnmergedTree = true).fetchSemanticsNode())
+
+    private fun screenRect(node: SemanticsNode): RectF {
         var root = node
         while (root.parent != null) root = checkNotNull(root.parent)
         val rootId = root.id
@@ -284,16 +286,29 @@ class LocalMotionUiTest {
         fun firstText(node: SemanticsNode): SemanticsNode? =
             if (!node.config.getOrNull(SemanticsProperties.Text).isNullOrEmpty()) node
             else node.children.firstNotNullOfOrNull { child -> firstText(child) }
+        drawFrame()
         val group = compose.onNodeWithTag("card-source-content", useUnmergedTree = true).fetchSemanticsNode()
         val caption = checkNotNull(firstText(group))
-        assertTrue("Real source caption must be fully visible",
-            caption.boundsInRoot.height >= caption.size.height - 1)
-        val image = capture("card-source-content")
+        val bounds = caption.boundsInRoot
+        val diagnostic = "caption bounds=" + bounds + " size=" + caption.size +
+            " groupBounds=" + group.boundsInRoot + " groupSize=" + group.size
+        assertTrue("Real source caption must be fully visible: " + diagnostic,
+            caption.size.width > 0 && caption.size.height > 0 &&
+                bounds.width >= caption.size.width - 1 && bounds.height >= caption.size.height - 1)
+        val rect = screenRect(caption)
+        val image = checkNotNull(automation.takeScreenshot())
         try {
-            val height = ceil(caption.boundsInRoot.bottom - group.boundsInRoot.top).toInt()
-            assertTrue("Caption crop excludes the asynchronous native thumbnail", height in 1..image.height)
+            val left = floor(rect.left).toInt(); val top = floor(rect.top).toInt()
+            val right = ceil(rect.right).toInt(); val bottom = ceil(rect.bottom).toInt()
+            val screenDiagnostic = diagnostic + " screen=" + rect + " screenshot=" + image.width + "x" + image.height
+            android.util.Log.i("InkWeft-LM66", "Actual source caption capture " + screenDiagnostic)
+            assertTrue("Caption crop must contain its complete actual screen region: " + screenDiagnostic,
+                rect.left.isFinite() && rect.top.isFinite() && rect.right.isFinite() && rect.bottom.isFinite() &&
+                    left >= 0 && top >= 0 && right > left && bottom > top &&
+                    right <= image.width && bottom <= image.height)
             val text = caption.config.getOrNull(SemanticsProperties.Text).orEmpty().joinToString("\n") { it.text }
-            return text to Bitmap.createBitmap(image, 0, 0, image.width, height)
+            // Sample only the actual text node; the asynchronous thumbnail is a separate control.
+            return text to Bitmap.createBitmap(image, left, top, right - left, bottom - top)
         } finally { image.recycle() }
     }
 
@@ -480,16 +495,28 @@ class LocalMotionUiTest {
     private fun actualScale(): Pair<String, Float> = main {
         val lookup = Class.forName("androidx.compose.ui.platform.WindowRecomposer_androidKt")
             .getMethod("getCompositionContext", View::class.java)
-        var view: View? = support.native<InkCanvasView>()
-        var composition: Any? = null
-        while (view != null && composition == null) {
-            composition = lookup.invoke(null, view)
-            view = view.parent as? View
+        var view: View = support.native<InkCanvasView>()
+        assertTrue("Actual native canvas must be attached to its window", view.isAttachedToWindow)
+        var nativeComposition: Any? = null
+        // AndroidViewHolder legitimately carries a child CompositionContext. Compose 1.10.5
+        // installs the window Recomposer on contentChild, immediately below android.R.id.content.
+        while (true) {
+            if (nativeComposition == null) nativeComposition = lookup.invoke(null, view)
+            val parent = view.parent as? View ?: break
+            if (parent.id == android.R.id.content) break
+            view = parent
         }
-        val actual = checkNotNull(composition) { "Actual active view-tree CompositionContext missing" }
-        val context = actual.javaClass.getMethod("getEffectCoroutineContext").invoke(actual) as CoroutineContext
-        val scale = checkNotNull(context[MotionDurationScale]) { "Actual lifecycle context has no MotionDurationScale" }
-        actual.javaClass.name to scale.scaleFactor
+        val native = checkNotNull(nativeComposition) { "Actual native view-tree CompositionContext missing" }
+        val window = checkNotNull(lookup.invoke(null, view)) { "Installed window CompositionContext missing" }
+        fun scale(composition: Any): MotionDurationScale {
+            val context = composition.javaClass.getMethod("getEffectCoroutineContext").invoke(composition) as CoroutineContext
+            return checkNotNull(context[MotionDurationScale]) { "Actual context has no MotionDurationScale" }
+        }
+        val nativeScale = scale(native)
+        val windowScale = scale(window)
+        assertSame("Native child must inherit the installed window's actual MotionDurationScale", windowScale, nativeScale)
+        assertEquals("Native and window effect scales must match", windowScale.scaleFactor, nativeScale.scaleFactor, 0f)
+        window.javaClass.name to nativeScale.scaleFactor
     }
 
     @Test fun cardSectionsEnterOnceAndDisposeCollapsedSourceAtTheNextRealFrame() {

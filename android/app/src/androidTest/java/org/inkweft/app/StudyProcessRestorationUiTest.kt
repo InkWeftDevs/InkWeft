@@ -138,12 +138,14 @@ class StudyProcessRestorationUiTest {
             assertTrue(panel(current, note.id).opened.value); assertEquals(1, study(current, note.id).lastTab)
         }
         compose.onNodeWithTag("node-title-input").assertTextContains(text)
+        compose.onNodeWithTag("node-title-input", useUnmergedTree = true)
             .assert(hasAnyAncestor(hasTestTag("outline-title-$root")))
-        compose.onAllNodesWithTag("node-title-editor").assertCountEquals(1)
+            .assert(hasAnyAncestor(hasTestTag("outline-row-$root")))
+        compose.onAllNodesWithTag("node-title-editor", useUnmergedTree = true).assertCountEquals(1)
         assertEquals(beforeCards, runBlocking { app.study.cards(note.id).first() })
         assertEquals(beforeNodes, runBlocking { app.study.nodes(note.id).first() })
         tap("node-title-cancel")
-        compose.onNodeWithTag("node-title-editor").assertDoesNotExist()
+        compose.onNodeWithTag("node-title-editor", useUnmergedTree = true).assertDoesNotExist()
         assertEquals(beforeCards, runBlocking { app.study.cards(note.id).first() })
         assertEquals(beforeNodes, runBlocking { app.study.nodes(note.id).first() })
     }
