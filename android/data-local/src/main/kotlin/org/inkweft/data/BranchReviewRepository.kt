@@ -42,6 +42,36 @@ class BranchReviewRepository(private val db: NoteDatabase) {
             questions.associate { it.first.questionId to it.second })
     }
 
+    suspend fun prepareCard(ref: MapRef, cardId: String, expectedCardRevision: Long,
+                            nodeId: String? = null, scope: ReviewQuestionScope = ReviewQuestionScope.ALL): BranchReviewPlan = db.withTransaction {
+        requireAvailableBook(ref.notebookId)
+        ref.mapId?.let { mapId ->
+            val map = db.knowledge().get(mapId)
+            require(map != null && map.notebookId == ref.notebookId && !map.removed && map.data() is KnowledgeData.MapDefinition) {
+                "BRANCH_REVIEW_MAP_UNAVAILABLE"
+            }
+        }
+        val card = requireNotNull(db.study().card(cardId)) { "BRANCH_REVIEW_CARD_UNAVAILABLE" }
+        require(card.notebookId == ref.notebookId && card.trashedAt == null) { "BRANCH_REVIEW_CARD_UNAVAILABLE" }
+        require(card.revision == expectedCardRevision) { "BRANCH_REVIEW_CARD_VERSION_CHANGED" }
+        nodeId?.let { id ->
+            val matches = if (ref.mapId == null) {
+                db.study().node(id)?.let { it.notebookId == ref.notebookId && !it.removed && it.cardId == card.id } == true
+            } else {
+                val row = db.knowledge().get(id)
+                val node = row?.data() as? KnowledgeData.MapOccurrence
+                row != null && row.notebookId == ref.notebookId && !row.removed && node != null && node.mapId == ref.mapId && node.cardId == card.id
+            }
+            require(matches) { "BRANCH_REVIEW_NODE_UNAVAILABLE" }
+        }
+        val rows = db.knowledge().forBook(ref.notebookId).filter {
+            !it.removed && (it.data() as? KnowledgeData.Question)?.cardId == card.id
+        }
+        val questions = questionReferences(rows, mapOf(card.id to card))
+        BranchReview.select(BranchReview.card(ref, card.id, card.revision, card.title, questions.map { it.first }, nodeId),
+            scope, questions.associate { it.first.questionId to it.second })
+    }
+
     suspend fun prepareCollection(book: String, collectionId: String, expectedRevision: Long, scope: ReviewQuestionScope = ReviewQuestionScope.ALL): BranchReviewPlan = db.withTransaction {
         requireAvailableBook(book)
         val row = requireNotNull(db.knowledge().get(collectionId)) { "BRANCH_REVIEW_COLLECTION_UNAVAILABLE" }

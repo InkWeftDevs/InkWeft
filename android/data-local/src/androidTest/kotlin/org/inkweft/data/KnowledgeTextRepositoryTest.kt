@@ -263,6 +263,73 @@ class KnowledgeTextRepositoryTest {
         assertEquals(before, authorState(db))
     }
 
+    @Test fun typedIncomingPreviewRequiresExplicitModeAndKeepsIdentityVersionAndReadOnlyGuards() = fixture { db, book ->
+        val targetBook = WorkspaceRepository(db).create("应用目标册", false, PaperStyle.DOTS).id
+        val source = TargetRef(TargetKind.CARD, checkNotNull(card(db, book, "应用来源", "来源旧正文").cardId))
+        val target = TargetRef(TargetKind.CARD, checkNotNull(card(db, targetBook, "应用目标", "目标固定正文").cardId))
+        val replacement = TargetRef(TargetKind.CARD, checkNotNull(card(db, targetBook, "另一应用目标").cardId))
+        val author = KnowledgeRepository(db)
+        val application = KnowledgeCommand(id(), book, id(), 0,
+            KnowledgeData.Link(source, target, RelationKind.APPLICATION, pinnedRevision = 1))
+        author.submit(application)
+        StudyRepository(db).submit(StudyCommand(id(), book, StudyAction.EDIT, cardId = source.id,
+            expectedRevision = 1, title = "应用来源新版", body = "来源当前正文"))
+        StudyRepository(db).submit(StudyCommand(id(), targetBook, StudyAction.EDIT, cardId = target.id,
+            expectedRevision = 1, title = "应用目标新版", body = "目标当前正文"))
+        // The explicit mode still rejects rows whose notebook does not own their source.
+        val foreign = KnowledgeRow(id(), targetBook, 1, KnowledgeCodec.encode(application.data))
+        db.knowledge().insert(foreign)
+        val repository = KnowledgeTextRepository(db)
+        var before = authorState(db)
+        reject(KnowledgeRejection.CONFLICT) { repository.preview(target, application.id, 1, incoming = true) }
+        reject(KnowledgeRejection.CONFLICT) { repository.observePreview(target, application.id, 1, incoming = true).first() }
+        val incoming = repository.preview(target, application.id, 1, incoming = true, includeAllIncomingRelations = true)
+        assertEquals(source, incoming.target)
+        assertEquals("应用来源新版", incoming.title)
+        assertEquals("来源当前正文", incoming.body)
+        assertNull(incoming.pinnedRevision)
+        assertTrue(incoming.canOpen)
+        assertEquals(incoming, repository.observePreview(target, application.id, 1,
+            incoming = true, includeAllIncomingRelations = true).first())
+        val outgoing = repository.preview(source, application.id, 1, includeAllIncomingRelations = true)
+        assertEquals(target, outgoing.target)
+        assertEquals("目标固定正文", outgoing.body)
+        assertEquals(1L, outgoing.pinnedRevision)
+        reject(KnowledgeRejection.CONFLICT) {
+            repository.preview(replacement, application.id, 1, incoming = true, includeAllIncomingRelations = true)
+        }
+        reject(KnowledgeRejection.CONFLICT) {
+            repository.preview(TargetRef(TargetKind.PAGE, target.id), application.id, 1,
+                incoming = true, includeAllIncomingRelations = true)
+        }
+        reject(KnowledgeRejection.CONFLICT) {
+            repository.preview(target, foreign.id, 1, incoming = true, includeAllIncomingRelations = true)
+        }
+        assertEquals(before, authorState(db))
+        author.submit(KnowledgeCommand(id(), book, application.id, 1,
+            KnowledgeData.Link(source, replacement, RelationKind.APPLICATION, pinnedRevision = 1)))
+        before = authorState(db)
+        reject(KnowledgeRejection.CONFLICT) {
+            repository.preview(replacement, application.id, 1, incoming = true, includeAllIncomingRelations = true)
+        }
+        reject(KnowledgeRejection.CONFLICT) {
+            repository.preview(target, application.id, 2, incoming = true, includeAllIncomingRelations = true)
+        }
+        assertEquals(source, repository.preview(replacement, application.id, 2,
+            incoming = true, includeAllIncomingRelations = true).target)
+        assertEquals(before, authorState(db))
+        val workspace = checkNotNull(db.workspace().get(book))
+        assertTrue(WorkspaceRepository(db).organize(book, workspace.revision, workspace.folder, workspace.tags, workspace.favorite, true))
+        before = authorState(db)
+        val unavailable = repository.observePreview(replacement, application.id, 2,
+            incoming = true, includeAllIncomingRelations = true).first()
+        assertEquals(source, unavailable.target)
+        assertEquals("来源当前正文", unavailable.body)
+        assertFalse(unavailable.canOpen)
+        assertNull(unavailable.pinnedRevision)
+        assertEquals(before, authorState(db))
+    }
+
     @Test fun incomingRejectsStaleRemovedAndRetypedRelationshipsWithoutWriting() = fixture { db, book ->
         val source = TargetRef(TargetKind.NOTE, book)
         val original = TargetRef(TargetKind.CARD, checkNotNull(card(db, book, "原目标").cardId))

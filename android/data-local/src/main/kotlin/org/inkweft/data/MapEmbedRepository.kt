@@ -26,19 +26,21 @@ class MapEmbedRepository(private val db:NoteDatabase){
         val ids=scene.nodes.associate{it.id to fresh("node:${it.id}")}
         val structure=scene.nodes.filter{it.cardId==null}.map{MapStructure(ids.getValue(it.id),it.parentId?.let(ids::get),it.title,it.x,it.y)}
         val knowledge=KnowledgeRepository(db)
-        knowledge.submit(KnowledgeCommand(fresh("create-map"),ref.notebookId,newRef.mapId!!,0,KnowledgeData.MapDefinition((scene.title.take(112)+" · 独立副本").take(120),structures=structure)))
+        val layout=ref.mapId?.let{(db.knowledge().get(it)?.data() as? KnowledgeData.MapDefinition)?.layout}?:"right"
+        val changes=mutableListOf(KnowledgeRow(newMapId,ref.notebookId,1,
+            KnowledgeCodec.encode(KnowledgeData.MapDefinition((scene.title.take(112)+" · 独立副本").take(120),layout,structure))))
         val cardIds=scene.nodes.mapNotNull{it.cardId}.distinct().associateWith{fresh("card:$it")}
         cardIds.forEach{(old,id)->
             val card=checkNotNull(db.study().card(old));require(card.trashedAt==null)
             db.study().addCard(card.copy(id=id,revision=1));db.study().revision(StudyCardRevisionRow(id,1,card.title,card.body,null))
             db.study().source(old)?.let{db.study().source(it.copy(cardId=id))}
         }
-        // Parents are already present before their children are inserted.
-        val rows=StudyOutline.project(scene.nodes.map{StudyNode(it.id,it.cardId?:it.id,it.parentId,it.x,it.y,it.revision)},emptySet(),null).rows
-        rows.forEach{row->val n=scene.nodes.first{it.id==row.node.id};n.cardId?.let{card->
-            knowledge.submit(KnowledgeCommand(fresh("place:${n.id}"),ref.notebookId,ids.getValue(n.id),0,KnowledgeData.MapOccurrence(newMapId,cardIds.getValue(card),n.parentId?.let(ids::get),n.x,n.y)))
-        }}
-        db.knowledge().receipt(KnowledgeReceiptRow(operationId,ref.notebookId,digest,newMapId));newRef
+        scene.nodes.forEach{n->n.cardId?.let{card->changes+=KnowledgeRow(ids.getValue(n.id),ref.notebookId,1,
+            KnowledgeCodec.encode(KnowledgeData.MapOccurrence(newMapId,cardIds.getValue(card),n.parentId?.let(ids::get),n.x,n.y)))}}
+        knowledge.commitGraph(ref.notebookId,knowledge.graphChanges(ref.notebookId,changes,
+            mapOf<String?,List<String>>(newMapId to scene.nodes.map{ids.getValue(it.id)})))
+        db.knowledge().receipt(KnowledgeReceiptRow(operationId,ref.notebookId,digest,newMapId))
+        db.notes().touch(ref.notebookId,System.currentTimeMillis());newRef
     }
     suspend fun validateReferences(book:String,objects:List<PageObject>){
         objects.mapNotNull{it.mapEmbed}.filter{it.policy==MapEmbedPolicy.LIVE}.forEach{embed->

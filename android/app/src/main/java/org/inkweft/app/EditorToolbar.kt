@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 internal object EditorToolOrder {
-    val labels=linkedMapOf("undo" to "撤销","redo" to "重做","pen" to "笔","map" to "导图","eraser" to "橡皮","lasso" to "套索","area" to "圈选擦除","image" to "图片","camera" to "拍照","text" to "文本框","excerpt" to "摘录","tag" to "标签","shape" to "图形","sticker" to "贴纸","objects" to "对象选择","beauty" to "实时字迹调整","readonly" to "只读模式","finger" to "手写／电容笔","add-page" to "添加页面","fullscreen" to "全屏专注","export" to "导出文档","timer" to "计时器")
+    val labels=linkedMapOf("undo" to "撤销","redo" to "重做","pen" to "笔","map" to "导图","eraser" to "橡皮","lasso" to "套索","area" to "圈选擦除","image" to "图片","camera" to "拍照","text" to "文本框","excerpt" to "摘录","tag" to "标签","shape" to "图形","sticker" to "贴纸","objects" to "对象选择","beauty" to "实时字迹调整","readonly" to "只读模式","finger" to "手指书写／移动","add-page" to "添加页面","fullscreen" to "全屏专注","export" to "导出文档","timer" to "计时器")
     val fixed=setOf("finger")
     val primary=setOf("undo","redo","pen","eraser","lasso","excerpt","map","finger")
     val defaultHidden=setOf("shape","sticker","objects","camera","tag","area","beauty","readonly","finger","add-page","fullscreen","export","timer")
@@ -26,7 +26,7 @@ internal object EditorToolOrder {
     fun read(context:Context):List<String>{val raw=context.getSharedPreferences("inkweft-editor",0).getString("toolbar-order-v32","").orEmpty().split(',').filter{it in labels}.distinct();return raw+labels.keys.filterNot{it in raw}}
 }
 /** Stable identifiers preserve visibility when new tools are added. Changes apply immediately. */
-@Composable internal fun EditorToolbar(externalMore:Boolean=false,moreRequest:Int=0,content:@Composable (String,()->Unit)->Unit){
+@Composable internal fun EditorToolbar(fullScreen:Boolean=false,content:@Composable (String,()->Unit)->Unit){
     val context=LocalContext.current;val prefs=remember{context.getSharedPreferences("inkweft-editor",0)}
     var order by remember{mutableStateOf(EditorToolOrder.read(context))}
     var hidden by remember{mutableStateOf((prefs.getStringSet("toolbar-hidden-v32",EditorToolOrder.defaultHidden).orEmpty()+EditorToolOrder.defaultHidden.filter{it !in prefs.getString("toolbar-order-v32","").orEmpty().split(',')})-EditorToolOrder.fixed)}
@@ -38,19 +38,25 @@ internal object EditorToolOrder {
         if(next in group.indices){val from=order.indexOf(id);val target=order.indexOf(group[next]);order=order.toMutableList().apply{removeAt(from);add(target,id)};save()}
     }
     var more by remember{mutableStateOf(false)}
-    var consumedMoreRequest by remember{mutableIntStateOf(moreRequest)}
-    LaunchedEffect(moreRequest){if(moreRequest>consumedMoreRequest)more=true;consumedMoreRequest=moreRequest}
     BoxWithConstraints{
-    val visiblePrimary=EditorToolOrder.primary+if(maxWidth>=528.dp)setOf("image","text")else emptySet()
+    val visiblePrimary=(EditorToolOrder.primary-if(fullScreen)emptySet()else setOf("map"))+if(maxWidth>=600.dp)setOf("image","text")else emptySet()
     Row(Modifier.testTag("editor-toolbar"),verticalAlignment=Alignment.CenterVertically){
-        Row(Modifier.weight(1f,fill=false).horizontalScroll(rememberScrollState())){
+        Row(Modifier.weight(1f).horizontalScroll(rememberScrollState()),verticalAlignment=Alignment.CenterVertically){
             order.filter{it in visiblePrimary&&it !in hidden&&it !in EditorToolOrder.fixed}.forEach{key(it){EditorToolSlot(it){content(it){}}}}
         }
+        VerticalDivider(Modifier.height(32.dp).padding(horizontal=4.dp),color=Line)
         EditorToolSlot("finger"){content("finger"){}}
         Box {
-            if(!externalMore)IconButton(onClick={more=true},modifier=Modifier.testTag("toolbar-more").describedAs("更多工具")){Glyph("more")}
+            EditorTool("更多","more",false,true,"toolbar-more",Modifier.describedAs("更多工具")){more=true}
             DropdownMenu(more,{more=false},containerColor=androidx.compose.ui.graphics.Color.White){
-                Row(Modifier.widthIn(max=320.dp).horizontalScroll(rememberScrollState())){order.filter{it !in visiblePrimary&&it !in hidden}.forEach{id->EditorToolSlot(id){content(id){more=false}}}}
+                val overflow=order.filter{it !in visiblePrimary&&it !in hidden&&it !in EditorToolOrder.fixed&&(fullScreen||it!="map")}
+                listOf("插入" to setOf("image","camera","text","shape","sticker"),"页面与工具" to (EditorToolOrder.labels.keys-setOf("image","camera","text","shape","sticker"))).forEach{(title,ids)->
+                    val group=overflow.filter{it in ids}
+                    if(group.isNotEmpty()){
+                        Text(title,Modifier.padding(horizontal=16.dp,vertical=8.dp),style=MaterialTheme.typography.labelLarge,color=Quiet)
+                        Row(Modifier.widthIn(max=320.dp).horizontalScroll(rememberScrollState())){group.forEach{id->EditorToolSlot(id){content(id){more=false}}}}
+                    }
+                }
                 DropdownMenuItem(text={Text("自定义快捷栏")},onClick={more=false;customizing=true},modifier=Modifier.testTag("toolbar-customize"))
             }
         }
@@ -107,11 +113,11 @@ internal object EditorToolOrder {
     }
 }
 
-/** Same visual/hit-area contract for every tool; names remain available on long press. */
+/** Allow visible labels to grow with text size; keep names available on long press. */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable internal fun EditorToolSlot(id:String,content:@Composable ()->Unit){
     TooltipBox(positionProvider=TooltipDefaults.rememberPlainTooltipPositionProvider(),
         tooltip={PlainTooltip{Text(EditorToolOrder.labels[id].orEmpty())}},state=rememberTooltipState()){
-        Box(Modifier.size(48.dp),contentAlignment=Alignment.Center){content()}
+        Box(Modifier.widthIn(min=48.dp).heightIn(min=56.dp),contentAlignment=Alignment.Center){content()}
     }
 }

@@ -1,0 +1,803 @@
+{
+  "format": "InkWeft public synthetic evidence v1",
+  "updatedDate": "2026-10-04",
+  "branch": "codex/local/ux-learning-flow-20261003",
+  "documentVersion": "随本报告提交的版本",
+  "privacy": "仅已接受合成画面、公开方法身份、SHA256和脱敏结果；原视频留本机。",
+  "build04b": {
+    "sourceCommit": "b466ad776424e219796f84dfdd6ff6381c230872",
+    "fullTrackedDiffSha256": "02b71372e7ef42eb646c47cea1d0e1246f486bd65c1a13ef8a74daf74bb64c74",
+    "trackedManifestSha256": "80d68e0e9cf844131b64aa3da92972a868df1a0facda87fbad106d3b321a42dd",
+    "freezeReceiptSha256": "426dfd968518fb317207d5ee622fee38651f2414ab13ac3be419346444dc577a",
+    "finalReceiptSha256": "82ff12c1e88b0e105614568e498535919d60ec8f1fa3fe0cfd95278a463a9abd",
+    "recordedUtc": "2026-10-03T22:43:27.938596+00:00",
+    "lint": {
+      "status": "PASS",
+      "counts": {
+        "Warning": 141,
+        "Error": 0,
+        "Fatal": 0
+      },
+      "baseline": "04",
+      "comparisonReceiptSha256": "639ebc39ac88f7b8ca58e1123ace3093975303c961f2aa24154c2e1ee6b0bec5",
+      "added": 0,
+      "removed": 0,
+      "matchingWarnings": 141,
+      "comparisonKey": "id/severity/message/file，含重复次数，忽略行列"
+    },
+    "artifacts": [
+      {
+        "kind": "app",
+        "sha256": "c12caad57412efe5933f0446d2e56f1aa2ce90ff60c4bc8f9632b6ef34d01079",
+        "certificateSha256": "18e67dbce88152dbe4d4821b5a3a513a409a3df4eac9261f4c11126c36e43969",
+        "rebuilt": true,
+        "reused": false,
+        "artifactOriginBatch": "04b"
+      },
+      {
+        "kind": "app-test",
+        "sha256": "092d96935813a5a5692cf9b42d8a061773795a4946a23d59ff06d100fb338f3d",
+        "certificateSha256": "18e67dbce88152dbe4d4821b5a3a513a409a3df4eac9261f4c11126c36e43969",
+        "rebuilt": true,
+        "reused": false,
+        "artifactOriginBatch": "04b"
+      },
+      {
+        "kind": "room-test",
+        "sha256": "f3b9ea801f3acc25f654f4ab38005ecb960bbc7102b402ba6b27de24fc4002ca",
+        "certificateSha256": "18e67dbce88152dbe4d4821b5a3a513a409a3df4eac9261f4c11126c36e43969",
+        "rebuilt": false,
+        "reused": true,
+        "artifactOriginBatch": "04"
+      }
+    ],
+    "historicalEvidence": {
+      "core": {
+        "batch": "04",
+        "PASS": 317,
+        "executedIn04b": 0
+      },
+      "room": {
+        "batch": "04",
+        "PASS": 37,
+        "executedIn04b": 0
+      }
+    }
+  },
+  "ui04b": {
+    "mode": "PHYSICAL_WITH_ONE_INITIAL_FOREGROUND_LAUNCH",
+    "receiptSha256": "822789f502c99111720b5a11c3b09b91ecc2983f899300bb71b140d83878a483",
+    "counts": {
+      "PASS": 8,
+      "FAIL": 0,
+      "NOT_RUN": 0
+    },
+    "startedUtc": "2026-10-03T22:40:55.140747+00:00",
+    "endedUtc": "2026-10-03T22:43:43.540851+00:00",
+    "methods": [
+      {
+        "method": "org.inkweft.app.StudyRelationsUiTest#actualToggleAndSelectedOccurrenceChangeOnlyTheReadOnlyOverlay",
+        "status": "PASS",
+        "settingsRestoredToRecordedBaseline": true
+      },
+      {
+        "method": "org.inkweft.app.KnowledgeTextLinksUiTest#inlineTitleAndAliasOpenConfirmedTargetWhileDuplicateNamesRequireChoice",
+        "status": "PASS",
+        "settingsRestoredToRecordedBaseline": true
+      },
+      {
+        "method": "org.inkweft.app.KnowledgeTextLinksUiTest#reopenedLivePreviewReadsCurrentBodyWhilePinnedPreviewKeepsExactHistory",
+        "status": "PASS",
+        "settingsRestoredToRecordedBaseline": true
+      },
+      {
+        "method": "org.inkweft.app.KnowledgeTextLinksUiTest#pickerAndPreviewRecreationReturnToOriginalCardNodeAndViewportWithoutWriting",
+        "status": "PASS",
+        "settingsRestoredToRecordedBaseline": true
+      },
+      {
+        "method": "org.inkweft.app.KnowledgeTextLinksUiTest#replacedAndRemovedLinkAreRevalidatedBeforeOpenWithoutSilentlyChangingTarget",
+        "status": "PASS",
+        "settingsRestoredToRecordedBaseline": true
+      },
+      {
+        "method": "org.inkweft.app.KnowledgeTextLinksUiTest#backlinkEntryRestoresLiveSourcePreviewAndOriginalCardWithoutAuthorWrites",
+        "status": "PASS",
+        "settingsRestoredToRecordedBaseline": true
+      },
+      {
+        "method": "org.inkweft.app.KnowledgeTextLinksUiTest#pageAndNotebookBacklinksKeepDistinctScopeAndReadOnlyPreviewIdentity",
+        "status": "PASS",
+        "settingsRestoredToRecordedBaseline": true
+      },
+      {
+        "method": "org.inkweft.app.KnowledgeTextLinksUiTest#narrow375LargeTextKeepsInlinePickerAndPreviewControlsReachable",
+        "status": "PASS",
+        "settingsRestoredToRecordedBaseline": true
+      }
+    ]
+  },
+  "images": [
+    {
+      "file": "screenshots/library-before.png",
+      "sha256": "8f6224a248b74249b735147d3f3d91bdab8c9ecedd6b8e22ae6b48ebdffcbe3e",
+      "acceptedEvidence": true,
+      "status": "PASS: inspected exact saved screenshot",
+      "scope": "资料库前态；没有视觉改版"
+    },
+    {
+      "file": "screenshots/library-after.png",
+      "sha256": "56245d20df2c7f804f7657b717c2c74dfe0f99880f69a09adffec9d3389b38e2",
+      "acceptedEvidence": true,
+      "status": "PASS",
+      "scope": "第1批相同过滤范围"
+    },
+    {
+      "file": "screenshots/writing-before.png",
+      "sha256": "4e084b62be12b6273abb1939f8f30881c496fa66a189ce5f16ee587f457a73b2",
+      "acceptedEvidence": true,
+      "status": "PASS: inspected exact saved screenshot",
+      "scope": "自动触屏轨迹，非真人笔"
+    },
+    {
+      "file": "screenshots/writing-after.png",
+      "sha256": "4a17e7eba9c54166a9e483a695271a36edb555eeaee5e53460858fc8f7c8c248",
+      "acceptedEvidence": true,
+      "status": "PASS",
+      "scope": "第1批工具与导航层级"
+    },
+    {
+      "file": "screenshots/map-before.png",
+      "sha256": "41cc7cbebde27210596a0cbef4e6effe604217656e68cca71c891f81e9a51110",
+      "acceptedEvidence": true,
+      "status": "PASS: inspected exact saved screenshot",
+      "scope": "旧通用摘录标题／遮挡"
+    },
+    {
+      "file": "screenshots/map-after-03a.png",
+      "sha256": "1fcc8ad2c628d2075dffea2ff2cf6a7f2749c943d00c9ea087f61948786e0e9c",
+      "acceptedEvidence": true,
+      "status": "PASS",
+      "scope": "03a布局应用后"
+    },
+    {
+      "file": "screenshots/links-before.png",
+      "sha256": "542776b38479d0b9014382bbbe936be8a454a9c84ac59b7e1956f4990d0d26a5",
+      "acceptedEvidence": true,
+      "status": "PASS: inspected exact saved screenshot",
+      "scope": "旧关联空态"
+    },
+    {
+      "file": "screenshots/links-after.png",
+      "sha256": "cfe5907e8739f1f525db7dd00eb184e6456dcd28497ff6ffaac5347525c25061",
+      "acceptedEvidence": true,
+      "status": "PASS",
+      "scope": "第1批相同页面空态"
+    },
+    {
+      "file": "screenshots/landscape-paper-map.png",
+      "sha256": "15e1897785004ababab5a0c7d729dbf291979384032847b4ee7689b03aa81208",
+      "acceptedEvidence": true,
+      "status": "PASS",
+      "scope": "应用内双栏，不是系统分屏"
+    },
+    {
+      "file": "screenshots/system-split-map.png",
+      "sha256": "0563906a1d4a5c3b97179616430fbc9d67b6312ed4c424fb91ffd93efa6e4baa",
+      "acceptedEvidence": true,
+      "status": "PASS",
+      "scope": "真实OEM多窗口"
+    },
+    {
+      "file": "screenshots/system-split-source.png",
+      "sha256": "1ce092c4e91901763d7263cf83002b768f8aaf0087dfde3c8c9a1133e9ade60d",
+      "acceptedEvidence": true,
+      "status": "PASS",
+      "scope": "真实OEM多窗口原文"
+    },
+    {
+      "file": "screenshots/system-split-return.png",
+      "sha256": "5c34fb6869855564e6cc7b32f45009c9ff26e76712bd05a3352b0b288fd8650a",
+      "acceptedEvidence": true,
+      "status": "PASS",
+      "scope": "真实OEM多窗口返回"
+    },
+    {
+      "file": "screenshots/outline-ime-03a.png",
+      "sha256": "4922154fff7678dbd60f765dcf08fcac1aa878f17b7622fcb29abcb4e5a52614",
+      "acceptedEvidence": true,
+      "status": "PASS",
+      "scope": "真实IME普通操作，不是25项夹具"
+    },
+    {
+      "file": "screenshots/organize-actions-03a.png",
+      "sha256": "1731a7aabd4e909f8188d2dd0bd77540c7f8f0f6e5dc4c937b018bc2c7b9561d",
+      "acceptedEvidence": true,
+      "status": "PASS",
+      "scope": "可见整理入口"
+    },
+    {
+      "file": "screenshots/outline-parent-child-03a.png",
+      "sha256": "7ca2c4b6c60987e10478c324a0b208ca820dce41b283ecc5cdc2008b97435d27",
+      "acceptedEvidence": true,
+      "status": "PASS",
+      "scope": "缩进后父子关系"
+    },
+    {
+      "file": "screenshots/collapsed-branch-03a.png",
+      "sha256": "d2e0b2eb566e55b3858fe3138073e204565494e2dee97b8d7cd69ca6be18dfee",
+      "acceptedEvidence": true,
+      "status": "PASS",
+      "scope": "收起一个子节点"
+    },
+    {
+      "file": "screenshots/outline-reopened-03a.png",
+      "sha256": "cd6dfa41efc22de6a1dde5eb4b86cc4416aae601ccd29cc2c7d7f559bfa950e0",
+      "acceptedEvidence": true,
+      "status": "PASS",
+      "scope": "重开保留父级与选中"
+    },
+    {
+      "file": "screenshots/manual-positions-03a.png",
+      "sha256": "13a5640efc1d23a0f8506621f2cb7a3a5ce31b4051ee7371a52afc6a6883d668",
+      "acceptedEvidence": true,
+      "status": "PASS",
+      "scope": "分组后仍是手工位置"
+    },
+    {
+      "file": "screenshots/layout-preview-03a.png",
+      "sha256": "736074ba0538c10ed8db045e748363d0a180f6be90415f4502e10fc1bcc3526a",
+      "acceptedEvidence": true,
+      "status": "PASS",
+      "scope": "预览，不单独证明已应用"
+    },
+    {
+      "file": "screenshots/layout-undo-partial-03a.png",
+      "sha256": "96cc7bdb153e503fc853ee1a16ffd903dd6aad15feacc363accc686133db8fc3",
+      "acceptedEvidence": true,
+      "status": "PARTIAL_STALE_FEEDBACK",
+      "scope": "PARTIAL_STALE_FEEDBACK，待04复验"
+    },
+    {
+      "file": "screenshots/layout-reopened-03a.png",
+      "sha256": "22987823561242d88e57a55bb3335152f7db1c99b4e8d745c3432d608410a3d0",
+      "acceptedEvidence": true,
+      "status": "PASS",
+      "scope": "再次应用并重开"
+    },
+    {
+      "file": "screenshots/source-return-02d.png",
+      "sha256": "5cbe7b60b2c0cbfe93419e3ddf1b75bef2dee0359cb3e063642f2b8264dfb435",
+      "acceptedEvidence": true,
+      "status": "PASS",
+      "scope": "02d返回，保留所属批次"
+    },
+    {
+      "file": "screenshots/links-narrow-preview-04.png",
+      "sha256": "abfbd652205b8d89839b094720211d665b08f93f23b822f8289f53609f8ee968",
+      "acceptedEvidence": true,
+      "status": "PASS",
+      "scope": "04实体UI已接受图；375dp／1.6为instrumentation窗口"
+    },
+    {
+      "file": "screenshots/links-narrow-picker-04.png",
+      "sha256": "4ad19420b6d35a24027ecf4aee66b645e529fc6b5e3ece9291712bf82538400b",
+      "acceptedEvidence": true,
+      "status": "PASS",
+      "scope": "04实体UI已接受图；375dp／1.6为instrumentation窗口"
+    },
+    {
+      "file": "screenshots/links-pinned-history-04.png",
+      "sha256": "fa265257a07ea6774e7a8c27eae00af580e916ce79834d33884423626f7eeb4b",
+      "acceptedEvidence": true,
+      "status": "PASS",
+      "scope": "04实体UI已接受图；375dp／1.6为instrumentation窗口"
+    },
+    {
+      "file": "screenshots/links-recreated-preview-04.png",
+      "sha256": "fb6f31f7ed5dbb0713bb4f4fae589efb178ab9a310a6b9df2a65a1bad8c13842",
+      "acceptedEvidence": true,
+      "status": "PASS",
+      "scope": "04实体UI已接受图；375dp／1.6为instrumentation窗口"
+    },
+    {
+      "file": "screenshots/links-removed-link-04.png",
+      "sha256": "6f76a959ffaaa6a4b329145bbd9d87b69def060235be2701477f489d1bdba3de",
+      "acceptedEvidence": true,
+      "status": "PASS",
+      "scope": "04实体UI已接受图；375dp／1.6为instrumentation窗口"
+    },
+    {
+      "file": "screenshots/links-same-name-choice-04.png",
+      "sha256": "777ad226393de3cc25b1b0cc308d2e810cb49c98ef607416ad8bdcf5b94bc31e",
+      "acceptedEvidence": true,
+      "status": "PASS",
+      "scope": "04实体UI已接受图；375dp／1.6为instrumentation窗口"
+    },
+    {
+      "file": "screenshots/map-default-off-04.png",
+      "sha256": "f9c2602b97b9ec7550331df1dc00b6ae96cdb0aa36f679086e082c7af903e963",
+      "acceptedEvidence": true,
+      "status": "PASS",
+      "scope": "普通主链：默认off、三卡保存父子和位置"
+    },
+    {
+      "file": "screenshots/map-relations-04.png",
+      "sha256": "51b5cafb1fc757931c21d08bb018c1d67586b9e00704a8943ba54a4b379fd4ad",
+      "acceptedEvidence": true,
+      "status": "PASS",
+      "scope": "普通主链：APPLICATION虚线与父子实线分开"
+    },
+    {
+      "file": "screenshots/review-card-scope-04.png",
+      "sha256": "be539cfb5182fd70181be408bb9953062489ca4541eefee74f9c58c58e0c8f42",
+      "acceptedEvidence": true,
+      "status": "PASS",
+      "scope": "当前文本卡1卡2题"
+    },
+    {
+      "file": "screenshots/review-branch-scope-04.png",
+      "sha256": "975c9d642b4669840ed91d447b21633ec8e9a20ea027a1d28ba07811da30bd22",
+      "acceptedEvidence": true,
+      "status": "PASS",
+      "scope": "同分支2卡3题"
+    },
+    {
+      "file": "screenshots/review-card-details-before-04.png",
+      "sha256": "38003597a746607dfb97d98ada4be9150d7962b3b93d76e79c3179ace093a23c",
+      "acceptedEvidence": true,
+      "status": "PASS",
+      "scope": "进入回忆前原详情"
+    },
+    {
+      "file": "screenshots/review-first-hidden-04.png",
+      "sha256": "43bac7ae840390099aac3728f6d21bfa6da0843e488c704274e74f642f7bf7bb",
+      "acceptedEvidence": true,
+      "status": "PASS",
+      "scope": "第一题隐藏线索"
+    },
+    {
+      "file": "screenshots/review-revealed-context-04.png",
+      "sha256": "2e0ebec950a0888c642c3a9bafb76909ce989a0630fa01b6fa26f6f147354c9f",
+      "acceptedEvidence": true,
+      "status": "PASS",
+      "scope": "揭答与同PDF上下文"
+    },
+    {
+      "file": "screenshots/review-source-page-04.png",
+      "sha256": "aabe2002c490a23061b74b8515b0716d1a0ecfda90e31f36f561d3a6c30bac9e",
+      "acceptedEvidence": true,
+      "status": "PASS",
+      "scope": "同PDF第1页全页只读来源"
+    },
+    {
+      "file": "screenshots/review-next-hidden-04.png",
+      "sha256": "7d7c962cebd416c39d524c4138225ab64586f83386683b7859b7fc4241b0ecfd",
+      "acceptedEvidence": true,
+      "status": "PASS",
+      "scope": "一次明确标记后第二题重新隐藏"
+    },
+    {
+      "file": "screenshots/review-ended-04.png",
+      "sha256": "a0a3ebdd17287ddf1cebd17d6183e9f8da1c09cfb2c6ebe2e33800aba711d1b8",
+      "acceptedEvidence": true,
+      "status": "PASS",
+      "scope": "1理解1待复习0跳过；不宣称SRS"
+    },
+    {
+      "file": "screenshots/review-card-details-returned-04.png",
+      "sha256": "9d66586448e32af92397a7d35850b908fb0abfdb75a1f4342ca43431b3ee778e",
+      "acceptedEvidence": true,
+      "status": "PASS",
+      "scope": "退出回忆回原详情"
+    },
+    {
+      "file": "screenshots/review-map-returned-04.png",
+      "sha256": "331fab8d6d6a0fb7fcbfc337a233e2aaa89344e34dfe4010cb5aa0ad97fae8c2",
+      "acceptedEvidence": true,
+      "status": "PASS",
+      "scope": "回原选中和视口；像素比较只限画面"
+    },
+    {
+      "file": "screenshots/review-image-answer-04.png",
+      "sha256": "353dd99e35feb2d493aab79a42060e256aa637239be0e5b1887bf31f58891c12",
+      "acceptedEvidence": true,
+      "status": "PASS",
+      "scope": "PASS：C卡一题，揭答后图表原迹可读，未评分"
+    },
+    {
+      "file": "screenshots/review-image-source-page2-04.png",
+      "sha256": "c9bd3026b3178bb837679f3a4734c905ffe4119fb2516bd847f9ef884924d896",
+      "acceptedEvidence": true,
+      "status": "PASS",
+      "scope": "PASS：同PDF第2页只读来源及返回题目入口"
+    },
+    {
+      "file": "screenshots/outside-direction-partial-04.png",
+      "sha256": "082b50371e20933da68d8c16addca41c42216e9c2fb34fc56a548bb108be8747",
+      "acceptedEvidence": true,
+      "status": "PARTIAL_WRONG_INITIAL_DIRECTION",
+      "scope": "PARTIAL_WRONG_INITIAL_DIRECTION：outgoing1却先落incoming0"
+    },
+    {
+      "file": "screenshots/fold-layout-partial-04.png",
+      "sha256": "e1e7d8c42b3da6f657313bf974f8c23c8cd1469303075cf89efa4f4959ce02a4",
+      "acceptedEvidence": true,
+      "status": "PARTIAL_LAYOUT_SHIFT_AND_GLYPH",
+      "scope": "PARTIAL_LAYOUT_SHIFT_AND_GLYPH：102px下移及折叠减号"
+    },
+    {
+      "file": "screenshots/review-native-49-04.png",
+      "sha256": "c84475a4609cfddc87a2d8379db06d939b2245a3a1e8acc9b26fcb7837949dff",
+      "acceptedEvidence": true,
+      "status": "PASS_FOR_RECORDED_REVIEW_STEPS",
+      "scope": "04已接受视频原生帧；PTS 17.227s；保留原图SHA"
+    },
+    {
+      "file": "screenshots/review-native-50-04.png",
+      "sha256": "5f395af8ba832d3021031a1d272c7eac9ff8fa3927fe92c89a71bf8f5448d3a3",
+      "acceptedEvidence": true,
+      "status": "PASS_FOR_RECORDED_REVIEW_STEPS",
+      "scope": "04已接受视频原生帧；PTS 49.108s；保留原图SHA"
+    },
+    {
+      "file": "screenshots/review-native-51-04.png",
+      "sha256": "d811d1ac6f1aa2c577743b9bb30747ff76c17111559c71627f8cab5aeef6b6fd",
+      "acceptedEvidence": true,
+      "status": "PASS_FOR_RECORDED_REVIEW_STEPS",
+      "scope": "04已接受视频原生帧；PTS 76.358s；保留原图SHA"
+    },
+    {
+      "file": "screenshots/review-native-52-04.png",
+      "sha256": "ec15f5cf7ce4675c4969c7aec2e0df858a09cab788a4119043b160701ade32e4",
+      "acceptedEvidence": true,
+      "status": "PASS_FOR_RECORDED_REVIEW_STEPS",
+      "scope": "04已接受视频原生帧；PTS 111.327s；保留原图SHA"
+    },
+    {
+      "file": "screenshots/review-native-53-04.png",
+      "sha256": "9d995787b95f72c1f144d33914cbd75cfd56fc10afc8a64ea197dd9100369283",
+      "acceptedEvidence": true,
+      "status": "PASS_FOR_RECORDED_REVIEW_STEPS",
+      "scope": "04已接受视频原生帧；PTS 132.208s；保留原图SHA"
+    },
+    {
+      "file": "screenshots/review-native-54-04.png",
+      "sha256": "879b9814051a215ba612d60e8a1d97d9f0d0b25e8ea0d1d6a43b7792f2fdaedb",
+      "acceptedEvidence": true,
+      "status": "PASS_FOR_RECORDED_REVIEW_STEPS",
+      "scope": "04已接受视频原生帧；PTS 164.492s；保留原图SHA"
+    },
+    {
+      "file": "screenshots/review-native-55-04.png",
+      "sha256": "601df08c58565d781cf2d2ab6bbce0a85868edf46006d2c26cb782f2236d7ac4",
+      "acceptedEvidence": true,
+      "status": "PASS_FOR_RECORDED_REVIEW_STEPS",
+      "scope": "04已接受视频原生帧；PTS 20.856s；保留原图SHA"
+    },
+    {
+      "file": "screenshots/review-native-56-04.png",
+      "sha256": "e2ef7569fd9bce4467303f1067a4c951ea03fe4956451886df1fe9e3af6f7db6",
+      "acceptedEvidence": true,
+      "status": "PASS_FOR_RECORDED_REVIEW_STEPS",
+      "scope": "04已接受视频原生帧；PTS 43.257s；保留原图SHA"
+    },
+    {
+      "file": "screenshots/review-native-57-04.png",
+      "sha256": "a041e374b5bec2a604aba7c5a111a46794d58fe5ca22633e08c17cda82ad378e",
+      "acceptedEvidence": true,
+      "status": "PASS_FOR_RECORDED_REVIEW_STEPS",
+      "scope": "04已接受视频原生帧；PTS 61.772s；保留原图SHA"
+    },
+    {
+      "file": "screenshots/review-native-58-04.png",
+      "sha256": "d6fe5b29773bf70ba63d3d87315aaad389a9934bf7e268ada677fd39c5943cab",
+      "acceptedEvidence": true,
+      "status": "PASS_FOR_RECORDED_REVIEW_STEPS",
+      "scope": "04已接受视频原生帧；PTS 80.021s；保留原图SHA"
+    },
+    {
+      "file": "screenshots/outside-direction-fixed-04b.png",
+      "sha256": "619a73a6d2f6e6d2fde8d125baf23ef41769526e05e49f455252e919476efab5",
+      "acceptedEvidence": true,
+      "status": "PASS_FOR_RECORDED_STEP",
+      "scope": "首次选择已有出向1条关系",
+      "batch": "04b"
+    },
+    {
+      "file": "screenshots/fold-stable-plus-04b.png",
+      "sha256": "09b41d50adb5921adc0c6ec4649cca1d2a6ad569b40c15231ba915ea29d5c4f9",
+      "acceptedEvidence": true,
+      "status": "PASS_FOR_RECORDED_STEP",
+      "scope": "折叠后范围外1条，同一行且显示加号",
+      "batch": "04b"
+    },
+    {
+      "file": "screenshots/expand-stable-04b.png",
+      "sha256": "b4adc2ea553ecab1aee8e7dd39205b3012936eb5510c8445fdc85ac3a1588087",
+      "acceptedEvidence": true,
+      "status": "PASS_FOR_RECORDED_STEP",
+      "scope": "展开后范围外0条，画布与父节点位置保持",
+      "batch": "04b"
+    },
+    {
+      "file": "screenshots/zero-animation-final-04b.png",
+      "sha256": "505ba833475d0dd59dcf4289f4477e584ed7cc8d4594fa3c02730ddc6b62136a",
+      "acceptedEvidence": true,
+      "status": "PASS_FOR_RECORDED_STEP",
+      "scope": "系统三个动画比例0时的展开终态，随后恢复1.0",
+      "batch": "04b"
+    },
+    {
+      "file": "screenshots/layout-undo-cleared-04b.png",
+      "sha256": "9eae4de8d39434d18277840850ee99da5e70c0bd5608c22d585968d80189bbc5",
+      "acceptedEvidence": true,
+      "status": "PASS_FOR_RECORDED_STEP",
+      "scope": "撤销恢复手动偏移和视口，旧布局提交提示已清除",
+      "batch": "04b"
+    },
+    {
+      "file": "screenshots/layout-reopened-04b.png",
+      "sha256": "babda3f712d60f247cc8abaa80bcc627b938c5f43f03bdba5100dca86b99ae2b",
+      "acceptedEvidence": true,
+      "status": "PASS_FOR_RECORDED_STEP",
+      "scope": "再次应用并重开后保留三卡、父子与布局",
+      "batch": "04b"
+    }
+  ],
+  "videos": [
+    {
+      "evidenceId": "V-04-SCOPE-SOURCE",
+      "sha256": "cda8c364879c00711a142f76ff1d19d7768860d382a6f2325e5692da91aef4cc",
+      "recordingWallSeconds": 180.469,
+      "decodedFrames": 392,
+      "lastDecodedPts": 164.4920888888889,
+      "status": "PASS_FOR_RECORDED_REVIEW_STEPS",
+      "acceptedEvidence": true,
+      "metadataSha256": "42c02f2e7164c4ab1744fbc9117747d82dbf83b24d19e0ba15551e0f53866e99",
+      "frameReceiptSha256": "5b975aa70349ff38cdb31901e9b0ec2f9983b85880dabbb00f01efd9ec10fc7b",
+      "frames": [
+        {
+          "file": "screenshots/review-native-49-04.png",
+          "selectedNativePts": 17.227255555555555,
+          "sha256": "c84475a4609cfddc87a2d8379db06d939b2245a3a1e8acc9b26fcb7837949dff"
+        },
+        {
+          "file": "screenshots/review-native-50-04.png",
+          "selectedNativePts": 49.10816666666667,
+          "sha256": "5f395af8ba832d3021031a1d272c7eac9ff8fa3927fe92c89a71bf8f5448d3a3"
+        },
+        {
+          "file": "screenshots/review-native-51-04.png",
+          "selectedNativePts": 76.35802222222223,
+          "sha256": "d811d1ac6f1aa2c577743b9bb30747ff76c17111559c71627f8cab5aeef6b6fd"
+        },
+        {
+          "file": "screenshots/review-native-52-04.png",
+          "selectedNativePts": 111.32684444444445,
+          "sha256": "ec15f5cf7ce4675c4969c7aec2e0df858a09cab788a4119043b160701ade32e4"
+        },
+        {
+          "file": "screenshots/review-native-53-04.png",
+          "selectedNativePts": 132.20783333333333,
+          "sha256": "9d995787b95f72c1f144d33914cbd75cfd56fc10afc8a64ea197dd9100369283"
+        },
+        {
+          "file": "screenshots/review-native-54-04.png",
+          "selectedNativePts": 164.4920888888889,
+          "sha256": "879b9814051a215ba612d60e8a1d97d9f0d0b25e8ea0d1d6a43b7792f2fdaedb"
+        }
+      ]
+    },
+    {
+      "evidenceId": "V-04-RETURN",
+      "sha256": "5afe5cc870c5eb6e29c69332420a60f46b4e3b763629e3bd0694dd45089e0283",
+      "recordingWallSeconds": 90.5,
+      "decodedFrames": 114,
+      "lastDecodedPts": 80.02097777777779,
+      "status": "PASS_FOR_RECORDED_REVIEW_STEPS",
+      "acceptedEvidence": true,
+      "metadataSha256": "284d8e7105e16782068d1606f2314c9a73bdd6b7dac47dd4837c422e56745e91",
+      "frameReceiptSha256": "f526dcf1a6de70b3c4c17294721edc93b7d9e1e6880e51981a3a9918ef263421",
+      "frames": [
+        {
+          "file": "screenshots/review-native-55-04.png",
+          "selectedNativePts": 20.85588888888889,
+          "sha256": "601df08c58565d781cf2d2ab6bbce0a85868edf46006d2c26cb782f2236d7ac4"
+        },
+        {
+          "file": "screenshots/review-native-56-04.png",
+          "selectedNativePts": 43.25745555555556,
+          "sha256": "e2ef7569fd9bce4467303f1067a4c951ea03fe4956451886df1fe9e3af6f7db6"
+        },
+        {
+          "file": "screenshots/review-native-57-04.png",
+          "selectedNativePts": 61.772355555555556,
+          "sha256": "a041e374b5bec2a604aba7c5a111a46794d58fe5ca22633e08c17cda82ad378e"
+        },
+        {
+          "file": "screenshots/review-native-58-04.png",
+          "selectedNativePts": 80.02097777777779,
+          "sha256": "d6fe5b29773bf70ba63d3d87315aaad389a9934bf7e268ada677fd39c5943cab"
+        }
+      ]
+    },
+    {
+      "evidenceId": "V-04B-NORMAL-RAPID-PAN",
+      "sha256": "2aa42e51659e7804c752eb53261e4b0a8522f897af20e604c10fec8d60af78c7",
+      "recordingWallSeconds": 90.406,
+      "decodedFrames": 235,
+      "lastNativePts": 59.644422222222225,
+      "status": "PASS_FOR_RECORDED_NORMAL_RAPID_AND_SUBSEQUENT_PAN_STEPS",
+      "acceptedEvidence": true,
+      "acceptanceReceiptSha256": "1c78346fc973e513873ee7f305c8f0e5ef3686dc88adc269af1f4c035e13fb98",
+      "frameReceiptSha256": "9a1fdc67b094913e360a8debd48f70b3aa4a892eb64fd4739b0a58b9903a0408",
+      "scopeBoundary": "普通应用ADB操作；精确输入延迟与动画中断时点未测量，真人硬件未测"
+    },
+    {
+      "evidenceId": "V-04B-ZERO",
+      "sha256": "99ac566f66add855fd248d6a240b1454eaa71f7a7613ad40666cd490e9f8c0c3",
+      "recordingWallSeconds": 40.438,
+      "decodedFrames": 31,
+      "lastNativePts": 15.7095,
+      "status": "PASS_FOR_RECORDED_ZERO_ANIMATION_STEPS",
+      "acceptedEvidence": true,
+      "acceptanceReceiptSha256": "1c78346fc973e513873ee7f305c8f0e5ef3686dc88adc269af1f4c035e13fb98",
+      "frameReceiptSha256": "1493e6806ca97bd01a47b96bfceab64320df1c160299fb83318202762f38cb46",
+      "scopeBoundary": "普通应用ADB操作；精确输入延迟与动画中断时点未测量，真人硬件未测"
+    }
+  ],
+  "dataAuditAfter04": {
+    "source": "04结束时的脱敏审计与同PDF合成对象核验回执",
+    "originalNotebooks": 175,
+    "originalRows": 6074,
+    "originalRowsUnchanged": true,
+    "currentNotebooks": 365,
+    "currentRows": 12888,
+    "newNotebooks": 190,
+    "newRows": 6814,
+    "newRowsAllOwnedByNewSyntheticNotebooks": true,
+    "finalTaskAuditPending": false,
+    "stableCards": 3,
+    "stableNodes": 3,
+    "stableSources": 3,
+    "ratedQuestionCount": 2,
+    "ratedQuestionRevisions": [
+      2,
+      2
+    ],
+    "imageQuestionRevision": 1,
+    "imageQuestionUnrated": true,
+    "samePdfReceiptSha256": "eca8d3aa38a0ffda77c522f7effa1c17d6787f062b6b04fe4e3cc3e80f49d3d7"
+  },
+  "pending": [
+    "真人笔感／压感／倾斜／掌拒／实体键盘",
+    "精确输入延迟与毫秒级动画中断时点",
+    "明确列明未执行的隔离故障／容量组合及普通子步骤"
+  ],
+  "ordinary04b": {
+    "receiptSha256": "ad0f760323722721837579dd3babe9108404b2d3d64be63a078a972d4f5560cb",
+    "status": "PASS_FOR_RECORDED_STEPS",
+    "method": "普通应用ADB操作",
+    "recordedScreenshotNumbers": [
+      63,
+      64,
+      65,
+      66,
+      67,
+      68,
+      69,
+      70,
+      71,
+      72,
+      73,
+      74
+    ],
+    "headerVerticalShiftPixels": 0,
+    "rapidTaps": 10,
+    "rapidTapElapsedSeconds": 1.531,
+    "zeroAnimationScales": [
+      0,
+      0,
+      0
+    ],
+    "restoredAnimationScales": [
+      1.0,
+      1.0,
+      1.0
+    ],
+    "layoutUndoClearedStaleFeedback": true,
+    "videoAcceptance": "PASS_FOR_RECORDED_STEPS"
+  },
+  "sourceToTestedBuild": {
+    "receiptSha256": "ce952435c4c60b7c13b7aadae2ab4055a9be727aab5e6d53374c2d404b23bd64",
+    "status": "PASS",
+    "frozenInputCount": 783,
+    "unchangedNonDocumentInputCount": 546,
+    "changedOnlyAuthorizedDocumentationCount": 7,
+    "sourceAndBuildConfigurationUnchanged": true
+  },
+  "samePdfFinal": {
+    "receiptSha256": "d1ad13dbd1b2078b42b8e52a3f5af72dc1ccc7dd78b2faaa8b0f224bd74d5fb9",
+    "verifiedUtc": "2026-10-03T23:01:24.648754+00:00",
+    "status": "PASS",
+    "stableCards": 3,
+    "stableSources": 3,
+    "stableKnowledgeRecords": 6,
+    "stableKnowledgeRevisions": 9,
+    "stableNodesIdCardParentXY": 3,
+    "changedNodeRevision": {
+      "syntheticAlias": "C",
+      "before": 5,
+      "after": 9,
+      "reason": "明确move/apply/undo/reapply四次操作"
+    },
+    "reviewQuestionStatesUnchangedSince04": true
+  },
+  "dataAuditAfter04b": {
+    "source": "终态脱敏审计摘要与同PDF合成对象核验回执",
+    "originalNotebooks": 175,
+    "originalRows": 6074,
+    "originalRowsUnchanged": true,
+    "currentNotebooks": 395,
+    "currentRows": 13556,
+    "newNotebooks": 220,
+    "newRows": 7482,
+    "newRowsAllOwnedByNewSyntheticNotebooks": true,
+    "diagramNodeFinalIdParentAndXYUnchanged": true,
+    "diagramNodeRevisionChangedByFourExplicitLayoutOperations": true,
+    "finalObjectReceiptPending": false,
+    "cardsAndSourcesUnchanged": true
+  },
+  "finalProtection": {
+    "source": "终态脱敏审计摘要与同PDF合成对象核验回执",
+    "status": "PASS",
+    "originalNotebooks": 175,
+    "originalRows": 6074,
+    "originalRowsUnchanged": true,
+    "currentNotebooks": 395,
+    "currentRows": 13556,
+    "newNotebooks": 220,
+    "newRows": 7482,
+    "newRowsAllOwnedByNewSyntheticNotebooks": true,
+    "originalPreferenceFilesMatched": 35,
+    "originalExternalFilesMatched": 69,
+    "changedFilesArchivedBeforeRestore": 14,
+    "restoredPreferenceFiles": 5,
+    "restoredOlderTestEvidenceFiles": 9,
+    "newFilesDeleted": 0,
+    "restorationGuardFirstAttempt": "Detected two additional LocalMotion evidence paths and stopped before any device write; after source-confirmed allowlist extension a separate attempt passed",
+    "deviceSettingFieldsRestored": 12,
+    "usbStayAwakeRestoredFrom": 2,
+    "usbStayAwakeRestoredTo": 0,
+    "mainApplicationStopped": true,
+    "originalUncommittedFilesPreserved": 162,
+    "olderV68AndPr11HeadStatusFilesUnchanged": true,
+    "remoteTemporaryCleanupPending": false,
+    "archivedThenDeletedDeviceTemporaryXml": 383,
+    "archivedThenDeletedDeviceTemporaryMp4": 6,
+    "archiveSHA256MatchedBeforeDelete": true,
+    "deviceTemporaryFilesRemaining": 0,
+    "localEvidencePackagesAndToolchainRetained": true,
+    "localTaskPythonCacheAbsent": true,
+    "objectReceiptPending": false
+  },
+  "overallResult": "PASS_FOR_RECORDED_SCOPE",
+  "capabilitiesNotImplemented": [
+    "卡片合并／拆分",
+    "未识别手写自动链接发现",
+    "SRS到期调度"
+  ],
+  "finalSummary": {
+    "receiptSha256": "da1a141a0a4811873ac679811152c8d204843cfc857f45246377769e7381f3d0",
+    "completedUtc": "2026-10-03T23:08:23.864644+00:00",
+    "result": "PASS_FOR_RECORDED_SCOPE",
+    "latestUniqueUI": {
+      "count": 26,
+      "pass": 26,
+      "unchangedMethodsFrom04": 18,
+      "rerunMethodsFrom04b": 8
+    },
+    "lastInstalledPackagesVerified": true
+  }
+}

@@ -493,7 +493,7 @@ class KnowledgeTextLinksUiTest {
         var before = authorStamp(f)
         tap("card-backlinks")
         waitFor("knowledge-links-incoming")
-        compose.waitUntil(15_000) { runCatching { compose.onNodeWithTag("knowledge-links-incoming").assertTextContains("反向引用 · 2") }.isSuccess }
+        compose.waitUntil(15_000) { runCatching { compose.onNodeWithTag("knowledge-links-incoming").assertTextContains("引用我的 · 2") }.isSuccess }
         compose.onNodeWithTag("knowledge-links-incoming").assertIsSelected()
         compose.onNodeWithTag("knowledge-close").assertTextContains("返回摘要")
         compose.onNodeWithTag("knowledge-link-focus").assertTextEquals("保持原卡")
@@ -559,7 +559,7 @@ class KnowledgeTextLinksUiTest {
         tap("card-link-close-preview")
         compose.onNodeWithTag("knowledge-links-list").performScrollToNode(hasTestTag("knowledge-scope-note"))
         tap("knowledge-scope-note")
-        compose.onNodeWithTag("knowledge-links-incoming").assertTextContains("反向引用 · 1")
+        compose.onNodeWithTag("knowledge-links-incoming").assertTextContains("引用我的 · 1")
         connectionItem("knowledge-incoming-" + noteLink)
         assertPreview("实时原答案 LIVE-V1")
         assertEquals(before, authorStamp(f))

@@ -43,15 +43,18 @@ class EditorVisualContractTest {
 
     @Test fun viewSelectionIsAbsentFromDocumentPainting(){
         val nodes=listOf(MapSceneNode("root",null,"card","概率条件","正文",20.0,20.0,1,1))
-        fun paint(selected:String?=null,style:MapViewStyle?=null)=Bitmap.createBitmap(280,130,Bitmap.Config.ARGB_8888).also{
-            val canvas=Canvas(it);canvas.drawColor(Color.WHITE);MapScenePainter.draw(canvas,nodes,selected,viewStyle=style)
+        val measured=MapNodeMetrics.measure("概率条件","正文")
+        val expanded=mapOf("root" to MapNodeMetrics.measure("概率条件","正文",MapSourceInfo("笔记 · 第 1 页"),expanded=true))
+        fun paint(selected:String?=null,style:MapViewStyle?=null,layouts:Map<String,MapNodeLayout> = emptyMap())=Bitmap.createBitmap(280,(measured.height+40).toInt(),Bitmap.Config.ARGB_8888).also{
+            val canvas=Canvas(it);canvas.drawColor(Color.WHITE);MapScenePainter.draw(canvas,nodes,selected,viewStyle=style,nodeLayouts=layouts)
         }
-        val document=paint();val selectedWithoutView=paint("root")
+        val document=paint();val selectedWithoutView=paint("root",layouts=expanded)
         val interactive=paint("root",MapViewStyle(Color.RED,Color.YELLOW,Color.BLACK))
         val after=paint()
         try{
             assertTrue(document.sameAs(selectedWithoutView));assertFalse(document.sameAs(interactive));assertTrue(document.sameAs(after))
-            assertEquals("概率条件",nodes.single().title);assertEquals(216,MapNodeMetrics.WIDTH);assertEquals(84,MapNodeMetrics.HEIGHT)
+            assertEquals("概率条件",nodes.single().title);assertEquals(232f,measured.width,0f)
+            assertTrue(measured.height>=measured.summaryTop+checkNotNull(measured.summary).height+14)
         }finally{listOf(document,selectedWithoutView,interactive,after).forEach{it.recycle()}}
     }
 

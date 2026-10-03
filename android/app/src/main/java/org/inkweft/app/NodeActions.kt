@@ -38,11 +38,13 @@ internal data class NodeTitleDraft(val token:String,val mapId:String?,val nodeId
 }
 @Composable internal fun NodeActions(enabled:Boolean,rename:()->Unit,child:()->Unit,sibling:()->Unit,more:()->Unit,moreEnabled:Boolean=enabled){
     Surface(shape=InkTheme.ToolShape,color=InkTheme.Surface,shadowElevation=InkTheme.ToolElevation,modifier=Modifier.testTag("node-actions")){
-        Row{
-            MapActionIcon("修改标题","pen","node-rename",enabled,rename)
-            MapActionIcon("添加子主题","node-child","node-add-child",enabled,child)
-            MapActionIcon("添加同级主题","node-sibling","node-add-sibling",enabled,sibling)
-            MapActionIcon("更多","more","node-more",moreEnabled,more)
+        Row(Modifier.fillMaxWidth()){
+            listOf(Triple("标题","pen","node-rename"),Triple("子主题","node-child","node-add-child"),Triple("同级","node-sibling","node-add-sibling"),Triple("整理","more","node-more")).forEachIndexed{i,(label,icon,tag)->
+                TextButton(listOf(rename,child,sibling,more)[i],enabled=if(i==3)moreEnabled else enabled,
+                    contentPadding=PaddingValues(horizontal=2.dp,vertical=6.dp),modifier=Modifier.weight(1f).heightIn(min=48.dp).testTag(tag)){
+                    Column(horizontalAlignment=androidx.compose.ui.Alignment.CenterHorizontally){Glyph(icon);Text(label,style=MaterialTheme.typography.labelMedium)}
+                }
+            }
         }
     }
 }
@@ -59,7 +61,11 @@ internal data class NodeTitleDraft(val token:String,val mapId:String?,val nodeId
     }}
     androidx.activity.compose.BackHandler{if(!busy&&!unknown)cancel()}
     Surface(modifier.testTag("node-title-editor"),shape=InkTheme.ToolShape,color=InkTheme.Surface,shadowElevation=InkTheme.FloatingElevation){
-        Column(Modifier.padding(8.dp).verticalScroll(rememberScrollState())){
+        BoxWithConstraints(Modifier.padding(8.dp)){
+        val fieldLabel=if(draft.creating)"新主题标题"else"修改标题"
+        val compact=maxHeight<160.dp
+        Column{
+            Column(Modifier.weight(1f,false).verticalScroll(rememberScrollState())){
             OutlinedTextField(text,{value->if(value.text.length<=120){
                 // CoreTextField deselects to the range end while the old Activity
                 // loses focus. Keep the saved range at that lifecycle boundary;
@@ -67,10 +73,10 @@ internal data class NodeTitleDraft(val token:String,val mapId:String?,val nodeId
                 val exitingDeselect=!lifecycle.currentState.isAtLeast(androidx.lifecycle.Lifecycle.State.RESUMED)&&
                     value.text==text.text&&!text.selection.collapsed&&value.selection==TextRange(text.selection.max)
                 onText(if(exitingDeselect)value.copy(selection=text.selection)else value)
-            }},enabled=!busy&&!unknown,label={Text(if(draft.creating)"新主题标题"else"修改标题")},singleLine=true,
+            }},enabled=!busy&&!unknown,label=if(compact)null else ({Text(fieldLabel)}),placeholder={Text(fieldLabel)},singleLine=true,
                 keyboardOptions=KeyboardOptions(imeAction=if(continueSibling==null)ImeAction.Done else ImeAction.Next),
                 keyboardActions=KeyboardActions(onDone={commit()},onNext={commit(true)}),
-                modifier=Modifier.fillMaxWidth().focusRequester(requester).then(if(continueSibling==null)Modifier else Modifier.onPreviewKeyEvent{event->
+                modifier=Modifier.fillMaxWidth().describedAs(fieldLabel).focusRequester(requester).then(if(continueSibling==null)Modifier else Modifier.onPreviewKeyEvent{event->
                     if(event.key!=Key.Enter&&event.key!=Key.NumPadEnter)false else {
                         // Consume both halves so Enter cannot also click the containing outline row.
                         val plainEnter=!event.isAltPressed&&!event.isCtrlPressed&&!event.isMetaPressed&&!event.isShiftPressed
@@ -87,10 +93,12 @@ internal data class NodeTitleDraft(val token:String,val mapId:String?,val nodeId
             if(continueSibling!=null)Text("Enter / 键盘下一步：保存并继续同级主题；完成：结束编辑",style=MaterialTheme.typography.labelSmall,color=Quiet)
             if(!draft.creating&&!draft.structural)Text("共享标题 · $sharedCount 个引用位置",style=MaterialTheme.typography.labelSmall,color=Quiet)
             message?.let{Text(it,style=MaterialTheme.typography.bodySmall,modifier=Modifier.testTag("node-title-error"))}
+            }
             FlowRow(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.End){
                 TextButton(cancel,enabled=!busy&&!unknown,modifier=Modifier.heightIn(min=48.dp).testTag("node-title-cancel")){Text("取消")}
                 TextButton({if(unknown)retry()else commit()},enabled=!busy&&(unknown||(text.text.isNotBlank()&&text.composition==null)),modifier=Modifier.heightIn(min=48.dp).testTag("node-title-save")){Text(if(unknown)"核对原操作"else"完成")}
             }
+        }
         }
     }
 }

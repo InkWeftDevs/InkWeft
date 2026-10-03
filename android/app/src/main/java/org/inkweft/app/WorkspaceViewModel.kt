@@ -14,7 +14,10 @@ import org.inkweft.data.*
 /** Shelf state never replaces an active text or ink draft. */
 class WorkspaceViewModel(app:Application,private val saved:androidx.lifecycle.SavedStateHandle):AndroidViewModel(app){
     val pendingCreate=saved.getStateFlow<ArrayList<String>?>("create.request",null)
-    val studyCardRequest=MutableStateFlow<String?>(null)
+    private val cardNavigation=MutableStateFlow<Map<String,String>>(emptyMap());val pendingStudyCardNavigation=cardNavigation.asStateFlow()
+    // Only the resolved destination may consume the latest card-opening request.
+    fun requestStudyCardNavigation(bookId:String,cardId:String){cardNavigation.value=mapOf(bookId to cardId)}
+    fun consumeStudyCardNavigation(bookId:String,cardId:String){cardNavigation.update{if(it[bookId]==cardId)it-bookId else it}}
     val focusAnchor=MutableStateFlow<KnowledgeData.Anchor?>(null)
     private val repo=(app as InkWeftApplication).workspaceRepository
     private val pages=(app as InkWeftApplication).pages

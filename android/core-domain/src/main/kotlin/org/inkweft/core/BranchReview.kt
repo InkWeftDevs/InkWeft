@@ -132,6 +132,17 @@ object BranchReview {
         questions: List<BranchReviewEntryRef>,
     ): BranchReviewPlan = prepare(MapRef(book), null, title, cards, questions)
 
+    /** One card keeps all of its independent questions, regardless of its map occurrences. */
+    fun card(
+        ref: MapRef,
+        cardId: String,
+        cardRevision: Long,
+        title: String,
+        questions: List<BranchReviewEntryRef>,
+        nodeId: String? = null,
+    ): BranchReviewPlan = prepare(ref, nodeId, title, mapOf(cardId to cardRevision),
+        questions.filter { it.cardId == cardId })
+
     private fun prepare(
         ref: MapRef,
         branchId: String?,

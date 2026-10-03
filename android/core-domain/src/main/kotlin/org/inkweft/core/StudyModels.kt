@@ -4,7 +4,7 @@ package org.inkweft.core
 import java.io.*
 import java.util.UUID
 
-enum class StudyAction { CREATE, UNDO_CAPTURE, CREATE_EXCERPT, RECROP_EXCERPT, EDIT, REUSE, MOVE, REPARENT, REMOVE_NODE, TRASH_CARD, RESTORE_CARD, ARRANGE }
+enum class StudyAction { CREATE, UNDO_CAPTURE, CREATE_EXCERPT, RECROP_EXCERPT, EDIT, REUSE, MOVE, REPARENT, REMOVE_NODE, TRASH_CARD, RESTORE_CARD, ARRANGE, ORGANIZE }
 class StudySourceDraft(val pageId:String,val inkRevision:Long,val bounds:CanvasBounds,ids:List<String>,preview:ByteArray?=null,val objectRevision:Long?=null){
     private val image=preview?.clone()
     fun previewBytes()=image?.clone()
@@ -32,19 +32,24 @@ object StudyGraph {
         validate(nodes);val active=nodes.filter{!it.removed};val children=active.groupBy{it.parentId};var leaf=0
         val output=linkedMapOf<String,CanvasPoint>()
         fun walk(n:StudyNode,depth:Int):Double{
-            val kids=children[n.id].orEmpty().sortedBy{it.id}
+            val kids=children[n.id].orEmpty()
             val y=if(kids.isEmpty())(++leaf)*128.0 else kids.map{walk(it,depth+1)}.average()
             output[n.id]=CanvasPoint(40.0+depth*260.0,y);return y
         }
-        children[null].orEmpty().sortedBy{it.id}.forEach{walk(it,0)};return output
+        children[null].orEmpty().forEach{walk(it,0)};return output
     }
 }
 class StudyCommand(val id:String,val notebookId:String,val action:StudyAction,val cardId:String?=null,
     val nodeId:String?=null,val expectedRevision:Long=0,val parentId:String?=null,val title:String="",val body:String="",
-    val x:Double=40.0,val y:Double=80.0,val source:StudySourceDraft?=null,val expectedGraph:String="",val mapId:String?=null) {
-    init{UUID.fromString(id);UUID.fromString(notebookId);listOfNotNull(cardId,nodeId,parentId,mapId).forEach{UUID.fromString(it)}
+    val x:Double=40.0,val y:Double=80.0,val source:StudySourceDraft?=null,val expectedGraph:String="",val mapId:String?=null,
+    organization:StudyOrganizationPlan?=null,val afterNodeId:String?=null) {
+    private val frozenOrganization=organization?.let(StudyOrganization::encode)
+    val organization get()=frozenOrganization?.let(StudyOrganization::decode)
+    init{UUID.fromString(id);UUID.fromString(notebookId);listOfNotNull(cardId,nodeId,parentId,mapId,afterNodeId).forEach{UUID.fromString(it)}
         require(expectedRevision in 0 until Long.MAX_VALUE);require(title.length<=120&&body.length<=20_000)
         require(x.isFinite()&&y.isFinite()&&x in -40000.0..40000.0&&y in -40000.0..40000.0)
+        require((action==StudyAction.ORGANIZE)==(organization!=null))
+        require(afterNodeId==null||action in setOf(StudyAction.CREATE,StudyAction.REUSE)&&afterNodeId!=nodeId)
         when(action){
             StudyAction.CREATE->{require(cardId!=null&&nodeId!=null&&title.isNotBlank()&&expectedRevision==0L)}
             StudyAction.UNDO_CAPTURE->{require(cardId!=null&&nodeId!=null&&expectedRevision>0&&source==null)}
@@ -55,6 +60,7 @@ class StudyCommand(val id:String,val notebookId:String,val action:StudyAction,va
             StudyAction.MOVE,StudyAction.REPARENT,StudyAction.REMOVE_NODE->{require(nodeId!=null&&expectedRevision>0&&source==null)}
             StudyAction.TRASH_CARD,StudyAction.RESTORE_CARD->{require(cardId!=null&&expectedRevision>0&&source==null)}
             StudyAction.ARRANGE->{require(expectedGraph.matches(Regex("[0-9a-f]{64}"))&&source==null)}
+            StudyAction.ORGANIZE->{require(organization!=null&&organization.ref==MapRef(notebookId,mapId)&&organization.expectedGraph==expectedGraph&&source==null&&cardId==null&&nodeId==null)}
         }
     }
     fun digest():String {
@@ -64,6 +70,8 @@ class StudyCommand(val id:String,val notebookId:String,val action:StudyAction,va
             d.writeBoolean(source!=null);source?.let{s->d.writeUTF(s.pageId);d.writeLong(s.inkRevision);listOf(s.bounds.left,s.bounds.top,s.bounds.right,s.bounds.bottom).forEach(d::writeDouble);d.writeInt(s.strokeIds.size);s.strokeIds.forEach(d::writeUTF)}
             source?.previewBytes()?.let{d.writeUTF("region-preview");d.writeUTF(ContentTransfer.hash(it));d.writeLong(source.objectRevision?:-1)}
             mapId?.let{d.writeUTF("map");d.writeUTF(it)}
+            frozenOrganization?.let{d.writeUTF("organization");d.writeInt(it.size);d.write(it)}
+            afterNodeId?.let{d.writeUTF("after-node");d.writeUTF(it)}
         };return ContentTransfer.hash(b.toByteArray())
     }
 }

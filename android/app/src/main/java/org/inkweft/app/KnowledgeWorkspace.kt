@@ -22,6 +22,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
@@ -35,6 +36,7 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import org.inkweft.core.*
 import org.inkweft.data.*
+import org.inkweft.app.ui.designsystem.InkTheme
 import java.util.UUID
 
 internal data class KnowledgeUi(val rows:List<KnowledgeRow> = emptyList(),val cards:List<StudyCardRow> = emptyList(),val notes:List<NoteRow> = emptyList(),val pages:List<NotebookPageRow> = emptyList(),
@@ -92,7 +94,7 @@ private val LinkPreviewSaver=Saver<LinkPreviewSelection?,List<String>>(
     SideEffect{vm.authorAllowed={book->locks["read-lock-$book",BookReadLockViewModel::class.java].canWrite}}
 }
 
-@Composable internal fun KnowledgeWorkspace(book:String,initialFocus:TargetRef,initialAnchor:KnowledgeData.Anchor?=null,initialTab:Int=0,initialCollection:String?=null,initialBacklinks:Boolean=false,dismiss:()->Unit,openTarget:(TargetRef)->Unit){
+@Composable internal fun KnowledgeWorkspace(book:String,initialFocus:TargetRef,initialAnchor:KnowledgeData.Anchor?=null,initialTab:Int=0,initialCollection:String?=null,initialBacklinks:Boolean=false,includeAllRelationKinds:Boolean=false,dismiss:()->Unit,openTarget:(TargetRef)->Unit){
     val context=LocalContext.current;val app=context.applicationContext as InkWeftApplication;val scope=rememberCoroutineScope()
     val focusManager=LocalFocusManager.current;val keyboard=LocalSoftwareKeyboardController.current
     val vm:KnowledgeViewModel=viewModel(key="knowledge-$book",factory=KnowledgeViewModel.Factory(app.knowledge,app.resourcePacks));val ui by vm.ui.collectAsStateWithLifecycle()
@@ -101,7 +103,10 @@ private val LinkPreviewSaver=Saver<LinkPreviewSelection?,List<String>>(
     var tab by rememberSaveable{mutableIntStateOf(initialTab)};var focus by rememberSaveable(stateSaver=Saver<TargetRef,List<String>>({listOf(it.kind.name,it.id)},{TargetRef(TargetKind.valueOf(it[0]),it[1])})){mutableStateOf(initialFocus)}
     var query by rememberSaveable{mutableStateOf("")};var picker by rememberSaveable{mutableStateOf(false)};var preview by rememberSaveable(stateSaver=LinkPreviewSaver){mutableStateOf<LinkPreviewSelection?>(null)}
     var incoming by rememberSaveable{mutableStateOf(initialBacklinks)}
+    var initialDirectionResolved by rememberSaveable(book,initialFocus,initialBacklinks,includeAllRelationKinds){mutableStateOf(!initialBacklinks||!includeAllRelationKinds)}
     var showExports by rememberSaveable{mutableStateOf(false)}
+    var showMentions by rememberSaveable{mutableStateOf(false)}
+    var scopeMenu by remember{mutableStateOf(false)}
     var relation by rememberSaveable{mutableStateOf(RelationKind.REFERENCE)};var pinned by rememberSaveable{mutableStateOf(false)}
     var afterAnchorPicker by remember{mutableStateOf(false)}
     var waitingAnchor by remember{mutableStateOf(false)};var anchorCopied by remember{mutableStateOf(false)}
@@ -223,7 +228,16 @@ private val LinkPreviewSaver=Saver<LinkPreviewSelection?,List<String>>(
         TargetKind.ANCHOR->"点击预览并核对原区域位置"
     }
     val outgoingLinks=links.filter{it.second.source==focus}
-    val incomingLinks=links.filter{it.second.target==focus&&it.second.relation==RelationKind.REFERENCE}
+    val incomingLinks=links.filter{it.second.target==focus&&(includeAllRelationKinds||it.second.relation==RelationKind.REFERENCE)}
+    LaunchedEffect(initialDirectionResolved,ui.loading,ui.readFailed,focus){
+        if(!initialDirectionResolved){
+            if(focus!=initialFocus)initialDirectionResolved=true
+            else if(!ui.loading&&!ui.readFailed){
+                incoming=incomingLinks.isNotEmpty()||outgoingLinks.isEmpty()
+                initialDirectionResolved=true
+            }
+        }
+    }
     fun sourceText():String=when(focus.kind){TargetKind.NOTE->ui.notes.find{it.id==focus.id}?.text.orEmpty();TargetKind.CARD->cards.find{it.id==focus.id}?.body.orEmpty();else->""}
     val export=rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("text/markdown")){uri->val text=pendingExport;pendingExport=null
         if(uri!=null&&text!=null)scope.launch{try{withContext(Dispatchers.IO){requireNotNull(context.contentResolver.openOutputStream(uri,"wt")).bufferedWriter().use{it.write(text)}};localMessage="关联快照已导出；不是完整备份。"}catch(c:CancellationException){throw c}catch(_:Exception){localMessage="导出未确认，原资料保留。"}}}
@@ -245,9 +259,11 @@ private val LinkPreviewSaver=Saver<LinkPreviewSelection?,List<String>>(
     LaunchedEffect(ui.busy,ui.unknown,ui.message){if(!ui.busy&&!ui.unknown&&ui.message?.startsWith("未提交")==true){waitingAnchor=false;afterAnchorPicker=false}}
     Dialog(onDismissRequest={closeWorkspace()},properties=DialogProperties(usePlatformDefaultWidth=false)){
         org.inkweft.app.ui.components.ContextPanel(tab==0,{closeWorkspace()}){Column(Modifier.safeDrawingPadding().imePadding()){
-            Row(Modifier.fillMaxWidth().padding(horizontal=16.dp,vertical=8.dp),verticalAlignment=Alignment.CenterVertically){Text(if(tab==0)"链接与反向引用"else"知识与关联",Modifier.weight(1f),style=MaterialTheme.typography.titleLarge);TextButton(onClick={closeWorkspace()},enabled=canDismiss,modifier=Modifier.heightIn(min=48.dp).testTag("knowledge-close")){Text(if(initialBacklinks)"返回摘要"else"返回笔记")}}
-            Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()).padding(horizontal=12.dp),horizontalArrangement=Arrangement.spacedBy(8.dp)){
-                listOf("链接","属性与集合","局部关联图","白板与脑图","手动回忆").forEachIndexed{i,t->FilterChip(tab==i,{if(tab!=i)cancelReviewPreparation();tab=i},enabled=enabled,label={Text(t)},modifier=Modifier.testTag("knowledge-tab-$i"))}}
+            Row(Modifier.fillMaxWidth().padding(horizontal=16.dp,vertical=4.dp),verticalAlignment=Alignment.CenterVertically){
+                Text(listOf("关联","属性与集合","局部关联图","白板与脑图","手动回忆")[tab],Modifier.weight(1f),style=InkTheme.PanelTitle)
+                TextButton(onClick={closeWorkspace()},enabled=canDismiss,modifier=Modifier.heightIn(min=48.dp).testTag("knowledge-close")){Text(if(initialBacklinks)"返回摘要"else"返回笔记")}
+            }
+            HorizontalDivider(color=InkTheme.Divider)
             if(ui.busy)LinearProgressIndicator(Modifier.fillMaxWidth())
             if(ui.readFailed)Column(Modifier.padding(horizontal=16.dp)){
                 Text("知识资料暂不可用；原资料没有改变。",color=Quiet)
@@ -258,34 +274,44 @@ private val LinkPreviewSaver=Saver<LinkPreviewSelection?,List<String>>(
             if(ui.unknown)TextButton(onClick=vm::retry,enabled=!ui.busy){Text("核对原操作")}
             when(tab){
                 0->LazyColumn(Modifier.weight(1f).fillMaxWidth().testTag("knowledge-links-list"),contentPadding=PaddingValues(16.dp),verticalArrangement=Arrangement.spacedBy(12.dp)){
-                    item{Surface(color=MaterialTheme.colorScheme.surfaceVariant.copy(alpha=.35f),shape=MaterialTheme.shapes.medium){
-                        Column(Modifier.fillMaxWidth().padding(16.dp),verticalArrangement=Arrangement.spacedBy(6.dp)){
-                            Text("当前对象",style=MaterialTheme.typography.labelLarge,color=Quiet)
-                            Text(label(focus),style=MaterialTheme.typography.titleLarge,modifier=Modifier.testTag("knowledge-link-focus"))
+                    item{Surface(color=InkTheme.Navigation,shape=MaterialTheme.shapes.medium){
+                        Column(Modifier.fillMaxWidth().padding(12.dp),verticalArrangement=Arrangement.spacedBy(4.dp)){
+                            Text("正在查看",style=MaterialTheme.typography.labelMedium,color=Quiet)
+                            Text(label(focus),style=MaterialTheme.typography.titleMedium,maxLines=3,overflow=TextOverflow.Ellipsis,modifier=Modifier.testTag("knowledge-link-focus"))
                             Text(targetContext(focus),style=MaterialTheme.typography.bodySmall,color=Quiet)
                         }
                     }}
                     item{Row(Modifier.horizontalScroll(rememberScrollState()),horizontalArrangement=Arrangement.spacedBy(8.dp)){
-                        FilterChip(focus==initialFocus,{focus=initialFocus},label={Text("初始对象")},modifier=Modifier.heightIn(min=48.dp).testTag("knowledge-scope-initial"))
-                        FilterChip(focus==TargetRef(TargetKind.NOTE,book),{focus=TargetRef(TargetKind.NOTE,book)},label={Text("笔记全文")},modifier=Modifier.heightIn(min=48.dp).testTag("knowledge-scope-note"))
-                        bookCards.forEach{c->FilterChip(focus==TargetRef(TargetKind.CARD,c.id),{focus=TargetRef(TargetKind.CARD,c.id)},label={Text(c.title)},modifier=Modifier.heightIn(min=48.dp))}
+                        FilterChip(focus==initialFocus,{focus=initialFocus},label={Text(when(initialFocus.kind){TargetKind.PAGE->"本页";TargetKind.CARD->"本卡片";TargetKind.ANCHOR->"本区域";TargetKind.NOTE->"笔记全文"})},modifier=Modifier.heightIn(min=48.dp).testTag("knowledge-scope-initial"))
+                        if(initialFocus!=TargetRef(TargetKind.NOTE,book))FilterChip(focus==TargetRef(TargetKind.NOTE,book),{focus=TargetRef(TargetKind.NOTE,book)},label={Text("笔记全文")},modifier=Modifier.heightIn(min=48.dp).testTag("knowledge-scope-note"))
+                        val otherCards=bookCards.filter{initialFocus!=TargetRef(TargetKind.CARD,it.id)}
+                        if(otherCards.isNotEmpty())Box{
+                            TextButton(onClick={scopeMenu=true},modifier=Modifier.heightIn(min=48.dp).testTag("knowledge-scope-cards")){Text("切换卡片")}
+                            DropdownMenu(scopeMenu,{scopeMenu=false}){otherCards.forEach{c->
+                                DropdownMenuItem(text={Text(c.title,maxLines=2,overflow=TextOverflow.Ellipsis)},onClick={focus=TargetRef(TargetKind.CARD,c.id);scopeMenu=false})
+                            }}
+                        }
                     }}
                     item{Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.spacedBy(8.dp)){
-                        FilterChip(!incoming,{incoming=false},label={Text("发出链接 · ${outgoingLinks.size}")},modifier=Modifier.weight(1f).heightIn(min=48.dp).testTag("knowledge-links-outgoing"))
-                        FilterChip(incoming,{incoming=true},label={Text("反向引用 · ${incomingLinks.size}")},modifier=Modifier.weight(1f).heightIn(min=48.dp).testTag("knowledge-links-incoming"))
+                        FilterChip(!incoming,{initialDirectionResolved=true;incoming=false},label={Text(if(includeAllRelationKinds)"从这里关联 · ${outgoingLinks.size}"else"我引用的 · ${outgoingLinks.size}")},modifier=Modifier.weight(1f).heightIn(min=48.dp).testTag("knowledge-links-outgoing"))
+                        FilterChip(incoming,{initialDirectionResolved=true;incoming=true},label={Text(if(includeAllRelationKinds)"关联到这里 · ${incomingLinks.size}"else"引用我的 · ${incomingLinks.size}")},modifier=Modifier.weight(1f).heightIn(min=48.dp).testTag("knowledge-links-incoming"))
                     }}
-                    item{Text(if(incoming)"这些内容引用了当前对象。点开先看来源，再决定是否跳转。"else"当前对象关联到的知识。固定摘录保留所选修订，实时链接查看当前内容。",style=MaterialTheme.typography.bodySmall,color=Quiet)}
+                    item{Text(if(incoming&&includeAllRelationKinds)"这些内容以不同关系指向这里。先看来源预览，再决定是否打开。"else if(incoming)"这些内容引用了这里。先看来源预览，再决定是否打开。"else"这里引用或关联的内容。先预览，再打开；固定版本会单独标记。",style=MaterialTheme.typography.bodySmall,color=Quiet)}
                     if(ui.loading)item{LinearProgressIndicator(Modifier.fillMaxWidth());Text("正在读取关联…",color=Quiet)}
                     else if(!ui.readFailed){
                         val shown=if(incoming)incomingLinks else outgoingLinks
                         if(shown.isEmpty())item{Column(Modifier.fillMaxWidth().padding(vertical=16.dp),verticalArrangement=Arrangement.spacedBy(8.dp)){
-                            Text(if(incoming)"还没有内容引用这里"else"还没有发出链接",style=MaterialTheme.typography.titleMedium,modifier=Modifier.testTag("knowledge-links-empty"))
-                            Text(if(incoming)"从其他内容建立正式“内容引用”后，会出现在这里；未确认提及不计入。"else"把相关概念连起来，下次就能从这里继续阅读。",style=MaterialTheme.typography.bodyMedium,color=Quiet)
+                            Text(if(incoming&&includeAllRelationKinds)"还没有内容关联到这里"else if(incoming)"还没有内容引用这里"else"还没有关联内容",style=MaterialTheme.typography.titleMedium,modifier=Modifier.testTag("knowledge-links-empty"))
+                            Text(if(!incoming)"点“添加关联”，选择一份笔记或卡片，下次就能从这里继续阅读。"
+                                else if(includeAllRelationKinds)"打开其他内容的“关联”，选择这里作为目标，可在此查看关系来源。"
+                                else if(focus.kind==TargetKind.NOTE||focus.kind==TargetKind.CARD)"打开另一笔记或卡片的“关联”，选择这里作为引用目标，即可在此查看来源。"
+                                else "这里只列出当前${if(focus.kind==TargetKind.PAGE)"页面"else"区域"}的引用。要建立整本笔记引用，可切换“笔记全文”，再从其他笔记或卡片的“关联”中选择这本笔记。",
+                                style=MaterialTheme.typography.bodyMedium,color=Quiet)
                         }}
                         items(shown,key={"${if(incoming)"in"else"out"}-${it.first.id}"}){(row,link)->
                             val target=if(incoming)link.source else link.target
                             KnowledgeConnectionCard(label(target),targetContext(target),
-                                if(incoming)"引用了这里 · 当前来源"else link.relation.label+" · "+(link.pinnedRevision?.let{"固定修订 $it"}?:"实时链接"),
+                                if(incoming&&includeAllRelationKinds)link.relation.label+" · 指向这里 · 当前来源"else if(incoming)"引用了这里 · 当前来源"else link.relation.label+" · "+(link.pinnedRevision?.let{"固定修订 $it"}?:"实时链接"),
                                 if(!incoming&&link.pinnedRevision!=null)"保留所选修订，点击查看固定摘录；卡片名称为当前名称。"else summary(target),
                                 "knowledge-${if(incoming)"incoming"else"outgoing"}-${row.id}",enabled,
                                 open={preview=LinkPreviewSelection(focus,row.id,row.revision,incoming)},
@@ -293,13 +319,16 @@ private val LinkPreviewSaver=Saver<LinkPreviewSelection?,List<String>>(
                         }
                     }
                     if(initialAnchor!=null&&!anchorCopied)item{OutlinedButton(onClick={waitingAnchor=true;vm.submit(book,initialAnchor)},enabled=editable,modifier=Modifier.fillMaxWidth().heightIn(min=48.dp).testTag("create-region-link")){Text("复制区域链接 · 不创建卡片")}}
-                    item{Button(onClick={if(initialAnchor!=null&&!anchorCopied){afterAnchorPicker=true;waitingAnchor=true;vm.submit(book,initialAnchor)}else picker=true},enabled=focusEditable&&!ui.loading&&!ui.readFailed,modifier=Modifier.fillMaxWidth().heightIn(min=48.dp).testTag("add-knowledge-link")){Text("关联已有知识")}}
+                    item{Button(onClick={if(initialAnchor!=null&&!anchorCopied){afterAnchorPicker=true;waitingAnchor=true;vm.submit(book,initialAnchor)}else picker=true},enabled=focusEditable&&!ui.loading&&!ui.readFailed,modifier=Modifier.fillMaxWidth().heightIn(min=48.dp).testTag("add-knowledge-link")){Glyph("link");Spacer(Modifier.width(8.dp));Text(if(incoming)"从这里添加引用"else"添加关联")}}
                     if(!incoming){
-                        item{HorizontalDivider();Text("未确认提及",Modifier.padding(top=12.dp),style=MaterialTheme.typography.titleMedium);Text("仅检查键入文字、摘要与名称，不识别手写；确认后才建立关联。",style=MaterialTheme.typography.bodySmall,color=Quiet)}
                         val aliases=values.values.filterIsInstance<KnowledgeData.Alias>()
                         val candidates=cards.filter{TargetRef(TargetKind.CARD,it.id)!=focus&&(sourceText().contains(it.title,true)||aliases.any{a->a.cardId==it.id&&sourceText().contains(a.name,true)})&&links.none{l->l.second.source==focus&&l.second.target==TargetRef(TargetKind.CARD,it.id)}}
-                        items(candidates,key={"candidate-"+it.id}){c->Row(verticalAlignment=Alignment.CenterVertically){Text(c.title+" · "+(ui.notes.find{it.id==c.notebookId}?.title?:""),Modifier.weight(1f));TextButton(onClick={vm.submit(focusBook,KnowledgeData.Link(focus,TargetRef(TargetKind.CARD,c.id)))},enabled=focusEditable,modifier=Modifier.heightIn(min=48.dp)){Text("确认关联")}}}
-                        if(candidates.isEmpty()&&!ui.loading&&!ui.readFailed)item{Text("当前覆盖范围没有候选提及",style=MaterialTheme.typography.bodySmall,color=Quiet)}
+                        item{HorizontalDivider();TextButton(onClick={showMentions=!showMentions},modifier=Modifier.fillMaxWidth().heightIn(min=48.dp).testTag("knowledge-mentions-toggle")){Text((if(showMentions)"收起未确认提及"else"发现未确认提及")+" · ${candidates.size}")}}
+                        if(showMentions){
+                            item{Text("仅检查键入文字、摘要与名称，不识别手写；确认后才建立关联。",style=MaterialTheme.typography.bodySmall,color=Quiet)}
+                            items(candidates,key={"candidate-"+it.id}){c->Row(verticalAlignment=Alignment.CenterVertically){Text(c.title+" · "+(ui.notes.find{it.id==c.notebookId}?.title?:""),Modifier.weight(1f));TextButton(onClick={vm.submit(focusBook,KnowledgeData.Link(focus,TargetRef(TargetKind.CARD,c.id)))},enabled=focusEditable,modifier=Modifier.heightIn(min=48.dp)){Text("确认关联")}}}
+                            if(candidates.isEmpty()&&!ui.loading&&!ui.readFailed)item{Text("当前覆盖范围没有候选提及",style=MaterialTheme.typography.bodySmall,color=Quiet)}
+                        }
                     }
                     item{HorizontalDivider();TextButton(onClick={showExports=!showExports},modifier=Modifier.fillMaxWidth().heightIn(min=48.dp).testTag("knowledge-link-export-options")){Text(if(showExports)"收起导出选项"else"导出关联快照")}}
                     if(showExports){
@@ -340,17 +369,26 @@ private val LinkPreviewSaver=Saver<LinkPreviewSelection?,List<String>>(
                     items(bookCards,key={it.id}){c->OutlinedButton(onClick={editCardId=c.id},modifier=Modifier.fillMaxWidth()){Text(if(readOnly)"查看属性 · ${c.title}"else"添加问题 · ${c.title}")}}
                 }
             }
+            HorizontalDivider(color=InkTheme.Divider)
+            Row(Modifier.fillMaxWidth().background(InkTheme.Navigation).horizontalScroll(rememberScrollState()).padding(horizontal=12.dp),horizontalArrangement=Arrangement.spacedBy(8.dp)){
+                listOf("关联","集合","关系图","画布","复习").forEachIndexed{i,t->
+                    FilterChip(tab==i,{if(tab!=i)cancelReviewPreparation();tab=i},enabled=enabled,label={Text(t)},modifier=Modifier.heightIn(min=48.dp).testTag("knowledge-tab-$i"))
+                }
+            }
         }}
     }
-    if(picker)AlertDialog(onDismissRequest={picker=false},title={Text("选择关联目标")},text={Column(Modifier.verticalScroll(rememberScrollState()),verticalArrangement=Arrangement.spacedBy(8.dp)){
+    if(picker)AlertDialog(onDismissRequest={picker=false},modifier=Modifier.safeDrawingPadding().imePadding(),properties=DialogProperties(decorFitsSystemWindows=false),title={Text("选择关联目标")},text={Column(Modifier.verticalScroll(rememberScrollState()),verticalArrangement=Arrangement.spacedBy(8.dp)){
         OutlinedTextField(query,{query=it},label={Text("按标题查找，核对所属笔记")})
         Row(Modifier.horizontalScroll(rememberScrollState())){RelationKind.entries.forEach{r->FilterChip(relation==r,{relation=r},enabled=focusEditable,label={Text(r.label)})}}
         Row(verticalAlignment=Alignment.CenterVertically){Checkbox(pinned,{pinned=it},enabled=focusEditable);Text("固定卡片当前版本")}
-        cards.filter{TargetRef(TargetKind.CARD,it.id)!=focus&&(query.isBlank()||it.title.contains(query,true))}.sortedBy{if(it.notebookId==book)0 else 1}.take(80).forEach{c->TextButton(onClick={vm.submit(focusBook,KnowledgeData.Link(focus,TargetRef(TargetKind.CARD,c.id),relation,if(pinned)c.revision else null));picker=false},enabled=focusEditable){Text("${c.title} · ${ui.notes.find{it.id==c.notebookId}?.title.orEmpty()} · ${c.id.take(6)}")}}
-        if(!pinned)ui.notes.filter{TargetRef(TargetKind.NOTE,it.id)!=focus&&(query.isBlank()||it.title.contains(query,true))}.take(50).forEach{n->TextButton(onClick={vm.submit(focusBook,KnowledgeData.Link(focus,TargetRef(TargetKind.NOTE,n.id),relation));picker=false},enabled=focusEditable){Text("笔记 · ${n.title} · ${n.id.take(6)}")}}
+        val matchingCards=cards.filter{TargetRef(TargetKind.CARD,it.id)!=focus&&(query.isBlank()||it.title.contains(query,true))}
+        val matchingNotes=if(pinned)emptyList()else ui.notes.filter{TargetRef(TargetKind.NOTE,it.id)!=focus&&(query.isBlank()||it.title.contains(query,true))}
+        if(matchingCards.isEmpty()&&matchingNotes.isEmpty())Text(if(query.isBlank())"暂无可关联内容。先新建笔记或摘要卡，再回来添加。"else"没有匹配结果，请缩短标题或清空搜索。",style=MaterialTheme.typography.bodyMedium,color=Quiet,modifier=Modifier.testTag("knowledge-picker-empty"))
+        matchingCards.sortedBy{if(it.notebookId==book)0 else 1}.take(80).forEach{c->TextButton(onClick={vm.submit(focusBook,KnowledgeData.Link(focus,TargetRef(TargetKind.CARD,c.id),relation,if(pinned)c.revision else null));picker=false},enabled=focusEditable){Text("${c.title} · ${ui.notes.find{it.id==c.notebookId}?.title.orEmpty()} · ${c.id.take(6)}")}}
+        matchingNotes.take(50).forEach{n->TextButton(onClick={vm.submit(focusBook,KnowledgeData.Link(focus,TargetRef(TargetKind.NOTE,n.id),relation));picker=false},enabled=focusEditable){Text("笔记 · ${n.title} · ${n.id.take(6)}")}}
     }},confirmButton={TextButton(onClick={picker=false}){Text("取消")}})
-    preview?.let{selection->key(selection){KnowledgeLinkPreview(selection.focus,selection.id,selection.revision,selection.incoming,
-        enabled=canDismiss,returnLabel="返回关联",dismiss={preview=null},onOpenTarget=openTarget)}}
+    preview?.let{selection->key(selection,includeAllRelationKinds){KnowledgeLinkPreview(selection.focus,selection.id,selection.revision,selection.incoming,
+        enabled=canDismiss,includeAllRelationKinds=includeAllRelationKinds,returnLabel="返回关联",dismiss={preview=null},onOpenTarget=openTarget)}}
     editCard?.let{card->
         val available=card.trashedAt==null&&book in activeBooks
         val questions=rows.filter{it.notebookId==book&&(it.data() as? KnowledgeData.Question)?.cardId==card.id}

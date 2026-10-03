@@ -236,6 +236,54 @@ class PdfTextSearchUiTest {
         finally { bitmap.recycle() }
     }
 
+    @Test fun sourceFrameReadinessRequiresCurrentPdfOnscreenDraw() {
+        ready()
+        val fixture = pdf(listOf("$alpha current rendered source"))
+        open(fixture.note)
+        val page = fixture.pages.single()
+        val support = SelectAwaitTestSupport(compose)
+        val before = support.authorStamp(fixture.note.id)
+        val native = compose.runOnIdle { canvas() }
+        val originalDraw = compose.runOnIdle { native.willNotDraw() }
+        val bounds = CanvasBounds(100.0, 840.0, 650.0, 970.0)
+        fun frameReady() = compose.runOnIdle {
+            native.hasDrawnSourceFrame(page, native.snapshotViewport(), native.width, native.height,
+                native.resources.displayMetrics.density.toDouble())
+        }
+        try {
+            compose.waitUntil(15_000) { frameReady() }
+            compose.runOnIdle {
+                val initial = native.snapshotViewport()
+                // Hold normal drawing while the real asynchronous PDF renderer completes a new ROI.
+                native.setWillNotDraw(true)
+                native.focusRegion(bounds)
+                assertNotEquals(initial, native.snapshotViewport())
+                assertTrue("An old PDF tile remains available for display", native.documentContentReady)
+                assertFalse("The old tile is not the current render request", native.sourceContentReady)
+                assertFalse("Changing viewport invalidates the drawn-frame proof", native.hasDrawnSourceFrame(
+                    page, native.snapshotViewport(), native.width, native.height, native.resources.displayMetrics.density.toDouble()))
+            }
+            compose.waitUntil(15_000) { compose.runOnIdle { native.sourceContentReady } }
+            assertFalse("A completed render must not claim a normal window draw", frameReady())
+            compose.runOnIdle {
+                // No normal frame can run between re-enabling drawing and this synchronous capture.
+                native.setWillNotDraw(false)
+                assertTrue(native.excerptPreview(bounds).isNotEmpty())
+                assertFalse("Offscreen excerpt drawing must not release the pulse", native.hasDrawnSourceFrame(
+                    page, native.snapshotViewport(), native.width, native.height, native.resources.displayMetrics.density.toDouble()))
+                native.invalidate()
+            }
+            compose.waitUntil(15_000) { frameReady() }
+            assertEquals(before, support.authorStamp(fixture.note.id))
+        } finally {
+            compose.runOnIdle {
+                native.setWillNotDraw(originalDraw)
+                ViewModelProvider(compose.activity)[NotebookViewModel::class.java].back()
+            }
+            ready()
+        }
+    }
+
     @Test fun pdfAndManualHitsMergeByPageAndOpenTheOriginalRegionInReadMode() {
         ready()
         val fixture = pdf(listOf("$alpha first origin", "$beta second origin", "$alpha third origin"),

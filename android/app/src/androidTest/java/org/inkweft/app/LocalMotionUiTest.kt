@@ -451,6 +451,14 @@ class LocalMotionUiTest {
         viewport
     }.also {
         if (panel) {
+            val panels = compose.onAllNodesWithTag("study-panel").fetchSemanticsNodes()
+            if (panels.isEmpty()) {
+                compose.onNodeWithTag("study-window-source-return").assertIsDisplayed()
+                compose.onNodeWithTag("ink-surface").assertIsDisplayed()
+                return@also
+            }
+            check(panels.size == 1) { "Expected one visible study panel, found ${panels.size}" }
+            compose.onNodeWithTag("study-panel").assertIsDisplayed()
             val paper = screenRect("ink-surface")
             val sourceRect = main {
                 val canvas = support.native<InkCanvasView>()

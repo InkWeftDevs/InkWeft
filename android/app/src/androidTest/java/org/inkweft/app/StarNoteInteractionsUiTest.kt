@@ -104,6 +104,9 @@ class StarNoteInteractionsUiTest {
   assertEquals(1L,runBlocking{app.inkRepository.read(note.id)}.revision)
  }
  @Test fun pdfTextExcerptKeepsOriginalPictureAndSelectedText(){
+  val prefs=app.getSharedPreferences("inkweft-excerpts",0)
+  val original=listOf("text","to-map").associateWith{prefs.all[it] as? Boolean}
+  try{
   compose.waitUntil(15000){compose.onAllNodesWithTag("new-note").fetchSemanticsNodes().isNotEmpty()}
   val pdf=android.graphics.pdf.PdfDocument();val page=pdf.startPage(android.graphics.pdf.PdfDocument.PageInfo.Builder(1000,1414,1).create())
   page.canvas.drawText("Extract me",100f,160f,android.graphics.Paint().apply{textSize=36f;color=android.graphics.Color.BLACK})
@@ -114,7 +117,13 @@ class StarNoteInteractionsUiTest {
   val note=runBlocking{app.libraryContent.import(ImportNotebook(id(),id(),prepared.sha256),prepared)}
   compose.runOnIdle{ViewModelProvider(compose.activity)[NotebookViewModel::class.java].select(note)};compose.singlePageEditor();ready();compose.frameCanvasFixture()
   compose.waitUntil(15000){var loaded=false;compose.runOnIdle{loaded=find<InkCanvasView>()!!.inputReady};loaded}
-  tap("top-excerpt");tap("top-excerpt");tap("excerpt-text-mode");tap("capture-destination-inbox");compose.onNodeWithContentDescription("关闭摘要笔").performClick()
+  tap("top-excerpt");tap("top-excerpt");tap("excerpt-region-mode");tap("capture-destination-inbox");compose.onNodeWithContentDescription("关闭摘要笔").performClick()
+  // Cancel before the PDF worker returns: its old result must not resurrect the selection.
+  compose.runOnIdle{find<SelectionOverlayView>()!!.let{overlay->
+   overlay.onRegion(InkRegion(listOf(EraserPoint(50f,50f),EraserPoint(650f,600f))))
+   overlay.onTap(800f,1100f)
+  }}
+  compose.waitForIdle();ready();compose.onNodeWithTag("capture-confirm").assertDoesNotExist()
   compose.runOnIdle{find<SelectionOverlayView>()!!.onRegion(InkRegion(listOf(EraserPoint(50f,50f),EraserPoint(650f,600f))))}
   compose.waitUntil(15000){compose.onAllNodesWithTag("capture-confirm").fetchSemanticsNodes().isNotEmpty()};tap("capture-confirm")
   if(compose.onAllNodesWithTag("capture-confirm").fetchSemanticsNodes().isNotEmpty())tap("capture-confirm")
@@ -124,6 +133,7 @@ class StarNoteInteractionsUiTest {
   val raw=java.util.Base64.getDecoder().decode(image);val bitmap=android.graphics.BitmapFactory.decodeByteArray(raw,0,raw.size)
   try{val color=bitmap.getPixel(bitmap.width/3,bitmap.height*2/3);assertTrue(android.graphics.Color.blue(color)>180);assertTrue(android.graphics.Color.red(color)<60)}finally{bitmap.recycle()}
   shot("v36-pdf-excerpt.png")
+  }finally{prefs.edit().apply{original.forEach{(key,value)->if(value==null)remove(key)else putBoolean(key,value)}}.commit()}
  }
  @Test fun splitSwitchEditingUsesThePageShownInReferencePane(){
   val note=create();val second=runBlocking{app.pages.addAfter(note.id,note.id,id())}

@@ -47,6 +47,84 @@ class KnowledgeRepository(private val db:NoteDatabase,private val fault:(Knowled
         row.let{Note(it.id,it.revision,it.title,it.text)} to anchor
     }
     suspend fun cardVersion(id:String,revision:Long)=db.study().cardVersion(id,revision)
+    internal fun orderId(book:String,mapId:String?)=UUID.nameUUIDFromBytes("inkweft.map-order.v1:$book:${mapId?:"main"}".toByteArray()).toString()
+
+    /** Build the order and tombstone changes against the final graph, before any row is written. */
+    internal suspend fun graphChanges(book:String,changes:List<KnowledgeRow>,preferredOrders:Map<String?,List<String>> = emptyMap()):List<KnowledgeRow>{
+        val previous=db.knowledge().forBook(book);val main=db.study().nodes(book)
+        val oldById=previous.associateBy{it.id};val updates=changes.associateBy{it.id}.toMutableMap()
+        val affected=linkedSetOf<String?>()
+        changes.forEach{row->listOfNotNull(oldById[row.id],row).forEach{r->when(val data=r.data()){
+            is KnowledgeData.MapDefinition->affected+=r.id
+            is KnowledgeData.MapOccurrence->affected+=data.mapId
+            is KnowledgeData.MapOrder->affected+=data.mapId
+            else->error("NOT_A_MAP_RECORD")
+        }}}
+        fun records()=previous.filter{it.id !in updates}+updates.values
+        for(mapId in affected){
+            val oldNodes=graphNodes(book,mapId,main,previous)
+            var current=records()
+            val definition=mapId?.let{id->current.find{it.id==id}}
+            val existingOrder=graphOrder(previous,mapId)?:previous.firstOrNull{(it.data() as? KnowledgeData.MapOrder)?.let{v->v.mapId==mapId}==true}
+            var nextNodes=graphNodes(book,mapId,main,current)
+            val ids=nextNodes.map{it.id}.toSet()
+            // Structure nodes live in one definition; their old revisions remain the historical owner.
+            // Detached occurrence tombstones must not keep a parent that no longer exists in that definition.
+            nextNodes.filter{it.removed&&it.parentId!=null&&it.parentId !in ids}.forEach{node->
+                val row=current.firstOrNull{it.id==node.id}?:return@forEach
+                val value=row.data() as? KnowledgeData.MapOccurrence?:return@forEach
+                updates[row.id]=row.copy(revision=(oldById[row.id]?.revision?:0)+1,payload=KnowledgeCodec.encode(value.copy(parentId=null)))
+            }
+            current=records();nextNodes=graphNodes(book,mapId,main,current)
+            if(definition?.removed==true){
+                existingOrder?.takeIf{!it.removed}?.let{updates[it.id]=it.copy(revision=it.revision+1,removed=true)}
+                continue
+            }
+            val seed=preferredOrders[mapId]?:((existingOrder?.data() as? KnowledgeData.MapOrder)?.orderedNodeIds
+                ?:StudyOrganization.legacyOrder(oldNodes.map{it.model()}))
+            val addedStructures=(definition?.data() as? KnowledgeData.MapDefinition)?.structures.orEmpty().map{it.id}
+            val order=canonicalGraphOrder(nextNodes.map{it.model()},seed+addedStructures)
+            val payload=KnowledgeCodec.encode(KnowledgeData.MapOrder(mapId,order))
+            if(existingOrder==null){
+                val id=orderId(book,mapId);require(previous.none{it.id==id}){"MAP_ORDER_ID_CONFLICT"}
+                updates[id]=KnowledgeRow(id,book,1,payload)
+            }else if(existingOrder.removed||!existingOrder.payload.contentEquals(payload)){
+                updates[existingOrder.id]=existingOrder.copy(revision=existingOrder.revision+1,payload=payload,removed=false)
+            }
+        }
+        return updates.values.toList()
+    }
+
+    /** Caller owns the transaction and top-level receipt. Intermediate graphs are never validated or emitted. */
+    internal suspend fun commitGraph(book:String,changes:List<KnowledgeRow>,mainNodes:List<StudyNodeRow>?=null){
+        val dao=db.knowledge();val previous=dao.forBook(book);val oldById=previous.associateBy{it.id}
+        require(changes.map{it.id}.distinct().size==changes.size)
+        changes.forEach{row->
+            val old=dao.get(row.id);require(row.notebookId==book&&row.revision in 1 until Long.MAX_VALUE)
+            require(row.data() is KnowledgeData.MapDefinition||row.data() is KnowledgeData.MapOccurrence||row.data() is KnowledgeData.MapOrder)
+            require(if(old==null)row.revision==1L else old.notebookId==book&&row.revision==old.revision+1&&old.data()::class==row.data()::class)
+        }
+        val changedIds=changes.map{it.id}.toSet();val finalRows=previous.filter{it.id !in changedIds}+changes
+        require(finalRows.size<=2000){"KNOWLEDGE_BUDGET"}
+        val oldMain=db.study().nodes(book);val finalMain=mainNodes?:oldMain
+        if(mainNodes!=null){
+            require(oldMain.all{old->mainNodes.any{it.id==old.id}}){"MAP_NODE_HISTORY_MISSING"}
+            val oldNodes=oldMain.associateBy{it.id}
+            mainNodes.forEach{n->val old=oldNodes[n.id];require(n.notebookId==book)
+                if(old==null)require(db.study().node(n.id)==null){"MAP_NODE_ID_EXISTS"}
+                require(old==n||if(old==null)n.revision==1L else n.revision==old.revision+1&&n.cardId==old.cardId)
+            }
+        }
+        validateMaps(finalRows,mapOf(book to finalMain))
+        if(mainNodes!=null){
+            val oldNodes=oldMain.associateBy{it.id}
+            mainNodes.forEach{n->val old=oldNodes[n.id];if(old==null)db.study().addNode(n)else if(old!=n)check(db.study().updateNode(n)==1)}
+        }
+        changes.forEach{row->
+            if(oldById[row.id]==null)dao.insert(row)else check(dao.update(row)==1)
+            dao.revision(KnowledgeRevisionRow(row.id,row.revision,book,row.payload,row.removed))
+        }
+    }
     suspend fun lookup(c:KnowledgeCommand):String?=db.withTransaction{db.knowledge().receipt(c.operationId)?.let{require(it.notebookId==c.notebookId&&it.digest==c.digest());it.resultId}}
     suspend fun outcome(c:KnowledgeCommand):KnowledgeOutcome = commandOutcome(c,null)
     suspend fun reviewOutcome(c:KnowledgeCommand,expectedCardRevision:Long):KnowledgeOutcome {
@@ -87,8 +165,9 @@ class KnowledgeRepository(private val db:NoteDatabase,private val fault:(Knowled
             if(c.data is KnowledgeData.Properties){val d=c.data as KnowledgeData.Properties;require(records.none{it.id!=c.id&&!it.removed&&(it.data() as? KnowledgeData.Properties)?.cardId==d.cardId}){"PROPERTY_EXISTS"}}
             if(c.data is KnowledgeData.Link&&!c.removed)require(records.none{it.id!=c.id&&!it.removed&&it.data()==c.data}){"LINK_EXISTS"}
             if(c.data is KnowledgeData.MapPortal&&!c.removed)require(records.none{it.id!=c.id&&it.notebookId==c.notebookId&&!it.removed&&it.data()==c.data}){"MAP_PORTAL_EXISTS"}
+            if(c.data is KnowledgeData.MapOrder)require(!c.removed){"MAP_ORDER_REQUIRED"}
             val next=KnowledgeRow(c.id,c.notebookId,c.expectedRevision+1,c.payload,c.removed)
-            validateMaps(records.filter{it.id!=c.id}+next)
+            if(c.data !is KnowledgeData.MapDefinition&&c.data !is KnowledgeData.MapOccurrence&&c.data !is KnowledgeData.MapOrder)validateMaps(records.filter{it.notebookId==c.notebookId&&it.id!=c.id}+next)
             old to next
             }catch(e:IllegalArgumentException){
                 throw KnowledgeRejected(when(e.message){
@@ -98,8 +177,15 @@ class KnowledgeRepository(private val db:NoteDatabase,private val fault:(Knowled
                     else->KnowledgeRejection.INVALID
                 })
             }
-            if(old==null)dao.insert(next)else check(dao.update(next)==1)
-            dao.revision(KnowledgeRevisionRow(next.id,next.revision,next.notebookId,next.payload,next.removed))
+            if(c.data is KnowledgeData.MapDefinition||c.data is KnowledgeData.MapOccurrence||c.data is KnowledgeData.MapOrder){
+                try{
+                    val changes=if(c.data is KnowledgeData.MapOrder)listOf(next)else graphChanges(c.notebookId,listOf(next))
+                    commitGraph(c.notebookId,changes)
+                }catch(e:IllegalArgumentException){throw KnowledgeRejected(if(e.message=="MAP_ORDER_EXISTS")KnowledgeRejection.DUPLICATE else KnowledgeRejection.INVALID)}
+            }else{
+                if(old==null)dao.insert(next)else check(dao.update(next)==1)
+                dao.revision(KnowledgeRevisionRow(next.id,next.revision,next.notebookId,next.payload,next.removed))
+            }
             fault(KnowledgeFault.BEFORE_RECEIPT);dao.receipt(KnowledgeReceiptRow(c.operationId,c.notebookId,c.digest(),c.id));db.notes().touch(c.notebookId,System.currentTimeMillis());c.id
         };fault(KnowledgeFault.AFTER_COMMIT);return result
     }
@@ -127,6 +213,7 @@ class KnowledgeRepository(private val db:NoteDatabase,private val fault:(Knowled
             is KnowledgeData.Alias->card(data.cardId)
             is KnowledgeData.MapDefinition,is KnowledgeData.MapTemplate->Unit
             is KnowledgeData.MapOccurrence->{card(data.cardId);val map=requireNotNull(db.knowledge().get(data.mapId));require(map.notebookId==book&&map.data() is KnowledgeData.MapDefinition);if(active)require(!map.removed)}
+            is KnowledgeData.MapOrder->validateOrderOwnership(book,data,active)
             is KnowledgeData.MapPortal->MapPortalRepository(db).validateData(book,data,active)
             is KnowledgeData.Decoration->{for(id in listOf(data.from,data.to)){val p=requireNotNull(db.knowledge().get(id));require(p.notebookId==book&&p.data() is KnowledgeData.Placement);if(active)require(!p.removed)}}
             is KnowledgeData.Collection->Unit
@@ -147,12 +234,55 @@ class KnowledgeRepository(private val db:NoteDatabase,private val fault:(Knowled
         require(portals.distinct().size==portals.size){"MAP_PORTAL_EXISTS"}
         validateMaps(rows)
     }
-    private fun validateMaps(rows:List<KnowledgeRow>){
-        val maps=rows.filter{it.data() is KnowledgeData.MapDefinition}.associateBy{it.id}
-        val nodes=rows.mapNotNull{r->(r.data() as? KnowledgeData.MapOccurrence)?.let{r to it}}
-        for((mapId,items) in nodes.groupBy{it.second.mapId}){
-            val map=requireNotNull(maps[mapId]);require(items.all{it.first.notebookId==map.notebookId});if(map.removed)require(items.all{it.first.removed})
-            StudyGraph.validate((map.data() as KnowledgeData.MapDefinition).structures.map{StudyNode(it.id,it.id,it.parentId,it.x,it.y,map.revision)}+items.map{(r,n)->StudyNode(r.id,n.cardId,n.parentId,n.x,n.y,r.revision,r.removed)})
+    private suspend fun validateOrderOwnership(book:String,order:KnowledgeData.MapOrder,active:Boolean){
+        require(db.notes().note(book)!=null)
+        val map=order.mapId?.let{id->requireNotNull(db.knowledge().get(id)).also{
+            require(it.notebookId==book&&it.data() is KnowledgeData.MapDefinition)
+            if(active)require(!it.removed)
+        }}
+        if(active){
+            val nodes=graphNodes(book,order.mapId,db.study().nodes(book),db.knowledge().forBook(book)).map{it.model()}
+            require(order.orderedNodeIds.toSet()==nodes.filterNot{it.removed}.map{it.id}.toSet()){"MAP_ORDER_MEMBERSHIP"}
+            require(StudyOrganization.canonicalOrder(nodes,order.orderedNodeIds)==order.orderedNodeIds){"MAP_ORDER_HIERARCHY"}
+            return
+        }
+        // An old order proves identities at that revision, not membership in today's graph.
+        val structureIds=if(map==null)emptySet()else (listOf(map.payload)+db.knowledge().revisions(map.id).map{it.payload})
+            .flatMap{(KnowledgeCodec.decode(it) as? KnowledgeData.MapDefinition)?.structures.orEmpty().map{n->n.id}}.toSet()
+        for(id in order.orderedNodeIds){
+            if(map==null){require(db.study().node(id)?.notebookId==book);continue}
+            if(id in structureIds)continue
+            val node=requireNotNull(db.knowledge().get(id));require(node.notebookId==book&&node.data() is KnowledgeData.MapOccurrence)
+            val versions=listOf(node.payload)+db.knowledge().revisions(id).filter{it.notebookId==book}.map{it.payload}
+            require(versions.any{payload->(KnowledgeCodec.decode(payload) as? KnowledgeData.MapOccurrence)?.let{
+                it.mapId==map.id&&db.study().card(it.cardId)?.notebookId==book
+            }==true}){"MAP_ORDER_OWNER"}
+        }
+    }
+
+    private suspend fun validateMaps(rows:List<KnowledgeRow>,mainOverrides:Map<String,List<StudyNodeRow>> = emptyMap()){
+        val books=rows.map{it.notebookId}.toSet()+mainOverrides.keys
+        for(book in books){
+            val own=rows.filter{it.notebookId==book};val maps=own.filter{it.data() is KnowledgeData.MapDefinition}.associateBy{it.id}
+            val cards=db.study().cards(book).associateBy{it.id};val main=mainOverrides[book]?:db.study().nodes(book)
+            fun card(id:String,removed:Boolean){val c=requireNotNull(cards[id]);require(removed||c.trashedAt==null)}
+            main.forEach{require(it.notebookId==book);card(it.cardId,it.removed)}
+            StudyGraph.validate(main.map{it.model()})
+            val occurrences=own.mapNotNull{r->(r.data() as? KnowledgeData.MapOccurrence)?.let{r to it}}
+            occurrences.forEach{(row,node)->
+                val map=requireNotNull(maps[node.mapId]);require(row.removed||!map.removed);card(node.cardId,row.removed)
+            }
+            val byMap=mutableMapOf<String?,List<StudyNode>>(null to main.map{it.model()})
+            maps.keys.forEach{id->
+                val models=graphNodes(book,id,main,own).map{it.model()};StudyGraph.validate(models);byMap[id]=models
+            }
+            val orders=own.filterNot{it.removed}.mapNotNull{(it.data() as? KnowledgeData.MapOrder)}
+            require(orders.map{it.mapId}.distinct().size==orders.size){"MAP_ORDER_EXISTS"}
+            orders.forEach{order->
+                order.mapId?.let{require(maps[it]?.removed==false){"MAP_ORDER_UNAVAILABLE"}}
+                val nodes=requireNotNull(byMap[order.mapId]);require(order.orderedNodeIds.toSet()==nodes.filterNot{it.removed}.map{it.id}.toSet()){"MAP_ORDER_MEMBERSHIP"}
+                require(StudyOrganization.canonicalOrder(nodes,order.orderedNodeIds)==order.orderedNodeIds){"MAP_ORDER_HIERARCHY"}
+            }
         }
     }
 }

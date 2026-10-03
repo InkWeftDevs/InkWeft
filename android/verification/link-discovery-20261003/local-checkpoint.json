@@ -1,0 +1,218 @@
+{
+  "recordedUtc": "2026-10-03T12:53:45.631432+00:00",
+  "baseCommit": "b466ad776424e219796f84dfdd6ff6381c230872",
+  "baseTree": "3a041d4d2579ec516ec5e8204747058d233980bb",
+  "workingTree": "uncommitted local candidate",
+  "codePatchSha256": "263179b829613a0c66e9ca2361f17565fa4b81930dadd39985c7b13d9b081854",
+  "sourceSha256": {
+    "android/app/src/main/java/org/inkweft/app/KnowledgeLinkPreview.kt": "08f9798b463e6e2788c6c65224c8e18ccca5f55135dedf310a5c6ef3570145aa",
+    "android/app/src/main/java/org/inkweft/app/KnowledgeWorkspace.kt": "9396360a782ce1075ed1464aa8da067b060b152aab5adb81034385980df86493"
+  },
+  "mainApk": {
+    "name": "InkWeft-link-ui-b466ad77-263179b8.apk",
+    "sha256": "ba4fcedb31dc057db4fc1325836eec031141bcd033606582af542daa7102405a",
+    "package": "org.inkweft.app.a0.workspace",
+    "versionCode": 68,
+    "versionName": "0.0.68-cloud-candidate",
+    "certificateSha256": "18e67dbce88152dbe4d4821b5a3a513a409a3df4eac9261f4c11126c36e43969"
+  },
+  "reusedTestApks": {
+    "app-test": "e276e95f58ad64a2e45f3bb24f3cd65abc0e6e2b7ab851e7a1becb7019cb09c9",
+    "room-test": "1ffb8681569672581189a0a8439e541d24e0487ef51ce80bcf8cbe6129559a34"
+  },
+  "ui": {
+    "environment": "physical Android 16 / API36",
+    "mode": "one initial MainActivity foreground launch per method; no assistance inside test body",
+    "originalTestSourceUnchanged": true,
+    "counts": {
+      "PASS": 7,
+      "FAIL": 0,
+      "NOT_RUN": 0
+    },
+    "methods": [
+      {
+        "method": "org.inkweft.app.KnowledgeTextLinksUiTest#inlineTitleAndAliasOpenConfirmedTargetWhileDuplicateNamesRequireChoice",
+        "status": "PASS",
+        "elapsedSeconds": 11.5,
+        "initialForegroundLaunchAtSeconds": 2.766,
+        "localReceipt": "physical-local-ui02/first-two/results.json"
+      },
+      {
+        "method": "org.inkweft.app.KnowledgeTextLinksUiTest#reopenedLivePreviewReadsCurrentBodyWhilePinnedPreviewKeepsExactHistory",
+        "status": "PASS",
+        "elapsedSeconds": 11.75,
+        "initialForegroundLaunchAtSeconds": 3.062,
+        "localReceipt": "physical-local-ui02/first-two/results.json"
+      },
+      {
+        "method": "org.inkweft.app.KnowledgeTextLinksUiTest#narrow375LargeTextKeepsInlinePickerAndPreviewControlsReachable",
+        "status": "PASS",
+        "elapsedSeconds": 19.234,
+        "initialForegroundLaunchAtSeconds": 2.734,
+        "localReceipt": "physical-local-ui02/narrow/01/runtime/results.json"
+      },
+      {
+        "method": "org.inkweft.app.KnowledgeTextLinksUiTest#backlinkEntryRestoresLiveSourcePreviewAndOriginalCardWithoutAuthorWrites",
+        "status": "PASS",
+        "elapsedSeconds": 12.859,
+        "initialForegroundLaunchAtSeconds": 2.766,
+        "localReceipt": "physical-local-ui02/remaining-four/results.json"
+      },
+      {
+        "method": "org.inkweft.app.KnowledgeTextLinksUiTest#pageAndNotebookBacklinksKeepDistinctScopeAndReadOnlyPreviewIdentity",
+        "status": "PASS",
+        "elapsedSeconds": 13.032,
+        "initialForegroundLaunchAtSeconds": 2.844,
+        "localReceipt": "physical-local-ui02/remaining-four/results.json"
+      },
+      {
+        "method": "org.inkweft.app.KnowledgeTextLinksUiTest#pickerAndPreviewRecreationReturnToOriginalCardNodeAndViewportWithoutWriting",
+        "status": "PASS",
+        "elapsedSeconds": 10.656,
+        "initialForegroundLaunchAtSeconds": 2.875,
+        "localReceipt": "physical-local-ui02/remaining-four/results.json"
+      },
+      {
+        "method": "org.inkweft.app.KnowledgeTextLinksUiTest#replacedAndRemovedLinkAreRevalidatedBeforeOpenWithoutSilentlyChangingTarget",
+        "status": "PASS",
+        "elapsedSeconds": 10.609,
+        "initialForegroundLaunchAtSeconds": 2.812,
+        "localReceipt": "physical-local-ui02/remaining-four/results.json"
+      }
+    ],
+    "unassisted": "NOT_RUN on final candidate; baseline one control blocked by kernel freeze; no repeated environment retries",
+    "monitoringNotes": [
+      {
+        "method": "org.inkweft.app.KnowledgeTextLinksUiTest#narrow375LargeTextKeepsInlinePickerAndPreviewControlsReachable",
+        "warning": "one cgroup.events ADB_READ_TIMEOUT in auxiliary environment monitoring",
+        "resultScope": "Exact test START/END and OK(1 test) are complete, so PASS is preserved; this does not assert continuous successful environment sampling"
+      }
+    ]
+  },
+  "room": {
+    "environment": "same physical device; independent UUID database per method; self-target runner; no Activity",
+    "mode": "unassisted",
+    "dataSourcesAndRunnerUnchangedSinceBaseline": true,
+    "counts": {
+      "PASS": 11,
+      "FAIL": 0,
+      "NOT_RUN": 0
+    },
+    "methods": [
+      {
+        "method": "org.inkweft.data.KnowledgeTextRepositoryTest#onlyConfirmedLinksForExactSourceAndOwnerAppearWithoutAuthorWrites",
+        "status": "PASS",
+        "elapsedSeconds": 0.516
+      },
+      {
+        "method": "org.inkweft.data.KnowledgeTextRepositoryTest#crossNotebookSameNamesAndAliasesKeepEveryConfirmedTargetIdentity",
+        "status": "PASS",
+        "elapsedSeconds": 0.516
+      },
+      {
+        "method": "org.inkweft.data.KnowledgeTextRepositoryTest#liveRenameAndAliasChangesNeverReplacePinnedTitleOrBody",
+        "status": "PASS",
+        "elapsedSeconds": 0.515
+      },
+      {
+        "method": "org.inkweft.data.KnowledgeTextRepositoryTest#missingPinnedRevisionRetainsAssociationWithoutCurrentTitleOrBodyFallback",
+        "status": "PASS",
+        "elapsedSeconds": 0.578
+      },
+      {
+        "method": "org.inkweft.data.KnowledgeTextRepositoryTest#recyclingNotebookEmitsUnavailableButKeepsExactPinnedExcerptAndTarget",
+        "status": "PASS",
+        "elapsedSeconds": 0.531
+      },
+      {
+        "method": "org.inkweft.data.KnowledgeTextRepositoryTest#capturedRevisionRejectsRetargetingRemovalAndWrongSourceWhilePageTargetsStayExplicit",
+        "status": "PASS",
+        "elapsedSeconds": 0.5
+      },
+      {
+        "method": "org.inkweft.data.KnowledgeTextRepositoryTest#incomingCrossNotebookPreviewReadsCurrentSourceRatherThanPinnedTarget",
+        "status": "PASS",
+        "elapsedSeconds": 0.531
+      },
+      {
+        "method": "org.inkweft.data.KnowledgeTextRepositoryTest#incomingRequiresExactTargetKindReferenceRelationAndSourceOwner",
+        "status": "PASS",
+        "elapsedSeconds": 0.437
+      },
+      {
+        "method": "org.inkweft.data.KnowledgeTextRepositoryTest#incomingRejectsStaleRemovedAndRetypedRelationshipsWithoutWriting",
+        "status": "PASS",
+        "elapsedSeconds": 0.516
+      },
+      {
+        "method": "org.inkweft.data.KnowledgeTextRepositoryTest#observedPreviewsRefreshBodyOnlyEditsAndSourceAvailabilityWithoutAuthorWrites",
+        "status": "PASS",
+        "elapsedSeconds": 0.547
+      },
+      {
+        "method": "org.inkweft.data.KnowledgeTextRepositoryTest#observedAnchorPreviewWarnsWhenOriginalInkRevisionChanges",
+        "status": "PASS",
+        "elapsedSeconds": 0.531
+      }
+    ],
+    "localReceipt": "physical-baseline/room11/results.json"
+  },
+  "build": {
+    "appAssemble": "PASS",
+    "appLint": "PASS",
+    "lintError": 0,
+    "lintFatal": 0,
+    "lintWarning": 137,
+    "trackedInputCount": 771,
+    "temporaryProbeAbsentInActiveDex": true
+  },
+  "earlierRuns": {
+    "baselineUi": {
+      "PASS": 3,
+      "FAIL": 4
+    },
+    "ui01": {
+      "PASS": 4,
+      "FAIL": 3
+    },
+    "diagnosticInlineV1": "PASS, excluded from acceptance",
+    "diagnosticInlineV2": "PASS, excluded from acceptance",
+    "preciseSnapshotRaceCaptured": false
+  },
+  "ordinaryAppVisuals": [
+    {
+      "build": "UI01 / 62039656 / 852b5541",
+      "scope": "entry, preview, original-card return, complete target card, duplicate target chip, landscape 640dp maximum, real Chinese IME candidate commits and cancel hit, real OEM split resizing to 435dp with preview and IME",
+      "localEvidence": "visual-local-ui01/"
+    },
+    {
+      "build": "UI02 / 263179b8 / ba4fcedb",
+      "scope": "375dp/font1.6/120-character title, actual scroll reveals body, fixed controls, actual close returns original card",
+      "localEvidence": "final-manual-narrow-display-session.json"
+    }
+  ],
+  "dataProtection": {
+    "originalNotebooks": 83,
+    "originalRows": 4379,
+    "originalRowsMissing": 0,
+    "originalRowsChanged": 0,
+    "currentRows": 6074,
+    "newTestNotebooksRetained": 92,
+    "newRows": 1695,
+    "newRowsAllOwnedByNewNotebooks": true,
+    "originalExternalFilesUnchanged": 48,
+    "originalPreferencesAllRestored": true,
+    "preferenceFilesActuallyRestored": 3,
+    "originalSettingsMatched": 11,
+    "oldWorktreesUnchanged": 3,
+    "oldDirtyFilesPreserved": 162
+  },
+  "privacy": "raw images, logs, row manifests, device identifiers, backups and signing material remain in local archives",
+  "localArchive": "ARCHIVE-LINK-DISCOVERY-20261003",
+  "cleanup": {
+    "taskDeviceXmlDeletedAfterMatchingLocalCopies": 134,
+    "localXmlEvidenceRetained": true,
+    "localPythonCache": "retained; automatic approval rejected deletion with blocked by policy; no retry",
+    "sourcePackagesEvidenceBackupsAndToolchainRetained": true
+  }
+}

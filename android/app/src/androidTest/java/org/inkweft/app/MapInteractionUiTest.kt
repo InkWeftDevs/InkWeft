@@ -27,8 +27,8 @@ class MapInteractionUiTest {
   val outline=tag.startsWith("outline-")&&compose.onAllNodesWithTag("study-list").fetchSemanticsNodes().isNotEmpty()
   if(outline)compose.onNodeWithTag("study-list").performScrollToNode(hasTestTag(tag))else compose.revealAction(tag)
   val n=compose.onNodeWithTag(tag);runCatching{n.performScrollTo()}
-  if(outline){
-   // ScrollToNode still chooses the nearest scroller, which is this button's horizontal Row.
+  if(compose.onAllNodes(hasTestTag(tag) and hasAnyAncestor(hasTestTag("study-list"))).fetchSemanticsNodes().isNotEmpty()){
+   // Align with the outer list after nested scrolling or an inline-editor relayout.
    val list=compose.onNodeWithTag("study-list");val viewport=list.fetchSemanticsNode().boundsInRoot
    val target=n.fetchSemanticsNode();val top=target.positionInRoot.y;val bottom=top+target.size.height
    val dy=when{top<viewport.top->top-viewport.top;bottom>viewport.bottom->bottom-viewport.bottom;else->0f}
@@ -208,15 +208,38 @@ class MapInteractionUiTest {
  }
  @Test fun narrowLargeTextKeepsActionsDraftAndCanvas(){
   val f=fixture();val automation=androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().uiAutomation
-  fun shell(c:String){automation.executeShellCommand(c).use{android.os.ParcelFileDescriptor.AutoCloseInputStream(it).readBytes()}}
+  fun shell(c:String)=automation.executeShellCommand(c).use{android.os.ParcelFileDescriptor.AutoCloseInputStream(it).readBytes().toString(Charsets.UTF_8).trim()}
+  fun readOverride(c:String)=Regex("Override (?:size|density):\\s*(\\S+)").find(shell(c))?.groupValues?.get(1)
+  val size=readOverride("wm size");val density=readOverride("wm density")
+  val fontScale=shell("settings get system font_scale");val hardwareIme=shell("settings get secure show_ime_with_hard_keyboard")
+  fun restoreSetting(namespace:String,key:String,value:String){shell(if(value=="null"||value.isBlank())"settings delete $namespace $key"else"settings put $namespace $key $value")}
   try{
-   shell("wm size 750x1600");shell("wm density 320");shell("settings put system font_scale 1.5");shell("settings put secure show_ime_with_hard_keyboard 1")
+   shell("wm size 750x1600");shell("wm density 320");shell("settings put system font_scale 1.6");shell("settings put secure show_ime_with_hard_keyboard 1")
    compose.activityRule.scenario.recreate();compose.waitForIdle();select(f.root);shot("narrow-selected")
    val actions=compose.onNodeWithTag("node-actions").fetchSemanticsNode().boundsInRoot;val canvas=compose.onNodeWithTag("study-map").fetchSemanticsNode().boundsInRoot
    assertTrue(actions.left>=canvas.left&&actions.right<=canvas.right)
-   tap("node-rename");compose.onNodeWithTag("node-title-input").performTextReplacement("窄窗中文草稿");compose.onNodeWithTag("node-title-save").assertIsDisplayed();shot("narrow-keyboard")
+   tap("node-rename");compose.onNodeWithTag("node-title-input").performTextReplacement("窄窗中文草稿")
+   compose.onNodeWithTag("node-title-input").performTouchInput{click()}
+   var priorLayout:List<Any>?=null;var stableSince=0L
+   compose.waitUntil(8000){
+    val insets=compose.activity.window.decorView.rootWindowInsets
+    val imeBottom=insets?.getInsets(android.view.WindowInsets.Type.ime())?.bottom?:0
+    val mapBounds=compose.onNodeWithTag("study-map").fetchSemanticsNode().boundsInRoot
+    val footer=listOf("node-title-input","node-title-cancel","node-title-save").map{compose.onAllNodesWithTag(it).fetchSemanticsNodes().singleOrNull()?:return@waitUntil false}
+    val full=footer.map{n->androidx.compose.ui.geometry.Rect(n.positionInRoot.x,n.positionInRoot.y,n.positionInRoot.x+n.size.width,n.positionInRoot.y+n.size.height)}
+    val clipped=footer.map{it.boundsInRoot};val layout=listOf(imeBottom,mapBounds)+full+clipped
+    val now=android.os.SystemClock.uptimeMillis()
+    if(layout!=priorLayout){priorLayout=layout;stableSince=now}
+    val minimum=48*compose.activity.resources.displayMetrics.density
+    insets?.isVisible(android.view.WindowInsets.Type.ime())==true&&imeBottom>150&&now-stableSince>=350&&full.indices.all{i->
+     val b=full[i];val visible=clipped[i]
+     b.width>=minimum&&b.height>=minimum&&b.left>=mapBounds.left&&b.top>=mapBounds.top&&b.right<=mapBounds.right&&b.bottom<=mapBounds.bottom&&
+      kotlin.math.abs(b.left-visible.left)<1&&kotlin.math.abs(b.top-visible.top)<1&&kotlin.math.abs(b.right-visible.right)<1&&kotlin.math.abs(b.bottom-visible.bottom)<1
+    }
+   }
+   compose.onNodeWithTag("node-title-save").assertIsDisplayed();compose.onNodeWithTag("node-title-cancel").assertIsDisplayed();shot("narrow-keyboard")
    compose.activityRule.scenario.recreate();compose.waitForIdle();compose.onNodeWithTag("node-title-input").assertTextContains("窄窗中文草稿");tap("node-title-cancel")
-  }finally{shell("wm size 1920x1200");shell("wm density 240");shell("settings put system font_scale 1.0");shell("settings put secure show_ime_with_hard_keyboard 0")}
+  }finally{shell("wm size ${size?:"reset"}");shell("wm density ${density?:"reset"}");restoreSetting("system","font_scale",fontScale);restoreSetting("secure","show_ime_with_hard_keyboard",hardwareIme)}
  }
  @Test fun microMoveAndCancelledDragDoNotMoveNode(){
   val f=fixture();select(f.root);val before=runBlocking{app.study.nodes(f.book).first()}.first{it.id==f.root};var p=Offset.Zero
@@ -246,12 +269,49 @@ class MapInteractionUiTest {
   compose.waitUntil(10000){compose.onAllNodesWithTag("study-open-source").fetchSemanticsNodes().isNotEmpty()};compose.onNodeWithTag("study-open-source").assertIsDisplayed();compose.onNodeWithTag("card-full-body").assertDoesNotExist();tap("card-back")
  }
 
- @Test fun titleRenderingNeverSubstitutesBodyForSecondLine(){
+ @Test fun titleAndSummaryRenderInSeparateMeasuredAreas(){
   val text="条件发生后重新计算样本空间并核对事件概率".repeat(4)
-  val nodes=listOf(4,12,24,60).mapIndexed{i,n->MapSceneNode(id(),null,null,text.take(n),"不应混入标题的正文",20.0,20.0+i*104,1,1)}
-  fun render(items:List<MapSceneNode>)=Bitmap.createBitmap(480,500,Bitmap.Config.ARGB_8888).also{b->val canvas=android.graphics.Canvas(b);canvas.drawColor(android.graphics.Color.WHITE);MapScenePainter.draw(canvas,items,fontScale=1.5f)}
-  val a=render(nodes);val b=render(nodes.map{it.copy(body="完全不同且很长的摘要".repeat(20))});assertTrue("Only titles belong inside nodes",a.sameAs(b))
-  java.io.File(app.getExternalFilesDir(null),"mui-title-layout.png").outputStream().use{a.compress(Bitmap.CompressFormat.PNG,100,it)};a.recycle();b.recycle()
+  val node=MapSceneNode(id(),null,id(),text,"正文保持独立：重新确定样本空间，再核对分母。".repeat(4),20.0,20.0,1,1)
+  val layout=MapNodeMetrics.measure(node.title,node.body,fontScale=1.6f)
+  fun render(body:String)=Bitmap.createBitmap(280,(layout.height+40).toInt(),Bitmap.Config.ARGB_8888).also{b->val canvas=android.graphics.Canvas(b);canvas.drawColor(android.graphics.Color.WHITE);MapScenePainter.draw(canvas,listOf(node.copy(body=body)),fontScale=1.6f)}
+  val a=render(node.body);val b=render("完全不同且很长的摘要".repeat(20))
+  try{
+   assertFalse("The summary is visible inside the content node",a.sameAs(b))
+   assertTrue(layout.title.lineCount<=2);assertTrue(checkNotNull(layout.summary).lineCount<=3)
+   assertTrue(layout.summaryTop>=layout.titleTop+layout.title.height+8)
+   for(y in (20+layout.titleTop).toInt() until (20+layout.titleTop+layout.title.height).toInt())for(x in 34 until 238)assertEquals("Summary must not replace title pixels",a.getPixel(x,y),b.getPixel(x,y))
+   java.io.File(app.getExternalFilesDir(null),"mui-title-layout.png").outputStream().use{a.compress(Bitmap.CompressFormat.PNG,100,it)}
+  }finally{a.recycle();b.recycle()}
+ }
+
+ @Test fun expandedExcerptUsesMeasuredBoundsAndNewPlacementKeepsGap(){
+  compose.runOnIdle{
+   val book=id();val parent=MapSceneNode(id(),null,null,"条件概率", "",40.0,80.0,1,1)
+   val child=MapSceneNode(id(),parent.id,id(),"已知事件发生之后重新定义样本空间并检查每一步的条件".repeat(3),"正文摘要：条件改变后需要重新计算分母，保留例题推导与复习问题。".repeat(12),312.0,80.0,1,1,"原迹摘录")
+   val source=MapSourceInfo("概率学习笔记 · 第 2 页")
+   val compact=MapNodeMetrics.measure(child.title,child.body,source,1.6f)
+   val expanded=MapNodeMetrics.measure(child.title,child.body,source,1.6f,expanded=true)
+   assertTrue(expanded.height>compact.height);assertTrue(expanded.canExpand);assertNotNull(expanded.preview)
+   val next=captureDestinationPosition(MapScene(MapRef(book),"复习",listOf(parent,child),"test"),parent.id,1.6f)
+   assertTrue(next.y>=child.y+compact.height+32);assertTrue(next.x>=parent.x+MapNodeMetrics.WIDTH+40)
+   val firstBox=android.graphics.RectF(child.x.toFloat(),child.y.toFloat(),child.x.toFloat()+compact.width,child.y.toFloat()+compact.height)
+   val nextBox=android.graphics.RectF(next.x.toFloat(),next.y.toFloat(),next.x.toFloat()+compact.width,next.y.toFloat()+compact.height)
+   assertFalse(android.graphics.RectF.intersects(firstBox,nextBox))
+   val config=android.content.res.Configuration(app.resources.configuration).apply{fontScale=1.6f}
+   val view=MindMapView(app.createConfigurationContext(config));view.layout(0,0,2000,2400)
+   val rows=listOf(parent,child).map{StudyNodeRow(it.id,book,it.cardId?:it.id,it.parentId,it.x,it.y)}
+   view.show(rows,listOf(StudyCardRow(parent.id,book,1,parent.title,parent.body),StudyCardRow(child.cardId!!,book,1,child.title,child.body)),sources=mapOf(child.cardId!! to source),structuralCardIds=setOf(parent.id))
+   view.restoreViewport(MapViewport(1f,0f,0f))
+   val density=view.resources.displayMetrics.density;val before=checkNotNull(view.nodeBounds(child.id))
+   assertEquals(compact.height*density,before.height(),.01f)
+   view.expandedNodeId=child.id;val after=checkNotNull(view.nodeBounds(child.id))
+   assertEquals(expanded.height*density,after.height(),.01f);assertEquals(before.left,after.left,0f);assertEquals(before.top,after.top,0f)
+   var selected:String?=null;view.onSelect={selected=it?.id}
+   val at=android.os.SystemClock.uptimeMillis();val x=after.centerX();val y=after.bottom-8*density
+   listOf(android.view.MotionEvent.ACTION_DOWN,android.view.MotionEvent.ACTION_UP).forEachIndexed{i,action->android.view.MotionEvent.obtain(at,at+i*20,action,x,y,0).also{view.onTouchEvent(it);it.recycle()}}
+   assertEquals(child.id,selected);assertTrue(view.canExpandNode(child.id))
+   view.expandedNodeId=null;assertEquals(before,view.nodeBounds(child.id));assertEquals(312.0,rows[1].x,0.0);assertEquals(80.0,rows[1].y,0.0)
+  }
  }
 
  @Test fun edgeAffordancesAvoidTitlesAndPrimaryActions(){

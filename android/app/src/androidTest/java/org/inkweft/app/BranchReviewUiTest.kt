@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.semantics.SemanticsProperties
+import androidx.compose.ui.semantics.getOrNull
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.lifecycle.SavedStateHandle
@@ -294,6 +295,94 @@ class BranchReviewUiTest {
         tap("branch-review-skip")
         waitFor("branch-review-ended")
         assertEquals(afterEdit, authorStamp(f.note.id))
+    }
+
+    @Test fun currentCardReviewKeepsItsQuestionsAndReturnsToTheSameScrolledDetailsAfterSourceAndRecreation() {
+        val f = fixture(longText = true)
+        val before = authorStamp(f.note.id)
+        select(f.child)
+        tap("node-more")
+        tap("node-view-content")
+        tap("card-positions")
+        compose.onNodeWithTag("card-reference-content").assertExists()
+        fun inspectorScroll(): Float = compose.onAllNodes(hasScrollAction() and
+            hasAnyAncestor(hasTestTag("study-card-details")), useUnmergedTree = true).fetchSemanticsNodes()
+            .mapNotNull { it.config.getOrNull(SemanticsProperties.VerticalScrollAxisRange)?.value?.invoke() }.single()
+        val originalScroll = inspectorScroll()
+        assertTrue("The fixture exercises retained inspector scroll", originalScroll > 0f)
+        val originalViewport = compose.runOnIdle { map().snapshotViewport() }
+        tap("card-review")
+        waitFor("branch-review-counts")
+        compose.onNodeWithTag("branch-review-counts").assertTextEquals("1 张卡片 · 2 道问题 · 0 张未设题卡片")
+        compose.onNodeWithTag("branch-review-scope").assertTextEquals("同一知识卡")
+        compose.activityRule.scenario.recreate()
+        waitFor("branch-review-counts")
+        compose.onNodeWithTag("branch-review-counts").assertTextEquals("1 张卡片 · 2 道问题 · 0 张未设题卡片")
+        compose.onNodeWithTag("branch-review-scope").assertTextEquals("同一知识卡")
+        tap("branch-review-start")
+        assertQuestion(f.prompts[0], 1, 2)
+        assertHidden()
+        tap("reveal-answer")
+        tap("review-open-source")
+        waitFor("review-source-canvas")
+        compose.activityRule.scenario.recreate()
+        waitFor("review-source-canvas")
+        tap("return-to-review")
+        assertQuestion(f.prompts[0], 1, 2)
+        compose.onNodeWithTag("review-answer").assertTextEquals(f.answer)
+        tap("branch-review-skip")
+        assertQuestion(f.prompts[1], 2, 2)
+        tap("branch-review-skip")
+        waitFor("branch-review-ended")
+        tap("branch-review-close")
+        waitFor("study-card-details")
+        compose.onNodeWithTag("card-reference-content").assertExists()
+        assertEquals(originalScroll, inspectorScroll(), 1f)
+        compose.runOnIdle {
+            assertEquals(f.note.id, ViewModelProvider(compose.activity)[NotebookViewModel::class.java].ui.value.selectedId)
+            val study = ViewModelProvider(compose.activity)["study-${f.note.id}", StudyViewModel::class.java]
+            assertEquals(f.map, study.mapId.value)
+            assertEquals(f.child, study.selectedByMap[f.map])
+            assertEquals(originalViewport, map().snapshotViewport())
+        }
+        tap("card-back")
+        tap("node-more")
+        tap("node-review-card")
+        waitFor("branch-review-counts")
+        compose.onNodeWithTag("branch-review-counts").assertTextEquals("1 张卡片 · 2 道问题 · 0 张未设题卡片")
+        tap("branch-review-close")
+        compose.runOnIdle { assertEquals(f.child, map().selectedNodeId); assertEquals(originalViewport, map().snapshotViewport()) }
+        assertEquals("Both current-card entries and source return are read-only until a rating is submitted", before, authorStamp(f.note.id))
+    }
+
+    @Test fun sourceOnlyCardShowsItsSavedExcerptAfterRevealWithoutWritingAResult() {
+        val f = fixture()
+        runBlocking {
+            app.study.submit(StudyCommand(id(), f.note.id, StudyAction.EDIT, cardId = f.card,
+                expectedRevision = 1, title = "原迹答案卡", body = ""))
+        }
+        val before = authorStamp(f.note.id)
+        compose.waitUntil(15_000) {
+            compose.runOnIdle { ViewModelProvider(compose.activity)["study-${f.note.id}", StudyViewModel::class.java]
+                .ui.value.cards.any { it.id == f.card && it.revision == 2L } }
+        }
+        select(f.child)
+        tap("node-more")
+        tap("node-review-card")
+        tap("branch-review-start")
+        assertQuestion(f.prompts[0], 1, 2)
+        assertHidden()
+        val explanation = "此卡未填写文字答案；请在下方「摘录」查看保存原迹，或打开来源核对。"
+        compose.onAllNodesWithText(explanation).assertCountEquals(0)
+        compose.onAllNodesWithTag("recall-context-excerpt-canvas").assertCountEquals(0)
+        tap("reveal-answer")
+        compose.onNodeWithTag("review-answer").assertTextEquals(explanation)
+        runCatching { compose.onNodeWithTag("recall-context").performScrollTo() }
+        tap("recall-context-tab-excerpt")
+        waitFor("recall-context-excerpt-canvas")
+        compose.onNodeWithTag("recall-context-excerpt-canvas").performScrollTo().assertIsDisplayed()
+        tap("branch-review-close")
+        assertEquals(before, authorStamp(f.note.id))
     }
 
     @Test fun changedAnswerRejectsExplicitMarkWithoutOverwritingOrAdvancingThenAllowsSkip() {

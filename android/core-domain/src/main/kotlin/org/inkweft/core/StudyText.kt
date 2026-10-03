@@ -23,7 +23,7 @@ object StudyText {
             if(active.isNotEmpty()){
                 append("## 大纲\n\n")
                 fun visit(parent:String?,depth:Int){
-                    children[parent].orEmpty().sortedBy{it.id}.forEach{n->
+                    children[parent].orEmpty().forEach{n->
                         append("  ".repeat(depth)).append("- [").append(inline(byId.getValue(n.cardId).title))
                             .append("](#card-").append(n.cardId).append(")\n")
                         visit(n.id,depth+1)

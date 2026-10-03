@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -19,10 +20,21 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import org.inkweft.core.*
 import org.inkweft.data.*
 
+/** New placements leave room for the rendered excerpt; existing coordinates are never changed. */
+internal fun captureDestinationPosition(target:MapScene,branch:String?,fontScale:Float):CanvasPoint{
+    val parent=target.nodes.find{it.id==branch}
+    fun size(node:MapSceneNode)=MapNodeMetrics.measure(node.title,node.body,
+        if(node.sourceState=="无来源")null else MapSourceInfo("原迹摘录"),fontScale,structural=node.cardId==null)
+    val y=target.nodes.filter{it.parentId==branch}.maxOfOrNull{it.y+size(it).height+32}?:parent?.y?:80.0
+    val x=parent?.let{it.x+size(it).width+40}?:40.0
+    return CanvasPoint(x.coerceIn(-40000.0,40000.0),y.coerceIn(-40000.0,40000.0))
+}
+
 /** Destination-only UI: never creates StudyContent or a hidden map canvas. */
 @Composable internal fun CaptureDestination(draft:CaptureDraft,writer:StudyViewModel,dismiss:()->Unit,
     sent:(MapRef,String?)->Unit){
     val app=LocalContext.current.applicationContext as InkWeftApplication
+    val fontScale=LocalDensity.current.fontScale
     val maxHeight=(LocalConfiguration.current.screenHeightDp*.82f).dp.coerceAtMost(560.dp)
     val prefs=remember{app.getSharedPreferences("inkweft-map-destinations",0)}
     val graphFlow=remember(draft.notebookId){app.mapGraphs.observe(draft.notebookId)}
@@ -42,9 +54,8 @@ import org.inkweft.data.*
     val ready=!state.busy&&!state.unknown&&!mapWrite.busy&&!mapWrite.unknown
     fun submit(target:MapScene,branch:String?){
         if(!ready||!target.available||branch!=null&&target.nodes.none{it.id==branch})return
-        val node=target.nodes.find{it.id==branch}
-        val y=node?.let{n->target.nodes.filter{it.parentId==n.id}.maxOfOrNull{it.y+128}?:n.y}?:target.nodes.size*128.0+80
-        val command=draft.command(target.ref,branch,target.graphHash,node?.let{if(it.x<=39740)it.x+260 else it.x-260}?:40.0,y.coerceIn(-40000.0,40000.0))
+        val position=captureDestinationPosition(target,branch,fontScale)
+        val command=draft.command(target.ref,branch,target.graphHash,position.x,position.y)
         sent(target.ref,branch);writer.submit(command)
     }
     LaunchedEffect(mapWrite.completed){mapWrite.completed?.let{selected=it;parent=null;newTitle=null;mapWriter.consumed()}}

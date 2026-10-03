@@ -165,7 +165,7 @@ class ReadingToolsUiTest {
         currentBook = note.id
         compose.runOnIdle { notebook().select(note) }
         if (continuous) { waitFor("continuous-pages"); compose.waitUntil(15_000) { app.navigationReady.value } }
-        else { compose.singlePageEditor(); compose.waitForSavedInk() }
+        else { singlePageEditor(); compose.waitForSavedInk() }
         return f
     }
     private fun waitFor(tag: String) {
@@ -176,6 +176,18 @@ class ReadingToolsUiTest {
         val node = compose.onNodeWithTag(tag)
         if (scroll) node.performScrollTo()
         node.assertIsDisplayed().assertIsEnabled().performTouchInput { click() }; compose.waitForIdle()
+    }
+    private fun tapDocumentAction(tag: String) {
+        if (compose.onAllNodesWithTag(tag).fetchSemanticsNodes().isEmpty()) tap("document-more")
+        tap(tag)
+        compose.onNodeWithTag("document-more-menu").assertDoesNotExist()
+    }
+    private fun singlePageEditor() {
+        compose.waitUntil(15_000) { compose.onAllNodesWithTag("ink-surface").fetchSemanticsNodes().isNotEmpty() ||
+            compose.onAllNodesWithTag("continuous-pages").fetchSemanticsNodes().isNotEmpty() }
+        if (compose.onAllNodesWithTag("continuous-pages").fetchSemanticsNodes().isNotEmpty() &&
+            compose.onAllNodesWithTag("quick-settings").fetchSemanticsNodes().isEmpty()) tap("document-more")
+        compose.singlePageEditor()
     }
     private fun closePanel(description: String) {
         compose.onNodeWithContentDescription(description, useUnmergedTree = true)
@@ -260,19 +272,38 @@ class ReadingToolsUiTest {
     }
     private fun checkGeometry(fullscreen: Boolean = false, compact: Boolean = false) {
         val row = compose.onNodeWithTag("reading-toolbar").assertIsDisplayed().fetchSemanticsNode().boundsInRoot
+        val document = if (fullscreen) null else compose.onNodeWithTag("document-toolbar").assertIsDisplayed().fetchSemanticsNode().boundsInRoot
+        if (document != null) assertFalse("Document navigation and reading controls stay separate", document.overlaps(row))
         val density = compose.activity.resources.displayMetrics.density
-        val rectangles = listOf("quick-study", "read-excerpts", "exit-readonly").map { tag ->
+        val rectangles = listOf("quick-study", "read-excerpts", "document-associations", "exit-readonly", "toolbar-more").map { tag ->
             val r = compose.onNodeWithTag(tag).assertIsDisplayed().assertIsEnabled().fetchSemanticsNode().boundsInRoot
+            val container = if (fullscreen || tag in setOf("exit-readonly", "toolbar-more")) row else checkNotNull(document)
             assertTrue("$tag has an actual 48dp target: $r", r.width >= 48f * density - 1 && r.height >= 48f * density - 1)
-            assertTrue("$tag stays wholly inside the reading row", r.left >= row.left && r.right <= row.right && r.top >= row.top && r.bottom <= row.bottom)
+            assertTrue("$tag stays wholly inside its document or reading row", r.left >= container.left && r.right <= container.right && r.top >= container.top && r.bottom <= container.bottom)
             r
         }
         for (a in rectangles.indices) for (b in a + 1 until rectangles.size)
             assertFalse("Primary reading targets must not overlap", rectangles[a].overlaps(rectangles[b]))
         assertEquals("Only one reachable More entry", 1, compose.onAllNodesWithTag("toolbar-more").fetchSemanticsNodes().size)
         val nestedMore = compose.onAllNodes(hasTestTag("toolbar-more") and hasAnyAncestor(hasTestTag("reading-toolbar"))).fetchSemanticsNodes().size
-        assertEquals(if (fullscreen || !compact) 1 else 0, nestedMore)
+        assertEquals(1, nestedMore)
         compose.onNodeWithTag("toolbar-more").assertIsDisplayed().assertIsEnabled()
+        compose.onNodeWithTag("document-more-menu").assertDoesNotExist()
+        if (compact && !fullscreen) checkDocumentMenu()
+    }
+    private fun checkDocumentMenu() {
+        tap("document-more")
+        val menu = compose.onNodeWithTag("document-more-menu").assertIsDisplayed().fetchSemanticsNode().boundsInRoot
+        val density = compose.activity.resources.displayMetrics.density
+        val targets = listOf("quick-overview", "quick-settings", "book-search").map { tag ->
+            val bounds = compose.onNodeWithTag(tag).assertIsDisplayed().assertIsEnabled().fetchSemanticsNode().boundsInRoot
+            assertTrue("$tag has an actual 48dp target in the document menu", bounds.width >= 48f * density - 1 && bounds.height >= 48f * density - 1)
+            assertTrue("$tag stays wholly inside the document menu", bounds.left >= menu.left && bounds.right <= menu.right && bounds.top >= menu.top && bounds.bottom <= menu.bottom)
+            bounds
+        }
+        for (a in targets.indices) for (b in a + 1 until targets.size)
+            assertFalse("Document menu targets must not overlap", targets[a].overlaps(targets[b]))
+        tapDocumentAction("quick-overview"); waitFor("pages-directory-dialog"); tap("pages-directory-dialog-close")
     }
     private fun openReadingMore() {
         tap("toolbar-more"); waitFor("reading-more-menu")
@@ -399,7 +430,7 @@ class ReadingToolsUiTest {
             compose.onNodeWithTag("timer-value").assertIsDisplayed(); closePanel("关闭计时器")
             compose.onNodeWithTag("reading-more-menu").assertDoesNotExist()
             openReadingMore(); tap("quick-fullscreen")
-            waitFor("book-search"); checkGeometry(compact = true)
+            waitFor("document-toolbar"); checkGeometry(compact = true)
             compose.onNodeWithTag("exit-fullscreen").assertDoesNotExist()
             returnWriting(f)
             assertEquals(editor, preference("inkweft-editor")); assertEquals(pen, preference("inkweft-pen-widths-book-${f.note.id}"))
@@ -430,12 +461,12 @@ class ReadingToolsUiTest {
             compose.waitUntil(15_000) { compose.runOnIdle { study(f.note.id).mapId.value == f.mapId && !study(f.note.id).ui.value.loading &&
                 views().filterIsInstance<MindMapView>().any { it.isShown && it.nodeBounds(f.node) != null && !it.authorEditing } } }
             tap("study-close")
-            tap("book-search"); waitFor("book-search-query")
+            tapDocumentAction("book-search"); waitFor("book-search-query")
             compose.onNodeWithTag("book-search-query").performTextReplacement("alpha")
             waitFor("book-search-hit-${f.sourcePage}")
             closePanel("关闭查找页内文字")
-            tap("quick-overview"); waitFor("pages-directory-dialog"); tap("pages-directory-dialog-close")
-            tap("quick-settings"); waitFor("document-settings-dialog")
+            tapDocumentAction("quick-overview"); waitFor("pages-directory-dialog"); tap("pages-directory-dialog-close")
+            tapDocumentAction("quick-settings"); waitFor("document-settings-dialog")
             compose.onNodeWithTag("continuous-setting").assertIsOn()
             tap("document-settings-dialog-close")
             assertRead(f, continuous = true)
@@ -452,9 +483,9 @@ class ReadingToolsUiTest {
             // Warm the real reference notebook as a tab, then filter the actual
             // tab menu so old retained tabs cannot virtualize this fixture away.
             compose.runOnIdle { notebook().select(f.other) }
-            compose.singlePageEditor(); compose.waitForSavedInk()
+            singlePageEditor(); compose.waitForSavedInk()
             compose.runOnIdle { notebook().select(f.note) }
-            compose.singlePageEditor(); compose.waitForSavedInk()
+            singlePageEditor(); compose.waitForSavedInk()
             waitFor("reading-toolbar"); assertRead(f)
             tap("tabs-list")
             compose.onNodeWithTag("tabs-filter").performTextReplacement(f.other.title)
@@ -466,21 +497,24 @@ class ReadingToolsUiTest {
             val lane = compose.onNodeWithTag("ink-surface").assertIsDisplayed().fetchSemanticsNode().boundsInRoot
             assertEquals("Real left/right split gives a roughly 186.5dp editor", 186.5f, lane.width / density, 3f)
             val reference = compose.onNodeWithTag("reference-pane").fetchSemanticsNode().boundsInRoot
-            val reading = compose.onNodeWithTag("reading-toolbar").fetchSemanticsNode().boundsInRoot
-            for (tag in listOf("back-library", "toolbar-more", "quick-overview", "quick-settings", "book-search",
-                "quick-study", "read-excerpts", "exit-readonly")) {
+            val targets = listOf("back-library", "toolbar-more", "document-more", "document-associations",
+                "quick-study", "read-excerpts", "exit-readonly").map { tag ->
                 val bounds = compose.onNodeWithTag(tag).assertIsDisplayed().assertIsEnabled().fetchSemanticsNode().boundsInRoot
                 assertTrue("$tag has a complete 48dp actual target in split: $bounds", bounds.width >= 48f * density - 1 && bounds.height >= 48f * density - 1)
                 assertTrue("$tag stays inside editor lane: $bounds / $lane", bounds.left >= lane.left - 1 && bounds.right <= lane.right + 1)
                 assertFalse("$tag does not intersect the reference pane", bounds.overlaps(reference))
-                if (tag == "book-search") assertFalse("Header search and reading controls stay separate", bounds.overlaps(reading))
+                bounds
             }
-            tap("book-search"); waitFor("book-search-query")
+            for (a in targets.indices) for (b in a + 1 until targets.size)
+                assertFalse("Persistent split actions must not overlap", targets[a].overlaps(targets[b]))
+            tapDocumentAction("book-search"); waitFor("book-search-query")
             compose.onNodeWithTag("book-search-query").performTextReplacement("alpha")
             waitFor("book-search-results")
             compose.onNodeWithTag("book-search-results").performScrollToNode(hasTestTag("book-search-hit-${f.sourcePage}"))
             compose.onNodeWithTag("book-search-hit-${f.sourcePage}").assertIsDisplayed()
             closePanel("关闭查找页内文字"); hideKeyboard()
+            tapDocumentAction("quick-overview"); waitFor("pages-directory-dialog"); tap("pages-directory-dialog-close")
+            tapDocumentAction("quick-settings"); waitFor("document-settings-dialog"); tap("document-settings-dialog-close")
             tap("read-excerpts"); waitFor("excerpt-panel")
             compose.onNodeWithTag("excerpt-comment-${f.excerpt}").assertIsNotEnabled()
             tap("excerpt-panel-close")

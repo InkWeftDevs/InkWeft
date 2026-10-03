@@ -162,9 +162,10 @@ class StudyAndSelectionRepositoryTest {
     }
     @Test fun arrangeUsesGraphRevisionAndRetainsCardContent()=fixture{db,page->
         val repo=StudyRepository(db);val a=create(page);repo.submit(a);val b=create(page,parent=a.nodeId);repo.submit(b)
-        val hash=StudyGraph.orderHash(db.study().nodes(page).map{it.model()});repo.submit(StudyCommand(id(),page,StudyAction.ARRANGE,expectedGraph=hash))
+        val graph=repo.readGraph(page);val plan=StudyOrganization.arrange(graph.state,graph.orderedNodeIds.associateWith{StudyNodeSize(232.0,64.0)})
+        repo.submit(plan.command(id()))
         assertTrue(db.study().node(b.nodeId!!)!!.x>db.study().node(a.nodeId!!)!!.x)
-        try{repo.submit(StudyCommand(id(),page,StudyAction.ARRANGE,expectedGraph=hash));fail()}catch(_:IllegalArgumentException){}
+        try{repo.submit(plan.command(id()));fail()}catch(_:IllegalArgumentException){}
         assertEquals("人工摘要",db.study().card(a.cardId!!)!!.body)
     }
     @Test fun backupRestoresCardsSourcesHierarchyAndTypedMasks()=fixture{db,page->
