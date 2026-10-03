@@ -321,24 +321,25 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
         if(titleCheckFailed){titleCheckFailed=false;titleCheckAttempt++}
         else if(titleDraft?.structural==true)mapWriter.retry()else vm.retry()
     }
+    // Keep native focus and the editor transition on Main after background reads.
     LaunchedEffect(titleOperation,titleVerified,titleCheckAttempt,ui.busy,ui.unknown,ui.completed,
-        mapWrite.busy,mapWrite.unknown,mapWrite.completedOperation,mapWrite.rejectedOperation){
-        val d=titleDraft?:return@LaunchedEffect;val operation=titleOperation?:return@LaunchedEffect
-        if(!titleSubmitted||vm.ui.value.busy||vm.ui.value.unknown||mapWriter.ui.value.busy||mapWriter.ui.value.unknown)return@LaunchedEffect
+        mapWrite.busy,mapWrite.unknown,mapWrite.completedOperation,mapWrite.rejectedOperation){withContext(Dispatchers.Main.immediate){
+        val d=titleDraft?:return@withContext;val operation=titleOperation?:return@withContext
+        if(!titleSubmitted||vm.ui.value.busy||vm.ui.value.unknown||mapWriter.ui.value.busy||mapWriter.ui.value.unknown)return@withContext
         try{
             if(!titleVerified){
                 val saved=if(d.structural){
                     if(mapWriter.ui.value.rejectedOperation==operation){
-                        titleSubmitted=false;titleContinue=false;titleOperation=null;return@LaunchedEffect
+                        titleSubmitted=false;titleContinue=false;titleOperation=null;return@withContext
                     }
                     mapWriter.ui.value.completedOperation==operation&&mapWriter.ui.value.completed==d.mapId
                 }else withContext(Dispatchers.IO){vm.repo.lookup(titleCommand(d,operation,titleSubmittedText))==d.cardId}
                 if(!saved){
                     // No successful receipt means there is no permission to continue.
                     if((if(d.structural)mapWriter.ui.value.message else vm.ui.value.message)==null)localMessage="未核对到成功保存，未继续；草稿保留，请核对后重试。"
-                    titleSubmitted=false;titleContinue=false;titleOperation=null;return@LaunchedEffect
+                    titleSubmitted=false;titleContinue=false;titleOperation=null;return@withContext
                 }
-                titleVerified=true;return@LaunchedEffect
+                titleVerified=true;return@withContext
             }
             val next=if(titleContinue&&vm.mapId.value==d.mapId&&vm.lastTab==1&&readLock.canWrite){
                 // A completed write can precede the UI Flow emission. Freeze from a fresh read.
@@ -352,7 +353,7 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
                     ((nodes.filter{!it.removed&&it.parentId==d.parentId}.maxOfOrNull{it.y}?:node.y)+128).coerceIn(-40000.0,40000.0),
                     creating=true,graph=StudyGraph.orderHash(nodes.map{it.model()}),anchorId=node.id)
             }else null
-            if(titleDraft?.token!=d.token||titleOperation!=operation)return@LaunchedEffect
+            if(titleDraft?.token!=d.token||titleOperation!=operation)return@withContext
             vm.selectedByMap[d.mapId?:"main"]=d.nodeId;vm.revealByMap[d.mapId?:"main"]=d.nodeId
             d.parentId?.let{collapsed=collapsed-it}
             if(d.structural)mapWriter.consumed(operation)else vm.clear()
@@ -367,7 +368,7 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
                 }else {titleCheckFailed=true;localMessage="标题结果待核对；草稿已保留，请核对原操作。"}
             }
         }
-    }
+    }}
     LaunchedEffect(tab,titleDraft?.token,projection.rows.map{it.node.id to (cardById[it.node.cardId]!=null)}){
         val d=titleDraft?:return@LaunchedEffect
         if(tab==1&&d.mapId==currentMap){
