@@ -28,11 +28,12 @@ class BranchReviewRoundUiTest {
     @Before fun captureSettings() = support.captureSettings()
     @After fun restoreSettings() { compose.mainClock.autoAdvance = true; support.closeAndRestoreSettings() }
 
-    private fun seed(count: Int, state: ManualState = ManualState.REVIEW): Fixture {
+    private fun seed(count: Int, state: ManualState = ManualState.REVIEW, longText: Boolean = false): Fixture {
         val source = support.seed()
         runBlocking {
             repeat(count) { index -> app.knowledge.submit(KnowledgeCommand(id(), source.note.id, id(), 0,
-                KnowledgeData.Question(source.card, "RR67 独立问题 " + index, state))) }
+                KnowledgeData.Question(source.card, "RR67 独立问题 " + index +
+                    (if (longText && index == count - 1) "\n" + "长问题条件仍须完整保留。".repeat(100) else ""), state))) }
         }
         return Fixture(source, runBlocking { app.branchReview.load(app.branchReview.prepareNotebook(source.note.id)) })
     }
@@ -72,6 +73,16 @@ class BranchReviewRoundUiTest {
         compose.onNodeWithTag("review-question").assertDoesNotExist()
     }
 
+    private fun detailNode(tag: String): SemanticsNodeInteraction {
+        support.waitFor("branch-review-details")
+        compose.waitUntil(15_000) { runCatching {
+            compose.onNodeWithTag("branch-review-details-list").performScrollToNode(hasTestTag(tag))
+            compose.onNodeWithTag(tag).assertExists()
+        }.isSuccess }
+        return compose.onNodeWithTag(tag)
+    }
+    private fun detailTap(tag: String) { detailNode(tag).assertIsDisplayed().performTouchInput { click() }; compose.waitForIdle() }
+
     private fun authors(f: Fixture) = support.authorStamp(f.source.note.id) to support.authorStamp(f.source.unrelated.id)
     private fun mark(state: ManualState) { support.tap("reveal-answer"); support.tap("branch-review-mark-" + state.name) }
     private fun blockedPending() {
@@ -82,7 +93,7 @@ class BranchReviewRoundUiTest {
     }
 
     @Test fun mixedExactResultsRetryOnlyTheConfirmedQuestionAndNeverMixANewSibling() {
-        val f = seed(4); start(); question(f, 0); hidden()
+        val f = seed(4, longText = true); start(); question(f, 0); hidden()
         mark(ManualState.UNDERSTOOD); question(f, 1); hidden()
         mark(ManualState.REVIEW); question(f, 2); hidden()
         support.tap("branch-review-skip"); question(f, 3); hidden()
@@ -95,6 +106,33 @@ class BranchReviewRoundUiTest {
         assertEquals(beforeRejection, authors(f))
         support.tap("branch-review-skip"); result(4, 1, 1, 1, 1)
         compose.activityRule.scenario.recreate(); result(4, 1, 1, 1, 1)
+        val beforeDetails = authors(f)
+        support.tap("branch-review-open-details")
+        detailNode("branch-review-detail-${f.frozen.first().reference.questionId}")
+        listOf("本次已理解", "仍需复习", "普通跳过 · 未标记", "未提交后跳过 · 未标记").forEachIndexed { index, label ->
+            val questionId = f.frozen[index].reference.questionId
+            detailNode("branch-review-detail-$questionId")
+            compose.onNodeWithTag("branch-review-detail-outcome-$questionId").assertTextEquals("第 ${index + 1} 题 · $label")
+            compose.onNodeWithTag("branch-review-detail-prompt-$questionId")
+                .assertTextEquals((f.frozen[index].question.data() as KnowledgeData.Question).prompt)
+        }
+        compose.onNodeWithTag("branch-review-details-list").performTouchInput { swipeUp() }
+        compose.onNodeWithTag("branch-review-details-close").assertIsDisplayed().assertIsEnabled()
+        compose.onNode(hasText(f.source.body) and hasAnyAncestor(hasTestTag("branch-review-details"))).assertDoesNotExist()
+        detailTap("branch-review-details-review")
+        compose.onNodeWithTag("branch-review-details-count").assertTextEquals("本范围 1 / 4 道题")
+        compose.onNodeWithTag("branch-review-detail-${f.frozen[1].reference.questionId}").assertExists()
+        compose.onNodeWithTag("branch-review-detail-${f.frozen[0].reference.questionId}").assertDoesNotExist()
+        detailTap("branch-review-details-skipped")
+        compose.activityRule.scenario.recreate()
+        detailNode("branch-review-details-count").assertTextEquals("本范围 2 / 4 道题")
+        support.tap("branch-review-details-close")
+        result(4, 1, 1, 1, 1)
+        support.tap("branch-review-open-details")
+        detailNode("branch-review-details-skipped").assertIsSelected()
+        compose.onNodeWithTag("branch-review-details-count").assertTextEquals("本范围 2 / 4 道题")
+        support.tap("branch-review-details-close"); result(4, 1, 1, 1, 1)
+        assertEquals(beforeDetails, authors(f))
         val extra = id()
         runBlocking { app.knowledge.submit(KnowledgeCommand(id(), f.source.note.id, extra, 0,
             KnowledgeData.Question(f.source.card, "后建问题不能进入本轮精确再练"))) }
@@ -111,6 +149,35 @@ class BranchReviewRoundUiTest {
         }
         compose.onNodeWithTag("branch-review-retry-review").assertIsNotEnabled()
         compose.onNodeWithTag("branch-review-retry-skipped").assertIsNotEnabled()
+    }
+
+    @Test fun missingFrozenResultDetailsKeepTheLedgerAndRetryWithoutCurrentQuestionSubstitution() {
+        val f = seed(2)
+        start(); support.tap("branch-review-skip"); question(f, 1)
+        support.tap("branch-review-skip"); result(2, 0, 0, 2)
+        val entry = f.frozen.last().reference
+        val history = runBlocking { checkNotNull(database.knowledge().revision(entry.questionId, entry.questionRevision)) }
+        var missing = true
+        try {
+            runBlocking { database.openHelper.writableDatabase.execSQL("DELETE FROM knowledge_revisions WHERE id=? AND revision=?",
+                arrayOf<Any>(entry.questionId, entry.questionRevision)) }
+            val beforeRead = authors(f)
+            support.tap("branch-review-open-details"); detailNode("branch-review-details-error")
+            f.frozen.forEach { compose.onNodeWithTag("branch-review-detail-${it.reference.questionId}").assertDoesNotExist() }
+            assertEquals(beforeRead, authors(f))
+            support.tap("branch-review-details-close"); result(2, 0, 0, 2)
+            support.tap("branch-review-open-details"); detailNode("branch-review-details-error")
+            runBlocking { database.knowledge().revision(history) }; missing = false
+            val beforeRetry = authors(f)
+            detailTap("branch-review-details-retry")
+            detailNode("branch-review-detail-${entry.questionId}")
+            compose.onNodeWithTag("branch-review-detail-prompt-${entry.questionId}")
+                .assertTextEquals((f.frozen.last().question.data() as KnowledgeData.Question).prompt)
+            detailTap("branch-review-details-review")
+            detailNode("branch-review-details-empty").assertExists()
+            support.tap("branch-review-details-close"); result(2, 0, 0, 2)
+            assertEquals(beforeRetry, authors(f))
+        } finally { if (missing) runBlocking { database.knowledge().revision(history) } }
     }
 
     @Test fun pureSkipWithIdenticalRefsStartsAtFirstQuestionWithNoOldPermissionAndRestoresItsOwnRound() {

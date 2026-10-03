@@ -155,6 +155,8 @@ internal val BranchReviewRoundSaver = Saver<BranchReviewRound, ByteArray>(
     var checkAttempt by remember{mutableIntStateOf(0)}
     var retryPreparing by remember{mutableStateOf(false)}
     var retryError by remember{mutableStateOf(false)}
+    var resultsOpen by rememberSaveable { mutableStateOf(false) }
+    var resultSelection by rememberSaveable { mutableStateOf<BranchReviewRetrySelection?>(null) }
     val scope=rememberCoroutineScope()
     val unresolved=round.pending?.rejected==false
     val rejected=round.pending?.rejected==true
@@ -278,6 +280,8 @@ internal val BranchReviewRoundSaver = Saver<BranchReviewRound, ByteArray>(
                             Text("其中普通跳过 ${counts.skipped} · 未提交后跳过 ${counts.rejectedSkipped}",
                                 Modifier.testTag("branch-review-result-rejected"))
                             Text("仅记录这一轮的手工选择；不计算准确率，也不安排到期时间。",style=MaterialTheme.typography.bodySmall,color=Quiet)
+                            TextButton(onClick={resultsOpen=true},enabled=!busy,
+                                modifier=Modifier.heightIn(min=48.dp).testTag("branch-review-open-details")){Text("查看本轮题目与结果")}
                             if(retryError)Text("固定题目、答案或原回执未能完整核准，保留本轮结果，请重试。",
                                 modifier=Modifier.testTag("branch-review-retry-error"))
                             OutlinedButton(onClick={retry(BranchReviewRetrySelection.REVIEW)},enabled=!busy&&counts.review>0,
@@ -365,5 +369,6 @@ internal val BranchReviewRoundSaver = Saver<BranchReviewRound, ByteArray>(
             }
         }
     }
+    if(resultsOpen&&round.complete)BranchReviewDetailsDialog(round,resultSelection,{resultSelection=it}){resultsOpen=false}
     if(sourceOpen&&cluesVisible)source?.let{ReviewSourceDialog(it,dismiss={sourceOpen=false},recallNotebookId=plan.ref.notebookId)}
 }
