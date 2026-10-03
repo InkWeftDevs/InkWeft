@@ -1,0 +1,56 @@
+{
+  "recorded_utc": "2026-10-02T15:09:22.541726+00:00",
+  "scope": "Session-only review round domain and read-only causal receipt/retry repository; UI integration still in progress",
+  "base_commit": "75051f748784fbdbf45092eca939205a1bc0088d",
+  "owner": "cloud: core-domain review round, BranchReviewRepository and targeted tests",
+  "schema_changes": false,
+  "new_dependencies": false,
+  "author_writes_in_new_repository_paths": false,
+  "checks": {
+    "new_domain_jvm_tests": {
+      "passed": 14,
+      "failed": 0,
+      "skipped": 0
+    },
+    "existing_branch_review_jvm_tests": {
+      "passed": 14,
+      "failed": 0,
+      "skipped": 0
+    },
+    "data_android_test_sources": "COMPILE_PASS",
+    "data_lint": {
+      "Error": 0,
+      "Fatal": 0,
+      "Warning": 2
+    },
+    "new_room_runtime_tests": {
+      "count": 12,
+      "status": "NOT_RUN"
+    },
+    "activity_ui_tests": "NOT_RUN; integration in progress"
+  },
+  "measured_gradle_times": {
+    "targeted_jvm_tests": "57s",
+    "initial_data_compile": "1m16s; failed on mixed SQL bind array type inference",
+    "data_compile_lint_retry": "2m3s; passed after explicit arrayOf<Any>"
+  },
+  "validation_policy": "Targeted module checks per edit; full integration only at a coherent feature boundary. No full Android build or UI rerun for this domain checkpoint.",
+  "files": [
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/BranchReviewRound.kt",
+      "sha256": "6e664537769c80c268644d271a99d5e15896ceafe55a8bf1bc2110bbb1dac69d"
+    },
+    {
+      "path": "android/core-domain/src/test/kotlin/org/inkweft/core/BranchReviewRoundTest.kt",
+      "sha256": "fc894bbc5d1ebf3616d71fe34b2a2fe03ca16ce9e520c11e52f4784baeb9951c"
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/BranchReviewRepository.kt",
+      "sha256": "6fe89fc55d0c051ec8bd29a9ab3b6849d1ff13d06b7718e2cbce5c97f1039513"
+    },
+    {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/BranchReviewRoundRepositoryTest.kt",
+      "sha256": "3d3a3dd2d719e242dd0ea4f4d1e193ed5f5035710652e11fed3ac6a27fdca71a"
+    }
+  ]
+}

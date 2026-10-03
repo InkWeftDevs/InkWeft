@@ -5,6 +5,10 @@ import androidx.room.withTransaction
 import org.inkweft.core.BranchReview
 import org.inkweft.core.BranchReviewEntryRef
 import org.inkweft.core.BranchReviewPlan
+import org.inkweft.core.BranchReviewRound
+import org.inkweft.core.BranchReviewResultKind
+import org.inkweft.core.BranchReviewRetrySelection
+import org.inkweft.core.KnowledgeCommand
 import org.inkweft.core.KnowledgeData
 import org.inkweft.core.KnowledgeQueries
 import org.inkweft.core.MapRef
@@ -56,12 +60,61 @@ class BranchReviewRepository(private val db: NoteDatabase) {
     }
 
     suspend fun load(plan: BranchReviewPlan): List<FrozenBranchReviewQuestion> = db.withTransaction {
+        loadReferences(plan.ref.notebookId, plan.entries)
+    }
+
+    /** A saved writer success is not a score until its original receipt and causal history agree. */
+    suspend fun confirmRoundResult(round: BranchReviewRound): BranchReviewRound = db.withTransaction {
+        val pending = round.pending ?: return@withTransaction round
+        require(!pending.rejected) { "BRANCH_REVIEW_RESULT_CONFLICT" }
+        verifyMark(round.plan.ref.notebookId, round.plan.entries[pending.index], pending.operationId, pending.state)
+        round.confirm(pending.operationId)
+    }
+
+    /** Select only this completed round's exact outcomes; never search current questions as substitutes. */
+    suspend fun prepareRetry(round: BranchReviewRound, selection: BranchReviewRetrySelection): BranchReviewPlan = db.withTransaction {
+        val selected = round.retryResults(selection)
+        require(selected.isNotEmpty()) { "BRANCH_REVIEW_RETRY_EMPTY" }
+        requireAvailableBook(round.plan.ref.notebookId)
+        val entries = selected.map { result ->
+            val original = round.plan.entries[result.index]
+            if (result.kind == BranchReviewResultKind.CONFIRMED_REVIEW)
+                verifyMark(round.plan.ref.notebookId, original, requireNotNull(result.operationId), ManualState.REVIEW)
+            else original
+        }
+        val plan = round.retryPlan(selection, entries)
+        loadReferences(plan.ref.notebookId, plan.entries)
+        plan
+    }
+
+    private suspend fun verifyMark(book: String, reference: BranchReviewEntryRef,
+                                   operationId: String, state: ManualState): BranchReviewEntryRef {
+        require(state == ManualState.UNDERSTOOD || state == ManualState.REVIEW) { "BRANCH_REVIEW_MARK_STATE" }
+        val original = loadReferences(book, listOf(reference)).single()
+        val question = original.question.data() as KnowledgeData.Question
+        val command = KnowledgeCommand(operationId, book, reference.questionId, reference.questionRevision,
+            question.copy(state = state))
+        val receipt = requireNotNull(db.knowledge().receipt(operationId)) { "BRANCH_REVIEW_RECEIPT_MISSING" }
+        require(receipt.notebookId == book && receipt.digest == command.digest() && receipt.resultId == reference.questionId) {
+            "BRANCH_REVIEW_RECEIPT_MISMATCH"
+        }
+        val next = requireNotNull(db.knowledge().revision(reference.questionId, reference.questionRevision + 1)) {
+            "BRANCH_REVIEW_RESULT_REVISION_MISSING"
+        }
+        require(next.notebookId == book && !next.removed && next.payload.contentEquals(command.payload)) {
+            "BRANCH_REVIEW_RESULT_REVISION_MISMATCH"
+        }
+        // Later author edits or recycling do not invalidate an already committed, exact receipt.
+        return reference.copy(questionRevision = reference.questionRevision + 1)
+    }
+
+    private suspend fun loadReferences(book: String, entries: List<BranchReviewEntryRef>): List<FrozenBranchReviewQuestion> {
         val cards = mutableMapOf<String, StudyCardRevisionRow>()
-        plan.entries.map { reference ->
+        return entries.map { reference ->
             val revision = requireNotNull(db.knowledge().revision(reference.questionId, reference.questionRevision)) {
                 "BRANCH_REVIEW_QUESTION_REVISION_MISSING"
             }
-            require(revision.notebookId == plan.ref.notebookId && !revision.removed) {
+            require(revision.notebookId == book && !revision.removed) {
                 "BRANCH_REVIEW_QUESTION_SCOPE_CHANGED"
             }
             val question = KnowledgeRow(revision.id, revision.notebookId, revision.revision, revision.payload.copyOf(), revision.removed)
@@ -71,7 +124,7 @@ class BranchReviewRepository(private val db: NoteDatabase) {
                 val currentCard = requireNotNull(db.study().card(reference.cardId)) {
                     "BRANCH_REVIEW_CARD_UNAVAILABLE"
                 }
-                require(currentCard.notebookId == plan.ref.notebookId) { "BRANCH_REVIEW_CARD_SCOPE_CHANGED" }
+                require(currentCard.notebookId == book) { "BRANCH_REVIEW_CARD_SCOPE_CHANGED" }
                 val frozen = requireNotNull(db.study().cardVersion(reference.cardId, reference.cardRevision)) {
                     "BRANCH_REVIEW_CARD_REVISION_MISSING"
                 }

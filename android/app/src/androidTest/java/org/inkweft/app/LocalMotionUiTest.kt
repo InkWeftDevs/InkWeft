@@ -498,10 +498,33 @@ class LocalMotionUiTest {
         touch("card-source-section"); tick()
         awaitFrames { compose.onAllNodesWithTag("excerpt-preview-" + f.card).fetchSemanticsNodes().isNotEmpty() }
         val oldPreview = main { views().filterIsInstance<InkCanvasView>().first { it.preview && it.isShown } }
+        fun previewField(name: String): Any? = InkCanvasView::class.java.getDeclaredField(name).apply {
+            isAccessible = true
+        }.get(oldPreview)
+        main {
+            assertTrue("Release control must contain actual saved ink", oldPreview.displayedStrokeCount > 0)
+            assertFalse("Release control must retain ink bounds", (previewField("bounds") as Map<*, *>).isEmpty())
+            // View-only object control: the saved source and author fixture stay unchanged.
+            oldPreview.showObjects(listOf(PageObject(id(), PageObjectKind.TEXT, text = "LM66 release control")))
+            for (name in listOf("objects", "appearanceObjects")) {
+                assertFalse("Release control must retain " + name, (previewField(name) as List<*>).isEmpty())
+            }
+        }
         touch("card-source-section"); tick()
         compose.onNodeWithTag("card-source-content").assertDoesNotExist()
         compose.onNodeWithTag("excerpt-preview-" + f.card).assertDoesNotExist()
         assertFalse("Closed source preview must detach immediately", main { oldPreview.isAttachedToWindow })
+        main {
+            assertEquals("Released preview must drop its saved ink", 0, oldPreview.displayedStrokeCount)
+            for (name in listOf("objects", "appearanceObjects")) {
+                assertTrue("Released preview must drop " + name, (previewField(name) as List<*>).isEmpty())
+            }
+            for (name in listOf("bounds", "meshes")) {
+                assertTrue("Released preview must clear its " + name, (previewField(name) as Map<*, *>).isEmpty())
+            }
+            assertFalse("Released preview must not retain pending raster work", oldPreview.rasterPending)
+        }
+        support.assertAuthors(f, own, other, source)
         touch("card-source-section"); tick(3)
         touch("card-back"); tick()
         compose.onNodeWithTag("study-card-details").assertDoesNotExist()

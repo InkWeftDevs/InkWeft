@@ -430,6 +430,54 @@ class QuestionMaintenanceUiTest {
         shot("parent-drafts-recreated")
     }
 
+    @Test fun longQuestionSearchKeepsDraftsAndIdentityAcrossRecreationAndEditing() = checked("question-search") {
+        val f = seed()
+        val target = id()
+        val old = KnowledgeData.Question(f.card, "NeEdLe：需要独立维护的目标问题", ManualState.REVIEW)
+        runBlocking {
+            repeat(18) { index -> app.knowledge.submit(KnowledgeCommand(id(), f.note.id, id(), 0,
+                KnowledgeData.Question(f.card, "长列表第 $index 题：" + "只作为其他题目保留。".repeat(60)))) }
+            app.knowledge.submit(KnowledgeCommand(id(), f.note.id, target, 0, old))
+        }
+        openProperties(f)
+        fillParentDrafts()
+        val unchanged = authorStamp()
+        replace("card-question-search", " needle ")
+        hideKeyboard()
+        compose.onNodeWithTag("card-question-search-count").assertTextEquals("显示 1 / 21 道已保存问题")
+        compose.onNodeWithTag("question-row-$target").assertExists()
+        compose.onNodeWithTag("question-row-${f.first}").assertDoesNotExist()
+        compose.onNodeWithTag("question-row-${f.foreignQuestion}").assertDoesNotExist()
+        compose.activityRule.scenario.recreate()
+        assertParentDrafts()
+        assertDraft("card-question-search", " needle ")
+        compose.onNodeWithTag("question-row-$target").assertExists()
+        assertEquals("Searching and rebuilding must not write author data", unchanged, authorStamp())
+        replace("card-question-search", "没有这道题")
+        hideKeyboard()
+        compose.onNodeWithTag("card-question-search-empty").assertExists()
+        tap("card-question-search-clear")
+        compose.onNodeWithTag("card-question-search-count").assertTextEquals("显示 21 / 21 道已保存问题")
+        replace("card-question-search", "needle")
+        hideKeyboard()
+        val before = authorStamp(Allowed(f.note.id, target))
+        val receiptIds = receipts(target)
+        edit(target)
+        val changed = "改题后已不再含搜索词"
+        replace("question-edit-prompt", changed)
+        hideKeyboard()
+        tap("question-edit-save")
+        waitGone("question-edit-dialog")
+        assertParentDrafts()
+        assertDraft("card-question-search", "needle")
+        compose.onNodeWithTag("card-question-search-count").assertTextEquals("显示 0 / 21 道已保存问题")
+        compose.onNodeWithTag("question-row-$target").assertDoesNotExist()
+        assertCommit(f, target, before, receiptIds, old.copy(prompt = changed))
+        tap("card-question-search-clear")
+        compose.onNodeWithTag("question-prompt-$target").assertTextEquals(changed)
+        shot("question-search-edited")
+    }
+
     @Test fun concurrentVersionChangeRejectsCapturedBaseAndKeepsExactRawDraftAcrossRecreation() = checked("conflict") {
         val f = seed()
         openProperties(f)
@@ -694,6 +742,12 @@ class QuestionMaintenanceUiTest {
             "card-question-add", "card-properties-save").forEach {
             compose.onNodeWithTag(it).assertIsNotEnabled()
         }
+        replace("card-question-search", "样本空间")
+        hideKeyboard()
+        compose.onNodeWithTag("card-question-search-count").assertTextEquals("显示 1 / 2 道已保存问题")
+        compose.onNodeWithTag("question-row-" + f.second).assertDoesNotExist()
+        tap("card-question-search-clear")
+        compose.onNodeWithTag("question-row-" + f.second).assertExists()
         assertEquals(before, authorStamp())
         shot("readonly-questions")
         tap("card-properties-cancel")
