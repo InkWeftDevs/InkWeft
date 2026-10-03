@@ -1,9 +1,12 @@
 package org.inkweft.app
 
 import android.graphics.Bitmap
+import android.view.KeyEvent
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.semantics.SemanticsProperties
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.lifecycle.ViewModelProvider
@@ -71,6 +74,115 @@ class MapInteractionUiTest {
   compose.waitUntil(10000){runBlocking{app.knowledge.observeBook(f.book).first()}.any{r->r.id==m&&(r.data() as KnowledgeData.MapDefinition).structures.first().title=="新的结构标题"}}
   val updated=runBlocking{app.knowledge.observeBook(f.book).first()}.first{it.id==m}.data() as KnowledgeData.MapDefinition
   assertEquals(definition.structures.single().copy(title="新的结构标题"),updated.structures.single());assertEquals(24,runBlocking{app.study.cards(f.book).first().size})
+ }
+ @Test fun outlineTitlesKeepSharedContentAndContinueAtTheSameParent(){
+  val f=fixture();val occurrence=id()
+  runBlocking{app.study.submit(StudyCommand(id(),f.book,StudyAction.REUSE,cardId=f.card,nodeId=occurrence,parentId=f.root,x=720.0,y=3600.0))}
+  compose.waitUntil(10000){vm(f.book).ui.value.nodes.any{it.id==occurrence}}
+  fun cards()=runBlocking{app.study.cards(f.book).first()}
+  fun nodes()=runBlocking{app.study.nodes(f.book).first()}
+  val beforeCards=cards();val beforeNodes=nodes();val beforeSource=runBlocking{app.study.source(f.card)}!!
+  val blank=SemanticsMatcher.expectValue(SemanticsProperties.EditableText,AnnotatedString(""))
+  tap("study-tab-1");tap("outline-node-$occurrence")
+  compose.onNodeWithTag("card-full-body").assertTextEquals(f.body);tap("card-back")
+  tap("outline-rename-$occurrence")
+  compose.onNodeWithTag("node-title-input").assert(hasAnyAncestor(hasTestTag("outline-title-$occurrence")))
+  compose.onNodeWithTag("outline-title-${f.root}").assertDoesNotExist();compose.onAllNodesWithTag("node-title-editor").assertCountEquals(1)
+  compose.onNodeWithTag("study-card-body").assertDoesNotExist()
+  compose.onNodeWithTag("node-title-input").performTextReplacement("重建后仍是草稿")
+  compose.activityRule.scenario.recreate();compose.waitForIdle()
+  compose.onNodeWithTag("node-title-input").assertTextContains("重建后仍是草稿")
+  compose.onNodeWithTag("node-title-input").assert(hasAnyAncestor(hasTestTag("outline-title-$occurrence")))
+  compose.onNodeWithTag("study-close").assertIsNotEnabled().performTouchInput{click()}
+  compose.onNodeWithTag("node-title-input").assertTextContains("重建后仍是草稿");tap("node-title-cancel")
+  assertEquals(beforeCards,cards());assertEquals(beforeNodes,nodes())
+  tap("study-close");tap("quick-study");tap("study-tab-1")
+  compose.onNodeWithTag("node-title-editor").assertDoesNotExist()
+  tap("outline-rename-$occurrence");compose.onNodeWithTag("node-title-input").performTextReplacement("大纲共享标题");tap("node-title-save")
+  compose.waitUntil(10000){cards().single{it.id==f.card}.title=="大纲共享标题"}
+  compose.waitUntil(10000){compose.onAllNodesWithTag("node-title-editor").fetchSemanticsNodes().isEmpty()}
+  val updated=cards().single{it.id==f.card};val original=beforeCards.single{it.id==f.card}
+  assertEquals(original.copy(title="大纲共享标题",revision=original.revision+1),updated);assertEquals(beforeNodes,nodes())
+  val afterSource=runBlocking{app.study.source(f.card)}!!
+  assertEquals(beforeSource.copy(snapshot=afterSource.snapshot),afterSource);assertArrayEquals(beforeSource.snapshot,afterSource.snapshot)
+  val shared=runBlocking{app.mapGraphs.observe(f.book).first()}.first{it.ref.mapId==f.otherMap}
+  assertEquals(updated.title,shared.nodes.single().title);assertEquals(beforeCards.size,cards().size)
+
+  tap("outline-child-$occurrence");compose.onNodeWithTag("node-title-input").performTextInput("大纲子主题")
+  compose.activityRule.scenario.recreate();compose.waitForIdle();compose.onNodeWithTag("node-title-input").assertTextContains("大纲子主题")
+  assertEquals(beforeNodes,nodes());assertEquals(beforeCards.size,cards().size);tap("node-title-save")
+  compose.waitUntil(10000){nodes().size==beforeNodes.size+1}
+  val child=nodes().single{it.id !in beforeNodes.map{n->n.id}};assertEquals(occurrence,child.parentId);assertEquals("大纲子主题",cards().single{it.id==child.cardId}.title)
+  compose.waitUntil(10000){compose.onAllNodesWithTag("node-title-editor").fetchSemanticsNodes().isEmpty()}
+  tap("outline-sibling-${child.id}");compose.onNodeWithTag("node-title-input").performTextInput("硬件 Enter 同级")
+  // Synthetic key dispatch covers repeat handling, not a real IME composition session.
+  val instrumentation=androidx.test.platform.app.InstrumentationRegistry.getInstrumentation();val time=android.os.SystemClock.uptimeMillis()
+  // Dispatch to the focused Dialog window, not the Activity behind the study workspace.
+  listOf(KeyEvent(time,time,KeyEvent.ACTION_DOWN,KeyEvent.KEYCODE_ENTER,0),KeyEvent(time,time+40,KeyEvent.ACTION_DOWN,KeyEvent.KEYCODE_ENTER,1),KeyEvent(time,time+80,KeyEvent.ACTION_UP,KeyEvent.KEYCODE_ENTER,0),KeyEvent(time,time+100,KeyEvent.ACTION_UP,KeyEvent.KEYCODE_ENTER,0)).forEach{instrumentation.sendKeySync(it)}
+  compose.waitUntil(10000){nodes().size==beforeNodes.size+2}
+  compose.waitUntil(10000){runCatching{compose.onNodeWithTag("node-title-input").assert(blank)}.isSuccess}
+  compose.onAllNodesWithTag("node-title-editor").assertCountEquals(1)
+  val sibling=nodes().single{it.id!=child.id&&it.id !in beforeNodes.map{n->n.id}};assertEquals(child.parentId,sibling.parentId);assertEquals("硬件 Enter 同级",cards().single{it.id==sibling.cardId}.title)
+  compose.onNodeWithTag("node-title-input").assert(hasAnyAncestor(hasTestTag("outline-title-${sibling.id}")))
+  val afterEnterCards=cards();val afterEnterNodes=nodes();tap("node-title-cancel")
+  assertEquals(afterEnterCards,cards());assertEquals(afterEnterNodes,nodes())
+  tap("outline-rename-${child.id}");compose.onNodeWithTag("node-title-input").performTextReplacement("软件 Next 子主题")
+  compose.onNodeWithTag("node-title-input").performImeAction()
+  compose.waitUntil(10000){cards().single{it.id==child.cardId}.title=="软件 Next 子主题"}
+  compose.waitUntil(10000){runCatching{compose.onNodeWithTag("node-title-input").assert(blank)}.isSuccess}
+  compose.onAllNodesWithTag("node-title-editor").assertCountEquals(1)
+  val afterNextCards=cards();tap("node-title-cancel")
+  assertEquals(afterNextCards,cards());assertEquals(afterEnterNodes,nodes());assertEquals(beforeCards.size+2,cards().size)
+
+  val independent=id();val structure=id();val definition=KnowledgeData.MapDefinition("大纲结构图",structures=listOf(MapStructure(structure,null,"结构标题",40.0,80.0)))
+  runBlocking{app.knowledge.submit(KnowledgeCommand(id(),f.book,independent,0,definition))}
+  compose.runOnIdle{vm(f.book).selectMap(independent)};compose.waitUntil(10000){vm(f.book).ui.value.nodes.any{it.id==structure}}
+  tap("outline-rename-$structure");compose.onNodeWithTag("node-title-input").performTextReplacement("原位结构标题");tap("node-title-save")
+  compose.waitUntil(10000){runBlocking{app.knowledge.observeBook(f.book).first()}.any{it.id==independent&&(it.data() as KnowledgeData.MapDefinition).structures.single().title=="原位结构标题"}}
+  val renamed=runBlocking{app.knowledge.observeBook(f.book).first()}.single{it.id==independent}.data() as KnowledgeData.MapDefinition
+  assertEquals(definition.copy(structures=listOf(definition.structures.single().copy(title="原位结构标题"))),renamed)
+  compose.waitUntil(10000){compose.onAllNodesWithTag("node-title-editor").fetchSemanticsNodes().isEmpty()}
+  assertEquals(afterNextCards,cards());assertEquals(afterEnterNodes,nodes())
+ }
+ @Test fun outlineEnterUnknownReceiptRetriesOneCommandBeforeOpeningOneSiblingDraft(){
+  val f=fixture();tap("study-close");val database=NoteDatabase.open(app);val fail=java.util.concurrent.atomic.AtomicBoolean(true)
+  val repository=StudyRepository(database){if(it==StudyFault.BEFORE_RECEIPT&&fail.get())throw java.io.IOException("test receipt unavailable")}
+  val saved=androidx.lifecycle.SavedStateHandle();lateinit var originalVm:StudyViewModel
+  fun cards()=runBlocking{database.study().cards(f.book)}
+  fun nodes()=runBlocking{database.study().nodes(f.book)}
+  fun receipts()=database.openHelper.readableDatabase.query("SELECT COUNT(*) FROM study_receipts WHERE notebookId=?",arrayOf(f.book)).use{it.moveToFirst();it.getLong(0)}
+  val beforeCards=cards();val beforeNodes=nodes();val beforeReceipts=receipts()
+  compose.runOnIdle{originalVm=StudyViewModel(f.book,repository,saved);compose.activity.viewModelStore.put("study-${f.book}",originalVm)}
+  try{
+   tap("quick-study");tap("study-tab-1");tap("outline-child-${f.root}")
+   compose.onNodeWithTag("node-title-input").performTextInput("回执核对后的唯一子主题");compose.onNodeWithTag("node-title-input").performImeAction()
+   compose.waitUntil(10000){originalVm.ui.value.unknown}
+   val command=compose.runOnIdle{ArrayList(checkNotNull(saved.get<ArrayList<String>>("study.command")))}
+   assertEquals(StudyAction.CREATE.name,command[2]);assertEquals(f.root,command[6])
+   compose.onNodeWithTag("node-title-input").assertTextContains("回执核对后的唯一子主题")
+   compose.onNodeWithTag("node-title-cancel").assertIsNotEnabled();compose.onAllNodesWithTag("node-title-editor").assertCountEquals(1)
+   assertEquals(beforeCards,cards());assertEquals(beforeNodes,nodes());assertEquals(beforeReceipts,receipts())
+   compose.activityRule.scenario.recreate();compose.waitForIdle()
+   compose.runOnIdle{assertSame(originalVm,vm(f.book));assertEquals(command,saved.get<ArrayList<String>>("study.command"))}
+   compose.onNodeWithTag("node-title-input").assertTextContains("回执核对后的唯一子主题")
+   tap("node-title-save");compose.waitUntil(10000){!originalVm.ui.value.busy&&originalVm.ui.value.unknown}
+   compose.runOnIdle{assertEquals(command,saved.get<ArrayList<String>>("study.command"))};assertEquals(beforeReceipts,receipts())
+   fail.set(false);tap("node-title-save")
+   compose.waitUntil(10000){!originalVm.ui.value.busy&&!originalVm.ui.value.unknown&&nodes().size==beforeNodes.size+1}
+   val blank=SemanticsMatcher.expectValue(SemanticsProperties.EditableText,AnnotatedString(""))
+   compose.waitUntil(10000){runCatching{compose.onNodeWithTag("node-title-input").assert(blank)}.isSuccess}
+   compose.onAllNodesWithTag("node-title-editor").assertCountEquals(1)
+   compose.onNodeWithTag("node-title-input").assert(hasAnyAncestor(hasTestTag("outline-title-${command[4]}")))
+   val created=nodes().single{it.id==command[4]};assertEquals(f.root,created.parentId);assertEquals(command[3],created.cardId)
+   assertEquals(beforeCards.size+1,cards().size);val card=cards().single{it.id==created.cardId};assertEquals(1L,card.revision);assertEquals(command[7],card.title)
+   assertEquals(beforeReceipts+1,receipts());assertEquals(created.cardId,runBlocking{database.study().receipt(command[0])}!!.resultId)
+   compose.runOnIdle{assertNull(saved.get<ArrayList<String>>("study.command"))}
+   val afterCards=cards();val afterNodes=nodes()
+   compose.activityRule.scenario.recreate();compose.waitForIdle();compose.onNodeWithTag("node-title-input").assert(blank)
+   compose.onAllNodesWithTag("node-title-editor").assertCountEquals(1);tap("node-title-cancel")
+   compose.onNodeWithTag("node-title-editor").assertDoesNotExist()
+   assertEquals(afterCards,cards());assertEquals(afterNodes,nodes());assertEquals(beforeReceipts+1,receipts())
+  }finally{compose.runOnIdle{compose.activity.viewModelStore.put("study-${f.book}",StudyViewModel(f.book,app.study,androidx.lifecycle.SavedStateHandle()))};database.close()}
  }
  @Test fun narrowLargeTextKeepsActionsDraftAndCanvas(){
   val f=fixture();val automation=androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().uiAutomation

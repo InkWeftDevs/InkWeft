@@ -419,6 +419,7 @@ class ReadLockUiTest {
         compose.onNodeWithTag("study-edit-card").assertIsNotEnabled()
         tap("card-back")
         tap("study-tab-1")
+        compose.onNodeWithTag("outline-rename-${f.node}").assertIsNotEnabled()
         compose.onNodeWithTag("outline-child-${f.node}").assertIsNotEnabled()
         compose.onNodeWithTag("outline-sibling-${f.node}").assertIsNotEnabled()
         tap("outline-node-${f.node}"); waitFor("card-full-body"); tap("card-back")
