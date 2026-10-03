@@ -1,10 +1,14 @@
 # 本地接手修复 · 2026-10-03
 
-从附件严格还原源码树 `65d3bd082cfeb28b958f01333e3524b8fa0e730f` 后，修复系统回收进程时选中笔记及学习窗口打开状态丢失的问题。原位标题继续使用已有草稿和操作身份恢复，未确认写入不会自动重放。隔离设备已完成实际后台进程终止后的未提交草稿、已确认标题恢复；真机验收状态以本轮结果表为准。
+本次APK构建源码 `41e23e96e36e0bb58c394e941718e049f525ada5` / tree `3bb36b951bd87773a784bb608e2ef4eb9231083d`。从精确基线810ba729接续，NotebookViewModel恢复选中路由，StudySession保存每本学习窗口opened；已有原位标题草稿/操作身份沿用，unknown请求等待明确重试。
 
-修复回原文窗口切回大窗口时的动画越界：窗口尺寸变化后，每帧位置仍受当前宿主边界约束，关闭按钮保留完整 48dp 触摸区域。补充逐帧回归，并修正测试中的嵌套滚动定位、异步导图加载等待、暂停动画时钟下的滚动准备及 OS 无障碍窗口读取前置条件。原有业务、首帧和无障碍正负断言保留。
+FloatingStudyWindow在尺寸变化期间逐帧约束位置，保持关闭目标在宿主内。StudyWorkspace改用requestScrollToItem，避免大纲项目数变化时立即scrollToItem重入布局；41e23另将完整标题完成与异常清理固定Dispatchers.Main.immediate，IO读取仍在后台，同命令回执、token、unknown与取消语义保持。
 
-包名、版本和原签名沿用当前 V68 候选身份。构建源码、逐方法结果、真实设备阻断及真人持笔步骤分别见 [本轮结果](STUDY-RESTORE-DEVICE-RESULTS-20261003.md) 与 [真机检查清单](DEVICE-TEST-CHECKLIST.md)。历史通过记录不计入本轮通过。
+测试修正包括真实菜单/嵌套滚动前置等待、输入在重建/原生按键前已应用的确认，以及Map unmerged tree和正确outline-row祖先断言。Map原业务结果断言保留。LocalMotion首次恢复像素场景改走同一卡片source-only入口（强制展开来源并省略正文），裁剪仅覆盖caption；它不独立证明showSource保存恢复或长正文整个来源组的首帧像素，不能称所有业务、首帧和无障碍覆盖完全等价。
+
+实际验证分环境分源码：API35原30跨源码最新 30 PASS / 0 FAIL / 0 NOT_RUN；真机首次前台辅助业务模式 28 PASS / 0 FAIL / 2 NOT_RUN；无辅助runner仍单列阻塞。普通应用真机 OS kill 的 draft、confirmed 两切点均有独立 PASS 回执（3fbc、29表各自前后3868/3870行），范围仅新增合成笔记大纲结构标题；registry/remount与实际OS终止分开。以下为当前候选已经完成核验的构建身份；本候选标题长流程、未知回执及容器重挂载，在模拟器和真机首次启动辅助模式下各3 PASS。
+
+包名、版本和原签名沿用V68候选身份。源码/包SHA、逐方法结果、历史失败、资料保护与真人待测见 [本轮结果](STUDY-RESTORE-DEVICE-RESULTS-20261003.md) 与 [真机检查清单](DEVICE-TEST-CHECKLIST.md)。
 
 ---
 

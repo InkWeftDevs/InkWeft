@@ -1,193 +1,183 @@
-# 学习页签恢复：本轮设备结果（2026-10-03）
+# 学习页签恢复：本轮交付与实际验证
 
-本报告记录精确恢复基线及已经发生的验证，不是最终修复交付结论。基线 commit `810ba729a4caa3c22a857454b4838776456ccf61`、tree `65d3bd082cfeb28b958f01333e3524b8fa0e730f`；后续原位标题测试诊断及外层恢复路由修复正在进行，最终 commit/tree、三包身份与修复回归结果由主任务补入。未运行项目保持 NOT_RUN，不继承旧 V68 结果。
+**隔离 API35 模拟器原30方法跨源码最新：30 PASS / 0 FAIL / 0 NOT_RUN。真机原runner无辅助启动仍为ENVIRONMENT_BLOCKED，原30无辅助方法记NOT_RUN；真机仅首次前台启动辅助模式：28 PASS / 0 FAIL / 2 NOT_RUN。** 三种环境独立列出，辅助下业务PASS不代表原runner启动机制已修复，也不把定向回归累计写成同一候选全量运行。未实际执行的项目保持NOT_RUN。
 
-主机与设备日志时钟不一致，本轮以同次方法事件、内部进程标识和相对耗时关联；新 runtime 同时记录 host UTC/device UTC，未调整时钟。公开报告不列具体进程标识。
+本次APK构建源码：`41e23e96e36e0bb58c394e941718e049f525ada5` / tree `3bb36b951bd87773a784bb608e2ef4eb9231083d`。以下为当前候选已经完成核验的构建身份。回执快照：2026-10-03T09:20:06.960372+00:00。待完成/失败范围：隔离模拟器：原30方法均已有明确来源的实际PASS；仍不代表同一候选全量运行。 真机首次前台辅助模式：`BranchReviewRoundUiTest#committedButUnverifiedResultStaysLockedAcrossRecreationAndRetriesReadOnlyProof`（NOT_RUN）；`BranchReviewRoundUiTest#missingFrozenResultDetailsKeepTheLedgerAndRetryWithoutCurrentQuestionSubstitution`（NOT_RUN）
 
-对应操作步骤见 [DEVICE-TEST-CHECKLIST.md](DEVICE-TEST-CHECKLIST.md) 的 SR-01～10、SR-HW-01。下表中的模拟器结果与真机结果分别计数；原始日志、设备唯一标识、进程标识及私人内容不复制到本报告。
+## 已核构建与安装边界
 
-|本轮范围|已核结果|限制/下一步|
-|---|---|---|
-|精确基线三包构建与身份|PASS|构建时源码 tree 为 65d3，不能代表后续修复工作树|
-|真机独立 Room 12 唯一方法|12 PASS / 0 FAIL / 0 NOT_RUN|本轮全新执行；不是继承旧 V68 12 PASS|
-|真机 app 30 唯一方法|0 PASS / 0 FAIL / 30 NOT_RUN|本候选主包/app runner 尚未在真机安装，等待用户就绪|
-|隔离 API35 模拟器 app 30 唯一方法|2 PASS / 1 FAIL / 27 NOT_RUN|两项修订缺失故障通过；原位标题祖先 semantics 断言失败待诊断|
-|隔离模拟器完整 OS 进程终止恢复|2 次 FAIL|均自动回资料库；手动重开可找到原位草稿，自动路由仍失败|
-|ADB 归档恢复保护验证|限定范围 PASS|41 个内部文件哈希一致、普通启动通过；不是应用内备份恢复验收|
-|真实完整学习旅程、真实 IME/窄窗分屏、真实 PDF/应用内导出及完整备份恢复|NOT_RUN|按 SR 清单分别执行|
-|真人 15 分钟、压感/倾斜/掌触与温升|NOT_RUN|必须由用户实际持笔，ADB 不能代替|
+已核构建源码为 `41e23e96e36e0bb58c394e941718e049f525ada5` / tree `3bb36b951bd87773a784bb608e2ef4eb9231083d`，版本仍为 `68 / 0.0.68-cloud-candidate`；构建回执 `build-repair-08/build-receipt.json`。版本号不足以区分这些候选。三包来自同一固定输入，原证书 SHA-256 为 `18e67dbce88152dbe4d4821b5a3a513a409a3df4eac9261f4c11126c36e43969`；两个 runner 均为 `androidx.test.runner.AndroidJUnitRunner`。
 
-## 精确构建身份
-
-源码按公开基点 `bb0f2b15f2c02e956c0ea4256e9f64378f41de0e` 顺序应用两份补丁；第一片本地 commit `d899727ad02b085c19e19448eb3511621660b7ec`、tree `58cd0921039e43a33efe81e20471d90545be185a`，第二片得到上述 65d3 基线。恢复回执记录附件哈希与 30 方法源码哈希全部匹配。
-
-构建采用 Temurin 17.0.20.1+1、SDK/build-tools 36/36.0.0、项目 Gradle wrapper 9.4.1，单 worker 串行构建主 APK、app runner 与独立 Room runner。764 个跟踪输入文件构建前后哈希一致，构建时工作树干净；耗时 279.746 秒。`INKWEFT_HEAD_SHA`/`GITHUB_SHA` 均为实际本地提交；主包及 app runner DEX 含该提交。Room 没有内嵌源码 BuildConfig 字段，以同次构建、输入摘要和产物绑定来源。
-
-|产物|包名 / targetPackage|版本|最终 SHA-256|
+|用途|完整文件名|包名 / targetPackage|完整 SHA-256|
 |---|---|---|---|
-|主 APK|`org.inkweft.app.a0.workspace` / 不适用|68 / `0.0.68-cloud-candidate`|`0d679a4d8cff63a3af842a0edecfe2a5b1938da5d78c6e38e3ca77976bcc0157`|
-|app runner|`org.inkweft.app.a0.workspace.test` / `org.inkweft.app.a0.workspace`|manifest 无独立版本字段|`b5f14c37486ee5b853b83286fe72f71a63893478f52a91bfdf787827d5278855`|
-|Room runner|`org.inkweft.data.test` / `org.inkweft.data.test`|manifest 无独立版本字段|`aa905b4de50848f12f7ee0054fc9f861b23eca2f86b972201671f3efde6bbff5`|
+|app|InkWeft-study-tab-restore-41e23e96.apk|`org.inkweft.app.a0.workspace` / `不适用`|`57604ea3bbeb61f38ca08d308544fe3a032e9529cf9b0259f61311909d56979e`|
+|app-test|InkWeft-study-tab-restore-41e23e96-androidTest.apk|`org.inkweft.app.a0.workspace.test` / `org.inkweft.app.a0.workspace`|`a888f69420959624b693f6bb7d16db49e8f15edd20f1e2056c10bd4344ed30d1`|
+|room-test|InkWeft-study-tab-restore-41e23e96-room-androidTest.apk|`org.inkweft.data.test` / `org.inkweft.data.test`|`aa905b4de50848f12f7ee0054fc9f861b23eca2f86b972201671f3efde6bbff5`|
 
-三包证书 SHA-256 均为原证书 `18e67dbce88152dbe4d4821b5a3a513a409a3df4eac9261f4c11126c36e43969`；两个 runner 均为 `androidx.test.runner.AndroidJUnitRunner`。三包签名、ZIP CRC、16KB zipalign、包名和 targetPackage 已核对。未更改 applicationId、未新建替代密钥；私钥/口令不进入报告。版本仍为 68，不能靠版本号辨认新旧源码。
+签名、ZIP/manifest与输入身份按各构建回执核对。签名包完整保留；没有更换包名、卸载清库或换钥绕过。用户已授权安装；此前UserRejected/同版本厂商弹窗等待保留为历史，后来选择重新安装主包，并确认runner风险继续安装，三包实际安装状态与SHA分别核对匹配。真机当前已装源码是 `41e23e96e36e0bb58c394e941718e049f525ada5` / tree `3bb36b951bd87773a784bb608e2ef4eb9231083d`；Room保持同字节已装包，主包/app runner原位更新。回执为 `repair8-physical/installation.json`。
 
-构建首次失败来自归档 PowerShell 脚本中带点参数未加引号；核查脚本曾预期错误的 runner 文件后缀。两处均仅修归档脚本，失败证据保留；不列为产品断言失败。
-
-## 旧包真机执行阻断
-
-这组控制均属于已装旧 V68 源码 `15f167ed1d1270617e51e0aacd21b5b7caa9bb18`，与本候选方法计数完全分开。
-
-|诊断|实际结果|能得出的结论|
+|已装包名|安装后完整SHA-256|核对结果|
 |---|---|---|
-|01，同 runner 纯内存 `RenderResourcesTest#immutableEqualityMemoDoesNotHideNewErasures`|PASS，0.859秒，开始/结束事件齐全|instrumentation 的这条纯内存路径可完成|
-|02，主线程原生 View `BrushB1InputTest#singlePaperPencilDrawsWhileDownAndPersistsPageCoordinates`|PASS，0.609秒，开始/结束事件齐全|该原生 View 控制可完成；不代表真人笔|
-|03，普通 Activity 启动、独立 UiAutomation 读取|PASS，0.718/2.688秒|普通启动与独立读取可完成；不代表 Compose Rule 初始化|
-|04，Compose Rule `EditorVisualContractTest#narrowMapActionsAvoidTheNeighbouringBranch`|BLOCKED，6.125秒；仅开始事件，观察到内核冻结|未取得产品断言结果|
-|07，同方法冻结前 JDWP 栈|BLOCKED，6.547秒|实际等待位于 `Instrumentation.startActivitySync`，并非此前候选 `waitForIdleSync`|
+|`org.inkweft.app.a0.workspace`|`57604ea3bbeb61f38ca08d308544fe3a032e9529cf9b0259f61311909d56979e`|updated in place|
+|`org.inkweft.app.a0.workspace.test`|`a888f69420959624b693f6bb7d16db49e8f15edd20f1e2056c10bd4344ed30d1`|updated in place|
+|`org.inkweft.data.test`|`aa905b4de50848f12f7ee0054fc9f861b23eca2f86b972201671f3efde6bbff5`|same byte-identical Room package retained|
 
-第 07 次栈显示 `Object.wait → Instrumentation.startActivitySync → InstrumentationActivityInvoker.startActivity → ActivityScenario.launchInternal → ActivityScenarioRule.before`；主线程在消息循环等待。未取得目标 Activity 创建/恢复或方法正文进入证据，不能归咎业务 Room 或控件断言。`SYSTEM_ALERT_WINDOW`（SAW）appop 的记录提供后台启动限制线索，尚无因果证明。
+## 原30方法逐项实际结果
 
-仅针对旧包的一次临时 SAW 许可对照仍在等待用户授权，执行后需恢复原值。已批准的窗口/字体/动画/旋转临时调整不等于批准此项，也不包括冻结策略、后台耗电设置或重启。不循环重试、重启或强制解冻。
+下表每行绑定真正运行的 commit/tree。候选自身是否运行、所有旧失败与 START-only 未完成记录保留在 `latest-30-executions.json`，逐源码矩阵保留在 `method-results-summary.json`；新源码未开始的 NOT_RUN 不覆盖旧源码实测 PASS。
 
-## 真机 Room：本轮重新执行
+|准确方法|最新实际结果|实际 sourceCommit / tree / 环境|真机无辅助|回执|
+|---|---|---|---|---|
+|`org.inkweft.app.LocalMotionUiTest#cardSectionsEnterOnceAndDisposeCollapsedSourceAtTheNextRealFrame`|PASS|`3fe6b7b1d9c3f62bf14e88b091abd08d47450e7d` / `f1dbedb95ac340602af7216613f8c007d3adff2c` / API35模拟器|NOT_RUN|`repair5-emulator/targeted5/results.json`|
+|`org.inkweft.app.LocalMotionUiTest#answerEnterCannotRetainPreviousQuestionCluesAcrossSkipHideAndExit`|PASS|`893a983d1f4fcf9d782d77e9e81c693a28a7c81c` / `d07daa86dd269a1811721448a0e7b5ddb04a8b47` / API35模拟器|NOT_RUN|`repair3-emulator/targeted6/results.json`|
+|`org.inkweft.app.LocalMotionUiTest#latestPassiveSourceHighlightKeepsExactPaperAndNativeCaptureAtSystemZeroScale`|PASS|`afd74669351d50ecf99a1f6a8b6bc4fc09a0e67c` / `edbe6490fae5788e7ea37674adac6be056097a66` / API35模拟器|NOT_RUN|`repair4-emulator/targeted4/results.json`|
+|`org.inkweft.app.CardSourceNavigationUiTest#collapsedSourceFooterReturnsToExactPaperAndKeepsReadOnlyMapContext`|PASS|`893a983d1f4fcf9d782d77e9e81c693a28a7c81c` / `d07daa86dd269a1811721448a0e7b5ddb04a8b47` / API35模拟器|NOT_RUN|`repair3-emulator/targeted4/results.json`|
+|`org.inkweft.app.SourceFocusVisibilityUiTest#movedResizedFloatingCollectOrganizeAndFocusExposeExactSourceThenRestoreOriginalWindow`|PASS|`893a983d1f4fcf9d782d77e9e81c693a28a7c81c` / `d07daa86dd269a1811721448a0e7b5ddb04a8b47` / API35模拟器|NOT_RUN|`repair3-emulator/targeted4/results.json`|
+|`org.inkweft.app.SourceFocusVisibilityUiTest#narrow375LargeFontRetainsSourceRegionThroughRecreationAndRestoresItsFocusFrame`|PASS|`893a983d1f4fcf9d782d77e9e81c693a28a7c81c` / `d07daa86dd269a1811721448a0e7b5ddb04a8b47` / API35模拟器|NOT_RUN|`repair3-emulator/targeted4/results.json`|
+|`org.inkweft.app.SourceFocusVisibilityUiTest#splitPaneRefitsRetainedSourceAcrossBothDirectionsWithoutChangingReferenceOrGraph`|PASS|`893a983d1f4fcf9d782d77e9e81c693a28a7c81c` / `d07daa86dd269a1811721448a0e7b5ddb04a8b47` / API35模拟器|NOT_RUN|`repair3-emulator/targeted4/results.json`|
+|`org.inkweft.app.RecallMaskUiTest#narrowRotationSourceReturnAndNextQuestionResetPermissions`|PASS|`bdf20da9e0a6fc135fc5072ba38592164b52719b` / `6e8046f288a9b28625cb8361dce8dedf95245dcc` / API35模拟器|NOT_RUN|`repair2-emulator/independent22/results.json`|
+|`org.inkweft.app.RecallMaskUiTest#explicitKnownAndUnknownRatingRetainOriginalCasAndReceiptIdentity`|PASS|`bdf20da9e0a6fc135fc5072ba38592164b52719b` / `6e8046f288a9b28625cb8361dce8dedf95245dcc` / API35模拟器|NOT_RUN|`repair2-emulator/independent22/results.json`|
+|`org.inkweft.app.RecallMaskUiTest#mapHintGatesNativeTopologyTitlesBodiesAndFoldedDescendants`|PASS|`bdf20da9e0a6fc135fc5072ba38592164b52719b` / `6e8046f288a9b28625cb8361dce8dedf95245dcc` / API35模拟器|NOT_RUN|`repair2-emulator/independent22/results.json`|
+|`org.inkweft.app.ReadLockUiTest#summaryOutlineAndMapRejectActualAuthorIntents`|PASS|`bdf20da9e0a6fc135fc5072ba38592164b52719b` / `6e8046f288a9b28625cb8361dce8dedf95245dcc` / API35模拟器|NOT_RUN|`repair2-emulator/independent22/results.json`|
+|`org.inkweft.app.BranchReviewRoundUiTest#mixedExactResultsRetryOnlyTheConfirmedQuestionAndNeverMixANewSibling`|PASS|`bdf20da9e0a6fc135fc5072ba38592164b52719b` / `6e8046f288a9b28625cb8361dce8dedf95245dcc` / API35模拟器|NOT_RUN|`repair2-emulator/independent22/results.json`|
+|`org.inkweft.app.BranchReviewRoundUiTest#pureSkipWithIdenticalRefsStartsAtFirstQuestionWithNoOldPermissionAndRestoresItsOwnRound`|PASS|`bdf20da9e0a6fc135fc5072ba38592164b52719b` / `6e8046f288a9b28625cb8361dce8dedf95245dcc` / API35模拟器|NOT_RUN|`repair2-emulator/independent22/results.json`|
+|`org.inkweft.app.BranchReviewRoundUiTest#unknownOriginalOperationSurvivesActivityAndWriterRecreationBeforeCountingExactlyOnce`|PASS|`bdf20da9e0a6fc135fc5072ba38592164b52719b` / `6e8046f288a9b28625cb8361dce8dedf95245dcc` / API35模拟器|NOT_RUN|`repair2-emulator/independent22/results.json`|
+|`org.inkweft.app.BranchReviewRoundUiTest#committedButUnverifiedResultStaysLockedAcrossRecreationAndRetriesReadOnlyProof`|PASS|`bdf20da9e0a6fc135fc5072ba38592164b52719b` / `6e8046f288a9b28625cb8361dce8dedf95245dcc` / API35模拟器|NOT_RUN|`repair2-emulator/independent22/results.json`|
+|`org.inkweft.app.BranchReviewRoundUiTest#completedRoundRecoveryConsumesOnlyItsOwnOperationBeforeRetryAndClose`|PASS|`bdf20da9e0a6fc135fc5072ba38592164b52719b` / `6e8046f288a9b28625cb8361dce8dedf95245dcc` / API35模拟器|NOT_RUN|`repair2-emulator/independent22/results.json`|
+|`org.inkweft.app.QuestionMaintenanceUiTest#longQuestionSearchKeepsDraftsAndIdentityAcrossRecreationAndEditing`|PASS|`bdf20da9e0a6fc135fc5072ba38592164b52719b` / `6e8046f288a9b28625cb8361dce8dedf95245dcc` / API35模拟器|NOT_RUN|`repair2-emulator/independent22/results.json`|
+|`org.inkweft.app.QuestionMaintenanceUiTest#actualReadOnlyEntryShowsSavedQuestionsButCannotEditRemoveOrSaveAuthors`|PASS|`bdf20da9e0a6fc135fc5072ba38592164b52719b` / `6e8046f288a9b28625cb8361dce8dedf95245dcc` / API35模拟器|NOT_RUN|`repair2-emulator/independent22/results.json`|
+|`org.inkweft.app.BranchReviewRoundUiTest#missingFrozenResultDetailsKeepTheLedgerAndRetryWithoutCurrentQuestionSubstitution`|PASS|`bdf20da9e0a6fc135fc5072ba38592164b52719b` / `6e8046f288a9b28625cb8361dce8dedf95245dcc` / API35模拟器|NOT_RUN|`repair2-emulator/independent22/results.json`|
+|`org.inkweft.app.OverviewTabsUiTest#outlineFoldsFollowStableRowsThroughSearchRestoreAndStructureChanges`|PASS|`bdf20da9e0a6fc135fc5072ba38592164b52719b` / `6e8046f288a9b28625cb8361dce8dedf95245dcc` / API35模拟器|NOT_RUN|`repair2-emulator/independent22/results.json`|
+|`org.inkweft.app.PageInsertionUiTest#newPagePaperRequiresSaveRestoresAndStaysNotebookLocal`|PASS|`bdf20da9e0a6fc135fc5072ba38592164b52719b` / `6e8046f288a9b28625cb8361dce8dedf95245dcc` / API35模拟器|NOT_RUN|`repair2-emulator/independent22/results.json`|
+|`org.inkweft.app.PageInsertionUiTest#restoredPendingInsertionKeepsCapturedPaperAndReceiptAfterDefaultChanges`|PASS|`bdf20da9e0a6fc135fc5072ba38592164b52719b` / `6e8046f288a9b28625cb8361dce8dedf95245dcc` / API35模拟器|NOT_RUN|`repair2-emulator/independent22/results.json`|
+|`org.inkweft.app.PageInsertionUiTest#failedDefaultSaveRollsBackAndKeepsDialogOpen`|PASS|`bdf20da9e0a6fc135fc5072ba38592164b52719b` / `6e8046f288a9b28625cb8361dce8dedf95245dcc` / API35模拟器|NOT_RUN|`repair2-emulator/independent22/results.json`|
+|`org.inkweft.app.PageInsertionUiTest#beginningBatchKeepsOriginalInkAndPageIdentity`|PASS|`bdf20da9e0a6fc135fc5072ba38592164b52719b` / `6e8046f288a9b28625cb8361dce8dedf95245dcc` / API35模拟器|NOT_RUN|`repair2-emulator/independent22/results.json`|
+|`org.inkweft.app.NotebookNavigationUiTest#realEditorAppendPersistsOneBlankPageAndRejectsStaleTail`|PASS|`bdf20da9e0a6fc135fc5072ba38592164b52719b` / `6e8046f288a9b28625cb8361dce8dedf95245dcc` / API35模拟器|NOT_RUN|`repair2-emulator/independent22/results.json`|
+|`org.inkweft.app.TemplateCreationUiTest#installedTemplatesAreUsableInExistingCreationFlows`|PASS|`bdf20da9e0a6fc135fc5072ba38592164b52719b` / `6e8046f288a9b28625cb8361dce8dedf95245dcc` / API35模拟器|NOT_RUN|`repair2-emulator/independent22/results.json`|
+|`org.inkweft.app.MapInteractionUiTest#outlineTitlesKeepSharedContentAndContinueAtTheSameParent`|PASS|`41e23e96e36e0bb58c394e941718e049f525ada5` / `3bb36b951bd87773a784bb608e2ef4eb9231083d` / API35模拟器|NOT_RUN|`repair8-emulator/targeted3/results.json`|
+|`org.inkweft.app.MapInteractionUiTest#outlineEnterUnknownReceiptRetriesOneCommandBeforeOpeningOneSiblingDraft`|PASS|`41e23e96e36e0bb58c394e941718e049f525ada5` / `3bb36b951bd87773a784bb608e2ef4eb9231083d` / API35模拟器|NOT_RUN|`repair8-emulator/targeted3/results.json`|
+|`org.inkweft.app.SelectionStudyUiTest#outlineFoldFocusAndQuickAddShareOneGraph`|PASS|`3fe6b7b1d9c3f62bf14e88b091abd08d47450e7d` / `f1dbedb95ac340602af7216613f8c007d3adff2c` / API35模拟器|NOT_RUN|`repair5-emulator/targeted3/results.json`|
+|`org.inkweft.app.ReadLockUiTest#studyTabSavedStateRestorationSurvivesCompactInitialization`|PASS|`bdf20da9e0a6fc135fc5072ba38592164b52719b` / `6e8046f288a9b28625cb8361dce8dedf95245dcc` / API35模拟器|NOT_RUN|`repair2-emulator/last2/results.json`|
 
-目标为用户指定的 Android 16 / API36 真机，仅使用公开别名，不记录序列号。重装 Room runner 时设备返回 `INSTALL_FAILED_ABORTED: User rejected permissions`；没有卸载、清数据或换包绕过。随后核实当前已装 APK 与本次精确源码构建产物字节相同，SHA-256 均为 `aa905b4d…e6bbff5`，以该明确身份执行全新 12 方法，时间为 2026-10-03 13:41:13～13:41:27（+08:00）。
+### 真机首次前台启动辅助下的正式业务断言
 
-运行回执 `oldPassReused=false`。每项均有正确 class/test 开始及完成事件、成功码和日志摘要；下面列的是本轮执行结果。同字节产物不是继承历史结果的理由。
+执行模式严格记为 `PHYSICAL_WITH_ONE_INITIAL_FOREGROUND_LAUNCH`，原始 `initialUnassistedRunnerStatus=ENVIRONMENT_BLOCKED` 保留。每方法只在初次ActivityScenarioRule启动时按已核对规则补一次真实MainActivity的MAIN+LAUNCHER、flags `0x10008000`；正文、recreate和恢复操作不补第二次启动。每条辅助的组件、相对时间、flags和限制原文保留在JSON，不能把这些PASS写成无条件真机PASS。诊断11的ComponentActivity控制 `formalAcceptanceEligible=false` 已排除，未凑进原30。
 
-|完整类：`org.inkweft.data.BranchReviewRoundRepositoryTest`；方法|本轮真机|耗时（秒）|
-|---|---|---|
-|`exactReceiptsCountIndependentSameCardQuestionsOnceWithZeroReadSideWrites`|PASS|0.953|
-|`unknownRollbackCannotCountOrSkipUntilTheSameOperationActuallyCommits`|PASS|0.953|
-|`missingWrongOperationBookDigestResultOrRequestedStateNeverConfirms`|PASS|1.313|
-|`causalRevisionMustExistAndMatchOnlyTheRequestedStateChange`|PASS|1.5|
-|`originalQuestionAndCardHistoryAreRequiredRatherThanCurrentRows`|PASS|1.344|
-|`laterQuestionCardEditsAndRecyclingNeverRebaseAnAlreadyCommittedResult`|PASS|0.937|
-|`skippedUnderstoodQuestionRetainsAllFourRefsAndDoesNotUseGlobalStateFiltering`|PASS|0.922|
-|`aMissingSelectedHistoryRejectsTheEntireRetryWithoutDroppingThatQuestion`|PASS|0.953|
-|`completedReviewLedgerStillRequiresItsOriginalReceiptForRetry`|PASS|0.969|
-|`wrongFrozenNotebookCannotBorrowAValidReceiptOrAnswer`|PASS|0.969|
-|`rejectedSkipRetriesOriginalRefsButNeverPretendsToHaveAReceipt`|PASS|0.953|
-|`noCandidateAndRecycledBookCannotStartANewRoundButOldReceiptStillCounts`|PASS|0.953|
+|准确方法|业务实际结果|实际 sourceCommit / tree|唯一首次辅助|显示设置恢复|回执|
+|---|---|---|---|---|---|
+|`org.inkweft.app.LocalMotionUiTest#cardSectionsEnterOnceAndDisposeCollapsedSourceAtTheNextRealFrame`|PASS|`3fbc5f15c607e85c29aec4402f92d3a22cad3d27` / `9cb1ba919979930ca4072935fa4c88887f364a4d`|`org.inkweft.app.a0.workspace/org.inkweft.app.MainActivity`；t+2.296s；flags `0x10008000`|PASS，before=after；`repair7-physical/display7-assisted/01/settings-receipt.json`|`repair7-physical/display7-assisted/01/runtime/results.json`|
+|`org.inkweft.app.LocalMotionUiTest#answerEnterCannotRetainPreviousQuestionCluesAcrossSkipHideAndExit`|PASS|`3fbc5f15c607e85c29aec4402f92d3a22cad3d27` / `9cb1ba919979930ca4072935fa4c88887f364a4d`|`org.inkweft.app.a0.workspace/org.inkweft.app.MainActivity`；t+2.281s；flags `0x10008000`|PASS，before=after；`repair7-physical/display7-assisted/02/settings-receipt.json`|`repair7-physical/display7-assisted/02/runtime/results.json`|
+|`org.inkweft.app.LocalMotionUiTest#latestPassiveSourceHighlightKeepsExactPaperAndNativeCaptureAtSystemZeroScale`|PASS|`3fbc5f15c607e85c29aec4402f92d3a22cad3d27` / `9cb1ba919979930ca4072935fa4c88887f364a4d`|`org.inkweft.app.a0.workspace/org.inkweft.app.MainActivity`；t+2.313s；flags `0x10008000`|PASS，before=after；`repair7-physical/display7-assisted/03/settings-receipt.json`|`repair7-physical/display7-assisted/03/runtime/results.json`|
+|`org.inkweft.app.CardSourceNavigationUiTest#collapsedSourceFooterReturnsToExactPaperAndKeepsReadOnlyMapContext`|PASS|`f28a9e23ce320de7b50e5b07699b765620930e56` / `077d2860789d5f1b3b8937460558e9439ce0ba47`|`org.inkweft.app.a0.workspace/org.inkweft.app.MainActivity`；t+2.281s；flags `0x10008000`|不适用/无该类回执|`repair6-physical/independent19-assisted/results.json`|
+|`org.inkweft.app.SourceFocusVisibilityUiTest#movedResizedFloatingCollectOrganizeAndFocusExposeExactSourceThenRestoreOriginalWindow`|PASS|`3fbc5f15c607e85c29aec4402f92d3a22cad3d27` / `9cb1ba919979930ca4072935fa4c88887f364a4d`|`org.inkweft.app.a0.workspace/org.inkweft.app.MainActivity`；t+2.313s；flags `0x10008000`|PASS，before=after；`repair7-physical/display7-assisted/04/settings-receipt.json`|`repair7-physical/display7-assisted/04/runtime/results.json`|
+|`org.inkweft.app.SourceFocusVisibilityUiTest#narrow375LargeFontRetainsSourceRegionThroughRecreationAndRestoresItsFocusFrame`|PASS|`3fbc5f15c607e85c29aec4402f92d3a22cad3d27` / `9cb1ba919979930ca4072935fa4c88887f364a4d`|`org.inkweft.app.a0.workspace/org.inkweft.app.MainActivity`；t+2.422s；flags `0x10008000`|PASS，before=after；`repair7-physical/display7-assisted/05/settings-receipt.json`|`repair7-physical/display7-assisted/05/runtime/results.json`|
+|`org.inkweft.app.SourceFocusVisibilityUiTest#splitPaneRefitsRetainedSourceAcrossBothDirectionsWithoutChangingReferenceOrGraph`|PASS|`3fbc5f15c607e85c29aec4402f92d3a22cad3d27` / `9cb1ba919979930ca4072935fa4c88887f364a4d`|`org.inkweft.app.a0.workspace/org.inkweft.app.MainActivity`；t+2.375s；flags `0x10008000`|PASS，before=after；`repair7-physical/display7-assisted/06/settings-receipt.json`|`repair7-physical/display7-assisted/06/runtime/results.json`|
+|`org.inkweft.app.RecallMaskUiTest#narrowRotationSourceReturnAndNextQuestionResetPermissions`|PASS|`3fbc5f15c607e85c29aec4402f92d3a22cad3d27` / `9cb1ba919979930ca4072935fa4c88887f364a4d`|`org.inkweft.app.a0.workspace/org.inkweft.app.MainActivity`；t+2.344s；flags `0x10008000`|PASS，before=after；`repair7-physical/display7-assisted/07/settings-receipt.json`|`repair7-physical/display7-assisted/07/runtime/results.json`|
+|`org.inkweft.app.RecallMaskUiTest#explicitKnownAndUnknownRatingRetainOriginalCasAndReceiptIdentity`|PASS|`f28a9e23ce320de7b50e5b07699b765620930e56` / `077d2860789d5f1b3b8937460558e9439ce0ba47`|`org.inkweft.app.a0.workspace/org.inkweft.app.MainActivity`；t+2.407s；flags `0x10008000`|不适用/无该类回执|`repair6-physical/independent19-assisted/results.json`|
+|`org.inkweft.app.RecallMaskUiTest#mapHintGatesNativeTopologyTitlesBodiesAndFoldedDescendants`|PASS|`f28a9e23ce320de7b50e5b07699b765620930e56` / `077d2860789d5f1b3b8937460558e9439ce0ba47`|`org.inkweft.app.a0.workspace/org.inkweft.app.MainActivity`；t+2.422s；flags `0x10008000`|不适用/无该类回执|`repair6-physical/independent19-assisted/results.json`|
+|`org.inkweft.app.ReadLockUiTest#summaryOutlineAndMapRejectActualAuthorIntents`|PASS|`f28a9e23ce320de7b50e5b07699b765620930e56` / `077d2860789d5f1b3b8937460558e9439ce0ba47`|`org.inkweft.app.a0.workspace/org.inkweft.app.MainActivity`；t+2.516s；flags `0x10008000`|不适用/无该类回执|`repair6-physical/first-assisted-method/results.json`|
+|`org.inkweft.app.BranchReviewRoundUiTest#mixedExactResultsRetryOnlyTheConfirmedQuestionAndNeverMixANewSibling`|PASS|`f28a9e23ce320de7b50e5b07699b765620930e56` / `077d2860789d5f1b3b8937460558e9439ce0ba47`|`org.inkweft.app.a0.workspace/org.inkweft.app.MainActivity`；t+2.562s；flags `0x10008000`|不适用/无该类回执|`repair6-physical/independent19-assisted/results.json`|
+|`org.inkweft.app.BranchReviewRoundUiTest#pureSkipWithIdenticalRefsStartsAtFirstQuestionWithNoOldPermissionAndRestoresItsOwnRound`|PASS|`f28a9e23ce320de7b50e5b07699b765620930e56` / `077d2860789d5f1b3b8937460558e9439ce0ba47`|`org.inkweft.app.a0.workspace/org.inkweft.app.MainActivity`；t+2.656s；flags `0x10008000`|不适用/无该类回执|`repair6-physical/independent19-assisted/results.json`|
+|`org.inkweft.app.BranchReviewRoundUiTest#unknownOriginalOperationSurvivesActivityAndWriterRecreationBeforeCountingExactlyOnce`|PASS|`f28a9e23ce320de7b50e5b07699b765620930e56` / `077d2860789d5f1b3b8937460558e9439ce0ba47`|`org.inkweft.app.a0.workspace/org.inkweft.app.MainActivity`；t+2.687s；flags `0x10008000`|不适用/无该类回执|`repair6-physical/independent19-assisted/results.json`|
+|`org.inkweft.app.BranchReviewRoundUiTest#committedButUnverifiedResultStaysLockedAcrossRecreationAndRetriesReadOnlyProof`|NOT_RUN|未实际执行|无完成运行证据|不适用/无该类回执|无|
+|`org.inkweft.app.BranchReviewRoundUiTest#completedRoundRecoveryConsumesOnlyItsOwnOperationBeforeRetryAndClose`|PASS|`f28a9e23ce320de7b50e5b07699b765620930e56` / `077d2860789d5f1b3b8937460558e9439ce0ba47`|`org.inkweft.app.a0.workspace/org.inkweft.app.MainActivity`；t+2.641s；flags `0x10008000`|不适用/无该类回执|`repair6-physical/independent19-assisted/results.json`|
+|`org.inkweft.app.QuestionMaintenanceUiTest#longQuestionSearchKeepsDraftsAndIdentityAcrossRecreationAndEditing`|PASS|`f28a9e23ce320de7b50e5b07699b765620930e56` / `077d2860789d5f1b3b8937460558e9439ce0ba47`|`org.inkweft.app.a0.workspace/org.inkweft.app.MainActivity`；t+2.516s；flags `0x10008000`|不适用/无该类回执|`repair6-physical/independent19-assisted/results.json`|
+|`org.inkweft.app.QuestionMaintenanceUiTest#actualReadOnlyEntryShowsSavedQuestionsButCannotEditRemoveOrSaveAuthors`|PASS|`f28a9e23ce320de7b50e5b07699b765620930e56` / `077d2860789d5f1b3b8937460558e9439ce0ba47`|`org.inkweft.app.a0.workspace/org.inkweft.app.MainActivity`；t+2.547s；flags `0x10008000`|不适用/无该类回执|`repair6-physical/independent19-assisted/results.json`|
+|`org.inkweft.app.BranchReviewRoundUiTest#missingFrozenResultDetailsKeepTheLedgerAndRetryWithoutCurrentQuestionSubstitution`|NOT_RUN|未实际执行|无完成运行证据|不适用/无该类回执|无|
+|`org.inkweft.app.OverviewTabsUiTest#outlineFoldsFollowStableRowsThroughSearchRestoreAndStructureChanges`|PASS|`f28a9e23ce320de7b50e5b07699b765620930e56` / `077d2860789d5f1b3b8937460558e9439ce0ba47`|`org.inkweft.app.a0.workspace/org.inkweft.app.MainActivity`；t+2.672s；flags `0x10008000`|不适用/无该类回执|`repair6-physical/independent19-assisted/results.json`|
+|`org.inkweft.app.PageInsertionUiTest#newPagePaperRequiresSaveRestoresAndStaysNotebookLocal`|PASS|`f28a9e23ce320de7b50e5b07699b765620930e56` / `077d2860789d5f1b3b8937460558e9439ce0ba47`|`org.inkweft.app.a0.workspace/org.inkweft.app.MainActivity`；t+2.672s；flags `0x10008000`|不适用/无该类回执|`repair6-physical/independent19-assisted/results.json`|
+|`org.inkweft.app.PageInsertionUiTest#restoredPendingInsertionKeepsCapturedPaperAndReceiptAfterDefaultChanges`|PASS|`f28a9e23ce320de7b50e5b07699b765620930e56` / `077d2860789d5f1b3b8937460558e9439ce0ba47`|`org.inkweft.app.a0.workspace/org.inkweft.app.MainActivity`；t+2.656s；flags `0x10008000`|不适用/无该类回执|`repair6-physical/independent19-assisted/results.json`|
+|`org.inkweft.app.PageInsertionUiTest#failedDefaultSaveRollsBackAndKeepsDialogOpen`|PASS|`f28a9e23ce320de7b50e5b07699b765620930e56` / `077d2860789d5f1b3b8937460558e9439ce0ba47`|`org.inkweft.app.a0.workspace/org.inkweft.app.MainActivity`；t+2.734s；flags `0x10008000`|不适用/无该类回执|`repair6-physical/independent19-assisted/results.json`|
+|`org.inkweft.app.PageInsertionUiTest#beginningBatchKeepsOriginalInkAndPageIdentity`|PASS|`f28a9e23ce320de7b50e5b07699b765620930e56` / `077d2860789d5f1b3b8937460558e9439ce0ba47`|`org.inkweft.app.a0.workspace/org.inkweft.app.MainActivity`；t+2.703s；flags `0x10008000`|不适用/无该类回执|`repair6-physical/independent19-assisted/results.json`|
+|`org.inkweft.app.NotebookNavigationUiTest#realEditorAppendPersistsOneBlankPageAndRejectsStaleTail`|PASS|`f28a9e23ce320de7b50e5b07699b765620930e56` / `077d2860789d5f1b3b8937460558e9439ce0ba47`|`org.inkweft.app.a0.workspace/org.inkweft.app.MainActivity`；t+2.594s；flags `0x10008000`|不适用/无该类回执|`repair6-physical/independent19-assisted/results.json`|
+|`org.inkweft.app.TemplateCreationUiTest#installedTemplatesAreUsableInExistingCreationFlows`|PASS|`f28a9e23ce320de7b50e5b07699b765620930e56` / `077d2860789d5f1b3b8937460558e9439ce0ba47`|`org.inkweft.app.a0.workspace/org.inkweft.app.MainActivity`；t+2.782s；flags `0x10008000`|不适用/无该类回执|`repair6-physical/independent19-assisted/results.json`|
+|`org.inkweft.app.MapInteractionUiTest#outlineTitlesKeepSharedContentAndContinueAtTheSameParent`|PASS|`41e23e96e36e0bb58c394e941718e049f525ada5` / `3bb36b951bd87773a784bb608e2ef4eb9231083d`|`org.inkweft.app.a0.workspace/org.inkweft.app.MainActivity`；t+2.344s；flags `0x10008000`|不适用/无该类回执|`repair8-physical/targeted3/results.json`|
+|`org.inkweft.app.MapInteractionUiTest#outlineEnterUnknownReceiptRetriesOneCommandBeforeOpeningOneSiblingDraft`|PASS|`41e23e96e36e0bb58c394e941718e049f525ada5` / `3bb36b951bd87773a784bb608e2ef4eb9231083d`|`org.inkweft.app.a0.workspace/org.inkweft.app.MainActivity`；t+2.297s；flags `0x10008000`|不适用/无该类回执|`repair8-physical/targeted3/results.json`|
+|`org.inkweft.app.SelectionStudyUiTest#outlineFoldFocusAndQuickAddShareOneGraph`|PASS|`f28a9e23ce320de7b50e5b07699b765620930e56` / `077d2860789d5f1b3b8937460558e9439ce0ba47`|`org.inkweft.app.a0.workspace/org.inkweft.app.MainActivity`；t+2.359s；flags `0x10008000`|不适用/无该类回执|`repair6-physical/independent19-assisted/results.json`|
+|`org.inkweft.app.ReadLockUiTest#studyTabSavedStateRestorationSurvivesCompactInitialization`|PASS|`f28a9e23ce320de7b50e5b07699b765620930e56` / `077d2860789d5f1b3b8937460558e9439ce0ba47`|`org.inkweft.app.a0.workspace/org.inkweft.app.MainActivity`；t+2.328s；flags `0x10008000`|不适用/无该类回执|`repair6-physical/independent19-assisted/results.json`|
 
-## app：30 个唯一方法按环境分别记录
+两个删除修订故障方法仍只在隔离模拟器执行，主真机保持NOT_RUN。七个显示配置方法使用用户已有临时设置授权，由外部wrapper逐项锁竖屏、让原测试改wm/font/animator，并在finally按快照恢复与核对；当前已有7项完整设置回执确认before=after。逐项原值、准备值与恢复值保留在JSON，正文结果与设置恢复分别核对。没有修改设备冻结策略、后台耗电设置或重启。
 
-当前真实平板尚未安装本候选主包及 app runner，30 项全为 NOT_RUN，等待用户就绪。独立 API35 AVD 已还原到本任务空快照，再安装本候选三包，三包 SHA 与构建回执匹配；用于故障测试的资料均为其后新建的合成数据。未把原资料副本留作故障夹具。
+## Room 14、新增回归5、PDF/备份UI4
 
-|准确方法（类均以 `org.inkweft.app.` 开头）|真机|隔离 API35 模拟器|
-|---|---|---|
-|`LocalMotionUiTest#cardSectionsEnterOnceAndDisposeCollapsedSourceAtTheNextRealFrame`|NOT_RUN|NOT_RUN|
-|`LocalMotionUiTest#answerEnterCannotRetainPreviousQuestionCluesAcrossSkipHideAndExit`|NOT_RUN|NOT_RUN|
-|`LocalMotionUiTest#latestPassiveSourceHighlightKeepsExactPaperAndNativeCaptureAtSystemZeroScale`|NOT_RUN|NOT_RUN|
-|`CardSourceNavigationUiTest#collapsedSourceFooterReturnsToExactPaperAndKeepsReadOnlyMapContext`|NOT_RUN|NOT_RUN|
-|`SourceFocusVisibilityUiTest#movedResizedFloatingCollectOrganizeAndFocusExposeExactSourceThenRestoreOriginalWindow`|NOT_RUN|NOT_RUN|
-|`SourceFocusVisibilityUiTest#narrow375LargeFontRetainsSourceRegionThroughRecreationAndRestoresItsFocusFrame`|NOT_RUN|NOT_RUN|
-|`SourceFocusVisibilityUiTest#splitPaneRefitsRetainedSourceAcrossBothDirectionsWithoutChangingReferenceOrGraph`|NOT_RUN|NOT_RUN|
-|`RecallMaskUiTest#narrowRotationSourceReturnAndNextQuestionResetPermissions`|NOT_RUN|NOT_RUN|
-|`RecallMaskUiTest#explicitKnownAndUnknownRatingRetainOriginalCasAndReceiptIdentity`|NOT_RUN|NOT_RUN|
-|`RecallMaskUiTest#mapHintGatesNativeTopologyTitlesBodiesAndFoldedDescendants`|NOT_RUN|NOT_RUN|
-|`ReadLockUiTest#summaryOutlineAndMapRejectActualAuthorIntents`|NOT_RUN|NOT_RUN|
-|`BranchReviewRoundUiTest#mixedExactResultsRetryOnlyTheConfirmedQuestionAndNeverMixANewSibling`|NOT_RUN|NOT_RUN|
-|`BranchReviewRoundUiTest#pureSkipWithIdenticalRefsStartsAtFirstQuestionWithNoOldPermissionAndRestoresItsOwnRound`|NOT_RUN|NOT_RUN|
-|`BranchReviewRoundUiTest#unknownOriginalOperationSurvivesActivityAndWriterRecreationBeforeCountingExactlyOnce`|NOT_RUN|NOT_RUN|
-|`BranchReviewRoundUiTest#committedButUnverifiedResultStaysLockedAcrossRecreationAndRetriesReadOnlyProof`|NOT_RUN|PASS|
-|`BranchReviewRoundUiTest#completedRoundRecoveryConsumesOnlyItsOwnOperationBeforeRetryAndClose`|NOT_RUN|NOT_RUN|
-|`QuestionMaintenanceUiTest#longQuestionSearchKeepsDraftsAndIdentityAcrossRecreationAndEditing`|NOT_RUN|NOT_RUN|
-|`QuestionMaintenanceUiTest#actualReadOnlyEntryShowsSavedQuestionsButCannotEditRemoveOrSaveAuthors`|NOT_RUN|NOT_RUN|
-|`BranchReviewRoundUiTest#missingFrozenResultDetailsKeepTheLedgerAndRetryWithoutCurrentQuestionSubstitution`|NOT_RUN|PASS|
-|`OverviewTabsUiTest#outlineFoldsFollowStableRowsThroughSearchRestoreAndStructureChanges`|NOT_RUN|NOT_RUN|
-|`PageInsertionUiTest#newPagePaperRequiresSaveRestoresAndStaysNotebookLocal`|NOT_RUN|NOT_RUN|
-|`PageInsertionUiTest#restoredPendingInsertionKeepsCapturedPaperAndReceiptAfterDefaultChanges`|NOT_RUN|NOT_RUN|
-|`PageInsertionUiTest#failedDefaultSaveRollsBackAndKeepsDialogOpen`|NOT_RUN|NOT_RUN|
-|`PageInsertionUiTest#beginningBatchKeepsOriginalInkAndPageIdentity`|NOT_RUN|NOT_RUN|
-|`NotebookNavigationUiTest#realEditorAppendPersistsOneBlankPageAndRejectsStaleTail`|NOT_RUN|NOT_RUN|
-|`TemplateCreationUiTest#installedTemplatesAreUsableInExistingCreationFlows`|NOT_RUN|NOT_RUN|
-|`MapInteractionUiTest#outlineTitlesKeepSharedContentAndContinueAtTheSameParent`|NOT_RUN|FAIL|
-|`MapInteractionUiTest#outlineEnterUnknownReceiptRetriesOneCommandBeforeOpeningOneSiblingDraft`|NOT_RUN|NOT_RUN|
-|`SelectionStudyUiTest#outlineFoldFocusAndQuickAddShareOneGraph`|NOT_RUN|NOT_RUN|
-|`ReadLockUiTest#studyTabSavedStateRestorationSurvivesCompactInitialization`|NOT_RUN|NOT_RUN|
+Room 主12与PDF/备份补充2均为本轮全新实际执行，`oldPassReused=false`。已装 runner 经完整SHA核对与当前构建Room产物同字节；Room模块未被这些UI修复改动，完整摘要为 `aa905b4de50848f12f7ee0054fc9f861b23eca2f86b972201671f3efde6bbff5`。这不是继承V68历史PASS，补充2不重复算入主12，也不算入app原30。
 
-两项故障的运行证据分别来自 `current-emulator/isolated-faults/results.json` 与 `current-emulator/isolated-fault-second/results.json`。第一项测试日志已完整结束后，主机 cgroup 监控读取超时退出；依据准确开始/结束、OK 摘要及最终成功码恢复其 PASS，没有重跑，也没有伪称取得 freeze 样本。第二项正常完成；两个唯一方法分别计一次。早先队列中第二方法的 NOT_RUN 已由随后单跑 PASS 补齐，不能用旧队列状态覆盖新结果。
+|准确方法|结果|实际 sourceCommit / tree / 环境|首次辅助边界|回执|
+|---|---|---|---|---|
+|`org.inkweft.data.BranchReviewRoundRepositoryTest#aMissingSelectedHistoryRejectsTheEntireRetryWithoutDroppingThatQuestion`|PASS|`810ba729a4caa3c22a857454b4838776456ccf61` / `65d3bd082cfeb28b958f01333e3524b8fa0e730f` / PHYSICAL|无已记录外部辅助|`current-physical-room/runtime/results.json`|
+|`org.inkweft.data.BranchReviewRoundRepositoryTest#causalRevisionMustExistAndMatchOnlyTheRequestedStateChange`|PASS|`810ba729a4caa3c22a857454b4838776456ccf61` / `65d3bd082cfeb28b958f01333e3524b8fa0e730f` / PHYSICAL|无已记录外部辅助|`current-physical-room/runtime/results.json`|
+|`org.inkweft.data.BranchReviewRoundRepositoryTest#completedReviewLedgerStillRequiresItsOriginalReceiptForRetry`|PASS|`810ba729a4caa3c22a857454b4838776456ccf61` / `65d3bd082cfeb28b958f01333e3524b8fa0e730f` / PHYSICAL|无已记录外部辅助|`current-physical-room/runtime/results.json`|
+|`org.inkweft.data.BranchReviewRoundRepositoryTest#exactReceiptsCountIndependentSameCardQuestionsOnceWithZeroReadSideWrites`|PASS|`810ba729a4caa3c22a857454b4838776456ccf61` / `65d3bd082cfeb28b958f01333e3524b8fa0e730f` / PHYSICAL|无已记录外部辅助|`current-physical-room/runtime/results.json`|
+|`org.inkweft.data.BranchReviewRoundRepositoryTest#laterQuestionCardEditsAndRecyclingNeverRebaseAnAlreadyCommittedResult`|PASS|`810ba729a4caa3c22a857454b4838776456ccf61` / `65d3bd082cfeb28b958f01333e3524b8fa0e730f` / PHYSICAL|无已记录外部辅助|`current-physical-room/runtime/results.json`|
+|`org.inkweft.data.BranchReviewRoundRepositoryTest#missingWrongOperationBookDigestResultOrRequestedStateNeverConfirms`|PASS|`810ba729a4caa3c22a857454b4838776456ccf61` / `65d3bd082cfeb28b958f01333e3524b8fa0e730f` / PHYSICAL|无已记录外部辅助|`current-physical-room/runtime/results.json`|
+|`org.inkweft.data.BranchReviewRoundRepositoryTest#noCandidateAndRecycledBookCannotStartANewRoundButOldReceiptStillCounts`|PASS|`810ba729a4caa3c22a857454b4838776456ccf61` / `65d3bd082cfeb28b958f01333e3524b8fa0e730f` / PHYSICAL|无已记录外部辅助|`current-physical-room/runtime/results.json`|
+|`org.inkweft.data.BranchReviewRoundRepositoryTest#originalQuestionAndCardHistoryAreRequiredRatherThanCurrentRows`|PASS|`810ba729a4caa3c22a857454b4838776456ccf61` / `65d3bd082cfeb28b958f01333e3524b8fa0e730f` / PHYSICAL|无已记录外部辅助|`current-physical-room/runtime/results.json`|
+|`org.inkweft.data.BranchReviewRoundRepositoryTest#rejectedSkipRetriesOriginalRefsButNeverPretendsToHaveAReceipt`|PASS|`810ba729a4caa3c22a857454b4838776456ccf61` / `65d3bd082cfeb28b958f01333e3524b8fa0e730f` / PHYSICAL|无已记录外部辅助|`current-physical-room/runtime/results.json`|
+|`org.inkweft.data.BranchReviewRoundRepositoryTest#skippedUnderstoodQuestionRetainsAllFourRefsAndDoesNotUseGlobalStateFiltering`|PASS|`810ba729a4caa3c22a857454b4838776456ccf61` / `65d3bd082cfeb28b958f01333e3524b8fa0e730f` / PHYSICAL|无已记录外部辅助|`current-physical-room/runtime/results.json`|
+|`org.inkweft.data.BranchReviewRoundRepositoryTest#unknownRollbackCannotCountOrSkipUntilTheSameOperationActuallyCommits`|PASS|`810ba729a4caa3c22a857454b4838776456ccf61` / `65d3bd082cfeb28b958f01333e3524b8fa0e730f` / PHYSICAL|无已记录外部辅助|`current-physical-room/runtime/results.json`|
+|`org.inkweft.data.BranchReviewRoundRepositoryTest#wrongFrozenNotebookCannotBorrowAValidReceiptOrAnswer`|PASS|`810ba729a4caa3c22a857454b4838776456ccf61` / `65d3bd082cfeb28b958f01333e3524b8fa0e730f` / PHYSICAL|无已记录外部辅助|`current-physical-room/runtime/results.json`|
+|`org.inkweft.data.LibraryBackupRepositoryTest#roundTripPreservesOriginalIdsHiddenInkMasksHistoryAndMetadata`|PASS|`810ba729a4caa3c22a857454b4838776456ccf61` / `65d3bd082cfeb28b958f01333e3524b8fa0e730f` / PHYSICAL|无已记录外部辅助|`current-physical-room/pdf-backup/results.json`|
+|`org.inkweft.data.ReadingHandwritingRepositoryTest#pdfCopyExportBackupAndRestoreRetainOwnedBytes`|PASS|`810ba729a4caa3c22a857454b4838776456ccf61` / `65d3bd082cfeb28b958f01333e3524b8fa0e730f` / PHYSICAL|无已记录外部辅助|`current-physical-room/pdf-backup/results.json`|
 
-原位标题方法实际在 `MapInteractionUiTest.kt:89` 的 `hasAnyAncestor(hasTestTag(...))` 断言失败，结束代码 -2，属于真实断言失败，不能混成旧真机冻结。当前需要检查合并/未合并 semantics 树及实际行身份，尚未证明是产品显示错误或测试查询错误；诊断/修正后的源码和运行结果另记，基线 FAIL 保留。
+新增恢复模型2、浮窗几何2、容器重挂载UI1是独立回归，不计原30；每方法按下表实际执行源码列出。registry/remount不等于OS进程终止，Geometry2也不是OEM、字体、分屏或旋转组合全扫。
 
-## SR-08：真实 OS 进程终止的基线失败
+|准确方法|结果|实际 sourceCommit / tree / 环境|首次辅助边界|回执|
+|---|---|---|---|---|
+|`org.inkweft.app.StudyProcessRestorationUiTest#remountedNotebookAndStudyContainersRestoreInlineTitleWithoutCreatingNode`|PASS|`41e23e96e36e0bb58c394e941718e049f525ada5` / `3bb36b951bd87773a784bb608e2ef4eb9231083d` / PHYSICAL_WITH_ONE_INITIAL_FOREGROUND_LAUNCH|`org.inkweft.app.a0.workspace/androidx.activity.ComponentActivity`；initial ActivityScenarioRule only; no second launch or assistance inside method body|`repair8-physical/remount-component/results.json`|
+|`org.inkweft.app.StudyProcessRestorationUiTest#restoredUnknownStudyCommandWaitsForExplicitRetryOfTheSameOperation`|PASS|`f67ace09d8e0f5693fe50895a3d355d7287c6640` / `1532822c0faf0456d024087f88123cca4642e9f1` / EMULATOR|无已记录外部辅助|`repair1-emulator/model-restoration/results.json`|
+|`org.inkweft.app.StudyProcessRestorationUiTest#savedRegistryRestoresSelectedBookPanelAndEveryStudyTab`|PASS|`f67ace09d8e0f5693fe50895a3d355d7287c6640` / `1532822c0faf0456d024087f88123cca4642e9f1` / EMULATOR|无已记录外部辅助|`repair1-emulator/model-restoration/results.json`|
+|`org.inkweft.app.StudyWindowGeometryUiTest#restoringBottomRightWindowKeepsExpandedFrameInsideEveryFrame`|PASS|`893a983d1f4fcf9d782d77e9e81c693a28a7c81c` / `d07daa86dd269a1811721448a0e7b5ddb04a8b47` / EMULATOR|无已记录外部辅助|`repair3-emulator/targeted9/results.json`|
+|`org.inkweft.app.StudyWindowGeometryUiTest#returningFromSourceToFocusKeepsCloseTargetInsideEveryFrame`|PASS|`893a983d1f4fcf9d782d77e9e81c693a28a7c81c` / `d07daa86dd269a1811721448a0e7b5ddb04a8b47` / EMULATOR|无已记录外部辅助|`repair3-emulator/targeted9/results.json`|
 
-两次均在隔离 API35 AVD 上完成实际进程终止与新进程启动验证，使用后台 Home → `am kill`，不是 `force-stop`、Activity 重建或仅划掉任务。为保护设备与资料，公开报告只记“旧进程消失/新进程已创建”及证据存在，不复制具体进程标识。
+新增remount使用createComposeRule，其真实宿主是ComponentActivity。首次辅助组件必须与该宿主匹配，不能套用原30的MainActivity配置；组件不匹配的START-only尝试作为harness环境NOT_RUN保留，不算产品FAIL或业务PASS。正确组件的独立重跑只按实际完成回执计数，正文中不补第二次启动。
 
-|切点|步骤与预期|实际结果|边界|
-|---|---|---|---|
-|SR-08-A，学习区节点大纲页签|选中合成本，打开学习区和节点大纲；后台终止进程并重启，预期恢复原本/学习区/大纲页签|FAIL：自动回到资料库|未覆盖草稿及已确认内容恢复|
-|SR-08-B，原位未提交标题|在合成本节点原位标题输入 ASCII 草稿，不点 Save/Enter；后台终止进程并重启，预期自动回到原编辑上下文|FAIL：没有自动返回草稿|ADB ASCII 仅检查此草稿恢复，不是中文 IME 组词|
-|SR-08-B 的诊断性手动重开|失败后手动重开同一本及导图/学习区，检查可编辑字段|找到原合成标题草稿|只说明该草稿仍在，不能抵消自动路由 FAIL，也不等于所有草稿/所有死亡方式均可恢复|
+PDF/导出/备份补充UI均在893a983的隔离API35模拟器执行。可渲染合成PDF经过实际导入、缩放/重开；导出和备份使用真实应用UI。独立恢复目标前27作者表均0行，确认恢复后1本1页、integrity=ok、FK违规0；两份截图已视觉检查。原设备没有作为恢复目标，不扩大为真实平板或任意用户资料规模通过。
 
-据此优先修复外层笔记/学习区恢复路由。修复进行中，未预填 PASS；其他页签 0/1/2、父层草稿、未知命令、已确认写入、结算结果/再练、force-stop 冷启动仍需按清单逐切点验证。真实平板的完整 OS 死亡项仍 NOT_RUN。
+|准确方法|结果|实际 sourceCommit / tree / 环境|首次辅助边界|回执|
+|---|---|---|---|---|
+|`org.inkweft.app.LibraryBackupUiTest#backupRequiresConsentThenSavesActualLibraryArchive`|PASS|`893a983d1f4fcf9d782d77e9e81c693a28a7c81c` / `d07daa86dd269a1811721448a0e7b5ddb04a8b47` / EMULATOR|无已记录外部辅助|`repair3-emulator/pdf-export-backup/results.json`|
+|`org.inkweft.app.LibraryBackupUiTest#isolatedPreviewRequiresConfirmationAndRestoresOnDevice`|PASS|`893a983d1f4fcf9d782d77e9e81c693a28a7c81c` / `d07daa86dd269a1811721448a0e7b5ddb04a8b47` / EMULATOR|无已记录外部辅助|`repair3-empty-restore-target/runtime/results.json`|
+|`org.inkweft.app.LibraryTransfersUiTest#exportStartsAtShelfAndWritesTheSamePreparedSnapshot`|PASS|`893a983d1f4fcf9d782d77e9e81c693a28a7c81c` / `d07daa86dd269a1811721448a0e7b5ddb04a8b47` / EMULATOR|无已记录外部辅助|`repair3-emulator/pdf-export-backup/results.json`|
+|`org.inkweft.app.ReadingHandwritingUiTest#pdfImportOwnsSourceAndKeepsBackgroundAcrossZoomAndReopen`|PASS|`893a983d1f4fcf9d782d77e9e81c693a28a7c81c` / `d07daa86dd269a1811721448a0e7b5ddb04a8b47` / EMULATOR|无已记录外部辅助|`repair3-emulator/pdf-export-backup/results.json`|
 
-## 资料保护与恢复边界
+## OS进程死亡、修复与历史
 
-在独立 API35 AVD 上完成原资料的 ADB 归档恢复保护检查：41 个内部文件逐文件哈希一致，普通启动 PASS，外部归档已复制。这是受控归档能还原的有限证据，不是应用内 LibraryArchive 备份导入/完整恢复验收，也不代表已逐页验收原笔迹、PDF、卡题/来源闭包。
+f67ace普通应用在隔离API35上完成两次HOME→带savedState的STOPPED→am kill→同一保留任务冷启动。旧进程消失、新进程创建：原本/学习区大纲/ASCII未提交标题自动恢复PASS；确认标题后第二次恢复PASS，29表349行前后一致，无重放/重复写入。证据在 `repair1-emulator/actual-os-death/result.json` 和 `confirmed-result.json`。这不是Activity重建替代，也不覆盖force-stop、真实中文IME、所有草稿或真机。
 
-保护检查后已还原本任务空快照，再安装当前三包开展合成故障验收。报告不包含原笔记名称、内容、文件清单、数据库行、截图或原始备份；不以原资料库开展删除修订等破坏性实验。应用内真实 PDF/导出往返及完整备份恢复仍为 NOT_RUN。
+普通应用真机 OS kill 的 draft、confirmed 两切点均有独立 PASS 回执。两次均为3fbc普通应用、非instrumentation：HOME后核对保留任务已保存且STOPPED，再OS am kill、同一任务冷启动。只覆盖新增合成笔记的大纲结构标题草稿与确认后状态；不与instrumentation首次启动辅助模式混用，也不能推广到全部编辑路径、中文IME、笔输入或force-stop。
 
-## 仍需执行的手工与真人项目
+|切点|结果|实际 sourceCommit / tree|逻辑快照范围|原回执scope|回执|
+|---|---|---|---|---|---|
+|draft|PASS|`3fbc5f15c607e85c29aec4402f92d3a22cad3d27` / `9cb1ba919979930ca4072935fa4c88887f364a4d`|29表 / 3868行（仅本切点前后）|New synthetic notebook; outline structure title only. ASCII ADB input is not Chinese IME or stylus evidence. Confirmed title is checked only in confirmed stage. No force-stop, permission change, process unfreeze or second recovery assistance.|`repair7-physical/manual-os-death/draft/result.json`|
+|confirmed|PASS|`3fbc5f15c607e85c29aec4402f92d3a22cad3d27` / `9cb1ba919979930ca4072935fa4c88887f364a4d`|29表 / 3870行（仅本切点前后）|New synthetic notebook; outline structure title only. ASCII ADB input is not Chinese IME or stylus evidence. Confirmed title is checked only in confirmed stage. No force-stop, permission change, process unfreeze or second recovery assistance.|`repair7-physical/manual-os-death/confirmed/result.json`|
 
-|稳定编号|范围|当前真实平板结果|
-|---|---|---|
-|SR-01|阅读→书写→摘录/导图→回忆→结果筛选→针对性再练完整旅程|NOT_RUN|
-|SR-02|长题搜索、页面大纲折叠与清空搜索状态恢复|NOT_RUN|
-|SR-03～04|真实中文组词、Enter 连按、取消、旋转、保存中离开|NOT_RUN；合成自动化断言/诊断不替代|
-|SR-05～06|新增页纸面取消/确认/沿用/单次覆盖/跨本隔离；插页与连续追加|NOT_RUN|
-|SR-07|375dp、大字体、真实软键盘、应用内及系统分屏|NOT_RUN|
-|SR-08|完整 OS 进程终止后页签、草稿及已确认写入恢复|NOT_RUN；模拟器基线失败另列|
-|SR-09～10|隔离目标上的真实 PDF、导出及应用内完整备份恢复|NOT_RUN|
-|SR-HW-01|真人 15 分钟：中英/公式、轻重压、倾斜、掌触、缩放；0/5/10/15 分钟卡顿/温升|NOT_RUN；必须真人实际持笔|
+各切点前后的29张逻辑表各自未变；draft为3868行、confirmed为3870行。这两个检查点之间存在用户确认写入，后续又新增测试夹具，不能把它们与后续3995行或设备当前全表行数直接相等比较。
 
-真人步骤与停止条件沿用清单 SR-HW-01。压感、倾斜、掌拒、热态笔感及温升不能用 ADB、回放、模拟器或 CI 填写通过。温度无法测量时写“未测量”，不填推测值。
+公开基点 `bb0f2b15f2c02e956c0ea4256e9f64378f41de0e` 顺序应用两补丁，得到本地精确基线 `810ba729a4caa3c22a857454b4838776456ccf61` / tree `65d3bd082cfeb28b958f01333e3524b8fa0e730f`。基线的2 PASS/1 FAIL/27 NOT_RUN、两次自动回资料库失败及后续各版本失败均保留；原V68章节不重写。后续生产修复包括恢复路由、浮窗动画边界及原位标题定位requestScrollToItem；对应实际验证以逐方法表为准。
 
-## 追加结果模板
+测试修正单列：暂停时钟前准备滚动、OS窗口检索标志、caption自身屏幕像素采样、真实window根Recomposer与native子上下文倍率对应、明确选择节点后打开来源。Map原业务断言保留，并增加unmerged tree和对应outline-row祖先检查；这不意味着所有测试覆盖等价。LocalMotion保留长正文窄屏重建后的可达性／正文／作者不变检查，但首次恢复像素段改走同一卡片source-only入口，该入口强制showSource=true并省略正文；取样也只含caption，不再包含整个来源组。因此该像素段不能独立证明showSource保存恢复、长正文底部整个来源区域的恢复首帧像素，或异步缩略图的同帧状态。准确审查见 `test-scope-review/FINAL-REPAIR-REVIEW.md`。
 
-```text
-case_or_exact_class_method / attempt:
-source_commit / source_tree / app_and_runner_SHA256 / certificate:
-environment: PHYSICAL | ISOLATED_EMULATOR
-device_alias / OS / pen / IME / input_mode:
-time_with_timezone / setup / isolated_fixture / backup_reference:
-settings_before / tested / restored_and_checked:
-actual_steps / expected / actual:
-status: NOT_RUN
-failure_class: PRODUCT_ASSERTION | ENVIRONMENT_BLOCKED | NONE
-capability_gap / remaining_scope:
-original_operationId / receipt / relevant_ids_and_revisions:
-start_end_events / final_test_code / summary / timeout_or_monitor_warning:
-private_evidence_reference / sanitized_evidence_reference / hashes:
-```
+3fe6卡片方法31.984秒PASS，未知回执18.578秒PASS，容器重挂载14.375秒PASS，Selection22.078秒PASS。3fe6长标题方法17.438秒FAIL发生在输入后立即recreate；f28a9e增加输入同步前置断言后两处recreate已通过，但Enter阶段仍FAIL。3fbc只修测试同步，该包在API35长流程30.688秒PASS、真机首次辅助长流程在line143的首次空白续写等待FAIL，两种结果分别保留。
 
-|真人时点|卡顿/等待及异常时间|轻重压/倾斜|掌触/缩放/丢笔|温度数值和方式或主观温感|电量/热状态|结果/证据|
+后续failure-only证据确认已保存节点但旧anchor编辑器仍锁定；完成阶段trace则在software Next后第二次空白等待失败：fresh-nodes IO读取返回后，完成交接在DefaultDispatcher worker继续，clearFocus抛CalledFromWrongThreadException，catch也在worker。那次trace内硬件Enter步骤已完成，不计整个方法正式PASS。Compose 1.10.5测试默认effectContext派生UnconfinedTestDispatcher，不保证IO返回后仍在主线程；此证据不能推出普通应用必现线上故障，普通应用OS kill两切点的PASS仍独立成立。
+
+正式修复 `41e23e96e36e0bb58c394e941718e049f525ada5` / tree `3bb36b951bd87773a784bb608e2ef4eb9231083d` 只将整个标题完成LaunchedEffect主体固定到Dispatchers.Main.immediate，保留内部IO读取、取消重抛、unknown门控、同命令回执与token校验；7处早退指向Main block，成功与catch收尾同在Main。归档补丁 `repair7-physical/title-completion-trace-diagnosis/minimal-fix.patch`；可分享的诊断摘要 `delivery-evidence-sanitized/title-completion-thread-summary.json`。诊断包不计正式通过。build08的标题长流程、未知回执、容器重挂载三项，在API35模拟器及真机首次启动辅助模式下各3 PASS，逐项回执分别见repair8-emulator/formal-run-summary.json和repair8-physical/formal-run-summary.json。该长流程在当前候选API35模拟器实际复跑PASS，耗时31.422秒，回执 `repair8-emulator/targeted3/results.json`；真机结果仍按独立表记录。
+
+旧V68纯内存/原生View/普通Activity与独立UiAutomation控制只用于诊断。诊断07证明等待在startActivitySync而非waitForIdleSync。用户后来批准SAW单次对照：诊断09因监控旧进程退出race，原始方法事件为空，立即finally恢复default，结论INCONCLUSIVE；不能说PASS或排除原因。诊断10有效持有SAW许可时仍START-only、约6秒freeze，结果NOT_RUN/ENVIRONMENT_BLOCKED，finally已恢复default并结束该次冻结instrumentation；普通MainActivity冷启动成功321ms，不代表原runner已修复。诊断11用精确shell MAIN+LAUNCHER/flags启动同一ComponentActivity一次，诊断PASS，但formalAcceptanceEligible=false，不入原30。随后业务方法采用上述独立辅助模式。没有改变冻结策略/后台耗电/重启；主机与设备时钟不一致，以host时间、同次方法事件与相对耗时关联，未调整时钟。
+
+## 真机、隐私与收尾
+
+SR-01～10、SR-HW-01保持稳定编号，真人手工用例仍NOT_RUN；相关真机自动化只按前台辅助模式记录，不合并为真人/无辅助通过。隔离证据另列。真人15分钟必须用户持笔，按0/5/10/15分钟记录中英/公式、轻重压、倾斜、掌触、缩放、卡顿和温升。ADB/回放/模拟器/CI不能替代。真实中文组词、真人完整旅程、物理分屏和实际笔感继续待验。
+
+`private-device-final/receipt.json` 确认原有2565行未丢失、未修改；该归档共4379行，新增1814行。`private-device-final/new-row-ownership.json` 确认新增行全部归属50个新增测试笔记，归属原有或未知笔记的新增行0。这是该检查点的原资料保留与归属结论；另有22项应用文件哈希变化，包含新增测试证据；原始偏好文件差异为0。 原始行保留与新增夹具归属不等于后续全库行数固定。两个受保护旧目录HEAD/status及162个原dirty文件未变、设置恢复等结论分别以各自保护回执检查点为准，不扩大为所有后续时点。原始笔记/数据库/备份/截图/系统日志及签名秘密仅留本机，本报告只放计数、scope及脱敏结果；不公开设备序列号、具体进程标识、原用户内容或行明细。应用“诊断与导出”用于标记时间、复现和导出ZIP，基础包不等于完整系统日志。
+
+|检查点|结果|原有行数|原有行差异|该点总行数|新增行/归属新笔记|回执|
 |---|---|---|---|---|---|---|
-|0分钟|待填|待填|待填|未测量|待填|NOT_RUN|
-|5分钟|待填|待填|待填|未测量|待填|NOT_RUN|
-|10分钟|待填|待填|待填|未测量|待填|NOT_RUN|
-|15分钟|待填|待填|待填|未测量|待填|NOT_RUN|
+|private-device-after-physical-tests-01|PASS|2565|缺失0 / 修改0|3995|1430行 / 46本|`private-device-after-physical-tests-01/receipt.json` / `private-device-after-physical-tests-01/new-row-ownership.json`|
+|private-device-final|PASS|2565|缺失0 / 修改0|4379|1814行 / 50本|`private-device-final/receipt.json` / `private-device-final/new-row-ownership.json`|
 
-每个设备、版本及 attempt 保留原记录；修复后的 PASS 不覆盖基线 FAIL。发生问题先在应用“诊断与导出”标记时间、复现、导出 ZIP，仅补日志不能表达的操作/视觉/笔感证据；基础诊断不是完整系统日志或端到端笔尖延迟测量。
+最终五项应用偏好open-tabs／reading／editor／study-window／learning已按原字节哈希恢复，恢复前已备份当时偏好，未写数据库或清空数据；回执 `final-preferences-restoration/receipt.json`。 最终十项display／IME／SAW设置与七项显示测试前baseline一致；回执 `final-settings-audit.json`。 最终完整保护回执存在时优先采用，较早检查点保留为历史；不存在时只报告已完成的中间检查点。
 
-## 本机证据索引与整理
+最终收尾：`protected-worktrees-after.json`确认两个受保护旧目录HEAD/status及162个原dirty文件哈希保持。40个本轮设备XML/PNG临时文件先归档核对哈希后删除，见`cleanup/device-ui-temporaries/receipt.json`；独占测试AVD已停止且数据保留，停止回执单列。实机普通MainActivity最后一次COLD启动成功328ms，不替代测试验收。
 
-本轮归档根为 `E:/Inkweft/archives/2026-10-03/StudyRestoreHandoff`。以下仅是证据定位，原始 private 日志/截图及原资料不随本文公开：
-
-|证据代号|本机回执位置|用途|
-|---|---|---|
-|S01|`source-reconstruction.json`|补丁顺序、实际 commit/tree 与哈希核对|
-|A01|`acceptance-810ba729-results.json`|精确源码 30 方法按真机/模拟器分别记录；Room 12 另列|
-|B01|`build-current-source/build-receipt.json`|三包来源、签名与摘要|
-|D07|`diagnostics-review/diagnostic-07-sanitized-summary.json`|旧包 `startActivitySync` 等待定位|
-|R01|`current-physical-room/installation.json`、`runtime/results.json`|同字节已装 runner 核对、本轮 12 方法结果|
-|E01|`current-emulator/installation.json`|空快照恢复与当前三包身份|
-|E02/E03|`current-emulator/isolated-faults/results.json`、`isolated-fault-second/results.json`|两项隔离故障结果与监控限制|
-|E04|`current-emulator/outline-title-baseline/results.json`|基线原位标题断言失败|
-|E05/E06|`current-emulator/process-death/result.json`、`inline-draft/os-death-result.json`、`inline-draft/manual-reopen-result.json`|两次 OS 终止及诊断性手动恢复|
-|P01|`isolated-restore-check/receipt.json`|限定 ADB 归档恢复验证|
-
-此次文档合并仅改新 clone 的清单和本报告，旧清单原记录完整保留；未操作受保护 recon/旧 V68、ADB、构建或提交。普通 Markdown 本轮仅做结构/diff 检查，不再启动浏览器生成配置。
-
-先前草稿渲染产生的 8 个临时浏览器配置及一份 npm 检查日志，删除操作被自动审批拒绝，仅返回 `blocked by policy`；未绕过，仍按 `delivery-draft/verification/render-results.json` 的 `cleanupPending` 留存。源文件、最终视觉证据、安装包、原始验证材料及依赖缓存均保留。
+清理限制仍保留：15个已验证重复-built.apk共859,594,231字节，Remove-Item在CreateProcess前被自动审批拒绝，命令未执行；8个临时Edge profile共56,517,876字节也保留原拒绝记录，没有绕过。不能声称所有临时产物都已删除。完整签名包、源码、原始验证证据、备份和必要工具缓存均保持；准确路径见cleanup回执。最终仓库文档提交与APK构建提交分开；文档整合不改变上述APK身份。
