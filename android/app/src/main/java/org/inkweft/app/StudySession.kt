@@ -39,11 +39,12 @@ internal class StudyViewModel(val book:String,val repo:StudyRepository,private v
     val collapsedByMap=mutableMapOf<String,List<String>>()
     val focusedByMap=mutableMapOf<String,String?>()
     val portalBranches=mutableStateMapOf<String,String>()
-    var lastTab by mutableIntStateOf(saved["study.tab"]?:0)
+    private val restoredTab=(saved.get<Any?>("study.tab") as? Int)?.takeIf{it in 0..2}
+    var lastTab by mutableIntStateOf(restoredTab?:0)
         private set
-    fun selectTab(value:Int){lastTab=value;saved["study.tab"]=value}
+    fun selectTab(value:Int){lastTab=value;saved["study.tab"]=value;compactInitialized=true}
     var captureGeneration by mutableLongStateOf(0L)
-    var compactInitialized=false
+    var compactInitialized=restoredTab!=null
     val captureUndo=mutableStateMapOf<String,StudyCommand>()
     val revealByMap=mutableMapOf<String,String>()
     fun undoCapture(){undoCaptureAt(mapId.value)}

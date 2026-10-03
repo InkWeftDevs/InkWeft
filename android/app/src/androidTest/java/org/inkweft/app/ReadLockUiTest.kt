@@ -673,4 +673,63 @@ class ReadLockUiTest {
                 title = "still forbidden", body = "retry permission must not authorize a new intent")) }
         compose.waitForIdle(); assertEquals(before, authorStamp(f.note.id))
     }
+
+    @Test fun studyTabSavedStateRestorationSurvivesCompactInitialization() {
+        val f = seed(open = false)
+        val before = authorStamp(f.note.id)
+        val source = StudySourceDraft(f.page, 1, CanvasBounds(100.0, 380.0, 440.0, 390.0), listOf(f.stroke))
+        val draft = CardEditor(source = source)
+        compose.runOnIdle {
+            val store = androidx.lifecycle.ViewModelStore()
+            fun newVm(saved: SavedStateHandle): StudyViewModel {
+                store.clear() // Cancel each previous real VM's observation before constructing the next.
+                return StudyViewModel(f.note.id, app.study, saved).also { store.put("tab-restore", it) }
+            }
+            fun initialize(vm: StudyViewModel, compactWindow: Boolean = true) {
+                // Same condition as StudyContent's LaunchedEffect(compactWindow), not an Activity-retained VM.
+                if(compactWindow&&!vm.compactInitialized){vm.selectTab(2);vm.compactInitialized=true}
+            }
+            try {
+                for (tab in 0..2) {
+                    val saved = SavedStateHandle(mapOf("study.tab" to tab, "study.map" to f.mapA))
+                    val vm = newVm(saved)
+                    vm.editorState.value = draft
+                    assertTrue(vm.compactInitialized)
+                    initialize(vm, false); repeat(2) { initialize(vm) }
+                    assertEquals(tab, vm.lastTab)
+                    assertEquals(tab, saved.get<Int>("study.tab"))
+                    assertEquals(f.mapA, vm.mapId.value)
+                    assertSame(draft, vm.editorState.value)
+                    assertSame(source, vm.editorState.value?.source)
+                    val rebuilt = newVm(SavedStateHandle(saved.keys().associateWith { saved.get<Any?>(it) }))
+                    assertNotSame(vm, rebuilt)
+                    initialize(rebuilt)
+                    assertEquals(tab, rebuilt.lastTab)
+                    assertEquals(f.mapA, rebuilt.mapId.value)
+                }
+                for (tab in listOf(null, -1, 3, Int.MIN_VALUE, Int.MAX_VALUE, "bad")) {
+                    val saved = if (tab == null) SavedStateHandle() else SavedStateHandle(mapOf("study.tab" to tab))
+                    val vm = newVm(saved)
+                    assertEquals(0, vm.lastTab); assertFalse(vm.compactInitialized)
+                    initialize(vm, false); assertEquals(0, vm.lastTab)
+                    repeat(2) { initialize(vm) }
+                    assertEquals(2, vm.lastTab); assertEquals(2, saved.get<Int>("study.tab"))
+                }
+                for (tab in 0..2) {
+                    val saved = SavedStateHandle()
+                    val vm = newVm(saved)
+                    // User/initialMap/source navigation all select through this same entry point.
+                    vm.selectTab(tab)
+                    assertTrue(vm.compactInitialized)
+                    initialize(vm, false); repeat(2) { initialize(vm) }
+                    assertEquals(tab, vm.lastTab)
+                    val rebuilt = newVm(SavedStateHandle(saved.keys().associateWith { saved.get<Any?>(it) }))
+                    assertNotSame(vm, rebuilt)
+                    initialize(rebuilt)
+                    assertEquals(tab, rebuilt.lastTab)
+                }
+            } finally { store.clear() }
+        }
+        assertEquals("Tab restoration never writes cards, nodes, source snapshots or author data", before, authorStamp(f.note.id))
+    }
 }
