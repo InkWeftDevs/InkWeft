@@ -12,7 +12,7 @@ object MapTemplates {
         if(layout!="bilateral")return positions
         val live=nodes.filterNot{it.removed};val byId=live.associateBy{it.id}
         val rootChildren=live.filter{n->n.parentId?.let{byId[it]?.parentId==null}==true}.groupBy{it.parentId}
-        val left=rootChildren.values.flatMap{children->children.sortedBy{it.id}.filterIndexed{i,_->i%2==0}}.map{it.id}.toSet()
+        val left=rootChildren.values.flatMap{children->children.filterIndexed{i,_->i%2==0}}.map{it.id}.toSet()
         return positions.mapValues{(id,p)->
             var branch=byId.getValue(id)
             while(branch.parentId?.let{byId[it]?.parentId!=null}==true)branch=byId.getValue(branch.parentId!!)

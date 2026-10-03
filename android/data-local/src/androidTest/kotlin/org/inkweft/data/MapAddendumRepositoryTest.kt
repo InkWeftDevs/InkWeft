@@ -31,7 +31,7 @@ class MapAddendumRepositoryTest {
   val copy=repo.duplicate(ref,old.signature(),operation);assertEquals(copy,repo.duplicate(ref,old.signature(),operation));val copied=access.read(book).first{it.ref==copy};assertNotEquals(old.nodes.single().cardId,copied.nodes.single().cardId);assertNotNull(db.study().source(copied.nodes.single().cardId!!))
   StudyRepository(db).submit(StudyCommand(id(),book,StudyAction.EDIT,cardId=c.cardId,expectedRevision=1,title="新标题",body="新正文"))
   val latest=access.read(book);assertEquals("新正文",MapEmbed(ref).resolve(latest)!!.nodes.single().body);assertEquals(draft.text,pinned.resolve(latest)!!.nodes.single().body);assertEquals(draft.text,latest.first{it.ref==copy}.nodes.single().body)
-  assertNotEquals(old.signature(),latest.first{it.ref==ref}.signature());assertEquals(old.graphHash,latest.first{it.ref==ref}.graphHash)
+  assertNotEquals(old.signature(),latest.first{it.ref==ref}.signature());assertNotEquals(old.graphHash,latest.first{it.ref==ref}.graphHash)
  }
  @Test fun pageOccurrenceCopyDeleteAndBackupKeepClosure()=fixture{db,book->
   val target=map(db,book);val draft=capture(db,book);val ref=MapRef(book,target);val access=MapGraphAccess(db);val c=draft.command(ref,null,access.read(book).first{it.ref==ref}.graphHash);StudyRepository(db).submit(c)

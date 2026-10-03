@@ -31,6 +31,15 @@ class InkCanvasView(context:Context):View(context){
     var finishStroke:(InkStroke)->InkStroke={it}
     var onViewportGesture:(Boolean)->Unit={}
     internal val documentContentReady get()=documentId==null||documentKnownAbsent||(documentTile!=null&&!documentError)
+    internal var sourceInteractionEpoch=0L
+        private set
+    internal val sourceContentReady get()=documentId==null||documentKnownAbsent||
+        (documentTile!=null&&!documentError&&completedDocumentGeneration==documentGeneration)
+    internal val sourceFrameFailed get()=failedDocumentGeneration==documentGeneration
+    internal fun hasDrawnSourceFrame(page:String,expectedViewport:CanvasViewport,expectedWidth:Int,expectedHeight:Int,expectedDensity:Double):Boolean=
+        documentId==page&&!documentError&&drawnDocumentGeneration==documentGeneration&&
+            drawnViewport==expectedViewport&&drawnWidth==expectedWidth&&drawnHeight==expectedHeight&&drawnDensity==expectedDensity&&
+            viewport==expectedViewport&&width==expectedWidth&&height==expectedHeight&&density==expectedDensity
     internal val inputReady get()=allowInput&&documentContentReady
     var seamWriting=false
     var onLiveSamples:(List<InkSample>)->Unit={}
@@ -90,7 +99,7 @@ class InkCanvasView(context:Context):View(context){
             maps.observe(book).flowOn(Dispatchers.IO).catch{if(it is CancellationException)throw it;emit(listOf(MapScene(MapRef(book),"",emptyList(),"",false)))}.collect{scenes->objectPainter.mapScenes=scenes.associateBy{it.ref};invalidate()}
         }
     }
-    fun showObjects(next:List<PageObject>){if(objects==next)return;objects=next;observeMapScenes();restoreAppearance();suppressedStrokeIds=next.flatMap{it.sourceStrokeIds}.toSet();if(preview&&world&&width>0&&height>0)fitContent(false);invalidate()}
+    fun showObjects(next:List<PageObject>){if(objects==next)return;objects=next;drawnViewport=null;observeMapScenes();restoreAppearance();suppressedStrokeIds=next.flatMap{it.sourceStrokeIds}.toSet();if(preview&&world&&width>0&&height>0)fitContent(false);invalidate()}
     fun previewObject(value:PageObject?){objectDraft=value;invalidate()}
     private var appearanceObjects=emptyList<PageObject>()
     private fun restoreAppearance(){val sources=content.associateBy{it.id};appearanceObjects=objects.map{BeautyAppearance.restore(it,sources)}}
@@ -101,7 +110,14 @@ class InkCanvasView(context:Context):View(context){
     private var documentRequest:String?=null
     private var documentKnownAbsent=false
     private var documentError=false
-    private fun releaseDocumentTile(){documentTile?.let{tile->documentId?.let{RenderResources.release(tile.bitmap,it)}};documentTile=null}
+    private var documentGeneration=0L
+    private var completedDocumentGeneration=-1L
+    private var failedDocumentGeneration=-1L
+    private var drawnDocumentGeneration=-1L
+    private var drawnViewport:CanvasViewport?=null
+    private var drawnWidth=0;private var drawnHeight=0;private var drawnDensity=0.0
+    private var capturingExcerpt=false
+    private fun releaseDocumentTile(){documentTile?.let{tile->documentId?.let{RenderResources.release(tile.bitmap,it)}};documentTile=null;drawnViewport=null}
     fun showDocument(id:String?){if(documentId==id)return;releaseDocumentTile();documentId=id;documentRequest=null;documentKnownAbsent=false;documentError=false;requestDocument();invalidate()}
     private fun requestDocument(){
         val id=documentId?:return;if(documentKnownAbsent||width<=0||height<=0||!isAttachedToWindow)return
@@ -110,12 +126,13 @@ class InkCanvasView(context:Context):View(context){
         val rect=CanvasBounds(left,top,visible.right.coerceIn(left+1,1000.0),visible.bottom.coerceIn(top+1,1414.0))
         val pixels=if(preview)256 else max(width,height).coerceAtMost(2048)
         val request="$id:$rect:$pixels";if(documentRequest==request)return;documentRequest=request;documentJob?.cancel()
+        val generation=++documentGeneration
         documentJob=CoroutineScope(Dispatchers.Main.immediate).launch {
             delay(80)
             try{val tile=(authorSession?.rendering?:(context.applicationContext as InkWeftApplication).documentRendering).render(id,rect,pixels)
-                ensureActive();if(documentRequest==request){releaseDocumentTile();documentTile=tile;documentKnownAbsent=tile==null;documentError=false;invalidate()}
+                ensureActive();if(documentRequest==request&&documentGeneration==generation){releaseDocumentTile();documentTile=tile;documentKnownAbsent=tile==null;documentError=false;completedDocumentGeneration=generation;invalidate()}
             }catch(c:CancellationException){throw c}catch(_:RenderBudgetBusy){delay(500);if(documentRequest==request){documentRequest=null;documentJob=null;requestDocument()}}
-            catch(_:Exception){if(documentRequest==request){documentError=true;invalidate();onNotice("文档页面读取失败，请离开后重新打开；原文件保留。")}}
+            catch(_:Exception){if(documentRequest==request&&documentGeneration==generation){documentError=true;failedDocumentGeneration=generation;invalidate();onNotice("文档页面读取失败，请离开后重新打开；原文件保留。")}}
         }
     }
     override fun onAttachedToWindow(){super.onAttachedToWindow();observeMapScenes();documentRequest=null;requestDocument()}
@@ -187,7 +204,7 @@ class InkCanvasView(context:Context):View(context){
     fun showStrokes(strokes:List<InkStroke>){
         if(content===strokes)return
         val removed=content.map{it.id}.toSet()-strokes.map{it.id}.toSet();transient.keys.removeAll(removed);transientPencils.keys.removeAll(removed)
-        content=strokes;restoreAppearance();val ids=strokes.map{it.id}.toSet();meshes.keys.retainAll(ids);bounds.keys.retainAll(ids)
+        content=strokes;drawnViewport=null;restoreAppearance();val ids=strokes.map{it.id}.toSet();meshes.keys.retainAll(ids);bounds.keys.retainAll(ids)
         for(s in strokes){if(!bounds.containsKey(s.id))bounds[s.id]=s.bounds();transient[s.id]?.let{meshes[s.id]=it}}
         if(preview&&width>0&&height>0)if(world)fitContent(false)else fitPage(false)
         invalidate()
@@ -257,6 +274,10 @@ class InkCanvasView(context:Context):View(context){
         // Draw cursor in screen space, outside the paper clip. Its diameter is
         // identical to the preview and does not vary with zoom or pen pressure.
         if((eraseMode||gestureErase)&&cursor!=null&&!preview){val p=checkNotNull(cursor);paint.style=Paint.Style.FILL;paint.color=0x183f7d67;val radius=(eraserDiameterDp*density/2).toFloat();canvas.drawCircle(p.x.toFloat(),p.y.toFloat(),radius,paint);paint.style=Paint.Style.STROKE;paint.strokeWidth=(3*density).toFloat();paint.color=Color.WHITE;canvas.drawCircle(p.x.toFloat(),p.y.toFloat(),radius,paint);paint.strokeWidth=density.toFloat();paint.color=0xff22272e.toInt();canvas.drawCircle(p.x.toFloat(),p.y.toFloat(),radius,paint);paint.style=Paint.Style.FILL}
+        // Only the current normal window frame may release a pending source decoration.
+        if(!capturingExcerpt&&isAttachedToWindow&&(!isHardwareAccelerated||canvas.isHardwareAccelerated)&&!asyncRaster.pending&&sourceContentReady){
+            drawnDocumentGeneration=documentGeneration;drawnViewport=viewport;drawnWidth=width;drawnHeight=height;drawnDensity=density
+        }
     }
     /** Capture only the rendered paper, never toolbars or selection decorations. */
     internal fun excerptPreview(region:CanvasBounds):ByteArray {
@@ -269,7 +290,8 @@ class InkCanvasView(context:Context):View(context){
         val bitmap=Bitmap.createBitmap(max(1,((b.x-a.x)*scale).toInt()),max(1,((b.y-a.y)*scale).toInt()),Bitmap.Config.ARGB_8888)
         try{
             val canvas=Canvas(bitmap);canvas.scale(scale.toFloat(),scale.toFloat());canvas.translate(-a.x.toFloat(),-a.y.toFloat())
-            draw(canvas)
+            capturingExcerpt=true
+            try{draw(canvas)}finally{capturingExcerpt=false}
             for(quality in listOf(90,75,55,35)){
                 val stream=java.io.ByteArrayOutputStream();bitmap.compress(Bitmap.CompressFormat.JPEG,quality,stream)
                 val bytes=stream.toByteArray();if(bytes.size<=240_000)return bytes
@@ -292,6 +314,7 @@ class InkCanvasView(context:Context):View(context){
     override fun onTouchEvent(e:MotionEvent):Boolean{
         BackgroundBudget.lastInput=android.os.SystemClock.elapsedRealtime()
         if(preview)return false;if(!configured)return true
+        if(e.actionMasked==MotionEvent.ACTION_DOWN||e.actionMasked==MotionEvent.ACTION_POINTER_DOWN)sourceInteractionEpoch++
         if(e.actionMasked==MotionEvent.ACTION_CANCEL||(e.flags and MotionEvent.FLAG_CANCELED)!=0){tapImage=null;cancelGesture();panPointer=-1;multiPanIds=emptySet();finishViewport();return true}
         if(embeddedPage&&!fingerWrites&&inputId==-1&&e.actionMasked!=MotionEvent.ACTION_POINTER_DOWN&&e.getToolType(0)==MotionEvent.TOOL_TYPE_FINGER)return false
         // Embedded sheets share one parent viewport; scaling a child would break the seam.

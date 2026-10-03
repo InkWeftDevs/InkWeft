@@ -32,10 +32,10 @@ import org.inkweft.app.ui.designsystem.InkTheme
     Surface(onClick=onClick,enabled=enabled,shape=RoundedCornerShape(12.dp),
         color=if(selected)MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surface,
         contentColor=if(selected)MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
-        modifier=modifier.heightIn(min=56.dp).testTag(tag)){
+        modifier=modifier.widthIn(min=48.dp).heightIn(min=56.dp).testTag(tag)){
         Column(Modifier.padding(horizontal=4.dp,vertical=5.dp),horizontalAlignment=Alignment.CenterHorizontally,verticalArrangement=Arrangement.spacedBy(2.dp)){
             Glyph(icon)
-            Text(label,style=MaterialTheme.typography.labelMedium,fontWeight=if(selected)FontWeight.SemiBold else FontWeight.Normal,maxLines=2)
+            Text(label,style=MaterialTheme.typography.labelMedium,fontWeight=if(selected)FontWeight.SemiBold else FontWeight.Normal,maxLines=1)
         }
     }
 }

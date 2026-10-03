@@ -39,15 +39,18 @@ class KnowledgeTextRepository(private val db: NoteDatabase) {
         }
     }.distinctUntilChanged()
 
-    fun observePreview(source: TargetRef, linkId: String, linkRevision: Long, incoming: Boolean = false): Flow<KnowledgeTextPreview> =
-        changes().map { preview(source, linkId, linkRevision, incoming) }.distinctUntilChanged()
+    fun observePreview(source: TargetRef, linkId: String, linkRevision: Long, incoming: Boolean = false,
+                       includeAllIncomingRelations: Boolean = false): Flow<KnowledgeTextPreview> =
+        changes().map { preview(source, linkId, linkRevision, incoming, includeAllIncomingRelations) }.distinctUntilChanged()
 
-    suspend fun preview(source: TargetRef, linkId: String, linkRevision: Long, incoming: Boolean = false): KnowledgeTextPreview = db.withTransaction {
+    suspend fun preview(source: TargetRef, linkId: String, linkRevision: Long, incoming: Boolean = false,
+                        includeAllIncomingRelations: Boolean = false): KnowledgeTextPreview = db.withTransaction {
         val row = db.knowledge().get(linkId)
         if (row == null || row.removed) throw KnowledgeRejected(KnowledgeRejection.UNAVAILABLE)
         val link = row.data() as? KnowledgeData.Link ?: throw KnowledgeRejected(KnowledgeRejection.INVALID)
         val reader = Reader()
-        val matches = if (incoming) link.target == source && link.relation == RelationKind.REFERENCE else link.source == source
+        val matches = if (incoming) link.target == source &&
+            (link.relation == RelationKind.REFERENCE || includeAllIncomingRelations) else link.source == source
         if (row.revision != linkRevision || !matches || reader.owner(link.source) != row.notebookId)
             throw KnowledgeRejected(KnowledgeRejection.CONFLICT)
         val target = if (incoming) link.source else link.target

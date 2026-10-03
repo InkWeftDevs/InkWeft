@@ -3,6 +3,8 @@ package org.inkweft.app
 
 import android.content.Context
 import androidx.compose.foundation.layout.*
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Rect
@@ -36,12 +38,17 @@ class StudyWindowGeometryUiTest {
         val opened = mutableStateOf(true)
         compose.setContent {
             InkTheme.Content {
-                Box(Modifier.widthIn(max = 800.dp).heightIn(max = 600.dp).fillMaxSize()
+                BoxWithConstraints(Modifier.widthIn(max = 800.dp).heightIn(max = 600.dp).fillMaxSize()
                     .testTag("study-frame-host")) {
+                    if (reading.value) TextButton(onClick = { reading.value = false },
+                        modifier = Modifier.heightIn(min = 48.dp).testTag("study-window-source-return")) {
+                        Text("返回导图")
+                    }
                     if (opened.value) FloatingStudyWindow(book, enabled = true,
                         minimized = minimized.value, onMinimize = { minimized.value = it },
                         docked = false, onDock = {}, close = { opened.value = false },
-                        sourceReading = reading.value, onSourceReadingEnd = { reading.value = false }) {
+                        paneLayout = StudyPaneLayout(true, minOf(360.dp, maxWidth)),
+                        topInset = 48.dp, paneActive = true, onActivate = {}, sourceReading = reading.value) {
                         val chrome = checkNotNull(LocalStudyWindowChrome.current)
                         Row(Modifier.fillMaxWidth().height(48.dp)) {
                             Spacer(Modifier.weight(1f))

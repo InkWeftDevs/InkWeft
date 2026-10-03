@@ -26,7 +26,7 @@ import kotlin.math.roundToInt
 
 internal val LocalPenPointsLeft=compositionLocalOf{false}
 
-@Composable internal fun FloatingPenCase(storageKey:String="case",wide:Boolean=false,expandRequest:Int=0,content:@Composable ColumnScope.()->Unit){
+@Composable internal fun FloatingPenCase(storageKey:String="case",wide:Boolean=false,expandRequest:Int=0,topInset:Dp=56.dp,content:@Composable ColumnScope.()->Unit){
     val context=LocalContext.current
     val prefs=remember{context.getSharedPreferences("inkweft-editor",0)}
     // App-wide persisted preferences outrank a notebook tab's saved composition.
@@ -41,11 +41,11 @@ internal val LocalPenPointsLeft=compositionLocalOf{false}
     val tag=if(wide)"favorite-pen-case"else"floating-pen-case"
     fun persist(){prefs.edit().putFloat("$storageKey-x",x).putFloat("$storageKey-y",y).putBoolean("$storageKey-collapsed",collapsed).apply()}
     LaunchedEffect(expandRequest){if(expandRequest>0){collapsed=false;persist()}}
-    Box(Modifier.fillMaxSize().padding(top=56.dp,bottom=48.dp).onSizeChanged{host=it}){
+    Box(Modifier.fillMaxSize().padding(top=topInset,bottom=48.dp).onSizeChanged{host=it}){
         val maxX=(host.width-size.width).coerceAtLeast(0).toFloat()
         val maxY=(host.height-size.height).coerceAtLeast(0).toFloat()
         Surface(Modifier.offset{IntOffset((x.coerceIn(0f,1f)*maxX).roundToInt(),(y.coerceIn(0f,1f)*maxY).roundToInt())}
-            .width(if(wide&&!collapsed)224.dp else if(collapsed)56.dp else 104.dp).heightIn(max=with(density){host.height.coerceAtLeast(1).toDp()}).onSizeChanged{size=it}.testTag(tag)
+            .width(if(wide&&!collapsed)224.dp else if(collapsed)56.dp else 104.dp).heightIn(max=minOf(384.dp,with(density){host.height.coerceAtLeast(1).toDp()})).onSizeChanged{size=it}.testTag(tag)
             .semantics{stateDescription=if(collapsed)"已收起"else if(x>.5f)"笔尖朝左"else"笔尖朝右"},
             shape=InkTheme.FloatingShape,color=InkTheme.Surface,shadowElevation=InkTheme.FloatingElevation){
             Column(horizontalAlignment=Alignment.CenterHorizontally){

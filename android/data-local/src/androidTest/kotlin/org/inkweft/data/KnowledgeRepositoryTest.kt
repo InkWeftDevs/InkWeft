@@ -123,23 +123,23 @@ class KnowledgeRepositoryTest {
         repo.submit(command(book,KnowledgeData.Properties(c,ManualState.REVIEW),create.id,1));try{repo.submit(command(book,KnowledgeData.Properties(c,ManualState.UNDERSTOOD),create.id,1));fail()}catch(_:IllegalArgumentException){}
         assertEquals(ManualState.REVIEW,(db.knowledge().get(create.id)!!.data() as KnowledgeData.Properties).state)}
     @Test fun backlinkIsSingleRecordAndRenameKeepsTargetIdentity()=fixture{db,book->val c=card(db,book);val repo=KnowledgeRepository(db);val l=KnowledgeData.Link(TargetRef(TargetKind.PAGE,book),TargetRef(TargetKind.CARD,c));repo.submit(command(book,l))
-        StudyRepository(db).submit(StudyCommand(id(),book,StudyAction.EDIT,cardId=c,expectedRevision=1,title="知识改名",body="新答案"));assertEquals(1,db.knowledge().all().size);assertEquals(c,(db.knowledge().all().single().data() as KnowledgeData.Link).target.id)}
+        StudyRepository(db).submit(StudyCommand(id(),book,StudyAction.EDIT,cardId=c,expectedRevision=1,title="知识改名",body="新答案"));val authored=db.knowledge().all().map{it.data()}.filterNot{it is KnowledgeData.MapOrder};assertEquals(1,authored.size);assertEquals(c,(authored.single() as KnowledgeData.Link).target.id)}
     @Test fun pinnedVersionAndLiveContentRemainDifferent()=fixture{db,book->val c=card(db,book);val repo=KnowledgeRepository(db);repo.submit(command(book,KnowledgeData.Link(TargetRef(TargetKind.PAGE,book),TargetRef(TargetKind.CARD,c),pinnedRevision=1)))
         StudyRepository(db).submit(StudyCommand(id(),book,StudyAction.EDIT,cardId=c,expectedRevision=1,title="新版",body="新答案"));assertEquals("原答案",repo.cardVersion(c,1)!!.body);assertEquals("新答案",db.study().card(c)!!.body)}
     @Test fun propertyAndBoardDoNotCreateMoreCardsOrMapNodes()=fixture{db,book->val c=card(db,book);val repo=KnowledgeRepository(db);repo.submit(command(book,KnowledgeData.Placement(c,50.0,80.0)));repo.submit(command(book,KnowledgeData.Properties(c,ManualState.REVIEW,listOf("数学"))));repo.submit(command(book,KnowledgeData.Question(c,"解释这个知识")))
         assertEquals(1,db.study().cards(book).size);assertEquals(1,db.study().nodes(book).size);assertEquals("原答案",db.study().card(c)!!.body)}
     @Test fun missingOrCrossBookSourceCannotCreateLink()=fixture{db,book->val other=WorkspaceRepository(db).create("其他",false,PaperStyle.BLANK);val c=card(db,book)
         try{KnowledgeRepository(db).submit(command(book,KnowledgeData.Link(TargetRef(TargetKind.PAGE,other.id),TargetRef(TargetKind.CARD,c))));fail()}catch(_:IllegalArgumentException){}
-        assertTrue(db.knowledge().all().isEmpty())}
+        assertTrue(db.knowledge().all().none{it.data() !is KnowledgeData.MapOrder})}
     @Test fun recycledTargetUnavailableButAuthorLinkPreserved()=fixture{db,book->val other=WorkspaceRepository(db).create("其他",false,PaperStyle.BLANK);val repo=KnowledgeRepository(db);repo.submit(command(book,KnowledgeData.Link(TargetRef(TargetKind.PAGE,book),TargetRef(TargetKind.NOTE,other.id))))
         val w=db.workspace().get(other.id)!!;WorkspaceRepository(db).organize(other.id,w.revision,w.folder,w.tags,w.favorite,true)
         assertFalse(repo.available(TargetRef(TargetKind.NOTE,other.id)));assertEquals(1,db.knowledge().all().size);repo.validateArchive()}
     @Test fun backupRestoresEveryKnowledgeKindAndRejectsConflict()=fixture{db,book->val c=card(db,book);val repo=KnowledgeRepository(db)
         val values=listOf(KnowledgeData.PageMark(book,"章节",false,2),KnowledgeData.PageMark(book,"重点",true),KnowledgeData.Link(TargetRef(TargetKind.PAGE,book),TargetRef(TargetKind.CARD,c),pinnedRevision=1),KnowledgeData.Properties(c,ManualState.REVIEW,listOf("数学")),KnowledgeData.Collection("数学复习","数学",ManualState.REVIEW),KnowledgeData.Question(c,"说明理由"),KnowledgeData.Placement(c,80.0,200.0),KnowledgeData.Alias(c,"同义名"))
-        values.forEach{repo.submit(command(book,it))};val name="restore-${id()}.db";val target=NoteDatabase.open(context,name)
+        values.forEach{repo.submit(command(book,it))};val expected=values.toSet()+StudyRepository(db).readGraph(book).order!!.data();val name="restore-${id()}.db";val target=NoteDatabase.open(context,name)
         try{val backup=LibraryBackupRepository(context,db);backup.snapshot().use{snap->val restore=LibraryBackupRepository(context,target)
             snap.file.inputStream().use{restore.inspect(it)}.use{preview->assertEquals(LibraryBackupRepository.RestoreResult.RESTORED,restore.restore(preview))}
-            assertEquals(values.toSet(),target.knowledge().all().map{it.data()}.toSet());assertEquals(PaperStyle.CORNELL.ordinal,target.pages().get(book)!!.paper)
+            assertEquals(expected,target.knowledge().all().map{it.data()}.toSet());assertEquals(PaperStyle.CORNELL.ordinal,target.pages().get(book)!!.paper)
             snap.file.inputStream().use{restore.inspect(it)}.use{preview->assertEquals(LibraryBackupRepository.RestoreResult.ALREADY_PRESENT,restore.restore(preview))}
             val prop=target.knowledge().all().first{it.data() is KnowledgeData.Properties};KnowledgeRepository(target).submit(command(book,KnowledgeData.Properties(c,ManualState.UNDERSTOOD),prop.id,1))
             snap.file.inputStream().use{restore.inspect(it)}.use{preview->assertEquals(LibraryBackupRepository.RestoreResult.IDENTITY_CONFLICT,restore.restore(preview))}

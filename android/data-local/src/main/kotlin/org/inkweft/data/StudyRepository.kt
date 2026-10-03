@@ -53,12 +53,12 @@ enum class StudyFault { BEFORE_RECEIPT, AFTER_COMMIT }
 class StudyRepository(private val db:NoteDatabase,private val fault:(StudyFault)->Unit={}) {
     fun excerpts(book:String)=db.study().excerpts(book)
     fun cards(book:String)=db.study().observeCards(book)
-    fun nodes(book:String,mapId:String?=null):Flow<List<StudyNodeRow>> = if(mapId==null)db.study().observeNodes(book)else db.knowledge().observeBook(book).map{rows->mapNodes(book,mapId,rows)}
-    private fun mapNodes(book:String,mapId:String,rows:List<KnowledgeRow>):List<StudyNodeRow>{
-        val definition=rows.find{it.id==mapId&&it.notebookId==book&&!it.removed}
-        val structures=(definition?.data() as? KnowledgeData.MapDefinition)?.structures.orEmpty().map{StudyNodeRow(it.id,book,it.id,it.parentId,it.x,it.y,definition!!.revision)}
-        return structures+rows.filter{it.notebookId==book}.mapNotNull{r->(r.data() as? KnowledgeData.MapOccurrence)?.takeIf{it.mapId==mapId}?.let{StudyNodeRow(r.id,book,it.cardId,it.parentId,it.x,it.y,r.revision,r.removed)}}
+    fun observeGraph(book:String,mapId:String?=null):Flow<StudyGraphSnapshot> =
+        db.invalidationTracker.createFlow("study_cards","study_nodes","knowledge_records","study_sources").map{readGraph(book,mapId)}
+    suspend fun readGraph(book:String,mapId:String?=null):StudyGraphSnapshot=db.withTransaction{
+        graphSnapshot(MapRef(book,mapId),db.study().cards(book),db.study().nodes(book),db.knowledge().forBook(book))
     }
+    fun nodes(book:String,mapId:String?=null):Flow<List<StudyNodeRow>> = observeGraph(book,mapId).map{it.nodes}
     fun observeSource(card:String)=db.study().observeSource(card)
     suspend fun source(card:String)=db.study().source(card)
     suspend fun lookup(c:StudyCommand):String?=db.withTransaction{
@@ -69,26 +69,60 @@ class StudyRepository(private val db:NoteDatabase,private val fault:(StudyFault)
     catch(e:StudyRejected){StudyOutcome.Rejected(e.message.orEmpty())}
     catch(e:KnowledgeRejected){StudyOutcome.Rejected(e.reason.name)}
     catch(_:Exception){try{lookup(c)?.let{StudyOutcome.Success(it)}?:StudyOutcome.Unknown}catch(cancel:kotlinx.coroutines.CancellationException){throw cancel}catch(_:Exception){StudyOutcome.Unknown}}
+
+    private suspend fun commitGraph(before:StudyGraphSnapshot,candidates:List<StudyNodeRow>,requestedOrder:List<String>,organized:StudyGraphState?){
+        try{
+            val book=before.ref.notebookId;val mapId=before.ref.mapId;val knowledge=KnowledgeRepository(db)
+            val oldById=before.nodes.associateBy{it.id};val structures=before.state.structuralNodeIds
+            var nodes=candidates.filterNot{it.id in structures&&it.removed}
+            val ids=nodes.map{it.id}.toSet()
+            nodes=nodes.map{n->if(n.removed&&n.parentId!=null&&n.parentId !in ids)n.copy(parentId=null,revision=oldById.getValue(n.id).revision+1)else n}
+            val changes=mutableListOf<KnowledgeRow>()
+            var definitionRevision=before.state.definitionRevision
+            if(mapId!=null){
+                val row=studyNotNull(before.definition);val value=row.data() as KnowledgeData.MapDefinition;val nextById=nodes.associateBy{it.id}
+                val definition=value.copy(structures=value.structures.mapNotNull{s->nextById[s.id]?.takeUnless{it.removed}?.let{s.copy(parentId=it.parentId,x=it.x,y=it.y)}})
+                if(definition!=value){definitionRevision=row.revision+1;changes+=row.copy(revision=definitionRevision,payload=KnowledgeCodec.encode(definition))}
+                nodes=nodes.map{if(it.id in structures)it.copy(revision=definitionRevision)else it}
+                nodes.filter{it.id !in structures}.forEach{node->
+                    if(oldById[node.id]!=node)changes+=KnowledgeRow(node.id,book,node.revision,
+                        KnowledgeCodec.encode(KnowledgeData.MapOccurrence(mapId,node.cardId,node.parentId,node.x,node.y)),node.removed)
+                }
+            }
+            val order=canonicalGraphOrder(nodes.map{it.model()},requestedOrder)
+            val orderRevision=if(before.order==null)1L else before.order.revision+if(order!=before.orderedNodeIds)1 else 0
+            if(before.order==null||orderRevision!=before.order.revision){
+                changes+=KnowledgeRow(before.order?.id?:knowledge.orderId(book,mapId),book,orderRevision,
+                    KnowledgeCodec.encode(KnowledgeData.MapOrder(mapId,order)))
+            }
+            if(organized!=null){
+                studyRequire(order==organized.orderedNodeIds&&orderRevision==organized.orderRevision&&definitionRevision==organized.definitionRevision){"MAP_PLAN_VERSION_MISMATCH"}
+                studyRequire(nodes.map{it.model()}.associateBy{it.id}==organized.nodes.associateBy{it.id}){"MAP_PLAN_NODE_MISMATCH"}
+            }
+            knowledge.commitGraph(book,changes,if(mapId==null)nodes else null)
+            if(organized!=null)studyRequire(readGraph(book,mapId).graphFingerprint==StudyOrganization.fingerprint(organized)){"MAP_AFTER_CONFLICT"}
+        }catch(e:IllegalArgumentException){if(e is StudyRejected)throw e;throw StudyRejected(e.message?:"STUDY_GRAPH_INVALID")}
+    }
+
     suspend fun submit(c:StudyCommand):String {
         val selectedMap=c.mapId
         val result=db.withTransaction {
             lookup(c)?.let{return@withTransaction it}
             val w=db.workspace().get(c.notebookId);studyRequire(w!=null&&w.trashedAt==null){"STUDY_BOOK_UNAVAILABLE"}
-            val dao=db.study();val cards=dao.cards(c.notebookId);val nodes=if(selectedMap==null)dao.nodes(c.notebookId)else {
-                val map=studyNotNull(db.knowledge().get(selectedMap));studyRequire(map.notebookId==c.notebookId&&!map.removed&&map.data() is KnowledgeData.MapDefinition){"MAP_UNAVAILABLE"}
-                mapNodes(c.notebookId,selectedMap,db.knowledge().all())
+            if(c.action==StudyAction.ARRANGE)throw StudyRejected("LAYOUT_PREVIEW_REQUIRED")
+            val dao=db.study();val before=readGraph(c.notebookId,selectedMap);val cards=before.cards;val nodes=before.nodes
+            if(selectedMap!=null)studyRequire(before.definition?.let{!it.removed}==true){"MAP_UNAVAILABLE"}
+            if(c.expectedGraph.isNotEmpty())studyRequire(c.expectedGraph==before.graphFingerprint){"MAP_VERSION_CHANGED"}
+            var finalNodes=nodes;var finalOrder=before.orderedNodeIds;var graphEdited=false
+            var organized:StudyGraphState?=null
+            fun writeNode(n:StudyNodeRow,expected:Long){
+                val old=finalNodes.find{it.id==n.id};studyRequire((old?.revision?:0)==expected){"NODE_VERSION_CHANGED"}
+                finalNodes=if(old==null)finalNodes+n else finalNodes.map{if(it.id==n.id)n else it};graphEdited=true
             }
-            if(c.expectedGraph.isNotEmpty())studyRequire(c.expectedGraph==StudyGraph.orderHash(nodes.map{it.model()})){"MAP_VERSION_CHANGED"}
-            suspend fun writeNode(n:StudyNodeRow,expected:Long){
-                if(selectedMap==null){if(expected==0L)dao.addNode(n)else check(dao.updateNode(n)==1)}else {
-                    val op=java.util.UUID.nameUUIDFromBytes((c.id+":"+n.id).toByteArray()).toString()
-                    val map=studyNotNull(db.knowledge().get(selectedMap));val definition=map.data() as KnowledgeData.MapDefinition
-                    val structural=definition.structures.find{it.id==n.id}
-                    if(structural!=null){
-                        val next=definition.copy(structures=definition.structures.mapNotNull{if(it.id!=n.id)it else if(n.removed)null else it.copy(parentId=n.parentId,x=n.x,y=n.y)})
-                        KnowledgeRepository(db).submit(KnowledgeCommand(op,c.notebookId,selectedMap,map.revision,next))
-                    }else KnowledgeRepository(db).submit(KnowledgeCommand(op,c.notebookId,n.id,expected,KnowledgeData.MapOccurrence(selectedMap,n.cardId,n.parentId,n.x,n.y),n.removed))
-                }
+            fun organization(plan:StudyOrganizationPlan){
+                val next=try{StudyOrganization.apply(before.state,plan)}catch(e:IllegalArgumentException){throw StudyRejected(e.message?:"MAP_VERSION_CHANGED")}
+                organized=next;finalNodes=next.nodes.map{StudyNodeRow(it.id,c.notebookId,it.cardId,it.parentId,it.x,it.y,it.revision,it.removed)}
+                finalOrder=next.orderedNodeIds;graphEdited=true
             }
             fun ownedCard():StudyCardRow=studyNotNull(cards.find{it.id==c.cardId})
             fun ownedNode():StudyNodeRow=studyNotNull(nodes.find{it.id==c.nodeId&&!it.removed})
@@ -96,7 +130,11 @@ class StudyRepository(private val db:NoteDatabase,private val fault:(StudyFault)
             suspend fun newNode(){
                 studyRequire(nodes.size<256&&nodes.count{!it.removed}<StudyGraph.MAX_NODES)
                 validParent();val n=StudyNodeRow(studyNotNull(c.nodeId),c.notebookId,studyNotNull(c.cardId),c.parentId,c.x,c.y)
-                validateStudyGraph((nodes+ n).map{it.model()});writeNode(n,0)
+                validateStudyGraph((nodes+n).map{it.model()})
+                val anchor=c.afterNodeId?.let{id->studyNotNull(nodes.find{it.id==id&&!it.removed}).also{studyRequire(it.parentId==c.parentId){"MAP_INSERT_ANCHOR_CHANGED"}}}?.id?:c.parentId
+                val descendants=mutableSetOf<String>();if(anchor!=null){descendants+=anchor;var added=true;while(added){added=false;nodes.filter{!it.removed&&it.parentId in descendants}.forEach{if(descendants.add(it.id))added=true}}}
+                val index=if(anchor==null)finalOrder.size else finalOrder.indexOfLast{it in descendants}+1
+                finalOrder=finalOrder.toMutableList().also{it.add(index,n.id)};writeNode(n,0)
             }
             suspend fun captureSource(s:StudySourceDraft,replacedBytes:Int=0):StudySourceRow {
                 val p=studyNotNull(db.pages().get(s.pageId));studyRequire(p.notebookId==c.notebookId&&p.trashedAt==null)
@@ -129,7 +167,10 @@ class StudyRepository(private val db:NoteDatabase,private val fault:(StudyFault)
                     studyRequire(nodes.none{it.parentId==old.id&&!it.removed}){"REMOVE_CHILDREN_FIRST"}
                     writeNode(old.copy(removed=true,revision=old.revision+1),old.revision)
                     val card=ownedCard()
-                    val used=dao.nodes(c.notebookId).any{!it.removed&&it.cardId==card.id}||db.knowledge().all().any{r->!r.removed&&when(val d=r.data()){is KnowledgeData.MapOccurrence->d.cardId==card.id;is KnowledgeData.Placement->d.cardId==card.id;is KnowledgeData.Properties->d.cardId==card.id;is KnowledgeData.Question->d.cardId==card.id;is KnowledgeData.Alias->d.cardId==card.id;is KnowledgeData.Link->d.source==TargetRef(TargetKind.CARD,card.id)||d.target==TargetRef(TargetKind.CARD,card.id);else->false}}
+                    val used=(if(selectedMap==null)finalNodes else dao.nodes(c.notebookId)).any{!it.removed&&it.cardId==card.id}||
+                        (selectedMap!=null&&finalNodes.any{!it.removed&&it.cardId==card.id})||db.knowledge().all().any{r->!r.removed&&when(val d=r.data()){
+                            is KnowledgeData.MapOccurrence->d.mapId!=selectedMap&&d.cardId==card.id
+                            is KnowledgeData.Placement->d.cardId==card.id;is KnowledgeData.Properties->d.cardId==card.id;is KnowledgeData.Question->d.cardId==card.id;is KnowledgeData.Alias->d.cardId==card.id;is KnowledgeData.Link->d.source==TargetRef(TargetKind.CARD,card.id)||d.target==TargetRef(TargetKind.CARD,card.id);else->false}}
                     if(!used&&card.revision==1L&&card.trashedAt==null){val next=card.copy(revision=2,trashedAt=System.currentTimeMillis());check(dao.updateCard(next)==1);dao.revision(StudyCardRevisionRow(next.id,next.revision,next.title,next.body,next.trashedAt))};old.id
                 }
                 StudyAction.RECROP_EXCERPT->{
@@ -156,15 +197,15 @@ class StudyRepository(private val db:NoteDatabase,private val fault:(StudyFault)
                     val old=ownedNode();studyRequire(old.revision==c.expectedRevision){"NODE_VERSION_CHANGED"}
                     if(c.action==StudyAction.REMOVE_NODE)studyRequire(nodes.none{it.parentId==old.id&&!it.removed}){"REMOVE_CHILDREN_FIRST"}
                     if(c.action==StudyAction.REPARENT)validParent()
-                    val next=old.copy(x=if(c.action==StudyAction.MOVE)c.x else old.x,y=if(c.action==StudyAction.MOVE)c.y else old.y,
-                        parentId=if(c.action==StudyAction.REPARENT)c.parentId else old.parentId,removed=c.action==StudyAction.REMOVE_NODE,revision=old.revision+1)
-                    validateStudyGraph(nodes.map{if(it.id==old.id)next.model()else it.model()});writeNode(next,old.revision);old.id
+                    if(c.action==StudyAction.REMOVE_NODE)writeNode(old.copy(removed=true,revision=old.revision+1),old.revision)
+                    else try{organization(if(c.action==StudyAction.MOVE)StudyOrganization.move(before.state,old.id,c.x,c.y)else StudyOrganization.reparent(before.state,old.id,c.parentId))}
+                        catch(e:IllegalArgumentException){throw StudyRejected(e.message?:"STUDY_GRAPH_INVALID")}
+                    old.id
                 }
-                StudyAction.ARRANGE->{
-                    studyRequire(c.expectedGraph==StudyGraph.orderHash(nodes.map{it.model()})){"MAP_VERSION_CHANGED"}
-                    val layout=selectedMap?.let{(db.knowledge().get(it)?.data() as? KnowledgeData.MapDefinition)?.layout}?:"right";val positions=MapTemplates.arrange(nodes.map{it.model()},layout);nodes.filter{!it.removed}.forEach{n->val p=positions.getValue(n.id);writeNode(n.copy(x=p.x,y=p.y,revision=n.revision+1),n.revision)};c.notebookId
-                }
+                StudyAction.ARRANGE->throw StudyRejected("LAYOUT_PREVIEW_REQUIRED")
+                StudyAction.ORGANIZE->{organization(studyNotNull(c.organization));selectedMap?:c.notebookId}
             }
+            if(graphEdited)commitGraph(before,finalNodes,finalOrder,organized)
             fault(StudyFault.BEFORE_RECEIPT);dao.receipt(StudyReceiptRow(c.id,c.notebookId,c.digest(),id));db.notes().touch(c.notebookId,System.currentTimeMillis());id
         };fault(StudyFault.AFTER_COMMIT);return result
     }

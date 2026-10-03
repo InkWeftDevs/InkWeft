@@ -24,7 +24,7 @@ import org.inkweft.data.KnowledgeTextPreview
 @Composable
 internal fun KnowledgeLinkPreview(
     focus: TargetRef, linkId: String, linkRevision: Long, incoming: Boolean = false,
-    enabled: Boolean, returnLabel: String = "返回摘要", dismiss: () -> Unit,
+    enabled: Boolean, includeAllRelationKinds: Boolean = false, returnLabel: String = "返回摘要", dismiss: () -> Unit,
     onOpenTarget: (TargetRef) -> Unit,
 ) {
     val app = LocalContext.current.applicationContext as InkWeftApplication
@@ -33,32 +33,39 @@ internal fun KnowledgeLinkPreview(
     var reading by remember { mutableStateOf(true) }
     var opening by remember { mutableStateOf(false) }
     var attempt by remember { mutableIntStateOf(0) }
+    var fullTitle by remember(linkId, linkRevision) { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
     val openTarget by rememberUpdatedState(onOpenTarget)
     fun failed(error: Exception) {
         failure = if (error is KnowledgeRejected) "关联已变化，请返回列表重新选择。" else "预览读取失败，请重试。"
         preview = null
     }
-    LaunchedEffect(focus, linkId, linkRevision, incoming, attempt) {
-        reading = true; failure = null; preview = null
+    LaunchedEffect(focus, linkId, linkRevision, incoming, includeAllRelationKinds, attempt) {
+        withContext(Dispatchers.Main.immediate) { reading = true; failure = null; preview = null }
         try {
-            app.knowledgeText.observePreview(focus, linkId, linkRevision, incoming)
+            app.knowledgeText.observePreview(focus, linkId, linkRevision, incoming, includeAllIncomingRelations=includeAllRelationKinds)
                 .flowOn(Dispatchers.IO).collect { value ->
-                    preview = value; failure = null; reading = false
+                    withContext(Dispatchers.Main.immediate) { preview = value; failure = null; reading = false }
                 }
         } catch (cancel: CancellationException) { throw cancel }
-        catch (error: Exception) { failed(error); reading = false }
+        catch (error: Exception) { withContext(Dispatchers.Main.immediate) { failed(error); reading = false } }
     }
     val windowSize = LocalWindowInfo.current.containerSize
     val contentHeight = with(LocalDensity.current) { (windowSize.height.toDp() * .5f).coerceAtLeast(100.dp) }
     AlertDialog(
         onDismissRequest = { if (!opening) dismiss() },
-        modifier = Modifier.fillMaxWidth(.96f).widthIn(max = 640.dp).testTag("card-link-preview"),
+        modifier = Modifier.widthIn(max = 640.dp).fillMaxWidth(.96f).testTag("card-link-preview"),
         properties = DialogProperties(usePlatformDefaultWidth = false),
-        title = { Text(if (incoming) "反向引用 · 来源预览" else "关联目标预览") },
+        title = { Text(if (incoming && includeAllRelationKinds) "关联来源预览" else if (incoming) "反向引用 · 来源预览" else "关联目标预览") },
         text = { Column(Modifier.heightIn(max = contentHeight).verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(12.dp)) {
-            preview?.let { Text(it.title, style = MaterialTheme.typography.titleLarge) }
+            preview?.let {
+                Text(it.title, style = MaterialTheme.typography.titleMedium, maxLines = if (fullTitle) Int.MAX_VALUE else 3,
+                    overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis)
+                if (it.title.length > 40) TextButton({ fullTitle = !fullTitle }, modifier = Modifier.heightIn(min = 48.dp)) {
+                    Text(if (fullTitle) "收起标题" else "完整标题")
+                }
+            }
             Text(preview?.pinnedRevision?.let { "固定摘录 · 修订 $it" } ?: "当前内容", style = MaterialTheme.typography.labelLarge, color = Forest)
             if (reading) CircularProgressIndicator(Modifier.size(24.dp))
             preview?.let { value ->
@@ -76,16 +83,18 @@ internal fun KnowledgeLinkPreview(
                 opening = true
                 scope.launch {
                     try {
-                        val checked = withContext(Dispatchers.IO) { app.knowledgeText.preview(focus, linkId, linkRevision, incoming) }
-                        preview = checked
-                        if (checked.canOpen) openTarget(checked.target)
+                        val checked = withContext(Dispatchers.IO) { app.knowledgeText.preview(focus, linkId, linkRevision, incoming, includeAllIncomingRelations=includeAllRelationKinds) }
+                        withContext(Dispatchers.Main.immediate) {
+                            preview = checked
+                            if (checked.canOpen) openTarget(checked.target)
+                        }
                     } catch (cancel: CancellationException) { throw cancel }
-                    catch (error: Exception) { failed(error) }
-                    finally { opening = false }
+                    catch (error: Exception) { withContext(Dispatchers.Main.immediate) { failed(error) } }
+                    finally { if (currentCoroutineContext().isActive) withContext(Dispatchers.Main.immediate) { opening = false } }
                 }
             }
         }, enabled = enabled && !reading && !opening && failure == null && preview?.canOpen == true,
-            modifier = Modifier.heightIn(min = 48.dp).testTag("card-link-open-target")) { Text(if (incoming) "打开引用来源" else "打开目标") } },
+            modifier = Modifier.heightIn(min = 48.dp).testTag("card-link-open-target")) { Text(if (incoming && includeAllRelationKinds) "打开关联来源" else if (incoming) "打开引用来源" else "打开目标") } },
         dismissButton = { TextButton(onClick = dismiss, enabled = !opening,
             modifier = Modifier.heightIn(min = 48.dp).testTag("card-link-close-preview")) { Text(returnLabel) } },
     )

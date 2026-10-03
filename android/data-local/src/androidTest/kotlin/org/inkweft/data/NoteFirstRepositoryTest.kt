@@ -26,7 +26,7 @@ class NoteFirstRepositoryTest {
         val stroke=InkStroke(id(),InkPen.PEN,0xff3366aa.toInt(),3f,InkTool.STYLUS,listOf(InkSample(100f,100f,0),InkSample(150f,130f,50)))
         InkRepository(db).save(CommitInk(id(),book,0,InkMutation.Add(stroke)))
         val source=StudySourceDraft(book,1,stroke.bounds(),listOf(stroke.id))
-        val c=StudyCommand(id(),book,StudyAction.CREATE,cardId=id(),nodeId=id(),title="来源",parentId=parent,source=source,mapId=map,expectedGraph=StudyGraph.orderHash(repo.nodes(book,map).first().map{it.model()}))
+        val c=StudyCommand(id(),book,StudyAction.CREATE,cardId=id(),nodeId=id(),title="来源",parentId=parent,source=source,mapId=map,expectedGraph=repo.readGraph(book,map).graphFingerprint)
         try{StudyRepository(db){if(it==StudyFault.BEFORE_RECEIPT)error("fault")}.submit(c);fail()}catch(_:IllegalStateException){}
         assertTrue(db.study().cards(book).isEmpty());assertNull(db.study().source(c.cardId!!));assertNull(db.study().receipt(c.id))
         assertTrue(StudyRepository(db){if(it==StudyFault.AFTER_COMMIT)error("lost response")}.outcome(c) is StudyOutcome.Success)
@@ -44,7 +44,7 @@ class NoteFirstRepositoryTest {
         assertEquals(1L,InkRepository(db).read(book).revision)
     }
     @Test fun staleTargetIsRejectedAndUndoKeepsReusedOrEditedKnowledge()=fixture{db,book->
-        val repo=StudyRepository(db);val empty=StudyGraph.orderHash(emptyList())
+        val repo=StudyRepository(db);val empty=repo.readGraph(book).graphFingerprint
         val a=StudyCommand(id(),book,StudyAction.CREATE,cardId=id(),nodeId=id(),title="原卡")
         repo.submit(a)
         val stale=StudyCommand(id(),book,StudyAction.CREATE,cardId=id(),nodeId=id(),title="过期",expectedGraph=empty)

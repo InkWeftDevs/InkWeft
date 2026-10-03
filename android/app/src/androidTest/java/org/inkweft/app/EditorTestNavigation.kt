@@ -6,6 +6,10 @@ import androidx.compose.ui.test.junit4.ComposeTestRule
 internal fun ComposeTestRule.singlePageEditor(){
     waitUntil(15_000){onAllNodesWithTag("ink-surface").fetchSemanticsNodes().isNotEmpty()||onAllNodesWithTag("continuous-pages").fetchSemanticsNodes().isNotEmpty()}
     if(onAllNodesWithTag("continuous-pages").fetchSemanticsNodes().isNotEmpty()){
+        if(onAllNodesWithTag("quick-settings").fetchSemanticsNodes().isEmpty()){
+            waitUntil(15_000){runCatching{onNodeWithTag("document-more").assertIsDisplayed().assertIsEnabled()}.isSuccess}
+            onNodeWithTag("document-more").performClick()
+        }
         waitUntil(15_000){runCatching{onNodeWithTag("quick-settings").assertIsEnabled()}.isSuccess}
         onNodeWithTag("quick-settings").performClick()
         onNodeWithTag("continuous-setting").performScrollTo().performClick()
@@ -117,12 +121,16 @@ internal fun ComposeTestRule.revealAction(tag:String){
                 }
                 onNodeWithTag("study-management").assertIsDisplayed().assertIsEnabled().performTouchInput{click()}
             }
+            waitUntil("map-menu is visible before revealing $tag",15_000){
+                runCatching{onNodeWithTag("map-menu").assertIsDisplayed()}.isSuccess
+            }
+            if(onAllNodesWithTag(tag).fetchSemanticsNodes().isNotEmpty())return
             val group=if(tag.startsWith("study-tab-")||tag.startsWith("study-fit-"))0 else if(tag in setOf("study-insert-map","study-save-template"))2 else 1
             val groupTag="map-menu-group-$group"
-            waitUntil("map-menu and $groupTag are visible before revealing $tag",15_000){
-                runCatching{onNodeWithTag("map-menu").assertIsDisplayed();onNodeWithTag(groupTag).assertIsDisplayed().assertIsEnabled()}.isSuccess
+            waitUntil("$groupTag exists before revealing $tag",15_000){
+                onAllNodesWithTag(groupTag).fetchSemanticsNodes().isNotEmpty()
             }
-            onNodeWithTag(groupTag).assertIsDisplayed().assertIsEnabled().performTouchInput{click()}
+            onNodeWithTag(groupTag).performScrollTo().assertIsDisplayed().assertIsEnabled().performTouchInput{click()}
             waitUntil("$tag exists after choosing $groupTag",15_000){onAllNodesWithTag(tag).fetchSemanticsNodes().isNotEmpty()}
         }
         tag.startsWith("width-preset-")||tag.startsWith("pencil-hardness-")->onNodeWithTag("pen-advanced").performScrollTo().performClick()

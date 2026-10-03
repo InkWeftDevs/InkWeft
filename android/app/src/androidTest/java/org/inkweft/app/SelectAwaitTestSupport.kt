@@ -222,8 +222,16 @@ internal class SelectAwaitTestSupport(
         val xy = IntArray(2); view.getLocationOnScreen(xy)
         return RectF(xy[0].toFloat(), xy[1].toFloat(), (xy[0] + view.width).toFloat(), (xy[1] + view.height).toFloat())
     }
-    private fun panelRect(): RectF {
-        val local = compose.onNodeWithTag("study-panel").fetchSemanticsNode().boundsInRoot
+    private fun panelRect(): RectF? {
+        val panels = compose.onAllNodesWithTag("study-panel").fetchSemanticsNodes()
+        if (panels.isEmpty()) {
+            compose.onNodeWithTag("study-window-source-return").assertIsDisplayed()
+            compose.onNodeWithTag("ink-surface").assertIsDisplayed()
+            return null
+        }
+        check(panels.size == 1) { "Expected one visible study panel, found ${panels.size}" }
+        compose.onNodeWithTag("study-panel").assertIsDisplayed()
+        val local = panels.single().boundsInRoot
         val origin = compose.runOnIdle {
             val queue = java.util.ArrayDeque<View>(); queue.add(compose.activity.window.decorView)
             var owner: View? = null
@@ -255,7 +263,8 @@ internal class SelectAwaitTestSupport(
                 pages(f.note.id).ui.value.selectedId == source.pageId && !ink(source.pageId).ui.value.loading &&
                     canvas.documentContentReady && !canvas.rasterPending && canvas.displayedStrokeCount == 1 &&
                     abs(viewport.centerX - expected.centerX) < .5 && abs(viewport.centerY - expected.centerY) < .5 &&
-                    abs(viewport.zoom - expected.zoom) < .01 && paper.contains(projected) && !RectF.intersects(projected, panel)
+                    abs(viewport.zoom - expected.zoom) < .01 && paper.contains(projected) &&
+                    (panel == null || !RectF.intersects(projected, panel))
             }
         }.getOrDefault(false) }
         assertCurrent(f, source.pageId)
@@ -269,6 +278,9 @@ internal class SelectAwaitTestSupport(
         .apply { isAccessible = true }.get(pages(book)) as Mutex
     fun awaitSelectionHeld(f: Fixture) {
         compose.waitUntil(15_000) { compose.runOnIdle { selectionMutex(f.note.id).isLocked } }
+    }
+    fun awaitSelectionReleased(f: Fixture) {
+        compose.waitUntil(15_000) { compose.runOnIdle { !selectionMutex(f.note.id).isLocked } }
     }
     fun startAwait(f: Fixture, target: String): Deferred<Boolean> = compose.runOnIdle {
         // The production API has an explicit Main caller contract.
@@ -322,7 +334,7 @@ internal class SelectAwaitTestSupport(
     }
     fun settle(f: Fixture) {
         check(heldGates.get() == 0) { "Release/join the gate before fencing the app's transaction queue" }
-        compose.waitUntil(15_000) { compose.runOnIdle { !selectionMutex(f.note.id).isLocked } }
+        awaitSelectionReleased(f)
         runBlocking { withTimeout(15_000) { database.withTransaction { database.workspace().get(f.note.id) } } }
         compose.waitForIdle()
     }

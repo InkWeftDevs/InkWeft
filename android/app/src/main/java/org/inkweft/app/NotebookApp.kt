@@ -59,7 +59,7 @@ fun NotebookApp(vm:NotebookViewModel=viewModel(),onDiagnostics:()->Unit={}){
     SideEffect{if(ui.selectedId==null)app.navigationReady.value=true}
     LaunchedEffect(target,navigationReady){val ref=target?:return@LaunchedEffect;if(!navigationReady)return@LaunchedEffect
         try{val (destination,anchor)=withContext(Dispatchers.IO){app.knowledge.resolve(ref)}
-            if(ref.kind==TargetKind.CARD)workspace.studyCardRequest.value=ref.id
+            if(ref.kind==TargetKind.CARD)workspace.requestStudyCardNavigation(destination.id,ref.id)
             if(anchor!=null){workspace.focusAnchor.value=anchor;workspace.openSearchPage(destination.id,anchor.pageId){vm.select(destination)}}
             else if(ref.kind==TargetKind.PAGE)workspace.openSearchPage(destination.id,ref.id){vm.select(destination)}else vm.select(destination)
         }catch(c:CancellationException){throw c}catch(_:Exception){Toast.makeText(context,"来源已回收或无法读取，未切换到其他页面。",Toast.LENGTH_LONG).show()}

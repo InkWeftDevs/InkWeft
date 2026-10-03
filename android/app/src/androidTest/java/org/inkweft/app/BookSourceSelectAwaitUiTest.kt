@@ -130,11 +130,16 @@ class BookSourceSelectAwaitUiTest {
         try {
             compose.activityRule.scenario.recreate()
             h.waitFor("card-full-body"); h.waitMap(f)
+            // Prove the old caller was canceled while the same Room transaction is still held.
+            h.awaitSelectionReleased(f)
             h.assertCurrent(f, f.note.id); h.assertReadOnly(f)
             compose.onNodeWithTag("card-full-body").assertTextEquals(f.body)
-            compose.waitUntil(15_000) { runCatching { compose.onNodeWithTag("study-open-source").assertIsEnabled() }.isSuccess }
+            assertEquals(context, h.graph(f))
+            compose.onNodeWithTag("study-window-source-return").assertDoesNotExist()
         } finally { recreateGate.finish() }
         h.settle(f)
+        // The recreated inspector reloads its source after the fixture releases Room.
+        compose.waitUntil(15_000) { runCatching { compose.onNodeWithTag("study-open-source").assertIsDisplayed().assertIsEnabled() }.isSuccess }
         compose.onNodeWithTag("study-card-details").assertIsDisplayed()
         compose.onNodeWithTag("card-full-body").assertTextEquals(f.body)
         h.assertNoRevealOrError(f, f.note.id); assertEquals(context, h.graph(f))

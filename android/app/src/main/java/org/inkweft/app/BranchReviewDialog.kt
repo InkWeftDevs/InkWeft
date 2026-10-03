@@ -109,18 +109,18 @@ internal val BranchReviewRoundSaver = Saver<BranchReviewRound, ByteArray>(
 }
 
 /** Fixed recall identities with session-only permission to inspect related clues. */
-@Composable internal fun BranchReviewDialog(plan:BranchReviewPlan, dismiss:()->Unit, showSummary:Boolean=true,showCollectionScope:Boolean=false) {
+@Composable internal fun BranchReviewDialog(plan:BranchReviewPlan, dismiss:()->Unit, showSummary:Boolean=true,showCollectionScope:Boolean=false,showCardScope:Boolean=false) {
     val sessionKey=remember(plan){plan.entries.joinToString(";"){"${it.questionId}:${it.questionRevision}:${it.cardId}:${it.cardRevision}"}}
-    key(plan.ref.notebookId,plan.ref.mapId,plan.branchId,plan.scope,sessionKey){
-        RecallWindowIsolation { BranchReviewContent(plan,dismiss,showSummary,showCollectionScope) }
+    key(plan.ref.notebookId,plan.ref.mapId,plan.branchId,plan.scope,sessionKey,showCardScope){
+        RecallWindowIsolation { BranchReviewContent(plan,dismiss,showSummary,showCollectionScope,showCardScope) }
     }
 }
 
-@Composable private fun BranchReviewContent(plan:BranchReviewPlan,dismiss:()->Unit,showSummary:Boolean,showCollectionScope:Boolean) {
+@Composable private fun BranchReviewContent(plan:BranchReviewPlan,dismiss:()->Unit,showSummary:Boolean,showCollectionScope:Boolean,showCardScope:Boolean) {
     val round=rememberSaveable(stateSaver=BranchReviewRoundSaver){mutableStateOf(BranchReviewRound(UUID.randomUUID().toString(),plan))}
     var retryKind by rememberSaveable{mutableStateOf<String?>(null)}
     key(round.value.roundId){
-        BranchReviewRoundContent(round,dismiss,showSummary&&retryKind==null,showCollectionScope,retryKind){next,selection->
+        BranchReviewRoundContent(round,dismiss,showSummary&&retryKind==null,showCollectionScope,showCardScope,retryKind){next,selection->
             retryKind=selection.name
             round.value=BranchReviewRound(UUID.randomUUID().toString(),next)
         }
@@ -128,7 +128,7 @@ internal val BranchReviewRoundSaver = Saver<BranchReviewRound, ByteArray>(
 }
 
 @Composable private fun BranchReviewRoundContent(roundState:MutableState<BranchReviewRound>,dismiss:()->Unit,
-    showSummary:Boolean,showCollectionScope:Boolean,retryKind:String?,retryReady:(BranchReviewPlan,BranchReviewRetrySelection)->Unit) {
+    showSummary:Boolean,showCollectionScope:Boolean,showCardScope:Boolean,retryKind:String?,retryReady:(BranchReviewPlan,BranchReviewRetrySelection)->Unit) {
     var round by roundState
     val visibleRoundId=round.roundId
     val visiblePendingOperation=round.pending?.operationId
@@ -252,14 +252,14 @@ internal val BranchReviewRoundSaver = Saver<BranchReviewRound, ByteArray>(
                         if(!started){
                             Column(Modifier.fillMaxWidth(),verticalArrangement=Arrangement.spacedBy(16.dp)) {
                                 Text("本轮回忆范围",style=MaterialTheme.typography.headlineSmall)
-                                if(showCollectionScope)Text(plan.title,modifier=Modifier.testTag("branch-review-scope"),style=MaterialTheme.typography.titleMedium)
+                                if(showCollectionScope||showCardScope)Text(plan.title,modifier=Modifier.testTag("branch-review-scope"),style=MaterialTheme.typography.titleMedium)
                                 Text(if(plan.scope==ReviewQuestionScope.REVIEW_ONLY)"仅复习标为「待复习」的问题"else"全部问题",
                                     modifier=Modifier.testTag("branch-review-filter"))
                                 Text("${plan.cardCount} 张卡片 · ${plan.entries.size} 道问题 · ${plan.withoutQuestionCount} 张未设题卡片",
                                     modifier=Modifier.testTag("branch-review-counts"))
                                 Text("范围内共 ${plan.totalQuestionCount} 道问题",modifier=Modifier.testTag("branch-review-total-questions"))
                                 Text("仅有已理解或待整理问题：${plan.otherStateOnlyCardCount} 张卡片",modifier=Modifier.testTag("branch-review-other-state-cards"))
-                                Text(if(showCollectionScope)"相同问题只出现一次，同一卡片的不同问题分别保留。"else"包含折叠下级。相同问题只出现一次，同一卡片的不同问题分别保留。")
+                                Text(if(showCardScope)"仅此卡片的问题。同一卡片的不同问题分别保留。"else if(showCollectionScope)"相同问题只出现一次，同一卡片的不同问题分别保留。"else"包含折叠下级。相同问题只出现一次，同一卡片的不同问题分别保留。")
                                 Text("本轮固定问题与答案版本。标题、原页和图中文字先遮挡；查看提示可能包含答案。",color=Quiet)
                                 Text("查看提示、显示答案均不写标记；手工标记不安排到期时间。",color=Quiet)
                                 if(plan.entries.isEmpty()){
@@ -305,7 +305,7 @@ internal val BranchReviewRoundSaver = Saver<BranchReviewRound, ByteArray>(
                                 val enterEvent=answerEnterEvent
                                 ClickEnterContent(enterEvent,answerEnterPending,{if(answerEnterEvent==enterEvent)answerEnterPending=false},
                                     Modifier.testTag("review-answer-enter")){
-                                    Text(current.card.body,fontSize=18.sp,modifier=Modifier.testTag("review-answer"))
+                                    Text(current.card.body.ifBlank{if(source!=null)"此卡未填写文字答案；请在下方「摘录」查看保存原迹，或打开来源核对。"else"此卡未填写文字答案。结束本轮后，可在卡片详情中补充。"},fontSize=18.sp,modifier=Modifier.testTag("review-answer"))
                                 }
                             }
                             if(!revealed){

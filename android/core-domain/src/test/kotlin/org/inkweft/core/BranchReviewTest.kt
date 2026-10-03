@@ -258,4 +258,35 @@ class BranchReviewTest {
             catch (_: IllegalArgumentException) { }
         }
     }
+
+    @Test fun currentCardKeepsIndependentQuestionsAndExcludesOtherCardsBeforeStateSelection() {
+        val ref = MapRef(id(), id()); val card = id(); val node = id()
+        val pending = question(card, 4); val understood = question(card, 4); val outside = question(id())
+        val all = BranchReview.card(ref, card, 4, "当前知识卡", listOf(pending, understood, outside), node)
+        assertEquals(ref, all.ref); assertEquals(node, all.branchId); assertEquals("当前知识卡", all.title)
+        assertEquals(1, all.cardCount); assertEquals(0, all.withoutQuestionCount)
+        assertEquals(setOf(pending, understood), all.entries.toSet())
+        val selected = BranchReview.select(all, ReviewQuestionScope.REVIEW_ONLY,
+            mapOf(pending.questionId to ManualState.REVIEW, understood.questionId to ManualState.UNDERSTOOD,
+                outside.questionId to ManualState.REVIEW))
+        assertEquals(listOf(pending), selected.entries)
+        assertEquals(2, selected.totalQuestionCount); assertEquals(0, selected.otherStateOnlyCardCount)
+    }
+
+    @Test fun currentCardDistinguishesUnaskedAndOtherStatesAndRejectsStaleRevision() {
+        val ref = MapRef(id()); val card = id()
+        val understood = question(card, 2); val inbox = question(card, 2)
+        val all = BranchReview.card(ref, card, 2, "未放置卡片", listOf(understood, inbox))
+        assertNull(all.branchId)
+        val selected = BranchReview.select(all, ReviewQuestionScope.REVIEW_ONLY,
+            mapOf(understood.questionId to ManualState.UNDERSTOOD, inbox.questionId to ManualState.INBOX))
+        assertTrue(selected.entries.isEmpty()); assertEquals(2, selected.totalQuestionCount)
+        assertEquals(0, selected.withoutQuestionCount); assertEquals(1, selected.otherStateOnlyCardCount)
+        val unasked = BranchReview.card(ref, card, 2, "真正无题", listOf(question(id())))
+        assertEquals(1, unasked.cardCount); assertEquals(1, unasked.withoutQuestionCount); assertEquals(0, unasked.totalQuestionCount)
+        rejected("BRANCH_REVIEW_CARD_REVISION_MISMATCH") {
+            BranchReview.select(BranchReview.card(ref, card, 1, "旧版本", listOf(understood)),
+                ReviewQuestionScope.REVIEW_ONLY, mapOf(understood.questionId to ManualState.UNDERSTOOD))
+        }
+    }
 }

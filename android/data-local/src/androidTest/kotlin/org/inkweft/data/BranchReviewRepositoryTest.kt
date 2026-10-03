@@ -74,6 +74,102 @@ class BranchReviewRepositoryTest {
         }.sorted()
     }
 
+    @Test fun currentCardPreparationKeepsOwnQuestionsAndUnplacedScopeWithoutAuthorWrites() = fixture { db, book ->
+        val named = map(db, book, "当前卡上下文")
+        val owner = card(db, book, map = named, title = "当前知识卡")
+        val ownerId = owner.cardId!!
+        val child = card(db, book, owner.nodeId, named, title = "下级卡片")
+        val outside = card(db, book, title = "其他卡片")
+        record(db, book, KnowledgeData.Properties(ownerId, ManualState.UNDERSTOOD))
+        val pending = question(db, book, ownerId, "当前卡第一题")
+        val understood = record(db, book, KnowledgeData.Question(ownerId, "当前卡第二题", ManualState.UNDERSTOOD))
+        val inbox = record(db, book, KnowledgeData.Question(ownerId, "当前卡第三题", ManualState.INBOX))
+        question(db, book, child.cardId!!, "不能带入下级卡的题")
+        question(db, book, outside.cardId!!, "不能带入其他卡的题")
+        val unplaced = card(db, book, title = "未放置卡")
+        StudyRepository(db).submit(StudyCommand(id(), book, StudyAction.REMOVE_NODE, nodeId = unplaced.nodeId, expectedRevision = 1))
+        val unplacedQuestion = question(db, book, unplaced.cardId!!)
+        val repository = BranchReviewRepository(db)
+        val before = authorStamp(db)
+        val ref = MapRef(book, named)
+        val all = repository.prepareCard(ref, ownerId, 1, owner.nodeId)
+        assertEquals(ref, all.ref); assertEquals(owner.nodeId, all.branchId); assertEquals("当前知识卡", all.title)
+        stateCounts(all, ReviewQuestionScope.ALL, 1, 3, 3, 0, 0)
+        assertEquals(setOf(pending.id, understood.id, inbox.id), all.entries.map { it.questionId }.toSet())
+        val selected = repository.prepareCard(ref, ownerId, 1, owner.nodeId, ReviewQuestionScope.REVIEW_ONLY)
+        stateCounts(selected, ReviewQuestionScope.REVIEW_ONLY, 1, 3, 1, 0, 0)
+        assertEquals(listOf(pending.id), selected.entries.map { it.questionId })
+        assertTrue(repository.load(all).all { it.reference.cardId == ownerId && it.card.body == "冻结答案" })
+        for (context in listOf(MapRef(book), ref)) {
+            val plan = repository.prepareCard(context, unplaced.cardId!!, 1)
+            assertEquals(context, plan.ref); assertNull(plan.branchId)
+            stateCounts(plan, ReviewQuestionScope.ALL, 1, 1, 1, 0, 0)
+            assertEquals(listOf(unplacedQuestion.id), plan.entries.map { it.questionId })
+        }
+        assertEquals(before, authorStamp(db))
+        KnowledgeRepository(db).submit(KnowledgeCommand(id(), book, pending.id, 1,
+            (pending.data as KnowledgeData.Question).copy(state = ManualState.UNDERSTOOD)))
+        val afterMark = authorStamp(db)
+        stateCounts(repository.prepareCard(ref, ownerId, 1, owner.nodeId, ReviewQuestionScope.REVIEW_ONLY),
+            ReviewQuestionScope.REVIEW_ONLY, 1, 3, 0, 0, 1)
+        assertEquals(afterMark, authorStamp(db))
+    }
+
+    @Test fun currentCardPreparationRejectsForeignStaleAndInvalidContextWithoutFallback() = fixture { db, book ->
+        val named = map(db, book, "当前图"); val otherMap = map(db, book, "其他图")
+        val owner = card(db, book, map = named)
+        val wrongCard = card(db, book, map = named)
+        val main = card(db, book)
+        val elsewhere = StudyCommand(id(), book, StudyAction.REUSE, cardId = owner.cardId, nodeId = id(), mapId = otherMap)
+        val study = StudyRepository(db); study.submit(elsewhere)
+        record(db, book, KnowledgeData.Question(owner.cardId!!, "已理解题也不能隐藏身份错误", ManualState.UNDERSTOOD))
+        val foreignBook = WorkspaceRepository(db).create("外本", false, PaperStyle.BLANK).id
+        val foreignMap = map(db, foreignBook, "外本图"); val foreign = card(db, foreignBook)
+        val repository = BranchReviewRepository(db); val ref = MapRef(book, named)
+        var before = authorStamp(db)
+        for (scope in ReviewQuestionScope.entries) {
+            reject("BRANCH_REVIEW_CARD_UNAVAILABLE") { repository.prepareCard(ref, foreign.cardId!!, 1, scope = scope) }
+            reject("BRANCH_REVIEW_CARD_UNAVAILABLE") { repository.prepareCard(ref, id(), 1, scope = scope) }
+            reject("BRANCH_REVIEW_MAP_UNAVAILABLE") { repository.prepareCard(MapRef(book, foreignMap), owner.cardId!!, 1, scope = scope) }
+            reject("BRANCH_REVIEW_MAP_UNAVAILABLE") { repository.prepareCard(MapRef(book, id()), owner.cardId!!, 1, scope = scope) }
+            reject("BRANCH_REVIEW_CARD_VERSION_CHANGED") { repository.prepareCard(ref, owner.cardId!!, 2, owner.nodeId, scope) }
+            reject("BRANCH_REVIEW_NODE_UNAVAILABLE") { repository.prepareCard(ref, owner.cardId!!, 1, id(), scope) }
+            reject("BRANCH_REVIEW_NODE_UNAVAILABLE") { repository.prepareCard(ref, owner.cardId!!, 1, wrongCard.nodeId, scope) }
+            reject("BRANCH_REVIEW_NODE_UNAVAILABLE") { repository.prepareCard(ref, owner.cardId!!, 1, elsewhere.nodeId, scope) }
+            reject("BRANCH_REVIEW_NODE_UNAVAILABLE") { repository.prepareCard(MapRef(book), owner.cardId!!, 1, owner.nodeId, scope) }
+            val validMain = repository.prepareCard(MapRef(book), main.cardId!!, 1, main.nodeId, scope)
+            assertEquals(main.nodeId, validMain.branchId)
+            stateCounts(validMain, scope, 1, 0, 0, 1, 0)
+        }
+        assertEquals(before, authorStamp(db))
+        study.submit(StudyCommand(id(), book, StudyAction.EDIT, cardId = owner.cardId, expectedRevision = 1, title = "修订卡片"))
+        before = authorStamp(db)
+        for (scope in ReviewQuestionScope.entries)
+            reject("BRANCH_REVIEW_CARD_VERSION_CHANGED") { repository.prepareCard(ref, owner.cardId!!, 1, owner.nodeId, scope) }
+        assertEquals(before, authorStamp(db))
+        study.submit(StudyCommand(id(), book, StudyAction.REMOVE_NODE, nodeId = owner.nodeId, expectedRevision = 1, mapId = named))
+        study.submit(StudyCommand(id(), book, StudyAction.REMOVE_NODE, nodeId = elsewhere.nodeId, expectedRevision = 1, mapId = otherMap))
+        before = authorStamp(db)
+        for (scope in ReviewQuestionScope.entries)
+            reject("BRANCH_REVIEW_NODE_UNAVAILABLE") { repository.prepareCard(ref, owner.cardId!!, 2, owner.nodeId, scope) }
+        assertEquals(before, authorStamp(db))
+        study.submit(StudyCommand(id(), book, StudyAction.TRASH_CARD, cardId = owner.cardId, expectedRevision = 2))
+        val mapRow = db.knowledge().get(otherMap)!!
+        KnowledgeRepository(db).submit(KnowledgeCommand(id(), book, otherMap, mapRow.revision, mapRow.data(), true))
+        before = authorStamp(db)
+        for (scope in ReviewQuestionScope.entries) {
+            reject("BRANCH_REVIEW_CARD_UNAVAILABLE") { repository.prepareCard(ref, owner.cardId!!, 3, scope = scope) }
+            reject("BRANCH_REVIEW_MAP_UNAVAILABLE") { repository.prepareCard(MapRef(book, otherMap), main.cardId!!, 1, scope = scope) }
+        }
+        assertEquals(before, authorStamp(db))
+        val workspace = WorkspaceRepository(db).get(book)
+        WorkspaceRepository(db).organize(book, workspace.revision, workspace.folder, workspace.tags, workspace.favorite, true)
+        before = authorStamp(db)
+        for (scope in ReviewQuestionScope.entries)
+            reject("BRANCH_REVIEW_BOOK_UNAVAILABLE") { repository.prepareCard(MapRef(book), main.cardId!!, 1, main.nodeId, scope) }
+        assertEquals(before, authorStamp(db))
+    }
+
     @Test fun twoMapsRepeatedPositionsAndRemovedNodeKeepIndependentQuestionScope() = fixture { db, book ->
         val root = id()
         val firstMap = map(db, book, "甲图", root)
