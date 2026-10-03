@@ -102,11 +102,12 @@ internal class BookPagesViewModel(
         persistPending(); submitPending()
     }
     /** An end-of-paper gesture uses the same receipt-checked insertion as the page dialog. */
-    fun appendBlankPage(expectedLastPage: String) {
+    fun appendBlankPage(expectedLastPage: String, defaultPaper: PaperStyle? = null) {
         val state = ui.value
         val last = state.pages.lastOrNull() ?: return
         if (last.id != expectedLastPage) return
-        insert(PageInsertLocation.AFTER, last.id, PaperStyle.entries[last.paper], 1, true,
+        // Resolve once into the immutable command; receipt retries never read preferences.
+        insert(PageInsertLocation.AFTER, last.id, defaultPaper ?: PaperStyle.entries[last.paper], 1, true,
             InsertPages.orderHash(state.pages.map { it.id }))
     }
     fun retryInsertion() { if (!ui.value.busy && pending != null) submitPending() }

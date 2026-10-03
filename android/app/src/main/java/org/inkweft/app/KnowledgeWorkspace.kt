@@ -51,7 +51,7 @@ internal class KnowledgeViewModel(private val repo:KnowledgeRepository,private v
     fun undoProperties(){if(ui.value.busy||pending!=null)return;val request=undoRequest?:return;if(!authorAllowed(request.notebookId)){state.update{it.copy(message="当前为阅读模式，请返回书写后编辑。")};return};pending=request;undoRequest=null;pendingUndo=null;state.update{it.copy(canUndoProperties=false)};persist();retry()}
     private fun persist(){if(pending==null){saved.set<ArrayList<String>?>("knowledge.template",null);saved.set<Long?>("knowledge.reviewCardRevision",null)};saved["knowledge.request"]=pending?.let{arrayListOf(it.operationId,it.notebookId,it.id,it.expectedRevision.toString(),it.removed.toString())};saved["knowledge.payload"]=pending?.payload}
     private fun persistResult(id:String?=null,operation:String?=null,rejectedOperation:String?=null,message:String?=null){saved["knowledge.completed"]=id;saved["knowledge.completedOperation"]=operation;saved["knowledge.rejectedOperation"]=rejectedOperation;saved["knowledge.rejectedMessage"]=message}
-    fun submitReview(book:String,old:KnowledgeRow,data:KnowledgeData.Question,cardRevision:Long){submitInternal(book,data,old,reviewCardRevision=cardRevision,review=true)}
+    fun submitReview(book:String,old:KnowledgeRow,data:KnowledgeData.Question,cardRevision:Long):String?=submitInternal(book,data,old,reviewCardRevision=cardRevision,review=true)
     fun submit(book:String,data:KnowledgeData,old:KnowledgeRow?=null,remove:Boolean=false,template:TemplateRef?=null):String?=submitInternal(book,data,old,remove,template)
     private fun submitInternal(book:String,data:KnowledgeData,old:KnowledgeRow?=null,remove:Boolean=false,template:TemplateRef?=null,reviewCardRevision:Long?=null,review:Boolean=false):String?{if(state.value.busy||pending!=null)return null;if(!review&&!authorAllowed(book)){state.update{it.copy(message="当前为阅读模式，请返回书写后编辑。")};return null};saved["knowledge.template"]=template?.let{arrayListOf(it.hash,it.id)};saved["knowledge.reviewCardRevision"]=reviewCardRevision;val command=KnowledgeCommand(UUID.randomUUID().toString(),book,old?.id?:UUID.randomUUID().toString(),old?.revision?:0,data,remove);pending=command;pendingUndo=if(data is KnowledgeData.Properties)KnowledgeCommand(UUID.randomUUID().toString(),book,pending!!.id,(old?.revision?:0)+1,old?.data()?:data,old==null)else null;persist();retry();return command.operationId}
     fun retry(){val c=pending?:return;if(state.value.busy)return;persistResult();state.update{it.copy(busy=true,message=null,completed=null,completedOperation=null,rejectedOperation=null)}
@@ -64,6 +64,7 @@ internal class KnowledgeViewModel(private val repo:KnowledgeRepository,private v
         catch(_:Exception){state.update{it.copy(busy=false,unknown=true,message="结果待核对，请重试原操作。")}}}
     }
     fun consumed(){saved.set<String?>("knowledge.completed",null);saved.set<String?>("knowledge.completedOperation",null);state.update{it.copy(completed=null,completedOperation=null)}}
+    fun consumed(operationId:String){if(state.value.completedOperation==operationId)consumed()}
     fun consumedRejection(operationId:String){if(state.value.rejectedOperation!=operationId)return;saved.set<String?>("knowledge.rejectedOperation",null);saved.set<String?>("knowledge.rejectedMessage",null);state.update{it.copy(rejectedOperation=null)}}
     class Factory(private val repo:KnowledgeRepository,private val packs:ResourcePacks):ViewModelProvider.Factory{override fun<T:ViewModel>create(modelClass:Class<T>,extras:CreationExtras):T{require(modelClass.isAssignableFrom(KnowledgeViewModel::class.java));@Suppress("UNCHECKED_CAST")return KnowledgeViewModel(repo,extras.createSavedStateHandle(),packs) as T}}
 }
@@ -309,33 +310,6 @@ private val QuestionEditDraftSaver=Saver<QuestionEditDraft?,List<String>>(
             {submitQuestion(draft.editorId)},{closeQuestion(draft.editorId)},{val live=vm.ui.value;if(live.unknown&&!live.busy&&questionEdit?.editorId==draft.editorId&&vm.pendingOperationId==questionEdit?.operationId&&questionEdit?.operationId!=null)vm.retry()})
     }
     reviewPlan?.let{plan->BranchReviewDialog(plan,{reviewPlan=null},showSummary=reviewWithSummary,showCollectionScope=reviewCollectionScope)}
-}
-
-@Composable private fun CardPropertiesDialog(card:StudyCardRow,current:KnowledgeData.Properties?,questions:List<KnowledgeRow>,enabled:Boolean,canClose:Boolean,available:Boolean,dismiss:()->Unit,openQuestion:(KnowledgeRow,Boolean)->Unit,save:(KnowledgeData)->Unit){
-    var state by rememberSaveable(card.id){mutableStateOf(current?.state?:ManualState.INBOX)};var tags by rememberSaveable(card.id){mutableStateOf(current?.tags?.joinToString(",").orEmpty())};var question by rememberSaveable(card.id){mutableStateOf("")};var alias by rememberSaveable(card.id){mutableStateOf("")}
-    AlertDialog(onDismissRequest={if(canClose)dismiss()},modifier=Modifier.testTag("card-properties-dialog"),title={Text(card.title)},text={Column(Modifier.verticalScroll(rememberScrollState()),verticalArrangement=Arrangement.spacedBy(8.dp)){
-        if(!available)Text("摘要卡已回收或不可用；未保存的草稿仍保留。",color=Quiet,modifier=Modifier.testTag("card-properties-unavailable"))
-        Text("手工状态");ManualState.entries.forEach{s->FilterChip(state==s,{state=s},enabled=enabled,label={Text(s.label)})}
-        OutlinedTextField(tags,{if(it.length<=240)tags=it},enabled=enabled,label={Text("标签，逗号分隔")},modifier=Modifier.testTag("card-properties-tags"))
-        OutlinedTextField(alias,{if(it.length<=120)alias=it},enabled=enabled,label={Text("别名 · 用于候选提及")},modifier=Modifier.testTag("card-properties-alias"))
-        TextButton(onClick={save(KnowledgeData.Alias(card.id,alias.trim()))},enabled=enabled&&alias.isNotBlank()){Text("添加别名")}
-        OutlinedTextField(question,{if(it.length<=2000)question=it},enabled=enabled,label={Text("独立复习问题")},modifier=Modifier.testTag("card-properties-question"))
-        TextButton(onClick={save(KnowledgeData.Question(card.id,question.trim()))},enabled=enabled&&question.isNotBlank(),modifier=Modifier.heightIn(min=48.dp).testTag("card-question-add")){Text("添加回忆题")}
-        Text("已保存的回忆题",style=MaterialTheme.typography.titleSmall)
-        if(questions.isEmpty())Text("还没有独立回忆题。",color=Quiet)
-        questions.forEach{row->key(row.id){val savedQuestion=row.data() as KnowledgeData.Question
-            OutlinedCard(Modifier.fillMaxWidth().testTag("question-row-${row.id}")){
-                Column(Modifier.padding(12.dp),verticalArrangement=Arrangement.spacedBy(8.dp)){
-                    Text(savedQuestion.prompt,modifier=Modifier.testTag("question-prompt-${row.id}"))
-                    Text("手工状态：${savedQuestion.state.label} · 修订 ${row.revision}",color=Quiet,modifier=Modifier.testTag("question-state-${row.id}"))
-                    Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.spacedBy(8.dp)){
-                        TextButton(onClick={openQuestion(row,false)},enabled=enabled,modifier=Modifier.weight(1f).heightIn(min=48.dp).testTag("question-edit-${row.id}")){Text("编辑")}
-                        TextButton(onClick={openQuestion(row,true)},enabled=enabled,modifier=Modifier.weight(1f).heightIn(min=48.dp).testTag("question-remove-${row.id}")){Text("移除")}
-                    }
-                }
-            }
-        }}
-    }},confirmButton={TextButton(onClick={val values=tags.split(',', '，').map{it.trim()}.filter{it.isNotEmpty()}.distinct();save(KnowledgeData.Properties(card.id,state,values))},enabled=enabled&&tags.split(',', '，').filter{it.isNotBlank()}.let{it.size<=12&&it.all{tag->tag.trim().length<=24}},modifier=Modifier.testTag("card-properties-save")){Text("保存属性")}},dismissButton={TextButton(onClick=dismiss,enabled=canClose,modifier=Modifier.testTag("card-properties-cancel")){Text(if(enabled)"取消"else"关闭")}})
 }
 
 @Composable private fun QuestionMaintenanceDialog(draft:QuestionEditDraft,cardTitle:String,writable:Boolean,busy:Boolean,unknown:Boolean,available:Boolean,revisionChanged:Boolean,canRetry:Boolean,
