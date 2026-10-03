@@ -3,7 +3,6 @@ package org.inkweft.data
 
 import androidx.room.withTransaction
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import org.inkweft.core.*
@@ -18,10 +17,12 @@ data class KnowledgeTextPreview(
 
 /** Projects confirmed relationships only. Every read is transactional and never creates a receipt. */
 class KnowledgeTextRepository(private val db: NoteDatabase) {
-    fun observe(source: TargetRef): Flow<List<KnowledgeTextTarget>> = combine(
-        db.knowledge().observe(), db.study().observeAllCards(), db.notes().observeAvailableNotes(),
-        db.workspace().observe(), db.pages().observeLibraryPages(),
-    ) { _, _, _, _, _ -> Unit }.map {
+    private fun changes() = db.invalidationTracker.createFlow(
+        "knowledge_records", "study_cards", "study_card_revisions", "notes",
+        "notebook_workspace", "notebook_pages", "ink_pages",
+    )
+
+    fun observe(source: TargetRef): Flow<List<KnowledgeTextTarget>> = changes().map {
         db.withTransaction {
             val reader = Reader()
             val book = reader.owner(source) ?: return@withTransaction emptyList<KnowledgeTextTarget>()
@@ -38,15 +39,21 @@ class KnowledgeTextRepository(private val db: NoteDatabase) {
         }
     }.distinctUntilChanged()
 
-    suspend fun preview(source: TargetRef, linkId: String, linkRevision: Long): KnowledgeTextPreview = db.withTransaction {
+    fun observePreview(source: TargetRef, linkId: String, linkRevision: Long, incoming: Boolean = false): Flow<KnowledgeTextPreview> =
+        changes().map { preview(source, linkId, linkRevision, incoming) }.distinctUntilChanged()
+
+    suspend fun preview(source: TargetRef, linkId: String, linkRevision: Long, incoming: Boolean = false): KnowledgeTextPreview = db.withTransaction {
         val row = db.knowledge().get(linkId)
         if (row == null || row.removed) throw KnowledgeRejected(KnowledgeRejection.UNAVAILABLE)
         val link = row.data() as? KnowledgeData.Link ?: throw KnowledgeRejected(KnowledgeRejection.INVALID)
         val reader = Reader()
-        if (row.revision != linkRevision || link.source != source || reader.owner(source) != row.notebookId)
+        val matches = if (incoming) link.target == source && link.relation == RelationKind.REFERENCE else link.source == source
+        if (row.revision != linkRevision || !matches || reader.owner(link.source) != row.notebookId)
             throw KnowledgeRejected(KnowledgeRejection.CONFLICT)
-        val content = reader.content(link.target, link.pinnedRevision)
-        KnowledgeTextPreview(link.target, content.title, content.body, content.canOpen, link.pinnedRevision)
+        val target = if (incoming) link.source else link.target
+        val pinned = if (incoming) null else link.pinnedRevision
+        val content = reader.content(target, pinned)
+        KnowledgeTextPreview(target, content.title, content.body, content.canOpen, pinned)
     }
 
     private data class Content(val title: String, val body: String, val book: String?, val terms: List<String>, val canOpen: Boolean)
@@ -120,7 +127,8 @@ class KnowledgeTextRepository(private val db: NoteDatabase) {
                     val anchor = row?.data() as? KnowledgeData.Anchor
                     val page = anchor?.let { db.pages().get(it.pageId) }
                     val valid = row != null && anchor != null && page?.notebookId == row.notebookId
-                    Content("来源区域", "打开来源区域查看。", row?.notebookId, emptyList(),
+                    val changed = anchor != null && (db.ink().page(anchor.pageId)?.revision ?: 0) != anchor.inkRevision
+                    Content("来源区域", if (changed) "来源已变化：仅可查看原区域位置，需重新核对关联。" else "打开来源区域查看。", row?.notebookId, emptyList(),
                         valid && row != null && !row.removed && page != null && page.trashedAt == null && active(row.notebookId))
                 }
             }

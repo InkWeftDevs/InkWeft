@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.key.*
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.ImeAction
@@ -46,12 +47,16 @@ internal data class NodeTitleDraft(val token:String,val mapId:String?,val nodeId
     }
 }
 @Composable internal fun NodeTitleEditor(draft:NodeTitleDraft,sharedCount:Int,busy:Boolean,unknown:Boolean,message:String?,
-    modifier:Modifier=Modifier,text:TextFieldValue,onText:(TextFieldValue)->Unit,cancel:()->Unit,submit:(String)->Unit,retry:()->Unit){
+    modifier:Modifier=Modifier,text:TextFieldValue,onText:(TextFieldValue)->Unit,cancel:()->Unit,submit:(String)->Unit,retry:()->Unit,continueSibling:((String)->Unit)?=null){
     val requester=remember{FocusRequester()}
     val keyboard=androidx.compose.ui.platform.LocalSoftwareKeyboardController.current
     val lifecycle=androidx.lifecycle.compose.LocalLifecycleOwner.current.lifecycle
     LaunchedEffect(draft.token){requester.requestFocus();keyboard?.show()}
-    fun commit(){if(!busy&&!unknown&&text.composition==null&&text.text.isNotBlank())submit(text.text.trim())}
+    var enterToken by remember{mutableStateOf<String?>(null)}
+    var enterHeld by remember{mutableStateOf(false)}
+    fun commit(next:Boolean=false){if(!busy&&!unknown&&text.composition==null&&text.text.isNotBlank()){
+        if(next)continueSibling?.invoke(text.text.trim())else submit(text.text.trim())
+    }}
     androidx.activity.compose.BackHandler{if(!busy&&!unknown)cancel()}
     Surface(modifier.testTag("node-title-editor"),shape=InkTheme.ToolShape,color=InkTheme.Surface,shadowElevation=InkTheme.FloatingElevation){
         Column(Modifier.padding(8.dp).verticalScroll(rememberScrollState())){
@@ -63,10 +68,26 @@ internal data class NodeTitleDraft(val token:String,val mapId:String?,val nodeId
                     value.text==text.text&&!text.selection.collapsed&&value.selection==TextRange(text.selection.max)
                 onText(if(exitingDeselect)value.copy(selection=text.selection)else value)
             }},enabled=!busy&&!unknown,label={Text(if(draft.creating)"新主题标题"else"修改标题")},singleLine=true,
-                keyboardOptions=KeyboardOptions(imeAction=ImeAction.Done),keyboardActions=KeyboardActions(onDone={commit()}),modifier=Modifier.fillMaxWidth().focusRequester(requester).testTag("node-title-input"))
+                keyboardOptions=KeyboardOptions(imeAction=if(continueSibling==null)ImeAction.Done else ImeAction.Next),
+                keyboardActions=KeyboardActions(onDone={commit()},onNext={commit(true)}),
+                modifier=Modifier.fillMaxWidth().focusRequester(requester).then(if(continueSibling==null)Modifier else Modifier.onPreviewKeyEvent{event->
+                    if(event.key!=Key.Enter&&event.key!=Key.NumPadEnter)false else {
+                        // Consume both halves so Enter cannot also click the containing outline row.
+                        val plainEnter=!event.isAltPressed&&!event.isCtrlPressed&&!event.isMetaPressed&&!event.isShiftPressed
+                        if(event.type==KeyEventType.KeyDown&&!enterHeld){
+                            enterHeld=true
+                            enterToken=draft.token.takeIf{plainEnter&&event.nativeKeyEvent.repeatCount==0&&text.composition==null&&!busy&&!unknown}
+                        }else if(event.type==KeyEventType.KeyUp){
+                            val commitToken=enterToken;enterHeld=false;enterToken=null
+                            if(plainEnter&&commitToken==draft.token)commit(true)
+                        }
+                        true
+                    }
+                }).testTag("node-title-input"))
+            if(continueSibling!=null)Text("Enter / 键盘下一步：保存并继续同级主题；完成：结束编辑",style=MaterialTheme.typography.labelSmall,color=Quiet)
             if(!draft.creating&&!draft.structural)Text("共享标题 · $sharedCount 个引用位置",style=MaterialTheme.typography.labelSmall,color=Quiet)
             message?.let{Text(it,style=MaterialTheme.typography.bodySmall,modifier=Modifier.testTag("node-title-error"))}
-            Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.End){
+            FlowRow(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.End){
                 TextButton(cancel,enabled=!busy&&!unknown,modifier=Modifier.heightIn(min=48.dp).testTag("node-title-cancel")){Text("取消")}
                 TextButton({if(unknown)retry()else commit()},enabled=!busy&&(unknown||(text.text.isNotBlank()&&text.composition==null)),modifier=Modifier.heightIn(min=48.dp).testTag("node-title-save")){Text(if(unknown)"核对原操作"else"完成")}
             }

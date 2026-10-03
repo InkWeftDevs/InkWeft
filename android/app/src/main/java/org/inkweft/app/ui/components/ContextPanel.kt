@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.dp
         val docked=sidePanel&&maxWidth>=912.dp
         Row(Modifier.fillMaxSize()){
             if(docked)Spacer(Modifier.weight(1f).fillMaxHeight().clickable(onClick=onDismiss).testTag("context-outside"))
-            Surface((if(docked)Modifier.width(320.dp)else Modifier.weight(1f)).fillMaxHeight().testTag("knowledge-workspace"),content=content)
+            Surface((if(docked)Modifier.width(400.dp)else Modifier.weight(1f)).fillMaxHeight().testTag("knowledge-workspace"),content=content)
         }
     }
 }

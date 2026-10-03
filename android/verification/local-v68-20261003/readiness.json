@@ -1,0 +1,108 @@
+{
+  "recorded_at": "2026-10-03T08:20:44.453586+08:00",
+  "task": "V68本地验收接续准备；本轮无签名、安装或Android runtime",
+  "source_commit": "15f167ed1d1270617e51e0aacd21b5b7caa9bb18",
+  "branch": "codex/local/v68-acceptance-20261003",
+  "upstream": "codex/cloud/candidate-v68-20261002",
+  "initial_git_status": "CLEAN",
+  "ownership": {
+    "local": [
+      "android/verification/local-v68-20261003/",
+      "android/DEVICE-TEST-CHECKLIST.md 的V68接续补充"
+    ],
+    "production_and_existing_tests": "仅阅读；仍由cloud持有"
+  },
+  "identity": {
+    "version_code": 68,
+    "version_name": "0.0.68-cloud-candidate",
+    "application_id": "org.inkweft.app.a0.workspace",
+    "v67_is_ancestor": true,
+    "export_fix_is_ancestor": true
+  },
+  "checks": {
+    "local_input_count": 453,
+    "local_input_manifest_sha256": "b249158be5e6ae20890dabba744d9de4f4c44a3926d45202aef5513a1f82774b",
+    "byte_exact": 74,
+    "crlf_only": 379,
+    "checkpoint_files": [
+      {
+        "checkpoint": "android/verification/review-round-20261002/ui-checkpoint.json",
+        "path": "android/app/src/main/java/org/inkweft/app/BranchReviewDialog.kt",
+        "sha256": "c0c30bb1758cf153095600bb4e60c8f5f2855235c889c51687160540af05d79e",
+        "status": "PASS_COMMIT_BYTES"
+      },
+      {
+        "checkpoint": "android/verification/review-round-20261002/ui-checkpoint.json",
+        "path": "android/app/src/main/java/org/inkweft/app/KnowledgeWorkspace.kt",
+        "sha256": "a729dd85ed88c677f44f6056d024d348ea59c49b8a59b282a18549030d4082e2",
+        "status": "PASS_COMMIT_BYTES"
+      },
+      {
+        "checkpoint": "android/verification/review-round-20261002/ui-checkpoint.json",
+        "path": "android/app/src/androidTest/java/org/inkweft/app/BranchReviewRoundUiTest.kt",
+        "sha256": "cccd1cc0adf6a33c444fe300b47b4a4848a386a35f10dbb034c1dff80969537d",
+        "status": "PASS_COMMIT_BYTES"
+      },
+      {
+        "checkpoint": "android/verification/thumbnail-release-20261002/checkpoint.json",
+        "path": "android/app/src/main/java/org/inkweft/app/ExcerptCollection.kt",
+        "sha256": "97c043a2755d465379f7921b60c073a4a2b99ecd86665f6f4bc424d58f87f555",
+        "status": "PASS_COMMIT_BYTES"
+      },
+      {
+        "checkpoint": "android/verification/thumbnail-release-20261002/checkpoint.json",
+        "path": "android/app/src/androidTest/java/org/inkweft/app/LocalMotionUiTest.kt",
+        "sha256": "3eb2f4c055abee367f5e90a9073f1ca95681288301fedd2868b5e009f41be617",
+        "status": "PASS_COMMIT_BYTES"
+      },
+      {
+        "checkpoint": "android/verification/notebook-export-boundary-20261002/checkpoint.json",
+        "path": "android/core-domain/src/main/kotlin/org/inkweft/core/NotebookFile.kt",
+        "sha256": "504fd28788ee479c9de52d11f67b27fdd8068fd04295d02db1bcf95eda76ce6d",
+        "status": "PASS_COMMIT_BYTES"
+      },
+      {
+        "checkpoint": "android/verification/notebook-export-boundary-20261002/checkpoint.json",
+        "path": "android/core-domain/src/test/kotlin/org/inkweft/core/ReadingHandwritingTest.kt",
+        "sha256": "b89be16792e6dc72770d56da7d649d3acad233452dec36a3debc1b273b2a397d",
+        "status": "PASS_COMMIT_BYTES"
+      }
+    ],
+    "all_28_methods_present_in_frozen_source": true
+  },
+  "cloud_delivery": {
+    "verification": "USER_HANDOFF_ONLY; ZIP/APK/BUILD_RECEIPT_NOT_FETCHED_OR_LOCALLY_VERIFIED",
+    "zip_name": "InkWeft-V68-cloud-candidate-unsigned-pair.zip",
+    "zip_bytes": 151608872,
+    "zip_sha256": "2f3055cb9b41585f1b3302849ec7712b8eaeb1e773e74292b523aad1fae7e0a7",
+    "app_sha256": "6ae174846d6705fd8a47aec31cae9c6085b39e467f729b660a3ed0cc59e4721a",
+    "app_runner_sha256": "3c5c23cb35dcd28f32a29e3dac2699a373190669b669732026949df1c0df321f",
+    "reported_core_tests": 307,
+    "reported_core_elapsed": "1m13s",
+    "reported_unsigned_pair_elapsed": "3m59s",
+    "original_453_input_manifest": "NOT_FETCHED; 本地453项不能替代与云端原清单逐项比对"
+  },
+  "local_execution": {
+    "gradle": "NOT_RUN",
+    "apk_verification": "NOT_RUN",
+    "signing": "NOT_RUN",
+    "installation": "NOT_RUN",
+    "android_runtime": "NOT_RUN",
+    "full_os_death": "NOT_RUN",
+    "real_pdf_rendering": "NOT_RUN",
+    "real_backup_restore": "NOT_RUN",
+    "old_database_upgrade": "NOT_RUN",
+    "real_pen": "NOT_RUN"
+  },
+  "plan": [
+    "核对Library ZIP/各文件回执，或从固定commit记录本地构建身份；不能把本地重建SHA当作云端包SHA",
+    "明确目标设备、合成资料/可恢复副本及签名安装授权；签前核原证书，不匹配立即停止",
+    "必要时JDK17/Gradle wrapper/SDK36串行低worker构建；INKWEFT_HEAD_SHA与GITHUB_SHA均为固定commit",
+    "主包和app runner按合同成对构建/签名/核验；data-local runner单独构建核manifest及证书",
+    "在授权目标运行11个LM66、5个ReviewRound UI与12个data-local Room唯一方法；逐方法保留结果和证据，恢复设置",
+    "按DEVICE-TEST-CHECKLIST的V68条目单列真实PDF、完整链路、OS死亡、恢复、升级与真实笔感；未执行保持NOT_RUN",
+    "有实际结果或修复后审查脱敏、确认路径所有权，中文commit与草稿PR回流；不自动合并"
+  ],
+  "documentation_resolution": "COLLABORATION.md内V66措辞作为历史背景；用户本轮明确指定V68及完整commit优先。保留历史报告。",
+  "follow_up": "local-build-receipt.json；本文件保留最初接续快照，后续本机构建与授权状态以该回执为准"
+}

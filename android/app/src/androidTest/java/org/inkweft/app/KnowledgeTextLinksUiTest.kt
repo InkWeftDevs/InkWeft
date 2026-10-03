@@ -377,7 +377,7 @@ class KnowledgeTextLinksUiTest {
         tap("card-knowledge-links")
         tap("card-link-choice-" + f.pinnedLink)
         assertPreview("固定原答案 PIN-V1")
-        compose.onNodeWithText("固定版本 1", useUnmergedTree = true).assertExists()
+        compose.onNodeWithText("固定摘录 · 修订 1", useUnmergedTree = true).assertExists()
         shot("pinned-history")
         returnToCard(f, pickerExpected = true)
         runBlocking {
@@ -421,7 +421,7 @@ class KnowledgeTextLinksUiTest {
             open.performClick()
         }
         waitFor("card-link-preview-error")
-        compose.onNodeWithTag("card-link-preview-error").assertTextEquals("关联已变化，请返回摘要重新选择。")
+        compose.onNodeWithTag("card-link-preview-error").assertTextEquals("关联已变化，请返回列表重新选择。")
         open.assertIsNotEnabled()
         compose.onNodeWithTag("card-link-preview-body").assertDoesNotExist()
         assertOrigin(f)
@@ -460,6 +460,135 @@ class KnowledgeTextLinksUiTest {
         }
     }
 
+    private fun connectionItem(tag: String) {
+        waitFor("knowledge-links-list")
+        compose.waitUntil(15_000) { runCatching {
+            compose.onNodeWithTag("knowledge-links-list").performScrollToNode(hasTestTag(tag))
+            compose.onNodeWithTag(tag).assertExists()
+        }.isSuccess }
+        tap(tag)
+    }
+
+    private fun closeConnections() {
+        compose.onNodeWithTag("knowledge-close").assertIsDisplayed().performClick()
+        compose.waitUntil(15_000) { compose.onAllNodesWithTag("knowledge-workspace").fetchSemanticsNodes().isEmpty() }
+    }
+
+    @Test fun backlinkEntryRestoresLiveSourcePreviewAndOriginalCardWithoutAuthorWrites() {
+        val f = fixture()
+        val incoming = id()
+        val contrast = id()
+        val localSource = id()
+        val localLink = id()
+        runBlocking {
+            app.study.submit(StudyCommand(id(), f.origin.id, StudyAction.CREATE,
+                cardId = localSource, nodeId = id(), title = "同册引用来源", body = "同册来源正文 LOCAL-SOURCE"))
+            app.knowledge.submit(KnowledgeCommand(id(), f.origin.id, localLink, 0,
+                KnowledgeData.Link(TargetRef(TargetKind.CARD, localSource), TargetRef(TargetKind.CARD, f.card))))
+            app.knowledge.submit(KnowledgeCommand(id(), f.books[1].id, incoming, 0,
+                KnowledgeData.Link(TargetRef(TargetKind.CARD, f.liveCard), TargetRef(TargetKind.CARD, f.card), pinnedRevision = 1)))
+            app.knowledge.submit(KnowledgeCommand(id(), f.books[1].id, contrast, 0,
+                KnowledgeData.Link(TargetRef(TargetKind.CARD, f.pinnedCard), TargetRef(TargetKind.CARD, f.card), RelationKind.CONTRAST)))
+        }
+        var before = authorStamp(f)
+        tap("card-backlinks")
+        waitFor("knowledge-links-incoming")
+        compose.waitUntil(15_000) { runCatching { compose.onNodeWithTag("knowledge-links-incoming").assertTextContains("反向引用 · 2") }.isSuccess }
+        compose.onNodeWithTag("knowledge-links-incoming").assertIsSelected()
+        compose.onNodeWithTag("knowledge-close").assertTextContains("返回摘要")
+        compose.onNodeWithTag("knowledge-link-focus").assertTextEquals("保持原卡")
+        compose.onNodeWithTag("knowledge-incoming-" + contrast).assertDoesNotExist()
+        connectionItem("knowledge-incoming-" + incoming)
+        assertPreview("实时原答案 LIVE-V1")
+        assertEquals(before, authorStamp(f))
+        runBlocking { app.study.submit(StudyCommand(id(), f.books[1].id, StudyAction.EDIT,
+            cardId = f.liveCard, expectedRevision = 1, title = "条件概率", body = "来源正文实时更新 LIVE-V2")) }
+        before = authorStamp(f)
+        compose.waitUntil(15_000) { runCatching { compose.onNodeWithTag("card-link-preview-body").assertTextEquals("来源正文实时更新 LIVE-V2") }.isSuccess }
+        compose.onNodeWithTag("card-link-open-target").assertTextContains("打开引用来源")
+        compose.activityRule.scenario.recreate()
+        assertPreview("来源正文实时更新 LIVE-V2")
+        tap("card-link-close-preview")
+        compose.onNodeWithTag("knowledge-links-list").performScrollToNode(hasTestTag("knowledge-links-incoming"))
+        compose.onNodeWithTag("knowledge-links-incoming").assertIsSelected()
+        closeConnections()
+        assertOrigin(f)
+        assertEquals(before, authorStamp(f))
+        tap("card-backlinks")
+        waitFor("knowledge-links-incoming")
+        compose.onNodeWithTag("card-link-preview").assertDoesNotExist()
+        tap("knowledge-links-outgoing")
+        connectionItem("knowledge-outgoing-" + f.pinnedLink)
+        assertPreview("固定原答案 PIN-V1")
+        tap("card-link-close-preview")
+        closeConnections()
+        assertOrigin(f)
+        assertEquals(before, authorStamp(f))
+        tap("card-backlinks")
+        connectionItem("knowledge-incoming-" + localLink)
+        assertPreview("同册来源正文 LOCAL-SOURCE")
+        tap("card-link-open-target")
+        compose.waitUntil(15_000) { runCatching { compose.onNodeWithTag("card-full-body").assertTextEquals("同册来源正文 LOCAL-SOURCE") }.isSuccess }
+        compose.onNodeWithTag("card-node-actions").assertDoesNotExist()
+        compose.onNodeWithTag("card-back").assertTextContains("关闭")
+        compose.runOnIdle { assertEquals(f.origin.id, ViewModelProvider(compose.activity)[NotebookViewModel::class.java].ui.value.selectedId) }
+        assertEquals(before, authorStamp(f))
+    }
+
+    @Test fun pageAndNotebookBacklinksKeepDistinctScopeAndReadOnlyPreviewIdentity() {
+        val f = fixture()
+        val pageLink = id()
+        val noteLink = id()
+        runBlocking {
+            val source = TargetRef(TargetKind.CARD, f.liveCard)
+            app.knowledge.submit(KnowledgeCommand(id(), f.books[1].id, pageLink, 0,
+                KnowledgeData.Link(source, TargetRef(TargetKind.PAGE, f.origin.id))))
+            app.knowledge.submit(KnowledgeCommand(id(), f.books[1].id, noteLink, 0,
+                KnowledgeData.Link(source, TargetRef(TargetKind.NOTE, f.origin.id))))
+        }
+        tap("card-back"); tap("study-close")
+        tap("quick-settings"); tap("settings-readonly")
+        waitFor("reading-toolbar")
+        val before = authorStamp(f)
+        tap("quick-settings"); tap("settings-knowledge")
+        waitFor("knowledge-links-incoming"); tap("knowledge-links-incoming")
+        compose.onNodeWithTag("knowledge-links-list").performScrollToNode(hasTestTag("add-knowledge-link"))
+        compose.onNodeWithTag("add-knowledge-link").assertIsNotEnabled()
+        connectionItem("knowledge-incoming-" + pageLink)
+        assertPreview("实时原答案 LIVE-V1")
+        tap("card-link-close-preview")
+        compose.onNodeWithTag("knowledge-links-list").performScrollToNode(hasTestTag("knowledge-scope-note"))
+        tap("knowledge-scope-note")
+        compose.onNodeWithTag("knowledge-links-incoming").assertTextContains("反向引用 · 1")
+        connectionItem("knowledge-incoming-" + noteLink)
+        assertPreview("实时原答案 LIVE-V1")
+        assertEquals(before, authorStamp(f))
+        val selectedLink = runBlocking { checkNotNull(probe.knowledge().get(noteLink)) }
+        runBlocking { app.knowledge.submit(KnowledgeCommand(id(), f.books[1].id, noteLink,
+            selectedLink.revision, selectedLink.data(), true)) }
+        val afterRemoval = authorStamp(f)
+        waitFor("card-link-preview-error")
+        compose.onNodeWithTag("card-link-open-target").assertIsNotEnabled()
+        compose.activityRule.scenario.recreate()
+        waitFor("card-link-preview-error")
+        compose.onNodeWithTag("card-link-open-target").assertIsNotEnabled()
+        tap("card-link-close-preview")
+        compose.onNodeWithTag("knowledge-links-list").performScrollToNode(hasTestTag("knowledge-links-empty"))
+        compose.onNodeWithTag("knowledge-links-empty").assertIsDisplayed()
+        compose.onNodeWithTag("knowledge-links-list").performScrollToNode(hasTestTag("knowledge-link-focus"))
+        compose.onNodeWithTag("knowledge-link-focus").assertTextEquals(f.origin.title)
+        tap("knowledge-scope-initial")
+        connectionItem("knowledge-incoming-" + pageLink)
+        assertPreview("实时原答案 LIVE-V1")
+        tap("card-link-close-preview")
+        closeConnections()
+        compose.runOnIdle {
+            assertEquals(f.origin.id, ViewModelProvider(compose.activity)[NotebookViewModel::class.java].ui.value.selectedId)
+        }
+        compose.runOnIdle { assertEquals(f.origin.id, ViewModelProvider(compose.activity)["book-" + f.origin.id, BookPagesViewModel::class.java].ui.value.selectedId) }
+        assertEquals(afterRemoval, authorStamp(f))
+    }
+
     private fun shell(command: String): String =
         InstrumentationRegistry.getInstrumentation().uiAutomation.executeShellCommand(command).use {
             ParcelFileDescriptor.AutoCloseInputStream(it).use { input -> input.readBytes().toString(Charsets.UTF_8).trim() }
@@ -491,7 +620,7 @@ class KnowledgeTextLinksUiTest {
                 kotlin.math.abs(config.screenWidthDp - 375) <= 4 && kotlin.math.abs(config.fontScale - 1.6f) < .02f
             }
             val f = fixture(longBody = true)
-            val before = authorStamp(f)
+            var before = authorStamp(f)
             clickInline(f, "条件概率")
             assertPreview("实时原答案 LIVE-V1")
             fullyVisible("card-link-open-target", "card-link-preview")
@@ -508,6 +637,23 @@ class KnowledgeTextLinksUiTest {
             fullyVisible("card-link-open-target", "card-link-preview")
             fullyVisible("card-link-close-preview", "card-link-preview")
             returnToCard(f, physical = true, pickerExpected = true)
+            assertEquals(before, authorStamp(f))
+            runBlocking { app.study.submit(StudyCommand(id(), f.books[1].id, StudyAction.EDIT,
+                cardId = f.liveCard, expectedRevision = 1, title = "完整长标题用于核对大字窄窗预览的滚动与操作可达性".repeat(6).take(120), body = "实时原答案 LIVE-V1")) }
+            before = authorStamp(f)
+            tap("card-backlinks", physical = true)
+            waitFor("knowledge-links-incoming")
+            fullyVisible("knowledge-links-incoming", "knowledge-workspace")
+            fullyVisible("knowledge-links-outgoing", "knowledge-workspace")
+            tap("knowledge-links-outgoing", physical = true)
+            connectionItem("knowledge-outgoing-" + f.liveLink)
+            assertPreview("实时原答案 LIVE-V1")
+            fullyVisible("card-link-open-target", "card-link-preview")
+            fullyVisible("card-link-close-preview", "card-link-preview")
+            shot("375-font1.6-connection-preview")
+            tap("card-link-close-preview", physical = true)
+            closeConnections()
+            assertOrigin(f)
             fullyVisible("card-back", "study-card-details")
             tap("card-back", physical = true)
             compose.onNodeWithTag("study-card-details").assertDoesNotExist()

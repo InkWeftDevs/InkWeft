@@ -134,7 +134,9 @@ internal class SelectAwaitTestSupport(
     }
 
     fun waitFor(tag: String) {
-        compose.waitUntil(15_000) { compose.onAllNodesWithTag(tag).fetchSemanticsNodes().isNotEmpty() }
+        compose.waitUntil(conditionDescription = "UI tag '$tag' exists", timeoutMillis = 15_000) {
+            compose.onAllNodesWithTag(tag).fetchSemanticsNodes().isNotEmpty()
+        }
         compose.waitForIdle()
     }
     fun tap(tag: String) {
@@ -185,6 +187,10 @@ internal class SelectAwaitTestSupport(
         waitMap(f); selectNode(if (second) f.secondNode else f.node)
         tap("node-more"); tap("node-view-content"); waitFor("card-full-body"); waitFor("study-open-source")
         compose.onNodeWithTag("card-full-body").assertTextEquals(if (second) f.secondBody else f.body)
+    }
+    fun openSource(f: Fixture) {
+        waitMap(f); selectNode(f.node)
+        tap("node-more"); tap("node-view-source"); waitFor("card-source-content")
     }
     fun source(card: String): StudySourceRow = runBlocking { checkNotNull(app.study.source(card)) }
 

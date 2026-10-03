@@ -38,20 +38,24 @@ import org.inkweft.data.*
 import java.util.UUID
 
 internal data class KnowledgeUi(val rows:List<KnowledgeRow> = emptyList(),val cards:List<StudyCardRow> = emptyList(),val notes:List<NoteRow> = emptyList(),val pages:List<NotebookPageRow> = emptyList(),
-    val busy:Boolean=false,val unknown:Boolean=false,val message:String?=null,val completed:String?=null,val canUndoProperties:Boolean=false,val completedOperation:String?=null,val rejectedOperation:String?=null)
+    val loading:Boolean=true,val readFailed:Boolean=false,val busy:Boolean=false,val unknown:Boolean=false,val message:String?=null,val completed:String?=null,val canUndoProperties:Boolean=false,val completedOperation:String?=null,val rejectedOperation:String?=null)
 internal class KnowledgeViewModel(private val repo:KnowledgeRepository,private val saved:SavedStateHandle,private val packs:ResourcePacks):ViewModel(){
     var authorAllowed:(String)->Boolean={true}
     val pendingBook:String? get()=pending?.notebookId
     val pendingOperationId:String? get()=pending?.operationId
     private fun restored():KnowledgeCommand?{val fields=saved.get<ArrayList<String>>("knowledge.request")?:return null;require(fields.size==5);return KnowledgeCommand(fields[0],fields[1],fields[2],fields[3].toLong(),KnowledgeCodec.decode(requireNotNull(saved.get<ByteArray>("knowledge.payload"))),fields[4].toBooleanStrict())}
     private var pending=restored();private val state=MutableStateFlow(KnowledgeUi(unknown=pending!=null,completed=saved["knowledge.completed"],completedOperation=saved["knowledge.completedOperation"],rejectedOperation=saved["knowledge.rejectedOperation"],message=saved["knowledge.rejectedMessage"]));val ui=state.asStateFlow()
-    init{viewModelScope.launch{try{combine(repo.observe(),repo.cards(),repo.notes(),repo.pages()){r,c,n,p->KnowledgeUi(rows=r,cards=c,notes=n,pages=p)}.collect{snapshot->state.update{it.copy(rows=snapshot.rows,cards=snapshot.cards,notes=snapshot.notes,pages=snapshot.pages)}}}catch(c:CancellationException){throw c}catch(_:Exception){state.update{it.copy(message="知识资料读取失败，请关闭后重试；没有清空原资料。")}}}}
+    private var readJob:Job?=null
+    init{reload()}
+    fun reload(){readJob?.cancel();state.update{it.copy(loading=true,readFailed=false)}
+        readJob=viewModelScope.launch{try{combine(repo.observe(),repo.cards(),repo.notes(),repo.pages()){r,c,n,p->KnowledgeUi(rows=r,cards=c,notes=n,pages=p)}.collect{snapshot->state.update{it.copy(rows=snapshot.rows,cards=snapshot.cards,notes=snapshot.notes,pages=snapshot.pages,loading=false,readFailed=false)}}}catch(c:CancellationException){throw c}catch(_:Exception){state.update{it.copy(loading=false,readFailed=true)}}}
+    }
     private var pendingUndo:KnowledgeCommand?=null
     private var undoRequest:KnowledgeCommand?=null
     fun undoProperties(){if(ui.value.busy||pending!=null)return;val request=undoRequest?:return;if(!authorAllowed(request.notebookId)){state.update{it.copy(message="当前为阅读模式，请返回书写后编辑。")};return};pending=request;undoRequest=null;pendingUndo=null;state.update{it.copy(canUndoProperties=false)};persist();retry()}
     private fun persist(){if(pending==null){saved.set<ArrayList<String>?>("knowledge.template",null);saved.set<Long?>("knowledge.reviewCardRevision",null)};saved["knowledge.request"]=pending?.let{arrayListOf(it.operationId,it.notebookId,it.id,it.expectedRevision.toString(),it.removed.toString())};saved["knowledge.payload"]=pending?.payload}
     private fun persistResult(id:String?=null,operation:String?=null,rejectedOperation:String?=null,message:String?=null){saved["knowledge.completed"]=id;saved["knowledge.completedOperation"]=operation;saved["knowledge.rejectedOperation"]=rejectedOperation;saved["knowledge.rejectedMessage"]=message}
-    fun submitReview(book:String,old:KnowledgeRow,data:KnowledgeData.Question,cardRevision:Long){submitInternal(book,data,old,reviewCardRevision=cardRevision,review=true)}
+    fun submitReview(book:String,old:KnowledgeRow,data:KnowledgeData.Question,cardRevision:Long):String?=submitInternal(book,data,old,reviewCardRevision=cardRevision,review=true)
     fun submit(book:String,data:KnowledgeData,old:KnowledgeRow?=null,remove:Boolean=false,template:TemplateRef?=null):String?=submitInternal(book,data,old,remove,template)
     private fun submitInternal(book:String,data:KnowledgeData,old:KnowledgeRow?=null,remove:Boolean=false,template:TemplateRef?=null,reviewCardRevision:Long?=null,review:Boolean=false):String?{if(state.value.busy||pending!=null)return null;if(!review&&!authorAllowed(book)){state.update{it.copy(message="当前为阅读模式，请返回书写后编辑。")};return null};saved["knowledge.template"]=template?.let{arrayListOf(it.hash,it.id)};saved["knowledge.reviewCardRevision"]=reviewCardRevision;val command=KnowledgeCommand(UUID.randomUUID().toString(),book,old?.id?:UUID.randomUUID().toString(),old?.revision?:0,data,remove);pending=command;pendingUndo=if(data is KnowledgeData.Properties)KnowledgeCommand(UUID.randomUUID().toString(),book,pending!!.id,(old?.revision?:0)+1,old?.data()?:data,old==null)else null;persist();retry();return command.operationId}
     fun retry(){val c=pending?:return;if(state.value.busy)return;persistResult();state.update{it.copy(busy=true,message=null,completed=null,completedOperation=null,rejectedOperation=null)}
@@ -64,6 +68,7 @@ internal class KnowledgeViewModel(private val repo:KnowledgeRepository,private v
         catch(_:Exception){state.update{it.copy(busy=false,unknown=true,message="结果待核对，请重试原操作。")}}}
     }
     fun consumed(){saved.set<String?>("knowledge.completed",null);saved.set<String?>("knowledge.completedOperation",null);state.update{it.copy(completed=null,completedOperation=null)}}
+    fun consumed(operationId:String){if(state.value.completedOperation==operationId)consumed()}
     fun consumedRejection(operationId:String){if(state.value.rejectedOperation!=operationId)return;saved.set<String?>("knowledge.rejectedOperation",null);saved.set<String?>("knowledge.rejectedMessage",null);state.update{it.copy(rejectedOperation=null)}}
     class Factory(private val repo:KnowledgeRepository,private val packs:ResourcePacks):ViewModelProvider.Factory{override fun<T:ViewModel>create(modelClass:Class<T>,extras:CreationExtras):T{require(modelClass.isAssignableFrom(KnowledgeViewModel::class.java));@Suppress("UNCHECKED_CAST")return KnowledgeViewModel(repo,extras.createSavedStateHandle(),packs) as T}}
 }
@@ -74,6 +79,12 @@ private val QuestionEditDraftSaver=Saver<QuestionEditDraft?,List<String>>(
     restore={fields->if(fields.isEmpty())null else{require(fields.size==9);val row=KnowledgeRow(fields[0],fields[1],fields[2].toLong(),Base64.decode(fields[3],Base64.NO_WRAP));require(row.revision>0&&row.data() is KnowledgeData.Question);QuestionEditDraft(row,fields[4],fields[5].toBooleanStrict(),fields[6].ifEmpty{null},fields[7].ifEmpty{null},fields[8])}}
 )
 
+private data class LinkPreviewSelection(val focus:TargetRef,val id:String,val revision:Long,val incoming:Boolean)
+private val LinkPreviewSaver=Saver<LinkPreviewSelection?,List<String>>(
+    save={it?.let{v->listOf(v.focus.kind.name,v.focus.id,v.id,v.revision.toString(),v.incoming.toString())}?:emptyList()},
+    restore={if(it.isEmpty())null else LinkPreviewSelection(TargetRef(TargetKind.valueOf(it[0]),it[1]),it[2],it[3].toLong(),it[4].toBooleanStrict())}
+)
+
 /** Knowledge writers can address several books; consult the requested book's live session. */
 @Composable internal fun BindKnowledgeReadLock(vm:KnowledgeViewModel){
     val owner=requireNotNull(LocalViewModelStoreOwner.current)
@@ -81,14 +92,16 @@ private val QuestionEditDraftSaver=Saver<QuestionEditDraft?,List<String>>(
     SideEffect{vm.authorAllowed={book->locks["read-lock-$book",BookReadLockViewModel::class.java].canWrite}}
 }
 
-@Composable internal fun KnowledgeWorkspace(book:String,initialFocus:TargetRef,initialAnchor:KnowledgeData.Anchor?=null,initialTab:Int=0,initialCollection:String?=null,dismiss:()->Unit,openTarget:(TargetRef)->Unit){
+@Composable internal fun KnowledgeWorkspace(book:String,initialFocus:TargetRef,initialAnchor:KnowledgeData.Anchor?=null,initialTab:Int=0,initialCollection:String?=null,initialBacklinks:Boolean=false,dismiss:()->Unit,openTarget:(TargetRef)->Unit){
     val context=LocalContext.current;val app=context.applicationContext as InkWeftApplication;val scope=rememberCoroutineScope()
     val focusManager=LocalFocusManager.current;val keyboard=LocalSoftwareKeyboardController.current
     val vm:KnowledgeViewModel=viewModel(key="knowledge-$book",factory=KnowledgeViewModel.Factory(app.knowledge,app.resourcePacks));val ui by vm.ui.collectAsStateWithLifecycle()
     BindKnowledgeReadLock(vm)
     val readLock=rememberBookReadLock(book);val readOnly by readLock.readOnly.collectAsStateWithLifecycle();val hasDraft by readLock.hasDraft.collectAsStateWithLifecycle()
     var tab by rememberSaveable{mutableIntStateOf(initialTab)};var focus by rememberSaveable(stateSaver=Saver<TargetRef,List<String>>({listOf(it.kind.name,it.id)},{TargetRef(TargetKind.valueOf(it[0]),it[1])})){mutableStateOf(initialFocus)}
-    var query by rememberSaveable{mutableStateOf("")};var picker by rememberSaveable{mutableStateOf(false)};var preview by remember{mutableStateOf<Pair<TargetRef,Long?>?>(null)}
+    var query by rememberSaveable{mutableStateOf("")};var picker by rememberSaveable{mutableStateOf(false)};var preview by rememberSaveable(stateSaver=LinkPreviewSaver){mutableStateOf<LinkPreviewSelection?>(null)}
+    var incoming by rememberSaveable{mutableStateOf(initialBacklinks)}
+    var showExports by rememberSaveable{mutableStateOf(false)}
     var relation by rememberSaveable{mutableStateOf(RelationKind.REFERENCE)};var pinned by rememberSaveable{mutableStateOf(false)}
     var afterAnchorPicker by remember{mutableStateOf(false)}
     var waitingAnchor by remember{mutableStateOf(false)};var anchorCopied by remember{mutableStateOf(false)}
@@ -198,6 +211,19 @@ private val QuestionEditDraftSaver=Saver<QuestionEditDraft?,List<String>>(
         questionEdit=if(operation==null)draft.copy(message=vm.ui.value.message?:"当前操作尚未就绪，未提交；草稿仍保留。")else draft.copy(operationId=operation,message=null)
     }
     fun label(ref:TargetRef):String=when(ref.kind){TargetKind.NOTE->ui.notes.find{it.id==ref.id}?.title?:"来源已回收或不可用";TargetKind.CARD->cards.find{it.id==ref.id}?.title?:"卡片已回收或不可用";TargetKind.PAGE->ui.pages.find{it.id==ref.id&&it.trashedAt==null}?.let{p->(ui.notes.find{it.id==p.notebookId}?.title?:"来源已回收")+" · 第 ${p.position+1} 页"}?:"页面已回收或不可用";TargetKind.ANCHOR->"手写区域链接"}
+    fun targetContext(ref:TargetRef):String{
+        val owner=when(ref.kind){TargetKind.NOTE->ref.id;TargetKind.PAGE->ui.pages.find{it.id==ref.id}?.notebookId;TargetKind.CARD->ui.cards.find{it.id==ref.id}?.notebookId;TargetKind.ANCHOR->ui.rows.find{it.id==ref.id}?.notebookId}
+        val kind=when(ref.kind){TargetKind.NOTE->"笔记全文";TargetKind.PAGE->"笔记页面";TargetKind.CARD->"摘要卡";TargetKind.ANCHOR->"手写区域"}
+        return "$kind · ${ui.notes.find{it.id==owner}?.title?:"所属笔记不可用"}"
+    }
+    fun summary(ref:TargetRef):String=when(ref.kind){
+        TargetKind.CARD->ui.cards.find{it.id==ref.id}?.body?.ifBlank{null}?:"尚未填写摘要，点击预览此卡片"
+        TargetKind.NOTE->ui.notes.find{it.id==ref.id}?.text?.ifBlank{null}?:"点击预览笔记全文"
+        TargetKind.PAGE->"点击预览后可打开来源页"
+        TargetKind.ANCHOR->"点击预览并核对原区域位置"
+    }
+    val outgoingLinks=links.filter{it.second.source==focus}
+    val incomingLinks=links.filter{it.second.target==focus&&it.second.relation==RelationKind.REFERENCE}
     fun sourceText():String=when(focus.kind){TargetKind.NOTE->ui.notes.find{it.id==focus.id}?.text.orEmpty();TargetKind.CARD->cards.find{it.id==focus.id}?.body.orEmpty();else->""}
     val export=rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("text/markdown")){uri->val text=pendingExport;pendingExport=null
         if(uri!=null&&text!=null)scope.launch{try{withContext(Dispatchers.IO){requireNotNull(context.contentResolver.openOutputStream(uri,"wt")).bufferedWriter().use{it.write(text)}};localMessage="关联快照已导出；不是完整备份。"}catch(c:CancellationException){throw c}catch(_:Exception){localMessage="导出未确认，原资料保留。"}}}
@@ -219,36 +245,67 @@ private val QuestionEditDraftSaver=Saver<QuestionEditDraft?,List<String>>(
     LaunchedEffect(ui.busy,ui.unknown,ui.message){if(!ui.busy&&!ui.unknown&&ui.message?.startsWith("未提交")==true){waitingAnchor=false;afterAnchorPicker=false}}
     Dialog(onDismissRequest={closeWorkspace()},properties=DialogProperties(usePlatformDefaultWidth=false)){
         org.inkweft.app.ui.components.ContextPanel(tab==0,{closeWorkspace()}){Column(Modifier.safeDrawingPadding().imePadding()){
-            Row(Modifier.fillMaxWidth().padding(horizontal=12.dp),verticalAlignment=Alignment.CenterVertically){Text("知识与关联",Modifier.weight(1f),fontSize=24.sp);TextButton(onClick={closeWorkspace()},enabled=canDismiss){Text("返回笔记")}}
+            Row(Modifier.fillMaxWidth().padding(horizontal=16.dp,vertical=8.dp),verticalAlignment=Alignment.CenterVertically){Text(if(tab==0)"链接与反向引用"else"知识与关联",Modifier.weight(1f),style=MaterialTheme.typography.titleLarge);TextButton(onClick={closeWorkspace()},enabled=canDismiss,modifier=Modifier.heightIn(min=48.dp).testTag("knowledge-close")){Text(if(initialBacklinks)"返回摘要"else"返回笔记")}}
             Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()).padding(horizontal=12.dp),horizontalArrangement=Arrangement.spacedBy(8.dp)){
-                listOf("关联","属性与集合","局部关联图","白板与脑图","手动回忆").forEachIndexed{i,t->FilterChip(tab==i,{if(tab!=i)cancelReviewPreparation();tab=i},enabled=enabled,label={Text(t)},modifier=Modifier.testTag("knowledge-tab-$i"))}}
+                listOf("链接","属性与集合","局部关联图","白板与脑图","手动回忆").forEachIndexed{i,t->FilterChip(tab==i,{if(tab!=i)cancelReviewPreparation();tab=i},enabled=enabled,label={Text(t)},modifier=Modifier.testTag("knowledge-tab-$i"))}}
             if(ui.busy)LinearProgressIndicator(Modifier.fillMaxWidth())
+            if(ui.readFailed)Column(Modifier.padding(horizontal=16.dp)){
+                Text("知识资料暂不可用；原资料没有改变。",color=Quiet)
+                TextButton(onClick=vm::reload,modifier=Modifier.heightIn(min=48.dp).testTag("knowledge-links-retry")){Text("重试读取关联")}
+            }
             (localMessage?:ui.message)?.let{Text(it,Modifier.padding(horizontal=16.dp),fontSize=12.sp)}
             if(ui.canUndoProperties)TextButton(onClick=vm::undoProperties,enabled=editable){Text("撤销属性修改")}
             if(ui.unknown)TextButton(onClick=vm::retry,enabled=!ui.busy){Text("核对原操作")}
             when(tab){
-                0->LazyColumn(Modifier.weight(1f).fillMaxWidth(),contentPadding=PaddingValues(16.dp),verticalArrangement=Arrangement.spacedBy(12.dp)){
-                    item{Text("作用域 · ${label(focus)}",fontSize=20.sp)}
+                0->LazyColumn(Modifier.weight(1f).fillMaxWidth().testTag("knowledge-links-list"),contentPadding=PaddingValues(16.dp),verticalArrangement=Arrangement.spacedBy(12.dp)){
+                    item{Surface(color=MaterialTheme.colorScheme.surfaceVariant.copy(alpha=.35f),shape=MaterialTheme.shapes.medium){
+                        Column(Modifier.fillMaxWidth().padding(16.dp),verticalArrangement=Arrangement.spacedBy(6.dp)){
+                            Text("当前对象",style=MaterialTheme.typography.labelLarge,color=Quiet)
+                            Text(label(focus),style=MaterialTheme.typography.titleLarge,modifier=Modifier.testTag("knowledge-link-focus"))
+                            Text(targetContext(focus),style=MaterialTheme.typography.bodySmall,color=Quiet)
+                        }
+                    }}
                     item{Row(Modifier.horizontalScroll(rememberScrollState()),horizontalArrangement=Arrangement.spacedBy(8.dp)){
-                        FilterChip(focus==initialFocus,{focus=initialFocus},label={Text("本页 / 初始对象")})
-                        FilterChip(focus==TargetRef(TargetKind.NOTE,book),{focus=TargetRef(TargetKind.NOTE,book)},label={Text("笔记全文")})
-                        bookCards.forEach{c->FilterChip(focus==TargetRef(TargetKind.CARD,c.id),{focus=TargetRef(TargetKind.CARD,c.id)},label={Text(c.title)})}
+                        FilterChip(focus==initialFocus,{focus=initialFocus},label={Text("初始对象")},modifier=Modifier.heightIn(min=48.dp).testTag("knowledge-scope-initial"))
+                        FilterChip(focus==TargetRef(TargetKind.NOTE,book),{focus=TargetRef(TargetKind.NOTE,book)},label={Text("笔记全文")},modifier=Modifier.heightIn(min=48.dp).testTag("knowledge-scope-note"))
+                        bookCards.forEach{c->FilterChip(focus==TargetRef(TargetKind.CARD,c.id),{focus=TargetRef(TargetKind.CARD,c.id)},label={Text(c.title)},modifier=Modifier.heightIn(min=48.dp))}
                     }}
-                    if(initialAnchor!=null&&!anchorCopied)item{OutlinedButton(onClick={waitingAnchor=true;vm.submit(book,initialAnchor)},enabled=editable,modifier=Modifier.testTag("create-region-link")){Text("复制区域链接 · 不创建卡片")}}
-                    item{Row(horizontalArrangement=Arrangement.spacedBy(12.dp)){Button(onClick={if(initialAnchor!=null&&!anchorCopied){afterAnchorPicker=true;waitingAnchor=true;vm.submit(book,initialAnchor)}else picker=true},enabled=focusEditable,modifier=Modifier.testTag("add-knowledge-link")){Text("关联已有知识")};TextButton(onClick={scope.launch{try{pendingExport=withContext(Dispatchers.IO){knowledgeMarkdown(app,book,ui.notes,cards,rows)};export.launch("墨织关联快照.md")}catch(c:CancellationException){throw c}catch(_:Exception){localMessage="导出读取失败，原资料保留。"}}},enabled=enabled){Text("导出关联快照")}}}
-                    item{TextButton(onClick={pendingExport=KnowledgeCanvasExport.encode(book,cards,rows);canvasExport.launch("墨织知识.canvas")},enabled=enabled){Text("导出 JSON Canvas 快照")}}
-                    item{Text("主动引用与语义关系",fontSize=16.sp)}
-                    items(links.filter{it.second.source==focus},key={it.first.id}){(r,l)->OutlinedCard(Modifier.fillMaxWidth()){
-                        Column(Modifier.padding(12.dp)){Text(l.relation.label+" → "+label(l.target));Text(if(l.pinnedRevision==null)"实时引用 · 已确认内容"else"固定摘录 · 修订 ${l.pinnedRevision}",fontSize=12.sp,color=Quiet)
-                            Row{TextButton(onClick={preview=l.target to l.pinnedRevision}){Text("预览")};TextButton(onClick={vm.submit(r.notebookId,l,r,true)},enabled=focusEditable){Text("移除此关联")}}}
+                    item{Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.spacedBy(8.dp)){
+                        FilterChip(!incoming,{incoming=false},label={Text("发出链接 · ${outgoingLinks.size}")},modifier=Modifier.weight(1f).heightIn(min=48.dp).testTag("knowledge-links-outgoing"))
+                        FilterChip(incoming,{incoming=true},label={Text("反向引用 · ${incomingLinks.size}")},modifier=Modifier.weight(1f).heightIn(min=48.dp).testTag("knowledge-links-incoming"))
                     }}
-                    item{Text("反向引用 · 由正式引用派生",fontSize=16.sp)}
-                    items(links.filter{it.second.target==focus&&it.second.relation==RelationKind.REFERENCE},key={"back-"+it.first.id}){(_,l)->OutlinedButton(onClick={preview=l.source to null}){Text(label(l.source)+" 引用了这里")}}
-                    item{Text("未确认提及",fontSize=16.sp);Text("只检查已覆盖的键入文字／摘要与名称；不代表识别了手写。确认前不进入反向引用和关联图。",fontSize=12.sp,color=Quiet)}
-                    val aliases=values.values.filterIsInstance<KnowledgeData.Alias>()
-                    val candidates=cards.filter{it.id!=focus.id&&(sourceText().contains(it.title,true)||aliases.any{a->a.cardId==it.id&&sourceText().contains(a.name,true)})&&links.none{l->l.second.source==focus&&l.second.target==TargetRef(TargetKind.CARD,it.id)}}
-                    items(candidates,key={"candidate-"+it.id}){c->Row(verticalAlignment=Alignment.CenterVertically){Text(c.title+" · "+(ui.notes.find{it.id==c.notebookId}?.title?:""),Modifier.weight(1f));TextButton(onClick={vm.submit(focusBook,KnowledgeData.Link(focus,TargetRef(TargetKind.CARD,c.id)))},enabled=focusEditable){Text("确认关联")}}}
-                    if(candidates.isEmpty())item{Text("当前覆盖范围没有候选提及",color=Quiet)}
+                    item{Text(if(incoming)"这些内容引用了当前对象。点开先看来源，再决定是否跳转。"else"当前对象关联到的知识。固定摘录保留所选修订，实时链接查看当前内容。",style=MaterialTheme.typography.bodySmall,color=Quiet)}
+                    if(ui.loading)item{LinearProgressIndicator(Modifier.fillMaxWidth());Text("正在读取关联…",color=Quiet)}
+                    else if(!ui.readFailed){
+                        val shown=if(incoming)incomingLinks else outgoingLinks
+                        if(shown.isEmpty())item{Column(Modifier.fillMaxWidth().padding(vertical=16.dp),verticalArrangement=Arrangement.spacedBy(8.dp)){
+                            Text(if(incoming)"还没有内容引用这里"else"还没有发出链接",style=MaterialTheme.typography.titleMedium,modifier=Modifier.testTag("knowledge-links-empty"))
+                            Text(if(incoming)"从其他内容建立正式“内容引用”后，会出现在这里；未确认提及不计入。"else"把相关概念连起来，下次就能从这里继续阅读。",style=MaterialTheme.typography.bodyMedium,color=Quiet)
+                        }}
+                        items(shown,key={"${if(incoming)"in"else"out"}-${it.first.id}"}){(row,link)->
+                            val target=if(incoming)link.source else link.target
+                            KnowledgeConnectionCard(label(target),targetContext(target),
+                                if(incoming)"引用了这里 · 当前来源"else link.relation.label+" · "+(link.pinnedRevision?.let{"固定修订 $it"}?:"实时链接"),
+                                if(!incoming&&link.pinnedRevision!=null)"保留所选修订，点击查看固定摘录；卡片名称为当前名称。"else summary(target),
+                                "knowledge-${if(incoming)"incoming"else"outgoing"}-${row.id}",enabled,
+                                open={preview=LinkPreviewSelection(focus,row.id,row.revision,incoming)},
+                                remove=if(!incoming&&focusEditable)({vm.submit(row.notebookId,link,row,true);Unit})else null)
+                        }
+                    }
+                    if(initialAnchor!=null&&!anchorCopied)item{OutlinedButton(onClick={waitingAnchor=true;vm.submit(book,initialAnchor)},enabled=editable,modifier=Modifier.fillMaxWidth().heightIn(min=48.dp).testTag("create-region-link")){Text("复制区域链接 · 不创建卡片")}}
+                    item{Button(onClick={if(initialAnchor!=null&&!anchorCopied){afterAnchorPicker=true;waitingAnchor=true;vm.submit(book,initialAnchor)}else picker=true},enabled=focusEditable&&!ui.loading&&!ui.readFailed,modifier=Modifier.fillMaxWidth().heightIn(min=48.dp).testTag("add-knowledge-link")){Text("关联已有知识")}}
+                    if(!incoming){
+                        item{HorizontalDivider();Text("未确认提及",Modifier.padding(top=12.dp),style=MaterialTheme.typography.titleMedium);Text("仅检查键入文字、摘要与名称，不识别手写；确认后才建立关联。",style=MaterialTheme.typography.bodySmall,color=Quiet)}
+                        val aliases=values.values.filterIsInstance<KnowledgeData.Alias>()
+                        val candidates=cards.filter{TargetRef(TargetKind.CARD,it.id)!=focus&&(sourceText().contains(it.title,true)||aliases.any{a->a.cardId==it.id&&sourceText().contains(a.name,true)})&&links.none{l->l.second.source==focus&&l.second.target==TargetRef(TargetKind.CARD,it.id)}}
+                        items(candidates,key={"candidate-"+it.id}){c->Row(verticalAlignment=Alignment.CenterVertically){Text(c.title+" · "+(ui.notes.find{it.id==c.notebookId}?.title?:""),Modifier.weight(1f));TextButton(onClick={vm.submit(focusBook,KnowledgeData.Link(focus,TargetRef(TargetKind.CARD,c.id)))},enabled=focusEditable,modifier=Modifier.heightIn(min=48.dp)){Text("确认关联")}}}
+                        if(candidates.isEmpty()&&!ui.loading&&!ui.readFailed)item{Text("当前覆盖范围没有候选提及",style=MaterialTheme.typography.bodySmall,color=Quiet)}
+                    }
+                    item{HorizontalDivider();TextButton(onClick={showExports=!showExports},modifier=Modifier.fillMaxWidth().heightIn(min=48.dp).testTag("knowledge-link-export-options")){Text(if(showExports)"收起导出选项"else"导出关联快照")}}
+                    if(showExports){
+                        item{TextButton(onClick={scope.launch{try{pendingExport=withContext(Dispatchers.IO){knowledgeMarkdown(app,book,ui.notes,cards,rows)};export.launch("墨织关联快照.md")}catch(c:CancellationException){throw c}catch(_:Exception){localMessage="导出读取失败，原资料保留。"}}},enabled=enabled,modifier=Modifier.fillMaxWidth().heightIn(min=48.dp)){Text("导出 Markdown 快照")}}
+                        item{TextButton(onClick={pendingExport=KnowledgeCanvasExport.encode(book,cards,rows);canvasExport.launch("墨织知识.canvas")},enabled=enabled,modifier=Modifier.fillMaxWidth().heightIn(min=48.dp)){Text("导出 JSON Canvas 快照")}}
+                    }
                 }
                 1->LazyColumn(Modifier.weight(1f),contentPadding=PaddingValues(16.dp),verticalArrangement=Arrangement.spacedBy(12.dp)){
                     item{OutlinedTextField(query,{query=it},label={Text("搜索我的总结或标题")},modifier=Modifier.fillMaxWidth().testTag("collection-search"));Text("范围：本笔记的独立摘要；不包含未识别手写。",fontSize=12.sp,color=Quiet)}
@@ -289,10 +346,11 @@ private val QuestionEditDraftSaver=Saver<QuestionEditDraft?,List<String>>(
         OutlinedTextField(query,{query=it},label={Text("按标题查找，核对所属笔记")})
         Row(Modifier.horizontalScroll(rememberScrollState())){RelationKind.entries.forEach{r->FilterChip(relation==r,{relation=r},enabled=focusEditable,label={Text(r.label)})}}
         Row(verticalAlignment=Alignment.CenterVertically){Checkbox(pinned,{pinned=it},enabled=focusEditable);Text("固定卡片当前版本")}
-        cards.filter{it.id!=focus.id&&(query.isBlank()||it.title.contains(query,true))}.sortedBy{if(it.notebookId==book)0 else 1}.take(80).forEach{c->TextButton(onClick={vm.submit(focusBook,KnowledgeData.Link(focus,TargetRef(TargetKind.CARD,c.id),relation,if(pinned)c.revision else null));picker=false},enabled=focusEditable){Text("${c.title} · ${ui.notes.find{it.id==c.notebookId}?.title.orEmpty()} · ${c.id.take(6)}")}}
-        if(!pinned)ui.notes.filter{it.id!=focus.id&&(query.isBlank()||it.title.contains(query,true))}.take(50).forEach{n->TextButton(onClick={vm.submit(focusBook,KnowledgeData.Link(focus,TargetRef(TargetKind.NOTE,n.id),relation));picker=false},enabled=focusEditable){Text("笔记 · ${n.title} · ${n.id.take(6)}")}}
+        cards.filter{TargetRef(TargetKind.CARD,it.id)!=focus&&(query.isBlank()||it.title.contains(query,true))}.sortedBy{if(it.notebookId==book)0 else 1}.take(80).forEach{c->TextButton(onClick={vm.submit(focusBook,KnowledgeData.Link(focus,TargetRef(TargetKind.CARD,c.id),relation,if(pinned)c.revision else null));picker=false},enabled=focusEditable){Text("${c.title} · ${ui.notes.find{it.id==c.notebookId}?.title.orEmpty()} · ${c.id.take(6)}")}}
+        if(!pinned)ui.notes.filter{TargetRef(TargetKind.NOTE,it.id)!=focus&&(query.isBlank()||it.title.contains(query,true))}.take(50).forEach{n->TextButton(onClick={vm.submit(focusBook,KnowledgeData.Link(focus,TargetRef(TargetKind.NOTE,n.id),relation));picker=false},enabled=focusEditable){Text("笔记 · ${n.title} · ${n.id.take(6)}")}}
     }},confirmButton={TextButton(onClick={picker=false}){Text("取消")}})
-    preview?.let{(ref,revision)->TargetPreview(ref,revision,ui,app,{preview=null}){openTarget(ref)}}
+    preview?.let{selection->key(selection){KnowledgeLinkPreview(selection.focus,selection.id,selection.revision,selection.incoming,
+        enabled=canDismiss,returnLabel="返回关联",dismiss={preview=null},onOpenTarget=openTarget)}}
     editCard?.let{card->
         val available=card.trashedAt==null&&book in activeBooks
         val questions=rows.filter{it.notebookId==book&&(it.data() as? KnowledgeData.Question)?.cardId==card.id}
@@ -309,33 +367,6 @@ private val QuestionEditDraftSaver=Saver<QuestionEditDraft?,List<String>>(
             {submitQuestion(draft.editorId)},{closeQuestion(draft.editorId)},{val live=vm.ui.value;if(live.unknown&&!live.busy&&questionEdit?.editorId==draft.editorId&&vm.pendingOperationId==questionEdit?.operationId&&questionEdit?.operationId!=null)vm.retry()})
     }
     reviewPlan?.let{plan->BranchReviewDialog(plan,{reviewPlan=null},showSummary=reviewWithSummary,showCollectionScope=reviewCollectionScope)}
-}
-
-@Composable private fun CardPropertiesDialog(card:StudyCardRow,current:KnowledgeData.Properties?,questions:List<KnowledgeRow>,enabled:Boolean,canClose:Boolean,available:Boolean,dismiss:()->Unit,openQuestion:(KnowledgeRow,Boolean)->Unit,save:(KnowledgeData)->Unit){
-    var state by rememberSaveable(card.id){mutableStateOf(current?.state?:ManualState.INBOX)};var tags by rememberSaveable(card.id){mutableStateOf(current?.tags?.joinToString(",").orEmpty())};var question by rememberSaveable(card.id){mutableStateOf("")};var alias by rememberSaveable(card.id){mutableStateOf("")}
-    AlertDialog(onDismissRequest={if(canClose)dismiss()},modifier=Modifier.testTag("card-properties-dialog"),title={Text(card.title)},text={Column(Modifier.verticalScroll(rememberScrollState()),verticalArrangement=Arrangement.spacedBy(8.dp)){
-        if(!available)Text("摘要卡已回收或不可用；未保存的草稿仍保留。",color=Quiet,modifier=Modifier.testTag("card-properties-unavailable"))
-        Text("手工状态");ManualState.entries.forEach{s->FilterChip(state==s,{state=s},enabled=enabled,label={Text(s.label)})}
-        OutlinedTextField(tags,{if(it.length<=240)tags=it},enabled=enabled,label={Text("标签，逗号分隔")},modifier=Modifier.testTag("card-properties-tags"))
-        OutlinedTextField(alias,{if(it.length<=120)alias=it},enabled=enabled,label={Text("别名 · 用于候选提及")},modifier=Modifier.testTag("card-properties-alias"))
-        TextButton(onClick={save(KnowledgeData.Alias(card.id,alias.trim()))},enabled=enabled&&alias.isNotBlank()){Text("添加别名")}
-        OutlinedTextField(question,{if(it.length<=2000)question=it},enabled=enabled,label={Text("独立复习问题")},modifier=Modifier.testTag("card-properties-question"))
-        TextButton(onClick={save(KnowledgeData.Question(card.id,question.trim()))},enabled=enabled&&question.isNotBlank(),modifier=Modifier.heightIn(min=48.dp).testTag("card-question-add")){Text("添加回忆题")}
-        Text("已保存的回忆题",style=MaterialTheme.typography.titleSmall)
-        if(questions.isEmpty())Text("还没有独立回忆题。",color=Quiet)
-        questions.forEach{row->key(row.id){val savedQuestion=row.data() as KnowledgeData.Question
-            OutlinedCard(Modifier.fillMaxWidth().testTag("question-row-${row.id}")){
-                Column(Modifier.padding(12.dp),verticalArrangement=Arrangement.spacedBy(8.dp)){
-                    Text(savedQuestion.prompt,modifier=Modifier.testTag("question-prompt-${row.id}"))
-                    Text("手工状态：${savedQuestion.state.label} · 修订 ${row.revision}",color=Quiet,modifier=Modifier.testTag("question-state-${row.id}"))
-                    Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.spacedBy(8.dp)){
-                        TextButton(onClick={openQuestion(row,false)},enabled=enabled,modifier=Modifier.weight(1f).heightIn(min=48.dp).testTag("question-edit-${row.id}")){Text("编辑")}
-                        TextButton(onClick={openQuestion(row,true)},enabled=enabled,modifier=Modifier.weight(1f).heightIn(min=48.dp).testTag("question-remove-${row.id}")){Text("移除")}
-                    }
-                }
-            }
-        }}
-    }},confirmButton={TextButton(onClick={val values=tags.split(',', '，').map{it.trim()}.filter{it.isNotEmpty()}.distinct();save(KnowledgeData.Properties(card.id,state,values))},enabled=enabled&&tags.split(',', '，').filter{it.isNotBlank()}.let{it.size<=12&&it.all{tag->tag.trim().length<=24}},modifier=Modifier.testTag("card-properties-save")){Text("保存属性")}},dismissButton={TextButton(onClick=dismiss,enabled=canClose,modifier=Modifier.testTag("card-properties-cancel")){Text(if(enabled)"取消"else"关闭")}})
 }
 
 @Composable private fun QuestionMaintenanceDialog(draft:QuestionEditDraft,cardTitle:String,writable:Boolean,busy:Boolean,unknown:Boolean,available:Boolean,revisionChanged:Boolean,canRetry:Boolean,
@@ -379,16 +410,7 @@ private val QuestionEditDraftSaver=Saver<QuestionEditDraft?,List<String>>(
     }},confirmButton={TextButton(onClick={save(KnowledgeData.Collection(title.trim(),tag.trim(),state,any))},enabled=enabled&&title.isNotBlank()){Text("保存集合")}},dismissButton={TextButton(onClick=dismiss,enabled=canClose){Text("取消")}})
 }
 
-@Composable private fun TargetPreview(ref:TargetRef,revision:Long?,ui:KnowledgeUi,app:InkWeftApplication,dismiss:()->Unit,open:()->Unit){
-    var text by remember{mutableStateOf("正在读取…")};var available by remember{mutableStateOf(false)}
-    LaunchedEffect(ref,revision){try{withContext(Dispatchers.IO){available=app.knowledge.available(ref);text=if(!available)"来源已回收或不可用"else when(ref.kind){
-        TargetKind.CARD->{val c=ui.cards.find{it.id==ref.id};if(revision==null)c?.let{it.title+"\n"+it.body}.orEmpty()else app.knowledge.cardVersion(ref.id,revision)?.let{it.title+"\n"+it.body}?:"固定版本不可用"}
-        TargetKind.NOTE->ui.notes.find{it.id==ref.id}?.let{it.title+"\n"+it.text}.orEmpty()
-        TargetKind.ANCHOR->{val a=ui.rows.find{it.id==ref.id}?.data() as? KnowledgeData.Anchor;if(a!=null&&app.pages.inkRevision(a.pageId)!=a.inkRevision)"来源已变化：仅可查看原区域位置，需重新核对关联。"else"手写区域，打开后定位原页。"}
-        TargetKind.PAGE->"打开来源页面"
-    }}}catch(c:CancellationException){throw c}catch(_:Exception){text="读取失败，请关闭重试。"}}
-    AlertDialog(onDismissRequest=dismiss,title={Text(if(revision==null)"实时引用预览"else"固定摘录 · 修订 $revision")},text={Column(Modifier.verticalScroll(rememberScrollState())){Text(text);Text("预览不递归展开其他引用。",fontSize=12.sp,color=Quiet)}},confirmButton={TextButton(onClick={dismiss();open()},enabled=available){Text("打开来源")}},dismissButton={TextButton(onClick=dismiss){Text("关闭")}})
-}
+
 
 private suspend fun knowledgeMarkdown(app:InkWeftApplication,book:String,notes:List<NoteRow>,cards:List<StudyCardRow>,rows:List<KnowledgeRow>):String {
     val pinned=linkedMapOf<String,StudyCardRevisionRow?>()

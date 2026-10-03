@@ -1,0 +1,166 @@
+{
+  "baseCommit": "bd21f89d991a22dd0da17087053e37c90a99a251",
+  "branch": "codex/cloud/link-discovery-20261003",
+  "sourceIdentity": "Source/test SHA-256 entries below identify the tested bytes; this checkpoint travels with the same source commit.",
+  "verificationDateUtc": "2026-10-03",
+  "checkedSourceFiles": 449,
+  "changedDuringFinalCheck": [],
+  "allSourceManifestSha256": "95f4fe2ffccb8bbb4ee9e1da506e2244796b427b14ea81cddaec590056457c91",
+  "changedSourceSha256": {
+    "android/app/src/androidTest/java/org/inkweft/app/KnowledgeTextLinksUiTest.kt": "2595655980a54ef2c344506fdfcc374d2377373781aeaaedcbdde5798ab9587b",
+    "android/app/src/main/java/org/inkweft/app/BookInkScreen.kt": "76020aded655608953a6a93a504da1ece550472bea3f50938d552d1b5fe40702",
+    "android/app/src/main/java/org/inkweft/app/KnowledgeConnectionCard.kt": "1f938d2c27219233601cd8fa2942c37608f40869bb8970731b60c356e37a7d58",
+    "android/app/src/main/java/org/inkweft/app/KnowledgeLinkPreview.kt": "842b5864468434d898a38e1d3f3e8baca57c6f8f74891d84ed1c35d31b6e1445",
+    "android/app/src/main/java/org/inkweft/app/KnowledgeLinkedCardBody.kt": "54fd38f1b502a68a77f8ce1ced1d841a50064d7de5115ed49d5822f546572078",
+    "android/app/src/main/java/org/inkweft/app/KnowledgeWorkspace.kt": "6cc53771b4ca888e61caaea562ddaa4bcbc38929eb6bace803d9e339956173f3",
+    "android/app/src/main/java/org/inkweft/app/StudyWorkspace.kt": "3eb188ca5c3061bde222971838790a9404e06a6c5426b900e1e72dadfc5b2e05",
+    "android/app/src/main/java/org/inkweft/app/ui/components/ContextPanel.kt": "13339717fad7c7df08059efd83c67a49292568eb28884aea2ca7718b8245099e",
+    "android/data-local/src/androidTest/kotlin/org/inkweft/data/KnowledgeTextRepositoryTest.kt": "4d58fd7d161a6443299d320c621d4c9064eb621926d92c9072062c50f72f1535",
+    "android/data-local/src/main/kotlin/org/inkweft/data/KnowledgeTextRepository.kt": "1667485d29b7f248292feae9305515d8ccb8f2d045d12f58215e7ddf45df9856"
+  },
+  "checks": {
+    "mainAndAndroidTestCompilation": "PASS",
+    "appAndDataLocalLint": {
+      "app": {
+        "Warning": 135
+      },
+      "data-local": {
+        "Warning": 2
+      }
+    },
+    "coreJvm": [
+      {
+        "name": "org.inkweft.core.KnowledgeTest",
+        "tests": "14",
+        "skipped": "0",
+        "failures": "0",
+        "errors": "0",
+        "timestamp": "2026-10-03T10:53:56.448Z"
+      },
+      {
+        "name": "org.inkweft.core.KnowledgeTextLinksTest",
+        "tests": "8",
+        "skipped": "0",
+        "failures": "0",
+        "errors": "0",
+        "timestamp": "2026-10-03T10:53:56.512Z"
+      }
+    ],
+    "finalCommand": "gradle --offline --no-daemon --max-workers=1 -Dorg.gradle.jvmargs=-Xmx1536m -Pkotlin.compiler.execution.strategy=in-process :app:compileDebugKotlin :app:compileDebugAndroidTestKotlin :data-local:compileDebugAndroidTestKotlin :app:lintDebug :data-local:lintDebug :core-domain:test --tests org.inkweft.core.KnowledgeTest --tests org.inkweft.core.KnowledgeTextLinksTest",
+    "attempts": [
+      {
+        "stage": "initial targeted compile/lint/JVM",
+        "result": "PASS",
+        "duration": "6m35s",
+        "finalSource": false
+      },
+      {
+        "stage": "review fix recheck",
+        "result": "FAIL",
+        "duration": "37s",
+        "reason": "sourceJob referenced outside card-local scope; removed from shared navigation callback. Owning Compose scope cancels on card disposal.",
+        "finalSource": false
+      },
+      {
+        "stage": "final production compile/lint",
+        "result": "PASS",
+        "duration": "5m48s",
+        "note": "Later change only hardens UI test wait helper."
+      },
+      {
+        "stage": "final complete task recheck after test helper",
+        "result": "PASS",
+        "duration": "2m13s",
+        "tasks": 89,
+        "executed": 5,
+        "upToDate": 84,
+        "note": "JVM tests unchanged and reused; actual 22-test execution recorded above."
+      }
+    ]
+  },
+  "androidRuntime": {
+    "status": "NOT_RUN",
+    "reason": "Cloud has no KVM, Android emulator or system image. No environment installation or user device operation requested or performed.",
+    "uiMethods": [
+      {
+        "method": "KnowledgeTextLinksUiTest#inlineTitleAndAliasOpenConfirmedTargetWhileDuplicateNamesRequireChoice",
+        "status": "NOT_RUN"
+      },
+      {
+        "method": "KnowledgeTextLinksUiTest#reopenedLivePreviewReadsCurrentBodyWhilePinnedPreviewKeepsExactHistory",
+        "status": "NOT_RUN"
+      },
+      {
+        "method": "KnowledgeTextLinksUiTest#pickerAndPreviewRecreationReturnToOriginalCardNodeAndViewportWithoutWriting",
+        "status": "NOT_RUN"
+      },
+      {
+        "method": "KnowledgeTextLinksUiTest#replacedAndRemovedLinkAreRevalidatedBeforeOpenWithoutSilentlyChangingTarget",
+        "status": "NOT_RUN"
+      },
+      {
+        "method": "KnowledgeTextLinksUiTest#backlinkEntryRestoresLiveSourcePreviewAndOriginalCardWithoutAuthorWrites",
+        "status": "NOT_RUN"
+      },
+      {
+        "method": "KnowledgeTextLinksUiTest#pageAndNotebookBacklinksKeepDistinctScopeAndReadOnlyPreviewIdentity",
+        "status": "NOT_RUN"
+      },
+      {
+        "method": "KnowledgeTextLinksUiTest#narrow375LargeTextKeepsInlinePickerAndPreviewControlsReachable",
+        "status": "NOT_RUN"
+      }
+    ],
+    "roomMethods": [
+      {
+        "method": "KnowledgeTextRepositoryTest#onlyConfirmedLinksForExactSourceAndOwnerAppearWithoutAuthorWrites",
+        "status": "NOT_RUN"
+      },
+      {
+        "method": "KnowledgeTextRepositoryTest#crossNotebookSameNamesAndAliasesKeepEveryConfirmedTargetIdentity",
+        "status": "NOT_RUN"
+      },
+      {
+        "method": "KnowledgeTextRepositoryTest#liveRenameAndAliasChangesNeverReplacePinnedTitleOrBody",
+        "status": "NOT_RUN"
+      },
+      {
+        "method": "KnowledgeTextRepositoryTest#missingPinnedRevisionRetainsAssociationWithoutCurrentTitleOrBodyFallback",
+        "status": "NOT_RUN"
+      },
+      {
+        "method": "KnowledgeTextRepositoryTest#recyclingNotebookEmitsUnavailableButKeepsExactPinnedExcerptAndTarget",
+        "status": "NOT_RUN"
+      },
+      {
+        "method": "KnowledgeTextRepositoryTest#capturedRevisionRejectsRetargetingRemovalAndWrongSourceWhilePageTargetsStayExplicit",
+        "status": "NOT_RUN"
+      },
+      {
+        "method": "KnowledgeTextRepositoryTest#incomingCrossNotebookPreviewReadsCurrentSourceRatherThanPinnedTarget",
+        "status": "NOT_RUN"
+      },
+      {
+        "method": "KnowledgeTextRepositoryTest#incomingRequiresExactTargetKindReferenceRelationAndSourceOwner",
+        "status": "NOT_RUN"
+      },
+      {
+        "method": "KnowledgeTextRepositoryTest#incomingRejectsStaleRemovedAndRetypedRelationshipsWithoutWriting",
+        "status": "NOT_RUN"
+      },
+      {
+        "method": "KnowledgeTextRepositoryTest#observedPreviewsRefreshBodyOnlyEditsAndSourceAvailabilityWithoutAuthorWrites",
+        "status": "NOT_RUN"
+      },
+      {
+        "method": "KnowledgeTextRepositoryTest#observedAnchorPreviewWarnsWhenOriginalInkRevisionChanges",
+        "status": "NOT_RUN"
+      }
+    ]
+  },
+  "visualAcceptance": "NOT_RUN; no current rendered screenshots or human acceptance. PR11 keeps raw screenshots local.",
+  "apk": "NOT_BUILT / NOT_INSTALLED",
+  "schemaVersionDependencySignatureChanges": false,
+  "ci": "Current workflows automatically trigger only for main-target PRs; integration PR needs separately dispatched verification. No absent run counted as PASS.",
+  "privacy": "Only code, synthetic tests and sanitized summaries. No user notes, private screenshots/logs, signing material, binaries, caches or local investigation reports."
+}

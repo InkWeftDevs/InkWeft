@@ -1,3 +1,21 @@
+# 当前本地接手修复 · 2026-10-03
+
+源码 `41e23e96e36e0bb58c394e941718e049f525ada5` / tree `3bb36b951bd87773a784bb608e2ef4eb9231083d`；以下为当前候选已经完成核验的构建身份。包名、V68版本号与原签名保持，准确包身份以 [本轮结果](STUDY-RESTORE-DEVICE-RESULTS-20261003.md) 的commit/tree/SHA为准。
+
+四个生产文件的改动：NotebookViewModel恢复选中笔记路由；StudySession保存每本学习窗口opened；FloatingStudyWindow按当前尺寸约束动画位置；StudyWorkspace以requestScrollToItem避免布局期立即重测，并在41e23将完整标题完成流程固定Main.immediate，保留IO读取、unknown/取消和原操作核验。
+
+原30方法API35模拟器跨源码最新：**30 PASS / 0 FAIL / 0 NOT_RUN**；当前候选自身原30实际计数：`{"NOT_RUN": 28, "PASS": 2}`。真机instrumentation原runner无辅助仍阻塞；仅首次前台辅助业务模式跨源码最新：**28 PASS / 0 FAIL / 2 NOT_RUN**，当前候选自身：`{"NOT_RUN": 28, "PASS": 2}`。隔离模拟器：原30方法均已有明确来源的实际PASS；仍不代表同一候选全量运行。 真机首次前台辅助模式：`BranchReviewRoundUiTest#committedButUnverifiedResultStaysLockedAcrossRecreationAndRetriesReadOnlyProof`（NOT_RUN）；`BranchReviewRoundUiTest#missingFrozenResultDetailsKeepTheLedgerAndRetryWithoutCurrentQuestionSubstitution`（NOT_RUN）
+
+普通应用真机 OS kill 的 draft、confirmed 两切点均有独立 PASS 回执，实际源码3fbc；两个切点各自前后29表不变，draft3868行、confirmed3870行。只覆盖新增合成笔记的大纲结构标题草稿/确认后恢复。Room14、新增registry/remount/Geometry5与PDF/备份UI4分别列来源，不扩充原30或当成当前候选全量重跑。
+
+线程trace在Compose测试unconfined effect环境确认IO后worker调用clearFocus失败；普通应用OS恢复PASS不受此替代，也不能据trace宣称线上必现。Map原业务断言保留；LocalMotion首帧像素段改用强制展开的source-only入口且只裁caption，不能独立证明showSource保存恢复或长正文整个来源组首帧。真人中文IME、持笔、压感/倾斜/掌触和完整人工旅程仍待验。
+
+`private-device-final/receipt.json` 确认原有2565行未丢失、未修改；该归档共4379行，新增1814行。`private-device-final/new-row-ownership.json` 确认新增行全部归属50个新增测试笔记，归属原有或未知笔记的新增行0。这是该检查点的原资料保留与归属结论；另有22项应用文件哈希变化，包含新增测试证据；原始偏好文件差异为0。 最终五项应用偏好open-tabs／reading／editor／study-window／learning已按原字节哈希恢复，恢复前已备份当时偏好，未写数据库或清空数据；回执 `final-preferences-restoration/receipt.json`。 最终十项display／IME／SAW设置与七项显示测试前baseline一致；回执 `final-settings-audit.json`。
+
+正式构建和新回归只按实际回执更新；诊断步骤通过不计方法PASS。历史结果与待测范围见 [本轮结果](STUDY-RESTORE-DEVICE-RESULTS-20261003.md) 和 [真机检查清单](DEVICE-TEST-CHECKLIST.md)。
+
+---
+
 # 最新本地候选 V65 — 2026-10-02
 
 整本、收藏集合、整图与分支复习可明确选择“全部问题”或“仅待复习”。后者仅包含题目自身标为“待复习”的活动问题，集合的卡片属性条件继续独立使用；新问题原本默认“待复习”。
