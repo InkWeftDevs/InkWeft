@@ -9,6 +9,7 @@ import android.graphics.*
 import android.view.MotionEvent
 import android.view.ScaleGestureDetector
 import android.view.View
+import android.view.ViewTreeObserver
 import androidx.ink.brush.Brush
 import androidx.ink.brush.StockBrushes
 import androidx.ink.brush.InputToolType
@@ -117,14 +118,33 @@ class InkCanvasView(context:Context):View(context){
     private var drawnViewport:CanvasViewport?=null
     private var drawnWidth=0;private var drawnHeight=0;private var drawnDensity=0.0
     private var capturingExcerpt=false
+    private val observedVisiblePixels=Rect()
+    // Continuous sheets grow with zoom, but their raster must only cover the window.
+    // Parent scrolling can move an unchanged View/display list without calling onSizeChanged.
+    private val visibleAreaListener=ViewTreeObserver.OnPreDrawListener {
+        val pixels=visiblePixels()
+        if(pixels!=observedVisiblePixels){observedVisiblePixels.set(pixels);requestDocument();invalidate()}
+        true
+    }
+    private fun visiblePixels():Rect {
+        val pixels=Rect(0,0,width,height)
+        if(isAttachedToWindow&&!getLocalVisibleRect(pixels))pixels.setEmpty()
+        if(!pixels.intersect(0,0,width,height))pixels.setEmpty()
+        return pixels
+    }
+    private fun rasterViewport(pixels:Rect):CanvasViewport {
+        val center=viewport.screenToWorld(pixels.exactCenterX().toDouble(),pixels.exactCenterY().toDouble(),width.toDouble(),height.toDouble(),density)
+        return CanvasViewport.safe(center.x,center.y,viewport.zoom)
+    }
     private fun releaseDocumentTile(){documentTile?.let{tile->documentId?.let{RenderResources.release(tile.bitmap,it)}};documentTile=null;drawnViewport=null}
     fun showDocument(id:String?){if(documentId==id)return;releaseDocumentTile();documentId=id;documentRequest=null;documentKnownAbsent=false;documentError=false;requestDocument();invalidate()}
     private fun requestDocument(){
         val id=documentId?:return;if(documentKnownAbsent||width<=0||height<=0||!isAttachedToWindow)return
-        val visible=viewport.visible(width.toDouble(),height.toDouble(),density)
+        val area=visiblePixels();if(area.isEmpty)return
+        val visible=rasterViewport(area).visible(area.width().toDouble(),area.height().toDouble(),density)
         val left=visible.left.coerceIn(0.0,999.0);val top=visible.top.coerceIn(0.0,1413.0)
         val rect=CanvasBounds(left,top,visible.right.coerceIn(left+1,1000.0),visible.bottom.coerceIn(top+1,1414.0))
-        val pixels=if(preview)256 else max(width,height).coerceAtMost(2048)
+        val pixels=if(preview)256 else ceil(max(rect.right-rect.left,rect.bottom-rect.top)*viewport.zoom*density).toInt().coerceAtLeast(1)
         val request="$id:$rect:$pixels";if(documentRequest==request)return;documentRequest=request;documentJob?.cancel()
         val generation=++documentGeneration
         documentJob=CoroutineScope(Dispatchers.Main.immediate).launch {
@@ -135,7 +155,7 @@ class InkCanvasView(context:Context):View(context){
             catch(_:Exception){if(documentRequest==request&&documentGeneration==generation){documentError=true;failedDocumentGeneration=generation;invalidate();onNotice("文档页面读取失败，请离开后重新打开；原文件保留。")}}
         }
     }
-    override fun onAttachedToWindow(){super.onAttachedToWindow();observeMapScenes();documentRequest=null;requestDocument()}
+    override fun onAttachedToWindow(){super.onAttachedToWindow();viewTreeObserver.addOnPreDrawListener(visibleAreaListener);observeMapScenes();documentRequest=null;requestDocument()}
 
     private var content=emptyList<InkStroke>()
     internal val displayedStrokeCount get()=content.size
@@ -249,8 +269,13 @@ class InkCanvasView(context:Context):View(context){
         canvas.restoreToCount(save)
         val staticSave=canvas.save()
         if(activeMask!=null&&!gestureOnlyHighlighter){val screenMask=Path(activeMask);screenMask.transform(matrix);canvas.clipOutPath(screenMask)}
-        if(isAttachedToWindow)asyncRaster.draw(canvas,width,height,viewport,density,world,embeddedPage,stable)
-        else pageRaster.draw(canvas,width,height,listOf(viewport,world),stable){c,s->
+        if(isAttachedToWindow){
+            val area=visiblePixels()
+            if(!area.isEmpty){
+                canvas.translate(area.left.toFloat(),area.top.toFloat())
+                asyncRaster.draw(canvas,area.width(),area.height(),rasterViewport(area),density,world,embeddedPage,stable)
+            }
+        }else pageRaster.draw(canvas,width,height,listOf(viewport,world),stable){c,s->
             val n=c.save();c.concat(matrix);if(!world&&!embeddedPage)c.clipRect(0f,0f,1000f,1414f)
             drawSavedStroke(c,s);c.restoreToCount(n)
         }
@@ -285,7 +310,8 @@ class InkCanvasView(context:Context):View(context){
         check(!rasterPending&&(documentId==null||documentKnownAbsent||documentTile!=null&&!documentError)){"页面仍在呈现，请稍后重试"}
         val a=viewport.worldToScreen(region.left,region.top,width.toDouble(),height.toDouble(),density)
         val b=viewport.worldToScreen(region.right,region.bottom,width.toDouble(),height.toDouble(),density)
-        check(a.x>=-1&&a.y>=-1&&b.x<=width+1&&b.y<=height+1){"请将摘录区域完整移到屏幕内"}
+        val area=visiblePixels()
+        check(!area.isEmpty&&a.x>=area.left-1&&a.y>=area.top-1&&b.x<=area.right+1&&b.y<=area.bottom+1){"请将摘录区域完整移到屏幕内"}
         check(max(b.x-a.x,b.y-a.y)/min(b.x-a.x,b.y-a.y)<=160){"选区过窄，请扩大一些再摘录"}
         val scale=min(1.0,800.0/max(b.x-a.x,b.y-a.y))
         val bitmap=Bitmap.createBitmap(max(1,((b.x-a.x)*scale).toInt()),max(1,((b.y-a.y)*scale).toInt()),Bitmap.Config.ARGB_8888)
@@ -407,6 +433,6 @@ class InkCanvasView(context:Context):View(context){
     }
     private fun finishViewport(){if(movingViewport){movingViewport=false;onViewport(viewport)}}
     fun cancelGesture(discardCheckpoint:Boolean=true){if(discardCheckpoint&&inputId!=-1&&!gestureErase)onCheckpointCancel(gestureId);tapImage=null;onLiveSamples(emptyList());val active=inputId!=-1;inputId=-1;BackgroundBudget.input(this,false);raw.clear();gestureErase=false;cursor=null;parent?.requestDisallowInterceptTouchEvent(false);if(active)onGesture(false);invalidate()}
-    override fun onDetachedFromWindow(){mapSceneJob?.cancel();mapSceneJob=null;PencilRenderer.forget(content.filter{it.pen==InkPen.PENCIL}.map{it.id}.toSet()+gestureId);pageRaster.clear();asyncRaster.clear();documentJob?.cancel();releaseDocumentTile();documentRequest=null;objectPainter.clear();cancelGesture(false);if(configured&&!preview)onViewport(viewport);super.onDetachedFromWindow()}
+    override fun onDetachedFromWindow(){viewTreeObserver.removeOnPreDrawListener(visibleAreaListener);observedVisiblePixels.setEmpty();mapSceneJob?.cancel();mapSceneJob=null;PencilRenderer.forget(content.filter{it.pen==InkPen.PENCIL}.map{it.id}.toSet()+gestureId);pageRaster.clear();asyncRaster.clear();documentJob?.cancel();releaseDocumentTile();documentRequest=null;objectPainter.clear();cancelGesture(false);if(configured&&!preview)onViewport(viewport);super.onDetachedFromWindow()}
     override fun performClick():Boolean{super.performClick();return true}
 }

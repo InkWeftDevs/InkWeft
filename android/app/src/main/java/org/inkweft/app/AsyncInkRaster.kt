@@ -49,6 +49,7 @@ internal class AsyncInkRaster(private val changed:()->Unit,private val failed:()
         val rejectedNow=rejected?.let{it.first==key&&it.second.size==strokes.size&&prefix(it.second,strokes)}==true
         if(!complete&&!rejectedNow&&request==null){
             generation++;job?.cancel();val token=generation;val source=strokes.toList();val base=frame?.takeIf{it.complete}
+            val showPreview=base==null&&fallback==null
             request=key to source
             RenderResources.inFlightJobs.incrementAndGet()
             job=CoroutineScope(Dispatchers.Main.immediate).launch {
@@ -56,7 +57,8 @@ internal class AsyncInkRaster(private val changed:()->Unit,private val failed:()
                     val context=currentCoroutineContext()
                     val visible=viewport.visible(width.toDouble(),height.toDouble(),density)
                     suspend fun render(budget:Double,detailed:Boolean){
-                        val scale=min(1.0,sqrt(budget/(width.toDouble()*height))).toFloat()
+                        // The caller supplies the visible window, never the enlarged whole page.
+                        val scale=if(detailed)1f else min(1.0,sqrt(budget/(width.toDouble()*height))).toFloat()
                         val w=max(1,(width*scale).roundToInt());val h=max(1,(height*scale).roundToInt())
                         val start=base?.takeIf{detailed}
                         RenderResources.admit(w.toLong()*h*4)
@@ -64,7 +66,7 @@ internal class AsyncInkRaster(private val changed:()->Unit,private val failed:()
                         val workerOwner="$owner-job-$token-$detailed"
                         RenderResources.track(bitmap,bitmap.allocationByteCount.toLong(),"ink-frame",workerOwner,RenderResources.Role.IN_FLIGHT)
                         val factor=(viewport.zoom*density).toFloat()
-                            val pencil=PencilTileRenderer(if(detailed)max(.5f,.5f/(factor*scale)) else max(.5f,1f/(factor*scale)),false){context.ensureActive()}
+                        val pencil=PencilTileRenderer(if(detailed)min(.5f,1f/factor) else max(.5f,1f/(factor*scale)),false){context.ensureActive()}
                         var published=false
                         try {
                             val canvas=Canvas(bitmap);canvas.scale(w.toFloat()/width,h.toFloat()/height)
@@ -88,8 +90,9 @@ internal class AsyncInkRaster(private val changed:()->Unit,private val failed:()
                             }}
                         }finally{pencil.clear();RenderResources.release(bitmap,workerOwner);if(!published)bitmap.recycle()}
                     }
-                    if(base==null&&width.toLong()*height>500_000&&source.any{it.pen==InkPen.PENCIL})render(220_000.0,false)
-                    render(4_000_000.0,true)
+                    // A preview is useful only on first load. Never downgrade a retained frame.
+                    if(showPreview&&width.toLong()*height>500_000&&source.any{it.pen==InkPen.PENCIL})render(220_000.0,false)
+                    render(width.toDouble()*height,true)
                 }}catch(_:CancellationException){RenderResources.cancelledJobs.incrementAndGet()}
                 catch(_:RenderBudgetBusy){if(token==generation){
                     rejected=key to source;budgetRetry?.cancel()

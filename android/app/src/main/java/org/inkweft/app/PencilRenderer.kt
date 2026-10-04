@@ -20,7 +20,7 @@ internal object PencilRenderer {
 internal class PencilTileRenderer(private val unit:Float=.5f,private val live:Boolean=true,private val checkpoint:()->Unit={}) {
     internal var tileBuilds=0L; private set
     companion object {private const val SIDE=64}
-    private val UNIT=unit.coerceAtLeast(.5f);private val TILE=SIDE*UNIT
+    private val UNIT=unit.also{require(it.isFinite()&&it>0f)};private val TILE=SIDE*UNIT
     private data class Key(val id:String,val appearance:StrokeAppearance,val color:Int,val width:Float,val x:Int,val y:Int)
     private val owner="pencil-"+java.util.UUID.randomUUID()
     private val bitmapAllocation=Any();private val coverageAllocation=Any();private var ownedTiles=0
