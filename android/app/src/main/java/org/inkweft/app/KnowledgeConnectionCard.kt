@@ -15,6 +15,7 @@ import androidx.compose.ui.unit.dp
 internal fun KnowledgeConnectionCard(
     title: String, context: String, relation: String, summary: String,
     tag: String, enabled: Boolean, open: () -> Unit, remove: (() -> Unit)? = null,
+    edit: (() -> Unit)? = null, annotation:String = "",
 ) {
     var actionsOpen by remember { mutableStateOf(false) }
     var confirmRemoval by rememberSaveable { mutableStateOf(false) }
@@ -34,7 +35,11 @@ internal fun KnowledgeConnectionCard(
             Text(title, style = MaterialTheme.typography.titleMedium)
             Text(context, style = MaterialTheme.typography.bodySmall, color = Quiet)
             Text(summary, style = MaterialTheme.typography.bodyMedium, maxLines = 3, overflow = TextOverflow.Ellipsis)
-            TextButton(onClick = open, enabled = enabled, modifier = Modifier.heightIn(min = 48.dp)) { Text("预览内容") }
+            if(annotation.isNotBlank())Text(annotation,style=MaterialTheme.typography.bodyMedium,maxLines=3,overflow=TextOverflow.Ellipsis)
+            FlowRow(horizontalArrangement=Arrangement.spacedBy(8.dp)){
+                TextButton(onClick = open, enabled = enabled, modifier = Modifier.heightIn(min = 48.dp)) { Text("预览内容") }
+                edit?.let{TextButton(it,enabled=enabled,modifier=Modifier.heightIn(min=48.dp).testTag("$tag-edit")){Text("编辑关系")}}
+            }
         }
     }
     if (confirmRemoval && remove != null) AlertDialog(

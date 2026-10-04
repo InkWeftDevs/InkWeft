@@ -131,6 +131,7 @@ private val LinkPreviewSaver=Saver<LinkPreviewSelection?,List<String>>(
     var afterAnchorPicker by remember{mutableStateOf(false)}
     var waitingAnchor by remember{mutableStateOf(false)};var anchorCopied by remember{mutableStateOf(false)}
     var editCardId by rememberSaveable{mutableStateOf<String?>(null)};val editCard=ui.cards.find{it.id==editCardId&&it.notebookId==book};var newCollection by rememberSaveable{mutableStateOf(false)}
+    var editingLinkId by rememberSaveable(book){mutableStateOf<String?>(null)}
     var questionEdit by rememberSaveable(book,stateSaver=QuestionEditDraftSaver){mutableStateOf<QuestionEditDraft?>(null)}
     var reviewPlan by rememberSaveable(stateSaver=BranchReviewPlanSaver){mutableStateOf<BranchReviewPlan?>(null)}
     var reviewWithSummary by rememberSaveable(book){mutableStateOf(false)}
@@ -155,7 +156,7 @@ private val LinkPreviewSaver=Saver<LinkPreviewSelection?,List<String>>(
     val focusLock=rememberBookReadLock(focusBook);val focusReadOnly by focusLock.readOnly.collectAsStateWithLifecycle()
     val focusEditable=enabled&&!focusReadOnly
     val guardKey=remember(vm){"knowledge-${UUID.randomUUID()}"}
-    val authorDraft=picker||newCollection||((editCardId!=null||questionEdit!=null)&&!readOnly)
+    val authorDraft=editingLinkId!=null||picker||newCollection||((editCardId!=null||questionEdit!=null)&&!readOnly)
     ReadLockGuard(readLock,guardKey,blocked=ui.busy||ui.unknown||authorDraft,draft=authorDraft)
     if(focusBook!=book)ReadLockGuard(focusLock,"$guardKey-focus",blocked=picker,draft=picker)
     val pendingLock=rememberBookReadLock(vm.pendingBook?:book)
@@ -336,7 +337,9 @@ private val LinkPreviewSaver=Saver<LinkPreviewSelection?,List<String>>(
                                 if(!incoming&&link.pinnedRevision!=null)"保留所选修订，点击查看固定摘录；卡片名称为当前名称。"else summary(target),
                                 "knowledge-${if(incoming)"incoming"else"outgoing"}-${row.id}",enabled,
                                 open={preview=LinkPreviewSelection(focus,row.id,row.revision,incoming)},
-                                remove=if(!incoming&&focusEditable)({vm.submit(row.notebookId,link,row,true);Unit})else null)
+                                remove=if(!incoming&&focusEditable)({vm.submit(row.notebookId,link,row,true);Unit})else null,
+                                edit=if(!incoming&&focusEditable)({editingLinkId=row.id})else null,
+                                annotation=listOfNotNull(link.annotation.takeIf{it.isNotBlank()},"${link.lineStyle.label} · ${link.direction.label}"+(if(link.visible)""else" · 图中隐藏")).joinToString("\n"))
                         }
                     }
                     if(initialAnchor!=null&&!anchorCopied)item{OutlinedButton(onClick={waitingAnchor=true;vm.submit(book,initialAnchor)},enabled=editable,modifier=Modifier.fillMaxWidth().heightIn(min=48.dp).testTag("create-region-link")){Text("复制区域链接 · 不创建卡片")}}
@@ -408,6 +411,11 @@ private val LinkPreviewSaver=Saver<LinkPreviewSelection?,List<String>>(
         matchingCards.sortedBy{if(it.notebookId==book)0 else 1}.take(80).forEach{c->TextButton(onClick={vm.submit(focusBook,KnowledgeData.Link(focus,TargetRef(TargetKind.CARD,c.id),relation,if(pinned)c.revision else null));picker=false},enabled=focusEditable){Text("${c.title} · ${ui.notes.find{it.id==c.notebookId}?.title.orEmpty()} · ${c.id.take(6)}")}}
         matchingNotes.take(50).forEach{n->TextButton(onClick={vm.submit(focusBook,KnowledgeData.Link(focus,TargetRef(TargetKind.NOTE,n.id),relation));picker=false},enabled=focusEditable){Text("笔记 · ${n.title} · ${n.id.take(6)}")}}
     }},confirmButton={TextButton(onClick={picker=false}){Text("取消")}})
+    editingLinkId?.let{id->
+        val selected=ui.rows.firstOrNull{it.id==id&&it.data() is KnowledgeData.Link}
+        if(selected!=null)key(id){KnowledgeRelationEditor(selected){editingLinkId=null}}
+        else if(!ui.loading)AlertDialog(onDismissRequest={editingLinkId=null},title={Text("关联不可用")},text={Text("这条关系尚未读取或已移除，未提交修改。")},confirmButton={TextButton({editingLinkId=null}){Text("返回")}})
+    }
     preview?.let{selection->key(selection,includeAllRelationKinds){KnowledgeLinkPreview(selection.focus,selection.id,selection.revision,selection.incoming,
         enabled=canDismiss,includeAllRelationKinds=includeAllRelationKinds,returnLabel="返回关联",dismiss={preview=null},onOpenTarget=openTarget)}}
     editCard?.let{card->

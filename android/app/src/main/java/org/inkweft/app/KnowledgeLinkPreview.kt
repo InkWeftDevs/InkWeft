@@ -69,6 +69,10 @@ internal fun KnowledgeLinkPreview(
             Text(preview?.pinnedRevision?.let { "固定摘录 · 修订 $it" } ?: "当前内容", style = MaterialTheme.typography.labelLarge, color = Forest)
             if (reading) CircularProgressIndicator(Modifier.size(24.dp))
             preview?.let { value ->
+                if(value.relationAnnotation.isNotBlank()){
+                    Text("关系注释",style=MaterialTheme.typography.labelLarge)
+                    SelectionContainer{Text(value.relationAnnotation,modifier=Modifier.testTag("relation-preview-annotation"))}
+                }
                 SelectionContainer { Text(value.body.ifBlank { "尚未填写内容" }, modifier = Modifier.testTag("card-link-preview-body")) }
                 if(value.annotation.isNotBlank()){
                     Text("个人注释",style=MaterialTheme.typography.labelLarge)
