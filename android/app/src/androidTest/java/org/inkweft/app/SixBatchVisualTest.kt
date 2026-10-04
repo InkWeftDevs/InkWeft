@@ -7,6 +7,7 @@ import android.view.KeyEvent
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.lifecycle.ViewModelProvider
@@ -31,6 +32,11 @@ class SixBatchVisualTest {
     private fun tap(tag:String){compose.revealAction(tag);waitFor(tag);val node=compose.onNodeWithTag(tag)
         runCatching{node.performScrollTo()};compose.waitUntil(60_000){runCatching{node.assertIsEnabled()}.isSuccess}
         node.assertIsDisplayed().performTouchInput{click()};compose.waitForIdle()}
+    private fun fullyVisible(tag:String,container:String){
+        val node=compose.onNodeWithTag(tag);node.assertIsDisplayed()
+        val child=node.getUnclippedBoundsInRoot();val bounds=compose.onNodeWithTag(container).getUnclippedBoundsInRoot()
+        assertTrue("$tag must be fully inside $container before capture",child.left>=bounds.left-1.dp&&child.right<=bounds.right+1.dp&&child.top>=bounds.top-1.dp&&child.bottom<=bounds.bottom+1.dp)
+    }
     private fun back(tag:String){instrumentation.sendKeyDownUpSync(KeyEvent.KEYCODE_BACK);compose.waitUntil(30_000){compose.onAllNodesWithTag(tag).fetchSemanticsNodes().isEmpty()}}
     private fun shell(command:String)=ParcelFileDescriptor.AutoCloseInputStream(instrumentation.uiAutomation.executeShellCommand(command)).bufferedReader().use{it.readText().trim()}
     private fun atDisplay(narrow:Boolean,action:()->Unit){
@@ -88,18 +94,24 @@ class SixBatchVisualTest {
                 tap("quick-study");tap("study-tab-2");waitFor("study-map")
                 val node=f.manifest.getJSONObject("authoring").getString("boundNodeId");select(node)
                 shot(f,layout,"03-map-selected");tap("study-direct-outline")
-                compose.onNodeWithTag("study-list").performScrollToNode(hasTestTag("outline-row-$node"));shot(f,layout,"04-outline-selected")
-                tap("outline-node-$node");waitFor("card-full-title");shot(f,layout,"05-long-card-title")
-                waitFor("card-full-body");compose.onNodeWithTag("card-full-body").performScrollTo();compose.onNodeWithTag("card-full-body").assertTextContains("正文末尾定位标记",substring=true)
+                compose.onNodeWithTag("study-list").performScrollToNode(hasTestTag("outline-row-$node"))
+                fullyVisible("outline-organize-$node","study-list");shot(f,layout,"04-outline-selected")
+                tap("outline-node-$node");waitFor("card-full-title");tap("card-jump-body")
+                fullyVisible("card-full-title","card-reading-content");shot(f,layout,"05-long-card-title")
+                tap("card-jump-body");compose.onNodeWithTag("card-reading-content").performTouchInput{swipeUp()}
+                compose.onNodeWithTag("card-full-body").assertIsDisplayed().assertTextContains("正文末尾定位标记",substring=true)
                 shot(f,layout,"06-long-card-body")
-                compose.onNodeWithTag("card-full-annotation").performScrollTo();compose.onNodeWithTag("card-full-annotation").assertTextContains("注释末尾定位标记",substring=true)
+                tap("card-jump-annotation");fullyVisible("card-annotation-heading","card-reading-content")
+                compose.onNodeWithTag("card-full-annotation").assertIsDisplayed().assertTextContains("注释末尾定位标记",substring=true)
                 shot(f,layout,"07-long-card-annotation")
-                if(compose.onAllNodesWithTag("card-source-content").fetchSemanticsNodes().isEmpty())tap("card-source-section")
-                waitFor("card-source-content");compose.onNodeWithTag("card-source-heading").performScrollTo();shot(f,layout,"08-long-card-source")
+                waitFor("card-source-summary-0");tap("card-jump-source")
+                compose.onNodeWithTag("card-source-summary-0").assertTextContains(note.title,substring=true).assertTextContains("第3页",substring=true)
+                for(tag in listOf("card-source-heading","card-source-summary-0","card-source-section","study-view-snapshot"))fullyVisible(tag,"card-reading-content")
+                compose.onNodeWithTag("study-open-source").assertIsDisplayed();shot(f,layout,"08-long-card-source")
                 tap("card-back");tap("study-close")
                 compose.openOverviewGrid();compose.onNodeWithTag("page-grid").performScrollToNode(hasTestTag("jump-page-4"));tap("jump-page-4");tap("pages-directory-dialog-close")
-                nativeEvidence.awaitPage(f,3,continuous=false);tap("page-layers-open");waitFor("page-layers");shot(f,layout,"09-page-layers");back("page-layers")
-                tap("page-whitespace-open");waitFor("document-whitespace-panel");shot(f,layout,"10-whitespace-expanded")
+                nativeEvidence.awaitPage(f,3,continuous=false);tap("page-layers-open");waitFor("page-layers");fullyVisible("layer-heading-${UserLayers.DEFAULT_ID}","page-layers");shot(f,layout,"09-page-layers");back("page-layers")
+                tap("page-whitespace-open");waitFor("document-whitespace-panel");compose.onNodeWithTag("floating-pen-case").assertDoesNotExist();fullyVisible("whitespace-title","document-whitespace-panel");shot(f,layout,"10-whitespace-expanded")
                 compose.onNode(hasScrollToIndexAction() and hasAnyAncestor(hasTestTag("document-whitespace-panel")))
                     .performScrollToNode(hasTestTag("whitespace-collapse-${f.id("blank-collapsed")}"))
                 compose.onNodeWithTag("whitespace-collapse-${f.id("blank-collapsed")}").assertTextEquals("展开")

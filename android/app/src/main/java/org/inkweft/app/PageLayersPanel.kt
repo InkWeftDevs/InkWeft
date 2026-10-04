@@ -15,24 +15,29 @@ import java.util.UUID
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable internal fun PageLayersPanel(model:PageAuthoringViewModel,state:AuthoringUi,enabled:Boolean,selection:List<LayerContent> = emptyList(),dismiss:()->Unit){
+    var showHelp by remember{mutableStateOf(false)}
     var rename by remember{mutableStateOf<UserLayer?>(null)}
     var name by remember{mutableStateOf("")}
     var deleting by remember{mutableStateOf<UserLayer?>(null)}
     var transferring by remember{mutableStateOf<List<LayerContent>?>(null)}
     val ready=enabled&&state.ready&&!model.writing
-    EditorPanel("图层","仅当前页／画布；至少保留一个可写层",{if(!state.pending&&!model.writing)dismiss()},"page-layers",kind=PanelKind.SETTINGS){
+    EditorPanel("图层","当前页／画布",{if(!state.pending&&!model.writing)dismiss()},"page-layers",kind=PanelKind.SETTINGS,footer=if(state.undo||state.redo)({
+        FlowRow {
+            TextButton(model::undo,enabled=ready&&state.undo,modifier=Modifier.testTag("layer-undo")){Text("撤销图层／批注")}
+            TextButton(model::redo,enabled=ready&&state.redo,modifier=Modifier.testTag("layer-redo")){Text("重做")}
+        }
+    })else null){
         Column(Modifier.verticalScroll(rememberScrollState())){
             Text(if(state.state.layers.currentId==null)"已暂停落笔，请明确选择可写层" else "当前可写层：${state.state.layers.layers.first{it.id==state.state.layers.currentId}.name}",modifier=Modifier.testTag("current-writable-layer"))
             FlowRow {
                 TextButton({model.layers{it.add(UserLayer(UUID.randomUUID().toString(),"图层 ${it.layers.size+1}"))}},enabled=ready,modifier=Modifier.testTag("layer-add")){Text("新建图层")}
-                TextButton(model::undo,enabled=ready&&state.undo,modifier=Modifier.testTag("layer-undo")){Text("撤销图层／批注")}
-                TextButton(model::redo,enabled=ready&&state.redo,modifier=Modifier.testTag("layer-redo")){Text("重做")}
+                TextButton({showHelp=!showHelp},modifier=Modifier.testTag("layer-help")){Text(if(showHelp)"收起说明"else"图层说明")}
             }
-            Text("列表从底层到顶层。隐藏仅影响显示，锁定限制编辑；回忆遮罩另行处理。",style=MaterialTheme.typography.bodySmall)
+            if(showHelp)Text("至少保留一个可写层。列表从底层到顶层。隐藏仅影响显示，锁定限制编辑；回忆遮罩另行处理。",style=MaterialTheme.typography.bodySmall,modifier=Modifier.testTag("layer-help-content"))
             if(selection.isNotEmpty())TextButton({transferring=selection},enabled=ready&&selection.all{state.state.layers.editable(it)},modifier=Modifier.testTag("layer-transfer-selection")){Text("选中的 ${selection.size} 项转层（含关联原迹）")}
             state.state.layers.layers.forEachIndexed{index,layer->
                 HorizontalDivider(Modifier.padding(vertical=6.dp))
-                Text("${index+1}. ${layer.name}${if(layer.locked)" · 已锁定"else""}${if(!layer.visible)" · 已隐藏"else""}")
+                Text("${index+1}. ${layer.name}${if(layer.locked)" · 已锁定"else""}${if(!layer.visible)" · 已隐藏"else""}",modifier=Modifier.testTag("layer-heading-${layer.id}"))
                 FlowRow {
                     TextButton({model.layers{it.select(layer.id)}},enabled=ready&&layer.writable,modifier=Modifier.testTag("layer-select-${layer.id}")){Text(if(state.state.layers.currentId==layer.id)"当前层"else"选为可写层")}
                     TextButton({rename=layer;name=layer.name},enabled=ready){Text("命名")}

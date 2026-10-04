@@ -313,11 +313,20 @@ class RecallMaskUiTest {
         if (compose.onAllNodesWithTag("open-library-drawer").fetchSemanticsNodes().isNotEmpty()) tap("open-library-drawer")
         compose.onNodeWithText("学习", useUnmergedTree = true).performScrollTo().performClick()
         waitFor("learning-workbench")
-        compose.onNodeWithTag("widget-maps").performScrollTo()
-        compose.onNodeWithTag("learning-map-search").performTextReplacement(f.mapTitle)
+        // A lazy child's semantics can outlive its old placement while recent
+        // entries reload. Position the owning widget before touching its row.
+        val mapsKey = app.learningStore.read().widgets.single {
+            it.definition == "org.inkweft/maps" && it.visible
+        }.id
+        val widgets = compose.onNode(hasScrollToKeyAction() and hasAnyAncestor(hasTestTag("learning-workbench")))
+        widgets.assertIsDisplayed().performScrollToKey(mapsKey)
+        waitFor("learning-map-search")
+        compose.onNodeWithTag("learning-map-search").assertIsDisplayed().performTextReplacement(f.mapTitle)
         val target = hasTestTag("learning-target-${f.map}") and hasAnyAncestor(hasTestTag("widget-maps"))
         compose.waitUntil(15_000) { compose.onAllNodes(target).fetchSemanticsNodes().isNotEmpty() }
-        compose.onNode(target).performScrollTo().performClick(); waitFor("study-map")
+        widgets.performScrollToKey(mapsKey)
+        compose.onNode(target).performScrollTo().assertIsDisplayed().assertIsEnabled().performTouchInput { click() }
+        waitFor("study-map", diagnoseOnFailure = true)
     }
 
     private fun openLibraryNotebook(f: Fixture, collection: Boolean) {
@@ -1019,8 +1028,29 @@ class RecallMaskUiTest {
         assertHidden(f); assertPlaceholder("recall-context-source-placeholder")
         tap("recall-context-tab-excerpt"); assertPlaceholder("recall-context-excerpt-placeholder")
         screenshot("v54-after-mask")
-        shell("settings put system font_scale 1.6"); compose.activityRule.scenario.recreate(); waitFor("review-question", diagnoseOnFailure = true)
-        compose.waitUntil(15_000) { kotlin.math.abs(compose.activity.resources.configuration.fontScale - 1.6f) < .02f }
+        // Changing FONT_SCALE already recreates this Activity. Verify that real
+        // transition before requesting another recreation, rather than racing
+        // two lifecycle drivers while the saved round is still being restored.
+        val beforeFontChange = compose.activity
+        shell("settings put system font_scale 1.6")
+        try {
+            compose.waitUntil(15_000) {
+                compose.activity !== beforeFontChange &&
+                    kotlin.math.abs(compose.activity.resources.configuration.fontScale - 1.6f) < .02f
+            }
+        } catch (error: Throwable) {
+            attachWaitDiagnostic(error, "system font-scale Activity replacement")
+            throw error
+        }
+        waitFor("review-question", diagnoseOnFailure = true)
+        assertHidden(f)
+        compose.onNodeWithTag("recall-context-tab-excerpt").assertIsSelected()
+        assertPlaceholder("recall-context-excerpt-placeholder")
+        assertNoWrites(f, before, otherBefore)
+        compose.activityRule.scenario.recreate(); waitFor("review-question", diagnoseOnFailure = true)
+        assertHidden(f)
+        compose.onNodeWithTag("recall-context-tab-excerpt").assertIsSelected()
+        assertPlaceholder("recall-context-excerpt-placeholder")
         for ((tab, placeholder) in listOf("source" to "source", "map" to "map", "excerpt" to "excerpt")) {
             tap("recall-context-tab-$tab"); assertPlaceholder("recall-context-$placeholder-placeholder"); assertHidden(f)
         }

@@ -10,7 +10,7 @@ from unittest.mock import patch
 
 from android_plan import inventory
 from run_six_batch_fixture import PACKAGE, PHASE_METHODS, RUNNER
-from six_batch_scope import build_plan
+from six_batch_scope import FOCUSED_METHODS, build_plan
 
 
 class SixBatchScopeTest(unittest.TestCase):
@@ -35,6 +35,25 @@ class SixBatchScopeTest(unittest.TestCase):
         self.assertEqual(24, plan["fixture"]["native_workspace_screenshots"])
         self.assertEqual(6, plan["fixture"]["native_recall_screenshots"])
         self.assertEqual(38, plan["fixture"]["expected_screenshots"])
+
+    def test_focused_is_explicit_small_scope_and_full_inventory_stays_complete(self):
+        focused, full = build_plan("focused"), build_plan("full")
+        self.assertEqual((134, 180, 5, 38), (full["expected_app"], full["expected_room"],
+                         full["fixture"]["expected_methods"], full["fixture"]["expected_screenshots"]))
+        self.assertEqual(15, focused["expected_app"])
+        self.assertEqual(FOCUSED_METHODS, focused["app_methods"])
+        self.assertEqual(set(focused["app"]), set(focused["app_methods"]))
+        self.assertEqual(["prepare", "native_recall"], focused["fixture"]["selected_phases"])
+        self.assertEqual(13, focused["fixture"]["selected_screenshots"])
+        self.assertEqual(list(PHASE_METHODS), full["fixture"]["selected_phases"])
+        self.assertEqual("NOT_RUN_FOCUSED", focused["lint"])
+        self.assertEqual("RUN_REQUIRED", full["lint"])
+        for name, method in (("RecallMaskUiTest", "libraryMapRecallAncestorsHideCluesFromInteractiveWindows"),
+                             ("RecallMaskUiTest", "tabletMapTextFitAndNeutralRecallPlaceholdersKeepAuthorRows"),
+                             ("SelectionStudyUiTest", "outlineFoldFocusAndQuickAddShareOneGraph")):
+            self.assertIn(method, focused["app_methods"]["org.inkweft.app." + name])
+        with self.assertRaises(ValueError):
+            build_plan("unknown")
 
     def test_workflow_uploads_only_explicit_fixture_files(self):
         workflow = (Path(__file__).resolve().parents[1] / ".github/workflows/android-six-batches.yml").read_text()

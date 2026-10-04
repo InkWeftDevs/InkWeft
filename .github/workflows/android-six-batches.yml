@@ -14,6 +14,13 @@ on:
       - "android/verification/six-batch-fixture-20261004/test_*.py"
       - ".github/workflows/android-six-batches.yml"
   workflow_dispatch:
+    inputs:
+      mode:
+        description: focused反馈当前阻塞；full执行完整六批验收
+        type: choice
+        options: [focused, full]
+        default: focused
+        required: true
 permissions:
   contents: read
   actions: read
@@ -22,19 +29,22 @@ concurrency:
   cancel-in-progress: false
 jobs:
   verify:
-    name: 定向验证分片 ${{ matrix.shard }} / 3
+    name: ${{ (inputs.mode == 'full' || (github.event_name == 'push' && contains(github.event.head_commit.message, '[six-batches-full]'))) && 'full' || 'focused' }} 验证分片 ${{ matrix.shard }}
     strategy:
       fail-fast: false
       matrix:
-        shard: [0, 1, 2]
+        shard: ${{ fromJSON((inputs.mode == 'full' || (github.event_name == 'push' && contains(github.event.head_commit.message, '[six-batches-full]'))) && '[0, 1, 2]' || '[0]') }}
     runs-on: ubuntu-24.04
     timeout-minutes: 45
     env:
       ORG_GRADLE_PROJECT_inkweftInsertionPreview: "true"
+      INKWEFT_MODE: ${{ (inputs.mode == 'full' || (github.event_name == 'push' && contains(github.event.head_commit.message, '[six-batches-full]'))) && 'full' || 'focused' }}
       INKWEFT_HEAD_SHA: ${{ github.sha }}
       INKWEFT_SHARD_INDEX: ${{ matrix.shard }}
       INKWEFT_SHARD_COUNT: ${{ strategy.job-total }}
     steps:
+      - name: 预留最后180秒清理上传并限制固定样本预算
+        run: echo "INKWEFT_FIXTURE_DEADLINE=$(( $(date +%s) + 45*60 - 180 ))" >> "$GITHUB_ENV"
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           persist-credentials: false
@@ -75,7 +85,7 @@ jobs:
           echo "$ANDROID_HOME/cmdline-tools/latest/bin" >> "$GITHUB_PATH"
           echo "$ANDROID_HOME/platform-tools" >> "$GITHUB_PATH"
           "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-36" "build-tools;36.0.0" "platform-tools"
-          python3 ci/six_batch_scope.py
+          python3 ci/six_batch_scope.py --mode "$INKWEFT_MODE"
           python3 -m unittest discover -s ci -p 'test_*.py'
           python3 -m unittest discover -s android/verification/six-batch-fixture-20261004 -p 'test_*.py'
       - name: 明确记录Room与固定样本只分配给0号分片
@@ -100,12 +110,17 @@ jobs:
           test "$(git rev-parse HEAD)" = "$INKWEFT_HEAD_SHA"
           python3 - <<'PY'
           import json, subprocess
+          from pathlib import Path
           p=json.load(open('android-plan.json'))
           command=['./gradlew','--no-daemon','--max-workers=1','-Pkotlin.compiler.execution.strategy=in-process',
                    '-Dorg.gradle.jvmargs=-Xmx3g -XX:MaxMetaspaceSize=1g -Dfile.encoding=UTF-8',':core-domain:test']
           for name in p['core_classes']: command+=['--tests',name]
-          command+=[':app:lintDebug',':app:assembleDebug',':app:assembleDebugAndroidTest',':data-local:assembleDebugAndroidTest']
+          if p['mode']=='full': command+=[':app:lintDebug']
+          command+=[':app:assembleDebug',':app:assembleDebugAndroidTest',':data-local:assembleDebugAndroidTest']
           subprocess.run(command,cwd='android',check=True)
+          Path('android/build/evidence/build-summary.json').write_text(json.dumps({
+              'mode':p['mode'],'core':'PASS','apk_build':'PASS',
+              'lint':'PASS' if p['mode']=='full' else 'NOT_RUN_FOCUSED'},indent=2))
           PY
           git diff --exit-code -- android/data-local/schemas
           test -z "$(git ls-files --others --exclude-standard -- android/data-local/schemas)"
@@ -142,6 +157,8 @@ jobs:
             android-plan.json
             android/build/evidence/app-summary.json
             android/build/evidence/room-summary.json
+            android/build/evidence/room-input-evidence.json
+            android/build/evidence/build-summary.json
             android/build/evidence/fixture-summary.json
             android/build/evidence/scope.json
             android/build/evidence/APK-SHA256.txt
@@ -155,10 +172,10 @@ jobs:
             android/build/evidence/app-*/timeout-app-backtrace.txt
       - name: 同一固定大样本准备、冷重开、原生界面及持久回忆取证
         if: ${{ !cancelled() && steps.build.outcome == 'success' && steps.emulator.outcome == 'success' && steps.acceleration.outputs.ready == 'true' && matrix.shard == 0 }}
-        run: python3 ci/run_six_batch_fixture.py --source-commit "$INKWEFT_HEAD_SHA"
+        run: python3 ci/run_six_batch_fixture.py --mode "$INKWEFT_MODE" --deadline-epoch "$INKWEFT_FIXTURE_DEADLINE" --source-commit "$INKWEFT_HEAD_SHA"
       - name: 如实记录固定大样本没有运行
         if: ${{ !cancelled() && (steps.build.outcome != 'success' || steps.emulator.outcome != 'success' || steps.acceleration.outputs.ready != 'true') && matrix.shard == 0 }}
-        run: python3 ci/run_six_batch_fixture.py --source-commit "$INKWEFT_HEAD_SHA" --not-run "Build=${{ steps.build.outcome }}; emulator=${{ steps.emulator.outcome }}; KVM=${{ steps.acceleration.outputs.ready }}"
+        run: python3 ci/run_six_batch_fixture.py --mode "$INKWEFT_MODE" --deadline-epoch "$INKWEFT_FIXTURE_DEADLINE" --source-commit "$INKWEFT_HEAD_SHA" --not-run "Build=${{ steps.build.outcome }}; emulator=${{ steps.emulator.outcome }}; KVM=${{ steps.acceleration.outputs.ready }}"
       - name: 如实记录没有设备运行
         if: steps.acceleration.outputs.ready != 'true'
         run: |
@@ -193,6 +210,7 @@ jobs:
             android/core-domain/build/test-results/test/TEST-*.xml
             android/app/build/reports/lint-results-debug.xml
             android/build/evidence/*-summary.json
+            android/build/evidence/room-input-evidence.json
             android/build/evidence/device-environment.json
             android/build/evidence/kvm-acl-restoration.json
             android/build/evidence/APK-SHA256.txt

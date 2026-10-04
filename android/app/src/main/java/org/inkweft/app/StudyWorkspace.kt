@@ -1089,7 +1089,7 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
                             if(card.body.isNotBlank()&&!repeatsExcerptBody(card.title,card.body))Text(card.body,maxLines=1,overflow=TextOverflow.Ellipsis,fontSize=12.sp,color=Quiet,modifier=Modifier.padding(start=56.dp,end=8.dp,bottom=4.dp))
                             titleDraft?.takeIf{it.mapId==currentMap&&it.anchorId==node.id}?.let{inlineTitle(it)}
                             // Keep this group distinct from the clickable card in the merged accessibility tree.
-                            if(isSelected)Row(Modifier.horizontalScroll(rememberScrollState()).semantics(mergeDescendants=true){}.testTag("outline-context-actions")){
+                            if(isSelected)FlowRow(Modifier.fillMaxWidth().semantics(mergeDescendants=true){}.testTag("outline-context-actions")){
                                 TextButton(onClick={editTitle(node)},enabled=editable,modifier=Modifier.heightIn(min=48.dp).testTag("outline-rename-${node.id}")){Text("修改标题")}
                                 TextButton(onClick={editTitle(node,true)},enabled=editable,modifier=Modifier.heightIn(min=48.dp).testTag("outline-child-${node.id}")){Text("＋ 子主题")}
                                 TextButton(onClick={editTitle(node,true,true)},enabled=editable,modifier=Modifier.heightIn(min=48.dp).testTag("outline-sibling-${node.id}")){Text("＋ 同级")}

@@ -1,6 +1,7 @@
 """Install once and capture evidence from the same instrumentation run, before cleanup."""
 import argparse
 import json
+import os
 from pathlib import Path
 import re
 import subprocess
@@ -8,6 +9,7 @@ from android_device import prepare_case
 from android_shards import partition
 from android_plan import select_methods
 from android_timeout import capture_app_timeout
+from room_evidence import room_evidence
 
 parser=argparse.ArgumentParser()
 parser.add_argument("--shard-index",type=int,default=0)
@@ -26,6 +28,17 @@ for module,key,runner in [("data-local","room","org.inkweft.data.test/androidx.t
                           ("app","app","org.inkweft.app.a0.insertion.test/androidx.test.runner.AndroidJUnitRunner")]:
     classes=plan[key]
     if not classes or (key=="room" and args.shard_index!=0): continue
+    if key=="room":
+        evidence=room_evidence(root,plan.get("mode","full"),plan["expected_room"],classes)
+        (out/"room-input-evidence.json").write_text(json.dumps(evidence,indent=2),encoding="utf-8")
+        if evidence["status"]=="REUSED_EVIDENCE":
+            (out/"room-summary.json").write_text(json.dumps({
+                "status":"REUSED_EVIDENCE","expected":0,"planned_total":plan["expected_room"],
+                "passed":0,"executed":0,"reused_passed":evidence["reused_passed"],
+                "failures":[],"infrastructure":[],"shard_index":args.shard_index,"shard_count":args.shard_count,
+                "current_source_commit":os.environ.get("INKWEFT_HEAD_SHA"),
+                "evidence":evidence},indent=2),encoding="utf-8")
+            continue
     if module=="app": subprocess.run(["adb","install","-r",str(root/"android/app/build/outputs/apk/debug/app-debug.apk")],check=True)
     apk=root/f"android/{module}/build/outputs/apk/androidTest/debug/{module}-debug-androidTest.apk"
     subprocess.run(["adb","install","-r",str(apk)],check=True)

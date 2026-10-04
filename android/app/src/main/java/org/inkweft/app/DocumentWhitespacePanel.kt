@@ -20,6 +20,7 @@ import org.inkweft.core.AnnotationTarget
 import java.util.UUID
 
 /** Native ink in local coordinates. The view crop changes, never the stored overflow samples. */
+@OptIn(ExperimentalLayoutApi::class)
 @Composable internal fun AnnotationPad(model:PageAuthoringViewModel,state:AuthoringUi,target:AnnotationTarget,
     enabled:Boolean,height:Double=300.0,width:Double=1000.0,referenceWidth:Double=1000.0,onNotice:(String)->Unit={}) {
     var finger by remember{mutableStateOf(false)};var eraser by remember{mutableStateOf(false)}
@@ -31,7 +32,7 @@ import java.util.UUID
         a.copy(target=AnnotationTarget(AnnotationTargetKind.PAGE,model.scope.id),localFrame=AnnotationFrame(0.0,0.0,scale).compose(a.localFrame))}
     val padState=PageAuthoring(state.state.layers,annotations=padAnnotations)
     Column {
-        Row {
+        FlowRow(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.spacedBy(4.dp)) {
             FilterChip(finger,{finger=!finger},label={Text("手指书写")},enabled=enabled&&!writing)
             FilterChip(eraser,{eraser=!eraser},label={Text("橡皮")},enabled=enabled&&!writing)
             TextButton(model::undo,enabled=enabled&&state.undo&&!writing){Text("撤销批注／图层")}
@@ -62,6 +63,7 @@ import java.util.UUID
     }
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable internal fun DocumentWhitespacePanel(pageId:String,paper:PaperStyle,ink:List<InkStroke>,objects:List<PageObject>,model:PageAuthoringViewModel,
     state:AuthoringUi,enabled:Boolean,embedded:Boolean=false,dismiss:()->Unit){
     var anchor by remember{mutableFloatStateOf(707f)}
@@ -75,9 +77,13 @@ import java.util.UUID
     DisposableEffect(pageId,listState){onDispose{preferences.edit().putInt("$pageId.index",listState.firstVisibleItemIndex).putInt("$pageId.offset",listState.firstVisibleItemScrollOffset).apply()}}
     val content:@Composable ()->Unit={
         Surface(Modifier.fillMaxSize().testTag("document-whitespace-panel")){
-            Column(Modifier.safeDrawingPadding()){
-                Row(Modifier.fillMaxWidth().padding(horizontal=12.dp)){
-                    Text("含留白展开视图",Modifier.weight(1f));TextButton({layers=true}){Text("图层")};TextButton(dismiss,enabled=!writerDraft&&!state.busy&&!state.pending){Text("原页视图")}
+            Column(if(embedded)Modifier else Modifier.safeDrawingPadding()){
+                FlowRow(Modifier.fillMaxWidth().padding(horizontal=12.dp).testTag("whitespace-header"),horizontalArrangement=Arrangement.SpaceBetween,verticalArrangement=Arrangement.Center){
+                    Text("含留白展开视图",Modifier.align(androidx.compose.ui.Alignment.CenterVertically).testTag("whitespace-title"))
+                    Row {
+                        TextButton({layers=true},modifier=Modifier.testTag("whitespace-layers")){Text("图层")}
+                        TextButton(dismiss,enabled=!writerDraft&&!state.busy&&!state.pending,modifier=Modifier.testTag("whitespace-original")){Text("原页视图")}
+                    }
                 }
                 Text("原 PDF 与源锚保持原坐标。此处展示展开留白，原页模式与原页尺寸的可见分享不含留白。",Modifier.padding(horizontal=12.dp),style=MaterialTheme.typography.bodySmall)
                 if(enabled)Row(Modifier.padding(horizontal=12.dp)){

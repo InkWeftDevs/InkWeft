@@ -453,7 +453,7 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
         HorizontalDivider(color=Line)
     }
     val toolbar:@Composable ()->Unit={
-        FloatingPenCase(expandRequest=penOpenRequest,topInset=toolbarHeight) {
+        FloatingPenCase(expandRequest=penOpenRequest,topInset=toolbarHeight,visible=!whitespaceOpen) {
             val caseKinds=listOf(InkPen.PENCIL,InkPen.PEN,InkPen.BRUSH,InkPen.MARKER,InkPen.BALLPOINT,InkPen.HIGHLIGHTER)
             caseKinds.forEach{kind->
                 val active=tool in 0..2&&kinds[tool]==kind
@@ -497,7 +497,7 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
         }
         if(notice!=null)Row(Modifier.fillMaxWidth().background(Color.White).padding(start=16.dp),verticalAlignment=Alignment.CenterVertically){Text(notice!!,Modifier.weight(1f),fontSize=12.sp);IconButton(onClick={notice=null},modifier=Modifier.describedAs("关闭提示")){Glyph("close")}}
         if(whitespaceOpen&&!page.world){
-            Box(Modifier.fillMaxWidth().weight(1f).padding(top=toolbarHeight)){DocumentWhitespacePanel(page.id,PaperStyle.entries[page.paper],ui.strokes,objectsUi.objects,authoringVm,authoringUi,authoringEnabled,embedded=true,dismiss={whitespaceMode(false)})}
+            Box(Modifier.fillMaxWidth().weight(1f)){DocumentWhitespacePanel(page.id,PaperStyle.entries[page.paper],ui.strokes,objectsUi.objects,authoringVm,authoringUi,authoringEnabled,embedded=true,dismiss={whitespaceMode(false)})}
         }else if(continuousPages!=null){
             Box(Modifier.fillMaxWidth().weight(1f)){ContinuousPages(continuousPages,page.id,
                 ContinuousTools(kinds[tool.coerceIn(0,2)],colors[tool.coerceIn(0,2)],widths[tool.coerceIn(0,2)],tool==3,eraser.whole,eraser.onlyHighlighter,eraser.diameterDp,authoringUi.canWrite&&externalEnabled&&!readOnly&&tool<4&&!(if(tool==3)objectsBlocked else inkObjectsBlocked),beautyOptions,recipes[tool.coerceIn(0,2)],eraser.onlyTape,finger&&!readOnly),
@@ -661,7 +661,7 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
             }
         if(fullScreen)TextButton(onClick={onFullScreen(false)},modifier=Modifier.align(Alignment.BottomEnd).padding(8.dp).testTag("exit-fullscreen")){Text("退出全屏")}
         if(!readOnly)toolbar()
-        if(favoritesOpen&&!readOnly)FloatingPenCase("favorites",wide=true,topInset=toolbarHeight){
+        if(favoritesOpen&&!readOnly)FloatingPenCase("favorites",wide=true,topInset=toolbarHeight,visible=!whitespaceOpen){
             if(favorites.isEmpty())Text("在笔参数卡片点星号收藏",Modifier.padding(16.dp),style=MaterialTheme.typography.bodySmall,color=Quiet)
             else Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()).padding(start=8.dp,end=8.dp,bottom=12.dp)){
                 favorites.forEach{p->Box{Column(horizontalAlignment=Alignment.CenterHorizontally){

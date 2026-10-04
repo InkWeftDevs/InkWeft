@@ -2,6 +2,7 @@
 package org.inkweft.app
 
 import android.graphics.Bitmap
+import android.os.ParcelFileDescriptor
 import android.view.KeyEvent
 import androidx.compose.ui.semantics.SemanticsProperties
 import androidx.compose.ui.test.*
@@ -45,6 +46,28 @@ class LearningWorkspacePolishUiTest {
         val bitmap=checkNotNull(InstrumentationRegistry.getInstrumentation().uiAutomation.takeScreenshot())
         try{File(h.app.getExternalFilesDir(null),name).outputStream().use{bitmap.compress(Bitmap.CompressFormat.PNG,100,it)}}finally{bitmap.recycle()}
     }
+    private fun shell(command:String)=ParcelFileDescriptor.AutoCloseInputStream(InstrumentationRegistry.getInstrumentation().uiAutomation.executeShellCommand(command)).bufferedReader().use{it.readText().trim()}
+    private fun atNarrow(action:()->Unit){
+        val oldSize=Regex("""Override size:\s*(\d+x\d+)""").find(shell("wm size"))?.groupValues?.get(1)
+        val oldDensity=Regex("""Override density:\s*(\d+)""").find(shell("wm density"))?.groupValues?.get(1)
+        val oldFont=shell("settings get system font_scale")
+        try{
+            shell("wm size 750x1600");shell("wm density 320");shell("settings put system font_scale 1.6")
+            compose.activityRule.scenario.recreate()
+            compose.waitUntil(30_000){val c=compose.activity.resources.configuration;kotlin.math.abs(c.screenWidthDp-375)<=4&&kotlin.math.abs(c.fontScale-1.6f)<.02f}
+            action()
+        }finally{
+            shell(if(oldSize==null)"wm size reset"else"wm size $oldSize")
+            shell(if(oldDensity==null)"wm density reset"else"wm density $oldDensity")
+            shell(if(oldFont=="null")"settings delete system font_scale"else"settings put system font_scale $oldFont")
+            compose.activityRule.scenario.recreate()
+        }
+    }
+    private fun fullyVisible(tag:String,container:String){
+        val node=compose.onNodeWithTag(tag);node.assertIsDisplayed()
+        val child=node.getUnclippedBoundsInRoot();val bounds=compose.onNodeWithTag(container).getUnclippedBoundsInRoot()
+        assertTrue("$tag stays entirely inside $container",child.left>=bounds.left-1.dp&&child.right<=bounds.right+1.dp&&child.top>=bounds.top-1.dp&&child.bottom<=bounds.bottom+1.dp)
+    }
     private fun y(tag:String)=compose.onNodeWithTag(tag).fetchSemanticsNode().positionInRoot.y
 
     @Test fun detailReadsTitleBodyAnnotationAndSourceBeforeEditingControls(){
@@ -78,7 +101,8 @@ class LearningWorkspacePolishUiTest {
                 KnowledgeData.CardPresentation(f.card,annotation,CardTint.GREEN,CardTint.ROSE)))
         }
         val authors=h.authorStamp(f.note.id);val unrelated=h.authorStamp(f.unrelated.id);val source=h.source(f.card)
-        h.openBody(f)
+        h.openBody(f);h.tapFooter("card-jump-body")
+        fullyVisible("card-full-title","card-reading-content")
         compose.waitUntil(15_000){runCatching{compose.onNodeWithTag("card-full-annotation").assertTextEquals(annotation)}.isSuccess}
         compose.onNodeWithTag("card-full-body").assertTextEquals(body)
         compose.onNodeWithTag("card-annotation-heading").assertIsNotDisplayed()
@@ -101,6 +125,8 @@ class LearningWorkspacePolishUiTest {
         compose.onNodeWithTag("card-source-heading").assertIsDisplayed().assert(SemanticsMatcher.keyIsDefined(SemanticsProperties.Heading))
         compose.onNodeWithTag("card-source-summary-0").assertIsDisplayed().assertTextContains("摘录时快照",substring=true)
         compose.onNodeWithTag("card-source-actions").assertIsDisplayed()
+        for(tag in listOf("card-source-heading","card-source-summary-0","card-source-section","study-view-snapshot"))fullyVisible(tag,"card-reading-content")
+        compose.onNodeWithTag("card-source-summary-0").assertTextContains(f.note.title,substring=true).assertTextContains("第2页",substring=true)
         compose.onNodeWithTag("study-open-source").assertIsDisplayed().assertIsEnabled()
         assertEquals("Section jumps never move the fixed return action",footer,compose.onNodeWithTag("card-back").getUnclippedBoundsInRoot())
         screenshot("polish-long-card-source-anchor.png")
@@ -209,5 +235,59 @@ class LearningWorkspacePolishUiTest {
         assertTrue("Excerpt panel starts below document navigation",panel.top>=header.bottom-1f)
         compose.onNodeWithTag("document-associations").assertIsDisplayed()
         screenshot("polish-excerpt-header-clear.png")
+    }
+
+    @Test fun narrowLargeTextCardSectionShortcutsRevealReadableContent()=atNarrow{
+        longCardShortcutsReachAnnotationAndSourcesWithFixedReturnActions()
+    }
+
+    @Test fun narrowLargeTextOutlineActionsWrapWithoutHorizontalHunting()=atNarrow{
+        val f=h.seed();h.tap("exit-readonly");h.tap("study-direct-outline");h.tap("outline-actions-${f.node}")
+        compose.onNodeWithTag("study-list").performScrollToNode(hasTestTag("outline-row-${f.node}"))
+        for(action in listOf("rename","child","sibling","organize","focus")){
+            val tag="outline-$action-${f.node}";fullyVisible(tag,"study-list")
+            compose.onNodeWithTag(tag).assertHeightIsAtLeast(48.dp).assertWidthIsAtLeast(48.dp)
+        }
+        screenshot("polish-narrow-outline-actions.png")
+        h.tap("outline-organize-${f.node}");compose.onNodeWithText("顺序与层级").assertIsDisplayed()
+        InstrumentationRegistry.getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_BACK)
+        h.waitFor("outline-context-actions")
+    }
+
+    @Test fun narrowLargeTextWhitespaceAndLayersKeepControlsClearAndPenPreference()=atNarrow{
+        h.seed();h.tap("exit-readonly");h.tap("study-close");h.tap("case-collapse")
+        compose.onNodeWithTag("pen-kind-pencil").assertExists()
+        val prefs=h.app.getSharedPreferences("inkweft-editor",0)
+        val caseBefore=listOf("case-x","case-y","case-collapsed").associateWith{prefs.all[it]}
+        val penBounds=compose.onNodeWithTag("floating-pen-case").getUnclippedBoundsInRoot()
+        val viewport=h.paperViewport()
+        compose.onNodeWithTag("editor-tools-page").assertIsDisplayed().assertHeightIsAtLeast(48.dp).assertWidthIsAtLeast(48.dp)
+        val fingerBounds=compose.onNodeWithTag("quick-finger").getUnclippedBoundsInRoot()
+        h.tap("editor-tools-page")
+        compose.onNodeWithTag("ink-select").performScrollTo()
+        fullyVisible("ink-select","editor-tool-scroll")
+        assertEquals(fingerBounds,compose.onNodeWithTag("quick-finger").getUnclippedBoundsInRoot())
+        h.tap("page-layers-open")
+        fullyVisible("layer-heading-${UserLayers.DEFAULT_ID}","page-layers")
+        compose.onNodeWithTag("current-writable-layer").assertIsDisplayed()
+        h.tap("layer-help")
+        compose.onNodeWithTag("layer-help-content").performScrollTo().assertIsDisplayed().assertTextContains("隐藏仅影响显示，锁定限制编辑",substring=true)
+        InstrumentationRegistry.getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_BACK)
+        compose.waitUntil(15_000){compose.onAllNodesWithTag("page-layers").fetchSemanticsNodes().isEmpty()}
+        h.tap("page-whitespace-open");h.waitFor("document-whitespace-panel")
+        compose.onNodeWithTag("floating-pen-case").assertDoesNotExist()
+        fullyVisible("whitespace-title","document-whitespace-panel")
+        fullyVisible("whitespace-original","document-whitespace-panel")
+        compose.onNodeWithTag("whitespace-add").assertIsDisplayed().assertHeightIsAtLeast(48.dp)
+        val toolbar=compose.onNodeWithTag("editor-toolbar").getUnclippedBoundsInRoot()
+        val header=compose.onNodeWithTag("whitespace-header").getUnclippedBoundsInRoot()
+        assertTrue("Whitespace begins immediately below the one toolbar inset",header.top>=toolbar.bottom&&header.top<=toolbar.bottom+2.dp)
+        assertEquals(caseBefore,listOf("case-x","case-y","case-collapsed").associateWith{prefs.all[it]})
+        screenshot("polish-narrow-whitespace-clear.png")
+        h.tap("whitespace-original");h.waitFor("ink-surface")
+        compose.onNodeWithTag("pen-kind-pencil").assertExists()
+        assertEquals(caseBefore,listOf("case-x","case-y","case-collapsed").associateWith{prefs.all[it]})
+        assertEquals(penBounds,compose.onNodeWithTag("floating-pen-case").getUnclippedBoundsInRoot())
+        assertEquals(viewport,h.paperViewport())
     }
 }

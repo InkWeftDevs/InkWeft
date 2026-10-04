@@ -16,6 +16,8 @@ import androidx.compose.ui.*
 import androidx.compose.ui.platform.*
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.draw.rotate
+import kotlinx.coroutines.launch
 
 internal object EditorToolOrder {
     val labels=linkedMapOf("undo" to "撤销","redo" to "重做","pen" to "笔","map" to "导图","eraser" to "橡皮","lasso" to "套索","area" to "圈选擦除","image" to "图片","camera" to "拍照","text" to "文本框","excerpt" to "摘录","tag" to "标签","shape" to "图形","sticker" to "贴纸","objects" to "对象选择","beauty" to "实时字迹调整","readonly" to "只读模式","finger" to "手指书写／移动","add-page" to "添加页面","fullscreen" to "全屏专注","export" to "导出文档","timer" to "计时器")
@@ -38,11 +40,21 @@ internal object EditorToolOrder {
         if(next in group.indices){val from=order.indexOf(id);val target=order.indexOf(group[next]);order=order.toMutableList().apply{removeAt(from);add(target,id)};save()}
     }
     var more by remember{mutableStateOf(false)}
+    val toolScroll=rememberScrollState()
+    val scrollScope=rememberCoroutineScope()
     BoxWithConstraints{
     val visiblePrimary=(EditorToolOrder.primary-if(fullScreen)emptySet()else setOf("map"))+if(maxWidth>=600.dp)setOf("image","text")else emptySet()
     Row(Modifier.testTag("editor-toolbar"),verticalAlignment=Alignment.CenterVertically){
-        Row(Modifier.weight(1f).horizontalScroll(rememberScrollState()),verticalAlignment=Alignment.CenterVertically){
+        Row(Modifier.weight(1f).testTag("editor-tool-scroll").horizontalScroll(toolScroll),verticalAlignment=Alignment.CenterVertically){
             order.filter{it in visiblePrimary&&it !in hidden&&it !in EditorToolOrder.fixed}.forEach{key(it){EditorToolSlot(it){content(it){}}}}
+        }
+        // A full-size paging target makes clipped tools discoverable beside the fixed controls.
+        if(toolScroll.maxValue>0){
+            val forward=toolScroll.canScrollForward
+            IconButton({scrollScope.launch{toolScroll.animateScrollTo(if(forward)(toolScroll.value+toolScroll.viewportSize).coerceAtMost(toolScroll.maxValue)else 0)}},
+                modifier=Modifier.size(48.dp).testTag("editor-tools-page").describedAs(if(forward)"查看更多工具"else"返回起始工具")){
+                Glyph("back",modifier=Modifier.rotate(if(forward)180f else 0f))
+            }
         }
         VerticalDivider(Modifier.height(32.dp).padding(horizontal=4.dp),color=Line)
         EditorToolSlot("finger"){content("finger"){}}

@@ -5,7 +5,7 @@ import subprocess
 import tempfile
 import unittest
 
-from run_six_batch_fixture import PHASE_METHODS, run_fixture
+from run_six_batch_fixture import FOCUSED_PHASES, PHASE_METHODS, run_fixture
 
 
 class SixBatchFixtureRunnerTest(unittest.TestCase):
@@ -60,6 +60,96 @@ class SixBatchFixtureRunnerTest(unittest.TestCase):
         self.assertEqual("PASS", self.summary()["status"])
         self.assertEqual(len(PHASE_METHODS), self.summary()["passed"])
         self.assertEqual("NOT_RUN", self.summary()["real_device"])
+
+    def test_focused_prepare_and_recall_keep_same_sample_safety_and_never_claims_full_pass(self):
+        self.assertEqual(0, run_fixture(self.root, self.commit, run=self.command, mode="focused"))
+        phases = [call[call.index("--phase") + 1] for call in self.calls if "--phase" in call]
+        self.assertEqual(list(FOCUSED_PHASES), phases)
+        self.assertEqual(1, sum("clear" in call for call in self.calls))
+        summary = self.summary()
+        self.assertEqual("FOCUSED_COMPLETE_NOT_FULL", summary["status"])
+        self.assertEqual((5, 2, 2), (summary["expected"], summary["selected_expected"], summary["passed"]))
+        self.assertEqual("PASS", summary["phases"]["prepare"]["status"])
+        for phase in PHASE_METHODS:
+            self.assertEqual("PASS" if phase in FOCUSED_PHASES else "NOT_RUN_FOCUSED",
+                             summary["phases"][phase]["status"])
+
+    def test_focused_prepare_failure_retains_failure_and_omitted_stage_states(self):
+        self.failed_phase = "prepare"
+        self.assertEqual(1, run_fixture(self.root, self.commit, run=self.command, mode="focused"))
+        summary = self.summary()
+        self.assertEqual("FAILED", summary["status"])
+        self.assertEqual(0, summary["passed"])
+        self.assertEqual("FAILED", summary["phases"]["prepare"]["status"])
+        self.assertEqual("NOT_RUN", summary["phases"]["native_recall"]["status"])
+        self.assertTrue(all(summary["phases"][phase]["status"] == "NOT_RUN_FOCUSED"
+                            for phase in PHASE_METHODS if phase not in FOCUSED_PHASES))
+
+    def test_stage_timeout_is_bounded_by_remaining_job_budget(self):
+        self.assertEqual(0, run_fixture(self.root, self.commit, run=self.command, mode="focused",
+                                      deadline_epoch=1000, now=lambda: 877))
+        command = next(call for call in self.calls if "--phase" in call)
+        self.assertEqual("63", command[command.index("--timeout") + 1])
+        self.assertEqual("1000", command[command.index("--deadline-epoch") + 1])
+        self.assertEqual(63, self.summary()["phases"]["prepare"]["timeout_seconds"])
+
+    def test_exhausted_budget_does_not_start_dependents_or_reseed(self):
+        clock = [0]
+        def command(args, **kwargs):
+            result = self.command(args, **kwargs)
+            if "--phase" in args:
+                clock[0] = 1000
+            return result
+        self.assertEqual(1, run_fixture(self.root, self.commit, run=command,
+                                      deadline_epoch=1000, now=lambda: clock[0]))
+        summary = self.summary()
+        self.assertEqual("NOT_RUN_TIME_BUDGET", summary["status"])
+        self.assertEqual(1, summary["passed"])
+        self.assertEqual("PASS", summary["phases"]["prepare"]["status"])
+        self.assertEqual(1, sum("--phase" in call for call in self.calls))
+        self.assertEqual(1, sum("clear" in call for call in self.calls))
+        self.assertTrue(all(summary["phases"][phase]["status"] == "NOT_RUN_TIME_BUDGET"
+                            for phase in list(PHASE_METHODS)[1:]))
+
+    def test_no_budget_never_installs_or_clears_the_fixture(self):
+        self.assertEqual(1, run_fixture(self.root, self.commit, run=self.command,
+                                      deadline_epoch=1000, now=lambda: 1000))
+        self.assertFalse(self.calls)
+        self.assertEqual("NOT_RUN_TIME_BUDGET", self.summary()["status"])
+
+    def test_runner_timeout_keeps_partial_evidence_and_never_runs_dependents(self):
+        clock = [800]
+        def command(args, **kwargs):
+            if "--phase" in args:
+                self.assertLessEqual(kwargs["timeout"], 200)
+                (self.out / "prepare-runner.json").write_text('{"status":"RUNNING"}')
+                clock[0] = 1000
+                raise subprocess.TimeoutExpired(args, kwargs["timeout"])
+            return self.command(args, **kwargs)
+        self.assertEqual(1, run_fixture(self.root, self.commit, run=command,
+                                      deadline_epoch=1000, now=lambda: clock[0]))
+        self.assertEqual("TIMEOUT_RESULT_UNKNOWN", self.summary()["status"])
+        self.assertEqual("TIMEOUT_RESULT_UNKNOWN", self.summary()["phases"]["prepare"]["status"])
+        self.assertEqual("NOT_RUN_TIME_BUDGET", self.summary()["phases"]["reopen"]["status"])
+        self.assertTrue((self.out / "prepare-runner.json").is_file())
+
+    def test_setup_timeout_is_not_misreported_as_exhausted_job_budget(self):
+        def command(args, **kwargs):
+            if "get-serialno" in args:
+                raise subprocess.TimeoutExpired(args, kwargs["timeout"])
+            return self.command(args, **kwargs)
+        self.assertEqual(1, run_fixture(self.root, self.commit, run=command,
+                                      deadline_epoch=1000, now=lambda: 100))
+        self.assertEqual("NOT_RUN_SETUP_TIMEOUT", self.summary()["status"])
+        self.assertTrue(all(phase["status"] == "NOT_RUN" for phase in self.summary()["phases"].values()))
+        self.assertFalse(any("clear" in call for call in self.calls))
+
+    def test_focused_unavailable_device_and_budget_are_not_passes(self):
+        self.assertEqual(1, run_fixture(self.root, self.commit, "Build unavailable", self.command, mode="focused"))
+        self.assertFalse(self.calls)
+        self.assertEqual("NOT_RUN", self.summary()["status"])
+        self.assertEqual("NOT_RUN", self.summary()["phases"]["prepare"]["status"])
+        self.assertEqual("NOT_RUN_FOCUSED", self.summary()["phases"]["reopen"]["status"])
 
     def test_failure_retains_receipt_and_never_reseeds_or_runs_dependents(self):
         self.failed_phase = "reopen"

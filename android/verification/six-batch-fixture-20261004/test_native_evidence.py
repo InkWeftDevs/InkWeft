@@ -2,6 +2,11 @@
 import copy
 import hashlib
 import importlib.util
+import json
+import subprocess
+import sys
+import tempfile
+from unittest.mock import patch
 from pathlib import Path
 import unittest
 
@@ -85,6 +90,40 @@ class NativeEvidenceContractTest(unittest.TestCase):
                 proof["panelAssertionsPassed"] = False
                 with self.assertRaises(ValueError):
                     self.check()
+
+
+class FixtureDeadlineTest(unittest.TestCase):
+    def test_timeout_bounds_preflight_and_saves_receipt_when_evidence_budget_expires(self):
+        clock = [877]
+        calls = []
+        def command(args, **kwargs):
+            calls.append(args)
+            self.assertLessEqual(kwargs["timeout"], 123)
+            if args[-1] == "ro.kernel.qemu":
+                stdout = "1"
+            elif "path" in args:
+                stdout = "package:/data/app/synthetic/base.apk"
+            elif "sha256sum" in args:
+                stdout = "b" * 64 + "  /data/app/synthetic/base.apk"
+            elif "instrument" in args:
+                self.assertEqual(63, kwargs["timeout"])
+                clock[0] = 1000
+                raise subprocess.TimeoutExpired(args, 63, output=b"partial instrumentation")
+            else:
+                self.fail("Evidence reads must not start after the deadline")
+            return subprocess.CompletedProcess(args, 0, stdout, "")
+        with tempfile.TemporaryDirectory() as directory:
+            args = ["run-fixture.py", "--serial", "emulator-5554", "--package", "org.inkweft.app.a0.insertion",
+                    "--source-commit", "a" * 40, "--phase", "prepare", "--output", directory,
+                    "--timeout", "63", "--deadline-epoch", "1000"]
+            with patch.object(sys, "argv", args), patch.object(runner.time, "time", side_effect=lambda: clock[0]), \
+                    patch.object(runner.subprocess, "run", side_effect=command):
+                self.assertEqual(1, runner.main())
+            receipt = json.loads((Path(directory) / "prepare-runner.json").read_text())
+            self.assertEqual("TIMEOUT_RESULT_UNKNOWN", receipt["status"])
+            self.assertEqual("UNAVAILABLE", receipt["manifest"])
+            self.assertEqual(b"partial instrumentation", (Path(directory) / "prepare-instrumentation.log").read_bytes())
+            self.assertEqual(1, sum("instrument" in call for call in calls))
 
 
 if __name__ == "__main__":

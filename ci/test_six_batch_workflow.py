@@ -1,5 +1,4 @@
 """Exercise the existing runner against the three-shard workflow without a device."""
-import ast
 from contextlib import redirect_stdout
 import io
 import json
@@ -37,7 +36,7 @@ def assigned_app_methods(plan):
     return methods
 
 
-def run_regression(root, plan, shard, selections, failing=None):
+def run_regression(root, plan, shard, selections, failing=None, shard_count=3):
     """Run the unchanged CLI; replace only device commands and per-case setup."""
     (root / "ci").mkdir(exist_ok=True)
     script = root / "ci/run_android_tests.py"
@@ -57,7 +56,7 @@ def run_regression(root, plan, shard, selections, failing=None):
         expected = 1 if "#" in selection else sum(plan["room_class_counts"][name] for name in selection.split(","))
         return f"OK ({expected} tests)\n"
 
-    with patch.object(sys, "argv", [str(script), "--shard-index", str(shard), "--shard-count", "3"]), \
+    with patch.object(sys, "argv", [str(script), "--shard-index", str(shard), "--shard-count", str(shard_count)]), \
             patch("subprocess.check_output", side_effect=adb), \
             patch("subprocess.run", return_value=subprocess.CompletedProcess([], 0)), \
             patch("android_device.prepare_case"), redirect_stdout(io.StringIO()):
@@ -66,7 +65,10 @@ def run_regression(root, plan, shard, selections, failing=None):
 
 class SixBatchWorkflowTest(unittest.TestCase):
     def test_three_standard_runners_keep_failures_and_artifacts_independent(self):
-        self.assertEqual([0, 1, 2], ast.literal_eval(re.search(r"shard: (\[[^\n]+\])", WORKFLOW).group(1)))
+        self.assertIn("shard: ${{ fromJSON((inputs.mode == 'full' || (github.event_name == 'push' && contains(github.event.head_commit.message, '[six-batches-full]'))) && '[0, 1, 2]' || '[0]') }}", WORKFLOW)
+        self.assertIn("options: [focused, full]", WORKFLOW)
+        self.assertIn("default: focused", WORKFLOW)
+        self.assertIn("INKWEFT_MODE: ${{ (inputs.mode == 'full' || (github.event_name == 'push' && contains(github.event.head_commit.message, '[six-batches-full]'))) && 'full' || 'focused' }}", WORKFLOW)
         for expected in ("runs-on: ubuntu-24.04", "fail-fast: false", "cancel-in-progress: false",
                          "INKWEFT_SHARD_INDEX: ${{ matrix.shard }}", "INKWEFT_SHARD_COUNT: ${{ strategy.job-total }}"):
             self.assertIn(expected, WORKFLOW)
@@ -85,6 +87,32 @@ class SixBatchWorkflowTest(unittest.TestCase):
             self.assertIn("android/build/evidence/source-commit.txt", step)
             self.assertNotIn(".apk", step)
         self.assertNotIn("download-artifact", WORKFLOW)
+
+    def test_push_marker_and_dispatch_choose_the_same_mode_and_runner_count(self):
+        matrix = re.search(r"shard: \$\{\{ fromJSON\((.+)\) \}\}", WORKFLOW).group(1)
+        mode = re.search(r"INKWEFT_MODE: \$\{\{ (.+) \}\}", WORKFLOW).group(1)
+        for event, requested, message, expected, shards in (
+                ("push", "", "ordinary fix", "focused", [0]),
+                ("push", "", "收口 [six-batches-full]", "full", [0, 1, 2]),
+                ("workflow_dispatch", "full", "", "full", [0, 1, 2]),
+                ("workflow_dispatch", "focused", "[six-batches-full]", "focused", [0])):
+            with self.subTest(event=event, requested=requested, message=message):
+                def evaluate(expression):
+                    expression = expression.replace("inputs.mode", repr(requested)).replace("github.event_name", repr(event))
+                    expression = expression.replace("github.event.head_commit.message", repr(message))
+                    return eval(expression.replace("&&", "and").replace("||", "or"),
+                                {"__builtins__": {}, "contains": lambda text, value: value.lower() in text.lower()})
+                self.assertEqual(expected, evaluate(mode))
+                self.assertEqual(shards, json.loads(evaluate(matrix)))
+
+    def test_focused_omits_lint_and_fixture_budget_leaves_cleanup_reserve(self):
+        build = step_containing("id: build")
+        self.assertIn("if p['mode']=='full': command+=[':app:lintDebug']", build)
+        self.assertIn("'lint':'PASS' if p['mode']=='full' else 'NOT_RUN_FOCUSED'", build)
+        self.assertIn("45*60 - 180", WORKFLOW)
+        for step in STEPS:
+            if "run: python3 ci/run_six_batch_fixture.py" in step:
+                self.assertIn('--deadline-epoch "$INKWEFT_FIXTURE_DEADLINE"', step)
 
     def test_fixture_chain_is_owned_only_by_shard_zero_and_acl_always_restores(self):
         fixture_steps = [step for step in STEPS if "run: python3 ci/run_six_batch_fixture.py" in step]

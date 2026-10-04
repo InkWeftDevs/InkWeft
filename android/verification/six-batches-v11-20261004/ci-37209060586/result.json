@@ -1,0 +1,224 @@
+{
+  "source": "46d2967a2f35756ddf8536c395cd85ccd6216dc2",
+  "run": 37209060586,
+  "url": "https://github.com/InkWeftDevs/InkWeft/actions/runs/37209060586",
+  "shards": [
+    {
+      "index": 0,
+      "artifact": 11306467668,
+      "app": {
+        "expected": 44,
+        "planned_total": 130,
+        "shard_index": 0,
+        "shard_count": 3,
+        "passed": 42,
+        "failures": [
+          "org.inkweft.app.RecallMaskUiTest#libraryMapRecallAncestorsHideCluesFromInteractiveWindows",
+          "org.inkweft.app.RecallMaskUiTest#tabletMapTextFitAndNeutralRecallPlaceholdersKeepAuthorRows"
+        ],
+        "infrastructure": []
+      },
+      "room": {
+        "expected": 180,
+        "planned_total": 180,
+        "shard_index": 0,
+        "shard_count": 3,
+        "passed": 180,
+        "failures": [],
+        "infrastructure": []
+      },
+      "fixture": {
+        "status": "FAILED",
+        "source_commit": "46d2967a2f35756ddf8536c395cd85ccd6216dc2",
+        "synthetic_only": true,
+        "expected": 5,
+        "passed": 3,
+        "phases": {
+          "prepare": {
+            "status": "PASS",
+            "returncode": 0
+          },
+          "reopen": {
+            "status": "PASS",
+            "returncode": 0
+          },
+          "visual": {
+            "status": "PASS",
+            "returncode": 0
+          },
+          "native_recall": {
+            "status": "FAILED",
+            "returncode": 1
+          },
+          "native_recall_reopen": {
+            "status": "NOT_RUN"
+          }
+        },
+        "real_device": "NOT_RUN",
+        "human_handwriting": "NOT_RUN",
+        "pixels_review": "PENDING_HUMAN_OR_VISUAL_REVIEW",
+        "reason": "native_recall did not pass; dependent phases NOT_RUN, original library retained"
+      },
+      "acl": {
+        "status": "RESTORED_EXACT_ORIGINAL_ACL"
+      },
+      "evidence_sha256": {
+        "app-summary.json": "5086db2aaecd3029db32480fe4df5d9519415c21c2e6c845f4bf7df44ac68fe1",
+        "room-summary.json": "9dff5cc46ef0d2832dbde05d5a404508c4d0fcc2f9f25cb16193c88626f7a9bf",
+        "fixture-summary.json": "cb636220d930dafe76f9a52b0d936c12c0d75f5e10d15c5bc8f3b9a0b964bdd6",
+        "APK-SHA256.txt": "bbb891ecc1a09eb2b70763bcf3b3079bd2c2cb00214f5674428f3201e2639f10",
+        "source-commit.txt": "655e7bc17296240cd38d4627e14e6fe5ec76f47ab419018658f4487c9695baaa"
+      }
+    },
+    {
+      "index": 1,
+      "artifact": 11306960149,
+      "app": {
+        "expected": 43,
+        "planned_total": 130,
+        "shard_index": 1,
+        "shard_count": 3,
+        "passed": 43,
+        "failures": [],
+        "infrastructure": []
+      },
+      "room": {
+        "status": "NOT_ASSIGNED",
+        "source_commit": "46d2967a2f35756ddf8536c395cd85ccd6216dc2",
+        "shard_index": 1,
+        "shard_count": 3,
+        "assigned_shard": 0,
+        "expected": 0,
+        "planned_total": 180,
+        "passed": 0,
+        "failures": [],
+        "infrastructure": []
+      },
+      "fixture": {
+        "status": "NOT_ASSIGNED",
+        "source_commit": "46d2967a2f35756ddf8536c395cd85ccd6216dc2",
+        "shard_index": 1,
+        "shard_count": 3,
+        "assigned_shard": 0,
+        "expected": 0,
+        "planned_total": 5,
+        "passed": 0,
+        "failures": [],
+        "infrastructure": [],
+        "phases": {
+          "prepare": {
+            "status": "NOT_ASSIGNED"
+          },
+          "reopen": {
+            "status": "NOT_ASSIGNED"
+          },
+          "visual": {
+            "status": "NOT_ASSIGNED"
+          },
+          "native_recall": {
+            "status": "NOT_ASSIGNED"
+          },
+          "native_recall_reopen": {
+            "status": "NOT_ASSIGNED"
+          }
+        }
+      },
+      "acl": {
+        "status": "RESTORED_EXACT_ORIGINAL_ACL"
+      },
+      "evidence_sha256": {
+        "app-summary.json": "5cf2e9a1db092e714954f1ccd97bfc24cf4dfdcb55ee5476b2f6c58e5a93f696",
+        "room-summary.json": "357dfcfee7dcbbd45ca0419bf7286e61f35f93890c9df69056bbea4f30da2bea",
+        "fixture-summary.json": "0dace056b375a7839fa876823b58f7c72846e77e9495b23dc470730e39e938e9",
+        "APK-SHA256.txt": "5ddd430be23165ab06e72bd4d90f37e5f8b2a5393b23211b3e2e20344449ff48",
+        "source-commit.txt": "655e7bc17296240cd38d4627e14e6fe5ec76f47ab419018658f4487c9695baaa"
+      }
+    },
+    {
+      "index": 2,
+      "artifact": 11305972979,
+      "app": {
+        "expected": 43,
+        "planned_total": 130,
+        "shard_index": 2,
+        "shard_count": 3,
+        "passed": 42,
+        "failures": [
+          "org.inkweft.app.SelectionStudyUiTest#outlineFoldFocusAndQuickAddShareOneGraph"
+        ],
+        "infrastructure": []
+      },
+      "room": {
+        "status": "NOT_ASSIGNED",
+        "source_commit": "46d2967a2f35756ddf8536c395cd85ccd6216dc2",
+        "shard_index": 2,
+        "shard_count": 3,
+        "assigned_shard": 0,
+        "expected": 0,
+        "planned_total": 180,
+        "passed": 0,
+        "failures": [],
+        "infrastructure": []
+      },
+      "fixture": {
+        "status": "NOT_ASSIGNED",
+        "source_commit": "46d2967a2f35756ddf8536c395cd85ccd6216dc2",
+        "shard_index": 2,
+        "shard_count": 3,
+        "assigned_shard": 0,
+        "expected": 0,
+        "planned_total": 5,
+        "passed": 0,
+        "failures": [],
+        "infrastructure": [],
+        "phases": {
+          "prepare": {
+            "status": "NOT_ASSIGNED"
+          },
+          "reopen": {
+            "status": "NOT_ASSIGNED"
+          },
+          "visual": {
+            "status": "NOT_ASSIGNED"
+          },
+          "native_recall": {
+            "status": "NOT_ASSIGNED"
+          },
+          "native_recall_reopen": {
+            "status": "NOT_ASSIGNED"
+          }
+        }
+      },
+      "acl": {
+        "status": "RESTORED_EXACT_ORIGINAL_ACL"
+      },
+      "evidence_sha256": {
+        "app-summary.json": "7f5f0413d7e37837238f87bf5ce2a081fd7a6ec61e231a2cca143e6b9daa866e",
+        "room-summary.json": "4397e335f6830fbfa59165455cecb65bd8bed817bf611f77369b74b8db385937",
+        "fixture-summary.json": "4330a49c7e91ec53b5b2537806ea1cc05e69194c1fc7c32841eb8a8fa1fb8b72",
+        "APK-SHA256.txt": "fa133f4932e0330c48f5a31a47d477afbe0137cb4199451e250c795f79135f91",
+        "source-commit.txt": "655e7bc17296240cd38d4627e14e6fe5ec76f47ab419018658f4487c9695baaa"
+      }
+    }
+  ],
+  "totals": {
+    "ui_completed": 130,
+    "ui_passed": 127,
+    "ui_failed": 3,
+    "ui_timeouts": 0,
+    "room_passed": 180,
+    "room_failed": 0,
+    "b6_passed": 3,
+    "b6_failed": 1,
+    "b6_not_run": 1,
+    "b6_screenshots": 33
+  },
+  "b6_phase_seconds": {
+    "native_recall": 84.18962445099987,
+    "visual": 81.0443186299999,
+    "reopen": 7.387195778999967,
+    "prepare": 84.74451171199985
+  },
+  "visual_review": "32 B6 workspace images inspected: native pressure and layer states visible; narrow layout/accessibility blockers reopened, not visual PASS",
+  "native_recall_failure": "Paper-gutter touch produced no draft ink; answerInk remained empty. Fixed proportional visible answer pad in following candidate."
+}

@@ -65,6 +65,7 @@ def main():
     parser.add_argument("--phase", choices=("prepare", "reopen", "visual", "native_recall", "native_recall_reopen"), required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--timeout", type=int, default=1800)
+    parser.add_argument("--deadline-epoch", type=int, help="Bound preflight and evidence reads before job cleanup")
     args = parser.parse_args()
     if not re.fullmatch(r"emulator-[0-9]+", args.serial):
         parser.error("Only an explicitly named emulator serial is accepted")
@@ -77,6 +78,11 @@ def main():
             parser.error("Expected APK identities must be complete lowercase SHA-256 values")
     adb = ["adb", "-s", args.serial]
     def run(parts, **kwargs):
+        if args.deadline_epoch is not None:
+            remaining = args.deadline_epoch - time.time()
+            if remaining <= 0:
+                raise subprocess.TimeoutExpired(adb + parts, 0)
+            kwargs["timeout"] = min(kwargs.get("timeout", 180), remaining)
         return subprocess.run(adb + parts, check=True, capture_output=True, **kwargs)
     if run(["shell", "getprop", "ro.kernel.qemu"], text=True).stdout.strip() != "1":
         parser.error("The selected target does not report itself as an emulator")
@@ -170,10 +176,10 @@ def main():
                     except (ValueError, KeyError, IndexError):
                         record["status"] = "FAILED_NO_NATIVE_PROOF"
                     evidence["screenshots"].append(record)
-                except (subprocess.CalledProcessError, ValueError, KeyError, IndexError):
+                except (subprocess.SubprocessError, ValueError, KeyError, IndexError):
                     evidence["screenshots"].append({"file": name, "status": "UNAVAILABLE"})
             evidence["pixels_review"] = "PENDING_HUMAN_OR_VISUAL_REVIEW"
-        except (subprocess.CalledProcessError, ValueError, KeyError, json.JSONDecodeError):
+        except (subprocess.SubprocessError, ValueError, KeyError, json.JSONDecodeError):
             evidence["manifest"] = "UNAVAILABLE"
         if evidence["status"] == "PASS" and (evidence.get("manifest") == "UNAVAILABLE" or
                 any(item.get("status") in ("UNAVAILABLE", "FAILED_NO_NATIVE_PROOF") for item in evidence.get("screenshots", []))):

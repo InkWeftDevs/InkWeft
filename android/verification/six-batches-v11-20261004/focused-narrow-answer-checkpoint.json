@@ -1,0 +1,20 @@
+{
+  "source": "1f31e7b",
+  "production_and_both_android_test_kotlin": "PASS",
+  "core": {
+    "tests": 367,
+    "failures": 0,
+    "skipped": 0,
+    "unchanged_input_reuse": true
+  },
+  "lint": "NOT_RUN_FOCUSED; full acceptance still required",
+  "seconds": 208,
+  "host_ci_tests": 61,
+  "host_native_tests": 8,
+  "actionlint": "PASS",
+  "log_sha256": "a4b5ec711181918d92b8a16a38de60f1e482246474835cae76ef1c2a67c93624",
+  "next_focused_ui": 15,
+  "next_full_ui": 134,
+  "room_current_evidence": "source46d2967 actual180 PASS; focused may reuse only exact source/test/build hashes",
+  "android": "NOT_RUN for new candidate"
+}

@@ -93,16 +93,31 @@ class SixBatchNativeRecallTest {
                 if(index==0){waitFor("recall-source-mask-projection");sourceReady();shot(f,"01-source-masked","recall-source-mask-projection")}
                 if(index==1){compose.onNodeWithTag("recall-inline-cloze").assertTextEquals(loaded.spec.maskedText(loaded.card.body));shot(f,"04-cloze-masked","recall-inline-cloze")}
                 if(index==2){compose.onNodeWithTag("recall-question-neutral").assertExists();compose.onNodeWithTag("recall-fixed-answer").assertDoesNotExist()}
-                compose.onNodeWithTag("recall-answer-text").performScrollTo().performTextInput("同一样例 · 第${index+1}种题型的离线作答")
+                val answerText="同一样例 · 第${index+1}种题型的离线作答"
+                compose.onNodeWithTag("recall-answer-text").performScrollTo().performTextInput(answerText)
                 hideKeyboard()
                 if(index==0){
+                    val vm=compose.runOnIdle{ViewModelProvider(compose.activity)["durable-recall-${f.books[0]}",RecallStudyViewModel::class.java]}
                     val original=app.inkRepository.read(f.manifest.getString("formulaPage"))
                     tap("recall-answer-finger")
                     compose.onNodeWithTag("recall-answer-ink-canvas").performScrollTo().assertIsDisplayed().performTouchInput{
                         down(Offset(width*.15f,height*.35f));moveTo(Offset(width*.45f,height*.65f),120);moveTo(Offset(width*.75f,height*.3f),120);up()
                     }
+                    compose.waitForIdle()
+                    val draft=compose.runOnIdle{vm.ui.value}
+                    assertNull("Native answer input failed",draft.error)
+                    assertEquals(loaded.row.id,draft.session?.current?.row?.id)
+                    assertEquals(answerText,draft.draftText)
+                    assertEquals("The visible answer pad must accept the actual finger stroke",1,RecallStudyViewModel.answerStrokes(draft.draftInk).size)
                     tap("recall-save-answer")
-                    compose.waitUntil(60_000){current(f.books[0])?.row?.answerInk?.isNotEmpty()==true}
+                    compose.waitUntil(60_000){
+                        assertNull("Native answer save failed",vm.ui.value.error)
+                        current(f.books[0])?.row?.answerInk?.isNotEmpty()==true
+                    }
+                    val saved=checkNotNull(current(f.books[0])).row
+                    assertEquals(loaded.row.id,saved.id);assertEquals(loaded.row.sessionId,saved.sessionId)
+                    assertEquals(answerText,saved.answerText);assertArrayEquals(draft.draftInk,saved.answerInk)
+                    assertEquals(0,saved.hintMask)
                     val after=app.inkRepository.read(f.manifest.getString("formulaPage"))
                     assertEquals(original.revision,after.revision);assertEquals(InkSession(original).visibleDraft(),InkSession(after).visibleDraft())
                     shot(f,"02-source-answer","recall-answer-ink-canvas")

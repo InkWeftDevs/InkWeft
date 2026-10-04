@@ -26,7 +26,7 @@ import kotlin.math.roundToInt
 
 internal val LocalPenPointsLeft=compositionLocalOf{false}
 
-@Composable internal fun FloatingPenCase(storageKey:String="case",wide:Boolean=false,expandRequest:Int=0,topInset:Dp=56.dp,content:@Composable ColumnScope.()->Unit){
+@Composable internal fun FloatingPenCase(storageKey:String="case",wide:Boolean=false,expandRequest:Int=0,topInset:Dp=56.dp,visible:Boolean=true,content:@Composable ColumnScope.()->Unit){
     val context=LocalContext.current
     val prefs=remember{context.getSharedPreferences("inkweft-editor",0)}
     // App-wide persisted preferences outrank a notebook tab's saved composition.
@@ -41,7 +41,8 @@ internal val LocalPenPointsLeft=compositionLocalOf{false}
     val tag=if(wide)"favorite-pen-case"else"floating-pen-case"
     fun persist(){prefs.edit().putFloat("$storageKey-x",x).putFloat("$storageKey-y",y).putBoolean("$storageKey-collapsed",collapsed).apply()}
     LaunchedEffect(expandRequest){if(expandRequest>0){collapsed=false;persist()}}
-    Box(Modifier.fillMaxSize().padding(top=topInset,bottom=48.dp).onSizeChanged{host=it}){
+    // Keep position and expansion state composed when another writing surface owns the tools.
+    if(visible)Box(Modifier.fillMaxSize().padding(top=topInset,bottom=48.dp).onSizeChanged{host=it}){
         val maxX=(host.width-size.width).coerceAtLeast(0).toFloat()
         val maxY=(host.height-size.height).coerceAtLeast(0).toFloat()
         Surface(Modifier.offset{IntOffset((x.coerceIn(0f,1f)*maxX).roundToInt(),(y.coerceIn(0f,1f)*maxY).roundToInt())}
