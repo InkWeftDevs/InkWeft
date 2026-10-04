@@ -4,6 +4,7 @@ package org.inkweft.app
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.view.KeyEvent
+import android.view.ScaleGestureDetector
 import android.view.View
 import android.view.ViewConfiguration
 import android.view.ViewGroup
@@ -173,24 +174,71 @@ class BoundAnnotationFlowUiTest {
         assertEquals(beforePoint.y+movedBounds.top-beforeBounds.top,movedPoint.y,.001)
         assertArrayEquals(PageAuthoringCodec.encode(bound.state),PageAuthoringCodec.encode(state(f.book).state));assertPaintAt(movedPoint)
 
-        select(f.node);tap("node-more");tap("node-organize");tap("node-order-up")
-        compose.waitUntil(15_000){graph(f.book).orderedNodeIds==listOf(f.node,f.first)};settled(f.book)
-        assertEquals(movedBounds,compose.runOnIdle{map().annotationBounds(f.node)})
-        assertArrayEquals(PageAuthoringCodec.encode(bound.state),PageAuthoringCodec.encode(state(f.book).state))
-        val camera=compose.runOnIdle{map().snapshotViewport()}
-        val beforeZoomNodes=graph(f.book).nodes
-        assertTrue("The actual camera must have room to zoom in: ${camera.scale}",camera.scale<2.5f)
-        compose.onNodeWithTag("study-map").performTouchInput{
-            // Compose orders these as start0/end0/start1/end1; named endpoints keep the fingers spreading apart.
-            pinch(start0=Offset(width*.35f,height*.5f),end0=Offset(width*.25f,height*.5f),
-                start1=Offset(width*.65f,height*.5f),end1=Offset(width*.75f,height*.5f),durationMillis=400)
+        val inputTrace=java.util.ArrayDeque<String>()
+        fun record(line:String){if(inputTrace.size>=200)inputTrace.removeFirst();inputTrace.addLast(line)}
+        val instrumented=compose.runOnIdle{map()}
+        val detector=MindMapView::class.java.getDeclaredField("detector").apply{isAccessible=true}.get(instrumented) as ScaleGestureDetector
+        val originalViewport=compose.runOnIdle{instrumented.onViewport}
+        var phase="select-and-reorder"
+        var eventTime=0L
+        fun detectorState()="progress=${detector.isInProgress} span=${detector.previousSpan}->${detector.currentSpan} spanXY=${detector.currentSpanX},${detector.currentSpanY} factor=${detector.scaleFactor} quick=${detector.isQuickScaleEnabled}"
+        compose.runOnIdle{
+            // Diagnostic observation only: preserve the production viewport callback and never consume a MotionEvent.
+            instrumented.setOnTouchListener{_,event->
+                eventTime=event.eventTime
+                record("$phase event action=${event.actionMasked} index=${event.actionIndex} time=$eventTime down=${event.downTime} count=${event.pointerCount} "+
+                    (0 until event.pointerCount).joinToString(";"){"p${event.getPointerId(it)}=${event.getX(it)},${event.getY(it)} tool=${event.getToolType(it)}"}+
+                    " source=${event.source} size=${instrumented.width}x${instrumented.height} enabled=${instrumented.enabledInput} editing=${instrumented.editingTitle} viewport=${instrumented.snapshotViewport()} detectorBefore=${detectorState()}")
+                false
+            }
+            instrumented.onViewport={viewport->
+                val caller=Throwable().stackTrace.filter{it.className.startsWith("org.inkweft.app.MindMapView")}.joinToString(" <- "){it.methodName}
+                record("$phase viewport time=$eventTime source=$caller value=$viewport detector=${detectorState()}")
+                originalViewport(viewport)
+            }
         }
-        compose.waitForIdle()
-        val zoomed=compose.runOnIdle{map().snapshotViewport()}
-        assertTrue("Native two-finger spread must increase scale: ${camera.scale} -> ${zoomed.scale}",zoomed.scale>camera.scale)
-        assertEquals("Pinch must cancel node dragging without authoring positions",beforeZoomNodes,graph(f.book).nodes)
-        assertEquals(bound.revision,state(f.book).revision)
-        assertArrayEquals(PageAuthoringCodec.encode(bound.state),PageAuthoringCodec.encode(state(f.book).state));assertPaintAt(movedPoint);assertPreserved(f)
+        try{
+            select(f.node);tap("node-more");tap("node-organize");tap("node-order-up")
+            compose.waitUntil(15_000){graph(f.book).orderedNodeIds==listOf(f.node,f.first)};settled(f.book)
+            assertEquals(movedBounds,compose.runOnIdle{map().annotationBounds(f.node)})
+            assertArrayEquals(PageAuthoringCodec.encode(bound.state),PageAuthoringCodec.encode(state(f.book).state))
+            val camera=compose.runOnIdle{map().snapshotViewport()}
+            val beforeZoomNodes=graph(f.book).nodes
+            assertTrue("The actual camera must have room to zoom in: ${camera.scale}",camera.scale<2.5f)
+            phase="original-timing"
+            val semanticBounds=compose.onNodeWithTag("study-map").fetchSemanticsNode().boundsInRoot
+            val nativeBounds=compose.runOnIdle{
+                val visible=android.graphics.Rect();instrumented.getGlobalVisibleRect(visible)
+                "size=${instrumented.width}x${instrumented.height} visible=$visible density=${instrumented.resources.displayMetrics.density} minScaleSpan=${ViewConfiguration.get(instrumented.context).scaledMinimumScalingSpan}"
+            }
+            record("$phase begin view=${System.identityHashCode(instrumented)} viewport=$camera semantics=$semanticBounds native=$nativeBounds")
+            compose.onNodeWithTag("study-map").performTouchInput{
+                pinch(start0=Offset(width*.35f,height*.5f),end0=Offset(width*.25f,height*.5f),
+                    start1=Offset(width*.65f,height*.5f),end1=Offset(width*.75f,height*.5f),durationMillis=400)
+            }
+            compose.waitForIdle()
+            val zoomed=compose.runOnIdle{map().snapshotViewport()}
+            record("$phase end view=${compose.runOnIdle{System.identityHashCode(map())}} viewport=$zoomed detector=${compose.runOnIdle{detectorState()}}")
+            if(zoomed.scale<=camera.scale){
+                // Diagnostic control only. A delayed success must NOT turn the original failed gesture into a pass.
+                phase="after-double-tap-timeout"
+                compose.onNodeWithTag("study-map").performTouchInput{
+                    advanceEventTime(ViewConfiguration.getDoubleTapTimeout().toLong()+1)
+                    pinch(start0=Offset(width*.35f,height*.5f),end0=Offset(width*.25f,height*.5f),
+                        start1=Offset(width*.65f,height*.5f),end1=Offset(width*.75f,height*.5f),durationMillis=400)
+                }
+                compose.waitForIdle()
+                record("$phase end view=${compose.runOnIdle{System.identityHashCode(map())}} viewport=${compose.runOnIdle{map().snapshotViewport()}} detector=${compose.runOnIdle{detectorState()}}")
+            }
+            val diagnostic=inputTrace.joinToString("\n")
+            assertTrue("Original native two-finger spread must increase scale: ${camera.scale} -> ${zoomed.scale}\n$diagnostic",zoomed.scale>camera.scale)
+            assertEquals("Pinch must cancel node dragging without authoring positions",beforeZoomNodes,graph(f.book).nodes)
+            assertEquals(bound.revision,state(f.book).revision)
+            assertArrayEquals(PageAuthoringCodec.encode(bound.state),PageAuthoringCodec.encode(state(f.book).state));assertPaintAt(movedPoint);assertPreserved(f)
+        }finally{
+            compose.runOnIdle{instrumented.setOnTouchListener(null);instrumented.onViewport=originalViewport}
+            println("BOUND_ANNOTATION_PINCH_TRACE\n${inputTrace.joinToString("\n")}")
+        }
 
         openAnnotation(f.node);tap("annotation-unbind")
         compose.waitUntil(15_000){state(f.book).state.annotations.single{it.stroke.id==f.free}.target==AnnotationTarget(AnnotationTargetKind.PAGE,f.book)}

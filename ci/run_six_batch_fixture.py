@@ -20,8 +20,9 @@ PHASE_METHODS = {
     "native_recall_reopen": ("SixBatchNativeRecallTest", "reopenSameFixtureNativeRecallRecords"),
 }
 
-# The current blocker is native recall; both stages use the same full-sized library.
-FOCUSED_PHASES = ("prepare", "native_recall")
+# Current blocker: native input fixes and their targeted UI regression guards.
+# Full always executes all five phases; diagnostics explicitly record zero new B6 execution.
+FOCUSED_PHASES = ()
 
 
 def run_fixture(root, source_commit, not_run=None, run=subprocess.run, mode="full", deadline_epoch=None, now=time.time):
@@ -57,6 +58,11 @@ def run_fixture(root, source_commit, not_run=None, run=subprocess.run, mode="ful
         summary["reason"] = not_run
         save()
         return 1
+    if mode == "focused" and not selected:
+        summary["status"] = "NOT_RUN_FOCUSED_UI_DIAGNOSTIC"
+        summary["reason"] = "Only targeted native-input regressions selected; no new B6 execution or screenshots. Final full still requires the complete five-phase sample."
+        save()
+        return 0
     try:
         if not re.fullmatch(r"[0-9a-f]{40}", source_commit):
             raise ValueError("A full frozen source commit is required")

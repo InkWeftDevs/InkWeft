@@ -211,7 +211,10 @@ internal class MindMapView(context:Context):View(context){
     }
     private val detector=ScaleGestureDetector(context,object:ScaleGestureDetector.SimpleOnScaleGestureListener(){
         override fun onScale(s:ScaleGestureDetector):Boolean{val old=scale;scale=(scale*s.scaleFactor).coerceIn(.001f,2.5f);tx=s.focusX-(s.focusX-tx)*scale/old;ty=s.focusY-(s.focusY-ty)*scale/old;changedViewport();invalidate();return true}
-    })
+    }).apply{
+        // Double-tap belongs to inline title editing; two-finger pinch owns zoom.
+        isQuickScaleEnabled=false
+    }
     init{isFocusable=true;isFocusableInTouchMode=true;contentDescription="可缩放思维导图，拖动节点移动；需要无障碍浏览时切换大纲视图。"}
     override fun dispatchKeyEvent(event:KeyEvent):Boolean{
         val key=event.keyCode

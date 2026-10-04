@@ -44,7 +44,7 @@ internal data class StudyLayoutPreview(
 
 internal enum class OutlineDropPosition { BEFORE, CHILD, AFTER }
 internal data class OutlineDropPreview(val targetId:String,val position:OutlineDropPosition,val plan:StudyOrganizationPlan?,val message:String)
-internal data class OutlineDrag(val state:StudyGraphState,val nodeId:String,val pointer:androidx.compose.ui.geometry.Offset,val preview:OutlineDropPreview?=null)
+internal data class OutlineDrag(val state:StudyGraphState,val nodeId:String,val pointerInRoot:androidx.compose.ui.geometry.Offset,val preview:OutlineDropPreview?=null)
 
 /** Resolve only the hovered row/zone. No author write occurs until the one pointer-up commit. */
 internal fun outlineDropPreview(state:StudyGraphState,nodeId:String,targetId:String,position:OutlineDropPosition,title:String,collapsed:Boolean):OutlineDropPreview {

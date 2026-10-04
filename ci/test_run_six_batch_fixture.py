@@ -4,12 +4,18 @@ from pathlib import Path
 import subprocess
 import tempfile
 import unittest
+from unittest.mock import patch
 
-from run_six_batch_fixture import FOCUSED_PHASES, PHASE_METHODS, run_fixture
+from run_six_batch_fixture import PHASE_METHODS, run_fixture
+
+# Explicit unit coverage retains the previous two-phase selection and failure guards.
+FOCUSED_PHASES = ("prepare", "native_recall")
 
 
 class SixBatchFixtureRunnerTest(unittest.TestCase):
     def setUp(self):
+        phases = patch("run_six_batch_fixture.FOCUSED_PHASES", FOCUSED_PHASES)
+        phases.start(); self.addCleanup(phases.stop)
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)
         self.root = Path(self.temp.name)
@@ -60,6 +66,15 @@ class SixBatchFixtureRunnerTest(unittest.TestCase):
         self.assertEqual("PASS", self.summary()["status"])
         self.assertEqual(len(PHASE_METHODS), self.summary()["passed"])
         self.assertEqual("NOT_RUN", self.summary()["real_device"])
+
+    def test_ui_only_diagnostic_never_accesses_or_clears_device_and_never_claims_pass(self):
+        with patch("run_six_batch_fixture.FOCUSED_PHASES", ()):
+            self.assertEqual(0, run_fixture(self.root, self.commit, run=self.command, mode="focused"))
+        self.assertEqual([], self.calls)
+        summary = self.summary()
+        self.assertEqual("NOT_RUN_FOCUSED_UI_DIAGNOSTIC", summary["status"])
+        self.assertEqual((5, 0, 0), (summary["expected"], summary["selected_expected"], summary["passed"]))
+        self.assertTrue(all(p["status"] == "NOT_RUN_FOCUSED" for p in summary["phases"].values()))
 
     def test_focused_prepare_and_recall_keep_same_sample_safety_and_never_claims_full_pass(self):
         self.assertEqual(0, run_fixture(self.root, self.commit, run=self.command, mode="focused"))

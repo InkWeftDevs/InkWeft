@@ -1,0 +1,12 @@
+{
+  "expected": 3,
+  "planned_total": 3,
+  "shard_index": 0,
+  "shard_count": 1,
+  "passed": 1,
+  "failures": [
+    "org.inkweft.app.BoundAnnotationFlowUiTest#bindMoveReorderZoomDetachAndReopenKeepOneTransformAndProtectedLayerOwnership",
+    "org.inkweft.app.StudyOrganizationUiTest#outlineEdgeScrollReachesOffscreenParentAndCancelKeepsWholeAuthorGraph"
+  ],
+  "infrastructure": []
+}

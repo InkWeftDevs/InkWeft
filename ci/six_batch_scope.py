@@ -22,8 +22,8 @@ METHODS = {
 # Full mode retains all prior regressions; focused omissions are not claimed as new passes.
 FOCUSED_METHODS = {
     "org.inkweft.app.BoundAnnotationFlowUiTest": ["bindMoveReorderZoomDetachAndReopenKeepOneTransformAndProtectedLayerOwnership"],
-    "org.inkweft.app.CardTrashUiTest": ["cardManagementCancelsRejectsChangedQuestionThenRestoresFromRecycleArea"],
-    "org.inkweft.app.StudyOrganizationUiTest": ["outlineEdgeScrollReachesOffscreenParentAndCancelKeepsWholeAuthorGraph"],
+    "org.inkweft.app.StudyOrganizationUiTest": ["outlineEdgeScrollReachesOffscreenParentAndCancelKeepsWholeAuthorGraph", "realOutlineHandleMovesWholeBranchAndSupportsUndoRedoAndCancel"],
+    "org.inkweft.app.MapInteractionUiTest": ["selectionRenameReadingAndMapMenusKeepTheirScope"],
 }
 
 CORE = ["PageObjectTest", "CardTrashCommandTest", "ContentTransferTest", "LibraryArchiveTest", "CardPresentationTest",
@@ -60,10 +60,10 @@ def build_plan(mode="full"):
             "core_classes":["org.inkweft.core."+c for c in CORE],
             "fixture":{"runner":RUNNER,"phases":list(PHASE_METHODS),
                        "selected_phases":list(FOCUSED_PHASES) if mode == "focused" else list(PHASE_METHODS),
-                       "selected_screenshots":14 if mode == "focused" else 39,
+                       "selected_screenshots":0 if mode == "focused" else 39,
                        "expected_methods":len(PHASE_METHODS),
                        "expected_screenshots":39,"native_workspace_screenshots":24,"native_recall_screenshots":7},
-            "scope":("focused: explicit UI methods and same-library B6 prepare/native_recall; omitted phases NOT_RUN_FOCUSED; not full acceptance"
+            "scope":("focused: native-input fixes plus double-tap and padded-drop guards only; B6 NOT_RUN_FOCUSED_UI_DIAGNOSTIC, zero methods/images; not full acceptance"
                      if mode == "focused" else "six-batch B1-B5 complete scoped regression and B6 full-sized synthetic five-phase evidence")
                     + "; physical device and human acceptance remain NOT_RUN"}
 

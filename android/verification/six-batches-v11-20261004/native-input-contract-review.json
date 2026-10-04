@@ -1,0 +1,33 @@
+{
+  "source_candidate": "df10162",
+  "production_changes": [
+    "MindMapView disables only Android quick-scale because double-tap is owned by inline title editing; normal two-finger detector stays enabled",
+    "Outline hit testing transforms pointerY with viewportStartOffset to account for8dp content padding; edge speed remains in list space",
+    "Transient pointer stored in root space; latest pointer/origin is read again after suspended scrollBy, including stationary header/layout changes"
+  ],
+  "static_evidence": [
+    "android/ACCEPTANCE-MUI.md:18",
+    "android/DELIVERY-V41.md:8",
+    "android/app/src/androidTest/java/org/inkweft/app/MapInteractionUiTest.kt:selectionRenameReadingAndMapMenusKeepTheirScope",
+    "Cached Compose1.10.5 LazyListMeasuredItem.position/place and checkIsDisplayed: item offsets exclude visual padding, placement checked separately from bounds"
+  ],
+  "primary_reference": "https://raw.githubusercontent.com/aosp-mirror/platform_frameworks_base/android15-release/core/java/android/view/ScaleGestureDetector.java",
+  "runtime_root_cause": "NOT_YET_ESTABLISHED; original timing assertion and bounded real event/viewport traces retained",
+  "targeted_regression": [
+    "Original-timing two-finger pinch plus unchanged author data and bound annotation projection",
+    "Existing actual double-tap editing flow",
+    "Actual edge scroll to previously offscreen final folded target, direct displayed midpoint, expand/undo/cancel",
+    "Existing whole-branch move with upper-quarter boundary at24percent to expose padding error"
+  ],
+  "b6": "NOT_RUN_FOCUSED_UI_DIAGNOSTIC,0new methods/images; final full must execute all5phases39PNG",
+  "prior_lint": {
+    "source": "a432bf8c0e27f5e296a55ae0986fd36512b48dbf",
+    "errors": 0,
+    "warnings": 165,
+    "hints": 2,
+    "seconds": 455,
+    "log_sha256": "a5cec496072013da890350a1bea589fa2385f6022d6c202c82e5342b607c2fe3",
+    "does_not_certify_following_production_changes": true
+  },
+  "physical_device": "NOT_RUN"
+}

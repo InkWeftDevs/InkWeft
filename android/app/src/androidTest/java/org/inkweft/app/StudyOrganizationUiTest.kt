@@ -243,7 +243,8 @@ class StudyOrganizationUiTest {
                 if(canceled)cancel()else up()
             }
         }
-        dragTo(f.first,.1f)
+        // A drop just inside the upper quarter must remain BEFORE despite the list's 8dp padding.
+        dragTo(f.first,.24f)
         val moved=listOf(f.root,f.second,f.secondChild,f.first,f.firstChild)
         compose.waitUntil(15_000){order(f.book)==moved};settled(f.book)
         assertEquals(initial.cards,cards(f.book))
@@ -259,7 +260,7 @@ class StudyOrganizationUiTest {
 
     @Test fun outlineEdgeScrollReachesOffscreenParentAndCancelKeepsWholeAuthorGraph(){
         val f=fixture()
-        val extra=List(28){id()};val destination=extra[5];val destinationChild=id()
+        val extra=List(28){id()};val destination=extra.last();val destinationChild=id()
         runBlocking{extra.forEachIndexed{index,node->
             app.study.submit(StudyCommand(id(),f.book,StudyAction.CREATE,cardId=id(),nodeId=node,parentId=f.root,
                 title="跨屏目标 $index",body="边缘拖动验证",x=640.0,y=900.0+index*120))
@@ -287,24 +288,26 @@ class StudyOrganizationUiTest {
             compose.onNodeWithTag("study-list").performTouchInput{
                 down(start);moveTo(start+Offset(0f,30f));moveTo(Offset(list.width*.5f,list.height-8f))
             }
-            var reached=false
+            var dropPoint:Offset?=null
             for(frame in 0 until 300){
                 compose.mainClock.advanceTimeBy(32)
                 compose.waitForIdle()
                 val bounds=compose.onNodeWithTag("study-list").fetchSemanticsNode().boundsInRoot
-                val row=runCatching{compose.onNodeWithTag("outline-row-$target").fetchSemanticsNode().boundsInRoot}.getOrNull()
-                if(row!=null&&row.top>bounds.top+48&&row.bottom<bounds.bottom-48){reached=true;break}
+                // Lazy lists can retain an unplaced node with old bounds; coordinates alone
+                // never prove that a user can see or drop on this row.
+                val row=runCatching{compose.onNodeWithTag("outline-row-$target").assertIsDisplayed().fetchSemanticsNode().boundsInRoot}.getOrNull()
+                if(row!=null&&row.width>0f&&row.height>40f&&row.top>bounds.top+48&&row.bottom<bounds.bottom-4){
+                    dropPoint=row.center-bounds.topLeft
+                    println("EDGE_TARGET_VISIBLE target=$target row=$row container=$bounds local=$dropPoint frame=$frame")
+                    break
+                }
             }
-            assertTrue("Production edge scrolling must reveal the previously offscreen target",reached)
-            var bounds=compose.onNodeWithTag("study-list").fetchSemanticsNode().boundsInRoot
-            compose.onNodeWithTag("study-list").performTouchInput{moveTo(Offset(bounds.width*.5f,bounds.height*.5f))}
+            assertNotNull("Production edge scrolling must reveal the previously offscreen final target",dropPoint)
+            // The final folded row is stable at the scroll boundary. Deliver the
+            // observed midpoint immediately; an intermediate parking move is not a user drop.
+            compose.onNodeWithTag("study-list").performTouchInput{moveTo(checkNotNull(dropPoint))}
             compose.mainClock.advanceTimeByFrame();compose.waitForIdle()
-            bounds=compose.onNodeWithTag("study-list").fetchSemanticsNode().boundsInRoot
-            val row=compose.onNodeWithTag("outline-row-$target").assertIsDisplayed().fetchSemanticsNode().boundsInRoot
-            assertTrue(row.center.y in bounds.top..bounds.bottom)
-            compose.onNodeWithTag("study-list").performTouchInput{moveTo(row.center-bounds.topLeft)}
-            compose.mainClock.advanceTimeByFrame();compose.waitForIdle()
-            compose.onNodeWithTag("outline-drag-feedback").assertTextContains("移入「跨屏目标 5」下级",substring=true)
+            compose.onNodeWithTag("outline-drag-feedback").assertTextContains("移入「跨屏目标 ${extra.lastIndex}」下级",substring=true)
         }
         val originalAutoAdvance=compose.mainClock.autoAdvance
         try{

@@ -339,17 +339,19 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
     fun updateOutlinePointer(point:Offset){
         val drag=outlineDrag?:return
         val info=outlineListState.layoutInfo
+        // Lazy item offsets exclude before-content padding; pointer events do not.
+        val itemY=point.y+info.viewportStartOffset
         val item=if(point.x !in 0f..outlineBounds.width||point.y<0||point.y>outlineBounds.height)null
-            else info.visibleItemsInfo.minByOrNull{item->when{point.y<item.offset->item.offset-point.y;point.y>item.offset+item.size->point.y-item.offset-item.size;else->0f}}
+            else info.visibleItemsInfo.minByOrNull{item->when{itemY<item.offset->item.offset-itemY;itemY>item.offset+item.size->itemY-item.offset-item.size;else->0f}}
         val row=item?.let{projection.rows.getOrNull(it.index)}
         val position=if(item==null)OutlineDropPosition.CHILD else when{
-            point.y<item.offset+item.size*.25f->OutlineDropPosition.BEFORE
-            point.y>item.offset+item.size*.75f->OutlineDropPosition.AFTER
+            itemY<item.offset+item.size*.25f->OutlineDropPosition.BEFORE
+            itemY>item.offset+item.size*.75f->OutlineDropPosition.AFTER
             else->OutlineDropPosition.CHILD
         }
         val preview=if(row==null)null else if(drag.preview?.targetId==row.node.id&&drag.preview.position==position)drag.preview
             else outlineDropPreview(drag.state,drag.nodeId,row.node.id,position,cardById[row.node.cardId]?.title.orEmpty(),row.node.id in collapsed)
-        outlineDrag=drag.copy(pointer=point,preview=preview)
+        outlineDrag=drag.copy(pointerInRoot=point+outlineBounds.topLeft,preview=preview)
     }
     val outlineDraggable by rememberUpdatedState(editable&&!hasDraft&&tab==1)
     val beginOutlineDrag by rememberUpdatedState<(Offset)->Boolean>({point->
@@ -357,7 +359,7 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
         val snapshot=graph
         if(node==null||snapshot==null||!editable||hasDraft||tab!=1)false else{
             focus.clearFocus();vm.selectedByMap[mapKey]=node;organizeNodeId=null
-            outlineDrag=OutlineDrag(snapshot.state,node,point)
+            outlineDrag=OutlineDrag(snapshot.state,node,point+outlineBounds.topLeft)
             readLock.guard("$guardKey-outline",true);updateOutlinePointer(point);true
         }
     })
@@ -383,7 +385,9 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
         if(outlineDrag==null)return@LaunchedEffect
         while(isActive&&outlineDrag!=null){
             delay(16)
-            val point=outlineDrag?.pointer?:break
+            val rootPoint=outlineDrag?.pointerInRoot?:break
+            // Keep a stationary finger fixed when the live feedback changes the list origin.
+            val point=rootPoint-outlineBounds.topLeft
             val height=outlineBounds.height
             val speed=when{
                 point.x !in 0f..outlineBounds.width||point.y !in 0f..height->0f
@@ -391,7 +395,10 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
                 point.y>height-outlineEdge->((point.y-height+outlineEdge)/outlineEdge).coerceIn(0f,1f)*outlineEdge/5
                 else->0f
             }
-            if(speed!=0f){outlineListState.scrollBy(speed);updateOutlinePointer(point)}
+            if(speed!=0f)outlineListState.scrollBy(speed)
+            // scrollBy may suspend while another event or layout moves the local origin.
+            val latestRoot=outlineDrag?.pointerInRoot?:break
+            updateOutlinePointer(latestRoot-outlineBounds.topLeft)
         }
     }
     LaunchedEffect(graph?.graphFingerprint,tab,readOnly){
