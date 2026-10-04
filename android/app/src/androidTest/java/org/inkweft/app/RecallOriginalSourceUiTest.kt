@@ -2,6 +2,8 @@
 package org.inkweft.app
 
 import android.database.Cursor
+import android.graphics.Bitmap
+import android.os.SystemClock
 import android.util.AtomicFile
 import android.util.Base64
 import android.view.inspector.WindowInspector
@@ -9,6 +11,7 @@ import androidx.activity.ComponentActivity
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.semantics.SemanticsProperties
+import androidx.compose.ui.semantics.getOrNull
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.StateRestorationTester
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
@@ -18,6 +21,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import androidx.test.platform.app.InstrumentationRegistry
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.runBlocking
 import org.inkweft.core.*
@@ -29,6 +33,7 @@ import org.junit.Rule
 import org.junit.Test
 import java.io.File
 import java.util.UUID
+import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
 
 /** Production recall/dialog components with real Room and native source canvas; synthetic data only. */
@@ -65,6 +70,62 @@ class RecallOriginalSourceUiTest {
     }
     private fun exists(tag:String)=compose.onAllNodesWithTag(tag).fetchSemanticsNodes().isNotEmpty()
     private fun waitFor(tag:String){compose.waitUntil(15_000){exists(tag)};compose.waitForIdle()}
+    /** Same merged-tag condition and 15-second budget; observe only, never warm app.knowledge. */
+    private fun waitForForeignSourceRejection(){
+        val instrumentation=InstrumentationRegistry.getInstrumentation()
+        val directory=instrumentation.targetContext.getExternalFilesDir(null)
+        val started=SystemClock.elapsedRealtime()
+        var polls=0;var stage="await-source-rejection";var first="No observation";var latest=first
+        var windows="No window observation";var windowAt=-1_000L
+        val states=hasTestTag("review-source") or hasTestTag("review-source-unavailable") or
+            hasTestTag("review-source-canvas") or hasTestTag("return-to-review") or
+            SemanticsMatcher.keyIsDefined(SemanticsProperties.ProgressBarRangeInfo)
+        try{
+            compose.waitUntil(15_000){
+                stage="query-semantics"
+                val nodes=compose.onAllNodes(states).fetchSemanticsNodes()
+                polls++
+                val semantics=nodes.take(8).joinToString("\n"){
+                    "tag=${it.config.getOrNull(SemanticsProperties.TestTag)} progress=${it.config.getOrNull(SemanticsProperties.ProgressBarRangeInfo)} bounds=${it.boundsInRoot}"
+                }
+                latest="poll=$polls elapsedMs=${SystemClock.elapsedRealtime()-started} clockMs=${compose.mainClock.currentTime}\n$semantics"
+                val elapsed=SystemClock.elapsedRealtime()-started
+                if(elapsed-windowAt>=1_000){
+                    stage="sample-windows"
+                    windows=compose.runOnUiThread{WindowInspector.getGlobalWindowViews().take(6).joinToString("\n"){
+                        "${it.javaClass.simpleName} attached=${it.isAttachedToWindow} shown=${it.isShown} focused=${it.hasWindowFocus()} visibility=${it.windowVisibility} size=${it.width}x${it.height} accessibility=${it.importantForAccessibility}"
+                    }}
+                    windowAt=elapsed
+                }
+                latest=(latest+"\nwindowsAtMs=$windowAt\n"+windows).take(3_000)
+                if(polls==1)first=latest
+                stage="await-source-rejection"
+                nodes.any{it.config.getOrNull(SemanticsProperties.TestTag)=="review-source-unavailable"}
+            }
+            stage="wait-for-idle";compose.waitForIdle()
+        }catch(error:Throwable){
+            // Do not re-enter Compose/Room on failure: only cached observations and one native image.
+            runCatching{
+                val diagnostic="RECALL_SOURCE_WAIT_FAILURE stage=$stage polls=$polls elapsedMs=${SystemClock.elapsedRealtime()-started} failure=${error.javaClass.simpleName}\nFIRST\n$first\nLAST\n$latest"
+                println(diagnostic)
+                File(checkNotNull(directory),"recall-source-wait-failure.txt").writeText(diagnostic)
+            }.onFailure{runCatching{println("Source wait text unavailable: ${it.javaClass.simpleName}")}}
+            runCatching{
+                val bitmap=checkNotNull(instrumentation.uiAutomation.takeScreenshot())
+                try{File(checkNotNull(directory),"recall-source-wait-failure.png").outputStream().use{check(bitmap.compress(Bitmap.CompressFormat.PNG,100,it))}}
+                finally{bitmap.recycle()}
+            }.onFailure{runCatching{println("Source wait screenshot unavailable: ${it.javaClass.simpleName}")}}
+            runCatching{
+                // Own process only; no shell elevation, streaming reader or unbounded pipe wait.
+                val log=File(checkNotNull(directory),"recall-source-wait-logcat.txt")
+                val process=ProcessBuilder("logcat","-d","-b","main","-b","crash","--pid=${android.os.Process.myPid()}","-t","80","*:W")
+                    .redirectErrorStream(true).redirectOutput(log).start()
+                try{if(!process.waitFor(2,TimeUnit.SECONDS))println("Source wait logcat timed out")}
+                finally{process.destroyForcibly()}
+            }.onFailure{runCatching{println("Source wait logcat unavailable: ${it.javaClass.simpleName}")}}
+            throw error
+        }
+    }
     private fun tap(tag:String){
         waitFor(tag);val node=compose.onNodeWithTag(tag)
         compose.waitUntil(15_000){runCatching{node.performScrollTo()};runCatching{node.assertIsDisplayed().assertIsEnabled()}.isSuccess}
@@ -205,7 +266,7 @@ class RecallOriginalSourceUiTest {
         val f=fixture();val source=f.sources.first().legacy(f.plan.entries.single().cardId).copy(pageId=f.other.id)
         val before=authorStamp();val visible=mutableStateOf(true)
         compose.setContent{MaterialTheme{if(visible.value)ReviewSourceDialog(source,{visible.value=false},recallNotebookId=f.book.id)}}
-        waitFor("review-source-unavailable");compose.onNodeWithTag("review-source-canvas").assertDoesNotExist()
+        waitForForeignSourceRejection();compose.onNodeWithTag("review-source-canvas").assertDoesNotExist()
         compose.onNodeWithText(f.other.title,substring=true).assertDoesNotExist()
         tap("return-to-review");compose.onNodeWithTag("review-source").assertDoesNotExist();assertEquals(before,authorStamp())
     }

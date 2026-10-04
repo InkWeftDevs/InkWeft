@@ -182,6 +182,13 @@ jobs:
             android/build/evidence/app-*/outline-input-route.txt
             android/build/evidence/app-*/selection-capture-failure.txt
             android/build/evidence/app-*/selection-capture-failure.png
+            android/build/evidence/app-*/recall-source-wait-failure.txt
+            android/build/evidence/app-*/recall-source-wait-failure.png
+            android/build/evidence/app-*/recall-source-wait-logcat.txt
+            android/build/evidence/app-*/ls58-learning-map-entry-failure.txt
+            android/build/evidence/app-*/ls58-learning-map-entry-failure.png
+            android/build/evidence/app-*/excerpt-comment-failure.txt
+            android/build/evidence/app-*/excerpt-comment-failure.png
             android/build/evidence/app-*/timeout-screen.png
             android/build/evidence/app-*/timeout-diagnostics.json
             android/build/evidence/app-*/timeout-app-logcat.txt
@@ -240,6 +247,13 @@ jobs:
             android/build/evidence/app-*/outline-input-route.txt
             android/build/evidence/app-*/selection-capture-failure.txt
             android/build/evidence/app-*/selection-capture-failure.png
+            android/build/evidence/app-*/recall-source-wait-failure.txt
+            android/build/evidence/app-*/recall-source-wait-failure.png
+            android/build/evidence/app-*/recall-source-wait-logcat.txt
+            android/build/evidence/app-*/ls58-learning-map-entry-failure.txt
+            android/build/evidence/app-*/ls58-learning-map-entry-failure.png
+            android/build/evidence/app-*/excerpt-comment-failure.txt
+            android/build/evidence/app-*/excerpt-comment-failure.png
             android/build/evidence/app-*/timeout-screen.png
             android/build/evidence/app-*/timeout-diagnostics.json
             android/build/evidence/app-*/timeout-app-logcat.txt

@@ -3,10 +3,14 @@ package org.inkweft.app
 
 import android.view.View
 import android.view.ViewGroup
+import android.view.inspector.WindowInspector
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.lifecycle.ViewModelProvider
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withTimeout
 import kotlinx.coroutines.flow.first
 import org.inkweft.core.*
 import org.junit.*
@@ -32,6 +36,76 @@ class StarNoteInteractionsUiTest {
  private inline fun<reified T:View> find():T?{
   val queue=java.util.ArrayDeque<View>();queue.add(compose.activity.window.decorView)
   while(queue.isNotEmpty()){val v=queue.removeFirst();if(v is T&&v.isShown)return v;if(v is ViewGroup)for(i in 0 until v.childCount)queue.add(v.getChildAt(i))};return null
+ }
+ private fun saveExcerptComment(book:String,card:String,text:String){
+  val repository=app.knowledge
+  val instrumentation=androidx.test.platform.app.InstrumentationRegistry.getInstrumentation()
+  val evidenceDirectory=instrumentation.targetContext.getExternalFilesDir(null)
+  var writer:KnowledgeViewModel?=null;var stage="open-editor";var cachedUi="not yet ready";var cachedIme="not inspected"
+  val deadline=android.os.SystemClock.elapsedRealtime()+10_000
+  fun await(condition:()->Boolean){
+   val remaining=deadline-android.os.SystemClock.elapsedRealtime()
+   check(remaining>0){"Comment's original 10-second budget expired at $stage"};compose.waitUntil(remaining,condition)
+  }
+  try{
+   val open=compose.onNodeWithTag("excerpt-comment-$card")
+   open.performScrollTo();await{runCatching{open.assertIsDisplayed().assertIsEnabled()}.isSuccess};open.performTouchInput{click()}
+   stage="load-input"
+   val input=compose.onNodeWithTag("excerpt-comment-input")
+   await{runCatching{input.assertExists().assertIsEnabled()}.isSuccess}
+   writer=compose.runOnIdle{ViewModelProvider(compose.activity)["card-presentation-$book-$card",KnowledgeViewModel::class.java]}
+   val owner=checkNotNull(writer)
+   input.performScrollTo();input.assertIsDisplayed().assertIsEnabled().performTextInput(text)
+   input.assertTextContains(text,substring=false)
+   cachedUi="INPUT_AFTER_TYPING\n"+input.printToString().take(1_000)
+   stage="settle-ime"
+   // This is the same real-window IME boundary used by the card-presentation palette regression.
+   val roots=compose.runOnIdle{WindowInspector.getGlobalWindowViews().filter{it.isAttachedToWindow&&it.isShown}}
+   compose.runOnIdle{roots.forEach{root->root.findFocus()?.clearFocus();ViewCompat.getWindowInsetsController(root)?.hide(WindowInsetsCompat.Type.ime())}}
+   await{compose.runOnIdle{
+    val states=roots.map{ViewCompat.getRootWindowInsets(it)?.isVisible(WindowInsetsCompat.Type.ime())}
+    cachedIme=states.toString();states.all{it==false}
+   }}
+   stage="save-once"
+   input.assertTextContains(text,substring=false)
+   val save=compose.onNodeWithTag("excerpt-comment-save")
+   save.performScrollTo();await{runCatching{save.assertIsDisplayed().assertIsEnabled()}.isSuccess}
+   val button=save.fetchSemanticsNode()
+   assertTrue("Comment Save must be fully inside the visible scroll area",button.boundsInRoot.width>=button.size.width-1&&button.boundsInRoot.height>=button.size.height-1)
+   cachedUi="READY_BEFORE_SAVE\n"+input.printToString().take(1_000)+"\n"+save.printToString().take(1_000)
+   save.performTouchInput{click()}
+   stage="persist-comment"
+   await{
+    val state=owner.ui.value
+    check(!state.unknown&&state.rejectedOperation==null){"Comment not confirmed: ${state.message}"}
+    check(state.busy||state.message==null||state.message=="已保存"){"Comment not accepted: ${state.message}"}
+    // KnowledgeViewModel.rows only comes from Room's observe() collector, never from the local editor draft.
+    state.rows.cardPresentations()[card]?.annotation==text
+   }
+   val remaining=deadline-android.os.SystemClock.elapsedRealtime();check(remaining>0){"Comment persistence read exceeded the original budget"}
+   val persisted=runBlocking{withTimeout(remaining){repository.observeBook(book).first()}}
+    .filter{!it.removed&&(it.data() as? KnowledgeData.CardPresentation)?.cardId==card}.single()
+   assertEquals("One save creates one presentation revision",1L,persisted.revision)
+   assertEquals(text,(persisted.data() as KnowledgeData.CardPresentation).annotation)
+   await{compose.onAllNodesWithTag("excerpt-comment-input").fetchSemanticsNodes().isEmpty()}
+  }catch(error:Throwable){
+   // Do not await a stuck Compose/Room pipeline while collecting the original failure.
+   runCatching{
+    val status=runCatching{
+     val state=writer?.ui?.value
+     "stage=$stage ime=$cachedIme loading=${state?.loading} readFailed=${state?.readFailed} busy=${state?.busy} unknown=${state?.unknown} pending=${writer?.pendingOperationId} completed=${state?.completedOperation} rejected=${state?.rejectedOperation} message=${state?.message} persisted=${state?.rows?.cardPresentations()?.get(card)?.annotation}"
+    }.getOrElse{"writer diagnostics unavailable: ${it.javaClass.simpleName}"}
+    val diagnostic=("EXCERPT_COMMENT_FAILURE $status\n$cachedUi").take(4_000)
+    runCatching{println(diagnostic)}
+    runCatching{java.io.File(checkNotNull(evidenceDirectory),"excerpt-comment-failure.txt").writeText(diagnostic)}
+    runCatching{
+     val bitmap=checkNotNull(instrumentation.uiAutomation.takeScreenshot())
+     try{java.io.File(checkNotNull(evidenceDirectory),"excerpt-comment-failure.png").outputStream().use{check(bitmap.compress(android.graphics.Bitmap.CompressFormat.PNG,100,it))}}
+     finally{bitmap.recycle()}
+    }.onFailure{runCatching{println("Comment screenshot unavailable: ${it.javaClass.simpleName}")}}
+   }.onFailure{runCatching{println("Comment diagnostics unavailable: ${it.javaClass.simpleName}")}}
+   throw error
+  }
  }
  @Test fun firstTapSelectsSecondTapAnchorsWithoutDimAndCustomizationDoesNotMoveRows(){
   create();val bounds=compose.onNodeWithTag("editor-toolbar").fetchSemanticsNode().boundsInRoot
@@ -63,8 +137,7 @@ class StarNoteInteractionsUiTest {
   assertTrue(runBlocking{app.study.nodes(note.id).first()}.isEmpty())
   val source=runBlocking{app.study.source(card.id)}!!;assertTrue(InkPageFile.decode(source.snapshot).objects.single().image.isNotBlank())
   compose.onNodeWithTag("study-panel").assertDoesNotExist();compose.onNodeWithTag("excerpt-panel").assertIsDisplayed();shot("v36-excerpt.png")
-  tap("excerpt-comment-${card.id}");compose.onNodeWithTag("excerpt-comment-input").performTextInput("原文旁的备注");tap("excerpt-comment-save")
-  compose.waitUntil(10000){runBlocking{app.knowledge.observeBook(note.id).first().cardPresentations()[card.id]?.annotation}=="原文旁的备注"};ready()
+  saveExcerptComment(note.id,card.id,"原文旁的备注");ready()
   tap("excerpt-menu-${card.id}");tap("excerpt-delete")
   compose.waitUntil(10000){runCatching{compose.onNodeWithTag("card-trash-confirm").assertIsEnabled()}.isSuccess}
   tap("card-trash-cancel");assertNull(runBlocking{app.study.cards(note.id).first().single()}.trashedAt)

@@ -18,22 +18,18 @@ METHODS = {
     "org.inkweft.app.StarNoteInteractionsUiTest": ["excerptKeepsPageImageAddsCommentAndDeletesWithoutDeletingSource",
         "inlineCommentAndEightHandleRecropCancelSaveAndReopenKeepOriginalInk"],
 }
-# Four full-suite failures and the directly affected recreation, map-state and native-ink guards.
-# Full mode retains all prior regressions; focused omissions are not claimed as new passes.
+# Three latest full-run failures and the directly shared library/source-entry guards.
+# Only test readiness/diagnostics changed; B6 is explicitly not rerun in this focused round.
 FOCUSED_METHODS = {
-    "org.inkweft.app.RecallQuestionEditorUiTest": [
-        "rotationAfterQuestionChangeCannotOverwriteNewPromptWithOldDraft",
-        "rotationAfterConfigurationChangeCannotResetNewMasksOrSchedule",
-        "rotationAfterBodyChangeDoesNotApplyOldClozesToNewValidOffsets",
-        "rotationPreservesPromptKindAndExplicitlyClearedClozeDraft"],
-    "org.inkweft.app.MapPortalUiTest": [
-        "nestedReturnKeepsAnUnavailableBranchInsteadOfExpandingItsMap",
-        "specifiedBranchCancelCreateReadNavigateRotateAndReturnKeepAuthorContent"],
-    "org.inkweft.app.MapInteractionUiTest": [
-        "selectionRenameReadingAndMapMenusKeepTheirScope", "branchBadgeAndSourceAreSeparateTargets"],
-    "org.inkweft.app.StudyOrganizationUiTest": ["nativeMapPreviewsEveryDescendantAndMarqueeMovementDeduplicatesBranches"],
-    "org.inkweft.app.BoundAnnotationFlowUiTest": ["bindMoveReorderZoomDetachAndReopenKeepOneTransformAndProtectedLayerOwnership"],
-    "org.inkweft.app.SelectionStudyUiTest": ["excerptCreatesSharedCardAndReturnsToSource"],
+    "org.inkweft.app.LibrarySourceNavigationUiTest": [
+        "learningSourceAwaitsRealPageSelectionThenFocusesOriginalBoundsWithReadLock",
+        "recycledLibrarySourceRetainsCurrentCardSnapshotAndMapWithoutNavigating",
+        "closingOrRecreatingPendingLibrarySourceCannotJumpOrCloseAnotherCard"],
+    "org.inkweft.app.StarNoteInteractionsUiTest": ["excerptKeepsPageImageAddsCommentAndDeletesWithoutDeletingSource"],
+    "org.inkweft.app.RecallOriginalSourceUiTest": [
+        "foreignSourceIsRejectedWithoutRenderingAnotherNotebook",
+        "durableCurrentSourceWaitsForOriginalReceiptAndReturnsToSameAnswerAndWindow",
+        "recycledCurrentSourceKeepsFixedSnapshotAndSameAttempt"],
 }
 
 CORE = ["PageObjectTest", "CardTrashCommandTest", "ContentTransferTest", "LibraryArchiveTest", "CardPresentationTest",
@@ -78,11 +74,11 @@ def build_plan(mode="full"):
             "core_classes":["org.inkweft.core."+c for c in CORE],
             "fixture":{"runner":RUNNER,"phases":list(PHASE_METHODS),
                        "selected_phases":list(FOCUSED_PHASES) if mode == "focused" else list(PHASE_METHODS),
-                       "selected_screenshots":32 if mode == "focused" else 40,
+                       "selected_screenshots":0 if mode == "focused" else 40,
                        "expected_methods":len(PHASE_METHODS),
                        "expected_screenshots":40,"native_workspace_screenshots":24,"native_recall_screenshots":7,
                        "native_recall_reopen_screenshots":1},
-            "scope":("focused: full-suite failures and affected map-state/recreation guards; same-sample prepare/reopen/visual only,32PNG; not full acceptance"
+            "scope":("focused: three full-suite failures and shared source-entry guards; B6 all NOT_RUN_FOCUSED with zero new screenshots; not full acceptance"
                      if mode == "focused" else "six-batch B1-B5 complete scoped regression and B6 full-sized synthetic five-phase evidence")
                     + "; physical device and human acceptance remain NOT_RUN"}
 
