@@ -39,7 +39,18 @@ jobs:
           echo "ANDROID_AVD_HOME=$RUNNER_TEMP/inkweft-six-batch-avd" >> "$GITHUB_ENV"
           echo "ANDROID_USER_HOME=$RUNNER_TEMP/inkweft-six-batch-android" >> "$GITHUB_ENV"
           echo "ANDROID_EMULATOR_HOME=$RUNNER_TEMP/inkweft-six-batch-android" >> "$GITHUB_ENV"
-      - name: 核验既有虚拟化权限（不修改权限或安全设置）
+      - name: 为当前临时runner用户临时授权KVM（用户已确认）
+        run: |
+          set -euo pipefail
+          test -c /dev/kvm
+          command -v getfacl
+          command -v setfacl
+          getfacl -p /dev/kvm > "$RUNNER_TEMP/inkweft-kvm-before.acl"
+          stat -c '%d:%i:%t:%T' /dev/kvm > "$RUNNER_TEMP/inkweft-kvm-identity"
+          sudo setfacl -m "u:$(id -u):rw" /dev/kvm
+          test -r /dev/kvm && test -w /dev/kvm
+          getfacl -p /dev/kvm
+      - name: 核验当前用户KVM访问并记录设备环境
         id: acceleration
         run: |
           mkdir -p android/build/evidence
@@ -74,7 +85,7 @@ jobs:
           sha256sum android/app/build/outputs/apk/debug/app-debug.apk android/app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk android/data-local/build/outputs/apk/androidTest/debug/data-local-debug-androidTest.apk > android/build/evidence/APK-SHA256.txt
           "$ANDROID_HOME/build-tools/36.0.0/apksigner" verify --print-certs android/app/build/outputs/apk/debug/app-debug.apk > android/build/evidence/apk-signature.txt
           git rev-parse HEAD > android/build/evidence/source-commit.txt
-      - name: 仅使用已可访问KVM启动隔离AOSP平板
+      - name: 仅使用已获准的KVM访问启动隔离AOSP平板
         if: steps.acceleration.outputs.ready == 'true'
         run: |
           set -euo pipefail
@@ -94,11 +105,24 @@ jobs:
       - name: 如实记录没有设备运行
         if: steps.acceleration.outputs.ready != 'true'
         run: |
-          echo 'Android methods NOT_RUN: existing runner permissions do not allow KVM. No permissions were changed.'
+          echo 'Android methods NOT_RUN: existing runner permissions do not allow KVM. See the temporary current-user ACL grant and restoration steps.'
           exit 1
       - name: 关闭本任务模拟器
         if: always()
         run: adb emu kill || true
+      - name: 恢复KVM原ACL并核验（包括原有当前UID条目）
+        if: always()
+        run: |
+          set -euo pipefail
+          if test -f "$RUNNER_TEMP/inkweft-kvm-before.acl"; then
+            test -c /dev/kvm
+            test "$(stat -c '%d:%i:%t:%T' /dev/kvm)" = "$(cat "$RUNNER_TEMP/inkweft-kvm-identity")"
+            sudo setfacl --restore="$RUNNER_TEMP/inkweft-kvm-before.acl"
+            getfacl -p /dev/kvm > "$RUNNER_TEMP/inkweft-kvm-after.acl"
+            cmp "$RUNNER_TEMP/inkweft-kvm-before.acl" "$RUNNER_TEMP/inkweft-kvm-after.acl"
+            mkdir -p android/build/evidence
+            printf '%s\n' '{"status":"RESTORED_EXACT_ORIGINAL_ACL"}' > android/build/evidence/kvm-acl-restoration.json
+          fi
       - name: 仅保存验证回执与合成像素（无APK）
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
@@ -112,7 +136,10 @@ jobs:
             android/app/build/reports/lint-results-debug.xml
             android/build/evidence/*-summary.json
             android/build/evidence/device-environment.json
+            android/build/evidence/kvm-acl-restoration.json
             android/build/evidence/APK-SHA256.txt
             android/build/evidence/apk-signature.txt
             android/build/evidence/source-commit.txt
-            android/build/evidence/**/b1-card-four-zones.png
+            android/build/evidence/**/*.png
+            android/build/evidence/**/instrumentation.txt
+            android/build/evidence/**/selection.txt

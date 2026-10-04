@@ -5,17 +5,16 @@ from android_plan import inventory, select_methods
 import re
 
 APP = ["ViewportRasterTest", "PdfViewportRasterTest", "ZoomRasterTest", "RenderResourcesTest",
-       "ImageRenderingTest", "CardPresentationUiTest", "RecallMaskUiTest", "StarNoteInteractionsUiTest", "StudyOrganizationUiTest"]
+       "ImageRenderingTest", "CardPresentationUiTest", "RecallMaskUiTest", "StarNoteInteractionsUiTest", "StudyOrganizationUiTest", "CardTransformUiTest", "StudyTransformNavigationUiTest", "StudyRelationPaintTest", "StudyRelationsUiTest"]
 ROOM = ["PageObjectRepositoryTest", "CardPresentationRepositoryTest", "LibraryBackupRepositoryTest",
-        "LibraryBackupGuardTest", "LibraryContentRepositoryTest", "StudyAndSelectionRepositoryTest"]
+        "LibraryBackupGuardTest", "LibraryContentRepositoryTest", "StudyAndSelectionRepositoryTest", "CardTransformRepositoryTest", "CardReuseRepositoryTest", "KnowledgeRepositoryTest", "KnowledgeTextRepositoryTest"]
 METHODS = {
-    "org.inkweft.app.StudyOrganizationUiTest": ["workModesPreserveSelectedGraphAndResumeTheSameUnrevealedQuestion"],
     "org.inkweft.app.RecallMaskUiTest": ["sharedCardAnnotationIsShieldedDuringRecallAndRestoredWithoutWrites"],
     "org.inkweft.app.StarNoteInteractionsUiTest": ["excerptKeepsPageImageAddsCommentAndDeletesWithoutDeletingSource",
         "inlineCommentAndEightHandleRecropCancelSaveAndReopenKeepOriginalInk"],
 }
 CORE = ["PageObjectTest", "ContentTransferTest", "LibraryArchiveTest", "CardPresentationTest",
-        "KnowledgeTest", "StudyTextTest", "MapAddendumTest", "StudyOrganizationTest"]
+        "KnowledgeTest", "StudyTextTest", "MapAddendumTest", "StudyOrganizationTest", "StudyOutlineTest", "CardTransformTest", "KnowledgeTextLinksTest"]
 app=["org.inkweft.app."+name for name in APP]
 room=["org.inkweft.data."+name for name in ROOM]
 root=Path(__file__).resolve().parents[1]
@@ -27,7 +26,8 @@ assert set(app)<=inventory("app").keys() and set(room)<=inventory("data-local").
 plan={"app":app,"room":room,"app_methods":METHODS,
       "expected_app":sum(len(METHODS[c]) if c in METHODS else inventory("app")[c] for c in app),
       "expected_room":sum(inventory("data-local")[c] for c in room),
+      "room_class_counts":{c:inventory("data-local")[c] for c in room},
       "core_classes":["org.inkweft.core."+c for c in CORE],
-      "scope":"six-batch B1 and shared rendering/data contracts; not the full historical suite"}
+      "scope":"six-batch B1-B3 and shared rendering/data/migration contracts; not the full historical suite"}
 Path("android-plan.json").write_text(json.dumps(plan,indent=2),encoding="utf-8")
 print(json.dumps(plan,indent=2))

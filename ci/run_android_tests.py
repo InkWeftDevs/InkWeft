@@ -20,6 +20,7 @@ out=root/"android/build/evidence";out.mkdir(parents=True,exist_ok=True)
 
 def adb(*args): return subprocess.check_output(["adb",*args],text=True,errors="replace",timeout=180)
 
+suite_failures=[]
 for module,key,runner in [("data-local","room","org.inkweft.data.test/androidx.test.runner.AndroidJUnitRunner"),
                           ("app","app","org.inkweft.app.a0.insertion.test/androidx.test.runner.AndroidJUnitRunner")]:
     classes=plan[key]
@@ -40,7 +41,10 @@ for module,key,runner in [("data-local","room","org.inkweft.data.test/androidx.t
             methods=select_methods(methods,plan.get("app_methods",{}).get(name))
             cases.extend((name+"#"+method,1) for method in methods)
         if len(cases)!=plan["expected_app"]: raise SystemExit("Test inventory mismatch")
-    else: cases=[(",".join(classes),plan["expected_room"])]
+    else:
+        counts=plan.get("room_class_counts")
+        cases=[(name,counts[name]) for name in classes] if counts else [(",".join(classes),plan["expected_room"])]
+        if sum(expected for _,expected in cases)!=plan["expected_room"]: raise SystemExit("Room inventory mismatch")
     if key=="app": cases=partition(cases,args.shard_index,args.shard_count)
     expected_shard=sum(expected for _,expected in cases)
     failures=[];total=0
@@ -75,6 +79,8 @@ for module,key,runner in [("data-local","room","org.inkweft.data.test/androidx.t
         summary()
         if key=="app": subprocess.run(["adb","pull","/sdcard/Android/data/org.inkweft.app.a0.insertion/files/.",str(case_dir)],stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
     summary()
-    if failures or total!=expected_shard: raise SystemExit(f"{key}: {len(failures)} failing selections; original assertions and logs retained")
+    if failures or total!=expected_shard: suite_failures.append(f"{key}: {len(failures)} failing selections; original assertions and logs retained")
 
 (out/"scope.json").write_text(json.dumps(plan,ensure_ascii=False,indent=2),encoding="utf-8")
+
+if suite_failures: raise SystemExit("; ".join(suite_failures))
