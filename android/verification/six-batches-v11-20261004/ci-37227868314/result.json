@@ -41,5 +41,6 @@
     "regression": 80.909
   },
   "full_acceptance": "NOT_COMPLETE",
-  "physical_device": "NOT_RUN"
+  "physical_device": "NOT_RUN",
+  "later_causal_correction": "The diagnostic patch was not purely observational: replacing rememberUpdatedState(::localFunction) with a lambda refreshes captured projection. Kotlin2.3.10/Compose1.10.5 reproduction and old production bytecode prove references compare equal despite different captures. Preserve lambda when removing observer. Another identical work-mode callback is being fixed with a current-branch regression."
 }

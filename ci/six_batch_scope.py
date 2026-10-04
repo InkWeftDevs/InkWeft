@@ -18,10 +18,10 @@ METHODS = {
     "org.inkweft.app.StarNoteInteractionsUiTest": ["excerptKeepsPageImageAddsCommentAndDeletesWithoutDeletingSource",
         "inlineCommentAndEightHandleRecropCancelSaveAndReopenKeepOriginalInk"],
 }
-# Target the remaining cross-screen release path plus the normal whole-branch drag control.
+# Check refreshed local callbacks: cross-screen release, ordinary drag, and a newly loaded review branch.
 # Full mode retains all prior regressions; focused omissions are not claimed as new passes.
 FOCUSED_METHODS = {
-    "org.inkweft.app.StudyOrganizationUiTest": ["outlineEdgeScrollReachesOffscreenParentAndCancelKeepsWholeAuthorGraph", "realOutlineHandleMovesWholeBranchAndSupportsUndoRedoAndCancel"],
+    "org.inkweft.app.StudyOrganizationUiTest": ["outlineEdgeScrollReachesOffscreenParentAndCancelKeepsWholeAuthorGraph", "realOutlineHandleMovesWholeBranchAndSupportsUndoRedoAndCancel", "workModesPreserveSelectedGraphAndResumeTheSameUnrevealedQuestion"],
 }
 
 CORE = ["PageObjectTest", "CardTrashCommandTest", "ContentTransferTest", "LibraryArchiveTest", "CardPresentationTest",

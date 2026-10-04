@@ -9,7 +9,6 @@ import android.view.View
 import android.view.ViewConfiguration
 import android.view.ViewGroup
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.platform.ViewRootForTest
 import androidx.compose.ui.semantics.SemanticsProperties
 import androidx.compose.ui.semantics.getOrNull
 import androidx.compose.ui.test.*
@@ -195,17 +194,26 @@ class StudyOrganizationUiTest {
         }
     }
     @Test fun workModesPreserveSelectedGraphAndResumeTheSameUnrevealedQuestion(){
-        val f=fixture();val before=author(f.book)
-        val card=cards(f.book).single{it.id==nodes(f.book).single{it.id==f.second}.cardId}
-        runBlocking{app.knowledge.submit(KnowledgeCommand(id(),f.book,id(),0,KnowledgeData.Question(card.id,"三态恢复合成问题")))}
-        select(f.second)
+        val f=fixture();val lateNode=id();val lateCard=id()
+        // Add this branch after StudyContent installed its external mode callback.
+        // A stale captured nodeById would select the whole map, including the decoy question.
+        val decoyCard=nodes(f.book).single{it.id==f.second}.cardId
+        runBlocking{
+            app.study.submit(StudyCommand(id(),f.book,StudyAction.CREATE,cardId=lateCard,nodeId=lateNode,parentId=f.root,
+                title="后加载分支",body="回忆必须使用当前选择",x=340.0,y=1300.0))
+            app.knowledge.submit(KnowledgeCommand(id(),f.book,id(),0,KnowledgeData.Question(decoyCard,"另一分支的问题不应进入此范围")))
+            app.knowledge.submit(KnowledgeCommand(id(),f.book,id(),0,KnowledgeData.Question(lateCard,"三态恢复合成问题")))
+        }
+        settled(f.book);val before=author(f.book)
+        select(lateNode)
         val camera=compose.runOnIdle{map().snapshotViewport()}
         tap("quick-readonly")
         compose.runOnIdle{assertTrue(ViewModelProvider(compose.activity)["read-lock-${f.book}",BookReadLockViewModel::class.java].readOnly.value)}
         tap("exit-readonly")
-        compose.runOnIdle{assertEquals(f.second,map().selectedNodeId);assertEquals(camera,map().snapshotViewport())}
+        compose.runOnIdle{assertEquals(lateNode,map().selectedNodeId);assertEquals(camera,map().snapshotViewport())}
         tap("workspace-recall")
         compose.waitUntil(15_000){compose.onAllNodesWithTag("branch-review-start").fetchSemanticsNodes().isNotEmpty()}
+        compose.onNodeWithTag("branch-review-total-questions").assertTextEquals("范围内共 1 道问题")
         tap("branch-review-start")
         compose.waitUntil(15_000){compose.onAllNodesWithTag("review-question").fetchSemanticsNodes().isNotEmpty()}
         compose.onNodeWithTag("review-question").assertTextEquals("三态恢复合成问题")
@@ -220,7 +228,7 @@ class StudyOrganizationUiTest {
         compose.onNodeWithTag("branch-review-start").assertDoesNotExist()
         compose.onNodeWithTag("review-consulted-original").assertExists()
         compose.onNode(hasContentDescription("书写批注") and hasAnyAncestor(hasTestTag("manual-review"))).performClick()
-        compose.runOnIdle{assertEquals(f.second,map().selectedNodeId);assertEquals(camera,map().snapshotViewport())}
+        compose.runOnIdle{assertEquals(lateNode,map().selectedNodeId);assertEquals(camera,map().snapshotViewport())}
         assertEquals(before.cards,cards(f.book));assertEquals(before.nodes,nodes(f.book))
         compose.runOnIdle{
             val lock=ViewModelProvider(compose.activity)["read-lock-${f.book}",BookReadLockViewModel::class.java]
@@ -261,7 +269,6 @@ class StudyOrganizationUiTest {
         tap("study-close");tap("quick-study");settled(f.book);assertEquals(moved,order(f.book))
     }
 
-    @OptIn(androidx.compose.ui.InternalComposeUiApi::class)
     @Test fun outlineEdgeScrollReachesOffscreenParentAndCancelKeepsWholeAuthorGraph(){
         val f=fixture()
         val extra=List(28){id()};val destination=extra.last();val destinationChild=id()
@@ -301,14 +308,6 @@ class StudyOrganizationUiTest {
             val bytes=text.toByteArray(Charsets.UTF_8)
             return if(bytes.size<=limit)bytes else bytes.copyOf(limit-32)+"\n[BOUNDED_DIAGNOSTIC_TAIL]\n".toByteArray()
         }
-        val listSemantics=compose.onNodeWithTag("study-list").fetchSemanticsNode()
-        val owner=(checkNotNull(listSemantics.root) as ViewRootForTest).view
-        val previousEvent=owner.javaClass.getDeclaredField("previousMotionEvent").apply{isAccessible=true}
-        fun recordOwnerEvent(stage:String)=compose.runOnIdle{
-            val screen=IntArray(2);val window=IntArray(2);owner.getLocationOnScreen(screen);owner.getLocationInWindow(window)
-            val event=previousEvent.get(owner) as? MotionEvent
-            recordRoute("$stage owner=${System.identityHashCode(owner)} screen=${screen.toList()} window=${window.toList()} list=${listSemantics.boundsInRoot} actualRootEvent=${event?.actionMasked} xy=${event?.x},${event?.y} raw=${event?.rawX},${event?.rawY} time=${event?.eventTime}")
-        }
         fun startAndReachTarget(target:String){
             val list=compose.onNodeWithTag("study-list").fetchSemanticsNode().boundsInRoot
             val handle=compose.onNodeWithTag("outline-drag-${f.first}").assertIsDisplayed().fetchSemanticsNode().boundsInRoot
@@ -343,17 +342,14 @@ class StudyOrganizationUiTest {
             compose.onNodeWithTag("outline-drag-feedback").assertTextContains("移入「跨屏目标 ${extra.lastIndex}」下级",substring=true)
         }
         val originalAutoAdvance=compose.mainClock.autoAdvance
-        compose.runOnIdle{vm(f.book).outlineInputObserver=::recordRoute}
         try{
         startAndReachTarget(destination)
         compose.onNodeWithTag("outline-drag-feedback").assertTextContains("松手后展开目标",substring=true)
-        recordOwnerEvent("before-up")
         val releaseBounds=compose.onNodeWithTag("study-list").fetchSemanticsNode().boundsInRoot
         compose.onNodeWithTag("study-list").performTouchInput{
             recordRoute("inject-up currentLocal=${currentPosition()} scopeBounds=$releaseBounds expectedRoot=${currentPosition()?.plus(releaseBounds.topLeft)}")
             up()
         }
-        recordOwnerEvent("after-up-flush")
         compose.mainClock.autoAdvance=originalAutoAdvance
         try{
             compose.waitUntil(15_000){nodes(f.book).single{it.id==f.first}.parentId==destination}
@@ -371,7 +367,7 @@ class StudyOrganizationUiTest {
         compose.waitUntil(15_000){order(f.book)==originalOrder};settled(f.book)
         assertEquals(initial.cards,cards(f.book))
         assertEquals(initial.nodes.associate{it.id to Triple(it.parentId,it.x,it.y)},nodes(f.book).associate{it.id to Triple(it.parentId,it.x,it.y)})
-        compose.onNodeWithTag("outline-drag-${f.first}").performScrollTo();compose.waitForIdle()
+        compose.onNodeWithTag("study-list").performScrollToNode(hasTestTag("outline-drag-${f.first}"));compose.waitForIdle()
         val beforeCancel=author(f.book)
         startAndReachTarget(destination)
         compose.onNodeWithTag("study-list").performTouchInput{cancel()}
@@ -388,7 +384,6 @@ class StudyOrganizationUiTest {
             fun cleanup(label:String,action:()->Unit){runCatching(action).exceptionOrNull()?.let{cleanupFailures+=it;recordRoute("cleanup-failed $label ${it.javaClass.name}")}}
             cleanup("pointer"){if(!compose.mainClock.autoAdvance)compose.onNodeWithTag("study-list").performTouchInput{cancel()}}
             cleanup("clock"){compose.mainClock.autoAdvance=originalAutoAdvance}
-            cleanup("observer"){compose.runOnIdle{vm(f.book).outlineInputObserver=null}}
             // Always try saving even if Compose cleanup failed. Preserve the original failure.
             val capture=runCatching{java.io.File(checkNotNull(app.getExternalFilesDir(null)),"outline-input-route.txt").writeBytes(routeReport(64*1024))}
             if(routeFailure==null){

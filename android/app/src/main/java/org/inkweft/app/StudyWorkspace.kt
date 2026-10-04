@@ -332,23 +332,11 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
         plan.after.placements.find{it.nodeId==node.id}?.parentId?.let{collapsed=collapsed-it}
         localMessage="顺序与层级已提交。画布位置保留，可预览自动布局。"
     }
-    fun traceOutlineInput(stage:String,point:Offset?=null){
-        if(!BuildConfig.DEBUG)return
-        val observer=vm.outlineInputObserver?:return
-        val drag=outlineDrag;val info=outlineListState.layoutInfo
-        val graphSame=if(stage=="end-before")drag?.let{graph?.graphFingerprint==StudyOrganization.fingerprint(it.state)}else null
-        // Coordinates, identities and state only: no card text, answers or author samples.
-        val line="$stage point=$point bounds=$outlineBounds root=${point?.plus(outlineBounds.topLeft)} drag=${drag?.nodeId} savedRoot=${drag?.pointerInRoot} target=${drag?.preview?.targetId} zone=${drag?.preview?.position} valid=${drag?.preview?.plan!=null} canWrite=${readLock.canWrite} graphSame=$graphSame tab=$tab readOnly=$readOnly viewport=${info.viewportStartOffset}..${info.viewportEndOffset} rows=${info.visibleItemsInfo.take(12).joinToString{"${it.key}:${it.index}:${it.offset}:${it.size}"}}"
-        runCatching{observer(line)}
-    }
-    val observeOutlineInput by rememberUpdatedState<(String,Offset?)->Unit>(::traceOutlineInput)
     fun cancelOutlineDrag(message:String="拖动已取消，顺序与层级保持不变"){
-        traceOutlineInput("cancel-before reason=$message")
         if(outlineDrag!=null)localMessage=message
         outlineDrag=null;readLock.guard("$guardKey-outline",false)
     }
-    fun updateOutlinePointer(point:Offset,origin:String="move"){
-        traceOutlineInput("$origin-pointer-before",point)
+    fun updateOutlinePointer(point:Offset){
         val drag=outlineDrag?:return
         val info=outlineListState.layoutInfo
         // Lazy item offsets exclude before-content padding; pointer events do not.
@@ -364,7 +352,6 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
         val preview=if(row==null)null else if(drag.preview?.targetId==row.node.id&&drag.preview.position==position)drag.preview
             else outlineDropPreview(drag.state,drag.nodeId,row.node.id,position,cardById[row.node.cardId]?.title.orEmpty(),row.node.id in collapsed)
         outlineDrag=drag.copy(pointerInRoot=point+outlineBounds.topLeft,preview=preview)
-        traceOutlineInput("$origin-pointer-after",point)
     }
     val outlineDraggable by rememberUpdatedState(editable&&!hasDraft&&tab==1)
     val outlineHandleAt by rememberUpdatedState<(Offset)->String?>({point->
@@ -381,16 +368,15 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
         if(snapshot==null||node !in snapshot.state.orderedNodeIds||!editable||hasDraft||tab!=1)false else{
             focus.clearFocus();vm.selectedByMap[mapKey]=node;organizeNodeId=null
             outlineDrag=OutlineDrag(snapshot.state,node,point+outlineBounds.topLeft)
-            readLock.guard("$guardKey-outline",true);updateOutlinePointer(point,"begin");true
+            readLock.guard("$guardKey-outline",true);updateOutlinePointer(point);true
         }
     })
     val openOutlineHandle by rememberUpdatedState<(String)->Unit>({node->
         if(editable&&!hasDraft&&node in nodeById){vm.selectedByMap[mapKey]=node;organizeNodeId=node}
     })
+    // Refresh the captured outline projection; a local callable reference can compare equal across captures.
     val moveOutlineDrag by rememberUpdatedState<(Offset)->Unit>({updateOutlinePointer(it)})
-    val releaseOutlinePointer by rememberUpdatedState<(Offset)->Unit>({updateOutlinePointer(it,"up")})
     val endOutlineDrag by rememberUpdatedState<()->Unit>({
-        traceOutlineInput("end-before")
         val drag=outlineDrag
         val plan=drag?.preview?.plan
         cancelOutlineDrag()
@@ -421,7 +407,7 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
             if(speed!=0f)outlineListState.scrollBy(speed)
             // scrollBy may suspend while another event or layout moves the local origin.
             val latestRoot=outlineDrag?.pointerInRoot?:break
-            updateOutlinePointer(latestRoot-outlineBounds.topLeft,"edge")
+            updateOutlinePointer(latestRoot-outlineBounds.topLeft)
         }
     }
     LaunchedEffect(graph?.graphFingerprint,tab,readOnly){
@@ -557,7 +543,7 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
             if(!chooseWorkMode(mode))localMessage=readLock.reason
         }
     }
-    val latestWorkMode by rememberUpdatedState<(StudyWorkMode)->Boolean>(::chooseWorkMode)
+    val latestWorkMode by rememberUpdatedState<(StudyWorkMode)->Boolean>({chooseWorkMode(it)})
     DisposableEffect(note.base.id,workModeRequest){
         val handler:(StudyWorkMode)->Boolean={latestWorkMode(it)}
         workModeRequest?.value=handler
@@ -1050,7 +1036,6 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
                         // The whole list owns this gesture, so auto-scroll may recycle the source row safely.
                         val source=if(outlineDraggable)outlineHandleAt(down.position)else null
                         if(source!=null){
-                            observeOutlineInput("down source=$source id=${down.id}",down.position)
                             down.consume()
                             var started=false
                             var ended=false
@@ -1059,21 +1044,19 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
                                     // Consume in Initial before LazyColumn's own scroll detector.
                                     val event=awaitPointerEvent(PointerEventPass.Initial)
                                     val change=event.changes.firstOrNull{it.id==down.id}?:break
-                                    observeOutlineInput("event type=${event.type} id=${change.id} pressed=${change.pressed} previousPressed=${change.previousPressed} consumed=${change.isConsumed} previous=${change.previousPosition}",change.position)
                                     if(event.changes.count{it.pressed}>1){event.changes.forEach{it.consume()};break}
                                     if(!change.pressed){
-                                        observeOutlineInput("release previousPressed=${change.previousPressed} consumed=${change.isConsumed} uptime=${change.uptimeMillis}",change.position)
                                         val released=change.changedToUp()
                                         change.consume()
                                         if(!released)break
-                                        if(started){releaseOutlinePointer(change.position);endOutlineDrag()}else openOutlineHandle(source)
+                                        if(started){moveOutlineDrag(change.position);endOutlineDrag()}else openOutlineHandle(source)
                                         ended=true;break
                                     }
                                     if(!started&&(change.position-down.position).getDistance()>=viewConfiguration.touchSlop)started=beginOutlineDrag(source,down.position)
                                     change.consume()
                                     if(started)moveOutlineDrag(change.position)
                                 }
-                            }finally{if(started&&!ended){observeOutlineInput("gesture-finally-cancel",null);cancelOutlineGesture()}}
+                            }finally{if(started&&!ended)cancelOutlineGesture()}
                         }
                     }
                 }.onPreviewKeyEvent{event->

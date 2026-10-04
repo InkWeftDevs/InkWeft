@@ -100,8 +100,6 @@ internal class StudyViewModel(val book:String,val repo:StudyRepository,private v
         portalReturns.removeAt(portalReturns.lastIndex);savePortalReturns();searchHit=null;selectMap(back.mapId,false);selectTab(2);viewportRestore++
         return true
     }
-    // Temporary opt-in test observation; never installed by production UI. Remove after native-route diagnosis.
-    internal var outlineInputObserver:((String)->Unit)?=null
     private var pending:StudyCommand?=restorePending()
     private var pendingOrganizationUndo:StudyCommand?=restoreOrganization("study.pendingOrganizationUndo")
     private var pendingHistoryDirection=(saved.get<Int>("study.pendingHistoryDirection")?:0).also{require(it in -1..1)}
