@@ -21,6 +21,11 @@ import java.util.UUID
 @Composable internal fun SourceThumbnail(card:String,modifier:Modifier=Modifier){
     val app=LocalContext.current.applicationContext as InkWeftApplication
     val source by remember(card){app.study.observeSource(card)}.collectAsStateWithLifecycle(initialValue=null)
+    SourceThumbnail(source,modifier,card)
+}
+
+/** An explicitly chosen frozen source must never fall back to the card's current crop. */
+@Composable internal fun SourceThumbnail(source:StudySourceRow?,modifier:Modifier=Modifier,card:String=source?.cardId.orEmpty()){
     val snapshot by produceState<InkPageFile?>(null,source){value=withContext(Dispatchers.IO){runCatching{source?.let{InkPageFile.decode(it.snapshot)}}.getOrNull()}}
     Box(modifier){snapshot?.let{file->AndroidView(factory={InkCanvasView(it).apply{preview=true}},onRelease={v->v.showObjects(emptyList());v.showStrokes(emptyList())},update={v->v.configure(true,PaperStyle.BLANK,null);v.showImageSources(file.imageSources);v.showStrokes(file.strokes);v.showObjects(file.objects)},modifier=Modifier.fillMaxSize().testTag("excerpt-preview-$card"))}}
 }

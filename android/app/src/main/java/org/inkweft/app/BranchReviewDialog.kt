@@ -216,13 +216,7 @@ internal val BranchReviewRoundSaver = Saver<BranchReviewRound, ByteArray>(
     }
     val current=loaded?.getOrNull(index)
     val cluesVisible=hints||revealed
-    var source by remember { mutableStateOf<StudySourceRow?>(null) }
-    LaunchedEffect(current?.reference?.cardId) {
-        source=null
-        if(current!=null)try { source=withContext(Dispatchers.IO){app.study.source(current.reference.cardId)} }
-        catch(c:CancellationException){throw c}
-        catch(_:Exception){source=null}
-    }
+    var source by remember(current?.reference){mutableStateOf(current?.let{it.sources.singleLegacy(it.reference.cardId)})}
 
     Dialog(onDismissRequest={requestDismiss()},properties=DialogProperties(usePlatformDefaultWidth=false)) {
         RecallWindowPermit()
@@ -300,6 +294,7 @@ internal val BranchReviewRoundSaver = Saver<BranchReviewRound, ByteArray>(
                             Text("本题固定版本未能读取，未将本轮标为完成。")
                         }else{
                             val question=current.question.data() as KnowledgeData.Question
+                            if(cluesVisible)FrozenCardSources(current.sources,current.reference.cardId,{selected->if(source!==selected)source=selected},enabled=!busy)
                             Text(question.prompt,fontSize=24.sp,modifier=Modifier.testTag("review-question"))
                             if(cluesVisible)Text(current.card.title,style=MaterialTheme.typography.titleMedium,
                                 modifier=Modifier.testTag("review-card-title"))

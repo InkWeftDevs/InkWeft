@@ -154,17 +154,31 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
     val scenes by graphFlow.collectAsStateWithLifecycle(initialValue=emptyList())
     val excerptRows by remember(note.base.id){app.study.excerpts(note.base.id)}.collectAsStateWithLifecycle(initialValue=emptyList())
     val sourcePages by remember(note.base.id){app.pages.observeAll(note.base.id)}.collectAsStateWithLifecycle(initialValue=emptyList())
-    val mapSources=remember(scenes,excerptRows,sourcePages,note.title){
+    val sourceSummaries by remember(note.base.id){app.study.sourceSummaries(note.base.id)}.collectAsStateWithLifecycle(initialValue=emptyList())
+    val mapSources=remember(scenes,excerptRows,sourcePages,note.title,sourceSummaries){
         val known=scenes.flatMap{it.nodes}.filter{it.sourceState!="无来源"}.mapNotNull{it.cardId}.associateWith{MapSourceInfo("原迹摘录")}
-        known+excerptRows.associate{excerpt->
+        val legacy=known+excerptRows.associate{excerpt->
             val page=sourcePages.find{it.id==excerpt.pageId&&it.trashedAt==null}
             excerpt.id to MapSourceInfo(page?.let{"第 ${it.position+1} 页"}?:"来源页不可用",CanvasBounds(excerpt.left,excerpt.top,excerpt.right,excerpt.bottom))
+        }
+        legacy+sourceSummaries.filter{it.count>0||!it.complete}.associate{summary->
+            summary.cardId to when{
+                !summary.complete->MapSourceInfo("来源版本需核对",previewEnabled=false)
+                summary.count>1->MapSourceInfo("${summary.count} 个来源 · 点开选择",previewEnabled=false)
+                else->legacy[summary.cardId]?:MapSourceInfo("固定来源 · 点开查看")
+            }
         }
     }
     val extraFlow=remember(app,note.base.id){app.knowledge.observeBook(note.base.id)};val extraRows by extraFlow.collectAsStateWithLifecycle(initialValue=emptyList())
     val presentations=remember(extraRows){extraRows.cardPresentations()}
     val annotations=remember(presentations){presentations.mapValues{it.value.annotation}}
     var presentationCardId by rememberSaveable{mutableStateOf<String?>(null)}
+    var transformKind by rememberSaveable{mutableStateOf<CardTransformKind?>(null)}
+    var transformCardIds by rememberSaveable{mutableStateOf(emptyList<String>())}
+    var transformedCardIds by rememberSaveable{mutableStateOf(emptyList<String>())}
+    var transformPending by remember{mutableStateOf(false)}
+    var resolutionPending by remember{mutableStateOf(false)}
+    val transforms=remember(app){app.study.transforms()}
     fun extraOccurrences(cardId:String)=extraRows.count{r->!r.removed&&r.notebookId==note.base.id&&when(val d=r.data()){is KnowledgeData.Placement->d.cardId==cardId;is KnowledgeData.MapOccurrence->d.cardId==cardId;else->false}}
 
     val currentMap by vm.mapId.collectAsStateWithLifecycle()
@@ -219,6 +233,9 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
     val chosenCard=displayCards.find{it.id==chosenCardId}
     val inspectorState=androidx.compose.runtime.saveable.rememberSaveableStateHolder()
     var source by remember{mutableStateOf<StudySourceRow?>(null)};var stale by remember{mutableStateOf(false)}
+    var sourceVersions by remember{mutableStateOf<Pair<StudyCardRow,FrozenStudySources>?>(null)}
+    var sourceLoadFailed by remember{mutableStateOf(false)}
+    var sourceReload by remember{mutableIntStateOf(0)}
     var map by remember{mutableStateOf<MindMapView?>(null)};var dragging by remember{mutableStateOf(false)}
     LaunchedEffect(graph?.graphFingerprint,layoutFitGraph,layoutRestoreGraph,map,tab,mapKey){
         val canvas=map?:return@LaunchedEffect;val stamp=graph?.graphFingerprint?:return@LaunchedEffect
@@ -280,8 +297,14 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
         val availableBooks=mapWrite.notes.map{it.id}.toSet()
         projectStudyRelations(relationNodeId,relationNodes,mapWrite.rows.filter{it.notebookId in availableBooks})
     }else StudyRelationProjection(emptyList(),0)
-    val browseReady=documentReady&&!ui.loading&&!ui.readFailed&&!ui.busy&&!ui.unknown&&!mapSaving
+    val browseReady=documentReady&&!ui.loading&&!ui.readFailed&&!ui.busy&&!ui.unknown&&!mapSaving&&!resolutionPending&&!transformPending
     val editable=browseReady&&!readOnly&&!missingPortalBranch&&titleDraft==null&&layoutPreview==null&&graph!=null
+    fun openTransform(kind:CardTransformKind,cardIds:List<String>){
+        if(!editable||hasDraft)return
+        val ids=cardIds.distinct().filter{id->ui.cards.any{it.id==id&&it.trashedAt==null}}
+        if(kind==CardTransformKind.SPLIT&&ids.size!=1||kind!=CardTransformKind.SPLIT&&ids.size !in 2..16){localMessage="拆分请选择1张卡，合并或总结请选择2–16张内容卡";return}
+        transformCardIds=ids;transformKind=kind;chosenCardId=null;chosenNodeId=null;nodeMenu=false
+    }
     fun organizationPlan(node:StudyNodeRow,action:StudyOrganizationAction):StudyOrganizationPlan?=
         graph?.let{runCatching{StudyOrganization.plan(it.state,node.id,action)}.getOrNull()}
     fun organize(node:StudyNodeRow,action:StudyOrganizationAction){
@@ -386,9 +409,11 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
         nodeSourceJob=scope.launch{
             val request=currentCoroutineContext().job
             try{
-                val original=withContext(Dispatchers.IO){app.study.source(node.cardId)}
+                val originals=withContext(Dispatchers.IO){app.study.sources(node.cardId)}
                 currentCoroutineContext().ensureActive()
                 if(!current()||!latestDocumentReady)return@launch
+                if(!originals.complete||originals.sources.size>1){chosenNodeId=node.id;chosenCardId=node.cardId;inspectSource=true;return@launch}
+                val original=originals.singleLegacy(node.cardId)
                 val opened=original!=null&&openSource(original)
                 currentCoroutineContext().ensureActive()
                 if(current()&&!opened)localMessage="来源页已回收或不可用；原迹快照仍保留。"
@@ -396,8 +421,10 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
             finally{if(nodeSourceJob===request)nodeSourceJob=null}
         }
     }
-    val authorDraft=outlineDrag!=null||groupTarget!=null||presentationCardId!=null||titleDraft!=null||editor!=null||newMapTitle!=null||saveTemplate||templatePicker||reparentId!=null||insertMap||layoutPreview!=null
+    val authorDraft=transformKind!=null||resolutionPending||outlineDrag!=null||groupTarget!=null||presentationCardId!=null||titleDraft!=null||editor!=null||newMapTitle!=null||saveTemplate||templatePicker||reparentId!=null||insertMap||layoutPreview!=null
     ReadLockGuard(readLock,guardKey,blocked=ui.busy||ui.unknown||mapSaving||authorDraft,draft=authorDraft)
+    ReadLockGuard(readLock,"$guardKey-transform",transformPending,draft=transformKind!=null)
+    ReadLockGuard(readLock,"$guardKey-resolution",resolutionPending,draft=resolutionPending)
     fun reviewReady(snapshot:StudyUi):Boolean=latestDocumentReady&&!snapshot.loading&&!snapshot.readFailed&&!snapshot.busy&&!snapshot.unknown&&
         !mapWriter.ui.value.busy&&!mapWriter.ui.value.unknown&&!portalWriter.ui.value.busy&&!portalWriter.ui.value.unknown&&!readLock.hasDraft.value&&
         titleDraft==null&&vm.editorState.value==null&&newMapTitle==null&&!saveTemplate&&!templatePicker&&reparentId==null&&!insertMap&&layoutPreview==null
@@ -543,9 +570,19 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
     val export=rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("text/markdown")){uri->
         val text=pendingExport;pendingExport=null;if(uri!=null&&text!=null)scope.launch{try{withContext(Dispatchers.IO){checkNotNull(context.contentResolver.openOutputStream(uri,"wt")).bufferedWriter(Charsets.UTF_8).use{it.write(text)}};localMessage="大纲与摘要已导出，共享卡片正文只保留一份。图形布局与来源原迹请用资料库备份保存。"}catch(c:CancellationException){throw c}catch(_:Exception){localMessage="导出未确认；卡片仍保留在本机。"}}
     }
-    LaunchedEffect(chosenCard?.id){source=null;stale=false;val card=chosenCard?:return@LaunchedEffect
-        try{source=withContext(Dispatchers.IO){app.study.source(card.id)};source?.let{s->stale=withContext(Dispatchers.IO){app.pages.inkRevision(s.pageId)!=s.inkRevision}}}
-        catch(c:CancellationException){throw c}catch(_:Exception){localMessage="来源快照读取失败，卡片文字仍保留。"}}
+    LaunchedEffect(chosenCard?.id,chosenCard?.revision,sourceReload){
+        source=null;sourceVersions=null;sourceLoadFailed=false;stale=false
+        val card=chosenCard?:return@LaunchedEffect
+        if(card.id in structureCards.map{it.id}){sourceVersions=card to FrozenStudySources(emptyList(),emptyList(),true);return@LaunchedEffect}
+        try{
+            val versions=withContext(Dispatchers.IO){app.study.sources(card.id,card.revision)}
+            sourceVersions=card to versions;source=versions.singleLegacy(card.id)
+        }catch(c:CancellationException){throw c}catch(_:Exception){sourceLoadFailed=true}
+    }
+    LaunchedEffect(source){
+        val current=source
+        stale=if(current==null)false else withContext(Dispatchers.IO){runCatching{app.pages.inkRevision(current.pageId)!=current.inkRevision}.getOrDefault(true)}
+    }
     LaunchedEffect(ui.completed){if(ui.completed!=null&&!titleSubmitted){
         editor?.takeIf{it.card==null}?.let{e->
             e.parent?.id?.let{collapsed=collapsed-it}
@@ -828,8 +865,19 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
                     Text("已选 ${selectedGroup.size} 项 · 整支 ${selectedBranches.size} 主题",style=MaterialTheme.typography.labelSmall,modifier=Modifier.align(Alignment.CenterVertically).testTag("study-selection-count"))
                     TextButton({graph?.state?.let{groupTarget=it to selectedGroup.toSet()}},enabled=editable&&!hasDraft,modifier=Modifier.testTag("study-group-selection")){Text("分组")}
                     TextButton({previewLayout(true)},enabled=editable&&!hasDraft,modifier=Modifier.testTag("study-arrange-selection")){Text("布局预览")}
+                    val selectedCards=selectedGroup.mapNotNull{nodeById[it]?.cardId}.filter{it !in structureCards.map{card->card.id}}.distinct()
+                    TextButton({openTransform(CardTransformKind.MERGE,selectedCards)},enabled=editable&&!hasDraft&&selectedCards.size in 2..16,modifier=Modifier.testTag("study-merge-selection")){Text("合并 ${selectedCards.size} 卡")}
+                    TextButton({openTransform(CardTransformKind.SUMMARY,selectedCards)},enabled=editable&&!hasDraft&&selectedCards.size in 2..16,modifier=Modifier.testTag("study-summarize-selection")){Text("总结 ${selectedCards.size} 卡")}
                     TextButton({selectedGroup=emptyList()},enabled=browseReady&&!hasDraft,modifier=Modifier.testTag("study-clear-selection")){Text("清除")}
                 }
+            }
+            if(tab==0&&transformedCardIds.isNotEmpty())Column(Modifier.fillMaxWidth().testTag("study-transform-results")){
+                Text("新内容卡已保留来源。选择查看；需要时可在详情中复用到导图。",style=MaterialTheme.typography.bodySmall)
+                transformedCardIds.forEach{id->
+                    val card=ui.cards.firstOrNull{it.id==id&&it.trashedAt==null}
+                    TextButton({card?.let{openCard(it)}},enabled=card!=null&&browseReady&&!hasDraft,modifier=Modifier.testTag("study-transform-result-$id")){Text(card?.title?:"正在读取新卡…")}
+                }
+                TextButton({transformedCardIds=emptyList()}){Text("收起结果入口")}
             }
             if(tab==2&&selectionMode)Text("在空白处拖框，点主题增减选择；拖动所选主题会移动各自整支。双指仍可缩放。",style=MaterialTheme.typography.bodySmall)
             if(tab==1)Text(outlineDrag?.preview?.message?:if(outlineDrag!=null)"移出大纲松手可取消"else"拖柄移动整支：上／下方为同级，中间为下级。整理按钮与键盘也可操作。",
@@ -928,7 +976,7 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
                     fold?.let{b->Surface(Modifier.offset{IntOffset(b.left.roundToInt(),b.top.roundToInt())},color=Color.White,shape=RoundedCornerShape(24.dp),border=BorderStroke(1.dp,Line)){
                         MapActionIcon(if(selected.id in collapsed)"展开下级主题"else"收起下级主题",if(selected.id in collapsed)"add"else"collapse","node-fold",browseReady){toggleBranch(selected.id)}
                     }}
-                    if(scenes.find{it.ref.mapId==currentMap}?.nodes?.any{it.id==selected.id&&it.sourceState!="无来源"}==true)sourceBox?.let{b->Surface(Modifier.offset{IntOffset(b.left.roundToInt(),b.top.roundToInt())},color=Color.White,shape=RoundedCornerShape(24.dp),border=BorderStroke(1.dp,Line)){
+                    if(selected.cardId in mapSources)sourceBox?.let{b->Surface(Modifier.offset{IntOffset(b.left.roundToInt(),b.top.roundToInt())},color=Color.White,shape=RoundedCornerShape(24.dp),border=BorderStroke(1.dp,Line)){
                         MapActionIcon("查看来源","link","node-source",browseReady){inspectSource=true;openCard(cardById.getValue(selected.cardId),selected)}
                     }}
                 }
@@ -1045,6 +1093,13 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
             studyFooterContent()
         }}
     }
+    transformKind?.let{kind->key(note.base.id,kind,transformCardIds){
+        CardTransformDialog(transforms,note.base.id,transformCardIds,kind,
+            onDismiss={if(!transformPending){transformKind=null;transformCardIds=emptyList()}},
+            onCommitted={ids->transformedCardIds=ids;transformKind=null;transformCardIds=emptyList();query="";showTrash=false;vm.selectTab(0);vm.refresh()},
+            embedded=compactWindow,authorAllowed={readLock.canWrite&&latestDocumentReady&&!vm.ui.value.busy&&!vm.ui.value.unknown&&!mapSaving&&!resolutionPending},
+            onPendingChanged={transformPending=it})
+    }}
     groupTarget?.let{(frozen,selection)->
         val excluded=StudyOrganization.selectedBranchIds(frozen,selection)
         val current=graph?.graphFingerprint==StudyOrganization.fingerprint(frozen)
@@ -1107,7 +1162,8 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
         val sourceScope=rememberCoroutineScope()
         var sourceOpening by remember{mutableStateOf(false)}
         var sourceJob by remember{mutableStateOf<Job?>(null)}
-        val cardSource=source?.takeIf{it.cardId==card.id}
+        val frozenSources=sourceVersions?.takeIf{it.first.id==card.id&&it.first.revision==card.revision}?.second
+        val cardSource=source?.takeIf{it.cardId==card.id&&frozenSources!=null}
         var showPositions by rememberSaveable(card.id){mutableStateOf(false)}
         var showSource by rememberSaveable(card.id){mutableStateOf(inspectSource)}
         var showSnapshot by rememberSaveable(card.id){mutableStateOf(false)}
@@ -1118,7 +1174,7 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
         var sourceMessage by rememberSaveable(card.id){mutableStateOf<String?>(null)}
         LaunchedEffect(card.id,inspectSource){if(inspectSource)showSource=true}
         var moreActions by rememberSaveable(card.id){mutableStateOf(false)}
-        CardInspector(compactWindow,onDismissRequest={sourceJob?.cancel();chosenCardId=null;chosenNodeId=null;inspectSource=false},modifier=Modifier.testTag("study-card-details"),containerColor=(presentations[card.id]?.cardColor?:CardTint.DEFAULT).surface(),title={Text(if(inspectSource)"摘录来源"else"摘要卡")},text={Column(Modifier.verticalScroll(rememberScrollState()),verticalArrangement=Arrangement.spacedBy(8.dp)){
+        CardInspector(compactWindow,onDismissRequest={if(!resolutionPending){sourceJob?.cancel();chosenCardId=null;chosenNodeId=null;inspectSource=false}else localMessage="请先核对这次撤销，再离开当前卡片"},modifier=Modifier.testTag("study-card-details"),containerColor=(presentations[card.id]?.cardColor?:CardTint.DEFAULT).surface(),title={Text(if(inspectSource)"摘录来源"else"摘要卡")},text={Column(Modifier.verticalScroll(rememberScrollState()),verticalArrangement=Arrangement.spacedBy(8.dp)){
             Text("标题",style=MaterialTheme.typography.labelMedium,color=Quiet)
             Text(card.title,fontWeight=FontWeight.Medium,modifier=Modifier.fillMaxWidth().background(presentations[card.id]?.titleBarColor?.argb?.let{Color(it)}?:Color.Transparent).padding(8.dp).testTag("card-full-title"))
             Row{
@@ -1137,6 +1193,12 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
                 Text("个人注释",style=MaterialTheme.typography.labelMedium,color=Quiet)
                 androidx.compose.foundation.text.selection.SelectionContainer{Text(annotations[card.id].orEmpty().ifBlank{"尚未添加个人注释"},modifier=Modifier.testTag("card-full-annotation"))}
                 TextButton({presentationCardId=card.id},enabled=editable&&card.trashedAt==null,modifier=Modifier.testTag("card-edit-presentation")){Text("编辑注释与配色")}
+            }
+            if(card.id !in structureCards.map{it.id}){
+                CardTransformResolutionPanel(transforms,card.id,onOpenCard={id->if(!resolutionPending){sourceJob?.cancel();chosenCardId=id;chosenNodeId=null;inspectSource=false}},
+                    authorAllowed={readLock.canWrite&&latestDocumentReady&&!vm.ui.value.busy&&!vm.ui.value.unknown&&!mapSaving&&!transformPending},
+                    onPendingChanged={resolutionPending=it})
+                TextButton({openTransform(CardTransformKind.SPLIT,listOf(card.id))},enabled=editable&&card.trashedAt==null,modifier=Modifier.testTag("study-split-card")){Text("拆分此内容卡")}
             }
             if(ui.message!=null)Text(ui.message!!,fontSize=12.sp)
             if(localMessage!=null)Text(localMessage!!,fontSize=12.sp)
@@ -1165,7 +1227,9 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
                 }
             }
             Text("来源",style=MaterialTheme.typography.labelMedium,color=Quiet,modifier=Modifier.testTag("card-source-heading"))
-            if(cardSource==null)Text("没有关联来源",style=MaterialTheme.typography.bodySmall,color=Quiet)
+            if(frozenSources!=null)FrozenCardSources(frozenSources,card.id,{selected->if(source!==selected)source=selected},enabled=browseReady&&!sourceOpening)
+            else if(sourceLoadFailed){Text("来源读取失败，原卡仍保留");TextButton({sourceReload++}){Text("重试来源")}}
+            else Text("正在读取固定来源…",style=MaterialTheme.typography.bodySmall,color=Quiet)
             cardSource?.let{s->
                 TextButton({
                     if(showSource){sourceEnterPending=false;showSource=false}
@@ -1178,7 +1242,7 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
                         Modifier.testTag("card-source-content")){
                         Column(verticalArrangement=Arrangement.spacedBy(8.dp)){
                             Text(if(stale)"来源页面已变化，下方保留摘录时快照。"else"摘录时的原迹快照",fontSize=12.sp,color=Quiet)
-                            SourceThumbnail(s.cardId,Modifier.fillMaxWidth().height(150.dp))
+                            SourceThumbnail(s,Modifier.fillMaxWidth().height(150.dp))
                         }
                     }
                 }
@@ -1211,7 +1275,7 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
                     }
                 }finally{sourceOpening=false}}}
             },enabled=browseReady&&!sourceOpening,modifier=Modifier.heightIn(min=48.dp).testTag("study-open-source")){Text(if(sourceOpening)"正在定位…"else"回原文")}}
-            TextButton(onClick={sourceJob?.cancel();chosenCardId=null;chosenNodeId=null;inspectSource=false},modifier=Modifier.heightIn(min=48.dp).testTag("card-back")){Text(if(node!=null)"返回原节点"else"关闭")}
+            TextButton(onClick={sourceJob?.cancel();chosenCardId=null;chosenNodeId=null;inspectSource=false},enabled=!resolutionPending,modifier=Modifier.heightIn(min=48.dp).testTag("card-back")){Text(if(node!=null)"返回原节点"else"关闭")}
         }})
         if(showSnapshot)cardSource?.let{StudySnapshotViewer(it){showSnapshot=false}}
         }

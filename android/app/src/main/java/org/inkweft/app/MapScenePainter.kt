@@ -36,7 +36,7 @@ internal object MapNodeMetrics {
     fun measure(title:String,body:String,source:MapSourceInfo?=null,fontScale:Float=1f,expanded:Boolean=false,structural:Boolean=false):MapNodeLayout {
         val factor=fontScale.coerceAtLeast(.5f)
         val textOnlyHeading=!structural&&repeatsExcerptBody(title,body)
-        val showPreview=source!=null&&!structural&&(body.isBlank()||expanded)
+        val showPreview=source?.previewEnabled==true&&!structural&&(body.isBlank()||expanded)
         val ratio=source?.previewRatio?:1.5f
         val width=when {
             structural->WIDTH.toFloat()

@@ -98,17 +98,11 @@ private fun sameSource(a:StudySourceRow,b:StudySourceRow):Boolean =
         a.left==b.left&&a.top==b.top&&a.right==b.right&&a.bottom==b.bottom&&
         a.strokeIds==b.strokeIds&&a.snapshot.contentEquals(b.snapshot)
 
-/** Source geometry is not versioned with the answer. Never substitute a changed source. */
-private suspend fun checkedSource(app:InkWeftApplication,plan:BranchReviewPlan,
-    current:FrozenBranchReviewQuestion,source:StudySourceRow):StudySourceRow {
-    if(source.cardId!=current.reference.cardId||current.question.notebookId!=plan.ref.notebookId)throw RecallSourceUnavailable()
-    val card=app.study.cards(plan.ref.notebookId).first().find{it.id==current.reference.cardId}
-        ?:throw RecallSourceUnavailable()
-    if(card.trashedAt!=null)throw RecallSourceUnavailable()
-    if(card.revision!=current.reference.cardRevision)throw RecallSourceChanged()
-    val fresh=app.study.source(source.cardId)?:throw RecallSourceUnavailable()
-    if(!sameSource(fresh,source))throw RecallSourceChanged()
-    return fresh
+/** The selected source must belong to this exact fixed card revision, not today's crop. */
+private fun checkedSource(plan:BranchReviewPlan,current:FrozenBranchReviewQuestion,source:StudySourceRow):StudySourceRow {
+    if(source.cardId!=current.reference.cardId||current.question.notebookId!=plan.ref.notebookId||!current.sources.complete)throw RecallSourceUnavailable()
+    return current.sources.sources.firstOrNull{frozen->frozen.notebookId==plan.ref.notebookId&&sameSource(frozen.legacy(current.reference.cardId),source)}
+        ?.legacy(current.reference.cardId)?:throw RecallSourceUnavailable()
 }
 
 private fun sourceFailure(error:Exception):String = when(error) {
@@ -136,7 +130,7 @@ private fun sourceFailure(error:Exception):String = when(error) {
         page=null;error=null
         try {
             val value=withContext(Dispatchers.IO) {
-                val fresh=checkedSource(app,plan,current,source)
+                val fresh=checkedSource(plan,current,source)
                 val owned=app.pages.activePages(plan.ref.notebookId).find{it.id==fresh.pageId}
                     ?:throw RecallSourceUnavailable()
                 val (note,_)=app.knowledge.resolve(TargetRef(TargetKind.PAGE,owned.id))
@@ -282,7 +276,7 @@ private fun sourceFailure(error:Exception):String = when(error) {
     LaunchedEffect(source,attempt) {
         snapshot=null;error=null
         try {
-            snapshot=withContext(Dispatchers.IO) { InkPageFile.decode(checkedSource(app,plan,current,source).snapshot) }
+            snapshot=withContext(Dispatchers.IO) { InkPageFile.decode(checkedSource(plan,current,source).snapshot) }
         } catch(c:CancellationException) { throw c }
         catch(e:Exception) { error=sourceFailure(e) }
     }

@@ -16,7 +16,7 @@ import java.util.Base64
 import kotlin.math.*
 
 /** View-only provenance. Missing bounds permit a stable placeholder while metadata arrives. */
-internal data class MapSourceInfo(val label:String,val bounds:CanvasBounds?=null,val contentRatio:Float?=null){
+internal data class MapSourceInfo(val label:String,val bounds:CanvasBounds?=null,val contentRatio:Float?=null,val previewEnabled:Boolean=true){
     val previewRatio:Float get()=contentRatio?.takeIf{it.isFinite()&&it>0f}
         ?:bounds?.let{((it.right-it.left)/(it.bottom-it.top)).toFloat()}?.takeIf{it.isFinite()&&it>0f}?:1.5f
 }
