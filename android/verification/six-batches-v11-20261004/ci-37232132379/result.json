@@ -1,0 +1,61 @@
+{
+  "source_commit": "8d6abf57328f0d377d3fab6a6eae010e0a2c8336",
+  "matching_local_source": "5956cb481c7e2ea8fe3192d4e6d383089f750abf",
+  "run": 37232132379,
+  "status": "FAILURE",
+  "ui": {
+    "executed": 153,
+    "passed": 149,
+    "failed": 4,
+    "partition": "3x51 exact disjoint cases"
+  },
+  "room": {
+    "executed": 202,
+    "passed": 202,
+    "reused": 0,
+    "classes": 18,
+    "recall_methods": 19,
+    "expanded_backup_assertion_executed": true
+  },
+  "core_per_shard": 157,
+  "lint_per_shard": {
+    "errors": 0,
+    "warnings": 174,
+    "hints": 2
+  },
+  "b6": {
+    "phases": 5,
+    "passed": 5,
+    "png_count": 39,
+    "same_library_source_spec_apk": true,
+    "run_id": "642d0e22-e777-4099-a66c-0d29cea401d6",
+    "pixel_integrity": "SHA_SIZE_DECODE_VERIFIED",
+    "visual_review": "Original narrow-screen P1s remain resolved; wide10 was captured while document and ink were loading. That frame does not prove stable expanded-whitespace rendering. Other states must not be generalized to every question state.",
+    "native_recall_reopen_png": 0
+  },
+  "failures": [
+    "RecallQuestionEditorUiTest.rotationAfterQuestionChangeCannotOverwriteNewPromptWithOldDraft:RUNNER_TIMEOUT",
+    "RecallQuestionEditorUiTest.rotationAfterConfigurationChangeCannotResetNewMasksOrSchedule:RUNNER_TIMEOUT",
+    "MapPortalUiTest.nestedReturnKeepsAnUnavailableBranchInsteadOfExpandingItsMap:detached AndroidViewHolder Handler.post null",
+    "SelectionStudyUiTest.excerptCreatesSharedCardAndReturnsToSource:capture-result wait timeout"
+  ],
+  "kvm": "ALL3_EXACT_ORIGINAL_ACL_RESTORED",
+  "remote_gradle_cache": "ALL3_RESTORE0_SAVE0",
+  "max_job_seconds": 2176,
+  "b6_seconds_approx": 237,
+  "next_candidate": {
+    "ui_focus": 11,
+    "visual_diagnostic_phases": [
+      "prepare",
+      "reopen",
+      "visual"
+    ],
+    "diagnostic_png": 32,
+    "full_required_ui": 153,
+    "full_required_room": 202,
+    "full_required_phases": 5,
+    "full_required_png": 40,
+    "new_cold_reopen_image_scope": "Rendered material page only; recall-record consistency remains asserted by the existing test/manifest."
+  },
+  "physical_tablet_pen_thermal_real_library_upgrade": "NOT_RUN"
+}

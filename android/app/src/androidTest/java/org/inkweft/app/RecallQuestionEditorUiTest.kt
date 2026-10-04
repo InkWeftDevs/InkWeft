@@ -3,6 +3,7 @@ package org.inkweft.app
 
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
+import android.os.SystemClock
 import android.util.AtomicFile
 import android.util.Base64
 import android.view.inspector.WindowInspector
@@ -12,6 +13,9 @@ import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.text.AnnotatedString
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.test.platform.app.InstrumentationRegistry
+import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry
+import androidx.test.runner.lifecycle.Stage
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.inkweft.core.*
@@ -107,15 +111,48 @@ class RecallQuestionEditorUiTest {
     private fun question(f:Fixture)=runBlocking{app.knowledge.observeBook(f.note.id).first().single{it.id==f.question}}
     private fun config(f:Fixture)=runBlocking{app.study.recall().configuration(f.question)!!.spec()}
     private fun saved(){compose.waitUntil(15_000){!exists("recall-config-prompt")};compose.waitForIdle()}
+    /** Never ask Compose to idle across recreation: its frame wait can retain a detached old root. */
+    private fun requestOrientation(request:Int,orientation:Int,phase:String){
+        val instrumentation=InstrumentationRegistry.getInstrumentation()
+        val monitor=ActivityLifecycleMonitorRegistry.getInstance()
+        lateinit var previous:MainActivity;lateinit var previousDecor:android.view.View;var replacing=false
+        instrumentation.runOnMainSync{
+            previous=monitor.getActivitiesInStage(Stage.RESUMED).filterIsInstance<MainActivity>().single()
+            previousDecor=previous.window.decorView
+            replacing=previous.resources.configuration.orientation!=orientation
+            android.util.Log.w("RecallConfigRotation","$phase requested: ${previous.resources.configuration.orientation} -> $orientation")
+            previous.requestedOrientation=request
+        }
+        val deadline=SystemClock.uptimeMillis()+15_000;var last="No resumed window"
+        do{
+            var ready=false
+            instrumentation.runOnMainSync{
+                val current=monitor.getActivitiesInStage(Stage.RESUMED).filterIsInstance<MainActivity>().singleOrNull()
+                val decor=current?.window?.decorView
+                val attached=decor?.isAttachedToWindow==true
+                val laidOut=decor!=null&&decor.isLaidOut&&decor.width>0&&decor.height>0
+                last="orientation=${current?.resources?.configuration?.orientation}, replacement=${current!==previous}, oldAttached=${previousDecor.isAttachedToWindow}, attached=$attached, laidOut=$laidOut"
+                ready=current!=null&&(!replacing||current!==previous&&previous.isDestroyed&&!previousDecor.isAttachedToWindow)&&
+                    current.resources.configuration.orientation==orientation&&attached&&laidOut&&!current.isFinishing&&!current.isDestroyed
+            }
+            if(ready){android.util.Log.w("RecallConfigRotation","$phase resumed: $last");return}
+            SystemClock.sleep(20)
+        }while(SystemClock.uptimeMillis()<deadline)
+        throw AssertionError("$phase did not finish Activity/window recreation within 15000 ms: $last")
+    }
     private fun rotated(check:()->Unit){
         val previousActivity=compose.activity;val originalRequest=previousActivity.requestedOrientation
-        val landscape=compose.activity.resources.configuration.orientation!=Configuration.ORIENTATION_LANDSCAPE
+        val originalOrientation=previousActivity.resources.configuration.orientation
+        val landscape=originalOrientation!=Configuration.ORIENTATION_LANDSCAPE
         val expectedOrientation=if(landscape)Configuration.ORIENTATION_LANDSCAPE else Configuration.ORIENTATION_PORTRAIT
         try{
-            compose.activityRule.scenario.onActivity{it.requestedOrientation=if(landscape)ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE else ActivityInfo.SCREEN_ORIENTATION_PORTRAIT}
-            compose.waitUntil(15_000){compose.activity!==previousActivity&&compose.activity.resources.configuration.orientation==expectedOrientation}
+            requestOrientation(if(landscape)ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE else ActivityInfo.SCREEN_ORIENTATION_PORTRAIT,expectedOrientation,"rotate")
             waitFor("recall-config-prompt");check()
-        }finally{compose.activityRule.scenario.onActivity{it.requestedOrientation=originalRequest}}
+            android.util.Log.w("RecallConfigRotation","Restored draft and current-record assertions completed")
+        }finally{
+            // @After immediately uses runOnIdle; finish the return rotation before handing it a root.
+            requestOrientation(originalRequest,originalOrientation,"restore")
+        }
     }
     private fun assertConflict(prompt:String){
         waitFor("recall-config-base-changed");draft("recall-config-prompt",prompt)

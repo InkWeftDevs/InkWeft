@@ -57,6 +57,7 @@ class SixBatchVisualTest {
         }
     }
     private fun shot(f:SixBatchFixture,layout:String,stage:String){
+        if(stage=="10-whitespace-expanded"||stage=="11-whitespace-collapsed")nativeEvidence.awaitWhitespace(f,3)
         compose.waitForIdle();val bitmap=checkNotNull(instrumentation.uiAutomation.takeScreenshot());val name="visual-$layout-$stage.png"
         try{File(f.root,name).outputStream().use{bitmap.compress(Bitmap.CompressFormat.PNG,100,it)}}finally{bitmap.recycle()}
         val c=compose.activity.resources.configuration

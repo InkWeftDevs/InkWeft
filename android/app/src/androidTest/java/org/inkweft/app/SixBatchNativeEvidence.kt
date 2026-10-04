@@ -28,14 +28,16 @@ internal class SixBatchNativeEvidence(
     private val tileField=field("documentTile")
     private val strokesField=field("content")
     private val authoringField=field("authoring")
-    private fun native(page:String,continuous:Boolean):InkCanvasView? {
-        fun find(view:View):InkCanvasView? {
+    private val regionField=field("fixedRegion")
+    private fun nativeViews(page:String,continuous:Boolean):List<InkCanvasView> {
+        val result=mutableListOf<InkCanvasView>()
+        fun find(view:View) {
             if(view is InkCanvasView&&!view.preview&&view.embeddedPage==continuous&&view.isShown&&
-                pageField.get(view)==page&&view.getGlobalVisibleRect(Rect()))return view
-            if(view is ViewGroup)for(i in 0 until view.childCount)find(view.getChildAt(i))?.let{return it}
-            return null
+                pageField.get(view)==page&&view.getGlobalVisibleRect(Rect()))result+=view
+            if(view is ViewGroup)for(i in 0 until view.childCount)find(view.getChildAt(i))
         }
-        return find(compose.activity.window.decorView)
+        find(compose.activity.window.decorView)
+        return result
     }
     private fun drawn(view:InkCanvasView,page:String)=tileField.get(view)!=null&&view.documentContentReady&&view.sourceContentReady&&
         !view.rasterPending&&!view.imageFramesPending&&view.hasDrawnSourceFrame(page,view.snapshotViewport(),view.width,view.height,
@@ -66,7 +68,7 @@ internal class SixBatchNativeEvidence(
         compose.waitUntil("Native source page ${index+1}: correct identity, complete PDF/ink/image frame",60_000){compose.runOnIdle {
             val provider=ViewModelProvider(compose.activity)
             val selected=provider["book-${f.books[0]}",BookPagesViewModel::class.java].ui.value.selectedId
-            val view=native(page,continuous)
+            val view=nativeViews(page,continuous).firstOrNull()
             val actualAuthoring=view?.let{authoringField.get(it) as? PageAuthoring}
             if(actualAuthoring!==observedAuthoring){observedAuthoring=actualAuthoring;observedFingerprint=actualAuthoring?.let(PageAuthoringCodec::fingerprint)}
             @Suppress("UNCHECKED_CAST") val actualInk=view?.let{strokesField.get(it) as List<InkStroke>}
@@ -77,6 +79,38 @@ internal class SixBatchNativeEvidence(
             ready
         }}
         return checkNotNull(result)
+    }
+
+    /** Opening or scrolling the whitespace layout creates fresh asynchronous source-slice views. */
+    fun awaitWhitespace(f:SixBatchFixture,index:Int){
+        val page=f.documentPages[index]
+        val source=runBlocking{checkNotNull(app.documents.read(page))}
+        assertEquals(index,source.page);assertEquals(f.manifest.getString("documentSha256"),source.document.sha256)
+        val expectedAuthoring=runBlocking{app.authoring.readPage(page).state}
+        val fingerprint=PageAuthoringCodec.fingerprint(expectedAuthoring)
+        val expectedInk=inkFingerprint(runBlocking{InkSession(app.inkRepository.read(page)).visibleDraft()})
+        val regions=DocumentWhitespaceLayout(expectedAuthoring.blanks).sourceSegments().map{it.first}
+        var readyViews=emptyList<InkCanvasView>()
+        compose.waitUntil("Whitespace page ${index+1}: every visible source slice has its complete native frame",60_000){compose.runOnIdle{
+            val provider=ViewModelProvider(compose.activity)
+            val views=nativeViews(page,continuous=true)
+            val ready=provider[NotebookViewModel::class.java].ui.value.selectedId==f.books[0]&&
+                provider["book-${f.books[0]}",BookPagesViewModel::class.java].ui.value.selectedId==page&&
+                app.navigationReady.value&&views.isNotEmpty()&&views.all{view->
+                    val authoring=authoringField.get(view) as? PageAuthoring
+                    val region=regionField.get(view) as? CanvasBounds
+                    @Suppress("UNCHECKED_CAST") val ink=strokesField.get(view) as List<InkStroke>
+                    region!=null&&region in regions&&drawn(view,page)&&
+                        authoring?.let(PageAuthoringCodec::fingerprint)==fingerprint&&inkFingerprint(ink)==expectedInk
+                }
+            if(ready)readyViews=views
+            ready
+        }}
+        readyViews.forEach{awaitCommittedFrame(it,page)}
+        compose.runOnIdle{
+            assertEquals("Visible whitespace slices changed before capture",readyViews,nativeViews(page,continuous=true))
+            assertTrue("Whitespace rendering changed before capture",readyViews.all{drawn(it,page)})
+        }
     }
 
     /** onDraw records commands; screenshot evidence must wait for their actual hardware frame submission. */

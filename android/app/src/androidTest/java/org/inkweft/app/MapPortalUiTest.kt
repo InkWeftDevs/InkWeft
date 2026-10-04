@@ -537,8 +537,12 @@ class MapPortalUiTest {
                 KnowledgeData.MapDefinition(f.targetTitle,structures=listOf(MapStructure(replacement,null,"同名替代主题",40.0,80.0)))))
         }
         val before=authorStamp(f.note.id)
+        val departedMap=compose.runOnIdle{map()}
         tap("map-portal-back");waitFor("map-portal-branch-unavailable")
         compose.runOnIdle {
+            assertFalse("Returning must release the departed map view",departedMap.isAttachedToWindow)
+            assertNotSame("Each map keeps its own native view ownership",departedMap,map())
+            assertTrue("The returned map must be attached",map().isAttachedToWindow)
             assertEquals(f.targetMap,study(f.note.id).mapId.value)
             assertEquals(f.targetNode,study(f.note.id).focusedByMap[f.targetMap])
             assertNull(map().nodeBounds(replacement))

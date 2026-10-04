@@ -3,7 +3,7 @@ import hashlib
 import json
 from pathlib import Path
 
-BASELINE = "android/verification/six-batches-v11-20261004/room-reuse-9593b92.json"
+BASELINE = "android/verification/six-batches-v11-20261004/room-reuse-8d6abf5.json"
 # Full source trees include main, debug/androidTestDebug overlays and future source sets.
 # Include tests and shared build/dependency tooling, not only production Kotlin.
 INPUT_PATHS = (

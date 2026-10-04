@@ -20,9 +20,9 @@ PHASE_METHODS = {
     "native_recall_reopen": ("SixBatchNativeRecallTest", "reopenSameFixtureNativeRecallRecords"),
 }
 
-# Current blocker: native input fixes and their targeted UI regression guards.
-# Full always executes all five phases; diagnostics explicitly record zero new B6 execution.
-FOCUSED_PHASES = ()
+# Changed visual capture needs the original sample and cold-open prerequisites.
+# Full still executes all five phases; the two unselected recall phases are NOT_RUN_FOCUSED.
+FOCUSED_PHASES = ("prepare", "reopen", "visual")
 
 
 def run_fixture(root, source_commit, not_run=None, run=subprocess.run, mode="full", deadline_epoch=None, now=time.time):

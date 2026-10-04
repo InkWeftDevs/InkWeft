@@ -27,6 +27,7 @@ import java.io.File
 /** Real production controls on the existing full 96-card fixture. No replacement UI or reseeding. */
 class SixBatchNativeRecallTest {
     @get:Rule val compose=createAndroidComposeRule<MainActivity>()
+    private val nativeEvidence by lazy{SixBatchNativeEvidence(compose)}
     private val app get()=compose.activity.application as InkWeftApplication
     private val automation get()=InstrumentationRegistry.getInstrumentation().uiAutomation
     private fun waitFor(tag:String){compose.waitUntil(60_000){compose.onAllNodesWithTag(tag).fetchSemanticsNodes().isNotEmpty()};compose.waitForIdle()}
@@ -167,6 +168,22 @@ class SixBatchNativeRecallTest {
             f.verifyNativeRecall();f.verify()
             val captures=f.manifest.getJSONArray("nativeRecallCaptures");check(captures.length()==7)
             for(index in 0 until captures.length()){val image=captures.getJSONObject(index);check(SixBatchFixture.sha(File(f.root,image.getString("file")))==image.getString("sha256"))}
+        }}
+        runBlocking{f.step("cold-reopen-visible-material-page-not-three-question-replay"){
+            compose.waitUntil(60_000){compose.runOnIdle{!ViewModelProvider(compose.activity)[NotebookViewModel::class.java].ui.value.loading}}
+            if(compose.runOnIdle{ViewModelProvider(compose.activity)[NotebookViewModel::class.java].ui.value.selectedId!=null})tap("back-library")
+            waitFor("new-note");tap("note-title-${f.books[0]}")
+            compose.singlePageEditor();compose.openOverviewGrid()
+            compose.onNodeWithTag("page-grid").performScrollToNode(hasTestTag("jump-page-1"))
+            tap("jump-page-1");tap("pages-directory-dialog-close")
+            val name="native-recall-reopen-01-material-page"
+            nativeEvidence.capturePage(f,name,0,continuous=false)
+            f.verifyNativeRecall()
+            f.manifest.put("nativeRecallReopenCapture",JSONObject().put("file","$name.png")
+                .put("sha256",SixBatchFixture.sha(File(f.root,"$name.png"))).put("verifiedRecallRecords",28)
+                .put("proves","REOPENED_MATERIAL_PAGE_ONLY")
+                .put("meaning","Same synthetic material is visibly rendered after cold reopen; the separate assertions verify 28 saved recall records, not a visual replay of the three questions.")
+                .put("review","PENDING_VISUAL_REVIEW"));f.save()
         }}
         f.manifest.put("nativeRecallReopen","PASS");f.save()
     }

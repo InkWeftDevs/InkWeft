@@ -18,15 +18,35 @@ METHODS = {
     "org.inkweft.app.StarNoteInteractionsUiTest": ["excerptKeepsPageImageAddsCommentAndDeletesWithoutDeletingSource",
         "inlineCommentAndEightHandleRecropCancelSaveAndReopenKeepOriginalInk"],
 }
-# Check refreshed local callbacks: cross-screen release, ordinary drag, and a newly loaded review branch.
+# Four full-suite failures and the directly affected recreation, map-state and native-ink guards.
 # Full mode retains all prior regressions; focused omissions are not claimed as new passes.
 FOCUSED_METHODS = {
-    "org.inkweft.app.StudyOrganizationUiTest": ["outlineEdgeScrollReachesOffscreenParentAndCancelKeepsWholeAuthorGraph", "realOutlineHandleMovesWholeBranchAndSupportsUndoRedoAndCancel", "workModesPreserveSelectedGraphAndResumeTheSameUnrevealedQuestion"],
+    "org.inkweft.app.RecallQuestionEditorUiTest": [
+        "rotationAfterQuestionChangeCannotOverwriteNewPromptWithOldDraft",
+        "rotationAfterConfigurationChangeCannotResetNewMasksOrSchedule",
+        "rotationAfterBodyChangeDoesNotApplyOldClozesToNewValidOffsets",
+        "rotationPreservesPromptKindAndExplicitlyClearedClozeDraft"],
+    "org.inkweft.app.MapPortalUiTest": [
+        "nestedReturnKeepsAnUnavailableBranchInsteadOfExpandingItsMap",
+        "specifiedBranchCancelCreateReadNavigateRotateAndReturnKeepAuthorContent"],
+    "org.inkweft.app.MapInteractionUiTest": [
+        "selectionRenameReadingAndMapMenusKeepTheirScope", "branchBadgeAndSourceAreSeparateTargets"],
+    "org.inkweft.app.StudyOrganizationUiTest": ["nativeMapPreviewsEveryDescendantAndMarqueeMovementDeduplicatesBranches"],
+    "org.inkweft.app.BoundAnnotationFlowUiTest": ["bindMoveReorderZoomDetachAndReopenKeepOneTransformAndProtectedLayerOwnership"],
+    "org.inkweft.app.SelectionStudyUiTest": ["excerptCreatesSharedCardAndReturnsToSource"],
 }
 
 CORE = ["PageObjectTest", "CardTrashCommandTest", "ContentTransferTest", "LibraryArchiveTest", "CardPresentationTest",
         "KnowledgeTest", "StudyTextTest", "MapAddendumTest", "StudyOrganizationTest", "StudyOutlineTest", "CardTransformTest", "KnowledgeTextLinksTest",
         "PageAuthoringTest", "SearchRequestVersionTest", "RecallStudyTest", "SuperMemo2PortTest", "BranchReviewTest", "BranchReviewRoundTest"]
+
+
+
+def lint_requirement(mode, shard):
+    """One full-source lint owner off the Room/B6 critical path; no ignored failures."""
+    if mode not in ("focused", "full") or shard not in ([0] if mode == "focused" else [0, 1, 2]):
+        raise ValueError("Invalid mode/shard for lint")
+    return ("RUN_REQUIRED" if shard == 1 else "NOT_ASSIGNED") if mode == "full" else "NOT_RUN_FOCUSED"
 
 
 def build_plan(mode="full"):
@@ -58,10 +78,11 @@ def build_plan(mode="full"):
             "core_classes":["org.inkweft.core."+c for c in CORE],
             "fixture":{"runner":RUNNER,"phases":list(PHASE_METHODS),
                        "selected_phases":list(FOCUSED_PHASES) if mode == "focused" else list(PHASE_METHODS),
-                       "selected_screenshots":0 if mode == "focused" else 39,
+                       "selected_screenshots":32 if mode == "focused" else 40,
                        "expected_methods":len(PHASE_METHODS),
-                       "expected_screenshots":39,"native_workspace_screenshots":24,"native_recall_screenshots":7},
-            "scope":("focused: native-input fixes plus double-tap and padded-drop guards only; B6 NOT_RUN_FOCUSED_UI_DIAGNOSTIC, zero methods/images; not full acceptance"
+                       "expected_screenshots":40,"native_workspace_screenshots":24,"native_recall_screenshots":7,
+                       "native_recall_reopen_screenshots":1},
+            "scope":("focused: full-suite failures and affected map-state/recreation guards; same-sample prepare/reopen/visual only,32PNG; not full acceptance"
                      if mode == "focused" else "six-batch B1-B5 complete scoped regression and B6 full-sized synthetic five-phase evidence")
                     + "; physical device and human acceptance remain NOT_RUN"}
 

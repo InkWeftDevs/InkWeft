@@ -118,18 +118,23 @@ jobs:
         run: |
           test "$(git rev-parse HEAD)" = "$INKWEFT_HEAD_SHA"
           python3 - <<'PY'
-          import json, subprocess
+          import json, os, subprocess, sys
           from pathlib import Path
+          sys.path.insert(0, 'ci')
+          from six_batch_scope import lint_requirement
           p=json.load(open('android-plan.json'))
+          shard=int(os.environ['INKWEFT_SHARD_INDEX'])
+          lint_gate=lint_requirement(p['mode'],shard)
           command=['./gradlew','--no-daemon','--max-workers=1','-Pkotlin.compiler.execution.strategy=in-process',
                    '-Dorg.gradle.jvmargs=-Xmx3g -XX:MaxMetaspaceSize=1g -Dfile.encoding=UTF-8',':core-domain:test']
           for name in p['core_classes']: command+=['--tests',name]
-          if p['mode']=='full': command+=[':app:lintDebug']
+          if lint_gate=='RUN_REQUIRED': command+=[':app:lintDebug']
           command+=[':app:assembleDebug',':app:assembleDebugAndroidTest',':data-local:assembleDebugAndroidTest']
           subprocess.run(command,cwd='android',check=True)
           Path('android/build/evidence/build-summary.json').write_text(json.dumps({
               'mode':p['mode'],'core':'PASS','apk_build':'PASS',
-              'lint':'PASS' if p['mode']=='full' else 'NOT_RUN_FOCUSED'},indent=2))
+              'shard_index':shard,'required_full_lint_shard':1,
+              'lint':'PASS' if lint_gate=='RUN_REQUIRED' else lint_gate},indent=2))
           PY
           git diff --exit-code -- android/data-local/schemas
           test -z "$(git ls-files --others --exclude-standard -- android/data-local/schemas)"
@@ -175,6 +180,8 @@ jobs:
             android/build/evidence/**/instrumentation.txt
             android/build/evidence/**/selection.txt
             android/build/evidence/app-*/outline-input-route.txt
+            android/build/evidence/app-*/selection-capture-failure.txt
+            android/build/evidence/app-*/selection-capture-failure.png
             android/build/evidence/app-*/timeout-screen.png
             android/build/evidence/app-*/timeout-diagnostics.json
             android/build/evidence/app-*/timeout-app-logcat.txt
@@ -231,6 +238,8 @@ jobs:
             android/build/evidence/**/instrumentation.txt
             android/build/evidence/**/selection.txt
             android/build/evidence/app-*/outline-input-route.txt
+            android/build/evidence/app-*/selection-capture-failure.txt
+            android/build/evidence/app-*/selection-capture-failure.png
             android/build/evidence/app-*/timeout-screen.png
             android/build/evidence/app-*/timeout-diagnostics.json
             android/build/evidence/app-*/timeout-app-logcat.txt
@@ -252,6 +261,7 @@ jobs:
             android/build/evidence/six-batch-fixture/native_recall_reopen-runner.json
             android/build/evidence/six-batch-fixture/native_recall_reopen-manifest.json
             android/build/evidence/six-batch-fixture/native_recall_reopen-instrumentation.log
+            android/build/evidence/six-batch-fixture/native-recall-reopen-01-material-page.png
             android/build/evidence/six-batch-fixture/01-twelve-page-material.png
             android/build/evidence/six-batch-fixture/02-outline-120-topics.png
             android/build/evidence/six-batch-fixture/03-unavailable-return-keeps-location.png

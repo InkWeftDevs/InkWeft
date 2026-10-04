@@ -77,6 +77,26 @@ class NativeEvidenceContractTest(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.check()
 
+    def test_reopen_material_image_requires_real_frame_and_separate_record_receipt(self):
+        self.name = "native-recall-reopen-01-material-page.png"
+        proof = copy.deepcopy(self.proof)
+        proof.update(pageId="page-1", sourcePage=1, continuous=False)
+        self.manifest["nativePageCaptures"][self.name] = proof
+        self.manifest.update(nativeRecallReopen="PASS", nativeRecallReopenCapture={
+            "file": self.name, "sha256": proof["sha256"], "verifiedRecallRecords": 28,
+            "proves": "REOPENED_MATERIAL_PAGE_ONLY"})
+        self.assertEqual(proof, self.check())
+        for key, value in (("verifiedRecallRecords", 25), ("proves", "THREE_QUESTION_REPLAY"), ("sha256", "d" * 64)):
+            with self.subTest(key=key):
+                capture = self.manifest["nativeRecallReopenCapture"]
+                old = capture[key];capture[key] = value
+                with self.assertRaises(ValueError):
+                    self.check()
+                capture[key] = old
+        proof["sourceFrameDrawn"] = False
+        with self.assertRaises(ValueError):
+            self.check()
+
     def test_panel_sections_require_correct_page_and_actual_assertions(self):
         for name, section in (("06-pressure-page-layers.png", "current"), ("07-pressure-hidden-layer.png", "hidden"),
                               ("08-pressure-locked-layer.png", "locked")):

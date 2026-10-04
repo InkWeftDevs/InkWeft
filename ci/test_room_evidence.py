@@ -35,8 +35,8 @@ class RoomEvidenceTest(unittest.TestCase):
     def test_exact_content_reuses_actual_receipt_but_full_always_executes(self):
         evidence = self.evidence()
         self.assertEqual("REUSED_EVIDENCE", evidence["status"])
-        self.assertEqual(37217398281, evidence["source_run"])
-        self.assertEqual("9593b928473b46ff9efe806dace74231d022f3d1", evidence["source_commit"])
+        self.assertEqual(37232132379, evidence["source_run"])
+        self.assertEqual("8d6abf57328f0d377d3fab6a6eae010e0a2c8336", evidence["source_commit"])
         self.assertEqual(202, evidence["reused_passed"])
         self.assertEqual("RUN_REQUIRED", self.evidence("full")["status"])
         self.assertEqual("RUN_REQUIRED", room_evidence(self.root, "focused", 202, ["changed-selection"])["status"])
@@ -73,8 +73,8 @@ class RoomEvidenceTest(unittest.TestCase):
         self.assertEqual(hashlib.sha256(receipt).hexdigest(), baseline["receipt_sha256"])
         self.assertEqual(202, json.loads(receipt)["passed"])
         self.assertEqual(set(INPUT_PATHS), set(baseline["input_sha256"]))
-        self.assertEqual(11309760174, baseline["artifact_id"])
-        self.assertEqual("3287f6c38c17b3f953e5066fe4cca5514e0933af", baseline["matching_local_source_commit"])
+        self.assertEqual(11314024600, baseline["artifact_id"])
+        self.assertEqual("5956cb481c7e2ea8fe3192d4e6d383089f750abf", baseline["matching_local_source_commit"])
 
     def test_missing_or_invalid_receipt_cannot_reuse(self):
         path = self.root / self.baseline["receipt"]

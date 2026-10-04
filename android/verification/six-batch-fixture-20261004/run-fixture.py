@@ -16,6 +16,7 @@ NATIVE_PAGE_CAPTURES = {
     "06-pressure-page-layers.png": 11,
     "07-pressure-hidden-layer.png": 11,
     "08-pressure-locked-layer.png": 11,
+    "native-recall-reopen-01-material-page.png": 0,
 }
 
 
@@ -33,7 +34,13 @@ def checked_native_capture(manifest, name, pixels, source_commit):
     if index == 11:
         expected["layers"] = 3
     else:
-        expected["continuous"] = True
+        expected["continuous"] = name != "native-recall-reopen-01-material-page.png"
+    if name == "native-recall-reopen-01-material-page.png":
+        capture = manifest.get("nativeRecallReopenCapture", {})
+        if manifest.get("nativeRecallReopen") != "PASS" or any(capture.get(key) != value for key, value in {
+                "file": name, "sha256": expected["sha256"], "verifiedRecallRecords": 28,
+                "proves": "REOPENED_MATERIAL_PAGE_ONLY"}.items()):
+            raise ValueError("Cold-reopen material capture lacks its separate persisted-record verification")
     sections = {"06-pressure-page-layers.png": "current", "07-pressure-hidden-layer.png": "hidden",
                 "08-pressure-locked-layer.png": "locked"}
     if name in sections:
@@ -160,7 +167,7 @@ def main():
                          "07-long-card-annotation", "08-long-card-source", "09-page-layers", "10-whitespace-expanded", "11-whitespace-collapsed", "12-bound-region-collapsed")),
                      "native_recall": tuple("native-recall-" + stage + ".png" for stage in (
                          "01-source-masked", "02-source-answer", "03-source-revealed", "04-cloze-masked", "05-cloze-revealed", "06-question-result", "07-sealed-grading-controls")),
-                     "native_recall_reopen": ()}[args.phase]
+                     "native_recall_reopen": ("native-recall-reopen-01-material-page.png",)}[args.phase]
             evidence["screenshots"] = []
             for name in names:
                 try:

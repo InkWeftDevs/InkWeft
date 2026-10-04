@@ -16,7 +16,7 @@ from unittest.mock import patch
 
 from android_plan import select_methods
 from android_shards import partition
-from six_batch_scope import build_plan
+from six_batch_scope import build_plan, lint_requirement
 
 ROOT = Path(__file__).resolve().parents[1]
 WORKFLOW = (ROOT / ".github/workflows/android-six-batches.yml").read_text()
@@ -114,10 +114,23 @@ class SixBatchWorkflowTest(unittest.TestCase):
                 self.assertEqual(expected, evaluate(mode))
                 self.assertEqual(shards, json.loads(evaluate(matrix)))
 
+    def test_full_lint_has_one_non_fixture_owner_and_is_not_ignored(self):
+        self.assertEqual(["NOT_ASSIGNED", "RUN_REQUIRED", "NOT_ASSIGNED"],
+                         [lint_requirement("full", shard) for shard in range(3)])
+        self.assertEqual("NOT_RUN_FOCUSED", lint_requirement("focused", 0))
+        for mode, shard in (("full", 3), ("focused", 1), ("unknown", 0)):
+            with self.assertRaises(ValueError): lint_requirement(mode, shard)
+        build = step_containing("id: build")
+        self.assertIn("lint_gate=lint_requirement(p['mode'],shard)", build)
+        self.assertIn("subprocess.run(command,cwd='android',check=True)", build)
+        self.assertNotIn("continue-on-error", build)
+        # Existing matrix-contract checks require all three jobs, including lint owner1.
+        self.assertIn("fail-fast: false", WORKFLOW)
+
     def test_focused_omits_lint_and_fixture_budget_leaves_cleanup_reserve(self):
         build = step_containing("id: build")
-        self.assertIn("if p['mode']=='full': command+=[':app:lintDebug']", build)
-        self.assertIn("'lint':'PASS' if p['mode']=='full' else 'NOT_RUN_FOCUSED'", build)
+        self.assertIn("if lint_gate=='RUN_REQUIRED': command+=[':app:lintDebug']", build)
+        self.assertIn("'lint':'PASS' if lint_gate=='RUN_REQUIRED' else lint_gate", build)
         self.assertIn("45*60 - 180", WORKFLOW)
         for step in STEPS:
             if "run: python3 ci/run_six_batch_fixture.py" in step:

@@ -34,23 +34,24 @@ class SixBatchScopeTest(unittest.TestCase):
         self.assertEqual(["prepare", "reopen", "visual", "native_recall", "native_recall_reopen"], plan["fixture"]["phases"])
         self.assertEqual(24, plan["fixture"]["native_workspace_screenshots"])
         self.assertEqual(7, plan["fixture"]["native_recall_screenshots"])
-        self.assertEqual(39, plan["fixture"]["expected_screenshots"])
+        self.assertEqual(1, plan["fixture"]["native_recall_reopen_screenshots"])
+        self.assertEqual(40, plan["fixture"]["expected_screenshots"])
 
     def test_focused_is_explicit_small_scope_and_full_inventory_stays_complete(self):
         focused, full = build_plan("focused"), build_plan("full")
-        self.assertEqual((153, 202, 5, 39), (full["expected_app"], full["expected_room"],
+        self.assertEqual((153, 202, 5, 40), (full["expected_app"], full["expected_room"],
                          full["fixture"]["expected_methods"], full["fixture"]["expected_screenshots"]))
-        self.assertEqual(3, focused["expected_app"])
+        self.assertEqual(11, focused["expected_app"])
         self.assertEqual(FOCUSED_METHODS, focused["app_methods"])
         self.assertEqual(set(focused["app"]), set(focused["app_methods"]))
-        self.assertEqual([], focused["fixture"]["selected_phases"])
-        self.assertEqual(0, focused["fixture"]["selected_screenshots"])
+        self.assertEqual(["prepare", "reopen", "visual"], focused["fixture"]["selected_phases"])
+        self.assertEqual(32, focused["fixture"]["selected_screenshots"])
         self.assertEqual(list(PHASE_METHODS), full["fixture"]["selected_phases"])
         self.assertEqual("NOT_RUN_FOCUSED", focused["lint"])
         self.assertEqual("RUN_REQUIRED", full["lint"])
-        for name, method in (("StudyOrganizationUiTest", "outlineEdgeScrollReachesOffscreenParentAndCancelKeepsWholeAuthorGraph"),
-                             ("StudyOrganizationUiTest", "realOutlineHandleMovesWholeBranchAndSupportsUndoRedoAndCancel"),
-                             ("StudyOrganizationUiTest", "workModesPreserveSelectedGraphAndResumeTheSameUnrevealedQuestion")):
+        for name, method in (("RecallQuestionEditorUiTest", "rotationAfterQuestionChangeCannotOverwriteNewPromptWithOldDraft"),
+                             ("MapPortalUiTest", "nestedReturnKeepsAnUnavailableBranchInsteadOfExpandingItsMap"),
+                             ("SelectionStudyUiTest", "excerptCreatesSharedCardAndReturnsToSource")):
             self.assertIn(method, focused["app_methods"]["org.inkweft.app." + name])
         with self.assertRaises(ValueError):
             build_plan("unknown")
@@ -58,7 +59,7 @@ class SixBatchScopeTest(unittest.TestCase):
     def test_workflow_uploads_only_explicit_fixture_files(self):
         workflow = (Path(__file__).resolve().parents[1] / ".github/workflows/android-six-batches.yml").read_text()
         files = [line.strip() for line in workflow.splitlines() if line.strip().startswith("android/build/evidence/six-batch-fixture/")]
-        self.assertEqual(39, sum(name.endswith(".png") for name in files))
+        self.assertEqual(40, sum(name.endswith(".png") for name in files))
         self.assertEqual(24, sum("/visual-" in name and name.endswith(".png") for name in files))
         self.assertFalse(any("*" in name for name in files))
         self.assertNotIn("android/build/evidence/**/*.png", workflow)
@@ -76,6 +77,9 @@ class SixBatchScopeTest(unittest.TestCase):
         pixels = b"\x89PNG\r\n\x1a\nsynthetic-host-contract-only"
         manifest = {"synthetic": True, "runId": "same-full-sized-fixture", "documentPages": [f"page-{n}" for n in range(12)],
                     "documentSha256": "b" * 64, "stressAuthoringFingerprint": "c" * 64, "nativePageCaptures": {}}
+        manifest.update(nativeRecallReopen="PASS", nativeRecallReopenCapture={
+            "file": "native-recall-reopen-01-material-page.png", "sha256": hashlib.sha256(pixels).hexdigest(),
+            "verifiedRecallRecords": 28, "proves": "REOPENED_MATERIAL_PAGE_ONLY"})
         sections = {"06-pressure-page-layers.png": "current", "07-pressure-hidden-layer.png": "hidden",
                     "08-pressure-locked-layer.png": "locked"}
         for name, index in runner.NATIVE_PAGE_CAPTURES.items():
@@ -85,7 +89,8 @@ class SixBatchScopeTest(unittest.TestCase):
                 "documentSha256": manifest["documentSha256"], "nativeInkSha256": "e" * 64,
                 "pdfTilePresent": True, "sourceFrameDrawn": True, "frameCommitted": True, "pendingRaster": False, "pendingImages": False,
                 "nativeStoredStrokes": 1000, "nativeStoredPoints": 100000, "nativeVisibleStrokes": 1000,
-                "authoringFingerprint": manifest["stressAuthoringFingerprint"], "continuous": index == 0,
+                "authoringFingerprint": manifest["stressAuthoringFingerprint"],
+                "continuous": index == 0 and name != "native-recall-reopen-01-material-page.png",
                 "baseLayerBluePixels": 20, "lockedLayerBluePixels": 20, "hiddenLayers": 1, "lockedLayers": 1,
                 "currentLayer": "00000000-0000-0000-0000-000000000001", "panelAssertionsPassed": True,
                 "panelSection": sections.get(name), "pressurePixelsFile": "05-layered-1000-stroke-pressure.png",
@@ -129,7 +134,9 @@ class SixBatchScopeTest(unittest.TestCase):
             whitelist = {line.strip().removeprefix(prefix) for line in workflow.splitlines() if line.strip().startswith(prefix)}
             self.assertEqual(whitelist - {"setup.txt"}, {file.name for file in out.iterdir()})
             # Even a stale local PNG cannot hide any failed extraction from this run.
-            for phase, missing_png in [("prepare", name) for name in sections] + [("visual", "visual-wide-01-default-tools.png")]:
+            for phase, missing_png in [("prepare", name) for name in sections] + [
+                    ("visual", "visual-wide-01-default-tools.png"),
+                    ("native_recall_reopen", "native-recall-reopen-01-material-page.png")]:
                 with self.subTest(missing_png=missing_png):
                     arguments = [RUNNER, "--serial", "emulator-5554", "--package", PACKAGE,
                                  "--source-commit", "a" * 40, "--phase", phase, "--output", directory]
