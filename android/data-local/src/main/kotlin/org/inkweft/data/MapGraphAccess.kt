@@ -7,7 +7,7 @@ import org.inkweft.core.*
 
 /** A single notebook projection shared by delivery, search and embedded rendering. */
 class MapGraphAccess(private val db:NoteDatabase){
-    fun observe(book:String)=db.invalidationTracker.createFlow("study_cards","study_nodes","knowledge_records","study_sources").map{read(book)}
+    fun observe(book:String)=db.invalidationTracker.createFlow("study_cards","study_nodes","knowledge_records","study_sources","study_card_source_sets","study_source_revisions").map{read(book)}
     suspend fun read(book:String)=db.withTransaction{project(book,db.study().cards(book),db.study().nodes(book),db.knowledge().forBook(book),db.study().sourceIds(book))}
     private fun project(book:String,cards:List<StudyCardRow>,main:List<StudyNodeRow>,records:List<KnowledgeRow>,sources:List<String>):List<MapScene>{
         val byCard=cards.filter{it.trashedAt==null}.associateBy{it.id};val sourced=sources.toSet()

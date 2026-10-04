@@ -147,7 +147,7 @@ class StudyCapacityRepositoryTest {
         assertEquals(2000,db.knowledge().forBook(book).size);assertEquals(last.id,repo.submit(last))
     }
 
-    @Test fun snapshotCapacityUsesStoredBytesAndRecropChargesOnlyItsDelta()=fixture{db,book->
+    @Test fun snapshotCapacityChargesImmutableCropHistoryAndNeverDiscardsOldBytes()=fixture{db,book->
         val repo=StudyRepository(db);val picture=jpeg(64);val smaller=jpeg(2);val larger=jpeg(128)
         assertTrue(smaller.size<picture.size&&picture.size<larger.size)
         val c=excerpt(book,picture);repo.submit(c);val old=repo.source(c.cardId!!)!!;val bytes=old.snapshot.size
@@ -157,20 +157,20 @@ class StudyCapacityRepositoryTest {
         val reused=id();repo.submit(StudyCommand(id(),book,StudyAction.REUSE,cardId=c.cardId,nodeId=reused))
         fun recrop(image:ByteArray,revision:Long)=StudyCommand(id(),book,StudyAction.RECROP_EXCERPT,cardId=c.cardId,expectedRevision=revision,
             source=StudySourceDraft(book,0,old.let{CanvasBounds(it.left,it.top,it.right,it.bottom)},emptyList(),image,0))
-        val same=recrop(picture,1);repo.submit(same);assertEquals(32_000_000L,repo.snapshotBytes())
-        val unchanged=repo.source(c.cardId!!)!!.snapshot
-        rejectStudy(db,recrop(larger,2),"STUDY_SNAPSHOT_BUDGET");assertArrayEquals(unchanged,repo.source(c.cardId!!)!!.snapshot)
-        val shrink=recrop(smaller,2);repo.submit(shrink);val reduced=repo.source(c.cardId!!)!!.snapshot.size
-        assertTrue(reduced<bytes);assertEquals(32_000_000L-bytes+reduced,repo.observeSnapshotBytes().first())
+        rejectStudy(db,recrop(picture,1),"STUDY_SNAPSHOT_BUDGET")
+        rejectStudy(db,recrop(larger,1),"STUDY_SNAPSHOT_BUDGET")
+        rejectStudy(db,recrop(smaller,1),"STUDY_SNAPSHOT_BUDGET")
+        assertArrayEquals(old.snapshot,repo.source(c.cardId!!)!!.snapshot)
+        assertEquals(1,db.sourceVersions().all().count{it.sourceId==c.cardId})
         repo.submit(StudyCommand(id(),book,StudyAction.REMOVE_NODE,nodeId=reused,expectedRevision=1))
-        repo.submit(StudyCommand(id(),book,StudyAction.TRASH_CARD,cardId=c.cardId,expectedRevision=3))
-        assertNotNull(db.study().card(c.cardId!!)!!.trashedAt);assertEquals(32_000_000L-bytes+reduced,repo.snapshotBytes())
-        repo.submit(StudyCommand(id(),book,StudyAction.RESTORE_CARD,cardId=c.cardId,expectedRevision=4))
-        repo.submit(StudyCommand(id(),book,StudyAction.EDIT,cardId=c.cardId,expectedRevision=5,title="恢复后编辑"))
-        assertEquals(32_000_000L-bytes+reduced,repo.observeSnapshotBytes().first())
+        repo.submit(StudyCommand(id(),book,StudyAction.TRASH_CARD,cardId=c.cardId,expectedRevision=1))
+        assertNotNull(db.study().card(c.cardId!!)!!.trashedAt);assertEquals(32_000_000L,repo.snapshotBytes())
+        repo.submit(StudyCommand(id(),book,StudyAction.RESTORE_CARD,cardId=c.cardId,expectedRevision=2))
+        repo.submit(StudyCommand(id(),book,StudyAction.EDIT,cardId=c.cardId,expectedRevision=3,title="恢复后编辑"))
+        assertEquals(32_000_000L,repo.observeSnapshotBytes().first())
     }
 
-    @Test fun independentCopyChargesDistinctCardsOnceAndReplayAddsNothing()=fixture{db,book->
+    @Test fun independentCopySharesImmutableSourcesAndChargesOnlyNewCards()=fixture{db,book->
         val repo=StudyRepository(db);val c=excerpt(book,jpeg(16));repo.submit(c)
         repeat(2){repo.submit(StudyCommand(id(),book,StudyAction.REUSE,cardId=c.cardId,nodeId=id()))}
         db.withTransaction{repeat(197){card(db,book)}};val sourceBytes=repo.source(c.cardId!!)!!.snapshot.size
@@ -179,16 +179,17 @@ class StudyCapacityRepositoryTest {
         val duplicate=copies.duplicate(scene.ref,scene.signature(),op)
         val copy=MapGraphAccess(db).read(book).single{it.ref==duplicate}
         assertEquals(2,copy.nodes.size);assertEquals(1,copy.nodes.mapNotNull{it.cardId}.distinct().size)
-        assertEquals(199,db.study().cards(book).size);assertEquals(32_000_000L,repo.snapshotBytes())
-        suspend fun reject(reason:String){val command=id();val cards=db.study().cards(book);val rows=knowledgeStamp(db.knowledge().forBook(book));val note=db.notes().note(book)
-            val current=MapGraphAccess(db).read(book).single{it.ref.mapId==null}
-            try{copies.duplicate(current.ref,current.signature(),command);fail()}catch(e:IllegalArgumentException){assertEquals(reason,e.message)}
-            assertEquals(cards,db.study().cards(book));assertEquals(rows,knowledgeStamp(db.knowledge().forBook(book)))
-            assertEquals(note,db.notes().note(book));assertEquals(32_000_000L,repo.snapshotBytes());assertNull(db.knowledge().receipt(command))}
-        reject("STUDY_SNAPSHOT_BUDGET")
-        repo.submit(StudyCommand(id(),book,StudyAction.CREATE,cardId=id(),nodeId=id(),title="第200张"));reject("STUDY_CARD_BUDGET")
+        assertEquals(199,db.study().cards(book).size);assertEquals(32_000_000L-sourceBytes,repo.snapshotBytes())
+        assertEquals(repo.sources(c.cardId!!).refs,repo.sources(copy.nodes.first().cardId!!).refs)
+        val current=MapGraphAccess(db).read(book).single{it.ref.mapId==null}
+        copies.duplicate(current.ref,current.signature(),id())
+        assertEquals(200,db.study().cards(book).size);assertEquals(32_000_000L-sourceBytes,repo.snapshotBytes())
+        val command=id();val cards=db.study().cards(book);val rows=knowledgeStamp(db.knowledge().forBook(book));val note=db.notes().note(book)
+        try{copies.duplicate(current.ref,current.signature(),command);fail()}catch(e:IllegalArgumentException){assertEquals("STUDY_CARD_BUDGET",e.message)}
+        assertEquals(cards,db.study().cards(book));assertEquals(rows,knowledgeStamp(db.knowledge().forBook(book)))
+        assertEquals(note,db.notes().note(book));assertNull(db.knowledge().receipt(command))
         assertEquals(duplicate,copies.duplicate(scene.ref,scene.signature(),op))
-        assertEquals(200,db.study().cards(book).size);assertEquals(32_000_000L,repo.snapshotBytes())
+        assertEquals(200,db.study().cards(book).size);assertEquals(32_000_000L-sourceBytes,repo.snapshotBytes())
     }
 
     @Test fun oversizedSingleSnapshotIsAConfirmedAtomicRejection()=fixture{db,book->

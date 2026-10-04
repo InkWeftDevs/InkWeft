@@ -67,8 +67,9 @@ class LibraryBackupRepositoryTest {
                     assertNull(t.notes().note(incomingBook));assertEquals(16_000_001L,t.study().snapshotBytes())
                     restore.snapshot().use{after->inspect(restore,after).use{assertEquals(original.canonical,it.canonical)}}
                     // Move this isolated fixture to the exact boundary by re-encoding one less ASCII byte.
-                    // This setup is separate from the repository recrop transaction tests.
-                    val source=t.study().source(recycled)!!;val page=InkPageFile.decode(source.snapshot)
+                    // Adjust only an unfrozen fixture source; immutable historical snapshots are never rewritten.
+                    val adjustable=t.study().cards(existingBook).first{it.id!=recycled}.id
+                    val source=t.study().source(adjustable)!!;val page=InkPageFile.decode(source.snapshot)
                     val smaller=InkPageFile(page.title,page.text.dropLast(1),page.strokes,page.world,page.paper,page.objects,page.source).encode()
                     assertEquals(source.snapshot.size-1,smaller.size);assertEquals(1,t.study().updateSource(source.copy(snapshot=smaller)))
                     restore.snapshot().use{exact->inspect(restore,exact).use{assertEquals(1,it.notes)}}

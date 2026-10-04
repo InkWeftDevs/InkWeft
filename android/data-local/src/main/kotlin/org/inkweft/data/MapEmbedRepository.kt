@@ -16,10 +16,6 @@ class MapEmbedRepository(private val db:NoteDatabase){
         require(scene.signature()==expectedSignature){"MAP_CONTENT_CHANGED"}
         val originals=scene.nodes.mapNotNull{it.cardId}.distinct()
         require(db.study().cards(ref.notebookId).size+originals.size<=StudyCapacity.MAX_CARDS_PER_NOTEBOOK){"STUDY_CARD_BUDGET"}
-        val used=db.study().snapshotBytes()
-        var copiedBytes=0L
-        originals.forEach{copiedBytes+=db.study().source(it)?.snapshot?.size?:0}
-        require(used+copiedBytes<=StudyCapacity.MAX_SNAPSHOT_BYTES){"STUDY_SNAPSHOT_BUDGET"}
         fun fresh(value:String)=UUID.nameUUIDFromBytes("$operationId:$value".toByteArray()).toString()
         val newRef=MapRef(ref.notebookId,fresh("map"))
         val newMapId=checkNotNull(newRef.mapId)
@@ -29,11 +25,16 @@ class MapEmbedRepository(private val db:NoteDatabase){
         val layout=ref.mapId?.let{(db.knowledge().get(it)?.data() as? KnowledgeData.MapDefinition)?.layout}?:"right"
         val changes=mutableListOf(KnowledgeRow(newMapId,ref.notebookId,1,
             KnowledgeCodec.encode(KnowledgeData.MapDefinition((scene.title.take(112)+" · 独立副本").take(120),layout,structure))))
+        val presentations=db.knowledge().forBook(ref.notebookId).filterNot{it.removed}.mapNotNull{it.data() as? KnowledgeData.CardPresentation}.associateBy{it.cardId}
         val cardIds=scene.nodes.mapNotNull{it.cardId}.distinct().associateWith{fresh("card:$it")}
         cardIds.forEach{(old,id)->
             val card=checkNotNull(db.study().card(old));require(card.trashedAt==null)
             db.study().addCard(card.copy(id=id,revision=1));db.study().revision(StudyCardRevisionRow(id,1,card.title,card.body,null))
-            db.study().source(old)?.let{db.study().source(it.copy(cardId=id))}
+            val sources=StudySourceVersions(db);sources.freezeCurrent(card);val frozen=sources.read(old);sources.writeSet(id,1,frozen.refs,frozen.complete)
+            presentations[old]?.let{presentation->
+                val row=KnowledgeRow(fresh("presentation:$old"),ref.notebookId,1,KnowledgeCodec.encode(presentation.copy(cardId=id)))
+                db.knowledge().insert(row);db.knowledge().revision(KnowledgeRevisionRow(row.id,1,row.notebookId,row.payload,false))
+            }
         }
         scene.nodes.forEach{n->n.cardId?.let{card->changes+=KnowledgeRow(ids.getValue(n.id),ref.notebookId,1,
             KnowledgeCodec.encode(KnowledgeData.MapOccurrence(newMapId,cardIds.getValue(card),n.parentId?.let(ids::get),n.x,n.y)))}}

@@ -19,6 +19,7 @@ data class FrozenBranchReviewQuestion(
     val reference: BranchReviewEntryRef,
     val question: KnowledgeRow,
     val card: StudyCardRevisionRow,
+    val sources: FrozenStudySources = FrozenStudySources(emptyList(),emptyList(),false),
 )
 
 /** Read-only session preparation. Marking still uses the existing guarded command/receipt path. */
@@ -139,7 +140,8 @@ class BranchReviewRepository(private val db: NoteDatabase) {
     }
 
     private suspend fun loadReferences(book: String, entries: List<BranchReviewEntryRef>): List<FrozenBranchReviewQuestion> {
-        val cards = mutableMapOf<String, StudyCardRevisionRow>()
+        val cards = mutableMapOf<Pair<String,Long>, StudyCardRevisionRow>()
+        val sources = mutableMapOf<Pair<String,Long>, FrozenStudySources>()
         return entries.map { reference ->
             val revision = requireNotNull(db.knowledge().revision(reference.questionId, reference.questionRevision)) {
                 "BRANCH_REVIEW_QUESTION_REVISION_MISSING"
@@ -150,7 +152,7 @@ class BranchReviewRepository(private val db: NoteDatabase) {
             val question = KnowledgeRow(revision.id, revision.notebookId, revision.revision, revision.payload.copyOf(), revision.removed)
             val data = question.data() as? KnowledgeData.Question
             require(data?.cardId == reference.cardId) { "BRANCH_REVIEW_QUESTION_CARD_CHANGED" }
-            val card = cards[reference.cardId] ?: run {
+            val card = cards[reference.cardId to reference.cardRevision] ?: run {
                 val currentCard = requireNotNull(db.study().card(reference.cardId)) {
                     "BRANCH_REVIEW_CARD_UNAVAILABLE"
                 }
@@ -159,10 +161,12 @@ class BranchReviewRepository(private val db: NoteDatabase) {
                     "BRANCH_REVIEW_CARD_REVISION_MISSING"
                 }
                 require(frozen.trashedAt == null) { "BRANCH_REVIEW_CARD_REVISION_UNAVAILABLE" }
-                frozen.also { cards[reference.cardId] = it }
+                frozen.also { cards[reference.cardId to reference.cardRevision] = it }
             }
             // Recycling after entry does not erase the frozen answer. Guarded marking checks current activity/revision.
-            FrozenBranchReviewQuestion(reference, question, card)
+            val sourceKey=reference.cardId to reference.cardRevision
+            val frozenSources=sources[sourceKey]?:StudySourceVersions(db).read(reference.cardId,reference.cardRevision).also{sources[sourceKey]=it}
+            FrozenBranchReviewQuestion(reference, question, card, frozenSources)
         }
     }
 

@@ -51,12 +51,14 @@ class LibraryBackupRepository(private val context:Context,private val db:NoteDat
             val parsed=stage.withTransaction {
                 val sql=stage.openHelper.writableDatabase;checkSchema(sql);val ctx=currentCoroutineContext()
                 var count=0
-                LibraryArchive.read(input,SCHEMA,{table,row->
+                val parsed=LibraryArchive.read(input,SCHEMA,{table,row->
                     if(++count%128==0)reserve()
                     // Schema6 has no tombstone column; promote to live/default null.
                     val promoted=if(table==4&&row.size==SCHEMA[table].columns.size-1)row+listOf(null)else row
                     insert(sql,table,promoted)
-                },legacySchema=SCHEMA_V6,otherLegacySchemas=listOf(SCHEMA_V7,SCHEMA_V8,SCHEMA_V9,SCHEMA_V10,SCHEMA_V11,SCHEMA_V12)){ctx.ensureActive()}
+                },legacySchema=SCHEMA_V6,otherLegacySchemas=listOf(SCHEMA_V7,SCHEMA_V8,SCHEMA_V9,SCHEMA_V10,SCHEMA_V11,SCHEMA_V12,SCHEMA_V13)){ctx.ensureActive()}
+                if(parsed.rows.size<SCHEMA.size)StudySourceVersions.promoteLegacy(sql)
+                parsed
             }
             validate(stage)
             val sql=stage.openHelper.writableDatabase
@@ -147,6 +149,10 @@ class LibraryBackupRepository(private val context:Context,private val db:NoteDat
         noRows("SELECT 1 FROM image_sources WHERE byteCount NOT BETWEEN 1 AND ${ImageSource.MAX_BYTES}")
         noRows("SELECT 1 FROM image_chunks WHERE position NOT BETWEEN 0 AND 40 OR length(payload) NOT BETWEEN 1 AND 512000")
         for(image in stage.images().all())ImageSourceRepository.validate(ImageSourceRepository(stage).read(image.notebookId,image.digest))
+        noRows("SELECT 1 FROM study_card_source_sets WHERE complete NOT IN (0,1)")
+        noRows("SELECT 1 FROM card_transform_operations WHERE undone NOT IN (0,1)")
+        StudySourceVersions(stage).validateArchive()
+        CardTransformRepository(stage).validateArchive()
         KnowledgeRepository(stage).validateArchive()
         sql.query("SELECT notebookId,payload FROM knowledge_revisions").use{c->while(c.moveToNext())KnowledgeRepository(stage).validateData(c.getString(0),KnowledgeCodec.decode(c.getBlob(1)),false)}
         sql.query("SELECT operationId,digest,resultId FROM knowledge_receipts").use{c->while(c.moveToNext()){UUID.fromString(c.getString(0));require(c.getString(1).matches(Regex("[0-9a-f]{64}")));require(stage.knowledge().get(c.getString(2))!=null)}}
@@ -266,8 +272,12 @@ class LibraryBackupRepository(private val context:Context,private val db:NoteDat
             table("document_chunks","documentId,position",col("documentId",'S'),col("position",'I'),col("payload",'B')),
             table("document_pages","pageId",col("pageId",'S'),col("documentId",'S'),col("sourcePage",'I')),
             table("image_sources","notebookId,digest",col("notebookId",'S'),col("digest",'S'),col("byteCount",'I')),
-            table("image_chunks","notebookId,digest,position",col("notebookId",'S'),col("digest",'S'),col("position",'I'),col("payload",'B'))
+            table("image_chunks","notebookId,digest,position",col("notebookId",'S'),col("digest",'S'),col("position",'I'),col("payload",'B')),
+            table("study_source_revisions","sourceId,revision",col("sourceId",'S'),col("revision",'I'),col("notebookId",'S'),col("pageId",'S'),col("inkRevision",'I'),col("left",'F'),col("top",'F'),col("right",'F'),col("bottom",'F'),col("strokeIds",'S'),col("snapshot",'B')),
+            table("study_card_source_sets","cardId,cardRevision",col("cardId",'S'),col("cardRevision",'I'),col("sourceRefs",'S'),col("complete",'I')),
+            table("card_transform_operations","operationId",col("operationId",'S'),col("notebookId",'S'),col("digest",'S'),col("payload",'B'),col("afterFingerprint",'S'),col("revision",'I'),col("undone",'I'),col("undoOperationId",'S',true),col("undoDigest",'S',true))
         )
+        val SCHEMA_V13=SCHEMA.take(29)
         val SCHEMA_V12=SCHEMA.take(27)
         val SCHEMA_V11=SCHEMA.take(24)
         val SCHEMA_V10=SCHEMA.take(22)
@@ -275,7 +285,7 @@ class LibraryBackupRepository(private val context:Context,private val db:NoteDat
         val SCHEMA_V8=SCHEMA.take(18)
         val SCHEMA_V7=SCHEMA.take(13)
         val SCHEMA_V6=SCHEMA.take(12).mapIndexed{i,t->if(i==4)t.copy(columns=t.columns.dropLast(1))else t}
-        private val OWNERS=listOf("id","noteId","noteId","noteId","notebookId","@ink","@ink","@ink","@ink","@search","notebookId","noteId","notebookId","notebookId","@cards","@cards","notebookId","notebookId","notebookId","notebookId","notebookId","noteId","@search","@search","notebookId","@documents","@search","notebookId","notebookId")
+        private val OWNERS=listOf("id","noteId","noteId","noteId","notebookId","@ink","@ink","@ink","@ink","@search","notebookId","noteId","notebookId","notebookId","@cards","@cards","notebookId","notebookId","notebookId","notebookId","notebookId","noteId","@search","@search","notebookId","@documents","@search","notebookId","notebookId","notebookId","@cards","notebookId")
         private fun count(sql:SupportSQLiteDatabase,table:String)=sql.query("SELECT COUNT(*) FROM `$table`").use{it.moveToFirst();it.getLong(0)}
         private fun insert(sql:SupportSQLiteDatabase,table:Int,row:List<Any?>){
             val t=SCHEMA[table]

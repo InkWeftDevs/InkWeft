@@ -97,7 +97,7 @@ class PageObjectRepositoryTest {
             for(i in 0 until entities.length()){
                 val entity=entities.getJSONObject(i);val table=entity.getString("tableName")
                 sql.execSQL(entity.getString("createSql").replace("\${TABLE_NAME}",table))
-                val indices=entity.getJSONArray("indices")
+                val indices=entity.optJSONArray("indices")?:org.json.JSONArray()
                 for(j in 0 until indices.length())sql.execSQL(indices.getJSONObject(j).getString("createSql").replace("\${TABLE_NAME}",table))
             }
             sql.execSQL("INSERT INTO notes VALUES (?,1,'保留标题','保留原文',1234)",arrayOf(book))
@@ -108,7 +108,7 @@ class PageObjectRepositoryTest {
         try{
             assertEquals("保留原文",db.notes().note(book)!!.text)
             assertEquals(1234L,db.notes().note(book)!!.updatedAt)
-            assertEquals(13,db.openHelper.readableDatabase.version)
+            assertEquals(14,db.openHelper.readableDatabase.version)
             assertEquals(0L,db.images().totalBytes())
         }finally{db.close();context.deleteDatabase(name)}
     }
