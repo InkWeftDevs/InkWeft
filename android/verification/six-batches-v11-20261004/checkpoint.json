@@ -57,11 +57,29 @@
       "app_android_test_kotlin": "PASS",
       "android_methods": "11 NOT_RUN",
       "pixels_and_performance": "NOT_RUN"
+    },
+    {
+      "source": "fa77e9985e4ef26f7b4ffa8dfa3a6064ec48e5c9",
+      "run": "https://github.com/InkWeftDevs/InkWeft/actions/runs/37190249886",
+      "targeted_core": "PASS",
+      "lint": "PASS",
+      "assemble_app_and_both_android_tests": "PASS",
+      "gradle_elapsed_seconds": 845,
+      "android_execution": "BLOCKED_KVM_ACCESS",
+      "methods_started": 0
+    },
+    {
+      "source": "f4f669a",
+      "scope": "workspace-transform-relations-integration",
+      "jvm_passed": 36,
+      "production_and_both_android_test_kotlin": "PASS",
+      "elapsed_seconds": 291,
+      "android_execution": "NOT_RUN"
     }
   ],
   "compatibility": {
     "candidate_version": 69,
-    "room_schema": 13,
+    "room_schema": 14,
     "image_objects": "IWOA",
     "image_page_copy": "IWP7",
     "safe_downgrade_to_v68": false
