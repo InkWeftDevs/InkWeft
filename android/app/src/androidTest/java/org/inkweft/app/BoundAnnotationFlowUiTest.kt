@@ -3,12 +3,15 @@ package org.inkweft.app
 
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.graphics.RectF
 import android.view.KeyEvent
+import android.view.MotionEvent
 import android.view.ScaleGestureDetector
 import android.view.View
 import android.view.ViewConfiguration
 import android.view.ViewGroup
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.semantics.*
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.lifecycle.ViewModelProvider
@@ -156,6 +159,76 @@ class BoundAnnotationFlowUiTest {
             }finally{bitmap.recycle()}
         }
     }
+    private data class PinchPath(val nativePoints:List<Offset>,val injectedPoints:List<Offset>,val width:Int,val height:Int,val endSpan:Float)
+    /** Root-aware geometry only. Never hide controls, clear selection, or send events directly to the View. */
+    private fun clearPinchPath(view:MindMapView,node:SemanticsNode,controls:List<SemanticsNode>,record:(String)->Unit):PinchPath {
+        val screen=IntArray(2).also(view::getLocationOnScreen)
+        val window=IntArray(2).also(view::getLocationInWindow)
+        val rootScreen=IntArray(2).also(view.rootView::getLocationOnScreen)
+        val local=android.graphics.Rect();val global=android.graphics.Rect()
+        assertTrue("Native map must have a local visible area",view.getLocalVisibleRect(local))
+        assertTrue("Native map must have a global visible area",view.getGlobalVisibleRect(global))
+        fun rect(value:androidx.compose.ui.geometry.Rect)=RectF(value.left,value.top,value.right,value.bottom)
+        fun screenRect(n:SemanticsNode,value:androidx.compose.ui.geometry.Rect)=rect(value).apply{
+            val origin=n.positionOnScreen-n.positionInRoot;offset(origin.x,origin.y)
+        }
+        val nativeVisible=RectF(local).apply{offset(screen[0].toFloat(),screen[1].toFloat())}
+        // Android's global-visible rectangle is root-relative, including in a Dialog window.
+        val globalOnScreen=RectF(global).apply{offset(rootScreen[0].toFloat(),rootScreen[1].toFloat())}
+        val semanticVisible=screenRect(node,node.boundsInRoot)
+        val mapping="native screen=${screen.toList()} window=${window.toList()} rootScreen=${rootScreen.toList()} local=$local global=$global screenVisible=$nativeVisible globalOnScreen=$globalOnScreen semantics root=${node.boundsInRoot} window=${node.boundsInWindow} positionScreen=${node.positionOnScreen} screenVisible=$semanticVisible"
+        record("pinch-mapping $mapping")
+        fun near(label:String,a:Float,b:Float){assertEquals("$label; $mapping",a,b,1f)}
+        near("Screen X",screen[0].toFloat(),node.positionOnScreen.x);near("Screen Y",screen[1].toFloat(),node.positionOnScreen.y)
+        near("Window X",window[0].toFloat(),node.positionInWindow.x);near("Window Y",window[1].toFloat(),node.positionInWindow.y)
+        for(other in listOf(globalOnScreen,semanticVisible)){
+            near("Visible left",nativeVisible.left,other.left);near("Visible top",nativeVisible.top,other.top)
+            near("Visible right",nativeVisible.right,other.right);near("Visible bottom",nativeVisible.bottom,other.bottom)
+        }
+        val config=ViewConfiguration.get(view.context);val density=view.resources.displayMetrics.density
+        val slop=config.scaledTouchSlop.toFloat();val minimumSpan=config.scaledMinimumScalingSpan.toFloat()
+        val margin=maxOf(8f*density,slop);val safe=RectF(local).apply{inset(margin,margin)}
+        val startSpan=minimumSpan+maxOf(slop,1f);val endSpan=startSpan+maxOf(4f*slop,16f*density)
+        val ancestors=generateSequence(node){it.parent}.map{it.id}.toSet()
+        val blocked=controls.filter{it.id !in ancestors&&it.boundsInRoot.width>0&&it.boundsInRoot.height>0}.mapNotNull{control->
+            // A popup may have a different semantics root: translate each control through its own screen origin.
+            val touch=screenRect(control,control.touchBoundsInRoot).apply{union(screenRect(control,control.boundsInRoot))}
+            if(!RectF.intersects(touch,nativeVisible))null else {
+                val localTouch=RectF(touch).apply{offset(-screen[0].toFloat(),-screen[1].toFloat())}
+                record("pinch-overlay tag=${control.config.getOrNull(SemanticsProperties.TestTag).orEmpty()} id=${control.id} root=${control.boundsInRoot} touchRoot=${control.touchBoundsInRoot} screen=$touch native=$localTouch")
+                localTouch.apply{inset(-margin,-margin)}
+            }
+        }
+        fun emptyBand(horizontal:Boolean):Float? {
+            if((if(horizontal)safe.width()else safe.height())<endSpan)return null
+            val low=if(horizontal)safe.top else safe.left;val high=if(horizontal)safe.bottom else safe.right
+            val intervals=blocked.filter{RectF.intersects(it,safe)}.map{
+                (if(horizontal)it.top else it.left).coerceAtLeast(low) to (if(horizontal)it.bottom else it.right).coerceAtMost(high)
+            }.sortedBy{it.first}
+            val free=mutableListOf<Pair<Float,Float>>();var cursor=low
+            for((start,end) in intervals){if(start>cursor)free+=cursor to start;cursor=maxOf(cursor,end)}
+            if(cursor<high)free+=cursor to high
+            return free.filter{it.second-it.first>2f}.maxByOrNull{it.second-it.first}?.let{(it.first+it.second)/2}
+        }
+        val horizontalBand=emptyBand(true);val horizontal=horizontalBand!=null
+        val band=horizontalBand?:emptyBand(false)
+        record("pinch-plan safe=$safe minSpan=$minimumSpan slop=$slop span=$startSpan->$endSpan horizontal=$horizontal band=$band blockers=$blocked")
+        assertNotNull("No completely unobstructed visible pinch band; $mapping safe=$safe requiredSpan=$endSpan blockers=$blocked",band)
+        fun point(span:Float,side:Float)=if(horizontal)Offset(safe.centerX()+side*span/2,checkNotNull(band))
+            else Offset(checkNotNull(band),safe.centerY()+side*span/2)
+        val points=listOf(point(startSpan,-1f),point(endSpan,-1f),point(startSpan,1f),point(endSpan,1f))
+        points.forEach{assertTrue("Pinch endpoint outside native safe area: $it / $safe",it.x in safe.left..safe.right&&it.y in safe.top..safe.bottom)}
+        for((a,b) in listOf(points[0] to points[1],points[2] to points[3]))for(obstacle in blocked){
+            val hit=if(horizontal)a.y in obstacle.top..obstacle.bottom&&maxOf(a.x,b.x)>=obstacle.left&&minOf(a.x,b.x)<=obstacle.right
+                else a.x in obstacle.left..obstacle.right&&maxOf(a.y,b.y)>=obstacle.top&&minOf(a.y,b.y)<=obstacle.bottom
+            assertFalse("Full pinch segment $a -> $b crosses $obstacle",hit)
+        }
+        // TouchInjectionScope starts at the clipped semantics bounds, which may differ from the View's full local origin.
+        val injectionOrigin=Offset(semanticVisible.left-screen[0],semanticVisible.top-screen[1])
+        val injected=points.map{it-injectionOrigin}
+        record("pinch-path native=$points injected=$injected origin=$injectionOrigin")
+        return PinchPath(points,injected,semanticVisible.width().roundToInt(),semanticVisible.height().roundToInt(),endSpan)
+    }
     @Test fun bindMoveReorderZoomDetachAndReopenKeepOneTransformAndProtectedLayerOwnership(){
         val f=fixture();val initial=state(f.book);val originalCards=graph(f.book).cards
         openAnnotation(f.node);tap("annotation-bind")
@@ -181,11 +254,21 @@ class BoundAnnotationFlowUiTest {
         val originalViewport=compose.runOnIdle{instrumented.onViewport}
         var phase="select-and-reorder"
         var eventTime=0L
+        var originalDown:Offset?=null;var originalPointerDown=0;var originalTwoPointerMoves=0;var receivedSpan=0f
         fun detectorState()="progress=${detector.isInProgress} span=${detector.previousSpan}->${detector.currentSpan} spanXY=${detector.currentSpanX},${detector.currentSpanY} factor=${detector.scaleFactor} quick=${detector.isQuickScaleEnabled}"
         compose.runOnIdle{
             // Diagnostic observation only: preserve the production viewport callback and never consume a MotionEvent.
             instrumented.setOnTouchListener{_,event->
                 eventTime=event.eventTime
+                if(phase=="original-timing"){
+                    if(event.actionMasked==MotionEvent.ACTION_DOWN)originalDown=Offset(event.x,event.y)
+                    if(event.actionMasked==MotionEvent.ACTION_POINTER_DOWN&&event.pointerCount==2)originalPointerDown++
+                    if(event.actionMasked==MotionEvent.ACTION_MOVE&&event.pointerCount==2){
+                        assertNotEquals("Native pinch pointer IDs must be distinct",event.getPointerId(0),event.getPointerId(1))
+                        originalTwoPointerMoves++
+                        receivedSpan=maxOf(receivedSpan,kotlin.math.hypot(event.getX(1)-event.getX(0),event.getY(1)-event.getY(0)))
+                    }
+                }
                 record("$phase event action=${event.actionMasked} index=${event.actionIndex} time=$eventTime down=${event.downTime} count=${event.pointerCount} "+
                     (0 until event.pointerCount).joinToString(";"){"p${event.getPointerId(it)}=${event.getX(it)},${event.getY(it)} tool=${event.getToolType(it)}"}+
                     " source=${event.source} size=${instrumented.width}x${instrumented.height} enabled=${instrumented.enabledInput} editing=${instrumented.editingTitle} viewport=${instrumented.snapshotViewport()} detectorBefore=${detectorState()}")
@@ -206,38 +289,31 @@ class BoundAnnotationFlowUiTest {
             val beforeZoomNodes=graph(f.book).nodes
             assertTrue("The actual camera must have room to zoom in: ${camera.scale}",camera.scale<2.5f)
             phase="original-timing"
-            val semanticBounds=compose.onNodeWithTag("study-map").fetchSemanticsNode().boundsInRoot
-            val nativeSize=compose.runOnIdle{instrumented.width to instrumented.height}
-            val pinchPoints=compose.runOnIdle{
-                val visible=android.graphics.Rect()
-                assertTrue("The native map must be visible before pinch",instrumented.getLocalVisibleRect(visible))
-                val configuration=ViewConfiguration.get(instrumented.context)
-                val density=instrumented.resources.displayMetrics.density
-                val touchSlop=configuration.scaledTouchSlop.toFloat()
-                val minimumSpan=configuration.scaledMinimumScalingSpan.toFloat()
-                val margin=maxOf(8f*density,touchSlop)
-                val safe=android.graphics.RectF(visible).apply{inset(margin,margin)}
-                // Both spans clear Android's minimum; leave multiple touch-slops of motion after detection begins.
-                val startSpan=minimumSpan+maxOf(touchSlop,1f)
-                val endSpan=startSpan+maxOf(4f*touchSlop,16f*density)
-                val horizontal=safe.width()>=endSpan
-                record("$phase geometry native=${nativeSize.first}x${nativeSize.second} semantics=$semanticBounds visible=$visible margin=$margin minSpan=$minimumSpan touchSlop=$touchSlop span=$startSpan->$endSpan horizontal=$horizontal")
-                assertTrue("Visible native map cannot fit a threshold-crossing pinch: safe=$safe requiredSpan=$endSpan minSpan=$minimumSpan touchSlop=$touchSlop",
-                    safe.width()>0&&safe.height()>0&&(horizontal||safe.height()>=endSpan))
-                fun point(span:Float,side:Float)=if(horizontal)Offset(safe.centerX()+side*span/2,safe.centerY())
-                    else Offset(safe.centerX(),safe.centerY()+side*span/2)
-                listOf(point(startSpan,-1f),point(endSpan,-1f),point(startSpan,1f),point(endSpan,1f))
-            }
+            val mapSemantics=compose.onNodeWithTag("study-map",useUnmergedTree=true).fetchSemanticsNode()
+            val overlayTags=setOf("node-actions","node-menu","node-title-editor","map-menu")
+            val controls=compose.onAllNodes(SemanticsMatcher("click/touch overlays"){
+                it.config.contains(SemanticsActions.OnClick)||it.config.contains(SemanticsActions.OnLongClick)||
+                    it.config.contains(SemanticsActions.ScrollBy)||it.config.contains(SemanticsActions.SetProgress)||
+                    it.config.getOrNull(SemanticsProperties.TestTag) in overlayTags
+            },useUnmergedTree=true).fetchSemanticsNodes()
+            val pinchPath=compose.runOnIdle{clearPinchPath(instrumented,mapSemantics,controls,::record)}
             record("$phase begin view=${System.identityHashCode(instrumented)} viewport=$camera")
             compose.onNodeWithTag("study-map").performTouchInput{
-                assertEquals("Compose/native pinch coordinate width",nativeSize.first,width)
-                assertEquals("Compose/native pinch coordinate height",nativeSize.second,height)
-                pinch(start0=pinchPoints[0],end0=pinchPoints[1],start1=pinchPoints[2],end1=pinchPoints[3],durationMillis=400)
+                assertEquals("Compose visible pinch width",pinchPath.width,width)
+                assertEquals("Compose visible pinch height",pinchPath.height,height)
+                pinch(start0=pinchPath.injectedPoints[0],end0=pinchPath.injectedPoints[1],
+                    start1=pinchPath.injectedPoints[2],end1=pinchPath.injectedPoints[3],durationMillis=400)
             }
             compose.waitForIdle()
             val zoomed=compose.runOnIdle{map().snapshotViewport()}
             record("$phase end view=${compose.runOnIdle{System.identityHashCode(map())}} viewport=$zoomed detector=${compose.runOnIdle{detectorState()}}")
             val diagnostic=inputTrace.joinToString("\n")
+            assertNotNull("Original pinch DOWN never reached native map\n$diagnostic",originalDown)
+            assertTrue("Original pinch POINTER_DOWN never reached native map\n$diagnostic",originalPointerDown>0)
+            assertTrue("Original two-pointer MOVE never reached native map\n$diagnostic",originalTwoPointerMoves>0)
+            assertEquals("Native DOWN x mapping\n$diagnostic",pinchPath.nativePoints[0].x,checkNotNull(originalDown).x,1f)
+            assertEquals("Native DOWN y mapping\n$diagnostic",pinchPath.nativePoints[0].y,checkNotNull(originalDown).y,1f)
+            assertTrue("Computed span must actually reach native MOVE: $receivedSpan < ${pinchPath.endSpan}\n$diagnostic",receivedSpan>=pinchPath.endSpan-2f)
             assertTrue("Original native two-finger spread must increase scale: ${camera.scale} -> ${zoomed.scale}\n$diagnostic",zoomed.scale>camera.scale)
             assertEquals("Pinch must cancel node dragging without authoring positions",beforeZoomNodes,graph(f.book).nodes)
             assertEquals(bound.revision,state(f.book).revision)

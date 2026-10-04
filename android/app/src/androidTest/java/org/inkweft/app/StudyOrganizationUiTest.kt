@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewConfiguration
 import android.view.ViewGroup
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.platform.ViewRootForTest
 import androidx.compose.ui.semantics.SemanticsProperties
 import androidx.compose.ui.semantics.getOrNull
 import androidx.compose.ui.test.*
@@ -260,6 +261,7 @@ class StudyOrganizationUiTest {
         tap("study-close");tap("quick-study");settled(f.book);assertEquals(moved,order(f.book))
     }
 
+    @OptIn(androidx.compose.ui.InternalComposeUiApi::class)
     @Test fun outlineEdgeScrollReachesOffscreenParentAndCancelKeepsWholeAuthorGraph(){
         val f=fixture()
         val extra=List(28){id()};val destination=extra.last();val destinationChild=id()
@@ -281,6 +283,16 @@ class StudyOrganizationUiTest {
         assertTrue("The target must start outside the visible viewport",
             runCatching{compose.onNodeWithTag("outline-row-$destination").assertIsDisplayed()}.isFailure)
         var dropDiagnostic="No target observed"
+        val routeTrace=java.util.ArrayDeque<String>()
+        fun recordRoute(line:String){if(routeTrace.size>=120)routeTrace.removeFirst();routeTrace.addLast(line)}
+        val listSemantics=compose.onNodeWithTag("study-list").fetchSemanticsNode()
+        val owner=(checkNotNull(listSemantics.root) as ViewRootForTest).view
+        val previousEvent=owner.javaClass.getDeclaredField("previousMotionEvent").apply{isAccessible=true}
+        fun recordOwnerEvent(stage:String)=compose.runOnIdle{
+            val screen=IntArray(2);val window=IntArray(2);owner.getLocationOnScreen(screen);owner.getLocationInWindow(window)
+            val event=previousEvent.get(owner) as? MotionEvent
+            recordRoute("$stage owner=${System.identityHashCode(owner)} screen=${screen.toList()} window=${window.toList()} list=${listSemantics.boundsInRoot} actualRootEvent=${event?.actionMasked} xy=${event?.x},${event?.y} raw=${event?.rawX},${event?.rawY} time=${event?.eventTime}")
+        }
         fun startAndReachTarget(target:String){
             val list=compose.onNodeWithTag("study-list").fetchSemanticsNode().boundsInRoot
             val handle=compose.onNodeWithTag("outline-drag-${f.first}").assertIsDisplayed().fetchSemanticsNode().boundsInRoot
@@ -315,10 +327,17 @@ class StudyOrganizationUiTest {
             compose.onNodeWithTag("outline-drag-feedback").assertTextContains("移入「跨屏目标 ${extra.lastIndex}」下级",substring=true)
         }
         val originalAutoAdvance=compose.mainClock.autoAdvance
+        compose.runOnIdle{vm(f.book).outlineInputObserver=::recordRoute}
         try{
         startAndReachTarget(destination)
         compose.onNodeWithTag("outline-drag-feedback").assertTextContains("松手后展开目标",substring=true)
-        compose.onNodeWithTag("study-list").performTouchInput{up()}
+        recordOwnerEvent("before-up")
+        val releaseBounds=compose.onNodeWithTag("study-list").fetchSemanticsNode().boundsInRoot
+        compose.onNodeWithTag("study-list").performTouchInput{
+            recordRoute("inject-up currentLocal=${currentPosition()} scopeBounds=$releaseBounds expectedRoot=${currentPosition()?.plus(releaseBounds.topLeft)}")
+            up()
+        }
+        recordOwnerEvent("after-up-flush")
         compose.mainClock.autoAdvance=originalAutoAdvance
         try{
             compose.waitUntil(15_000){nodes(f.book).single{it.id==f.first}.parentId==destination}
@@ -344,9 +363,12 @@ class StudyOrganizationUiTest {
         settled(f.book)
         assertEquals(beforeCancel,author(f.book))
         compose.onNodeWithTag("study-message").assertTextContains("拖动已取消",substring=true)
+        }catch(failure:Throwable){
+            throw AssertionError("Complete outline route (observational only):\n${routeTrace.joinToString("\n")}",failure)
         }finally{
             if(!compose.mainClock.autoAdvance)runCatching{compose.onNodeWithTag("study-list").performTouchInput{cancel()}}
             compose.mainClock.autoAdvance=originalAutoAdvance
+            compose.runOnIdle{vm(f.book).outlineInputObserver=null}
         }
     }
 
