@@ -57,6 +57,7 @@ private fun validateStudyGraph(nodes:List<StudyNode>){try{StudyGraph.validate(no
 sealed interface StudyOutcome { data class Success(val id:String):StudyOutcome;data class Rejected(val reason:String):StudyOutcome;data object Unknown:StudyOutcome }
 enum class StudyFault { BEFORE_RECEIPT, AFTER_COMMIT }
 class StudyRepository(private val db:NoteDatabase,private val fault:(StudyFault)->Unit={}) {
+    val reuse by lazy{CardReuseRepository(db)}
     private val transformRepository by lazy{CardTransformRepository(db)}
     fun transforms()=transformRepository
     fun sourceSummaries(book:String)=db.study().observeSourceSummaries(book)
