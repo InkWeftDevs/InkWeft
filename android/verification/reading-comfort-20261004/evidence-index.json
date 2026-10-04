@@ -110,7 +110,31 @@
       "method": "ADB ordinary application interaction; no instrumentation",
       "appSha256": "3c5b887d58f146628fc87f6e427a228dca498554fa42ea379458bfed8b9469e5",
       "captureBatch": "comfort-01d"
+    },
+    {
+      "file": "screenshots/after-02-capacity-portrait.png",
+      "sourceArchiveRelativePath": "screenshots-after/02-01-capacity-panel-portrait.png",
+      "sha256": "df3b9a38bc310ffa5e8cdbb261119ce28460c43347489751753169696d1827e5",
+      "accepted": true,
+      "publicEligible": true,
+      "visualInspection": "PASS",
+      "capturedUtc": "2026-10-04T05:40:19.050261+00:00",
+      "method": "ADB ordinary application interaction; no instrumentation",
+      "appSha256": "714785938f0521e56eacd42d43dfd35c40a3717ecb330817ba3c28e603e6bc12",
+      "captureBatch": "comfort-02"
+    },
+    {
+      "file": "screenshots/after-02-capacity-font160-actions.png",
+      "sourceArchiveRelativePath": "screenshots-after/02-04-capacity-font160-actions.png",
+      "sha256": "6b442226ff6446bf653c99505fe765e629d7bf96ebd7e789979281af9c69d038",
+      "accepted": true,
+      "publicEligible": true,
+      "visualInspection": "PASS",
+      "capturedUtc": "2026-10-04T05:47:42.062744+00:00",
+      "method": "ADB ordinary application interaction; no instrumentation",
+      "appSha256": "714785938f0521e56eacd42d43dfd35c40a3717ecb330817ba3c28e603e6bc12",
+      "captureBatch": "comfort-02"
     }
   ],
-  "captureScope": "One pre-change baseline, one comfort-01b capture, and eight comfort-01d captures. No image in this index validates ordinary capacity-panel pixels on comfort-02."
+  "captureScope": "One pre-change baseline, one comfort-01b capture, eight comfort-01d captures, and two public-eligible comfort-02 ordinary capacity-panel captures. The comfort-02 images validate only their recorded panel layout and scroll states."
 }

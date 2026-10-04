@@ -1,5 +1,5 @@
 {
-  "reportCheckpoint": "REVIEWABLE_WITH_OPEN_DEVICE_VALIDATION_AND_USER_REPORTED_ZOOM_DEFECT",
+  "reportCheckpoint": "REPRODUCIBLE_ZOOM_BLANK_PATH_FIXED_AUTOMATED_REGRESSION_PASS_HUMAN_RETEST_PENDING",
   "readingUiRuns": [
     {
       "sourceArchiveRelativePath": "physical-batch01b/ui-selected/display-results.json",
@@ -161,8 +161,8 @@
     "sourceInputFiles": 81
   },
   "capacityRemaining": {
-    "ordinaryPanelPixelInspection": "NOT_RUN",
-    "postBatch02FinalDataProtectionAudit": "PARTIAL_ORIGINAL_ROWS_PASS_EXTERNAL_PREFS_OWNERSHIP_NOT_COMPLETED",
+    "ordinaryPanelPixelInspection": "PASS_FOR_RECORDED_ORDINARY_STEPS",
+    "postBatch02FinalDataProtectionAudit": "PASS_FOR_CAPTURED_READ_ONLY_SNAPSHOTS",
     "mergedBackupCapacityMethod": "PASS_WITH_ONE_INITIAL_TEST_HOST",
     "retry": "EXECUTED_PASS"
   },
@@ -175,49 +175,52 @@
   },
   "readingUiAssistance": "Each selected UI method had one initial foreground launch after instrumentation start. Test-method body entry was not independently observed. These runs are not described as unassisted.",
   "latestCandidate": {
-    "batch": "comfort-02",
+    "batch": "zoom-repair",
     "versionCode": 68,
     "package": "org.inkweft.app.a0.workspace",
-    "buildReceiptSha256": "303117f207515eba5971a31fffedd076454f43de79726aa6ce754c4f61cdcea8",
-    "installationVerifiedUtc": "2026-10-04T05:08:55.207736+00:00",
-    "dataCleared": false,
-    "packageUninstalled": false,
+    "buildReceiptSha256": "0394462c33127d07ab3861ddcb45851c21e0551ce46f03407ad0eb69b9a4577a",
+    "baseCommit": "eb1dc792bfb8f62049a9ed5c6c9225e5a59ff41e",
+    "installed": true,
     "artifacts": [
       {
         "kind": "app",
-        "file": "InkWeft-comfort-batch02.apk",
-        "sha256": "714785938f0521e56eacd42d43dfd35c40a3717ecb330817ba3c28e603e6bc12",
+        "file": "InkWeft-zoom-repair.apk",
+        "sha256": "7a49c8f07befc7b8b519d5f3a7a24d4472c4c481bf08720f0e22fcd1c052fa8f",
         "rebuilt": true,
         "reused": false,
-        "signatureVerified": true,
         "certificateSha256": "18e67dbce88152dbe4d4821b5a3a513a409a3df4eac9261f4c11126c36e43969"
       },
       {
         "kind": "app-test",
-        "file": "InkWeft-comfort-batch02-androidTest.apk",
-        "sha256": "8a64fa5ac2c44ae3fadb0781b4d27e36b4233ce77ccbb0b26848720f4c27be29",
+        "file": "InkWeft-zoom-repair-androidTest.apk",
+        "sha256": "f3824e284ed2d9085b2d3c35fcfb6d397bc189561d3e4a1fe09e347ff0706fbc",
         "rebuilt": true,
         "reused": false,
-        "signatureVerified": true,
-        "certificateSha256": "18e67dbce88152dbe4d4821b5a3a513a409a3df4eac9261f4c11126c36e43969"
-      },
-      {
-        "kind": "room-test",
-        "file": "InkWeft-comfort-batch02-room-androidTest.apk",
-        "sha256": "3e96950af47e042078709668dd0791129afc0d8540d4d9c592f3973298981e08",
-        "rebuilt": true,
-        "reused": false,
-        "signatureVerified": true,
         "certificateSha256": "18e67dbce88152dbe4d4821b5a3a513a409a3df4eac9261f4c11126c36e43969"
       }
     ],
+    "reusedRoomTestSha256": "3e96950af47e042078709668dd0791129afc0d8540d4d9c592f3973298981e08",
     "lint": {
       "status": "PASS",
       "executed": true,
       "errors": 0,
       "fatal": 0,
       "warnings": 141,
-      "xmlSha256": "6fc6b26080747a7f5caa02f5bf72e954edd8cdd36e4708b5cea4d3ac26e1a439"
+      "xmlSha256": "e75ecd4d2eb3c874e6b70523d16d17c3fea5bb3d78df4b40c9d5310cb5813e2f"
+    },
+    "historicalVerification": {
+      "core": {
+        "tests": 39,
+        "inputsUnchanged": true,
+        "executedThisRepair": 0
+      },
+      "room": {
+        "distinctMethods": 12,
+        "inputsUnchanged": true,
+        "executedThisRepair": 0,
+        "unassisted": 11,
+        "oneInitialTestHost": 1
+      }
     }
   },
   "capacityRoom": {
@@ -447,7 +450,7 @@
     "methodBodyEntryIndependentlyObserved": false
   },
   "humanSession": {
-    "status": "USER_FEEDBACK_RECEIVED_DIAGNOSIS_PENDING",
+    "status": "ORIGINAL_FAILURE_RETAINED_REPAIR_AUTOMATION_PASS_HUMAN_RETEST_PENDING",
     "installedMainAppSha256": "714785938f0521e56eacd42d43dfd35c40a3717ecb330817ba3c28e603e6bc12",
     "reportedIssue": "Notes briefly disappear during zoom.",
     "reportedCase": "CF-HW-04",
@@ -455,11 +458,17 @@
     "otherFourCases": "Individual execution details and results are unconfirmed; NOT_RUN is retained as an unverified-result field, not a claim that no user actions occurred.",
     "actualDurationPenModelPageGestureAndTimestamp": "NOT_REPORTED",
     "userInkAndPreferenceChanges": "Must be retained.",
-    "diagnosisLimit": "Basic diagnostic events do not provide a complete frame-by-frame rendering log; lack of recent error events does not establish normal zoom rendering."
+    "diagnosisLimit": "Basic diagnostic events do not provide a complete frame-by-frame rendering log; lack of recent error events does not establish normal zoom rendering.",
+    "currentRetestCandidateSha256": "7a49c8f07befc7b8b519d5f3a7a24d4472c4c481bf08720f0e22fcd1c052fa8f",
+    "currentPageFour": {
+      "humanStrokes": 100,
+      "mustPreserve": true,
+      "oldBlankPageImage": "Historical preparation only; not current page content."
+    }
   },
   "ordinaryCapacityChecks": {
-    "CF-CP-01": "NOT_RUN",
-    "CF-CP-02": "NOT_RUN",
+    "CF-CP-01": "PARTIAL",
+    "CF-CP-02": "PARTIAL",
     "CF-CP-03": "NOT_RUN"
   },
   "dataProtectionAfterHuman": {
@@ -474,5 +483,300 @@
     "sourceHashStable": true,
     "evidence": "Read-only backup and audit retained locally. Raw database and logs are not published.",
     "scopeLimit": "This verifies original-row preservation at the post-human checkpoint; it is not the final external-file, preference, or complete new-row ownership audit."
-  }
+  },
+  "ordinaryCapacityVerification": {
+    "status": "PASS_FOR_RECORDED_ORDINARY_STEPS",
+    "appSha256": "714785938f0521e56eacd42d43dfd35c40a3717ecb330817ba3c28e603e6bc12",
+    "sourceArchiveRelativePath": "physical-batch02/ordinary-capacity.json",
+    "sourceReceiptSha256": "3096dc703662a8cb6d2fe57c94d5d9ba18111f72f3676e1e4abcef8b566f82fd",
+    "recordedUtc": "2026-10-04T05:55:39.588465+00:00",
+    "inputMode": "ADB taps and scroll in the ordinary app; no instrumentation or stylus claim",
+    "entry": "Document menu capacity panel",
+    "counts": {
+      "activeNodes": 2,
+      "nodeRecords": 2,
+      "cards": 2,
+      "trashedCards": 0,
+      "snapshotBytes": 438671
+    },
+    "snapshotAggregateMatchesOfflineSql": true,
+    "navigationPassed": [
+      "existing cards: two synthetic cards",
+      "card trash: empty",
+      "return to current parent-child map"
+    ],
+    "portraitNormalFont": "PASS",
+    "portraitFontScale1_6AndScrollToFourActions": "PASS",
+    "displaySettingsRestored": true,
+    "newMapAction": "NOT_RUN_ORDINARY",
+    "ordinaryFoldComparison": "NOT_RUN",
+    "ordinaryCompactMapMenuEntry": "NOT_RUN",
+    "ordinaryReadOnlyGateCheck": "NOT_RUN",
+    "caseLimits": {
+      "CF-CP-01": "Entry, scope, counts and aggregate checked; no ordinary before/after folding comparison in this run.",
+      "CF-CP-02": "Large font scrolling and existing cards/trash/map navigation checked; compact map-menu entry and new-map action not performed.",
+      "CF-CP-03": "No ordinary read-only mode and disabled-new-map check; automated coverage remains separately recorded."
+    }
+  },
+  "capacityCandidate": {
+    "batch": "comfort-02",
+    "versionCode": 68,
+    "package": "org.inkweft.app.a0.workspace",
+    "buildReceiptSha256": "303117f207515eba5971a31fffedd076454f43de79726aa6ce754c4f61cdcea8",
+    "installationVerifiedUtc": "2026-10-04T05:08:55.207736+00:00",
+    "dataCleared": false,
+    "packageUninstalled": false,
+    "artifacts": [
+      {
+        "kind": "app",
+        "file": "InkWeft-comfort-batch02.apk",
+        "sha256": "714785938f0521e56eacd42d43dfd35c40a3717ecb330817ba3c28e603e6bc12",
+        "rebuilt": true,
+        "reused": false,
+        "signatureVerified": true,
+        "certificateSha256": "18e67dbce88152dbe4d4821b5a3a513a409a3df4eac9261f4c11126c36e43969"
+      },
+      {
+        "kind": "app-test",
+        "file": "InkWeft-comfort-batch02-androidTest.apk",
+        "sha256": "8a64fa5ac2c44ae3fadb0781b4d27e36b4233ce77ccbb0b26848720f4c27be29",
+        "rebuilt": true,
+        "reused": false,
+        "signatureVerified": true,
+        "certificateSha256": "18e67dbce88152dbe4d4821b5a3a513a409a3df4eac9261f4c11126c36e43969"
+      },
+      {
+        "kind": "room-test",
+        "file": "InkWeft-comfort-batch02-room-androidTest.apk",
+        "sha256": "3e96950af47e042078709668dd0791129afc0d8540d4d9c592f3973298981e08",
+        "rebuilt": true,
+        "reused": false,
+        "signatureVerified": true,
+        "certificateSha256": "18e67dbce88152dbe4d4821b5a3a513a409a3df4eac9261f4c11126c36e43969"
+      }
+    ],
+    "lint": {
+      "status": "PASS",
+      "executed": true,
+      "errors": 0,
+      "fatal": 0,
+      "warnings": 141,
+      "xmlSha256": "6fc6b26080747a7f5caa02f5bf72e954edd8cdd36e4708b5cea4d3ac26e1a439"
+    }
+  },
+  "zoomRepair": {
+    "scope": "Attached native view pixel regression; no human pen latency or full hardware acceptance claim",
+    "recordedUtc": "2026-10-04T06:17:12.650484+00:00",
+    "buildReceiptSha256": "0394462c33127d07ab3861ddcb45851c21e0551ce46f03407ad0eb69b9a4577a",
+    "attempts": {
+      "red": [
+        {
+          "method": "org.inkweft.app.ZoomRasterTest#zoomInKeepsVisibleAnchorWhenEdgeStrokeLeaves",
+          "status": "REPRODUCED",
+          "receipt": "zoom-repair/physical/red-zoom-in-assisted/results.json",
+          "receiptSha256": "868c00544d3cdf260cae910a4bf2e6059d496e1072c8e93cec4092194c8f7324",
+          "rawLogSha256": "7e0bc8b9746648a9d6172d1eb8dd1f8c88531ab2101aedf581f8ff5517741e29",
+          "elapsedSeconds": 4.391,
+          "assistanceAttempts": 1,
+          "installedArtifactShas": {
+            "app": "714785938f0521e56eacd42d43dfd35c40a3717ecb330817ba3c28e603e6bc12",
+            "app-test": "f3824e284ed2d9085b2d3c35fcfb6d397bc189561d3e4a1fe09e347ff0706fbc",
+            "room-test": "3e96950af47e042078709668dd0791129afc0d8540d4d9c592f3973298981e08"
+          },
+          "declaredExecutionMode": "PHYSICAL_WITH_ONE_INITIAL_FOREGROUND_LAUNCH",
+          "actualExecutionMode": "PHYSICAL_WITH_ONE_INITIAL_FOREGROUND_LAUNCH"
+        },
+        {
+          "method": "org.inkweft.app.ZoomRasterTest#zoomOutKeepsVisibleAnchorWhenEdgeStrokeEnters",
+          "status": "REPRODUCED",
+          "receipt": "zoom-repair/physical/red-zoom-out-assisted/results.json",
+          "receiptSha256": "bf333c6a60786d1e00990a6120c1361268ff7c9c4ad73e7825a02abc1f138e26",
+          "rawLogSha256": "5f05428172da85c252f20b14bb0f13fcd0aad902cbdf15104eec1dfccf0c715a",
+          "elapsedSeconds": 4.141,
+          "assistanceAttempts": 1,
+          "installedArtifactShas": {
+            "app": "714785938f0521e56eacd42d43dfd35c40a3717ecb330817ba3c28e603e6bc12",
+            "app-test": "f3824e284ed2d9085b2d3c35fcfb6d397bc189561d3e4a1fe09e347ff0706fbc",
+            "room-test": "3e96950af47e042078709668dd0791129afc0d8540d4d9c592f3973298981e08"
+          },
+          "declaredExecutionMode": "PHYSICAL_WITH_ONE_INITIAL_FOREGROUND_LAUNCH",
+          "actualExecutionMode": "PHYSICAL_WITH_ONE_INITIAL_FOREGROUND_LAUNCH"
+        }
+      ],
+      "green": [
+        {
+          "method": "org.inkweft.app.ZoomRasterTest#zoomInKeepsVisibleAnchorWhenEdgeStrokeLeaves",
+          "status": "PASS",
+          "receipt": "zoom-repair/physical/green-zoom-in/results.json",
+          "receiptSha256": "35abe9d3370738d3332149c42141ba9cf71b0a839a7ef480d1373d7eceb2f20b",
+          "rawLogSha256": "b702babc54666d3f8e735130122fd747109ae2a8b98f6255e0f9d44d800cc9e1",
+          "elapsedSeconds": 4.125,
+          "assistanceAttempts": 1,
+          "installedArtifactShas": {
+            "app": "7a49c8f07befc7b8b519d5f3a7a24d4472c4c481bf08720f0e22fcd1c052fa8f",
+            "app-test": "f3824e284ed2d9085b2d3c35fcfb6d397bc189561d3e4a1fe09e347ff0706fbc",
+            "room-test": "3e96950af47e042078709668dd0791129afc0d8540d4d9c592f3973298981e08"
+          },
+          "declaredExecutionMode": "PHYSICAL_WITH_ONE_INITIAL_FOREGROUND_LAUNCH",
+          "actualExecutionMode": "PHYSICAL_WITH_ONE_INITIAL_FOREGROUND_LAUNCH"
+        },
+        {
+          "method": "org.inkweft.app.ZoomRasterTest#zoomOutKeepsVisibleAnchorWhenEdgeStrokeEnters",
+          "status": "PASS",
+          "receipt": "zoom-repair/physical/green-zoom-out/results.json",
+          "receiptSha256": "f853ef68359e5a52d3cda3d4ad9d6cbebc169dce81850bca57c11c4e44d7154f",
+          "rawLogSha256": "2602c798201b6c71c14c0ed721b326a234ebdb7da6a758176c25ad4cb742b6a5",
+          "elapsedSeconds": 4.141,
+          "assistanceAttempts": 1,
+          "installedArtifactShas": {
+            "app": "7a49c8f07befc7b8b519d5f3a7a24d4472c4c481bf08720f0e22fcd1c052fa8f",
+            "app-test": "f3824e284ed2d9085b2d3c35fcfb6d397bc189561d3e4a1fe09e347ff0706fbc",
+            "room-test": "3e96950af47e042078709668dd0791129afc0d8540d4d9c592f3973298981e08"
+          },
+          "declaredExecutionMode": "PHYSICAL_WITH_ONE_INITIAL_FOREGROUND_LAUNCH",
+          "actualExecutionMode": "PHYSICAL_WITH_ONE_INITIAL_FOREGROUND_LAUNCH"
+        },
+        {
+          "method": "org.inkweft.app.ZoomRasterTest#embeddedResizeKeepsVisibleAnchorBeforeReplacementFrame",
+          "status": "PASS",
+          "receipt": "zoom-repair/physical/green-embedded-resize/results.json",
+          "receiptSha256": "fc8e38cdee173cd7b7824f1a4c4aebdffa6fad3b0e968dca5ca1e25eaeea9788",
+          "rawLogSha256": "25b35f8ad5468e1100cabf9fabea6efaab1e86a583af85c2e45526d0fbcd2cc2",
+          "elapsedSeconds": 2.297,
+          "assistanceAttempts": 0,
+          "installedArtifactShas": {
+            "app": "7a49c8f07befc7b8b519d5f3a7a24d4472c4c481bf08720f0e22fcd1c052fa8f",
+            "app-test": "f3824e284ed2d9085b2d3c35fcfb6d397bc189561d3e4a1fe09e347ff0706fbc",
+            "room-test": "3e96950af47e042078709668dd0791129afc0d8540d4d9c592f3973298981e08"
+          },
+          "declaredExecutionMode": "PHYSICAL_WITH_ONE_INITIAL_FOREGROUND_LAUNCH",
+          "actualExecutionMode": "PHYSICAL_UNASSISTED"
+        },
+        {
+          "method": "org.inkweft.app.AsyncRasterTest#backgroundRasterPreservesPixelsAndRejectsStaleWork",
+          "status": "PASS",
+          "receipt": "zoom-repair/physical/green-async-regression/results.json",
+          "receiptSha256": "d65f6ca2be583f5eca3d9c9af9236b3f6ea2764963b8e872807dae14bebe8797",
+          "rawLogSha256": "3533e8511ec8b30c55283d0647706629bb40c05695f2ae3c860127b9a55d35ad",
+          "elapsedSeconds": 2.094,
+          "assistanceAttempts": 0,
+          "installedArtifactShas": {
+            "app": "7a49c8f07befc7b8b519d5f3a7a24d4472c4c481bf08720f0e22fcd1c052fa8f",
+            "app-test": "f3824e284ed2d9085b2d3c35fcfb6d397bc189561d3e4a1fe09e347ff0706fbc",
+            "room-test": "3e96950af47e042078709668dd0791129afc0d8540d4d9c592f3973298981e08"
+          },
+          "declaredExecutionMode": "PHYSICAL_UNASSISTED",
+          "actualExecutionMode": "PHYSICAL_UNASSISTED"
+        }
+      ]
+    },
+    "counts": {
+      "redReproduced": 2,
+      "greenPassed": 4,
+      "greenInitialForegroundLaunches": 2
+    },
+    "unassistedFirstAttempt": {
+      "status": "NOT_RUN",
+      "reason": "ENVIRONMENT_BLOCKED_KERNEL_FREEZE",
+      "receipt": "zoom-repair/physical/red-zoom-in/results.json"
+    },
+    "currentHumanRetest": "NOT_RUN",
+    "productionChanges": {
+      "files": 2,
+      "insertions": 6,
+      "deletions": 2,
+      "scope": "Keep the stable stroke list independent of viewport culling; cull offscreen strokes in the background renderer."
+    }
+  },
+  "humanRetest": {
+    "CF-HW-04": {
+      "candidate": "zoom-repair",
+      "status": "NOT_RUN",
+      "originalCandidate02Result": "FAIL_USER_REPORTED",
+      "automatedRepairValidation": "PASS_FOR_REPRODUCED_NATIVE_VIEW_PIXEL_PATH"
+    }
+  },
+  "humanDataPreservationAfterZoom": {
+    "status": "PASS",
+    "reference": "Post-human snapshot",
+    "authorRows": 15014,
+    "changedAuthorRows": 0,
+    "missingAuthorRows": 0,
+    "newAuthorRows": 0,
+    "externalFiles": 106,
+    "changedOrMissingExternalFiles": 0,
+    "newExternalFiles": 0,
+    "preferenceChangedKeys": 1,
+    "preferenceChangeScope": "One recent-browsing key changed during ordinary capacity checks; all other keys identical.",
+    "preferenceNewKeys": 0,
+    "recordedUtc": "2026-10-04T06:16:10.356879+00:00",
+    "rawValuesPublished": false
+  },
+  "externalFilePreservation": {
+    "status": "PASS",
+    "originalBaselineFiles": 95,
+    "originalFilesIdenticalAfterHuman": 95,
+    "originalFilesIdenticalAfterZoom": 95,
+    "missingOrChangedOriginalFiles": 0,
+    "addedFilesRetained": 11,
+    "afterHumanFiles": 106,
+    "afterZoomFiles": 106,
+    "afterHumanVsAfterZoomAllHashesEqual": true
+  },
+  "systemSettingsRestoration": {
+    "status": "PASS",
+    "baselineSettings": 12,
+    "restoredChangedSettingCount": 2,
+    "changedSettingsRestored": [
+      "stay_awake_while_plugged_in: 2 to 0",
+      "accelerometer_rotation: 0 to 1"
+    ],
+    "authorPreferencesOverwritten": false
+  },
+  "handoffState": {
+    "candidate": "zoom-repair",
+    "book": "COMFORT-Learning-20261004",
+    "lastVisibleSaveMessage": "This page ink has been saved.",
+    "pageFourHumanStrokesRetained": 100,
+    "humanZoomRetest": "NOT_RUN"
+  },
+  "finalOfflineDataAudit": {
+    "status": "PASS",
+    "receiptSha256": "7671a011e0cebc9eb5f1d33b6f5686d2057790644438b9b3143f32f23ee3f877",
+    "ownershipReceiptSha256": "9c787a62677fdfcb826a18eb57e9a44e1500315d291e01a40a057e5700a4ec82",
+    "sqliteReadMode": "mode=ro, immutable",
+    "snapshotCount": 3,
+    "tablesPerSnapshot": 29,
+    "allIntegrityChecks": "ok",
+    "originalRows": 13556,
+    "originalNotebooks": 395,
+    "missingOriginalRows": 0,
+    "changedOriginalRows": 0,
+    "humanToZoomRows": 15014,
+    "newMissingOrChangedHumanToZoomRows": 0,
+    "addedRows": 1458,
+    "addedRowOwnership": "All resolve to 39 workflow-created notebooks; exactly two capacity-fixture notebooks were added after the before-human checkpoint.",
+    "ownershipDoesNotAuthorizeDeletion": true,
+    "originalExternalFilesRetained": 95,
+    "afterHumanAndZoomExternalFilesIdentical": 106,
+    "addedExternalFilesRetained": 11,
+    "preferenceFiles": 53,
+    "preferenceKeys": 370,
+    "unchangedPreferenceKeys": 369,
+    "changedPreferenceKeys": 1,
+    "preferenceChange": "recent browsing during ordinary capacity checks",
+    "missingOrNewPreferenceKeys": 0,
+    "preferenceRestorationPerformed": false,
+    "snapshotInternalAndExternalHashesUnchangedByAudit": true,
+    "scopeLimit": "Read-only captured snapshots only; not a guarantee about later online state.",
+    "rawDataPublished": false
+  },
+  "cleanup": {
+    "remoteTaskTemporaryXmlRemoved": 328,
+    "comparedAgainstLocalArchiveBeforeRemoval": true,
+    "obsoleteReviewPatchRemoved": true,
+    "sourcePackagesAndFinalEvidenceRetained": true
+  },
+  "humanChecksCandidate": "comfort-02",
+  "ordinaryCapacityChecksCandidate": "comfort-02"
 }

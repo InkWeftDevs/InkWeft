@@ -54,6 +54,7 @@ internal class AsyncInkRaster(private val changed:()->Unit,private val failed:()
             job=CoroutineScope(Dispatchers.Main.immediate).launch {
                 try {withContext(worker){
                     val context=currentCoroutineContext()
+                    val visible=viewport.visible(width.toDouble(),height.toDouble(),density)
                     suspend fun render(budget:Double,detailed:Boolean){
                         val scale=min(1.0,sqrt(budget/(width.toDouble()*height))).toFloat()
                         val w=max(1,(width*scale).roundToInt());val h=max(1,(height*scale).roundToInt())
@@ -72,7 +73,9 @@ internal class AsyncInkRaster(private val changed:()->Unit,private val failed:()
 
                             val renderer=InkBrushes.renderer()
                             for(i in (start?.strokes?.size?:0) until source.size){
-                                context.ensureActive();val stroke=source[i];val n=canvas.save()
+                                context.ensureActive();val stroke=source[i]
+                                if(!stroke.bounds().intersects(visible))continue
+                                val n=canvas.save()
                                 stroke.cuts.forEach{canvas.clipOutPath(VisibleInkGeometry.cutPath(it))}
                                 if(stroke.pen==InkPen.PENCIL)pencil.draw(canvas,stroke)else renderer.draw(canvas,InkBrushes.stroke(stroke),matrix)
                                 canvas.restoreToCount(n)
