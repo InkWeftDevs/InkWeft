@@ -175,7 +175,7 @@ class StudyRepository(private val db:NoteDatabase,private val fault:(StudyFault)
                     val used=(if(selectedMap==null)finalNodes else dao.nodes(c.notebookId)).any{!it.removed&&it.cardId==card.id}||
                         (selectedMap!=null&&finalNodes.any{!it.removed&&it.cardId==card.id})||db.knowledge().all().any{r->!r.removed&&when(val d=r.data()){
                             is KnowledgeData.MapOccurrence->d.mapId!=selectedMap&&d.cardId==card.id
-                            is KnowledgeData.Placement->d.cardId==card.id;is KnowledgeData.Properties->d.cardId==card.id;is KnowledgeData.Question->d.cardId==card.id;is KnowledgeData.Alias->d.cardId==card.id;is KnowledgeData.Link->d.source==TargetRef(TargetKind.CARD,card.id)||d.target==TargetRef(TargetKind.CARD,card.id);else->false}}
+                            is KnowledgeData.CardPresentation->d.cardId==card.id;is KnowledgeData.Placement->d.cardId==card.id;is KnowledgeData.Properties->d.cardId==card.id;is KnowledgeData.Question->d.cardId==card.id;is KnowledgeData.Alias->d.cardId==card.id;is KnowledgeData.Link->d.source==TargetRef(TargetKind.CARD,card.id)||d.target==TargetRef(TargetKind.CARD,card.id);else->false}}
                     if(!used&&card.revision==1L&&card.trashedAt==null){val next=card.copy(revision=2,trashedAt=System.currentTimeMillis());check(dao.updateCard(next)==1);dao.revision(StudyCardRevisionRow(next.id,next.revision,next.title,next.body,next.trashedAt))};old.id
                 }
                 StudyAction.RECROP_EXCERPT->{

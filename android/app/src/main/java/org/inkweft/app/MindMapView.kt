@@ -117,6 +117,8 @@ internal class MindMapView(context:Context):View(context){
     var onMove:(StudyNodeRow,Double,Double)->Unit={_,_,_->}
     var onActive:(Boolean)->Unit={}
     private var nodes=emptyList<StudyNodeRow>();private var titles=emptyMap<String,String>()
+    private var presentations=emptyMap<String,org.inkweft.core.KnowledgeData.CardPresentation>()
+    fun setCardPresentations(value:Map<String,org.inkweft.core.KnowledgeData.CardPresentation>){if(presentations!=value){presentations=value;invalidate()}}
     private var bodies=emptyMap<String,String>()
     private var revisions=emptyMap<String,Long>()
     private var sources=emptyMap<String,MapSourceInfo>()
@@ -308,7 +310,7 @@ internal class MindMapView(context:Context):View(context){
         val lookup=nodes.associateBy{it.id}
         drawKnowledgeRelations(c,lookup)
         MapScenePainter.draw(c,nodes.map{n->org.inkweft.core.MapSceneNode(n.id,n.parentId,n.cardId.takeUnless{it in structuralCardIds},titles[if(relationMode)n.id else n.cardId].orEmpty(),bodies[n.cardId].orEmpty(),x(n).toDouble(),y(n).toDouble(),n.revision,revisions[n.cardId]?:n.revision)},active?.id?:selectedNodeId,hiddenCounts,resources.configuration.fontScale,scale>=.35f,!relationMode,
-            viewStyle,layouts,sourcePreviews.frames())
+            viewStyle,layouts,sourcePreviews.frames(),presentations)
         paint.style=Paint.Style.STROKE;paint.strokeWidth=1.5f;paint.pathEffect=relationDash
         paint.color=InkTheme.Accent.toArgb()
         for((a,b) in relationEdges){val start=lookup[a]?:continue;val end=lookup[b]?:continue

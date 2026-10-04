@@ -162,6 +162,11 @@ class KnowledgeRepository(private val db:NoteDatabase,private val fault:(Knowled
                 a.strokeIds.forEach{id->val b=requireNotNull(visible[id]).bounds();require(b.left>=a.bounds.left-1&&b.right<=a.bounds.right+1&&b.top>=a.bounds.top-1&&b.bottom<=a.bounds.bottom+1)}
             }
             if(c.data is KnowledgeData.PageMark&&!c.removed){val d=c.data as KnowledgeData.PageMark;if(d.bookmark)require(records.none{it.id!=c.id&&!it.removed&&(it.data() as? KnowledgeData.PageMark)?.let{m->m.bookmark&&m.pageId==d.pageId}==true}){"BOOKMARK_EXISTS"}}
+            if(c.data is KnowledgeData.CardPresentation){
+                val d=c.data as KnowledgeData.CardPresentation
+                require(old==null||(old.data() as KnowledgeData.CardPresentation).cardId==d.cardId){"PRESENTATION_CARD_CHANGED"}
+                if(!c.removed)require(records.none{it.id!=c.id&&!it.removed&&(it.data() as? KnowledgeData.CardPresentation)?.cardId==d.cardId}){"PRESENTATION_EXISTS"}
+            }
             if(c.data is KnowledgeData.Properties){val d=c.data as KnowledgeData.Properties;require(records.none{it.id!=c.id&&!it.removed&&(it.data() as? KnowledgeData.Properties)?.cardId==d.cardId}){"PROPERTY_EXISTS"}}
             if(c.data is KnowledgeData.Link&&!c.removed)require(records.none{it.id!=c.id&&!it.removed&&it.data()==c.data}){"LINK_EXISTS"}
             if(c.data is KnowledgeData.MapPortal&&!c.removed)require(records.none{it.id!=c.id&&it.notebookId==c.notebookId&&!it.removed&&it.data()==c.data}){"MAP_PORTAL_EXISTS"}
@@ -172,7 +177,7 @@ class KnowledgeRepository(private val db:NoteDatabase,private val fault:(Knowled
             }catch(e:IllegalArgumentException){
                 throw KnowledgeRejected(when(e.message){
                     "KNOWLEDGE_VERSION_CHANGED","SOURCE_CHANGED","REVIEW_CARD_CHANGED"->KnowledgeRejection.CONFLICT
-                    "BOOKMARK_EXISTS","PROPERTY_EXISTS","LINK_EXISTS","MAP_PORTAL_EXISTS"->KnowledgeRejection.DUPLICATE
+                    "BOOKMARK_EXISTS","PROPERTY_EXISTS","PRESENTATION_EXISTS","LINK_EXISTS","MAP_PORTAL_EXISTS"->KnowledgeRejection.DUPLICATE
                     "BOOK_UNAVAILABLE","MAP_PORTAL_SOURCE_UNAVAILABLE","MAP_PORTAL_TARGET_UNAVAILABLE"->KnowledgeRejection.UNAVAILABLE
                     "STUDY_NODE_BUDGET"->KnowledgeRejection.STUDY_NODE_BUDGET
                     "STUDY_NODE_RECORD_BUDGET"->KnowledgeRejection.STUDY_NODE_RECORD_BUDGET
@@ -216,6 +221,7 @@ class KnowledgeRepository(private val db:NoteDatabase,private val fault:(Knowled
             is KnowledgeData.PageMark->require(owner(TargetRef(TargetKind.PAGE,data.pageId),active)==book)
             is KnowledgeData.Anchor->{require(owner(TargetRef(TargetKind.PAGE,data.pageId),active)==book);require(data.inkRevision<=(db.ink().page(data.pageId)?.revision?:0));data.strokeIds.forEach{require(db.ink().stroke(it)?.noteId==data.pageId)}}
             is KnowledgeData.Link->{require(owner(data.source,active)==book);owner(data.target,active);data.pinnedRevision?.let{require(db.study().cardVersion(data.target.id,it)!=null)}}
+            is KnowledgeData.CardPresentation->card(data.cardId)
             is KnowledgeData.Properties->card(data.cardId)
             is KnowledgeData.Question->card(data.cardId)
             is KnowledgeData.Placement->card(data.cardId)
@@ -236,7 +242,12 @@ class KnowledgeRepository(private val db:NoteDatabase,private val fault:(Knowled
             validateData(row.notebookId,row.data(),false)
             val version=requireNotNull(db.knowledge().revision(row.id,row.revision))
             require(version.notebookId==row.notebookId&&version.payload.contentEquals(row.payload)&&version.removed==row.removed)
+            (row.data() as? KnowledgeData.CardPresentation)?.let{current->
+                require(db.knowledge().revisions(row.id).all{(KnowledgeCodec.decode(it.payload) as? KnowledgeData.CardPresentation)?.cardId==current.cardId}){"PRESENTATION_CARD_CHANGED"}
+            }
         }
+        val presentations=rows.filter{!it.removed}.mapNotNull{it.data() as? KnowledgeData.CardPresentation}
+        require(presentations.map{it.cardId}.distinct().size==presentations.size){"PRESENTATION_EXISTS"}
         val props=rows.filter{!it.removed}.mapNotNull{it.data() as? KnowledgeData.Properties}
         require(props.map{it.cardId}.distinct().size==props.size)
         val portals=rows.filter{!it.removed}.mapNotNull{row->(row.data() as? KnowledgeData.MapPortal)?.let{row.notebookId to it}}

@@ -64,7 +64,7 @@ class StarNoteInteractionsUiTest {
   val source=runBlocking{app.study.source(card.id)}!!;assertTrue(InkPageFile.decode(source.snapshot).objects.single().image.isNotBlank())
   compose.onNodeWithTag("study-panel").assertDoesNotExist();compose.onNodeWithTag("excerpt-panel").assertIsDisplayed();shot("v36-excerpt.png")
   tap("excerpt-comment-${card.id}");compose.onNodeWithTag("excerpt-comment-input").performTextInput("原文旁的备注");tap("excerpt-comment-save")
-  compose.waitUntil(10000){runBlocking{app.study.cards(note.id).first().single()}.body=="原文旁的备注"};ready()
+  compose.waitUntil(10000){runBlocking{app.knowledge.observeBook(note.id).first().cardPresentations()[card.id]?.annotation}=="原文旁的备注"};ready()
   tap("excerpt-menu-${card.id}");tap("excerpt-delete")
   compose.waitUntil(10000){runBlocking{app.study.cards(note.id).first().single()}.trashedAt!=null}
   assertEquals(1,runBlocking{app.inkRepository.read(note.id)}.strokes.size)
@@ -84,7 +84,7 @@ class StarNoteInteractionsUiTest {
   tap("excerpt-inline-comment");compose.onNode(isDialog()).assertDoesNotExist()
   compose.onNodeWithTag("excerpt-inline-input").performTextInput("页面内备注");compose.activityRule.scenario.recreate();compose.waitForIdle()
   compose.onNodeWithTag("excerpt-inline-input").assertTextContains("页面内备注");tap("excerpt-inline-save")
-  compose.waitUntil(10000){runBlocking{app.study.cards(note.id).first().single()}.body=="页面内备注"};ready()
+  compose.waitUntil(10000){runBlocking{app.knowledge.observeBook(note.id).first().cardPresentations()[card.id]?.annotation}=="页面内备注"};ready()
   tap("excerpt-resize")
   fun drag(){
    var start=androidx.compose.ui.geometry.Offset.Zero
@@ -94,11 +94,11 @@ class StarNoteInteractionsUiTest {
   drag();tap("excerpt-resize-cancel");ready()
   assertEquals(original.right,runBlocking{app.study.source(card.id)}!!.right,0.0)
   tap("excerpt-resize");drag();compose.activityRule.scenario.recreate();compose.waitForIdle();shot("v37-excerpt-resize.png");tap("excerpt-resize-save")
-  compose.waitUntil(15000){runBlocking{app.study.cards(note.id).first().single()}.revision==3L};ready()
+  compose.waitUntil(15000){runBlocking{app.study.cards(note.id).first().single()}.revision==2L};ready()
   val resized=runBlocking{app.study.source(card.id)}!!;assertTrue(resized.right>original.right);assertTrue(resized.bottom>original.bottom)
   assertEquals(original.left,resized.left,0.0);assertEquals(original.top,resized.top,0.0)
   compose.onNodeWithContentDescription("取消摘录选择").performClick();compose.activityRule.scenario.recreate();ready()
-  assertEquals("页面内备注",runBlocking{app.study.cards(note.id).first().single()}.body)
+  assertEquals("页面内备注",runBlocking{app.knowledge.observeBook(note.id).first().cardPresentations()[card.id]?.annotation});assertEquals(card.body,runBlocking{app.study.cards(note.id).first().single()}.body)
   assertEquals(resized.right,runBlocking{app.study.source(card.id)}!!.right,0.0)
   assertEquals(ink.samples,runBlocking{app.inkRepository.read(note.id)}.strokes.single().stroke.samples)
   assertEquals(1L,runBlocking{app.inkRepository.read(note.id)}.revision)

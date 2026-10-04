@@ -13,6 +13,8 @@ sealed interface KnowledgeData {
     data class PageMark(val pageId:String,val title:String,val bookmark:Boolean=false,val depth:Int=0):KnowledgeData
     data class Anchor(val pageId:String,val inkRevision:Long,val bounds:CanvasBounds,val strokeIds:List<String>):KnowledgeData
     data class Link(val source:TargetRef,val target:TargetRef,val relation:RelationKind=RelationKind.REFERENCE,val pinnedRevision:Long?=null):KnowledgeData
+    /** Shared by card identity; legacy body is never inferred or moved into annotation. */
+    data class CardPresentation(val cardId:String,val annotation:String="",val cardColor:CardTint=CardTint.DEFAULT,val titleBarColor:CardTint=CardTint.DEFAULT):KnowledgeData
     data class Properties(val cardId:String,val state:ManualState=ManualState.INBOX,val tags:List<String> = emptyList()):KnowledgeData
     data class Collection(val title:String,val tag:String="",val state:ManualState?=null,val matchAny:Boolean=false):KnowledgeData
     data class Question(val cardId:String,val prompt:String,val state:ManualState=ManualState.REVIEW):KnowledgeData
@@ -37,6 +39,7 @@ object KnowledgeCodec {
             is KnowledgeData.Anchor->{id(v.pageId);require(v.inkRevision>=0);require(v.strokeIds.size in 1..256&&v.strokeIds.distinct().size==v.strokeIds.size);v.strokeIds.forEach(::id)
                 require(v.bounds.left>=-BoardLimits.WORLD&&v.bounds.right<=BoardLimits.WORLD&&v.bounds.top>=-BoardLimits.WORLD&&v.bounds.bottom<=BoardLimits.WORLD)}
             is KnowledgeData.Link->{require(v.pinnedRevision==null||v.target.kind==TargetKind.CARD&&v.pinnedRevision>0);require(v.source!=v.target)}
+            is KnowledgeData.CardPresentation->{id(v.cardId);require(v.annotation.length<=CardPresentationRules.MAX_ANNOTATION)}
             is KnowledgeData.Properties->{id(v.cardId);require(v.tags.size<=12&&v.tags.distinct().size==v.tags.size&&v.tags.all{it.isNotBlank()&&it.length<=24&&!it.contains('\n')})}
             is KnowledgeData.Collection->{require(v.title.isNotBlank()&&v.title.length<=120&&v.tag.length<=24)}
             is KnowledgeData.Question->{id(v.cardId);require(v.prompt.isNotBlank()&&v.prompt.length<=2000)}
@@ -70,6 +73,7 @@ object KnowledgeCodec {
                 is KnowledgeData.PageMark->{d.writeUTF("PAGE_MARK");d.writeUTF(v.pageId);d.writeUTF(v.title);d.writeBoolean(v.bookmark);d.writeInt(v.depth)}
                 is KnowledgeData.Anchor->{d.writeUTF("ANCHOR");d.writeUTF(v.pageId);d.writeLong(v.inkRevision);listOf(v.bounds.left,v.bounds.top,v.bounds.right,v.bounds.bottom).forEach(d::writeDouble);d.writeInt(v.strokeIds.size);v.strokeIds.forEach(d::writeUTF)}
                 is KnowledgeData.Link->{d.writeUTF("LINK");ref(v.source);ref(v.target);d.writeUTF(v.relation.name);d.writeLong(v.pinnedRevision?:0)}
+                is KnowledgeData.CardPresentation->{d.writeUTF("CARD_PRESENTATION_V1");d.writeUTF(v.cardId);d.writeUTF(v.annotation);d.writeUTF(v.cardColor.name);d.writeUTF(v.titleBarColor.name)}
                 is KnowledgeData.Properties->{d.writeUTF("PROPERTIES");d.writeUTF(v.cardId);d.writeUTF(v.state.name);d.writeInt(v.tags.size);v.tags.forEach(d::writeUTF)}
                 is KnowledgeData.Collection->{d.writeUTF("COLLECTION");d.writeUTF(v.title);d.writeUTF(v.tag);d.writeUTF(v.state?.name.orEmpty());d.writeBoolean(v.matchAny)}
                 is KnowledgeData.Question->{d.writeUTF("QUESTION");d.writeUTF(v.cardId);d.writeUTF(v.prompt);d.writeUTF(v.state.name)}
@@ -94,6 +98,7 @@ object KnowledgeCodec {
                 "PAGE_MARK"->KnowledgeData.PageMark(d.readUTF(),d.readUTF(),d.readBoolean(),d.readInt())
                 "ANCHOR"->KnowledgeData.Anchor(d.readUTF(),d.readLong(),CanvasBounds(d.readDouble(),d.readDouble(),d.readDouble(),d.readDouble()),list(256))
                 "LINK"->KnowledgeData.Link(ref(),ref(),RelationKind.valueOf(d.readUTF()),d.readLong().let{require(it>=0);if(it==0L)null else it})
+                "CARD_PRESENTATION_V1"->KnowledgeData.CardPresentation(d.readUTF(),d.readUTF(),CardTint.valueOf(d.readUTF()),CardTint.valueOf(d.readUTF()))
                 "PROPERTIES"->KnowledgeData.Properties(d.readUTF(),ManualState.valueOf(d.readUTF()),list(12))
                 "COLLECTION"->KnowledgeData.Collection(d.readUTF(),d.readUTF(),d.readUTF().ifEmpty{null}?.let(ManualState::valueOf),d.readBoolean())
                 "QUESTION"->KnowledgeData.Question(d.readUTF(),d.readUTF(),ManualState.valueOf(d.readUTF()))

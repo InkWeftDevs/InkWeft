@@ -70,7 +70,11 @@ internal fun KnowledgeLinkPreview(
             if (reading) CircularProgressIndicator(Modifier.size(24.dp))
             preview?.let { value ->
                 SelectionContainer { Text(value.body.ifBlank { "尚未填写内容" }, modifier = Modifier.testTag("card-link-preview-body")) }
-                if (value.pinnedRevision != null && value.canOpen) Text("此处预览固定版本；打开目标会查看当前卡片。", style = MaterialTheme.typography.bodySmall, color = Quiet)
+                if(value.annotation.isNotBlank()){
+                    Text("个人注释",style=MaterialTheme.typography.labelLarge)
+                    SelectionContainer{Text(value.annotation,modifier=Modifier.testTag("card-link-preview-annotation"))}
+                }
+                if (value.pinnedRevision != null && value.canOpen) Text("此处仅预览固定版本的标题与正文，不附加当前个人注释；打开目标会查看当前卡片。", style = MaterialTheme.typography.bodySmall, color = Quiet)
                 if (!value.canOpen) Text("目标不可打开，预览仍保留可读取的内容。", style = MaterialTheme.typography.bodySmall, color = Quiet)
                 Text("只读预览，不展开其他关联。", style = MaterialTheme.typography.bodySmall, color = Quiet)
             }

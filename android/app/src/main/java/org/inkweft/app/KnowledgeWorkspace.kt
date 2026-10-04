@@ -143,6 +143,7 @@ private val LinkPreviewSaver=Saver<LinkPreviewSelection?,List<String>>(
     val activeBooks=ui.notes.map{it.id}.toSet()
     val rows=ui.rows.filter{!it.removed&&it.notebookId in activeBooks};val cards=ui.cards.filter{it.trashedAt==null&&it.notebookId in activeBooks}
     val values=rows.associate{it.id to it.data()};val links=rows.mapNotNull{r->(values[r.id] as? KnowledgeData.Link)?.let{r to it}}
+    val presentations=values.values.filterIsInstance<KnowledgeData.CardPresentation>().associateBy{it.cardId}
     val collectionRows=rows.filter{it.notebookId==book&&values[it.id] is KnowledgeData.Collection}
     val chosenCollectionRow=collectionRows.find{it.id==chosenCollectionId}
     val chosenCollection=chosenCollectionRow?.let{values[it.id] as? KnowledgeData.Collection}
@@ -371,7 +372,7 @@ private val LinkPreviewSaver=Saver<LinkPreviewSelection?,List<String>>(
                             collectionReviewMessage?.let{Text(it,color=Quiet,modifier=Modifier.testTag("collection-review-unavailable"))}
                         }
                     }
-                    val shown=if(chosenCollectionId!=null&&chosenCollection==null)emptyList()else bookCards.filter{c->(query.isBlank()||c.title.contains(query,true)||c.body.contains(query,true))&&(chosenCollection?.let{KnowledgeQueries.matches(it,properties[c.id]?:KnowledgeData.Properties(c.id))}!=false)}
+                    val shown=if(chosenCollectionId!=null&&chosenCollection==null)emptyList()else bookCards.filter{c->(query.isBlank()||c.title.contains(query,true)||c.body.contains(query,true)||presentations[c.id]?.annotation?.contains(query,true)==true)&&(chosenCollection?.let{KnowledgeQueries.matches(it,properties[c.id]?:KnowledgeData.Properties(c.id))}!=false)}
                     item{Text("${shown.size} 张卡片 · 筛选不复制内容",fontSize=12.sp,color=Quiet)}
                     items(shown,key={it.id}){c->OutlinedCard(onClick={editCardId=c.id},modifier=Modifier.fillMaxWidth()){
                         Column(Modifier.padding(16.dp)){Text(c.title,fontSize=18.sp);Text(c.body,maxLines=3);Text("我的总结 · 手工状态："+(properties[c.id]?.state?:ManualState.INBOX).label,fontSize=12.sp,color=Quiet)}}}
@@ -484,6 +485,7 @@ private suspend fun knowledgeMarkdown(app:InkWeftApplication,book:String,notes:L
             if(d.pinnedRevision!=null){val frozen=pinned[r.id];appendLine("  固定摘录："+(frozen?.let{clean(it.title)+"\n\n"+clean(it.body)}?:"固定版本不可用；未用当前正文代替。"))}
             else if(c in included)appendLine("  [目标摘要](#card-${c!!.id})")else appendLine("  目标未包含在此文件；保留身份供映射，不宣称迁移完整。")}
         is KnowledgeData.Anchor->appendLine("- 区域 ${r.id}：页面 ${d.pageId} / 修订 ${d.inkRevision} / ${d.bounds}；不含笔迹采样")
+        is KnowledgeData.CardPresentation->if(!r.removed)appendLine("- 个人注释 ${d.cardId}：${clean(d.annotation)}；卡片色 ${d.cardColor.label} / 标题栏色 ${d.titleBarColor.label}")
         is KnowledgeData.Properties->appendLine("- 属性 ${d.cardId}：手工${d.state.label} / ${d.tags.joinToString()}")
         is KnowledgeData.MapPortal->appendLine("- 跨图入口 ${r.id}：图 ${d.sourceMapId?:"主图"} / 节点 ${d.sourceNodeId} → 整图 ${d.targetMapId?:"主图"} · ${if(r.removed)"已移除"else"保留身份"}；此文本不还原入口关系，完整恢复使用资料库备份。")
         else->Unit

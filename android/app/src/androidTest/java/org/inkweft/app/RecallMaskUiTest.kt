@@ -530,6 +530,24 @@ class RecallMaskUiTest {
         record("all-ancestors", f, before, otherBefore, JSONObject().put("ancestors", JSONArray(visited)))
     }
 
+    @Test fun sharedCardAnnotationIsShieldedDuringRecallAndRestoredWithoutWrites() {
+        val f=fixture();val annotation="RM69-PRIVATE-ANNOTATION-${f.card}"
+        runBlocking{app.knowledge.submit(KnowledgeCommand(id(),f.note.id,id(),0,KnowledgeData.CardPresentation(f.card,annotation,CardTint.CREAM,CardTint.BLUE)))}
+        val before=authorStamp(f.note.id);val otherBefore=authorStamp(f.other.id)
+        select(f.child);tap("node-more");tap("node-view-content")
+        compose.onNodeWithTag("card-full-annotation").assertTextEquals(annotation)
+        tap("card-review");waitFor("branch-review-counts")
+        assertFalse(platformText().any{it.contains(annotation)})
+        tap("branch-review-start");assertHidden(f)
+        assertFalse(platformText().any{it.contains(annotation)})
+        tap("review-show-hint")
+        assertFalse("An independent annotation is not silently substituted for the frozen answer",platformText().any{it.contains(annotation)})
+        tap("review-hide-hint");assertHidden(f)
+        tap("branch-review-close");waitFor("card-full-annotation")
+        compose.onNodeWithTag("card-full-annotation").assertTextEquals(annotation)
+        assertNoWrites(f,before,otherBefore)
+    }
+
     @Test fun pageHintMasksOwnedPdfInkObjectsAndWarmNativeCachesWithoutWrites() {
         val f = fixture(); val before = authorStamp(f.note.id); val otherBefore = authorStamp(f.other.id)
         startGraph(f); assertHidden(f); tap("recall-context-tab-source"); assertPlaceholder("recall-context-source-placeholder")
