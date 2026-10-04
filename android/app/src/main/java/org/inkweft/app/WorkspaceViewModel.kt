@@ -18,6 +18,22 @@ class WorkspaceViewModel(app:Application,private val saved:androidx.lifecycle.Sa
     // Only the resolved destination may consume the latest card-opening request.
     fun requestStudyCardNavigation(bookId:String,cardId:String){cardNavigation.value=mapOf(bookId to cardId)}
     fun consumeStudyCardNavigation(bookId:String,cardId:String){cardNavigation.update{if(it[bookId]==cardId)it-bookId else it}}
+    val knowledgeReturns=saved.getStateFlow<ArrayList<String>>("knowledge.returns",arrayListOf())
+    data class KnowledgeReturn(val target:TargetRef,val book:String,val page:String,val viewport:CanvasViewport?)
+    fun rememberKnowledgeReturn(target:TargetRef,book:String,page:String){
+        val v=liveViews[page]
+        val value=listOf(target.kind.name,target.id,book,page,v?.centerX?.toString().orEmpty(),v?.centerY?.toString().orEmpty(),v?.zoom?.toString().orEmpty()).joinToString("|")
+        val current=knowledgeReturns.value
+        saved["knowledge.returns"]=ArrayList((current+value).takeLast(16))
+    }
+    fun peekKnowledgeReturn():KnowledgeReturn?=knowledgeReturns.value.lastOrNull()?.let{value->runCatching{
+        val f=value.split('|');KnowledgeReturn(TargetRef(TargetKind.valueOf(f[0]),f[1]),f[2],f[3],if(f[4].isBlank())null else CanvasViewport(f[4].toDouble(),f[5].toDouble(),f[6].toDouble()))
+    }.getOrNull()}
+    fun consumeKnowledgeReturn(){saved["knowledge.returns"]=ArrayList(knowledgeReturns.value.dropLast(1))}
+    private val returnViews=MutableStateFlow<Map<String,CanvasViewport>>(emptyMap())
+    val pendingReturnViewport=returnViews.asStateFlow()
+    fun restoreKnowledgeViewport(location:KnowledgeReturn){location.viewport?.let{liveViews[location.page]=it;returnViews.value=mapOf(location.page to it)}}
+    fun consumeReturnViewport(page:String){returnViews.update{it-page}}
     val focusAnchor=MutableStateFlow<KnowledgeData.Anchor?>(null)
     private val repo=(app as InkWeftApplication).workspaceRepository
     private val pages=(app as InkWeftApplication).pages

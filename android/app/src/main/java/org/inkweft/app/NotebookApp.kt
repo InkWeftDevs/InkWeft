@@ -57,13 +57,24 @@ fun NotebookApp(vm:NotebookViewModel=viewModel(),onDiagnostics:()->Unit={}){
     val target by app.openKnowledgeTarget.collectAsStateWithLifecycle()
     val navigationReady by app.navigationReady.collectAsStateWithLifecycle()
     SideEffect{if(ui.selectedId==null)app.navigationReady.value=true}
+    val returnStack by workspace.knowledgeReturns.collectAsStateWithLifecycle()
+    var returnRequested by remember{mutableStateOf(false)}
     LaunchedEffect(target,navigationReady){val ref=target?:return@LaunchedEffect;if(!navigationReady)return@LaunchedEffect
-        try{val (destination,anchor)=withContext(Dispatchers.IO){app.knowledge.resolve(ref)}
-            if(ref.kind==TargetKind.CARD)workspace.requestStudyCardNavigation(destination.id,ref.id)
-            if(anchor!=null){workspace.focusAnchor.value=anchor;workspace.openSearchPage(destination.id,anchor.pageId){vm.select(destination)}}
-            else if(ref.kind==TargetKind.PAGE)workspace.openSearchPage(destination.id,ref.id){vm.select(destination)}else vm.select(destination)
-        }catch(c:CancellationException){throw c}catch(_:Exception){Toast.makeText(context,"来源已回收或无法读取，未切换到其他页面。",Toast.LENGTH_LONG).show()}
-        finally{app.openKnowledgeTarget.value=null}
+        val back=if(returnRequested)workspace.peekKnowledgeReturn()else null
+        val origin=app.knowledgeTargetOrigin.value
+        val originBook=ui.selectedId
+        val originPage=originBook?.let{workspace.entries.value[it]?.selectedPageId?.ifEmpty{null}?:it}
+        try{
+            val (destination,anchor)=withContext(Dispatchers.IO){app.knowledge.resolve(ref)}
+            val page=back?.page?:anchor?.pageId?:ref.id.takeIf{ref.kind==TargetKind.PAGE}
+            val opened=if(page!=null)workspace.openPageAwait(destination.id,page,anchor){vm.select(destination)}else{vm.select(destination);true}
+            if(opened){
+                if(back!=null){workspace.restoreKnowledgeViewport(back);workspace.consumeKnowledgeReturn()}
+                else if(originBook!=null&&originPage!=null)workspace.rememberKnowledgeReturn(origin?:TargetRef(TargetKind.PAGE,originPage),originBook,originPage)
+                if(ref.kind==TargetKind.CARD)workspace.requestStudyCardNavigation(destination.id,ref.id)
+            }
+        }catch(c:CancellationException){throw c}catch(_:Exception){Toast.makeText(context,"目标已回收或无法读取，当前位置与返回记录仍保留。",Toast.LENGTH_LONG).show()}
+        finally{app.openKnowledgeTarget.value=null;app.knowledgeTargetOrigin.value=null;returnRequested=false}
     }
     var showCreate by rememberSaveable{mutableStateOf(false)};var newTitle by rememberSaveable{mutableStateOf("")}
     var newWorld by rememberSaveable{mutableStateOf(false)};var newPaper by rememberSaveable{mutableStateOf(PaperStyle.RULED)};var newCover by rememberSaveable{mutableStateOf(NotebookCover.AUTO)}
@@ -98,6 +109,12 @@ fun NotebookApp(vm:NotebookViewModel=viewModel(),onDiagnostics:()->Unit={}){
         if(workspaceError!=null)Surface(color=Color.White){Row(Modifier.fillMaxWidth().padding(horizontal=16.dp),verticalAlignment=Alignment.CenterVertically){Text(workspaceError!!,Modifier.weight(1f),fontSize=12.sp);TextButton(onClick=workspace::clearError){Text("知道了")}}}
         if(pendingCreate!=null&&!busy)TextButton(onClick={workspace.retryCreate{vm.select(it)}},modifier=Modifier.testTag("retry-create-notebook")){Text("核对原创建请求")}
         if(transferUi.busy||busy)LinearProgressIndicator(Modifier.fillMaxWidth())
+        if(returnStack.isNotEmpty())Row(Modifier.fillMaxWidth().heightIn(min=48.dp),verticalAlignment=Alignment.CenterVertically){
+            TextButton({workspace.peekKnowledgeReturn()?.let{location->returnRequested=true;app.openKnowledgeTarget.value=location.target}},enabled=navigationReady&&target==null&&!busy&&!transferUi.busy,modifier=Modifier.testTag("knowledge-return")){Glyph("back");Text("返回关联前的位置")}
+            Spacer(Modifier.weight(1f))
+            TextButton(workspace::consumeKnowledgeReturn,enabled=target==null,modifier=Modifier.testTag("knowledge-return-skip")){Text("移除此返回记录")}
+        }
+
         val notebookTabs:@Composable (Boolean,Modifier)->Unit={compact,modifier->NotebookTabs(ui,navigationReady&&!busy&&!transferUi.busy,{id->focus.clearFocus(force=true);keyboard?.hide();vm.selectTab(id)},
             {id->if(vm.closeTab(id)){notebookStates.removeState(id);if(splitId==id)splitId=null}else Toast.makeText(context,"这份笔记有未保存文字或待核对操作，请先处理后再关闭标签。",Toast.LENGTH_SHORT).show()},{splitId=null;vm.back()},modifier=modifier,split={id,vertical->splitId=id;splitVertical=vertical},compact=compact)}
         if(ui.current!=null&&!immersive&&!inkMode)notebookTabs(false,Modifier)

@@ -417,7 +417,7 @@ private val LinkPreviewSaver=Saver<LinkPreviewSelection?,List<String>>(
         else if(!ui.loading)AlertDialog(onDismissRequest={editingLinkId=null},title={Text("关联不可用")},text={Text("这条关系尚未读取或已移除，未提交修改。")},confirmButton={TextButton({editingLinkId=null}){Text("返回")}})
     }
     preview?.let{selection->key(selection,includeAllRelationKinds){KnowledgeLinkPreview(selection.focus,selection.id,selection.revision,selection.incoming,
-        enabled=canDismiss,includeAllRelationKinds=includeAllRelationKinds,returnLabel="返回关联",dismiss={preview=null},onOpenTarget=openTarget)}}
+        enabled=canDismiss,includeAllRelationKinds=includeAllRelationKinds,returnLabel="返回关联",dismiss={preview=null},onOpenTarget={target->app.knowledgeTargetOrigin.value=focus;openTarget(target);if(app.openKnowledgeTarget.value!=target)app.knowledgeTargetOrigin.value=null})}}
     editCard?.let{card->
         val available=card.trashedAt==null&&book in activeBooks
         val questions=rows.filter{it.notebookId==book&&(it.data() as? KnowledgeData.Question)?.cardId==card.id}
