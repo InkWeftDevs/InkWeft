@@ -11,8 +11,6 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
-import androidx.compose.foundation.gestures.awaitTouchSlopOrCancellation
-import androidx.compose.foundation.gestures.drag
 import androidx.compose.foundation.gestures.scrollBy
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
@@ -314,6 +312,7 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
             else outlineDropPreview(drag.state,drag.nodeId,row.node.id,position,cardById[row.node.cardId]?.title.orEmpty(),row.node.id in collapsed)
         outlineDrag=drag.copy(pointer=point,preview=preview)
     }
+    val outlineDraggable by rememberUpdatedState(editable&&!hasDraft&&tab==1)
     val beginOutlineDrag by rememberUpdatedState<(Offset)->Boolean>({point->
         val node=outlineHandles.entries.firstOrNull{it.value.contains(point+outlineBounds.topLeft)}?.key
         val snapshot=graph
@@ -952,17 +951,27 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
                     awaitEachGesture {
                         val down=awaitFirstDown(requireUnconsumed=false,pass=PointerEventPass.Initial)
                         // The whole list owns this gesture, so auto-scroll may recycle the source row safely.
-                        val handle=outlineHandles.values.any{it.contains(down.position+outlineBounds.topLeft)}
+                        val handle=outlineDraggable&&outlineHandles.values.any{it.contains(down.position+outlineBounds.topLeft)}
                         if(handle){
                             down.consume()
-                            val slop=awaitTouchSlopOrCancellation(down.id){change,_->change.consume()}
-                            if(slop!=null&&beginOutlineDrag(down.position)){
-                                try{
-                                    moveOutlineDrag(slop.position)
-                                    if(drag(slop.id){change->change.consume();moveOutlineDrag(change.position)})endOutlineDrag()
-                                    else cancelOutlineGesture()
-                                }finally{cancelOutlineGesture()}
-                            }else if(slop==null&&currentEvent.type==PointerEventType.Release)openOutlineHandle(down.position)
+                            var started=false
+                            var ended=false
+                            try{
+                                while(true){
+                                    // Consume in Initial before LazyColumn's own scroll detector.
+                                    val event=awaitPointerEvent(PointerEventPass.Initial)
+                                    val change=event.changes.firstOrNull{it.id==down.id}?:break
+                                    if(event.changes.count{it.pressed}>1){event.changes.forEach{it.consume()};break}
+                                    if(!change.pressed){
+                                        change.consume()
+                                        if(started){moveOutlineDrag(change.position);endOutlineDrag()}else if(event.type==PointerEventType.Release)openOutlineHandle(down.position)
+                                        ended=true;break
+                                    }
+                                    if(!started&&(change.position-down.position).getDistance()>=viewConfiguration.touchSlop)started=beginOutlineDrag(down.position)
+                                    change.consume()
+                                    if(started)moveOutlineDrag(change.position)
+                                }
+                            }finally{if(started&&!ended)cancelOutlineGesture()}
                         }
                     }
                 }.onPreviewKeyEvent{event->
