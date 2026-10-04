@@ -48,11 +48,12 @@ class CardTransformRepository(private val db:NoteDatabase,private val fault:(Car
         require(cardIds.size in 1..16&&cardIds.distinct().size==cardIds.size){"TRANSFORM_SELECTION"}
         require(db.notes().note(book)!=null&&db.workspace().get(book)?.trashedAt==null){"TRANSFORM_BOOK_UNAVAILABLE"}
         val all=db.knowledge().all();val main=db.study().nodes(book)
+        val sourceRows=mutableMapOf<StudySourceVersionRef,StudySourceRevisionRow>()
         val cards=cardIds.map{id->
             val row=requireNotNull(db.study().card(id)){"TRANSFORM_CARD_UNAVAILABLE"}
             require(row.notebookId==book&&row.trashedAt==null){"TRANSFORM_SAME_NOTEBOOK_REQUIRED"}
             val presentation=all.filterNot{it.removed}.mapNotNull{it.data() as? KnowledgeData.CardPresentation}.singleOrNull{it.cardId==id}?:KnowledgeData.CardPresentation(id)
-            val sources=StudySourceVersions(db).read(id)
+            val sources=StudySourceVersions(db).read(id,null,sourceRows)
             CardTransformCard(id,row.revision,row.title,row.body,presentation,sources.refs,sources.complete)
         }
         CardTransformPreview(book,fingerprint(book,cardIds),cards,cards.map{card->
@@ -62,7 +63,7 @@ class CardTransformRepository(private val db:NoteDatabase,private val fault:(Car
                     is KnowledgeData.MapOccurrence->"导图 ${d.mapId} · ${r.id}";is KnowledgeData.Placement->"知识板 · ${r.id}";else->null}},
                 related.filter{it.data() is KnowledgeData.Link}.map{r->val d=r.data() as KnowledgeData.Link;"${d.relation.label} · ${r.id}"+(d.pinnedRevision?.let{" · 固定版本 $it"}?:"")},
                 related.mapNotNull{r->(r.data() as? KnowledgeData.Question)?.let{"${it.prompt} · ${it.state.label}"}},
-                StudySourceVersions(db).read(card.id,card.revision).sources.map{source->
+                StudySourceVersions(db).read(card.id,card.revision,sourceRows).sources.map{source->
                     val page=db.pages().get(source.pageId);"第 ${(page?.position?:-1)+1} 页 · 来源 ${source.sourceId} · 版本 ${source.revision}"})
         })
     }
@@ -157,12 +158,13 @@ class CardTransformRepository(private val db:NoteDatabase,private val fault:(Car
     }
     private suspend fun fingerprint(book:String,cardIds:List<String>,ignoreOperationId:String?=null):String {
         val ids=cardIds.toSet();val out=ByteArrayOutputStream()
+        val sourceRows=mutableMapOf<StudySourceVersionRef,StudySourceRevisionRow>()
         DataOutputStream(out).use{d->
             fun text(s:String){val bytes=s.toByteArray();d.writeInt(bytes.size);d.write(bytes)}
             text(book)
             ids.sorted().forEach{id->
                 val c=requireNotNull(db.study().card(id));text(c.id);d.writeLong(c.revision);text(c.title);text(c.body);d.writeLong(c.trashedAt?:-1)
-                val source=StudySourceVersions(db).read(id);text(StudySourceRefs.encode(source.refs));d.writeBoolean(source.complete)
+                val source=StudySourceVersions(db).read(id,null,sourceRows);text(StudySourceRefs.encode(source.refs));d.writeBoolean(source.complete)
                 source.sources.forEach{d.writeUTF(ContentTransfer.hash(it.snapshot))}
             }
             db.study().nodes(book).filter{it.cardId in ids}.sortedBy{it.id}.forEach{n->text(n.toString())}

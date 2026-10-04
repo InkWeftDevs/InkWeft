@@ -142,6 +142,7 @@ class BranchReviewRepository(private val db: NoteDatabase) {
     private suspend fun loadReferences(book: String, entries: List<BranchReviewEntryRef>): List<FrozenBranchReviewQuestion> {
         val cards = mutableMapOf<Pair<String,Long>, StudyCardRevisionRow>()
         val sources = mutableMapOf<Pair<String,Long>, FrozenStudySources>()
+        val sourceRows = mutableMapOf<org.inkweft.core.StudySourceVersionRef, StudySourceRevisionRow>()
         return entries.map { reference ->
             val revision = requireNotNull(db.knowledge().revision(reference.questionId, reference.questionRevision)) {
                 "BRANCH_REVIEW_QUESTION_REVISION_MISSING"
@@ -165,7 +166,7 @@ class BranchReviewRepository(private val db: NoteDatabase) {
             }
             // Recycling after entry does not erase the frozen answer. Guarded marking checks current activity/revision.
             val sourceKey=reference.cardId to reference.cardRevision
-            val frozenSources=sources[sourceKey]?:StudySourceVersions(db).read(reference.cardId,reference.cardRevision).also{sources[sourceKey]=it}
+            val frozenSources=sources[sourceKey]?:StudySourceVersions(db).read(reference.cardId,reference.cardRevision,sourceRows).also{sources[sourceKey]=it}
             FrozenBranchReviewQuestion(reference, question, card, frozenSources)
         }
     }

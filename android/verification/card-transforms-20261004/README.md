@@ -14,7 +14,7 @@
 - 保留 `study_sources` 单源兼容缓存（存在当前快照的存储开销）；容量按不可变来源历史及未升级legacy来源核算。RECROP新增来源版本，满额时不以丢弃旧版本腾空间。
 - `MapEmbedRepository` 的独立副本保留全部固定来源，并复制共享注释/双色初值到新cardId；题目与进度不复制。
 - Room13→14、生成schema14、完整备份、V6–V13归档promotion及校验同批。旧body逐字保留；已被旧版本覆盖的历史裁剪显式不可恢复，绝不拿当前裁剪冒充。
-- `FrozenBranchReviewQuestion.sources` 按原cardRevision读取，旧题固定答案不读取新裁剪。
+- `FrozenBranchReviewQuestion.sources` 按原cardRevision读取，旧题固定答案不读取新裁剪。同一次复习/变换读取按sourceRef共享不可变sourceRow/bytes，避免多卡共源复制BLOB；没有全局缓存。
 
 ## 接线合同
 
@@ -34,8 +34,8 @@
 - JVM：`CardTransformTest` 6、`KnowledgeTest` 15、`CardPresentationTest` 4，共25项通过
 - `data-local`、`app` 主Kotlin及两模块AndroidTest Kotlin编译通过；最新检查点命令使用单worker、in-process、Xmx3g、MaxMetaspaceSize1g
 - host SQLite：`python3 android/verification/card-transforms-20261004/verify-source-migration.py` 通过。执行实际迁移SQL，比较生成Room14 DDL语义，核对29张旧表全部原行不变、旧body/快照/原图BLOB不改、早期未知来源明确不可用
-- 定义并编译：`CardTransformRepositoryTest` 9项、`CardTransformUiTest` 4项；修订既有来源容量与迁移期望
+- 定义并编译：`CardTransformRepositoryTest` 10项、`CardTransformUiTest` 4项；修订既有来源容量与迁移期望
 - Android Room/UI实跑、像素/真实输入/真实平板体验：NOT_RUN。当前软件AVD此前启动ANR且已停机，不将编译或host SQLite当作设备通过
 - 本提交未跑lint、未生成交付APK、未签名
 
-首次及增量日志位于执行环境 `toolchain/logs/card-transforms-build.log`、`card-transforms-final-build.log`、`card-transforms-recovery-build.log`。它们是本工作树验证，集成后的最终UI入口仍需重新编译和运行适用测试。
+首次及增量日志位于执行环境 `toolchain/logs/card-transforms-build.log`、`card-transforms-final-build.log`、`card-transforms-recovery-build.log`、`card-transforms-source-sharing-build.log`。最后一轮仅数据层主/测试源码增量编译通过，UI由入口集成者联合复验。它们是本工作树验证，集成后的最终UI入口仍需重新编译和运行适用测试。

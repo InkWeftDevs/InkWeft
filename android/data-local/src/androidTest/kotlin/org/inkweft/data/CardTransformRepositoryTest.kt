@@ -187,4 +187,14 @@ class CardTransformRepositoryTest {
         assertNotNull(db.study().card(merge.targets.single().id)!!.trashedAt);assertNull(db.study().card(a.id)!!.trashedAt)
     }
 
+    @Test fun sharedSourceBytesAreReadOnceForDifferentFrozenCardsInOneReviewLoad()=fixture{db,book->
+        val a=card(db,book,"共源原卡");val repo=CardTransformRepository(db);val p=repo.preview(book,listOf(a.id))
+        val split=p.plan(CardTransformKind.SPLIT,CardTransforms.splitTargets(p.cards.single(),2));repo.submit(split)
+        val knowledge=KnowledgeRepository(db)
+        for(card in listOf(a.id)+split.targets.map{it.id})knowledge.submit(KnowledgeCommand(id(),book,id(),0,KnowledgeData.Question(card,"显式创建的独立题")))
+        val review=BranchReviewRepository(db);val entries=review.load(review.prepareNotebook(book))
+        assertEquals(3,entries.size);val source=entries.first().sources.sources.single()
+        entries.forEach{assertSame(source,it.sources.sources.single());assertSame(source.snapshot,it.sources.sources.single().snapshot)}
+    }
+
 }

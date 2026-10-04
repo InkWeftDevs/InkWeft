@@ -32,13 +32,15 @@ data class FrozenStudySources(val refs:List<StudySourceVersionRef>,val sources:L
 }
 class StudySourceVersions(private val db:NoteDatabase) {
     fun observe(cardId:String)=db.invalidationTracker.createFlow("study_cards","study_sources","study_source_revisions","study_card_source_sets").map{read(cardId)}
-    suspend fun read(cardId:String,cardRevision:Long?=null):FrozenStudySources=db.withTransaction {
+    suspend fun read(cardId:String,cardRevision:Long?=null):FrozenStudySources=read(cardId,cardRevision,mutableMapOf())
+    /** One operation/session can share immutable rows across different cards referencing the same source. */
+    internal suspend fun read(cardId:String,cardRevision:Long?,cache:MutableMap<StudySourceVersionRef,StudySourceRevisionRow>):FrozenStudySources=db.withTransaction {
         val card=requireNotNull(db.study().card(cardId)){"SOURCE_CARD_UNAVAILABLE"}
         val revision=cardRevision?:card.revision
         require(db.study().cardVersion(cardId,revision)!=null){"SOURCE_CARD_VERSION_UNAVAILABLE"}
         val set=db.sourceVersions().set(cardId,revision)
         if(set!=null){
-            val refs=set.refs();val values=refs.mapNotNull{db.sourceVersions().get(it.sourceId,it.revision)}
+            val refs=set.refs();val values=refs.mapNotNull{ref->cache[ref]?:db.sourceVersions().get(ref.sourceId,ref.revision)?.also{cache[ref]=it}}
             return@withTransaction FrozenStudySources(refs,values,set.complete&&values.size==refs.size)
         }
         // Compatibility for data inserted by older adapters. Never guess a historical snapshot.
