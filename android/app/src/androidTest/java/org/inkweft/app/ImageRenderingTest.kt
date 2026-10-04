@@ -176,13 +176,15 @@ class ImageRenderingTest {
         try{
             ins.runOnMainSync{
                 renderer=ImageRendering(context,{})
-                RenderResources.track(held,RenderResources.BUDGET-1_000_000,"fixture","original-read-pressure",RenderResources.Role.ACTIVE)
+                val baseline=RenderResources.snapshot().getValue("totalBytes")
+                RenderResources.track(held,RenderResources.BUDGET-baseline-4_000_000,"fixture","original-read-pressure",RenderResources.Role.ACTIVE)
                 renderer!!.request(listOf(o),full,1.0,readSize={ImageSource.MAX_BYTES}){reads.incrementAndGet();entered.complete(Unit);gate.await();original}
             }
             waitUntil{renderer!!.budgetDeferred}
             assertEquals("No chunks may be rebuilt before their lease is admitted",0,reads.get())
         }finally{RenderResources.release(held,"original-read-pressure")}
         runBlocking{withTimeout(20_000){entered.await()}}
+        assertTrue(RenderResources.snapshot().getOrDefault("category.background-work",0L)>=ImageSource.MAX_BYTES.toLong()*3)
         ins.runOnMainSync{renderer!!.clear()};gate.complete(Unit)
         waitUntil{RenderResources.snapshot().getOrDefault("category.background-work",0L)==0L}
         assertEquals(1,reads.get())
