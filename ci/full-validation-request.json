@@ -1,0 +1,53 @@
+{
+  "status": "REQUESTED_NOT_EXECUTED",
+  "requested_utc": "2026-10-04T20:22:00Z",
+  "candidate_code_local": "b2f3306",
+  "prior_focused_source": "bab4e8c793cf12d8c03c42027258fbfdbeb1f945",
+  "prior_focused_run": 37230771244,
+  "prior_focused_ui": {
+    "executed": 3,
+    "passed": 3
+  },
+  "required": {
+    "mode": "full",
+    "ui_methods": 153,
+    "fresh_room_methods": 202,
+    "fixture_phases": [
+      "prepare",
+      "reopen",
+      "visual",
+      "native_recall",
+      "native_recall_reopen"
+    ],
+    "same_sample_png": 39,
+    "independent_visual_review": true,
+    "lint": "RUN_REQUIRED",
+    "shards": 3,
+    "room_reuse": false
+  },
+  "backup_test": {
+    "integrated_local_commit": "b2f3306",
+    "original_test_commit": "8fdb3731cbbd63b2e7227deb6aaf0297e9d6879f",
+    "method_count_unchanged": true,
+    "main_compile_task": "SUCCESS_FROM_LOCAL_CACHE_29s",
+    "independent_same_test_compile": "ACTUALLY_EXECUTED_PASS_73s",
+    "compiled_class_sha256_both_worktrees": "f3966d2190e5c15eff7518667054e20316dc79aaa56ca8cf8caac92aa4505081",
+    "android_execution": "NOT_RUN_YET"
+  },
+  "fixed_sample": {
+    "pages": 12,
+    "cards": 96,
+    "maps": 3,
+    "nodes_per_map": 120,
+    "pressure_strokes": 1000,
+    "pressure_points": 100000,
+    "original_review_records": 25
+  },
+  "operational_constraints": {
+    "remote_gradle_cache": "DISABLED",
+    "kvm": "CURRENT_UID_ONLY_TEMPORARY_AND_EXACT_RESTORE_ALWAYS",
+    "artifacts": "SYNTHETIC_REPORTS_AND_PNG_ONLY_NO_APK",
+    "merge_release_deploy": "NOT_REQUESTED"
+  },
+  "external_acceptance": "REAL_TABLET_PEN_THERMAL_AND_REAL_LIBRARY_UPGRADE_NOT_RUN"
+}

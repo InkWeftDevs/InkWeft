@@ -151,7 +151,21 @@ class RecallStudyRepositoryTest {
     }
     @Test fun saveReopenResumeFullBackupRestoreAndReceiptKeepAnswerBytes()=fixture{db,f->
         val repo=RecallStudyRepository(db);val row=begin(repo,f);val op=id()
-        ok(repo.saveAnswer(op,f.book,row.row.id,row.row.revision,"未评分保留😀",byteArrayOf()))
+        db.notes().touch(f.book,1234L);val before=db.notes().note(f.book)!!;val answerAt=System.currentTimeMillis()
+        val answerInk=InkPageFile("本次回答","",listOf(InkStroke(id(),InkPen.PEN,0xff123456.toInt(),2f,InkTool.STYLUS,
+            listOf(InkSample(2f,3f,0),InkSample(8f,9f,10)))),false,PaperStyle.BLANK).encode()
+        ok(repo.saveAnswer(op,f.book,row.row.id,row.row.revision,"未评分保留😀",answerInk))
+        val answered=db.notes().note(f.book)!!;assertEquals(before.copy(updatedAt=answered.updatedAt),answered)
+        assertTrue(answered.updatedAt in answerAt..System.currentTimeMillis())
+        val savedAnswer=repo.loadAttempt(row.row.id);val originalOp=id()
+        val failed=RecallStudyRepository(db){if(it==RecallFault.BEFORE_RECEIPT)error("synthetic original rollback")}
+        assertEquals(RecallOutcome.Unknown,failed.consultOriginal(originalOp,f.book,row.row.id,savedAnswer.row.revision,now+1))
+        assertEquals(answered,db.notes().note(f.book));assertNull(repo.lookup(originalOp))
+        val originalAt=System.currentTimeMillis()
+        ok(repo.consultOriginal(originalOp,f.book,row.row.id,savedAnswer.row.revision,now+1))
+        val touched=db.notes().note(f.book)!!;assertEquals(answered.copy(updatedAt=touched.updatedAt),touched)
+        assertTrue(touched.updatedAt>=answered.updatedAt&&touched.updatedAt in originalAt..System.currentTimeMillis())
+        val fixed=repo.loadAttempt(row.row.id);val schedule=repo.schedule(f.question)
         val targetName="recall-restore-${id()}.db";var target=NoteDatabase.open(context,targetName)
         try{
             val backup=LibraryBackupRepository(context,db);val restore=LibraryBackupRepository(context,target)
@@ -160,7 +174,14 @@ class RecallStudyRepositoryTest {
             val recovered=RecallStudyRepository(target);val session=recovered.resume(f.book)!!;val answer=recovered.loadSession(session.id).current!!
             assertEquals("未评分保留😀",answer.row.answerText);assertEquals(row.row.id,answer.row.id);assertEquals(row.spec,answer.spec)
             assertArrayEquals(row.sources.sources.single().snapshot,answer.sources.sources.single().snapshot)
-            ok(recovered.saveAnswer(op,f.book,row.row.id,row.row.revision,"未评分保留😀",byteArrayOf()))
+            assertArrayEquals(answerInk,answer.row.answerInk);assertEquals(fixed.hints,answer.hints)
+            assertEquals(RecallHint.ORIGINAL.bit,answer.row.hintMask);assertEquals(schedule,recovered.schedule(f.question))
+            assertEquals(touched,target.notes().note(f.book));assertEquals(repo.history(f.book),recovered.history(f.book))
+            assertEquals(repo.lookup(op),recovered.lookup(op));assertEquals(repo.lookup(originalOp),recovered.lookup(originalOp))
+            ok(recovered.saveAnswer(op,f.book,row.row.id,row.row.revision,"未评分保留😀",answerInk))
+            ok(recovered.consultOriginal(originalOp,f.book,row.row.id,savedAnswer.row.revision,now+1))
+            assertEquals("Replayed receipts must not touch the restored note again",touched,target.notes().note(f.book))
+            assertEquals(fixed.hints,recovered.loadAttempt(row.row.id).hints)
             assertEquals(1,recovered.history(f.book).size);LibraryBackupRepository(context,target).snapshot().close()
         }finally{target.close();context.deleteDatabase(targetName)}
     }
