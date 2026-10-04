@@ -117,6 +117,18 @@ internal fun ComposeTestRule.revealAction(tag:String){
             onNodeWithTag("document-more").performClick()
         }
         tag in setOf("node-add-child","node-add-sibling","node-links")->onNodeWithTag("node-more").assertIsDisplayed().assertIsEnabled().performClick()
+        tag in setOf("page-layers-open","page-whitespace-open","page-visible-share","page-annotation-open")->{
+            onNodeWithTag("toolbar-more").assertIsDisplayed().assertIsEnabled().performClick()
+            onNodeWithText("页面与批注").assertIsDisplayed()
+            onNodeWithTag(tag).performScrollTo().assertIsDisplayed()
+        }
+        listOf("outline-rename-","outline-child-","outline-sibling-","outline-organize-","outline-focus-").any(tag::startsWith)&&onAllNodesWithTag("study-list").fetchSemanticsNodes().isNotEmpty()->{
+            val prefix=listOf("outline-rename-","outline-child-","outline-sibling-","outline-organize-","outline-focus-").first(tag::startsWith)
+            val selectTag="outline-actions-${tag.removePrefix(prefix)}"
+            onNodeWithTag("study-list").performScrollToNode(hasTestTag(selectTag))
+            onNodeWithTag(selectTag).assertIsDisplayed().assertIsEnabled().performClick()
+            onNodeWithTag("study-list").performScrollToNode(hasTestTag(tag))
+        }
         (tag.startsWith("study-card-")||tag.startsWith("outline-"))&&onAllNodesWithTag("study-list").fetchSemanticsNodes().isNotEmpty()->onNodeWithTag("study-list").performScrollToNode(hasTestTag(tag))
         tag=="toolbar-customize"->onNodeWithTag("toolbar-more").performClick()
         tag.startsWith("study-tab-")||tag.startsWith("study-fit-")||tag in setOf("study-new-map","study-insert-map","study-save-template","study-add-card","study-expand-all","study-focus-all","study-collapse-all","study-arrange")->{

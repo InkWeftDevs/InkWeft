@@ -146,7 +146,6 @@ class InkRepository(private val db:NoteDatabase,private val fault:(InkFaultPoint
             val owner=owner(command.noteId);val current=dao.page(command.noteId)
             if(owner.trashedAt!=null || db.workspace().get(owner.notebookId)?.trashedAt!=null)return@withTransaction InkCommitResult.Conflict
             if((current?.revision?:0)!=command.expectedRevision)return@withTransaction InkCommitResult.Conflict
-            val authoring=try{PageAuthoringRepository(db).acceptInk(command)}catch(e:IllegalArgumentException){return@withTransaction if(e.message=="LAYER_WRITE_SCOPE_CHANGED")InkCommitResult.Conflict else InkCommitResult.Rejected}
             val next=command.expectedRevision+1
             val visible=when(val change=command.mutation){
                 is InkMutation.Replace->{
@@ -182,6 +181,8 @@ class InkRepository(private val db:NoteDatabase,private val fault:(InkFaultPoint
                     change.visible
                 }
             }
+            // Preserve target conflicts before layer validation; both checks still precede every write.
+            val authoring=try{PageAuthoringRepository(db).acceptInk(command)}catch(e:IllegalArgumentException){return@withTransaction if(e.message=="LAYER_WRITE_SCOPE_CHANGED")InkCommitResult.Conflict else InkCommitResult.Rejected}
             if(current==null)dao.insertPage(InkPageRow(command.noteId,next))else check(dao.compareAndSet(command.noteId,command.expectedRevision,next)==1)
             when(val change=command.mutation){
                 is InkMutation.Replace->{

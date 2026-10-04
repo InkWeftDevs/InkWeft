@@ -32,8 +32,8 @@ internal val LocalPenPointsLeft=compositionLocalOf{false}
     // App-wide persisted preferences outrank a notebook tab's saved composition.
     var x by remember(storageKey){mutableFloatStateOf(prefs.getFloat("$storageKey-x",if(wide).5f else 0f))}
     var y by remember(storageKey){mutableFloatStateOf(prefs.getFloat("$storageKey-y",if(wide).92f else .3f))}
-    val compactWindow=LocalConfiguration.current.screenWidthDp<600
-    var collapsed by remember(storageKey){mutableStateOf(prefs.getBoolean("$storageKey-collapsed",compactWindow))}
+    val initiallyCollapsed=!wide||LocalConfiguration.current.screenWidthDp<600
+    var collapsed by remember(storageKey){mutableStateOf(prefs.getBoolean("$storageKey-collapsed",initiallyCollapsed))}
     var positionMenu by remember{mutableStateOf(false)}
     var host by remember{mutableStateOf(IntSize.Zero)}
     var size by remember{mutableStateOf(IntSize.Zero)}

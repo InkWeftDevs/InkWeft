@@ -109,8 +109,9 @@ class RecallMaskUiTest {
         val collection: String, val questions: List<String>, val prompts: List<String>,
         val answer: String, val title: String, val branchTitle: String, val mapTitle: String,
         val objectText: String, val pdfText: String, val embedText: String,
+        val manualTitle: String, val manualAnswer: String,
     ) {
-        val secrets get() = listOf(note.title, answer, title, branchTitle, mapTitle, objectText, pdfText, embedText)
+        val secrets get() = listOf(note.title, answer, title, branchTitle, mapTitle, objectText, pdfText, embedText, manualTitle, manualAnswer)
     }
 
     private fun fixture(longText: Boolean = false, longNames: Boolean = false): Fixture {
@@ -140,6 +141,7 @@ class RecallMaskUiTest {
         val other = runBlocking { app.workspaceRepository.create(if (longNames) "$commonName · 乙卷讨论" else "RM53-OTHER-$suffix", false, PaperStyle.BLANK) }
         val map = id(); val branch = id(); val card = id(); val child = id(); val duplicate = id()
         val manualCard = id(); val collection = id()
+        val manualTitle = "RM53-MANUAL-$suffix"; val manualAnswer = "RM53-MANUAL-ANSWER-$suffix"
         val prefix = id().take(24)
         val questions = (1..3).map { prefix + it.toString().padStart(12, '0') }
         val stroke = InkStroke(id(), InkPen.PEN, 0xffcf00a4.toInt(), 22f, InkTool.STYLUS,
@@ -176,7 +178,7 @@ class RecallMaskUiTest {
                 parentId = branch, x = 300.0, y = 220.0, mapId = map))
             val manualNode=id()
             app.study.submit(StudyCommand(id(), note.id, StudyAction.CREATE, cardId = manualCard,nodeId=manualNode,
-                title = "RM53-MANUAL-$suffix", body = "RM53-MANUAL-ANSWER-$suffix"))
+                title = manualTitle, body = manualAnswer))
             app.study.submit(StudyCommand(id(), note.id, StudyAction.REMOVE_NODE,nodeId=manualNode,expectedRevision=1))
             listOf(card, card, manualCard).forEachIndexed { index, owner ->
                 app.knowledge.submit(KnowledgeCommand(id(), note.id, questions[index], 0, KnowledgeData.Question(owner, prompts[index])))
@@ -184,7 +186,7 @@ class RecallMaskUiTest {
             app.knowledge.submit(KnowledgeCommand(id(), note.id, collection, 0, KnowledgeData.Collection("RM53-COLLECTION-$suffix")))
         }
         val f = Fixture(note, other, map, branch, card, child, duplicate, manualCard, collection, questions, prompts,
-            answer, title, branchTitle, mapTitle, objectText, pdfText, embedText)
+            answer, title, branchTitle, mapTitle, objectText, pdfText, embedText, manualTitle, manualAnswer)
         File(evidence, "fixture-$suffix.json").writeText(JSONObject().put("syntheticFixture", true)
             .put("book", note.id).put("otherBook", other.id).put("map", map).put("branch", branch).put("card", card)
             .put("questions", JSONArray(questions)).put("ownedPdfSha256", sha(pdfBytes))
@@ -339,14 +341,14 @@ class RecallMaskUiTest {
         return result
     }
 
-    private fun assertPlatformCluesAbsent(f: Fixture, requirePrompt: Boolean = false) {
+    private fun assertPlatformCluesAbsent(f: Fixture, prompt: String? = null) {
         compose.waitUntil(15_000) { var protected = false
             compose.runOnIdle { protected = roots().any { it.importantForAccessibility == View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS } }
             protected
         }
         val texts = platformText()
         assertTrue("OS inspection must retrieve the actual app UI, not an empty tree", texts.any { it.contains("回忆") || it.contains("本题") })
-        if (requirePrompt) assertTrue("The actual current question remains accessible", texts.any { it.contains(f.prompts[0].lineSequence().first()) || it.contains(f.prompts[1].lineSequence().first()) })
+        if (prompt != null) assertTrue("The actual current question remains accessible", texts.any { it.contains(prompt.lineSequence().first()) })
         f.secrets.forEach { secret -> assertFalse("Actual interactive-window accessibility leaked $secret", texts.any { it.contains(secret) }) }
         val top = semanticText(compose.onNodeWithTag("manual-review", useUnmergedTree = true).fetchSemanticsNode())
         f.secrets.forEach { secret -> assertFalse("Current review semantics leaked $secret", top.any { it.contains(secret) }) }
@@ -361,7 +363,7 @@ class RecallMaskUiTest {
         compose.onNodeWithTag("review-answer").assertDoesNotExist()
         compose.onNodeWithTag("review-card-title").assertDoesNotExist()
         compose.onNodeWithTag("review-show-hint").assertExists()
-        assertPlatformCluesAbsent(f, requirePrompt = true)
+        assertPlatformCluesAbsent(f, prompt = f.prompts[question])
     }
 
     private val authorQueries = listOf(
@@ -491,19 +493,38 @@ class RecallMaskUiTest {
         screenshot(name)
     }
 
-    private fun checkAncestor(f: Fixture, label: String, before: String, otherBefore: String) {
-        assertHidden(f)
-        tap("recall-context-tab-source"); assertPlaceholder("recall-context-source-placeholder")
-        tap("recall-context-tab-map"); assertPlaceholder("recall-context-map-placeholder")
-        compose.onNodeWithTag("recall-context-map-outline").assertDoesNotExist()
-        tap("recall-context-tab-excerpt"); assertPlaceholder("recall-context-excerpt-placeholder")
-        assertHidden(f)
-        assertNoWrites(f, before, otherBefore)
-        screenshot("ancestor-$label")
+    private fun checkAncestor(f: Fixture, label: String, before: String, otherBefore: String, wholeNotebook: Boolean = false) {
+        // Notebook scope includes the unplaced manual card and has its own author/title
+        // order. Check every exact fixture question once, not just a graph-first Q1.
+        val expected = if (wholeNotebook) f.prompts.indices.toSet() else setOf(0, 1)
+        val remaining = expected.toMutableSet()
+        repeat(expected.size) { position ->
+            waitFor("review-question")
+            val prompt = compose.onNodeWithTag("review-question").fetchSemanticsNode()
+                .config[SemanticsProperties.Text].single().text
+            val question = f.prompts.indexOf(prompt)
+            assertTrue("$label must visit each scoped fixture question exactly once: $prompt", remaining.remove(question))
+            compose.onNodeWithText("手动回忆 · ${position + 1} / ${expected.size}").assertExists()
+            assertHidden(f, question)
+            tap("recall-context-tab-source"); assertPlaceholder("recall-context-source-placeholder")
+            tap("recall-context-tab-map"); assertPlaceholder("recall-context-map-placeholder")
+            compose.onNodeWithTag("recall-context-map-outline").assertDoesNotExist()
+            tap("recall-context-tab-excerpt"); assertPlaceholder("recall-context-excerpt-placeholder")
+            assertHidden(f, question)
+            assertNoWrites(f, before, otherBefore)
+            screenshot("ancestor-$label-q${question + 1}")
+            if (remaining.isNotEmpty()) tap("branch-review-skip")
+        }
+        assertTrue("$label must cover its complete question scope", remaining.isEmpty())
         tap("branch-review-close")
+        assertNoWrites(f, before, otherBefore)
     }
 
-    @Test fun allRecallAncestorsHideCluesFromInteractiveWindows() {
+    // The former allRecallAncestorsHideCluesFromInteractiveWindows (CI 37198766363,
+    // app-026) is split across these three runner cases, not reduced in scope:
+    // 4 notebook ancestors / 10 questions, 3 library-map / 7, 2 library-notebook / 6.
+    // Each case keeps the same timeout and byte-exact author/OS/pixel checks.
+    @Test fun notebookRecallAncestorsHideCluesFromInteractiveWindows() {
         val f = fixture(); val before = authorStamp(f.note.id); val otherBefore = authorStamp(f.other.id)
         screenshot("design-reading-map")
         val visited = mutableListOf<String>()
@@ -512,22 +533,41 @@ class RecallMaskUiTest {
             checkAncestor(f, label, before, otherBefore); visited += label
         }
         tap("study-close"); screenshot("design-writing"); tap("quick-settings"); tap("settings-knowledge"); startNotebook()
-        checkAncestor(f, "book-knowledge", before, otherBefore); visited += "book-knowledge"; closeKnowledge()
+        checkAncestor(f, "book-knowledge", before, otherBefore, wholeNotebook = true); visited += "book-knowledge"; closeKnowledge()
         openMap(f); select(f.child); tap("node-more"); tap("node-view-content"); tap("card-properties"); startNotebook()
-        checkAncestor(f, "book-card-properties", before, otherBefore); visited += "book-card-properties"; closeKnowledge(); tap("study-close")
-        openLibraryMap(f)
+        checkAncestor(f, "book-card-properties", before, otherBefore, wholeNotebook = true); visited += "book-card-properties"; closeKnowledge(); tap("study-close")
+        assertEquals(listOf("book-branch", "book-map", "book-knowledge", "book-card-properties"), visited)
+        record("notebook-ancestors", f, before, otherBefore, JSONObject().put("ancestors", JSONArray(visited))
+            .put("questionCount", 10).put("splitFrom", "allRecallAncestorsHideCluesFromInteractiveWindows"))
+    }
+
+    @Test fun libraryMapRecallAncestorsHideCluesFromInteractiveWindows() {
+        val f = fixture(); val before = authorStamp(f.note.id); val otherBefore = authorStamp(f.other.id)
+        val visited = mutableListOf<String>()
+        tap("study-close"); openLibraryMap(f)
         for (branch in listOf(true, false)) {
             startGraph(f, branch); val label = if (branch) "library-branch" else "library-map"
             checkAncestor(f, label, before, otherBefore); visited += label
         }
         select(f.child); tap("node-more"); tap("node-view-content"); tap("card-properties"); startNotebook()
-        checkAncestor(f, "library-card-properties", before, otherBefore); visited += "library-card-properties"; closeKnowledge(); tap("study-close")
+        checkAncestor(f, "library-card-properties", before, otherBefore, wholeNotebook = true); visited += "library-card-properties"; closeKnowledge(); tap("study-close")
+        assertEquals(listOf("library-branch", "library-map", "library-card-properties"), visited)
+        record("library-map-ancestors", f, before, otherBefore, JSONObject().put("ancestors", JSONArray(visited))
+            .put("questionCount", 7).put("splitFrom", "allRecallAncestorsHideCluesFromInteractiveWindows"))
+    }
+
+    @Test fun libraryNotebookRecallAncestorsHideCluesFromInteractiveWindows() {
+        val f = fixture(); val before = authorStamp(f.note.id); val otherBefore = authorStamp(f.other.id)
+        val visited = mutableListOf<String>()
+        tap("study-close")
         for (collection in listOf(false, true)) {
             openLibraryNotebook(f, collection); startNotebook()
             val label = if (collection) "library-collection" else "library-review"
-            checkAncestor(f, label, before, otherBefore); visited += label; closeKnowledge()
+            checkAncestor(f, label, before, otherBefore, wholeNotebook = true); visited += label; closeKnowledge()
         }
-        record("all-ancestors", f, before, otherBefore, JSONObject().put("ancestors", JSONArray(visited)))
+        assertEquals(listOf("library-review", "library-collection"), visited)
+        record("library-notebook-ancestors", f, before, otherBefore, JSONObject().put("ancestors", JSONArray(visited))
+            .put("questionCount", 6).put("splitFrom", "allRecallAncestorsHideCluesFromInteractiveWindows"))
     }
 
     @Test fun sharedCardAnnotationIsShieldedDuringRecallAndRestoredWithoutWrites() {
@@ -781,17 +821,35 @@ class RecallMaskUiTest {
         compose.onNodeWithTag(tag).assertDoesNotExist()
     }
 
-    private fun selectedTab(note: Note) {
-        val tab = compose.onNodeWithTag("notebook-tab-${note.id}").assertIsSelected().assertIsDisplayed()
-        assertTrue(tab.fetchSemanticsNode().config.getOrNull(SemanticsProperties.ContentDescription).orEmpty().any { it.contains(note.title) })
-        val title = compose.onNode(hasText(note.title) and hasAnyAncestor(hasTestTag("notebook-tab-${note.id}")), useUnmergedTree = true)
-        assertEquals(TextOverflow.MiddleEllipsis, textLayout(title).layoutInput.overflow)
+    private fun selectedTab(note: Note, compact: Boolean = true) {
+        if (compact) compose.waitForSavedInk()
         compose.runOnIdle { assertEquals(note.id, notebook().ui.value.selectedId); assertEquals(note.id, notebook().ui.value.current?.base?.id) }
         val count = compose.runOnIdle { notebook().ui.value.openIds.size }
-        val list = compose.onNodeWithTag("tabs-list").assertTextContains("已打开 $count", substring = true).assertIsDisplayed()
+        val list = compose.onNodeWithTag("tabs-list").assertIsDisplayed().assertIsEnabled()
+        assertTrue(list.fetchSemanticsNode().config.getOrNull(SemanticsProperties.ContentDescription).orEmpty().any { it.contains("已打开 $count") })
+        val titleParent = if (compact) {
+            // Ink uses the B1 document-title switcher at every width; full tabs live
+            // in the text editor. Its popup remains the real selected-note control.
+            compose.onNodeWithTag("notebook-tab-${note.id}").assertDoesNotExist()
+            list.assertTextContains(note.title)
+            assertTrue(list.fetchSemanticsNode().config.getOrNull(SemanticsProperties.ContentDescription).orEmpty().any { it.contains("当前笔记：${note.title}") })
+            "tabs-list"
+        } else {
+            val tab = compose.onNodeWithTag("notebook-tab-${note.id}").assertIsSelected().assertIsDisplayed()
+            assertTrue(tab.fetchSemanticsNode().config.getOrNull(SemanticsProperties.ContentDescription).orEmpty().any { it.contains(note.title) })
+            list.assertTextContains("已打开 $count", substring = true)
+            "notebook-tab-${note.id}"
+        }
+        val title = compose.onNode(hasText(note.title) and hasAnyAncestor(hasTestTag(titleParent)), useUnmergedTree = true)
+        assertEquals(TextOverflow.MiddleEllipsis, textLayout(title).layoutInput.overflow)
         val d = compose.activity.resources.displayMetrics.density
         assertTrue("Opened-notes control must retain a 48dp hit height", list.fetchSemanticsNode().boundsInRoot.height >= 48 * d - 1)
         assertTrue("Opened-notes control must retain a 48dp hit width", list.fetchSemanticsNode().boundsInRoot.width >= 48 * d - 1)
+        tap("tabs-list"); filterTabs("")
+        compose.onNodeWithTag("tabs-scroll").performScrollToNode(hasTestTag("tabs-list-${note.id}"))
+        compose.onNodeWithTag("tabs-list-${note.id}").assertIsSelected().assertIsDisplayed()
+        fullName("tabs-full-name-${note.id}", note.title)
+        dismissPopup("tabs-popup")
     }
 
     private fun filterTabs(query: String) {
@@ -906,14 +964,22 @@ class RecallMaskUiTest {
         val before = authorStamp(f.note.id); val otherBefore = authorStamp(f.other.id)
         screenshot("v54-after-map")
         tap("study-close")
-        compose.runOnIdle { notebook().select(f.other); notebook().select(f.note) }
-        compose.waitForIdle(); selectedTab(f.note)
+        openPaper(f.other); openPaper(f.note); selectedTab(f.note)
+        screenshot("v54-after-writing")
+        tap("quick-settings"); tap("mode-text"); waitFor("note-body")
+        selectedTab(f.note, compact = false)
         val d = compose.activity.resources.displayMetrics.density
         fun tabWidth(note: Note) = compose.onNodeWithTag("notebook-tab-${note.id}").fetchSemanticsNode().boundsInRoot.width +
             compose.onNodeWithTag("close-tab-${note.id}").fetchSemanticsNode().boundsInRoot.width
         assertEquals(220 * d, tabWidth(f.note), 2 * d); assertEquals(168 * d, tabWidth(f.other), 2 * d)
         compose.onNodeWithTag("notebook-tab-${f.other.id}").assertIsNotSelected()
-        screenshot("v54-after-writing")
+        tap("tabs-list"); tap("tabs-hide")
+        compose.onNodeWithTag("notebook-tab-${f.note.id}").assertDoesNotExist()
+        compose.onNodeWithTag("notebook-tab-${f.other.id}").assertDoesNotExist()
+        compose.onNodeWithTag("tabs-list").assertIsDisplayed().assertIsEnabled()
+        tap("tabs-list"); tap("tabs-hide"); selectedTab(f.note, compact = false)
+        tap("mode-ink"); compose.singlePageEditor(); selectedTab(f.note)
+        assertNoWrites(f, before, otherBefore)
         backToLibrary(); libraryTitles(f, f.note.title.substringAfterLast('-'))
         tap("note-menu-${f.note.id}"); fullName("note-menu-title-${f.note.id}", f.note.title); dismissPopup("notebook-actions-menu")
         screenshot("v54-after-library")

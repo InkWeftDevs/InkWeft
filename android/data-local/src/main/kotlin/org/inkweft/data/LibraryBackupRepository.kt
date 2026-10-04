@@ -310,8 +310,25 @@ class LibraryBackupRepository(private val context:Context,private val db:NoteDat
         private fun checkSchema(sql:SupportSQLiteDatabase){
             val names=sql.query("SELECT name FROM sqlite_master WHERE type='table' AND name NOT GLOB 'sqlite_*' AND name NOT IN ('room_master_table','android_metadata')").use{c->buildSet{while(c.moveToNext())add(c.getString(0))}}
             require(names==SCHEMA.map{it.name}.toSet()){"BACKUP_SCHEMA_COVERAGE_CHANGED"}
-            for(t in SCHEMA){val cols=sql.query("PRAGMA table_info(`${t.name}`)").use{c->buildList{while(c.moveToNext())add(c.getString(1))}}
-                require(cols==t.columns.map{it.name}){"BACKUP_SCHEMA_COLUMNS_CHANGED"}}
+            for(t in SCHEMA){
+                val cols=sql.query("PRAGMA table_info(`${t.name}`)").use{c->buildList{while(c.moveToNext()){
+                    // Compare SQLite affinity, not spelling (e.g. VARCHAR is still text).
+                    // Reject drift before cursor getters can coerce or truncate author values.
+                    val type=c.getString(2).uppercase()
+                    val kind=when {
+                        "INT" in type->'I'
+                        "CHAR" in type||"CLOB" in type||"TEXT" in type->'S'
+                        type.isEmpty()||"BLOB" in type->'B'
+                        "REAL" in type||"FLOA" in type||"DOUB" in type->'F'
+                        else->'?' // NUMERIC affinity has no lossless archive column equivalent.
+                    }
+                    add(col(c.getString(1),kind,c.getInt(3)==0) to c.getInt(5))
+                }}}
+                require(cols.map{it.first.name}==t.columns.map{it.name}){"BACKUP_SCHEMA_COLUMNS_CHANGED"}
+                require(cols.map{it.first.kind}==t.columns.map{it.kind}){"BACKUP_SCHEMA_TYPES_CHANGED"}
+                require(cols.map{it.first.nullable}==t.columns.map{it.nullable}){"BACKUP_SCHEMA_NULLABILITY_CHANGED"}
+                require(cols.filter{it.second>0}.sortedBy{it.second}.map{it.first.name}==t.keys){"BACKUP_SCHEMA_KEYS_CHANGED"}
+            }
         }
     }
 }

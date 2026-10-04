@@ -24,8 +24,7 @@ class MapInteractionUiTest {
  private val app get()=compose.activity.application as InkWeftApplication
  private fun id()=UUID.randomUUID().toString()
  private fun tap(tag:String){
-  val outline=tag.startsWith("outline-")&&compose.onAllNodesWithTag("study-list").fetchSemanticsNodes().isNotEmpty()
-  if(outline)compose.onNodeWithTag("study-list").performScrollToNode(hasTestTag(tag))else compose.revealAction(tag)
+  compose.revealAction(tag)
   val n=compose.onNodeWithTag(tag);runCatching{n.performScrollTo()}
   if(compose.onAllNodes(hasTestTag(tag) and hasAnyAncestor(hasTestTag("study-list"))).fetchSemanticsNodes().isNotEmpty()){
    // Align with the outer list after nested scrolling or an inline-editor relayout.

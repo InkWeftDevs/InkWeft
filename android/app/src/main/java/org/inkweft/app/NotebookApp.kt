@@ -58,22 +58,26 @@ fun NotebookApp(vm:NotebookViewModel=viewModel(),onDiagnostics:()->Unit={}){
     val navigationReady by app.navigationReady.collectAsStateWithLifecycle()
     SideEffect{if(ui.selectedId==null)app.navigationReady.value=true}
     val returnStack by workspace.knowledgeReturns.collectAsStateWithLifecycle()
-    LaunchedEffect(target,navigationReady){val ref=target?:return@LaunchedEffect;if(!navigationReady)return@LaunchedEffect
-        val back=if(workspace.knowledgeReturnRequested)workspace.peekKnowledgeReturn()else null
-        val origin=app.knowledgeTargetOrigin.value
-        val originBook=ui.selectedId
-        val originPage=originBook?.let{workspace.entries.value[it]?.selectedPageId?.ifEmpty{null}?:it}
-        try{
-            val (destination,anchor)=withContext(Dispatchers.IO){app.knowledge.resolve(ref)}
-            val page=back?.page?:anchor?.pageId?:ref.id.takeIf{ref.kind==TargetKind.PAGE}
-            val opened=if(page!=null)workspace.openPageAwait(destination.id,page,anchor){vm.select(destination)}else{vm.select(destination);true}
-            if(opened){
-                if(back!=null){workspace.restoreKnowledgeViewport(back);workspace.consumeKnowledgeReturn()}
-                else if(originBook!=null&&originPage!=null)workspace.rememberKnowledgeReturn(origin?:TargetRef(TargetKind.PAGE,originPage),originBook,originPage)
-                if(ref.kind==TargetKind.CARD)workspace.requestStudyCardNavigation(destination.id,ref.id)
-            }
-        }catch(c:CancellationException){throw c}catch(_:Exception){Toast.makeText(context,"目标已回收或无法读取，当前位置与返回记录仍保留。",Toast.LENGTH_LONG).show()}
-        finally{app.openKnowledgeTarget.value=null;app.knowledgeTargetOrigin.value=null;workspace.finishKnowledgeReturn()}
+    LaunchedEffect(target,navigationReady){
+        // UI/navigation effects remain on the Android main dispatcher even after an IO failure.
+        withContext(Dispatchers.Main.immediate){
+            val ref=target?:return@withContext;if(!navigationReady)return@withContext
+            val back=if(workspace.knowledgeReturnRequested)workspace.peekKnowledgeReturn()else null
+            val origin=app.knowledgeTargetOrigin.value
+            val originBook=ui.selectedId
+            val originPage=originBook?.let{workspace.entries.value[it]?.selectedPageId?.ifEmpty{null}?:it}
+            try{
+                val (destination,anchor)=withContext(Dispatchers.IO){app.knowledge.resolve(ref)}
+                val page=back?.page?:anchor?.pageId?:ref.id.takeIf{ref.kind==TargetKind.PAGE}
+                val opened=if(page!=null)workspace.openPageAwait(destination.id,page,anchor){vm.select(destination)}else{vm.select(destination);true}
+                if(opened){
+                    if(back!=null){workspace.restoreKnowledgeViewport(back);workspace.consumeKnowledgeReturn()}
+                    else if(originBook!=null&&originPage!=null)workspace.rememberKnowledgeReturn(origin?:TargetRef(TargetKind.PAGE,originPage),originBook,originPage)
+                    if(ref.kind==TargetKind.CARD)workspace.requestStudyCardNavigation(destination.id,ref.id)
+                }
+            }catch(c:CancellationException){throw c}catch(_:Exception){Toast.makeText(context,"目标已回收或无法读取，当前位置与返回记录仍保留。",Toast.LENGTH_LONG).show()}
+            finally{app.openKnowledgeTarget.value=null;app.knowledgeTargetOrigin.value=null;workspace.finishKnowledgeReturn()}
+        }
     }
     var showCreate by rememberSaveable{mutableStateOf(false)};var newTitle by rememberSaveable{mutableStateOf("")}
     var newWorld by rememberSaveable{mutableStateOf(false)};var newPaper by rememberSaveable{mutableStateOf(PaperStyle.RULED)};var newCover by rememberSaveable{mutableStateOf(NotebookCover.AUTO)}

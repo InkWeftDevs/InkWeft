@@ -90,6 +90,21 @@ class RecallQuestionEditorUiTest {
     private fun question(f:Fixture)=runBlocking{app.knowledge.observeBook(f.note.id).first().single{it.id==f.question}}
     private fun config(f:Fixture)=runBlocking{app.study.recall().configuration(f.question)!!.spec()}
     private fun saved(){compose.waitUntil(15_000){!exists("recall-config-prompt")};compose.waitForIdle()}
+    private fun rotated(check:()->Unit){
+        val previousActivity=compose.activity;val originalRequest=previousActivity.requestedOrientation
+        val landscape=compose.activity.resources.configuration.orientation!=Configuration.ORIENTATION_LANDSCAPE
+        val expectedOrientation=if(landscape)Configuration.ORIENTATION_LANDSCAPE else Configuration.ORIENTATION_PORTRAIT
+        try{
+            compose.activityRule.scenario.onActivity{it.requestedOrientation=if(landscape)ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE else ActivityInfo.SCREEN_ORIENTATION_PORTRAIT}
+            compose.waitUntil(15_000){compose.activity!==previousActivity&&compose.activity.resources.configuration.orientation==expectedOrientation}
+            waitFor("recall-config-prompt");check()
+        }finally{compose.activityRule.scenario.onActivity{it.requestedOrientation=originalRequest}}
+    }
+    private fun assertConflict(prompt:String){
+        waitFor("recall-config-base-changed");draft("recall-config-prompt",prompt)
+        compose.onNodeWithTag("recall-config-save").assertIsNotEnabled()
+        assertFalse(journals.last().exists())
+    }
 
     @Test fun latestSavedQuestionPromptSurvivesOpeningAndSavingOldConfiguration(){
         val f=fixture();properties(f);tap("question-edit-${f.question}")
@@ -109,20 +124,58 @@ class RecallQuestionEditorUiTest {
         replace("recall-config-prompt",changed)
         compose.onNode(hasText("移除") and hasAnyAncestor(hasTestTag("recall-config-dialog"))).performScrollTo().performClick()
         compose.onNodeWithText(RecallQuestionKind.QUESTION.label).performScrollTo().performClick()
-        val previousActivity=compose.activity;val originalRequest=previousActivity.requestedOrientation
-        val landscape=compose.activity.resources.configuration.orientation!=Configuration.ORIENTATION_LANDSCAPE
-        val expectedOrientation=if(landscape)Configuration.ORIENTATION_LANDSCAPE else Configuration.ORIENTATION_PORTRAIT
-        try{
-            compose.activityRule.scenario.onActivity{it.requestedOrientation=if(landscape)ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE else ActivityInfo.SCREEN_ORIENTATION_PORTRAIT}
-            compose.waitUntil(15_000){compose.activity!==previousActivity&&compose.activity.resources.configuration.orientation==expectedOrientation}
-            waitFor("recall-config-prompt")
+        rotated{
             compose.waitUntil(15_000){runCatching{compose.onNodeWithTag("recall-config-save").assertIsEnabled()}.isSuccess}
+            compose.onNodeWithTag("recall-config-base-changed").assertDoesNotExist()
             draft("recall-config-prompt",changed)
             compose.onNodeWithText(RecallQuestionKind.QUESTION.label).assertIsSelected()
             assertEquals(f.prompt,(question(f).data() as KnowledgeData.Question).prompt)
             tap("recall-config-save");saved()
             val spec=config(f);assertEquals(changed,spec.prompt);assertEquals(RecallQuestionKind.QUESTION,spec.kind);assertTrue(spec.clozes.isEmpty())
-        }finally{compose.activityRule.scenario.onActivity{it.requestedOrientation=originalRequest}}
+        }
+    }
+
+    @Test fun rotationAfterBodyChangeDoesNotApplyOldClozesToNewValidOffsets(){
+        val f=fixture(RecallQuestionKind.TEXT_CLOZE);properties(f);configure(f)
+        val local="本机旧正文上的问法草稿";replace("recall-config-prompt",local)
+        val before=config(f);val schedule=runBlocking{app.study.recall().schedule(f.question)}
+        runBlocking{app.study.submit(StudyCommand(id(),f.note.id,StudyAction.EDIT,cardId=f.card,expectedRevision=1,title=f.title,body="戊己庚辛：不同答案"))}
+        rotated{
+            assertConflict(local)
+            // The old offsets still fit the new body; only the frozen base detects the semantic change.
+            draft("recall-cloze-select-text","甲乙丙丁：固定答案")
+            assertEquals(before,config(f));assertEquals(schedule,runBlocking{app.study.recall().schedule(f.question)})
+            assertEquals("戊己庚辛：不同答案",runBlocking{app.study.cards(f.note.id).first().single{it.id==f.card}.body})
+            assertEquals(f.prompt,(question(f).data() as KnowledgeData.Question).prompt)
+        }
+    }
+
+    @Test fun rotationAfterQuestionChangeCannotOverwriteNewPromptWithOldDraft(){
+        val f=fixture();properties(f);configure(f)
+        val local="本机未保存问法";val external="另一处已保存的新问法"
+        replace("recall-config-prompt",local)
+        val before=config(f);val schedule=runBlocking{app.study.recall().schedule(f.question)}
+        val current=question(f)
+        runBlocking{app.knowledge.submit(KnowledgeCommand(id(),f.note.id,f.question,current.revision,(current.data() as KnowledgeData.Question).copy(prompt=external)))}
+        rotated{
+            assertConflict(local)
+            assertEquals(external,(question(f).data() as KnowledgeData.Question).prompt)
+            assertEquals(before,config(f));assertEquals(schedule,runBlocking{app.study.recall().schedule(f.question)})
+        }
+    }
+
+    @Test fun rotationAfterConfigurationChangeCannotResetNewMasksOrSchedule(){
+        val f=fixture(RecallQuestionKind.TEXT_CLOZE);properties(f);configure(f)
+        val local="旧配置的本机草稿";replace("recall-config-prompt",local)
+        runBlocking{assertTrue(app.study.recall().configure(id(),f.note.id,f.question,1,1,1,f.card,1,f.prompt,
+            RecallQuestionKind.TEXT_CLOZE,clozes=listOf(RecallCloze(2,4))) is RecallOutcome.Success)}
+        val external=config(f);val schedule=runBlocking{app.study.recall().schedule(f.question)}
+        rotated{
+            assertConflict(local)
+            compose.onNodeWithText("空位 1：甲乙").assertExists()
+            assertEquals(listOf(RecallCloze(2,4)),external.clozes)
+            assertEquals(external,config(f));assertEquals(schedule,runBlocking{app.study.recall().schedule(f.question)})
+        }
     }
 
     @Test fun pendingCommandTakesPrecedenceOverCurrentPromptAcrossRecreation(){
@@ -134,12 +187,17 @@ class RecallQuestionEditorUiTest {
         val file=journals.last();val journal=AtomicFile(file);val stream=journal.startWrite();stream.write(raw);journal.finishWrite(stream)
         properties(f);configure(f);draft("recall-config-prompt",pendingPrompt)
         compose.onNodeWithTag("recall-config-prompt").assertIsNotEnabled();assertArrayEquals(raw,journal.readFully())
+        // Simulate a committed command whose response was lost before journal cleanup.
+        runBlocking{assertTrue(app.study.recall().configure(operation,f.note.id,f.question,1,1,1,f.card,1,pendingPrompt,
+            spec.kind,spec.clozes,spec.regions,spec.presentation,true) is RecallOutcome.Success)}
+        val committedSchedule=runBlocking{app.study.recall().schedule(f.question)}
         compose.activityRule.scenario.recreate();waitFor("recall-config-prompt")
         compose.waitUntil(15_000){runCatching{compose.onNodeWithTag("recall-config-save").assertIsEnabled()}.isSuccess}
         draft("recall-config-prompt",pendingPrompt);compose.onNodeWithTag("recall-config-prompt").assertIsNotEnabled()
         assertArrayEquals(raw,journal.readFully());tap("recall-config-save");saved()
         assertEquals(pendingPrompt,(question(f).data() as KnowledgeData.Question).prompt)
         assertEquals(pendingPrompt,config(f).prompt);assertFalse(file.exists())
+        assertEquals(committedSchedule,runBlocking{app.study.recall().schedule(f.question)})
         assertNotNull(runBlocking{app.study.recall().lookup(operation)})
     }
 }

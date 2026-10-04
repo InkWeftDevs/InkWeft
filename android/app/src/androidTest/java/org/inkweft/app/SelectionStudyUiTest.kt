@@ -165,6 +165,7 @@ class SelectionStudyUiTest {
         compose.onNodeWithTag("quick-settings").performClick();compose.onNodeWithTag("study-open").performScrollTo().performClick();compose.revealAction("study-tab-1");compose.onNodeWithTag("study-tab-1").performClick()
         compose.onNodeWithTag("outline-fold-$root").performScrollTo().performClick()
         compose.onNodeWithTag("outline-node-$child").assertDoesNotExist()
+        compose.revealAction("outline-focus-$root")
         compose.onNodeWithTag("outline-focus-$root").performScrollTo().performClick()
         compose.onNodeWithTag("outline-node-$other").assertDoesNotExist()
         compose.revealAction("study-tab-2");compose.onNodeWithTag("study-tab-2").performClick();compose.onNodeWithText("1 / 4 个主题").assertExists();shot("study-folded-map.png")
@@ -172,16 +173,19 @@ class SelectionStudyUiTest {
         compose.onNodeWithText("3 / 4 个主题").assertExists()
         compose.revealAction("study-tab-1");compose.onNodeWithTag("study-tab-1").performClick()
         compose.onNodeWithTag("study-list").performScrollToIndex(1)
+        compose.revealAction("outline-focus-$child")
         compose.onNodeWithTag("outline-focus-$child").performScrollTo()
         compose.onNodeWithTag("outline-focus-$child").assertIsDisplayed().performClick()
         compose.onNodeWithTag("outline-node-$root").assertDoesNotExist()
         compose.onNodeWithTag("study-breadcrumb-$root").assertExists()
+        compose.revealAction("outline-child-$child")
         compose.onNodeWithTag("outline-child-$child").performScrollTo().performClick();compose.onNodeWithTag("node-title-input").performTextInput("新子主题");compose.onNodeWithTag("node-title-save").performClick()
         compose.waitUntil(10_000){compose.onAllNodesWithTag("node-title-editor").fetchSemanticsNodes().isEmpty()}
         val newChild=runBlocking{app.study.cards(n.id).first()}.single{it.title=="新子主题"}
         assertEquals(child,runBlocking{app.study.nodes(n.id).first()}.single{it.cardId==newChild.id}.parentId)
         compose.revealAction("study-focus-all");compose.onNodeWithTag("study-focus-all").performScrollTo().performClick()
         compose.onNodeWithTag("study-list").performScrollToIndex(1)
+        compose.revealAction("outline-sibling-$child")
         compose.onNodeWithTag("outline-sibling-$child").performScrollTo().assertIsDisplayed().performClick();compose.onNodeWithTag("node-title-input").performTextInput("同级主题");compose.onNodeWithTag("node-title-save").performClick()
         compose.waitUntil(10_000){compose.onAllNodesWithTag("node-title-editor").fetchSemanticsNodes().isEmpty()}
         val sibling=runBlocking{app.study.cards(n.id).first()}.single{it.title=="同级主题"}

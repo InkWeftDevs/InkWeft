@@ -26,7 +26,7 @@ internal object EditorToolOrder {
     fun read(context:Context):List<String>{val raw=context.getSharedPreferences("inkweft-editor",0).getString("toolbar-order-v32","").orEmpty().split(',').filter{it in labels}.distinct();return raw+labels.keys.filterNot{it in raw}}
 }
 /** Stable identifiers preserve visibility when new tools are added. Changes apply immediately. */
-@Composable internal fun EditorToolbar(fullScreen:Boolean=false,content:@Composable (String,()->Unit)->Unit){
+@Composable internal fun EditorToolbar(fullScreen:Boolean=false,pageActions:@Composable (()->Unit)->Unit={},content:@Composable (String,()->Unit)->Unit){
     val context=LocalContext.current;val prefs=remember{context.getSharedPreferences("inkweft-editor",0)}
     var order by remember{mutableStateOf(EditorToolOrder.read(context))}
     var hidden by remember{mutableStateOf((prefs.getStringSet("toolbar-hidden-v32",EditorToolOrder.defaultHidden).orEmpty()+EditorToolOrder.defaultHidden.filter{it !in prefs.getString("toolbar-order-v32","").orEmpty().split(',')})-EditorToolOrder.fixed)}
@@ -48,7 +48,8 @@ internal object EditorToolOrder {
         EditorToolSlot("finger"){content("finger"){}}
         Box {
             EditorTool("更多","more",false,true,"toolbar-more",Modifier.describedAs("更多工具")){more=true}
-            DropdownMenu(more,{more=false},containerColor=androidx.compose.ui.graphics.Color.White){
+            DropdownMenu(more,{more=false},modifier=Modifier.testTag("editor-more-menu"),containerColor=androidx.compose.ui.graphics.Color.White){
+                pageActions{more=false}
                 val overflow=order.filter{it !in visiblePrimary&&it !in hidden&&it !in EditorToolOrder.fixed&&(fullScreen||it !in setOf("map","readonly"))}
                 listOf("插入" to setOf("image","camera","text","shape","sticker"),"页面与工具" to (EditorToolOrder.labels.keys-setOf("image","camera","text","shape","sticker"))).forEach{(title,ids)->
                     val group=overflow.filter{it in ids}

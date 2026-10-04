@@ -12,7 +12,7 @@ import androidx.compose.ui.unit.dp
 /** Browse existing material without changing the writing toolbar's saved configuration. */
 @OptIn(ExperimentalLayoutApi::class)
 @Composable internal fun ReadingToolbar(enabled:Boolean,fullScreen:Boolean,
-    onMap:()->Unit,onExcerpts:()->Unit,onAssociate:()->Unit,onWrite:()->Unit,onSearch:()->Unit,onOverview:()->Unit,onFullScreen:()->Unit,onExport:()->Unit,onTimer:()->Unit,showWriteControl:Boolean=true){
+    onMap:()->Unit,onExcerpts:()->Unit,onAssociate:()->Unit,onWrite:()->Unit,onSearch:()->Unit,onOverview:()->Unit,onFullScreen:()->Unit,onExport:()->Unit,onTimer:()->Unit,showWriteControl:Boolean=true,pageActions:@Composable (()->Unit)->Unit={}){
     var more by remember{mutableStateOf(false)}
     FlowRow(Modifier.fillMaxWidth().testTag("reading-toolbar"),horizontalArrangement=Arrangement.Center){
         if(fullScreen){
@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
         Box{
             EditorAction("更多","more",tag="toolbar-more"){more=true}
             DropdownMenu(more,{more=false},modifier=Modifier.testTag("reading-more-menu"),containerColor=Color.White){
+                pageActions{more=false}
                 DropdownMenuItem(text={Text(if(fullScreen)"退出全屏"else"全屏专注")},leadingIcon={Glyph("fullscreen")},onClick={more=false;onFullScreen()},enabled=enabled,modifier=Modifier.heightIn(min=48.dp).testTag("quick-fullscreen"))
                 if(fullScreen){
                     DropdownMenuItem(text={Text("查找笔记")},leadingIcon={Glyph("search")},onClick={more=false;onSearch()},enabled=enabled,modifier=Modifier.heightIn(min=48.dp).testTag("reading-search"))

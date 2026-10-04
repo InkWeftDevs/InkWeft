@@ -9,6 +9,50 @@ import subprocess
 import time
 
 
+NATIVE_PAGE_CAPTURES = {
+    "01-twelve-page-material.png": 0,
+    "04-reopened-same-material.png": 0,
+    "05-layered-1000-stroke-pressure.png": 11,
+    "06-pressure-page-layers.png": 11,
+    "07-pressure-hidden-layer.png": 11,
+    "08-pressure-locked-layer.png": 11,
+}
+
+
+def checked_native_capture(manifest, name, pixels, source_commit):
+    """A PNG header/filename alone is not proof of a rendered, correctly bound source page."""
+    if name not in NATIVE_PAGE_CAPTURES:
+        return None
+    index = NATIVE_PAGE_CAPTURES[name]
+    proof = manifest.get("nativePageCaptures", {}).get(name, {})
+    expected = {"runId": manifest["runId"], "sourceCommit": source_commit,
+                "pageId": manifest["documentPages"][index], "sourcePage": index + 1,
+                "sha256": hashlib.sha256(pixels).hexdigest()}
+    if index == 11:
+        expected["layers"] = 3
+    else:
+        expected["continuous"] = True
+    sections = {"06-pressure-page-layers.png": "current", "07-pressure-hidden-layer.png": "hidden",
+                "08-pressure-locked-layer.png": "locked"}
+    if name in sections:
+        expected.update(hiddenLayers=1, lockedLayers=1, currentLayer="00000000-0000-0000-0000-000000000001",
+                        panelSection=sections[name], authoringFingerprint=manifest["stressAuthoringFingerprint"],
+                        panelAssertionsPassed=True, pressurePixelsFile="05-layered-1000-stroke-pressure.png")
+    else:
+        if not re.fullmatch(r"[0-9a-f]{64}", proof.get("nativeInkSha256", "")):
+            raise ValueError("Missing full native ink payload fingerprint")
+        expected.update(documentSha256=manifest["documentSha256"], pdfTilePresent=True,
+                        sourceFrameDrawn=True, pendingRaster=False, pendingImages=False)
+    if name == "05-layered-1000-stroke-pressure.png":
+        expected.update(nativeStoredStrokes=1000, nativeStoredPoints=100000, nativeVisibleStrokes=1000,
+                        authoringFingerprint=manifest["stressAuthoringFingerprint"], continuous=False)
+        if min(proof.get("baseLayerBluePixels", 0), proof.get("lockedLayerBluePixels", 0)) < 20:
+            raise ValueError("Pressure screenshot lacks actual base/locked-layer ink pixel proof")
+    if any(proof.get(key) != value for key, value in expected.items()):
+        raise ValueError("Missing, stale, or incomplete native source-frame proof for " + name)
+    return proof
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--serial", required=True)
@@ -101,7 +145,7 @@ def main():
                 raise ValueError("Refusing non-synthetic output")
             (args.output / f"{args.phase}-manifest.json").write_bytes(raw)
             evidence["run_id"] = manifest["runId"]
-            names = {"prepare": ("01-twelve-page-material.png", "02-outline-120-topics.png", "03-unavailable-return-keeps-location.png", "05-layered-1000-stroke-pressure.png"),
+            names = {"prepare": ("01-twelve-page-material.png", "02-outline-120-topics.png", "03-unavailable-return-keeps-location.png", "05-layered-1000-stroke-pressure.png", "06-pressure-page-layers.png", "07-pressure-hidden-layer.png", "08-pressure-locked-layer.png"),
                      "reopen": ("04-reopened-same-material.png",),
                      "visual": tuple("visual-" + layout + "-" + stage + ".png" for layout in ("wide", "narrow") for stage in (
                          "01-default-tools", "02-advanced-pen", "03-map-selected", "04-outline-selected", "05-long-card-title", "06-long-card-body",
@@ -115,9 +159,13 @@ def main():
                     pixels = run(["exec-out", "run-as", args.package, "cat", "files/six-batch-fixture-v1/" + name]).stdout
                     if not pixels.startswith(b"\x89PNG\r\n\x1a\n"):
                         raise ValueError("Invalid synthetic screenshot")
+                    proof = checked_native_capture(manifest, name, pixels, args.source_commit)
                     (args.output / name).write_bytes(pixels)
-                    evidence["screenshots"].append({"file": name, "bytes": len(pixels), "sha256": hashlib.sha256(pixels).hexdigest()})
-                except (subprocess.CalledProcessError, ValueError):
+                    record = {"file": name, "bytes": len(pixels), "sha256": hashlib.sha256(pixels).hexdigest()}
+                    if proof is not None:
+                        record["native_page_proof"] = proof
+                    evidence["screenshots"].append(record)
+                except (subprocess.CalledProcessError, ValueError, KeyError, IndexError):
                     evidence["screenshots"].append({"file": name, "status": "UNAVAILABLE"})
             evidence["pixels_review"] = "PENDING_HUMAN_OR_VISUAL_REVIEW"
         except (subprocess.CalledProcessError, ValueError, KeyError, json.JSONDecodeError):

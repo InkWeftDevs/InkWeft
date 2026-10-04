@@ -3,7 +3,9 @@ package org.inkweft.data
 
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withTimeout
 import org.inkweft.core.*
 import org.junit.Assert.*
 import org.junit.Test
@@ -187,6 +189,83 @@ class RecallStudyRepositoryTest {
         ok(repo.grade(id(),f.book,row.row.id,row.row.revision,5,now+200,asPractice=true));LibraryBackupRepository(context,db).snapshot().close()
     }
 
+    @Test fun readQueriesKeepFrozenHistoryDescriptionsAndCurrentScheduleFiltersWithoutWrites()=fixture{db,f->
+        val repo=RecallStudyRepository(db)
+        ok(repo.configure(id(),f.book,f.question,1,0,0,f.card,1,"请回忆这项知识",RecallQuestionKind.TEXT_CLOZE,listOf(RecallCloze(2,4))))
+        var first=begin(repo,f)
+        ok(repo.hint(id(),f.book,first.row.id,first.row.revision,RecallHint.TEXT,0,now+1))
+        first=compare(repo,f,repo.loadAttempt(first.row.id))
+        ok(repo.grade(id(),f.book,first.row.id,first.row.revision,5,now+200))
+        val graded=repo.schedule(f.question)!!
+        val queries=RecallStudyQueries(db)
+        assertEquals(1,queries.filteredHistory(f.book,RecallHistoryFilter(due=RecallDueFilter.NOT_DUE),now+201).total)
+        ok(repo.withdraw(id(),f.book,first.row.id,graded.revision,"合成误点评分",now+202))
+        val restored=repo.schedule(f.question)!!
+        ok(repo.configure(id(),f.book,f.question,1,1,restored.revision,f.card,1,"新的问法",RecallQuestionKind.QUESTION))
+        val fresh=f.copy(plan=repo.refreshReferences(f.plan))
+        val second=compare(repo,fresh,begin(repo,fresh,now+300,RecallMode.PRACTICE),now+301)
+        ok(repo.grade(id(),f.book,second.row.id,second.row.revision,4,now+302))
+        val before=counts(db);val note=db.notes().note(f.book);val schedule=repo.schedule(f.question);val receipts=db.recall().receipts()
+
+        val all=queries.filteredHistory(f.book,RecallHistoryFilter(),now+400)
+        assertEquals(listOf(second.row.id,first.row.id),all.entries.map{it.row.id})
+        assertEquals(listOf("新的问法","请回忆这项知识"),all.entries.map{it.prompt})
+        assertEquals(listOf(RecallQuestionKind.QUESTION,RecallQuestionKind.TEXT_CLOZE),all.entries.map{it.kind})
+        assertEquals(listOf(false,true),all.entries.map{it.withdrawn})
+        assertTrue(all.entries.all{it.scheduleRevision==schedule!!.revision})
+        assertEquals(all,repo.filteredHistory(f.book,RecallHistoryFilter(),now+400))
+        val page=queries.filteredHistory(f.book,RecallHistoryFilter(),now+400,offset=1,limit=1)
+        assertEquals(2,page.total);assertEquals(1,page.offset);assertEquals(listOf(first.row.id),page.entries.map{it.row.id})
+        val pastEnd=queries.filteredHistory(f.book,RecallHistoryFilter(),now+400,offset=2,limit=1)
+        assertEquals(2,pastEnd.total);assertTrue(pastEnd.entries.isEmpty())
+        val hinted=RecallHistoryFilter(due=RecallDueFilter.DUE,kind=RecallQuestionKind.TEXT_CLOZE,usedHint=true,fromInclusive=now+200,untilExclusive=now+201)
+        assertEquals(listOf(first.row.id),queries.filteredHistory(f.book,hinted,now+400).entries.map{it.row.id})
+        assertEquals(0,queries.filteredHistory(f.book,RecallHistoryFilter(due=RecallDueFilter.NOT_DUE),now+400).total)
+        assertEquals(listOf(second.row.id),queries.filteredHistory(f.book,RecallHistoryFilter(usedHint=false),now+400).entries.map{it.row.id})
+        val old=queries.loadAttempt(first.row.id)
+        assertEquals(first.spec,old.spec);assertEquals(first.card,old.card);assertNotNull(old.correction)
+        assertArrayEquals(first.sources.sources.single().snapshot,old.sources.sources.single().snapshot)
+        assertEquals(schedule,old.schedule);assertNull(queries.loadSession(first.row.sessionId).current);assertNull(queries.resume(f.book))
+        assertEquals(queries.history(f.book),repo.history(f.book))
+        assertEquals(before,counts(db));assertEquals(note,db.notes().note(f.book));assertEquals(schedule,repo.schedule(f.question));assertEquals(receipts,db.recall().receipts())
+    }
+
+    @Test fun historyAndClosedSessionQueriesDoNotHydrateFixedSourcesOrUnstartedAttempts()=fixture{db,f->
+        val other=id();KnowledgeRepository(db).submit(KnowledgeCommand(id(),f.book,other,0,KnowledgeData.Question(f.card,"第二个问题")))
+        val plan=BranchReviewRepository(db).prepareCard(MapRef(f.book),f.card,1)
+        val repo=RecallStudyRepository(db);val sessionId=ok(repo.start(id(),id(),plan,RecallMode.PRACTICE,now))
+        val queries=RecallStudyQueries(db);val active=withTimeout(5_000){queries.observeSession(sessionId).first()}
+        assertEquals(2,active.attempts.size);assertEquals(sessionId,queries.resume(f.book)!!.id)
+        val started=requireNotNull(active.current).row.id
+        assertEquals(listOf(started),withTimeout(5_000){queries.observeHistory(f.book).first()}.map{it.id})
+        ok(repo.closeSession(id(),f.book,sessionId,active.row.revision,now+1))
+        // Summary projections must not require the source BLOBs needed only by the detail query.
+        db.openHelper.writableDatabase.execSQL("DELETE FROM study_source_revisions WHERE sourceId=?",arrayOf(f.card))
+        val before=counts(db);val note=db.notes().note(f.book)
+        val closed=queries.loadSession(sessionId)
+        assertTrue(closed.row.closed);assertNull(closed.current);assertEquals(2,closed.attempts.size)
+        assertEquals(listOf(started),queries.history(f.book).map{it.id})
+        assertEquals(listOf(started),queries.filteredHistory(f.book,RecallHistoryFilter(),now+2).entries.map{it.row.id})
+        assertEquals("RECALL_SOURCE_VERSION_CHANGED",runCatching{queries.loadAttempt(started)}.exceptionOrNull()?.message)
+        assertEquals(before,counts(db));assertEquals(note,db.notes().note(f.book))
+    }
+
+    @Test fun detailCommandsAndArchiveShareTheFrozenPresentationValidation()=fixture{db,f->
+        val presentation=id()
+        KnowledgeRepository(db).submit(KnowledgeCommand(id(),f.book,presentation,0,KnowledgeData.CardPresentation(f.card,"固定注释")))
+        val repo=RecallStudyRepository(db);val row=compare(repo,f,begin(repo,f))
+        val queries=RecallStudyQueries(db)
+        assertEquals("固定注释",queries.loadAttempt(row.row.id).presentation!!.annotation)
+        repo.validateArchive()
+        db.openHelper.writableDatabase.execSQL("UPDATE knowledge_revisions SET removed=1 WHERE id=? AND revision=1",arrayOf(presentation))
+        val before=counts(db);val schedule=repo.schedule(f.question)
+        assertEquals("RECALL_PRESENTATION_UNAVAILABLE",runCatching{queries.loadAttempt(row.row.id)}.exceptionOrNull()?.message)
+        assertEquals("RECALL_PRESENTATION_UNAVAILABLE",runCatching{repo.loadAttempt(row.row.id)}.exceptionOrNull()?.message)
+        assertEquals("RECALL_PRESENTATION_UNAVAILABLE",runCatching{repo.validateArchive()}.exceptionOrNull()?.message)
+        assertEquals(RecallOutcome.Rejected("RECALL_PRESENTATION_UNAVAILABLE"),repo.grade(id(),f.book,row.row.id,row.row.revision,5,now+200))
+        assertEquals(before,counts(db));assertEquals(schedule,repo.schedule(f.question))
+    }
+
     @Test fun schema15MigrationAddsRecallWithoutRewritingAuthorInkQuestionOrAnnotation()=runBlocking{
         val name="recall-migration-${id()}.db";val path=context.getDatabasePath(name);path.parentFile!!.mkdirs()
         val schema=org.json.JSONObject(context.assets.open("org.inkweft.data.NoteDatabase/15.json").bufferedReader().use{it.readText()}).getJSONObject("database")
@@ -203,6 +282,7 @@ class RecallStudyRepositoryTest {
                 for(j in 0 until indices.length())sql.execSQL(indices.getJSONObject(j).getString("createSql").replace("\${TABLE_NAME}",table))
             }
             sql.execSQL("INSERT INTO notes VALUES (?,1,'旧本','',1234)",arrayOf(book));sql.execSQL("INSERT INTO note_revisions VALUES (?,1,'旧本','',1234)",arrayOf(book))
+            sql.execSQL("INSERT INTO notebook_workspace (noteId,world,paper,folder,tags,favorite,trashedAt,centerX,centerY,zoom,revision) VALUES (?,0,0,'','',0,NULL,500,707,0,0)",arrayOf(book))
             sql.execSQL("INSERT INTO study_cards VALUES (?,?,1,'旧卡','旧正文',NULL)",arrayOf(card,book))
             sql.execSQL("INSERT INTO study_card_revisions VALUES (?,1,'旧卡','旧正文',NULL)",arrayOf(card))
             sql.execSQL("INSERT INTO notebook_pages VALUES (?,?,0,0,0,500,707,0,NULL,NULL)",arrayOf(book,book))
@@ -216,6 +296,7 @@ class RecallStudyRepositoryTest {
         val db=NoteDatabase.open(context,name)
         try{
             assertEquals(16,db.openHelper.readableDatabase.version);assertEquals("旧正文",db.study().card(card)!!.body)
+            assertEquals(WorkspaceRow(book,paper=0),db.workspace().get(book))
             assertArrayEquals(questionBytes,db.knowledge().get(question)!!.payload);assertArrayEquals(annotationBytes,db.knowledge().get(presentation)!!.payload)
             db.openHelper.readableDatabase.query("SELECT payload FROM ink_strokes WHERE id=?",arrayOf(stroke.id)).use{cursor->assertTrue(cursor.moveToFirst());assertArrayEquals(ink,cursor.getBlob(0))}
             val repo=RecallStudyRepository(db);assertTrue(repo.history(book).isEmpty());assertNull(repo.schedule(question))

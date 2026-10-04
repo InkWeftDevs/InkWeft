@@ -91,9 +91,26 @@ class StarNoteInteractionsUiTest {
    compose.runOnIdle{val v=find<ExcerptResizeOverlay>()!!;val b=v.bounds;val p=v.canvasView!!.snapshotViewport().worldToScreen(b.right,b.bottom,v.width.toDouble(),v.height.toDouble(),v.resources.displayMetrics.density.toDouble());start=androidx.compose.ui.geometry.Offset(p.x.toFloat(),p.y.toFloat())}
    compose.onNodeWithTag("excerpt-edit-overlay").performTouchInput{swipe(start,start+androidx.compose.ui.geometry.Offset(90f,55f),400)}
   }
-  drag();tap("excerpt-resize-cancel");ready()
-  assertEquals(original.right,runBlocking{app.study.source(card.id)}!!.right,0.0)
-  tap("excerpt-resize");drag();compose.activityRule.scenario.recreate();compose.waitForIdle();shot("v37-excerpt-resize.png");tap("excerpt-resize-save")
+  fun resizeControls(){
+   compose.onNodeWithTag("selection-context-menu").assertIsDisplayed()
+   listOf("excerpt-resize-cancel","excerpt-resize-save").forEach{compose.onNodeWithTag(it).assertIsDisplayed().assertIsEnabled()}
+  }
+  fun touchResize(tag:String){resizeControls();compose.onNodeWithTag(tag).performTouchInput{click()};compose.waitForIdle()}
+  fun assertOriginalSource(){
+   val unchanged=runBlocking{app.study.source(card.id)}!!
+   // Compare all source metadata separately from the snapshot's byte contents.
+   assertEquals(original,unchanged.copy(snapshot=original.snapshot));assertArrayEquals(original.snapshot,unchanged.snapshot)
+   assertEquals(card.revision,runBlocking{app.study.cards(note.id).first().single()}.revision)
+   compose.onNodeWithTag("excerpt-resize").assertIsDisplayed().assertIsEnabled()
+   compose.onNodeWithTag("excerpt-resize-save").assertDoesNotExist()
+  }
+  drag();touchResize("excerpt-resize-cancel");ready();assertOriginalSource()
+  tap("excerpt-resize");drag();resizeControls()
+  androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().sendKeyDownUpSync(android.view.KeyEvent.KEYCODE_BACK)
+  ready();assertOriginalSource()
+  tap("excerpt-resize");drag();compose.activityRule.scenario.recreate();compose.waitForIdle()
+  compose.waitUntil(5_000){runCatching{resizeControls()}.isSuccess}
+  shot("v37-excerpt-resize.png");touchResize("excerpt-resize-save")
   compose.waitUntil(15000){runBlocking{app.study.cards(note.id).first().single()}.revision==2L};ready()
   val resized=runBlocking{app.study.source(card.id)}!!;assertTrue(resized.right>original.right);assertTrue(resized.bottom>original.bottom)
   assertEquals(original.left,resized.left,0.0);assertEquals(original.top,resized.top,0.0)

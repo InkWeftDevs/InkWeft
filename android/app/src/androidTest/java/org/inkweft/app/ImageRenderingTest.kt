@@ -45,7 +45,14 @@ class ImageRenderingTest {
     @After fun release(){rule.scenario.onActivity{renderer?.clear();it.setContentView(FrameLayout(it));RenderResources.trim()}}
 
     @Test fun regionRetainsNativeDetailAndTransparentPixelsWithoutRedecodingEachDraw(){
-        val original=source(4000,2000){b->for(x in 0 until b.width)if(x%2==0)Canvas(b).drawLine(x.toFloat(),0f,x.toFloat(),2000f,Paint().apply{color=Color.RED;strokeWidth=1f})}
+        // Paint() enables antialiasing on Android S+: integer-centred 1px lines create
+        // half-alpha pixels. Literal pixels keep this native-detail/alpha fixture exact.
+        // https://developer.android.com/reference/android/graphics/Paint#Paint()
+        val original=source(4000,2000){b->
+            val row=IntArray(b.width){x->if(x%2==0)Color.RED else Color.TRANSPARENT}
+            for(y in 0 until b.height)b.setPixels(row,0,b.width,0,y,b.width,1)
+            assertEquals(Color.RED,b.getPixel(0,100));assertEquals(0,Color.alpha(b.getPixel(1,100)))
+        }
         val o=item(original);val visible=CanvasBounds(180.0,80.0,220.0,120.0)
         request(o,original,visible,10.0)
         ins.runOnMainSync{

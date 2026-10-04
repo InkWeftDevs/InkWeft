@@ -443,6 +443,15 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
         favoriteStore.apply(next);favorites=next;if(match==null)showFavorites(true)
     }
     if(continuousPages==null&&!readOnly)AutomaticBeautyBinding(objectsVm,ui,gesture,beautyOptions,page.world,app)
+    var pageMore by remember{mutableStateOf(false)}
+    val pageTools:@Composable (()->Unit)->Unit={close->
+        Text("页面与批注",Modifier.padding(horizontal=16.dp,vertical=8.dp),style=MaterialTheme.typography.labelLarge,color=Quiet)
+        DropdownMenuItem(text={Text("图层 · "+(authoringUi.state.layers.layers.firstOrNull{it.id==authoringUi.state.layers.currentId}?.name?:"请选择可写层"))},onClick={close();layersOpen=true},enabled=!gesture&&!busy,modifier=Modifier.testTag("page-layers-open"))
+        if(!page.world)DropdownMenuItem(text={Text(if(whitespaceOpen)"收起留白 · 返回原页"else"含留白展开视图")},onClick={close();whitespaceMode(!whitespaceOpen)},enabled=!gesture&&!busy&&!authoringUi.pending,modifier=Modifier.testTag("page-whitespace-open"))
+        DropdownMenuItem(text={Text("可见分享")},onClick={close();visibleShare=true},enabled=navigationReady,modifier=Modifier.testTag("page-visible-share"))
+        DropdownMenuItem(text={Text(if(selectedObject!=null)"对象旁批注"else"游离批注")},onClick={close();annotationTarget=selectedObject?:page.id},enabled=!gesture&&!busy,modifier=Modifier.testTag("page-annotation-open"))
+        HorizontalDivider(color=Line)
+    }
     val toolbar:@Composable ()->Unit={
         FloatingPenCase(expandRequest=penOpenRequest,topInset=toolbarHeight) {
             val caseKinds=listOf(InkPen.PENCIL,InkPen.PEN,InkPen.BRUSH,InkPen.MARKER,InkPen.BALLPOINT,InkPen.HIGHLIGHTER)
@@ -529,8 +538,10 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
                 val o=objectsUi.objects.find{it.id==selectedObject}
                 val region=o?.let{InkRegion(listOf(EraserPoint(it.x,it.y),EraserPoint(it.x+it.width,it.y+it.height)))}
                 SelectionToolbar(region,selectionViewport){
+                Column {
+                if(o!=null)TextButton({annotationTarget=o.id},enabled=!gesture&&!busy,modifier=Modifier.heightIn(min=48.dp).testTag("object-annotation-context")){Text("对象旁批注")}
                 PageObjectTools(objectsVm,objectsUi,page.id,page.world,tool==5,editable&&!gesture&&(selectedObject==null||authoringUi.state.layers.editable(LayerContent(LayerContentKind.OBJECT,selectedObject!!))),selectedObject,{selectedObject=it},{objectInteraction=it},{view?.snapshotViewport()},{notice=it},request=objectRequest.takeIf{continuousPages==null},onRequestConsumed={objectRequest=null},onDone={selectedObject=null;tool=lastWritingTool},onEditMap={selectedObject=null;tool=lastWritingTool;onEditMap(it)})
-                }
+                }}
             }
             if(tool!=5)PageObjectTools(objectsVm,objectsUi,page.id,page.world,false,editable&&!gesture,null,{selectedObject=it},{objectInteraction=it},{view?.snapshotViewport()},{notice=it})
             if((tool==4||tool==6)&&selectedExcerpt==null)AndroidView(factory={SelectionOverlayView(it)},update={v->
@@ -593,8 +604,8 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
                 enabled=navigationReady&&externalEnabled,fullScreen=fullScreen,
                 onMap={onDocumentAction("map")},onExcerpts={onDocumentAction("excerpts")},onAssociate={onDocumentAction("associations")},onWrite={changeReadOnly(false)},
                 onSearch={onSearch(ui.revision)},onOverview={onDocumentAction("overview")},
-                onFullScreen={onFullScreen(!fullScreen)},onExport={if(page.world)confirmExport=true else onDocumentAction("export")},onTimer={timerOpen=true},showWriteControl=!workspaceModesProvided)
-            else if(!readOnly)EditorToolbar(fullScreen=fullScreen) { action,closeOverflow -> when(action){
+                onFullScreen={onFullScreen(!fullScreen)},onExport={if(page.world)confirmExport=true else onDocumentAction("export")},onTimer={timerOpen=true},showWriteControl=!workspaceModesProvided,pageActions=pageTools)
+            else if(!readOnly)EditorToolbar(fullScreen=fullScreen,pageActions=pageTools) { action,closeOverflow -> when(action){
                 "undo" -> IconButton(onClick={closeOverflow();when(historyHeads.undo){EditDomain.AUTHORING->authoringVm.undo();EditDomain.OBJECT->objectsVm.undo();else->vm.undo()}},enabled=(when(historyHeads.undo){EditDomain.AUTHORING->authoringUi.undo;EditDomain.OBJECT->objectsUi.undo;else->ui.canUndo})&&!editingBlocked,modifier=Modifier.size(48.dp).testTag("ink-undo").describedAs("撤销")){Glyph("undo")}
                 "redo" -> IconButton(onClick={closeOverflow();when(historyHeads.redo){EditDomain.AUTHORING->authoringVm.redo();EditDomain.OBJECT->objectsVm.redo();else->vm.redo()}},enabled=(when(historyHeads.redo){EditDomain.AUTHORING->authoringUi.redo;EditDomain.OBJECT->objectsUi.redo;else->ui.canRedo})&&!editingBlocked,modifier=Modifier.size(48.dp).testTag("ink-redo").describedAs("重做")){Glyph("redo")}
                 "pen" -> EditorTool("笔","pen",tool<3&&!readOnly,!busy,"top-draw",Modifier.describedAs("笔参数")){closeOverflow();if(!readOnly||changeReadOnly(false)){selectedObject=null;if(tool in 0..2){settings=true;penOpenRequest++}else{tool=lastWritingTool;penOpenRequest++}}}
@@ -621,12 +632,15 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
                 "export" -> IconButton(onClick={closeOverflow();if(page.world)confirmExport=true else onDocumentAction("export")},enabled=!busy,modifier=Modifier.testTag("quick-export").describedAs("导出文档")){Glyph("export")}
                 "timer" -> IconButton(onClick={closeOverflow();timerOpen=true},modifier=Modifier.testTag("quick-timer").describedAs("计时器")){Glyph("timer")}
             }}
-            Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState())){
-                TextButton({layersOpen=true},enabled=!gesture&&!busy,modifier=Modifier.testTag("page-layers-open")){Text("图层 · "+(authoringUi.state.layers.layers.firstOrNull{it.id==authoringUi.state.layers.currentId}?.name?:"请选择可写层"))}
-                if(!page.world)TextButton({whitespaceMode(!whitespaceOpen)},enabled=!gesture&&!busy&&!authoringUi.pending,modifier=Modifier.testTag("page-whitespace-open")){Text(if(whitespaceOpen)"原页视图"else"含留白展开视图")}
-                TextButton({visibleShare=true},enabled=navigationReady,modifier=Modifier.testTag("page-visible-share")){Text("可见分享")}
-                TextButton({annotationTarget=selectedObject?:page.id},enabled=!gesture&&!busy,modifier=Modifier.testTag("page-annotation-open")){Text(if(selectedObject!=null)"对象旁批注"else"游离批注")}
+            else Row(Modifier.fillMaxWidth(),verticalAlignment=Alignment.CenterVertically){
+                Text(if(whitespaceOpen)"含留白展开视图"else"原页视图",Modifier.weight(1f).padding(start=12.dp),style=MaterialTheme.typography.labelMedium,color=Quiet)
+                Box{
+                    EditorAction("页面与批注","more",tag="toolbar-more"){pageMore=true}
+                    DropdownMenu(pageMore,{pageMore=false}){pageTools{pageMore=false}}
+                }
             }
+            }
+        }
             val inkStatus=when {
                 authoringUi.busy||authoringUi.pending->"批注／图层尚未保存或待核对"
                 authoringUi.loading->"正在读取图层"
@@ -639,13 +653,12 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
                 ui.processing||ui.queued>0->"正在保存笔迹"
                 else->"本页笔迹已保存"
             }
-            // Reserve one line in every state. This does not report object or beauty-review saves.
-            Box(Modifier.fillMaxWidth().height(maxOf(24.dp,with(toolbarDensity){18.sp.toDp()})).padding(horizontal=12.dp),contentAlignment=Alignment.CenterEnd){
-                Text(inkStatus,Modifier.testTag("ink-save-status"),fontSize=11.sp,lineHeight=14.sp,maxLines=1,
+            // Save feedback does not consume a second toolbar row or enter native paper snapshots.
+            Surface(Modifier.align(Alignment.BottomStart).padding(start=8.dp,bottom=8.dp).widthIn(max=280.dp),
+                shape=RoundedCornerShape(8.dp),color=MaterialTheme.colorScheme.surface.copy(alpha=.94f)){
+                Text(inkStatus,Modifier.padding(horizontal=8.dp,vertical=4.dp).testTag("ink-save-status"),fontSize=11.sp,lineHeight=14.sp,maxLines=1,
                     overflow=androidx.compose.ui.text.style.TextOverflow.Ellipsis,color=if(ui.readFailed||ui.blocked!=null)MaterialTheme.colorScheme.error else Quiet)
             }
-            }
-        }
         if(fullScreen)TextButton(onClick={onFullScreen(false)},modifier=Modifier.align(Alignment.BottomEnd).padding(8.dp).testTag("exit-fullscreen")){Text("退出全屏")}
         if(!readOnly)toolbar()
         if(favoritesOpen&&!readOnly)FloatingPenCase("favorites",wide=true,topInset=toolbarHeight){

@@ -8,7 +8,7 @@ import re
 APP = ["ViewportRasterTest", "PdfViewportRasterTest", "ZoomRasterTest", "RenderResourcesTest",
        "ImageRenderingTest", "CardPresentationUiTest", "RecallMaskUiTest", "StarNoteInteractionsUiTest", "StudyOrganizationUiTest", "CardTransformUiTest", "StudyTransformNavigationUiTest", "StudyRelationPaintTest", "StudyRelationsUiTest", "KnowledgeRelationEditorUiTest", "CardReuseStoreTest",
        "LayerAuthoringNativeTest", "LayerSnapshotPreviewTest", "VisiblePageExportTest",
-       "RecallDurableRecoveryTest", "RecallMaskNativeTest", "RecallQuestionEditorUiTest"]
+       "RecallDurableRecoveryTest", "RecallMaskNativeTest", "RecallQuestionEditorUiTest", "StudyNavigationStateTest", "CardSourceNavigationUiTest", "LibrarySourceNavigationUiTest", "MapPortalUiTest", "LearningWorkspacePolishUiTest", "MapInteractionUiTest", "SelectionStudyUiTest"]
 ROOM = ["PageObjectRepositoryTest", "CardPresentationRepositoryTest", "LibraryBackupRepositoryTest",
         "LibraryBackupGuardTest", "LibraryContentRepositoryTest", "StudyAndSelectionRepositoryTest", "CardTransformRepositoryTest", "CardReuseRepositoryTest", "KnowledgeRepositoryTest", "KnowledgeTextRepositoryTest",
         "PageAuthoringRepositoryTest", "AuthoringPendingStoreTest", "BranchReviewRepositoryTest", "BranchReviewRoundRepositoryTest", "RecallStudyRepositoryTest"]
@@ -43,7 +43,7 @@ def build_plan():
             "room_class_counts":{c:inventory("data-local")[c] for c in room},
             "core_classes":["org.inkweft.core."+c for c in CORE],
             "fixture":{"runner":RUNNER,"phases":list(PHASE_METHODS),"expected_methods":len(PHASE_METHODS),
-                       "expected_screenshots":35,"native_workspace_screenshots":24,"native_recall_screenshots":6},
+                       "expected_screenshots":38,"native_workspace_screenshots":24,"native_recall_screenshots":6},
             "scope":"six-batch B1-B5 targeted regression and B6 full-sized synthetic prepare/cold-reopen/workspace/native-recall evidence; physical device and human acceptance remain NOT_RUN"}
 
 

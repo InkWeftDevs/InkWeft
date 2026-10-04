@@ -3,7 +3,6 @@ package org.inkweft.data
 
 import androidx.room.withTransaction
 import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.flow.map
 import org.inkweft.core.*
 import java.io.ByteArrayOutputStream
 import java.io.DataOutputStream
@@ -17,20 +16,16 @@ sealed interface RecallOutcome {
 }
 data class RecallQueueItem(val reference:BranchReviewEntryRef,val prompt:String,val kind:RecallQuestionKind,val dueAt:Long,
     val needsReview:Boolean,val specRevision:Long,val scheduleRevision:Long)
-data class RecallLoadedAttempt(val row:RecallAttemptRow,val spec:RecallQuestionSpec,val card:StudyCardRevisionRow,val sources:FrozenStudySources,
-    val hints:List<RecallHintRow>,val correction:RecallCorrectionRow?,val schedule:RecallScheduleRow?,val presentation:KnowledgeData.CardPresentation?=null)
-data class RecallHistoryEntry(val row:RecallAttemptSummary,val prompt:String,val kind:RecallQuestionKind,val withdrawn:Boolean,val scheduleRevision:Long)
-data class RecallHistoryPage(val entries:List<RecallHistoryEntry>,val total:Int,val offset:Int)
-data class RecallLoadedSession(val row:RecallSessionRow,val attempts:List<RecallAttemptSummary>,val current:RecallLoadedAttempt?)
 
 /** One question identity owns one schedule across every collection. All state-changing methods use receipts. */
 class RecallStudyRepository(private val db:NoteDatabase,private val fault:(RecallFault)->Unit={}){
     private val dao get()=db.recall()
-    fun observeSession(id:String)=db.invalidationTracker.createFlow("recall_sessions","recall_attempts","recall_hint_events","recall_schedules","recall_corrections","recall_questions","study_cards","knowledge_records").map{loadSession(id)}
-    fun observeHistory(book:String)=db.invalidationTracker.createFlow("recall_attempts","recall_hint_events","recall_schedules","recall_corrections").map{history(book)}
-    suspend fun resume(book:String):RecallSessionRow?=db.withTransaction{requireBook(book);dao.sessions(book).lastOrNull{!it.closed}}
+    private val queries=RecallStudyQueries(db)
+    fun observeSession(id:String)=queries.observeSession(id)
+    fun observeHistory(book:String)=queries.observeHistory(book)
+    suspend fun resume(book:String):RecallSessionRow?=queries.resume(book)
     suspend fun queue(plan:BranchReviewPlan):List<RecallQueueItem> = db.withTransaction {
-        requireBook(plan.ref.notebookId)
+        queries.requireBook(plan.ref.notebookId)
         val positions=dao.questionOrder(plan.ref.notebookId).associate{it.questionId to it.position}
         val cards=plan.entries.map{it.cardId}.distinct().withIndex().associate{it.value to it.index}
         plan.entries.map{ref->
@@ -45,7 +40,7 @@ class RecallStudyRepository(private val db:NoteDatabase,private val fault:(Recal
     }
     /** Explicit preparation refresh. Never called while starting/retrying a frozen pending session command. */
     suspend fun refreshReferences(plan:BranchReviewPlan):BranchReviewPlan = db.withTransaction {
-        requireBook(plan.ref.notebookId)
+        queries.requireBook(plan.ref.notebookId)
         val entries=plan.entries.map{ref->
             val question=requireNotNull(db.knowledge().get(ref.questionId)){"RECALL_QUESTION_UNAVAILABLE"}
             val data=question.data() as? KnowledgeData.Question
@@ -222,35 +217,11 @@ class RecallStudyRepository(private val db:NoteDatabase,private val fault:(Recal
         require(row.status==RecallAttemptStatus.OPEN.name){"RECALL_ATTEMPT_FINISHED"}
         val session=requireNotNull(dao.session(row.sessionId));require(!session.closed&&session.position==row.position){"RECALL_SESSION_CHANGED"};return row
     }
-    suspend fun loadSession(id:String):RecallLoadedSession=db.withTransaction{
-        val session=requireNotNull(dao.session(id)){"RECALL_SESSION_UNAVAILABLE"};requireBook(session.notebookId)
-        val attempts=dao.sessionSummaries(id);require(attempts.size==session.size&&attempts.withIndex().all{it.index==it.value.position})
-        RecallLoadedSession(session,attempts,attempts.getOrNull(session.position)?.takeIf{!session.closed}?.let{loadAttempt(requireNotNull(dao.attempt(it.id)))})
-    }
-    suspend fun loadAttempt(id:String):RecallLoadedAttempt=db.withTransaction{loadAttempt(requireNotNull(dao.attempt(id)))}
-    private suspend fun loadAttempt(row:RecallAttemptRow):RecallLoadedAttempt {
-        val spec=requireNotNull(dao.questionVersion(row.questionId,row.specRevision)).spec()
-        val card=requireNotNull(db.study().cardVersion(spec.cardId,spec.cardRevision));spec.validateBody(card.body)
-        val sources=StudySourceVersions(db).read(spec.cardId,spec.cardRevision)
-        require(sources.refs==spec.sourceRefs&&sources.complete==spec.sourcesComplete){"RECALL_SOURCE_VERSION_CHANGED"}
-        return RecallLoadedAttempt(row,spec,card,sources,dao.hints(row.id),dao.correction(row.id),dao.schedule(row.questionId),frozenPresentation(spec))
-    }
-    suspend fun history(book:String):List<RecallAttemptSummary> = db.withTransaction{requireBook(book);dao.attemptSummaries(book).filter{it.startedAt!=null}}
-    /** History pages never load answer ink or source BLOBs. Open an individual row for the fixed answer. */
-    suspend fun filteredHistory(book:String,filter:RecallHistoryFilter,now:Long,offset:Int=0,limit:Int=100):RecallHistoryPage = db.withTransaction{
-        require(now>=0&&offset>=0&&limit in 1..200)
-        val specs=mutableMapOf<Pair<String,Long>,Pair<String,RecallQuestionKind>>()
-        val schedules=dao.schedules(book).associateBy{it.questionId}
-        val corrections=dao.corrections(book).map{it.attemptId}.toSet()
-        val matches=history(book).mapNotNull{row->
-            val key=row.questionId to row.specRevision
-            val description=specs[key]?:requireNotNull(dao.questionVersion(row.questionId,row.specRevision)).spec().let{it.prompt to it.kind}.also{specs[key]=it}
-            val schedule=schedules[row.questionId]
-            if(filter.matches(description.second,row.hintMask,row.completedAt?:requireNotNull(row.startedAt),schedule?.dueAt?:0,now))
-                RecallHistoryEntry(row,description.first,description.second,row.id in corrections,schedule?.revision?:0L)else null
-        }
-        RecallHistoryPage(matches.drop(offset).take(limit),matches.size,offset)
-    }
+    suspend fun loadSession(id:String):RecallLoadedSession=queries.loadSession(id)
+    suspend fun loadAttempt(id:String):RecallLoadedAttempt=queries.loadAttempt(id)
+    suspend fun history(book:String):List<RecallAttemptSummary> = queries.history(book)
+    suspend fun filteredHistory(book:String,filter:RecallHistoryFilter,now:Long,offset:Int=0,limit:Int=100):RecallHistoryPage =
+        queries.filteredHistory(book,filter,now,offset,limit)
     /** Checks raw integer ranges before Room narrows them, then verifies frozen and causal closure. */
     suspend fun validateArchive(){
         val sql=db.openHelper.readableDatabase
@@ -264,7 +235,7 @@ class RecallStudyRepository(private val db:NoteDatabase,private val fault:(Recal
         val books=sql.query("SELECT id FROM notes").use{cursor->buildList{while(cursor.moveToNext())add(cursor.getString(0))}}
         for(version in dao.questionVersions()){
             val spec=version.spec();require(spec.questionId==version.questionId)
-            frozenPresentation(spec)
+            queries.frozenPresentation(spec)
             val q=requireNotNull(db.knowledge().revision(spec.questionId,spec.knowledgeRevision));val value=KnowledgeCodec.decode(q.payload) as? KnowledgeData.Question
             require(!q.removed&&q.notebookId==version.notebookId&&value?.cardId==spec.cardId&&value.prompt==spec.prompt)
             require(db.study().card(spec.cardId)?.notebookId==version.notebookId)
@@ -358,26 +329,17 @@ class RecallStudyRepository(private val db:NoteDatabase,private val fault:(Recal
         val card=requireNotNull(db.study().card(cardId))
         return db.knowledge().forBook(card.notebookId).singleOrNull{!it.removed&&(it.data() as? KnowledgeData.CardPresentation)?.cardId==cardId}
     }
-    private suspend fun frozenPresentation(spec:RecallQuestionSpec):KnowledgeData.CardPresentation? {
-        val reference=spec.presentation?:return null
-        require(spec.presentationKnown){"RECALL_PRESENTATION_UNAVAILABLE"}
-        val row=requireNotNull(db.knowledge().revision(reference.id,reference.revision)){"RECALL_PRESENTATION_UNAVAILABLE"}
-        val data=KnowledgeCodec.decode(row.payload) as? KnowledgeData.CardPresentation
-        require(!row.removed&&data?.cardId==spec.cardId&&row.notebookId==db.study().card(spec.cardId)?.notebookId){"RECALL_PRESENTATION_UNAVAILABLE"}
-        return data
-    }
     private suspend fun presentationCurrent(spec:RecallQuestionSpec):Boolean=spec.presentationKnown&&
-        ((currentPresentation(spec.cardId)?.data() as? KnowledgeData.CardPresentation)?.annotation.orEmpty()==frozenPresentation(spec)?.annotation.orEmpty())
+        ((currentPresentation(spec.cardId)?.data() as? KnowledgeData.CardPresentation)?.annotation.orEmpty()==queries.frozenPresentation(spec)?.annotation.orEmpty())
     private suspend fun requireAttemptTime(row:RecallAttemptRow,at:Long){
         require(at>=maxOf(requireNotNull(row.startedAt),dao.hints(row.id).maxOfOrNull{it.at}?:0)){"RECALL_CLOCK_MOVED_BACK"}
     }
     suspend fun lookup(operationId:String):RecallReceiptRow?=dao.receipt(operationId)
-    private suspend fun requireBook(book:String){UUID.fromString(book);require(db.notes().note(book)!=null&&db.workspace().get(book)?.trashedAt==null){"RECALL_BOOK_UNAVAILABLE"}}
     private suspend fun write(operationId:String,book:String,kind:String,digest:String,action:suspend()->String):RecallOutcome =try{
         UUID.fromString(operationId)
         val result=db.withTransaction{
             dao.receipt(operationId)?.let{require(it.notebookId==book&&it.kind==kind&&it.digest==digest){"RECALL_OPERATION_MISMATCH"};return@withTransaction it.resultId}
-            requireBook(book);require(dao.receiptCount(book)<RecallLimits.MAX_COMMANDS_PER_BOOK){"RECALL_COMMAND_BUDGET"}
+            queries.requireBook(book);require(dao.receiptCount(book)<RecallLimits.MAX_COMMANDS_PER_BOOK){"RECALL_COMMAND_BUDGET"}
             val id=action();fault(RecallFault.BEFORE_RECEIPT);dao.insert(RecallReceiptRow(operationId,book,kind,digest,id));db.notes().touch(book,System.currentTimeMillis());id
         };fault(RecallFault.AFTER_COMMIT);RecallOutcome.Success(result)
     }catch(c:CancellationException){throw c}catch(e:IllegalArgumentException){RecallOutcome.Rejected(e.message?:"RECALL_INVALID")}

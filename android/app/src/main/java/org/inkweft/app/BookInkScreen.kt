@@ -315,14 +315,14 @@ fun InkScreen(note:NoteDraft,workspace:WorkspaceViewModel=viewModel(),onBack:()-
             }
         }
     }
-    if(excerptsOpen)DocumentSidePanel("摘录","excerpt-panel",{if(excerptReady)excerptsOpen=false},Modifier.align(Alignment.CenterEnd).width(panelWidth)){
+    if(excerptsOpen)DocumentSidePanel("摘录","excerpt-panel",{if(excerptReady)excerptsOpen=false},Modifier.align(Alignment.CenterEnd).padding(top=chromeHeight).width(panelWidth)){
         ExcerptCollection(excerptsVm,ui.pages,pageActionsReady,{source->vm.select(source.pageId);revealSource(source.pageId,CanvasBounds(source.left,source.top,source.right,source.bottom))}, {card->if(showDocumentPanel("map")){initialStudyCard=card;initialStudyCardRequest++;studySource=null}})
     }
     if(searchOpen)searchStateHolder.SaveableStateProvider("search-${note.base.id}"){BookSearchPanel(note.base.id,note.title,page?.id,{searchOpen=false},{id,bounds->
         if(ui.pages.any{it.id==id}){if(bounds!=null)revealSource(id,bounds);vm.select(id);searchOpen=false}
     },{draft->searchTarget=draft;searchOpen=false},onMapSearch={showDocumentPanel("map-search")})}
     if(mapSearchOpen)MapSearchPanel(MapRef(note.base.id,selectedMapId),{mapSearchOpen=false}){query,all,hit->if(showDocumentPanel("map")){studySession.selectTab(2);studySession.beginSearch(query,all,hit)}}
-    if(documentSettings)DocumentSidePanel("其他设置","document-settings-dialog",{documentSettings=false},Modifier.align(Alignment.CenterEnd).width(panelWidth)){
+    if(documentSettings)DocumentSidePanel("其他设置","document-settings-dialog",{documentSettings=false},Modifier.align(Alignment.CenterEnd).padding(top=chromeHeight).width(panelWidth)){
         var readOnlyReason by remember(note.base.id){mutableStateOf<String?>(null)}
         val inputFocus=LocalFocusManager.current;val keyboard=LocalSoftwareKeyboardController.current
         Column(Modifier.verticalScroll(rememberScrollState())){
@@ -406,7 +406,7 @@ fun InkScreen(note:NoteDraft,workspace:WorkspaceViewModel=viewModel(),onBack:()-
         }
     }
     }
-    if(directory)DocumentSidePanel("文档概览","pages-directory-dialog",{directory=false},Modifier.align(Alignment.CenterEnd).width(panelWidth)){
+    if(directory)DocumentSidePanel("文档概览","pages-directory-dialog",{directory=false},Modifier.align(Alignment.CenterEnd).padding(top=chromeHeight).width(panelWidth)){
         Row(Modifier.fillMaxWidth().padding(horizontal=8.dp)){
             listOf("页面" to "overview","大纲" to "list","页签" to "bookmark","摘录" to "excerpt").forEachIndexed{i,(label,icon)->
                 Column(Modifier.weight(1f).selectable(selected=overviewTab==i,onClick={overviewTab=i;showRecycled=false},role=androidx.compose.ui.semantics.Role.Tab).heightIn(min=64.dp).padding(vertical=8.dp).testTag("overview-tab-$i"),horizontalAlignment=Alignment.CenterHorizontally){

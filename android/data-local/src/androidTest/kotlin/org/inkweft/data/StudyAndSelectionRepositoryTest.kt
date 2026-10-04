@@ -102,6 +102,31 @@ class StudyAndSelectionRepositoryTest {
         assertEquals(InkCommitResult.Conflict,InkRepository(db).save(c));assertEquals(1,db.ink().strokes(page).size)
         assertEquals(InkCommitResult.Conflict,InkRepository(db).save(CommitInk(id(),page,0,InkMutation.Visibility(listOf(s.id),false))))
     }
+    @Test fun missingAndForeignInkTargetsConflictWithoutChangingInkOrLayers()=fixture{db,page->
+        val s=seed(db,page);val ink=InkRepository(db)
+        val cut=InkRegion(listOf(EraserPoint(140f,100f),EraserPoint(160f,125f))).mask()
+        assertEquals(InkCommitResult.Committed(2),ink.save(CommitInk(id(),page,1,InkMutation.Cut(EraseSelection(cut,listOf(s.id))))))
+        val other=WorkspaceRepository(db).create("无目标的编辑页",false,PaperStyle.BLANK).id
+        val before=ink.read(page);val sourceNote=db.notes().note(page);val targetNote=db.notes().note(other)
+        val layers=PageAuthoringCodec.fingerprint(PageAuthoringRepository(db).readPage(page).state)
+        val changes=listOf(s.id,id()).flatMap{target->listOf(
+            InkMutation.Replace(listOf(target),InkSelectionEdit.copy(listOf(s),0f,0f)),
+            InkMutation.Swap(listOf(target),emptyList()),InkMutation.Swap(emptyList(),listOf(target)),
+            InkMutation.Visibility(listOf(target),false),
+            InkMutation.Cut(EraseSelection(InkRegion(listOf(EraserPoint(140f,100f),EraserPoint(160f,125f))).mask(),listOf(target))))
+        }+listOf(InkMutation.CutVisibility(cut.id,false),InkMutation.CutVisibility(id(),false))
+        for(change in changes){
+            val command=CommitInk(id(),other,0,change)
+            assertEquals(InkCommitResult.Conflict,ink.save(command));assertNull(db.ink().receipt(command.commandId))
+        }
+        assertEquals(before.revision,ink.read(page).revision)
+        assertArrayEquals(InkStrokeCodec.encode(s),db.ink().stroke(s.id)!!.payload);assertTrue(db.ink().stroke(s.id)!!.visible)
+        assertArrayEquals(InkCutCodec.encode(cut),db.ink().cut(cut.id)!!.payload);assertTrue(db.ink().cut(cut.id)!!.visible)
+        assertNull(db.ink().page(other));assertTrue(db.ink().strokes(other).isEmpty());assertTrue(db.ink().cuts(other).isEmpty())
+        assertNull(db.authoring().get(AuthoringScopeKind.PAGE.name,other))
+        assertEquals(layers,PageAuthoringCodec.fingerprint(PageAuthoringRepository(db).readPage(page).state))
+        assertEquals(sourceNote,db.notes().note(page));assertEquals(targetNote,db.notes().note(other))
+    }
     @Test fun excerptSnapshotIsImmutableAfterSourceEraseAndPageMove()=fixture{db,page->
         val s=seed(db,page);val c=create(page,source=StudySourceDraft(page,1,CanvasBounds(90.0,90.0,210.0,130.0),listOf(s.id)))
         val repo=StudyRepository(db);repo.submit(c);val old=repo.source(c.cardId!!)!!.snapshot.clone()

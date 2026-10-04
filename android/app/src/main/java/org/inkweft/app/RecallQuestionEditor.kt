@@ -34,6 +34,9 @@ import java.util.UUID
     var kind by rememberSaveable{mutableStateOf(item.kind)};var prompt by rememberSaveable{mutableStateOf(item.prompt)}
     // Empty masks can be an intentional draft edit, including after recreation.
     var initialized by rememberSaveable(book,item.reference.questionId){mutableStateOf(false)}
+    var draftBase by rememberSaveable(book,item.reference.questionId){mutableStateOf<String?>(null)}
+    var currentBase by remember{mutableStateOf<String?>(null)}
+    val baseChanged=currentBase!=null&&currentBase!=draftBase
     var rangeText by rememberSaveable{mutableStateOf("")};var maskText by rememberSaveable{mutableStateOf("")}
     var text by rememberSaveable(stateSaver=TextFieldValue.Saver){mutableStateOf(TextFieldValue())}
     var selectedSource by rememberSaveable{mutableIntStateOf(-1)}
@@ -46,6 +49,9 @@ import java.util.UUID
     fun ranges()=if(rangeText.isEmpty())emptyList()else rangeText.split(';').map{value->val parts=value.split(':');RecallCloze(parts[0].toInt(),parts[1].toInt())}
     fun masks()=if(maskText.isEmpty())emptyList()else maskText.split(';').map{value->val p=value.split('|');RecallRegion(StudySourceVersionRef(p[0],p[1].toLong()),p[2].toDouble(),p[3].toDouble(),p[4].toDouble(),p[5].toDouble())}
     fun encodeMask(v:RecallRegion)="${v.source.sourceId}|${v.source.revision}|${v.left}|${v.top}|${v.right}|${v.bottom}"
+    fun base(questionRevision:Long,cardId:String,cardRevision:Long,specRevision:Long,scheduleRevision:Long,
+        presentation:RecallPresentationRef?,refs:List<StudySourceVersionRef>,complete:Boolean)=
+        listOf(questionRevision,cardId,cardRevision,specRevision,scheduleRevision,presentation?.let{"${it.id}@${it.revision}"},StudySourceRefs.encode(refs),complete).joinToString("|")
     LaunchedEffect(item.reference.questionId){
         busy=true
         try{withContext(Dispatchers.IO){
@@ -56,23 +62,29 @@ import java.util.UUID
             val q=app.knowledge.observeBook(book).first().single{it.id==item.reference.questionId&&!it.removed}
             val c=app.study.cards(book).first().single{it.id==item.reference.cardId&&it.trashedAt==null}
             val shownPresentation=repository.presentation(c.id);val config=repository.configuration(q.id);val scheduleRow=repository.schedule(q.id);val frozen=app.study.sources(c.id,c.revision)
+            val loadedBase=base(q.revision,c.id,c.revision,config?.revision?:0,scheduleRow?.revision?:0,
+                shownPresentation?.let{RecallPresentationRef(it.id,it.revision)},frozen.refs,frozen.complete)
             withContext(Dispatchers.Main){question=q;card=c;original=config;schedule=scheduleRow;sources=frozen;presentation=shownPresentation
-                if(text.text!=c.body)text=TextFieldValue(c.body)
-                if(pending!=null){val spec=RecallCodec.spec(Base64.decode(JSONObject(pending).getString("spec"),Base64.NO_WRAP))
+                currentBase=loadedBase
+                if(pending!=null){val intent=JSONObject(pending);val spec=RecallCodec.spec(Base64.decode(intent.getString("spec"),Base64.NO_WRAP))
+                    // A sealed retry keeps its own CAS base, even if the live records have advanced.
+                    draftBase=base(intent.getLong("questionRevision"),spec.cardId,spec.cardRevision,intent.getLong("specRevision"),intent.getLong("scheduleRevision"),spec.presentation,spec.sourceRefs,spec.sourcesComplete)
                     prompt=spec.prompt;kind=spec.kind;rangeText=spec.clozes.joinToString(";"){"${it.start}:${it.end}"};maskText=spec.regions.joinToString(";",transform=::encodeMask)
                 }else if(!initialized){
+                    draftBase=loadedBase
                     prompt=(q.data() as KnowledgeData.Question).prompt
                     config?.spec()?.let{spec->
                         kind=spec.kind;rangeText=spec.clozes.joinToString(";"){"${it.start}:${it.end}"};maskText=spec.regions.joinToString(";",transform=::encodeMask)
                     }
                 }
+                if((pending!=null||draftBase==loadedBase)&&text.text!=c.body)text=TextFieldValue(c.body)
                 initialized=true
                 if(selectedSource<0&&frozen.sources.size==1)selectedSource=0
             }
         }}catch(c:CancellationException){throw c}catch(e:Exception){error=recallError(e.message)}finally{busy=false}
     }
     fun apply(){
-        if(busy||!lock.canWrite&&command==null)return
+        if(busy||command==null&&(!lock.canWrite||baseChanged))return
         val raw=command?:run {
         val c=card?:return;val q=question?:return
         val clozes=try{if(kind==RecallQuestionKind.TEXT_CLOZE)ranges()else emptyList()}catch(e:Exception){error="空位格式无效，请重新选择";return}
@@ -104,11 +116,12 @@ import java.util.UUID
 
     AlertDialog(onDismissRequest={if(!busy&&!unknown)dismiss()},modifier=Modifier.testTag("recall-config-dialog"),title={Text("题型与固定答案")},text={Column(Modifier.fillMaxWidth().heightIn(max=620.dp).verticalScroll(rememberScrollState()),verticalArrangement=Arrangement.spacedBy(8.dp)){
         Text("保存会固定当前题目/知识/来源版本，并重置本题到首次到期；旧作答与原排程历史不改写。",modifier=Modifier.testTag("recall-config-policy"))
+        if(baseChanged&&command==null)Text("题目、知识、来源或排程已变化；原草稿仍保留，不能直接套用新版本。请取消后重新打开并核对。",color=MaterialTheme.colorScheme.error,modifier=Modifier.testTag("recall-config-base-changed"))
         if(busy)LinearProgressIndicator(Modifier.fillMaxWidth())
         OutlinedTextField(prompt,{prompt=it},enabled=!busy&&!unknown,label={Text("问法")},modifier=Modifier.fillMaxWidth().testTag("recall-config-prompt"))
         FlowRow{RecallQuestionKind.entries.forEach{value->FilterChip(kind==value,{kind=value},enabled=!busy&&!unknown,label={Text(value.label)})}}
         card?.let{c->
-            Text("固定知识版本 ${c.revision} · ${c.title}")
+            Text("${if(baseChanged)"当前资料版本"else"固定知识版本"} ${c.revision} · ${c.title}")
             Text("共享注释固定版本 ${presentation?.revision?:0}："+((presentation?.data() as? KnowledgeData.CardPresentation)?.annotation.orEmpty().ifEmpty{"（空）"}))
             if(unknown)Text("正在核对之前已封存的配置命令；以上当前内容只作参考，不会改变原命令的版本和参数。")
             if(kind==RecallQuestionKind.TEXT_CLOZE){
@@ -121,7 +134,7 @@ import java.util.UUID
                     rangeText=updated.joinToString(";"){"${it.start}:${it.end}"};error=null
                 }catch(_:Exception){error="请选择不重叠的完整文字，最多32个空位"}},enabled=!busy&&!unknown){Text("把选中文字设为空位")}
                 runCatching{ranges()}.getOrDefault(emptyList()).forEachIndexed{i,range->Row{
-                    Text("空位 ${i+1}：${c.body.substring(range.start.coerceAtMost(c.body.length),range.end.coerceAtMost(c.body.length))}",Modifier.weight(1f))
+                    Text("空位 ${i+1}：${text.text.substring(range.start.coerceAtMost(text.text.length),range.end.coerceAtMost(text.text.length))}",Modifier.weight(1f))
                     TextButton({rangeText=ranges().filterIndexed{index,_->index!=i}.joinToString(";"){"${it.start}:${it.end}"}},enabled=!busy&&!unknown){Text("移除")}
                 }}
             }
@@ -144,5 +157,5 @@ import java.util.UUID
             }
         }
         error?.let{Text(it,color=MaterialTheme.colorScheme.error)}
-    }},confirmButton={TextButton(::apply,enabled=!busy&&(command!=null||lock.canWrite&&card!=null&&prompt.isNotBlank()),modifier=Modifier.testTag("recall-config-save")){Text(if(unknown)"核对原操作并重试"else"保存固定答案并重置到期")}},dismissButton={TextButton(dismiss,enabled=!busy&&!unknown){Text("取消")}})
+    }},confirmButton={TextButton(::apply,enabled=!busy&&(command!=null||!baseChanged&&lock.canWrite&&card!=null&&prompt.isNotBlank()),modifier=Modifier.testTag("recall-config-save")){Text(if(unknown)"核对原操作并重试"else"保存固定答案并重置到期")}},dismissButton={TextButton(dismiss,enabled=!busy&&!unknown){Text("取消")}})
 }

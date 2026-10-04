@@ -2,6 +2,8 @@
 package org.inkweft.app
 
 import android.graphics.Bitmap
+import android.view.KeyEvent
+import androidx.test.platform.app.InstrumentationRegistry
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
@@ -21,6 +23,7 @@ import java.util.zip.CRC32
 class SixBatchAcceptanceTest {
     @get:Rule val compose=createAndroidComposeRule<MainActivity>()
     private val app get()=compose.activity.application as InkWeftApplication
+    private val nativeEvidence by lazy{SixBatchNativeEvidence(compose)}
     private fun notebook()=ViewModelProvider(compose.activity)[NotebookViewModel::class.java]
     private fun workspace()=ViewModelProvider(compose.activity)[WorkspaceViewModel::class.java]
     private fun waitFor(tag:String){compose.waitUntil(60_000){compose.onAllNodesWithTag(tag).fetchSemanticsNodes().isNotEmpty()};compose.waitForIdle()}
@@ -38,11 +41,10 @@ class SixBatchAcceptanceTest {
         runBlocking{f.step("native-full-pressure-page-load-scroll-and-pinch"){
             val note=checkNotNull(app.repository.read(f.books[0]))
             compose.runOnIdle{notebook().select(note)};settled(note.id);waitFor("continuous-pages");tap("quick-readonly")
-            for(index in listOf(0,5,11)){compose.onNodeWithTag("continuous-pages").performScrollToIndex(index);compose.waitForIdle()}
-            waitFor("continuous-ink-12")
-            compose.waitUntil(60_000){compose.runOnIdle{runCatching{
-                ViewModelProvider(compose.activity)["ink-${f.stressPage}",InkViewModel::class.java].ui.value.let{!it.loading&&it.strokes.size==1000}
-            }.getOrDefault(false)}}
+            for(index in listOf(0,5,11)){
+                compose.onNodeWithTag("continuous-pages").performScrollToIndex(index)
+                nativeEvidence.awaitPage(f,index,continuous=true)
+            }
             for(expand in listOf(true,false)){
                 compose.onNodeWithTag("continuous-pages").performTouchInput{
                     val y=height*.5f;val x=width*.5f;val start=if(expand).12f else .22f
@@ -50,10 +52,49 @@ class SixBatchAcceptanceTest {
                     repeat(8){i->val d=width*(start+(i+1)*(if(expand).01f else -.017f))
                         updatePointerTo(0,Offset(x-d,y));updatePointerTo(1,Offset(x+d,y));move(30)}
                     up(1);up(0)
-                };compose.waitForIdle()
+                };nativeEvidence.awaitPage(f,11,continuous=true)
             }
-            shot(f,"05-layered-1000-stroke-pressure")
-            compose.onNodeWithTag("continuous-pages").performScrollToIndex(0);compose.waitForIdle();shot(f,"01-twelve-page-material")
+            // This step's elapsed/memory values describe the actual scroll/pinch path, not a screenshot benchmark.
+        }}
+        runBlocking{f.step("native-pressure-pixels-and-real-layer-panel"){
+            compose.singlePageEditor()
+            selectPage(12)
+            nativeEvidence.awaitPage(f,11,continuous=false)
+            compose.frameCanvasFixture()
+            nativeEvidence.capturePage(f,"05-layered-1000-stroke-pressure",11,continuous=false,pressure=true)
+            val beforePanel=nativeEvidence.savedPageFingerprint(f.stressPage)
+            tap("page-layers-open");waitFor("page-layers")
+            compose.assertCurrentPage("第 12 / 12 页")
+            compose.onNodeWithTag("current-writable-layer").assertTextEquals("当前可写层：基础层").assertIsDisplayed()
+            compose.onNodeWithTag("layer-select-${UserLayers.DEFAULT_ID}").assertTextEquals("当前层")
+            val panelProof=JSONObject().put("pageId",f.stressPage).put("sourcePage",12).put("layers",3)
+                .put("hiddenLayers",1).put("lockedLayers",1).put("currentLayer",UserLayers.DEFAULT_ID)
+                .put("panelAssertionsPassed",true).put("pressurePixelsFile","05-layered-1000-stroke-pressure.png")
+                .put("authoringFingerprint",beforePanel.first).put("nativeInkSha256",beforePanel.second)
+            shot(f,"06-pressure-page-layers")
+            nativeEvidence.record(f,"06-pressure-page-layers",JSONObject(panelProof.toString()).put("panelSection","current"))
+            // The production settings popup is deliberately bounded; show each real row by scrolling, never stitch or resize it.
+            compose.onNodeWithTag("layer-visible-${f.id("stress-hidden-layer")}").performScrollTo().assertTextEquals("显示").assertIsDisplayed()
+            compose.onNodeWithTag("layer-select-${f.id("stress-hidden-layer")}").assertIsNotEnabled()
+            compose.onNodeWithText("2. 隐藏空层 · 已隐藏").assertIsDisplayed()
+            assertEquals(beforePanel,nativeEvidence.savedPageFingerprint(f.stressPage))
+            compose.onNodeWithTag("current-writable-layer").assertTextEquals("当前可写层：基础层")
+            shot(f,"07-pressure-hidden-layer")
+            nativeEvidence.record(f,"07-pressure-hidden-layer",JSONObject(panelProof.toString()).put("panelSection","hidden"))
+            compose.onNodeWithTag("layer-lock-${f.id("stress-locked-layer")}").performScrollTo().assertTextEquals("解锁").assertIsDisplayed()
+            compose.onNodeWithTag("layer-select-${f.id("stress-locked-layer")}").assertIsNotEnabled()
+            compose.onNodeWithText("3. 锁定压力层 · 已锁定").assertIsDisplayed()
+            assertEquals(beforePanel,nativeEvidence.savedPageFingerprint(f.stressPage))
+            compose.onNodeWithTag("current-writable-layer").assertTextEquals("当前可写层：基础层")
+            shot(f,"08-pressure-locked-layer")
+            nativeEvidence.record(f,"08-pressure-locked-layer",JSONObject(panelProof.toString()).put("panelSection","locked"))
+            InstrumentationRegistry.getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_BACK)
+            compose.waitUntil(30_000){compose.onAllNodesWithTag("page-layers").fetchSemanticsNodes().isEmpty()}
+            assertEquals(beforePanel,nativeEvidence.savedPageFingerprint(f.stressPage))
+            nativeEvidence.awaitPage(f,11,continuous=false)
+            tap("quick-settings");tap("continuous-setting");tap("document-settings-dialog-close");waitFor("continuous-pages")
+            compose.onNodeWithTag("continuous-pages").performScrollToIndex(0)
+            nativeEvidence.capturePage(f,"01-twelve-page-material",0,continuous=true)
         }}
         runBlocking{f.step("native-read-write-outline-whole-branch-undo-redo"){
             val note=checkNotNull(app.repository.read(f.books[0]))
@@ -130,9 +171,16 @@ class SixBatchAcceptanceTest {
             assertEquals(f.manifest.getString("documentSha256"),SixBatchFixture.sha(File(f.root,"synthetic-document.pdf")))
             val note=checkNotNull(app.repository.read(f.books[0]))
             compose.runOnIdle{notebook().select(note)};settled(f.books[0])
-            waitFor("continuous-pages");shot(f,"04-reopened-same-material")
+            waitFor("continuous-pages");compose.onNodeWithTag("continuous-pages").performScrollToIndex(0)
+            nativeEvidence.capturePage(f,"04-reopened-same-material",0,continuous=true)
         }}
         f.manifest.put("reopenStatus","PASS");f.save()
+    }
+
+    private fun selectPage(number:Int){
+        compose.openOverviewGrid()
+        compose.onNodeWithTag("page-grid").performScrollToNode(hasTestTag("jump-page-$number"))
+        tap("jump-page-$number");tap("pages-directory-dialog-close")
     }
 
     private suspend fun backupRoundTrip(f:SixBatchFixture){

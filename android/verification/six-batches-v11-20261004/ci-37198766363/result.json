@@ -1,0 +1,191 @@
+{
+  "source": "56b792f0e75b6c896a2c157f283a2b5086baede8",
+  "run": 37198766363,
+  "job": 111425949140,
+  "artifact": 11301624285,
+  "artifact_sha256": "944ff0c5b0045a787ce61ef2f6c7e58ea932e4033fc041254c52bbb9a6bf7e1e",
+  "build_lint_apks": "PASS",
+  "app": {
+    "expected": 72,
+    "planned_total": 72,
+    "shard_index": 0,
+    "shard_count": 1,
+    "passed": 68,
+    "failures": [
+      "org.inkweft.app.ImageRenderingTest#regionRetainsNativeDetailAndTransparentPixelsWithoutRedecodingEachDraw",
+      "org.inkweft.app.RecallMaskUiTest#allRecallAncestorsHideCluesFromInteractiveWindows",
+      "org.inkweft.app.RecallMaskUiTest#longChineseTabsLibraryAndBackupCancellationKeepAuthorRows",
+      "org.inkweft.app.RecallMaskUiTest#tabletMapTextFitAndNeutralRecallPlaceholdersKeepAuthorRows"
+    ],
+    "infrastructure": []
+  },
+  "room_class_summary": {
+    "expected": 171,
+    "planned_total": 171,
+    "shard_index": 0,
+    "shard_count": 1,
+    "passed": 112,
+    "failures": [
+      "org.inkweft.data.StudyAndSelectionRepositoryTest",
+      "org.inkweft.data.CardTransformRepositoryTest",
+      "org.inkweft.data.BranchReviewRoundRepositoryTest",
+      "org.inkweft.data.RecallStudyRepositoryTest"
+    ],
+    "infrastructure": []
+  },
+  "room_terminal_counts": [
+    {
+      "selection": "org.inkweft.data.PageObjectRepositoryTest",
+      "completed": 6,
+      "failed": 0,
+      "sha256": "e79677269ff488ef9b71187b05c137a42cac7e98893656995f51a9b1a8275b23"
+    },
+    {
+      "selection": "org.inkweft.data.CardPresentationRepositoryTest",
+      "completed": 4,
+      "failed": 0,
+      "sha256": "746d21c3a4b064d3cd01f0afaf30f1d0cdbc0a1d1fa634a716b21a9b15a97db6"
+    },
+    {
+      "selection": "org.inkweft.data.LibraryBackupRepositoryTest",
+      "completed": 13,
+      "failed": 0,
+      "sha256": "1f9d7a22f8db9047b4ffd8fabfabeca36d19ec1ce3cfbebac98c5429e5d574bc"
+    },
+    {
+      "selection": "org.inkweft.data.LibraryBackupGuardTest",
+      "completed": 4,
+      "failed": 0,
+      "sha256": "9cbfde044bb41cf1b0fee881d96150b4989a4a2029fe5c37d2dce99e5bd9daa1"
+    },
+    {
+      "selection": "org.inkweft.data.LibraryContentRepositoryTest",
+      "completed": 13,
+      "failed": 0,
+      "sha256": "f01248074dc02ea40d13ba99e58fb201ae17bae84b8152422c55b96d49fb2301"
+    },
+    {
+      "selection": "org.inkweft.data.StudyAndSelectionRepositoryTest",
+      "completed": 20,
+      "failed": 1,
+      "sha256": "6bbb2a1a95e2759418006ed756b9870d8babcf0058aaf213558b94e92b942ff9"
+    },
+    {
+      "selection": "org.inkweft.data.CardTransformRepositoryTest",
+      "completed": 13,
+      "failed": 1,
+      "sha256": "21992814a8a61c9b330505afe6705569bc124867443af9b981128d1a147c449e"
+    },
+    {
+      "selection": "org.inkweft.data.CardReuseRepositoryTest",
+      "completed": 3,
+      "failed": 0,
+      "sha256": "8aa4d15cc8e79e678e18fb2ee594124e1baf990dab9ddc62d129ef6f56404ab5"
+    },
+    {
+      "selection": "org.inkweft.data.KnowledgeRepositoryTest",
+      "completed": 20,
+      "failed": 0,
+      "sha256": "1304f6d4332d85aa0ca44f4c44517733620726c4b2ada579f95a9cfc838a3ca6"
+    },
+    {
+      "selection": "org.inkweft.data.KnowledgeTextRepositoryTest",
+      "completed": 12,
+      "failed": 0,
+      "sha256": "9097fb68d2b156e11d55939cec21112fa5757562ec45294a3c321bd18d9a904a"
+    },
+    {
+      "selection": "org.inkweft.data.PageAuthoringRepositoryTest",
+      "completed": 10,
+      "failed": 0,
+      "sha256": "0b90257d4c232e31d890e1bcb9a3b971d3771f9146464eb0c70b903a26d14025"
+    },
+    {
+      "selection": "org.inkweft.data.AuthoringPendingStoreTest",
+      "completed": 2,
+      "failed": 0,
+      "sha256": "aff89a62c047c8fd39f918364cbc0e43450f1b4b63c966b39b3760fb3b053fc8"
+    },
+    {
+      "selection": "org.inkweft.data.BranchReviewRepositoryTest",
+      "completed": 25,
+      "failed": 0,
+      "sha256": "570a794719abb83ead50a63f17d9d8a2e9597df0c7c9034d143a46b4b659c947"
+    },
+    {
+      "selection": "org.inkweft.data.BranchReviewRoundRepositoryTest",
+      "completed": 12,
+      "failed": 1,
+      "sha256": "bfdf2081e183cadfbf27ee0f3c203886774efa50b1c8f3ee64e210b84c92f272"
+    },
+    {
+      "selection": "org.inkweft.data.RecallStudyRepositoryTest",
+      "completed": 14,
+      "failed": 1,
+      "sha256": "5a034f9b6a36124d6eb18b3800856d043fe8c0166a6d6999d9292afbf309e53c"
+    }
+  ],
+  "room_actual": {
+    "completed": 171,
+    "failed": 4
+  },
+  "fixture": {
+    "status": "FAILED",
+    "source_commit": "56b792f0e75b6c896a2c157f283a2b5086baede8",
+    "synthetic_only": true,
+    "expected": 5,
+    "passed": 0,
+    "phases": {
+      "prepare": {
+        "status": "FAILED",
+        "returncode": 1
+      },
+      "reopen": {
+        "status": "NOT_RUN"
+      },
+      "visual": {
+        "status": "NOT_RUN"
+      },
+      "native_recall": {
+        "status": "NOT_RUN"
+      },
+      "native_recall_reopen": {
+        "status": "NOT_RUN"
+      }
+    },
+    "real_device": "NOT_RUN",
+    "human_handwriting": "NOT_RUN",
+    "pixels_review": "PENDING_HUMAN_OR_VISUAL_REVIEW",
+    "reason": "prepare did not pass; dependent phases NOT_RUN, original library retained"
+  },
+  "original_acl": {
+    "status": "RESTORED_EXACT_ORIGINAL_ACL"
+  },
+  "screenshots": [
+    {
+      "path": "app-023/b1-card-four-zones.png",
+      "sha256": "9f4298806618094e4103b12d71a4fabb6dcefaec5334ba5d681177b773fc683f"
+    },
+    {
+      "path": "app-036/v36-excerpt.png",
+      "sha256": "9efb49597c48856d763881fba37d0281ec02d80df824b4e8465092dc857c6259"
+    },
+    {
+      "path": "app-037/v37-excerpt-resize.png",
+      "sha256": "201369f054002a006fa01966b20efdaa39bc42280aa260975dfd85621c9405c1"
+    },
+    {
+      "path": "six-batch-fixture/01-twelve-page-material.png",
+      "sha256": "100e7e35bf38e55c0c49ca2e4ccfc159f64eff593bbf260d58369686d6e87673"
+    },
+    {
+      "path": "six-batch-fixture/02-outline-120-topics.png",
+      "sha256": "cdafcaf6949ded8878e81fd664ab52914017f20000fd32d3072f42ef84bae769"
+    },
+    {
+      "path": "six-batch-fixture/05-layered-1000-stroke-pressure.png",
+      "sha256": "25739adb17f7e597c3a18bdc668ada9781ca8103c6ee77168c03a4dffd1b1923"
+    }
+  ],
+  "visual_limits": "Six PNGs only: 01 remains loading; 05 does not prove pressure/layers. Remaining four support only their current static surfaces. Not 35-image acceptance."
+}

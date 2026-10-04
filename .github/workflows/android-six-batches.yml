@@ -11,6 +11,7 @@ on:
       - "android/settings.gradle.kts"
       - "ci/**"
       - "android/verification/six-batch-fixture-20261004/run-fixture.py"
+      - "android/verification/six-batch-fixture-20261004/test_*.py"
       - ".github/workflows/android-six-batches.yml"
   workflow_dispatch:
 permissions:
@@ -18,14 +19,21 @@ permissions:
   actions: read
 concurrency:
   group: inkweft-six-batches-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: false
 jobs:
   verify:
+    name: 定向验证分片 ${{ matrix.shard }} / 3
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [0, 1, 2]
     runs-on: ubuntu-24.04
     timeout-minutes: 45
     env:
       ORG_GRADLE_PROJECT_inkweftInsertionPreview: "true"
       INKWEFT_HEAD_SHA: ${{ github.sha }}
+      INKWEFT_SHARD_INDEX: ${{ matrix.shard }}
+      INKWEFT_SHARD_COUNT: ${{ strategy.job-total }}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
@@ -69,9 +77,27 @@ jobs:
           "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-36" "build-tools;36.0.0" "platform-tools"
           python3 ci/six_batch_scope.py
           python3 -m unittest discover -s ci -p 'test_*.py'
-      - name: 串行定向构建（模拟器尚未启动）
+          python3 -m unittest discover -s android/verification/six-batch-fixture-20261004 -p 'test_*.py'
+      - name: 明确记录Room与固定样本只分配给0号分片
+        if: matrix.shard != 0
+        run: |
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          plan=json.loads(Path('android-plan.json').read_text())
+          out=Path('android/build/evidence'); out.mkdir(parents=True,exist_ok=True)
+          for key,total in [('room',plan['expected_room']),('fixture',plan['fixture']['expected_methods'])]:
+              summary={'status':'NOT_ASSIGNED','source_commit':os.environ['INKWEFT_HEAD_SHA'],
+                       'shard_index':int(os.environ['INKWEFT_SHARD_INDEX']),
+                       'shard_count':int(os.environ['INKWEFT_SHARD_COUNT']),'assigned_shard':0,
+                       'expected':0,'planned_total':total,'passed':0,'failures':[],'infrastructure':[]}
+              if key=='fixture': summary['phases']={phase:{'status':'NOT_ASSIGNED'} for phase in plan['fixture']['phases']}
+              (out/f'{key}-summary.json').write_text(json.dumps(summary,indent=2))
+          PY
+      - name: 本片独立串行构建（模拟器尚未启动）
         id: build
         run: |
+          test "$(git rev-parse HEAD)" = "$INKWEFT_HEAD_SHA"
           python3 - <<'PY'
           import json, subprocess
           p=json.load(open('android-plan.json'))
@@ -102,13 +128,31 @@ jobs:
           adb shell wm size 1920x1200
           adb shell wm density 240
       - name: 执行合成Room与原生UI回归
+        id: regression
         if: steps.acceleration.outputs.ready == 'true'
-        run: python3 ci/run_android_tests.py
+        run: python3 ci/run_android_tests.py --shard-index "$INKWEFT_SHARD_INDEX" --shard-count "$INKWEFT_SHARD_COUNT"
+      - name: 提前保存定向回归终态以便与固定样本并行诊断
+        if: ${{ !cancelled() && (steps.regression.outcome == 'success' || steps.regression.outcome == 'failure') }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: six-batches-regression-${{ github.sha }}-shard-${{ matrix.shard }}
+          retention-days: 7
+          if-no-files-found: warn
+          path: |
+            android-plan.json
+            android/build/evidence/app-summary.json
+            android/build/evidence/room-summary.json
+            android/build/evidence/fixture-summary.json
+            android/build/evidence/scope.json
+            android/build/evidence/APK-SHA256.txt
+            android/build/evidence/source-commit.txt
+            android/build/evidence/**/instrumentation.txt
+            android/build/evidence/**/selection.txt
       - name: 同一固定大样本准备、冷重开、原生界面及持久回忆取证
-        if: ${{ !cancelled() && steps.build.outcome == 'success' && steps.emulator.outcome == 'success' && steps.acceleration.outputs.ready == 'true' }}
+        if: ${{ !cancelled() && steps.build.outcome == 'success' && steps.emulator.outcome == 'success' && steps.acceleration.outputs.ready == 'true' && matrix.shard == 0 }}
         run: python3 ci/run_six_batch_fixture.py --source-commit "$INKWEFT_HEAD_SHA"
       - name: 如实记录固定大样本没有运行
-        if: ${{ !cancelled() && (steps.build.outcome != 'success' || steps.emulator.outcome != 'success' || steps.acceleration.outputs.ready != 'true') }}
+        if: ${{ !cancelled() && (steps.build.outcome != 'success' || steps.emulator.outcome != 'success' || steps.acceleration.outputs.ready != 'true') && matrix.shard == 0 }}
         run: python3 ci/run_six_batch_fixture.py --source-commit "$INKWEFT_HEAD_SHA" --not-run "Build=${{ steps.build.outcome }}; emulator=${{ steps.emulator.outcome }}; KVM=${{ steps.acceleration.outputs.ready }}"
       - name: 如实记录没有设备运行
         if: steps.acceleration.outputs.ready != 'true'
@@ -131,11 +175,12 @@ jobs:
             mkdir -p android/build/evidence
             printf '%s\n' '{"status":"RESTORED_EXACT_ORIGINAL_ACL"}' > android/build/evidence/kvm-acl-restoration.json
           fi
-      - name: 仅保存验证回执与合成像素（无APK）
+      # Each shard builds its own APKs from the same source. Its hashes identify only its own evidence.
+      - name: 仅保存本片验证回执与合成像素（无APK）
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: six-batches-verification-${{ github.sha }}
+          name: six-batches-verification-${{ github.sha }}-shard-${{ matrix.shard }}
           retention-days: 7
           if-no-files-found: warn
           path: |
@@ -173,6 +218,9 @@ jobs:
             android/build/evidence/six-batch-fixture/03-unavailable-return-keeps-location.png
             android/build/evidence/six-batch-fixture/04-reopened-same-material.png
             android/build/evidence/six-batch-fixture/05-layered-1000-stroke-pressure.png
+            android/build/evidence/six-batch-fixture/06-pressure-page-layers.png
+            android/build/evidence/six-batch-fixture/07-pressure-hidden-layer.png
+            android/build/evidence/six-batch-fixture/08-pressure-locked-layer.png
             android/build/evidence/six-batch-fixture/visual-wide-01-default-tools.png
             android/build/evidence/six-batch-fixture/visual-wide-02-advanced-pen.png
             android/build/evidence/six-batch-fixture/visual-wide-03-map-selected.png

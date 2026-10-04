@@ -151,6 +151,50 @@ class LibraryBackupRepositoryTest {
         seed(s);s.openHelper.writableDatabase.execSQL("CREATE TABLE future_author_data(id TEXT)")
         try{LibraryBackupRepository(context,s).snapshot();fail()}catch(_:IllegalArgumentException){}
     }
+    private fun replaceEmptyReceipts(db:NoteDatabase,digestColumn:String){
+        val sql=db.openHelper.writableDatabase
+        sql.execSQL("DROP TABLE recall_receipts")
+        sql.execSQL("CREATE TABLE recall_receipts (operationId TEXT NOT NULL, notebookId TEXT NOT NULL, kind TEXT NOT NULL, $digestColumn, resultId TEXT NOT NULL, PRIMARY KEY(operationId), FOREIGN KEY(notebookId) REFERENCES notes(id) ON UPDATE NO ACTION ON DELETE NO ACTION)")
+    }
+    private suspend fun assertSchemaRejected(db:NoteDatabase,message:String){
+        try{LibraryBackupRepository(context,db).snapshot().use{};fail("Expected $message")}
+        catch(e:IllegalArgumentException){assertEquals(message,e.message)}
+    }
+    @Test fun sameNamedColumnsWithDifferentAffinityCannotBeCoercedIntoBackup()=fixture{s,_->
+        for(type in listOf("INTEGER","NUMERIC")){
+            replaceEmptyReceipts(s,"digest $type NOT NULL")
+            assertSchemaRejected(s,"BACKUP_SCHEMA_TYPES_CHANGED")
+        }
+    }
+    @Test fun sameNamedColumnsWithDifferentNullabilityCannotBeBackedUp()=fixture{s,_->
+        replaceEmptyReceipts(s,"digest TEXT")
+        assertSchemaRejected(s,"BACKUP_SCHEMA_NULLABILITY_CHANGED")
+    }
+    @Test fun reorderedCompositePrimaryKeyCannotChangeCanonicalBackupOrder()=fixture{s,_->
+        val sql=s.openHelper.writableDatabase
+        sql.execSQL("DROP TABLE image_sources")
+        sql.execSQL("CREATE TABLE image_sources (notebookId TEXT NOT NULL, digest TEXT NOT NULL, byteCount INTEGER NOT NULL, PRIMARY KEY(digest,notebookId), FOREIGN KEY(notebookId) REFERENCES notes(id) ON UPDATE NO ACTION ON DELETE NO ACTION)")
+        assertSchemaRejected(s,"BACKUP_SCHEMA_KEYS_CHANGED")
+    }
+    @Test fun compatibleTextAffinitySpellingIsStillAccepted()=fixture{s,_->
+        replaceEmptyReceipts(s,"digest VARCHAR(64) NOT NULL")
+        LibraryBackupRepository(context,s).snapshot().use{assertEquals(LibraryBackupRepository.SCHEMA.size,it.summary.rows.size)}
+    }
+    @Test fun allSupportedArchiveSchemasStillStageIntoTheCurrentRoomContract()=fixture{_,t->
+        val schemas=with(LibraryBackupRepository){listOf(SCHEMA_V6,SCHEMA_V7,SCHEMA_V8,SCHEMA_V9,SCHEMA_V10,SCHEMA_V11,SCHEMA_V12,SCHEMA_V13,SCHEMA_V14,SCHEMA_V15,SCHEMA)}
+        val empty=object:LibraryArchive.Rows{
+            override fun count(table:Int)=0L
+            override fun visit(table:Int,consume:(List<Any?>)->Unit){}
+        }
+        val repo=LibraryBackupRepository(context,t)
+        for(schema in schemas){
+            val bytes=ByteArrayOutputStream().also{LibraryArchive.write(it,schema,empty,0)}.toByteArray()
+            repo.inspect(ByteArrayInputStream(bytes)).use{preview->
+                assertEquals(schema.size,preview.summary.rows.size)
+                assertEquals(LibraryBackupRepository.RestoreResult.ALREADY_PRESENT,repo.restore(preview))
+            }
+        }
+    }
     @Test fun orphanHistoricalReferencesPreventExport()=fixture{s,_->
         seed(s);s.openHelper.writableDatabase.execSQL("INSERT INTO note_revisions VALUES(?,1,'孤儿','不能遗漏',1)",arrayOf(id()))
         try{LibraryBackupRepository(context,s).snapshot();fail()}catch(_:IllegalArgumentException){}

@@ -1,3 +1,4 @@
+import hashlib
 import importlib.util
 import json
 from pathlib import Path
@@ -33,15 +34,16 @@ class SixBatchScopeTest(unittest.TestCase):
         self.assertEqual(["prepare", "reopen", "visual", "native_recall", "native_recall_reopen"], plan["fixture"]["phases"])
         self.assertEqual(24, plan["fixture"]["native_workspace_screenshots"])
         self.assertEqual(6, plan["fixture"]["native_recall_screenshots"])
-        self.assertEqual(35, plan["fixture"]["expected_screenshots"])
+        self.assertEqual(38, plan["fixture"]["expected_screenshots"])
 
     def test_workflow_uploads_only_explicit_fixture_files(self):
         workflow = (Path(__file__).resolve().parents[1] / ".github/workflows/android-six-batches.yml").read_text()
         files = [line.strip() for line in workflow.splitlines() if line.strip().startswith("android/build/evidence/six-batch-fixture/")]
-        self.assertEqual(35, sum(name.endswith(".png") for name in files))
+        self.assertEqual(38, sum(name.endswith(".png") for name in files))
         self.assertEqual(24, sum("/visual-" in name and name.endswith(".png") for name in files))
         self.assertFalse(any("*" in name for name in files))
         self.assertNotIn("android/build/evidence/**/*.png", workflow)
+        self.assertIn("python3 -m unittest discover -s android/verification/six-batch-fixture-20261004 -p 'test_*.py'", workflow)
         self.assertIn("timeout-minutes: 45", workflow)
         self.assertIn("!cancelled() && steps.build.outcome == 'success'", workflow)
 
@@ -52,6 +54,23 @@ class SixBatchScopeTest(unittest.TestCase):
         spec.loader.exec_module(runner)
         calls = []
         missing_png = None
+        pixels = b"\x89PNG\r\n\x1a\nsynthetic-host-contract-only"
+        manifest = {"synthetic": True, "runId": "same-full-sized-fixture", "documentPages": [f"page-{n}" for n in range(12)],
+                    "documentSha256": "b" * 64, "stressAuthoringFingerprint": "c" * 64, "nativePageCaptures": {}}
+        sections = {"06-pressure-page-layers.png": "current", "07-pressure-hidden-layer.png": "hidden",
+                    "08-pressure-locked-layer.png": "locked"}
+        for name, index in runner.NATIVE_PAGE_CAPTURES.items():
+            manifest["nativePageCaptures"][name] = {
+                "runId": manifest["runId"], "sourceCommit": "a" * 40, "pageId": manifest["documentPages"][index],
+                "sourcePage": index + 1, "sha256": hashlib.sha256(pixels).hexdigest(), "layers": 3,
+                "documentSha256": manifest["documentSha256"], "nativeInkSha256": "e" * 64,
+                "pdfTilePresent": True, "sourceFrameDrawn": True, "pendingRaster": False, "pendingImages": False,
+                "nativeStoredStrokes": 1000, "nativeStoredPoints": 100000, "nativeVisibleStrokes": 1000,
+                "authoringFingerprint": manifest["stressAuthoringFingerprint"], "continuous": index == 0,
+                "baseLayerBluePixels": 20, "lockedLayerBluePixels": 20, "hiddenLayers": 1, "lockedLayers": 1,
+                "currentLayer": "00000000-0000-0000-0000-000000000001", "panelAssertionsPassed": True,
+                "panelSection": sections.get(name), "pressurePixelsFile": "05-layered-1000-stroke-pressure.png",
+            }
 
         def command(command, **kwargs):
             calls.append(command)
@@ -62,11 +81,11 @@ class SixBatchScopeTest(unittest.TestCase):
             elif "sha256sum" in command:
                 stdout = "b" * 64 + "  /data/app/~~synthetic/base.apk"
             elif command[-1].endswith("manifest.json"):
-                stdout = json.dumps({"synthetic": True, "runId": "same-full-sized-fixture"}).encode()
+                stdout = json.dumps(manifest).encode()
             elif command[-1].endswith(".png"):
                 if command[-1].endswith(missing_png or "no-missing-screenshot"):
                     raise subprocess.CalledProcessError(1, command)
-                stdout = b"\x89PNG\r\n\x1a\nsynthetic-mock"
+                stdout = pixels
             elif "instrument" in command:
                 stdout = "OK (1 test)\n"
             else:
@@ -90,16 +109,29 @@ class SixBatchScopeTest(unittest.TestCase):
             prefix = "android/build/evidence/six-batch-fixture/"
             whitelist = {line.strip().removeprefix(prefix) for line in workflow.splitlines() if line.strip().startswith(prefix)}
             self.assertEqual(whitelist - {"setup.txt"}, {file.name for file in out.iterdir()})
-            # A stale local PNG must not hide a failed extraction from this run.
-            missing_png = "visual-wide-01-default-tools.png"
+            # Even a stale local PNG cannot hide any failed extraction from this run.
+            for phase, missing_png in [("prepare", name) for name in sections] + [("visual", "visual-wide-01-default-tools.png")]:
+                with self.subTest(missing_png=missing_png):
+                    arguments = [RUNNER, "--serial", "emulator-5554", "--package", PACKAGE,
+                                 "--source-commit", "a" * 40, "--phase", phase, "--output", directory]
+                    with patch.object(sys, "argv", arguments), patch.object(runner.subprocess, "run", side_effect=command):
+                        self.assertEqual(1, runner.main())
+                    receipt = json.loads((out / f"{phase}-runner.json").read_text())
+                    self.assertEqual("PASS", receipt["instrumentation_status"])
+                    self.assertEqual("INCOMPLETE_EVIDENCE", receipt["status"])
+                    self.assertIn({"file": missing_png, "status": "UNAVAILABLE"}, receipt["screenshots"])
+            # An available PNG with stale native proof also fails, rather than passing on its filename.
+            missing_png = None
+            stale_png = "05-layered-1000-stroke-pressure.png"
+            manifest["nativePageCaptures"][stale_png]["sourceCommit"] = "d" * 40
             arguments = [RUNNER, "--serial", "emulator-5554", "--package", PACKAGE,
-                         "--source-commit", "a" * 40, "--phase", "visual", "--output", directory]
+                         "--source-commit", "a" * 40, "--phase", "prepare", "--output", directory]
             with patch.object(sys, "argv", arguments), patch.object(runner.subprocess, "run", side_effect=command):
                 self.assertEqual(1, runner.main())
-            receipt = json.loads((out / "visual-runner.json").read_text())
+            receipt = json.loads((out / "prepare-runner.json").read_text())
             self.assertEqual("PASS", receipt["instrumentation_status"])
             self.assertEqual("INCOMPLETE_EVIDENCE", receipt["status"])
-            self.assertTrue(any(item.get("status") == "UNAVAILABLE" for item in receipt["screenshots"]))
+            self.assertIn({"file": stale_png, "status": "UNAVAILABLE"}, receipt["screenshots"])
 
 
 if __name__ == "__main__":

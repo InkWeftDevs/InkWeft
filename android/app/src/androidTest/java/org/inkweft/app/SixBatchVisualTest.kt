@@ -24,6 +24,7 @@ import kotlin.math.abs
 /** Captures real production surfaces on the persisted full fixture. Pixels require separate review. */
 class SixBatchVisualTest {
     @get:Rule val compose=createAndroidComposeRule<MainActivity>()
+    private val nativeEvidence by lazy{SixBatchNativeEvidence(compose)}
     private val app get()=compose.activity.application as InkWeftApplication
     private val instrumentation get()=InstrumentationRegistry.getInstrumentation()
     private fun waitFor(tag:String){compose.waitUntil(60_000){compose.onAllNodesWithTag(tag).fetchSemanticsNodes().isNotEmpty()};compose.waitForIdle()}
@@ -78,6 +79,9 @@ class SixBatchVisualTest {
                 val note=checkNotNull(app.repository.read(f.books[0]))
                 compose.runOnIdle{ViewModelProvider(compose.activity)[NotebookViewModel::class.java].select(note)}
                 compose.singlePageEditor();compose.waitUntil(60_000){app.navigationReady.value}
+                compose.openOverviewGrid();compose.onNodeWithTag("page-grid").performScrollToNode(hasTestTag("jump-page-1"))
+                tap("jump-page-1");tap("pages-directory-dialog-close")
+                nativeEvidence.awaitPage(f,0,continuous=false)
                 if(compose.onAllNodesWithTag("exit-readonly").fetchSemanticsNodes().isNotEmpty())tap("exit-readonly")
                 shot(f,layout,"01-default-tools")
                 tap("top-draw");tap("pen-advanced");shot(f,layout,"02-advanced-pen");tap("close-pen-settings")
@@ -85,7 +89,7 @@ class SixBatchVisualTest {
                 val node=f.manifest.getJSONObject("authoring").getString("boundNodeId");select(node)
                 shot(f,layout,"03-map-selected");tap("study-direct-outline")
                 compose.onNodeWithTag("study-list").performScrollToNode(hasTestTag("outline-row-$node"));shot(f,layout,"04-outline-selected")
-                tap("outline-row-$node");waitFor("card-full-title");shot(f,layout,"05-long-card-title")
+                tap("outline-node-$node");waitFor("card-full-title");shot(f,layout,"05-long-card-title")
                 waitFor("card-full-body");compose.onNodeWithTag("card-full-body").performScrollTo();compose.onNodeWithTag("card-full-body").assertTextContains("正文末尾定位标记",substring=true)
                 shot(f,layout,"06-long-card-body")
                 compose.onNodeWithTag("card-full-annotation").performScrollTo();compose.onNodeWithTag("card-full-annotation").assertTextContains("注释末尾定位标记",substring=true)
@@ -94,7 +98,7 @@ class SixBatchVisualTest {
                 waitFor("card-source-content");compose.onNodeWithTag("card-source-heading").performScrollTo();shot(f,layout,"08-long-card-source")
                 tap("card-back");tap("study-close")
                 compose.openOverviewGrid();compose.onNodeWithTag("page-grid").performScrollToNode(hasTestTag("jump-page-4"));tap("jump-page-4");tap("pages-directory-dialog-close")
-                compose.waitUntil(60_000){app.navigationReady.value};tap("page-layers-open");waitFor("page-layers");shot(f,layout,"09-page-layers");back("page-layers")
+                nativeEvidence.awaitPage(f,3,continuous=false);tap("page-layers-open");waitFor("page-layers");shot(f,layout,"09-page-layers");back("page-layers")
                 tap("page-whitespace-open");waitFor("document-whitespace-panel");shot(f,layout,"10-whitespace-expanded")
                 compose.onNode(hasScrollToIndexAction() and hasAnyAncestor(hasTestTag("document-whitespace-panel")))
                     .performScrollToNode(hasTestTag("whitespace-collapse-${f.id("blank-collapsed")}"))

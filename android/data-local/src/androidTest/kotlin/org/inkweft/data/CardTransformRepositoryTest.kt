@@ -229,7 +229,7 @@ class CardTransformRepositoryTest {
         val before=counts(db);assertEquals(CardTransformOutcome.Rejected("MAP_VERSION_CHANGED"),repository.outcome(plan));assertEquals(before,counts(db));assertNull(db.study().card(plan.targets.single().id))
         val rows=db.study().nodes(book);db.withTransaction{repeat(StudyGraph.MAX_NODES-rows.count{!it.removed}){db.study().addNode(StudyNodeRow(id(),book,a.id,null,0.0,it.toDouble()))}}
         // Reconcile the isolated fixture's author order before exercising the real writer.
-        val order=db.knowledge().forBook(book).single{(it.data() as? KnowledgeData.MapOrder)?.mapId==null};val value=KnowledgeData.MapOrder(null,StudyOrganization.legacyOrder(db.study().nodes(book).map{it.model()}))
+        val order=db.knowledge().forBook(book).single{(it.data() as? KnowledgeData.MapOrder)?.let{order->order.mapId==null}==true};val value=KnowledgeData.MapOrder(null,StudyOrganization.legacyOrder(db.study().nodes(book).map{it.model()}))
         val changed=order.copy(revision=order.revision+1,payload=KnowledgeCodec.encode(value));db.knowledge().update(changed);db.knowledge().revision(KnowledgeRevisionRow(changed.id,changed.revision,book,changed.payload,false))
         val full=repository.preview(book,listOf(a.id,b.id));val rejected=full.plan(CardTransformKind.SUMMARY,listOf(CardTransforms.mergeTarget(full.cards,"满图总结").copy(body="归纳")))
         val counts=counts(db);assertEquals(CardTransformOutcome.Rejected("STUDY_NODE_BUDGET"),repository.outcome(rejected));assertEquals(counts,counts(db));assertNull(db.study().card(rejected.targets.single().id))
