@@ -5,10 +5,11 @@ from android_plan import inventory, select_methods
 import re
 
 APP = ["ViewportRasterTest", "PdfViewportRasterTest", "ZoomRasterTest", "RenderResourcesTest",
-       "ImageRenderingTest", "CardPresentationUiTest", "RecallMaskUiTest", "StarNoteInteractionsUiTest"]
+       "ImageRenderingTest", "CardPresentationUiTest", "RecallMaskUiTest", "StarNoteInteractionsUiTest", "StudyOrganizationUiTest"]
 ROOM = ["PageObjectRepositoryTest", "CardPresentationRepositoryTest", "LibraryBackupRepositoryTest",
         "LibraryBackupGuardTest", "LibraryContentRepositoryTest", "StudyAndSelectionRepositoryTest"]
 METHODS = {
+    "org.inkweft.app.StudyOrganizationUiTest": ["workModesPreserveSelectedGraphAndResumeTheSameUnrevealedQuestion"],
     "org.inkweft.app.RecallMaskUiTest": ["sharedCardAnnotationIsShieldedDuringRecallAndRestoredWithoutWrites"],
     "org.inkweft.app.StarNoteInteractionsUiTest": ["excerptKeepsPageImageAddsCommentAndDeletesWithoutDeletingSource",
         "inlineCommentAndEightHandleRecropCancelSaveAndReopenKeepOriginalInk"],
