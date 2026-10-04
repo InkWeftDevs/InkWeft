@@ -19,6 +19,9 @@ import kotlinx.coroutines.flow.flowOn
 import org.inkweft.core.TargetRef
 import org.inkweft.data.KnowledgeRejected
 import org.inkweft.data.KnowledgeTextPreview
+import org.inkweft.data.FrozenStudySources
+import org.inkweft.data.StudySourceRow
+import org.inkweft.core.TargetKind
 
 /** Both directions retain the clicked relationship's identity until explicitly closed. */
 @Composable
@@ -34,6 +37,18 @@ internal fun KnowledgeLinkPreview(
     var opening by remember { mutableStateOf(false) }
     var attempt by remember { mutableIntStateOf(0) }
     var fullTitle by remember(linkId, linkRevision) { mutableStateOf(false) }
+    var sources by remember { mutableStateOf<FrozenStudySources?>(null) }
+    var source by remember { mutableStateOf<StudySourceRow?>(null) }
+    var sourceError by remember { mutableStateOf(false) }
+    var showSnapshot by remember { mutableStateOf(false) }
+    LaunchedEffect(preview?.target,preview?.cardRevision){
+        sources=null;source=null;sourceError=false;showSnapshot=false
+        val current=preview?:return@LaunchedEffect
+        if(current.target.kind==TargetKind.CARD&&current.cardRevision!=null)try{
+            sources=withContext(Dispatchers.IO){app.study.sources(current.target.id,current.cardRevision)}
+        }catch(cancel:CancellationException){throw cancel}catch(_:Exception){sourceError=true}
+    }
+    if(showSnapshot)source?.let{StudySnapshotViewer(it){showSnapshot=false}}
     val scope = rememberCoroutineScope()
     val openTarget by rememberUpdatedState(onOpenTarget)
     fun failed(error: Exception) {
@@ -77,6 +92,15 @@ internal fun KnowledgeLinkPreview(
                 if(value.annotation.isNotBlank()){
                     Text("个人注释",style=MaterialTheme.typography.labelLarge)
                     SelectionContainer{Text(value.annotation,modifier=Modifier.testTag("card-link-preview-annotation"))}
+                }
+                if(value.target.kind==TargetKind.CARD&&value.cardRevision!=null){
+                    Text("内容来源 · 修订 ${value.cardRevision}",style=MaterialTheme.typography.labelLarge)
+                    sources?.let{FrozenCardSources(it,value.target.id,{chosen->source=chosen},enabled=!opening)}
+                    if(sourceError)Text("来源读取失败，未替换为当前摘录。请重试预览。")
+                    source?.let{chosen->
+                        SourceThumbnail(chosen,Modifier.fillMaxWidth().height(160.dp))
+                        TextButton({showSnapshot=true},modifier=Modifier.testTag("link-source-snapshot")){Text("查看完整固定摘录")}
+                    }
                 }
                 if (value.pinnedRevision != null && value.canOpen) Text("此处仅预览固定版本的标题与正文，不附加当前个人注释；打开目标会查看当前卡片。", style = MaterialTheme.typography.bodySmall, color = Quiet)
                 if (!value.canOpen) Text("目标不可打开，预览仍保留可读取的内容。", style = MaterialTheme.typography.bodySmall, color = Quiet)

@@ -21,11 +21,12 @@ import org.inkweft.data.StudyNodeRow
     Row(Modifier.padding(horizontal=12.dp)){TextButton(onClick={list=!list}){Text(if(list)"图形视图"else"关系列表")};TextButton(onClick={view?.fit()}){Text("适配全部")}}
     if(list)LazyColumn(Modifier.weight(1f),contentPadding=PaddingValues(16.dp)){
         items(graph.nodes.toList(),key={key(it)}){ref->OutlinedCard(Modifier.fillMaxWidth()){
-            Column(Modifier.padding(12.dp)){Text(label(ref));TextButton(onClick={focus(ref)}){Text("以此为中心")};graph.edges.filter{it.source==ref}.forEach{l->Text("${l.relation.label} → ${label(l.target)}")}}
+            Column(Modifier.padding(12.dp)){Text(label(ref));TextButton(onClick={focus(ref)}){Text("以此为中心")};graph.edges.filter{it.source==ref}.forEach{l->Text("${l.relation.label} ${l.direction.label} · ${label(l.target)}${if(l.visible)""else" · 图中隐藏"}${if(l.annotation.isBlank())""else"\n${l.annotation}"}")}}
         }}
     }else AndroidView(factory={MindMapView(it).also{v->view=v;v.contentDescription="局部关联图，箭头表示方向；可切换关系列表浏览。"}},update={v->
         val nodes=refs.entries.mapIndexed{i,(id,ref)->val p=positions[id]?:CanvasPoint((i%4)*280.0,(i/4)*150.0);StudyNodeRow(id,book,ref.id,null,p.x,p.y)}
-        v.showRelations(nodes,refs.mapValues{label(it.value)},graph.edges.map{key(it.source) to key(it.target)})
+        v.showRelations(nodes,refs.mapValues{label(it.value)},emptyList())
+        v.setKnowledgeRelations(graph.edges.filter{it.visible}.map{link->StudyRelationEdge(key(link.source),key(link.target),listOf(link.relation.label),emptyList(),link.lineStyle,link.direction,listOfNotNull(link.annotation.takeIf{it.isNotBlank()}))})
         v.onMove={n,x,y->positions=positions+(n.id to CanvasPoint(x,y))};v.onOpen={n->refs[n.id]?.let(focus)}
     },modifier=Modifier.fillMaxWidth().weight(1f).testTag("knowledge-graph"))
 }

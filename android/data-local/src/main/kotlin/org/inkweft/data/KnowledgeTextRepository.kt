@@ -15,6 +15,7 @@ data class KnowledgeTextPreview(
     val pinnedRevision: Long?,
     val annotation: String = "",
     val relationAnnotation: String = "",
+    val cardRevision:Long? = null,
 )
 
 /** Projects confirmed relationships only. Every read is transactional and never creates a receipt. */
@@ -60,7 +61,7 @@ class KnowledgeTextRepository(private val db: NoteDatabase) {
         val content = reader.content(target, pinned)
         val annotation=if(target.kind==TargetKind.CARD&&pinned==null&&content.book!=null)
             db.knowledge().forBook(content.book).firstNotNullOfOrNull{r->(r.data() as? KnowledgeData.CardPresentation)?.takeIf{!r.removed&&it.cardId==target.id}?.annotation}.orEmpty() else ""
-        KnowledgeTextPreview(target, content.title, content.body, content.canOpen, pinned,annotation,link.annotation)
+        KnowledgeTextPreview(target, content.title, content.body, content.canOpen, pinned,annotation,link.annotation,if(target.kind==TargetKind.CARD)pinned?:db.study().card(target.id)?.revision else null)
     }
 
     private data class Content(val title: String, val body: String, val book: String?, val terms: List<String>, val canOpen: Boolean)
