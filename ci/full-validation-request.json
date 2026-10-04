@@ -1,12 +1,12 @@
 {
   "status": "REQUESTED_NOT_EXECUTED",
-  "requested_utc": "2026-10-04T21:52:00Z",
-  "candidate_code_local": "732a5a3",
-  "prior_focused_source": "5ef7087b7da678296180ad6951ac75c6ed7ba849",
-  "prior_focused_run": 37236310245,
+  "requested_utc": "2026-10-04T22:52:00Z",
+  "candidate_code_local": "86780492f46a433fb2a4390b5c71b9ad7acef962",
+  "prior_focused_source": "7cbfb5c8ac7bfe302a0a5f16e84e57e37b8cbf73",
+  "prior_focused_run": 37240518869,
   "prior_focused_ui": {
-    "executed": 11,
-    "passed": 11
+    "executed": 7,
+    "passed": 7
   },
   "required": {
     "mode": "full",
@@ -51,15 +51,26 @@
   },
   "external_acceptance": "REAL_TABLET_PEN_THERMAL_AND_REAL_LIBRARY_UPGRADE_NOT_RUN",
   "prior_focused_b6": {
-    "prepare": "PASS",
-    "reopen": "PASS",
-    "visual": "FAIL_SINGLE_BACK_SENT_BEFORE_PENDING_PUBLICATION",
-    "png_generated_and_hash_verified": 32,
-    "wide_10_pixel_review": "PASS_RENDERED_SOURCE_AND_INK"
+    "all_phases": "NOT_RUN_FOCUSED",
+    "png": 0
   },
   "test_only_fix": {
-    "commit": "f37da91",
-    "scope": "Wait same revision and complete authoring fingerprint in ready published model, plus enabled expanded-region UI before the original single system Back. Retain busy dismiss guard and original 30s disappearance assertion."
+    "commits": [
+      "40a523d",
+      "2983688",
+      "0b5a277"
+    ],
+    "scope": "Actual Dialog IME/visible stable target readiness, exact comment draft and single save within original10s; foreign-source15s wait only adds bounded diagnostics, root cause unproven. No production changes."
   },
-  "scope_rationale": "Production unchanged from 11/11 targeted pass; run final full directly after test-only publication barrier repair, not another focused build."
+  "scope_rationale": "All seven focused UI passed with unchanged production. Final full validates one candidate rather than combining sources.",
+  "last_full": {
+    "source": "919696c89da298cec7661b54765235b73441f19a",
+    "run": 37237976648,
+    "ui_passed": 150,
+    "ui_executed": 153,
+    "fresh_room_passed": 202,
+    "b6_phases_passed": 5,
+    "b6_png": 40,
+    "visual": "40reviewed;stable selected outline uses visual-wide/narrow04;realdeviceNOTRUN"
+  }
 }
