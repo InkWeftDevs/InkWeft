@@ -26,9 +26,6 @@ jobs:
     env:
       ORG_GRADLE_PROJECT_inkweftInsertionPreview: "true"
       INKWEFT_HEAD_SHA: ${{ github.sha }}
-      ANDROID_AVD_HOME: ${{ runner.temp }}/inkweft-six-batch-avd
-      ANDROID_USER_HOME: ${{ runner.temp }}/inkweft-six-batch-android
-      ANDROID_EMULATOR_HOME: ${{ runner.temp }}/inkweft-six-batch-android
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
@@ -37,6 +34,11 @@ jobs:
         with:
           distribution: temurin
           java-version: "17"
+      - name: 初始化本次任务的临时目录
+        run: |
+          echo "ANDROID_AVD_HOME=$RUNNER_TEMP/inkweft-six-batch-avd" >> "$GITHUB_ENV"
+          echo "ANDROID_USER_HOME=$RUNNER_TEMP/inkweft-six-batch-android" >> "$GITHUB_ENV"
+          echo "ANDROID_EMULATOR_HOME=$RUNNER_TEMP/inkweft-six-batch-android" >> "$GITHUB_ENV"
       - name: 核验既有虚拟化权限（不修改权限或安全设置）
         id: acceleration
         run: |
@@ -62,7 +64,7 @@ jobs:
           import json, subprocess
           p=json.load(open('android-plan.json'))
           command=['./gradlew','--no-daemon','--max-workers=1','-Pkotlin.compiler.execution.strategy=in-process',
-                   '-Dorg.gradle.jvmargs=-Xmx2g -XX:MaxMetaspaceSize=512m -Dfile.encoding=UTF-8',':core-domain:test']
+                   '-Dorg.gradle.jvmargs=-Xmx3g -XX:MaxMetaspaceSize=1g -Dfile.encoding=UTF-8',':core-domain:test']
           for name in p['core_classes']: command+=['--tests',name]
           command+=[':app:lintDebug',':app:assembleDebug',':app:assembleDebugAndroidTest',':data-local:assembleDebugAndroidTest']
           subprocess.run(command,cwd='android',check=True)
