@@ -108,13 +108,14 @@ private class CardTransformPendingStore(context:Context,book:String) {
         }
     }
     val finalResult=result
+    val effectiveKind=pending?.kind?:proposal?.kind?:kind
     StudyDialog(embedded,onDismissRequest={if(!pendingState)onDismiss()},modifier=Modifier.testTag("card-transform-dialog"),
-        title={Text(if(finalResult!=null)"${kind.label}已保存"else"${kind.label}内容卡")},
+        title={Text(if(finalResult!=null)"${effectiveKind.label}已保存"else"${effectiveKind.label}内容卡")},
         text={Column(Modifier.fillMaxWidth().heightIn(max=600.dp).verticalScroll(rememberScrollState()),verticalArrangement=Arrangement.spacedBy(10.dp)){
             if(busy)LinearProgressIndicator(Modifier.fillMaxWidth())
             if(finalResult!=null){
                 Text("已创建 ${finalResult.targetIds.size} 张新内容卡。原卡、原图位置、引用及旧题保留；新卡尚未加入导图，也没有自动创建复习题。")
-                Text("从原卡的“${kind.label}结果”可找到新卡，并在内容和引用未变化时撤销。")
+                Text("从原卡的“${effectiveKind.label}结果”可找到新卡，并在内容和引用未变化时撤销。")
             }else if(proposal!=null){
                 val plan=requireNotNull(proposal)
                 Text("确认前核对以下去向",style=MaterialTheme.typography.titleMedium)
@@ -159,7 +160,7 @@ private class CardTransformPendingStore(context:Context,book:String) {
         }},
         confirmButton={
             if(finalResult!=null)TextButton({onCommitted(finalResult.targetIds)},modifier=Modifier.testTag("transform-done")){Text("查看新卡")}
-            else if(proposal!=null)TextButton({apply(requireNotNull(pending?:proposal))},enabled=!busy&&canAuthor(),modifier=Modifier.testTag("transform-confirm")){Text(if(unknown)"核对并重试同一次"else"确认${kind.label}")}
+            else if(proposal!=null)TextButton({apply(requireNotNull(pending?:proposal))},enabled=!busy&&canAuthor(),modifier=Modifier.testTag("transform-confirm")){Text(if(unknown)"核对并重试同一次"else"确认${effectiveKind.label}")}
             else TextButton({preview()},enabled=loaded!=null&&!busy&&canAuthor(),modifier=Modifier.testTag("transform-preview")){Text("查看影响")}
         },dismissButton={if(finalResult==null)TextButton(onDismiss,enabled=!pendingState,modifier=Modifier.testTag("transform-cancel")){Text("取消")}})
 }
@@ -188,7 +189,7 @@ private class CardTransformPendingStore(context:Context,book:String) {
             try{
                 if(withContext(Dispatchers.IO){repository.lookupUndo(operation,1,undo)}!=null){activeOperation=null;undoId=null}
                 else error="撤销结果待核对，请重试同一次撤销"
-            }catch(c:CancellationException){throw c}catch(_:Exception){error="撤销结果待核对，请重试同一次撤销"}finally{busy=false}
+            }catch(c:CancellationException){throw c}catch(e:IllegalArgumentException){activeOperation=null;undoId=null;error=transformMessage(e.message)}catch(_:Exception){error="撤销结果待核对，请重试同一次撤销"}finally{busy=false}
         }
     }
     fun undo(operation:String){
@@ -243,6 +244,7 @@ private fun transformMessage(reason:String?)=when(reason){
     "TRANSFORM_BODY_TOO_LONG"->"合并正文超过单卡 20,000 字符，请减少所选卡片；原内容没有改动"
     "TRANSFORM_ANNOTATION_TOO_LONG"->"合并注释超过单卡 10,000 字符，请减少所选卡片；原注释没有改动"
     "TRANSFORM_VERSION_CHANGED"->"预览期间内容、来源或相关记录已变化，请重新读取并预览"
+    "TRANSFORM_UNDO_OPERATION_MISMATCH","TRANSFORM_ALREADY_UNDONE"->"这次转换已由另一条撤销操作完成，请查看保留的原卡"
     "TRANSFORM_UNDO_DEPENDENCIES_CHANGED"->"新卡或相关引用已修改，不能覆盖后续编辑来撤销。原卡仍完整保留"
     "TRANSFORM_SAME_NOTEBOOK_REQUIRED"->"请在同一本笔记中选择未回收的内容卡"
     "TRANSFORM_SUMMARY_REQUIRED"->"请先写下总结正文"

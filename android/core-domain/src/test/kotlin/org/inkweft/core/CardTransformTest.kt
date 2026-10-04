@@ -49,4 +49,12 @@ class CardTransformTest {
         assertThrows(IllegalArgumentException::class.java){StudySourceRefs.decode("${ref.sourceId}@0")}
         assertThrows(IllegalArgumentException::class.java){StudySourceRefs.decode("${ref.sourceId}@04")}
     }
+    @Test fun malformedUtf8PlanCannotSilentlyReplaceOriginalText(){
+        val cards=listOf(card("unique-content-a"),card("unique-content-b"))
+        val bytes=CardTransformCodec.encode(plan(CardTransformKind.MERGE,cards,listOf(CardTransforms.mergeTarget(cards,"合并"))))
+        val marker="unique-content-a".toByteArray();val index=(0..bytes.size-marker.size).first{offset->marker.indices.all{bytes[offset+it]==marker[it]}}
+        bytes[index]=0xff.toByte()
+        assertThrows(java.nio.charset.CharacterCodingException::class.java){CardTransformCodec.decode(bytes)}
+    }
+
 }

@@ -77,7 +77,7 @@ object CardTransformCodec {
     fun decode(bytes:ByteArray):CardTransformPlan {
         require(bytes.size<=MAX_BYTES)
         return DataInputStream(ByteArrayInputStream(bytes)).use{d->
-            fun text():String {val n=d.readInt();require(n in 0..MAX_BYTES&&n<=d.available());val b=ByteArray(n);d.readFully(b);return b.toString(Charsets.UTF_8)}
+            fun text():String {val n=d.readInt();require(n in 0..MAX_BYTES&&n<=d.available());val b=ByteArray(n);d.readFully(b);return Charsets.UTF_8.newDecoder().onMalformedInput(java.nio.charset.CodingErrorAction.REPORT).onUnmappableCharacter(java.nio.charset.CodingErrorAction.REPORT).decode(java.nio.ByteBuffer.wrap(b)).toString()}
             fun count()=d.readInt().also{require(it in 1..16)}
             require(d.readInt()==0x49575431);val op=d.readUTF();val book=d.readUTF();val kind=CardTransformKind.valueOf(d.readUTF());val fingerprint=d.readUTF()
             val cards=List(count()){val id=d.readUTF();val rev=d.readLong();val title=text();val body=text();val annotation=text();val color=CardTint.valueOf(d.readUTF());val titleColor=CardTint.valueOf(d.readUTF());CardTransformCard(id,rev,title,body,KnowledgeData.CardPresentation(id,annotation,color,titleColor),StudySourceRefs.decode(text()),d.readBoolean())}

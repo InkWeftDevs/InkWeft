@@ -166,7 +166,7 @@ class CardTransformRepository(private val db:NoteDatabase,private val fault:(Car
                 source.sources.forEach{d.writeUTF(ContentTransfer.hash(it.snapshot))}
             }
             db.study().nodes(book).filter{it.cardId in ids}.sortedBy{it.id}.forEach{n->text(n.toString())}
-            db.cardTransforms().forBook(book).filter{row->row.operationId!=ignoreOperationId&&row.plan().let{plan->plan.inputs.any{it.id in ids}||plan.targets.any{it.id in ids}}}.forEach{row->
+            db.cardTransforms().forBook(book).filter{row->!row.undone&&row.operationId!=ignoreOperationId&&row.plan().let{plan->plan.inputs.any{it.id in ids}||plan.targets.any{it.id in ids}}}.forEach{row->
                 text(row.operationId);d.writeLong(row.revision);d.writeBoolean(row.undone);text(row.digest)
             }
             db.knowledge().all().filter{mentions(it.data(),ids)}.sortedBy{it.id}.forEach{r->text(r.id);text(r.notebookId);d.writeLong(r.revision);d.writeBoolean(r.removed);d.writeInt(r.payload.size);d.write(r.payload)}

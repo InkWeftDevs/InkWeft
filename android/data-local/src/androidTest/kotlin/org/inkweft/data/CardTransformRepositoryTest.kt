@@ -180,9 +180,11 @@ class CardTransformRepositoryTest {
         val a=card(db,book,"甲");val b=card(db,book,"乙");val repo=CardTransformRepository(db)
         val p=repo.preview(book,listOf(a.id,b.id));val merge=p.plan(CardTransformKind.MERGE,listOf(CardTransforms.mergeTarget(p.cards,"合并")))
         repo.submit(merge)
-        val split=repo.preview(book,listOf(merge.targets.single().id));repo.submit(split.plan(CardTransformKind.SPLIT,CardTransforms.splitTargets(split.cards.single(),2)))
+        val split=repo.preview(book,listOf(merge.targets.single().id));val splitPlan=split.plan(CardTransformKind.SPLIT,CardTransforms.splitTargets(split.cards.single(),2));repo.submit(splitPlan)
         assertEquals(CardTransformOutcome.Rejected("TRANSFORM_UNDO_DEPENDENCIES_CHANGED"),repo.undoOutcome(merge.operationId,1,id()))
         assertNull(db.study().card(merge.targets.single().id)!!.trashedAt)
+        repo.undo(splitPlan.operationId,1,id());repo.undo(merge.operationId,1,id())
+        assertNotNull(db.study().card(merge.targets.single().id)!!.trashedAt);assertNull(db.study().card(a.id)!!.trashedAt)
     }
 
 }
