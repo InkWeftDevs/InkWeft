@@ -829,7 +829,7 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
             }
             val msg=ui.message?:localMessage
             if(knowledgeRelations&&tab==2)Row(Modifier.fillMaxWidth().padding(horizontal=8.dp),verticalAlignment=Alignment.CenterVertically){
-                Text("虚线：知识关联",style=MaterialTheme.typography.bodySmall,color=Quiet,maxLines=1,overflow=TextOverflow.Ellipsis,modifier=Modifier.weight(1f).testTag("study-knowledge-relations-legend"))
+                Text("知识关联 · 箭头表示方向",style=MaterialTheme.typography.bodySmall,color=Quiet,maxLines=1,overflow=TextOverflow.Ellipsis,modifier=Modifier.weight(1f).testTag("study-knowledge-relations-legend"))
                 TextButton({nodeById[relationNodeId]?.let{openCardKnowledge(it.cardId,true,true)}},
                     enabled=browseReady&&!hasDraft&&relationNodeId!=null,modifier=Modifier.heightIn(min=48.dp).testTag("study-knowledge-relations-outside")){
                     Text(if(relationNodeId==null)"选中卡片查看关联"else"查看关联 · 范围外 ${knowledgeProjection.outOfScopeCount}",maxLines=1,overflow=TextOverflow.Ellipsis)

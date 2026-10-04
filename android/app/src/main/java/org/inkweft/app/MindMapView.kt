@@ -281,6 +281,7 @@ internal class MindMapView(context:Context):View(context){
     // drawColor and transformed nodes must never paint outside this viewport.
     override fun draw(canvas:Canvas){val save=canvas.save();try{canvas.clipRect(0,0,width,height);super.draw(canvas)}finally{canvas.restoreToCount(save)}}
     private fun drawKnowledgeRelations(c:Canvas,lookup:Map<String,StudyNodeRow>){
+        val lanes=mutableMapOf<Pair<String,String>,Int>()
         for(edge in knowledgeRelations){
             val a=lookup[edge.fromNodeId]?.let(::worldBounds)?:continue
             val b=lookup[edge.toNodeId]?.let(::worldBounds)?:continue
@@ -293,20 +294,28 @@ internal class MindMapView(context:Context):View(context){
             val length=hypot(ex-sx,ey-sy).coerceAtLeast(1f)
             val nx=-(ey-sy)/length;val ny=(ex-sx)/length
             // A bow keeps a knowledge link visible even when it shares a tree parent/child pair.
-            val bow=if(horizontal)max(a.height(),b.height())+48f else max(a.width(),b.width())+48f
+            val pair=edge.fromNodeId to edge.toNodeId;val lane=lanes[pair]?:0;lanes[pair]=lane+1
+            val bow=(if(horizontal)max(a.height(),b.height())+48f else max(a.width(),b.width())+48f)+lane*28f
             val cx=(sx+ex)/2+nx*bow;val cy=(sy+ey)/2+ny*bow
-            paint.style=Paint.Style.STROKE;paint.strokeWidth=1.8f;paint.color=InkTheme.Accent.toArgb();paint.pathEffect=relationDash
+            paint.style=Paint.Style.STROKE;paint.strokeWidth=1.8f;paint.color=InkTheme.Accent.toArgb();paint.pathEffect=if(edge.lineStyle==org.inkweft.core.RelationLineStyle.DASHED)relationDash else null
             c.drawPath(Path().apply{moveTo(sx,sy);quadTo(cx,cy,ex,ey)},paint)
             paint.pathEffect=null;paint.style=Paint.Style.FILL
-            val t=.8f;val u=1-t
-            val ax=u*u*sx+2*u*t*cx+t*t*ex;val ay=u*u*sy+2*u*t*cy+t*t*ey
-            val angle=atan2(u*(cy-sy)+t*(ey-cy),u*(cx-sx)+t*(ex-cx))
-            c.drawPath(Path().apply{
-                moveTo(ax,ay);lineTo(ax-10*cos(angle-.45f),ay-10*sin(angle-.45f))
-                lineTo(ax-10*cos(angle+.45f),ay-10*sin(angle+.45f));close()
-            },paint)
-            val label=edge.labels.joinToString(" · ")
+            fun arrow(t:Float,reverse:Boolean=false){
+                val u=1-t
+                val ax=u*u*sx+2*u*t*cx+t*t*ex;val ay=u*u*sy+2*u*t*cy+t*t*ey
+                val angle=atan2(u*(cy-sy)+t*(ey-cy),u*(cx-sx)+t*(ex-cx))+(if(reverse)PI.toFloat()else 0f)
+                c.drawPath(Path().apply{
+                    moveTo(ax,ay);lineTo(ax-10*cos(angle-.45f),ay-10*sin(angle-.45f))
+                    lineTo(ax-10*cos(angle+.45f),ay-10*sin(angle+.45f));close()
+                },paint)
+            }
+            arrow(.8f)
+            if(edge.direction==org.inkweft.core.RelationDirection.BOTH)arrow(.2f,true)
+            val text=(edge.labels+edge.annotations.map{it.replace('\n',' ')}).joinToString(" · ")
             paint.textSize=11f*resources.configuration.fontScale;paint.typeface=Typeface.DEFAULT
+            val limit=220f*resources.configuration.fontScale.coerceIn(1f,1.5f)
+            val count=paint.breakText(text,true,limit-paint.measureText("…"),null)
+            val label=if(count<text.length)text.take(count)+"…"else text
             val mx=(sx+2*cx+ex)/4;val my=(sy+2*cy+ey)/4
             val half=paint.measureText(label)/2;val metrics=paint.fontMetrics
             val baseline=my-(metrics.ascent+metrics.descent)/2
