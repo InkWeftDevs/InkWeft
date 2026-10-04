@@ -1,0 +1,32 @@
+{
+  "baseline": "760cc3fe01295eafb8033fcbf5d564eb53d9ceb9",
+  "plan": "SIX-BATCH-PLAN-v1.1.md",
+  "status": "IN_PROGRESS",
+  "checks": [
+    {
+      "source": "6d9d67305726622857a4cf6fd86a5d9a69f27a57",
+      "production_kotlin": "PASS",
+      "app_android_test_kotlin": "PASS",
+      "assemble_app_and_test": "PASS",
+      "lint": "FAILED_DAEMON_DISAPPEARED_DURING_ANDROID_TEST_ANALYSIS",
+      "android_execution": "RUNNING_ISOLATED_SOFTWARE_API35",
+      "hardware_and_human": "NOT_RUN"
+    },
+    {
+      "source": "ffa0864174ca1dad55693dee13123dac5de480a2",
+      "scope": "preserved-image-originals-and-rendering-integration",
+      "jvm": {"PageObjectTest": 7, "ContentTransferTest": 13, "LibraryArchiveTest": 14, "failed": 0, "skipped": 0},
+      "production_kotlin": "PASS",
+      "app_android_test_kotlin": "PASS",
+      "data_local_android_test_kotlin": "PASS",
+      "elapsed_seconds": 208,
+      "gradle_tasks_executed": 27,
+      "gradle_tasks_from_cache": 26,
+      "room_execution": "NOT_RUN",
+      "image_visual_validation": "NOT_RUN",
+      "hardware_and_human": "NOT_RUN"
+    }
+  ],
+  "compatibility": {"candidate_version": 69, "room_schema": 13, "image_objects": "IWOA", "image_page_copy": "IWP7", "safe_downgrade_to_v68": false},
+  "privacy": "Only source, synthetic tests and sanitized reports. No private notes, signing material, APK or raw device logs."
+}
