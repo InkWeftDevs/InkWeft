@@ -98,7 +98,10 @@ class InkCanvasView(context:Context):View(context){
     private fun requestImages(drawn:List<PageObject>,visible:CanvasBounds){
         val page=documentId;val sources=snapshotImageSources
         val repo=authorSession?.objects?:(context.applicationContext as? InkWeftApplication)?.pageObjects
-        imageRendering.request(drawn,visible,viewport.zoom*density){o->
+        imageRendering.request(drawn,visible,viewport.zoom*density,readSize={o->
+            if(sources!=null)sources.firstOrNull{it.sha256==o.imageSource}?.size
+            else if(page!=null)repo?.originalSize(page,checkNotNull(o.imageSource)) else null
+        }){o->
             if(sources!=null)sources.firstOrNull{it.sha256==o.imageSource}
             else if(page!=null)repo?.originals(page,listOf(o))?.singleOrNull() else null
         }
@@ -316,7 +319,11 @@ class InkCanvasView(context:Context):View(context){
         seamDraft?.let{if(it.pen==InkPen.PENCIL)PencilRenderer.draw(canvas,it)else renderer.draw(canvas,InkBrushes.stroke(it),matrix)}
         objectPainter.draw(canvas,drawn,true,objectVisible)
         canvas.restoreToCount(inkSave)
-        if(asyncRaster.pending&&!preview&&inputId==-1&&content.isNotEmpty()){paint.color=Color.GRAY;paint.textSize=(12*density).toFloat();paint.style=Paint.Style.FILL;canvas.drawText("正在呈现笔迹…",(16*density).toFloat(),(height-18*density).toFloat(),paint)}
+        if(!preview&&inputId==-1&&(imageFramesPending||asyncRaster.pending&&content.isNotEmpty())){
+            paint.color=Color.GRAY;paint.textSize=(12*density).toFloat();paint.style=Paint.Style.FILL
+            val status=if(imageFramesPending){if(imageRendering.budgetDeferred)"图片高清显示等待可用内存…"else"正在呈现图片…"}else"正在呈现笔迹…"
+            canvas.drawText(status,(16*density).toFloat(),(height-18*density).toFloat(),paint)
+        }
         // Draw cursor in screen space, outside the paper clip. Its diameter is
         // identical to the preview and does not vary with zoom or pen pressure.
         if((eraseMode||gestureErase)&&cursor!=null&&!preview){val p=checkNotNull(cursor);paint.style=Paint.Style.FILL;paint.color=0x183f7d67;val radius=(eraserDiameterDp*density/2).toFloat();canvas.drawCircle(p.x.toFloat(),p.y.toFloat(),radius,paint);paint.style=Paint.Style.STROKE;paint.strokeWidth=(3*density).toFloat();paint.color=Color.WHITE;canvas.drawCircle(p.x.toFloat(),p.y.toFloat(),radius,paint);paint.strokeWidth=density.toFloat();paint.color=0xff22272e.toInt();canvas.drawCircle(p.x.toFloat(),p.y.toFloat(),radius,paint);paint.style=Paint.Style.FILL}

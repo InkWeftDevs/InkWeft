@@ -38,7 +38,7 @@ class ImageRenderingTest {
         fail(message)
     }
     private fun request(o:PageObject,source:ImageSource,visible:CanvasBounds=full,scale:Double=1.0){
-        ins.runOnMainSync{if(renderer==null)renderer=ImageRendering(context,{});renderer!!.request(listOf(o),visible,scale){source}}
+        ins.runOnMainSync{if(renderer==null)renderer=ImageRendering(context,{});renderer!!.request(listOf(o),visible,scale,readSize={source.size}){source}}
         waitUntil{!renderer!!.pending}
     }
     @Before fun emptyActivity(){rule.scenario.onActivity{it.setContentView(FrameLayout(it));RenderResources.trim();BackgroundBudget.lastInput=0}}
@@ -133,7 +133,7 @@ class ImageRenderingTest {
                 renderer!!.request(listOf(o),CanvasBounds(80.0,40.0,320.0,160.0),2.0){original}
             }
             Thread.sleep(250)
-            ins.runOnMainSync{assertTrue(renderer!!.pending);assertNotNull(renderer!!.frame(o));assertEquals(1,renderer!!.decodeCount)}
+            ins.runOnMainSync{assertTrue(renderer!!.budgetDeferred);assertTrue(renderer!!.pending);assertNotNull(renderer!!.frame(o));assertEquals(1,renderer!!.decodeCount)}
         }finally{RenderResources.release(held,"original-image-pressure")}
         waitUntil{!renderer!!.pending}
         ins.runOnMainSync{assertEquals(2,renderer!!.decodeCount)}
@@ -169,6 +169,38 @@ class ImageRenderingTest {
             waitUntil{view.width>0&&!view.imageFramesPending&&(field(view,"imageRendering") as ImageRendering).frame(o)!=null}
             rule.scenario.onActivity{assertEquals(original.sha256,(field(view,"imageRendering") as ImageRendering).frame(o)?.source)}
         }finally{rule.scenario.onActivity{it.setContentView(FrameLayout(it))};replica.close();replica.directory.deleteRecursively()}
+    }
+    @Test fun byteReservationPrecedesRepositoryReconstructionAndCancellationReleasesIt(){
+        val original=source();val o=item(original);val reads=AtomicInteger();val gate=CompletableDeferred<Unit>();val entered=CompletableDeferred<Unit>()
+        val held=Any()
+        try{
+            ins.runOnMainSync{
+                renderer=ImageRendering(context,{})
+                RenderResources.track(held,RenderResources.BUDGET-1_000_000,"fixture","original-read-pressure",RenderResources.Role.ACTIVE)
+                renderer!!.request(listOf(o),full,1.0,readSize={ImageSource.MAX_BYTES}){reads.incrementAndGet();entered.complete(Unit);gate.await();original}
+            }
+            waitUntil{renderer!!.budgetDeferred}
+            assertEquals("No chunks may be rebuilt before their lease is admitted",0,reads.get())
+        }finally{RenderResources.release(held,"original-read-pressure")}
+        runBlocking{withTimeout(20_000){entered.await()}}
+        ins.runOnMainSync{renderer!!.clear()};gate.complete(Unit)
+        waitUntil{RenderResources.snapshot().getOrDefault("category.background-work",0L)==0L}
+        assertEquals(1,reads.get())
+    }
+    @Test fun visibleOriginalsAboveTheFormerSoftLimitAreNotPermanentlyDowngraded(){
+        val original=source(2200,2000);val a=item(original);val b=item(original).copy(x=400f)
+        ins.runOnMainSync{
+            renderer=ImageRendering(context,{})
+            renderer!!.request(listOf(a,b),CanvasBounds(0.0,0.0,800.0,200.0),5.5,readSize={original.size}){original}
+        }
+        waitUntil{!renderer!!.pending}
+        ins.runOnMainSync{
+            val first=checkNotNull(renderer!!.frame(a));val second=checkNotNull(renderer!!.frame(b))
+            assertTrue(first.bitmap.allocationByteCount.toLong()+second.bitmap.allocationByteCount>32L*1024*1024)
+            assertEquals(2,renderer!!.decodeCount)
+            renderer!!.request(listOf(a,b),CanvasBounds(0.0,0.0,800.0,200.0),5.5,readSize={original.size}){error("Stable visible originals must not be downgraded or reloaded")}
+            assertNotNull(renderer!!.frame(a));assertNotNull(renderer!!.frame(b));assertFalse(renderer!!.pending)
+        }
     }
     private fun field(value:Any,name:String):Any=value.javaClass.getDeclaredField(name).apply{isAccessible=true}.get(value)!!
 }

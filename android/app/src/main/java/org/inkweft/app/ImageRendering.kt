@@ -50,17 +50,19 @@ internal class ImageRendering(private val context:Context,private val changed:()
     private val frames=linkedMapOf<String,Saved>()
     private var job:Job?=null
     internal val pending get()=job!=null
+    internal var budgetDeferred=false
+        private set
     internal var decodeCount=0
         private set
     fun frame(o:PageObject):ImageFrame?=frames[o.id]?.frame?.takeIf{it.source==o.imageSource}
-    fun clear(){generation++;job?.cancel();job=null;wanted=emptyList();frames.values.forEach{RenderResources.release(it.frame.bitmap,owner)};frames.clear()}
+    fun clear(){budgetDeferred=false;generation++;job?.cancel();job=null;wanted=emptyList();frames.values.forEach{RenderResources.release(it.frame.bitmap,owner)};frames.clear()}
     fun retain(objects:List<PageObject>){
         val images=objects.filter{!it.hidden&&it.kind==PageObjectKind.IMAGE}.associateBy{it.id}
         frames.keys.filter{frames[it]?.frame?.source!=images[it]?.imageSource}.forEach{frames.remove(it)?.let{s->RenderResources.release(s.frame.bitmap,owner)}}
         // Cancel even before the next draw, so a deleted object cannot be republished.
         if(wanted.any{images[it.key.id]?.imageSource!=it.key.source}){generation++;job?.cancel();job=null;wanted=emptyList()}
     }
-    fun request(objects:List<PageObject>,visible:CanvasBounds,pixelsPerWorld:Double,read:suspend (PageObject)->ImageSource?){
+    fun request(objects:List<PageObject>,visible:CanvasBounds,pixelsPerWorld:Double,readSize:suspend (PageObject)->Int?={ImageSource.MAX_BYTES},read:suspend (PageObject)->ImageSource?){
         val next=objects.filter{!it.hidden&&it.kind==PageObjectKind.IMAGE&&it.imageSource!=null&&it.bounds().intersects(visible)}.mapNotNull{o->
             val l=max(o.x.toDouble(),visible.left);val t=max(o.y.toDouble(),visible.top)
             val r=min((o.x+o.width).toDouble(),visible.right);val b=min((o.y+o.height).toDouble(),visible.bottom)
@@ -71,7 +73,7 @@ internal class ImageRendering(private val context:Context,private val changed:()
         val keys=next.map{it.key}
         frames.keys.filter{id->next.none{it.key.id==id}}.forEach{frames.remove(it)?.let{s->RenderResources.release(s.frame.bitmap,owner)}}
         if(wanted.map{it.key}==keys)return
-        wanted=next;val token=++generation;job?.cancel();job=null
+        wanted=next;budgetDeferred=false;val token=++generation;job?.cancel();job=null
         if(next.isEmpty())return
         job=CoroutineScope(Dispatchers.Main.immediate).launch{
             delay(80)
@@ -85,10 +87,14 @@ internal class ImageRendering(private val context:Context,private val changed:()
                         try{
                             withContext(Dispatchers.IO){decodeLock.withLock{
                                 BackgroundBudget.await(context);ensureActive()
-                                val source=read(request.objectValue)?:error("IMAGE_ORIGINAL_MISSING")
-                                require(source.sha256==request.key.source)
-                                RenderResources.track(source,source.size.toLong(),"image-original-bytes",owner,RenderResources.Role.IN_FLIGHT)
-                                try{BackgroundBudget.memory(source.size.toLong()*2){
+                                val byteCount=readSize(request.objectValue)?:error("IMAGE_ORIGINAL_MISSING")
+                                require(byteCount in 1..ImageSource.MAX_BYTES)
+                                // Repository reconstruction holds chunks, a join buffer and owned bytes.
+                                // Afterwards this same lease covers owned bytes, decoder input and its stream.
+                                BackgroundBudget.memory(byteCount.toLong()*3){
+                                    val source=read(request.objectValue)?:error("IMAGE_ORIGINAL_MISSING")
+                                    require(source.sha256==request.key.source&&source.size<=byteCount)
+                                    ensureActive()
                                     val result=decode(source,request.key)
                                     var published=false
                                     try{
@@ -96,24 +102,25 @@ internal class ImageRendering(private val context:Context,private val changed:()
                                         withContext(Dispatchers.Main.immediate){
                                             if(token==generation){
                                                 frames.remove(request.key.id)?.let{RenderResources.release(it.frame.bitmap,owner)}
-                                                // ponytail: keep 32 MiB per view; lower layers retain their small previews under extreme overlap.
-                                                while(frames.isNotEmpty()&&frames.values.sumOf{it.frame.bitmap.allocationByteCount.toLong()}+result.bitmap.allocationByteCount>FRAME_BYTES){
-                                                    val first=frames.keys.first();RenderResources.release(frames.remove(first)!!.frame.bitmap,owner)
-                                                }
                                                 frames[request.key.id]=Saved(request.key,result)
                                                 RenderResources.track(result.bitmap,result.bitmap.allocationByteCount.toLong(),"image-region",owner,RenderResources.Role.ACTIVE)
-                                                decodeCount++;published=true;changed()
+                                                decodeCount++;budgetDeferred=false;published=true;changed()
                                             }
                                         }
                                     }finally{if(!published){RenderResources.release(result.bitmap,owner);result.bitmap.recycle()}}
-                                }}finally{RenderResources.release(source,owner)}
+                                }
                             }}
-                        }catch(_:RenderBudgetBusy){delay(500);retry=true}
+                        }catch(_:RenderBudgetBusy){
+                            if(token==generation&&!budgetDeferred){budgetDeferred=true;changed()}
+                            delay(500);retry=true
+                        }catch(cancel:CancellationException){throw cancel}
+                        catch(_:Exception){if(token==generation)failed()}
                     }
                 }
             }catch(cancel:CancellationException){RenderResources.cancelledJobs.incrementAndGet();throw cancel}
             catch(_:Exception){if(token==generation)failed()}
-            finally{RenderResources.inFlightJobs.decrementAndGet();if(token==generation){job=null;changed()}}
+            catch(_:OutOfMemoryError){if(token==generation)failed()}
+            finally{RenderResources.inFlightJobs.decrementAndGet();if(token==generation){job=null;budgetDeferred=false;changed()}}
         }
     }
     private suspend fun decode(source:ImageSource,key:Key):ImageFrame {
@@ -140,7 +147,6 @@ internal class ImageRendering(private val context:Context,private val changed:()
         }finally{decoder.recycle()}
     }
     companion object {
-        private const val FRAME_BYTES=32L*1024*1024
         // Serialize original-byte reconstruction and decoder scratch space across continuous pages.
         private val decodeLock=Mutex()
     }
