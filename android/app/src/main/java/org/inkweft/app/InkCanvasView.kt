@@ -119,7 +119,7 @@ class InkCanvasView(context:Context):View(context){
             maps.observe(book).flowOn(Dispatchers.IO).catch{if(it is CancellationException)throw it;emit(listOf(MapScene(MapRef(book),"",emptyList(),"",false)))}.collect{scenes->objectPainter.mapScenes=scenes.associateBy{it.ref};invalidate()}
         }
     }
-    fun showObjects(next:List<PageObject>){if(objects==next)return;objects=next;imageRendering.retain(next);drawnViewport=null;observeMapScenes();restoreAppearance();suppressedStrokeIds=next.flatMap{it.sourceStrokeIds}.toSet();if(preview&&world&&width>0&&height>0)fitContent(false);invalidate()}
+    fun showObjects(next:List<PageObject>){if(objects==next){if(imageRendering.retryFailed())invalidate();return};objects=next;imageRendering.retain(next);drawnViewport=null;observeMapScenes();restoreAppearance();suppressedStrokeIds=next.flatMap{it.sourceStrokeIds}.toSet();if(preview&&world&&width>0&&height>0)fitContent(false);invalidate()}
     fun previewObject(value:PageObject?){objectDraft=value;invalidate()}
     private var appearanceObjects=emptyList<PageObject>()
     private fun restoreAppearance(){val sources=content.associateBy{it.id};appearanceObjects=objects.map{BeautyAppearance.restore(it,sources)}}

@@ -204,5 +204,17 @@ class ImageRenderingTest {
             assertNotNull(renderer!!.frame(a));assertNotNull(renderer!!.frame(b));assertFalse(renderer!!.pending)
         }
     }
+    @Test fun unchangedObjectsCanRetryAfterAnOriginalImportFinishes(){
+        val original=source();val o=item(original);val reads=AtomicInteger()
+        ins.runOnMainSync{renderer=ImageRendering(context,{});renderer!!.request(listOf(o),full,1.0,readSize={null}){reads.incrementAndGet();original}}
+        waitUntil{!renderer!!.pending}
+        ins.runOnMainSync{
+            assertNull(renderer!!.frame(o));assertEquals(0,reads.get())
+            assertTrue(renderer!!.retryFailed())
+            renderer!!.request(listOf(o),full,1.0,readSize={original.size}){reads.incrementAndGet();original}
+        }
+        waitUntil{!renderer!!.pending}
+        ins.runOnMainSync{assertNotNull(renderer!!.frame(o));assertEquals(1,reads.get());assertFalse("Healthy frames must not reload on unrelated UI updates",renderer!!.retryFailed())}
+    }
     private fun field(value:Any,name:String):Any=value.javaClass.getDeclaredField(name).apply{isAccessible=true}.get(value)!!
 }

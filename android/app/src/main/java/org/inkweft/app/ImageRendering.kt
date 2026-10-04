@@ -49,13 +49,20 @@ internal class ImageRendering(private val context:Context,private val changed:()
     private var wanted=emptyList<Request>()
     private val frames=linkedMapOf<String,Saved>()
     private var job:Job?=null
+    private var failedRequest=false
     internal val pending get()=job!=null
     internal var budgetDeferred=false
         private set
     internal var decodeCount=0
         private set
     fun frame(o:PageObject):ImageFrame?=frames[o.id]?.frame?.takeIf{it.source==o.imageSource}
-    fun clear(){budgetDeferred=false;generation++;job?.cancel();job=null;wanted=emptyList();frames.values.forEach{RenderResources.release(it.frame.bitmap,owner)};frames.clear()}
+    fun clear(){failedRequest=false;budgetDeferred=false;generation++;job?.cancel();job=null;wanted=emptyList();frames.values.forEach{RenderResources.release(it.frame.bitmap,owner)};frames.clear()}
+    /** Optimistic import objects can arrive before their original-byte transaction commits. */
+    fun retryFailed():Boolean {
+        if(!failedRequest||pending)return false
+        failedRequest=false;wanted=emptyList();return true
+    }
+    private fun reportFailure(){failedRequest=true;failed()}
     fun retain(objects:List<PageObject>){
         val images=objects.filter{!it.hidden&&it.kind==PageObjectKind.IMAGE}.associateBy{it.id}
         frames.keys.filter{frames[it]?.frame?.source!=images[it]?.imageSource}.forEach{frames.remove(it)?.let{s->RenderResources.release(s.frame.bitmap,owner)}}
@@ -73,7 +80,7 @@ internal class ImageRendering(private val context:Context,private val changed:()
         val keys=next.map{it.key}
         frames.keys.filter{id->next.none{it.key.id==id}}.forEach{frames.remove(it)?.let{s->RenderResources.release(s.frame.bitmap,owner)}}
         if(wanted.map{it.key}==keys)return
-        wanted=next;budgetDeferred=false;val token=++generation;job?.cancel();job=null
+        wanted=next;failedRequest=false;budgetDeferred=false;val token=++generation;job?.cancel();job=null
         if(next.isEmpty())return
         job=CoroutineScope(Dispatchers.Main.immediate).launch{
             delay(80)
@@ -114,12 +121,12 @@ internal class ImageRendering(private val context:Context,private val changed:()
                             if(token==generation&&!budgetDeferred){budgetDeferred=true;changed()}
                             delay(500);retry=true
                         }catch(cancel:CancellationException){throw cancel}
-                        catch(_:Exception){if(token==generation)failed()}
+                        catch(_:Exception){if(token==generation)reportFailure()}
                     }
                 }
             }catch(cancel:CancellationException){RenderResources.cancelledJobs.incrementAndGet();throw cancel}
-            catch(_:Exception){if(token==generation)failed()}
-            catch(_:OutOfMemoryError){if(token==generation)failed()}
+            catch(_:Exception){if(token==generation)reportFailure()}
+            catch(_:OutOfMemoryError){if(token==generation)reportFailure()}
             finally{RenderResources.inFlightJobs.decrementAndGet();if(token==generation){job=null;budgetDeferred=false;changed()}}
         }
     }
