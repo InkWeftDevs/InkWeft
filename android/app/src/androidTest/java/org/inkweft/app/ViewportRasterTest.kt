@@ -47,6 +47,31 @@ class ViewportRasterTest {
         }finally{target.recycle()}
     }
 
+    @Test fun sixMillionPixelFrameFinishesUnderPinnedFramePressure(){
+        val held=Any();val target=Bitmap.createBitmap(1,1,Bitmap.Config.ARGB_8888)
+        try {
+            rule.scenario.onActivity{activity->
+                activity.setContentView(FrameLayout(activity));RenderResources.trim()
+                // Other old/new ink/PDF frames and live caches leave 1 MB beyond the
+                // actual 3000 x 2000 final frame, enough for its preview and a transient tile.
+                val baseline=RenderResources.snapshot().getValue("totalBytes")
+                RenderResources.track(held,RenderResources.BUDGET-baseline-6_000_000L*4-1_000_000,
+                    "fixture","viewport-pressure",RenderResources.Role.ACTIVE)
+                val ink=InkStroke(UUID.randomUUID().toString(),InkPen.PENCIL,Color.BLACK,3f,InkTool.STYLUS,
+                    listOf(InkSample(350f,707f,0,.8f),InkSample(650f,707f,40,.8f)))
+                raster=AsyncInkRaster({})
+                raster!!.draw(Canvas(target),3000,2000,CanvasViewport(500.0,707.0,3.0),1.0,false,false,listOf(ink))
+            }
+            awaitRaster(raster!!)
+            instrumentation.runOnMainSync{
+                val bitmap=checkNotNull(frame(raster!!))
+                assertEquals("One-shot material tiles must not pin the coarse preview forever",3000,bitmap.width)
+                assertEquals(2000,bitmap.height)
+                assertTrue(RenderResources.snapshot().getValue("totalBytes")<=RenderResources.BUDGET)
+            }
+        }finally{RenderResources.release(held,"viewport-pressure");target.recycle()}
+    }
+
     @Test fun zoomNeverPublishesACoarsePencilFrameOverRetainedInk(){
         val target=Bitmap.createBitmap(1,1,Bitmap.Config.ARGB_8888)
         val widths=mutableListOf<Int>()

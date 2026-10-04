@@ -108,6 +108,9 @@ internal class PencilTileRenderer(private val unit:Float=.5f,private val live:Bo
                 pixels[index]=(alpha shl 24) or(stroke.color and 0xffffff)
             };tile.bitmap.setPixels(pixels,dirtyTop*SIDE+dirtyLeft,SIDE,dirtyLeft,dirtyTop,dirtyRight-dirtyLeft+1,dirtyBottom-dirtyTop+1)}
             destination.set(ox,oy,ox+TILE,oy+TILE);canvas.drawBitmap(tile.bitmap,null,destination,paint)
+            // A software raster has copied these pixels synchronously. One-shot workers
+            // never revisit the tile; retaining it can starve the final high-resolution frame.
+            if(!live&&!canvas.isHardwareAccelerated){tiles.remove(key);release(tile);tile.bitmap.recycle()}
         }
     }
 }
