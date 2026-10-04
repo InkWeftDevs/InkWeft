@@ -11,6 +11,7 @@ import java.util.Base64
 /** Bounded caches; decoded media is shared by transformed copies until the view is detached. */
 internal class PageObjectPainter {
     var mapScenes:Map<MapRef,MapScene> = emptyMap()
+    var originalImage:(PageObject)->ImageFrame? = {null}
     private val mapScenesResolved=object:LinkedHashMap<String,MapScene?>(16,.75f,true){override fun removeEldestEntry(e:MutableMap.MutableEntry<String,MapScene?>?)=size>32}
     private val resourceOwner="objects-"+java.util.UUID.randomUUID()
     private val images=object:LinkedHashMap<String,Bitmap?>(8,.75f,true){override fun removeEldestEntry(eldest:MutableMap.MutableEntry<String,Bitmap?>?):Boolean{if(size<=8)return false;eldest?.value?.let{RenderResources.release(it,resourceOwner)};return true}}
@@ -33,6 +34,7 @@ internal class PageObjectPainter {
                     MapScenePainter.embed(canvas,scene,o)
                 }
                 PageObjectKind.IMAGE->{
+                    val original=originalImage(o)
                     val bitmap=if(images.containsKey(o.image))images[o.image]else try{
                         val bytes=Base64.getDecoder().decode(o.image)
                         val opts=BitmapFactory.Options().apply{inJustDecodeBounds=true};BitmapFactory.decodeByteArray(bytes,0,bytes.size,opts)
@@ -40,8 +42,13 @@ internal class PageObjectPainter {
                         RenderResources.admit(opts.outWidth.toLong()*opts.outHeight*4)
                         BitmapFactory.decodeByteArray(bytes,0,bytes.size)?.also{RenderResources.track(it,it.allocationByteCount.toLong(),"image",resourceOwner,RenderResources.Role.ACTIVE)}.also{images[o.image]=it}
                     }catch(_:RenderBudgetBusy){null}catch(_:Exception){images[o.image]=null;null}
+                    val fallback=canvas.save()
+                    // Never paint an opaque JPEG underneath transparent original pixels.
+                    original?.let{canvas.clipOutRect(it.bounds(o))}
                     if(bitmap!=null)canvas.drawBitmap(bitmap,null,RectF(o.x,o.y,o.x+o.width,o.y+o.height),paint)
                     else {paint.color=Color.LTGRAY;canvas.drawRect(o.x,o.y,o.x+o.width,o.y+o.height,paint)}
+                    canvas.restoreToCount(fallback)
+                    original?.draw(canvas,o,paint)
                 }
                 PageObjectKind.TEXT->{
                     if(o.textRuns.isNotEmpty()){
