@@ -19,6 +19,8 @@ data class ImageChunkRow(val notebookId:String,val digest:String,val position:In
     @Insert(onConflict=OnConflictStrategy.ABORT) suspend fun insert(row:ImageChunkRow)
 }
 
+class ImageOriginalCapacity:IllegalArgumentException("IMAGE_LIBRARY_BUDGET")
+
 /** Writes participate in their caller's object/import transaction; no detached file can be lost. */
 class ImageSourceRepository(private val db:NoteDatabase) {
     suspend fun read(book:String,hash:String):ImageSource {
@@ -38,7 +40,7 @@ class ImageSourceRepository(private val db:NoteDatabase) {
     internal suspend fun attach(book:String,sources:List<ImageSource>) {
         for(source in sources.distinctBy{it.sha256}){
             if(db.images().source(book,source.sha256)!=null){require(read(book,source.sha256).size==source.size);continue}
-            require(db.images().totalBytes()+source.size<=ImageSource.LIBRARY_BYTES){"IMAGE_LIBRARY_BUDGET"}
+            if(db.images().totalBytes()+source.size>ImageSource.LIBRARY_BYTES)throw ImageOriginalCapacity()
             validate(source)
             db.images().insert(ImageSourceRow(book,source.sha256,source.size))
             val bytes=source.bytes();var offset=0;var position=0

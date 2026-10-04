@@ -201,7 +201,10 @@ internal class PageObjectViewModel(private val pageId:String,private val repo:Pa
             try{
                 val revision=withContext(Dispatchers.IO){repo.save(pageId,p.before.revision,p.id,p.after,p.expectedInk,p.originals)}
                 completeExternal(revision)
-            }catch(c:CancellationException){throw c}catch(_:Exception){publish("对象保存尚未确认。请核对重试；如有版本冲突，可重新读取已保存对象。")}
+            }catch(c:CancellationException){throw c}catch(_:ImageOriginalCapacity){
+                // This rejection is raised inside the transaction before its receipt commits.
+                pending=null;external=false;publish("图片未保存：原件总量已达 32 MB 上限。原文件和已有内容均未更改；可另存较小副本后导入。")
+            }catch(_:Exception){publish("对象保存尚未确认。请核对重试；如有版本冲突，可重新读取已保存对象。")}
         }
     }
     internal fun validateExternal(objects:List<PageObject>){check(authorAllowed());check(!state.value.loading&&!state.value.busy&&!state.value.pending);PageObjectCodec.encode(objects)}
