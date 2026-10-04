@@ -1,0 +1,28 @@
+name: Android runner只读诊断
+on:
+  push:
+    branches: ["codex/cloud/six-batches-v11-20261004"]
+    paths: [".github/workflows/android-runner-diagnostics.yml"]
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 3
+    steps:
+      - name: 读取设备节点与当前身份，不改变权限
+        run: |
+          id
+          if test -e /dev/kvm; then
+            stat -c 'path=%n type=%F mode=%a owner=%U(%u) group=%G(%g)' /dev/kvm
+            test -r /dev/kvm && echo 'readable=true' || echo 'readable=false'
+            test -w /dev/kvm && echo 'writable=true' || echo 'writable=false'
+            command -v getfacl >/dev/null && getfacl /dev/kvm || true
+          else
+            echo 'kvm_node=MISSING'
+          fi
+          grep -m 1 -E '^(flags|Features)' /proc/cpuinfo || true
+          lsmod | grep '^kvm' || true
+          if test -x "$ANDROID_HOME/emulator/emulator"; then
+            "$ANDROID_HOME/emulator/emulator" -accel-check || true
+          fi
