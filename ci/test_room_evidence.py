@@ -94,6 +94,9 @@ class RoomEvidenceTest(unittest.TestCase):
 
     def test_runner_rechecks_inputs_and_reports_reuse_as_zero_new_execution(self):
         plan = build_plan("focused")
+        # Exercise the historical selection exactly; expanded current scope must run anew.
+        plan["room"] = self.baseline["room_classes"]
+        plan["expected_room"] = 180
         selections = []
         run_regression(self.root, plan, 0, selections, shard_count=1)
         self.assertEqual(assigned_app_methods(plan), selections)
@@ -112,6 +115,6 @@ class RoomEvidenceTest(unittest.TestCase):
         self.assertEqual(plan["room"], [selection for selection in selections if "#" not in selection])
         self.assertEqual(assigned_app_methods(plan), [selection for selection in selections if "#" in selection])
         summary = json.loads((self.root / "android/build/evidence/room-summary.json").read_text())
-        self.assertEqual((180, 180), (summary["expected"], summary["passed"]))
+        self.assertEqual((plan["expected_room"], plan["expected_room"]), (summary["expected"], summary["passed"]))
         evidence = json.loads((self.root / "android/build/evidence/room-input-evidence.json").read_text())
         self.assertEqual("RUN_REQUIRED", evidence["status"])

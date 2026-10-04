@@ -50,7 +50,7 @@ class CardReuseRepositoryTest {
         val another=repo.prepare(card,1,b,CardReuseKind.REFERENCE);repo.submit(another)
         val node=db.study().nodes(a).single()
         StudyRepository(db).submit(StudyCommand(id(),a,StudyAction.REMOVE_NODE,nodeId=node.id,expectedRevision=node.revision))
-        StudyRepository(db).submit(StudyCommand(id(),a,StudyAction.TRASH_CARD,cardId=card,expectedRevision=1))
+        StudyRepository(db).submit(StudyCommand(id(),a,StudyAction.TRASH_CARD,cardId=card,expectedRevision=1,expectedTrashImpact=StudyRepository(db).previewTrash(a,requireNotNull(card)).fingerprint))
         val preview=KnowledgeTextRepository(db).preview(TargetRef(TargetKind.NOTE,b),another.resultId(),1)
         assertFalse(preview.canOpen);assertEquals("完整正文",preview.body)
     }

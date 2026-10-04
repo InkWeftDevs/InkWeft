@@ -616,6 +616,8 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
                 "camera" -> IconButton(onClick={closeOverflow();insertObject("camera")},enabled=!editingBlocked&&!continuousBlocked,modifier=Modifier.testTag("object-camera").describedAs("拍照")){Glyph("camera")}
                 "text" -> IconButton(onClick={closeOverflow();insertObject("text")},enabled=!editingBlocked&&!continuousBlocked,modifier=Modifier.testTag("object-text").describedAs("文本框")){Glyph("text")}
                 "map" -> EditorTool("导图","mindmap",false,!busy,"quick-study",Modifier.describedAs("笔记导图")){closeOverflow();onDocumentAction("map")}
+                "associations" -> EditorTool("关联","link",false,navigationReady&&externalEnabled,"document-associations",Modifier.describedAs("笔记关联")){closeOverflow();onDocumentAction("associations")}
+                "excerpts" -> EditorTool("摘录列表","excerpt",false,navigationReady&&externalEnabled,"read-excerpts",Modifier.describedAs("查看本笔记摘录")){closeOverflow();onDocumentAction("excerpts")}
                 "excerpt" -> EditorTool("摘录","excerpt",tool==4&&excerptMode,!editingBlocked&&!continuousBlocked,"top-excerpt",Modifier.toolAnchor("excerpt").describedAs("摘录")){closeOverflow();if(tool==4&&excerptMode){anchorFor("excerpt");excerptSettings=true}else chooseSelection(excerpt=true)}
                 "tag" -> IconButton(onClick=onTags,enabled=!editingBlocked,modifier=Modifier.testTag("top-tags").describedAs("笔记标签")){Glyph("tag")}
                 "shape" -> IconButton(onClick={closeOverflow();insertObject("shape")},enabled=!editingBlocked&&!continuousBlocked,modifier=Modifier.testTag("object-shape").describedAs("图形")){Glyph("shape")}

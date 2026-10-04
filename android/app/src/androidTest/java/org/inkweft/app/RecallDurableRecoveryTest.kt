@@ -49,6 +49,48 @@ class RecallDurableRecoveryTest {
             assertEquals(1,repo.loadSession(b.sessionId!!).current!!.hints.count{it.kind=="ORIGINAL"})
         }finally{main{first?.viewModelScope?.cancel();second?.viewModelScope?.cancel()}}
     }
+    @Test fun repeatedOriginalSavesNewAnswerAndCancellationNeverRunsStaleContinuation()=fixture{repo,plan,fail->
+        val context=InstrumentationRegistry.getInstrumentation().targetContext
+        val vm=main{RecallStudyViewModel(repo,plan.ref.notebookId,context,SavedStateHandle()).also{it.open(plan)}}
+        try{
+            withTimeout(15000){vm.ui.first{!it.loading}};main{vm.start(RecallMode.PRACTICE)}
+            withTimeout(15000){vm.ui.first{it.session?.current!=null&&!it.busy}}
+            val session=vm.sessionId!!;val attempt=vm.ui.value.session!!.current!!.row.id
+            var visits=0;main{assertTrue(vm.original{visits++})}
+            withTimeout(15000){vm.ui.first{it.navigationReady&&!it.busy&&!it.pending}}
+            main{vm.cancelNavigation();vm.finishNavigation()};assertEquals(0,visits)
+            val first=repo.loadAttempt(attempt);assertEquals(1,first.hints.count{it.kind=="ORIGINAL"})
+            main{vm.draft(text="回源后继续写下的原作答")};withTimeout(15000){vm.ui.first{it.draftSaved}}
+            fail.set(true);main{assertTrue(vm.original{visits++})}
+            withTimeout(15000){vm.ui.first{it.pending&&!it.busy}}
+            main{vm.finishNavigation()};assertEquals(0,visits);assertEquals("",repo.loadAttempt(attempt).row.answerText)
+            fail.set(false);main{vm.retry()}
+            withTimeout(15000){vm.ui.first{it.navigationReady&&!it.busy&&!it.pending}}
+            assertEquals("回源后继续写下的原作答",repo.loadAttempt(attempt).row.answerText)
+            main{vm.finishNavigation();vm.finishNavigation()};assertEquals(1,visits)
+            val same=repo.loadSession(session)
+            assertEquals(attempt,same.current!!.row.id);assertEquals(1,same.attempts.size)
+            assertEquals(1,same.current!!.hints.count{it.kind=="ORIGINAL"});assertFalse(same.current!!.row.answerRevealed)
+            assertEquals("回源后继续写下的原作答",vm.ui.value.draftText)
+        }finally{main{vm.viewModelScope.cancel()}}
+    }
+    @Test fun cancellingUnknownAnswerBeforeOriginalRetryDoesNotOpenOrRecordOriginal()=fixture{repo,plan,fail->
+        val context=InstrumentationRegistry.getInstrumentation().targetContext
+        val vm=main{RecallStudyViewModel(repo,plan.ref.notebookId,context,SavedStateHandle()).also{it.open(plan)}}
+        try{
+            withTimeout(15000){vm.ui.first{!it.loading}};main{vm.start(RecallMode.DUE)}
+            withTimeout(15000){vm.ui.first{it.session?.current!=null&&!it.busy}}
+            val attempt=vm.ui.value.session!!.current!!.row.id
+            main{vm.draft(text="取消回源仍保留作答")};withTimeout(15000){vm.ui.first{it.draftSaved}}
+            var exposed=false;fail.set(true);main{assertTrue(vm.original{exposed=true})}
+            withTimeout(15000){vm.ui.first{it.pending&&!it.busy}}
+            main{vm.cancelNavigation()};fail.set(false);main{vm.retry()}
+            withTimeout(15000){vm.ui.first{!it.pending&&!it.busy}}
+            main{vm.finishNavigation()};assertFalse(exposed)
+            val row=repo.loadAttempt(attempt)
+            assertEquals("取消回源仍保留作答",row.row.answerText);assertEquals(0,row.row.hintMask);assertTrue(row.hints.isEmpty())
+        }finally{main{vm.viewModelScope.cancel()}}
+    }
     @Test fun unsubmittedTextAndStrokeCheckpointRecoverIntoSameAttemptWithoutAuthorPageWrite()=fixture{repo,plan,_->
         val context=InstrumentationRegistry.getInstrumentation().targetContext;var a:RecallStudyViewModel?=null;var b:RecallStudyViewModel?=null
         try{

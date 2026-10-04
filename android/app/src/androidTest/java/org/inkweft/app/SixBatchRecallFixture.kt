@@ -20,8 +20,8 @@ internal suspend fun SixBatchFixture.seedRecall(){
             val refs=app.study.sources(card.id,card.revision).refs
             success(repo.configure(id("recall-spec-$index"),book,question,1,0,0,card.id,card.revision,
                 "请在不看材料时说明第${index+1}个概念的条件与反例",kind,
-                clozes=if(kind==RecallQuestionKind.TEXT_CLOZE)listOf(RecallCloze(0,12),RecallCloze(22,34))else emptyList(),
-                regions=if(kind==RecallQuestionKind.SOURCE_MASK)listOf(RecallRegion(refs.single(),.2,.2,.8,.8))else emptyList()))
+                clozes=if(kind==RecallQuestionKind.TEXT_CLOZE)listOf("紫杉木","青铜器").map{answer->val start=card.body.indexOf(answer);check(start>=0&&card.body.lastIndexOf(answer)==start);RecallCloze(start,start+answer.length)}else emptyList(),
+                regions=if(kind==RecallQuestionKind.SOURCE_MASK)listOf(RecallRegion(refs.single(),0.0,0.0,1.0,1.0))else emptyList()))
         }
         val start=Instant.parse(manifest.getJSONObject("spec").getJSONObject("requiredRecall").getString("syntheticStartUtc")).toEpochMilli()
         val sessions=mutableListOf<String>()

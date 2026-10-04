@@ -7,6 +7,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
@@ -32,6 +33,9 @@ import java.time.format.DateTimeFormatter
     var history by rememberSaveable{mutableStateOf(false)}
     var config by rememberSaveable{mutableStateOf<String?>(null)}
     var sourceViewer by remember{mutableStateOf<StudySourceRow?>(null)}
+    // Save only fixed-source identity; the underlying question and its window stay mounted.
+    var originalAttempt by rememberSaveable{mutableStateOf<String?>(null)}
+    var originalSourceIndex by rememberSaveable{mutableIntStateOf(-1)}
     var endConfirm by remember{mutableStateOf(false)}
     var forcePractice by remember{mutableStateOf(false)}
     var priorExposure by rememberSaveable{mutableStateOf(consultedOriginal)}
@@ -54,9 +58,10 @@ import java.time.format.DateTimeFormatter
     Dialog(onDismissRequest={exit()},properties=DialogProperties(usePlatformDefaultWidth=false)){
         RecallWindowPermit()
         Surface(Modifier.fillMaxSize().testTag("durable-recall")){
-            Column(Modifier.safeDrawingPadding().padding(12.dp)){
+            Box(Modifier.fillMaxSize(),contentAlignment=Alignment.TopCenter){
+            Column(Modifier.widthIn(max=840.dp).fillMaxSize().safeDrawingPadding().padding(12.dp).testTag("recall-reading-column")){
                 Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.SpaceBetween){
-                    Text(if(ui.session?.current!=null)"本轮持久回忆"else"${ui.session?.row?.title?:plan.title} · 持久回忆",style=MaterialTheme.typography.titleLarge)
+                    Text(if(ui.session?.current!=null)"本轮持久回忆"else"${ui.session?.row?.title?:plan.title} · 持久回忆",Modifier.weight(1f),style=MaterialTheme.typography.titleLarge)
                     TextButton({exit()},enabled=!busy,modifier=Modifier.testTag("recall-pause")){Text(if(ui.session?.current?.row?.answerRevealed==false)"暂停并查看资料（计提示）"else"暂停并返回")}
                 }
                 workModes?.invoke(!busy)
@@ -108,8 +113,19 @@ import java.time.format.DateTimeFormatter
                                 }
                             }
                             if(row.mode==RecallMode.DUE.name)FilterChip(forcePractice,{forcePractice=!forcePractice},enabled=!busy,label={Text("明确改存临时练习")})
-                            if(current.sources.complete)current.sources.sources.forEachIndexed{i,source->TextButton({sourceViewer=source.legacy(current.spec.cardId)},enabled=!busy){Text("查看固定原迹 ${i+1}（已封存后的对照）")}}
+                            if(current.sources.complete)current.sources.sources.forEachIndexed{i,source->TextButton({sourceViewer=source.legacy(current.spec.cardId)},enabled=!busy,modifier=Modifier.heightIn(min=48.dp).testTag("recall-fixed-source-$i")){Text("查看固定原迹 ${i+1}（已封存后的对照）")}}
                         }
+                        if(current.sources.complete&&current.sources.sources.isNotEmpty()){
+                            Text("当前原页会显示最新内容；固定原迹保留摘录时的内容。",style=MaterialTheme.typography.bodySmall)
+                            if(current.sources.sources.size>1)Text("请选择要查看的来源（共 ${current.sources.sources.size} 个），不会自动选择第一项。")
+                            current.sources.sources.forEachIndexed{index,_->
+                                OutlinedButton({vm.original{originalAttempt=row.id;originalSourceIndex=index}},enabled=!busy,
+                                    modifier=Modifier.fillMaxWidth().heightIn(min=48.dp).testTag("recall-current-source-$index")){
+                                    Text("查看当前原页"+(if(current.sources.sources.size>1)" · 来源 ${index+1}"else "")+
+                                        if(row.answerRevealed)" · 返回此题"else "（计为提示）· 返回此题")
+                                }
+                            }
+                        }else Text(if(current.sources.complete)"此题没有原页来源。"else"固定来源无法恢复；未改用当前卡片来源。")
                         TextButton(vm::skip,enabled=!busy,modifier=Modifier.testTag("recall-skip")){Text("跳过本题（不计成绩，不改排程）")}
                     }else if(session?.row?.closed==true){
                         Text("本轮已结束：${session.attempts.count{it.status==RecallAttemptStatus.GRADED.name}} 次已评分，${session.attempts.count{it.status==RecallAttemptStatus.SKIPPED.name}} 次跳过。",modifier=Modifier.testTag("recall-round-result"))
@@ -123,11 +139,18 @@ import java.time.format.DateTimeFormatter
                     Text("SM2-IW1 · SuperMemo2 3.0.1 MIT核心移植 © Alan Kan\nSM-2 algorithm © Piotr Wozniak / SuperMemo World\n初始EF 2.5、下限1.3、ceil取整、最大间隔100年；提示有效分≤2，临时练习不改排程。",style=MaterialTheme.typography.bodySmall)
                 }
             }
+            }
         }
     }
     config?.let{id->ui.queue.find{it.reference.questionId==id}?.let{item->RecallQuestionEditor(repository,plan.ref.notebookId,item,{config=null},{config=null;vm.refreshQueue()})}}
     if(history)RecallHistoryDialog(repository,plan.ref.notebookId,busy,{if(!busy)history=false}){entry,reason->vm.withdraw(entry,reason)}
-    sourceViewer?.let{source->StudySnapshotViewer(source){sourceViewer=null}}
+    ui.session?.current?.takeIf{it.row.id==originalAttempt&&!ui.loading&&!ui.pending&&!ui.busy&&
+        it.hints.any{hint->hint.kind==if(it.row.answerRevealed)"ORIGINAL_COMPARE"else RecallHint.ORIGINAL.name}}
+        ?.let{current->val selected=remember(current.row.id,originalSourceIndex){current.sources.sources.getOrNull(originalSourceIndex)?.legacy(current.spec.cardId)}
+            selected?.let{source->ReviewSourceDialog(source,dismiss={originalAttempt=null;originalSourceIndex=-1},recallNotebookId=current.row.notebookId,
+                onViewSnapshot={sourceViewer=source})
+        }}
+    sourceViewer?.let{source->StudySnapshotViewer(source,returnLabel=if(originalAttempt==null)"返回此题"else"返回当前原页"){sourceViewer=null}}
     if(endConfirm)AlertDialog(onDismissRequest={endConfirm=false},title={Text("结束这轮复习？")},text={RecallWindowPermit();Text("本次作答先保存；已有作答与成绩保留。未做题保留为未完成，不伪造成绩。")},confirmButton={TextButton({endConfirm=false;vm.closeSession()},modifier=Modifier.testTag("recall-end-confirm")){Text("结束本轮")}},dismissButton={TextButton({endConfirm=false}){Text("继续")}})
 }
 

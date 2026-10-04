@@ -145,18 +145,24 @@ internal class RecallStudyViewModel(private val repository:RecallStudyRepository
             if(pending!!.kind=="ORIGINAL"&&pending!!.value.getString("target")==expected){retry();return true}
             navigation=null;return false
         }
-        val fact=if(current.row.answerRevealed)"ORIGINAL_COMPARE"else RecallHint.ORIGINAL.name
-        if(current.hints.any{it.kind==fact}){state.value=state.value.copy(navigationReady=true);return true}
+        // Even a previously recorded hint must save this visit's answer before leaving the question.
         save{
-            val row=state.value.session?.current?.row
-            if(row?.id==expected)submit(RecallIntent(base("ORIGINAL",row.id,row.revision).toString()))else navigation=null
+            val loaded=state.value.session?.current
+            if(loaded?.row?.id!=expected||navigation?.first!=expected){cancelNavigation();return@save}
+            val fact=if(loaded.row.answerRevealed)"ORIGINAL_COMPARE"else RecallHint.ORIGINAL.name
+            if(loaded.hints.any{it.kind==fact})state.value=state.value.copy(navigationReady=true)
+            else submit(RecallIntent(base("ORIGINAL",loaded.row.id,loaded.row.revision).toString()))
         }
         return true
     }
     /** Called after UI pending guards have observed success; stale or disposed continuations are dropped. */
     fun finishNavigation(){
-        val next=navigation;navigation=null;state.value=state.value.copy(navigationReady=false)
-        if(next!=null&&state.value.session?.current?.row?.id==next.first&&!state.value.busy&&pending==null)next.second()
+        if(!state.value.navigationReady)return
+        val next=navigation;cancelNavigation()
+        val current=state.value.session?.current
+        val fact=if(current?.row?.answerRevealed==true)"ORIGINAL_COMPARE"else RecallHint.ORIGINAL.name
+        if(next!=null&&current?.row?.id==next.first&&current.hints.any{it.kind==fact}&&
+            !state.value.busy&&pending==null&&state.value.draftSaved&&!state.value.draftDirty)next.second()
     }
     fun cancelNavigation(){navigation=null;state.value=state.value.copy(navigationReady=false)}
     fun retry(){pending?.let{submit(it,afterWrite)}}

@@ -56,7 +56,7 @@ class LibraryBackupRepositoryTest {
     }
     @Test fun legalSnapshotArchivesRejectMergedOverflowAndReplayAtExactCapacity()=fixture{s,t->
         val incomingBook=seedSnapshotBudget(s,false).first;val (existingBook,recycled)=seedSnapshotBudget(t,true)
-        StudyRepository(t).submit(StudyCommand(id(),existingBook,StudyAction.TRASH_CARD,cardId=recycled,expectedRevision=1))
+        StudyRepository(t).submit(StudyCommand(id(),existingBook,StudyAction.TRASH_CARD,cardId=recycled,expectedRevision=1,expectedTrashImpact=StudyRepository(t).previewTrash(existingBook,requireNotNull(recycled)).fingerprint))
         assertEquals(16_000_000L,s.study().snapshotBytes());assertEquals(16_000_001L,t.study().snapshotBytes())
         val restore=LibraryBackupRepository(context,t)
         LibraryBackupRepository(context,s).snapshot().use{incoming->

@@ -279,3 +279,4 @@ jobs:
             android/build/evidence/six-batch-fixture/native-recall-04-cloze-masked.png
             android/build/evidence/six-batch-fixture/native-recall-05-cloze-revealed.png
             android/build/evidence/six-batch-fixture/native-recall-06-question-result.png
+            android/build/evidence/six-batch-fixture/native-recall-07-sealed-grading-controls.png

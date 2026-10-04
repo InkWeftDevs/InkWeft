@@ -116,6 +116,11 @@ internal class StudyViewModel(val book:String,val repo:StudyRepository,private v
     }.collect{graph->state.update{it.copy(cards=graph.cards,nodes=graph.nodes,mainNodes=graph.allMainNodes,graph=graph,loading=false,readFailed=false)}}}}
     init{startObservation()}
     fun submit(c:StudyCommand,undo:StudyCommand?=null,historyDirection:Int=0){require(c.notebookId==book);if(ui.value.busy||pending!=null)return;if(!authorAllowed()){state.update{it.copy(message="当前为阅读模式，请返回书写后编辑。")};return};pending=c;pendingOrganizationUndo=undo;pendingHistoryDirection=historyDirection;persistPending();execute()}
+    fun trash(preview:CardTrashPreview):Boolean {
+        val live=ui.value
+        if(live.loading||live.readFailed||live.busy||live.unknown||pending!=null||!authorAllowed()||preview.card.notebookId!=book)return false
+        submit(preview.command());return true
+    }
     fun organize(graph:StudyGraphState,plan:StudyOrganizationPlan){
         val inverse=StudyOrganization.undo(StudyOrganization.apply(graph,plan),plan).command(UUID.randomUUID().toString())
         submit(plan.command(UUID.randomUUID().toString()),inverse)
@@ -133,9 +138,13 @@ internal class StudyViewModel(val book:String,val repo:StudyRepository,private v
     }
     fun retry(){if(!ui.value.busy&&pending!=null)execute()}
     private fun execute(){val c=pending?:return;state.update{it.copy(busy=true,message=null,completed=null)}
-        viewModelScope.launch{try{when(val result=withContext(Dispatchers.IO){repo.outcome(c)}){
+        viewModelScope.launch{try{when(val result=withContext(Dispatchers.IO){if(c.action==StudyAction.TRASH_CARD&&!authorAllowed()){
+                // Read-only mode may resolve an existing receipt, never create a previously uncommitted recycle.
+                try{repo.lookup(c)?.let{StudyOutcome.Success(it)}?:StudyOutcome.Rejected("TRASH_READ_ONLY")}
+                catch(cancel:CancellationException){throw cancel}catch(_:Exception){StudyOutcome.Unknown}
+            }else repo.outcome(c)}){
             is StudyOutcome.Success->{if(c.action==StudyAction.CREATE_EXCERPT)captureGeneration++;if(c.action==StudyAction.UNDO_CAPTURE)captureUndo.remove(c.mapId?:"main");if(c.action==StudyAction.CREATE&&c.source!=null){captureGeneration++;c.nodeId?.let{revealByMap[c.mapId?:"main"]=it;selectedByMap[c.mapId?:"main"]=it}};if(c.action==StudyAction.CREATE&&c.source!=null)captureUndo[c.mapId?:"main"]=StudyCommand(UUID.randomUUID().toString(),book,StudyAction.UNDO_CAPTURE,cardId=c.cardId,nodeId=c.nodeId,expectedRevision=1,mapId=c.mapId);if(pendingHistoryDirection<0){organizationUndo=null;organizationRedo=pendingOrganizationUndo}else{organizationUndo=pendingOrganizationUndo;organizationRedo=null};persistOrganization("study.organizationUndo",organizationUndo);persistOrganization("study.organizationRedo",organizationRedo);pending=null;pendingOrganizationUndo=null;pendingHistoryDirection=0;persistPending();state.update{it.copy(busy=false,unknown=false,completed=result.id)}}
-            is StudyOutcome.Rejected->{pending=null;pendingOrganizationUndo=null;pendingHistoryDirection=0;persistPending();state.update{it.copy(busy=false,unknown=false,message=studyCapacityRejection(result.reason)?:"未提交：来源或内容已变化，请核对当前图和分支后重新保存（${result.reason}）。")}}
+            is StudyOutcome.Rejected->{pending=null;pendingOrganizationUndo=null;pendingHistoryDirection=0;persistPending();state.update{it.copy(busy=false,unknown=false,message=cardTrashRejection(result.reason)?:studyCapacityRejection(result.reason)?:"未提交：来源或内容已变化，请核对当前图和分支后重新保存（${result.reason}）。")}}
             StudyOutcome.Unknown->state.update{it.copy(busy=false,unknown=true,message="操作结果待核对。重试核对同一操作，不重复建卡。")}
         }}catch(cancel:CancellationException){state.update{it.copy(busy=false,unknown=true)};throw cancel}}
     }
@@ -150,6 +159,7 @@ internal class StudyViewModel(val book:String,val repo:StudyRepository,private v
         saved["study.preview"]=c?.source?.previewBytes();saved["study.objectRevision"]=c?.source?.objectRevision;saved["study.authoringRevision"]=c?.source?.authoringRevision
         saved["study.organization"]=c?.organization?.let(StudyOrganization::encode)
         saved["study.afterNodeId"]=c?.afterNodeId
+        saved["study.trashImpact"]=c?.expectedTrashImpact
         persistOrganization("study.pendingOrganizationUndo",pendingOrganizationUndo)
         saved.set<ArrayList<String>?>("study.source",c?.source?.let{arrayListOf(it.pageId,it.inkRevision.toString(),it.bounds.left.toString(),it.bounds.top.toString(),it.bounds.right.toString(),it.bounds.bottom.toString(),*it.strokeIds.toTypedArray())})
     }
@@ -157,7 +167,7 @@ internal class StudyViewModel(val book:String,val repo:StudyRepository,private v
         val values=saved.get<ArrayList<String>>("study.command")?:return null
         require(values.size in 12..13&&values[1]==book)
         val s=saved.get<ArrayList<String>>("study.source")?.let{require(it.size in 6..262);StudySourceDraft(it[0],it[1].toLong(),CanvasBounds(it[2].toDouble(),it[3].toDouble(),it[4].toDouble(),it[5].toDouble()),it.drop(6),saved["study.preview"],saved["study.objectRevision"],saved["study.authoringRevision"])}
-        return StudyCommand(values[0],book,StudyAction.valueOf(values[2]),values[3].ifEmpty{null},values[4].ifEmpty{null},values[5].toLong(),values[6].ifEmpty{null},values[7],values[8],values[9].toDouble(),values[10].toDouble(),s,values[11],values.getOrNull(12)?.ifEmpty{null},saved.get<ByteArray>("study.organization")?.let(StudyOrganization::decode),saved["study.afterNodeId"])
+        return StudyCommand(values[0],book,StudyAction.valueOf(values[2]),values[3].ifEmpty{null},values[4].ifEmpty{null},values[5].toLong(),values[6].ifEmpty{null},values[7],values[8],values[9].toDouble(),values[10].toDouble(),s,values[11],values.getOrNull(12)?.ifEmpty{null},saved.get<ByteArray>("study.organization")?.let(StudyOrganization::decode),saved["study.afterNodeId"],saved.get<String>("study.trashImpact").orEmpty())
     }
     private fun persistOrganization(key:String,c:StudyCommand?){saved["$key.id"]=c?.id;saved[key]=c?.organization?.let(StudyOrganization::encode)}
     private fun restoreOrganization(key:String):StudyCommand?{

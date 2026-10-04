@@ -257,6 +257,58 @@ class StudyOrganizationUiTest {
         tap("study-close");tap("quick-study");settled(f.book);assertEquals(moved,order(f.book))
     }
 
+    @Test fun outlineEdgeScrollReachesOffscreenParentAndCancelKeepsWholeAuthorGraph(){
+        val f=fixture()
+        val extra=List(28){id()}
+        runBlocking{extra.forEachIndexed{index,node->
+            app.study.submit(StudyCommand(id(),f.book,StudyAction.CREATE,cardId=id(),nodeId=node,parentId=f.root,
+                title="跨屏目标 $index",body="边缘拖动验证",x=640.0,y=900.0+index*120))
+        }}
+        settled(f.book)
+        val initial=author(f.book);val originalOrder=order(f.book)
+        tap("study-direct-outline")
+        tap("outline-fold-${f.first}")
+        compose.onNodeWithTag("outline-drag-${f.first}").performScrollTo()
+        compose.waitForIdle()
+        val destination=extra[5]
+        assertTrue("The target must start outside the visible viewport",
+            runCatching{compose.onNodeWithTag("outline-row-$destination").assertIsDisplayed()}.isFailure)
+        fun startAndReachTarget(target:String){
+            val list=compose.onNodeWithTag("study-list").fetchSemanticsNode().boundsInRoot
+            val handle=compose.onNodeWithTag("outline-drag-${f.first}").fetchSemanticsNode().boundsInRoot
+            val start=handle.center-list.topLeft
+            compose.onNodeWithTag("study-list").performTouchInput{
+                down(start);moveTo(start+Offset(0f,30f));moveTo(Offset(list.width*.5f,list.height-8f))
+            }
+            // Keep the pointer down while the production 16 ms edge-scroll loop runs.
+            // No scrollTo / swipe is allowed to bring the target into view.
+            compose.waitUntil(15_000){
+                val row=runCatching{compose.onNodeWithTag("outline-row-$target").fetchSemanticsNode().boundsInRoot}.getOrNull()
+                row!=null&&row.top>list.top+48&&row.bottom<list.bottom-48
+            }
+            val row=compose.onNodeWithTag("outline-row-$target").fetchSemanticsNode().boundsInRoot
+            compose.onNodeWithTag("study-list").performTouchInput{moveTo(row.center-list.topLeft)}
+            compose.onNodeWithTag("outline-drag-feedback").assertExists()
+        }
+        startAndReachTarget(destination)
+        compose.onNodeWithTag("study-list").performTouchInput{up()}
+        compose.waitUntil(15_000){nodes(f.book).single{it.id==f.first}.parentId==destination}
+        settled(f.book)
+        assertEquals(f.first,nodes(f.book).single{it.id==f.firstChild}.parentId)
+        assertEquals(initial.cards,cards(f.book))
+        tap("study-undo-organization")
+        compose.waitUntil(15_000){order(f.book)==originalOrder};settled(f.book)
+        assertEquals(initial.cards,cards(f.book))
+        assertEquals(initial.nodes.associate{it.id to Triple(it.parentId,it.x,it.y)},nodes(f.book).associate{it.id to Triple(it.parentId,it.x,it.y)})
+        compose.onNodeWithTag("outline-drag-${f.first}").performScrollTo();compose.waitForIdle()
+        val beforeCancel=author(f.book)
+        startAndReachTarget(destination)
+        compose.onNodeWithTag("study-list").performTouchInput{cancel()}
+        settled(f.book)
+        assertEquals(beforeCancel,author(f.book))
+        compose.onNodeWithTag("study-message").assertTextContains("拖动已取消")
+    }
+
     @Test fun nativeMapPreviewsEveryDescendantAndMarqueeMovementDeduplicatesBranches(){
         val f=fixture();val original=author(f.book);val times=SystemClock.uptimeMillis()
         compose.runOnIdle{

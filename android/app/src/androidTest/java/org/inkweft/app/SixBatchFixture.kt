@@ -100,7 +100,7 @@ internal class SixBatchFixture(val app:InkWeftApplication,val manifest:JSONObjec
                 app.study.submit(StudyCommand(id("create-$bookIndex-$index"),book,StudyAction.CREATE,cardId=card,nodeId=node,
                     parentId=if(index%6==0)null else id("base-node-$bookIndex-${index-1}"),
                     title=if(index==0&&bookIndex==0)"条件概率的完整推导与边界"else"${if(bookIndex==0)"原文"else"复用"}主题 ${index+1}",
-                    body=chinese(if(index==0&&bookIndex==0)12000 else 1024,"正文末尾定位标记"),
+                    body=if(index==1&&bookIndex==0)clozeBody()else chinese(if(index==0&&bookIndex==0)12000 else 1024,"正文末尾定位标记"),
                     x=40.0+(index%6)*320.0,y=80.0+(index/6)*340.0,source=source))
                 app.knowledge.submit(KnowledgeCommand(id("presentation-op-$bookIndex-$index"),book,id("presentation-$bookIndex-$index"),0,
                     KnowledgeData.CardPresentation(card,chinese(if(index==0&&bookIndex==0)4000 else 128,"注释末尾定位标记"),
@@ -316,6 +316,11 @@ internal class SixBatchFixture(val app:InkWeftApplication,val manifest:JSONObjec
     }
 
     companion object{
+        fun clozeBody():String {
+            val opening="第一答案是紫杉木，第二答案是青铜器。\n"
+            val context=(1..30).joinToString("\n"){"资料段落$it：观察记录中的时间、地点与证据，比较各项描述，并用自己的语言解释推理过程。"}
+            return (opening+context).take(1024).padEnd(1024,'。')
+        }
         fun chinese(length:Int,end:String):String{val line="条件概率先明确已知条件并限定样本空间再核对交集与分母独立性必须用反例检查";return line.repeat(length/line.length+1).take(length-end.length)+end}
         fun sha(file:File):String=file.inputStream().use{input->val d=MessageDigest.getInstance("SHA-256");val b=ByteArray(8192);while(true){val n=input.read(b);if(n<0)break;d.update(b,0,n)};d.digest().joinToString(""){"%02x".format(it.toInt() and 255)}}
         fun guard(context:Context){

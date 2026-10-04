@@ -33,24 +33,24 @@ class SixBatchScopeTest(unittest.TestCase):
         self.assertFalse(any("SixBatch" in name for name in plan["app"]))
         self.assertEqual(["prepare", "reopen", "visual", "native_recall", "native_recall_reopen"], plan["fixture"]["phases"])
         self.assertEqual(24, plan["fixture"]["native_workspace_screenshots"])
-        self.assertEqual(6, plan["fixture"]["native_recall_screenshots"])
-        self.assertEqual(38, plan["fixture"]["expected_screenshots"])
+        self.assertEqual(7, plan["fixture"]["native_recall_screenshots"])
+        self.assertEqual(39, plan["fixture"]["expected_screenshots"])
 
     def test_focused_is_explicit_small_scope_and_full_inventory_stays_complete(self):
         focused, full = build_plan("focused"), build_plan("full")
-        self.assertEqual((134, 180, 5, 38), (full["expected_app"], full["expected_room"],
+        self.assertEqual((153, 202, 5, 39), (full["expected_app"], full["expected_room"],
                          full["fixture"]["expected_methods"], full["fixture"]["expected_screenshots"]))
-        self.assertEqual(5, focused["expected_app"])
+        self.assertEqual(20, focused["expected_app"])
         self.assertEqual(FOCUSED_METHODS, focused["app_methods"])
         self.assertEqual(set(focused["app"]), set(focused["app_methods"]))
         self.assertEqual(["prepare", "native_recall"], focused["fixture"]["selected_phases"])
-        self.assertEqual(13, focused["fixture"]["selected_screenshots"])
+        self.assertEqual(14, focused["fixture"]["selected_screenshots"])
         self.assertEqual(list(PHASE_METHODS), full["fixture"]["selected_phases"])
         self.assertEqual("NOT_RUN_FOCUSED", focused["lint"])
         self.assertEqual("RUN_REQUIRED", full["lint"])
-        for name, method in (("RecallMaskUiTest", "libraryMapRecallAncestorsHideCluesFromInteractiveWindows"),
-                             ("RecallMaskUiTest", "tabletMapTextFitAndNeutralRecallPlaceholdersKeepAuthorRows"),
-                             ("RecallAnswerPadUiTest", "wideAndNarrowPadsAcceptBothEdgesAndKeepExistingCoordinates")):
+        for name, method in (("CardTrashUiTest", "cardManagementCancelsRejectsChangedQuestionThenRestoresFromRecycleArea"),
+                             ("StudyOrganizationUiTest", "outlineEdgeScrollReachesOffscreenParentAndCancelKeepsWholeAuthorGraph"),
+                             ("RecallDurableRecoveryTest", "repeatedOriginalSavesNewAnswerAndCancellationNeverRunsStaleContinuation")):
             self.assertIn(method, focused["app_methods"]["org.inkweft.app." + name])
         with self.assertRaises(ValueError):
             build_plan("unknown")
@@ -58,7 +58,7 @@ class SixBatchScopeTest(unittest.TestCase):
     def test_workflow_uploads_only_explicit_fixture_files(self):
         workflow = (Path(__file__).resolve().parents[1] / ".github/workflows/android-six-batches.yml").read_text()
         files = [line.strip() for line in workflow.splitlines() if line.strip().startswith("android/build/evidence/six-batch-fixture/")]
-        self.assertEqual(38, sum(name.endswith(".png") for name in files))
+        self.assertEqual(39, sum(name.endswith(".png") for name in files))
         self.assertEqual(24, sum("/visual-" in name and name.endswith(".png") for name in files))
         self.assertFalse(any("*" in name for name in files))
         self.assertNotIn("android/build/evidence/**/*.png", workflow)

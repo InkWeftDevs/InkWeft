@@ -1,0 +1,41 @@
+{
+  "source": "45ccb74befc6e7ac553abfa698d53175ebac9daf",
+  "matching_local_source": "f9923d43f7b9f56d285652d79207d7334a0aae09",
+  "run": 37214898049,
+  "url": "https://github.com/InkWeftDevs/InkWeft/actions/runs/37214898049",
+  "status": "FOCUSED_COMPLETE_NOT_FULL",
+  "app": {
+    "executed": 5,
+    "passed": 5,
+    "failed": 0
+  },
+  "room": {
+    "executed": 0,
+    "passed": 0,
+    "reused": 180,
+    "source_run": 37209060586
+  },
+  "b6": {
+    "prepare": "PASS",
+    "native_recall": "PASS",
+    "reopen": "NOT_RUN_FOCUSED",
+    "visual": "NOT_RUN_FOCUSED",
+    "native_recall_reopen": "NOT_RUN_FOCUSED",
+    "screenshots": 13
+  },
+  "artifact": 11308047516,
+  "artifact_sha256": "c21b388890c60acdb3adf6bd1eb3c33db0563ec242aafa50ed43abe4ade28c95",
+  "acl": "RESTORED_EXACT_ORIGINAL_ACL",
+  "time_seconds": 1009.107,
+  "visual": {
+    "reviewed_native_recall": 6,
+    "remaining": [
+      "Original source mask fixture only covers central band, so cannot prove no answer clues",
+      "Cloze repeated-answer fixture must be improved",
+      "No actual grading-controls frame; result page not a replacement"
+    ],
+    "not_app_failures_inferred_from_fixture": true
+  },
+  "full_acceptance": "NOT_COMPLETE",
+  "physical_device": "NOT_RUN"
+}

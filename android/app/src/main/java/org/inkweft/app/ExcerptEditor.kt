@@ -33,6 +33,7 @@ import java.util.UUID
     var revision by rememberSaveable(id){mutableLongStateOf(0)}
     var message by remember(id){mutableStateOf<String?>(null)}
     var submitted by rememberSaveable(id){mutableStateOf(false)}
+    var trashOpen by rememberSaveable(id){mutableStateOf(false)}
     val waiting=ui.busy||ui.unknown
     val enabled=ready&&!readOnly&&!waiting&&!ui.loading&&!ui.readFailed
     ReadLockGuard(readLock,guardKey,blocked=waiting||mode!="actions",draft=mode!="actions")
@@ -42,6 +43,7 @@ import java.util.UUID
     LaunchedEffect(card,ui.loading){if(card==null&&!ui.loading&&!ui.readFailed&&!waiting)dismiss()}
     fun cancel(){if(!waiting){mode="actions";setDraft(null);message=null;vm.clear()}}
     BackHandler{if(mode!="actions")cancel()else if(!waiting)dismiss()}
+    if(trashOpen)CardTrashDialog(vm,id,enabled){trashOpen=false}
     if(card==null||source==null)return
     val original=source!!
     val b=draft?:CanvasBounds(original.left,original.top,original.right,original.bottom)
@@ -69,7 +71,7 @@ import java.util.UUID
                         if(clipped==null)message="来源范围不在当前纸张内，请重新摘录"
                         else{revision=card.revision;setDraft(clipped);mode="resize";vm.clear()}
                     },enabled=enabled,modifier=Modifier.testTag("excerpt-resize")){Text("调整范围")}
-                    TextButton({submitted=true;vm.submit(StudyCommand(UUID.randomUUID().toString(),vm.book,StudyAction.TRASH_CARD,cardId=id,expectedRevision=card.revision))},enabled=enabled,modifier=Modifier.testTag("excerpt-inline-delete")){Text("删除")}
+                    TextButton({trashOpen=true},enabled=enabled,modifier=Modifier.testTag("excerpt-inline-delete")){Text("删除")}
                     IconButton(dismiss,enabled=!waiting,modifier=Modifier.describedAs("取消摘录选择")){Glyph("close")}
                 }
             }

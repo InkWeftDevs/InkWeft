@@ -38,7 +38,12 @@ class RecallStudyRepositoryTest {
     }
     private fun counts(db:NoteDatabase)=LibraryBackupRepository.SCHEMA.map{table->db.openHelper.readableDatabase.query("SELECT COUNT(*) FROM `${table.name}`").use{it.moveToFirst();it.getLong(0)}}
     @Test fun normalSealedComparisonRetainsRawAndEffectiveAndOneScoreAcrossCollections()=fixture{db,f->
-        val repo=RecallStudyRepository(db);var attempt=begin(repo,f)
+        val repo=RecallStudyRepository(db)
+        val collections=List(2){index->id().also{collection->
+            KnowledgeRepository(db).submit(KnowledgeCommand(id(),f.book,collection,0,KnowledgeData.Collection("真实集合 ${index+1}")))
+        }}.map{BranchReviewRepository(db).prepareCollection(f.book,it,1)}
+        assertEquals(collections[0].entries,collections[1].entries)
+        var attempt=begin(repo,f.copy(plan=collections[0]))
         val ink=InkPageFile("本次作答","",listOf(InkStroke(id(),InkPen.PEN,0xff000000.toInt(),2f,InkTool.STYLUS,listOf(InkSample(1f,2f,0)))),false,PaperStyle.BLANK).encode()
         ok(repo.saveAnswer(id(),f.book,attempt.row.id,attempt.row.revision,"我的文字答案",ink));attempt=compare(repo,f,repo.loadAttempt(attempt.row.id))
         assertEquals(0,attempt.row.hintMask);assertEquals(listOf("ANSWER_COMPARE"),attempt.hints.map{it.kind})
@@ -51,7 +56,8 @@ class RecallStudyRepositoryTest {
         val stored=repo.loadAttempt(attempt.row.id);assertEquals(5,stored.row.requestedQuality);assertEquals(5,stored.row.effectiveQuality);assertArrayEquals(ink,stored.row.answerInk)
         assertEquals("我的文字答案",stored.row.answerText);assertTrue(repo.loadSession(attempt.row.sessionId).row.closed)
         // Any collection reuses the same questionId/schedule, not a copied scheduler identity.
-        assertEquals(schedule.dueAt,repo.queue(BranchReviewPlan(f.plan.ref,f.plan.branchId,"另一个集合",f.plan.cardCount,0,f.plan.entries)).single().dueAt)
+        assertEquals(schedule.dueAt,repo.queue(collections[1]).single().dueAt)
+        assertEquals(f.question,repo.queue(collections[1]).single().reference.questionId)
         assertTrue(repo.start(id(),id(),f.plan,RecallMode.DUE,now+201) is RecallOutcome.Rejected)
         LibraryBackupRepository(context,db).snapshot().close()
     }
@@ -157,6 +163,61 @@ class RecallStudyRepositoryTest {
             ok(recovered.saveAnswer(op,f.book,row.row.id,row.row.revision,"未评分保留😀",byteArrayOf()))
             assertEquals(1,recovered.history(f.book).size);LibraryBackupRepository(context,target).snapshot().close()
         }finally{target.close();context.deleteDatabase(targetName)}
+    }
+    @Test fun skippedDurableTextAndInkReopenAtNextQuestionWithoutChangingSchedules()=fixture{db,f->
+        KnowledgeRepository(db).submit(KnowledgeCommand(id(),f.book,id(),0,KnowledgeData.Question(f.card,"第二道独立问题")))
+        val plan=BranchReviewRepository(db).prepareCard(MapRef(f.book),f.card,1)
+        val repo=RecallStudyRepository(db);var row=begin(repo,f.copy(plan=plan))
+        val schedules=plan.entries.associate{it.questionId to repo.schedule(it.questionId)}
+        val stroke=InkStroke(id(),InkPen.PEN,0xff123456.toInt(),3f,InkTool.STYLUS,listOf(InkSample(2f,3f,0),InkSample(20f,30f,10)))
+        val ink=InkPageFile("跳过前作答","",listOf(stroke),false,PaperStyle.BLANK).encode()
+        ok(repo.saveAnswer(id(),f.book,row.row.id,row.row.revision,"不会丢弃的作答",ink));row=repo.loadAttempt(row.row.id)
+        ok(repo.consultOriginal(id(),f.book,row.row.id,row.row.revision,now+1));row=repo.loadAttempt(row.row.id)
+        val operation=id();ok(repo.skip(operation,f.book,row.row.id,row.row.revision,now+2))
+        ok(repo.skip(operation,f.book,row.row.id,row.row.revision,now+2))
+        val next=repo.loadSession(row.row.sessionId).current!!
+        assertNotEquals(row.row.id,next.row.id);assertEquals(1,next.row.position)
+        val name=checkNotNull(db.openHelper.databaseName);db.close()
+        val reopened=NoteDatabase.open(context,name)
+        try{
+            val recovered=RecallStudyRepository(reopened);val restored=recovered.loadSession(recovered.resume(f.book)!!.id)
+            assertEquals(row.row.sessionId,restored.row.id);assertEquals(next.row.id,restored.current!!.row.id)
+            assertEquals(next.row.questionId,restored.current!!.row.questionId);assertEquals(2,restored.attempts.size)
+            val stored=recovered.loadAttempt(row.row.id)
+            assertEquals(schedules,plan.entries.associate{it.questionId to recovered.schedule(it.questionId)})
+            assertEquals(RecallAttemptStatus.SKIPPED.name,stored.row.status);assertEquals("不会丢弃的作答",stored.row.answerText)
+            assertArrayEquals(ink,stored.row.answerInk);assertEquals(RecallHint.ORIGINAL.bit,stored.row.hintMask)
+            assertNull(stored.row.requestedQuality);assertNull(stored.row.effectiveQuality);assertNull(stored.row.scheduleAfter)
+            assertEquals(RecallAttemptStatus.OPEN.name,restored.current!!.row.status);assertFalse(restored.row.closed)
+        }finally{reopened.close()}
+    }
+    @Test fun timezoneChangeAndDatabaseReopenKeepUtcScheduleAndSameOpenAttempt()=fixture{db,f->
+        val repo=RecallStudyRepository(db);val graded=compare(repo,f,begin(repo,f))
+        ok(repo.grade(id(),f.book,graded.row.id,graded.row.revision,5,now+200))
+        val schedule=repo.schedule(f.question)!!
+        var active=begin(repo,f,now+300,RecallMode.PRACTICE)
+        ok(repo.saveAnswer(id(),f.book,active.row.id,active.row.revision,"跨时区继续原作答",byteArrayOf()))
+        active=repo.loadAttempt(active.row.id)
+        ok(repo.consultOriginal(id(),f.book,active.row.id,active.row.revision,now+301))
+        val name=checkNotNull(db.openHelper.databaseName);val originalZone=java.util.TimeZone.getDefault();db.close()
+        try{
+            for(zoneId in listOf("Pacific/Kiritimati","America/Los_Angeles")){
+                java.util.TimeZone.setDefault(java.util.TimeZone.getTimeZone(zoneId))
+                val reopened=NoteDatabase.open(context,name)
+                try{
+                    val current=RecallStudyRepository(reopened);val session=current.resume(f.book)!!
+                    val restored=current.loadSession(session.id)
+                    assertEquals(active.row.sessionId,session.id);assertEquals(active.row.id,restored.current!!.row.id)
+                    assertEquals("跨时区继续原作答",restored.current!!.row.answerText)
+                    assertEquals(RecallHint.ORIGINAL.bit,restored.current!!.row.hintMask);assertEquals(1,restored.attempts.size)
+                    assertEquals(schedule,current.schedule(f.question));assertEquals(schedule.dueAt,current.queue(f.plan).single().dueAt)
+                    val day=java.time.Instant.ofEpochMilli(now+200).atZone(java.time.ZoneId.systemDefault()).toLocalDate().toString()
+                    val range=RecallHistoryFilter.localDays(day,day,zoneId)
+                    assertTrue(current.filteredHistory(f.book,RecallHistoryFilter(fromInclusive=range.first,untilExclusive=range.second),now+400)
+                        .entries.any{it.row.id==graded.row.id})
+                }finally{reopened.close()}
+            }
+        }finally{java.util.TimeZone.setDefault(originalZone)}
     }
     @Test fun answerCapacityRejectsWithoutAnyPartialScoreOrInkWrite()=fixture{db,f->
         val repo=RecallStudyRepository(db);val row=begin(repo,f);val before=counts(db)

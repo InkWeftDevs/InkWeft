@@ -143,6 +143,12 @@ class SixBatchNativeRecallTest {
                     compose.onNodeWithTag("recall-reveal-cloze-1").assertExists();shot(f,"05-cloze-revealed","recall-inline-cloze")
                 }
                 tap("recall-seal-compare");compose.waitUntil(60_000){current(f.books[0])?.row?.answerRevealed==true}
+                if(index==2){
+                    compose.onNodeWithTag("recall-grade-4").performScrollTo().assertIsDisplayed().assertIsEnabled()
+                    listOf(0,1,2,3,4,5).forEach{grade->compose.onNodeWithTag("recall-grade-$grade").assertExists().assertIsEnabled()}
+                    assertEquals(loaded.row.id,checkNotNull(current(f.books[0])).row.id)
+                    shot(f,"07-sealed-grading-controls","recall-grade-4")
+                }
                 tap("recall-grade-4");waitFor("recall-round-result")
                 if(index==2)shot(f,"06-question-result","recall-round-result")
                 tap("recall-pause");tap("card-back")
@@ -159,7 +165,7 @@ class SixBatchNativeRecallTest {
         check(f.manifest.getString("nativeRecallCapture")=="CAPTURED_PENDING_VISUAL_REVIEW")
         runBlocking{f.step("cold-reopen-original-25-and-exact-three-native-attempts"){
             f.verifyNativeRecall();f.verify()
-            val captures=f.manifest.getJSONArray("nativeRecallCaptures");check(captures.length()==6)
+            val captures=f.manifest.getJSONArray("nativeRecallCaptures");check(captures.length()==7)
             for(index in 0 until captures.length()){val image=captures.getJSONObject(index);check(SixBatchFixture.sha(File(f.root,image.getString("file")))==image.getString("sha256"))}
         }}
         f.manifest.put("nativeRecallReopen","PASS");f.save()

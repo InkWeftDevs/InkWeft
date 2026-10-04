@@ -199,7 +199,26 @@ fun InkScreen(note:NoteDraft,workspace:WorkspaceViewModel=viewModel(),onBack:()-
     androidx.activity.compose.BackHandler(panelOpen&&pageActionsReady&&!hasAuthorDraft){if(leaveStudyReview()){endSourceReading();directory=false;documentSettings=false;mapMinimized=true;excerptsOpen=false}}
     val compactHeader=paneWidth<760.dp*density.fontScale.coerceAtLeast(1f)
     val narrowHeader=paneWidth<400.dp*density.fontScale.coerceAtLeast(1f)
+    val toolbar by rememberEditorToolbarPreferences()
+    @Composable fun documentAction(label:String,icon:String,enabled:Boolean,tag:String,action:()->Unit){
+        if(narrowHeader)TextButton(action,enabled=enabled,contentPadding=PaddingValues(horizontal=4.dp),
+            modifier=Modifier.widthIn(min=48.dp).heightIn(min=48.dp).testTag(tag)){Text(label,maxLines=1)}
+        else EditorAction(label,icon,enabled,tag,action)
+    }
+    @Composable fun documentDestination(id:String,inMenu:Boolean=false){
+        val label=when(id){"map"->if(sourceReading)"返回导图"else"导图";"associations"->"关联";else->"摘录"}
+        val tag=when(id){"map"->if(sourceReading)"study-window-source-return"else"quick-study";"associations"->"document-associations";else->"read-excerpts"}
+        val enabled=pageActionsReady&&(!hasAuthorDraft||(id=="map"&&(paneLayout.sideBySide||mapVisible)))
+        val action:()->Unit={
+            if(id=="map"&&sourceReading){if(leaveStudyReview()){documentMore=false;endSourceReading();mapActive=true}}
+            else showDocumentPanel(id)
+        }
+        if(inMenu)DropdownMenuItem(text={Text(label)},leadingIcon={Glyph(EditorToolOrder.icon(id))},
+            enabled=enabled,modifier=Modifier.heightIn(min=48.dp).testTag(tag),onClick=action)
+        else documentAction(label,EditorToolOrder.icon(id),enabled,tag,action)
+    }
     val documentTools:@Composable ()->Unit={
+        toolbar.destinations(hidden=true).forEach{documentDestination(it,inMenu=true)}
         DropdownMenuItem(text={Text("文档概览")},leadingIcon={Glyph("overview")},enabled=pageActionsReady&&!hasAuthorDraft,modifier=Modifier.testTag("quick-overview"),onClick={showDocumentPanel(if(directory)"none"else"overview")})
         DropdownMenuItem(text={Text("查找笔记")},leadingIcon={Glyph("search")},enabled=pageActionsReady&&!hasAuthorDraft,modifier=Modifier.testTag("book-search"),onClick={showDocumentPanel("search")})
         DropdownMenuItem(text={Text("文档设置")},leadingIcon={Glyph("settings")},enabled=pageActionsReady&&!hasAuthorDraft,modifier=Modifier.testTag("quick-settings"),onClick={showDocumentPanel(if(documentSettings)"none"else"settings")})
@@ -211,19 +230,10 @@ fun InkScreen(note:NoteDraft,workspace:WorkspaceViewModel=viewModel(),onBack:()-
         DropdownMenuItem(text={Text("计时器")},leadingIcon={Glyph("timer")},modifier=Modifier.testTag("quick-timer"),onClick={documentMore=false;pageToolRequest.value?.invoke("timer")})
         if(studyOpen&&!mapVisible)DropdownMenuItem(text={Text("关闭导图")},enabled=pageActionsReady&&!hasAuthorDraft,modifier=Modifier.testTag("study-close"),onClick={if(leaveStudyReview()){documentMore=false;endSourceReading();studyOpen=false}})
     }
-    @Composable fun documentAction(label:String,icon:String,enabled:Boolean,tag:String,action:()->Unit){
-        if(narrowHeader)TextButton(action,enabled=enabled,contentPadding=PaddingValues(horizontal=4.dp),
-            modifier=Modifier.widthIn(min=48.dp).heightIn(min=48.dp).testTag(tag)){Text(label,maxLines=1)}
-        else EditorAction(label,icon,enabled,tag,action)
-    }
     val destinations:@Composable ()->Unit={
         if(studyOpen)TextButton({if(leaveStudyReview()){endSourceReading();mapActive=false}},enabled=pageActionsReady&&!hasAuthorDraft,
             modifier=Modifier.heightIn(min=48.dp).testTag("study-pane-source").editorSelected(paperVisible&&!mapVisible)){Text("原文")}
-        documentAction(if(sourceReading)"返回导图"else"导图","mindmap",pageActionsReady&&(!hasAuthorDraft||paneLayout.sideBySide||mapVisible),if(sourceReading)"study-window-source-return"else"quick-study"){
-            if(sourceReading){if(leaveStudyReview()){endSourceReading();mapActive=true}}else showDocumentPanel("map")
-        }
-        documentAction("关联","link",pageActionsReady&&!hasAuthorDraft,"document-associations"){showDocumentPanel("associations")}
-        documentAction("摘录","excerpt",pageActionsReady&&!hasAuthorDraft,"read-excerpts"){showDocumentPanel("excerpts")}
+        toolbar.destinations().forEach{documentDestination(it)}
     }
     fun chooseWorkMode(mode:StudyWorkMode){
         val handler=workModeRequest.value

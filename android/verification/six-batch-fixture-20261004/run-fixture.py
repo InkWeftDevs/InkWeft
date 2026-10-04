@@ -159,7 +159,7 @@ def main():
                          "01-default-tools", "02-advanced-pen", "03-map-selected", "04-outline-selected", "05-long-card-title", "06-long-card-body",
                          "07-long-card-annotation", "08-long-card-source", "09-page-layers", "10-whitespace-expanded", "11-whitespace-collapsed", "12-bound-region-collapsed")),
                      "native_recall": tuple("native-recall-" + stage + ".png" for stage in (
-                         "01-source-masked", "02-source-answer", "03-source-revealed", "04-cloze-masked", "05-cloze-revealed", "06-question-result")),
+                         "01-source-masked", "02-source-answer", "03-source-revealed", "04-cloze-masked", "05-cloze-revealed", "06-question-result", "07-sealed-grading-controls")),
                      "native_recall_reopen": ()}[args.phase]
             evidence["screenshots"] = []
             for name in names:

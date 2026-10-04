@@ -18,7 +18,7 @@ import org.inkweft.core.InkPageFile
 import org.inkweft.data.StudySourceRow
 
 /** Reads only the saved excerpt; viewing never follows or changes the current source page. */
-@Composable internal fun StudySnapshotViewer(source:StudySourceRow,dismiss:()->Unit){
+@Composable internal fun StudySnapshotViewer(source:StudySourceRow,returnLabel:String="返回原卡",dismiss:()->Unit){
     var loaded by remember(source){mutableStateOf<InkPageFile?>(null)}
     var error by remember(source){mutableStateOf<String?>(null)}
     var view by remember(source){mutableStateOf<InkCanvasView?>(null)}
@@ -33,7 +33,7 @@ import org.inkweft.data.StudySourceRow
             Column(Modifier.safeDrawingPadding()){
                 Row(Modifier.fillMaxWidth().padding(horizontal=16.dp),verticalAlignment=Alignment.CenterVertically){
                     Text("摘录时快照 · 只读",Modifier.weight(1f))
-                    TextButton(dismiss,modifier=Modifier.testTag("study-snapshot-close")){Text("返回原卡")}
+                    TextButton(dismiss,modifier=Modifier.heightIn(min=48.dp).testTag("study-snapshot-close")){Text(returnLabel)}
                 }
                 val file=loaded
                 if(file!=null){

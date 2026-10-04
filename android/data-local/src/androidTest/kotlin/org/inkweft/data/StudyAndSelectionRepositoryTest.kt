@@ -30,7 +30,7 @@ class StudyAndSelectionRepositoryTest {
         val snapshot=repo.source(c.cardId!!)!!.snapshot
         assertEquals(PageObjectKind.IMAGE,InkPageFile.decode(snapshot).objects.single().kind)
         repo.submit(StudyCommand(id(),page,StudyAction.EDIT,cardId=c.cardId,expectedRevision=1,title="区域摘录",body="备注"))
-        repo.submit(StudyCommand(id(),page,StudyAction.TRASH_CARD,cardId=c.cardId,expectedRevision=2))
+        repo.submit(StudyCommand(id(),page,StudyAction.TRASH_CARD,cardId=c.cardId,expectedRevision=2,expectedTrashImpact=StudyRepository(db).previewTrash(page,requireNotNull(c.cardId)).fingerprint))
         assertTrue(repo.excerpts(page).first().isEmpty());assertArrayEquals(snapshot,repo.source(c.cardId!!)!!.snapshot)
         assertEquals(0L,InkRepository(db).read(page).revision)
         val name="restore-region-${id()}.db";val target=NoteDatabase.open(context,name)
@@ -166,9 +166,9 @@ class StudyAndSelectionRepositoryTest {
     }
     @Test fun cardTrashAndRestoreKeepRevisionHistory()=fixture{db,page->
         val repo=StudyRepository(db);val c=create(page);repo.submit(c)
-        try{repo.submit(StudyCommand(id(),page,StudyAction.TRASH_CARD,cardId=c.cardId,expectedRevision=1));fail()}catch(_:IllegalArgumentException){}
+        try{repo.submit(StudyCommand(id(),page,StudyAction.TRASH_CARD,cardId=c.cardId,expectedRevision=1,expectedTrashImpact=StudyRepository(db).previewTrash(page,requireNotNull(c.cardId)).fingerprint));fail()}catch(_:IllegalArgumentException){}
         repo.submit(StudyCommand(id(),page,StudyAction.REMOVE_NODE,nodeId=c.nodeId,expectedRevision=1))
-        repo.submit(StudyCommand(id(),page,StudyAction.TRASH_CARD,cardId=c.cardId,expectedRevision=1));assertNotNull(db.study().card(c.cardId!!)!!.trashedAt)
+        repo.submit(StudyCommand(id(),page,StudyAction.TRASH_CARD,cardId=c.cardId,expectedRevision=1,expectedTrashImpact=StudyRepository(db).previewTrash(page,requireNotNull(c.cardId)).fingerprint));assertNotNull(db.study().card(c.cardId!!)!!.trashedAt)
         repo.submit(StudyCommand(id(),page,StudyAction.RESTORE_CARD,cardId=c.cardId,expectedRevision=2));assertNull(db.study().card(c.cardId!!)!!.trashedAt)
         assertEquals(3L,db.study().card(c.cardId!!)!!.revision)
     }

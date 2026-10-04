@@ -76,6 +76,7 @@ class StudyRepository(private val db:NoteDatabase,private val fault:(StudyFault)
     fun observeSource(card:String)=StudySourceVersions(db).observe(card).map{it.singleLegacy(card)}
     suspend fun source(card:String)=StudySourceVersions(db).read(card).singleLegacy(card)
     suspend fun sources(card:String,revision:Long?=null)=StudySourceVersions(db).read(card,revision)
+    suspend fun previewTrash(book:String,cardId:String):CardTrashPreview=readCardTrashPreview(db,book,cardId)
     suspend fun lookup(c:StudyCommand):String?=db.withTransaction{
         db.study().receipt(c.id)?.let{studyRequire(it.notebookId==c.notebookId&&it.digest==c.digest());it.resultId}
     }
@@ -207,7 +208,12 @@ class StudyRepository(private val db:NoteDatabase,private val fault:(StudyFault)
                 StudyAction.EDIT,StudyAction.TRASH_CARD,StudyAction.RESTORE_CARD->{
                     val old=ownedCard();studyRequire(old.revision==c.expectedRevision){"CARD_VERSION_CHANGED"}
                     StudySourceVersions(db).freezeCurrent(old)
-                    if(c.action==StudyAction.TRASH_CARD){studyRequire(dao.nodes(c.notebookId).none{it.cardId==old.id&&!it.removed}){"REMOVE_OCCURRENCES_FIRST"}
+                    if(c.action==StudyAction.TRASH_CARD){
+                        // Receipt lookup above still resolves old confirmed operations; never replay a legacy unpreviewed write.
+                        studyRequire(c.expectedTrashImpact.isNotEmpty()){ "TRASH_PREVIEW_REQUIRED" }
+                        studyRequire(old.trashedAt==null){"CARD_VERSION_CHANGED"}
+                        studyRequire(previewTrash(c.notebookId,old.id).fingerprint==c.expectedTrashImpact){"TRASH_IMPACT_CHANGED"}
+                        studyRequire(dao.nodes(c.notebookId).none{it.cardId==old.id&&!it.removed}){"REMOVE_OCCURRENCES_FIRST"}
                         studyRequire(db.knowledge().all().none{r->!r.removed&&when(val d=r.data()){is KnowledgeData.Placement->d.cardId==old.id;is KnowledgeData.MapOccurrence->d.cardId==old.id;else->false}}){"REMOVE_OTHER_VIEW_OCCURRENCES_FIRST"}
                     }
                     if(c.action==StudyAction.EDIT)studyRequire(old.trashedAt==null)

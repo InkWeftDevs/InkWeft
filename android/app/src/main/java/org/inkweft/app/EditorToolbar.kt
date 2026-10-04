@@ -2,6 +2,7 @@
 package org.inkweft.app
 
 import android.content.Context
+import android.content.SharedPreferences
 import androidx.compose.foundation.*
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.gestures.awaitEachGesture
@@ -20,30 +21,36 @@ import androidx.compose.ui.draw.rotate
 import kotlinx.coroutines.launch
 
 internal object EditorToolOrder {
-    val labels=linkedMapOf("undo" to "撤销","redo" to "重做","pen" to "笔","map" to "导图","eraser" to "橡皮","lasso" to "套索","area" to "圈选擦除","image" to "图片","camera" to "拍照","text" to "文本框","excerpt" to "摘录","tag" to "标签","shape" to "图形","sticker" to "贴纸","objects" to "对象选择","beauty" to "实时字迹调整","readonly" to "只读模式","finger" to "手指书写／移动","add-page" to "添加页面","fullscreen" to "全屏专注","export" to "导出文档","timer" to "计时器")
+    val labels=linkedMapOf("undo" to "撤销","redo" to "重做","pen" to "笔","map" to "导图","associations" to "关联","excerpts" to "摘录列表","eraser" to "橡皮","lasso" to "套索","area" to "圈选擦除","image" to "图片","camera" to "拍照","text" to "文本框","excerpt" to "摘录","tag" to "标签","shape" to "图形","sticker" to "贴纸","objects" to "对象选择","beauty" to "实时字迹调整","readonly" to "只读模式","finger" to "手指书写／移动","add-page" to "添加页面","fullscreen" to "全屏专注","export" to "导出文档","timer" to "计时器")
     val fixed=setOf("finger")
-    val primary=setOf("undo","redo","pen","eraser","lasso","excerpt","map","finger")
+    val destinations=setOf("map","associations","excerpts")
+    val primary=setOf("undo","redo","pen","eraser","lasso","excerpt","finger")+destinations
     val defaultHidden=setOf("shape","sticker","objects","camera","tag","area","beauty","readonly","finger","add-page","fullscreen","export","timer")
-    fun icon(id:String)=when(id){"map"->"mindmap";"lasso"->"select";"area"->"area-erase";"favorites"->"favorite-pens";else->id}
-    fun read(context:Context):List<String>{val raw=context.getSharedPreferences("inkweft-editor",0).getString("toolbar-order-v32","").orEmpty().split(',').filter{it in labels}.distinct();return raw+labels.keys.filterNot{it in raw}}
+    fun icon(id:String)=when(id){"map"->"mindmap";"associations"->"link";"excerpts"->"excerpt";"lasso"->"select";"area"->"area-erase";"favorites"->"favorite-pens";else->id}
+    fun read(context:Context):List<String> = read(context.getSharedPreferences("inkweft-editor",0))
+    fun read(prefs:SharedPreferences):List<String>{val raw=prefs.getString("toolbar-order-v32","").orEmpty().split(',').filter{it in labels}.distinct();return raw+labels.keys.filterNot{it in raw}}
 }
 /** Stable identifiers preserve visibility when new tools are added. Changes apply immediately. */
 @Composable internal fun EditorToolbar(fullScreen:Boolean=false,pageActions:@Composable (()->Unit)->Unit={},content:@Composable (String,()->Unit)->Unit){
-    val context=LocalContext.current;val prefs=remember{context.getSharedPreferences("inkweft-editor",0)}
-    var order by remember{mutableStateOf(EditorToolOrder.read(context))}
-    var hidden by remember{mutableStateOf((prefs.getStringSet("toolbar-hidden-v32",EditorToolOrder.defaultHidden).orEmpty()+EditorToolOrder.defaultHidden.filter{it !in prefs.getString("toolbar-order-v32","").orEmpty().split(',')})-EditorToolOrder.fixed)}
+    val context=LocalContext.current;val prefs=remember(context){context.getSharedPreferences("inkweft-editor",0)}
+    val configuration=rememberEditorToolbarPreferences()
+    val order=configuration.value.order;val hidden=configuration.value.hidden
     var customizing by remember{mutableStateOf(false)}
-    fun save(){prefs.edit().putString("toolbar-order-v32",order.joinToString(",")).putStringSet("toolbar-hidden-v32",hidden).apply()}
+    fun save(order:List<String> = configuration.value.order,hidden:Set<String> = configuration.value.hidden){
+        // Keep unknown legacy IDs too; adding shortcuts must not erase another tool's settings.
+        val retained=prefs.getString("toolbar-order-v32","").orEmpty().split(',').filter{it.isNotBlank()&&it !in EditorToolOrder.labels}
+        prefs.edit().putString("toolbar-order-v32",(order+retained).joinToString(",")).putStringSet("toolbar-hidden-v32",hidden).apply()
+    }
     fun move(id:String,delta:Int){
         if(id in EditorToolOrder.fixed)return
-        val group=order;val next=group.indexOf(id)+delta
-        if(next in group.indices){val from=order.indexOf(id);val target=order.indexOf(group[next]);order=order.toMutableList().apply{removeAt(from);add(target,id)};save()}
+        val group=configuration.value.order;val next=group.indexOf(id)+delta
+        if(next in group.indices)save(order=group.toMutableList().apply{removeAt(indexOf(id));add(next,id)})
     }
     var more by remember{mutableStateOf(false)}
     val toolScroll=rememberScrollState()
     val scrollScope=rememberCoroutineScope()
     BoxWithConstraints{
-    val visiblePrimary=(EditorToolOrder.primary-if(fullScreen)emptySet()else setOf("map"))+if(maxWidth>=600.dp)setOf("image","text")else emptySet()
+    val visiblePrimary=(EditorToolOrder.primary-if(fullScreen)emptySet()else EditorToolOrder.destinations)+if(maxWidth>=600.dp)setOf("image","text")else emptySet()
     Row(Modifier.testTag("editor-toolbar"),verticalAlignment=Alignment.CenterVertically){
         Row(Modifier.weight(1f).testTag("editor-tool-scroll").horizontalScroll(toolScroll),verticalAlignment=Alignment.CenterVertically){
             order.filter{it in visiblePrimary&&it !in hidden&&it !in EditorToolOrder.fixed}.forEach{key(it){EditorToolSlot(it){content(it){}}}}
@@ -62,7 +69,8 @@ internal object EditorToolOrder {
             EditorTool("更多","more",false,true,"toolbar-more",Modifier.describedAs("更多工具")){more=true}
             DropdownMenu(more,{more=false},modifier=Modifier.testTag("editor-more-menu"),containerColor=androidx.compose.ui.graphics.Color.White){
                 pageActions{more=false}
-                val overflow=order.filter{it !in visiblePrimary&&it !in hidden&&it !in EditorToolOrder.fixed&&(fullScreen||it !in setOf("map","readonly"))}
+                val overflow=order.filter{it !in EditorToolOrder.fixed&&(fullScreen||it !in EditorToolOrder.destinations+"readonly")&&
+                    ((it !in visiblePrimary&&it !in hidden)||(it in EditorToolOrder.destinations&&it in hidden))}
                 listOf("插入" to setOf("image","camera","text","shape","sticker"),"页面与工具" to (EditorToolOrder.labels.keys-setOf("image","camera","text","shape","sticker"))).forEach{(title,ids)->
                     val group=overflow.filter{it in ids}
                     if(group.isNotEmpty()){
@@ -96,7 +104,7 @@ internal object EditorToolOrder {
                                 group.forEachIndexed{index,id->key(id){
                                     val hideGroup=id in hidden
                                     Row(Modifier.fillMaxWidth().heightIn(min=56.dp).padding(horizontal=4.dp).testTag("toolbar-row-$id"),verticalAlignment=Alignment.CenterVertically){
-                                        if(id in EditorToolOrder.fixed)Spacer(Modifier.size(48.dp))else IconToggleButton(!hideGroup,{show->hidden=if(show)hidden-id else hidden+id;save()},modifier=Modifier.size(48.dp).testTag("toolbar-visible-$id").describedAs((if(hideGroup)"显示"else"隐藏")+EditorToolOrder.labels.getValue(id))){Glyph(if(hideGroup)"eye-off"else"eye",if(hideGroup)Quiet else TextInk)}
+                                        if(id in EditorToolOrder.fixed)Spacer(Modifier.size(48.dp))else IconToggleButton(!hideGroup,{show->save(hidden=if(show)configuration.value.hidden-id else configuration.value.hidden+id)},modifier=Modifier.size(48.dp).testTag("toolbar-visible-$id").describedAs((if(hideGroup)"显示"else"隐藏")+EditorToolOrder.labels.getValue(id))){Glyph(if(hideGroup)"eye-off"else"eye",if(hideGroup)Quiet else TextInk)}
                                         Glyph(EditorToolOrder.icon(id),if(hideGroup)Quiet else TextInk)
                                         Text(EditorToolOrder.labels.getValue(id),Modifier.weight(1f).padding(horizontal=12.dp),color=if(hideGroup)Quiet else TextInk)
                                         var menu by remember{mutableStateOf(false)}
@@ -110,7 +118,7 @@ internal object EditorToolOrder {
                                             DropdownMenu(menu,{menu=false},containerColor=androidx.compose.ui.graphics.Color.White){
                                                 DropdownMenuItem(text={Text("上移")},onClick={move(id,-1);menu=false},enabled=index>0)
                                                 DropdownMenuItem(text={Text("下移")},onClick={move(id,1);menu=false},enabled=index<group.lastIndex)
-                                                DropdownMenuItem(text={Text("移到最前")},onClick={order=listOf(id)+order.filterNot{it==id};save();menu=false},enabled=index>0)
+                                                DropdownMenuItem(text={Text("移到最前")},onClick={save(order=listOf(id)+configuration.value.order.filterNot{it==id});menu=false},enabled=index>0)
                                             }
                                         }
                                     }
@@ -120,7 +128,7 @@ internal object EditorToolOrder {
                         }
                     }
                 }
-                TextButton(onClick={order=EditorToolOrder.labels.keys.toList();hidden=EditorToolOrder.defaultHidden;save()},modifier=Modifier.padding(start=16.dp,bottom=8.dp).testTag("toolbar-reset")){Text("恢复默认")}
+                TextButton(onClick={save(order=EditorToolOrder.labels.keys.toList(),hidden=EditorToolOrder.defaultHidden+(configuration.value.hidden-EditorToolOrder.labels.keys))},modifier=Modifier.padding(start=16.dp,bottom=8.dp).testTag("toolbar-reset")){Text("恢复默认")}
             }
         }
     }

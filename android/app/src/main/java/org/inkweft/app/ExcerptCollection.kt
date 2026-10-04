@@ -42,8 +42,10 @@ import java.util.UUID
     val regions by remember(vm){vm.repo.excerpts(vm.book)}.collectAsStateWithLifecycle(initialValue=emptyList())
     var query by rememberSaveable{mutableStateOf("")}
     var editing by rememberSaveable{mutableStateOf<String?>(null)}
+    var trashCard by rememberSaveable{mutableStateOf<String?>(null)}
     val browseReady=ready&&!ui.busy&&!ui.unknown&&!ui.loading&&!ui.readFailed
     val enabled=browseReady&&!readOnly
+    trashCard?.let{cardId->CardTrashDialog(vm,cardId,enabled&&editing==null){trashCard=null}}
     val guardKey=remember(vm){"excerpt-collection-${UUID.randomUUID()}"}
     ReadLockGuard(readLock,guardKey,blocked=ui.busy||ui.unknown||editing!=null,draft=editing!=null)
     LaunchedEffect(ui.completed){if(ui.completed!=null){editing=null;vm.clear()}}
@@ -71,7 +73,7 @@ import java.util.UUID
                             DropdownMenu(menu,{menu=false}){
                                 DropdownMenuItem(text={Text("返回原文")},enabled=editing==null&&pages.any{it.id==original.pageId},onClick={menu=false;open(original)})
                                 DropdownMenuItem(text={Text("整理到导图")},enabled=editing==null,onClick={menu=false;map(card.id)})
-                                DropdownMenuItem(text={Text("删除摘录")},enabled=enabled&&editing==null,onClick={menu=false;vm.submit(StudyCommand(UUID.randomUUID().toString(),vm.book,StudyAction.TRASH_CARD,cardId=card.id,expectedRevision=card.revision))},modifier=Modifier.testTag("excerpt-delete"))
+                                DropdownMenuItem(text={Text("删除摘录")},enabled=enabled&&editing==null,onClick={menu=false;trashCard=card.id},modifier=Modifier.testTag("excerpt-delete"))
                             }
                         }
                     }

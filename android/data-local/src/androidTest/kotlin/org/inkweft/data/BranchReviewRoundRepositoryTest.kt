@@ -227,7 +227,7 @@ class BranchReviewRoundRepositoryTest {
         KnowledgeRepository(db).submit(KnowledgeCommand(id(), f.book, id(), 0,
             KnowledgeData.Question(cardId, "后建旁题不得混入")))
         StudyRepository(db).submit(StudyCommand(id(), f.book, StudyAction.REMOVE_NODE, nodeId = f.card.nodeId, expectedRevision = 1))
-        StudyRepository(db).submit(StudyCommand(id(), f.book, StudyAction.TRASH_CARD, cardId = cardId, expectedRevision = 2))
+        StudyRepository(db).submit(StudyCommand(id(), f.book, StudyAction.TRASH_CARD, cardId = cardId, expectedRevision = 2,expectedTrashImpact=StudyRepository(db).previewTrash(f.book,requireNotNull(cardId)).fingerprint))
         val before = authorStamp(db)
         val repository = BranchReviewRepository(db)
         val confirmed = repository.confirmRoundResult(pending)

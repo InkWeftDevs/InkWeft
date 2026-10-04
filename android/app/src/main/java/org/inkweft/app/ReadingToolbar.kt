@@ -14,11 +14,18 @@ import androidx.compose.ui.unit.dp
 @Composable internal fun ReadingToolbar(enabled:Boolean,fullScreen:Boolean,
     onMap:()->Unit,onExcerpts:()->Unit,onAssociate:()->Unit,onWrite:()->Unit,onSearch:()->Unit,onOverview:()->Unit,onFullScreen:()->Unit,onExport:()->Unit,onTimer:()->Unit,showWriteControl:Boolean=true,pageActions:@Composable (()->Unit)->Unit={}){
     var more by remember{mutableStateOf(false)}
+    val toolbar by rememberEditorToolbarPreferences()
+    @Composable fun destination(id:String,inMenu:Boolean=false){
+        val label=when(id){"map"->"导图";"associations"->"关联";else->"摘录"}
+        val tag=when(id){"map"->"quick-study";"associations"->"document-associations";else->"read-excerpts"}
+        val action=when(id){"map"->onMap;"associations"->onAssociate;else->onExcerpts}
+        if(inMenu)DropdownMenuItem(text={Text(label)},leadingIcon={Glyph(EditorToolOrder.icon(id))},
+            onClick={more=false;action()},enabled=enabled,modifier=Modifier.heightIn(min=48.dp).testTag(tag))
+        else EditorAction(label,EditorToolOrder.icon(id),enabled,tag,action)
+    }
     FlowRow(Modifier.fillMaxWidth().testTag("reading-toolbar"),horizontalArrangement=Arrangement.Center){
         if(fullScreen){
-            EditorAction("导图","mindmap",enabled,"quick-study",onMap)
-            EditorAction("摘录","excerpt",enabled,"read-excerpts",onExcerpts)
-            EditorAction("关联","link",enabled,"document-associations",onAssociate)
+            toolbar.destinations().forEach{destination(it)}
         }
         if(showWriteControl)TextButton(onWrite,modifier=Modifier.heightIn(min=48.dp).testTag("exit-readonly").describedAs("只读浏览，返回书写")){
             Text("返回书写",maxLines=1)
@@ -26,6 +33,7 @@ import androidx.compose.ui.unit.dp
         Box{
             EditorAction("更多","more",tag="toolbar-more"){more=true}
             DropdownMenu(more,{more=false},modifier=Modifier.testTag("reading-more-menu"),containerColor=Color.White){
+                if(fullScreen)toolbar.destinations(hidden=true).forEach{destination(it,inMenu=true)}
                 pageActions{more=false}
                 DropdownMenuItem(text={Text(if(fullScreen)"退出全屏"else"全屏专注")},leadingIcon={Glyph("fullscreen")},onClick={more=false;onFullScreen()},enabled=enabled,modifier=Modifier.heightIn(min=48.dp).testTag("quick-fullscreen"))
                 if(fullScreen){

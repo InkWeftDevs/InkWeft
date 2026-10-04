@@ -243,6 +243,7 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
     var returnTab by rememberSaveable{mutableStateOf<Int?>(null)}
     var editor by vm.editorState
     var chosenNodeId by rememberSaveable{mutableStateOf<String?>(null)}
+    var trashCardId by rememberSaveable{mutableStateOf<String?>(null)}
     var chosenCardId by rememberSaveable{mutableStateOf<String?>(null)}
     val chosenNode=ui.nodes.find{it.id==chosenNodeId&&!it.removed}
     val chosenCard=displayCards.find{it.id==chosenCardId}
@@ -1337,7 +1338,7 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
                     TextButton(onClick={chooseParent(node);navigation.cancelCardSource();chosenCardId=null},enabled=editable){Text("修改上级主题")}
                     TextButton(onClick={vm.submit(StudyCommand(id(),note.base.id,StudyAction.REMOVE_NODE,mapId=currentMap,nodeId=node.id,expectedRevision=node.revision))},enabled=editable,modifier=Modifier.testTag("study-remove-node")){Text("移除此节点（保留摘要卡）")}
                 }
-                if(node==null&&card.id !in structureCards.map{it.id})TextButton(onClick={vm.submit(StudyCommand(id(),note.base.id,StudyAction.TRASH_CARD,mapId=currentMap,cardId=card.id,expectedRevision=card.revision))},enabled=editable&&occurrenceCount(card.id)==0){Text("移入卡片回收区")}
+                if(node==null&&card.id !in structureCards.map{it.id})TextButton(onClick={trashCardId=card.id},enabled=editable,modifier=Modifier.testTag("study-trash-card")){Text("移入卡片回收区")}
             }else if(card.trashedAt!=null)TextButton(onClick={vm.submit(StudyCommand(id(),note.base.id,StudyAction.RESTORE_CARD,mapId=currentMap,cardId=card.id,expectedRevision=card.revision))},enabled=editable){Text("恢复卡片")}
         }},confirmButton={FlowRow(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.End){
             if(card.trashedAt==null&&card.id !in structureCards.map{it.id})TextButton(onClick={navigation.cancelCardSource();prepareReview(MapRef(note.base.id,currentMap),node,card)},enabled=reviewReady(ui)&&reviewPreparation==null&&!sourceOpening,
@@ -1358,6 +1359,7 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
         if(showSnapshot)cardSource?.let{StudySnapshotViewer(it){showSnapshot=false}}
         }
     }}
+    trashCardId?.let{cardId->CardTrashDialog(vm,cardId,editable){trashCardId=null}}
     if(vm.capacityOpen)StudyCapacityPanel(compactWindow,
         if(currentMap==null)"主图"else (maps.find{it.id==currentMap}?.data() as? KnowledgeData.MapDefinition)?.title?:"当前导图",
         capacityUsage,capacitySnapshot,ui.readFailed||(!ui.loading&&capacityUsage==null),browseReady&&!hasDraft,editable&&!hasDraft,

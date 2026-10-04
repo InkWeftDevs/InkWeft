@@ -66,6 +66,11 @@ class StarNoteInteractionsUiTest {
   tap("excerpt-comment-${card.id}");compose.onNodeWithTag("excerpt-comment-input").performTextInput("原文旁的备注");tap("excerpt-comment-save")
   compose.waitUntil(10000){runBlocking{app.knowledge.observeBook(note.id).first().cardPresentations()[card.id]?.annotation}=="原文旁的备注"};ready()
   tap("excerpt-menu-${card.id}");tap("excerpt-delete")
+  compose.waitUntil(10000){runCatching{compose.onNodeWithTag("card-trash-confirm").assertIsEnabled()}.isSuccess}
+  tap("card-trash-cancel");assertNull(runBlocking{app.study.cards(note.id).first().single()}.trashedAt)
+  tap("excerpt-menu-${card.id}");tap("excerpt-delete")
+  compose.waitUntil(10000){runCatching{compose.onNodeWithTag("card-trash-confirm").assertIsEnabled()}.isSuccess}
+  tap("card-trash-confirm")
   compose.waitUntil(10000){runBlocking{app.study.cards(note.id).first().single()}.trashedAt!=null}
   assertEquals(1,runBlocking{app.inkRepository.read(note.id)}.strokes.size)
  }
@@ -81,6 +86,10 @@ class StarNoteInteractionsUiTest {
   val card=runBlocking{app.study.cards(note.id).first().single()};val original=runBlocking{app.study.source(card.id)}!!
   compose.onNodeWithContentDescription("关闭摘录").performClick()
   compose.runOnIdle{find<SelectionOverlayView>()!!.onTap(200f,220f)}
+  tap("excerpt-inline-delete")
+  compose.waitUntil(10000){runCatching{compose.onNodeWithTag("card-trash-confirm").assertIsEnabled()}.isSuccess}
+  tap("card-trash-cancel");assertNull(runBlocking{app.study.cards(note.id).first().single()}.trashedAt)
+  assertArrayEquals(original.snapshot,runBlocking{app.study.source(card.id)}!!.snapshot)
   tap("excerpt-inline-comment");compose.onNode(isDialog()).assertDoesNotExist()
   compose.onNodeWithTag("excerpt-inline-input").performTextInput("页面内备注");compose.activityRule.scenario.recreate();compose.waitForIdle()
   compose.onNodeWithTag("excerpt-inline-input").assertTextContains("页面内备注");tap("excerpt-inline-save")
