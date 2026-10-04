@@ -179,7 +179,7 @@ class StudyRelationsUiTest {
         select(f.a.id);assertTrue(edges().isEmpty())
         compose.onNodeWithTag("study-knowledge-relations-legend").assertDoesNotExist()
         toggleRelations()
-        compose.onNodeWithTag("study-knowledge-relations-legend").assertTextContains("虚线：知识关联")
+        compose.onNodeWithTag("study-knowledge-relations-legend").assertTextContains("知识关联 · 箭头表示方向")
         val shown=listOf(f.a,f.anotherA,f.b,f.anotherB,f.isolated,outgoingOnly)
         val links=f.links+listOf(outgoingLink,branchLink)
         val expected=projectStudyRelations(f.a.id,shown,links).edges
