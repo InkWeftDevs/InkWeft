@@ -72,22 +72,22 @@ internal class RecallStudyViewModel(private val repository:RecallStudyRepository
         val previous=state.value.session
         if(previous?.row?.id==loaded.row.id&&(previous.row.revision>loaded.row.revision||
             previous.current?.row?.id==loaded.current?.row?.id&&(previous.current?.row?.revision?:0)>(loaded.current?.row?.revision?:0)))return@withLock
-                val current=loaded.current?.row
-                if(current?.id!=draftAttempt){
-                    val local=withContext(Dispatchers.IO){disk.withLock{journal.draft()}}
-                    draftAttempt=current?.id;draftGeneration++
-                    val recover=current!=null&&!current.answerRevealed&&local?.optString("attempt")==current.id
-                    val text=if(recover)local!!.getString("text")else current?.answerText.orEmpty()
-                    val ink=if(recover)Base64.decode(local!!.getString("ink"),Base64.NO_WRAP)else current?.answerInk?:byteArrayOf()
-                    state.value=state.value.copy(session=loaded,loading=false,draftText=text,draftInk=ink,draftSaved=true,
-                        draftDirty=current!=null&&(text!=current.answerText||!ink.contentEquals(current.answerInk)))
-                }else{
-                    val keepDraft=current!=null&&!current.answerRevealed&&(state.value.draftDirty||!state.value.draftSaved)
-                    val text=if(keepDraft)state.value.draftText else current?.answerText.orEmpty()
-                    val ink=if(keepDraft)state.value.draftInk else current?.answerInk?:byteArrayOf()
-                    val dirty=current!=null&&(text!=current.answerText||!ink.contentEquals(current.answerInk))
-                    state.value=state.value.copy(session=loaded,loading=false,draftText=text,draftInk=ink,draftDirty=dirty)
-                }
+        val current=loaded.current?.row
+        if(current?.id!=draftAttempt){
+            val local=withContext(Dispatchers.IO){disk.withLock{journal.draft()}}
+            draftAttempt=current?.id;draftGeneration++
+            val recover=current!=null&&!current.answerRevealed&&local?.optString("attempt")==current.id
+            val text=if(recover)local!!.getString("text")else current?.answerText.orEmpty()
+            val ink=if(recover)Base64.decode(local!!.getString("ink"),Base64.NO_WRAP)else current?.answerInk?:byteArrayOf()
+            state.value=state.value.copy(session=loaded,loading=false,draftText=text,draftInk=ink,draftSaved=true,
+                draftDirty=current!=null&&(text!=current.answerText||!ink.contentEquals(current.answerInk)))
+        }else{
+            val keepDraft=current!=null&&!current.answerRevealed&&(state.value.draftDirty||!state.value.draftSaved)
+            val text=if(keepDraft)state.value.draftText else current?.answerText.orEmpty()
+            val ink=if(keepDraft)state.value.draftInk else current?.answerInk?:byteArrayOf()
+            val dirty=current!=null&&(text!=current.answerText||!ink.contentEquals(current.answerInk))
+            state.value=state.value.copy(session=loaded,loading=false,draftText=text,draftInk=ink,draftDirty=dirty)
+        }
     }
     fun draft(text:String=state.value.draftText,ink:ByteArray=state.value.draftInk){
         val row=state.value.session?.current?.row?:return
