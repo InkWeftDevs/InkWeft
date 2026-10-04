@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.semantics.SemanticsActions
+import androidx.compose.ui.semantics.getOrNull
 import androidx.compose.ui.semantics.SemanticsProperties
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.test.*
@@ -184,6 +185,43 @@ class MapInteractionUiTest {
   fun receipts()=database.openHelper.readableDatabase.query("SELECT COUNT(*) FROM study_receipts WHERE notebookId=?",arrayOf(f.book)).use{it.moveToFirst();it.getLong(0)}
   val beforeCards=cards();val beforeNodes=nodes();val beforeReceipts=receipts()
   compose.runOnIdle{originalVm=StudyViewModel(f.book,repository,saved);compose.activity.viewModelStore.put("study-${f.book}",originalVm)}
+  val notebookVm=compose.runOnIdle{ViewModelProvider(compose.activity)[NotebookViewModel::class.java]}
+  val expectedMap=compose.runOnIdle{originalVm.mapId.value}
+  val application=app;val evidenceDirectory=application.getExternalFilesDir(null)
+  fun awaitRestoredDraft(anchor:String,text:String,unknown:Boolean,phase:String){
+   var observed="Awaiting restored outline draft: $phase"
+   try{
+    // Room/lifecycle reload and the production requestScrollToItem happen after Compose idle.
+    // Observe their result; never scroll, reopen an editor, or manufacture the missing draft.
+    compose.waitUntil("Same retained note/map VM and original inline draft after $phase",10_000){
+     val ready=compose.runOnIdle{
+      val live=compose.activity.viewModelStore.get("study-${f.book}")
+      val notebook=notebookVm.ui.value;val study=originalVm.ui.value
+      observed="phase=$phase sameVm=${live===originalVm} book=${originalVm.book} selected=${notebook.selectedId} current=${notebook.current?.base?.id} notebookLoading=${notebook.loading} " +
+       "map=${originalVm.mapId.value} tab=${originalVm.lastTab} graph=${study.graph?.ref} loading=${study.loading} readFailed=${study.readFailed} busy=${study.busy} unknown=${study.unknown} expectedAnchor=$anchor"
+      live===originalVm&&originalVm.book==f.book&&notebook.selectedId==f.book&&notebook.current?.base?.id==f.book&&!notebook.loading&&
+       originalVm.mapId.value==expectedMap&&originalVm.lastTab==1&&study.graph?.ref==MapRef(f.book,expectedMap)&&
+       !study.loading&&!study.readFailed&&!study.busy&&study.unknown==unknown
+     }
+     val inputs=compose.onAllNodesWithTag("node-title-input",useUnmergedTree=true).fetchSemanticsNodes()
+     val editors=compose.onAllNodesWithTag("node-title-editor",useUnmergedTree=true).fetchSemanticsNodes()
+     val originalPosition=hasAnyAncestor(hasTestTag("outline-title-$anchor")) and hasAnyAncestor(hasTestTag("outline-row-$anchor"))
+     val originalText=SemanticsMatcher.expectValue(SemanticsProperties.EditableText,AnnotatedString(text))
+     val input=inputs.singleOrNull()
+     observed+=" editors=${editors.size} inputs=${inputs.size} text=${input?.config?.getOrNull(SemanticsProperties.EditableText)} bounds=${input?.boundsInRoot} originalPosition=${input?.let(originalPosition::matches)}"
+     ready&&editors.size==1&&input!=null&&originalPosition.matches(input)&&originalText.matches(input)&&
+      runCatching{compose.onNodeWithTag("node-title-input",useUnmergedTree=true).assertIsDisplayed()}.isSuccess
+    }
+   }catch(error:Throwable){
+    // Record the last observed state first; an exception path must not re-enter Compose idle.
+    runCatching{java.io.File(evidenceDirectory,"mui-outline-$phase-failure.txt").writeText(observed)}.onFailure(error::addSuppressed)
+    runCatching{
+     val image=checkNotNull(androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().uiAutomation.takeScreenshot())
+     try{java.io.File(evidenceDirectory,"mui-outline-$phase-failure.png").outputStream().use{image.compress(Bitmap.CompressFormat.PNG,100,it)}}finally{image.recycle()}
+    }.onFailure(error::addSuppressed)
+    error.addSuppressed(AssertionError(observed));throw error
+   }
+  }
   try{
    tap("quick-study");tap("study-tab-1");tap("outline-child-${f.root}")
    compose.onNodeWithTag("node-title-input").performTextInput("回执核对后的唯一子主题");compose.onNodeWithTag("node-title-input").performImeAction()
@@ -193,7 +231,8 @@ class MapInteractionUiTest {
    compose.onNodeWithTag("node-title-input").assertTextContains("回执核对后的唯一子主题")
    compose.onNodeWithTag("node-title-cancel").assertIsNotEnabled();compose.onAllNodesWithTag("node-title-editor",useUnmergedTree=true).assertCountEquals(1)
    assertEquals(beforeCards,cards());assertEquals(beforeNodes,nodes());assertEquals(beforeReceipts,receipts())
-   compose.activityRule.scenario.recreate();compose.waitForIdle()
+   compose.activityRule.scenario.recreate()
+   awaitRestoredDraft(f.root,"回执核对后的唯一子主题",true,"unknown-recreate")
    compose.runOnIdle{assertSame(originalVm,vm(f.book));assertEquals(command,saved.get<ArrayList<String>>("study.command"))}
    compose.onNodeWithTag("node-title-input").assertTextContains("回执核对后的唯一子主题")
    tap("node-title-save");compose.waitUntil(10000){!originalVm.ui.value.busy&&originalVm.ui.value.unknown}
@@ -210,11 +249,22 @@ class MapInteractionUiTest {
    assertEquals(beforeReceipts+1,receipts());assertEquals(created.cardId,runBlocking{database.study().receipt(command[0])}!!.resultId)
    compose.runOnIdle{assertNull(saved.get<ArrayList<String>>("study.command"))}
    val afterCards=cards();val afterNodes=nodes()
-   compose.activityRule.scenario.recreate();compose.waitForIdle();compose.onNodeWithTag("node-title-input").assert(blank)
+   compose.activityRule.scenario.recreate()
+   awaitRestoredDraft(created.id,"",false,"sibling-recreate")
+   compose.onNodeWithTag("node-title-input").assert(blank)
+   compose.onNodeWithTag("node-title-input",useUnmergedTree=true).assert(hasAnyAncestor(hasTestTag("outline-title-${created.id}")))
+    .assert(hasAnyAncestor(hasTestTag("outline-row-${created.id}")))
+   compose.runOnIdle{assertSame(originalVm,vm(f.book));assertNull(saved.get<ArrayList<String>>("study.command"))}
    compose.onAllNodesWithTag("node-title-editor",useUnmergedTree=true).assertCountEquals(1);tap("node-title-cancel")
    compose.onNodeWithTag("node-title-editor",useUnmergedTree=true).assertDoesNotExist()
    assertEquals(afterCards,cards());assertEquals(afterNodes,nodes());assertEquals(beforeReceipts+1,receipts())
-  }finally{compose.runOnIdle{compose.activity.viewModelStore.put("study-${f.book}",StudyViewModel(f.book,app.study,androidx.lifecycle.SavedStateHandle()))};database.close()}
+  }finally{
+   androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().runOnMainSync{
+    androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry.getInstance().getActivitiesInStage(androidx.test.runner.lifecycle.Stage.RESUMED)
+     .filterIsInstance<MainActivity>().singleOrNull()?.viewModelStore?.put("study-${f.book}",StudyViewModel(f.book,application.study,androidx.lifecycle.SavedStateHandle()))
+   }
+   database.close()
+  }
  }
  @Test fun narrowLargeTextKeepsActionsDraftAndCanvas(){
   val f=fixture();val automation=androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().uiAutomation

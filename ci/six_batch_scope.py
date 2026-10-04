@@ -18,18 +18,12 @@ METHODS = {
     "org.inkweft.app.StarNoteInteractionsUiTest": ["excerptKeepsPageImageAddsCommentAndDeletesWithoutDeletingSource",
         "inlineCommentAndEightHandleRecropCancelSaveAndReopenKeepOriginalInk"],
 }
-# Three latest full-run failures and the directly shared library/source-entry guards.
-# Only test readiness/diagnostics changed; B6 is explicitly not rerun in this focused round.
+# The one remaining recreation failure and the normal sibling-draft contract.
+# Production and the full five-phase B6 sample are unchanged.
 FOCUSED_METHODS = {
-    "org.inkweft.app.LibrarySourceNavigationUiTest": [
-        "learningSourceAwaitsRealPageSelectionThenFocusesOriginalBoundsWithReadLock",
-        "recycledLibrarySourceRetainsCurrentCardSnapshotAndMapWithoutNavigating",
-        "closingOrRecreatingPendingLibrarySourceCannotJumpOrCloseAnotherCard"],
-    "org.inkweft.app.StarNoteInteractionsUiTest": ["excerptKeepsPageImageAddsCommentAndDeletesWithoutDeletingSource"],
-    "org.inkweft.app.RecallOriginalSourceUiTest": [
-        "foreignSourceIsRejectedWithoutRenderingAnotherNotebook",
-        "durableCurrentSourceWaitsForOriginalReceiptAndReturnsToSameAnswerAndWindow",
-        "recycledCurrentSourceKeepsFixedSnapshotAndSameAttempt"],
+    "org.inkweft.app.MapInteractionUiTest": [
+        "outlineEnterUnknownReceiptRetriesOneCommandBeforeOpeningOneSiblingDraft",
+        "outlineTitlesKeepSharedContentAndContinueAtTheSameParent"],
 }
 
 CORE = ["PageObjectTest", "CardTrashCommandTest", "ContentTransferTest", "LibraryArchiveTest", "CardPresentationTest",
@@ -78,7 +72,7 @@ def build_plan(mode="full"):
                        "expected_methods":len(PHASE_METHODS),
                        "expected_screenshots":40,"native_workspace_screenshots":24,"native_recall_screenshots":7,
                        "native_recall_reopen_screenshots":1},
-            "scope":("focused: three full-suite failures and shared source-entry guards; B6 all NOT_RUN_FOCUSED with zero new screenshots; not full acceptance"
+            "scope":("focused: one recreation failure and normal sibling-draft guard; B6 all NOT_RUN_FOCUSED with zero new screenshots; not full acceptance"
                      if mode == "focused" else "six-batch B1-B5 complete scoped regression and B6 full-sized synthetic five-phase evidence")
                     + "; physical device and human acceptance remain NOT_RUN"}
 

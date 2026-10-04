@@ -185,6 +185,10 @@ jobs:
             android/build/evidence/app-*/recall-source-wait-failure.txt
             android/build/evidence/app-*/recall-source-wait-failure.png
             android/build/evidence/app-*/recall-source-wait-logcat.txt
+            android/build/evidence/app-*/mui-outline-unknown-recreate-failure.txt
+            android/build/evidence/app-*/mui-outline-unknown-recreate-failure.png
+            android/build/evidence/app-*/mui-outline-sibling-recreate-failure.txt
+            android/build/evidence/app-*/mui-outline-sibling-recreate-failure.png
             android/build/evidence/app-*/ls58-learning-map-entry-failure.txt
             android/build/evidence/app-*/ls58-learning-map-entry-failure.png
             android/build/evidence/app-*/excerpt-comment-failure.txt
@@ -250,6 +254,10 @@ jobs:
             android/build/evidence/app-*/recall-source-wait-failure.txt
             android/build/evidence/app-*/recall-source-wait-failure.png
             android/build/evidence/app-*/recall-source-wait-logcat.txt
+            android/build/evidence/app-*/mui-outline-unknown-recreate-failure.txt
+            android/build/evidence/app-*/mui-outline-unknown-recreate-failure.png
+            android/build/evidence/app-*/mui-outline-sibling-recreate-failure.txt
+            android/build/evidence/app-*/mui-outline-sibling-recreate-failure.png
             android/build/evidence/app-*/ls58-learning-map-entry-failure.txt
             android/build/evidence/app-*/ls58-learning-map-entry-failure.png
             android/build/evidence/app-*/excerpt-comment-failure.txt
