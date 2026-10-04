@@ -1,0 +1,19 @@
+{
+  "source": "3af6a78",
+  "production_and_both_android_test_kotlin": "PASS",
+  "core": {
+    "tests": 367,
+    "failures": 0,
+    "skipped": 0,
+    "unchanged_input_reuse": true
+  },
+  "lint": "NOT_RUN_FOCUSED",
+  "compile_seconds": 101,
+  "preceding_compile_failure": "Missing explicit InkStrokeCodec import in a new test; fixed before publication",
+  "host_ci": 61,
+  "host_native": 8,
+  "next_focused_ui": 5,
+  "full_ui": 134,
+  "log_sha256": "62a7524c6f67f2e79703e60687142917f05b4508b92a6a749d0dfa710a9e543d",
+  "android": "NOT_RUN for this follow-up"
+}

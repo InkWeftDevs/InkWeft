@@ -119,7 +119,10 @@ class SixBatchNativeRecallTest {
                     assertEquals(answerText,saved.answerText);assertArrayEquals(draft.draftInk,saved.answerInk)
                     assertEquals(0,saved.hintMask)
                     val after=app.inkRepository.read(f.manifest.getString("formulaPage"))
-                    assertEquals(original.revision,after.revision);assertEquals(InkSession(original).visibleDraft(),InkSession(after).visibleDraft())
+                    assertEquals(original.revision,after.revision)
+                    val originalInk=InkSession(original).visibleDraft();val currentInk=InkSession(after).visibleDraft()
+                    assertEquals(originalInk.size,currentInk.size)
+                    originalInk.forEachIndexed{i,stroke->assertArrayEquals(InkStrokeCodec.encode(stroke),InkStrokeCodec.encode(currentInk[i]))}
                     shot(f,"02-source-answer","recall-answer-ink-canvas")
                     val attempt=checkNotNull(current(f.books[0])).row.id
                     tap("recall-pause");compose.waitUntil(60_000){compose.onAllNodesWithTag("durable-recall").fetchSemanticsNodes().isEmpty()}

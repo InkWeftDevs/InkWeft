@@ -25,7 +25,7 @@ import kotlinx.coroutines.withContext
 import org.inkweft.core.*
 import org.inkweft.data.*
 
-private enum class RecallContextTab(val label:String,val tag:String) {
+internal enum class RecallContextTab(val label:String,val tag:String) {
     SOURCE("原页","source"), MAP("导图","map"), EXCERPT("摘录","excerpt")
 }
 
@@ -37,23 +37,24 @@ private const val RecallPlaceholderColor:Int = 0xfff4f7f5.toInt()
     current:FrozenBranchReviewQuestion,
     cluesVisible:Boolean,
     source:StudySourceRow?,
+    tab:RecallContextTab,
+    onTabChange:(RecallContextTab)->Unit,
     modifier:Modifier=Modifier,
 ) {
     key(plan.ref,plan.branchId,current.reference.questionId,current.reference.questionRevision) {
-        var tab by rememberSaveable(current.reference.questionId) { mutableStateOf(RecallContextTab.SOURCE.name) }
         Surface(modifier.testTag("recall-context")) {
             Column(Modifier.fillMaxWidth().verticalScroll(rememberScrollState()).padding(12.dp),
                 verticalArrangement=Arrangement.spacedBy(8.dp)) {
                 Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
                     horizontalArrangement=Arrangement.spacedBy(8.dp)) {
                     RecallContextTab.entries.forEach { item ->
-                        FilterChip(tab==item.name,{tab=item.name},label={Text(item.label)},
+                        FilterChip(tab==item,{onTabChange(item)},label={Text(item.label)},
                             modifier=Modifier.heightIn(min=48.dp).testTag("recall-context-tab-${item.tag}"))
                     }
                 }
                 // A permission change replaces the complete subtree, including native caches.
                 key(tab,cluesVisible) {
-                    when(RecallContextTab.valueOf(tab)) {
+                    when(tab) {
                         RecallContextTab.SOURCE -> RecallSourceContext(plan,current,source,cluesVisible)
                         RecallContextTab.MAP -> RecallMapContext(plan,current,cluesVisible)
                         RecallContextTab.EXCERPT -> RecallExcerptContext(plan,current,source,cluesVisible)

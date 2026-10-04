@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 package org.inkweft.app
 
+import org.inkweft.core.InkStrokeCodec
+
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.mutableStateOf
@@ -52,7 +54,9 @@ class RecallAnswerPadUiTest {
                 compose.waitUntil(10_000){RecallStudyViewModel.answerStrokes(answer.value).size==count}
                 compose.runOnIdle{
                     val strokes=RecallStudyViewModel.answerStrokes(answer.value)
-                    assertEquals(old,strokes.dropLast(1))
+                    assertEquals(old.size,strokes.size-1)
+                    // InkStroke has identity equality; compare every persisted field after decoding.
+                    old.forEachIndexed{i,stroke->assertArrayEquals(InkStrokeCodec.encode(stroke),InkStrokeCodec.encode(strokes[i]))}
                     val samples=strokes.last().samples
                     assertTrue("Left paper edge must accept ink",samples.minOf{it.x}<100f)
                     assertTrue("Right paper edge must accept ink",samples.maxOf{it.x}>900f)

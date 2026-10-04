@@ -172,6 +172,8 @@ internal val BranchReviewRoundSaver = Saver<BranchReviewRound, ByteArray>(
     var cluesConsulted by rememberSaveable { mutableStateOf(false) }
     var hints by rememberSaveable { mutableStateOf(false) }
     var sourceOpen by rememberSaveable { mutableStateOf(false) }
+    // The fixed question owns its tab across the two adaptive panel call sites.
+    var contextTab by rememberSaveable(index) { mutableStateOf(RecallContextTab.SOURCE) }
     var loaded by remember { mutableStateOf<List<FrozenBranchReviewQuestion>?>(null) }
     var loadError by remember { mutableStateOf(false) }
     var loadAttempt by remember { mutableIntStateOf(0) }
@@ -382,13 +384,13 @@ internal val BranchReviewRoundSaver = Saver<BranchReviewRound, ByteArray>(
                             Row(Modifier.fillMaxSize(),horizontalArrangement=Arrangement.spacedBy(20.dp)) {
                                 Column(Modifier.weight(1f).fillMaxHeight().verticalScroll(rememberScrollState()),
                                     verticalArrangement=Arrangement.spacedBy(12.dp),content=questionContent)
-                                RecallContextPanel(plan,current,cluesVisible,source,
+                                RecallContextPanel(plan,current,cluesVisible,source,contextTab,{contextTab=it},
                                     Modifier.weight(1.1f).fillMaxHeight())
                             }
                         }else{
                             Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()),verticalArrangement=Arrangement.spacedBy(12.dp)) {
                                 questionContent()
-                                if(started&&current!=null)RecallContextPanel(plan,current,cluesVisible,source,
+                                if(started&&current!=null)RecallContextPanel(plan,current,cluesVisible,source,contextTab,{contextTab=it},
                                     Modifier.fillMaxWidth().height(460.dp))
                             }
                         }

@@ -18,25 +18,15 @@ METHODS = {
     "org.inkweft.app.StarNoteInteractionsUiTest": ["excerptKeepsPageImageAddsCommentAndDeletesWithoutDeletingSource",
         "inlineCommentAndEightHandleRecropCancelSaveAndReopenKeepOriginalInk"],
 }
-# Three current failures plus direct recall-shield, source-return and long-card guards.
+# Current answer-pad/context-tab fixes and direct clue/rotation/parent-window guards.
+# Repeat only direct guards; the passing unchanged paths remain in full mode, not new executions.
 FOCUSED_METHODS = {
     "org.inkweft.app.RecallAnswerPadUiTest": ["wideAndNarrowPadsAcceptBothEdgesAndKeepExistingCoordinates"],
     "org.inkweft.app.RecallMaskUiTest": [
         "libraryMapRecallAncestorsHideCluesFromInteractiveWindows",
         "tabletMapTextFitAndNeutralRecallPlaceholdersKeepAuthorRows",
         "mapHintGatesNativeTopologyTitlesBodiesAndFoldedDescendants",
-        "narrowRotationSourceReturnAndNextQuestionResetPermissions",
-        "exitRestoresAncestorRenderingAccessibilityDraftAndOtherBook",
-        "longChineseTabsLibraryAndBackupCancellationKeepAuthorRows"],
-    "org.inkweft.app.SelectionStudyUiTest": ["outlineFoldFocusAndQuickAddShareOneGraph"],
-    "org.inkweft.app.LearningWorkspacePolishUiTest": ["longCardShortcutsReachAnnotationAndSourcesWithFixedReturnActions",
-        "narrowLargeTextCardSectionShortcutsRevealReadableContent",
-        "narrowLargeTextOutlineActionsWrapWithoutHorizontalHunting",
-        "narrowLargeTextWhitespaceAndLayersKeepControlsClearAndPenPreference"],
-    "org.inkweft.app.CardSourceNavigationUiTest": ["narrowLargeFontKeepsFooterReachableAfterLongBodyScrollAndRecreation"],
-    "org.inkweft.app.LibrarySourceNavigationUiTest": [
-        "recycledLibrarySourceRetainsCurrentCardSnapshotAndMapWithoutNavigating",
-        "closingOrRecreatingPendingLibrarySourceCannotJumpOrCloseAnotherCard"],
+        "narrowRotationSourceReturnAndNextQuestionResetPermissions"],
 }
 
 CORE = ["PageObjectTest", "ContentTransferTest", "LibraryArchiveTest", "CardPresentationTest",
