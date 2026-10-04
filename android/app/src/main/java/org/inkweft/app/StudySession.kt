@@ -65,6 +65,8 @@ internal class StudyViewModel(val book:String,val repo:StudyRepository,private v
     // One bounded, frozen inverse survives recreation and an unknown commit result.
     var organizationUndo by mutableStateOf(restoreOrganization("study.organizationUndo"))
         private set
+    var organizationRedo by mutableStateOf(restoreOrganization("study.organizationRedo"))
+        private set
     val revealByMap=mutableMapOf<String,String>()
     fun undoCapture(){undoCaptureAt(mapId.value)}
     fun undoCaptureAt(target:String?){val c=captureUndo[target?:"main"]?:return;submit(c)}
@@ -100,6 +102,7 @@ internal class StudyViewModel(val book:String,val repo:StudyRepository,private v
     }
     private var pending:StudyCommand?=restorePending()
     private var pendingOrganizationUndo:StudyCommand?=restoreOrganization("study.pendingOrganizationUndo")
+    private var pendingHistoryDirection=(saved.get<Int>("study.pendingHistoryDirection")?:0).also{require(it in -1..1)}
     private val state=MutableStateFlow(StudyUi(unknown=pending!=null,message=if(pending!=null)"上次摘要操作待核对，请重试原操作。"else null));val ui=state.asStateFlow()
     private val reload=MutableStateFlow(0)
     fun refresh(){state.update{it.copy(loading=true)};reload.value++}
@@ -112,17 +115,27 @@ internal class StudyViewModel(val book:String,val repo:StudyRepository,private v
             .catch{e->if(e is CancellationException)throw e;state.update{it.copy(loading=false,readFailed=true)}}
     }.collect{graph->state.update{it.copy(cards=graph.cards,nodes=graph.nodes,mainNodes=graph.allMainNodes,graph=graph,loading=false,readFailed=false)}}}}
     init{startObservation()}
-    fun submit(c:StudyCommand,undo:StudyCommand?=null){require(c.notebookId==book);if(ui.value.busy||pending!=null)return;if(!authorAllowed()){state.update{it.copy(message="当前为阅读模式，请返回书写后编辑。")};return};pending=c;pendingOrganizationUndo=undo;persistPending();execute()}
+    fun submit(c:StudyCommand,undo:StudyCommand?=null,historyDirection:Int=0){require(c.notebookId==book);if(ui.value.busy||pending!=null)return;if(!authorAllowed()){state.update{it.copy(message="当前为阅读模式，请返回书写后编辑。")};return};pending=c;pendingOrganizationUndo=undo;pendingHistoryDirection=historyDirection;persistPending();execute()}
     fun organize(graph:StudyGraphState,plan:StudyOrganizationPlan){
         val inverse=StudyOrganization.undo(StudyOrganization.apply(graph,plan),plan).command(UUID.randomUUID().toString())
         submit(plan.command(UUID.randomUUID().toString()),inverse)
     }
-    fun undoOrganization(){organizationUndo?.let{submit(it)}}
+    fun undoOrganization()=replayOrganization(organizationUndo,-1)
+    fun redoOrganization()=replayOrganization(organizationRedo,1)
+    private fun replayOrganization(command:StudyCommand?,direction:Int){
+        command?:return
+        val graph=ui.value.graph?.state?:return
+        try{
+            val plan=checkNotNull(command.organization)
+            val inverse=StudyOrganization.undo(StudyOrganization.apply(graph,plan),plan).command(UUID.randomUUID().toString())
+            submit(command,inverse,direction)
+        }catch(_:IllegalArgumentException){state.update{it.copy(message="图已变化，无法重放这一步整理；现有内容保持不变。")}}
+    }
     fun retry(){if(!ui.value.busy&&pending!=null)execute()}
     private fun execute(){val c=pending?:return;state.update{it.copy(busy=true,message=null,completed=null)}
         viewModelScope.launch{try{when(val result=withContext(Dispatchers.IO){repo.outcome(c)}){
-            is StudyOutcome.Success->{if(c.action==StudyAction.CREATE_EXCERPT)captureGeneration++;if(c.action==StudyAction.UNDO_CAPTURE)captureUndo.remove(c.mapId?:"main");if(c.action==StudyAction.CREATE&&c.source!=null){captureGeneration++;c.nodeId?.let{revealByMap[c.mapId?:"main"]=it;selectedByMap[c.mapId?:"main"]=it}};if(c.action==StudyAction.CREATE&&c.source!=null)captureUndo[c.mapId?:"main"]=StudyCommand(UUID.randomUUID().toString(),book,StudyAction.UNDO_CAPTURE,cardId=c.cardId,nodeId=c.nodeId,expectedRevision=1,mapId=c.mapId);organizationUndo=pendingOrganizationUndo;persistOrganization("study.organizationUndo",organizationUndo);pending=null;pendingOrganizationUndo=null;persistPending();state.update{it.copy(busy=false,unknown=false,completed=result.id)}}
-            is StudyOutcome.Rejected->{pending=null;pendingOrganizationUndo=null;persistPending();state.update{it.copy(busy=false,unknown=false,message=studyCapacityRejection(result.reason)?:"未提交：来源或内容已变化，请核对当前图和分支后重新保存（${result.reason}）。")}}
+            is StudyOutcome.Success->{if(c.action==StudyAction.CREATE_EXCERPT)captureGeneration++;if(c.action==StudyAction.UNDO_CAPTURE)captureUndo.remove(c.mapId?:"main");if(c.action==StudyAction.CREATE&&c.source!=null){captureGeneration++;c.nodeId?.let{revealByMap[c.mapId?:"main"]=it;selectedByMap[c.mapId?:"main"]=it}};if(c.action==StudyAction.CREATE&&c.source!=null)captureUndo[c.mapId?:"main"]=StudyCommand(UUID.randomUUID().toString(),book,StudyAction.UNDO_CAPTURE,cardId=c.cardId,nodeId=c.nodeId,expectedRevision=1,mapId=c.mapId);if(pendingHistoryDirection<0){organizationUndo=null;organizationRedo=pendingOrganizationUndo}else{organizationUndo=pendingOrganizationUndo;organizationRedo=null};persistOrganization("study.organizationUndo",organizationUndo);persistOrganization("study.organizationRedo",organizationRedo);pending=null;pendingOrganizationUndo=null;pendingHistoryDirection=0;persistPending();state.update{it.copy(busy=false,unknown=false,completed=result.id)}}
+            is StudyOutcome.Rejected->{pending=null;pendingOrganizationUndo=null;pendingHistoryDirection=0;persistPending();state.update{it.copy(busy=false,unknown=false,message=studyCapacityRejection(result.reason)?:"未提交：来源或内容已变化，请核对当前图和分支后重新保存（${result.reason}）。")}}
             StudyOutcome.Unknown->state.update{it.copy(busy=false,unknown=true,message="操作结果待核对。重试核对同一操作，不重复建卡。")}
         }}catch(cancel:CancellationException){state.update{it.copy(busy=false,unknown=true)};throw cancel}}
     }
@@ -132,6 +145,7 @@ internal class StudyViewModel(val book:String,val repo:StudyRepository,private v
     // Snapshot ink stays in the DB; only the user-confirmed bounded request is in saved state.
     private fun persistPending(){
         val c=pending
+        saved["study.pendingHistoryDirection"]=pendingHistoryDirection
         saved.set<ArrayList<String>?>("study.command",c?.let{arrayListOf(it.id,it.notebookId,it.action.name,it.cardId.orEmpty(),it.nodeId.orEmpty(),it.expectedRevision.toString(),it.parentId.orEmpty(),it.title,it.body,it.x.toString(),it.y.toString(),it.expectedGraph,it.mapId.orEmpty())})
         saved["study.preview"]=c?.source?.previewBytes();saved["study.objectRevision"]=c?.source?.objectRevision
         saved["study.organization"]=c?.organization?.let(StudyOrganization::encode)
