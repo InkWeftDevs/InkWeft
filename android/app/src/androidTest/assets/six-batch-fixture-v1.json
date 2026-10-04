@@ -1,0 +1,41 @@
+{
+  "format": "inkweft.six-batch-fixture.v1",
+  "synthetic": true,
+  "documentPages": 12,
+  "companionPages": 1,
+  "notebooks": 2,
+  "cardsPerNotebook": 48,
+  "totalCards": 96,
+  "maps": 3,
+  "activeNodesPerMap": 120,
+  "branchDepth": 6,
+  "crossNotebookReferences": 12,
+  "longCardBodyChars": 12000,
+  "longCardAnnotationChars": 4000,
+  "imageWidth": 4096,
+  "imageHeight": 3072,
+  "originalImages": 2,
+  "formulaExcerpts": 1,
+  "stressStrokes": 1000,
+  "pointsPerStressStroke": 100,
+  "stressPoints": 100000,
+  "requiredAuthoring": {
+    "layers": 3,
+    "hiddenLayers": 1,
+    "lockedLayers": 1,
+    "collapsibleBlanks": 2
+  },
+  "requiredRecall": {
+    "textAnswer": true,
+    "handwritingAnswer": true,
+    "crossDayRecords": true,
+    "syntheticStartUtc": "2026-10-01T09:00:00Z"
+  },
+  "manualTarget": {
+    "model": "vivo iPA2673",
+    "api": 36,
+    "continuousPenMinutes": 15,
+    "learningMinutes": 30,
+    "thermalRecord": true
+  }
+}

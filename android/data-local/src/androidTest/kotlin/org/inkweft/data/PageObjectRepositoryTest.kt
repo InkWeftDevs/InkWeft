@@ -108,7 +108,7 @@ class PageObjectRepositoryTest {
         try{
             assertEquals("保留原文",db.notes().note(book)!!.text)
             assertEquals(1234L,db.notes().note(book)!!.updatedAt)
-            assertEquals(14,db.openHelper.readableDatabase.version)
+            assertEquals(16,db.openHelper.readableDatabase.version)
             assertEquals(0L,db.images().totalBytes())
         }finally{db.close();context.deleteDatabase(name)}
     }

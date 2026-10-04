@@ -17,7 +17,7 @@ import java.util.UUID
 /** The card owns a separate shared annotation; resizing replaces only its source snapshot. */
 @Composable internal fun ExcerptEditor(
     id:String,vm:StudyViewModel,view:InkCanvasView?,viewport:CanvasViewport,world:Boolean,
-    inkRevision:Long,objectRevision:Long,ready:Boolean,dismiss:()->Unit,onActive:(Boolean)->Unit,onDraft:(Boolean)->Unit
+    inkRevision:Long,objectRevision:Long,authoring:AuthoringUi,ready:Boolean,dismiss:()->Unit,onActive:(Boolean)->Unit,onDraft:(Boolean)->Unit
 ){
     val ui by vm.ui.collectAsStateWithLifecycle()
     val readLock=rememberBookReadLock(vm.book)
@@ -56,9 +56,9 @@ import java.util.UUID
                 CardPresentationEditor(vm.book,id,inline=true,showColors=false,inputTag="excerpt-inline-input",saveTag="excerpt-inline-save",cancelTag="excerpt-inline-cancel",dismiss=::cancel)
             }else if(mode=="resize"){
                 Row{TextButton(::cancel,enabled=!waiting,modifier=Modifier.testTag("excerpt-resize-cancel")){Text("取消")};TextButton({
-                    runCatching{checkNotNull(view).excerptPreview(b)}.onSuccess{picture->
+                    runCatching{check(checkNotNull(view).matchesAuthoring(authoring.state)){"图层画面正在更新，请稍后重试"};checkNotNull(view).excerptPreview(b)}.onSuccess{picture->
                         message=null;submitted=true;vm.submit(StudyCommand(UUID.randomUUID().toString(),vm.book,StudyAction.RECROP_EXCERPT,cardId=id,expectedRevision=revision,
-                            source=StudySourceDraft(original.pageId,inkRevision,b,emptyList(),picture,objectRevision)))
+                            source=StudySourceDraft(original.pageId,inkRevision,b,emptyList(),picture,objectRevision,authoring.revision)))
                     }.onFailure{message=it.message?:"范围未保存，请重试"}
                 },enabled=enabled&&draft!=null,modifier=Modifier.testTag("excerpt-resize-save")){Text("保存范围")}}
             }else{

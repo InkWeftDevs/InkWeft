@@ -68,10 +68,11 @@ class CardTransformRepositoryTest {
         assertEquals(before,counts(db));assertNull(db.cardTransforms().get(plan.operationId));assertNull(db.study().card(target.id))
         repo.submit(plan)
         val links=db.knowledge().forBook(book).mapNotNull{it.data() as? KnowledgeData.Link}.filter{it.relation==RelationKind.SUMMARY}
-        assertEquals(cards.map{it.id}.toSet(),links.map{it.source.id}.toSet());assertTrue(links.all{it.target.id==target.id});assertEquals(nodes,db.study().nodes(book))
+        assertEquals(cards.map{it.id}.toSet(),links.map{it.source.id}.toSet());assertTrue(links.all{it.target.id==target.id});val summaryNode=requireNotNull(plan.summaryPlacement).nodeId
+        assertEquals(nodes,db.study().nodes(book).filter{it.id!=summaryNode});assertEquals(target.id,db.study().node(summaryNode)!!.cardId)
         val stale=preview.plan(CardTransformKind.MERGE,listOf(CardTransforms.mergeTarget(preview.cards,"旧预览")))
         assertEquals(CardTransformOutcome.Rejected("TRANSFORM_VERSION_CHANGED"),repo.outcome(stale))
-        val undo=id();repo.undo(plan.operationId,1,undo);assertTrue(db.knowledge().forBook(book).filter{it.data() is KnowledgeData.Link}.all{it.removed})
+        val undo=id();repo.undo(plan.operationId,1,undo);assertTrue(db.study().node(summaryNode)!!.removed);assertEquals(nodes,db.study().nodes(book).filter{it.id!=summaryNode});assertTrue(db.knowledge().forBook(book).filter{it.data() is KnowledgeData.Link}.all{it.removed})
     }
     @Test fun recropKeepsExactOldCardSourceAndOldReviewNeverReadsCurrentCrop()=fixture{db,book->
         val bitmap=android.graphics.Bitmap.createBitmap(20,20,android.graphics.Bitmap.Config.ARGB_8888)
@@ -123,7 +124,7 @@ class CardTransformRepositoryTest {
         }
         val db=NoteDatabase.open(context,name)
         try{
-            assertEquals(14,db.openHelper.readableDatabase.version);assertEquals(body,db.study().card(card)!!.body);assertEquals(body,db.study().cardVersion(card,1)!!.body)
+            assertEquals(16,db.openHelper.readableDatabase.version);assertEquals(body,db.study().card(card)!!.body);assertEquals(body,db.study().cardVersion(card,1)!!.body)
             assertFalse(StudySourceVersions(db).read(card,1).complete);assertNull(StudySourceVersions(db).read(card,1).singleLegacy(card))
             val current=StudySourceVersions(db).read(card,2);assertTrue(current.complete);assertArrayEquals(snapshot,current.sources.single().snapshot)
             assertEquals(1L,current.refs.single().revision);assertEquals(0L,db.images().totalBytes());assertEquals(snapshot.size.toLong(),db.study().snapshotBytes())
@@ -195,6 +196,59 @@ class CardTransformRepositoryTest {
         val review=BranchReviewRepository(db);val entries=review.load(review.prepareNotebook(book))
         assertEquals(3,entries.size);val source=entries.first().sources.sources.single()
         entries.forEach{assertSame(source,it.sources.sources.single());assertSame(source.snapshot,it.sources.sources.single().snapshot)}
+    }
+
+    @Test fun summaryInNamedMapHasStableOccurrenceAndAtomicUndoAfterBackupRestore()=fixture{db,book->
+        val a=card(db,book,"甲");val b=card(db,book,"乙");val map=id();val parent=id();val knowledge=KnowledgeRepository(db)
+        knowledge.submit(KnowledgeCommand(id(),book,map,0,KnowledgeData.MapDefinition("归纳图",structures=listOf(MapStructure(parent,null,"共同父级",0.0,0.0)))))
+        for(card in listOf(a,b))StudyRepository(db).submit(StudyCommand(id(),book,StudyAction.REUSE,cardId=card.id,nodeId=id(),parentId=parent,mapId=map))
+        val repository=CardTransformRepository(db);val preview=repository.preview(book,listOf(a.id,b.id),map)
+        val plan=preview.plan(CardTransformKind.SUMMARY,listOf(CardTransforms.mergeTarget(preview.cards,"归纳总结").copy(body="我的总结")))
+        assertEquals(parent,plan.summaryPlacement!!.parentId);assertEquals(map,plan.summaryPlacement!!.mapId)
+        val before=StudyRepository(db).readGraph(book,map).nodes
+        val outcome=CardTransformRepository(db){if(it==CardTransformFault.AFTER_COMMIT)error("lost")}.outcome(plan)
+        assertTrue(outcome is CardTransformOutcome.Success);assertEquals(outcome,repository.submit(plan))
+        val node=StudyRepository(db).readGraph(book,map).nodes.single{it.id==plan.summaryPlacement!!.nodeId}
+        assertEquals(parent,node.parentId);assertEquals(plan.targets.single().id,node.cardId)
+        assertEquals(before,StudyRepository(db).readGraph(book,map).nodes.filter{it.id!=node.id})
+        val name="summary-node-restore-${id()}.db";val target=NoteDatabase.open(context,name)
+        try{
+            val backup=LibraryBackupRepository(context,db);val restore=LibraryBackupRepository(context,target)
+            backup.snapshot().use{snap->snap.file.inputStream().use{restore.inspect(it)}.use{candidate->assertEquals(LibraryBackupRepository.RestoreResult.RESTORED,restore.restore(candidate))}}
+            val undo=id();assertTrue(CardTransformRepository(target).undoOutcome(plan.operationId,1,undo) is CardTransformOutcome.Success)
+            assertTrue(StudyRepository(target).readGraph(book,map).nodes.single{it.id==node.id}.removed)
+            assertEquals(before,StudyRepository(target).readGraph(book,map).nodes.filter{it.id!=node.id})
+            assertEquals(node,StudyRepository(db).readGraph(book,map).nodes.single{it.id==node.id})
+        }finally{target.close();context.deleteDatabase(name)}
+    }
+    @Test fun staleSummaryGraphAndNodeCapacityRejectEntireContentTransaction()=fixture{db,book->
+        val a=card(db,book,"甲");val b=card(db,book,"乙");val repository=CardTransformRepository(db)
+        val extra=StudyCommand(id(),book,StudyAction.CREATE,cardId=id(),nodeId=id(),title="不相关主题");StudyRepository(db).submit(extra)
+        val preview=repository.preview(book,listOf(a.id,b.id));val plan=preview.plan(CardTransformKind.SUMMARY,listOf(CardTransforms.mergeTarget(preview.cards,"总结").copy(body="归纳")))
+        StudyRepository(db).submit(StudyCommand(id(),book,StudyAction.MOVE,nodeId=extra.nodeId,expectedRevision=1,x=400.0,y=400.0))
+        val before=counts(db);assertEquals(CardTransformOutcome.Rejected("MAP_VERSION_CHANGED"),repository.outcome(plan));assertEquals(before,counts(db));assertNull(db.study().card(plan.targets.single().id))
+        val rows=db.study().nodes(book);db.withTransaction{repeat(StudyGraph.MAX_NODES-rows.count{!it.removed}){db.study().addNode(StudyNodeRow(id(),book,a.id,null,0.0,it.toDouble()))}}
+        // Reconcile the isolated fixture's author order before exercising the real writer.
+        val order=db.knowledge().forBook(book).single{(it.data() as? KnowledgeData.MapOrder)?.mapId==null};val value=KnowledgeData.MapOrder(null,StudyOrganization.legacyOrder(db.study().nodes(book).map{it.model()}))
+        val changed=order.copy(revision=order.revision+1,payload=KnowledgeCodec.encode(value));db.knowledge().update(changed);db.knowledge().revision(KnowledgeRevisionRow(changed.id,changed.revision,book,changed.payload,false))
+        val full=repository.preview(book,listOf(a.id,b.id));val rejected=full.plan(CardTransformKind.SUMMARY,listOf(CardTransforms.mergeTarget(full.cards,"满图总结").copy(body="归纳")))
+        val counts=counts(db);assertEquals(CardTransformOutcome.Rejected("STUDY_NODE_BUDGET"),repository.outcome(rejected));assertEquals(counts,counts(db));assertNull(db.study().card(rejected.targets.single().id))
+    }
+
+    @Test fun summaryDoesNotGuessFirstOccurrenceAndUncommittedLegacyPlanRequiresNewPreview()=fixture{db,book->
+        val a=card(db,book,"多位置");val b=card(db,book,"单位置");val study=StudyRepository(db)
+        val map=id();val parent=id()
+        KnowledgeRepository(db).submit(KnowledgeCommand(id(),book,map,0,KnowledgeData.MapDefinition("多位置归纳",structures=listOf(MapStructure(parent,null,"共同主题",0.0,0.0)))))
+        study.submit(StudyCommand(id(),book,StudyAction.REUSE,cardId=a.id,nodeId="00000000-0000-0000-0000-000000000010",parentId=parent,mapId=map))
+        study.submit(StudyCommand(id(),book,StudyAction.REUSE,cardId=a.id,nodeId="00000000-0000-0000-0000-000000000020",mapId=map))
+        study.submit(StudyCommand(id(),book,StudyAction.REUSE,cardId=b.id,nodeId="00000000-0000-0000-0000-000000000030",parentId=parent,mapId=map))
+        val repository=CardTransformRepository(db);val preview=repository.preview(book,listOf(a.id,b.id),map)
+        assertNull(preview.summaryPlacement.parentId)
+        val targets=listOf(CardTransforms.mergeTarget(preview.cards,"总结").copy(body="归纳"))
+        val old=CardTransformPlan(id(),book,CardTransformKind.SUMMARY,preview.fingerprint,preview.cards,targets)
+        val before=counts(db)
+        assertEquals(CardTransformOutcome.Rejected("SUMMARY_PLACEMENT_REQUIRED"),repository.outcome(old))
+        assertEquals(before,counts(db));assertNull(db.study().card(targets.single().id))
     }
 
 }

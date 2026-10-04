@@ -33,7 +33,7 @@ class CardReuseRepository(private val db:NoteDatabase,private val fault:(Knowled
             if(card.trashedAt!=null||db.workspace().get(card.notebookId)?.trashedAt!=null||db.notes().note(r.destination)==null||db.workspace().get(r.destination)?.trashedAt!=null)throw KnowledgeRejected(KnowledgeRejection.UNAVAILABLE)
             if(card.revision!=r.cardRevision)throw KnowledgeRejected(KnowledgeRejection.CONFLICT)
             val p=db.knowledge().forBook(card.notebookId).singleOrNull{!it.removed&&(it.data() as? KnowledgeData.CardPresentation)?.cardId==card.id}
-            if(p?.id!=r.presentationId||(p?.revision?:0)!=r.presentationRevision)throw KnowledgeRejected(KnowledgeRejection.CONFLICT)
+            if(p?.id!=r.presentationId||(p?.revision?:0L)!=r.presentationRevision)throw KnowledgeRejected(KnowledgeRejection.CONFLICT)
             val result=r.resultId()
             if(r.kind==CardReuseKind.REFERENCE){
                 val link=KnowledgeData.Link(TargetRef(TargetKind.NOTE,r.destination),TargetRef(TargetKind.CARD,card.id))

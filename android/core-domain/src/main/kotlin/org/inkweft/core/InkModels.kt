@@ -102,10 +102,11 @@ object InkStrokeCodec {
 sealed interface InkMutation {
     /** New immutable versions; original strokes stay available for undo/history.
      * Empty hidden is a duplicate. No caller can mutate the frozen payload lists. */
-    class Replace(hidden:List<String>,added:List<InkStroke>):InkMutation {
+    class Replace(hidden:List<String>,added:List<InkStroke>,layerSources:List<String> = emptyList()):InkMutation {
+        val layerSources:List<String> = Collections.unmodifiableList(ArrayList(layerSources))
         val hidden:List<String> = Collections.unmodifiableList(hidden.sorted())
         val added:List<InkStroke> = Collections.unmodifiableList(ArrayList(added))
-        init{require(added.isNotEmpty()&&added.size<=256&&hidden.size<=256)
+        init{require(layerSources.isEmpty()||layerSources.size==added.size);layerSources.forEach{UUID.fromString(it)};require(added.isNotEmpty()&&added.size<=256&&hidden.size<=256)
             require(hidden.distinct().size==hidden.size&&added.map{it.id}.distinct().size==added.size)
             hidden.forEach{UUID.fromString(it)};require(added.none{it.id in hidden})}
     }
@@ -123,18 +124,20 @@ sealed interface InkMutation {
     class Cut(val selection:EraseSelection):InkMutation
     data class CutVisibility(val cutId:String,val visible:Boolean):InkMutation{init{UUID.fromString(cutId)}}
 }
-class CommitInk(val commandId:String,val noteId:String,val expectedRevision:Long,val mutation:InkMutation) {
+class CommitInk(val commandId:String,val noteId:String,val expectedRevision:Long,val mutation:InkMutation,val layerScope:LayerWriteScope?=null) {
     init{UUID.fromString(commandId);UUID.fromString(noteId);require(expectedRevision in 0 until Long.MAX_VALUE-1)}
     val strokeIds:List<String> get()=when(val m=mutation){is InkMutation.Add->listOf(m.stroke.id);is InkMutation.Visibility->m.ids;is InkMutation.Cut->m.selection.strokeIds;is InkMutation.CutVisibility->emptyList();is InkMutation.Replace->m.hidden+m.added.map{it.id};is InkMutation.Swap->m.hide+m.show}
     fun digest():String {
         val out=ByteArrayOutputStream();DataOutputStream(out).use{d->
-            d.writeUTF("inkweft.ink-command.v1");d.writeUTF(commandId);d.writeUTF(noteId);d.writeLong(expectedRevision)
+            val layered=layerScope!=null||(mutation is InkMutation.Replace&&mutation.layerSources.isNotEmpty())
+            d.writeUTF(if(!layered)"inkweft.ink-command.v1" else "inkweft.ink-command.v2");d.writeUTF(commandId);d.writeUTF(noteId);d.writeLong(expectedRevision)
+            if(layered){d.writeBoolean(layerScope!=null);layerScope?.let{d.writeUTF(it.layerId);d.writeLong(it.configurationRevision)}}
             when(val m=mutation){
                 is InkMutation.Add->{d.writeByte(1);val b=InkStrokeCodec.encode(m.stroke);d.writeInt(b.size);d.write(b)}
                 is InkMutation.Visibility->{d.writeByte(2);d.writeBoolean(m.visible);d.writeInt(m.ids.size);m.ids.forEach(d::writeUTF)}
                 is InkMutation.Cut->{d.writeByte(3);InkCutCodec.write(d,m.selection.cut);d.writeInt(m.selection.strokeIds.size);m.selection.strokeIds.forEach(d::writeUTF)}
                 is InkMutation.CutVisibility->{d.writeByte(4);d.writeUTF(m.cutId);d.writeBoolean(m.visible)}
-                is InkMutation.Replace->{d.writeByte(5);d.writeInt(m.hidden.size);m.hidden.forEach(d::writeUTF);d.writeInt(m.added.size);m.added.forEach{val b=InkStrokeCodec.encode(it);d.writeInt(b.size);d.write(b)}}
+                is InkMutation.Replace->{d.writeByte(5);d.writeInt(m.hidden.size);m.hidden.forEach(d::writeUTF);d.writeInt(m.added.size);m.added.forEach{val b=InkStrokeCodec.encode(it);d.writeInt(b.size);d.write(b)};if(layered){d.writeInt(m.layerSources.size);m.layerSources.forEach(d::writeUTF)}}
                 is InkMutation.Swap->{d.writeByte(6);d.writeInt(m.hide.size);m.hide.forEach(d::writeUTF);d.writeInt(m.show.size);m.show.forEach(d::writeUTF)}
             }
         };return MessageDigest.getInstance("SHA-256").digest(out.toByteArray()).joinToString(""){"%02x".format(it.toInt() and 255)}

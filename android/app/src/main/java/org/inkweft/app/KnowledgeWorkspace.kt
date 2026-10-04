@@ -429,15 +429,23 @@ private val LinkPreviewSaver=Saver<LinkPreviewSelection?,List<String>>(
         val question=draft.row.data() as KnowledgeData.Question
         val current=rows.find{it.id==draft.row.id&&it.notebookId==book&&(it.data() as? KnowledgeData.Question)?.cardId==question.cardId}
         val available=current!=null&&bookCards.any{it.id==question.cardId}
-        QuestionMaintenanceDialog(draft,editCard?.title?:"摘要卡不可用",!readOnly,ui.busy,ui.unknown,available,current?.revision!=draft.row.revision,vm.pendingOperationId==draft.operationId&&draft.operationId!=null,
+        var configuring by rememberSaveable(draft.editorId){mutableStateOf(false)}
+        if(configuring&&editCard!=null)RecallQuestionEditor(app.study.recall(),book,
+            RecallQueueItem(BranchReviewEntryRef(draft.row.id,draft.row.revision,question.cardId,editCard.revision),question.prompt,RecallQuestionKind.QUESTION,0,false,0,0),
+            {configuring=false},{configuring=false;closeQuestion(draft.editorId)})
+        else QuestionMaintenanceDialog(draft,editCard?.title?:"摘要卡不可用",!readOnly,ui.busy,ui.unknown,available,current?.revision!=draft.row.revision,vm.pendingOperationId==draft.operationId&&draft.operationId!=null,
             {value->val live=vm.ui.value;if(!live.busy&&!live.unknown&&readLock.canWrite&&questionEdit?.editorId==draft.editorId&&questionEdit?.operationId==null&&value.length<=2000)questionEdit=questionEdit?.copy(prompt=value,message=null)},
-            {submitQuestion(draft.editorId)},{closeQuestion(draft.editorId)},{val live=vm.ui.value;if(live.unknown&&!live.busy&&questionEdit?.editorId==draft.editorId&&vm.pendingOperationId==questionEdit?.operationId&&questionEdit?.operationId!=null)vm.retry()})
+            {submitQuestion(draft.editorId)},{closeQuestion(draft.editorId)},
+            {val live=vm.ui.value;val active=questionEdit
+                if(readLock.canWrite&&!live.busy&&!live.unknown&&active?.editorId==draft.editorId&&active.operationId==null&&
+                    active.prompt==question.prompt&&current?.revision==draft.row.revision&&available)configuring=true},
+            {val live=vm.ui.value;if(live.unknown&&!live.busy&&questionEdit?.editorId==draft.editorId&&vm.pendingOperationId==questionEdit?.operationId&&questionEdit?.operationId!=null)vm.retry()})
     }
     reviewPlan?.let{plan->BranchReviewDialog(plan,{reviewPlan=null},showSummary=reviewWithSummary,showCollectionScope=reviewCollectionScope)}
 }
 
 @Composable private fun QuestionMaintenanceDialog(draft:QuestionEditDraft,cardTitle:String,writable:Boolean,busy:Boolean,unknown:Boolean,available:Boolean,revisionChanged:Boolean,canRetry:Boolean,
-    changePrompt:(String)->Unit,submit:()->Unit,dismiss:()->Unit,retry:()->Unit){
+    changePrompt:(String)->Unit,submit:()->Unit,dismiss:()->Unit,configureType:()->Unit,retry:()->Unit){
     val canClose=!busy&&!unknown&&draft.operationId==null
     val canEdit=canClose&&writable&&available
     val savedQuestion=draft.row.data() as KnowledgeData.Question
@@ -451,6 +459,11 @@ private val LinkPreviewSaver=Saver<LinkPreviewSelection?,List<String>>(
                 Text(savedQuestion.prompt,modifier=Modifier.testTag("question-remove-prompt"))
                 Text("只移除这道题，摘要卡、答案和来源保留。已经开始的回忆仍可显示原题。",color=Quiet)
             }else OutlinedTextField(draft.prompt,changePrompt,enabled=canClose,readOnly=!writable||!available,label={Text("问题原文")},minLines=3,maxLines=10,modifier=Modifier.fillMaxWidth().testTag("question-edit-prompt"))
+            if(!draft.removing){
+                OutlinedButton(configureType,enabled=canEdit&&!revisionChanged&&draft.prompt==savedQuestion.prompt,
+                    modifier=Modifier.fillMaxWidth().heightIn(min=48.dp).testTag("question-configure-type")){Text("题型 / 固定答案与到期设置")}
+                if(draft.prompt!=savedQuestion.prompt)Text("请先保存或取消问题原文草稿，再设置题型，避免两个编辑窗口覆盖。",color=Quiet)
+            }
             if(busy)LinearProgressIndicator(Modifier.fillMaxWidth())
             if(unknown)Text("结果待核对；原文与原操作已保留。请核对原操作后再退出。",color=Quiet)
             else if(!busy){

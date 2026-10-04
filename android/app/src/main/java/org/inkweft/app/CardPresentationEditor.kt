@@ -43,7 +43,7 @@ internal fun List<KnowledgeRow>.cardPresentations()=asSequence().filterNot{it.re
     var titleColor by rememberSaveable(cardId){mutableStateOf(CardTint.DEFAULT)}
     var operation by rememberSaveable(cardId){mutableStateOf<String?>(null)}
     val waiting=ui.busy||ui.unknown
-    val changed=loaded&&!ui.loading&&!ui.readFailed&&(baseId!=latest?.id||baseRevision!=(latest?.revision?:0))
+    val changed=loaded&&!ui.loading&&!ui.readFailed&&(baseId!=latest?.id||baseRevision!=(latest?.revision?:0L))
     val editable=loaded&&available&&!readOnly&&!ui.loading&&!ui.readFailed&&!waiting&&!changed
     ReadLockGuard(lock,"card-presentation-$cardId",blocked=true,draft=true)
     androidx.activity.compose.BackHandler{if(!waiting)dismiss()}

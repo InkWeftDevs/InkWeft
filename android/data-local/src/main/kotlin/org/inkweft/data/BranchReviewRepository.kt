@@ -178,11 +178,14 @@ class BranchReviewRepository(private val db: NoteDatabase) {
         }
     }
 
-    private suspend fun activeCards(book: String) = db.study().cards(book)
-        .filter { it.trashedAt == null }.associateBy { it.id }
+    private suspend fun activeCards(book:String):Map<String,StudyCardRow> {
+        val cards=db.study().cards(book).filter{it.trashedAt==null};val byId=cards.associateBy{it.id}
+        val mapped=StudyRepository(db).readGraph(book).nodes.filterNot{it.removed}.mapNotNull{byId[it.cardId]}.distinctBy{it.id}
+        return (mapped+cards.filter{it.id !in mapped.map{c->c.id}.toSet()}.sortedWith(compareBy<StudyCardRow>{it.title}.thenBy{it.id})).associateBy{it.id}
+    }
 
     private fun questionReferences(rows: List<KnowledgeRow>, cards: Map<String, StudyCardRow>): List<Pair<BranchReviewEntryRef, ManualState>> =
-        rows.filter { !it.removed }.mapNotNull { row ->
+        rows.filter { !it.removed }.sortedWith(compareBy<KnowledgeRow>{(it.data() as? KnowledgeData.Question)?.prompt.orEmpty()}.thenBy{it.id}).mapNotNull { row ->
             val question = row.data() as? KnowledgeData.Question ?: return@mapNotNull null
             val card = cards[question.cardId] ?: return@mapNotNull null
             BranchReviewEntryRef(row.id, row.revision, card.id, card.revision) to question.state

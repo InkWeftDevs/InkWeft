@@ -57,4 +57,14 @@ class CardTransformTest {
         assertThrows(java.nio.charset.CharacterCodingException::class.java){CardTransformCodec.decode(bytes)}
     }
 
+    @Test fun summaryPlacementRoundTripsWithoutChangingLegacyPlanBytes(){
+        val cards=listOf(card(),card());val target=CardTransforms.mergeTarget(cards,"归纳").copy(body="我的总结")
+        val legacy=plan(CardTransformKind.SUMMARY,cards,listOf(target));val oldBytes=CardTransformCodec.encode(legacy)
+        assertArrayEquals(oldBytes,CardTransformCodec.encode(CardTransformCodec.decode(oldBytes)))
+        val placement=CardTransformPlacement(id(),id(),id(),40.0,300.0,"b".repeat(64))
+        val current=CardTransformPlan(legacy.operationId,legacy.notebookId,legacy.kind,legacy.expectedFingerprint,cards,listOf(target),placement)
+        assertEquals(placement,CardTransformCodec.decode(CardTransformCodec.encode(current)).summaryPlacement)
+        assertNotEquals(legacy.digest(),current.digest())
+    }
+
 }

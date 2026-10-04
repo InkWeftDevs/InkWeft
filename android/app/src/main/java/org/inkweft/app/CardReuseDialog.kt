@@ -19,17 +19,30 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import org.inkweft.data.*
 
-internal class CardReuseViewModel(private val repo:CardReuseRepository,private val saved:SavedStateHandle):ViewModel(){
+internal class CardReuseViewModel(private val repo:CardReuseRepository,private val saved:SavedStateHandle,private val store:CardReuseStore):ViewModel(){
     val busy=MutableStateFlow(false)
     val pending=saved.getStateFlow<ArrayList<String>?>("reuse.pending",null)
     val message=MutableStateFlow<String?>(null)
+    val readFailed=MutableStateFlow(false)
     var allowed:()->Boolean={false}
+    init{reloadIntent()}
+    fun reloadIntent(){
+        if(busy.value)return;busy.value=true
+        viewModelScope.launch{try{
+            val restored=withContext(Dispatchers.IO){store.read()}
+            if(restored!=null)saved["reuse.pending"]=restored
+            readFailed.value=false
+            if(pending.value!=null)message.value="上次复用操作仍待核对，请核对原操作；不会另建一次。"
+        }catch(c:CancellationException){throw c}catch(_:Exception){readFailed.value=true;message.value="待核对记录暂不可读，恢复材料保留，禁止覆盖创建。"}finally{busy.value=false}}
+    }
     fun start(card:StudyCardRow,destination:String,kind:CardReuseKind){
-        if(busy.value||pending.value!=null||!allowed())return
+        if(busy.value||pending.value!=null||readFailed.value||!allowed())return
         busy.value=true
         viewModelScope.launch{try{
             val r=withContext(Dispatchers.IO){repo.prepare(card.id,card.revision,destination,kind)}
-            saved["reuse.pending"]=arrayListOf(r.operationId,r.cardId,r.cardRevision.toString(),r.destination,r.kind.name,r.presentationId.orEmpty(),r.presentationRevision.toString())
+            val fields=CardReuseStore.fields(r)
+            withContext(Dispatchers.IO){store.save(fields)}
+            saved["reuse.pending"]=fields
         }catch(c:CancellationException){throw c}catch(_:Exception){message.value="原卡已变化或读取失败，请返回重新打开；没有创建引用或副本。"}finally{busy.value=false}
             if(pending.value!=null)retry()
         }
@@ -40,29 +53,31 @@ internal class CardReuseViewModel(private val repo:CardReuseRepository,private v
         // A frozen unknown operation must still be reconciled after a mode change.
         busy.value=true
         viewModelScope.launch{try{
-            val r=CardReuseRequest(f[0],f[1],f[2].toLong(),f[3],CardReuseKind.valueOf(f[4]),f[5].ifEmpty{null},f[6].toLong())
+            val r=CardReuseStore.request(f)
+            withContext(Dispatchers.IO){store.save(f)}
             when(val result=withContext(Dispatchers.IO){repo.outcome(r)}){
-                is KnowledgeOutcome.Success->{saved.set<ArrayList<String>?>("reuse.pending",null);message.value=if(r.kind==CardReuseKind.REFERENCE)"同步引用已加入目标笔记的关联页，仍是同一张卡。"else"独立副本已加入目标笔记主图；题目与进度未复制。"}
-                is KnowledgeOutcome.Rejected->{saved.set<ArrayList<String>?>("reuse.pending",null);message.value=when(result.reason){KnowledgeRejection.DUPLICATE->"目标笔记已引用此卡；没有重复创建。";KnowledgeRejection.CONFLICT->"原内容或注释已变化，请返回重新打开。";KnowledgeRejection.UNAVAILABLE->"原卡或目标笔记不可用，未创建副本。";else->"未创建：目标容量或内容条件不满足，原卡保留。"}}
+                is KnowledgeOutcome.Success->{withContext(Dispatchers.IO){store.clear(f)};saved.set<ArrayList<String>?>("reuse.pending",null);message.value=if(r.kind==CardReuseKind.REFERENCE)"同步引用已加入目标笔记的关联页，仍是同一张卡。"else"独立副本已加入目标笔记主图；题目与进度未复制。"}
+                is KnowledgeOutcome.Rejected->{withContext(Dispatchers.IO){store.clear(f)};saved.set<ArrayList<String>?>("reuse.pending",null);message.value=when(result.reason){KnowledgeRejection.DUPLICATE->"目标笔记已引用此卡；没有重复创建。";KnowledgeRejection.CONFLICT->"原内容或注释已变化，请返回重新打开。";KnowledgeRejection.UNAVAILABLE->"原卡或目标笔记不可用，未创建副本。";else->"未创建：目标容量或内容条件不满足，原卡保留。"}}
                 KnowledgeOutcome.Unknown->message.value="结果待核对，请核对原操作，不要另建一次。"
             }
         }catch(c:CancellationException){throw c}catch(_:Exception){message.value="结果待核对，原请求已保留。"}finally{busy.value=false}}
     }
-    class Factory(private val repo:CardReuseRepository):ViewModelProvider.Factory{
-        override fun<T:ViewModel>create(modelClass:Class<T>,extras:CreationExtras):T{@Suppress("UNCHECKED_CAST")return CardReuseViewModel(repo,extras.createSavedStateHandle()) as T}
+    class Factory(private val repo:CardReuseRepository,private val store:CardReuseStore):ViewModelProvider.Factory{
+        override fun<T:ViewModel>create(modelClass:Class<T>,extras:CreationExtras):T{@Suppress("UNCHECKED_CAST")return CardReuseViewModel(repo,extras.createSavedStateHandle(),store) as T}
     }
 }
 
 @Composable internal fun CardReuseDialog(card:StudyCardRow,dismiss:()->Unit){
     val app=LocalContext.current.applicationContext as InkWeftApplication
-    val vm:CardReuseViewModel=viewModel(key="card-reuse-${card.id}",factory=CardReuseViewModel.Factory(app.study.reuse))
+    val vm:CardReuseViewModel=viewModel(key="card-reuse-${card.id}",factory=CardReuseViewModel.Factory(app.study.reuse,CardReuseStore(app,card.id)))
     val notes by remember(app){app.knowledge.notes()}.collectAsStateWithLifecycle(initialValue=emptyList())
+    val readFailed by vm.readFailed.collectAsStateWithLifecycle()
     val busy by vm.busy.collectAsStateWithLifecycle();val pending by vm.pending.collectAsStateWithLifecycle();val message by vm.message.collectAsStateWithLifecycle()
     var destination by rememberSaveable(card.id){mutableStateOf(card.notebookId)}
     var kind by rememberSaveable(card.id){mutableStateOf(CardReuseKind.REFERENCE)}
     val target=pending?.get(3)?:destination
     val lock=rememberBookReadLock(target);val readOnly by lock.readOnly.collectAsStateWithLifecycle()
-    val editable=!busy&&pending==null&&!readOnly&&notes.any{it.id==target}
+    val editable=!busy&&!readFailed&&pending==null&&!readOnly&&notes.any{it.id==target}
     SideEffect{vm.allowed={lock.canWrite}}
     ReadLockGuard(lock,"card-reuse-${card.id}",blocked=true,draft=pending!=null)
     EditorPanel("复用知识卡","",{if(!busy&&pending==null)dismiss()},"card-reuse",footer={
@@ -82,6 +97,7 @@ internal class CardReuseViewModel(private val repo:CardReuseRepository,private v
             }
             if(readOnly)Text("目标笔记处于阅读锁定，请先在该笔记切换为书写。")
             message?.let{Text(it,modifier=Modifier.testTag("card-reuse-message"))}
+            if(readFailed)TextButton(vm::reloadIntent,enabled=!busy){Text("重试读取原复用记录")}
         }
     }
 }

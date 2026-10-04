@@ -102,7 +102,8 @@ object BranchReview {
                 descendants.add(node)
                 children[node.id].orEmpty().forEach { queue.addLast(it) }
             }
-            descendants
+            val ids=descendants.map{it.id}.toSet()
+            scene.nodes.filter{it.id in ids}
         }
         val cards = linkedMapOf<String, Long>()
         selected.forEach { node ->
@@ -161,7 +162,8 @@ object BranchReview {
             val previous = unique.put(question.questionId, question)
             require(previous == null || previous == question) { "BRANCH_REVIEW_QUESTION_ID_REUSE" }
         }
-        val entries = unique.values.sortedBy { it.questionId }
+        val byCard=unique.values.groupBy{it.cardId}
+        val entries=cards.keys.flatMap{byCard[it].orEmpty()}
         val askedCards = entries.map { it.cardId }.toSet()
         return BranchReviewPlan(ref, branchId, title, cards.size, cards.size - askedCards.size, entries)
     }

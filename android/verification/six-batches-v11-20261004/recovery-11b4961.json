@@ -1,0 +1,326 @@
+{
+  "source": "11b4961070ac4b5648168f0e1fc89e7a91963699",
+  "source_tree": "5c10a8fccb62f2f5d6bebbf1e381054d33a9befb",
+  "scope": "all Core plus production and app/data-local AndroidTest Kotlin",
+  "jvm": {
+    "tests": 366,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "classes": [
+    {
+      "name": "org.inkweft.core.BranchReviewRoundTest",
+      "tests": 14,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "9a2d444afb59266232bdae052ef9cbe14eb78a501feaacfd958729e931d9683a"
+    },
+    {
+      "name": "org.inkweft.core.BranchReviewTest",
+      "tests": 16,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "07dbae2cb790913d37b22416bdee4cd84f21fa4598e6b997a55fb4f6676392aa"
+    },
+    {
+      "name": "org.inkweft.core.BrushRecipeTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "330180a9adbff5bd0ccefb1c6e569eb24ca38f356b770362ec2117d2e2f2549a"
+    },
+    {
+      "name": "org.inkweft.core.CanvasViewportTest",
+      "tests": 20,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "c1373cc83d30d42b7b9cc79efc491422678e7c5079c3c4b8fd3dbc3e0990b0d2"
+    },
+    {
+      "name": "org.inkweft.core.CardPresentationTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "4579e77666d7a0e53d7d733ea121fddb662d0d702738870149ed36e3d1aa272b"
+    },
+    {
+      "name": "org.inkweft.core.CardTransformTest",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "a62eff59d5825a03dd9091f5d1b7d70cb3e9c40b2710075a20e915fb5f455431"
+    },
+    {
+      "name": "org.inkweft.core.ContentTransferTest",
+      "tests": 13,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "2e82bb22cbc85fb455885f017adcbfdbec113af8e46d96e7f70f8114f30c093b"
+    },
+    {
+      "name": "org.inkweft.core.ContinuousWritingTest",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "52fb791065330b1d15c908169d9cb4f6e3b5349c86b34741b519f1d750c475b7"
+    },
+    {
+      "name": "org.inkweft.core.CustomCoverTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "f568ae99ebcce0a5d3b6a256aa1aa504409506c24e34f49e4a1632387c94dd64"
+    },
+    {
+      "name": "org.inkweft.core.DiagnosticLogTest",
+      "tests": 14,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "caee501b4d81a7d0acb54df8bb7918981dd31ca58d091663cb428d25b16bf879"
+    },
+    {
+      "name": "org.inkweft.core.DraftReloadTest",
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "10b0e8cced3772ee622201808555fc38e4e592e9827470692c7f3507969042f9"
+    },
+    {
+      "name": "org.inkweft.core.ExcerptBoundsTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "204dbc37db20f584fc672ee6b4df0b54fdba7a72be1e37b93e476480adec9de7"
+    },
+    {
+      "name": "org.inkweft.core.InkEditingTest",
+      "tests": 12,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "4493213bd9a44d4b6b1458cd7bf9f74238c2e7ed15742e166908cb13a18469ac"
+    },
+    {
+      "name": "org.inkweft.core.InkModelsTest",
+      "tests": 26,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "d854481febdc30b4d35cd8fa34c79cc63256e502fda4d354fadd689c125d761f"
+    },
+    {
+      "name": "org.inkweft.core.KnowledgeTest",
+      "tests": 16,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "7fd7ed6357f49d72bac71e73493e17066f153417e5f9be527d771c6a9f2c09bd"
+    },
+    {
+      "name": "org.inkweft.core.KnowledgeTextLinksTest",
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "2f494b6dd4c709ba8bd4e1dfa7004f5789b82feee0638e4095c374db33587993"
+    },
+    {
+      "name": "org.inkweft.core.LearningWidgetsTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "dd4d6f74385a6c4ccd0485d25fc902b9a1dfb1172b88372cd3176ce021d813dc"
+    },
+    {
+      "name": "org.inkweft.core.LibraryArchiveTest",
+      "tests": 14,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "b86122a2675a5b39dde1ab440a3e6047a68bd7b753a5abe7155252ba4b8afc9d"
+    },
+    {
+      "name": "org.inkweft.core.MapAddendumTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "e0258a7aee9a805063ea46dd81507b5860123dfae224e98f0c1369c17aa673f5"
+    },
+    {
+      "name": "org.inkweft.core.MapPortalTest",
+      "tests": 10,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "b847824c81d8beac7bed6daae126f955eec7b854e72c0277a888bdd6795b1d68"
+    },
+    {
+      "name": "org.inkweft.core.MapTemplatesTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "7a1e7b2e4b0dcd44d0c53e4ce45540f857a6f61064a6d51ea1e7bc19a9069d76"
+    },
+    {
+      "name": "org.inkweft.core.NoteDraftTest",
+      "tests": 12,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "21bc8cd37e6335af7ae53dc350cf6013771736685e775b333245e6a1c5c24148"
+    },
+    {
+      "name": "org.inkweft.core.NotebookAppearanceTest",
+      "tests": 12,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "cb507bd43c512e9a0d319b006309bb5d6febb7ae310da28628d8cb9b49f8a2f9"
+    },
+    {
+      "name": "org.inkweft.core.PageAuthoringTest",
+      "tests": 16,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "c425cce8647db56595327f1fe4a2b24757e40b80fb6404f76f538052b40dcc50"
+    },
+    {
+      "name": "org.inkweft.core.PageEditingTest",
+      "tests": 14,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "3d0ef86801e597dbb85bb74bf495112896ce606994f77ef580aacd10b49bb5c3"
+    },
+    {
+      "name": "org.inkweft.core.PageInsertionTest",
+      "tests": 14,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "ceedb1986b0cc6258bd5438b4732ff36551114dd5e8789c1d03adc3c41eed2da"
+    },
+    {
+      "name": "org.inkweft.core.PageObjectTest",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "cce3c8536d1b1a29765e153d57b2b8e34117e1b91568080c4e9136de788b5aa2"
+    },
+    {
+      "name": "org.inkweft.core.PaperTemplatesTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "e6072a4aded27ebf7f1c5f2cd6c69580b3fd2033f33ffff13298df9b6e7d0a5a"
+    },
+    {
+      "name": "org.inkweft.core.PenKindsTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "7659a670de404fadf3f80a206ceba15bc37ec84295821bbab16b765c9899e542"
+    },
+    {
+      "name": "org.inkweft.core.ReadingHandwritingTest",
+      "tests": 10,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "7e6e4c60549dee9bc7323c737a133292049a50b25c3ce7391412de3cf6d0e2ba"
+    },
+    {
+      "name": "org.inkweft.core.RecallStudyTest",
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "1366eca8bfe529bb5ba5c09b56517561b98c1a11a6c023edc48433b79952f008"
+    },
+    {
+      "name": "org.inkweft.core.SearchRequestVersionTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "d5b320d03f987c7a66c91be7241a96423f3c176894007a6caf8e90b67b044b46"
+    },
+    {
+      "name": "org.inkweft.core.SelectionLearningTest",
+      "tests": 20,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "c68ed2149e252cfd5f381d4548edda9950edea3fac294d22122df2babeec4698"
+    },
+    {
+      "name": "org.inkweft.core.StudyOrganizationTest",
+      "tests": 10,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "ad49b96b19f574123394bf23683d95dfed0866207c20981281cbdbc341d77c63"
+    },
+    {
+      "name": "org.inkweft.core.StudyOutlineTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "5c47c08675ea36e6be27d8f308463ed8d40ef4b1847eaa946894191e220a21ea"
+    },
+    {
+      "name": "org.inkweft.core.StudyTextTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "af1307049eb10c1fe881c195865780355928f2f540842965af17f278a92c5d9c"
+    },
+    {
+      "name": "org.inkweft.core.SuperMemo2PortTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "307d08f05e9564a506fd30c329a6056ac54d9eebfbb2798308bbaf5af744ca3f"
+    },
+    {
+      "name": "org.inkweft.core.TextGlyphTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "b8d8089d672d91d547c43bc1a7090adbaada8fc8995596c6c6ed3886b89bb3b9"
+    }
+  ],
+  "kotlin": "PASS",
+  "elapsed_seconds": 323,
+  "gradle_tasks_executed": 12,
+  "gradle_tasks_up_to_date": 41,
+  "log_sha256": "a9d2a61294654e61d6438303e9bccb54e51fd85550d47a7ea0773ed0b1b75e11",
+  "android_execution": "NOT_RUN",
+  "pixels": "NOT_RUN",
+  "hardware_human": "NOT_RUN",
+  "not_included": "Later strict export and B5 UI fixes; no inherited pass"
+}

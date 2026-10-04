@@ -29,6 +29,7 @@ class InkCanvasView(context:Context):View(context){
     var onCheckpointCancel:(String)->Unit={}
     private var checkpointAt=0L
     var onStroke:(InkStroke)->Unit={}
+    var onWriteStart:()->Boolean={true}
     var finishStroke:(InkStroke)->InkStroke={it}
     var onViewportGesture:(Boolean)->Unit={}
     internal val documentContentReady get()=documentId==null||documentKnownAbsent||(documentTile!=null&&!documentError)
@@ -79,6 +80,27 @@ class InkCanvasView(context:Context):View(context){
     private var restored=false
     private var viewport=CanvasViewport()
     private var objects=emptyList<PageObject>()
+    private var authoring:PageAuthoring?=null
+    internal fun matchesAuthoring(value:PageAuthoring)=authoring===value||(authoring==null&&value.legacy)
+    fun showAuthoring(value:PageAuthoring?){
+        if(authoring===value)return
+        val old=authoring
+        val moved=old?.layers?.memberships.orEmpty().any{before->value?.layers?.layer(before.content)?.id!=before.layerId}
+        val incompatible=old?.legacy!=value?.legacy||old?.layers?.layers!=value?.layers?.layers||moved||old?.layers?.deleted!=value?.layers?.deleted
+        authoring=value
+        val annotationIds=value?.annotations.orEmpty().map{it.stroke.id}.toSet();transient.keys.removeAll(annotationIds);transientPencils.keys.removeAll(annotationIds)
+        if(incompatible){pageRaster.clear();asyncRaster.clear();layerRasters.values.forEach{it.clear()};layerRasters.clear()}
+        imageRendering.retain(objects.filter(::visibleObject));drawnViewport=null;invalidate()
+    }
+    private var fixedRegion:CanvasBounds?=null
+    fun fixedRegion(bounds:CanvasBounds?){fixedRegion=bounds;if(bounds!=null&&width>0&&height>0){
+        viewport=CanvasViewport.safe((bounds.left+bounds.right)/2,(bounds.top+bounds.bottom)/2,min(width/density/max(1.0,bounds.right-bounds.left),height/density/max(1.0,bounds.bottom-bounds.top)))
+        transform();invalidate()
+    }}
+    private val annotationPainter=AnnotationPainter()
+    private fun visibleObject(o:PageObject)=authoring?.layers?.visible(LayerContent(LayerContentKind.OBJECT,o.id))?:true
+    private fun visibleStroke(s:InkStroke)=authoring?.layers?.visible(LayerContent(LayerContentKind.INK,s.id))?:true
+    private fun editableStroke(s:InkStroke)=authoring?.layers?.editable(LayerContent(LayerContentKind.INK,s.id))?:true
     private var suppressedStrokeIds=emptySet<String>()
     private val documentPaint=Paint(Paint.FILTER_BITMAP_FLAG)
     private val documentRect=RectF()
@@ -186,7 +208,9 @@ class InkCanvasView(context:Context):View(context){
     private val renderer=InkBrushes.renderer()
     private val pageRaster=InkPageRaster()
     private val asyncRaster=AsyncInkRaster({postInvalidateOnAnimation()},{onNotice("笔迹显示未完成，请退出后重开；原笔迹已保留。")})
-    internal val rasterPending get()=asyncRaster.pending
+    private val layerRasters=mutableMapOf<String,AsyncInkRaster>()
+    private var layerBudgetBlocked=false
+    internal val rasterPending get()=layerBudgetBlocked||asyncRaster.pending||layerRasters.values.any{it.pending}
     private val live=InProgressStroke()
     private val incremental=MutableStrokeInputBatch()
     private val empty=MutableStrokeInputBatch()
@@ -240,16 +264,22 @@ class InkCanvasView(context:Context):View(context){
         check(world==board){"A canvas identity cannot change coordinate space"};transform();invalidate()
     }
     fun snapshotViewport()=viewport
+    fun restoreViewport(value:CanvasViewport):Boolean {
+        if(!configured||embeddedPage||width<=0||height<=0||inputId!=-1||movingViewport)return false
+        viewport=value;restored=true;transform();invalidate()
+        return viewport==value
+    }
     fun showStrokes(strokes:List<InkStroke>){
         if(content===strokes)return
         val removed=content.map{it.id}.toSet()-strokes.map{it.id}.toSet();transient.keys.removeAll(removed);transientPencils.keys.removeAll(removed)
+        val changed=strokes.filter{s->content.any{it.id==s.id&&it!==s&&it.samples!=s.samples}}.map{it.id}.toSet();meshes.keys.removeAll(changed);bounds.keys.removeAll(changed)
         content=strokes;drawnViewport=null;restoreAppearance();val ids=strokes.map{it.id}.toSet();meshes.keys.retainAll(ids);bounds.keys.retainAll(ids)
         for(s in strokes){if(!bounds.containsKey(s.id))bounds[s.id]=s.bounds();transient[s.id]?.let{meshes[s.id]=it}}
         if(preview&&width>0&&height>0)if(world)fitContent(false)else fitPage(false)
         invalidate()
     }
     private fun toInk(s:InkStroke):Stroke=InkBrushes.stroke(s)
-    private fun transform(){if(!world&&!preview&&!embeddedPage)viewport=viewport.constrainedToPaper(width/density,height/density);val f=(viewport.zoom*density).toFloat();matrix.setScale(f,f);matrix.postTranslate((width/2-viewport.centerX*f).toFloat(),(height/2-viewport.centerY*f).toFloat());onScale(viewport.zoom);requestDocument()}
+    private fun transform(){if(!world&&!preview&&!embeddedPage&&fixedRegion==null)viewport=viewport.constrainedToPaper(width/density,height/density);val f=(viewport.zoom*density).toFloat();matrix.setScale(f,f);matrix.postTranslate((width/2-viewport.centerX*f).toFloat(),(height/2-viewport.centerY*f).toFloat());onScale(viewport.zoom);requestDocument()}
     private fun initialFit(){viewport=if(world)CanvasViewport(0.0,0.0,.8)else CanvasViewport.pageWidth(width/density,height/density);if(preview||embeddedPage)fitPage(false);transform()}
     fun fitPage(publish:Boolean=true){cancelGesture();viewport=if(embeddedPage)CanvasViewport(500.0,707.0,(width/density/1000.0).coerceIn(.02,8.0))else CanvasViewport.fit(CanvasBounds(0.0,0.0,1000.0,1414.0),width/density,height/density);transform();invalidate();if(publish)onViewport(viewport)}
     fun fitWidth(){cancelGesture();viewport=CanvasViewport.pageWidth(width/density,height/density);transform();invalidate();onViewport(viewport)}
@@ -257,14 +287,14 @@ class InkCanvasView(context:Context):View(context){
     internal var previewPadding=40.0
     fun fitContent(publish:Boolean=true){cancelGesture();val allBounds=bounds.values+objects.map{it.bounds()};if(allBounds.isEmpty()){if(world)viewport=CanvasViewport(0.0,0.0,.8)else fitPage(false)}else viewport=CanvasViewport.fit(allBounds.reduce{a,b->a.union(b)}.padded(if(preview)previewPadding else 40.0),width/density,height/density);transform();invalidate();if(publish)onViewport(viewport)}
     fun zoomBy(ratio:Double){cancelGesture();viewport=viewport.zoomAt(ratio,width/2.0,height/2.0,width.toDouble(),height.toDouble(),density);transform();invalidate();onViewport(viewport)}
-    override fun onSizeChanged(w:Int,h:Int,oldw:Int,oldh:Int){cancelGesture();if(configured&&oldw==0&&!restored)initialFit();if(embeddedPage&&configured)fitPage(false);if(preview)if(world)fitContent(false)else fitPage(false);transform()}
+    override fun onSizeChanged(w:Int,h:Int,oldw:Int,oldh:Int){cancelGesture();if(configured&&oldw==0&&!restored)initialFit();if(embeddedPage&&configured)fitPage(false);if(preview)if(world)fitContent(false)else fitPage(false);transform();fixedRegion?.let{fixedRegion(it)}}
     override fun draw(c:Canvas){val save=c.save();try{c.clipRect(0,0,width,height);super.draw(c)}finally{c.restoreToCount(save)}}
     internal fun cutPath(cut:InkCut):Path=maskPaths[cut]?:VisibleInkGeometry.cutPath(cut).also{maskPaths[cut]=it}
     private fun sweptPath(points:List<EraserPoint>,radius:Float)=VisibleInkGeometry.sweptPath(points,radius)
     var onObjectTap:(String)->Unit={}
     internal fun imageAt(x:Float,y:Float):String? {
         val p=viewport.screenToWorld(x.toDouble(),y.toDouble(),width.toDouble(),height.toDouble(),density)
-        val candidates=objects.asReversed().filter{!it.hidden&&it.kind in listOf(PageObjectKind.IMAGE,PageObjectKind.MAP,PageObjectKind.SHAPE,PageObjectKind.TAPE)}
+        val candidates=objects.asReversed().filter{visibleObject(it)&&!it.hidden&&it.kind in listOf(PageObjectKind.IMAGE,PageObjectKind.MAP,PageObjectKind.SHAPE,PageObjectKind.TAPE)}
         return (candidates.filter{it.kind==PageObjectKind.TAPE}+candidates.filter{it.kind!=PageObjectKind.TAPE}).firstOrNull{ObjectGeometry.hit(it,p.x.toFloat(),p.y.toFloat())}?.id
     }
     private var tapImage:String?=null
@@ -272,22 +302,68 @@ class InkCanvasView(context:Context):View(context){
     override fun onDraw(canvas:Canvas){
         super.onDraw(canvas);if(!configured)return
         canvas.drawColor(if(world||preview||embeddedPage)Color.WHITE else InkTheme.Workspace.toArgb())
-        val visible=viewport.visible(width.toDouble(),height.toDouble(),density);val save=canvas.save();canvas.concat(matrix)
+        val visible=viewport.visible(width.toDouble(),height.toDouble(),density);val screenTransform=Matrix(canvas.matrix);val save=canvas.save();canvas.concat(matrix)
         if(!world){paint.style=Paint.Style.FILL;paint.color=Color.WHITE;canvas.drawRect(0f,0f,1000f,1414f,paint);if(!embeddedPage)canvas.clipRect(0f,0f,1000f,1414f)}
         if(documentId==null||documentKnownAbsent)drawGuide(canvas,visible)
         documentTile?.let{tile->val b=tile.bounds;documentRect.set(b.left.toFloat(),b.top.toFloat(),b.right.toFloat(),b.bottom.toFloat());canvas.drawBitmap(tile.bitmap,null,documentRect,documentPaint)}
         if(documentId!=null&&!documentKnownAbsent&&(documentTile==null||documentError)){paint.color=Color.DKGRAY;paint.textSize=24f;canvas.drawText(if(documentError)"文档载入失败"else"正在载入文档…",80f,100f,paint)}
         val beautyMask=if(gestureErase&&!gestureOnlyTape&&!gestureOnlyHighlighter&&raw.isNotEmpty())sweptPath(raw.map{EraserPoint(it.x,it.y)},gestureRadius)else null
-        val drawn=drawnObjects()
+        val drawn=drawnObjects().filter(::visibleObject)
         val area=visiblePixels()
         val objectVisible=if(area.isEmpty)CanvasBounds(0.0,0.0,0.0,0.0)else rasterViewport(area).visible(area.width().toDouble(),area.height().toDouble(),density)
         if(isAttachedToWindow&&!capturingExcerpt)requestImages(drawn,objectVisible)
+        val layers=authoring?.takeUnless{it.legacy}
+        if(layers!=null){
+            val visibleLayers=layers.layers.layers.filter{it.visible}
+            val memberships=layers.layers.memberships.associate{it.content to it.layerId}
+            val perLayer=content.filter{it.id !in suppressedStrokeIds&&visibleStroke(it)}.groupBy{memberships[LayerContent(LayerContentKind.INK,it.id)]}
+            val needed=visibleLayers.filter{perLayer[it.id].orEmpty().isNotEmpty()}.map{it.id}.toSet()
+            layerRasters.keys.filter{it !in needed}.forEach{layerRasters.remove(it)?.clear()}
+            // One shared viewport cache per nonempty visible layer; retain native resolution, never downsample a hidden answer into another layer.
+            val blocked=isAttachedToWindow&&area.width().toLong()*area.height()*needed.size>20_000_000L
+            if(blocked){
+                if(!layerBudgetBlocked)post{onNotice("当前可见图层合计超过 2000 万视窗像素显示预算；请隐藏部分图层或缩小窗口。原内容完整保留，分享仍按选定范围处理。")}
+                layerBudgetBlocked=true;canvas.restoreToCount(save);paint.color=Color.DKGRAY;paint.textSize=(16*density).toFloat();canvas.drawText("图层显示未完成 · 超出视窗预算",(16*density).toFloat(),(40*density).toFloat(),paint);return
+            };layerBudgetBlocked=false
+            val eraseMask=if(inputId!=-1&&gestureErase&&!gestureOnlyTape&&!gestureWhole&&raw.isNotEmpty())sweptPath(raw.map{EraserPoint(it.x,it.y)},gestureRadius)else null
+            for(layer in visibleLayers){
+                val layerObjects=drawn.filter{memberships[LayerContent(LayerContentKind.OBJECT,it.id)]==layer.id}
+                objectPainter.draw(canvas,layerObjects,false,objectVisible,if(layer.locked)null else beautyMask,gestureWhole)
+                val layerInk=perLayer[layer.id].orEmpty();val dynamic=selectedIds+if(eraseMask!=null&&gestureOnlyHighlighter&&!layer.locked)eraseTargets else emptySet()
+                val stable=layerInk.filter{it.id !in dynamic}
+                if(isAttachedToWindow&&stable.isNotEmpty()&&!area.isEmpty){
+                    val cached=layerRasters.getOrPut(layer.id){AsyncInkRaster({postInvalidateOnAnimation()},{onNotice("图层笔迹显示未完成，原笔迹保留")})}
+                    val saved=canvas.save();canvas.setMatrix(screenTransform)
+                    if(eraseMask!=null&&!layer.locked&&!gestureOnlyHighlighter){val screenMask=Path(eraseMask);screenMask.transform(matrix);canvas.clipOutPath(screenMask)}
+                    canvas.translate(area.left.toFloat(),area.top.toFloat());cached.draw(canvas,area.width(),area.height(),rasterViewport(area),density,world,embeddedPage,stable);canvas.restoreToCount(saved)
+                }
+                layerInk.filter{!isAttachedToWindow||it.id in dynamic}.forEach{s->
+                    val saved=canvas.save();if(s.id in selectedIds)canvas.translate(selectedDx,selectedDy)
+                    if(eraseMask!=null&&!layer.locked&&(!gestureOnlyHighlighter||s.pen==InkPen.HIGHLIGHTER))canvas.clipOutPath(eraseMask)
+                    drawSavedStroke(canvas,s);canvas.restoreToCount(saved)
+                }
+                annotationPainter.draw(canvas,layers.visibleAnnotations().filter{memberships[LayerContent(LayerContentKind.ANNOTATION,it.stroke.id)]==layer.id},drawn,matrix,regions=layers.regions)
+                transient.keys.removeAll{id->layerRasters.values.any{it.contains(id)}};transientPencils.keys.removeAll{id->layerRasters.values.any{it.contains(id)}}
+                if(layer.id==layers.layers.currentId){
+                    transient.values.forEach{renderer.draw(canvas,it,matrix)};transientPencils.values.forEach{PencilRenderer.draw(canvas,it)}
+                    if(inputId!=-1&&!gestureErase&&raw.isNotEmpty()){if(gesturePen==InkPen.PENCIL)PencilRenderer.draw(canvas,liveStroke(raw))else{live.updateShape();renderer.draw(canvas,live,matrix)}}
+                    seamDraft?.let{if(it.pen==InkPen.PENCIL)PencilRenderer.draw(canvas,it)else renderer.draw(canvas,InkBrushes.stroke(it),matrix)}
+                }
+                objectPainter.draw(canvas,layerObjects,true,objectVisible)
+            }
+            annotationPainter.regions(canvas,layers.regions,drawn)
+            canvas.restoreToCount(save)
+            if(!capturingExcerpt&&sourceContentReady&&!imageFramesPending&&!rasterPending){drawnDocumentGeneration=documentGeneration;drawnViewport=viewport;drawnWidth=width;drawnHeight=height;drawnDensity=density}
+            if(rasterPending){paint.color=Color.GRAY;paint.textSize=(12*density).toFloat();canvas.drawText("正在呈现图层笔迹…",(16*density).toFloat(),(height-18*density).toFloat(),paint)}
+            if((eraseMode||gestureErase)&&cursor!=null&&!preview){val p=checkNotNull(cursor);paint.style=Paint.Style.STROKE;paint.strokeWidth=density.toFloat();paint.color=Color.DKGRAY;canvas.drawCircle(p.x.toFloat(),p.y.toFloat(),(eraserDiameterDp*density/2).toFloat(),paint);paint.style=Paint.Style.FILL}
+            return
+        }
         objectPainter.draw(canvas,drawn,false,objectVisible,beautyMask,gestureWhole)
         val activeMask=if(inputId!=-1&&gestureErase&&!gestureOnlyTape&&!gestureWhole&&raw.isNotEmpty())sweptPath(raw.map{EraserPoint(it.x,it.y)},gestureRadius)else null
         val separateErasing=activeMask!=null&&gestureOnlyHighlighter
         val movingOrErasing=selectedIds + if(separateErasing)eraseTargets else emptySet()
         // Keep content identity stable across zoom; the worker culls offscreen strokes.
-        val stable=content.filter{it.id !in suppressedStrokeIds && it.id !in movingOrErasing}
+        val stable=content.filter{visibleStroke(it)&&it.id !in suppressedStrokeIds && it.id !in movingOrErasing}
         // The raster is in viewport pixels; live input and object layers stay independent.
         canvas.restoreToCount(save)
         val staticSave=canvas.save()
@@ -367,7 +443,7 @@ class InkCanvasView(context:Context):View(context){
     override fun onHoverEvent(e:MotionEvent):Boolean {if(preview||!eraseMode)return super.onHoverEvent(e);cursor=if(e.actionMasked==MotionEvent.ACTION_HOVER_EXIT)null else CanvasPoint(e.x.toDouble(),e.y.toDouble());invalidate();return true}
     override fun onTouchEvent(e:MotionEvent):Boolean{
         BackgroundBudget.lastInput=android.os.SystemClock.elapsedRealtime()
-        if(preview)return false;if(!configured)return true
+        if(preview||fixedRegion!=null&&!allowInput)return false;if(!configured)return true
         if(e.actionMasked==MotionEvent.ACTION_DOWN||e.actionMasked==MotionEvent.ACTION_POINTER_DOWN)sourceInteractionEpoch++
         if(e.actionMasked==MotionEvent.ACTION_CANCEL||(e.flags and MotionEvent.FLAG_CANCELED)!=0){tapImage=null;cancelGesture();panPointer=-1;multiPanIds=emptySet();finishViewport();return true}
         if(embeddedPage&&!fingerWrites&&inputId==-1&&e.actionMasked!=MotionEvent.ACTION_POINTER_DOWN&&e.getToolType(0)==MotionEvent.TOOL_TYPE_FINGER)return false
@@ -386,6 +462,7 @@ class InkCanvasView(context:Context):View(context){
             if(inputId!=-1)cancelGesture();val type=e.getToolType(downIndex);inputKind=when(type){MotionEvent.TOOL_TYPE_STYLUS,MotionEvent.TOOL_TYPE_ERASER->InkTool.STYLUS;MotionEvent.TOOL_TYPE_MOUSE->InkTool.MOUSE;else->InkTool.TOUCH}
             if(inputKind==InkTool.TOUCH&&!fingerWrites){tapImage=if(allowInput&&!eraseMode)imageAt(e.x,e.y)else null;tapX=e.x;tapY=e.y;panPointer=e.getPointerId(0);panLastX=e.x;panLastY=e.y;return true};if(!allowInput||(documentId!=null&&!documentKnownAbsent&&(documentTile==null||documentError)))return true
             val p=viewport.screenToWorld(e.getX(downIndex).toDouble(),e.getY(downIndex).toDouble(),width.toDouble(),height.toDouble(),density)
+            if(!onWriteStart()){onNotice("请先选择可写图层，再落笔");return true}
             if(!world&&(p.x !in 0.0..1000.0||p.y !in 0.0..1414.0))return true
             if(abs(p.x)>BoardLimits.WORLD||abs(p.y)>BoardLimits.WORLD){onNotice("已到达画布数值安全边界，请返回内容区域。");return true}
             tapImage=if(!eraseMode)imageAt(e.getX(downIndex),e.getY(downIndex))else null
@@ -393,7 +470,7 @@ class InkCanvasView(context:Context):View(context){
             gestureId=UUID.randomUUID().toString();gestureAppearance=StrokeAppearance(brushRecipe,UUID.randomUUID().leastSignificantBits,p.x.toFloat(),p.y.toFloat())
             gesturePen=pen;gestureColor=penColor;gestureWidth=penWidth;gestureErase=eraseMode||type==MotionEvent.TOOL_TYPE_ERASER
             gestureOnlyTape=eraserTapeOnly;gestureWhole=eraserWhole||gestureOnlyTape;gestureOnlyHighlighter=eraserHighlighterOnly&&!gestureOnlyTape;gestureRadius=(eraserDiameterDp/(2*viewport.zoom)).toFloat()
-            eraseTargets=content.filter{it.id !in suppressedStrokeIds&&(!gestureOnlyHighlighter||it.pen==InkPen.HIGHLIGHTER)}.map{it.id}.toSet();cursor=CanvasPoint(e.x.toDouble(),e.y.toDouble())
+            eraseTargets=content.filter{editableStroke(it)&&it.id !in suppressedStrokeIds&&(!gestureOnlyHighlighter||it.pen==InkPen.HIGHLIGHTER)}.map{it.id}.toSet();cursor=CanvasPoint(e.x.toDouble(),e.y.toDouble())
             raw=ArrayList();checkpointAt=0;val device=e.device;val pressure=device?.getMotionRange(MotionEvent.AXIS_PRESSURE,e.source)
             hasPressure=inputKind==InkTool.STYLUS&&pressure!=null&&pressure.max>pressure.min;pressureMin=pressure?.min?:0f;pressureSpan=(pressure?.range?:1f).coerceAtLeast(.001f)
             hasTilt=inputKind==InkTool.STYLUS&&device?.getMotionRange(MotionEvent.AXIS_TILT,e.source)!=null;hasOrientation=inputKind==InkTool.STYLUS&&device?.getMotionRange(MotionEvent.AXIS_ORIENTATION,e.source)!=null
@@ -460,6 +537,6 @@ class InkCanvasView(context:Context):View(context){
     }
     private fun finishViewport(){if(movingViewport){movingViewport=false;onViewport(viewport)}}
     fun cancelGesture(discardCheckpoint:Boolean=true){if(discardCheckpoint&&inputId!=-1&&!gestureErase)onCheckpointCancel(gestureId);tapImage=null;onLiveSamples(emptyList());val active=inputId!=-1;inputId=-1;BackgroundBudget.input(this,false);raw.clear();gestureErase=false;cursor=null;parent?.requestDisallowInterceptTouchEvent(false);if(active)onGesture(false);invalidate()}
-    override fun onDetachedFromWindow(){viewTreeObserver.removeOnPreDrawListener(visibleAreaListener);observedVisiblePixels.setEmpty();mapSceneJob?.cancel();mapSceneJob=null;PencilRenderer.forget(content.filter{it.pen==InkPen.PENCIL}.map{it.id}.toSet()+gestureId);pageRaster.clear();asyncRaster.clear();documentJob?.cancel();releaseDocumentTile();documentRequest=null;imageRendering.clear();objectPainter.clear();cancelGesture(false);if(configured&&!preview)onViewport(viewport);super.onDetachedFromWindow()}
+    override fun onDetachedFromWindow(){viewTreeObserver.removeOnPreDrawListener(visibleAreaListener);observedVisiblePixels.setEmpty();mapSceneJob?.cancel();mapSceneJob=null;PencilRenderer.forget(content.filter{it.pen==InkPen.PENCIL}.map{it.id}.toSet()+gestureId);pageRaster.clear();asyncRaster.clear();layerRasters.values.forEach{it.clear()};layerRasters.clear();documentJob?.cancel();releaseDocumentTile();documentRequest=null;imageRendering.clear();objectPainter.clear();cancelGesture(false);if(configured&&!preview)onViewport(viewport);super.onDetachedFromWindow()}
     override fun performClick():Boolean{super.performClick();return true}
 }

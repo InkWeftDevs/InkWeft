@@ -49,7 +49,7 @@ class LibraryContentRepository(private val db:NoteDatabase,
             pages.forEachIndexed { index,page ->
                 val state=InkRepository(db).read(page.id)
                 val visible=InkSession(state).visibleDraft()
-                val copy=InkPageFile(title,"",visible,page.world,PaperStyle.entries[page.paper],PageObjectRepository(db).read(page.id).objects,DocumentRepository(db).read(page.id,documents),ImageSourceRepository(db).forPage(page.id,PageObjectRepository(db).read(page.id).objects))
+                val copy=InkPageFile(title,"",visible,page.world,PaperStyle.entries[page.paper],PageObjectRepository(db).read(page.id).objects,DocumentRepository(db).read(page.id,documents),ImageSourceRepository(db).forPage(page.id,PageObjectRepository(db).read(page.id).objects),PageAuthoringRepository(db).readPage(page.id).state.takeUnless{it.legacy})
                 encodedBytes+=copy.encode(false).size
                 require(encodedBytes<NotebookFile.MAX_BYTES-500_000){"COPY_SIZE_LIMIT"}
                 val pageId=if(index==0)target.id else UUID.randomUUID().toString()
@@ -105,7 +105,7 @@ class LibraryContentRepository(private val db:NoteDatabase,
         if(metadata.world){
             val p=rows.single()
             val file=InkPageFile(note.title,note.text,InkSession(InkRepository(db).read(p.id)).visibleDraft(),
-                true,PaperStyle.entries[p.paper],PageObjectRepository(db).read(p.id).objects,imageSources=ImageSourceRepository(db).forPage(p.id,PageObjectRepository(db).read(p.id).objects))
+                true,PaperStyle.entries[p.paper],PageObjectRepository(db).read(p.id).objects,imageSources=ImageSourceRepository(db).forPage(p.id,PageObjectRepository(db).read(p.id).objects),authoring=PageAuthoringRepository(db).readPage(p.id).state.takeUnless{it.legacy})
             ContentExport(note.title,"iwpage",file.encode())
         }else ContentExport(note.title,"iwbook",NotebookPages(db).exportBook(notebookId).encode())
     }
@@ -135,6 +135,7 @@ class LibraryContentRepository(private val db:NoteDatabase,
             val stroke=InkStroke(checkNotNull(strokeIds[old.id]),old.pen,old.color,old.width,old.tool,old.samples,old.world,masks,old.appearance)
             db.ink().insertStroke(InkStrokeRow(stroke.id,pageId,InkStrokeCodec.encode(stroke),stroke.samples.size,true,index.toLong()+1))
         }
-        PageObjectRepository(db).import(pageId,page.objects,strokeIds,page.imageSources)
+        val objects=PageObjectRepository(db).import(pageId,page.objects,strokeIds,page.imageSources)
+        page.authoring?.let{state->val owner=checkNotNull(db.pages().get(pageId));val copied=state.copied(pageId,strokeIds,objects);PageAuthoringRepository(db).validate(AuthoringScope.page(owner.notebookId,pageId),copied);db.authoring().put(PageAuthoringRow(AuthoringScopeKind.PAGE.name,pageId,owner.notebookId,0,PageAuthoringCodec.encode(copied)))}
     }
 }

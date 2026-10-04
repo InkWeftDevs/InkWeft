@@ -114,7 +114,16 @@ class ViewportRasterTest {
                 view=InkCanvasView(activity).apply{embeddedPage=true}
                 window=FrameLayout(activity).apply{clipChildren=true;addView(view,FrameLayout.LayoutParams(3000,4242))}
                 activity.setContentView(FrameLayout(activity).apply{addView(window,FrameLayout.LayoutParams(300,300))})
-                window.layout(0,0,300,300);view.layout(0,0,3000,4242)
+            }
+            // setContentView only attaches the hierarchy; its root has no visible bounds until layout.
+            // Wait for the actual Android traversal rather than inventing child bounds under a 0x0 root.
+            val layoutDeadline=System.nanoTime()+5_000_000_000L
+            while(System.nanoTime()<layoutDeadline){
+                var ready=false;rule.scenario.onActivity{ready=view.isAttachedToWindow&&window.width==300&&view.width==3000&&view.height==4242}
+                if(ready)break;Thread.sleep(20)
+            }
+            rule.scenario.onActivity{
+                assertEquals(300,window.width);assertEquals(3000,view.width);assertEquals(4242,view.height)
                 view.configure(false,PaperStyle.BLANK,null);view.showStrokes(listOf(stroke(),stroke(700f,900f)))
                 pageViewport=view.snapshotViewport()
                 window.scrollTo(1350,1971);drawWindow()

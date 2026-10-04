@@ -23,9 +23,9 @@ data class CardTransformOperationRow(@PrimaryKey val operationId:String,val note
     @Update suspend fun update(row:CardTransformOperationRow):Int
 }
 data class CardTransformImpact(val card:CardTransformCard,val occurrences:List<String>,val references:List<String>,val questions:List<String>,val sourceLabels:List<String>)
-data class CardTransformPreview(val notebookId:String,val fingerprint:String,val cards:List<CardTransformCard>,val impact:List<CardTransformImpact>) {
+data class CardTransformPreview(val notebookId:String,val fingerprint:String,val cards:List<CardTransformCard>,val impact:List<CardTransformImpact>,val summaryPlacement:CardTransformPlacement) {
     fun plan(kind:CardTransformKind,targets:List<CardTransformTarget>,operationId:String=UUID.randomUUID().toString())=
-        CardTransformPlan(operationId,notebookId,kind,fingerprint,cards,targets)
+        CardTransformPlan(operationId,notebookId,kind,fingerprint,cards,targets,summaryPlacement.takeIf{kind==CardTransformKind.SUMMARY})
 }
 data class CardTransformResolution(val operationId:String,val kind:CardTransformKind,val targets:List<StudyCardRow>,val undone:Boolean)
 sealed interface CardTransformOutcome {
@@ -44,7 +44,7 @@ class CardTransformRepository(private val db:NoteDatabase,private val fault:(Car
         }
     }
     /** Read-only: opening or cancelling a preview does not materialize source history or write a receipt. */
-    suspend fun preview(book:String,cardIds:List<String>):CardTransformPreview=db.withTransaction {
+    suspend fun preview(book:String,cardIds:List<String>,mapId:String?=null):CardTransformPreview=db.withTransaction {
         require(cardIds.size in 1..16&&cardIds.distinct().size==cardIds.size){"TRANSFORM_SELECTION"}
         require(db.notes().note(book)!=null&&db.workspace().get(book)?.trashedAt==null){"TRANSFORM_BOOK_UNAVAILABLE"}
         val all=db.knowledge().all();val main=db.study().nodes(book)
@@ -56,6 +56,14 @@ class CardTransformRepository(private val db:NoteDatabase,private val fault:(Car
             val sources=StudySourceVersions(db).read(id,null,sourceRows)
             CardTransformCard(id,row.revision,row.title,row.body,presentation,sources.refs,sources.complete)
         }
+        val graph=StudyRepository(db).readGraph(book,mapId)
+        require(mapId==null||graph.definition?.removed==false){"MAP_UNAVAILABLE"}
+        val selected=cardIds.mapNotNull{id->graph.nodes.filter{!it.removed&&it.cardId==id}.singleOrNull()}
+        val parent=selected.map{it.parentId}.distinct().singleOrNull().takeIf{selected.size==cardIds.size}
+        val siblings=graph.nodes.filter{!it.removed&&it.parentId==parent}
+        val placement=CardTransformPlacement(UUID.randomUUID().toString(),mapId,parent,
+            (selected.map{it.x}.average().takeIf{it.isFinite()}?:40.0).coerceIn(-40000.0,40000.0),
+            ((siblings.maxOfOrNull{it.y}?:-48.0)+128.0).coerceIn(-40000.0,40000.0),graph.graphFingerprint)
         CardTransformPreview(book,fingerprint(book,cardIds),cards,cards.map{card->
             val related=all.filter{!it.removed&&mentions(it.data(),setOf(card.id))}
             CardTransformImpact(card,
@@ -65,7 +73,7 @@ class CardTransformRepository(private val db:NoteDatabase,private val fault:(Car
                 related.mapNotNull{r->(r.data() as? KnowledgeData.Question)?.let{"${it.prompt} · ${it.state.label}"}},
                 StudySourceVersions(db).read(card.id,card.revision,sourceRows).sources.map{source->
                     val page=db.pages().get(source.pageId);"第 ${(page?.position?:-1)+1} 页 · 来源 ${source.sourceId} · 版本 ${source.revision}"})
-        })
+        },placement)
     }
     suspend fun lookup(plan:CardTransformPlan):CardTransformOutcome.Success?=db.withTransaction {
         db.cardTransforms().get(plan.operationId)?.let{row->
@@ -81,8 +89,10 @@ class CardTransformRepository(private val db:NoteDatabase,private val fault:(Car
         val plan=CardTransformCodec.decode(CardTransformCodec.encode(request))
         val result=db.withTransaction {
             lookup(plan)?.let{return@withTransaction it}
+            require(plan.kind!=CardTransformKind.SUMMARY||plan.summaryPlacement!=null){"SUMMARY_PLACEMENT_REQUIRED"}
             require(db.cardTransforms().undo(plan.operationId)==null){"TRANSFORM_OPERATION_MISMATCH"}
-            val fresh=preview(plan.notebookId,plan.inputs.map{it.id})
+            val fresh=preview(plan.notebookId,plan.inputs.map{it.id},plan.summaryPlacement?.mapId)
+            require(plan.kind!=CardTransformKind.SUMMARY||plan.summaryPlacement!=null){"SUMMARY_PLACEMENT_REQUIRED"}
             require(fresh.fingerprint==plan.expectedFingerprint&&fresh.cards==plan.inputs){"TRANSFORM_VERSION_CHANGED"}
             val study=db.study();val knowledge=db.knowledge();val sources=StudySourceVersions(db)
             require(study.cards(plan.notebookId).size+plan.targets.size<=StudyCapacity.MAX_CARDS_PER_NOTEBOOK){"STUDY_CARD_BUDGET"}
@@ -102,7 +112,12 @@ class CardTransformRepository(private val db:NoteDatabase,private val fault:(Car
                 writeKnowledge(KnowledgeRow(summaryId(plan.operationId,input.id),plan.notebookId,1,
                     KnowledgeCodec.encode(KnowledgeData.Link(TargetRef(TargetKind.CARD,input.id),TargetRef(TargetKind.CARD,plan.targets.single().id),RelationKind.SUMMARY))))
             }
-            val after=fingerprint(plan.notebookId,plan.inputs.map{it.id}+plan.targets.map{it.id},plan.operationId)
+            plan.summaryPlacement?.let{placement->
+                StudyRepository(db).submit(StudyCommand(placementOperation(plan.operationId),plan.notebookId,StudyAction.REUSE,
+                    cardId=plan.targets.single().id,nodeId=placement.nodeId,parentId=placement.parentId,x=placement.x,y=placement.y,
+                    expectedGraph=placement.expectedGraph,mapId=placement.mapId))
+            }
+            val after=fingerprint(plan.notebookId,plan.inputs.map{it.id}+plan.targets.map{it.id},plan.operationId,plan.summaryPlacement?.let{MapRef(plan.notebookId,it.mapId)})
             fault(CardTransformFault.BEFORE_RECEIPT)
             db.cardTransforms().insert(CardTransformOperationRow(plan.operationId,plan.notebookId,plan.digest(),CardTransformCodec.encode(plan),after))
             db.notes().touch(plan.notebookId,System.currentTimeMillis())
@@ -135,7 +150,14 @@ class CardTransformRepository(private val db:NoteDatabase,private val fault:(Car
             require(db.cardTransforms().get(undoOperationId)==null&&db.cardTransforms().undo(undoOperationId)==null){"TRANSFORM_OPERATION_MISMATCH"}
             require(expectedRevision==row.revision){"TRANSFORM_VERSION_CHANGED"}
             require(db.workspace().get(row.notebookId)?.trashedAt==null){"TRANSFORM_BOOK_UNAVAILABLE"}
-            require(fingerprint(row.notebookId,plan.inputs.map{it.id}+plan.targets.map{it.id},row.operationId)==row.afterFingerprint){"TRANSFORM_UNDO_DEPENDENCIES_CHANGED"}
+            require(fingerprint(row.notebookId,plan.inputs.map{it.id}+plan.targets.map{it.id},row.operationId,plan.summaryPlacement?.let{MapRef(row.notebookId,it.mapId)})==row.afterFingerprint){"TRANSFORM_UNDO_DEPENDENCIES_CHANGED"}
+            plan.summaryPlacement?.let{placement->
+                val graph=StudyRepository(db).readGraph(row.notebookId,placement.mapId)
+                val node=requireNotNull(graph.nodes.singleOrNull{it.id==placement.nodeId&&!it.removed}){"SUMMARY_NODE_UNAVAILABLE"}
+                require(node.cardId==plan.targets.single().id){"SUMMARY_NODE_CHANGED"}
+                StudyRepository(db).submit(StudyCommand(placementOperation(undoOperationId),row.notebookId,StudyAction.REMOVE_NODE,
+                    nodeId=node.id,expectedRevision=node.revision,expectedGraph=graph.graphFingerprint,mapId=placement.mapId))
+            }
             for(target in plan.targets){
                 val card=requireNotNull(db.study().card(target.id));val next=card.copy(revision=card.revision+1,trashedAt=System.currentTimeMillis())
                 check(db.study().updateCard(next)==1);db.study().revision(StudyCardRevisionRow(next.id,next.revision,next.title,next.body,next.trashedAt))
@@ -156,12 +178,13 @@ class CardTransformRepository(private val db:NoteDatabase,private val fault:(Car
         if(row.revision==1L)db.knowledge().insert(row)else check(db.knowledge().update(row)==1)
         db.knowledge().revision(KnowledgeRevisionRow(row.id,row.revision,row.notebookId,row.payload,row.removed))
     }
-    private suspend fun fingerprint(book:String,cardIds:List<String>,ignoreOperationId:String?=null):String {
+    private suspend fun fingerprint(book:String,cardIds:List<String>,ignoreOperationId:String?=null,graphRef:MapRef?=null):String {
         val ids=cardIds.toSet();val out=ByteArrayOutputStream()
         val sourceRows=mutableMapOf<StudySourceVersionRef,StudySourceRevisionRow>()
         DataOutputStream(out).use{d->
             fun text(s:String){val bytes=s.toByteArray();d.writeInt(bytes.size);d.write(bytes)}
             text(book)
+            graphRef?.let{text(StudyRepository(db).readGraph(it.notebookId,it.mapId).graphFingerprint)}
             ids.sorted().forEach{id->
                 val c=requireNotNull(db.study().card(id));text(c.id);d.writeLong(c.revision);text(c.title);text(c.body);d.writeLong(c.trashedAt?:-1)
                 val source=StudySourceVersions(db).read(id,null,sourceRows);text(StudySourceRefs.encode(source.refs));d.writeBoolean(source.complete)
@@ -184,10 +207,15 @@ class CardTransformRepository(private val db:NoteDatabase,private val fault:(Car
             require(row.undone==(row.undoOperationId!=null)&&row.undone==(row.undoDigest!=null))
             row.undoOperationId?.let{UUID.fromString(it);require(row.undoDigest==undoDigest(row.operationId,1,it));require(operations.none{r->r.operationId==it})}
             plan.inputs.forEach{require(db.study().card(it.id)?.notebookId==row.notebookId);val old=requireNotNull(db.study().cardVersion(it.id,it.revision));require(old.title==it.title&&old.body==it.body)}
+            plan.summaryPlacement?.let{placement->
+                val graph=StudyRepository(db).readGraph(row.notebookId,placement.mapId)
+                val node=requireNotNull(graph.nodes.singleOrNull{it.id==placement.nodeId});require(node.cardId==plan.targets.single().id)
+            }
             plan.targets.forEach{target->require(db.study().card(target.id)?.notebookId==row.notebookId);val old=requireNotNull(db.study().cardVersion(target.id,1));require(old.title==target.title&&old.body==target.body);val sourceSet=requireNotNull(db.sourceVersions().set(target.id,1));require(sourceSet.refs()==target.sources&&sourceSet.complete==plan.inputs.all{it.sourcesComplete})}
         }
     }
     companion object {
+        private fun placementOperation(op:String)=UUID.nameUUIDFromBytes("transform-occurrence:$op".toByteArray()).toString()
         private fun undoDigest(op:String,revision:Long,undo:String)=ContentTransfer.hash("card-transform-undo-v1|$op|$revision|$undo".toByteArray())
         private fun presentationId(op:String,card:String)=UUID.nameUUIDFromBytes("transform-presentation:$op:$card".toByteArray()).toString()
         private fun summaryId(op:String,card:String)=UUID.nameUUIDFromBytes("transform-summary:$op:$card".toByteArray()).toString()

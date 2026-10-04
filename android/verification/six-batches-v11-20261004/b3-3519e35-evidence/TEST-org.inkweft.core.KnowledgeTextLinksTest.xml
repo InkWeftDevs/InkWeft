@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="org.inkweft.core.KnowledgeTextLinksTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-10-04T09:32:51.749Z" hostname="c8f738c2aa6c" time="0.015">
+  <properties/>
+  <testcase name="equalNamesKeepEveryLinkAndRepeatedAliasSpellingDoesNotDuplicateIt" classname="org.inkweft.core.KnowledgeTextLinksTest" time="0.004"/>
+  <testcase name="onlyExplicitTermsMatchLiteralPunctuationWithoutChangingOriginalText" classname="org.inkweft.core.KnowledgeTextLinksTest" time="0.001"/>
+  <testcase name="archivedConfirmedTargetCanStillExposeItsOriginalLinkIdentity" classname="org.inkweft.core.KnowledgeTextLinksTest" time="0.0"/>
+  <testcase name="asciiWordsIgnoreCaseButNeverMatchInsideAnotherAsciiWord" classname="org.inkweft.core.KnowledgeTextLinksTest" time="0.0"/>
+  <testcase name="spanBudgetReturnsNoPartialCoverageAtOverflow" classname="org.inkweft.core.KnowledgeTextLinksTest" time="0.005"/>
+  <testcase name="firstPositionWinsCrossOverlapAndLongestTermWinsAtThatPosition" classname="org.inkweft.core.KnowledgeTextLinksTest" time="0.0"/>
+  <testcase name="targetTermAndTextBudgetsDisableInlineWithoutDroppingCallerAssociations" classname="org.inkweft.core.KnowledgeTextLinksTest" time="0.002"/>
+  <testcase name="utf16OffsetsKeepEmojiAndCombiningMarksIntactWithoutNormalization" classname="org.inkweft.core.KnowledgeTextLinksTest" time="0.002"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

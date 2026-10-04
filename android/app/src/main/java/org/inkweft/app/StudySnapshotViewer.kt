@@ -50,7 +50,7 @@ import org.inkweft.data.StudySourceRow
                     },update={native->
                         native.preview=false;native.allowInput=false;native.fingerWrites=false
                         native.configure(file.world,file.paper,null)
-                        native.showImageSources(file.imageSources);native.showStrokes(file.strokes);native.showObjects(file.objects)
+                        native.showAuthoring(file.authoring);native.showImageSources(file.imageSources);native.showStrokes(file.strokes);native.showObjects(file.objects)
                     },modifier=Modifier.fillMaxWidth().weight(1f).testTag("study-snapshot-canvas"))
                     Row(Modifier.fillMaxWidth().padding(horizontal=8.dp)){
                         TextButton({view?.zoomBy(1/1.2)},modifier=Modifier.testTag("study-snapshot-zoom-out")){Text("缩小")}

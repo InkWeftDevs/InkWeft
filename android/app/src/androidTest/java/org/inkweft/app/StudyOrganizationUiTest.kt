@@ -250,8 +250,10 @@ class StudyOrganizationUiTest {
         assertEquals(initial.nodes.associate{it.id to Triple(it.parentId,it.x,it.y)},nodes(f.book).associate{it.id to Triple(it.parentId,it.x,it.y)})
         tap("study-undo-organization");compose.waitUntil(15_000){order(f.book)==f.initialOrder};settled(f.book)
         tap("study-redo-organization");compose.waitUntil(15_000){order(f.book)==moved};settled(f.book)
-        val beforeCancel=author(f.book);dragTo(f.first,.5f,canceled=true)
+        val beforeCancel=author(f.book);dragTo(f.first,.5f,canceled=true);settled(f.book)
+        compose.onNodeWithTag("study-message").assertTextContains("拖动已取消，顺序与层级保持不变")
         assertEquals(beforeCancel,author(f.book))
+        compose.runOnIdle{assertTrue(ViewModelProvider(compose.activity)["read-lock-${f.book}",BookReadLockViewModel::class.java].canChangeMode())}
         tap("study-close");tap("quick-study");settled(f.book);assertEquals(moved,order(f.book))
     }
 

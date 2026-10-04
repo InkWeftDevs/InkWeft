@@ -71,7 +71,7 @@ internal class MapSourcePreview(private val read:suspend (String)->StudySourceRo
                         val snapshot=withContext(Dispatchers.IO){read(key.card)?.let{InkPageFile.decode(it.snapshot)}}
                             ?:error("SOURCE_UNAVAILABLE")
                         ensureActive()
-                        val image=snapshot.objects.singleOrNull()?.takeIf{it.kind==PageObjectKind.IMAGE&&snapshot.strokes.isEmpty()}
+                        val image=snapshot.objects.singleOrNull()?.takeIf{it.kind==PageObjectKind.IMAGE&&snapshot.strokes.isEmpty()&&snapshot.authoring==null}
                         if(image!=null)withContext(Dispatchers.Default){
                             val bytes=Base64.getDecoder().decode(image.image)
                             val size=BitmapFactory.Options().apply{inJustDecodeBounds=true}
@@ -110,10 +110,24 @@ internal class MapSourcePreview(private val read:suspend (String)->StudySourceRo
     private fun release(entry:Entry){entry.job?.cancel();entry.bitmap?.let{RenderResources.release(it,entry.owner)};entry.bitmap=null}
 
     private suspend fun render(file:InkPageFile,owner:String):Bitmap {
-        val objects=file.objects.filterNot{it.hidden}
-        val suppressed=objects.flatMap{it.sourceStrokeIds}.toSet()
-        val strokes=file.strokes.filter{it.id !in suppressed}
-        val bounds=(objects.map{it.bounds()}+strokes.map{it.bounds()}).reduceOrNull{a,b->a.union(b)}?.padded(6.0)
+        val state=file.authoring
+        val objects=file.objects.filter{!it.hidden&&state?.layers?.visible(LayerContent(LayerContentKind.OBJECT,it.id))!=false}
+        val suppressed=file.objects.flatMap{it.sourceStrokeIds}.toSet()
+        val strokes=file.strokes.filter{it.id !in suppressed&&state?.layers?.visible(LayerContent(LayerContentKind.INK,it.id))!=false}
+        val annotations=state?.visibleAnnotations().orEmpty()
+        val annotationBounds=annotations.mapNotNull{a->
+            val region=state?.regions?.firstOrNull{it.target==a.target}
+            if(region?.collapsed==true)null else when(a.target.kind){
+                AnnotationTargetKind.PAGE->a.displayBounds(AnnotationFrame(0.0,0.0))
+                AnnotationTargetKind.PAGE_OBJECT->objects.firstOrNull{it.id==a.target.id}?.let{o->
+                    val box=a.displayBounds(a.targetFrame(o.bounds()));val crop=region?.bounds(o.bounds())
+                    if(crop==null)box else if(!box.intersects(crop))null else CanvasBounds(max(box.left,crop.left),max(box.top,crop.top),min(box.right,crop.right),min(box.bottom,crop.bottom))
+                }
+                else->null
+            }
+        }
+        val regionBounds=state?.regions.orEmpty().mapNotNull{r->objects.firstOrNull{it.id==r.target.id}?.let{r.bounds(it.bounds())}}
+        val bounds=(objects.map{it.bounds()}+strokes.map{it.bounds()}+annotationBounds+regionBounds).reduceOrNull{a,b->a.union(b)}?.padded(6.0)
             ?:error("EMPTY_SOURCE")
         val ratio=((bounds.right-bounds.left)/(bounds.bottom-bounds.top)).coerceIn(1.0/16,16.0)
         val width=if(ratio>=1)384 else (384*ratio).roundToInt().coerceAtLeast(24)
@@ -122,24 +136,35 @@ internal class MapSourcePreview(private val read:suspend (String)->StudySourceRo
         val bitmap=Bitmap.createBitmap(width,height,Bitmap.Config.ARGB_8888)
         RenderResources.track(bitmap,bitmap.allocationByteCount.toLong(),"map-source",owner,RenderResources.Role.IN_FLIGHT)
         val viewport=CanvasViewport.fit(bounds,width.toDouble(),height.toDouble())
-        val ready=CompletableDeferred<Unit>()
+        var ready=CompletableDeferred<Unit>()
         lateinit var raster:AsyncInkRaster
         raster=AsyncInkRaster({if(!raster.pending)ready.complete(Unit)},{ready.completeExceptionally(IllegalStateException("SOURCE_RENDER_FAILED"))})
         val painter=PageObjectPainter()
         var completed=false
         try{
             val canvas=Canvas(bitmap)
-            // The first draw schedules the existing worker. Only its complete frame is published.
-            raster.draw(canvas,width,height,viewport,1.0,true,false,strokes)
-            if(!raster.pending)ready.complete(Unit)
-            withTimeout(8_000){ready.await()}
-            currentCoroutineContext().ensureActive()
-            check(!raster.pending&&strokes.all{raster.contains(it.id)}){"SOURCE_RENDER_INCOMPLETE"}
             bitmap.eraseColor(Color.WHITE)
             val matrix=Matrix().apply{setScale(viewport.zoom.toFloat(),viewport.zoom.toFloat());postTranslate((width/2.0-viewport.centerX*viewport.zoom).toFloat(),(height/2.0-viewport.centerY*viewport.zoom).toFloat())}
-            val under=canvas.save();canvas.concat(matrix);painter.draw(canvas,objects,false,bounds);canvas.restoreToCount(under)
-            raster.draw(canvas,width,height,viewport,1.0,true,false,strokes)
-            val over=canvas.save();canvas.concat(matrix);painter.draw(canvas,objects,true,bounds);canvas.restoreToCount(over)
+            val annotationPainter=AnnotationPainter()
+            val layers:List<String?> =state?.layers?.layers?.filter{it.visible}?.map{it.id}?:listOf(null)
+            for(layer in layers){
+                val localObjects=objects.filter{layer==null||state?.layers?.layer(LayerContent(LayerContentKind.OBJECT,it.id))?.id==layer}
+                val localStrokes=strokes.filter{layer==null||state?.layers?.layer(LayerContent(LayerContentKind.INK,it.id))?.id==layer}
+                raster.clear();ready=CompletableDeferred()
+                if(localStrokes.isNotEmpty()){
+                    // Schedule without drawing a cached frame into the partially composed output.
+                    val hidden=canvas.save();canvas.clipRect(0,0,0,0);raster.draw(canvas,width,height,viewport,1.0,true,false,localStrokes);canvas.restoreToCount(hidden)
+                    if(!raster.pending)ready.complete(Unit)
+                    withTimeout(8_000){ready.await()};currentCoroutineContext().ensureActive()
+                    check(!raster.pending&&localStrokes.all{raster.contains(it.id)}){"SOURCE_RENDER_INCOMPLETE"}
+                }
+                val under=canvas.save();canvas.concat(matrix);painter.draw(canvas,localObjects,false,bounds);canvas.restoreToCount(under)
+                if(localStrokes.isNotEmpty())raster.draw(canvas,width,height,viewport,1.0,true,false,localStrokes)
+                val over=canvas.save();canvas.concat(matrix)
+                annotationPainter.draw(canvas,annotations.filter{layer==null||state?.layers?.layer(LayerContent(LayerContentKind.ANNOTATION,it.stroke.id))?.id==layer},objects,matrix,regions=state?.regions.orEmpty())
+                painter.draw(canvas,localObjects,true,bounds);canvas.restoreToCount(over)
+            }
+            val regions=canvas.save();canvas.concat(matrix);annotationPainter.regions(canvas,state?.regions.orEmpty(),objects);canvas.restoreToCount(regions)
             bitmap.prepareToDraw();completed=true;return bitmap
         }finally{
             raster.clear();painter.clear()

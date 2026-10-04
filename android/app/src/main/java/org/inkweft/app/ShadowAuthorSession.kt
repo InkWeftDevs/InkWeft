@@ -10,6 +10,7 @@ internal class ShadowAuthorSession(context:Context,val replica:ShadowReplica){
     val notes=NoteRepository(replica.db)
     val ink=InkRepository(replica.db)
     val objects=PageObjectRepository(replica.db)
+    val authoring=PageAuthoringRepository(replica.db)
     val study=StudyRepository(replica.db)
     val knowledge=KnowledgeRepository(replica.db)
     val maps=MapGraphAccess(replica.db)

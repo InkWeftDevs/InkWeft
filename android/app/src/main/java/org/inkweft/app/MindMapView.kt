@@ -9,6 +9,7 @@ import android.content.res.Configuration
 import android.graphics.*
 import android.view.*
 import org.inkweft.data.*
+import org.inkweft.core.*
 import kotlin.math.*
 import androidx.compose.ui.graphics.toArgb
 import org.inkweft.app.ui.designsystem.InkTheme
@@ -113,6 +114,10 @@ internal class MindMapView(context:Context):View(context){
     private var lastTapId:String?=null
     private var lastTapTime=0L
     private var lastTapX=0f;private var lastTapY=0f
+    private var annotations:PageAuthoring?=null
+    private val annotationPainter=AnnotationPainter()
+    fun showAuthoring(state:PageAuthoring?){if(annotations===state)return;annotations=state;clearSceneTransition();invalidate()}
+    fun annotationBounds(id:String):CanvasBounds?=nodes.firstOrNull{it.id==id}?.let{worldBounds(it)}?.let{CanvasBounds(it.left.toDouble(),it.top.toDouble(),it.right.toDouble(),it.bottom.toDouble())}
     fun nodeBounds(id:String):RectF?=nodes.find{it.id==id}?.let{n->val box=worldBounds(n);RectF(box.left*d*scale+tx,box.top*d*scale+ty,box.right*d*scale+tx,box.bottom*d*scale+ty)}
     private fun publishBounds(){val b=selectedNodeId?.let(::nodeBounds);if(b!=lastBounds){lastBounds=b;post{onSelectionBounds(b)}}}
     var onMove:(StudyNodeRow,Double,Double)->Unit={_,_,_->}
@@ -362,6 +367,12 @@ internal class MindMapView(context:Context):View(context){
             paint.pathEffect=DashPathEffect(floatArrayOf(6f/scale,4f/scale),0f)
             dropParent?.let{parent->val box=worldBounds(parent);c.drawRoundRect(box.left-3f,box.top-3f,box.right+3f,box.bottom+3f,12f,12f,paint);c.drawLine(box.right,box.centerY(),point.x,point.y,paint)}
             c.drawRoundRect(point.x,point.y,point.x+168,point.y+52,8f,8f,paint);paint.pathEffect=null
+        }
+        annotations?.let{state->
+            val occurrences=nodes.mapNotNull{n->annotationBounds(n.id)?.let{n.id to it}}.toMap()
+            val viewport=Matrix().apply{setScale(scale*d,scale*d);postTranslate(tx,ty)}
+            annotationPainter.regions(c,state.regions,emptyList(),occurrences)
+            for(layer in state.layers.layers.filter{it.visible})annotationPainter.draw(c,state.visibleAnnotations().filter{state.layers.layer(LayerContent(LayerContentKind.ANNOTATION,it.stroke.id))?.id==layer.id},emptyList(),viewport,occurrences,state.regions)
         }
         // Selected branches have both an outline and a checkmark, independent of card colors.
         for(n in nodes)if(n.id in selectedNodeIds){

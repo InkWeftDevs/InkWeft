@@ -78,7 +78,10 @@ class PageEditingRepository(private val db:NoteDatabase,private val fault:(PageE
                     db.pages().search(source.id)?.takeIf{it.inkRevision==head&&it.method=="MANUAL"}?.let{
                         db.pages().putSearch(PageSearchRow(resultId,visible.size.toLong(),it.text))
                     }
-                    PageObjectRepository(db).read(source.id).objects.let{objects->PageObjectRepository(db).import(resultId,objects,strokeIds,ImageSourceRepository(db).forPage(source.id,objects))}
+                    val copiedObjects=PageObjectRepository(db).read(source.id).objects.let{objects->PageObjectRepository(db).import(resultId,objects,strokeIds,ImageSourceRepository(db).forPage(source.id,objects))}
+                    val authoring=PageAuthoringRepository(db).readPage(source.id).state.copied(resultId,strokeIds,copiedObjects)
+                    PageAuthoringRepository(db).validate(AuthoringScope.page(c.notebookId,resultId),authoring)
+                    db.authoring().put(PageAuthoringRow(AuthoringScopeKind.PAGE.name,resultId,c.notebookId,0,PageAuthoringCodec.encode(authoring)))
                     ordered.add(at,resultId);selected=resultId
                 }
             }

@@ -60,6 +60,8 @@ class StudyRepository(private val db:NoteDatabase,private val fault:(StudyFault)
     val reuse by lazy{CardReuseRepository(db)}
     private val transformRepository by lazy{CardTransformRepository(db)}
     fun transforms()=transformRepository
+    private val recallRepository by lazy{RecallStudyRepository(db)}
+    fun recall()=recallRepository
     fun sourceSummaries(book:String)=db.study().observeSourceSummaries(book)
     fun excerpts(book:String)=db.study().excerpts(book)
     fun cards(book:String)=db.study().observeCards(book)
@@ -153,6 +155,9 @@ class StudyRepository(private val db:NoteDatabase,private val fault:(StudyFault)
             suspend fun captureSource(s:StudySourceDraft):StudySourceRow {
                 val p=studyNotNull(db.pages().get(s.pageId));studyRequire(p.notebookId==c.notebookId&&p.trashedAt==null)
                 val ink=InkRepository(db).read(s.pageId);studyRequire(ink.revision==s.inkRevision){"SOURCE_VERSION_CHANGED"}
+                val authoring=PageAuthoringRepository(db).readPage(s.pageId)
+                studyRequire(s.authoringRevision?.let{it==authoring.revision}?:authoring.state.legacy){"SOURCE_AUTHORING_CHANGED"}
+                studyRequire(s.strokeIds.all{authoring.state.layers.visible(LayerContent(LayerContentKind.INK,it))}){"SOURCE_LAYER_HIDDEN"}
                 val visible=InkSession(ink).visibleDraft().associateBy{it.id};val selected=s.strokeIds.map{studyNotNull(visible[it])}
                 val picture=s.previewBytes()
                 studyRequire(picture==null||p.world||(s.bounds.left>=0&&s.bounds.top>=0&&s.bounds.right<=1000&&s.bounds.bottom<=1414)){"EXCERPT_OUTSIDE_PAGE"}

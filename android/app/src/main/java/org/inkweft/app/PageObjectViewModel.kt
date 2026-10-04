@@ -17,7 +17,7 @@ internal class PageObjectViewModel(private val pageId:String,private val repo:Pa
     internal val revision get()=snapshot.revision
     private val undo=ArrayDeque<List<PageObject>>()
     private val redo=ArrayDeque<List<PageObject>>()
-    private data class Pending(val id:String,val before:ObjectSnapshot,val after:List<PageObject>,val direction:Int,val expectedInk:Long?=null,val accepted:(()->Unit)?=null,val automatic:Boolean=false,val originals:List<ImageSource> = emptyList())
+    private data class Pending(val id:String,val before:ObjectSnapshot,val after:List<PageObject>,val direction:Int,val expectedInk:Long?=null,val accepted:(()->Unit)?=null,val automatic:Boolean=false,val originals:List<ImageSource> = emptyList(),val layerScope:LayerWriteScope?=null)
     private var pending:Pending?=null
     private var external=false
     private val groupUndo=java.util.IdentityHashMap<List<PageObject>,()->Unit>()
@@ -97,7 +97,7 @@ internal class PageObjectViewModel(private val pageId:String,private val repo:Pa
         if(writing||ink.queued>0||ink.processing){beautyJob?.cancel();beautyJob=null;beautyKey=null;beautyState.value=null;return}
         if(ink.blocked!=null||ink.readFailed||state.value.loading||state.value.busy||state.value.pending)return
         val suppressed=snapshot.objects.flatMap{it.sourceStrokeIds}.toSet()
-        val fresh=ink.strokes.filter{it.id !in beautyKnown!!&&it.id !in suppressed&&it.pen!=InkPen.HIGHLIGHTER}
+        val fresh=ink.strokes.filter{editableInk(it.id)&&it.id !in beautyKnown!!&&it.id !in suppressed&&it.pen!=InkPen.HIGHLIGHTER}
         if(fresh.isEmpty()){showWaitingBeauty();return}
         val key="${ink.revision}:$options"
         if(key==beautyKey){showWaitingBeauty();return}
@@ -188,18 +188,21 @@ internal class PageObjectViewModel(private val pageId:String,private val repo:Pa
     }}
     private fun publish(error:String?=null){state.value=ObjectsUi(if(pending?.automatic==true)snapshot.objects else pending?.after?:snapshot.objects,false,false,error,pending!=null,undo.isNotEmpty(),redo.isNotEmpty(),pending?.automatic==true)}
     internal var authorAllowed:()->Boolean={true}
+    internal var layerScopeProvider:()->LayerWriteScope?={null}
+    internal var editableContent:(String)->Boolean={true}
+    internal var editableInk:(String)->Boolean={true}
     internal val authorOperationActive:Boolean get()=beautyJob?.isActive==true||state.value.busy||state.value.pending
-    fun change(objects:List<PageObject>,direction:Int=0,expectedInk:Long?=null,accepted:(()->Unit)?=null,automatic:Boolean=false,originals:List<ImageSource> = emptyList()){
+    fun change(objects:List<PageObject>,direction:Int=0,expectedInk:Long?=null,accepted:(()->Unit)?=null,automatic:Boolean=false,originals:List<ImageSource> = emptyList(),layerScope:LayerWriteScope?=layerScopeProvider()){
         if(!authorAllowed())return
         if(state.value.loading||state.value.busy||state.value.pending||objects==snapshot.objects)return
         try{PageObjectCodec.encode(objects)}catch(_:Exception){publish("对象超过容量：每页最多 32 项、图片与对象总计约 1.6 MB。请减少图片后重试。");return}
-        pending=Pending(UUID.randomUUID().toString(),snapshot,objects.toList(),direction,expectedInk,accepted,automatic,originals);retry()
+        pending=Pending(UUID.randomUUID().toString(),snapshot,objects.toList(),direction,expectedInk,accepted,automatic,originals,layerScope);retry()
     }
     fun retry(){val p=pending?:return;if(state.value.busy||external)return
         state.value=state.value.copy(objects=if(p.automatic)snapshot.objects else p.after,busy=true,pending=true,error=null,automaticPending=p.automatic)
         viewModelScope.launch{
             try{
-                val revision=withContext(Dispatchers.IO){repo.save(pageId,p.before.revision,p.id,p.after,p.expectedInk,p.originals)}
+                val revision=withContext(Dispatchers.IO){repo.save(pageId,p.before.revision,p.id,p.after,p.expectedInk,p.originals,p.layerScope)}
                 completeExternal(revision)
             }catch(c:CancellationException){throw c}catch(_:ImageOriginalCapacity){
                 // This rejection is raised inside the transaction before its receipt commits.
@@ -209,9 +212,9 @@ internal class PageObjectViewModel(private val pageId:String,private val repo:Pa
     }
     internal fun validateExternal(objects:List<PageObject>){check(authorAllowed());check(!state.value.loading&&!state.value.busy&&!state.value.pending);PageObjectCodec.encode(objects)}
     internal fun prepareExternal(objects:List<PageObject>,direction:Int=0):ObjectWrite {
-        validateExternal(objects);val p=Pending(UUID.randomUUID().toString(),snapshot,objects.toList(),direction)
+        validateExternal(objects);val p=Pending(UUID.randomUUID().toString(),snapshot,objects.toList(),direction,layerScope=layerScopeProvider())
         pending=p;external=true;state.value=state.value.copy(objects=p.after,busy=true,pending=true,error=null)
-        return ObjectWrite(pageId,p.before.revision,p.id,p.after)
+        return ObjectWrite(pageId,p.before.revision,p.id,p.after,p.layerScope)
     }
     internal fun completeExternal(revision:Long){
         val p=checkNotNull(pending)
@@ -227,12 +230,12 @@ internal class PageObjectViewModel(private val pageId:String,private val repo:Pa
     internal fun registerGroupHistory(back:Boolean,action:()->Unit){historyIdentity(back)?.let{(if(back)groupUndo else groupRedo)[it]=action}}
     fun undo(){if(!authorAllowed())return;if(undo.isNotEmpty()){groupUndo[undo.last()]?.let{it();return};change(undo.last(),-1)}}
     fun redo(){if(!authorAllowed())return;if(redo.isNotEmpty()){groupRedo[redo.last()]?.let{it();return};change(redo.last(),1)}}
-    fun put(value:PageObject,originals:List<ImageSource> = emptyList(),accepted:(()->Unit)?=null){val old=snapshot.objects;change(if(old.any{it.id==value.id})old.map{if(it.id==value.id)value else it}else old+value,originals=originals,accepted=accepted)}
+    fun put(value:PageObject,originals:List<ImageSource> = emptyList(),accepted:(()->Unit)?=null,layerScope:LayerWriteScope?=layerScopeProvider()){val old=snapshot.objects;change(if(old.any{it.id==value.id})old.map{if(it.id==value.id)value else it}else old+value,originals=originals,accepted=accepted,layerScope=layerScope)}
     fun delete(id:String)=deleteObjects(setOf(id))
     fun deleteObjects(ids:Set<String>){change(snapshot.objects.mapNotNull{if(it.id !in ids)it else if(it.sourceStrokeIds.isNotEmpty())it.copy(hidden=true)else null})}
     fun restoreOriginal(id:String)=change(snapshot.objects.filterNot{it.id==id})
     fun eraseTapes(path:List<InkSample>,radius:Float){change(erasedTapes(path,radius))}
-    internal fun erasedTapes(path:List<InkSample>,radius:Float)=snapshot.objects.filterNot{ObjectGeometry.intersectsTape(it,path,radius)}
+    internal fun erasedTapes(path:List<InkSample>,radius:Float)=snapshot.objects.filterNot{editableContent(it.id)&&ObjectGeometry.intersectsTape(it,path,radius)}
     fun eraseBeauty(path:List<InkSample>,radius:Float,whole:Boolean){
         if(path.isNotEmpty())change(erasedBeauty(path,radius,whole))
     }
@@ -249,7 +252,7 @@ internal class PageObjectViewModel(private val pageId:String,private val repo:Pa
             publish("这段文字的局部擦除次数已达上限，可撤销一次擦除或使用整字擦除。");return snapshot.objects
         }
         return snapshot.objects.mapNotNull{o->
-            if(o.hidden||(o.sourceStrokeIds.isEmpty()&&o.glyphs.isEmpty())||!hits(o.bounds()))o else {
+            if(!editableContent(o.id)||o.hidden||(o.sourceStrokeIds.isEmpty()&&o.glyphs.isEmpty())||!hits(o.bounds()))o else {
                 val before=TextStyles.positioned(o)
                 val after=before.map{g->if(g.hidden||!hits(CanvasBounds((o.x+g.x).toDouble(),(o.y+g.y).toDouble(),(o.x+g.x+g.width).toDouble(),(o.y+g.y+g.height).toDouble())))g else g.copy(hidden=true)}
                 if(after==before)o else if(whole){if(after.all{it.hidden}&&o.sourceStrokeIds.isEmpty())null else o.copy(glyphs=after,hidden=after.all{it.hidden})} else {

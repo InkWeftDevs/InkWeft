@@ -36,7 +36,7 @@ private class CardTransformPendingStore(context:Context,book:String) {
 /** Launch with one card for SPLIT and at least two explicitly selected cards for MERGE/SUMMARY. */
 @Composable internal fun CardTransformDialog(repository:CardTransformRepository,notebookId:String,initialCardIds:List<String>,
     kind:CardTransformKind,onDismiss:()->Unit,onCommitted:(List<String>)->Unit,embedded:Boolean=false,
-    authorAllowed:()->Boolean={true},onPendingChanged:(Boolean)->Unit={}) {
+    authorAllowed:()->Boolean={true},onPendingChanged:(Boolean)->Unit={},mapId:String?=null) {
     val context=LocalContext.current;val store=remember(notebookId){CardTransformPendingStore(context.applicationContext,notebookId)}
     val scope=rememberCoroutineScope();val canAuthor by rememberUpdatedState(authorAllowed)
     var loaded by remember{mutableStateOf<CardTransformPreview?>(null)}
@@ -56,7 +56,7 @@ private class CardTransformPendingStore(context:Context,book:String) {
     val pendingState=busy||pending!=null
     SideEffect{onPendingChanged(pendingState)}
     DisposableEffect(Unit){onDispose{onPendingChanged(false)}}
-    LaunchedEffect(notebookId,initialCardIds,attempt){
+    LaunchedEffect(notebookId,initialCardIds,mapId,attempt){
         busy=true;error=null
         try{
             val restored=withContext(Dispatchers.IO){store.read()}
@@ -65,7 +65,7 @@ private class CardTransformPendingStore(context:Context,book:String) {
                 val receipt=withContext(Dispatchers.IO){repository.lookup(restored)}
                 if(receipt!=null){result=receipt;withContext(Dispatchers.IO){store.clear(restored)};pending=null}else unknown=true
             }else{
-                loaded=withContext(Dispatchers.IO){repository.preview(notebookId,initialCardIds)}
+                loaded=withContext(Dispatchers.IO){repository.preview(notebookId,initialCardIds,mapId)}
                 loaded?.let{preview->
                     if(title.isEmpty())title=if(kind==CardTransformKind.SUMMARY)"" else preview.cards.first().title.take(112)+if(kind==CardTransformKind.MERGE)" · 合并"else" · 1"
                     if(secondTitle.isEmpty())secondTitle=preview.cards.first().title.take(112)+" · 2"
@@ -114,7 +114,7 @@ private class CardTransformPendingStore(context:Context,book:String) {
         text={Column(Modifier.fillMaxWidth().heightIn(max=600.dp).verticalScroll(rememberScrollState()),verticalArrangement=Arrangement.spacedBy(10.dp)){
             if(busy)LinearProgressIndicator(Modifier.fillMaxWidth())
             if(finalResult!=null){
-                Text("已创建 ${finalResult.targetIds.size} 张新内容卡。原卡、原图位置、引用及旧题保留；新卡尚未加入导图，也没有自动创建复习题。")
+                Text("已创建 ${finalResult.targetIds.size} 张新内容卡。原卡、原图位置、引用及旧题保留；${if(effectiveKind==CardTransformKind.SUMMARY&&proposal?.summaryPlacement!=null)"总结节点已加入预览中指定的导图。"else"新卡尚未加入导图。"}没有自动创建复习题。")
                 Text("从原卡的“${effectiveKind.label}结果”可找到新卡，并在内容和引用未变化时撤销。")
             }else if(proposal!=null){
                 val plan=requireNotNull(proposal)
@@ -137,7 +137,10 @@ private class CardTransformPendingStore(context:Context,book:String) {
                     Text("来源（${target.sources.size}）："+target.sources.joinToString("\n"){"${it.sourceId} · 版本 ${it.revision}"})
                     Text("卡色：${target.cardColor.label}；标题栏：${target.titleBarColor.label}")
                 }
-                if(plan.kind==CardTransformKind.SUMMARY)Text("每张原卡 → 新总结卡：归纳总结关系；不会改变父子层级。总结正文由你撰写。")
+                if(plan.kind==CardTransformKind.SUMMARY){
+                    val placement=plan.summaryPlacement
+                    Text("每张原卡 → 新总结节点：归纳总结关系。新位置：${if(placement?.mapId==null)"主图"else"所选导图"}，${if(placement?.parentId==null)"根级"else"所选卡的共同父级下"}；已有节点位置与层级不变。总结正文由你撰写。",modifier=Modifier.testTag("transform-summary-placement"))
+                }
                 if(!pendingState)TextButton({proposal=null},modifier=Modifier.testTag("transform-back")){Text("返回修改")}
                 if(unknown)Text("此时不能丢弃待确认操作；请重试核对，避免生成重复卡片。")
             }else loaded?.let{preview->
@@ -247,6 +250,7 @@ private fun transformMessage(reason:String?)=when(reason){
     "TRANSFORM_UNDO_OPERATION_MISMATCH","TRANSFORM_ALREADY_UNDONE"->"这次转换已由另一条撤销操作完成，请查看保留的原卡"
     "TRANSFORM_UNDO_DEPENDENCIES_CHANGED"->"新卡或相关引用已修改，不能覆盖后续编辑来撤销。原卡仍完整保留"
     "TRANSFORM_SAME_NOTEBOOK_REQUIRED"->"请在同一本笔记中选择未回收的内容卡"
+    "SUMMARY_PLACEMENT_REQUIRED"->"旧版总结请求尚未创建位置；未重复创建，请重新打开预览以确定总结节点位置"
     "TRANSFORM_SUMMARY_REQUIRED"->"请先写下总结正文"
     "STUDY_CARD_BUDGET"->"本笔记已达到内容卡容量；原卡和草稿均保留"
     "KNOWLEDGE_BUDGET"->"本笔记已达到关系记录容量；原卡和草稿均保留"

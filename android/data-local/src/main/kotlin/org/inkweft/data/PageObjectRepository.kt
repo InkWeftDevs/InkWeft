@@ -33,16 +33,17 @@ class PageObjectRepository(private val db:NoteDatabase,private val afterCommit:(
         return db.images().source(page.notebookId,hash)?.byteCount?.also{require(it in 1..ImageSource.MAX_BYTES)}
     }
     fun observe(id:String)=db.objects().observe(id)
-    suspend fun save(pageId:String,expected:Long,command:String,objects:List<PageObject>,expectedInk:Long?=null,originals:List<ImageSource> = emptyList()):Long {
+    suspend fun save(pageId:String,expected:Long,command:String,objects:List<PageObject>,expectedInk:Long?=null,originals:List<ImageSource> = emptyList(),layerScope:LayerWriteScope?=null):Long {
         UUID.fromString(command);require(expected>=0)
         val bytes=PageObjectCodec.encode(objects)
-        val digest=MessageDigest.getInstance("SHA-256").digest((pageId+":"+expected+":"+expectedInk+":").toByteArray()+bytes).joinToString(""){"%02x".format(it.toInt()and 255)}
+        val digest=MessageDigest.getInstance("SHA-256").digest((pageId+":"+expected+":"+expectedInk+":"+(layerScope?.let{"layers-v1:${it.layerId}:${it.configurationRevision}:"}?:"")).toByteArray()+bytes).joinToString(""){"%02x".format(it.toInt()and 255)}
         val next=db.withTransaction {
             db.objects().receipt(command)?.let{require(it.pageId==pageId&&it.digest==digest){"OBJECT_COMMAND_REUSED"};return@withTransaction it.revision}
             val owner=checkNotNull(db.pages().get(pageId))
             require(owner.trashedAt==null&&db.workspace().get(owner.notebookId)?.trashedAt==null)
             require((db.objects().get(pageId)?.revision?:0)==expected){"OBJECT_CONFLICT"}
             if(expectedInk!=null)require((db.ink().page(pageId)?.revision?:0)==expectedInk){"INK_CONFLICT"}
+            val authoring=PageAuthoringRepository(db).acceptObjects(pageId,objects,layerScope)
             MapEmbedRepository(db).validateReferences(owner.notebookId,objects)
             val images=ImageSourceRepository(db)
             require(originals.all{source->objects.any{it.imageSource==source.sha256}})
@@ -51,6 +52,7 @@ class PageObjectRepository(private val db:NoteDatabase,private val afterCommit:(
             validateBounds(objects,owner.world);validateImages(objects)
             db.pages().invalidateSearch(pageId)
             db.objects().put(PageObjectRow(pageId,expected+1,bytes))
+            authoring?.let{db.authoring().put(it)}
             db.objects().record(ObjectReceiptRow(command,pageId,digest,expected+1))
             db.notes().touch(owner.notebookId,System.currentTimeMillis());expected+1
         }
@@ -60,8 +62,8 @@ class PageObjectRepository(private val db:NoteDatabase,private val afterCommit:(
         val refs=objects.flatMap{it.sourceStrokeIds};require(refs.distinct().size==refs.size)
         if(refs.isNotEmpty()){val owned=db.ink().strokes(pageId).map{it.id}.toSet();require(refs.all{it in owned})}
     }
-    internal suspend fun import(pageId:String,objects:List<PageObject>,strokeIds:Map<String,String> = emptyMap(),originals:List<ImageSource> = emptyList()) {
-        if(objects.isEmpty())return
+    internal suspend fun import(pageId:String,objects:List<PageObject>,strokeIds:Map<String,String> = emptyMap(),originals:List<ImageSource> = emptyList()):Map<String,String> {
+        if(objects.isEmpty())return emptyMap()
         require(db.objects().get(pageId)==null)
         val page=checkNotNull(db.pages().get(pageId))
         ImageSourceRepository(db).attach(page.notebookId,originals)
@@ -71,6 +73,7 @@ class PageObjectRepository(private val db:NoteDatabase,private val afterCommit:(
         MapEmbedRepository(db).validateReferences(checkNotNull(db.pages().get(pageId)).notebookId,mapped)
         validateSources(pageId,mapped)
         db.objects().put(PageObjectRow(pageId,1,PageObjectCodec.encode(mapped)))
+        return objects.zip(mapped).associate{it.first.id to it.second.id}
     }
     companion object {
         fun validateImages(objects:List<PageObject>) {

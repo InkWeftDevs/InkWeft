@@ -41,7 +41,7 @@ internal fun KnowledgeLinkPreview(
     var source by remember { mutableStateOf<StudySourceRow?>(null) }
     var sourceError by remember { mutableStateOf(false) }
     var showSnapshot by remember { mutableStateOf(false) }
-    LaunchedEffect(preview?.target,preview?.cardRevision){
+    LaunchedEffect(preview?.target,preview?.cardRevision,attempt){
         sources=null;source=null;sourceError=false;showSnapshot=false
         val current=preview?:return@LaunchedEffect
         if(current.target.kind==TargetKind.CARD&&current.cardRevision!=null)try{
@@ -96,7 +96,7 @@ internal fun KnowledgeLinkPreview(
                 if(value.target.kind==TargetKind.CARD&&value.cardRevision!=null){
                     Text("内容来源 · 修订 ${value.cardRevision}",style=MaterialTheme.typography.labelLarge)
                     sources?.let{FrozenCardSources(it,value.target.id,{chosen->source=chosen},enabled=!opening)}
-                    if(sourceError)Text("来源读取失败，未替换为当前摘录。请重试预览。")
+                    if(sourceError){Text("来源读取失败，未替换为当前摘录。");TextButton({attempt++},enabled=!opening,modifier=Modifier.testTag("link-source-retry")){Text("重试固定来源")}}
                     source?.let{chosen->
                         SourceThumbnail(chosen,Modifier.fillMaxWidth().height(160.dp))
                         TextButton({showSnapshot=true},modifier=Modifier.testTag("link-source-snapshot")){Text("查看完整固定摘录")}

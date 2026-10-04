@@ -131,6 +131,9 @@ class StudyRelationsUiTest {
     }
     private fun tap(tag:String){
         compose.revealAction(tag)
+        // These chips are lazy-list items and may have been recycled after reading a lower link.
+        if(tag in setOf("knowledge-links-incoming","knowledge-links-outgoing"))
+            compose.onNodeWithTag("knowledge-links-list").performScrollToNode(hasTestTag(tag))
         val target=compose.onNodeWithTag(tag);runCatching{target.performScrollTo()}
         target.assertIsDisplayed().assertIsEnabled().performTouchInput{click()};compose.waitForIdle()
     }

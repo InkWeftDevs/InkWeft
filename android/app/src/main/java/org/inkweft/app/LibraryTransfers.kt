@@ -54,7 +54,7 @@ class LibraryTransfersViewModel(app:Application,private val saved:SavedStateHand
         if(ui.value.busy)return
         if(hasPending()){checkPending();return}
         remember("COPY",source=noteId)
-        mutable.value=LibraryTransferUi("COPY",false,"复制当前已保存的可见内容、纸面、封面、文件夹、标签和仍有效的人工索引。副本使用全新身份；摘要卡与脑图请使用资料库备份保存。本次不复制隐藏笔迹、历史回执、收藏、置顶或未保存草稿。")
+        mutable.value=LibraryTransferUi("COPY",false,"复制当前已保存的可见内容、纸面、封面、文件夹、标签和仍有效的人工索引。副本使用全新身份；摘要卡与脑图请使用资料库备份保存。保留页面隐藏图层、留白和页面绑定批注；本次不复制已撤销的历史笔迹、历史回执、收藏、置顶或未保存草稿。")
     }
     fun readUri(uri:Uri){
         if(ui.value.busy)return
@@ -119,7 +119,7 @@ class LibraryTransfersViewModel(app:Application,private val saved:SavedStateHand
         viewModelScope.launch{
             try{
                 val content=withContext(Dispatchers.IO){repo.export(noteId)}
-                mutable.value=LibraryTransferUi("EXPORT",message="导出已保存可见内容。${if(content.extension=="iwbook")"整本所有页面"else"无界页面"}，${content.bytes.size} 字节。明文，不含摘要卡/脑图、历史、分类、搜索索引或未保存草稿；不是完整备份。你选择的文件提供方可能是云盘。",export=content)
+                mutable.value=LibraryTransferUi("EXPORT",message="导出已保存可编辑内容，包含页面隐藏图层、留白及页面绑定批注。${if(content.extension=="iwbook")"整本所有页面"else"无界页面"}，${content.bytes.size} 字节。明文，不含摘要卡/脑图、历史、分类、搜索索引或未保存草稿；不是完整备份。你选择的文件提供方可能是云盘。",export=content)
             }catch(c:CancellationException){throw c}
             catch(e:Exception){mutable.value=LibraryTransferUi("ERROR",message=e.mapExportExplanation()?:"无法生成内容副本，可能超出容量或存在读取错误。原资料保留；可尝试逐页导出。")}
         }

@@ -18,6 +18,10 @@ class WorkspaceViewModel(app:Application,private val saved:androidx.lifecycle.Sa
     // Only the resolved destination may consume the latest card-opening request.
     fun requestStudyCardNavigation(bookId:String,cardId:String){cardNavigation.value=mapOf(bookId to cardId)}
     fun consumeStudyCardNavigation(bookId:String,cardId:String){cardNavigation.update{if(it[bookId]==cardId)it-bookId else it}}
+    var knowledgeReturnRequested=false
+        private set
+    fun requestKnowledgeReturn():TargetRef?=peekKnowledgeReturn()?.target?.also{knowledgeReturnRequested=true}
+    fun finishKnowledgeReturn(){knowledgeReturnRequested=false}
     val knowledgeReturns=saved.getStateFlow<ArrayList<String>>("knowledge.returns",arrayListOf())
     data class KnowledgeReturn(val target:TargetRef,val book:String,val page:String,val viewport:CanvasViewport?)
     fun rememberKnowledgeReturn(target:TargetRef,book:String,page:String){

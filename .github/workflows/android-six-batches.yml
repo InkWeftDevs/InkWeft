@@ -9,8 +9,8 @@ on:
       - "android/gradle/**"
       - "android/gradle.properties"
       - "android/settings.gradle.kts"
-      - "ci/run_android_tests.py"
-      - "ci/six_batch_scope.py"
+      - "ci/**"
+      - "android/verification/six-batch-fixture-20261004/run-fixture.py"
       - ".github/workflows/android-six-batches.yml"
   workflow_dispatch:
 permissions:
@@ -70,6 +70,7 @@ jobs:
           python3 ci/six_batch_scope.py
           python3 -m unittest discover -s ci -p 'test_*.py'
       - name: 串行定向构建（模拟器尚未启动）
+        id: build
         run: |
           python3 - <<'PY'
           import json, subprocess
@@ -86,6 +87,7 @@ jobs:
           "$ANDROID_HOME/build-tools/36.0.0/apksigner" verify --print-certs android/app/build/outputs/apk/debug/app-debug.apk > android/build/evidence/apk-signature.txt
           git rev-parse HEAD > android/build/evidence/source-commit.txt
       - name: 仅使用已获准的KVM访问启动隔离AOSP平板
+        id: emulator
         if: steps.acceleration.outputs.ready == 'true'
         run: |
           set -euo pipefail
@@ -102,6 +104,12 @@ jobs:
       - name: 执行合成Room与原生UI回归
         if: steps.acceleration.outputs.ready == 'true'
         run: python3 ci/run_android_tests.py
+      - name: 同一固定大样本准备、冷重开、原生界面及持久回忆取证
+        if: ${{ !cancelled() && steps.build.outcome == 'success' && steps.emulator.outcome == 'success' && steps.acceleration.outputs.ready == 'true' }}
+        run: python3 ci/run_six_batch_fixture.py --source-commit "$INKWEFT_HEAD_SHA"
+      - name: 如实记录固定大样本没有运行
+        if: ${{ !cancelled() && (steps.build.outcome != 'success' || steps.emulator.outcome != 'success' || steps.acceleration.outputs.ready != 'true') }}
+        run: python3 ci/run_six_batch_fixture.py --source-commit "$INKWEFT_HEAD_SHA" --not-run "Build=${{ steps.build.outcome }}; emulator=${{ steps.emulator.outcome }}; KVM=${{ steps.acceleration.outputs.ready }}"
       - name: 如实记录没有设备运行
         if: steps.acceleration.outputs.ready != 'true'
         run: |
@@ -140,6 +148,58 @@ jobs:
             android/build/evidence/APK-SHA256.txt
             android/build/evidence/apk-signature.txt
             android/build/evidence/source-commit.txt
-            android/build/evidence/**/*.png
+            android/build/evidence/scope.json
+            android/build/evidence/app-*/**/*.png
             android/build/evidence/**/instrumentation.txt
             android/build/evidence/**/selection.txt
+            android/build/evidence/six-batch-fixture/setup.txt
+            android/build/evidence/six-batch-fixture/prepare-runner.json
+            android/build/evidence/six-batch-fixture/prepare-manifest.json
+            android/build/evidence/six-batch-fixture/prepare-instrumentation.log
+            android/build/evidence/six-batch-fixture/reopen-runner.json
+            android/build/evidence/six-batch-fixture/reopen-manifest.json
+            android/build/evidence/six-batch-fixture/reopen-instrumentation.log
+            android/build/evidence/six-batch-fixture/visual-runner.json
+            android/build/evidence/six-batch-fixture/visual-manifest.json
+            android/build/evidence/six-batch-fixture/visual-instrumentation.log
+            android/build/evidence/six-batch-fixture/native_recall-runner.json
+            android/build/evidence/six-batch-fixture/native_recall-manifest.json
+            android/build/evidence/six-batch-fixture/native_recall-instrumentation.log
+            android/build/evidence/six-batch-fixture/native_recall_reopen-runner.json
+            android/build/evidence/six-batch-fixture/native_recall_reopen-manifest.json
+            android/build/evidence/six-batch-fixture/native_recall_reopen-instrumentation.log
+            android/build/evidence/six-batch-fixture/01-twelve-page-material.png
+            android/build/evidence/six-batch-fixture/02-outline-120-topics.png
+            android/build/evidence/six-batch-fixture/03-unavailable-return-keeps-location.png
+            android/build/evidence/six-batch-fixture/04-reopened-same-material.png
+            android/build/evidence/six-batch-fixture/05-layered-1000-stroke-pressure.png
+            android/build/evidence/six-batch-fixture/visual-wide-01-default-tools.png
+            android/build/evidence/six-batch-fixture/visual-wide-02-advanced-pen.png
+            android/build/evidence/six-batch-fixture/visual-wide-03-map-selected.png
+            android/build/evidence/six-batch-fixture/visual-wide-04-outline-selected.png
+            android/build/evidence/six-batch-fixture/visual-wide-05-long-card-title.png
+            android/build/evidence/six-batch-fixture/visual-wide-06-long-card-body.png
+            android/build/evidence/six-batch-fixture/visual-wide-07-long-card-annotation.png
+            android/build/evidence/six-batch-fixture/visual-wide-08-long-card-source.png
+            android/build/evidence/six-batch-fixture/visual-wide-09-page-layers.png
+            android/build/evidence/six-batch-fixture/visual-wide-10-whitespace-expanded.png
+            android/build/evidence/six-batch-fixture/visual-wide-11-whitespace-collapsed.png
+            android/build/evidence/six-batch-fixture/visual-wide-12-bound-region-collapsed.png
+            android/build/evidence/six-batch-fixture/visual-narrow-01-default-tools.png
+            android/build/evidence/six-batch-fixture/visual-narrow-02-advanced-pen.png
+            android/build/evidence/six-batch-fixture/visual-narrow-03-map-selected.png
+            android/build/evidence/six-batch-fixture/visual-narrow-04-outline-selected.png
+            android/build/evidence/six-batch-fixture/visual-narrow-05-long-card-title.png
+            android/build/evidence/six-batch-fixture/visual-narrow-06-long-card-body.png
+            android/build/evidence/six-batch-fixture/visual-narrow-07-long-card-annotation.png
+            android/build/evidence/six-batch-fixture/visual-narrow-08-long-card-source.png
+            android/build/evidence/six-batch-fixture/visual-narrow-09-page-layers.png
+            android/build/evidence/six-batch-fixture/visual-narrow-10-whitespace-expanded.png
+            android/build/evidence/six-batch-fixture/visual-narrow-11-whitespace-collapsed.png
+            android/build/evidence/six-batch-fixture/visual-narrow-12-bound-region-collapsed.png
+            android/build/evidence/six-batch-fixture/native-recall-01-source-masked.png
+            android/build/evidence/six-batch-fixture/native-recall-02-source-answer.png
+            android/build/evidence/six-batch-fixture/native-recall-03-source-revealed.png
+            android/build/evidence/six-batch-fixture/native-recall-04-cloze-masked.png
+            android/build/evidence/six-batch-fixture/native-recall-05-cloze-revealed.png
+            android/build/evidence/six-batch-fixture/native-recall-06-question-result.png

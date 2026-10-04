@@ -147,7 +147,7 @@ internal class StudyViewModel(val book:String,val repo:StudyRepository,private v
         val c=pending
         saved["study.pendingHistoryDirection"]=pendingHistoryDirection
         saved.set<ArrayList<String>?>("study.command",c?.let{arrayListOf(it.id,it.notebookId,it.action.name,it.cardId.orEmpty(),it.nodeId.orEmpty(),it.expectedRevision.toString(),it.parentId.orEmpty(),it.title,it.body,it.x.toString(),it.y.toString(),it.expectedGraph,it.mapId.orEmpty())})
-        saved["study.preview"]=c?.source?.previewBytes();saved["study.objectRevision"]=c?.source?.objectRevision
+        saved["study.preview"]=c?.source?.previewBytes();saved["study.objectRevision"]=c?.source?.objectRevision;saved["study.authoringRevision"]=c?.source?.authoringRevision
         saved["study.organization"]=c?.organization?.let(StudyOrganization::encode)
         saved["study.afterNodeId"]=c?.afterNodeId
         persistOrganization("study.pendingOrganizationUndo",pendingOrganizationUndo)
@@ -156,7 +156,7 @@ internal class StudyViewModel(val book:String,val repo:StudyRepository,private v
     private fun restorePending():StudyCommand?{
         val values=saved.get<ArrayList<String>>("study.command")?:return null
         require(values.size in 12..13&&values[1]==book)
-        val s=saved.get<ArrayList<String>>("study.source")?.let{require(it.size in 6..262);StudySourceDraft(it[0],it[1].toLong(),CanvasBounds(it[2].toDouble(),it[3].toDouble(),it[4].toDouble(),it[5].toDouble()),it.drop(6),saved["study.preview"],saved["study.objectRevision"])}
+        val s=saved.get<ArrayList<String>>("study.source")?.let{require(it.size in 6..262);StudySourceDraft(it[0],it[1].toLong(),CanvasBounds(it[2].toDouble(),it[3].toDouble(),it[4].toDouble(),it[5].toDouble()),it.drop(6),saved["study.preview"],saved["study.objectRevision"],saved["study.authoringRevision"])}
         return StudyCommand(values[0],book,StudyAction.valueOf(values[2]),values[3].ifEmpty{null},values[4].ifEmpty{null},values[5].toLong(),values[6].ifEmpty{null},values[7],values[8],values[9].toDouble(),values[10].toDouble(),s,values[11],values.getOrNull(12)?.ifEmpty{null},saved.get<ByteArray>("study.organization")?.let(StudyOrganization::decode),saved["study.afterNodeId"])
     }
     private fun persistOrganization(key:String,c:StudyCommand?){saved["$key.id"]=c?.id;saved[key]=c?.organization?.let(StudyOrganization::encode)}

@@ -58,8 +58,10 @@ class ImageRenderingTest {
                 val canvas=Canvas(target).apply{scale(10f,10f);translate(-180f,-80f)}
                 painter.draw(canvas,listOf(o),false,visible)
                 val row=(20 until 380).map{target.getPixel(it,200)}
-                assertTrue("Transparent source pixels must reveal blue, not the JPEG preview",row.count{Color.blue(it)>200&&Color.red(it)<40}>100)
-                assertTrue("One-pixel source stripes must remain distinct",row.count{Color.red(it)>200&&Color.blue(it)<40}>100)
+                val blueCount=row.count{Color.blue(it)>200&&Color.red(it)<40};val redCount=row.count{Color.red(it)>200&&Color.blue(it)<40}
+                val sample=row.take(12).joinToString{Integer.toHexString(it)}
+                assertTrue("Transparent source pixels must reveal blue, not JPEG: blue=$blueCount red=$redCount pixels=$sample sourceHasAlpha=${frame.bitmap.hasAlpha()} region=${frame.region}",blueCount>100)
+                assertTrue("One-pixel source stripes must remain distinct: blue=$blueCount red=$redCount pixels=$sample",redCount>100)
                 repeat(20){renderer!!.request(listOf(o),visible,10.0){error("A stable frame must not reload the original")};painter.draw(canvas,listOf(o),false,visible)}
                 assertEquals(1,renderer!!.decodeCount);assertFalse(renderer!!.pending)
             }finally{painter.clear();target.recycle()}
@@ -115,11 +117,13 @@ class ImageRenderingTest {
         ins.runOnMainSync{assertNull(renderer!!.frame(a));assertEquals(blue.sha256,renderer!!.frame(b)?.source);assertEquals(Color.BLUE,renderer!!.frame(b)!!.bitmap.getPixel(50,50))}
     }
 
-    @Test fun hiddenOffscreenAndLegacyImagesNeverReadOriginals(){
+    @Test fun offscreenAndLegacyImagesAndHiddenAuthorTextNeverReadOriginals(){
         val original=source();val o=item(original);val reads=AtomicInteger()
         ins.runOnMainSync{
             renderer=ImageRendering(context,{})
-            renderer!!.request(listOf(o.copy(hidden=true),o.copy(id=UUID.randomUUID().toString(),x=2000f),item(null)),full,1.0){reads.incrementAndGet();original}
+            // hidden is the existing source-text replacement flag, not a user image-layer switch.
+            val hiddenText=PageObject(UUID.randomUUID().toString(),PageObjectKind.TEXT,0f,0f,400f,200f,text="隐藏的转换原文",sourceStrokeIds=listOf(UUID.randomUUID().toString()),hidden=true)
+            renderer!!.request(listOf(hiddenText,o.copy(id=UUID.randomUUID().toString(),x=2000f),item(null)),full,1.0){reads.incrementAndGet();original}
             assertFalse(renderer!!.pending);assertEquals(0,reads.get());assertNull(renderer!!.frame(o))
         }
     }

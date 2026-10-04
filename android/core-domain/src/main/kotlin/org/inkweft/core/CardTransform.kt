@@ -22,13 +22,17 @@ data class CardTransformCard(val id:String,val revision:Long,val title:String,va
     val presentation:KnowledgeData.CardPresentation,val sources:List<StudySourceVersionRef>,val sourcesComplete:Boolean=true)
 data class CardTransformTarget(val id:String,val title:String,val body:String,val annotation:String,
     val sources:List<StudySourceVersionRef>,val cardColor:CardTint=CardTint.DEFAULT,val titleBarColor:CardTint=CardTint.DEFAULT)
+data class CardTransformPlacement(val nodeId:String,val mapId:String?,val parentId:String?,val x:Double,val y:Double,val expectedGraph:String) {
+    init{listOfNotNull(nodeId,mapId,parentId).forEach{UUID.fromString(it)};require(x.isFinite()&&y.isFinite()&&x in -40000.0..40000.0&&y in -40000.0..40000.0);require(expectedGraph.matches(Regex("[0-9a-f]{64}")))}
+}
 /** The input fingerprint covers content, presentation, references, questions and independent placements. */
 class CardTransformPlan(val operationId:String,val notebookId:String,val kind:CardTransformKind,val expectedFingerprint:String,
-    inputs:List<CardTransformCard>,targets:List<CardTransformTarget>) {
+    inputs:List<CardTransformCard>,targets:List<CardTransformTarget>,val summaryPlacement:CardTransformPlacement?=null) {
     val inputs=inputs.map{it.copy(sources=it.sources.toList())}.toList()
     val targets=targets.map{it.copy(sources=it.sources.toList())}.toList()
     init {
         listOf(operationId,notebookId).forEach{UUID.fromString(it)}
+        require(summaryPlacement==null||kind==CardTransformKind.SUMMARY)
         require(expectedFingerprint.matches(Regex("[0-9a-f]{64}")))
         require(this.inputs.size in 1..16&&this.targets.size in 1..16)
         require(this.inputs.map{it.id}.distinct().size==this.inputs.size)
@@ -70,19 +74,21 @@ object CardTransformCodec {
     const val MAX_BYTES=2_000_000
     fun encode(plan:CardTransformPlan):ByteArray=ByteArrayOutputStream().also{out->DataOutputStream(out).use{d->
         fun text(s:String){val b=s.toByteArray(Charsets.UTF_8);d.writeInt(b.size);d.write(b)}
-        d.writeInt(0x49575431);d.writeUTF(plan.operationId);d.writeUTF(plan.notebookId);d.writeUTF(plan.kind.name);d.writeUTF(plan.expectedFingerprint)
+        d.writeInt(if(plan.summaryPlacement==null)0x49575431 else 0x49575432);d.writeUTF(plan.operationId);d.writeUTF(plan.notebookId);d.writeUTF(plan.kind.name);d.writeUTF(plan.expectedFingerprint)
         d.writeInt(plan.inputs.size);plan.inputs.forEach{c->d.writeUTF(c.id);d.writeLong(c.revision);text(c.title);text(c.body);text(c.presentation.annotation);d.writeUTF(c.presentation.cardColor.name);d.writeUTF(c.presentation.titleBarColor.name);text(StudySourceRefs.encode(c.sources));d.writeBoolean(c.sourcesComplete)}
         d.writeInt(plan.targets.size);plan.targets.forEach{c->d.writeUTF(c.id);text(c.title);text(c.body);text(c.annotation);text(StudySourceRefs.encode(c.sources));d.writeUTF(c.cardColor.name);d.writeUTF(c.titleBarColor.name)}
+        plan.summaryPlacement?.let{p->d.writeUTF(p.nodeId);d.writeUTF(p.mapId.orEmpty());d.writeUTF(p.parentId.orEmpty());d.writeDouble(p.x);d.writeDouble(p.y);d.writeUTF(p.expectedGraph)}
     }}.toByteArray().also{require(it.size<=MAX_BYTES)}
     fun decode(bytes:ByteArray):CardTransformPlan {
         require(bytes.size<=MAX_BYTES)
         return DataInputStream(ByteArrayInputStream(bytes)).use{d->
             fun text():String {val n=d.readInt();require(n in 0..MAX_BYTES&&n<=d.available());val b=ByteArray(n);d.readFully(b);return Charsets.UTF_8.newDecoder().onMalformedInput(java.nio.charset.CodingErrorAction.REPORT).onUnmappableCharacter(java.nio.charset.CodingErrorAction.REPORT).decode(java.nio.ByteBuffer.wrap(b)).toString()}
             fun count()=d.readInt().also{require(it in 1..16)}
-            require(d.readInt()==0x49575431);val op=d.readUTF();val book=d.readUTF();val kind=CardTransformKind.valueOf(d.readUTF());val fingerprint=d.readUTF()
+            val magic=d.readInt();require(magic==0x49575431||magic==0x49575432);val op=d.readUTF();val book=d.readUTF();val kind=CardTransformKind.valueOf(d.readUTF());val fingerprint=d.readUTF()
             val cards=List(count()){val id=d.readUTF();val rev=d.readLong();val title=text();val body=text();val annotation=text();val color=CardTint.valueOf(d.readUTF());val titleColor=CardTint.valueOf(d.readUTF());CardTransformCard(id,rev,title,body,KnowledgeData.CardPresentation(id,annotation,color,titleColor),StudySourceRefs.decode(text()),d.readBoolean())}
             val targets=List(count()){CardTransformTarget(d.readUTF(),text(),text(),text(),StudySourceRefs.decode(text()),CardTint.valueOf(d.readUTF()),CardTint.valueOf(d.readUTF()))}
-            require(d.read()==-1);CardTransformPlan(op,book,kind,fingerprint,cards,targets)
+            val placement=if(magic==0x49575432)CardTransformPlacement(d.readUTF(),d.readUTF().ifEmpty{null},d.readUTF().ifEmpty{null},d.readDouble(),d.readDouble(),d.readUTF())else null
+            require(d.read()==-1);CardTransformPlan(op,book,kind,fingerprint,cards,targets,placement)
         }
     }
 }

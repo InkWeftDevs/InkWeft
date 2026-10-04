@@ -133,7 +133,9 @@ class KnowledgeTextRepositoryTest {
         val pinned = link(db, book, target, 1)
         StudyRepository(db).submit(StudyCommand(id(), book, StudyAction.EDIT, cardId = target.id,
             expectedRevision = 1, title = "当前新标题", body = "当前新正文"))
-        // Deliberately remove the selected historical row only in this disposable fault fixture.
+        // Deliberately remove this version and its new FK child only in this disposable fault fixture.
+        // The live link remains; the unavailable-version reader must still never fall back.
+        db.openHelper.writableDatabase.execSQL("DELETE FROM study_card_source_sets WHERE cardId=? AND cardRevision=1", arrayOf(target.id))
         db.openHelper.writableDatabase.execSQL("DELETE FROM study_card_revisions WHERE cardId=? AND revision=1", arrayOf(target.id))
         val repository = KnowledgeTextRepository(db)
         val before = authorState(db)

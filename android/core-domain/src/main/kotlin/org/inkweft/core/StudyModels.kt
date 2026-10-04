@@ -11,12 +11,12 @@ object StudyCapacity {
     const val MAX_SNAPSHOT_BYTES=32_000_000L
     const val MAX_SOURCE_BYTES=1_800_000
 }
-class StudySourceDraft(val pageId:String,val inkRevision:Long,val bounds:CanvasBounds,ids:List<String>,preview:ByteArray?=null,val objectRevision:Long?=null){
+class StudySourceDraft(val pageId:String,val inkRevision:Long,val bounds:CanvasBounds,ids:List<String>,preview:ByteArray?=null,val objectRevision:Long?=null,val authoringRevision:Long?=null){
     private val image=preview?.clone()
     fun previewBytes()=image?.clone()
     val strokeIds:List<String> = java.util.Collections.unmodifiableList(ids.sorted())
     init{UUID.fromString(pageId);require(inkRevision>=0);require(ids.size in (if(image==null)1 else 0)..256&&ids.distinct().size==ids.size);ids.forEach{UUID.fromString(it)}
-        require(image==null||(bounds.right>bounds.left&&bounds.bottom>bounds.top));require(image==null||(image.size in 5..240_000&&image[0]==0xff.toByte()&&image[1]==0xd8.toByte()));require(objectRevision==null||objectRevision>=0)
+        require(image==null||(bounds.right>bounds.left&&bounds.bottom>bounds.top));require(image==null||(image.size in 5..240_000&&image[0]==0xff.toByte()&&image[1]==0xd8.toByte()));require(objectRevision==null||objectRevision>=0);require(authoringRevision==null||authoringRevision>=0)
         require(bounds.left>=-BoardLimits.WORLD&&bounds.right<=BoardLimits.WORLD&&bounds.top>=-BoardLimits.WORLD&&bounds.bottom<=BoardLimits.WORLD)}
 }
 data class StudyNode(val id:String,val cardId:String,val parentId:String?,val x:Double,val y:Double,val revision:Long=1,val removed:Boolean=false)
@@ -77,6 +77,7 @@ class StudyCommand(val id:String,val notebookId:String,val action:StudyAction,va
             val text=body.toByteArray(Charsets.UTF_8);d.writeInt(text.size);d.write(text);d.writeLong(expectedRevision);d.writeDouble(x);d.writeDouble(y)
             d.writeBoolean(source!=null);source?.let{s->d.writeUTF(s.pageId);d.writeLong(s.inkRevision);listOf(s.bounds.left,s.bounds.top,s.bounds.right,s.bounds.bottom).forEach(d::writeDouble);d.writeInt(s.strokeIds.size);s.strokeIds.forEach(d::writeUTF)}
             source?.previewBytes()?.let{d.writeUTF("region-preview");d.writeUTF(ContentTransfer.hash(it));d.writeLong(source.objectRevision?:-1)}
+            source?.authoringRevision?.let{d.writeUTF("source-authoring-v1");d.writeLong(it)}
             mapId?.let{d.writeUTF("map");d.writeUTF(it)}
             frozenOrganization?.let{d.writeUTF("organization");d.writeInt(it.size);d.write(it)}
             afterNodeId?.let{d.writeUTF("after-node");d.writeUTF(it)}

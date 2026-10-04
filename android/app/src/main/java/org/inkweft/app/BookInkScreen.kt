@@ -90,6 +90,7 @@ fun InkScreen(note:NoteDraft,workspace:WorkspaceViewModel=viewModel(),onBack:()-
     val entries by workspace.entries.collectAsStateWithLifecycle()
     val studyPanel:StudyPanelSession=viewModel(key="study-panel-${note.base.id}")
     var initialStudyCard by studyPanel.card
+    var initialStudyCardRequest by rememberSaveable(note.base.id){mutableLongStateOf(0L)}
     var studyOpen by studyPanel.opened
     var studySource by studyPanel.source
     var sourceNavigation by remember(note.base.id){mutableStateOf<Job?>(null)}
@@ -192,7 +193,7 @@ fun InkScreen(note:NoteDraft,workspace:WorkspaceViewModel=viewModel(),onBack:()-
     val pageActionsReady=canNavigate&&!ui.busy&&!ui.actionUnknown&&!ui.insertionUnknown&&studyCanLeave&&excerptReady
     val pageAuthorReady=pageActionsReady&&!readOnly
     val pageInsertReady=pageAuthorReady&&newPagePaperReady
-    LaunchedEffect(note.base.id,requestedCard,pageActionsReady,hasAuthorDraft,knowledgeOpen){requestedCard?.let{if(pageActionsReady&&!hasAuthorDraft&&showDocumentPanel("map")){initialStudyCard=it;workspace.consumeStudyCardNavigation(note.base.id,it)}}}
+    LaunchedEffect(note.base.id,requestedCard,pageActionsReady,hasAuthorDraft,knowledgeOpen){requestedCard?.let{if(pageActionsReady&&!hasAuthorDraft&&showDocumentPanel("map")){initialStudyCard=it;initialStudyCardRequest++;workspace.consumeStudyCardNavigation(note.base.id,it)}}}
     val sourceReady by rememberUpdatedState(pageActionsReady&&!hasAuthorDraft&&studyOpen&&!mapMinimized)
     SideEffect{if(!sourceReady)cancelSourceNavigation();app.navigationReady.value=pageActionsReady&&!hasAuthorDraft}
     androidx.activity.compose.BackHandler(panelOpen&&pageActionsReady&&!hasAuthorDraft){if(leaveStudyReview()){endSourceReading();directory=false;documentSettings=false;mapMinimized=true;excerptsOpen=false}}
@@ -280,10 +281,10 @@ fun InkScreen(note:NoteDraft,workspace:WorkspaceViewModel=viewModel(),onBack:()-
         else Box(Modifier.weight(1f)){val pendingSourceRequest=sourceFocusRequest;val pendingSourceFocus=sourceFocus?.takeIf{it.first==page.id};InkPageScreen(note,workspace,page,{if(!it)cancelSourceNavigation();canNavigate=it},{_->if(!hasAuthorDraft)showDocumentPanel("search")},paperVisible&&!ui.busy&&!ui.actionUnknown&&!ui.insertionUnknown&&pageActionId==null,
             readOnlyRequest=readOnlyRequest,workspaceModesProvided=true,pageToolRequest=pageToolRequest,onAuthorDraft={paperAuthorDraft=it},embedRequest=studyPanel.embedInsertion.value?.takeIf{it.pageId==page.id},onEmbedConsumed={studyPanel.embedInsertion.value=null},
             onEditMap={embed->if(showDocumentPanel("map")){studySession.selectMap(embed.target.mapId);studySession.selectTab(2);studySession.focusedByMap[embed.target.key]=embed.branchId;embed.branchId?.let{studySession.revealByMap[embed.target.key]=it}}},
-            onMapExcerpt={selection->if(readLock.canWrite){studySession.clear();studyPanel.captureResult.value=null;studyPanel.captureDraft.value=CaptureDraft(note.base.id,StudySourceDraft(page.id,selection.revision,selection.region.bounds,selection.strokes.map{it.id},selection.preview,selection.objectRevision),selection.excerptText)}},
+            onMapExcerpt={selection->if(readLock.canWrite){studySession.clear();studyPanel.captureResult.value=null;studyPanel.captureDraft.value=CaptureDraft(note.base.id,StudySourceDraft(page.id,selection.revision,selection.region.bounds,selection.strokes.map{it.id},selection.preview,selection.objectRevision,selection.authoringRevision),selection.excerptText)}},
             onAssociate={selection->if(readLock.canWrite)showDocumentPanel("associations",KnowledgeData.Anchor(page.id,selection.revision,selection.region.bounds,selection.strokes.map{it.id}))},
             onExcerpt={selection->
-                if(excerptReady&&readLock.canWrite&&showDocumentPanel("excerpts")){excerptsVm.submit(StudyCommand(java.util.UUID.randomUUID().toString(),note.base.id,StudyAction.CREATE_EXCERPT,cardId=java.util.UUID.randomUUID().toString(),title="第${page.position+1}页摘录",body=selection.excerptText,source=StudySourceDraft(page.id,selection.revision,selection.region.bounds,selection.strokes.map{it.id},selection.preview,selection.objectRevision)))}
+                if(excerptReady&&readLock.canWrite&&showDocumentPanel("excerpts")){excerptsVm.submit(StudyCommand(java.util.UUID.randomUUID().toString(),note.base.id,StudyAction.CREATE_EXCERPT,cardId=java.util.UUID.randomUUID().toString(),title="第${page.position+1}页摘录",body=selection.excerptText,source=StudySourceDraft(page.id,selection.revision,selection.region.bounds,selection.strokes.map{it.id},selection.preview,selection.objectRevision,selection.authoringRevision)))}
             },
             focusRegion=pendingSourceFocus?.second?:sourceReadingTarget?.takeIf{it.first==page.id}?.second,focusRequest=pendingSourceRequest,onFocusConsumed={if(sourceFocusRequest==pendingSourceRequest&&sourceFocus==pendingSourceFocus)sourceFocus=null},pageNavigation={
                 if(!page.world)Text("${page.position+1} / ${ui.pages.size}",fontSize=12.sp,modifier=Modifier.testTag("page-counter"))
@@ -315,7 +316,7 @@ fun InkScreen(note:NoteDraft,workspace:WorkspaceViewModel=viewModel(),onBack:()-
         }
     }
     if(excerptsOpen)DocumentSidePanel("摘录","excerpt-panel",{if(excerptReady)excerptsOpen=false},Modifier.align(Alignment.CenterEnd).width(panelWidth)){
-        ExcerptCollection(excerptsVm,ui.pages,pageActionsReady,{source->vm.select(source.pageId);revealSource(source.pageId,CanvasBounds(source.left,source.top,source.right,source.bottom))}, {card->if(showDocumentPanel("map")){initialStudyCard=card;studySource=null}})
+        ExcerptCollection(excerptsVm,ui.pages,pageActionsReady,{source->vm.select(source.pageId);revealSource(source.pageId,CanvasBounds(source.left,source.top,source.right,source.bottom))}, {card->if(showDocumentPanel("map")){initialStudyCard=card;initialStudyCardRequest++;studySource=null}})
     }
     if(searchOpen)searchStateHolder.SaveableStateProvider("search-${note.base.id}"){BookSearchPanel(note.base.id,note.title,page?.id,{searchOpen=false},{id,bounds->
         if(ui.pages.any{it.id==id}){if(bounds!=null)revealSource(id,bounds);vm.select(id);searchOpen=false}
@@ -386,7 +387,7 @@ fun InkScreen(note:NoteDraft,workspace:WorkspaceViewModel=viewModel(),onBack:()-
     if(studyOpen)studyUiState.SaveableStateProvider(note.base.id){FloatingStudyWindow(note.base.id,enabled=pageActionsReady&&!hasAuthorDraft&&!knowledgeOpen,minimized=mapMinimized,
         onMinimize={if(it){endSourceReading();mapMinimized=true;mapActive=false}else showDocumentPanel("map")},docked=!floatingMap,onDock={endSourceReading();floatingMap=!it},close={endSourceReading();studyOpen=false},
         paneLayout=paneLayout,topInset=chromeHeight,paneActive=effectiveMapActive,onActivate={if(!hasAuthorDraft)mapActive=true},onAuthorDraft={if(it&&!mapAuthorDraft)endSourceReading();mapAuthorDraft=it},frameEnabled=pageActionsReady&&!knowledgeOpen,sourceReading=sourceReading,beforeContentExit={leaveStudyReview()}){
-        StudyContent(note,studySource,{endSourceReading();studyOpen=false},initialCardId=initialStudyCard,documentReady=pageActionsReady,compactWindow=true,showReadControl=false,capacityVisible=mapVisible,sourceRequest=studyPanel.captureRequest.longValue,reviewLeaveRequest=studyReviewLeaveRequest,
+        StudyContent(note,studySource,{endSourceReading();studyOpen=false},initialCardId=initialStudyCard,cardOpenRequest=initialStudyCardRequest,documentReady=pageActionsReady,compactWindow=true,showReadControl=false,capacityVisible=mapVisible,sourceRequest=studyPanel.captureRequest.longValue,reviewLeaveRequest=studyReviewLeaveRequest,
             reviewRequest=studyPanel.reviewRequest.value,workModeRequest=workModeRequest,onReviewActive={recalling=it},onInsertEmbed={embed->
             if(readLock.canWrite)page?.let{p->endSourceReading();readingMode(false);studyPanel.embedInsertion.value=EmbedInsertion(p.id,java.util.UUID.randomUUID().toString(),embed);mapMinimized=true}
         }){source->
@@ -497,14 +498,17 @@ private fun PageSearchDialog(draft:PageSearchDraft,dismiss:()->Unit){
     var objectRevision by remember(draft){mutableLongStateOf(draft.objectRevision)};var ocr by remember{mutableStateOf(false)}
     var text by remember(draft){mutableStateOf(draft.text)};var busy by remember{mutableStateOf(false)}
     var message by remember(draft){mutableStateOf(if(draft.stale)"本页手写已有变化，请重新识别并校对。"else null)}
-    EditorPanel("校对手写识别","",{if(!busy)dismiss()},"page-search-dialog",footer={Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.End){TextButton(onClick=dismiss,enabled=!busy){Text("取消")};TextButton(onClick={busy=true;scope.launch{try{if(withContext(Dispatchers.IO){app.pages.saveSearchText(pageId,revision,text,objectRevision,if(ocr)"OCR"else"MANUAL")})dismiss()else message="笔迹已更新，没有套用到新版本。请关闭后重新核对。"}catch(c:CancellationException){throw c}catch(_:Exception){message="校对尚未保存，请重试。"}finally{busy=false}}},enabled=!busy,modifier=Modifier.testTag("save-page-search")){Text("保存校对")}}}){Column(Modifier.verticalScroll(rememberScrollState()),verticalArrangement=Arrangement.spacedBy(4.dp)){
+    EditorPanel("校对手写识别","",{if(!busy)dismiss()},"page-search-dialog",footer={Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.End){TextButton(onClick=dismiss,enabled=!busy){Text("取消")};TextButton(onClick={busy=true;scope.launch{try{if(withContext(Dispatchers.IO){app.pages.saveSearchText(pageId,revision,text,objectRevision,if(ocr)"OCR"else"MANUAL",draft.authoringRevision)})dismiss()else message="页面内容或图层已更新，没有套用到新版本。请关闭后重新核对。"}catch(c:CancellationException){throw c}catch(_:Exception){message="校对尚未保存，请重试。"}finally{busy=false}}},enabled=!busy,modifier=Modifier.testTag("save-page-search")){Text("保存校对")}}}){Column(Modifier.verticalScroll(rememberScrollState()),verticalArrangement=Arrangement.spacedBy(4.dp)){
         Text("只修正查找用的文字，保留纸面手写。",fontSize=12.sp,color=Quiet)
         TextButton(onClick={busy=true;message="正在离线识别…";scope.launch{try{
-            val pair=withContext(Dispatchers.IO){app.inkRepository.read(pageId) to app.pageObjects.read(pageId)}
-            check(pair.first.revision==revision);objectRevision=pair.second.revision
-            val suppressed=pair.second.objects.flatMap{it.sourceStrokeIds}.toSet()
-            val result=app.handwriting.recognize(InkSession(pair.first).visibleDraft().filterNot{it.id in suppressed})
-            text=(listOf(result.text)+pair.second.objects.filter{!it.hidden&&it.kind==PageObjectKind.TEXT}.map{it.visibleText()}).filter{it.isNotBlank()}.joinToString("\n").also{require(it.length<=20000)}
+            val frozen=withContext(Dispatchers.IO){app.authoring.exportPage(pageId)}
+            check(frozen.authoring.inkRevision==revision&&frozen.authoring.revision==draft.authoringRevision)
+            objectRevision=frozen.authoring.objectRevision
+            val layers=frozen.authoring.state.layers
+            val visibleObjects=frozen.objects.filter{layers.visible(LayerContent(LayerContentKind.OBJECT,it.id))}
+            val suppressed=visibleObjects.flatMap{it.sourceStrokeIds}.toSet()
+            val result=app.handwriting.recognize(frozen.ink.filter{layers.visible(LayerContent(LayerContentKind.INK,it.id))&&it.id !in suppressed})
+            text=(listOf(result.text)+visibleObjects.filter{!it.hidden&&it.kind==PageObjectKind.TEXT}.map{it.visibleText()}).filter{it.isNotBlank()}.joinToString("\n").also{require(it.length<=20000)}
             ocr=true;message=if(text.isBlank())"未识别到文字，可手动补充关键词。"else"识别完成，请核对后保存。"
         }catch(c:CancellationException){throw c}catch(_:Exception){message="识别未完成或页面已经变化。原笔迹保留，可关闭后重试。"}finally{busy=false}}},enabled=!busy,modifier=Modifier.testTag("recognize-page")){Text("识别本页手写")}
         if(busy)LinearProgressIndicator(Modifier.fillMaxWidth())

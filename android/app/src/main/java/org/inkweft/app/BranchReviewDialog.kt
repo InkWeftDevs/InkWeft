@@ -109,18 +109,42 @@ internal val BranchReviewRoundSaver = Saver<BranchReviewRound, ByteArray>(
 }
 
 /** Fixed recall identities with session-only permission to inspect related clues. */
-@Composable internal fun BranchReviewDialog(plan:BranchReviewPlan, dismiss:()->Unit, showSummary:Boolean=true,showCollectionScope:Boolean=false,showCardScope:Boolean=false,consultedOriginal:Boolean=false,workModes:(@Composable (Boolean)->Unit)?=null) {
+@Composable internal fun BranchReviewDialog(plan:BranchReviewPlan, dismiss:()->Unit, showSummary:Boolean=true,showCollectionScope:Boolean=false,showCardScope:Boolean=false,consultedOriginal:Boolean=false,workModes:(@Composable (Boolean)->Unit)?=null,onOriginalGateChanged:(RecallOriginalGate?)->Unit={}) {
     val sessionKey=remember(plan){plan.entries.joinToString(";"){"${it.questionId}:${it.questionRevision}:${it.cardId}:${it.cardRevision}"}}
     key(plan.ref.notebookId,plan.ref.mapId,plan.branchId,plan.scope,sessionKey,showCardScope){
-        RecallWindowIsolation { BranchReviewContent(plan,dismiss,showSummary,showCollectionScope,showCardScope,consultedOriginal,workModes) }
+        RecallWindowIsolation { BranchReviewContent(plan,dismiss,showSummary,showCollectionScope,showCardScope,consultedOriginal,workModes,onOriginalGateChanged) }
     }
 }
 
-@Composable private fun BranchReviewContent(plan:BranchReviewPlan,dismiss:()->Unit,showSummary:Boolean,showCollectionScope:Boolean,showCardScope:Boolean,consultedOriginal:Boolean,workModes:(@Composable (Boolean)->Unit)?) {
+@Composable private fun BranchReviewContent(plan:BranchReviewPlan,dismiss:()->Unit,showSummary:Boolean,showCollectionScope:Boolean,showCardScope:Boolean,consultedOriginal:Boolean,workModes:(@Composable (Boolean)->Unit)?,onOriginalGateChanged:(RecallOriginalGate?)->Unit) {
+    var durable by rememberSaveable{mutableStateOf(false)}
+    var durableExposure by rememberSaveable{mutableStateOf(false)}
+    val app=LocalContext.current.applicationContext as InkWeftApplication
+    var recoveryChecked by remember{mutableStateOf(false)}
+    var recoveryError by remember{mutableStateOf(false)}
+    var recoveryRetry by remember{mutableIntStateOf(0)}
+    LaunchedEffect(plan.ref.notebookId,recoveryRetry){
+        if(durable){recoveryChecked=true;return@LaunchedEffect}
+        try{
+            durable=withContext(Dispatchers.IO){app.study.recall().resume(plan.ref.notebookId)!=null||RecallStudyViewModel.hasPending(app,plan.ref.notebookId)}
+            recoveryChecked=true;recoveryError=false
+        }catch(c:CancellationException){throw c}catch(_:Exception){recoveryError=true}
+    }
+    if(durable){RecallStudyDialog(plan,dismiss,workModes,onOriginalGateChanged,consultedOriginal||durableExposure);return}
+    if(!recoveryChecked){
+        val shield=LocalRecallWindowShield.current
+        SideEffect{shield?.setActive(true)}
+        Dialog(onDismissRequest={}){RecallWindowPermit();Surface{Column(Modifier.padding(24.dp)){
+            Text(if(recoveryError)"无法核对未完成的回忆，未另开轮次"else"正在恢复本笔记的回忆…")
+            if(recoveryError)TextButton({recoveryError=false;recoveryRetry++}){Text("重新核对")}
+            else LinearProgressIndicator(Modifier.fillMaxWidth())
+        }}}
+        return
+    }
     val round=rememberSaveable(stateSaver=BranchReviewRoundSaver){mutableStateOf(BranchReviewRound(UUID.randomUUID().toString(),plan))}
     var retryKind by rememberSaveable{mutableStateOf<String?>(null)}
     key(round.value.roundId){
-        BranchReviewRoundContent(round,dismiss,showSummary&&retryKind==null,showCollectionScope,showCardScope,retryKind,consultedOriginal,workModes){next,selection->
+        BranchReviewRoundContent(round,dismiss,showSummary&&retryKind==null,showCollectionScope,showCardScope,retryKind,consultedOriginal,workModes,{exposed->durableExposure=exposed;durable=true}){next,selection->
             retryKind=selection.name
             round.value=BranchReviewRound(UUID.randomUUID().toString(),next)
         }
@@ -128,7 +152,7 @@ internal val BranchReviewRoundSaver = Saver<BranchReviewRound, ByteArray>(
 }
 
 @Composable private fun BranchReviewRoundContent(roundState:MutableState<BranchReviewRound>,dismiss:()->Unit,
-    showSummary:Boolean,showCollectionScope:Boolean,showCardScope:Boolean,retryKind:String?,consultedOriginal:Boolean,workModes:(@Composable (Boolean)->Unit)?,retryReady:(BranchReviewPlan,BranchReviewRetrySelection)->Unit) {
+    showSummary:Boolean,showCollectionScope:Boolean,showCardScope:Boolean,retryKind:String?,consultedOriginal:Boolean,workModes:(@Composable (Boolean)->Unit)?,durableReady:(Boolean)->Unit,retryReady:(BranchReviewPlan,BranchReviewRetrySelection)->Unit) {
     var round by roundState
     val visibleRoundId=round.roundId
     val visiblePendingOperation=round.pending?.operationId
@@ -145,6 +169,7 @@ internal val BranchReviewRoundSaver = Saver<BranchReviewRound, ByteArray>(
     var revealed by rememberSaveable { mutableStateOf(false) }
     var answerEnterEvent by remember(index){mutableIntStateOf(0)}
     var answerEnterPending by remember(index){mutableStateOf(false)}
+    var cluesConsulted by rememberSaveable { mutableStateOf(false) }
     var hints by rememberSaveable { mutableStateOf(false) }
     var sourceOpen by rememberSaveable { mutableStateOf(false) }
     var loaded by remember { mutableStateOf<List<FrozenBranchReviewQuestion>?>(null) }
@@ -158,6 +183,7 @@ internal val BranchReviewRoundSaver = Saver<BranchReviewRound, ByteArray>(
     var resultsOpen by rememberSaveable { mutableStateOf(false) }
     var resultSelection by rememberSaveable { mutableStateOf<BranchReviewRetrySelection?>(null) }
     val scope=rememberCoroutineScope()
+    SideEffect{if(hints||revealed||sourceOpen)cluesConsulted=true}
     val unresolved=round.pending?.rejected==false
     val rejected=round.pending?.rejected==true
     val busy=ui.busy||ui.unknown||ui.completedOperation!=null||unresolved||checking||retryPreparing
@@ -246,6 +272,8 @@ internal val BranchReviewRoundSaver = Saver<BranchReviewRound, ByteArray>(
                                 modifier=Modifier.testTag("branch-review-confirm-pending"))
                             TextButton(onClick={checkAttempt++},modifier=Modifier.heightIn(min=48.dp).testTag("branch-review-confirm-retry")){Text("重新核对原结果")}
                         }
+                        if(started&&round.results.isEmpty()&&!busy)OutlinedButton({durableReady(consultedOriginal||cluesConsulted)},
+                            modifier=Modifier.fillMaxWidth().heightIn(min=48.dp).testTag("branch-review-durable")){Text("持久回忆：作答与到期复习")}
                         if(!started){
                             Column(Modifier.fillMaxWidth(),verticalArrangement=Arrangement.spacedBy(16.dp)) {
                                 Text("本轮回忆范围",style=MaterialTheme.typography.headlineSmall)
@@ -265,6 +293,8 @@ internal val BranchReviewRoundSaver = Saver<BranchReviewRound, ByteArray>(
                                     else Text("这部分尚无问题。可从摘要卡的“属性与回忆”添加问题，原内容不变。")
                                 }
                             }
+                            OutlinedButton(onClick={durableReady(consultedOriginal||cluesConsulted)},enabled=plan.entries.isNotEmpty()&&!busy,
+                                modifier=Modifier.fillMaxWidth().heightIn(min=48.dp).testTag("branch-review-durable")){Text("持久回忆：作答、题型与到期复习")}
                             Button(onClick={started=true},enabled=plan.entries.isNotEmpty()&&!busy,
                                 modifier=Modifier.fillMaxWidth().heightIn(min=48.dp).testTag("branch-review-start")){Text("开始回忆")}
                         }else if(round.complete){

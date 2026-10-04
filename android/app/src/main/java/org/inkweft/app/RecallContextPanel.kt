@@ -88,7 +88,7 @@ private const val RecallPlaceholderColor:Int = 0xfff4f7f5.toInt()
     },modifier=Modifier.fillMaxWidth().height(160.dp).testTag(tag))
 }
 
-private data class RecallSourcePage(val title:String,val page:NotebookPageRow,val strokes:List<InkStroke>,val objects:List<PageObject>)
+private data class RecallSourcePage(val title:String,val page:NotebookPageRow,val strokes:List<InkStroke>,val objects:List<PageObject>,val authoring:PageAuthoring)
 private class RecallSourceChanged:Exception()
 private class RecallSourceUnavailable:Exception()
 private class RecallMapUnrelated:Exception()
@@ -141,7 +141,7 @@ private fun sourceFailure(error:Exception):String = when(error) {
                 val objects=app.pageObjects.read(owned.id).objects.filter{
                     it.mapEmbed?.target?.notebookId?.let{book->book==plan.ref.notebookId}!=false
                 }
-                RecallSourcePage(note.title,owned,InkSession(ink).visibleDraft(),objects)
+                RecallSourcePage(note.title,owned,InkSession(ink).visibleDraft(),objects,app.authoring.readPage(owned.id).state)
             }
             page=value
         } catch(c:CancellationException) { throw c }
@@ -159,7 +159,7 @@ private fun sourceFailure(error:Exception):String = when(error) {
         }
         return
     }
-    Text("${loaded.title} · 第 ${loaded.page.position+1} 页 · 当前来源，只读",
+    Text("${loaded.title} · 第 ${loaded.page.position+1} 页 · 原页视图（不含展开留白），只读",
         maxLines=2,overflow=TextOverflow.Ellipsis,modifier=Modifier.testTag("recall-context-source-title"))
     AndroidView(factory={context->InkCanvasView(context).also { native->
         native.allowInput=false;native.fingerWrites=false
@@ -172,7 +172,7 @@ private fun sourceFailure(error:Exception):String = when(error) {
         native.allowInput=false;native.fingerWrites=false
         native.onNotice={error="来源呈现失败，本题固定问答仍保留。"}
         native.configure(loaded.page.world,PaperStyle.entries[loaded.page.paper],null)
-        native.showDocument(loaded.page.id);native.showObjects(loaded.objects);native.showStrokes(loaded.strokes)
+        native.showAuthoring(loaded.authoring);native.showDocument(loaded.page.id);native.showObjects(loaded.objects);native.showStrokes(loaded.strokes)
     },modifier=Modifier.fillMaxWidth().height(280.dp).testTag("recall-context-source-canvas"))
     Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState())) {
         TextButton({view?.zoomBy(1/1.2)},modifier=Modifier.heightIn(min=48.dp).testTag("recall-context-source-zoom-out")){Text("缩小")}
@@ -296,8 +296,19 @@ private fun sourceFailure(error:Exception):String = when(error) {
     }},onRelease={native->native.showDocument(null);native.showObjects(emptyList());native.showStrokes(emptyList())},update={native->
         native.preview=true;native.allowInput=false;native.fingerWrites=false
         native.configure(loaded.world,PaperStyle.BLANK,null)
+        native.showAuthoring(loaded.authoring);native.showImageSources(loaded.imageSources)
         native.showStrokes(loaded.strokes);native.showObjects(loaded.objects.filter{
             it.mapEmbed?.target?.notebookId?.let{book->book==plan.ref.notebookId}!=false
         })
     },modifier=Modifier.fillMaxWidth().height(240.dp).testTag("recall-context-excerpt-canvas"))
+}
+
+/** Durable typed recall uses the same original-context surface without ever exposing neighbour content. */
+@Composable internal fun RecallContextPanel(plan:BranchReviewPlan,current:RecallLoadedAttempt,enabled:Boolean,onReveal:(Int)->Unit){
+    var showMap by rememberSaveable(current.row.id){mutableStateOf(false)}
+    Column(Modifier.fillMaxWidth().testTag("recall-durable-context"),verticalArrangement=Arrangement.spacedBy(8.dp)){
+        RecallQuestionProjection(current,enabled,onReveal)
+        TextButton({showMap=!showMap},enabled=enabled){Text(if(showMap)"收起原导图位置"else"在原导图位置回忆（其他主题保持遮挡）")}
+        if(showMap)RecallMaskedMapProjection(plan,current)
+    }
 }

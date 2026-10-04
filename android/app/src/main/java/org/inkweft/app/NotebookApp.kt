@@ -58,9 +58,8 @@ fun NotebookApp(vm:NotebookViewModel=viewModel(),onDiagnostics:()->Unit={}){
     val navigationReady by app.navigationReady.collectAsStateWithLifecycle()
     SideEffect{if(ui.selectedId==null)app.navigationReady.value=true}
     val returnStack by workspace.knowledgeReturns.collectAsStateWithLifecycle()
-    var returnRequested by remember{mutableStateOf(false)}
     LaunchedEffect(target,navigationReady){val ref=target?:return@LaunchedEffect;if(!navigationReady)return@LaunchedEffect
-        val back=if(returnRequested)workspace.peekKnowledgeReturn()else null
+        val back=if(workspace.knowledgeReturnRequested)workspace.peekKnowledgeReturn()else null
         val origin=app.knowledgeTargetOrigin.value
         val originBook=ui.selectedId
         val originPage=originBook?.let{workspace.entries.value[it]?.selectedPageId?.ifEmpty{null}?:it}
@@ -74,7 +73,7 @@ fun NotebookApp(vm:NotebookViewModel=viewModel(),onDiagnostics:()->Unit={}){
                 if(ref.kind==TargetKind.CARD)workspace.requestStudyCardNavigation(destination.id,ref.id)
             }
         }catch(c:CancellationException){throw c}catch(_:Exception){Toast.makeText(context,"目标已回收或无法读取，当前位置与返回记录仍保留。",Toast.LENGTH_LONG).show()}
-        finally{app.openKnowledgeTarget.value=null;app.knowledgeTargetOrigin.value=null;returnRequested=false}
+        finally{app.openKnowledgeTarget.value=null;app.knowledgeTargetOrigin.value=null;workspace.finishKnowledgeReturn()}
     }
     var showCreate by rememberSaveable{mutableStateOf(false)};var newTitle by rememberSaveable{mutableStateOf("")}
     var newWorld by rememberSaveable{mutableStateOf(false)};var newPaper by rememberSaveable{mutableStateOf(PaperStyle.RULED)};var newCover by rememberSaveable{mutableStateOf(NotebookCover.AUTO)}
@@ -110,7 +109,7 @@ fun NotebookApp(vm:NotebookViewModel=viewModel(),onDiagnostics:()->Unit={}){
         if(pendingCreate!=null&&!busy)TextButton(onClick={workspace.retryCreate{vm.select(it)}},modifier=Modifier.testTag("retry-create-notebook")){Text("核对原创建请求")}
         if(transferUi.busy||busy)LinearProgressIndicator(Modifier.fillMaxWidth())
         if(returnStack.isNotEmpty())Row(Modifier.fillMaxWidth().heightIn(min=48.dp),verticalAlignment=Alignment.CenterVertically){
-            TextButton({workspace.peekKnowledgeReturn()?.let{location->returnRequested=true;app.openKnowledgeTarget.value=location.target}},enabled=navigationReady&&target==null&&!busy&&!transferUi.busy,modifier=Modifier.testTag("knowledge-return")){Glyph("back");Text("返回关联前的位置")}
+            TextButton({workspace.requestKnowledgeReturn()?.let{app.openKnowledgeTarget.value=it}},enabled=navigationReady&&target==null&&!busy&&!transferUi.busy,modifier=Modifier.testTag("knowledge-return")){Glyph("back");Text("返回关联前的位置")}
             Spacer(Modifier.weight(1f))
             TextButton(workspace::consumeKnowledgeReturn,enabled=target==null,modifier=Modifier.testTag("knowledge-return-skip")){Text("移除此返回记录")}
         }

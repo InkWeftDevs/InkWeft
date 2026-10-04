@@ -17,6 +17,7 @@ class InkWeftApplication:Application(){
     val repository by lazy{NoteRepository(database)}
     val documents by lazy{DocumentRepository(database)}
     val pageObjects by lazy{PageObjectRepository(database)}
+    val authoring by lazy{PageAuthoringRepository(database)}
     val inkRepository by lazy{InkRepository(database)}
     val workspaceRepository by lazy{WorkspaceRepository(database)}
     val pages by lazy{NotebookPages(database)}

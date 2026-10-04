@@ -1,0 +1,21 @@
+{
+  "format": "inkweft.six-batch-preparation.v1",
+  "synthetic_only": true,
+  "generator": "NEW_B5_EXTENSION_NOT_COMPILED_PREVIOUS_2338ce0_COMPILE_PASS",
+  "controlled_android_test": "NOT_RUN",
+  "room_backup_roundtrip": "NOT_RUN",
+  "observed_counts": null,
+  "observed_time_ms": null,
+  "observed_memory": null,
+  "actual_pixels": "NOT_CAPTURED",
+  "authoring_extension": "SOURCE_COMPILED_AT_2338ce0_NOT_RUN",
+  "recall_extension": "SOURCE_ADDED_NOT_COMPILED_OR_RUN",
+  "final_apk_sha256": "PENDING_MAIN_INTEGRATION_BUILD",
+  "final_signer_identity": "PENDING_MAIN_INTEGRATION_BUILD",
+  "physical_device": "vivo iPA2673 / API36 target only; NOT_RUN",
+  "human_pen_15_minutes": "NOT_RUN",
+  "human_learning_30_minutes": "NOT_RUN",
+  "human_thermal_record": "NOT_RUN",
+  "native_workspace_capture": "SOURCE_ADDED_NOT_COMPILED_OR_RUN",
+  "native_recall_capture": "PENDING_B5_UI"
+}

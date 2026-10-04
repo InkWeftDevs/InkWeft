@@ -30,6 +30,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import androidx.lifecycle.ViewModelProvider
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 import org.inkweft.core.*
@@ -40,7 +41,7 @@ internal data class ContinuousTools(val pen:InkPen,val color:Int,val width:Float
 
 /** Only visible pages have native views. Visited writers remain observed until their saves settle. */
 @Composable internal fun ContinuousPages(pages:List<NotebookPageRow>,selected:String,tools:ContinuousTools,
-    writing:Boolean,onSelect:(String)->Unit,onGesture:(Boolean)->Unit,onBlocked:(Boolean)->Unit,onNotice:(String)->Unit,onRepair:(String)->Unit,onObjectTap:(String,String)->Unit={_,_->},onScroll:()->Unit={},onAppendPage:(()->Unit)?=null,onZoom:(Double)->Unit={},authorAllowed:()->Boolean={true}){
+    writing:Boolean,onSelect:(String)->Unit,onGesture:(Boolean)->Unit,onBlocked:(Boolean)->Unit,onNotice:(String)->Unit,onRepair:(String)->Unit,onObjectTap:(String,String)->Unit={_,_->},onScroll:()->Unit={},onAppendPage:(()->Unit)?=null,onZoom:(Double)->Unit={},authorAllowed:()->Boolean={true},returnViewport:CanvasViewport?=null,onReturnViewportRestored:()->Unit={},onViewport:(String,CanvasViewport)->Unit={_,_->},selectedAuthoring:AuthoringUi?=null){
     if(pages.isEmpty())return
     val app=LocalContext.current.applicationContext as InkWeftApplication
     val state=rememberLazyListState(initialFirstVisibleItemIndex=pages.indexOfFirst{it.id==selected}.coerceAtLeast(0))
@@ -51,10 +52,19 @@ internal data class ContinuousTools(val pen:InkPen,val color:Int,val width:Float
     val views=remember{mutableMapOf<String,InkCanvasView>()}
     val writer:ContinuousInkWriter=viewModel(key="continuous-writer-${pages.firstOrNull()?.notebookId}")
     val book=pages.first().notebookId
+    var authorRows by remember(book){mutableStateOf<List<org.inkweft.data.PageAuthoringRow>?>(null)}
+    LaunchedEffect(book){app.authoring.observeBook(book).collect{authorRows=it}}
+    val authorStates=remember(authorRows){authorRows.orEmpty().associate{it.scopeId to it.data()}}
+    fun authorRow(id:String)=authorRows?.firstOrNull{it.kind==AuthoringScopeKind.PAGE.name&&it.scopeId==id}
+    fun authorState(id:String)=if(id==selected&&selectedAuthoring?.loading==false)selectedAuthoring.state else authorStates[id]
+    fun layerScope(id:String):LayerWriteScope? {check(authorRows!=null)
+        if(id==selected&&selectedAuthoring!=null){check(selectedAuthoring.canWrite);return selectedAuthoring.state.layers.writeScope(selectedAuthoring.revision)}
+        val row=authorRow(id);return if(row==null)LayerWriteScope(UserLayers.DEFAULT_ID,0)else authorStates.getValue(id).layers.writeScope(row.revision)
+    }
     val readLock=rememberBookReadLock(book)
     val readOnly by readLock.readOnly.collectAsStateWithLifecycle()
     val owner=checkNotNull(LocalViewModelStoreOwner.current)
-    fun modelFor(id:String):InkViewModel=models.getOrPut(id){ViewModelProvider(owner,InkViewModel.Factory(id,app.inkRepository))["ink-$id",InkViewModel::class.java]}.also{it.authorAllowed={currentAuthorAllowed()}}
+    fun modelFor(id:String):InkViewModel=models.getOrPut(id){ViewModelProvider(owner,InkViewModel.Factory(id,app.inkRepository))["ink-$id",InkViewModel::class.java]}.also{model->model.authorAllowed={currentAuthorAllowed()};model.layerScopeProvider={layerScope(id)};model.editableContent={key->authorState(id)?.layers?.editable(LayerContent(LayerContentKind.INK,key))?:true}}
     val recovery:ContinuousGroupSession=viewModel(key="continuous-recovery-$book",factory=ContinuousGroupSession.Factory(book,app.inkRepository))
     val recovering by recovery.busy.collectAsStateWithLifecycle()
     val recoveryProblem by recovery.problem.collectAsStateWithLifecycle()
@@ -102,6 +112,35 @@ internal data class ContinuousTools(val pen:InkPen,val color:Int,val width:Float
     BoxWithConstraints(Modifier.fillMaxSize().clipToBounds()){
     val pageWidth=maxWidth
     val viewportWidth=with(density){pageWidth.toPx()}
+    val returning by rememberUpdatedState(onReturnViewportRestored)
+    val parentHeight=with(density){maxHeight.toPx()}
+    val reportViewport by rememberUpdatedState(onViewport)
+    LaunchedEffect(state,selected,paperZoom,paperPanX,viewportWidth,parentHeight,writing){
+        snapshotFlow{val item=state.layoutInfo.visibleItemsInfo.firstOrNull{it.key==selected};Triple(state.isScrollInProgress,item?.offset,item?.size)}.distinctUntilChanged().collect{(scrolling,offset,_)->
+            if(!scrolling&&!writing&&offset!=null){val zoom=viewportWidth*paperZoom/density.density/1000.0
+                reportViewport(selected,CanvasViewport.safe(500-paperPanX/(zoom*density.density),(parentHeight/2-offset)/(zoom*density.density),zoom))}
+        }
+    }
+    LaunchedEffect(returnViewport,selected,writing,pending,groupBlocked,recovering,viewportWidth,parentHeight){
+        val target=returnViewport?:return@LaunchedEffect
+        if(writing||pending||groupBlocked||recovering||state.isScrollInProgress)return@LaunchedEffect
+        val index=pages.indexOfFirst{it.id==selected};if(index<0)return@LaunchedEffect
+        val targetZoom=(target.zoom*1000*density.density/viewportWidth).toFloat()
+        val pan=((500-target.centerX)*target.zoom*density.density).toFloat()
+        val limit=viewportWidth*(targetZoom-1f)/2
+        if(targetZoom !in 1f..3f||kotlin.math.abs(pan)>limit+.5f){onNotice("已返回原页；连续视图不能精确恢复此次缩放，切换单页可恢复原视野");return@LaunchedEffect}
+        paperZoom=targetZoom;paperPanX=pan
+        val offset=(target.centerY*target.zoom*density.density-parentHeight/2).roundToInt()
+        if(index==0&&offset<0){onNotice("已返回首页；连续视图没有页前空白，切换单页可恢复原视野");return@LaunchedEffect}
+        state.scrollToItem(index,offset)
+        val exact=kotlinx.coroutines.withTimeoutOrNull(2000){snapshotFlow{
+            val item=state.layoutInfo.visibleItemsInfo.firstOrNull{it.key==selected}
+            val native=views[selected]
+            item!=null&&native!=null&&kotlin.math.abs(native.snapshotViewport().zoom-target.zoom)<.001&&
+                kotlin.math.abs((parentHeight/2-item.offset)/(target.zoom*density.density)-target.centerY)<2.0
+        }.first{it}}
+        if(exact==true)returning()else onNotice("已返回原页，连续页视野尚未精确恢复；切换单页可继续恢复")
+    }
     Box(Modifier.fillMaxSize().nestedScroll(pullConnection).pointerInput(book,tools.fingerWrites,viewportWidth){
         awaitEachGesture{
             val down=awaitFirstDown(requireUnconsumed=false,pass=PointerEventPass.Initial)
@@ -166,7 +205,12 @@ internal data class ContinuousTools(val pen:InkPen,val color:Int,val width:Float
             val model:InkViewModel=viewModel(key="ink-${page.id}",factory=InkViewModel.Factory(page.id,app.inkRepository))
             val ui by model.ui.collectAsStateWithLifecycle()
             val objectModel:PageObjectViewModel=viewModel(key="objects-${page.id}",factory=PageObjectViewModel.Factory(page.id,app.pageObjects))
-            SideEffect{model.authorAllowed={currentAuthorAllowed()};objectModel.authorAllowed={currentAuthorAllowed()};readLock.observeObjects(page.id,objectModel)}
+            SideEffect{model.authorAllowed={currentAuthorAllowed()};objectModel.authorAllowed={currentAuthorAllowed()};readLock.observeObjects(page.id,objectModel)
+                model.layerScopeProvider={layerScope(page.id)};objectModel.layerScopeProvider={layerScope(page.id)}
+                model.editableContent={authorState(page.id)?.layers?.editable(LayerContent(LayerContentKind.INK,it))?:true}
+                objectModel.editableInk=model.editableContent
+                objectModel.editableContent={authorState(page.id)?.layers?.editable(LayerContent(LayerContentKind.OBJECT,it))?:true}
+            }
             val objectUi by objectModel.ui.collectAsStateWithLifecycle()
             val beautyReview by objectModel.beautyReview.collectAsStateWithLifecycle()
             SideEffect{models[page.id]=model;objectModels[page.id]=objectModel;objectModel.history=model.history;model.suppressedIds=objectUi.objects.flatMap{it.sourceStrokeIds}.toSet()}
@@ -178,11 +222,12 @@ internal data class ContinuousTools(val pen:InkPen,val color:Int,val width:Float
                         v.configure(false,PaperStyle.entries[page.paper],null)
                         v.fingerWrites=tools.fingerWrites
                         views[page.id]=v
-                        v.allowInput=!recovering&&recoveryProblem==null&&(if(tools.erasing)!groupBlocked else drawingReady)&&tools.enabled&&!objectUi.loading&&(!(objectUi.pending||objectUi.busy)||(!tools.erasing&&objectUi.automaticPending))&&(if(tools.erasing)!ui.loading&&!ui.readFailed&&ui.blocked==null&&!ui.processing&&ui.queued<16 else ui.canStart)&&(gestureOwner==null||gestureOwner==page.id)
+                        v.allowInput=authorRows!=null&&!recovering&&recoveryProblem==null&&(if(tools.erasing)!groupBlocked else drawingReady)&&tools.enabled&&!objectUi.loading&&(!(objectUi.pending||objectUi.busy)||(!tools.erasing&&objectUi.automaticPending))&&(if(tools.erasing)!ui.loading&&!ui.readFailed&&ui.blocked==null&&!ui.processing&&ui.queued<16 else ui.canStart)&&(gestureOwner==null||gestureOwner==page.id)
                         v.finishStroke={polishNewStroke(it,tools.beauty)}
                         v.pen=tools.pen;v.penColor=tools.color;v.penWidth=tools.width;v.brushRecipe=tools.recipe
                         v.eraserTapeOnly=tools.onlyTape;v.eraseMode=tools.erasing;v.eraserWhole=tools.whole;v.eraserHighlighterOnly=tools.highlighterOnly;v.eraserDiameterDp=tools.diameter
                         v.onObjectTap={id->if(currentAuthorAllowed()){val o=objectModel.ui.value.objects.find{it.id==id};if(o?.kind==PageObjectKind.TAPE)objectModel.put(o.copy(revealed=!o.revealed))else onObjectTap(page.id,id)}}
+                        v.onWriteStart=model::beginLayerWrite
                         v.onCheckpointCancel={id->model.cancelCheckpoint(id);recovery.cancel(id)}
                         v.onCheckpoint={if(currentAuthorAllowed())recovery.checkpoint(it)}
                         v.onStroke=stroke@{stroke->
@@ -212,9 +257,9 @@ internal data class ContinuousTools(val pen:InkPen,val color:Int,val width:Float
                             }
                             writer.erase(targets,radius,whole,only,app.inkRepository,tools.onlyTape)
                         }
-                        v.onGesture={active->if(active){recovery.begin(pages.map{it.id},page.id);gestureOwner=page.id;reported=page.id;latestSelect(page.id)}else if(gestureOwner==page.id)gestureOwner=null;onGesture(active)}
+                        v.onGesture={active->if(active){recovery.begin(pages.map{it.id},page.id,pages.map{runCatching{layerScope(it.id)}.getOrNull()});gestureOwner=page.id;reported=page.id;latestSelect(page.id)}else if(gestureOwner==page.id)gestureOwner=null;onGesture(active)}
                         v.onAxes=app.diagnostics::inputAxes;v.onNotice=onNotice
-                        v.showDocument(page.id);v.showStrokes(ui.strokes+drafts[model].orEmpty());v.showObjects(beautyPreviewObjects(objectUi.objects,beautyReview))
+                        v.showAuthoring(authorState(page.id));v.showDocument(page.id);v.showStrokes(ui.strokes+drafts[model].orEmpty());v.showObjects(beautyPreviewObjects(objectUi.objects,beautyReview))
                     },modifier=Modifier.fillMaxSize().testTag("continuous-ink-${page.position+1}"))
                     DisposableEffect(page.id){onDispose{views.remove(page.id)}}
                     if(ui.loading)CircularProgressIndicator(Modifier.align(Alignment.Center))
