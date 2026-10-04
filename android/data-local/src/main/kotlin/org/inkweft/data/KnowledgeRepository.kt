@@ -168,7 +168,7 @@ class KnowledgeRepository(private val db:NoteDatabase,private val fault:(Knowled
                 if(!c.removed)require(records.none{it.id!=c.id&&!it.removed&&(it.data() as? KnowledgeData.CardPresentation)?.cardId==d.cardId}){"PRESENTATION_EXISTS"}
             }
             if(c.data is KnowledgeData.Properties){val d=c.data as KnowledgeData.Properties;require(records.none{it.id!=c.id&&!it.removed&&(it.data() as? KnowledgeData.Properties)?.cardId==d.cardId}){"PROPERTY_EXISTS"}}
-            if(c.data is KnowledgeData.Link&&!c.removed)require(records.none{it.id!=c.id&&!it.removed&&it.data()==c.data}){"LINK_EXISTS"}
+            if(c.data is KnowledgeData.Link&&!c.removed)require(records.none{it.id!=c.id&&!it.removed&&(it.data() as? KnowledgeData.Link)?.sameMeaning(c.data as KnowledgeData.Link)==true}){"LINK_EXISTS"}
             if(c.data is KnowledgeData.MapPortal&&!c.removed)require(records.none{it.id!=c.id&&it.notebookId==c.notebookId&&!it.removed&&it.data()==c.data}){"MAP_PORTAL_EXISTS"}
             if(c.data is KnowledgeData.MapOrder)require(!c.removed){"MAP_ORDER_REQUIRED"}
             val next=KnowledgeRow(c.id,c.notebookId,c.expectedRevision+1,c.payload,c.removed)
@@ -252,6 +252,8 @@ class KnowledgeRepository(private val db:NoteDatabase,private val fault:(Knowled
         require(props.map{it.cardId}.distinct().size==props.size)
         val portals=rows.filter{!it.removed}.mapNotNull{row->(row.data() as? KnowledgeData.MapPortal)?.let{row.notebookId to it}}
         require(portals.distinct().size==portals.size){"MAP_PORTAL_EXISTS"}
+        val links=rows.filterNot{it.removed}.mapNotNull{it.data() as? KnowledgeData.Link}
+        require(links.map{listOf(it.source,it.target,it.relation,it.pinnedRevision)}.distinct().size==links.size){"LINK_EXISTS"}
         validateMaps(rows)
     }
     private suspend fun validateOrderOwnership(book:String,order:KnowledgeData.MapOrder,active:Boolean){

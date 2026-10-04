@@ -83,6 +83,18 @@ class StudyRelationsUiTest {
         assertEquals(3,projectStudyRelations(a.id,listOf(a),listOf(outside,page,visible)).outOfScopeCount)
     }
 
+    @Test fun displaySettingsKeepSemanticIdentityAndDoNotMixStyledEdges(){
+        val book=id();val a=node(book);val b=node(book)
+        val default=KnowledgeData.Link(TargetRef(TargetKind.CARD,a.cardId),TargetRef(TargetKind.CARD,b.cardId))
+        val styled=default.copy(relation=RelationKind.CONTRAST,lineStyle=RelationLineStyle.SOLID,direction=RelationDirection.BOTH,annotation="核对适用边界")
+        val rows=listOf(row(book,default),row(book,styled),row(book,styled.copy(relation=RelationKind.APPLICATION,visible=false)))
+        val projection=projectStudyRelations(a.id,listOf(a,b),rows)
+        assertEquals(2,projection.edges.size);assertEquals(0,projection.outOfScopeCount)
+        val edge=projection.edges.single{it.lineStyle==RelationLineStyle.SOLID}
+        assertEquals(RelationDirection.BOTH,edge.direction);assertEquals(listOf("核对适用边界"),edge.annotations)
+        assertTrue(default.sameMeaning(default.copy(visible=false)))
+    }
+
     private data class Fixture(val book:String,val sourceBook:String,val a:StudyNodeRow,val anotherA:StudyNodeRow,
         val b:StudyNodeRow,val anotherB:StudyNodeRow,val isolated:StudyNodeRow,val links:List<KnowledgeRow>)
     private fun fixture():Fixture {

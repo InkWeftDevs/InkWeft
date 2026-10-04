@@ -14,6 +14,21 @@ class KnowledgeRepositoryTest {
     private fun fixture(block:suspend(NoteDatabase,String)->Unit)=runBlocking{val name="knowledge-${id()}.db";val db=NoteDatabase.open(context,name);try{block(db,WorkspaceRepository(db).create("关联测试",false,PaperStyle.CORNELL).id)}finally{db.close();context.deleteDatabase(name)}}
     private suspend fun card(db:NoteDatabase,book:String):String{val c=StudyCommand(id(),book,StudyAction.CREATE,id(),id(),title="知识甲",body="原答案");StudyRepository(db).submit(c);return c.cardId!!}
     private fun command(book:String,data:KnowledgeData,id:String=id(),revision:Long=0)=KnowledgeCommand(id(),book,id,revision,data)
+    @Test fun relationshipAppearanceIsVersionedIdempotentAndCannotDuplicateMeaning()=fixture{db,book->
+        val a=card(db,book);val b=card(db,book);val repo=KnowledgeRepository(db)
+        val original=command(book,KnowledgeData.Link(TargetRef(TargetKind.CARD,a),TargetRef(TargetKind.CARD,b)))
+        repo.submit(original)
+        val edited=(original.data as KnowledgeData.Link).copy(lineStyle=RelationLineStyle.SOLID,direction=RelationDirection.BOTH,annotation="限定条件",visible=false)
+        val change=command(book,edited,original.id,1)
+        assertTrue(KnowledgeRepository(db){if(it==KnowledgeFault.AFTER_COMMIT)error("lost")}.outcome(change) is KnowledgeOutcome.Success)
+        repo.submit(change);assertEquals(2L,db.knowledge().get(original.id)!!.revision)
+        assertEquals(original.data,db.knowledge().revision(original.id,1)!!.let{KnowledgeCodec.decode(it.payload)})
+        assertEquals(edited,db.knowledge().get(original.id)!!.data())
+        assertEquals(KnowledgeRejection.DUPLICATE,(repo.outcome(command(book,edited.copy(visible=true))) as KnowledgeOutcome.Rejected).reason)
+        assertEquals(KnowledgeRejection.CONFLICT,(repo.outcome(command(book,edited.copy(annotation="stale"),original.id,1)) as KnowledgeOutcome.Rejected).reason)
+        repo.validateArchive()
+        LibraryBackupRepository(context,db).snapshot().use{snap->snap.file.inputStream().use{LibraryBackupRepository(context,db).inspect(it)}.use{preview->assertEquals(LibraryBackupRepository.RestoreResult.ALREADY_PRESENT,LibraryBackupRepository(context,db).restore(preview))}}
+    }
     @Test fun sourceCardAndIndependentMapOccurrenceCommitAtomicallyAndRestore()=fixture{db,book->
         val ink=InkStroke(id(),InkPen.PEN,0xff123456.toInt(),3f,InkTool.STYLUS,listOf(InkSample(100f,100f,0),InkSample(200f,110f,30)))
         InkRepository(db).save(CommitInk(id(),book,0,InkMutation.Add(ink)))
