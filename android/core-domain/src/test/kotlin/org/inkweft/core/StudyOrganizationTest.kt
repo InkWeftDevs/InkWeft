@@ -152,4 +152,23 @@ class StudyOrganizationTest {
         val template=MapTemplates.anonymize("顺序","right",nodes,cards.associate{it.id to it.title},true)
         assertEquals(listOf("首项","子项","末项"),template.nodes.map{it.title});assertEquals(0,template.nodes[1].parent)
     }
+    @Test fun selectedBranchesMoveOnceKeepContentAndCanUndoThenRedo(){
+        val root=node(x=50.0,y=100.0);val child=node(root,150.0,220.0);val leaf=node(child,250.0,340.0);val other=node(x=800.0,y=900.0)
+        val initial=state(listOf(root,child,leaf,other),listOf(root.id,child.id,leaf.id,other.id))
+        val plan=StudyOrganization.moveSelection(initial,setOf(root.id,child.id),70.0,-40.0)
+        val moved=StudyOrganization.apply(initial,plan)
+        for(before in listOf(root,child,leaf)){
+            val after=moved.nodes.first{it.id==before.id}
+            assertEquals(before.x+70,after.x,0.0);assertEquals(before.y-40,after.y,0.0)
+            assertEquals(before.cardId,after.cardId);assertEquals(before.parentId,after.parentId)
+        }
+        assertEquals(other,moved.nodes.first{it.id==other.id});assertEquals(initial.orderedNodeIds,moved.orderedNodeIds)
+        val inverse=StudyOrganization.undo(moved,plan);val undone=StudyOrganization.apply(moved,inverse)
+        assertEquals(initial.nodes.map{it.x to it.y},undone.nodes.map{it.x to it.y})
+        val redone=StudyOrganization.apply(undone,StudyOrganization.undo(undone,inverse))
+        assertEquals(moved.nodes.map{it.x to it.y},redone.nodes.map{it.x to it.y})
+        reject{StudyOrganization.move(initial,root.id,40000.0,0.0)}
+        assertEquals(50.0,initial.nodes.first().x,0.0)
+    }
+
 }

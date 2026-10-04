@@ -166,9 +166,20 @@ object StudyOrganization {
     }
 
     fun move(state:StudyGraphState,nodeId:String,x:Double,y:Double):StudyOrganizationPlan {
-        require(nodeId in state.orderedNodeIds)
-        val before=patch(state)
-        return prepare(state,StudyOrganizationKind.MOVE,before.copy(placements=before.placements.map{if(it.nodeId==nodeId)it.copy(x=x,y=y)else it}))
+        val node=state.nodes.first{it.id==nodeId&&!it.removed}
+        return moveSelection(state,setOf(nodeId),x-node.x,y-node.y)
+    }
+
+    /** A branch moves as one unit. Overlapping selections never apply the delta twice. */
+    fun moveSelection(state:StudyGraphState,roots:Set<String>,dx:Double,dy:Double):StudyOrganizationPlan {
+        validate(state);require(roots.isNotEmpty()&&roots.all{it in state.orderedNodeIds})
+        require(dx.isFinite()&&dy.isFinite())
+        val before=patch(state);val moving=roots.toMutableSet()
+        // Canonical author order is depth-first, so each parent precedes its descendants.
+        before.placements.forEach{if(it.parentId in moving)moving+=it.nodeId}
+        return prepare(state,StudyOrganizationKind.MOVE,before.copy(placements=before.placements.map{
+            if(it.nodeId in moving)it.copy(x=it.x+dx,y=it.y+dy)else it
+        }))
     }
 
     fun arrange(state:StudyGraphState,sizes:Map<String,StudyNodeSize>,layout:String="right"):StudyOrganizationPlan {
