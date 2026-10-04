@@ -79,7 +79,7 @@ internal fun StudyWorkspace(note:NoteDraft,initialSource:StudySourceDraft?,dismi
     }
 }
 @Composable
-internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss:()->Unit,initialQuery:String="",initialCardId:String?=null,documentReady:Boolean=true,compactWindow:Boolean=false,sourceRequest:Long=0L,initialCaptureText:String="",onInsertEmbed:((MapEmbed)->Unit)?=null,initialMap:MapRef?=null,initialBranch:String?=null,reviewLeaveRequest:MutableState<(() -> Boolean)?>?=null,showReadControl:Boolean=true,capacityVisible:Boolean=true,openSource:suspend (StudySourceRow)->Boolean){
+internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss:()->Unit,initialQuery:String="",initialCardId:String?=null,documentReady:Boolean=true,compactWindow:Boolean=false,sourceRequest:Long=0L,initialCaptureText:String="",onInsertEmbed:((MapEmbed)->Unit)?=null,initialMap:MapRef?=null,initialBranch:String?=null,reviewLeaveRequest:MutableState<(() -> Boolean)?>?=null,showReadControl:Boolean=true,capacityVisible:Boolean=true,reviewRequest:Long=0L,workModeRequest:MutableState<((StudyWorkMode)->Boolean)?>?=null,onReviewActive:(Boolean)->Unit={},openSource:suspend (StudySourceRow)->Boolean){
     val context=LocalContext.current;val app=context.applicationContext as InkWeftApplication
     val focus=LocalFocusManager.current
     val vm:StudyViewModel=viewModel(key="study-${note.base.id}",factory=StudyViewModel.Factory(note.base.id,app.study))
@@ -115,6 +115,10 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
     var portalMapKey by rememberSaveable{mutableStateOf("main")}
     var reviewPlan by rememberSaveable(stateSaver=BranchReviewPlanSaver){mutableStateOf<BranchReviewPlan?>(null)}
     var reviewCardOnly by rememberSaveable{mutableStateOf(false)}
+    var reviewVisible by rememberSaveable{mutableStateOf(false)}
+    var reviewSessionKey by rememberSaveable{mutableStateOf(UUID.randomUUID().toString())}
+    val reviewStateHolder=androidx.compose.runtime.saveable.rememberSaveableStateHolder()
+    var reviewRequestSeen by rememberSaveable{mutableLongStateOf(0L)}
     var reviewQuestionScope by rememberSaveable(note.base.id){mutableStateOf(ReviewQuestionScope.ALL)}
     var reviewPreparation by remember(note.base.id){mutableStateOf<Pair<List<Any?>,Job>?>(null)}
     val reviewWriter:KnowledgeViewModel?=if(reviewPlan!=null)viewModel(key="branch-review-${note.base.id}",
@@ -303,12 +307,6 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
     }
     val authorDraft=presentationCardId!=null||titleDraft!=null||editor!=null||newMapTitle!=null||saveTemplate||templatePicker||reparentId!=null||insertMap||layoutPreview!=null
     ReadLockGuard(readLock,guardKey,blocked=ui.busy||ui.unknown||mapSaving||authorDraft,draft=authorDraft)
-    val readControl:@Composable ()->Unit={TextButton({
-        val ready=documentReady&&!vm.ui.value.busy&&!vm.ui.value.unknown&&!mapWriter.ui.value.busy&&!mapWriter.ui.value.unknown&&!portalWriter.ui.value.busy&&!portalWriter.ui.value.unknown
-        if(!readLock.request(!readOnly,ready))localMessage=readLock.reason else {localMessage=null;focus.clearFocus()}
-    },modifier=Modifier.heightIn(min=48.dp).testTag("study-readonly").describedAs(if(readOnly)"阅读模式 · 返回书写"else"书写模式 · 开启阅读锁")){
-        Glyph(if(readOnly)"readonly"else"pen");Spacer(Modifier.width(4.dp));Text(if(readOnly)"只读"else"书写")
-    }}
     fun reviewReady(snapshot:StudyUi):Boolean=latestDocumentReady&&!snapshot.loading&&!snapshot.readFailed&&!snapshot.busy&&!snapshot.unknown&&
         !mapWriter.ui.value.busy&&!mapWriter.ui.value.unknown&&!portalWriter.ui.value.busy&&!portalWriter.ui.value.unknown&&!readLock.hasDraft.value&&
         titleDraft==null&&vm.editorState.value==null&&newMapTitle==null&&!saveTemplate&&!templatePicker&&reparentId==null&&!insertMap&&layoutPreview==null
@@ -322,11 +320,14 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
         if(expectedContext!=null&&pending.first!=expectedContext)return
         reviewPreparation=null;pending.second.cancel()
     }
-    fun leaveReviewContext():Boolean{
+    fun leaveReviewContext(preserve:Boolean=false):Boolean{
         val live=vm.ui.value;val review=reviewWriter?.ui?.value
         if(live.busy||live.unknown||mapWriter.ui.value.busy||mapWriter.ui.value.unknown||portalWriter.ui.value.busy||portalWriter.ui.value.unknown||readLock.hasDraft.value||
             titleDraft!=null||vm.editorState.value!=null||newMapTitle!=null||saveTemplate||templatePicker||reparentId!=null||insertMap||layoutPreview!=null||review?.busy==true||review?.unknown==true)return false
-        cancelReviewPreparation();reviewPlan=null;reviewCardOnly=false;return true
+        if(!readLock.canChangeMode(latestDocumentReady))return false
+        cancelReviewPreparation();reviewVisible=false
+        if(!preserve){reviewStateHolder.removeState(reviewSessionKey);reviewPlan=null;reviewCardOnly=false}
+        return true
     }
     fun openCapacity(){
         if(!browseReady||hasDraft||!leaveReviewContext())return
@@ -362,12 +363,42 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
                     else app.branchReview.prepareCard(target,card.id,card.revision,branch?.id,selectedScope)
                 }
                 currentCoroutineContext().ensureActive()
-                if(reviewPreparation?.second===request&&reviewPreparationContext(vm.ui.value)==origin){reviewCardOnly=card!=null;reviewPlan=plan}
+                if(reviewPreparation?.second===request&&reviewPreparationContext(vm.ui.value)==origin){reviewStateHolder.removeState(reviewSessionKey);reviewSessionKey=UUID.randomUUID().toString();reviewCardOnly=card!=null;reviewPlan=plan;reviewVisible=true}
             }catch(c:CancellationException){throw c}
             catch(_:Exception){if(reviewPreparation?.second===request&&reviewPreparationContext(vm.ui.value)==origin)localMessage=if(card!=null)"卡片或所在导图已变化，回忆范围未读取。请重新选择；原内容不变。"else"导图或分支已变化，回忆范围未读取。请重新选择；原内容不变。"}
             finally{if(reviewPreparation?.second===request)reviewPreparation=null}
         }
         reviewPreparation=origin to job;job.start()
+    }
+    fun chooseWorkMode(mode:StudyWorkMode):Boolean{
+        if(!readLock.canChangeMode(reviewReady(vm.ui.value)))return false
+        if(mode==StudyWorkMode.RECALL){
+            if(reviewPlan?.ref==MapRef(note.base.id,currentMap)){reviewVisible=true;return true}
+            prepareReview(MapRef(note.base.id,currentMap),nodeById[vm.selectedByMap[mapKey]])
+            return reviewPreparation!=null
+        }
+        if(!leaveReviewContext(preserve=true))return false
+        if(!readLock.request(mode==StudyWorkMode.READ,latestDocumentReady))return false
+        focus.clearFocus();return true
+    }
+    val readControl:@Composable ()->Unit={
+        StudyWorkModes(if(reviewVisible||reviewPreparation!=null)StudyWorkMode.RECALL else if(readOnly)StudyWorkMode.READ else StudyWorkMode.WRITE,tagPrefix="study"){mode->
+            if(!chooseWorkMode(mode))localMessage=readLock.reason
+        }
+    }
+    val latestWorkMode by rememberUpdatedState<(StudyWorkMode)->Boolean>(::chooseWorkMode)
+    DisposableEffect(note.base.id,workModeRequest){
+        val handler:(StudyWorkMode)->Boolean={latestWorkMode(it)}
+        workModeRequest?.value=handler
+        onDispose{if(workModeRequest!=null&&workModeRequest.value===handler)workModeRequest.value=null}
+    }
+    SideEffect{onReviewActive(reviewVisible||reviewPreparation!=null)}
+    DisposableEffect(note.base.id){val report=onReviewActive;onDispose{report(false)}}
+    LaunchedEffect(reviewRequest,browseReady){
+        if(reviewRequest>reviewRequestSeen&&browseReady){
+            reviewRequestSeen=reviewRequest
+            if(!chooseWorkMode(StudyWorkMode.RECALL))localMessage=readLock.reason
+        }
     }
     androidx.activity.compose.BackHandler(ui.busy||ui.unknown||mapSaving||hasDraft){android.widget.Toast.makeText(context,"请先完成或取消草稿，并核对当前导图操作",android.widget.Toast.LENGTH_SHORT).show()}
     fun changeCollapsed(next:List<String>,anchor:String?=null){
@@ -1017,7 +1048,14 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
     portalNodeId?.let{node->key(portalMapKey,node){MapPortalPanel(MapRef(note.base.id,portalMapKey.takeUnless{it=="main"}),node,note.title,scenes,extraRows,compactWindow,browseReady,portalWriter,portalWrite,{portalNodeId=null}){preview->
         if(!browseReady||titleDraft!=null)false else {cancelReviewPreparation();vm.openPortal(preview,if(chrome?.sourceReading==true)vm.viewports[mapKey]else map?.snapshotViewport(),collapsed,focusId)}
     }}}
-    reviewPlan?.let{plan->BranchReviewDialog(plan,{reviewPlan=null;reviewCardOnly=false},showCardScope=reviewCardOnly)}
+    if(reviewVisible)reviewPlan?.let{plan->reviewStateHolder.SaveableStateProvider(reviewSessionKey){
+        BranchReviewDialog(plan,{leaveReviewContext()},showCardScope=reviewCardOnly,workModes={ready->
+            StudyWorkModes(StudyWorkMode.RECALL,tagPrefix="review"){mode->
+                if(!ready||!chooseWorkMode(mode))android.widget.Toast.makeText(context,
+                    readLock.reason.ifBlank{"请先核对本题标记，再切换工作状态"},android.widget.Toast.LENGTH_SHORT).show()
+            }
+        })
+    }}
     knowledgeCard?.let{card->
         val openKnowledgeTarget:(TargetRef)->Unit={target->if(leaveReviewContext()){app.openKnowledgeTarget.value=target;closeCardKnowledge();chosenCardId=null;chosenNodeId=null;inspectSource=false;dismiss()}}
         if(knowledgeBacklinks)KnowledgeWorkspace(note.base.id,TargetRef(TargetKind.CARD,card.id),initialBacklinks=true,includeAllRelationKinds=knowledgeAllRelationKinds,dismiss=::closeCardKnowledge,openTarget=openKnowledgeTarget)

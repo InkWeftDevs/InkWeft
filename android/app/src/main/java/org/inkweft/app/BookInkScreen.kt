@@ -44,6 +44,8 @@ fun InkScreen(note:NoteDraft,workspace:WorkspaceViewModel=viewModel(),onBack:()-
     val readOnlyRequest=remember(note.base.id){mutableStateOf<((Boolean)->Boolean)?>(null)}
     val pageToolRequest=remember(note.base.id){mutableStateOf<((String)->Unit)?>(null)}
     val studyReviewLeaveRequest=remember(note.base.id){mutableStateOf<(() -> Boolean)?>(null)}
+    val workModeRequest=remember(note.base.id){mutableStateOf<((StudyWorkMode)->Boolean)?>(null)}
+    var recalling by remember(note.base.id){mutableStateOf(false)}
     fun leaveStudyReview():Boolean=studyReviewLeaveRequest.value?.invoke()!=false
     val hasAuthorDraft by readLock.hasDraft.collectAsStateWithLifecycle()
     val vm:BookPagesViewModel=viewModel(key="book-${note.base.id}",factory=BookPagesViewModel.Factory(note.base.id,app.pages,app.workspaceRepository,app.resourcePacks))
@@ -222,14 +224,19 @@ fun InkScreen(note:NoteDraft,workspace:WorkspaceViewModel=viewModel(),onBack:()-
         documentAction("关联","link",pageActionsReady&&!hasAuthorDraft,"document-associations"){showDocumentPanel("associations")}
         documentAction("摘录","excerpt",pageActionsReady&&!hasAuthorDraft,"read-excerpts"){showDocumentPanel("excerpts")}
     }
+    fun chooseWorkMode(mode:StudyWorkMode){
+        val handler=workModeRequest.value
+        val accepted=when{
+            !readLock.canChangeMode(pageActionsReady&&!knowledgeOpen)->false
+            handler!=null->handler(mode)
+            mode==StudyWorkMode.RECALL->{studyOpen=true;studyPanel.reviewRequest.value++;true}
+            paperVisible->readOnlyRequest.value?.invoke(mode==StudyWorkMode.READ)==true
+            else->readLock.request(mode==StudyWorkMode.READ,pageActionsReady)
+        }
+        if(!accepted)Toast.makeText(context,readLock.reason.ifBlank{"页面尚未准备好，请先核对当前操作"},Toast.LENGTH_SHORT).show()
+    }
     val documentControls:@Composable ()->Unit={
-                TextButton({
-                    val accepted=if(paperVisible)readOnlyRequest.value?.invoke(!readOnly)==true else readLock.request(!readOnly,pageActionsReady)
-                    if(!accepted)Toast.makeText(context,readLock.reason.ifBlank{"页面尚未准备好，请稍后重试"},Toast.LENGTH_SHORT).show()
-                },enabled=page!=null,contentPadding=if(narrowHeader)PaddingValues(horizontal=4.dp)else ButtonDefaults.TextButtonContentPadding,modifier=Modifier.widthIn(min=48.dp).heightIn(min=48.dp).testTag(if(readOnly)"exit-readonly"else"quick-readonly").describedAs(if(readOnly)"只读浏览，返回书写"else"书写模式，开启阅读锁")){
-                    if(!narrowHeader){Glyph(if(readOnly)"pen"else"readonly",modifier=Modifier.size(20.dp));Spacer(Modifier.width(6.dp))}
-                    Text(if(readOnly)"返回书写"else"阅读模式",maxLines=1)
-                }
+                StudyWorkModes(if(recalling)StudyWorkMode.RECALL else if(readOnly)StudyWorkMode.READ else StudyWorkMode.WRITE,choose=::chooseWorkMode)
                 Box{
                     documentAction("文档","more",pageActionsReady,"document-more"){documentMore=true}
                     DropdownMenu(documentMore,{documentMore=false},modifier=Modifier.testTag("document-more-menu"),containerColor=Color.White){documentTools()}
@@ -242,9 +249,8 @@ fun InkScreen(note:NoteDraft,workspace:WorkspaceViewModel=viewModel(),onBack:()-
                 IconButton({if(leaveStudyReview()){endSourceReading();onBack()}},enabled=pageActionsReady&&!hasAuthorDraft,modifier=Modifier.size(48.dp).testTag("back-library").describedAs("返回资料库")){Glyph("back")}
                 notebookSwitcher(Modifier.weight(1f))
                 if(!compactHeader)destinations()
-                if(!narrowHeader)documentControls()
+                documentControls()
             }
-            if(narrowHeader)FlowRow(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.Center){documentControls()}
             if(compactHeader)FlowRow(Modifier.fillMaxWidth().testTag("document-destinations"),horizontalArrangement=Arrangement.Center){destinations()}
             }
         }
@@ -372,7 +378,8 @@ fun InkScreen(note:NoteDraft,workspace:WorkspaceViewModel=viewModel(),onBack:()-
     if(studyOpen)studyUiState.SaveableStateProvider(note.base.id){FloatingStudyWindow(note.base.id,enabled=pageActionsReady&&!hasAuthorDraft&&!knowledgeOpen,minimized=mapMinimized,
         onMinimize={if(it){endSourceReading();mapMinimized=true;mapActive=false}else showDocumentPanel("map")},docked=!floatingMap,onDock={endSourceReading();floatingMap=!it},close={endSourceReading();studyOpen=false},
         paneLayout=paneLayout,topInset=chromeHeight,paneActive=effectiveMapActive,onActivate={if(!hasAuthorDraft)mapActive=true},onAuthorDraft={if(it&&!mapAuthorDraft)endSourceReading();mapAuthorDraft=it},frameEnabled=pageActionsReady&&!knowledgeOpen,sourceReading=sourceReading,beforeContentExit={leaveStudyReview()}){
-        StudyContent(note,studySource,{endSourceReading();studyOpen=false},initialCardId=initialStudyCard,documentReady=pageActionsReady,compactWindow=true,showReadControl=fullScreen,capacityVisible=mapVisible,sourceRequest=studyPanel.captureRequest.longValue,reviewLeaveRequest=studyReviewLeaveRequest,onInsertEmbed={embed->
+        StudyContent(note,studySource,{endSourceReading();studyOpen=false},initialCardId=initialStudyCard,documentReady=pageActionsReady,compactWindow=true,showReadControl=fullScreen,capacityVisible=mapVisible,sourceRequest=studyPanel.captureRequest.longValue,reviewLeaveRequest=studyReviewLeaveRequest,
+            reviewRequest=studyPanel.reviewRequest.value,workModeRequest=workModeRequest,onReviewActive={recalling=it},onInsertEmbed={embed->
             if(readLock.canWrite)page?.let{p->endSourceReading();readingMode(false);studyPanel.embedInsertion.value=EmbedInsertion(p.id,java.util.UUID.randomUUID().toString(),embed);mapMinimized=true}
         }){source->
             currentCoroutineContext().ensureActive()

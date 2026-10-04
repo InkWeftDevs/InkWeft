@@ -176,6 +176,7 @@ internal class StudyPanelSession(saved:SavedStateHandle):ViewModel(){
     val opened=saved.saveable("study.panel.opened",stateSaver=autoSaver<Boolean>()){mutableStateOf(false)}
     val source=mutableStateOf<StudySourceDraft?>(null)
     val captureRequest=mutableLongStateOf(0L)
+    val reviewRequest=saved.saveable("study.panel.reviewRequest",stateSaver=autoSaver<Long>()){mutableStateOf(0L)}
     val card=mutableStateOf<String?>(null)
 }
 internal data class CardEditor(val card:StudyCardRow?=null,val parent:StudyNodeRow?=null,val source:StudySourceDraft?=null)

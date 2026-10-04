@@ -190,4 +190,39 @@ class StudyOrganizationUiTest {
             overview.zoom(.8f);assertEquals(scale,overview.snapshotViewport().scale,.000001f)
         }
     }
+    @Test fun workModesPreserveSelectedGraphAndResumeTheSameUnrevealedQuestion(){
+        val f=fixture();val before=author(f.book)
+        val card=cards(f.book).single{it.id==nodes(f.book).single{it.id==f.second}.cardId}
+        runBlocking{app.knowledge.submit(KnowledgeCommand(id(),f.book,id(),0,KnowledgeData.Question(card.id,"三态恢复合成问题")))}
+        select(f.second)
+        val camera=compose.runOnIdle{map().snapshotViewport()}
+        tap("quick-readonly")
+        compose.runOnIdle{assertTrue(ViewModelProvider(compose.activity)["read-lock-${f.book}",BookReadLockViewModel::class.java].readOnly.value)}
+        tap("exit-readonly")
+        compose.runOnIdle{assertEquals(f.second,map().selectedNodeId);assertEquals(camera,map().snapshotViewport())}
+        tap("workspace-recall")
+        compose.waitUntil(15_000){compose.onAllNodesWithTag("branch-review-start").fetchSemanticsNodes().isNotEmpty()}
+        tap("branch-review-start")
+        compose.waitUntil(15_000){compose.onAllNodesWithTag("review-question").fetchSemanticsNodes().isNotEmpty()}
+        compose.onNodeWithTag("review-question").assertTextEquals("三态恢复合成问题")
+        compose.onNodeWithTag("review-clues-hidden").assertExists()
+        // Choose the visible Dialog's mode control; the paper remains mounted underneath.
+        compose.onNode(hasContentDescription("阅读资料") and hasAnyAncestor(hasTestTag("manual-review"))).performClick()
+        compose.onNodeWithTag("manual-review").assertDoesNotExist()
+        tap("workspace-recall")
+        compose.waitUntil(15_000){compose.onAllNodesWithTag("review-question").fetchSemanticsNodes().isNotEmpty()}
+        compose.onNodeWithTag("review-question").assertTextEquals("三态恢复合成问题")
+        compose.onNodeWithTag("review-clues-hidden").assertExists()
+        compose.onNodeWithTag("branch-review-start").assertDoesNotExist()
+        compose.onNode(hasContentDescription("书写批注") and hasAnyAncestor(hasTestTag("manual-review"))).performClick()
+        compose.runOnIdle{assertEquals(f.second,map().selectedNodeId);assertEquals(camera,map().snapshotViewport())}
+        assertEquals(before.cards,cards(f.book));assertEquals(before.nodes,nodes(f.book))
+        compose.runOnIdle{
+            val lock=ViewModelProvider(compose.activity)["read-lock-${f.book}",BookReadLockViewModel::class.java]
+            lock.guard("synthetic-unraised-pen",true)
+            assertFalse(lock.canChangeMode());assertFalse(lock.request(true));assertFalse(lock.readOnly.value)
+            assertTrue(lock.reason.contains("抬笔"));lock.guard("synthetic-unraised-pen",false)
+        }
+    }
+
 }
