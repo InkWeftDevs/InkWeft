@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="org.inkweft.core.CardTransformTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-10-04T09:17:24.008Z" hostname="c8f738c2aa6c" time="0.11">
+  <properties/>
+  <testcase name="summaryUsesExistingSemanticLinkAndRequiresUserWrittenBody" classname="org.inkweft.core.CardTransformTest" time="0.065"/>
+  <testcase name="oversizedMergeAndInvalidSplitRejectWithoutTruncation" classname="org.inkweft.core.CardTransformTest" time="0.011"/>
+  <testcase name="mergeKeepsExactTextAllAnnotationsOrderedSourceVersionsAndFirstColors" classname="org.inkweft.core.CardTransformTest" time="0.018"/>
+  <testcase name="splitPreservesWhitespaceAndExplicitAnnotationSourceDestinations" classname="org.inkweft.core.CardTransformTest" time="0.005"/>
+  <testcase name="referencesRejectDuplicatesAndKeepIndependentStableIdentity" classname="org.inkweft.core.CardTransformTest" time="0.002"/>
+  <testcase name="malformedUtf8PlanCannotSilentlyReplaceOriginalText" classname="org.inkweft.core.CardTransformTest" time="0.005"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
