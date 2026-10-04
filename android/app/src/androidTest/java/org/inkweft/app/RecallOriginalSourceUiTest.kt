@@ -86,13 +86,16 @@ class RecallOriginalSourceUiTest {
         if(restoration==null)compose.setContent(content)else restoration.setContent(content)
         tap("branch-review-durable");tap("recall-start-practice");waitFor("recall-answer-text");awaitSaved()
     }
-    /** Exact author tables, including all books, snapshots, selected page, viewport and original ink bytes. */
-    private fun authorStamp():String=runBlocking{
+    /** Only an explicitly committed recall command may touch its own notes.updatedAt; all other
+     * columns/books remain exact. Pure source browsing uses the default, with no permitted changes. */
+    private fun authorStamp(recallWriteBook:String?=null):String=runBlocking{
         JSONArray().apply{LibraryBackupRepository.SCHEMA_V15.forEach{table->
             val rows=JSONArray()
             db.openHelper.readableDatabase.query("SELECT * FROM `${table.name}` ORDER BY "+table.keys.joinToString(","){"`$it`"}).use{cursor->
                 while(cursor.moveToNext())rows.put(JSONArray().apply{repeat(cursor.columnCount){index->
-                    put(when(cursor.getType(index)){
+                    put(if(table.name=="notes"&&recallWriteBook!=null&&cursor.getColumnName(index)=="updatedAt"&&
+                        cursor.getString(cursor.getColumnIndexOrThrow("id"))==recallWriteBook)"expected-recall-touch"
+                    else when(cursor.getType(index)){
                         Cursor.FIELD_TYPE_NULL->org.json.JSONObject.NULL
                         Cursor.FIELD_TYPE_BLOB->"blob:"+Base64.encodeToString(cursor.getBlob(index),Base64.NO_WRAP)
                         Cursor.FIELD_TYPE_INTEGER->"int:"+cursor.getLong(index)
@@ -102,6 +105,12 @@ class RecallOriginalSourceUiTest {
                 }})
             };put(rows)
         }}.toString()
+    }
+    private fun note(book:String)=runBlocking{checkNotNull(db.notes().note(book))}
+    private fun assertRecallTouch(before:NoteRow,startedAt:Long){
+        val after=note(before.id)
+        assertEquals("A recall command may only touch its own note timestamp",before.copy(updatedAt=after.updatedAt),after)
+        assertTrue("The touch must belong to this successful command",after.updatedAt>=before.updatedAt&&after.updatedAt in startedAt..System.currentTimeMillis())
     }
     private fun sameAttempt(session:String,attempt:String,text:String){
         val loaded=runBlocking{RecallStudyRepository(db).loadSession(session)}
@@ -114,33 +123,44 @@ class RecallOriginalSourceUiTest {
     @Test fun durableCurrentSourceWaitsForOriginalReceiptAndReturnsToSameAnswerAndWindow(){
         val f=fixture();val fail=AtomicBoolean(false);val restoration=StateRestorationTester(compose)
         start(f,fail,restoration)
-        val row=vm!!.ui.value.session!!.current!!.row;val before=authorStamp()
-        answer("原题尚未封存的作答");tap("recall-save-answer");awaitSaved()
+        val row=vm!!.ui.value.session!!.current!!.row;val before=authorStamp(f.book.id)
+        val beforeDraft=authorStamp();answer("原题尚未封存的作答");assertEquals(beforeDraft,authorStamp())
+        val beforeSave=note(f.book.id);val saveAt=System.currentTimeMillis()
+        tap("recall-save-answer");awaitSaved();assertRecallTouch(beforeSave,saveAt)
         compose.onNodeWithTag("review-source").assertDoesNotExist()
         for(index in 0..1){
             val action=compose.onNodeWithTag("recall-current-source-$index").performScrollTo().assertIsDisplayed()
             assertTrue(action.fetchSemanticsNode().boundsInRoot.height>=with(compose.density){48.dp.toPx()})
         }
+        val beforeUnknown=authorStamp()
         fail.set(true);tap("recall-current-source-1");waitFor("recall-retry-operation")
+        assertEquals("Unknown ORIGINAL must roll back even the note timestamp",beforeUnknown,authorStamp())
         compose.onNodeWithTag("review-source").assertDoesNotExist();compose.onNodeWithTag("study-snapshot-viewer").assertDoesNotExist()
         compose.onNodeWithText("固定答案 1\n\n固定答案 2").assertDoesNotExist()
         val pending=File(app.filesDir,"recall-${f.book.id}.pending").readBytes()
         compose.onNodeWithTag("recall-current-source-0").assertIsNotEnabled()
         assertEquals(0,runBlocking{RecallStudyRepository(db).loadAttempt(row.id).row.hintMask})
         assertArrayEquals(pending,File(app.filesDir,"recall-${f.book.id}.pending").readBytes())
-        fail.set(false);tap("recall-retry-operation");waitFor("review-source-canvas")
+        val beforeOriginal=note(f.book.id);val originalAt=System.currentTimeMillis()
+        fail.set(false);tap("recall-retry-operation");waitFor("review-source-canvas");assertRecallTouch(beforeOriginal,originalAt)
+        val openedSource=authorStamp()
         val chosenPage=runBlocking{NotebookPages(db).activePages(f.book.id).single{it.id==f.sources[1].pageId}}
         compose.onNodeWithText("${f.book.title} · 第 ${chosenPage.position+1} 页").assertIsDisplayed()
         assertEquals(RecallHint.ORIGINAL.bit,runBlocking{RecallStudyRepository(db).loadAttempt(row.id).row.hintMask})
         restoration.emulateSavedInstanceStateRestore();waitFor("review-source-canvas")
         compose.onNodeWithText("${f.book.title} · 第 ${chosenPage.position+1} 页").assertIsDisplayed()
         tap("return-to-review");sameAttempt(row.sessionId,row.id,"原题尚未封存的作答")
-        answer("回源后继续的作答");tap("recall-current-source-0");waitFor("review-source-canvas")
+        assertEquals("Source restore/read/return must not touch any author column",openedSource,authorStamp())
+        answer("回源后继续的作答");assertEquals(openedSource,authorStamp())
+        val beforeSecondSave=note(f.book.id);val secondSaveAt=System.currentTimeMillis()
+        tap("recall-current-source-0");waitFor("review-source-canvas");assertRecallTouch(beforeSecondSave,secondSaveAt)
+        val reopenedSource=authorStamp()
         assertEquals("回源后继续的作答",runBlocking{RecallStudyRepository(db).loadAttempt(row.id).row.answerText})
         androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().uiAutomation.performGlobalAction(android.accessibilityservice.AccessibilityService.GLOBAL_ACTION_BACK)
         compose.waitUntil(15_000){!exists("review-source")};sameAttempt(row.sessionId,row.id,"回源后继续的作答")
         assertEquals(1,runBlocking{RecallStudyRepository(db).loadAttempt(row.id).hints.count{it.kind=="ORIGINAL"}})
-        assertEquals(before,authorStamp())
+        assertEquals("Back from the source is read-only including all timestamps",reopenedSource,authorStamp())
+        assertEquals(before,authorStamp(f.book.id))
     }
 
     @Test fun recycledCurrentSourceKeepsFixedSnapshotAndSameAttempt(){
@@ -151,13 +171,17 @@ class RecallOriginalSourceUiTest {
             assertTrue(pages.edit(EditPage(id(),f.book.id,source.pageId,PageEditKind.TRASH,InsertPages.orderHash(active.map{it.id}),
                 source.inkRevision,stayOnPageId=stay)) is EditPageResult.Applied)
         }
-        start(f);val row=vm!!.ui.value.session!!.current!!.row;val before=authorStamp()
-        answer("原页回收也保留我的作答");tap("recall-current-source-1");waitFor("review-source-unavailable")
+        start(f);val row=vm!!.ui.value.session!!.current!!.row;val before=authorStamp(f.book.id)
+        val beforeDraft=authorStamp();answer("原页回收也保留我的作答");assertEquals(beforeDraft,authorStamp())
+        val beforeCommands=note(f.book.id);val commandsAt=System.currentTimeMillis()
+        tap("recall-current-source-1");waitFor("review-source-unavailable");assertRecallTouch(beforeCommands,commandsAt)
+        val unavailableSource=authorStamp()
         compose.onNodeWithTag("review-source-canvas").assertDoesNotExist()
         tap("review-source-fixed-snapshot");waitFor("study-snapshot-canvas")
         compose.onNodeWithText("摘录时快照 · 只读").assertIsDisplayed();tap("study-snapshot-close")
         waitFor("review-source-unavailable");tap("return-to-review");sameAttempt(row.sessionId,row.id,"原页回收也保留我的作答")
-        assertEquals(before,authorStamp())
+        assertEquals("Unavailable source and frozen-snapshot reading must not touch timestamps",unavailableSource,authorStamp())
+        assertEquals(before,authorStamp(f.book.id))
     }
 
     @Test fun sealedComparisonKeepsSixScoresReachableWithinBoundedReadingColumn(){

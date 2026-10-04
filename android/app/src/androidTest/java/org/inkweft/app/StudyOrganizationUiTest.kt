@@ -283,12 +283,20 @@ class StudyOrganizationUiTest {
             // Keep the pointer down while the production 16 ms edge-scroll loop runs.
             // No scrollTo / swipe is allowed to bring the target into view.
             compose.waitUntil(15_000){
+                val currentList=compose.onNodeWithTag("study-list").fetchSemanticsNode().boundsInRoot
                 val row=runCatching{compose.onNodeWithTag("outline-row-$target").fetchSemanticsNode().boundsInRoot}.getOrNull()
-                row!=null&&row.top>list.top+48&&row.bottom<list.bottom-48
+                row!=null&&row.top>currentList.top+48&&row.bottom<currentList.bottom-48
             }
+            // Leave the edge first: scrolling and the live feedback can change the
+            // list's origin while the pointer remains down. Never reuse pre-drag bounds.
+            var currentList=compose.onNodeWithTag("study-list").fetchSemanticsNode().boundsInRoot
+            compose.onNodeWithTag("study-list").performTouchInput{moveTo(Offset(currentList.width*.5f,currentList.height*.5f))}
+            compose.waitForIdle()
+            currentList=compose.onNodeWithTag("study-list").fetchSemanticsNode().boundsInRoot
             val row=compose.onNodeWithTag("outline-row-$target").fetchSemanticsNode().boundsInRoot
-            compose.onNodeWithTag("study-list").performTouchInput{moveTo(row.center-list.topLeft)}
-            compose.onNodeWithTag("outline-drag-feedback").assertExists()
+            compose.onNodeWithTag("study-list").performTouchInput{moveTo(row.center-currentList.topLeft)}
+            compose.waitForIdle()
+            compose.onNodeWithTag("outline-drag-feedback").assertTextContains("移入「跨屏目标 5」下级",substring=true)
         }
         startAndReachTarget(destination)
         compose.onNodeWithTag("study-list").performTouchInput{up()}
@@ -306,7 +314,7 @@ class StudyOrganizationUiTest {
         compose.onNodeWithTag("study-list").performTouchInput{cancel()}
         settled(f.book)
         assertEquals(beforeCancel,author(f.book))
-        compose.onNodeWithTag("study-message").assertTextContains("拖动已取消")
+        compose.onNodeWithTag("study-message").assertTextContains("拖动已取消",substring=true)
     }
 
     @Test fun nativeMapPreviewsEveryDescendantAndMarqueeMovementDeduplicatesBranches(){

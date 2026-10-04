@@ -1,0 +1,14 @@
+{
+  "code_source": "0fb4f55",
+  "production_behavior_changed": false,
+  "compile_app_android_test": "PASS",
+  "compile_seconds": 86,
+  "compile_log_sha256": "79b672f0d179e2083e9425334b4019112fcd164f6b219767362d26d7a9088c8a",
+  "ci_host_tests": 62,
+  "actionlint": "PASS",
+  "next_focused_ui": 6,
+  "room": "REUSED_EVIDENCE202 only when full source/test/build hashes match actual9593b9; newly executed0",
+  "next_fixture": "prepare/native_recall same complete fixture;14PNG; other3NOT_RUN_FOCUSED",
+  "full_still_pending": "153UI/202Room/5phases/39PNG; extra backup regression commit8fdb373 will join only full and requires fresh202Room",
+  "new_ci_cache": "Existing pinned official Gradle action; reviewed public settings hash gate; dependency files and official wrapper distributions only; no configuration/build cache/APK/credentials/scans/dependency upload"
+}

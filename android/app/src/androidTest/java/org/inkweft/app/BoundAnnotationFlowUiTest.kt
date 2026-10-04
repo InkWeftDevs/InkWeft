@@ -112,8 +112,15 @@ class BoundAnnotationFlowUiTest {
         val now=state(f.book).state
         assertEquals(f.original.layers.layers,now.layers.layers)
         assertEquals(f.original.layers.currentId,now.layers.currentId)
-        assertEquals(f.original.layers.memberships,now.layers.memberships)
+        // Membership is keyed data: the production codec sorts it by content kind/ID, unlike the layer stack.
+        val expectedMembership=f.original.layers.memberships.associate{it.content to it.layerId}
+        val actualMembership=now.layers.memberships.associate{it.content to it.layerId}
+        assertEquals("Fixture membership keys must be unique",f.original.layers.memberships.size,expectedMembership.size)
+        assertEquals("Persisted membership keys must be unique",now.layers.memberships.size,actualMembership.size)
+        assertEquals("No membership may be added or dropped",f.original.layers.memberships.size,now.layers.memberships.size)
+        assertEquals(expectedMembership,actualMembership)
         assertEquals(f.original.layers.deleted,now.layers.deleted)
+        assertEquals(f.original.annotations.size,now.annotations.size)
         f.original.annotations.forEach{old->assertArrayEquals("Never transform the stored author samples",InkStrokeCodec.encode(old.stroke),InkStrokeCodec.encode(now.annotations.single{it.stroke.id==old.stroke.id}.stroke))}
         for(protected in listOf(f.hidden,f.locked)){
             val old=f.original.annotations.single{it.stroke.id==protected};val fresh=now.annotations.single{it.stroke.id==protected}
@@ -193,8 +200,8 @@ class BoundAnnotationFlowUiTest {
         assertEquals(detached.revision,state(f.book).revision);assertEquals(originalCards,graph(f.book).cards);assertPreserved(f)
         // Reopen the real target panel and its layer UI; the detached editable stroke remains on the map.
         openAnnotation(f.node);compose.onNodeWithTag("annotation-unbind").assertDoesNotExist();tap("annotation-layers")
-        compose.onNodeWithTag("layer-heading-${f.hiddenLayer}").assertTextContains("已隐藏")
-        compose.onNodeWithTag("layer-heading-${f.lockedLayer}").assertTextContains("已锁定")
+        compose.onNodeWithTag("layer-heading-${f.hiddenLayer}").assertTextContains("隐藏批注",substring=true).assertTextContains("已隐藏",substring=true)
+        compose.onNodeWithTag("layer-heading-${f.lockedLayer}").assertTextContains("锁定批注",substring=true).assertTextContains("已锁定",substring=true)
         close("page-layers");close("bound-annotation")
     }
 }

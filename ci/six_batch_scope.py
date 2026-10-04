@@ -21,25 +21,13 @@ METHODS = {
 # Target the concentrated four scope repairs and previously unverified production flows.
 # Full mode retains all prior regressions; focused omissions are not claimed as new passes.
 FOCUSED_METHODS = {
- 'org.inkweft.app.BoundAnnotationFlowUiTest': ['bindMoveReorderZoomDetachAndReopenKeepOneTransformAndProtectedLayerOwnership'],'org.inkweft.app.CardTrashRestorationTest': ['unknownFrozenImpactSurvivesRestorationAndRejectsLaterReferences',
-                                              'oldPendingIsNotReplayedAndReadOnlyCanOnlyResolveACommittedReceipt'],
- 'org.inkweft.app.CardTrashUiTest': ['cardManagementCancelsRejectsChangedQuestionThenRestoresFromRecycleArea'],
- 'org.inkweft.app.DocumentShortcutPreferencesUiTest': ['documentOrderAndVisibilityApplyImmediatelyAcrossFullScreenModesAndRecreation',
-                                                       'legacyToolOrderHiddenIdsAndPenSettingsSurviveNewDestinationPreferences',
-                                                       'hiddenDestinationsRemainReachableFromDocumentWritingAndReadingMenus'],
- 'org.inkweft.app.RecallOriginalSourceUiTest': ['durableCurrentSourceWaitsForOriginalReceiptAndReturnsToSameAnswerAndWindow',
-                                                'recycledCurrentSourceKeepsFixedSnapshotAndSameAttempt',
-                                                'sealedComparisonKeepsSixScoresReachableWithinBoundedReadingColumn',
-                                                'foreignSourceIsRejectedWithoutRenderingAnotherNotebook'],
- 'org.inkweft.app.CardReuseDialogUiTest': ['realReferenceAndCopyActionsKeepSharedIdentityAndIndependentContentAfterReopen'],
- 'org.inkweft.app.StudyCapacityPanelUiTest': ['warningsStartAtEightyPercentForEachBudgetAndStayAbsentBelowIt',
-                                              'narrowLargeTypePanelScrollsToFullTouchTargetsAndRetriesSnapshotFailure'],
- 'org.inkweft.app.StudyOrganizationUiTest': ['outlineEdgeScrollReachesOffscreenParentAndCancelKeepsWholeAuthorGraph'],
- 'org.inkweft.app.RecallDurableRecoveryTest': ['repeatedOriginalSavesNewAnswerAndCancellationNeverRunsStaleContinuation',
-                                               'cancellingUnknownAnswerBeforeOriginalRetryDoesNotOpenOrRecordOriginal'],
- 'org.inkweft.app.StarNoteInteractionsUiTest': ['excerptKeepsPageImageAddsCommentAndDeletesWithoutDeletingSource',
-                                                'inlineCommentAndEightHandleRecropCancelSaveAndReopenKeepOriginalInk'],
- 'org.inkweft.app.StudyCapacityUiTest': ['cardBudgetRejectionKeepsTheRealEditorDraftAndAuthorRecords']}
+    "org.inkweft.app.BoundAnnotationFlowUiTest": ["bindMoveReorderZoomDetachAndReopenKeepOneTransformAndProtectedLayerOwnership"],
+    "org.inkweft.app.CardTrashUiTest": ["cardManagementCancelsRejectsChangedQuestionThenRestoresFromRecycleArea"],
+    "org.inkweft.app.RecallOriginalSourceUiTest": ["durableCurrentSourceWaitsForOriginalReceiptAndReturnsToSameAnswerAndWindow",
+        "recycledCurrentSourceKeepsFixedSnapshotAndSameAttempt"],
+    "org.inkweft.app.CardReuseDialogUiTest": ["realReferenceAndCopyActionsKeepSharedIdentityAndIndependentContentAfterReopen"],
+    "org.inkweft.app.StudyOrganizationUiTest": ["outlineEdgeScrollReachesOffscreenParentAndCancelKeepsWholeAuthorGraph"],
+}
 
 CORE = ["PageObjectTest", "CardTrashCommandTest", "ContentTransferTest", "LibraryArchiveTest", "CardPresentationTest",
         "KnowledgeTest", "StudyTextTest", "MapAddendumTest", "StudyOrganizationTest", "StudyOutlineTest", "CardTransformTest", "KnowledgeTextLinksTest",

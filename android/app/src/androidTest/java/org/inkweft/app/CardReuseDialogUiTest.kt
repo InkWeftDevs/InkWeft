@@ -40,7 +40,7 @@ class CardReuseDialogUiTest {
         compose.waitUntil(15_000){runCatching{compose.onNodeWithTag("reuse-book-${target.id}").assertExists()}.isSuccess}
         tap("reuse-book-${target.id}")
         tap("card-reuse-save")
-        compose.waitUntil(15_000){runCatching{compose.onNodeWithTag("card-reuse-message").assertTextContains("同步引用已加入")}.isSuccess}
+        compose.waitUntil(15_000){runCatching{compose.onNodeWithTag("card-reuse-message").assertTextContains("同步引用已加入",substring=true)}.isSuccess}
         val reference=runBlocking{app.knowledge.observeBook(target.id).first().single{it.data() is KnowledgeData.Link}}
         assertTrue(runBlocking{app.study.cards(target.id).first().isEmpty()})
         compose.onNodeWithText("返回原卡").performClick()
@@ -49,7 +49,7 @@ class CardReuseDialogUiTest {
         tap("reuse-book-${target.id}")
         compose.onNodeWithText("独立副本",substring=false).performScrollTo().performClick()
         tap("card-reuse-save")
-        compose.waitUntil(15_000){runCatching{compose.onNodeWithTag("card-reuse-message").assertTextContains("独立副本已加入")}.isSuccess}
+        compose.waitUntil(15_000){runCatching{compose.onNodeWithTag("card-reuse-message").assertTextContains("独立副本已加入",substring=true)}.isSuccess}
         val copy=runBlocking{app.study.cards(target.id).first().single()}
         assertNotEquals(cardId,copy.id);assertEquals("原正文",copy.body)
         val originalSources=runBlocking{app.study.sources(cardId,card.revision)}

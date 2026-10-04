@@ -30,16 +30,16 @@ class RoomEvidenceTest(unittest.TestCase):
         (self.root / BASELINE).write_text(json.dumps(self.baseline))
 
     def evidence(self, mode="focused"):
-        return room_evidence(self.root, mode, 180, self.baseline["room_classes"])
+        return room_evidence(self.root, mode, 202, self.baseline["room_classes"])
 
     def test_exact_content_reuses_actual_receipt_but_full_always_executes(self):
         evidence = self.evidence()
         self.assertEqual("REUSED_EVIDENCE", evidence["status"])
-        self.assertEqual(37209060586, evidence["source_run"])
-        self.assertEqual("46d2967a2f35756ddf8536c395cd85ccd6216dc2", evidence["source_commit"])
-        self.assertEqual(180, evidence["reused_passed"])
+        self.assertEqual(37217398281, evidence["source_run"])
+        self.assertEqual("9593b928473b46ff9efe806dace74231d022f3d1", evidence["source_commit"])
+        self.assertEqual(202, evidence["reused_passed"])
         self.assertEqual("RUN_REQUIRED", self.evidence("full")["status"])
-        self.assertEqual("RUN_REQUIRED", room_evidence(self.root, "focused", 180, ["changed-selection"])["status"])
+        self.assertEqual("RUN_REQUIRED", room_evidence(self.root, "focused", 202, ["changed-selection"])["status"])
 
     def test_each_source_schema_test_and_build_input_change_requires_fresh_room(self):
         for name in INPUT_PATHS:
@@ -71,10 +71,10 @@ class RoomEvidenceTest(unittest.TestCase):
         baseline = json.loads((ROOT / BASELINE).read_text())
         receipt = (ROOT / baseline["receipt"]).read_bytes()
         self.assertEqual(hashlib.sha256(receipt).hexdigest(), baseline["receipt_sha256"])
-        self.assertEqual(180, json.loads(receipt)["passed"])
+        self.assertEqual(202, json.loads(receipt)["passed"])
         self.assertEqual(set(INPUT_PATHS), set(baseline["input_sha256"]))
-        self.assertEqual(11306726676, baseline["artifact_id"])
-        self.assertEqual("6a37aca6ef053f8caa5a9f6bb5cff27b49e64eaf", baseline["matching_local_source_commit"])
+        self.assertEqual(11309760174, baseline["artifact_id"])
+        self.assertEqual("3287f6c38c17b3f953e5066fe4cca5514e0933af", baseline["matching_local_source_commit"])
 
     def test_missing_or_invalid_receipt_cannot_reuse(self):
         path = self.root / self.baseline["receipt"]
@@ -96,13 +96,13 @@ class RoomEvidenceTest(unittest.TestCase):
         plan = build_plan("focused")
         # Exercise the historical selection exactly; expanded current scope must run anew.
         plan["room"] = self.baseline["room_classes"]
-        plan["expected_room"] = 180
+        plan["expected_room"] = 202
         selections = []
         run_regression(self.root, plan, 0, selections, shard_count=1)
         self.assertEqual(assigned_app_methods(plan), selections)
         summary = json.loads((self.root / "android/build/evidence/room-summary.json").read_text())
         self.assertEqual("REUSED_EVIDENCE", summary["status"])
-        self.assertEqual((0, 0, 0, 180, 180), tuple(summary[key] for key in
+        self.assertEqual((0, 0, 0, 202, 202), tuple(summary[key] for key in
                          ("expected", "passed", "executed", "planned_total", "reused_passed")))
 
     def test_stale_plan_reuse_falls_back_to_all_original_room_methods(self):

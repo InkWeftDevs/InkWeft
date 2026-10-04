@@ -52,6 +52,30 @@ jobs:
         with:
           distribution: temurin
           java-version: "17"
+      - name: 仅允许已审查的公开依赖源进入下载缓存
+        id: public-cache
+        run: |
+          expected=6a18e6904b57d3d42b97e88495cd5777e01d0cb04167437cc282a43ad6e976f0
+          actual=$(sha256sum android/settings.gradle.kts | cut -d' ' -f1)
+          if test "$actual" = "$expected"; then echo "allowed=true" >> "$GITHUB_OUTPUT"; else echo "allowed=false" >> "$GITHUB_OUTPUT"; fi
+      - uses: gradle/actions/setup-gradle@ed408507eac070d1f99cc633dbcf757c94c7933a
+        with:
+          cache-disabled: ${{ steps.public-cache.outputs.allowed != 'true' }}
+          cache-read-only: false
+          cache-cleanup: never
+          gradle-home-cache-includes: |
+            caches/modules-2/files-2.1
+            wrapper/dists
+          gradle-home-cache-excludes: |
+            **/configuration-cache/**
+            **/build-cache-*/**
+            **/*.apk
+            **/*.keystore
+            **/*.properties
+          dependency-graph: disabled
+          build-scan-publish: false
+          validate-wrappers: true
+          add-job-summary: on-failure
       - name: 初始化本次任务的临时目录
         run: |
           echo "ANDROID_AVD_HOME=$RUNNER_TEMP/inkweft-six-batch-avd" >> "$GITHUB_ENV"
