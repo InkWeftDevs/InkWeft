@@ -201,15 +201,23 @@ class RecallMaskUiTest {
         } catch (error: Throwable) {
             // Keep the original failure, but distinguish a lost round from a loading
             // or adaptive-layout failure in the disposable synthetic CI fixture.
-            if (diagnoseOnFailure) runCatching {
-                println("RECALL_WAIT_FAILURE: tag=$tag config=${compose.activity.resources.configuration}")
-                compose.onAllNodes(isRoot(), useUnmergedTree = true).fetchSemanticsNodes().indices.forEach { index ->
-                    runCatching { println(compose.onAllNodes(isRoot(), useUnmergedTree = true)[index].printToString()) }
-                }
-            }
+            if (diagnoseOnFailure) attachWaitDiagnostic(error, "tag=$tag")
             throw error
         }
         compose.waitForIdle()
+    }
+
+    private fun attachWaitDiagnostic(error: Throwable, stage: String) {
+        // Only this test's synthetic app semantics/configuration, never global logcat.
+        val diagnostic = buildString {
+            appendLine("RECALL_WAIT_FAILURE: $stage")
+            appendLine("config=${runCatching { compose.activity.resources.configuration }.getOrNull()}")
+            appendLine(runCatching {
+                val nodes = compose.onAllNodes(isRoot(), useUnmergedTree = true)
+                nodes.fetchSemanticsNodes().indices.joinToString("\n") { nodes[it].printToString() }
+            }.getOrElse { "Synthetic semantics unavailable: ${it.javaClass.simpleName}" })
+        }
+        error.addSuppressed(AssertionError(diagnostic))
     }
 
     private fun scrollTo(tag: String) {
@@ -358,7 +366,18 @@ class RecallMaskUiTest {
             compose.runOnIdle { protected = roots().any { it.importantForAccessibility == View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS } }
             protected
         }
-        val texts = platformText()
+        var texts = emptyList<String>()
+        try {
+            // Compose idle does not mean Android has published the dialog's OS tree.
+            // Wait only for the real positive control, never for secrets to disappear.
+            compose.waitUntil(15_000) {
+                texts = platformText()
+                texts.any { it.contains("回忆") || it.contains("本题") }
+            }
+        } catch (error: Throwable) {
+            attachWaitDiagnostic(error, "actual OS review UI; lastAppTextCount=${texts.size}")
+            throw error
+        }
         assertTrue("OS inspection must retrieve the actual app UI, not an empty tree", texts.any { it.contains("回忆") || it.contains("本题") })
         if (prompt != null) assertTrue("The actual current question remains accessible", texts.any { it.contains(prompt.lineSequence().first()) })
         f.secrets.forEach { secret -> assertFalse("Actual interactive-window accessibility leaked $secret", texts.any { it.contains(secret) }) }

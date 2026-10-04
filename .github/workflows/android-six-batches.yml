@@ -148,6 +148,11 @@ jobs:
             android/build/evidence/source-commit.txt
             android/build/evidence/**/instrumentation.txt
             android/build/evidence/**/selection.txt
+            android/build/evidence/app-*/timeout-screen.png
+            android/build/evidence/app-*/timeout-diagnostics.json
+            android/build/evidence/app-*/timeout-app-logcat.txt
+            android/build/evidence/app-*/timeout-app-threads.txt
+            android/build/evidence/app-*/timeout-app-backtrace.txt
       - name: 同一固定大样本准备、冷重开、原生界面及持久回忆取证
         if: ${{ !cancelled() && steps.build.outcome == 'success' && steps.emulator.outcome == 'success' && steps.acceleration.outputs.ready == 'true' && matrix.shard == 0 }}
         run: python3 ci/run_six_batch_fixture.py --source-commit "$INKWEFT_HEAD_SHA"
@@ -197,6 +202,11 @@ jobs:
             android/build/evidence/app-*/**/*.png
             android/build/evidence/**/instrumentation.txt
             android/build/evidence/**/selection.txt
+            android/build/evidence/app-*/timeout-screen.png
+            android/build/evidence/app-*/timeout-diagnostics.json
+            android/build/evidence/app-*/timeout-app-logcat.txt
+            android/build/evidence/app-*/timeout-app-threads.txt
+            android/build/evidence/app-*/timeout-app-backtrace.txt
             android/build/evidence/six-batch-fixture/setup.txt
             android/build/evidence/six-batch-fixture/prepare-runner.json
             android/build/evidence/six-batch-fixture/prepare-manifest.json

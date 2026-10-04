@@ -67,11 +67,21 @@ class CardTransformUiTest {
     @Test fun frozenMultiSourceRequiresChoiceAndUnavailableNeverFallsBack(){
         val book=id();val card=id();val sources=List(2){i->StudySourceRevisionRow(id(),i+1L,book,id(),0,0.0,0.0,20.0,20.0,"",byteArrayOf(i.toByte()))}
         var frozen by mutableStateOf(FrozenStudySources(sources.map{it.ref()},sources,true));var selected:StudySourceRow?=null
-        compose.setContent{MaterialTheme{FrozenCardSources(frozen,card,{selected=it})}}
+        var enabled by mutableStateOf(true)
+        compose.setContent{MaterialTheme{FrozenCardSources(frozen,card,{selected=it},enabled=enabled)}}
         compose.runOnIdle{assertNull(selected)}
         compose.onNodeWithTag("frozen-source-1").performClick();compose.runOnIdle{assertEquals(sources[1].pageId,selected!!.pageId)}
+        val pendingSource=compose.runOnIdle{checkNotNull(selected).also{enabled=false}}
+        compose.onNodeWithTag("frozen-source-0").assertIsNotEnabled().performTouchInput{click()}
+        compose.onNodeWithTag("frozen-source-1").assertIsNotEnabled()
+        compose.runOnIdle{assertSame("Pending navigation retains the exact chosen source",pendingSource,selected)}
         compose.runOnIdle{frozen=frozen.copy(complete=false)}
         compose.onNodeWithTag("frozen-source-unavailable").assertExists();compose.runOnIdle{assertNull(selected)}
+        // A different, complete single-source version is valid even while choices
+        // remain disabled. It must replace, rather than revive, the previous one.
+        compose.runOnIdle{frozen=FrozenStudySources(listOf(sources[0].ref()),listOf(sources[0]),true)}
+        compose.runOnIdle{assertEquals(sources[0].pageId,selected!!.pageId);enabled=true}
+        compose.runOnIdle{assertEquals(sources[0].pageId,selected!!.pageId)}
     }
     @Test fun restoredUnknownInverseKeepsOneGuardAndDisablesOtherResolutionActions(){
         val (book,cards)=seed();val plain=CardTransformRepository(db)

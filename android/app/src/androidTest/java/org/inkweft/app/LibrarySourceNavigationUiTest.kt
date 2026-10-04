@@ -176,11 +176,20 @@ class LibrarySourceNavigationUiTest {
             compose.onNodeWithText("学习", useUnmergedTree = true).performScrollTo().performTouchInput { click() }
         }
         waitFor("learning-workbench")
-        compose.onNodeWithTag("widget-maps").performScrollTo()
-        compose.onNodeWithTag("learning-map-search").performTextReplacement(f.mapTitle)
+        // Re-entry changes recent-row heights while the directory reloads. A lazy
+        // descendant may exist before it is placed; position its owning item by
+        // the actual widget key before reading/touching the descendant's bounds.
+        val mapsKey = app.learningStore.read().widgets.single {
+            it.definition == "org.inkweft/maps" && it.visible
+        }.id
+        val widgets = compose.onNode(hasScrollToKeyAction() and hasAnyAncestor(hasTestTag("learning-workbench")))
+        widgets.assertIsDisplayed().performScrollToKey(mapsKey)
+        waitFor("learning-map-search")
+        compose.onNodeWithTag("learning-map-search").assertIsDisplayed().performTextReplacement(f.mapTitle)
         val target = hasTestTag("learning-target-${f.mapId}") and hasAnyAncestor(hasTestTag("widget-maps"))
         compose.waitUntil(15_000) { compose.onAllNodes(target).fetchSemanticsNodes().isNotEmpty() }
-        compose.onNode(target).performScrollTo().assertIsDisplayed().performTouchInput { click() }
+        widgets.performScrollToKey(mapsKey)
+        compose.onNode(target).performScrollTo().assertIsDisplayed().assertIsEnabled().performTouchInput { click() }
         waitFor("study-map")
         compose.waitUntil(15_000) { var ready = false
             compose.runOnIdle { ready = study(f.note.id).mapId.value == f.mapId && !study(f.note.id).ui.value.loading &&
@@ -472,9 +481,10 @@ class LibrarySourceNavigationUiTest {
 
     private fun beginHeldNavigation(label: String): WriterGate {
         val gate = WriterGate(label)
+        var queueBefore = "not sampled"
         try {
             gate.awaitHeld()
-            println("LS58 $label: held Room queue before touch=${transactionQueueDepth()}")
+            queueBefore = transactionQueueDepth().toString()
             tapFooter("study-open-source")
             compose.waitUntil("$label: the touched source request remains pending behind Room", 10_000) {
                 runCatching { compose.onNodeWithTag("study-open-source")
@@ -484,16 +494,19 @@ class LibrarySourceNavigationUiTest {
             compose.onNodeWithTag("card-back").assertIsDisplayed().assertIsEnabled()
             return gate
         } catch (error: Throwable) {
-            runCatching { println("LS58 $label: Room queue at failure=${transactionQueueDepth()}") }
-            // Capture the actual pending UI before releasing Room; a timeout alone
-            // cannot distinguish a missed touch from an early navigation result.
-            runCatching { screenshot("ls58-$label-navigation-failure.png") }
+            // Attach synthetic-fixture diagnostics to the original failure. stdout
+            // goes to Android logcat and is absent from am instrument's result.
+            val diagnostic = StringBuilder("LS58 $label: Room queue before touch=$queueBefore")
+            runCatching { diagnostic.append("\nRoom queue at failure=${transactionQueueDepth()}") }.onFailure(error::addSuppressed)
+            runCatching { screenshot("ls58-$label-navigation-failure.png") }.onFailure(error::addSuppressed)
+            runCatching { compose.runOnIdle { diagnostic.append("\nselected=${notebook().ui.value.selectedId}, " +
+                "pending=${workspace().pendingPageNavigation.value}, error=${workspace().error.value}") } }.onFailure(error::addSuppressed)
             runCatching { compose.onAllNodes(isRoot(), useUnmergedTree = true).fetchSemanticsNodes().indices.forEach {
-                println(compose.onAllNodes(isRoot(), useUnmergedTree = true)[it].printToString())
-            } }
-            runCatching { compose.runOnIdle { println("LS58 $label: selected=${notebook().ui.value.selectedId}, " +
-                "pending=${workspace().pendingPageNavigation.value}, error=${workspace().error.value}") } }
-            gate.finish(); throw error
+                diagnostic.append("\n").append(compose.onAllNodes(isRoot(), useUnmergedTree = true)[it].printToString())
+            } }.onFailure(error::addSuppressed)
+            error.addSuppressed(AssertionError(diagnostic.toString()))
+            runCatching { gate.finish() }.onFailure(error::addSuppressed)
+            throw error
         }
     }
 

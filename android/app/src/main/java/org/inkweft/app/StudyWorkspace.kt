@@ -9,6 +9,8 @@ import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.relocation.BringIntoViewRequester
+import androidx.compose.foundation.relocation.bringIntoViewRequester
 import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.scrollBy
@@ -22,6 +24,7 @@ import androidx.compose.ui.layout.boundsInRoot
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.semantics.LiveRegionMode
 import androidx.compose.ui.semantics.liveRegion
+import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.stateDescription
@@ -1205,7 +1208,27 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
         var sourceMessage by rememberSaveable(card.id){mutableStateOf<String?>(null)}
         LaunchedEffect(card.id,inspectSource){if(inspectSource)showSource=true}
         var moreActions by rememberSaveable(card.id){mutableStateOf(false)}
-        CardInspector(compactWindow,onDismissRequest={if(!resolutionPending){navigation.cancelCardSource();chosenCardId=null;chosenNodeId=null;inspectSource=false}else localMessage="请先核对这次撤销，再离开当前卡片"},modifier=Modifier.testTag("study-card-details"),containerColor=MaterialTheme.colorScheme.surface,title={Text(if(inspectSource)"摘录来源"else"摘要卡")},text={Column(Modifier.verticalScroll(rememberScrollState()),verticalArrangement=Arrangement.spacedBy(8.dp)){
+        val detailScroll=rememberScrollState()
+        val sectionScope=rememberCoroutineScope()
+        val annotationAnchor=remember{BringIntoViewRequester()}
+        val sourceAnchor=remember{BringIntoViewRequester()}
+        var sectionJump by remember{mutableStateOf<Job?>(null)}
+        fun showSection(anchor:BringIntoViewRequester?=null){
+            sectionJump?.cancel()
+            sectionJump=sectionScope.launch{
+                if(anchor==null)detailScroll.animateScrollTo(0)
+                // Include the viewport so a section heading lands above its content, not at the bottom edge.
+                else anchor.bringIntoView(Rect(0f,0f,1f,detailScroll.viewportSize.toFloat()))
+            }
+        }
+        CardInspector(compactWindow,onDismissRequest={if(!resolutionPending){navigation.cancelCardSource();chosenCardId=null;chosenNodeId=null;inspectSource=false}else localMessage="请先核对这次撤销，再离开当前卡片"},modifier=Modifier.testTag("study-card-details"),containerColor=MaterialTheme.colorScheme.surface,title={Column{
+            Text(if(inspectSource)"摘录来源"else"摘要卡")
+            if(!inspectSource)FlowRow(Modifier.fillMaxWidth().testTag("card-section-navigation"),horizontalArrangement=Arrangement.spacedBy(4.dp)){
+                TextButton({showSection()},modifier=Modifier.sizeIn(minWidth=48.dp,minHeight=48.dp).testTag("card-jump-body").describedAs("定位到正文")){Text("正文")}
+                if(card.id !in structureCards.map{it.id})TextButton({showSection(annotationAnchor)},modifier=Modifier.sizeIn(minWidth=48.dp,minHeight=48.dp).testTag("card-jump-annotation").describedAs("定位到个人注释")){Text("注释")}
+                TextButton({showSection(sourceAnchor)},modifier=Modifier.sizeIn(minWidth=48.dp,minHeight=48.dp).testTag("card-jump-source").describedAs("定位到来源")){Text("来源")}
+            }
+        }},text={Column(Modifier.testTag("card-reading-content").verticalScroll(detailScroll),verticalArrangement=Arrangement.spacedBy(8.dp)){
             Row(Modifier.fillMaxWidth().height(IntrinsicSize.Min),verticalAlignment=Alignment.Top){
                 Box(Modifier.width(4.dp).fillMaxHeight().background((presentations[card.id]?.cardColor?:CardTint.DEFAULT).argb?.let{Color(it)}?:InkTheme.Divider))
                 Column(Modifier.weight(1f).padding(start=12.dp,bottom=8.dp),verticalArrangement=Arrangement.spacedBy(8.dp)){
@@ -1214,17 +1237,17 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
                 }
             }
             if(!inspectSource){
-                Text("正文 / 既有内容",style=MaterialTheme.typography.labelMedium,color=Quiet)
+                Text("正文 / 既有内容",style=MaterialTheme.typography.labelMedium,color=Quiet,modifier=Modifier.testTag("card-body-heading").semantics{heading()})
                 if(card.id in structureCards.map{it.id})androidx.compose.foundation.text.selection.SelectionContainer{Text(card.body.ifBlank{"尚未填写摘要"},modifier=Modifier.testTag("card-full-body"))}
                 else KnowledgeLinkedCardBody(TargetRef(TargetKind.CARD,card.id),card.body,browseReady){target->
                     openRelatedTarget(target)
                 }
             }
             if(!inspectSource&&card.id !in structureCards.map{it.id}){
-                Text("个人注释",style=MaterialTheme.typography.labelMedium,color=Quiet)
+                Text("个人注释",style=MaterialTheme.typography.labelMedium,color=Quiet,modifier=Modifier.bringIntoViewRequester(annotationAnchor).testTag("card-annotation-heading").semantics{heading()})
                 androidx.compose.foundation.text.selection.SelectionContainer{Text(annotations[card.id].orEmpty().ifBlank{"尚未添加个人注释"},modifier=Modifier.testTag("card-full-annotation"))}
             }
-            Text("来源",style=MaterialTheme.typography.labelMedium,color=Quiet,modifier=Modifier.testTag("card-source-heading"))
+            Text("来源",style=MaterialTheme.typography.labelMedium,color=Quiet,modifier=Modifier.bringIntoViewRequester(sourceAnchor).testTag("card-source-heading").semantics{heading()})
             frozenSources?.takeIf{it.complete}?.sources?.forEachIndexed{index,fixed->
                 val page=(sourcePages+mapWrite.pages).firstOrNull{it.id==fixed.pageId&&it.notebookId==fixed.notebookId}
                 val sourceTitle=if(fixed.notebookId==note.base.id)note.title else mapWrite.notes.firstOrNull{it.id==fixed.notebookId}?.title
@@ -1242,11 +1265,13 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
             else if(sourceLoadFailed){Text("来源读取失败，原卡仍保留");TextButton({sourceReload++}){Text("重试来源")}}
             else Text("正在读取固定来源…",style=MaterialTheme.typography.bodySmall,color=Quiet)
             cardSource?.let{s->
-                TextButton({
-                    if(showSource){sourceEnterPending=false;showSource=false}
-                    else{sourceEnterEvent++;sourceEnterPending=true;showSource=true}
-                },modifier=Modifier.testTag("card-source-section")){Text(if(showSource)"收起来源"else"查看来源")}
-                TextButton({showSnapshot=true},enabled=browseReady&&!sourceOpening,modifier=Modifier.heightIn(min=48.dp).testTag("study-view-snapshot")){Text("查看完整摘录 · 摘录时快照")}
+                FlowRow(Modifier.fillMaxWidth().testTag("card-source-actions"),horizontalArrangement=Arrangement.spacedBy(4.dp)){
+                    TextButton({
+                        if(showSource){sourceEnterPending=false;showSource=false}
+                        else{sourceEnterEvent++;sourceEnterPending=true;showSource=true}
+                    },modifier=Modifier.heightIn(min=48.dp).testTag("card-source-section")){Text(if(showSource)"收起来源"else"查看来源")}
+                    TextButton({showSnapshot=true},enabled=browseReady&&!sourceOpening,modifier=Modifier.heightIn(min=48.dp).testTag("study-view-snapshot")){Text("查看完整摘录 · 摘录时快照")}
+                }
                 if(showSource){
                     val enterEvent=sourceEnterEvent
                     ClickEnterContent(enterEvent,sourceEnterPending,{if(sourceEnterEvent==enterEvent)sourceEnterPending=false},

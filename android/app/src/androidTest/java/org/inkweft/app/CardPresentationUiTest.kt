@@ -1,6 +1,9 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 package org.inkweft.app
 
+import android.view.inspector.WindowInspector
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.test.platform.app.InstrumentationRegistry
@@ -28,6 +31,30 @@ class CardPresentationUiTest {
         h.tap("card-edit-presentation");h.waitFor("card-annotation-input")
         compose.waitUntil(15_000){runCatching{compose.onNodeWithTag("card-annotation-input").assertIsEnabled()}.isSuccess}
     }
+    private fun settleKeyboard(){
+        // Activity and dialog are separate windows; Compose idle does not wait for IME insets.
+        val roots=compose.runOnIdle{WindowInspector.getGlobalWindowViews().filter{it.isAttachedToWindow&&it.isShown}}
+        compose.runOnIdle{roots.forEach{root->
+            root.findFocus()?.clearFocus()
+            ViewCompat.getWindowInsetsController(root)?.hide(WindowInsetsCompat.Type.ime())
+        }}
+        compose.waitUntil("All editor windows have hidden the IME before palette touches",15_000){compose.runOnIdle{
+            roots.all{ViewCompat.getRootWindowInsets(it)?.isVisible(WindowInsetsCompat.Type.ime())==false}
+        }}
+        compose.waitForIdle()
+    }
+    private fun assertDraftColors(stage:String,title:CardTint=CardTint.ROSE){
+        try{
+            compose.onNodeWithTag("card-color-GREEN").assertIsSelected()
+            compose.onNodeWithTag("card-title-color-${title.name}").assertIsSelected()
+        }catch(error:Throwable){
+            runCatching{screenshot("b1-card-colors-$stage-failure.png")}
+            val tree=runCatching{compose.onAllNodes(isRoot(),useUnmergedTree=true).printToString()}
+                .getOrElse{"Root dump failed: ${it.message}"}
+            runCatching{File(h.app.getExternalFilesDir(null),"b1-card-colors-$stage-failure.txt").writeText(tree)}
+            throw AssertionError("Card palette selection failed at $stage\n$tree",error)
+        }
+    }
     private fun waitSaved(f:SelectAwaitTestSupport.Fixture,text:String){
         compose.waitUntil(15_000){(row(f)?.data() as? KnowledgeData.CardPresentation)?.annotation==text}
         h.waitFor("study-card-details");compose.onNodeWithTag("card-full-annotation").assertTextEquals(text)
@@ -41,17 +68,24 @@ class CardPresentationUiTest {
         val cards=runBlocking{h.app.study.cards(f.note.id).first()};val nodes=runBlocking{h.app.study.nodes(f.note.id).first()}
         val source=h.source(f.card).snapshot.copyOf();val maps=runBlocking{h.app.mapGraphs.read(f.note.id)}
         openEditor(f);compose.onNodeWithTag("card-annotation-input").performTextInput("独立个人理解 SEARCH-ANNOTATION")
-        h.tap("card-color-GREEN");h.tap("card-title-color-ROSE")
+        settleKeyboard()
+        h.tap("card-color-GREEN");assertDraftColors("card-touched",CardTint.DEFAULT)
+        h.tap("card-title-color-ROSE");assertDraftColors("before-recreate")
+        assertNull("Draft colors must not be written before Save",row(f))
         compose.activityRule.scenario.recreate();h.waitFor("card-annotation-input")
+        compose.waitUntil(15_000){runCatching{compose.onNodeWithTag("card-annotation-input").assertIsEnabled()}.isSuccess}
         compose.onNodeWithTag("card-annotation-input").assertTextContains("独立个人理解 SEARCH-ANNOTATION")
-        compose.onNodeWithTag("card-color-GREEN").assertIsSelected();compose.onNodeWithTag("card-title-color-ROSE").assertIsSelected()
+        assertDraftColors("after-recreate")
+        assertNull("Restoring the draft must not save it",row(f))
         h.tap("card-presentation-save");waitSaved(f,"独立个人理解 SEARCH-ANNOTATION")
+        val saved=row(f)!!.data() as KnowledgeData.CardPresentation
+        assertEquals(CardTint.GREEN,saved.cardColor);assertEquals(CardTint.ROSE,saved.titleBarColor)
         compose.onNodeWithTag("card-full-body").assertTextEquals(f.body);h.tap("card-back")
         h.tap("study-content-search");compose.onNodeWithTag("map-content-query").performTextInput("SEARCH-ANNOTATION")
         h.tap("map-hit-${f.mapId}-${f.node}")
         compose.runOnIdle{assertEquals(f.node,h.native<MindMapView>().selectedNodeId)}
         h.openBody(f);screenshot("b1-card-four-zones.png")
-        openEditor(f);h.tap("card-colors-reset");h.tap("card-presentation-save");waitSaved(f,"独立个人理解 SEARCH-ANNOTATION")
+        openEditor(f);assertDraftColors("reopened");h.tap("card-colors-reset");h.tap("card-presentation-save");waitSaved(f,"独立个人理解 SEARCH-ANNOTATION")
         val value=row(f)!!.data() as KnowledgeData.CardPresentation;assertEquals(CardTint.DEFAULT,value.cardColor);assertEquals(CardTint.DEFAULT,value.titleBarColor)
         assertEquals(cards,runBlocking{h.app.study.cards(f.note.id).first()});assertEquals(nodes,runBlocking{h.app.study.nodes(f.note.id).first()});assertArrayEquals(source,h.source(f.card).snapshot);assertEquals(maps,runBlocking{h.app.mapGraphs.read(f.note.id)})
         h.tap("card-back");h.tap("quick-readonly");h.openBody(f)

@@ -229,7 +229,9 @@ private class CardTransformPendingStore(context:Context,book:String) {
     enabled:Boolean=true) {
     val key=sources.refs.joinToString{it.toString()}
     var selected by rememberSaveable(cardId,key){mutableStateOf(if(sources.complete&&sources.sources.size==1)0 else -1)}
-    val value=remember(sources,cardId,selected,enabled){if(enabled&&sources.complete)sources.sources.getOrNull(selected)?.legacy(cardId)else null}
+    // Disabling changes prevents another choice; it must not erase the source
+    // while its caller is awaiting navigation, scoring, or another operation.
+    val value=remember(sources,cardId,selected){if(sources.complete)sources.sources.getOrNull(selected)?.legacy(cardId)else null}
     SideEffect{onSourceSelected(value)}
     Column(Modifier.testTag("frozen-card-sources")){
         when{

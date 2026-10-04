@@ -68,7 +68,19 @@ class RecallQuestionEditorUiTest {
             runCatching{node.performScrollTo()}
             runCatching{node.assertIsDisplayed().assertIsEnabled()}.isSuccess
         }
-        node.assertIsDisplayed().performTouchInput{click()};compose.waitForIdle()
+        try {
+            node.assertIsDisplayed().performTouchInput{click()};compose.waitForIdle()
+        } catch(error:Throwable) {
+            // Instrumentation stdout omits Android println; attach bounded synthetic state to the original failure.
+            val diagnostic=runCatching {
+                val roots=compose.onAllNodes(isRoot(),useUnmergedTree=true)
+                val state=roots.fetchSemanticsNodes().indices.joinToString("\n"){roots[it].printToString()}
+                val bitmap=androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().uiAutomation.takeScreenshot()
+                bitmap?.let { image->try{File(app.getExternalFilesDir(null),"recall-config-$tag-failure.png").outputStream().use{image.compress(android.graphics.Bitmap.CompressFormat.PNG,100,it)}}finally{image.recycle()} }
+                "Synthetic target=$tag config=${compose.activity.resources.configuration}\n$state"
+            }.getOrElse{"Synthetic diagnostic capture failed: ${it.javaClass.simpleName}"}
+            error.addSuppressed(AssertionError(diagnostic));throw error
+        }
     }
     private fun draft(tag:String,value:String)=compose.onNodeWithTag(tag).assert(
         SemanticsMatcher.expectValue(SemanticsProperties.EditableText,AnnotatedString(value)))
@@ -90,7 +102,7 @@ class RecallQuestionEditorUiTest {
         compose.waitUntil(15_000){compose.onAllNodes(card).fetchSemanticsNodes().isNotEmpty()}
         compose.onNode(card).performScrollTo().performClick();waitFor("question-row-${f.question}")
     }
-    private fun configure(f:Fixture){tap("question-edit-${f.question}");tap("question-configure-type");waitFor("recall-config-prompt")
+    private fun configure(f:Fixture){tap("question-edit-${f.question}");hideKeyboard();tap("question-configure-type");waitFor("recall-config-prompt")
         compose.waitUntil(15_000){runCatching{compose.onNodeWithTag("recall-config-save").assertIsEnabled()}.isSuccess}}
     private fun question(f:Fixture)=runBlocking{app.knowledge.observeBook(f.note.id).first().single{it.id==f.question}}
     private fun config(f:Fixture)=runBlocking{app.study.recall().configuration(f.question)!!.spec()}

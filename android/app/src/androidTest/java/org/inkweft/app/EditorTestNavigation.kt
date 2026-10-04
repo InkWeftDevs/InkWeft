@@ -119,7 +119,7 @@ internal fun ComposeTestRule.revealAction(tag:String){
         tag in setOf("node-add-child","node-add-sibling","node-links")->onNodeWithTag("node-more").assertIsDisplayed().assertIsEnabled().performClick()
         tag in setOf("page-layers-open","page-whitespace-open","page-visible-share","page-annotation-open")->{
             onNodeWithTag("toolbar-more").assertIsDisplayed().assertIsEnabled().performClick()
-            onNodeWithText("页面与批注").assertIsDisplayed()
+            onNode(hasText("页面与批注") and hasAnyAncestor(isPopup())).assertIsDisplayed()
             onNodeWithTag(tag).performScrollTo().assertIsDisplayed()
         }
         listOf("outline-rename-","outline-child-","outline-sibling-","outline-organize-","outline-focus-").any(tag::startsWith)&&onAllNodesWithTag("study-list").fetchSemanticsNodes().isNotEmpty()->{

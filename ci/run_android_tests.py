@@ -7,6 +7,7 @@ import subprocess
 from android_device import prepare_case
 from android_shards import partition
 from android_plan import select_methods
+from android_timeout import capture_app_timeout
 
 parser=argparse.ArgumentParser()
 parser.add_argument("--shard-index",type=int,default=0)
@@ -68,11 +69,17 @@ for module,key,runner in [("data-local","room","org.inkweft.data.test/androidx.t
         except subprocess.TimeoutExpired as error:
             raw=error.stdout or b""
             result=(raw.decode("utf-8",errors="replace") if isinstance(raw,bytes) else raw)+"\nRUNNER_TIMEOUT\n"
-            subprocess.run(["adb","shell","am","force-stop",runner.split("/")[0]],check=True)
+            # Persist the original failure before best-effort diagnostics and cleanup.
+            (case_dir/"instrumentation.txt").write_text(result,encoding="utf-8")
+            try:
+                if key=="app": capture_app_timeout(serial,case_dir)
+                else: subprocess.run(["adb","shell","am","force-stop",runner.split("/")[0]],check=False,timeout=5)
+            except Exception as diagnostic_error:
+                print(f"Timeout diagnostics unavailable: {type(diagnostic_error).__name__}",flush=True)
         (case_dir/"instrumentation.txt").write_text(result,encoding="utf-8")
         (case_dir/"selection.txt").write_text(selection,encoding="utf-8")
         match=re.search(r"^OK \((\d+) tests?\)\s*$",result,re.M)
-        passed=bool(match and int(match.group(1))==expected and "FAILURES!!!" not in result)
+        passed=bool(match and int(match.group(1))==expected and "FAILURES!!!" not in result and "RUNNER_TIMEOUT" not in result)
         print(f"{selection}: {'PASS' if passed else 'FAIL'}",flush=True)
         if passed: total+=expected
         else: failures.append(selection);print(result)
