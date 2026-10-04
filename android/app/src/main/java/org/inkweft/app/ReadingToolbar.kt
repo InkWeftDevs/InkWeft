@@ -12,7 +12,7 @@ import androidx.compose.ui.unit.dp
 /** Browse existing material without changing the writing toolbar's saved configuration. */
 @OptIn(ExperimentalLayoutApi::class)
 @Composable internal fun ReadingToolbar(enabled:Boolean,fullScreen:Boolean,
-    onMap:()->Unit,onExcerpts:()->Unit,onAssociate:()->Unit,onWrite:()->Unit,onSearch:()->Unit,onOverview:()->Unit,onFullScreen:()->Unit,onExport:()->Unit,onTimer:()->Unit){
+    onMap:()->Unit,onExcerpts:()->Unit,onAssociate:()->Unit,onWrite:()->Unit,onSearch:()->Unit,onOverview:()->Unit,onFullScreen:()->Unit,onExport:()->Unit,onTimer:()->Unit,showWriteControl:Boolean=true){
     var more by remember{mutableStateOf(false)}
     FlowRow(Modifier.fillMaxWidth().testTag("reading-toolbar"),horizontalArrangement=Arrangement.Center){
         if(fullScreen){
@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.dp
             EditorAction("摘录","excerpt",enabled,"read-excerpts",onExcerpts)
             EditorAction("关联","link",enabled,"document-associations",onAssociate)
         }
-        TextButton(onWrite,modifier=Modifier.heightIn(min=48.dp).testTag("exit-readonly").describedAs("只读浏览，返回书写")){
+        if(showWriteControl)TextButton(onWrite,modifier=Modifier.heightIn(min=48.dp).testTag("exit-readonly").describedAs("只读浏览，返回书写")){
             Text("返回书写",maxLines=1)
         }
         Box{
