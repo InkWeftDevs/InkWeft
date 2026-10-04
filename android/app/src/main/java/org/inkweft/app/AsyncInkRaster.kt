@@ -21,6 +21,9 @@ internal class AsyncInkRaster(private val changed:()->Unit,private val failed:()
     private var generation=0L
     private val paint=Paint(Paint.FILTER_BITMAP_FLAG)
     internal val pending get()=job!=null
+    /** True only after draw painted the complete frame for its current request, not a fallback or deferred job. */
+    internal var frameReady=false
+        private set
     fun contains(id:String)=frame?.strokes?.any{it.id==id}==true
     private fun same(a:InkStroke,b:InkStroke)=equality.same(a,b){(a.id==b.id&&a.pen==b.pen&&a.width==b.width&&a.color==b.color&&a.world==b.world&&a.appearance==b.appearance&&a.samples==b.samples&&a.cuts.size==b.cuts.size&&a.cuts.indices.all{val x=a.cuts[it];val y=b.cuts[it];x===y||(x.id==y.id&&x.radius==y.radius&&x.shape==y.shape&&x.points==y.points)})}
     private fun prefix(a:List<InkStroke>,b:List<InkStroke>)=a.size<=b.size&&a.indices.all{same(a[it],b[it])}
@@ -30,8 +33,9 @@ internal class AsyncInkRaster(private val changed:()->Unit,private val failed:()
         frame=next;fallback=prior
         keep.forEach{RenderResources.track(it,it.allocationByteCount.toLong(),"ink-frame",owner,RenderResources.Role.ACTIVE)}
     }
-    fun clear(){generation++;job?.cancel();budgetRetry?.cancel();budgetRetry=null;job=null;request=null;publish(null,null);rejected=null;equality.clear()}
+    fun clear(){frameReady=false;generation++;job?.cancel();budgetRetry?.cancel();budgetRetry=null;job=null;request=null;publish(null,null);rejected=null;equality.clear()}
     fun draw(c:Canvas,width:Int,height:Int,viewport:CanvasViewport,density:Double,world:Boolean,embedded:Boolean,strokes:List<InkStroke>){
+        frameReady=false
         if(width<=0||height<=0)return
         val key=Key(width,height,viewport,density,world,embedded)
         val old=frame
@@ -101,7 +105,10 @@ internal class AsyncInkRaster(private val changed:()->Unit,private val failed:()
             }
         }
         val current=frame?.takeIf{it.key==key}
-        if(current!=null)c.drawBitmap(current.bitmap,null,Rect(0,0,width,height),paint)
+        if(current!=null){
+            c.drawBitmap(current.bitmap,null,Rect(0,0,width,height),paint)
+            frameReady=current.complete&&current.strokes.size==strokes.size
+        }
         else fallback?.let{prior->
             val oldFactor=prior.key.viewport.zoom*prior.key.density;val factor=viewport.zoom*density;val ratio=factor/oldFactor
             val m=Matrix().apply{setScale((prior.key.width.toDouble()/prior.bitmap.width*ratio).toFloat(),(prior.key.height.toDouble()/prior.bitmap.height*ratio).toFloat());postTranslate((width/2.0-prior.key.width/2.0*ratio+(prior.key.viewport.centerX-viewport.centerX)*factor).toFloat(),(height/2.0-prior.key.height/2.0*ratio+(prior.key.viewport.centerY-viewport.centerY)*factor).toFloat())}

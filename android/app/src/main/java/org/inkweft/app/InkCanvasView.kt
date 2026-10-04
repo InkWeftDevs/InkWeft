@@ -210,7 +210,8 @@ class InkCanvasView(context:Context):View(context){
     private val asyncRaster=AsyncInkRaster({postInvalidateOnAnimation()},{onNotice("笔迹显示未完成，请退出后重开；原笔迹已保留。")})
     private val layerRasters=mutableMapOf<String,AsyncInkRaster>()
     private var layerBudgetBlocked=false
-    internal val rasterPending get()=layerBudgetBlocked||asyncRaster.pending||layerRasters.values.any{it.pending}
+    private var incompleteInkFrame=false
+    internal val rasterPending get()=layerBudgetBlocked||incompleteInkFrame||asyncRaster.pending||layerRasters.values.any{it.pending}
     private val live=InProgressStroke()
     private val incremental=MutableStrokeInputBatch()
     private val empty=MutableStrokeInputBatch()
@@ -301,6 +302,7 @@ class InkCanvasView(context:Context):View(context){
     private var tapX=0f;private var tapY=0f
     override fun onDraw(canvas:Canvas){
         super.onDraw(canvas);if(!configured)return
+        incompleteInkFrame=false
         canvas.drawColor(if(world||preview||embeddedPage)Color.WHITE else InkTheme.Workspace.toArgb())
         val visible=viewport.visible(width.toDouble(),height.toDouble(),density);val screenTransform=Matrix(canvas.matrix);val save=canvas.save();canvas.concat(matrix)
         if(!world){paint.style=Paint.Style.FILL;paint.color=Color.WHITE;canvas.drawRect(0f,0f,1000f,1414f,paint);if(!embeddedPage)canvas.clipRect(0f,0f,1000f,1414f)}
@@ -335,7 +337,8 @@ class InkCanvasView(context:Context):View(context){
                     val cached=layerRasters.getOrPut(layer.id){AsyncInkRaster({postInvalidateOnAnimation()},{onNotice("图层笔迹显示未完成，原笔迹保留")})}
                     val saved=canvas.save();canvas.setMatrix(screenTransform)
                     if(eraseMask!=null&&!layer.locked&&!gestureOnlyHighlighter){val screenMask=Path(eraseMask);screenMask.transform(matrix);canvas.clipOutPath(screenMask)}
-                    canvas.translate(area.left.toFloat(),area.top.toFloat());cached.draw(canvas,area.width(),area.height(),rasterViewport(area),density,world,embeddedPage,stable);canvas.restoreToCount(saved)
+                    canvas.translate(area.left.toFloat(),area.top.toFloat());cached.draw(canvas,area.width(),area.height(),rasterViewport(area),density,world,embeddedPage,stable)
+                    incompleteInkFrame=incompleteInkFrame||!cached.frameReady;canvas.restoreToCount(saved)
                 }
                 layerInk.filter{!isAttachedToWindow||it.id in dynamic}.forEach{s->
                     val saved=canvas.save();if(s.id in selectedIds)canvas.translate(selectedDx,selectedDy)
@@ -353,7 +356,7 @@ class InkCanvasView(context:Context):View(context){
             }
             annotationPainter.regions(canvas,layers.regions,drawn)
             canvas.restoreToCount(save)
-            if(!capturingExcerpt&&sourceContentReady&&!imageFramesPending&&!rasterPending){drawnDocumentGeneration=documentGeneration;drawnViewport=viewport;drawnWidth=width;drawnHeight=height;drawnDensity=density}
+            if(!capturingExcerpt&&isAttachedToWindow&&(!isHardwareAccelerated||canvas.isHardwareAccelerated)&&sourceContentReady&&!imageFramesPending&&!rasterPending){drawnDocumentGeneration=documentGeneration;drawnViewport=viewport;drawnWidth=width;drawnHeight=height;drawnDensity=density}
             if(rasterPending){paint.color=Color.GRAY;paint.textSize=(12*density).toFloat();canvas.drawText("正在呈现图层笔迹…",(16*density).toFloat(),(height-18*density).toFloat(),paint)}
             if((eraseMode||gestureErase)&&cursor!=null&&!preview){val p=checkNotNull(cursor);paint.style=Paint.Style.STROKE;paint.strokeWidth=density.toFloat();paint.color=Color.DKGRAY;canvas.drawCircle(p.x.toFloat(),p.y.toFloat(),(eraserDiameterDp*density/2).toFloat(),paint);paint.style=Paint.Style.FILL}
             return
@@ -373,6 +376,7 @@ class InkCanvasView(context:Context):View(context){
             if(!area.isEmpty){
                 canvas.translate(area.left.toFloat(),area.top.toFloat())
                 asyncRaster.draw(canvas,area.width(),area.height(),rasterViewport(area),density,world,embeddedPage,stable)
+                incompleteInkFrame=!asyncRaster.frameReady
             }
         }else pageRaster.draw(canvas,width,height,listOf(viewport,world),stable){c,s->
             val n=c.save();c.concat(matrix);if(!world&&!embeddedPage)c.clipRect(0f,0f,1000f,1414f)
@@ -404,7 +408,7 @@ class InkCanvasView(context:Context):View(context){
         // identical to the preview and does not vary with zoom or pen pressure.
         if((eraseMode||gestureErase)&&cursor!=null&&!preview){val p=checkNotNull(cursor);paint.style=Paint.Style.FILL;paint.color=0x183f7d67;val radius=(eraserDiameterDp*density/2).toFloat();canvas.drawCircle(p.x.toFloat(),p.y.toFloat(),radius,paint);paint.style=Paint.Style.STROKE;paint.strokeWidth=(3*density).toFloat();paint.color=Color.WHITE;canvas.drawCircle(p.x.toFloat(),p.y.toFloat(),radius,paint);paint.strokeWidth=density.toFloat();paint.color=0xff22272e.toInt();canvas.drawCircle(p.x.toFloat(),p.y.toFloat(),radius,paint);paint.style=Paint.Style.FILL}
         // Only the current normal window frame may release a pending source decoration.
-        if(!capturingExcerpt&&isAttachedToWindow&&(!isHardwareAccelerated||canvas.isHardwareAccelerated)&&!asyncRaster.pending&&sourceContentReady&&!imageFramesPending){
+        if(!capturingExcerpt&&isAttachedToWindow&&(!isHardwareAccelerated||canvas.isHardwareAccelerated)&&!rasterPending&&sourceContentReady&&!imageFramesPending){
             drawnDocumentGeneration=documentGeneration;drawnViewport=viewport;drawnWidth=width;drawnHeight=height;drawnDensity=density
         }
     }

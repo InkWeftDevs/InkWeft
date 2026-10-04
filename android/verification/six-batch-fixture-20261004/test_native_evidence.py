@@ -17,7 +17,7 @@ class NativeEvidenceContractTest(unittest.TestCase):
         self.commit = "a" * 40
         self.proof = dict(runId="same-run", sourceCommit=self.commit, pageId="page-12", sourcePage=12,
                           sha256=hashlib.sha256(self.pixels).hexdigest(), layers=3, documentSha256="b" * 64,
-                          nativeInkSha256="e" * 64, pdfTilePresent=True, sourceFrameDrawn=True,
+                          nativeInkSha256="e" * 64, pdfTilePresent=True, sourceFrameDrawn=True, frameCommitted=True,
                           pendingRaster=False, pendingImages=False, nativeStoredStrokes=1000,
                           nativeStoredPoints=100000, nativeVisibleStrokes=1000, authoringFingerprint="c" * 64,
                           continuous=False, baseLayerBluePixels=20, lockedLayerBluePixels=20)
@@ -30,6 +30,11 @@ class NativeEvidenceContractTest(unittest.TestCase):
 
     def test_matching_full_native_proof_is_accepted(self):
         self.assertEqual(self.proof, self.check())
+
+    def test_failed_diagnostic_pixels_cannot_be_promoted_to_native_proof(self):
+        self.manifest["failedNativePageCaptures"] = {self.name: {"status": "FAILED_NO_NATIVE_PROOF"}}
+        with self.assertRaises(ValueError):
+            self.check()
 
     def test_png_name_alone_is_rejected(self):
         self.manifest["nativePageCaptures"] = {}
@@ -47,7 +52,7 @@ class NativeEvidenceContractTest(unittest.TestCase):
                 self.proof[key] = old
 
     def test_loading_or_incomplete_ink_is_rejected(self):
-        for key, value in (("pdfTilePresent", False), ("sourceFrameDrawn", False), ("pendingRaster", True),
+        for key, value in (("pdfTilePresent", False), ("sourceFrameDrawn", False), ("frameCommitted", False), ("pendingRaster", True),
                            ("pendingImages", True), ("nativeStoredStrokes", 999), ("nativeStoredPoints", 99999),
                            ("nativeVisibleStrokes", 900), ("baseLayerBluePixels", 0), ("lockedLayerBluePixels", 0)):
             with self.subTest(key=key):

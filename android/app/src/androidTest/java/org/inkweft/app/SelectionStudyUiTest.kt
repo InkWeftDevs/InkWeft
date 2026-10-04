@@ -132,7 +132,7 @@ class SelectionStudyUiTest {
         compose.onAllNodesWithTag("study-card-details").assertCountEquals(0);assertEquals(n.id,snapshot.pageId)
     }
     @Test fun outlineAndMapReuseSingleEditableCard(){
-        val(n,_)=seed();compose.onNodeWithTag("quick-settings").performClick();compose.onNodeWithTag("study-open").performScrollTo().performClick();compose.revealAction("study-add-card");compose.onNodeWithTag("study-add-card").performClick();addCard("条件概率","按定义推导")
+        val(n,_)=seed();compose.revealAction("quick-settings");compose.onNodeWithTag("quick-settings").performClick();compose.onNodeWithTag("study-open").performScrollTo().performClick();compose.revealAction("study-add-card");compose.onNodeWithTag("study-add-card").performClick();addCard("条件概率","按定义推导")
         val card=runBlocking{app.study.cards(n.id).first()}.single()
         compose.onNodeWithTag("study-card-${card.id}").performClick();compose.onNodeWithTag("card-management-actions").performClick();compose.onNodeWithTag("study-reuse-card").performScrollTo().performClick()
         compose.waitUntil(10_000){runBlocking{app.study.nodes(n.id).first().size}==2}
@@ -145,7 +145,7 @@ class SelectionStudyUiTest {
         compose.onNodeWithTag("study-close").assertIsDisplayed();shot("study-mindmap.png")
     }
     @Test fun childThemeAndRemovingLeafKeepsCard(){
-        val(n,_)=seed();compose.onNodeWithTag("quick-settings").performClick();compose.onNodeWithTag("study-open").performScrollTo().performClick();compose.revealAction("study-add-card");compose.onNodeWithTag("study-add-card").performClick();addCard("总论","根节点")
+        val(n,_)=seed();compose.revealAction("quick-settings");compose.onNodeWithTag("quick-settings").performClick();compose.onNodeWithTag("study-open").performScrollTo().performClick();compose.revealAction("study-add-card");compose.onNodeWithTag("study-add-card").performClick();addCard("总论","根节点")
         val root=runBlocking{app.study.nodes(n.id).first()}.single();compose.revealAction("study-tab-1");compose.onNodeWithTag("study-tab-1").performClick();compose.onNodeWithTag("outline-node-${root.id}").performScrollTo().performClick();compose.onNodeWithTag("card-node-actions").performScrollTo().performClick();compose.onNodeWithTag("study-add-child").performScrollTo().performClick();addCard("必要条件","检查假设")
         val child=runBlocking{app.study.nodes(n.id).first()}.single{it.parentId==root.id}
         compose.onNodeWithText("必要条件",useUnmergedTree=true).performScrollTo().performClick()
@@ -162,7 +162,7 @@ class SelectionStudyUiTest {
                 app.study.submit(StudyCommand(id(),n.id,StudyAction.CREATE,cardId=id(),nodeId=node,parentId=parent,title=title))
             }
         }
-        compose.onNodeWithTag("quick-settings").performClick();compose.onNodeWithTag("study-open").performScrollTo().performClick();compose.revealAction("study-tab-1");compose.onNodeWithTag("study-tab-1").performClick()
+        compose.revealAction("quick-settings");compose.onNodeWithTag("quick-settings").performClick();compose.onNodeWithTag("study-open").performScrollTo().performClick();compose.revealAction("study-tab-1");compose.onNodeWithTag("study-tab-1").performClick()
         compose.onNodeWithTag("outline-fold-$root").performScrollTo().performClick()
         compose.onNodeWithTag("outline-node-$child").assertDoesNotExist()
         compose.revealAction("outline-focus-$root")
@@ -195,7 +195,7 @@ class SelectionStudyUiTest {
         shot("study-branch-navigation.png")
     }
     @Test fun cardSearchFindsBodyAndClearRestoresCards(){
-        val(n,_)=seed();compose.onNodeWithTag("quick-settings").performClick();compose.onNodeWithTag("study-open").performScrollTo().performClick()
+        val(n,_)=seed();compose.revealAction("quick-settings");compose.onNodeWithTag("quick-settings").performClick();compose.onNodeWithTag("study-open").performScrollTo().performClick()
         compose.revealAction("study-add-card");compose.onNodeWithTag("study-add-card").performClick();addCard("概率","先验条件")
         compose.revealAction("study-add-card");compose.onNodeWithTag("study-add-card").performClick();addCard("微积分","连续可导")
         val cards=runBlocking{app.study.cards(n.id).first()}

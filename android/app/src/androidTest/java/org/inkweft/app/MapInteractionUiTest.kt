@@ -95,7 +95,18 @@ class MapInteractionUiTest {
   fun nodes()=runBlocking{app.study.nodes(f.book).first()}
   val beforeCards=cards();val beforeNodes=nodes();val beforeSource=runBlocking{app.study.source(f.card)}!!
   val blank=SemanticsMatcher.expectValue(SemanticsProperties.EditableText,AnnotatedString(""))
-  tap("study-tab-1");tap("outline-node-$occurrence")
+  tap("study-tab-1")
+  // Recycle both ends of the long outline before changing selection again.
+  // Detached row semantics must not observe the next selection update.
+  repeat(2){
+   tap("outline-actions-${f.root}")
+   compose.onNodeWithTag("outline-row-${f.root}").assertIsSelected()
+   compose.onAllNodesWithTag("outline-context-actions").assertCountEquals(1)
+   tap("outline-actions-$occurrence")
+   compose.onNodeWithTag("outline-row-$occurrence").assertIsSelected()
+   compose.onAllNodesWithTag("outline-context-actions").assertCountEquals(1)
+  }
+  tap("outline-node-$occurrence")
   compose.onNodeWithTag("card-full-body").assertTextEquals(f.body);tap("card-back")
   tap("outline-rename-$occurrence")
   compose.onNodeWithTag("node-title-input",useUnmergedTree=true).assert(hasAnyAncestor(hasTestTag("outline-title-$occurrence")))

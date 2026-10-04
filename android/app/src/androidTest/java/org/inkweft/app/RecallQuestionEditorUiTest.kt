@@ -61,8 +61,13 @@ class RecallQuestionEditorUiTest {
     private fun waitFor(tag:String){compose.waitUntil(15_000){exists(tag)};compose.waitForIdle()}
     private fun tap(tag:String){
         compose.revealAction(tag);waitFor(tag)
-        val node=compose.onNodeWithTag(tag);runCatching{node.performScrollTo()}
-        compose.waitUntil(15_000){runCatching{node.assertIsEnabled()}.isSuccess}
+        val node=compose.onNodeWithTag(tag)
+        // A newly mounted dialog may enable its action before its scroll viewport is placed.
+        // Keep the same deadline, and require the actual touch target to be laid out and visible.
+        compose.waitUntil(15_000){
+            runCatching{node.performScrollTo()}
+            runCatching{node.assertIsDisplayed().assertIsEnabled()}.isSuccess
+        }
         node.assertIsDisplayed().performTouchInput{click()};compose.waitForIdle()
     }
     private fun draft(tag:String,value:String)=compose.onNodeWithTag(tag).assert(

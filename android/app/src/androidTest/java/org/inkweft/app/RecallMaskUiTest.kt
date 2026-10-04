@@ -195,8 +195,20 @@ class RecallMaskUiTest {
         return f
     }
 
-    private fun waitFor(tag: String) {
-        compose.waitUntil(15_000) { compose.onAllNodesWithTag(tag).fetchSemanticsNodes().isNotEmpty() }
+    private fun waitFor(tag: String, diagnoseOnFailure: Boolean = false) {
+        try {
+            compose.waitUntil(15_000) { compose.onAllNodesWithTag(tag).fetchSemanticsNodes().isNotEmpty() }
+        } catch (error: Throwable) {
+            // Keep the original failure, but distinguish a lost round from a loading
+            // or adaptive-layout failure in the disposable synthetic CI fixture.
+            if (diagnoseOnFailure) runCatching {
+                println("RECALL_WAIT_FAILURE: tag=$tag config=${compose.activity.resources.configuration}")
+                compose.onAllNodes(isRoot(), useUnmergedTree = true).fetchSemanticsNodes().indices.forEach { index ->
+                    runCatching { println(compose.onAllNodes(isRoot(), useUnmergedTree = true)[index].printToString()) }
+                }
+            }
+            throw error
+        }
         compose.waitForIdle()
     }
 
@@ -988,7 +1000,7 @@ class RecallMaskUiTest {
         assertHidden(f); assertPlaceholder("recall-context-source-placeholder")
         tap("recall-context-tab-excerpt"); assertPlaceholder("recall-context-excerpt-placeholder")
         screenshot("v54-after-mask")
-        shell("settings put system font_scale 1.6"); compose.activityRule.scenario.recreate(); waitFor("review-question")
+        shell("settings put system font_scale 1.6"); compose.activityRule.scenario.recreate(); waitFor("review-question", diagnoseOnFailure = true)
         compose.waitUntil(15_000) { kotlin.math.abs(compose.activity.resources.configuration.fontScale - 1.6f) < .02f }
         for ((tab, placeholder) in listOf("source" to "source", "map" to "map", "excerpt" to "excerpt")) {
             tap("recall-context-tab-$tab"); assertPlaceholder("recall-context-$placeholder-placeholder"); assertHidden(f)

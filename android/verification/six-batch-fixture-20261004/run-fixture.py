@@ -23,6 +23,8 @@ def checked_native_capture(manifest, name, pixels, source_commit):
     """A PNG header/filename alone is not proof of a rendered, correctly bound source page."""
     if name not in NATIVE_PAGE_CAPTURES:
         return None
+    if name in manifest.get("failedNativePageCaptures", {}):
+        raise ValueError("Failed diagnostic capture is not native source-frame proof")
     index = NATIVE_PAGE_CAPTURES[name]
     proof = manifest.get("nativePageCaptures", {}).get(name, {})
     expected = {"runId": manifest["runId"], "sourceCommit": source_commit,
@@ -42,7 +44,7 @@ def checked_native_capture(manifest, name, pixels, source_commit):
         if not re.fullmatch(r"[0-9a-f]{64}", proof.get("nativeInkSha256", "")):
             raise ValueError("Missing full native ink payload fingerprint")
         expected.update(documentSha256=manifest["documentSha256"], pdfTilePresent=True,
-                        sourceFrameDrawn=True, pendingRaster=False, pendingImages=False)
+                        sourceFrameDrawn=True, frameCommitted=True, pendingRaster=False, pendingImages=False)
     if name == "05-layered-1000-stroke-pressure.png":
         expected.update(nativeStoredStrokes=1000, nativeStoredPoints=100000, nativeVisibleStrokes=1000,
                         authoringFingerprint=manifest["stressAuthoringFingerprint"], continuous=False)
@@ -159,11 +161,14 @@ def main():
                     pixels = run(["exec-out", "run-as", args.package, "cat", "files/six-batch-fixture-v1/" + name]).stdout
                     if not pixels.startswith(b"\x89PNG\r\n\x1a\n"):
                         raise ValueError("Invalid synthetic screenshot")
-                    proof = checked_native_capture(manifest, name, pixels, args.source_commit)
                     (args.output / name).write_bytes(pixels)
                     record = {"file": name, "bytes": len(pixels), "sha256": hashlib.sha256(pixels).hexdigest()}
-                    if proof is not None:
-                        record["native_page_proof"] = proof
+                    try:
+                        proof = checked_native_capture(manifest, name, pixels, args.source_commit)
+                        if proof is not None:
+                            record["native_page_proof"] = proof
+                    except (ValueError, KeyError, IndexError):
+                        record["status"] = "FAILED_NO_NATIVE_PROOF"
                     evidence["screenshots"].append(record)
                 except (subprocess.CalledProcessError, ValueError, KeyError, IndexError):
                     evidence["screenshots"].append({"file": name, "status": "UNAVAILABLE"})
@@ -171,7 +176,7 @@ def main():
         except (subprocess.CalledProcessError, ValueError, KeyError, json.JSONDecodeError):
             evidence["manifest"] = "UNAVAILABLE"
         if evidence["status"] == "PASS" and (evidence.get("manifest") == "UNAVAILABLE" or
-                any(item.get("status") == "UNAVAILABLE" for item in evidence.get("screenshots", []))):
+                any(item.get("status") in ("UNAVAILABLE", "FAILED_NO_NATIVE_PROOF") for item in evidence.get("screenshots", []))):
             evidence["status"] = "INCOMPLETE_EVIDENCE"
         result_path.write_text(json.dumps(evidence, indent=2))
     return 0 if evidence["status"] == "PASS" else 1

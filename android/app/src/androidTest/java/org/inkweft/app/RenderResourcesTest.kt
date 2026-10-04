@@ -16,10 +16,10 @@ class RenderResourcesTest {
    ins.runOnMainSync{raster=AsyncInkRaster({},{errors++});raster.draw(Canvas(bitmap),200,200,vp,1.0,false,false,listOf(stroke))}
    var pending=true;val deadline=System.nanoTime()+10_000_000_000L
    while(pending&&System.nanoTime()<deadline){Thread.sleep(10);ins.runOnMainSync{pending=raster.pending}}
-   assertFalse(pending);ins.runOnMainSync{assertFalse(raster.contains(stroke.id))};assertEquals(0,errors)
+   assertFalse(pending);ins.runOnMainSync{assertFalse(raster.contains(stroke.id));assertFalse("An idle deferred job is not a complete drawn frame",raster.frameReady)};assertEquals(0,errors)
    RenderResources.release(held,"budget-test")
    while(!complete&&System.nanoTime()<deadline){Thread.sleep(20);ins.runOnMainSync{raster.draw(Canvas(bitmap),200,200,vp,1.0,false,false,listOf(stroke));complete=raster.contains(stroke.id)&&!raster.pending}}
-   assertTrue("Deferred raster did not recover",complete);assertEquals(0,errors)
+   assertTrue("Deferred raster did not recover",complete);ins.runOnMainSync{assertTrue("Recovery must draw the complete current frame",raster.frameReady)};assertEquals(0,errors)
   }finally{RenderResources.release(held,"budget-test");ins.runOnMainSync{raster.clear()};bitmap.recycle()}
  }
  @Test fun allocationsAreNotDoubleCountedAndPinnedFrameSurvivesTrim(){

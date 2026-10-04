@@ -16,6 +16,7 @@ import org.json.JSONObject
 import org.junit.Assert.*
 import java.io.File
 import java.security.MessageDigest
+import java.util.concurrent.atomic.AtomicBoolean
 
 /** Read-only observations of the actual attached view, never a replacement renderer or VM injection. */
 internal class SixBatchNativeEvidence(
@@ -78,15 +79,39 @@ internal class SixBatchNativeEvidence(
         return checkNotNull(result)
     }
 
+    /** onDraw records commands; screenshot evidence must wait for their actual hardware frame submission. */
+    private fun awaitCommittedFrame(view:InkCanvasView,page:String){
+        val committed=AtomicBoolean(false)
+        compose.runOnIdle {
+            assertTrue("Native screenshot evidence requires a hardware-accelerated window",view.isHardwareAccelerated)
+            assertTrue("The source frame changed before frame submission",drawn(view,page))
+            view.viewTreeObserver.registerFrameCommitCallback{committed.set(true)}
+            view.invalidate()
+        }
+        compose.waitUntil("Complete native source frame submitted to the window",15_000){committed.get()}
+    }
+
     fun capturePage(f:SixBatchFixture,name:String,index:Int,continuous:Boolean,pressure:Boolean=false){
-        val view=awaitPage(f,index,continuous);val page=f.documentPages[index]
-        val bitmap=checkNotNull(InstrumentationRegistry.getInstrumentation().uiAutomation.takeScreenshot())
+        val page=f.documentPages[index];val file=File(f.root,"$name.png")
+        val observations=JSONObject();var bitmap:Bitmap?=null;var pixelsSaved=false;var stage="await-native-frame"
+        fun savePixels(value:Bitmap){file.outputStream().use{check(value.compress(Bitmap.CompressFormat.PNG,100,it))};pixelsSaved=true}
         try{
+            val view=awaitPage(f,index,continuous)
+            stage="await-frame-commit";awaitCommittedFrame(view,page)
+            stage="capture-window";val pixels=checkNotNull(InstrumentationRegistry.getInstrumentation().uiAutomation.takeScreenshot())
+            bitmap=pixels;savePixels(pixels)
+            stage="assert-native-pixels"
             val proof=compose.runOnIdle {
+                val location=IntArray(2);view.getLocationOnScreen(location)
+                val viewport=view.snapshotViewport()
+                observations.put("bitmapWidth",pixels.width).put("bitmapHeight",pixels.height)
+                    .put("viewLeft",location[0]).put("viewTop",location[1]).put("viewWidth",view.width).put("viewHeight",view.height)
+                    .put("viewportCenterX",viewport.centerX).put("viewportCenterY",viewport.centerY).put("viewportZoom",viewport.zoom)
+                    .put("density",view.resources.displayMetrics.density).put("frameCommitted",true)
                 assertTrue("The source frame changed during capture",drawn(view,page))
                 @Suppress("UNCHECKED_CAST") val ink=strokesField.get(view) as List<InkStroke>
                 val state=checkNotNull(authoringField.get(view) as? PageAuthoring)
-                JSONObject().put("pageId",page).put("sourcePage",index+1).put("documentSha256",f.manifest.getString("documentSha256"))
+                observations.put("pageId",page).put("sourcePage",index+1).put("documentSha256",f.manifest.getString("documentSha256"))
                     .put("nativeInkSha256",inkFingerprint(ink)).put("nativeStoredStrokes",ink.size).put("nativeStoredPoints",ink.sumOf{it.samples.size})
                     .put("nativeVisibleStrokes",ink.count{state.layers.visible(LayerContent(LayerContentKind.INK,it.id))})
                     .put("authoringFingerprint",PageAuthoringCodec.fingerprint(state)).put("layers",state.layers.layers.size)
@@ -96,20 +121,31 @@ internal class SixBatchNativeEvidence(
                         assertEquals(1000,ink.size);assertEquals(100000,ink.sumOf{s->s.samples.size})
                         assertEquals(1000,ink.count{s->state.layers.visible(LayerContent(LayerContentKind.INK,s.id))})
                         assertEquals(900,ink.count{s->state.layers.editable(LayerContent(LayerContentKind.INK,s.id))})
-                        val base=bluePixels(bitmap,view,CanvasBounds(10.0,14.0,986.0,60.0))
-                        val locked=bluePixels(bitmap,view,CanvasBounds(10.0,1182.0,986.0,1310.0))
+                        val base=bluePixels(pixels,view,CanvasBounds(10.0,14.0,986.0,60.0),observations,"base")
+                        val locked=bluePixels(pixels,view,CanvasBounds(10.0,1182.0,986.0,1310.0),observations,"locked")
+                        it.put("baseLayerBluePixels",base).put("lockedLayerBluePixels",locked)
                         assertTrue("No actual base-layer pressure ink pixels: $base",base>=20)
                         assertTrue("No actual locked-layer pressure ink pixels: $locked",locked>=20)
-                        it.put("baseLayerBluePixels",base).put("lockedLayerBluePixels",locked)
                     }}
             }
-            File(f.root,"$name.png").outputStream().use{bitmap.compress(Bitmap.CompressFormat.PNG,100,it)}
             record(f,name,proof)
-        }finally{bitmap.recycle()}
+        }catch(error:Throwable){
+            // Preserve the single failed capture (or the window at readiness failure), never promote it to proof.
+            if(bitmap==null)runCatching{
+                bitmap=checkNotNull(InstrumentationRegistry.getInstrumentation().uiAutomation.takeScreenshot());savePixels(checkNotNull(bitmap))
+            }.onFailure{observations.put("diagnosticScreenshotFailure",it.javaClass.simpleName)}
+            f.manifest.optJSONObject("nativePageCaptures")?.remove("$name.png")
+            val failures=f.manifest.optJSONObject("failedNativePageCaptures")?:JSONObject().also{f.manifest.put("failedNativePageCaptures",it)}
+            failures.put("$name.png",JSONObject().put("status","FAILED_NO_NATIVE_PROOF").put("stage",stage)
+                .put("runId",f.runId).put("sourceCommit",BuildConfig.SOURCE_COMMIT).put("sha256",if(pixelsSaved)SixBatchFixture.sha(file)else JSONObject.NULL)
+                .put("failureClass",error.javaClass.simpleName).put("failureMessage",error.message)
+                .put("observations",observations).put("renderResources",JSONObject(RenderResources.snapshot())))
+            f.save();throw error
+        }finally{bitmap?.recycle()}
     }
 
     /** The PDF is teal (#183346); this blue-only predicate cannot count its printed source text. */
-    private fun bluePixels(bitmap:Bitmap,view:InkCanvasView,region:CanvasBounds):Int {
+    private fun bluePixels(bitmap:Bitmap,view:InkCanvasView,region:CanvasBounds,observations:JSONObject,label:String):Int {
         val location=IntArray(2);view.getLocationOnScreen(location)
         val viewport=view.snapshotViewport();val density=view.resources.displayMetrics.density.toDouble()
         fun point(x:Double,y:Double)=viewport.worldToScreen(x,y,view.width.toDouble(),view.height.toDouble(),density)
@@ -117,6 +153,8 @@ internal class SixBatchNativeEvidence(
         val left=(a.x+location[0]).toInt();val top=(a.y+location[1]).toInt()
         val right=(b.x+location[0]).toInt();val bottom=(b.y+location[1]).toInt()
         val visible=Rect();assertTrue(view.getGlobalVisibleRect(visible))
+        observations.put(label+"Sample",JSONObject().put("left",left).put("top",top).put("right",right).put("bottom",bottom)
+            .put("visibleRect",visible.toShortString()))
         assertTrue("Pressure layer sample is off screen",left>=visible.left&&top>=visible.top&&right<=visible.right&&bottom<=visible.bottom)
         var count=0
         for(y in top until bottom)for(x in left until right){val c=bitmap.getPixel(x,y)

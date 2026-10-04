@@ -1057,7 +1057,9 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
                     if(cards.isEmpty())item{Text(if(query.isNotBlank())"没有匹配的摘要卡"else if(showTrash)"卡片回收区为空"else"框选手写摘录，或新建摘要卡。摘要由你填写，不会自动发送到云端。",color=Quiet)}}
                 else{items(projection.rows,key={it.node.id}){row->val node=nodeById.getValue(row.node.id);val depth=row.depth;val card=cardById[node.cardId]
                     DisposableEffect(node.id){onDispose{outlineHandles.remove(node.id)}}
-                    if(card!=null)OutlinedCard(onClick={if(vm.selectedByMap[mapKey]!=node.id)cancelReviewPreparation();vm.selectedByMap[mapKey]=node.id},enabled=browseReady&&titleDraft==null,colors=CardDefaults.outlinedCardColors(containerColor=if(vm.selectedByMap[mapKey]==node.id)InkTheme.Selected else MaterialTheme.colorScheme.surface),border=BorderStroke(if(vm.selectedByMap[mapKey]==node.id)2.dp else 1.dp,if(vm.selectedByMap[mapKey]==node.id)InkTheme.Accent else Line),modifier=Modifier.fillMaxWidth().padding(start=minOf((depth.coerceAtMost(10)*20).dp,maxWidth/5)).testTag("outline-row-${node.id}").semantics{selected=vm.selectedByMap[mapKey]==node.id;stateDescription="${depth+1}级主题"}.drawWithContent{
+                    // Capture in composition: a recycled row must not observe selection from semantics.
+                    val isSelected=vm.selectedByMap[mapKey]==node.id
+                    if(card!=null)OutlinedCard(onClick={if(vm.selectedByMap[mapKey]!=node.id)cancelReviewPreparation();vm.selectedByMap[mapKey]=node.id},enabled=browseReady&&titleDraft==null,colors=CardDefaults.outlinedCardColors(containerColor=if(isSelected)InkTheme.Selected else MaterialTheme.colorScheme.surface),border=BorderStroke(if(isSelected)2.dp else 1.dp,if(isSelected)InkTheme.Accent else Line),modifier=Modifier.fillMaxWidth().padding(start=minOf((depth.coerceAtMost(10)*20).dp,maxWidth/5)).testTag("outline-row-${node.id}").semantics{selected=isSelected;stateDescription="${depth+1}级主题"}.drawWithContent{
                         drawContent()
                         outlineDrag?.preview?.takeIf{it.targetId==node.id}?.let{drop->
                             val color=if(drop.plan==null)Color(0xffb3261e)else Forest
@@ -1083,7 +1085,8 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
                             }
                             if(card.body.isNotBlank()&&!repeatsExcerptBody(card.title,card.body))Text(card.body,maxLines=1,overflow=TextOverflow.Ellipsis,fontSize=12.sp,color=Quiet,modifier=Modifier.padding(start=56.dp,end=8.dp,bottom=4.dp))
                             titleDraft?.takeIf{it.mapId==currentMap&&it.anchorId==node.id}?.let{inlineTitle(it)}
-                            if(vm.selectedByMap[mapKey]==node.id)Row(Modifier.horizontalScroll(rememberScrollState()).testTag("outline-context-actions")){
+                            // Keep this group distinct from the clickable card in the merged accessibility tree.
+                            if(isSelected)Row(Modifier.horizontalScroll(rememberScrollState()).semantics(mergeDescendants=true){}.testTag("outline-context-actions")){
                                 TextButton(onClick={editTitle(node)},enabled=editable,modifier=Modifier.heightIn(min=48.dp).testTag("outline-rename-${node.id}")){Text("修改标题")}
                                 TextButton(onClick={editTitle(node,true)},enabled=editable,modifier=Modifier.heightIn(min=48.dp).testTag("outline-child-${node.id}")){Text("＋ 子主题")}
                                 TextButton(onClick={editTitle(node,true,true)},enabled=editable,modifier=Modifier.heightIn(min=48.dp).testTag("outline-sibling-${node.id}")){Text("＋ 同级")}

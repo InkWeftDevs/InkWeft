@@ -64,7 +64,7 @@ class SixBatchScopeTest(unittest.TestCase):
                 "runId": manifest["runId"], "sourceCommit": "a" * 40, "pageId": manifest["documentPages"][index],
                 "sourcePage": index + 1, "sha256": hashlib.sha256(pixels).hexdigest(), "layers": 3,
                 "documentSha256": manifest["documentSha256"], "nativeInkSha256": "e" * 64,
-                "pdfTilePresent": True, "sourceFrameDrawn": True, "pendingRaster": False, "pendingImages": False,
+                "pdfTilePresent": True, "sourceFrameDrawn": True, "frameCommitted": True, "pendingRaster": False, "pendingImages": False,
                 "nativeStoredStrokes": 1000, "nativeStoredPoints": 100000, "nativeVisibleStrokes": 1000,
                 "authoringFingerprint": manifest["stressAuthoringFingerprint"], "continuous": index == 0,
                 "baseLayerBluePixels": 20, "lockedLayerBluePixels": 20, "hiddenLayers": 1, "lockedLayers": 1,
@@ -131,7 +131,21 @@ class SixBatchScopeTest(unittest.TestCase):
             receipt = json.loads((out / "prepare-runner.json").read_text())
             self.assertEqual("PASS", receipt["instrumentation_status"])
             self.assertEqual("INCOMPLETE_EVIDENCE", receipt["status"])
-            self.assertIn({"file": stale_png, "status": "UNAVAILABLE"}, receipt["screenshots"])
+            capture = next(item for item in receipt["screenshots"] if item["file"] == stale_png)
+            self.assertEqual("FAILED_NO_NATIVE_PROOF", capture["status"])
+            self.assertNotIn("native_page_proof", capture)
+            self.assertEqual(pixels, (out / stale_png).read_bytes())
+            # A failed screenshot remains inspectable even when an old successful proof happens to match.
+            manifest["nativePageCaptures"][stale_png]["sourceCommit"] = "a" * 40
+            manifest["failedNativePageCaptures"] = {stale_png: {"status": "FAILED_NO_NATIVE_PROOF"}}
+            with patch.object(sys, "argv", arguments), patch.object(runner.subprocess, "run", side_effect=command):
+                self.assertEqual(1, runner.main())
+            receipt = json.loads((out / "prepare-runner.json").read_text())
+            self.assertEqual("INCOMPLETE_EVIDENCE", receipt["status"])
+            capture = next(item for item in receipt["screenshots"] if item["file"] == stale_png)
+            self.assertEqual("FAILED_NO_NATIVE_PROOF", capture["status"])
+            self.assertNotIn("native_page_proof", capture)
+            self.assertEqual(pixels, (out / stale_png).read_bytes())
 
 
 if __name__ == "__main__":
