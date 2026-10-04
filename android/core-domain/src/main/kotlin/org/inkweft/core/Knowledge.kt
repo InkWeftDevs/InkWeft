@@ -6,7 +6,7 @@ import java.util.UUID
 
 enum class TargetKind { NOTE, PAGE, CARD, ANCHOR }
 data class TargetRef(val kind:TargetKind,val id:String){init{UUID.fromString(id)}}
-enum class RelationKind(val label:String){REFERENCE("内容引用"),PREREQUISITE("前置知识"),CONTRAST("对照"),DERIVATION("推导"),APPLICATION("应用")}
+enum class RelationKind(val label:String){REFERENCE("内容引用"),PREREQUISITE("前置知识"),CONTRAST("对照"),DERIVATION("推导"),APPLICATION("应用"),SUMMARY("归纳总结")}
 enum class ManualState(val label:String){INBOX("待整理"),REVIEW("待复习"),UNDERSTOOD("已理解")}
 
 sealed interface KnowledgeData {
