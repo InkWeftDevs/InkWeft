@@ -53,7 +53,7 @@ internal fun cardTrashRejection(reason:String):String?=when(reason){
         text={Column(Modifier.fillMaxWidth().heightIn(max=440.dp).verticalScroll(rememberScrollState()),verticalArrangement=Arrangement.spacedBy(10.dp)){
             Text("回收的是整张内容卡，不是删除一处展示。卡片正文、个人注释、摘录快照、原页笔迹、双链及题目记录都会保留。")
             Text("回收后，这张卡暂不能从引用打开或参加复习；固定版本的历史快照仍保留。")
-            Text("恢复：打开此笔记的导图 → 摘要卡 → 卡片回收区 → 选择此卡 → 恢复卡片。",modifier=Modifier.testTag("card-trash-recovery"))
+            Text("恢复：打开此笔记的导图 → 导图管理 → 整理 → 容量与整理 → 查看卡片回收区 → 选择此卡 → 恢复卡片。",modifier=Modifier.testTag("card-trash-recovery"))
             if(loading||ui.busy)LinearProgressIndicator(Modifier.fillMaxWidth())
             preview?.let{p->
                 Text("${p.card.title} · 卡片修订 ${p.card.revision}")

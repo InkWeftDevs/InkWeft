@@ -88,16 +88,12 @@ class SixBatchWorkflowTest(unittest.TestCase):
             self.assertNotIn(".apk", step)
         self.assertNotIn("download-artifact", WORKFLOW)
 
-    def test_only_public_downloads_are_cached_without_uploading_builds_or_scans(self):
+    def test_gradle_remote_cache_is_disabled_while_wrapper_validation_stays_enabled(self):
         step = step_containing("uses: gradle/actions/setup-gradle@")
-        self.assertIn("cache-disabled: ${{ steps.public-cache.outputs.allowed != 'true' }}", step)
-        includes = step.split("gradle-home-cache-includes: |", 1)[1].split("gradle-home-cache-excludes:", 1)[0]
-        self.assertEqual(["caches/modules-2/files-2.1", "wrapper/dists"], [line.strip() for line in includes.splitlines() if line.strip()])
-        for setting in ("dependency-graph: disabled", "build-scan-publish: false", "validate-wrappers: true"):
+        for setting in ("cache-disabled: true", "dependency-graph: disabled", "build-scan-publish: false", "validate-wrappers: true"):
             self.assertIn(setting, step)
-        guard = step_containing("id: public-cache")
-        self.assertIn("6a18e6904b57d3d42b97e88495cd5777e01d0cb04167437cc282a43ad6e976f0", guard)
-        self.assertIn('else echo "allowed=false"', guard)
+        self.assertNotIn("gradle-home-cache-includes", step)
+        self.assertNotIn("cache-disabled: ${{", step)
 
     def test_push_marker_and_dispatch_choose_the_same_mode_and_runner_count(self):
         matrix = re.search(r"shard: \$\{\{ fromJSON\((.+)\) \}\}", WORKFLOW).group(1)

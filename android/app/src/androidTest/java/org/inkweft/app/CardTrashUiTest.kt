@@ -1,6 +1,9 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 package org.inkweft.app
 
+import android.graphics.Bitmap
+import androidx.test.platform.app.InstrumentationRegistry
+import java.io.File
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.lifecycle.ViewModelProvider
@@ -46,7 +49,13 @@ class CardTrashUiTest {
             .assertTextContains("${other.title} · ${other.id}",substring=true)
             .assertTextContains("可恢复卡 · $card",substring=true)
             .assertTextContains("记录 $link · 修订 1",substring=true)
-        compose.onNodeWithTag("card-trash-recovery").assertTextContains("卡片回收区",substring=true)
+        compose.onNodeWithTag("card-trash-recovery").assertTextContains("导图管理 → 整理 → 容量与整理 → 查看卡片回收区",substring=true)
+        compose.onNodeWithTag("card-trash-confirm").assertIsDisplayed().assertIsEnabled()
+        compose.waitForIdle()
+        val previewFrame=checkNotNull(InstrumentationRegistry.getInstrumentation().uiAutomation.takeScreenshot())
+        try{File(app.getExternalFilesDir(null),"card-trash-impact-preview.png").outputStream().use{
+            check(previewFrame.compress(Bitmap.CompressFormat.PNG,100,it))
+        }}finally{previewFrame.recycle()}
         tap("card-trash-cancel");assertNull(current(card).trashedAt);assertEquals(1L,current(card).revision)
         tap("study-trash-card");waitFor("card-trash-impact-$question")
         runBlocking{app.knowledge.submit(KnowledgeCommand(id(),note.id,question,1,KnowledgeData.Question(card,"预览后修改的题目")))}
@@ -59,11 +68,23 @@ class CardTrashUiTest {
             .assertTextContains("${note.title} · ${note.id}",substring=true)
             .assertTextContains("记录 $question · 修订 2",substring=true)
         tap("card-trash-confirm")
-        compose.waitUntil(15_000){current(card).trashedAt!=null&&compose.onAllNodesWithTag("card-trash-dialog").fetchSemanticsNodes().isEmpty()}
-        tap("card-back")
-        compose.onNodeWithText("卡片回收区",substring=false).performClick();tap("study-card-$card")
+        // Successful StudyCommands close the inspector automatically; the active list must no longer contain this card.
+        compose.waitUntil(15_000){current(card).trashedAt!=null&&
+            compose.onAllNodesWithTag("card-trash-dialog").fetchSemanticsNodes().isEmpty()&&
+            compose.onAllNodesWithTag("study-card-details").fetchSemanticsNodes().isEmpty()&&
+            compose.onAllNodesWithTag("study-card-$card").fetchSemanticsNodes().isEmpty()}
+        waitFor("study-list");compose.onNodeWithTag("study-card-$card").assertDoesNotExist()
+        assertEquals(2L,current(card).revision)
+        // Compact maps expose recovery through the existing management/capacity panel, not the wide-only filter chip.
+        tap("study-management");tap("map-menu-group-1");tap("study-capacity");tap("capacity-open-trash")
+        tap("study-card-$card")
         compose.onNodeWithText("恢复卡片",substring=false).let{runCatching{it.performScrollTo()};it.performClick()}
         compose.waitUntil(15_000){current(card).trashedAt==null&&current(card).revision==3L}
+        compose.waitUntil(15_000){compose.onAllNodesWithTag("study-card-details").fetchSemanticsNodes().isEmpty()&&
+            compose.onAllNodesWithTag("study-card-$card").fetchSemanticsNodes().isEmpty()}
+        compose.onNodeWithTag("study-card-$card").assertDoesNotExist()
+        tap("study-management");tap("map-menu-group-1");tap("study-capacity");tap("capacity-open-cards")
+        waitFor("study-card-$card");compose.onNodeWithTag("study-card-$card").assertIsDisplayed()
         assertEquals("保留正文",current(card).body)
         runBlocking{assertFalse(db.knowledge().get(link)!!.removed);assertEquals("预览后修改的题目",(db.knowledge().get(question)!!.data() as KnowledgeData.Question).prompt)}
     }

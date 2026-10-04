@@ -1,0 +1,13 @@
+{
+  "expected": 6,
+  "planned_total": 6,
+  "shard_index": 0,
+  "shard_count": 1,
+  "passed": 3,
+  "failures": [
+    "org.inkweft.app.BoundAnnotationFlowUiTest#bindMoveReorderZoomDetachAndReopenKeepOneTransformAndProtectedLayerOwnership",
+    "org.inkweft.app.CardTrashUiTest#cardManagementCancelsRejectsChangedQuestionThenRestoresFromRecycleArea",
+    "org.inkweft.app.StudyOrganizationUiTest#outlineEdgeScrollReachesOffscreenParentAndCancelKeepsWholeAuthorGraph"
+  ],
+  "infrastructure": []
+}

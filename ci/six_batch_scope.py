@@ -23,9 +23,6 @@ METHODS = {
 FOCUSED_METHODS = {
     "org.inkweft.app.BoundAnnotationFlowUiTest": ["bindMoveReorderZoomDetachAndReopenKeepOneTransformAndProtectedLayerOwnership"],
     "org.inkweft.app.CardTrashUiTest": ["cardManagementCancelsRejectsChangedQuestionThenRestoresFromRecycleArea"],
-    "org.inkweft.app.RecallOriginalSourceUiTest": ["durableCurrentSourceWaitsForOriginalReceiptAndReturnsToSameAnswerAndWindow",
-        "recycledCurrentSourceKeepsFixedSnapshotAndSameAttempt"],
-    "org.inkweft.app.CardReuseDialogUiTest": ["realReferenceAndCopyActionsKeepSharedIdentityAndIndependentContentAfterReopen"],
     "org.inkweft.app.StudyOrganizationUiTest": ["outlineEdgeScrollReachesOffscreenParentAndCancelKeepsWholeAuthorGraph"],
 }
 

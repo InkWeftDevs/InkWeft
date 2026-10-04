@@ -178,10 +178,17 @@ class BoundAnnotationFlowUiTest {
         assertEquals(movedBounds,compose.runOnIdle{map().annotationBounds(f.node)})
         assertArrayEquals(PageAuthoringCodec.encode(bound.state),PageAuthoringCodec.encode(state(f.book).state))
         val camera=compose.runOnIdle{map().snapshotViewport()}
+        val beforeZoomNodes=graph(f.book).nodes
+        assertTrue("The actual camera must have room to zoom in: ${camera.scale}",camera.scale<2.5f)
         compose.onNodeWithTag("study-map").performTouchInput{
-            pinch(Offset(width*.35f,height*.5f),Offset(width*.65f,height*.5f),Offset(width*.25f,height*.5f),Offset(width*.75f,height*.5f),durationMillis=400)
+            // Compose orders these as start0/end0/start1/end1; named endpoints keep the fingers spreading apart.
+            pinch(start0=Offset(width*.35f,height*.5f),end0=Offset(width*.25f,height*.5f),
+                start1=Offset(width*.65f,height*.5f),end1=Offset(width*.75f,height*.5f),durationMillis=400)
         }
-        compose.waitForIdle();assertTrue(compose.runOnIdle{map().snapshotViewport().scale>camera.scale})
+        compose.waitForIdle()
+        val zoomed=compose.runOnIdle{map().snapshotViewport()}
+        assertTrue("Native two-finger spread must increase scale: ${camera.scale} -> ${zoomed.scale}",zoomed.scale>camera.scale)
+        assertEquals("Pinch must cancel node dragging without authoring positions",beforeZoomNodes,graph(f.book).nodes)
         assertEquals(bound.revision,state(f.book).revision)
         assertArrayEquals(PageAuthoringCodec.encode(bound.state),PageAuthoringCodec.encode(state(f.book).state));assertPaintAt(movedPoint);assertPreserved(f)
 

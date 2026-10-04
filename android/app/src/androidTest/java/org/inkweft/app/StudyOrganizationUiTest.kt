@@ -259,50 +259,64 @@ class StudyOrganizationUiTest {
 
     @Test fun outlineEdgeScrollReachesOffscreenParentAndCancelKeepsWholeAuthorGraph(){
         val f=fixture()
-        val extra=List(28){id()}
+        val extra=List(28){id()};val destination=extra[5];val destinationChild=id()
         runBlocking{extra.forEachIndexed{index,node->
             app.study.submit(StudyCommand(id(),f.book,StudyAction.CREATE,cardId=id(),nodeId=node,parentId=f.root,
                 title="跨屏目标 $index",body="边缘拖动验证",x=640.0,y=900.0+index*120))
-        }}
+        }
+            app.study.submit(StudyCommand(id(),f.book,StudyAction.CREATE,cardId=id(),nodeId=destinationChild,parentId=destination,
+                title="目标已有的下级",body="折叠目标必须在放入整支后展开",x=950.0,y=1600.0))
+        }
         settled(f.book)
         val initial=author(f.book);val originalOrder=order(f.book)
         tap("study-direct-outline")
         tap("outline-fold-${f.first}")
-        compose.onNodeWithTag("outline-drag-${f.first}").performScrollTo()
+        compose.onNodeWithTag("study-list").performScrollToNode(hasTestTag("outline-fold-$destination"))
+        tap("outline-fold-$destination")
+        compose.onNodeWithTag("study-list").performScrollToNode(hasTestTag("outline-drag-${f.first}"))
         compose.waitForIdle()
-        val destination=extra[5]
         assertTrue("The target must start outside the visible viewport",
             runCatching{compose.onNodeWithTag("outline-row-$destination").assertIsDisplayed()}.isFailure)
         fun startAndReachTarget(target:String){
             val list=compose.onNodeWithTag("study-list").fetchSemanticsNode().boundsInRoot
             val handle=compose.onNodeWithTag("outline-drag-${f.first}").fetchSemanticsNode().boundsInRoot
             val start=handle.center-list.topLeft
+            // An idle-synchronizing semantics read must not fast-forward the
+            // repeating edge-scroll coroutine past the target between measurements.
+            compose.mainClock.autoAdvance=false
             compose.onNodeWithTag("study-list").performTouchInput{
                 down(start);moveTo(start+Offset(0f,30f));moveTo(Offset(list.width*.5f,list.height-8f))
             }
-            // Keep the pointer down while the production 16 ms edge-scroll loop runs.
-            // No scrollTo / swipe is allowed to bring the target into view.
-            compose.waitUntil(15_000){
-                val currentList=compose.onNodeWithTag("study-list").fetchSemanticsNode().boundsInRoot
+            var reached=false
+            for(frame in 0 until 300){
+                compose.mainClock.advanceTimeBy(32)
+                compose.waitForIdle()
+                val bounds=compose.onNodeWithTag("study-list").fetchSemanticsNode().boundsInRoot
                 val row=runCatching{compose.onNodeWithTag("outline-row-$target").fetchSemanticsNode().boundsInRoot}.getOrNull()
-                row!=null&&row.top>currentList.top+48&&row.bottom<currentList.bottom-48
+                if(row!=null&&row.top>bounds.top+48&&row.bottom<bounds.bottom-48){reached=true;break}
             }
-            // Leave the edge first: scrolling and the live feedback can change the
-            // list's origin while the pointer remains down. Never reuse pre-drag bounds.
-            var currentList=compose.onNodeWithTag("study-list").fetchSemanticsNode().boundsInRoot
-            compose.onNodeWithTag("study-list").performTouchInput{moveTo(Offset(currentList.width*.5f,currentList.height*.5f))}
-            compose.waitForIdle()
-            currentList=compose.onNodeWithTag("study-list").fetchSemanticsNode().boundsInRoot
-            val row=compose.onNodeWithTag("outline-row-$target").fetchSemanticsNode().boundsInRoot
-            compose.onNodeWithTag("study-list").performTouchInput{moveTo(row.center-currentList.topLeft)}
-            compose.waitForIdle()
+            assertTrue("Production edge scrolling must reveal the previously offscreen target",reached)
+            var bounds=compose.onNodeWithTag("study-list").fetchSemanticsNode().boundsInRoot
+            compose.onNodeWithTag("study-list").performTouchInput{moveTo(Offset(bounds.width*.5f,bounds.height*.5f))}
+            compose.mainClock.advanceTimeByFrame();compose.waitForIdle()
+            bounds=compose.onNodeWithTag("study-list").fetchSemanticsNode().boundsInRoot
+            val row=compose.onNodeWithTag("outline-row-$target").assertIsDisplayed().fetchSemanticsNode().boundsInRoot
+            assertTrue(row.center.y in bounds.top..bounds.bottom)
+            compose.onNodeWithTag("study-list").performTouchInput{moveTo(row.center-bounds.topLeft)}
+            compose.mainClock.advanceTimeByFrame();compose.waitForIdle()
             compose.onNodeWithTag("outline-drag-feedback").assertTextContains("移入「跨屏目标 5」下级",substring=true)
         }
+        val originalAutoAdvance=compose.mainClock.autoAdvance
+        try{
         startAndReachTarget(destination)
+        compose.onNodeWithTag("outline-drag-feedback").assertTextContains("松手后展开目标",substring=true)
         compose.onNodeWithTag("study-list").performTouchInput{up()}
+        compose.mainClock.autoAdvance=originalAutoAdvance
         compose.waitUntil(15_000){nodes(f.book).single{it.id==f.first}.parentId==destination}
         settled(f.book)
         assertEquals(f.first,nodes(f.book).single{it.id==f.firstChild}.parentId)
+        compose.onNodeWithTag("study-list").performScrollToNode(hasTestTag("outline-row-$destinationChild"))
+        compose.onNodeWithTag("outline-row-$destinationChild").assertIsDisplayed()
         assertEquals(initial.cards,cards(f.book))
         tap("study-undo-organization")
         compose.waitUntil(15_000){order(f.book)==originalOrder};settled(f.book)
@@ -312,9 +326,14 @@ class StudyOrganizationUiTest {
         val beforeCancel=author(f.book)
         startAndReachTarget(destination)
         compose.onNodeWithTag("study-list").performTouchInput{cancel()}
+        compose.mainClock.autoAdvance=originalAutoAdvance
         settled(f.book)
         assertEquals(beforeCancel,author(f.book))
         compose.onNodeWithTag("study-message").assertTextContains("拖动已取消",substring=true)
+        }finally{
+            if(!compose.mainClock.autoAdvance)runCatching{compose.onNodeWithTag("study-list").performTouchInput{cancel()}}
+            compose.mainClock.autoAdvance=originalAutoAdvance
+        }
     }
 
     @Test fun nativeMapPreviewsEveryDescendantAndMarqueeMovementDeduplicatesBranches(){
