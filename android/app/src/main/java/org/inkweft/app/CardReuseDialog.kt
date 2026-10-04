@@ -56,7 +56,7 @@ internal class CardReuseViewModel(private val repo:CardReuseRepository,private v
 @Composable internal fun CardReuseDialog(card:StudyCardRow,dismiss:()->Unit){
     val app=LocalContext.current.applicationContext as InkWeftApplication
     val vm:CardReuseViewModel=viewModel(key="card-reuse-${card.id}",factory=CardReuseViewModel.Factory(app.study.reuse))
-    val notes by app.knowledge.notes().collectAsStateWithLifecycle(initialValue=emptyList())
+    val notes by remember(app){app.knowledge.notes()}.collectAsStateWithLifecycle(initialValue=emptyList())
     val busy by vm.busy.collectAsStateWithLifecycle();val pending by vm.pending.collectAsStateWithLifecycle();val message by vm.message.collectAsStateWithLifecycle()
     var destination by rememberSaveable(card.id){mutableStateOf(card.notebookId)}
     var kind by rememberSaveable(card.id){mutableStateOf(CardReuseKind.REFERENCE)}
