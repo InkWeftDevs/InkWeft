@@ -7,6 +7,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.selected
+import androidx.compose.ui.semantics.stateDescription
 
 internal enum class StudyWorkMode { READ, WRITE, RECALL }
 
@@ -19,8 +22,8 @@ internal enum class StudyWorkMode { READ, WRITE, RECALL }
             TextButton({choose(value)},contentPadding=PaddingValues(horizontal=6.dp),
                 modifier=Modifier.widthIn(min=48.dp).heightIn(min=48.dp)
                     .testTag(if(tagPrefix.isNotEmpty())"$tagPrefix-mode-${value.name.lowercase()}" else when(value){StudyWorkMode.READ->"quick-readonly";StudyWorkMode.WRITE->"exit-readonly";StudyWorkMode.RECALL->"workspace-recall"})
-                    .editorSelected(value==mode).describedAs(description)){
-                Text(label,maxLines=1)
+                    .editorSelected(value==mode).describedAs(description).semantics{selected=value==mode;stateDescription=if(value==mode)"当前工作状态"else"切换工作状态"}){
+                Text(if(value==mode)"✓$label"else label,maxLines=1)
             }
         }
     }
