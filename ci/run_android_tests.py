@@ -6,6 +6,7 @@ import re
 import subprocess
 from android_device import prepare_case
 from android_shards import partition
+from android_plan import select_methods
 
 parser=argparse.ArgumentParser()
 parser.add_argument("--shard-index",type=int,default=0)
@@ -36,6 +37,7 @@ for module,key,runner in [("data-local","room","org.inkweft.data.test/androidx.t
             source=next((root/"android/app/src/androidTest").rglob(name.rsplit(".",1)[1]+".kt"))
             methods=re.findall(r"@Test(?:\([^)]*\))?\s+fun\s+(\w+)",source.read_text(encoding="utf-8"))
             if not methods: raise SystemExit(f"Cannot enumerate tests: {name}")
+            methods=select_methods(methods,plan.get("app_methods",{}).get(name))
             cases.extend((name+"#"+method,1) for method in methods)
         if len(cases)!=plan["expected_app"]: raise SystemExit("Test inventory mismatch")
     else: cases=[(",".join(classes),plan["expected_room"])]

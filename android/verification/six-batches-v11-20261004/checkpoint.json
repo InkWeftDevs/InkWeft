@@ -9,13 +9,22 @@
       "app_android_test_kotlin": "PASS",
       "assemble_app_and_test": "PASS",
       "lint": "FAILED_DAEMON_DISAPPEARED_DURING_ANDROID_TEST_ANALYSIS",
-      "android_execution": "RUNNING_ISOLATED_SOFTWARE_API35",
-      "hardware_and_human": "NOT_RUN"
+      "android_execution": "BLOCKED_STARTUP_ANR",
+      "hardware_and_human": "NOT_RUN",
+      "attempts": 2,
+      "methods_started": 0,
+      "android_methods": "11 NOT_STARTED"
     },
     {
       "source": "ffa0864174ca1dad55693dee13123dac5de480a2",
       "scope": "preserved-image-originals-and-rendering-integration",
-      "jvm": {"PageObjectTest": 7, "ContentTransferTest": 13, "LibraryArchiveTest": 14, "failed": 0, "skipped": 0},
+      "jvm": {
+        "PageObjectTest": 7,
+        "ContentTransferTest": 13,
+        "LibraryArchiveTest": 14,
+        "failed": 0,
+        "skipped": 0
+      },
       "production_kotlin": "PASS",
       "app_android_test_kotlin": "PASS",
       "data_local_android_test_kotlin": "PASS",
@@ -25,8 +34,37 @@
       "room_execution": "NOT_RUN",
       "image_visual_validation": "NOT_RUN",
       "hardware_and_human": "NOT_RUN"
+    },
+    {
+      "source": "78028952805690d7498c14af50ea60329080e8a9",
+      "scope": "independent-card-annotations-and-colors",
+      "jvm": {
+        "CardPresentationTest": 4,
+        "KnowledgeTest": 15,
+        "StudyTextTest": 4,
+        "failed": 0,
+        "skipped": 0
+      },
+      "production_kotlin": "PASS",
+      "app_android_test_kotlin": "PASS",
+      "data_local_android_test_kotlin": "PASS",
+      "android_execution": "NOT_RUN"
+    },
+    {
+      "source": "dda6545250b5710a328be5c2d5d959c2b5dbe5c2",
+      "scope": "visible-region-original-image-rendering",
+      "production_kotlin": "PASS",
+      "app_android_test_kotlin": "PASS",
+      "android_methods": "11 NOT_RUN",
+      "pixels_and_performance": "NOT_RUN"
     }
   ],
-  "compatibility": {"candidate_version": 69, "room_schema": 13, "image_objects": "IWOA", "image_page_copy": "IWP7", "safe_downgrade_to_v68": false},
+  "compatibility": {
+    "candidate_version": 69,
+    "room_schema": 13,
+    "image_objects": "IWOA",
+    "image_page_copy": "IWP7",
+    "safe_downgrade_to_v68": false
+  },
   "privacy": "Only source, synthetic tests and sanitized reports. No private notes, signing material, APK or raw device logs."
 }

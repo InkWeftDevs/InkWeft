@@ -2,6 +2,14 @@ import unittest
 from android_plan import plan, inventory
 
 class PlanTest(unittest.TestCase):
+    def test_explicit_methods_keep_source_order_and_reject_missing_or_repeated(self):
+        from android_plan import select_methods
+        self.assertEqual(["a", "b"], select_methods(["a", "b"]))
+        self.assertEqual(["a", "c"], select_methods(["a", "b", "c"], ["c", "a"]))
+        for values in ([], ["missing"], ["a", "a"]):
+            with self.assertRaises(ValueError):
+                select_methods(["a", "b"], values)
+
     def test_tls_has_explicit_gate_and_full_run(self):
         for path in ['backup-server/tls_fixture.py','android/app/src/main/java/org/inkweft/app/BackupTransport.kt','android/app/src/tlsProbe/res/xml/network_security_config.xml','android/app/build.gradle.kts','ci/run_tls_probe.py']:
             self.assertTrue(plan([path])['tls'],path)

@@ -336,7 +336,12 @@
 ### 验证检查点（按实际源码划分）
 
 - `6d9d67305726622857a4cf6fd86a5d9a69f27a57` 渲染独立提交：生产及AndroidTest源码编译通过，主／测试APK组装成功。lint在`lintAnalyzeDebugAndroidTest`阶段因daemon退出失败，原因未确定；不能记PASS
-- 该渲染提交的11项合成Android35用例开始执行。没有任何真实设备／真人结果继承到本轮
+- 该渲染提交的11项合成Android35用例两次均在0方法开始前因应用启动ANR受阻（含一次完全错峰、同字节包重试）。记录BLOCKED_STARTUP_ANR／11 NOT_STARTED；自建软件AVD已关闭，不继续空耗，也没有任何真实设备／真人结果继承到本轮
 - 原件与Room13提交在主树 `ffa0864174ca1dad55693dee13123dac5de480a2` 定向34项JVM全通过（PageObject7／ContentTransfer13／LibraryArchive14），app及app/data-local两组AndroidTest源码编译通过；3分28秒、53任务（27实际执行、26缓存）。新增Room运行与迁移实际执行仍待排队
 - 当前本轮版本标识69，Room13；新原件对象使用IWOA、带原件页面副本IWP7。V68及更早版本不能读取新格式／数据库，禁止以相同包名或签名推断可安全降级。未触用户实际安装及签名材料
 - 新注释与双色使用`CARD_PRESENTATION_V1` Knowledge记录，旧包不认识该kind。默认注释空、旧body不变；固定卡片版本链接继续固定旧title/body，明确不混入当前注释
+
+
+- 卡片独立提交`7802895`：23项定向JVM通过（CardPresentation4／Knowledge15／StudyText4），主源码与两组AndroidTest源码编译通过；Room／原生UI及实际像素尚未执行
+- 原图区域显示独立提交`dda6545`：主源码与AndroidTest源码编译通过，11项Android测试尚未执行。真实区域解码、EXIF八方向、透明、失败重试、删除取消、原件预先预算已实现，不能据源码编译直接认定像素或性能通过
+- 新增当前草稿分支专用的定向CI候选；仅仅读既有KVM访问，不更改系统权限，不上传APK。CI尚未触发／验收，缺KVM时必须明写环境BLOCKED
