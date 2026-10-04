@@ -86,6 +86,8 @@ class SixBatchWorkflowTest(unittest.TestCase):
             self.assertIn("android/build/evidence/APK-SHA256.txt", step)
             self.assertIn("android/build/evidence/source-commit.txt", step)
             self.assertNotIn(".apk", step)
+            self.assertIn("android/build/evidence/app-*/outline-input-route.txt", step)
+            self.assertNotIn("android/build/evidence/**/*.txt", step)
         self.assertNotIn("download-artifact", WORKFLOW)
 
     def test_gradle_remote_cache_is_disabled_while_wrapper_validation_stays_enabled(self):

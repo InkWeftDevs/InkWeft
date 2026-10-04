@@ -1,0 +1,11 @@
+{
+  "expected": 4,
+  "planned_total": 4,
+  "shard_index": 0,
+  "shard_count": 1,
+  "passed": 3,
+  "failures": [
+    "org.inkweft.app.StudyOrganizationUiTest#outlineEdgeScrollReachesOffscreenParentAndCancelKeepsWholeAuthorGraph"
+  ],
+  "infrastructure": []
+}

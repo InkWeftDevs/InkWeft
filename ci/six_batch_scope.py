@@ -18,12 +18,10 @@ METHODS = {
     "org.inkweft.app.StarNoteInteractionsUiTest": ["excerptKeepsPageImageAddsCommentAndDeletesWithoutDeletingSource",
         "inlineCommentAndEightHandleRecropCancelSaveAndReopenKeepOriginalInk"],
 }
-# Target the concentrated four scope repairs and previously unverified production flows.
+# Target the remaining cross-screen release path plus the normal whole-branch drag control.
 # Full mode retains all prior regressions; focused omissions are not claimed as new passes.
 FOCUSED_METHODS = {
-    "org.inkweft.app.BoundAnnotationFlowUiTest": ["bindMoveReorderZoomDetachAndReopenKeepOneTransformAndProtectedLayerOwnership"],
     "org.inkweft.app.StudyOrganizationUiTest": ["outlineEdgeScrollReachesOffscreenParentAndCancelKeepsWholeAuthorGraph", "realOutlineHandleMovesWholeBranchAndSupportsUndoRedoAndCancel"],
-    "org.inkweft.app.MapInteractionUiTest": ["selectionRenameReadingAndMapMenusKeepTheirScope"],
 }
 
 CORE = ["PageObjectTest", "CardTrashCommandTest", "ContentTransferTest", "LibraryArchiveTest", "CardPresentationTest",

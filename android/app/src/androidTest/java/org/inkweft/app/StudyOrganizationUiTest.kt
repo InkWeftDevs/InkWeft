@@ -284,7 +284,23 @@ class StudyOrganizationUiTest {
             runCatching{compose.onNodeWithTag("outline-row-$destination").assertIsDisplayed()}.isFailure)
         var dropDiagnostic="No target observed"
         val routeTrace=java.util.ArrayDeque<String>()
-        fun recordRoute(line:String){if(routeTrace.size>=120)routeTrace.removeFirst();routeTrace.addLast(line)}
+        val criticalTrace=java.util.ArrayDeque<String>()
+        val firstTrace=mutableListOf<String>()
+        var routeFailure:String?=null
+        fun recordRoute(line:String){
+            if(firstTrace.size<4)firstTrace+=line
+            if(routeTrace.size>=32)routeTrace.removeFirst();routeTrace.addLast(line)
+            if(!line.startsWith("edge-")){if(criticalTrace.size>=32)criticalTrace.removeFirst();criticalTrace.addLast(line)}
+        }
+        fun routeReport(limit:Int):ByteArray {
+            val text="synthetic_only=true; test=outlineEdgeScrollReachesOffscreenParentAndCancelKeepsWholeAuthorGraph\n"+
+                "failure=${routeFailure?:"NONE"}\ndrop=$dropDiagnostic\n"+
+                "LATEST_CRITICAL_FIRST\n${criticalTrace.toList().asReversed().joinToString("\n")}\n"+
+                "FIRST_CONTEXT\n${firstTrace.joinToString("\n")}\n"+
+                "LATEST_EVENTS_FIRST\n${routeTrace.toList().asReversed().joinToString("\n")}\n"
+            val bytes=text.toByteArray(Charsets.UTF_8)
+            return if(bytes.size<=limit)bytes else bytes.copyOf(limit-32)+"\n[BOUNDED_DIAGNOSTIC_TAIL]\n".toByteArray()
+        }
         val listSemantics=compose.onNodeWithTag("study-list").fetchSemanticsNode()
         val owner=(checkNotNull(listSemantics.root) as ViewRootForTest).view
         val previousEvent=owner.javaClass.getDeclaredField("previousMotionEvent").apply{isAccessible=true}
@@ -364,11 +380,21 @@ class StudyOrganizationUiTest {
         assertEquals(beforeCancel,author(f.book))
         compose.onNodeWithTag("study-message").assertTextContains("拖动已取消",substring=true)
         }catch(failure:Throwable){
-            throw AssertionError("Complete outline route (observational only):\n${routeTrace.joinToString("\n")}",failure)
+            routeFailure="${failure.javaClass.name}: ${failure.message}".take(4000)
+            // Android's instrumentation stack payload is bounded: put the actual reason and UP/end first.
+            throw AssertionError(routeReport(12*1024).toString(Charsets.UTF_8),failure)
         }finally{
-            if(!compose.mainClock.autoAdvance)runCatching{compose.onNodeWithTag("study-list").performTouchInput{cancel()}}
-            compose.mainClock.autoAdvance=originalAutoAdvance
-            compose.runOnIdle{vm(f.book).outlineInputObserver=null}
+            val cleanupFailures=mutableListOf<Throwable>()
+            fun cleanup(label:String,action:()->Unit){runCatching(action).exceptionOrNull()?.let{cleanupFailures+=it;recordRoute("cleanup-failed $label ${it.javaClass.name}")}}
+            cleanup("pointer"){if(!compose.mainClock.autoAdvance)compose.onNodeWithTag("study-list").performTouchInput{cancel()}}
+            cleanup("clock"){compose.mainClock.autoAdvance=originalAutoAdvance}
+            cleanup("observer"){compose.runOnIdle{vm(f.book).outlineInputObserver=null}}
+            // Always try saving even if Compose cleanup failed. Preserve the original failure.
+            val capture=runCatching{java.io.File(checkNotNull(app.getExternalFilesDir(null)),"outline-input-route.txt").writeBytes(routeReport(64*1024))}
+            if(routeFailure==null){
+                val problem=cleanupFailures.firstOrNull()?:capture.exceptionOrNull()
+                if(problem!=null)throw AssertionError("Synthetic outline diagnostic cleanup/capture failed",problem)
+            }
         }
     }
 
