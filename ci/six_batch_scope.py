@@ -18,12 +18,16 @@ METHODS = {
     "org.inkweft.app.StarNoteInteractionsUiTest": ["excerptKeepsPageImageAddsCommentAndDeletesWithoutDeletingSource",
         "inlineCommentAndEightHandleRecropCancelSaveAndReopenKeepOriginalInk"],
 }
-# The one remaining recreation failure and the normal sibling-draft contract.
+# Same asynchronous restoration boundary, exhaustively covering its eight observed call sites.
 # Production and the full five-phase B6 sample are unchanged.
 FOCUSED_METHODS = {
     "org.inkweft.app.MapInteractionUiTest": [
+        "conflictAndRecreationRetainFrozenTitleDraft",
+        "outlineTitlesKeepSharedContentAndContinueAtTheSameParent",
         "outlineEnterUnknownReceiptRetriesOneCommandBeforeOpeningOneSiblingDraft",
-        "outlineTitlesKeepSharedContentAndContinueAtTheSameParent"],
+        "narrowLargeTextKeepsActionsDraftAndCanvas"],
+    "org.inkweft.app.StarNoteInteractionsUiTest": [
+        "inlineCommentAndEightHandleRecropCancelSaveAndReopenKeepOriginalInk"],
 }
 
 CORE = ["PageObjectTest", "CardTrashCommandTest", "ContentTransferTest", "LibraryArchiveTest", "CardPresentationTest",
@@ -72,7 +76,7 @@ def build_plan(mode="full"):
                        "expected_methods":len(PHASE_METHODS),
                        "expected_screenshots":40,"native_workspace_screenshots":24,"native_recall_screenshots":7,
                        "native_recall_reopen_screenshots":1},
-            "scope":("focused: one recreation failure and normal sibling-draft guard; B6 all NOT_RUN_FOCUSED with zero new screenshots; not full acceptance"
+            "scope":("focused: five original-draft restoration contracts across eight lifecycle boundaries; B6 all NOT_RUN_FOCUSED with zero new screenshots; not full acceptance"
                      if mode == "focused" else "six-batch B1-B5 complete scoped regression and B6 full-sized synthetic five-phase evidence")
                     + "; physical device and human acceptance remain NOT_RUN"}
 

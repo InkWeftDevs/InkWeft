@@ -164,8 +164,45 @@ class StarNoteInteractionsUiTest {
   tap("card-trash-cancel");assertNull(runBlocking{app.study.cards(note.id).first().single()}.trashedAt)
   assertArrayEquals(original.snapshot,runBlocking{app.study.source(card.id)}!!.snapshot)
   tap("excerpt-inline-comment");compose.onNode(isDialog()).assertDoesNotExist()
-  compose.onNodeWithTag("excerpt-inline-input").performTextInput("页面内备注");compose.activityRule.scenario.recreate();compose.waitForIdle()
-  compose.onNodeWithTag("excerpt-inline-input").assertTextContains("页面内备注");tap("excerpt-inline-save")
+  val inlineDraft="页面内备注"
+  val inlineInput=compose.onNodeWithTag("excerpt-inline-input")
+  inlineInput.performTextInput(inlineDraft);inlineInput.assertIsDisplayed().assertTextContains(inlineDraft,substring=false)
+  val beforeRecreate=inlineInput.printToString().take(1_200)
+  val (bookModel,pageModel,annotationModel)=compose.runOnIdle{val provider=ViewModelProvider(compose.activity)
+   Triple(provider[NotebookViewModel::class.java],provider["book-${note.id}",BookPagesViewModel::class.java],
+    provider["card-presentation-${note.id}-${card.id}",KnowledgeViewModel::class.java])}
+  val instrumentation=androidx.test.platform.app.InstrumentationRegistry.getInstrumentation()
+  val evidenceDirectory=instrumentation.targetContext.getExternalFilesDir(null)
+  var recreateStage="recreate";var lastInputCheck="not checked"
+  try{
+   compose.activityRule.scenario.recreate();recreateStage="await-original-page-and-inline-draft"
+   // Saved draft identity/text survives; the page and source Flow still have to remount the actual editor.
+   compose.waitUntil(10_000){
+    val bookState=bookModel.ui.value;val pageState=pageModel.ui.value
+    if(bookState.loading||bookState.readFailed||bookState.selectedId!=note.id||pageState.loading||
+     pageState.error!=null||pageState.selectedId!=original.pageId)false
+    else runCatching{
+     compose.onNodeWithTag("ink-surface").assertIsDisplayed()
+     compose.onNodeWithTag("excerpt-edit-overlay").assertIsDisplayed()
+     compose.onNodeWithTag("excerpt-inline-input").assertIsDisplayed().assertIsEnabled().assertTextContains(inlineDraft,substring=false)
+    }.onFailure{lastInputCheck=(it.message?:it.javaClass.simpleName).take(700)}.isSuccess
+   }
+  }catch(error:Throwable){
+   // Cached models/text only: a restoration failure must not trigger another Compose or Room wait.
+   runCatching{
+    val state=annotationModel.ui.value
+    val diagnostic=("INLINE_RECREATE_FAILURE stage=$recreateStage expectedBook=${note.id} expectedPage=${original.pageId} book=${bookModel.ui.value.selectedId} bookLoading=${bookModel.ui.value.loading} page=${pageModel.ui.value.selectedId} pageLoading=${pageModel.ui.value.loading} pageError=${pageModel.ui.value.error} annotationLoading=${state.loading} annotationReadFailed=${state.readFailed} busy=${state.busy} unknown=${state.unknown} message=${state.message}\nlastInputCheck=$lastInputCheck\nBEFORE_RECREATE\n$beforeRecreate").take(3_000)
+    runCatching{println(diagnostic)}
+    runCatching{java.io.File(checkNotNull(evidenceDirectory),"inline-recreate-failure.txt").writeText(diagnostic)}
+    runCatching{
+     val bitmap=checkNotNull(instrumentation.uiAutomation.takeScreenshot())
+     try{java.io.File(checkNotNull(evidenceDirectory),"inline-recreate-failure.png").outputStream().use{check(bitmap.compress(android.graphics.Bitmap.CompressFormat.PNG,100,it))}}
+     finally{bitmap.recycle()}
+    }.onFailure{runCatching{println("Inline restoration screenshot unavailable: ${it.javaClass.simpleName}")}}
+   }.onFailure{runCatching{println("Inline restoration diagnostics unavailable: ${it.javaClass.simpleName}")}}
+   throw error
+  }
+  compose.onNodeWithTag("excerpt-inline-input").assertTextContains(inlineDraft,substring=false);tap("excerpt-inline-save")
   compose.waitUntil(10000){runBlocking{app.knowledge.observeBook(note.id).first().cardPresentations()[card.id]?.annotation}=="页面内备注"};ready()
   tap("excerpt-resize")
   fun drag(){
