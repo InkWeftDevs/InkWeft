@@ -82,7 +82,7 @@ class NotebookPages(private val db:NoteDatabase) {
         val pages=db.pages().list(notebookId)
         var bytes=0L
         val documents=mutableMapOf<String,PdfDocumentSource>()
-        val copies=pages.map{p->InkPageFile(n.title,"",InkSession(InkRepository(db).read(p.id)).visibleDraft(),p.world,PaperStyle.entries[p.paper],PageObjectRepository(db).read(p.id).objects,DocumentRepository(db).read(p.id,documents)).also{bytes+=it.encode(false).size;require(bytes<NotebookFile.MAX_BYTES-500_000)}}
+        val copies=pages.map{p->InkPageFile(n.title,"",InkSession(InkRepository(db).read(p.id)).visibleDraft(),p.world,PaperStyle.entries[p.paper],PageObjectRepository(db).read(p.id).objects,DocumentRepository(db).read(p.id,documents),ImageSourceRepository(db).forPage(p.id,PageObjectRepository(db).read(p.id).objects)).also{bytes+=it.encode(false).size;require(bytes<NotebookFile.MAX_BYTES-500_000)}}
         NotebookFile(n.title,n.text,copies)
     }
     suspend fun importBook(file:NotebookFile):Note=db.withTransaction {

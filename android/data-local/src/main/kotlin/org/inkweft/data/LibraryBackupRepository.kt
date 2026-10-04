@@ -56,7 +56,7 @@ class LibraryBackupRepository(private val context:Context,private val db:NoteDat
                     // Schema6 has no tombstone column; promote to live/default null.
                     val promoted=if(table==4&&row.size==SCHEMA[table].columns.size-1)row+listOf(null)else row
                     insert(sql,table,promoted)
-                },legacySchema=SCHEMA_V6,otherLegacySchemas=listOf(SCHEMA_V7,SCHEMA_V8,SCHEMA_V9,SCHEMA_V10,SCHEMA_V11)){ctx.ensureActive()}
+                },legacySchema=SCHEMA_V6,otherLegacySchemas=listOf(SCHEMA_V7,SCHEMA_V8,SCHEMA_V9,SCHEMA_V10,SCHEMA_V11,SCHEMA_V12)){ctx.ensureActive()}
             }
             validate(stage)
             val sql=stage.openHelper.writableDatabase
@@ -92,6 +92,7 @@ class LibraryBackupRepository(private val context:Context,private val db:NoteDat
                         require(!collision){"BACKUP_COMMAND_IDENTITY_CONFLICT"}
                     }
                 }
+                require(db.images().totalBytes()+preview.stage.images().totalBytes()<=ImageSource.LIBRARY_BYTES){"IMAGE_LIBRARY_BUDGET"}
                 require(db.documents().totalBytes()+preview.stage.documents().totalBytes()<=80_000_000){"DOCUMENT_LIBRARY_BUDGET"}
                 require(db.covers().otherBytes("")+preview.stage.covers().otherBytes("")<=32_000_000){"COVER_LIBRARY_BUDGET"}
                 if(db.study().snapshotBytes()+preview.stage.study().snapshotBytes()>StudyCapacity.MAX_SNAPSHOT_BYTES)
@@ -142,6 +143,10 @@ class LibraryBackupRepository(private val context:Context,private val db:NoteDat
         noRows("SELECT 1 FROM document_sources WHERE pageCount NOT BETWEEN 1 AND 500 OR byteCount NOT BETWEEN 8 AND 32000000")
         noRows("SELECT 1 FROM document_pages p JOIN document_sources s ON s.id=p.documentId WHERE sourcePage<0 OR sourcePage>=s.pageCount")
         noRows("SELECT 1 FROM document_chunks WHERE position NOT BETWEEN 0 AND 62 OR length(payload) NOT BETWEEN 1 AND 512000")
+        require(stage.images().totalBytes()<=ImageSource.LIBRARY_BYTES){"IMAGE_LIBRARY_BUDGET"}
+        noRows("SELECT 1 FROM image_sources WHERE byteCount NOT BETWEEN 1 AND ${ImageSource.MAX_BYTES}")
+        noRows("SELECT 1 FROM image_chunks WHERE position NOT BETWEEN 0 AND 40 OR length(payload) NOT BETWEEN 1 AND 512000")
+        for(image in stage.images().all())ImageSourceRepository.validate(ImageSourceRepository(stage).read(image.notebookId,image.digest))
         KnowledgeRepository(stage).validateArchive()
         sql.query("SELECT notebookId,payload FROM knowledge_revisions").use{c->while(c.moveToNext())KnowledgeRepository(stage).validateData(c.getString(0),KnowledgeCodec.decode(c.getBlob(1)),false)}
         sql.query("SELECT operationId,digest,resultId FROM knowledge_receipts").use{c->while(c.moveToNext()){UUID.fromString(c.getString(0));require(c.getString(1).matches(Regex("[0-9a-f]{64}")));require(stage.knowledge().get(c.getString(2))!=null)}}
@@ -182,6 +187,7 @@ class LibraryBackupRepository(private val context:Context,private val db:NoteDat
                 val objects=PageObjectRepository(stage).read(p.id).objects
                 val refs=objects.flatMap{it.sourceStrokeIds};require(refs.distinct().size==refs.size);val owned=stage.ink().strokes(p.id).map{it.id}.toSet();require(refs.all{it in owned})
                 MapEmbedRepository(stage).validateReferences(p.notebookId,objects)
+                ImageSourceRepository(stage).validateReferences(p.notebookId,objects)
                 PageObjectRepository.validateBounds(objects,p.world);PageObjectRepository.validateImages(objects)
                 stage.pages().search(p.id)?.let{s->require(s.inkRevision in 0..ink.revision&&s.text.length<=20_000&&s.method in listOf("MANUAL","OCR"))}
             }
@@ -258,15 +264,18 @@ class LibraryBackupRepository(private val context:Context,private val db:NoteDat
             table("object_receipts","commandId",col("commandId",'S'),col("pageId",'S'),col("digest",'S'),col("revision",'I')),
             table("document_sources","id",col("id",'S'),col("notebookId",'S'),col("digest",'S'),col("pageCount",'I'),col("byteCount",'I')),
             table("document_chunks","documentId,position",col("documentId",'S'),col("position",'I'),col("payload",'B')),
-            table("document_pages","pageId",col("pageId",'S'),col("documentId",'S'),col("sourcePage",'I'))
+            table("document_pages","pageId",col("pageId",'S'),col("documentId",'S'),col("sourcePage",'I')),
+            table("image_sources","notebookId,digest",col("notebookId",'S'),col("digest",'S'),col("byteCount",'I')),
+            table("image_chunks","notebookId,digest,position",col("notebookId",'S'),col("digest",'S'),col("position",'I'),col("payload",'B'))
         )
+        val SCHEMA_V12=SCHEMA.take(27)
         val SCHEMA_V11=SCHEMA.take(24)
         val SCHEMA_V10=SCHEMA.take(22)
         val SCHEMA_V9=SCHEMA.take(21)
         val SCHEMA_V8=SCHEMA.take(18)
         val SCHEMA_V7=SCHEMA.take(13)
         val SCHEMA_V6=SCHEMA.take(12).mapIndexed{i,t->if(i==4)t.copy(columns=t.columns.dropLast(1))else t}
-        private val OWNERS=listOf("id","noteId","noteId","noteId","notebookId","@ink","@ink","@ink","@ink","@search","notebookId","noteId","notebookId","notebookId","@cards","@cards","notebookId","notebookId","notebookId","notebookId","notebookId","noteId","@search","@search","notebookId","@documents","@search")
+        private val OWNERS=listOf("id","noteId","noteId","noteId","notebookId","@ink","@ink","@ink","@ink","@search","notebookId","noteId","notebookId","notebookId","@cards","@cards","notebookId","notebookId","notebookId","notebookId","notebookId","noteId","@search","@search","notebookId","@documents","@search","notebookId","notebookId")
         private fun count(sql:SupportSQLiteDatabase,table:String)=sql.query("SELECT COUNT(*) FROM `$table`").use{it.moveToFirst();it.getLong(0)}
         private fun insert(sql:SupportSQLiteDatabase,table:Int,row:List<Any?>){
             val t=SCHEMA[table]

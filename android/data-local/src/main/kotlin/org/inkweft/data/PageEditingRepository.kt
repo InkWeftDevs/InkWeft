@@ -78,7 +78,7 @@ class PageEditingRepository(private val db:NoteDatabase,private val fault:(PageE
                     db.pages().search(source.id)?.takeIf{it.inkRevision==head&&it.method=="MANUAL"}?.let{
                         db.pages().putSearch(PageSearchRow(resultId,visible.size.toLong(),it.text))
                     }
-                    PageObjectRepository(db).import(resultId,PageObjectRepository(db).read(source.id).objects,strokeIds)
+                    PageObjectRepository(db).read(source.id).objects.let{objects->PageObjectRepository(db).import(resultId,objects,strokeIds,ImageSourceRepository(db).forPage(source.id,objects))}
                     ordered.add(at,resultId);selected=resultId
                 }
             }

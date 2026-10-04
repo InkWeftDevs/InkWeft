@@ -17,7 +17,7 @@ internal class PageObjectViewModel(private val pageId:String,private val repo:Pa
     internal val revision get()=snapshot.revision
     private val undo=ArrayDeque<List<PageObject>>()
     private val redo=ArrayDeque<List<PageObject>>()
-    private data class Pending(val id:String,val before:ObjectSnapshot,val after:List<PageObject>,val direction:Int,val expectedInk:Long?=null,val accepted:(()->Unit)?=null,val automatic:Boolean=false)
+    private data class Pending(val id:String,val before:ObjectSnapshot,val after:List<PageObject>,val direction:Int,val expectedInk:Long?=null,val accepted:(()->Unit)?=null,val automatic:Boolean=false,val originals:List<ImageSource> = emptyList())
     private var pending:Pending?=null
     private var external=false
     private val groupUndo=java.util.IdentityHashMap<List<PageObject>,()->Unit>()
@@ -189,17 +189,17 @@ internal class PageObjectViewModel(private val pageId:String,private val repo:Pa
     private fun publish(error:String?=null){state.value=ObjectsUi(if(pending?.automatic==true)snapshot.objects else pending?.after?:snapshot.objects,false,false,error,pending!=null,undo.isNotEmpty(),redo.isNotEmpty(),pending?.automatic==true)}
     internal var authorAllowed:()->Boolean={true}
     internal val authorOperationActive:Boolean get()=beautyJob?.isActive==true||state.value.busy||state.value.pending
-    fun change(objects:List<PageObject>,direction:Int=0,expectedInk:Long?=null,accepted:(()->Unit)?=null,automatic:Boolean=false){
+    fun change(objects:List<PageObject>,direction:Int=0,expectedInk:Long?=null,accepted:(()->Unit)?=null,automatic:Boolean=false,originals:List<ImageSource> = emptyList()){
         if(!authorAllowed())return
         if(state.value.loading||state.value.busy||state.value.pending||objects==snapshot.objects)return
         try{PageObjectCodec.encode(objects)}catch(_:Exception){publish("对象超过容量：每页最多 32 项、图片与对象总计约 1.6 MB。请减少图片后重试。");return}
-        pending=Pending(UUID.randomUUID().toString(),snapshot,objects.toList(),direction,expectedInk,accepted,automatic);retry()
+        pending=Pending(UUID.randomUUID().toString(),snapshot,objects.toList(),direction,expectedInk,accepted,automatic,originals);retry()
     }
     fun retry(){val p=pending?:return;if(state.value.busy||external)return
         state.value=state.value.copy(objects=if(p.automatic)snapshot.objects else p.after,busy=true,pending=true,error=null,automaticPending=p.automatic)
         viewModelScope.launch{
             try{
-                val revision=withContext(Dispatchers.IO){repo.save(pageId,p.before.revision,p.id,p.after,p.expectedInk)}
+                val revision=withContext(Dispatchers.IO){repo.save(pageId,p.before.revision,p.id,p.after,p.expectedInk,p.originals)}
                 completeExternal(revision)
             }catch(c:CancellationException){throw c}catch(_:Exception){publish("对象保存尚未确认。请核对重试；如有版本冲突，可重新读取已保存对象。")}
         }
@@ -224,7 +224,7 @@ internal class PageObjectViewModel(private val pageId:String,private val repo:Pa
     internal fun registerGroupHistory(back:Boolean,action:()->Unit){historyIdentity(back)?.let{(if(back)groupUndo else groupRedo)[it]=action}}
     fun undo(){if(!authorAllowed())return;if(undo.isNotEmpty()){groupUndo[undo.last()]?.let{it();return};change(undo.last(),-1)}}
     fun redo(){if(!authorAllowed())return;if(redo.isNotEmpty()){groupRedo[redo.last()]?.let{it();return};change(redo.last(),1)}}
-    fun put(value:PageObject){val old=snapshot.objects;change(if(old.any{it.id==value.id})old.map{if(it.id==value.id)value else it}else old+value)}
+    fun put(value:PageObject,originals:List<ImageSource> = emptyList(),accepted:(()->Unit)?=null){val old=snapshot.objects;change(if(old.any{it.id==value.id})old.map{if(it.id==value.id)value else it}else old+value,originals=originals,accepted=accepted)}
     fun delete(id:String)=deleteObjects(setOf(id))
     fun deleteObjects(ids:Set<String>){change(snapshot.objects.mapNotNull{if(it.id !in ids)it else if(it.sourceStrokeIds.isNotEmpty())it.copy(hidden=true)else null})}
     fun restoreOriginal(id:String)=change(snapshot.objects.filterNot{it.id==id})
@@ -273,19 +273,22 @@ internal class PageObjectViewModel(private val pageId:String,private val repo:Pa
         viewModelScope.launch {
             try {
                 ui.first{!it.loading}
+                check(authorAllowed())
                 check(!state.value.busy&&!state.value.pending)
                 state.value=state.value.copy(busy=true,error=null)
-                val bytes=withContext(Dispatchers.IO){CoverImages.read(context.applicationContext,uri,PageObjectCodec.MAX_IMAGE)}
+                val (original,bytes)=withContext(Dispatchers.IO){
+                    val raw=CoverImages.readBytes(context.applicationContext,uri)
+                    ImageSource(raw) to CoverImages.normalize(raw,PageObjectCodec.MAX_IMAGE)
+                }
                 val size=android.graphics.BitmapFactory.Options().apply{inJustDecodeBounds=true}
                 android.graphics.BitmapFactory.decodeByteArray(bytes,0,bytes.size,size)
                 val width=minOf(500f,500f*size.outWidth/size.outHeight);val height=width*size.outHeight/size.outWidth
                 val x=(viewport.centerX-width/2).toFloat();val y=(viewport.centerY-height/2).toFloat()
                 val o=PageObject(UUID.randomUUID().toString(),PageObjectKind.IMAGE,
                     if(world)x else x.coerceIn(0f,1000f-width),if(world)y else y.coerceIn(0f,1414f-height),width,height,
-                    image=java.util.Base64.getEncoder().encodeToString(bytes))
-                publish();put(o);onSelected(o.id)
-            }catch(c:CancellationException){throw c}catch(_:Exception){publish("图片未能加入。支持静态 JPG、PNG、WebP、HEIF，原图最多 20 MB；可先缩小后重试。")}
-            finally{cleanup?.delete()}
+                    image=java.util.Base64.getEncoder().encodeToString(bytes),imageSource=original.sha256)
+                publish();put(o,listOf(original),accepted={cleanup?.delete();onSelected(o.id)})
+            }catch(c:CancellationException){throw c}catch(_:Exception){publish("图片未能加入。支持静态 JPG、PNG、WebP、HEIF，原图最多 20 MB；原件整库上限 32 MB，原件与预览会一同保存。")}
         }
     }
     class Factory(private val id:String,private val repo:PageObjectRepository):ViewModelProvider.Factory {

@@ -224,7 +224,7 @@ class InkRepository(private val db:NoteDatabase,private val fault:(InkFaultPoint
         val strokeIds=file.strokes.associate{it.id to UUID.randomUUID().toString()}
         dao.insertPage(InkPageRow(id,file.strokes.size.toLong()))
         file.strokes.forEachIndexed{index,old->val s=InkStroke(checkNotNull(strokeIds[old.id]),old.pen,old.color,old.width,old.tool,old.samples,old.world,old.cuts,old.appearance);dao.insertStroke(InkStrokeRow(s.id,id,InkStrokeCodec.encode(s),s.samples.size,true,index.toLong()+1))}
-        PageObjectRepository(db).import(id,file.objects,strokeIds)
+        PageObjectRepository(db).import(id,file.objects,strokeIds,file.imageSources)
     }
     suspend fun importCopy(file:InkPageFile):Note=db.withTransaction {
         val title=(file.title.take(115)+" · 副本").take(120)

@@ -35,7 +35,7 @@ class NotebookFile(val title:String,val text:String,pages:List<InkPageFile>) {
                 val title=field(480);val text=field(400_000)
                 val sources=if(magic==MAGIC2){val count=d.readInt();require(count in 1..500);List(count){val pages=d.readInt();val size=d.readInt();require(size in 8..PdfDocumentSource.MAX_BYTES&&size<=d.available());val pdf=ByteArray(size);d.readFully(pdf);PdfDocumentSource(pdf,pages)}}else emptyList()
                 val n=d.readInt();require(n in 1..500)
-                val pages=List(n){val size=d.readInt();require(size in 1..InkPageFile.MAX_BYTES&&size<=d.available());val p=ByteArray(size);d.readFully(p);val page=InkPageFile.decode(p);if(magic==MAGIC2){val source=d.readInt();val index=d.readInt();require(source in -1 until sources.size);val ref=if(source<0){require(index==0);null}else PdfPageSource(sources[source],index);InkPageFile(page.title,page.text,page.strokes,page.world,page.paper,page.objects,ref)}else page}
+                val pages=List(n){val size=d.readInt();require(size in 1..InkPageFile.MAX_BYTES&&size<=d.available());val p=ByteArray(size);d.readFully(p);val page=InkPageFile.decode(p);if(magic==MAGIC2){val source=d.readInt();val index=d.readInt();require(source in -1 until sources.size);val ref=if(source<0){require(index==0);null}else PdfPageSource(sources[source],index);InkPageFile(page.title,page.text,page.strokes,page.world,page.paper,page.objects,ref,page.imageSources)}else page}
                 require(d.available()==0);NotebookFile(title,text,pages)
             }
         }

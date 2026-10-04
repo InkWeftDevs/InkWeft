@@ -49,7 +49,7 @@ class LibraryContentRepository(private val db:NoteDatabase,
             pages.forEachIndexed { index,page ->
                 val state=InkRepository(db).read(page.id)
                 val visible=InkSession(state).visibleDraft()
-                val copy=InkPageFile(title,"",visible,page.world,PaperStyle.entries[page.paper],PageObjectRepository(db).read(page.id).objects,DocumentRepository(db).read(page.id,documents))
+                val copy=InkPageFile(title,"",visible,page.world,PaperStyle.entries[page.paper],PageObjectRepository(db).read(page.id).objects,DocumentRepository(db).read(page.id,documents),ImageSourceRepository(db).forPage(page.id,PageObjectRepository(db).read(page.id).objects))
                 encodedBytes+=copy.encode(false).size
                 require(encodedBytes<NotebookFile.MAX_BYTES-500_000){"COPY_SIZE_LIMIT"}
                 val pageId=if(index==0)target.id else UUID.randomUUID().toString()
@@ -105,7 +105,7 @@ class LibraryContentRepository(private val db:NoteDatabase,
         if(metadata.world){
             val p=rows.single()
             val file=InkPageFile(note.title,note.text,InkSession(InkRepository(db).read(p.id)).visibleDraft(),
-                true,PaperStyle.entries[p.paper],PageObjectRepository(db).read(p.id).objects)
+                true,PaperStyle.entries[p.paper],PageObjectRepository(db).read(p.id).objects,imageSources=ImageSourceRepository(db).forPage(p.id,PageObjectRepository(db).read(p.id).objects))
             ContentExport(note.title,"iwpage",file.encode())
         }else ContentExport(note.title,"iwbook",NotebookPages(db).exportBook(notebookId).encode())
     }
@@ -135,6 +135,6 @@ class LibraryContentRepository(private val db:NoteDatabase,
             val stroke=InkStroke(checkNotNull(strokeIds[old.id]),old.pen,old.color,old.width,old.tool,old.samples,old.world,masks,old.appearance)
             db.ink().insertStroke(InkStrokeRow(stroke.id,pageId,InkStrokeCodec.encode(stroke),stroke.samples.size,true,index.toLong()+1))
         }
-        PageObjectRepository(db).import(pageId,page.objects,strokeIds)
+        PageObjectRepository(db).import(pageId,page.objects,strokeIds,page.imageSources)
     }
 }
