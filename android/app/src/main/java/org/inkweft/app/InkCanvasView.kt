@@ -277,9 +277,9 @@ class InkCanvasView(context:Context):View(context){
         val beautyMask=if(gestureErase&&!gestureOnlyTape&&!gestureOnlyHighlighter&&raw.isNotEmpty())sweptPath(raw.map{EraserPoint(it.x,it.y)},gestureRadius)else null
         val drawn=drawnObjects()
         val area=visiblePixels()
-        val imageVisible=if(area.isEmpty)CanvasBounds(0.0,0.0,0.0,0.0)else rasterViewport(area).visible(area.width().toDouble(),area.height().toDouble(),density)
-        if(isAttachedToWindow&&!capturingExcerpt)requestImages(drawn,imageVisible)
-        objectPainter.draw(canvas,drawn,false,visible,beautyMask,gestureWhole)
+        val objectVisible=if(area.isEmpty)CanvasBounds(0.0,0.0,0.0,0.0)else rasterViewport(area).visible(area.width().toDouble(),area.height().toDouble(),density)
+        if(isAttachedToWindow&&!capturingExcerpt)requestImages(drawn,objectVisible)
+        objectPainter.draw(canvas,drawn,false,objectVisible,beautyMask,gestureWhole)
         val activeMask=if(inputId!=-1&&gestureErase&&!gestureOnlyTape&&!gestureWhole&&raw.isNotEmpty())sweptPath(raw.map{EraserPoint(it.x,it.y)},gestureRadius)else null
         val separateErasing=activeMask!=null&&gestureOnlyHighlighter
         val movingOrErasing=selectedIds + if(separateErasing)eraseTargets else emptySet()
@@ -314,7 +314,7 @@ class InkCanvasView(context:Context):View(context){
         transientPencils.values.forEach{PencilRenderer.draw(canvas,it)}
         if(inputId!=-1&&!gestureErase&&raw.isNotEmpty()){if(gesturePen==InkPen.PENCIL)PencilRenderer.draw(canvas,liveStroke(raw))else{live.updateShape();renderer.draw(canvas,live,matrix)}}
         seamDraft?.let{if(it.pen==InkPen.PENCIL)PencilRenderer.draw(canvas,it)else renderer.draw(canvas,InkBrushes.stroke(it),matrix)}
-        objectPainter.draw(canvas,drawn,true,visible)
+        objectPainter.draw(canvas,drawn,true,objectVisible)
         canvas.restoreToCount(inkSave)
         if(asyncRaster.pending&&!preview&&inputId==-1&&content.isNotEmpty()){paint.color=Color.GRAY;paint.textSize=(12*density).toFloat();paint.style=Paint.Style.FILL;canvas.drawText("正在呈现笔迹…",(16*density).toFloat(),(height-18*density).toFloat(),paint)}
         // Draw cursor in screen space, outside the paper clip. Its diameter is
