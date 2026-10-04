@@ -255,7 +255,7 @@ class ReadingToolsUiTest {
         compose.waitUntil(15_000) { compose.runOnIdle { lock(f.note.id).readOnly.value && !lock(f.note.id).canWrite &&
             visibleCanvases().isNotEmpty() && visibleCanvases().all { !it.allowInput && !it.fingerWrites } } }
         compose.onNodeWithTag("exit-readonly").assertIsDisplayed()
-        compose.onNodeWithTag("exit-readonly").assertTextEquals("返回书写")
+        compose.onNodeWithTag("exit-readonly").assertContentDescriptionEquals("书写批注")
         for (tag in listOf("editor-toolbar", "top-draw", "top-eraser", "ink-select", "quick-finger", "document-add-page", "toolbar-customize", "floating-pen-case"))
             compose.onNodeWithTag(tag).assertDoesNotExist()
         if (continuous) compose.onNodeWithTag("continuous-pages").assertIsDisplayed()
@@ -279,7 +279,8 @@ class ReadingToolsUiTest {
         val rectangles = listOf("quick-study", "read-excerpts", "document-associations", "exit-readonly", moreTag).map { tag ->
             val r = compose.onNodeWithTag(tag).assertIsDisplayed().assertIsEnabled().fetchSemanticsNode().boundsInRoot
             assertTrue("$tag has an actual 48dp target: $r", r.width >= 48f * density - 1 && r.height >= 48f * density - 1)
-            assertTrue("$tag stays wholly inside the consolidated header", r.left >= container.left && r.right <= container.right && r.top >= container.top && r.bottom <= container.bottom)
+            val owner=if(fullscreen&&tag=="exit-readonly")compose.onNodeWithTag("study-pane-switcher").fetchSemanticsNode().boundsInRoot else container
+            assertTrue("$tag stays wholly inside its shared work-state or context toolbar", r.left >= owner.left && r.right <= owner.right && r.top >= owner.top && r.bottom <= owner.bottom)
             r
         }
         for (a in rectangles.indices) for (b in a + 1 until rectangles.size)
@@ -508,14 +509,13 @@ class ReadingToolsUiTest {
             val mode = bounds("exit-readonly")
             val more = bounds("document-more")
             val destinations = listOf("quick-study", "document-associations", "read-excerpts").map(::bounds)
-            assertEquals("Mode and document tools share one row", mode.top, more.top, 1f)
+            val modes=listOf("quick-readonly","exit-readonly","workspace-recall").map(::bounds)
+            modes.forEach{assertEquals("The three work states share one compact row",mode.top,it.top,1f)}
             destinations.forEach { assertEquals("The three named destinations share one row", destinations.first().top, it.top, 1f) }
-            // Large text can make the title row taller than 48dp. Check the
-            // actual three-row topology without shrinking text to a fixed height.
-            assertTrue("Controls follow the title row", mode.top >= title.bottom - 1f && mode.top <= title.bottom + 2f)
-            assertTrue("Destinations follow the control row", destinations.first().top >= maxOf(mode.bottom, more.bottom) - 1f &&
-                destinations.first().top <= maxOf(mode.bottom, more.bottom) + 2f)
-            assertEquals("Header ends after the destination row", header.bottom, destinations.maxOf { it.bottom }, 2f)
+            // A narrow document puts title/menu first, then the three short work states.
+            assertTrue("Modes follow the title and document menu",mode.top>=maxOf(title.bottom,more.bottom)-1f)
+            assertTrue("Destinations follow the shared mode row",destinations.first().top>=mode.bottom-1f)
+            assertEquals("Header ends after the destination row",header.bottom,destinations.maxOf{it.bottom},2f)
             val reference = compose.onNodeWithTag("reference-pane").fetchSemanticsNode().boundsInRoot
             val targets = listOf("back-library", "document-more", "document-associations",
                 "quick-study", "read-excerpts", "exit-readonly").map { tag ->

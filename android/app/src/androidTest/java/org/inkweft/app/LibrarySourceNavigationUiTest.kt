@@ -159,7 +159,7 @@ class LibrarySourceNavigationUiTest {
         tap("back-library")
         waitFor("new-note")
         openLearningMap(f)
-        if (!compose.runOnIdle { lock(note.id).readOnly.value }) tap("study-readonly")
+        if (!compose.runOnIdle { lock(note.id).readOnly.value }) tap("study-mode-read")
         assertReadOnly(f, paperVisible = false)
         selectNode(f.node)
         tap("node-fold")

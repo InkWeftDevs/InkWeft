@@ -126,7 +126,7 @@ internal class SelectAwaitTestSupport(
         compose.singlePageEditor(); compose.waitForSavedInk()
         tap("quick-study"); tap("study-map-picker"); tap("study-map-${f.mapId}"); tap("study-tab-2")
         waitMap(f)
-        if (!compose.runOnIdle { lock(note.id).readOnly.value }) tap("study-readonly")
+        if (!compose.runOnIdle { lock(note.id).readOnly.value }) tap("quick-readonly")
         assertReadOnly(f)
         selectNode(f.node); tap("node-fold")
         compose.runOnIdle { assertNull(native<MindMapView>().nodeBounds(f.child)) }

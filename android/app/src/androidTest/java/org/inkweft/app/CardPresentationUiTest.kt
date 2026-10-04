@@ -37,7 +37,7 @@ class CardPresentationUiTest {
         File(h.app.getExternalFilesDir(null),name).outputStream().use{image.compress(android.graphics.Bitmap.CompressFormat.PNG,100,it)};image.recycle()
     }
     @Test fun sharedAnnotationColorsRestoreSearchAndResetWithoutTouchingBodyOrLayout(){
-        val f=h.seed();h.tap("study-readonly");h.openBody(f)
+        val f=h.seed();h.tap("exit-readonly");h.openBody(f)
         val cards=runBlocking{h.app.study.cards(f.note.id).first()};val nodes=runBlocking{h.app.study.nodes(f.note.id).first()}
         val source=h.source(f.card).snapshot.copyOf();val maps=runBlocking{h.app.mapGraphs.read(f.note.id)}
         openEditor(f);compose.onNodeWithTag("card-annotation-input").performTextInput("独立个人理解 SEARCH-ANNOTATION")
@@ -54,13 +54,13 @@ class CardPresentationUiTest {
         openEditor(f);h.tap("card-colors-reset");h.tap("card-presentation-save");waitSaved(f,"独立个人理解 SEARCH-ANNOTATION")
         val value=row(f)!!.data() as KnowledgeData.CardPresentation;assertEquals(CardTint.DEFAULT,value.cardColor);assertEquals(CardTint.DEFAULT,value.titleBarColor)
         assertEquals(cards,runBlocking{h.app.study.cards(f.note.id).first()});assertEquals(nodes,runBlocking{h.app.study.nodes(f.note.id).first()});assertArrayEquals(source,h.source(f.card).snapshot);assertEquals(maps,runBlocking{h.app.mapGraphs.read(f.note.id)})
-        h.tap("card-back");h.tap("study-readonly");h.openBody(f)
+        h.tap("card-back");h.tap("quick-readonly");h.openBody(f)
         compose.onNodeWithTag("card-edit-presentation").assertIsNotEnabled()
     }
     @Test fun concurrentEditRetainsDraftRequiresExplicitRebaseAndCancelWritesNothing(){
         val f=h.seed();val initial=KnowledgeCommand(id(),f.note.id,id(),0,KnowledgeData.CardPresentation(f.card,"最初注释"))
         runBlocking{h.app.knowledge.submit(initial)}
-        h.tap("study-readonly");h.openBody(f);openEditor(f)
+        h.tap("exit-readonly");h.openBody(f);openEditor(f)
         compose.onNodeWithTag("card-annotation-input").performTextReplacement("我的未提交草稿")
         runBlocking{h.app.knowledge.submit(KnowledgeCommand(id(),f.note.id,initial.id,1,KnowledgeData.CardPresentation(f.card,"另一处已保存",CardTint.BLUE)))}
         h.waitFor("card-presentation-conflict");compose.onNodeWithTag("card-annotation-input").assertTextContains("我的未提交草稿")

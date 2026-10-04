@@ -426,7 +426,7 @@ class MapPortalUiTest {
         assertEquals(originalContent, contentStamp(f.note.id))
         val afterSave = authorStamp(f.note.id)
         closeManager()
-        tap("study-readonly")
+        tap("quick-readonly")
         openManager()
         compose.onNodeWithTag("map-portal-create").assertIsNotEnabled()
         preview(entry.id, f.targetTitle)
@@ -435,7 +435,7 @@ class MapPortalUiTest {
         shot("branch-preview")
         tap("map-portal-open")
         waitMap(f, f.targetMap, f.targetNode)
-        compose.onNodeWithTag("study-readonly").assertIsOn()
+        compose.onNodeWithTag("quick-readonly").assertIsSelected()
         compose.runOnIdle {
             assertEquals(f.targetNode, study(f.note.id).focusedByMap[f.targetMap])
             assertEquals(f.targetNode, map().selectedNodeId)
