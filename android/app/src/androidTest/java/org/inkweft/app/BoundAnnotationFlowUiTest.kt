@@ -207,29 +207,36 @@ class BoundAnnotationFlowUiTest {
             assertTrue("The actual camera must have room to zoom in: ${camera.scale}",camera.scale<2.5f)
             phase="original-timing"
             val semanticBounds=compose.onNodeWithTag("study-map").fetchSemanticsNode().boundsInRoot
-            val nativeBounds=compose.runOnIdle{
-                val visible=android.graphics.Rect();instrumented.getGlobalVisibleRect(visible)
-                "size=${instrumented.width}x${instrumented.height} visible=$visible density=${instrumented.resources.displayMetrics.density} minScaleSpan=${ViewConfiguration.get(instrumented.context).scaledMinimumScalingSpan}"
+            val nativeSize=compose.runOnIdle{instrumented.width to instrumented.height}
+            val pinchPoints=compose.runOnIdle{
+                val visible=android.graphics.Rect()
+                assertTrue("The native map must be visible before pinch",instrumented.getLocalVisibleRect(visible))
+                val configuration=ViewConfiguration.get(instrumented.context)
+                val density=instrumented.resources.displayMetrics.density
+                val touchSlop=configuration.scaledTouchSlop.toFloat()
+                val minimumSpan=configuration.scaledMinimumScalingSpan.toFloat()
+                val margin=maxOf(8f*density,touchSlop)
+                val safe=android.graphics.RectF(visible).apply{inset(margin,margin)}
+                // Both spans clear Android's minimum; leave multiple touch-slops of motion after detection begins.
+                val startSpan=minimumSpan+maxOf(touchSlop,1f)
+                val endSpan=startSpan+maxOf(4f*touchSlop,16f*density)
+                val horizontal=safe.width()>=endSpan
+                record("$phase geometry native=${nativeSize.first}x${nativeSize.second} semantics=$semanticBounds visible=$visible margin=$margin minSpan=$minimumSpan touchSlop=$touchSlop span=$startSpan->$endSpan horizontal=$horizontal")
+                assertTrue("Visible native map cannot fit a threshold-crossing pinch: safe=$safe requiredSpan=$endSpan minSpan=$minimumSpan touchSlop=$touchSlop",
+                    safe.width()>0&&safe.height()>0&&(horizontal||safe.height()>=endSpan))
+                fun point(span:Float,side:Float)=if(horizontal)Offset(safe.centerX()+side*span/2,safe.centerY())
+                    else Offset(safe.centerX(),safe.centerY()+side*span/2)
+                listOf(point(startSpan,-1f),point(endSpan,-1f),point(startSpan,1f),point(endSpan,1f))
             }
-            record("$phase begin view=${System.identityHashCode(instrumented)} viewport=$camera semantics=$semanticBounds native=$nativeBounds")
+            record("$phase begin view=${System.identityHashCode(instrumented)} viewport=$camera")
             compose.onNodeWithTag("study-map").performTouchInput{
-                pinch(start0=Offset(width*.35f,height*.5f),end0=Offset(width*.25f,height*.5f),
-                    start1=Offset(width*.65f,height*.5f),end1=Offset(width*.75f,height*.5f),durationMillis=400)
+                assertEquals("Compose/native pinch coordinate width",nativeSize.first,width)
+                assertEquals("Compose/native pinch coordinate height",nativeSize.second,height)
+                pinch(start0=pinchPoints[0],end0=pinchPoints[1],start1=pinchPoints[2],end1=pinchPoints[3],durationMillis=400)
             }
             compose.waitForIdle()
             val zoomed=compose.runOnIdle{map().snapshotViewport()}
             record("$phase end view=${compose.runOnIdle{System.identityHashCode(map())}} viewport=$zoomed detector=${compose.runOnIdle{detectorState()}}")
-            if(zoomed.scale<=camera.scale){
-                // Diagnostic control only. A delayed success must NOT turn the original failed gesture into a pass.
-                phase="after-double-tap-timeout"
-                compose.onNodeWithTag("study-map").performTouchInput{
-                    advanceEventTime(ViewConfiguration.getDoubleTapTimeout().toLong()+1)
-                    pinch(start0=Offset(width*.35f,height*.5f),end0=Offset(width*.25f,height*.5f),
-                        start1=Offset(width*.65f,height*.5f),end1=Offset(width*.75f,height*.5f),durationMillis=400)
-                }
-                compose.waitForIdle()
-                record("$phase end view=${compose.runOnIdle{System.identityHashCode(map())}} viewport=${compose.runOnIdle{map().snapshotViewport()}} detector=${compose.runOnIdle{detectorState()}}")
-            }
             val diagnostic=inputTrace.joinToString("\n")
             assertTrue("Original native two-finger spread must increase scale: ${camera.scale} -> ${zoomed.scale}\n$diagnostic",zoomed.scale>camera.scale)
             assertEquals("Pinch must cancel node dragging without authoring positions",beforeZoomNodes,graph(f.book).nodes)

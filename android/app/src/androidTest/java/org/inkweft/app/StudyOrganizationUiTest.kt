@@ -9,6 +9,8 @@ import android.view.View
 import android.view.ViewConfiguration
 import android.view.ViewGroup
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.semantics.SemanticsProperties
+import androidx.compose.ui.semantics.getOrNull
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.lifecycle.ViewModelProvider
@@ -278,9 +280,10 @@ class StudyOrganizationUiTest {
         compose.waitForIdle()
         assertTrue("The target must start outside the visible viewport",
             runCatching{compose.onNodeWithTag("outline-row-$destination").assertIsDisplayed()}.isFailure)
+        var dropDiagnostic="No target observed"
         fun startAndReachTarget(target:String){
             val list=compose.onNodeWithTag("study-list").fetchSemanticsNode().boundsInRoot
-            val handle=compose.onNodeWithTag("outline-drag-${f.first}").fetchSemanticsNode().boundsInRoot
+            val handle=compose.onNodeWithTag("outline-drag-${f.first}").assertIsDisplayed().fetchSemanticsNode().boundsInRoot
             val start=handle.center-list.topLeft
             // An idle-synchronizing semantics read must not fast-forward the
             // repeating edge-scroll coroutine past the target between measurements.
@@ -288,6 +291,8 @@ class StudyOrganizationUiTest {
             compose.onNodeWithTag("study-list").performTouchInput{
                 down(start);moveTo(start+Offset(0f,30f));moveTo(Offset(list.width*.5f,list.height-8f))
             }
+            compose.mainClock.advanceTimeByFrame();compose.waitForIdle()
+            compose.runOnIdle{assertEquals("The visible source handle must own this drag",f.first,vm(f.book).selectedByMap["main"])}
             var dropPoint:Offset?=null
             for(frame in 0 until 300){
                 compose.mainClock.advanceTimeBy(32)
@@ -298,7 +303,7 @@ class StudyOrganizationUiTest {
                 val row=runCatching{compose.onNodeWithTag("outline-row-$target").assertIsDisplayed().fetchSemanticsNode().boundsInRoot}.getOrNull()
                 if(row!=null&&row.width>0f&&row.height>40f&&row.top>bounds.top+48&&row.bottom<bounds.bottom-4){
                     dropPoint=row.center-bounds.topLeft
-                    println("EDGE_TARGET_VISIBLE target=$target row=$row container=$bounds local=$dropPoint frame=$frame")
+                    dropDiagnostic="target=$target row=$row container=$bounds local=$dropPoint frame=$frame"
                     break
                 }
             }
@@ -315,7 +320,13 @@ class StudyOrganizationUiTest {
         compose.onNodeWithTag("outline-drag-feedback").assertTextContains("松手后展开目标",substring=true)
         compose.onNodeWithTag("study-list").performTouchInput{up()}
         compose.mainClock.autoAdvance=originalAutoAdvance
-        compose.waitUntil(15_000){nodes(f.book).single{it.id==f.first}.parentId==destination}
+        try{
+            compose.waitUntil(15_000){nodes(f.book).single{it.id==f.first}.parentId==destination}
+        }catch(failure:Throwable){
+            val state=vm(f.book).ui.value
+            val message=runCatching{compose.onNodeWithTag("study-message").fetchSemanticsNode().config.getOrNull(SemanticsProperties.Text)?.joinToString{it.text}}.getOrNull()
+            throw AssertionError("Real edge drop did not commit: $dropDiagnostic; source=${f.first}; selected=${vm(f.book).selectedByMap["main"]}; busy=${state.busy}; unknown=${state.unknown}; readFailed=${state.readFailed}; completed=${state.completed}; vmMessage=${state.message}; uiMessage=$message; parents=${nodes(f.book).associate{it.id to it.parentId}}",failure)
+        }
         settled(f.book)
         assertEquals(f.first,nodes(f.book).single{it.id==f.firstChild}.parentId)
         compose.onNodeWithTag("study-list").performScrollToNode(hasTestTag("outline-row-$destinationChild"))

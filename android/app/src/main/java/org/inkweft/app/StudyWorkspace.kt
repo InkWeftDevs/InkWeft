@@ -354,17 +354,25 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
         outlineDrag=drag.copy(pointerInRoot=point+outlineBounds.topLeft,preview=preview)
     }
     val outlineDraggable by rememberUpdatedState(editable&&!hasDraft&&tab==1)
-    val beginOutlineDrag by rememberUpdatedState<(Offset)->Boolean>({point->
-        val node=outlineHandles.entries.firstOrNull{it.value.contains(point+outlineBounds.topLeft)}?.key
+    val outlineHandleAt by rememberUpdatedState<(Offset)->String?>({point->
+        val info=outlineListState.layoutInfo
+        val itemY=point.y+info.viewportStartOffset
+        // Retained, unplaced Lazy rows may still have old handle rectangles.
+        // Resolve the visible item first; never let a stale offscreen row own a touch.
+        val key=if(point.x !in 0f..outlineBounds.width||point.y !in 0f..outlineBounds.height)null
+            else info.visibleItemsInfo.firstOrNull{itemY>=it.offset&&itemY<it.offset+it.size}?.key as? String
+        key?.takeIf{outlineHandles[it]?.contains(point+outlineBounds.topLeft)==true}
+    })
+    val beginOutlineDrag by rememberUpdatedState<(String,Offset)->Boolean>({node,point->
         val snapshot=graph
-        if(node==null||snapshot==null||!editable||hasDraft||tab!=1)false else{
+        if(snapshot==null||node !in snapshot.state.orderedNodeIds||!editable||hasDraft||tab!=1)false else{
             focus.clearFocus();vm.selectedByMap[mapKey]=node;organizeNodeId=null
             outlineDrag=OutlineDrag(snapshot.state,node,point+outlineBounds.topLeft)
             readLock.guard("$guardKey-outline",true);updateOutlinePointer(point);true
         }
     })
-    val openOutlineHandle by rememberUpdatedState<(Offset)->Unit>({point->
-        if(editable&&!hasDraft)outlineHandles.entries.firstOrNull{it.value.contains(point+outlineBounds.topLeft)}?.key?.let{vm.selectedByMap[mapKey]=it;organizeNodeId=it}
+    val openOutlineHandle by rememberUpdatedState<(String)->Unit>({node->
+        if(editable&&!hasDraft&&node in nodeById){vm.selectedByMap[mapKey]=node;organizeNodeId=node}
     })
     val moveOutlineDrag by rememberUpdatedState<(Offset)->Unit>(::updateOutlinePointer)
     val endOutlineDrag by rememberUpdatedState<()->Unit>({
@@ -1025,8 +1033,8 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
                     awaitEachGesture {
                         val down=awaitFirstDown(requireUnconsumed=false,pass=PointerEventPass.Initial)
                         // The whole list owns this gesture, so auto-scroll may recycle the source row safely.
-                        val handle=outlineDraggable&&outlineHandles.values.any{it.contains(down.position+outlineBounds.topLeft)}
-                        if(handle){
+                        val source=if(outlineDraggable)outlineHandleAt(down.position)else null
+                        if(source!=null){
                             down.consume()
                             var started=false
                             var ended=false
@@ -1040,10 +1048,10 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
                                         val released=change.changedToUp()
                                         change.consume()
                                         if(!released)break
-                                        if(started){moveOutlineDrag(change.position);endOutlineDrag()}else openOutlineHandle(down.position)
+                                        if(started){moveOutlineDrag(change.position);endOutlineDrag()}else openOutlineHandle(source)
                                         ended=true;break
                                     }
-                                    if(!started&&(change.position-down.position).getDistance()>=viewConfiguration.touchSlop)started=beginOutlineDrag(down.position)
+                                    if(!started&&(change.position-down.position).getDistance()>=viewConfiguration.touchSlop)started=beginOutlineDrag(source,down.position)
                                     change.consume()
                                     if(started)moveOutlineDrag(change.position)
                                 }
