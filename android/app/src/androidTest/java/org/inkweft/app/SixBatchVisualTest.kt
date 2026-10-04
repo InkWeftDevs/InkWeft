@@ -124,6 +124,19 @@ class SixBatchVisualTest {
                 shot(f,layout,"12-bound-region-collapsed")
                 tap("annotation-region-collapse")
                 compose.waitUntil(60_000){runBlocking{!app.authoring.read(AuthoringScope.map(MapRef(f.books[0]))).state.regions.single().collapsed}}
+                // Room commits before the pending journal is cleared and the dismiss guard recomposes.
+                // A Back sent during that interval is correctly consumed without closing the panel.
+                val expanded=app.authoring.read(AuthoringScope.map(MapRef(f.books[0])))
+                val expandedFingerprint=PageAuthoringCodec.fingerprint(expanded.state)
+                compose.waitUntil("Expanded annotation is published and its real dismiss guard is ready",60_000){
+                    val ready=compose.runOnIdle{
+                        val model=ViewModelProvider(compose.activity)["map-authoring-${f.books[0]}-main",PageAuthoringViewModel::class.java]
+                        val state=model.ui.value
+                        state.ready&&!model.writing&&state.revision==expanded.revision&&PageAuthoringCodec.fingerprint(state.state)==expandedFingerprint
+                    }
+                    ready&&runCatching{compose.onNodeWithTag("annotation-region-collapse").assertTextEquals("折叠批注区").assertIsEnabled()}.isSuccess
+                }
+                compose.onNodeWithTag("bound-annotation").assertIsDisplayed();compose.waitForIdle()
                 back("bound-annotation");tap("study-close");tap("back-library")
             }}
         }}finally{val e=reading.edit();if(hadReading)e.putBoolean(readingKey,oldReading)else e.remove(readingKey);check(e.commit())}

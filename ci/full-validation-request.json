@@ -1,12 +1,12 @@
 {
   "status": "REQUESTED_NOT_EXECUTED",
-  "requested_utc": "2026-10-04T20:22:00Z",
-  "candidate_code_local": "b2f3306",
-  "prior_focused_source": "bab4e8c793cf12d8c03c42027258fbfdbeb1f945",
-  "prior_focused_run": 37230771244,
+  "requested_utc": "2026-10-04T21:52:00Z",
+  "candidate_code_local": "732a5a3",
+  "prior_focused_source": "5ef7087b7da678296180ad6951ac75c6ed7ba849",
+  "prior_focused_run": 37236310245,
   "prior_focused_ui": {
-    "executed": 3,
-    "passed": 3
+    "executed": 11,
+    "passed": 11
   },
   "required": {
     "mode": "full",
@@ -19,9 +19,9 @@
       "native_recall",
       "native_recall_reopen"
     ],
-    "same_sample_png": 39,
+    "same_sample_png": 40,
     "independent_visual_review": true,
-    "lint": "RUN_REQUIRED",
+    "lint": "RUN_REQUIRED_SHARD_1_ONLY",
     "shards": 3,
     "room_reuse": false
   },
@@ -32,7 +32,7 @@
     "main_compile_task": "SUCCESS_FROM_LOCAL_CACHE_29s",
     "independent_same_test_compile": "ACTUALLY_EXECUTED_PASS_73s",
     "compiled_class_sha256_both_worktrees": "f3966d2190e5c15eff7518667054e20316dc79aaa56ca8cf8caac92aa4505081",
-    "android_execution": "NOT_RUN_YET"
+    "android_execution": "PASS_FRESH_ROOM_202_AT_8d6abf5_RUN_37232132379"
   },
   "fixed_sample": {
     "pages": 12,
@@ -49,5 +49,17 @@
     "artifacts": "SYNTHETIC_REPORTS_AND_PNG_ONLY_NO_APK",
     "merge_release_deploy": "NOT_REQUESTED"
   },
-  "external_acceptance": "REAL_TABLET_PEN_THERMAL_AND_REAL_LIBRARY_UPGRADE_NOT_RUN"
+  "external_acceptance": "REAL_TABLET_PEN_THERMAL_AND_REAL_LIBRARY_UPGRADE_NOT_RUN",
+  "prior_focused_b6": {
+    "prepare": "PASS",
+    "reopen": "PASS",
+    "visual": "FAIL_SINGLE_BACK_SENT_BEFORE_PENDING_PUBLICATION",
+    "png_generated_and_hash_verified": 32,
+    "wide_10_pixel_review": "PASS_RENDERED_SOURCE_AND_INK"
+  },
+  "test_only_fix": {
+    "commit": "f37da91",
+    "scope": "Wait same revision and complete authoring fingerprint in ready published model, plus enabled expanded-region UI before the original single system Back. Retain busy dismiss guard and original 30s disappearance assertion."
+  },
+  "scope_rationale": "Production unchanged from 11/11 targeted pass; run final full directly after test-only publication barrier repair, not another focused build."
 }
