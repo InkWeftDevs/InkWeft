@@ -27,6 +27,11 @@ class PageObjectRepository(private val db:NoteDatabase,private val afterCommit:(
         return db.objects().get(id)?.let{require(it.revision>0);ObjectSnapshot(it.revision,PageObjectCodec.decode(it.payload))}?:ObjectSnapshot()
     }
     suspend fun originals(id:String,objects:List<PageObject>)=ImageSourceRepository(db).forPage(id,objects)
+    suspend fun originalSize(pageId:String,hash:String):Int? {
+        require(ImageSource.validHash(hash))
+        val page=db.pages().get(pageId)?:return null
+        return db.images().source(page.notebookId,hash)?.byteCount?.also{require(it in 1..ImageSource.MAX_BYTES)}
+    }
     fun observe(id:String)=db.objects().observe(id)
     suspend fun save(pageId:String,expected:Long,command:String,objects:List<PageObject>,expectedInk:Long?=null,originals:List<ImageSource> = emptyList()):Long {
         UUID.fromString(command);require(expected>=0)
