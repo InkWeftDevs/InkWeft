@@ -4,6 +4,7 @@ package org.inkweft.app
 import android.graphics.RectF
 import android.os.SystemClock
 import android.view.KeyEvent
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewConfiguration
 import android.view.ViewGroup
@@ -214,6 +215,7 @@ class StudyOrganizationUiTest {
         compose.onNodeWithTag("review-question").assertTextEquals("三态恢复合成问题")
         compose.onNodeWithTag("review-clues-hidden").assertExists()
         compose.onNodeWithTag("branch-review-start").assertDoesNotExist()
+        compose.onNodeWithTag("review-consulted-original").assertExists()
         compose.onNode(hasContentDescription("书写批注") and hasAnyAncestor(hasTestTag("manual-review"))).performClick()
         compose.runOnIdle{assertEquals(f.second,map().selectedNodeId);assertEquals(camera,map().snapshotViewport())}
         assertEquals(before.cards,cards(f.book));assertEquals(before.nodes,nodes(f.book))
@@ -223,6 +225,66 @@ class StudyOrganizationUiTest {
             assertFalse(lock.canChangeMode());assertFalse(lock.request(true));assertFalse(lock.readOnly.value)
             assertTrue(lock.reason.contains("抬笔"));lock.guard("synthetic-unraised-pen",false)
         }
+    }
+
+    @Test fun realOutlineHandleMovesWholeBranchAndSupportsUndoRedoAndCancel(){
+        val f=fixture();val initial=author(f.book)
+        tap("study-direct-outline")
+        tap("outline-fold-${f.first}");tap("outline-fold-${f.second}")
+        compose.onNodeWithTag("outline-drag-${f.second}").performScrollTo()
+        compose.waitForIdle()
+        fun dragTo(target:String,part:Float,canceled:Boolean=false){
+            val list=compose.onNodeWithTag("study-list").fetchSemanticsNode().boundsInRoot
+            val handle=compose.onNodeWithTag("outline-drag-${f.second}").fetchSemanticsNode().boundsInRoot
+            val row=compose.onNodeWithTag("outline-row-$target").fetchSemanticsNode().boundsInRoot
+            val start=handle.center-list.topLeft;val end=Offset(row.center.x-list.left,row.top+row.height*part-list.top)
+            compose.onNodeWithTag("study-list").performTouchInput{
+                down(start);moveTo(start+Offset(0f,-20f));moveTo(end)
+                if(canceled)cancel()else up()
+            }
+        }
+        dragTo(f.first,.1f)
+        val moved=listOf(f.root,f.second,f.secondChild,f.first,f.firstChild)
+        compose.waitUntil(15_000){order(f.book)==moved};settled(f.book)
+        assertEquals(initial.cards,cards(f.book))
+        assertEquals(initial.nodes.associate{it.id to Triple(it.parentId,it.x,it.y)},nodes(f.book).associate{it.id to Triple(it.parentId,it.x,it.y)})
+        tap("study-undo-organization");compose.waitUntil(15_000){order(f.book)==f.initialOrder};settled(f.book)
+        tap("study-redo-organization");compose.waitUntil(15_000){order(f.book)==moved};settled(f.book)
+        val beforeCancel=author(f.book);dragTo(f.first,.5f,canceled=true)
+        assertEquals(beforeCancel,author(f.book))
+        tap("study-close");tap("quick-study");settled(f.book);assertEquals(moved,order(f.book))
+    }
+
+    @Test fun nativeMapPreviewsEveryDescendantAndMarqueeMovementDeduplicatesBranches(){
+        val f=fixture();val original=author(f.book);val times=SystemClock.uptimeMillis()
+        compose.runOnIdle{
+            val view=map();view.fitOverview()
+            val before=listOf(f.root,f.first,f.firstChild).associateWith{RectF(checkNotNull(view.nodeBounds(it)))}
+            val root=before.getValue(f.root);val x=root.centerX();val y=root.centerY()
+            fun event(action:Int,px:Float,py:Float,time:Long){MotionEvent.obtain(times,time,action,px,py,0).also{view.dispatchTouchEvent(it);it.recycle()}}
+            event(MotionEvent.ACTION_DOWN,x,y,times);event(MotionEvent.ACTION_MOVE,x+45,y+30,times+30)
+            before.forEach{(id,box)->val now=checkNotNull(view.nodeBounds(id));assertEquals(45f,now.left-box.left,.01f);assertEquals(30f,now.top-box.top,.01f)}
+            assertEquals(original.nodes,nodes(f.book))
+            event(MotionEvent.ACTION_CANCEL,x+45,y+30,times+40)
+            before.forEach{(id,box)->assertEquals(box,view.nodeBounds(id))}
+        }
+        assertEquals(original,author(f.book))
+        tap("study-select-many")
+        compose.runOnIdle{map().fitOverview()}
+        compose.onNodeWithTag("study-map").performTouchInput{down(Offset(2f,2f));moveTo(Offset(width-2f,height-2f));up()}
+        compose.onNodeWithTag("study-selection-count").assertTextContains("整支 5 主题",substring=true)
+        val before=nodes(f.book).associateBy{it.id}
+        compose.runOnIdle{
+            val view=map();val box=checkNotNull(view.nodeBounds(f.first));val time=SystemClock.uptimeMillis()
+            listOf(MotionEvent.ACTION_DOWN to 0f,MotionEvent.ACTION_MOVE to 40f,MotionEvent.ACTION_UP to 40f).forEachIndexed{i,(action,delta)->
+                MotionEvent.obtain(time,time+i*25,action,box.centerX()+delta,box.centerY()+delta/2,0).also{view.dispatchTouchEvent(it);it.recycle()}
+            }
+        }
+        compose.waitUntil(15_000){nodes(f.book).first{it.id==f.first}.x!=before.getValue(f.first).x};settled(f.book)
+        val after=nodes(f.book);val dx=after.first().x-before.getValue(after.first().id).x;val dy=after.first().y-before.getValue(after.first().id).y
+        for(node in after){val old=before.getValue(node.id);assertEquals(dx,node.x-old.x,.001);assertEquals(dy,node.y-old.y,.001);assertEquals(old.revision+1,node.revision)}
+        tap("study-undo-organization");compose.waitUntil(15_000){nodes(f.book).all{it.x==before.getValue(it.id).x&&it.y==before.getValue(it.id).y}};settled(f.book)
+        assertEquals(original.cards,cards(f.book))
     }
 
 }

@@ -109,18 +109,18 @@ internal val BranchReviewRoundSaver = Saver<BranchReviewRound, ByteArray>(
 }
 
 /** Fixed recall identities with session-only permission to inspect related clues. */
-@Composable internal fun BranchReviewDialog(plan:BranchReviewPlan, dismiss:()->Unit, showSummary:Boolean=true,showCollectionScope:Boolean=false,showCardScope:Boolean=false,workModes:(@Composable (Boolean)->Unit)?=null) {
+@Composable internal fun BranchReviewDialog(plan:BranchReviewPlan, dismiss:()->Unit, showSummary:Boolean=true,showCollectionScope:Boolean=false,showCardScope:Boolean=false,consultedOriginal:Boolean=false,workModes:(@Composable (Boolean)->Unit)?=null) {
     val sessionKey=remember(plan){plan.entries.joinToString(";"){"${it.questionId}:${it.questionRevision}:${it.cardId}:${it.cardRevision}"}}
     key(plan.ref.notebookId,plan.ref.mapId,plan.branchId,plan.scope,sessionKey,showCardScope){
-        RecallWindowIsolation { BranchReviewContent(plan,dismiss,showSummary,showCollectionScope,showCardScope,workModes) }
+        RecallWindowIsolation { BranchReviewContent(plan,dismiss,showSummary,showCollectionScope,showCardScope,consultedOriginal,workModes) }
     }
 }
 
-@Composable private fun BranchReviewContent(plan:BranchReviewPlan,dismiss:()->Unit,showSummary:Boolean,showCollectionScope:Boolean,showCardScope:Boolean,workModes:(@Composable (Boolean)->Unit)?) {
+@Composable private fun BranchReviewContent(plan:BranchReviewPlan,dismiss:()->Unit,showSummary:Boolean,showCollectionScope:Boolean,showCardScope:Boolean,consultedOriginal:Boolean,workModes:(@Composable (Boolean)->Unit)?) {
     val round=rememberSaveable(stateSaver=BranchReviewRoundSaver){mutableStateOf(BranchReviewRound(UUID.randomUUID().toString(),plan))}
     var retryKind by rememberSaveable{mutableStateOf<String?>(null)}
     key(round.value.roundId){
-        BranchReviewRoundContent(round,dismiss,showSummary&&retryKind==null,showCollectionScope,showCardScope,retryKind,workModes){next,selection->
+        BranchReviewRoundContent(round,dismiss,showSummary&&retryKind==null,showCollectionScope,showCardScope,retryKind,consultedOriginal,workModes){next,selection->
             retryKind=selection.name
             round.value=BranchReviewRound(UUID.randomUUID().toString(),next)
         }
@@ -128,7 +128,7 @@ internal val BranchReviewRoundSaver = Saver<BranchReviewRound, ByteArray>(
 }
 
 @Composable private fun BranchReviewRoundContent(roundState:MutableState<BranchReviewRound>,dismiss:()->Unit,
-    showSummary:Boolean,showCollectionScope:Boolean,showCardScope:Boolean,retryKind:String?,workModes:(@Composable (Boolean)->Unit)?,retryReady:(BranchReviewPlan,BranchReviewRetrySelection)->Unit) {
+    showSummary:Boolean,showCollectionScope:Boolean,showCardScope:Boolean,retryKind:String?,consultedOriginal:Boolean,workModes:(@Composable (Boolean)->Unit)?,retryReady:(BranchReviewPlan,BranchReviewRetrySelection)->Unit) {
     var round by roundState
     val visibleRoundId=round.roundId
     val visiblePendingOperation=round.pending?.operationId
@@ -234,6 +234,8 @@ internal val BranchReviewRoundSaver = Saver<BranchReviewRound, ByteArray>(
                     TextButton(onClick={requestDismiss()},enabled=!busy,modifier=Modifier.testTag("branch-review-close")){Text("退出回忆")}
                 }
                 workModes?.invoke(!busy)
+                if(consultedOriginal)Text("已离开回忆查看资料；本轮按使用提示记录，重新进入不会清除此标记。",
+                    style=MaterialTheme.typography.bodySmall,modifier=Modifier.testTag("review-consulted-original"))
                 retryKind?.let{Text(if(it==BranchReviewRetrySelection.REVIEW.name)"再练本轮仍需复习 · 固定题目与答案版本"else"再练本轮跳过 · 固定题目与答案版本",
                     style=MaterialTheme.typography.bodySmall,modifier=Modifier.testTag("branch-review-retry-origin"))}
                 key(started,index) {

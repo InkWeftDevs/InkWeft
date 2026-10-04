@@ -178,6 +178,39 @@ class StudyProcessRestorationUiTest {
         } finally { main { original.close(); rebuilt?.close() }; database.close() }
     }
 
+    @Test fun unknownOrganizationUndoRestoresDirectionAndRedoKeepsTheSameBranchDelta(){
+        val note=book();val root=id();val child=id()
+        runBlocking{
+            app.study.submit(StudyCommand(id(),note.id,StudyAction.CREATE,cardId=id(),nodeId=root,title="整支恢复根",x=100.0,y=100.0))
+            app.study.submit(StudyCommand(id(),note.id,StudyAction.CREATE,cardId=id(),nodeId=child,parentId=root,title="整支恢复子",x=400.0,y=200.0))
+        }
+        val database=NoteDatabase.open(app);val fail=AtomicBoolean(false);val writes=AtomicInteger()
+        val repo=StudyRepository(database){if(it==StudyFault.BEFORE_RECEIPT){writes.incrementAndGet();if(fail.get())throw IOException("Synthetic undo receipt rollback")}}
+        val original=main{owner()};var rebuilt:RestoredOwner?=null
+        try{
+            val first=main{study(original,note.id,repo)};settled(first)
+            val before=runBlocking{repo.readGraph(note.id)}
+            val plan=StudyOrganization.moveSelection(before.state,setOf(root,child),70.0,25.0)
+            main{first.organize(before.state,plan)}
+            runBlocking{withTimeout(15_000){first.ui.first{!it.busy&&it.graph?.graphFingerprint==plan.expectedAfterGraph}}}
+            val undo=main{checkNotNull(first.organizationUndo)}
+            fail.set(true);main{first.undoOrganization()}
+            runBlocking{withTimeout(15_000){first.ui.first{it.unknown&&!it.busy}}}
+            val state=main{original.save().also{original.close()}}
+            val restored=main{owner(state).also{rebuilt=it}.let{study(it,note.id,repo)}};settled(restored)
+            assertTrue(restored.ui.value.unknown);assertEquals(2,writes.get())
+            fail.set(false);main{restored.retry()}
+            runBlocking{withTimeout(15_000){restored.ui.first{!it.unknown&&!it.busy&&it.graph?.graphFingerprint==undo.organization!!.expectedAfterGraph}}}
+            assertNull(main{restored.organizationUndo});val redo=main{checkNotNull(restored.organizationRedo)}
+            assertEquals(note.id,runBlocking{repo.lookup(undo)})
+            main{restored.redoOrganization()}
+            runBlocking{withTimeout(15_000){restored.ui.first{!it.busy&&it.graph?.graphFingerprint==redo.organization!!.expectedAfterGraph}}}
+            val after=runBlocking{repo.readGraph(note.id)}
+            assertEquals(plan.after.placements,after.orderedNodeIds.map{id->after.nodes.first{it.id==id}.let{StudyNodePlacement(it.id,it.parentId,it.x,it.y)}})
+            assertEquals(before.cards,after.cards);assertNull(main{restored.organizationRedo})
+        }finally{main{original.close();rebuilt?.close()};database.close()}
+    }
+
     private class RestoredOwner(application: Application, restored: Bundle?) : SavedStateRegistryOwner,
         ViewModelStoreOwner, HasDefaultViewModelProviderFactory {
         override val lifecycle = LifecycleRegistry(this)

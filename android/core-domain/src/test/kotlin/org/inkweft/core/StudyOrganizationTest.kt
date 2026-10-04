@@ -171,4 +171,25 @@ class StudyOrganizationTest {
         assertEquals(50.0,initial.nodes.first().x,0.0)
     }
 
+    @Test fun overlappingSelectionGroupsOnceAndLayoutKeepsUnselectedBranches(){
+        val root=node();val first=node(root,200.0,100.0);val leaf=node(first,500.0,150.0)
+        val second=node(root,200.0,400.0);val target=node(x=900.0,y=100.0)
+        val initial=state(listOf(root,first,leaf,second,target),listOf(root.id,first.id,leaf.id,second.id,target.id))
+        val selection=setOf(first.id,leaf.id,second.id)
+        assertEquals(setOf(first.id,second.id),StudyOrganization.selectionRoots(initial,selection))
+        val grouped=StudyOrganization.apply(initial,StudyOrganization.reparentSelection(initial,selection,target.id))
+        assertEquals(listOf(root.id,target.id,first.id,leaf.id,second.id),grouped.orderedNodeIds)
+        assertEquals(first.id,grouped.nodes.first{it.id==leaf.id}.parentId)
+        assertTrue(grouped.nodes.filter{it.id in setOf(first.id,second.id)}.all{it.parentId==target.id})
+        reject{StudyOrganization.reparentSelection(initial,selection,leaf.id)}
+        val sizes=initial.orderedNodeIds.associateWith{StudyNodeSize(280.0,150.0)}
+        val plan=StudyOrganization.arrangeSelection(initial,selection,sizes)
+        val arranged=StudyOrganization.apply(initial,plan)
+        for(node in listOf(root,target))assertEquals(node,arranged.nodes.first{it.id==node.id})
+        assertEquals(initial.orderedNodeIds,arranged.orderedNodeIds)
+        assertEquals(initial.nodes.associate{it.id to it.parentId},arranged.nodes.associate{it.id to it.parentId})
+        val undo=StudyOrganization.undo(arranged,plan)
+        assertEquals(initial.nodes.map{it.x to it.y},StudyOrganization.apply(arranged,undo).nodes.map{it.x to it.y})
+    }
+
 }
