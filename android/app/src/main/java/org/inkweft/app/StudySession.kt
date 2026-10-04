@@ -38,6 +38,19 @@ internal class StudyViewModel(val book:String,val repo:StudyRepository,private v
     }
     val mapId=MutableStateFlow<String?>(saved["study.map"])
     val editorState=mutableStateOf<CardEditor?>(null)
+    var capacityOpen by mutableStateOf(saved.get<Boolean>("study.capacityOpen")?:false)
+        private set
+    fun openCapacity(){capacityOpen=true;saved["study.capacityOpen"]=true}
+    fun closeCapacity(){capacityOpen=false;saved["study.capacityOpen"]=false}
+    private val capacityReload=MutableStateFlow(0)
+    // Source-table invalidations only: map dragging and graph reads do not aggregate BLOB lengths.
+    val snapshotUsage=capacityReload.flatMapLatest{
+        repo.observeSnapshotBytes().map{StudySnapshotUsage(bytes=it)}
+            .onStart{emit(StudySnapshotUsage())}
+            .catch{e->if(e is CancellationException)throw e;emit(StudySnapshotUsage(failed=true))}
+    }.distinctUntilChanged().stateIn(viewModelScope,
+        SharingStarted.WhileSubscribed(stopTimeoutMillis=0,replayExpirationMillis=0),StudySnapshotUsage())
+    fun refreshCapacity(){capacityReload.value++;refresh()}
     val viewports=mutableMapOf<String,MapViewport>()
     val collapsedByMap=mutableMapOf<String,List<String>>()
     val focusedByMap=mutableMapOf<String,String?>()
@@ -109,7 +122,7 @@ internal class StudyViewModel(val book:String,val repo:StudyRepository,private v
     private fun execute(){val c=pending?:return;state.update{it.copy(busy=true,message=null,completed=null)}
         viewModelScope.launch{try{when(val result=withContext(Dispatchers.IO){repo.outcome(c)}){
             is StudyOutcome.Success->{if(c.action==StudyAction.CREATE_EXCERPT)captureGeneration++;if(c.action==StudyAction.UNDO_CAPTURE)captureUndo.remove(c.mapId?:"main");if(c.action==StudyAction.CREATE&&c.source!=null){captureGeneration++;c.nodeId?.let{revealByMap[c.mapId?:"main"]=it;selectedByMap[c.mapId?:"main"]=it}};if(c.action==StudyAction.CREATE&&c.source!=null)captureUndo[c.mapId?:"main"]=StudyCommand(UUID.randomUUID().toString(),book,StudyAction.UNDO_CAPTURE,cardId=c.cardId,nodeId=c.nodeId,expectedRevision=1,mapId=c.mapId);organizationUndo=pendingOrganizationUndo;persistOrganization("study.organizationUndo",organizationUndo);pending=null;pendingOrganizationUndo=null;persistPending();state.update{it.copy(busy=false,unknown=false,completed=result.id)}}
-            is StudyOutcome.Rejected->{pending=null;pendingOrganizationUndo=null;persistPending();state.update{it.copy(busy=false,unknown=false,message="未提交：来源或内容已变化，请核对当前图和分支后重新保存（${result.reason}）。")}}
+            is StudyOutcome.Rejected->{pending=null;pendingOrganizationUndo=null;persistPending();state.update{it.copy(busy=false,unknown=false,message=studyCapacityRejection(result.reason)?:"未提交：来源或内容已变化，请核对当前图和分支后重新保存（${result.reason}）。")}}
             StudyOutcome.Unknown->state.update{it.copy(busy=false,unknown=true,message="操作结果待核对。重试核对同一操作，不重复建卡。")}
         }}catch(cancel:CancellationException){state.update{it.copy(busy=false,unknown=true)};throw cancel}}
     }

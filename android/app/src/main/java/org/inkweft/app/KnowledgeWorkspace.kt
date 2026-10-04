@@ -59,11 +59,31 @@ internal class KnowledgeViewModel(private val repo:KnowledgeRepository,private v
     private fun persistResult(id:String?=null,operation:String?=null,rejectedOperation:String?=null,message:String?=null){saved["knowledge.completed"]=id;saved["knowledge.completedOperation"]=operation;saved["knowledge.rejectedOperation"]=rejectedOperation;saved["knowledge.rejectedMessage"]=message}
     fun submitReview(book:String,old:KnowledgeRow,data:KnowledgeData.Question,cardRevision:Long):String?=submitInternal(book,data,old,reviewCardRevision=cardRevision,review=true)
     fun submit(book:String,data:KnowledgeData,old:KnowledgeRow?=null,remove:Boolean=false,template:TemplateRef?=null):String?=submitInternal(book,data,old,remove,template)
-    private fun submitInternal(book:String,data:KnowledgeData,old:KnowledgeRow?=null,remove:Boolean=false,template:TemplateRef?=null,reviewCardRevision:Long?=null,review:Boolean=false):String?{if(state.value.busy||pending!=null)return null;if(!review&&!authorAllowed(book)){state.update{it.copy(message="当前为阅读模式，请返回书写后编辑。")};return null};saved["knowledge.template"]=template?.let{arrayListOf(it.hash,it.id)};saved["knowledge.reviewCardRevision"]=reviewCardRevision;val command=KnowledgeCommand(UUID.randomUUID().toString(),book,old?.id?:UUID.randomUUID().toString(),old?.revision?:0,data,remove);pending=command;pendingUndo=if(data is KnowledgeData.Properties)KnowledgeCommand(UUID.randomUUID().toString(),book,pending!!.id,(old?.revision?:0)+1,old?.data()?:data,old==null)else null;persist();retry();return command.operationId}
+    private fun submitInternal(book:String,data:KnowledgeData,old:KnowledgeRow?=null,remove:Boolean=false,template:TemplateRef?=null,reviewCardRevision:Long?=null,review:Boolean=false):String?{
+        if(state.value.busy||pending!=null)return null
+        if(!review&&!authorAllowed(book)){state.update{it.copy(message="当前为阅读模式，请返回书写后编辑。")};return null}
+        val operation=UUID.randomUUID().toString()
+        // Encoding validates structural counts before a repository request exists.
+        val command=try{KnowledgeCommand(operation,book,old?.id?:UUID.randomUUID().toString(),old?.revision?:0,data,remove)}
+        catch(e:IllegalArgumentException){
+            val message=studyCapacityRejection(e.message.orEmpty())?:throw e
+            pendingUndo=null;persist();persistResult(rejectedOperation=operation,message=message)
+            state.update{it.copy(busy=false,unknown=false,completed=null,completedOperation=null,rejectedOperation=operation,message=message)}
+            return null
+        }
+        val inverse=if(data is KnowledgeData.Properties)KnowledgeCommand(UUID.randomUUID().toString(),book,command.id,(old?.revision?:0)+1,old?.data()?:data,old==null)else null
+        saved["knowledge.template"]=template?.let{arrayListOf(it.hash,it.id)};saved["knowledge.reviewCardRevision"]=reviewCardRevision
+        pending=command;pendingUndo=inverse;persist();retry();return command.operationId
+    }
     fun retry(){val c=pending?:return;if(state.value.busy)return;persistResult();state.update{it.copy(busy=true,message=null,completed=null,completedOperation=null,rejectedOperation=null)}
-        viewModelScope.launch{try{when(val result=withContext(Dispatchers.IO){val ref=saved.get<ArrayList<String>>("knowledge.template");if(ref==null)saved.get<Long>("knowledge.reviewCardRevision")?.let{repo.reviewOutcome(c,it)}?:repo.outcome(c)else try{KnowledgeOutcome.Success(packs.map(TemplateRef(ref[0],ref[1]),c))}catch(e:KnowledgeRejected){KnowledgeOutcome.Rejected(e.reason)}catch(e:IllegalArgumentException){KnowledgeOutcome.Rejected(KnowledgeRejection.INVALID)}}){
+        viewModelScope.launch{try{when(val result=withContext(Dispatchers.IO){val ref=saved.get<ArrayList<String>>("knowledge.template");if(ref==null)saved.get<Long>("knowledge.reviewCardRevision")?.let{repo.reviewOutcome(c,it)}?:repo.outcome(c)else try{KnowledgeOutcome.Success(packs.map(TemplateRef(ref[0],ref[1]),c))}catch(e:KnowledgeRejected){KnowledgeOutcome.Rejected(e.reason)}catch(e:IllegalArgumentException){KnowledgeOutcome.Rejected(when(e.message){
+            "STUDY_NODE_BUDGET"->KnowledgeRejection.STUDY_NODE_BUDGET
+            "STUDY_NODE_RECORD_BUDGET"->KnowledgeRejection.STUDY_NODE_RECORD_BUDGET
+            "KNOWLEDGE_BUDGET"->KnowledgeRejection.KNOWLEDGE_BUDGET
+            else->KnowledgeRejection.INVALID
+        })}}){
             is KnowledgeOutcome.Success->{persistResult(result.id,c.operationId);pending=null;persist();pendingUndo?.let{undoRequest=it};pendingUndo=null;state.update{it.copy(busy=false,unknown=false,completed=result.id,completedOperation=c.operationId,rejectedOperation=null,message="已保存",canUndoProperties=undoRequest!=null)}}
-            is KnowledgeOutcome.Rejected->{val message="未提交：来源、版本或引用已变化，或内容重复。请重新核对。";persistResult(rejectedOperation=c.operationId,message=message);pending=null;pendingUndo=null;persist();state.update{it.copy(busy=false,unknown=false,rejectedOperation=c.operationId,message=message)}}
+            is KnowledgeOutcome.Rejected->{val message=studyCapacityRejection(result.reason.name)?:"未提交：来源、版本或引用已变化，或内容重复。请重新核对。";persistResult(rejectedOperation=c.operationId,message=message);pending=null;pendingUndo=null;persist();state.update{it.copy(busy=false,unknown=false,rejectedOperation=c.operationId,message=message)}}
             KnowledgeOutcome.Unknown->state.update{it.copy(busy=false,unknown=true,message="结果待核对，请重试原操作。")}
         }}
         catch(c:CancellationException){state.update{it.copy(busy=false,unknown=true)};throw c}
@@ -357,8 +377,8 @@ private val LinkPreviewSaver=Saver<LinkPreviewSelection?,List<String>>(
                         Column(Modifier.padding(16.dp)){Text(c.title,fontSize=18.sp);Text(c.body,maxLines=3);Text("我的总结 · 手工状态："+(properties[c.id]?.state?:ManualState.INBOX).label,fontSize=12.sp,color=Quiet)}}}
                 }
                 2->{val graph=KnowledgeQueries.graph(focus,links.map{it.second},hops)
-                    Row(Modifier.padding(12.dp),horizontalArrangement=Arrangement.spacedBy(8.dp)){FilterChip(hops==1,{hops=1},label={Text("一跳")});FilterChip(hops==2,{hops=2},label={Text("二跳")});Text("${graph.nodes.size} 个对象 / ${graph.edges.size} 条边",fontSize=12.sp)}
-                    Text(if(graph.truncated)"仅展示部分 · 上限 100 个对象 / 200 条边"else"当前对象的局部范围，非全库图",Modifier.padding(horizontal=16.dp),fontSize=12.sp,color=Quiet)
+                    Row(Modifier.padding(12.dp),horizontalArrangement=Arrangement.spacedBy(8.dp)){FilterChip(hops==1,{hops=1},label={Text("一层")});FilterChip(hops==2,{hops=2},label={Text("两层")});Text("${graph.nodes.size} 个对象 / ${graph.edges.size} 条边",fontSize=12.sp)}
+                    Text(if(graph.truncated)"仅展示部分 · 上限 100 个对象 / 200 条边"else"围绕当前对象查看已建立的关联；点对象可切换中心",Modifier.padding(horizontal=16.dp),fontSize=12.sp,color=Quiet)
                     KnowledgeGraph(book,graph,::label){focus=it}
                 }
                 3->KnowledgeBoard(book,bookCards,rows,editable,{data,old->vm.submit(book,data,old)},{old->vm.submit(book,old.data(),old,true)},browseReady=enabled)
@@ -371,7 +391,7 @@ private val LinkPreviewSaver=Saver<LinkPreviewSelection?,List<String>>(
             }
             HorizontalDivider(color=InkTheme.Divider)
             Row(Modifier.fillMaxWidth().background(InkTheme.Navigation).horizontalScroll(rememberScrollState()).padding(horizontal=12.dp),horizontalArrangement=Arrangement.spacedBy(8.dp)){
-                listOf("关联","集合","关系图","画布","复习").forEachIndexed{i,t->
+                listOf("关联","集合","关联图","卡片白板","复习").forEachIndexed{i,t->
                     FilterChip(tab==i,{if(tab!=i)cancelReviewPreparation();tab=i},enabled=enabled,label={Text(t)},modifier=Modifier.heightIn(min=48.dp).testTag("knowledge-tab-$i"))
                 }
             }

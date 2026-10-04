@@ -36,15 +36,20 @@ internal data class NodeTitleDraft(val token:String,val mapId:String?,val nodeId
         IconButton(click,enabled=enabled,modifier=Modifier.size(48.dp).testTag(tag).describedAs(label)){Glyph(icon)}
     }
 }
-@Composable internal fun NodeActions(enabled:Boolean,rename:()->Unit,child:()->Unit,sibling:()->Unit,more:()->Unit,moreEnabled:Boolean=enabled){
+@Composable internal fun NodeActions(enabled:Boolean,browseReady:Boolean,rename:()->Unit,more:()->Unit,
+    openSource:(()->Unit)?=null,sourceOpening:Boolean=false,expand:(()->Unit)?=null,expanded:Boolean=false){
     Surface(shape=InkTheme.ToolShape,color=InkTheme.Surface,shadowElevation=InkTheme.ToolElevation,modifier=Modifier.testTag("node-actions")){
         Row(Modifier.fillMaxWidth()){
-            listOf(Triple("标题","pen","node-rename"),Triple("子主题","node-child","node-add-child"),Triple("同级","node-sibling","node-add-sibling"),Triple("整理","more","node-more")).forEachIndexed{i,(label,icon,tag)->
-                TextButton(listOf(rename,child,sibling,more)[i],enabled=if(i==3)moreEnabled else enabled,
-                    contentPadding=PaddingValues(horizontal=2.dp,vertical=6.dp),modifier=Modifier.weight(1f).heightIn(min=48.dp).testTag(tag)){
+            @Composable fun action(label:String,icon:String,tag:String,active:Boolean,click:()->Unit){
+                TextButton(click,enabled=active,contentPadding=PaddingValues(horizontal=2.dp,vertical=6.dp),
+                    modifier=Modifier.weight(1f).heightIn(min=48.dp).testTag(tag)){
                     Column(horizontalAlignment=androidx.compose.ui.Alignment.CenterHorizontally){Glyph(icon);Text(label,style=MaterialTheme.typography.labelMedium)}
                 }
             }
+            openSource?.let{action(if(sourceOpening)"定位中…"else"回原文","link","node-open-source",browseReady&&!sourceOpening,it)}
+            expand?.let{action(if(expanded)"收起预览"else"展开预览","overview","node-expand-content",browseReady,it)}
+            action("改标题","pen","node-rename",enabled,rename)
+            action("更多","more","node-more",browseReady,more)
         }
     }
 }

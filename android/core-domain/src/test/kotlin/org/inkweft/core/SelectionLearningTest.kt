@@ -32,6 +32,15 @@ class SelectionLearningTest {
         assertNotEquals(a.digest(),changed.digest());reject{StudySourceDraft(page,0,b,emptyList())}
     }
     @Test fun graphRejectsCyclesMissingParentAndInvalidNumbers(){val a=StudyNode(id(),id(),null,0.0,0.0);val b=StudyNode(id(),id(),a.id,100.0,0.0);reject{StudyGraph.validate(listOf(a.copy(parentId=b.id),b))};reject{StudyGraph.validate(listOf(a.copy(parentId=id())))};reject{StudyGraph.validate(listOf(a.copy(x=Double.NaN)))}}
+    @Test fun graphCapacityDistinguishesActiveNodesFromRetainedRecords(){
+        val card=id();val nodes=List(257){StudyNode(id(),card,null,0.0,0.0)}
+        StudyGraph.validate(nodes.take(127));StudyGraph.validate(nodes.take(128))
+        try{StudyGraph.validate(nodes.take(129));fail()}catch(e:IllegalArgumentException){assertEquals("STUDY_NODE_BUDGET",e.message)}
+        val history=nodes.mapIndexed{i,n->n.copy(removed=i>=127)}
+        StudyGraph.validate(history.take(255));StudyGraph.validate(history.take(256))
+        try{StudyGraph.validate(history);fail()}catch(e:IllegalArgumentException){assertEquals("STUDY_NODE_RECORD_BUDGET",e.message)}
+        try{StudyGraph.validate(listOf(nodes.first(),nodes.first()));fail()}catch(e:IllegalArgumentException){assertFalse(e.message.orEmpty().startsWith("STUDY_NODE_"))}
+    }
     @Test fun multipleOccurrencesShareOneCardAndLayoutDoesNotChangeIdentity(){val card=id();val a=StudyNode(id(),card,null,0.0,0.0);val b=StudyNode(id(),card,a.id,0.0,0.0);StudyGraph.validate(listOf(a,b));val layout=StudyGraph.arrange(listOf(a,b));assertEquals(setOf(a.id,b.id),layout.keys);assertTrue(layout.getValue(b.id).x>layout.getValue(a.id).x);assertEquals(card,b.cardId)}
     @Test fun removedParentCannotOwnVisibleChild(){val a=StudyNode(id(),id(),null,0.0,0.0,removed=true);val b=StudyNode(id(),id(),a.id,10.0,10.0);reject{StudyGraph.validate(listOf(a,b))}}
     @Test fun studyDigestBindsPayloadAndGraphRevision(){val book=id();val c=id();val node=id();val command=id();val a=StudyCommand(command,book,StudyAction.CREATE,c,node,title="摘要",body="A");val b=StudyCommand(command,book,StudyAction.CREATE,c,node,title="摘要",body="B");assertNotEquals(a.digest(),b.digest());val n=StudyNode(node,c,null,0.0,0.0);assertNotEquals(StudyGraph.orderHash(listOf(n)),StudyGraph.orderHash(listOf(n.copy(revision=2))))}

@@ -33,7 +33,7 @@ import org.inkweft.core.*
 import org.inkweft.data.NotebookPageRow
 
 @Composable
-fun InkScreen(note:NoteDraft,workspace:WorkspaceViewModel=viewModel(),onBack:()->Unit={},onRename:()->Unit={},onText:()->Unit={},onDiagnostics:()->Unit={},fullScreen:Boolean=false,onFullScreen:(Boolean)->Unit={}){
+fun InkScreen(note:NoteDraft,workspace:WorkspaceViewModel=viewModel(),onBack:()->Unit={},onRename:()->Unit={},onText:()->Unit={},onDiagnostics:()->Unit={},fullScreen:Boolean=false,onFullScreen:(Boolean)->Unit={},notebookSwitcher:@Composable (Modifier)->Unit={}){
     BoxWithConstraints {
     val paneWidth=maxWidth
     val density=LocalDensity.current
@@ -42,6 +42,7 @@ fun InkScreen(note:NoteDraft,workspace:WorkspaceViewModel=viewModel(),onBack:()-
     val readLock=rememberBookReadLock(note.base.id)
     val readOnly by readLock.readOnly.collectAsStateWithLifecycle()
     val readOnlyRequest=remember(note.base.id){mutableStateOf<((Boolean)->Boolean)?>(null)}
+    val pageToolRequest=remember(note.base.id){mutableStateOf<((String)->Unit)?>(null)}
     val studyReviewLeaveRequest=remember(note.base.id){mutableStateOf<(() -> Boolean)?>(null)}
     fun leaveStudyReview():Boolean=studyReviewLeaveRequest.value?.invoke()!=false
     val hasAuthorDraft by readLock.hasDraft.collectAsStateWithLifecycle()
@@ -193,24 +194,58 @@ fun InkScreen(note:NoteDraft,workspace:WorkspaceViewModel=viewModel(),onBack:()-
     val sourceReady by rememberUpdatedState(pageActionsReady&&!hasAuthorDraft&&studyOpen&&!mapMinimized)
     SideEffect{if(!sourceReady)cancelSourceNavigation();app.navigationReady.value=pageActionsReady&&!hasAuthorDraft}
     androidx.activity.compose.BackHandler(panelOpen&&pageActionsReady&&!hasAuthorDraft){if(leaveStudyReview()){endSourceReading();directory=false;documentSettings=false;mapMinimized=true;excerptsOpen=false}}
-    val compactHeader=paneWidth<720.dp||density.fontScale>1.3f
+    val compactHeader=paneWidth<760.dp*density.fontScale.coerceAtLeast(1f)
+    val narrowHeader=paneWidth<400.dp*density.fontScale.coerceAtLeast(1f)
     val documentTools:@Composable ()->Unit={
-        EditorAction("概览","overview",pageActionsReady&&!hasAuthorDraft,"quick-overview"){showDocumentPanel(if(directory)"none"else"overview")}
-        EditorAction("查找","search",pageActionsReady&&!hasAuthorDraft,"book-search"){showDocumentPanel("search")}
-        EditorAction("设置","settings",pageActionsReady&&!hasAuthorDraft,"quick-settings"){showDocumentPanel(if(documentSettings)"none"else"settings")}
-        if(!readOnly)EditorAction("加页","add-page",pageInsertReady&&page?.world==false,"document-add-page"){page?.let{if(showDocumentPanel("none"))insertion=it.id to PageInsertLocation.AFTER}}
+        DropdownMenuItem(text={Text("文档概览")},leadingIcon={Glyph("overview")},enabled=pageActionsReady&&!hasAuthorDraft,modifier=Modifier.testTag("quick-overview"),onClick={showDocumentPanel(if(directory)"none"else"overview")})
+        DropdownMenuItem(text={Text("查找笔记")},leadingIcon={Glyph("search")},enabled=pageActionsReady&&!hasAuthorDraft,modifier=Modifier.testTag("book-search"),onClick={showDocumentPanel("search")})
+        DropdownMenuItem(text={Text("文档设置")},leadingIcon={Glyph("settings")},enabled=pageActionsReady&&!hasAuthorDraft,modifier=Modifier.testTag("quick-settings"),onClick={showDocumentPanel(if(documentSettings)"none"else"settings")})
+        DropdownMenuItem(text={Text("容量与整理")},enabled=pageActionsReady&&!hasAuthorDraft,modifier=Modifier.testTag("document-capacity"),onClick={if(showDocumentPanel("map"))studySession.openCapacity()})
+        if(!readOnly)DropdownMenuItem(text={Text("添加页面")},leadingIcon={Glyph("add-page")},enabled=pageInsertReady&&page?.world==false,modifier=Modifier.testTag("document-add-page"),onClick={page?.let{if(showDocumentPanel("none"))insertion=it.id to PageInsertLocation.AFTER}})
+        HorizontalDivider()
+        DropdownMenuItem(text={Text("全屏专注")},leadingIcon={Glyph("fullscreen")},enabled=pageActionsReady,modifier=Modifier.testTag("quick-fullscreen"),onClick={documentMore=false;onFullScreen(true)})
+        DropdownMenuItem(text={Text("导出文档")},leadingIcon={Glyph("export")},enabled=pageActionsReady,modifier=Modifier.testTag("quick-export"),onClick={documentMore=false;pageToolRequest.value?.invoke("export")})
+        DropdownMenuItem(text={Text("计时器")},leadingIcon={Glyph("timer")},modifier=Modifier.testTag("quick-timer"),onClick={documentMore=false;pageToolRequest.value?.invoke("timer")})
+        if(studyOpen&&!mapVisible)DropdownMenuItem(text={Text("关闭导图")},enabled=pageActionsReady&&!hasAuthorDraft,modifier=Modifier.testTag("study-close"),onClick={if(leaveStudyReview()){documentMore=false;endSourceReading();studyOpen=false}})
+    }
+    @Composable fun documentAction(label:String,icon:String,enabled:Boolean,tag:String,action:()->Unit){
+        if(narrowHeader)TextButton(action,enabled=enabled,contentPadding=PaddingValues(horizontal=4.dp),
+            modifier=Modifier.widthIn(min=48.dp).heightIn(min=48.dp).testTag(tag)){Text(label,maxLines=1)}
+        else EditorAction(label,icon,enabled,tag,action)
+    }
+    val destinations:@Composable ()->Unit={
+        if(studyOpen)TextButton({if(leaveStudyReview()){endSourceReading();mapActive=false}},enabled=pageActionsReady&&!hasAuthorDraft,
+            modifier=Modifier.heightIn(min=48.dp).testTag("study-pane-source").editorSelected(paperVisible&&!mapVisible)){Text("原文")}
+        documentAction(if(sourceReading)"返回导图"else"导图","mindmap",pageActionsReady&&(!hasAuthorDraft||paneLayout.sideBySide||mapVisible),if(sourceReading)"study-window-source-return"else"quick-study"){
+            if(sourceReading){if(leaveStudyReview()){endSourceReading();mapActive=true}}else showDocumentPanel("map")
+        }
+        documentAction("关联","link",pageActionsReady&&!hasAuthorDraft,"document-associations"){showDocumentPanel("associations")}
+        documentAction("摘录","excerpt",pageActionsReady&&!hasAuthorDraft,"read-excerpts"){showDocumentPanel("excerpts")}
+    }
+    val documentControls:@Composable ()->Unit={
+                TextButton({
+                    val accepted=if(paperVisible)readOnlyRequest.value?.invoke(!readOnly)==true else readLock.request(!readOnly,pageActionsReady)
+                    if(!accepted)Toast.makeText(context,readLock.reason.ifBlank{"页面尚未准备好，请稍后重试"},Toast.LENGTH_SHORT).show()
+                },enabled=page!=null,contentPadding=if(narrowHeader)PaddingValues(horizontal=4.dp)else ButtonDefaults.TextButtonContentPadding,modifier=Modifier.widthIn(min=48.dp).heightIn(min=48.dp).testTag(if(readOnly)"exit-readonly"else"quick-readonly").describedAs(if(readOnly)"只读浏览，返回书写"else"书写模式，开启阅读锁")){
+                    if(!narrowHeader){Glyph(if(readOnly)"pen"else"readonly",modifier=Modifier.size(20.dp));Spacer(Modifier.width(6.dp))}
+                    Text(if(readOnly)"返回书写"else"阅读模式",maxLines=1)
+                }
+                Box{
+                    documentAction("文档","more",pageActionsReady,"document-more"){documentMore=true}
+                    DropdownMenu(documentMore,{documentMore=false},modifier=Modifier.testTag("document-more-menu"),containerColor=Color.White){documentTools()}
+                }
     }
     val documentBar:@Composable ()->Unit={
         Surface(color=MaterialTheme.colorScheme.surface){
-            FlowRow(Modifier.fillMaxWidth().heightIn(min=48.dp).padding(horizontal=4.dp).testTag("document-toolbar"),horizontalArrangement=Arrangement.SpaceBetween){
+            Column(Modifier.fillMaxWidth().padding(horizontal=4.dp).testTag("document-toolbar")){
+            Row(Modifier.fillMaxWidth().heightIn(min=48.dp),verticalAlignment=Alignment.CenterVertically){
                 IconButton({if(leaveStudyReview()){endSourceReading();onBack()}},enabled=pageActionsReady&&!hasAuthorDraft,modifier=Modifier.size(48.dp).testTag("back-library").describedAs("返回资料库")){Glyph("back")}
-                EditorAction("导图","mindmap",pageActionsReady&&(!hasAuthorDraft||paneLayout.sideBySide||mapVisible),"quick-study"){showDocumentPanel("map")}
-                EditorAction("关联","link",pageActionsReady&&!hasAuthorDraft,"document-associations"){showDocumentPanel("associations")}
-                EditorAction("摘录","excerpt",pageActionsReady&&!hasAuthorDraft,"read-excerpts"){showDocumentPanel("excerpts")}
-                if(compactHeader)Box{
-                    EditorAction("文档","more",pageActionsReady,"document-more"){documentMore=true}
-                    DropdownMenu(documentMore,{documentMore=false},modifier=Modifier.testTag("document-more-menu"),containerColor=Color.White){documentTools()}
-                }else documentTools()
+                notebookSwitcher(Modifier.weight(1f))
+                if(!compactHeader)destinations()
+                if(!narrowHeader)documentControls()
+            }
+            if(narrowHeader)FlowRow(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.Center){documentControls()}
+            if(compactHeader)FlowRow(Modifier.fillMaxWidth().testTag("document-destinations"),horizontalArrangement=Arrangement.Center){destinations()}
             }
         }
     }
@@ -232,7 +267,7 @@ fun InkScreen(note:NoteDraft,workspace:WorkspaceViewModel=viewModel(),onBack:()-
         }
         if(page==null)Box(Modifier.weight(1f).fillMaxWidth(),contentAlignment=Alignment.Center){if(ui.loading)CircularProgressIndicator()else Text("页面未能载入，原数据保留")}
         else Box(Modifier.weight(1f)){val pendingSourceRequest=sourceFocusRequest;val pendingSourceFocus=sourceFocus?.takeIf{it.first==page.id};InkPageScreen(note,workspace,page,{if(!it)cancelSourceNavigation();canNavigate=it},{_->if(!hasAuthorDraft)showDocumentPanel("search")},paperVisible&&!ui.busy&&!ui.actionUnknown&&!ui.insertionUnknown&&pageActionId==null,
-            readOnlyRequest=readOnlyRequest,onAuthorDraft={paperAuthorDraft=it},embedRequest=studyPanel.embedInsertion.value?.takeIf{it.pageId==page.id},onEmbedConsumed={studyPanel.embedInsertion.value=null},
+            readOnlyRequest=readOnlyRequest,pageToolRequest=pageToolRequest,onAuthorDraft={paperAuthorDraft=it},embedRequest=studyPanel.embedInsertion.value?.takeIf{it.pageId==page.id},onEmbedConsumed={studyPanel.embedInsertion.value=null},
             onEditMap={embed->if(showDocumentPanel("map")){studySession.selectMap(embed.target.mapId);studySession.selectTab(2);studySession.focusedByMap[embed.target.key]=embed.branchId;embed.branchId?.let{studySession.revealByMap[embed.target.key]=it}}},
             onMapExcerpt={selection->if(readLock.canWrite){studySession.clear();studyPanel.captureResult.value=null;studyPanel.captureDraft.value=CaptureDraft(note.base.id,StudySourceDraft(page.id,selection.revision,selection.region.bounds,selection.strokes.map{it.id},selection.preview,selection.objectRevision),selection.excerptText)}},
             onAssociate={selection->if(readLock.canWrite)showDocumentPanel("associations",KnowledgeData.Anchor(page.id,selection.revision,selection.region.bounds,selection.strokes.map{it.id}))},
@@ -254,7 +289,7 @@ fun InkScreen(note:NoteDraft,workspace:WorkspaceViewModel=viewModel(),onBack:()-
     }
     Column(Modifier.fillMaxWidth().align(Alignment.TopStart).onSizeChanged{chromeHeight=with(density){it.height.toDp()}}){
         if(!fullScreen)documentBar()
-        if(studyOpen&&!hasAuthorDraft)Surface(color=MaterialTheme.colorScheme.surface){
+        if(fullScreen&&studyOpen&&!hasAuthorDraft)Surface(color=MaterialTheme.colorScheme.surface){
             FlowRow(Modifier.fillMaxWidth().heightIn(min=48.dp).padding(horizontal=8.dp).testTag("study-pane-switcher"),verticalArrangement=Arrangement.Center){
                 TextButton({if(leaveStudyReview()){endSourceReading();mapActive=false}},enabled=pageActionsReady&&!hasAuthorDraft,
                     modifier=Modifier.heightIn(min=48.dp).testTag("study-pane-source")){Text("原文")}
@@ -337,7 +372,7 @@ fun InkScreen(note:NoteDraft,workspace:WorkspaceViewModel=viewModel(),onBack:()-
     if(studyOpen)studyUiState.SaveableStateProvider(note.base.id){FloatingStudyWindow(note.base.id,enabled=pageActionsReady&&!hasAuthorDraft&&!knowledgeOpen,minimized=mapMinimized,
         onMinimize={if(it){endSourceReading();mapMinimized=true;mapActive=false}else showDocumentPanel("map")},docked=!floatingMap,onDock={endSourceReading();floatingMap=!it},close={endSourceReading();studyOpen=false},
         paneLayout=paneLayout,topInset=chromeHeight,paneActive=effectiveMapActive,onActivate={if(!hasAuthorDraft)mapActive=true},onAuthorDraft={if(it&&!mapAuthorDraft)endSourceReading();mapAuthorDraft=it},frameEnabled=pageActionsReady&&!knowledgeOpen,sourceReading=sourceReading,beforeContentExit={leaveStudyReview()}){
-        StudyContent(note,studySource,{endSourceReading();studyOpen=false},initialCardId=initialStudyCard,documentReady=pageActionsReady,compactWindow=true,sourceRequest=studyPanel.captureRequest.longValue,reviewLeaveRequest=studyReviewLeaveRequest,onInsertEmbed={embed->
+        StudyContent(note,studySource,{endSourceReading();studyOpen=false},initialCardId=initialStudyCard,documentReady=pageActionsReady,compactWindow=true,showReadControl=fullScreen,capacityVisible=mapVisible,sourceRequest=studyPanel.captureRequest.longValue,reviewLeaveRequest=studyReviewLeaveRequest,onInsertEmbed={embed->
             if(readLock.canWrite)page?.let{p->endSourceReading();readingMode(false);studyPanel.embedInsertion.value=EmbedInsertion(p.id,java.util.UUID.randomUUID().toString(),embed);mapMinimized=true}
         }){source->
             currentCoroutineContext().ensureActive()

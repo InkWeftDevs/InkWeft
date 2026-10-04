@@ -41,7 +41,9 @@ internal data class EmbedInsertion(val pageId:String,val objectId:String,val emb
             val target=withContext(Dispatchers.IO){app.mapEmbeds.duplicate(MapRef(sourceBook,sourceMap.ifEmpty{null}),signature,operation)}
             unknown=false
             insert(MapEmbed(target));dismiss()
-        }catch(c:CancellationException){throw c}catch(e:Exception){unknown=e !is IllegalArgumentException&&e.message!="MAP_UNAVAILABLE";message=if(e.message=="MAP_PORTAL_COPY_UNSUPPORTED")"此图带有跨图入口，尚不能独立复制。可改用实时视图；节点快照不包含入口关系，完整保存请使用资料库备份。"else if(!unknown)"源图或内容已变化，未创建副本；请取消后重新核对。"else"独立副本尚未确认，请核对原操作后重试。"}finally{busy=false}}}
+        }catch(c:CancellationException){throw c}catch(e:Exception){unknown=e !is IllegalArgumentException&&e.message!="MAP_UNAVAILABLE"
+            message=(if(!unknown)studyCapacityRejection(e.message.orEmpty())else null)?:if(e.message=="MAP_PORTAL_COPY_UNSUPPORTED")"此图带有跨图入口，尚不能独立复制。可改用实时视图；节点快照不包含入口关系，完整保存请使用资料库备份。"else if(!unknown)"源图或内容已变化，未创建副本；请取消后重新核对。"else"独立副本尚未确认，请核对原操作后重试。"
+        }finally{busy=false}}}
         else{insert(MapEmbed(scene.ref,if(onlyBranch)branch else null,policy=if(policy==1)MapEmbedPolicy.PINNED else MapEmbedPolicy.LIVE,snapshot=if(policy==1)scene else null));dismiss()}
     },enabled=!busy&&(unknown||(!readOnly&&scene.available)),modifier=Modifier.testTag("map-insert-confirm")){Text(if(busy)"正在准备"else if(unknown)"核对原操作"else"插入")}},dismissButton={TextButton(dismiss,enabled=!busy&&!unknown){Text("取消")}})
 }

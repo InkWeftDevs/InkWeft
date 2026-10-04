@@ -196,10 +196,10 @@ class ReadLockUiTest {
     }
 
     private fun setReadOnly(f: Fixture, value: Boolean, fromStudy: Boolean = true) {
+        if (fromStudy) compose.onNodeWithTag("study-readonly").assertDoesNotExist()
         val current = compose.runOnIdle { lock(f.note.id).readOnly.value }
         if (current != value) {
-            if (fromStudy) tap("study-readonly", physical = true)
-            else if (value) tapPaperReadOnly() else tap("exit-readonly", physical = true)
+            if (value) tapPaperReadOnly() else tap("exit-readonly", physical = true)
         }
         compose.waitUntil(15_000) { var actual = false
             compose.runOnIdle { actual = lock(f.note.id).readOnly.value == value && lock(f.note.id).canWrite != value }
@@ -208,19 +208,7 @@ class ReadLockUiTest {
     }
 
     private fun tapPaperReadOnly() {
-        if (compose.onAllNodesWithTag("quick-readonly").fetchSemanticsNodes().isEmpty()) {
-            tap("toolbar-more")
-            if (compose.onAllNodesWithTag("quick-readonly").fetchSemanticsNodes().isEmpty()) {
-                tap("toolbar-customize")
-                waitFor("toolbar-visible-readonly")
-                val visibility = compose.onNodeWithTag("toolbar-visible-readonly")
-                visibility.performScrollTo()
-                if (runCatching { visibility.assertIsOff() }.isSuccess) visibility.performTouchInput { click() }
-                visibility.assertIsOn()
-                tap("toolbar-done")
-                tap("toolbar-more")
-            }
-        }
+        compose.onNodeWithTag("document-toolbar").assertIsDisplayed()
         tap("quick-readonly", physical = true)
     }
 
@@ -424,8 +412,11 @@ class ReadLockUiTest {
         compose.onNodeWithTag("outline-sibling-${f.node}").assertIsNotEnabled()
         tap("outline-node-${f.node}"); waitFor("card-full-body"); tap("card-back")
         tap("study-tab-2"); waitMap(f, f.mapA, f.node); selectNode(f.node)
-        listOf("node-rename", "node-add-child", "node-add-sibling").forEach { compose.onNodeWithTag(it).assertIsNotEnabled() }
+        compose.onNodeWithTag("node-rename").assertIsNotEnabled()
         compose.onNodeWithTag("node-more").assertIsEnabled()
+        tap("node-more")
+        listOf("node-add-child", "node-add-sibling").forEach { compose.onNodeWithTag(it).assertIsNotEnabled() }
+        tap("node-view-content"); waitFor("card-full-body"); tap("card-back")
         var point = Offset.Zero
         compose.runOnIdle { val b = checkNotNull(native<MindMapView>().nodeBounds(f.node)); point = Offset(b.centerX(), b.centerY()) }
         compose.onNodeWithTag("study-map").performTouchInput { down(point); moveTo(point + Offset(60f, 30f), 240); up() }
@@ -535,8 +526,9 @@ class ReadLockUiTest {
                 kotlin.math.abs(c.screenWidthDp - 375) <= 4 && kotlin.math.abs(c.fontScale - 1.6f) < .02f }
             val f = seed(); openMap(f); setReadOnly(f, true)
             val before = authorStamp(f.note.id)
-            compose.onNodeWithTag("study-readonly").assertIsDisplayed().assertIsEnabled()
-            compose.activityRule.scenario.recreate(); waitFor("study-readonly")
+            compose.onNodeWithTag("study-readonly").assertDoesNotExist()
+            compose.onNodeWithTag("exit-readonly").assertIsDisplayed().assertIsEnabled()
+            compose.activityRule.scenario.recreate(); waitFor("exit-readonly")
             compose.runOnIdle { assertTrue(lock(f.note.id).readOnly.value); assertFalse(native<InkCanvasView>().allowInput) }
             tap("study-window-minimize", physical = true)
             compose.onNodeWithTag("study-map").assertDoesNotExist()
@@ -606,18 +598,22 @@ class ReadLockUiTest {
             assertFalse(lock(f.note.id).request(true)); assertFalse(lock(f.note.id).readOnly.value) }
         assertDraftText("study-card-body", exact)
         assertEquals(before, authorStamp(f.note.id))
-        val originalRequest = compose.activity.requestedOrientation
         val originalOrientation = compose.activity.resources.configuration.orientation
+        val originalAutoRotation = shell("settings get system accelerometer_rotation")
+        val originalUserRotation = shell("settings get system user_rotation")
         try {
-            compose.activityRule.scenario.onActivity { it.requestedOrientation =
-                if (originalOrientation == Configuration.ORIENTATION_PORTRAIT) ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-                else ActivityInfo.SCREEN_ORIENTATION_PORTRAIT }
+            // Use the tablet's display rotation; large-screen Android can ignore Activity orientation requests.
+            shell("settings put system accelerometer_rotation 0")
+            shell("settings put system user_rotation ${if (originalOrientation == Configuration.ORIENTATION_PORTRAIT) 1 else 0}")
             compose.waitUntil(15_000) { runCatching {
                 compose.activity.resources.configuration.orientation != originalOrientation }.getOrDefault(false) }
             waitFor("study-card-body"); assertDraftText("study-card-body", exact)
             compose.runOnIdle { assertFalse(lock(f.note.id).request(true)); assertTrue(lock(f.note.id).hasDraft.value) }
             assertEquals(before, authorStamp(f.note.id))
-        } finally { compose.activityRule.scenario.onActivity { it.requestedOrientation = originalRequest } }
+        } finally {
+            shell(if (originalUserRotation == "null") "settings delete system user_rotation" else "settings put system user_rotation $originalUserRotation")
+            shell(if (originalAutoRotation == "null") "settings delete system accelerometer_rotation" else "settings put system accelerometer_rotation $originalAutoRotation")
+        }
         compose.waitUntil(15_000) { runCatching {
             compose.activity.resources.configuration.orientation == originalOrientation }.getOrDefault(false) }
         waitFor("study-card-body"); assertDraftText("study-card-body", exact)

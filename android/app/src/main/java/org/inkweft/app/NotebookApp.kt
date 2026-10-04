@@ -98,8 +98,9 @@ fun NotebookApp(vm:NotebookViewModel=viewModel(),onDiagnostics:()->Unit={}){
         if(workspaceError!=null)Surface(color=Color.White){Row(Modifier.fillMaxWidth().padding(horizontal=16.dp),verticalAlignment=Alignment.CenterVertically){Text(workspaceError!!,Modifier.weight(1f),fontSize=12.sp);TextButton(onClick=workspace::clearError){Text("知道了")}}}
         if(pendingCreate!=null&&!busy)TextButton(onClick={workspace.retryCreate{vm.select(it)}},modifier=Modifier.testTag("retry-create-notebook")){Text("核对原创建请求")}
         if(transferUi.busy||busy)LinearProgressIndicator(Modifier.fillMaxWidth())
-        if(ui.current!=null&&!immersive)NotebookTabs(ui,navigationReady&&!busy&&!transferUi.busy,{id->focus.clearFocus(force=true);keyboard?.hide();vm.selectTab(id)},
-            {id->if(vm.closeTab(id)){notebookStates.removeState(id);if(splitId==id)splitId=null}else Toast.makeText(context,"这份笔记有未保存文字或待核对操作，请先处理后再关闭标签。",Toast.LENGTH_SHORT).show()},{splitId=null;vm.back()},{id,vertical->splitId=id;splitVertical=vertical})
+        val notebookTabs:@Composable (Boolean,Modifier)->Unit={compact,modifier->NotebookTabs(ui,navigationReady&&!busy&&!transferUi.busy,{id->focus.clearFocus(force=true);keyboard?.hide();vm.selectTab(id)},
+            {id->if(vm.closeTab(id)){notebookStates.removeState(id);if(splitId==id)splitId=null}else Toast.makeText(context,"这份笔记有未保存文字或待核对操作，请先处理后再关闭标签。",Toast.LENGTH_SHORT).show()},{splitId=null;vm.back()},modifier=modifier,split={id,vertical->splitId=id;splitVertical=vertical},compact=compact)}
+        if(ui.current!=null&&!immersive&&!inkMode)notebookTabs(false,Modifier)
         val draft=ui.current
         if(draft==null)Box(Modifier.weight(1f)){LibraryScreen(ui,workspace,vm::select,::openCreate,{importGuide=true},onDiagnostics,::beginRename,{transfers.requestCopy(it.id)},{transfers.export(it.id)})}
         else{
@@ -115,7 +116,7 @@ fun NotebookApp(vm:NotebookViewModel=viewModel(),onDiagnostics:()->Unit={}){
             }
             HorizontalDivider(color=Line)
             if(inkMode&&draft.base.revision>0)Box(Modifier.weight(1f)){
-                val editor:@Composable ()->Unit={notebookStates.SaveableStateProvider(draft.base.id){InkScreen(draft,workspace,{splitId=null;vm.back()},{beginRename(draft.base)},{inkMode=false;immersive=false},onDiagnostics,immersive,{immersive=it})}}
+                val editor:@Composable ()->Unit={notebookStates.SaveableStateProvider(draft.base.id){InkScreen(draft,workspace,{splitId=null;vm.back()},{beginRename(draft.base)},{inkMode=false;immersive=false},onDiagnostics,immersive,{immersive=it},notebookSwitcher={modifier->notebookTabs(true,modifier)})}}
                 val other=splitId?.let{id->ui.notes.find{it.id==id}}
                 val reference:@Composable ()->Unit={if(other!=null)NotebookReferencePane(other.id,other.title,navigationReady,splitVertical,{splitVertical=!splitVertical},{pageId->val previous=draft.base.id;workspace.openSearchPage(other.id,pageId){vm.select(other);splitId=previous}},{splitId=null})}
                 if(other==null)editorSlot(editor)

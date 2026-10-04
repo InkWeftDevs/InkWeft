@@ -49,7 +49,7 @@ internal object EditorToolOrder {
         Box {
             EditorTool("更多","more",false,true,"toolbar-more",Modifier.describedAs("更多工具")){more=true}
             DropdownMenu(more,{more=false},containerColor=androidx.compose.ui.graphics.Color.White){
-                val overflow=order.filter{it !in visiblePrimary&&it !in hidden&&it !in EditorToolOrder.fixed&&(fullScreen||it!="map")}
+                val overflow=order.filter{it !in visiblePrimary&&it !in hidden&&it !in EditorToolOrder.fixed&&(fullScreen||it !in setOf("map","readonly"))}
                 listOf("插入" to setOf("image","camera","text","shape","sticker"),"页面与工具" to (EditorToolOrder.labels.keys-setOf("image","camera","text","shape","sticker"))).forEach{(title,ids)->
                     val group=overflow.filter{it in ids}
                     if(group.isNotEmpty()){

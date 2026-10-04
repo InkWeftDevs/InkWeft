@@ -1,0 +1,478 @@
+{
+  "reportCheckpoint": "REVIEWABLE_WITH_OPEN_DEVICE_VALIDATION_AND_USER_REPORTED_ZOOM_DEFECT",
+  "readingUiRuns": [
+    {
+      "sourceArchiveRelativePath": "physical-batch01b/ui-selected/display-results.json",
+      "batch": "physical-batch01b",
+      "counts": {
+        "PASS": 10,
+        "FAIL": 4
+      },
+      "methods": [
+        {
+          "method": "org.inkweft.app.ReadingToolsUiTest#wideReadingPreservesCollapsedPenCaseToolbarAndNativePenThenReturnsThroughGate",
+          "status": "PASS"
+        },
+        {
+          "method": "org.inkweft.app.ReadingToolsUiTest#narrowLargeFontRecreationAndFullscreenKeepReachableReadingActionsWithoutReplay",
+          "status": "PASS"
+        },
+        {
+          "method": "org.inkweft.app.ReadingToolsUiTest#continuousReadingUsesExistingExcerptMapAndHeaderNavigationWithoutAuthorWrites",
+          "status": "PASS"
+        },
+        {
+          "method": "org.inkweft.app.ReadingToolsUiTest#narrowSplitKeepsReadingAndHeaderActionsReachableWithoutChangingReference",
+          "status": "PASS"
+        },
+        {
+          "method": "org.inkweft.app.MapInteractionUiTest#branchBadgeAndSourceAreSeparateTargets",
+          "status": "PASS"
+        },
+        {
+          "method": "org.inkweft.app.MapInteractionUiTest#titleAndSummaryRenderInSeparateMeasuredAreas",
+          "status": "FAIL"
+        },
+        {
+          "method": "org.inkweft.app.MapInteractionUiTest#expandedExcerptUsesMeasuredBoundsAndNewPlacementKeepsGap",
+          "status": "PASS"
+        },
+        {
+          "method": "org.inkweft.app.MapInteractionUiTest#provisionalChildAndSiblingCancelWithoutOrphans",
+          "status": "PASS"
+        },
+        {
+          "method": "org.inkweft.app.ReadLockUiTest#draftPreventsModeChangeAndKeepsExactText",
+          "status": "FAIL"
+        },
+        {
+          "method": "org.inkweft.app.ReadingAccessUiTest#openSettingsLiveGateRejectsQueuedOriginalReceiptHeldNativeInputAndRealPreviewDraft",
+          "status": "PASS"
+        },
+        {
+          "method": "org.inkweft.app.StudyOrganizationUiTest#layoutPreviewCancelKeepsAuthorStateAndApplyUndoUseMeasuredNodeBounds",
+          "status": "PASS"
+        },
+        {
+          "method": "org.inkweft.app.StudyRelationsUiTest#actualToggleAndSelectedOccurrenceChangeOnlyTheReadOnlyOverlay",
+          "status": "PASS"
+        },
+        {
+          "method": "org.inkweft.app.CardSourceNavigationUiTest#collapsedSourceFooterReturnsToExactPaperAndKeepsReadOnlyMapContext",
+          "status": "FAIL"
+        },
+        {
+          "method": "org.inkweft.app.SourceFocusVisibilityUiTest#splitPaneRefitsRetainedSourceAcrossBothDirectionsWithoutChangingReferenceOrGraph",
+          "status": "FAIL"
+        }
+      ]
+    },
+    {
+      "sourceArchiveRelativePath": "physical-tests01c/ui-selected/display-results.json",
+      "batch": "physical-tests01c",
+      "counts": {
+        "PASS": 2,
+        "FAIL": 2
+      },
+      "methods": [
+        {
+          "method": "org.inkweft.app.MapInteractionUiTest#titleAndSummaryRenderInSeparateMeasuredAreas",
+          "status": "PASS"
+        },
+        {
+          "method": "org.inkweft.app.ReadLockUiTest#draftPreventsModeChangeAndKeepsExactText",
+          "status": "PASS"
+        },
+        {
+          "method": "org.inkweft.app.CardSourceNavigationUiTest#collapsedSourceFooterReturnsToExactPaperAndKeepsReadOnlyMapContext",
+          "status": "FAIL"
+        },
+        {
+          "method": "org.inkweft.app.SourceFocusVisibilityUiTest#splitPaneRefitsRetainedSourceAcrossBothDirectionsWithoutChangingReferenceOrGraph",
+          "status": "FAIL"
+        }
+      ]
+    },
+    {
+      "sourceArchiveRelativePath": "physical-batch01d/ui-selected/display-results.json",
+      "batch": "physical-batch01d",
+      "counts": {
+        "PASS": 5,
+        "FAIL": 1
+      },
+      "methods": [
+        {
+          "method": "org.inkweft.app.ReadingToolsUiTest#wideReadingPreservesCollapsedPenCaseToolbarAndNativePenThenReturnsThroughGate",
+          "status": "PASS"
+        },
+        {
+          "method": "org.inkweft.app.ReadingToolsUiTest#narrowLargeFontRecreationAndFullscreenKeepReachableReadingActionsWithoutReplay",
+          "status": "PASS"
+        },
+        {
+          "method": "org.inkweft.app.ReadingToolsUiTest#continuousReadingUsesExistingExcerptMapAndHeaderNavigationWithoutAuthorWrites",
+          "status": "PASS"
+        },
+        {
+          "method": "org.inkweft.app.ReadingToolsUiTest#narrowSplitKeepsReadingAndHeaderActionsReachableWithoutChangingReference",
+          "status": "FAIL"
+        },
+        {
+          "method": "org.inkweft.app.CardSourceNavigationUiTest#collapsedSourceFooterReturnsToExactPaperAndKeepsReadOnlyMapContext",
+          "status": "PASS"
+        },
+        {
+          "method": "org.inkweft.app.SourceFocusVisibilityUiTest#splitPaneRefitsRetainedSourceAcrossBothDirectionsWithoutChangingReferenceOrGraph",
+          "status": "PASS"
+        }
+      ]
+    },
+    {
+      "sourceArchiveRelativePath": "physical-tests01e/ui-selected/display-results.json",
+      "batch": "physical-tests01e",
+      "counts": {
+        "PASS": 1
+      },
+      "methods": [
+        {
+          "method": "org.inkweft.app.ReadingToolsUiTest#narrowSplitKeepsReadingAndHeaderActionsReachableWithoutChangingReference",
+          "status": "PASS"
+        }
+      ]
+    }
+  ],
+  "capacityCore": {
+    "status": "PASS",
+    "startedUtc": "2026-10-04T04:34:41.584050+00:00",
+    "endedUtc": "2026-10-04T04:35:41.532889+00:00",
+    "tests": 39,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "inputsByteIdentical": true,
+    "inputsBeforeSha256": "08bae1bd2afa02900286df143046d898dea615ff8120df9ab30a978b3ec452bb",
+    "inputsAfterSha256": "08bae1bd2afa02900286df143046d898dea615ff8120df9ab30a978b3ec452bb",
+    "testTaskExecuted": true,
+    "apkBuild": false,
+    "lint": false,
+    "adb": false,
+    "reusedByBatch02": true,
+    "executedInBatch02Builder": 0,
+    "sourceInputFiles": 81
+  },
+  "capacityRemaining": {
+    "ordinaryPanelPixelInspection": "NOT_RUN",
+    "postBatch02FinalDataProtectionAudit": "PARTIAL_ORIGINAL_ROWS_PASS_EXTERNAL_PREFS_OWNERSHIP_NOT_COMPLETED",
+    "mergedBackupCapacityMethod": "PASS_WITH_ONE_INITIAL_TEST_HOST",
+    "retry": "EXECUTED_PASS"
+  },
+  "humanChecks": {
+    "CF-HW-01": "NOT_RUN",
+    "CF-HW-02": "NOT_RUN",
+    "CF-HW-03": "NOT_RUN",
+    "CF-HW-04": "FAIL_USER_REPORTED",
+    "CF-HW-05": "NOT_RUN"
+  },
+  "readingUiAssistance": "Each selected UI method had one initial foreground launch after instrumentation start. Test-method body entry was not independently observed. These runs are not described as unassisted.",
+  "latestCandidate": {
+    "batch": "comfort-02",
+    "versionCode": 68,
+    "package": "org.inkweft.app.a0.workspace",
+    "buildReceiptSha256": "303117f207515eba5971a31fffedd076454f43de79726aa6ce754c4f61cdcea8",
+    "installationVerifiedUtc": "2026-10-04T05:08:55.207736+00:00",
+    "dataCleared": false,
+    "packageUninstalled": false,
+    "artifacts": [
+      {
+        "kind": "app",
+        "file": "InkWeft-comfort-batch02.apk",
+        "sha256": "714785938f0521e56eacd42d43dfd35c40a3717ecb330817ba3c28e603e6bc12",
+        "rebuilt": true,
+        "reused": false,
+        "signatureVerified": true,
+        "certificateSha256": "18e67dbce88152dbe4d4821b5a3a513a409a3df4eac9261f4c11126c36e43969"
+      },
+      {
+        "kind": "app-test",
+        "file": "InkWeft-comfort-batch02-androidTest.apk",
+        "sha256": "8a64fa5ac2c44ae3fadb0781b4d27e36b4233ce77ccbb0b26848720f4c27be29",
+        "rebuilt": true,
+        "reused": false,
+        "signatureVerified": true,
+        "certificateSha256": "18e67dbce88152dbe4d4821b5a3a513a409a3df4eac9261f4c11126c36e43969"
+      },
+      {
+        "kind": "room-test",
+        "file": "InkWeft-comfort-batch02-room-androidTest.apk",
+        "sha256": "3e96950af47e042078709668dd0791129afc0d8540d4d9c592f3973298981e08",
+        "rebuilt": true,
+        "reused": false,
+        "signatureVerified": true,
+        "certificateSha256": "18e67dbce88152dbe4d4821b5a3a513a409a3df4eac9261f4c11126c36e43969"
+      }
+    ],
+    "lint": {
+      "status": "PASS",
+      "executed": true,
+      "errors": 0,
+      "fatal": 0,
+      "warnings": 141,
+      "xmlSha256": "6fc6b26080747a7f5caa02f5bf72e954edd8cdd36e4708b5cea4d3ac26e1a439"
+    }
+  },
+  "capacityRoom": {
+    "selected": 12,
+    "currentCounts": {
+      "PASS": 12,
+      "FAIL": 0,
+      "NOT_RUN": 0
+    },
+    "runs": [
+      {
+        "sourceArchiveRelativePath": "physical-batch02/room-selected/results.json",
+        "executionMode": "PHYSICAL_UNASSISTED",
+        "counts": {
+          "PASS": 7,
+          "FAIL": 0,
+          "NOT_RUN": 5
+        },
+        "methods": [
+          {
+            "method": "org.inkweft.data.StudyCapacityRepositoryTest#cardCapacityCountsRecycledCardsAndAllowsRestoreReuseAndEdit",
+            "status": "PASS"
+          },
+          {
+            "method": "org.inkweft.data.StudyCapacityRepositoryTest#activeNodeCapacityRejectsAtomicallyAndRemovalAllowsReuse",
+            "status": "PASS"
+          },
+          {
+            "method": "org.inkweft.data.StudyCapacityRepositoryTest#retainedNodeCapacityRejectsStudyAndKnowledgeWithoutPartialWrites",
+            "status": "PASS"
+          },
+          {
+            "method": "org.inkweft.data.StudyCapacityRepositoryTest#knowledgeCapacityPreservesReasonsInBothTransactionChecks",
+            "status": "PASS"
+          },
+          {
+            "method": "org.inkweft.data.StudyCapacityRepositoryTest#snapshotCapacityUsesStoredBytesAndRecropChargesOnlyItsDelta",
+            "status": "PASS"
+          },
+          {
+            "method": "org.inkweft.data.StudyCapacityRepositoryTest#independentCopyChargesDistinctCardsOnceAndReplayAddsNothing",
+            "status": "PASS"
+          },
+          {
+            "method": "org.inkweft.data.StudyCapacityRepositoryTest#oversizedSingleSnapshotIsAConfirmedAtomicRejection",
+            "status": "PASS"
+          },
+          {
+            "method": "org.inkweft.data.LibraryBackupRepositoryTest#legalSnapshotArchivesRejectMergedOverflowAndReplayAtExactCapacity",
+            "status": "NOT_RUN",
+            "reason": "ENVIRONMENT_BLOCKED_KERNEL_FREEZE"
+          },
+          {
+            "method": "org.inkweft.data.StudyOrganizationRepositoryTest#orderUniquenessOwnershipAndNodeLimitRejectWithoutPartialWrites",
+            "status": "NOT_RUN",
+            "reason": "QUEUE_STOPPED_AFTER_ENVIRONMENT_BLOCKED_KERNEL_FREEZE"
+          },
+          {
+            "method": "org.inkweft.data.LibraryBackupRepositoryTest#disjointExistingLibraryIsRetainedAndRepeatedRestoreIsNoOp",
+            "status": "NOT_RUN",
+            "reason": "QUEUE_STOPPED_AFTER_ENVIRONMENT_BLOCKED_KERNEL_FREEZE"
+          },
+          {
+            "method": "org.inkweft.data.LibraryBackupRepositoryTest#preCommitFailureRollsBackAllLiveTables",
+            "status": "NOT_RUN",
+            "reason": "QUEUE_STOPPED_AFTER_ENVIRONMENT_BLOCKED_KERNEL_FREEZE"
+          },
+          {
+            "method": "org.inkweft.data.MapAddendumRepositoryTest#liveAndPinnedFollowContentAndIndependentCopyReplaysOnce",
+            "status": "NOT_RUN",
+            "reason": "QUEUE_STOPPED_AFTER_ENVIRONMENT_BLOCKED_KERNEL_FREEZE"
+          }
+        ]
+      },
+      {
+        "sourceArchiveRelativePath": "physical-batch02/room-remaining/results.json",
+        "executionMode": "PHYSICAL_UNASSISTED",
+        "counts": {
+          "PASS": 4,
+          "FAIL": 0,
+          "NOT_RUN": 0
+        },
+        "methods": [
+          {
+            "method": "org.inkweft.data.StudyOrganizationRepositoryTest#orderUniquenessOwnershipAndNodeLimitRejectWithoutPartialWrites",
+            "status": "PASS"
+          },
+          {
+            "method": "org.inkweft.data.LibraryBackupRepositoryTest#disjointExistingLibraryIsRetainedAndRepeatedRestoreIsNoOp",
+            "status": "PASS"
+          },
+          {
+            "method": "org.inkweft.data.LibraryBackupRepositoryTest#preCommitFailureRollsBackAllLiveTables",
+            "status": "PASS"
+          },
+          {
+            "method": "org.inkweft.data.MapAddendumRepositoryTest#liveAndPinnedFollowContentAndIndependentCopyReplaysOnce",
+            "status": "PASS"
+          }
+        ]
+      },
+      {
+        "sourceArchiveRelativePath": "physical-batch02/room-backup-host/results.json",
+        "sourceReceiptSha256": "1c09b05d62d65b038544b6f6d8b26e5a5cb2c9642a4ecaea00d92a1697c4444f",
+        "executionMode": "PHYSICAL_WITH_ONE_INITIAL_TEST_HOST",
+        "counts": {
+          "PASS": 1,
+          "FAIL": 0,
+          "NOT_RUN": 0
+        },
+        "methods": [
+          {
+            "method": "org.inkweft.data.LibraryBackupRepositoryTest#legalSnapshotArchivesRejectMergedOverflowAndReplayAtExactCapacity",
+            "status": "PASS",
+            "executionMode": "PHYSICAL_WITH_ONE_INITIAL_TEST_HOST",
+            "assistance": "one initial test host launch"
+          }
+        ]
+      }
+    ],
+    "currentMethods": [
+      {
+        "method": "org.inkweft.data.StudyCapacityRepositoryTest#cardCapacityCountsRecycledCardsAndAllowsRestoreReuseAndEdit",
+        "status": "PASS"
+      },
+      {
+        "method": "org.inkweft.data.StudyCapacityRepositoryTest#activeNodeCapacityRejectsAtomicallyAndRemovalAllowsReuse",
+        "status": "PASS"
+      },
+      {
+        "method": "org.inkweft.data.StudyCapacityRepositoryTest#retainedNodeCapacityRejectsStudyAndKnowledgeWithoutPartialWrites",
+        "status": "PASS"
+      },
+      {
+        "method": "org.inkweft.data.StudyCapacityRepositoryTest#knowledgeCapacityPreservesReasonsInBothTransactionChecks",
+        "status": "PASS"
+      },
+      {
+        "method": "org.inkweft.data.StudyCapacityRepositoryTest#snapshotCapacityUsesStoredBytesAndRecropChargesOnlyItsDelta",
+        "status": "PASS"
+      },
+      {
+        "method": "org.inkweft.data.StudyCapacityRepositoryTest#independentCopyChargesDistinctCardsOnceAndReplayAddsNothing",
+        "status": "PASS"
+      },
+      {
+        "method": "org.inkweft.data.StudyCapacityRepositoryTest#oversizedSingleSnapshotIsAConfirmedAtomicRejection",
+        "status": "PASS"
+      },
+      {
+        "method": "org.inkweft.data.LibraryBackupRepositoryTest#legalSnapshotArchivesRejectMergedOverflowAndReplayAtExactCapacity",
+        "status": "PASS",
+        "executionMode": "PHYSICAL_WITH_ONE_INITIAL_TEST_HOST",
+        "assistance": "one initial test host launch"
+      },
+      {
+        "method": "org.inkweft.data.StudyOrganizationRepositoryTest#orderUniquenessOwnershipAndNodeLimitRejectWithoutPartialWrites",
+        "status": "PASS"
+      },
+      {
+        "method": "org.inkweft.data.LibraryBackupRepositoryTest#disjointExistingLibraryIsRetainedAndRepeatedRestoreIsNoOp",
+        "status": "PASS"
+      },
+      {
+        "method": "org.inkweft.data.LibraryBackupRepositoryTest#preCommitFailureRollsBackAllLiveTables",
+        "status": "PASS"
+      },
+      {
+        "method": "org.inkweft.data.MapAddendumRepositoryTest#liveAndPinnedFollowContentAndIndependentCopyReplaysOnce",
+        "status": "PASS"
+      }
+    ],
+    "blockedMethodRetry": {
+      "status": "PASS",
+      "executionMode": "PHYSICAL_WITH_ONE_INITIAL_TEST_HOST",
+      "assistance": "one initial test host launch",
+      "launchCount": 1,
+      "launchAtSeconds": 3.391,
+      "testSeconds": 8.829,
+      "sourceOrGlobalFreezerSettingChange": false,
+      "originalUnassistedResult": "NOT_RUN_ENVIRONMENT_BLOCKED_KERNEL_FREEZE",
+      "sourceReceiptSha256": "1c09b05d62d65b038544b6f6d8b26e5a5cb2c9642a4ecaea00d92a1697c4444f",
+      "rawResultSha256": "15a1da4cc151075ad630c9f730f1f3800266a38a728d076040bf44af69f470f2"
+    },
+    "passedExecutionModes": {
+      "PHYSICAL_UNASSISTED": 11,
+      "PHYSICAL_WITH_ONE_INITIAL_TEST_HOST": 1
+    }
+  },
+  "capacityUi": {
+    "selected": 4,
+    "counts": {
+      "PASS": 4,
+      "FAIL": 0,
+      "NOT_RUN": 0
+    },
+    "methods": [
+      {
+        "sourceArchiveRelativePath": "physical-batch02/ui-mainactivity/01/runtime/results.json",
+        "method": "org.inkweft.app.StudyCapacityUiTest#realMenusCountRemovedNodesAndTrashedCardsAcrossMapSwitchAndCollapse",
+        "status": "PASS",
+        "executionMode": "PHYSICAL_WITH_ONE_INITIAL_FOREGROUND_LAUNCH",
+        "assistance": "one initial foreground launch"
+      },
+      {
+        "sourceArchiveRelativePath": "physical-batch02/ui-mainactivity/02/runtime/results.json",
+        "method": "org.inkweft.app.StudyCapacityUiTest#cardBudgetRejectionKeepsTheRealEditorDraftAndAuthorRecords",
+        "status": "PASS",
+        "executionMode": "PHYSICAL_WITH_ONE_INITIAL_FOREGROUND_LAUNCH",
+        "assistance": "one initial foreground launch"
+      },
+      {
+        "sourceArchiveRelativePath": "physical-batch02/ui-panel/01/runtime/results.json",
+        "method": "org.inkweft.app.StudyCapacityPanelUiTest#warningsStartAtEightyPercentForEachBudgetAndStayAbsentBelowIt",
+        "status": "PASS",
+        "executionMode": "PHYSICAL_UNASSISTED",
+        "assistance": null
+      },
+      {
+        "sourceArchiveRelativePath": "physical-batch02/ui-panel/02/runtime/results.json",
+        "method": "org.inkweft.app.StudyCapacityPanelUiTest#narrowLargeTypePanelScrollsToFullTouchTargetsAndRetriesSnapshotFailure",
+        "status": "PASS",
+        "executionMode": "PHYSICAL_UNASSISTED",
+        "assistance": null
+      }
+    ],
+    "methodBodyEntryIndependentlyObserved": false
+  },
+  "humanSession": {
+    "status": "USER_FEEDBACK_RECEIVED_DIAGNOSIS_PENDING",
+    "installedMainAppSha256": "714785938f0521e56eacd42d43dfd35c40a3717ecb330817ba3c28e603e6bc12",
+    "reportedIssue": "Notes briefly disappear during zoom.",
+    "reportedCase": "CF-HW-04",
+    "evidenceType": "USER_TEXT_REPORT",
+    "otherFourCases": "Individual execution details and results are unconfirmed; NOT_RUN is retained as an unverified-result field, not a claim that no user actions occurred.",
+    "actualDurationPenModelPageGestureAndTimestamp": "NOT_REPORTED",
+    "userInkAndPreferenceChanges": "Must be retained.",
+    "diagnosisLimit": "Basic diagnostic events do not provide a complete frame-by-frame rendering log; lack of recent error events does not establish normal zoom rendering."
+  },
+  "ordinaryCapacityChecks": {
+    "CF-CP-01": "NOT_RUN",
+    "CF-CP-02": "NOT_RUN",
+    "CF-CP-03": "NOT_RUN"
+  },
+  "dataProtectionAfterHuman": {
+    "originalRowsAudit": "PASS",
+    "originalRows": 13556,
+    "missingOriginalRows": 0,
+    "changedOriginalRows": 0,
+    "addedRowsRetained": 1458,
+    "snapshotRows": 15014,
+    "snapshotTables": 29,
+    "integrityCheck": "OK",
+    "sourceHashStable": true,
+    "evidence": "Read-only backup and audit retained locally. Raw database and logs are not published.",
+    "scopeLimit": "This verifies original-row preservation at the post-human checkpoint; it is not the final external-file, preference, or complete new-row ownership audit."
+  }
+}

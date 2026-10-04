@@ -61,7 +61,7 @@ internal class OverviewViewModel(val book:String,val repo:KnowledgeRepository,pr
         viewModelScope.launch{try{when(val result=repo.outcome(command)){
             is KnowledgeOutcome.Success->{pending=null;persist();draft.value=null;state.value=OverviewSaveState.SUCCESS;completed.value++}
             is KnowledgeOutcome.Rejected->{pending=null;persist();state.value=if(result.reason==KnowledgeRejection.CONFLICT)OverviewSaveState.CONFLICT else OverviewSaveState.REJECTED
-                writeError.value=when(result.reason){KnowledgeRejection.CONFLICT->"内容已被修改，草稿已保留；请重新加载后保存";KnowledgeRejection.DUPLICATE->"该页已有页签或相同记录，请查看已有项";else->"操作未提交，草稿已保留；请重新加载并核对来源"}}
+                writeError.value=studyCapacityRejection(result.reason.name)?:when(result.reason){KnowledgeRejection.CONFLICT->"内容已被修改，草稿已保留；请重新加载后保存";KnowledgeRejection.DUPLICATE->"该页已有页签或相同记录，请查看已有项";else->"操作未提交，草稿已保留；请重新加载并核对来源"}}
             KnowledgeOutcome.Unknown->{state.value=OverviewSaveState.UNKNOWN;writeError.value="保存结果待核对，请核对原操作"}
         }}catch(c:CancellationException){state.value=OverviewSaveState.UNKNOWN;writeError.value="保存结果待核对";throw c}finally{busy.value=false}}
     }

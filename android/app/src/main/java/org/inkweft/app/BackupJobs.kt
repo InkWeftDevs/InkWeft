@@ -194,7 +194,7 @@ internal class BackupEngine(private val app:InkWeftApplication,private val fault
     }
     fun restore()=work("正在导入已校验备份…"){
         val p=checkNotNull(preview)
-        try{val result=app.libraryBackup.restore(p);state.value=state.value.copy(restoreNotes=null,message=when(result){LibraryBackupRepository.RestoreResult.RESTORED->"恢复完成";LibraryBackupRepository.RestoreResult.ALREADY_PRESENT->"相同资料已存在，无需重复导入";LibraryBackupRepository.RestoreResult.IDENTITY_CONFLICT->"资料身份存在冲突，已停止；请使用空白资料库恢复"})}finally{p.close();preview=null;state.value=state.value.copy(restoreNotes=null)}
+        try{val result=app.libraryBackup.restore(p);state.value=state.value.copy(restoreNotes=null,message=when(result){LibraryBackupRepository.RestoreResult.RESTORED->"恢复完成";LibraryBackupRepository.RestoreResult.ALREADY_PRESENT->"相同资料已存在，无需重复导入";LibraryBackupRepository.RestoreResult.IDENTITY_CONFLICT->"资料身份存在冲突，已停止；请使用空白资料库恢复";LibraryBackupRepository.RestoreResult.SNAPSHOT_CAPACITY_EXCEEDED->STUDY_RESTORE_CAPACITY_MESSAGE})}finally{p.close();preview=null;state.value=state.value.copy(restoreNotes=null)}
     }
     fun cancelRestore(){if(!ui.value.busy){preview?.close();preview=null;state.value=state.value.copy(restoreNotes=null,message="已取消恢复，原资料未改变")}}
     fun hasPendingUpload()=runCatching{readQueue().getString("state")=="PENDING"}.getOrDefault(false)

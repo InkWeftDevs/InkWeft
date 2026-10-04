@@ -27,7 +27,8 @@ object MapTemplates {
         skeleton("错题复盘",listOf("题干与条件","解题思路","错因","重做检查")),
         skeleton("考前章节总览",listOf("章节重点","知识联系","易错点","复习安排")))
     fun validate(layout:String,nodes:List<TemplateNode>){
-        require(layout in setOf("right","bilateral")&&nodes.size<=128)
+        require(layout in setOf("right","bilateral"))
+        require(nodes.size<=StudyGraph.MAX_NODES){"STUDY_NODE_BUDGET"}
         nodes.forEachIndexed{i,n->
             require(n.title.isNotBlank()&&n.title.length<=120&&n.x.isFinite()&&n.y.isFinite()&&n.x in -40000.0..40000.0&&n.y in -40000.0..40000.0)
             require(n.parent==null||n.parent in nodes.indices)

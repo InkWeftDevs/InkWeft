@@ -223,7 +223,7 @@ class StudyOrganizationRepositoryTest {
         assertEquals(structures.map { it.id }, before.orderedNodeIds)
         val extra = StudyCommand(id(), book, StudyAction.CREATE, cardId = id(), nodeId = id(), title = "第129个",
             mapId = named, expectedGraph = before.graphFingerprint)
-        assertTrue(repo.outcome(extra) is StudyOutcome.Rejected); assertNull(db.study().card(extra.cardId!!)); assertNull(db.study().receipt(extra.id))
+        assertEquals(StudyOutcome.Rejected("STUDY_NODE_BUDGET"),repo.outcome(extra)); assertNull(db.study().card(extra.cardId!!)); assertNull(db.study().receipt(extra.id))
         val knowledge = KnowledgeRepository(db); val order = before.order!!
         assertEquals(KnowledgeOutcome.Rejected(KnowledgeRejection.INVALID), knowledge.outcome(KnowledgeCommand(id(), book, order.id,
             order.revision, KnowledgeData.MapOrder(named, before.orderedNodeIds.dropLast(1)))))

@@ -1,0 +1,116 @@
+{
+  "scope": "Accepted synthetic-material PNG copies only; original evidence unchanged; no raw database, preferences, PDF or video copied.",
+  "images": [
+    {
+      "file": "screenshots/before-landscape-reading.png",
+      "sourceArchiveRelativePath": "screenshots-before/03-landscape-map-reading.png",
+      "sha256": "a12fb064c7ade084dabb2a40e5523005fd8d31933bc3e7b5debef4196208e54c",
+      "accepted": true,
+      "visualInspection": "ACCEPTED_BASELINE",
+      "capturedUtc": "2026-10-04T01:08:51.710563+00:00",
+      "method": "ADB ordinary application interaction; no instrumentation",
+      "appSha256": "c12caad57412efe5933f0446d2e56f1aa2ce90ff60c4bc8f9632b6ef34d01079",
+      "captureBatch": "pre-change-baseline"
+    },
+    {
+      "file": "screenshots/after-01b-landscape-reading.png",
+      "sourceArchiveRelativePath": "screenshots-after/01b-03-landscape-map-reading.png",
+      "sha256": "74cbdcbc764246ecd36f7eaf3778bd39f6b52e3b931bad613d9335482767cdd5",
+      "accepted": true,
+      "visualInspection": "PASS",
+      "capturedUtc": "2026-10-04T02:34:09.711793+00:00",
+      "method": "ADB ordinary application interaction; no instrumentation",
+      "appSha256": "35c98f3bdd8c1f4ae4ca41808ab646b08b52238ca6cf9e2697c033fc6d77824c",
+      "captureBatch": "comfort-01b"
+    },
+    {
+      "file": "screenshots/after-01d-narrow-reading.png",
+      "sourceArchiveRelativePath": "screenshots-after/01d-03-narrow-split-reading.png",
+      "sha256": "5bf0cc1a6f0c74002979848307606ce84c1958479941bb8daf91fd44ad323948",
+      "accepted": true,
+      "visualInspection": "PASS",
+      "capturedUtc": "2026-10-04T03:45:56.588194+00:00",
+      "method": "ADB ordinary application interaction; no instrumentation",
+      "appSha256": "3c5b887d58f146628fc87f6e427a228dca498554fa42ea379458bfed8b9469e5",
+      "captureBatch": "comfort-01d"
+    },
+    {
+      "file": "screenshots/flow-real-ime.png",
+      "sourceArchiveRelativePath": "screenshots-after/01d-11-flow-real-ime-composing.png",
+      "sha256": "12c61466bac01bb87fd7ab0c3de98788da9d6afa55171f223e3d43a5fd3e7dda",
+      "accepted": true,
+      "visualInspection": "PASS",
+      "capturedUtc": "2026-10-04T04:12:05.213845+00:00",
+      "method": "ADB ordinary application interaction; no instrumentation",
+      "appSha256": "3c5b887d58f146628fc87f6e427a228dca498554fa42ea379458bfed8b9469e5",
+      "captureBatch": "comfort-01d"
+    },
+    {
+      "file": "screenshots/flow-chinese-title.png",
+      "sourceArchiveRelativePath": "screenshots-after/01d-12-flow-real-ime-committed-title.png",
+      "sha256": "d6540058c40ef4908096210e14334cde9506478342fae238b4da598cbc6a1443",
+      "accepted": true,
+      "visualInspection": "PASS",
+      "capturedUtc": "2026-10-04T04:13:09.718635+00:00",
+      "method": "ADB ordinary application interaction; no instrumentation",
+      "appSha256": "3c5b887d58f146628fc87f6e427a228dca498554fa42ea379458bfed8b9469e5",
+      "captureBatch": "comfort-01d"
+    },
+    {
+      "file": "screenshots/flow-organized-child.png",
+      "sourceArchiveRelativePath": "screenshots-after/01d-13-flow-organized-child.png",
+      "sha256": "1bd93bad7fb4f9b9cd59afcf0bee51ff14b6cebd3b5d47df54024123eb0fd3bb",
+      "accepted": true,
+      "visualInspection": "PASS",
+      "capturedUtc": "2026-10-04T04:14:52.822854+00:00",
+      "method": "ADB ordinary application interaction; no instrumentation",
+      "appSha256": "3c5b887d58f146628fc87f6e427a228dca498554fa42ea379458bfed8b9469e5",
+      "captureBatch": "comfort-01d"
+    },
+    {
+      "file": "screenshots/flow-hidden-question.png",
+      "sourceArchiveRelativePath": "screenshots-after/01d-18-flow-question-hidden.png",
+      "sha256": "d70fbb3a65f80477490a8fad7109635662a5e2aab0a7c5f44da4fe4f386d6272",
+      "accepted": true,
+      "visualInspection": "PASS",
+      "capturedUtc": "2026-10-04T04:23:21.007842+00:00",
+      "method": "ADB ordinary application interaction; no instrumentation",
+      "appSha256": "3c5b887d58f146628fc87f6e427a228dca498554fa42ea379458bfed8b9469e5",
+      "captureBatch": "comfort-01d"
+    },
+    {
+      "file": "screenshots/flow-revealed-answer.png",
+      "sourceArchiveRelativePath": "screenshots-after/01d-19-flow-manual-answer.png",
+      "sha256": "7a544666ecc631ca275b0dd9cbfe5cfafcecba6a4fd28bee83525e85c6749a0f",
+      "accepted": true,
+      "visualInspection": "PASS",
+      "capturedUtc": "2026-10-04T04:24:03.760213+00:00",
+      "method": "ADB ordinary application interaction; no instrumentation",
+      "appSha256": "3c5b887d58f146628fc87f6e427a228dca498554fa42ea379458bfed8b9469e5",
+      "captureBatch": "comfort-01d"
+    },
+    {
+      "file": "screenshots/flow-reopened-map.png",
+      "sourceArchiveRelativePath": "screenshots-after/01d-23-flow-reopened.png",
+      "sha256": "cc8244931afce1ba737c7bb8fc25c2c2d53c857dc823a8096dc18d866a7a73ea",
+      "accepted": true,
+      "visualInspection": "PASS",
+      "capturedUtc": "2026-10-04T04:26:16.827657+00:00",
+      "method": "ADB ordinary application interaction; no instrumentation",
+      "appSha256": "3c5b887d58f146628fc87f6e427a228dca498554fa42ea379458bfed8b9469e5",
+      "captureBatch": "comfort-01d"
+    },
+    {
+      "file": "screenshots/human-page-four-ready.png",
+      "sourceArchiveRelativePath": "screenshots-after/01d-25-human-handoff-after-cold-open.png",
+      "sha256": "70f3c14fb5409e8419a1547064e50611666bbbb992d24b4e1d0ee19acc76a085",
+      "accepted": true,
+      "visualInspection": "PASS",
+      "capturedUtc": "2026-10-04T04:38:32.484573+00:00",
+      "method": "ADB ordinary application interaction; no instrumentation",
+      "appSha256": "3c5b887d58f146628fc87f6e427a228dca498554fa42ea379458bfed8b9469e5",
+      "captureBatch": "comfort-01d"
+    }
+  ],
+  "captureScope": "One pre-change baseline, one comfort-01b capture, and eight comfort-01d captures. No image in this index validates ordinary capacity-panel pixels on comfort-02."
+}

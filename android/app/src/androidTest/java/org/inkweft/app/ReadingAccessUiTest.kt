@@ -66,7 +66,7 @@ class ReadingAccessUiTest {
     @After fun restoreOwnedSettings() {
         try {
             compose.runOnIdle { views().filterIsInstance<InkCanvasView>().forEach { it.cancelGesture() } }
-            if (exists("reading-more-menu")) {
+            if (exists("reading-more-menu") || exists("document-more-menu")) {
                 InstrumentationRegistry.getInstrumentation().sendKeyDownUpSync(android.view.KeyEvent.KEYCODE_BACK)
                 compose.waitForIdle()
             }
@@ -169,7 +169,7 @@ class ReadingAccessUiTest {
     private fun waitFor(tag: String) {
         try { compose.waitUntil(15_000) { exists(tag) }; compose.waitForIdle() }
         catch (failure: Throwable) {
-            if (tag == "reading-toolbar") {
+            if (tag == "reading-toolbar" || tag == "exit-readonly") {
                 compose.runOnIdle {
                     val book = checkNotNull(notebook().ui.value.selectedId)
                     val page = checkNotNull(pages(book).ui.value.selectedId)
@@ -187,6 +187,7 @@ class ReadingAccessUiTest {
     }
     private fun tap(tag: String, scroll: Boolean = false) {
         println("RA62Touch tag=$tag")
+        compose.revealAction(tag)
         waitFor(tag); val target = compose.onNodeWithTag(tag)
         if (scroll) target.performScrollTo()
         target.assertIsDisplayed().assertIsEnabled().performTouchInput { click() }; compose.waitForIdle()
@@ -243,8 +244,20 @@ class ReadingAccessUiTest {
     }
     private fun assertMode(f: Fixture, readOnly: Boolean, ready: Boolean = true) {
         compose.waitUntil(15_000) { compose.runOnIdle { lock(f.note.id).readOnly.value == readOnly && lock(f.note.id).canWrite != readOnly } }
-        compose.onNodeWithTag(if (readOnly) "reading-toolbar" else "editor-toolbar").assertIsDisplayed()
-        compose.onNodeWithTag(if (readOnly) "editor-toolbar" else "reading-toolbar").assertDoesNotExist()
+        if (readOnly) {
+            compose.onNodeWithTag("exit-readonly").assertIsDisplayed().assertIsEnabled()
+            compose.onNodeWithTag("editor-toolbar").assertDoesNotExist()
+            if (exists("exit-fullscreen")) {
+                compose.onNodeWithTag("reading-toolbar").assertIsDisplayed()
+                compose.onNodeWithTag("document-toolbar").assertDoesNotExist()
+            } else {
+                compose.onNodeWithTag("document-toolbar").assertIsDisplayed()
+                compose.onNodeWithTag("reading-toolbar").assertDoesNotExist()
+            }
+        } else {
+            compose.onNodeWithTag("editor-toolbar").assertIsDisplayed()
+            compose.onNodeWithTag("reading-toolbar").assertDoesNotExist()
+        }
         if (readOnly || ready) {
             val measured = screenRect("ink-surface")
             compose.runOnIdle { assertEquals(!readOnly, paper(measured).allowInput) }
@@ -256,10 +269,11 @@ class ReadingAccessUiTest {
     }
     private fun enterReadingFromDefaultSettings(f: Fixture) {
         tap("quick-settings"); settingsSwitch(); compose.onNodeWithTag("settings-readonly").assertIsOff()
-        tap("settings-readonly"); waitFor("reading-toolbar"); assertMode(f, true)
+        tap("settings-readonly"); waitFor("exit-readonly"); assertMode(f, true)
         compose.onNodeWithTag("document-settings-dialog").assertDoesNotExist()
         compose.onNodeWithTag("settings-readonly-reason").assertDoesNotExist()
-        compose.onNodeWithTag("reading-more-menu").assertDoesNotExist(); awaitImeHidden()
+        compose.onNodeWithTag("reading-more-menu").assertDoesNotExist()
+        compose.onNodeWithTag("document-more-menu").assertDoesNotExist(); awaitImeHidden()
     }
     private fun assertRejected(f: Fixture) {
         compose.onNodeWithTag("document-settings-dialog").assertIsDisplayed()
@@ -269,16 +283,20 @@ class ReadingAccessUiTest {
         assertMode(f, false, ready = false)
     }
     private fun openReadingMore(fullscreen: Boolean) {
-        tap("toolbar-more"); waitFor("reading-more-menu")
-        val outer = compose.onNodeWithTag("reading-more-menu").fetchSemanticsNode().boundsInRoot
-        for (tag in listOf("reading-search", "reading-overview")) {
-            if (!fullscreen) compose.onNodeWithTag(tag).assertDoesNotExist()
-            else {
-                val r = compose.onNodeWithTag(tag).assertIsDisplayed().assertIsEnabled().fetchSemanticsNode().boundsInRoot
-                val density = compose.activity.resources.displayMetrics.density
-                assertTrue("$tag actual target is at least 48dp: $r", r.width >= 48f * density - 1 && r.height >= 48f * density - 1)
-                assertTrue("$tag is wholly reachable inside its real Popup", r.left >= outer.left - 1 && r.right <= outer.right + 1 && r.top >= outer.top - 1 && r.bottom <= outer.bottom + 1)
-            }
+        val menu = if (fullscreen) "reading-more-menu" else "document-more-menu"
+        tap(if (fullscreen) "toolbar-more" else "document-more"); waitFor(menu)
+        val outer = compose.onNodeWithTag(menu).fetchSemanticsNode().boundsInRoot
+        val actions = if (fullscreen) listOf("reading-search", "reading-overview")
+            else listOf("book-search", "quick-overview", "quick-settings")
+        if (!fullscreen) {
+            compose.onNodeWithTag("reading-search").assertDoesNotExist()
+            compose.onNodeWithTag("reading-overview").assertDoesNotExist()
+        }
+        for (tag in actions) {
+            val r = compose.onNodeWithTag(tag).assertIsDisplayed().assertIsEnabled().fetchSemanticsNode().boundsInRoot
+            val density = compose.activity.resources.displayMetrics.density
+            assertTrue("$tag actual target is at least 48dp: $r", r.width >= 48f * density - 1 && r.height >= 48f * density - 1)
+            assertTrue("$tag is wholly reachable inside its real Popup", r.left >= outer.left - 1 && r.right <= outer.right + 1 && r.top >= outer.top - 1 && r.bottom <= outer.bottom + 1)
         }
     }
     private fun assertFullscreen(f: Fixture) {
@@ -340,26 +358,31 @@ class ReadingAccessUiTest {
             val own = support.authorStamp(f.note.id); val reference = support.authorStamp(f.reference.id)
             assertTrue("The fixture keeps readonly hidden by actual defaults", "readonly" in EditorToolOrder.defaultHidden)
             assertNull(app.getSharedPreferences("inkweft-editor", 0).getStringSet("toolbar-hidden-v32", null))
-            tap("toolbar-more"); compose.onNodeWithTag("quick-readonly").assertDoesNotExist()
+            tap("toolbar-more")
+            assertEquals("The document header owns the only reading entry", 1, compose.onAllNodesWithTag("quick-readonly").fetchSemanticsNodes().size)
+            compose.onNodeWithTag("quick-readonly").assert(hasAnyAncestor(hasTestTag("document-toolbar")))
             InstrumentationRegistry.getInstrumentation().sendKeyDownUpSync(android.view.KeyEvent.KEYCODE_BACK); compose.waitForIdle()
             tap("quick-settings"); tap("document-page-number", scroll = true)
             compose.onNodeWithTag("document-page-number").performTextReplacement("1")
             settingsSwitch(); val switch = compose.onNodeWithTag("settings-readonly").fetchSemanticsNode().boundsInRoot
             assertTrue(switch.width >= 48f * compose.activity.resources.displayMetrics.density - 1)
-            tap("settings-readonly"); waitFor("reading-toolbar"); assertMode(f, true); awaitImeHidden()
+            tap("settings-readonly"); waitFor("exit-readonly"); assertMode(f, true); awaitImeHidden()
             compose.onNodeWithTag("document-settings-dialog").assertDoesNotExist()
             compose.onNodeWithTag("settings-readonly-reason").assertDoesNotExist()
             assertEquals(writing, writingPreferences(f)); assertAuthors(f, own, reference)
             compose.activityRule.scenario.recreate(); awaitConfiguration(1200, 1f)
-            waitFor("reading-toolbar"); assertSelected(f, f.note.id); assertMode(f, true)
+            waitFor("exit-readonly"); assertSelected(f, f.note.id); assertMode(f, true)
             compose.onNodeWithTag("reading-more-menu").assertDoesNotExist()
+            compose.onNodeWithTag("document-more-menu").assertDoesNotExist()
             openReadingMore(fullscreen = false); tap("quick-fullscreen"); waitFor("exit-fullscreen")
-            openReadingMore(fullscreen = true); tap("quick-fullscreen"); waitFor("book-search")
+            openReadingMore(fullscreen = true); tap("quick-fullscreen"); waitFor("document-toolbar")
             assertEquals(writing, writingPreferences(f)); assertAuthors(f, own, reference); shot("ra62-default-reading.png")
             tap("quick-settings"); settingsSwitch(); compose.onNodeWithTag("settings-readonly").assertIsOn()
             tap("settings-readonly"); waitFor("editor-toolbar"); assertMode(f, false)
             compose.onNodeWithTag("document-settings-dialog").assertDoesNotExist()
-            tap("toolbar-more"); compose.onNodeWithTag("quick-readonly").assertDoesNotExist()
+            tap("toolbar-more")
+            assertEquals("The document header owns the only reading entry", 1, compose.onAllNodesWithTag("quick-readonly").fetchSemanticsNodes().size)
+            compose.onNodeWithTag("quick-readonly").assert(hasAnyAncestor(hasTestTag("document-toolbar")))
             InstrumentationRegistry.getInstrumentation().sendKeyDownUpSync(android.view.KeyEvent.KEYCODE_BACK); compose.waitForIdle()
             assertEquals(writing, writingPreferences(f)); assertAuthors(f, own, reference)
         }
@@ -430,7 +453,7 @@ class ReadingAccessUiTest {
                 .assertIsDisplayed().assertIsEnabled().performTouchInput { click() }
             compose.waitUntil(15_000) { compose.runOnIdle { !lock(f.note.id).hasDraft.value } }
             compose.onNodeWithTag("capture-confirm").assertDoesNotExist()
-            tap("settings-readonly"); waitFor("reading-toolbar"); assertMode(f, true)
+            tap("settings-readonly"); waitFor("exit-readonly"); assertMode(f, true)
             compose.onNodeWithTag("document-settings-dialog").assertDoesNotExist()
             assertEquals(writing, writingPreferences(f)); assertAuthors(f, own, reference)
             tap("exit-readonly"); waitFor("editor-toolbar"); assertMode(f, false, ready = false)
@@ -447,7 +470,7 @@ class ReadingAccessUiTest {
             val f = seed(); enterReadingFromDefaultSettings(f)
             compose.runOnIdle { notebook().select(f.reference) }; compose.singlePageEditor(); compose.waitForSavedInk()
             compose.runOnIdle { notebook().select(f.note) }; compose.singlePageEditor(); compose.waitForSavedInk()
-            waitFor("reading-toolbar"); tap("tabs-list")
+            waitFor("exit-readonly"); tap("tabs-list")
             compose.onNodeWithTag("tabs-filter").performTextReplacement(f.reference.title)
             tap("tabs-actions-${f.reference.id}"); tap("tab-split-horizontal"); hideKeyboard()
             assertReference(f); assertMode(f, true)
@@ -474,7 +497,7 @@ class ReadingAccessUiTest {
             compose.activityRule.scenario.recreate(); awaitConfiguration(375, 1.6f)
             waitFor("reading-toolbar"); assertSelected(f, f.thirdPage); assertFullscreen(f); assertReference(f)
             compose.onNodeWithTag("reading-more-menu").assertDoesNotExist()
-            openReadingMore(fullscreen = true); tap("quick-fullscreen"); waitFor("book-search")
+            openReadingMore(fullscreen = true); tap("quick-fullscreen"); waitFor("document-toolbar")
             openReadingMore(fullscreen = false)
             InstrumentationRegistry.getInstrumentation().sendKeyDownUpSync(android.view.KeyEvent.KEYCODE_BACK); compose.waitForIdle()
             assertEquals(writing, writingPreferences(f)); assertAuthors(f, own, reference)
@@ -537,7 +560,7 @@ class ReadingAccessUiTest {
             compose.runOnIdle { assertEquals(f.node, native<MindMapView>().selectedNodeId) }
             assertEquals(frame, preference("inkweft-study-window")); assertEquals(writing, writingPreferences(f)); assertAuthors(f, own, reference)
             shot("ra62-source-search-closed.png")
-            openReadingMore(fullscreen = true); tap("quick-fullscreen"); waitFor("book-search")
+            openReadingMore(fullscreen = true); tap("quick-fullscreen"); waitFor("document-toolbar")
             tap("study-window-source-return"); tap("study-close")
             assertSelected(f, f.sourcePage); assertMode(f, true)
             tap("exit-readonly"); waitFor("editor-toolbar"); assertMode(f, false)

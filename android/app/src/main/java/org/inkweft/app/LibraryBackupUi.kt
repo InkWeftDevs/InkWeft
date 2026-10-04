@@ -78,6 +78,7 @@ class LibraryBackupViewModel(app:Application):AndroidViewModel(app){
                 LibraryBackupRepository.RestoreResult.RESTORED->"已恢复资料库记录，原有不冲突的笔记保留。重开后的撤销栈仍按当前版本能力处理，备份不生成原本不存在的撤销历史。"
                 LibraryBackupRepository.RestoreResult.ALREADY_PRESENT->"备份记录已存在且完全一致，没有重复恢复或创建副本。"
                 LibraryBackupRepository.RestoreResult.IDENTITY_CONFLICT->"已有同一身份但内容不同的资料，本次没有恢复任何记录。暂不支持覆盖或自动合并；请保留当前资料与备份。"
+                LibraryBackupRepository.RestoreResult.SNAPSHOT_CAPACITY_EXCEEDED->STUDY_RESTORE_CAPACITY_MESSAGE
             });dispose()
         }catch(c:CancellationException){throw c}
         catch(_:Exception){state.value=BackupUi(BackupMode.UNKNOWN,"恢复结果待核对。可以用同一份备份核对重试；不会覆盖已有记录或重复创建。存储或历史命令身份冲突也会阻止整批写入。",true)}}

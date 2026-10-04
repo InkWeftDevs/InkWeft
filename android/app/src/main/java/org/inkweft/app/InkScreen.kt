@@ -73,7 +73,7 @@ private data class SourceFocusPulse(
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:NotebookPageRow,onCanNavigate:(Boolean)->Unit,onSearch:(Long)->Unit,externalEnabled:Boolean=true,onExcerpt:(SelectedInk)->Unit={},onMapExcerpt:(SelectedInk)->Unit={},onAssociate:(SelectedInk)->Unit={},focusRegion:CanvasBounds?=null,focusRequest:Int=0,onFocusConsumed:()->Unit={},pageNavigation:@Composable ()->Unit={},continuousPages:List<NotebookPageRow>?=null,onContinuousPage:(String)->Unit={},leaveContinuous:()->Unit={},onTags:()->Unit={},onDocumentAction:(String)->Unit={},canAddPage:Boolean=false,excerptRequest:Int=0,fullScreen:Boolean=false,embedRequest:EmbedInsertion?=null,onEmbedConsumed:()->Unit={},onEditMap:(MapEmbed)->Unit={},onFullScreen:(Boolean)->Unit={},onAppendPage:(()->Unit)?=null,readOnlyRequest:MutableState<((Boolean)->Boolean)?>?=null,onAuthorDraft:(Boolean)->Unit={}){
+internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:NotebookPageRow,onCanNavigate:(Boolean)->Unit,onSearch:(Long)->Unit,externalEnabled:Boolean=true,onExcerpt:(SelectedInk)->Unit={},onMapExcerpt:(SelectedInk)->Unit={},onAssociate:(SelectedInk)->Unit={},focusRegion:CanvasBounds?=null,focusRequest:Int=0,onFocusConsumed:()->Unit={},pageNavigation:@Composable ()->Unit={},continuousPages:List<NotebookPageRow>?=null,onContinuousPage:(String)->Unit={},leaveContinuous:()->Unit={},onTags:()->Unit={},onDocumentAction:(String)->Unit={},canAddPage:Boolean=false,excerptRequest:Int=0,fullScreen:Boolean=false,embedRequest:EmbedInsertion?=null,onEmbedConsumed:()->Unit={},onEditMap:(MapEmbed)->Unit={},onFullScreen:(Boolean)->Unit={},onAppendPage:(()->Unit)?=null,readOnlyRequest:MutableState<((Boolean)->Boolean)?>?=null,pageToolRequest:MutableState<((String)->Unit)?>?=null,onAuthorDraft:(Boolean)->Unit={}){
     val context=LocalContext.current;val app=context.applicationContext as InkWeftApplication
     val vm:InkViewModel=viewModel(key="ink-${page.id}",factory=InkViewModel.Factory(page.id,app.inkRepository))
     val ui by vm.ui.collectAsStateWithLifecycle()
@@ -321,6 +321,16 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
         slot?.value=handler
         onDispose{if(slot!=null&&slot.value===handler)slot.value=null}
     }
+    val currentPageTool by rememberUpdatedState<(String)->Unit>({action->when(action){
+        "export"->if(page.world)confirmExport=true else onDocumentAction("export")
+        "timer"->timerOpen=true
+    }})
+    DisposableEffect(page.id,pageToolRequest){
+        val slot=pageToolRequest
+        val handler:(String)->Unit={currentPageTool(it)}
+        slot?.value=handler
+        onDispose{if(slot!=null&&slot.value===handler)slot.value=null}
+    }
     // Reading hides transient parameter UI, while keeping tools and all saved preferences.
     LaunchedEffect(readOnly){if(readOnly){
         settings=false;eraserDialog=false;selectionSettings=false;excerptSettings=false
@@ -555,12 +565,12 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
         }
         Surface(Modifier.align(Alignment.TopCenter).padding(horizontal=4.dp).widthIn(max=960.dp).fillMaxWidth().onSizeChanged{toolbarHeight=with(toolbarDensity){it.height.toDp()}},shape=InkTheme.FloatingShape,color=InkTheme.Navigation,shadowElevation=InkTheme.ToolElevation){
             Column {
-            if(readOnly)ReadingToolbar(
+            if(readOnly&&fullScreen)ReadingToolbar(
                 enabled=navigationReady&&externalEnabled,fullScreen=fullScreen,
                 onMap={onDocumentAction("map")},onExcerpts={onDocumentAction("excerpts")},onAssociate={onDocumentAction("associations")},onWrite={changeReadOnly(false)},
                 onSearch={onSearch(ui.revision)},onOverview={onDocumentAction("overview")},
                 onFullScreen={onFullScreen(!fullScreen)},onExport={if(page.world)confirmExport=true else onDocumentAction("export")},onTimer={timerOpen=true})
-            else EditorToolbar(fullScreen=fullScreen) { action,closeOverflow -> when(action){
+            else if(!readOnly)EditorToolbar(fullScreen=fullScreen) { action,closeOverflow -> when(action){
                 "undo" -> IconButton(onClick={closeOverflow();if(historyHeads.undo==EditDomain.OBJECT)objectsVm.undo()else vm.undo()},enabled=(if(historyHeads.undo==EditDomain.OBJECT)objectsUi.undo else ui.canUndo)&&!editingBlocked,modifier=Modifier.size(48.dp).testTag("ink-undo").describedAs("撤销")){Glyph("undo")}
                 "redo" -> IconButton(onClick={closeOverflow();if(historyHeads.redo==EditDomain.OBJECT)objectsVm.redo()else vm.redo()},enabled=(if(historyHeads.redo==EditDomain.OBJECT)objectsUi.redo else ui.canRedo)&&!editingBlocked,modifier=Modifier.size(48.dp).testTag("ink-redo").describedAs("重做")){Glyph("redo")}
                 "pen" -> EditorTool("笔","pen",tool<3&&!readOnly,!busy,"top-draw",Modifier.describedAs("笔参数")){closeOverflow();if(!readOnly||changeReadOnly(false)){selectedObject=null;if(tool in 0..2){settings=true;penOpenRequest++}else{tool=lastWritingTool;penOpenRequest++}}}
