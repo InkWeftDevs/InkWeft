@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="org.inkweft.core.StudyOutlineTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-10-04T08:49:37.125Z" hostname="c8f738c2aa6c" time="0.014">
+  <properties/>
+  <testcase name="collapseHidesDescendantsWithoutChangingSharedCardsOrExport" classname="org.inkweft.core.StudyOutlineTest" time="0.011"/>
+  <testcase name="missingOrRemovedFocusFallsBackToAllAndStaleCollapseIdsAreHarmless" classname="org.inkweft.core.StudyOutlineTest" time="0.0"/>
+  <testcase name="identicalCardOccurrencesCanBeCollapsedIndependently" classname="org.inkweft.core.StudyOutlineTest" time="0.001"/>
+  <testcase name="focusRebasesDepthAndIncludesAncestorsEvenWhenAncestorCollapsed" classname="org.inkweft.core.StudyOutlineTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
