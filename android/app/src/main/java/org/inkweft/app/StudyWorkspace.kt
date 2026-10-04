@@ -179,6 +179,8 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
     var transformPending by remember{mutableStateOf(false)}
     var resolutionPending by remember{mutableStateOf(false)}
     val transforms=remember(app){app.study.transforms()}
+    var reuseCardId by rememberSaveable{mutableStateOf<String?>(null)}
+    val reuseCard=ui.cards.firstOrNull{it.id==reuseCardId}
     fun extraOccurrences(cardId:String)=extraRows.count{r->!r.removed&&r.notebookId==note.base.id&&when(val d=r.data()){is KnowledgeData.Placement->d.cardId==cardId;is KnowledgeData.MapOccurrence->d.cardId==cardId;else->false}}
 
     val currentMap by vm.mapId.collectAsStateWithLifecycle()
@@ -421,7 +423,7 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
             finally{if(nodeSourceJob===request)nodeSourceJob=null}
         }
     }
-    val authorDraft=transformKind!=null||resolutionPending||outlineDrag!=null||groupTarget!=null||presentationCardId!=null||titleDraft!=null||editor!=null||newMapTitle!=null||saveTemplate||templatePicker||reparentId!=null||insertMap||layoutPreview!=null
+    val authorDraft=reuseCardId!=null||transformKind!=null||resolutionPending||outlineDrag!=null||groupTarget!=null||presentationCardId!=null||titleDraft!=null||editor!=null||newMapTitle!=null||saveTemplate||templatePicker||reparentId!=null||insertMap||layoutPreview!=null
     ReadLockGuard(readLock,guardKey,blocked=ui.busy||ui.unknown||mapSaving||authorDraft,draft=authorDraft)
     ReadLockGuard(readLock,"$guardKey-transform",transformPending,draft=transformKind!=null)
     ReadLockGuard(readLock,"$guardKey-resolution",resolutionPending,draft=resolutionPending)
@@ -1093,6 +1095,10 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
             studyFooterContent()
         }}
     }
+    reuseCard?.let{card->CardReuseDialog(card){reuseCardId=null}}
+    if(reuseCardId!=null&&reuseCard==null&&!ui.loading)StudyDialog(compactWindow,onDismissRequest={reuseCardId=null},
+        title={Text("原卡暂不可用")},text={Text("没有重新提交复用操作。请返回，重新读取原卡后再核对。")},
+        confirmButton={TextButton({reuseCardId=null;vm.refresh()}){Text("返回并重新读取")}})
     transformKind?.let{kind->key(note.base.id,kind,transformCardIds){
         CardTransformDialog(transforms,note.base.id,transformCardIds,kind,
             onDismiss={if(!transformPending){transformKind=null;transformCardIds=emptyList()}},
@@ -1157,7 +1163,7 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
         },enabled=!ui.busy&&!mapWrite.busy&&!portalWrite.busy&&(ui.unknown||(structuralEditorSubmitted&&mapWrite.unknown)||(editable&&title.isNotBlank())),modifier=Modifier.testTag("study-save-card")){Text(if(ui.unknown||(structuralEditorSubmitted&&mapWrite.unknown))"核对原操作"else"保存")}},dismissButton={TextButton(onClick={editor=null;structuralEditorSubmitted=false;returnTab?.let(vm::selectTab);returnTab=null},enabled=!ui.busy&&!ui.unknown&&!mapSaving,modifier=Modifier.testTag("study-cancel-card")){Text("取消")}})
     }}
     presentationCardId?.let{cardId->CardPresentationEditor(note.base.id,cardId,embedded=compactWindow){presentationCardId=null}}
-    chosenCard?.takeIf{presentationCardId==null}?.let{card->inspectorState.SaveableStateProvider(card.id){val node=chosenNode
+    chosenCard?.takeIf{presentationCardId==null&&reuseCardId==null}?.let{card->inspectorState.SaveableStateProvider(card.id){val node=chosenNode
         key(note.base.id,card.id,node?.id,mapKey){
         val sourceScope=rememberCoroutineScope()
         var sourceOpening by remember{mutableStateOf(false)}
@@ -1250,6 +1256,8 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
             TextButton(onClick={openCardKnowledge(card.id,false);sourceJob?.cancel();chosenCardId=null},enabled=card.id !in structureCards.map{it.id},modifier=Modifier.testTag("card-properties")){Text("属性与回忆")}
             if(node!=null)TextButton({moreActions=!moreActions},modifier=Modifier.testTag("card-node-actions")){Text("组织此主题")}
             if(card.trashedAt==null&&moreActions){
+                if(card.id !in structureCards.map{it.id})TextButton({sourceJob?.cancel();reuseCardId=card.id},enabled=editable,
+                    modifier=Modifier.testTag("card-reuse-open")){Text("跨笔记复用 · 引用或独立副本")}
                 if(card.id !in structureCards.map{it.id})TextButton(onClick={vm.submit(StudyCommand(id(),note.base.id,StudyAction.REUSE,mapId=currentMap,cardId=card.id,nodeId=id(),y=nextNodeY(null)))},enabled=editable,modifier=Modifier.testTag("study-reuse-card")){Text("复用到脑图新位置")}
                 if(node!=null){
                     TextButton(onClick={focusBranch(node.id);sourceJob?.cancel();chosenCardId=null;chosenNodeId=null},modifier=Modifier.testTag("study-focus-branch")){Text("聚焦此分支")}
