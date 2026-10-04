@@ -70,6 +70,7 @@ internal fun ComposeTestRule.waitForSavedInk(){waitUntil(15000){
     app.navigationReady.value&&onAllNodesWithTag("ink-surface").fetchSemanticsNodes().isNotEmpty()
 }}
 internal fun ComposeTestRule.openOverviewGrid(){
+    revealAction("quick-overview")
     onNodeWithTag("quick-overview").performClick()
     if(onAllNodesWithTag("page-grid").fetchSemanticsNodes().isEmpty())onNodeWithTag("overview-layout").performClick()
 }
@@ -111,6 +112,11 @@ internal fun ComposeTestRule.assertCurrentPage(text:String){
 internal fun ComposeTestRule.revealAction(tag:String){
     if(onAllNodesWithTag(tag).fetchSemanticsNodes().isNotEmpty())return
     when {
+        tag in setOf("quick-overview","quick-settings","book-search","quick-fullscreen","quick-export","quick-timer","document-add-page","study-close")&&onAllNodesWithTag("document-more").fetchSemanticsNodes().isNotEmpty()->{
+            waitUntil(15_000){runCatching{onNodeWithTag("document-more").assertIsDisplayed().assertIsEnabled()}.isSuccess}
+            onNodeWithTag("document-more").performClick()
+        }
+        tag in setOf("node-add-child","node-add-sibling","node-links")->onNodeWithTag("node-more").assertIsDisplayed().assertIsEnabled().performClick()
         (tag.startsWith("study-card-")||tag.startsWith("outline-"))&&onAllNodesWithTag("study-list").fetchSemanticsNodes().isNotEmpty()->onNodeWithTag("study-list").performScrollToNode(hasTestTag(tag))
         tag=="toolbar-customize"->onNodeWithTag("toolbar-more").performClick()
         tag.startsWith("study-tab-")||tag.startsWith("study-fit-")||tag in setOf("study-new-map","study-insert-map","study-save-template","study-add-card","study-expand-all","study-focus-all","study-collapse-all","study-arrange")->{

@@ -5,6 +5,12 @@ import java.io.*
 import java.util.UUID
 
 enum class StudyAction { CREATE, UNDO_CAPTURE, CREATE_EXCERPT, RECROP_EXCERPT, EDIT, REUSE, MOVE, REPARENT, REMOVE_NODE, TRASH_CARD, RESTORE_CARD, ARRANGE, ORGANIZE }
+/** Stored cards and source snapshots retain their capacity charge while recycled. */
+object StudyCapacity {
+    const val MAX_CARDS_PER_NOTEBOOK=200
+    const val MAX_SNAPSHOT_BYTES=32_000_000L
+    const val MAX_SOURCE_BYTES=1_800_000
+}
 class StudySourceDraft(val pageId:String,val inkRevision:Long,val bounds:CanvasBounds,ids:List<String>,preview:ByteArray?=null,val objectRevision:Long?=null){
     private val image=preview?.clone()
     fun previewBytes()=image?.clone()
@@ -17,9 +23,11 @@ data class StudyNode(val id:String,val cardId:String,val parentId:String?,val x:
 /** Cards own content. Nodes own only placement and hierarchy. */
 object StudyGraph {
     const val MAX_NODES=128
+    const val MAX_RECORDS=256
     fun validate(nodes:List<StudyNode>){
-        require(nodes.size<=256&&nodes.map{it.id}.distinct().size==nodes.size)
-        val all=nodes.associateBy{it.id};val active=nodes.filter{!it.removed};require(active.size<=MAX_NODES)
+        require(nodes.size<=MAX_RECORDS){"STUDY_NODE_RECORD_BUDGET"}
+        require(nodes.map{it.id}.distinct().size==nodes.size)
+        val all=nodes.associateBy{it.id};val active=nodes.filter{!it.removed};require(active.size<=MAX_NODES){"STUDY_NODE_BUDGET"}
         nodes.forEach{n->UUID.fromString(n.id);UUID.fromString(n.cardId);require(n.revision in 1 until Long.MAX_VALUE)
             require(n.x.isFinite()&&n.y.isFinite()&&n.x in -40000.0..40000.0&&n.y in -40000.0..40000.0)
             require(n.parentId==null||all[n.parentId]?.let{it.id!=n.id&&(!it.removed||n.removed)}==true)

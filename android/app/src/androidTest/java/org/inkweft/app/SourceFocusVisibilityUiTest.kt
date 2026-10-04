@@ -220,7 +220,8 @@ class SourceFocusVisibilityUiTest {
         waitFor("ink-surface")
         tap("quick-study"); tap("study-map-picker"); tap("study-map-${f.mapId}"); tap("study-tab-2")
         waitMap(f)
-        if (!compose.runOnIdle { lock(note.id).readOnly.value }) tap("study-readonly")
+        compose.onNodeWithTag("study-readonly").assertDoesNotExist()
+        if (!compose.runOnIdle { lock(note.id).readOnly.value }) tap("quick-readonly")
         assertReadOnly(f, nativeMap = true)
         selectNode(f.node); tap("node-fold")
         compose.runOnIdle { assertNull(map().nodeBounds(f.child)); assertTrue(f.node in study(note.id).collapsedByMap[f.mapId].orEmpty()) }
@@ -277,10 +278,15 @@ class SourceFocusVisibilityUiTest {
     private fun assertReadOnly(f: Fixture, nativeMap: Boolean) {
         compose.waitUntil(15_000) { var ready = false
             compose.runOnIdle { ready = lock(f.note.id).readOnly.value && !lock(f.note.id).canWrite }; ready }
-        val measured = screenRect("ink-surface")
         compose.runOnIdle {
             assertTrue(lock(f.note.id).readOnly.value); assertFalse(lock(f.note.id).canWrite)
-            assertFalse(paper("ink-surface", measured).allowInput)
+            // Source geometry is checked while visible above; after returning to
+            // a narrow map, the retained editor must still reject author input.
+            val document = InkCanvasView::class.java.getDeclaredField("documentId").apply { isAccessible = true }
+            val selectedPage = pages(f.note.id).ui.value.selectedId
+            val editor = activityViews().filterIsInstance<InkCanvasView>().single {
+                !it.preview && !it.embeddedPage && document.get(it) == selectedPage }
+            assertFalse(editor.allowInput)
             if (nativeMap) assertFalse(map().authorEditing)
         }
     }
@@ -312,7 +318,7 @@ class SourceFocusVisibilityUiTest {
         try {
             waitFor("ink-surface"); waitFor("study-window-source-return")
             compose.waitUntil(15_000) { runCatching {
-                val panel = screenRect("study-panel"); val measured = screenRect("ink-surface")
+                val panel = screenRect(if (collapsed) "document-toolbar" else "study-panel"); val measured = screenRect("ink-surface")
                 val g = sourceGeometry(source, measured)
                 val selection = compose.runOnIdle { Triple(notebook().ui.value.selectedId,
                     pages(f.note.id).ui.value.selectedId, ink(source.pageId).ui.value.loading) }
@@ -324,16 +330,21 @@ class SourceFocusVisibilityUiTest {
                     abs(g.viewport.centerY - g.expected.centerY) < .5 && abs(g.viewport.zoom - g.expected.zoom) < .01 &&
                     contains(g.paper, g.projected) && !RectF.intersects(g.projected, panel)
             }.onFailure { lastProbeFailure = it }.getOrDefault(false) }
-            val panel = screenRect("study-panel"); val measured = screenRect("ink-surface")
+            val panel = screenRect(if (collapsed) "document-toolbar" else "study-panel"); val measured = screenRect("ink-surface")
             val g = sourceGeometry(source, measured)
             assertTrue("Actual source world bounds must lie inside the measured native paper: ${g.projected} in ${g.paper}", contains(g.paper, g.projected))
             assertFalse("Actual source screen bounds must not overlap the study panel", RectF.intersects(g.projected, panel))
             assertEquals(g.expected.centerX, g.viewport.centerX, .5); assertEquals(g.expected.centerY, g.viewport.centerY, .5)
             assertEquals("Refit must use the current native AndroidView size", g.expected.zoom, g.viewport.zoom, .01)
             if (collapsed) {
-                compose.onNodeWithTag("study-map").assertDoesNotExist()
-                assertEquals(48f * compose.activity.resources.displayMetrics.density, panel.height(), 2f)
-                assertTrue("Collapsed source bar must stay above actual paper", g.paper.top >= panel.bottom - 1f)
+                compose.onNodeWithTag("study-panel").assertIsNotDisplayed()
+                compose.onNodeWithTag("study-map").assertIsNotDisplayed()
+                compose.onNodeWithTag("study-window-source-return").assertIsDisplayed().assertIsEnabled()
+                val returnAction = screenRect("study-window-source-return")
+                val minimum = 48f * compose.activity.resources.displayMetrics.density
+                assertTrue("The return action keeps its full touch target", returnAction.width() >= minimum && returnAction.height() >= minimum)
+                assertTrue("Narrow source return stays inside the document header", contains(panel, returnAction))
+                assertTrue("Document source header stays above actual paper", g.paper.top >= panel.bottom - 1f)
             } else {
                 waitMap(f)
                 assertTrue("Wide source paper lane must be left of the temporary dock", g.paper.right <= panel.left + 1f)
@@ -425,10 +436,13 @@ class SourceFocusVisibilityUiTest {
     }
 
     private fun touchSourceHeaderSearchAndClose(f: Fixture, original: StudySourceRow) {
-        val header = screenRect("book-search"); val bar = screenRect("study-panel")
+        val header = screenRect("document-more"); val bar = screenRect("study-panel")
         assertFalse("Shifted actual document-header action must not overlap the collapsed source bar", RectF.intersects(header, bar))
+        tapVisible("document-more")
+        compose.onNodeWithTag("document-more-menu").assertIsDisplayed()
         tapVisible("book-search")
         waitFor("book-search-query")
+        compose.onNodeWithTag("document-more-menu").assertDoesNotExist()
         compose.onNodeWithTag("book-search-query").assertIsDisplayed()
         compose.onNodeWithContentDescription("关闭查找页内文字", useUnmergedTree = true)
             .assertIsDisplayed().assertIsEnabled().performTouchInput { click() }

@@ -19,6 +19,10 @@ internal data class MapNodeLayout(
     val preview:RectF?,val canExpand:Boolean,
 )
 
+/** Capture titles repeat the first source line; suppress that heading only in display projections. */
+internal fun repeatsExcerptBody(title:String,body:String):Boolean = body.isNotBlank() &&
+    title == body.lineSequence().firstOrNull{it.isNotBlank()}?.take(48)
+
 internal object MapNodeMetrics {
     const val WIDTH=232
     private const val PAD=14f
@@ -31,24 +35,33 @@ internal object MapNodeMetrics {
     }
     fun measure(title:String,body:String,source:MapSourceInfo?=null,fontScale:Float=1f,expanded:Boolean=false,structural:Boolean=false):MapNodeLayout {
         val factor=fontScale.coerceAtLeast(.5f)
-        val heading=textLayout(title.replace('\n',' '),if(structural)18f else 16f,factor,if(expanded)4 else 2,true)
-        val summary=body.takeIf{it.isNotBlank()&&!structural}?.let{textLayout(it,13f,factor,if(expanded)8 else 3)}
-        val caption=source?.let{
-            val paint=TextPaint(Paint.ANTI_ALIAS_FLAG).apply{textSize=11f*factor}
-            val label=TextUtils.ellipsize(it.label.replace('\n',' '),paint,(WIDTH-28)*2f,TextUtils.TruncateAt.MIDDLE).toString()
-            textLayout(label,11f,factor,2)
+        val textOnlyHeading=!structural&&repeatsExcerptBody(title,body)
+        val showPreview=source!=null&&!structural&&(body.isBlank()||expanded)
+        val ratio=source?.previewRatio?:1.5f
+        val width=when {
+            structural->WIDTH.toFloat()
+            expanded->320f
+            showPreview->(sqrt(24_000f*ratio)+PAD*2).coerceIn(196f,308f)
+            else->WIDTH.toFloat()
         }
+        val contentWidth=(width-PAD*2).roundToInt()
+        val heading=textLayout(if(textOnlyHeading)body else title.replace('\n',' '),
+            if(structural)18f else if(textOnlyHeading)14f else 16f,factor,
+            if(textOnlyHeading){if(expanded)8 else 4}else if(expanded)3 else 2,
+            bold=!textOnlyHeading,width=contentWidth)
+        val summary=body.takeIf{it.isNotBlank()&&!structural&&!textOnlyHeading}?.let{textLayout(it,13f,factor,if(expanded)8 else 3,width=contentWidth)}
+        val caption=source?.let{textLayout(it.label.replace('\n',' '),11f,factor,1,width=contentWidth)}
         var y=PAD+heading.height
         val summaryTop=if(summary!=null)y+8f else y
         if(summary!=null)y=summaryTop+summary.height
-        val preview=if(source!=null&&!structural&&(summary==null||expanded)){
-            // Metadata and bitmap arrival never resize the reserved original-content slot.
-            RectF(PAD,y+8f,WIDTH-PAD,y+8f+(if(expanded)144f else 88f)).also{y=it.bottom}
+        val preview=if(showPreview){
+            val height=(contentWidth/ratio).coerceIn(24f,if(expanded)200f else 160f)
+            RectF(PAD,y+8f,width-PAD,y+8f+height).also{y=it.bottom}
         }else null
         val sourceTop=if(caption!=null)y+8f else y
-        if(caption!=null)y=sourceTop+max(caption.height.toFloat(),ceil(caption.paint.fontSpacing*2))
+        if(caption!=null)y=sourceTop+caption.height
         val truncated=(0 until heading.lineCount).any{heading.getEllipsisCount(it)>0}||summary?.let{s->(0 until s.lineCount).any{s.getEllipsisCount(it)>0}}==true
-        return MapNodeLayout(WIDTH.toFloat(),max(if(structural)60f else 64f,y+PAD),heading,PAD,summary,summaryTop,caption,sourceTop,preview,truncated||source!=null||expanded)
+        return MapNodeLayout(width,max(if(structural)60f else 64f,y+PAD),heading,PAD,summary,summaryTop,caption,sourceTop,preview,truncated||source!=null||expanded)
     }
 }
 
@@ -96,9 +109,11 @@ internal object MapScenePainter {
                     paint.color=0xfff5f6f8.toInt();c.drawRoundRect(target,6f,6f,paint)
                     val bitmap=frame?.bitmap?.takeUnless{it.isRecycled}
                     if(bitmap!=null){
-                        val scale=min(target.width()/bitmap.width,target.height()/bitmap.height)
-                        val width=bitmap.width*scale;val height=bitmap.height*scale
-                        c.drawBitmap(bitmap,null,RectF(target.centerX()-width/2,target.centerY()-height/2,target.centerX()+width/2,target.centerY()+height/2),paint)
+                        val content=frame?.contentBounds
+                        val contentWidth=content?.width()?:bitmap.width;val contentHeight=content?.height()?:bitmap.height
+                        val scale=min(target.width()/contentWidth,target.height()/contentHeight)
+                        val width=contentWidth*scale;val height=contentHeight*scale
+                        c.drawBitmap(bitmap,content,RectF(target.centerX()-width/2,target.centerY()-height/2,target.centerX()+width/2,target.centerY()+height/2),paint)
                     }else{
                         val label=when{frame==null->"放大或选中查看原貌";frame.unavailable->"原貌暂不可用 · 展开重试";else->"正在读取原貌…"}
                         val placeholder=MapNodeMetrics.textLayout(label,11f,fontScale,2,width=(target.width()-16).toInt())

@@ -15,11 +15,11 @@ class MapEmbedRepository(private val db:NoteDatabase){
         val scene=MapGraphAccess(db).read(ref.notebookId).firstOrNull{it.ref==ref&&it.available}?:error("MAP_UNAVAILABLE")
         require(scene.signature()==expectedSignature){"MAP_CONTENT_CHANGED"}
         val originals=scene.nodes.mapNotNull{it.cardId}.distinct()
-        require(db.study().cards(ref.notebookId).size+originals.size<=200){"STUDY_CARD_BUDGET"}
-        val used=db.openHelper.writableDatabase.query("SELECT COALESCE(SUM(length(snapshot)),0) FROM study_sources").use{it.moveToFirst();it.getLong(0)}
+        require(db.study().cards(ref.notebookId).size+originals.size<=StudyCapacity.MAX_CARDS_PER_NOTEBOOK){"STUDY_CARD_BUDGET"}
+        val used=db.study().snapshotBytes()
         var copiedBytes=0L
         originals.forEach{copiedBytes+=db.study().source(it)?.snapshot?.size?:0}
-        require(used+copiedBytes<=32_000_000){"STUDY_SNAPSHOT_BUDGET"}
+        require(used+copiedBytes<=StudyCapacity.MAX_SNAPSHOT_BYTES){"STUDY_SNAPSHOT_BUDGET"}
         fun fresh(value:String)=UUID.nameUUIDFromBytes("$operationId:$value".toByteArray()).toString()
         val newRef=MapRef(ref.notebookId,fresh("map"))
         val newMapId=checkNotNull(newRef.mapId)

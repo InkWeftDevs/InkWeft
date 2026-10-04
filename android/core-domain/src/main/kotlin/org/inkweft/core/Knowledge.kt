@@ -43,7 +43,8 @@ object KnowledgeCodec {
             is KnowledgeData.Placement->{id(v.cardId);require(v.x.isFinite()&&v.y.isFinite()&&v.x in -40000.0..40000.0&&v.y in -40000.0..40000.0)}
             is KnowledgeData.Alias->{id(v.cardId);require(v.name.isNotBlank()&&v.name.length<=120)}
             is KnowledgeData.MapDefinition->{
-                require(v.title.isNotBlank()&&v.title.length<=120&&v.layout in setOf("right","bilateral")&&v.structures.size<=128)
+                require(v.title.isNotBlank()&&v.title.length<=120&&v.layout in setOf("right","bilateral"))
+                require(v.structures.size<=StudyGraph.MAX_NODES){"STUDY_NODE_BUDGET"}
                 val structures=v.structures.associateBy{it.id};require(structures.size==v.structures.size)
                 v.structures.forEach{n->
                     id(n.id);n.parentId?.let(::id);require(n.title.isNotBlank()&&n.title.length<=120)
@@ -55,7 +56,7 @@ object KnowledgeCodec {
             }
             is KnowledgeData.MapTemplate->{require(v.title.isNotBlank()&&v.title.length<=120&&v.version==1);MapTemplates.validate(v.layout,v.nodes)}
             is KnowledgeData.MapOccurrence->{id(v.mapId);id(v.cardId);v.parentId?.let(::id);require(v.x.isFinite()&&v.y.isFinite()&&v.x in -40000.0..40000.0&&v.y in -40000.0..40000.0)}
-            is KnowledgeData.MapOrder->{v.mapId?.let(::id);require(v.orderedNodeIds.size<=StudyGraph.MAX_NODES&&v.orderedNodeIds.distinct().size==v.orderedNodeIds.size);v.orderedNodeIds.forEach(::id)}
+            is KnowledgeData.MapOrder->{v.mapId?.let(::id);require(v.orderedNodeIds.size<=StudyGraph.MAX_NODES){"STUDY_NODE_BUDGET"};require(v.orderedNodeIds.distinct().size==v.orderedNodeIds.size);v.orderedNodeIds.forEach(::id)}
             is KnowledgeData.MapPortal->{v.sourceMapId?.let(::id);id(v.sourceNodeId);v.targetMapId?.let(::id);v.targetBranchId?.let(::id);require(v.sourceMapId!=v.targetMapId)}
             is KnowledgeData.Decoration->{id(v.from);id(v.to);require(v.from!=v.to&&v.label.length<=120)}
         }

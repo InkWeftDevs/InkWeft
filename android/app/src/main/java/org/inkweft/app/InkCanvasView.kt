@@ -243,7 +243,8 @@ class InkCanvasView(context:Context):View(context){
         val activeMask=if(inputId!=-1&&gestureErase&&!gestureOnlyTape&&!gestureWhole&&raw.isNotEmpty())sweptPath(raw.map{EraserPoint(it.x,it.y)},gestureRadius)else null
         val separateErasing=activeMask!=null&&gestureOnlyHighlighter
         val movingOrErasing=selectedIds + if(separateErasing)eraseTargets else emptySet()
-        val stable=content.filter{it.id !in suppressedStrokeIds && it.id !in movingOrErasing && bounds[it.id]?.intersects(visible)==true}
+        // Keep content identity stable across zoom; the worker culls offscreen strokes.
+        val stable=content.filter{it.id !in suppressedStrokeIds && it.id !in movingOrErasing}
         // The raster is in viewport pixels; live input and object layers stay independent.
         canvas.restoreToCount(save)
         val staticSave=canvas.save()

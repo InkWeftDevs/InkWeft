@@ -87,13 +87,13 @@ class CardSourceNavigationUiTest {
         compose.waitForIdle()
     }
 
-    private inline fun <reified T : View> native(preview: Boolean = false): T {
+    private inline fun <reified T : View> native(preview: Boolean = false, includeUnplaced: Boolean = false): T {
         val queue = java.util.ArrayDeque<View>()
         queue.add(compose.activity.window.decorView)
         WindowInspector.getGlobalWindowViews().filter { it !== compose.activity.window.decorView }.forEach(queue::add)
         while (queue.isNotEmpty()) {
             val view = queue.removeFirst()
-            if (view is T && view.isShown && (view !is InkCanvasView || view.preview == preview && !view.embeddedPage)) return view
+            if (view is T && (includeUnplaced || view.isShown) && (view !is InkCanvasView || view.preview == preview && !view.embeddedPage)) return view
             if (view is ViewGroup) repeat(view.childCount) { queue.add(view.getChildAt(it)) }
         }
         error("Visible native ${T::class.java.simpleName} (preview=$preview) missing")
@@ -155,7 +155,8 @@ class CardSourceNavigationUiTest {
                 runCatching { native<MindMapView>().nodeBounds(f.node) != null }.getOrDefault(false) }
             ready
         }
-        tap("study-readonly")
+        compose.onNodeWithTag("study-readonly").assertDoesNotExist()
+        tap("quick-readonly")
         assertReadOnly(f)
         selectNode(f.node)
         tap("node-fold")
@@ -229,8 +230,12 @@ class CardSourceNavigationUiTest {
             assertFalse(native<InkCanvasView>().allowInput)
         }
         if (compose.onAllNodesWithTag("study-map").fetchSemanticsNodes().isEmpty()) {
-            val panel = compose.onNodeWithTag("study-panel").fetchSemanticsNode().boundsInRoot
-            assertEquals(48f * compose.activity.resources.displayMetrics.density, panel.height, 2f)
+            compose.onNodeWithTag("study-panel").assertIsNotDisplayed()
+            val header = compose.onNodeWithTag("document-toolbar").assertIsDisplayed().fetchSemanticsNode().boundsInRoot
+            val back = compose.onNodeWithTag("study-window-source-return").fetchSemanticsNode().boundsInRoot
+            val minimum = 48f * compose.activity.resources.displayMetrics.density
+            assertTrue(back.width >= minimum - 1f && back.height >= minimum - 1f)
+            assertTrue(back.left >= header.left && back.right <= header.right && back.top >= header.top && back.bottom <= header.bottom)
         }
         tapFooter("study-window-source-return")
         waitFor("study-map")
@@ -252,7 +257,11 @@ class CardSourceNavigationUiTest {
             assertTrue(lock(f.note.id).readOnly.value)
             assertFalse(lock(f.note.id).canWrite)
             assertFalse(native<MindMapView>().authorEditing)
-            assertFalse(native<InkCanvasView>().allowInput)
+            // Returning to a narrow map retains the editor without placing it.
+            val paper = native<InkCanvasView>(includeUnplaced = true)
+            val document = InkCanvasView::class.java.getDeclaredField("documentId").apply { isAccessible = true }
+            assertEquals(pages(f.note.id).ui.value.selectedId, document.get(paper))
+            assertFalse(paper.allowInput)
         }
     }
 
@@ -378,7 +387,8 @@ class CardSourceNavigationUiTest {
         val context = mapState(f)
         tapFooter("study-open-source")
         compose.onNodeWithTag("study-card-details").assertDoesNotExist()
-        compose.onNodeWithTag("study-panel").assertIsDisplayed()
+        compose.onNodeWithTag("study-window-source-return").assertIsDisplayed().assertIsEnabled()
+        compose.onNodeWithTag("document-toolbar").assertIsDisplayed()
         assertPage(f, f.sourcePage, 1)
         assertFocus(originalSource)
         restoreMapAfterSource(f, context)

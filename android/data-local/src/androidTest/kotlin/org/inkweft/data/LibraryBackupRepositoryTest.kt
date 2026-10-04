@@ -2,6 +2,7 @@
 package org.inkweft.data
 
 import android.content.Context
+import androidx.room.withTransaction
 import androidx.test.core.app.ApplicationProvider
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.first
@@ -37,6 +38,52 @@ class LibraryBackupRepositoryTest {
         return n.id
     }
     private suspend fun inspect(repo:LibraryBackupRepository,snapshot:LibraryBackupRepository.Snapshot)=snapshot.file.inputStream().use{repo.inspect(it)}
+    /** Complete synthetic author rows with real encoded sources; snapshot + inspect still validate every row. */
+    private suspend fun seedSnapshotBudget(db:NoteDatabase,extraByte:Boolean):Pair<String,String> {
+        val book=WorkspaceRepository(db).create("合法合成备份容量",false,PaperStyle.BLANK).id
+        val stroke=InkStroke(id(),InkPen.PEN,0xff123456.toInt(),2f,InkTool.STYLUS,listOf(InkSample(20f,20f,0)))
+        assertTrue(InkRepository(db).save(CommitInk(id(),book,0,InkMutation.Add(stroke))) is InkCommitResult.Committed)
+        val base=InkPageFile("合成来源","",listOf(stroke),false,PaperStyle.BLANK).encode().size
+        val cache=mutableMapOf<Int,ByteArray>();var first=""
+        db.withTransaction {repeat(160){i->
+            val size=100_000+if(extraByte&&i==0)1 else 0
+            val bytes=cache.getOrPut(size){InkPageFile("合成来源","x".repeat(size-base),listOf(stroke),false,PaperStyle.BLANK).encode().also{
+                assertEquals(size,it.size);assertEquals(stroke.id,InkPageFile.decode(it).strokes.single().id)}}
+            val card=StudyCardRow(id(),book,1,"容量来源 $i","");if(i==0)first=card.id
+            db.study().addCard(card);db.study().revision(StudyCardRevisionRow(card.id,1,card.title,card.body,null))
+            db.study().source(StudySourceRow(card.id,book,1,10.0,10.0,30.0,30.0,stroke.id,bytes))
+        }};return book to first
+    }
+    @Test fun legalSnapshotArchivesRejectMergedOverflowAndReplayAtExactCapacity()=fixture{s,t->
+        val incomingBook=seedSnapshotBudget(s,false).first;val (existingBook,recycled)=seedSnapshotBudget(t,true)
+        StudyRepository(t).submit(StudyCommand(id(),existingBook,StudyAction.TRASH_CARD,cardId=recycled,expectedRevision=1))
+        assertEquals(16_000_000L,s.study().snapshotBytes());assertEquals(16_000_001L,t.study().snapshotBytes())
+        val restore=LibraryBackupRepository(context,t)
+        LibraryBackupRepository(context,s).snapshot().use{incoming->
+            restore.snapshot().use{existing->inspect(restore,existing).use{original->
+                inspect(restore,incoming).use{preview->
+                    assertEquals(1,original.notes);assertEquals(1,preview.notes)
+                    assertEquals(LibraryBackupRepository.RestoreResult.SNAPSHOT_CAPACITY_EXCEEDED,restore.restore(preview))
+                    assertNull(t.notes().note(incomingBook));assertEquals(16_000_001L,t.study().snapshotBytes())
+                    restore.snapshot().use{after->inspect(restore,after).use{assertEquals(original.canonical,it.canonical)}}
+                    // Move this isolated fixture to the exact boundary by re-encoding one less ASCII byte.
+                    // This setup is separate from the repository recrop transaction tests.
+                    val source=t.study().source(recycled)!!;val page=InkPageFile.decode(source.snapshot)
+                    val smaller=InkPageFile(page.title,page.text.dropLast(1),page.strokes,page.world,page.paper,page.objects,page.source).encode()
+                    assertEquals(source.snapshot.size-1,smaller.size);assertEquals(1,t.study().updateSource(source.copy(snapshot=smaller)))
+                    restore.snapshot().use{exact->inspect(restore,exact).use{assertEquals(1,it.notes)}}
+                    assertEquals(LibraryBackupRepository.RestoreResult.RESTORED,restore.restore(preview))
+                    assertEquals(32_000_000L,t.study().snapshotBytes());assertNotNull(t.study().card(recycled)!!.trashedAt)
+                    assertEquals(320,t.study().cards(existingBook).size+t.study().cards(incomingBook).size)
+                    restore.snapshot().use{full->inspect(restore,full).use{beforeReplay->
+                        assertEquals(LibraryBackupRepository.RestoreResult.ALREADY_PRESENT,restore.restore(preview))
+                        assertEquals(32_000_000L,t.study().snapshotBytes())
+                        restore.snapshot().use{after->inspect(restore,after).use{assertEquals(beforeReplay.canonical,it.canonical)}}
+                    }}
+                }
+            }}
+        }
+    }
     @Test fun roundTripPreservesOriginalIdsHiddenInkMasksHistoryAndMetadata()=fixture{s,t->
         val id=seed(s);val repo=LibraryBackupRepository(context,t)
         LibraryBackupRepository(context,s).snapshot().use{file->inspect(repo,file).use{p->

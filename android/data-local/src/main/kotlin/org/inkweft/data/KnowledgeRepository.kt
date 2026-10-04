@@ -27,7 +27,7 @@ data class KnowledgeReceiptRow(@PrimaryKey val operationId:String,val notebookId
     @Insert(onConflict=OnConflictStrategy.ABORT) suspend fun receipt(row:KnowledgeReceiptRow)
 }
 
-enum class KnowledgeRejection { CONFLICT, DUPLICATE, UNAVAILABLE, INVALID }
+enum class KnowledgeRejection { CONFLICT, DUPLICATE, UNAVAILABLE, INVALID, STUDY_NODE_BUDGET, STUDY_NODE_RECORD_BUDGET, KNOWLEDGE_BUDGET }
 class KnowledgeRejected(val reason:KnowledgeRejection):IllegalArgumentException(reason.name)
 sealed interface KnowledgeOutcome {
     data class Success(val id:String):KnowledgeOutcome
@@ -174,6 +174,9 @@ class KnowledgeRepository(private val db:NoteDatabase,private val fault:(Knowled
                     "KNOWLEDGE_VERSION_CHANGED","SOURCE_CHANGED","REVIEW_CARD_CHANGED"->KnowledgeRejection.CONFLICT
                     "BOOKMARK_EXISTS","PROPERTY_EXISTS","LINK_EXISTS","MAP_PORTAL_EXISTS"->KnowledgeRejection.DUPLICATE
                     "BOOK_UNAVAILABLE","MAP_PORTAL_SOURCE_UNAVAILABLE","MAP_PORTAL_TARGET_UNAVAILABLE"->KnowledgeRejection.UNAVAILABLE
+                    "STUDY_NODE_BUDGET"->KnowledgeRejection.STUDY_NODE_BUDGET
+                    "STUDY_NODE_RECORD_BUDGET"->KnowledgeRejection.STUDY_NODE_RECORD_BUDGET
+                    "KNOWLEDGE_BUDGET"->KnowledgeRejection.KNOWLEDGE_BUDGET
                     else->KnowledgeRejection.INVALID
                 })
             }
@@ -181,7 +184,13 @@ class KnowledgeRepository(private val db:NoteDatabase,private val fault:(Knowled
                 try{
                     val changes=if(c.data is KnowledgeData.MapOrder)listOf(next)else graphChanges(c.notebookId,listOf(next))
                     commitGraph(c.notebookId,changes)
-                }catch(e:IllegalArgumentException){throw KnowledgeRejected(if(e.message=="MAP_ORDER_EXISTS")KnowledgeRejection.DUPLICATE else KnowledgeRejection.INVALID)}
+                }catch(e:IllegalArgumentException){throw KnowledgeRejected(when(e.message){
+                    "MAP_ORDER_EXISTS"->KnowledgeRejection.DUPLICATE
+                    "STUDY_NODE_BUDGET"->KnowledgeRejection.STUDY_NODE_BUDGET
+                    "STUDY_NODE_RECORD_BUDGET"->KnowledgeRejection.STUDY_NODE_RECORD_BUDGET
+                    "KNOWLEDGE_BUDGET"->KnowledgeRejection.KNOWLEDGE_BUDGET
+                    else->KnowledgeRejection.INVALID
+                })}
             }else{
                 if(old==null)dao.insert(next)else check(dao.update(next)==1)
                 dao.revision(KnowledgeRevisionRow(next.id,next.revision,next.notebookId,next.payload,next.removed))

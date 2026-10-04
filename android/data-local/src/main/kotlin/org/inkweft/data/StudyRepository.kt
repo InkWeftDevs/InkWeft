@@ -23,6 +23,8 @@ interface StudyDao {
     @Query("SELECT id,notebookId,title,trashedAt FROM study_cards ORDER BY id") fun observeLearningCards():Flow<List<LearningCardRow>>
     @Query("SELECT s.cardId FROM study_sources s JOIN study_cards c ON c.id=s.cardId WHERE c.notebookId=:book") fun observeSourceIds(book:String):Flow<List<String>>
     @Query("SELECT s.cardId FROM study_sources s JOIN study_cards c ON c.id=s.cardId WHERE c.notebookId=:book") suspend fun sourceIds(book:String):List<String>
+    @Query("SELECT COALESCE(SUM(length(snapshot)),0) FROM study_sources") fun observeSnapshotBytes():Flow<Long>
+    @Query("SELECT COALESCE(SUM(length(snapshot)),0) FROM study_sources") suspend fun snapshotBytes():Long
     @Query("SELECT c.id,c.title,c.body,s.pageId,s.`left`,s.`top`,s.`right`,s.`bottom` FROM study_cards c JOIN study_sources s ON s.cardId=c.id WHERE c.notebookId=:book AND c.trashedAt IS NULL ORDER BY c.id") fun excerpts(book:String):Flow<List<ExcerptRow>>
     @Query("SELECT * FROM study_cards ORDER BY id") fun observeAllCards():Flow<List<StudyCardRow>>
     @Query("SELECT * FROM study_card_revisions WHERE cardId=:id AND revision=:revision") suspend fun cardVersion(id:String,revision:Long):StudyCardRevisionRow?
@@ -53,6 +55,8 @@ enum class StudyFault { BEFORE_RECEIPT, AFTER_COMMIT }
 class StudyRepository(private val db:NoteDatabase,private val fault:(StudyFault)->Unit={}) {
     fun excerpts(book:String)=db.study().excerpts(book)
     fun cards(book:String)=db.study().observeCards(book)
+    fun observeSnapshotBytes():Flow<Long> = db.study().observeSnapshotBytes()
+    suspend fun snapshotBytes():Long = db.study().snapshotBytes()
     fun observeGraph(book:String,mapId:String?=null):Flow<StudyGraphSnapshot> =
         db.invalidationTracker.createFlow("study_cards","study_nodes","knowledge_records","study_sources").map{readGraph(book,mapId)}
     suspend fun readGraph(book:String,mapId:String?=null):StudyGraphSnapshot=db.withTransaction{
@@ -128,7 +132,8 @@ class StudyRepository(private val db:NoteDatabase,private val fault:(StudyFault)
             fun ownedNode():StudyNodeRow=studyNotNull(nodes.find{it.id==c.nodeId&&!it.removed})
             fun validParent(){studyRequire(c.parentId==null||nodes.any{it.id==c.parentId&&!it.removed}){"MAP_PARENT_UNAVAILABLE"}}
             suspend fun newNode(){
-                studyRequire(nodes.size<256&&nodes.count{!it.removed}<StudyGraph.MAX_NODES)
+                studyRequire(nodes.size<StudyGraph.MAX_RECORDS){"STUDY_NODE_RECORD_BUDGET"}
+                studyRequire(nodes.count{!it.removed}<StudyGraph.MAX_NODES){"STUDY_NODE_BUDGET"}
                 validParent();val n=StudyNodeRow(studyNotNull(c.nodeId),c.notebookId,studyNotNull(c.cardId),c.parentId,c.x,c.y)
                 validateStudyGraph((nodes+n).map{it.model()})
                 val anchor=c.afterNodeId?.let{id->studyNotNull(nodes.find{it.id==id&&!it.removed}).also{studyRequire(it.parentId==c.parentId){"MAP_INSERT_ANCHOR_CHANGED"}}}?.id?:c.parentId
@@ -149,14 +154,14 @@ class StudyRepository(private val db:NoteDatabase,private val fault:(StudyFault)
                     val scale=maxOf(24.0/minOf(w,h),minOf(1.0,1000.0/maxOf(w,h)))
                     studyRequire(maxOf(w,h)*scale<=4000){"EXCERPT_TOO_NARROW"}
                     InkPageFile("区域摘录","",emptyList(),true,PaperStyle.BLANK,listOf(PageObject(java.util.UUID.randomUUID().toString(),PageObjectKind.IMAGE,0f,0f,(w*scale).toFloat(),(h*scale).toFloat(),image=java.util.Base64.getEncoder().encodeToString(picture)))).encode()
-                };studyRequire(bytes.size<=1_800_000)
-                val used=db.openHelper.writableDatabase.query("SELECT COALESCE(SUM(length(snapshot)),0) FROM study_sources").use{it.moveToFirst();it.getLong(0)}
-                studyRequire(used-replacedBytes+bytes.size<=32_000_000){"STUDY_SNAPSHOT_BUDGET"}
+                };studyRequire(bytes.size<=StudyCapacity.MAX_SOURCE_BYTES){"STUDY_SNAPSHOT_TOO_LARGE"}
+                val used=dao.snapshotBytes()
+                studyRequire(used-replacedBytes+bytes.size<=StudyCapacity.MAX_SNAPSHOT_BYTES){"STUDY_SNAPSHOT_BUDGET"}
                 return StudySourceRow(studyNotNull(c.cardId),p.id,ink.revision,s.bounds.left,s.bounds.top,s.bounds.right,s.bounds.bottom,s.strokeIds.joinToString(","),bytes)
             }
             val id=when(c.action){
                 StudyAction.CREATE,StudyAction.CREATE_EXCERPT->{
-                    studyRequire(cards.size<200){"STUDY_CARD_BUDGET"}
+                    studyRequire(cards.size<StudyCapacity.MAX_CARDS_PER_NOTEBOOK){"STUDY_CARD_BUDGET"}
                     var snap:StudySourceRow?=null
                     c.source?.let{snap=captureSource(it)}
                     val row=StudyCardRow(studyNotNull(c.cardId),c.notebookId,1,c.title,c.body)

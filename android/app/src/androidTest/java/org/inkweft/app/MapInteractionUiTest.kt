@@ -266,7 +266,15 @@ class MapInteractionUiTest {
   compose.runOnIdle{map().focusNode(f.root);val b=map().nodeBounds(f.root)!!;p=Offset(b.right+12*app.resources.displayMetrics.density,b.centerY())}
   compose.onNodeWithTag("study-map").performTouchInput{click(p)};compose.waitForIdle();compose.runOnIdle{assertTrue(f.root in vm(f.book).collapsedByMap["main"].orEmpty())};compose.onNodeWithTag("study-card-details").assertDoesNotExist()
   select(f.root);tap("node-fold");compose.runOnIdle{assertFalse(f.root in vm(f.book).collapsedByMap["main"].orEmpty())};tap("node-source")
-  compose.waitUntil(10000){compose.onAllNodesWithTag("study-open-source").fetchSemanticsNodes().isNotEmpty()};compose.onNodeWithTag("study-open-source").assertIsDisplayed();compose.onNodeWithTag("card-full-body").assertDoesNotExist();tap("card-back")
+  compose.waitUntil(10000){compose.onAllNodesWithTag("study-open-source").fetchSemanticsNodes().isNotEmpty()};compose.onNodeWithTag("study-open-source").assertIsDisplayed();compose.onNodeWithTag("card-full-body").assertDoesNotExist()
+  val beforeCards=runBlocking{app.study.cards(f.book).first()};val beforeNodes=runBlocking{app.study.nodes(f.book).first()};val beforeSource=runBlocking{app.study.source(f.card)}!!
+  tap("study-view-snapshot");compose.waitUntil(10000){compose.onAllNodesWithTag("study-snapshot-canvas").fetchSemanticsNodes().isNotEmpty()}
+  tap("study-snapshot-zoom-in");tap("study-snapshot-zoom-out");tap("study-snapshot-fit")
+  compose.onNodeWithTag("study-snapshot-canvas").performTouchInput{swipe(Offset(width*.4f,height*.4f),Offset(width*.6f,height*.6f))}
+  tap("study-snapshot-close");compose.onNodeWithTag("study-card-details").assertIsDisplayed();compose.onNodeWithTag("study-snapshot-viewer").assertDoesNotExist()
+  assertEquals(beforeCards,runBlocking{app.study.cards(f.book).first()});assertEquals(beforeNodes,runBlocking{app.study.nodes(f.book).first()})
+  val afterSource=runBlocking{app.study.source(f.card)}!!;assertEquals(beforeSource.copy(snapshot=afterSource.snapshot),afterSource);assertArrayEquals(beforeSource.snapshot,afterSource.snapshot)
+  tap("card-back")
  }
 
  @Test fun titleAndSummaryRenderInSeparateMeasuredAreas(){
@@ -282,6 +290,32 @@ class MapInteractionUiTest {
    for(y in (20+layout.titleTop).toInt() until (20+layout.titleTop+layout.title.height).toInt())for(x in 34 until 238)assertEquals("Summary must not replace title pixels",a.getPixel(x,y),b.getPixel(x,y))
    java.io.File(app.getExternalFilesDir(null),"mui-title-layout.png").outputStream().use{a.compress(Bitmap.CompressFormat.PNG,100,it)}
   }finally{a.recycle();b.recycle()}
+  val excerpt="摘录首行\n第二段也要显示"
+  val derived=MapNodeMetrics.measure(excerpt.lineSequence().first().take(48),excerpt)
+  assertNull(derived.summary);assertEquals(excerpt,derived.title.text.toString())
+  assertTrue((0 until derived.title.lineCount).all{derived.title.getEllipsisCount(it)==0})
+  val renamed=MapNodeMetrics.measure("自己概括的标题",excerpt)
+  assertEquals("自己概括的标题",renamed.title.text.toString());assertEquals(excerpt,checkNotNull(renamed.summary).text.toString())
+  val longExcerpt=(1..10).joinToString("\n"){"第${it}行：摘录内容"}
+  val excerptTitle=longExcerpt.lineSequence().first()
+  val compactExcerpt=MapNodeMetrics.measure(excerptTitle,longExcerpt)
+  val expandedExcerpt=MapNodeMetrics.measure(excerptTitle,longExcerpt,expanded=true)
+  assertNull(compactExcerpt.summary);assertNull(expandedExcerpt.summary)
+  assertEquals(4,compactExcerpt.title.lineCount);assertEquals(8,expandedExcerpt.title.lineCount)
+  assertTrue(compactExcerpt.title.getEllipsisCount(compactExcerpt.title.lineCount-1)>0)
+  assertTrue(expandedExcerpt.title.getEllipsisCount(expandedExcerpt.title.lineCount-1)>0)
+  assertTrue(compactExcerpt.canExpand);assertTrue(expandedExcerpt.height>compactExcerpt.height)
+  val thumbnail=Bitmap.createBitmap(120,80,Bitmap.Config.ARGB_8888)
+  try{
+   thumbnail.eraseColor(android.graphics.Color.WHITE)
+   android.graphics.Canvas(thumbnail).drawRect(20f,30f,100f,45f,android.graphics.Paint().apply{color=android.graphics.Color.BLACK})
+   val original=thumbnail.copy(Bitmap.Config.ARGB_8888,false)
+   try{assertEquals(android.graphics.Rect(18,28,102,47),previewContentBounds(thumbnail));assertTrue(thumbnail.sameAs(original))}finally{original.recycle()}
+   thumbnail.setPixel(0,0,android.graphics.Color.BLUE);assertEquals(android.graphics.Rect(0,0,120,80),previewContentBounds(thumbnail))
+   thumbnail.eraseColor(android.graphics.Color.TRANSPARENT)
+   android.graphics.Canvas(thumbnail).drawRect(20f,30f,100f,45f,android.graphics.Paint().apply{color=android.graphics.Color.BLACK})
+   assertEquals(android.graphics.Rect(18,28,102,47),previewContentBounds(thumbnail))
+  }finally{thumbnail.recycle()}
  }
 
  @Test fun expandedExcerptUsesMeasuredBoundsAndNewPlacementKeepsGap(){
@@ -292,6 +326,10 @@ class MapInteractionUiTest {
    val compact=MapNodeMetrics.measure(child.title,child.body,source,1.6f)
    val expanded=MapNodeMetrics.measure(child.title,child.body,source,1.6f,expanded=true)
    assertTrue(expanded.height>compact.height);assertTrue(expanded.canExpand);assertNotNull(expanded.preview)
+   val wide=MapNodeMetrics.measure("横向摘录","",MapSourceInfo("第 2 页",CanvasBounds(0.0,0.0,480.0,40.0)))
+   val tall=MapNodeMetrics.measure("竖向摘录","",MapSourceInfo("第 2 页",CanvasBounds(0.0,0.0,40.0,480.0)))
+   assertTrue(wide.width>MapNodeMetrics.WIDTH);assertTrue(checkNotNull(wide.preview).height()<=40f)
+   assertTrue(checkNotNull(tall.preview).height()<=160f);assertTrue(wide.width>tall.width)
    val next=captureDestinationPosition(MapScene(MapRef(book),"复习",listOf(parent,child),"test"),parent.id,1.6f)
    assertTrue(next.y>=child.y+compact.height+32);assertTrue(next.x>=parent.x+MapNodeMetrics.WIDTH+40)
    val firstBox=android.graphics.RectF(child.x.toFloat(),child.y.toFloat(),child.x.toFloat()+compact.width,child.y.toFloat()+compact.height)

@@ -123,7 +123,7 @@ internal class MindMapView(context:Context):View(context){
     private var structuralCardIds=emptySet<String>()
     private var layouts=emptyMap<String,MapNodeLayout>()
     private var layoutInputs:List<Any?>?=null
-    private val sourcePreviews=MapSourcePreview({card->(context.applicationContext as? InkWeftApplication)?.study?.source(card)},{invalidate()})
+    private val sourcePreviews=MapSourcePreview({card->(context.applicationContext as? InkWeftApplication)?.study?.source(card)},{remeasure();publishBounds();invalidate()})
     private var relationEdges=emptyList<Pair<String,String>>()
     private var knowledgeRelations=emptyList<StudyRelationEdge>()
     private var relationMode=false
@@ -162,12 +162,14 @@ internal class MindMapView(context:Context):View(context){
     private val d get()=resources.displayMetrics.density
     private fun nodeLayout(n:StudyNodeRow)=layouts.getValue(n.id)
     private fun worldBounds(n:StudyNodeRow):RectF{val size=nodeLayout(n);return RectF(x(n),y(n),x(n)+size.width,y(n)+size.height)}
+    fun previewSourceInfo(card:String,source:MapSourceInfo):MapSourceInfo = source.copy(
+        contentRatio=source.contentRatio?:sourcePreviews.aspectRatio(card,revisions[card]?:nodes.find{it.cardId==card}?.revision?:0))
     private fun remeasure(){
-        val input=listOf(nodes.map{it.id to it.cardId},titles,bodies,sources,structuralCardIds,resources.configuration.fontScale,expandedNodeId,relationMode)
+        val input=listOf(nodes.map{it.id to it.cardId},titles,bodies,sources,structuralCardIds,resources.configuration.fontScale,expandedNodeId,relationMode,sourcePreviews.shapeSignature())
         if(layoutInputs==input)return
         layoutInputs=input
         layouts=nodes.associate{n->n.id to MapNodeMetrics.measure(titles[if(relationMode)n.id else n.cardId].orEmpty(),bodies[n.cardId].orEmpty(),
-            sources[n.cardId].takeUnless{relationMode},resources.configuration.fontScale,expandedNodeId==n.id,n.cardId in structuralCardIds&&!relationMode)}
+            sources[n.cardId]?.let{previewSourceInfo(n.cardId,it)}.takeUnless{relationMode},resources.configuration.fontScale,expandedNodeId==n.id,n.cardId in structuralCardIds&&!relationMode)}
     }
     private fun requestSourcePreviews(){
         if(!isAttachedToWindow||relationMode||width<=0||height<=0){sourcePreviews.request(emptyList());return}

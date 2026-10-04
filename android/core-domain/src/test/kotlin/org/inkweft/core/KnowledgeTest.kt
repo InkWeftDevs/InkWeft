@@ -22,6 +22,17 @@ class KnowledgeTest {
     @Test(expected=IllegalArgumentException::class) fun invalidPlacementRejected(){KnowledgeCodec.encode(KnowledgeData.Placement(id(),Double.NaN,0.0))}
     @Test(expected=IllegalArgumentException::class) fun cannotPinNotebookAsCardRevision(){KnowledgeCodec.encode(KnowledgeData.Link(TargetRef(TargetKind.PAGE,id()),TargetRef(TargetKind.NOTE,id()),pinnedRevision=3))}
     @Test fun commandFreezesCallerOwnedLists(){val tags=mutableListOf("数学");val c=KnowledgeCommand(id(),id(),id(),0,KnowledgeData.Properties(id(),tags=tags));val digest=c.digest();tags.clear();c.payload.fill(0);assertEquals(digest,c.digest());assertEquals(listOf("数学"),(c.data as KnowledgeData.Properties).tags)}
+    @Test fun commandCreationReportsMapCapacityWithoutRelabelingMalformedData(){
+        val structures=List(129){MapStructure(id(),null,"主题",0.0,0.0)}
+        fun command(data:KnowledgeData)=KnowledgeCommand(id(),id(),id(),0,data)
+        fun reason(data:KnowledgeData):String?{try{command(data);fail("must reject")}catch(e:IllegalArgumentException){return e.message};return null}
+        command(KnowledgeData.MapDefinition("图",structures=structures.take(128)))
+        command(KnowledgeData.MapOrder(null,structures.take(128).map{it.id}))
+        assertEquals("STUDY_NODE_BUDGET",reason(KnowledgeData.MapDefinition("图",structures=structures)))
+        assertEquals("STUDY_NODE_BUDGET",reason(KnowledgeData.MapOrder(null,structures.map{it.id})))
+        assertFalse(reason(KnowledgeData.MapDefinition("图",layout="invalid")).orEmpty().startsWith("STUDY_NODE_"))
+        assertFalse(reason(KnowledgeData.MapOrder(null,listOf(structures[0].id,structures[0].id))).orEmpty().startsWith("STUDY_NODE_"))
+    }
     @Test fun operationReuseWithOtherPayloadChangesDigest(){val op=id();val book=id();val target=id();assertNotEquals(KnowledgeCommand(op,book,target,0,KnowledgeData.Collection("甲")).digest(),KnowledgeCommand(op,book,target,0,KnowledgeData.Collection("乙")).digest())}
     @Test fun collectionAndOrAreTypedAndDoNotCreateData(){val p=KnowledgeData.Properties(id(),ManualState.INBOX,listOf("数学"));assertFalse(KnowledgeQueries.matches(KnowledgeData.Collection("集合","数学",ManualState.REVIEW),p));assertTrue(KnowledgeQueries.matches(KnowledgeData.Collection("集合","数学",ManualState.REVIEW,true),p));assertEquals(ManualState.INBOX,p.state)}
     @Test fun backlinksDoNotNeedAnInverseAuthorEdge(){val a=TargetRef(TargetKind.CARD,id());val b=TargetRef(TargetKind.CARD,id());val link=KnowledgeData.Link(a,b);val graph=KnowledgeQueries.graph(b,listOf(link));assertEquals(listOf(link),graph.edges);assertEquals(setOf(a,b),graph.nodes)}

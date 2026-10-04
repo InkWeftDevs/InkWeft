@@ -15,7 +15,7 @@ import java.util.UUID
 class LibraryBackupRepository(private val context:Context,private val db:NoteDatabase,
     private val fault:(BackupFault)->Unit={}) {
     enum class BackupFault { BEFORE_RESTORE_COMMIT, AFTER_RESTORE_COMMIT }
-    enum class RestoreResult { RESTORED, ALREADY_PRESENT, IDENTITY_CONFLICT }
+    enum class RestoreResult { RESTORED, ALREADY_PRESENT, IDENTITY_CONFLICT, SNAPSHOT_CAPACITY_EXCEEDED }
     class Preview internal constructor(internal val stage:NoteDatabase,internal val root:File,
         val summary:LibraryArchive.Summary,val notes:Int,val pages:Int,val trashed:Int,val recycledPages:Int,
         internal val canonical:String):Closeable {
@@ -94,6 +94,8 @@ class LibraryBackupRepository(private val context:Context,private val db:NoteDat
                 }
                 require(db.documents().totalBytes()+preview.stage.documents().totalBytes()<=80_000_000){"DOCUMENT_LIBRARY_BUDGET"}
                 require(db.covers().otherBytes("")+preview.stage.covers().otherBytes("")<=32_000_000){"COVER_LIBRARY_BUDGET"}
+                if(db.study().snapshotBytes()+preview.stage.study().snapshotBytes()>StudyCapacity.MAX_SNAPSHOT_BYTES)
+                    return@live RestoreResult.SNAPSHOT_CAPACITY_EXCEEDED
                 val ctx=currentCoroutineContext()
                 SCHEMA.indices.forEach{index->SqlRows(source).visit(index){row->ctx.ensureActive();insert(target,index,row)}}
                 check(target.query("PRAGMA foreign_key_check").use{!it.moveToFirst()})
@@ -124,7 +126,7 @@ class LibraryBackupRepository(private val context:Context,private val db:NoteDat
         noRows("SELECT 1 FROM library_content_receipts WHERE kind NOT IN ('COPY','IMPORT','CREATE','RESOURCE','INK_GROUP')")
         noRows("SELECT 1 FROM notebook_pages WHERE trashedAt<0")
         noRows("SELECT 1 FROM study_nodes WHERE removed NOT IN (0,1)")
-        require(sql.query("SELECT COALESCE(SUM(length(snapshot)),0) FROM study_sources").use{it.moveToFirst();it.getLong(0)}<=32_000_000){"STUDY_SNAPSHOT_BUDGET"}
+        require(stage.study().snapshotBytes()<=StudyCapacity.MAX_SNAPSHOT_BYTES){"STUDY_SNAPSHOT_BUDGET"}
         noRows("SELECT 1 FROM study_nodes n JOIN study_cards c ON c.id=n.cardId WHERE c.notebookId!=n.notebookId OR (c.trashedAt IS NOT NULL AND n.removed=0)")
         noRows("SELECT 1 FROM study_nodes n JOIN study_nodes p ON p.id=n.parentId WHERE n.notebookId!=p.notebookId")
         noRows("SELECT 1 FROM study_card_revisions r JOIN study_cards c ON c.id=r.cardId WHERE r.revision<1 OR r.revision>c.revision OR length(r.title)>120 OR length(r.body)>20000")
@@ -151,12 +153,12 @@ class LibraryBackupRepository(private val context:Context,private val db:NoteDat
             require(w.folder.length<=48&&w.tags.length<=320&&w.paper in PaperStyle.entries.indices)
             CanvasViewport(w.centerX,w.centerY,if(w.zoom==0.0).7 else w.zoom)
             val cards=stage.study().cards(id);val nodes=stage.study().nodes(id)
-            require(cards.size<=200);StudyGraph.validate(nodes.map{it.model()})
+            require(cards.size<=StudyCapacity.MAX_CARDS_PER_NOTEBOOK);StudyGraph.validate(nodes.map{it.model()})
             for(c in cards){
                 UUID.fromString(c.id);require(c.revision>=1&&c.title.isNotBlank()&&c.title.length<=120&&c.body.length<=20000&&(c.trashedAt==null||c.trashedAt>=0))
                 stage.study().source(c.id)?.let{source->
                     val ids=source.strokeIds.split(',').filter{it.isNotBlank()};val bounds=CanvasBounds(source.left,source.top,source.right,source.bottom)
-                    require(source.snapshot.size<=1800000);val snapshot=InkPageFile.decode(source.snapshot)
+                    require(source.snapshot.size<=StudyCapacity.MAX_SOURCE_BYTES);val snapshot=InkPageFile.decode(source.snapshot)
                     val regionPreview=snapshot.objects.singleOrNull()?.takeIf{it.kind==PageObjectKind.IMAGE&&snapshot.strokes.isEmpty()}?.let{java.util.Base64.getDecoder().decode(it.image)}
                     StudySourceDraft(source.pageId,source.inkRevision,bounds,ids,regionPreview)
                     if(regionPreview==null)require(snapshot.strokes.map{it.id}.toSet()==ids.toSet())

@@ -246,15 +246,15 @@ class ReadingToolsUiTest {
         compose.waitForIdle()
     }
     private fun enterRead(f: Fixture) {
-        tap("toolbar-more"); tap("quick-readonly")
-        waitFor("reading-toolbar")
+        tap("quick-readonly")
+        waitFor("exit-readonly")
         assertRead(f)
         compose.onNodeWithTag("reading-more-menu").assertDoesNotExist()
     }
     private fun assertRead(f: Fixture, continuous: Boolean = false) {
         compose.waitUntil(15_000) { compose.runOnIdle { lock(f.note.id).readOnly.value && !lock(f.note.id).canWrite &&
             visibleCanvases().isNotEmpty() && visibleCanvases().all { !it.allowInput && !it.fingerWrites } } }
-        compose.onNodeWithTag("reading-toolbar").assertIsDisplayed()
+        compose.onNodeWithTag("exit-readonly").assertIsDisplayed()
         compose.onNodeWithTag("exit-readonly").assertTextEquals("返回书写")
         for (tag in listOf("editor-toolbar", "top-draw", "top-eraser", "ink-select", "quick-finger", "document-add-page", "toolbar-customize", "floating-pen-case"))
             compose.onNodeWithTag(tag).assertDoesNotExist()
@@ -271,25 +271,24 @@ class ReadingToolsUiTest {
         compose.onNodeWithTag("toolbar-customize").assertDoesNotExist()
     }
     private fun checkGeometry(fullscreen: Boolean = false, compact: Boolean = false) {
-        val row = compose.onNodeWithTag("reading-toolbar").assertIsDisplayed().fetchSemanticsNode().boundsInRoot
-        val document = if (fullscreen) null else compose.onNodeWithTag("document-toolbar").assertIsDisplayed().fetchSemanticsNode().boundsInRoot
-        if (document != null) assertFalse("Document navigation and reading controls stay separate", document.overlaps(row))
+        val containerTag = if (fullscreen) "reading-toolbar" else "document-toolbar"
+        val moreTag = if (fullscreen) "toolbar-more" else "document-more"
+        val container = compose.onNodeWithTag(containerTag).assertIsDisplayed().fetchSemanticsNode().boundsInRoot
+        if (!fullscreen) compose.onNodeWithTag("reading-toolbar").assertDoesNotExist()
         val density = compose.activity.resources.displayMetrics.density
-        val rectangles = listOf("quick-study", "read-excerpts", "document-associations", "exit-readonly", "toolbar-more").map { tag ->
+        val rectangles = listOf("quick-study", "read-excerpts", "document-associations", "exit-readonly", moreTag).map { tag ->
             val r = compose.onNodeWithTag(tag).assertIsDisplayed().assertIsEnabled().fetchSemanticsNode().boundsInRoot
-            val container = if (fullscreen || tag in setOf("exit-readonly", "toolbar-more")) row else checkNotNull(document)
             assertTrue("$tag has an actual 48dp target: $r", r.width >= 48f * density - 1 && r.height >= 48f * density - 1)
-            assertTrue("$tag stays wholly inside its document or reading row", r.left >= container.left && r.right <= container.right && r.top >= container.top && r.bottom <= container.bottom)
+            assertTrue("$tag stays wholly inside the consolidated header", r.left >= container.left && r.right <= container.right && r.top >= container.top && r.bottom <= container.bottom)
             r
         }
         for (a in rectangles.indices) for (b in a + 1 until rectangles.size)
             assertFalse("Primary reading targets must not overlap", rectangles[a].overlaps(rectangles[b]))
-        assertEquals("Only one reachable More entry", 1, compose.onAllNodesWithTag("toolbar-more").fetchSemanticsNodes().size)
-        val nestedMore = compose.onAllNodes(hasTestTag("toolbar-more") and hasAnyAncestor(hasTestTag("reading-toolbar"))).fetchSemanticsNodes().size
+        assertEquals("Only one reachable document menu", 1, compose.onAllNodesWithTag(moreTag).fetchSemanticsNodes().size)
+        val nestedMore = compose.onAllNodes(hasTestTag(moreTag) and hasAnyAncestor(hasTestTag(containerTag))).fetchSemanticsNodes().size
         assertEquals(1, nestedMore)
-        compose.onNodeWithTag("toolbar-more").assertIsDisplayed().assertIsEnabled()
         compose.onNodeWithTag("document-more-menu").assertDoesNotExist()
-        if (compact && !fullscreen) checkDocumentMenu()
+        if (!fullscreen) checkDocumentMenu()
     }
     private fun checkDocumentMenu() {
         tap("document-more")
@@ -306,7 +305,9 @@ class ReadingToolsUiTest {
         tapDocumentAction("quick-overview"); waitFor("pages-directory-dialog"); tap("pages-directory-dialog-close")
     }
     private fun openReadingMore() {
-        tap("toolbar-more"); waitFor("reading-more-menu")
+        val fullscreen = compose.onAllNodesWithTag("exit-fullscreen").fetchSemanticsNodes().isNotEmpty()
+        tap(if (fullscreen) "toolbar-more" else "document-more")
+        waitFor(if (fullscreen) "reading-more-menu" else "document-more-menu")
         for (tag in listOf("quick-fullscreen", "quick-export", "quick-timer")) compose.onNodeWithTag(tag).assertIsDisplayed().assertIsEnabled()
         compose.onNodeWithTag("toolbar-customize").assertDoesNotExist()
         compose.onNodeWithTag("top-draw").assertDoesNotExist()
@@ -386,7 +387,12 @@ class ReadingToolsUiTest {
             compose.onNodeWithTag("pen-kind-pencil").assertDoesNotExist()
             val editor = preference("inkweft-editor"); val pen = preference("inkweft-pen-widths-book-${f.note.id}")
             val before = authorStamp(f.note.id); val other = authorStamp(f.other.id)
+            val writingTop = compose.onNodeWithTag("ink-surface").fetchSemanticsNode().boundsInRoot.top
             enterRead(f); checkGeometry()
+            val readingTop = compose.onNodeWithTag("ink-surface").fetchSemanticsNode().boundsInRoot.top
+            assertTrue("Reading returns the full writing-tool row to content", writingTop - readingTop >= 55f * compose.activity.resources.displayMetrics.density)
+            compose.onNodeWithTag("notebook-tabs").assertIsDisplayed()
+            assertEquals(1, compose.onAllNodesWithTag("tabs-list").fetchSemanticsNodes().size)
             val old = compose.runOnIdle { paper().snapshotViewport() }
             compose.pinchCanvasOut()
             compose.waitUntil(15_000) { compose.runOnIdle { paper().snapshotViewport() != old } }
@@ -395,7 +401,7 @@ class ReadingToolsUiTest {
             compose.waitForIdle(); assertRead(f)
             assertEquals(editor, preference("inkweft-editor")); assertEquals(pen, preference("inkweft-pen-widths-book-${f.note.id}"))
             assertAuthors(f, before, other)
-            shot("rt61-wide-reading.png")
+            shot("comfort01-rt-wide-reading.png")
             returnWriting(f)
             compose.onNodeWithTag("pen-kind-pencil").assertDoesNotExist()
             assertTrue(app.getSharedPreferences("inkweft-editor", 0).getBoolean("case-collapsed", false))
@@ -413,15 +419,15 @@ class ReadingToolsUiTest {
             compose.activityRule.scenario.recreate()
             compose.waitUntil(15_000) { val c = compose.activity.resources.configuration
                 abs(c.screenWidthDp - 375) <= 4 && abs(c.fontScale - 1.6f) < .02f }
-            waitFor("reading-toolbar"); assertRead(f); checkGeometry(compact = true)
+            waitFor("exit-readonly"); assertRead(f); checkGeometry(compact = true)
             compose.onNodeWithTag("reading-more-menu").assertDoesNotExist()
             assertEquals(editor, preference("inkweft-editor")); assertEquals(pen, preference("inkweft-pen-widths-book-${f.note.id}"))
-            assertAuthors(f, before, other); shot("rt61-narrow-recreated.png")
+            assertAuthors(f, before, other); shot("comfort01-rt-narrow-recreated.png")
             openReadingMore(); tap("quick-fullscreen")
             waitFor("exit-fullscreen"); assertRead(f); checkGeometry(fullscreen = true, compact = true)
             compose.onNodeWithTag("book-search").assertDoesNotExist()
             compose.onNodeWithTag("reading-more-menu").assertDoesNotExist()
-            openReadingMore(); assertAuthors(f, before, other); shot("rt61-fullscreen-menu.png")
+            openReadingMore(); assertAuthors(f, before, other); shot("comfort01-rt-fullscreen-menu.png")
             tap("quick-export")
             compose.onNodeWithText("导出整本内容副本", useUnmergedTree = true).assertIsDisplayed()
             compose.onNodeWithText("取消", useUnmergedTree = true).assertIsDisplayed().performTouchInput { click() }
@@ -453,7 +459,7 @@ class ReadingToolsUiTest {
             compose.onNodeWithTag("excerpt-preview-${f.excerpt}").assertIsDisplayed()
             compose.onNodeWithTag("excerpt-comment-${f.excerpt}").assertIsNotEnabled()
             assertAuthors(f, before, other)
-            shot("rt61-continuous-reading.png")
+            shot("comfort01-rt-continuous-reading.png")
             tap("excerpt-panel-close")
             tap("quick-study"); waitFor("study-map-picker"); tap("study-map-picker")
             tap("study-map-${f.mapId}"); tap("study-management"); tap("map-menu-group-0"); tap("study-tab-2")
@@ -486,7 +492,7 @@ class ReadingToolsUiTest {
             singlePageEditor(); compose.waitForSavedInk()
             compose.runOnIdle { notebook().select(f.note) }
             singlePageEditor(); compose.waitForSavedInk()
-            waitFor("reading-toolbar"); assertRead(f)
+            waitFor("exit-readonly"); assertRead(f)
             tap("tabs-list")
             compose.onNodeWithTag("tabs-filter").performTextReplacement(f.other.title)
             tap("tabs-actions-${f.other.id}"); tap("tab-split-horizontal"); hideKeyboard()
@@ -496,8 +502,22 @@ class ReadingToolsUiTest {
             val density = compose.activity.resources.displayMetrics.density
             val lane = compose.onNodeWithTag("ink-surface").assertIsDisplayed().fetchSemanticsNode().boundsInRoot
             assertEquals("Real left/right split gives a roughly 186.5dp editor", 186.5f, lane.width / density, 3f)
+            val header = compose.onNodeWithTag("document-toolbar").fetchSemanticsNode().boundsInRoot
+            fun bounds(tag: String) = compose.onNodeWithTag(tag).assertIsDisplayed().fetchSemanticsNode().boundsInRoot
+            val title = bounds("tabs-list")
+            val mode = bounds("exit-readonly")
+            val more = bounds("document-more")
+            val destinations = listOf("quick-study", "document-associations", "read-excerpts").map(::bounds)
+            assertEquals("Mode and document tools share one row", mode.top, more.top, 1f)
+            destinations.forEach { assertEquals("The three named destinations share one row", destinations.first().top, it.top, 1f) }
+            // Large text can make the title row taller than 48dp. Check the
+            // actual three-row topology without shrinking text to a fixed height.
+            assertTrue("Controls follow the title row", mode.top >= title.bottom - 1f && mode.top <= title.bottom + 2f)
+            assertTrue("Destinations follow the control row", destinations.first().top >= maxOf(mode.bottom, more.bottom) - 1f &&
+                destinations.first().top <= maxOf(mode.bottom, more.bottom) + 2f)
+            assertEquals("Header ends after the destination row", header.bottom, destinations.maxOf { it.bottom }, 2f)
             val reference = compose.onNodeWithTag("reference-pane").fetchSemanticsNode().boundsInRoot
-            val targets = listOf("back-library", "toolbar-more", "document-more", "document-associations",
+            val targets = listOf("back-library", "document-more", "document-associations",
                 "quick-study", "read-excerpts", "exit-readonly").map { tag ->
                 val bounds = compose.onNodeWithTag(tag).assertIsDisplayed().assertIsEnabled().fetchSemanticsNode().boundsInRoot
                 assertTrue("$tag has a complete 48dp actual target in split: $bounds", bounds.width >= 48f * density - 1 && bounds.height >= 48f * density - 1)
@@ -523,7 +543,7 @@ class ReadingToolsUiTest {
             tap("study-close")
             assertReference(f); assertRead(f); checkGeometry(compact = true)
             assertEquals(editor, preference("inkweft-editor")); assertEquals(pen, preference("inkweft-pen-widths-book-${f.note.id}"))
-            assertAuthors(f, before, other); shot("rt61-narrow-split.png")
+            assertAuthors(f, before, other); shot("comfort01-rt-narrow-split.png")
             returnWriting(f); assertReference(f)
             compose.runOnIdle { assertTrue(paper().allowInput); assertTrue(paper().fingerWrites); assertFalse(checkNotNull(referenceCanvas).allowInput) }
             assertEquals(editor, preference("inkweft-editor")); assertEquals(pen, preference("inkweft-pen-widths-book-${f.note.id}"))
