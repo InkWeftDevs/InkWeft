@@ -569,7 +569,11 @@ class SourceFocusVisibilityUiTest {
 
     @Test fun originalRightDockAndOriginalMinimizedSurviveTemporarySourcePresentation() =
         configured("1440x2200", 160, 1440, 1f) {
-            val f = seed(); chooseMode("ORGANIZE")
+            val f = seed()
+            // New books open docked; choose the actual floating-window entry before its size mode.
+            tapVisible("study-window-maximize")
+            compose.onNodeWithText("浮动窗口").assertIsDisplayed()
+            tapVisible("study-window-dock"); chooseMode("ORGANIZE")
             tapVisible("study-window-maximize"); tapVisible("study-window-dock")
             waitMap(f); openBody(f)
             val dock = windowState(f); val original = source(f)
