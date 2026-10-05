@@ -44,6 +44,27 @@ class RecallOriginalSourceUiTest {
     private val journals=mutableListOf<File>()
     private var vm:RecallStudyViewModel?=null
     private fun id()=UUID.randomUUID().toString()
+    private fun exportReadPhases(log:File){
+        val process=ProcessBuilder("logcat","-d","-b","main","-b","crash","--pid=${android.os.Process.myPid()}","-t","200","StudyReadPhase:D","*:S")
+            .redirectErrorStream(true).redirectOutput(log).start()
+        try{if(!process.waitFor(2,TimeUnit.SECONDS))println("Source phase logcat timed out")}
+        finally{process.destroyForcibly()}
+    }
+    private fun withReadPhases(case:String,block:()->Unit){
+        val previous=studyReadPhaseEnabled;studyReadPhaseEnabled=true
+        var passed=false
+        try{
+            runCatching{traceStudyRead("test.$case.before",null)}
+            block();passed=true
+        }finally{
+            runCatching{traceStudyRead("test.$case.after.${if(passed)"pass"else"fail"}",null)}
+            runCatching{
+                val directory=checkNotNull(InstrumentationRegistry.getInstrumentation().targetContext.getExternalFilesDir(null))
+                exportReadPhases(File(directory,"recall-source-phase.txt"))
+            }.onFailure{runCatching{println("Source phase logcat unavailable: ${it.javaClass.simpleName}")}}
+            studyReadPhaseEnabled=previous
+        }
+    }
     @After fun finish(){
         compose.runOnIdle{vm?.viewModelScope?.cancel()}
         journals.forEach{AtomicFile(it).delete()};db.close()
@@ -136,10 +157,7 @@ class RecallOriginalSourceUiTest {
             runCatching{
                 // Own process only; no shell elevation, streaming reader or unbounded pipe wait.
                 val log=File(checkNotNull(directory),"recall-source-wait-logcat.txt")
-                val process=ProcessBuilder("logcat","-d","-b","main","-b","crash","--pid=${android.os.Process.myPid()}","-t","200","StudyReadPhase:D","*:S")
-                    .redirectErrorStream(true).redirectOutput(log).start()
-                try{if(!process.waitFor(2,TimeUnit.SECONDS))println("Source wait logcat timed out")}
-                finally{process.destroyForcibly()}
+                exportReadPhases(log)
             }.onFailure{runCatching{println("Source wait logcat unavailable: ${it.javaClass.simpleName}")}}
             throw error
         }
@@ -242,7 +260,7 @@ class RecallOriginalSourceUiTest {
         assertEquals(before,authorStamp(f.book.id))
     }
 
-    @Test fun recycledCurrentSourceKeepsFixedSnapshotAndSameAttempt(){
+    @Test fun recycledCurrentSourceKeepsFixedSnapshotAndSameAttempt()=withReadPhases("recycled"){
         val f=fixture();val source=f.sources[1]
         runBlocking{
             val pages=NotebookPages(db);val active=pages.activePages(f.book.id)
@@ -280,7 +298,7 @@ class RecallOriginalSourceUiTest {
         assertTrue(row.answerRevealed);assertEquals(RecallAttemptStatus.OPEN.name,row.status);assertNull(row.requestedQuality)
     }
 
-    @Test fun foreignSourceIsRejectedWithoutRenderingAnotherNotebook(){
+    @Test fun foreignSourceIsRejectedWithoutRenderingAnotherNotebook()=withReadPhases("foreign"){
         val f=fixture();val source=f.sources.first().legacy(f.plan.entries.single().cardId).copy(pageId=f.other.id)
         val before=authorStamp();val visible=mutableStateOf(true)
         compose.setContent{MaterialTheme{if(visible.value)ReviewSourceDialog(source,{visible.value=false},recallNotebookId=f.book.id)}}

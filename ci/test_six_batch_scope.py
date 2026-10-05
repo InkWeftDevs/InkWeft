@@ -41,7 +41,9 @@ class SixBatchScopeTest(unittest.TestCase):
         focused, full = build_plan("focused"), build_plan("full")
         self.assertEqual((163, 202, 5, 40), (full["expected_app"], full["expected_room"],
                          full["fixture"]["expected_methods"], full["fixture"]["expected_screenshots"]))
-        self.assertEqual(5, focused["expected_app"])
+        self.assertEqual(3, focused["expected_app"])
+        self.assertEqual(3, focused["diagnostic_rounds"])
+        self.assertEqual(1, full["diagnostic_rounds"])
         self.assertEqual(FOCUSED_METHODS, focused["app_methods"])
         self.assertEqual(set(focused["app"]), set(focused["app_methods"]))
         self.assertEqual([], focused["fixture"]["selected_phases"])

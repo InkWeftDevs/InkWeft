@@ -213,6 +213,7 @@ class SelectionStudyUiTest {
         val mainThread=android.os.Looper.getMainLooper().thread
         val phase=java.util.concurrent.atomic.AtomicReference("seed")
         val historyLock=Any();var history="";var lastObservation="";var beforeSaveUi="Not reached"
+        var result="FAIL"
         var snapshot:()->String={"Study models not captured"}
         val observations=CoroutineScope(SupervisorJob()+Dispatchers.Main.immediate)
         fun record(value:String){synchronized(historyLock){if(value!=lastObservation){
@@ -283,6 +284,7 @@ class SelectionStudyUiTest {
             stage("open-map")
             shot("study-outline.png");compose.revealAction("study-tab-2");compose.onNodeWithTag("study-tab-2").performClick();compose.onNodeWithTag("study-map").assertIsDisplayed()
             compose.onNodeWithTag("study-close").assertIsDisplayed();shot("study-mindmap.png")
+            result="PASS"
         }catch(error:Throwable){
             // The original failure may be blocked Main/IO: no Compose idle, fresh semantics, or Room queries here.
             runCatching{
@@ -301,7 +303,14 @@ class SelectionStudyUiTest {
                 runCatching{error.addSuppressed(AssertionError(report))}
             }
             throw error
-        }finally{observations.cancel()}
+        }finally{
+            observations.cancel()
+            // Export only the bounded history already collected; no new UI/Room observation or diagnostic screenshot.
+            runCatching{
+                val report=("SHARED_CARD_PHASE result=$result phase=${phase.get()}\n"+synchronized(historyLock){history}).take(8_000)
+                File(checkNotNull(directory),"selection-shared-card-phase.txt").writeText(report)
+            }
+        }
     }
     @Test fun childThemeAndRemovingLeafKeepsCard(){
         val(n,_)=seed();compose.revealAction("quick-settings");compose.onNodeWithTag("quick-settings").performClick();compose.onNodeWithTag("study-open").performScrollTo().performClick();compose.revealAction("study-add-card");compose.onNodeWithTag("study-add-card").performClick();addCard("总论","根节点")

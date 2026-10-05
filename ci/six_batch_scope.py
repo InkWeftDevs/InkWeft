@@ -29,16 +29,14 @@ METHODS = {
     "org.inkweft.app.LearningWorkbenchTest": ["learningOpensMapWithoutOpeningNoteAndKeepsHostConfiguration"],
 }
 
-# Three full-run failures and their direct original-source/shared-card controls.
+# Three full-run failures, each observed in at most three independently reset rounds.
 # No larger timeout, retries, or substitute fixture; B6 is not rerun here.
 FOCUSED_METHODS = {
     "org.inkweft.app.RecallOriginalSourceUiTest": [
-        "durableCurrentSourceWaitsForOriginalReceiptAndReturnsToSameAnswerAndWindow",
         "recycledCurrentSourceKeepsFixedSnapshotAndSameAttempt",
         "foreignSourceIsRejectedWithoutRenderingAnotherNotebook"],
     "org.inkweft.app.SelectionStudyUiTest": [
-        "outlineAndMapReuseSingleEditableCard",
-        "excerptCreatesSharedCardAndReturnsToSource"],
+        "outlineAndMapReuseSingleEditableCard"],
 }
 
 CORE = ["PageObjectTest", "CardTrashCommandTest", "ContentTransferTest", "LibraryArchiveTest", "CardPresentationTest",
@@ -77,6 +75,7 @@ def build_plan(mode="full"):
     return {"mode":mode,"app":app,"room":room,"app_methods":methods,
             "expected_app":sum(len(methods[c]) if c in methods else inventory("app")[c] for c in app),
             "expected_room":expected_room,
+            "diagnostic_rounds":3 if mode == "focused" else 1,
             "lint":"NOT_RUN_FOCUSED" if mode == "focused" else "RUN_REQUIRED",
             "room_evidence":room_evidence(root, mode, expected_room, room),
             "room_class_counts":{c:inventory("data-local")[c] for c in room},

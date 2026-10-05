@@ -19,9 +19,12 @@ import org.inkweft.data.*
 
 private data class ReviewPage(val title:String,val page:NotebookPageRow,val ink:InkPage,val objects:List<PageObject>,val authoring:PageAuthoring)
 
+/** Explicit diagnostic opt-in only; normal debug and release sessions stay silent. */
+@Volatile internal var studyReadPhaseEnabled=false
+
 /** Fixed phases only: never log page/card identities, content, bytes or exception messages. */
 internal fun traceStudyRead(phase:String,job:Job?){
-    if(BuildConfig.DEBUG){
+    if(BuildConfig.DEBUG&&studyReadPhaseEnabled){
         val thread=Thread.currentThread()
         android.util.Log.d("StudyReadPhase","phase=$phase job=${System.identityHashCode(job)} thread=${thread.id}:${thread.name} active=${job?.isActive}")
     }

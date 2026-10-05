@@ -99,7 +99,7 @@ class RoomEvidenceTest(unittest.TestCase):
         plan["expected_room"] = 202
         selections = []
         run_regression(self.root, plan, 0, selections, shard_count=1)
-        self.assertEqual(assigned_app_methods(plan), selections)
+        self.assertEqual(assigned_app_methods(plan) * plan.get("diagnostic_rounds", 1), selections)
         summary = json.loads((self.root / "android/build/evidence/room-summary.json").read_text())
         self.assertEqual("REUSED_EVIDENCE", summary["status"])
         self.assertEqual((0, 0, 0, 202, 202), tuple(summary[key] for key in
@@ -113,8 +113,24 @@ class RoomEvidenceTest(unittest.TestCase):
         selections = []
         run_regression(self.root, plan, 0, selections, shard_count=1)
         self.assertEqual(plan["room"], [selection for selection in selections if "#" not in selection])
-        self.assertEqual(assigned_app_methods(plan), [selection for selection in selections if "#" in selection])
+        self.assertEqual(assigned_app_methods(plan) * plan.get("diagnostic_rounds", 1), [selection for selection in selections if "#" in selection])
         summary = json.loads((self.root / "android/build/evidence/room-summary.json").read_text())
         self.assertEqual((plan["expected_room"], plan["expected_room"]), (summary["expected"], summary["passed"]))
         evidence = json.loads((self.root / "android/build/evidence/room-input-evidence.json").read_text())
         self.assertEqual("RUN_REQUIRED", evidence["status"])
+
+    def test_three_round_diagnostics_stop_on_first_failure_and_keep_unrun_count(self):
+        plan = build_plan("focused")
+        methods = assigned_app_methods(plan)
+        selections = []
+        with self.assertRaises(SystemExit):
+            run_regression(self.root, plan, 0, selections, failing=methods[1], shard_count=1)
+        self.assertEqual(methods[:2], selections)
+        directory = self.root / "android/build/evidence"
+        summary = json.loads((directory / "app-summary.json").read_text())
+        self.assertEqual((9, 2, 1), tuple(summary[key] for key in ("expected", "executed", "passed")))
+        self.assertEqual([methods[1]], summary["failures"])
+        self.assertTrue(summary["stopped_after_first_failure"])
+        self.assertEqual(1, json.loads((directory / "app-001/round.json").read_text())["round"])
+        self.assertIn("FAILURES!!!", (directory / "app-001/instrumentation.txt").read_text())
+        self.assertFalse((directory / "app-002").exists())

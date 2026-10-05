@@ -6,7 +6,7 @@ from pathlib import Path
 import re
 import subprocess
 from android_device import prepare_case
-from android_shards import partition
+from android_shards import partition, diagnostic_cases
 from android_plan import select_methods
 from android_timeout import capture_app_timeout
 from room_evidence import room_evidence
@@ -60,13 +60,15 @@ for module,key,runner in [("data-local","room","org.inkweft.data.test/androidx.t
         cases=[(name,counts[name]) for name in classes] if counts else [(",".join(classes),plan["expected_room"])]
         if sum(expected for _,expected in cases)!=plan["expected_room"]: raise SystemExit("Room inventory mismatch")
     if key=="app": cases=partition(cases,args.shard_index,args.shard_count)
-    expected_shard=sum(expected for _,expected in cases)
-    failures=[];total=0
+    rounds=plan.get("diagnostic_rounds",1) if key=="app" else 1
+    cases=diagnostic_cases(cases,plan.get("mode","full"),rounds)
+    expected_shard=sum(expected for _,_,expected in cases)
+    failures=[];total=0;executed=0;stopped=False
     infrastructure=[]
     def summary():
-        (out/f"{key}-summary.json").write_text(json.dumps({"expected":expected_shard,"planned_total":plan[f"expected_{key}"],"shard_index":args.shard_index,"shard_count":args.shard_count,"passed":total,"failures":failures,"infrastructure":infrastructure},indent=2),encoding="utf-8")
+        (out/f"{key}-summary.json").write_text(json.dumps({"expected":expected_shard,"planned_total":plan[f"expected_{key}"]*rounds,"distinct_methods":plan[f"expected_{key}"],"diagnostic_rounds":rounds,"executed":executed,"stopped_after_first_failure":stopped,"shard_index":args.shard_index,"shard_count":args.shard_count,"passed":total,"failures":failures,"infrastructure":infrastructure},indent=2),encoding="utf-8")
     summary()
-    for index,(selection,expected) in enumerate(cases):
+    for index,(round_id,selection,expected) in enumerate(cases):
         case_dir=out/f"{key}-{index:03d}";case_dir.mkdir(exist_ok=True)
         if key=="app":
             setup=[]
@@ -91,6 +93,8 @@ for module,key,runner in [("data-local","room","org.inkweft.data.test/androidx.t
                 print(f"Timeout diagnostics unavailable: {type(diagnostic_error).__name__}",flush=True)
         (case_dir/"instrumentation.txt").write_text(result,encoding="utf-8")
         (case_dir/"selection.txt").write_text(selection,encoding="utf-8")
+        (case_dir/"round.json").write_text(json.dumps({"round":round_id,"selection":selection,"source":os.environ.get("INKWEFT_HEAD_SHA")}),encoding="utf-8")
+        executed+=expected
         match=re.search(r"^OK \((\d+) tests?\)\s*$",result,re.M)
         passed=bool(match and int(match.group(1))==expected and "FAILURES!!!" not in result and "RUNNER_TIMEOUT" not in result)
         print(f"{selection}: {'PASS' if passed else 'FAIL'}",flush=True)
@@ -98,6 +102,8 @@ for module,key,runner in [("data-local","room","org.inkweft.data.test/androidx.t
         else: failures.append(selection);print(result)
         summary()
         if key=="app": subprocess.run(["adb","pull","/sdcard/Android/data/org.inkweft.app.a0.insertion/files/.",str(case_dir)],stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
+        if rounds>1 and not passed:
+            stopped=True;summary();break
     summary()
     if failures or total!=expected_shard: suite_failures.append(f"{key}: {len(failures)} failing selections; original assertions and logs retained")
 
