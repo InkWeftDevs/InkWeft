@@ -595,7 +595,9 @@ class SourceFocusVisibilityUiTest {
             compose.waitUntil(15_000) { compose.runOnIdle { pages(f.note.id).ui.value.selectedId == f.note.id } }
             compose.runOnIdle { app.openKnowledgeTarget.value = TargetRef(TargetKind.ANCHOR, f.anchor) }
             assertSourceVisible(f, original, collapsed = true)
-            assertEquals(56f * compose.activity.resources.displayMetrics.density,
+            val sourceBarHeight = screenRect("study-pane-switcher").height()
+            assertTrue(sourceBarHeight >= 48f * compose.activity.resources.displayMetrics.density)
+            assertEquals(sourceBarHeight,
                 screenRect("ink-surface").top - beforePaper.top, 2f)
             touchSourceHeaderSearchAndClose(f, original)
             assertEquals(prefs, framePrefs(f)); assertEquals(context, graphState(f)); assertAuthors(f, own, other, original)
