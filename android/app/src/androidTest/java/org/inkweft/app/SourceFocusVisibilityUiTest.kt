@@ -591,19 +591,31 @@ class SourceFocusVisibilityUiTest {
             compose.onNodeWithTag("study-map").assertDoesNotExist()
             val minimized = screenRect("study-panel"); val prefs = framePrefs(f); val context = graphState(f)
             val beforePaper = screenRect("ink-surface")
+            val beforeHeader = screenRect("document-toolbar")
+            compose.onNodeWithTag("knowledge-return").assertDoesNotExist()
             compose.runOnIdle { pages(f.note.id).select(f.note.id) }
             compose.waitUntil(15_000) { compose.runOnIdle { pages(f.note.id).ui.value.selectedId == f.note.id } }
             compose.runOnIdle { app.openKnowledgeTarget.value = TargetRef(TargetKind.ANCHOR, f.anchor) }
             assertSourceVisible(f, original, collapsed = true)
-            val sourceBarHeight = screenRect("study-pane-switcher").height()
-            assertTrue(sourceBarHeight >= 48f * compose.activity.resources.displayMetrics.density)
-            assertEquals(sourceBarHeight,
+            // External anchor navigation adds the app's association-return row above this book.
+            compose.onNodeWithTag("knowledge-return").assertIsDisplayed()
+            val header = screenRect("document-toolbar")
+            assertTrue(header.bottom >= beforeHeader.bottom)
+            assertEquals(header.bottom - beforeHeader.bottom,
                 screenRect("ink-surface").top - beforePaper.top, 2f)
-            touchSourceHeaderSearchAndClose(f, original)
+            compose.onNodeWithTag("document-more").assertIsDisplayed().assertIsEnabled()
+            compose.onNodeWithTag("study-window-source-return").assertIsDisplayed().assertIsEnabled()
+            val menu = screenRect("document-more"); val sourceReturn = screenRect("study-window-source-return")
+            assertTrue(contains(header, menu) && contains(header, sourceReturn))
+            assertFalse(RectF.intersects(menu, sourceReturn))
             assertEquals(prefs, framePrefs(f)); assertEquals(context, graphState(f)); assertAuthors(f, own, other, original)
             screenshot("sf59-minimized-visible.png")
             tapVisible("study-window-source-return")
             compose.onNodeWithTag("study-map").assertDoesNotExist()
+            // Remove only this fixture's external-navigation row before comparing the original host geometry.
+            tapVisible("knowledge-return-skip")
+            compose.onNodeWithTag("knowledge-return").assertDoesNotExist()
+            assertEquals(beforePaper.top, screenRect("ink-surface").top, 2f)
             compose.waitUntil(15_000) { closeRect(minimized, screenRect("study-panel")) }
             assertEquals(prefs, framePrefs(f)); assertEquals(context, graphState(f))
             tapVisible("study-window-minimize")
