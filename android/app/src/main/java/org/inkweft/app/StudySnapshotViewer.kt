@@ -12,6 +12,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.inkweft.core.InkPageFile
@@ -22,10 +23,19 @@ import org.inkweft.data.StudySourceRow
     var loaded by remember(source){mutableStateOf<InkPageFile?>(null)}
     var error by remember(source){mutableStateOf<String?>(null)}
     var view by remember(source){mutableStateOf<InkCanvasView?>(null)}
+    val readJob=remember(source){if(BuildConfig.DEBUG)java.util.concurrent.atomic.AtomicReference<Job?>(null)else null}
     LaunchedEffect(source){
-        try{loaded=withContext(Dispatchers.IO){InkPageFile.decode(source.snapshot)}}
-        catch(cancel:CancellationException){throw cancel}
-        catch(_:Exception){error="摘录快照无法读取，请返回原卡后重试。"}
+        val job=coroutineContext[Job];readJob?.set(job);traceStudyRead("snapshot.effect.start",job)
+        try{
+            val result=withContext(Dispatchers.IO){
+                traceStudyRead("snapshot.decode.enter",job)
+                InkPageFile.decode(source.snapshot).also{traceStudyRead("snapshot.decode.return",job)}
+            }
+            traceStudyRead("snapshot.publish.loaded.before",job);loaded=result;traceStudyRead("snapshot.publish.loaded.after",job)
+        }catch(cancel:CancellationException){traceStudyRead("snapshot.effect.cancelled",job);throw cancel}
+        catch(_:Exception){
+            traceStudyRead("snapshot.publish.error.before",job);error="摘录快照无法读取，请返回原卡后重试。";traceStudyRead("snapshot.publish.error.after",job)
+        }finally{traceStudyRead("snapshot.effect.finally",job)}
     }
     Dialog(onDismissRequest=dismiss,properties=DialogProperties(usePlatformDefaultWidth=false)){
         RecallWindowPermit()
@@ -36,6 +46,8 @@ import org.inkweft.data.StudySourceRow
                     TextButton(dismiss,modifier=Modifier.heightIn(min=48.dp).testTag("study-snapshot-close")){Text(returnLabel)}
                 }
                 val file=loaded
+                val renderPhase=if(file!=null)"snapshot.compose.loaded"else if(error!=null)"snapshot.compose.error"else "snapshot.compose.loading"
+                SideEffect{traceStudyRead(renderPhase,readJob?.get())}
                 if(file!=null){
                     AndroidView(factory={context->InkCanvasView(context).also{native->
                         native.preview=false;native.allowInput=false;native.fingerWrites=false
@@ -58,9 +70,9 @@ import org.inkweft.data.StudySourceRow
                         TextButton({view?.fitContent()},modifier=Modifier.testTag("study-snapshot-fit")){Text("全部内容")}
                     }
                 }else Box(Modifier.fillMaxWidth().weight(1f).padding(24.dp),contentAlignment=Alignment.Center){
-                    if(error!=null)Text(error!!)
+                    if(error!=null)Text(error!!,Modifier.testTag("study-snapshot-error"))
                     else Column(horizontalAlignment=Alignment.CenterHorizontally){
-                        CircularProgressIndicator()
+                        CircularProgressIndicator(Modifier.testTag("study-snapshot-loading"))
                         Text("正在读取摘录快照…",Modifier.padding(top=16.dp))
                     }
                 }

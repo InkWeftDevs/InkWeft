@@ -185,6 +185,9 @@ jobs:
             android/build/evidence/app-*/recall-source-wait-failure.txt
             android/build/evidence/app-*/recall-source-wait-failure.png
             android/build/evidence/app-*/recall-source-wait-logcat.txt
+            android/build/evidence/app-*/recall-source-wait-threads.txt
+            android/build/evidence/app-*/selection-shared-card-failure.txt
+            android/build/evidence/app-*/selection-shared-card-failure.png
             android/build/evidence/app-*/mui-map-interaction-failure.txt
             android/build/evidence/app-*/mui-map-interaction-failure.png
             android/build/evidence/app-*/inline-recreate-failure.txt
@@ -258,6 +261,9 @@ jobs:
             android/build/evidence/app-*/recall-source-wait-failure.txt
             android/build/evidence/app-*/recall-source-wait-failure.png
             android/build/evidence/app-*/recall-source-wait-logcat.txt
+            android/build/evidence/app-*/recall-source-wait-threads.txt
+            android/build/evidence/app-*/selection-shared-card-failure.txt
+            android/build/evidence/app-*/selection-shared-card-failure.png
             android/build/evidence/app-*/mui-map-interaction-failure.txt
             android/build/evidence/app-*/mui-map-interaction-failure.png
             android/build/evidence/app-*/inline-recreate-failure.txt

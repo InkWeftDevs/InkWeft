@@ -29,32 +29,16 @@ METHODS = {
     "org.inkweft.app.LearningWorkbenchTest": ["learningOpensMapWithoutOpeningNoteAndKeepsHostConfiguration"],
 }
 
-# Direct map-publication ownership and every shared learning-target caller.
-# Original safety assertions stay; focused does not rerun the unchanged B6 sample.
+# Three full-run failures and their direct original-source/shared-card controls.
+# No larger timeout, retries, or substitute fixture; B6 is not rerun here.
 FOCUSED_METHODS = {
-    "org.inkweft.app.MapPortalUiTest": [
-        "specifiedBranchCancelCreateReadNavigateRotateAndReturnKeepAuthorContent",
-        "missingBranchNeverOpensSameNamedReplacementAndRelationCanBeRemoved",
-        "branchRemovedAfterOpeningStaysUnavailableUntilExplicitAllTopics",
-        "nestedReturnKeepsAnUnavailableBranchInsteadOfExpandingItsMap",
-        "createCancelSaveAndReturnRestoreExactDocumentAndBranchView",
-        "occurrenceScopeAndRenamedOrRecycledTargetNeverRedirectToMainMap",
-        "capturedRevisionRejectsRetargetAndRemovalWithoutWrongNavigationOrWrites",
-        "activityRecreationKeepsDraftPreviewAndReturnIdentityWithoutExtraAuthorCommands",
-        "libraryLearningMapRecreationKeepsPortalTargetAndReturnsOriginalView",
-        "narrow375LargeTextKeepsSpecifiedBranchSelectionAndReturnUsable",
-        "narrow375LargeTextKeepsControlsReachableAndReciprocalPortalsFinite",
-    ],
-    "org.inkweft.app.LibrarySourceNavigationUiTest": [
-        "learningSourceAwaitsRealPageSelectionThenFocusesOriginalBoundsWithReadLock",
-        "recycledLibrarySourceRetainsCurrentCardSnapshotAndMapWithoutNavigating",
-        "closingOrRecreatingPendingLibrarySourceCannotJumpOrCloseAnotherCard"],
-    "org.inkweft.app.RecallMaskUiTest": ["libraryMapRecallAncestorsHideCluesFromInteractiveWindows"],
-    "org.inkweft.app.LearningWorkbenchTest": METHODS["org.inkweft.app.LearningWorkbenchTest"],
-    "org.inkweft.app.StudyMapReadinessTest": ["rapidMapSelectionNeverPublishesLoadedGraphForAnotherCurrentMap"],
-    "org.inkweft.app.MapInteractionUiTest": [
-        "selectionRenameReadingAndMapMenusKeepTheirScope",
-        "outlineTitlesKeepSharedContentAndContinueAtTheSameParent"],
+    "org.inkweft.app.RecallOriginalSourceUiTest": [
+        "durableCurrentSourceWaitsForOriginalReceiptAndReturnsToSameAnswerAndWindow",
+        "recycledCurrentSourceKeepsFixedSnapshotAndSameAttempt",
+        "foreignSourceIsRejectedWithoutRenderingAnotherNotebook"],
+    "org.inkweft.app.SelectionStudyUiTest": [
+        "outlineAndMapReuseSingleEditableCard",
+        "excerptCreatesSharedCardAndReturnsToSource"],
 }
 
 CORE = ["PageObjectTest", "CardTrashCommandTest", "ContentTransferTest", "LibraryArchiveTest", "CardPresentationTest",
@@ -103,7 +87,7 @@ def build_plan(mode="full"):
                        "expected_methods":len(PHASE_METHODS),
                        "expected_screenshots":40,"native_workspace_screenshots":24,"native_recall_screenshots":7,
                        "native_recall_reopen_screenshots":1},
-            "scope":("focused: current-map projection ownership and shared learning-entry regressions; B6 all NOT_RUN_FOCUSED with zero new screenshots; not full acceptance"
+            "scope":("focused: source-reader completion and shared-card save diagnosis; B6 all NOT_RUN_FOCUSED with zero new screenshots; not full acceptance"
                      if mode == "focused" else "six-batch B1-B5 complete scoped regression and B6 full-sized synthetic five-phase evidence")
                     + "; physical device and human acceptance remain NOT_RUN"}
 

@@ -13,6 +13,14 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.collect
 import androidx.test.platform.app.InstrumentationRegistry
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.CompletableDeferred
@@ -200,17 +208,100 @@ class SelectionStudyUiTest {
         compose.onAllNodesWithTag("study-card-details").assertCountEquals(0);assertEquals(n.id,snapshot.pageId)
     }
     @Test fun outlineAndMapReuseSingleEditableCard(){
-        val(n,_)=seed();compose.revealAction("quick-settings");compose.onNodeWithTag("quick-settings").performClick();compose.onNodeWithTag("study-open").performScrollTo().performClick();compose.revealAction("study-add-card");compose.onNodeWithTag("study-add-card").performClick();addCard("条件概率","按定义推导")
-        val card=runBlocking{app.study.cards(n.id).first()}.single()
-        compose.onNodeWithTag("study-card-${card.id}").performClick();compose.onNodeWithTag("card-management-actions").performClick();compose.onNodeWithTag("study-reuse-card").performScrollTo().performClick()
-        compose.waitUntil(10_000){runBlocking{app.study.nodes(n.id).first().size}==2}
-        compose.revealAction("study-tab-1");compose.onNodeWithTag("study-tab-1").performClick();val nodes=runBlocking{app.study.nodes(n.id).first()}
-        compose.onNodeWithTag("outline-node-${nodes.first().id}").performScrollTo().performClick();compose.onNodeWithTag("study-edit-card").performScrollTo().performClick()
-        compose.onNodeWithTag("study-card-title").performTextReplacement("概率公式整理");compose.onNodeWithTag("study-save-card").performClick()
-        compose.waitUntil(10_000){compose.onAllNodesWithTag("study-card-editor").fetchSemanticsNodes().isEmpty()}
-        assertEquals("概率公式整理",runBlocking{app.study.cards(n.id).first().single().title});assertEquals(2,runBlocking{app.study.nodes(n.id).first().count{it.cardId==card.id}})
-        shot("study-outline.png");compose.revealAction("study-tab-2");compose.onNodeWithTag("study-tab-2").performClick();compose.onNodeWithTag("study-map").assertIsDisplayed()
-        compose.onNodeWithTag("study-close").assertIsDisplayed();shot("study-mindmap.png")
+        val instrumentation=InstrumentationRegistry.getInstrumentation()
+        val directory=runCatching{instrumentation.targetContext.getExternalFilesDir(null)}.getOrNull()
+        val mainThread=android.os.Looper.getMainLooper().thread
+        val phase=java.util.concurrent.atomic.AtomicReference("seed")
+        val historyLock=Any();var history="";var lastObservation="";var beforeSaveUi="Not reached"
+        var snapshot:()->String={"Study models not captured"}
+        val observations=CoroutineScope(SupervisorJob()+Dispatchers.Main.immediate)
+        fun record(value:String){synchronized(historyLock){if(value!=lastObservation){
+            lastObservation=value;history=(history+"\n${android.os.SystemClock.uptimeMillis()} phase=${phase.get()} thread=${Thread.currentThread().name} $value").takeLast(7_000)
+        }}}
+        fun observe(){runCatching{record(snapshot())}.onFailure{record("State snapshot unavailable: ${it.javaClass.simpleName}")}}
+        fun stage(name:String){phase.set(name);record("begin $name");observe()}
+        try{
+            val(n,originalInk)=seed()
+            stage("open-study")
+            compose.revealAction("quick-settings");compose.onNodeWithTag("quick-settings").performClick();compose.onNodeWithTag("study-open").performScrollTo().performClick()
+            // Cache mounted models before the risky operations; no new model or production callback is installed.
+            runCatching{compose.runOnIdle{
+                val store=compose.activity.viewModelStore
+                val writer=checkNotNull(store.get("study-${n.id}") as? StudyViewModel)
+                val mapWriter=store.get("study-map-writer-${n.id}") as? KnowledgeViewModel
+                val portalWriter=store.get("map-portal-writer-${n.id}") as? KnowledgeViewModel
+                val author=store.get("map-authoring-${n.id}-main") as? PageAuthoringViewModel
+                val lock=store.get("read-lock-${n.id}") as? BookReadLockViewModel
+                val pending=StudyViewModel::class.java.getDeclaredField("pending").apply{isAccessible=true}
+                val graphRead=StudyViewModel::class.java.getDeclaredField("observation").apply{isAccessible=true}
+                val owners=StudyViewModel::class.java.getDeclaredField("visibleOwners").apply{isAccessible=true}
+                val writerJob=writer.viewModelScope.coroutineContext[Job]
+                fun job(value:Job?)=value?.let{"${it.javaClass.simpleName}@${System.identityHashCode(it)} active=${it.isActive} completed=${it.isCompleted} cancelled=${it.isCancelled}"}
+                fun knowledge(value:KnowledgeViewModel?):String{
+                    val ui=value?.ui?.value
+                    return "loading=${ui?.loading},readFailed=${ui?.readFailed},busy=${ui?.busy},unknown=${ui?.unknown},pending=${value?.pendingOperationId},completed=${ui?.completed},completedOperation=${ui?.completedOperation},rejected=${ui?.rejectedOperation},message=${ui?.message}"
+                }
+                snapshot={
+                    val ui=writer.ui.value;val request=pending.get(writer) as? StudyCommand;val editor=writer.editorState.value;val a=author?.ui?.value
+                    "study[map=${writer.mapId.value},tab=${writer.lastTab},loading=${ui.loading},readFailed=${ui.readFailed},busy=${ui.busy},unknown=${ui.unknown},completed=${ui.completed},message=${ui.message}] "+
+                        "pending[id=${request?.id},action=${request?.action},revision=${request?.expectedRevision}] editor[exists=${editor!=null},card=${editor?.card?.id},revision=${editor?.card?.revision}] "+
+                        "cards=${ui.cards.map{Triple(it.id,it.revision,it.title)}} nodes=${ui.nodes.map{it.id to it.cardId}} graph=${ui.graph?.graphFingerprint} "+
+                        "author[loading=${a?.loading},busy=${a?.busy},pending=${a?.pending}] readOnly=${lock?.readOnly?.value} hasDraft=${lock?.hasDraft?.value} "+
+                        "mapWriter[${knowledge(mapWriter)}] portalWriter[${knowledge(portalWriter)}] "+
+                        "observationOwners=${owners.get(writer)} graphRead=${job(graphRead.get(writer) as? Job)} scope=${job(writerJob)} dispatcher=${writer.viewModelScope.coroutineContext[kotlin.coroutines.ContinuationInterceptor]} children=${writerJob?.children?.take(6)?.map(::job)?.toList()}"
+                }
+                // Observe receipt-returned UI signals in memory; a missed/conflated emission is not proof of no receipt.
+                observations.launch(start=CoroutineStart.UNDISPATCHED){writer.ui.collect{value->
+                    record("StudyUi emission busy=${value.busy} unknown=${value.unknown} completed=${value.completed} message=${value.message}");observe()
+                }}
+            }}.onFailure{record("Model diagnostics unavailable: ${it.javaClass.simpleName}")}
+            stage("create-shared-card")
+            compose.revealAction("study-add-card");compose.onNodeWithTag("study-add-card").performClick();addCard("条件概率","按定义推导")
+            val card=runBlocking{app.study.cards(n.id).first()}.single()
+            stage("reuse-card")
+            compose.onNodeWithTag("study-card-${card.id}").performClick();compose.onNodeWithTag("card-management-actions").performClick();compose.onNodeWithTag("study-reuse-card").performScrollTo().performClick()
+            compose.waitUntil(10_000){observe();runBlocking{app.study.nodes(n.id).first().size}==2}
+            stage("open-outline-editor")
+            compose.revealAction("study-tab-1");compose.onNodeWithTag("study-tab-1").performClick();val nodes=runBlocking{app.study.nodes(n.id).first()}
+            compose.onNodeWithTag("outline-node-${nodes.first().id}").performScrollTo().performClick();compose.onNodeWithTag("study-edit-card").performScrollTo().performClick()
+            stage("replace-title")
+            val title=compose.onNodeWithTag("study-card-title")
+            title.performTextReplacement("概率公式整理")
+            beforeSaveUi=runCatching{
+                "TITLE ${title.printToString().take(900)}\nSAVE ${compose.onNodeWithTag("study-save-card").printToString().take(1_100)}"
+            }.getOrElse{"Save controls unavailable: ${it.javaClass.simpleName}"}
+            observe()
+            title.assertTextContains("概率公式整理",substring=false)
+            stage("save-once")
+            compose.onNodeWithTag("study-save-card").assertIsDisplayed().assertIsEnabled().performClick()
+            stage("await-editor-close")
+            compose.waitUntil(10_000){observe();compose.onAllNodesWithTag("study-card-editor").fetchSemanticsNodes().isEmpty()}
+            stage("verify-shared-revision")
+            assertEquals("概率公式整理",runBlocking{app.study.cards(n.id).first().single().title});assertEquals(2,runBlocking{app.study.nodes(n.id).first().count{it.cardId==card.id}})
+            val originalPage=runBlocking{app.inkRepository.read(n.id)}
+            assertEquals(1L,originalPage.revision);assertArrayEquals(InkStrokeCodec.encode(originalInk),InkStrokeCodec.encode(originalPage.strokes.single().stroke))
+            stage("open-map")
+            shot("study-outline.png");compose.revealAction("study-tab-2");compose.onNodeWithTag("study-tab-2").performClick();compose.onNodeWithTag("study-map").assertIsDisplayed()
+            compose.onNodeWithTag("study-close").assertIsDisplayed();shot("study-mindmap.png")
+        }catch(error:Throwable){
+            // The original failure may be blocked Main/IO: no Compose idle, fresh semantics, or Room queries here.
+            runCatching{
+                observe()
+                val threads=runCatching{
+                    val stacks=Thread.getAllStackTraces()
+                    val relevant=(listOf(mainThread)+stacks.keys.filter{thread->thread!==mainThread&&stacks[thread].orEmpty().any{it.className.startsWith("org.inkweft.")||it.className.startsWith("androidx.room.")}}.take(3)).distinct()
+                    relevant.joinToString("\n"){thread->"thread=${thread.name} state=${thread.state}\n"+stacks[thread].orEmpty().take(10).joinToString("\n")}.take(3_000)
+                }.getOrElse{"Thread snapshot unavailable: ${it.javaClass.simpleName}"}
+                val report=("SHARED_CARD_FAILURE phase=${phase.get()} error=${error.javaClass.simpleName}\n$beforeSaveUi\n"+synchronized(historyLock){history}+"\n$threads").take(13_000)
+                runCatching{println(report);File(checkNotNull(directory),"selection-shared-card-failure.txt").writeText(report)}
+                runCatching{
+                    val bitmap=checkNotNull(instrumentation.uiAutomation.takeScreenshot())
+                    try{File(checkNotNull(directory),"selection-shared-card-failure.png").outputStream().use{bitmap.compress(Bitmap.CompressFormat.PNG,100,it)}}finally{bitmap.recycle()}
+                }
+                runCatching{error.addSuppressed(AssertionError(report))}
+            }
+            throw error
+        }finally{observations.cancel()}
     }
     @Test fun childThemeAndRemovingLeafKeepsCard(){
         val(n,_)=seed();compose.revealAction("quick-settings");compose.onNodeWithTag("quick-settings").performClick();compose.onNodeWithTag("study-open").performScrollTo().performClick();compose.revealAction("study-add-card");compose.onNodeWithTag("study-add-card").performClick();addCard("总论","根节点")
