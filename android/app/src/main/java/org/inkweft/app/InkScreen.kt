@@ -136,7 +136,8 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
     var objectRequest by remember{mutableStateOf<String?>(null)}
     var selectedExcerpt by rememberSaveable(page.id){mutableStateOf<String?>(null)}
     val toolbarDensity=LocalDensity.current
-    var toolbarHeight by remember{mutableStateOf(56.dp)}
+    var measuredToolbarHeight by remember{mutableStateOf<androidx.compose.ui.unit.Dp?>(null)}
+    val toolbarHeight=measuredToolbarHeight?:56.dp
     var excerptDraft by remember{mutableStateOf(false)}
     val excerptVm:StudyViewModel=viewModel(key="excerpt-${note.base.id}",factory=StudyViewModel.Factory(note.base.id,app.study))
     val mapSession:StudyViewModel=viewModel(key="study-${note.base.id}",factory=StudyViewModel.Factory(note.base.id,app.study))
@@ -182,6 +183,8 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
     var hintJob by remember{mutableStateOf<Job?>(null)}
     fun showViewportHint(scale:Boolean){viewportHint=if(scale)2 else 1;hintJob?.cancel();hintJob=scope.launch{delay(850);viewportHint=0}}
     val returnViewports by workspace.pendingReturnViewport.collectAsStateWithLifecycle()
+    // Apply a saved viewport only after the paper uses the measured toolbar height.
+    val returnViewport=returnViewports[page.id].takeIf{measuredToolbarHeight!=null}
     var selectionViewport by remember{mutableStateOf(CanvasViewport())}
     var settings by remember{mutableStateOf(false)}
     var more by remember{mutableStateOf(false)}
@@ -503,7 +506,7 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
         }else if(continuousPages!=null){
             Box(Modifier.fillMaxWidth().weight(1f)){ContinuousPages(continuousPages,page.id,
                 ContinuousTools(kinds[tool.coerceIn(0,2)],colors[tool.coerceIn(0,2)],widths[tool.coerceIn(0,2)],tool==3,eraser.whole,eraser.onlyHighlighter,eraser.diameterDp,authoringUi.canWrite&&externalEnabled&&!readOnly&&tool<4&&!(if(tool==3)objectsBlocked else inkObjectsBlocked),beautyOptions,recipes[tool.coerceIn(0,2)],eraser.onlyTape,finger&&!readOnly),
-                gesture,onContinuousPage,{gesture=it;readLock.guard("ink-gesture-${page.id}",it);if(!it&&tool==3&&eraser.returnToPen)tool=lastWritingTool},{continuousBlocked=it},{notice=it},{id->onContinuousPage(id);leaveContinuous()},onAppendPage=onAppendPage.takeIf{!readOnly},authorAllowed={readLock.canWrite},returnViewport=returnViewports[page.id],onReturnViewportRestored={workspace.consumeReturnViewport(page.id)},onViewport={id,vp->workspace.viewport(id,vp)},selectedAuthoring=authoringUi,onZoom={zoom=it;showViewportHint(true)},onScroll={showViewportHint(false)},onObjectTap={pageId,id->if(!readOnly){pendingObject=pageId to id;onContinuousPage(pageId);leaveContinuous()}})}
+                gesture,onContinuousPage,{gesture=it;readLock.guard("ink-gesture-${page.id}",it);if(!it&&tool==3&&eraser.returnToPen)tool=lastWritingTool},{continuousBlocked=it},{notice=it},{id->onContinuousPage(id);leaveContinuous()},onAppendPage=onAppendPage.takeIf{!readOnly},authorAllowed={readLock.canWrite},returnViewport=returnViewport,onReturnViewportRestored={workspace.consumeReturnViewport(page.id)},onViewport={id,vp->workspace.viewport(id,vp)},selectedAuthoring=authoringUi,onZoom={zoom=it;showViewportHint(true)},onScroll={showViewportHint(false)},onObjectTap={pageId,id->if(!readOnly){pendingObject=pageId to id;onContinuousPage(pageId);leaveContinuous()}})}
         }else if(row!=null){
             val initial=remember(page.id){workspace.cachedViewport(page.id)?:row.takeIf{it.zoom>0}?.let{runCatching{CanvasViewport(it.centerX,it.centerY,it.zoom)}.getOrNull()}}
             Box(Modifier.fillMaxWidth().weight(1f)){
@@ -600,7 +603,7 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
         if(viewportHint!=0)Surface(Modifier.align(Alignment.BottomCenter).padding(bottom=12.dp),shape=RoundedCornerShape(20.dp),color=Color.White.copy(alpha=.9f),border=BorderStroke(1.dp,Line)){
             Row(Modifier.padding(horizontal=14.dp,vertical=6.dp)){if(viewportHint==2)Text("${(zoom*100).toInt()}%",fontSize=12.sp,modifier=Modifier.testTag("ink-zoom"))else pageNavigation()}
         }
-        Surface(Modifier.align(Alignment.TopCenter).padding(horizontal=4.dp).widthIn(max=960.dp).fillMaxWidth().onSizeChanged{toolbarHeight=with(toolbarDensity){it.height.toDp()}},shape=InkTheme.FloatingShape,color=InkTheme.Navigation,shadowElevation=InkTheme.ToolElevation){
+        Surface(Modifier.align(Alignment.TopCenter).padding(horizontal=4.dp).widthIn(max=960.dp).fillMaxWidth().onSizeChanged{measuredToolbarHeight=with(toolbarDensity){it.height.toDp()}},shape=InkTheme.FloatingShape,color=InkTheme.Navigation,shadowElevation=InkTheme.ToolElevation){
             Column {
             if(readOnly&&fullScreen)ReadingToolbar(
                 enabled=navigationReady&&externalEnabled,fullScreen=fullScreen,
