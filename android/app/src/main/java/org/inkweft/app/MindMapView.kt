@@ -9,6 +9,7 @@ import android.content.res.Configuration
 import android.graphics.*
 import android.view.*
 import org.inkweft.data.*
+import org.inkweft.core.*
 import kotlin.math.*
 import androidx.compose.ui.graphics.toArgb
 import org.inkweft.app.ui.designsystem.InkTheme
@@ -20,13 +21,14 @@ internal class MindMapView(context:Context):View(context){
     var enabledInput=true
     /** Browsing remains enabled while author movement, capture and title editing are locked. */
     var authorEditing=true
-        set(value){if(field!=value){field=value;dx=0f;dy=0f;dropPoint=null;dropParent=null;candidate=null;lastTapId=null;if(!value)onActive(false);invalidate()}}
+        set(value){if(field!=value){field=value;dx=0f;dy=0f;dropPoint=null;dropParent=null;candidate=null;lastTapId=null;if(!value)cancelAuthorGesture();invalidate()}}
     var captureBook=""
         set(value){if(field!=value){field=value;clearSceneTransition();knowledgeRelations=emptyList()}}
     var captureMapKey=""
         set(value){if(field!=value){field=value;clearSceneTransition();knowledgeRelations=emptyList()}}
     private var capturedMap=""
     var captureGraph=""
+        set(value){if(field!=value){if(movingIds.isNotEmpty()||selectionBox!=null)cancelAuthorGesture("图已变化，拖动取消");field=value}}
     var onCapture:(CaptureTransfer,StudyNodeRow?,Double,Double,String)->Unit={_,_,_,_,_->}
     private var capturedGraph=""
     private var dropPoint:PointF?=null
@@ -112,11 +114,40 @@ internal class MindMapView(context:Context):View(context){
     private var lastTapId:String?=null
     private var lastTapTime=0L
     private var lastTapX=0f;private var lastTapY=0f
+    private var annotations:PageAuthoring?=null
+    private val annotationPainter=AnnotationPainter()
+    fun showAuthoring(state:PageAuthoring?){if(annotations===state)return;annotations=state;clearSceneTransition();invalidate()}
+    fun annotationBounds(id:String):CanvasBounds?=nodes.firstOrNull{it.id==id}?.let{worldBounds(it)}?.let{CanvasBounds(it.left.toDouble(),it.top.toDouble(),it.right.toDouble(),it.bottom.toDouble())}
     fun nodeBounds(id:String):RectF?=nodes.find{it.id==id}?.let{n->val box=worldBounds(n);RectF(box.left*d*scale+tx,box.top*d*scale+ty,box.right*d*scale+tx,box.bottom*d*scale+ty)}
     private fun publishBounds(){val b=selectedNodeId?.let(::nodeBounds);if(b!=lastBounds){lastBounds=b;post{onSelectionBounds(b)}}}
     var onMove:(StudyNodeRow,Double,Double)->Unit={_,_,_->}
+    /** Full graph for subtree membership, including currently folded descendants. */
+    var movementNodes:List<StudyNodeRow> = emptyList()
+    var selectionMode=false
+    var selectedNodeIds:Set<String> = emptySet()
+        set(value){if(field!=value){field=value;invalidate()}}
+    var onSelectMany:(Set<String>)->Unit={}
+    var onMoveSelection:((Set<String>,Double,Double,String)->Unit)?=null
+    var onGestureMessage:(String)->Unit={}
+    private var movingIds:Set<String> = emptySet()
+    private var movingRoots:Set<String> = emptySet()
+    private var movingRows:List<StudyNodeRow> = emptyList()
+    private var gestureGraph=""
+    private var selectionBox:RectF?=null
+    private fun branchIdsFor(roots:Set<String>):Set<String>{
+        val source=movementNodes.ifEmpty{nodes};val result=roots.toMutableSet()
+        // At most 128 topics. Iterate to a fixed point for callers without canonical order.
+        repeat(source.size){val size=result.size;source.forEach{if(it.parentId in result)result+=it.id};if(size==result.size)return result}
+        return result
+    }
+    private fun cancelAuthorGesture(message:String?=null){
+        active=null;movingIds=emptySet();movingRoots=emptySet();movingRows=emptyList();selectionBox=null;dx=0f;dy=0f
+        onActive(false);message?.let(onGestureMessage);publishBounds();invalidate()
+    }
     var onActive:(Boolean)->Unit={}
     private var nodes=emptyList<StudyNodeRow>();private var titles=emptyMap<String,String>()
+    private var presentations=emptyMap<String,org.inkweft.core.KnowledgeData.CardPresentation>()
+    fun setCardPresentations(value:Map<String,org.inkweft.core.KnowledgeData.CardPresentation>){if(presentations!=value){presentations=value;invalidate()}}
     private var bodies=emptyMap<String,String>()
     private var revisions=emptyMap<String,Long>()
     private var sources=emptyMap<String,MapSourceInfo>()
@@ -180,7 +211,10 @@ internal class MindMapView(context:Context):View(context){
     }
     private val detector=ScaleGestureDetector(context,object:ScaleGestureDetector.SimpleOnScaleGestureListener(){
         override fun onScale(s:ScaleGestureDetector):Boolean{val old=scale;scale=(scale*s.scaleFactor).coerceIn(.001f,2.5f);tx=s.focusX-(s.focusX-tx)*scale/old;ty=s.focusY-(s.focusY-ty)*scale/old;changedViewport();invalidate();return true}
-    })
+    }).apply{
+        // Double-tap belongs to inline title editing; two-finger pinch owns zoom.
+        isQuickScaleEnabled=false
+    }
     init{isFocusable=true;isFocusableInTouchMode=true;contentDescription="可缩放思维导图，拖动节点移动；需要无障碍浏览时切换大纲视图。"}
     override fun dispatchKeyEvent(event:KeyEvent):Boolean{
         val key=event.keyCode
@@ -239,8 +273,8 @@ internal class MindMapView(context:Context):View(context){
         changedViewport();invalidate();return true
     }
     fun zoom(f:Float){val old=scale;scale=(scale*f).coerceIn(.001f,2.5f);tx=width/2-(width/2-tx)*scale/old;ty=height/2-(height/2-ty)*scale/old;changedViewport();invalidate()}
-    private fun x(n:StudyNodeRow)=n.x.toFloat()+if(n.id==active?.id)dx else 0f
-    private fun y(n:StudyNodeRow)=n.y.toFloat()+if(n.id==active?.id)dy else 0f
+    private fun x(n:StudyNodeRow)=n.x.toFloat()+if(n.id in movingIds)dx else 0f
+    private fun y(n:StudyNodeRow)=n.y.toFloat()+if(n.id in movingIds)dy else 0f
     override fun onSizeChanged(w:Int,h:Int,oldw:Int,oldh:Int){
         super.onSizeChanged(w,h,oldw,oldh)
         clearSceneTransition()
@@ -255,6 +289,7 @@ internal class MindMapView(context:Context):View(context){
     // drawColor and transformed nodes must never paint outside this viewport.
     override fun draw(canvas:Canvas){val save=canvas.save();try{canvas.clipRect(0,0,width,height);super.draw(canvas)}finally{canvas.restoreToCount(save)}}
     private fun drawKnowledgeRelations(c:Canvas,lookup:Map<String,StudyNodeRow>){
+        val lanes=mutableMapOf<Pair<String,String>,Int>()
         for(edge in knowledgeRelations){
             val a=lookup[edge.fromNodeId]?.let(::worldBounds)?:continue
             val b=lookup[edge.toNodeId]?.let(::worldBounds)?:continue
@@ -267,20 +302,28 @@ internal class MindMapView(context:Context):View(context){
             val length=hypot(ex-sx,ey-sy).coerceAtLeast(1f)
             val nx=-(ey-sy)/length;val ny=(ex-sx)/length
             // A bow keeps a knowledge link visible even when it shares a tree parent/child pair.
-            val bow=if(horizontal)max(a.height(),b.height())+48f else max(a.width(),b.width())+48f
+            val pair=edge.fromNodeId to edge.toNodeId;val lane=lanes[pair]?:0;lanes[pair]=lane+1
+            val bow=(if(horizontal)max(a.height(),b.height())+48f else max(a.width(),b.width())+48f)+lane*28f
             val cx=(sx+ex)/2+nx*bow;val cy=(sy+ey)/2+ny*bow
-            paint.style=Paint.Style.STROKE;paint.strokeWidth=1.8f;paint.color=InkTheme.Accent.toArgb();paint.pathEffect=relationDash
+            paint.style=Paint.Style.STROKE;paint.strokeWidth=1.8f;paint.color=InkTheme.Accent.toArgb();paint.pathEffect=if(edge.lineStyle==org.inkweft.core.RelationLineStyle.DASHED)relationDash else null
             c.drawPath(Path().apply{moveTo(sx,sy);quadTo(cx,cy,ex,ey)},paint)
             paint.pathEffect=null;paint.style=Paint.Style.FILL
-            val t=.8f;val u=1-t
-            val ax=u*u*sx+2*u*t*cx+t*t*ex;val ay=u*u*sy+2*u*t*cy+t*t*ey
-            val angle=atan2(u*(cy-sy)+t*(ey-cy),u*(cx-sx)+t*(ex-cx))
-            c.drawPath(Path().apply{
-                moveTo(ax,ay);lineTo(ax-10*cos(angle-.45f),ay-10*sin(angle-.45f))
-                lineTo(ax-10*cos(angle+.45f),ay-10*sin(angle+.45f));close()
-            },paint)
-            val label=edge.labels.joinToString(" · ")
+            fun arrow(t:Float,reverse:Boolean=false){
+                val u=1-t
+                val ax=u*u*sx+2*u*t*cx+t*t*ex;val ay=u*u*sy+2*u*t*cy+t*t*ey
+                val angle=atan2(u*(cy-sy)+t*(ey-cy),u*(cx-sx)+t*(ex-cx))+(if(reverse)PI.toFloat()else 0f)
+                c.drawPath(Path().apply{
+                    moveTo(ax,ay);lineTo(ax-10*cos(angle-.45f),ay-10*sin(angle-.45f))
+                    lineTo(ax-10*cos(angle+.45f),ay-10*sin(angle+.45f));close()
+                },paint)
+            }
+            arrow(.8f)
+            if(edge.direction==org.inkweft.core.RelationDirection.BOTH)arrow(.2f,true)
+            val text=(edge.labels+edge.annotations.map{it.replace('\n',' ')}).joinToString(" · ")
             paint.textSize=11f*resources.configuration.fontScale;paint.typeface=Typeface.DEFAULT
+            val limit=220f*resources.configuration.fontScale.coerceIn(1f,1.5f)
+            val count=paint.breakText(text,true,limit-paint.measureText("…"),null)
+            val label=if(count<text.length)text.take(count)+"…"else text
             val mx=(sx+2*cx+ex)/4;val my=(sy+2*cy+ey)/4
             val half=paint.measureText(label)/2;val metrics=paint.fontMetrics
             val baseline=my-(metrics.ascent+metrics.descent)/2
@@ -308,7 +351,7 @@ internal class MindMapView(context:Context):View(context){
         val lookup=nodes.associateBy{it.id}
         drawKnowledgeRelations(c,lookup)
         MapScenePainter.draw(c,nodes.map{n->org.inkweft.core.MapSceneNode(n.id,n.parentId,n.cardId.takeUnless{it in structuralCardIds},titles[if(relationMode)n.id else n.cardId].orEmpty(),bodies[n.cardId].orEmpty(),x(n).toDouble(),y(n).toDouble(),n.revision,revisions[n.cardId]?:n.revision)},active?.id?:selectedNodeId,hiddenCounts,resources.configuration.fontScale,scale>=.35f,!relationMode,
-            viewStyle,layouts,sourcePreviews.frames())
+            viewStyle,layouts,sourcePreviews.frames(),presentations)
         paint.style=Paint.Style.STROKE;paint.strokeWidth=1.5f;paint.pathEffect=relationDash
         paint.color=InkTheme.Accent.toArgb()
         for((a,b) in relationEdges){val start=lookup[a]?:continue;val end=lookup[b]?:continue
@@ -328,7 +371,23 @@ internal class MindMapView(context:Context):View(context){
             dropParent?.let{parent->val box=worldBounds(parent);c.drawRoundRect(box.left-3f,box.top-3f,box.right+3f,box.bottom+3f,12f,12f,paint);c.drawLine(box.right,box.centerY(),point.x,point.y,paint)}
             c.drawRoundRect(point.x,point.y,point.x+168,point.y+52,8f,8f,paint);paint.pathEffect=null
         }
+        annotations?.let{state->
+            val occurrences=nodes.mapNotNull{n->annotationBounds(n.id)?.let{n.id to it}}.toMap()
+            val viewport=Matrix().apply{setScale(scale*d,scale*d);postTranslate(tx,ty)}
+            annotationPainter.regions(c,state.regions,emptyList(),occurrences)
+            for(layer in state.layers.layers.filter{it.visible})annotationPainter.draw(c,state.visibleAnnotations().filter{state.layers.layer(LayerContent(LayerContentKind.ANNOTATION,it.stroke.id))?.id==layer.id},emptyList(),viewport,occurrences,state.regions)
+        }
+        // Selected branches have both an outline and a checkmark, independent of card colors.
+        for(n in nodes)if(n.id in selectedNodeIds){
+            val box=worldBounds(n);paint.style=Paint.Style.STROKE;paint.strokeWidth=3f/scale;paint.pathEffect=null;paint.color=InkTheme.Accent.toArgb()
+            c.drawRoundRect(box.left-4/scale,box.top-4/scale,box.right+4/scale,box.bottom+4/scale,10f,10f,paint)
+            paint.style=Paint.Style.FILL;paint.textSize=18f/scale;c.drawText("✓",box.left+5/scale,box.top+20/scale,paint)
+        }
         c.restoreToCount(save)
+        selectionBox?.let{box->
+            paint.style=Paint.Style.FILL;paint.color=InkTheme.Accent.toArgb();paint.alpha=28;c.drawRect(box,paint)
+            paint.style=Paint.Style.STROKE;paint.alpha=255;paint.strokeWidth=2*d;paint.pathEffect=DashPathEffect(floatArrayOf(7*d,4*d),0f);c.drawRect(box,paint);paint.pathEffect=null
+        }
         // Screen-size affordances remain hittable independently of zoom and node dragging.
         nodes.filter{it.id in branchIds&&it.id!=selectedNodeId}.forEach{n->nodeBounds(n.id)?.let{b->
             val cx=b.right+12*d;val cy=b.centerY();paint.style=Paint.Style.FILL;paint.color=Color.WHITE;c.drawCircle(cx,cy,12*d,paint)
@@ -345,29 +404,64 @@ internal class MindMapView(context:Context):View(context){
     }
     override fun onTouchEvent(e:MotionEvent):Boolean{
         if(e.actionMasked==MotionEvent.ACTION_DOWN)clearSceneTransition()
-        if(!enabledInput||editingTitle){active=null;dx=0f;dy=0f;onActive(false);invalidate();return true}
+        if(!enabledInput||editingTitle){cancelAuthorGesture();return true}
         detector.onTouchEvent(e)
-        if(e.pointerCount>1){lastTapId=null;multi=true;active=null;dx=0f;dy=0f;invalidate();return true}
+        if(e.pointerCount>1){lastTapId=null;multi=true;cancelAuthorGesture();onActive(true);return true}
         when(e.actionMasked){
             MotionEvent.ACTION_DOWN->{startX=e.x;startY=e.y;lastX=e.x;lastY=e.y;dx=0f;dy=0f;moving=false;multi=false
                 pressedBranch=nodes.lastOrNull{n->n.id in branchIds&&n.id!=selectedNodeId&&nodeBounds(n.id)?.let{b->abs(e.x-(b.right+12*d))<=24*d&&abs(e.y-b.centerY())<=24*d}==true}?.id
                 val px=(e.x-tx)/(scale*d);val py=(e.y-ty)/(scale*d)
                 val ordered=nodes.sortedBy{it.id==selectedNodeId}
                 active=if(pressedBranch!=null)null else ordered.lastOrNull{worldBounds(it).contains(px,py)}
+                gestureGraph=captureGraph
+                movingRoots=active?.let{if(it.id in selectedNodeIds)selectedNodeIds else setOf(it.id)}.orEmpty()
+                movingIds=if(onMoveSelection==null)movingRoots else branchIdsFor(movingRoots)
+                movingRows=movementNodes.ifEmpty{nodes}.filter{it.id in movingIds}
+                selectionBox=if(selectionMode&&active==null&&pressedBranch==null)RectF(e.x,e.y,e.x,e.y)else null
                 parent?.requestDisallowInterceptTouchEvent(true);onActive(true)}
             MotionEvent.ACTION_MOVE->{if(multi)return true
                 if(hypot(e.x-startX,e.y-startY)>ViewConfiguration.get(context).scaledTouchSlop)moving=true
-                if(moving&&pressedBranch==null){lastTapId=null;if(active!=null&&authorEditing){dx=(e.x-startX)/(scale*d);dy=(e.y-startY)/(scale*d)}else {tx+=e.x-lastX;ty+=e.y-lastY}}
-                lastX=e.x;lastY=e.y;if(active==null||!authorEditing)changedViewport()else publishBounds();invalidate()}
-            MotionEvent.ACTION_UP->{val n=active;val mx=dx;val my=dy;active=null;dx=0f;dy=0f;onActive(false);parent?.requestDisallowInterceptTouchEvent(false)
+                if(moving&&pressedBranch==null){
+                    lastTapId=null
+                    if(selectionBox!=null)selectionBox=RectF(min(startX,e.x),min(startY,e.y),max(startX,e.x),max(startY,e.y))
+                    else if(active!=null&&authorEditing){
+                        val desiredX=(e.x-startX)/(scale*d);val desiredY=(e.y-startY)/(scale*d)
+                        dx=if(movingRows.isEmpty())desiredX else desiredX.coerceIn((-40000-movingRows.minOf{it.x}).toFloat(),(40000-movingRows.maxOf{it.x}).toFloat())
+                        dy=if(movingRows.isEmpty())desiredY else desiredY.coerceIn((-40000-movingRows.minOf{it.y}).toFloat(),(40000-movingRows.maxOf{it.y}).toFloat())
+                    }else {tx+=e.x-lastX;ty+=e.y-lastY}
+                }
+                lastX=e.x;lastY=e.y;if(selectionBox==null&&(active==null||!authorEditing))changedViewport()else publishBounds();invalidate()}
+            MotionEvent.ACTION_UP->{
+                val n=active;val mx=dx;val my=dy;val roots=movingRoots;val stamp=gestureGraph;val box=selectionBox
                 val branch=pressedBranch;pressedBranch=null
-                if(branch!=null){lastTapId=null;if(!multi&&!moving)onToggleBranch(branch)}else if(!multi){if(n!=null&&moving){if(authorEditing)onMove(n,(n.x+mx).coerceIn(-40000.0,40000.0),(n.y+my).coerceIn(-40000.0,40000.0))}
-                else if(!moving){if(n==null){lastTapId=null;onSelect?.invoke(null)}else if(onSelect==null)onOpen(n)else{
-                    val twice=lastTapId==n.id&&e.eventTime-lastTapTime<=ViewConfiguration.getDoubleTapTimeout()&&hypot(e.x-lastTapX,e.y-lastTapY)<ViewConfiguration.get(context).scaledDoubleTapSlop
-                    selectedNodeId=n.id;requestFocus();onSelect?.invoke(n)
-                    if(twice){lastTapId=null;if(authorEditing)onEditTitle(n)else onOpenDetails(n)}else{lastTapId=n.id;lastTapTime=e.eventTime;lastTapX=e.x;lastTapY=e.y}
-                }}}else lastTapId=null;invalidate();performClick()}
-            MotionEvent.ACTION_CANCEL->{pressedBranch=null;lastTapId=null;parent?.requestDisallowInterceptTouchEvent(false);active=null;dx=0f;dy=0f;onActive(false);invalidate()}
+                cancelAuthorGesture();parent?.requestDisallowInterceptTouchEvent(false)
+                if(branch!=null){lastTapId=null;if(!multi&&!moving)onToggleBranch(branch)}
+                else if(!multi&&box!=null){
+                    val selected=if(moving)nodes.filter{nodeBounds(it.id)?.let{bounds->RectF.intersects(bounds,box)}==true}.map{it.id}.toSet()else emptySet()
+                    selectedNodeIds=selected;onSelectMany(selected);lastTapId=null
+                    onGestureMessage(if(selected.isEmpty())"框选为空，未改变内容"else"已框选 ${selected.size} 个主题；移动、分组和布局包含各自下级")
+                }else if(!multi){
+                    if(n!=null&&moving&&authorEditing){
+                        if(stamp!=captureGraph)onGestureMessage("图已变化，移动取消")
+                        else if(mx!=0f||my!=0f){
+                            val moveMany=onMoveSelection
+                            if(moveMany==null)onMove(n,n.x+mx,n.y+my)else moveMany(roots,mx.toDouble(),my.toDouble(),stamp)
+                        }
+                    }else if(!moving){
+                        if(n==null){lastTapId=null;onSelect?.invoke(null)}
+                        else if(selectionMode){
+                            val selected=if(n.id in selectedNodeIds)selectedNodeIds-n.id else selectedNodeIds+n.id
+                            selectedNodeIds=selected;onSelectMany(selected);lastTapId=null
+                        }else if(onSelect==null)onOpen(n)else{
+                            val twice=lastTapId==n.id&&e.eventTime-lastTapTime<=ViewConfiguration.getDoubleTapTimeout()&&hypot(e.x-lastTapX,e.y-lastTapY)<ViewConfiguration.get(context).scaledDoubleTapSlop
+                            selectedNodeId=n.id;requestFocus();onSelect?.invoke(n)
+                            if(twice){lastTapId=null;if(authorEditing)onEditTitle(n)else onOpenDetails(n)}else{lastTapId=n.id;lastTapTime=e.eventTime;lastTapX=e.x;lastTapY=e.y}
+                        }
+                    }
+                }else lastTapId=null
+                invalidate();performClick()
+            }
+            MotionEvent.ACTION_CANCEL->{pressedBranch=null;lastTapId=null;parent?.requestDisallowInterceptTouchEvent(false);cancelAuthorGesture("拖动已取消，原位置保留")}
         };return true
     }
     override fun performClick():Boolean{super.performClick();return true}

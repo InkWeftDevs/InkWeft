@@ -1,0 +1,21 @@
+{
+  "local_source": "3519e3568ba15d346c08439b4c9ed84b466aadab",
+  "public_same_tree": "37f512f684af6a93a81455864253a74e943ea5d6",
+  "tree": "3e803c91226ef71424dec18717e088b3b93e50cf",
+  "targeted_core": {
+    "passed": 30,
+    "failed": 0,
+    "skipped": 0
+  },
+  "app_kotlin": "PASS",
+  "app_android_test_kotlin": "PASS",
+  "data_android_test_kotlin": "PASS",
+  "elapsed_seconds": 240,
+  "gradle_tasks": {
+    "executed": 10,
+    "cache": 2,
+    "up_to_date": 41
+  },
+  "android_execution": "NOT_RUN locally; separate CI in progress",
+  "log_sha256": "f4fc256c822eb2a86dbeddb092f6e6ad2ad18f84957542c1bfd5647af9283af6"
+}

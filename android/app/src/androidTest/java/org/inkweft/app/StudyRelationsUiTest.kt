@@ -83,6 +83,18 @@ class StudyRelationsUiTest {
         assertEquals(3,projectStudyRelations(a.id,listOf(a),listOf(outside,page,visible)).outOfScopeCount)
     }
 
+    @Test fun displaySettingsKeepSemanticIdentityAndDoNotMixStyledEdges(){
+        val book=id();val a=node(book);val b=node(book)
+        val default=KnowledgeData.Link(TargetRef(TargetKind.CARD,a.cardId),TargetRef(TargetKind.CARD,b.cardId))
+        val styled=default.copy(relation=RelationKind.CONTRAST,lineStyle=RelationLineStyle.SOLID,direction=RelationDirection.BOTH,annotation="核对适用边界")
+        val rows=listOf(row(book,default),row(book,styled),row(book,styled.copy(relation=RelationKind.APPLICATION,visible=false)))
+        val projection=projectStudyRelations(a.id,listOf(a,b),rows)
+        assertEquals(2,projection.edges.size);assertEquals(0,projection.outOfScopeCount)
+        val edge=projection.edges.single{it.lineStyle==RelationLineStyle.SOLID}
+        assertEquals(RelationDirection.BOTH,edge.direction);assertEquals(listOf("核对适用边界"),edge.annotations)
+        assertTrue(default.sameMeaning(default.copy(visible=false)))
+    }
+
     private data class Fixture(val book:String,val sourceBook:String,val a:StudyNodeRow,val anotherA:StudyNodeRow,
         val b:StudyNodeRow,val anotherB:StudyNodeRow,val isolated:StudyNodeRow,val links:List<KnowledgeRow>)
     private fun fixture():Fixture {
@@ -119,6 +131,9 @@ class StudyRelationsUiTest {
     }
     private fun tap(tag:String){
         compose.revealAction(tag)
+        // These chips are lazy-list items and may have been recycled after reading a lower link.
+        if(tag in setOf("knowledge-links-incoming","knowledge-links-outgoing"))
+            compose.onNodeWithTag("knowledge-links-list").performScrollToNode(hasTestTag(tag))
         val target=compose.onNodeWithTag(tag);runCatching{target.performScrollTo()}
         target.assertIsDisplayed().assertIsEnabled().performTouchInput{click()};compose.waitForIdle()
     }
@@ -167,7 +182,7 @@ class StudyRelationsUiTest {
         select(f.a.id);assertTrue(edges().isEmpty())
         compose.onNodeWithTag("study-knowledge-relations-legend").assertDoesNotExist()
         toggleRelations()
-        compose.onNodeWithTag("study-knowledge-relations-legend").assertTextContains("虚线：知识关联")
+        compose.onNodeWithTag("study-knowledge-relations-legend").assertTextContains("知识关联 · 箭头表示方向")
         val shown=listOf(f.a,f.anotherA,f.b,f.anotherB,f.isolated,outgoingOnly)
         val links=f.links+listOf(outgoingLink,branchLink)
         val expected=projectStudyRelations(f.a.id,shown,links).edges

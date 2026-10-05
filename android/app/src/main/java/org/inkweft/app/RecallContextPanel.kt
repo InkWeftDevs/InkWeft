@@ -25,7 +25,7 @@ import kotlinx.coroutines.withContext
 import org.inkweft.core.*
 import org.inkweft.data.*
 
-private enum class RecallContextTab(val label:String,val tag:String) {
+internal enum class RecallContextTab(val label:String,val tag:String) {
     SOURCE("原页","source"), MAP("导图","map"), EXCERPT("摘录","excerpt")
 }
 
@@ -37,23 +37,24 @@ private const val RecallPlaceholderColor:Int = 0xfff4f7f5.toInt()
     current:FrozenBranchReviewQuestion,
     cluesVisible:Boolean,
     source:StudySourceRow?,
+    tab:RecallContextTab,
+    onTabChange:(RecallContextTab)->Unit,
     modifier:Modifier=Modifier,
 ) {
     key(plan.ref,plan.branchId,current.reference.questionId,current.reference.questionRevision) {
-        var tab by rememberSaveable(current.reference.questionId) { mutableStateOf(RecallContextTab.SOURCE.name) }
         Surface(modifier.testTag("recall-context")) {
             Column(Modifier.fillMaxWidth().verticalScroll(rememberScrollState()).padding(12.dp),
                 verticalArrangement=Arrangement.spacedBy(8.dp)) {
                 Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
                     horizontalArrangement=Arrangement.spacedBy(8.dp)) {
                     RecallContextTab.entries.forEach { item ->
-                        FilterChip(tab==item.name,{tab=item.name},label={Text(item.label)},
+                        FilterChip(tab==item,{onTabChange(item)},label={Text(item.label)},
                             modifier=Modifier.heightIn(min=48.dp).testTag("recall-context-tab-${item.tag}"))
                     }
                 }
                 // A permission change replaces the complete subtree, including native caches.
                 key(tab,cluesVisible) {
-                    when(RecallContextTab.valueOf(tab)) {
+                    when(tab) {
                         RecallContextTab.SOURCE -> RecallSourceContext(plan,current,source,cluesVisible)
                         RecallContextTab.MAP -> RecallMapContext(plan,current,cluesVisible)
                         RecallContextTab.EXCERPT -> RecallExcerptContext(plan,current,source,cluesVisible)
@@ -88,7 +89,7 @@ private const val RecallPlaceholderColor:Int = 0xfff4f7f5.toInt()
     },modifier=Modifier.fillMaxWidth().height(160.dp).testTag(tag))
 }
 
-private data class RecallSourcePage(val title:String,val page:NotebookPageRow,val strokes:List<InkStroke>,val objects:List<PageObject>)
+private data class RecallSourcePage(val title:String,val page:NotebookPageRow,val strokes:List<InkStroke>,val objects:List<PageObject>,val authoring:PageAuthoring)
 private class RecallSourceChanged:Exception()
 private class RecallSourceUnavailable:Exception()
 private class RecallMapUnrelated:Exception()
@@ -98,17 +99,11 @@ private fun sameSource(a:StudySourceRow,b:StudySourceRow):Boolean =
         a.left==b.left&&a.top==b.top&&a.right==b.right&&a.bottom==b.bottom&&
         a.strokeIds==b.strokeIds&&a.snapshot.contentEquals(b.snapshot)
 
-/** Source geometry is not versioned with the answer. Never substitute a changed source. */
-private suspend fun checkedSource(app:InkWeftApplication,plan:BranchReviewPlan,
-    current:FrozenBranchReviewQuestion,source:StudySourceRow):StudySourceRow {
-    if(source.cardId!=current.reference.cardId||current.question.notebookId!=plan.ref.notebookId)throw RecallSourceUnavailable()
-    val card=app.study.cards(plan.ref.notebookId).first().find{it.id==current.reference.cardId}
-        ?:throw RecallSourceUnavailable()
-    if(card.trashedAt!=null)throw RecallSourceUnavailable()
-    if(card.revision!=current.reference.cardRevision)throw RecallSourceChanged()
-    val fresh=app.study.source(source.cardId)?:throw RecallSourceUnavailable()
-    if(!sameSource(fresh,source))throw RecallSourceChanged()
-    return fresh
+/** The selected source must belong to this exact fixed card revision, not today's crop. */
+private fun checkedSource(plan:BranchReviewPlan,current:FrozenBranchReviewQuestion,source:StudySourceRow):StudySourceRow {
+    if(source.cardId!=current.reference.cardId||current.question.notebookId!=plan.ref.notebookId||!current.sources.complete)throw RecallSourceUnavailable()
+    return current.sources.sources.firstOrNull{frozen->frozen.notebookId==plan.ref.notebookId&&sameSource(frozen.legacy(current.reference.cardId),source)}
+        ?.legacy(current.reference.cardId)?:throw RecallSourceUnavailable()
 }
 
 private fun sourceFailure(error:Exception):String = when(error) {
@@ -136,7 +131,7 @@ private fun sourceFailure(error:Exception):String = when(error) {
         page=null;error=null
         try {
             val value=withContext(Dispatchers.IO) {
-                val fresh=checkedSource(app,plan,current,source)
+                val fresh=checkedSource(plan,current,source)
                 val owned=app.pages.activePages(plan.ref.notebookId).find{it.id==fresh.pageId}
                     ?:throw RecallSourceUnavailable()
                 val (note,_)=app.knowledge.resolve(TargetRef(TargetKind.PAGE,owned.id))
@@ -147,7 +142,7 @@ private fun sourceFailure(error:Exception):String = when(error) {
                 val objects=app.pageObjects.read(owned.id).objects.filter{
                     it.mapEmbed?.target?.notebookId?.let{book->book==plan.ref.notebookId}!=false
                 }
-                RecallSourcePage(note.title,owned,InkSession(ink).visibleDraft(),objects)
+                RecallSourcePage(note.title,owned,InkSession(ink).visibleDraft(),objects,app.authoring.readPage(owned.id).state)
             }
             page=value
         } catch(c:CancellationException) { throw c }
@@ -165,7 +160,7 @@ private fun sourceFailure(error:Exception):String = when(error) {
         }
         return
     }
-    Text("${loaded.title} · 第 ${loaded.page.position+1} 页 · 当前来源，只读",
+    Text("${loaded.title} · 第 ${loaded.page.position+1} 页 · 原页视图（不含展开留白），只读",
         maxLines=2,overflow=TextOverflow.Ellipsis,modifier=Modifier.testTag("recall-context-source-title"))
     AndroidView(factory={context->InkCanvasView(context).also { native->
         native.allowInput=false;native.fingerWrites=false
@@ -178,7 +173,7 @@ private fun sourceFailure(error:Exception):String = when(error) {
         native.allowInput=false;native.fingerWrites=false
         native.onNotice={error="来源呈现失败，本题固定问答仍保留。"}
         native.configure(loaded.page.world,PaperStyle.entries[loaded.page.paper],null)
-        native.showDocument(loaded.page.id);native.showObjects(loaded.objects);native.showStrokes(loaded.strokes)
+        native.showAuthoring(loaded.authoring);native.showDocument(loaded.page.id);native.showObjects(loaded.objects);native.showStrokes(loaded.strokes)
     },modifier=Modifier.fillMaxWidth().height(280.dp).testTag("recall-context-source-canvas"))
     Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState())) {
         TextButton({view?.zoomBy(1/1.2)},modifier=Modifier.heightIn(min=48.dp).testTag("recall-context-source-zoom-out")){Text("缩小")}
@@ -282,7 +277,7 @@ private fun sourceFailure(error:Exception):String = when(error) {
     LaunchedEffect(source,attempt) {
         snapshot=null;error=null
         try {
-            snapshot=withContext(Dispatchers.IO) { InkPageFile.decode(checkedSource(app,plan,current,source).snapshot) }
+            snapshot=withContext(Dispatchers.IO) { InkPageFile.decode(checkedSource(plan,current,source).snapshot) }
         } catch(c:CancellationException) { throw c }
         catch(e:Exception) { error=sourceFailure(e) }
     }
@@ -302,8 +297,19 @@ private fun sourceFailure(error:Exception):String = when(error) {
     }},onRelease={native->native.showDocument(null);native.showObjects(emptyList());native.showStrokes(emptyList())},update={native->
         native.preview=true;native.allowInput=false;native.fingerWrites=false
         native.configure(loaded.world,PaperStyle.BLANK,null)
+        native.showAuthoring(loaded.authoring);native.showImageSources(loaded.imageSources)
         native.showStrokes(loaded.strokes);native.showObjects(loaded.objects.filter{
             it.mapEmbed?.target?.notebookId?.let{book->book==plan.ref.notebookId}!=false
         })
     },modifier=Modifier.fillMaxWidth().height(240.dp).testTag("recall-context-excerpt-canvas"))
+}
+
+/** Durable typed recall uses the same original-context surface without ever exposing neighbour content. */
+@Composable internal fun RecallContextPanel(plan:BranchReviewPlan,current:RecallLoadedAttempt,enabled:Boolean,onReveal:(Int)->Unit){
+    var showMap by rememberSaveable(current.row.id){mutableStateOf(false)}
+    Column(Modifier.fillMaxWidth().testTag("recall-durable-context"),verticalArrangement=Arrangement.spacedBy(8.dp)){
+        RecallQuestionProjection(current,enabled,onReveal)
+        TextButton({showMap=!showMap},enabled=enabled){Text(if(showMap)"收起原导图位置"else"在原导图位置回忆（其他主题保持遮挡）")}
+        if(showMap)RecallMaskedMapProjection(plan,current)
+    }
 }

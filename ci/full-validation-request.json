@@ -1,0 +1,16 @@
+{
+  "requested_utc": "2026-10-05T04:48:00Z",
+  "reason": "Full scoped acceptance after same-build three-round source/snapshot/shared-card pass and minimal Dialog observation ownership fix",
+  "local_production_candidate": "887dcabad386f82a1454adbd935c6d863639bba0",
+  "public_production_candidate": "ace31a25af59fce20d52946b8ddaadb15965e6fd",
+  "focused_run": 37263980819,
+  "focused_distinct_methods": 3,
+  "focused_observations_passed": 9,
+  "expected_app": 163,
+  "fresh_room": 202,
+  "b6_phases": 5,
+  "b6_pngs": 40,
+  "full_lint_owner_shard": 1,
+  "physical_device": "NOT_RUN",
+  "production_changes_since_focused": false
+}

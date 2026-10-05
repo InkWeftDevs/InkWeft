@@ -1,0 +1,25 @@
+{
+  "source": "d836cc72040475a87ba901fe4e63431e1ad8e8ff",
+  "production_and_both_android_test_kotlin": "PASS",
+  "lint": {
+    "Warning": 165,
+    "Hint": 2
+  },
+  "jvm": {
+    "tests": 367,
+    "failures": 0,
+    "skipped": 0,
+    "reuse": "unchanged inputs"
+  },
+  "python_ci_tests": 38,
+  "native_evidence_host_tests": 7,
+  "actionlint": "PASS",
+  "seconds": 587,
+  "log_sha256": "d7b5fea5a32260967c0a14b3376d20a75a57c2591049cc266c121b8397b50375",
+  "android": "NOT_RUN for this follow-up; previous54902a5b results separate",
+  "unresolved_runtime": [
+    "tablet font/recreation recall state",
+    "library first held navigation",
+    "locked layer pressure0 pixels actual cause"
+  ]
+}

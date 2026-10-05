@@ -1,0 +1,55 @@
+{
+  "source": "57e9dc50da1f72b98362656eef383561aa0594b6",
+  "run": 37219005590,
+  "observed": {
+    "setup_status": "PASS",
+    "settings_raw_sha256": "6a18e6904b57d3d42b97e88495cd5777e01d0cb04167437cc282a43ad6e976f0",
+    "settings_gate_matched": true,
+    "pinned_action": "gradle/actions/setup-gradle@ed408507eac070d1f99cc633dbcf757c94c7933a",
+    "restore": "NO_MATCH_COLD_CACHE",
+    "entries_restored": 0,
+    "entries_saved": 8,
+    "total_saved_size_mb_reported": 756,
+    "sum_save_time_ms_reported": 21610,
+    "build_scans_published": false,
+    "dependency_graph_enabled": false,
+    "downloads_only_claim": "NOT_ESTABLISHED_CONFIGURATION_TOO_BROAD",
+    "reason": "setup-gradle saved generated Gradle jars, instrumented jars, Kotlin/Groovy DSL, and transforms as separate cache entries despite the gradle-home-cache-includes list",
+    "saved_entries": [
+      {
+        "line": 1487,
+        "text": "2026-10-04T17:18:46.9104184Z Saved cache entry with key gradle-instrumented-jars-v1-da27189608cc64b8ccdc1e8234084779 from /home/runner/.gradle/caches/jars-*/*/ in 991ms"
+      },
+      {
+        "line": 1488,
+        "text": "2026-10-04T17:18:46.9745692Z Saved cache entry with key gradle-groovy-dsl-v1-89646872b7ce6277d31433fba800176d from /home/runner/.gradle/caches/*/groovy-dsl/*/ in 991ms"
+      },
+      {
+        "line": 1489,
+        "text": "2026-10-04T17:18:47.0348230Z Saved cache entry with key gradle-kotlin-dsl-v1-1d4dd106dc346473c439a06c1b646228 from /home/runner/.gradle/caches/*/kotlin-dsl/accessors/*/,/home/runner/.gradle/caches/*/kotlin-dsl/scripts/*/ in 1069ms"
+      },
+      {
+        "line": 1493,
+        "text": "2026-10-04T17:18:48.0570433Z Saved cache entry with key gradle-generated-gradle-jars-v1-8e79c31f3eb4e570a88142dd102a0a2f from /home/runner/.gradle/caches/9.4.1/generated-gradle-jars/gradle-api-9.4.1.jar in 3034ms"
+      },
+      {
+        "line": 1497,
+        "text": "2026-10-04T17:18:48.7578950Z Saved cache entry with key gradle-wrapper-zips-v1-9db0835d029c62b1a3d29bf9e5532cf5 from /home/runner/.gradle/wrapper/dists/gradle-9.4.1-bin/arn2x92ynaizyzdaamcbpbhtj in 3732ms"
+      },
+      {
+        "line": 1501,
+        "text": "2026-10-04T17:18:50.4803296Z Saved cache entry with key gradle-dependencies-v1-5a3d8b4527c28d78d1c4ce817adb054a from /home/runner/.gradle/caches/modules-*/files-*/*/*/*/* in 4599ms"
+      },
+      {
+        "line": 1504,
+        "text": "2026-10-04T17:18:53.2917463Z Saved cache entry with key gradle-transforms-v1-3b7da3f2062a9435119d55bb4790b340 from /home/runner/.gradle/caches/transforms-4/*/,/home/runner/.gradle/caches/*/transforms/*/ in 6465ms"
+      },
+      {
+        "line": 1507,
+        "text": "2026-10-04T17:18:55.1547410Z Saved cache entry with key gradle-home-v1|Linux-X64|verify[a279211f2f583d00ed15ec212f266428]-57e9dc50da1f72b98362656eef383561aa0594b6 from /home/runner/.gradle/caches/modules-2/files-2.1,/home/runner/.gradle/wrapper/dists,/home/runner/.gradle/.setup-gradle in 729ms"
+      }
+    ],
+    "archive_content_limit": "No cache archives downloaded. No logged saved-entry path explicitly names APK, credentials, keystores, or configuration-cache; configured excludes were recorded but cache contents are not independently certified."
+  },
+  "correction": "All setup-gradle remote caching disabled in following candidate; official wrapper validation retained. No cache archives downloaded or deleted. Logged categories exceeded requested downloads-only boundary; no APK/credential path explicitly evidenced, contents not independently certified."
+}

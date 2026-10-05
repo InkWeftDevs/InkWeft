@@ -1,0 +1,26 @@
+{
+  "source": "e0d372e80ef90dec865e0650afb5d6d94bbb9a4c",
+  "production_and_both_android_test_kotlin": "PASS",
+  "lint": {
+    "errors": 0,
+    "warnings": 165,
+    "hints": 2
+  },
+  "core": {
+    "tests": 367,
+    "failures": 0,
+    "skipped": 0,
+    "reuse": "unchanged Core inputs, not 367 additional executions"
+  },
+  "ci_python_tests": 38,
+  "native_evidence_python_tests": 6,
+  "actionlint": "PASS",
+  "aggregate_seconds": 468,
+  "resize_touch_followup_seconds": 238,
+  "android_runtime": "NOT_RUN_FOR_THIS_CANDIDATE",
+  "prior_compile_failure": "New UI test incorrectly used DpRect.height; changed to bottom-top; no assertion removed",
+  "logs": {
+    "final-ui-native-build-fixed.log": "d4082bc9a998227f508f750282b954ef7032710ef6298d712c577f3993e69e86",
+    "resize-touch-final-build.log": "dd2636a577419f1be4583749d9a77ffce4d33364d06e5d432297cdc0e55cc982"
+  }
+}

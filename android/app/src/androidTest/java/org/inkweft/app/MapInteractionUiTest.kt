@@ -4,8 +4,12 @@ import android.graphics.Bitmap
 import android.view.KeyEvent
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.ui.platform.ViewRootForTest
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.semantics.SemanticsActions
+import androidx.compose.ui.semantics.getOrNull
 import androidx.compose.ui.semantics.SemanticsProperties
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.test.*
@@ -20,26 +24,132 @@ import org.junit.Assert.*
 import java.util.UUID
 
 class MapInteractionUiTest {
- @get:Rule val compose=createAndroidComposeRule<MainActivity>()
+ @get:Rule(order=0) val compose=createAndroidComposeRule<MainActivity>()
  private val app get()=compose.activity.application as InkWeftApplication
+ private var observedUi="No UI observation yet"
+ private var failureCaptured=false
+ private fun recordUi(value:String){observedUi=(observedUi+"\n"+value).takeLast(16_000)}
+ // Inner to the Compose rule: capture while the actual Activity/windows are still alive.
+ @get:Rule(order=1) val failureEvidence=object:org.junit.rules.TestWatcher(){
+  override fun starting(description:org.junit.runner.Description){observedUi="test=${description.methodName}";failureCaptured=false}
+  override fun failed(error:Throwable,description:org.junit.runner.Description){captureFailure(error)}
+ }
+ private fun captureFailure(error:Throwable){
+  if(failureCaptured)return;failureCaptured=true
+  // Use only cached observations here: no Compose idle, fresh semantics, or database work.
+  runCatching{
+   val instrumentation=androidx.test.platform.app.InstrumentationRegistry.getInstrumentation()
+   val directory=checkNotNull(instrumentation.targetContext.getExternalFilesDir(null))
+   runCatching{java.io.File(directory,"mui-map-interaction-failure.txt").writeText(observedUi)}.onFailure(error::addSuppressed)
+   runCatching{
+    val image=checkNotNull(instrumentation.uiAutomation.takeScreenshot())
+    try{java.io.File(directory,"mui-map-interaction-failure.png").outputStream().use{image.compress(Bitmap.CompressFormat.PNG,100,it)}}finally{image.recycle()}
+   }.onFailure(error::addSuppressed)
+  }.onFailure(error::addSuppressed)
+  error.addSuppressed(AssertionError(observedUi))
+ }
  private fun id()=UUID.randomUUID().toString()
  private fun tap(tag:String){
-  val outline=tag.startsWith("outline-")&&compose.onAllNodesWithTag("study-list").fetchSemanticsNodes().isNotEmpty()
-  if(outline)compose.onNodeWithTag("study-list").performScrollToNode(hasTestTag(tag))else compose.revealAction(tag)
-  val n=compose.onNodeWithTag(tag);runCatching{n.performScrollTo()}
-  if(compose.onAllNodes(hasTestTag(tag) and hasAnyAncestor(hasTestTag("study-list"))).fetchSemanticsNodes().isNotEmpty()){
-   // Align with the outer list after nested scrolling or an inline-editor relayout.
-   val list=compose.onNodeWithTag("study-list");val viewport=list.fetchSemanticsNode().boundsInRoot
-   val target=n.fetchSemanticsNode();val top=target.positionInRoot.y;val bottom=top+target.size.height
-   val dy=when{top<viewport.top->top-viewport.top;bottom>viewport.bottom->bottom-viewport.bottom;else->0f}
-   if(dy!=0f)list.performSemanticsAction(SemanticsActions.ScrollBy){it(0f,dy)}
-  }
-  n.assertIsDisplayed().performTouchInput{click()};compose.waitForIdle()
+  recordUi("tap requested: $tag")
+  try{
+   compose.revealAction(tag)
+   val deadline=android.os.SystemClock.uptimeMillis()+10_000
+   compose.waitUntil("$tag exists before positioning its physical touch",10_000){
+    val present=compose.onAllNodesWithTag(tag).fetchSemanticsNodes().size==1
+    if(!present)recordUi("tap $tag: awaiting one target")
+    present
+   }
+   val n=compose.onNodeWithTag(tag);runCatching{n.performScrollTo()}
+   if(compose.onAllNodes(hasTestTag(tag) and hasAnyAncestor(hasTestTag("study-list"))).fetchSemanticsNodes().isNotEmpty()){
+    // Align with the outer list after nested scrolling or an inline-editor relayout.
+    val list=compose.onNodeWithTag("study-list");val viewport=list.fetchSemanticsNode().boundsInRoot
+    val target=n.fetchSemanticsNode();val top=target.positionInRoot.y;val bottom=top+target.size.height
+    val dy=when{top<viewport.top->top-viewport.top;bottom>viewport.bottom->bottom-viewport.bottom;else->0f}
+    if(dy!=0f)list.performSemanticsAction(SemanticsActions.ScrollBy){it(0f,dy)}
+   }
+   var previousPlacement:Pair<View,androidx.compose.ui.geometry.Rect>?=null
+   compose.waitUntil("$tag is displayed and enabled before one physical touch",(deadline-android.os.SystemClock.uptimeMillis()).coerceAtLeast(1)){
+    val node=compose.onAllNodesWithTag(tag).fetchSemanticsNodes().singleOrNull()
+    if(node==null){recordUi("tap $tag: target absent");false}else{
+     val enabled=isEnabled().matches(node);val displayed=runCatching{n.assertIsDisplayed()}.isSuccess
+     val owner=(node.root as? ViewRootForTest)?.view
+     val windowReady=compose.runOnIdle{
+      val window=owner?.rootView;val visible=android.graphics.Rect();window?.getWindowVisibleDisplayFrame(visible)
+      val local=android.graphics.Rect();val locallyVisible=owner?.getLocalVisibleRect(local)==true
+      val screen=IntArray(2);owner?.getLocationOnScreen(screen)
+      val origin=Offset(screen[0].toFloat(),screen[1].toFloat());val bounds=node.boundsInRoot.translate(origin)
+      val point=bounds.center;val localPoint=node.boundsInRoot.center
+      val inside=locallyVisible&&local.contains(localPoint.x.toInt(),localPoint.y.toInt())&&visible.contains(point.x.toInt(),point.y.toInt())
+      val placement=owner?.let{it to bounds};val stable=placement!=null&&placement==previousPlacement;previousPlacement=placement
+      val store=compose.activity.viewModelStore
+      val writers=store.keys().mapNotNull{store.get(it) as? StudyViewModel}.take(2).joinToString("; "){writer->
+       val study=writer.ui.value;val map=(store.get("study-map-writer-${writer.book}") as? KnowledgeViewModel)?.ui?.value
+       val annotation=(store.get("map-authoring-${writer.book}-${writer.mapId.value?:"main"}") as? PageAuthoringViewModel)?.ui?.value
+       "book=${writer.book} map=${writer.mapId.value} study[loading=${study.loading},readFailed=${study.readFailed},busy=${study.busy},unknown=${study.unknown}] " +
+        "mapWriter[busy=${map?.busy},unknown=${map?.unknown}] annotation[loading=${annotation?.loading},busy=${annotation?.busy},pending=${annotation?.pending}]"
+      }
+      recordUi("tap $tag: enabled=$enabled displayed=$displayed row=${node.boundsInRoot} screenBounds=$bounds touch=$point " +
+       "window=${window?.let{System.identityHashCode(it)}} attached=${owner?.isAttachedToWindow} focused=${window?.hasWindowFocus()} layout=${window?.isLayoutRequested} " +
+       "visible=$visible localVisible=$local inside=$inside stable=$stable ime=${window?.let{ViewCompat.getRootWindowInsets(it)?.isVisible(WindowInsetsCompat.Type.ime())}} $writers")
+      // Non-focusable popups can still receive touches; focus is diagnostic, not a gate.
+      owner?.isAttachedToWindow==true&&owner.isLaidOut&&!owner.isLayoutRequested&&window?.isLayoutRequested==false&&inside&&stable
+     }
+     enabled&&displayed&&windowReady
+    }
+   }
+   val target=n.assertIsDisplayed().assertIsEnabled().fetchSemanticsNode()
+   val touchOrigin=target.positionOnScreen-target.positionInRoot+target.boundsInRoot.topLeft
+   n.performTouchInput{recordUi("tap $tag: single touch local=$center observedScreen=${touchOrigin+center}");click()}
+   compose.waitForIdle()
+  }catch(error:Throwable){captureFailure(error);throw error}
  }
  private fun map():MindMapView{val q=java.util.ArrayDeque<View>();q.add(compose.activity.window.decorView);while(q.isNotEmpty()){val v=q.removeFirst();if(v is MindMapView&&v.isShown)return v;if(v is ViewGroup)for(i in 0 until v.childCount)q.add(v.getChildAt(i))};error("Map missing")}
  private fun vm(book:String)=ViewModelProvider(compose.activity)["study-$book",StudyViewModel::class.java]
  private fun shot(name:String){compose.waitForIdle();android.os.SystemClock.sleep(350);val b=androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().uiAutomation.takeScreenshot()!!;java.io.File(app.getExternalFilesDir(null),"mui-$name.png").outputStream().use{b.compress(Bitmap.CompressFormat.PNG,100,it)};b.recycle()}
  private data class Fixture(val book:String,val root:String,val card:String,val otherMap:String,val body:String)
+ /** Lifecycle recreation is only the start: wait for the retained context and its real projection. */
+ private fun recreateAndAwaitStudy(f:Fixture,anchor:String,text:String?,phase:String,outline:Boolean=false,unknown:Boolean=false){
+  val originalVm=compose.runOnIdle{vm(f.book)}
+  val notebookVm=compose.runOnIdle{ViewModelProvider(compose.activity)[NotebookViewModel::class.java]}
+  val expectedMap=compose.runOnIdle{originalVm.mapId.value}
+  val expectedTab=if(outline)1 else 2
+  compose.runOnIdle{assertEquals(expectedTab,originalVm.lastTab)}
+  var observed="Awaiting restored study context: $phase"
+  try{
+   compose.activityRule.scenario.recreate()
+   // Room/lifecycle reload and the outline's requestScrollToItem are not covered by Compose idle.
+   // Observe the original draft in place; do not scroll, open an editor, or change any state.
+   compose.waitUntil("Same retained note/map and original projection after $phase",10_000){
+    val ready=compose.runOnIdle{
+     val live=compose.activity.viewModelStore.get("study-${f.book}")
+     val notebook=notebookVm.ui.value;val study=originalVm.ui.value
+     observed="phase=$phase sameVm=${live===originalVm} book=${originalVm.book} selected=${notebook.selectedId} current=${notebook.current?.base?.id} notebookLoading=${notebook.loading} " +
+      "map=${originalVm.mapId.value} tab=${originalVm.lastTab} graph=${study.graph?.ref} loading=${study.loading} readFailed=${study.readFailed} busy=${study.busy} unknown=${study.unknown} expectedAnchor=$anchor"
+     live===originalVm&&originalVm.book==f.book&&notebook.selectedId==f.book&&notebook.current?.base?.id==f.book&&!notebook.loading&&
+      originalVm.mapId.value==expectedMap&&originalVm.lastTab==expectedTab&&study.graph?.ref==MapRef(f.book,expectedMap)&&
+      !study.loading&&!study.readFailed&&!study.busy&&study.unknown==unknown
+    }
+    val inputs=compose.onAllNodesWithTag("node-title-input",useUnmergedTree=true).fetchSemanticsNodes()
+    val editors=compose.onAllNodesWithTag("node-title-editor",useUnmergedTree=true).fetchSemanticsNodes()
+    val input=inputs.singleOrNull()
+    val originalPosition=if(outline)hasAnyAncestor(hasTestTag("outline-title-$anchor")) and hasAnyAncestor(hasTestTag("outline-row-$anchor"))
+     else hasAnyAncestor(hasTestTag("node-title-editor"))
+    observed+=" editors=${editors.size} inputs=${inputs.size} text=${input?.config?.getOrNull(SemanticsProperties.EditableText)} bounds=${input?.boundsInRoot} originalPosition=${input?.let(originalPosition::matches)}"
+    val mapReady=if(outline)true else {compose.runOnIdle{
+     val canvas=runCatching{map()}.getOrNull();val graph=originalVm.ui.value.graph
+     observed+=" canvasBook=${canvas?.captureBook} canvasMap=${canvas?.captureMapKey} canvasGraph=${canvas?.captureGraph} selectedNode=${canvas?.selectedNodeId}"
+     canvas!=null&&canvas.isAttachedToWindow&&canvas.width>0&&canvas.height>0&&canvas.captureBook==f.book&&
+      canvas.captureMapKey==(expectedMap?:"main")&&canvas.captureGraph==graph?.graphFingerprint&&canvas.nodeBounds(anchor)!=null&&
+      (text==null||canvas.selectedNodeId==anchor&&originalVm.selectedByMap[expectedMap?:"main"]==anchor)
+    }&&runCatching{compose.onNodeWithTag("study-map").assertIsDisplayed()}.isSuccess}
+    val draftReady=if(text==null)inputs.isEmpty()&&editors.isEmpty() else editors.size==1&&input!=null&&originalPosition.matches(input)&&
+     SemanticsMatcher.expectValue(SemanticsProperties.EditableText,AnnotatedString(text)).matches(input)&&
+     runCatching{compose.onNodeWithTag("node-title-input",useUnmergedTree=true).assertIsDisplayed()}.isSuccess
+    recordUi(observed)
+    ready&&mapReady&&draftReady
+   }
+  }catch(error:Throwable){recordUi(observed);captureFailure(error);throw error}
+ }
  private fun fixture():Fixture{
   compose.waitUntil(15000){compose.onAllNodesWithTag("new-note").fetchSemanticsNodes().isNotEmpty()}
   val note=runBlocking{app.workspaceRepository.create("学习笔记 · 导图交互验收",false,PaperStyle.RULED)};val root=id();val card=id();val other=id();val body=(1..24).joinToString("\n"){"第${it}段：条件概率需要先确定样本空间，再计算交集；记清独立和互斥的区别。"}
@@ -76,7 +186,7 @@ class MapInteractionUiTest {
  }
  @Test fun conflictAndRecreationRetainFrozenTitleDraft(){
   val f=fixture();select(f.root);tap("node-rename");compose.onNodeWithTag("node-title-input").performTextReplacement("尚未提交的名称");compose.waitForIdle();compose.onNodeWithTag("node-title-input").assertTextContains("尚未提交的名称")
-  compose.activityRule.scenario.recreate();compose.waitForIdle();compose.onNodeWithTag("node-title-input").assertTextContains("尚未提交的名称")
+  recreateAndAwaitStudy(f,f.root,"尚未提交的名称","map-rename");compose.onNodeWithTag("node-title-input").assertTextContains("尚未提交的名称")
   runBlocking{val c=app.study.cards(f.book).first().first{it.id==f.card};app.study.submit(StudyCommand(id(),f.book,StudyAction.EDIT,cardId=c.id,expectedRevision=c.revision,title="另一处更新",body=f.body+"\n新的正文"))}
   tap("node-title-save");compose.waitUntil(10000){compose.onAllNodesWithTag("node-title-error").fetchSemanticsNodes().isNotEmpty()};compose.onNodeWithTag("node-title-input").assertTextContains("尚未提交的名称");assertEquals("另一处更新",runBlocking{app.study.cards(f.book).first()}.first{it.id==f.card}.title)
   shot("conflict-draft");tap("node-title-cancel")
@@ -96,7 +206,18 @@ class MapInteractionUiTest {
   fun nodes()=runBlocking{app.study.nodes(f.book).first()}
   val beforeCards=cards();val beforeNodes=nodes();val beforeSource=runBlocking{app.study.source(f.card)}!!
   val blank=SemanticsMatcher.expectValue(SemanticsProperties.EditableText,AnnotatedString(""))
-  tap("study-tab-1");tap("outline-node-$occurrence")
+  tap("study-tab-1")
+  // Recycle both ends of the long outline before changing selection again.
+  // Detached row semantics must not observe the next selection update.
+  repeat(2){
+   tap("outline-actions-${f.root}")
+   compose.onNodeWithTag("outline-row-${f.root}").assertIsSelected()
+   compose.onAllNodesWithTag("outline-context-actions").assertCountEquals(1)
+   tap("outline-actions-$occurrence")
+   compose.onNodeWithTag("outline-row-$occurrence").assertIsSelected()
+   compose.onAllNodesWithTag("outline-context-actions").assertCountEquals(1)
+  }
+  tap("outline-node-$occurrence")
   compose.onNodeWithTag("card-full-body").assertTextEquals(f.body);tap("card-back")
   tap("outline-rename-$occurrence")
   compose.onNodeWithTag("node-title-input",useUnmergedTree=true).assert(hasAnyAncestor(hasTestTag("outline-title-$occurrence")))
@@ -106,7 +227,7 @@ class MapInteractionUiTest {
   compose.onNodeWithTag("node-title-input").performTextReplacement("重建后仍是草稿")
   // Confirm the edit reached Compose before crossing the Activity lifecycle boundary.
   compose.onNodeWithTag("node-title-input").assertTextContains("重建后仍是草稿")
-  compose.activityRule.scenario.recreate();compose.waitForIdle()
+  recreateAndAwaitStudy(f,occurrence,"重建后仍是草稿","outline-rename",outline=true)
   compose.onNodeWithTag("node-title-input").assertTextContains("重建后仍是草稿")
   compose.onNodeWithTag("node-title-input",useUnmergedTree=true).assert(hasAnyAncestor(hasTestTag("outline-title-$occurrence")))
    .assert(hasAnyAncestor(hasTestTag("outline-row-$occurrence")))
@@ -127,7 +248,7 @@ class MapInteractionUiTest {
 
   tap("outline-child-$occurrence");compose.onNodeWithTag("node-title-input").performTextInput("大纲子主题")
   compose.onNodeWithTag("node-title-input").assertTextContains("大纲子主题")
-  compose.activityRule.scenario.recreate();compose.waitForIdle();compose.onNodeWithTag("node-title-input").assertTextContains("大纲子主题")
+  recreateAndAwaitStudy(f,occurrence,"大纲子主题","outline-child",outline=true);compose.onNodeWithTag("node-title-input").assertTextContains("大纲子主题")
   assertEquals(beforeNodes,nodes());assertEquals(beforeCards.size,cards().size);tap("node-title-save")
   compose.waitUntil(10000){nodes().size==beforeNodes.size+1}
   val child=nodes().single{it.id !in beforeNodes.map{n->n.id}};assertEquals(occurrence,child.parentId);assertEquals("大纲子主题",cards().single{it.id==child.cardId}.title)
@@ -174,6 +295,7 @@ class MapInteractionUiTest {
   fun receipts()=database.openHelper.readableDatabase.query("SELECT COUNT(*) FROM study_receipts WHERE notebookId=?",arrayOf(f.book)).use{it.moveToFirst();it.getLong(0)}
   val beforeCards=cards();val beforeNodes=nodes();val beforeReceipts=receipts()
   compose.runOnIdle{originalVm=StudyViewModel(f.book,repository,saved);compose.activity.viewModelStore.put("study-${f.book}",originalVm)}
+  val application=app
   try{
    tap("quick-study");tap("study-tab-1");tap("outline-child-${f.root}")
    compose.onNodeWithTag("node-title-input").performTextInput("回执核对后的唯一子主题");compose.onNodeWithTag("node-title-input").performImeAction()
@@ -183,7 +305,7 @@ class MapInteractionUiTest {
    compose.onNodeWithTag("node-title-input").assertTextContains("回执核对后的唯一子主题")
    compose.onNodeWithTag("node-title-cancel").assertIsNotEnabled();compose.onAllNodesWithTag("node-title-editor",useUnmergedTree=true).assertCountEquals(1)
    assertEquals(beforeCards,cards());assertEquals(beforeNodes,nodes());assertEquals(beforeReceipts,receipts())
-   compose.activityRule.scenario.recreate();compose.waitForIdle()
+   recreateAndAwaitStudy(f,f.root,"回执核对后的唯一子主题","unknown-recreate",outline=true,unknown=true)
    compose.runOnIdle{assertSame(originalVm,vm(f.book));assertEquals(command,saved.get<ArrayList<String>>("study.command"))}
    compose.onNodeWithTag("node-title-input").assertTextContains("回执核对后的唯一子主题")
    tap("node-title-save");compose.waitUntil(10000){!originalVm.ui.value.busy&&originalVm.ui.value.unknown}
@@ -200,11 +322,21 @@ class MapInteractionUiTest {
    assertEquals(beforeReceipts+1,receipts());assertEquals(created.cardId,runBlocking{database.study().receipt(command[0])}!!.resultId)
    compose.runOnIdle{assertNull(saved.get<ArrayList<String>>("study.command"))}
    val afterCards=cards();val afterNodes=nodes()
-   compose.activityRule.scenario.recreate();compose.waitForIdle();compose.onNodeWithTag("node-title-input").assert(blank)
+   recreateAndAwaitStudy(f,created.id,"","sibling-recreate",outline=true)
+   compose.onNodeWithTag("node-title-input").assert(blank)
+   compose.onNodeWithTag("node-title-input",useUnmergedTree=true).assert(hasAnyAncestor(hasTestTag("outline-title-${created.id}")))
+    .assert(hasAnyAncestor(hasTestTag("outline-row-${created.id}")))
+   compose.runOnIdle{assertSame(originalVm,vm(f.book));assertNull(saved.get<ArrayList<String>>("study.command"))}
    compose.onAllNodesWithTag("node-title-editor",useUnmergedTree=true).assertCountEquals(1);tap("node-title-cancel")
    compose.onNodeWithTag("node-title-editor",useUnmergedTree=true).assertDoesNotExist()
    assertEquals(afterCards,cards());assertEquals(afterNodes,nodes());assertEquals(beforeReceipts+1,receipts())
-  }finally{compose.runOnIdle{compose.activity.viewModelStore.put("study-${f.book}",StudyViewModel(f.book,app.study,androidx.lifecycle.SavedStateHandle()))};database.close()}
+  }finally{
+   androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().runOnMainSync{
+    androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry.getInstance().getActivitiesInStage(androidx.test.runner.lifecycle.Stage.RESUMED)
+     .filterIsInstance<MainActivity>().singleOrNull()?.viewModelStore?.put("study-${f.book}",StudyViewModel(f.book,application.study,androidx.lifecycle.SavedStateHandle()))
+   }
+   database.close()
+  }
  }
  @Test fun narrowLargeTextKeepsActionsDraftAndCanvas(){
   val f=fixture();val automation=androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().uiAutomation
@@ -215,7 +347,7 @@ class MapInteractionUiTest {
   fun restoreSetting(namespace:String,key:String,value:String){shell(if(value=="null"||value.isBlank())"settings delete $namespace $key"else"settings put $namespace $key $value")}
   try{
    shell("wm size 750x1600");shell("wm density 320");shell("settings put system font_scale 1.6");shell("settings put secure show_ime_with_hard_keyboard 1")
-   compose.activityRule.scenario.recreate();compose.waitForIdle();select(f.root);shot("narrow-selected")
+   recreateAndAwaitStudy(f,f.root,null,"narrow-map");select(f.root);shot("narrow-selected")
    val actions=compose.onNodeWithTag("node-actions").fetchSemanticsNode().boundsInRoot;val canvas=compose.onNodeWithTag("study-map").fetchSemanticsNode().boundsInRoot
    assertTrue(actions.left>=canvas.left&&actions.right<=canvas.right)
    tap("node-rename");compose.onNodeWithTag("node-title-input").performTextReplacement("窄窗中文草稿")
@@ -238,7 +370,7 @@ class MapInteractionUiTest {
     }
    }
    compose.onNodeWithTag("node-title-save").assertIsDisplayed();compose.onNodeWithTag("node-title-cancel").assertIsDisplayed();shot("narrow-keyboard")
-   compose.activityRule.scenario.recreate();compose.waitForIdle();compose.onNodeWithTag("node-title-input").assertTextContains("窄窗中文草稿");tap("node-title-cancel")
+   recreateAndAwaitStudy(f,f.root,"窄窗中文草稿","narrow-draft");compose.onNodeWithTag("node-title-input").assertTextContains("窄窗中文草稿");tap("node-title-cancel")
   }finally{shell("wm size ${size?:"reset"}");shell("wm density ${density?:"reset"}");restoreSetting("system","font_scale",fontScale);restoreSetting("secure","show_ime_with_hard_keyboard",hardwareIme)}
  }
  @Test fun microMoveAndCancelledDragDoNotMoveNode(){
@@ -268,7 +400,17 @@ class MapInteractionUiTest {
   select(f.root);tap("node-fold");compose.runOnIdle{assertFalse(f.root in vm(f.book).collapsedByMap["main"].orEmpty())};tap("node-source")
   compose.waitUntil(10000){compose.onAllNodesWithTag("study-open-source").fetchSemanticsNodes().isNotEmpty()};compose.onNodeWithTag("study-open-source").assertIsDisplayed();compose.onNodeWithTag("card-full-body").assertDoesNotExist()
   val beforeCards=runBlocking{app.study.cards(f.book).first()};val beforeNodes=runBlocking{app.study.nodes(f.book).first()};val beforeSource=runBlocking{app.study.source(f.card)}!!
-  tap("study-view-snapshot");compose.waitUntil(10000){compose.onAllNodesWithTag("study-snapshot-canvas").fetchSemanticsNodes().isNotEmpty()}
+  // The same production decoder checks the frozen fixture before opening; no current-page fallback.
+  val decoded=InkPageFile.decode(beforeSource.snapshot)
+  recordUi("snapshot fixture: bytes=${beforeSource.snapshot.size} strokes=${decoded.strokes.size}")
+  tap("study-view-snapshot");compose.waitUntil(10000){
+   val viewer=compose.onAllNodesWithTag("study-snapshot-viewer").fetchSemanticsNodes()
+   val canvas=compose.onAllNodesWithTag("study-snapshot-canvas").fetchSemanticsNodes()
+   val failed=compose.onAllNodesWithText("摘录快照无法读取，请返回原卡后重试。").fetchSemanticsNodes().isNotEmpty()
+   val loading=compose.onAllNodesWithText("正在读取摘录快照…").fetchSemanticsNodes().isNotEmpty()
+   recordUi("snapshot after single touch: viewer=${viewer.size} canvas=${canvas.size} decodeError=$failed loading=$loading")
+   canvas.isNotEmpty()
+  }
   tap("study-snapshot-zoom-in");tap("study-snapshot-zoom-out");tap("study-snapshot-fit")
   compose.onNodeWithTag("study-snapshot-canvas").performTouchInput{swipe(Offset(width*.4f,height*.4f),Offset(width*.6f,height*.6f))}
   tap("study-snapshot-close");compose.onNodeWithTag("study-card-details").assertIsDisplayed();compose.onNodeWithTag("study-snapshot-viewer").assertDoesNotExist()

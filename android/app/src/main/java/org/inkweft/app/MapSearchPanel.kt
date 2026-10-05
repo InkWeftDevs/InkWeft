@@ -24,12 +24,14 @@ import org.inkweft.core.*
     val flow=remember(current.notebookId){app.mapGraphs.observe(current.notebookId)}
     val scenes by flow.collectAsStateWithLifecycle(initialValue=emptyList())
     var query by rememberSaveable{mutableStateOf("")};var allMaps by rememberSaveable{mutableStateOf(false)}
-    val results=remember(scenes,query,current,allMaps){MapSearch.find(scenes,query,current,allMaps)}
+    val records by remember(current.notebookId){app.knowledge.observeBook(current.notebookId)}.collectAsStateWithLifecycle(initialValue=emptyList())
+    val annotations=remember(records){records.cardPresentations().mapValues{it.value.annotation}}
+    val results=remember(scenes,query,current,allMaps,annotations){MapSearch.find(scenes,query,current,allMaps,annotations)}
     androidx.compose.ui.window.Popup(alignment=Alignment.CenterEnd,onDismissRequest=dismiss,properties=androidx.compose.ui.window.PopupProperties(focusable=true)){
         Surface(Modifier.padding(12.dp).widthIn(max=420.dp).fillMaxWidth().heightIn(max=LocalConfiguration.current.screenHeightDp.dp*.82f).testTag("map-search-panel"),color=Color.White,shape=RoundedCornerShape(16.dp),shadowElevation=8.dp,border=BorderStroke(1.dp,Line)){
             Column(Modifier.padding(12.dp)){
                 Row(verticalAlignment=Alignment.CenterVertically){Text("查找导图内容",Modifier.weight(1f),style=MaterialTheme.typography.titleMedium);IconButton(dismiss,modifier=Modifier.describedAs("关闭导图查找")){Glyph("close")}}
-                OutlinedTextField(query,{query=it.take(200)},label={Text("主题、摘要或已确认文字")},singleLine=true,modifier=Modifier.fillMaxWidth().testTag("map-content-query"))
+                OutlinedTextField(query,{query=it.take(200)},label={Text("标题、正文或个人注释")},singleLine=true,modifier=Modifier.fillMaxWidth().testTag("map-content-query"))
                 Row(verticalAlignment=Alignment.CenterVertically){FilterChip(!allMaps,{allMaps=false},label={Text("当前图")},modifier=Modifier.testTag("map-search-current"));Spacer(Modifier.width(8.dp));FilterChip(allMaps,{allMaps=true},label={Text("本笔记所有图")},modifier=Modifier.testTag("map-search-all"))}
                 Text("只检索已保存文字，未识别的手写和图片不在结果中。",style=MaterialTheme.typography.bodySmall,color=Quiet)
                 LazyColumn(Modifier.weight(1f,false).testTag("map-search-results")){

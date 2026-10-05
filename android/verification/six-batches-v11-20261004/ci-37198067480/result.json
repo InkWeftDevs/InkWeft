@@ -1,0 +1,28 @@
+{
+  "source": "01a200f2372ffe99673670d06848e6cde5183482",
+  "run": 37198067480,
+  "job": 111423935745,
+  "status": "FAILED_LINT",
+  "android_methods_started": 0,
+  "fixture": "NOT_RUN",
+  "screenshots": 0,
+  "reason": "RecallStudyViewModel.kt:75 SuspiciousIndentation",
+  "warnings": 174,
+  "hints": 2,
+  "errors": 1,
+  "original_kvm_acl_restoration": "PASS",
+  "followup_run": 37198766363,
+  "followup_source": "56b792f0e75b6c896a2c157f283a2b5086baede8",
+  "repair": "whitespace-only, git diff -w empty",
+  "failure_lines": [
+    "2026-10-04T11:24:31.0645429Z Lint found 1 error, 174 warnings and 2 hints. First failure:",
+    "2026-10-04T11:24:31.0646960Z   Lint found 1 error, 174 warnings, 2 hints. First failure:",
+    "2026-10-04T11:24:31.0648614Z   /home/runner/work/InkWeft/InkWeft/android/app/src/main/java/org/inkweft/app/RecallStudyViewModel.kt:75: Error: Suspicious indentation: This is indented but is not nested under the previous expression (if(previous?.row?.id...) [SuspiciousIndentation]",
+    "2026-10-04T11:24:31.0655039Z /home/runner/work/InkWeft/InkWeft/android/app/src/main/java/org/inkweft/app/RecallStudyViewModel.kt:75: Error: Suspicious indentation: This is indented but is not nested under the previous expression (if(previous?.row?.id...) [SuspiciousIndentation]",
+    "2026-10-04T11:24:31.0683971Z BUILD FAILED in 9m 39s",
+    "2026-10-04T11:24:31.0684859Z Lint found 1 error, 174 warnings, 2 hints. First failure:",
+    "2026-10-04T11:24:31.0686530Z /home/runner/work/InkWeft/InkWeft/android/app/src/main/java/org/inkweft/app/RecallStudyViewModel.kt:75: Error: Suspicious indentation: This is indented but is not nested under the previous expression (if(previous?.row?.id...) [SuspiciousIndentation]",
+    "2026-10-04T11:24:32.2527990Z \u001b[36;1m  cmp \"$RUNNER_TEMP/inkweft-kvm-before.acl\" \"$RUNNER_TEMP/inkweft-kvm-after.acl\"\u001b[0m",
+    "2026-10-04T11:24:32.2528867Z \u001b[36;1m  printf '%s\\n' '{\"status\":\"RESTORED_EXACT_ORIGINAL_ACL\"}' > android/build/evidence/kvm-acl-restoration.json\u001b[0m"
+  ]
+}

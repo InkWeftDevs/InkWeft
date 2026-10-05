@@ -1,0 +1,58 @@
+{
+  "source": "9593b928473b46ff9efe806dace74231d022f3d1",
+  "local_same_tree": "3287f6c38c17b3f953e5066fe4cca5514e0933af",
+  "run": 37217398281,
+  "status": "FAILED_FOCUSED_UI",
+  "core": {
+    "passed": 157,
+    "failed": 0
+  },
+  "room": {
+    "executed": 202,
+    "passed": 202,
+    "failed": 0,
+    "classes": 18
+  },
+  "app": {
+    "executed": 20,
+    "passed": 14,
+    "failed": 6
+  },
+  "fixture": {
+    "prepare": "PASS",
+    "native_recall": "PASS",
+    "reopen": "NOT_RUN_FOCUSED",
+    "visual": "NOT_RUN_FOCUSED",
+    "native_recall_reopen": "NOT_RUN_FOCUSED",
+    "same_library": true,
+    "png": 14
+  },
+  "acl": "RESTORED_EXACT_ORIGINAL_ACL",
+  "artifact": 11309760174,
+  "artifact_sha256": "804142fca2cc293b520b89bf1af8700808c3fdacd1ed6b5dace82904ff1a70b5",
+  "timing_seconds": {
+    "total": 951.6,
+    "build": 498,
+    "emulator": 63.5,
+    "regression": 260.3,
+    "fixture": 113.7
+  },
+  "ui_failures": [
+    "BoundAnnotationFlowUiTest: canonical membership order differs; cardinality and per-content layer mapping must be checked, layer order stays strict",
+    "CardTrashUiTest: expected partial title used whole-string default assertion",
+    "RecallOriginalSourceUiTest x2: explicit answer/hint writes update the current note modifiedAt; read-only phase needs separate exact all-column invariant",
+    "CardReuseDialogUiTest: whole-string assertion around a partial success message timed out",
+    "StudyOrganizationUiTest: offscreen target reached, but requested child drop not observed; recheck live viewport coordinates and actual drop feedback"
+  ],
+  "visual_review": {
+    "native_recall_images": 7,
+    "full_answer_mask": "VISIBLE",
+    "unique_cloze_answers": "VISIBLE",
+    "reading_column": "CENTERED_BOUNDED",
+    "six_grade_controls": "VISIBLE_SAME_VIEWPORT",
+    "new_blockers": [],
+    "limits": "Different question states; no claim grade image proves persisted ink. Not every question or physical input."
+  },
+  "full_acceptance": "NOT_COMPLETE",
+  "physical_device": "NOT_RUN"
+}

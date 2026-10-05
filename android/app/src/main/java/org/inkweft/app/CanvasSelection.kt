@@ -24,17 +24,19 @@ internal class SelectionStore(context:Context){
     fun read()=SelectionOptions(prefs.getStringSet("types",SelectionType.entries.map{it.name}.toSet()).orEmpty().mapNotNull{runCatching{SelectionType.valueOf(it)}.getOrNull()}.toSet(),prefs.getBoolean("precise",false),prefs.getBoolean("freehand",true))
     fun save(value:SelectionOptions){prefs.edit().putStringSet("types",value.types.map{it.name}.toSet()).putBoolean("precise",value.precise).putBoolean("freehand",value.freehand).apply()}
 }
-internal data class CanvasSelection(val region:InkRegion,val revision:Long,val strokes:List<InkStroke>,val objects:List<PageObject>,val snapshot:List<PageObject>,val sourceInk:List<InkStroke> = emptyList()){
+internal data class CanvasSelection(val region:InkRegion,val revision:Long,val strokes:List<InkStroke>,val objects:List<PageObject>,val snapshot:List<PageObject>,val sourceInk:List<InkStroke> = emptyList(),val locked:List<LayerContent> = emptyList()){
     val count get()=strokes.size+objects.size
 }
 internal object CanvasSelectionEdit {
-    fun query(region:InkRegion,revision:Long,ink:List<InkStroke>,objects:List<PageObject>,options:SelectionOptions,geometry:VisibleInkGeometry):CanvasSelection{
+    fun query(region:InkRegion,revision:Long,ink:List<InkStroke>,objects:List<PageObject>,options:SelectionOptions,geometry:VisibleInkGeometry,layers:UserLayers?=null):CanvasSelection{
         val suppressed=objects.flatMap{it.sourceStrokeIds}.toSet()
-        return CanvasSelection(region,revision,ink.filter{it.id !in suppressed&&options.accepts(it)&&geometry.selects(region,it,options.precise)},
-            objects.filter{!it.hidden&&options.accepts(it)&&geometry.selects(region,it,options.precise)},objects,ink)
+        val strokes=ink.filter{it.id !in suppressed&&options.accepts(it)&&(layers?.visible(LayerContent(LayerContentKind.INK,it.id))!=false)&&geometry.selects(region,it,options.precise)}
+        val chosen=objects.filter{!it.hidden&&options.accepts(it)&&(layers?.visible(LayerContent(LayerContentKind.OBJECT,it.id))!=false)&&geometry.selects(region,it,options.precise)}
+        val refs=strokes.map{LayerContent(LayerContentKind.INK,it.id)}+chosen.map{LayerContent(LayerContentKind.OBJECT,it.id)}
+        return CanvasSelection(region,revision,strokes,chosen,objects,ink,refs.filter{layers?.editable(it)==false})
     }
     fun moved(s:CanvasSelection,dx:Float,dy:Float,copy:Boolean,world:Boolean):Pair<InkMutation?,List<PageObject>>{
-        val ink=if(s.strokes.isEmpty())null else InkMutation.Replace(if(copy)emptyList()else s.strokes.map{it.id},InkSelectionEdit.copy(s.strokes,dx,dy))
+        val ink=if(s.strokes.isEmpty())null else InkMutation.Replace(if(copy)emptyList()else s.strokes.map{it.id},InkSelectionEdit.copy(s.strokes,dx,dy),s.strokes.map{it.id})
         val sources=s.sourceInk.associateBy{it.id}
         val moved=s.objects.map{original->
             val o=if(copy)BeautyAppearance.restore(original,sources)else original
@@ -61,7 +63,7 @@ internal object CanvasSelectionEdit {
                 InkStroke(UUID.randomUUID().toString(),o.pen,o.color,o.width*scale,o.tool,o.samples.map(::sample),o.world,
                     o.cuts.map{c->InkCut(cutIds.getOrPut(c.id){UUID.randomUUID().toString()},(c.radius*scale).coerceAtLeast(.01f),c.points.map(::point),c.shape)},
                     o.appearance.copy(originX=x(o.appearance.originX),originY=y(o.appearance.originY),leading=o.appearance.leading?.let(::sample),trailing=o.appearance.trailing?.let(::sample)))
-            })
+            },strokes.map{it.id})
         }
         val sources=s.sourceInk.associateBy{it.id}
         val replacements=s.objects.associate{original->
@@ -105,15 +107,15 @@ internal object CanvasSelectionEdit {
     var more by remember{mutableStateOf(false)}
     androidx.activity.compose.BackHandler{dismiss()}
     Row(Modifier.horizontalScroll(rememberScrollState()),verticalAlignment=Alignment.CenterVertically){
-        Text("${s.count} 项",Modifier.padding(horizontal=10.dp),style=MaterialTheme.typography.labelMedium)
-        TextButton(copy,enabled=enabled,modifier=Modifier.testTag("mixed-copy")){Text("复制")}
-        TextButton(delete,enabled=enabled,modifier=Modifier.testTag("mixed-delete")){Text("删除")}
-        if(s.strokes.isEmpty()&&s.objects.size==1)TextButton(edit,enabled=enabled,modifier=Modifier.testTag("mixed-edit")){Text("编辑")}
+        Text("${s.count} 项${if(s.locked.isNotEmpty())" · ${s.locked.size} 项锁定，整组不可编辑"else""}",Modifier.padding(horizontal=10.dp),style=MaterialTheme.typography.labelMedium)
+        TextButton(copy,enabled=enabled&&s.locked.isEmpty(),modifier=Modifier.testTag("mixed-copy")){Text("复制到当前层")}
+        TextButton(delete,enabled=enabled&&s.locked.isEmpty(),modifier=Modifier.testTag("mixed-delete")){Text("删除")}
+        if(s.strokes.isEmpty()&&s.objects.size==1)TextButton(edit,enabled=enabled&&s.locked.isEmpty(),modifier=Modifier.testTag("mixed-edit")){Text("编辑")}
         Box {
-            TextButton({more=true},enabled=enabled,modifier=Modifier.testTag("mixed-more")){Text("更多")}
+            TextButton({more=true},enabled=enabled&&s.locked.isEmpty(),modifier=Modifier.testTag("mixed-more")){Text("更多")}
             DropdownMenu(more,{more=false}){
-                DropdownMenuItem(text={Text("放大 10%")},onClick={more=false;scale(1.1f)},enabled=enabled,modifier=Modifier.testTag("mixed-enlarge"))
-                DropdownMenuItem(text={Text("缩小 10%")},onClick={more=false;scale(.9f)},enabled=enabled,modifier=Modifier.testTag("mixed-shrink"))
+                DropdownMenuItem(text={Text("放大 10%")},onClick={more=false;scale(1.1f)},enabled=enabled&&s.locked.isEmpty(),modifier=Modifier.testTag("mixed-enlarge"))
+                DropdownMenuItem(text={Text("缩小 10%")},onClick={more=false;scale(.9f)},enabled=enabled&&s.locked.isEmpty(),modifier=Modifier.testTag("mixed-shrink"))
             }
         }
         IconButton(dismiss,modifier=Modifier.testTag("mixed-dismiss").describedAs("取消选择")){Glyph("close")}

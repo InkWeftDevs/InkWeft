@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 package org.inkweft.core
 
-data class StudyTextCard(val id:String,val title:String,val body:String)
+data class StudyTextCard(val id:String,val title:String,val body:String,val annotation:String="")
 
 /** Text export preserves shared-card occurrences without duplicating authoritative content. */
 object StudyText {
     fun matches(card:StudyTextCard,query:String):Boolean = query.trim().let {
-        it.isEmpty() || card.title.contains(it,ignoreCase=true) || card.body.contains(it,ignoreCase=true)
+        it.isEmpty() || card.title.contains(it,ignoreCase=true) || card.body.contains(it,ignoreCase=true) || card.annotation.contains(it,ignoreCase=true)
     }
     private fun inline(text:String)=text.replace('\n',' ').replace('\r',' ')
         .replace("\\","\\\\").replace("[","\\[").replace("]","\\]")
@@ -35,6 +35,7 @@ object StudyText {
             cards.forEach{c->
                 append("<a id=\"card-").append(c.id).append("\"></a>\n\n### ")
                     .append(inline(c.title)).append("\n\n").append(c.body).append("\n\n")
+                if(c.annotation.isNotBlank())append("#### 个人注释\n\n").append(c.annotation).append("\n\n")
             }
         }
     }

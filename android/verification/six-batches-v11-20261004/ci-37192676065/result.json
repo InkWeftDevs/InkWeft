@@ -1,0 +1,126 @@
+{
+  "source": "37f512f684af6a93a81455864253a74e943ea5d6",
+  "url": "https://github.com/InkWeftDevs/InkWeft/actions/runs/37192676065",
+  "artifact_id": 11299937884,
+  "artifact_zip_sha256": "1fd3035dc6a01f08acda8743e077216d9fc89e926dbae4ec29e5840b94adf14e",
+  "build_lint_and_apks": "PASS",
+  "gradle_seconds": 888,
+  "environment": "GitHub ubuntu-24.04, Android35 x86_64 AOSP, existing KVM with approved temporary UID ACL",
+  "android_total": {
+    "completed": 151,
+    "not_failed": 142,
+    "failed": 9
+  },
+  "app": {
+    "expected": 46,
+    "planned_total": 46,
+    "shard_index": 0,
+    "shard_count": 1,
+    "passed": 38,
+    "failures": [
+      "org.inkweft.app.ViewportRasterTest#enlargedEmbeddedPageRendersOnlyItsWindowAndTracksParentScroll",
+      "org.inkweft.app.ImageRenderingTest#regionRetainsNativeDetailAndTransparentPixelsWithoutRedecodingEachDraw",
+      "org.inkweft.app.ImageRenderingTest#hiddenOffscreenAndLegacyImagesNeverReadOriginals",
+      "org.inkweft.app.CardPresentationUiTest#sharedAnnotationColorsRestoreSearchAndResetWithoutTouchingBodyOrLayout",
+      "org.inkweft.app.StarNoteInteractionsUiTest#excerptKeepsPageImageAddsCommentAndDeletesWithoutDeletingSource",
+      "org.inkweft.app.StarNoteInteractionsUiTest#inlineCommentAndEightHandleRecropCancelSaveAndReopenKeepOriginalInk",
+      "org.inkweft.app.StudyOrganizationUiTest#realOutlineHandleMovesWholeBranchAndSupportsUndoRedoAndCancel",
+      "org.inkweft.app.StudyRelationsUiTest#actualToggleAndSelectedOccurrenceChangeOnlyTheReadOnlyOverlay"
+    ],
+    "infrastructure": []
+  },
+  "room_terminal_counts": [
+    {
+      "selection": "org.inkweft.data.PageObjectRepositoryTest",
+      "terminal_line": "OK (6 tests)",
+      "completed": 6,
+      "failed": 0,
+      "instrumentation_sha256": "d02a1118b026749bbd000f49a06d409918c8737736dfedab795d0bdf397d4546"
+    },
+    {
+      "selection": "org.inkweft.data.CardPresentationRepositoryTest",
+      "terminal_line": "OK (4 tests)",
+      "completed": 4,
+      "failed": 0,
+      "instrumentation_sha256": "eba6369979297e3e38de8d89969653b8f9bcd04bcec4f55ad5ede428d53900a3"
+    },
+    {
+      "selection": "org.inkweft.data.LibraryBackupRepositoryTest",
+      "terminal_line": "OK (13 tests)",
+      "completed": 13,
+      "failed": 0,
+      "instrumentation_sha256": "f77a40fcff05b434afaa176caefa63a2f392b9c158e1030b71c59fe129fe381c"
+    },
+    {
+      "selection": "org.inkweft.data.LibraryBackupGuardTest",
+      "terminal_line": "OK (4 tests)",
+      "completed": 4,
+      "failed": 0,
+      "instrumentation_sha256": "6232373310bcd66c9c92bda4c543a14b17d3099c7db18ffaba7308a69f685e51"
+    },
+    {
+      "selection": "org.inkweft.data.LibraryContentRepositoryTest",
+      "terminal_line": "OK (13 tests)",
+      "completed": 13,
+      "failed": 0,
+      "instrumentation_sha256": "e2aaeb168a0732a74d9d78d637600b1e2ccd148d2e607fa1e7b11f6c1b9d2055"
+    },
+    {
+      "selection": "org.inkweft.data.StudyAndSelectionRepositoryTest",
+      "terminal_line": "OK (20 tests)",
+      "completed": 20,
+      "failed": 0,
+      "instrumentation_sha256": "703e1ff5b385ca3a3da286066b141c38f9a9c3fdb0107e4d6f04958f153ebf8b"
+    },
+    {
+      "selection": "org.inkweft.data.CardTransformRepositoryTest",
+      "terminal_line": "OK (10 tests)",
+      "completed": 10,
+      "failed": 0,
+      "instrumentation_sha256": "2301929e83b184017e5bd7cbe9b3ea4d891c2845a693f45bea4f1cadeaf7d32e"
+    },
+    {
+      "selection": "org.inkweft.data.CardReuseRepositoryTest",
+      "terminal_line": "OK (3 tests)",
+      "completed": 3,
+      "failed": 0,
+      "instrumentation_sha256": "b0f1c294f1d327c9715f71b5d2e51e400e91adc9169a2962dc100f4595255956"
+    },
+    {
+      "selection": "org.inkweft.data.KnowledgeRepositoryTest",
+      "terminal_line": "OK (20 tests)",
+      "completed": 20,
+      "failed": 0,
+      "instrumentation_sha256": "f9cd77606de2f25adc5c7cc2f8ed3673a1d0b4d0ce6d92fae26a0f89197d6f7c"
+    },
+    {
+      "selection": "org.inkweft.data.KnowledgeTextRepositoryTest",
+      "terminal_line": "Tests run: 12,  Failures: 1",
+      "completed": 12,
+      "failed": 1,
+      "instrumentation_sha256": "3755f10f90b8301275921d30f94170989b539760c1c16b2514efa0dbe3b824a3"
+    }
+  ],
+  "room_actual": {
+    "completed": 105,
+    "failed": 1,
+    "not_failed": 104
+  },
+  "room_harness_summary": {
+    "expected": 105,
+    "planned_total": 105,
+    "shard_index": 0,
+    "shard_count": 1,
+    "passed": 93,
+    "failures": [
+      "org.inkweft.data.KnowledgeTextRepositoryTest"
+    ],
+    "infrastructure": []
+  },
+  "room_count_note": "Harness passed=93 counts only wholly successful class selections. Raw terminal reports show 93 OK methods plus a completed 12-test class with one failure; the 104 not-failed count is derived from actual JUnit terminal totals, not the planned inventory.",
+  "acl_restoration": {
+    "status": "RESTORED_EXACT_ORIGINAL_ACL"
+  },
+  "real_device_and_human": "NOT_RUN",
+  "subsequent_changes": "NOT_INCLUDED in this run"
+}

@@ -1,0 +1,9 @@
+synthetic_only=true; test=outlineEdgeScrollReachesOffscreenParentAndCancelKeepsWholeAuthorGraph
+failure=NONE
+drop=target=57a9c449-b0b8-4217-942a-bc2e09613fa5 row=Rect.fromLTRB(1236.0, 971.0, 1914.0, 1091.0) container=Rect.fromLTRB(1206.0, 386.0, 1914.0, 1110.0) local=Offset(369.0, 645.0) frame=132
+LATEST_CRITICAL_FIRST
+inject-up currentLocal=Offset(369.0, 724.0) scopeBounds=Rect.fromLTRB(1206.0, 314.0, 1914.0, 1110.0) expectedRoot=Offset(1575.0, 1038.0)
+FIRST_CONTEXT
+inject-up currentLocal=Offset(369.0, 724.0) scopeBounds=Rect.fromLTRB(1206.0, 314.0, 1914.0, 1110.0) expectedRoot=Offset(1575.0, 1038.0)
+LATEST_EVENTS_FIRST
+inject-up currentLocal=Offset(369.0, 724.0) scopeBounds=Rect.fromLTRB(1206.0, 314.0, 1914.0, 1110.0) expectedRoot=Offset(1575.0, 1038.0)

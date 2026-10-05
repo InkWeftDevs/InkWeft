@@ -22,6 +22,7 @@ import java.util.UUID
     val scope=rememberCoroutineScope();var changed by remember{mutableIntStateOf(0)}
     var pages by remember{mutableStateOf(emptyList<NotebookPageRow>())};var pageId by remember{mutableStateOf(book)}
     var ink by remember{mutableStateOf<InkPage?>(null)};var objects by remember{mutableStateOf(emptyList<PageObject>())}
+    var authoring by remember{mutableStateOf<PageAuthoring?>(null)}
     var tab by remember{mutableIntStateOf(0)};var busy by remember{mutableStateOf(false)};var error by remember{mutableStateOf<String?>(null)}
     SideEffect{onBusy(busy)}
     var unsupported by remember{mutableIntStateOf(0)}
@@ -30,7 +31,7 @@ import java.util.UUID
     val scenes by remember(session,book){session.maps.observe(book)}.collectAsState(emptyList())
     var mapId by remember{mutableStateOf<String?>(null)}
     fun work(action:suspend()->Unit){if(busy)return;busy=true;error=null;scope.launch{try{withContext(Dispatchers.IO){action()};changed++}catch(c:CancellationException){throw c}catch(e:Exception){error=when(e.message){"SHADOW_CONFLICT_CHANGED"->"版本已变化，请重新核对双方内容。";"SHADOW_RESOLUTION_REQUIRED"->"此内容有两个版本，请先处理冲突。";else->"操作未确认，原资料保留，请重试原操作。"}}finally{busy=false}}}
-    LaunchedEffect(session,book,pageId,refresh,changed){try{withContext(Dispatchers.IO){pages=session.pages.activePages(book);ink=session.ink.read(pageId);objects=session.objects.read(pageId).objects;conflicts=session.replica.semanticConflicts();unsupported=session.replica.unsupportedConflicts()}}catch(c:CancellationException){throw c}catch(_:Exception){error="页面不可用，旧资料保留。"}}
+    LaunchedEffect(session,book,pageId,refresh,changed){try{withContext(Dispatchers.IO){pages=session.pages.activePages(book);ink=session.ink.read(pageId);objects=session.objects.read(pageId).objects;authoring=session.authoring.readPage(pageId).state;conflicts=session.replica.semanticConflicts();unsupported=session.replica.unsupportedConflicts()}}catch(c:CancellationException){throw c}catch(_:Exception){error="页面不可用，旧资料保留。"}}
     Column(Modifier.fillMaxSize().background(androidx.compose.ui.graphics.Color.White).safeDrawingPadding().testTag("shadow-native-panel")){
         Text("隔离接收库 · 合成资料",Modifier.padding(12.dp),style=MaterialTheme.typography.titleMedium)
         Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState())){listOf("页面","导图","版本冲突").forEachIndexed{i,title->FilterChip(tab==i,{tab=i},label={Text(title)},modifier=Modifier.padding(horizontal=4.dp).testTag("shadow-tab-$i"))}}
@@ -41,7 +42,7 @@ import java.util.UUID
                 Row(Modifier.horizontalScroll(rememberScrollState())){pages.forEach{p->TextButton({pageId=p.id},enabled=!busy,modifier=Modifier.testTag("shadow-page-${p.position}")){Text("第 ${p.position+1} 页")}}}
                 val page=pages.find{it.id==pageId};val loaded=ink
                 if(page!=null&&loaded!=null)Box(Modifier.fillMaxWidth().weight(1f),contentAlignment=androidx.compose.ui.Alignment.Center){AndroidView(factory={InkCanvasView(it).apply{authorSession=session;tag="shadow-page-canvas"}},update={v->
-                    v.configure(page.world,PaperStyle.entries[page.paper],null);v.showDocument(page.id);v.showStrokes(InkSession(loaded).visibleDraft());v.showObjects(objects);v.allowInput=false
+                    v.configure(page.world,PaperStyle.entries[page.paper],null);v.showAuthoring(authoring);v.showDocument(page.id);v.showStrokes(InkSession(loaded).visibleDraft());v.showObjects(objects);v.allowInput=false
                 },modifier=Modifier.fillMaxHeight().aspectRatio(1000f/1414f,matchHeightConstraintsFirst=true).testTag("shadow-paper"))}
             }
             1->{

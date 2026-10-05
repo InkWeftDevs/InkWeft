@@ -44,4 +44,21 @@ class PageObjectTest {
         assertEquals(objects,InkPageFile.decode(InkPageFile("花纹","",emptyList(),objects=objects).encode()).objects)
     }
 
+    @Test fun originalsRemainByteExactAcrossPageBookAndMissingClosureIsRejected(){
+        val bytes=byteArrayOf(1,2,3,4,5,6)
+        val original=ImageSource(bytes);bytes[0]=99
+        val preview=java.util.Base64.getEncoder().encodeToString(byteArrayOf(0xff.toByte(),0xd8.toByte(),1,2,3))
+        val item=PageObject(UUID.randomUUID().toString(),PageObjectKind.IMAGE,image=preview,imageSource=original.sha256)
+        assertThrows(IllegalArgumentException::class.java){InkPageFile("缺原件","",emptyList(),objects=listOf(item))}
+        val file=InkPageFile("原件","",emptyList(),objects=listOf(item),imageSources=listOf(original))
+        val page=InkPageFile.decode(file.encode())
+        assertEquals(ContentTransfer.Kind.PAGE,ContentTransfer.kind(file.encode()))
+        assertEquals(item,page.objects.single());assertArrayEquals(byteArrayOf(1,2,3,4,5,6),page.imageSources.single().bytes())
+        val book=NotebookFile.decode(NotebookFile("原件","",listOf(file)).encode())
+        assertEquals(original.sha256,book.pages.single().imageSources.single().sha256)
+        val legacy=item.copy(imageSource=null)
+        assertNull(InkPageFile.decode(InkPageFile("旧预览","",emptyList(),objects=listOf(legacy)).encode()).objects.single().imageSource)
+        assertThrows(IllegalArgumentException::class.java){item.copy(imageSource="not-a-hash")}
+    }
+
 }

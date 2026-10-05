@@ -1,0 +1,1474 @@
+{
+  "format": "inkweft.six-batch-acceptance-current.v1",
+  "as_of_utc": "2026-10-04T21:49:00Z",
+  "code_baseline": "1a84afc2cdf7524ee4e6333815351c0515cd5d2f",
+  "baseline_not_current_acceptance": "The first full source 8d6abf5/run37232132379 actually executed 153 UI (149 passed, 4 failed), fresh 202 Room (all passed, including the enhanced backup assertions), and five same-library B6 phases with 39 PNG. The run failed and wide10 was still loading, so it is not full UI or visual acceptance. Repairs are integrated at local1a84afc/public5ef7087; run37236310245 passed11/11 targeted UI but failed B6 visual during the final narrow bound-annotation dismissal. Prepare/reopen passed;32 PNG integrity passed; the new wide10 pixel gap is closed for that image only. Room executed0/reused202, and both native-recall phases were NOT_RUN_FOCUSED. Targeted evidence is separate from full acceptance. Final acceptance still requires one candidate with all153 UI, fresh202 Room and five phases/40 PNG plus actual pixel review.",
+  "candidate_fix_commits": {
+    "41c8f0a": "Card trash impact preview and same-version/impact confirmation across all three entry points",
+    "db7d768": "Shared document/full-screen shortcut preferences and truthful immutable-snapshot capacity messages",
+    "3264ccb": "Durable recall current-source navigation and same-attempt return, plus skip/timezone/actual-collection repository cases",
+    "efb0106": "Previously omitted capacity/organization scope, edge-scroll and real reuse UI cases",
+    "c0c77b9": "Native recall fixture answer-mask/cloze/grading-frame evidence corrections and split capacity UI class",
+    "a5d950c": "Bound annotation move/reorder/zoom/detach/reopen native combination case",
+    "df10162": "Map normal pinch/double-tap ownership and viewport padding/pointer coordinates; source 57a7a4b has partial focused evidence",
+    "9561eb2": "Visible-row and pointer-DOWN source guard; later captured-projection root cause repaired with lambdas at 5e1168c",
+    "7a4d8e2": "Bounded source/release failure evidence for edge drag",
+    "e711307": "Actual two-finger test uses observed native minSpan and visible bounds without changing production threshold or 400 ms timing",
+    "a8f5989": "Deliver real two-finger events along the unobstructed visible native path; full bound-annotation method passed at eaa8a7d",
+    "5e1168c": "Refresh captured move and workMode callbacks with lambdas; remove temporary production observers",
+    "47d01ce": "Exercise a branch added after mounting with a decoy branch and preserve exact second-drag cancellation assertions",
+    "b2f3306": "Integrated cherry-pick of 8fdb373: strengthen the existing answer/original-hint/modifiedAt backup test; method count stays202; actual Android execution passed in fresh202 at8d6abf5/run37232132379",
+    "7fc74c7": "Read native-map rendering snapshot state in composition so detached AndroidViewHolder does not receive state notifications; later1a84afc adds the lifecycle reproduction",
+    "ee23dfb": "Wait for actual native window takeover in both question-editor rotation directions",
+    "378a84e": "Require old window detachment and new window layout at the rotation barrier",
+    "33c0dcf": "Gate native excerpt capture on real readiness and retain bounded failure diagnostics",
+    "5b292fe": "Collect excerpt failure evidence without waiting on UI or database again",
+    "f10817e": "Require actually rendered whitespace tiles and add a cold-reopen material-page PNG; the new image does not prove recall-record persistence",
+    "279c7af": "Target prepare/reopen/visual diagnostics and assign full-source lint once outside the B6 path"
+  },
+  "verification_plan_from_integration_owner": {
+    "full_ui": 153,
+    "full_room": 202,
+    "focused_ui": 11,
+    "b6_phases": [
+      "prepare",
+      "reopen",
+      "visual",
+      "native_recall",
+      "native_recall_reopen"
+    ],
+    "b6_expected_screenshots": 40,
+    "status": "TARGETED_UI_11_PASS_B6_VISUAL_FAIL_FINAL_FULL_PENDING",
+    "note": "Source5ef7087/run37236310245 passed11/11 targeted UI and B6 prepare/reopen, but visual failed on the final narrow annotation dismissal after24 visual PNG (32 total). Room executed0/reused202 from exact8d6abf5 inputs; both native-recall phases NOT_RUN_FOCUSED. New wide10 pixel evidence is complete, but that does not pass the visual phase. Final repaired same-candidate153 UI/fresh202 Room/five phases/40 PNG and complete pixel review remain required;40th image covers only the rendered cold-reopen material page."
+  },
+  "historical_runs": [
+    {
+      "source": "46d2967a2f35756ddf8536c395cd85ccd6216dc2",
+      "run": 37209060586,
+      "ui": {
+        "executed": 130,
+        "passed": 127,
+        "failed": 3
+      },
+      "room": {
+        "executed": 180,
+        "passed": 180
+      },
+      "b6": {
+        "prepare": "PASS",
+        "reopen": "PASS",
+        "visual": "PASS",
+        "native_recall": "FAIL",
+        "native_recall_reopen": "NOT_RUN",
+        "screenshots": 33
+      },
+      "receipt": "android/verification/six-batches-v11-20261004/ci-37209060586/result.json"
+    },
+    {
+      "source": "65523ff3643b16b0b5cfec06cca7a4c109f3aa9b",
+      "run": 37212713015,
+      "ui": {
+        "executed": 15,
+        "passed": 13,
+        "failed": 2
+      },
+      "room": {
+        "executed": 0,
+        "reused_passed": 180,
+        "source_run": 37209060586
+      },
+      "visual": "Five actual375dp/font1.6 screenshots reviewed; three narrow-layout P1 states closed, not overall visual acceptance",
+      "receipt": "android/verification/six-batches-v11-20261004/ci-37212713015/result.json"
+    },
+    {
+      "source": "45ccb74befc6e7ac553abfa698d53175ebac9daf",
+      "matching_local_source": "f9923d43f7b9f56d285652d79207d7334a0aae09",
+      "run": 37214898049,
+      "ui": {
+        "executed": 5,
+        "passed": 5,
+        "failed": 0
+      },
+      "room": {
+        "executed": 0,
+        "passed": 0,
+        "reused": 180,
+        "source_run": 37209060586
+      },
+      "b6": {
+        "prepare": "PASS",
+        "native_recall": "PASS",
+        "reopen": "NOT_RUN_FOCUSED",
+        "visual": "NOT_RUN_FOCUSED",
+        "native_recall_reopen": "NOT_RUN_FOCUSED",
+        "screenshots": 13
+      },
+      "visual": {
+        "reviewed_native_recall": 6,
+        "remaining": [
+          "Original source mask fixture only covers central band, so cannot prove no answer clues",
+          "Cloze repeated-answer fixture must be improved",
+          "No actual grading-controls frame; result page not a replacement"
+        ],
+        "not_app_failures_inferred_from_fixture": true
+      },
+      "receipt": "android/verification/six-batches-v11-20261004/ci-37214898049/result.json",
+      "receipt_sha256": "502a84927a6979bd9831e0a0de3911c699cec104fb47ce48ededd9ed3655e6c2"
+    },
+    {
+      "source": "9593b928473b46ff9efe806dace74231d022f3d1",
+      "matching_local_source": "3287f6c38c17b3f953e5066fe4cca5514e0933af",
+      "run": 37217398281,
+      "ui": {
+        "executed": 20,
+        "passed": 14,
+        "failed": 6
+      },
+      "room": {
+        "executed": 202,
+        "passed": 202,
+        "failed": 0,
+        "classes": 18
+      },
+      "b6": {
+        "prepare": "PASS",
+        "native_recall": "PASS",
+        "reopen": "NOT_RUN_FOCUSED",
+        "visual": "NOT_RUN_FOCUSED",
+        "native_recall_reopen": "NOT_RUN_FOCUSED",
+        "same_library": true,
+        "png": 14
+      },
+      "receipt": "android/verification/six-batches-v11-20261004/ci-37217398281/result.json",
+      "receipt_sha256": "9dd221dbfd69adfaee7407381f882f1f9f9bd8c941c36ba093d31b34c2bd2108",
+      "visual_review": {
+        "native_recall_images": 7,
+        "full_answer_mask": "VISIBLE",
+        "unique_cloze_answers": "VISIBLE",
+        "reading_column": "CENTERED_BOUNDED",
+        "six_grade_controls": "VISIBLE_SAME_VIEWPORT",
+        "new_blockers": [],
+        "limits": "Different question states; no claim grade image proves persisted ink. Not every question or physical input."
+      },
+      "not_final_full_acceptance": true
+    },
+    {
+      "source": "57e9dc50da1f72b98362656eef383561aa0594b6",
+      "matching_local_source": "618f2cd217487b602504d714bba2941736c65465",
+      "run": 37219005590,
+      "ui": {
+        "executed": 6,
+        "passed": 3,
+        "failed": 3
+      },
+      "room": {
+        "executed": 0,
+        "passed": 0,
+        "reused": 202,
+        "source_run": 37217398281
+      },
+      "b6": {
+        "prepare": "PASS",
+        "native_recall": "PASS",
+        "remaining3": "NOT_RUN_FOCUSED",
+        "same_run_id": "c22240af-31c3-489a-af30-0066c84994ff",
+        "png_verified": 14
+      },
+      "receipt": "android/verification/six-batches-v11-20261004/ci-37219005590/result.json",
+      "receipt_sha256": "38dc8c6079c2c13437f755ee3f1c9c051aa95e77a1b5667976b44b18612a73ed",
+      "not_final_full_acceptance": true
+    },
+    {
+      "source": "725ebcf7eb53d6b0d8fdbd5aa268b2920c921ccc",
+      "matching_local_source": "a432bf8c0e27f5e296a55ae0986fd36512b48dbf",
+      "run": 37220861109,
+      "ui": {
+        "executed": 3,
+        "passed": 1,
+        "failed": 2,
+        "passed_method": "CardTrashUiTest.cardManagementCancelsRejectsChangedQuestionThenRestoresFromRecycleArea"
+      },
+      "room": {
+        "executed": 0,
+        "reused": 202,
+        "source_run": 37217398281
+      },
+      "b6": {
+        "prepare": "PASS",
+        "native_recall": "PASS",
+        "other3": "NOT_RUN_FOCUSED",
+        "same_fixture": true,
+        "verified_png": 14
+      },
+      "receipt": "android/verification/six-batches-v11-20261004/ci-37220861109/result.json",
+      "receipt_sha256": "4edc5e1a43eb768308f4d0c534c0379d9b805aac3b9589531a0626596867f0f6",
+      "visual_review": {
+        "sha256": "b41283d1d9289f3daac97ae393c8a94d96260583b4fa3f904e25c58614ccb0e6",
+        "pixels_reviewed": true,
+        "result": "Consequence, actual recovery path, link/question impact and actions readable without clipping at1920x1200"
+      },
+      "remaining_failures": [
+        "Named pinch still leaves scale1.3 unchanged; requires native trace and production gesture-contract analysis",
+        "Bounds-only reach predicate passed for a row later not displayed; verify placement and direct stable target before release"
+      ],
+      "not_final_full_acceptance": true
+    },
+    {
+      "source": "57a7a4b0123383fe34b64229beb238668f4b9802",
+      "matching_local_source": "c9746cc78549d237d2ebf7a6eafee4523e9ebc80",
+      "run": 37223946216,
+      "ui": {
+        "executed": 4,
+        "passed": 2,
+        "failed": 2,
+        "passed_methods": [
+          "MapInteractionUiTest.selectionRenameReadingAndMapMenusKeepTheirScope",
+          "StudyOrganizationUiTest.realOutlineHandleMovesWholeBranchAndSupportsUndoRedoAndCancel"
+        ]
+      },
+      "room": {
+        "executed": 0,
+        "reused": 202,
+        "source_run": 37217398281
+      },
+      "b6": {
+        "status": "NOT_RUN_FOCUSED_UI_DIAGNOSTIC",
+        "executed": 0,
+        "png": 0
+      },
+      "receipt": "android/verification/six-batches-v11-20261004/ci-37223946216/result.json",
+      "receipt_sha256": "1d6ccdcc60b17707ea6f88d445ef8024b72ecc47cb736a254288e2ac39102882",
+      "remaining_failures": [
+        "Real pinch events reach native view but original span212.40039->354 stays below observed minimum span529; detector inactive",
+        "Edge-scroll actual displayed final target and intended child feedback pass; parent unchanged after release; selected source/commit reason not yet proven"
+      ],
+      "not_final_full_acceptance": true
+    },
+    {
+      "source": "e24e16dacc613a71470cdeba079ba83360c0ddd4",
+      "matching_local_source": "4e661539a72adb913dbc04d04c24a3781cb1c0ed",
+      "run": 37225874419,
+      "ui": {
+        "executed": 4,
+        "passed": 2,
+        "failed": 2
+      },
+      "room": {
+        "executed": 0,
+        "reused": 202,
+        "source_run": 37217398281
+      },
+      "b6": {
+        "status": "NOT_RUN_FOCUSED_UI_DIAGNOSTIC",
+        "executed": 0,
+        "png": 0
+      },
+      "receipt": "android/verification/six-batches-v11-20261004/ci-37225874419/result.json",
+      "receipt_sha256": "a41ec60bc3270477615a44168b2dbde10444f4792c11ed06a2e06eec26e8c919",
+      "not_final_full_acceptance": true
+    },
+    {
+      "source": "eaa8a7d43e8026d469452a28948478549667f8b4",
+      "matching_local_source": "27aa9877c38a54432ecc9c38f5a8699d86d1af98",
+      "run": 37227868314,
+      "ui": {
+        "executed": 4,
+        "passed": 3,
+        "failed": 1,
+        "passed_methods": [
+          "BoundAnnotationFlowUiTest.bindMoveReorderZoomDetachAndReopenKeepOneTransformAndProtectedLayerOwnership",
+          "MapInteractionUiTest.selectionRenameReadingAndMapMenusKeepTheirScope",
+          "StudyOrganizationUiTest.realOutlineHandleMovesWholeBranchAndSupportsUndoRedoAndCancel"
+        ]
+      },
+      "room": {
+        "executed": 0,
+        "reused": 202,
+        "source_run": 37217398281
+      },
+      "b6": {
+        "status": "NOT_RUN_FOCUSED_UI_DIAGNOSTIC",
+        "executed": 0,
+        "png": 0
+      },
+      "receipt": "android/verification/six-batches-v11-20261004/ci-37227868314/result.json",
+      "receipt_sha256": "91483e67d5cdf7f9e6f7a8195a399b8157e0a1b972d2ab291ed92c32b2826e31",
+      "not_final_full_acceptance": true
+    },
+    {
+      "source": "bab4e8c793cf12d8c03c42027258fbfdbeb1f945",
+      "matching_local_source": "5c621b073110b756f36f0d651276ffe47ed3f3ae",
+      "run": 37230771244,
+      "ui": {
+        "executed": 3,
+        "passed": 3,
+        "failed": 0,
+        "scope": [
+          "workModes after-mount branch+decoy exact1/unrevealed resume/camera/data",
+          "ordinary whole-branch boundary/undo/redo/cancel",
+          "cross-screen target commit/expand/undo/materialized source/second cancel/full author invariant"
+        ]
+      },
+      "room": {
+        "executed": 0,
+        "reused": 202,
+        "source_run": 37217398281
+      },
+      "b6": {
+        "status": "NOT_RUN_FOCUSED_UI_DIAGNOSTIC",
+        "executed": 0,
+        "png": 0
+      },
+      "receipt": "android/verification/six-batches-v11-20261004/ci-37230771244/result.json",
+      "receipt_sha256": "8277b107285470859555c2eca1a65d92ff699b2d9f2a68f718567cacf3b8bf48",
+      "not_final_full_acceptance": true
+    },
+    {
+      "source": "8d6abf57328f0d377d3fab6a6eae010e0a2c8336",
+      "matching_local_source": "5956cb481c7e2ea8fe3192d4e6d383089f750abf",
+      "tree": "fbb780211fad316df2784a495d17b3dc3e38f0c7",
+      "run": 37232132379,
+      "url": "https://github.com/InkWeftDevs/InkWeft/actions/runs/37232132379",
+      "status": "FAILURE",
+      "ui": {
+        "executed": 153,
+        "passed": 149,
+        "failed": 4,
+        "partition": "3x51 exact disjoint cases"
+      },
+      "room": {
+        "executed": 202,
+        "passed": 202,
+        "reused": 0,
+        "classes": 18,
+        "recall_methods": 19,
+        "expanded_backup_assertion_executed": true,
+        "failed": 0
+      },
+      "b6": {
+        "phases": 5,
+        "passed": 5,
+        "png_count": 39,
+        "same_library_source_spec_apk": true,
+        "run_id": "642d0e22-e777-4099-a66c-0d29cea401d6",
+        "pixel_integrity": "SHA_SIZE_DECODE_VERIFIED",
+        "visual_review": "Original narrow-screen P1s remain resolved; wide10 was captured while document and ink were loading. That frame does not prove stable expanded-whitespace rendering. Other states must not be generalized to every question state.",
+        "native_recall_reopen_png": 0,
+        "prepare": "PASS",
+        "reopen": "PASS",
+        "visual": "PASS_AUTOMATED_ASSERTIONS_ONLY",
+        "native_recall": "PASS",
+        "native_recall_reopen": "PASS"
+      },
+      "failures": [
+        "RecallQuestionEditorUiTest.rotationAfterQuestionChangeCannotOverwriteNewPromptWithOldDraft:RUNNER_TIMEOUT",
+        "RecallQuestionEditorUiTest.rotationAfterConfigurationChangeCannotResetNewMasksOrSchedule:RUNNER_TIMEOUT",
+        "MapPortalUiTest.nestedReturnKeepsAnUnavailableBranchInsteadOfExpandingItsMap:detached AndroidViewHolder Handler.post null",
+        "SelectionStudyUiTest.excerptCreatesSharedCardAndReturnsToSource:capture-result wait timeout"
+      ],
+      "core_per_shard": 157,
+      "lint_per_shard": {
+        "errors": 0,
+        "warnings": 174,
+        "hints": 2
+      },
+      "receipt": "android/verification/six-batches-v11-20261004/ci-37232132379/result.json",
+      "receipt_sha256": "2e79e211cd67640ae77a894711102e5dc393c6cd73c49211959afe844c3a82e9",
+      "artifact_identity": [
+        {
+          "id": 11314024600,
+          "sha256": "073675a8aa84fbe8c0e75262319810b17c36a26cdcd7daa74e25154b19aca4a5",
+          "bytes": 28458732,
+          "head_sha": "8d6abf57328f0d377d3fab6a6eae010e0a2c8336"
+        },
+        {
+          "id": 11314743857,
+          "sha256": "6298238eb41f4019beb3a7ea3588ea87c6935b0333f352dfe64b8ec86d41d20f",
+          "bytes": 2484434,
+          "head_sha": "8d6abf57328f0d377d3fab6a6eae010e0a2c8336"
+        },
+        {
+          "id": 11315216141,
+          "sha256": "6faa9781a1dedfd8c805d5b3d16decc049b8744f81c67a250c77940d9a10dd80",
+          "bytes": 2302504,
+          "head_sha": "8d6abf57328f0d377d3fab6a6eae010e0a2c8336"
+        }
+      ],
+      "apk_identity_limit": {
+        "each_runner_recorded_separately": true,
+        "distinct_app_build_hashes": 3,
+        "distinct_app_signers": 3,
+        "apk_bytes_downloaded": false,
+        "room_installed_hash_limit": "Fresh Room execution and built Room-test APK hash available; no independent installed Room APK hash receipt was uploaded."
+      },
+      "kvm": "ALL3_EXACT_ORIGINAL_ACL_RESTORED",
+      "remote_gradle_cache": "ALL3_RESTORE0_SAVE0",
+      "visual_acceptance": "NOT_COMPLETE_WIDE10_LOADING",
+      "not_final_full_acceptance": true
+    },
+    {
+      "source": "5ef7087b7da678296180ad6951ac75c6ed7ba849",
+      "matching_local_source": "1a84afc2cdf7524ee4e6333815351c0515cd5d2f",
+      "tree": "2419680f5a996e0cdc17e16d7d9bca4fad0a3c60",
+      "run": 37236310245,
+      "status": "FAILURE",
+      "ui": {
+        "executed": 11,
+        "passed": 11,
+        "failed": 0
+      },
+      "room": {
+        "executed": 0,
+        "passed": 0,
+        "reused": 202,
+        "source_run": 37232132379
+      },
+      "b6": {
+        "prepare": "PASS",
+        "reopen": "PASS",
+        "visual": "FAILED",
+        "native_recall": "NOT_RUN_FOCUSED",
+        "native_recall_reopen": "NOT_RUN_FOCUSED",
+        "screenshots": 32,
+        "visual_screenshots": 24,
+        "same_library": true
+      },
+      "failure": "Final narrow bound-annotation native BACK dismissal timed out after30000ms; later narrow close/back-library/final verification did not execute",
+      "visual_review": "New wide10 complete and no loading; narrow10 unobstructed; narrow12 visible X does not prove dismissal; no overall visual pass",
+      "artifact_id": 11316016722,
+      "artifact_sha256": "6ce57b1bc22bdcfa7c2e52f0c5884c07b7a2bb6b3322c956870ae3fd01bc1dea",
+      "detail": "current_focused_checkpoint",
+      "not_final_full_acceptance": true
+    }
+  ],
+  "physical_and_external": {
+    "target": "vivo iPA2673 / Android16 API36",
+    "human_pen_15_minutes": "NOT_RUN",
+    "human_learning_30_minutes": "NOT_RUN",
+    "thermal": "NOT_RUN",
+    "upgrade_install_with_existing_user_data": "NOT_RUN",
+    "requires": "Separate authorization and actual local/physical execution; no real notes or handwriting upload; no clearing user data"
+  },
+  "scope_boundaries": "Original37 items and HC01-HC07 preserved. No extension to AI, Anki, FSRS, broad beautification algorithm upgrades, new media/platform/plugin systems, layer opacity or merging.",
+  "document_edit_contract": {
+    "modified_region": "Section16 realtime index, continuing-defect environment row and appended evidence checkpoint; sections1-15 and existing historical checkpoints unchanged",
+    "sections_1_to_15_byte_identical": true,
+    "prefix_sha256": "0e2546a8e1784da87aefe176dc457e64c61d11d91e294747e14ae1a8814672e4",
+    "outside_table_byte_identical": false,
+    "historical_checkpoints_unchanged": true,
+    "fixture_readme_status_unchanged": true
+  },
+  "items": [
+    {
+      "id": "IW-B1-01",
+      "title": "同一资料读写忆与上下文工具",
+      "status": "实现候选／待同源验收",
+      "implementation_candidate": "读写忆同资料及状态保持已接；5e1168c将workMode捕获回调改为lambda，使用最新分支投影",
+      "historical_executed_evidence": "46d2967读写忆往返及45ccb74同题页签UI PASS；bab4e8c/run37230771244挂载后新增分支+decoy范围回忆UI PASS",
+      "current_verification_needed": "最终同候选纸面/导图状态往返与宽窄像素复验",
+      "current_candidate_android": "FINAL_FULL_PENDING_AT_5EF7087",
+      "prior_review_code_refs": [
+        "android/app/src/main/java/org/inkweft/app/BookInkScreen.kt:228-240",
+        "android/app/src/main/java/org/inkweft/app/StudyWorkspace.kt:443-449,501-536",
+        "android/app/src/main/java/org/inkweft/app/FloatingStudyWindow.kt:46-55",
+        "android/app/src/main/java/org/inkweft/app/InkScreen.kt:324-359",
+        "android/app/src/main/java/org/inkweft/app/StudySession.kt:54-75",
+        "android/app/src/main/java/org/inkweft/app/StudyWorkMode.kt:17-27",
+        "android/app/src/main/java/org/inkweft/app/NodeActions.kt:39-52"
+      ],
+      "prior_refs_note": "Static baseline pointers from f9923d43; current changed entry points are identified by candidate_fix_commits. Line numbers may shift.",
+      "external_conditions": "Target-tablet/human15min+30min and real-data upgrade remain separate NOT_RUN; applicable only to their final physical/human checks"
+    },
+    {
+      "id": "IW-B1-02",
+      "title": "顶栏分组、自定义与宽窄布局",
+      "status": "实现候选／待同源验收",
+      "implementation_candidate": "db7d768已将普通文档/阅读/全屏快捷入口统一排序显隐，保留隐藏入口回路",
+      "historical_executed_evidence": "9593b92/run37217398281工具偏好3UI PASS（即时/全屏/重建、旧偏好兼容、隐藏入口可达）；65523ff窄屏相关3项P1已关闭",
+      "current_verification_needed": "最终同候选宽窄/大字体像素与发现性复验；不把3UI代全部视觉收口",
+      "current_candidate_android": "FINAL_FULL_PENDING_AT_5EF7087",
+      "prior_review_code_refs": [
+        "android/app/src/main/java/org/inkweft/app/EditorToolbar.kt:22-74,78-123",
+        "android/app/src/main/java/org/inkweft/app/BookInkScreen.kt:200-260",
+        "android/app/src/main/java/org/inkweft/app/InkScreen.kt:601-663",
+        "android/app/src/main/java/org/inkweft/app/FloatingStudyWindow.kt:37-43"
+      ],
+      "prior_refs_note": "Static baseline pointers from f9923d43; current changed entry points are identified by candidate_fix_commits. Line numbers may shift.",
+      "external_conditions": "Target-tablet/human15min+30min and real-data upgrade remain separate NOT_RUN; applicable only to their final physical/human checks"
+    },
+    {
+      "id": "IW-B1-03",
+      "title": "标题、正文、个人注释、来源四区及文本搜索",
+      "status": "实现候选／待同源验收",
+      "implementation_candidate": "标题/既有正文/个人注释/来源四区及文本搜索回跳已接",
+      "historical_executed_evidence": "46d2967注释搜索精确选中、四区阅读顺序UI PASS",
+      "current_verification_needed": "当前全文/注释搜索及来源回跳同源复验；不等于手写识别搜索",
+      "current_candidate_android": "FINAL_FULL_PENDING_AT_5EF7087",
+      "prior_review_code_refs": [
+        "android/app/src/main/java/org/inkweft/app/StudyWorkspace.kt:1224-1289,1005,1376",
+        "android/app/src/main/java/org/inkweft/app/CardPresentationEditor.kt:57-92",
+        "android/app/src/main/java/org/inkweft/app/MapSearchPanel.kt:22-43",
+        "android/app/src/main/java/org/inkweft/app/StudyWorkspace.kt:575-582",
+        "android/core-domain/src/main/kotlin/org/inkweft/core/StudyText.kt:4-10",
+        "android/app/src/main/java/org/inkweft/app/ExcerptCollection.kt:50-82"
+      ],
+      "prior_refs_note": "Static baseline pointers from f9923d43; current changed entry points are identified by candidate_fix_commits. Line numbers may shift.",
+      "external_conditions": "Target-tablet/human15min+30min and real-data upgrade remain separate NOT_RUN; applicable only to their final physical/human checks"
+    },
+    {
+      "id": "IW-B1-04",
+      "title": "长内容、截图、手写/公式完整阅读与折叠",
+      "status": "实现候选／待同源验收",
+      "implementation_candidate": "长中文/图片原件/手写快照完整查看、展开与可见区高清已接",
+      "historical_executed_evidence": "46d2967原生/PDF高清与长卡重开PASS；65523ff窄屏长文返回PASS",
+      "current_verification_needed": "当前长卡/公式/原图及最终大样本像素、性能复验",
+      "current_candidate_android": "FINAL_FULL_PENDING_AT_5EF7087",
+      "prior_review_code_refs": [
+        "android/app/src/main/java/org/inkweft/app/StudyWorkspace.kt:1231-1283,1326,1358",
+        "android/app/src/main/java/org/inkweft/app/KnowledgeLinkedCardBody.kt:72-90",
+        "android/app/src/main/java/org/inkweft/app/StudySnapshotViewer.kt:20-59",
+        "android/app/src/main/java/org/inkweft/app/NodeActions.kt:49-50",
+        "android/app/src/main/java/org/inkweft/app/StudyWorkspace.kt:946-947"
+      ],
+      "prior_refs_note": "Static baseline pointers from f9923d43; current changed entry points are identified by candidate_fix_commits. Line numbers may shift.",
+      "external_conditions": "Target-tablet/human15min+30min and real-data upgrade remain separate NOT_RUN; applicable only to their final physical/human checks"
+    },
+    {
+      "id": "IW-B1-05",
+      "title": "卡片底色与标题栏色",
+      "status": "实现候选／待同源验收",
+      "implementation_candidate": "卡片/标题栏双色、恢复默认、保存与独立副本已接",
+      "historical_executed_evidence": "46d2967 CardPresentation Room4及调色/重开/默认UI PASS",
+      "current_verification_needed": "当前候选颜色可读性、选中态及保存重开同源复验",
+      "current_candidate_android": "FINAL_FULL_PENDING_AT_5EF7087",
+      "prior_review_code_refs": [
+        "android/app/src/main/java/org/inkweft/app/CardPresentationEditor.kt:64-79,90-95",
+        "android/core-domain/src/main/kotlin/org/inkweft/core/CardPresentation.kt:4-11",
+        "android/data-local/src/main/kotlin/org/inkweft/data/KnowledgeRepository.kt:165-168",
+        "android/app/src/main/java/org/inkweft/app/MapScenePainter.kt:95-109",
+        "android/app/src/main/java/org/inkweft/app/MindMapView.kt:377-382",
+        "android/app/src/main/java/org/inkweft/app/StudyWorkspace.kt:1058-1059,1231-1236"
+      ],
+      "prior_refs_note": "Static baseline pointers from f9923d43; current changed entry points are identified by candidate_fix_commits. Line numbers may shift.",
+      "external_conditions": "Target-tablet/human15min+30min and real-data upgrade remain separate NOT_RUN; applicable only to their final physical/human checks"
+    },
+    {
+      "id": "IW-B1-06",
+      "title": "稳定内容身份、来源、删除复用与后续合同",
+      "status": "实现候选／待同源验收",
+      "implementation_candidate": "稳定内容/位置/来源/题目/作答身份合同已落；41c8f0a补三回收入口影响预览与同版本确认",
+      "historical_executed_evidence": "9593b92/run37217398281回收Room及恢复存储UI PASS；725ebcf/run37220861109回收取消/题目变化拒绝/回收区恢复UI PASS，影响预览像素已审；8d6abf5/run37232132379全量中摘录建共享卡返回来源方法等待capture-result超时，该旧失败保留记录；5ef7087/run37236310245该摘录共享卡与回源方法实际PASS，最终full仍待",
+      "current_verification_needed": "最终同候选回收/来源/引用/旧题合同及完整备份复验；已有专项通过不作全量验收",
+      "current_candidate_android": "FOCUSED_EXCERPT_RETURN_PASS_FINAL_FULL_PENDING",
+      "prior_review_code_refs": [
+        "android/data-local/src/main/kotlin/org/inkweft/data/StudyRepository.kt:9-15,207-218",
+        "android/data-local/src/main/kotlin/org/inkweft/data/StudySourceVersions.kt:10-18,29-78",
+        "android/data-local/src/main/kotlin/org/inkweft/data/StudyGraphSnapshot.kt:33-45",
+        "android/app/src/main/java/org/inkweft/app/CardPresentationEditor.kt:57",
+        "android/app/src/main/java/org/inkweft/app/StudyWorkspace.kt:1121-1124,1326,1338-1341",
+        "android/app/src/main/java/org/inkweft/app/CardReuseDialog.kt:89-96",
+        "android/app/src/main/java/org/inkweft/app/CardTransformDialog.kt:119-143,211-219",
+        "android/core-domain/src/main/kotlin/org/inkweft/core/RecallStudy.kt:31-42"
+      ],
+      "prior_refs_note": "Static baseline pointers from f9923d43; current changed entry points are identified by candidate_fix_commits. Line numbers may shift.",
+      "external_conditions": "Target-tablet/human15min+30min and real-data upgrade remain separate NOT_RUN; applicable only to their final physical/human checks"
+    },
+    {
+      "id": "IW-B2-01",
+      "title": "大纲缩进、展开折叠、层级提示",
+      "status": "实现候选／待同源验收",
+      "implementation_candidate": "多级缩进、内容/子树折叠及选中上下文已接",
+      "historical_executed_evidence": "46d2967大纲上下文UI PASS但quickAdd曾FAIL；65523ff同方法PASS",
+      "current_verification_needed": "当前候选层级/折叠/大字体及最终高密度像素复验",
+      "current_candidate_android": "FINAL_FULL_PENDING_AT_5EF7087",
+      "prior_review_code_refs": [
+        "android/core-domain/src/main/kotlin/org/inkweft/core/StudyOutline.kt:9-28",
+        "android/app/src/main/java/org/inkweft/app/StudyWorkspace.kt:1061-1098,550-564",
+        "android/app/src/main/java/org/inkweft/app/NodeActions.kt:49-50",
+        "android/app/src/main/java/org/inkweft/app/StudyWorkspace.kt:964"
+      ],
+      "prior_refs_note": "Static baseline pointers from f9923d43; current changed entry points are identified by candidate_fix_commits. Line numbers may shift.",
+      "external_conditions": "Target-tablet/human15min+30min and real-data upgrade remain separate NOT_RUN; applicable only to their final physical/human checks"
+    },
+    {
+      "id": "IW-B2-02",
+      "title": "真实拖动换父级及同级排序",
+      "status": "实现候选／待同源验收",
+      "implementation_candidate": "真实拖柄/落点/CAS已接；5e1168c以lambda刷新move捕获投影并移除临时生产observer",
+      "historical_executed_evidence": "bab4e8c/run37230771244常规整支拖动、跨屏换父/undo及第二次cancel方法均完整PASS",
+      "current_verification_needed": "最终同候选全量拖动/层级/撤重/重开复验；不将专项3UI代153UI",
+      "current_candidate_android": "FINAL_FULL_PENDING_AT_5EF7087",
+      "prior_review_code_refs": [
+        "android/app/src/main/java/org/inkweft/app/StudyWorkspace.kt:338-379,1016-1042,1065-1074",
+        "android/app/src/main/java/org/inkweft/app/StudyOrganizationUi.kt:49-61",
+        "android/core-domain/src/main/kotlin/org/inkweft/core/StudyOrganization.kt:156-165"
+      ],
+      "prior_refs_note": "Static baseline pointers from f9923d43; current changed entry points are identified by candidate_fix_commits. Line numbers may shift.",
+      "external_conditions": "Target-tablet/human15min+30min and real-data upgrade remain separate NOT_RUN; applicable only to their final physical/human checks"
+    },
+    {
+      "id": "IW-B2-03",
+      "title": "整支拖动与边缘自动滚动",
+      "status": "实现候选／待同源验收",
+      "implementation_candidate": "根因已由Kotlin2.3.10/Compose1.10.5复现：callable-ref equals保留旧projection；move改lambda，不再保留临时生产observer",
+      "historical_executed_evidence": "bab4e8c/run37230771244真实跨屏目标换父、undo后第二次拖动cancel完整方法PASS，原失败专项已关闭",
+      "current_verification_needed": "最终同候选边滚/折叠反馈/整支完整性复验；源码和实际结论均绑定该次运行",
+      "current_candidate_android": "FINAL_FULL_PENDING_AT_5EF7087",
+      "prior_review_code_refs": [
+        "android/core-domain/src/main/kotlin/org/inkweft/core/StudyOrganization.kt:156-165,168-209",
+        "android/app/src/main/java/org/inkweft/app/StudyWorkspace.kt:380-394,1016-1042,367-375",
+        "android/app/src/main/java/org/inkweft/app/StudyOrganizationUi.kt:57-60"
+      ],
+      "prior_refs_note": "Static baseline pointers from f9923d43; current changed entry points are identified by candidate_fix_commits. Line numbers may shift.",
+      "external_conditions": "Target-tablet/human15min+30min and real-data upgrade remain separate NOT_RUN; applicable only to their final physical/human checks"
+    },
+    {
+      "id": "IW-B2-04",
+      "title": "图纲同结构、撤销重做与重开",
+      "status": "实现候选／待同源验收",
+      "implementation_candidate": "图纲同事务、单步撤销重做、持久顺序已接",
+      "historical_executed_evidence": "9593b92组织Room8 PASS；bab4e8c/run37230771244常规整支与跨屏换父/undo/第二次cancel真实UI PASS",
+      "current_verification_needed": "最终同候选图纲/顺序/撤重/重开及fresh202Room复验",
+      "current_candidate_android": "FINAL_FULL_PENDING_AT_5EF7087",
+      "prior_review_code_refs": [
+        "android/app/src/main/java/org/inkweft/app/StudySession.kt:113-140,162-166",
+        "android/data-local/src/main/kotlin/org/inkweft/data/StudyRepository.kt:70-74,88-118",
+        "android/data-local/src/main/kotlin/org/inkweft/data/StudyGraphSnapshot.kt:48-74",
+        "android/app/src/main/java/org/inkweft/app/StudyWorkspace.kt:858-873,918"
+      ],
+      "prior_refs_note": "Static baseline pointers from f9923d43; current changed entry points are identified by candidate_fix_commits. Line numbers may shift.",
+      "external_conditions": "Target-tablet/human15min+30min and real-data upgrade remain separate NOT_RUN; applicable only to their final physical/human checks"
+    },
+    {
+      "id": "IW-B2-05",
+      "title": "分组、框选、聚焦、布局预览",
+      "status": "实现候选／待同源验收",
+      "implementation_candidate": "框选去重/分组/聚焦/实测边界布局预览已接",
+      "historical_executed_evidence": "46d2967布局预览取消/应用/撤销及整支框选去重UI PASS；9593b92/run37217398281组织Room8 PASS；5ef7087/run37236310245真实后代预览与框选移动去重方法PASS，非全量像素验收",
+      "current_verification_needed": "当前选择反馈/布局恢复与最终像素复验；不将Room通过代原生体验",
+      "current_candidate_android": "FINAL_FULL_PENDING_AT_5EF7087",
+      "prior_review_code_refs": [
+        "android/app/src/main/java/org/inkweft/app/StudyWorkspace.kt:405-413,551,879-899,1137-1145",
+        "android/core-domain/src/main/kotlin/org/inkweft/core/StudyOrganization.kt:168-209",
+        "android/app/src/main/java/org/inkweft/app/StudyOrganizationUi.kt:14-42",
+        "android/app/src/main/java/org/inkweft/app/MindMapView.kt:377-386,437-451"
+      ],
+      "prior_refs_note": "Static baseline pointers from f9923d43; current changed entry points are identified by candidate_fix_commits. Line numbers may shift.",
+      "external_conditions": "Target-tablet/human15min+30min and real-data upgrade remain separate NOT_RUN; applicable only to their final physical/human checks"
+    },
+    {
+      "id": "IW-B2-06",
+      "title": "真实总结节点与归纳关系",
+      "status": "实现候选／待同源验收",
+      "implementation_candidate": "SUMMARY卡、归纳边与稳定总结出现位置同事务创建/撤销已接",
+      "historical_executed_evidence": "46d2967 CardTransform Room13含真实总结node/来源/撤销PASS",
+      "current_verification_needed": "当前总结入口/原卡来源/预算拒绝同源复验；旧无node缺口已关闭",
+      "current_candidate_android": "FINAL_FULL_PENDING_AT_5EF7087",
+      "prior_review_code_refs": [
+        "android/app/src/main/java/org/inkweft/app/StudyWorkspace.kt:885-887,1130-1135",
+        "android/app/src/main/java/org/inkweft/app/CardTransformDialog.kt:85-86,140-149",
+        "android/data-local/src/main/kotlin/org/inkweft/data/CardTransformRepository.kt:59-66,88-124,153-169",
+        "android/core-domain/src/main/kotlin/org/inkweft/core/Knowledge.kt:9"
+      ],
+      "prior_refs_note": "Static baseline pointers from f9923d43; current changed entry points are identified by candidate_fix_commits. Line numbers may shift.",
+      "external_conditions": "Target-tablet/human15min+30min and real-data upgrade remain separate NOT_RUN; applicable only to their final physical/human checks"
+    },
+    {
+      "id": "IW-B2-07",
+      "title": "合并拆分影响、确定分配与撤销",
+      "status": "实现候选／待同源验收",
+      "implementation_candidate": "合并拆分预览、不可变来源、旧身份明确解析及幂等撤销已接",
+      "historical_executed_evidence": "46d2967变换Room13、预览取消/确认合并/丢响应恢复及来源选择UI PASS",
+      "current_verification_needed": "当前源码合并拆分/引用/旧题保留与备份撤销同源复验",
+      "current_candidate_android": "FINAL_FULL_PENDING_AT_5EF7087",
+      "prior_review_code_refs": [
+        "android/app/src/main/java/org/inkweft/app/StudyWorkspace.kt:886,1297",
+        "android/app/src/main/java/org/inkweft/app/CardTransformDialog.kt:81-107,119-167,198-224",
+        "android/core-domain/src/main/kotlin/org/inkweft/core/CardTransform.kt:33-68",
+        "android/data-local/src/main/kotlin/org/inkweft/data/CardTransformRepository.kt:47-76,88-126,143-175"
+      ],
+      "prior_refs_note": "Static baseline pointers from f9923d43; current changed entry points are identified by candidate_fix_commits. Line numbers may shift.",
+      "external_conditions": "Target-tablet/human15min+30min and real-data upgrade remain separate NOT_RUN; applicable only to their final physical/human checks"
+    },
+    {
+      "id": "IW-B3-01",
+      "title": "父子边与语义关系边分开表达",
+      "status": "实现候选／待同源验收",
+      "implementation_candidate": "父子结构与自由语义关系独立投影/绘图已接",
+      "historical_executed_evidence": "46d2967关系投影/选中出现位置UI与线型实际位图PASS",
+      "current_verification_needed": "当前候选父子/语义视觉区分与无结构误改复验",
+      "current_candidate_android": "FINAL_FULL_PENDING_AT_5EF7087",
+      "prior_review_code_refs": [
+        "android/app/src/main/java/org/inkweft/app/StudyRelations.kt:23-58",
+        "android/app/src/main/java/org/inkweft/app/MindMapView.kt:290-330,349-350",
+        "android/app/src/main/java/org/inkweft/app/StudyWorkspace.kt:307-314"
+      ],
+      "prior_refs_note": "Static baseline pointers from f9923d43; current changed entry points are identified by candidate_fix_commits. Line numbers may shift.",
+      "external_conditions": "Target-tablet/human15min+30min and real-data upgrade remain separate NOT_RUN; applicable only to their final physical/human checks"
+    },
+    {
+      "id": "IW-B3-02",
+      "title": "虚线、方向、关系注释及显示控制",
+      "status": "实现候选／待同源验收",
+      "implementation_candidate": "实虚线/单双向/注释/显隐、CAS编辑及移除关联已接",
+      "historical_executed_evidence": "46d2967关系编辑重开/独立层级UI、线型位图、Knowledge Room20 PASS",
+      "current_verification_needed": "当前关系创建/编辑/删除/重开和宽窄可达性复验",
+      "current_candidate_android": "FINAL_FULL_PENDING_AT_5EF7087",
+      "prior_review_code_refs": [
+        "android/app/src/main/java/org/inkweft/app/KnowledgeWorkspace.kt:404-420",
+        "android/app/src/main/java/org/inkweft/app/KnowledgeRelationEditor.kt:19-77",
+        "android/app/src/main/java/org/inkweft/app/KnowledgeConnectionCard.kt:26-50",
+        "android/app/src/main/java/org/inkweft/app/KnowledgeGraph.kt:24-29"
+      ],
+      "prior_refs_note": "Static baseline pointers from f9923d43; current changed entry points are identified by candidate_fix_commits. Line numbers may shift.",
+      "external_conditions": "Target-tablet/human15min+30min and real-data upgrade remain separate NOT_RUN; applicable only to their final physical/human checks"
+    },
+    {
+      "id": "IW-B3-03",
+      "title": "关系预览、跳转与返回",
+      "status": "实现候选／待同源验收",
+      "implementation_candidate": "精确关系/冻结多来源预览、跨本跳转及详情内返回栈已接",
+      "historical_executed_evidence": "46d2967 B6实际A→B→失效原点留位→恢复返回PASS；预览重建/原图位置PASS；8d6abf5/run37232132379嵌套返回保留失效分支方法出现detached AndroidViewHolder Handler.post null，不能继承旧返回链PASS；5ef7087/run37236310245两个MapPortal方法及两个MapInteraction方法实际PASS，旧故障专项已过但最终full仍待",
+      "current_verification_needed": "当前同源返回链/失败恢复与最终完整样本复验",
+      "current_candidate_android": "FOCUSED_PORTAL_MAP_UI_PASS_FINAL_FULL_PENDING",
+      "prior_review_code_refs": [
+        "android/app/src/main/java/org/inkweft/app/KnowledgeLinkPreview.kt:28-132",
+        "android/app/src/main/java/org/inkweft/app/KnowledgeReturnAction.kt:15-22",
+        "android/app/src/main/java/org/inkweft/app/WorkspaceViewModel.kt:23-40",
+        "android/app/src/main/java/org/inkweft/app/NotebookApp.kt:60-79",
+        "android/app/src/main/java/org/inkweft/app/StudyWorkspace.kt:1353-1355"
+      ],
+      "prior_refs_note": "Static baseline pointers from f9923d43; current changed entry points are identified by candidate_fix_commits. Line numbers may shift.",
+      "external_conditions": "Target-tablet/human15min+30min and real-data upgrade remain separate NOT_RUN; applicable only to their final physical/human checks"
+    },
+    {
+      "id": "IW-B3-04",
+      "title": "正向链接、反向链接与局部关系入口",
+      "status": "实现候选／待同源验收",
+      "implementation_candidate": "正反链、局部关系图及变更观察已接；隐藏仅影响画线",
+      "historical_executed_evidence": "46d2967跨本入链/反链边界UI、KnowledgeText Room12 PASS",
+      "current_verification_needed": "当前增删刷新/目标变化及正反入口发现性复验",
+      "current_candidate_android": "FINAL_FULL_PENDING_AT_5EF7087",
+      "prior_review_code_refs": [
+        "android/app/src/main/java/org/inkweft/app/KnowledgeWorkspace.kt:304-355,383-386",
+        "android/app/src/main/java/org/inkweft/app/KnowledgeGraph.kt:16-31",
+        "android/data-local/src/main/kotlin/org/inkweft/data/KnowledgeTextRepository.kt"
+      ],
+      "prior_refs_note": "Static baseline pointers from f9923d43; current changed entry points are identified by candidate_fix_commits. Line numbers may shift.",
+      "external_conditions": "Target-tablet/human15min+30min and real-data upgrade remain separate NOT_RUN; applicable only to their final physical/human checks"
+    },
+    {
+      "id": "IW-B3-05",
+      "title": "引用、独立副本与多处呈现",
+      "status": "实现候选／待同源验收",
+      "implementation_candidate": "引用同cardId/副本新身份不带进度已接；回收影响预览、安全恢复与双路径真实入口已接",
+      "historical_executed_evidence": "9593b92/run37217398281 CardReuse Room3 PASS；57e9dc5/run37219005590真实引用/独立副本重开UI PASS；725ebcf回收恢复UI PASS",
+      "current_verification_needed": "最终同候选源更新/删除恢复/独立布局与来源复验",
+      "current_candidate_android": "FINAL_FULL_PENDING_AT_5EF7087",
+      "prior_review_code_refs": [
+        "android/app/src/main/java/org/inkweft/app/StudyWorkspace.kt:1327-1338",
+        "android/app/src/main/java/org/inkweft/app/CardReuseDialog.kt:70-101",
+        "android/app/src/main/java/org/inkweft/app/CardReuseStore.kt",
+        "android/data-local/src/main/kotlin/org/inkweft/data/CardReuseRepository.kt:18-55"
+      ],
+      "prior_refs_note": "Static baseline pointers from f9923d43; current changed entry points are identified by candidate_fix_commits. Line numbers may shift.",
+      "external_conditions": "Target-tablet/human15min+30min and real-data upgrade remain separate NOT_RUN; applicable only to their final physical/human checks"
+    },
+    {
+      "id": "IW-B3-06",
+      "title": "跨页或跨笔记复用及失效处理",
+      "status": "实现候选／待同源验收",
+      "implementation_candidate": "跨本共享内容/独立副本与稳定来源、失效不误删已接",
+      "historical_executed_evidence": "46d2967跨本失效Room及65523ff来源回收/关闭重建UI PASS；57e9dc5/run37219005590真实跨本引用/副本UI PASS",
+      "current_verification_needed": "当前跨本回溯/失效提示与最终同候选返回链复验",
+      "current_candidate_android": "FINAL_FULL_PENDING_AT_5EF7087",
+      "prior_review_code_refs": [
+        "android/data-local/src/main/kotlin/org/inkweft/data/CardReuseRepository.kt:32-50",
+        "android/app/src/main/java/org/inkweft/app/KnowledgeLinkPreview.kt:44-50,97-106,118-129",
+        "android/app/src/main/java/org/inkweft/app/StudyNavigationState.kt:36-95"
+      ],
+      "prior_refs_note": "Static baseline pointers from f9923d43; current changed entry points are identified by candidate_fix_commits. Line numbers may shift.",
+      "external_conditions": "Target-tablet/human15min+30min and real-data upgrade remain separate NOT_RUN; applicable only to their final physical/human checks"
+    },
+    {
+      "id": "IW-B4-01",
+      "title": "文档内留白及卡片旁批注区域",
+      "status": "实现候选／待同源验收",
+      "implementation_candidate": "正文留白/出现位置批注区、尺寸/折叠与溢出保护已接",
+      "historical_executed_evidence": "46d2967 PageAuthoring Room10、B6三层两留白保存重开PASS；65523ff窄屏控件PASS；8d6abf5五阶段自动断言过，但wide10截图仍在加载文档/笔迹，不证明展开留白稳定渲染；5ef7087/run37236310245新wide10已实际审阅原文/蓝笔迹/展开留白/滑条完整且无loading，narrow10无遮挡；仅该像素缺口关闭，visual末尾退出仍FAIL",
+      "current_verification_needed": "当前创建/缩小/折叠展开/重开与最终宽窄像素复验",
+      "current_candidate_android": "FINAL_FULL_PENDING_AT_5EF7087",
+      "prior_review_code_refs": [
+        "android/app/src/main/java/org/inkweft/app/InkScreen.kt:450",
+        "android/app/src/main/java/org/inkweft/app/DocumentWhitespacePanel.kt:67",
+        "android/app/src/main/java/org/inkweft/app/DocumentWhitespacePanel.kt:91",
+        "android/app/src/main/java/org/inkweft/app/DocumentWhitespacePanel.kt:97",
+        "android/app/src/main/java/org/inkweft/app/BoundAnnotationPanel.kt:38",
+        "android/core-domain/src/main/kotlin/org/inkweft/core/DocumentWhitespace.kt:15",
+        "android/core-domain/src/main/kotlin/org/inkweft/core/PageAuthoring.kt:55"
+      ],
+      "prior_refs_note": "Static baseline pointers from f9923d43; current changed entry points are identified by candidate_fix_commits. Line numbers may shift.",
+      "external_conditions": "Target-tablet/human15min+30min and real-data upgrade remain separate NOT_RUN; applicable only to their final physical/human checks"
+    },
+    {
+      "id": "IW-B4-02",
+      "title": "手写绑定、解绑与跟随",
+      "status": "实现候选／待同源验收",
+      "implementation_candidate": "稳定位置绑定/单次投影/解绑冻结已接；按真实可见触区避开浮动控件，保留实际原生事件与数据断言",
+      "historical_executed_evidence": "eaa8a7d/run37227868314 BoundAnnotationFlow完整方法PASS，含原生双指接收/缩放、作者与来源/层归属/单次投影、解绑后移动及重开；5ef7087/run37236310245该完整绑定组合方法再次PASS；独立B6 visual在窄屏批注末尾退出超时，不能据专项过而关闭该问题",
+      "current_verification_needed": "最终同候选绑定组合复验；真实持笔仍列B6-02，不因模拟输入通过代签",
+      "current_candidate_android": "FOCUSED_BOUND_FLOW_PASS_B6_VISUAL_EXIT_FAIL_FINAL_FULL_PENDING",
+      "prior_review_code_refs": [
+        "android/app/src/main/java/org/inkweft/app/StudyWorkspace.kt:1121",
+        "android/app/src/main/java/org/inkweft/app/InkScreen.kt:740",
+        "android/app/src/main/java/org/inkweft/app/BoundAnnotationPanel.kt:31",
+        "android/app/src/main/java/org/inkweft/app/BoundAnnotationPanel.kt:53",
+        "android/core-domain/src/main/kotlin/org/inkweft/core/BoundAnnotations.kt:18",
+        "android/core-domain/src/main/kotlin/org/inkweft/core/BoundAnnotations.kt:27",
+        "android/app/src/main/java/org/inkweft/app/AnnotationPainter.kt:18"
+      ],
+      "prior_refs_note": "Static baseline pointers from f9923d43; current changed entry points are identified by candidate_fix_commits. Line numbers may shift.",
+      "external_conditions": "Target-tablet/human15min+30min and real-data upgrade remain separate NOT_RUN; applicable only to their final physical/human checks"
+    },
+    {
+      "id": "IW-B4-03",
+      "title": "手写与回忆视图的显示边界",
+      "status": "实现候选／待同源验收",
+      "implementation_candidate": "作者墨迹/attempt作答隔离、持久原文门禁已接",
+      "historical_executed_evidence": "45ccb74原生作答/遮罩UI PASS；57e9dc5/run37219005590当前原页往返及失效来源2UI PASS，同attempt/作者数据边界核验",
+      "current_verification_needed": "最终同候选原文/作答隔离与native_recall_reopen复验；专项2UI不代完整五阶段",
+      "current_candidate_android": "FINAL_FULL_PENDING_AT_5EF7087",
+      "prior_review_code_refs": [
+        "android/app/src/main/java/org/inkweft/app/BoundAnnotationPanel.kt:36",
+        "android/app/src/main/java/org/inkweft/app/RecallAnswerPad.kt:16",
+        "android/app/src/main/java/org/inkweft/app/RecallStudyViewModel.kt:99",
+        "android/app/src/main/java/org/inkweft/app/RecallStudyViewModel.kt:139",
+        "android/app/src/main/java/org/inkweft/app/StudyWorkspace.kt:508",
+        "android/app/src/main/java/org/inkweft/app/RecallWindowShield.kt:45"
+      ],
+      "prior_refs_note": "Static baseline pointers from f9923d43; current changed entry points are identified by candidate_fix_commits. Line numbers may shift.",
+      "external_conditions": "Target-tablet/human15min+30min and real-data upgrade remain separate NOT_RUN; applicable only to their final physical/human checks"
+    },
+    {
+      "id": "IW-B4-04",
+      "title": "新建、命名、排序、显隐、锁定、删除及内容转层",
+      "status": "实现候选／待同源验收",
+      "implementation_candidate": "图层创建/命名/排序/显隐/锁定/明确删除或转层、当前层失效停笔已接",
+      "historical_executed_evidence": "46d2967 PageAuthoring Room10 PASS；65523ff窄屏层控件及相关像素PASS",
+      "current_verification_needed": "当前删层/转层/跨锁层整体拒绝/停笔与重开交互复验",
+      "current_candidate_android": "FINAL_FULL_PENDING_AT_5EF7087",
+      "prior_review_code_refs": [
+        "android/app/src/main/java/org/inkweft/app/InkScreen.kt:449",
+        "android/app/src/main/java/org/inkweft/app/PageLayersPanel.kt:31",
+        "android/app/src/main/java/org/inkweft/app/PageLayersPanel.kt:38",
+        "android/app/src/main/java/org/inkweft/app/PageLayersPanel.kt:59",
+        "android/core-domain/src/main/kotlin/org/inkweft/core/UserLayers.kt:27",
+        "android/core-domain/src/main/kotlin/org/inkweft/core/UserLayers.kt:47",
+        "android/core-domain/src/main/kotlin/org/inkweft/core/UserLayers.kt:69",
+        "android/app/src/main/java/org/inkweft/app/CanvasSelection.kt:106"
+      ],
+      "prior_refs_note": "Static baseline pointers from f9923d43; current changed entry points are identified by candidate_fix_commits. Line numbers may shift.",
+      "external_conditions": "Target-tablet/human15min+30min and real-data upgrade remain separate NOT_RUN; applicable only to their final physical/human checks"
+    },
+    {
+      "id": "IW-B4-05",
+      "title": "图层编辑隔离、恢复与导出",
+      "status": "实现候选／待同源验收",
+      "implementation_candidate": "隐藏/锁定编辑隔离、完整备份与可见导出分离已接",
+      "historical_executed_evidence": "46d2967隐藏原图/千笔延迟帧/缩略图及3项导出失败重试UI PASS；备份42表一致",
+      "current_verification_needed": "当前同源备份/撤销/可见导出范围复验；不能把交互降级当完整导出",
+      "current_candidate_android": "FINAL_FULL_PENDING_AT_5EF7087",
+      "prior_review_code_refs": [
+        "android/app/src/main/java/org/inkweft/app/InkViewModel.kt:22",
+        "android/data-local/src/main/kotlin/org/inkweft/data/PageAuthoringRepository.kt:68",
+        "android/data-local/src/main/kotlin/org/inkweft/data/PageAuthoringRepository.kt:109",
+        "android/app/src/main/java/org/inkweft/app/PageAuthoringViewModel.kt:46",
+        "android/app/src/main/java/org/inkweft/app/PageAuthoringViewModel.kt:63",
+        "android/data-local/src/main/kotlin/org/inkweft/data/LibraryBackupRepository.kt:155",
+        "android/data-local/src/main/kotlin/org/inkweft/data/LibraryBackupRepository.kt:289",
+        "android/app/src/main/java/org/inkweft/app/VisiblePageExport.kt:25",
+        "android/app/src/main/java/org/inkweft/app/VisiblePageExport.kt:98"
+      ],
+      "prior_refs_note": "Static baseline pointers from f9923d43; current changed entry points are identified by candidate_fix_commits. Line numbers may shift.",
+      "external_conditions": "Target-tablet/human15min+30min and real-data upgrade remain separate NOT_RUN; applicable only to their final physical/human checks"
+    },
+    {
+      "id": "IW-B4-06",
+      "title": "图层与卡片绑定协同",
+      "status": "实现候选／待同源验收",
+      "implementation_candidate": "出现位置绑定与层序/显隐协同已接；a5d950c补保护层原生组合",
+      "historical_executed_evidence": "eaa8a7d/run37227868314绑定/移动/重排/缩放/解绑/重开及保护层归属完整方法PASS；既有Room与千笔隐藏像素来源保留；5ef7087/run37236310245完整绑定组合方法PASS；B6窄屏批注退出超时仍待修复",
+      "current_verification_needed": "最终同候选层序/显隐/来源/重开组合及40图复验",
+      "current_candidate_android": "FOCUSED_BOUND_FLOW_PASS_B6_VISUAL_EXIT_FAIL_FINAL_FULL_PENDING",
+      "prior_review_code_refs": [
+        "android/core-domain/src/main/kotlin/org/inkweft/core/PageAuthoring.kt:9",
+        "android/core-domain/src/main/kotlin/org/inkweft/core/BoundAnnotations.kt:6",
+        "android/app/src/main/java/org/inkweft/app/MindMapView.kt:371",
+        "android/data-local/src/main/kotlin/org/inkweft/data/PageAuthoringRepository.kt:95",
+        "android/app/src/main/java/org/inkweft/app/StudyWorkspace.kt:1121"
+      ],
+      "prior_refs_note": "Static baseline pointers from f9923d43; current changed entry points are identified by candidate_fix_commits. Line numbers may shift.",
+      "external_conditions": "Target-tablet/human15min+30min and real-data upgrade remain separate NOT_RUN; applicable only to their final physical/human checks"
+    },
+    {
+      "id": "IW-B5-01",
+      "title": "原位遮挡与渐进揭示",
+      "status": "实现候选／待同源验收",
+      "implementation_candidate": "三题型原位遮挡/渐揭与窗口隔离已接；c0c77b9已修取证样例并增加真实评分帧",
+      "historical_executed_evidence": "45ccb74原位回忆5UI PASS；9593b92/run37217398281 native_recall PASS且7图已审：完整公式遮罩、唯一挖空、六评分同屏可见",
+      "current_verification_needed": "最终同候选五阶段40图逐张审阅；这7图不代表全部题态或真笔体验",
+      "current_candidate_android": "FINAL_FULL_PENDING_AT_5EF7087",
+      "prior_review_code_refs": [
+        "android/app/src/main/java/org/inkweft/app/BranchReviewDialog.kt:133",
+        "android/app/src/main/java/org/inkweft/app/BranchReviewDialog.kt:277",
+        "android/app/src/main/java/org/inkweft/app/RecallStudyDialog.kt:88",
+        "android/app/src/main/java/org/inkweft/app/RecallMaskProjection.kt:59",
+        "android/app/src/main/java/org/inkweft/app/RecallMaskProjection.kt:79",
+        "android/app/src/main/java/org/inkweft/app/RecallMaskProjection.kt:114",
+        "android/app/src/main/java/org/inkweft/app/RecallWindowShield.kt:45",
+        "android/data-local/src/main/kotlin/org/inkweft/data/RecallStudyRepository.kt:127"
+      ],
+      "prior_refs_note": "Static baseline pointers from f9923d43; current changed entry points are identified by candidate_fix_commits. Line numbers may shift.",
+      "external_conditions": "Target-tablet/human15min+30min and real-data upgrade remain separate NOT_RUN; applicable only to their final physical/human checks"
+    },
+    {
+      "id": "IW-B5-02",
+      "title": "回答、对照与上下文返回",
+      "status": "实现候选／待同源验收",
+      "implementation_candidate": "固定内容/来源版本与独立作答恢复已接；3264ccb补当前原页多源选择/提示门禁/同题返回",
+      "historical_executed_evidence": "9593b92封存对照/外来来源拒绝UI PASS；57e9dc5/run37219005590当前原页同题返回、回收来源保留封存2UI PASS",
+      "current_verification_needed": "最终同候选同attempt文字/手写草稿、提示及作者原迹往返和冷重开复验",
+      "current_candidate_android": "FINAL_FULL_PENDING_AT_5EF7087",
+      "prior_review_code_refs": [
+        "android/app/src/main/java/org/inkweft/app/RecallStudyDialog.kt:90",
+        "android/app/src/main/java/org/inkweft/app/RecallStudyDialog.kt:97",
+        "android/app/src/main/java/org/inkweft/app/RecallStudyDialog.kt:111",
+        "android/app/src/main/java/org/inkweft/app/RecallStudyDialog.kt:130",
+        "android/app/src/main/java/org/inkweft/app/RecallContextPanel.kt:308",
+        "android/app/src/main/java/org/inkweft/app/StudySnapshotViewer.kt:20",
+        "android/app/src/main/java/org/inkweft/app/RecallStudyViewModel.kt:48",
+        "android/app/src/main/java/org/inkweft/app/RecallStudyViewModel.kt:71"
+      ],
+      "prior_refs_note": "Static baseline pointers from f9923d43; current changed entry points are identified by candidate_fix_commits. Line numbers may shift.",
+      "external_conditions": "Target-tablet/human15min+30min and real-data upgrade remain separate NOT_RUN; applicable only to their final physical/human checks"
+    },
+    {
+      "id": "IW-B5-03",
+      "title": "当前卡、分支及集合范围",
+      "status": "实现候选／待同源验收",
+      "implementation_candidate": "当前卡/分支/集合去重题序与共享排程已接；workMode回调lambda读取最新范围，已去临时observer",
+      "historical_executed_evidence": "9593b92实际两Collection共享question/排程Room PASS；bab4e8c/run37230771244新挂载后新增分支与decoy范围回忆UI PASS",
+      "current_verification_needed": "最终同候选集合/分支入口、作者题序、fresh202Room复验",
+      "current_candidate_android": "FINAL_FULL_PENDING_AT_5EF7087",
+      "prior_review_code_refs": [
+        "android/app/src/main/java/org/inkweft/app/StudyWorkspace.kt:472",
+        "android/app/src/main/java/org/inkweft/app/StudyWorkspace.kt:953",
+        "android/app/src/main/java/org/inkweft/app/KnowledgeWorkspace.kt:372",
+        "android/data-local/src/main/kotlin/org/inkweft/data/BranchReviewRepository.kt:27",
+        "android/data-local/src/main/kotlin/org/inkweft/data/BranchReviewRepository.kt:76",
+        "android/data-local/src/main/kotlin/org/inkweft/data/BranchReviewRepository.kt:181",
+        "android/core-domain/src/main/kotlin/org/inkweft/core/BranchReview.kt:158",
+        "android/data-local/src/main/kotlin/org/inkweft/data/RecallStudyRepository.kt:27",
+        "android/data-local/src/main/kotlin/org/inkweft/data/RecallStorage.kt:12"
+      ],
+      "prior_refs_note": "Static baseline pointers from f9923d43; current changed entry points are identified by candidate_fix_commits. Line numbers may shift.",
+      "external_conditions": "Target-tablet/human15min+30min and real-data upgrade remain separate NOT_RUN; applicable only to their final physical/human checks"
+    },
+    {
+      "id": "IW-B5-04",
+      "title": "到期队列与调度结果",
+      "status": "实现候选／待同源验收",
+      "implementation_candidate": "SM2-IW1调用MIT SuperMemo2核、幂等评分/正式与练习分离已接",
+      "historical_executed_evidence": "9593b92/run37217398281 RecallStudy Room19 PASS，含幂等/丢响应/提示cap/跨日/默认时区变化及数据库重开；DST旧JVM PASS",
+      "current_verification_needed": "最终同候选正式队列/评分重试与fresh Room复验；算法仍SM2-IW1，不称FSRS",
+      "current_candidate_android": "FINAL_FULL_PENDING_AT_5EF7087",
+      "prior_review_code_refs": [
+        "android/app/src/main/java/org/inkweft/app/RecallStudyDialog.kt:69",
+        "android/app/src/main/java/org/inkweft/app/RecallStudyDialog.kt:103",
+        "android/data-local/src/main/kotlin/org/inkweft/data/RecallStudyRepository.kt:87",
+        "android/data-local/src/main/kotlin/org/inkweft/data/RecallStudyRepository.kt:155",
+        "android/data-local/src/main/kotlin/org/inkweft/data/RecallStudyRepository.kt:338",
+        "android/app/src/main/java/org/inkweft/app/RecallStudyViewModel.kt:164",
+        "android/core-domain/src/main/kotlin/org/inkweft/core/Sm2Schedule.kt:13",
+        "android/core-domain/src/main/kotlin/org/inkweft/core/RecallStudy.kt:73"
+      ],
+      "prior_refs_note": "Static baseline pointers from f9923d43; current changed entry points are identified by candidate_fix_commits. Line numbers may shift.",
+      "external_conditions": "Target-tablet/human15min+30min and real-data upgrade remain separate NOT_RUN; applicable only to their final physical/human checks"
+    },
+    {
+      "id": "IW-B5-05",
+      "title": "历史、筛选与顺序",
+      "status": "实现候选／待同源验收",
+      "implementation_candidate": "到期/题型/提示/日期筛选、分页历史与更正已接",
+      "historical_executed_evidence": "9593b92/run37217398281历史固定问法/筛选/分页/只读查询及换时区重开Room PASS",
+      "current_verification_needed": "当前窗口日期筛选/队列统计及最终同候选UI和fresh Room复验",
+      "current_candidate_android": "FINAL_FULL_PENDING_AT_5EF7087",
+      "prior_review_code_refs": [
+        "android/app/src/main/java/org/inkweft/app/RecallStudyDialog.kt:114",
+        "android/app/src/main/java/org/inkweft/app/RecallStudyDialog.kt:135",
+        "android/data-local/src/main/kotlin/org/inkweft/data/RecallStudyQueries.kt:38",
+        "android/data-local/src/main/kotlin/org/inkweft/data/RecallStudyQueries.kt:40",
+        "android/data-local/src/main/kotlin/org/inkweft/data/RecallStorage.kt:40"
+      ],
+      "prior_refs_note": "Static baseline pointers from f9923d43; current changed entry points are identified by candidate_fix_commits. Line numbers may shift.",
+      "external_conditions": "Target-tablet/human15min+30min and real-data upgrade remain separate NOT_RUN; applicable only to their final physical/human checks"
+    },
+    {
+      "id": "IW-B5-06",
+      "title": "调度与数据规则",
+      "status": "实现候选／待同源验收",
+      "implementation_candidate": "版本冻结/变化复核/提示cap/练习不调度/撤销更正已接；3264ccb补持久skip/重开场景",
+      "historical_executed_evidence": "9593b92持久skip/版本门禁/撤销更正Room PASS；725ebcf回收恢复UI PASS；b2f3306增强作答墨迹/原文提示/modifiedAt/回执备份断言已在8d6abf5/run37232132379 fresh202Room中实际通过；该full两条题型编辑旋转UI超时，修复候选仍待同源全量；5ef7087/run37236310245四条编辑旋转UI含原失败两条均实际PASS，仍不代最终full",
+      "current_verification_needed": "最终同候选fresh202继续覆盖已实跑增强备份及已专项通过的题目/配置旋转门禁；不能用Room或4条旋转UI通过代替全量UI通过",
+      "current_candidate_android": "FOCUSED_ROTATION_UI_PASS_FINAL_FULL_PENDING",
+      "prior_review_code_refs": [
+        "android/data-local/src/main/kotlin/org/inkweft/data/RecallStudyRepository.kt:75",
+        "android/data-local/src/main/kotlin/org/inkweft/data/RecallStudyRepository.kt:102",
+        "android/data-local/src/main/kotlin/org/inkweft/data/RecallStudyRepository.kt:163",
+        "android/data-local/src/main/kotlin/org/inkweft/data/RecallStudyRepository.kt:173",
+        "android/data-local/src/main/kotlin/org/inkweft/data/RecallStudyRepository.kt:187",
+        "android/data-local/src/main/kotlin/org/inkweft/data/RecallStudyQueries.kt:31",
+        "android/data-local/src/main/kotlin/org/inkweft/data/BranchReviewRepository.kt:181",
+        "android/app/src/main/java/org/inkweft/app/KnowledgeWorkspace.kt:378",
+        "android/app/src/main/java/org/inkweft/app/KnowledgeWorkspace.kt:458",
+        "android/app/src/main/java/org/inkweft/app/RecallQuestionEditor.kt:118",
+        "android/core-domain/src/main/kotlin/org/inkweft/core/RecallStudy.kt:102"
+      ],
+      "prior_refs_note": "Static baseline pointers from f9923d43; current changed entry points are identified by candidate_fix_commits. Line numbers may shift.",
+      "external_conditions": "Target-tablet/human15min+30min and real-data upgrade remain separate NOT_RUN; applicable only to their final physical/human checks"
+    },
+    {
+      "id": "IW-B6-01",
+      "title": "完整学习流程",
+      "status": "实现候选／待同源验收",
+      "implementation_candidate": "四个收口欠实现及原生输入两处问题均已有实现与绑定来源专项通过；固定完整样本与五阶段链保持",
+      "historical_executed_evidence": "bab4e8c/run37230771244当时3UI全过；此前eaa8a7d绑定完整方法过；旧130UI中127过/180Room及分阶段B6证据仍各归原源；首次full8d6abf5/run37232132379实际153UI中149过/4失败、fresh202Room全过、同库五阶段通过/39PNG；wide10加载帧使视觉收口仍未完成；5ef7087/run37236310245定向11/11UI通过、Room新执行0复用202、prepare/reopen通过，visual末尾退出FAIL且两回忆阶段NOT_RUN_FOCUSED",
+      "current_verification_needed": "最终同候选153UI＋fresh202Room＋同一固定库五阶段40PNG仍待实跑，不能拼专项/历史为全量PASS",
+      "current_candidate_android": "FOCUSED_11_UI_PASS_B6_VISUAL_FAIL_FINAL_FULL_PENDING",
+      "prior_review_code_refs": [
+        "android/app/src/androidTest/java/org/inkweft/app/SixBatchAcceptanceTest.kt:38-177",
+        "android/app/src/androidTest/java/org/inkweft/app/SixBatchNativeRecallTest.kt:72-179",
+        "android/app/src/androidTest/java/org/inkweft/app/SixBatchFixture.kt:50-280"
+      ],
+      "prior_refs_note": "Static baseline pointers from f9923d43; current changed entry points are identified by candidate_fix_commits. Line numbers may shift.",
+      "external_conditions": "Target-tablet/human15min+30min and real-data upgrade remain separate NOT_RUN; applicable only to their final physical/human checks"
+    },
+    {
+      "id": "IW-B6-02",
+      "title": "目标平板与真实手写",
+      "status": "外部待验／NOT_RUN",
+      "implementation_candidate": "目标vivo iPA2673/API36、15分钟持笔/30分钟学习及热状态交接已列",
+      "historical_executed_evidence": "本轮云端API35模拟器有实际结果；目标平板/真人全部NOT_RUN",
+      "current_verification_needed": "外部：另获授权真平板与真人连续15/30分钟，掌触/压感/倾斜适用项和热状态",
+      "current_candidate_android": "PHYSICAL_DEVICE_NOT_RUN",
+      "prior_review_code_refs": [
+        "android/verification/six-batch-fixture-20261004/PHYSICAL-DEVICE-HANDOFF.md:1-59"
+      ],
+      "prior_refs_note": "Static baseline pointers from f9923d43; current changed entry points are identified by candidate_fix_commits. Line numbers may shift.",
+      "external_conditions": "Target-tablet/human15min+30min and real-data upgrade remain separate NOT_RUN; applicable only to their final physical/human checks"
+    },
+    {
+      "id": "IW-B6-03",
+      "title": "容量与性能",
+      "status": "实现候选／待同源验收",
+      "implementation_candidate": "固定12页/96卡/三图各120节点/千笔十万点已实测；db7d768纠正容量文案",
+      "historical_executed_evidence": "46d2967固定12页/96卡/360节点/千笔十万点压力与原件超限PASS；9593b92/run37217398281容量Room7/组织Room8及容量提示3UI PASS；8d6abf5/run37232132379同样本五阶段与fresh容量/组织Room再次通过，样本未缩小；五阶段执行约237秒不等同连续15/30分钟热稳定",
+      "current_verification_needed": "最终同候选固定规模耗时/内存、容量边界与像素复验；真平板热状态仍外部NOT_RUN",
+      "current_candidate_android": "FINAL_FULL_PENDING_AT_5EF7087",
+      "prior_review_code_refs": [
+        "android/app/src/main/java/org/inkweft/app/StudyCapacityPanel.kt:16-55,75-110",
+        "android/data-local/src/main/kotlin/org/inkweft/data/StudyRepository.kt",
+        "android/app/src/androidTest/java/org/inkweft/app/SixBatchAcceptanceTest.kt:41-58,137-153",
+        "android/app/src/androidTest/assets/six-batch-fixture-v1.json"
+      ],
+      "prior_refs_note": "Static baseline pointers from f9923d43; current changed entry points are identified by candidate_fix_commits. Line numbers may shift.",
+      "external_conditions": "Target-tablet/human15min+30min and real-data upgrade remain separate NOT_RUN; applicable only to their final physical/human checks"
+    },
+    {
+      "id": "IW-B6-04",
+      "title": "备份恢复与中断恢复",
+      "status": "实现候选／待同源验收",
+      "implementation_candidate": "全表备份/中断回执已接；b2f3306增强既有Room方法验证作答墨迹/原文提示/modifiedAt/回执恢复，方法总数仍202",
+      "historical_executed_evidence": "旧46d2967备份42表/冷重开及9593b92现有202Room已过；8fdb373集成为b2f3306后，增强备份已在8d6abf5/run37232132379 fresh202中实际通过，RecallStudy19/19含完整作答/提示/modifiedAt/回执恢复；同库backup及native_recall_reopen阶段通过，后者当时没有PNG；5ef7087/run37236310245只有prepare/reopen通过，Room新执行0复用上述fresh202，native_recall_reopen未选执行",
+      "current_verification_needed": "最终修复同候选fresh202与五阶段重跑；第40张新增cold-reopen图只证明资料页已渲染，回忆记录一致性继续依靠现有测试/manifest；真实用户库覆盖升级NOT_RUN",
+      "current_candidate_android": "FINAL_FULL_PENDING_AT_5EF7087",
+      "prior_review_code_refs": [
+        "android/data-local/src/main/kotlin/org/inkweft/data/LibraryBackupRepository.kt:31-113,115-211",
+        "android/app/src/androidTest/java/org/inkweft/app/SixBatchAcceptanceTest.kt:159-177,186-213",
+        "android/app/src/androidTest/java/org/inkweft/app/RecallDurableRecoveryTest.kt",
+        "android/app/src/androidTest/java/org/inkweft/app/SixBatchNativeRecallTest.kt:157-179"
+      ],
+      "prior_refs_note": "Static baseline pointers from f9923d43; current changed entry points are identified by candidate_fix_commits. Line numbers may shift.",
+      "external_conditions": "Target-tablet/human15min+30min and real-data upgrade remain separate NOT_RUN; applicable only to their final physical/human checks"
+    },
+    {
+      "id": "IW-B6-05",
+      "title": "可发现性与视觉收口",
+      "status": "实现候选／待同源验收",
+      "implementation_candidate": "宽窄界面整改、主入口个性化与40张组合取证候选已接",
+      "historical_executed_evidence": "65523ff五张375dp/1.6图相关3项P1关闭；9593b92七张回忆图及725ebcf回收影响图已审，无该组新阻断；工具偏好3UI已过；8d6abf5/run37232132379实际39PNG完整性已验，旧窄屏P1仍关闭，但wide10仍loading，不能算展开留白完成视觉证据；其他题态仍不得由局部图泛化；5ef7087/run37236310245新wide10/narrow10实际像素审阅关闭原loading/遮挡缺口，narrow12仅证明X可见；32图完整性通过但visual阶段退出超时FAIL",
+      "current_verification_needed": "修复并实跑窄屏批注末尾退出；新wide10像素缺口仅在该源关闭，最终同候选40图及宽窄/大字/错误态/发现性仍需完整审阅；新增cold-reopen图仅为资料页，不证明回忆记录一致性",
+      "current_candidate_android": "WIDE10_PIXEL_GAP_CLOSED_B6_VISUAL_EXIT_FAIL_FINAL_FULL_PENDING",
+      "prior_review_code_refs": [
+        "android/app/src/androidTest/java/org/inkweft/app/SixBatchVisualTest.kt:77-143",
+        "android/app/src/androidTest/java/org/inkweft/app/SixBatchNativeRecallTest.kt:72-179",
+        "android/verification/six-batches-v11-20261004/ci-37212713015/result.json"
+      ],
+      "prior_refs_note": "Static baseline pointers from f9923d43; current changed entry points are identified by candidate_fix_commits. Line numbers may shift.",
+      "external_conditions": "Target-tablet/human15min+30min and real-data upgrade remain separate NOT_RUN; applicable only to their final physical/human checks"
+    },
+    {
+      "id": "IW-B6-06",
+      "title": "发布范围与遗留项说明",
+      "status": "实现候选／待同源验收",
+      "implementation_candidate": "候选v69/Room16；move/workMode回调lambda已接且临时生产observer移除；b2f3306已集成增强备份回归",
+      "historical_executed_evidence": "bab4e8c（本地5c621b0）/run37230771244专项3UI全过；eaa8a7d绑定完整方法过；首次full8d6abf5/run37232132379真实149/153UI、fresh202/202Room、五阶段39PNG，总体FAIL；后续本地1a84afc/公开5ef7087修复候选尚不能继承该full为完成；5ef7087/run37236310245专项11UI通过，总体仍因B6 visual退出超时FAIL，native两阶段未跑",
+      "current_verification_needed": "冻结最终构件并执行153UI/fresh202Room/五阶段40PNG后回填37项；未发布，真平板/真实库升级NOT_RUN",
+      "current_candidate_android": "FOCUSED_11_UI_PASS_B6_VISUAL_FAIL_FINAL_FULL_PENDING",
+      "prior_review_code_refs": [
+        "android/app/build.gradle.kts:15-22",
+        "SIX-BATCH-PLAN-v1.1.md:16节",
+        "android/verification/six-batch-fixture-20261004/status.json",
+        "android/verification/six-batch-fixture-20261004/PHYSICAL-DEVICE-HANDOFF.md"
+      ],
+      "prior_refs_note": "Static baseline pointers from f9923d43; current changed entry points are identified by candidate_fix_commits. Line numbers may shift.",
+      "external_conditions": "Target-tablet/human15min+30min and real-data upgrade remain separate NOT_RUN; applicable only to their final physical/human checks"
+    }
+  ],
+  "current_focused_checkpoint": {
+    "reported_at_utc": "2026-10-04T21:49:00Z",
+    "source_short": "5ef7087",
+    "source": "5ef7087b7da678296180ad6951ac75c6ed7ba849",
+    "matching_local_source": "1a84afc2cdf7524ee4e6333815351c0515cd5d2f",
+    "tree": "2419680f5a996e0cdc17e16d7d9bca4fad0a3c60",
+    "run": 37236310245,
+    "url": "https://github.com/InkWeftDevs/InkWeft/actions/runs/37236310245",
+    "status_at_checkpoint": "FAILURE_B6_VISUAL_WITH_11_UI_PASS",
+    "ui": {
+      "executed": 11,
+      "passed": 11,
+      "failed": 0,
+      "method_results": [
+        {
+          "selection": "org.inkweft.app.RecallQuestionEditorUiTest#rotationPreservesPromptKindAndExplicitlyClearedClozeDraft",
+          "status": "PASS",
+          "elapsed_seconds": 15.08,
+          "file": "11316016722/android/build/evidence/app-000/instrumentation.txt",
+          "sha256": "7eff861b7ddeb63cb064b7ffa199454e6d500f1350365a6823ac5e2bbe76bfc7"
+        },
+        {
+          "selection": "org.inkweft.app.RecallQuestionEditorUiTest#rotationAfterBodyChangeDoesNotApplyOldClozesToNewValidOffsets",
+          "status": "PASS",
+          "elapsed_seconds": 14.529,
+          "file": "11316016722/android/build/evidence/app-001/instrumentation.txt",
+          "sha256": "dc8d1a81995d2f6c884d2f06377dd54c7002d0c220bd32d3fac3c8628ad0b451"
+        },
+        {
+          "selection": "org.inkweft.app.RecallQuestionEditorUiTest#rotationAfterQuestionChangeCannotOverwriteNewPromptWithOldDraft",
+          "status": "PASS",
+          "elapsed_seconds": 13.538,
+          "file": "11316016722/android/build/evidence/app-002/instrumentation.txt",
+          "sha256": "4843850fd456e70d770f71cbd10608771fabc5744656de548d0af47d52a024f6"
+        },
+        {
+          "selection": "org.inkweft.app.RecallQuestionEditorUiTest#rotationAfterConfigurationChangeCannotResetNewMasksOrSchedule",
+          "status": "PASS",
+          "elapsed_seconds": 13.3,
+          "file": "11316016722/android/build/evidence/app-003/instrumentation.txt",
+          "sha256": "c6dd8917b5c8575cd25e3021ceabc844658dbc0846780f262fbee7aa18474d2e"
+        },
+        {
+          "selection": "org.inkweft.app.MapPortalUiTest#specifiedBranchCancelCreateReadNavigateRotateAndReturnKeepAuthorContent",
+          "status": "PASS",
+          "elapsed_seconds": 22.214,
+          "file": "11316016722/android/build/evidence/app-004/instrumentation.txt",
+          "sha256": "c350ed62936925123cdf0bfd965daa7bb9e61162be53ae31d131caf12764cf9e"
+        },
+        {
+          "selection": "org.inkweft.app.MapPortalUiTest#nestedReturnKeepsAnUnavailableBranchInsteadOfExpandingItsMap",
+          "status": "PASS",
+          "elapsed_seconds": 16.041,
+          "file": "11316016722/android/build/evidence/app-005/instrumentation.txt",
+          "sha256": "fc00a7b76efbe68cfcf1c220bc5a2280b858c2b34c5fc7ff4750f6ee6e4b1652"
+        },
+        {
+          "selection": "org.inkweft.app.MapInteractionUiTest#selectionRenameReadingAndMapMenusKeepTheirScope",
+          "status": "PASS",
+          "elapsed_seconds": 18.324,
+          "file": "11316016722/android/build/evidence/app-006/instrumentation.txt",
+          "sha256": "f01fe8f44276b7fc5c2279b9df1453a1e8277595282f1b50ca2e3ee6f140995d"
+        },
+        {
+          "selection": "org.inkweft.app.MapInteractionUiTest#branchBadgeAndSourceAreSeparateTargets",
+          "status": "PASS",
+          "elapsed_seconds": 14.076,
+          "file": "11316016722/android/build/evidence/app-007/instrumentation.txt",
+          "sha256": "68e4e4977805ca3bb82efe187f62ce079b628cee4af146fc9291dbf8dcb22f51"
+        },
+        {
+          "selection": "org.inkweft.app.StudyOrganizationUiTest#nativeMapPreviewsEveryDescendantAndMarqueeMovementDeduplicatesBranches",
+          "status": "PASS",
+          "elapsed_seconds": 9.081,
+          "file": "11316016722/android/build/evidence/app-008/instrumentation.txt",
+          "sha256": "de9e0b75b81d1b909678ed5d8ea6a5ed78c874a0624a9a973745501fc320d7e4"
+        },
+        {
+          "selection": "org.inkweft.app.BoundAnnotationFlowUiTest#bindMoveReorderZoomDetachAndReopenKeepOneTransformAndProtectedLayerOwnership",
+          "status": "PASS",
+          "elapsed_seconds": 16.037,
+          "file": "11316016722/android/build/evidence/app-009/instrumentation.txt",
+          "sha256": "8087c6ee800d2212c4d73984dcb020c46e1dc43d1b8d38e5f1948658d31093f8"
+        },
+        {
+          "selection": "org.inkweft.app.SelectionStudyUiTest#excerptCreatesSharedCardAndReturnsToSource",
+          "status": "PASS",
+          "elapsed_seconds": 17.162,
+          "file": "11316016722/android/build/evidence/app-010/instrumentation.txt",
+          "sha256": "5815339e66bdca3718e569a214360a4711727a00c71a01eda91b58d23ef38e5b"
+        }
+      ]
+    },
+    "room_new_executed": 0,
+    "room_new_passed": 0,
+    "room_reused_source": "8d6abf57328f0d377d3fab6a6eae010e0a2c8336",
+    "room_reused_source_run": 37232132379,
+    "room_reused_methods": 202,
+    "room_reuse_exact_inputs_and_classes_verified": true,
+    "b6": {
+      "status": "FAILED",
+      "selected_phases": 3,
+      "passed": 2,
+      "prepare": "PASS",
+      "reopen": "PASS",
+      "visual": "FAILED",
+      "native_recall": "NOT_RUN_FOCUSED",
+      "native_recall_reopen": "NOT_RUN_FOCUSED",
+      "new_png": 32,
+      "visual_png": 24,
+      "run_id": "1a22d1b6-6563-418b-a585-886f4fe34fd8",
+      "same_source_library_spec_apk": true,
+      "image_integrity": "ALL32_SHA_SIZE_DECODE_PASS",
+      "visual_failure": {
+        "phase_status": "FAILED",
+        "instrumentation_file": "11316016722/android/build/evidence/six-batch-fixture/visual-instrumentation.log",
+        "instrumentation_sha256": "f7ab5e07d2f4bc69e7ec0169e628fe2c6d93404e3a11c53f45bdc1d910e86b06",
+        "exception": "ComposeTimeoutException after30000ms waiting bound-annotation tag to disappear after native BACK",
+        "helper": "SixBatchVisualTest.kt:40",
+        "call_site": "SixBatchVisualTest.kt:127",
+        "location": "Narrow layout after24 total visual captures, after bound region expansion restoration assertion; final dialog dismissal did not complete",
+        "wide_step_status": "PASS",
+        "narrow_step_status": "NOT_COMPLETED",
+        "visual_captures_recorded": 24,
+        "visual_manifest_failure_stage": "capture-narrow-production-workspace-pending-pixel-review",
+        "visual_manifest_failure_class": "ComposeTimeoutException",
+        "later_actions_not_executed": [
+          "narrow study-close",
+          "narrow back-library",
+          "final f.verify and nativeWorkspaceCapture completion marker"
+        ],
+        "source_disclosure": "Remaining reading-preference/display restoration finally blocks still execute; no claim of complete visual phase or full sample pass"
+      }
+    },
+    "visual_review": {
+      "evidence_origin": "Integration owner relayed completed actual pixel review at2026-10-04T21:48:25Z; source-bound image identities below",
+      "wide10": "CLOSED_FOR_THIS_IMAGE: original page, blue ink, expanded whitespace and slider are complete, with no loading text",
+      "narrow10": "No occlusion observed in this image",
+      "narrow12": "Annotation X control is visible; this frame does not explain or prove successful dismissal",
+      "overall": "NOT_COMPLETE: visual phase FAILED during final native BACK dismissal; no all-question or final40-image acceptance",
+      "images": [
+        {
+          "phase": "visual",
+          "phase_status": "FAILED",
+          "file": "11316016722/android/build/evidence/six-batch-fixture/visual-wide-10-whitespace-expanded.png",
+          "sha256": "19d7c1a8cd39eb3349b2493070c497753a1c22c007b6bb66d210e8a45f0f1b70",
+          "bytes": 945514,
+          "dimensions": [
+            1440,
+            2200
+          ],
+          "source_commit": "5ef7087b7da678296180ad6951ac75c6ed7ba849",
+          "run_id": "1a22d1b6-6563-418b-a585-886f4fe34fd8"
+        },
+        {
+          "phase": "visual",
+          "phase_status": "FAILED",
+          "file": "11316016722/android/build/evidence/six-batch-fixture/visual-narrow-10-whitespace-expanded.png",
+          "sha256": "5cfad9c5eabfec3f30c728864ef4134882ef9fcc8c3ddeb55623783d50e82b5c",
+          "bytes": 256742,
+          "dimensions": [
+            750,
+            1600
+          ],
+          "source_commit": "5ef7087b7da678296180ad6951ac75c6ed7ba849",
+          "run_id": "1a22d1b6-6563-418b-a585-886f4fe34fd8"
+        },
+        {
+          "phase": "visual",
+          "phase_status": "FAILED",
+          "file": "11316016722/android/build/evidence/six-batch-fixture/visual-narrow-12-bound-region-collapsed.png",
+          "sha256": "b583d7a707a293d97548870f0247144f93a98dd2dc4dfcb2c2403bd15daae872",
+          "bytes": 208785,
+          "dimensions": [
+            750,
+            1600
+          ],
+          "source_commit": "5ef7087b7da678296180ad6951ac75c6ed7ba849",
+          "run_id": "1a22d1b6-6563-418b-a585-886f4fe34fd8"
+        }
+      ]
+    },
+    "evidence_origin": "Terminal GitHub run plus verified final artifact; raw instrumentation and manifests independently audited",
+    "artifact_id": 11316016722,
+    "artifact_sha256": "6ce57b1bc22bdcfa7c2e52f0c5884c07b7a2bb6b3322c956870ae3fd01bc1dea",
+    "audit_sha256": "724dbeae0f523dc6836f9c2558d8458ac1dc33e3b03e1a8be72da47a51fb615b",
+    "b6_png_index_sha256": "786bd9ff65483381fc13e1f29caac1caa33b4265cfa41bfd59fd0392edeadd13",
+    "phase_receipts": {
+      "prepare": {
+        "status": "PASS",
+        "manifest_sha256": "f769f6a4fa25b8828ca5f1058844ed448790b9557f57f3774bb20921773781d2",
+        "runner_sha256": "cf594db40f60c6350eaabab3c2f0a6c394ffbc12dd1e05257d2a577a39ca13d5",
+        "screenshot_count": 7
+      },
+      "reopen": {
+        "status": "PASS",
+        "manifest_sha256": "0b0c1f091fe005fd3ff802db6eaf230deb8ea0f46b6e417e9e27e480fd3b3c8a",
+        "runner_sha256": "b8c519765a07e3333e84f5859b1dfc977f7f82b128c2266ba7513ec4079884f9",
+        "screenshot_count": 1
+      },
+      "visual": {
+        "status": "FAILED",
+        "manifest_sha256": "fc1477448ef097a98acb797c8a150069dbc65cee569ffa6a6d1ff8cd6bf2ddc2",
+        "runner_sha256": "49f0fa6c817392f8042a4c7641d7525ed721528d65957651798b2fa9bde9bebc",
+        "screenshot_count": 24
+      }
+    },
+    "apk_identity": {
+      "build_sha256": {
+        "android/app/build/outputs/apk/debug/app-debug.apk": "b822e2c7efc51b5eb8a623042dac59596941f7c9e34f90ec9a42a5c285dfd27b",
+        "android/app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk": "6219a72cbb3e0d62dc3f8a7160a78b9aad8f512b40637f39da3c9a9e64c33fef",
+        "android/data-local/build/outputs/apk/androidTest/debug/data-local-debug-androidTest.apk": "79733e51f4e623424faaa40b179a160e46de0cfad3f239cfa507306bc9c61528"
+      },
+      "signer_certificate_sha256": "665367df2b62c35f09f770399408ff19c0e0e6bd1360a60c5b8384bdc195baaa",
+      "all3_phase_installed_app_test_hashes_match_build": true,
+      "all3_manifest_app_hash_and_signer_match": true,
+      "apk_bytes_downloaded": false,
+      "room_apk_execution": "NOT_RUN_REUSED_EVIDENCE"
+    },
+    "lint": "NOT_RUN_FOCUSED",
+    "core_xml_counts": {
+      "tests": 157,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "kvm": "RESTORED_EXACT_ORIGINAL_ACL",
+    "remote_gradle_cache": {
+      "status": "PASS_NO_REMOTE_RESTORE_OR_SAVE",
+      "entries_restored": 0,
+      "entries_saved": 0,
+      "size_mb": 0,
+      "post_action_success": true,
+      "no_cache_archive_downloaded": true,
+      "intra_build_task_cache_hits_distinct_from_remote_restore": true
+    },
+    "not_final_full_acceptance": true
+  },
+  "room_evidence_reuse": {
+    "receipt": "android/verification/six-batches-v11-20261004/room-reuse-8d6abf5.json",
+    "receipt_sha256": "ff6b0486556499eb8527ae2d2b1b098fcf4292efd42217d941d1b5f49cbca326",
+    "executed_source": "8d6abf57328f0d377d3fab6a6eae010e0a2c8336",
+    "executed_run": 37232132379,
+    "executed_and_passed": 202,
+    "current_focus_new_room_executions": 0,
+    "note": "Current focus may reuse only the fresh202 pass from8d6abf5/run37232132379, including enhanced backup. All16 input paths and18 classes must match exactly; current focus adds0 Room executions. Final full must rerun fresh202 regardless of matching inputs.",
+    "current_code_baseline_reuse_allowed": true,
+    "final_full_reuse_allowed": false,
+    "superseded_baseline": {
+      "source": "9593b928473b46ff9efe806dace74231d022f3d1",
+      "run": 37217398281,
+      "invalidated_by_integrated_commit": "b2f3306e6c99d625745c3e1639233c4df5ca052c",
+      "reason": "Old202 did not include the enhanced backup test input; this was resolved by actual fresh202 execution at8d6abf5, not by equal method counts."
+    },
+    "current_focused_run": 37236310245,
+    "all_16_input_paths_and_18_classes_matched": true
+  },
+  "remaining_explicit_items": [
+    {
+      "kind": "缺验证",
+      "items": [
+        "IW-B1-06",
+        "IW-B3-03",
+        "IW-B5-06",
+        "IW-B6-01"
+      ],
+      "detail": "All4 first-full UI failures have passed within the new11/11 targeted UI at5ef7087/run37236310245. Final repaired full153 UI still remains pending; preserve both source-bound results rather than substituting a mixed-source full pass."
+    },
+    {
+      "kind": "缺验证",
+      "items": [
+        "IW-B4-01",
+        "IW-B4-02",
+        "IW-B4-06",
+        "IW-B6-05"
+      ],
+      "detail": "New5ef7087 wide10 pixel review closes the loading-frame gap for that source; narrow10 is unobstructed and narrow12 showsX. B6 visual nevertheless FAILED after24 captures when native BACK did not dismiss the narrow bound-annotation dialog within30000ms. Later narrow close/back-library/final verification did not run. Repair and rerun this exit path; final40-image review remains pending. The new40th image proves only a rendered cold-reopen material page."
+    },
+    {
+      "kind": "缺验证",
+      "items": [
+        "IW-B6-01",
+        "IW-B6-03",
+        "IW-B6-04",
+        "IW-B6-05",
+        "IW-B6-06"
+      ],
+      "detail": "Final frozen repaired candidate:153 UI/fresh202 Room/five same-library phases/40 PNG, actual pixel review and matching artifact identity remain pending. The first full and later targeted runs remain source-bound."
+    },
+    {
+      "kind": "缺外部条件",
+      "items": [
+        "IW-B6-02",
+        "IW-B6-03",
+        "IW-B6-04",
+        "IW-B6-06"
+      ],
+      "detail": "Target vivo iPA2673/API36, real handwriting15min, full learning30min, applicable palm/pressure/tilt, thermal stability and real-user-library upgrade install remain NOT_RUN. Synthetic emulator execution cannot replace these."
+    }
+  ],
+  "integrated_backup_test_checkpoint": {
+    "original_commit": "8fdb3731cbbd63b2e7227deb6aaf0297e9d6879f",
+    "integrated_commit": "b2f3306e6c99d625745c3e1639233c4df5ca052c",
+    "method_total": 202,
+    "compile_main": {
+      "status": "PASS_FROM_CACHE",
+      "seconds": 29
+    },
+    "compile_original_worktree": {
+      "status": "PASS_ACTUALLY_EXECUTED",
+      "seconds": 73
+    },
+    "compiled_class_identity": "Same class SHA confirmed by integration owner; exact digest retained in the separately recorded compile receipt",
+    "android": "PASS_ACTUALLY_EXECUTED_IN_FRESH_202_AT_8D6ABF5",
+    "evidence_origin": "Terminal result.json plus source-bound room-017 raw instrumentation retained in verified shard0 artifact11314024600",
+    "executed_source": "8d6abf57328f0d377d3fab6a6eae010e0a2c8336",
+    "executed_run": 37232132379,
+    "executed_method": "org.inkweft.data.RecallStudyRepositoryTest#saveReopenResumeFullBackupRestoreAndReceiptKeepAnswerBytes",
+    "recall_class_passed": 19,
+    "receipt": "android/verification/six-batches-v11-20261004/ci-37232132379/result.json",
+    "receipt_sha256": "2e79e211cd67640ae77a894711102e5dc393c6cd73c49211959afe844c3a82e9",
+    "raw_instrumentation_sha256": "bdd3d2615626b38a1e461b70faec6dac31f963f7a02842a88ab7c9918a1d952f",
+    "final_repaired_candidate": "FRESH_202_STILL_REQUIRED"
+  },
+  "public_code_baseline": "5ef7087b7da678296180ad6951ac75c6ed7ba849",
+  "code_tree": "2419680f5a996e0cdc17e16d7d9bca4fad0a3c60",
+  "latest_full_checkpoint": {
+    "source": "8d6abf57328f0d377d3fab6a6eae010e0a2c8336",
+    "run": 37232132379,
+    "status": "FAILURE_149_OF_153_UI",
+    "receipt": "android/verification/six-batches-v11-20261004/ci-37232132379/result.json",
+    "receipt_sha256": "2e79e211cd67640ae77a894711102e5dc393c6cd73c49211959afe844c3a82e9",
+    "enhanced_backup_android": "PASS_IN_FRESH_202",
+    "visual_acceptance": "NOT_COMPLETE_WIDE10_LOADING",
+    "not_final_full_acceptance": true
+  }
+}

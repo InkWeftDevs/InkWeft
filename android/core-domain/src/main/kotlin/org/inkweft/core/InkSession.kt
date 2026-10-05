@@ -8,6 +8,7 @@ class InkSession(initial:InkPage) {
     var blocked:InkCommitResult?=null;private set
     var pending:CommitInk?=null;private set
     private val queue=ArrayDeque<InkMutation>()
+    private val scopes=java.util.IdentityHashMap<InkMutation,LayerWriteScope?>()
     private val undo=ArrayDeque<InkMutation>()
     private val redo=ArrayDeque<InkMutation>()
     private var historyMove:Boolean?=null
@@ -45,7 +46,7 @@ class InkSession(initial:InkPage) {
         cuts.values.filter{it.visible}.forEach{c->c.selection.strokeIds.forEach{id->byStroke.getOrPut(id){mutableListOf()}.add(c.selection.cut)}}
         return rows.values.filter{it.visible}.map{it.stroke.withCuts(byStroke[it.stroke.id].orEmpty())}
     }
-    fun enqueue(change:InkMutation,finishInFlight:Boolean=false){
+    fun enqueue(change:InkMutation,finishInFlight:Boolean=false,layerScope:LayerWriteScope?=null){
         check(canStart||(finishInFlight&&queued<17&&blocked==null)||(change !is InkMutation.Add&&queued==0&&blocked==null)){"Resolve pending storage before more input"}
         when(change){
             is InkMutation.Replace->{
@@ -57,9 +58,9 @@ class InkSession(initial:InkPage) {
             is InkMutation.Add->{val current=visibleDraft();require(page.strokes.size+additions().size<InkLimits.MAX_STROKES);require(page.strokes.sumOf{it.stroke.samples.size}+additions().sumOf{it.samples.size}+change.stroke.samples.size<=InkLimits.MAX_PAGE_POINTS);require(page.strokes.none{it.stroke.id==change.stroke.id}&&current.none{it.id==change.stroke.id})}
             is InkMutation.Cut->{val current=visibleDraft().associateBy{it.id};require(page.cuts.size+(listOfNotNull(pending?.mutation)+queue).count{it is InkMutation.Cut}<InkLimits.MAX_CUTS);change.selection.strokeIds.forEach{id->val s=checkNotNull(current[id]);require(s.cuts.size<InkLimits.MAX_CUTS&&s.cuts.sumOf{it.points.size}+change.selection.cut.points.size<=InkLimits.MAX_CUT_POINTS)}}
             else->Unit
-        };queue.add(change)
+        };queue.add(change);scopes[change]=layerScope
     }
-    fun nextCommand(id:()->String={UUID.randomUUID().toString()}):CommitInk? {if(blocked!=null)return null;if(pending==null&&queue.isNotEmpty())pending=CommitInk(id(),page.noteId,page.revision,queue.removeFirst());return pending}
+    fun nextCommand(id:()->String={UUID.randomUUID().toString()}):CommitInk? {if(blocked!=null)return null;if(pending==null&&queue.isNotEmpty())pending=queue.removeFirst().let{CommitInk(id(),page.noteId,page.revision,it,scopes.remove(it))};return pending}
     fun retry():CommitInk?{if(blocked!=InkCommitResult.Unknown)return null;blocked=null;return pending}
     fun complete(command:CommitInk,result:InkCommitResult){
         check(command===pending);if(result !is InkCommitResult.Committed){blocked=result;return};require(result.revision==command.expectedRevision+1)
@@ -69,11 +70,11 @@ class InkSession(initial:InkPage) {
         when(historyMove){true->{undo.removeLast();redo.add(inverse)};false->{redo.removeLast();undo.add(inverse)};null->{undo.add(inverse);redo.clear()}}
         while(undo.size>50)undo.removeFirst();historyMove=null;pending=null;blocked=null
     }
-    fun requestUndo(){check(canUndo);historyMove=true;queue.add(undo.last())}
+    fun requestUndo(layerScope:LayerWriteScope?=null){check(canUndo);historyMove=true;queue.add(undo.last());scopes[undo.last()]=layerScope}
     /** Reconstruct only the just-recovered logical stroke, not an invented full history. */
     fun rememberRecoveredAddition(ids:List<String>){
         check(queued==0&&blocked==null);require(ids.isNotEmpty()&&ids.distinct()==ids&&ids.all{id->page.strokes.any{it.stroke.id==id&&it.visible}})
         undo.add(InkMutation.Visibility(ids,false));redo.clear()
     }
-    fun requestRedo(){check(canRedo);historyMove=false;queue.add(redo.last())}
+    fun requestRedo(layerScope:LayerWriteScope?=null){check(canRedo);historyMove=false;queue.add(redo.last());scopes[redo.last()]=layerScope}
 }

@@ -14,10 +14,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.inkweft.core.*
 import java.util.UUID
 
-/** The card owns the comment; resizing replaces only its source snapshot after confirmation. */
+/** The card owns a separate shared annotation; resizing replaces only its source snapshot. */
 @Composable internal fun ExcerptEditor(
     id:String,vm:StudyViewModel,view:InkCanvasView?,viewport:CanvasViewport,world:Boolean,
-    inkRevision:Long,objectRevision:Long,ready:Boolean,dismiss:()->Unit,onActive:(Boolean)->Unit,onDraft:(Boolean)->Unit
+    inkRevision:Long,objectRevision:Long,authoring:AuthoringUi,ready:Boolean,dismiss:()->Unit,onActive:(Boolean)->Unit,onDraft:(Boolean)->Unit
 ){
     val ui by vm.ui.collectAsStateWithLifecycle()
     val readLock=rememberBookReadLock(vm.book)
@@ -31,9 +31,9 @@ import java.util.UUID
     val draft=coordinates?.let{CanvasBounds(it[0],it[1],it[2],it[3])}
     fun setDraft(b:CanvasBounds?){coordinates=b?.let{listOf(it.left,it.top,it.right,it.bottom)}}
     var revision by rememberSaveable(id){mutableLongStateOf(0)}
-    var text by rememberSaveable(id){mutableStateOf("")}
     var message by remember(id){mutableStateOf<String?>(null)}
     var submitted by rememberSaveable(id){mutableStateOf(false)}
+    var trashOpen by rememberSaveable(id){mutableStateOf(false)}
     val waiting=ui.busy||ui.unknown
     val enabled=ready&&!readOnly&&!waiting&&!ui.loading&&!ui.readFailed
     ReadLockGuard(readLock,guardKey,blocked=waiting||mode!="actions",draft=mode!="actions")
@@ -43,6 +43,7 @@ import java.util.UUID
     LaunchedEffect(card,ui.loading){if(card==null&&!ui.loading&&!ui.readFailed&&!waiting)dismiss()}
     fun cancel(){if(!waiting){mode="actions";setDraft(null);message=null;vm.clear()}}
     BackHandler{if(mode!="actions")cancel()else if(!waiting)dismiss()}
+    if(trashOpen)CardTrashDialog(vm,id,enabled){trashOpen=false}
     if(card==null||source==null)return
     val original=source!!
     val b=draft?:CanvasBounds(original.left,original.top,original.right,original.bottom)
@@ -54,29 +55,23 @@ import java.util.UUID
     SelectionToolbar(region,viewport,focusable=mode=="comment"){
         Column(Modifier.widthIn(max=320.dp)){
             if(mode=="comment"){
-                Column(Modifier.padding(12.dp)){
-                    Text("摘录备注",style=MaterialTheme.typography.titleSmall)
-                    OutlinedTextField(text,{if(it.length<=20000)text=it},enabled=enabled,maxLines=5,placeholder={Text("写下你的理解")},modifier=Modifier.fillMaxWidth().testTag("excerpt-inline-input"))
-                    Row{TextButton(::cancel,enabled=!waiting){Text("取消")};Spacer(Modifier.weight(1f));TextButton({
-                        submitted=true;vm.submit(StudyCommand(UUID.randomUUID().toString(),vm.book,StudyAction.EDIT,cardId=id,expectedRevision=revision,title=card.title,body=text))
-                    },enabled=enabled,modifier=Modifier.testTag("excerpt-inline-save")){Text("保存")}}
-                }
+                CardPresentationEditor(vm.book,id,inline=true,showColors=false,inputTag="excerpt-inline-input",saveTag="excerpt-inline-save",cancelTag="excerpt-inline-cancel",dismiss=::cancel)
             }else if(mode=="resize"){
                 Row{TextButton(::cancel,enabled=!waiting,modifier=Modifier.testTag("excerpt-resize-cancel")){Text("取消")};TextButton({
-                    runCatching{checkNotNull(view).excerptPreview(b)}.onSuccess{picture->
+                    runCatching{check(checkNotNull(view).matchesAuthoring(authoring.state)){"图层画面正在更新，请稍后重试"};checkNotNull(view).excerptPreview(b)}.onSuccess{picture->
                         message=null;submitted=true;vm.submit(StudyCommand(UUID.randomUUID().toString(),vm.book,StudyAction.RECROP_EXCERPT,cardId=id,expectedRevision=revision,
-                            source=StudySourceDraft(original.pageId,inkRevision,b,emptyList(),picture,objectRevision)))
+                            source=StudySourceDraft(original.pageId,inkRevision,b,emptyList(),picture,objectRevision,authoring.revision)))
                     }.onFailure{message=it.message?:"范围未保存，请重试"}
                 },enabled=enabled&&draft!=null,modifier=Modifier.testTag("excerpt-resize-save")){Text("保存范围")}}
             }else{
                 Row{
-                    TextButton({revision=card.revision;text=card.body;mode="comment";vm.clear()},enabled=enabled,modifier=Modifier.testTag("excerpt-inline-comment")){Text("备注")}
+                    TextButton({mode="comment";vm.clear()},enabled=enabled,modifier=Modifier.testTag("excerpt-inline-comment")){Text("备注")}
                     TextButton({
                         val clipped=if(world)b else ExcerptBounds.inside(b,CanvasBounds(0.0,0.0,1000.0,1414.0))
                         if(clipped==null)message="来源范围不在当前纸张内，请重新摘录"
                         else{revision=card.revision;setDraft(clipped);mode="resize";vm.clear()}
                     },enabled=enabled,modifier=Modifier.testTag("excerpt-resize")){Text("调整范围")}
-                    TextButton({submitted=true;vm.submit(StudyCommand(UUID.randomUUID().toString(),vm.book,StudyAction.TRASH_CARD,cardId=id,expectedRevision=card.revision))},enabled=enabled,modifier=Modifier.testTag("excerpt-inline-delete")){Text("删除")}
+                    TextButton({trashOpen=true},enabled=enabled,modifier=Modifier.testTag("excerpt-inline-delete")){Text("删除")}
                     IconButton(dismiss,enabled=!waiting,modifier=Modifier.describedAs("取消摘录选择")){Glyph("close")}
                 }
             }

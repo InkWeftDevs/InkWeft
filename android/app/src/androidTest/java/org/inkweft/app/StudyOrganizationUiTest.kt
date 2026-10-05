@@ -4,10 +4,13 @@ package org.inkweft.app
 import android.graphics.RectF
 import android.os.SystemClock
 import android.view.KeyEvent
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewConfiguration
 import android.view.ViewGroup
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.semantics.SemanticsProperties
+import androidx.compose.ui.semantics.getOrNull
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.lifecycle.ViewModelProvider
@@ -190,4 +193,236 @@ class StudyOrganizationUiTest {
             overview.zoom(.8f);assertEquals(scale,overview.snapshotViewport().scale,.000001f)
         }
     }
+    @Test fun workModesPreserveSelectedGraphAndResumeTheSameUnrevealedQuestion(){
+        val f=fixture();val lateNode=id();val lateCard=id()
+        // Add this branch after StudyContent installed its external mode callback.
+        // A stale captured nodeById would select the whole map, including the decoy question.
+        val decoyCard=nodes(f.book).single{it.id==f.second}.cardId
+        runBlocking{
+            app.study.submit(StudyCommand(id(),f.book,StudyAction.CREATE,cardId=lateCard,nodeId=lateNode,parentId=f.root,
+                title="后加载分支",body="回忆必须使用当前选择",x=340.0,y=1300.0))
+            app.knowledge.submit(KnowledgeCommand(id(),f.book,id(),0,KnowledgeData.Question(decoyCard,"另一分支的问题不应进入此范围")))
+            app.knowledge.submit(KnowledgeCommand(id(),f.book,id(),0,KnowledgeData.Question(lateCard,"三态恢复合成问题")))
+        }
+        settled(f.book);val before=author(f.book)
+        select(lateNode)
+        val camera=compose.runOnIdle{map().snapshotViewport()}
+        tap("quick-readonly")
+        compose.runOnIdle{assertTrue(ViewModelProvider(compose.activity)["read-lock-${f.book}",BookReadLockViewModel::class.java].readOnly.value)}
+        tap("exit-readonly")
+        compose.runOnIdle{assertEquals(lateNode,map().selectedNodeId);assertEquals(camera,map().snapshotViewport())}
+        tap("workspace-recall")
+        compose.waitUntil(15_000){compose.onAllNodesWithTag("branch-review-start").fetchSemanticsNodes().isNotEmpty()}
+        compose.onNodeWithTag("branch-review-total-questions").assertTextEquals("范围内共 1 道问题")
+        tap("branch-review-start")
+        compose.waitUntil(15_000){compose.onAllNodesWithTag("review-question").fetchSemanticsNodes().isNotEmpty()}
+        compose.onNodeWithTag("review-question").assertTextEquals("三态恢复合成问题")
+        compose.onNodeWithTag("review-clues-hidden").assertExists()
+        // Choose the visible Dialog's mode control; the paper remains mounted underneath.
+        compose.onNode(hasContentDescription("阅读资料") and hasAnyAncestor(hasTestTag("manual-review"))).performClick()
+        compose.onNodeWithTag("manual-review").assertDoesNotExist()
+        tap("workspace-recall")
+        compose.waitUntil(15_000){compose.onAllNodesWithTag("review-question").fetchSemanticsNodes().isNotEmpty()}
+        compose.onNodeWithTag("review-question").assertTextEquals("三态恢复合成问题")
+        compose.onNodeWithTag("review-clues-hidden").assertExists()
+        compose.onNodeWithTag("branch-review-start").assertDoesNotExist()
+        compose.onNodeWithTag("review-consulted-original").assertExists()
+        compose.onNode(hasContentDescription("书写批注") and hasAnyAncestor(hasTestTag("manual-review"))).performClick()
+        compose.runOnIdle{assertEquals(lateNode,map().selectedNodeId);assertEquals(camera,map().snapshotViewport())}
+        assertEquals(before.cards,cards(f.book));assertEquals(before.nodes,nodes(f.book))
+        compose.runOnIdle{
+            val lock=ViewModelProvider(compose.activity)["read-lock-${f.book}",BookReadLockViewModel::class.java]
+            lock.guard("synthetic-unraised-pen",true)
+            assertFalse(lock.canChangeMode());assertFalse(lock.request(true));assertFalse(lock.readOnly.value)
+            assertTrue(lock.reason.contains("抬笔"));lock.guard("synthetic-unraised-pen",false)
+        }
+    }
+
+    @Test fun realOutlineHandleMovesWholeBranchAndSupportsUndoRedoAndCancel(){
+        val f=fixture();val initial=author(f.book)
+        tap("study-direct-outline")
+        tap("outline-fold-${f.first}");tap("outline-fold-${f.second}")
+        compose.onNodeWithTag("outline-drag-${f.second}").performScrollTo()
+        compose.waitForIdle()
+        fun dragTo(target:String,part:Float,canceled:Boolean=false){
+            val list=compose.onNodeWithTag("study-list").fetchSemanticsNode().boundsInRoot
+            val handle=compose.onNodeWithTag("outline-drag-${f.second}").fetchSemanticsNode().boundsInRoot
+            val row=compose.onNodeWithTag("outline-row-$target").fetchSemanticsNode().boundsInRoot
+            val start=handle.center-list.topLeft;val end=Offset(row.center.x-list.left,row.top+row.height*part-list.top)
+            compose.onNodeWithTag("study-list").performTouchInput{
+                down(start);moveTo(start+Offset(0f,-20f));moveTo(end)
+                if(canceled)cancel()else up()
+            }
+        }
+        // A drop just inside the upper quarter must remain BEFORE despite the list's 8dp padding.
+        dragTo(f.first,.24f)
+        val moved=listOf(f.root,f.second,f.secondChild,f.first,f.firstChild)
+        compose.waitUntil(15_000){order(f.book)==moved};settled(f.book)
+        assertEquals(initial.cards,cards(f.book))
+        assertEquals(initial.nodes.associate{it.id to Triple(it.parentId,it.x,it.y)},nodes(f.book).associate{it.id to Triple(it.parentId,it.x,it.y)})
+        tap("study-undo-organization");compose.waitUntil(15_000){order(f.book)==f.initialOrder};settled(f.book)
+        tap("study-redo-organization");compose.waitUntil(15_000){order(f.book)==moved};settled(f.book)
+        val beforeCancel=author(f.book);dragTo(f.first,.5f,canceled=true);settled(f.book)
+        compose.onNodeWithTag("study-message").assertTextContains("拖动已取消，顺序与层级保持不变")
+        assertEquals(beforeCancel,author(f.book))
+        compose.runOnIdle{assertTrue(ViewModelProvider(compose.activity)["read-lock-${f.book}",BookReadLockViewModel::class.java].canChangeMode())}
+        tap("study-close");tap("quick-study");settled(f.book);assertEquals(moved,order(f.book))
+    }
+
+    @Test fun outlineEdgeScrollReachesOffscreenParentAndCancelKeepsWholeAuthorGraph(){
+        val f=fixture()
+        val extra=List(28){id()};val destination=extra.last();val destinationChild=id()
+        runBlocking{extra.forEachIndexed{index,node->
+            app.study.submit(StudyCommand(id(),f.book,StudyAction.CREATE,cardId=id(),nodeId=node,parentId=f.root,
+                title="跨屏目标 $index",body="边缘拖动验证",x=640.0,y=900.0+index*120))
+        }
+            app.study.submit(StudyCommand(id(),f.book,StudyAction.CREATE,cardId=id(),nodeId=destinationChild,parentId=destination,
+                title="目标已有的下级",body="折叠目标必须在放入整支后展开",x=950.0,y=1600.0))
+        }
+        settled(f.book)
+        val initial=author(f.book);val originalOrder=order(f.book)
+        tap("study-direct-outline")
+        tap("outline-fold-${f.first}")
+        compose.onNodeWithTag("study-list").performScrollToNode(hasTestTag("outline-fold-$destination"))
+        tap("outline-fold-$destination")
+        compose.onNodeWithTag("study-list").performScrollToNode(hasTestTag("outline-drag-${f.first}"))
+        compose.waitForIdle()
+        assertTrue("The target must start outside the visible viewport",
+            runCatching{compose.onNodeWithTag("outline-row-$destination").assertIsDisplayed()}.isFailure)
+        var dropDiagnostic="No target observed"
+        val routeTrace=java.util.ArrayDeque<String>()
+        val criticalTrace=java.util.ArrayDeque<String>()
+        val firstTrace=mutableListOf<String>()
+        var routeFailure:String?=null
+        fun recordRoute(line:String){
+            if(firstTrace.size<4)firstTrace+=line
+            if(routeTrace.size>=32)routeTrace.removeFirst();routeTrace.addLast(line)
+            if(!line.startsWith("edge-")){if(criticalTrace.size>=32)criticalTrace.removeFirst();criticalTrace.addLast(line)}
+        }
+        fun routeReport(limit:Int):ByteArray {
+            val text="synthetic_only=true; test=outlineEdgeScrollReachesOffscreenParentAndCancelKeepsWholeAuthorGraph\n"+
+                "failure=${routeFailure?:"NONE"}\ndrop=$dropDiagnostic\n"+
+                "LATEST_CRITICAL_FIRST\n${criticalTrace.toList().asReversed().joinToString("\n")}\n"+
+                "FIRST_CONTEXT\n${firstTrace.joinToString("\n")}\n"+
+                "LATEST_EVENTS_FIRST\n${routeTrace.toList().asReversed().joinToString("\n")}\n"
+            val bytes=text.toByteArray(Charsets.UTF_8)
+            return if(bytes.size<=limit)bytes else bytes.copyOf(limit-32)+"\n[BOUNDED_DIAGNOSTIC_TAIL]\n".toByteArray()
+        }
+        fun startAndReachTarget(target:String){
+            val list=compose.onNodeWithTag("study-list").fetchSemanticsNode().boundsInRoot
+            val handle=compose.onNodeWithTag("outline-drag-${f.first}").assertIsDisplayed().fetchSemanticsNode().boundsInRoot
+            val start=handle.center-list.topLeft
+            // An idle-synchronizing semantics read must not fast-forward the
+            // repeating edge-scroll coroutine past the target between measurements.
+            compose.mainClock.autoAdvance=false
+            compose.onNodeWithTag("study-list").performTouchInput{
+                down(start);moveTo(start+Offset(0f,30f));moveTo(Offset(list.width*.5f,list.height-8f))
+            }
+            compose.mainClock.advanceTimeByFrame();compose.waitForIdle()
+            compose.runOnIdle{assertEquals("The visible source handle must own this drag",f.first,vm(f.book).selectedByMap["main"])}
+            var dropPoint:Offset?=null
+            for(frame in 0 until 300){
+                compose.mainClock.advanceTimeBy(32)
+                compose.waitForIdle()
+                val bounds=compose.onNodeWithTag("study-list").fetchSemanticsNode().boundsInRoot
+                // Lazy lists can retain an unplaced node with old bounds; coordinates alone
+                // never prove that a user can see or drop on this row.
+                val row=runCatching{compose.onNodeWithTag("outline-row-$target").assertIsDisplayed().fetchSemanticsNode().boundsInRoot}.getOrNull()
+                if(row!=null&&row.width>0f&&row.height>40f&&row.top>bounds.top+48&&row.bottom<bounds.bottom-4){
+                    dropPoint=row.center-bounds.topLeft
+                    dropDiagnostic="target=$target row=$row container=$bounds local=$dropPoint frame=$frame"
+                    break
+                }
+            }
+            assertNotNull("Production edge scrolling must reveal the previously offscreen final target",dropPoint)
+            // The final folded row is stable at the scroll boundary. Deliver the
+            // observed midpoint immediately; an intermediate parking move is not a user drop.
+            compose.onNodeWithTag("study-list").performTouchInput{moveTo(checkNotNull(dropPoint))}
+            compose.mainClock.advanceTimeByFrame();compose.waitForIdle()
+            compose.onNodeWithTag("outline-drag-feedback").assertTextContains("移入「跨屏目标 ${extra.lastIndex}」下级",substring=true)
+        }
+        val originalAutoAdvance=compose.mainClock.autoAdvance
+        try{
+        startAndReachTarget(destination)
+        compose.onNodeWithTag("outline-drag-feedback").assertTextContains("松手后展开目标",substring=true)
+        val releaseBounds=compose.onNodeWithTag("study-list").fetchSemanticsNode().boundsInRoot
+        compose.onNodeWithTag("study-list").performTouchInput{
+            recordRoute("inject-up currentLocal=${currentPosition()} scopeBounds=$releaseBounds expectedRoot=${currentPosition()?.plus(releaseBounds.topLeft)}")
+            up()
+        }
+        compose.mainClock.autoAdvance=originalAutoAdvance
+        try{
+            compose.waitUntil(15_000){nodes(f.book).single{it.id==f.first}.parentId==destination}
+        }catch(failure:Throwable){
+            val state=vm(f.book).ui.value
+            val message=runCatching{compose.onNodeWithTag("study-message").fetchSemanticsNode().config.getOrNull(SemanticsProperties.Text)?.joinToString{it.text}}.getOrNull()
+            throw AssertionError("Real edge drop did not commit: $dropDiagnostic; source=${f.first}; selected=${vm(f.book).selectedByMap["main"]}; busy=${state.busy}; unknown=${state.unknown}; readFailed=${state.readFailed}; completed=${state.completed}; vmMessage=${state.message}; uiMessage=$message; parents=${nodes(f.book).associate{it.id to it.parentId}}",failure)
+        }
+        settled(f.book)
+        assertEquals(f.first,nodes(f.book).single{it.id==f.firstChild}.parentId)
+        compose.onNodeWithTag("study-list").performScrollToNode(hasTestTag("outline-row-$destinationChild"))
+        compose.onNodeWithTag("outline-row-$destinationChild").assertIsDisplayed()
+        assertEquals(initial.cards,cards(f.book))
+        tap("study-undo-organization")
+        compose.waitUntil(15_000){order(f.book)==originalOrder};settled(f.book)
+        assertEquals(initial.cards,cards(f.book))
+        assertEquals(initial.nodes.associate{it.id to Triple(it.parentId,it.x,it.y)},nodes(f.book).associate{it.id to Triple(it.parentId,it.x,it.y)})
+        compose.onNodeWithTag("study-list").performScrollToNode(hasTestTag("outline-drag-${f.first}"));compose.waitForIdle()
+        val beforeCancel=author(f.book)
+        startAndReachTarget(destination)
+        compose.onNodeWithTag("study-list").performTouchInput{cancel()}
+        compose.mainClock.autoAdvance=originalAutoAdvance
+        settled(f.book)
+        assertEquals(beforeCancel,author(f.book))
+        compose.onNodeWithTag("study-message").assertTextContains("拖动已取消",substring=true)
+        }catch(failure:Throwable){
+            routeFailure="${failure.javaClass.name}: ${failure.message}".take(4000)
+            // Android's instrumentation stack payload is bounded: put the actual reason and UP/end first.
+            throw AssertionError(routeReport(12*1024).toString(Charsets.UTF_8),failure)
+        }finally{
+            val cleanupFailures=mutableListOf<Throwable>()
+            fun cleanup(label:String,action:()->Unit){runCatching(action).exceptionOrNull()?.let{cleanupFailures+=it;recordRoute("cleanup-failed $label ${it.javaClass.name}")}}
+            cleanup("pointer"){if(!compose.mainClock.autoAdvance)compose.onNodeWithTag("study-list").performTouchInput{cancel()}}
+            cleanup("clock"){compose.mainClock.autoAdvance=originalAutoAdvance}
+            // Always try saving even if Compose cleanup failed. Preserve the original failure.
+            val capture=runCatching{java.io.File(checkNotNull(app.getExternalFilesDir(null)),"outline-input-route.txt").writeBytes(routeReport(64*1024))}
+            if(routeFailure==null){
+                val problem=cleanupFailures.firstOrNull()?:capture.exceptionOrNull()
+                if(problem!=null)throw AssertionError("Synthetic outline diagnostic cleanup/capture failed",problem)
+            }
+        }
+    }
+
+    @Test fun nativeMapPreviewsEveryDescendantAndMarqueeMovementDeduplicatesBranches(){
+        val f=fixture();val original=author(f.book);val times=SystemClock.uptimeMillis()
+        compose.runOnIdle{
+            val view=map();view.fitOverview()
+            val before=listOf(f.root,f.first,f.firstChild).associateWith{RectF(checkNotNull(view.nodeBounds(it)))}
+            val root=before.getValue(f.root);val x=root.centerX();val y=root.centerY()
+            fun event(action:Int,px:Float,py:Float,time:Long){MotionEvent.obtain(times,time,action,px,py,0).also{view.dispatchTouchEvent(it);it.recycle()}}
+            event(MotionEvent.ACTION_DOWN,x,y,times);event(MotionEvent.ACTION_MOVE,x+45,y+30,times+30)
+            before.forEach{(id,box)->val now=checkNotNull(view.nodeBounds(id));assertEquals(45f,now.left-box.left,.01f);assertEquals(30f,now.top-box.top,.01f)}
+            assertEquals(original.nodes,nodes(f.book))
+            event(MotionEvent.ACTION_CANCEL,x+45,y+30,times+40)
+            before.forEach{(id,box)->assertEquals(box,view.nodeBounds(id))}
+        }
+        assertEquals(original,author(f.book))
+        tap("study-select-many")
+        compose.runOnIdle{map().fitOverview()}
+        compose.onNodeWithTag("study-map").performTouchInput{down(Offset(2f,2f));moveTo(Offset(width-2f,height-2f));up()}
+        compose.onNodeWithTag("study-selection-count").assertTextContains("整支 5 主题",substring=true)
+        val before=nodes(f.book).associateBy{it.id}
+        compose.runOnIdle{
+            val view=map();val box=checkNotNull(view.nodeBounds(f.first));val time=SystemClock.uptimeMillis()
+            listOf(MotionEvent.ACTION_DOWN to 0f,MotionEvent.ACTION_MOVE to 40f,MotionEvent.ACTION_UP to 40f).forEachIndexed{i,(action,delta)->
+                MotionEvent.obtain(time,time+i*25,action,box.centerX()+delta,box.centerY()+delta/2,0).also{view.dispatchTouchEvent(it);it.recycle()}
+            }
+        }
+        compose.waitUntil(15_000){nodes(f.book).first{it.id==f.first}.x!=before.getValue(f.first).x};settled(f.book)
+        val after=nodes(f.book);val dx=after.first().x-before.getValue(after.first().id).x;val dy=after.first().y-before.getValue(after.first().id).y
+        for(node in after){val old=before.getValue(node.id);assertEquals(dx,node.x-old.x,.001);assertEquals(dy,node.y-old.y,.001);assertEquals(old.revision+1,node.revision)}
+        tap("study-undo-organization");compose.waitUntil(15_000){nodes(f.book).all{it.x==before.getValue(it.id).x&&it.y==before.getValue(it.id).y}};settled(f.book)
+        assertEquals(original.cards,cards(f.book))
+    }
+
 }

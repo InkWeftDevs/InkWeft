@@ -1,0 +1,29 @@
+{
+  "source": "f8511af4b981c90cdc47d596289171df69c92d90",
+  "core": {
+    "tests": 369,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "status": "PASS"
+  },
+  "production_kotlin": "PASS",
+  "app_android_test_kotlin": "PASS",
+  "room_android_test_kotlin": "PASS",
+  "ci_host_tests": 61,
+  "fixture_host_tests": 8,
+  "actionlint": "PASS",
+  "seconds": 461,
+  "compile_log_sha256": "9ef012c6d5ae5de0a982712dd0a5a564c9602af6ef303c21181ac6b52237b5c4",
+  "lint": "NOT_RUN_FOCUSED",
+  "device": "NOT_RUN_NEW_CANDIDATE",
+  "scope": {
+    "focused_ui": 20,
+    "full_ui": 153,
+    "room": 202,
+    "full_fixture_phases": 5,
+    "full_png": 39
+  },
+  "room_old_evidence": "INVALIDATED_BY_CHANGED_SOURCE_AND_SCOPE_REQUIRES_EXECUTION",
+  "physical_device": "NOT_RUN"
+}

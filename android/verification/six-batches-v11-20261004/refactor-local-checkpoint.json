@@ -1,0 +1,24 @@
+{
+  "source": "27269e73e62f8343d17ba1de88b8557189a9901b",
+  "scope": "Local navigation/read-query/schema guard integration; no Android runtime results inherited",
+  "production_and_both_android_test_kotlin": "PASS",
+  "jvm": {
+    "tests": 367,
+    "failures": 0,
+    "skipped": 0,
+    "reuse": "unchanged Core inputs; not an extra 367 executions"
+  },
+  "lint": {
+    "Error": 0,
+    "Warning": 165,
+    "Information": 0
+  },
+  "first_joint_seconds": 672,
+  "uuid_fixture_followup_seconds": 202,
+  "android_execution": "NOT_RUN",
+  "current_public_ci_excludes_refactors": "56b792f0e75b6c896a2c157f283a2b5086baede8",
+  "logs": {
+    "refactor-joint-build.log": "082242d32da4e78b934ba65593b9fb461d1feb7a005adecc930ab317e5f9bd95",
+    "navigation-fixture-build.log": "7959cea8ee650342f59ef64bd038d7b528173fd830a0dbbc0a784fdebded613a"
+  }
+}

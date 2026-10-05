@@ -15,6 +15,7 @@ internal class PageObjectOverlay(context:Context):View(context) {
     var enabledInput=true
     var world=false
     var onSelect:(String?)->Unit={}
+    var canEdit:(PageObject)->Boolean={true}
     var onChange:(PageObject)->Unit={}
     var onActive:(Boolean)->Unit={}
     private var original:PageObject?=null
@@ -43,6 +44,7 @@ internal class PageObjectOverlay(context:Context):View(context) {
                 resize=old?.let{val p=screen(it.x+it.width,it.y+it.height);hypot(e.x-p.x,e.y-p.y)<=24*density}?:false
                 original=if(resize)old else (objects.filter{!it.hidden&&it.kind!=PageObjectKind.TAPE}+objects.filter{!it.hidden&&it.kind==PageObjectKind.TAPE}).asReversed().find{ObjectGeometry.hit(it,start.x.toFloat(),start.y.toFloat())}
                 draft=original;onSelect(original?.id)
+                if(original?.let{!canEdit(it)}==true){original=null;draft=null;invalidate();return true}
                 if(original!=null){parent?.requestDisallowInterceptTouchEvent(true);onActive(true)}else v.onTouchEvent(e)
                 invalidate()
             }

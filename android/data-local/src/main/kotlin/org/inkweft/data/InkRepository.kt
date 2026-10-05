@@ -33,7 +33,7 @@ interface InkDao {
     @Query("UPDATE ink_strokes SET visible=:visible WHERE noteId=:noteId AND id IN (:ids)") suspend fun setVisibility(noteId:String,ids:List<String>,visible:Boolean):Int
 }
 enum class InkFaultPoint { BEFORE_RECEIPT,AFTER_TRANSACTION }
-data class ObjectWrite(val pageId:String,val expected:Long,val commandId:String,val objects:List<PageObject>)
+data class ObjectWrite(val pageId:String,val expected:Long,val commandId:String,val objects:List<PageObject>,val layerScope:LayerWriteScope?=null)
 data class CanvasBatchResult(val ink:List<InkCommitResult> = emptyList(),val objects:List<Long> = emptyList(),val failure:InkCommitResult?=null)
 data class InkGroupCommit(val group:InkGroupPrefix,val results:List<InkCommitResult.Committed>,val replayed:Boolean)
 class InkRepository(private val db:NoteDatabase,private val fault:(InkFaultPoint)->Unit={}) {
@@ -54,7 +54,7 @@ class InkRepository(private val db:NoteDatabase,private val fault:(InkFaultPoint
             val ink=if(commands.isEmpty())emptyList()else saveGroup(commands)
             ink.firstOrNull{it !is InkCommitResult.Committed}?.let{throw GroupAbort(it)}
             val objectRepo=PageObjectRepository(db)
-            val revisions=objects.map{objectRepo.save(it.pageId,it.expected,it.commandId,it.objects)}
+            val revisions=objects.map{objectRepo.save(it.pageId,it.expected,it.commandId,it.objects,layerScope=it.layerScope)}
             CanvasBatchResult(ink,revisions)
         }}catch(e:GroupAbort){CanvasBatchResult(failure=e.result)}
         catch(_:IllegalArgumentException){CanvasBatchResult(failure=InkCommitResult.Conflict)}
@@ -65,10 +65,10 @@ class InkRepository(private val db:NoteDatabase,private val fault:(InkFaultPoint
     private val groups by lazy{InkGroupCheckpoints(java.io.File(checkNotNull(db.checkpointRoot),"groups")){groupFaultForTest("journal-$it")}}
     private fun groupOperation(id:String)=UUID.nameUUIDFromBytes("ink-group:$id".toByteArray()).toString()
     fun hasUnsealedInput():Boolean=db.checkpointRoot?.let{root->root.walkTopDown().any{it.isFile&&(it.name.endsWith(".inkpart")||it.name.endsWith(".inkpart.bak"))}||groups.hasUnsealed()}?:false
-    suspend fun captureGroup(book:String,pages:List<String>,origin:Int,stroke:InkStroke):InkGroupPrefix=db.withTransaction{
+    suspend fun captureGroup(book:String,pages:List<String>,origin:Int,stroke:InkStroke,layerScopes:List<LayerWriteScope?> = emptyList()):InkGroupPrefix=db.withTransaction{
         require(db.workspace().get(book)?.trashedAt==null&&db.notes().note(book)!=null){"GROUP_BOOK_UNAVAILABLE"}
         pages.forEach{id->val p=checkNotNull(db.pages().get(id));require(p.notebookId==book&&!p.world&&p.trashedAt==null){"GROUP_PAGE_UNAVAILABLE"}}
-        InkGroupPrefix(book,pages,pages.map{dao.page(it)?.revision?:0L},origin,stroke)
+        InkGroupPrefix(book,pages,pages.map{dao.page(it)?.revision?:0L},origin,stroke,layerScopes=layerScopes)
     }
     suspend fun checkpointGroup(group:InkGroupPrefix):Boolean=db.inkGroupMutex.withLock{
         if(db.libraryContent().receipt(groupOperation(group.stroke.id))!=null)return@withLock false
@@ -113,16 +113,17 @@ class InkRepository(private val db:NoteDatabase,private val fault:(InkFaultPoint
         groupFaultForTest("after-group-marker")
         InkGroupCommit(group.copy(state="SEALED"),results,replay!=null)
     }
-    suspend fun checkpoint(page:String,stroke:InkStroke){
+    suspend fun checkpoint(page:String,stroke:InkStroke,layerScope:LayerWriteScope?=null){
         require(stroke.world==owner(page).world)
-        if(dao.stroke(stroke.id)==null)checkpoints.save(page,stroke.samples.size,stroke)
+        if(dao.stroke(stroke.id)==null)checkpoints.save(page,stroke.samples.size,stroke,layerScope)
     }
     fun discardCheckpoint(page:String,strokeId:String){if(db.checkpointRoot!=null)checkpoints.remove(page,strokeId)}
-    suspend fun recoverCheckpoints(page:String):List<InkStroke> {
+    suspend fun recoverCheckpoints(page:String):List<InkStroke> = recoverScopedCheckpoints(page).map{it.stroke}
+    suspend fun recoverScopedCheckpoints(page:String):List<InkCheckpoint> {
         if(db.checkpointRoot==null)return emptyList()
-        val recovered=mutableListOf<InkStroke>()
-        for(stroke in checkpoints.read(page)){
-            if(dao.stroke(stroke.id)!=null)checkpoints.remove(page,stroke.id) else recovered+=stroke
+        val recovered=mutableListOf<InkCheckpoint>()
+        for(checkpoint in checkpoints.readScoped(page)){
+            if(dao.stroke(checkpoint.stroke.id)!=null)checkpoints.remove(page,checkpoint.stroke.id) else recovered+=checkpoint
         };return recovered
     }
 
@@ -180,6 +181,8 @@ class InkRepository(private val db:NoteDatabase,private val fault:(InkFaultPoint
                     change.visible
                 }
             }
+            // Preserve target conflicts before layer validation; both checks still precede every write.
+            val authoring=try{PageAuthoringRepository(db).acceptInk(command)}catch(e:IllegalArgumentException){return@withTransaction if(e.message=="LAYER_WRITE_SCOPE_CHANGED")InkCommitResult.Conflict else InkCommitResult.Rejected}
             if(current==null)dao.insertPage(InkPageRow(command.noteId,next))else check(dao.compareAndSet(command.noteId,command.expectedRevision,next)==1)
             when(val change=command.mutation){
                 is InkMutation.Replace->{
@@ -195,6 +198,7 @@ class InkRepository(private val db:NoteDatabase,private val fault:(InkFaultPoint
                 is InkMutation.Cut->dao.insertCut(InkCutRow(change.selection.cut.id,command.noteId,InkCutCodec.encode(change.selection.cut),change.selection.strokeIds.joinToString(","),true,next))
                 is InkMutation.CutVisibility->check(dao.cutVisibility(change.cutId,command.noteId,change.visible)==1)
             }
+            authoring?.let{db.authoring().put(it)}
             // Pure annotation changes do not change the transcribed underlying handwriting.
             // Advance only an already-valid index; never resurrect a stale revision.
             suspend fun highlights(ids:List<String>):Boolean{for(id in ids){val r=dao.stroke(id)?:return false;if(InkStrokeCodec.decode(r.payload).pen!=InkPen.HIGHLIGHTER)return false};return ids.isNotEmpty()}
@@ -224,7 +228,8 @@ class InkRepository(private val db:NoteDatabase,private val fault:(InkFaultPoint
         val strokeIds=file.strokes.associate{it.id to UUID.randomUUID().toString()}
         dao.insertPage(InkPageRow(id,file.strokes.size.toLong()))
         file.strokes.forEachIndexed{index,old->val s=InkStroke(checkNotNull(strokeIds[old.id]),old.pen,old.color,old.width,old.tool,old.samples,old.world,old.cuts,old.appearance);dao.insertStroke(InkStrokeRow(s.id,id,InkStrokeCodec.encode(s),s.samples.size,true,index.toLong()+1))}
-        PageObjectRepository(db).import(id,file.objects,strokeIds)
+        val objects=PageObjectRepository(db).import(id,file.objects,strokeIds,file.imageSources)
+        file.authoring?.let{state->val owner=checkNotNull(db.pages().get(id));val copied=state.copied(id,strokeIds,objects);PageAuthoringRepository(db).validate(AuthoringScope.page(owner.notebookId,id),copied);db.authoring().put(PageAuthoringRow(AuthoringScopeKind.PAGE.name,id,owner.notebookId,0,PageAuthoringCodec.encode(copied)))}
     }
     suspend fun importCopy(file:InkPageFile):Note=db.withTransaction {
         val title=(file.title.take(115)+" · 副本").take(120)

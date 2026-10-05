@@ -70,10 +70,12 @@ class NotebookPages(private val db:NoteDatabase) {
     }
     suspend fun searchText(pageId:String):PageSearchRow?=db.pages().search(pageId)
     /** Version-bound derived text. OCR checks both ink and object snapshots; object writes invalidate the index. */
-    suspend fun saveSearchText(pageId:String,expectedInkRevision:Long,text:String,expectedObjects:Long?=null,method:String="MANUAL"):Boolean=db.withTransaction {
+    suspend fun saveSearchText(pageId:String,expectedInkRevision:Long,text:String,expectedObjects:Long?=null,method:String="MANUAL",authoringRevision:Long?=null):Boolean=db.withTransaction {
         require(db.pages().get(pageId)?.trashedAt==null && db.pages().get(pageId)!=null);require(text.length<=20_000)
         if((db.ink().page(pageId)?.revision?:0)!=expectedInkRevision)return@withTransaction false
         if(expectedObjects!=null&&(db.objects().get(pageId)?.revision?:0)!=expectedObjects)return@withTransaction false
+        val authoring=PageAuthoringRepository(db).readPage(pageId)
+        if(authoringRevision?.let{it!=authoring.revision}?:!authoring.state.legacy)return@withTransaction false
         require(method in listOf("MANUAL","OCR"))
         db.pages().putSearch(PageSearchRow(pageId,expectedInkRevision,text,method));true
     }
@@ -82,7 +84,7 @@ class NotebookPages(private val db:NoteDatabase) {
         val pages=db.pages().list(notebookId)
         var bytes=0L
         val documents=mutableMapOf<String,PdfDocumentSource>()
-        val copies=pages.map{p->InkPageFile(n.title,"",InkSession(InkRepository(db).read(p.id)).visibleDraft(),p.world,PaperStyle.entries[p.paper],PageObjectRepository(db).read(p.id).objects,DocumentRepository(db).read(p.id,documents)).also{bytes+=it.encode(false).size;require(bytes<NotebookFile.MAX_BYTES-500_000)}}
+        val copies=pages.map{p->InkPageFile(n.title,"",InkSession(InkRepository(db).read(p.id)).visibleDraft(),p.world,PaperStyle.entries[p.paper],PageObjectRepository(db).read(p.id).objects,DocumentRepository(db).read(p.id,documents),ImageSourceRepository(db).forPage(p.id,PageObjectRepository(db).read(p.id).objects),PageAuthoringRepository(db).readPage(p.id).state.takeUnless{it.legacy}).also{bytes+=it.encode(false).size;require(bytes<NotebookFile.MAX_BYTES-500_000)}}
         NotebookFile(n.title,n.text,copies)
     }
     suspend fun importBook(file:NotebookFile):Note=db.withTransaction {

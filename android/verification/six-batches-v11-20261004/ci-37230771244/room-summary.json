@@ -1,0 +1,42 @@
+{
+  "status": "REUSED_EVIDENCE",
+  "expected": 0,
+  "planned_total": 202,
+  "passed": 0,
+  "executed": 0,
+  "reused_passed": 202,
+  "failures": [],
+  "infrastructure": [],
+  "shard_index": 0,
+  "shard_count": 1,
+  "current_source_commit": "bab4e8c793cf12d8c03c42027258fbfdbeb1f945",
+  "evidence": {
+    "status": "REUSED_EVIDENCE",
+    "baseline": "android/verification/six-batches-v11-20261004/room-reuse-9593b92.json",
+    "input_sha256": {
+      "android/core-domain/src": "18082def88945d7e4899ccb18da1ef5a91e2bde9ae4ea99e82c65256a1f7c6d2",
+      "android/data-local/src": "f1b294a6b699c522dcbab14b9b47648205c0692ae568cf22ff481a81116d4dd6",
+      "android/data-local/schemas": "43c88b994e4e2b8e5748745fb9ec56357ca3a9e26b1fa10f1f266726bad1cba8",
+      "android/core-domain/build.gradle.kts": "7754674e70e931b57b5ba1590d02e36f8c2e675b5ad1ece344aba62b4fe0ecda",
+      "android/data-local/build.gradle.kts": "f5a022be21f7471751286863f16b21a178f31acc67c4dc313b1f93c7b909ef7b",
+      "android/build.gradle.kts": "7773e9489989b149cb35c6738f7d73cb6cbd72500b7ef360f9c011557a72aae6",
+      "android/settings.gradle.kts": "0a682ed7c3abe5c8117f9456a69e3e73983fdbda7622212e845b46d5b300b86c",
+      "android/gradle.properties": "493711482b6e6847c9bdbed87b9e6d2850e5fb241632081e3df46199fecf4dc8",
+      "android/gradle": "1c7f35a50c7352521257b9eb52c05605541c638fc5fce18b45b91d626b890259",
+      "android/gradlew": "043cc93505f8d09ff86425a7432bcd25bbccede939f4b79c7ad6ecb4b30672de",
+      "android/gradlew.bat": "0800441edc6a0425c5228bb2f3a8c6eef7b55a07d099d9d461990ec6e8f648b3",
+      "android/buildSrc": null,
+      "android/build-logic": null,
+      "android/gradle.lockfile": null,
+      "android/core-domain/gradle.lockfile": null,
+      "android/data-local/gradle.lockfile": null
+    },
+    "source_commit": "9593b928473b46ff9efe806dace74231d022f3d1",
+    "source_run": 37217398281,
+    "source_url": "https://github.com/InkWeftDevs/InkWeft/actions/runs/37217398281",
+    "receipt": "android/verification/six-batches-v11-20261004/ci-37217398281/room-summary.json",
+    "receipt_sha256": "0587aa4884aaf991623d67452feba6ca45dce93b06b6b2316b7d4bd1cb96b11e",
+    "reused_passed": 202,
+    "reason": "Exact input content match; no Room tests executed in this run"
+  }
+}

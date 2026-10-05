@@ -47,7 +47,7 @@ import org.inkweft.data.*
     }
     Text(if(mapId==null)"白板位置与装饰线独立保存，不成为正式关系。手写请使用已有无界笔记。"else"此脑图独立保存层级与位置；卡片正文与其他视图共享。",Modifier.padding(horizontal=16.dp),fontSize=12.sp,color=Quiet)
     AndroidView(factory={MindMapView(it).also{v->view=v;v.contentDescription="自由白板：拖动卡片摆放，点击查看；不创建语义关系。"}},update={v->
-        v.enabledInput=browseReady;v.authorEditing=editable;v.onActive={readLock.guard("$guardKey-gesture",it)};v.show(placements.map{r->when(val d=r.data()){
+        v.setCardPresentations(rows.cardPresentations());v.enabledInput=browseReady;v.authorEditing=editable;v.onActive={readLock.guard("$guardKey-gesture",it)};v.show(placements.map{r->when(val d=r.data()){
             is KnowledgeData.Placement->StudyNodeRow(r.id,book,d.cardId,null,d.x,d.y,r.revision)
             is KnowledgeData.MapOccurrence->StudyNodeRow(r.id,book,d.cardId,d.parentId,d.x,d.y,r.revision)
             else->error("Unexpected placement")}},cards)

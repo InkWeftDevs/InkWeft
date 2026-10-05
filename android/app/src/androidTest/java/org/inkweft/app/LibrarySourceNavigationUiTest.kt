@@ -159,7 +159,7 @@ class LibrarySourceNavigationUiTest {
         tap("back-library")
         waitFor("new-note")
         openLearningMap(f)
-        if (!compose.runOnIdle { lock(note.id).readOnly.value }) tap("study-readonly")
+        if (!compose.runOnIdle { lock(note.id).readOnly.value }) tap("study-mode-read")
         assertReadOnly(f, paperVisible = false)
         selectNode(f.node)
         tap("node-fold")
@@ -176,12 +176,7 @@ class LibrarySourceNavigationUiTest {
             compose.onNodeWithText("学习", useUnmergedTree = true).performScrollTo().performTouchInput { click() }
         }
         waitFor("learning-workbench")
-        compose.onNodeWithTag("widget-maps").performScrollTo()
-        compose.onNodeWithTag("learning-map-search").performTextReplacement(f.mapTitle)
-        val target = hasTestTag("learning-target-${f.mapId}") and hasAnyAncestor(hasTestTag("widget-maps"))
-        compose.waitUntil(15_000) { compose.onAllNodes(target).fetchSemanticsNodes().isNotEmpty() }
-        compose.onNode(target).performScrollTo().assertIsDisplayed().performTouchInput { click() }
-        waitFor("study-map")
+        compose.openLearningMapTarget(f.mapId,f.mapTitle)
         compose.waitUntil(15_000) { var ready = false
             compose.runOnIdle { ready = study(f.note.id).mapId.value == f.mapId && !study(f.note.id).ui.value.loading &&
                 runCatching { native<MindMapView>().nodeBounds(f.node) != null }.getOrDefault(false) }
@@ -208,13 +203,13 @@ class LibrarySourceNavigationUiTest {
         compose.runOnIdle { assertEquals(node, native<MindMapView>().selectedNodeId) }
     }
 
-    private fun openBody(node: String, body: String) {
+    private fun openBody(node: String, body: String, awaitSource: Boolean = true) {
         selectNode(node)
         tap("node-more")
         tap("node-view-content")
         waitFor("card-full-body")
         compose.onNodeWithTag("card-full-body").assertTextEquals(body)
-        waitFor("study-open-source")
+        if (awaitSource) waitFor("study-open-source")
     }
 
     private fun session(f: Fixture): SessionState = compose.runOnIdle {
@@ -457,22 +452,54 @@ class LibrarySourceNavigationUiTest {
         }
     }
 
+    // Observe Room's existing serial transaction queue without issuing another
+    // database read behind the held writer (same probe used by collection tests).
+    private fun transactionQueueDepth(): Int {
+        val executor = probe.transactionExecutor
+        val field = generateSequence(executor.javaClass as Class<*>?) { it.superclass }
+            .flatMap { it.declaredFields.asSequence() }
+            .single { java.util.Collection::class.java.isAssignableFrom(it.type) }
+        return synchronized(executor) {
+            field.isAccessible = true
+            (field.get(executor) as Collection<*>).size
+        }
+    }
+
     private fun beginHeldNavigation(label: String): WriterGate {
         val gate = WriterGate(label)
+        var queueBefore = "not sampled"
         try {
             gate.awaitHeld()
+            queueBefore = transactionQueueDepth().toString()
             tapFooter("study-open-source")
-            compose.waitUntil(10_000) { runCatching { compose.onNodeWithTag("study-open-source").assertIsNotEnabled() }.isSuccess }
+            compose.waitUntil("$label: the touched source request remains pending behind Room", 10_000) {
+                runCatching { compose.onNodeWithTag("study-open-source")
+                    .assertTextEquals("正在定位…").assertIsNotEnabled() }.isSuccess
+            }
             compose.onNodeWithTag("study-card-details").assertIsDisplayed()
             compose.onNodeWithTag("card-back").assertIsDisplayed().assertIsEnabled()
             return gate
-        } catch (error: Throwable) { gate.finish(); throw error }
+        } catch (error: Throwable) {
+            // Attach synthetic-fixture diagnostics to the original failure. stdout
+            // goes to Android logcat and is absent from am instrument's result.
+            val diagnostic = StringBuilder("LS58 $label: Room queue before touch=$queueBefore")
+            runCatching { diagnostic.append("\nRoom queue at failure=${transactionQueueDepth()}") }.onFailure(error::addSuppressed)
+            runCatching { screenshot("ls58-$label-navigation-failure.png") }.onFailure(error::addSuppressed)
+            runCatching { compose.runOnIdle { diagnostic.append("\nselected=${notebook().ui.value.selectedId}, " +
+                "pending=${workspace().pendingPageNavigation.value}, error=${workspace().error.value}") } }.onFailure(error::addSuppressed)
+            runCatching { compose.onAllNodes(isRoot(), useUnmergedTree = true).fetchSemanticsNodes().indices.forEach {
+                diagnostic.append("\n").append(compose.onAllNodes(isRoot(), useUnmergedTree = true)[it].printToString())
+            } }.onFailure(error::addSuppressed)
+            error.addSuppressed(AssertionError(diagnostic.toString()))
+            runCatching { gate.finish() }.onFailure(error::addSuppressed)
+            throw error
+        }
     }
 
     private fun settleReleasedNavigation(f: Fixture) {
         // The actual app's transaction queue is a fence behind the released
         // navigation transaction. Keep DB assertions out of the held interval.
-        runBlocking { app.workspaceRepository.get(f.note.id) }
+        runBlocking { withTimeout(15_000) { app.workspaceRepository.get(f.note.id) } }
         compose.waitForIdle()
     }
 
@@ -501,11 +528,14 @@ class LibrarySourceNavigationUiTest {
             assertInLibrary(f)
             tapFooter("card-back")
             compose.onNodeWithTag("study-card-details").assertDoesNotExist()
-            openBody(f.secondNode, f.secondBody)
-            compose.onNodeWithTag("study-open-source").assertIsEnabled()
+            // The replacement card's sources() uses this same Room transaction
+            // queue. Its body can open now; its source must reload after release.
+            openBody(f.secondNode, f.secondBody, awaitSource = false)
+            compose.onNodeWithTag("study-open-source").assertDoesNotExist()
             assertInLibrary(f)
         } finally { firstGate.finish() }
         settleReleasedNavigation(f)
+        waitFor("study-open-source")
         compose.onNodeWithTag("study-card-details").assertIsDisplayed()
         compose.onNodeWithTag("card-full-body").assertTextEquals(f.secondBody)
         compose.onNodeWithTag("study-open-source").assertIsEnabled()
@@ -522,10 +552,13 @@ class LibrarySourceNavigationUiTest {
             waitFor("card-full-body")
             awaitRecreatedStudyLayout(f)
             compose.onNodeWithTag("card-full-body").assertTextEquals(f.secondBody)
-            compose.waitUntil(15_000) { runCatching { compose.onNodeWithTag("study-open-source").assertIsEnabled() }.isSuccess }
+            // Recreated transient source state must not reuse the old request;
+            // its new database read cannot finish while this gate is still held.
+            compose.onNodeWithTag("study-open-source").assertDoesNotExist()
             assertInLibrary(f)
         } finally { secondGate.finish() }
         settleReleasedNavigation(f)
+        waitFor("study-open-source")
         compose.onNodeWithTag("card-full-body").assertTextEquals(f.secondBody)
         compose.onNodeWithTag("study-card-details").assertIsDisplayed()
         compose.onNodeWithTag("study-open-source").assertIsDisplayed().assertIsEnabled()

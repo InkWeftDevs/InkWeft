@@ -42,17 +42,20 @@ data class MapScene(val ref:MapRef,val title:String,val nodes:List<MapSceneNode>
 data class MapSearchHit(val ref:MapRef,val nodeId:String,val cardId:String?,val mapTitle:String,val title:String,
     val branchPath:List<String>,val matchedField:String,val snippet:String,val sourceState:String,val rank:Int)
 object MapSearch {
-    fun find(scenes:List<MapScene>,query:String,current:MapRef,allMaps:Boolean):List<MapSearchHit>{
+    fun find(scenes:List<MapScene>,query:String,current:MapRef,allMaps:Boolean,annotations:Map<String,String> = emptyMap()):List<MapSearchHit>{
         val q=query.trim();if(q.isEmpty())return emptyList()
         return scenes.filter{it.available&&(allMaps||it.ref==current)}.flatMap{s->
             val byId=s.nodes.associateBy{it.id}
             s.nodes.mapNotNull{n->
-                val inTitle=n.title.contains(q,true);val index=n.body.indexOf(q,ignoreCase=true)
+                val inTitle=n.title.contains(q,true);val inBody=n.body.contains(q,true)
+                val annotation=annotations[n.cardId].orEmpty()
+                val matchedText=if(inBody)n.body else annotation
+                val index=matchedText.indexOf(q,ignoreCase=true)
                 if(!inTitle&&index<0)return@mapNotNull null
                 val path=mutableListOf<String>();val seen=mutableSetOf(n.id);var parent=byId[n.parentId]
                 while(parent!=null&&seen.add(parent.id)){path.add(0,parent.title);parent=byId[parent.parentId]}
-                MapSearchHit(s.ref,n.id,n.cardId,s.title,n.title,path,if(inTitle)"标题"else"正文",
-                    if(inTitle)n.title else n.body.substring((index-24).coerceAtLeast(0),(index+q.length+64).coerceAtMost(n.body.length)),n.sourceState,
+                MapSearchHit(s.ref,n.id,n.cardId,s.title,n.title,path,if(inTitle)"标题"else if(inBody)"正文"else"个人注释",
+                    if(inTitle)n.title else matchedText.substring((index-24).coerceAtLeast(0),(index+q.length+64).coerceAtMost(matchedText.length)),n.sourceState,
                     (if(s.ref==current)0 else 10)+(if(n.title.equals(q,true))0 else if(inTitle)1 else 2))
             }
         }.sortedWith(compareBy<MapSearchHit>{it.rank}.thenBy{it.mapTitle}.thenBy{it.title}.thenBy{it.nodeId})

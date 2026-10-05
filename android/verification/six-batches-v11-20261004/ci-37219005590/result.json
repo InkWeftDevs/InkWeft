@@ -1,0 +1,45 @@
+{
+  "source": "57e9dc50da1f72b98362656eef383561aa0594b6",
+  "local_same_tree": "618f2cd217487b602504d714bba2941736c65465",
+  "run": 37219005590,
+  "status": "FAILED_THREE_UI",
+  "core": {
+    "passed": 157,
+    "failed": 0
+  },
+  "ui": {
+    "executed": 6,
+    "passed": 3,
+    "failed": 3
+  },
+  "room": {
+    "executed": 0,
+    "passed": 0,
+    "reused": 202,
+    "source_run": 37217398281
+  },
+  "fixture": {
+    "prepare": "PASS",
+    "native_recall": "PASS",
+    "remaining3": "NOT_RUN_FOCUSED",
+    "same_run_id": "c22240af-31c3-489a-af30-0066c84994ff",
+    "png_verified": 14
+  },
+  "artifact": 11309348607,
+  "artifact_sha256": "sha256:280c8377d567708bbddb6db306f1162d93e251ed22fe7f4128262faa8cda6ba2",
+  "acl": "RESTORED_EXACT_ORIGINAL_ACL",
+  "timing_seconds": {
+    "build": 591.6,
+    "emulator": 67.5,
+    "regression": 102.9,
+    "fixture": 138.2,
+    "total": 944.3
+  },
+  "remaining": [
+    "Bound pinch used incorrect positional argument order",
+    "Card trash succeeded and auto-closed details, test used obsolete back path; compact restore instructions need correction",
+    "Outline feedback proved the pointer landed outside the list after edge scroll. Candidate diagnosis: idle synchronization advances the ongoing coroutine between coordinate reads; explicit frame stepping plus live bounds and exact child-drop/undo/cancel assertions require the next real run."
+  ],
+  "full_acceptance": "NOT_COMPLETE",
+  "physical_device": "NOT_RUN"
+}

@@ -153,7 +153,7 @@ class BranchReviewRepositoryTest {
         for (scope in ReviewQuestionScope.entries)
             reject("BRANCH_REVIEW_NODE_UNAVAILABLE") { repository.prepareCard(ref, owner.cardId!!, 2, owner.nodeId, scope) }
         assertEquals(before, authorStamp(db))
-        study.submit(StudyCommand(id(), book, StudyAction.TRASH_CARD, cardId = owner.cardId, expectedRevision = 2))
+        study.submit(StudyCommand(id(), book, StudyAction.TRASH_CARD, cardId = owner.cardId, expectedRevision = 2,expectedTrashImpact=StudyRepository(db).previewTrash(book,requireNotNull(owner.cardId)).fingerprint))
         val mapRow = db.knowledge().get(otherMap)!!
         KnowledgeRepository(db).submit(KnowledgeCommand(id(), book, otherMap, mapRow.revision, mapRow.data(), true))
         before = authorStamp(db)
@@ -309,7 +309,7 @@ class BranchReviewRepositoryTest {
         val repository = BranchReviewRepository(db)
         val plan = repository.prepare(MapRef(book), card.nodeId)
         StudyRepository(db).submit(StudyCommand(id(), book, StudyAction.REMOVE_NODE, nodeId = card.nodeId, expectedRevision = 1))
-        StudyRepository(db).submit(StudyCommand(id(), book, StudyAction.TRASH_CARD, cardId = card.cardId, expectedRevision = 1))
+        StudyRepository(db).submit(StudyCommand(id(), book, StudyAction.TRASH_CARD, cardId = card.cardId, expectedRevision = 1,expectedTrashImpact=StudyRepository(db).previewTrash(book,requireNotNull(card.cardId)).fingerprint))
         assertEquals("冻结答案", repository.load(plan).single().card.body)
         val mark = KnowledgeCommand(id(), book, question.id, 1, KnowledgeData.Question(cardId, "独立问题", ManualState.UNDERSTOOD))
         assertTrue(KnowledgeRepository(db).reviewOutcome(mark, 1) is KnowledgeOutcome.Rejected)
@@ -422,7 +422,7 @@ class BranchReviewRepositoryTest {
         val understoodQuestion = question(db, book, understood.cardId!!)
         question(db, book, recycled.cardId!!)
         StudyRepository(db).submit(StudyCommand(id(), book, StudyAction.REMOVE_NODE, nodeId = recycled.nodeId, expectedRevision = 1))
-        StudyRepository(db).submit(StudyCommand(id(), book, StudyAction.TRASH_CARD, cardId = recycled.cardId, expectedRevision = 1))
+        StudyRepository(db).submit(StudyCommand(id(), book, StudyAction.TRASH_CARD, cardId = recycled.cardId, expectedRevision = 1,expectedTrashImpact=StudyRepository(db).previewTrash(book,requireNotNull(recycled.cardId)).fingerprint))
         val inbox = record(db, book, KnowledgeData.Collection("默认待整理", state = ManualState.INBOX))
         val unrestricted = record(db, book, KnowledgeData.Collection("不设条件的集合"))
         val repository = BranchReviewRepository(db)

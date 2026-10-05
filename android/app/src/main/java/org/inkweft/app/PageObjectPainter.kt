@@ -9,8 +9,9 @@ import org.inkweft.core.*
 import java.util.Base64
 
 /** Bounded caches; decoded media is shared by transformed copies until the view is detached. */
-internal class PageObjectPainter {
+internal class PageObjectPainter(private val requireCompleteImages:Boolean=false) {
     var mapScenes:Map<MapRef,MapScene> = emptyMap()
+    var originalImage:(PageObject)->ImageFrame? = {null}
     private val mapScenesResolved=object:LinkedHashMap<String,MapScene?>(16,.75f,true){override fun removeEldestEntry(e:MutableMap.MutableEntry<String,MapScene?>?)=size>32}
     private val resourceOwner="objects-"+java.util.UUID.randomUUID()
     private val images=object:LinkedHashMap<String,Bitmap?>(8,.75f,true){override fun removeEldestEntry(eldest:MutableMap.MutableEntry<String,Bitmap?>?):Boolean{if(size<=8)return false;eldest?.value?.let{RenderResources.release(it,resourceOwner)};return true}}
@@ -24,7 +25,7 @@ internal class PageObjectPainter {
             val o=if(liveErase!=null&&source.sourceStrokeIds.isNotEmpty()&&source.glyphs.isEmpty())source.copy(glyphs=TextStyles.positioned(source))else source
             paint.alpha=255;paint.style=Paint.Style.FILL;paint.pathEffect=null
             val save=canvas.save();canvas.clipRect(o.x,o.y,o.x+o.width,o.y+o.height)
-            when(o.kind) {
+            try{when(o.kind) {
                 PageObjectKind.MAP->{
                     val embed=checkNotNull(o.mapEmbed)
                     val live=embed.snapshot?:mapScenes[embed.target]?:if(mapScenes.keys.any{it.notebookId==embed.target.notebookId})MapScene(embed.target,"",emptyList(),"",false)else null
@@ -33,15 +34,25 @@ internal class PageObjectPainter {
                     MapScenePainter.embed(canvas,scene,o)
                 }
                 PageObjectKind.IMAGE->{
+                    val original=originalImage(o)
                     val bitmap=if(images.containsKey(o.image))images[o.image]else try{
                         val bytes=Base64.getDecoder().decode(o.image)
                         val opts=BitmapFactory.Options().apply{inJustDecodeBounds=true};BitmapFactory.decodeByteArray(bytes,0,bytes.size,opts)
                         require(opts.outWidth in 1..1024&&opts.outHeight in 1..1024)
                         RenderResources.admit(opts.outWidth.toLong()*opts.outHeight*4)
                         BitmapFactory.decodeByteArray(bytes,0,bytes.size)?.also{RenderResources.track(it,it.allocationByteCount.toLong(),"image",resourceOwner,RenderResources.Role.ACTIVE)}.also{images[o.image]=it}
-                    }catch(_:RenderBudgetBusy){null}catch(_:Exception){images[o.image]=null;null}
+                    }catch(e:RenderBudgetBusy){if(requireCompleteImages)throw e else null}catch(e:Exception){
+                        if(requireCompleteImages)throw IllegalStateException("可见图片预览无法完整解码，本次未输出；原内容保留",e)
+                        images[o.image]=null;null
+                    }
+                    check(!requireCompleteImages||bitmap!=null){"可见图片预览无法完整解码，本次未输出；原内容保留"}
+                    val fallback=canvas.save()
+                    // Never paint an opaque JPEG underneath transparent original pixels.
+                    original?.let{canvas.clipOutRect(it.bounds(o))}
                     if(bitmap!=null)canvas.drawBitmap(bitmap,null,RectF(o.x,o.y,o.x+o.width,o.y+o.height),paint)
                     else {paint.color=Color.LTGRAY;canvas.drawRect(o.x,o.y,o.x+o.width,o.y+o.height,paint)}
+                    canvas.restoreToCount(fallback)
+                    original?.draw(canvas,o,paint)
                 }
                 PageObjectKind.TEXT->{
                     if(o.textRuns.isNotEmpty()){
@@ -84,7 +95,7 @@ internal class PageObjectPainter {
                 PageObjectKind.SHAPE->{paint.color=o.color;paint.style=Paint.Style.STROKE;paint.strokeWidth=o.lineWidth;paint.strokeJoin=Paint.Join.ROUND;paint.strokeCap=Paint.Cap.ROUND
                     // Inset a half stroke so borders survive object clipping.
                     canvas.drawPath(ObjectGeometry.path(o,o.lineWidth/2),paint);paint.style=Paint.Style.FILL}
-            };canvas.restoreToCount(save)
+            }}finally{canvas.restoreToCount(save)}
         }
     }
     private fun erasePath(cut:TextErasePath,x:Float,y:Float):Path {

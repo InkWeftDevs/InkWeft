@@ -102,7 +102,9 @@ internal class DocumentRendering(context:Context,private val repo:DocumentReposi
             }.also{cache[pageId]=it}
         }?:return@withLock null
         val w=bounds.right-bounds.left;val h=bounds.bottom-bounds.top
-        val scale=pixels.coerceIn(128,2048)/max(w,h)
+        require(w>0&&h>0&&pixels>0)
+        // Bounds are already clipped to the visible window; keep one raster pixel per screen pixel.
+        val scale=pixels/max(w,h)
         RenderResources.admit((ceil(w*scale).toLong().coerceAtLeast(1))*(ceil(h*scale).toLong().coerceAtLeast(1))*4)
         val bitmap=Bitmap.createBitmap(ceil(w*scale).toInt().coerceAtLeast(1),ceil(h*scale).toInt().coerceAtLeast(1),Bitmap.Config.ARGB_8888)
         try {

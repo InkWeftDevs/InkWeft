@@ -152,4 +152,44 @@ class StudyOrganizationTest {
         val template=MapTemplates.anonymize("顺序","right",nodes,cards.associate{it.id to it.title},true)
         assertEquals(listOf("首项","子项","末项"),template.nodes.map{it.title});assertEquals(0,template.nodes[1].parent)
     }
+    @Test fun selectedBranchesMoveOnceKeepContentAndCanUndoThenRedo(){
+        val root=node(x=50.0,y=100.0);val child=node(root,150.0,220.0);val leaf=node(child,250.0,340.0);val other=node(x=800.0,y=900.0)
+        val initial=state(listOf(root,child,leaf,other),listOf(root.id,child.id,leaf.id,other.id))
+        val plan=StudyOrganization.moveSelection(initial,setOf(root.id,child.id),70.0,-40.0)
+        val moved=StudyOrganization.apply(initial,plan)
+        for(before in listOf(root,child,leaf)){
+            val after=moved.nodes.first{it.id==before.id}
+            assertEquals(before.x+70,after.x,0.0);assertEquals(before.y-40,after.y,0.0)
+            assertEquals(before.cardId,after.cardId);assertEquals(before.parentId,after.parentId)
+        }
+        assertEquals(other,moved.nodes.first{it.id==other.id});assertEquals(initial.orderedNodeIds,moved.orderedNodeIds)
+        val inverse=StudyOrganization.undo(moved,plan);val undone=StudyOrganization.apply(moved,inverse)
+        assertEquals(initial.nodes.map{it.x to it.y},undone.nodes.map{it.x to it.y})
+        val redone=StudyOrganization.apply(undone,StudyOrganization.undo(undone,inverse))
+        assertEquals(moved.nodes.map{it.x to it.y},redone.nodes.map{it.x to it.y})
+        reject{StudyOrganization.move(initial,root.id,40000.0,0.0)}
+        assertEquals(50.0,initial.nodes.first().x,0.0)
+    }
+
+    @Test fun overlappingSelectionGroupsOnceAndLayoutKeepsUnselectedBranches(){
+        val root=node();val first=node(root,200.0,100.0);val leaf=node(first,500.0,150.0)
+        val second=node(root,200.0,400.0);val target=node(x=900.0,y=100.0)
+        val initial=state(listOf(root,first,leaf,second,target),listOf(root.id,first.id,leaf.id,second.id,target.id))
+        val selection=setOf(first.id,leaf.id,second.id)
+        assertEquals(setOf(first.id,second.id),StudyOrganization.selectionRoots(initial,selection))
+        val grouped=StudyOrganization.apply(initial,StudyOrganization.reparentSelection(initial,selection,target.id))
+        assertEquals(listOf(root.id,target.id,first.id,leaf.id,second.id),grouped.orderedNodeIds)
+        assertEquals(first.id,grouped.nodes.first{it.id==leaf.id}.parentId)
+        assertTrue(grouped.nodes.filter{it.id in setOf(first.id,second.id)}.all{it.parentId==target.id})
+        reject{StudyOrganization.reparentSelection(initial,selection,leaf.id)}
+        val sizes=initial.orderedNodeIds.associateWith{StudyNodeSize(280.0,150.0)}
+        val plan=StudyOrganization.arrangeSelection(initial,selection,sizes)
+        val arranged=StudyOrganization.apply(initial,plan)
+        for(node in listOf(root,target))assertEquals(node,arranged.nodes.first{it.id==node.id})
+        assertEquals(initial.orderedNodeIds,arranged.orderedNodeIds)
+        assertEquals(initial.nodes.associate{it.id to it.parentId},arranged.nodes.associate{it.id to it.parentId})
+        val undo=StudyOrganization.undo(arranged,plan)
+        assertEquals(initial.nodes.map{it.x to it.y},StudyOrganization.apply(arranged,undo).nodes.map{it.x to it.y})
+    }
+
 }

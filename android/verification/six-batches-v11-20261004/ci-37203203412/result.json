@@ -1,0 +1,262 @@
+{
+  "source": "54902a5b1cece4c53052e0a08a81bcc89533d598",
+  "run": 37203203412,
+  "url": "https://github.com/InkWeftDevs/InkWeft/actions/runs/37203203412",
+  "scope": "synthetic Android35 accelerated emulator, not physical tablet",
+  "shards": [
+    {
+      "index": 0,
+      "artifact": 11304545988,
+      "app": {
+        "expected": 43,
+        "planned_total": 128,
+        "shard_index": 0,
+        "shard_count": 3,
+        "passed": 38,
+        "failures": [
+          "org.inkweft.app.RecallMaskUiTest#tabletMapTextFitAndNeutralRecallPlaceholdersKeepAuthorRows",
+          "org.inkweft.app.CardSourceNavigationUiTest#narrowLargeFontKeepsFooterReachableAfterLongBodyScrollAndRecreation",
+          "org.inkweft.app.LearningWorkspacePolishUiTest#outlineExposesOneContextGroupAndKeepsFullDetailsAndFoldTargets",
+          "org.inkweft.app.MapInteractionUiTest#outlineTitlesKeepSharedContentAndContinueAtTheSameParent",
+          "org.inkweft.app.SelectionStudyUiTest#outlineFoldFocusAndQuickAddShareOneGraph"
+        ],
+        "infrastructure": []
+      },
+      "room": {
+        "expected": 180,
+        "planned_total": 180,
+        "shard_index": 0,
+        "shard_count": 3,
+        "passed": 180,
+        "failures": [],
+        "infrastructure": []
+      },
+      "fixture": {
+        "status": "FAILED",
+        "source_commit": "54902a5b1cece4c53052e0a08a81bcc89533d598",
+        "synthetic_only": true,
+        "expected": 5,
+        "passed": 0,
+        "phases": {
+          "prepare": {
+            "status": "FAILED",
+            "returncode": 1
+          },
+          "reopen": {
+            "status": "NOT_RUN"
+          },
+          "visual": {
+            "status": "NOT_RUN"
+          },
+          "native_recall": {
+            "status": "NOT_RUN"
+          },
+          "native_recall_reopen": {
+            "status": "NOT_RUN"
+          }
+        },
+        "real_device": "NOT_RUN",
+        "human_handwriting": "NOT_RUN",
+        "pixels_review": "PENDING_HUMAN_OR_VISUAL_REVIEW",
+        "reason": "prepare did not pass; dependent phases NOT_RUN, original library retained"
+      },
+      "acl": {
+        "status": "RESTORED_EXACT_ORIGINAL_ACL"
+      },
+      "screenshots": [
+        "app-029/ls58-recycled-source.png",
+        "app-030/bp55-unavailable-branch.png",
+        "app-013/v37-excerpt-resize.png",
+        "app-038/mui-title-layout.png"
+      ],
+      "evidence_sha256": {
+        "app-summary.json": "58a475dde55f6ca4248711744daf7db48d0ac593b01e1adb637744ac44143414",
+        "room-summary.json": "9dff5cc46ef0d2832dbde05d5a404508c4d0fcc2f9f25cb16193c88626f7a9bf",
+        "fixture-summary.json": "38732b55e84016c906ce02beee69eff3bcb636c9d3b80a85de8b73f4a85f8af4",
+        "APK-SHA256.txt": "3f0142e23f55d0693fdc8b4e5fd4a8b9127b553c6984c2c0467de586481876a4",
+        "apk-signature.txt": "4e298c4f20a7c5876cc4f5f4cc563bd79f367ced64152781151089633e7d896b",
+        "source-commit.txt": "6ace31e031fc79f6024b9373ff3aed99417f632b6e3d9b58e4855cada2303578"
+      }
+    },
+    {
+      "index": 1,
+      "artifact": 11304750433,
+      "app": {
+        "expected": 43,
+        "planned_total": 128,
+        "shard_index": 1,
+        "shard_count": 3,
+        "passed": 39,
+        "failures": [
+          "org.inkweft.app.RecallQuestionEditorUiTest#pendingCommandTakesPrecedenceOverCurrentPromptAcrossRecreation",
+          "org.inkweft.app.LibrarySourceNavigationUiTest#closingOrRecreatingPendingLibrarySourceCannotJumpOrCloseAnotherCard",
+          "org.inkweft.app.SelectionStudyUiTest#outlineAndMapReuseSingleEditableCard",
+          "org.inkweft.app.SelectionStudyUiTest#cardSearchFindsBodyAndClearRestoresCards"
+        ],
+        "infrastructure": []
+      },
+      "room": {
+        "status": "NOT_ASSIGNED",
+        "source_commit": "54902a5b1cece4c53052e0a08a81bcc89533d598",
+        "shard_index": 1,
+        "shard_count": 3,
+        "assigned_shard": 0,
+        "expected": 0,
+        "planned_total": 180,
+        "passed": 0,
+        "failures": [],
+        "infrastructure": []
+      },
+      "fixture": {
+        "status": "NOT_ASSIGNED",
+        "source_commit": "54902a5b1cece4c53052e0a08a81bcc89533d598",
+        "shard_index": 1,
+        "shard_count": 3,
+        "assigned_shard": 0,
+        "expected": 0,
+        "planned_total": 5,
+        "passed": 0,
+        "failures": [],
+        "infrastructure": [],
+        "phases": {
+          "prepare": {
+            "status": "NOT_ASSIGNED"
+          },
+          "reopen": {
+            "status": "NOT_ASSIGNED"
+          },
+          "visual": {
+            "status": "NOT_ASSIGNED"
+          },
+          "native_recall": {
+            "status": "NOT_ASSIGNED"
+          },
+          "native_recall_reopen": {
+            "status": "NOT_ASSIGNED"
+          }
+        }
+      },
+      "acl": {
+        "status": "RESTORED_EXACT_ORIGINAL_ACL"
+      },
+      "screenshots": [
+        "app-033/polish-card-reading-order.png",
+        "app-037/mui-unknown-draft.png",
+        "app-035/mui-conflict-draft.png",
+        "app-039/beautify-preview.png",
+        "app-034/polish-default-tools.png",
+        "app-034/polish-excerpt-header-clear.png",
+        "app-028/sn57-unavailable-source.png",
+        "app-030/bp55-opened-branch-removed.png"
+      ],
+      "evidence_sha256": {
+        "app-summary.json": "1d5a9c1b7d42fcbda6debdc6984ab1851f9a3b859723b6c00cb41d933db891ac",
+        "room-summary.json": "5d1cd81cce64291ce2013d9d976439eac282cd4e3c47da3371758fb66fe1570a",
+        "fixture-summary.json": "9829959e017498b1c5a58e535adf642ef47a7f1a58e724d14135bc5a4e0ad2fa",
+        "APK-SHA256.txt": "ca5d9845d0a010302c06c1a1f0343e8febb42e94583be357e0bbe365d8eeac54",
+        "apk-signature.txt": "477dd85b3738a7fa9364627ced5d4733fbb0fe2cf207837d4fb038e0ec123102",
+        "source-commit.txt": "6ace31e031fc79f6024b9373ff3aed99417f632b6e3d9b58e4855cada2303578"
+      }
+    },
+    {
+      "index": 2,
+      "artifact": 11304241699,
+      "app": {
+        "expected": 42,
+        "planned_total": 128,
+        "shard_index": 2,
+        "shard_count": 3,
+        "passed": 41,
+        "failures": [
+          "org.inkweft.app.SelectionStudyUiTest#childThemeAndRemovingLeafKeepsCard"
+        ],
+        "infrastructure": []
+      },
+      "room": {
+        "status": "NOT_ASSIGNED",
+        "source_commit": "54902a5b1cece4c53052e0a08a81bcc89533d598",
+        "shard_index": 2,
+        "shard_count": 3,
+        "assigned_shard": 0,
+        "expected": 0,
+        "planned_total": 180,
+        "passed": 0,
+        "failures": [],
+        "infrastructure": []
+      },
+      "fixture": {
+        "status": "NOT_ASSIGNED",
+        "source_commit": "54902a5b1cece4c53052e0a08a81bcc89533d598",
+        "shard_index": 2,
+        "shard_count": 3,
+        "assigned_shard": 0,
+        "expected": 0,
+        "planned_total": 5,
+        "passed": 0,
+        "failures": [],
+        "infrastructure": [],
+        "phases": {
+          "prepare": {
+            "status": "NOT_ASSIGNED"
+          },
+          "reopen": {
+            "status": "NOT_ASSIGNED"
+          },
+          "visual": {
+            "status": "NOT_ASSIGNED"
+          },
+          "native_recall": {
+            "status": "NOT_ASSIGNED"
+          },
+          "native_recall_reopen": {
+            "status": "NOT_ASSIGNED"
+          }
+        }
+      },
+      "acl": {
+        "status": "RESTORED_EXACT_ORIGINAL_ACL"
+      },
+      "screenshots": [
+        "app-007/b1-card-four-zones.png",
+        "app-029/bp55-focused-branch.png",
+        "app-029/bp55-branch-picker.png",
+        "app-029/bp55-branch-preview.png",
+        "app-039/selection-actions.png",
+        "app-034/mui-selected.png",
+        "app-034/mui-rename-keyboard.png",
+        "app-034/mui-long-content.png",
+        "app-034/mui-map-menu.png",
+        "app-034/mui-node-menu.png",
+        "app-034/mui-unselected-24.png",
+        "app-027/sn57-collapsed-source-return.png",
+        "app-028/ls58-exact-source.png",
+        "app-012/v36-excerpt.png",
+        "app-032/bp55-narrow-large-type-picker.png",
+        "app-032/bp55-narrow-large-type-preview.png",
+        "app-036/mui-narrow-selected.png",
+        "app-036/mui-narrow-keyboard.png",
+        "app-038/mui-edge-affordances.png"
+      ],
+      "evidence_sha256": {
+        "app-summary.json": "c4d2d95344028d145a530ba0912f1e2b11f3d7e33ed0e697e043dff369e53678",
+        "room-summary.json": "ee9e71d088a8174f5e420d8fa478212fe2e6b3cf0cb149d43ee77bdfdbaac8be",
+        "fixture-summary.json": "59e8144cfe10a4c8bf8e0e1ea13428922434dbd34f153bdb84ac82883d5b2c53",
+        "APK-SHA256.txt": "b5ce3f3868a24bbfca5207adb71bf1b7096db51b53d1f00fb6dace933581f173",
+        "apk-signature.txt": "277c794a59e6e2477981751e79b2362b200a363d3b1c6991af850ec2e380744b",
+        "source-commit.txt": "6ace31e031fc79f6024b9373ff3aed99417f632b6e3d9b58e4855cada2303578"
+      }
+    }
+  ],
+  "totals": {
+    "ui_completed": 128,
+    "ui_passed": 118,
+    "ui_failed": 10,
+    "room_completed": 180,
+    "room_passed": 180,
+    "room_failed": 0,
+    "fixture_completed": 1,
+    "fixture_failed": 1,
+    "fixture_remaining_not_run": 4
+  },
+  "failure_classification": "UI includes four stale quick-settings paths; remaining cases under production/fixture diagnosis. B6 locked-layer pressure pixel count0 is not waived."
+}

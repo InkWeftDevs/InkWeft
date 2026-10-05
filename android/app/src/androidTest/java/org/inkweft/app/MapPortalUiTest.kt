@@ -31,6 +31,32 @@ class MapPortalUiTest {
     private var probeDatabase: NoteDatabase? = null
     private val probe get() = probeDatabase ?: NoteDatabase.open(app).also { probeDatabase = it }
     private fun id() = UUID.randomUUID().toString()
+    private var mapEvidence = ""
+    private var lastMapObservation = ""
+    private var mapFailureCaptured = false
+    private var actionSerial = 0
+    private var lastAction = "No map action yet"
+    private fun recordMapEvidence(value: String) {
+        if (value != lastMapObservation) {
+            lastMapObservation = value
+            mapEvidence = (mapEvidence + "\n" + value).takeLast(48_000)
+        }
+    }
+    private fun captureMapFailure(error: Throwable) {
+        if (mapFailureCaptured) return
+        mapFailureCaptured = true
+        runCatching {
+            val instrumentation = InstrumentationRegistry.getInstrumentation()
+            val directory = checkNotNull(instrumentation.targetContext.getExternalFilesDir(null))
+            runCatching { java.io.File(directory, "bp55-map-state-failure.txt").writeText(mapEvidence) }.onFailure(error::addSuppressed)
+            runCatching {
+                val bitmap = checkNotNull(instrumentation.uiAutomation.takeScreenshot())
+                try { java.io.File(directory, "bp55-map-state-failure.png").outputStream().use { bitmap.compress(android.graphics.Bitmap.CompressFormat.PNG, 100, it) } }
+                finally { bitmap.recycle() }
+            }.onFailure(error::addSuppressed)
+        }.onFailure(error::addSuppressed)
+        error.addSuppressed(AssertionError(mapEvidence))
+    }
 
     @After fun closeProbe() {
         probeDatabase?.close()
@@ -77,21 +103,62 @@ class MapPortalUiTest {
         val node = compose.onNodeWithTag(tag)
         runCatching { node.performScrollTo() }
         node.assertIsDisplayed()
+        lastAction = "action=${++actionSerial} tag=$tag physical=$physical enabled=true bounds=${node.fetchSemanticsNode().boundsInRoot}"
+        recordMapEvidence(lastAction)
         if (physical) node.performTouchInput { click() } else node.performClick()
         compose.waitForIdle()
     }
 
-    private fun map(): MindMapView {
+    private fun nativeMaps(): List<MindMapView> {
         val queue = java.util.ArrayDeque<View>()
         queue.add(compose.activity.window.decorView)
-        // Library StudyWorkspace is a real Dialog window rather than the embedded book window.
         WindowInspector.getGlobalWindowViews().filter { it !== compose.activity.window.decorView }.forEach(queue::add)
+        val visited = java.util.Collections.newSetFromMap(java.util.IdentityHashMap<View, Boolean>())
+        val result = mutableListOf<MindMapView>()
         while (queue.isNotEmpty()) {
             val view = queue.removeFirst()
-            if (view is MindMapView && view.isShown) return view
+            if (!visited.add(view)) continue
+            if (view is MindMapView) result.add(view)
             if (view is ViewGroup) repeat(view.childCount) { queue.add(view.getChildAt(it)) }
         }
-        error("Visible native map is missing")
+        return result
+    }
+
+    // Preserve the existing first-visible selection until evidence establishes an ownership bug.
+    private fun map(): MindMapView = nativeMaps().firstOrNull { it.isShown }
+        ?: error("Visible native map is missing")
+
+    /** Read-only, on the UI thread. Record every candidate rather than assuming the first is ours. */
+    private fun mapState(f: Fixture, expectedMap: String?, expectedNode: String, phase: String): Boolean {
+        val vm = study(f.note.id); val state = vm.ui.value
+        val views = nativeMaps(); val first = views.firstOrNull { it.isShown }
+        val mapMatches = vm.mapId.value == expectedMap
+        val loaded = !state.loading
+        val firstHasNode = runCatching { first?.nodeBounds(expectedNode) != null }.getOrDefault(false)
+        val candidates = views.map { view ->
+            val screen = IntArray(2); view.getLocationOnScreen(screen)
+            val local = android.graphics.Rect(); val visible = view.getLocalVisibleRect(local)
+            val root = view.rootView
+            val rendered = runCatching {
+                @Suppress("UNCHECKED_CAST")
+                (MindMapView::class.java.getDeclaredField("nodes").apply { isAccessible = true }.get(view) as List<StudyNodeRow>)
+            }.getOrNull()
+            "view=${System.identityHashCode(view)} first=${view === first} root=${System.identityHashCode(root)} " +
+                "shown=${view.isShown} attached=${view.isAttachedToWindow} focus=${root.hasWindowFocus()} laidOut=${view.isLaidOut} layoutRequested=${view.isLayoutRequested} " +
+                "size=${view.width}x${view.height} screen=${screen.toList()} localVisible=$visible/$local " +
+                "book=${view.captureBook} map=${view.captureMapKey} graph=${view.captureGraph} viewport=${view.snapshotViewport()} " +
+                "renderedCount=${rendered?.size} renderedIds=${rendered?.take(12)?.map { it.id }} targetInRendered=${rendered?.any { it.id == expectedNode }} " +
+                "movementCount=${view.movementNodes.size} targetBounds=${runCatching { view.nodeBounds(expectedNode) }.getOrNull()} " +
+                "ownerMatches=${view.captureBook == f.note.id && view.captureMapKey == (expectedMap ?: "main")}"
+        }
+        recordMapEvidence("phase=$phase $lastAction activity=${System.identityHashCode(compose.activity)} vm=${System.identityHashCode(vm)} " +
+            "expectedBook=${f.note.id} expectedMap=$expectedMap expectedNode=$expectedNode mapMatches=$mapMatches loaded=$loaded firstHasNode=$firstHasNode " +
+            "book=${vm.book} map=${vm.mapId.value} tab=${vm.lastTab} loading=${state.loading} readFailed=${state.readFailed} busy=${state.busy} unknown=${state.unknown} " +
+            "graphRef=${state.graph?.ref} graphHash=${state.graph?.graphFingerprint} graphNodes=${state.graph?.nodes?.size} uiNodes=${state.nodes.size} uiTarget=${state.nodes.any { it.id == expectedNode }} " +
+            "selected=${vm.selectedByMap[expectedMap ?: "main"]} focus=${vm.focusedByMap[expectedMap ?: "main"]} collapsed=${vm.collapsedByMap[expectedMap ?: "main"]} " +
+            "nativeViews=${views.size}\n" + candidates.joinToString("\n"))
+        // The original three-part condition and 15-second budget remain unchanged.
+        return mapMatches && loaded && firstHasNode
     }
 
     private fun study(book: String) =
@@ -101,32 +168,35 @@ class MapPortalUiTest {
         ViewModelProvider(compose.activity)["book-" + book, BookPagesViewModel::class.java]
 
     private fun waitMap(f: Fixture, mapId: String?, node: String, inLibrary: Boolean = false) {
-        waitFor("study-map")
-        compose.waitUntil(15_000) {
-            var ready = false
-            compose.runOnIdle {
-                ready = study(f.note.id).mapId.value == mapId && !study(f.note.id).ui.value.loading &&
-                    runCatching { map().nodeBounds(node) != null }.getOrDefault(false)
+        try {
+            compose.runOnIdle { mapState(f, mapId, node, "before-map-tag") }
+            waitFor("study-map")
+            compose.waitUntil(15_000) {
+                compose.runOnIdle { mapState(f, mapId, node, "wait-map") }
             }
-            ready
-        }
-        if (inLibrary) {
-            compose.onAllNodesWithTag("study-panel").assertCountEquals(0)
-            compose.onAllNodes(isDialog()).assertCountEquals(1)
-        } else compose.onAllNodesWithTag("study-panel").assertCountEquals(1)
-        compose.onAllNodesWithTag("study-map").assertCountEquals(1)
-        compose.runOnIdle {
-            assertEquals(if (inLibrary) null else f.note.id,
-                ViewModelProvider(compose.activity)[NotebookViewModel::class.java].ui.value.selectedId)
-            assertEquals("Map navigation must retain the exact document page", f.page, pages(f.note.id).ui.value.selectedId)
-        }
-        if (inLibrary) compose.onNodeWithTag("ink-surface").assertDoesNotExist()
+            if (inLibrary) {
+                compose.onAllNodesWithTag("study-panel").assertCountEquals(0)
+                compose.onAllNodes(isDialog()).assertCountEquals(1)
+            } else compose.onAllNodesWithTag("study-panel").assertCountEquals(1)
+            compose.onAllNodesWithTag("study-map").assertCountEquals(1)
+            compose.runOnIdle {
+                assertEquals(if (inLibrary) null else f.note.id,
+                    ViewModelProvider(compose.activity)[NotebookViewModel::class.java].ui.value.selectedId)
+                assertEquals("Map navigation must retain the exact document page", f.page, pages(f.note.id).ui.value.selectedId)
+            }
+            if (inLibrary) compose.onNodeWithTag("ink-surface").assertDoesNotExist()
+        } catch (error: Throwable) { captureMapFailure(error); throw error }
     }
 
     private fun chooseMap(f: Fixture, mapId: String?, node: String) {
-        tap("study-map-picker")
-        tap("study-map-" + (mapId ?: "main"))
-        waitMap(f, mapId, node)
+        try {
+            compose.runOnIdle { mapState(f, mapId, node, "before-picker") }
+            tap("study-map-picker")
+            compose.runOnIdle { mapState(f, mapId, node, "before-map-choice") }
+            tap("study-map-" + (mapId ?: "main"))
+            compose.runOnIdle { mapState(f, mapId, node, "after-map-choice") }
+            waitMap(f, mapId, node)
+        } catch (error: Throwable) { captureMapFailure(error); throw error }
     }
 
     private fun select(node: String) {
@@ -426,7 +496,7 @@ class MapPortalUiTest {
         assertEquals(originalContent, contentStamp(f.note.id))
         val afterSave = authorStamp(f.note.id)
         closeManager()
-        tap("study-readonly")
+        tap("quick-readonly")
         openManager()
         compose.onNodeWithTag("map-portal-create").assertIsNotEnabled()
         preview(entry.id, f.targetTitle)
@@ -435,7 +505,7 @@ class MapPortalUiTest {
         shot("branch-preview")
         tap("map-portal-open")
         waitMap(f, f.targetMap, f.targetNode)
-        compose.onNodeWithTag("study-readonly").assertIsOn()
+        compose.onNodeWithTag("quick-readonly").assertIsSelected()
         compose.runOnIdle {
             assertEquals(f.targetNode, study(f.note.id).focusedByMap[f.targetMap])
             assertEquals(f.targetNode, map().selectedNodeId)
@@ -537,8 +607,12 @@ class MapPortalUiTest {
                 KnowledgeData.MapDefinition(f.targetTitle,structures=listOf(MapStructure(replacement,null,"同名替代主题",40.0,80.0)))))
         }
         val before=authorStamp(f.note.id)
+        val departedMap=compose.runOnIdle{map()}
         tap("map-portal-back");waitFor("map-portal-branch-unavailable")
         compose.runOnIdle {
+            assertFalse("Returning must release the departed map view",departedMap.isAttachedToWindow)
+            assertNotSame("Each map keeps its own native view ownership",departedMap,map())
+            assertTrue("The returned map must be attached",map().isAttachedToWindow)
             assertEquals(f.targetMap,study(f.note.id).mapId.value)
             assertEquals(f.targetNode,study(f.note.id).focusedByMap[f.targetMap])
             assertNull(map().nodeBounds(replacement))
@@ -795,11 +869,7 @@ class MapPortalUiTest {
         if (compose.onAllNodesWithTag("open-library-drawer").fetchSemanticsNodes().isNotEmpty()) tap("open-library-drawer")
         compose.onNodeWithText("学习", useUnmergedTree = true).performScrollTo().performClick()
         waitFor("learning-workbench")
-        compose.onNodeWithTag("widget-maps").performScrollTo()
-        compose.onNodeWithTag("learning-map-search").performTextReplacement(entryTitle)
-        val target = hasTestTag("learning-target-" + f.sourceMap) and hasAnyAncestor(hasTestTag("widget-maps"))
-        compose.waitUntil(15_000) { compose.onAllNodes(target).fetchSemanticsNodes().isNotEmpty() }
-        compose.onNode(target).performScrollTo().assertIsDisplayed().performClick()
+        compose.openLearningMapTarget(f.sourceMap,entryTitle)
         waitMap(f, f.sourceMap, f.sourceNode, inLibrary = true)
         compose.onNodeWithTag("learning-workbench").assertDoesNotExist()
         select(f.sourceNode)

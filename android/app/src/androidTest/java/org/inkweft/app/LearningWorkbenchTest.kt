@@ -78,10 +78,7 @@ class LearningWorkbenchTest {
         app.learningStore.visit(StableTargetRef(LearningTargetKind.PAGE,n.id,n.id))
         compose.onNodeWithText("学习",useUnmergedTree=true).performClick()
         compose.onNodeWithTag("learning-workbench").assertIsDisplayed()
-        compose.onNodeWithTag("widget-maps").performScrollTo()
-        compose.onNodeWithTag("learning-map-search").performTextInput("概率复习")
-        shot("directory")
-        compose.onNodeWithTag("learning-target-$map").performScrollTo().performClick()
+        compose.openLearningMapTarget(map,"概率复习"){shot("directory")}
         compose.waitUntil(10000){compose.onAllNodesWithTag("study-map").fetchSemanticsNodes().isNotEmpty()}
         compose.runOnIdle{
             assertNull(ViewModelProvider(compose.activity)[NotebookViewModel::class.java].ui.value.selectedId)

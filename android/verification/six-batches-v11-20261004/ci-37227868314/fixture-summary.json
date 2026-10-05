@@ -1,0 +1,31 @@
+{
+  "status": "NOT_RUN_FOCUSED_UI_DIAGNOSTIC",
+  "mode": "focused",
+  "source_commit": "eaa8a7d43e8026d469452a28948478549667f8b4",
+  "synthetic_only": true,
+  "expected": 5,
+  "selected_expected": 0,
+  "passed": 0,
+  "deadline_epoch": 1791144130,
+  "phases": {
+    "prepare": {
+      "status": "NOT_RUN_FOCUSED"
+    },
+    "reopen": {
+      "status": "NOT_RUN_FOCUSED"
+    },
+    "visual": {
+      "status": "NOT_RUN_FOCUSED"
+    },
+    "native_recall": {
+      "status": "NOT_RUN_FOCUSED"
+    },
+    "native_recall_reopen": {
+      "status": "NOT_RUN_FOCUSED"
+    }
+  },
+  "real_device": "NOT_RUN",
+  "human_handwriting": "NOT_RUN",
+  "pixels_review": "PENDING_HUMAN_OR_VISUAL_REVIEW",
+  "reason": "Only targeted native-input regressions selected; no new B6 execution or screenshots. Final full still requires the complete five-phase sample."
+}

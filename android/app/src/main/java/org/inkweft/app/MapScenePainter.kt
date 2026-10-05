@@ -36,7 +36,7 @@ internal object MapNodeMetrics {
     fun measure(title:String,body:String,source:MapSourceInfo?=null,fontScale:Float=1f,expanded:Boolean=false,structural:Boolean=false):MapNodeLayout {
         val factor=fontScale.coerceAtLeast(.5f)
         val textOnlyHeading=!structural&&repeatsExcerptBody(title,body)
-        val showPreview=source!=null&&!structural&&(body.isBlank()||expanded)
+        val showPreview=source?.previewEnabled==true&&!structural&&(body.isBlank()||expanded)
         val ratio=source?.previewRatio?:1.5f
         val width=when {
             structural->WIDTH.toFloat()
@@ -72,7 +72,7 @@ internal data class MapViewStyle(val selection:Int,val selectionFill:Int,val con
 internal object MapScenePainter {
     internal fun titleLayout(title:String,fontScale:Float=1f):StaticLayout = MapNodeMetrics.textLayout(title.replace('\n',' '),16f,fontScale,2,true)
     fun draw(c:Canvas,nodes:List<MapSceneNode>,selected:String?=null,collapsed:Map<String,Int> = emptyMap(),fontScale:Float=1f,detail:Boolean=true,hierarchy:Boolean=true,viewStyle:MapViewStyle?=null,
-             nodeLayouts:Map<String,MapNodeLayout> = emptyMap(),previews:Map<String,MapSourceFrame> = emptyMap()){
+             nodeLayouts:Map<String,MapNodeLayout> = emptyMap(),previews:Map<String,MapSourceFrame> = emptyMap(),presentations:Map<String,KnowledgeData.CardPresentation> = emptyMap()){
         val paint=Paint(Paint.ANTI_ALIAS_FLAG or Paint.FILTER_BITMAP_FLAG)
         val lookup=nodes.associateBy{it.id}
         // Document and embedded painting deliberately ignore live source and expansion state.
@@ -93,8 +93,13 @@ internal object MapScenePainter {
             val structural=hierarchy&&n.cardId==null
             val root=hierarchy&&n.parentId !in lookup
             val highlight=viewStyle!=null&&n.id==selected
-            paint.style=Paint.Style.FILL;paint.color=when{highlight->checkNotNull(viewStyle).selectionFill;structural&&root->0xffe9f2fb.toInt();else->Color.WHITE}
+            val presentation=presentations[n.cardId]
+            paint.style=Paint.Style.FILL;paint.color=presentation?.cardColor?.argb?:when{highlight->checkNotNull(viewStyle).selectionFill;structural&&root->0xffe9f2fb.toInt();else->Color.WHITE}
             c.drawRoundRect(left,top,left+layout.width,top+layout.height,12f,12f,paint)
+            presentation?.titleBarColor?.argb?.let{tint->
+                val saved=c.save();c.clipPath(Path().apply{addRoundRect(left,top,left+layout.width,top+layout.height,12f,12f,Path.Direction.CW)})
+                paint.color=tint;c.drawRect(left,top,left+layout.width,top+layout.titleTop+layout.title.height+7f,paint);c.restoreToCount(saved)
+            }
             paint.style=Paint.Style.STROKE;paint.strokeWidth=if(structural&&root)1.5f else 1f;paint.color=if(structural)0xff7c9dbd.toInt()else 0xffc6cdd6.toInt()
             c.drawRoundRect(left,top,left+layout.width,top+layout.height,12f,12f,paint)
             if(highlight){paint.color=checkNotNull(viewStyle).selection;paint.strokeWidth=2f;c.drawRoundRect(left-4,top-4,left+layout.width+4,top+layout.height+4,16f,16f,paint)}

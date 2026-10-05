@@ -165,10 +165,48 @@ object StudyOrganization {
         return prepare(state,StudyOrganizationKind.REPARENT,StudyGraphPatch(order,order.map{updated.getValue(it).let{n->StudyNodePlacement(n.id,n.parentId,n.x,n.y)}}))
     }
 
+    /** Canonical roots make overlapping parent/child selections one branch, never two edits. */
+    fun selectionRoots(state:StudyGraphState,selection:Set<String>):Set<String> {
+        validate(state);require(selection.isNotEmpty()&&selection.all{it in state.orderedNodeIds})
+        val byId=state.nodes.associateBy{it.id};val covered=mutableSetOf<String>();val roots=linkedSetOf<String>()
+        state.orderedNodeIds.forEach { id ->
+            if(byId.getValue(id).parentId in covered)covered+=id
+            else if(id in selection){roots+=id;covered+=id}
+        }
+        return roots
+    }
+
+    fun selectedBranchIds(state:StudyGraphState,selection:Set<String>):Set<String> {
+        val moving=selectionRoots(state,selection).toMutableSet()
+        val byId=state.nodes.associateBy{it.id}
+        state.orderedNodeIds.forEach{if(byId.getValue(it).parentId in moving)moving+=it}
+        return moving
+    }
+
+    fun reparentSelection(state:StudyGraphState,selection:Set<String>,parentId:String?,beforeNodeId:String?=null):StudyOrganizationPlan {
+        val roots=selectionRoots(state,selection);val byId=state.nodes.filterNot{it.removed}.associateBy{it.id}
+        require(parentId==null||parentId in byId&&parentId !in selectedBranchIds(state,roots)){"MAP_SELECTION_CYCLE"}
+        require(beforeNodeId==null||beforeNodeId !in roots&&byId[beforeNodeId]?.parentId==parentId&&beforeNodeId in byId)
+        val nodes=state.nodes.map{if(it.id in roots)it.copy(parentId=parentId)else it}
+        StudyGraph.validate(nodes)
+        val order=state.orderedNodeIds.filter{it !in roots}.toMutableList()
+        order.addAll(beforeNodeId?.let{order.indexOf(it)}?:order.size,roots)
+        val canonical=canonicalOrder(nodes,order);val updated=nodes.associateBy{it.id}
+        return prepare(state,StudyOrganizationKind.REPARENT,StudyGraphPatch(canonical,canonical.map{updated.getValue(it).let{n->StudyNodePlacement(n.id,n.parentId,n.x,n.y)}}))
+    }
+
     fun move(state:StudyGraphState,nodeId:String,x:Double,y:Double):StudyOrganizationPlan {
-        require(nodeId in state.orderedNodeIds)
-        val before=patch(state)
-        return prepare(state,StudyOrganizationKind.MOVE,before.copy(placements=before.placements.map{if(it.nodeId==nodeId)it.copy(x=x,y=y)else it}))
+        val node=state.nodes.first{it.id==nodeId&&!it.removed}
+        return moveSelection(state,setOf(nodeId),x-node.x,y-node.y)
+    }
+
+    /** A branch moves as one unit. Overlapping selections never apply the delta twice. */
+    fun moveSelection(state:StudyGraphState,roots:Set<String>,dx:Double,dy:Double):StudyOrganizationPlan {
+        require(dx.isFinite()&&dy.isFinite())
+        val moving=selectedBranchIds(state,roots);val before=patch(state)
+        return prepare(state,StudyOrganizationKind.MOVE,before.copy(placements=before.placements.map{
+            if(it.nodeId in moving)it.copy(x=it.x+dx,y=it.y+dy)else it
+        }))
     }
 
     fun arrange(state:StudyGraphState,sizes:Map<String,StudyNodeSize>,layout:String="right"):StudyOrganizationPlan {
@@ -207,6 +245,19 @@ object StudyOrganization {
         val dy=if(maxY>40_000)40_000-maxY else if(minY< -40_000)-40_000-minY else 0.0
         val before=patch(state)
         return prepare(state,StudyOrganizationKind.ARRANGE,before.copy(placements=before.placements.map{p->positions.getValue(p.nodeId).let{p.copy(x=it.x+dx,y=it.y+dy)}}))
+    }
+
+    /** Reuse the existing layout for selected whole branches; all unselected geometry stays put. */
+    fun arrangeSelection(state:StudyGraphState,selection:Set<String>,sizes:Map<String,StudyNodeSize>,layout:String="right"):StudyOrganizationPlan {
+        val ids=selectedBranchIds(state,selection);val roots=selectionRoots(state,selection)
+        val subset=state.copy(nodes=state.nodes.filter{it.id in ids}.map{if(it.id in roots)it.copy(parentId=null)else it},
+            orderedNodeIds=state.orderedNodeIds.filter{it in ids},structuralNodeIds=state.structuralNodeIds.intersect(ids))
+        val arranged=arrange(subset,sizes.filterKeys{it in ids},layout).after.placements.associateBy{it.nodeId}
+        val old=patch(state);val minX=old.placements.filter{it.nodeId in ids}.minOf{it.x};val minY=old.placements.filter{it.nodeId in ids}.minOf{it.y}
+        val dx=minX-arranged.values.minOf{it.x};val dy=minY-arranged.values.minOf{it.y}
+        return prepare(state,StudyOrganizationKind.ARRANGE,old.copy(placements=old.placements.map { p ->
+            arranged[p.nodeId]?.let{p.copy(x=it.x+dx,y=it.y+dy)}?:p
+        }))
     }
 
     fun undo(current:StudyGraphState,appliedPlan:StudyOrganizationPlan):StudyOrganizationPlan {

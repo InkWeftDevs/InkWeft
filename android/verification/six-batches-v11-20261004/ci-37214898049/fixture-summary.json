@@ -1,0 +1,34 @@
+{
+  "status": "FOCUSED_COMPLETE_NOT_FULL",
+  "mode": "focused",
+  "source_commit": "45ccb74befc6e7ac553abfa698d53175ebac9daf",
+  "synthetic_only": true,
+  "expected": 5,
+  "selected_expected": 2,
+  "passed": 2,
+  "deadline_epoch": 1791131918,
+  "phases": {
+    "prepare": {
+      "status": "PASS",
+      "returncode": 0,
+      "timeout_seconds": 1594
+    },
+    "reopen": {
+      "status": "NOT_RUN_FOCUSED"
+    },
+    "visual": {
+      "status": "NOT_RUN_FOCUSED"
+    },
+    "native_recall": {
+      "status": "PASS",
+      "returncode": 0,
+      "timeout_seconds": 1509
+    },
+    "native_recall_reopen": {
+      "status": "NOT_RUN_FOCUSED"
+    }
+  },
+  "real_device": "NOT_RUN",
+  "human_handwriting": "NOT_RUN",
+  "pixels_review": "PENDING_HUMAN_OR_VISUAL_REVIEW"
+}

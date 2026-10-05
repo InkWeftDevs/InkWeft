@@ -6,13 +6,21 @@ import java.util.UUID
 
 enum class TargetKind { NOTE, PAGE, CARD, ANCHOR }
 data class TargetRef(val kind:TargetKind,val id:String){init{UUID.fromString(id)}}
-enum class RelationKind(val label:String){REFERENCE("内容引用"),PREREQUISITE("前置知识"),CONTRAST("对照"),DERIVATION("推导"),APPLICATION("应用")}
+enum class RelationKind(val label:String){REFERENCE("内容引用"),PREREQUISITE("前置知识"),CONTRAST("对照"),DERIVATION("推导"),APPLICATION("应用"),SUMMARY("归纳总结")}
+enum class RelationLineStyle(val label:String){DASHED("虚线"),SOLID("实线")}
+enum class RelationDirection(val label:String){FORWARD("单向"),BOTH("双向")}
 enum class ManualState(val label:String){INBOX("待整理"),REVIEW("待复习"),UNDERSTOOD("已理解")}
 
 sealed interface KnowledgeData {
     data class PageMark(val pageId:String,val title:String,val bookmark:Boolean=false,val depth:Int=0):KnowledgeData
     data class Anchor(val pageId:String,val inkRevision:Long,val bounds:CanvasBounds,val strokeIds:List<String>):KnowledgeData
-    data class Link(val source:TargetRef,val target:TargetRef,val relation:RelationKind=RelationKind.REFERENCE,val pinnedRevision:Long?=null):KnowledgeData
+    data class Link(val source:TargetRef,val target:TargetRef,val relation:RelationKind=RelationKind.REFERENCE,val pinnedRevision:Long?=null,
+        val lineStyle:RelationLineStyle=RelationLineStyle.DASHED,val direction:RelationDirection=RelationDirection.FORWARD,
+        val annotation:String="",val visible:Boolean=true):KnowledgeData {
+        fun sameMeaning(other:Link)=source==other.source&&target==other.target&&relation==other.relation&&pinnedRevision==other.pinnedRevision
+    }
+    /** Shared by card identity; legacy body is never inferred or moved into annotation. */
+    data class CardPresentation(val cardId:String,val annotation:String="",val cardColor:CardTint=CardTint.DEFAULT,val titleBarColor:CardTint=CardTint.DEFAULT):KnowledgeData
     data class Properties(val cardId:String,val state:ManualState=ManualState.INBOX,val tags:List<String> = emptyList()):KnowledgeData
     data class Collection(val title:String,val tag:String="",val state:ManualState?=null,val matchAny:Boolean=false):KnowledgeData
     data class Question(val cardId:String,val prompt:String,val state:ManualState=ManualState.REVIEW):KnowledgeData
@@ -36,7 +44,8 @@ object KnowledgeCodec {
             is KnowledgeData.PageMark->{id(v.pageId);require(v.title.isNotBlank()&&v.title.length<=120);require(v.depth in 0..3&&(!v.bookmark||v.depth==0))}
             is KnowledgeData.Anchor->{id(v.pageId);require(v.inkRevision>=0);require(v.strokeIds.size in 1..256&&v.strokeIds.distinct().size==v.strokeIds.size);v.strokeIds.forEach(::id)
                 require(v.bounds.left>=-BoardLimits.WORLD&&v.bounds.right<=BoardLimits.WORLD&&v.bounds.top>=-BoardLimits.WORLD&&v.bounds.bottom<=BoardLimits.WORLD)}
-            is KnowledgeData.Link->{require(v.pinnedRevision==null||v.target.kind==TargetKind.CARD&&v.pinnedRevision>0);require(v.source!=v.target)}
+            is KnowledgeData.Link->{require(v.annotation.length<=2000);require(v.pinnedRevision==null||v.target.kind==TargetKind.CARD&&v.pinnedRevision>0);require(v.source!=v.target)}
+            is KnowledgeData.CardPresentation->{id(v.cardId);require(v.annotation.length<=CardPresentationRules.MAX_ANNOTATION)}
             is KnowledgeData.Properties->{id(v.cardId);require(v.tags.size<=12&&v.tags.distinct().size==v.tags.size&&v.tags.all{it.isNotBlank()&&it.length<=24&&!it.contains('\n')})}
             is KnowledgeData.Collection->{require(v.title.isNotBlank()&&v.title.length<=120&&v.tag.length<=24)}
             is KnowledgeData.Question->{id(v.cardId);require(v.prompt.isNotBlank()&&v.prompt.length<=2000)}
@@ -69,7 +78,12 @@ object KnowledgeCodec {
             when(v){
                 is KnowledgeData.PageMark->{d.writeUTF("PAGE_MARK");d.writeUTF(v.pageId);d.writeUTF(v.title);d.writeBoolean(v.bookmark);d.writeInt(v.depth)}
                 is KnowledgeData.Anchor->{d.writeUTF("ANCHOR");d.writeUTF(v.pageId);d.writeLong(v.inkRevision);listOf(v.bounds.left,v.bounds.top,v.bounds.right,v.bounds.bottom).forEach(d::writeDouble);d.writeInt(v.strokeIds.size);v.strokeIds.forEach(d::writeUTF)}
-                is KnowledgeData.Link->{d.writeUTF("LINK");ref(v.source);ref(v.target);d.writeUTF(v.relation.name);d.writeLong(v.pinnedRevision?:0)}
+                is KnowledgeData.Link->{
+                    val styled=v.lineStyle!=RelationLineStyle.DASHED||v.direction!=RelationDirection.FORWARD||v.annotation.isNotEmpty()||!v.visible
+                    d.writeUTF(if(styled)"LINK_V2"else"LINK");ref(v.source);ref(v.target);d.writeUTF(v.relation.name);d.writeLong(v.pinnedRevision?:0)
+                    if(styled){d.writeUTF(v.lineStyle.name);d.writeUTF(v.direction.name);d.writeUTF(v.annotation);d.writeBoolean(v.visible)}
+                }
+                is KnowledgeData.CardPresentation->{d.writeUTF("CARD_PRESENTATION_V1");d.writeUTF(v.cardId);d.writeUTF(v.annotation);d.writeUTF(v.cardColor.name);d.writeUTF(v.titleBarColor.name)}
                 is KnowledgeData.Properties->{d.writeUTF("PROPERTIES");d.writeUTF(v.cardId);d.writeUTF(v.state.name);d.writeInt(v.tags.size);v.tags.forEach(d::writeUTF)}
                 is KnowledgeData.Collection->{d.writeUTF("COLLECTION");d.writeUTF(v.title);d.writeUTF(v.tag);d.writeUTF(v.state?.name.orEmpty());d.writeBoolean(v.matchAny)}
                 is KnowledgeData.Question->{d.writeUTF("QUESTION");d.writeUTF(v.cardId);d.writeUTF(v.prompt);d.writeUTF(v.state.name)}
@@ -94,6 +108,9 @@ object KnowledgeCodec {
                 "PAGE_MARK"->KnowledgeData.PageMark(d.readUTF(),d.readUTF(),d.readBoolean(),d.readInt())
                 "ANCHOR"->KnowledgeData.Anchor(d.readUTF(),d.readLong(),CanvasBounds(d.readDouble(),d.readDouble(),d.readDouble(),d.readDouble()),list(256))
                 "LINK"->KnowledgeData.Link(ref(),ref(),RelationKind.valueOf(d.readUTF()),d.readLong().let{require(it>=0);if(it==0L)null else it})
+                "LINK_V2"->KnowledgeData.Link(ref(),ref(),RelationKind.valueOf(d.readUTF()),d.readLong().let{require(it>=0);if(it==0L)null else it},
+                    RelationLineStyle.valueOf(d.readUTF()),RelationDirection.valueOf(d.readUTF()),d.readUTF(),d.readBoolean())
+                "CARD_PRESENTATION_V1"->KnowledgeData.CardPresentation(d.readUTF(),d.readUTF(),CardTint.valueOf(d.readUTF()),CardTint.valueOf(d.readUTF()))
                 "PROPERTIES"->KnowledgeData.Properties(d.readUTF(),ManualState.valueOf(d.readUTF()),list(12))
                 "COLLECTION"->KnowledgeData.Collection(d.readUTF(),d.readUTF(),d.readUTF().ifEmpty{null}?.let(ManualState::valueOf),d.readBoolean())
                 "QUESTION"->KnowledgeData.Question(d.readUTF(),d.readUTF(),ManualState.valueOf(d.readUTF()))

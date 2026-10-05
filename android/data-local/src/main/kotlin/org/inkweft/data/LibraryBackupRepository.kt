@@ -51,12 +51,14 @@ class LibraryBackupRepository(private val context:Context,private val db:NoteDat
             val parsed=stage.withTransaction {
                 val sql=stage.openHelper.writableDatabase;checkSchema(sql);val ctx=currentCoroutineContext()
                 var count=0
-                LibraryArchive.read(input,SCHEMA,{table,row->
+                val parsed=LibraryArchive.read(input,SCHEMA,{table,row->
                     if(++count%128==0)reserve()
                     // Schema6 has no tombstone column; promote to live/default null.
                     val promoted=if(table==4&&row.size==SCHEMA[table].columns.size-1)row+listOf(null)else row
                     insert(sql,table,promoted)
-                },legacySchema=SCHEMA_V6,otherLegacySchemas=listOf(SCHEMA_V7,SCHEMA_V8,SCHEMA_V9,SCHEMA_V10,SCHEMA_V11)){ctx.ensureActive()}
+                },legacySchema=SCHEMA_V6,otherLegacySchemas=listOf(SCHEMA_V7,SCHEMA_V8,SCHEMA_V9,SCHEMA_V10,SCHEMA_V11,SCHEMA_V12,SCHEMA_V13,SCHEMA_V14,SCHEMA_V15)){ctx.ensureActive()}
+                if(parsed.rows.size<32)StudySourceVersions.promoteLegacy(sql)
+                parsed
             }
             validate(stage)
             val sql=stage.openHelper.writableDatabase
@@ -92,6 +94,8 @@ class LibraryBackupRepository(private val context:Context,private val db:NoteDat
                         require(!collision){"BACKUP_COMMAND_IDENTITY_CONFLICT"}
                     }
                 }
+                require(db.recall().answerInkBytes()+preview.stage.recall().answerInkBytes()<=RecallLimits.MAX_INK_LIBRARY_BYTES){"RECALL_ANSWER_LIBRARY_BUDGET"}
+                require(db.images().totalBytes()+preview.stage.images().totalBytes()<=ImageSource.LIBRARY_BYTES){"IMAGE_LIBRARY_BUDGET"}
                 require(db.documents().totalBytes()+preview.stage.documents().totalBytes()<=80_000_000){"DOCUMENT_LIBRARY_BUDGET"}
                 require(db.covers().otherBytes("")+preview.stage.covers().otherBytes("")<=32_000_000){"COVER_LIBRARY_BUDGET"}
                 if(db.study().snapshotBytes()+preview.stage.study().snapshotBytes()>StudyCapacity.MAX_SNAPSHOT_BYTES)
@@ -142,6 +146,23 @@ class LibraryBackupRepository(private val context:Context,private val db:NoteDat
         noRows("SELECT 1 FROM document_sources WHERE pageCount NOT BETWEEN 1 AND 500 OR byteCount NOT BETWEEN 8 AND 32000000")
         noRows("SELECT 1 FROM document_pages p JOIN document_sources s ON s.id=p.documentId WHERE sourcePage<0 OR sourcePage>=s.pageCount")
         noRows("SELECT 1 FROM document_chunks WHERE position NOT BETWEEN 0 AND 62 OR length(payload) NOT BETWEEN 1 AND 512000")
+        require(stage.images().totalBytes()<=ImageSource.LIBRARY_BYTES){"IMAGE_LIBRARY_BUDGET"}
+        noRows("SELECT 1 FROM image_sources WHERE byteCount NOT BETWEEN 1 AND ${ImageSource.MAX_BYTES}")
+        noRows("SELECT 1 FROM image_chunks WHERE position NOT BETWEEN 0 AND 40 OR length(payload) NOT BETWEEN 1 AND 512000")
+        for(image in stage.images().all())ImageSourceRepository.validate(ImageSourceRepository(stage).read(image.notebookId,image.digest))
+        noRows("SELECT 1 FROM study_card_source_sets WHERE complete NOT IN (0,1)")
+        noRows("SELECT 1 FROM card_transform_operations WHERE undone NOT IN (0,1)")
+        noRows("SELECT 1 FROM canvas_authoring WHERE kind NOT IN ('PAGE','MAP') OR revision<0 OR length(payload) NOT BETWEEN 8 AND ${PageAuthoringCodec.MAX_BYTES}")
+        noRows("SELECT 1 FROM authoring_receipts r LEFT JOIN canvas_authoring a ON a.kind=r.kind AND a.scopeId=r.scopeId WHERE a.scopeId IS NULL OR a.notebookId!=r.notebookId OR r.revision<1 OR r.revision>a.revision")
+        require(count(sql,"canvas_authoring")<=25_000){"AUTHORING_LIBRARY_BUDGET"}
+        for(book in notes)for(row in stage.authoring().forBook(book)){
+            UUID.fromString(row.scopeId);val state=PageAuthoringRepository(stage).read(row.scope()).state
+            PageAuthoringRepository(stage).validate(row.scope(),state)
+        }
+        sql.query("SELECT commandId,digest FROM authoring_receipts").use{c->while(c.moveToNext()){UUID.fromString(c.getString(0));require(c.getString(1).matches(Regex("[0-9a-f]{64}")))}}
+        RecallStudyRepository(stage).validateArchive()
+        StudySourceVersions(stage).validateArchive()
+        CardTransformRepository(stage).validateArchive()
         KnowledgeRepository(stage).validateArchive()
         sql.query("SELECT notebookId,payload FROM knowledge_revisions").use{c->while(c.moveToNext())KnowledgeRepository(stage).validateData(c.getString(0),KnowledgeCodec.decode(c.getBlob(1)),false)}
         sql.query("SELECT operationId,digest,resultId FROM knowledge_receipts").use{c->while(c.moveToNext()){UUID.fromString(c.getString(0));require(c.getString(1).matches(Regex("[0-9a-f]{64}")));require(stage.knowledge().get(c.getString(2))!=null)}}
@@ -182,6 +203,7 @@ class LibraryBackupRepository(private val context:Context,private val db:NoteDat
                 val objects=PageObjectRepository(stage).read(p.id).objects
                 val refs=objects.flatMap{it.sourceStrokeIds};require(refs.distinct().size==refs.size);val owned=stage.ink().strokes(p.id).map{it.id}.toSet();require(refs.all{it in owned})
                 MapEmbedRepository(stage).validateReferences(p.notebookId,objects)
+                ImageSourceRepository(stage).validateReferences(p.notebookId,objects)
                 PageObjectRepository.validateBounds(objects,p.world);PageObjectRepository.validateImages(objects)
                 stage.pages().search(p.id)?.let{s->require(s.inkRevision in 0..ink.revision&&s.text.length<=20_000&&s.method in listOf("MANUAL","OCR"))}
             }
@@ -258,15 +280,26 @@ class LibraryBackupRepository(private val context:Context,private val db:NoteDat
             table("object_receipts","commandId",col("commandId",'S'),col("pageId",'S'),col("digest",'S'),col("revision",'I')),
             table("document_sources","id",col("id",'S'),col("notebookId",'S'),col("digest",'S'),col("pageCount",'I'),col("byteCount",'I')),
             table("document_chunks","documentId,position",col("documentId",'S'),col("position",'I'),col("payload",'B')),
-            table("document_pages","pageId",col("pageId",'S'),col("documentId",'S'),col("sourcePage",'I'))
-        )
+            table("document_pages","pageId",col("pageId",'S'),col("documentId",'S'),col("sourcePage",'I')),
+            table("image_sources","notebookId,digest",col("notebookId",'S'),col("digest",'S'),col("byteCount",'I')),
+            table("image_chunks","notebookId,digest,position",col("notebookId",'S'),col("digest",'S'),col("position",'I'),col("payload",'B')),
+            table("study_source_revisions","sourceId,revision",col("sourceId",'S'),col("revision",'I'),col("notebookId",'S'),col("pageId",'S'),col("inkRevision",'I'),col("left",'F'),col("top",'F'),col("right",'F'),col("bottom",'F'),col("strokeIds",'S'),col("snapshot",'B')),
+            table("study_card_source_sets","cardId,cardRevision",col("cardId",'S'),col("cardRevision",'I'),col("sourceRefs",'S'),col("complete",'I')),
+            table("card_transform_operations","operationId",col("operationId",'S'),col("notebookId",'S'),col("digest",'S'),col("payload",'B'),col("afterFingerprint",'S'),col("revision",'I'),col("undone",'I'),col("undoOperationId",'S',true),col("undoDigest",'S',true)),
+            table("canvas_authoring","kind,scopeId",col("kind",'S'),col("scopeId",'S'),col("notebookId",'S'),col("revision",'I'),col("payload",'B')),
+            table("authoring_receipts","commandId",col("commandId",'S'),col("notebookId",'S'),col("kind",'S'),col("scopeId",'S'),col("digest",'S'),col("revision",'I'))
+        )+RecallStorage.SCHEMA
+        val SCHEMA_V15=SCHEMA.take(34)
+        val SCHEMA_V14=SCHEMA.take(32)
+        val SCHEMA_V13=SCHEMA.take(29)
+        val SCHEMA_V12=SCHEMA.take(27)
         val SCHEMA_V11=SCHEMA.take(24)
         val SCHEMA_V10=SCHEMA.take(22)
         val SCHEMA_V9=SCHEMA.take(21)
         val SCHEMA_V8=SCHEMA.take(18)
         val SCHEMA_V7=SCHEMA.take(13)
         val SCHEMA_V6=SCHEMA.take(12).mapIndexed{i,t->if(i==4)t.copy(columns=t.columns.dropLast(1))else t}
-        private val OWNERS=listOf("id","noteId","noteId","noteId","notebookId","@ink","@ink","@ink","@ink","@search","notebookId","noteId","notebookId","notebookId","@cards","@cards","notebookId","notebookId","notebookId","notebookId","notebookId","noteId","@search","@search","notebookId","@documents","@search")
+        private val OWNERS=listOf("id","noteId","noteId","noteId","notebookId","@ink","@ink","@ink","@ink","@search","notebookId","noteId","notebookId","notebookId","@cards","@cards","notebookId","notebookId","notebookId","notebookId","notebookId","noteId","@search","@search","notebookId","@documents","@search","notebookId","notebookId","notebookId","@cards","notebookId","notebookId","notebookId")+List(RecallStorage.SCHEMA.size){"notebookId"}
         private fun count(sql:SupportSQLiteDatabase,table:String)=sql.query("SELECT COUNT(*) FROM `$table`").use{it.moveToFirst();it.getLong(0)}
         private fun insert(sql:SupportSQLiteDatabase,table:Int,row:List<Any?>){
             val t=SCHEMA[table]
@@ -277,8 +310,25 @@ class LibraryBackupRepository(private val context:Context,private val db:NoteDat
         private fun checkSchema(sql:SupportSQLiteDatabase){
             val names=sql.query("SELECT name FROM sqlite_master WHERE type='table' AND name NOT GLOB 'sqlite_*' AND name NOT IN ('room_master_table','android_metadata')").use{c->buildSet{while(c.moveToNext())add(c.getString(0))}}
             require(names==SCHEMA.map{it.name}.toSet()){"BACKUP_SCHEMA_COVERAGE_CHANGED"}
-            for(t in SCHEMA){val cols=sql.query("PRAGMA table_info(`${t.name}`)").use{c->buildList{while(c.moveToNext())add(c.getString(1))}}
-                require(cols==t.columns.map{it.name}){"BACKUP_SCHEMA_COLUMNS_CHANGED"}}
+            for(t in SCHEMA){
+                val cols=sql.query("PRAGMA table_info(`${t.name}`)").use{c->buildList{while(c.moveToNext()){
+                    // Compare SQLite affinity, not spelling (e.g. VARCHAR is still text).
+                    // Reject drift before cursor getters can coerce or truncate author values.
+                    val type=c.getString(2).uppercase()
+                    val kind=when {
+                        "INT" in type->'I'
+                        "CHAR" in type||"CLOB" in type||"TEXT" in type->'S'
+                        type.isEmpty()||"BLOB" in type->'B'
+                        "REAL" in type||"FLOA" in type||"DOUB" in type->'F'
+                        else->'?' // NUMERIC affinity has no lossless archive column equivalent.
+                    }
+                    add(col(c.getString(1),kind,c.getInt(3)==0) to c.getInt(5))
+                }}}
+                require(cols.map{it.first.name}==t.columns.map{it.name}){"BACKUP_SCHEMA_COLUMNS_CHANGED"}
+                require(cols.map{it.first.kind}==t.columns.map{it.kind}){"BACKUP_SCHEMA_TYPES_CHANGED"}
+                require(cols.map{it.first.nullable}==t.columns.map{it.nullable}){"BACKUP_SCHEMA_NULLABILITY_CHANGED"}
+                require(cols.filter{it.second>0}.sortedBy{it.second}.map{it.first.name}==t.keys){"BACKUP_SCHEMA_KEYS_CHANGED"}
+            }
         }
     }
 }

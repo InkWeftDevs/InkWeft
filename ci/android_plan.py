@@ -19,6 +19,13 @@ def inventory(module):
             result[f"{package}.{path.stem}"] = count
     return result
 
+def select_methods(available, requested=None):
+    if requested is None:
+        return available
+    if not requested or len(requested) != len(set(requested)) or not set(requested) <= set(available):
+        raise ValueError("Invalid explicit method selection")
+    return [method for method in available if method in requested]
+
 def plan(paths, full=False):
     core = lint = full
     experiments = full

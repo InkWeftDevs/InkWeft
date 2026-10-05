@@ -30,7 +30,7 @@ class StudyAndSelectionRepositoryTest {
         val snapshot=repo.source(c.cardId!!)!!.snapshot
         assertEquals(PageObjectKind.IMAGE,InkPageFile.decode(snapshot).objects.single().kind)
         repo.submit(StudyCommand(id(),page,StudyAction.EDIT,cardId=c.cardId,expectedRevision=1,title="区域摘录",body="备注"))
-        repo.submit(StudyCommand(id(),page,StudyAction.TRASH_CARD,cardId=c.cardId,expectedRevision=2))
+        repo.submit(StudyCommand(id(),page,StudyAction.TRASH_CARD,cardId=c.cardId,expectedRevision=2,expectedTrashImpact=StudyRepository(db).previewTrash(page,requireNotNull(c.cardId)).fingerprint))
         assertTrue(repo.excerpts(page).first().isEmpty());assertArrayEquals(snapshot,repo.source(c.cardId!!)!!.snapshot)
         assertEquals(0L,InkRepository(db).read(page).revision)
         val name="restore-region-${id()}.db";val target=NoteDatabase.open(context,name)
@@ -102,6 +102,31 @@ class StudyAndSelectionRepositoryTest {
         assertEquals(InkCommitResult.Conflict,InkRepository(db).save(c));assertEquals(1,db.ink().strokes(page).size)
         assertEquals(InkCommitResult.Conflict,InkRepository(db).save(CommitInk(id(),page,0,InkMutation.Visibility(listOf(s.id),false))))
     }
+    @Test fun missingAndForeignInkTargetsConflictWithoutChangingInkOrLayers()=fixture{db,page->
+        val s=seed(db,page);val ink=InkRepository(db)
+        val cut=InkRegion(listOf(EraserPoint(140f,100f),EraserPoint(160f,125f))).mask()
+        assertEquals(InkCommitResult.Committed(2),ink.save(CommitInk(id(),page,1,InkMutation.Cut(EraseSelection(cut,listOf(s.id))))))
+        val other=WorkspaceRepository(db).create("无目标的编辑页",false,PaperStyle.BLANK).id
+        val before=ink.read(page);val sourceNote=db.notes().note(page);val targetNote=db.notes().note(other)
+        val layers=PageAuthoringCodec.fingerprint(PageAuthoringRepository(db).readPage(page).state)
+        val changes=listOf(s.id,id()).flatMap{target->listOf(
+            InkMutation.Replace(listOf(target),InkSelectionEdit.copy(listOf(s),0f,0f)),
+            InkMutation.Swap(listOf(target),emptyList()),InkMutation.Swap(emptyList(),listOf(target)),
+            InkMutation.Visibility(listOf(target),false),
+            InkMutation.Cut(EraseSelection(InkRegion(listOf(EraserPoint(140f,100f),EraserPoint(160f,125f))).mask(),listOf(target))))
+        }+listOf(InkMutation.CutVisibility(cut.id,false),InkMutation.CutVisibility(id(),false))
+        for(change in changes){
+            val command=CommitInk(id(),other,0,change)
+            assertEquals(InkCommitResult.Conflict,ink.save(command));assertNull(db.ink().receipt(command.commandId))
+        }
+        assertEquals(before.revision,ink.read(page).revision)
+        assertArrayEquals(InkStrokeCodec.encode(s),db.ink().stroke(s.id)!!.payload);assertTrue(db.ink().stroke(s.id)!!.visible)
+        assertArrayEquals(InkCutCodec.encode(cut),db.ink().cut(cut.id)!!.payload);assertTrue(db.ink().cut(cut.id)!!.visible)
+        assertNull(db.ink().page(other));assertTrue(db.ink().strokes(other).isEmpty());assertTrue(db.ink().cuts(other).isEmpty())
+        assertNull(db.authoring().get(AuthoringScopeKind.PAGE.name,other))
+        assertEquals(layers,PageAuthoringCodec.fingerprint(PageAuthoringRepository(db).readPage(page).state))
+        assertEquals(sourceNote,db.notes().note(page));assertEquals(targetNote,db.notes().note(other))
+    }
     @Test fun excerptSnapshotIsImmutableAfterSourceEraseAndPageMove()=fixture{db,page->
         val s=seed(db,page);val c=create(page,source=StudySourceDraft(page,1,CanvasBounds(90.0,90.0,210.0,130.0),listOf(s.id)))
         val repo=StudyRepository(db);repo.submit(c);val old=repo.source(c.cardId!!)!!.snapshot.clone()
@@ -141,9 +166,9 @@ class StudyAndSelectionRepositoryTest {
     }
     @Test fun cardTrashAndRestoreKeepRevisionHistory()=fixture{db,page->
         val repo=StudyRepository(db);val c=create(page);repo.submit(c)
-        try{repo.submit(StudyCommand(id(),page,StudyAction.TRASH_CARD,cardId=c.cardId,expectedRevision=1));fail()}catch(_:IllegalArgumentException){}
+        try{repo.submit(StudyCommand(id(),page,StudyAction.TRASH_CARD,cardId=c.cardId,expectedRevision=1,expectedTrashImpact=StudyRepository(db).previewTrash(page,requireNotNull(c.cardId)).fingerprint));fail()}catch(_:IllegalArgumentException){}
         repo.submit(StudyCommand(id(),page,StudyAction.REMOVE_NODE,nodeId=c.nodeId,expectedRevision=1))
-        repo.submit(StudyCommand(id(),page,StudyAction.TRASH_CARD,cardId=c.cardId,expectedRevision=1));assertNotNull(db.study().card(c.cardId!!)!!.trashedAt)
+        repo.submit(StudyCommand(id(),page,StudyAction.TRASH_CARD,cardId=c.cardId,expectedRevision=1,expectedTrashImpact=StudyRepository(db).previewTrash(page,requireNotNull(c.cardId)).fingerprint));assertNotNull(db.study().card(c.cardId!!)!!.trashedAt)
         repo.submit(StudyCommand(id(),page,StudyAction.RESTORE_CARD,cardId=c.cardId,expectedRevision=2));assertNull(db.study().card(c.cardId!!)!!.trashedAt)
         assertEquals(3L,db.study().card(c.cardId!!)!!.revision)
     }
@@ -189,6 +214,6 @@ class StudyAndSelectionRepositoryTest {
             sql.execSQL("INSERT INTO notebook_workspace VALUES(?,0,1,'数学','复习',1,NULL,500,707,0,0,'auto',?,1)",arrayOf(book,book))
             sql.execSQL("INSERT INTO notebook_pages VALUES(?,?,0,0,1,500,707,0,NULL,NULL)",arrayOf(book,book));sql.execSQL("INSERT INTO ink_pages VALUES(?,1)",arrayOf(book));sql.execSQL("INSERT INTO ink_strokes VALUES(?,?,?,?,1,1)",arrayOf(s.id,book,bytes,3));sql.version=7
         }finally{sql.close()}
-        val db=NoteDatabase.open(context,name);try{assertEquals("原文",db.notes().note(book)!!.text);assertArrayEquals(bytes,db.ink().stroke(s.id)!!.payload);assertEquals(book,db.pages().list(book).single().id);assertTrue(db.workspace().get(book)!!.pinned);assertEquals(12,db.openHelper.writableDatabase.version);val c=create(book);StudyRepository(db).submit(c);assertNotNull(db.study().card(c.cardId!!))}finally{db.close();context.deleteDatabase(name)}
+        val db=NoteDatabase.open(context,name);try{assertEquals("原文",db.notes().note(book)!!.text);assertArrayEquals(bytes,db.ink().stroke(s.id)!!.payload);assertEquals(book,db.pages().list(book).single().id);assertTrue(db.workspace().get(book)!!.pinned);assertEquals(16,db.openHelper.writableDatabase.version);val c=create(book);StudyRepository(db).submit(c);assertNotNull(db.study().card(c.cardId!!))}finally{db.close();context.deleteDatabase(name)}
     }
 }

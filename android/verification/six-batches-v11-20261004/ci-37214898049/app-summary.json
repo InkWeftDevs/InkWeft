@@ -1,0 +1,9 @@
+{
+  "expected": 5,
+  "planned_total": 5,
+  "shard_index": 0,
+  "shard_count": 1,
+  "passed": 5,
+  "failures": [],
+  "infrastructure": []
+}

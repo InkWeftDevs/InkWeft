@@ -1,0 +1,21 @@
+{
+  "code_source": "56e535f",
+  "main_and_android_test_kotlin": "PASS",
+  "seconds": 136,
+  "log_sha256": "ab6c2a499f57a34d3b4624565811f39dd3e2d1e42eefba6d44e1852b9dbcf8ea",
+  "ci_host_tests": 63,
+  "actionlint": "PASS",
+  "current_device_status": "NOT_RUN_FOR_NEW_FIXES",
+  "focused_ui": 4,
+  "room": "exact202 evidence reuse only; new executed0",
+  "b6": "NOT_RUN_FOCUSED_UI_DIAGNOSTIC with0new methods/images",
+  "full_required": {
+    "ui": 153,
+    "fresh_room": 202,
+    "phases": 5,
+    "png": 39
+  },
+  "prior_lint_source": "a432bf8,0errors165warnings2hints; not an assertion that new gesture fixes passed lint",
+  "deferred_full_test": "8fdb3731cbbd63b2e7227deb6aaf0297e9d6879f strengthens existing Room backup case and must join final fresh202run",
+  "physical_device": "NOT_RUN"
+}

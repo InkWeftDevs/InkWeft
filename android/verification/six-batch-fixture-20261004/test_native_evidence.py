@@ -1,0 +1,150 @@
+"""Host contract checks only; these do not simulate native rendering or an Android pass."""
+import copy
+import hashlib
+import importlib.util
+import json
+import subprocess
+import sys
+import tempfile
+from unittest.mock import patch
+from pathlib import Path
+import unittest
+
+spec = importlib.util.spec_from_file_location("runner", Path(__file__).with_name("run-fixture.py"))
+runner = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(runner)
+
+
+class NativeEvidenceContractTest(unittest.TestCase):
+    def setUp(self):
+        self.name = "05-layered-1000-stroke-pressure.png"
+        self.pixels = b"\x89PNG\r\n\x1a\nsynthetic-host-contract-only"
+        self.commit = "a" * 40
+        self.proof = dict(runId="same-run", sourceCommit=self.commit, pageId="page-12", sourcePage=12,
+                          sha256=hashlib.sha256(self.pixels).hexdigest(), layers=3, documentSha256="b" * 64,
+                          nativeInkSha256="e" * 64, pdfTilePresent=True, sourceFrameDrawn=True, frameCommitted=True,
+                          pendingRaster=False, pendingImages=False, nativeStoredStrokes=1000,
+                          nativeStoredPoints=100000, nativeVisibleStrokes=1000, authoringFingerprint="c" * 64,
+                          continuous=False, baseLayerBluePixels=20, lockedLayerBluePixels=20)
+        self.manifest = dict(runId="same-run", documentPages=[f"page-{n}" for n in range(1, 13)],
+                             documentSha256="b" * 64, stressAuthoringFingerprint="c" * 64,
+                             nativePageCaptures={self.name: self.proof})
+
+    def check(self):
+        return runner.checked_native_capture(self.manifest, self.name, self.pixels, self.commit)
+
+    def test_matching_full_native_proof_is_accepted(self):
+        self.assertEqual(self.proof, self.check())
+
+    def test_failed_diagnostic_pixels_cannot_be_promoted_to_native_proof(self):
+        self.manifest["failedNativePageCaptures"] = {self.name: {"status": "FAILED_NO_NATIVE_PROOF"}}
+        with self.assertRaises(ValueError):
+            self.check()
+
+    def test_png_name_alone_is_rejected(self):
+        self.manifest["nativePageCaptures"] = {}
+        with self.assertRaises(ValueError):
+            self.check()
+
+    def test_wrong_source_or_stale_bytes_are_rejected(self):
+        for key, value in (("pageId", "page-1"), ("sourcePage", 1), ("sourceCommit", "d" * 40),
+                           ("sha256", "d" * 64), ("runId", "other-run")):
+            with self.subTest(key=key):
+                old = self.proof[key]
+                self.proof[key] = value
+                with self.assertRaises(ValueError):
+                    self.check()
+                self.proof[key] = old
+
+    def test_loading_or_incomplete_ink_is_rejected(self):
+        for key, value in (("pdfTilePresent", False), ("sourceFrameDrawn", False), ("frameCommitted", False), ("pendingRaster", True),
+                           ("pendingImages", True), ("nativeStoredStrokes", 999), ("nativeStoredPoints", 99999),
+                           ("nativeVisibleStrokes", 900), ("baseLayerBluePixels", 0), ("lockedLayerBluePixels", 0)):
+            with self.subTest(key=key):
+                old = self.proof[key]
+                self.proof[key] = value
+                with self.assertRaises(ValueError):
+                    self.check()
+                self.proof[key] = old
+
+    def test_first_page_requires_completed_continuous_source_frame(self):
+        self.name = "01-twelve-page-material.png"
+        first = copy.deepcopy(self.proof)
+        first.update(pageId="page-1", sourcePage=1, continuous=True)
+        self.manifest["nativePageCaptures"][self.name] = first
+        self.assertEqual(first, self.check())
+        first["sourceFrameDrawn"] = False
+        with self.assertRaises(ValueError):
+            self.check()
+
+    def test_reopen_material_image_requires_real_frame_and_separate_record_receipt(self):
+        self.name = "native-recall-reopen-01-material-page.png"
+        proof = copy.deepcopy(self.proof)
+        proof.update(pageId="page-1", sourcePage=1, continuous=False)
+        self.manifest["nativePageCaptures"][self.name] = proof
+        self.manifest.update(nativeRecallReopen="PASS", nativeRecallReopenCapture={
+            "file": self.name, "sha256": proof["sha256"], "verifiedRecallRecords": 28,
+            "proves": "REOPENED_MATERIAL_PAGE_ONLY"})
+        self.assertEqual(proof, self.check())
+        for key, value in (("verifiedRecallRecords", 25), ("proves", "THREE_QUESTION_REPLAY"), ("sha256", "d" * 64)):
+            with self.subTest(key=key):
+                capture = self.manifest["nativeRecallReopenCapture"]
+                old = capture[key];capture[key] = value
+                with self.assertRaises(ValueError):
+                    self.check()
+                capture[key] = old
+        proof["sourceFrameDrawn"] = False
+        with self.assertRaises(ValueError):
+            self.check()
+
+    def test_panel_sections_require_correct_page_and_actual_assertions(self):
+        for name, section in (("06-pressure-page-layers.png", "current"), ("07-pressure-hidden-layer.png", "hidden"),
+                              ("08-pressure-locked-layer.png", "locked")):
+            with self.subTest(section=section):
+                self.name = name
+                proof = copy.deepcopy(self.proof)
+                proof.update(hiddenLayers=1, lockedLayers=1, currentLayer="00000000-0000-0000-0000-000000000001",
+                             panelAssertionsPassed=True, panelSection=section, pressurePixelsFile="05-layered-1000-stroke-pressure.png")
+                self.manifest["nativePageCaptures"][name] = proof
+                self.assertEqual(proof, self.check())
+                proof["panelAssertionsPassed"] = False
+                with self.assertRaises(ValueError):
+                    self.check()
+
+
+class FixtureDeadlineTest(unittest.TestCase):
+    def test_timeout_bounds_preflight_and_saves_receipt_when_evidence_budget_expires(self):
+        clock = [877]
+        calls = []
+        def command(args, **kwargs):
+            calls.append(args)
+            self.assertLessEqual(kwargs["timeout"], 123)
+            if args[-1] == "ro.kernel.qemu":
+                stdout = "1"
+            elif "path" in args:
+                stdout = "package:/data/app/synthetic/base.apk"
+            elif "sha256sum" in args:
+                stdout = "b" * 64 + "  /data/app/synthetic/base.apk"
+            elif "instrument" in args:
+                self.assertEqual(63, kwargs["timeout"])
+                clock[0] = 1000
+                raise subprocess.TimeoutExpired(args, 63, output=b"partial instrumentation")
+            else:
+                self.fail("Evidence reads must not start after the deadline")
+            return subprocess.CompletedProcess(args, 0, stdout, "")
+        with tempfile.TemporaryDirectory() as directory:
+            args = ["run-fixture.py", "--serial", "emulator-5554", "--package", "org.inkweft.app.a0.insertion",
+                    "--source-commit", "a" * 40, "--phase", "prepare", "--output", directory,
+                    "--timeout", "63", "--deadline-epoch", "1000"]
+            with patch.object(sys, "argv", args), patch.object(runner.time, "time", side_effect=lambda: clock[0]), \
+                    patch.object(runner.subprocess, "run", side_effect=command):
+                self.assertEqual(1, runner.main())
+            receipt = json.loads((Path(directory) / "prepare-runner.json").read_text())
+            self.assertEqual("TIMEOUT_RESULT_UNKNOWN", receipt["status"])
+            self.assertEqual("UNAVAILABLE", receipt["manifest"])
+            self.assertEqual(b"partial instrumentation", (Path(directory) / "prepare-instrumentation.log").read_bytes())
+            self.assertEqual(1, sum("instrument" in call for call in calls))
+
+
+if __name__ == "__main__":
+    unittest.main()

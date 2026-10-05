@@ -1,0 +1,49 @@
+{
+  "source": "57a7a4b0123383fe34b64229beb238668f4b9802",
+  "local_same_tree": "c9746cc78549d237d2ebf7a6eafee4523e9ebc80",
+  "run": 37223946216,
+  "ui": {
+    "executed": 4,
+    "passed": 2,
+    "failed": 2,
+    "passed_methods": [
+      "MapInteractionUiTest.selectionRenameReadingAndMapMenusKeepTheirScope",
+      "StudyOrganizationUiTest.realOutlineHandleMovesWholeBranchAndSupportsUndoRedoAndCancel"
+    ]
+  },
+  "core_passed": 157,
+  "room": {
+    "executed": 0,
+    "reused": 202,
+    "source_run": 37217398281
+  },
+  "b6": {
+    "status": "NOT_RUN_FOCUSED_UI_DIAGNOSTIC",
+    "executed": 0,
+    "png": 0
+  },
+  "artifact_id": 11310999734,
+  "artifact_sha256": "sha256:2ea870f80d190130210910897ef1e0f53b3030243b9806d87e3e1f2823e5f96a",
+  "acl": "RESTORED_EXACT_ORIGINAL_ACL",
+  "remote_cache": {
+    "restored": 0,
+    "saved": 0
+  },
+  "remaining_failures": [
+    "Real pinch events reach native view but original span212.40039->354 stays below observed minimum span529; detector inactive",
+    "Edge-scroll actual displayed final target and intended child feedback pass; parent unchanged after release; selected source/commit reason not yet proven"
+  ],
+  "next_candidate": [
+    "Calibrate actual two-finger test gesture to runtime minimum span within visible view, preserving original timing and all author-state assertions",
+    "Only visible Lazy row can own a handle; fix source identity at DOWN rather than reusing retained offscreen rectangles. Actual contribution to last failure still pending runtime proof",
+    "Preserve drag source identity assertion and bounded release diagnostic in failure text"
+  ],
+  "timing_seconds": {
+    "job": 707,
+    "build": 522.786,
+    "emulator": 60.912,
+    "regression": 96.096
+  },
+  "full_acceptance": "NOT_COMPLETE",
+  "physical_device": "NOT_RUN"
+}

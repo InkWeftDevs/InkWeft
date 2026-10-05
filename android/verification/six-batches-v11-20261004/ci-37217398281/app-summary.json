@@ -1,0 +1,16 @@
+{
+  "expected": 20,
+  "planned_total": 20,
+  "shard_index": 0,
+  "shard_count": 1,
+  "passed": 14,
+  "failures": [
+    "org.inkweft.app.BoundAnnotationFlowUiTest#bindMoveReorderZoomDetachAndReopenKeepOneTransformAndProtectedLayerOwnership",
+    "org.inkweft.app.CardTrashUiTest#cardManagementCancelsRejectsChangedQuestionThenRestoresFromRecycleArea",
+    "org.inkweft.app.RecallOriginalSourceUiTest#durableCurrentSourceWaitsForOriginalReceiptAndReturnsToSameAnswerAndWindow",
+    "org.inkweft.app.RecallOriginalSourceUiTest#recycledCurrentSourceKeepsFixedSnapshotAndSameAttempt",
+    "org.inkweft.app.CardReuseDialogUiTest#realReferenceAndCopyActionsKeepSharedIdentityAndIndependentContentAfterReopen",
+    "org.inkweft.app.StudyOrganizationUiTest#outlineEdgeScrollReachesOffscreenParentAndCancelKeepsWholeAuthorGraph"
+  ],
+  "infrastructure": []
+}

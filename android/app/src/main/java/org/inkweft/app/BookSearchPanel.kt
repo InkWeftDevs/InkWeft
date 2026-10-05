@@ -20,12 +20,14 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.*
 import org.inkweft.core.*
 
-internal data class PageSearchDraft(val pageId:String,val inkRevision:Long,val objectRevision:Long,val text:String,val stale:Boolean)
+internal data class PageSearchDraft(val pageId:String,val inkRevision:Long,val objectRevision:Long,val text:String,val stale:Boolean,val authoringRevision:Long)
 
 @Composable internal fun BookSearchPanel(bookId:String,title:String,currentPageId:String?,dismiss:()->Unit,
     openPage:(String,CanvasBounds?)->Unit,correctPage:(PageSearchDraft)->Unit,onMapSearch:(()->Unit)?=null){
     val app=LocalContext.current.applicationContext as InkWeftApplication
     val scope=rememberCoroutineScope()
+    val requestVersion=remember(bookId){SearchRequestVersion()}
+    DisposableEffect(requestVersion){onDispose{requestVersion.close()}}
     val resultListState=rememberLazyListState()
     val searchFlow=remember(app){app.pages.observeSearch()}
     val allRows by searchFlow.collectAsStateWithLifecycle(initialValue=emptyList())
@@ -64,15 +66,16 @@ internal data class PageSearchDraft(val pageId:String,val inkRevision:Long,val o
                 for((i,page)in currentPages.withIndex()){
                     ensureActive()
                     try{
-                        val ink=withContext(Dispatchers.IO){app.inkRepository.read(page.id)}
+                        val frozen=withContext(Dispatchers.IO){app.authoring.exportPage(page.id)}
                         val old=withContext(Dispatchers.IO){app.pages.searchText(page.id)}
-                        if(old?.inkRevision==ink.revision){processed=i+1;continue}
-                        val objects=withContext(Dispatchers.IO){app.pageObjects.read(page.id)}
-                        val suppressed=objects.objects.flatMap{it.sourceStrokeIds}.toSet()
-                        val result=app.handwriting.recognize(InkSession(ink).visibleDraft().filterNot{it.id in suppressed})
-                        val text=(listOf(result.text)+objects.objects.filter{!it.hidden&&it.kind==PageObjectKind.TEXT}.map{it.visibleText()}).filter{it.isNotBlank()}.joinToString("\n")
+                        if(old?.inkRevision==frozen.authoring.inkRevision){processed=i+1;continue}
+                        val layers=frozen.authoring.state.layers
+                        val visibleObjects=frozen.objects.filter{layers.visible(LayerContent(LayerContentKind.OBJECT,it.id))}
+                        val suppressed=visibleObjects.flatMap{it.sourceStrokeIds}.toSet()
+                        val result=app.handwriting.recognize(frozen.ink.filter{layers.visible(LayerContent(LayerContentKind.INK,it.id))&&it.id !in suppressed})
+                        val text=(listOf(result.text)+visibleObjects.filter{!it.hidden&&it.kind==PageObjectKind.TEXT}.map{it.visibleText()}).filter{it.isNotBlank()}.joinToString("\n")
                         require(text.length<=20_000)
-                        if(!withContext(Dispatchers.IO){app.pages.saveSearchText(page.id,ink.revision,text,objects.revision,"OCR")})failed++
+                        if(!withContext(Dispatchers.IO){app.pages.saveSearchText(page.id,frozen.authoring.inkRevision,text,frozen.authoring.objectRevision,"OCR",frozen.authoring.revision)})failed++
                     }catch(c:CancellationException){throw c}catch(_:Exception){failed++}
                     processed=i+1
                 }
@@ -86,6 +89,7 @@ internal data class PageSearchDraft(val pageId:String,val inkRevision:Long,val o
     val term=query.trim()
     LaunchedEffect(bookId,term,pages.map{it.id},pdfAttempt){
         val worker=currentCoroutineContext()[Job]!!
+        val request=requestVersion.invalidate()
         pdfJob=worker;pdfTerm=term;pdfHits=emptyMap();pdfProcessed=0;pdfTotal=pages.size
         pdfImageOnly=0;pdfFailed=0;pdfPaused=false;pdfRunning=term.isNotEmpty()&&pages.isNotEmpty()
         try{
@@ -97,11 +101,13 @@ internal data class PageSearchDraft(val pageId:String,val inkRevision:Long,val o
                 try{
                     val result=app.documentRendering.search(page.id,term,sources)
                     ensureActive()
+                    if(!requestVersion.isCurrent(request))return@LaunchedEffect
                     if(result!=null){
                         if(!result.hasText)pdfImageOnly++
                         result.hit?.let{pdfHits=pdfHits+(page.id to it)}
                     }
-                }catch(c:CancellationException){throw c}catch(_:Exception){pdfFailed++}
+                }catch(c:CancellationException){throw c}catch(_:Exception){if(requestVersion.isCurrent(request))pdfFailed++}
+                if(!requestVersion.isCurrent(request))return@LaunchedEffect
                 pdfProcessed=i+1
             }
         }finally{if(pdfJob===worker){pdfRunning=false;pdfJob=null}}
@@ -119,6 +125,7 @@ internal data class PageSearchDraft(val pageId:String,val inkRevision:Long,val o
         if(openingPage!=null)return
         openingPage=pageId;message=null
         val requested=term
+        val request=requestVersion.current()
         scope.launch{
             try{
                 val valid=withContext(Dispatchers.IO){
@@ -126,9 +133,9 @@ internal data class PageSearchDraft(val pageId:String,val inkRevision:Long,val o
                         it.document.sha256==hit.documentSha256&&it.page==hit.sourcePage
                     }==true)
                 }
-                if(query.trim()!=requested)return@launch
+                if(!requestVersion.isCurrent(request)||query.trim()!=requested)return@launch
                 if(valid){returnPage=pageId;openPage(pageId,hit?.bounds)}else message="页面或原文已变化，请重新查找"
-            }catch(c:CancellationException){throw c}catch(_:Exception){message="暂时无法打开结果，请重试"}
+            }catch(c:CancellationException){throw c}catch(_:Exception){if(requestVersion.isCurrent(request))message="暂时无法打开结果，请重试"}
             finally{openingPage=null}
         }
     }
@@ -151,7 +158,7 @@ internal data class PageSearchDraft(val pageId:String,val inkRevision:Long,val o
             }else if(pdfPaused||pdfFailed>0){
                 Row(verticalAlignment=Alignment.CenterVertically){
                     Text(if(pdfPaused)"PDF 查找已暂停"else"$pdfFailed 页 PDF 暂未查找成功",Modifier.weight(1f),style=MaterialTheme.typography.bodySmall,color=Quiet)
-                    TextButton(onClick={pdfAttempt++},modifier=Modifier.testTag("pdf-search-retry")){Text("重试")}
+                    TextButton(onClick={requestVersion.invalidate();pdfAttempt++},modifier=Modifier.testTag("pdf-search-retry")){Text("重试")}
                 }
             }
             if(pdfImageOnly>0)Text("$pdfImageOnly 页 PDF 没有原生文字，可用区域摘录",style=MaterialTheme.typography.bodySmall,color=Quiet,modifier=Modifier.testTag("pdf-search-image-only"))
@@ -164,16 +171,17 @@ internal data class PageSearchDraft(val pageId:String,val inkRevision:Long,val o
                     Text(if(missing>0)"$missing 页待识别"else"已识别 ${rows.size} 页",Modifier.weight(1f),style=MaterialTheme.typography.bodySmall,color=Quiet)
                     TextButton(onClick={automaticStarted=true;recognize()},enabled=pages.isNotEmpty(),modifier=Modifier.testTag("recognize-book")){Text(if(message?.contains("未识别成功")==true)"重试"else"识别手写")}
                     if(currentPageId!=null)TextButton(onClick={openingCorrection=true;scope.launch{try{
-                    val draft=withContext(Dispatchers.IO){val revision=app.pages.inkRevision(currentPageId);val objects=app.pageObjects.read(currentPageId);val old=app.pages.searchText(currentPageId)
-                        PageSearchDraft(currentPageId,revision,objects.revision,old?.text.orEmpty(),old!=null&&old.inkRevision!=revision)}
+                    val draft=withContext(Dispatchers.IO){val frozen=app.authoring.readPage(currentPageId);val old=app.pages.searchText(currentPageId)
+                        check(app.authoring.readPage(currentPageId).let{it.revision==frozen.revision&&it.inkRevision==frozen.inkRevision&&it.objectRevision==frozen.objectRevision})
+                        PageSearchDraft(currentPageId,frozen.inkRevision,frozen.objectRevision,old?.text.orEmpty(),old!=null&&old.inkRevision!=frozen.inkRevision,frozen.revision)}
                     correctPage(draft)
                 }catch(c:CancellationException){throw c}catch(_:Exception){message="暂时无法打开校对，请重试"}finally{openingCorrection=false}}},enabled=!openingCorrection&&openingPage==null,modifier=Modifier.testTag("search-correct-page")){Text(if(openingCorrection)"正在打开…"else"校对当前页")}
                 }
             }
         }
     }){
-        OutlinedTextField(query,{val value=it.take(256);if(value.trim()!=query.trim()){pdfHits=emptyMap();returnPage=null;restorePage=null};query=value},singleLine=true,label={Text("输入关键词")},leadingIcon={Glyph("search")},
-            trailingIcon={if(query.isNotEmpty())IconButton(onClick={pdfHits=emptyMap();returnPage=null;restorePage=null;query=""},modifier=Modifier.describedAs("清空搜索")){Glyph("close")}},
+        OutlinedTextField(query,{val value=it.take(256);if(value.trim()!=query.trim()){requestVersion.invalidate();pdfHits=emptyMap();returnPage=null;restorePage=null};query=value},singleLine=true,label={Text("输入关键词")},leadingIcon={Glyph("search")},
+            trailingIcon={if(query.isNotEmpty())IconButton(onClick={requestVersion.invalidate();pdfHits=emptyMap();returnPage=null;restorePage=null;query=""},modifier=Modifier.describedAs("清空搜索")){Glyph("close")}},
             modifier=Modifier.fillMaxWidth().testTag("book-search-query"))
         Row(Modifier.fillMaxWidth().padding(vertical=4.dp),verticalAlignment=Alignment.CenterVertically){
             Text("PDF 原文 · 手写 · 文本框",Modifier.weight(1f),style=MaterialTheme.typography.bodySmall,color=Quiet)

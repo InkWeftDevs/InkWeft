@@ -1,0 +1,313 @@
+{
+  "source": "a2930ef370cdc5cb39a1bc995cf11ee2135c8a98",
+  "run": 37206124646,
+  "url": "https://github.com/InkWeftDevs/InkWeft/actions/runs/37206124646",
+  "scope": "synthetic accelerated Android35, no physical/human acceptance",
+  "shards": [
+    {
+      "index": 0,
+      "artifact": 11305142252,
+      "app": {
+        "expected": 43,
+        "planned_total": 128,
+        "shard_index": 0,
+        "shard_count": 3,
+        "passed": 41,
+        "failures": [
+          "org.inkweft.app.RecallMaskUiTest#narrowRotationSourceReturnAndNextQuestionResetPermissions",
+          "org.inkweft.app.RecallQuestionEditorUiTest#rotationAfterConfigurationChangeCannotResetNewMasksOrSchedule"
+        ],
+        "infrastructure": []
+      },
+      "room": {
+        "expected": 180,
+        "planned_total": 180,
+        "shard_index": 0,
+        "shard_count": 3,
+        "passed": 180,
+        "failures": [],
+        "infrastructure": []
+      },
+      "fixture": {
+        "status": "FAILED",
+        "source_commit": "a2930ef370cdc5cb39a1bc995cf11ee2135c8a98",
+        "synthetic_only": true,
+        "expected": 5,
+        "passed": 0,
+        "phases": {
+          "prepare": {
+            "status": "FAILED",
+            "returncode": 1
+          },
+          "reopen": {
+            "status": "NOT_RUN"
+          },
+          "visual": {
+            "status": "NOT_RUN"
+          },
+          "native_recall": {
+            "status": "NOT_RUN"
+          },
+          "native_recall_reopen": {
+            "status": "NOT_RUN"
+          }
+        },
+        "real_device": "NOT_RUN",
+        "human_handwriting": "NOT_RUN",
+        "pixels_review": "PENDING_HUMAN_OR_VISUAL_REVIEW",
+        "reason": "prepare did not pass; dependent phases NOT_RUN, original library retained"
+      },
+      "acl": {
+        "status": "RESTORED_EXACT_ORIGINAL_ACL"
+      },
+      "screenshots": [
+        "six-batch-fixture/05-layered-1000-stroke-pressure.png",
+        "app-029/ls58-recycled-source.png",
+        "app-041/study-branch-navigation.png",
+        "app-041/study-folded-map.png",
+        "app-034/polish-outline-one-action-group.png",
+        "app-028/sn57-narrow-fixed-footer.png",
+        "app-030/bp55-unavailable-branch.png",
+        "app-013/v37-excerpt-resize.png",
+        "app-038/mui-title-layout.png"
+      ],
+      "evidence_sha256": {
+        "app-summary.json": "fb346619578ed13be5298997a50db32eaf9fa0a615e39e93563355d26d949a06",
+        "room-summary.json": "9dff5cc46ef0d2832dbde05d5a404508c4d0fcc2f9f25cb16193c88626f7a9bf",
+        "fixture-summary.json": "c37f578a7fb062e7de6c8e54d84b7f53159d5b217541e008377a7ee6b30e0292",
+        "APK-SHA256.txt": "18a0a3a6a30dd7c7a16bbae01269601a3da5225722c279fcf8067ea1a902a45b",
+        "apk-signature.txt": "b444426640b7fa3f04420ce90668ab3591d8116de279b48029a56254d9b71180",
+        "source-commit.txt": "4de26783f913ba0f6771268607aa25eded4983bacc96ad1c6e31af498d9d24c2"
+      }
+    },
+    {
+      "index": 1,
+      "artifact": 11305188021,
+      "app": {
+        "expected": 43,
+        "planned_total": 128,
+        "shard_index": 1,
+        "shard_count": 3,
+        "passed": 41,
+        "failures": [
+          "org.inkweft.app.RecallQuestionEditorUiTest#pendingCommandTakesPrecedenceOverCurrentPromptAcrossRecreation",
+          "org.inkweft.app.LibrarySourceNavigationUiTest#closingOrRecreatingPendingLibrarySourceCannotJumpOrCloseAnotherCard"
+        ],
+        "infrastructure": []
+      },
+      "room": {
+        "status": "NOT_ASSIGNED",
+        "source_commit": "a2930ef370cdc5cb39a1bc995cf11ee2135c8a98",
+        "shard_index": 1,
+        "shard_count": 3,
+        "assigned_shard": 0,
+        "expected": 0,
+        "planned_total": 180,
+        "passed": 0,
+        "failures": [],
+        "infrastructure": []
+      },
+      "fixture": {
+        "status": "NOT_ASSIGNED",
+        "source_commit": "a2930ef370cdc5cb39a1bc995cf11ee2135c8a98",
+        "shard_index": 1,
+        "shard_count": 3,
+        "assigned_shard": 0,
+        "expected": 0,
+        "planned_total": 5,
+        "passed": 0,
+        "failures": [],
+        "infrastructure": [],
+        "phases": {
+          "prepare": {
+            "status": "NOT_ASSIGNED"
+          },
+          "reopen": {
+            "status": "NOT_ASSIGNED"
+          },
+          "visual": {
+            "status": "NOT_ASSIGNED"
+          },
+          "native_recall": {
+            "status": "NOT_ASSIGNED"
+          },
+          "native_recall_reopen": {
+            "status": "NOT_ASSIGNED"
+          }
+        }
+      },
+      "acl": {
+        "status": "RESTORED_EXACT_ORIGINAL_ACL"
+      },
+      "screenshots": [
+        "app-033/polish-card-reading-order.png",
+        "app-037/mui-unknown-draft.png",
+        "app-035/mui-conflict-draft.png",
+        "app-029/ls58-close-card-navigation-failure.png",
+        "app-040/study-mindmap.png",
+        "app-040/study-outline.png",
+        "app-039/beautify-preview.png",
+        "app-034/polish-default-tools.png",
+        "app-034/polish-excerpt-header-clear.png",
+        "app-028/sn57-unavailable-source.png",
+        "app-030/bp55-opened-branch-removed.png"
+      ],
+      "evidence_sha256": {
+        "app-summary.json": "b5a5638e8fc3c605e1b9343a2e8789d7cfaf55743c1828272297a6eb525206dd",
+        "room-summary.json": "cfe397db730241ae14df57eedb4d4adfd9e848bfb33d2302d490b18b08a2910f",
+        "fixture-summary.json": "3b23e9ccd377cf89a7149fbe2a53201d194324cbd00427ca3868a42d5ca137a7",
+        "APK-SHA256.txt": "b887a750bd21f803d7a428b5811566c2dd800542979655d95263e29e64675bf8",
+        "apk-signature.txt": "5c4c19639e845ef8a2af07e88e95742a936c4984fad4e4254f02fa02cb650d69",
+        "source-commit.txt": "4de26783f913ba0f6771268607aa25eded4983bacc96ad1c6e31af498d9d24c2"
+      }
+    },
+    {
+      "index": 2,
+      "artifact": 11304789154,
+      "app": {
+        "expected": 42,
+        "planned_total": 128,
+        "shard_index": 2,
+        "shard_count": 3,
+        "passed": 40,
+        "failures": [
+          "org.inkweft.app.CardPresentationUiTest#sharedAnnotationColorsRestoreSearchAndResetWithoutTouchingBodyOrLayout",
+          "org.inkweft.app.LibrarySourceNavigationUiTest#learningSourceAwaitsRealPageSelectionThenFocusesOriginalBoundsWithReadLock"
+        ],
+        "infrastructure": []
+      },
+      "room": {
+        "status": "NOT_ASSIGNED",
+        "source_commit": "a2930ef370cdc5cb39a1bc995cf11ee2135c8a98",
+        "shard_index": 2,
+        "shard_count": 3,
+        "assigned_shard": 0,
+        "expected": 0,
+        "planned_total": 180,
+        "passed": 0,
+        "failures": [],
+        "infrastructure": []
+      },
+      "fixture": {
+        "status": "NOT_ASSIGNED",
+        "source_commit": "a2930ef370cdc5cb39a1bc995cf11ee2135c8a98",
+        "shard_index": 2,
+        "shard_count": 3,
+        "assigned_shard": 0,
+        "expected": 0,
+        "planned_total": 5,
+        "passed": 0,
+        "failures": [],
+        "infrastructure": [],
+        "phases": {
+          "prepare": {
+            "status": "NOT_ASSIGNED"
+          },
+          "reopen": {
+            "status": "NOT_ASSIGNED"
+          },
+          "visual": {
+            "status": "NOT_ASSIGNED"
+          },
+          "native_recall": {
+            "status": "NOT_ASSIGNED"
+          },
+          "native_recall_reopen": {
+            "status": "NOT_ASSIGNED"
+          }
+        }
+      },
+      "acl": {
+        "status": "RESTORED_EXACT_ORIGINAL_ACL"
+      },
+      "screenshots": [
+        "app-029/bp55-focused-branch.png",
+        "app-029/bp55-branch-picker.png",
+        "app-029/bp55-branch-preview.png",
+        "app-039/selection-actions.png",
+        "app-034/mui-selected.png",
+        "app-034/mui-rename-keyboard.png",
+        "app-034/mui-long-content.png",
+        "app-034/mui-map-menu.png",
+        "app-034/mui-node-menu.png",
+        "app-034/mui-unselected-24.png",
+        "app-027/sn57-collapsed-source-return.png",
+        "app-028/ls58-exact-source.png",
+        "app-012/v36-excerpt.png",
+        "app-032/bp55-narrow-large-type-picker.png",
+        "app-032/bp55-narrow-large-type-preview.png",
+        "app-036/mui-narrow-selected.png",
+        "app-036/mui-narrow-keyboard.png",
+        "app-038/mui-edge-affordances.png"
+      ],
+      "evidence_sha256": {
+        "app-summary.json": "0ee0893ffd087070e98ea52faa30843e1292d626829b83e130ae285af817fb3e",
+        "room-summary.json": "7b57cf9b7061b0269fc39e426f0ec9709da0366d3f05d0aa37445c9010299f3c",
+        "fixture-summary.json": "d82f2a445dae5a7ae683ff14024d9f77a43c61332b02a3aef46f1db9be830a42",
+        "APK-SHA256.txt": "26d4c98638772cfb2e578c254b6a07264a46a10f7f68f37f5618375007555a59",
+        "apk-signature.txt": "0915836a6898f33a46e1e510823d7630f9401b15c4d117f6055daebaad89f93b",
+        "source-commit.txt": "4de26783f913ba0f6771268607aa25eded4983bacc96ad1c6e31af498d9d24c2"
+      }
+    }
+  ],
+  "totals": {
+    "ui_attempted": 128,
+    "ui_junit_completed": 127,
+    "ui_passed": 122,
+    "ui_assertion_failed": 5,
+    "ui_runner_timeout": 1,
+    "room_completed": 180,
+    "room_passed": 180,
+    "room_failed": 0,
+    "b6_prepare_failed": 1,
+    "b6_remaining_not_run": 4
+  },
+  "pressure_native_proof": {
+    "bitmapWidth": 1920,
+    "bitmapHeight": 1200,
+    "viewLeft": 0,
+    "viewTop": 182,
+    "viewWidth": 1920,
+    "viewHeight": 934,
+    "viewportCenterX": 500,
+    "viewportCenterY": 707,
+    "viewportZoom": 0.44035832154644033,
+    "density": 1.5,
+    "frameCommitted": true,
+    "pageId": "86ac31c1-a5f9-4f5e-95fe-9eec0ffc1d47",
+    "sourcePage": 12,
+    "documentSha256": "2ebcf89629bc6d071916d4d7b5b0e70ead81d6cab43f98470aad18d75e5caa17",
+    "nativeInkSha256": "778f75047b4b0ae9d4bef2fec2a1c7d50984c93bac66dcea5046551b01e5a20a",
+    "nativeStoredStrokes": 1000,
+    "nativeStoredPoints": 100000,
+    "nativeVisibleStrokes": 1000,
+    "authoringFingerprint": "36b9d6355c0f0146ee3b5ddb0bb508ee67a5fb8e99ea83c6744abcfd2bf5fe6f",
+    "layers": 3,
+    "pdfTilePresent": true,
+    "sourceFrameDrawn": true,
+    "pendingRaster": false,
+    "pendingImages": false,
+    "continuous": false,
+    "baseSample": {
+      "left": 636,
+      "top": 191,
+      "right": 1281,
+      "bottom": 221,
+      "visibleRect": "[0,182][1920,1116]"
+    },
+    "lockedSample": {
+      "left": 636,
+      "top": 962,
+      "right": 1281,
+      "bottom": 1047,
+      "visibleRect": "[0,182][1920,1116]"
+    },
+    "baseLayerBluePixels": 1540,
+    "lockedLayerBluePixels": 3786,
+    "sha256": "c23d14ce5e61b6ef34364584567bec84f17c31ff07780f53e7eb5157c00425b3",
+    "runId": "e26daa4a-a521-491a-a243-7196a95d9bf1",
+    "sourceCommit": "a2930ef370cdc5cb39a1bc995cf11ee2135c8a98",
+    "review": "PENDING_VISUAL_REVIEW"
+  },
+  "b6_blocker": "After valid pressure capture, duplicate 页面与批注 labels in toolbar and popup matched; actual popup selector correction pending next candidate."
+}

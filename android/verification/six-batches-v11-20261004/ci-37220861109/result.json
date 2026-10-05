@@ -1,0 +1,50 @@
+{
+  "source": "725ebcf7eb53d6b0d8fdbd5aa268b2920c921ccc",
+  "local_same_tree": "a432bf8c0e27f5e296a55ae0986fd36512b48dbf",
+  "run": 37220861109,
+  "ui": {
+    "executed": 3,
+    "passed": 1,
+    "failed": 2,
+    "passed_method": "CardTrashUiTest.cardManagementCancelsRejectsChangedQuestionThenRestoresFromRecycleArea"
+  },
+  "core_passed": 157,
+  "room": {
+    "executed": 0,
+    "reused": 202,
+    "source_run": 37217398281
+  },
+  "b6": {
+    "prepare": "PASS",
+    "native_recall": "PASS",
+    "other3": "NOT_RUN_FOCUSED",
+    "same_fixture": true,
+    "verified_png": 14
+  },
+  "artifact_id": 11310496604,
+  "artifact_sha256": "sha256:1161baec656e3f91cf9c814d9f9340c81d0f86247caa01279d000d22a2138303",
+  "acl": "RESTORED_EXACT_ORIGINAL_ACL",
+  "remote_cache": {
+    "restored": 0,
+    "saved": 0,
+    "terminal_disabled_messages_verified": true
+  },
+  "card_trash_preview": {
+    "sha256": "b41283d1d9289f3daac97ae393c8a94d96260583b4fa3f904e25c58614ccb0e6",
+    "pixels_reviewed": true,
+    "result": "Consequence, actual recovery path, link/question impact and actions readable without clipping at1920x1200"
+  },
+  "remaining_failures": [
+    "Named pinch still leaves scale1.3 unchanged; requires native trace and production gesture-contract analysis",
+    "Bounds-only reach predicate passed for a row later not displayed; verify placement and direct stable target before release"
+  ],
+  "timing_seconds": {
+    "total": 933.7,
+    "build": 628.6,
+    "emulator": 69.4,
+    "regression": 64.1,
+    "b6": 154.9
+  },
+  "full_acceptance": "NOT_COMPLETE",
+  "physical_device": "NOT_RUN"
+}

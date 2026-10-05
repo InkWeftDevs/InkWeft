@@ -40,4 +40,17 @@ class KnowledgeTest {
         assertFalse(c in KnowledgeQueries.graph(a,links,1).nodes);assertTrue(c in KnowledgeQueries.graph(a,links,2).nodes)
         val dense=(1..200).map{KnowledgeData.Link(a,TargetRef(TargetKind.CARD,id()))};val g=KnowledgeQueries.graph(a,dense);assertTrue(g.truncated);assertEquals(100,g.nodes.size);assertTrue(g.edges.size<=200)}
     @Test fun cycleExpansionAndDeepChainsStop(){val a=TargetRef(TargetKind.CARD,id());assertFalse(KnowledgeQueries.canExpand(a,listOf(a),1));assertFalse(KnowledgeQueries.canExpand(a,List(4){TargetRef(TargetKind.CARD,id())},4));assertFalse(KnowledgeQueries.canExpand(a,emptyList(),100))}
+    @Test fun styledRelationsRoundTripAndDefaultsKeepTheLegacyWireTag(){
+        val link=KnowledgeData.Link(TargetRef(TargetKind.CARD,id()),TargetRef(TargetKind.CARD,id()),RelationKind.SUMMARY,3)
+        java.io.DataInputStream(java.io.ByteArrayInputStream(KnowledgeCodec.encode(link))).use{it.readInt();assertEquals("LINK",it.readUTF())}
+        for(style in RelationLineStyle.entries)for(direction in RelationDirection.entries)for(visible in listOf(true,false)){
+            val edited=link.copy(lineStyle=style,direction=direction,annotation="由两段原文归纳\n仅改变关系显示",visible=visible)
+            assertEquals(edited,KnowledgeCodec.decode(KnowledgeCodec.encode(edited)))
+            assertTrue(link.sameMeaning(edited));assertFalse(link.sameMeaning(edited.copy(target=TargetRef(TargetKind.CARD,id()))))
+        }
+        assertThrows(IllegalArgumentException::class.java){KnowledgeCodec.encode(link.copy(annotation="字".repeat(2001)))}
+        val operation=id();val book=id();val record=id()
+        assertNotEquals(KnowledgeCommand(operation,book,record,1,link).digest(),KnowledgeCommand(operation,book,record,1,link.copy(visible=false)).digest())
+    }
+
 }

@@ -14,7 +14,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.*
 import org.inkweft.core.*
 
-internal data class SelectedInk(val region:InkRegion,val revision:Long,val strokes:List<InkStroke>,val preview:ByteArray?=null,val objectRevision:Long?=null,val excerptText:String="")
+internal data class SelectedInk(val region:InkRegion,val revision:Long,val strokes:List<InkStroke>,val preview:ByteArray?=null,val objectRevision:Long?=null,val excerptText:String="",val authoringRevision:Long?=null)
 @Composable
 internal fun SelectionActions(selection:SelectedInk?,all:List<InkStroke>,enabled:Boolean,
     freehand:Boolean,onMode:(Boolean)->Unit,apply:(Long,InkMutation)->Boolean,
@@ -35,7 +35,7 @@ internal fun SelectionActions(selection:SelectedInk?,all:List<InkStroke>,enabled
             }
             if(s!=null&&count>0){
                 TextButton(onClick={if(apply(s.revision,InkMutation.Visibility(s.strokes.map{it.id},false)))clear()},enabled=enabled&&count>0,modifier=Modifier.testTag("selection-delete")){Text("删除")}
-                TextButton(onClick={runCatching{InkSelectionEdit.copy(s.strokes,0f,0f)}.getOrNull()?.let{if(apply(s.revision,InkMutation.Replace(emptyList(),it)))clear()}},enabled=enabled&&count in 1..256,modifier=Modifier.testTag("selection-copy")){Text("复制")}
+                TextButton(onClick={runCatching{InkSelectionEdit.copy(s.strokes,0f,0f)}.getOrNull()?.let{if(apply(s.revision,InkMutation.Replace(emptyList(),it,s.strokes.map{it.id})))clear()}},enabled=enabled&&count in 1..256,modifier=Modifier.testTag("selection-copy")){Text("复制到当前层")}
                 TextButton(onClick={color=true},enabled=enabled&&count in 1..256,modifier=Modifier.testTag("selection-recolor")){Text("改色")}
                 TextButton(onClick={fontBeauty(s)},enabled=enabled&&count in 1..256&&s.strokes.none{it.pen==InkPen.HIGHLIGHTER},modifier=Modifier.testTag("selection-font-beauty")){Text("美化字迹")}
                 Box {
@@ -43,7 +43,7 @@ internal fun SelectionActions(selection:SelectedInk?,all:List<InkStroke>,enabled
                     DropdownMenu(more,{more=false}){
                         listOf("放大 10%","缩小 10%","水平翻转","垂直翻转").forEachIndexed{i,title->
                             DropdownMenuItem(text={Text(title)},enabled=enabled&&count in 1..256,onClick={more=false
-                                runCatching{InkSelectionEdit.transform(s.strokes,if(i==0)1.1f else if(i==1).9f else 1f,i==2,i==3)}.onSuccess{changed->if(apply(s.revision,InkMutation.Replace(s.strokes.map{it.id},changed)))clear()}.onFailure{transformError=true}
+                                runCatching{InkSelectionEdit.transform(s.strokes,if(i==0)1.1f else if(i==1).9f else 1f,i==2,i==3)}.onSuccess{changed->if(apply(s.revision,InkMutation.Replace(s.strokes.map{it.id},changed,s.strokes.map{it.id})))clear()}.onFailure{transformError=true}
                             },modifier=Modifier.testTag("selection-transform-$i"))
                         }
                         DropdownMenuItem(text={Text("摘录")},onClick={more=false;excerpt(s)},enabled=enabled&&count in 1..256,modifier=Modifier.testTag("selection-excerpt"))
@@ -58,9 +58,9 @@ internal fun SelectionActions(selection:SelectedInk?,all:List<InkStroke>,enabled
         }
     }
     if(transformError)AlertDialog(onDismissRequest={transformError=false},text={Text("调整超出页面或笔宽范围，原笔迹保留。")},confirmButton={TextButton({transformError=false}){Text("知道了")}})
-    if(beauty&&s!=null)BeautifyDialog(s.strokes,{beauty=false}){changed->if(apply(s.revision,InkMutation.Replace(s.strokes.map{it.id},changed))){clear();beauty=false}}
+    if(beauty&&s!=null)BeautifyDialog(s.strokes,{beauty=false}){changed->if(apply(s.revision,InkMutation.Replace(s.strokes.map{it.id},changed,s.strokes.map{it.id}))){clear();beauty=false}}
     if(color&&s!=null)AlertDialog(onDismissRequest={color=false},title={Text("修改选中笔迹颜色")},text={Row(horizontalArrangement=Arrangement.spacedBy(8.dp)){
-        listOf(0xff24342f,0xffb83239,0xff3159b8,0xff14735d,0xffa57605).forEach{c->Button(onClick={if(apply(s.revision,InkMutation.Replace(s.strokes.map{it.id},InkSelectionEdit.recolor(s.strokes,c.toInt())))){clear();color=false}},colors=ButtonDefaults.buttonColors(containerColor=androidx.compose.ui.graphics.Color(c)),modifier=Modifier.size(48.dp),contentPadding=PaddingValues(0.dp)){Text("●")}}
+        listOf(0xff24342f,0xffb83239,0xff3159b8,0xff14735d,0xffa57605).forEach{c->Button(onClick={if(apply(s.revision,InkMutation.Replace(s.strokes.map{it.id},InkSelectionEdit.recolor(s.strokes,c.toInt()),s.strokes.map{it.id}))){clear();color=false}},colors=ButtonDefaults.buttonColors(containerColor=androidx.compose.ui.graphics.Color(c)),modifier=Modifier.size(48.dp),contentPadding=PaddingValues(0.dp)){Text("●")}}
     }},confirmButton={TextButton(onClick={color=false}){Text("取消")}})
 }
 @Composable

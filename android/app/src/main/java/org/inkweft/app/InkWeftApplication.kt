@@ -8,6 +8,7 @@ import org.inkweft.core.DisabledCloudServices
 
 class InkWeftApplication:Application(){
     val openKnowledgeTarget=kotlinx.coroutines.flow.MutableStateFlow<org.inkweft.core.TargetRef?>(null)
+    val knowledgeTargetOrigin=kotlinx.coroutines.flow.MutableStateFlow<org.inkweft.core.TargetRef?>(null)
     val navigationReady=kotlinx.coroutines.flow.MutableStateFlow(true)
     val diagnostics by lazy{AppDiagnostics(this)}
     internal val beautyDiagnostics by lazy{BeautyDiagnostics()}
@@ -16,6 +17,7 @@ class InkWeftApplication:Application(){
     val repository by lazy{NoteRepository(database)}
     val documents by lazy{DocumentRepository(database)}
     val pageObjects by lazy{PageObjectRepository(database)}
+    val authoring by lazy{PageAuthoringRepository(database)}
     val inkRepository by lazy{InkRepository(database)}
     val workspaceRepository by lazy{WorkspaceRepository(database)}
     val pages by lazy{NotebookPages(database)}

@@ -1,0 +1,46 @@
+{
+  "source": "e24e16dacc613a71470cdeba079ba83360c0ddd4",
+  "local_same_tree": "4e661539a72adb913dbc04d04c24a3781cb1c0ed",
+  "tree": "be7f6383b62ca305c8552b25603d6c5177ef4efb",
+  "run": 37225874419,
+  "ui": {
+    "executed": 4,
+    "passed": 2,
+    "failed": 2
+  },
+  "core_passed": 157,
+  "room": {
+    "executed": 0,
+    "reused": 202,
+    "source_run": 37217398281
+  },
+  "b6": {
+    "status": "NOT_RUN_FOCUSED_UI_DIAGNOSTIC",
+    "executed": 0,
+    "png": 0
+  },
+  "artifact_id": 11311404641,
+  "artifact_sha256": "53479e8c929f641944ca221c434c376d1ee3c16aa9d398bea7b951bc91c02ead",
+  "acl": "RESTORED_EXACT_ORIGINAL_ACL",
+  "remote_cache": {
+    "restored": 0,
+    "saved": 0
+  },
+  "failures": {
+    "pinch": "Computed541->589px exceedsmin529, but original-phase native listener receives no event; scale1.3/span0. Calculated source-button overlay covers start(83.5,371); actual overlay measurement required, not an observed delivered span.",
+    "edge": "Source identity and visible target feedback are correct. On release UI says outside/cancelled; busy/unknown/readFailed=false, completed/message=null. Actual UP root/local and possible early drag clearing were not recorded, so database/coordinate cause not proven."
+  },
+  "next_diagnostics": {
+    "pinch": "Measured per-root visible and touch overlay bounds determine an unobstructed complete path; assert actual native event receipt before scaling/data invariants. No detector change.",
+    "edge": "Temporary opt-in debug observer and test-only root last-event read capture full input/update/end/cancel route. Default inactive, no content logged, no decisions altered. Remove observer before final full."
+  },
+  "timing_seconds": {
+    "job": 763,
+    "build": 581.215,
+    "emulator": 58.026,
+    "regression": 103.594
+  },
+  "full_acceptance": "NOT_COMPLETE",
+  "physical_device": "NOT_RUN",
+  "later_causal_correction": "The diagnostic patch was not purely observational: replacing rememberUpdatedState(::localFunction) with a lambda refreshes captured projection. Kotlin2.3.10/Compose1.10.5 reproduction and old production bytecode prove references compare equal despite different captures. Preserve lambda when removing observer. Another identical work-mode callback is being fixed with a current-branch regression."
+}

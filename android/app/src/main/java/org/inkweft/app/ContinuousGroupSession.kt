@@ -18,15 +18,15 @@ internal class ContinuousGroupSession(private val book:String,private val repo:I
     private fun operation(value:Boolean){operationActive=value;refreshBusy()}
     internal suspend fun awaitCancellationSettled(){cancellations.first{it==0}}
     private val error=MutableStateFlow<String?>(null);val problem=error.asStateFlow()
-    private var frozenPages=emptyList<String>();private var origin=0;private var opened=false
+    private var frozenScopes=emptyList<LayerWriteScope?>();private var frozenPages=emptyList<String>();private var origin=0;private var opened=false
     private var tail:Job?=null
     lateinit var writer:ContinuousInkWriter
     var modelFor:(String)->InkViewModel={kotlin.error("Writer unavailable")}
     var notice:(String)->Unit={}
-    fun begin(pages:List<String>,page:String){frozenPages=pages.toList();origin=pages.indexOf(page);require(origin>=0)}
+    fun begin(pages:List<String>,page:String,layerScopes:List<LayerWriteScope?> = emptyList()){frozenScopes=layerScopes.toList();frozenPages=pages.toList();origin=pages.indexOf(page);require(origin>=0)}
     private fun capture(stroke:InkStroke):Capture=captures.getOrPut(stroke.id){
-        val pages=frozenPages;val start=origin;val previous=tail
-        Capture(viewModelScope.async{previous?.join();writer.awaitSettled();withContext(Dispatchers.IO){repo.captureGroup(book,pages,start,stroke)}},stroke)
+        val pages=frozenPages;val scopes=frozenScopes;val start=origin;val previous=tail
+        Capture(viewModelScope.async{previous?.join();writer.awaitSettled();withContext(Dispatchers.IO){repo.captureGroup(book,pages,start,stroke,scopes)}},stroke)
     }
     fun checkpoint(stroke:InkStroke){
         val c=capture(stroke);if(c.cancelled)return;c.latest=stroke
@@ -66,12 +66,13 @@ internal class ContinuousGroupSession(private val book:String,private val repo:I
     fun finish(raw:InkStroke,finished:InkStroke){
         val c=capture(raw);c.latest=raw;operation(true)
         val previous=tail
-        tail=viewModelScope.launch{
+        val job=viewModelScope.launch(start=CoroutineStart.LAZY){
             try{previous?.join();c.job?.join();if(c.cancelled)return@launch
                 val base=c.prepared.await();apply(base.copy(stroke=raw),finished);captures.remove(raw.id)
             }catch(c:CancellationException){throw c}catch(t:Exception){error.value=describe(t);notice(error.value!!)}
             finally{if(tail===currentCoroutineContext()[Job])operation(false)}
         }
+        tail=job;job.start()
     }
     fun open(){if(opened)return;opened=true;retry()}
     fun retry(){

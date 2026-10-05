@@ -1,0 +1,16 @@
+{
+  "code_source": "eb9a226c6986cd1a8962b71c5ddd609c2a1b5fb8",
+  "production_change": "Correct one recovery-path instruction to match the existing compact/wide management menu; no persistence or gesture behavior changes",
+  "compile_main_and_android_test": "PASS",
+  "compile_seconds": 248,
+  "compile_log_sha256": "0807d2c5ce8da705e12ffae03fdcc8b1811eb5adc2a11411c967ef4981e8c105",
+  "ci_host_tests": 62,
+  "actionlint": "PASS",
+  "next_ui": 3,
+  "room": "202 prior passes reused only on exact complete input hash match; new executed0",
+  "cache": "ALL_REMOTE_CACHING_DISABLED after observed separate derived entries bypassed includes; wrapper validation remains. Existing archives not downloaded or deleted. No new cache strategy.",
+  "next_fixture": "same complete sample prepare/native_recall14PNG; finalfull5phases39PNG stillpending",
+  "physical_device": "NOT_RUN",
+  "synchronization_reference": "https://developer.android.com/develop/ui/compose/testing/synchronization",
+  "notes": "Explicit clock drives real edge-scroll coroutine while pointer remains down; no scrollTo during gesture, no substituted author mutation; await actual native result."
+}

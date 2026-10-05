@@ -28,8 +28,8 @@ interface NoteDao {
     @Insert(onConflict=OnConflictStrategy.ABORT) suspend fun insertRevision(row:NoteRevisionRow)
     @Insert(onConflict=OnConflictStrategy.ABORT) suspend fun insertReceipt(row:ReceiptRow)
 }
-@Database(entities=[NoteRow::class,NoteRevisionRow::class,ReceiptRow::class,InkPageRow::class,InkStrokeRow::class,InkReceiptRow::class,WorkspaceRow::class,NotebookPageRow::class,InkCutRow::class,PageSearchRow::class,PageInsertReceiptRow::class,LibraryContentReceipt::class,PageEditReceiptRow::class,StudyCardRow::class,StudyCardRevisionRow::class,StudySourceRow::class,StudyNodeRow::class,StudyReceiptRow::class,KnowledgeRow::class,KnowledgeRevisionRow::class,KnowledgeReceiptRow::class,NotebookCoverRow::class,PageObjectRow::class,ObjectReceiptRow::class,DocumentSourceRow::class,DocumentChunkRow::class,DocumentPageRow::class],
-    version=12,exportSchema=true,autoMigrations=[AutoMigration(from=1,to=2)])
+@Database(entities=[NoteRow::class,NoteRevisionRow::class,ReceiptRow::class,InkPageRow::class,InkStrokeRow::class,InkReceiptRow::class,WorkspaceRow::class,NotebookPageRow::class,InkCutRow::class,PageSearchRow::class,PageInsertReceiptRow::class,LibraryContentReceipt::class,PageEditReceiptRow::class,StudyCardRow::class,StudyCardRevisionRow::class,StudySourceRow::class,StudyNodeRow::class,StudyReceiptRow::class,KnowledgeRow::class,KnowledgeRevisionRow::class,KnowledgeReceiptRow::class,NotebookCoverRow::class,PageObjectRow::class,ObjectReceiptRow::class,DocumentSourceRow::class,DocumentChunkRow::class,DocumentPageRow::class,ImageSourceRow::class,ImageChunkRow::class,StudySourceRevisionRow::class,StudyCardSourceSetRow::class,CardTransformOperationRow::class,PageAuthoringRow::class,AuthoringReceiptRow::class,RecallQuestionRow::class,RecallQuestionVersionRow::class,RecallScheduleRow::class,RecallSessionRow::class,RecallAttemptRow::class,RecallHintRow::class,RecallCorrectionRow::class,RecallReceiptRow::class],
+    version=16,exportSchema=true,autoMigrations=[AutoMigration(from=1,to=2)])
 abstract class NoteDatabase:RoomDatabase() {
     internal val inkGroupMutex=kotlinx.coroutines.sync.Mutex()
     internal var documentScratch:java.io.File?=null
@@ -46,6 +46,11 @@ abstract class NoteDatabase:RoomDatabase() {
     abstract fun objects():PageObjectDao
     abstract fun documents():DocumentDao
     abstract fun covers():NotebookCoverDao
+    abstract fun images():ImageSourceDao
+    abstract fun authoring():PageAuthoringDao
+    abstract fun recall():RecallDao
+    abstract fun sourceVersions():StudySourceVersionDao
+    abstract fun cardTransforms():CardTransformDao
     companion object {
         val MIGRATION_2_3=object:Migration(2,3){
             override fun migrate(db:SupportSQLiteDatabase){
@@ -136,11 +141,25 @@ abstract class NoteDatabase:RoomDatabase() {
             db.execSQL("CREATE TABLE document_pages (pageId TEXT NOT NULL, documentId TEXT NOT NULL, sourcePage INTEGER NOT NULL, PRIMARY KEY(pageId), FOREIGN KEY(pageId) REFERENCES notebook_pages(id) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY(documentId) REFERENCES document_sources(id) ON UPDATE NO ACTION ON DELETE NO ACTION)")
             db.execSQL("CREATE INDEX index_document_pages_documentId ON document_pages(documentId)")
         }}
+        val MIGRATION_12_13=object:Migration(12,13){override fun migrate(db:SupportSQLiteDatabase){
+            db.execSQL("CREATE TABLE image_sources (notebookId TEXT NOT NULL, digest TEXT NOT NULL, byteCount INTEGER NOT NULL, PRIMARY KEY(notebookId,digest), FOREIGN KEY(notebookId) REFERENCES notes(id) ON UPDATE NO ACTION ON DELETE NO ACTION)")
+            db.execSQL("CREATE TABLE image_chunks (notebookId TEXT NOT NULL, digest TEXT NOT NULL, position INTEGER NOT NULL, payload BLOB NOT NULL, PRIMARY KEY(notebookId,digest,position), FOREIGN KEY(notebookId,digest) REFERENCES image_sources(notebookId,digest) ON UPDATE NO ACTION ON DELETE NO ACTION)")
+        }}
+        val MIGRATION_13_14=object:Migration(13,14){override fun migrate(db:SupportSQLiteDatabase){
+            StudySourceVersions.createTables(db);StudySourceVersions.promoteLegacy(db);CardTransformRepository.createTable(db)
+        }}
+        val MIGRATION_14_15=object:Migration(14,15){override fun migrate(db:SupportSQLiteDatabase){
+            db.execSQL("CREATE TABLE canvas_authoring (kind TEXT NOT NULL, scopeId TEXT NOT NULL, notebookId TEXT NOT NULL, revision INTEGER NOT NULL, payload BLOB NOT NULL, PRIMARY KEY(kind,scopeId), FOREIGN KEY(notebookId) REFERENCES notes(id) ON UPDATE NO ACTION ON DELETE NO ACTION)")
+            db.execSQL("CREATE INDEX index_canvas_authoring_notebookId ON canvas_authoring(notebookId)")
+            db.execSQL("CREATE TABLE authoring_receipts (commandId TEXT NOT NULL, notebookId TEXT NOT NULL, kind TEXT NOT NULL, scopeId TEXT NOT NULL, digest TEXT NOT NULL, revision INTEGER NOT NULL, PRIMARY KEY(commandId), FOREIGN KEY(notebookId) REFERENCES notes(id) ON UPDATE NO ACTION ON DELETE NO ACTION)")
+            db.execSQL("CREATE INDEX index_authoring_receipts_notebookId ON authoring_receipts(notebookId)")
+        }}
+        val MIGRATION_15_16=object:Migration(15,16){override fun migrate(db:SupportSQLiteDatabase){RecallStorage.createTables(db)}}
         fun open(context:Context,name:String="inkweft-a0.db"):NoteDatabase=
             Room.databaseBuilder(context.applicationContext,NoteDatabase::class.java,name)
                 .openHelperFactory(PreservingOpenHelperFactory())
                 .setJournalMode(JournalMode.WRITE_AHEAD_LOGGING)
-                .addMigrations(MIGRATION_2_3,MIGRATION_3_4,MIGRATION_4_5,MIGRATION_5_6,MIGRATION_6_7,MIGRATION_7_8,MIGRATION_8_9,MIGRATION_9_10,MIGRATION_10_11,MIGRATION_11_12)
+                .addMigrations(MIGRATION_2_3,MIGRATION_3_4,MIGRATION_4_5,MIGRATION_5_6,MIGRATION_6_7,MIGRATION_7_8,MIGRATION_8_9,MIGRATION_9_10,MIGRATION_10_11,MIGRATION_11_12,MIGRATION_12_13,MIGRATION_13_14,MIGRATION_14_15,MIGRATION_15_16)
                 .addCallback(object:Callback(){override fun onOpen(db:SupportSQLiteDatabase){db.execSQL("PRAGMA synchronous=FULL")}})
                 .build().also{it.documentScratch=context.cacheDir;it.checkpointRoot=java.io.File(context.filesDir,"ink-checkpoints/"+org.inkweft.core.ContentTransfer.hash(name.toByteArray()))}
     }

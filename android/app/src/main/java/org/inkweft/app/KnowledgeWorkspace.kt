@@ -131,6 +131,7 @@ private val LinkPreviewSaver=Saver<LinkPreviewSelection?,List<String>>(
     var afterAnchorPicker by remember{mutableStateOf(false)}
     var waitingAnchor by remember{mutableStateOf(false)};var anchorCopied by remember{mutableStateOf(false)}
     var editCardId by rememberSaveable{mutableStateOf<String?>(null)};val editCard=ui.cards.find{it.id==editCardId&&it.notebookId==book};var newCollection by rememberSaveable{mutableStateOf(false)}
+    var editingLinkId by rememberSaveable(book){mutableStateOf<String?>(null)}
     var questionEdit by rememberSaveable(book,stateSaver=QuestionEditDraftSaver){mutableStateOf<QuestionEditDraft?>(null)}
     var reviewPlan by rememberSaveable(stateSaver=BranchReviewPlanSaver){mutableStateOf<BranchReviewPlan?>(null)}
     var reviewWithSummary by rememberSaveable(book){mutableStateOf(false)}
@@ -143,6 +144,7 @@ private val LinkPreviewSaver=Saver<LinkPreviewSelection?,List<String>>(
     val activeBooks=ui.notes.map{it.id}.toSet()
     val rows=ui.rows.filter{!it.removed&&it.notebookId in activeBooks};val cards=ui.cards.filter{it.trashedAt==null&&it.notebookId in activeBooks}
     val values=rows.associate{it.id to it.data()};val links=rows.mapNotNull{r->(values[r.id] as? KnowledgeData.Link)?.let{r to it}}
+    val presentations=values.values.filterIsInstance<KnowledgeData.CardPresentation>().associateBy{it.cardId}
     val collectionRows=rows.filter{it.notebookId==book&&values[it.id] is KnowledgeData.Collection}
     val chosenCollectionRow=collectionRows.find{it.id==chosenCollectionId}
     val chosenCollection=chosenCollectionRow?.let{values[it.id] as? KnowledgeData.Collection}
@@ -154,7 +156,7 @@ private val LinkPreviewSaver=Saver<LinkPreviewSelection?,List<String>>(
     val focusLock=rememberBookReadLock(focusBook);val focusReadOnly by focusLock.readOnly.collectAsStateWithLifecycle()
     val focusEditable=enabled&&!focusReadOnly
     val guardKey=remember(vm){"knowledge-${UUID.randomUUID()}"}
-    val authorDraft=picker||newCollection||((editCardId!=null||questionEdit!=null)&&!readOnly)
+    val authorDraft=editingLinkId!=null||picker||newCollection||((editCardId!=null||questionEdit!=null)&&!readOnly)
     ReadLockGuard(readLock,guardKey,blocked=ui.busy||ui.unknown||authorDraft,draft=authorDraft)
     if(focusBook!=book)ReadLockGuard(focusLock,"$guardKey-focus",blocked=picker,draft=picker)
     val pendingLock=rememberBookReadLock(vm.pendingBook?:book)
@@ -335,7 +337,9 @@ private val LinkPreviewSaver=Saver<LinkPreviewSelection?,List<String>>(
                                 if(!incoming&&link.pinnedRevision!=null)"保留所选修订，点击查看固定摘录；卡片名称为当前名称。"else summary(target),
                                 "knowledge-${if(incoming)"incoming"else"outgoing"}-${row.id}",enabled,
                                 open={preview=LinkPreviewSelection(focus,row.id,row.revision,incoming)},
-                                remove=if(!incoming&&focusEditable)({vm.submit(row.notebookId,link,row,true);Unit})else null)
+                                remove=if(!incoming&&focusEditable)({vm.submit(row.notebookId,link,row,true);Unit})else null,
+                                edit=if(!incoming&&focusEditable)({editingLinkId=row.id})else null,
+                                annotation=listOfNotNull(link.annotation.takeIf{it.isNotBlank()},"${link.lineStyle.label} · ${link.direction.label}"+(if(link.visible)""else" · 图中隐藏")).joinToString("\n"))
                         }
                     }
                     if(initialAnchor!=null&&!anchorCopied)item{OutlinedButton(onClick={waitingAnchor=true;vm.submit(book,initialAnchor)},enabled=editable,modifier=Modifier.fillMaxWidth().heightIn(min=48.dp).testTag("create-region-link")){Text("复制区域链接 · 不创建卡片")}}
@@ -371,7 +375,7 @@ private val LinkPreviewSaver=Saver<LinkPreviewSelection?,List<String>>(
                             collectionReviewMessage?.let{Text(it,color=Quiet,modifier=Modifier.testTag("collection-review-unavailable"))}
                         }
                     }
-                    val shown=if(chosenCollectionId!=null&&chosenCollection==null)emptyList()else bookCards.filter{c->(query.isBlank()||c.title.contains(query,true)||c.body.contains(query,true))&&(chosenCollection?.let{KnowledgeQueries.matches(it,properties[c.id]?:KnowledgeData.Properties(c.id))}!=false)}
+                    val shown=if(chosenCollectionId!=null&&chosenCollection==null)emptyList()else bookCards.filter{c->(query.isBlank()||c.title.contains(query,true)||c.body.contains(query,true)||presentations[c.id]?.annotation?.contains(query,true)==true)&&(chosenCollection?.let{KnowledgeQueries.matches(it,properties[c.id]?:KnowledgeData.Properties(c.id))}!=false)}
                     item{Text("${shown.size} 张卡片 · 筛选不复制内容",fontSize=12.sp,color=Quiet)}
                     items(shown,key={it.id}){c->OutlinedCard(onClick={editCardId=c.id},modifier=Modifier.fillMaxWidth()){
                         Column(Modifier.padding(16.dp)){Text(c.title,fontSize=18.sp);Text(c.body,maxLines=3);Text("我的总结 · 手工状态："+(properties[c.id]?.state?:ManualState.INBOX).label,fontSize=12.sp,color=Quiet)}}}
@@ -407,8 +411,13 @@ private val LinkPreviewSaver=Saver<LinkPreviewSelection?,List<String>>(
         matchingCards.sortedBy{if(it.notebookId==book)0 else 1}.take(80).forEach{c->TextButton(onClick={vm.submit(focusBook,KnowledgeData.Link(focus,TargetRef(TargetKind.CARD,c.id),relation,if(pinned)c.revision else null));picker=false},enabled=focusEditable){Text("${c.title} · ${ui.notes.find{it.id==c.notebookId}?.title.orEmpty()} · ${c.id.take(6)}")}}
         matchingNotes.take(50).forEach{n->TextButton(onClick={vm.submit(focusBook,KnowledgeData.Link(focus,TargetRef(TargetKind.NOTE,n.id),relation));picker=false},enabled=focusEditable){Text("笔记 · ${n.title} · ${n.id.take(6)}")}}
     }},confirmButton={TextButton(onClick={picker=false}){Text("取消")}})
+    editingLinkId?.let{id->
+        val selected=ui.rows.firstOrNull{it.id==id&&it.data() is KnowledgeData.Link}
+        if(selected!=null)key(id){KnowledgeRelationEditor(selected){editingLinkId=null}}
+        else if(!ui.loading)AlertDialog(onDismissRequest={editingLinkId=null},title={Text("关联不可用")},text={Text("这条关系尚未读取或已移除，未提交修改。")},confirmButton={TextButton({editingLinkId=null}){Text("返回")}})
+    }
     preview?.let{selection->key(selection,includeAllRelationKinds){KnowledgeLinkPreview(selection.focus,selection.id,selection.revision,selection.incoming,
-        enabled=canDismiss,includeAllRelationKinds=includeAllRelationKinds,returnLabel="返回关联",dismiss={preview=null},onOpenTarget=openTarget)}}
+        enabled=canDismiss,includeAllRelationKinds=includeAllRelationKinds,returnLabel="返回关联",dismiss={preview=null},onOpenTarget={target->app.knowledgeTargetOrigin.value=focus;openTarget(target);if(app.openKnowledgeTarget.value!=target)app.knowledgeTargetOrigin.value=null})}}
     editCard?.let{card->
         val available=card.trashedAt==null&&book in activeBooks
         val questions=rows.filter{it.notebookId==book&&(it.data() as? KnowledgeData.Question)?.cardId==card.id}
@@ -420,15 +429,23 @@ private val LinkPreviewSaver=Saver<LinkPreviewSelection?,List<String>>(
         val question=draft.row.data() as KnowledgeData.Question
         val current=rows.find{it.id==draft.row.id&&it.notebookId==book&&(it.data() as? KnowledgeData.Question)?.cardId==question.cardId}
         val available=current!=null&&bookCards.any{it.id==question.cardId}
-        QuestionMaintenanceDialog(draft,editCard?.title?:"摘要卡不可用",!readOnly,ui.busy,ui.unknown,available,current?.revision!=draft.row.revision,vm.pendingOperationId==draft.operationId&&draft.operationId!=null,
+        var configuring by rememberSaveable(draft.editorId){mutableStateOf(false)}
+        if(configuring&&editCard!=null)RecallQuestionEditor(app.study.recall(),book,
+            RecallQueueItem(BranchReviewEntryRef(draft.row.id,draft.row.revision,question.cardId,editCard.revision),question.prompt,RecallQuestionKind.QUESTION,0,false,0,0),
+            {configuring=false},{configuring=false;closeQuestion(draft.editorId)})
+        else QuestionMaintenanceDialog(draft,editCard?.title?:"摘要卡不可用",!readOnly,ui.busy,ui.unknown,available,current?.revision!=draft.row.revision,vm.pendingOperationId==draft.operationId&&draft.operationId!=null,
             {value->val live=vm.ui.value;if(!live.busy&&!live.unknown&&readLock.canWrite&&questionEdit?.editorId==draft.editorId&&questionEdit?.operationId==null&&value.length<=2000)questionEdit=questionEdit?.copy(prompt=value,message=null)},
-            {submitQuestion(draft.editorId)},{closeQuestion(draft.editorId)},{val live=vm.ui.value;if(live.unknown&&!live.busy&&questionEdit?.editorId==draft.editorId&&vm.pendingOperationId==questionEdit?.operationId&&questionEdit?.operationId!=null)vm.retry()})
+            {submitQuestion(draft.editorId)},{closeQuestion(draft.editorId)},
+            {val live=vm.ui.value;val active=questionEdit
+                if(readLock.canWrite&&!live.busy&&!live.unknown&&active?.editorId==draft.editorId&&active.operationId==null&&
+                    active.prompt==question.prompt&&current?.revision==draft.row.revision&&available)configuring=true},
+            {val live=vm.ui.value;if(live.unknown&&!live.busy&&questionEdit?.editorId==draft.editorId&&vm.pendingOperationId==questionEdit?.operationId&&questionEdit?.operationId!=null)vm.retry()})
     }
     reviewPlan?.let{plan->BranchReviewDialog(plan,{reviewPlan=null},showSummary=reviewWithSummary,showCollectionScope=reviewCollectionScope)}
 }
 
 @Composable private fun QuestionMaintenanceDialog(draft:QuestionEditDraft,cardTitle:String,writable:Boolean,busy:Boolean,unknown:Boolean,available:Boolean,revisionChanged:Boolean,canRetry:Boolean,
-    changePrompt:(String)->Unit,submit:()->Unit,dismiss:()->Unit,retry:()->Unit){
+    changePrompt:(String)->Unit,submit:()->Unit,dismiss:()->Unit,configureType:()->Unit,retry:()->Unit){
     val canClose=!busy&&!unknown&&draft.operationId==null
     val canEdit=canClose&&writable&&available
     val savedQuestion=draft.row.data() as KnowledgeData.Question
@@ -442,6 +459,11 @@ private val LinkPreviewSaver=Saver<LinkPreviewSelection?,List<String>>(
                 Text(savedQuestion.prompt,modifier=Modifier.testTag("question-remove-prompt"))
                 Text("只移除这道题，摘要卡、答案和来源保留。已经开始的回忆仍可显示原题。",color=Quiet)
             }else OutlinedTextField(draft.prompt,changePrompt,enabled=canClose,readOnly=!writable||!available,label={Text("问题原文")},minLines=3,maxLines=10,modifier=Modifier.fillMaxWidth().testTag("question-edit-prompt"))
+            if(!draft.removing){
+                OutlinedButton(configureType,enabled=canEdit&&!revisionChanged&&draft.prompt==savedQuestion.prompt,
+                    modifier=Modifier.fillMaxWidth().heightIn(min=48.dp).testTag("question-configure-type")){Text("题型 / 固定答案与到期设置")}
+                if(draft.prompt!=savedQuestion.prompt)Text("请先保存或取消问题原文草稿，再设置题型，避免两个编辑窗口覆盖。",color=Quiet)
+            }
             if(busy)LinearProgressIndicator(Modifier.fillMaxWidth())
             if(unknown)Text("结果待核对；原文与原操作已保留。请核对原操作后再退出。",color=Quiet)
             else if(!busy){
@@ -484,6 +506,7 @@ private suspend fun knowledgeMarkdown(app:InkWeftApplication,book:String,notes:L
             if(d.pinnedRevision!=null){val frozen=pinned[r.id];appendLine("  固定摘录："+(frozen?.let{clean(it.title)+"\n\n"+clean(it.body)}?:"固定版本不可用；未用当前正文代替。"))}
             else if(c in included)appendLine("  [目标摘要](#card-${c!!.id})")else appendLine("  目标未包含在此文件；保留身份供映射，不宣称迁移完整。")}
         is KnowledgeData.Anchor->appendLine("- 区域 ${r.id}：页面 ${d.pageId} / 修订 ${d.inkRevision} / ${d.bounds}；不含笔迹采样")
+        is KnowledgeData.CardPresentation->if(!r.removed)appendLine("- 个人注释 ${d.cardId}：${clean(d.annotation)}；卡片色 ${d.cardColor.label} / 标题栏色 ${d.titleBarColor.label}")
         is KnowledgeData.Properties->appendLine("- 属性 ${d.cardId}：手工${d.state.label} / ${d.tags.joinToString()}")
         is KnowledgeData.MapPortal->appendLine("- 跨图入口 ${r.id}：图 ${d.sourceMapId?:"主图"} / 节点 ${d.sourceNodeId} → 整图 ${d.targetMapId?:"主图"} · ${if(r.removed)"已移除"else"保留身份"}；此文本不还原入口关系，完整恢复使用资料库备份。")
         else->Unit

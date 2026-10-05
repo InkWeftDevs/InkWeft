@@ -197,9 +197,18 @@ class BranchReviewRoundRepositoryTest {
         rejectsWithoutWrites(db, "BRANCH_REVIEW_QUESTION_REVISION_MISSING") { repository.confirmRoundResult(pending) }
         db.knowledge().revision(question)
         val card = checkNotNull(db.study().cardVersion(checkNotNull(f.card.cardId), 1))
-        db.openHelper.writableDatabase.execSQL("DELETE FROM study_card_revisions WHERE cardId=? AND revision=1", arrayOf(card.cardId))
+        val sources = checkNotNull(db.sourceVersions().set(card.cardId, card.revision))
+        // Remove the dependent fixture row first, keeping foreign-key enforcement enabled.
+        db.withTransaction {
+            db.openHelper.writableDatabase.execSQL("DELETE FROM study_card_source_sets WHERE cardId=? AND cardRevision=1", arrayOf(card.cardId))
+            db.openHelper.writableDatabase.execSQL("DELETE FROM study_card_revisions WHERE cardId=? AND revision=1", arrayOf(card.cardId))
+        }
+        assertNotNull(db.study().card(card.cardId))
         rejectsWithoutWrites(db, "BRANCH_REVIEW_CARD_REVISION_MISSING") { repository.confirmRoundResult(pending) }
-        db.study().revision(card)
+        db.withTransaction {
+            db.study().revision(card)
+            db.sourceVersions().insert(sources)
+        }
         val current = checkNotNull(db.study().card(card.cardId))
         val foreign = WorkspaceRepository(db).create("错误归属", false, PaperStyle.BLANK).id
         db.study().updateCard(current.copy(notebookId = foreign))
@@ -218,7 +227,7 @@ class BranchReviewRoundRepositoryTest {
         KnowledgeRepository(db).submit(KnowledgeCommand(id(), f.book, id(), 0,
             KnowledgeData.Question(cardId, "后建旁题不得混入")))
         StudyRepository(db).submit(StudyCommand(id(), f.book, StudyAction.REMOVE_NODE, nodeId = f.card.nodeId, expectedRevision = 1))
-        StudyRepository(db).submit(StudyCommand(id(), f.book, StudyAction.TRASH_CARD, cardId = cardId, expectedRevision = 2))
+        StudyRepository(db).submit(StudyCommand(id(), f.book, StudyAction.TRASH_CARD, cardId = cardId, expectedRevision = 2,expectedTrashImpact=StudyRepository(db).previewTrash(f.book,requireNotNull(cardId)).fingerprint))
         val before = authorStamp(db)
         val repository = BranchReviewRepository(db)
         val confirmed = repository.confirmRoundResult(pending)

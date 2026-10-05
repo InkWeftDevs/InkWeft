@@ -1,0 +1,111 @@
+{
+  "generated_at_utc": "2026-10-04T21:07:28.365524+00:00",
+  "status": "PASS",
+  "kotlin_version": "2.3.10",
+  "compose_runtime_version": "1.10.5",
+  "source_commit": "d72613207971772bfa72097457626e6a821b0484",
+  "scope": "Standalone actual Compose SnapshotStateObserver lifecycle ordering reproduction; Android Gradle and app instrumentation NOT_RUN",
+  "required_condition": "At least one sibling scope remains under the same onChanged callback, so clearing the removed scope does not remove its entire ObservedScopeMap",
+  "source": {
+    "filename": "HolderObservationRepro.kt",
+    "sha256": "6631cdf80923c09c8237cc3c96a283f87bd60ae63791ff63acfae70b2dd4d6e1"
+  },
+  "jars": {
+    "compiler": {
+      "filename": "kotlin-compiler-embeddable-2.3.10.jar",
+      "path": "${GRADLE_USER_HOME}/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-compiler-embeddable/2.3.10/6e349e33b398eb4f0227ceb5b99db2535a982670/kotlin-compiler-embeddable-2.3.10.jar",
+      "sha256": "ac6a182785345380b5db5085dbeea3f5f0e925e2e100e54ab059b5787d4f6e40"
+    },
+    "stdlib": {
+      "filename": "kotlin-stdlib-2.3.10.jar",
+      "path": "${GRADLE_USER_HOME}/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.3.10/8b80e2f80a3b7daa99c16017f91d4c72cd8b31a6/kotlin-stdlib-2.3.10.jar",
+      "sha256": "f61662c6d3a2f8ef5bd34362a02d877772c39f393cd394feb259dfaf7f4d8437"
+    },
+    "script_runtime": {
+      "filename": "kotlin-script-runtime-2.3.10.jar",
+      "path": "${GRADLE_USER_HOME}/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-script-runtime/2.3.10/1964f711f069f184f7848971fdcbdd15f26ef79/kotlin-script-runtime-2.3.10.jar",
+      "sha256": "d0b3b08ecf8901c6610aa0e8efb29db3731bfbd96afd4f987cc817016b1e003e"
+    },
+    "compiler_reflect_dependency": {
+      "filename": "kotlin-reflect-1.6.10.jar",
+      "path": "${GRADLE_USER_HOME}/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-reflect/1.6.10/1cbe9c92c12a94eea200d23c2bbaedaf3daf5132/kotlin-reflect-1.6.10.jar",
+      "sha256": "3277ac102ae17aad10a55abec75ff5696c8d109790396434b496e75087854203"
+    },
+    "coroutines": {
+      "filename": "kotlinx-coroutines-core-jvm-1.10.2.jar",
+      "path": "${GRADLE_USER_HOME}/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-coroutines-core-jvm/1.10.2/4a9f78ef49483748e2c129f3d124b8fa249dafbf/kotlinx-coroutines-core-jvm-1.10.2.jar",
+      "sha256": "5ca175b38df331fd64155b35cd8cae1251fa9ee369709b36d42e0a288ccce3fd"
+    },
+    "annotations": {
+      "filename": "annotations-13.0.jar",
+      "path": "${GRADLE_USER_HOME}/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar",
+      "sha256": "ace2a10dc8e2d5fd34925ecac03e4988b2c0f851650c94b8cef49ba1bd111478"
+    },
+    "collection": {
+      "filename": "collection-jvm-1.5.0.jar",
+      "path": "${GRADLE_USER_HOME}/caches/modules-2/files-2.1/androidx.collection/collection-jvm/1.5.0/7ba2c69414d46ebc2dd76598bdd0a75c54281a57/collection-jvm-1.5.0.jar",
+      "sha256": "70b35924e4babcdffa37d0e575ee039c56a2d97123342624c48b603233704341"
+    },
+    "compose_runtime": {
+      "filename": "runtime-1.10.5.jar",
+      "path": "${CALLBACK_REPRO_DIR}/runtime-1.10.5.jar",
+      "sha256": "9517d45d6aa1d849481531663d136e01f4937cf02d299fb302c02ef754907e43"
+    },
+    "android_api_stubs": {
+      "filename": "android.jar",
+      "path": "${ANDROID_HOME}/platforms/android-36/android.jar",
+      "sha256": "d9eb9da824d9e247a352f570f01e1169e725b2954bca9e283a71786c59b59f9a"
+    }
+  },
+  "compose_runtime_extraction": {
+    "source_aar_path": "${GRADLE_USER_HOME}/caches/modules-2/files-2.1/androidx.compose.runtime/runtime-android/1.10.5/fd5897c409c463d890dfdc361b8db2d164f53859/runtime.aar",
+    "source_aar_sha256": "fd57586cf86d8b89f070d05cf5f0a2afcd15dd57411e767decc9e6b929764d43",
+    "zip_entry": "classes.jar",
+    "extracted_jar_sha256": "9517d45d6aa1d849481531663d136e01f4937cf02d299fb302c02ef754907e43"
+  },
+  "commands": [
+    {
+      "stage": "compile",
+      "argv": [
+        "${JAVA_HOME}/bin/java",
+        "-cp",
+        "${GRADLE_USER_HOME}/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-compiler-embeddable/2.3.10/6e349e33b398eb4f0227ceb5b99db2535a982670/kotlin-compiler-embeddable-2.3.10.jar:${GRADLE_USER_HOME}/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.3.10/8b80e2f80a3b7daa99c16017f91d4c72cd8b31a6/kotlin-stdlib-2.3.10.jar:${GRADLE_USER_HOME}/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-script-runtime/2.3.10/1964f711f069f184f7848971fdcbdd15f26ef79/kotlin-script-runtime-2.3.10.jar:${GRADLE_USER_HOME}/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-reflect/1.6.10/1cbe9c92c12a94eea200d23c2bbaedaf3daf5132/kotlin-reflect-1.6.10.jar:${GRADLE_USER_HOME}/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-coroutines-core-jvm/1.10.2/4a9f78ef49483748e2c129f3d124b8fa249dafbf/kotlinx-coroutines-core-jvm-1.10.2.jar:${GRADLE_USER_HOME}/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar",
+        "org.jetbrains.kotlin.cli.jvm.K2JVMCompiler",
+        "-no-stdlib",
+        "-no-reflect",
+        "-classpath",
+        "${GRADLE_USER_HOME}/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.3.10/8b80e2f80a3b7daa99c16017f91d4c72cd8b31a6/kotlin-stdlib-2.3.10.jar:${GRADLE_USER_HOME}/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar:${CALLBACK_REPRO_DIR}/runtime-1.10.5.jar:${ANDROID_HOME}/platforms/android-36/android.jar",
+        "-d",
+        "${REPRO_DIR}/classes",
+        "${REPRO_DIR}/HolderObservationRepro.kt"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "",
+      "elapsed_seconds": 5.269
+    },
+    {
+      "stage": "run",
+      "argv": [
+        "${JAVA_HOME}/bin/java",
+        "-cp",
+        "${REPRO_DIR}/classes:${GRADLE_USER_HOME}/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.3.10/8b80e2f80a3b7daa99c16017f91d4c72cd8b31a6/kotlin-stdlib-2.3.10.jar:${CALLBACK_REPRO_DIR}/runtime-1.10.5.jar:${GRADLE_USER_HOME}/caches/modules-2/files-2.1/androidx.collection/collection-jvm/1.5.0/7ba2c69414d46ebc2dd76598bdd0a75c54281a57/collection-jvm-1.5.0.jar:${ANDROID_HOME}/platforms/android-36/android.jar:${GRADLE_USER_HOME}/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-coroutines-core-jvm/1.10.2/4a9f78ef49483748e2c129f3d124b8fa249dafbf/kotlinx-coroutines-core-jvm-1.10.2.jar",
+        "HolderObservationReproKt"
+      ],
+      "exit_code": 0,
+      "stdout": "Direct holder observation: detached notifications=1\nComposition-owned inputs: composition notifications=1 detached holder notifications=0 rendered=1\n",
+      "stderr": "",
+      "elapsed_seconds": 0.144
+    }
+  ],
+  "known_limits": [
+    "This verifies retained invalidation callbacks and composition-owned input updates with the actual runtime; it does not identify the crashed Android holder instance from instrumentation logs",
+    "The prior CI first exception is independently AndroidViewHolder OnCommitAffectingUpdate calling getHandler().post with a null handler",
+    "The Kotlin control using only one observed scope produced zero stale callbacks because clear removed the entire callback map; a sibling scope is required"
+  ],
+  "primary_sources": [
+    "https://raw.githubusercontent.com/androidx/androidx/androidx-main/compose/ui/ui/src/androidMain/kotlin/androidx/compose/ui/viewinterop/AndroidViewHolder.android.kt",
+    "https://developer.android.com/jetpack/androidx/releases/compose-ui#1.10.6"
+  ],
+  "path_normalization": "Execution paths normalized to environment placeholders; dependency hashes and actual outputs preserved."
+}

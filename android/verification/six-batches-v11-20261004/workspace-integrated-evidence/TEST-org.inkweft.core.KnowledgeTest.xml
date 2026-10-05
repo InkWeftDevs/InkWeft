@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="org.inkweft.core.KnowledgeTest" tests="16" skipped="0" failures="0" errors="0" timestamp="2026-10-04T09:17:24.127Z" hostname="c8f738c2aa6c" time="0.045">
+  <properties/>
+  <testcase name="styledRelationsRoundTripAndDefaultsKeepTheLegacyWireTag" classname="org.inkweft.core.KnowledgeTest" time="0.005"/>
+  <testcase name="cannotPinNotebookAsCardRevision" classname="org.inkweft.core.KnowledgeTest" time="0.0"/>
+  <testcase name="originalPaperOrdinalsRemainReadable" classname="org.inkweft.core.KnowledgeTest" time="0.001"/>
+  <testcase name="cornellDefinesRealCueColumnAndSummary" classname="org.inkweft.core.KnowledgeTest" time="0.006"/>
+  <testcase name="collectionAndOrAreTypedAndDoNotCreateData" classname="org.inkweft.core.KnowledgeTest" time="0.004"/>
+  <testcase name="everyKnowledgeKindRoundTrips" classname="org.inkweft.core.KnowledgeTest" time="0.003"/>
+  <testcase name="invalidPlacementRejected" classname="org.inkweft.core.KnowledgeTest" time="0.0"/>
+  <testcase name="graphDepthAndBudgetAreExplicit" classname="org.inkweft.core.KnowledgeTest" time="0.004"/>
+  <testcase name="trailingDataIsRejected" classname="org.inkweft.core.KnowledgeTest" time="0.0"/>
+  <testcase name="commandFreezesCallerOwnedLists" classname="org.inkweft.core.KnowledgeTest" time="0.004"/>
+  <testcase name="wideCornellAndBlankVariantAreDistinct" classname="org.inkweft.core.KnowledgeTest" time="0.0"/>
+  <testcase name="commandCreationReportsMapCapacityWithoutRelabelingMalformedData" classname="org.inkweft.core.KnowledgeTest" time="0.01"/>
+  <testcase name="cycleExpansionAndDeepChainsStop" classname="org.inkweft.core.KnowledgeTest" time="0.001"/>
+  <testcase name="farAwayBoardGuidesAreBounded" classname="org.inkweft.core.KnowledgeTest" time="0.002"/>
+  <testcase name="backlinksDoNotNeedAnInverseAuthorEdge" classname="org.inkweft.core.KnowledgeTest" time="0.001"/>
+  <testcase name="operationReuseWithOtherPayloadChangesDigest" classname="org.inkweft.core.KnowledgeTest" time="0.002"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

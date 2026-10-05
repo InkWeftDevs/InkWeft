@@ -1,0 +1,2 @@
+lazy=false synchronous_before_assignment=1137 stranded_busy=1137 / 20000
+lazy=true synchronous_before_assignment=0 stranded_busy=0 / 20000

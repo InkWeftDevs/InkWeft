@@ -1,0 +1,92 @@
+INSTRUMENTATION_STATUS: class=org.inkweft.app.SixBatchAcceptanceTest
+INSTRUMENTATION_STATUS: current=1
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=1
+INSTRUMENTATION_STATUS: stream=
+org.inkweft.app.SixBatchAcceptanceTest:
+INSTRUMENTATION_STATUS: test=prepareFullSizeBaselineAndExerciseReadingStructureAndCrossBookReturn
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=org.inkweft.app.SixBatchAcceptanceTest
+INSTRUMENTATION_STATUS: current=1
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=1
+INSTRUMENTATION_STATUS: stack=java.lang.AssertionError: Failed to perform checkIsDisplayed check: Expected at most 1 node but found 2 nodes that satisfy (Text + InputText + EditableText contains '页面与批注' (ignoreCase: false))
+	at androidx.compose.ui.test.AndroidAssertions_androidKt.checkIsDisplayed(AndroidAssertions.android.kt:35)
+	at androidx.compose.ui.test.AssertionsKt.isDisplayed(Assertions.kt:351)
+	at androidx.compose.ui.test.AssertionsKt.assertIsDisplayed(Assertions.kt:33)
+	at org.inkweft.app.EditorTestNavigationKt.revealAction(EditorTestNavigation.kt:122)
+	at org.inkweft.app.SixBatchAcceptanceTest.tap(SixBatchAcceptanceTest.kt:30)
+	at org.inkweft.app.SixBatchAcceptanceTest.access$tap(SixBatchAcceptanceTest.kt:23)
+	at org.inkweft.app.SixBatchAcceptanceTest$prepareFullSizeBaselineAndExerciseReadingStructureAndCrossBookReturn$3$1.invokeSuspend(SixBatchAcceptanceTest.kt:66)
+	at org.inkweft.app.SixBatchAcceptanceTest$prepareFullSizeBaselineAndExerciseReadingStructureAndCrossBookReturn$3$1.invoke(Unknown Source:8)
+	at org.inkweft.app.SixBatchAcceptanceTest$prepareFullSizeBaselineAndExerciseReadingStructureAndCrossBookReturn$3$1.invoke(Unknown Source:2)
+	at org.inkweft.app.SixBatchFixture.step(SixBatchFixture.kt:45)
+	at org.inkweft.app.SixBatchAcceptanceTest$prepareFullSizeBaselineAndExerciseReadingStructureAndCrossBookReturn$3.invokeSuspend(SixBatchAcceptanceTest.kt:59)
+	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:34)
+	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:100)
+	at kotlinx.coroutines.EventLoopImplBase.processNextEvent(EventLoop.common.kt:263)
+	at kotlinx.coroutines.BlockingCoroutine.joinBlocking(Builders.kt:94)
+	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking(Builders.kt:70)
+	at kotlinx.coroutines.BuildersKt.runBlocking(Unknown Source:1)
+	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking$default(Builders.kt:48)
+	at kotlinx.coroutines.BuildersKt.runBlocking$default(Unknown Source:1)
+	at org.inkweft.app.SixBatchAcceptanceTest.prepareFullSizeBaselineAndExerciseReadingStructureAndCrossBookReturn(SixBatchAcceptanceTest.kt:59)
+
+INSTRUMENTATION_STATUS: stream=
+Error in prepareFullSizeBaselineAndExerciseReadingStructureAndCrossBookReturn(org.inkweft.app.SixBatchAcceptanceTest):
+java.lang.AssertionError: Failed to perform checkIsDisplayed check: Expected at most 1 node but found 2 nodes that satisfy (Text + InputText + EditableText contains '页面与批注' (ignoreCase: false))
+	at androidx.compose.ui.test.AndroidAssertions_androidKt.checkIsDisplayed(AndroidAssertions.android.kt:35)
+	at androidx.compose.ui.test.AssertionsKt.isDisplayed(Assertions.kt:351)
+	at androidx.compose.ui.test.AssertionsKt.assertIsDisplayed(Assertions.kt:33)
+	at org.inkweft.app.EditorTestNavigationKt.revealAction(EditorTestNavigation.kt:122)
+	at org.inkweft.app.SixBatchAcceptanceTest.tap(SixBatchAcceptanceTest.kt:30)
+	at org.inkweft.app.SixBatchAcceptanceTest.access$tap(SixBatchAcceptanceTest.kt:23)
+	at org.inkweft.app.SixBatchAcceptanceTest$prepareFullSizeBaselineAndExerciseReadingStructureAndCrossBookReturn$3$1.invokeSuspend(SixBatchAcceptanceTest.kt:66)
+	at org.inkweft.app.SixBatchAcceptanceTest$prepareFullSizeBaselineAndExerciseReadingStructureAndCrossBookReturn$3$1.invoke(Unknown Source:8)
+	at org.inkweft.app.SixBatchAcceptanceTest$prepareFullSizeBaselineAndExerciseReadingStructureAndCrossBookReturn$3$1.invoke(Unknown Source:2)
+	at org.inkweft.app.SixBatchFixture.step(SixBatchFixture.kt:45)
+	at org.inkweft.app.SixBatchAcceptanceTest$prepareFullSizeBaselineAndExerciseReadingStructureAndCrossBookReturn$3.invokeSuspend(SixBatchAcceptanceTest.kt:59)
+	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:34)
+	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:100)
+	at kotlinx.coroutines.EventLoopImplBase.processNextEvent(EventLoop.common.kt:263)
+	at kotlinx.coroutines.BlockingCoroutine.joinBlocking(Builders.kt:94)
+	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking(Builders.kt:70)
+	at kotlinx.coroutines.BuildersKt.runBlocking(Unknown Source:1)
+	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking$default(Builders.kt:48)
+	at kotlinx.coroutines.BuildersKt.runBlocking$default(Unknown Source:1)
+	at org.inkweft.app.SixBatchAcceptanceTest.prepareFullSizeBaselineAndExerciseReadingStructureAndCrossBookReturn(SixBatchAcceptanceTest.kt:59)
+
+INSTRUMENTATION_STATUS: test=prepareFullSizeBaselineAndExerciseReadingStructureAndCrossBookReturn
+INSTRUMENTATION_STATUS_CODE: -2
+INSTRUMENTATION_RESULT: stream=
+
+Time: 38.845
+There was 1 failure:
+1) prepareFullSizeBaselineAndExerciseReadingStructureAndCrossBookReturn(org.inkweft.app.SixBatchAcceptanceTest)
+java.lang.AssertionError: Failed to perform checkIsDisplayed check: Expected at most 1 node but found 2 nodes that satisfy (Text + InputText + EditableText contains '页面与批注' (ignoreCase: false))
+	at androidx.compose.ui.test.AndroidAssertions_androidKt.checkIsDisplayed(AndroidAssertions.android.kt:35)
+	at androidx.compose.ui.test.AssertionsKt.isDisplayed(Assertions.kt:351)
+	at androidx.compose.ui.test.AssertionsKt.assertIsDisplayed(Assertions.kt:33)
+	at org.inkweft.app.EditorTestNavigationKt.revealAction(EditorTestNavigation.kt:122)
+	at org.inkweft.app.SixBatchAcceptanceTest.tap(SixBatchAcceptanceTest.kt:30)
+	at org.inkweft.app.SixBatchAcceptanceTest.access$tap(SixBatchAcceptanceTest.kt:23)
+	at org.inkweft.app.SixBatchAcceptanceTest$prepareFullSizeBaselineAndExerciseReadingStructureAndCrossBookReturn$3$1.invokeSuspend(SixBatchAcceptanceTest.kt:66)
+	at org.inkweft.app.SixBatchAcceptanceTest$prepareFullSizeBaselineAndExerciseReadingStructureAndCrossBookReturn$3$1.invoke(Unknown Source:8)
+	at org.inkweft.app.SixBatchAcceptanceTest$prepareFullSizeBaselineAndExerciseReadingStructureAndCrossBookReturn$3$1.invoke(Unknown Source:2)
+	at org.inkweft.app.SixBatchFixture.step(SixBatchFixture.kt:45)
+	at org.inkweft.app.SixBatchAcceptanceTest$prepareFullSizeBaselineAndExerciseReadingStructureAndCrossBookReturn$3.invokeSuspend(SixBatchAcceptanceTest.kt:59)
+	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:34)
+	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:100)
+	at kotlinx.coroutines.EventLoopImplBase.processNextEvent(EventLoop.common.kt:263)
+	at kotlinx.coroutines.BlockingCoroutine.joinBlocking(Builders.kt:94)
+	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking(Builders.kt:70)
+	at kotlinx.coroutines.BuildersKt.runBlocking(Unknown Source:1)
+	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking$default(Builders.kt:48)
+	at kotlinx.coroutines.BuildersKt.runBlocking$default(Unknown Source:1)
+	at org.inkweft.app.SixBatchAcceptanceTest.prepareFullSizeBaselineAndExerciseReadingStructureAndCrossBookReturn(SixBatchAcceptanceTest.kt:59)
+
+FAILURES!!!
+Tests run: 1,  Failures: 1
+
+
+INSTRUMENTATION_CODE: -1

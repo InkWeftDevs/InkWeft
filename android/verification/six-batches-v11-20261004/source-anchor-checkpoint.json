@@ -1,0 +1,26 @@
+{
+  "kotlin_source": "ebbc084",
+  "production_and_both_android_test_kotlin": "PASS",
+  "core": {
+    "tests": 367,
+    "failures": 0,
+    "skipped": 0,
+    "unchanged_input_reuse": true
+  },
+  "lint": {
+    "Warning": 165,
+    "Hint": 2
+  },
+  "ci_host_tests": 43,
+  "native_evidence_tests": 7,
+  "actionlint": "PASS",
+  "seconds": 566,
+  "log_sha256": "bc50290a52a344f48258dbf0e50b8418e3e6ed85ae79745d1c61f06b5315f954",
+  "android": "NOT_RUN for follow-up source",
+  "new_runtime_inventory": {
+    "ui": 130,
+    "room": 180,
+    "b6": 5,
+    "b6_png": 38
+  }
+}

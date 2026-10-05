@@ -1,0 +1,349 @@
+{
+  "source_commit": "81ec1a3",
+  "core_suites": [
+    {
+      "name": "org.inkweft.core.BranchReviewRoundTest",
+      "tests": "14",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "timestamp": "2026-10-04T10:31:19.846Z",
+      "time": "0.079"
+    },
+    {
+      "name": "org.inkweft.core.BranchReviewTest",
+      "tests": "16",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "timestamp": "2026-10-04T10:31:19.933Z",
+      "time": "0.052"
+    },
+    {
+      "name": "org.inkweft.core.BrushRecipeTest",
+      "tests": "4",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "timestamp": "2026-10-04T10:31:19.988Z",
+      "time": "0.02"
+    },
+    {
+      "name": "org.inkweft.core.CanvasViewportTest",
+      "tests": "20",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "timestamp": "2026-10-04T10:31:20.012Z",
+      "time": "0.011"
+    },
+    {
+      "name": "org.inkweft.core.CardPresentationTest",
+      "tests": "4",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "timestamp": "2026-10-04T10:31:20.025Z",
+      "time": "0.012"
+    },
+    {
+      "name": "org.inkweft.core.CardTransformTest",
+      "tests": "7",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "timestamp": "2026-10-04T10:31:20.041Z",
+      "time": "0.034"
+    },
+    {
+      "name": "org.inkweft.core.ContentTransferTest",
+      "tests": "13",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "timestamp": "2026-10-04T10:31:20.079Z",
+      "time": "0.456"
+    },
+    {
+      "name": "org.inkweft.core.ContinuousWritingTest",
+      "tests": "9",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "timestamp": "2026-10-04T10:31:20.538Z",
+      "time": "0.01"
+    },
+    {
+      "name": "org.inkweft.core.CustomCoverTest",
+      "tests": "4",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "timestamp": "2026-10-04T10:31:20.550Z",
+      "time": "0.004"
+    },
+    {
+      "name": "org.inkweft.core.DiagnosticLogTest",
+      "tests": "14",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "timestamp": "2026-10-04T10:31:20.557Z",
+      "time": "0.05"
+    },
+    {
+      "name": "org.inkweft.core.DraftReloadTest",
+      "tests": "8",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "timestamp": "2026-10-04T10:31:20.610Z",
+      "time": "0.004"
+    },
+    {
+      "name": "org.inkweft.core.ExcerptBoundsTest",
+      "tests": "4",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "timestamp": "2026-10-04T10:31:20.615Z",
+      "time": "0.001"
+    },
+    {
+      "name": "org.inkweft.core.InkEditingTest",
+      "tests": "12",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "timestamp": "2026-10-04T10:31:20.619Z",
+      "time": "0.012"
+    },
+    {
+      "name": "org.inkweft.core.InkModelsTest",
+      "tests": "26",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "timestamp": "2026-10-04T10:31:20.634Z",
+      "time": "0.013"
+    },
+    {
+      "name": "org.inkweft.core.KnowledgeTest",
+      "tests": "16",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "timestamp": "2026-10-04T10:31:20.650Z",
+      "time": "0.022"
+    },
+    {
+      "name": "org.inkweft.core.KnowledgeTextLinksTest",
+      "tests": "8",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "timestamp": "2026-10-04T10:31:20.674Z",
+      "time": "0.01"
+    },
+    {
+      "name": "org.inkweft.core.LearningWidgetsTest",
+      "tests": "3",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "timestamp": "2026-10-04T10:31:20.686Z",
+      "time": "0.007"
+    },
+    {
+      "name": "org.inkweft.core.LibraryArchiveTest",
+      "tests": "14",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "timestamp": "2026-10-04T10:31:20.697Z",
+      "time": "0.038"
+    },
+    {
+      "name": "org.inkweft.core.MapAddendumTest",
+      "tests": "5",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "timestamp": "2026-10-04T10:31:20.736Z",
+      "time": "0.029"
+    },
+    {
+      "name": "org.inkweft.core.MapPortalTest",
+      "tests": "10",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "timestamp": "2026-10-04T10:31:20.767Z",
+      "time": "0.007"
+    },
+    {
+      "name": "org.inkweft.core.MapTemplatesTest",
+      "tests": "4",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "timestamp": "2026-10-04T10:31:20.776Z",
+      "time": "0.006"
+    },
+    {
+      "name": "org.inkweft.core.NoteDraftTest",
+      "tests": "12",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "timestamp": "2026-10-04T10:31:20.783Z",
+      "time": "0.012"
+    },
+    {
+      "name": "org.inkweft.core.NotebookAppearanceTest",
+      "tests": "12",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "timestamp": "2026-10-04T10:31:20.797Z",
+      "time": "0.006"
+    },
+    {
+      "name": "org.inkweft.core.PageAuthoringTest",
+      "tests": "16",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "timestamp": "2026-10-04T10:31:20.808Z",
+      "time": "0.117"
+    },
+    {
+      "name": "org.inkweft.core.PageEditingTest",
+      "tests": "14",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "timestamp": "2026-10-04T10:31:20.929Z",
+      "time": "0.018"
+    },
+    {
+      "name": "org.inkweft.core.PageInsertionTest",
+      "tests": "14",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "timestamp": "2026-10-04T10:31:20.949Z",
+      "time": "0.006"
+    },
+    {
+      "name": "org.inkweft.core.PageObjectTest",
+      "tests": "7",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "timestamp": "2026-10-04T10:31:20.957Z",
+      "time": "0.011"
+    },
+    {
+      "name": "org.inkweft.core.PaperTemplatesTest",
+      "tests": "6",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "timestamp": "2026-10-04T10:31:20.970Z",
+      "time": "0.012"
+    },
+    {
+      "name": "org.inkweft.core.PenKindsTest",
+      "tests": "3",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "timestamp": "2026-10-04T10:31:20.983Z",
+      "time": "0.003"
+    },
+    {
+      "name": "org.inkweft.core.ReadingHandwritingTest",
+      "tests": "10",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "timestamp": "2026-10-04T10:31:20.988Z",
+      "time": "0.86"
+    },
+    {
+      "name": "org.inkweft.core.SelectionLearningTest",
+      "tests": "20",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "timestamp": "2026-10-04T10:31:21.850Z",
+      "time": "0.024"
+    },
+    {
+      "name": "org.inkweft.core.StudyOrganizationTest",
+      "tests": "10",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "timestamp": "2026-10-04T10:31:21.879Z",
+      "time": "0.049"
+    },
+    {
+      "name": "org.inkweft.core.StudyOutlineTest",
+      "tests": "4",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "timestamp": "2026-10-04T10:31:21.930Z",
+      "time": "0.011"
+    },
+    {
+      "name": "org.inkweft.core.StudyTextTest",
+      "tests": "4",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "timestamp": "2026-10-04T10:31:21.942Z",
+      "time": "0.002"
+    },
+    {
+      "name": "org.inkweft.core.TextGlyphTest",
+      "tests": "3",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "timestamp": "2026-10-04T10:31:21.946Z",
+      "time": "0.007"
+    }
+  ],
+  "total": {
+    "tests": 350,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "android_execution": "NOT_RUN (0 methods in this B4 worker)",
+  "logs": [
+    {
+      "file": "b4-ui-joint-build.log",
+      "sha256": "97fe1e0ae3e95a3163bf242d156eb843473d6e2d09da246900dc1473939bc727"
+    },
+    {
+      "file": "b4-ui-joint-build2.log",
+      "sha256": "62d822ecb5aa082cd73a82b2fd7aad8d80bf8bc468859df89ce713d3860d9b8d"
+    },
+    {
+      "file": "b4-ui-joint-build3.log",
+      "sha256": "75dc6545608ed5673e364216e4d1186adf29ce78576bd9801ec452cf685ae6f3"
+    },
+    {
+      "file": "b4-ui-joint-build4.log",
+      "sha256": "43cec9b20bfccc2ecf5c5b9ccfc7ad20add690d2b3548812bc255a309d3987e0"
+    },
+    {
+      "file": "b4-final-compile.log",
+      "sha256": "2968c65ea33c06ffd1ee667a6fce3a788a1da79dbd1ef0c8c4b169e3b9cad7f5"
+    }
+  ]
+}
