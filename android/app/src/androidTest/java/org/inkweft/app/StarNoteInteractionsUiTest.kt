@@ -26,6 +26,53 @@ class StarNoteInteractionsUiTest {
   java.io.File(compose.activity.getExternalFilesDir(null),name).outputStream().use{b.compress(android.graphics.Bitmap.CompressFormat.PNG,100,it)};b.recycle()
  }
  private fun ready(){compose.waitUntil(15000){app.navigationReady.value};compose.waitForIdle()}
+ // Capture the already-mounted models before selecting; failure collection never waits for Compose or Room.
+ private fun excerptNavigationReadyCheck(book:String):()->Unit{
+  val application=app
+  val instrumentation=androidx.test.platform.app.InstrumentationRegistry.getInstrumentation()
+  val evidenceDir=instrumentation.targetContext.getExternalFilesDir(null)
+  val status=runCatching<()->String>{compose.runOnIdle{
+   val provider=ViewModelProvider(compose.activity)
+   val pages=provider["book-$book",BookPagesViewModel::class.java]
+   val page=checkNotNull(pages.ui.value.selectedId)
+   val ink=provider["ink-$page",InkViewModel::class.java]
+   val objects=provider["objects-$page",PageObjectViewModel::class.java]
+   val author=provider["authoring-$page",PageAuthoringViewModel::class.java]
+   val mixed=provider["mixed-writer-$page",ContinuousInkWriter::class.java]
+   val excerpts=provider["excerpt-$book",StudyViewModel::class.java]
+   val study=provider["study-$book",StudyViewModel::class.java]
+   val lock=provider["read-lock-$book",BookReadLockViewModel::class.java]
+   val observations=AppDiagnostics::class.java.getDeclaredMethod("observations").apply{isAccessible=true}
+   val guards=BookReadLockViewModel::class.java.getDeclaredField("guards").apply{isAccessible=true}
+   fun snapshot():String{
+    val p=pages.ui.value;val i=ink.ui.value;val o=objects.ui.value;val a=author.ui.value
+    val e=excerpts.ui.value;val m=study.ui.value
+    return "navigationReady=${application.navigationReady.value} samePage=${p.selectedId==page} pages(loading=${p.loading},busy=${p.busy},actionUnknown=${p.actionUnknown},insertionUnknown=${p.insertionUnknown},error=${p.error})\n"+
+     "ink(loading=${i.loading},readFailed=${i.readFailed},processing=${i.processing},queued=${i.queued},blocked=${i.blocked},revision=${i.revision})\n"+
+     "objects(loading=${o.loading},busy=${o.busy},pending=${o.pending},authorActive=${objects.authorOperationActive},error=${o.error}) author(loading=${a.loading},busy=${a.busy},pending=${a.pending},message=${a.message})\n"+
+     "mixed(blocked=${mixed.blocked.value},retry=${mixed.needsRetry.value}) excerpt(busy=${e.busy},unknown=${e.unknown},cards=${e.cards.size},completed=${e.completed},message=${e.message}) study(busy=${m.busy},unknown=${m.unknown}) hasDraft=${lock.hasDraft.value} guards=${guards.get(lock)}\n"+
+     "latestUiObservations=${observations.invoke(application.diagnostics)}"
+   }
+   ::snapshot
+  }}.getOrElse{failure->{"diagnostics unavailable: ${failure.javaClass.simpleName}"}}
+  var latest=runCatching{status()}.getOrElse{"diagnostics unavailable: ${it.javaClass.simpleName}"}.take(4000)
+  var diagnosticFailure=""
+  return {
+   try{compose.waitUntil(15000){
+    runCatching{status()}.onSuccess{latest=it.take(4000);diagnosticFailure=""}
+     .onFailure{diagnosticFailure="diagnostics unavailable: ${it.javaClass.simpleName}"}
+    application.navigationReady.value
+   };compose.waitForIdle()}
+   catch(error:Throwable){
+    val report="excerpt navigation failure: ${error.javaClass.simpleName}\n$diagnosticFailure\n$latest".take(4500)
+    runCatching{println(report);java.io.File(evidenceDir,"excerpt-ready-failure.txt").writeText(report)}
+    runCatching{instrumentation.uiAutomation.takeScreenshot()?.let{bitmap->try{
+     java.io.File(evidenceDir,"excerpt-ready-failure.png").outputStream().use{bitmap.compress(android.graphics.Bitmap.CompressFormat.PNG,100,it)}
+    }finally{bitmap.recycle()}}}
+    throw error
+   }
+  }
+ }
  private fun create():Note{
   compose.waitUntil(15000){compose.onAllNodesWithTag("new-note").fetchSemanticsNodes().isNotEmpty()}
   val note=runBlocking{app.workspaceRepository.create("交互验收",false,PaperStyle.BLANK)}
@@ -125,6 +172,7 @@ class StarNoteInteractionsUiTest {
   compose.runOnIdle{find<InkCanvasView>()!!.onStroke(InkStroke(id(),InkPen.BALLPOINT,0xff2464bb.toInt(),6f,InkTool.STYLUS,listOf(InkSample(200f,220f,0),InkSample(400f,250f,80))))}
   ready();compose.waitUntil(15000){runBlocking{app.inkRepository.read(note.id)}.strokes.size==1}
   compose.waitUntil(15000){var pending=true;compose.runOnIdle{pending=find<InkCanvasView>()!!.rasterPending};!pending}
+  val readyAfterCapture=excerptNavigationReadyCheck(note.id)
   compose.selectInboxCapture()
   compose.runOnIdle{find<SelectionOverlayView>()!!.onRegion(InkRegion(listOf(EraserPoint(150f,180f),EraserPoint(450f,290f))))}
   compose.waitUntil(15000){compose.onAllNodesWithTag("capture-confirm").fetchSemanticsNodes().isNotEmpty()};tap("capture-confirm")
@@ -132,7 +180,7 @@ class StarNoteInteractionsUiTest {
    compose.onRoot(useUnmergedTree=true).printToLog("ExcerptFailure")
    val b=androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().uiAutomation.takeScreenshot()
    java.io.File(compose.activity.getExternalFilesDir(null),"excerpt-failure.png").outputStream().use{b.compress(android.graphics.Bitmap.CompressFormat.PNG,100,it)};b.recycle();throw e
-  };ready()
+  };readyAfterCapture()
   val card=runBlocking{app.study.cards(note.id).first().single()}
   assertTrue(runBlocking{app.study.nodes(note.id).first()}.isEmpty())
   val source=runBlocking{app.study.source(card.id)}!!;assertTrue(InkPageFile.decode(source.snapshot).objects.single().image.isNotBlank())

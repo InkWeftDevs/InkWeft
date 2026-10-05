@@ -39,9 +39,9 @@ class SixBatchScopeTest(unittest.TestCase):
 
     def test_focused_is_explicit_small_scope_and_full_inventory_stays_complete(self):
         focused, full = build_plan("focused"), build_plan("full")
-        self.assertEqual((153, 202, 5, 40), (full["expected_app"], full["expected_room"],
+        self.assertEqual((161, 202, 5, 40), (full["expected_app"], full["expected_room"],
                          full["fixture"]["expected_methods"], full["fixture"]["expected_screenshots"]))
-        self.assertEqual(5, focused["expected_app"])
+        self.assertEqual(22, focused["expected_app"])
         self.assertEqual(FOCUSED_METHODS, focused["app_methods"])
         self.assertEqual(set(focused["app"]), set(focused["app_methods"]))
         self.assertEqual([], focused["fixture"]["selected_phases"])

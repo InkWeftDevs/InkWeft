@@ -1,0 +1,84 @@
+{
+  "captured_utc": "2026-10-05T00:57:22.677505+00:00",
+  "scope": "Standalone coroutine protocol only; real IO dispatcher returning an empty string. No Room, Compose, Android device, or production capture execution.",
+  "source_test_commit": "26feb48b178dee59fac73c812fc14779c4c976a9",
+  "production_fix_commit": "5ccb3ee2d6208b9f2363932ea6deeca434dce0ff",
+  "production_base_commit": "6bc691bed94557812dc94132863b07d5b4d87eda",
+  "ci_failure_causality": "UNCONFIRMED: no capturingExcerpt flag was captured in the failing CI run.",
+  "checks": {
+    "io": {
+      "compile_exit": "0",
+      "run_exit": "0",
+      "observations": [
+        {
+          "lazy": false,
+          "synchronous_before_assignment": 1137,
+          "stranded_busy": 1137,
+          "iterations": 20000
+        },
+        {
+          "lazy": true,
+          "synchronous_before_assignment": 0,
+          "stranded_busy": 0,
+          "iterations": 20000
+        }
+      ]
+    },
+    "protocol": {
+      "compile_exit": "0",
+      "run_exit": "0"
+    },
+    "default-mutant": {
+      "compile_exit": "0",
+      "run_exit": "1"
+    }
+  },
+  "source_sha256": {
+    "sources/CaptureJobRegistrationTest.kt": "09ec77e9146cc1a5a6682e3c4872feacff62aee487f890ed0d36c4fb665e3ee0",
+    "sources/DefaultCaptureJobRegistrationTest.kt": "f1acdc3fb74dd999b31c9778a10935cee3375ab32b2f62530cf48ff54c0716d3",
+    "sources/Race.kt": "e06c5963f91b94420ffe3ab7277f6d6ff8ceb517aae354f514d76ad6b6a18748"
+  },
+  "script_sha256": "260d0c48000eeb6f5a4380d0223ed20aa68bc178d3caeef463cee97480981f9b",
+  "logs_sha256": {
+    "logs/default-mutant-compile.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "logs/default-mutant-compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "logs/default-mutant-run.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "logs/default-mutant-run.log": "753b293e160173797aaebb2d2aa375a3a977b6a59dcc363548aa826a2c32b028",
+    "logs/io-compile.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "logs/io-compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "logs/io-run.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "logs/io-run.log": "39395a8090ec343622cef302bb32bf8afc7b6204cd8482adf6aede049c88a467",
+    "logs/java-version.log": "8ffd2d05de22acb2a1f82845905d499e807c7595cf7c3e7f2a2cab7e576a26de",
+    "logs/kotlin-version.log": "c97dde01261aa76141504faa853f11094ab63c05755a76d3e099f128a86fb78f",
+    "logs/protocol-compile.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "logs/protocol-compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "logs/protocol-run.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "logs/protocol-run.log": "4c244c18b1e5771837e7187bd701fd176e8b53f532e80b475795991210b97b18"
+  },
+  "tools": {
+    "java_version_output": "openjdk version \"17.0.20.1\" 2026-08-18\nOpenJDK Runtime Environment Temurin-17.0.20.1+1 (build 17.0.20.1+1)\nOpenJDK 64-Bit Server VM Temurin-17.0.20.1+1 (build 17.0.20.1+1, mixed mode, sharing)",
+    "kotlin_version_output": "info: kotlinc-jvm 2.3.0 (JRE 17.0.20.1+1)",
+    "jars": {
+      "KOTLIN_STDLIB_JAR": {
+        "name": "kotlin-stdlib-2.3.0.jar",
+        "sha256": "887587c91713250ad52fe14ad9166d042c33835049890e9437f355ffc5a195b1"
+      },
+      "COROUTINES_CORE_JAR": {
+        "name": "kotlinx-coroutines-core-jvm-1.10.2.jar",
+        "sha256": "5ca175b38df331fd64155b35cd8cae1251fa9ee369709b36d42e0a288ccce3fd"
+      },
+      "COROUTINES_TEST_JAR": {
+        "name": "kotlinx-coroutines-test-jvm-1.10.2.jar",
+        "sha256": "590a549f8c1db590c9d98a8a20424a1f581a34162a369e6a6bd884ce7d36d3d7"
+      },
+      "JUNIT_JAR": {
+        "name": "junit-4.13.2.jar",
+        "sha256": "8e495b634469d64fb8acfa3495a065cbacc8a0fff55ce1e31007be4c16dc57d3"
+      },
+      "HAMCREST_JAR": {
+        "name": "hamcrest-core-1.3.jar",
+        "sha256": "66fdef91e9739348df7a096aa384a5685f4e875584cce89386a7a47251c4d8e9"
+      }
+    }
+  }
+}

@@ -10,24 +10,47 @@ import re
 APP = ["ViewportRasterTest", "PdfViewportRasterTest", "ZoomRasterTest", "RenderResourcesTest",
        "ImageRenderingTest", "CardPresentationUiTest", "StudyCapacityUiTest", "StudyCapacityPanelUiTest", "RecallMaskUiTest", "StarNoteInteractionsUiTest", "StudyOrganizationUiTest", "CardTransformUiTest", "StudyTransformNavigationUiTest", "StudyRelationPaintTest", "StudyRelationsUiTest", "KnowledgeRelationEditorUiTest", "CardReuseStoreTest", "CardReuseDialogUiTest", "CardTrashRestorationTest", "CardTrashUiTest", "DocumentShortcutPreferencesUiTest", "RecallOriginalSourceUiTest",
        "BoundAnnotationFlowUiTest", "LayerAuthoringNativeTest", "LayerSnapshotPreviewTest", "VisiblePageExportTest",
-       "RecallDurableRecoveryTest", "RecallMaskNativeTest", "RecallAnswerPadUiTest", "RecallQuestionEditorUiTest", "StudyNavigationStateTest", "CardSourceNavigationUiTest", "LibrarySourceNavigationUiTest", "MapPortalUiTest", "LearningWorkspacePolishUiTest", "MapInteractionUiTest", "SelectionStudyUiTest"]
+       "RecallDurableRecoveryTest", "RecallMaskNativeTest", "RecallAnswerPadUiTest", "RecallQuestionEditorUiTest", "StudyNavigationStateTest", "CardSourceNavigationUiTest", "LibrarySourceNavigationUiTest", "MapPortalUiTest", "LearningWorkspacePolishUiTest", "MapInteractionUiTest", "SelectionStudyUiTest", "CaptureJobRegistrationTest", "AuthoringReadinessTest", "ContinuousWritingUiTest", "ContinuousPageGestureUiTest"]
 ROOM = ["PageObjectRepositoryTest", "StudyCapacityRepositoryTest", "CardTrashRepositoryTest", "StudyOrganizationRepositoryTest", "CardPresentationRepositoryTest", "LibraryBackupRepositoryTest",
         "LibraryBackupGuardTest", "LibraryContentRepositoryTest", "StudyAndSelectionRepositoryTest", "CardTransformRepositoryTest", "CardReuseRepositoryTest", "KnowledgeRepositoryTest", "KnowledgeTextRepositoryTest",
         "PageAuthoringRepositoryTest", "AuthoringPendingStoreTest", "BranchReviewRepositoryTest", "BranchReviewRoundRepositoryTest", "RecallStudyRepositoryTest"]
+CONTINUOUS_METHODS = {
+    "org.inkweft.app.ContinuousWritingUiTest": [
+        "cancellingLongGestureDoesNotResurrectItsCheckpointOnReopen",
+        "continuousSeamHasNoGapAndOneGesturePersistsOnBothSides"],
+    "org.inkweft.app.ContinuousPageGestureUiTest": [
+        "longFingerCancellationBlocksAppendUntilItsJournalSettles",
+        "failedLongFingerCancellationRetriesCancelWithoutRevivingInk"],
+}
 METHODS = {
     "org.inkweft.app.StarNoteInteractionsUiTest": ["excerptKeepsPageImageAddsCommentAndDeletesWithoutDeletingSource",
         "inlineCommentAndEightHandleRecropCancelSaveAndReopenKeepOriginalInk"],
+    **CONTINUOUS_METHODS,
 }
-# Same asynchronous restoration boundary, exhaustively covering its eight observed call sites.
-# Production and the full five-phase B6 sample are unchanged.
+
+# Shared readiness and job ownership: all actual tap callers plus direct production paths.
+# Full adds only four new protocol/readiness methods and four existing continuous guards.
 FOCUSED_METHODS = {
     "org.inkweft.app.MapInteractionUiTest": [
+        "selectionRenameReadingAndMapMenusKeepTheirScope",
+        "provisionalChildAndSiblingCancelWithoutOrphans",
         "conflictAndRecreationRetainFrozenTitleDraft",
+        "structureRenameDoesNotCreateCardOrChangePlacement",
         "outlineTitlesKeepSharedContentAndContinueAtTheSameParent",
         "outlineEnterUnknownReceiptRetriesOneCommandBeforeOpeningOneSiblingDraft",
-        "narrowLargeTextKeepsActionsDraftAndCanvas"],
-    "org.inkweft.app.StarNoteInteractionsUiTest": [
-        "inlineCommentAndEightHandleRecropCancelSaveAndReopenKeepOriginalInk"],
+        "narrowLargeTextKeepsActionsDraftAndCanvas",
+        "microMoveAndCancelledDragDoNotMoveNode",
+        "unknownSaveKeepsDraftAndRetriesOriginalOperation",
+        "branchBadgeAndSourceAreSeparateTargets",
+        "edgeAffordancesAvoidTitlesAndPrimaryActions"],
+    "org.inkweft.app.StarNoteInteractionsUiTest": METHODS["org.inkweft.app.StarNoteInteractionsUiTest"],
+    "org.inkweft.app.SelectionStudyUiTest": ["excerptCreatesSharedCardAndReturnsToSource"],
+    "org.inkweft.app.CaptureJobRegistrationTest": [
+        "immediateSuccessAndCompletedFailureBothReleaseTheirOwnGate",
+        "suspendedCompletionKeepsGateUntilItsOwnWorkFinishes",
+        "olderCompletionOrCancellationCannotUnlockItsReplacement"],
+    "org.inkweft.app.AuthoringReadinessTest": ["readinessRequiresLoadingBusyAndPendingToBeClear"],
+    **CONTINUOUS_METHODS,
 }
 
 CORE = ["PageObjectTest", "CardTrashCommandTest", "ContentTransferTest", "LibraryArchiveTest", "CardPresentationTest",
@@ -76,7 +99,7 @@ def build_plan(mode="full"):
                        "expected_methods":len(PHASE_METHODS),
                        "expected_screenshots":40,"native_workspace_screenshots":24,"native_recall_screenshots":7,
                        "native_recall_reopen_screenshots":1},
-            "scope":("focused: five original-draft restoration contracts across eight lifecycle boundaries; B6 all NOT_RUN_FOCUSED with zero new screenshots; not full acceptance"
+            "scope":("focused: shared target-ready and task-ownership regressions with direct continuous/capture guards; B6 all NOT_RUN_FOCUSED with zero new screenshots; not full acceptance"
                      if mode == "focused" else "six-batch B1-B5 complete scoped regression and B6 full-sized synthetic five-phase evidence")
                     + "; physical device and human acceptance remain NOT_RUN"}
 

@@ -66,12 +66,13 @@ internal class ContinuousGroupSession(private val book:String,private val repo:I
     fun finish(raw:InkStroke,finished:InkStroke){
         val c=capture(raw);c.latest=raw;operation(true)
         val previous=tail
-        tail=viewModelScope.launch{
+        val job=viewModelScope.launch(start=CoroutineStart.LAZY){
             try{previous?.join();c.job?.join();if(c.cancelled)return@launch
                 val base=c.prepared.await();apply(base.copy(stroke=raw),finished);captures.remove(raw.id)
             }catch(c:CancellationException){throw c}catch(t:Exception){error.value=describe(t);notice(error.value!!)}
             finally{if(tail===currentCoroutineContext()[Job])operation(false)}
         }
+        tail=job;job.start()
     }
     fun open(){if(opened)return;opened=true;retry()}
     fun retry(){

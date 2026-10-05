@@ -314,7 +314,7 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
         val availableBooks=mapWrite.notes.map{it.id}.toSet()
         projectStudyRelations(relationNodeId,relationNodes,mapWrite.rows.filter{it.notebookId in availableBooks})
     }else StudyRelationProjection(emptyList(),0)
-    val browseReady=!annotationUi.busy&&!annotationUi.pending&&documentReady&&!ui.loading&&!ui.readFailed&&!ui.busy&&!ui.unknown&&!mapSaving&&!resolutionPending&&!transformPending
+    val browseReady=annotationUi.ready&&documentReady&&!ui.loading&&!ui.readFailed&&!ui.busy&&!ui.unknown&&!mapSaving&&!resolutionPending&&!transformPending
     val editable=browseReady&&!readOnly&&!missingPortalBranch&&titleDraft==null&&layoutPreview==null&&graph!=null
     fun openTransform(kind:CardTransformKind,cardIds:List<String>){
         if(!editable||hasDraft)return

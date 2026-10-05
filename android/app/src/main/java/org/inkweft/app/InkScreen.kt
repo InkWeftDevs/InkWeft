@@ -319,7 +319,7 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
     val authoringEnabled=!readOnly&&!busy&&ui.queued==0&&ui.blocked==null&&!objectsVm.authorOperationActive&&authoringVm.pageHeadsMatch(ui.revision,objectsVm.revision)
     val editingBlocked=excerptDraft||busy||readOnly||!authoringUi.ready
     // Observe readiness in composition, not only inside a deferred SideEffect.
-    val navigationReady=!authoringUi.busy&&!authoringUi.pending&&!busy&&!ui.loading&&!ui.readFailed&&ui.queued==0&&ui.blocked==null&&!continuousBlocked
+    val navigationReady=authoringUi.ready&&!busy&&!ui.loading&&!ui.readFailed&&ui.queued==0&&ui.blocked==null&&!continuousBlocked
     SideEffect{onCanNavigate(navigationReady)}
     // A saved object's selection is browse state; its unsaved tools and gestures
     // report their own interaction/operation guards.
@@ -414,7 +414,8 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
         val strokes=selectable.filter{it.bounds().intersects(selection.region.bounds)}
         val recognizeInk=excerptTextMode&&strokes.size<=256
         capturingExcerpt=true
-        excerptJob=scope.launch{
+        // Register before starting: even an IO read may finish before launch returns.
+        val job=scope.launch(start=CoroutineStart.LAZY){
             val request=currentCoroutineContext().job
             try{
                 // PDF/object text is cheap and deterministic; handwriting recognition stays opt-in.
@@ -429,6 +430,7 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
             }catch(c:CancellationException){throw c}catch(_:Exception){if(current()){notice="文字提取未完成，已保留框选原貌";prepared(selection.copy(preview=picture,objectRevision=revision))}}
             finally{if(excerptJob===request){capturingExcerpt=false;excerptJob=null}}
         }
+        excerptJob=job;job.start()
     }
     fun enterBeauty(){
         if(continuousPages!=null)leaveContinuous()
