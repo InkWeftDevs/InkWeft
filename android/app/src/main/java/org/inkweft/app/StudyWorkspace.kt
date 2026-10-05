@@ -227,7 +227,7 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
     val mapSaving=mapWrite.busy||mapWrite.unknown||portalWrite.busy||portalWrite.unknown
     LaunchedEffect(mapWrite.completed){if(titleSubmitted&&titleDraft?.structural==true)return@LaunchedEffect;mapWrite.completed?.let{if(newMapTitle!=null)vm.selectMap(it);newMapTitle=null;saveTemplate=false;if(structuralEditorSubmitted){vm.editorState.value=null;structuralEditorSubmitted=false};mapWriter.consumed()}}
     val mainNodes=ui.mainNodes
-    val graph=ui.graph?.takeIf{it.ref.mapId==currentMap}
+    val graph=ui.graph?.takeIf{it.ref==MapRef(note.base.id,currentMap)}
     val definition=graph?.definition?.data() as? KnowledgeData.MapDefinition
     val structureCards=definition?.structures.orEmpty().map{StudyCardRow(it.id,note.base.id,checkNotNull(graph?.definition).revision,it.title,"")}
     val displayCards=ui.cards+structureCards
@@ -287,7 +287,7 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
     var focusId by remember(mapKey,restoreEpoch){mutableStateOf(vm.focusedByMap[mapKey])}
     var organizationReveal by remember(mapKey){mutableStateOf<Pair<String,String>?>(null)}
     val chrome=LocalStudyWindowChrome.current
-    val active=ui.nodes.filter{!it.removed}
+    val active=graph?.nodes.orEmpty().filter{!it.removed}
     val nodeById=active.associateBy{it.id};val cardById=displayCards.associateBy{it.id}
     LaunchedEffect(mapKey,active.map{it.id}){selectedGroup=selectedGroup.filter{it in nodeById}}
     val selectedBranches=graph?.state?.let{state->selectedGroup.filter{it in state.orderedNodeIds}.toSet().takeIf{it.isNotEmpty()}?.let{StudyOrganization.selectedBranchIds(state,it)}}.orEmpty()
@@ -314,7 +314,7 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
         val availableBooks=mapWrite.notes.map{it.id}.toSet()
         projectStudyRelations(relationNodeId,relationNodes,mapWrite.rows.filter{it.notebookId in availableBooks})
     }else StudyRelationProjection(emptyList(),0)
-    val browseReady=annotationUi.ready&&documentReady&&!ui.loading&&!ui.readFailed&&!ui.busy&&!ui.unknown&&!mapSaving&&!resolutionPending&&!transformPending
+    val browseReady=graph!=null&&annotationUi.ready&&documentReady&&!ui.loading&&!ui.readFailed&&!ui.busy&&!ui.unknown&&!mapSaving&&!resolutionPending&&!transformPending
     val editable=browseReady&&!readOnly&&!missingPortalBranch&&titleDraft==null&&layoutPreview==null&&graph!=null
     fun openTransform(kind:CardTransformKind,cardIds:List<String>){
         if(!editable||hasDraft)return

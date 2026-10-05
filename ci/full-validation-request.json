@@ -1,16 +1,16 @@
 {
   "status": "REQUESTED_NOT_EXECUTED",
-  "requested_utc": "2026-10-05T01:23:00Z",
-  "candidate_code_local": "bb60aa401854cb55f3ead2e6e6de3fddd2a9bb84",
-  "prior_focused_source": "7cb10d7e4413b87b2f6899b511b7072e5ecf40f6",
-  "prior_focused_run": 37249783741,
+  "requested_utc": "2026-10-05T02:43:00Z",
+  "candidate_code_local": "d1940cb47779dcf65f671d78a10ef7c06a9647cf",
+  "prior_focused_source": "0a3950fc46b9bca3b858f7e3ca610b6760ae5d7b",
+  "prior_focused_run": 37255217999,
   "prior_focused_ui": {
-    "executed": 22,
-    "passed": 22
+    "executed": 19,
+    "passed": 19
   },
   "required": {
     "mode": "full",
-    "ui_methods": 161,
+    "ui_methods": 163,
     "fresh_room_methods": 202,
     "fixture_phases": [
       "prepare",
@@ -58,16 +58,16 @@
     "superseded_by": "shared_ready_production_fix",
     "historical_note": "Earlier lifecycle-only repairs remain; this candidate also contains actual job-registration and authoring loading gate fixes."
   },
-  "scope_rationale": "Focused22 all passed:18 direct UI,3 task protocol,1 ready contract. Full161 adds4 new protocol/readiness and4 existing continuous guards to original153. No production or test change after focused pass.",
+  "scope_rationale": "Focused19 passed. Full163 adds direct StudyVM/Room1 and existing LearningWorkbench1 to prior161; final full also validates the three independently reviewed Compose ownership guard lines added after focused. No extra focused round or timeout relaxation.",
   "last_full": {
-    "source": "d207159ddc4e138c6bfe1094656e2ba432ab6b2a",
-    "run": 37246577810,
-    "ui_passed": 151,
-    "ui_executed": 153,
+    "source": "97baf67cad28f45830e75a27ca4b0a11737832c7",
+    "run": 37251286673,
+    "ui_passed": 159,
+    "ui_executed": 161,
     "fresh_room_passed": 202,
     "b6_phases_passed": 5,
     "b6_png": 40,
-    "visual": "40 bound original screenshots; independent final candidate review required"
+    "visual": "40 integrity-checked images; final same-source pixel review remains required"
   },
   "shared_ready_production_fix": {
     "commits": [
@@ -75,5 +75,15 @@
       "3d64ad8"
     ],
     "scope": "Register lazy excerpt/continuous tasks before start; reuse AuthoringUi.ready during recovery loading. Identity cleanup, pending journals and business assertions retained. Shared target-enabled single-touch protocol; bounded full-method evidence."
+  },
+  "map_projection_fix": {
+    "scope": "loading before key; readonly mapId; existing reload counter is unique read generation; success/error require current generation and MapRef; four learning entries share stable target protocol. Direct real StudyVM/Room/Main ABA regression passed in focused19.",
+    "compose_followup_after_focus": {
+      "commit": "d1940cb",
+      "lines": 3,
+      "scope": "Full book/map graph identity, nodes from validated graph, browseReady requires validated graph.",
+      "local_compile": "PASS_103_SECONDS",
+      "device": "NOT_RUN_AFTER_FOCUS_UNTIL_THIS_FULL"
+    }
   }
 }
