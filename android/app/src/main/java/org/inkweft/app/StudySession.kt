@@ -36,7 +36,8 @@ internal class StudyViewModel(val book:String,val repo:StudyRepository,private v
     fun endSearch(){val before=searchSession;searchSession=null;searchHit=null
         if(before!=null&&!before.changedByUser){viewports.clear();viewports.putAll(before.viewports);collapsedByMap.clear();collapsedByMap.putAll(before.collapsed);focusedByMap.clear();focusedByMap.putAll(before.focus);selectMap(before.initialMap,false);viewportRestore++}
     }
-    val mapId=MutableStateFlow<String?>(saved["study.map"])
+    private val selectedMap=MutableStateFlow<String?>(saved["study.map"])
+    val mapId=selectedMap.asStateFlow()
     val editorState=mutableStateOf<CardEditor?>(null)
     var capacityOpen by mutableStateOf(saved.get<Boolean>("study.capacityOpen")?:false)
         private set
@@ -74,7 +75,14 @@ internal class StudyViewModel(val book:String,val repo:StudyRepository,private v
     val expandedByMap=mutableStateMapOf<String,String?>()
     val portalReturns=mutableStateListOf<PortalReturn>().also{list->saved.get<ArrayList<String>>("study.portalReturns").orEmpty().takeLast(32).mapNotNull(PortalReturn::restore).forEach(list::add)}
     private fun savePortalReturns(){saved["study.portalReturns"]=ArrayList(portalReturns.map{it.saved()})}
-    fun selectMap(id:String?,userInitiated:Boolean=true){if(id!=mapId.value&&!ui.value.busy&&!ui.value.unknown){if(userInitiated){searchSession?.changedByUser=true;portalReturns.clear();portalBranches.clear();savePortalReturns()};saved["study.map"]=id;mapId.value=id;state.update{it.copy(loading=true,nodes=emptyList())}}}
+    fun selectMap(id:String?,userInitiated:Boolean=true){
+        if(id==mapId.value||ui.value.busy||ui.value.unknown)return
+        if(userInitiated){searchSession?.changedByUser=true;portalReturns.clear();portalBranches.clear();savePortalReturns()}
+        // Main.immediate observers/readers can resume inside these Flow setters. Make the old
+        // projection unavailable before publishing either the selected key or its read request.
+        state.update{it.copy(loading=true,nodes=emptyList())}
+        saved["study.map"]=id;selectedMap.value=id;reload.value++
+    }
     fun openPortal(preview:MapPortalPreview,viewport:MapViewport?,collapsed:List<String>,focus:String?):Boolean {
         if(!preview.canOpen||preview.source.notebookId!=book||preview.target.notebookId!=book||preview.source.mapId!=mapId.value||ui.value.busy||ui.value.unknown)return false
         val key=mapId.value?:"main"
@@ -110,10 +118,15 @@ internal class StudyViewModel(val book:String,val repo:StudyRepository,private v
     private var visibleOwners=0
     fun attach(){visibleOwners++;startObservation()}
     fun detach(){visibleOwners=(visibleOwners-1).coerceAtLeast(0);if(visibleOwners==0){observation?.cancel();observation=null}}
-    private fun startObservation(){if(observation?.isActive==true)return;observation=viewModelScope.launch{combine(mapId,reload){m,_->m}.flatMapLatest{m->
-        repo.observeGraph(book,m)
-            .catch{e->if(e is CancellationException)throw e;state.update{it.copy(loading=false,readFailed=true)}}
-    }.collect{graph->state.update{it.copy(cards=graph.cards,nodes=graph.nodes,mainNodes=graph.allMainNodes,graph=graph,loading=false,readFailed=false)}}}}
+    // Every selection/refresh advances this request, including A→B→A key changes that
+    // StateFlow may conflate. Map identity alone cannot reject an earlier visit's buffered result.
+    private fun startObservation(){if(observation?.isActive==true)return;observation=viewModelScope.launch{reload.flatMapLatest{request->
+        val m=mapId.value
+        repo.observeGraph(book,m).map{request to it}
+            .catch{e->if(e is CancellationException)throw e;if(request==reload.value&&m==mapId.value)state.update{it.copy(loading=false,readFailed=true)}}
+    }.collect{(request,graph)->
+        if(request==reload.value&&graph.ref==MapRef(book,mapId.value))state.update{it.copy(cards=graph.cards,nodes=graph.nodes,mainNodes=graph.allMainNodes,graph=graph,loading=false,readFailed=false)}
+    }}}
     init{startObservation()}
     fun submit(c:StudyCommand,undo:StudyCommand?=null,historyDirection:Int=0){require(c.notebookId==book);if(ui.value.busy||pending!=null)return;if(!authorAllowed()){state.update{it.copy(message="当前为阅读模式，请返回书写后编辑。")};return};pending=c;pendingOrganizationUndo=undo;pendingHistoryDirection=historyDirection;persistPending();execute()}
     fun trash(preview:CardTrashPreview):Boolean {

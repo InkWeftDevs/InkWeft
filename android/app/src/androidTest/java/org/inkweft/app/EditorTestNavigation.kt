@@ -1,6 +1,9 @@
 package org.inkweft.app
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.ComposeTestRule
+import androidx.compose.ui.platform.ViewRootForTest
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 
 /** Tests of single-sheet tools explicitly choose that mode; production defaults to continuous. */
 internal fun ComposeTestRule.singlePageEditor(){
@@ -160,4 +163,74 @@ internal fun ComposeTestRule.revealAction(tag:String){
 internal fun ComposeTestRule.selectInboxCapture(){
     onNodeWithTag("top-excerpt").performClick();onNodeWithTag("top-excerpt").performClick()
     onNodeWithTag("capture-destination-inbox").performClick();onNodeWithContentDescription("关闭摘要笔").performClick()
+}
+
+/** Verified learning-directory input protocol shared by actual map-navigation tests. */
+internal fun ComposeTestRule.openLearningMapTarget(mapId:String,query:String,beforeOpen:()->Unit={}){
+    val application=androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().targetContext.applicationContext as InkWeftApplication
+    fun awaitTag(tag:String){waitUntil(15_000){onAllNodesWithTag(tag).fetchSemanticsNodes().isNotEmpty()};waitForIdle()}
+    awaitTag("learning-workbench")
+    // Re-entry changes recent-row heights while the directory reloads. A lazy
+    // descendant may exist before it is placed; position its owning item by
+    // the actual widget key before reading/touching the descendant's bounds.
+    val mapsKey = application.learningStore.read().widgets.single {
+        it.definition == "org.inkweft/maps" && it.visible
+    }.id
+    val widgets = onNode(hasScrollToKeyAction() and hasAnyAncestor(hasTestTag("learning-workbench")))
+    widgets.assertIsDisplayed().performScrollToKey(mapsKey)
+    awaitTag("learning-map-search")
+    onNodeWithTag("learning-map-search").assertIsDisplayed().performTextReplacement(query)
+    val target = hasTestTag("learning-target-${mapId}") and hasAnyAncestor(hasTestTag("widget-maps"))
+    val evidenceDirectory = application.getExternalFilesDir(null)
+    var touchState = "No target placement yet"
+    try {
+        waitUntil(15_000) { onAllNodes(target).fetchSemanticsNodes().isNotEmpty() }
+        // Search replacement focuses the Dialog, whose OS keyboard/insets are not Compose idle.
+        val window = (onNodeWithTag("learning-workbench").fetchSemanticsNode().root as ViewRootForTest).view.rootView
+        fun windowReady(bounds: androidx.compose.ui.geometry.Rect? = null): Boolean {
+            val insets = ViewCompat.getRootWindowInsets(window)
+            val visible = android.graphics.Rect(); window.getWindowVisibleDisplayFrame(visible)
+            touchState = "learningDialog=${System.identityHashCode(window)}, attached=${window.isAttachedToWindow}, focused=${window.hasWindowFocus()}, " +
+                "laidOut=${window.isLaidOut}, layoutRequested=${window.isLayoutRequested}, ime=${insets?.isVisible(WindowInsetsCompat.Type.ime())}, " +
+                "visible=$visible, row=$bounds, touch=${bounds?.center}"
+            return window.isAttachedToWindow && window.hasWindowFocus() && window.isLaidOut && !window.isLayoutRequested &&
+                insets?.isVisible(WindowInsetsCompat.Type.ime()) == false && (bounds == null ||
+                bounds.width > 0 && bounds.height > 0 && bounds.left >= visible.left && bounds.top >= visible.top &&
+                bounds.right <= visible.right && bounds.bottom <= visible.bottom)
+        }
+        runOnIdle {
+            window.findFocus()?.clearFocus()
+            ViewCompat.getWindowInsetsController(window)?.hide(WindowInsetsCompat.Type.ime())
+        }
+        waitUntil("Learning Dialog keyboard is hidden and its window is laid out", 15_000) {
+            runOnIdle { windowReady() }
+        }
+        widgets.performScrollToKey(mapsKey)
+        onNode(target).performScrollTo()
+        var previous: androidx.compose.ui.geometry.Rect? = null
+        waitUntil("Learning map row has a stable, enabled physical touch target", 15_000) {
+            runCatching {
+                val node = onNode(target).assertIsDisplayed().assertIsEnabled().fetchSemanticsNode()
+                val bounds = androidx.compose.ui.geometry.Rect(node.positionOnScreen, node.boundsInRoot.size)
+                val sameWindow = (node.root as? ViewRootForTest)?.view?.rootView === window
+                val ready = runOnIdle { windowReady(bounds) } && sameWindow
+                touchState += ", sameWindow=$sameWindow"
+                (ready && bounds == previous).also { previous = bounds }
+            }.getOrDefault(false)
+        }
+        beforeOpen()
+        // One real touch only. A missing destination remains a failure, never a retry.
+        onNode(target).assertIsDisplayed().assertIsEnabled().performTouchInput { click() }
+        awaitTag("study-map")
+    } catch (error: Throwable) {
+        // Save already observed bounds/window state before one direct OS capture. Do not call
+        // Compose idle or fetch a fresh semantics tree from an exceptional navigation state.
+        runCatching { java.io.File(evidenceDirectory, "ls58-learning-map-entry-failure.txt").writeText(touchState) }.onFailure(error::addSuppressed)
+        runCatching {
+            val bitmap = checkNotNull(androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().uiAutomation.takeScreenshot())
+            try { java.io.File(evidenceDirectory, "ls58-learning-map-entry-failure.png").outputStream().use { bitmap.compress(android.graphics.Bitmap.CompressFormat.PNG, 100, it) } }
+            finally { bitmap.recycle() }
+        }.onFailure(error::addSuppressed)
+        error.addSuppressed(AssertionError("Synthetic learning-map entry: $touchState")); throw error
+    }
 }

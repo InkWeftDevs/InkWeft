@@ -189,6 +189,8 @@ jobs:
             android/build/evidence/app-*/mui-map-interaction-failure.png
             android/build/evidence/app-*/inline-recreate-failure.txt
             android/build/evidence/app-*/inline-recreate-failure.png
+            android/build/evidence/app-*/bp55-map-state-failure.txt
+            android/build/evidence/app-*/bp55-map-state-failure.png
             android/build/evidence/app-*/ls58-learning-map-entry-failure.txt
             android/build/evidence/app-*/ls58-learning-map-entry-failure.png
             android/build/evidence/app-*/excerpt-ready-failure.txt
@@ -260,6 +262,8 @@ jobs:
             android/build/evidence/app-*/mui-map-interaction-failure.png
             android/build/evidence/app-*/inline-recreate-failure.txt
             android/build/evidence/app-*/inline-recreate-failure.png
+            android/build/evidence/app-*/bp55-map-state-failure.txt
+            android/build/evidence/app-*/bp55-map-state-failure.png
             android/build/evidence/app-*/ls58-learning-map-entry-failure.txt
             android/build/evidence/app-*/ls58-learning-map-entry-failure.png
             android/build/evidence/app-*/excerpt-ready-failure.txt

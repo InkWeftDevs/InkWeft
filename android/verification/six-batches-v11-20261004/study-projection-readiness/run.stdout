@@ -1,0 +1,12 @@
+Protocol copy: Kotlin 2.3.0; kotlinx-coroutines-core-jvm 1.10.2; Java=17.0.20.1
+IMMEDIATE loadingFirst=false final=Ui(loading=true, readFailed=false, graph=Graph(map=1, revision=0), nodes=[]) events=[collect(0:0,current=0), select-start(1), collect(1:0,current=1), select-end(1,loading=true,graph=Graph(map=1, revision=0))]
+IMMEDIATE loadingFirst=true final=Ui(loading=false, readFailed=false, graph=Graph(map=1, revision=0), nodes=[1]) events=[collect(0:0,current=0), select-start(1), collect(1:0,current=1), select-end(1,loading=false,graph=Graph(map=1, revision=0))]
+EXTERNAL_KEY_OBSERVER loadingFirst=false key=1 observed=Ui(loading=false, readFailed=false, graph=Graph(map=0, revision=0), nodes=[0])
+EXTERNAL_KEY_OBSERVER loadingFirst=true key=1 observed=Ui(loading=true, readFailed=false, graph=Graph(map=0, revision=0), nodes=[])
+REAL_IO loadingFirst=false iterations=1000 loadingLeftTrue=22
+REAL_IO loadingFirst=true iterations=1000 loadingLeftTrue=0
+BUFFERED_OLD_SUCCESS guard=false beforeNew=Ui(loading=false, readFailed=false, graph=Graph(map=0, revision=1), nodes=[0]) events=[collect(0:0,current=0), select-start(1), select-end(1,loading=true,graph=Graph(map=0, revision=0)), collect(0:1,current=1)]
+BUFFERED_OLD_SUCCESS guard=true beforeNew=Ui(loading=true, readFailed=false, graph=Graph(map=0, revision=0), nodes=[]) events=[collect(0:0,current=0), select-start(1), select-end(1,loading=true,graph=Graph(map=0, revision=0)), collect(0:1,current=1)]
+OLD_FAILURE_BEFORE_CANCELLATION guard=false beforeNew=Ui(loading=false, readFailed=true, graph=Graph(map=0, revision=0), nodes=[]) events=[collect(0:0,current=0), select-start(1), select-end(1,loading=true,graph=Graph(map=0, revision=0)), error(0,current=1)]
+OLD_FAILURE_BEFORE_CANCELLATION guard=true beforeNew=Ui(loading=true, readFailed=false, graph=Graph(map=0, revision=0), nodes=[]) events=[collect(0:0,current=0), select-start(1), select-end(1,loading=true,graph=Graph(map=0, revision=0)), error(0,current=1)]
+ALL_PROTOCOL_ASSERTIONS_PASS

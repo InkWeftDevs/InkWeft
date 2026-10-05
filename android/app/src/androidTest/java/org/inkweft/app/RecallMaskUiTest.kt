@@ -313,19 +313,7 @@ class RecallMaskUiTest {
         if (compose.onAllNodesWithTag("open-library-drawer").fetchSemanticsNodes().isNotEmpty()) tap("open-library-drawer")
         compose.onNodeWithText("学习", useUnmergedTree = true).performScrollTo().performClick()
         waitFor("learning-workbench")
-        // A lazy child's semantics can outlive its old placement while recent
-        // entries reload. Position the owning widget before touching its row.
-        val mapsKey = app.learningStore.read().widgets.single {
-            it.definition == "org.inkweft/maps" && it.visible
-        }.id
-        val widgets = compose.onNode(hasScrollToKeyAction() and hasAnyAncestor(hasTestTag("learning-workbench")))
-        widgets.assertIsDisplayed().performScrollToKey(mapsKey)
-        waitFor("learning-map-search")
-        compose.onNodeWithTag("learning-map-search").assertIsDisplayed().performTextReplacement(f.mapTitle)
-        val target = hasTestTag("learning-target-${f.map}") and hasAnyAncestor(hasTestTag("widget-maps"))
-        compose.waitUntil(15_000) { compose.onAllNodes(target).fetchSemanticsNodes().isNotEmpty() }
-        widgets.performScrollToKey(mapsKey)
-        compose.onNode(target).performScrollTo().assertIsDisplayed().assertIsEnabled().performTouchInput { click() }
+        compose.openLearningMapTarget(f.map,f.mapTitle)
         waitFor("study-map", diagnoseOnFailure = true)
     }
 

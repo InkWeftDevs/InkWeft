@@ -39,9 +39,9 @@ class SixBatchScopeTest(unittest.TestCase):
 
     def test_focused_is_explicit_small_scope_and_full_inventory_stays_complete(self):
         focused, full = build_plan("focused"), build_plan("full")
-        self.assertEqual((161, 202, 5, 40), (full["expected_app"], full["expected_room"],
+        self.assertEqual((163, 202, 5, 40), (full["expected_app"], full["expected_room"],
                          full["fixture"]["expected_methods"], full["fixture"]["expected_screenshots"]))
-        self.assertEqual(22, focused["expected_app"])
+        self.assertEqual(19, focused["expected_app"])
         self.assertEqual(FOCUSED_METHODS, focused["app_methods"])
         self.assertEqual(set(focused["app"]), set(focused["app_methods"]))
         self.assertEqual([], focused["fixture"]["selected_phases"])
@@ -49,8 +49,8 @@ class SixBatchScopeTest(unittest.TestCase):
         self.assertEqual(list(PHASE_METHODS), full["fixture"]["selected_phases"])
         self.assertEqual("NOT_RUN_FOCUSED", focused["lint"])
         self.assertEqual("RUN_REQUIRED", full["lint"])
-        for name, method in (("MapInteractionUiTest", "outlineEnterUnknownReceiptRetriesOneCommandBeforeOpeningOneSiblingDraft"),
-                             ("MapInteractionUiTest", "outlineTitlesKeepSharedContentAndContinueAtTheSameParent")):
+        for name, method in (("MapPortalUiTest", "narrow375LargeTextKeepsControlsReachableAndReciprocalPortalsFinite"),
+                             ("StudyMapReadinessTest", "rapidMapSelectionNeverPublishesLoadedGraphForAnotherCurrentMap")):
             self.assertIn(method, focused["app_methods"]["org.inkweft.app." + name])
         with self.assertRaises(ValueError):
             build_plan("unknown")
