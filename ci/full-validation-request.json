@@ -1,16 +1,16 @@
 {
   "status": "REQUESTED_NOT_EXECUTED",
-  "requested_utc": "2026-10-05T00:09:00Z",
-  "candidate_code_local": "252042b29ba78a22ba09bb307a666c0f2223e6cd",
-  "prior_focused_source": "e1f2239c6d0e0ea726fd2a6b0fa97f8a2fbe9bbf",
-  "prior_focused_run": 37245266607,
+  "requested_utc": "2026-10-05T01:23:00Z",
+  "candidate_code_local": "bb60aa401854cb55f3ead2e6e6de3fddd2a9bb84",
+  "prior_focused_source": "7cb10d7e4413b87b2f6899b511b7072e5ecf40f6",
+  "prior_focused_run": 37249783741,
   "prior_focused_ui": {
-    "executed": 5,
-    "passed": 5
+    "executed": 22,
+    "passed": 22
   },
   "required": {
     "mode": "full",
-    "ui_methods": 153,
+    "ui_methods": 161,
     "fresh_room_methods": 202,
     "fixture_phases": [
       "prepare",
@@ -55,21 +55,25 @@
     "png": 0
   },
   "test_only_fix": {
-    "commits": [
-      "ec6c579",
-      "87ffc33"
-    ],
-    "scope": "All seven map-test recreation boundaries and one inline-comment boundary await retained original book/page/map/VM and actual original draft rendering within10s. No scroll-to-create or draft mutation; unchanged production and business assertions."
+    "superseded_by": "shared_ready_production_fix",
+    "historical_note": "Earlier lifecycle-only repairs remain; this candidate also contains actual job-registration and authoring loading gate fixes."
   },
-  "scope_rationale": "All five complete methods covering eight identified restoration boundaries passed. Final full validates one unchanged production/test candidate.",
+  "scope_rationale": "Focused22 all passed:18 direct UI,3 task protocol,1 ready contract. Full161 adds4 new protocol/readiness and4 existing continuous guards to original153. No production or test change after focused pass.",
   "last_full": {
-    "source": "fab16acda4051eb1c6c89b162a0eaea90c51e3bb",
-    "run": 37241701712,
-    "ui_passed": 152,
+    "source": "d207159ddc4e138c6bfe1094656e2ba432ab6b2a",
+    "run": 37246577810,
+    "ui_passed": 151,
     "ui_executed": 153,
     "fresh_room_passed": 202,
     "b6_phases_passed": 5,
     "b6_png": 40,
-    "visual": "40 newly reviewed; oldP1closed;realdeviceNOTRUN"
+    "visual": "40 bound original screenshots; independent final candidate review required"
+  },
+  "shared_ready_production_fix": {
+    "commits": [
+      "03010c6",
+      "3d64ad8"
+    ],
+    "scope": "Register lazy excerpt/continuous tasks before start; reuse AuthoringUi.ready during recovery loading. Identity cleanup, pending journals and business assertions retained. Shared target-enabled single-touch protocol; bounded full-method evidence."
   }
 }
