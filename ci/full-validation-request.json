@@ -1,12 +1,12 @@
 {
   "status": "REQUESTED_NOT_EXECUTED",
-  "requested_utc": "2026-10-04T22:52:00Z",
-  "candidate_code_local": "86780492f46a433fb2a4390b5c71b9ad7acef962",
-  "prior_focused_source": "7cbfb5c8ac7bfe302a0a5f16e84e57e37b8cbf73",
-  "prior_focused_run": 37240518869,
+  "requested_utc": "2026-10-05T00:09:00Z",
+  "candidate_code_local": "252042b29ba78a22ba09bb307a666c0f2223e6cd",
+  "prior_focused_source": "e1f2239c6d0e0ea726fd2a6b0fa97f8a2fbe9bbf",
+  "prior_focused_run": 37245266607,
   "prior_focused_ui": {
-    "executed": 7,
-    "passed": 7
+    "executed": 5,
+    "passed": 5
   },
   "required": {
     "mode": "full",
@@ -56,21 +56,20 @@
   },
   "test_only_fix": {
     "commits": [
-      "40a523d",
-      "2983688",
-      "0b5a277"
+      "ec6c579",
+      "87ffc33"
     ],
-    "scope": "Actual Dialog IME/visible stable target readiness, exact comment draft and single save within original10s; foreign-source15s wait only adds bounded diagnostics, root cause unproven. No production changes."
+    "scope": "All seven map-test recreation boundaries and one inline-comment boundary await retained original book/page/map/VM and actual original draft rendering within10s. No scroll-to-create or draft mutation; unchanged production and business assertions."
   },
-  "scope_rationale": "All seven focused UI passed with unchanged production. Final full validates one candidate rather than combining sources.",
+  "scope_rationale": "All five complete methods covering eight identified restoration boundaries passed. Final full validates one unchanged production/test candidate.",
   "last_full": {
-    "source": "919696c89da298cec7661b54765235b73441f19a",
-    "run": 37237976648,
-    "ui_passed": 150,
+    "source": "fab16acda4051eb1c6c89b162a0eaea90c51e3bb",
+    "run": 37241701712,
+    "ui_passed": 152,
     "ui_executed": 153,
     "fresh_room_passed": 202,
     "b6_phases_passed": 5,
     "b6_png": 40,
-    "visual": "40reviewed;stable selected outline uses visual-wide/narrow04;realdeviceNOTRUN"
+    "visual": "40 newly reviewed; oldP1closed;realdeviceNOTRUN"
   }
 }
