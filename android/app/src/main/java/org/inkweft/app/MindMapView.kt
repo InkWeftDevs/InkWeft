@@ -66,38 +66,46 @@ internal class MindMapView(context:Context):View(context){
         };return true
     }
     var selectedNodeId:String?=null
-        set(value){if(field!=value){field=value;requestSourcePreviews();publishBounds();invalidate()}}
+        set(value){if(field!=value){field=value;if(readingViewport!=null)readingFocusPending=true;requestSourcePreviews();publishBounds();invalidate()}}
     /** Expansion belongs to this occurrence, never to the shared card or stored coordinates. */
     var expandedNodeId:String?=null
         set(value){if(field!=value){field=value;remeasure();value?.let{id->nodes.find{it.id==id}?.let{sourcePreviews.retry(it.cardId)}};requestSourcePreviews();publishBounds();invalidate()}}
     fun canExpandNode(id:String)=nodes.find{it.id==id}?.let{nodeLayout(it).canExpand}==true
     var onViewport:(MapViewport)->Unit={}
     private var positioned=false
-    // The source dock has a temporary camera; returning restores the user's exact original viewport.
-    private var sourceReadingViewport:MapViewport?=null
-    private var sourceFocusPending=false
-    fun setSourceReading(enabled:Boolean){
+    // Reading panes temporarily resize the map; closing them restores the user's camera.
+    private var readingViewport:MapViewport?=null
+    private var readingFocusPending=false
+    private var centerReadingSelection=true
+    fun setReadingFocus(sourceReading:Boolean,inspectingCard:Boolean){
+        val enabled=sourceReading||inspectingCard
         if(enabled){
-            if(sourceReadingViewport==null){sourceReadingViewport=snapshotViewport();sourceFocusPending=true}
-            focusSourceSelection()
-        }else sourceReadingViewport?.let{original->
-            sourceReadingViewport=null;sourceFocusPending=false;restoreViewport(original)
+            if(readingViewport==null){readingViewport=snapshotViewport();readingFocusPending=true}
+            if(centerReadingSelection!=sourceReading){centerReadingSelection=sourceReading;readingFocusPending=true}
+            focusReadingSelection()
+        }else readingViewport?.let{original->
+            readingViewport=null;readingFocusPending=false;restoreViewport(original)
         }
     }
-    private fun focusSourceSelection(){
-        if(sourceReadingViewport!=null&&sourceFocusPending&&width>0&&height>0&&nodes.isNotEmpty()){
-            if(selectedNodeId?.let(::focusNode)!=true)fit()
-            sourceFocusPending=false
+    private fun focusReadingSelection(){
+        if(readingViewport!=null&&readingFocusPending&&width>0&&height>0&&nodes.isNotEmpty()){
+            val selected=selectedNodeId
+            val bounds=selected?.let(::nodeBounds)
+            if(selected==null||bounds==null)fit()
+            else if(centerReadingSelection||bounds.width()>width-24*d||bounds.height()>height-24*d)focusNode(selected)
+            else revealNode(selected)
+            readingFocusPending=false
         }
     }
     fun snapshotViewport()=MapViewport(scale,tx,ty)
+    fun readingReturnViewport()=readingViewport?:snapshotViewport()
     fun restoreViewport(v:MapViewport){
-        if(sourceReadingViewport!=null){
-            sourceReadingViewport=v;sourceFocusPending=true;focusSourceSelection();return
+        if(readingViewport!=null){
+            readingViewport=v;readingFocusPending=true;focusReadingSelection();return
         }
         scale=v.scale;tx=v.x;ty=v.y;positioned=true;requestSourcePreviews();publishBounds();invalidate()
     }
-    private fun changedViewport(){positioned=true;if(sourceReadingViewport==null)onViewport(snapshotViewport());requestSourcePreviews();publishBounds()}
+    private fun changedViewport(){positioned=true;if(readingViewport==null)onViewport(snapshotViewport());requestSourcePreviews();publishBounds()}
     var onOpen:(StudyNodeRow)->Unit={} // Other knowledge canvases retain their own activation contract.
     var onSelect:((StudyNodeRow?)->Unit)?=null
     var onEditTitle:(StudyNodeRow)->Unit={}
@@ -278,7 +286,7 @@ internal class MindMapView(context:Context):View(context){
     override fun onSizeChanged(w:Int,h:Int,oldw:Int,oldh:Int){
         super.onSizeChanged(w,h,oldw,oldh)
         clearSceneTransition()
-        if(sourceReadingViewport!=null){sourceFocusPending=true;focusSourceSelection()}
+        if(readingViewport!=null){readingFocusPending=true;focusReadingSelection()}
         else if(oldw==0&&!positioned)fit()
         requestSourcePreviews();publishBounds()
     }
