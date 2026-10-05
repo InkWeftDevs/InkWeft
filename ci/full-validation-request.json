@@ -1,89 +1,16 @@
 {
-  "status": "REQUESTED_NOT_EXECUTED",
-  "requested_utc": "2026-10-05T02:43:00Z",
-  "candidate_code_local": "d1940cb47779dcf65f671d78a10ef7c06a9647cf",
-  "prior_focused_source": "0a3950fc46b9bca3b858f7e3ca610b6760ae5d7b",
-  "prior_focused_run": 37255217999,
-  "prior_focused_ui": {
-    "executed": 19,
-    "passed": 19
-  },
-  "required": {
-    "mode": "full",
-    "ui_methods": 163,
-    "fresh_room_methods": 202,
-    "fixture_phases": [
-      "prepare",
-      "reopen",
-      "visual",
-      "native_recall",
-      "native_recall_reopen"
-    ],
-    "same_sample_png": 40,
-    "independent_visual_review": true,
-    "lint": "RUN_REQUIRED_SHARD_1_ONLY",
-    "shards": 3,
-    "room_reuse": false
-  },
-  "backup_test": {
-    "integrated_local_commit": "b2f3306",
-    "original_test_commit": "8fdb3731cbbd63b2e7227deb6aaf0297e9d6879f",
-    "method_count_unchanged": true,
-    "main_compile_task": "SUCCESS_FROM_LOCAL_CACHE_29s",
-    "independent_same_test_compile": "ACTUALLY_EXECUTED_PASS_73s",
-    "compiled_class_sha256_both_worktrees": "f3966d2190e5c15eff7518667054e20316dc79aaa56ca8cf8caac92aa4505081",
-    "android_execution": "PASS_FRESH_ROOM_202_AT_8d6abf5_RUN_37232132379"
-  },
-  "fixed_sample": {
-    "pages": 12,
-    "cards": 96,
-    "maps": 3,
-    "nodes_per_map": 120,
-    "pressure_strokes": 1000,
-    "pressure_points": 100000,
-    "original_review_records": 25
-  },
-  "operational_constraints": {
-    "remote_gradle_cache": "DISABLED",
-    "kvm": "CURRENT_UID_ONLY_TEMPORARY_AND_EXACT_RESTORE_ALWAYS",
-    "artifacts": "SYNTHETIC_REPORTS_AND_PNG_ONLY_NO_APK",
-    "merge_release_deploy": "NOT_REQUESTED"
-  },
-  "external_acceptance": "REAL_TABLET_PEN_THERMAL_AND_REAL_LIBRARY_UPGRADE_NOT_RUN",
-  "prior_focused_b6": {
-    "all_phases": "NOT_RUN_FOCUSED",
-    "png": 0
-  },
-  "test_only_fix": {
-    "superseded_by": "shared_ready_production_fix",
-    "historical_note": "Earlier lifecycle-only repairs remain; this candidate also contains actual job-registration and authoring loading gate fixes."
-  },
-  "scope_rationale": "Focused19 passed. Full163 adds direct StudyVM/Room1 and existing LearningWorkbench1 to prior161; final full also validates the three independently reviewed Compose ownership guard lines added after focused. No extra focused round or timeout relaxation.",
-  "last_full": {
-    "source": "97baf67cad28f45830e75a27ca4b0a11737832c7",
-    "run": 37251286673,
-    "ui_passed": 159,
-    "ui_executed": 161,
-    "fresh_room_passed": 202,
-    "b6_phases_passed": 5,
-    "b6_png": 40,
-    "visual": "40 integrity-checked images; final same-source pixel review remains required"
-  },
-  "shared_ready_production_fix": {
-    "commits": [
-      "03010c6",
-      "3d64ad8"
-    ],
-    "scope": "Register lazy excerpt/continuous tasks before start; reuse AuthoringUi.ready during recovery loading. Identity cleanup, pending journals and business assertions retained. Shared target-enabled single-touch protocol; bounded full-method evidence."
-  },
-  "map_projection_fix": {
-    "scope": "loading before key; readonly mapId; existing reload counter is unique read generation; success/error require current generation and MapRef; four learning entries share stable target protocol. Direct real StudyVM/Room/Main ABA regression passed in focused19.",
-    "compose_followup_after_focus": {
-      "commit": "d1940cb",
-      "lines": 3,
-      "scope": "Full book/map graph identity, nodes from validated graph, browseReady requires validated graph.",
-      "local_compile": "PASS_103_SECONDS",
-      "device": "NOT_RUN_AFTER_FOCUS_UNTIL_THIS_FULL"
-    }
-  }
+  "requested_utc": "2026-10-05T04:48:00Z",
+  "reason": "Full scoped acceptance after same-build three-round source/snapshot/shared-card pass and minimal Dialog observation ownership fix",
+  "local_production_candidate": "887dcabad386f82a1454adbd935c6d863639bba0",
+  "public_production_candidate": "ace31a25af59fce20d52946b8ddaadb15965e6fd",
+  "focused_run": 37263980819,
+  "focused_distinct_methods": 3,
+  "focused_observations_passed": 9,
+  "expected_app": 163,
+  "fresh_room": 202,
+  "b6_phases": 5,
+  "b6_pngs": 40,
+  "full_lint_owner_shard": 1,
+  "physical_device": "NOT_RUN",
+  "production_changes_since_focused": false
 }

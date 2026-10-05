@@ -1,0 +1,112 @@
+{
+  "run": 37263980819,
+  "run_url": "https://github.com/InkWeftDevs/InkWeft/actions/runs/37263980819",
+  "head_sha": "ace31a25af59fce20d52946b8ddaadb15965e6fd",
+  "local_commit": "887dcabad386f82a1454adbd935c6d863639bba0",
+  "tree": "2d75266b34d0117e21198540a68c6d8f794fe7bf",
+  "conclusion": "success",
+  "app": {
+    "expected": 9,
+    "planned_total": 9,
+    "distinct_methods": 3,
+    "diagnostic_rounds": 3,
+    "executed": 9,
+    "stopped_after_first_failure": false,
+    "shard_index": 0,
+    "shard_count": 1,
+    "passed": 9,
+    "failures": [],
+    "infrastructure": []
+  },
+  "phase_outcomes": [
+    {
+      "round": 1,
+      "selection": "org.inkweft.app.RecallOriginalSourceUiTest#recycledCurrentSourceKeepsFixedSnapshotAndSameAttempt",
+      "source": "ace31a25af59fce20d52946b8ddaadb15965e6fd",
+      "phase_file": "11325916496/android/build/evidence/app-000/recall-source-phase.txt",
+      "sha256": "3215cc05f096fcf6086266609581d53a0406c7b990867baf8d182fe4094209c7",
+      "bytes": 2399,
+      "pass": true
+    },
+    {
+      "round": 1,
+      "selection": "org.inkweft.app.RecallOriginalSourceUiTest#foreignSourceIsRejectedWithoutRenderingAnotherNotebook",
+      "source": "ace31a25af59fce20d52946b8ddaadb15965e6fd",
+      "phase_file": "11325916496/android/build/evidence/app-001/recall-source-phase.txt",
+      "sha256": "2243004826dd4010ef3a3197fb6930cd5045ae83644c6730a14010c128c11fb4",
+      "bytes": 1528,
+      "pass": true
+    },
+    {
+      "round": 1,
+      "selection": "org.inkweft.app.SelectionStudyUiTest#outlineAndMapReuseSingleEditableCard",
+      "source": "ace31a25af59fce20d52946b8ddaadb15965e6fd",
+      "phase_file": "11325916496/android/build/evidence/app-002/selection-shared-card-phase.txt",
+      "sha256": "f53e537e144193c7e4547560d75ad3b741b309c05a677a6b6c39c1e8dafc6801",
+      "bytes": 7097,
+      "pass": true
+    },
+    {
+      "round": 2,
+      "selection": "org.inkweft.app.RecallOriginalSourceUiTest#recycledCurrentSourceKeepsFixedSnapshotAndSameAttempt",
+      "source": "ace31a25af59fce20d52946b8ddaadb15965e6fd",
+      "phase_file": "11325916496/android/build/evidence/app-003/recall-source-phase.txt",
+      "sha256": "42af283a0296718e73fc4307b3be3006f226410b17c122aab195bc0551ec82f7",
+      "bytes": 2399,
+      "pass": true
+    },
+    {
+      "round": 2,
+      "selection": "org.inkweft.app.RecallOriginalSourceUiTest#foreignSourceIsRejectedWithoutRenderingAnotherNotebook",
+      "source": "ace31a25af59fce20d52946b8ddaadb15965e6fd",
+      "phase_file": "11325916496/android/build/evidence/app-004/recall-source-phase.txt",
+      "sha256": "634b078f7663cbfaab19af992de465935c57640b92b5bdde63e3d0c4afefba40",
+      "bytes": 1528,
+      "pass": true
+    },
+    {
+      "round": 2,
+      "selection": "org.inkweft.app.SelectionStudyUiTest#outlineAndMapReuseSingleEditableCard",
+      "source": "ace31a25af59fce20d52946b8ddaadb15965e6fd",
+      "phase_file": "11325916496/android/build/evidence/app-005/selection-shared-card-phase.txt",
+      "sha256": "03b4fe1ad4d6ff4e76c35c02e966420219a0836cb6212a49e45a272f3161d5ef",
+      "bytes": 7097,
+      "pass": true
+    },
+    {
+      "round": 3,
+      "selection": "org.inkweft.app.RecallOriginalSourceUiTest#recycledCurrentSourceKeepsFixedSnapshotAndSameAttempt",
+      "source": "ace31a25af59fce20d52946b8ddaadb15965e6fd",
+      "phase_file": "11325916496/android/build/evidence/app-006/recall-source-phase.txt",
+      "sha256": "39b5d3dcd54ed21e6acf0567eb0fa73b9a66c4d10caf137f3e403ec9f7155a8b",
+      "bytes": 2375,
+      "pass": true
+    },
+    {
+      "round": 3,
+      "selection": "org.inkweft.app.RecallOriginalSourceUiTest#foreignSourceIsRejectedWithoutRenderingAnotherNotebook",
+      "source": "ace31a25af59fce20d52946b8ddaadb15965e6fd",
+      "phase_file": "11325916496/android/build/evidence/app-007/recall-source-phase.txt",
+      "sha256": "211bea0b317bf4c1f8fd8754edc4086ae0d7968339dd22f2aa15807d1ef57bbd",
+      "bytes": 1528,
+      "pass": true
+    },
+    {
+      "round": 3,
+      "selection": "org.inkweft.app.SelectionStudyUiTest#outlineAndMapReuseSingleEditableCard",
+      "source": "ace31a25af59fce20d52946b8ddaadb15965e6fd",
+      "phase_file": "11325916496/android/build/evidence/app-008/selection-shared-card-phase.txt",
+      "sha256": "7e3c0a3ebf892692f6df8a2b03f7571203f06750d4b81f39839daa9ed1536535",
+      "bytes": 7097,
+      "pass": true
+    }
+  ],
+  "unexecuted_observations": 0,
+  "source_artifact_id": 11325916496,
+  "source_artifact_sha256": "a38b2f20d275cb05e73147665a84349d8d6d92b936e2a60f6cf066ce2a5480d6",
+  "core_passed": 157,
+  "room_reused_passed": 202,
+  "room_new_execution": 0,
+  "b6": "NOT_RUN",
+  "lint": "NOT_RUN_FOCUSED"
+}

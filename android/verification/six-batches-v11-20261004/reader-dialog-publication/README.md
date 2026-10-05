@@ -19,3 +19,9 @@ Compose 1.10.5 实际依赖检查指出：Recomposer apply observer 只处理被
 - ui-test-android AAR SHA-256：`e26d8331bccc81e87e947840041f4e15aa975d6f62cb340bbccf73df0cab95b2`
 
 生产修正见独立提交（读取任务所属 composition 观察结果再传入来源弹窗）。本地生产/仪器测试编译通过，Android 回归结果仍需本候选的独立回执，不在此预填。
+
+## 修正后定向结果
+
+`ace31a25af59fce20d52946b8ddaadb15965e6fd` / [run37263980819](https://github.com/InkWeftDevs/InkWeft/actions/runs/37263980819)：三个方法各三轮，9次完整执行全部通过，各自独立重置合成应用，9份phase均匹配回执。三轮快照均实际提交loaded分支，来源拒绝均显示error分支，共享卡均完成保存与原业务断言。未把三个方法写成九个独立功能。
+
+core157通过，data-local Room复用202、新执行0，B6和lint未运行。该有界对照支持此最小结构修正，不证明任意负载下绝无时序问题，也不声称已经确定历史共享卡保存失败的同一因果。下一次完整163项及fresh202/B6五阶段40图仍须单独验收。
