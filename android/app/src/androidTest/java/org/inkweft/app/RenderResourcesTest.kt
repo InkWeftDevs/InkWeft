@@ -41,6 +41,25 @@ class RenderResourcesTest {
    b.eraseColor(Color.TRANSPARENT);raster.draw(Canvas(b),220,180,vp,1.0,false,false,listOf(s));assertFalse(raster.pending)
    val after=IntArray(39600);b.getPixels(after,0,220,0,0,220,180);assertArrayEquals(beforePixels,after);raster.clear()};b.recycle()
  }
+ @Test fun replacementAdmissionDoesNotSubtractAnotherOwnersBitmap(){
+  val old=Any();val held=Any();val bytes=8L*1024*1024
+  try{
+   RenderResources.trim()
+   val baseline=RenderResources.snapshot().getValue("totalBytes");val free=2L*1024*1024
+   assertTrue(baseline+bytes+free<RenderResources.BUDGET)
+   RenderResources.track(old,bytes,"fixture","replacement-view",RenderResources.Role.ACTIVE)
+   RenderResources.track(old,bytes,"fixture","replacement-cache",RenderResources.Role.CACHE)
+   RenderResources.track(held,RenderResources.BUDGET-baseline-bytes-free,"fixture","replacement-pressure",RenderResources.Role.ACTIVE)
+   val busy=assertThrows(RenderBudgetBusy::class.java){RenderResources.admit(bytes)}
+   val before=RenderResources.snapshot().getValue("totalBytes")
+   assertFalse(RenderResources.canReplace(old,"replacement-view",busy))
+   assertEquals(before,RenderResources.snapshot().getValue("totalBytes"))
+   RenderResources.release(old,"replacement-cache")
+   assertTrue(RenderResources.canReplace(old,"replacement-view",busy))
+   assertEquals("Admission checks do not release the still-visible bitmap",before,RenderResources.snapshot().getValue("totalBytes"))
+   assertFalse("Unknown admission sizes cannot authorize dropping a frame",RenderResources.canReplace(old,"replacement-view",RenderBudgetBusy()))
+  }finally{RenderResources.release(old,"replacement-view");RenderResources.release(old,"replacement-cache");RenderResources.release(held,"replacement-pressure")}
+ }
  @Test fun immutableEqualityMemoDoesNotHideNewErasures(){
   val a=InkStroke(UUID.randomUUID().toString(),InkPen.PEN,Color.BLACK,3f,InkTool.STYLUS,listOf(InkSample(30f,30f,0),InkSample(80f,40f,10)))
   val b=InkStrokeCodec.decode(InkStrokeCodec.encode(a));val cache=InkEqualityCache();var comparisons=0

@@ -28,7 +28,7 @@ class MapInteractionUiTest {
  private val app get()=compose.activity.application as InkWeftApplication
  private var observedUi="No UI observation yet"
  private var failureCaptured=false
- private fun recordUi(value:String){observedUi=(observedUi+"\n"+value).takeLast(16_000)}
+ private fun recordUi(value:String){observedUi=(observedUi+"\n"+value).takeLast(16_000);android.util.Log.i("InkWeftMapTest",value)}
  // Inner to the Compose rule: capture while the actual Activity/windows are still alive.
  @get:Rule(order=1) val failureEvidence=object:org.junit.rules.TestWatcher(){
   override fun starting(description:org.junit.runner.Description){observedUi="test=${description.methodName}";failureCaptured=false}
@@ -177,7 +177,9 @@ class MapInteractionUiTest {
   select(f.root,true);compose.onNodeWithTag("node-title-editor").assertIsDisplayed();compose.onNodeWithTag("study-map").performTouchInput{click(Offset(10f,10f))};compose.onNodeWithTag("node-title-editor").assertIsDisplayed();tap("node-title-cancel")
   compose.onNodeWithTag("study-map").performTouchInput{click(Offset(10f,10f))};compose.onNodeWithTag("node-actions").assertDoesNotExist()
  }
- @Test fun portraitCardInspectorKeepsCapacitySelectionNeighborsAndLongTextVisible(){
+ @Test fun portraitCardInspectorKeepsCapacitySelectionNeighborsAndLongTextVisible()=checkPortraitCardInspector(1f)
+ @Test fun portraitCardInspectorAtLargeFontKeepsCapacitySelectionNeighborsAndLongTextVisible()=checkPortraitCardInspector(1.6f)
+ private fun checkPortraitCardInspector(font:Float){
   require(app.packageName.endsWith(".insertion")){"Synthetic closeout verification requires the isolated insertion application"}
   val f=fixture();val neighbor=id()
   val title="条件概率的完整推导与边界：先核对已知条件，再比较独立事件和互斥事件，保留每一步分母变化及其适用范围"
@@ -228,13 +230,13 @@ class MapInteractionUiTest {
   }
   try{
    shell("wm size 1680x2560");shell("wm density 320")
-   for(font in listOf(1f,1.6f)){
+   run{
     shell("settings put system font_scale $font")
     recreateAndAwaitStudy(f,f.root,null,"portrait-card-$font")
     compose.waitUntil(15_000){val c=compose.activity.resources.configuration;kotlin.math.abs(c.screenWidthDp-840)<=4&&kotlin.math.abs(c.fontScale-font)<.02f}
-    select(f.root)
+    recordUi("portrait font=$font select start");select(f.root);recordUi("portrait font=$font select complete")
     val original=compose.runOnIdle{map().snapshotViewport()};val originalMap=bounds("study-map")
-    shot("portrait-card-$font-before")
+    recordUi("portrait font=$font before screenshot");shot("portrait-card-$font-before");recordUi("portrait font=$font screenshot complete")
     tap("node-more");tap("node-view-content")
     val inspector=bounds("study-card-details");val primary=bounds("study-primary-content");val canvas=bounds("study-map")
     val minimumMap=320*compose.activity.resources.displayMetrics.density

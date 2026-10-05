@@ -146,6 +146,9 @@ class ImageMemoryProbeTest {
                         .put("imagePending",renderer.pending).put("budgetDeferred",renderer.budgetDeferred).put("decodeCount",renderer.decodeCount)
                         .put("failedRequest",field(renderer,"failedRequest")).put("matchingRequestAndFrame",matching).put("completeMatchingDrawnFrame",drawn)
                         .put("rasterPending",view.rasterPending).put("sourceContentReady",view.sourceContentReady).put("authorInputEnabled",view.allowInput)
+                        .put("documentGeneration",field(view,"documentGeneration")).put("completedDocumentGeneration",field(view,"completedDocumentGeneration"))
+                        .put("drawnDocumentGeneration",field(view,"drawnDocumentGeneration")).put("documentRequest",field(view,"documentRequest"))
+                        .put("documentJobActive",(field(view,"documentJob") as? kotlinx.coroutines.Job)?.isActive==true)
                     requestKey?.let { k->value.put("requestedCrop",bounds(field(k,"crop") as CanvasBounds)).put("requestedFullWidthPx",field(k,"width")).put("requestedFullHeightPx",field(k,"height")) }
                     frame?.let { f->value.put("frame",JSONObject().put("source",f.source).put("sourcePixelRegion",rect(f.region)).put("rawWidth",f.rawWidth).put("rawHeight",f.rawHeight)
                         .put("decodedWidth",f.bitmap.width).put("decodedHeight",f.bitmap.height).put("allocationBytes",f.bitmap.allocationByteCount).put("orientation",f.orientation)) }
@@ -185,7 +188,8 @@ class ImageMemoryProbeTest {
                 }else{stableGeometry=null;firstMatching=0L}
                 Thread.sleep(200)
             }
-            stage.put("status","WAIT_LIMIT_REACHED").put("endedNanos",now());save();throw Stop("$phase:NO_COMPLETE_MATCHING_FRAME_WITHIN_12S")
+            stage.put("status","WAIT_LIMIT_REACHED").put("endedNanos",now());save()
+            if(lastRow?.optBoolean("targetVisible")!=true)throw Stop("$phase:NO_VISIBLE_TARGET_WITHIN_12S")
         }
         fun nativeView()=views().single { it.embeddedPage&&field(it,"documentId")==page&&it.getLocalVisibleRect(Rect()) }
         fun scrollOnce() {
@@ -227,7 +231,7 @@ class ImageMemoryProbeTest {
             repeat(5){sample("stationary-after-zoom");Thread.sleep(200)}
             val beforeZoomOut=geometry(sample("before-zoom-out"))
             onMain { nativeView().zoomBy(1.0/1.7) };awaitFrame("native-zoom-out",now(),beforeZoomOut)
-            report.put("status","MEASURED_ALL_FOUR_PHASES")
+            report.put("status",if((0 until stages.length()).all{stages.getJSONObject(it).getString("status")=="COMPLETE_MATCHING_FRAME"})"MEASURED_ALL_FOUR_PHASES" else "MEASURED_INCOMPLETE_PHASES")
         } catch(stop:Stop){report.put("status","MEASURED_STOPPED_AT_BOUND").put("stopReason",stop.reason)}
         catch(error:Throwable){failure=error;report.put("status","PROBE_ERROR").put("errorType",error.javaClass.simpleName)}
         finally {

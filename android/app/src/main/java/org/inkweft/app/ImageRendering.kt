@@ -91,6 +91,7 @@ internal class ImageRendering(private val context:Context,private val changed:()
                     var retry=true
                     while(retry){
                         retry=false
+                        var decodeBudgetFailure:RenderBudgetBusy?=null
                         try{
                             withContext(Dispatchers.IO){decodeLock.withLock{
                                 BackgroundBudget.await(context);ensureActive()
@@ -102,7 +103,7 @@ internal class ImageRendering(private val context:Context,private val changed:()
                                     val source=read(request.objectValue)?:error("IMAGE_ORIGINAL_MISSING")
                                     require(source.sha256==request.key.source&&source.size<=byteCount)
                                     ensureActive()
-                                    val result=decode(source,request.key)
+                                    val result=try{decode(source,request.key)}catch(busy:RenderBudgetBusy){decodeBudgetFailure=busy;throw busy}
                                     var published=false
                                     try{
                                         ensureActive()
@@ -117,8 +118,14 @@ internal class ImageRendering(private val context:Context,private val changed:()
                                     }finally{if(!published){RenderResources.release(result.bitmap,owner);result.bitmap.recycle()}}
                                 }
                             }}
-                        }catch(_:RenderBudgetBusy){
-                            if(token==generation&&!budgetDeferred){budgetDeferred=true;changed()}
+                        }catch(busy:RenderBudgetBusy){
+                            if(token==generation){
+                                val replaced=frames[request.key.id]?.takeIf{
+                                    decodeBudgetFailure===busy&&it.key!=request.key&&RenderResources.canReplace(it.frame.bitmap,owner,busy)
+                                }
+                                if(replaced!=null){frames.remove(request.key.id);RenderResources.release(replaced.frame.bitmap,owner)}
+                                if(!budgetDeferred||replaced!=null){budgetDeferred=true;changed()}
+                            }
                             delay(500);retry=true
                         }catch(cancel:CancellationException){throw cancel}
                         catch(_:Exception){if(token==generation)reportFailure()}

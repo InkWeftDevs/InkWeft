@@ -192,7 +192,12 @@ class InkCanvasView(context:Context):View(context){
             delay(80)
             try{val tile=(authorSession?.rendering?:(context.applicationContext as InkWeftApplication).documentRendering).render(id,rect,pixels)
                 ensureActive();if(documentRequest==request&&documentGeneration==generation){releaseDocumentTile();documentTile=tile;documentKnownAbsent=tile==null;documentError=false;completedDocumentGeneration=generation;invalidate()}
-            }catch(c:CancellationException){throw c}catch(_:RenderBudgetBusy){delay(500);if(documentRequest==request){documentRequest=null;documentJob=null;requestDocument()}}
+            }catch(c:CancellationException){throw c}catch(busy:RenderBudgetBusy){
+                if(documentRequest==request&&documentGeneration==generation){
+                    documentTile?.takeIf{completedDocumentGeneration!=generation&&RenderResources.canReplace(it.bitmap,id,busy)}?.let{releaseDocumentTile();invalidate()}
+                }
+                delay(500);if(documentRequest==request&&documentGeneration==generation){documentRequest=null;documentJob=null;requestDocument()}
+            }
             catch(_:Exception){if(documentRequest==request&&documentGeneration==generation){documentError=true;failedDocumentGeneration=generation;invalidate();onNotice("文档页面读取失败，请离开后重新打开；原文件保留。")}}
         }
     }
