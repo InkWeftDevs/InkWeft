@@ -209,6 +209,23 @@ class MapInteractionUiTest {
    node.performSemanticsAction(SemanticsActions.GetTextLayoutResult){it(result)}
    return result.single()
   }
+  fun wholeText(node:SemanticsNodeInteraction,expected:String,container:androidx.compose.ui.geometry.Rect,label:String){
+   val layout=textLayout(node);val semantics=node.fetchSemanticsNode()
+   val visible=semantics.boundsInRoot.intersect(container)
+   recordUi("$label layout=${layout.size} paragraph=${layout.multiParagraph.width}x${layout.multiParagraph.height} overflow=${layout.hasVisualOverflow} visible=$visible")
+   assertEquals(expected,layout.layoutInput.text.text)
+   assertTrue(layout.lineCount>0);assertFalse(layout.multiParagraph.didExceedMaxLines)
+   assertEquals(0,layout.getLineStart(0));assertEquals(expected.length,layout.getLineEnd(layout.lineCount-1,false))
+   for(line in 0 until layout.lineCount){
+    assertFalse("$label line $line must not be ellipsized",layout.isLineEllipsized(line))
+    assertTrue(expected.substring(layout.getLineEnd(line,true),layout.getLineEnd(line,false)).all{it.isWhitespace()})
+    val p=semantics.positionInRoot
+    val row=androidx.compose.ui.geometry.Rect(p.x+layout.getLineLeft(line),p.y+layout.getLineTop(line),p.x+layout.getLineRight(line),p.y+layout.getLineBottom(line))
+    recordUi("$label line=$line start=${layout.getLineStart(line)} end=${layout.getLineEnd(line,false)} visibleEnd=${layout.getLineEnd(line,true)}")
+    // TextLayoutResult compares float paragraph dimensions with rounded Int sizes; allow one physical pixel only.
+    inside(row,visible,"$label line $line")
+   }
+  }
   try{
    shell("wm size 1680x2560");shell("wm density 320")
    for(font in listOf(1f,1.6f)){
@@ -226,8 +243,7 @@ class MapInteractionUiTest {
     inside(canvas,primary,"native map")
     inside(bounds("capacity-warning"),primary,"capacity warning")
     val warningText=compose.onNodeWithText("本图活动主题接近上限 · 容量与整理",useUnmergedTree=true)
-    val warningLayout=textLayout(warningText)
-    assertFalse("Capacity text must wrap without truncation",warningLayout.hasVisualOverflow)
+    wholeText(warningText,"本图活动主题接近上限 · 容量与整理",primary.intersect(bounds("capacity-warning")),"capacity text")
     val warningNode=warningText.fetchSemanticsNode()
     inside(androidx.compose.ui.geometry.Rect(warningNode.positionInRoot.x,warningNode.positionInRoot.y,
      warningNode.positionInRoot.x+warningNode.size.width,warningNode.positionInRoot.y+warningNode.size.height),primary,"complete capacity text")
@@ -240,7 +256,7 @@ class MapInteractionUiTest {
      assertEquals("Temporary reader camera must not replace the user's return camera",original,vm(f.book).viewports["main"])
     }
     inside(bounds("card-full-title"),bounds("card-reading-content"),"complete long Chinese title")
-    assertFalse(textLayout(compose.onNodeWithTag("card-full-title")).hasVisualOverflow)
+    wholeText(compose.onNodeWithTag("card-full-title"),title,bounds("card-reading-content"),"long title")
     shot("portrait-card-$font-title")
     val reader=compose.onNodeWithTag("card-reading-content")
     val bodyNode=compose.onNodeWithTag("card-full-body");bodyNode.assertTextEquals(body)

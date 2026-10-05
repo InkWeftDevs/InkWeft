@@ -121,6 +121,9 @@ class ImageMemoryProbeTest {
         var measurementStart=0L;var lastRow:JSONObject?=null;var failure:Throwable?=null
         val power=app.getSystemService(PowerManager::class.java)
         fun sample(phase:String):JSONObject {
+            if(now()>=deadline)throw Stop("TOTAL_WINDOW_LIMIT")
+            // StateFlow changes need a test-clock frame before Android can lay out/draw the new Compose tree.
+            compose.mainClock.advanceTimeByFrame()
             val row=onMain {
                 val view=views().firstOrNull { it.embeddedPage&&field(it,"documentId")==page&&it.getLocalVisibleRect(Rect()) }
                 val value=JSONObject().put("atNanos",now()).put("phase",phase).put("targetVisible",view!=null)
