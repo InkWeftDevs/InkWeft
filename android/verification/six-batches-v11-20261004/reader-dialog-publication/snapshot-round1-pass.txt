@@ -1,0 +1,19 @@
+--------- beginning of main
+10-05 04:21:26.250  2227  2247 D StudyReadPhase: phase=test.recycled.before job=0 thread=42:Instr: androidx.test.runner.AndroidJUnitRunner active=null
+10-05 04:21:35.097  2227  2227 D StudyReadPhase: phase=source.effect.start job=185707869 thread=2:main active=true
+10-05 04:21:35.098  2227  2250 D StudyReadPhase: phase=source.io.enter job=185707869 thread=45:DefaultDispatcher-worker-3 active=true
+10-05 04:21:35.098  2227  2250 D StudyReadPhase: phase=source.repository.ready job=185707869 thread=45:DefaultDispatcher-worker-3 active=true
+10-05 04:21:35.110  2227  2227 D StudyReadPhase: phase=source.publish.error.before job=185707869 thread=2:main active=true
+10-05 04:21:35.110  2227  2227 D StudyReadPhase: phase=source.publish.error.after job=185707869 thread=2:main active=true
+10-05 04:21:35.110  2227  2227 D StudyReadPhase: phase=source.effect.finally job=185707869 thread=2:main active=true
+10-05 04:21:35.148  2227  2227 D StudyReadPhase: phase=source.compose.error job=185707869 thread=2:main active=false
+10-05 04:21:35.508  2227  2227 D StudyReadPhase: phase=source.snapshot.open job=185707869 thread=2:main active=false
+10-05 04:21:35.565  2227  2227 D StudyReadPhase: phase=snapshot.effect.start job=12934049 thread=2:main active=true
+10-05 04:21:35.567  2227  2251 D StudyReadPhase: phase=snapshot.decode.enter job=12934049 thread=46:DefaultDispatcher-worker-4 active=true
+10-05 04:21:35.568  2227  2251 D StudyReadPhase: phase=snapshot.decode.return job=12934049 thread=46:DefaultDispatcher-worker-4 active=true
+10-05 04:21:35.579  2227  2251 D StudyReadPhase: phase=snapshot.publish.loaded.before job=12934049 thread=46:DefaultDispatcher-worker-4 active=true
+10-05 04:21:35.583  2227  2251 D StudyReadPhase: phase=snapshot.publish.loaded.after job=12934049 thread=46:DefaultDispatcher-worker-4 active=true
+10-05 04:21:35.584  2227  2251 D StudyReadPhase: phase=snapshot.effect.finally job=12934049 thread=46:DefaultDispatcher-worker-4 active=true
+10-05 04:21:35.593  2227  2227 D StudyReadPhase: phase=snapshot.compose.loading job=12934049 thread=2:main active=false
+10-05 04:21:35.973  2227  2227 D StudyReadPhase: phase=snapshot.compose.loaded job=12934049 thread=2:main active=false
+10-05 04:21:37.119  2227  2247 D StudyReadPhase: phase=test.recycled.after.pass job=0 thread=42:Instr: androidx.test.runner.AndroidJUnitRunner active=null

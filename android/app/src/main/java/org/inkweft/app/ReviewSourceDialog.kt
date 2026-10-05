@@ -70,14 +70,15 @@ internal fun traceStudyRead(phase:String,job:Job?){
         }finally{traceStudyRead("source.effect.finally",job)}
     }
     LaunchedEffect(loaded,view){if(loaded!=null)view?.post{view?.focusRegion(CanvasBounds(source.left,source.top,source.right,source.bottom))}}
+    // Observe success and failure here as well as forwarding their values into the child Dialog.
+    val result=loaded;val failure=error
     Dialog(onDismissRequest=dismiss,properties=DialogProperties(usePlatformDefaultWidth=false)){
         RecallWindowPermit()
         Surface(Modifier.fillMaxSize().testTag("review-source")){Column(Modifier.safeDrawingPadding()){
             Row(Modifier.fillMaxWidth().padding(horizontal=16.dp)){
                 Text("来源页 · 只读",Modifier.weight(1f));TextButton(onClick=dismiss,modifier=Modifier.heightIn(min=48.dp).testTag("return-to-review")){Text(if(session==null)"返回此题"else"返回知识卡")}
             }
-            val result=loaded
-            val renderPhase=if(result!=null)"source.compose.loaded"else if(error!=null)"source.compose.error"else "source.compose.loading"
+            val renderPhase=if(result!=null)"source.compose.loaded"else if(failure!=null)"source.compose.error"else "source.compose.loading"
             SideEffect{traceStudyRead(renderPhase,readJob?.get())}
             if(result!=null){
                 Text("${result.title} · 第 ${result.page.position+1} 页",Modifier.padding(horizontal=16.dp))
@@ -85,7 +86,7 @@ internal fun traceStudyRead(phase:String,job:Job?){
                 AndroidView(factory={InkCanvasView(it).also{v->v.authorSession=session;view=v;v.allowInput=false;v.fingerWrites=false}},update={v->
                     v.configure(result.page.world,PaperStyle.entries[result.page.paper],null);v.allowInput=false;v.showAuthoring(result.authoring);v.showDocument(result.page.id);v.showObjects(result.objects);v.showStrokes(InkSession(result.ink).visibleDraft())
                 },modifier=Modifier.fillMaxWidth().weight(1f).testTag("review-source-canvas"))
-            }else if(error!=null)Text(error!!,Modifier.weight(1f).fillMaxWidth().verticalScroll(rememberScrollState()).padding(24.dp).testTag("review-source-unavailable"))
+            }else if(failure!=null)Text(failure,Modifier.weight(1f).fillMaxWidth().verticalScroll(rememberScrollState()).padding(24.dp).testTag("review-source-unavailable"))
             else Box(Modifier.weight(1f)){CircularProgressIndicator(Modifier.padding(24.dp))}
             FlowRow(Modifier.fillMaxWidth().padding(horizontal=8.dp)){
                 if(result!=null){

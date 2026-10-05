@@ -37,6 +37,8 @@ import org.inkweft.data.StudySourceRow
             traceStudyRead("snapshot.publish.error.before",job);error="摘录快照无法读取，请返回原卡后重试。";traceStudyRead("snapshot.publish.error.after",job)
         }finally{traceStudyRead("snapshot.effect.finally",job)}
     }
+    // Register the result with the effect's owning composition before Dialog starts its child.
+    val file=loaded;val failure=error
     Dialog(onDismissRequest=dismiss,properties=DialogProperties(usePlatformDefaultWidth=false)){
         RecallWindowPermit()
         Surface(Modifier.fillMaxSize().testTag("study-snapshot-viewer")){
@@ -45,8 +47,7 @@ import org.inkweft.data.StudySourceRow
                     Text("摘录时快照 · 只读",Modifier.weight(1f))
                     TextButton(dismiss,modifier=Modifier.heightIn(min=48.dp).testTag("study-snapshot-close")){Text(returnLabel)}
                 }
-                val file=loaded
-                val renderPhase=if(file!=null)"snapshot.compose.loaded"else if(error!=null)"snapshot.compose.error"else "snapshot.compose.loading"
+                val renderPhase=if(file!=null)"snapshot.compose.loaded"else if(failure!=null)"snapshot.compose.error"else "snapshot.compose.loading"
                 SideEffect{traceStudyRead(renderPhase,readJob?.get())}
                 if(file!=null){
                     AndroidView(factory={context->InkCanvasView(context).also{native->
@@ -70,7 +71,7 @@ import org.inkweft.data.StudySourceRow
                         TextButton({view?.fitContent()},modifier=Modifier.testTag("study-snapshot-fit")){Text("全部内容")}
                     }
                 }else Box(Modifier.fillMaxWidth().weight(1f).padding(24.dp),contentAlignment=Alignment.Center){
-                    if(error!=null)Text(error!!,Modifier.testTag("study-snapshot-error"))
+                    if(failure!=null)Text(failure,Modifier.testTag("study-snapshot-error"))
                     else Column(horizontalAlignment=Alignment.CenterHorizontally){
                         CircularProgressIndicator(Modifier.testTag("study-snapshot-loading"))
                         Text("正在读取摘录快照…",Modifier.padding(top=16.dp))
