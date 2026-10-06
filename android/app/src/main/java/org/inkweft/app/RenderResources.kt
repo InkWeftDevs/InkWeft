@@ -2,7 +2,7 @@ package org.inkweft.app
 
 import java.util.WeakHashMap
 import java.util.concurrent.CopyOnWriteArrayList
-internal class RenderBudgetBusy:IllegalStateException("RENDER_BUDGET_BUSY")
+internal class RenderBudgetBusy(val requestedBytes:Long=0,val usedBytes:Long=Long.MAX_VALUE):IllegalStateException("RENDER_BUDGET_BUSY")
 /** Logical retained bytes, counted once per allocation. Driver/GPU allocations are not inferred. */
 internal object RenderResources {
     enum class Role { CACHE, IN_FLIGHT, ACTIVE, LIVE_INK }
@@ -18,6 +18,14 @@ internal object RenderResources {
     }
     @Synchronized fun release(resource:Any,owner:String){resources[resource]?.let{it.owners.remove(owner);if(it.owners.isEmpty()){estimated-=it.bytes;resources.remove(resource)}}}
     @Synchronized fun releaseOwner(owner:String){val it=resources.entries.iterator();while(it.hasNext()){val e=it.next().value;e.owners.remove(owner);if(e.owners.isEmpty()){estimated-=e.bytes;it.remove()}}}
+    /** A replaced frame only makes room when this owner holds its last accounted reference. */
+    @Synchronized fun canReplace(resource:Any,owner:String,busy:RenderBudgetBusy):Boolean {
+        val entry=resources[resource]?:return false
+        if(entry.owners.size!=1||entry.owners[owner]!=Role.ACTIVE||busy.requestedBytes<=0)return false
+        // A failed decoder's temporary byte lease may already be released at its caller.
+        val retained=maxOf(resources.values.sumOf{it.bytes},busy.usedBytes)-entry.bytes
+        return retained<=BUDGET&&busy.requestedBytes<=BUDGET-retained
+    }
     @Synchronized fun snapshot():Map<String,Long>{
         val values=resources.values.toList();estimated=values.sumOf{it.bytes};val out=mutableMapOf("totalBytes" to estimated,"budgetBytes" to BUDGET,"peakTrackedBytes" to peak,"inFlightJobs" to inFlightJobs.get().toLong(),"cancelledJobs" to cancelledJobs.get().toLong())
         Role.entries.forEach{r->out[r.name.lowercase()+"Bytes"]=values.filter{it.owners.values.maxByOrNull{v->v.ordinal}==r}.sumOf{it.bytes}}
@@ -30,7 +38,8 @@ internal object RenderResources {
     fun admit(bytes:Long,live:Boolean=false){
         if(synchronized(this){estimated}+bytes<=BUDGET)return
         trim()
-        if(!live&&snapshot().getValue("totalBytes")+bytes>BUDGET)throw RenderBudgetBusy()
+        val used=snapshot().getValue("totalBytes")
+        if(!live&&used+bytes>BUDGET)throw RenderBudgetBusy(bytes,used)
     }
 }
 /** Comparisons are cached only for immutable instances, including their erase masks. */

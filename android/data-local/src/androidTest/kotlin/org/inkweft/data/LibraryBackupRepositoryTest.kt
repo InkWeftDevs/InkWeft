@@ -2,6 +2,8 @@
 package org.inkweft.data
 
 import android.content.Context
+import android.content.ContextWrapper
+import android.os.FileObserver
 import androidx.room.withTransaction
 import androidx.test.core.app.ApplicationProvider
 import kotlinx.coroutines.*
@@ -220,4 +222,68 @@ class LibraryBackupRepositoryTest {
         LibraryBackupRepository(context,s).snapshot().use{f->inspect(r,f).use{assertEquals(LibraryBackupRepository.RestoreResult.ALREADY_PRESENT,r.restore(it))}}
         assertNotNull(t.notes().note(note))
     }
+    @Test fun cancellingWrittenSnapshotRemovesPartialAndPreservesAuthorLibrary()=fixture{s,_->coroutineScope{
+        // The existing legal fixture supplies 160 x 100 KB encoded source rows.
+        seedSnapshotBudget(s,false)
+        val cache=File(context.cacheDir,"backup-cancel-${id()}").canonicalFile
+        assertEquals(context.cacheDir.canonicalFile,cache.parentFile)
+        assertTrue(cache.mkdir())
+        val isolated=object:ContextWrapper(context){override fun getCacheDir()=cache}
+        val scratch=File(cache,"library-backup")
+        suspend fun canonical(db:NoteDatabase):String {
+            val repo=LibraryBackupRepository(isolated,db)
+            return repo.snapshot().use{file->inspect(repo,file).use{it.canonical}}
+        }
+        try{
+            val repo=LibraryBackupRepository(isolated,s)
+            val baseline=repo.snapshot().use{file->
+                inspect(repo,file).use{file.file.length() to it.canonical}
+            }
+            val written=CompletableDeferred<Pair<File,Long>>()
+            val generation=async(start=CoroutineStart.LAZY){repo.snapshot()}
+            val observer=object:FileObserver(scratch.absolutePath,FileObserver.MODIFY){
+                override fun onEvent(event:Int,path:String?){
+                    if(event and FileObserver.MODIFY==0||path==null||!path.startsWith("snapshot-")||!path.endsWith(".iwbackup"))return
+                    val partial=File(scratch,path);val bytes=partial.length()
+                    // Do not count an already-complete archive as a mid-write interruption.
+                    if(bytes<=0||bytes>=baseline.first)return
+                    if(written.complete(partial to bytes))generation.cancel(CancellationException("synthetic snapshot cancellation after write"))
+                }
+            }
+            try{
+                observer.startWatching();generation.start()
+                val outcome=runCatching{withTimeout(15_000){generation.await()}}
+                outcome.getOrNull()?.close()
+                val failure=outcome.exceptionOrNull()
+                assertTrue("Snapshot must be cancelled, not finish normally or time out",failure is CancellationException&&failure !is TimeoutCancellationException)
+                assertTrue("A partial file must be observed before cancellation",written.isCompleted)
+                val partial=written.await()
+                assertTrue(partial.second in 1 until baseline.first)
+                assertTrue(generation.isCancelled)
+                assertFalse("Cancelled snapshot must remove its own partial file",partial.first.exists())
+                assertTrue("Cancelled snapshot must leave no scratch files",scratch.listFiles().orEmpty().isEmpty())
+                println("SNAPSHOT_CANCEL writtenBytes=${partial.second} completeBytes=${baseline.first} partialRemoved=true")
+            }finally{
+                observer.stopWatching()
+                withContext(NonCancellable){
+                    generation.cancelAndJoin()
+                    // A racing successful snapshot is a test failure, but its owned file still needs closing.
+                    if(!generation.isCancelled)runCatching{generation.await().close()}
+                }
+            }
+            assertEquals(baseline.second,canonical(s))
+            val name=checkNotNull(s.openHelper.databaseName)
+            s.close()
+            val reopened=NoteDatabase.open(context,name)
+            try{
+                // canonical() performs a fresh snapshot + full inspect after actual Room close/reopen.
+                assertEquals(baseline.second,canonical(reopened))
+                assertTrue(scratch.listFiles().orEmpty().isEmpty())
+                println("SNAPSHOT_CANCEL authorCanonical=${baseline.second} closeReopenAndFreshSnapshotInspect=true")
+            }finally{reopened.close()}
+        }finally{
+            // Test-owned UUID cache only. Assertions above happen before this failure cleanup.
+            assertTrue(cache.deleteRecursively())
+        }
+    }}
 }

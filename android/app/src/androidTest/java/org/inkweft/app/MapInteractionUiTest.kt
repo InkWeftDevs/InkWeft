@@ -28,7 +28,7 @@ class MapInteractionUiTest {
  private val app get()=compose.activity.application as InkWeftApplication
  private var observedUi="No UI observation yet"
  private var failureCaptured=false
- private fun recordUi(value:String){observedUi=(observedUi+"\n"+value).takeLast(16_000)}
+ private fun recordUi(value:String){observedUi=(observedUi+"\n"+value).takeLast(16_000);android.util.Log.i("InkWeftMapTest",value)}
  // Inner to the Compose rule: capture while the actual Activity/windows are still alive.
  @get:Rule(order=1) val failureEvidence=object:org.junit.rules.TestWatcher(){
   override fun starting(description:org.junit.runner.Description){observedUi="test=${description.methodName}";failureCaptured=false}
@@ -176,6 +176,118 @@ class MapInteractionUiTest {
   tap("study-management");compose.onNodeWithTag("study-map").assertExists();shot("map-menu");compose.onNodeWithTag("study-tab-2").performScrollTo().performClick()
   select(f.root,true);compose.onNodeWithTag("node-title-editor").assertIsDisplayed();compose.onNodeWithTag("study-map").performTouchInput{click(Offset(10f,10f))};compose.onNodeWithTag("node-title-editor").assertIsDisplayed();tap("node-title-cancel")
   compose.onNodeWithTag("study-map").performTouchInput{click(Offset(10f,10f))};compose.onNodeWithTag("node-actions").assertDoesNotExist()
+ }
+ @Test fun portraitCardInspectorKeepsCapacitySelectionNeighborsAndLongTextVisible()=checkPortraitCardInspector(1f)
+ @Test fun portraitCardInspectorAtLargeFontKeepsCapacitySelectionNeighborsAndLongTextVisible()=checkPortraitCardInspector(1.6f)
+ private fun checkPortraitCardInspector(font:Float){
+  require(app.packageName.endsWith(".insertion")){"Synthetic closeout verification requires the isolated insertion application"}
+  val f=fixture();val neighbor=id()
+  val title="条件概率的完整推导与边界：先核对已知条件，再比较独立事件和互斥事件，保留每一步分母变化及其适用范围"
+  val body=f.body+"\n正文末尾定位标记"
+  runBlocking{
+   val card=app.study.cards(f.book).first().single{it.id==f.card}
+   app.study.submit(StudyCommand(id(),f.book,StudyAction.EDIT,cardId=f.card,expectedRevision=card.revision,title=title,body=body))
+   app.study.submit(StudyCommand(id(),f.book,StudyAction.REUSE,cardId=f.card,nodeId=neighbor,x=40.0,y=350.0))
+   repeat(79){i->app.study.submit(StudyCommand(id(),f.book,StudyAction.REUSE,cardId=f.card,nodeId=id(),x=2000.0+(i%6)*280,y=1200.0+(i/6)*240))}
+  }
+  compose.waitUntil(15_000){vm(f.book).ui.value.nodes.count{!it.removed}==104&&vm(f.book).ui.value.cards.any{it.id==f.card&&it.title==title}}
+  val beforeNodes=runBlocking{app.study.nodes(f.book).first()};val beforeCards=runBlocking{app.study.cards(f.book).first()}
+  val beforeSource=runBlocking{app.study.source(f.card)}
+  val automation=androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().uiAutomation
+  fun shell(command:String)=android.os.ParcelFileDescriptor.AutoCloseInputStream(automation.executeShellCommand(command)).bufferedReader().use{it.readText().trim()}
+  val oldSize=Regex("Override size:\\s*(\\d+x\\d+)").find(shell("wm size"))?.groupValues?.get(1)
+  val oldDensity=Regex("Override density:\\s*(\\d+)").find(shell("wm density"))?.groupValues?.get(1)
+  val oldFont=shell("settings get system font_scale")
+  fun bounds(tag:String):androidx.compose.ui.geometry.Rect{
+   val n=compose.onNodeWithTag(tag).assertIsDisplayed().fetchSemanticsNode()
+   return androidx.compose.ui.geometry.Rect(n.positionInRoot.x,n.positionInRoot.y,n.positionInRoot.x+n.size.width,n.positionInRoot.y+n.size.height)
+  }
+  fun inside(child:androidx.compose.ui.geometry.Rect,parent:androidx.compose.ui.geometry.Rect,label:String){
+   recordUi("$label bounds=$child container=$parent")
+   assertTrue("$label must be wholly readable inside its container",child.left>=parent.left-1&&child.top>=parent.top-1&&child.right<=parent.right+1&&child.bottom<=parent.bottom+1)
+  }
+  fun textLayout(node:SemanticsNodeInteraction):androidx.compose.ui.text.TextLayoutResult{
+   val result=mutableListOf<androidx.compose.ui.text.TextLayoutResult>()
+   node.performSemanticsAction(SemanticsActions.GetTextLayoutResult){it(result)}
+   return result.single()
+  }
+  fun wholeText(node:SemanticsNodeInteraction,expected:String,container:androidx.compose.ui.geometry.Rect,label:String){
+   val layout=textLayout(node);val semantics=node.fetchSemanticsNode()
+   val visible=semantics.boundsInRoot.intersect(container)
+   recordUi("$label layout=${layout.size} paragraph=${layout.multiParagraph.width}x${layout.multiParagraph.height} overflow=${layout.hasVisualOverflow} visible=$visible")
+   assertEquals(expected,layout.layoutInput.text.text)
+   assertTrue(layout.lineCount>0);assertFalse(layout.multiParagraph.didExceedMaxLines)
+   assertEquals(0,layout.getLineStart(0));assertEquals(expected.length,layout.getLineEnd(layout.lineCount-1,false))
+   for(line in 0 until layout.lineCount){
+    assertFalse("$label line $line must not be ellipsized",layout.isLineEllipsized(line))
+    assertTrue(expected.substring(layout.getLineEnd(line,true),layout.getLineEnd(line,false)).all{it.isWhitespace()})
+    val p=semantics.positionInRoot
+    val row=androidx.compose.ui.geometry.Rect(p.x+layout.getLineLeft(line),p.y+layout.getLineTop(line),p.x+layout.getLineRight(line),p.y+layout.getLineBottom(line))
+    recordUi("$label line=$line start=${layout.getLineStart(line)} end=${layout.getLineEnd(line,false)} visibleEnd=${layout.getLineEnd(line,true)}")
+    // TextLayoutResult compares float paragraph dimensions with rounded Int sizes; allow one physical pixel only.
+    inside(row,visible,"$label line $line")
+   }
+  }
+  try{
+   shell("wm size 1680x2560");shell("wm density 320")
+   run{
+    shell("settings put system font_scale $font")
+    recreateAndAwaitStudy(f,f.root,null,"portrait-card-$font")
+    compose.waitUntil(15_000){val c=compose.activity.resources.configuration;kotlin.math.abs(c.screenWidthDp-840)<=4&&kotlin.math.abs(c.fontScale-font)<.02f}
+    recordUi("portrait font=$font select start");select(f.root);recordUi("portrait font=$font select complete")
+    val original=compose.runOnIdle{map().snapshotViewport()};val originalMap=bounds("study-map")
+    recordUi("portrait font=$font before screenshot");shot("portrait-card-$font-before");recordUi("portrait font=$font screenshot complete")
+    tap("node-more");tap("node-view-content")
+    val inspector=bounds("study-card-details");val primary=bounds("study-primary-content");val canvas=bounds("study-map")
+    val minimumMap=320*compose.activity.resources.displayMetrics.density
+    assertTrue("Portrait must retain a readable side-by-side map",canvas.width>=minimumMap-1&&canvas.width<originalMap.width)
+    assertTrue("Inspector must not overlay the primary content",primary.right<=inspector.left+1)
+    inside(canvas,primary,"native map")
+    inside(bounds("capacity-warning"),primary,"capacity warning")
+    val warningText=compose.onNodeWithText("本图活动主题接近上限 · 容量与整理",useUnmergedTree=true)
+    wholeText(warningText,"本图活动主题接近上限 · 容量与整理",primary.intersect(bounds("capacity-warning")),"capacity text")
+    val warningNode=warningText.fetchSemanticsNode()
+    inside(androidx.compose.ui.geometry.Rect(warningNode.positionInRoot.x,warningNode.positionInRoot.y,
+     warningNode.positionInRoot.x+warningNode.size.width,warningNode.positionInRoot.y+warningNode.size.height),primary,"complete capacity text")
+    compose.runOnIdle{
+     val v=map();assertEquals(f.root,v.selectedNodeId)
+     for(node in listOf(f.root,neighbor)){
+      val b=checkNotNull(v.nodeBounds(node));recordUi("font=$font nativeNode=$node bounds=$b viewport=${v.width}x${v.height}")
+      assertTrue("Selected and neighboring card must remain wholly inside the real map viewport",b.left>=-1&&b.top>=-1&&b.right<=v.width+1&&b.bottom<=v.height+1)
+     }
+     assertEquals("Temporary reader camera must not replace the user's return camera",original,vm(f.book).viewports["main"])
+    }
+    inside(bounds("card-full-title"),bounds("card-reading-content"),"complete long Chinese title")
+    wholeText(compose.onNodeWithTag("card-full-title"),title,bounds("card-reading-content"),"long title")
+    shot("portrait-card-$font-title")
+    val reader=compose.onNodeWithTag("card-reading-content")
+    val bodyNode=compose.onNodeWithTag("card-full-body");bodyNode.assertTextEquals(body)
+    val bodyLayout=textLayout(bodyNode);val lastLine=bodyLayout.lineCount-1
+    val tailBottom=bodyNode.fetchSemanticsNode().positionInRoot.y+bodyLayout.getLineBottom(lastLine)
+    val scrollToTail=(tailBottom-bounds("card-reading-content").bottom+16*compose.activity.resources.displayMetrics.density).coerceAtLeast(0f)
+    reader.performSemanticsAction(SemanticsActions.ScrollBy){it(0f,scrollToTail)}
+    val bodyPosition=bodyNode.fetchSemanticsNode().positionInRoot
+    inside(androidx.compose.ui.geometry.Rect(bodyPosition.x,bodyPosition.y+bodyLayout.getLineTop(lastLine),
+     bodyPosition.x+bodyLayout.getLineRight(lastLine),bodyPosition.y+bodyLayout.getLineBottom(lastLine)),bounds("card-reading-content"),"body end marker")
+    shot("portrait-card-$font-body-end")
+    tap("card-jump-annotation");inside(bounds("card-annotation-heading"),bounds("card-reading-content"),"annotation heading")
+    tap("card-jump-source");inside(bounds("card-source-heading"),bounds("card-reading-content"),"source heading")
+    shot("portrait-card-$font-source")
+    tap("card-back")
+    compose.onNodeWithTag("study-card-details").assertDoesNotExist()
+    assertEquals(originalMap,bounds("study-map"))
+    compose.runOnIdle{assertEquals(original,map().snapshotViewport());assertEquals(f.root,map().selectedNodeId)}
+   }
+   assertEquals(beforeNodes,runBlocking{app.study.nodes(f.book).first()});assertEquals(beforeCards,runBlocking{app.study.cards(f.book).first()})
+   val afterSource=runBlocking{app.study.source(f.card)}
+   assertNotNull(beforeSource);assertNotNull(afterSource)
+   assertEquals(beforeSource!!.copy(snapshot=afterSource!!.snapshot),afterSource)
+   assertArrayEquals(beforeSource.snapshot,afterSource.snapshot)
+  }finally{
+   shell(if(oldSize==null)"wm size reset"else"wm size $oldSize");shell(if(oldDensity==null)"wm density reset"else"wm density $oldDensity")
+   shell(if(oldFont=="null")"settings delete system font_scale"else"settings put system font_scale $oldFont")
+   compose.activityRule.scenario.recreate()
+  }
  }
  @Test fun provisionalChildAndSiblingCancelWithoutOrphans(){
   val f=fixture();select(f.root);tap("node-add-child");compose.onNodeWithTag("study-card-body").assertDoesNotExist();compose.onNodeWithTag("node-title-input").performTextInput("临时分支");tap("node-title-cancel")

@@ -150,6 +150,35 @@ class ImageRenderingTest {
         ins.runOnMainSync{assertEquals(2,renderer!!.decodeCount)}
     }
 
+    @Test fun obsoleteRegionMakesRoomForItsReplacementWithoutExternalPressureRelease(){
+        val original=source(1000,1000);val o=item(original)
+        assertTrue("Use a small owned PNG lease so this reaches bitmap admission",original.size.toLong()*3<256*1024)
+        request(o,original,scale=2.5)
+        val held=Any();lateinit var old:ImageFrame
+        try{
+            ins.runOnMainSync{
+                old=checkNotNull(renderer!!.frame(o));assertEquals(4_000_000,old.bitmap.allocationByteCount)
+                RenderResources.trim()
+                val before=RenderResources.snapshot().getValue("totalBytes");val free=3L*1024*1024
+                assertTrue(before<RenderResources.BUDGET-free)
+                RenderResources.track(held,RenderResources.BUDGET-before-free,"fixture","original-image-replacement-pressure",RenderResources.Role.ACTIVE)
+                renderer!!.request(listOf(o),CanvasBounds(4.0,2.0,396.0,198.0),2.5,readSize={original.size}){original}
+            }
+            // The pressure owner stays pinned until finally; only the obsolete region can make room.
+            waitUntil("An obsolete region must not permanently block its own replacement"){renderer!!.decodeCount==2&&!renderer!!.pending}
+            ins.runOnMainSync{
+                val next=checkNotNull(renderer!!.frame(o))
+                assertNotSame(old,next);assertEquals(original.sha256,next.source)
+                assertEquals(1000,next.rawWidth);assertEquals(1000,next.rawHeight)
+                assertTrue(next.bitmap.width in 980..984);assertTrue(next.bitmap.height in 980..984)
+                assertEquals(Color.RED,next.bitmap.getPixel(next.bitmap.width/2,next.bitmap.height/2))
+                assertFalse("Published frames may still be held by a display list",old.bitmap.isRecycled)
+                assertFalse(renderer!!.budgetDeferred)
+                assertTrue(RenderResources.snapshot().getValue("totalBytes")<=RenderResources.BUDGET)
+            }
+        }finally{RenderResources.release(held,"original-image-replacement-pressure")}
+    }
+
     @Test fun explicitFileSourcesRenderWithoutLookingUpAnApplicationPage(){
         val original=source(2000,1000);val o=item(original)
         lateinit var view:InkCanvasView

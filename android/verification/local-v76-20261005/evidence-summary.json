@@ -1,0 +1,374 @@
+{
+  "status": "AUTOMATED_SCOPE_PASSED_HUMAN_ACCEPTANCE_PENDING",
+  "utc": "2026-10-05T15:53:55.485363+00:00",
+  "productionCommit": "105046acfab3a5b515e03371c0bc5d8cb4c472d8",
+  "productionTree": "aac74955904dea600f0d9e32a4c73521fb913bce",
+  "versionCode": 76,
+  "roomVersion": 16,
+  "deviceModel": "iPA2673",
+  "androidVersion": 16,
+  "artifacts": [
+    {
+      "kind": "app",
+      "package": "org.inkweft.app.a0.insertion",
+      "sha256": "63517e8d35ab4beb5d0a9f60f719de707e8d342c2461c07536f366dc286a4f94",
+      "bytes": 148499654,
+      "versionCode": 76,
+      "versionName": "0.0.76-v74-closeout",
+      "certificateSha256": "18e67dbce88152dbe4d4821b5a3a513a409a3df4eac9261f4c11126c36e43969",
+      "signatureVerified": true,
+      "zipCrc": "PASS",
+      "zipalign16k": "PASS",
+      "sourceCommitField": "105046acfab3a5b515e03371c0bc5d8cb4c472d8",
+      "buildCommitField": "105046acfab3a5b515e03371c0bc5d8cb4c472d8"
+    },
+    {
+      "kind": "app-test",
+      "package": "org.inkweft.app.a0.insertion.test",
+      "sha256": "953a44878376b57f62771835a96bc7c1c646b69ad030696482c153fb488e29f5",
+      "bytes": 15552083,
+      "versionCode": null,
+      "versionName": null,
+      "certificateSha256": "18e67dbce88152dbe4d4821b5a3a513a409a3df4eac9261f4c11126c36e43969",
+      "signatureVerified": true,
+      "zipCrc": "PASS",
+      "zipalign16k": "PASS",
+      "sourceCommitField": "105046acfab3a5b515e03371c0bc5d8cb4c472d8",
+      "buildCommitField": "105046acfab3a5b515e03371c0bc5d8cb4c472d8"
+    },
+    {
+      "kind": "app",
+      "package": "org.inkweft.app.a0.workspace",
+      "sha256": "f25139c1d14004fe16d0f5a546503c9c2d87f43504e105e9a30311f05896066a",
+      "bytes": 148499654,
+      "versionCode": 76,
+      "versionName": "0.0.76-v74-closeout",
+      "certificateSha256": "18e67dbce88152dbe4d4821b5a3a513a409a3df4eac9261f4c11126c36e43969",
+      "signatureVerified": true,
+      "zipCrc": "PASS",
+      "zipalign16k": "PASS",
+      "sourceCommitField": "105046acfab3a5b515e03371c0bc5d8cb4c472d8",
+      "buildCommitField": "105046acfab3a5b515e03371c0bc5d8cb4c472d8"
+    },
+    {
+      "kind": "room-test",
+      "package": "org.inkweft.data.test",
+      "sha256": "b3659ff7158e963bdf05b218f619ee575407435a8e442243d79a77f5d27d0e98",
+      "bytes": 14606588,
+      "versionCode": null,
+      "versionName": null,
+      "certificateSha256": "18e67dbce88152dbe4d4821b5a3a513a409a3df4eac9261f4c11126c36e43969",
+      "signatureVerified": true,
+      "zipCrc": "PASS",
+      "zipalign16k": "PASS"
+    },
+    {
+      "kind": "app-test",
+      "package": "org.inkweft.app.a0.insertion.test",
+      "sha256": "5660ad9812c8d83bec4f411aa186158352b0e838aa8b10dd392892341d8d31c6",
+      "bytes": 15552083,
+      "versionCode": null,
+      "versionName": null,
+      "certificateSha256": "18e67dbce88152dbe4d4821b5a3a513a409a3df4eac9261f4c11126c36e43969",
+      "signatureVerified": true,
+      "zipCrc": "PASS",
+      "zipalign16k": "PASS",
+      "sourceCommitField": "105046acfab3a5b515e03371c0bc5d8cb4c472d8",
+      "buildCommitField": "105046acfab3a5b515e03371c0bc5d8cb4c472d8",
+      "testCommit": "57a494bfe552740dcbaf1e379034b6f6252ff827"
+    }
+  ],
+  "candidateUniquePassCount": 14,
+  "candidateMethods": [
+    {
+      "method": "org.inkweft.app.ImageRenderingTest#obsoleteRegionMakesRoomForItsReplacementWithoutExternalPressureRelease",
+      "status": "PASS",
+      "productionCommit": "105046acfab3a5b515e03371c0bc5d8cb4c472d8",
+      "testCommit": "105046acfab3a5b515e03371c0bc5d8cb4c472d8",
+      "installedPackages": {
+        "org.inkweft.app.a0.insertion": "63517e8d35ab4beb5d0a9f60f719de707e8d342c2461c07536f366dc286a4f94",
+        "org.inkweft.app.a0.insertion.test": "953a44878376b57f62771835a96bc7c1c646b69ad030696482c153fb488e29f5",
+        "org.inkweft.app.a0.workspace": "c2107c58f4788af0b7475958132323c8e37fcff12cdbdf91b3712a66fed981d4"
+      },
+      "initialMainLaunches": 1,
+      "elapsedSeconds": 10.375,
+      "rawLogSha256": "c691cdfcf2f686bd3d3cb8ca21f62c5ae330889a1afaca5932b5c350acc98f44",
+      "groupReceiptSha256": "e974f369bf7d4b578285f24c591a98a8a9e487fea5f0a5992415537a2c1b46a1",
+      "localGroup": "v76-render-tests"
+    },
+    {
+      "method": "org.inkweft.app.ImageRenderingTest#budgetPressureRetainsTheOldFrameAndRetriesWhenReleased",
+      "status": "PASS",
+      "productionCommit": "105046acfab3a5b515e03371c0bc5d8cb4c472d8",
+      "testCommit": "105046acfab3a5b515e03371c0bc5d8cb4c472d8",
+      "installedPackages": {
+        "org.inkweft.app.a0.insertion": "63517e8d35ab4beb5d0a9f60f719de707e8d342c2461c07536f366dc286a4f94",
+        "org.inkweft.app.a0.insertion.test": "953a44878376b57f62771835a96bc7c1c646b69ad030696482c153fb488e29f5",
+        "org.inkweft.app.a0.workspace": "c2107c58f4788af0b7475958132323c8e37fcff12cdbdf91b3712a66fed981d4"
+      },
+      "initialMainLaunches": 1,
+      "elapsedSeconds": 10.235,
+      "rawLogSha256": "f171005b31c3456d941ace47c92deccb03a0304ab455d549121c0d6d5da808f9",
+      "groupReceiptSha256": "e974f369bf7d4b578285f24c591a98a8a9e487fea5f0a5992415537a2c1b46a1",
+      "localGroup": "v76-render-tests"
+    },
+    {
+      "method": "org.inkweft.app.ImageRenderingTest#byteReservationPrecedesRepositoryReconstructionAndCancellationReleasesIt",
+      "status": "PASS",
+      "productionCommit": "105046acfab3a5b515e03371c0bc5d8cb4c472d8",
+      "testCommit": "105046acfab3a5b515e03371c0bc5d8cb4c472d8",
+      "installedPackages": {
+        "org.inkweft.app.a0.insertion": "63517e8d35ab4beb5d0a9f60f719de707e8d342c2461c07536f366dc286a4f94",
+        "org.inkweft.app.a0.insertion.test": "953a44878376b57f62771835a96bc7c1c646b69ad030696482c153fb488e29f5",
+        "org.inkweft.app.a0.workspace": "c2107c58f4788af0b7475958132323c8e37fcff12cdbdf91b3712a66fed981d4"
+      },
+      "initialMainLaunches": 1,
+      "elapsedSeconds": 10.172,
+      "rawLogSha256": "48e1aab049cf84fd0c8a4190df18bdcabc53ba3098408563bdc4d2de9d64dd5b",
+      "groupReceiptSha256": "e974f369bf7d4b578285f24c591a98a8a9e487fea5f0a5992415537a2c1b46a1",
+      "localGroup": "v76-render-tests"
+    },
+    {
+      "method": "org.inkweft.app.RenderResourcesTest#replacementAdmissionDoesNotSubtractAnotherOwnersBitmap",
+      "status": "PASS",
+      "productionCommit": "105046acfab3a5b515e03371c0bc5d8cb4c472d8",
+      "testCommit": "105046acfab3a5b515e03371c0bc5d8cb4c472d8",
+      "installedPackages": {
+        "org.inkweft.app.a0.insertion": "63517e8d35ab4beb5d0a9f60f719de707e8d342c2461c07536f366dc286a4f94",
+        "org.inkweft.app.a0.insertion.test": "953a44878376b57f62771835a96bc7c1c646b69ad030696482c153fb488e29f5",
+        "org.inkweft.app.a0.workspace": "c2107c58f4788af0b7475958132323c8e37fcff12cdbdf91b3712a66fed981d4"
+      },
+      "initialMainLaunches": 0,
+      "elapsedSeconds": 9.0,
+      "rawLogSha256": "d1b43c0bdec51c868052dcc4c39e6037080a38077f592b732a2f2dbf3767bfe0",
+      "groupReceiptSha256": "e974f369bf7d4b578285f24c591a98a8a9e487fea5f0a5992415537a2c1b46a1",
+      "localGroup": "v76-render-tests"
+    },
+    {
+      "method": "org.inkweft.app.MapInteractionUiTest#portraitCardInspectorKeepsCapacitySelectionNeighborsAndLongTextVisible",
+      "status": "PASS",
+      "productionCommit": "105046acfab3a5b515e03371c0bc5d8cb4c472d8",
+      "testCommit": "105046acfab3a5b515e03371c0bc5d8cb4c472d8",
+      "installedPackages": {
+        "org.inkweft.app.a0.insertion": "63517e8d35ab4beb5d0a9f60f719de707e8d342c2461c07536f366dc286a4f94",
+        "org.inkweft.app.a0.insertion.test": "953a44878376b57f62771835a96bc7c1c646b69ad030696482c153fb488e29f5",
+        "org.inkweft.app.a0.workspace": "c2107c58f4788af0b7475958132323c8e37fcff12cdbdf91b3712a66fed981d4"
+      },
+      "initialMainLaunches": 1,
+      "elapsedSeconds": 21.531,
+      "rawLogSha256": "5b177aa4625f37bbcd3bd0e8cb2dace30086a30cabcdba78cd7b303b843433af",
+      "groupReceiptSha256": "b8d07f2fd89a52d7ca8e6564ca8ef863b10adc31e3218ec132619ee06bae9fe3",
+      "localGroup": "v76-sidebar-tests"
+    },
+    {
+      "method": "org.inkweft.app.MapInteractionUiTest#portraitCardInspectorAtLargeFontKeepsCapacitySelectionNeighborsAndLongTextVisible",
+      "status": "PASS",
+      "productionCommit": "105046acfab3a5b515e03371c0bc5d8cb4c472d8",
+      "testCommit": "105046acfab3a5b515e03371c0bc5d8cb4c472d8",
+      "installedPackages": {
+        "org.inkweft.app.a0.insertion": "63517e8d35ab4beb5d0a9f60f719de707e8d342c2461c07536f366dc286a4f94",
+        "org.inkweft.app.a0.insertion.test": "953a44878376b57f62771835a96bc7c1c646b69ad030696482c153fb488e29f5",
+        "org.inkweft.app.a0.workspace": "c2107c58f4788af0b7475958132323c8e37fcff12cdbdf91b3712a66fed981d4"
+      },
+      "initialMainLaunches": 1,
+      "elapsedSeconds": 21.859,
+      "rawLogSha256": "bf6077dc653d02bf9a98a3e88c84bc0c8131809239fde1d70662895c019063a7",
+      "groupReceiptSha256": "b8d07f2fd89a52d7ca8e6564ca8ef863b10adc31e3218ec132619ee06bae9fe3",
+      "localGroup": "v76-sidebar-tests"
+    },
+    {
+      "method": "org.inkweft.app.NotebookNavigationUiTest#continuousManualViewportSurvivesOverviewResize",
+      "status": "PASS",
+      "productionCommit": "105046acfab3a5b515e03371c0bc5d8cb4c472d8",
+      "testCommit": "105046acfab3a5b515e03371c0bc5d8cb4c472d8",
+      "installedPackages": {
+        "org.inkweft.app.a0.insertion": "63517e8d35ab4beb5d0a9f60f719de707e8d342c2461c07536f366dc286a4f94",
+        "org.inkweft.app.a0.insertion.test": "953a44878376b57f62771835a96bc7c1c646b69ad030696482c153fb488e29f5",
+        "org.inkweft.app.a0.workspace": "c2107c58f4788af0b7475958132323c8e37fcff12cdbdf91b3712a66fed981d4"
+      },
+      "initialMainLaunches": 1,
+      "elapsedSeconds": 10.547,
+      "rawLogSha256": "92571a3567a47ec92a834a25bfeacd09c7e79f8d7744abb130b088d43d3b8d2e",
+      "groupReceiptSha256": "9ead54ec995595f20313a432993fbb3ae26bff8e8e34f109224fd5d881ce07ee",
+      "localGroup": "v76-navigation-only"
+    },
+    {
+      "method": "org.inkweft.app.NotebookNavigationUiTest#continuousCrossBookReturnRestoresNonTopViewport",
+      "status": "PASS",
+      "productionCommit": "105046acfab3a5b515e03371c0bc5d8cb4c472d8",
+      "testCommit": "105046acfab3a5b515e03371c0bc5d8cb4c472d8",
+      "installedPackages": {
+        "org.inkweft.app.a0.insertion": "63517e8d35ab4beb5d0a9f60f719de707e8d342c2461c07536f366dc286a4f94",
+        "org.inkweft.app.a0.insertion.test": "953a44878376b57f62771835a96bc7c1c646b69ad030696482c153fb488e29f5",
+        "org.inkweft.app.a0.workspace": "c2107c58f4788af0b7475958132323c8e37fcff12cdbdf91b3712a66fed981d4"
+      },
+      "initialMainLaunches": 1,
+      "elapsedSeconds": 11.187,
+      "rawLogSha256": "01748dfa7b321f65692a1e89bd2fc45426eb2831b9224d66f04757bddcf462b0",
+      "groupReceiptSha256": "9ead54ec995595f20313a432993fbb3ae26bff8e8e34f109224fd5d881ce07ee",
+      "localGroup": "v76-navigation-only"
+    },
+    {
+      "method": "org.inkweft.app.NotebookNavigationUiTest#continuousOverviewJumpKeepsRequestedPageUntilScrollingSettles",
+      "status": "PASS",
+      "productionCommit": "105046acfab3a5b515e03371c0bc5d8cb4c472d8",
+      "testCommit": "105046acfab3a5b515e03371c0bc5d8cb4c472d8",
+      "installedPackages": {
+        "org.inkweft.app.a0.insertion": "63517e8d35ab4beb5d0a9f60f719de707e8d342c2461c07536f366dc286a4f94",
+        "org.inkweft.app.a0.insertion.test": "953a44878376b57f62771835a96bc7c1c646b69ad030696482c153fb488e29f5",
+        "org.inkweft.app.a0.workspace": "c2107c58f4788af0b7475958132323c8e37fcff12cdbdf91b3712a66fed981d4"
+      },
+      "initialMainLaunches": 1,
+      "elapsedSeconds": 12.688,
+      "rawLogSha256": "99d7527baed4ad513b2633568d31aaf4a995b3c8909972629636ea9f761a6f48",
+      "groupReceiptSha256": "9ead54ec995595f20313a432993fbb3ae26bff8e8e34f109224fd5d881ce07ee",
+      "localGroup": "v76-navigation-only"
+    },
+    {
+      "method": "org.inkweft.app.NotebookNavigationUiTest#realEditorAppendPersistsOneBlankPageAndRejectsStaleTail",
+      "status": "PASS",
+      "productionCommit": "105046acfab3a5b515e03371c0bc5d8cb4c472d8",
+      "testCommit": "105046acfab3a5b515e03371c0bc5d8cb4c472d8",
+      "installedPackages": {
+        "org.inkweft.app.a0.insertion": "63517e8d35ab4beb5d0a9f60f719de707e8d342c2461c07536f366dc286a4f94",
+        "org.inkweft.app.a0.insertion.test": "953a44878376b57f62771835a96bc7c1c646b69ad030696482c153fb488e29f5",
+        "org.inkweft.app.a0.workspace": "c2107c58f4788af0b7475958132323c8e37fcff12cdbdf91b3712a66fed981d4"
+      },
+      "initialMainLaunches": 1,
+      "elapsedSeconds": 13.046,
+      "rawLogSha256": "bff8f49f7217048fbf13e7b3f322866776d1bcf7efeb79f2a758840044ec38e3",
+      "groupReceiptSha256": "9ead54ec995595f20313a432993fbb3ae26bff8e8e34f109224fd5d881ce07ee",
+      "localGroup": "v76-navigation-only"
+    },
+    {
+      "method": "org.inkweft.app.ReadingToolsUiTest#continuousReadingUsesExistingExcerptMapAndHeaderNavigationWithoutAuthorWrites",
+      "status": "PASS",
+      "productionCommit": "105046acfab3a5b515e03371c0bc5d8cb4c472d8",
+      "testCommit": "105046acfab3a5b515e03371c0bc5d8cb4c472d8",
+      "installedPackages": {
+        "org.inkweft.app.a0.insertion": "63517e8d35ab4beb5d0a9f60f719de707e8d342c2461c07536f366dc286a4f94",
+        "org.inkweft.app.a0.insertion.test": "953a44878376b57f62771835a96bc7c1c646b69ad030696482c153fb488e29f5",
+        "org.inkweft.app.a0.workspace": "c2107c58f4788af0b7475958132323c8e37fcff12cdbdf91b3712a66fed981d4"
+      },
+      "initialMainLaunches": 1,
+      "elapsedSeconds": 18.672,
+      "rawLogSha256": "d83302adeb11de86556402d82dbd838b152b15114cc19ab4a58bbfa96394822b",
+      "groupReceiptSha256": "9ead54ec995595f20313a432993fbb3ae26bff8e8e34f109224fd5d881ce07ee",
+      "localGroup": "v76-navigation-only"
+    },
+    {
+      "method": "org.inkweft.app.ContinuousWritingUiTest#continuousSeamHasNoGapAndOneGesturePersistsOnBothSides",
+      "status": "PASS",
+      "productionCommit": "105046acfab3a5b515e03371c0bc5d8cb4c472d8",
+      "testCommit": "105046acfab3a5b515e03371c0bc5d8cb4c472d8",
+      "installedPackages": {
+        "org.inkweft.app.a0.insertion": "63517e8d35ab4beb5d0a9f60f719de707e8d342c2461c07536f366dc286a4f94",
+        "org.inkweft.app.a0.insertion.test": "953a44878376b57f62771835a96bc7c1c646b69ad030696482c153fb488e29f5",
+        "org.inkweft.app.a0.workspace": "c2107c58f4788af0b7475958132323c8e37fcff12cdbdf91b3712a66fed981d4"
+      },
+      "initialMainLaunches": 1,
+      "elapsedSeconds": 11.266,
+      "rawLogSha256": "fee02092bf64354cbb4457e13b81b11191db2fd5940afcf661892f143c18c29d",
+      "groupReceiptSha256": "9ead54ec995595f20313a432993fbb3ae26bff8e8e34f109224fd5d881ce07ee",
+      "localGroup": "v76-navigation-only"
+    },
+    {
+      "method": "org.inkweft.data.LibraryBackupRepositoryTest#cancellingWrittenSnapshotRemovesPartialAndPreservesAuthorLibrary",
+      "status": "PASS",
+      "productionCommit": "105046acfab3a5b515e03371c0bc5d8cb4c472d8",
+      "testCommit": "105046acfab3a5b515e03371c0bc5d8cb4c472d8",
+      "installedPackages": {
+        "org.inkweft.app.a0.insertion": "63517e8d35ab4beb5d0a9f60f719de707e8d342c2461c07536f366dc286a4f94",
+        "org.inkweft.app.a0.insertion.test": "953a44878376b57f62771835a96bc7c1c646b69ad030696482c153fb488e29f5",
+        "org.inkweft.app.a0.workspace": "c2107c58f4788af0b7475958132323c8e37fcff12cdbdf91b3712a66fed981d4",
+        "org.inkweft.data.test": "b3659ff7158e963bdf05b218f619ee575407435a8e442243d79a77f5d27d0e98"
+      },
+      "initialMainLaunches": 0,
+      "elapsedSeconds": 11.593,
+      "rawLogSha256": "3989dca41874a9e5dbbbc79645fd7fab83704226c6363eaa1884037ab1979d89",
+      "groupReceiptSha256": "7f22db3a7930d856322a0af8d253aa9e04d80223092c5f0a7cfeebb25285ed31",
+      "localGroup": "v76-backup-cancel"
+    },
+    {
+      "method": "org.inkweft.app.SourceFocusVisibilityUiTest#originalRightDockAndOriginalMinimizedSurviveTemporarySourcePresentation",
+      "status": "PASS",
+      "productionCommit": "105046acfab3a5b515e03371c0bc5d8cb4c472d8",
+      "testCommit": "57a494bfe552740dcbaf1e379034b6f6252ff827",
+      "installedPackages": {
+        "org.inkweft.app.a0.insertion": "63517e8d35ab4beb5d0a9f60f719de707e8d342c2461c07536f366dc286a4f94",
+        "org.inkweft.app.a0.insertion.test": "5660ad9812c8d83bec4f411aa186158352b0e838aa8b10dd392892341d8d31c6",
+        "org.inkweft.app.a0.workspace": "c2107c58f4788af0b7475958132323c8e37fcff12cdbdf91b3712a66fed981d4",
+        "org.inkweft.data.test": "b3659ff7158e963bdf05b218f619ee575407435a8e442243d79a77f5d27d0e98"
+      },
+      "initialMainLaunches": 1,
+      "elapsedSeconds": 18.578,
+      "rawLogSha256": "781372b01430acdceefe145a1489fb2f39d5e93fd5d5c16f3abe3c0daf22d128",
+      "groupReceiptSha256": "352f97601c3f42b2fa8cbe5946b4e8d67cecc609c118abe1cdd4ce41aa9e362a",
+      "localGroup": "v76-camera-return-navigation"
+    }
+  ],
+  "old69Recovery": {
+    "count": 5,
+    "sourceIdentity": {
+      "runnerSourceCommit": "84fa32e7f59d979bd8faf54c33ca1b2efd27d7ad",
+      "currentCommittedBaseline": "050edf0224c61c9958bbd4c10bcbcde9465787fa",
+      "storageAndSelectedTestSourcesUnchanged": true,
+      "scope": "Fresh on-device isolated database/checkpoint and stream/transaction fault injection plus database close/reopen. Not physical power-loss or a new V75 Room build."
+    },
+    "methods": [
+      {
+        "method": "org.inkweft.data.InkCheckpointTest#checkpointCrashCutsKeepOneIdentityAndSealDeduplicates",
+        "status": "PASS",
+        "initialMainLaunches": 0,
+        "rawSha256": "763e22e4c42cb0e0088f1111629013c8cf0fbae08be3a6294f37785e394b9fdf"
+      },
+      {
+        "method": "org.inkweft.data.LibraryBackupRepositoryTest#streamReadFailureOnlyAffectsIsolatedStage",
+        "status": "PASS",
+        "initialMainLaunches": 0,
+        "rawSha256": "7af3351b37f73f7ebd641ea334e63e0de677a9de82162c4f8ea11bb808e43209"
+      },
+      {
+        "method": "org.inkweft.data.LibraryBackupRepositoryTest#preCommitFailureRollsBackAllLiveTables",
+        "status": "PASS",
+        "initialMainLaunches": 0,
+        "rawSha256": "9bb0367bf8aa35a47d7aa8f4496fe0429bd08cb23633fa42a21dd12bc37aaf35"
+      },
+      {
+        "method": "org.inkweft.data.LibraryBackupRepositoryTest#lostAcknowledgementReusesOriginalIdentities",
+        "status": "PASS",
+        "initialMainLaunches": 0,
+        "rawSha256": "18ee317ebdcd5882a7a463c8106da3f13bc81f30013e8b76ca4dca88151dd93d"
+      },
+      {
+        "method": "org.inkweft.data.LibraryBackupRepositoryTest#restoredRecordsRemainAfterRealCloseAndReopen",
+        "status": "PASS",
+        "initialMainLaunches": 0,
+        "rawSha256": "01e7493aa334f886b590234e8d329efeb1e39beecc2eb0b39b3a4dec8e5c9183"
+      }
+    ]
+  },
+  "evidenceSha256": {
+    "v74-starting-state.json": "aa66935fa9b199f52cc5b39d359f05005900ee9e1ea9f335745aead5d7087070",
+    "v74-source-commit.json": "9c049d472dc8fe691ede4c58dab3e5e84e0714ec2ea0950086c3c3bcdbf61f83",
+    "candidate-v76/checks/lint-receipt.json": "8886cbb354f6de9d6eb29ffaba51a3ed6d1d4ab1a6a79939ec1bff453d0d10a9",
+    "candidate-v76/analysis/image-probe-comparison.json": "be68ebefaf03482c55a9a33f852fa96d5bb6d65a82662e386d8367d45f213e32",
+    "physical-synthetic/final-flow-receipt.json": "c7905204f28cf96a3aec1cd9822c76510fc98fbceba3f9dcd4f2e429196b5a6d",
+    "physical-synthetic/learning-flow-audit/real-ui-learning-flow-final-receipt.json": "a421404bfe8bc76d8f4cf77d993b54c78689142a9f48b598f849b7d95020e385",
+    "upgrade-results/native-first-open.json": "036e6011bb9a99face133a9b203b707d48c5d9f40a93b6a869f4c7c63885bd03",
+    "upgrade-results/workspace-preservation.json": "ea36803b76ddaa195b30216aa817565c7f0e85a1fd624412b07bfd1842eaba15",
+    "candidate-v76/installations/workspace-verified/receipt.json": "8ad8c27ef04889ad72fd966b7ab0700799ded2533432972d3277f0986647b68b",
+    "final-device-state.json": "2482eebeef42db6b164d7bc920bd594ddd6c4d84b3494611fd881121fe81936f",
+    "cleanup-device-ui.json": "da45a5834a33f845a4ddfad9e312c3796879d5fbcc68f661e95e8a17b7ad2bfe",
+    "cleanup-local-bytecode.json": "e5e8e5a0c5fc6fc893212ac72675e2bc8c144130b7ec897b9eb8de0845a5c427",
+    "upgrade-results/workspace-upgrade-final.json": "b696947eeaa67317c3efba49abbba502f4d3e825713c85553728f4ae56865264",
+    "candidate-v76/analysis/workspace-upgrade-independent-audit.json": "a9252351b892ace1f9f1af5d8c4422770edcae2775171419865fc1bdf0110710",
+    "checklist-sync-receipt.json": "34362315b6d4feee3bed9aa66ad29b36841a473ab72f6edd7b5ad167f79830db"
+  },
+  "localEvidenceRootName": "V74Closeout",
+  "humanPenMinutesCompleted": 0,
+  "humanLearningMinutesCompleted": 0,
+  "oemHiddenThousandStroke": "NOT_RUN_ENVIRONMENT_BLOCKED",
+  "mainWorkspaceUpgrade": "PASS_CONTROLLED_COVER_AND_DATA_PRESERVATION",
+  "cleanupLimit": "Automatic approval review blocked deletion of one 22626-byte task-generated Python cache; retained without retry."
+}

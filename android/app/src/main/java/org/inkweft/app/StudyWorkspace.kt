@@ -781,7 +781,10 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
     },enabled=browseReady&&!hasDraft,modifier=Modifier.fillMaxWidth().heightIn(min=48.dp).testTag("map-portal-back")){
         Text("返回 ${vm.portalReturns.last().title}",maxLines=1,overflow=androidx.compose.ui.text.style.TextOverflow.Ellipsis)
     }
-    Box(Modifier.weight(1f)){
+    BoxWithConstraints(Modifier.weight(1f)){
+    val inspectorWidth=cardInspectorWidth(maxWidth,maxHeight,LocalDensity.current.fontScale)
+    val inspectorBesideMap=compactWindow&&chosenCard!=null&&presentationCardId==null&&reuseCardId==null&&inspectorWidth<maxWidth
+    val inspectorInset=if(inspectorBesideMap)inspectorWidth else 0.dp
     if(templatePicker){
         val installedMaps=rememberTemplateCatalog().filter{it.resource.map!=null}
         Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(12.dp)){
@@ -944,7 +947,7 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
                     runCatching{StudyOrganization.moveSelection(snapshot.state,roots,dx,dy)}.onSuccess{vm.organize(snapshot.state,it)}
                         .onFailure{localMessage="整支超出画布范围，未移动；所有来源与位置保留"}
                 }else localMessage="导图已变化，移动取消；请重新拖动"
-            };v.selectedNodeId=mapSelectedId;v.branchIds=active.mapNotNull{it.parentId}.toSet();v.onToggleBranch=::toggleBranch;v.enabledInput=browseReady;v.authorEditing=editable;v.editingTitle=mapEditingTitle;v.onSelectionBounds={selectedBounds=it};v.expandedNodeId=expandedNodeId;val showScene={v.show(shown,displayCards,hiddenCounts,mapSources,structureCards.map{it.id}.toSet())};val feedback=mapFeedback;if(feedback!=null&&feedback.graph==graph?.graphFingerprint&&(feedback.collapsed==null||feedback.collapsed==mapCollapsed)){mapChangeFeedback=null;v.transitionScene(feedback.nodes,feedback.anchor,showScene)}else showScene();v.showAuthoring(mapAnnotationState);v.setKnowledgeRelations(knowledgeProjection.edges);v.setSourceReading(chrome?.sourceReading==true);mapRevealNodeId?.let{if(if(mapRevealShouldFocus)v.focusNode(it)else v.revealNode(it))vm.revealByMap.remove(mapKey)};v.setCardPresentations(presentations);v.onActive={readLock.guard("$guardKey-gesture",it);dragging=it;controlPulse++;if(it)vm.searchSession?.changedByUser=true};v.onSelect={n->if(vm.selectedByMap[mapKey]!=n?.id)cancelReviewPreparation();vm.selectedByMap[mapKey]=n?.id;nodeMenu=false};v.onEditTitle={n->editTitle(n)};v.onOpenDetails={n->cardById[n.cardId]?.let{openCard(it,n)}};v.onIndent={outdent->if(!hasDraft&&chosenCardId==null&&knowledgeCardId==null&&!reviewVisible&&organizeNodeId==null&&reparentId==null)nodeById[vm.selectedByMap[mapKey]]?.let{organize(it,if(outdent)StudyOrganizationAction.OUTDENT else StudyOrganizationAction.INDENT)}};v.onAddSibling={if(!hasDraft&&chosenCardId==null&&knowledgeCardId==null&&!reviewVisible&&organizeNodeId==null&&reparentId==null)nodeById[vm.selectedByMap[mapKey]]?.let{editTitle(it,true,true)}};v.onMove={n,x,y->if(editable&&readLock.canWrite)graph?.let{snapshot->runCatching{StudyOrganization.move(snapshot.state,n.id,x,y)}.getOrNull()?.let{vm.organize(snapshot.state,it)}}}}},modifier=Modifier.fillMaxSize().then(if(compactWindow)Modifier else Modifier.clip(InkTheme.ToolShape)).testTag("study-map"))}
+            };v.selectedNodeId=mapSelectedId;v.branchIds=active.mapNotNull{it.parentId}.toSet();v.onToggleBranch=::toggleBranch;v.enabledInput=browseReady;v.authorEditing=editable;v.editingTitle=mapEditingTitle;v.onSelectionBounds={selectedBounds=it};v.expandedNodeId=expandedNodeId;val showScene={v.show(shown,displayCards,hiddenCounts,mapSources,structureCards.map{it.id}.toSet())};val feedback=mapFeedback;if(feedback!=null&&feedback.graph==graph?.graphFingerprint&&(feedback.collapsed==null||feedback.collapsed==mapCollapsed)){mapChangeFeedback=null;v.transitionScene(feedback.nodes,feedback.anchor,showScene)}else showScene();v.showAuthoring(mapAnnotationState);v.setKnowledgeRelations(knowledgeProjection.edges);v.setReadingFocus(chrome?.sourceReading==true,inspectorBesideMap);mapRevealNodeId?.let{if(if(mapRevealShouldFocus)v.focusNode(it)else v.revealNode(it))vm.revealByMap.remove(mapKey)};v.setCardPresentations(presentations);v.onActive={readLock.guard("$guardKey-gesture",it);dragging=it;controlPulse++;if(it)vm.searchSession?.changedByUser=true};v.onSelect={n->if(vm.selectedByMap[mapKey]!=n?.id)cancelReviewPreparation();vm.selectedByMap[mapKey]=n?.id;nodeMenu=false};v.onEditTitle={n->editTitle(n)};v.onOpenDetails={n->cardById[n.cardId]?.let{openCard(it,n)}};v.onIndent={outdent->if(!hasDraft&&chosenCardId==null&&knowledgeCardId==null&&!reviewVisible&&organizeNodeId==null&&reparentId==null)nodeById[vm.selectedByMap[mapKey]]?.let{organize(it,if(outdent)StudyOrganizationAction.OUTDENT else StudyOrganizationAction.INDENT)}};v.onAddSibling={if(!hasDraft&&chosenCardId==null&&knowledgeCardId==null&&!reviewVisible&&organizeNodeId==null&&reparentId==null)nodeById[vm.selectedByMap[mapKey]]?.let{editTitle(it,true,true)}};v.onMove={n,x,y->if(editable&&readLock.canWrite)graph?.let{snapshot->runCatching{StudyOrganization.move(snapshot.state,n.id,x,y)}.getOrNull()?.let{vm.organize(snapshot.state,it)}}}}},modifier=Modifier.fillMaxSize().then(if(compactWindow)Modifier else Modifier.clip(InkTheme.ToolShape)).testTag("study-map"))}
                 val selected=nodeById[vm.selectedByMap[mapKey]]
                 val density=LocalDensity.current
                 var overlaySize by remember{mutableStateOf(IntSize.Zero)}
@@ -1140,7 +1143,7 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
                 else if(focusId==null)Text("${shown.size} / ${active.size} 个主题",Modifier.weight(1f),style=MaterialTheme.typography.labelSmall,color=Quiet)
             }
         }
-        Surface(Modifier.fillMaxSize(),shape=RoundedCornerShape(if(compactWindow)0.dp else 20.dp),color=Color.White,border=if(compactWindow)null else BorderStroke(1.dp,Line)){Column(Modifier.fillMaxSize().padding(if(compactWindow)4.dp else 16.dp)){
+        Surface(Modifier.fillMaxSize().padding(end=inspectorInset).testTag("study-primary-content"),shape=RoundedCornerShape(if(compactWindow)0.dp else 20.dp),color=Color.White,border=if(compactWindow)null else BorderStroke(1.dp,Line)){Column(Modifier.fillMaxSize().padding(if(compactWindow)4.dp else 16.dp)){
             studyHeaderContent()
             if(tab==2)studyMapContent()else studyListContent()
             studyFooterContent()
@@ -1250,7 +1253,7 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
                 else anchor.bringIntoView(Rect(0f,0f,1f,detailScroll.viewportSize.toFloat()))
             }
         }
-        CardInspector(compactWindow,onDismissRequest={if(!resolutionPending){navigation.cancelCardSource();chosenCardId=null;chosenNodeId=null;inspectSource=false}else localMessage="请先核对这次撤销，再离开当前卡片"},modifier=Modifier.testTag("study-card-details"),containerColor=MaterialTheme.colorScheme.surface,title={Column{
+        CardInspector(compactWindow,onDismissRequest={if(!resolutionPending){navigation.cancelCardSource();chosenCardId=null;chosenNodeId=null;inspectSource=false}else localMessage="请先核对这次撤销，再离开当前卡片"},modifier=Modifier.testTag("study-card-details"),containerColor=MaterialTheme.colorScheme.surface,panelWidth=inspectorWidth,title={Column{
             Text(if(inspectSource)"摘录来源"else"摘要卡")
             if(!inspectSource)FlowRow(Modifier.fillMaxWidth().testTag("card-section-navigation"),horizontalArrangement=Arrangement.spacedBy(4.dp)){
                 TextButton({showSection()},modifier=Modifier.sizeIn(minWidth=48.dp,minHeight=48.dp).testTag("card-jump-body").describedAs("定位到正文")){Text("正文")}
@@ -1405,7 +1408,7 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
     if(insertMap&&onInsertEmbed!=null)scenes.find{it.ref==MapRef(note.base.id,currentMap)}?.let{scene->MapInsertPanel(scene,vm.selectedByMap[mapKey],compactWindow,{insertMap=false},onInsertEmbed)}
     if(contentSearch)MapSearchPanel(MapRef(note.base.id,currentMap),{contentSearch=false}){query,all,hit->cancelReviewPreparation();contentSearch=false;vm.selectTab(2);vm.beginSearch(query,all,hit)}
     portalNodeId?.let{node->key(portalMapKey,node){MapPortalPanel(MapRef(note.base.id,portalMapKey.takeUnless{it=="main"}),node,note.title,scenes,extraRows,compactWindow,browseReady,portalWriter,portalWrite,{portalNodeId=null}){preview->
-        if(!browseReady||titleDraft!=null)false else {cancelReviewPreparation();vm.openPortal(preview,if(chrome?.sourceReading==true)vm.viewports[mapKey]else map?.snapshotViewport(),collapsed,focusId)}
+        if(!browseReady||titleDraft!=null)false else {cancelReviewPreparation();vm.openPortal(preview,map?.readingReturnViewport()?:vm.viewports[mapKey],collapsed,focusId)}
     }}}
     if(reviewVisible)reviewPlan?.let{plan->reviewStateHolder.SaveableStateProvider(reviewSessionKey){
         BranchReviewDialog(plan,{leaveReviewContext()},showCardScope=reviewCardOnly,consultedOriginal=reviewConsultedOriginal,onOriginalGateChanged={originalGate=it},workModes={ready->
@@ -1435,7 +1438,7 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
             mapFontScale==preview.fontScale&&expandedNodeId==preview.expandedNodeId&&measuredNodeSizes()==preview.sizes
         StudyLayoutPreviewDialog(preview,compactWindow,current,{layoutPreview=null}){
             if(current&&readLock.canWrite){
-                layoutCamera=PortalReturn(currentMap,"",vm.selectedByMap[mapKey],map?.snapshotViewport()?:vm.viewports[mapKey],collapsed,focusId).saved()
+                layoutCamera=PortalReturn(currentMap,"",vm.selectedByMap[mapKey],map?.readingReturnViewport()?:vm.viewports[mapKey],collapsed,focusId).saved()
                 layoutUndoGraph=preview.plan.expectedAfterGraph;layoutFitGraph=preview.plan.expectedAfterGraph;layoutRestoreGraph=null
                 mapChangeFeedback=MapChangeFeedback(preview.plan.expectedAfterGraph,null,active.map{it.id}.toSet(),vm.selectedByMap[mapKey])
                 vm.organize(preview.state,preview.plan);layoutPreview=null;localMessage="布局已提交，撤销可恢复原位置和视野。"

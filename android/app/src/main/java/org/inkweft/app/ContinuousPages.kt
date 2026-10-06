@@ -98,15 +98,7 @@ internal data class ContinuousTools(val pen:InkPen,val color:Int,val width:Float
         }
     }}
     SideEffect{onBlocked(pending||groupBlocked||recovering||recoveryProblem!=null);writer.onNotice=onNotice}
-    LaunchedEffect(selected,pages.map{it.id}){
-        val index=pages.indexOfFirst{it.id==selected}
-        if(index>=0&&selected!=reported&&!writing){reported=selected;state.animateScrollToItem(index)}
-    }
     LaunchedEffect(state){snapshotFlow{Triple(state.isScrollInProgress,state.firstVisibleItemIndex,state.firstVisibleItemScrollOffset)}.distinctUntilChanged().collect{if(it.first&&dragged)onScroll()}}
-    LaunchedEffect(state){snapshotFlow{
-        val info=state.layoutInfo;val mid=(info.viewportStartOffset+info.viewportEndOffset)/2
-        info.visibleItemsInfo.minByOrNull{kotlin.math.abs(it.offset+it.size/2-mid)}?.key as? String
-    }.distinctUntilChanged().collect{id->if(id!=null&&gestureOwner==null&&latestPages.any{it.id==id}){reported=id;latestSelect(id)}}}
     var paperZoom by remember(book){mutableFloatStateOf(1f)}
     var paperPanX by remember(book){mutableFloatStateOf(0f)}
     BoxWithConstraints(Modifier.fillMaxSize().clipToBounds()){
@@ -114,6 +106,35 @@ internal data class ContinuousTools(val pen:InkPen,val color:Int,val width:Float
     val viewportWidth=with(density){pageWidth.toPx()}
     val returning by rememberUpdatedState(onReturnViewportRestored)
     val parentHeight=with(density){maxHeight.toPx()}
+    val width=viewportWidth.roundToInt()
+    var handledWidth by remember(book){mutableIntStateOf(width)}
+    var originAnchor by remember(book){mutableStateOf<Pair<Int,Int>?>(null)}
+    val latestWidth by rememberUpdatedState(width)
+    val latestSelected by rememberUpdatedState(selected)
+    val pageIds=pages.map{it.id}
+    // Explicit page selection survives scrolling and panel resizing; manual scrolling reports its settled page.
+    LaunchedEffect(selected,pageIds,width,writing){
+        val index=pages.indexOfFirst{it.id==selected}
+        if(index<0||writing)return@LaunchedEffect
+        if(selected==reported){
+            if(handledWidth==width)return@LaunchedEffect
+            if(originAnchor==null){handledWidth=width;return@LaunchedEffect}
+        }
+        var completed=false
+        try{state.animateScrollToItem(index);completed=true}
+        finally{
+            if(latestSelected==selected&&latestWidth==width&&latestPages.map{it.id}==pageIds){
+                originAnchor=if(completed)state.firstVisibleItemIndex to state.firstVisibleItemScrollOffset else null
+                handledWidth=width;reported=selected
+            }
+        }
+    }
+    LaunchedEffect(state){snapshotFlow{
+        val anchor=state.firstVisibleItemIndex to state.firstVisibleItemScrollOffset
+        if(state.isScrollInProgress||latestSelected!=reported||handledWidth!=latestWidth||anchor==originAnchor)return@snapshotFlow null
+        val info=state.layoutInfo;val mid=(info.viewportStartOffset+info.viewportEndOffset)/2
+        info.visibleItemsInfo.minByOrNull{kotlin.math.abs(it.offset+it.size/2-mid)}?.key as? String
+    }.distinctUntilChanged().collect{id->if(id!=null&&gestureOwner==null&&latestPages.any{it.id==id}){originAnchor=null;reported=id;latestSelect(id)}}}
     val reportViewport by rememberUpdatedState(onViewport)
     LaunchedEffect(state,selected,paperZoom,paperPanX,viewportWidth,parentHeight,writing){
         snapshotFlow{val item=state.layoutInfo.visibleItemsInfo.firstOrNull{it.key==selected};Triple(state.isScrollInProgress,item?.offset,item?.size)}.distinctUntilChanged().collect{(scrolling,offset,_)->
