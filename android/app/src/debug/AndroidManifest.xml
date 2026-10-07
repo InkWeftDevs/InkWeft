@@ -3,5 +3,6 @@
     <application>
         <!-- Isolated, synthetic UX review. No launcher entry or production navigation. -->
         <activity android:name=".EditorDesignReviewActivity" android:exported="false" />
+        <activity android:name=".WritingStudyReviewActivity" android:exported="false" />
     </application>
 </manifest>

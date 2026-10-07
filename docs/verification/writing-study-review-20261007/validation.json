@@ -1,0 +1,75 @@
+{
+  "status": "VISUAL_REVIEW_PENDING",
+  "scope": "One debug-only native landscape writing page; no production or storage changes.",
+  "prior_multi_mode_proposal": "Rejected overall by user; retained for comparison.",
+  "source_base_head": "4164a47a57d751a231f74e4dd844c9f7ae3c25f7",
+  "stacked_base": "ad0e982402edeb0b5d4bcc8ce453b317925f52fa",
+  "reference": {
+    "url": "https://support.goodnotes.com/hc/article_attachments/13919783257615",
+    "pixel_reviewer": "Parent-side independent visual research",
+    "executor_viewed_reference_pixels": false,
+    "implementation_method": "Original Compose composition from parent-verified written design specification",
+    "official_assets_copied": false
+  },
+  "capture": {
+    "file": "writing-study-landscape.png",
+    "dimensions": [
+      1200,
+      800
+    ],
+    "density_dpi": 160,
+    "font_scale": 1.0,
+    "bytes": 123171,
+    "sha256": "b9e94349b44d67dd6835b6237a3240cb7a7d0ad3f29ed2d8665a5e1afd46e87b",
+    "method": "Android UiAutomation.takeScreenshot; original PNG, no cropping or retouching",
+    "content": "Synthetic study notes using existing bundled WenKai font and native Canvas vectors",
+    "executor_visually_inspected": true
+  },
+  "build": {
+    "debug_app": "PASS",
+    "debug_android_test": "PASS",
+    "apk_signature_verification": "PASS",
+    "dependencies": "Existing external verification init script substitutes a complete source-built MuPDF fitz 1.28.5 AAR; production dependency declarations unchanged",
+    "apks_published": false
+  },
+  "instrumentation": {
+    "class": "org.inkweft.app.WritingStudyReviewTest",
+    "passed": 1,
+    "failed": 0,
+    "test_duration_seconds": 63.447,
+    "start_utc": "2026-10-07T07:13:40.584167+00:00",
+    "end_utc": "2026-10-07T07:15:03.173015+00:00",
+    "checks": [
+      "48dp document row and 56dp tool row",
+      "paper occupies at least 95% of available width",
+      "color and stroke width selection, native pointer stroke",
+      "undo, redo and return to clean fixture",
+      "native confirmation of any first-run immersive tutorial; assert tutorial absent before capture"
+    ]
+  },
+  "implementation_sha256": {
+    "android/app/src/debug/java/org/inkweft/app/WritingStudyReviewActivity.kt": "aeb0a980fe5363f4f205ac42fb61ba0f3d9c6a5f33708fab08ac079a32773616",
+    "android/app/src/debug/AndroidManifest.xml": "f938c86ac7667f6a5df373aabbb77800cad8008efc3785db2d379ea1be5c69fe",
+    "android/app/src/androidTestDebug/java/org/inkweft/app/WritingStudyReviewTest.kt": "528a04332b7b4eb047f2e4104c2c305342839eb1b21d75a395ef5e7e7b391c5e"
+  },
+  "local_apk_receipts": [
+    {
+      "name": "app-debug.apk",
+      "bytes": 119422523,
+      "sha256": "8897bbb0a0c1441fdb9fc28ef56dcb303fede3c663f3b8676c83a8a63fe681ce"
+    },
+    {
+      "name": "app-debug-androidTest.apk",
+      "bytes": 15803856,
+      "sha256": "aa6e055f6bcb92f586792dc6f5a7dc07bff01801efac1885df83d81e396fb858"
+    }
+  ],
+  "limits": [
+    "Not UX approval or production integration.",
+    "Only landscape at font scale 1.0; other modes and viewports not expanded.",
+    "Temporary in-memory ink; lasso only shows selection and eraser removes the latest temporary stroke.",
+    "Navigation, search, panels and more entries remain disabled placeholders.",
+    "This debug Activity hides the Android navigation bar; edge swipe temporarily reveals it.",
+    "Software emulator API 36; no handwriting latency or PDF renderer claim."
+  ]
+}
