@@ -1,5 +1,25 @@
 {
   "review_status": "AWAITING_LAYOUT_FEEDBACK",
+  "ux_review": {
+    "status": "NARROW_LAYOUT_NEEDS_REVISION",
+    "user_accepted": false,
+    "review_date": "2026-10-07",
+    "evidence": "Independent parent-thread artifact review of all 10 existing prototype screenshots; no new device run",
+    "landscape_and_800dp_portrait": "More coherent overall composition; user acceptance still pending",
+    "narrow_375px": {
+      "map_content_height_px_approx": 134,
+      "issues": [
+        "Persistent two-row writing tools and comparison controls leave only one full branch node visible; other branches are clipped.",
+        "The source pane shows the introduction, not the definition associated with the selected node."
+      ],
+      "next_debug_options": [
+        "Allow writing properties or contextual tools to collapse and recover content space without automatic fullscreen.",
+        "Expose the selected source definition and sufficient surrounding text in comparison view."
+      ]
+    },
+    "current_action": "Record issues and await user layout feedback; no supplementary preview or production integration in this follow-up",
+    "test_interpretation": "Passing interaction and geometry checks do not establish UX acceptance or readable source context."
+  },
   "production_redesign_integrated": false,
   "baseline": "e9e096b6f64d9b36cf084d3d7ce99d063898bc22",
   "stacked_pr16_head": "ad0e982402edeb0b5d4bcc8ce453b317925f52fa",
