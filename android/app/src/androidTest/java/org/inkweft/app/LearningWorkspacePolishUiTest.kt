@@ -268,7 +268,7 @@ class LearningWorkspacePolishUiTest {
         fullyVisible("ink-select","editor-tool-scroll")
         assertEquals(fingerBounds,compose.onNodeWithTag("quick-finger").getUnclippedBoundsInRoot())
         h.tap("page-layers-open")
-        fullyVisible("layer-heading-${UserLayers.DEFAULT_ID}","page-layers")
+        fullyVisible("layer-select-${UserLayers.DEFAULT_ID}","page-layers")
         compose.onNodeWithTag("current-writable-layer").assertIsDisplayed()
         h.tap("layer-help")
         compose.onNodeWithTag("layer-help-content").performScrollTo().assertIsDisplayed().assertTextContains("隐藏仅影响显示，锁定限制编辑",substring=true)
@@ -288,6 +288,45 @@ class LearningWorkspacePolishUiTest {
         compose.onNodeWithTag("pen-kind-pencil").assertExists()
         assertEquals(caseBefore,listOf("case-x","case-y","case-collapsed").associateWith{prefs.all[it]})
         assertEquals(penBounds,compose.onNodeWithTag("floating-pen-case").getUnclippedBoundsInRoot())
+        assertEquals(viewport,h.paperViewport())
+    }
+
+    @Test fun compactLayersKeepBrowsingSeparateFromWritingAndUndoDeletion()=atNarrow{
+        val f=h.seed();h.tap("exit-readonly");h.tap("study-close")
+        val scope=AuthoringScope.page(f.note.id,f.note.id)
+        val reference=h.authorStamp(f.unrelated.id)
+        val viewport=h.paperViewport()
+        fun layers()=runBlocking{h.app.authoring.read(scope).state.layers}
+        fun saved(predicate:(UserLayers)->Boolean){
+            compose.waitUntil(15_000){predicate(layers())&&runCatching{compose.onNodeWithTag("layer-add").assertIsEnabled()}.isSuccess}
+        }
+        h.tap("page-layers-open");h.tap("layer-add")
+        saved{it.layers.size==2}
+        val added=checkNotNull(layers().currentId)
+        assertNotEquals(UserLayers.DEFAULT_ID,added)
+        for(tag in listOf("layer-visible-$added","layer-lock-$added","layer-more-$added")){
+            compose.onNodeWithTag(tag).assertWidthIsAtLeast(48.dp).assertHeightIsAtLeast(48.dp)
+            fullyVisible(tag,"page-layers")
+        }
+        h.tap("layer-visible-$added");saved{it.currentId==null&&!it.layers.last().visible}
+        h.tap("layer-select-$added")
+        assertNull("Inspecting hidden data must not resume writing",layers().currentId)
+        h.tap("layer-visible-$added");saved{it.layers.last().visible}
+        assertNull("Showing a layer alone must not resume writing",layers().currentId)
+        h.tap("layer-select-$added");saved{it.currentId==added}
+        h.tap("layer-lock-$added");saved{it.currentId==null&&it.layers.last().locked}
+        h.tap("layer-select-${UserLayers.DEFAULT_ID}");saved{it.currentId==UserLayers.DEFAULT_ID}
+        val locked=PageAuthoringCodec.fingerprint(runBlocking{h.app.authoring.read(scope).state})
+        h.tap("layer-select-$added")
+        assertEquals(UserLayers.DEFAULT_ID,layers().currentId)
+        assertEquals(locked,PageAuthoringCodec.fingerprint(runBlocking{h.app.authoring.read(scope).state}))
+        h.tap("layer-lock-$added");saved{!it.layers.last().locked}
+        h.tap("layer-select-$added");saved{it.currentId==added}
+        h.tap("layer-more-$added");h.tap("layer-delete-$added")
+        compose.onNodeWithText("删除空层").performClick();saved{it.layers.size==1}
+        h.tap("layer-undo");saved{it.layers.size==2&&it.currentId==added}
+        screenshot("editor-ui-layers-narrow-undo.png")
+        assertEquals(reference,h.authorStamp(f.unrelated.id))
         assertEquals(viewport,h.paperViewport())
     }
 }

@@ -50,13 +50,14 @@ internal object EditorToolOrder {
     val toolScroll=rememberScrollState()
     val scrollScope=rememberCoroutineScope()
     BoxWithConstraints{
+    val canPageTools=maxWidth>=240.dp
     val visiblePrimary=(EditorToolOrder.primary-if(fullScreen)emptySet()else EditorToolOrder.destinations)+if(maxWidth>=600.dp)setOf("image","text")else emptySet()
     Row(Modifier.testTag("editor-toolbar"),verticalAlignment=Alignment.CenterVertically){
         Row(Modifier.weight(1f).testTag("editor-tool-scroll").horizontalScroll(toolScroll),verticalAlignment=Alignment.CenterVertically){
             order.filter{it in visiblePrimary&&it !in hidden&&it !in EditorToolOrder.fixed}.forEach{key(it){EditorToolSlot(it){content(it){}}}}
         }
         // A full-size paging target makes clipped tools discoverable beside the fixed controls.
-        if(toolScroll.maxValue>0){
+        if(toolScroll.maxValue>0&&canPageTools){
             val forward=toolScroll.canScrollForward
             IconButton({scrollScope.launch{toolScroll.animateScrollTo(if(forward)(toolScroll.value+toolScroll.viewportSize).coerceAtMost(toolScroll.maxValue)else 0)}},
                 modifier=Modifier.size(48.dp).testTag("editor-tools-page").describedAs(if(forward)"查看更多工具"else"返回起始工具")){
@@ -75,7 +76,9 @@ internal object EditorToolOrder {
                     val group=overflow.filter{it in ids}
                     if(group.isNotEmpty()){
                         Text(title,Modifier.padding(horizontal=16.dp,vertical=8.dp),style=MaterialTheme.typography.labelLarge,color=Quiet)
-                        Row(Modifier.widthIn(max=320.dp).horizontalScroll(rememberScrollState())){group.forEach{id->EditorToolSlot(id){content(id){more=false}}}}
+                        CompositionLocalProvider(LocalEditorToolMenu provides true){
+                            group.forEach{id->EditorToolSlot(id){content(id){more=false}}}
+                        }
                     }
                 }
                 DropdownMenuItem(text={Text("自定义快捷栏")},onClick={more=false;customizing=true},modifier=Modifier.testTag("toolbar-customize"))
@@ -134,11 +137,7 @@ internal object EditorToolOrder {
     }
 }
 
-/** Allow visible labels to grow with text size; keep names available on long press. */
-@OptIn(ExperimentalMaterial3Api::class)
+/** Slot identity is stable across saved reordering; the control owns its tooltip. */
 @Composable internal fun EditorToolSlot(id:String,content:@Composable ()->Unit){
-    TooltipBox(positionProvider=TooltipDefaults.rememberPlainTooltipPositionProvider(),
-        tooltip={PlainTooltip{Text(EditorToolOrder.labels[id].orEmpty())}},state=rememberTooltipState()){
-        Box(Modifier.widthIn(min=48.dp).heightIn(min=56.dp),contentAlignment=Alignment.Center){content()}
-    }
+    key(id){Box(Modifier.widthIn(min=48.dp).heightIn(min=48.dp),contentAlignment=Alignment.Center){content()}}
 }

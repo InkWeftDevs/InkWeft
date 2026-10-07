@@ -6,12 +6,15 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.Density
 import androidx.test.core.app.ApplicationProvider
 import org.inkweft.app.ui.designsystem.InkTheme
 import org.junit.After
@@ -30,15 +33,17 @@ class StudyWindowGeometryUiTest {
         prefs.edit().remove("$book-mode").remove("$book-x").remove("$book-y").commit()
     }
 
-    private fun window(mode: StudyWindowMode, initiallyMinimized: Boolean, initiallyReading: Boolean) {
+    private fun window(mode: StudyWindowMode, initiallyMinimized: Boolean, initiallyReading: Boolean,
+        sideBySide: Boolean = true, fontScale: Float = 1f, restoreLegacyFocus: Boolean = false) {
         prefs.edit().putString("$book-mode", mode.name).putFloat("$book-x", 1f)
             .putFloat("$book-y", 1f).commit()
         val minimized = mutableStateOf(initiallyMinimized)
-        val reading = mutableStateOf(initiallyReading)
+        val reading = mutableStateOf(false)
         val opened = mutableStateOf(true)
         compose.setContent {
             InkTheme.Content {
-                BoxWithConstraints(Modifier.widthIn(max = 800.dp).heightIn(max = 600.dp).fillMaxSize()
+                CompositionLocalProvider(LocalDensity provides Density(LocalDensity.current.density,fontScale)){
+                BoxWithConstraints(Modifier.widthIn(max = if(sideBySide)800.dp else 375.dp).heightIn(max = 600.dp).fillMaxSize()
                     .testTag("study-frame-host")) {
                     if (reading.value) TextButton(onClick = { reading.value = false },
                         modifier = Modifier.heightIn(min = 48.dp).testTag("study-window-source-return")) {
@@ -46,8 +51,8 @@ class StudyWindowGeometryUiTest {
                     }
                     if (opened.value) FloatingStudyWindow(book, enabled = true,
                         minimized = minimized.value, onMinimize = { minimized.value = it },
-                        docked = false, onDock = {}, close = { opened.value = false },
-                        paneLayout = StudyPaneLayout(true, minOf(360.dp, maxWidth)),
+                        docked = !sideBySide, onDock = {}, close = { opened.value = false },
+                        paneLayout = StudyPaneLayout(sideBySide, minOf(360.dp, maxWidth)),
                         topInset = 48.dp, paneActive = true, onActivate = {}, sourceReading = reading.value) {
                         val chrome = checkNotNull(LocalStudyWindowChrome.current)
                         Row(Modifier.fillMaxWidth().height(48.dp)) {
@@ -56,8 +61,14 @@ class StudyWindowGeometryUiTest {
                         }
                     }
                 }
+                }
             }
         }
+        if(mode==StudyWindowMode.FOCUS&&!restoreLegacyFocus){
+            compose.onNodeWithTag("study-window-maximize").performClick()
+            compose.onNodeWithTag("study-window-mode-FOCUS").performClick()
+        }
+        compose.runOnIdle{reading.value=initiallyReading}
     }
 
     private fun assertFrameAndCloseStayInsideHost() {
@@ -104,5 +115,35 @@ class StudyWindowGeometryUiTest {
     @Test fun restoringBottomRightWindowKeepsExpandedFrameInsideEveryFrame() {
         window(StudyWindowMode.ORGANIZE, initiallyMinimized = true, initiallyReading = false)
         expandAndCheckEveryFrame("study-window-minimize")
+    }
+
+    @Test fun narrowDefaultKeepsPageSpaceEvenWithLegacyFocusPreference() {
+        window(StudyWindowMode.FOCUS,false,false,sideBySide=false,restoreLegacyFocus=true)
+        assertCompactThenExplicitFocus()
+    }
+
+    @Test fun narrowLargeTextKeepsCompactRestoreAndCloseTargetsReachable() {
+        window(StudyWindowMode.ORGANIZE,false,false,sideBySide=false,fontScale=1.6f)
+        assertCompactThenExplicitFocus()
+    }
+
+    private fun assertCompactThenExplicitFocus(){
+        assertFrameAndCloseStayInsideHost()
+        val host=compose.onNodeWithTag("study-frame-host").getUnclippedBoundsInRoot()
+        val compact=compose.onNodeWithTag("study-panel").getUnclippedBoundsInRoot()
+        assertTrue("A default map leaves original-page space",compact.bottom-compact.top<host.bottom-host.top-96.dp)
+        compose.onNodeWithTag("study-window-maximize").performClick()
+        compose.onNodeWithTag("study-window-mode-FOCUS").performClick()
+        val focused=compose.onNodeWithTag("study-panel").getUnclippedBoundsInRoot()
+        assertTrue("Only explicit focus expands the map",focused.bottom-focused.top>compact.bottom-compact.top)
+        assertFrameAndCloseStayInsideHost()
+        compose.onNodeWithTag("study-window-maximize").performClick()
+        compose.onNodeWithTag("study-window-mode-ORGANIZE").performClick()
+        compose.onNodeWithTag("study-window-minimize").performClick()
+        compose.onNodeWithTag("study-panel").assertHeightIsEqualTo(48.dp)
+        compose.onNodeWithTag("study-window-minimize").performClick()
+        assertFrameAndCloseStayInsideHost()
+        val restored=compose.onNodeWithTag("study-panel").getUnclippedBoundsInRoot()
+        assertTrue("Restore keeps the original-page strip",restored.bottom-restored.top<host.bottom-host.top-96.dp)
     }
 }

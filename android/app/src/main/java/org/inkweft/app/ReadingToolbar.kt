@@ -27,9 +27,7 @@ import androidx.compose.ui.unit.dp
         if(fullScreen){
             toolbar.destinations().forEach{destination(it)}
         }
-        if(showWriteControl)TextButton(onWrite,modifier=Modifier.heightIn(min=48.dp).testTag("exit-readonly").describedAs("只读浏览，返回书写")){
-            Text("返回书写",maxLines=1)
-        }
+        if(showWriteControl)EditorAction("返回书写","pen",tag="exit-readonly",onClick=onWrite)
         Box{
             EditorAction("更多","more",tag="toolbar-more"){more=true}
             DropdownMenu(more,{more=false},modifier=Modifier.testTag("reading-more-menu"),containerColor=Color.White){

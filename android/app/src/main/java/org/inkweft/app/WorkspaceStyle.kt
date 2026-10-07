@@ -67,6 +67,8 @@ internal val Side=InkTheme.Surface
         "favorite-pens"->R.drawable.ic_favorite_pens
         "eye"->R.drawable.ic_eye
         "eye-off"->R.drawable.ic_eye_off
+        "lock"->R.drawable.ic_lock
+        "unlock"->R.drawable.ic_unlock
         "drag-handle"->R.drawable.ic_drag_handle
         "overview"->R.drawable.ic_overview
         "add-page"->R.drawable.ic_add_page
