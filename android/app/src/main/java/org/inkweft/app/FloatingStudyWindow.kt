@@ -71,7 +71,7 @@ internal fun studyPaneLayout(width:Dp,height:Dp,fontScale:Float):StudyPaneLayout
     SideEffect{reportFocus(mode==StudyWindowMode.FOCUS&&!minimized&&!sourceReading)}
     DisposableEffect(book){onDispose{reportFocus(false)}}
     var x by rememberSaveable(book){mutableFloatStateOf(prefs.getFloat("$book-x",1f))}
-    var y by rememberSaveable(book){mutableFloatStateOf(prefs.getFloat("$book-y",.25f))}
+    var y by rememberSaveable(book){mutableFloatStateOf(prefs.getFloat("$book-y",if(paneLayout.sideBySide).25f else 1f))}
     var width by rememberSaveable(book,modeName){mutableFloatStateOf(prefs.getFloat("$book-$modeName-width",if(mode==StudyWindowMode.COLLECT)prefs.getFloat("$book-width",mode.width)else mode.width))}
     var height by rememberSaveable(book,modeName){mutableFloatStateOf(prefs.getFloat("$book-$modeName-height",if(mode==StudyWindowMode.COLLECT)prefs.getFloat("$book-height",mode.height)else mode.height))}
     var modeMenu by remember{mutableStateOf(false)}
@@ -93,8 +93,8 @@ internal fun studyPaneLayout(width:Dp,height:Dp,fontScale:Float):StudyPaneLayout
         // Keyboard/short-window changes must not dispose a guarded author draft.
         val collapsed=minimized||(floating&&!maximized&&availableH<180&&enabled)
         val visible=if(sourceReading)paneLayout.sideBySide&&!minimized else minimized||paneLayout.sideBySide||paneActive
-        // Leave a visible strip of the original page even when the lane cannot support two columns.
-        val compactH=if(paneLayout.sideBySide)availableH else (availableH-minOf(120f,availableH*.3f)).coerceAtLeast(48f)
+        // Reserve reading space above a compact map; saved drag coordinates remain authoritative.
+        val compactH=if(paneLayout.sideBySide)availableH else (availableH*.58f).coerceAtLeast(48f)
         val w=if(floating&&collapsed)minOf(availableW,320f)else if(effectiveDocked)paneLayout.mapWidth.value else if(!floating||maximized)availableW else width.coerceIn(minOf(320f,availableW),availableW)
         val h=if(floating&&collapsed)minOf(48f,availableH)else if(!floating||maximized)availableH else height.coerceIn(minOf(300f,compactH),compactH)
         val travelX=(availableW-w).coerceAtLeast(0f);val travelY=(availableH-h).coerceAtLeast(0f)
@@ -120,17 +120,17 @@ internal fun studyPaneLayout(width:Dp,height:Dp,fontScale:Float):StudyPaneLayout
                     if(paneLayout.sideBySide)DropdownMenuItem(text={Text(if(effectiveDocked)"浮动窗口"else"停靠双栏")},onClick={if(currentEnabled&&beforeContentExit()){onDock(!effectiveDocked);modeName=StudyWindowMode.ORGANIZE.name;modeMenu=false}},enabled=enabled,modifier=Modifier.testTag("study-window-dock"))
                 }
             }
-            IconButton({if(currentEnabled&&beforeContentExit())onMinimize(!collapsed)},enabled=enabled,modifier=Modifier.size(48.dp).testTag("study-window-minimize").describedAs(if(collapsed)"恢复导图"else"最小化导图")){Text(if(collapsed)"□"else"−")}
+            IconButton({if(currentEnabled&&beforeContentExit())onMinimize(!collapsed)},enabled=enabled,modifier=Modifier.size(48.dp).testTag("study-window-minimize").describedAs(if(collapsed)"恢复导图"else"最小化导图")){Glyph(if(collapsed)"window-restore"else"window-minimize")}
             IconButton({if(currentEnabled&&beforeContentExit()){modeName=StudyWindowMode.ORGANIZE.name;close()}},enabled=enabled,modifier=Modifier.size(48.dp).testTag("study-close").describedAs("关闭导图")){Glyph("close")}
         }
         // Size changes apply immediately; an in-flight position must still fit the current frame.
         RetainedStudyPane(visible,Modifier.fillMaxSize()){
         Surface(Modifier.offset{IntOffset((frameLeft.value.coerceIn(margin,margin+travelX)*density).roundToInt(),(frameTop.value.coerceIn(frameTopInset,frameTopInset+travelY)*density).roundToInt())}
-            .size(w.dp,h.dp).pointerInput(Unit){awaitEachGesture{awaitFirstDown(requireUnconsumed=false,pass=PointerEventPass.Initial);activate()}}.testTag("study-panel"),color=Color.White,shape=InkTheme.FloatingShape,
+            .size(w.dp,h.dp).pointerInput(Unit){awaitEachGesture{awaitFirstDown(requireUnconsumed=false,pass=PointerEventPass.Initial);activate()}}.testTag("study-panel"),color=Color.White,shape=androidx.compose.foundation.shape.RoundedCornerShape(12.dp),
             shadowElevation=InkTheme.FloatingElevation){
-            Box(Modifier.fillMaxSize().clip(InkTheme.FloatingShape)){
+            Box(Modifier.fillMaxSize().clip(androidx.compose.foundation.shape.RoundedCornerShape(12.dp))){
                 if(collapsed)Row(Modifier.fillMaxWidth().height(48.dp),verticalAlignment=Alignment.CenterVertically){
-                    Box(drag.weight(1f).fillMaxHeight(),contentAlignment=Alignment.CenterStart){Text("⠿ 导图",Modifier.padding(start=12.dp))};controls()
+                    Row(drag.weight(1f).fillMaxHeight().padding(start=12.dp),verticalAlignment=Alignment.CenterVertically){Glyph("drag-handle",Quiet);Text("导图",Modifier.padding(start=8.dp))};controls()
                 }else {
                     holder.SaveableStateProvider(book){CompositionLocalProvider(LocalStudyWindowChrome provides StudyWindowChrome(drag,sourceReading,onAuthorDraft,controls)){content()}}
                     if(floating&&!maximized)Box(Modifier.align(Alignment.BottomEnd).size(48.dp).testTag("study-window-resize").describedAs("拖动调整导图窗口大小")

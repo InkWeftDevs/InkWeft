@@ -55,7 +55,7 @@ import java.util.UUID
         }
     })else null){
         Column(Modifier.verticalScroll(rememberScrollState())){
-            Text(if(layers.currentId==null)"已暂停落笔，请明确选择可写层" else "当前可写层：${layers.layers.first{it.id==layers.currentId}.name}",
+            Text(if(layers.currentId==null)"暂停书写 · 请选择可写层" else "书写层 · ${layers.layers.first{it.id==layers.currentId}.name}",
                 style=MaterialTheme.typography.bodySmall,color=Quiet,modifier=Modifier.testTag("current-writable-layer").padding(bottom=8.dp))
             if(selection.isNotEmpty())TextButton({transferring=selection},enabled=ready&&selection.all{state.state.layers.editable(it)},modifier=Modifier.testTag("layer-transfer-selection")){Text("选中的 ${selection.size} 项转层（含关联原迹）")}
             layers.layers.forEachIndexed{index,layer->key(layer.id){
@@ -65,7 +65,8 @@ import java.util.UUID
                     strokes.filter{LayerContent(LayerContentKind.INK,it.id) in members}+
                         state.state.annotations.filter{LayerContent(LayerContentKind.ANNOTATION,it.stroke.id) in members}.map{it.stroke}}
                 val previewObjects=remember(objects,members){objects.filter{LayerContent(LayerContentKind.OBJECT,it.id) in members}}
-                Surface(color=if(selectedId==layer.id)InkTheme.Selected else Color.Transparent,shape=RoundedCornerShape(10.dp),
+                Surface(color=if(layers.currentId==layer.id)InkTheme.Selected else Color.Transparent,shape=RoundedCornerShape(8.dp),
+                    border=if(selectedId==layer.id&&layers.currentId!=layer.id)BorderStroke(1.dp,InkTheme.ControlBorder)else null,
                     modifier=Modifier.fillMaxWidth().padding(vertical=2.dp).testTag("layer-row-${layer.id}")){
                     Row(verticalAlignment=Alignment.CenterVertically){
                         Row(Modifier.weight(1f).heightIn(min=64.dp).testTag("layer-select-${layer.id}")

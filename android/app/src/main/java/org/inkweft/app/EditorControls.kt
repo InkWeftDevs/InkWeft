@@ -45,10 +45,12 @@ internal val LocalEditorToolMenu=staticCompositionLocalOf{false}
         tooltip={PlainTooltip{Text(label)}},state=rememberTooltipState()){
         IconButton(onClick,enabled=enabled,modifier=target.size(48.dp),
             colors=IconButtonDefaults.iconButtonColors(
-                containerColor=if(selected==true)MaterialTheme.colorScheme.primaryContainer else Color.Transparent,
+                containerColor=Color.Transparent,
                 contentColor=if(selected==true)MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
                 disabledContentColor=MaterialTheme.colorScheme.onSurface.copy(alpha=.38f))){
-            Glyph(icon,modifier=Modifier.size(24.dp))
+            Box(Modifier.size(36.dp).background(if(selected==true&&enabled)InkTheme.Selected else Color.Transparent,RoundedCornerShape(7.dp)),contentAlignment=Alignment.Center){
+                Glyph(icon,modifier=Modifier.size(24.dp))
+            }
         }
     }
 }
@@ -67,7 +69,7 @@ internal val LocalEditorAnchor=staticCompositionLocalOf<IntRect?>{null}
 internal enum class PanelKind { CONTENT, SETTINGS, BEAUTY_REVIEW, LAYERS }
 internal data class PanelPresentationPolicy(val bottom:Boolean,val maxHeight:Dp)
 internal fun panelPresentation(kind:PanelKind,width:Dp,height:Dp):PanelPresentationPolicy {
-    val bottom=kind==PanelKind.BEAUTY_REVIEW&&width<720.dp
+    val bottom=(kind==PanelKind.BEAUTY_REVIEW&&width<720.dp)||(kind==PanelKind.LAYERS&&width<600.dp)
     val maximum=when{
         bottom->minOf(480.dp,height*.55f)
         kind==PanelKind.SETTINGS->minOf(360.dp,height*.55f)

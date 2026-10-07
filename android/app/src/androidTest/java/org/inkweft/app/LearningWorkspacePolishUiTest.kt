@@ -215,25 +215,23 @@ class LearningWorkspacePolishUiTest {
     }
 
     @Test fun oneRowToolsKeepNamedPageMenuPenPreferenceAndHeaderUncovered(){
-        h.seed();h.tap("exit-readonly");h.tap("study-close")
+        val f=h.seed();h.tap("exit-readonly");h.tap("study-close")
         val toolbarBounds=compose.onNodeWithTag("editor-toolbar").getUnclippedBoundsInRoot()
         assertTrue("Writing tools occupy one row",toolbarBounds.bottom-toolbarBounds.top<=64.dp)
-        compose.onNodeWithTag("floating-pen-case").assert(SemanticsMatcher.expectValue(SemanticsProperties.StateDescription,"已收起"))
-        compose.onNodeWithTag("page-layers-open").assertDoesNotExist()
+        compose.onNodeWithTag("floating-pen-case").assertDoesNotExist()
         compose.onNodeWithTag("quick-study").assertIsDisplayed().assertIsEnabled()
         h.tap("page-layers-open");h.waitFor("page-layers")
         InstrumentationRegistry.getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_BACK)
         compose.waitUntil(15_000){compose.onAllNodesWithTag("page-layers").fetchSemanticsNodes().isEmpty()}
-        h.tap("case-collapse")
-        compose.onNodeWithTag("pen-kind-pencil").assertExists()
-        compose.activityRule.scenario.recreate();h.waitFor("pen-kind-pencil")
-        assertFalse(h.app.getSharedPreferences("inkweft-editor",0).getBoolean("case-collapsed",true))
-        h.tap("case-collapse");screenshot("polish-default-tools.png")
+        compose.selectPen("pencil")
+        val store=PenWidthStore(h.app,"inkweft-pen-widths-book-${f.note.id}")
+        assertEquals(InkPen.PENCIL,store.readKinds()[0])
+        compose.activityRule.scenario.recreate();h.waitFor("top-draw")
+        assertEquals(InkPen.PENCIL,store.readKinds()[0]);screenshot("polish-default-tools.png")
         h.tap("read-excerpts");h.waitFor("excerpt-panel")
         val header=compose.onNodeWithTag("document-toolbar").fetchSemanticsNode().boundsInRoot
         val panel=compose.onNodeWithTag("excerpt-panel").fetchSemanticsNode().boundsInRoot
         assertTrue("Excerpt panel starts below document navigation",panel.top>=header.bottom-1f)
-        compose.onNodeWithTag("document-associations").assertIsDisplayed()
         screenshot("polish-excerpt-header-clear.png")
     }
 
@@ -255,18 +253,14 @@ class LearningWorkspacePolishUiTest {
     }
 
     @Test fun narrowLargeTextWhitespaceAndLayersKeepControlsClearAndPenPreference()=atNarrow{
-        h.seed();h.tap("exit-readonly");h.tap("study-close");h.tap("case-collapse")
-        compose.onNodeWithTag("pen-kind-pencil").assertExists()
+        val f=h.seed();h.tap("exit-readonly");h.tap("study-close")
+        compose.selectPen("pencil")
+        val store=PenWidthStore(h.app,"inkweft-pen-widths-book-${f.note.id}")
+        val penBefore=store.readPen(InkPen.PENCIL)
         val prefs=h.app.getSharedPreferences("inkweft-editor",0)
         val caseBefore=listOf("case-x","case-y","case-collapsed").associateWith{prefs.all[it]}
-        val penBounds=compose.onNodeWithTag("floating-pen-case").getUnclippedBoundsInRoot()
         val viewport=h.paperViewport()
-        compose.onNodeWithTag("editor-tools-page").assertIsDisplayed().assertHeightIsAtLeast(48.dp).assertWidthIsAtLeast(48.dp)
-        val fingerBounds=compose.onNodeWithTag("quick-finger").getUnclippedBoundsInRoot()
-        h.tap("editor-tools-page")
-        compose.onNodeWithTag("ink-select").performScrollTo()
         fullyVisible("ink-select","editor-tool-scroll")
-        assertEquals(fingerBounds,compose.onNodeWithTag("quick-finger").getUnclippedBoundsInRoot())
         h.tap("page-layers-open")
         fullyVisible("layer-select-${UserLayers.DEFAULT_ID}","page-layers")
         compose.onNodeWithTag("current-writable-layer").assertIsDisplayed()
@@ -285,9 +279,9 @@ class LearningWorkspacePolishUiTest {
         assertEquals(caseBefore,listOf("case-x","case-y","case-collapsed").associateWith{prefs.all[it]})
         screenshot("polish-narrow-whitespace-clear.png")
         h.tap("whitespace-original");h.waitFor("ink-surface")
-        compose.onNodeWithTag("pen-kind-pencil").assertExists()
+        compose.onNodeWithTag("top-draw").assertIsOn()
+        assertEquals(penBefore,store.readPen(InkPen.PENCIL))
         assertEquals(caseBefore,listOf("case-x","case-y","case-collapsed").associateWith{prefs.all[it]})
-        assertEquals(penBounds,compose.onNodeWithTag("floating-pen-case").getUnclippedBoundsInRoot())
         assertEquals(viewport,h.paperViewport())
     }
 

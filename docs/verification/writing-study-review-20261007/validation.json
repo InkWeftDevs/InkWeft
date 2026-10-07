@@ -1,5 +1,5 @@
 {
-  "status": "VISUAL_REVIEW_PENDING",
+  "status": "VISUAL_DIRECTION_ACCEPTED_BY_USER",
   "scope": "One debug-only native landscape writing page; no production or storage changes.",
   "prior_multi_mode_proposal": "Rejected overall by user; retained for comparison.",
   "source_base_head": "4164a47a57d751a231f74e4dd844c9f7ae3c25f7",
@@ -71,5 +71,10 @@
     "Navigation, search, panels and more entries remain disabled placeholders.",
     "This debug Activity hides the Android navigation bar; edge swipe temporarily reveals it.",
     "Software emulator API 36; no handwriting latency or PDF renderer claim."
-  ]
+  ],
+  "followup": {
+    "user_feedback": "这次改动比原来好了很多",
+    "production_integration": "../production-editor-20261007/README.md",
+    "functional_acceptance": false
+  }
 }

@@ -21,17 +21,25 @@ internal fun ComposeTestRule.singlePageEditor(){
     }
 }
 internal fun ComposeTestRule.openCurrentPen(){
-    if(onAllNodesWithTag("pen-kind-pen").fetchSemanticsNodes().isEmpty())onNodeWithTag("case-collapse").performClick()
-    val active=org.inkweft.core.InkPen.entries.firstOrNull{runCatching{onNodeWithTag("pen-kind-${it.name.lowercase()}").assertIsOn()}.isSuccess}
-    val node=onNodeWithTag("pen-kind-${(active?:org.inkweft.core.InkPen.PEN).name.lowercase()}")
-    if(active==null)node.performScrollTo().performClick()
-    node.performScrollTo().performClick()
+    if(onAllNodesWithTag("pen-width-dialog").fetchSemanticsNodes().isNotEmpty())return
+    val highlighter=runCatching{onNodeWithTag("pen-kind-highlighter").assertIsOn()}.isSuccess
+    val control=onNodeWithTag(if(highlighter)"pen-kind-highlighter"else"top-draw")
+    if(!highlighter&&runCatching{control.assertIsOff()}.isSuccess)control.performClick()
+    control.performClick()
+    onNodeWithTag("pen-width-dialog").assertIsDisplayed()
 }
 
 internal fun ComposeTestRule.selectPen(kind:String){
     if(onAllNodesWithTag("close-pen-settings").fetchSemanticsNodes().isNotEmpty())closePenSettings()
-    if(onAllNodesWithTag("pen-kind-$kind").fetchSemanticsNodes().isEmpty())onNodeWithTag("case-collapse").performClick()
-    val node=onNodeWithTag("pen-kind-$kind");if(runCatching{node.assertIsOff()}.isSuccess)node.performScrollTo().performClick()
+    if(kind=="highlighter"){
+        val node=onNodeWithTag("pen-kind-highlighter")
+        if(runCatching{node.assertIsOff()}.isSuccess)node.performClick()
+    }else{
+        val pen=onNodeWithTag("top-draw")
+        if(runCatching{pen.assertIsOff()}.isSuccess)pen.performClick()
+        openCurrentPen();onNodeWithTag("pen-kind-menu").performClick()
+        onNodeWithTag("pen-kind-$kind").performScrollTo().performClick();closePenSettings()
+    }
 }
 /** Observe the actual canvas state; stroke totals are no longer user-facing UI. */
 internal fun SemanticsNodeInteraction.assertInkCount(expected:Int):SemanticsNodeInteraction {
@@ -49,13 +57,13 @@ internal fun SemanticsNodeInteraction.assertInkCount(expected:Int):SemanticsNode
 }
 
 internal fun ComposeTestRule.closePenSettings(){onNodeWithTag("close-pen-settings").performScrollTo().performClick()}
-internal fun ComposeTestRule.openBeautySettings(){onNodeWithTag("auto-beauty-toggle").performScrollTo().performClick()}
+internal fun ComposeTestRule.openBeautySettings(){openEditorAction("quick-beauty")}
 
 internal fun ComposeTestRule.openEditorAction(tag:String){
     revealAction("toolbar-more")
     if(onAllNodesWithTag(tag).fetchSemanticsNodes().isEmpty())onNodeWithTag("toolbar-more").performClick()
     val actual=if(tag=="add-page")"quick-add-page"else tag
-    val actions=mapOf("add-page" to "add-page","object-shape" to "shape","page-objects" to "objects","object-sticker" to "sticker","top-area-erase" to "area","object-camera" to "camera","quick-finger" to "finger")
+    val actions=mapOf("add-page" to "add-page","object-shape" to "shape","page-objects" to "objects","object-sticker" to "sticker","top-area-erase" to "area","object-camera" to "camera","quick-finger" to "finger","quick-beauty" to "beauty")
     if(onAllNodesWithTag(actual).fetchSemanticsNodes().isEmpty()){
         val action=actions[tag]?:error("Unknown hidden action $tag")
         onNodeWithTag("toolbar-customize").performClick()
@@ -115,7 +123,7 @@ internal fun ComposeTestRule.assertCurrentPage(text:String){
 internal fun ComposeTestRule.revealAction(tag:String){
     if(onAllNodesWithTag(tag).fetchSemanticsNodes().isNotEmpty())return
     when {
-        tag in setOf("quick-overview","quick-settings","book-search","quick-fullscreen","quick-export","quick-timer","document-add-page","study-close")&&onAllNodesWithTag("document-more").fetchSemanticsNodes().isNotEmpty()->{
+        tag in setOf("quick-overview","quick-settings","book-search","quick-fullscreen","quick-export","quick-timer","document-add-page","study-close","quick-readonly","exit-readonly","document-recall","document-associations","read-excerpts")&&onAllNodesWithTag("document-more").fetchSemanticsNodes().isNotEmpty()->{
             waitUntil(15_000){runCatching{onNodeWithTag("document-more").assertIsDisplayed().assertIsEnabled()}.isSuccess}
             onNodeWithTag("document-more").performClick()
         }
@@ -156,7 +164,7 @@ internal fun ComposeTestRule.revealAction(tag:String){
         }
         tag.startsWith("width-preset-")||tag.startsWith("pencil-hardness-")->onNodeWithTag("pen-advanced").performScrollTo().performClick()
         tag.startsWith("pen-color-")->onNodeWithTag("pen-basic").performScrollTo().performClick()
-        tag in setOf("quick-readonly","quick-fullscreen","quick-timer","quick-add-page","quick-export","quick-beauty","quick-finger","object-image","object-text","top-tags")->onNodeWithTag("toolbar-more").performClick()
+        tag in setOf("quick-readonly","quick-fullscreen","quick-timer","quick-add-page","quick-export","quick-beauty","quick-finger","object-image","object-text","top-tags","top-excerpt","object-tape","favorite-pens-toggle")->onNodeWithTag("toolbar-more").performClick()
     }
 }
 

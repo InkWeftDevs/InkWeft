@@ -40,6 +40,10 @@ internal val Side=InkTheme.Surface
         "board"->R.drawable.ic_board
         "mindmap"->R.drawable.ic_mindmap
         "pen"->R.drawable.ic_pen
+        "highlighter"->R.drawable.ic_highlighter
+        "layers"->R.drawable.ic_layers
+        "window-minimize"->R.drawable.ic_window_minimize
+        "window-restore"->R.drawable.ic_window_restore
         "beauty"->R.drawable.ic_beauty
         "eraser"->R.drawable.ic_eraser
         "undo"->R.drawable.ic_undo

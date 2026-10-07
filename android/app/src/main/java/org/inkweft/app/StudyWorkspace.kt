@@ -726,7 +726,7 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
     }
     Column(Modifier.fillMaxSize()){
     if(compactWindow&&chrome!=null)FlowRow(Modifier.fillMaxWidth().heightIn(min=48.dp).testTag("study-shared-header"),horizontalArrangement=Arrangement.SpaceBetween){
-        Box(chrome.drag.size(32.dp,48.dp),contentAlignment=Alignment.Center){Text("⠿",color=Quiet)}
+        Box(chrome.drag.size(32.dp,48.dp),contentAlignment=Alignment.Center){Glyph("drag-handle",Quiet,Modifier.size(20.dp))}
         Box(Modifier.weight(1f)){
             TextButton({mapMenu=true},enabled=browseReady&&!hasDraft,modifier=Modifier.fillMaxWidth().testTag("study-map-picker")){
                 Text(currentMap?.let{m->(maps.find{it.id==m}?.data() as? KnowledgeData.MapDefinition)?.title}?:"主图",maxLines=1,overflow=androidx.compose.ui.text.style.TextOverflow.Ellipsis)
