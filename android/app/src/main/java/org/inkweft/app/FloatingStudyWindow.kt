@@ -58,14 +58,20 @@ internal fun studyPaneLayout(width:Dp,height:Dp,fontScale:Float):StudyPaneLayout
 /** Geometry belongs to the frame, not the current card/template/content page. */
 @Composable internal fun FloatingStudyWindow(book:String,enabled:Boolean,minimized:Boolean,
     onMinimize:(Boolean)->Unit,docked:Boolean,onDock:(Boolean)->Unit,close:()->Unit,paneLayout:StudyPaneLayout,topInset:Dp,paneActive:Boolean,onActivate:()->Unit,
-    onAuthorDraft:(Boolean)->Unit={},frameEnabled:Boolean=enabled,sourceReading:Boolean=false,beforeContentExit:()->Boolean={true},content:@Composable ()->Unit){
+    onAuthorDraft:(Boolean)->Unit={},frameEnabled:Boolean=enabled,sourceReading:Boolean=false,beforeContentExit:()->Boolean={true},onFocusChanged:(Boolean)->Unit={},content:@Composable ()->Unit){
     val holder=androidx.compose.runtime.saveable.rememberSaveableStateHolder()
     val prefs=LocalContext.current.getSharedPreferences("inkweft-study-window",0)
     val density=LocalDensity.current.density
-    var modeName by rememberSaveable(book){mutableStateOf(prefs.getString("$book-mode",StudyWindowMode.ORGANIZE.name)!!)}
+    // Old persisted FOCUS must not make a newly opened map replace the page by default.
+    // Saveable state still restores an explicitly focused window across recreation/source visits.
+    var modeName by rememberSaveable(book){mutableStateOf(prefs.getString("$book-mode",StudyWindowMode.ORGANIZE.name)
+        ?.takeUnless{it==StudyWindowMode.FOCUS.name}?:StudyWindowMode.ORGANIZE.name)}
     val mode=StudyWindowMode.entries.find{it.name==modeName}?:StudyWindowMode.ORGANIZE
+    val reportFocus by rememberUpdatedState(onFocusChanged)
+    SideEffect{reportFocus(mode==StudyWindowMode.FOCUS&&!minimized&&!sourceReading)}
+    DisposableEffect(book){onDispose{reportFocus(false)}}
     var x by rememberSaveable(book){mutableFloatStateOf(prefs.getFloat("$book-x",1f))}
-    var y by rememberSaveable(book){mutableFloatStateOf(prefs.getFloat("$book-y",.25f))}
+    var y by rememberSaveable(book){mutableFloatStateOf(prefs.getFloat("$book-y",if(paneLayout.sideBySide).25f else 1f))}
     var width by rememberSaveable(book,modeName){mutableFloatStateOf(prefs.getFloat("$book-$modeName-width",if(mode==StudyWindowMode.COLLECT)prefs.getFloat("$book-width",mode.width)else mode.width))}
     var height by rememberSaveable(book,modeName){mutableFloatStateOf(prefs.getFloat("$book-$modeName-height",if(mode==StudyWindowMode.COLLECT)prefs.getFloat("$book-height",mode.height)else mode.height))}
     var modeMenu by remember{mutableStateOf(false)}
@@ -73,18 +79,24 @@ internal fun studyPaneLayout(width:Dp,height:Dp,fontScale:Float):StudyPaneLayout
     fun save(){prefs.edit().putString("$book-mode",mode.name).putFloat("$book-x",x).putFloat("$book-y",y)
         .putFloat("$book-${mode.name}-width",width).putFloat("$book-${mode.name}-height",height).apply()}
     fun choose(next:StudyWindowMode){if(!beforeContentExit())return;save();modeName=next.name;prefs.edit().putString("$book-mode",next.name).apply();modeMenu=false;onMinimize(false)}
+    androidx.activity.compose.BackHandler(mode==StudyWindowMode.FOCUS&&!minimized&&!sourceReading&&paneActive){
+        if(enabled)choose(StudyWindowMode.ORGANIZE)
+    }
     BoxWithConstraints(Modifier.fillMaxSize()){
-        val floating=paneLayout.sideBySide&&!docked&&!sourceReading
+        val maximized=mode==StudyWindowMode.FOCUS&&!sourceReading&&!minimized
+        val effectiveDocked=paneLayout.sideBySide&&(docked||sourceReading)&&!maximized&&!minimized
+        val floating=!effectiveDocked
         val margin=if(floating)8f else 0f
         val availableW=(maxWidth.value-margin*2).coerceAtLeast(1f)
         val frameTopInset=topInset.value+margin
         val availableH=(maxHeight.value-frameTopInset-margin).coerceAtLeast(1f)
-        val collapsed=minimized||(floating&&availableH<180)
-        val visible=floating||(!minimized&&(paneLayout.sideBySide||(!sourceReading&&paneActive)))
-        val maximized=floating&&mode==StudyWindowMode.FOCUS
-        val effectiveDocked=!floating&&paneLayout.sideBySide
+        // Keyboard/short-window changes must not dispose a guarded author draft.
+        val collapsed=minimized||(floating&&!maximized&&availableH<180&&enabled)
+        val visible=if(sourceReading)paneLayout.sideBySide&&!minimized else minimized||paneLayout.sideBySide||paneActive
+        // Reserve reading space above a compact map; saved drag coordinates remain authoritative.
+        val compactH=if(paneLayout.sideBySide)availableH else (availableH*.58f).coerceAtLeast(48f)
         val w=if(floating&&collapsed)minOf(availableW,320f)else if(effectiveDocked)paneLayout.mapWidth.value else if(!floating||maximized)availableW else width.coerceIn(minOf(320f,availableW),availableW)
-        val h=if(floating&&collapsed)minOf(48f,availableH)else if(!floating||maximized)availableH else height.coerceIn(minOf(300f,availableH),availableH)
+        val h=if(floating&&collapsed)minOf(48f,availableH)else if(!floating||maximized)availableH else height.coerceIn(minOf(300f,compactH),compactH)
         val travelX=(availableW-w).coerceAtLeast(0f);val travelY=(availableH-h).coerceAtLeast(0f)
         val left=margin+if(effectiveDocked||maximized)travelX else if(!floating)0f else x.coerceIn(0f,1f)*travelX
         val top=frameTopInset+if(!floating||maximized)0f else y.coerceIn(0f,1f)*travelY
@@ -101,30 +113,30 @@ internal fun studyPaneLayout(width:Dp,height:Dp,fontScale:Float):StudyPaneLayout
             }
         }
         val controls:@Composable ()->Unit={
-            if(!collapsed&&paneLayout.sideBySide)Box{
+            if(!collapsed)Box{
                 IconButton({modeMenu=true},enabled=enabled,modifier=Modifier.size(48.dp).testTag("study-window-maximize").describedAs("导图窗口模式：${mode.title}")){Glyph("fullscreen")}
                 DropdownMenu(modeMenu,{modeMenu=false}){
-                    if(floating)StudyWindowMode.entries.forEach{m->DropdownMenuItem(text={Text(m.title)},onClick={if(currentEnabled)choose(m)},enabled=enabled,modifier=Modifier.testTag("study-window-mode-${m.name}"))}
-                    DropdownMenuItem(text={Text(if(floating)"停靠双栏"else"浮动窗口")},onClick={if(currentEnabled&&beforeContentExit()){onDock(floating);modeMenu=false}},enabled=enabled,modifier=Modifier.testTag("study-window-dock"))
+                    StudyWindowMode.entries.forEach{m->DropdownMenuItem(text={Text(if(m==StudyWindowMode.FOCUS)"全屏专注"else m.title)},onClick={if(currentEnabled)choose(m)},enabled=enabled,modifier=Modifier.testTag("study-window-mode-${m.name}"))}
+                    if(paneLayout.sideBySide)DropdownMenuItem(text={Text(if(effectiveDocked)"浮动窗口"else"停靠双栏")},onClick={if(currentEnabled&&beforeContentExit()){onDock(!effectiveDocked);modeName=StudyWindowMode.ORGANIZE.name;modeMenu=false}},enabled=enabled,modifier=Modifier.testTag("study-window-dock"))
                 }
             }
-            IconButton({if(currentEnabled&&beforeContentExit())onMinimize(!collapsed)},enabled=enabled,modifier=Modifier.size(48.dp).testTag("study-window-minimize").describedAs(if(collapsed)"恢复导图"else"最小化导图")){Text(if(collapsed)"□"else"−")}
-            IconButton({if(currentEnabled&&beforeContentExit())close()},enabled=enabled,modifier=Modifier.size(48.dp).testTag("study-close").describedAs("关闭导图")){Glyph("close")}
+            IconButton({if(currentEnabled&&beforeContentExit())onMinimize(!collapsed)},enabled=enabled,modifier=Modifier.size(48.dp).testTag("study-window-minimize").describedAs(if(collapsed)"恢复导图"else"最小化导图")){Glyph(if(collapsed)"window-restore"else"window-minimize")}
+            IconButton({if(currentEnabled&&beforeContentExit()){modeName=StudyWindowMode.ORGANIZE.name;close()}},enabled=enabled,modifier=Modifier.size(48.dp).testTag("study-close").describedAs("关闭导图")){Glyph("close")}
         }
         // Size changes apply immediately; an in-flight position must still fit the current frame.
         RetainedStudyPane(visible,Modifier.fillMaxSize()){
         Surface(Modifier.offset{IntOffset((frameLeft.value.coerceIn(margin,margin+travelX)*density).roundToInt(),(frameTop.value.coerceIn(frameTopInset,frameTopInset+travelY)*density).roundToInt())}
-            .size(w.dp,h.dp).pointerInput(Unit){awaitEachGesture{awaitFirstDown(requireUnconsumed=false,pass=PointerEventPass.Initial);activate()}}.testTag("study-panel"),color=Color.White,shape=InkTheme.FloatingShape,
+            .size(w.dp,h.dp).pointerInput(Unit){awaitEachGesture{awaitFirstDown(requireUnconsumed=false,pass=PointerEventPass.Initial);activate()}}.testTag("study-panel"),color=Color.White,shape=androidx.compose.foundation.shape.RoundedCornerShape(12.dp),
             shadowElevation=InkTheme.FloatingElevation){
-            Box(Modifier.fillMaxSize().clip(InkTheme.FloatingShape)){
+            Box(Modifier.fillMaxSize().clip(androidx.compose.foundation.shape.RoundedCornerShape(12.dp))){
                 if(collapsed)Row(Modifier.fillMaxWidth().height(48.dp),verticalAlignment=Alignment.CenterVertically){
-                    Box(drag.weight(1f).fillMaxHeight(),contentAlignment=Alignment.CenterStart){Text("⠿ 导图",Modifier.padding(start=12.dp))};controls()
+                    Row(drag.weight(1f).fillMaxHeight().padding(start=12.dp),verticalAlignment=Alignment.CenterVertically){Glyph("drag-handle",Quiet);Text("导图",Modifier.padding(start=8.dp))};controls()
                 }else {
                     holder.SaveableStateProvider(book){CompositionLocalProvider(LocalStudyWindowChrome provides StudyWindowChrome(drag,sourceReading,onAuthorDraft,controls)){content()}}
                     if(floating&&!maximized)Box(Modifier.align(Alignment.BottomEnd).size(48.dp).testTag("study-window-resize").describedAs("拖动调整导图窗口大小")
-                        .pointerInput(availableW,availableH,effectiveDocked,maximized,sourceReading){detectDragGestures(onDragStart={dragging=true},onDragEnd={if(!sourceReading)save();dragging=false},onDragCancel={if(!sourceReading)save();dragging=false}){change,delta->
-                            change.consume();if(currentFrameEnabled&&floating&&!maximized){val oldW=width.coerceIn(minOf(320f,availableW),availableW);val oldH=height.coerceIn(minOf(300f,availableH),availableH);val oldX=x*(availableW-oldW);val oldY=y*(availableH-oldH)
-                                width=(oldW+delta.x/density).coerceIn(minOf(320f,availableW),availableW);height=(oldH+delta.y/density).coerceIn(minOf(300f,availableH),availableH)
+                        .pointerInput(availableW,availableH,compactH,effectiveDocked,maximized,sourceReading){detectDragGestures(onDragStart={dragging=true},onDragEnd={if(!sourceReading)save();dragging=false},onDragCancel={if(!sourceReading)save();dragging=false}){change,delta->
+                            change.consume();if(currentFrameEnabled&&floating&&!maximized){val oldW=width.coerceIn(minOf(320f,availableW),availableW);val oldH=height.coerceIn(minOf(300f,compactH),compactH);val oldX=x*(availableW-oldW);val oldY=y*(availableH-oldH)
+                                width=(oldW+delta.x/density).coerceIn(minOf(320f,availableW),availableW);height=(oldH+delta.y/density).coerceIn(minOf(300f,compactH),compactH)
                                 x=if(availableW>width)(oldX/(availableW-width)).coerceIn(0f,1f)else 0f;y=if(availableH>height)(oldY/(availableH-height)).coerceIn(0f,1f)else 0f}
                         }},contentAlignment=Alignment.BottomEnd){Text("⌟",Modifier.padding(8.dp),color=Quiet)}
                 }

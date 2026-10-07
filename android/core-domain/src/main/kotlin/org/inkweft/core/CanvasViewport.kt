@@ -41,6 +41,9 @@ data class CanvasViewport(val centerX: Double=500.0, val centerY: Double=707.0, 
         val a=screenToWorld(0.0,0.0,w,h,density);val b=screenToWorld(w,h,w,h,density)
         return CanvasBounds(a.x,a.y,b.x,b.y)
     }
+    /** Keep the reading origin and scale when surrounding panels change the visible area. */
+    fun resizedFrom(oldWidthDp:Double,oldHeightDp:Double,widthDp:Double,heightDp:Double):CanvasViewport =
+        safe(centerX+(widthDp-oldWidthDp)/(2*zoom),centerY+(heightDp-oldHeightDp)/(2*zoom),zoom)
     /** A finite sheet stays reachable; empty space cannot be panned indefinitely. */
     fun constrainedToPaper(wDp:Double,hDp:Double):CanvasViewport {
         if(wDp<=0||hDp<=0)return this
@@ -60,6 +63,12 @@ data class CanvasViewport(val centerX: Double=500.0, val centerY: Double=707.0, 
         fun fit(bounds: CanvasBounds,wDp: Double,hDp: Double): CanvasViewport {
             val z=min(max(1.0,wDp-40)/max(80.0,bounds.right-bounds.left),max(1.0,hDp-40)/max(80.0,bounds.bottom-bounds.top)).coerceIn(.02,8.0)
             return safe((bounds.left+bounds.right)/2,(bounds.top+bounds.bottom)/2,z)
+        }
+        /** First opening only: a narrow sheet starts at readable scale, with its leading edge visible. */
+        fun readingStart(wDp:Double,hDp:Double):CanvasViewport {
+            val fitted=pageWidth(wDp,hDp)
+            if(fitted.zoom>=.8)return fitted
+            return safe(wDp/(2*.8),hDp/(2*.8),.8)
         }
         fun pageWidth(wDp: Double,hDp: Double): CanvasViewport {
             val z=(max(1.0,wDp-40)/InkLimits.WIDTH).coerceIn(.02,8.0)

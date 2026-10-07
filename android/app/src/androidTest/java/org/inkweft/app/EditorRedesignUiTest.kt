@@ -57,7 +57,6 @@ class EditorRedesignUiTest {
 
     @Test fun beautySettingsStayCompactAndDoNotMovePaper(){
         ready();val note=runBlocking{app.workspaceRepository.create("美化设置验收",false,PaperStyle.GRID)};open(note)
-        compose.onNodeWithTag("auto-beauty-toggle").performScrollTo().assertExists()
         val before=compose.onNodeWithTag("ink-surface").fetchSemanticsNode().boundsInRoot
         compose.openBeautySettings();compose.onNodeWithTag("beauty-replace-font").performScrollTo().performClick()
         compose.onNodeWithTag("beauty-font-picker").assertIsDisplayed();compose.onNodeWithTag("beauty-select").performScrollTo().assertIsDisplayed()

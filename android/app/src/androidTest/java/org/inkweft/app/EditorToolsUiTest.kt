@@ -41,7 +41,7 @@ class EditorToolsUiTest {
         penKinds.forEachIndexed{i,kind->
             compose.selectPen(kind.name.lowercase());compose.openCurrentPen();tap("width-preset-${i%3}")
             compose.onNodeWithTag("brush-scratch-open").assertDoesNotExist();compose.closePenSettings()
-            tap("case-color-"+listOf("b83239","2f53aa","126b50","e1ad19","7355a2")[i])
+            compose.openCurrentPen();tap("pen-color-${i%5}");compose.closePenSettings()
         }
         val before=penKinds.associateWith(store::readPen)
         penKinds.forEach{compose.selectPen(it.name.lowercase());assertEquals(before[it],store.readPen(it))}
@@ -63,7 +63,7 @@ class EditorToolsUiTest {
     }
     @Test fun tapeStickerAndShapesSaveAndUndoThroughDirectTools(){
         val n=open();compose.selectPen("pen");tap("object-tape");compose.onNodeWithTag("tape-overlay").performTouchInput{swipe(Offset(width*.3f,height*.3f),Offset(width*.6f,height*.3f),250)};compose.waitUntil(10000){objects(n).size==1};ready()
-        assertEquals(PageObjectKind.TAPE,objects(n).single().kind);compose.selectPen("pen");compose.onNodeWithTag("pen-kind-pen").assertIsOn()
+        assertEquals(PageObjectKind.TAPE,objects(n).single().kind);compose.selectPen("pen");compose.onNodeWithTag("top-draw").assertIsOn();assertEquals(InkPen.PEN,PenWidthStore(app,"inkweft-pen-widths-book-${n.id}").readKinds()[1])
         tap("object-sticker");tap("sticker-⭐");compose.waitUntil(10000){objects(n).size==2};ready();assertEquals("⭐",objects(n).last().text)
         tap("object-deselect");tap("ink-undo");compose.waitUntil(10000){objects(n).size==1};ready();tap("ink-redo");compose.waitUntil(10000){objects(n).size==2};ready()
         tap("object-shape");tap("shape-rectangle");compose.waitUntil(10000){objects(n).size==3};ready()
@@ -101,7 +101,7 @@ class EditorToolsUiTest {
         tap("toolbar-customize");listOf("readonly","fullscreen","timer","add-page","export","beauty","finger").filterNot{it in EditorToolOrder.fixed}.forEach{tap("toolbar-visible-$it")};tap("toolbar-done")
         tap("quick-readonly");compose.onNodeWithTag("floating-pen-case").assertDoesNotExist();compose.onNodeWithTag("top-eraser").assertDoesNotExist()
         compose.onNodeWithTag("ink-surface").performTouchInput{swipe(Offset(width*.3f,height*.4f),Offset(width*.6f,height*.5f),250)}
-        assertTrue(strokes(n).isEmpty());tap("exit-readonly");compose.onNodeWithTag("floating-pen-case").assertExists()
+        assertTrue(strokes(n).isEmpty());tap("exit-readonly");compose.onNodeWithTag("top-draw").assertIsDisplayed()
         tap("quick-fullscreen");compose.onNodeWithTag("notebook-tabs").assertDoesNotExist();compose.onNodeWithTag("rename-from-editor").assertDoesNotExist()
         compose.activityRule.scenario.recreate();compose.waitUntil(10000){compose.onAllNodesWithTag("exit-fullscreen").fetchSemanticsNodes().isNotEmpty()};tap("exit-fullscreen");compose.onNodeWithTag("notebook-tabs").assertExists()
         tap("quick-timer");tap("timer-toggle");compose.waitUntil(5000){runCatching{compose.onNodeWithTag("timer-value").assertTextEquals("00:00:00")}.isFailure};tap("timer-toggle")

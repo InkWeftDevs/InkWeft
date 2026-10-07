@@ -216,14 +216,26 @@ class SourceFocusVisibilityUiTest {
             .putFloat("${note.id}-ORGANIZE-width", 580f).putFloat("${note.id}-ORGANIZE-height", 420f).commit()
         app.getSharedPreferences("inkweft-reading", 0).edit().putBoolean("continuous-v20-${note.id}", false).commit()
         compose.runOnIdle { notebook().select(note) }
-        compose.singlePageEditor(); compose.waitForSavedInk()
+        // A captured timeout on the software emulator already showed the correct, ready canvas.
+        // Give only initial fixture loading its 30s budget; source/state checks retain their limits.
+        try { compose.singlePageEditor(timeoutMillis = 30_000); compose.waitForSavedInk() } catch (failure: Throwable) {
+            val state = compose.runOnIdle { val ui = notebook().ui.value
+                "selectedFixture=${ui.selectedId == note.id} loading=${ui.loading} readFailed=${ui.readFailed} " +
+                    "revision=${ui.current?.base?.revision} nativeCanvases=${activityViews().filterIsInstance<InkCanvasView>().size}" }
+            android.util.Log.e("SF59Seed", state, failure)
+            runCatching { compose.onRoot(useUnmergedTree = true).printToLog("SF59Seed") }.onFailure(failure::addSuppressed)
+            runCatching { screenshot("sf59-seed-failure.png") }.onFailure(failure::addSuppressed)
+            throw failure
+        }
         waitFor("ink-surface")
         tap("quick-study"); tap("study-map-picker"); tap("study-map-${f.mapId}"); tap("study-tab-2")
         waitMap(f)
         compose.onNodeWithTag("study-readonly").assertDoesNotExist()
         if (!compose.runOnIdle { lock(note.id).readOnly.value }) tap("quick-readonly")
         assertReadOnly(f, nativeMap = true)
-        selectNode(f.node); tap("node-fold")
+        // Compact maps may omit the optional node-side accessory when no free rectangle fits.
+        // Use the always-available public menu; the collapsed graph state is still asserted.
+        selectNode(f.node); tap("node-more"); tap("node-menu-fold")
         compose.runOnIdle { assertNull(map().nodeBounds(f.child)); assertTrue(f.node in study(note.id).collapsedByMap[f.mapId].orEmpty()) }
         return f
     }
@@ -628,23 +640,31 @@ class SourceFocusVisibilityUiTest {
 
     @Test fun narrow375LargeFontRetainsSourceRegionThroughRecreationAndRestoresItsFocusFrame() =
         configured("750x1600", 320, 375, 1.6f) {
-            val f = seed(longText = true); chooseMode("FOCUS"); waitMap(f); openBody(f)
+            val f = seed(longText = true)
+            // Measure the visible paper before explicit focus retains but stops placing it.
+            compose.onNodeWithTag("ink-surface").assertIsDisplayed()
+            val paperBefore = screenRect("ink-surface")
+            chooseMode("FOCUS"); waitMap(f); openBody(f)
             val originalWindow = windowState(f); val original = source(f)
             val own = authorStamp(f.note.id); val other = authorStamp(f.other.id)
-            val paperBefore = screenRect("ink-surface")
             tapVisible("study-open-source")
             assertSourceVisible(f, original, collapsed = true)
             val button = compose.onNodeWithTag("study-window-source-return").assertIsDisplayed().assertIsEnabled().fetchSemanticsNode().boundsInRoot
             val density = compose.activity.resources.displayMetrics.density
             assertTrue(button.width >= 48f * density - 1f); assertTrue(button.height >= 48f * density - 1f)
-            assertEquals(56f * density, screenRect("ink-surface").top - paperBefore.top, 2f)
+            // Source return is integrated into the fixed document header; it adds no row.
+            assertEquals(48f * density, screenRect("document-toolbar").height(), 2f)
+            assertEquals("Source navigation must not shift paper below an extra toolbar",
+                paperBefore.top, screenRect("ink-surface").top, 2f)
             assertEquals(originalWindow.preferences, framePrefs(f)); assertEquals(originalWindow.graph, graphState(f))
             compose.activityRule.scenario.recreate()
             compose.waitUntil(15_000) { val c = compose.activity.resources.configuration
                 abs(c.screenWidthDp - 375) <= 4 && abs(c.fontScale - 1.6f) < .02f }
             assertSourceVisible(f, original, collapsed = true)
             assertEquals(originalWindow.preferences, framePrefs(f)); assertEquals(originalWindow.graph, graphState(f))
-            assertEquals(56f * density, screenRect("ink-surface").top - paperBefore.top, 2f)
+            assertEquals(48f * density, screenRect("document-toolbar").height(), 2f)
+            assertEquals("Recreation must preserve the source paper's stable header inset",
+                paperBefore.top, screenRect("ink-surface").top, 2f)
             assertAuthors(f, own, other, original)
             screenshot("sf59-narrow-recreated.png")
             restoreWindow(f, originalWindow)

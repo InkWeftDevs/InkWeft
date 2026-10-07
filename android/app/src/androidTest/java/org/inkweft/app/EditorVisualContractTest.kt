@@ -29,6 +29,8 @@ class EditorVisualContractTest {
         assertFalse(panelPresentation(PanelKind.CONTENT,375.dp,800.dp).bottom)
         assertTrue(panelPresentation(PanelKind.BEAUTY_REVIEW,375.dp,800.dp).bottom)
         assertFalse(panelPresentation(PanelKind.BEAUTY_REVIEW,1280.dp,800.dp).bottom)
+        assertTrue(panelPresentation(PanelKind.LAYERS,375.dp,800.dp).bottom)
+        assertFalse(panelPresentation(PanelKind.LAYERS,1200.dp,800.dp).bottom)
     }
 
     @Test fun parameterSegmentsKeepSeparateTouchTargetsAndSelection(){
@@ -66,16 +68,18 @@ class EditorVisualContractTest {
         assertFalse(android.graphics.RectF.intersects(bar,root));assertFalse(android.graphics.RectF.intersects(bar,neighbour))
         assertTrue(bar.left>=0f&&bar.right<=702f&&bar.top>=0f&&bar.bottom<=610f)
     }
-    @Test fun narrowToolbarKeepsInputModeVisibleWithoutWrapping(){
+    @Test fun narrowToolbarKeepsWritingToolsVisibleAndInputModeRecoverable(){
         var hand by mutableStateOf(false)
-        compose.setContent{InkTheme.Content{Box(Modifier.width(340.dp)){
+        compose.setContent{InkTheme.Content{Box(Modifier.width(375.dp)){
             EditorToolbar{tool,_->IconToggleButton(hand,{hand=it},modifier=Modifier.size(48.dp).testTag("slot-$tool")){Text(if(tool=="finger")if(hand)"手"else"笔"else "·")}}
         }}}
-        compose.onNodeWithTag("editor-toolbar").assertHeightIsEqualTo(48.dp)
+        compose.onNodeWithTag("editor-toolbar").assertHeightIsEqualTo(56.dp)
+        for(tool in listOf("pen","highlighter","eraser","lasso"))compose.onNodeWithTag("slot-$tool").assertIsDisplayed().assertWidthIsEqualTo(48.dp)
+        compose.onNodeWithTag("slot-finger").assertDoesNotExist()
+        compose.onNodeWithTag("toolbar-more").performClick()
         val mode=compose.onNodeWithTag("slot-finger");mode.assertIsDisplayed().assertWidthIsAtLeast(48.dp).assertHeightIsAtLeast(48.dp)
         val before=mode.fetchSemanticsNode().boundsInRoot;mode.performClick().assertIsOn()
         assertEquals(before,mode.fetchSemanticsNode().boundsInRoot)
-        assertFalse(before.overlaps(compose.onNodeWithTag("toolbar-more").fetchSemanticsNode().boundsInRoot))
     }
 
 }

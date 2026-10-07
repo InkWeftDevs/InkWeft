@@ -21,17 +21,17 @@ import androidx.compose.ui.draw.rotate
 import kotlinx.coroutines.launch
 
 internal object EditorToolOrder {
-    val labels=linkedMapOf("undo" to "撤销","redo" to "重做","pen" to "笔","map" to "导图","associations" to "关联","excerpts" to "摘录列表","eraser" to "橡皮","lasso" to "套索","area" to "圈选擦除","image" to "图片","camera" to "拍照","text" to "文本框","excerpt" to "摘录","tag" to "标签","shape" to "图形","sticker" to "贴纸","objects" to "对象选择","beauty" to "实时字迹调整","readonly" to "只读模式","finger" to "手指书写／移动","add-page" to "添加页面","fullscreen" to "全屏专注","export" to "导出文档","timer" to "计时器")
+    val labels=linkedMapOf("undo" to "撤销","redo" to "重做","pen" to "笔","highlighter" to "荧光笔","tape" to "胶带","favorites" to "收藏笔","map" to "导图","associations" to "关联","excerpts" to "摘录列表","eraser" to "橡皮","lasso" to "套索","area" to "圈选擦除","image" to "图片","camera" to "拍照","text" to "文本框","excerpt" to "摘录","tag" to "标签","shape" to "图形","sticker" to "贴纸","objects" to "对象选择","beauty" to "实时字迹调整","readonly" to "只读模式","finger" to "手指书写／移动","add-page" to "添加页面","fullscreen" to "全屏专注","export" to "导出文档","timer" to "计时器")
     val fixed=setOf("finger")
     val destinations=setOf("map","associations","excerpts")
-    val primary=setOf("undo","redo","pen","eraser","lasso","excerpt","finger")+destinations
+    val primary=setOf("pen","highlighter","eraser","lasso")
     val defaultHidden=setOf("shape","sticker","objects","camera","tag","area","beauty","readonly","finger","add-page","fullscreen","export","timer")
     fun icon(id:String)=when(id){"map"->"mindmap";"associations"->"link";"excerpts"->"excerpt";"lasso"->"select";"area"->"area-erase";"favorites"->"favorite-pens";else->id}
     fun read(context:Context):List<String> = read(context.getSharedPreferences("inkweft-editor",0))
-    fun read(prefs:SharedPreferences):List<String>{val raw=prefs.getString("toolbar-order-v32","").orEmpty().split(',').filter{it in labels}.distinct();return raw+labels.keys.filterNot{it in raw}}
+    fun read(prefs:SharedPreferences):List<String>{val raw=prefs.getString("toolbar-order-v32","").orEmpty().split(',').filter{it in labels}.distinct();val order=(raw+labels.keys.filterNot{it in raw}).toMutableList();if("highlighter" !in raw){order.remove("highlighter");order.add(order.indexOf("pen")+1,"highlighter")};return order}
 }
 /** Stable identifiers preserve visibility when new tools are added. Changes apply immediately. */
-@Composable internal fun EditorToolbar(fullScreen:Boolean=false,pageActions:@Composable (()->Unit)->Unit={},content:@Composable (String,()->Unit)->Unit){
+@Composable internal fun EditorToolbar(fullScreen:Boolean=false,pageActions:@Composable (Boolean,()->Unit)->Unit={_,_->},inkProperties:@Composable ()->Unit={},content:@Composable (String,()->Unit)->Unit){
     val context=LocalContext.current;val prefs=remember(context){context.getSharedPreferences("inkweft-editor",0)}
     val configuration=rememberEditorToolbarPreferences()
     val order=configuration.value.order;val hidden=configuration.value.hidden
@@ -48,34 +48,31 @@ internal object EditorToolOrder {
     }
     var more by remember{mutableStateOf(false)}
     val toolScroll=rememberScrollState()
-    val scrollScope=rememberCoroutineScope()
     BoxWithConstraints{
-    val visiblePrimary=(EditorToolOrder.primary-if(fullScreen)emptySet()else EditorToolOrder.destinations)+if(maxWidth>=600.dp)setOf("image","text")else emptySet()
-    Row(Modifier.testTag("editor-toolbar"),verticalAlignment=Alignment.CenterVertically){
-        Row(Modifier.weight(1f).testTag("editor-tool-scroll").horizontalScroll(toolScroll),verticalAlignment=Alignment.CenterVertically){
-            order.filter{it in visiblePrimary&&it !in hidden&&it !in EditorToolOrder.fixed}.forEach{key(it){EditorToolSlot(it){content(it){}}}}
-        }
-        // A full-size paging target makes clipped tools discoverable beside the fixed controls.
-        if(toolScroll.maxValue>0){
-            val forward=toolScroll.canScrollForward
-            IconButton({scrollScope.launch{toolScroll.animateScrollTo(if(forward)(toolScroll.value+toolScroll.viewportSize).coerceAtMost(toolScroll.maxValue)else 0)}},
-                modifier=Modifier.size(48.dp).testTag("editor-tools-page").describedAs(if(forward)"查看更多工具"else"返回起始工具")){
-                Glyph("back",modifier=Modifier.rotate(if(forward)180f else 0f))
+    val wide=maxWidth>=960.dp
+    val inline=(EditorToolOrder.primary+setOf("undo","redo"))-hidden
+    Row(Modifier.fillMaxWidth().height(56.dp).padding(horizontal=4.dp).testTag("editor-toolbar"),verticalAlignment=Alignment.CenterVertically){
+        listOf("undo","redo").filter{it in inline}.forEach{id->EditorToolSlot(id){content(id){}}}
+        if(wide)Spacer(Modifier.weight(1f))
+        Row(Modifier.then(if(wide)Modifier else Modifier.weight(1f)).testTag("editor-tool-scroll").horizontalScroll(toolScroll),verticalAlignment=Alignment.CenterVertically){
+            order.filter{it in EditorToolOrder.primary&&it in inline}.forEach{id->EditorToolSlot(id){content(id){}}}
+            if(wide){
+                VerticalDivider(Modifier.padding(horizontal=12.dp).height(22.dp),color=Line)
+                inkProperties()
             }
         }
-        VerticalDivider(Modifier.height(32.dp).padding(horizontal=4.dp),color=Line)
-        EditorToolSlot("finger"){content("finger"){}}
+        if(wide){Spacer(Modifier.weight(1f));EditorToolSlot("layers"){content("layers"){}}}
         Box {
-            EditorTool("更多","more",false,true,"toolbar-more",Modifier.describedAs("更多工具")){more=true}
+            EditorTool("更多工具","more",false,true,"toolbar-more"){more=true}
             DropdownMenu(more,{more=false},modifier=Modifier.testTag("editor-more-menu"),containerColor=androidx.compose.ui.graphics.Color.White){
-                pageActions{more=false}
-                val overflow=order.filter{it !in EditorToolOrder.fixed&&(fullScreen||it !in EditorToolOrder.destinations+"readonly")&&
-                    ((it !in visiblePrimary&&it !in hidden)||(it in EditorToolOrder.destinations&&it in hidden))}
-                listOf("插入" to setOf("image","camera","text","shape","sticker"),"页面与工具" to (EditorToolOrder.labels.keys-setOf("image","camera","text","shape","sticker"))).forEach{(title,ids)->
+                pageActions(!wide){more=false}
+                val overflow=order.filter{it !in inline&&(it !in hidden||it in EditorToolOrder.fixed)&&
+                    (fullScreen||it !in EditorToolOrder.destinations+"readonly")}
+                listOf("插入" to setOf("image","camera","text","shape","sticker","tape"),"工具" to (EditorToolOrder.labels.keys-setOf("image","camera","text","shape","sticker","tape"))).forEach{(title,ids)->
                     val group=overflow.filter{it in ids}
                     if(group.isNotEmpty()){
                         Text(title,Modifier.padding(horizontal=16.dp,vertical=8.dp),style=MaterialTheme.typography.labelLarge,color=Quiet)
-                        Row(Modifier.widthIn(max=320.dp).horizontalScroll(rememberScrollState())){group.forEach{id->EditorToolSlot(id){content(id){more=false}}}}
+                        CompositionLocalProvider(LocalEditorToolMenu provides true){group.forEach{id->EditorToolSlot(id){content(id){more=false}}}}
                     }
                 }
                 DropdownMenuItem(text={Text("自定义快捷栏")},onClick={more=false;customizing=true},modifier=Modifier.testTag("toolbar-customize"))
@@ -134,11 +131,7 @@ internal object EditorToolOrder {
     }
 }
 
-/** Allow visible labels to grow with text size; keep names available on long press. */
-@OptIn(ExperimentalMaterial3Api::class)
+/** Slot identity is stable across saved reordering; the control owns its tooltip. */
 @Composable internal fun EditorToolSlot(id:String,content:@Composable ()->Unit){
-    TooltipBox(positionProvider=TooltipDefaults.rememberPlainTooltipPositionProvider(),
-        tooltip={PlainTooltip{Text(EditorToolOrder.labels[id].orEmpty())}},state=rememberTooltipState()){
-        Box(Modifier.widthIn(min=48.dp).heightIn(min=56.dp),contentAlignment=Alignment.Center){content()}
-    }
+    key(id){Box(Modifier.widthIn(min=48.dp).heightIn(min=48.dp),contentAlignment=Alignment.Center){content()}}
 }

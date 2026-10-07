@@ -1,0 +1,69 @@
+{
+  "code_commit": "a096c479fbcb4e06b68be355f234c2678ab5e54a",
+  "baseline_commit": "ad0e982402edeb0b5d4bcc8ce453b317925f52fa",
+  "scope": "Three editor UI changes: consistent icon tools, bounded default map, compact layer card.",
+  "screenshots": "Actual Android captures using synthetic notes only; manually inspected, not full workflow test passes.",
+  "files": [
+    {
+      "file": "layers-narrow-after-undo.png",
+      "sha256": "4613450e565f7fa46aeddfe91f8808acca5254b172bb0683fc787cfce564bfcc"
+    },
+    {
+      "file": "layers.png",
+      "sha256": "e9089509935678e36a310d289e916e42987c11a20c53ad427f3c680661bb4fde"
+    },
+    {
+      "file": "mindmap-narrow-font16.png",
+      "sha256": "99c2bf2dc4546c8b378f7deb71dea394979654e9335e04a9b981eb731577da1b"
+    },
+    {
+      "file": "mindmap-narrow-right-node-selected.png",
+      "sha256": "218216472bae361b68c9151aebfce87a20d5b3df1b592594d30097a656701940"
+    },
+    {
+      "file": "mindmap-narrow-with-original-ink.png",
+      "sha256": "cedff5b1af41d3c1f3bf131e7a8a89386201e658903a7e61cde1acc275da91f7"
+    },
+    {
+      "file": "toolbar.png",
+      "sha256": "4e0e9f90fd07acfea8bd49ec56abe8f5300c9ce78c12408a4a61e5ad4c8b092d"
+    }
+  ],
+  "verified": {
+    "domain_tests_passed": 369,
+    "native_component_tests_passed": 5,
+    "lint_errors": 0,
+    "new_lint_issues": 0,
+    "native_debug_build": "passed",
+    "native_integration_tests_passed": 3,
+    "integration_cases": [
+      "Layer visibility/lock browsing keeps writable currentId correct; delete/undo, 48dp targets at 375dp/font1.6, viewport and unrelated author fingerprint.",
+      "Source navigation waits for real page selection, focuses original ink, returns to retained map context, and preserves own/unrelated author data and source snapshot.",
+      "Unsaved map title survives recreation, blocks native stylus input on the retained original page, and leaves author data unchanged."
+    ],
+    "baseline_source_comparator": "PASS on ad0e982 production with the same explicit editor-data readiness wait; 167.285 test seconds. This is a baseline control, not a candidate test count."
+  },
+  "remaining": "Real device stylus/performance and actual OS split-window are not verified by these emulator checks.",
+  "distribution": "Diagnostic APK/full logs remain private. Library transfer failed with cloud network Forbidden; no confirmed Library file IDs. The cloud debug certificate differs from the user installation, so the APK must not directly replace it.",
+  "test_commit": "98f7b66d7a93d32488c08831611cb07ca7effcca",
+  "manual_narrow_check": {
+    "size_px": [
+      375,
+      800
+    ],
+    "density_dpi": 160,
+    "font_scale": 1.6,
+    "original_ink": "Existing blue source ink remains visible below the bounded map after native read-only page panning; no author content added for the screenshot.",
+    "original_visible_blue_pixel_bounds": [
+      83,
+      644,
+      290,
+      675
+    ],
+    "right_node": "Native horizontal pan reveals the previously clipped child node; a native tap selects it.",
+    "author_queries": 30,
+    "before_after_sha256": "761395160b0829f4165ba58ca4847ca412b6dcfea6e33ae36610764aa75907ef",
+    "fingerprint_scope": "Original author queries plus canvas authoring, author receipts and source-set rows; view position and page selection excluded."
+  },
+  "ci": "No CI pass claimed: automatic workflow targets main; this draft PR is stacked on the latest PR16 branch."
+}

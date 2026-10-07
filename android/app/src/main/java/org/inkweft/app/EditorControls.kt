@@ -25,36 +25,55 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.selected
+import androidx.compose.ui.graphics.Color
 import org.inkweft.app.ui.designsystem.InkTheme
 
-@Composable internal fun EditorTool(label:String,icon:String,selected:Boolean,enabled:Boolean,tag:String,
-    modifier:Modifier=Modifier,onClick:()->Unit){
-    Surface(onClick=onClick,enabled=enabled,shape=RoundedCornerShape(12.dp),
-        color=if(selected)MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surface,
-        contentColor=if(selected)MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
-        modifier=modifier.widthIn(min=48.dp).heightIn(min=56.dp).testTag(tag)){
-        Column(Modifier.padding(horizontal=4.dp,vertical=5.dp),horizontalAlignment=Alignment.CenterHorizontally,verticalArrangement=Arrangement.spacedBy(2.dp)){
-            Glyph(icon)
-            Text(label,style=MaterialTheme.typography.labelMedium,fontWeight=if(selected)FontWeight.SemiBold else FontWeight.Normal,maxLines=1)
+internal val LocalEditorToolMenu=staticCompositionLocalOf{false}
+
+/** The same target, selection, disabled color and tooltip for every editor shortcut. */
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable internal fun EditorIconButton(label:String,icon:String,tag:String,modifier:Modifier=Modifier,
+    enabled:Boolean=true,selected:Boolean?=null,onClick:()->Unit){
+    val target=modifier.testTag(tag).describedAs(label).then(
+        if(selected==null)Modifier else Modifier.semantics{this.selected=selected})
+    if(LocalEditorToolMenu.current){
+        DropdownMenuItem(text={Text(label)},leadingIcon={Glyph(icon)},enabled=enabled,
+            modifier=target.heightIn(min=48.dp),onClick=onClick)
+    }else TooltipBox(positionProvider=TooltipDefaults.rememberTooltipPositionProvider(),
+        tooltip={PlainTooltip{Text(label)}},state=rememberTooltipState()){
+        IconButton(onClick,enabled=enabled,modifier=target.size(48.dp),
+            colors=IconButtonDefaults.iconButtonColors(
+                containerColor=Color.Transparent,
+                contentColor=if(selected==true)MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
+                disabledContentColor=MaterialTheme.colorScheme.onSurface.copy(alpha=.38f))){
+            Box(Modifier.size(36.dp).background(if(selected==true&&enabled)InkTheme.Selected else Color.Transparent,RoundedCornerShape(7.dp)),contentAlignment=Alignment.Center){
+                Glyph(icon,modifier=Modifier.size(24.dp))
+            }
         }
     }
 }
 
+@Composable internal fun EditorTool(label:String,icon:String,selected:Boolean,enabled:Boolean,tag:String,
+    modifier:Modifier=Modifier,onClick:()->Unit){
+    EditorIconButton(label,icon,tag,modifier,enabled,selected,onClick)
+}
+
 @Composable internal fun EditorAction(label:String,icon:String,enabled:Boolean=true,tag:String,onClick:()->Unit){
-    TextButton(onClick=onClick,enabled=enabled,modifier=Modifier.heightIn(min=48.dp).testTag(tag),contentPadding=PaddingValues(horizontal=10.dp)){
-        Glyph(icon,modifier=Modifier.size(20.dp));Spacer(Modifier.width(6.dp));Text(label,maxLines=1)
-    }
+    EditorIconButton(label,icon,tag,enabled=enabled,onClick=onClick)
 }
 
 internal val LocalEditorAnchor=staticCompositionLocalOf<IntRect?>{null}
 
-internal enum class PanelKind { CONTENT, SETTINGS, BEAUTY_REVIEW }
+internal enum class PanelKind { CONTENT, SETTINGS, BEAUTY_REVIEW, LAYERS }
 internal data class PanelPresentationPolicy(val bottom:Boolean,val maxHeight:Dp)
 internal fun panelPresentation(kind:PanelKind,width:Dp,height:Dp):PanelPresentationPolicy {
-    val bottom=kind==PanelKind.BEAUTY_REVIEW&&width<720.dp
+    val bottom=(kind==PanelKind.BEAUTY_REVIEW&&width<720.dp)||(kind==PanelKind.LAYERS&&width<600.dp)
     val maximum=when{
         bottom->minOf(480.dp,height*.55f)
         kind==PanelKind.SETTINGS->minOf(360.dp,height*.55f)
+        kind==PanelKind.LAYERS->minOf(480.dp,height*.65f)
         else->minOf(600.dp,(height-64.dp).coerceAtLeast(48.dp))
     }
     return PanelPresentationPolicy(bottom,maximum)
@@ -80,7 +99,7 @@ internal fun Modifier.editorSelected(selected:Boolean)=drawBehind {
 
 /** Bounded floating panel: settings stay compact while the paper remains visible. */
 @Composable internal fun EditorPanel(title:String,subtitle:String,dismiss:()->Unit,tag:String,
-    kind:PanelKind=PanelKind.CONTENT,footer:(@Composable ()->Unit)?=null,content:@Composable ColumnScope.()->Unit){
+    kind:PanelKind=PanelKind.CONTENT,footer:(@Composable ()->Unit)?=null,actions:(@Composable ()->Unit)?=null,content:@Composable ColumnScope.()->Unit){
     val window=LocalWindowInfo.current.containerSize
     val windowWidth=with(LocalDensity.current){window.width.toDp()}
     val windowHeight=with(LocalDensity.current){window.height.toDp()}
@@ -107,6 +126,7 @@ internal fun Modifier.editorSelected(selected:Boolean)=drawBehind {
                 Column(Modifier.fillMaxWidth()){
                     Row(Modifier.fillMaxWidth().padding(start=16.dp,end=4.dp,top=2.dp,bottom=2.dp),verticalAlignment=Alignment.CenterVertically){
                         Column(Modifier.weight(1f)){Text(title,style=InkTheme.PanelTitle);if(subtitle.isNotBlank())Text(subtitle,style=MaterialTheme.typography.bodySmall,color=Quiet,modifier=Modifier.padding(top=4.dp))}
+                        actions?.invoke()
                         IconButton(onClick=dismiss,modifier=Modifier.describedAs("关闭$title")){Glyph("close")}
                     }
                     Column(Modifier.weight(1f,fill=false).fillMaxWidth().padding(horizontal=InkTheme.PanelInset,vertical=8.dp),content=content)

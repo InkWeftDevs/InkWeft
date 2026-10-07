@@ -1,0 +1,58 @@
+[
+  {
+    "name": "saber",
+    "commit": "f143d84b46cb6faf795b13c00aee6d31f69e5da9",
+    "inspected_files": [
+      {
+        "file": "LICENSE.md",
+        "sha256": "3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986"
+      },
+      {
+        "file": "lib/components/toolbar/toolbar.dart",
+        "sha256": "25561c68f31e6851896be4067d90456ececdd26228f1df27a2d480bfa7cdc7f1"
+      },
+      {
+        "file": "lib/components/toolbar/color_bar.dart",
+        "sha256": "2b5b36a833c4347de9c2ba71142e8f94b60ff7d3c4570e01d776f4842eb52899"
+      },
+      {
+        "file": "metadata/en-US/images/phoneScreenshots/2_editor.png",
+        "sha256": "d70db74ff1e829f8281c94da060892cdd4a67b5a57964269576ddaaa64484184"
+      },
+      {
+        "file": "metadata/en-US/images/tenInchScreenshots/2_editor.png",
+        "sha256": "bb2b6bce23d0f30b9584384e56ca48c6324e136eab496db76553c4c93549583c"
+      }
+    ]
+  },
+  {
+    "name": "butterfly",
+    "commit": "5b4f303c8d5283688790a6f211545a4f9b3d730a",
+    "inspected_files": [
+      {
+        "file": "LICENSE",
+        "sha256": "8486a10c4393cee1c25392769ddd3b2d6c242d6ec7928e1414efff7dfb2f07ef"
+      },
+      {
+        "file": "BRANDING_LICENSE",
+        "sha256": "187442db4df3afd21f2f0525739fd4beac28a62daaba3ee8d3533f60e7c33ec7"
+      },
+      {
+        "file": "app/lib/views/edit.dart",
+        "sha256": "fe18f49e54b181ed21198cd786e14c99a5e9dd7aded00466011522f5cd71dfd2"
+      },
+      {
+        "file": "app/lib/views/toolbar/view.dart",
+        "sha256": "3da94cd167683341235ce9961bfa0652ed59fd253227b5a17708f1281ee44a3d"
+      },
+      {
+        "file": "docs/src/content/docs/docs/v2/layers.md",
+        "sha256": "24919acae610e938fa17035e2e497bfd1933bfa1a146a0ea1a6401c4c7eebfb1"
+      },
+      {
+        "file": "metadata/en-US/images/tenInchScreenshots/2-main.png",
+        "sha256": "b3524b0e5cd7a9da0d608d347ecf99dfb129aa38025e8515aecf40068b12be3d"
+      }
+    ]
+  }
+]

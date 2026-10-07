@@ -108,7 +108,6 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
     val beautyReview by objectsVm.beautyReview.collectAsStateWithLifecycle()
     val visibleGeometry=remember{VisibleInkGeometry()}
     var pendingObject by remember(note.base.id){mutableStateOf<Pair<String,String>?>(null)}
-    var penOpenRequest by remember{mutableIntStateOf(0)}
     var selectedObject by remember(page.id){mutableStateOf<String?>(null)}
     var objectInteraction by remember{mutableStateOf(false)}
     val objectsBlocked=objectsUi.loading||objectsUi.busy||objectsUi.pending||objectInteraction||smoothSelection!=null||beautyReview?.open==true
@@ -162,11 +161,11 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
     var tapePatternIndex by rememberSaveable{mutableIntStateOf(tapePrefs.getInt("pattern",0).coerceIn(0,TapePattern.entries.lastIndex))}
     fun saveTape(){tapePrefs.edit().putInt("brush-mode-v30",tapeMode).putFloat("width",tapeWidth).putInt("color",tapeColor).putInt("pattern",tapePatternIndex).apply()}
     var lastWritingTool by rememberSaveable{mutableIntStateOf(0)}
-    LaunchedEffect(tool){if(tool in 0..2)lastWritingTool=tool}
+    var lastPenTool by rememberSaveable(note.base.id){mutableIntStateOf(0)}
+    LaunchedEffect(tool){if(tool in 0..2)lastWritingTool=tool;if(tool in 0..1)lastPenTool=tool}
     var favoriteBusy by remember{mutableStateOf(false)}
-    val casePrefs=remember{context.getSharedPreferences("inkweft-editor",0)}
-    var favoritesOpen by remember{mutableStateOf(casePrefs.getBoolean("favorites-open",false))}
-    fun showFavorites(value:Boolean){favoritesOpen=value;casePrefs.edit().putBoolean("favorites-open",value).apply()}
+    var favoritesOpen by rememberSaveable(note.base.id){mutableStateOf(false)}
+    fun showFavorites(value:Boolean){favoritesOpen=value}
     var continuousBlocked by remember{mutableStateOf(false)}
     var gesture by remember{mutableStateOf(false)}
     var notice by remember{mutableStateOf<String?>(null)}
@@ -319,8 +318,8 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
     }
     LaunchedEffect(continuousPages==null){if(continuousPages==null)continuousBlocked=false else if(tool>=4)tool=0}
     val busy=excerptDraft||capturingExcerpt||gesture||ui.processing||objectsBlocked||mixedBlocked
-    val authoringEnabled=!readOnly&&!busy&&ui.queued==0&&ui.blocked==null&&!objectsVm.authorOperationActive&&authoringVm.pageHeadsMatch(ui.revision,objectsVm.revision)
-    val editingBlocked=excerptDraft||busy||readOnly||!authoringUi.ready
+    val authoringEnabled=externalEnabled&&!readOnly&&!busy&&ui.queued==0&&ui.blocked==null&&!objectsVm.authorOperationActive&&authoringVm.pageHeadsMatch(ui.revision,objectsVm.revision)
+    val editingBlocked=!externalEnabled||excerptDraft||busy||readOnly||!authoringUi.ready
     // Observe readiness in composition, not only inside a deferred SideEffect.
     val navigationReady=authoringUi.ready&&!busy&&!ui.loading&&!ui.readFailed&&ui.queued==0&&ui.blocked==null&&!continuousBlocked
     SideEffect{onCanNavigate(navigationReady)}
@@ -358,7 +357,7 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
     // Reading hides transient parameter UI, while keeping tools and all saved preferences.
     LaunchedEffect(readOnly){if(readOnly){
         settings=false;eraserDialog=false;selectionSettings=false;excerptSettings=false
-        tapeSettings=false;favoriteSettings=null;beautySettings=false;penOpenRequest=0
+        tapeSettings=false;favoriteSettings=null;beautySettings=false
     }}
     LaunchedEffect(ui.message){if(ui.message!=null){notice=ui.message;vm.clearMessage()}}
     fun savePreset(selected:Int,width:Float,color:Int,kind:InkPen){
@@ -449,47 +448,26 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
     }
     if(continuousPages==null&&!readOnly)AutomaticBeautyBinding(objectsVm,ui,gesture,beautyOptions,page.world,app)
     var pageMore by remember{mutableStateOf(false)}
-    val pageTools:@Composable (()->Unit)->Unit={close->
+    val pageTools:@Composable (Boolean,()->Unit)->Unit={showLayers,close->
         Text("页面与批注",Modifier.padding(horizontal=16.dp,vertical=8.dp),style=MaterialTheme.typography.labelLarge,color=Quiet)
-        DropdownMenuItem(text={Text("图层 · "+(authoringUi.state.layers.layers.firstOrNull{it.id==authoringUi.state.layers.currentId}?.name?:"请选择可写层"))},onClick={close();layersOpen=true},enabled=!gesture&&!busy,modifier=Modifier.testTag("page-layers-open"))
+        if(showLayers)DropdownMenuItem(text={Text("图层 · "+(authoringUi.state.layers.layers.firstOrNull{it.id==authoringUi.state.layers.currentId}?.name?:"请选择可写层"))},onClick={close();parameterAnchor=null;layersOpen=true},enabled=!gesture&&!busy,modifier=Modifier.testTag("page-layers-open"))
         if(!page.world)DropdownMenuItem(text={Text(if(whitespaceOpen)"收起留白 · 返回原页"else"含留白展开视图")},onClick={close();whitespaceMode(!whitespaceOpen)},enabled=!gesture&&!busy&&!authoringUi.pending,modifier=Modifier.testTag("page-whitespace-open"))
         DropdownMenuItem(text={Text("可见分享")},onClick={close();visibleShare=true},enabled=navigationReady,modifier=Modifier.testTag("page-visible-share"))
         DropdownMenuItem(text={Text(if(selectedObject!=null)"对象旁批注"else"游离批注")},onClick={close();annotationTarget=selectedObject?:page.id},enabled=!gesture&&!busy,modifier=Modifier.testTag("page-annotation-open"))
         HorizontalDivider(color=Line)
     }
-    val toolbar:@Composable ()->Unit={
-        FloatingPenCase(expandRequest=penOpenRequest,topInset=toolbarHeight,visible=!whitespaceOpen) {
-            val caseKinds=listOf(InkPen.PENCIL,InkPen.PEN,InkPen.BRUSH,InkPen.MARKER,InkPen.BALLPOINT,InkPen.HIGHLIGHTER)
-            caseKinds.forEach{kind->
-                val active=tool in 0..2&&kinds[tool]==kind
-                val value=penStore.readPen(kind)
-                Box{
-                    IconToggleButton(active,{if(active)settings=true else choosePen(kind)},enabled=!editingBlocked,modifier=Modifier.size(96.dp,48.dp).testTag("pen-kind-${kind.name.lowercase()}").describedAs(PenKinds.title(kind)+"，再点调整")){
-                        PenSilhouette(kind,if(active)colors[tool]else value.color,selected=active)
-                    }
-                    if(active)PenPresetMenu(settings,tool,widths[tool],colors[tool],kind,{settings=false},favorites,favoriteBusy,::toggleFavorite,recipe=recipes[tool],onRecipe={saveRecipe(tool,it)}){width,color,k->savePreset(tool,width,color,k)}
-                }
-            }
-            Box {
-            IconButton(onClick={if(tool==7)tapeSettings=true else{if(continuousPages!=null)leaveContinuous();selectedObject=null;tool=7}},enabled=!editingBlocked&&!continuousBlocked,modifier=Modifier.size(96.dp,48.dp).testTag("object-tape").describedAs("胶带，拖动画胶带，再点调节")){CaseAccessory("tape",tool==7)}
-                if(tapeSettings)TapeSettingsCard(tapeMode,{tapeMode=it;saveTape()},tapeWidth,{tapeWidth=it;saveTape()},tapeColor,{tapeColor=it;saveTape()},TapePattern.entries[tapePatternIndex],{tapePatternIndex=it.ordinal;saveTape()},objectsUi.objects.filter{it.kind==PageObjectKind.TAPE}.all{!it.revealed},
+    val penSettings:@Composable ()->Unit={
+        val slot=tool.coerceIn(0,2)
+        PenPresetMenu(settings,slot,widths[slot],colors[slot],kinds[slot],{settings=false},favorites,favoriteBusy,::toggleFavorite,
+            recipe=recipes[slot],onRecipe={saveRecipe(slot,it)},attachedToToolbar=true,onChooseKind={choosePen(it);settings=true}){width,color,kind->savePreset(slot,width,color,kind)}
+    }
+    val parameterPopups:@Composable ()->Unit={
+        if(tapeSettings)TapeSettingsCard(tapeMode,{tapeMode=it;saveTape()},tapeWidth,{tapeWidth=it;saveTape()},tapeColor,{tapeColor=it;saveTape()},TapePattern.entries[tapePatternIndex],{tapePatternIndex=it.ordinal;saveTape()},objectsUi.objects.filter{it.kind==PageObjectKind.TAPE}.all{!it.revealed},
                     {shown->objectsVm.change(objectsUi.objects.map{if(it.kind==PageObjectKind.TAPE)it.copy(revealed=!shown)else it})},
                     {objectsVm.change(objectsUi.objects.filterNot{it.kind==PageObjectKind.TAPE})},{tapeSettings=false})
-            }
-            IconToggleButton(tool==3,{if(tool==3){anchorFor("eraser-case");eraserDialog=true}else tool=3},enabled=!editingBlocked,modifier=Modifier.size(96.dp,48.dp).toolAnchor("eraser-case").testTag("ink-tool-3").describedAs("橡皮，再点调整")){CaseAccessory("eraser",tool==3)}
-            HorizontalDivider(Modifier.width(80.dp),color=Line)
-            PenCaseColors(colors[lastWritingTool],lastWritingTool==2,!busy){color->savePreset(lastWritingTool,widths[lastWritingTool],color,kinds[lastWritingTool]);tool=lastWritingTool}
-            Row(verticalAlignment=Alignment.CenterVertically){
-            Box{
-                IconButton(onClick={beautySettings=true},enabled=!busy,modifier=Modifier.size(56.dp).testTag("auto-beauty-toggle").semantics{contentDescription="自动美化参数";stateDescription=if(beautyOptions.enabled)"已开启"else"已关闭"}){
-                    Column(horizontalAlignment=Alignment.CenterHorizontally){Glyph("beauty",if(beautyOptions.enabled)Forest else Quiet);Text("自动美化",fontSize=10.sp,color=if(beautyOptions.enabled)Forest else Quiet)}
-                }
-                BeautySettingsMenu(beautySettings,{beautySettings=false},beautyOptions,::saveBeauty,{beautySettings=false;beautyFont=true;enterBeauty()},{beautySettings=false;beautyFont=false;enterBeauty()})
-            }
-
-            }
-        }
+        BeautySettingsMenu(beautySettings,{beautySettings=false},beautyOptions,::saveBeauty,{beautySettings=false;beautyFont=true;enterBeauty()},{beautySettings=false;beautyFont=false;enterBeauty()})
     }
+
     Box(Modifier.fillMaxSize()){
     Column(Modifier.fillMaxSize().padding(top=toolbarHeight)){
 
@@ -506,7 +484,7 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
         }else if(continuousPages!=null){
             Box(Modifier.fillMaxWidth().weight(1f)){ContinuousPages(continuousPages,page.id,
                 ContinuousTools(kinds[tool.coerceIn(0,2)],colors[tool.coerceIn(0,2)],widths[tool.coerceIn(0,2)],tool==3,eraser.whole,eraser.onlyHighlighter,eraser.diameterDp,authoringUi.canWrite&&externalEnabled&&!readOnly&&tool<4&&!(if(tool==3)objectsBlocked else inkObjectsBlocked),beautyOptions,recipes[tool.coerceIn(0,2)],eraser.onlyTape,finger&&!readOnly),
-                gesture,onContinuousPage,{gesture=it;readLock.guard("ink-gesture-${page.id}",it);if(!it&&tool==3&&eraser.returnToPen)tool=lastWritingTool},{continuousBlocked=it},{notice=it},{id->onContinuousPage(id);leaveContinuous()},onAppendPage=onAppendPage.takeIf{!readOnly},authorAllowed={readLock.canWrite},returnViewport=returnViewport,onReturnViewportRestored={workspace.consumeReturnViewport(page.id)},onViewport={id,vp->workspace.viewport(id,vp)},selectedAuthoring=authoringUi,onZoom={zoom=it;showViewportHint(true)},onScroll={showViewportHint(false)},onObjectTap={pageId,id->if(!readOnly){pendingObject=pageId to id;onContinuousPage(pageId);leaveContinuous()}})}
+                gesture,onContinuousPage,{gesture=it;readLock.guard("ink-gesture-${page.id}",it);if(!it&&tool==3&&eraser.returnToPen)tool=lastWritingTool},{continuousBlocked=it},{notice=it},{id->onContinuousPage(id);leaveContinuous()},onAppendPage=onAppendPage.takeIf{!readOnly},authorAllowed={readLock.canWrite},returnViewport=returnViewport,onReturnViewportRestored={workspace.consumeReturnViewport(page.id)},onViewport={id,vp->workspace.viewport(id,vp)},initialViewport=workspace.cachedViewport(page.id)?:row.takeIf{it.zoom>0}?.let{CanvasViewport(it.centerX,it.centerY,it.zoom)},selectedAuthoring=authoringUi,onZoom={zoom=it;showViewportHint(true)},onScroll={showViewportHint(false)},onObjectTap={pageId,id->if(!readOnly){pendingObject=pageId to id;onContinuousPage(pageId);leaveContinuous()}})}
         }else if(row!=null){
             val initial=remember(page.id){workspace.cachedViewport(page.id)?:row.takeIf{it.zoom>0}?.let{runCatching{CanvasViewport(it.centerX,it.centerY,it.zoom)}.getOrNull()}}
             Box(Modifier.fillMaxWidth().weight(1f)){
@@ -603,47 +581,66 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
         if(viewportHint!=0)Surface(Modifier.align(Alignment.BottomCenter).padding(bottom=12.dp),shape=RoundedCornerShape(20.dp),color=Color.White.copy(alpha=.9f),border=BorderStroke(1.dp,Line)){
             Row(Modifier.padding(horizontal=14.dp,vertical=6.dp)){if(viewportHint==2)Text("${(zoom*100).toInt()}%",fontSize=12.sp,modifier=Modifier.testTag("ink-zoom"))else pageNavigation()}
         }
-        Surface(Modifier.align(Alignment.TopCenter).padding(horizontal=4.dp).widthIn(max=960.dp).fillMaxWidth().onSizeChanged{measuredToolbarHeight=with(toolbarDensity){it.height.toDp()}},shape=InkTheme.FloatingShape,color=InkTheme.Navigation,shadowElevation=InkTheme.ToolElevation){
+        Surface(Modifier.align(Alignment.TopCenter).fillMaxWidth().onSizeChanged{measuredToolbarHeight=with(toolbarDensity){it.height.toDp()}},color=Color.White){
             Column {
             if(readOnly&&fullScreen)ReadingToolbar(
                 enabled=navigationReady&&externalEnabled,fullScreen=fullScreen,
                 onMap={onDocumentAction("map")},onExcerpts={onDocumentAction("excerpts")},onAssociate={onDocumentAction("associations")},onWrite={changeReadOnly(false)},
                 onSearch={onSearch(ui.revision)},onOverview={onDocumentAction("overview")},
-                onFullScreen={onFullScreen(!fullScreen)},onExport={if(page.world)confirmExport=true else onDocumentAction("export")},onTimer={timerOpen=true},showWriteControl=!workspaceModesProvided,pageActions=pageTools)
-            else if(!readOnly)EditorToolbar(fullScreen=fullScreen,pageActions=pageTools) { action,closeOverflow -> when(action){
-                "undo" -> IconButton(onClick={closeOverflow();when(historyHeads.undo){EditDomain.AUTHORING->authoringVm.undo();EditDomain.OBJECT->objectsVm.undo();else->vm.undo()}},enabled=(when(historyHeads.undo){EditDomain.AUTHORING->authoringUi.undo;EditDomain.OBJECT->objectsUi.undo;else->ui.canUndo})&&!editingBlocked,modifier=Modifier.size(48.dp).testTag("ink-undo").describedAs("撤销")){Glyph("undo")}
-                "redo" -> IconButton(onClick={closeOverflow();when(historyHeads.redo){EditDomain.AUTHORING->authoringVm.redo();EditDomain.OBJECT->objectsVm.redo();else->vm.redo()}},enabled=(when(historyHeads.redo){EditDomain.AUTHORING->authoringUi.redo;EditDomain.OBJECT->objectsUi.redo;else->ui.canRedo})&&!editingBlocked,modifier=Modifier.size(48.dp).testTag("ink-redo").describedAs("重做")){Glyph("redo")}
-                "pen" -> EditorTool("笔","pen",tool<3&&!readOnly,!busy,"top-draw",Modifier.describedAs("笔参数")){closeOverflow();if(!readOnly||changeReadOnly(false)){selectedObject=null;if(tool in 0..2){settings=true;penOpenRequest++}else{tool=lastWritingTool;penOpenRequest++}}}
+                onFullScreen={onFullScreen(!fullScreen)},onExport={if(page.world)confirmExport=true else onDocumentAction("export")},onTimer={timerOpen=true},showWriteControl=true,pageActions={close->pageTools(true,close)})
+            else if(!readOnly)EditorToolbar(fullScreen=fullScreen,pageActions=pageTools,inkProperties={
+                val slot=lastWritingTool
+                EditorInkPresets(slot,widths[slot],colors[slot],!editingBlocked&&tool in 0..2,
+                    onWidth={savePreset(slot,it,colors[slot],kinds[slot])},onColor={savePreset(slot,widths[slot],it,kinds[slot])})
+            }) { action,closeOverflow -> when(action){
+                "undo" -> EditorIconButton("撤销","undo",tag="ink-undo",onClick={closeOverflow();when(historyHeads.undo){EditDomain.AUTHORING->authoringVm.undo();EditDomain.OBJECT->objectsVm.undo();else->vm.undo()}},enabled=(when(historyHeads.undo){EditDomain.AUTHORING->authoringUi.undo;EditDomain.OBJECT->objectsUi.undo;else->ui.canUndo})&&!editingBlocked)
+                "redo" -> EditorIconButton("重做","redo",tag="ink-redo",onClick={closeOverflow();when(historyHeads.redo){EditDomain.AUTHORING->authoringVm.redo();EditDomain.OBJECT->objectsVm.redo();else->vm.redo()}},enabled=(when(historyHeads.redo){EditDomain.AUTHORING->authoringUi.redo;EditDomain.OBJECT->objectsUi.redo;else->ui.canRedo})&&!editingBlocked)
+                "pen" -> Box {
+                    EditorTool("笔，再点调整","pen",tool in 0..1&&!readOnly,!editingBlocked,"top-draw",Modifier.semantics{toggleableState=ToggleableState(tool in 0..1)}){
+                        closeOverflow();selectedObject=null;if(tool in 0..1)settings=true else{tool=lastPenTool;settings=false}
+                    }
+                    if(tool in 0..1)penSettings()
+                }
+                "highlighter" -> Box {
+                    EditorTool("荧光笔，再点调整","highlighter",tool==2,!editingBlocked,"pen-kind-highlighter",Modifier.semantics{toggleableState=ToggleableState(tool==2)}){
+                        closeOverflow();selectedObject=null;if(tool==2)settings=true else choosePen(InkPen.HIGHLIGHTER)
+                    }
+                    if(tool==2)penSettings()
+                }
+                "layers" -> EditorTool("图层","layers",layersOpen,!gesture&&!busy,"page-layers-open",Modifier.toolAnchor("layers")){closeOverflow();anchorFor("layers");layersOpen=true}
+                "tape" -> EditorTool("胶带，再点调整","tape",tool==7,!editingBlocked&&!continuousBlocked,"object-tape"){
+                    closeOverflow();if(tool==7)tapeSettings=true else{if(continuousPages!=null)leaveContinuous();selectedObject=null;tool=7}
+                }
                 "eraser" -> EditorTool("橡皮","eraser",tool==3,!editingBlocked,"top-eraser",Modifier.toolAnchor("eraser").describedAs("橡皮").semantics{toggleableState=ToggleableState(tool==3)}){closeOverflow();if(tool==3){anchorFor("eraser");eraserDialog=true}else tool=3}
                 "lasso" -> EditorTool("套索","select",tool==4&&!excerptMode&&!areaEraseMode,!editingBlocked&&!continuousBlocked,"ink-select",Modifier.toolAnchor("lasso").describedAs("套索").semantics{toggleableState=ToggleableState(tool==4&&!excerptMode&&!areaEraseMode)}){closeOverflow();if(tool==4&&!excerptMode&&!areaEraseMode){anchorFor("lasso");selectionSettings=true}else chooseSelection()}
-                "area" -> IconButton(onClick={closeOverflow();chooseSelection(true,erase=true)},enabled=!editingBlocked&&!continuousBlocked,modifier=Modifier.testTag("top-area-erase").describedAs("圈选擦除")){Glyph("area-erase")}
-                "image" -> IconButton(onClick={closeOverflow();insertObject("image")},enabled=!editingBlocked&&!continuousBlocked,modifier=Modifier.testTag("object-image").describedAs("插入图片")){Glyph("image")}
-                "camera" -> IconButton(onClick={closeOverflow();insertObject("camera")},enabled=!editingBlocked&&!continuousBlocked,modifier=Modifier.testTag("object-camera").describedAs("拍照")){Glyph("camera")}
-                "text" -> IconButton(onClick={closeOverflow();insertObject("text")},enabled=!editingBlocked&&!continuousBlocked,modifier=Modifier.testTag("object-text").describedAs("文本框")){Glyph("text")}
+                "area" -> EditorIconButton("圈选擦除","area-erase",tag="top-area-erase",onClick={closeOverflow();chooseSelection(true,erase=true)},enabled=!editingBlocked&&!continuousBlocked)
+                "image" -> EditorIconButton("插入图片","image",tag="object-image",onClick={closeOverflow();insertObject("image")},enabled=!editingBlocked&&!continuousBlocked)
+                "camera" -> EditorIconButton("拍照","camera",tag="object-camera",onClick={closeOverflow();insertObject("camera")},enabled=!editingBlocked&&!continuousBlocked)
+                "text" -> EditorIconButton("文本框","text",tag="object-text",onClick={closeOverflow();insertObject("text")},enabled=!editingBlocked&&!continuousBlocked)
                 "map" -> EditorTool("导图","mindmap",false,!busy,"quick-study",Modifier.describedAs("笔记导图")){closeOverflow();onDocumentAction("map")}
                 "associations" -> EditorTool("关联","link",false,navigationReady&&externalEnabled,"document-associations",Modifier.describedAs("笔记关联")){closeOverflow();onDocumentAction("associations")}
                 "excerpts" -> EditorTool("摘录列表","excerpt",false,navigationReady&&externalEnabled,"read-excerpts",Modifier.describedAs("查看本笔记摘录")){closeOverflow();onDocumentAction("excerpts")}
                 "excerpt" -> EditorTool("摘录","excerpt",tool==4&&excerptMode,!editingBlocked&&!continuousBlocked,"top-excerpt",Modifier.toolAnchor("excerpt").describedAs("摘录")){closeOverflow();if(tool==4&&excerptMode){anchorFor("excerpt");excerptSettings=true}else chooseSelection(excerpt=true)}
-                "tag" -> IconButton(onClick=onTags,enabled=!editingBlocked,modifier=Modifier.testTag("top-tags").describedAs("笔记标签")){Glyph("tag")}
-                "shape" -> IconButton(onClick={closeOverflow();insertObject("shape")},enabled=!editingBlocked&&!continuousBlocked,modifier=Modifier.testTag("object-shape").describedAs("图形")){Glyph("shape")}
-                "sticker" -> IconButton(onClick={closeOverflow();insertObject("sticker")},enabled=!editingBlocked&&!continuousBlocked,modifier=Modifier.testTag("object-sticker").describedAs("贴纸与符号")){Glyph("sticker")}
-                "objects" -> IconToggleButton(tool==5,{closeOverflow();if(continuousPages!=null)leaveContinuous();selectedObject=null;tool=if(tool==5)lastWritingTool else 5},enabled=!editingBlocked&&!continuousBlocked,modifier=Modifier.testTag("page-objects").describedAs("选择图片与文字")){Glyph("objects")}
-                "favorites" -> IconToggleButton(favoritesOpen,{closeOverflow();showFavorites(it)},enabled=!editingBlocked,modifier=Modifier.testTag("favorite-pens-toggle").describedAs("收藏笔")){Glyph("favorite-pens")}
-                "beauty" -> IconButton(onClick={closeOverflow();beautySettings=true;penOpenRequest++},enabled=!editingBlocked,modifier=Modifier.testTag("quick-beauty").describedAs("实时字迹调整")){Glyph("beauty")}
-                "readonly" -> if(!workspaceModesProvided)IconToggleButton(readOnly,{closeOverflow();changeReadOnly(it)},modifier=Modifier.testTag("quick-readonly").describedAs("只读模式")){Glyph("readonly")}
+                "tag" -> EditorIconButton("笔记标签","tag",tag="top-tags",onClick=onTags,enabled=!editingBlocked)
+                "shape" -> EditorIconButton("图形","shape",tag="object-shape",onClick={closeOverflow();insertObject("shape")},enabled=!editingBlocked&&!continuousBlocked)
+                "sticker" -> EditorIconButton("贴纸与符号","sticker",tag="object-sticker",onClick={closeOverflow();insertObject("sticker")},enabled=!editingBlocked&&!continuousBlocked)
+                "objects" -> EditorIconButton("选择图片与文字","objects",tag="page-objects",selected=tool==5,enabled=!editingBlocked&&!continuousBlocked){closeOverflow();if(continuousPages!=null)leaveContinuous();selectedObject=null;tool=if(tool==5)lastWritingTool else 5}
+                "favorites" -> EditorIconButton("收藏笔","favorite-pens",tag="favorite-pens-toggle",selected=favoritesOpen,enabled=!editingBlocked){closeOverflow();showFavorites(!favoritesOpen)}
+                "beauty" -> EditorIconButton("实时字迹调整","beauty",tag="quick-beauty",onClick={closeOverflow();beautySettings=true},enabled=!editingBlocked)
+                "readonly" -> if(!workspaceModesProvided||fullScreen)EditorIconButton("只读模式","readonly",tag="quick-readonly",selected=readOnly){closeOverflow();changeReadOnly(!readOnly)}
                 "finger" -> EditorTool(if(finger)"手指书写"else"手指移动","finger",finger,!editingBlocked&&!continuousBlocked,"quick-finger",Modifier.describedAs(if(finger)"手指书写，单指书写，双指移动和缩放；点击切换手指移动"else"手指移动，单指移动，双指缩放；点击切换手指书写").semantics{toggleableState=ToggleableState(finger)}){closeOverflow();finger=!finger;inputPrefs.edit().putBoolean("finger-writes",finger).apply();tool=lastWritingTool}
-                "add-page" -> IconButton(onClick={closeOverflow();onDocumentAction("add-page")},enabled=!editingBlocked&&canAddPage,modifier=Modifier.testTag("quick-add-page").describedAs("添加页面")){Glyph("add-page")}
-                "overview" -> IconButton(onClick={closeOverflow();onDocumentAction("overview")},enabled=!busy,modifier=Modifier.size(48.dp).testTag("quick-overview").describedAs("文档概览")){Glyph("overview",modifier=Modifier.size(24.dp))}
-                "settings" -> IconButton(onClick={closeOverflow();onDocumentAction("settings")},enabled=!busy,modifier=Modifier.size(48.dp).testTag("quick-settings").describedAs("其他设置")){Glyph("settings",modifier=Modifier.size(24.dp))}
-                "fullscreen" -> IconToggleButton(fullScreen,{closeOverflow();onFullScreen(it)},enabled=!busy,modifier=Modifier.testTag("quick-fullscreen").describedAs("全屏专注")){Glyph("fullscreen")}
-                "export" -> IconButton(onClick={closeOverflow();if(page.world)confirmExport=true else onDocumentAction("export")},enabled=!busy,modifier=Modifier.testTag("quick-export").describedAs("导出文档")){Glyph("export")}
-                "timer" -> IconButton(onClick={closeOverflow();timerOpen=true},modifier=Modifier.testTag("quick-timer").describedAs("计时器")){Glyph("timer")}
+                "add-page" -> EditorIconButton("添加页面","add-page",tag="quick-add-page",onClick={closeOverflow();onDocumentAction("add-page")},enabled=!editingBlocked&&canAddPage)
+                "overview" -> EditorIconButton("文档概览","overview",tag="quick-overview",onClick={closeOverflow();onDocumentAction("overview")},enabled=!busy)
+                "settings" -> EditorIconButton("其他设置","settings",tag="quick-settings",onClick={closeOverflow();onDocumentAction("settings")},enabled=!busy)
+                "fullscreen" -> EditorIconButton("全屏专注","fullscreen",tag="quick-fullscreen",selected=fullScreen,enabled=!busy){closeOverflow();onFullScreen(!fullScreen)}
+                "export" -> EditorIconButton("导出文档","export",tag="quick-export",onClick={closeOverflow();if(page.world)confirmExport=true else onDocumentAction("export")},enabled=!busy)
+                "timer" -> EditorIconButton("计时器","timer",tag="quick-timer",onClick={closeOverflow();timerOpen=true})
             }}
             else Row(Modifier.fillMaxWidth(),verticalAlignment=Alignment.CenterVertically){
                 Text(if(whitespaceOpen)"含留白展开视图"else"原页视图",Modifier.weight(1f).padding(start=12.dp),style=MaterialTheme.typography.labelMedium,color=Quiet)
                 Box{
                     EditorAction("页面与批注","more",tag="toolbar-more"){pageMore=true}
-                    DropdownMenu(pageMore,{pageMore=false}){pageTools{pageMore=false}}
+                    DropdownMenu(pageMore,{pageMore=false}){pageTools(true){pageMore=false}}
                 }
             }
             }
@@ -667,8 +664,8 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
                     overflow=androidx.compose.ui.text.style.TextOverflow.Ellipsis,color=if(ui.readFailed||ui.blocked!=null)MaterialTheme.colorScheme.error else Quiet)
             }
         if(fullScreen)TextButton(onClick={onFullScreen(false)},modifier=Modifier.align(Alignment.BottomEnd).padding(8.dp).testTag("exit-fullscreen")){Text("退出全屏")}
-        if(!readOnly)toolbar()
-        if(favoritesOpen&&!readOnly)FloatingPenCase("favorites",wide=true,topInset=toolbarHeight,visible=!whitespaceOpen){
+        if(!readOnly)parameterPopups()
+        if(favoritesOpen&&!readOnly&&!whitespaceOpen)EditorPanel("收藏笔","",{showFavorites(false)},"favorite-pens-panel"){
             if(favorites.isEmpty())Text("在笔参数卡片点星号收藏",Modifier.padding(16.dp),style=MaterialTheme.typography.bodySmall,color=Quiet)
             else Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()).padding(start=8.dp,end=8.dp,bottom=12.dp)){
                 favorites.forEach{p->Box{Column(horizontalAlignment=Alignment.CenterHorizontally){
@@ -742,7 +739,9 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
     if(layersOpen){
         val picked=(mixedSelection?.let{it.strokes.map{LayerContent(LayerContentKind.INK,it.id)}+it.objects.map{LayerContent(LayerContentKind.OBJECT,it.id)}}?:selected?.strokes.orEmpty().map{LayerContent(LayerContentKind.INK,it.id)}).toMutableSet()
         objectsUi.objects.filter{o->LayerContent(LayerContentKind.OBJECT,o.id) in picked||o.sourceStrokeIds.any{LayerContent(LayerContentKind.INK,it) in picked}}.forEach{o->picked+=LayerContent(LayerContentKind.OBJECT,o.id);picked+=o.sourceStrokeIds.map{LayerContent(LayerContentKind.INK,it)}}
-        PageLayersPanel(authoringVm,authoringUi,authoringEnabled,picked.toList(),dismiss={layersOpen=false})
+        CompositionLocalProvider(LocalEditorAnchor provides parameterAnchor){
+            PageLayersPanel(authoringVm,authoringUi,authoringEnabled,picked.toList(),strokes=ui.strokes,objects=objectsUi.objects,dismiss={layersOpen=false})
+        }
     }
     annotationTarget?.let{id->val target=objectsUi.objects.firstOrNull{it.id==id};BoundAnnotationPanel(authoringVm,authoringUi,AnnotationTarget(if(target==null)AnnotationTargetKind.PAGE else AnnotationTargetKind.PAGE_OBJECT,id),if(target==null)"游离"else"对象",target?.bounds(),authoringEnabled,dismiss={annotationTarget=null})}
     if(confirmExport)AlertDialog(onDismissRequest={confirmExport=false},title={Text("导出可编辑页面副本")},text={Text("包括图片原件（可能带有拍摄元数据）、文本框、胶带状态、可见笔迹、纸张/无界形式、纸面样式和当前文字（可能含未确认内容）。明文 .iwpage，不是整库备份，包括隐藏图层与绑定批注；不包含已撤销的历史笔迹、分类、视图位置和回执。所选位置可能属于云盘。")},confirmButton={TextButton(onClick={confirmExport=false;val r=row?:return@TextButton;scope.launch{try{val source=withContext(Dispatchers.IO){app.documents.read(page.id)};require(objectsUi.objects.none{it.mapEmbed?.policy==MapEmbedPolicy.LIVE}){"LIVE_MAP_REQUIRES_FULL_BACKUP_OR_SNAPSHOT"};exportPending=InkPageFile(note.title.ifBlank{"笔记"},note.text,ui.strokes,r.world,PaperStyle.entries.getOrElse(r.paper){PaperStyle.RULED},objectsUi.objects,source,withContext(Dispatchers.IO){app.pageObjects.originals(page.id,objectsUi.objects)},authoringUi.state.takeUnless{it.legacy});launcher.launch("墨织页面.iwpage")}catch(c:CancellationException){throw c}catch(e:Exception){notice=e.mapExportExplanation()?:"页面源文件未能读取，没有导出残缺副本。"}}}){Text("选择保存位置")}},dismissButton={TextButton(onClick={confirmExport=false}){Text("取消")}})

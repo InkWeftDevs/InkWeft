@@ -83,14 +83,22 @@ internal class PenWidthStore(context:Context,name:String="inkweft-pen-widths") {
 /** Anchored to the toolbar. Outside taps dismiss without passing into ink. */
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
-internal fun PenPresetMenu(expanded:Boolean,tool:Int,current:Float,currentColor:Int,currentKind:InkPen,onDismiss:()->Unit,favorites:List<FavoritePen> = emptyList(),favoriteBusy:Boolean=false,onFavorite:(InkPen,Float,Int)->Unit={_,_,_->},favoriteSelected:Boolean?=null,recipe:BrushRecipe=BrushRecipe(),onRecipe:(BrushRecipe)->Unit={},onApply:(Float,Int,InkPen)->Unit) {
-    DropdownMenu(expanded=expanded,onDismissRequest=onDismiss,offset=DpOffset(if(LocalPenPointsLeft.current)(-320).dp else 104.dp,0.dp),shape=InkTheme.FloatingShape,containerColor=InkTheme.Surface,tonalElevation=0.dp,shadowElevation=InkTheme.FloatingElevation,modifier=Modifier.width(320.dp).heightIn(max=minOf(360.dp,androidx.compose.ui.platform.LocalConfiguration.current.screenHeightDp.dp*.55f)).testTag("pen-width-dialog")) {
+internal fun PenPresetMenu(expanded:Boolean,tool:Int,current:Float,currentColor:Int,currentKind:InkPen,onDismiss:()->Unit,favorites:List<FavoritePen> = emptyList(),favoriteBusy:Boolean=false,onFavorite:(InkPen,Float,Int)->Unit={_,_,_->},favoriteSelected:Boolean?=null,recipe:BrushRecipe=BrushRecipe(),onRecipe:(BrushRecipe)->Unit={},attachedToToolbar:Boolean=false,onChooseKind:((InkPen)->Unit)?=null,onApply:(Float,Int,InkPen)->Unit) {
+    DropdownMenu(expanded=expanded,onDismissRequest=onDismiss,offset=if(attachedToToolbar)DpOffset.Zero else DpOffset(if(LocalPenPointsLeft.current)(-320).dp else 104.dp,0.dp),shape=InkTheme.FloatingShape,containerColor=InkTheme.Surface,tonalElevation=0.dp,shadowElevation=InkTheme.FloatingElevation,modifier=Modifier.width(320.dp).heightIn(max=minOf(360.dp,androidx.compose.ui.platform.LocalConfiguration.current.screenHeightDp.dp*.55f)).testTag("pen-width-dialog")) {
         var advanced by remember{mutableStateOf(false)}
         var kind by remember(expanded,tool,currentKind){mutableStateOf(currentKind)}
         var draft by remember(expanded,tool,current){mutableFloatStateOf(current)}
         var color by remember(expanded,tool,currentColor){mutableIntStateOf(currentColor)}
         Column(Modifier.padding(horizontal=InkTheme.PanelInset,vertical=4.dp),verticalArrangement=Arrangement.spacedBy(8.dp)) {
-            Row(verticalAlignment=Alignment.CenterVertically){Text(PenKinds.title(kind),Modifier.weight(1f),style=InkTheme.PanelTitle,color=TextInk)
+            Row(verticalAlignment=Alignment.CenterVertically){
+                if(onChooseKind!=null&&tool!=2)Box(Modifier.weight(1f)){
+                    var chooseKind by remember{mutableStateOf(false)}
+                    TextButton({chooseKind=true},modifier=Modifier.testTag("pen-kind-menu")){Text(PenKinds.title(kind)+" ▾",style=InkTheme.PanelTitle,color=TextInk)}
+                    DropdownMenu(chooseKind,{chooseKind=false}){
+                        PenKinds.writing.forEach{value->DropdownMenuItem(text={Text(PenKinds.title(value))},
+                            modifier=Modifier.testTag("pen-kind-${value.name.lowercase()}"),onClick={chooseKind=false;onChooseKind(value)})}
+                    }
+                }else Text(PenKinds.title(kind),Modifier.weight(1f),style=InkTheme.PanelTitle,color=TextInk)
                 val saved=favoriteSelected?:favorites.any{it.matches(kind,draft,color,recipe)}
                 IconToggleButton(saved,{onFavorite(kind,draft,color)},enabled=!favoriteBusy,modifier=Modifier.size(48.dp).testTag("pen-favorite").describedAs(if(saved)"取消收藏这支笔"else"收藏这支笔")){Glyph(if(saved)"star-filled"else"star",if(saved)Color(0xffbd8100)else Quiet)}
                 IconButton(onClick=onDismiss,modifier=Modifier.size(48.dp).testTag("close-pen-settings").describedAs("关闭笔参数")){Glyph("close")}

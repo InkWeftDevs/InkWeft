@@ -215,25 +215,23 @@ class LearningWorkspacePolishUiTest {
     }
 
     @Test fun oneRowToolsKeepNamedPageMenuPenPreferenceAndHeaderUncovered(){
-        h.seed();h.tap("exit-readonly");h.tap("study-close")
+        val f=h.seed();h.tap("exit-readonly");h.tap("study-close")
         val toolbarBounds=compose.onNodeWithTag("editor-toolbar").getUnclippedBoundsInRoot()
         assertTrue("Writing tools occupy one row",toolbarBounds.bottom-toolbarBounds.top<=64.dp)
-        compose.onNodeWithTag("floating-pen-case").assert(SemanticsMatcher.expectValue(SemanticsProperties.StateDescription,"已收起"))
-        compose.onNodeWithTag("page-layers-open").assertDoesNotExist()
+        compose.onNodeWithTag("floating-pen-case").assertDoesNotExist()
         compose.onNodeWithTag("quick-study").assertIsDisplayed().assertIsEnabled()
         h.tap("page-layers-open");h.waitFor("page-layers")
         InstrumentationRegistry.getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_BACK)
         compose.waitUntil(15_000){compose.onAllNodesWithTag("page-layers").fetchSemanticsNodes().isEmpty()}
-        h.tap("case-collapse")
-        compose.onNodeWithTag("pen-kind-pencil").assertExists()
-        compose.activityRule.scenario.recreate();h.waitFor("pen-kind-pencil")
-        assertFalse(h.app.getSharedPreferences("inkweft-editor",0).getBoolean("case-collapsed",true))
-        h.tap("case-collapse");screenshot("polish-default-tools.png")
+        compose.selectPen("pencil")
+        val store=PenWidthStore(h.app,"inkweft-pen-widths-book-${f.note.id}")
+        assertEquals(InkPen.PENCIL,store.readKinds()[0])
+        compose.activityRule.scenario.recreate();h.waitFor("top-draw")
+        assertEquals(InkPen.PENCIL,store.readKinds()[0]);screenshot("polish-default-tools.png")
         h.tap("read-excerpts");h.waitFor("excerpt-panel")
         val header=compose.onNodeWithTag("document-toolbar").fetchSemanticsNode().boundsInRoot
         val panel=compose.onNodeWithTag("excerpt-panel").fetchSemanticsNode().boundsInRoot
         assertTrue("Excerpt panel starts below document navigation",panel.top>=header.bottom-1f)
-        compose.onNodeWithTag("document-associations").assertIsDisplayed()
         screenshot("polish-excerpt-header-clear.png")
     }
 
@@ -255,20 +253,16 @@ class LearningWorkspacePolishUiTest {
     }
 
     @Test fun narrowLargeTextWhitespaceAndLayersKeepControlsClearAndPenPreference()=atNarrow{
-        h.seed();h.tap("exit-readonly");h.tap("study-close");h.tap("case-collapse")
-        compose.onNodeWithTag("pen-kind-pencil").assertExists()
+        val f=h.seed();h.tap("exit-readonly");h.tap("study-close")
+        compose.selectPen("pencil")
+        val store=PenWidthStore(h.app,"inkweft-pen-widths-book-${f.note.id}")
+        val penBefore=store.readPen(InkPen.PENCIL)
         val prefs=h.app.getSharedPreferences("inkweft-editor",0)
         val caseBefore=listOf("case-x","case-y","case-collapsed").associateWith{prefs.all[it]}
-        val penBounds=compose.onNodeWithTag("floating-pen-case").getUnclippedBoundsInRoot()
         val viewport=h.paperViewport()
-        compose.onNodeWithTag("editor-tools-page").assertIsDisplayed().assertHeightIsAtLeast(48.dp).assertWidthIsAtLeast(48.dp)
-        val fingerBounds=compose.onNodeWithTag("quick-finger").getUnclippedBoundsInRoot()
-        h.tap("editor-tools-page")
-        compose.onNodeWithTag("ink-select").performScrollTo()
         fullyVisible("ink-select","editor-tool-scroll")
-        assertEquals(fingerBounds,compose.onNodeWithTag("quick-finger").getUnclippedBoundsInRoot())
         h.tap("page-layers-open")
-        fullyVisible("layer-heading-${UserLayers.DEFAULT_ID}","page-layers")
+        fullyVisible("layer-select-${UserLayers.DEFAULT_ID}","page-layers")
         compose.onNodeWithTag("current-writable-layer").assertIsDisplayed()
         h.tap("layer-help")
         compose.onNodeWithTag("layer-help-content").performScrollTo().assertIsDisplayed().assertTextContains("隐藏仅影响显示，锁定限制编辑",substring=true)
@@ -285,9 +279,84 @@ class LearningWorkspacePolishUiTest {
         assertEquals(caseBefore,listOf("case-x","case-y","case-collapsed").associateWith{prefs.all[it]})
         screenshot("polish-narrow-whitespace-clear.png")
         h.tap("whitespace-original");h.waitFor("ink-surface")
-        compose.onNodeWithTag("pen-kind-pencil").assertExists()
+        compose.onNodeWithTag("top-draw").assertIsOn()
+        assertEquals(penBefore,store.readPen(InkPen.PENCIL))
         assertEquals(caseBefore,listOf("case-x","case-y","case-collapsed").associateWith{prefs.all[it]})
-        assertEquals(penBounds,compose.onNodeWithTag("floating-pen-case").getUnclippedBoundsInRoot())
+        assertEquals(viewport,h.paperViewport())
+    }
+
+    @Test fun compactMapDraftBlocksNativePageWritingAndSurvivesRecreation(){
+        val f=h.seed();h.tap("exit-readonly")
+        val own=h.authorStamp(f.note.id);val other=h.authorStamp(f.unrelated.id);val source=h.source(f.card)
+        h.tap("node-rename")
+        val draft="云端未保存主题：保持原文与来源"
+        compose.onNodeWithTag("node-title-input").performTextReplacement(draft)
+        compose.waitUntil(15_000){compose.runOnUiThread{h.lock(f.note.id).hasDraft.value}}
+        compose.onNodeWithTag("top-draw").assertIsNotEnabled()
+        compose.onNodeWithTag("study-close").assertIsNotEnabled()
+        compose.runOnIdle{
+            val canvas=h.native<InkCanvasView>();assertFalse(canvas.allowInput)
+            val viewport=canvas.snapshotViewport();val down=android.os.SystemClock.uptimeMillis()
+            val pointer=android.view.MotionEvent.PointerProperties().apply{id=0;toolType=android.view.MotionEvent.TOOL_TYPE_STYLUS}
+            listOf(android.view.MotionEvent.ACTION_DOWN,android.view.MotionEvent.ACTION_MOVE,android.view.MotionEvent.ACTION_UP).forEachIndexed{index,action->
+                val point=android.view.MotionEvent.PointerCoords().apply{x=canvas.width*.3f+index*20f;y=canvas.height*.5f;pressure=.5f}
+                val event=android.view.MotionEvent.obtain(down,down+index*20L,action,1,arrayOf(pointer),arrayOf(point),0,0,1f,1f,0,0,android.view.InputDevice.SOURCE_STYLUS,0)
+                try{canvas.dispatchTouchEvent(event)}finally{event.recycle()}
+            }
+            assertEquals(viewport,canvas.snapshotViewport())
+            assertFalse(h.lock(f.note.id).request(true))
+        }
+        h.assertAuthors(f,own,other,source)
+        compose.activityRule.scenario.recreate();h.waitFor("node-title-input")
+        compose.onNodeWithTag("node-title-input").assertTextContains(draft)
+        compose.runOnIdle{
+            assertEquals(f.mapId,h.study(f.note.id).mapId.value)
+            assertEquals(f.node,h.study(f.note.id).selectedByMap[f.mapId])
+            assertTrue(h.lock(f.note.id).hasDraft.value);assertFalse(h.native<InkCanvasView>().allowInput)
+        }
+        h.assertAuthors(f,own,other,source)
+        h.tap("node-title-cancel")
+        compose.waitUntil(15_000){compose.runOnUiThread{!h.lock(f.note.id).hasDraft.value&&h.app.navigationReady.value}}
+        compose.runOnIdle{assertTrue(h.native<InkCanvasView>().allowInput)}
+        h.assertAuthors(f,own,other,source)
+    }
+
+    @Test fun compactLayersKeepBrowsingSeparateFromWritingAndUndoDeletion()=atNarrow{
+        val f=h.seed();h.tap("exit-readonly");h.tap("study-close")
+        val scope=AuthoringScope.page(f.note.id,f.note.id)
+        val reference=h.authorStamp(f.unrelated.id)
+        val viewport=h.paperViewport()
+        fun layers()=runBlocking{h.app.authoring.read(scope).state.layers}
+        fun saved(predicate:(UserLayers)->Boolean){
+            compose.waitUntil(15_000){predicate(layers())&&runCatching{compose.onNodeWithTag("layer-add").assertIsEnabled()}.isSuccess}
+        }
+        h.tap("page-layers-open");h.tap("layer-add")
+        saved{it.layers.size==2}
+        val added=checkNotNull(layers().currentId)
+        assertNotEquals(UserLayers.DEFAULT_ID,added)
+        for(tag in listOf("layer-visible-$added","layer-lock-$added","layer-more-$added")){
+            compose.onNodeWithTag(tag).assertWidthIsAtLeast(48.dp).assertHeightIsAtLeast(48.dp)
+            fullyVisible(tag,"page-layers")
+        }
+        h.tap("layer-visible-$added");saved{it.currentId==null&&!it.layers.last().visible}
+        h.tap("layer-select-$added")
+        assertNull("Inspecting hidden data must not resume writing",layers().currentId)
+        h.tap("layer-visible-$added");saved{it.layers.last().visible}
+        assertNull("Showing a layer alone must not resume writing",layers().currentId)
+        h.tap("layer-select-$added");saved{it.currentId==added}
+        h.tap("layer-lock-$added");saved{it.currentId==null&&it.layers.last().locked}
+        h.tap("layer-select-${UserLayers.DEFAULT_ID}");saved{it.currentId==UserLayers.DEFAULT_ID}
+        val locked=PageAuthoringCodec.fingerprint(runBlocking{h.app.authoring.read(scope).state})
+        h.tap("layer-select-$added")
+        assertEquals(UserLayers.DEFAULT_ID,layers().currentId)
+        assertEquals(locked,PageAuthoringCodec.fingerprint(runBlocking{h.app.authoring.read(scope).state}))
+        h.tap("layer-lock-$added");saved{!it.layers.last().locked}
+        h.tap("layer-select-$added");saved{it.currentId==added}
+        h.tap("layer-more-$added");h.tap("layer-delete-$added")
+        compose.onNodeWithText("删除空层").performClick();saved{it.layers.size==1}
+        h.tap("layer-undo");saved{it.layers.size==2&&it.currentId==added}
+        screenshot("editor-ui-layers-narrow-undo.png")
+        assertEquals(reference,h.authorStamp(f.unrelated.id))
         assertEquals(viewport,h.paperViewport())
     }
 }

@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -41,7 +42,7 @@ internal data class ContinuousTools(val pen:InkPen,val color:Int,val width:Float
 
 /** Only visible pages have native views. Visited writers remain observed until their saves settle. */
 @Composable internal fun ContinuousPages(pages:List<NotebookPageRow>,selected:String,tools:ContinuousTools,
-    writing:Boolean,onSelect:(String)->Unit,onGesture:(Boolean)->Unit,onBlocked:(Boolean)->Unit,onNotice:(String)->Unit,onRepair:(String)->Unit,onObjectTap:(String,String)->Unit={_,_->},onScroll:()->Unit={},onAppendPage:(()->Unit)?=null,onZoom:(Double)->Unit={},authorAllowed:()->Boolean={true},returnViewport:CanvasViewport?=null,onReturnViewportRestored:()->Unit={},onViewport:(String,CanvasViewport)->Unit={_,_->},selectedAuthoring:AuthoringUi?=null){
+    writing:Boolean,onSelect:(String)->Unit,onGesture:(Boolean)->Unit,onBlocked:(Boolean)->Unit,onNotice:(String)->Unit,onRepair:(String)->Unit,onObjectTap:(String,String)->Unit={_,_->},onScroll:()->Unit={},onAppendPage:(()->Unit)?=null,onZoom:(Double)->Unit={},authorAllowed:()->Boolean={true},returnViewport:CanvasViewport?=null,onReturnViewportRestored:()->Unit={},onViewport:(String,CanvasViewport)->Unit={_,_->},selectedAuthoring:AuthoringUi?=null,initialViewport:CanvasViewport?=null){
     if(pages.isEmpty())return
     val app=LocalContext.current.applicationContext as InkWeftApplication
     val state=rememberLazyListState(initialFirstVisibleItemIndex=pages.indexOfFirst{it.id==selected}.coerceAtLeast(0))
@@ -99,11 +100,25 @@ internal data class ContinuousTools(val pen:InkPen,val color:Int,val width:Float
     }}
     SideEffect{onBlocked(pending||groupBlocked||recovering||recoveryProblem!=null);writer.onNotice=onNotice}
     LaunchedEffect(state){snapshotFlow{Triple(state.isScrollInProgress,state.firstVisibleItemIndex,state.firstVisibleItemScrollOffset)}.distinctUntilChanged().collect{if(it.first&&dragged)onScroll()}}
-    var paperZoom by remember(book){mutableFloatStateOf(1f)}
-    var paperPanX by remember(book){mutableFloatStateOf(0f)}
     BoxWithConstraints(Modifier.fillMaxSize().clipToBounds()){
     val pageWidth=maxWidth
     val viewportWidth=with(density){pageWidth.toPx()}
+    // Restore saved reading context once; later panel changes must not fit or reset it.
+    val initialReading=remember(book){initialViewport.takeIf{returnViewport==null}}
+    var initialReadingApplied by rememberSaveable(book){mutableStateOf(initialReading==null)}
+    val basePaperWidthDp by rememberSaveable(book){mutableFloatStateOf(initialReading?.let{(it.zoom*1000).toFloat()}?:maxOf(pageWidth.value,800f))}
+    var paperZoom by rememberSaveable(book){mutableFloatStateOf(1f)}
+    var paperLeftDp by rememberSaveable(book){mutableFloatStateOf(initialReading?.let{(pageWidth.value/2-it.centerX*it.zoom).toFloat()}?:0f)}
+    val baseWidthPx=basePaperWidthDp*density.density
+    val paperWidthPx=baseWidthPx*paperZoom
+    fun paperLeftPx():Float {
+        val contentWidth=baseWidthPx*paperZoom
+        return if(contentWidth<=viewportWidth)(viewportWidth-contentWidth)/2f
+            else (paperLeftDp*density.density).coerceIn(viewportWidth-contentWidth,0f)
+    }
+    val paperLeftX=paperLeftPx()
+    val minimumZoom=viewportWidth/baseWidthPx
+    val maximumZoom=maxOf(minimumZoom,minOf(3f,8000f/basePaperWidthDp))
     val returning by rememberUpdatedState(onReturnViewportRestored)
     val parentHeight=with(density){maxHeight.toPx()}
     val width=viewportWidth.roundToInt()
@@ -112,14 +127,21 @@ internal data class ContinuousTools(val pen:InkPen,val color:Int,val width:Float
     val latestWidth by rememberUpdatedState(width)
     val latestSelected by rememberUpdatedState(selected)
     val pageIds=pages.map{it.id}
+    LaunchedEffect(book,parentHeight,pageIds){
+        if(!initialReadingApplied&&initialReading!=null){
+            val index=pages.indexOfFirst{it.id==selected}
+            if(index>=0){
+                val offset=(initialReading.centerY*initialReading.zoom*density.density-parentHeight/2).roundToInt()
+                state.scrollToItem(index,if(index==0)offset.coerceAtLeast(0)else offset)
+                initialReadingApplied=true
+            }
+        }
+    }
     // Explicit page selection survives scrolling and panel resizing; manual scrolling reports its settled page.
     LaunchedEffect(selected,pageIds,width,writing){
         val index=pages.indexOfFirst{it.id==selected}
         if(index<0||writing)return@LaunchedEffect
-        if(selected==reported){
-            if(handledWidth==width)return@LaunchedEffect
-            if(originAnchor==null){handledWidth=width;return@LaunchedEffect}
-        }
+        if(selected==reported){handledWidth=width;return@LaunchedEffect}
         var completed=false
         try{state.animateScrollToItem(index);completed=true}
         finally{
@@ -131,26 +153,26 @@ internal data class ContinuousTools(val pen:InkPen,val color:Int,val width:Float
     }
     LaunchedEffect(state){snapshotFlow{
         val anchor=state.firstVisibleItemIndex to state.firstVisibleItemScrollOffset
-        if(state.isScrollInProgress||latestSelected!=reported||handledWidth!=latestWidth||anchor==originAnchor)return@snapshotFlow null
+        if(!initialReadingApplied||state.isScrollInProgress||latestSelected!=reported||handledWidth!=latestWidth||anchor==originAnchor)return@snapshotFlow null
         val info=state.layoutInfo;val mid=(info.viewportStartOffset+info.viewportEndOffset)/2
         info.visibleItemsInfo.minByOrNull{kotlin.math.abs(it.offset+it.size/2-mid)}?.key as? String
     }.distinctUntilChanged().collect{id->if(id!=null&&gestureOwner==null&&latestPages.any{it.id==id}){originAnchor=null;reported=id;latestSelect(id)}}}
     val reportViewport by rememberUpdatedState(onViewport)
-    LaunchedEffect(state,selected,paperZoom,paperPanX,viewportWidth,parentHeight,writing){
+    LaunchedEffect(state,selected,paperZoom,paperLeftX,viewportWidth,parentHeight,writing,initialReadingApplied){
         snapshotFlow{val item=state.layoutInfo.visibleItemsInfo.firstOrNull{it.key==selected};Triple(state.isScrollInProgress,item?.offset,item?.size)}.distinctUntilChanged().collect{(scrolling,offset,_)->
-            if(!scrolling&&!writing&&offset!=null){val zoom=viewportWidth*paperZoom/density.density/1000.0
-                reportViewport(selected,CanvasViewport.safe(500-paperPanX/(zoom*density.density),(parentHeight/2-offset)/(zoom*density.density),zoom))}
+            if(initialReadingApplied&&!scrolling&&!writing&&offset!=null){val zoom=basePaperWidthDp*paperZoom/1000.0
+                reportViewport(selected,CanvasViewport.safe((viewportWidth/2-paperLeftX)/(zoom*density.density),(parentHeight/2-offset)/(zoom*density.density),zoom))}
         }
     }
     LaunchedEffect(returnViewport,selected,writing,pending,groupBlocked,recovering,viewportWidth,parentHeight){
         val target=returnViewport?:return@LaunchedEffect
         if(writing||pending||groupBlocked||recovering||state.isScrollInProgress)return@LaunchedEffect
         val index=pages.indexOfFirst{it.id==selected};if(index<0)return@LaunchedEffect
-        val targetZoom=(target.zoom*1000*density.density/viewportWidth).toFloat()
-        val pan=((500-target.centerX)*target.zoom*density.density).toFloat()
-        val limit=viewportWidth*(targetZoom-1f)/2
-        if(targetZoom !in 1f..3f||kotlin.math.abs(pan)>limit+.5f){onNotice("已返回原页；连续视图不能精确恢复此次缩放，切换单页可恢复原视野");return@LaunchedEffect}
-        paperZoom=targetZoom;paperPanX=pan
+        val targetZoom=(target.zoom*1000/basePaperWidthDp).toFloat()
+        val pan=(viewportWidth/2-target.centerX*target.zoom*density.density).toFloat()
+        val limit=minOf(0f,viewportWidth-baseWidthPx*targetZoom)
+        if(targetZoom !in minimumZoom..maximumZoom||pan<limit-.5f||pan>.5f){onNotice("已返回原页；连续视图不能精确恢复此次缩放，切换单页可恢复原视野");return@LaunchedEffect}
+        paperZoom=targetZoom;paperLeftDp=pan/density.density
         val offset=(target.centerY*target.zoom*density.density-parentHeight/2).roundToInt()
         if(index==0&&offset<0){onNotice("已返回首页；连续视图没有页前空白，切换单页可恢复原视野");return@LaunchedEffect}
         state.scrollToItem(index,offset)
@@ -162,7 +184,7 @@ internal data class ContinuousTools(val pen:InkPen,val color:Int,val width:Float
         }.first{it}}
         if(exact==true)returning()else onNotice("已返回原页，连续页视野尚未精确恢复；切换单页可继续恢复")
     }
-    Box(Modifier.fillMaxSize().nestedScroll(pullConnection).pointerInput(book,tools.fingerWrites,viewportWidth){
+    Box(Modifier.fillMaxSize().testTag("continuous-viewport").nestedScroll(pullConnection).pointerInput(book,tools.fingerWrites,viewportWidth){
         awaitEachGesture{
             val down=awaitFirstDown(requireUnconsumed=false,pass=PointerEventPass.Initial)
             val epoch=++gestureEpoch[0]
@@ -189,15 +211,15 @@ internal data class ContinuousTools(val pen:InkPen,val color:Int,val width:Float
                             val after=common.map{it.position}.reduce{a,b->a+b}/common.size.toFloat()
                             val oldSpan=common.sumOf{(it.previousPosition-before).getDistance().toDouble()}
                             val newSpan=common.sumOf{(it.position-after).getDistance().toDouble()}
-                            val nextZoom=(paperZoom*if(oldSpan>0.0)(newSpan/oldSpan).toFloat()else 1f).coerceIn(1f,3f)
+                            val nextZoom=(paperZoom*if(oldSpan>0.0)(newSpan/oldSpan).toFloat()else 1f).coerceIn(minimumZoom,maximumZoom)
                             val ratio=nextZoom/paperZoom
-                            val limit=viewportWidth*(nextZoom-1f)/2f
-                            paperPanX=(paperPanX*ratio+(before.x-viewportWidth/2f)*(1f-ratio)+after.x-before.x).coerceIn(-limit,limit)
+                            val limit=minOf(0f,viewportWidth-baseWidthPx*nextZoom)
+                            paperLeftDp=(paperLeftPx()*ratio+before.x*(1f-ratio)+after.x-before.x).coerceIn(limit,0f)/density.density
                             if(kotlin.math.abs(ratio-1f)>.0001f){
                                 val offset=((state.firstVisibleItemScrollOffset+before.y)*ratio-after.y).roundToInt()
                                 paperZoom=nextZoom
                                 state.requestScrollToItem(state.firstVisibleItemIndex,offset)
-                                pull.cancel();pull.begin();latestZoom(nextZoom.toDouble())
+                                pull.cancel();pull.begin();latestZoom(basePaperWidthDp*nextZoom/1000.0)
                             }else{
                                 val scroll=before.y-after.y
                                 val consumed=state.dispatchRawDelta(scroll)
@@ -220,7 +242,7 @@ internal data class ContinuousTools(val pen:InkPen,val color:Int,val width:Float
             }finally{pull.cancel()}
         }
     }){
-    LazyColumn(state=state,userScrollEnabled=!writing&&!tools.fingerWrites,modifier=Modifier.requiredWidth(pageWidth*paperZoom).fillMaxHeight().offset{IntOffset(paperPanX.roundToInt(),0)}.background(Color.White).testTag("continuous-pages"),
+    LazyColumn(state=state,userScrollEnabled=!writing&&!tools.fingerWrites,modifier=Modifier.requiredWidth((basePaperWidthDp*paperZoom).dp).fillMaxHeight().offset{IntOffset((paperLeftX+(paperWidthPx-viewportWidth)/2).roundToInt(),0)}.background(Color.White).testTag("continuous-pages"),
         contentPadding=PaddingValues(0.dp),verticalArrangement=Arrangement.spacedBy(0.dp),horizontalAlignment=Alignment.CenterHorizontally){
         items(pages,key={it.id}){page->
             val model:InkViewModel=viewModel(key="ink-${page.id}",factory=InkViewModel.Factory(page.id,app.inkRepository))

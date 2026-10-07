@@ -1,0 +1,436 @@
+{
+  "status": "TARGETED_REGRESSIONS_VERIFIED_AWAITING_USER_REVIEW",
+  "production_editor_integrated": true,
+  "user_functional_acceptance": false,
+  "base_head": "0219ca84d0355b1228056535e7daf60087d637aa",
+  "stacked_pr16_head": "ad0e982402edeb0b5d4bcc8ce453b317925f52fa",
+  "pr": 17,
+  "keep_draft": true,
+  "build": {
+    "app": "PASS",
+    "app_androidTest": "PASS",
+    "data_local_androidTest_build": "PASS",
+    "core_domain_tests": 369,
+    "core_domain_failures": 0,
+    "lint_errors": 0,
+    "lint_non_errors": 171,
+    "schema_changed": false,
+    "app_signature": "PASS",
+    "dependency_override": "External init script: full official-source MuPDF fitz 1.28.5 AAR; production declarations unchanged",
+    "fitz_aar_sha256": "007daaac996e9f7ff7f62646f8ca29beb7f642238a0bf7d6a0c557119e2fa5d1",
+    "test_signature": "PASS"
+  },
+  "native_ui": {
+    "status": "PASS",
+    "start_utc": "2026-10-07T08:55:47.971083+00:00",
+    "end_utc": "2026-10-07T09:04:45.459071+00:00",
+    "seconds": 512.075,
+    "cases": [
+      {
+        "class": "org.inkweft.app.EditorWritingIntegrationUiTest",
+        "test": "landscapeRealInkPresetsHistoryPanelsAndRecreation",
+        "status": "PASS",
+        "runner_code": 0
+      },
+      {
+        "class": "org.inkweft.app.EditorWritingIntegrationUiTest",
+        "test": "narrowLargeTextKeepsToolsParametersAndSourceReachable",
+        "status": "PASS",
+        "runner_code": 0
+      },
+      {
+        "class": "org.inkweft.app.EditorChromeUiTest",
+        "test": "largeTextShortcutsShareTargetsAndKeepNamesInTooltips",
+        "status": "PASS",
+        "runner_code": 0
+      },
+      {
+        "class": "org.inkweft.app.StudyWindowGeometryUiTest",
+        "test": "restoringBottomRightWindowKeepsExpandedFrameInsideEveryFrame",
+        "status": "PASS",
+        "runner_code": 0
+      },
+      {
+        "class": "org.inkweft.app.StudyWindowGeometryUiTest",
+        "test": "narrowLargeTextKeepsCompactRestoreAndCloseTargetsReachable",
+        "status": "PASS",
+        "runner_code": 0
+      },
+      {
+        "class": "org.inkweft.app.StudyWindowGeometryUiTest",
+        "test": "returningFromSourceToFocusKeepsCloseTargetInsideEveryFrame",
+        "status": "PASS",
+        "runner_code": 0
+      },
+      {
+        "class": "org.inkweft.app.StudyWindowGeometryUiTest",
+        "test": "narrowDefaultKeepsPageSpaceEvenWithLegacyFocusPreference",
+        "status": "PASS",
+        "runner_code": 0
+      },
+      {
+        "class": "org.inkweft.app.EditorVisualContractTest",
+        "test": "changingLocatorCannotMoveOrResizePanel",
+        "status": "PASS",
+        "runner_code": 0
+      }
+    ],
+    "apks": {
+      "app-debug.apk": {
+        "bytes": 119446165,
+        "sha256": "f8a7ad16cfa8bbb6fbec1bae81714016d89a52b70e8d90882f80858a9fc593c9"
+      },
+      "app-debug-androidTest.apk": {
+        "bytes": 15823912,
+        "sha256": "46bdb03e9be3cd6063a9fcb18ef07e60b10c2c86f292c6110b64d438bbc371f6"
+      }
+    }
+  },
+  "regressions": {
+    "status": "ALL_TARGET_CASES_PASS_AFTER_TEST_ADAPTATION",
+    "target_cases": 10,
+    "unique_passed": 10,
+    "first_run": {
+      "status": "FAILED_OR_INCOMPLETE",
+      "start_utc": "2026-10-07T09:05:16.409546+00:00",
+      "end_utc": "2026-10-07T09:26:52.448247+00:00",
+      "seconds": 1275.86,
+      "cases": [
+        {
+          "class": "org.inkweft.app.LearningWorkspacePolishUiTest",
+          "test": "compactMapDraftBlocksNativePageWritingAndSurvivesRecreation",
+          "status": "PASS",
+          "runner_code": 0
+        },
+        {
+          "class": "org.inkweft.app.LearningWorkspacePolishUiTest",
+          "test": "compactLayersKeepBrowsingSeparateFromWritingAndUndoDeletion",
+          "status": "PASS",
+          "runner_code": 0
+        },
+        {
+          "class": "org.inkweft.app.SourceFocusVisibilityUiTest",
+          "test": "narrow375LargeFontRetainsSourceRegionThroughRecreationAndRestoresItsFocusFrame",
+          "status": "FAIL",
+          "runner_code": -2
+        },
+        {
+          "class": "org.inkweft.app.SourceFocusVisibilityUiTest",
+          "test": "splitPaneRefitsRetainedSourceAcrossBothDirectionsWithoutChangingReferenceOrGraph",
+          "status": "PASS",
+          "runner_code": 0
+        },
+        {
+          "class": "org.inkweft.app.EditorToolsUiTest",
+          "test": "distinctPensRememberRecipesAndPaletteDoesNotRewriteOtherPens",
+          "status": "PASS",
+          "runner_code": 0
+        },
+        {
+          "class": "org.inkweft.app.EditorToolsUiTest",
+          "test": "documentActionsReadOnlyFullScreenAndTimerAreOperational",
+          "status": "PASS",
+          "runner_code": 0
+        },
+        {
+          "class": "org.inkweft.app.EditorToolsUiTest",
+          "test": "tapeStickerAndShapesSaveAndUndoThroughDirectTools",
+          "status": "PASS",
+          "runner_code": 0
+        },
+        {
+          "class": "org.inkweft.app.EditorRedesignUiTest",
+          "test": "beautySettingsStayCompactAndDoNotMovePaper",
+          "status": "PASS",
+          "runner_code": 0
+        },
+        {
+          "class": "org.inkweft.app.ContinuousWritingUiTest",
+          "test": "rapidSuccessiveStrokesRemainQueuedUntilAllAreSaved",
+          "status": "PASS",
+          "runner_code": 0
+        },
+        {
+          "class": "org.inkweft.app.EditorVisualContractTest",
+          "test": "narrowToolbarKeepsWritingToolsVisibleAndInputModeRecoverable",
+          "status": "PASS",
+          "runner_code": 0
+        }
+      ],
+      "apks": {
+        "app-debug.apk": {
+          "bytes": 119446165,
+          "sha256": "f8a7ad16cfa8bbb6fbec1bae81714016d89a52b70e8d90882f80858a9fc593c9"
+        },
+        "app-debug-androidTest.apk": {
+          "bytes": 15824280,
+          "sha256": "561dca837630991a60a4cc67706942f1d40e81de75e25ff3710ceb78a1382ccd"
+        }
+      }
+    },
+    "intermediate_retries": [
+      {
+        "status": "FAILED_OR_INCOMPLETE",
+        "start_utc": "2026-10-07T09:27:15.338531+00:00",
+        "end_utc": "2026-10-07T09:32:33.928311+00:00",
+        "seconds": 299.304,
+        "cases": [
+          {
+            "class": "org.inkweft.app.SourceFocusVisibilityUiTest",
+            "test": "narrow375LargeFontRetainsSourceRegionThroughRecreationAndRestoresItsFocusFrame",
+            "status": "FAIL",
+            "runner_code": -2
+          }
+        ],
+        "apks": {
+          "app-debug.apk": {
+            "bytes": 119446165,
+            "sha256": "f8a7ad16cfa8bbb6fbec1bae81714016d89a52b70e8d90882f80858a9fc593c9"
+          },
+          "app-debug-androidTest.apk": {
+            "bytes": 15824284,
+            "sha256": "8260975d7cd10a5fcbdaa36271c9cffc4d70d4684e93f9ba81fd0f24a083337c"
+          }
+        }
+      },
+      {
+        "status": "FAILED_OR_INCOMPLETE",
+        "start_utc": "2026-10-07T09:38:12.884392+00:00",
+        "end_utc": "2026-10-07T09:43:14.896052+00:00",
+        "seconds": 286.27,
+        "cases": [
+          {
+            "class": "org.inkweft.app.SourceFocusVisibilityUiTest",
+            "test": "narrow375LargeFontRetainsSourceRegionThroughRecreationAndRestoresItsFocusFrame",
+            "status": "FAIL",
+            "runner_code": -2
+          }
+        ],
+        "apks": {
+          "app-debug.apk": {
+            "bytes": 119446165,
+            "sha256": "f8a7ad16cfa8bbb6fbec1bae81714016d89a52b70e8d90882f80858a9fc593c9"
+          },
+          "app-debug-androidTest.apk": {
+            "bytes": 15824320,
+            "sha256": "26c2d404ae313ae9e33f26b6b804442fbed6c126c6d2f1a0a51f677990f1f33a"
+          }
+        }
+      },
+      {
+        "status": "FAILED_OR_INCOMPLETE",
+        "start_utc": "2026-10-07T09:44:34.225080+00:00",
+        "end_utc": "2026-10-07T09:48:05.846285+00:00",
+        "seconds": 190.694,
+        "cases": [
+          {
+            "class": "org.inkweft.app.SourceFocusVisibilityUiTest",
+            "test": "narrow375LargeFontRetainsSourceRegionThroughRecreationAndRestoresItsFocusFrame",
+            "status": "FAIL",
+            "runner_code": -2
+          }
+        ],
+        "apks": {
+          "app-debug.apk": {
+            "bytes": 119446165,
+            "sha256": "f8a7ad16cfa8bbb6fbec1bae81714016d89a52b70e8d90882f80858a9fc593c9"
+          },
+          "app-debug-androidTest.apk": {
+            "bytes": 15824540,
+            "sha256": "065647bf32fde0e6cc6bf692e2d1657ef1ca901f0b574f0ef7a0567db9fe753a"
+          }
+        }
+      },
+      {
+        "status": "FAILED_OR_INCOMPLETE",
+        "start_utc": "2026-10-07T09:49:26.346901+00:00",
+        "end_utc": "2026-10-07T09:51:54.251314+00:00",
+        "seconds": 108.568,
+        "cases": [
+          {
+            "class": "org.inkweft.app.SourceFocusVisibilityUiTest",
+            "test": "narrow375LargeFontRetainsSourceRegionThroughRecreationAndRestoresItsFocusFrame",
+            "status": "FAIL",
+            "runner_code": -2
+          }
+        ],
+        "apks": {
+          "app-debug.apk": {
+            "bytes": 119446165,
+            "sha256": "f8a7ad16cfa8bbb6fbec1bae81714016d89a52b70e8d90882f80858a9fc593c9"
+          },
+          "app-debug-androidTest.apk": {
+            "bytes": 15824540,
+            "sha256": "065647bf32fde0e6cc6bf692e2d1657ef1ca901f0b574f0ef7a0567db9fe753a"
+          }
+        }
+      }
+    ],
+    "final_retry_environment": "Preconfigured the isolated emulator to 750x1600 px, density 320, font 1.6 before instrumentation; same production APK; test APK adds failure-only diagnostics without changing the success path or assertions; no app data clearing",
+    "corrected_test_retry": {
+      "status": "PASS",
+      "start_utc": "2026-10-07T09:53:57.305273+00:00",
+      "end_utc": "2026-10-07T09:58:07.442980+00:00",
+      "seconds": 228.869,
+      "cases": [
+        {
+          "class": "org.inkweft.app.SourceFocusVisibilityUiTest",
+          "test": "narrow375LargeFontRetainsSourceRegionThroughRecreationAndRestoresItsFocusFrame",
+          "status": "PASS",
+          "runner_code": 0
+        }
+      ],
+      "apks": {
+        "app-debug.apk": {
+          "bytes": 119446165,
+          "sha256": "f8a7ad16cfa8bbb6fbec1bae81714016d89a52b70e8d90882f80858a9fc593c9"
+        },
+        "app-debug-androidTest.apk": {
+          "bytes": 15826408,
+          "sha256": "e6b71d49a5da90beea9ac4eb13e5a577d0826893f59fca27c20a21d3b4d16710"
+        }
+      }
+    },
+    "correction": "Use the existing node-menu-fold action for fixture setup; the optional node-side accessory may be omitted when no rectangle fits. Measure the visible paper before entering explicit focus, because the retained hidden subtree intentionally clears semantics. Replace the old extra-row offset assertion with exact 48dp document-header height and unchanged paper top before/after navigation and recreation. Source visibility, graph, viewport, recreation and author fingerprint assertions are retained."
+  },
+  "source_sha256": {
+    "android/app/src/androidTest/java/org/inkweft/app/EditorRedesignUiTest.kt": "12bc03f645a2954089c592639c2a91617d66187f936577864830d647da09ea7d",
+    "android/app/src/androidTest/java/org/inkweft/app/EditorTestNavigation.kt": "93a02cd479ca694eb29a295caa6ead293c4de826c1885436daa3566a9f240eda",
+    "android/app/src/androidTest/java/org/inkweft/app/EditorToolsUiTest.kt": "4a68d9414c3b487bd71a7fd339e351244eadbba96f271bde430d925465b4412f",
+    "android/app/src/androidTest/java/org/inkweft/app/EditorVisualContractTest.kt": "b7e5e12bad959cd7a244edc55efb1985f666326ac0c023b550ee5a57e4b824ea",
+    "android/app/src/androidTest/java/org/inkweft/app/LearningWorkspacePolishUiTest.kt": "f4750c930287e149a7fc431dad015084f2bdeff73670af0afe625e321e44be8e",
+    "android/app/src/main/java/org/inkweft/app/BookInkScreen.kt": "ef85d731ad04388ceee097cba713fa44e1196d0938cb32c00863e96f25fb1c54",
+    "android/app/src/main/java/org/inkweft/app/EditorControls.kt": "c0694559f2f6793d2f5470640ee6b62455a3809959a6da99a43a97f60a259ad6",
+    "android/app/src/main/java/org/inkweft/app/EditorToolbar.kt": "657a78202047e896fb5041c71def3882c55d55ece6f307c8c1045fecb1e8f569",
+    "android/app/src/main/java/org/inkweft/app/FloatingStudyWindow.kt": "14b2ba68de8fef7c7c14fd73c558ba3bc8fa71bdc0cf10b77ac4ad1cd416ff63",
+    "android/app/src/main/java/org/inkweft/app/InkScreen.kt": "14f11e804f1adb3e6b9e1a03223000b7e17ba781b9c1a74db7e7db4aa9a3b51e",
+    "android/app/src/main/java/org/inkweft/app/PageLayersPanel.kt": "303cf5f7889ab6c92aab32f8b964b35d26f19bb7efcf185204f9790444642f99",
+    "android/app/src/main/java/org/inkweft/app/PenWidthSettings.kt": "5711d1b9508941e24bcbad565168349189fcbdbe16c0fa4de3a29dc943e79683",
+    "android/app/src/main/java/org/inkweft/app/StudyWorkspace.kt": "b445c712d2fb5227d3a973ad3b3503c41be94f8fa826a239ad72d44ac831f4d6",
+    "android/app/src/main/java/org/inkweft/app/WorkspaceStyle.kt": "14be715b27d86b5ada8da2451909810ce3ea8ced19ca96c2cd857bb9fad765de",
+    "android/app/src/androidTest/java/org/inkweft/app/EditorWritingIntegrationUiTest.kt": "71b45f18f116e812a9c754691f7aee7e103ee9960a8298b1160f9d6d22aeb3f9",
+    "android/app/src/main/java/org/inkweft/app/EditorInkPresets.kt": "fcf90c2374f3fcd200d756ceb0efc37c42e779c06a83f98725d9a37d565fbebd",
+    "android/app/src/main/res/drawable/ic_highlighter.xml": "c1dc2f7ca985befc94171935405907414b16b8f7f588a8090f6f6e380cca0ecf",
+    "android/app/src/main/res/drawable/ic_layers.xml": "8a1eca3fb5b951aa431452cc84ca1e68c9de9a0fb203557a4ff2c7ca7ea39373",
+    "android/app/src/main/res/drawable/ic_window_minimize.xml": "cd6ffee723f2ef43dec1d95e3e837dc6fc94bb29ff13bd2eba04bde4bae918ea",
+    "android/app/src/main/res/drawable/ic_window_restore.xml": "bec2acb4939f1d46a468edf9447ee8774d7652b11865479aa9520ebbc4858d64",
+    "android/app/src/androidTest/java/org/inkweft/app/SourceFocusVisibilityUiTest.kt": "95337371ad840d17b604e9b4d8182af805a80bb0e94bb96928517d73080da127"
+  },
+  "captures": [
+    {
+      "file": "production-layers-landscape.png",
+      "dimensions": [
+        1200,
+        800
+      ],
+      "sha256": "78ef062f9a5da7d33120b0f51aaa0b2c417dfef3c61346f557f79f373c5b12b1",
+      "source": "Actual MainActivity; synthetic persisted page objects and native stylus events; original unretouched PNG",
+      "executor_visually_inspected": true
+    },
+    {
+      "file": "production-layers-narrow-font16.png",
+      "dimensions": [
+        375,
+        800
+      ],
+      "sha256": "2bea069c0d59f075bede5ea18e10936f7b8f8d40183d1317895c61d87e634c60",
+      "source": "Actual MainActivity; synthetic persisted page objects and native stylus events; original unretouched PNG",
+      "executor_visually_inspected": true
+    },
+    {
+      "file": "production-map-landscape.png",
+      "dimensions": [
+        1200,
+        800
+      ],
+      "sha256": "5410af879d56de909f24c4756be3970e82132230ba429943bebb7c919f31aea1",
+      "source": "Actual MainActivity; synthetic persisted page objects and native stylus events; original unretouched PNG",
+      "executor_visually_inspected": true
+    },
+    {
+      "file": "production-map-narrow-font16.png",
+      "dimensions": [
+        375,
+        800
+      ],
+      "sha256": "a9138a8357036c79db21bfd195dab6d47478787a7d4431432ceacdafed17795b",
+      "source": "Actual MainActivity; synthetic persisted page objects and native stylus events; original unretouched PNG",
+      "executor_visually_inspected": true
+    },
+    {
+      "file": "production-writing-landscape.png",
+      "dimensions": [
+        1200,
+        800
+      ],
+      "sha256": "ed14ab428225ef8f9f007f30a61246654369066cfcff2fe0a43f156275f2a707",
+      "source": "Actual MainActivity; synthetic persisted page objects and native stylus events; original unretouched PNG",
+      "executor_visually_inspected": true
+    },
+    {
+      "file": "production-writing-narrow-font16.png",
+      "dimensions": [
+        375,
+        800
+      ],
+      "sha256": "8c06abf68d1f1506fc2d1aed9850889caf5d335d8dd3cd9bc5efd3c4c120c1f8",
+      "source": "Actual MainActivity; synthetic persisted page objects and native stylus events; original unretouched PNG",
+      "executor_visually_inspected": true
+    },
+    {
+      "file": "source-narrow-recreated.png",
+      "dimensions": [
+        750,
+        1600
+      ],
+      "sha256": "10eab493500a6bbcde19588e3e96195106a9bce519e7feec3f9d709d03d24e15",
+      "source": "Actual MainActivity; repository-seeded synthetic source ink; public UI source navigation; original unretouched PNG",
+      "executor_visually_inspected": true
+    },
+    {
+      "file": "source-split-visible.png",
+      "dimensions": [
+        1200,
+        2200
+      ],
+      "sha256": "79c0134508d2b56600ae094606098618ac1815ef0131fbe21d5ed4d4a24f3a23",
+      "source": "Actual MainActivity; repository-seeded synthetic source ink; public UI source navigation; original unretouched PNG",
+      "executor_visually_inspected": true
+    }
+  ],
+  "not_run": [
+    "Physical stylus pressure and latency",
+    "Physical tablet and OS multiwindow",
+    "Entire instrumentation suite"
+  ],
+  "ci": "No CI pass claimed. PR-triggered main workflow does not target this stacked base.",
+  "apks_published": false,
+  "full_logs_published": false,
+  "implementation_commit": "db04d8397e4ba1f2aa6090403f5ffeb2d25dd0ee",
+  "unique_native_cases_passed": 18,
+  "resolved_initial_attempts": [
+    {
+      "test": "landscape writing integration",
+      "result": "FAIL",
+      "cause": "Test used exact text matching for a status with the layer name. Changed to substring matching; final full case passed."
+    },
+    {
+      "test": "narrow writing integration",
+      "result": "FAIL",
+      "cause": "Compose test layout reentry during configuration change. Added explicit Activity recreation and library readiness; final full case passed."
+    },
+    {
+      "test": "narrow source navigation",
+      "result": "FAIL",
+      "cause": "Fixture required an optional inline fold accessory. Switched to the existing public menu action. The next attempt then exposed a baseline geometry lookup of intentionally hidden paper. Measured that same baseline before entering focus; the following run passed source visibility but encountered the old 56dp extra-row offset expectation. Updated that expectation to a fixed 48dp header and unchanged paper top, while retaining source/data/viewport/window checks; the final retry passed."
+    }
+  ],
+  "test_stability_observations": [
+    {
+      "test": "narrow source fixture readiness",
+      "result": "Two pre-source fixture startup timeouts; later diagnostic run passed the complete case",
+      "root_cause": "NOT_ESTABLISHED",
+      "details": "Preconfiguring the emulator alone did not eliminate the timeout. The final test APK only added failure-state logging and screenshots; its successful path and all assertions were unchanged. No app data was cleared. This is a remaining harness reliability observation, not a production fix claim."
+    }
+  ]
+}
