@@ -1,0 +1,180 @@
+{
+  "review_status": "AWAITING_LAYOUT_FEEDBACK",
+  "production_redesign_integrated": false,
+  "baseline": "e9e096b6f64d9b36cf084d3d7ce99d063898bc22",
+  "stacked_pr16_head": "ad0e982402edeb0b5d4bcc8ce453b317925f52fa",
+  "pr": 17,
+  "keep_draft": true,
+  "build": {
+    "app_and_androidTest": "PASS",
+    "test_variant_isolation": "androidTestDebug",
+    "dependency_override": "Exact fitz 1.28.5 source-built cloud native AAR; repository dependency unchanged"
+  },
+  "native_tests": {
+    "class": "org.inkweft.app.EditorDesignReviewTest",
+    "tests": 3,
+    "failures": 0,
+    "seconds": 249.24,
+    "start_utc": "2026-10-07T04:37:38.863716+00:00",
+    "end_utc": "2026-10-07T04:42:06.101012+00:00",
+    "environment": "API 36 x86_64 cloud emulator; software rendering; font scale 1.0",
+    "paths": [
+      "writing and ink undo",
+      "map comparison, explicit single-view selection, source focus and collapse",
+      "browse hidden layer without changing writing target, explicitly select a writable layer, resume writing"
+    ],
+    "checks": [
+      "source action stays inside map panel",
+      "wide panels do not overlap and original pane is at least 600px",
+      "portrait/narrow original pane exceeds 200px and panels do not overlap"
+    ],
+    "scope": "Synthetic Debug prototype only; not production domain integration or UX acceptance"
+  },
+  "source_files": [
+    {
+      "file": "android/app/src/androidTestDebug/java/org/inkweft/app/EditorDesignReviewTest.kt",
+      "sha256": "5b8618277e4e8727134856acc486060271aa55d157c544a3a2feed628ec42b28"
+    },
+    {
+      "file": "android/app/src/debug/AndroidManifest.xml",
+      "sha256": "d8c4e5014622370c8ecc5356553343727ade465dcafea2ea660479026e58bd2b"
+    },
+    {
+      "file": "android/app/src/debug/java/org/inkweft/app/EditorDesignReviewActivity.kt",
+      "sha256": "dd83b62d4bc2dccd491bb2844af76940b7c939d18548dd3da183582b3574f287"
+    },
+    {
+      "file": "android/app/src/debug/res/drawable/ic_review_hand.xml",
+      "sha256": "0a7816a810ad88201d7f9a8bfae9ff9472c119d6ef4033549f4bb7eabb60a965"
+    },
+    {
+      "file": "android/app/src/debug/res/drawable/ic_review_highlighter.xml",
+      "sha256": "c1dc2f7ca985befc94171935405907414b16b8f7f588a8090f6f6e380cca0ecf"
+    },
+    {
+      "file": "android/app/src/debug/res/drawable/ic_review_layers.xml",
+      "sha256": "8a1eca3fb5b951aa431452cc84ca1e68c9de9a0fb203557a4ff2c7ca7ea39373"
+    }
+  ],
+  "tested_binaries": {
+    "app": {
+      "sha256": "1cb50b87a6eef857ac9491412040f63f9d47801e7551c7a357c882f583f126f0",
+      "bytes": 119353071
+    },
+    "test": {
+      "sha256": "18c87a96013c3afca57e545d1b02112018caa27fb2147b3e5eee5a4d32b7134f",
+      "bytes": 15795660
+    }
+  },
+  "captures": [
+    {
+      "file": "current-landscape-map.png",
+      "pixels": [
+        1200,
+        800
+      ],
+      "sha256": "27cbf9bf4e1c69cfa1d27a1d8cd44ae42294948fb52eb56511807846c3ce4b53",
+      "source": "prior e9 artifact"
+    },
+    {
+      "file": "landscape-layers.png",
+      "pixels": [
+        1200,
+        800
+      ],
+      "sha256": "0313d139b07127c29f85d8b84236b6694db1fa9dc3fdbd88ea8f30d8215823bb",
+      "source": "final native Android UI run"
+    },
+    {
+      "file": "landscape-map-source.png",
+      "pixels": [
+        1200,
+        800
+      ],
+      "sha256": "1c090e18d8eda5abf7f9c57b3fce7a09e6c4b02cd7570ef969c31e96118cf1ae",
+      "source": "final native Android UI run"
+    },
+    {
+      "file": "landscape-map.png",
+      "pixels": [
+        1200,
+        800
+      ],
+      "sha256": "916f0459941ac1d9df13a4498990fd42a187fa9ce37e82a09741c4ec115751a4",
+      "source": "final native Android UI run"
+    },
+    {
+      "file": "landscape-pen-properties.png",
+      "pixels": [
+        1200,
+        800
+      ],
+      "sha256": "79c15de3ef7a826502b7c626ea0f9aa96fa707778f0b636a65c0c84c9c10be2d",
+      "source": "final native Android UI run"
+    },
+    {
+      "file": "landscape-resume-writing.png",
+      "pixels": [
+        1200,
+        800
+      ],
+      "sha256": "7db84948ff234fb053aadcefe0c82898f8fe8bb006b1e4f7259fc6909df87964",
+      "source": "final native Android UI run"
+    },
+    {
+      "file": "landscape-writing.png",
+      "pixels": [
+        1200,
+        800
+      ],
+      "sha256": "c8836149c42ab56b53644179350280069087ebd4661d910fa309300ae8d96609",
+      "source": "final native Android UI run"
+    },
+    {
+      "file": "narrow-map.png",
+      "pixels": [
+        375,
+        800
+      ],
+      "sha256": "be9da1a02beec2156b8b854cd523ef9b34f210eec3c831bfc9c290fb7a594fcd",
+      "source": "final native Android UI run"
+    },
+    {
+      "file": "portrait-layers.png",
+      "pixels": [
+        800,
+        1200
+      ],
+      "sha256": "3c73a7f1a3cd30495ec0d489b6e73757ed3fdd5dfa2e3a732a446bb4de0d7af1",
+      "source": "final native Android UI run"
+    },
+    {
+      "file": "portrait-map.png",
+      "pixels": [
+        800,
+        1200
+      ],
+      "sha256": "0611968b2bff3ff28029560e2ad6dfe3d7aa425bdf4595ef52ec4f1f4417e254",
+      "source": "final native Android UI run"
+    },
+    {
+      "file": "portrait-writing.png",
+      "pixels": [
+        800,
+        1200
+      ],
+      "sha256": "efa41b997c87c06c14a6e6992061ac020721f8aa2aa5ba36abe3283a938bcd16",
+      "source": "final native Android UI run"
+    }
+  ],
+  "limits": [
+    "Production editor and data code unchanged in this design-review commit.",
+    "Synthetic Compose document and temporary Canvas ink; no PDF or pen-latency claim.",
+    "No physical user device used.",
+    "StarNote official image downloads returned HTTP 403 in this environment; parent separately inspected official images.",
+    "Goodnotes/MarginNote documentation verified here; reference images additionally inspected by parent.",
+    "Saber/Butterfly official repository screenshots and relevant source/license files inspected here.",
+    "No new full production regression suite or GitHub CI pass claimed for this isolated prototype.",
+    "APK and complete local logs are not publicly published."
+  ]
+}

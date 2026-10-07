@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <application>
+        <!-- Isolated, synthetic UX review. No launcher entry or production navigation. -->
+        <activity android:name=".EditorDesignReviewActivity" android:exported="false" />
+    </application>
+</manifest>
