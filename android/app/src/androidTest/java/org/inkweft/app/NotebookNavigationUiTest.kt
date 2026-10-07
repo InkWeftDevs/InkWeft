@@ -49,7 +49,7 @@ class NotebookNavigationUiTest {
     @Test fun continuousOverviewJumpKeepsRequestedPageUntilScrollingSettles(){
         val note=open(12)
         val pages=runBlocking{app.pages.activePages(note.id)}
-        compose.onNodeWithTag("quick-readonly").performClick()
+        compose.revealAction("quick-readonly");compose.onNodeWithTag("quick-readonly").performClick()
         fun jump(number:Int){
             compose.openOverviewGrid()
             compose.onNodeWithTag("page-grid").performScrollToNode(hasTestTag("jump-page-$number"))
@@ -72,8 +72,8 @@ class NotebookNavigationUiTest {
     }
     @Test fun continuousManualViewportSurvivesOverviewResize(){
         val note=open(3)
-        compose.onNodeWithTag("quick-readonly").performClick();ready()
-        compose.onNodeWithTag("continuous-pages").performTouchInput{swipe(Offset(centerX,height*.65f),Offset(centerX,height*.50f),650)}
+        compose.revealAction("quick-readonly");compose.onNodeWithTag("quick-readonly").performClick();ready()
+        compose.onNodeWithTag("continuous-pages").performTouchInput{swipe(Offset(centerX,height*.85f),Offset(centerX,height*.25f),650)}
         ready();compose.assertCurrentPage("第 1 / 3 页")
         data class Region(val bounds:androidx.compose.ui.geometry.Rect,val y:Int,val width:Int,val height:Int)
         fun region():Region {
@@ -147,9 +147,9 @@ class NotebookNavigationUiTest {
         // Warm both real editors so a late data load cannot hide a lost return request.
         compose.runOnIdle{notebook.select(other)};settled(other)
         compose.runOnIdle{notebook.select(origin)};settled(origin)
-        compose.onNodeWithTag("quick-readonly").performClick();ready()
+        compose.revealAction("quick-readonly");compose.onNodeWithTag("quick-readonly").performClick();ready()
         val atTop=region(origin.id)
-        compose.onNodeWithTag("continuous-pages").performTouchInput{swipe(Offset(centerX,height*.65f),Offset(centerX,height*.50f),650)}
+        compose.onNodeWithTag("continuous-pages").performTouchInput{swipe(Offset(centerX,height*.85f),Offset(centerX,height*.25f),650)}
         ready();compose.assertCurrentPage("第 1 / 3 页")
         val before=region(origin.id)
         assertTrue("Fixture must leave the page top",before.world.centerY-atTop.world.centerY>80.0)

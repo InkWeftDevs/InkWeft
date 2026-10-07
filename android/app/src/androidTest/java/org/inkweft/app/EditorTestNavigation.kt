@@ -6,8 +6,8 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 
 /** Tests of single-sheet tools explicitly choose that mode; production defaults to continuous. */
-internal fun ComposeTestRule.singlePageEditor(){
-    waitUntil(15_000){onAllNodesWithTag("ink-surface").fetchSemanticsNodes().isNotEmpty()||onAllNodesWithTag("continuous-pages").fetchSemanticsNodes().isNotEmpty()}
+internal fun ComposeTestRule.singlePageEditor(timeoutMillis:Long=15_000){
+    waitUntil(timeoutMillis){onAllNodesWithTag("ink-surface").fetchSemanticsNodes().isNotEmpty()||onAllNodesWithTag("continuous-pages").fetchSemanticsNodes().isNotEmpty()}
     if(onAllNodesWithTag("continuous-pages").fetchSemanticsNodes().isNotEmpty()){
         if(onAllNodesWithTag("quick-settings").fetchSemanticsNodes().isEmpty()){
             waitUntil(15_000){runCatching{onNodeWithTag("document-more").assertIsDisplayed().assertIsEnabled()}.isSuccess}

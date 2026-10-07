@@ -133,6 +133,8 @@ class EditorWritingIntegrationUiTest {
             repeat(4){panReading("ink-surface",-95f,0f)}
             assertTrue("Two fingers must reach the right column while the map stays open",readingState().left>350)
             shot("reading-single-narrow-panned.png")
+            val preZoom=readingState();zoomReading("ink-surface")
+            assertTrue("A native pinch must enlarge the single-page source",readingState().zoom>preZoom.zoom*1.2)
             val chosen=readingState();tap("study-close");assertReadingContext(chosen);tap("quick-study");assertReadingContext(chosen)
             compose.activityRule.scenario.recreate();saved(book,1);assertReadingContext(chosen);tap("study-close")
             shot("production-writing-narrow-font16.png")
@@ -193,10 +195,32 @@ class EditorWritingIntegrationUiTest {
         compose.waitForIdle()
     }
     private fun zoomReading(tag:String){
-        compose.onNodeWithTag(tag).performTouchInput {
-            pinch(start0=Offset(width*.38f,80f),start1=Offset(width*.62f,80f),end0=Offset(width*.2f,80f),end1=Offset(width*.8f,80f),durationMillis=600)
+        val native=if(tag=="ink-surface")compose.runOnIdle{readingCanvas()}else null
+        val config=native?.let{ViewConfiguration.get(it.context)}
+        var moves=0;var receivedSpan=0f;var expectedSpan=0f;val before=readingState()
+        if(native!=null)compose.runOnIdle{native.setOnTouchListener{_,event->
+            if(event.actionMasked==MotionEvent.ACTION_MOVE&&event.pointerCount==2){
+                assertNotEquals(event.getPointerId(0),event.getPointerId(1));moves++
+                receivedSpan=maxOf(receivedSpan,kotlin.math.hypot(event.getX(1)-event.getX(0),event.getY(1)-event.getY(0)))
+            }
+            false // Observe the real native dispatch without consuming or altering it.
+        }}
+        try{
+            compose.onNodeWithTag(tag).performTouchInput {
+                // Android's native recognizer starts only beyond its physical minimum span.
+                val start=config?.let{it.scaledMinimumScalingSpan+2f*it.scaledTouchSlop}?:width*.24f
+                val end=if(config!=null)width-32f else width*.60f
+                expectedSpan=end
+                assertTrue("Visible source must provide room for a recognised pinch: $start -> $end",end>start*1.3f)
+                println("READING_PINCH tag=$tag width=$width minSpan=${config?.scaledMinimumScalingSpan} span=$start->$end")
+                pinch(start0=Offset(centerX-start/2,80f),start1=Offset(centerX+start/2,80f),end0=Offset(centerX-end/2,80f),end1=Offset(centerX+end/2,80f),durationMillis=600)
+            }
+            compose.waitForIdle()
+            if(native!=null){assertTrue("Two-pointer moves must reach the native source",moves>0);assertTrue("Native source must receive the full spread",receivedSpan>=expectedSpan-2f)}
+        }finally{
+            if(native!=null)compose.runOnIdle{native.setOnTouchListener(null)}
+            println("READING_PINCH_RESULT tag=$tag moves=$moves span=$receivedSpan before=$before after=${readingState()}")
         }
-        compose.waitForIdle()
     }
     private fun continuousReading(narrow:Boolean){
         try{

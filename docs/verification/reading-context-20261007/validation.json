@@ -1,5 +1,5 @@
 {
-  "status": "READING_UI_PASS_RELATED_REGRESSIONS_PENDING",
+  "status": "TARGETED_READING_AND_RELATED_REGRESSIONS_PASS_AWAITING_USER_REVIEW",
   "base_head": "3730d65236acce0a3c38f98eecec6a57f33b676f",
   "prior_pr16_head": "ad0e982402edeb0b5d4bcc8ce453b317925f52fa",
   "pr": 17,
@@ -47,21 +47,95 @@
         "bytes": 15846044,
         "sha256": "705bdb4d8d0ccb27e9b18dc99306a0a533ff72d4f8504cdee6db8cd39237a36f"
       }
-    }
+    },
+    "source_commit": "a934ee431027f95ff1c0a8f43871e426c0c671a6"
   },
   "regressions": {
-    "status": "PENDING",
+    "status": "ALL_TARGET_CASES_PASS_AFTER_FIXTURE_ADAPTATION",
     "requested_cases": [
-      "org.inkweft.app.SourceFocusVisibilityUiTest#narrow375LargeFontRetainsSourceRegionThroughRecreationAndRestoresItsFocusFrame",
-      "org.inkweft.app.SourceFocusVisibilityUiTest#splitPaneRefitsRetainedSourceAcrossBothDirectionsWithoutChangingReferenceOrGraph",
-      "org.inkweft.app.ContinuousWritingUiTest#rapidSuccessiveStrokesRemainQueuedUntilAllAreSaved",
-      "org.inkweft.app.ContinuousPageGestureUiTest#shortTwoFingerNavigationDoesNotCreateCancellationFiles",
       "org.inkweft.app.ContinuousPageGestureUiTest#fingerModeWritesAndTwoFingerTakeoverPreservesOnlyCommittedInk",
+      "org.inkweft.app.ContinuousPageGestureUiTest#shortTwoFingerNavigationDoesNotCreateCancellationFiles",
+      "org.inkweft.app.ContinuousWritingUiTest#rapidSuccessiveStrokesRemainQueuedUntilAllAreSaved",
       "org.inkweft.app.LearningWorkspacePolishUiTest#compactMapDraftBlocksNativePageWritingAndSurvivesRecreation",
-      "org.inkweft.app.NotebookNavigationUiTest#continuousOverviewJumpKeepsRequestedPageUntilScrollingSettles",
+      "org.inkweft.app.NotebookNavigationUiTest#continuousCrossBookReturnRestoresNonTopViewport",
       "org.inkweft.app.NotebookNavigationUiTest#continuousManualViewportSurvivesOverviewResize",
-      "org.inkweft.app.NotebookNavigationUiTest#continuousCrossBookReturnRestoresNonTopViewport"
-    ]
+      "org.inkweft.app.NotebookNavigationUiTest#continuousOverviewJumpKeepsRequestedPageUntilScrollingSettles",
+      "org.inkweft.app.SourceFocusVisibilityUiTest#narrow375LargeFontRetainsSourceRegionThroughRecreationAndRestoresItsFocusFrame",
+      "org.inkweft.app.SourceFocusVisibilityUiTest#splitPaneRefitsRetainedSourceAcrossBothDirectionsWithoutChangingReferenceOrGraph"
+    ],
+    "unique_target_cases_passed": 9,
+    "first_run": {
+      "status": "FAILED_OR_INCOMPLETE",
+      "start_utc": "2026-10-07T10:44:24.645074+00:00",
+      "end_utc": "2026-10-07T10:58:48.782024+00:00",
+      "seconds": 836.728,
+      "cases": [
+        {
+          "class": "org.inkweft.app.SourceFocusVisibilityUiTest",
+          "test": "narrow375LargeFontRetainsSourceRegionThroughRecreationAndRestoresItsFocusFrame",
+          "status": "FAIL",
+          "runner_code": -2
+        },
+        {
+          "class": "org.inkweft.app.SourceFocusVisibilityUiTest",
+          "test": "splitPaneRefitsRetainedSourceAcrossBothDirectionsWithoutChangingReferenceOrGraph",
+          "status": "PASS",
+          "runner_code": 0
+        },
+        {
+          "class": "org.inkweft.app.ContinuousWritingUiTest",
+          "test": "rapidSuccessiveStrokesRemainQueuedUntilAllAreSaved",
+          "status": "PASS",
+          "runner_code": 0
+        },
+        {
+          "class": "org.inkweft.app.ContinuousPageGestureUiTest",
+          "test": "fingerModeWritesAndTwoFingerTakeoverPreservesOnlyCommittedInk",
+          "status": "PASS",
+          "runner_code": 0
+        },
+        {
+          "class": "org.inkweft.app.ContinuousPageGestureUiTest",
+          "test": "shortTwoFingerNavigationDoesNotCreateCancellationFiles",
+          "status": "PASS",
+          "runner_code": 0
+        },
+        {
+          "class": "org.inkweft.app.LearningWorkspacePolishUiTest",
+          "test": "compactMapDraftBlocksNativePageWritingAndSurvivesRecreation",
+          "status": "PASS",
+          "runner_code": 0
+        },
+        {
+          "class": "org.inkweft.app.NotebookNavigationUiTest",
+          "test": "continuousCrossBookReturnRestoresNonTopViewport",
+          "status": "FAIL",
+          "runner_code": -2
+        },
+        {
+          "class": "org.inkweft.app.NotebookNavigationUiTest",
+          "test": "continuousManualViewportSurvivesOverviewResize",
+          "status": "FAIL",
+          "runner_code": -2
+        },
+        {
+          "class": "org.inkweft.app.NotebookNavigationUiTest",
+          "test": "continuousOverviewJumpKeepsRequestedPageUntilScrollingSettles",
+          "status": "PASS",
+          "runner_code": 0
+        }
+      ],
+      "apks": {
+        "app-debug.apk": {
+          "bytes": 119458173,
+          "sha256": "4770204a99588d364d6350fe5d3030db13b120d5dc0c61edec399d47ad7300b8"
+        },
+        "app-debug-androidTest.apk": {
+          "bytes": 15846092,
+          "sha256": "6aa3220f7e4dbb756bff1f41f07474ae6be5a41f984edd1829ba1ba649d89e9c"
+        }
+      }
+    }
   },
   "build": {
     "core_tests": 374,
@@ -81,7 +155,10 @@
     "android/app/src/main/java/org/inkweft/app/InkScreen.kt": "46eb6f4c1575ce8225701b6065e317415e26c46f33e8ddc016a13325f081ec51",
     "android/core-domain/src/main/kotlin/org/inkweft/core/CanvasViewport.kt": "76240efdc1039454206390a3b188f0e68b99c6ca6030516978186ccf56af7345",
     "android/core-domain/src/test/kotlin/org/inkweft/core/CanvasViewportTest.kt": "ad08aa9488f51be11cbb0618310bc6bc60732843befc9a8d0dcbdf93aa847267",
-    "android/app/src/androidTest/java/org/inkweft/app/EditorWritingIntegrationUiTest.kt": "f0df71ad5aa47aa0ea71c27a0012f4c4db16577f7b3ada35ec1f7138fd0736e2"
+    "android/app/src/androidTest/java/org/inkweft/app/EditorWritingIntegrationUiTest.kt": "db938c3d5b4a7a9cdf21fee4223618a0b85555bc2e787ac175059693f065a6d0",
+    "android/app/src/androidTest/java/org/inkweft/app/EditorTestNavigation.kt": "ccccca178567c83013b52c169e22aff02dc209e3413ce4f436a13dd825611092",
+    "android/app/src/androidTest/java/org/inkweft/app/NotebookNavigationUiTest.kt": "99880d24d1aaa2f677047ab16d47995909b9efcf2540499dc2dc1ad8178097a7",
+    "android/app/src/androidTest/java/org/inkweft/app/SourceFocusVisibilityUiTest.kt": "80def9febdcbee25deb0320a98615f173dc2641be8ddd4131d00230ed55aab6b"
   },
   "captures": [
     {
@@ -170,6 +247,36 @@
       "stage": "build2 lint",
       "result": "FAIL",
       "cause": "Internal Kotlin/FIR ClassCastException during test-file analysis; full stable-source build3 rerun passed without disabling rules."
+    },
+    {
+      "stage": "first related regression batch",
+      "result": "6 PASS / 3 FAIL",
+      "failures": [
+        {
+          "case": "narrow375LargeFontRetainsSourceRegionThroughRecreationAndRestoresItsFocusFrame",
+          "before_navigation": true,
+          "observed": "15s initial editor wait timed out. Captured state: correct note selected, no read failure, native canvas and ink-surface visible immediately after timeout.",
+          "correction": "Only this initial wait now allows 30s; complete case then passed. Underlying scheduling latency is not established and this is not a performance fix claim."
+        },
+        {
+          "cases": [
+            "continuousManualViewportSurvivesOverviewResize",
+            "continuousCrossBookReturnRestoresNonTopViewport"
+          ],
+          "before_navigation": true,
+          "observed": "A 15%-height gesture did not satisfy existing non-top fixture preconditions on the 800px-high cloud display.",
+          "correction": "Use a 60%-height real swipe; keep the original >200px / >80 author-unit preconditions and full restoration/data checks."
+        }
+      ]
+    },
+    {
+      "stage": "strengthened single-page pinch",
+      "result": "Initial added assertion FAIL; threshold-aware native event rerun PASS",
+      "observed": "The narrow injected span ended at 225px. Android config_minScalingSpan is 32mm on this emulator; native recognition began too late to achieve the required 20% zoom. The rerun reads scaledMinimumScalingSpan, starts above it, observes distinct native pointer IDs and received full spread, and retains the >20% zoom and context-restoration assertions.",
+      "trace": [
+        "READING_PINCH tag=ink-surface width=375 minSpan=202 span=218.0->343.0",
+        "READING_PINCH_RESULT tag=ink-surface moves=38 span=343.0 before=ReadingState(zoom=0.8, left=475.0, top=0.0) after=ReadingState(zoom=1.1703540939837236, left=549.1670757795823, top=31.644618999288525)"
+      ]
     }
   ],
   "prior_evidence": {
@@ -185,5 +292,92 @@
   ],
   "ci": "No GitHub CI pass claimed; automatic workflow targets main, this PR remains stacked on PR16.",
   "apks_published": false,
-  "full_logs_published": false
+  "full_logs_published": false,
+  "implementation_commit": "a934ee431027f95ff1c0a8f43871e426c0c671a6",
+  "followup_runs": [
+    {
+      "status": "FAILED_OR_INCOMPLETE",
+      "start_utc": "2026-10-07T11:03:21.749427+00:00",
+      "end_utc": "2026-10-07T11:13:22.741756+00:00",
+      "seconds": 581.99,
+      "cases": [
+        {
+          "class": "org.inkweft.app.SourceFocusVisibilityUiTest",
+          "test": "narrow375LargeFontRetainsSourceRegionThroughRecreationAndRestoresItsFocusFrame",
+          "status": "PASS",
+          "runner_code": 0
+        },
+        {
+          "class": "org.inkweft.app.EditorWritingIntegrationUiTest",
+          "test": "narrowLargeTextKeepsToolsParametersAndSourceReachable",
+          "status": "FAIL",
+          "runner_code": -2
+        },
+        {
+          "class": "org.inkweft.app.NotebookNavigationUiTest",
+          "test": "continuousCrossBookReturnRestoresNonTopViewport",
+          "status": "PASS",
+          "runner_code": 0
+        },
+        {
+          "class": "org.inkweft.app.NotebookNavigationUiTest",
+          "test": "continuousManualViewportSurvivesOverviewResize",
+          "status": "PASS",
+          "runner_code": 0
+        }
+      ],
+      "apks": {
+        "app-debug.apk": {
+          "bytes": 119458173,
+          "sha256": "4770204a99588d364d6350fe5d3030db13b120d5dc0c61edec399d47ad7300b8"
+        },
+        "app-debug-androidTest.apk": {
+          "bytes": 15846820,
+          "sha256": "70ec0f0136000f2a6eabd69608fc3e354a9a287fa17c89f42d7d31c8c39207bd"
+        }
+      }
+    },
+    {
+      "status": "PASS",
+      "start_utc": "2026-10-07T11:17:55.879227+00:00",
+      "end_utc": "2026-10-07T11:23:08.803379+00:00",
+      "seconds": 294.16,
+      "cases": [
+        {
+          "class": "org.inkweft.app.EditorWritingIntegrationUiTest",
+          "test": "narrowLargeTextKeepsToolsParametersAndSourceReachable",
+          "status": "PASS",
+          "runner_code": 0
+        }
+      ],
+      "apks": {
+        "app-debug.apk": {
+          "sha256": "4770204a99588d364d6350fe5d3030db13b120d5dc0c61edec399d47ad7300b8",
+          "bytes": 119458173
+        },
+        "app-debug-androidTest.apk": {
+          "sha256": "e0d2b1ed82c4e438294fedbfb2f078abf5a655a3225cd233819fa79da1d8f7f0",
+          "bytes": 15851224
+        }
+      }
+    }
+  ],
+  "current_apk_unique_native_cases_passed": 14,
+  "test_adaptations": [
+    "Existing navigation tests reach read-only through the public document menu; viewport/data assertions retained.",
+    "Source fixture first-page readiness budget is 30 seconds; ordinary helper default and subsequent source/window/data checks retain their limits.",
+    "Two navigation fixtures use a real 60%-height swipe instead of 15%, preserving the existing non-top preconditions and all navigation assertions.",
+    "Single-page narrow test additionally performs a real pinch, requires increased zoom, then checks panel cycles and recreation retain the selected context."
+  ],
+  "captures_from": "Initial 5-case native UI run, using the same production APK as the final follow-up.",
+  "final_test_build": {
+    "status": "PASS",
+    "duration": "1m 49s",
+    "tasks": [
+      ":app:assembleDebugAndroidTest",
+      ":app:lintDebug"
+    ],
+    "app_apk_unchanged": true,
+    "test_apk_signature": "PASS"
+  }
 }

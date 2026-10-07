@@ -216,7 +216,9 @@ class SourceFocusVisibilityUiTest {
             .putFloat("${note.id}-ORGANIZE-width", 580f).putFloat("${note.id}-ORGANIZE-height", 420f).commit()
         app.getSharedPreferences("inkweft-reading", 0).edit().putBoolean("continuous-v20-${note.id}", false).commit()
         compose.runOnIdle { notebook().select(note) }
-        try { compose.singlePageEditor(); compose.waitForSavedInk() } catch (failure: Throwable) {
+        // A captured timeout on the software emulator already showed the correct, ready canvas.
+        // Give only initial fixture loading its 30s budget; source/state checks retain their limits.
+        try { compose.singlePageEditor(timeoutMillis = 30_000); compose.waitForSavedInk() } catch (failure: Throwable) {
             val state = compose.runOnIdle { val ui = notebook().ui.value
                 "selectedFixture=${ui.selectedId == note.id} loading=${ui.loading} readFailed=${ui.readFailed} " +
                     "revision=${ui.current?.base?.revision} nativeCanvases=${activityViews().filterIsInstance<InkCanvasView>().size}" }
