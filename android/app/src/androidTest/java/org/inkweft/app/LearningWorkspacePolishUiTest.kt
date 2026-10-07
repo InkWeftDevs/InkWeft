@@ -291,6 +291,42 @@ class LearningWorkspacePolishUiTest {
         assertEquals(viewport,h.paperViewport())
     }
 
+    @Test fun compactMapDraftBlocksNativePageWritingAndSurvivesRecreation(){
+        val f=h.seed();h.tap("exit-readonly")
+        val own=h.authorStamp(f.note.id);val other=h.authorStamp(f.unrelated.id);val source=h.source(f.card)
+        h.tap("node-rename")
+        val draft="云端未保存主题：保持原文与来源"
+        compose.onNodeWithTag("node-title-input").performTextReplacement(draft)
+        compose.waitUntil(15_000){compose.runOnUiThread{h.lock(f.note.id).hasDraft.value}}
+        compose.onNodeWithTag("top-draw").assertIsNotEnabled()
+        compose.onNodeWithTag("study-close").assertIsNotEnabled()
+        compose.runOnIdle{
+            val canvas=h.native<InkCanvasView>();assertFalse(canvas.allowInput)
+            val viewport=canvas.snapshotViewport();val down=android.os.SystemClock.uptimeMillis()
+            val pointer=android.view.MotionEvent.PointerProperties().apply{id=0;toolType=android.view.MotionEvent.TOOL_TYPE_STYLUS}
+            listOf(android.view.MotionEvent.ACTION_DOWN,android.view.MotionEvent.ACTION_MOVE,android.view.MotionEvent.ACTION_UP).forEachIndexed{index,action->
+                val point=android.view.MotionEvent.PointerCoords().apply{x=canvas.width*.3f+index*20f;y=canvas.height*.5f;pressure=.5f}
+                val event=android.view.MotionEvent.obtain(down,down+index*20L,action,1,arrayOf(pointer),arrayOf(point),0,0,1f,1f,0,0,android.view.InputDevice.SOURCE_STYLUS,0)
+                try{canvas.dispatchTouchEvent(event)}finally{event.recycle()}
+            }
+            assertEquals(viewport,canvas.snapshotViewport())
+            assertFalse(h.lock(f.note.id).request(true))
+        }
+        h.assertAuthors(f,own,other,source)
+        compose.activityRule.scenario.recreate();h.waitFor("node-title-input")
+        compose.onNodeWithTag("node-title-input").assertTextContains(draft)
+        compose.runOnIdle{
+            assertEquals(f.mapId,h.study(f.note.id).mapId.value)
+            assertEquals(f.node,h.study(f.note.id).selectedByMap[f.mapId])
+            assertTrue(h.lock(f.note.id).hasDraft.value);assertFalse(h.native<InkCanvasView>().allowInput)
+        }
+        h.assertAuthors(f,own,other,source)
+        h.tap("node-title-cancel")
+        compose.waitUntil(15_000){compose.runOnUiThread{!h.lock(f.note.id).hasDraft.value&&h.app.navigationReady.value}}
+        compose.runOnIdle{assertTrue(h.native<InkCanvasView>().allowInput)}
+        h.assertAuthors(f,own,other,source)
+    }
+
     @Test fun compactLayersKeepBrowsingSeparateFromWritingAndUndoDeletion()=atNarrow{
         val f=h.seed();h.tap("exit-readonly");h.tap("study-close")
         val scope=AuthoringScope.page(f.note.id,f.note.id)

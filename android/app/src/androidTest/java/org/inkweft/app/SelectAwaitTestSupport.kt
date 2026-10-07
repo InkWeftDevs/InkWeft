@@ -123,6 +123,18 @@ internal class SelectAwaitTestSupport(
         app.getSharedPreferences("inkweft-study-window", 0).edit().putString("${note.id}-mode", "FOCUS").commit()
         app.getSharedPreferences("inkweft-reading", 0).edit().putBoolean("continuous-v20-${note.id}", false).commit()
         compose.runOnIdle { notebook().select(note) }
+        // Room loading runs outside Compose's virtual clock. Wait for the actual
+        // editor and its write gate before asking Espresso to settle the UI.
+        compose.waitUntil("single-page editor data and authoring are ready", 60_000) {
+            compose.runOnUiThread {
+                runCatching {
+                    native<InkCanvasView>()
+                    !ink(note.id).ui.value.loading &&
+                        provider()["authoring-${note.id}", PageAuthoringViewModel::class.java].ui.value.ready &&
+                        app.navigationReady.value
+                }.getOrDefault(false)
+            }
+        }
         compose.singlePageEditor(); compose.waitForSavedInk()
         tap("quick-study"); tap("study-map-picker"); tap("study-map-${f.mapId}"); tap("study-tab-2")
         waitMap(f)
