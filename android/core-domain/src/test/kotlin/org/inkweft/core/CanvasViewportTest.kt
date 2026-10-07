@@ -31,4 +31,33 @@ class CanvasViewportTest {
     @Test fun cullingRejectsFarStroke(){assertFalse(board().bounds().intersects(CanvasBounds(20000.0,20000.0,21000.0,21000.0)))}
     @Test fun boardEraserSweptIntersection(){val s=InkStroke(id(),InkPen.PEN,0xff000000.toInt(),2f,InkTool.TOUCH,listOf(InkSample(-2000f,-2000f,0,world=true),InkSample(-1000f,-1000f,20,world=true)),true);assertTrue(InkHitTest.hits(s,listOf(InkSample(-2000f,-1000f,0,world=true),InkSample(-1000f,-2000f,20,world=true))))}
     @Test fun boardDigestDiffersFromPageForSamePoints(){val strokeId=id();val a=InkStroke(strokeId,InkPen.PEN,0xff000000.toInt(),2f,InkTool.TOUCH,listOf(InkSample(1f,2f,0)));val b=InkStroke(strokeId,InkPen.PEN,0xff000000.toInt(),2f,InkTool.TOUCH,listOf(InkSample(1f,2f,0,world=true)),true);val c=id();val n=id();assertNotEquals(CommitInk(c,n,0,InkMutation.Add(a)).digest(),CommitInk(c,n,0,InkMutation.Add(b)).digest())}
+    @Test fun narrowNewSheetStartsReadableAtItsLeadingEdge(){
+        val v=CanvasViewport.readingStart(375.0,600.0).constrainedToPaper(375.0,600.0)
+        val visible=v.visible(375.0,600.0,1.0)
+        assertEquals(.8,v.zoom,0.0);assertEquals(0.0,visible.left,1e-7);assertEquals(0.0,visible.top,1e-7)
+        assertTrue(20*v.zoom>=16)
+    }
+    @Test fun wideNewSheetKeepsExistingWidthFit(){
+        assertEquals(CanvasViewport.pageWidth(1200.0,600.0),CanvasViewport.readingStart(1200.0,600.0))
+    }
+    @Test fun resizingRetainsPannedReadingOriginAndChosenZoom(){
+        val original=CanvasViewport(620.0,750.0,1.8)
+        val next=original.resizedFrom(1200.0,600.0,708.0,480.0).constrainedToPaper(708.0,480.0)
+        val before=original.visible(1200.0,600.0,1.0);val after=next.visible(708.0,480.0,1.0)
+        assertEquals(before.left,after.left,1e-7);assertEquals(before.top,after.top,1e-7)
+        assertEquals(original.zoom,next.zoom,0.0)
+        assertEquals(original,next.resizedFrom(708.0,480.0,1200.0,600.0))
+    }
+    @Test fun dockingWidthFitCannotCropThePagesLeadingText(){
+        val original=CanvasViewport.pageWidth(1200.0,600.0).constrainedToPaper(1200.0,600.0)
+        val next=original.resizedFrom(1200.0,600.0,708.0,600.0).constrainedToPaper(708.0,600.0)
+        val title=next.worldToScreen(54.0,35.0,708.0,600.0,1.0)
+        assertTrue(title.x>=0);assertTrue(title.y>=0);assertEquals(original.zoom,next.zoom,0.0)
+    }
+    @Test fun explicitOverviewZoomIsNotReplacedByReadingDefaultOnResize(){
+        val original=CanvasViewport(500.0,707.0,.4)
+        val next=original.resizedFrom(700.0,500.0,375.0,500.0).constrainedToPaper(375.0,500.0)
+        assertEquals(.4,next.zoom,0.0)
+    }
+
 }

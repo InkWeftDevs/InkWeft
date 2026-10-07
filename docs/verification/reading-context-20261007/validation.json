@@ -1,0 +1,189 @@
+{
+  "status": "READING_UI_PASS_RELATED_REGRESSIONS_PENDING",
+  "base_head": "3730d65236acce0a3c38f98eecec6a57f33b676f",
+  "prior_pr16_head": "ad0e982402edeb0b5d4bcc8ce453b317925f52fa",
+  "pr": 17,
+  "keep_draft": true,
+  "user_functional_acceptance": false,
+  "native_ui": {
+    "status": "PASS",
+    "passed": 5,
+    "start_utc": "2026-10-07T10:29:39.922845+00:00",
+    "end_utc": "2026-10-07T10:40:40.240287+00:00",
+    "seconds": 643.682,
+    "cases": [
+      {
+        "class": "org.inkweft.app.EditorWritingIntegrationUiTest",
+        "test": "landscapeContinuousMapRetainsReadingScalePanAndRecreation",
+        "status": "PASS"
+      },
+      {
+        "class": "org.inkweft.app.EditorWritingIntegrationUiTest",
+        "test": "landscapeRealInkPresetsHistoryPanelsAndRecreation",
+        "status": "PASS"
+      },
+      {
+        "class": "org.inkweft.app.EditorWritingIntegrationUiTest",
+        "test": "continuousReopensSavedReadingViewportWithoutFittingItAway",
+        "status": "PASS"
+      },
+      {
+        "class": "org.inkweft.app.EditorWritingIntegrationUiTest",
+        "test": "narrowContinuousMapKeepsReadableContentAndTwoFingerNavigation",
+        "status": "PASS"
+      },
+      {
+        "class": "org.inkweft.app.EditorWritingIntegrationUiTest",
+        "test": "narrowLargeTextKeepsToolsParametersAndSourceReachable",
+        "status": "PASS"
+      }
+    ],
+    "apks": {
+      "app-debug.apk": {
+        "bytes": 119458173,
+        "sha256": "4770204a99588d364d6350fe5d3030db13b120d5dc0c61edec399d47ad7300b8"
+      },
+      "app-debug-androidTest.apk": {
+        "bytes": 15846044,
+        "sha256": "705bdb4d8d0ccb27e9b18dc99306a0a533ff72d4f8504cdee6db8cd39237a36f"
+      }
+    }
+  },
+  "regressions": {
+    "status": "PENDING",
+    "requested_cases": [
+      "org.inkweft.app.SourceFocusVisibilityUiTest#narrow375LargeFontRetainsSourceRegionThroughRecreationAndRestoresItsFocusFrame",
+      "org.inkweft.app.SourceFocusVisibilityUiTest#splitPaneRefitsRetainedSourceAcrossBothDirectionsWithoutChangingReferenceOrGraph",
+      "org.inkweft.app.ContinuousWritingUiTest#rapidSuccessiveStrokesRemainQueuedUntilAllAreSaved",
+      "org.inkweft.app.ContinuousPageGestureUiTest#shortTwoFingerNavigationDoesNotCreateCancellationFiles",
+      "org.inkweft.app.ContinuousPageGestureUiTest#fingerModeWritesAndTwoFingerTakeoverPreservesOnlyCommittedInk",
+      "org.inkweft.app.LearningWorkspacePolishUiTest#compactMapDraftBlocksNativePageWritingAndSurvivesRecreation",
+      "org.inkweft.app.NotebookNavigationUiTest#continuousOverviewJumpKeepsRequestedPageUntilScrollingSettles",
+      "org.inkweft.app.NotebookNavigationUiTest#continuousManualViewportSurvivesOverviewResize",
+      "org.inkweft.app.NotebookNavigationUiTest#continuousCrossBookReturnRestoresNonTopViewport"
+    ]
+  },
+  "build": {
+    "core_tests": 374,
+    "core_failures": 0,
+    "app": "PASS",
+    "app_androidTest": "PASS",
+    "data_local_androidTest_build": "PASS",
+    "lint_errors": 0,
+    "lint_non_errors": 171,
+    "signature": "PASS",
+    "schema_changed": false,
+    "dependency_override": "External init script with full official-source MuPDF fitz 1.28.5 AAR; production declarations unchanged"
+  },
+  "source_sha256": {
+    "android/app/src/main/java/org/inkweft/app/ContinuousPages.kt": "283daa417f69f4a4f10e8708d9303a0b65400b1a646c771512102dd1a1dea227",
+    "android/app/src/main/java/org/inkweft/app/InkCanvasView.kt": "f469086dc1ea664fd535a548142f5dd52982a1d7b1faaf6beeab00845e07d8c8",
+    "android/app/src/main/java/org/inkweft/app/InkScreen.kt": "46eb6f4c1575ce8225701b6065e317415e26c46f33e8ddc016a13325f081ec51",
+    "android/core-domain/src/main/kotlin/org/inkweft/core/CanvasViewport.kt": "76240efdc1039454206390a3b188f0e68b99c6ca6030516978186ccf56af7345",
+    "android/core-domain/src/test/kotlin/org/inkweft/core/CanvasViewportTest.kt": "ad08aa9488f51be11cbb0618310bc6bc60732843befc9a8d0dcbdf93aa847267",
+    "android/app/src/androidTest/java/org/inkweft/app/EditorWritingIntegrationUiTest.kt": "f0df71ad5aa47aa0ea71c27a0012f4c4db16577f7b3ada35ec1f7138fd0736e2"
+  },
+  "captures": [
+    {
+      "file": "after-continuous-map-landscape.png",
+      "dimensions": [
+        1200,
+        800
+      ],
+      "sha256": "0152f83f76fb6141748b5698c26080445a5e4d936220ad928761ac260060073a",
+      "executor_visually_inspected": true,
+      "source": "Original native screenshot; synthetic repository objects; before from 3730d652, after from tested APK"
+    },
+    {
+      "file": "after-continuous-map-narrow-font16.png",
+      "dimensions": [
+        375,
+        800
+      ],
+      "sha256": "6b5b7c61dfad458dd2c8e6669b8ffdd4c81a9eed54cde8a5449d105225f7029c",
+      "executor_visually_inspected": true,
+      "source": "Original native screenshot; synthetic repository objects; before from 3730d652, after from tested APK"
+    },
+    {
+      "file": "after-continuous-narrow-panned.png",
+      "dimensions": [
+        375,
+        800
+      ],
+      "sha256": "972636daad7a38638f0e93f94e131ad287651d13eeae562cf4c3a593003d6580",
+      "executor_visually_inspected": true,
+      "source": "Original native screenshot; synthetic repository objects; before from 3730d652, after from tested APK"
+    },
+    {
+      "file": "after-single-map-landscape.png",
+      "dimensions": [
+        1200,
+        800
+      ],
+      "sha256": "f459113443f55e121fb929b13fbdfd1e2b9712ad6b1342617f21b582b1bab14b",
+      "executor_visually_inspected": true,
+      "source": "Original native screenshot; synthetic repository objects; before from 3730d652, after from tested APK"
+    },
+    {
+      "file": "after-single-map-narrow-font16.png",
+      "dimensions": [
+        375,
+        800
+      ],
+      "sha256": "8ab7ef63e0bc04096ac3a4eecd2d0d54bd0e4aa39c7cfff72605d2b7ef6a4343",
+      "executor_visually_inspected": true,
+      "source": "Original native screenshot; synthetic repository objects; before from 3730d652, after from tested APK"
+    },
+    {
+      "file": "after-single-narrow-panned.png",
+      "dimensions": [
+        375,
+        800
+      ],
+      "sha256": "24718d86bc0f8b3300867e71bd384ba3823c126b87af34b3c024d4e3c2818f50",
+      "executor_visually_inspected": true,
+      "source": "Original native screenshot; synthetic repository objects; before from 3730d652, after from tested APK"
+    },
+    {
+      "file": "before-map-landscape.png",
+      "dimensions": [
+        1200,
+        800
+      ],
+      "sha256": "5410af879d56de909f24c4756be3970e82132230ba429943bebb7c919f31aea1",
+      "executor_visually_inspected": true,
+      "source": "Original native screenshot; synthetic repository objects; before from 3730d652, after from tested APK"
+    },
+    {
+      "file": "before-map-narrow-font16.png",
+      "dimensions": [
+        375,
+        800
+      ],
+      "sha256": "a9138a8357036c79db21bfd195dab6d47478787a7d4431432ceacdafed17795b",
+      "executor_visually_inspected": true,
+      "source": "Original native screenshot; synthetic repository objects; before from 3730d652, after from tested APK"
+    }
+  ],
+  "attempts": [
+    {
+      "stage": "build2 lint",
+      "result": "FAIL",
+      "cause": "Internal Kotlin/FIR ClassCastException during test-file analysis; full stable-source build3 rerun passed without disabling rules."
+    }
+  ],
+  "prior_evidence": {
+    "commit": "3730d65236acce0a3c38f98eecec6a57f33b676f",
+    "unique_native_passes": 18,
+    "not_counted_as_current_apk_tests": true,
+    "two_fixture_startup_timeouts": "Preserved in prior report; cause not established"
+  },
+  "not_run": [
+    "Physical stylus pressure/latency",
+    "Physical tablet OS multiwindow",
+    "Entire instrumentation suite"
+  ],
+  "ci": "No GitHub CI pass claimed; automatic workflow targets main, this PR remains stacked on PR16.",
+  "apks_published": false,
+  "full_logs_published": false
+}

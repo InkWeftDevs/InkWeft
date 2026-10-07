@@ -36,7 +36,7 @@ class EditorWritingIntegrationUiTest {
     private fun tap(tag:String){compose.revealAction(tag);val n=compose.onNodeWithTag(tag);runCatching{n.performScrollTo()};n.assertIsDisplayed().assertIsEnabled().performClick();compose.waitForIdle()}
     private fun saved(book:String,count:Int){compose.waitUntil(30_000){app.navigationReady.value&&runBlocking{InkSession(app.inkRepository.read(book)).visibleDraft().size==count}};compose.waitForIdle()}
     private fun strokes(book:String)=runBlocking{InkSession(app.inkRepository.read(book)).visibleDraft()}
-    private fun seed():String {
+    private fun seed(singlePage:Boolean=true,savedView:CanvasViewport?=null):String {
         compose.waitUntil(30_000){runCatching{compose.onNodeWithTag("new-note").assertIsDisplayed().assertIsEnabled()}.isSuccess}
         compose.waitForIdle()
         val book=runBlocking {
@@ -56,12 +56,13 @@ class EditorWritingIntegrationUiTest {
             app.pageObjects.save(book,0,id(),objects)
             assertArrayEquals(PageObjectCodec.encode(objects),PageObjectCodec.encode(app.pageObjects.read(book).objects))
             app.study.submit(StudyCommand(id(),book,StudyAction.CREATE,cardId=id(),nodeId=id(),title="导数与变化率",body="从原笔记回看定义、例题与几何意义。",x=60.0,y=80.0))
+            savedView?.let{app.workspaceRepository.saveViewport(book,it)}
             book
         }
         val note=runBlocking{checkNotNull(app.repository.read(book))}
         compose.runOnIdle{ViewModelProvider(compose.activity)[NotebookViewModel::class.java].select(note)}
-        compose.singlePageEditor();saved(book,0)
-        compose.runOnIdle{canvas().fitWidth()};compose.waitForIdle()
+        if(singlePage)compose.singlePageEditor() else compose.waitUntil(30_000){compose.onAllNodesWithTag("continuous-pages").fetchSemanticsNodes().isNotEmpty()}
+        saved(book,0);compose.waitForIdle()
         return book
     }
     private fun stylus(y:Float){
@@ -75,7 +76,11 @@ class EditorWritingIntegrationUiTest {
             }
         }
     }
-    private fun shot(name:String){compose.waitForIdle();val bmp=checkNotNull(instrumentation.uiAutomation.takeScreenshot());try{File(app.getExternalFilesDir(null),name).outputStream().use{bmp.compress(Bitmap.CompressFormat.PNG,100,it)}}finally{bmp.recycle()}}
+    private fun shot(name:String){compose.waitForIdle();instrumentation.waitForIdleSync()
+        val frame=java.util.concurrent.CountDownLatch(1)
+        instrumentation.runOnMainSync{val decor=compose.activity.window.decorView;decor.postOnAnimation{decor.postOnAnimation{frame.countDown()}}}
+        assertTrue("Capture must follow actual native frames",frame.await(30,java.util.concurrent.TimeUnit.SECONDS))
+        val bmp=checkNotNull(instrumentation.uiAutomation.takeScreenshot());try{File(app.getExternalFilesDir(null),name).outputStream().use{bmp.compress(Bitmap.CompressFormat.PNG,100,it)}}finally{bmp.recycle()}}
     private fun shell(command:String){instrumentation.uiAutomation.executeShellCommand(command).use{android.os.ParcelFileDescriptor.AutoCloseInputStream(it).readBytes()}}
 
     @Test fun landscapeRealInkPresetsHistoryPanelsAndRecreation(){
@@ -98,8 +103,11 @@ class EditorWritingIntegrationUiTest {
         val panel=compose.onNodeWithTag("page-layers").fetchSemanticsNode().layoutInfo.coordinates
         assertTrue("Layer card must open below the writing tools",panel.positionOnScreen().y>=toolbar.positionOnScreen().y+toolbar.size.height)
         shot("production-layers-landscape.png");compose.onNodeWithContentDescription("关闭图层").performClick()
-        repeat(3){tap("quick-study");compose.onNodeWithTag("study-map").assertIsDisplayed();tap("study-close")}
-        tap("quick-study");shot("production-map-landscape.png");tap("study-close")
+        val readingBefore=readingState()
+        repeat(3){tap("quick-study");compose.onNodeWithTag("study-map").assertIsDisplayed();assertReadingContext(readingBefore);assertLeadingReadable();tap("study-close");assertReadingContext(readingBefore)}
+        tap("quick-study");assertLeadingReadable();shot("production-map-landscape.png")
+        val dockedReading=readingState();compose.activityRule.scenario.recreate();saved(book,3)
+        compose.onNodeWithTag("study-map").assertIsDisplayed();assertReadingContext(dockedReading);assertLeadingReadable();tap("study-close")
         assertEquals(before,strokes(book).map{InkStrokeCodec.encode(it).toList()});shot("production-writing-landscape.png")
         compose.activityRule.scenario.recreate();saved(book,3)
         assertEquals(before,strokes(book).map{InkStrokeCodec.encode(it).toList()});compose.onNodeWithTag("quick-width-0").assertIsOn();compose.onNodeWithTag("quick-color-1").assertIsOn()
@@ -116,13 +124,115 @@ class EditorWritingIntegrationUiTest {
             compose.openCurrentPen();compose.revealAction("width-preset-0");tap("width-preset-0");compose.closePenSettings()
             stylus(.45f);saved(book,1);assertEquals(1.5f,strokes(book).single().width,0f)
             tap("page-layers-open");compose.onNodeWithContentDescription("关闭图层").assertIsDisplayed();shot("production-layers-narrow-font16.png");compose.onNodeWithContentDescription("关闭图层").performClick()
-            tap("quick-study");compose.onNodeWithTag("study-map").assertIsDisplayed()
+            val readingBefore=readingState();assertLeadingReadable()
+            tap("quick-study");compose.onNodeWithTag("study-map").assertIsDisplayed();assertReadingContext(readingBefore);assertLeadingReadable()
             val window=compose.onNodeWithTag("study-panel").fetchSemanticsNode().boundsInRoot
             val page=compose.onNodeWithTag("ink-surface").fetchSemanticsNode().boundsInRoot
             assertTrue("Opening a map must retain a useful source region",window.top-page.top>=page.height*.25f)
-            shot("production-map-narrow-font16.png");tap("study-close")
+            shot("production-map-narrow-font16.png")
+            repeat(4){panReading("ink-surface",-95f,0f)}
+            assertTrue("Two fingers must reach the right column while the map stays open",readingState().left>350)
+            shot("reading-single-narrow-panned.png")
+            val chosen=readingState();tap("study-close");assertReadingContext(chosen);tap("quick-study");assertReadingContext(chosen)
+            compose.activityRule.scenario.recreate();saved(book,1);assertReadingContext(chosen);tap("study-close")
             shot("production-writing-narrow-font16.png")
             val before=strokes(book).map{InkStrokeCodec.encode(it).toList()};compose.activityRule.scenario.recreate();saved(book,1);assertEquals(before,strokes(book).map{InkStrokeCodec.encode(it).toList()})
         }finally{shell("settings put system font_scale 1.0");shell("wm size reset");compose.activityRule.scenario.recreate()}
     }
+    private fun readingCanvas():InkCanvasView {
+        fun find(v:View):InkCanvasView? {
+            if(v is InkCanvasView&&v.isShown&&!v.preview)return v
+            if(v is ViewGroup)for(i in 0 until v.childCount)find(v.getChildAt(i))?.let{return it}
+            return null
+        }
+        return checkNotNull(find(compose.activity.window.decorView))
+    }
+    private data class ReadingState(val zoom:Double,val left:Double,val top:Double)
+    private fun readingBounds():android.graphics.RectF {
+        val tag=if(compose.onAllNodesWithTag("continuous-viewport").fetchSemanticsNodes().isNotEmpty())"continuous-viewport"else"ink-surface"
+        val coordinates=compose.onNodeWithTag(tag).fetchSemanticsNode().layoutInfo.coordinates
+        val origin=coordinates.positionOnScreen()
+        return android.graphics.RectF(origin.x,origin.y,origin.x+coordinates.size.width,origin.y+coordinates.size.height)
+    }
+    private fun readingState():ReadingState {
+        val visible=readingBounds()
+        return compose.runOnIdle {
+            val v=readingCanvas();val origin=IntArray(2);v.getLocationOnScreen(origin)
+            val camera=v.snapshotViewport();val world=camera.screenToWorld((visible.left-origin[0]).toDouble(),(visible.top-origin[1]).toDouble(),v.width.toDouble(),v.height.toDouble(),v.resources.displayMetrics.density.toDouble())
+            ReadingState(camera.zoom,world.x,world.y)
+        }
+    }
+    private fun assertReadingContext(expected:ReadingState){
+        compose.waitUntil(30_000){runCatching{val actual=readingState();kotlin.math.abs(expected.zoom-actual.zoom)<.002&&kotlin.math.abs(expected.left-actual.left)<2&&kotlin.math.abs(expected.top-actual.top)<2}.getOrDefault(false)}
+        val actual=readingState();assertEquals(expected.zoom,actual.zoom,.002);assertEquals(expected.left,actual.left,2.0);assertEquals(expected.top,actual.top,2.0)
+    }
+    private fun assertLeadingReadable(){
+        val map=compose.onAllNodesWithTag("study-panel").fetchSemanticsNodes().firstOrNull()?.layoutInfo?.coordinates
+        val mapOrigin=map?.positionOnScreen();val mapWidth=map?.size?.width
+        val visible=readingBounds()
+        compose.runOnIdle {
+            val v=readingCanvas();assertTrue(v.isShown)
+            val origin=IntArray(2);v.getLocationOnScreen(origin)
+            val camera=v.snapshotViewport();val density=v.resources.displayMetrics.density.toDouble()
+            assertTrue("A 20-unit formula must be at least 15dp high, not an unreadable page thumbnail",20*camera.zoom>=15)
+            val bottom=if(mapOrigin!=null&&mapWidth!=null&&mapOrigin.x<visible.right&&mapOrigin.x+mapWidth>visible.left)minOf(visible.bottom.toFloat(),mapOrigin.y)else visible.bottom.toFloat()
+            for(y in listOf(35.0,105.0,155.0)){
+                val start=camera.worldToScreen(54.0,y,v.width.toDouble(),v.height.toDouble(),density)
+                val reading=camera.worldToScreen(300.0,y+30,v.width.toDouble(),v.height.toDouble(),density)
+                assertTrue("Title, explanation and formula leading text must stay in the visible source lane",origin[0]+start.x>=visible.left-1&&origin[0]+reading.x<=visible.right+1&&origin[1]+start.y>=visible.top-1&&origin[1]+reading.y<=bottom+1)
+            }
+        }
+    }
+    private fun panReading(tag:String,dx:Float,dy:Float){
+        compose.onNodeWithTag(tag).performTouchInput {
+            val a=Offset(width*.60f,80f);val b=Offset(width*.85f,80f)
+            down(0,a);down(1,b)
+            repeat(10){i->val delta=Offset(dx,dy)*((i+1)/10f);updatePointerTo(0,a+delta);updatePointerTo(1,b+delta);move(30)}
+            up(1);up(0)
+        }
+        compose.waitForIdle()
+    }
+    private fun zoomReading(tag:String){
+        compose.onNodeWithTag(tag).performTouchInput {
+            pinch(start0=Offset(width*.38f,80f),start1=Offset(width*.62f,80f),end0=Offset(width*.2f,80f),end1=Offset(width*.8f,80f),durationMillis=600)
+        }
+        compose.waitForIdle()
+    }
+    private fun continuousReading(narrow:Boolean){
+        try{
+            if(narrow){shell("wm size 375x800");shell("settings put system font_scale 1.6");compose.activityRule.scenario.recreate()
+                compose.waitUntil(30_000){compose.activity.resources.configuration.screenWidthDp==375&&compose.activity.resources.configuration.fontScale>1.5f}}
+            val book=seed(singlePage=false)
+            val objects=runBlocking{PageObjectCodec.encode(app.pageObjects.read(book).objects)}
+            val before=readingState();assertLeadingReadable()
+            tap("quick-study");compose.onNodeWithTag("study-map").assertIsDisplayed();assertReadingContext(before);assertLeadingReadable()
+            shot(if(narrow)"reading-continuous-map-narrow-font16.png"else"reading-continuous-map-landscape.png")
+            if(narrow){repeat(4){panReading("continuous-viewport",-95f,0f)}
+                assertTrue("Continuous source remains horizontally readable alongside the map",readingState().left>350)
+                shot("reading-continuous-narrow-panned.png")}
+            val preZoom=readingState();zoomReading("continuous-viewport")
+            assertTrue("An actual pinch must enlarge the retained source",readingState().zoom>preZoom.zoom*1.2)
+            panReading("continuous-viewport",-60f,-45f)
+            val chosen=readingState();assertTrue(chosen.top>before.top+10)
+            repeat(2){tap("study-close");assertReadingContext(chosen);tap("quick-study");assertReadingContext(chosen)}
+            compose.activityRule.scenario.recreate();saved(book,0)
+            compose.onNodeWithTag("study-map").assertIsDisplayed();assertReadingContext(chosen)
+            assertArrayEquals(objects,runBlocking{PageObjectCodec.encode(app.pageObjects.read(book).objects)})
+            assertTrue(strokes(book).isEmpty());tap("study-close")
+        }finally{if(narrow){shell("settings put system font_scale 1.0");shell("wm size reset");compose.activityRule.scenario.recreate()}}
+    }
+    @Test fun landscapeContinuousMapRetainsReadingScalePanAndRecreation()=continuousReading(false)
+    @Test fun narrowContinuousMapKeepsReadableContentAndTwoFingerNavigation()=continuousReading(true)
+
+    @Test fun continuousReopensSavedReadingViewportWithoutFittingItAway(){
+        val savedView=CanvasViewport(450.0,500.0,1.6)
+        val book=seed(singlePage=false,savedView=savedView)
+        val bounds=readingBounds();val density=compose.activity.resources.displayMetrics.density
+        val expected=ReadingState(savedView.zoom,savedView.centerX-bounds.width()/(2*savedView.zoom*density),savedView.centerY-bounds.height()/(2*savedView.zoom*density))
+        assertReadingContext(expected)
+        tap("quick-study");assertReadingContext(expected);tap("study-close");assertReadingContext(expected)
+        compose.activityRule.scenario.recreate();saved(book,0);assertReadingContext(expected)
+        assertTrue(strokes(book).isEmpty())
+    }
+
 }
