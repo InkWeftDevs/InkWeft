@@ -18,7 +18,13 @@
       ]
     },
     "current_action": "Record issues and await user layout feedback; no supplementary preview or production integration in this follow-up",
-    "test_interpretation": "Passing interaction and geometry checks do not establish UX acceptance or readable source context."
+    "test_interpretation": "Passing interaction and geometry checks do not establish UX acceptance or readable source context.",
+    "pending_validation": [
+      "The next narrow prototype must cover font scale 1.6; all 3 current cases use 1.0 and cannot inherit the earlier production-editor 1.6 result.",
+      "Real source anchors and context preservation across layout branches remain unverified: this prototype only scrolls to a fixed section and asserts a boolean highlight state."
+    ],
+    "future_integration_plan": "Reuse existing production source navigation, selection and viewport state and existing domain/authoring rules; no domain rewrite, prototype database expansion, or replacement storage.",
+    "integration_started": false
   },
   "production_redesign_integrated": false,
   "baseline": "e9e096b6f64d9b36cf084d3d7ce99d063898bc22",
@@ -40,7 +46,7 @@
     "environment": "API 36 x86_64 cloud emulator; software rendering; font scale 1.0",
     "paths": [
       "writing and ink undo",
-      "map comparison, explicit single-view selection, source focus and collapse",
+      "map comparison, explicit single-view selection, fixed-section source highlight flag and collapse",
       "browse hidden layer without changing writing target, explicitly select a writable layer, resume writing"
     ],
     "checks": [
@@ -195,6 +201,8 @@
     "Goodnotes/MarginNote documentation verified here; reference images additionally inspected by parent.",
     "Saber/Butterfly official repository screenshots and relevant source/license files inspected here.",
     "No new full production regression suite or GitHub CI pass claimed for this isolated prototype.",
+    "All current prototype viewport cases use font scale 1.0; font scale 1.6 is pending for the next narrow preview.",
+    "Source positioning is hardcoded scrollTo(180) with a boolean assertion. Paper scroll state is local to layout branches; cross-layout context preservation is not established.",
     "APK and complete local logs are not publicly published."
   ]
 }
