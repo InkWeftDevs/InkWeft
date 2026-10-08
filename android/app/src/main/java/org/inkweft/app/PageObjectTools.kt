@@ -76,6 +76,7 @@ import kotlinx.coroutines.*
                 }
                 if(item.kind==PageObjectKind.IMAGE)Text(if(item.imageSource!=null)"原件已保留"else"旧图片仅有预览",modifier=Modifier.padding(horizontal=8.dp).testTag("object-image-source"),style=MaterialTheme.typography.bodySmall)
                 if(item.kind==PageObjectKind.TEXT)TextButton(onClick={editing=item},enabled=available,modifier=Modifier.testTag("object-edit-text")){Text("编辑文字")}
+                if(item.kind==PageObjectKind.FORMULA)TextButton(onClick={editing=item},enabled=available,modifier=Modifier.testTag("object-edit-formula")){Text("编辑公式")}
                 if(item.kind==PageObjectKind.TAPE)TextButton(onClick={vm.put(item.copy(revealed=!item.revealed))},enabled=available,modifier=Modifier.testTag("object-reveal")){Text(if(item.revealed)"盖上胶带"else"揭开胶带")}
                 TextButton(onClick={val x=if(world)item.x+24 else (item.x+24).coerceAtMost(1000-item.width);val y=if(world)item.y+24 else (item.y+24).coerceAtMost(1414-item.height);val o=item.copy(id=UUID.randomUUID().toString(),x=x,y=y,sourceStrokeIds=emptyList(),textRuns=item.textRuns.map{it.copy(sourceIds=emptyList())});vm.put(o);onSelect(o.id)},enabled=available,modifier=Modifier.testTag("object-copy")){Text("复制")}
                 TextButton(onClick={vm.change(ui.objects.filterNot{it.id==item.id}+item)},enabled=available,modifier=Modifier.testTag("object-front")){Text("移到同类前方")}
@@ -95,6 +96,10 @@ import kotlinx.coroutines.*
         Column { listOf("⭐","❤️","✅","❗","💡","📌","😊","🎯","📚").chunked(3).forEach{row->Row{row.forEach{symbol->TextButton(onClick={val o=newObject(PageObjectKind.TEXT).copy(text=symbol,fontSize=80f,width=140f,height=140f);vm.put(o);onSelect(o.id);stickerPicker=false},modifier=Modifier.size(72.dp).testTag("sticker-$symbol")){Text(symbol,fontSize=28.sp)}}}} }
     }
     editing?.let { original ->
+        if(original.kind==PageObjectKind.FORMULA){
+            FormulaEditor(original,world,{editing=null},{vm.put(it);onSelect(it.id);editing=null})
+            return@let
+        }
         var text by rememberSaveable(original.id){mutableStateOf(if(ui.objects.any{it.id==original.id})original.visibleText() else "")}
         var font by rememberSaveable(original.id){mutableFloatStateOf(original.fontSize)}
         var family by rememberSaveable(original.id){mutableStateOf(original.font)}

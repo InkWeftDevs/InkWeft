@@ -37,6 +37,7 @@ class InkWeftApplication:Application(){
     val cloudServices:CloudServicePort=DisabledCloudServices
     internal val documentRendering by lazy{DocumentRendering(this,documents)}
     internal val handwriting by lazy{HandwritingRecognizer(this)}
+    internal val formulas by lazy{FormulaRecognizer(this)}
     override fun onTrimMemory(level:Int){super.onTrimMemory(level);if(level>=android.content.ComponentCallbacks2.TRIM_MEMORY_RUNNING_LOW)RenderResources.trim()}
     override fun onLowMemory(){super.onLowMemory();RenderResources.trim()}
     override fun onCreate(){super.onCreate();TextStyles.initialize(this);diagnostics; if(backupEngine.mayResume())BackupScheduler.schedule(this)}

@@ -17,6 +17,14 @@ internal fun RecognizedWriting.corrected(text:String):RecognizedWriting {
 
 internal fun prepareBeautyReview(strokes:List<InkStroke>,result:RecognizedWriting,options:BeautyOptions,world:Boolean,
     inkRevision:Long,objectRevision:Long,previous:PageObject?,affected:Set<String>,automatic:Boolean,ink:List<InkStroke>,objects:List<PageObject>):BeautyReview {
+    if(options.formula){
+        val built=runCatching{FormulaLayout.build(strokes,result.text,options,world)}
+        val candidate=built.getOrNull()
+        val sourceIds=strokes.map{it.id}.toSet();val suppressed=objects.flatMap{it.sourceStrokeIds}.toSet()
+        val collision=candidate?.let{c->ink.any{it.id !in sourceIds&&it.id !in suppressed&&it.bounds().intersects(c.bounds())}||objects.any{!it.hidden&&it.kind!=PageObjectKind.IMAGE&&it.bounds().intersects(c.bounds())}}==true
+        val reason=if(built.isFailure)"公式格式或尺寸不适用，请修改候选或缩小字号" else if(collision)"公式与邻近内容相交，请缩小字号或保留原迹"else "请核对函数名、分子分母和上下标，再应用公式"
+        return BeautyReview(strokes,result,options,world,inkRevision,objectRevision,null,emptySet(),automatic,candidate,reason)
+    }
     var reason:String?=null
     val candidate=runCatching{
         val built=beautyObject(strokes,result,options,world,revision=inkRevision)

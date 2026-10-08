@@ -73,6 +73,7 @@ android {
 dependencies {
     implementation(project(":core-domain"))
     implementation(libs.onnxruntime)
+    implementation(libs.jlatexmath)
     implementation(libs.mupdf)
     implementation(project(":data-local"))
     implementation(platform(libs.compose.bom))

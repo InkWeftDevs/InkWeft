@@ -512,7 +512,7 @@ private fun PageSearchDialog(draft:PageSearchDraft,dismiss:()->Unit){
             val visibleObjects=frozen.objects.filter{layers.visible(LayerContent(LayerContentKind.OBJECT,it.id))}
             val suppressed=visibleObjects.flatMap{it.sourceStrokeIds}.toSet()
             val result=app.handwriting.recognize(frozen.ink.filter{layers.visible(LayerContent(LayerContentKind.INK,it.id))&&it.id !in suppressed})
-            text=(listOf(result.text)+visibleObjects.filter{!it.hidden&&it.kind==PageObjectKind.TEXT}.map{it.visibleText()}).filter{it.isNotBlank()}.joinToString("\n").also{require(it.length<=20000)}
+            text=(listOf(result.text)+visibleObjects.filter{!it.hidden&&it.kind in setOf(PageObjectKind.TEXT,PageObjectKind.FORMULA)}.map{it.visibleText()}).filter{it.isNotBlank()}.joinToString("\n").also{require(it.length<=20000)}
             ocr=true;message=if(text.isBlank())"未识别到文字，可手动补充关键词。"else"识别完成，请核对后保存。"
         }catch(c:CancellationException){throw c}catch(_:Exception){message="识别未完成或页面已经变化。原笔迹保留，可关闭后重试。"}finally{busy=false}}},enabled=!busy,modifier=Modifier.testTag("recognize-page")){Text("识别本页手写")}
         if(busy)LinearProgressIndicator(Modifier.fillMaxWidth())

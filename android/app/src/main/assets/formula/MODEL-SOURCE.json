@@ -1,0 +1,8 @@
+{
+  "model": "alephpi/FormulaNet (Texo transfer ONNX)",
+  "revision": "b2668efe5112082846fde4d446b9bfaab3989533",
+  "source": "https://huggingface.co/alephpi/FormulaNet",
+  "training_source": "https://github.com/alephpi/Texo",
+  "license": "AGPL-3.0",
+  "purpose": "Offline formula-to-LaTeX recognition; results require review"
+}

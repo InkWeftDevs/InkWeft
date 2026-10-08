@@ -5,7 +5,7 @@ import java.io.*
 import java.util.Base64
 import java.util.UUID
 
-enum class PageObjectKind { IMAGE, TEXT, TAPE, SHAPE, MAP }
+enum class PageObjectKind { IMAGE, TEXT, TAPE, SHAPE, MAP, FORMULA }
 enum class TapePattern { STRIPES, SPARKLES, GRID, SOLID, DOTS, WAVES }
 enum class ObjectShape { RECTANGLE, ELLIPSE, TRIANGLE, LINE, ARROW, TABLE }
 data class TapePoint(val x:Float,val y:Float) { init { require(x.isFinite()&&y.isFinite()&&x>=0&&y>=0) } }
@@ -55,17 +55,18 @@ data class PageObject(
         require(lineSpacing.isFinite()&&lineSpacing in 1f..2f)
         require(sourceStrokeIds.size<=256&&sourceStrokeIds.distinct().size==sourceStrokeIds.size)
         sourceStrokeIds.forEach{UUID.fromString(it)}
-        require(sourceStrokeIds.isEmpty()||kind==PageObjectKind.TEXT)
+        require(sourceStrokeIds.isEmpty()||kind==PageObjectKind.TEXT||kind==PageObjectKind.FORMULA)
         require(!hidden||sourceStrokeIds.isNotEmpty())
         require(glyphs.isEmpty()||kind==PageObjectKind.TEXT)
-        require(erasures.isEmpty()||kind==PageObjectKind.TEXT&&glyphs.isNotEmpty())
+        require(erasures.isEmpty()||kind==PageObjectKind.TEXT&&glyphs.isNotEmpty()||kind==PageObjectKind.FORMULA)
         require(erasures.size<=InkLimits.MAX_CUTS&&erasures.sumOf{it.points.size}<=InkLimits.MAX_CUT_POINTS)
         require(erasures.all{it.end<=text.length})
         require(glyphs.size<=4000&&glyphs.zipWithNext().all{(a,b)->a.end<=b.start})
         require(glyphs.all{it.end<=text.length&&it.x+it.width<=width+.01f&&it.y+it.height<=height+.01f})
         require(kotlin.math.abs(x)+width<=BoardLimits.WORLD && kotlin.math.abs(y)+height<=BoardLimits.WORLD)
         require(text.length<=4000 && image.length<=PageObjectCodec.MAX_IMAGE*4/3+4)
-        require(when(kind){PageObjectKind.IMAGE->image.isNotEmpty()&&text.isEmpty();PageObjectKind.TEXT->text.isNotBlank()&&image.isEmpty();PageObjectKind.TAPE,PageObjectKind.SHAPE,PageObjectKind.MAP->text.isEmpty()&&image.isEmpty()})
+        require(when(kind){PageObjectKind.IMAGE->image.isNotEmpty()&&text.isEmpty();PageObjectKind.TEXT,PageObjectKind.FORMULA->text.isNotBlank()&&image.isEmpty();PageObjectKind.TAPE,PageObjectKind.SHAPE,PageObjectKind.MAP->text.isEmpty()&&image.isEmpty()})
+        if(kind==PageObjectKind.FORMULA)FormulaText.validate(text)
     }
     fun bounds()=CanvasBounds(x.toDouble(),y.toDouble(),(x+width).toDouble(),(y+height).toDouble())
     fun visibleText():String {

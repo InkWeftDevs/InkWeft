@@ -8,13 +8,13 @@ import java.util.UUID
 
 internal enum class BeautyLanguage(val title:String){MIXED("中文（含英文）"),ENGLISH("English")}
 internal data class BeautyOptions(val enabled:Boolean=false,val font:TextFont=TextFont.WENKAI,
-    val size:Float=28f,val spacing:Float=1.2f,val bold:Boolean=false,val preserveLayout:Boolean=true,val snap:Float=.5f,val language:BeautyLanguage=BeautyLanguage.MIXED,val keepInk:Boolean=false,val inkStrength:Float=.5f)
+    val size:Float=28f,val spacing:Float=1.2f,val bold:Boolean=false,val preserveLayout:Boolean=true,val snap:Float=.5f,val language:BeautyLanguage=BeautyLanguage.MIXED,val keepInk:Boolean=false,val inkStrength:Float=.5f,val formula:Boolean=false)
 internal class BeautyStore(context:Context){
     private val prefs=context.getSharedPreferences("inkweft-beauty",Context.MODE_PRIVATE)
     fun read()=BeautyOptions(prefs.getBoolean("enabled",false),TextFont.entries.getOrElse(prefs.getInt("font",1)){TextFont.WENKAI},
-        prefs.getFloat("size",28f).coerceIn(12f,96f),prefs.getFloat("spacing",1.2f).coerceIn(1f,2f),prefs.getBoolean("bold",false),prefs.getBoolean("preserve-layout",true),prefs.getFloat("snap",.5f).coerceIn(0f,1f),BeautyLanguage.entries.getOrElse(prefs.getInt("language",0)){BeautyLanguage.MIXED},prefs.getBoolean("keep-ink",false),prefs.getFloat("ink-strength",.5f).coerceIn(0f,1f))
+        prefs.getFloat("size",28f).coerceIn(12f,96f),prefs.getFloat("spacing",1.2f).coerceIn(1f,2f),prefs.getBoolean("bold",false),prefs.getBoolean("preserve-layout",true),prefs.getFloat("snap",.5f).coerceIn(0f,1f),BeautyLanguage.entries.getOrElse(prefs.getInt("language",0)){BeautyLanguage.MIXED},prefs.getBoolean("keep-ink",false),prefs.getFloat("ink-strength",.5f).coerceIn(0f,1f),prefs.getBoolean("formula",false))
     fun save(value:BeautyOptions){prefs.edit().putBoolean("enabled",value.enabled).putInt("font",value.font.ordinal)
-        .putFloat("size",value.size).putFloat("spacing",value.spacing).putBoolean("bold",value.bold).putBoolean("preserve-layout",value.preserveLayout).putFloat("snap",value.snap).putInt("language",value.language.ordinal).putBoolean("keep-ink",value.keepInk).putFloat("ink-strength",value.inkStrength).apply()}
+        .putFloat("size",value.size).putFloat("spacing",value.spacing).putBoolean("bold",value.bold).putBoolean("preserve-layout",value.preserveLayout).putFloat("snap",value.snap).putInt("language",value.language.ordinal).putBoolean("keep-ink",value.keepInk).putFloat("ink-strength",value.inkStrength).putBoolean("formula",value.formula).apply()}
 }
 
 @Composable internal fun AutomaticBeautyBinding(model:PageObjectViewModel,ink:InkUi,writing:Boolean,options:BeautyOptions,world:Boolean,app:InkWeftApplication){

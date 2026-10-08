@@ -38,6 +38,7 @@ internal class VisibleInkGeometry {
             val outline=ObjectGeometry.path(obj,if(obj.kind==PageObjectKind.SHAPE)obj.lineWidth/2 else 0f)
             val painted=if(obj.kind==PageObjectKind.SHAPE)Path().also{Paint(Paint.ANTI_ALIAS_FLAG).apply{style=Paint.Style.STROKE;strokeWidth=obj.lineWidth;strokeCap=Paint.Cap.ROUND;strokeJoin=Paint.Join.ROUND}.getFillPath(outline,it)}else outline
             painted.op(Path().apply{addRect(obj.x,obj.y,obj.x+obj.width,obj.y+obj.height,Path.Direction.CW)},Path.Op.INTERSECT)
+            if(obj.kind==PageObjectKind.FORMULA)obj.erasures.forEach{cut->painted.op(sweptPath(cut.points.map{EraserPoint(obj.x+it.x,obj.y+it.y)},cut.radius),Path.Op.DIFFERENCE)}
             return overlaps(region,painted,precise)
         }
         val result=Path();val paint=TextStyles.paint(obj);val box=Rect()

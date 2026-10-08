@@ -422,7 +422,7 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
             try{
                 // PDF/object text is cheap and deterministic; handwriting recognition stays opt-in.
                 val pdfText=app.documentRendering.text(page.id,selection.region.bounds)
-                val objectText=objectsUi.objects.filter{!it.hidden&&authoringUi.state.layers.visible(LayerContent(LayerContentKind.OBJECT,it.id))&&it.kind==PageObjectKind.TEXT&&it.bounds().intersects(selection.region.bounds)}.joinToString("\n"){it.visibleText()}
+                val objectText=objectsUi.objects.filter{!it.hidden&&authoringUi.state.layers.visible(LayerContent(LayerContentKind.OBJECT,it.id))&&it.kind in setOf(PageObjectKind.TEXT,PageObjectKind.FORMULA)&&it.bounds().intersects(selection.region.bounds)}.joinToString("\n"){it.visibleText()}
                 val inkText=if(recognizeInk&&strokes.isNotEmpty())app.handwriting.recognize(strokes).text else ""
                 val text=listOf(pdfText,objectText,inkText).filter{it.isNotBlank()}.joinToString("\n").take(20000)
                 if(current()){

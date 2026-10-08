@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.sp
 import org.inkweft.core.TextFont
 import kotlin.math.roundToInt
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable internal fun BeautySettingsMenu(expanded:Boolean,dismiss:()->Unit,value:BeautyOptions,change:(BeautyOptions)->Unit,select:()->Unit,smooth:()->Unit){
     var section by remember(expanded){mutableStateOf<String?>(null)}
     DropdownMenu(expanded,dismiss,shape=InkTheme.FloatingShape,containerColor=InkTheme.Surface,tonalElevation=0.dp,
@@ -32,23 +33,28 @@ import kotlin.math.roundToInt
         }
         if(section=="font")TextFont.entries.forEach{font->
             DropdownMenuItem(text={Text(TextStyles.name(font),fontFamily=FontFamily(TextStyles.face(font)))},trailingIcon={if(value.font==font)Glyph("check",Forest)},
-                onClick={change(value.copy(font=font,keepInk=false));section=null},modifier=Modifier.testTag("font-${font.name}"))
+                onClick={change(value.copy(font=font,keepInk=false,formula=false));section=null},modifier=Modifier.testTag("font-${font.name}"))
         }else if(section=="language")BeautyLanguage.entries.forEach{language->
             DropdownMenuItem(text={Text(language.title)},trailingIcon={if(value.language==language)Glyph("check",Forest)},onClick={change(value.copy(language=language));section=null},modifier=Modifier.testTag("beauty-language-${language.name}"))
         }else{
             Column(Modifier.padding(horizontal=16.dp)){
                 BeautySwitch("自动美化",value.enabled,"beauty-enabled"){change(value.copy(enabled=it))}
-                TextButton(onClick={section="font"},contentPadding=PaddingValues(0.dp),modifier=Modifier.fillMaxWidth().heightIn(min=48.dp).testTag("beauty-font-picker")){
+                if(!value.formula)TextButton(onClick={section="font"},contentPadding=PaddingValues(0.dp),modifier=Modifier.fillMaxWidth().heightIn(min=48.dp).testTag("beauty-font-picker")){
                     Text("美化字体",color=TextInk);Spacer(Modifier.weight(1f));Text(if(value.keepInk)"选择字体"else TextStyles.name(value.font),fontSize=13.sp,color=Quiet);Text("  ›",color=Quiet)
                 }
                 HorizontalDivider(color=Line)
-                Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.spacedBy(8.dp)){
-                    FilterChip(value.keepInk,{change(value.copy(keepInk=true))},label={Text("保留笔形")},modifier=Modifier.testTag("beauty-keep-ink"))
-                    FilterChip(!value.keepInk,{change(value.copy(keepInk=false))},label={Text("字体美化")},modifier=Modifier.testTag("beauty-replace-font"))
+                FlowRow(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.spacedBy(6.dp)){
+                    FilterChip(value.keepInk,{change(value.copy(keepInk=true,formula=false))},label={Text("保留笔形")},modifier=Modifier.testTag("beauty-keep-ink"))
+                    FilterChip(!value.keepInk&&!value.formula,{change(value.copy(keepInk=false,formula=false))},label={Text("文字美化")},modifier=Modifier.testTag("beauty-replace-font"))
+                    FilterChip(!value.keepInk&&value.formula,{change(value.copy(keepInk=false,formula=true))},label={Text("公式美化")},modifier=Modifier.testTag("beauty-formula"))
                 }
                 if(value.keepInk){
                     Text("只整理原迹，不换字体；适合公式",fontSize=12.sp,color=Quiet)
                     BeautySlider("整理强度","${(value.inkStrength*100).roundToInt()}%",value.inkStrength,0f..1f,true,"beauty-ink-strength"){change(value.copy(inkStrength=it))}
+                }else if(value.formula){
+                    Text("离线识别分式、上下标与数学符号；先校对，再应用。保存后仍可编辑公式或恢复原迹。",fontSize=12.sp,color=Quiet)
+                    BeautySwitch("贴近原稿大小",value.preserveLayout,"beauty-formula-layout"){change(value.copy(preserveLayout=it))}
+                    BeautySlider("字号",value.size.toInt().toString(),value.size,12f..96f,!value.preserveLayout,"beauty-formula-size"){change(value.copy(size=it.roundToInt().toFloat()))}
                 }else{
                 Text("稳定片段自动转换，含糊内容可校对",fontSize=12.sp,color=Quiet)
                 BeautySwitch("动态加粗",value.bold,"beauty-dynamic-bold"){change(value.copy(bold=it))}
@@ -63,7 +69,7 @@ import kotlin.math.roundToInt
                 }
             }
             HorizontalDivider(color=Line)
-            DropdownMenuItem(text={Text("框选美化")},onClick=select,modifier=Modifier.testTag("beauty-select"))
+            DropdownMenuItem(text={Text(if(value.formula)"框选公式"else"框选美化")},onClick=select,modifier=Modifier.testTag("beauty-select"))
             DropdownMenuItem(text={Text("笔形润色")},onClick=smooth)
         }
     }

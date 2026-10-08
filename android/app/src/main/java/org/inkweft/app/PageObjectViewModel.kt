@@ -117,8 +117,8 @@ internal class PageObjectViewModel(private val pageId:String,private val repo:Pa
             if(!current(ink.revision,snapshot.revision))return@launch
             val freshBounds=unit.bounds
             // A late dot/radical can touch an older fragment, not only the last converted word.
-            val touched=snapshot.objects.filter{!it.hidden&&it.textRuns.isNotEmpty()}.firstOrNull{o->o.textRuns.any{r->r.sourceIds.mapNotNull{byId[it]}.any{it.bounds().padded(5.0).intersects(freshBounds)}}}
-            val previous=touched?:snapshot.objects.find{it.id==lastAutomatic&&!it.hidden}
+            val touched=if(options.formula)null else snapshot.objects.filter{!it.hidden&&it.textRuns.isNotEmpty()}.firstOrNull{o->o.textRuns.any{r->r.sourceIds.mapNotNull{byId[it]}.any{it.bounds().padded(5.0).intersects(freshBounds)}}}
+            val previous=if(options.formula)null else touched?:snapshot.objects.find{it.id==lastAutomatic&&!it.hidden&&it.kind==PageObjectKind.TEXT}
             val merge=previous?.takeIf{it.bounds().padded(options.size*2.0).intersects(freshBounds)}
             val affected=touched?.textRuns?.filter{r->r.sourceIds.mapNotNull{byId[it]}.any{it.bounds().padded(5.0).intersects(freshBounds)}}?.map{it.id}?.toSet().orEmpty()
             val context=touched?.textRuns?.filter{it.id in affected}?.flatMap{it.sourceIds}?.toSet().orEmpty()
@@ -159,18 +159,18 @@ internal class PageObjectViewModel(private val pageId:String,private val repo:Pa
         diagnostics?.event(DiagnosticCode.BEAUTY_INPUT,DiagnosticResult.OBSERVED,strokes.size.toLong(),if(automatic)1 else 0)
         beautyState.value="正在美化…"
         try{
-            val result=recognition?.invoke(strokes,options.language,false)?:app.handwriting.recognize(strokes,language=options.language,trace=trace)
+            val result=recognition?.invoke(strokes,options.language,false)?:if(options.formula)app.formulas.recognize(strokes,trace)else app.handwriting.recognize(strokes,language=options.language,trace=trace)
             if(!current(revision,objectRevision)){trace?.finish("STALE");beautyState.value=null;return false}
             // Quiet time is only scheduling. Compare a second raster margin after checking author versions.
-            delay(250)
-            val variant=recognition?.invoke(strokes,options.language,true)?:app.handwriting.recognize(strokes,language=options.language,padded=true,trace=trace)
+            if(!options.formula)delay(250)
+            val variant=if(options.formula)result else recognition?.invoke(strokes,options.language,true)?:app.handwriting.recognize(strokes,language=options.language,padded=true,trace=trace)
             if(!current(revision,objectRevision)){trace?.finish("STALE");beautyState.value=null;return false}
-            val quality=BeautyQuality.decide(strokes,result,variant,true)
+            val quality=if(options.formula)BeautyDecision(false,"请核对函数名、分子分母和上下标，再应用公式")else BeautyQuality.decide(strokes,result,variant,true)
             val r=prepareBeautyReview(strokes,result,options,world,revision,objectRevision,previous,affected,automatic,latestInk.strokes,snapshot.objects).copy(trace=trace)
-            runCatching{trace?.decision(result,variant,quality,r)}
+            runCatching{if(options.formula)trace?.record("formula_review_required",true)else trace?.decision(result,variant,quality,r)}
             if(automatic&&quality.automatic&&r.candidate!=null&&r.reason==null)commitBeauty(r,r.candidate)
             else {
-                val review=r.copy(reason=quality.reason?:r.reason,open=!automatic)
+                val review=r.copy(reason=if(options.formula)r.reason?:quality.reason else quality.reason?:r.reason,open=!automatic)
                 if(automatic)beautyWaiting[strokes.map{it.id}.toSet()]=review
                 reviewState.value=review;beautyState.value="美化待校对"
                 diagnostics?.event(DiagnosticCode.BEAUTY_REVIEW,DiagnosticResult.REJECTED,strokes.size.toLong(),result.text.length.toLong())
@@ -248,11 +248,14 @@ internal class PageObjectViewModel(private val pageId:String,private val repo:Pa
             fun slab(start:Double,delta:Double,min:Double,max:Double):Boolean{if(delta==0.0)return start in min..max;val a=(min-start)/delta;val b=(max-start)/delta;lo=maxOf(lo,minOf(a,b));hi=minOf(hi,maxOf(a,b));return lo<=hi}
             slab(a.x.toDouble(),(b.x-a.x).toDouble(),box.left,box.right)&&slab(a.y.toDouble(),(b.y-a.y).toDouble(),box.top,box.bottom)
         }
-        if(!whole&&snapshot.objects.any{!it.hidden&&(it.sourceStrokeIds.isNotEmpty()||it.glyphs.isNotEmpty())&&hits(it.bounds())&&(it.erasures.size>=InkLimits.MAX_CUTS||it.erasures.sumOf{c->c.points.size}+path.size>InkLimits.MAX_CUT_POINTS)}){
+        if(!whole&&snapshot.objects.any{!it.hidden&&(it.sourceStrokeIds.isNotEmpty()||it.glyphs.isNotEmpty()||it.kind==PageObjectKind.FORMULA)&&hits(it.bounds())&&(it.erasures.size>=InkLimits.MAX_CUTS||it.erasures.sumOf{c->c.points.size}+path.size>InkLimits.MAX_CUT_POINTS)}){
             publish("这段文字的局部擦除次数已达上限，可撤销一次擦除或使用整字擦除。");return snapshot.objects
         }
         return snapshot.objects.mapNotNull{o->
-            if(!editableContent(o.id)||o.hidden||(o.sourceStrokeIds.isEmpty()&&o.glyphs.isEmpty())||!hits(o.bounds()))o else {
+            if(!editableContent(o.id)||o.hidden||(o.sourceStrokeIds.isEmpty()&&o.glyphs.isEmpty()&&o.kind!=PageObjectKind.FORMULA)||!hits(o.bounds()))o else if(o.kind==PageObjectKind.FORMULA){
+                if(whole){if(o.sourceStrokeIds.isEmpty())null else o.copy(hidden=true)}
+                else o.copy(erasures=o.erasures+TextErasePath(0,o.text.length,radius,path.map{TextErasePoint(it.x-o.x,it.y-o.y)}))
+            }else {
                 val before=TextStyles.positioned(o)
                 val after=before.map{g->if(g.hidden||!hits(CanvasBounds((o.x+g.x).toDouble(),(o.y+g.y).toDouble(),(o.x+g.x+g.width).toDouble(),(o.y+g.y+g.height).toDouble())))g else g.copy(hidden=true)}
                 if(after==before)o else if(whole){if(after.all{it.hidden}&&o.sourceStrokeIds.isEmpty())null else o.copy(glyphs=after,hidden=after.all{it.hidden})} else {

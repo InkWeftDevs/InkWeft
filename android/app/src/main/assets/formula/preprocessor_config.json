@@ -1,0 +1,10 @@
+{
+  "crop_ink_threshold": 200,
+  "size": 384,
+  "preserve_aspect": true,
+  "padding_color": 0,
+  "grayscale": true,
+  "mean": 0.7931,
+  "std": 0.1738,
+  "reference": "https://github.com/alephpi/Texo/blob/main/src/texo/data/processor/image_processor.py"
+}

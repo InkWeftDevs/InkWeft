@@ -1,3 +1,9 @@
+# 当前：V77 平板反馈与公式编辑候选 · 2026-10-08
+
+处理擦除闪烁、自动美化入口、笔橡皮切换和离线可编辑数学公式。第一批界面／擦除候选实机 5/5 通过；公式主体编译通过，完整公式与最终交付检查仍在进行。准确构件和范围见 [本轮报告](TABLET-FEEDBACK-V77.md)，真机待测与结果记录见 [设备清单](DEVICE-TEST-CHECKLIST.md)。现用两包均含真人资料，测试改用独立反馈包。
+
+---
+
 # 平板书写、关联与学习导图流程 · 2026-10-04
 
 当前文档对应分支 `codex/local/ux-learning-flow-20261003` 随本报告提交的版本。版本68／`0.0.68-cloud-candidate`、workspace包名与原签名保持。04b主包SHA256 `c12caad57412efe5933f0446d2e56f1aa2ce90ff60c4bc8f9632b6ef34d01079`；准确基点、补丁、runner与证书见[学习流程报告](verification/ux-learning-flow-20261003/README.md)。

@@ -309,7 +309,7 @@ class InkCanvasView(context:Context):View(context){
     var onObjectTap:(String)->Unit={}
     internal fun imageAt(x:Float,y:Float):String? {
         val p=viewport.screenToWorld(x.toDouble(),y.toDouble(),width.toDouble(),height.toDouble(),density)
-        val candidates=objects.asReversed().filter{visibleObject(it)&&!it.hidden&&it.kind in listOf(PageObjectKind.IMAGE,PageObjectKind.MAP,PageObjectKind.SHAPE,PageObjectKind.TAPE)}
+        val candidates=objects.asReversed().filter{visibleObject(it)&&!it.hidden&&it.kind in listOf(PageObjectKind.IMAGE,PageObjectKind.MAP,PageObjectKind.SHAPE,PageObjectKind.TAPE,PageObjectKind.FORMULA)}
         return (candidates.filter{it.kind==PageObjectKind.TAPE}+candidates.filter{it.kind!=PageObjectKind.TAPE}).firstOrNull{ObjectGeometry.hit(it,p.x.toFloat(),p.y.toFloat())}?.id
     }
     private var tapImage:String?=null

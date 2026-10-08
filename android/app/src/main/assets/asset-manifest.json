@@ -18,5 +18,40 @@
     "asset": "fonts/LXGWWenKaiLite-Regular.ttf",
     "bytes": 13872424,
     "sha256": "140c99ba4e28e817cec49bf82a0c5fcdc4fe633fb9dfda16d0ee8d59a8545f15"
+  },
+  {
+    "asset": "formula/config.json",
+    "bytes": 5065,
+    "sha256": "4a6db2899d540ab44ca4c219e0e76381c52f441781e41bd027c1844208b88e34"
+  },
+  {
+    "asset": "formula/decoder_model.onnx",
+    "bytes": 25872372,
+    "sha256": "00f07add62d74c78750cfda60ce8f1cff3d1774f913ca3f412e2e72f4189d7d4"
+  },
+  {
+    "asset": "formula/encoder_model.onnx",
+    "bytes": 54168561,
+    "sha256": "fbd69cf63cf833db1e2ef40013d859b560671c1253278441a01bde4516b624ae"
+  },
+  {
+    "asset": "formula/generation_config.json",
+    "bytes": 213,
+    "sha256": "8065912018ef63e9d9399f0e8513fb32809b58938a18393278e01608ded745a5"
+  },
+  {
+    "asset": "formula/MODEL-SOURCE.json",
+    "bytes": 330,
+    "sha256": "6f813a9e44a7586319841beda3622055bae732d298d71b5313f0624c3639cead"
+  },
+  {
+    "asset": "formula/preprocessor_config.json",
+    "bytes": 255,
+    "sha256": "e8a5028a07af148f16c525577fc41d0646756c4bb26e395a47a6fbb303fc5a58"
+  },
+  {
+    "asset": "formula/tokenizer.json",
+    "bytes": 17318,
+    "sha256": "1240f9d178e1ad2a0076fe95ba62e332871c702accdd5ce3ae3ef33ffd6c3a1e"
   }
 ]

@@ -73,7 +73,7 @@ internal data class PageSearchDraft(val pageId:String,val inkRevision:Long,val o
                         val visibleObjects=frozen.objects.filter{layers.visible(LayerContent(LayerContentKind.OBJECT,it.id))}
                         val suppressed=visibleObjects.flatMap{it.sourceStrokeIds}.toSet()
                         val result=app.handwriting.recognize(frozen.ink.filter{layers.visible(LayerContent(LayerContentKind.INK,it.id))&&it.id !in suppressed})
-                        val text=(listOf(result.text)+visibleObjects.filter{!it.hidden&&it.kind==PageObjectKind.TEXT}.map{it.visibleText()}).filter{it.isNotBlank()}.joinToString("\n")
+                        val text=(listOf(result.text)+visibleObjects.filter{!it.hidden&&it.kind in setOf(PageObjectKind.TEXT,PageObjectKind.FORMULA)}.map{it.visibleText()}).filter{it.isNotBlank()}.joinToString("\n")
                         require(text.length<=20_000)
                         if(!withContext(Dispatchers.IO){app.pages.saveSearchText(page.id,frozen.authoring.inkRevision,text,frozen.authoring.objectRevision,"OCR",frozen.authoring.revision)})failed++
                     }catch(c:CancellationException){throw c}catch(_:Exception){failed++}

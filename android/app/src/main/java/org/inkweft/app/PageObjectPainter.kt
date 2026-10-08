@@ -17,15 +17,29 @@ internal class PageObjectPainter(private val requireCompleteImages:Boolean=false
     private val images=object:LinkedHashMap<String,Bitmap?>(8,.75f,true){override fun removeEldestEntry(eldest:MutableMap.MutableEntry<String,Bitmap?>?):Boolean{if(size<=8)return false;eldest?.value?.let{RenderResources.release(it,resourceOwner)};return true}}
     private val layouts=object:LinkedHashMap<PageObject,StaticLayout>(32,.75f,true){override fun removeEldestEntry(eldest:MutableMap.MutableEntry<PageObject,StaticLayout>?)=size>32}
     private val naturalLayouts=object:LinkedHashMap<PageObject,List<StaticLayout>>(16,.75f,true){override fun removeEldestEntry(e:MutableMap.MutableEntry<PageObject,List<StaticLayout>>?)=size>32}
+    private val formulaLayouts=object:LinkedHashMap<PageObject,ru.noties.jlatexmath.JLatexMathDrawable>(16,.75f,true){override fun removeEldestEntry(e:MutableMap.MutableEntry<PageObject,ru.noties.jlatexmath.JLatexMathDrawable>?)=size>32}
     private val graphite=object:LinkedHashMap<Int,BitmapShader>(8,.75f,true){override fun removeEldestEntry(eldest:MutableMap.MutableEntry<Int,BitmapShader>?)=size>8}
     private val paint=Paint(Paint.ANTI_ALIAS_FLAG or Paint.FILTER_BITMAP_FLAG)
-    fun clear(){RenderResources.releaseOwner(resourceOwner);images.clear();layouts.clear();naturalLayouts.clear();graphite.clear();mapScenesResolved.clear();mapScenes=emptyMap()}
+    fun clear(){RenderResources.releaseOwner(resourceOwner);images.clear();layouts.clear();naturalLayouts.clear();formulaLayouts.clear();graphite.clear();mapScenesResolved.clear();mapScenes=emptyMap()}
     fun draw(canvas:Canvas,objects:List<PageObject>,tapes:Boolean,visible:CanvasBounds,liveErase:Path?=null,wholeErase:Boolean=false) {
         objects.filter{!it.hidden&&(it.kind==PageObjectKind.TAPE)==tapes&&it.bounds().intersects(visible)}.forEach { source ->
-            val o=if(liveErase!=null&&source.sourceStrokeIds.isNotEmpty()&&source.glyphs.isEmpty())source.copy(glyphs=TextStyles.positioned(source))else source
+            val o=if(liveErase!=null&&source.kind==PageObjectKind.TEXT&&source.sourceStrokeIds.isNotEmpty()&&source.glyphs.isEmpty())source.copy(glyphs=TextStyles.positioned(source))else source
             paint.alpha=255;paint.style=Paint.Style.FILL;paint.pathEffect=null
             val save=canvas.save();canvas.clipRect(o.x,o.y,o.x+o.width,o.y+o.height)
             try{when(o.kind) {
+                PageObjectKind.FORMULA->{
+                    val erased=liveErase!=null&&wholeErase&&Path(liveErase).apply{op(ObjectGeometry.path(o),Path.Op.INTERSECT)}.let{!it.isEmpty}
+                    if(!erased){
+                        if(liveErase!=null&&!wholeErase)canvas.clipOutPath(liveErase)
+                        o.erasures.forEach{canvas.clipOutPath(erasePath(it,o.x,o.y))}
+                        val layout=runCatching{formulaLayouts[o]?:FormulaLayout.drawable(o.text,o.fontSize,o.color).also{formulaLayouts[o]=it}}
+                        if(layout.isSuccess)FormulaLayout.draw(canvas,o,layout.getOrThrow())
+                        else{
+                            check(!requireCompleteImages){"公式无法完整排版，本次未输出；请编辑公式后重试"}
+                            paint.color=Color.DKGRAY;paint.textSize=16f;canvas.drawText("公式暂无法排版，请编辑",o.x,o.y+20f,paint)
+                        }
+                    }
+                }
                 PageObjectKind.MAP->{
                     val embed=checkNotNull(o.mapEmbed)
                     val live=embed.snapshot?:mapScenes[embed.target]?:if(mapScenes.keys.any{it.notebookId==embed.target.notebookId})MapScene(embed.target,"",emptyList(),"",false)else null

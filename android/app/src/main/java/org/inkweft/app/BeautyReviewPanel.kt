@@ -13,7 +13,7 @@ import org.inkweft.core.TextFont
 @OptIn(ExperimentalLayoutApi::class)
 @Composable internal fun BeautyReviewPanel(value:BeautyReview,vm:PageObjectViewModel){
     var text by remember(value.inkRevision,value.objectRevision){mutableStateOf(value.result.text)}
-    EditorPanel("校对美化",if(value.options.preserveLayout)"原位换字体"else"段落整理",vm::dismissBeauty,"beauty-review",kind=PanelKind.BEAUTY_REVIEW,footer={
+    EditorPanel(if(value.options.formula)"校对公式"else"校对美化",if(value.options.formula)"可编辑数学公式"else if(value.options.preserveLayout)"原位换字体"else"段落整理",vm::dismissBeauty,"beauty-review",kind=PanelKind.BEAUTY_REVIEW,footer={
         Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.End){
             TextButton(vm::dismissBeauty,modifier=Modifier.testTag("beauty-review-cancel")){Text("保留原迹")}
             TextButton(vm::acceptBeauty,enabled=value.candidate!=null,modifier=Modifier.testTag("beauty-review-apply")){Text("应用")}
@@ -22,6 +22,12 @@ import org.inkweft.core.TextFont
         Column(Modifier.verticalScroll(rememberScrollState()),verticalArrangement=Arrangement.spacedBy(4.dp)){
             value.reason?.let{Text(it,style=MaterialTheme.typography.bodySmall,color=Quiet)}
             Text(if(value.preview)"正在对比未应用候选；原迹仍保留"else"纸面显示原迹；候选尚未应用",style=MaterialTheme.typography.bodySmall,modifier=Modifier.testTag("beauty-review-unapplied"))
+            if(value.options.formula){
+                FormulaPreview(text,value.candidate?.fontSize?:value.options.size,value.candidate?.color?:0xff24342f.toInt())
+                FormulaSourceField(text){text=it;vm.reviseBeauty(it,value.options)}
+                Text("字号 ${value.options.size.toInt()}",style=MaterialTheme.typography.bodySmall)
+                Slider(value.options.size,{vm.reviseBeauty(text,value.options.copy(size=it,preserveLayout=false))},valueRange=12f..96f,modifier=Modifier.testTag("beauty-review-formula-size"))
+            }else{
             OutlinedTextField(text,{if(it.length<=4000){text=it;vm.reviseBeauty(it,value.options)}},label={Text("核对文字")},modifier=Modifier.fillMaxWidth().heightIn(min=88.dp,max=144.dp).testTag("beauty-review-text"))
             Row{
                 FilterChip(value.options.preserveLayout,{vm.reviseBeauty(text,value.options.copy(preserveLayout=true))},label={Text("原位")},modifier=Modifier.testTag("beauty-review-in-place"))
@@ -34,6 +40,7 @@ import org.inkweft.core.TextFont
                 Slider(value.options.size,{vm.reviseBeauty(text,value.options.copy(size=it))},valueRange=12f..96f,modifier=Modifier.testTag("beauty-review-size"))
                 Text("行距 %.1f×".format(value.options.spacing),style=MaterialTheme.typography.bodySmall)
                 Slider(value.options.spacing,{vm.reviseBeauty(text,value.options.copy(spacing=it))},valueRange=1f..2f,modifier=Modifier.testTag("beauty-review-spacing"))
+            }
             }
             TextButton({vm.previewBeauty(!value.preview)},modifier=Modifier.testTag("beauty-review-compare")){Text(if(value.preview)"查看原迹"else"对比未应用候选")}
         }
