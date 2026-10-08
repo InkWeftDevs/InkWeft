@@ -35,8 +35,9 @@ internal class BeautyDiagnostics {
         trace.record("source",JSONObject().apply{
             put("page_id",page);put("ink_revision",ink.revision);put("automatic",automatic)
             put("version_code",BuildConfig.VERSION_CODE);put("version_name",BuildConfig.VERSION_NAME);put("application_id",BuildConfig.APPLICATION_ID);put("source_commit",BuildConfig.SOURCE_COMMIT);put("utc_ms",System.currentTimeMillis())
-            put("variant_scope","SAME_ONNX_EXTRA_MARGIN_NOT_INDEPENDENT_MODEL")
-            put("language",options.language.name);put("font",options.font.name);put("preserve_layout",options.preserveLayout)
+            put("content_mode",if(options.formula)"FORMULA" else "TEXT")
+            put("variant_scope",if(options.formula)"FORMULA_SINGLE_PASS_REVIEW_REQUIRED" else "SAME_ONNX_EXTRA_MARGIN_NOT_INDEPENDENT_MODEL")
+            put("language",if(options.formula)"LATEX" else options.language.name);put("font",if(options.formula)"MATH" else options.font.name);put("preserve_layout",options.preserveLayout)
             put("known_ids",JSONArray(known.toList()));put("input_ids",JSONArray(ink.strokes.map{it.id}))
             put("converted_ids",JSONArray(objects.flatMap{it.sourceStrokeIds}));put("replacement_ids",JSONArray(sources.map{it.id}))
             put("fresh_ids",JSONArray(sources.filter{it.id !in known&&objects.none{o->it.id in o.sourceStrokeIds}}.map{it.id}))
@@ -68,8 +69,14 @@ internal class BeautyDiagnostics {
             if(data.size>4*1024*1024||records.sumOf{it.bytes}+data.size>8*1024*1024){truncate();return}
             attachments[name]=data;bytes+=data.size
         }}
-        fun group(pass:String,index:Int,line:HandwritingLine)=record("$pass-group-$index",JSONObject().put("bounds",bounds(line.bounds)).put("extra_world_margin",if(pass=="padded")3 else 0)
-            .put("raster_bounds",bounds(if(pass=="padded")line.bounds.padded(3.0)else line.bounds)).put("stroke_ids",JSONArray(line.strokes.map{it.id})))
+        fun group(pass:String,index:Int,line:HandwritingLine)=record("$pass-group-$index",JSONObject().put("bounds",bounds(line.bounds)).put("extra_world_margin",if(pass in listOf("padded","formula"))3 else 0)
+            .put("raster_bounds",bounds(if(pass in listOf("padded","formula"))line.bounds.padded(3.0)else line.bounds)).put("stroke_ids",JSONArray(line.strokes.map{it.id})))
+        fun formulaInput(index:Int,raster:Bitmap,input:Bitmap){
+            record("formula-input-$index",JSONObject().put("raster_width",raster.width).put("raster_height",raster.height)
+                .put("shape",JSONArray(listOf(1,3,384,384))).put("channel_order","RGB_GRAYSCALE")
+                .put("normalization","(pixel/255-0.7931)/0.1738").put("padding","CENTERED_BLACK_BEFORE_NORMALIZATION"))
+            if(privateAttachments)ByteArrayOutputStream().also{input.compress(Bitmap.CompressFormat.PNG,100,it)}.toByteArray().let{attach("formula-input-$index.png",it)}
+        }
         fun input(pass:String,index:Int,bitmap:Bitmap,scaledWidth:Int,width:Int,data:FloatArray){
             // This is the actual normalized ONNX input, including zero-valued right padding.
             var left=scaledWidth;var top=48;var right=-1;var bottom=-1
@@ -91,7 +98,7 @@ internal class BeautyDiagnostics {
                 .put("text",if(privateAttachments)result.text else JSONObject.NULL).put("tokens",JSONArray(result.tokens.map{token->JSONObject().apply{
                     put("center",token.center.toDouble());put("score",token.score.toDouble());put("alternative_score",token.alternativeScore.toDouble())
                     if(privateAttachments){put("text",token.text);put("alternative",token.alternative?:JSONObject.NULL)}
-                }})).apply{if(steps!=null)put("ctc_steps_top2",steps)})
+                }})).apply{if(steps!=null)put(if(pass=="formula")"formula_decoder_steps" else "ctc_steps_top2",steps)})
         }
         fun decision(first:RecognizedWriting,second:RecognizedWriting,quality:BeautyDecision,review:BeautyReview){
             record("decision",JSONObject().put("same_text",first.text==second.text).put("quality_automatic",quality.automatic)

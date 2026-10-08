@@ -36,7 +36,7 @@ class FormulaFlowTest {
         ins.runOnMainSync{vm.undo()};ready(vm);assertTrue(app.pageObjects.read(note.id).objects.isEmpty())
         ins.runOnMainSync{vm.redo()};ready(vm);assertEquals(saved,app.pageObjects.read(note.id).objects.single())
         ins.runOnMainSync{vm.restoreOriginal(saved.id)};ready(vm);assertTrue(app.pageObjects.read(note.id).objects.isEmpty())
-        assertArrayEquals(InkStrokeCodec.encode(source),InkStrokeCodec.encode(app.inkRepository.read(note.id).strokes.single()))
+        assertArrayEquals(InkStrokeCodec.encode(source),InkStrokeCodec.encode(app.inkRepository.read(note.id).strokes.single().stroke))
     }
     @Test fun automaticFormulaNeverCommitsWithoutReviewAndStaleReviewIsRejected()=runBlocking{
         val note=app.workspaceRepository.create("公式自动候选回归",false,PaperStyle.BLANK);val source=stroke()

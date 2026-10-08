@@ -9,6 +9,7 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import org.inkweft.core.*
 import org.json.JSONObject
+import org.json.JSONArray
 import java.nio.FloatBuffer
 import java.nio.LongBuffer
 import kotlin.math.*
@@ -16,6 +17,7 @@ import kotlin.math.*
 /** Pinned Texo / FormulaNet (AGPL-3.0), entirely offline. Scores are not correctness estimates. */
 internal class FormulaRecognizer(context:Context) {
     private val app=context.applicationContext
+    private val owner="formula-${System.identityHashCode(this)}"
     private val lock=Mutex()
     private val env by lazy{OrtEnvironment.getEnvironment().also{it.setTelemetry(false)}}
     private val tokens by lazy{
@@ -38,18 +40,17 @@ internal class FormulaRecognizer(context:Context) {
                     for((i,line) in lines.withIndex()){
                         ensureActive();runCatching{trace?.group("formula",i,line)}
                         val bitmap=raster(line)
-                        val result=try{withTimeout(30_000){recognizeBitmap(bitmap,encoder,decoder)}}finally{bitmap.recycle()}
+                        val result=try{withTimeout(30_000){recognizeBitmap(bitmap,encoder,decoder,trace,i)}}finally{release(bitmap)}
                         regions.add(RecognizedLine(result.first,line.bounds,line.strokes.map{it.id},emptyList(),result.second))
-                        runCatching{trace?.output("formula",i,RecognizedWriting(result.first,result.second,1),null)}
                     }
                 }
             }
         }
         RecognizedWriting(regions.joinToString("\n"){it.text},regions.map{it.score}.average().toFloat(),regions.size,regions)
     }}
-    private suspend fun recognizeBitmap(bitmap:Bitmap,encoder:OrtSession,decoder:OrtSession):Pair<String,Float>{
+    private suspend fun recognizeBitmap(bitmap:Bitmap,encoder:OrtSession,decoder:OrtSession,trace:BeautyDiagnostics.Trace?,index:Int):Pair<String,Float>{
         val scaled=preprocess(bitmap)
-        val pixels=IntArray(384*384);scaled.getPixels(pixels,0,384,0,0,384,384);scaled.recycle()
+        val pixels=try{runCatching{trace?.formulaInput(index,bitmap,scaled)};IntArray(384*384).also{scaled.getPixels(it,0,384,0,0,384,384)}}finally{release(scaled)}
         val plane=pixels.size;val data=FloatArray(plane*3)
         for(i in pixels.indices){val gray=(pixels[i] and 255)/255f;val v=(gray-.7931f)/.1738f;data[i]=v;data[plane+i]=v;data[2*plane+i]=v}
         return OnnxTensor.createTensor(env,FloatBuffer.wrap(data),longArrayOf(1,3,384,384)).use{input->
@@ -59,6 +60,7 @@ internal class FormulaRecognizer(context:Context) {
                 require(encodedShape.size==3&&encodedShape[0]==1L&&encodedShape[1] in 1L..1024L&&encodedShape[2]==2048L)
                 // These IDs come from the pinned model's generation_config.json.
                 val ids=mutableListOf(0L);var sum=0.0;var ended=false
+                val steps=if(trace?.privateAttachments==true)JSONArray() else null
                 for(step in 0 until 384){
                     currentCoroutineContext().ensureActive()
                     val next=OnnxTensor.createTensor(env,LongBuffer.wrap(ids.toLongArray()),longArrayOf(1,ids.size.toLong())).use{sequence->
@@ -72,6 +74,7 @@ internal class FormulaRecognizer(context:Context) {
                             best to (1.0/denominator)
                         }
                     }
+                    steps?.put(JSONObject().put("token_id",next.first).put("text",tokens[next.first]).put("score_uncalibrated",next.second))
                     if(next.first==2){ended=true;break}
                     require(next.first>=4){"公式候选不完整，请缩小选区"}
                     ids.add(next.first.toLong());sum+=next.second
@@ -79,7 +82,9 @@ internal class FormulaRecognizer(context:Context) {
                 require(ended&&ids.size>1){"公式过长或未识别完整，请分段框选"}
                 val text=ids.drop(1).joinToString(" "){tokens[it.toInt()]}.trim()
                 require(text.isNotBlank()&&text.length<=4000)
-                text to (sum/(ids.size-1)).toFloat()
+                val score=(sum/(ids.size-1)).toFloat()
+                runCatching{trace?.output("formula",index,RecognizedWriting(text,score,1),steps)}
+                text to score
             }
         }
     }
@@ -95,16 +100,19 @@ internal class FormulaRecognizer(context:Context) {
         require(right>left&&bottom>top)
         val width=right-left;val height=bottom-top;val scale=384f/max(width,height)
         val w=max(1,(width*scale).roundToInt());val h=max(1,(height*scale).roundToInt())
-        val result=Bitmap.createBitmap(384,384,Bitmap.Config.ARGB_8888);val canvas=Canvas(result);canvas.drawColor(Color.BLACK)
+        val result=allocate(384,384)
+        try{val canvas=Canvas(result);canvas.drawColor(Color.BLACK)
         // Input raster is black/white; filtered resampling keeps all three channels identical.
         canvas.drawBitmap(bitmap,Rect(left,top,right,bottom),Rect((384-w)/2,(384-h)/2,(384-w)/2+w,(384-h)/2+h),Paint(Paint.FILTER_BITMAP_FLAG))
         return result
+        }catch(error:Throwable){release(result);throw error}
     }
     private fun raster(line:HandwritingLine):Bitmap {
         val b=line.bounds.padded(3.0);val scale=min(3.0,192.0/(b.bottom-b.top).coerceAtLeast(1.0))
         val width=ceil((b.right-b.left)*scale).toInt().coerceAtLeast(1);val height=ceil((b.bottom-b.top)*scale).toInt().coerceAtLeast(1)
         require(width<=4096&&height<=512){"公式行过长，请分段框选"}
-        return Bitmap.createBitmap(width,height,Bitmap.Config.ARGB_8888).also{bitmap->
+        val bitmap=allocate(width,height)
+        try{
             val canvas=Canvas(bitmap);canvas.drawColor(Color.WHITE);canvas.scale(scale.toFloat(),scale.toFloat());canvas.translate(-b.left.toFloat(),-b.top.toFloat())
             val paint=Paint(Paint.ANTI_ALIAS_FLAG).apply{color=Color.BLACK;style=Paint.Style.STROKE;strokeCap=Paint.Cap.ROUND;strokeJoin=Paint.Join.ROUND}
             val geometry=VisibleInkGeometry()
@@ -117,6 +125,12 @@ internal class FormulaRecognizer(context:Context) {
                 }
                 canvas.restoreToCount(saved)
             }
-        }
+        return bitmap
+        }catch(error:Throwable){release(bitmap);throw error}
     }
+    private fun allocate(width:Int,height:Int):Bitmap{
+        RenderResources.admit(width.toLong()*height*4)
+        return Bitmap.createBitmap(width,height,Bitmap.Config.ARGB_8888).also{RenderResources.track(it,it.allocationByteCount.toLong(),"formula-input",owner,RenderResources.Role.IN_FLIGHT)}
+    }
+    private fun release(bitmap:Bitmap){RenderResources.release(bitmap,owner);bitmap.recycle()}
 }

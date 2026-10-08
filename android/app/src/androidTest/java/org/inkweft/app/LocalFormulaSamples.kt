@@ -23,7 +23,12 @@ class LocalFormulaSamples {
             val filename=j.getString("source");require(filename.matches(Regex("[A-Za-z0-9_.-]+\\.inkweft")))
             val file=File(root,filename).canonicalFile;require(file.parentFile==root&&file.length() in 1..10_000_000)
             val bytes=file.readBytes();val page=InkPageFile.decode(bytes);require(page.strokes.size in 1..256)
-            val start=System.nanoTime();val result=app.formulas.recognize(page.strokes)
+            val capture=BeautyDiagnostics().apply{start(true)}
+            val trace=capture.begin("local-consented-sample",InkUi(strokes=page.strokes,loading=false),emptySet(),emptyList(),page.strokes,BeautyOptions(formula=true),false,null,emptySet())
+            val budgetBefore=RenderResources.snapshot()["category.formula-input"]?:0L
+            val start=System.nanoTime();val result=app.formulas.recognize(page.strokes,trace)
+            check((RenderResources.snapshot()["category.formula-input"]?:0L)==budgetBefore)
+            File(root,"formula-diagnostics.zip").apply{check(!exists());writeBytes(capture.bundle())}
             val regions=JSONArray();result.regions.forEach{r->regions.put(JSONObject().put("latex",r.text).put("source_count",r.strokeIds.size).put("uncalibrated_score",r.score.toDouble()))}
             writer.appendLine(JSONObject().put("id",j.getString("id")).put("source_sha256",EncryptedBackupFile.hex(bytes)).put("reference",j.getString("reference"))
                 .put("hypothesis",result.text).put("regions",regions).put("automatic",false).put("recognition_ms",(System.nanoTime()-start)/1e6).toString())

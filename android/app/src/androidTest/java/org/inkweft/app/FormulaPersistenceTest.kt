@@ -22,18 +22,18 @@ class FormulaPersistenceTest {
             val repo=PageObjectRepository(db);val command=id();repo.save(note.id,0,command,listOf(formula),expectedInk=1)
             val copy=LibraryContentRepository(db).duplicate(CopyNotebook(id(),note.id,id()))
             val copied=repo.read(copy.id).objects.single();assertEquals(formula.text,copied.text);assertNotEquals(formula.id,copied.id)
-            assertEquals(InkRepository(db).read(copy.id).strokes.map{it.id},copied.sourceStrokeIds);assertNotEquals(formula.sourceStrokeIds,copied.sourceStrokeIds)
+            assertEquals(InkRepository(db).read(copy.id).strokes.map{it.stroke.id},copied.sourceStrokeIds);assertNotEquals(formula.sourceStrokeIds,copied.sourceStrokeIds)
             val exported=NotebookFile.decode(NotebookPages(db).exportBook(note.id).encode())
             assertEquals(formula,exported.pages.single().objects.single())
             val imported=NotebookPages(db).importBook(exported);val importedFormula=repo.read(imported.id).objects.single()
-            assertEquals(formula.text,importedFormula.text);assertEquals(InkRepository(db).read(imported.id).strokes.map{it.id},importedFormula.sourceStrokeIds)
+            assertEquals(formula.text,importedFormula.text);assertEquals(InkRepository(db).read(imported.id).strokes.map{it.stroke.id},importedFormula.sourceStrokeIds)
             LibraryBackupRepository(context,db).snapshot().use{snapshot->
                 val backup=LibraryBackupRepository(context,target)
                 snapshot.file.inputStream().use{backup.inspect(it)}.use{assertEquals(LibraryBackupRepository.RestoreResult.RESTORED,backup.restore(it))}
             }
             target.close();target=NoteDatabase.open(context,restoredName)
             assertEquals(formula,PageObjectRepository(target).read(note.id).objects.single())
-            assertArrayEquals(InkStrokeCodec.encode(stroke),InkStrokeCodec.encode(InkRepository(target).read(note.id).strokes.single()))
+            assertArrayEquals(InkStrokeCodec.encode(stroke),InkStrokeCodec.encode(InkRepository(target).read(note.id).strokes.single().stroke))
             assertEquals(1L,PageObjectRepository(target).save(note.id,0,command,listOf(formula),expectedInk=1))
         }finally{db.close();target.close();context.deleteDatabase(name);context.deleteDatabase(restoredName)}
     }
