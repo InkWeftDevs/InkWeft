@@ -28,7 +28,7 @@ import kotlin.math.roundToInt
         shadowElevation=InkTheme.FloatingElevation,modifier=Modifier.width(320.dp).testTag("beauty-settings")){
         Row(Modifier.fillMaxWidth().padding(horizontal=8.dp),verticalAlignment=Alignment.CenterVertically){
             IconButton(onClick={if(section==null)dismiss()else section=null},modifier=Modifier.testTag("beauty-close").describedAs(if(section==null)"关闭美化参数"else"返回美化参数")){Glyph("back")}
-            Text(when(section){"font"->"美化字体";"language"->"书写语言";else->"实时美化字迹"},style=InkTheme.PanelTitle)
+            Text(when(section){"font"->"美化字体";"language"->"书写语言";else->"自动美化"},style=InkTheme.PanelTitle)
         }
         if(section=="font")TextFont.entries.forEach{font->
             DropdownMenuItem(text={Text(TextStyles.name(font),fontFamily=FontFamily(TextStyles.face(font)))},trailingIcon={if(value.font==font)Glyph("check",Forest)},
@@ -37,7 +37,7 @@ import kotlin.math.roundToInt
             DropdownMenuItem(text={Text(language.title)},trailingIcon={if(value.language==language)Glyph("check",Forest)},onClick={change(value.copy(language=language));section=null},modifier=Modifier.testTag("beauty-language-${language.name}"))
         }else{
             Column(Modifier.padding(horizontal=16.dp)){
-                BeautySwitch("实时美化字迹",value.enabled,"beauty-enabled"){change(value.copy(enabled=it))}
+                BeautySwitch("自动美化",value.enabled,"beauty-enabled"){change(value.copy(enabled=it))}
                 TextButton(onClick={section="font"},contentPadding=PaddingValues(0.dp),modifier=Modifier.fillMaxWidth().heightIn(min=48.dp).testTag("beauty-font-picker")){
                     Text("美化字体",color=TextInk);Spacer(Modifier.weight(1f));Text(if(value.keepInk)"选择字体"else TextStyles.name(value.font),fontSize=13.sp,color=Quiet);Text("  ›",color=Quiet)
                 }

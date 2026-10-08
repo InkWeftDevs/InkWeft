@@ -21,8 +21,8 @@ import androidx.compose.ui.draw.rotate
 import kotlinx.coroutines.launch
 
 internal object EditorToolOrder {
-    val labels=linkedMapOf("undo" to "撤销","redo" to "重做","pen" to "笔","highlighter" to "荧光笔","tape" to "胶带","favorites" to "收藏笔","map" to "导图","associations" to "关联","excerpts" to "摘录列表","eraser" to "橡皮","lasso" to "套索","area" to "圈选擦除","image" to "图片","camera" to "拍照","text" to "文本框","excerpt" to "摘录","tag" to "标签","shape" to "图形","sticker" to "贴纸","objects" to "对象选择","beauty" to "实时字迹调整","readonly" to "只读模式","finger" to "手指书写／移动","add-page" to "添加页面","fullscreen" to "全屏专注","export" to "导出文档","timer" to "计时器")
-    val fixed=setOf("finger")
+    val labels=linkedMapOf("undo" to "撤销","redo" to "重做","pen" to "笔","highlighter" to "荧光笔","tape" to "胶带","favorites" to "收藏笔","map" to "导图","associations" to "关联","excerpts" to "摘录列表","eraser" to "橡皮","lasso" to "套索","area" to "圈选擦除","image" to "图片","camera" to "拍照","text" to "文本框","excerpt" to "摘录","tag" to "标签","shape" to "图形","sticker" to "贴纸","objects" to "对象选择","beauty" to "自动美化","readonly" to "只读模式","finger" to "手指书写／移动","add-page" to "添加页面","fullscreen" to "全屏专注","export" to "导出文档","timer" to "计时器")
+    val fixed=setOf("finger","beauty")
     val destinations=setOf("map","associations","excerpts")
     val primary=setOf("pen","highlighter","eraser","lasso")
     val defaultHidden=setOf("shape","sticker","objects","camera","tag","area","beauty","readonly","finger","add-page","fullscreen","export","timer")

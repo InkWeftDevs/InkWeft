@@ -6,6 +6,29 @@ import org.junit.Test
 import org.junit.Assert.*
 import java.util.UUID
 class AsyncRasterTest {
+ @Test fun editedFallbackPreservesOverlappingPencilAndHighlighterPixels(){
+  val ins=InstrumentationRegistry.getInstrumentation();val actual=Bitmap.createBitmap(300,300,Bitmap.Config.ARGB_8888);val expected=Bitmap.createBitmap(300,300,Bitmap.Config.ARGB_8888)
+  val vp=CanvasViewport(150.0,150.0,1.0);lateinit var raster:AsyncInkRaster
+  fun stroke(pen:InkPen,color:Int,y:Float)=InkStroke(UUID.randomUUID().toString(),pen,color,20f,InkTool.STYLUS,listOf(InkSample(40f,y,0,.7f),InkSample(260f,y+25f,100,.7f)),appearance=StrokeAppearance(BrushRecipe(),123,0f,0f))
+  val pencil=stroke(InkPen.PENCIL,Color.BLACK,100f);val marker=stroke(InkPen.HIGHLIGHTER,0x60ffff00,110f);val unaffected=stroke(InkPen.PEN,Color.BLUE,220f)
+  fun draw(items:List<InkStroke>){actual.eraseColor(Color.TRANSPARENT);raster.draw(Canvas(actual),300,300,vp,1.0,false,false,items)}
+  ins.runOnMainSync{AsyncInkRaster.clearMemoryCache();raster=AsyncInkRaster({});draw(listOf(pencil,marker,unaffected))}
+  val deadline=System.nanoTime()+10_000_000_000L;var pending=true
+  while(pending&&System.nanoTime()<deadline){Thread.sleep(10);ins.runOnMainSync{pending=raster.pending}}
+  try{
+   assertFalse(pending)
+   ins.runOnMainSync{
+    val cut=marker.withCuts(listOf(InkCut(UUID.randomUUID().toString(),25f,listOf(EraserPoint(150f,123f)))))
+    for(items in listOf(listOf(pencil,cut,unaffected),listOf(pencil,unaffected),listOf(unaffected))){
+     draw(items);expected.eraseColor(Color.TRANSPARENT)
+     val c=Canvas(expected);val matrix=Matrix();val renderer=InkBrushes.renderer();val pencilRenderer=PencilTileRenderer(.5f,false)
+     try{items.forEach{s->val saved=c.save();s.cuts.forEach{c.clipOutPath(VisibleInkGeometry.cutPath(it))};if(s.pen==InkPen.PENCIL)pencilRenderer.draw(c,s)else renderer.draw(c,InkBrushes.stroke(s),matrix);c.restoreToCount(saved)}}finally{pencilRenderer.clear()}
+     val a=IntArray(90_000);val b=IntArray(a.size);actual.getPixels(a,0,300,0,0,300,300);expected.getPixels(b,0,300,0,0,300,300)
+     assertArrayEquals("The pending replacement must match current cuts and stacking order",b,a)
+    }
+   }
+  }finally{ins.runOnMainSync{raster.clear();AsyncInkRaster.clearMemoryCache()};actual.recycle();expected.recycle()}
+ }
  @Test fun eraseKeepsUnaffectedInkVisibleBeforeReplacementFrameCompletes(){
   val ins=InstrumentationRegistry.getInstrumentation();val bitmap=Bitmap.createBitmap(300,300,Bitmap.Config.ARGB_8888)
   val vp=CanvasViewport(150.0,150.0,1.0)

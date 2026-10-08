@@ -40,9 +40,9 @@ internal class AsyncInkRaster(private val changed:()->Unit,private val failed:()
         val key=Key(width,height,viewport,density,world,embedded)
         val old=frame
         if(old!=null&&(old.key!=key||!prefix(old.strokes,strokes))){
-            publish(null,old.takeIf{it.strokes.size==strokes.size&&prefix(it.strokes,strokes)&&it.key.world==world&&it.key.embedded==embedded})
+            publish(null,old.takeIf{it.key==key||it.strokes.size==strokes.size&&prefix(it.strokes,strokes)&&it.key.world==world&&it.key.embedded==embedded})
         }
-        fallback?.let{if(it.strokes.size!=strokes.size||!prefix(it.strokes,strokes))publish(frame,null)}
+        fallback?.let{if(it.key!=key&&(it.strokes.size!=strokes.size||!prefix(it.strokes,strokes)))publish(frame,null)}
         if(frame==null){
             synchronized(cache){val index=cache.indexOfLast{it.key==key&&it.strokes.size==strokes.size&&prefix(it.strokes,strokes)}
             if(index>=0){publish(cache.removeAt(index).also{cache.add(it)},null)}}
@@ -110,10 +110,39 @@ internal class AsyncInkRaster(private val changed:()->Unit,private val failed:()
             frameReady=current.complete&&current.strokes.size==strokes.size
         }
         else fallback?.let{prior->
+            if(prior.key==key){drawEditedFrame(c,prior,strokes);return}
             val oldFactor=prior.key.viewport.zoom*prior.key.density;val factor=viewport.zoom*density;val ratio=factor/oldFactor
             val m=Matrix().apply{setScale((prior.key.width.toDouble()/prior.bitmap.width*ratio).toFloat(),(prior.key.height.toDouble()/prior.bitmap.height*ratio).toFloat());postTranslate((width/2.0-prior.key.width/2.0*ratio+(prior.key.viewport.centerX-viewport.centerX)*factor).toFloat(),(height/2.0-prior.key.height/2.0*ratio+(prior.key.viewport.centerY-viewport.centerY)*factor).toFloat())}
             c.drawBitmap(prior.bitmap,m,paint)
         }
+    }
+    /** Keep unchanged pixels while rebuilding an edit. Repaint the damaged area in stacking order,
+     * so an erased highlighter never removes overlapping ink or flashes the whole page blank. */
+    private fun drawEditedFrame(c:Canvas,prior:Frame,strokes:List<InkStroke>){
+        val before=prior.strokes.associateBy{it.id};val after=strokes.associateBy{it.id}
+        val reordered=prior.strokes.filter{it.id in after}.map{it.id}!=strokes.filter{it.id in before}.map{it.id}
+        val changed=if(reordered)prior.strokes+strokes else
+            prior.strokes.filter{s->after[s.id]?.let{same(s,it)}!=true}+strokes.filter{s->before[s.id]?.let{same(s,it)}!=true}
+        val key=prior.key;val factor=(key.viewport.zoom*key.density).toFloat()
+        val matrix=Matrix().apply{setScale(factor,factor);postTranslate((key.width/2-key.viewport.centerX*factor).toFloat(),(key.height/2-key.viewport.centerY*factor).toFloat())}
+        val bounds=changed.map{it.bounds()}.reduceOrNull{a,b->a.union(b)}
+        if(bounds==null){c.drawBitmap(prior.bitmap,null,Rect(0,0,key.width,key.height),paint);return}
+        val dirty=RectF(bounds.left.toFloat(),bounds.top.toFloat(),bounds.right.toFloat(),bounds.bottom.toFloat())
+        matrix.mapRect(dirty)
+        // Align the seam to pixels and include antialiasing coverage beyond author-space bounds.
+        dirty.set(floor(dirty.left)-2f,floor(dirty.top)-2f,ceil(dirty.right)+2f,ceil(dirty.bottom)+2f)
+        val saved=c.save();c.clipOutRect(dirty);c.drawBitmap(prior.bitmap,null,Rect(0,0,key.width,key.height),paint);c.restoreToCount(saved)
+        val damaged=c.save();c.clipRect(dirty);c.concat(matrix)
+        if(!key.world&&!key.embedded)c.clipRect(0f,0f,1000f,1414f)
+        val pencil=PencilTileRenderer(min(.5f,1f/factor),false)
+        try{
+            val renderer=InkBrushes.renderer();val extent=bounds.padded(2.0/factor)
+            strokes.filter{it.bounds().intersects(extent)}.forEach{s->
+                val clipped=c.save();s.cuts.forEach{c.clipOutPath(VisibleInkGeometry.cutPath(it))}
+                if(s.pen==InkPen.PENCIL)pencil.draw(c,s)else renderer.draw(c,InkBrushes.stroke(s),matrix)
+                c.restoreToCount(clipped)
+            }
+        }finally{pencil.clear();c.restoreToCount(damaged)}
     }
     companion object {
         // UI-thread LRU: immutable buffers remain valid while a view still references them.

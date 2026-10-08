@@ -11,7 +11,7 @@ import java.io.File
 class LocalBeautySamples {
     @Test fun collectConsentedSegments()=runBlocking {
         val app=InstrumentationRegistry.getInstrumentation().targetContext.applicationContext as InkWeftApplication
-        val root=File(app.getExternalFilesDir(null),"beauty-samples").canonicalFile
+        val root=File(app.filesDir,"beauty-samples").canonicalFile
         val manifest=File(root,"samples.jsonl")
         require(manifest.isFile&&manifest.length()<=512000)
         val rows=manifest.readLines().filter{it.isNotBlank()}.map(::JSONObject);require(rows.size in 1..200)

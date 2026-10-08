@@ -47,7 +47,7 @@
 
 1. 在专用测试资料库写一小段后，用原迹导出生成 `.inkweft` 文件；每段 1–256 笔，不含未授权内容。人工确认原文，保留大小写、空格、标点及数字；一位作者只能归入开发、校准、评估中的一个分组。
 2. 在本机仓库外保留原文件和 `samples.jsonl`，每行形如 `{"id":"s001","writer":"writer01","split":"evaluation","consent":true,"source":"s001.inkweft","reference":"人工确认的原文"}`。不写真实姓名。得到同意后才收集。
-3. 仅在独立测试设备安装与候选匹配的测试 APK，将上述目录通过 ADB 放入应用外部目录 `files/beauty-samples/`。显式执行 `org.inkweft.app.LocalBeautySamples#collectConsentedSegments` 仪器方法，取回 `recognized.jsonl`。此采样器不属于 CI 自动测试清单，不会自动读取平板已有笔记；重复采集前先归档旧输出。
+3. 仅在独立测试设备安装与候选匹配的测试 APK，将上述目录通过 `run-as` 放入应用内部目录 `files/beauty-samples/`（普通 `adb push` 创建的外部目录在部分系统上不可读）。显式执行 `org.inkweft.app.LocalBeautySamples#collectConsentedSegments` 仪器方法，取回 `recognized.jsonl`。此采样器不属于 CI 自动测试清单，不会自动读取平板已有笔记；重复采集前先归档旧输出。
 4. 在仓库根运行 `python ci/beauty_quality_report.py <仓库外的recognized.jsonl> <仓库外的report.json>`。报告记录输入 SHA-256；分开发／校准／评估报告严格 CER、自动段覆盖、字符覆盖、自动放行部分 CER、错段数、待校对段数和最少编辑量。最少编辑量不是实际人工耗时，后者另记。
 5. 评分器拒绝作者或源文件摘要跨开发／校准与评估重复、缺少同意、重复样本ID、空原文及超长片段。没有数据的分组为 NOT_RUN，比例为 null；不输出虚假的 0% 错误或 100% 准确。报告仅列符号／数字混淆，不携带私人词句。原文件、原文和模型输出均留本机，不加入 Git、PR 或 CI 构件。
 

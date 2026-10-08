@@ -16,6 +16,45 @@ class BeautySettingsUiTest {
     @Before fun prepare(){old=BeautyStore(app).read();BeautyStore(app).save(BeautyOptions(keepInk=false))}
     @After fun restore(){old?.let{BeautyStore(app).save(it)}}
     private fun id()=UUID.randomUUID().toString()
+    @Test fun defaultAndSavedHiddenToolbarExposeBeautyWithoutCustomization(){
+        val prefs=app.getSharedPreferences("inkweft-editor",0)
+        val hadHidden=prefs.contains("toolbar-hidden-v32");val hidden=prefs.getStringSet("toolbar-hidden-v32",null)?.toSet()
+        try{
+            prefs.edit().putStringSet("toolbar-hidden-v32",EditorToolOrder.defaultHidden+"beauty").commit()
+            compose.waitUntil(15_000){compose.onAllNodesWithTag("new-note").fetchSemanticsNodes().isNotEmpty()}
+            val note=runBlocking{app.workspaceRepository.create("自动美化入口回归",false,PaperStyle.BLANK)}
+            compose.runOnIdle{ViewModelProvider(compose.activity)[NotebookViewModel::class.java].select(note)}
+            compose.singlePageEditor()
+            fun open(){
+                compose.onNodeWithTag("toolbar-more").assertIsDisplayed().performClick()
+                compose.onNodeWithTag("quick-beauty").performScrollTo().assertIsDisplayed().performClick()
+                compose.onNodeWithTag("beauty-settings").assertIsDisplayed()
+            }
+            open();compose.onNodeWithTag("beauty-enabled").assertIsOff().performClick()
+            compose.onNodeWithTag("beauty-close").performClick()
+            compose.activityRule.scenario.recreate();compose.waitForIdle();open()
+            compose.onNodeWithTag("beauty-enabled").assertIsOn()
+            compose.onNodeWithTag("beauty-close").performClick()
+            assertTrue(runBlocking{app.inkRepository.read(note.id).strokes.isEmpty()})
+        }finally{prefs.edit().apply{if(hadHidden)putStringSet("toolbar-hidden-v32",hidden)else remove("toolbar-hidden-v32")}.commit()}
+    }
+    @Test fun repeatedPenEraserSwitchesKeepParametersClosedUntilCurrentPenIsTapped(){
+        compose.waitUntil(15_000){compose.onAllNodesWithTag("new-note").fetchSemanticsNodes().isNotEmpty()}
+        val note=runBlocking{app.workspaceRepository.create("笔橡皮切换回归",false,PaperStyle.BLANK)}
+        compose.runOnIdle{ViewModelProvider(compose.activity)[NotebookViewModel::class.java].select(note)}
+        compose.singlePageEditor()
+        repeat(4){
+            compose.onNodeWithTag("top-eraser").performClick().assertIsOn()
+            compose.onNodeWithTag("pen-width-dialog").assertDoesNotExist()
+            compose.onNodeWithTag("top-draw").performClick().assertIsOn()
+            compose.onNodeWithTag("pen-width-dialog").assertDoesNotExist()
+            compose.onNodeWithTag("floating-pen-case").assertDoesNotExist()
+        }
+        compose.onNodeWithTag("top-draw").performClick()
+        compose.onNodeWithTag("pen-width-dialog").assertIsDisplayed()
+        compose.closePenSettings()
+        assertTrue(runBlocking{app.inkRepository.read(note.id).strokes.isEmpty()})
+    }
     @Test fun clickOpensCardWithoutTogglingAndParametersPersist(){
         compose.waitUntil(15_000){compose.onAllNodesWithTag("new-note").fetchSemanticsNodes().isNotEmpty()}
         val note=runBlocking{app.workspaceRepository.create("美化参数卡验收",false,PaperStyle.BLANK)}
