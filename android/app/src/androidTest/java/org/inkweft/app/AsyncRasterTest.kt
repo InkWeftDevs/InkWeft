@@ -6,6 +6,30 @@ import org.junit.Test
 import org.junit.Assert.*
 import java.util.UUID
 class AsyncRasterTest {
+ @Test fun eraseKeepsUnaffectedInkVisibleBeforeReplacementFrameCompletes(){
+  val ins=InstrumentationRegistry.getInstrumentation();val bitmap=Bitmap.createBitmap(300,300,Bitmap.Config.ARGB_8888)
+  val vp=CanvasViewport(150.0,150.0,1.0)
+  fun line(y:Float)=InkStroke(UUID.randomUUID().toString(),InkPen.PEN,Color.BLACK,8f,InkTool.STYLUS,listOf(InkSample(30f,y,0),InkSample(270f,y,100)))
+  val first=line(90f);val second=line(210f);lateinit var raster:AsyncInkRaster
+  fun draw(strokes:List<InkStroke>){bitmap.eraseColor(Color.TRANSPARENT);raster.draw(Canvas(bitmap),300,300,vp,1.0,false,false,strokes)}
+  ins.runOnMainSync{AsyncInkRaster.clearMemoryCache();raster=AsyncInkRaster({});draw(listOf(first,second))}
+  val deadline=System.nanoTime()+10_000_000_000L;var pending=true
+  while(pending&&System.nanoTime()<deadline){Thread.sleep(10);ins.runOnMainSync{pending=raster.pending}}
+  try{
+   assertFalse(pending)
+   ins.runOnMainSync{
+    draw(listOf(first,second));assertTrue(Color.alpha(bitmap.getPixel(150,210))>200)
+    val erased=first.withCuts(listOf(InkCut(UUID.randomUUID().toString(),16f,listOf(EraserPoint(150f,90f)))))
+    draw(listOf(erased,second))
+    assertTrue("Unchanged line disappeared while the partial-erase frame was rebuilding",Color.alpha(bitmap.getPixel(150,210))>200)
+    assertTrue("The uncut end must remain visible",Color.alpha(bitmap.getPixel(50,90))>200)
+    assertEquals("Erased ink must not reappear in the retained frame",0,Color.alpha(bitmap.getPixel(150,90)))
+    draw(listOf(second))
+    assertTrue("Whole-stroke erase must not blank unrelated ink",Color.alpha(bitmap.getPixel(150,210))>200)
+    assertEquals(0,Color.alpha(bitmap.getPixel(50,90)))
+   }
+  }finally{ins.runOnMainSync{raster.clear();AsyncInkRaster.clearMemoryCache()};bitmap.recycle()}
+ }
  @Test fun backgroundRasterPreservesPixelsAndRejectsStaleWork(){
   val ins=InstrumentationRegistry.getInstrumentation();val actual=Bitmap.createBitmap(220,180,Bitmap.Config.ARGB_8888);val expected=Bitmap.createBitmap(220,180,Bitmap.Config.ARGB_8888)
   lateinit var raster:AsyncInkRaster
