@@ -25,7 +25,7 @@ data class StudyOrganizationPlan(val ref:MapRef,val kind:StudyOrganizationKind,v
 
 /** Author order is a DFS sequence of node identities; geometry never chooses an existing order. */
 object StudyOrganization {
-    const val MAX_BYTES=65_536
+    const val MAX_BYTES=1_000_000
     private val hashPattern=Regex("[0-9a-f]{64}")
     private fun <T> frozen(values:List<T>):List<T> = Collections.unmodifiableList(values.toList())
 
@@ -35,8 +35,12 @@ object StudyOrganization {
         require(order.size==active.size&&order.toSet()==byId.keys){"MAP_ORDER_MEMBERS"}
         val children=order.map{byId.getValue(it)}.groupBy{it.parentId}
         return buildList {
-            fun visit(parent:String?){children[parent].orEmpty().forEach{add(it.id);visit(it.id)}}
-            visit(null)
+            val pending=ArrayDeque<StudyNode>()
+            children[null].orEmpty().asReversed().forEach{pending.addLast(it)}
+            while(pending.isNotEmpty()){
+                val node=pending.removeLast();add(node.id)
+                children[node.id].orEmpty().asReversed().forEach{pending.addLast(it)}
+            }
         }
     }
 
@@ -50,7 +54,7 @@ object StudyOrganization {
         val byId=state.nodes.associateBy{it.id}
         require(state.structuralNodeIds.all{byId[it]?.let{n->!n.removed&&n.revision==state.definitionRevision}==true})
         require(state.structuralNodeIds.isEmpty()||state.ref.mapId!=null&&state.definitionRevision>0)
-        require(state.cardVersions.size<=200&&state.cardVersions.map{it.cardId}.distinct().size==state.cardVersions.size)
+        require(state.cardVersions.size<=StudyCapacity.MAX_CARDS_PER_NOTEBOOK&&state.cardVersions.map{it.cardId}.distinct().size==state.cardVersions.size)
         state.cardVersions.forEach{UUID.fromString(it.cardId);require(it.revision in 1 until Long.MAX_VALUE);require(it.trashedAt==null||it.trashedAt>=0)}
     }
 
@@ -213,30 +217,45 @@ object StudyOrganization {
         validate(state);require(layout in setOf("right","bilateral"));require(sizes.keys==state.orderedNodeIds.toSet()){"MAP_NODE_SIZES"}
         sizes.values.forEach{require(it.width.isFinite()&&it.height.isFinite()&&it.width>0&&it.height>0&&it.width<=80_000&&it.height<=80_000)}
         val byId=state.nodes.associateBy{it.id};val children=state.orderedNodeIds.map{byId.getValue(it)}.groupBy{it.parentId}
-        val widths=mutableMapOf<Int,Double>();val heights=mutableMapOf<String,Double>()
+        val widths=mutableMapOf<Int,Double>();val heights=mutableMapOf<String,Double>();val depths=mutableMapOf<String,Int>()
         fun groupHeight(nodes:List<StudyNode>)=nodes.sumOf{heights.getValue(it.id)}+48.0*(nodes.size-1).coerceAtLeast(0)
-        fun measure(n:StudyNode,depth:Int){
-            widths[depth]=maxOf(widths[depth]?:0.0,sizes.getValue(n.id).width)
-            val kids=children[n.id].orEmpty();kids.forEach{measure(it,depth+1)}
-            val childHeight=if(layout=="bilateral"&&depth==0)maxOf(groupHeight(kids.filterIndexed{i,_->i%2==0}),groupHeight(kids.filterIndexed{i,_->i%2==1}))else groupHeight(kids)
-            heights[n.id]=maxOf(sizes.getValue(n.id).height,childHeight)
+        state.orderedNodeIds.forEach{id->
+            val n=byId.getValue(id);val depth=n.parentId?.let{depths.getValue(it)+1}?:0;depths[id]=depth
+            widths[depth]=maxOf(widths[depth]?:0.0,sizes.getValue(id).width)
         }
-        val roots=children[null].orEmpty();roots.forEach{measure(it,0)}
+        state.orderedNodeIds.asReversed().forEach{id->
+            val kids=children[id].orEmpty()
+            val childHeight=if(layout=="bilateral"&&depths.getValue(id)==0)maxOf(groupHeight(kids.filterIndexed{i,_->i%2==0}),groupHeight(kids.filterIndexed{i,_->i%2==1}))else groupHeight(kids)
+            heights[id]=maxOf(sizes.getValue(id).height,childHeight)
+        }
+        val maxDepth=depths.values.maxOrNull()?:0
+        val rightX=DoubleArray(maxDepth+1){40.0};val leftX=DoubleArray(maxDepth+1){40.0}
+        for(depth in 1..maxDepth){rightX[depth]=rightX[depth-1]+widths.getValue(depth-1)+96.0;leftX[depth]=leftX[depth-1]-widths.getValue(depth)-96.0}
+        val requests=mutableMapOf<String,Pair<Double,Boolean>>();var top=80.0
+        children[null].orEmpty().forEach{requests[it.id]=top to false;top+=heights.getValue(it.id)+96.0}
         val positions=mutableMapOf<String,CanvasPoint>()
-        fun place(n:StudyNode,depth:Int,top:Double,left:Boolean){
-            val size=sizes.getValue(n.id);val height=heights.getValue(n.id)
-            val x=if(depth==0)40.0 else if(left)40.0-(1..depth).sumOf{widths.getValue(it)+96.0}
-                else 40.0+(0 until depth).sumOf{widths.getValue(it)+96.0}
-            positions[n.id]=CanvasPoint(x,top+(height-size.height)/2)
-            val kids=children[n.id].orEmpty()
+        state.orderedNodeIds.forEach{id->
+            val (nodeTop,left)=requests.getValue(id);val height=heights.getValue(id);val depth=depths.getValue(id)
+            positions[id]=CanvasPoint(if(left)leftX[depth]else rightX[depth],nodeTop+(height-sizes.getValue(id).height)/2)
+            val kids=children[id].orEmpty()
             fun placeGroup(group:List<StudyNode>,onLeft:Boolean){
-                var next=top+(height-groupHeight(group))/2
-                group.forEach{place(it,depth+1,next,onLeft);next+=heights.getValue(it.id)+48.0}
+                var next=nodeTop+(height-groupHeight(group))/2
+                group.forEach{requests[it.id]=next to onLeft;next+=heights.getValue(it.id)+48.0}
             }
-            if(layout=="bilateral"&&depth==0){placeGroup(kids.filterIndexed{i,_->i%2==0},true);placeGroup(kids.filterIndexed{i,_->i%2==1},false)}
-            else placeGroup(kids,left)
+            if(layout=="bilateral"&&depth==0){placeGroup(kids.filterIndexed{i,_->i%2==0},true);placeGroup(kids.filterIndexed{i,_->i%2==1},false)}else placeGroup(kids,left)
         }
-        var top=80.0;roots.forEach{place(it,0,top,false);top+=heights.getValue(it.id)+96.0}
+        if(positions.isNotEmpty()){
+            val spanX=positions.maxOf{(id,p)->p.x+sizes.getValue(id).width}-positions.values.minOf{it.x}
+            val spanY=positions.maxOf{(id,p)->p.y+sizes.getValue(id).height}-positions.values.minOf{it.y}
+            if(spanX>80_000||spanY>80_000){
+                // Very wide/deep trees use compact columns in author DFS order. Preserve
+                // node sizes, relationships and gaps instead of overlapping cards.
+                val cellWidth=sizes.values.maxOf{it.width}+96.0;val cellHeight=sizes.values.maxOf{it.height}+48.0
+                val rows=maxOf(1,(80_000/cellHeight).toInt());val columns=(positions.size+rows-1)/rows
+                require(columns*cellWidth-96.0<=80_000&&minOf(rows,positions.size)*cellHeight-48.0<=80_000){"MAP_LAYOUT_BOUNDS"}
+                state.orderedNodeIds.forEachIndexed{i,id->positions[id]=CanvasPoint(40.0+(i/rows)*cellWidth,80.0+(i%rows)*cellHeight)}
+            }
+        }
         val minX=positions.values.minOfOrNull{it.x}?:0.0;val minY=positions.values.minOfOrNull{it.y}?:0.0
         val maxX=positions.maxOfOrNull{(id,p)->p.x+sizes.getValue(id).width}?:0.0
         val maxY=positions.maxOfOrNull{(id,p)->p.y+sizes.getValue(id).height}?:0.0

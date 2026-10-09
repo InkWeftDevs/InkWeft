@@ -33,7 +33,11 @@ internal object FormulaLayout {
     }
     fun edited(original:PageObject,text:String,size:Float,color:Int,world:Boolean):PageObject {
         if(text.trim()==original.text&&size==original.fontSize)return original.copy(color=color)
-        val layout=drawable(text,size,color);val width=max(24f,layout.intrinsicWidth.toFloat());val height=max(24f,layout.intrinsicHeight.toFloat())
+        // Width/height also carry the selection/handle transform. Keep that display scale
+        // when editing content or font size, including formulas saved by older versions.
+        val previous=drawable(original.text,original.fontSize,original.color)
+        val scale=min(original.width/previous.intrinsicWidth,original.height/previous.intrinsicHeight)
+        val layout=drawable(text,size,color);val width=max(24f,layout.intrinsicWidth*scale);val height=max(24f,layout.intrinsicHeight*scale)
         require(width<=4000&&height<=4000&&(world||original.x+width<=1000&&original.y+height<=1414)){"公式超出页面，请减小字号或分段编辑"}
         return original.copy(text=text.trim(),fontSize=size,color=color,width=width,height=height,erasures=emptyList())
     }

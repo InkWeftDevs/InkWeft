@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="org.inkweft.core.PageInsertionTest" tests="14" skipped="0" failures="0" errors="0" timestamp="2026-10-09T15:44:25.222Z" hostname="3892303cc95a" time="0.012">
+  <properties/>
+  <testcase name="orderFingerprintChangesOnMoveOrInsert" classname="org.inkweft.core.PageInsertionTest" time="0.007"/>
+  <testcase name="missingAnchorRefusesInsteadOfAppending" classname="org.inkweft.core.PageInsertionTest" time="0.001"/>
+  <testcase name="sameFrozenCommandHasStableDigest" classname="org.inkweft.core.PageInsertionTest" time="0.0"/>
+  <testcase name="endAndBeginningHaveNoHiddenAnchor" classname="org.inkweft.core.PageInsertionTest" time="0.0"/>
+  <testcase name="templateAndNewIdsDoNotAffectOriginalIdentity" classname="org.inkweft.core.PageInsertionTest" time="0.0"/>
+  <testcase name="commandDigestIncludesPositionPaperAndSelection" classname="org.inkweft.core.PageInsertionTest" time="0.001"/>
+  <testcase name="emptyOrOversizedOrDuplicateBatchRefused" classname="org.inkweft.core.PageInsertionTest" time="0.001"/>
+  <testcase name="twentyPagesCanBeOneAtomicOperation" classname="org.inkweft.core.PageInsertionTest" time="0.0"/>
+  <testcase name="beforeUsesAnchorNotPageNumber" classname="org.inkweft.core.PageInsertionTest" time="0.0"/>
+  <testcase name="endIsAfterAllExistingPages" classname="org.inkweft.core.PageInsertionTest" time="0.0"/>
+  <testcase name="originalPageIdentityCannotBeUsedForNewPage" classname="org.inkweft.core.PageInsertionTest" time="0.0"/>
+  <testcase name="callerCannotChangeBatchAfterConfirmation" classname="org.inkweft.core.PageInsertionTest" time="0.001"/>
+  <testcase name="afterUsesAnchor" classname="org.inkweft.core.PageInsertionTest" time="0.0"/>
+  <testcase name="beginningCanPrecedeOriginalFirstPage" classname="org.inkweft.core.PageInsertionTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

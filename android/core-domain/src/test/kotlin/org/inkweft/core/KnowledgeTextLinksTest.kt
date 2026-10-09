@@ -74,4 +74,40 @@ class KnowledgeTextLinksTest {
             KnowledgeTextLinks.spans("词 ".repeat(KnowledgeTextLinks.MAX_SPANS), listOf(term)).size)
         assertTrue(KnowledgeTextLinks.spans("词 ".repeat(KnowledgeTextLinks.MAX_SPANS + 1), listOf(term)).isEmpty())
     }
+
+    @Test fun unicodeCaseAndOverlapsMatchThePreviousLiteralContract(){
+        val dictionary=listOf(target("work","共享","共享知识","C++","Σ","İ","K","𐐀"),target("共享","σ","i","k","𐐨"))
+        val texts=listOf("WORK worker 共享知识共享 C++ σ Σ ς İ i ı K k 𐐀𐐨", "xKx xİx 共享知识", "🧠共享𐐨 C++")
+        texts.forEach{assertEquals(reference(it,dictionary),KnowledgeTextLinks.spans(it,dictionary))}
+        val random=java.util.Random(42)
+        val fragments=listOf("work","WORK","_work","共享知识","共享","C++","甲乙","😀","σ","𐐨"," ","x")
+        repeat(100){val text=List(60){fragments[random.nextInt(fragments.size)]}.joinToString("");assertEquals(reference(text,dictionary),KnowledgeTextLinks.spans(text,dictionary))}
+    }
+    @Test fun expandedDictionaryFindsLateTargetsAndRejectsExcessiveTrieMemory(){
+        val dictionary=List(KnowledgeTextLinks.MAX_TARGETS){target("知识${it}条","alias${it}")}
+        val text="知识511条 alias511"
+        assertEquals(reference(text,dictionary),KnowledgeTextLinks.spans(text,dictionary))
+        val excessive=target("长".repeat(KnowledgeTextLinks.MAX_DICTIONARY_CHARS+1))
+        assertTrue(KnowledgeTextLinks.spans("长",listOf(excessive)).isEmpty())
+    }
+    /** Independent scan keeps Unicode/boundary/overlap behavior comparable to the original implementation. */
+    private fun reference(text:String,targets:List<KnowledgeTextTarget>):List<KnowledgeTextSpan>{
+        val terms=mutableListOf<Pair<String,MutableSet<String>>>()
+        targets.forEach{t->t.terms.filter{it.isNotBlank()}.forEach{value->
+            val old=terms.firstOrNull{it.first.equals(value,ignoreCase=true)}
+            if(old==null)terms.add(value to mutableSetOf(t.linkId))else old.second.add(t.linkId)
+        }}
+        val ordered=terms.sortedWith(compareByDescending<Pair<String,MutableSet<String>>>{it.first.length}.thenBy{it.first})
+        fun word(c:Char)=c in 'a'..'z'||c in 'A'..'Z'||c in '0'..'9'||c=='_'
+        val result=mutableListOf<KnowledgeTextSpan>();var start=0
+        while(start<text.length){
+            val term=ordered.firstOrNull{(value,_)->val end=start+value.length
+                end<=text.length&&(end==text.length||!(text[end-1].isHighSurrogate()&&text[end].isLowSurrogate()))&&
+                    (!word(value.first())||start==0||!word(text[start-1]))&&(!word(value.last())||end==text.length||!word(text[end]))&&
+                    text.regionMatches(start,value,0,value.length,ignoreCase=true)
+            }
+            if(term==null)start+=Character.charCount(text.codePointAt(start))else{val end=start+term.first.length;result.add(KnowledgeTextSpan(start,end,term.second.sorted()));start=end}
+        }
+        return result
+    }
 }

@@ -37,7 +37,7 @@ class StudyCapacityRepositoryTest {
         assertNull(db.study().receipt(c.id))
         if(c.action!=StudyAction.REUSE)c.cardId?.let{assertNull(db.study().cardVersion(it,c.expectedRevision+1))}
     }
-    /** DAO seeding isolates the 127/255 boundaries; all tested mutations use real repositories. */
+    /** DAO seeding isolates active/retained capacity boundaries; all tested mutations use real repositories. */
     private suspend fun graph(db:NoteDatabase,book:String,card:String,total:Int,active:Int,named:Boolean):String?=db.withTransaction {
         val map=if(named)id()else null
         if(map!=null){val row=KnowledgeRow(map,book,1,KnowledgeCodec.encode(KnowledgeData.MapDefinition("命名图")))
@@ -76,37 +76,37 @@ class StudyCapacityRepositoryTest {
     }
 
     @Test fun cardCapacityCountsRecycledCardsAndAllowsRestoreReuseAndEdit()=fixture{db,book->
-        val repo=StudyRepository(db);val originals=db.withTransaction{List(199){card(db,book)}}
-        assertEquals(199,repo.cards(book).first().size)
-        val last=StudyCommand(id(),book,StudyAction.CREATE,cardId=id(),nodeId=id(),title="第200张")
-        repo.submit(last);assertEquals(200,repo.cards(book).first().size)
+        val repo=StudyRepository(db);val originals=db.withTransaction{List((StudyCapacity.MAX_CARDS_PER_NOTEBOOK-1)){card(db,book)}}
+        assertEquals((StudyCapacity.MAX_CARDS_PER_NOTEBOOK-1),repo.cards(book).first().size)
+        val last=StudyCommand(id(),book,StudyAction.CREATE,cardId=id(),nodeId=id(),title="最后一张")
+        repo.submit(last);assertEquals(StudyCapacity.MAX_CARDS_PER_NOTEBOOK,repo.cards(book).first().size)
         val recycled=originals.first();repo.submit(StudyCommand(id(),book,StudyAction.TRASH_CARD,cardId=recycled,expectedRevision=1,expectedTrashImpact=StudyRepository(db).previewTrash(book,requireNotNull(recycled)).fingerprint))
-        assertNotNull(db.study().card(recycled)!!.trashedAt);assertEquals(200,repo.cards(book).first().size)
-        rejectStudy(db,StudyCommand(id(),book,StudyAction.CREATE,cardId=id(),nodeId=id(),title="第201张"),"STUDY_CARD_BUDGET")
+        assertNotNull(db.study().card(recycled)!!.trashedAt);assertEquals(StudyCapacity.MAX_CARDS_PER_NOTEBOOK,repo.cards(book).first().size)
+        rejectStudy(db,StudyCommand(id(),book,StudyAction.CREATE,cardId=id(),nodeId=id(),title="超限卡片"),"STUDY_CARD_BUDGET")
         repo.submit(StudyCommand(id(),book,StudyAction.RESTORE_CARD,cardId=recycled,expectedRevision=2))
         repo.submit(StudyCommand(id(),book,StudyAction.REUSE,cardId=recycled,nodeId=id()))
         repo.submit(StudyCommand(id(),book,StudyAction.EDIT,cardId=recycled,expectedRevision=3,title="满额仍可编辑",body="内容保留"))
-        assertEquals(200,repo.cards(book).first().size);assertNull(db.study().card(recycled)!!.trashedAt)
+        assertEquals(StudyCapacity.MAX_CARDS_PER_NOTEBOOK,repo.cards(book).first().size);assertNull(db.study().card(recycled)!!.trashedAt)
         assertEquals("满额仍可编辑",db.study().card(recycled)!!.title);assertEquals(2,repo.readGraph(book).nodes.size)
-        assertEquals(last.cardId,repo.submit(last));assertEquals(200,repo.cards(book).first().size)
+        assertEquals(last.cardId,repo.submit(last));assertEquals(StudyCapacity.MAX_CARDS_PER_NOTEBOOK,repo.cards(book).first().size)
     }
 
     @Test fun activeNodeCapacityRejectsAtomicallyAndRemovalAllowsReuse()=fixture{db,first->
         for(named in listOf(false,true)){
             val book=if(named)WorkspaceRepository(db).create("命名图活动容量",false,PaperStyle.BLANK).id else first
-            val c=card(db,book);val map=graph(db,book,c,127,127,named);val repo=StudyRepository(db)
-            assertEquals(127,repo.readGraph(book,map).nodes.count{!it.removed})
+            val c=card(db,book);val map=graph(db,book,c,(StudyGraph.MAX_NODES-1),(StudyGraph.MAX_NODES-1),named);val repo=StudyRepository(db)
+            assertEquals((StudyGraph.MAX_NODES-1),repo.readGraph(book,map).nodes.count{!it.removed})
             val last=StudyCommand(id(),book,StudyAction.REUSE,cardId=c,nodeId=id(),mapId=map)
-            repo.submit(last);assertEquals(128,repo.readGraph(book,map).nodes.count{!it.removed})
-            rejectStudy(db,StudyCommand(id(),book,StudyAction.CREATE,cardId=id(),nodeId=id(),title="第129个",mapId=map),"STUDY_NODE_BUDGET")
+            repo.submit(last);assertEquals(StudyGraph.MAX_NODES,repo.readGraph(book,map).nodes.count{!it.removed})
+            rejectStudy(db,StudyCommand(id(),book,StudyAction.CREATE,cardId=id(),nodeId=id(),title="超限节点",mapId=map),"STUDY_NODE_BUDGET")
             if(map!=null){val op=KnowledgeCommand(id(),book,id(),0,KnowledgeData.MapOccurrence(map,c,null,0.0,0.0))
                 val before=knowledgeStamp(db.knowledge().forBook(book));val note=db.notes().note(book)
                 assertEquals(KnowledgeOutcome.Rejected(KnowledgeRejection.STUDY_NODE_BUDGET),KnowledgeRepository(db).outcome(op))
                 assertEquals(before,knowledgeStamp(db.knowledge().forBook(book)));assertEquals(note,db.notes().note(book));assertNull(db.knowledge().receipt(op.operationId))}
             repo.submit(StudyCommand(id(),book,StudyAction.REMOVE_NODE,nodeId=last.nodeId,expectedRevision=1,mapId=map))
-            assertEquals(128,repo.readGraph(book,map).nodes.size);assertEquals(127,repo.readGraph(book,map).nodes.count{!it.removed})
+            assertEquals(StudyGraph.MAX_NODES,repo.readGraph(book,map).nodes.size);assertEquals((StudyGraph.MAX_NODES-1),repo.readGraph(book,map).nodes.count{!it.removed})
             repo.submit(StudyCommand(id(),book,StudyAction.REUSE,cardId=c,nodeId=id(),mapId=map))
-            assertEquals(129,repo.readGraph(book,map).nodes.size);assertEquals(128,repo.readGraph(book,map).nodes.count{!it.removed})
+            assertEquals((StudyGraph.MAX_NODES+1),repo.readGraph(book,map).nodes.size);assertEquals(StudyGraph.MAX_NODES,repo.readGraph(book,map).nodes.count{!it.removed})
             assertEquals(1,db.study().cards(book).size)
         }
     }
@@ -114,11 +114,11 @@ class StudyCapacityRepositoryTest {
     @Test fun retainedNodeCapacityRejectsStudyAndKnowledgeWithoutPartialWrites()=fixture{db,first->
         for(named in listOf(false,true)){
             val book=if(named)WorkspaceRepository(db).create("命名图历史容量",false,PaperStyle.BLANK).id else first
-            val c=card(db,book);val map=graph(db,book,c,255,1,named);val repo=StudyRepository(db)
-            assertEquals(255,repo.readGraph(book,map).nodes.size)
+            val c=card(db,book);val map=graph(db,book,c,(StudyGraph.MAX_RECORDS-1),1,named);val repo=StudyRepository(db)
+            assertEquals((StudyGraph.MAX_RECORDS-1),repo.readGraph(book,map).nodes.size)
             val last=StudyCommand(id(),book,StudyAction.REUSE,cardId=c,nodeId=id(),mapId=map)
-            repo.submit(last);assertEquals(256,repo.readGraph(book,map).nodes.size)
-            rejectStudy(db,StudyCommand(id(),book,StudyAction.CREATE,cardId=id(),nodeId=id(),title="第257条",mapId=map),"STUDY_NODE_RECORD_BUDGET")
+            repo.submit(last);assertEquals(StudyGraph.MAX_RECORDS,repo.readGraph(book,map).nodes.size)
+            rejectStudy(db,StudyCommand(id(),book,StudyAction.CREATE,cardId=id(),nodeId=id(),title="超限历史记录",mapId=map),"STUDY_NODE_RECORD_BUDGET")
             if(map!=null){val op=KnowledgeCommand(id(),book,id(),0,KnowledgeData.MapOccurrence(map,c,null,0.0,0.0))
                 val before=knowledgeStamp(db.knowledge().forBook(book));val note=db.notes().note(book)
                 assertEquals(KnowledgeOutcome.Rejected(KnowledgeRejection.STUDY_NODE_RECORD_BUDGET),KnowledgeRepository(db).outcome(op))
@@ -126,25 +126,25 @@ class StudyCapacityRepositoryTest {
             repo.submit(StudyCommand(id(),book,StudyAction.MOVE,nodeId=last.nodeId,expectedRevision=1,x=100.0,y=200.0,mapId=map))
             repo.submit(StudyCommand(id(),book,StudyAction.EDIT,cardId=c,expectedRevision=1,title="保留历史仍可编辑"))
             repo.submit(StudyCommand(id(),book,StudyAction.REMOVE_NODE,nodeId=last.nodeId,expectedRevision=2,mapId=map))
-            assertEquals(256,repo.readGraph(book,map).nodes.size);assertEquals(1,repo.readGraph(book,map).nodes.count{!it.removed})
+            assertEquals(StudyGraph.MAX_RECORDS,repo.readGraph(book,map).nodes.size);assertEquals(1,repo.readGraph(book,map).nodes.count{!it.removed})
             rejectStudy(db,StudyCommand(id(),book,StudyAction.REUSE,cardId=c,nodeId=id(),mapId=map),"STUDY_NODE_RECORD_BUDGET")
-            assertEquals(last.nodeId,repo.submit(last));assertEquals(256,repo.readGraph(book,map).nodes.size)
+            assertEquals(last.nodeId,repo.submit(last));assertEquals(StudyGraph.MAX_RECORDS,repo.readGraph(book,map).nodes.size)
         }
     }
 
     @Test fun knowledgeCapacityPreservesReasonsInBothTransactionChecks()=fixture{db,book->
         val payload=KnowledgeCodec.encode(KnowledgeData.Collection("合成集合"))
-        db.withTransaction{repeat(1999){val row=KnowledgeRow(id(),book,1,payload)
+        db.withTransaction{repeat(KnowledgeCodec.MAX_RECORDS_PER_NOTEBOOK-1){val row=KnowledgeRow(id(),book,1,payload)
             db.knowledge().insert(row);db.knowledge().revision(KnowledgeRevisionRow(row.id,1,book,payload,false))}}
         val repo=KnowledgeRepository(db);val map=KnowledgeCommand(id(),book,id(),0,KnowledgeData.MapDefinition("需要图与顺序两条记录"))
         val before=knowledgeStamp(db.knowledge().forBook(book));val note=db.notes().note(book)
         assertEquals(KnowledgeOutcome.Rejected(KnowledgeRejection.KNOWLEDGE_BUDGET),repo.outcome(map))
         assertEquals(before,knowledgeStamp(db.knowledge().forBook(book)));assertEquals(note,db.notes().note(book));assertNull(db.knowledge().receipt(map.operationId))
-        val last=KnowledgeCommand(id(),book,id(),0,KnowledgeData.Collection("第2000条"));repo.submit(last)
-        val extra=KnowledgeCommand(id(),book,id(),0,KnowledgeData.Collection("第2001条"))
+        val last=KnowledgeCommand(id(),book,id(),0,KnowledgeData.Collection("最后一条"));repo.submit(last)
+        val extra=KnowledgeCommand(id(),book,id(),0,KnowledgeData.Collection("超限记录"))
         assertEquals(KnowledgeOutcome.Rejected(KnowledgeRejection.KNOWLEDGE_BUDGET),repo.outcome(extra));assertNull(db.knowledge().receipt(extra.operationId))
         repo.submit(KnowledgeCommand(id(),book,last.id,1,KnowledgeData.Collection("满额编辑")))
-        assertEquals(2000,db.knowledge().forBook(book).size);assertEquals(last.id,repo.submit(last))
+        assertEquals(KnowledgeCodec.MAX_RECORDS_PER_NOTEBOOK,db.knowledge().forBook(book).size);assertEquals(last.id,repo.submit(last))
     }
 
     @Test fun snapshotCapacityChargesImmutableCropHistoryAndNeverDiscardsOldBytes()=fixture{db,book->
@@ -152,7 +152,7 @@ class StudyCapacityRepositoryTest {
         assertTrue(smaller.size<picture.size&&picture.size<larger.size)
         val c=excerpt(book,picture);repo.submit(c);val old=repo.source(c.cardId!!)!!;val bytes=old.snapshot.size
         fillSnapshotBytes(db,StudyCapacity.MAX_SNAPSHOT_BYTES-bytes)
-        assertEquals(32_000_000L,repo.snapshotBytes());assertEquals(32_000_000L,repo.observeSnapshotBytes().first())
+        assertEquals(StudyCapacity.MAX_SNAPSHOT_BYTES,repo.snapshotBytes());assertEquals(StudyCapacity.MAX_SNAPSHOT_BYTES,repo.observeSnapshotBytes().first())
         assertEquals(c.cardId,repo.submit(c));rejectStudy(db,excerpt(book,picture),"STUDY_SNAPSHOT_BUDGET")
         val reused=id();repo.submit(StudyCommand(id(),book,StudyAction.REUSE,cardId=c.cardId,nodeId=reused))
         fun recrop(image:ByteArray,revision:Long)=StudyCommand(id(),book,StudyAction.RECROP_EXCERPT,cardId=c.cardId,expectedRevision=revision,
@@ -164,10 +164,10 @@ class StudyCapacityRepositoryTest {
         assertEquals(1,db.sourceVersions().all().count{it.sourceId==c.cardId})
         repo.submit(StudyCommand(id(),book,StudyAction.REMOVE_NODE,nodeId=reused,expectedRevision=1))
         repo.submit(StudyCommand(id(),book,StudyAction.TRASH_CARD,cardId=c.cardId,expectedRevision=1,expectedTrashImpact=StudyRepository(db).previewTrash(book,requireNotNull(c.cardId)).fingerprint))
-        assertNotNull(db.study().card(c.cardId!!)!!.trashedAt);assertEquals(32_000_000L,repo.snapshotBytes())
+        assertNotNull(db.study().card(c.cardId!!)!!.trashedAt);assertEquals(StudyCapacity.MAX_SNAPSHOT_BYTES,repo.snapshotBytes())
         repo.submit(StudyCommand(id(),book,StudyAction.RESTORE_CARD,cardId=c.cardId,expectedRevision=2))
         repo.submit(StudyCommand(id(),book,StudyAction.EDIT,cardId=c.cardId,expectedRevision=3,title="恢复后编辑"))
-        assertEquals(32_000_000L,repo.observeSnapshotBytes().first())
+        assertEquals(StudyCapacity.MAX_SNAPSHOT_BYTES,repo.observeSnapshotBytes().first())
     }
 
     @Test fun independentCopySharesImmutableSourcesAndChargesOnlyNewCards()=fixture{db,book->
@@ -179,17 +179,17 @@ class StudyCapacityRepositoryTest {
         val duplicate=copies.duplicate(scene.ref,scene.signature(),op)
         val copy=MapGraphAccess(db).read(book).single{it.ref==duplicate}
         assertEquals(2,copy.nodes.size);assertEquals(1,copy.nodes.mapNotNull{it.cardId}.distinct().size)
-        assertEquals(199,db.study().cards(book).size);assertEquals(32_000_000L-sourceBytes,repo.snapshotBytes())
+        assertEquals((StudyCapacity.MAX_CARDS_PER_NOTEBOOK-1),db.study().cards(book).size);assertEquals(StudyCapacity.MAX_SNAPSHOT_BYTES-sourceBytes,repo.snapshotBytes())
         assertEquals(repo.sources(c.cardId!!).refs,repo.sources(copy.nodes.first().cardId!!).refs)
         val current=MapGraphAccess(db).read(book).single{it.ref.mapId==null}
         copies.duplicate(current.ref,current.signature(),id())
-        assertEquals(200,db.study().cards(book).size);assertEquals(32_000_000L-sourceBytes,repo.snapshotBytes())
+        assertEquals(StudyCapacity.MAX_CARDS_PER_NOTEBOOK,db.study().cards(book).size);assertEquals(StudyCapacity.MAX_SNAPSHOT_BYTES-sourceBytes,repo.snapshotBytes())
         val command=id();val cards=db.study().cards(book);val rows=knowledgeStamp(db.knowledge().forBook(book));val note=db.notes().note(book)
         try{copies.duplicate(current.ref,current.signature(),command);fail()}catch(e:IllegalArgumentException){assertEquals("STUDY_CARD_BUDGET",e.message)}
         assertEquals(cards,db.study().cards(book));assertEquals(rows,knowledgeStamp(db.knowledge().forBook(book)))
         assertEquals(note,db.notes().note(book));assertNull(db.knowledge().receipt(command))
         assertEquals(duplicate,copies.duplicate(scene.ref,scene.signature(),op))
-        assertEquals(200,db.study().cards(book).size);assertEquals(32_000_000L-sourceBytes,repo.snapshotBytes())
+        assertEquals(StudyCapacity.MAX_CARDS_PER_NOTEBOOK,db.study().cards(book).size);assertEquals(StudyCapacity.MAX_SNAPSHOT_BYTES-sourceBytes,repo.snapshotBytes())
     }
 
     @Test fun oversizedSingleSnapshotIsAConfirmedAtomicRejection()=fixture{db,book->

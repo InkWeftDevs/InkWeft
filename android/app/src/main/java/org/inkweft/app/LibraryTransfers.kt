@@ -71,7 +71,7 @@ class LibraryTransfersViewModel(app:Application,private val saved:SavedStateHand
                 val count=when(val c=parsed.content){is ContentTransfer.Content.Page->1;is ContentTransfer.Content.Book->c.value.pages.size}
                 mutable.value=LibraryTransferUi("IMPORT",message="已校验 ${parsed.byteCount} 字节、$count 页。将导入为新笔记，不覆盖现有资料。副本不是完整资料库备份；不包含账号或云服务配置。")
             }catch(c:CancellationException){throw c}
-            catch(e:Exception){mutable.value=LibraryTransferUi("ERROR",message=(e as? DocumentImportException)?.explanation?:"无法完整导入：文件损坏、已加密或超出上限。源文档最多 32 MB / 500 页，页面副本 36 MB、整本副本 64 MB。原资料未改动。待核对导入请选择同一文件。",needsFile=hasPending())}
+            catch(e:Exception){mutable.value=LibraryTransferUi("ERROR",message=(e as? DocumentImportException)?.explanation?:"无法完整导入：文件损坏、已加密或超出上限。源文档最多 32 MB / 500 页，页面副本 64 MB、整本副本 96 MB。原资料未改动。待核对导入请选择同一文件。",needsFile=hasPending())}
         }
     }
     fun commit(){

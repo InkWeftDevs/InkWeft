@@ -41,39 +41,39 @@ class StudyCapacityPanelUiTest {
     @get:Rule val compose = createComposeRule()
 
     @Test fun warningsStartAtEightyPercentForEachBudgetAndStayAbsentBelowIt() {
-        val below = StudyCapacityUsage(activeNodes = 102, nodeRecords = 204, cards = 159)
+        val below = StudyCapacityUsage(activeNodes = (StudyGraph.MAX_NODES*4+4)/5-1, nodeRecords = (StudyGraph.MAX_RECORDS*4+4)/5-1, cards = (StudyCapacity.MAX_CARDS_PER_NOTEBOOK*4+4)/5-1)
         val usage = mutableStateOf<StudyCapacityUsage?>(below)
-        val snapshot = mutableStateOf(StudySnapshotUsage(bytes = 25_599_999L))
+        val snapshot = mutableStateOf(StudySnapshotUsage(bytes = (StudyCapacity.MAX_SNAPSHOT_BYTES*4/5-1)))
         var opened = 0
         compose.setContent {
             InkTheme.Content { StudyCapacityWarning(usage.value, snapshot.value, enabled = true, onOpen = { opened++ }) }
         }
         compose.onNodeWithTag("capacity-warning").assertDoesNotExist()
         val crossings = listOf(
-            below.copy(activeNodes = 103) to StudySnapshotUsage(bytes = 25_599_999L),
-            below.copy(nodeRecords = 205) to StudySnapshotUsage(bytes = 25_599_999L),
-            below.copy(cards = 160) to StudySnapshotUsage(bytes = 25_599_999L),
-            below to StudySnapshotUsage(bytes = 25_600_000L),
+            below.copy(activeNodes = (StudyGraph.MAX_NODES*4+4)/5) to StudySnapshotUsage(bytes = (StudyCapacity.MAX_SNAPSHOT_BYTES*4/5-1)),
+            below.copy(nodeRecords = (StudyGraph.MAX_RECORDS*4+4)/5) to StudySnapshotUsage(bytes = (StudyCapacity.MAX_SNAPSHOT_BYTES*4/5-1)),
+            below.copy(cards = (StudyCapacity.MAX_CARDS_PER_NOTEBOOK*4+4)/5) to StudySnapshotUsage(bytes = (StudyCapacity.MAX_SNAPSHOT_BYTES*4/5-1)),
+            below to StudySnapshotUsage(bytes = (StudyCapacity.MAX_SNAPSHOT_BYTES*4/5)),
         )
         crossings.forEach { (nextUsage, nextSnapshot) ->
             compose.runOnIdle { usage.value = nextUsage; snapshot.value = nextSnapshot }
             compose.onNodeWithTag("capacity-warning").assertIsDisplayed().assertIsEnabled()
                 .assertHeightIsAtLeast(48.dp).performTouchInput { click() }
-            compose.runOnIdle { usage.value = below; snapshot.value = StudySnapshotUsage(bytes = 25_599_999L) }
+            compose.runOnIdle { usage.value = below; snapshot.value = StudySnapshotUsage(bytes = (StudyCapacity.MAX_SNAPSHOT_BYTES*4/5-1)) }
             compose.onNodeWithTag("capacity-warning").assertDoesNotExist()
         }
         compose.runOnIdle { assertEquals(4, opened) }
         val full = listOf(
-            below.copy(activeNodes = 128) to StudySnapshotUsage(bytes = 25_599_999L),
-            below.copy(nodeRecords = 256) to StudySnapshotUsage(bytes = 25_599_999L),
-            below.copy(cards = 200) to StudySnapshotUsage(bytes = 25_599_999L),
-            below to StudySnapshotUsage(bytes = 32_000_000L),
+            below.copy(activeNodes = StudyGraph.MAX_NODES) to StudySnapshotUsage(bytes = (StudyCapacity.MAX_SNAPSHOT_BYTES*4/5-1)),
+            below.copy(nodeRecords = StudyGraph.MAX_RECORDS) to StudySnapshotUsage(bytes = (StudyCapacity.MAX_SNAPSHOT_BYTES*4/5-1)),
+            below.copy(cards = StudyCapacity.MAX_CARDS_PER_NOTEBOOK) to StudySnapshotUsage(bytes = (StudyCapacity.MAX_SNAPSHOT_BYTES*4/5-1)),
+            below to StudySnapshotUsage(bytes = StudyCapacity.MAX_SNAPSHOT_BYTES),
         )
         full.forEach { (nextUsage, nextSnapshot) ->
             compose.runOnIdle { usage.value = nextUsage; snapshot.value = nextSnapshot }
             compose.onNodeWithTag("capacity-warning").assertIsDisplayed().assertTextContains("已满", substring = true)
         }
-        compose.runOnIdle { usage.value = below; snapshot.value = StudySnapshotUsage(bytes = 32_000_001L) }
+        compose.runOnIdle { usage.value = below; snapshot.value = StudySnapshotUsage(bytes = (StudyCapacity.MAX_SNAPSHOT_BYTES+1)) }
         compose.onNodeWithTag("capacity-warning").assertIsDisplayed().assertTextContains("超过上限", substring = true)
         compose.runOnIdle { usage.value = null; snapshot.value = StudySnapshotUsage(failed = true) }
         compose.onNodeWithTag("capacity-warning").assertDoesNotExist()
@@ -91,7 +91,7 @@ class StudyCapacityPanelUiTest {
                     Box(Modifier.widthIn(max = 187.5.dp).heightIn(max = 480.dp).fillMaxSize().testTag("capacity-test-host")) {
                         if (!closed.value) StudyCapacityPanel(embedded = true,
                             mapTitle = "用于窄窗口容量核对的命名导图，保留完整中文标题",
-                            usage = StudyCapacityUsage(103, 205, 160, trashedCards = 40),
+                            usage = StudyCapacityUsage((StudyGraph.MAX_NODES*4+4)/5, (StudyGraph.MAX_RECORDS*4+4)/5, (StudyCapacity.MAX_CARDS_PER_NOTEBOOK*4+4)/5, trashedCards = 40),
                             snapshot = snapshot.value, graphFailed = false,
                             navigationEnabled = true, createMapEnabled = true,
                             dismiss = { closed.value = true }, retry = { retries++ }, onAction = { actions.add(it) })
@@ -100,18 +100,18 @@ class StudyCapacityPanelUiTest {
             }
         }
         compose.onNodeWithTag("capacity-panel").assertIsDisplayed()
-        compose.onNodeWithTag("capacity-map-active").assertTextContains("103 / 128", substring = true)
-        compose.onNodeWithTag("capacity-map-total").assertTextContains("205 / 256", substring = true)
-        compose.onNodeWithTag("capacity-book-cards").assertTextContains("160 / 200", substring = true)
+        compose.onNodeWithTag("capacity-map-active").assertTextContains("${(StudyGraph.MAX_NODES*4+4)/5} / ${StudyGraph.MAX_NODES}", substring = true)
+        compose.onNodeWithTag("capacity-map-total").assertTextContains("${(StudyGraph.MAX_RECORDS*4+4)/5} / ${StudyGraph.MAX_RECORDS}", substring = true)
+        compose.onNodeWithTag("capacity-book-cards").assertTextContains("${(StudyCapacity.MAX_CARDS_PER_NOTEBOOK*4+4)/5} / ${StudyCapacity.MAX_CARDS_PER_NOTEBOOK}", substring = true)
         val retry = compose.onNodeWithTag("capacity-retry").performScrollTo()
         assertFullTouchTarget("capacity-retry")
         retry.performTouchInput { click() }
         compose.runOnIdle {
             assertEquals(1, retries)
-            snapshot.value = StudySnapshotUsage(bytes = 25_600_000L)
+            snapshot.value = StudySnapshotUsage(bytes = (StudyCapacity.MAX_SNAPSHOT_BYTES*4/5))
         }
         compose.onNodeWithTag("capacity-snapshot-bytes").performScrollTo().assertIsDisplayed()
-            .assertTextEquals("25.60 / 32.00 MB · 接近上限")
+            .assertTextEquals("204.80 / 256.00 MB · 接近上限")
         listOf(
             "capacity-open-map" to StudyCapacityAction.MAP,
             "capacity-open-cards" to StudyCapacityAction.CARDS,

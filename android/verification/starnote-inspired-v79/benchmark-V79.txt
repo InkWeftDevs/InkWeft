@@ -1,0 +1,6 @@
+metric,iterations,median_ms,min_ms,max_ms
+canStart,500,0.444204,0.279227,1.2844
+visibleDraft,25,0.002243,0.002213,0.033611
+keywordSpans,3,6.666288,3.184812,28.35618
+consumed=2807000
+archive_bytes=144001436,rows=96,sha256=e736dcbacfd9371548fbdc1e9ae7a3affc0e14edb22cbdeabb8e7c3f5a2ed606

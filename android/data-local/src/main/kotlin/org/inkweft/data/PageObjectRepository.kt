@@ -3,6 +3,8 @@ package org.inkweft.data
 
 import androidx.room.*
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
 import org.inkweft.core.*
 import java.security.MessageDigest
 import java.util.UUID
@@ -14,6 +16,7 @@ data class ObjectReceiptRow(@PrimaryKey val commandId:String,val pageId:String,v
 @Dao interface PageObjectDao {
     @Query("SELECT * FROM page_objects WHERE pageId=:id") suspend fun get(id:String):PageObjectRow?
     @Query("SELECT * FROM page_objects WHERE pageId=:id") fun observe(id:String):Flow<PageObjectRow?>
+    @Query("SELECT revision FROM page_objects WHERE pageId=:id") fun observeRevision(id:String):Flow<Long?>
     @Query("SELECT * FROM object_receipts WHERE commandId=:id") suspend fun receipt(id:String):ObjectReceiptRow?
     @Insert(onConflict=OnConflictStrategy.REPLACE) suspend fun put(row:PageObjectRow)
     @Insert(onConflict=OnConflictStrategy.ABORT) suspend fun record(row:ObjectReceiptRow)
@@ -33,6 +36,7 @@ class PageObjectRepository(private val db:NoteDatabase,private val afterCommit:(
         return db.images().source(page.notebookId,hash)?.byteCount?.also{require(it in 1..ImageSource.MAX_BYTES)}
     }
     fun observe(id:String)=db.objects().observe(id)
+    fun observePreview(id:String)=db.objects().observeRevision(id).distinctUntilChanged().map{read(id).objects}
     suspend fun save(pageId:String,expected:Long,command:String,objects:List<PageObject>,expectedInk:Long?=null,originals:List<ImageSource> = emptyList(),layerScope:LayerWriteScope?=null):Long {
         UUID.fromString(command);require(expected>=0)
         val bytes=PageObjectCodec.encode(objects)

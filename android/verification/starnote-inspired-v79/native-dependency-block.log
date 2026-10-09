@@ -1,0 +1,51 @@
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/9.4.1/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build
+
+> Configure project :app
+w: file:///workspace/scratch/inkweft-study/InkWeft-improvements/android/app/build.gradle.kts:62:46: 'fun srcDir(srcDir: Any): Any' is deprecated. Use `directories` mutable set instead.
+Checking the license for package Android SDK Platform-Tools in /workspace/scratch/inkweft-study/tools/android-build/sdk/licenses
+License for package Android SDK Platform-Tools accepted.
+Preparing "Install Android SDK Platform-Tools v.37.0.1".
+"Install Android SDK Platform-Tools v.37.0.1" ready.
+Installing Android SDK Platform-Tools in /workspace/scratch/inkweft-study/tools/android-build/sdk/platform-tools
+"Install Android SDK Platform-Tools v.37.0.1" complete.
+"Install Android SDK Platform-Tools v.37.0.1" finished.
+
+> Task :core-domain:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :core-domain:processResources NO-SOURCE
+> Task :core-domain:processTestResources NO-SOURCE
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :app:generateDebugBuildConfig
+> Task :app:generateDebugResources
+> Task :app:packageDebugResources
+> Task :data-local:preBuild UP-TO-DATE
+> Task :data-local:preDebugBuild UP-TO-DATE
+> Task :data-local:processDebugNavigationResources
+
+> Task :core-domain:compileKotlin
+w: file:///workspace/scratch/inkweft-study/InkWeft-improvements/android/core-domain/src/main/kotlin/org/inkweft/core/MapTemplates.kt:18:108 Unnecessary non-null assertion (!!) on a non-null receiver of type 'String'.
+
+> Task :app:processDebugNavigationResources
+> Task :app:processDebugNavigationResources FAILED
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':app:processDebugNavigationResources'.
+> Could not resolve all files for configuration ':app:debugRuntimeClasspath'.
+   > Could not resolve com.artifex.mupdf:fitz:1.28.5.
+     Required by:
+         project ':app'
+      > Could not resolve com.artifex.mupdf:fitz:1.28.5.
+         > Could not get resource 'https://maven.ghostscript.com/com/artifex/mupdf/fitz/1.28.5/fitz-1.28.5.pom'.
+            > Could not GET 'https://maven.ghostscript.com/com/artifex/mupdf/fitz/1.28.5/fitz-1.28.5.pom'. Received status code 403 from server: Forbidden
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights from a Build Scan (powered by Develocity).
+> Get more help at https://help.gradle.org.
+
+BUILD FAILED in 1m 5s
+6 actionable tasks: 6 executed

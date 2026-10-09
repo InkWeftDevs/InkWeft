@@ -144,7 +144,7 @@ class StudyOrganizationTest {
         val order=nodes.map{it.id};val mapOrder=KnowledgeData.MapOrder(id(),order)
         assertEquals(mapOrder,KnowledgeCodec.decode(KnowledgeCodec.encode(mapOrder)))
         reject{KnowledgeCodec.encode(mapOrder.copy(orderedNodeIds=listOf(a.id,a.id)))}
-        reject{KnowledgeCodec.encode(mapOrder.copy(orderedNodeIds=List(129){id()}))}
+        reject{KnowledgeCodec.encode(mapOrder.copy(orderedNodeIds=List(StudyGraph.MAX_NODES+1){id()}))}
         reject{StudyOrganization.canonicalOrder(nodes,listOf(b.id,child.id))}
         val cards=listOf(StudyTextCard(a.cardId,"末项",""),StudyTextCard(b.cardId,"首项",""),StudyTextCard(child.cardId,"子项",""))
         val text=StudyText.markdown("顺序",cards,nodes)

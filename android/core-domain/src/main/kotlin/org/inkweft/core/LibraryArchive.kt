@@ -10,7 +10,7 @@ import java.security.*
  * Caller-supplied schema is compiled into the app, never read from the archive.
  * SHA-256 detects damage; it is NOT authentication or encryption. */
 object LibraryArchive {
-    const val MAX_BYTES = 134_217_728L
+    const val MAX_BYTES = 1_073_741_824L
     const val MAX_ROWS = 500_000L
     const val MAX_FIELD = 2_000_000
     private const val MAGIC = 0x49574C42 // IWLB

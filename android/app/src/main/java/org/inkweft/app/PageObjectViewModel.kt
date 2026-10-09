@@ -107,7 +107,7 @@ internal class PageObjectViewModel(private val pageId:String,private val repo:Pa
             delay(750)
             // Retry only a spatial unit whose immutable source or options changed. A rejection
             // remains author ink; it is never promoted to beautyKnown to hide unfinished work.
-            val units=try{withContext(Dispatchers.Default){HandwritingLines.split(fresh)}}catch(c:CancellationException){throw c}
+            val units=try{withContext(Dispatchers.Default){if(options.formula)FormulaGroups.automatic(fresh)else HandwritingLines.split(fresh)}}catch(c:CancellationException){throw c}
                 catch(_:Exception){beautyState.value="这段字较长，可分段框选美化";return@launch}
             val byId=ink.strokes.associateBy{it.id}
             val active=ink.strokes.map{it.id}.toSet()

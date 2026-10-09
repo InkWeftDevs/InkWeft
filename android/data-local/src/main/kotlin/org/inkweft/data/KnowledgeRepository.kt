@@ -105,7 +105,7 @@ class KnowledgeRepository(private val db:NoteDatabase,private val fault:(Knowled
             require(if(old==null)row.revision==1L else old.notebookId==book&&row.revision==old.revision+1&&old.data()::class==row.data()::class)
         }
         val changedIds=changes.map{it.id}.toSet();val finalRows=previous.filter{it.id !in changedIds}+changes
-        require(finalRows.size<=2000){"KNOWLEDGE_BUDGET"}
+        require(finalRows.size<=KnowledgeCodec.MAX_RECORDS_PER_NOTEBOOK){"KNOWLEDGE_BUDGET"}
         val oldMain=db.study().nodes(book);val finalMain=mainNodes?:oldMain
         if(mainNodes!=null){
             require(oldMain.all{old->mainNodes.any{it.id==old.id}}){"MAP_NODE_HISTORY_MISSING"}
@@ -155,7 +155,7 @@ class KnowledgeRepository(private val db:NoteDatabase,private val fault:(Knowled
             require(old==null||old.notebookId==c.notebookId&&old.data()::class==c.data::class)
             require(!c.removed||old!=null)
             if(c.removed)require(old!!.payload.contentEquals(c.payload)){"REMOVE_MUST_PRESERVE_PAYLOAD"}
-            val records=dao.all();require(old!=null||records.count{it.notebookId==c.notebookId}<2000){"KNOWLEDGE_BUDGET"}
+            val records=dao.forBook(c.notebookId);require(old!=null||records.size<KnowledgeCodec.MAX_RECORDS_PER_NOTEBOOK){"KNOWLEDGE_BUDGET"}
             validateData(c.notebookId,c.data,!c.removed)
             if(c.data is KnowledgeData.Anchor&&old==null){val a=c.data as KnowledgeData.Anchor;require((db.ink().page(a.pageId)?.revision?:0)==a.inkRevision){"SOURCE_CHANGED"}
                 val visible=InkSession(InkRepository(db).read(a.pageId)).visibleDraft().associateBy{it.id}
@@ -235,8 +235,8 @@ class KnowledgeRepository(private val db:NoteDatabase,private val fault:(Knowled
         }
     }
     suspend fun validateArchive(){
-        val rows=db.knowledge().all();require(rows.size<=500*2000)
-        require(rows.groupBy{it.notebookId}.values.all{it.size<=2000})
+        val rows=db.knowledge().all();require(rows.size<=500*KnowledgeCodec.MAX_RECORDS_PER_NOTEBOOK)
+        require(rows.groupBy{it.notebookId}.values.all{it.size<=KnowledgeCodec.MAX_RECORDS_PER_NOTEBOOK})
         for(row in rows){
             UUID.fromString(row.id);require(row.revision in 1 until Long.MAX_VALUE)
             validateData(row.notebookId,row.data(),false)

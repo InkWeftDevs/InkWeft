@@ -433,7 +433,9 @@ class InkCanvasView(context:Context):View(context){
         }
     }
     /** Capture only the rendered paper, never toolbars or selection decorations. */
-    internal fun excerptPreview(region:CanvasBounds):ByteArray {
+    internal fun excerptPreview(region:CanvasBounds):ByteArray=excerptPreview(InkRegion(listOf(EraserPoint(region.left.toFloat(),region.top.toFloat()),EraserPoint(region.right.toFloat(),region.bottom.toFloat()))))
+    internal fun excerptPreview(selection:InkRegion):ByteArray {
+        val region=selection.bounds
         check(!rasterPending&&!imageFramesPending&&(documentId==null||documentKnownAbsent||documentTile!=null&&!documentError)){"页面仍在呈现，请稍后重试"}
         val a=viewport.worldToScreen(region.left,region.top,width.toDouble(),height.toDouble(),density)
         val b=viewport.worldToScreen(region.right,region.bottom,width.toDouble(),height.toDouble(),density)
@@ -443,7 +445,12 @@ class InkCanvasView(context:Context):View(context){
         val scale=min(1.0,800.0/max(b.x-a.x,b.y-a.y))
         val bitmap=Bitmap.createBitmap(max(1,((b.x-a.x)*scale).toInt()),max(1,((b.y-a.y)*scale).toInt()),Bitmap.Config.ARGB_8888)
         try{
-            val canvas=Canvas(bitmap);canvas.scale(scale.toFloat(),scale.toFloat());canvas.translate(-a.x.toFloat(),-a.y.toFloat())
+            val canvas=Canvas(bitmap);canvas.drawColor(Color.WHITE);canvas.scale(scale.toFloat(),scale.toFloat());canvas.translate(-a.x.toFloat(),-a.y.toFloat())
+            if(!selection.rectangle){
+                val path=Path();selection.points.forEachIndexed{i,p->val point=viewport.worldToScreen(p.x.toDouble(),p.y.toDouble(),width.toDouble(),height.toDouble(),density)
+                    if(i==0)path.moveTo(point.x.toFloat(),point.y.toFloat())else path.lineTo(point.x.toFloat(),point.y.toFloat())}
+                path.close();canvas.clipPath(path)
+            }
             capturingExcerpt=true
             try{draw(canvas)}finally{capturingExcerpt=false}
             for(quality in listOf(90,75,55,35)){

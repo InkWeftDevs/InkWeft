@@ -26,7 +26,7 @@ internal class FormulaRecognizer(context:Context) {
     }
     suspend fun recognize(strokes:List<InkStroke>,trace:BeautyDiagnostics.Trace?=null):RecognizedWriting=withContext(Dispatchers.Default){lock.withLock{
         require(strokes.size in 1..256)
-        val lines=HandwritingLines.split(strokes);require(lines.size in 1..16){"请每次选择不超过 16 行公式"}
+        val lines=listOf(FormulaGroups.block(strokes))
         val regions=mutableListOf<RecognizedLine>()
         runCatching{trace?.record("recognizer","texo@b2668efe5112082846fde4d446b9bfaab3989533")}
         // Release both sessions after the selection, including cancellation. The editor need not

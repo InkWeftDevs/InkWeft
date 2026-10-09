@@ -1,0 +1,9 @@
+/workspace/scratch/inkweft-study/tools/android-build/mupdf-android-fitz/libmupdf/platform/java/src/com/artifex/mupdf/fitz/PDFAnnotation.java:439: warning: [dep-ann] deprecated item is not annotated with @Deprecated
+	public float getBorder() { return getBorderWidth(); }
+	             ^
+/workspace/scratch/inkweft-study/tools/android-build/mupdf-android-fitz/libmupdf/platform/java/src/com/artifex/mupdf/fitz/PDFAnnotation.java:442: warning: [dep-ann] deprecated item is not annotated with @Deprecated
+	public void setBorder(float width) { setBorderWidth(width); }
+	            ^
+Note: Some input files use or override a deprecated API.
+Note: Recompile with -Xlint:deprecation for details.
+2 warnings

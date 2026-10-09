@@ -32,8 +32,13 @@ object MapTemplates {
         nodes.forEachIndexed{i,n->
             require(n.title.isNotBlank()&&n.title.length<=120&&n.x.isFinite()&&n.y.isFinite()&&n.x in -40000.0..40000.0&&n.y in -40000.0..40000.0)
             require(n.parent==null||n.parent in nodes.indices)
-            val seen=mutableSetOf(i);var p=n.parent
-            while(p!=null){require(seen.add(p)&&seen.size<=32);p=nodes[p].parent}
+            require(n.parent!=i)
+        }
+        val resolved=mutableSetOf<Int>()
+        nodes.indices.forEach{i->
+            val seen=mutableSetOf<Int>();var p:Int?=i
+            while(p!=null&&p !in resolved){require(seen.add(p)){"MAP_CYCLE"};p=nodes[p].parent}
+            resolved.addAll(seen)
         }
     }
     fun instantiate(template:KnowledgeData.MapTemplate,title:String):KnowledgeData.MapDefinition{

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="org.inkweft.core.PaperTemplatesTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-10-09T15:44:25.243Z" hostname="3892303cc95a" time="0.013">
+  <properties/>
+  <testcase name="allNewTemplatesRoundTripInEditableContentFiles" classname="org.inkweft.core.PaperTemplatesTest" time="0.0"/>
+  <testcase name="categoriesAndDescriptionsAreSearchable" classname="org.inkweft.core.PaperTemplatesTest" time="0.002"/>
+  <testcase name="musicHasTwelveGroupsOfFiveLines" classname="org.inkweft.core.PaperTemplatesTest" time="0.0"/>
+  <testcase name="structuredGeometryStaysOnPageAndHasUsefulWritingRegions" classname="org.inkweft.core.PaperTemplatesTest" time="0.006"/>
+  <testcase name="structuredTemplatesNeverRepeatAcrossInfiniteCanvas" classname="org.inkweft.core.PaperTemplatesTest" time="0.002"/>
+  <testcase name="weeklyAndMonthlyAreUndatedAndHabitHasExactlyThirtyCells" classname="org.inkweft.core.PaperTemplatesTest" time="0.003"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

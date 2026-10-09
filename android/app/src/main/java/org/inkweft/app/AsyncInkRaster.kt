@@ -20,6 +20,11 @@ internal class AsyncInkRaster(private val changed:()->Unit,private val failed:()
     private var rejected:Pair<Key,List<InkStroke>>?=null
     private var generation=0L
     private val paint=Paint(Paint.FILTER_BITMAP_FLAG)
+    private val fallbackRenderer by lazy{InkBrushes.renderer()}
+    private data class Mesh(val source:InkStroke,val stroke:androidx.ink.strokes.Stroke)
+    private val fallbackMeshes=LinkedHashMap<String,Mesh>(128,.75f,true)
+    private var fallbackPencil:PencilTileRenderer?=null
+    private var fallbackPencilUnit=0f
     internal val pending get()=job!=null
     /** True only after draw painted the complete frame for its current request, not a fallback or deferred job. */
     internal var frameReady=false
@@ -33,7 +38,7 @@ internal class AsyncInkRaster(private val changed:()->Unit,private val failed:()
         frame=next;fallback=prior
         keep.forEach{RenderResources.track(it,it.allocationByteCount.toLong(),"ink-frame",owner,RenderResources.Role.ACTIVE)}
     }
-    fun clear(){frameReady=false;generation++;job?.cancel();budgetRetry?.cancel();budgetRetry=null;job=null;request=null;publish(null,null);rejected=null;equality.clear()}
+    fun clear(){frameReady=false;generation++;job?.cancel();budgetRetry?.cancel();budgetRetry=null;job=null;request=null;publish(null,null);rejected=null;equality.clear();fallbackMeshes.clear();fallbackPencil?.clear();fallbackPencil=null}
     fun draw(c:Canvas,width:Int,height:Int,viewport:CanvasViewport,density:Double,world:Boolean,embedded:Boolean,strokes:List<InkStroke>){
         frameReady=false
         if(width<=0||height<=0)return
@@ -146,15 +151,23 @@ internal class AsyncInkRaster(private val changed:()->Unit,private val failed:()
     }
     private fun drawStrokes(c:Canvas,key:Key,strokes:List<InkStroke>,matrix:Matrix){
         val saved=c.save();c.concat(matrix);if(!key.world&&!key.embedded)c.clipRect(0f,0f,1000f,1414f)
-        val pencil=PencilTileRenderer(min(.5f,(1/(key.viewport.zoom*key.density)).toFloat()),false)
+        val unit=min(.5f,(1/(key.viewport.zoom*key.density)).toFloat())
+        if(fallbackPencil==null||unit!=fallbackPencilUnit){fallbackPencil?.clear();fallbackPencil=PencilTileRenderer(unit,false);fallbackPencilUnit=unit}
+        val pencil=checkNotNull(fallbackPencil)
         try{
-            val renderer=InkBrushes.renderer()
             strokes.forEach{s->
                 val clipped=c.save();s.cuts.forEach{c.clipOutPath(VisibleInkGeometry.cutPath(it))}
-                if(s.pen==InkPen.PENCIL)pencil.draw(c,s)else renderer.draw(c,InkBrushes.stroke(s),matrix)
+                if(s.pen==InkPen.PENCIL)pencil.draw(c,s)else{
+                    val old=fallbackMeshes[s.id]
+                    val unchanged=old?.source?.let{it===s||it.pen==s.pen&&it.width==s.width&&it.color==s.color&&it.world==s.world&&it.appearance==s.appearance&&it.samples==s.samples}==true
+                    val mesh=if(unchanged)checkNotNull(old).stroke else InkBrushes.stroke(s).also{fallbackMeshes[s.id]=Mesh(s,it)}
+                    fallbackRenderer.draw(c,mesh,matrix)
+                    // Meshes are disposable: bound by samples as well as stroke count.
+                    while(fallbackMeshes.size>128||fallbackMeshes.values.sumOf{it.source.samples.size}>65536)fallbackMeshes.remove(fallbackMeshes.keys.first())
+                }
                 c.restoreToCount(clipped)
             }
-        }finally{pencil.clear();c.restoreToCount(saved)}
+        }finally{c.restoreToCount(saved)}
     }
     companion object {
         // UI-thread LRU: immutable buffers remain valid while a view still references them.

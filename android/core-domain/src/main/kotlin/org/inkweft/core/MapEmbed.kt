@@ -18,7 +18,7 @@ object MapEmbedCodec {
         val b=ByteArrayOutputStream();DataOutputStream(b).use{d->
             d.writeInt(0x49574d31);d.writeUTF(value.target.notebookId);d.writeUTF(value.target.mapId.orEmpty());d.writeUTF(value.branchId.orEmpty());d.writeInt(value.depth);d.writeByte(value.policy.ordinal)
             value.snapshot?.let{s->
-                require(s.nodes.size<=128&&s.title.length<=120&&s.available)
+                require(s.nodes.size<=StudyGraph.MAX_NODES&&s.title.length<=120&&s.available)
                 require(s.graphHash.matches(Regex("[0-9a-f]{64}")))
                 StudyGraph.validate(s.nodes.map{StudyNode(it.id,it.cardId?:it.id,it.parentId,it.x,it.y,it.revision)})
                 d.writeUTF(s.title);d.writeUTF(s.graphHash);d.writeInt(s.nodes.size)
@@ -39,7 +39,7 @@ object MapEmbedCodec {
             require(d.readInt()==0x49574d31)
             val ref=MapRef(d.readUTF(),d.readUTF().ifEmpty{null});val branch=d.readUTF().ifEmpty{null};val depth=d.readInt();val policy=MapEmbedPolicy.entries.getOrNull(d.readUnsignedByte())?:error("Embed policy")
             val scene=if(policy==MapEmbedPolicy.PINNED){
-                val title=d.readUTF();val graph=d.readUTF();val count=d.readInt();require(count in 0..128)
+                val title=d.readUTF();val graph=d.readUTF();val count=d.readInt();require(count in 0..StudyGraph.MAX_NODES)
                 val nodes=List(count){
                     val id=d.readUTF();val parent=d.readUTF().ifEmpty{null};val card=d.readUTF().ifEmpty{null};val name=d.readUTF()
                     val size=d.readInt();require(size in 0..80_000&&size<=d.available());val text=ByteArray(size);d.readFully(text);val body=text.toString(Charsets.UTF_8);require(body.toByteArray(Charsets.UTF_8).contentEquals(text))

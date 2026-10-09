@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="org.inkweft.core.InkModelsTest" tests="26" skipped="0" failures="0" errors="0" timestamp="2026-10-09T15:44:24.778Z" hostname="3892303cc95a" time="0.012">
+  <properties/>
+  <testcase name="queueIsBounded" classname="org.inkweft.core.InkModelsTest" time="0.002"/>
+  <testcase name="conflictStopsWriterButRetainsVisibleDraft" classname="org.inkweft.core.InkModelsTest" time="0.0"/>
+  <testcase name="sweptEraserHitsCrossingSegments" classname="org.inkweft.core.InkModelsTest" time="0.0"/>
+  <testcase name="sourcePageCannotContainDuplicateStrokeIds" classname="org.inkweft.core.InkModelsTest" time="0.001"/>
+  <testcase name="authorInputListDefensivelyCopied" classname="org.inkweft.core.InkModelsTest" time="0.0"/>
+  <testcase name="historyUndoRedoPreservesPayloadAndAddsCommits" classname="org.inkweft.core.InkModelsTest" time="0.0"/>
+  <testcase name="backwardsTimeRejected" classname="org.inkweft.core.InkModelsTest" time="0.0"/>
+  <testcase name="nanCoordinateRejected" classname="org.inkweft.core.InkModelsTest" time="0.0"/>
+  <testcase name="emptyPageCopySupported" classname="org.inkweft.core.InkModelsTest" time="0.0"/>
+  <testcase name="duplicateInputRejected" classname="org.inkweft.core.InkModelsTest" time="0.0"/>
+  <testcase name="pageCopyTamperRejected" classname="org.inkweft.core.InkModelsTest" time="0.001"/>
+  <testcase name="semanticDigestChangesWithExpectedVersion" classname="org.inkweft.core.InkModelsTest" time="0.0"/>
+  <testcase name="staleReceiptCannotAcknowledgeNewOperation" classname="org.inkweft.core.InkModelsTest" time="0.0"/>
+  <testcase name="pageCopyRoundTrip" classname="org.inkweft.core.InkModelsTest" time="0.0"/>
+  <testcase name="initialQueueKeepsNewStrokeVisible" classname="org.inkweft.core.InkModelsTest" time="0.001"/>
+  <testcase name="erasureAndUndoKeepOriginalInkIdentity" classname="org.inkweft.core.InkModelsTest" time="0.001"/>
+  <testcase name="orderedQueueUsesFreshExpectedVersion" classname="org.inkweft.core.InkModelsTest" time="0.0"/>
+  <testcase name="failedWriteKeepsSameCommandAndDraft" classname="org.inkweft.core.InkModelsTest" time="0.001"/>
+  <testcase name="mixedPressureAvailabilityRejected" classname="org.inkweft.core.InkModelsTest" time="0.001"/>
+  <testcase name="codecRoundTripPreservesPressureAndTiming" classname="org.inkweft.core.InkModelsTest" time="0.0"/>
+  <testcase name="truncatedStrokeRejected" classname="org.inkweft.core.InkModelsTest" time="0.001"/>
+  <testcase name="semanticDigestStableForUnorderedVisibilityIds" classname="org.inkweft.core.InkModelsTest" time="0.001"/>
+  <testcase name="eraserDoesNotHitFarCollinearLine" classname="org.inkweft.core.InkModelsTest" time="0.0"/>
+  <testcase name="trailingDataRejected" classname="org.inkweft.core.InkModelsTest" time="0.0"/>
+  <testcase name="offPageRejected" classname="org.inkweft.core.InkModelsTest" time="0.001"/>
+  <testcase name="committedReceiptAdvancesOnce" classname="org.inkweft.core.InkModelsTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

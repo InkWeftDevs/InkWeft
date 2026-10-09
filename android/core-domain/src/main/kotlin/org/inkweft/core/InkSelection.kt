@@ -52,7 +52,7 @@ class InkRegion(points:List<EraserPoint>,val rectangle:Boolean=true) {
         else InkCut(id,.01f,points,InkCutShape.POLYGON)
 }
 object InkSelectionEdit {
-    const val MAX_SELECTED=256
+    const val MAX_SELECTED=1024
     fun copy(strokes:List<InkStroke>,dx:Float,dy:Float):List<InkStroke> {
         require(strokes.size in 1..MAX_SELECTED&&dx.isFinite()&&dy.isFinite())
         val cuts=mutableMapOf<String,String>()
@@ -87,7 +87,7 @@ object InkSelectionEdit {
     /** Uniform resize/reflection keeps pressure and moves erase masks with their ink. */
     fun transform(strokes:List<InkStroke>,scale:Float=1f,flipX:Boolean=false,flipY:Boolean=false):List<InkStroke>{
         require(strokes.size in 1..MAX_SELECTED&&scale in .1f..10f)
-        val points=strokes.flatMap{it.samples};val cx=(points.minOf{it.x}+points.maxOf{it.x})/2;val cy=(points.minOf{it.y}+points.maxOf{it.y})/2
+        val bounds=strokes.map{it.sampleBounds()}.reduce{a,b->a.union(b)};val cx=((bounds.left+bounds.right)/2).toFloat();val cy=((bounds.top+bounds.bottom)/2).toFloat()
         fun point(x:Float,y:Float)=EraserPoint(cx+(x-cx)*scale*(if(flipX)-1 else 1),cy+(y-cy)*scale*(if(flipY)-1 else 1))
         fun sample(p:InkSample):InkSample {val q=point(p.x,p.y);return p.copy(x=q.x,y=q.y)}
         val cuts=mutableMapOf<String,String>()

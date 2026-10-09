@@ -11,11 +11,11 @@ object InkLimits {
     const val WIDTH=1000f
     const val HEIGHT=1414f
     const val MAX_POINTS=8192
-    const val MAX_STROKES=10_000
-    const val MAX_PAGE_POINTS=500_000
+    const val MAX_STROKES=20_000
+    const val MAX_PAGE_POINTS=1_000_000
     // Live-page capacity and retained undo/source storage are different budgets.
-    const val MAX_RETAINED_STROKES=20_000
-    const val MAX_RETAINED_POINTS=1_000_000
+    const val MAX_RETAINED_STROKES=40_000
+    const val MAX_RETAINED_POINTS=2_000_000
     const val MAX_RETAINED_CUTS=2048
     const val MAX_STROKE_BYTES=2_000_000
     const val MAX_CUTS=128
@@ -51,11 +51,12 @@ class InkStroke(val id:String,val pen:InkPen,val color:Int,val width:Float,val t
     samples:List<InkSample>,val world:Boolean=false,cuts:List<InkCut> = emptyList(),val appearance:StrokeAppearance=if(pen==InkPen.PENCIL)StrokeAppearance(BrushRecipe())else StrokeAppearance()) {
     val samples:List<InkSample> = Collections.unmodifiableList(ArrayList(samples))
     val cuts:List<InkCut> = Collections.unmodifiableList(ArrayList(cuts))
-    internal val cachedBounds:CanvasBounds by lazy {
-        val pad=coverageRadius().toDouble()
-        CanvasBounds(this.samples.minOf{it.x}.toDouble()-pad,this.samples.minOf{it.y}.toDouble()-pad,
-            this.samples.maxOf{it.x}.toDouble()+pad,this.samples.maxOf{it.y}.toDouble()+pad)
+    internal val cachedSampleBounds:CanvasBounds by lazy {
+        var left=Float.POSITIVE_INFINITY;var top=left;var right=Float.NEGATIVE_INFINITY;var bottom=right
+        this.samples.forEach{left=minOf(left,it.x);top=minOf(top,it.y);right=maxOf(right,it.x);bottom=maxOf(bottom,it.y)}
+        CanvasBounds(left.toDouble(),top.toDouble(),right.toDouble(),bottom.toDouble())
     }
+    internal val cachedBounds:CanvasBounds by lazy {cachedSampleBounds.padded(coverageRadius().toDouble())}
     init {
         UUID.fromString(id);require(width.isFinite()&&width in .5f..48f);require((color ushr 24) in 1..255)
         require(samples.size in 1..InkLimits.MAX_POINTS)
@@ -71,6 +72,9 @@ class InkStroke(val id:String,val pen:InkPen,val color:Int,val width:Float,val t
     }
     fun withCuts(extra:List<InkCut>):InkStroke = if(extra.isEmpty())this else InkStroke(id,pen,color,width,tool,samples,world,cuts+extra,appearance)
 }
+/** Original sample extents, without brush coverage or eraser masks. */
+fun InkStroke.sampleBounds():CanvasBounds = cachedSampleBounds
+
 object InkCutCodec {
     fun write(out:DataOutputStream,cut:InkCut){if(cut.shape!=InkCutShape.ROUND){out.writeUTF("IW-CUT-2");out.writeByte(cut.shape.ordinal)};out.writeUTF(cut.id);out.writeFloat(cut.radius);out.writeInt(cut.points.size);cut.points.forEach{out.writeFloat(it.x);out.writeFloat(it.y)}}
     fun read(input:DataInputStream):InkCut {val token=input.readUTF();val shape=if(token=="IW-CUT-2")InkCutShape.entries.getOrNull(input.readUnsignedByte())?:error("Unsupported cut shape")else InkCutShape.ROUND;val id=if(token=="IW-CUT-2")input.readUTF()else token;val radius=input.readFloat();val count=input.readInt();require(count in 1..InkLimits.MAX_POINTS&&count.toLong()*8<=input.available());return InkCut(id,radius,List(count){EraserPoint(input.readFloat(),input.readFloat())},shape)}
@@ -115,14 +119,14 @@ sealed interface InkMutation {
         val layerSources:List<String> = Collections.unmodifiableList(ArrayList(layerSources))
         val hidden:List<String> = Collections.unmodifiableList(hidden.sorted())
         val added:List<InkStroke> = Collections.unmodifiableList(ArrayList(added))
-        init{require(layerSources.isEmpty()||layerSources.size==added.size);layerSources.forEach{UUID.fromString(it)};require(added.isNotEmpty()&&added.size<=256&&hidden.size<=256)
+        init{require(layerSources.isEmpty()||layerSources.size==added.size);layerSources.forEach{UUID.fromString(it)};require(added.isNotEmpty()&&added.size<=InkSelectionEdit.MAX_SELECTED&&hidden.size<=InkSelectionEdit.MAX_SELECTED)
             require(hidden.distinct().size==hidden.size&&added.map{it.id}.distinct().size==added.size)
             hidden.forEach{UUID.fromString(it)};require(added.none{it.id in hidden})}
     }
     class Swap(hide:List<String>,show:List<String>):InkMutation {
         val hide:List<String> = Collections.unmodifiableList(hide.sorted())
         val show:List<String> = Collections.unmodifiableList(show.sorted())
-        init{require(hide.size+show.size in 1..512);require((hide+show).distinct().size==hide.size+show.size);(hide+show).forEach{UUID.fromString(it)}}
+        init{require(hide.size+show.size in 1..InkSelectionEdit.MAX_SELECTED*2);require((hide+show).distinct().size==hide.size+show.size);(hide+show).forEach{UUID.fromString(it)}}
     }
 
     class Add(val stroke:InkStroke):InkMutation

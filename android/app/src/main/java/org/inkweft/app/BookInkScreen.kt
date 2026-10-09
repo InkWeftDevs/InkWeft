@@ -488,8 +488,14 @@ fun InkScreen(note:NoteDraft,workspace:WorkspaceViewModel=viewModel(),onBack:()-
 @Composable
 internal fun PageThumb(page:NotebookPageRow,modifier:Modifier=Modifier.size(84.dp,110.dp)){
     val app=LocalContext.current.applicationContext as InkWeftApplication
-    val strokes by produceState<List<InkStroke>?>(null,page.id){value=withContext(Dispatchers.IO){runCatching{InkSession(app.inkRepository.read(page.id)).visibleDraft()}.getOrNull()}}
-    val objects by produceState<List<PageObject>>(emptyList(),page.id){value=withContext(Dispatchers.IO){runCatching{app.pageObjects.read(page.id).objects}.getOrDefault(emptyList())}}
+    val strokes by produceState<List<InkStroke>?>(null,page.id){
+        try{withContext(Dispatchers.IO){app.inkRepository.observeVisible(page.id).collect{value=it}}}
+        catch(c:CancellationException){throw c}catch(_:Exception){value=null}
+    }
+    val objects by produceState<List<PageObject>>(emptyList(),page.id){
+        try{withContext(Dispatchers.IO){app.pageObjects.observePreview(page.id).collect{value=it}}}
+        catch(c:CancellationException){throw c}catch(_:Exception){value=emptyList()}
+    }
     Box(modifier){
         val loaded=strokes
         AndroidView(factory={InkCanvasView(it).apply{preview=true}},update={it.configure(false,PaperStyle.entries[page.paper],null);it.showDocument(page.id);it.showStrokes(loaded.orEmpty());it.showObjects(objects)},modifier=Modifier.fillMaxSize())

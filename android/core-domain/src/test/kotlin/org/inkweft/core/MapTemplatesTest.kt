@@ -25,8 +25,8 @@ class MapTemplatesTest {
     @Test fun rejectCyclesBudgetNonFiniteAndTrailingPayload(){
         fun rejected(block:()->Unit){try{block();fail("must reject")}catch(_:IllegalArgumentException){}}
         rejected{MapTemplates.validate("right",listOf(TemplateNode("a",1,0.0,0.0),TemplateNode("b",0,0.0,0.0)))}
-        MapTemplates.validate("right",List(128){TemplateNode("a",null,0.0,0.0)})
-        try{MapTemplates.validate("right",List(129){TemplateNode("a",null,0.0,0.0)});fail("must reject")}
+        MapTemplates.validate("right",List(StudyGraph.MAX_NODES){TemplateNode("a",null,0.0,0.0)})
+        try{MapTemplates.validate("right",List(StudyGraph.MAX_NODES+1){TemplateNode("a",null,0.0,0.0)});fail("must reject")}
         catch(e:IllegalArgumentException){assertEquals("STUDY_NODE_BUDGET",e.message)}
         rejected{MapTemplates.validate("right",listOf(TemplateNode("a",null,Double.NaN,0.0)))}
         rejected{KnowledgeCodec.decode(KnowledgeCodec.encode(MapTemplates.builtins[0])+byteArrayOf(0))}

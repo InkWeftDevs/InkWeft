@@ -17,6 +17,18 @@ class FormulaFlowTest {
     private fun stroke(x:Float=100f)=InkStroke(id(),InkPen.PEN,Color.BLACK,2f,InkTool.STYLUS,listOf(InkSample(x,200f,0),InkSample(x+60f,260f,20)))
     private fun result(s:List<InkStroke>)=RecognizedWriting("\\frac{1}{x^2}=\\alpha",.999f,1,listOf(RecognizedLine("\\frac{1}{x^2}=\\alpha",s.map{it.bounds()}.reduce{a,b->a.union(b)},s.map{it.id},emptyList(),.999f)))
     private suspend fun ready(vm:PageObjectViewModel){withTimeout(10000){while(vm.ui.value.loading||vm.ui.value.busy||vm.ui.value.pending)delay(20)}}
+    @Test fun editingResizedFormulaKeepsItsDisplayScaleAndColorOnlyEditKeepsMasks(){
+        val latex="x^2";val base=FormulaLayout.drawable(latex,28f,Color.BLACK)
+        val original=PageObject(id(),PageObjectKind.FORMULA,x=30f,y=30f,
+            width=base.intrinsicWidth*2f,height=base.intrinsicHeight*2f,fontSize=28f,text=latex)
+        val edited=FormulaLayout.edited(original,"x^3",28f,Color.BLACK,false)
+        val next=FormulaLayout.drawable(edited.text,edited.fontSize,edited.color)
+        assertEquals(2f,minOf(edited.width/next.intrinsicWidth,edited.height/next.intrinsicHeight),.001f)
+        val masked=original.copy(erasures=listOf(TextErasePath(0,latex.length,5f,listOf(TextErasePoint(10f,10f)))))
+        assertEquals(masked.copy(color=Color.BLUE),FormulaLayout.edited(masked,latex,28f,Color.BLUE,false))
+        assertTrue(FormulaLayout.edited(masked,"x^3",28f,Color.BLUE,false).erasures.isEmpty())
+        assertEquals(edited,PageObjectCodec.decode(PageObjectCodec.encode(listOf(edited))).single())
+    }
     @Test fun confirmationCorrectionUndoAndRestoreKeepOriginalInkByteExact()=runBlocking{
         val note=app.workspaceRepository.create("公式事务回归",false,PaperStyle.BLANK);val source=stroke()
         app.inkRepository.save(CommitInk(id(),note.id,0,InkMutation.Add(source)))

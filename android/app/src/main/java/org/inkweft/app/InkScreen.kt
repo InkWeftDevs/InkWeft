@@ -378,7 +378,7 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
         val region=InkRegion(listOf(EraserPoint(-bound,-bound),EraserPoint(if(page.world)bound else InkLimits.WIDTH,if(page.world)bound else InkLimits.HEIGHT)))
         val candidates=selectable.count{selectionOptions.accepts(it)}
         val found=if(candidates<=InkSelectionEdit.MAX_SELECTED)CanvasSelectionEdit.query(region,ui.revision,ui.strokes,objectsUi.objects,selectionOptions,visibleGeometry,authoringUi.state.layers)else null
-        if(found==null)notice="本页笔迹较多，请分批选择（每次最多256笔）"
+        if(found==null)notice="本页笔迹较多，请分批选择（每次最多${InkSelectionEdit.MAX_SELECTED}笔）"
         else if(found.count==0)notice="当前筛选范围内没有可选内容"
         else {
             val bounds=(found.strokes.map{it.bounds()}+found.objects.map{it.bounds()}).reduce{a,b->a.union(b)}
@@ -412,9 +412,10 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
         fun current()=selected===selection&&readLock.canWrite
         fun prepared(value:SelectedInk){if(current())selected=value}
         val authoringRevision=authoringUi.revision
-        val picture=runCatching{check(checkNotNull(view).matchesAuthoring(authoringUi.state)){"图层画面正在更新，请稍后重试"};checkNotNull(view).excerptPreview(selection.region.bounds)}.getOrElse{notice=it.message?:"摘录未完成，请稍后重试";return}
+        val picture=runCatching{check(checkNotNull(view).matchesAuthoring(authoringUi.state)){"图层画面正在更新，请稍后重试"};checkNotNull(view).excerptPreview(selection.region)}.getOrElse{notice=it.message?:"摘录未完成，请稍后重试";return}
         val revision=objectsVm.revision
-        val strokes=selectable.filter{it.bounds().intersects(selection.region.bounds)}
+        val excerptGeometry=VisibleInkGeometry()
+        val strokes=selectable.filter{excerptGeometry.selects(selection.region,it,precise=true)}
         val recognizeInk=excerptTextMode&&strokes.size<=256
         capturingExcerpt=true
         // Register before starting: even an IO read may finish before launch returns.
@@ -422,8 +423,8 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
             val request=currentCoroutineContext().job
             try{
                 // PDF/object text is cheap and deterministic; handwriting recognition stays opt-in.
-                val pdfText=app.documentRendering.text(page.id,selection.region.bounds)
-                val objectText=objectsUi.objects.filter{!it.hidden&&authoringUi.state.layers.visible(LayerContent(LayerContentKind.OBJECT,it.id))&&it.kind in setOf(PageObjectKind.TEXT,PageObjectKind.FORMULA)&&it.bounds().intersects(selection.region.bounds)}.joinToString("\n"){it.visibleText()}
+                val pdfText=app.documentRendering.text(page.id,selection.region)
+                val objectText=objectsUi.objects.filter{!it.hidden&&authoringUi.state.layers.visible(LayerContent(LayerContentKind.OBJECT,it.id))&&it.kind in setOf(PageObjectKind.TEXT,PageObjectKind.FORMULA)&&excerptGeometry.selects(selection.region,it,precise=true)}.joinToString("\n"){it.visibleText()}
                 val inkText=if(recognizeInk&&strokes.isNotEmpty())app.handwriting.recognize(strokes).text else ""
                 val text=listOf(pdfText,objectText,inkText).filter{it.isNotBlank()}.joinToString("\n").take(20000)
                 if(current()){

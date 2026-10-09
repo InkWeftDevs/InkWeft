@@ -37,12 +37,13 @@ sealed interface KnowledgeData {
 
 /** Closed declarative format: no executable payload or arbitrary property names. */
 object KnowledgeCodec {
-    const val MAX_BYTES=32768
+    const val MAX_BYTES=524_288
+    const val MAX_RECORDS_PER_NOTEBOOK=20_000
     fun validate(v:KnowledgeData){
         fun id(s:String){UUID.fromString(s)}
         when(v){
             is KnowledgeData.PageMark->{id(v.pageId);require(v.title.isNotBlank()&&v.title.length<=120);require(v.depth in 0..3&&(!v.bookmark||v.depth==0))}
-            is KnowledgeData.Anchor->{id(v.pageId);require(v.inkRevision>=0);require(v.strokeIds.size in 1..256&&v.strokeIds.distinct().size==v.strokeIds.size);v.strokeIds.forEach(::id)
+            is KnowledgeData.Anchor->{id(v.pageId);require(v.inkRevision>=0);require(v.strokeIds.size in 1..InkSelectionEdit.MAX_SELECTED&&v.strokeIds.distinct().size==v.strokeIds.size);v.strokeIds.forEach(::id)
                 require(v.bounds.left>=-BoardLimits.WORLD&&v.bounds.right<=BoardLimits.WORLD&&v.bounds.top>=-BoardLimits.WORLD&&v.bounds.bottom<=BoardLimits.WORLD)}
             is KnowledgeData.Link->{require(v.annotation.length<=2000);require(v.pinnedRevision==null||v.target.kind==TargetKind.CARD&&v.pinnedRevision>0);require(v.source!=v.target)}
             is KnowledgeData.CardPresentation->{id(v.cardId);require(v.annotation.length<=CardPresentationRules.MAX_ANNOTATION)}
@@ -106,7 +107,7 @@ object KnowledgeCodec {
             fun list(max:Int):List<String>{val n=d.readInt();require(n in 0..max);return List(n){d.readUTF()}}
             val value=when(d.readUTF()){
                 "PAGE_MARK"->KnowledgeData.PageMark(d.readUTF(),d.readUTF(),d.readBoolean(),d.readInt())
-                "ANCHOR"->KnowledgeData.Anchor(d.readUTF(),d.readLong(),CanvasBounds(d.readDouble(),d.readDouble(),d.readDouble(),d.readDouble()),list(256))
+                "ANCHOR"->KnowledgeData.Anchor(d.readUTF(),d.readLong(),CanvasBounds(d.readDouble(),d.readDouble(),d.readDouble(),d.readDouble()),list(InkSelectionEdit.MAX_SELECTED))
                 "LINK"->KnowledgeData.Link(ref(),ref(),RelationKind.valueOf(d.readUTF()),d.readLong().let{require(it>=0);if(it==0L)null else it})
                 "LINK_V2"->KnowledgeData.Link(ref(),ref(),RelationKind.valueOf(d.readUTF()),d.readLong().let{require(it>=0);if(it==0L)null else it},
                     RelationLineStyle.valueOf(d.readUTF()),RelationDirection.valueOf(d.readUTF()),d.readUTF(),d.readBoolean())
@@ -117,8 +118,8 @@ object KnowledgeCodec {
                 "PLACEMENT"->KnowledgeData.Placement(d.readUTF(),d.readDouble(),d.readDouble())
                 "ALIAS"->KnowledgeData.Alias(d.readUTF(),d.readUTF())
                 "MAP"->KnowledgeData.MapDefinition(d.readUTF())
-                "MAP_V2"->{val title=d.readUTF();val layout=d.readUTF();val count=d.readInt();require(count in 0..128);KnowledgeData.MapDefinition(title,layout,List(count){MapStructure(d.readUTF(),d.readUTF().ifEmpty{null},d.readUTF(),d.readDouble(),d.readDouble())})}
-                "MAP_TEMPLATE_V1"->{val title=d.readUTF();val version=d.readInt();val layout=d.readUTF();val count=d.readInt();require(count in 0..128);KnowledgeData.MapTemplate(title,version,layout,List(count){TemplateNode(d.readUTF(),d.readInt().let{require(it>=-1);it.takeIf{it>=0}},d.readDouble(),d.readDouble())})}
+                "MAP_V2"->{val title=d.readUTF();val layout=d.readUTF();val count=d.readInt();require(count in 0..StudyGraph.MAX_NODES);KnowledgeData.MapDefinition(title,layout,List(count){MapStructure(d.readUTF(),d.readUTF().ifEmpty{null},d.readUTF(),d.readDouble(),d.readDouble())})}
+                "MAP_TEMPLATE_V1"->{val title=d.readUTF();val version=d.readInt();val layout=d.readUTF();val count=d.readInt();require(count in 0..StudyGraph.MAX_NODES);KnowledgeData.MapTemplate(title,version,layout,List(count){TemplateNode(d.readUTF(),d.readInt().let{require(it>=-1);it.takeIf{it>=0}},d.readDouble(),d.readDouble())})}
                 "MAP_NODE"->KnowledgeData.MapOccurrence(d.readUTF(),d.readUTF(),d.readUTF().ifEmpty{null},d.readDouble(),d.readDouble())
                 "MAP_ORDER_V1"->KnowledgeData.MapOrder(d.readUTF().ifEmpty{null},list(StudyGraph.MAX_NODES))
                 "MAP_PORTAL_V1"->KnowledgeData.MapPortal(d.readUTF().ifEmpty{null},d.readUTF(),d.readUTF().ifEmpty{null})

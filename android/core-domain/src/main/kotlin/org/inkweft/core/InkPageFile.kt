@@ -6,13 +6,14 @@ import java.util.Collections
 
 /** Visible content copy, including effective masks; not vault or undo history. */
 class InkPageFile(val title:String,val text:String,strokes:List<InkStroke>,val world:Boolean=false,val paper:PaperStyle=PaperStyle.RULED,objects:List<PageObject> = emptyList(),val source:PdfPageSource?=null,imageSources:List<ImageSource> = emptyList(),val authoring:PageAuthoring?=null){
-    val objects:List<PageObject> = Collections.unmodifiableList(objects.mapNotNull{o->val refs=o.sourceStrokeIds.filter{id->strokes.any{it.id==id}};if(o.hidden&&refs.isEmpty())null else o.copy(sourceStrokeIds=refs,textRuns=o.textRuns.map{it.copy(sourceIds=it.sourceIds.filter{v->v in refs})})})
+    private val strokeIds=strokes.map{it.id}.toSet()
+    val objects:List<PageObject> = Collections.unmodifiableList(objects.mapNotNull{o->val refs=o.sourceStrokeIds.filter{it in strokeIds};if(o.hidden&&refs.isEmpty())null else o.copy(sourceStrokeIds=refs,textRuns=o.textRuns.map{it.copy(sourceIds=it.sourceIds.filter{v->v in refs})})})
     val imageSources:List<ImageSource> = Collections.unmodifiableList(imageSources.distinctBy{it.sha256})
     val strokes:List<InkStroke> = Collections.unmodifiableList(ArrayList(strokes))
     init{authoring?.let(PageAuthoringCodec::encode);require(objects.mapNotNull{it.imageSource}.toSet()==this.imageSources.map{it.sha256}.toSet()){"IMAGE_ORIGINAL_CLOSURE"};require(source==null||!world);PageObjectCodec.encode(objects);require(title.isNotBlank()&&title.length<=120&&text.length<=100_000);require(strokes.size<=InkLimits.MAX_STROKES&&strokes.map{it.id}.distinct().size==strokes.size);require(strokes.sumOf{it.samples.size}<=InkLimits.MAX_PAGE_POINTS);require(strokes.all{it.world==world})}
     fun encode(includeSource:Boolean=true):ByteArray {
         require(objects.none{it.mapEmbed?.policy==MapEmbedPolicy.LIVE}){"LIVE_MAP_REQUIRES_FULL_BACKUP_OR_SNAPSHOT"}
-        val body=ByteArrayOutputStream();DataOutputStream(body).use{out->
+        val body=ChecksummedBuffer();DataOutputStream(body).use{out->
             val withSource=includeSource&&source!=null
             out.writeInt(if(authoring!=null)0x49575038 else if(imageSources.isNotEmpty())0x49575037 else if(withSource)0x49575036 else if(objects.isNotEmpty())0x49575035 else if(strokes.any{s->s.cuts.any{it.shape!=InkCutShape.ROUND}})0x49575034 else if(strokes.any{it.cuts.isNotEmpty()})0x49575033 else 0x49575032);out.writeBoolean(world);out.writeByte(paper.ordinal)
             fun field(t:String){val b=t.toByteArray(Charsets.UTF_8);out.writeInt(b.size);out.write(b)}
@@ -26,7 +27,7 @@ class InkPageFile(val title:String,val text:String,strokes:List<InkStroke>,val w
                 imageSources.forEach{source->val bytes=source.bytes();require(body.size().toLong()+bytes.size+36<=MAX_BYTES);out.writeInt(bytes.size);out.write(bytes)}
             }
             authoring?.let{val bytes=PageAuthoringCodec.encode(it);out.writeInt(bytes.size);out.write(bytes)}
-        };val bytes=body.toByteArray();require(bytes.size+32<=MAX_BYTES);return bytes+MessageDigest.getInstance("SHA-256").digest(bytes)
+        };return body.finish(MAX_BYTES)
     }
     companion object {
         const val MAX_BYTES=64_000_000
