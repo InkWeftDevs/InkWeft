@@ -10,6 +10,10 @@ internal data class BeautyReview(
     val candidate:PageObject?,val reason:String?,val open:Boolean=false,val preview:Boolean=false,val trace:BeautyDiagnostics.Trace?=null
 )
 
+/** A touched neighbour is valid for moving, but must not become recognition source by accident. */
+internal fun manualBeautySources(selection:SelectedInk,geometry:VisibleInkGeometry=VisibleInkGeometry())=
+    selection.strokes.filter{it.pen!=InkPen.HIGHLIGHTER&&geometry.selects(selection.region,it,precise=true)}
+
 internal fun RecognizedWriting.corrected(text:String):RecognizedWriting {
     val lines=text.lines()
     return copy(text=text,regions=if(lines.size==regions.size)regions.zip(lines){r,s->r.copy(text=s,tokens=emptyList(),score=-1f)}else emptyList(),tokens=emptyList(),confidence=-1f)

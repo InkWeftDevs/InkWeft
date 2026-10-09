@@ -31,6 +31,7 @@ import androidx.compose.ui.graphics.Color
 import org.inkweft.app.ui.designsystem.InkTheme
 
 internal val LocalEditorToolMenu=staticCompositionLocalOf{false}
+internal val LocalEditorTransientLock=staticCompositionLocalOf{false}
 
 /** The same target, selection, disabled color and tooltip for every editor shortcut. */
 @OptIn(ExperimentalMaterial3Api::class)
@@ -38,6 +39,11 @@ internal val LocalEditorToolMenu=staticCompositionLocalOf{false}
     enabled:Boolean=true,selected:Boolean?=null,onClick:()->Unit){
     val target=modifier.testTag(tag).describedAs(label).then(
         if(selected==null)Modifier else Modifier.semantics{this.selected=selected})
+    val transientLock=LocalEditorTransientLock.current
+    var settledEnabled by remember(tag){mutableStateOf(enabled)}
+    SideEffect{if(!transientLock)settledEnabled=enabled}
+    val visualEnabled=if(transientLock)settledEnabled else enabled
+    val tone=if(selected==true)MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
     if(LocalEditorToolMenu.current){
         DropdownMenuItem(text={Text(label)},leadingIcon={Glyph(icon)},enabled=enabled,
             modifier=target.heightIn(min=48.dp),onClick=onClick)
@@ -46,9 +52,9 @@ internal val LocalEditorToolMenu=staticCompositionLocalOf{false}
         IconButton(onClick,enabled=enabled,modifier=target.size(48.dp),
             colors=IconButtonDefaults.iconButtonColors(
                 containerColor=Color.Transparent,
-                contentColor=if(selected==true)MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
-                disabledContentColor=MaterialTheme.colorScheme.onSurface.copy(alpha=.38f))){
-            Box(Modifier.size(36.dp).background(if(selected==true&&enabled)InkTheme.Selected else Color.Transparent,RoundedCornerShape(7.dp)),contentAlignment=Alignment.Center){
+                contentColor=tone,
+                disabledContentColor=if(visualEnabled)tone else MaterialTheme.colorScheme.onSurface.copy(alpha=.38f))){
+            Box(Modifier.size(36.dp).background(if(selected==true&&visualEnabled)InkTheme.Selected else Color.Transparent,RoundedCornerShape(7.dp)),contentAlignment=Alignment.Center){
                 Glyph(icon,modifier=Modifier.size(24.dp))
             }
         }

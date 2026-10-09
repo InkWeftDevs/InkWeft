@@ -89,12 +89,18 @@ internal object CanvasSelectionEdit {
 @Composable internal fun SelectionSettings(value:SelectionOptions,freehand:Boolean,dismiss:()->Unit,all:()->Unit,change:(SelectionOptions,Boolean)->Unit){
     EditorPanel("套索","",dismiss,"selection-settings",kind=PanelKind.SETTINGS){
         Column(Modifier.verticalScroll(rememberScrollState())){
+            Text("选择规则",style=MaterialTheme.typography.labelLarge)
             Row(horizontalArrangement=Arrangement.spacedBy(6.dp)){
-                FilterChip(freehand&&!value.precise,{change(value.copy(precise=false),true)},label={Text("自由")},modifier=Modifier.testTag("lasso-free"))
-                FilterChip(!freehand&&!value.precise,{change(value.copy(precise=false),false)},label={Text("矩形")},modifier=Modifier.testTag("lasso-rectangle"))
-                FilterChip(value.precise,{change(value.copy(precise=true),true)},label={Text("精确")},modifier=Modifier.testTag("lasso-precise"))
+                FilterChip(!value.precise,{change(value.copy(precise=false),freehand)},label={Text("碰到即选")},modifier=Modifier.testTag("lasso-touch"))
+                FilterChip(value.precise,{change(value.copy(precise=true),freehand)},label={Text("完整圈入")},modifier=Modifier.testTag("lasso-precise"))
             }
             Text(if(value.precise)"完整圈住才选中"else"碰到一部分即可选中整项",style=MaterialTheme.typography.bodySmall,color=Quiet)
+            HorizontalDivider(Modifier.padding(vertical=8.dp),color=Line)
+            Text("选区形状",style=MaterialTheme.typography.labelLarge)
+            Row(horizontalArrangement=Arrangement.spacedBy(6.dp)){
+                FilterChip(freehand,{change(value,true)},label={Text("自由套索")},modifier=Modifier.testTag("lasso-free"))
+                FilterChip(!freehand,{change(value,false)},label={Text("矩形")},modifier=Modifier.testTag("lasso-rectangle"))
+            }
             HorizontalDivider(Modifier.padding(vertical=8.dp),color=Line)
             TextButton(all,modifier=Modifier.testTag("selection-all")){Text("全选本页")}
             SelectionType.entries.forEach{type->Row(Modifier.fillMaxWidth().heightIn(min=48.dp),verticalAlignment=Alignment.CenterVertically){

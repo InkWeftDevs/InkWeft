@@ -47,12 +47,12 @@ internal class PageObjectViewModel(private val pageId:String,private val repo:Pa
         if(!current(r.inkRevision,r.objectRevision)){dismissBeauty();return}
         reviewState.value=prepareBeautyReview(r.strokes,r.result.corrected(text),options,r.world,r.inkRevision,r.objectRevision,r.previous,r.affected,r.automatic,latestInk.strokes,snapshot.objects).copy(open=true,preview=r.preview,trace=r.trace)
     }
-    fun acceptBeauty(){
+    fun acceptBeauty(onApplied:(PageObject)->Unit={}){
         val r=reviewState.value?:return;val o=r.candidate?:return
         if(!current(r.inkRevision,r.objectRevision)){dismissBeauty();return}
-        commitBeauty(r,o,false)
+        commitBeauty(r,o,false,onApplied)
     }
-    private fun commitBeauty(r:BeautyReview,o:PageObject,automaticCommit:Boolean=r.automatic){
+    private fun commitBeauty(r:BeautyReview,o:PageObject,automaticCommit:Boolean=r.automatic,onApplied:(PageObject)->Unit={}){
         val replaced=r.previous?.id?.takeIf{it==o.id}
         runCatching{r.trace?.let{trace->
             trace.record("automatic_commit",automaticCommit)
@@ -66,6 +66,7 @@ internal class PageObjectViewModel(private val pageId:String,private val repo:Pa
             beautyKnown=beautyKnown.orEmpty()+r.strokes.map{it.id};if(r.automatic)lastAutomatic=o.id
             val ids=r.strokes.map{it.id}.toSet();beautyWaiting.keys.removeAll{key->key.any{it in ids}}
             reviewState.value=null;beautyState.value=null;showWaitingBeauty()
+            onApplied(o)
         })
         if(pending==null){
             val review=r.copy(reason=state.value.error?:"结果尚未保存，已保留原迹",open=!automaticCommit)
@@ -149,7 +150,7 @@ internal class PageObjectViewModel(private val pageId:String,private val repo:Pa
     fun beautify(selection:SelectedInk,options:BeautyOptions,world:Boolean,app:InkWeftApplication){
         diagnostics=app.diagnostics
         beautyJob?.cancel()
-        beautyJob=viewModelScope.launch{convertBeauty(selection.strokes.filter{it.pen!=InkPen.HIGHLIGHTER},selection.revision,options,world,app,null,false)}
+        beautyJob=viewModelScope.launch{convertBeauty(manualBeautySources(selection),selection.revision,options,world,app,null,false)}
     }
     private suspend fun convertBeauty(strokes:List<InkStroke>,revision:Long,options:BeautyOptions,world:Boolean,app:InkWeftApplication,previous:PageObject?,automatic:Boolean,affected:Set<String> = emptySet()):Boolean{
         if(strokes.isEmpty()||strokes.size>256)return false
@@ -278,26 +279,45 @@ internal class PageObjectViewModel(private val pageId:String,private val repo:Pa
     }
     /** The ViewModel owns decoding so rotation cannot cancel an accepted camera result. */
     fun importImage(context:android.content.Context,uri:android.net.Uri,world:Boolean,viewport:CanvasViewport,
+        cleanup:java.io.File?=null,onSelected:(String)->Unit={}) =
+        importImages(context,listOf(uri),world,viewport,cleanup,onSelected)
+
+    fun importImages(context:android.content.Context,uris:List<android.net.Uri>,world:Boolean,viewport:CanvasViewport,
         cleanup:java.io.File?=null,onSelected:(String)->Unit={}) {
+        if(uris.isEmpty())return
         viewModelScope.launch {
+            ui.first{!it.loading}
+            if(!authorAllowed()||state.value.busy||state.value.pending)return@launch
+            state.value=state.value.copy(busy=true,error=null)
             try {
-                ui.first{!it.loading}
-                check(authorAllowed())
-                check(!state.value.busy&&!state.value.pending)
-                state.value=state.value.copy(busy=true,error=null)
-                val (original,bytes)=withContext(Dispatchers.IO){
-                    val raw=CoverImages.readBytes(context.applicationContext,uri)
-                    ImageSource(raw) to CoverImages.normalize(raw,PageObjectCodec.MAX_IMAGE)
+                val selected=uris.distinct()
+                require(selected.size+snapshot.objects.count{!it.hidden}<=PageObjectCodec.MAX_OBJECTS)
+                val sources=withContext(Dispatchers.IO){
+                    var total=0L
+                    selected.map{uri->
+                        val raw=CoverImages.readBytes(context.applicationContext,uri)
+                        total+=raw.size;require(total<=32L*1024*1024)
+                        ImageSource(raw) to CoverImages.normalize(raw,PageObjectCodec.MAX_IMAGE)
+                    }
                 }
-                val size=android.graphics.BitmapFactory.Options().apply{inJustDecodeBounds=true}
-                android.graphics.BitmapFactory.decodeByteArray(bytes,0,bytes.size,size)
-                val width=minOf(500f,500f*size.outWidth/size.outHeight);val height=width*size.outHeight/size.outWidth
-                val x=(viewport.centerX-width/2).toFloat();val y=(viewport.centerY-height/2).toFloat()
-                val o=PageObject(UUID.randomUUID().toString(),PageObjectKind.IMAGE,
-                    if(world)x else x.coerceIn(0f,1000f-width),if(world)y else y.coerceIn(0f,1414f-height),width,height,
-                    image=java.util.Base64.getEncoder().encodeToString(bytes),imageSource=original.sha256)
-                publish();put(o,listOf(original),accepted={cleanup?.delete();onSelected(o.id)})
-            }catch(c:CancellationException){throw c}catch(_:Exception){publish("图片未能加入。支持静态 JPG、PNG、WebP、HEIF，原图最多 20 MB；原件整库上限 32 MB，原件与预览会一同保存。")}
+                val columns=kotlin.math.ceil(kotlin.math.sqrt(sources.size.toDouble())).toInt()
+                val rows=(sources.size+columns-1)/columns
+                val gridWidth=minOf(900f,500f*columns);val gridHeight=minOf(1200f,500f*rows)
+                val cellWidth=gridWidth/columns;val cellHeight=gridHeight/rows
+                val left=(viewport.centerX-gridWidth/2).toFloat().let{if(world)it.coerceIn(-BoardLimits.WORLD,BoardLimits.WORLD-gridWidth)else it.coerceIn(0f,1000f-gridWidth)}
+                val top=(viewport.centerY-gridHeight/2).toFloat().let{if(world)it.coerceIn(-BoardLimits.WORLD,BoardLimits.WORLD-gridHeight)else it.coerceIn(0f,1414f-gridHeight)}
+                val added=sources.mapIndexed{index,(original,bytes)->
+                    val size=android.graphics.BitmapFactory.Options().apply{inJustDecodeBounds=true}
+                    android.graphics.BitmapFactory.decodeByteArray(bytes,0,bytes.size,size)
+                    require(size.outWidth>0&&size.outHeight>0)
+                    val scale=minOf((cellWidth-16)/size.outWidth,(cellHeight-16)/size.outHeight)
+                    val width=size.outWidth*scale;val height=size.outHeight*scale
+                    PageObject(UUID.randomUUID().toString(),PageObjectKind.IMAGE,
+                        left+(index%columns)*cellWidth+(cellWidth-width)/2,top+(index/columns)*cellHeight+(cellHeight-height)/2,width,height,
+                        image=java.util.Base64.getEncoder().encodeToString(bytes),imageSource=original.sha256)
+                }
+                publish();change(snapshot.objects+added,originals=sources.map{it.first},accepted={cleanup?.delete();onSelected(added.last().id)})
+            }catch(c:CancellationException){throw c}catch(_:Exception){publish("这批图片未加入，已有内容保留。每页最多 32 项；支持静态 JPG、PNG、WebP、HEIF，单个原图最多 20 MB，原件整库上限 32 MB。请减少数量或缩小图片后重试。")}
         }
     }
     class Factory(private val id:String,private val repo:PageObjectRepository):ViewModelProvider.Factory {

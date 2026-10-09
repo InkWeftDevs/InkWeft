@@ -55,7 +55,10 @@ internal object InkBrushes {
     private val families=object:LinkedHashMap<Pair<InkPen,StrokeAppearance>,BrushFamily>(64,.75f,true){override fun removeEldestEntry(eldest:MutableMap.MutableEntry<Pair<InkPen,StrokeAppearance>,BrushFamily>?)=size>64}
     fun brush(pen:InkPen,color:Int,width:Float,hasPressure:Boolean,appearance:StrokeAppearance=StrokeAppearance()):Brush {
         val family=when {
-            appearance.recipe.version==1&&(pen==InkPen.PEN||pen==InkPen.PENCIL||pen==InkPen.BALLPOINT)->synchronized(families){families.getOrPut(pen to appearance){modern(pen,appearance)}}
+            appearance.recipe.version==1&&(pen==InkPen.PEN||pen==InkPen.PENCIL||pen==InkPen.BALLPOINT)->synchronized(families){
+                val familyAppearance=if(pen==InkPen.PENCIL)appearance else StrokeAppearance(appearance.recipe)
+                families.getOrPut(pen to familyAppearance){modern(pen,familyAppearance)}
+            }
             pen==InkPen.HIGHLIGHTER||pen==InkPen.MARKER->chisel
             pen==InkPen.BRUSH->if(hasPressure)brushPressure else brushSpeed
             pen==InkPen.PEN->if(hasPressure)fountainPressure else fountainSpeed

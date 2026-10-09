@@ -26,7 +26,8 @@ data class TextErasePath(val start:Int,val end:Int,val radius:Float,val points:L
         points=points.map{TextErasePoint(it.x*scale+dx,it.y*scale+dy)})
 }
 
-/** Immutable author data. List order is object stacking order; ink sits above images/text. */
+/** Immutable author data. Within a user layer, images are backdrops, text/shapes follow,
+ * and tapes are foreground. List order controls stacking within each of those groups. */
 data class PageObject(
     val id:String, val kind:PageObjectKind,
     val x:Float=100f, val y:Float=180f, val width:Float=400f, val height:Float=220f,

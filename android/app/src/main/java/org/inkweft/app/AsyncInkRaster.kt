@@ -111,9 +111,11 @@ internal class AsyncInkRaster(private val changed:()->Unit,private val failed:()
         }
         else fallback?.let{prior->
             if(prior.key==key){drawEditedFrame(c,prior,strokes);return}
-            val oldFactor=prior.key.viewport.zoom*prior.key.density;val factor=viewport.zoom*density;val ratio=factor/oldFactor
-            val m=Matrix().apply{setScale((prior.key.width.toDouble()/prior.bitmap.width*ratio).toFloat(),(prior.key.height.toDouble()/prior.bitmap.height*ratio).toFloat());postTranslate((width/2.0-prior.key.width/2.0*ratio+(prior.key.viewport.centerX-viewport.centerX)*factor).toFloat(),(height/2.0-prior.key.height/2.0*ratio+(prior.key.viewport.centerY-viewport.centerY)*factor).toFloat())}
-            c.drawBitmap(prior.bitmap,m,paint)
+            // A translated viewport bitmap cannot provide newly revealed ink, and native
+            // mesh antialiasing depends on the current clip. Draw the visible source at
+            // the current transform until a complete worker frame can be published.
+            val visible=viewport.visible(width.toDouble(),height.toDouble(),density)
+            drawStrokes(c,key,strokes.filter{it.bounds().intersects(visible)},transform(key))
         }
     }
     /** Keep unchanged pixels while rebuilding an edit. Repaint the damaged area in stacking order,
@@ -123,26 +125,36 @@ internal class AsyncInkRaster(private val changed:()->Unit,private val failed:()
         val reordered=prior.strokes.filter{it.id in after}.map{it.id}!=strokes.filter{it.id in before}.map{it.id}
         val changed=if(reordered)prior.strokes+strokes else
             prior.strokes.filter{s->after[s.id]?.let{same(s,it)}!=true}+strokes.filter{s->before[s.id]?.let{same(s,it)}!=true}
-        val key=prior.key;val factor=(key.viewport.zoom*key.density).toFloat()
-        val matrix=Matrix().apply{setScale(factor,factor);postTranslate((key.width/2-key.viewport.centerX*factor).toFloat(),(key.height/2-key.viewport.centerY*factor).toFloat())}
-        val bounds=changed.map{it.bounds()}.reduceOrNull{a,b->a.union(b)}
-        if(bounds==null){c.drawBitmap(prior.bitmap,null,Rect(0,0,key.width,key.height),paint);return}
-        val dirty=RectF(bounds.left.toFloat(),bounds.top.toFloat(),bounds.right.toFloat(),bounds.bottom.toFloat())
-        matrix.mapRect(dirty)
-        // Align the seam to pixels and include antialiasing coverage beyond author-space bounds.
-        dirty.set(floor(dirty.left)-2f,floor(dirty.top)-2f,ceil(dirty.right)+2f,ceil(dirty.bottom)+2f)
-        val saved=c.save();c.clipOutRect(dirty);c.drawBitmap(prior.bitmap,null,Rect(0,0,key.width,key.height),paint);c.restoreToCount(saved)
-        val damaged=c.save();c.clipRect(dirty);c.concat(matrix)
-        if(!key.world&&!key.embedded)c.clipRect(0f,0f,1000f,1414f)
-        val pencil=PencilTileRenderer(min(.5f,1f/factor),false)
+        val key=prior.key;val factor=key.viewport.zoom*key.density;val matrix=transform(key)
+        val visible=key.viewport.visible(key.width.toDouble(),key.height.toDouble(),key.density)
+        val extents=changed.map{it.bounds().padded(2.0/factor)}.filter{it.intersects(visible)}.distinct()
+        if(extents.isEmpty()){c.drawBitmap(prior.bitmap,null,Rect(0,0,key.width,key.height),paint);return}
+        val dirty=Path()
+        extents.forEach{bounds->
+            val rect=RectF(bounds.left.toFloat(),bounds.top.toFloat(),bounds.right.toFloat(),bounds.bottom.toFloat());matrix.mapRect(rect)
+            // Separate patches avoid repainting all ink between distant erased strokes.
+            dirty.addRect(floor(rect.left),floor(rect.top),ceil(rect.right),ceil(rect.bottom),Path.Direction.CW)
+        }
+        val saved=c.save();c.clipOutPath(dirty);c.drawBitmap(prior.bitmap,null,Rect(0,0,key.width,key.height),paint);c.restoreToCount(saved)
+        val damaged=c.save();c.clipPath(dirty)
+        drawStrokes(c,key,strokes.filter{s->extents.any{s.bounds().intersects(it)}},matrix)
+        c.restoreToCount(damaged)
+    }
+    private fun transform(key:Key):Matrix {
+        val factor=(key.viewport.zoom*key.density).toFloat()
+        return Matrix().apply{setScale(factor,factor);postTranslate((key.width/2-key.viewport.centerX*factor).toFloat(),(key.height/2-key.viewport.centerY*factor).toFloat())}
+    }
+    private fun drawStrokes(c:Canvas,key:Key,strokes:List<InkStroke>,matrix:Matrix){
+        val saved=c.save();c.concat(matrix);if(!key.world&&!key.embedded)c.clipRect(0f,0f,1000f,1414f)
+        val pencil=PencilTileRenderer(min(.5f,(1/(key.viewport.zoom*key.density)).toFloat()),false)
         try{
-            val renderer=InkBrushes.renderer();val extent=bounds.padded(2.0/factor)
-            strokes.filter{it.bounds().intersects(extent)}.forEach{s->
+            val renderer=InkBrushes.renderer()
+            strokes.forEach{s->
                 val clipped=c.save();s.cuts.forEach{c.clipOutPath(VisibleInkGeometry.cutPath(it))}
                 if(s.pen==InkPen.PENCIL)pencil.draw(c,s)else renderer.draw(c,InkBrushes.stroke(s),matrix)
                 c.restoreToCount(clipped)
             }
-        }finally{pencil.clear();c.restoreToCount(damaged)}
+        }finally{pencil.clear();c.restoreToCount(saved)}
     }
     companion object {
         // UI-thread LRU: immutable buffers remain valid while a view still references them.

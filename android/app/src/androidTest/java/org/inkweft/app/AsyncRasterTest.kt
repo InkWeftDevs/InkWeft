@@ -6,6 +6,39 @@ import org.junit.Test
 import org.junit.Assert.*
 import java.util.UUID
 class AsyncRasterTest {
+ @Test fun panPaintsNewlyExposedInkBeforeWorkerCanPublish(){
+  val ins=InstrumentationRegistry.getInstrumentation();val actual=Bitmap.createBitmap(300,300,Bitmap.Config.ARGB_8888)
+  val expected=Bitmap.createBitmap(300,300,Bitmap.Config.ARGB_8888)
+  for(world in listOf(false,true)){
+   fun line(x:Float,y:Float,pen:InkPen,color:Int)=InkStroke(UUID.randomUUID().toString(),pen,color,12f,InkTool.STYLUS,
+    listOf(InkSample(x,y,0,.7f,world=world),InkSample(x+220,y+15,100,.7f,world=world)),world,
+    appearance=StrokeAppearance(BrushRecipe(),123,0f,0f))
+   val ink=listOf(line(50f,110f,InkPen.PEN,Color.BLUE),line(260f,200f,InkPen.PENCIL,Color.BLACK),line(240f,210f,InkPen.HIGHLIGHTER,0x70ffff00))
+   lateinit var raster:AsyncInkRaster
+   val initial=CanvasViewport(150.0,150.0,1.0)
+   ins.runOnMainSync{AsyncInkRaster.clearMemoryCache();raster=AsyncInkRaster({});raster.draw(Canvas(actual),300,300,initial,1.0,world,false,ink)}
+   var pending=true;val deadline=System.nanoTime()+10_000_000_000L
+   while(pending&&System.nanoTime()<deadline){Thread.sleep(10);ins.runOnMainSync{pending=raster.pending}}
+   try{
+    assertFalse(pending)
+    // All draws run in one UI turn: no dispatched worker result can rescue these assertions.
+    ins.runOnMainSync{
+     raster.draw(Canvas(actual),300,300,initial,1.0,world,false,ink);assertTrue(raster.frameReady)
+     for(dx in listOf(70f,135f,210f)){
+      val vp=CanvasViewport(150.0+dx,150.0,1.0);actual.eraseColor(Color.TRANSPARENT)
+      raster.draw(Canvas(actual),300,300,vp,1.0,world,false,ink);assertFalse(raster.frameReady)
+      expected.eraseColor(Color.TRANSPARENT);val c=Canvas(expected);val matrix=Matrix().apply{setTranslate(-dx,0f)}
+      c.concat(matrix);if(!world)c.clipRect(0f,0f,1000f,1414f)
+      val pencil=PencilTileRenderer(.5f,false);val renderer=InkBrushes.renderer()
+      try{ink.forEach{s->if(s.pen==InkPen.PENCIL)pencil.draw(c,s)else renderer.draw(c,InkBrushes.stroke(s),matrix)}}finally{pencil.clear()}
+      val a=IntArray(90_000);val b=IntArray(a.size);actual.getPixels(a,0,300,0,0,300,300);expected.getPixels(b,0,300,0,0,300,300)
+      assertArrayEquals("Newly visible ink and cache seams must be complete during MOVE (world=$world, dx=$dx)",b,a)
+     }
+    }
+   }finally{ins.runOnMainSync{raster.clear();AsyncInkRaster.clearMemoryCache()}}
+  }
+  actual.recycle();expected.recycle()
+ }
  @Test fun editedFallbackPreservesOverlappingPencilAndHighlighterPixels(){
   val ins=InstrumentationRegistry.getInstrumentation();val actual=Bitmap.createBitmap(300,300,Bitmap.Config.ARGB_8888);val expected=Bitmap.createBitmap(300,300,Bitmap.Config.ARGB_8888)
   val vp=CanvasViewport(150.0,150.0,1.0);lateinit var raster:AsyncInkRaster

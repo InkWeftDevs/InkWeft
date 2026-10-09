@@ -22,7 +22,7 @@ class NotebookFile(val title:String,val text:String,pages:List<InkPageFile>) {
         val data=body.toByteArray();return data+MessageDigest.getInstance("SHA-256").digest(data)
     }
     companion object {
-        const val MAX_BYTES=64_000_000
+        const val MAX_BYTES=96_000_000
         private const val MAGIC=0x49574231
         private const val MAGIC2=0x49574232
         fun isBook(bytes:ByteArray)=bytes.size>=4&&DataInputStream(ByteArrayInputStream(bytes)).readInt() in listOf(MAGIC,MAGIC2)

@@ -47,7 +47,10 @@ import kotlinx.coroutines.*
     fun readImage(uri:Uri,cleanup:File?=null) {
         vm.importImage(context,uri,world,viewport()?:CanvasViewport(),cleanup){onSelect(it)}
     }
-    val picker=rememberLauncherForActivityResult(ActivityResultContracts.GetContent()){uri->picking=false;if(uri!=null)readImage(uri)else onDone()}
+    val picker=rememberLauncherForActivityResult(ActivityResultContracts.GetMultipleContents()){uris->
+        picking=false
+        if(uris.isNotEmpty())vm.importImages(context,uris,world,viewport()?:CanvasViewport()){onSelect(it)}else onDone()
+    }
     val camera=rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()){ok->
         val file=cameraPath?.let(::File);cameraPath=null
         if(ok&&file!=null&&file.length()>0)readImage(FileProvider.getUriForFile(context,context.packageName+".diagnostics.files",file),file)

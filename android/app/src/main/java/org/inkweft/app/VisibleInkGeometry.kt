@@ -26,8 +26,12 @@ internal class VisibleInkGeometry {
     }
     fun bounds(stroke:InkStroke)=bounds(path(stroke))
     fun hits(stroke:InkStroke,eraser:List<InkSample>,radius:Float):Boolean {
-        if(!InkHitTest.hits(stroke,eraser,radius))return false
-        val overlap=Path(path(stroke));overlap.op(sweptPath(eraser.map{EraserPoint(it.x,it.y)},radius),Path.Op.INTERSECT)
+        if(eraser.isEmpty())return false
+        return hits(stroke,sweptPath(eraser.map{EraserPoint(it.x,it.y)},radius),eraserBounds(eraser,radius))
+    }
+    fun hits(stroke:InkStroke,mask:Path,bounds:CanvasBounds):Boolean {
+        if(!stroke.bounds().intersects(bounds))return false
+        val overlap=Path(path(stroke));overlap.op(mask,Path.Op.INTERSECT)
         return !overlap.isEmpty
     }
     fun selects(region:InkRegion,stroke:InkStroke,precise:Boolean=false)=stroke.bounds().intersects(region.bounds)&&overlaps(region,path(stroke),precise)
@@ -67,6 +71,7 @@ internal class VisibleInkGeometry {
         return if(precise)inside.isEmpty else !inside.isEmpty
     }
     companion object {
+        fun eraserBounds(points:List<InkSample>,radius:Float)=CanvasBounds(points.minOf{it.x}.toDouble(),points.minOf{it.y}.toDouble(),points.maxOf{it.x}.toDouble(),points.maxOf{it.y}.toDouble()).padded(radius.toDouble())
         private fun bounds(path:Path):CanvasBounds? {
             if(path.isEmpty)return null
             val box=RectF();path.computeBounds(box,true)

@@ -64,8 +64,13 @@ class InkViewModel(private val noteId:String,private val repository:InkRepositor
         writing=true;publish();return command
     }
     internal fun eraseChange(snapshot:List<InkStroke>,path:List<InkSample>,radius:Float,whole:Boolean,onlyHighlighter:Boolean):InkMutation?{
+        if(path.isEmpty())return null
         val candidates=snapshot.filter{it.id !in suppressedIds&&editableContent(it.id)&&(!onlyHighlighter||it.pen==InkPen.HIGHLIGHTER)}
-        val ids=if(whole)candidates.filter{VisibleInkGeometry().hits(it,path,radius)}.map{it.id}else {
+        val ids=if(whole){
+            val geometry=VisibleInkGeometry();val mask=VisibleInkGeometry.sweptPath(path.map{EraserPoint(it.x,it.y)},radius)
+            val bounds=VisibleInkGeometry.eraserBounds(path,radius)
+            candidates.filter{geometry.hits(it,mask,bounds)}.map{it.id}
+        }else {
             val box=CanvasBounds(path.minOf{it.x}.toDouble(),path.minOf{it.y}.toDouble(),path.maxOf{it.x}.toDouble(),path.maxOf{it.y}.toDouble()).padded(radius.toDouble())
             candidates.filter{it.bounds().intersects(box)}.map{it.id}
         }
@@ -90,8 +95,10 @@ class InkViewModel(private val noteId:String,private val repository:InkRepositor
     internal fun validateQueued(strokes:List<InkStroke>){
         val s=checkNotNull(session);check(s.blocked==null&&!erasing)
         val existing=(s.page.strokes.map{it.stroke}+ui.value.strokes).associateBy{it.id}
-        require(existing.size+strokes.size<=InkLimits.MAX_STROKES)
-        require(existing.values.sumOf{it.samples.size}+strokes.sumOf{it.samples.size}<=InkLimits.MAX_PAGE_POINTS)
+        require(existing.size+strokes.size<=InkLimits.MAX_RETAINED_STROKES)
+        require(existing.values.sumOf{it.samples.size}+strokes.sumOf{it.samples.size}<=InkLimits.MAX_RETAINED_POINTS)
+        require(ui.value.strokes.size+strokes.size<=InkLimits.MAX_STROKES)
+        require(ui.value.strokes.sumOf{it.samples.size}+strokes.sumOf{it.samples.size}<=InkLimits.MAX_PAGE_POINTS)
         require(strokes.map{it.id}.distinct().size==strokes.size&&strokes.none{it.id in existing})
     }
     private var checkpointJob:Job?=null
@@ -134,7 +141,11 @@ class InkViewModel(private val noteId:String,private val repository:InkRepositor
         }
         erasing=true;publish()
         viewModelScope.launch{try{
-            val ids=withContext(Dispatchers.Default){snapshot.filter{ensureActive();VisibleInkGeometry().hits(it,path,radius)}.map{it.id}}
+            val ids=withContext(Dispatchers.Default){
+                val geometry=VisibleInkGeometry();val mask=VisibleInkGeometry.sweptPath(path.map{EraserPoint(it.x,it.y)},radius)
+                val bounds=VisibleInkGeometry.eraserBounds(path,radius)
+                snapshot.filter{ensureActive();geometry.hits(it,mask,bounds)}.map{it.id}
+            }
             if(session===s&&ids.isNotEmpty())erase(ids)
         }catch(c:CancellationException){throw c}catch(_:Exception){mutable.value=mutable.value.copy(message="擦除未被接收，已保存笔迹不变；请检查容量。")}
         finally{erasing=false;publish()}}

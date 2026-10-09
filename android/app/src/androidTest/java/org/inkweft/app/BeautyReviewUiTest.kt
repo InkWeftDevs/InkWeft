@@ -1,6 +1,7 @@
 package org.inkweft.app
 
 import android.graphics.Bitmap
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.lifecycle.ViewModel
@@ -53,6 +54,24 @@ class BeautyReviewUiTest {
         compose.waitUntil(10000){!vm.ui.value.busy&&vm.beautyReview.value==null}
         assertEquals(neighbour,runBlocking{app.pageObjects.read(note.id).objects.first()})
         assertEquals(source.map{it.id},vm.ui.value.objects.last().sourceStrokeIds)
+        compose.onNodeWithTag("object-overlay").assertExists()
+        val saved=vm.ui.value.objects.last()
+        var from=Offset.Zero
+        compose.runOnIdle{
+            fun find(v:android.view.View):InkCanvasView? {
+                if(v is InkCanvasView)return v
+                if(v is android.view.ViewGroup)for(i in 0 until v.childCount)find(v.getChildAt(i))?.let{return it}
+                return null
+            }
+            val view=checkNotNull(find(compose.activity.window.decorView))
+            val p=view.snapshotViewport().worldToScreen((saved.x+saved.width/2).toDouble(),(saved.y+saved.height/2).toDouble(),view.width.toDouble(),view.height.toDouble(),view.resources.displayMetrics.density.toDouble())
+            from=Offset(p.x.toFloat(),p.y.toFloat())
+        }
+        compose.onNodeWithTag("object-overlay").performTouchInput{swipe(from,from+Offset(50f,60f),240)}
+        compose.waitUntil(10000){vm.ui.value.objects.last().y>saved.y+5&&!vm.ui.value.busy}
+        compose.onNodeWithTag("object-overlay").performTouchInput{click(Offset(20f,height-30f))}
+        compose.onNodeWithTag("object-overlay").assertExists()
+        assertEquals(source.size,runBlocking{app.inkRepository.read(note.id).strokes.size})
         shot("fq-paper-applied.png")
     }
 }

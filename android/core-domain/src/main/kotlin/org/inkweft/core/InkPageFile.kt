@@ -29,7 +29,7 @@ class InkPageFile(val title:String,val text:String,strokes:List<InkStroke>,val w
         };val bytes=body.toByteArray();require(bytes.size+32<=MAX_BYTES);return bytes+MessageDigest.getInstance("SHA-256").digest(bytes)
     }
     companion object {
-        const val MAX_BYTES=36_000_000
+        const val MAX_BYTES=64_000_000
         fun decode(bytes:ByteArray):InkPageFile {
             require(bytes.size in 48..MAX_BYTES);val body=bytes.copyOfRange(0,bytes.size-32)
             require(MessageDigest.isEqual(MessageDigest.getInstance("SHA-256").digest(body),bytes.copyOfRange(bytes.size-32,bytes.size)))

@@ -60,6 +60,7 @@ internal class SelectionOverlayView(context:Context):View(context){
     override fun onTouchEvent(e:MotionEvent):Boolean{
         val view=canvasView?:return true
         if(!enabledInput){cancel();return true}
+        if(!view.fingerWrites&&e.getToolType(0)==MotionEvent.TOOL_TYPE_FINGER){cancel();view.onTouchEvent(e);return true}
         if(e.actionMasked==MotionEvent.ACTION_DOWN)view.onTouchEvent(e)
         if(e.pointerCount>1){cancel();view.onTouchEvent(e);return true}
         if(e.actionMasked==MotionEvent.ACTION_CANCEL){cancel();view.onTouchEvent(e);return true}

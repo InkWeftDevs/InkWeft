@@ -11,12 +11,12 @@ import androidx.compose.ui.unit.dp
 import org.inkweft.core.TextFont
 
 @OptIn(ExperimentalLayoutApi::class)
-@Composable internal fun BeautyReviewPanel(value:BeautyReview,vm:PageObjectViewModel){
+@Composable internal fun BeautyReviewPanel(value:BeautyReview,vm:PageObjectViewModel,onApplied:(org.inkweft.core.PageObject)->Unit={}){
     var text by remember(value.inkRevision,value.objectRevision){mutableStateOf(value.result.text)}
     EditorPanel(if(value.options.formula)"校对公式"else"校对美化",if(value.options.formula)"可编辑数学公式"else if(value.options.preserveLayout)"原位换字体"else"段落整理",vm::dismissBeauty,"beauty-review",kind=PanelKind.BEAUTY_REVIEW,footer={
         Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.End){
             TextButton(vm::dismissBeauty,modifier=Modifier.testTag("beauty-review-cancel")){Text("保留原迹")}
-            TextButton(vm::acceptBeauty,enabled=value.candidate!=null,modifier=Modifier.testTag("beauty-review-apply")){Text("应用")}
+            TextButton({vm.acceptBeauty(onApplied)},enabled=value.candidate!=null,modifier=Modifier.testTag("beauty-review-apply")){Text("应用")}
         }
     }){
         Column(Modifier.verticalScroll(rememberScrollState()),verticalArrangement=Arrangement.spacedBy(4.dp)){

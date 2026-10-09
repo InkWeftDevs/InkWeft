@@ -6,9 +6,9 @@ import java.util.UUID
 
 class ReadingHandwritingTest {
     private fun id()=UUID.randomUUID().toString()
-    private fun sourceBook(firstSize:Int,secondSize:Int):NotebookFile {
+    private fun sourceBook(vararg sizes:Int):NotebookFile {
         // Header-only synthetic sources exercise the codec contract, not PDF rendering.
-        val pages=listOf(firstSize,secondSize).map{size->
+        val pages=sizes.map{size->
             val source=PdfDocumentSource(ByteArray(size).also{"%PDF-1.7\n".toByteArray().copyInto(it)},1)
             InkPageFile("p","",emptyList(),source=PdfPageSource(source,0))
         }
@@ -16,14 +16,14 @@ class ReadingHandwritingTest {
         return NotebookFile("b","",pages+InkPageFile("p","",emptyList()))
     }
     @Test fun sourceBookByteLimitIncludesReferencesAndChecksum(){
-        val overhead=sourceBook(9,10).encode().size-19
+        val overhead=sourceBook(9,10,11).encode().size-30
         for(excess in listOf(0,1,8)){
-            val book=sourceBook(PdfDocumentSource.MAX_BYTES,NotebookFile.MAX_BYTES-overhead-PdfDocumentSource.MAX_BYTES+excess)
+            val book=sourceBook(PdfDocumentSource.MAX_BYTES,PdfDocumentSource.MAX_BYTES-1,NotebookFile.MAX_BYTES-overhead-2*PdfDocumentSource.MAX_BYTES+1+excess)
             if(excess==0){
                 val bytes=book.encode();assertEquals(NotebookFile.MAX_BYTES,bytes.size)
-                val copy=NotebookFile.decode(bytes);assertEquals(book.title,copy.title);assertEquals(3,copy.pages.size)
+                val copy=NotebookFile.decode(bytes);assertEquals(book.title,copy.title);assertEquals(4,copy.pages.size)
                 assertEquals(book.pages.map{it.source?.document?.sha256},copy.pages.map{it.source?.document?.sha256})
-                assertEquals(listOf(0,0,null),copy.pages.map{it.source?.page})
+                assertEquals(listOf(0,0,0,null),copy.pages.map{it.source?.page})
             }else assertThrows(IllegalArgumentException::class.java){book.encode()}
         }
     }

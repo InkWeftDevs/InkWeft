@@ -14,8 +14,10 @@ class InkSession(initial:InkPage) {
     private var historyMove:Boolean?=null
     val queued get()=queue.size+if(pending==null)0 else 1
     private fun additions()=(listOfNotNull(pending?.mutation)+queue).flatMap{when(it){is InkMutation.Add->listOf(it.stroke);is InkMutation.Replace->it.added;else->emptyList()}}
-    val canStart get()=blocked==null&&queued<16&&page.strokes.size+additions().size<InkLimits.MAX_STROKES&&
-        page.strokes.sumOf{it.stroke.samples.size}+additions().sumOf{it.samples.size}+InkLimits.MAX_POINTS<=InkLimits.MAX_PAGE_POINTS
+    val canStart get()=blocked==null&&queued<16&&page.strokes.count{it.visible}+additions().size<InkLimits.MAX_STROKES&&
+        page.strokes.sumOf{if(it.visible)it.stroke.samples.size else 0}+additions().sumOf{it.samples.size}+InkLimits.MAX_POINTS<=InkLimits.MAX_PAGE_POINTS&&
+        page.strokes.size+additions().size<InkLimits.MAX_RETAINED_STROKES&&
+        page.strokes.sumOf{it.stroke.samples.size}+additions().sumOf{it.samples.size}+InkLimits.MAX_POINTS<=InkLimits.MAX_RETAINED_POINTS
     val canUndo get()=queued==0&&blocked==null&&undo.isNotEmpty()
     val canRedo get()=queued==0&&blocked==null&&redo.isNotEmpty()
     val undoIdentity:InkMutation? get()=undo.lastOrNull()
@@ -50,13 +52,20 @@ class InkSession(initial:InkPage) {
         check(canStart||(finishInFlight&&queued<17&&blocked==null)||(change !is InkMutation.Add&&queued==0&&blocked==null)){"Resolve pending storage before more input"}
         when(change){
             is InkMutation.Replace->{
-                require(queued==0);require(page.strokes.size+change.added.size<=InkLimits.MAX_STROKES)
-                require(page.strokes.sumOf{it.stroke.samples.size}+change.added.sumOf{it.samples.size}<=InkLimits.MAX_PAGE_POINTS)
+                require(queued==0)
+                val retained=page.strokes.filter{it.visible&&it.stroke.id !in change.hidden}
+                require(retained.size+change.added.size<=InkLimits.MAX_STROKES)
+                require(retained.sumOf{it.stroke.samples.size}+change.added.sumOf{it.samples.size}<=InkLimits.MAX_PAGE_POINTS)
+                require(page.strokes.size+change.added.size<=InkLimits.MAX_RETAINED_STROKES)
+                require(page.strokes.sumOf{it.stroke.samples.size}+change.added.sumOf{it.samples.size}<=InkLimits.MAX_RETAINED_POINTS)
                 require(change.hidden.all{id->page.strokes.any{it.stroke.id==id&&it.visible}})
                 require(change.added.none{s->page.strokes.any{it.stroke.id==s.id}})
             }
-            is InkMutation.Add->{val current=visibleDraft();require(page.strokes.size+additions().size<InkLimits.MAX_STROKES);require(page.strokes.sumOf{it.stroke.samples.size}+additions().sumOf{it.samples.size}+change.stroke.samples.size<=InkLimits.MAX_PAGE_POINTS);require(page.strokes.none{it.stroke.id==change.stroke.id}&&current.none{it.id==change.stroke.id})}
-            is InkMutation.Cut->{val current=visibleDraft().associateBy{it.id};require(page.cuts.size+(listOfNotNull(pending?.mutation)+queue).count{it is InkMutation.Cut}<InkLimits.MAX_CUTS);change.selection.strokeIds.forEach{id->val s=checkNotNull(current[id]);require(s.cuts.size<InkLimits.MAX_CUTS&&s.cuts.sumOf{it.points.size}+change.selection.cut.points.size<=InkLimits.MAX_CUT_POINTS)}}
+            is InkMutation.Add->{val current=visibleDraft();require(current.size<InkLimits.MAX_STROKES);require(current.sumOf{it.samples.size}+change.stroke.samples.size<=InkLimits.MAX_PAGE_POINTS)
+                require(page.strokes.size+additions().size<InkLimits.MAX_RETAINED_STROKES)
+                require(page.strokes.sumOf{it.stroke.samples.size}+additions().sumOf{it.samples.size}+change.stroke.samples.size<=InkLimits.MAX_RETAINED_POINTS)
+                require(page.strokes.none{it.stroke.id==change.stroke.id}&&current.none{it.id==change.stroke.id})}
+            is InkMutation.Cut->{val current=visibleDraft().associateBy{it.id};require(page.cuts.size+(listOfNotNull(pending?.mutation)+queue).count{it is InkMutation.Cut}<InkLimits.MAX_RETAINED_CUTS);change.selection.strokeIds.forEach{id->val s=checkNotNull(current[id]);require(s.cuts.size<InkLimits.MAX_CUTS&&s.cuts.sumOf{it.points.size}+change.selection.cut.points.size<=InkLimits.MAX_CUT_POINTS)}}
             else->Unit
         };queue.add(change);scopes[change]=layerScope
     }

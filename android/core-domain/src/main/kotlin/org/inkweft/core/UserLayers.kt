@@ -83,7 +83,7 @@ class UserLayers(layers:List<UserLayer> = listOf(UserLayer(DEFAULT_ID,"基础层
     companion object {
         const val DEFAULT_ID="00000000-0000-0000-0000-000000000001"
         const val MAX_LAYERS=32
-        const val MAX_CONTENT=2400
+        const val MAX_CONTENT=22_000
         fun legacy(contents:Collection<LayerContent>)=UserLayers(memberships=contents.map{LayerMembership(it,DEFAULT_ID)})
     }
 }

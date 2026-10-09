@@ -40,8 +40,13 @@ internal fun EraserDialog(current:EraserSettings,dismiss:()->Unit,circle:()->Uni
             FilterChip(draft.whole&&!draft.onlyTape,{update(draft.copy(whole=true))},label={Text("整笔擦除")},enabled=!draft.onlyTape,modifier=Modifier.testTag("eraser-whole"))
         }
         Row(Modifier.fillMaxWidth(),verticalAlignment=androidx.compose.ui.Alignment.CenterVertically){
-            Text("擦除直径",Modifier.weight(1f),style=MaterialTheme.typography.bodyMedium)
-            Text("${draft.diameterDp.toInt()} dp",style=MaterialTheme.typography.bodyMedium,modifier=Modifier.testTag("eraser-size-value"))
+            Text("擦除大小",Modifier.weight(1f),style=MaterialTheme.typography.bodyMedium)
+            Text("${draft.diameterDp.toInt()}",style=MaterialTheme.typography.bodyMedium,modifier=Modifier.testTag("eraser-size-value"))
+        }
+        Canvas(Modifier.fillMaxWidth().height(104.dp).testTag("eraser-size-preview")){
+            val radius=draft.diameterDp.dp.toPx()/2
+            drawCircle(androidx.compose.ui.graphics.Color(0x183f7d67),radius)
+            drawCircle(androidx.compose.ui.graphics.Color(0xff24342f),radius,style=Stroke(1.dp.toPx()))
         }
         Slider(draft.diameterDp,{update(draft.copy(diameterDp=it.roundToInt().toFloat()))},valueRange=8f..96f,modifier=Modifier.testTag("eraser-size-slider"))
         TextButton(circle,enabled=!draft.onlyTape,modifier=Modifier.heightIn(min=48.dp).testTag("eraser-circle")){Glyph("area-erase");Spacer(Modifier.width(8.dp));Text("圈选擦除")}

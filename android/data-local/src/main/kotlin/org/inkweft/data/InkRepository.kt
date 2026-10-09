@@ -24,6 +24,8 @@ interface InkDao {
     @Query("SELECT * FROM ink_cuts WHERE id=:id") suspend fun cut(id:String):InkCutRow?
     @Query("SELECT COUNT(*) FROM ink_strokes WHERE noteId=:id") suspend fun count(id:String):Int
     @Query("SELECT COALESCE(SUM(pointCount),0) FROM ink_strokes WHERE noteId=:id") suspend fun pointCount(id:String):Int
+    @Query("SELECT COUNT(*) FROM ink_strokes WHERE noteId=:id AND visible=1") suspend fun visibleCount(id:String):Int
+    @Query("SELECT COALESCE(SUM(pointCount),0) FROM ink_strokes WHERE noteId=:id AND visible=1") suspend fun visiblePointCount(id:String):Int
     @Insert(onConflict=OnConflictStrategy.ABORT) suspend fun insertPage(row:InkPageRow)
     @Insert(onConflict=OnConflictStrategy.ABORT) suspend fun insertStroke(row:InkStrokeRow)
     @Insert(onConflict=OnConflictStrategy.ABORT) suspend fun insertReceipt(row:InkReceiptRow)
@@ -130,10 +132,11 @@ class InkRepository(private val db:NoteDatabase,private val fault:(InkFaultPoint
     private suspend fun owner(id:String)=db.pages().get(id)?:NotebookPages(db).ensureFirst(id)
     suspend fun read(noteId:String):InkPage=db.withTransaction {
         val owner=owner(noteId);val page=dao.page(noteId);val rows=dao.strokes(noteId)
-        check(rows.size<=InkLimits.MAX_STROKES&&rows.sumOf{it.pointCount}<=InkLimits.MAX_PAGE_POINTS)
+        check(rows.size<=InkLimits.MAX_RETAINED_STROKES&&rows.sumOf{it.pointCount}<=InkLimits.MAX_RETAINED_POINTS)
+        check(rows.count{it.visible}<=InkLimits.MAX_STROKES&&rows.sumOf{if(it.visible)it.pointCount else 0}<=InkLimits.MAX_PAGE_POINTS)
         val decoded=rows.map{val s=InkStrokeCodec.decode(it.payload);check(s.id==it.id&&s.samples.size==it.pointCount&&s.world==owner.world);StoredInk(s,it.visible,it.createdRevision)}
         val ids=decoded.map{it.stroke.id}.toSet()
-        val cuts=dao.cuts(noteId);check(cuts.size<=InkLimits.MAX_CUTS)
+        val cuts=dao.cuts(noteId);check(cuts.size<=InkLimits.MAX_RETAINED_CUTS)
         val masks=cuts.map{r->val cut=InkCutCodec.decode(r.payload);check(cut.id==r.id);val target=r.strokeIds.split(',');check(target.all{it in ids});StoredCut(EraseSelection(cut,target),r.visible,r.createdRevision)}
         check(page!=null||(rows.isEmpty()&&masks.isEmpty()))
         InkPage(noteId,page?.revision?:0,decoded,masks).also{InkSession(it).visibleDraft()}
@@ -149,23 +152,31 @@ class InkRepository(private val db:NoteDatabase,private val fault:(InkFaultPoint
             val next=command.expectedRevision+1
             val visible=when(val change=command.mutation){
                 is InkMutation.Replace->{
-                    if(dao.count(command.noteId)+change.added.size>InkLimits.MAX_STROKES ||
-                        dao.pointCount(command.noteId)+change.added.sumOf{it.samples.size}>InkLimits.MAX_PAGE_POINTS)
+                    if(dao.count(command.noteId)+change.added.size>InkLimits.MAX_RETAINED_STROKES ||
+                        dao.pointCount(command.noteId)+change.added.sumOf{it.samples.size}>InkLimits.MAX_RETAINED_POINTS)
                         return@withTransaction InkCommitResult.Rejected
-                    for(id in change.hidden){val row=dao.stroke(id);if(row==null||row.noteId!=command.noteId||!row.visible)return@withTransaction InkCommitResult.Conflict}
+                    var replacedPoints=0
+                    for(id in change.hidden){val row=dao.stroke(id);if(row==null||row.noteId!=command.noteId||!row.visible)return@withTransaction InkCommitResult.Conflict;replacedPoints+=row.pointCount}
+                    if(dao.visibleCount(command.noteId)-change.hidden.size+change.added.size>InkLimits.MAX_STROKES||
+                        dao.visiblePointCount(command.noteId)-replacedPoints+change.added.sumOf{it.samples.size}>InkLimits.MAX_PAGE_POINTS)return@withTransaction InkCommitResult.Rejected
                     if(change.added.any{it.world!=owner.world||dao.stroke(it.id)!=null})return@withTransaction InkCommitResult.Rejected
                     true
                 }
                 is InkMutation.Swap->{
-                    for(id in change.hide){val row=dao.stroke(id);if(row==null||row.noteId!=command.noteId||!row.visible)return@withTransaction InkCommitResult.Conflict}
-                    for(id in change.show){val row=dao.stroke(id);if(row==null||row.noteId!=command.noteId||row.visible)return@withTransaction InkCommitResult.Conflict}
+                    var hiddenPoints=0;var shownPoints=0
+                    for(id in change.hide){val row=dao.stroke(id);if(row==null||row.noteId!=command.noteId||!row.visible)return@withTransaction InkCommitResult.Conflict;hiddenPoints+=row.pointCount}
+                    for(id in change.show){val row=dao.stroke(id);if(row==null||row.noteId!=command.noteId||row.visible)return@withTransaction InkCommitResult.Conflict;shownPoints+=row.pointCount}
+                    if(dao.visibleCount(command.noteId)-change.hide.size+change.show.size>InkLimits.MAX_STROKES||dao.visiblePointCount(command.noteId)-hiddenPoints+shownPoints>InkLimits.MAX_PAGE_POINTS)return@withTransaction InkCommitResult.Rejected
                     true
                 }
-                is InkMutation.Add->{if(change.stroke.world!=owner.world||dao.stroke(change.stroke.id)!=null||dao.count(command.noteId)>=InkLimits.MAX_STROKES||dao.pointCount(command.noteId)+change.stroke.samples.size>InkLimits.MAX_PAGE_POINTS)return@withTransaction InkCommitResult.Rejected;true}
-                is InkMutation.Visibility->{for(id in change.ids){val r=dao.stroke(id);if(r==null||r.noteId!=command.noteId||r.visible==change.visible)return@withTransaction InkCommitResult.Conflict};change.visible}
+                is InkMutation.Add->{if(change.stroke.world!=owner.world||dao.stroke(change.stroke.id)!=null||dao.visibleCount(command.noteId)>=InkLimits.MAX_STROKES||dao.visiblePointCount(command.noteId)+change.stroke.samples.size>InkLimits.MAX_PAGE_POINTS||
+                    dao.count(command.noteId)>=InkLimits.MAX_RETAINED_STROKES||dao.pointCount(command.noteId)+change.stroke.samples.size>InkLimits.MAX_RETAINED_POINTS)return@withTransaction InkCommitResult.Rejected;true}
+                is InkMutation.Visibility->{var points=0;for(id in change.ids){val r=dao.stroke(id);if(r==null||r.noteId!=command.noteId||r.visible==change.visible)return@withTransaction InkCommitResult.Conflict;points+=r.pointCount}
+                    if(change.visible&&(dao.visibleCount(command.noteId)+change.ids.size>InkLimits.MAX_STROKES||dao.visiblePointCount(command.noteId)+points>InkLimits.MAX_PAGE_POINTS))return@withTransaction InkCommitResult.Rejected
+                    change.visible}
                 is InkMutation.Cut->{
                     val c=change.selection;val oldCuts=dao.cuts(command.noteId)
-                    if(dao.cut(c.cut.id)!=null||oldCuts.size>=InkLimits.MAX_CUTS)return@withTransaction InkCommitResult.Rejected
+                    if(dao.cut(c.cut.id)!=null||oldCuts.size>=InkLimits.MAX_RETAINED_CUTS)return@withTransaction InkCommitResult.Rejected
                     val effective=InkSession(read(command.noteId)).visibleDraft().associateBy{it.id}
                     for(id in c.strokeIds){val s=effective[id]?:return@withTransaction InkCommitResult.Conflict;if(s.cuts.size>=InkLimits.MAX_CUTS||s.cuts.sumOf{it.points.size}+c.cut.points.size>InkLimits.MAX_CUT_POINTS)return@withTransaction InkCommitResult.Rejected}
                     true
@@ -186,15 +197,15 @@ class InkRepository(private val db:NoteDatabase,private val fault:(InkFaultPoint
             if(current==null)dao.insertPage(InkPageRow(command.noteId,next))else check(dao.compareAndSet(command.noteId,command.expectedRevision,next)==1)
             when(val change=command.mutation){
                 is InkMutation.Replace->{
-                    if(change.hidden.isNotEmpty())check(dao.setVisibility(command.noteId,change.hidden,false)==change.hidden.size)
+                    change.hidden.chunked(900).forEach{check(dao.setVisibility(command.noteId,it,false)==it.size)}
                     change.added.forEach{stroke->dao.insertStroke(InkStrokeRow(stroke.id,command.noteId,InkStrokeCodec.encode(stroke),stroke.samples.size,true,next))}
                 }
                 is InkMutation.Swap->{
-                    if(change.hide.isNotEmpty())check(dao.setVisibility(command.noteId,change.hide,false)==change.hide.size)
-                    if(change.show.isNotEmpty())check(dao.setVisibility(command.noteId,change.show,true)==change.show.size)
+                    change.hide.chunked(900).forEach{check(dao.setVisibility(command.noteId,it,false)==it.size)}
+                    change.show.chunked(900).forEach{check(dao.setVisibility(command.noteId,it,true)==it.size)}
                 }
                 is InkMutation.Add->dao.insertStroke(InkStrokeRow(change.stroke.id,command.noteId,InkStrokeCodec.encode(change.stroke),change.stroke.samples.size,true,next))
-                is InkMutation.Visibility->check(dao.setVisibility(command.noteId,change.ids,change.visible)==change.ids.size)
+                is InkMutation.Visibility->change.ids.chunked(900).forEach{check(dao.setVisibility(command.noteId,it,change.visible)==it.size)}
                 is InkMutation.Cut->dao.insertCut(InkCutRow(change.selection.cut.id,command.noteId,InkCutCodec.encode(change.selection.cut),change.selection.strokeIds.joinToString(","),true,next))
                 is InkMutation.CutVisibility->check(dao.cutVisibility(change.cutId,command.noteId,change.visible)==1)
             }

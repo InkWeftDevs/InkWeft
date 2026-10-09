@@ -8,6 +8,13 @@ import android.text.TextPaint
 import org.inkweft.core.*
 import java.util.Base64
 
+/** Images are backdrops within their user layer; converted handwriting stays above them. */
+internal fun pageObjectPaintOrder(objects:List<PageObject>)=objects.sortedBy{when(it.kind){
+    PageObjectKind.IMAGE,PageObjectKind.MAP->0
+    PageObjectKind.TAPE->2
+    else->1
+}}
+
 /** Bounded caches; decoded media is shared by transformed copies until the view is detached. */
 internal class PageObjectPainter(private val requireCompleteImages:Boolean=false) {
     var mapScenes:Map<MapRef,MapScene> = emptyMap()
@@ -22,7 +29,7 @@ internal class PageObjectPainter(private val requireCompleteImages:Boolean=false
     private val paint=Paint(Paint.ANTI_ALIAS_FLAG or Paint.FILTER_BITMAP_FLAG)
     fun clear(){RenderResources.releaseOwner(resourceOwner);images.clear();layouts.clear();naturalLayouts.clear();formulaLayouts.clear();graphite.clear();mapScenesResolved.clear();mapScenes=emptyMap()}
     fun draw(canvas:Canvas,objects:List<PageObject>,tapes:Boolean,visible:CanvasBounds,liveErase:Path?=null,wholeErase:Boolean=false) {
-        objects.filter{!it.hidden&&(it.kind==PageObjectKind.TAPE)==tapes&&it.bounds().intersects(visible)}.forEach { source ->
+        pageObjectPaintOrder(objects).filter{!it.hidden&&(it.kind==PageObjectKind.TAPE)==tapes&&it.bounds().intersects(visible)}.forEach { source ->
             val o=if(liveErase!=null&&source.kind==PageObjectKind.TEXT&&source.sourceStrokeIds.isNotEmpty()&&source.glyphs.isEmpty())source.copy(glyphs=TextStyles.positioned(source))else source
             paint.alpha=255;paint.style=Paint.Style.FILL;paint.pathEffect=null
             val save=canvas.save();canvas.clipRect(o.x,o.y,o.x+o.width,o.y+o.height)

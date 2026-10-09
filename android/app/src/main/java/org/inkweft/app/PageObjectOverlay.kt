@@ -42,7 +42,7 @@ internal class PageObjectOverlay(context:Context):View(context) {
                 start=author(e.x,e.y)
                 val old=objects.find{it.id==selected}
                 resize=old?.let{val p=screen(it.x+it.width,it.y+it.height);hypot(e.x-p.x,e.y-p.y)<=24*density}?:false
-                original=if(resize)old else (objects.filter{!it.hidden&&it.kind!=PageObjectKind.TAPE}+objects.filter{!it.hidden&&it.kind==PageObjectKind.TAPE}).asReversed().find{ObjectGeometry.hit(it,start.x.toFloat(),start.y.toFloat())}
+                original=if(resize)old else pageObjectPaintOrder(objects).asReversed().find{!it.hidden&&ObjectGeometry.hit(it,start.x.toFloat(),start.y.toFloat())}
                 draft=original;onSelect(original?.id)
                 if(original?.let{!canEdit(it)}==true){original=null;draft=null;invalidate();return true}
                 if(original!=null){parent?.requestDisallowInterceptTouchEvent(true);onActive(true)}else v.onTouchEvent(e)

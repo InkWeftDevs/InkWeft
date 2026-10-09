@@ -11,8 +11,12 @@ object InkLimits {
     const val WIDTH=1000f
     const val HEIGHT=1414f
     const val MAX_POINTS=8192
-    const val MAX_STROKES=1000
-    const val MAX_PAGE_POINTS=100_000
+    const val MAX_STROKES=10_000
+    const val MAX_PAGE_POINTS=500_000
+    // Live-page capacity and retained undo/source storage are different budgets.
+    const val MAX_RETAINED_STROKES=20_000
+    const val MAX_RETAINED_POINTS=1_000_000
+    const val MAX_RETAINED_CUTS=2048
     const val MAX_STROKE_BYTES=2_000_000
     const val MAX_CUTS=128
     const val MAX_CUT_POINTS=32_768
@@ -47,6 +51,11 @@ class InkStroke(val id:String,val pen:InkPen,val color:Int,val width:Float,val t
     samples:List<InkSample>,val world:Boolean=false,cuts:List<InkCut> = emptyList(),val appearance:StrokeAppearance=if(pen==InkPen.PENCIL)StrokeAppearance(BrushRecipe())else StrokeAppearance()) {
     val samples:List<InkSample> = Collections.unmodifiableList(ArrayList(samples))
     val cuts:List<InkCut> = Collections.unmodifiableList(ArrayList(cuts))
+    internal val cachedBounds:CanvasBounds by lazy {
+        val pad=coverageRadius().toDouble()
+        CanvasBounds(this.samples.minOf{it.x}.toDouble()-pad,this.samples.minOf{it.y}.toDouble()-pad,
+            this.samples.maxOf{it.x}.toDouble()+pad,this.samples.maxOf{it.y}.toDouble()+pad)
+    }
     init {
         UUID.fromString(id);require(width.isFinite()&&width in .5f..48f);require((color ushr 24) in 1..255)
         require(samples.size in 1..InkLimits.MAX_POINTS)
