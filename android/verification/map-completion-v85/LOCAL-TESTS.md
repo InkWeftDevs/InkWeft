@@ -2,10 +2,11 @@
 
 在保留本地未推送修改的测试工作树检出 PR18 最新头；本包不替代实机回执。Room16不迁移表，新布局／归纳记录需要V85读取，先保留完整备份，不建议降级打开新内容。
 
-在 `android` 目录用完整原生依赖执行：
+日常先用 [增量验收入口](FAST-TESTS.md)，将本轮新增与关联回归限制为13个设备方法；V84与V85无需各跑一次完整套件。历版待测在最终候选合并／发布前集中补齐，未执行项目仍为NOT_RUN。
+
+只检查V85新增与修改的11个设备方法时，在 `android` 目录用完整原生依赖执行；任务自动构建所需APK，无需先单独构建、清缓存或重跑已完成的云端核心检查：
 
 ```powershell
-.\gradlew.bat :core-domain:test :app:assembleDebug -PinkweftInsertionPreview=true
 .\gradlew.bat :data-local:connectedDebugAndroidTest "-Pandroid.testInstrumentationRunnerArguments.class=org.inkweft.data.MapCompletionRepositoryTest"
 .\gradlew.bat :app:connectedDebugAndroidTest -PinkweftInsertionPreview=true "-Pandroid.testInstrumentationRunnerArguments.class=org.inkweft.app.MapCompletionUiTest,org.inkweft.app.NoteFirstUiTest#personalTemplateIsAnonymousAndClosingWindowKeepsDraft"
 ```
