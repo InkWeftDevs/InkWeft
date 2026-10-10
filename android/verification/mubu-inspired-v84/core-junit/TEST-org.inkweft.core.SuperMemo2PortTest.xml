@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="org.inkweft.core.SuperMemo2PortTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-10-10T11:38:00.167Z" hostname="4d22d97528bf" time="0.001">
+  <properties/>
+  <testcase name="upstreamFirstReviewSixGrades" classname="org.inkweft.core.SuperMemo2PortTest" time="0.0"/>
+  <testcase name="upstreamRepeatSixGradesAndCeil" classname="org.inkweft.core.SuperMemo2PortTest" time="0.0"/>
+  <testcase name="exactHundredthsDeliberatelyDoNotCompoundBinaryFloatCeilDrift" classname="org.inkweft.core.SuperMemo2PortTest" time="0.001"/>
+  <testcase name="upstreamFloorAndSecondReview" classname="org.inkweft.core.SuperMemo2PortTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

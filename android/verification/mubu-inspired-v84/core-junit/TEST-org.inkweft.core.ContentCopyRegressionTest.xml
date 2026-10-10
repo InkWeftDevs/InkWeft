@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="org.inkweft.core.ContentCopyRegressionTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-10-10T11:37:57.740Z" hostname="4d22d97528bf" time="0.016">
+  <properties/>
+  <testcase name="validOuterChecksumDoesNotBypassNestedPageChecksum" classname="org.inkweft.core.ContentCopyRegressionTest" time="0.011"/>
+  <testcase name="latestAuthoringPageCanBeImportedThroughTheRealTransferEntry" classname="org.inkweft.core.ContentCopyRegressionTest" time="0.003"/>
+  <testcase name="nestedPageParsingUsesOnlyItsBoundedSlice" classname="org.inkweft.core.ContentCopyRegressionTest" time="0.002"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

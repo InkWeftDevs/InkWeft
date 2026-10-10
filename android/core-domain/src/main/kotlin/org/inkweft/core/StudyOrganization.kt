@@ -223,9 +223,28 @@ object StudyOrganization {
             val n=byId.getValue(id);val depth=n.parentId?.let{depths.getValue(it)+1}?:0;depths[id]=depth
             widths[depth]=maxOf(widths[depth]?:0.0,sizes.getValue(id).width)
         }
+        val splitIndices=mutableMapOf<String,Int>()
+        // Split only between complete, consecutive sibling branches. Minimize
+        // occupied height using measured subtrees; never reorder author identities.
+        fun balancedSplit(kids:List<StudyNode>):Int {
+            if(kids.size<=1)return kids.size
+            val total=kids.sumOf{heights.getValue(it.id)};var prefix=0.0
+            var best=1;var bestHeight=Double.POSITIVE_INFINITY;val preferred=(kids.size+1)/2
+            for(index in 1 until kids.size){
+                prefix+=heights.getValue(kids[index-1].id)
+                val left=prefix+48.0*(index-1)
+                val right=total-prefix+48.0*(kids.size-index-1)
+                val occupied=maxOf(left,right)
+                if(occupied<bestHeight||(occupied==bestHeight&&kotlin.math.abs(index-preferred)<kotlin.math.abs(best-preferred))){best=index;bestHeight=occupied}
+            }
+            return best
+        }
         state.orderedNodeIds.asReversed().forEach{id->
             val kids=children[id].orEmpty()
-            val childHeight=if(layout=="bilateral"&&depths.getValue(id)==0)maxOf(groupHeight(kids.filterIndexed{i,_->i%2==0}),groupHeight(kids.filterIndexed{i,_->i%2==1}))else groupHeight(kids)
+            val childHeight=if(layout=="bilateral"&&depths.getValue(id)==0){
+                val split=balancedSplit(kids);splitIndices[id]=split
+                maxOf(groupHeight(kids.take(split)),groupHeight(kids.drop(split)))
+            }else groupHeight(kids)
             heights[id]=maxOf(sizes.getValue(id).height,childHeight)
         }
         val maxDepth=depths.values.maxOrNull()?:0
@@ -242,7 +261,7 @@ object StudyOrganization {
                 var next=nodeTop+(height-groupHeight(group))/2
                 group.forEach{requests[it.id]=next to onLeft;next+=heights.getValue(it.id)+48.0}
             }
-            if(layout=="bilateral"&&depth==0){placeGroup(kids.filterIndexed{i,_->i%2==0},true);placeGroup(kids.filterIndexed{i,_->i%2==1},false)}else placeGroup(kids,left)
+            if(layout=="bilateral"&&depth==0){val split=splitIndices.getValue(id);placeGroup(kids.take(split),true);placeGroup(kids.drop(split),false)}else placeGroup(kids,left)
         }
         if(positions.isNotEmpty()){
             val spanX=positions.maxOf{(id,p)->p.x+sizes.getValue(id).width}-positions.values.minOf{it.x}

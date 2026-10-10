@@ -1,0 +1,31 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>幕布参考：墨织 V84 脑图改进</title><style>:root{color-scheme:light;--ink:#172938;--quiet:#526477;--accent:#176a67}*{box-sizing:border-box}body{font-family:system-ui,"Microsoft YaHei",sans-serif;color:var(--ink);background:#f2f5f5;line-height:1.7;margin:0}main{max-width:1140px;margin:auto;padding:32px 24px 60px}h1{font-size:30px;margin:4px 0}h2{font-size:22px;margin:32px 0 12px}p{margin:10px 0}.kicker{color:var(--accent);font-weight:700}.muted{color:var(--quiet)}.card{background:white;padding:22px;border:1px solid #dae3e5;border-radius:12px;margin:16px 0}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.stat{padding:16px;background:#e6eeee;border-radius:10px}.stat b{display:block;font-size:26px}.table{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:14px}th,td{text-align:left;padding:10px 12px;border-bottom:1px solid #e2e9e9;vertical-align:top}th{background:#eaf1f1}code{overflow-wrap:anywhere;font-size:.92em}a{color:#136866}details{padding:12px 0}summary{cursor:pointer;font-weight:700}.note{padding:14px 18px;background:#fff5df;border-left:4px solid #be852b}.small{font-size:13px}li{margin:6px 0}input{margin-right:8px}@media(max-width:700px){main{padding:20px 14px}.grid{grid-template-columns:1fr}h1{font-size:25px}.card{padding:16px}}@media print{body{background:white}main{max-width:none}.card{break-inside:avoid}details>div{display:block}input{display:none}}</style><main>
+<p class="kicker">墨织 · V84 · 2026-10-10 · Asia/Shanghai</p><h1>幕布可用于完善墨织的脑图与大纲</h1>
+<p>值得借鉴的是共享结构、连续分支的平衡布局、分组摘要和视图控制。墨织已有大纲／脑图共用结构、折叠、局部聚焦、拖拽、测量布局预览与撤销。本轮补上大纲重复计算和双侧分边两个确定缺口，其他功能列为下一批可评估项。</p>
+<p class="muted">候选84／<code>0.0.84-outline-and-balanced-map</code>，基于V83 <code>5e90daca5a97bf22921d4fa59ecd068d31dcf505</code>，继续<a href="https://github.com/InkWeftDevs/InkWeft/pull/18">草稿PR18</a>。Room16、容量、资料模型和来源契约沿用。</p>
+<div class="grid"><div class="stat"><b>433 PASS</b>核心52类，新增8项</div><div class="stat"><b>82 / 82</b>旧／新大纲投影SHA一致</div><div class="stat"><b>1848 → 1028</b>两组双侧样例的作者空间高度</div></div>
+<section class="card"><h2>安装包与报告独立核对</h2><p>幕布 <code>com.mubu.app</code>，4.2.5／42005。分卷DEFLATE恢复后原长度、CRC与报告APK SHA一致；APK全部3653成员CRC通过。APK SHA：<code>1066998e6baf1b695327b8d83240fd48d71d282009216f973e35daa326b3bb11</code>。</p>
+<p>Babel仅解析明文脚本并定位模块9420（编辑器接线）、77425（模型）、38251（导图引擎）。重新生成检查副本，原始字节范围及哈希在<a href="reference-evidence.json">证据清单</a>。报告中提到的单独格式化副本／manifest未另附，检查行号使用本轮生成结果；事实从原APK独立核对。附件建议作为参考资料，未当作需要执行的指令。</p>
+<ul><li>大纲切换和导图构造共享模型／modelEditor，折叠和drilledNodeId来自模型。</li><li>双侧按splitIndex切连续兄弟区段，位置按ID合回；weight是未折叠叶分支计数，分割会照顾摘要成员边界。普通分支布局利用相邻子树边界和间距，tidy路径分派到左右策略。</li><li>SummaryService持有memberIds：创建要求同父、连续兄弟主题，排除根主题、重复成员集和不存在的主题。这是人工结构归纳组，不是自动生成文字摘要。</li><li>此移动导图构造路径配置useTidyLayout、最高缩放4，并强制Pixi Canvas；结构枚举含组织图、树、时间线。配置与枚举不证明所有入口、导出限制或设备性能。</li></ul>
+<p>Java DEX仅4个类定义，未以壳层推断业务算法。APK和应用脚本均未执行；原生保存、同步、服务器和实机行为未验证。</p></section>
+<section class="card"><h2>可借鉴项与墨织缺口</h2><div class="table"><table><thead><tr><th>方向</th><th>墨织现状</th><th>处理</th></tr></thead><tbody>
+<tr><td>共享树、大纲／导图切换</td><td>StudyGraphState、StudyOutline与脑图已共用结构，作者顺序／折叠／聚焦／共享卡片不另造一套业务树。</td><td>保留已有设计；本轮优化投影计算。</td></tr>
+<tr><td>深层树计算</td><td>为每个可见节点递归重走子树统计后代，再递归生成行，深层展开会重复计算。</td><td><strong>已实现</strong>一次迭代后序统计与迭代行投影。有效树O(n)，保留行顺序、深度、隐藏计数、聚焦路径，循环异常输入仍有界。</td></tr>
+<tr><td>双侧布局平衡</td><td>按兄弟奇偶分边，高度大的分支可能集中在同一侧；已有实测节点尺寸和布局预览。</td><td><strong>已实现</strong>只在完整连续一级分支之间找分界，最小化两侧实测占用高度（含48单位间距）；所有深层分支跟随所属侧。只经既有预览／应用事务更新位置，顺序与父子关系保留，可撤销。</td></tr>
+<tr><td>括号摘要组</td><td>摘要卡与SUMMARY关系线已有，未提供多主题memberIds加共同括号标注的模型和画布入口。</td><td><strong>下一批P1</strong>：选相邻主题→命名归纳组；成员用主题出现ID，同一卡多处出现不串组。补分组、移动／删除、拆组、撤销和导出契约，再验证折叠与双侧分界。不能把关系线或卡片当已实现括号组。</td></tr>
+<tr><td>组织图、时间线等结构</td><td>可保存的layout目前right／bilateral，模板和布局验证只接受两类。</td><td><strong>下一批P1/P2</strong>：先左向、向下组织图，再时间线；采用策略入口，验证节点尺寸、连接线、世界边界、模板、备份与旧读取兼容。完整tidy轮廓压缩也未在本轮恢复。</td></tr>
+<tr><td>缩放与定位</td><td>已有双指缩放、全图适配、选中定位与视野返回；缩放范围0.001–2.5与大世界空间相关。</td><td><strong>下一批P2</strong>：清楚的缩放百分比、100%回正及局部适配。按现有坐标与可点击区域验证，不能直接套幕布0.2／4配置导致大图无法全览。</td></tr>
+<tr><td>脑图视觉主题与独立输出</td><td>已有原生Canvas、卡片／标题栏配色、实测文字换行与展开、共享页内绘图。工作台当前直接导出入口为Markdown；页内绘图与整库备份另有既有功能。</td><td><strong>下一批P2</strong>：脑图主题样式、连接线样式、独立高清PNG／PDF输出。复用绘图能力并明确全图／当前子树和来源显示范围；既有页导出不等同独立脑图导出。</td></tr>
+</tbody></table></div></section>
+<section class="card"><h2>实测节点的布局与投影验证</h2><p>新算法是墨织独立实现：幕布以未折叠叶权重选分界，墨织使用本次预览冻结的节点和完整子树实测高度，继续排布收起的内容。因此只借鉴连续分区和子树驱动的思路，不宣称与幕布的完整tidy结果一致。</p>
+<table><thead><tr><th>自建场景</th><th>V83</th><th>V84</th><th>保留项</th></tr></thead><tbody>
+<tr><td>四兄弟高度80/900/80/900</td><td>左右交替；总高度1848</td><td>前两支／后两支；高度1028</td><td>主题身份、作者顺序、父子关系</td></tr>
+<tr><td>同高兄弟，第二／四支有900高子节点</td><td>高度1848</td><td>高度1028</td><td>按整支高度，而非仅父卡高；深层侧向一致</td></tr>
+<tr><td>相同两场景的right布局</td><td>高度2104</td><td>高度2104，坐标SHA一致</td><td>未改变单侧结果</td></tr>
+</tbody></table>
+<p>1024层展开大纲，独立主机JVM对照每版10暖机＋15测量，中位 22.933 ms → 0.999 ms；82组合（分支树、折叠、聚焦、深链）投影SHA完全相同。<a href="algorithm-probes.json">逐次耗时与判定</a>、<a href="MapAlgorithmProbe.kt">自建核心探针</a>、<a href="run_probes.py">可重复入口</a>。</p>
+<p class="note">这些是核心计算与自建几何数据，不是Android首帧、滚动／缩放FPS或幕布性能排名。树的真实文字测量、来源预览、触摸反馈和端到端流畅度仍需设备复测。</p></section>
+<section class="card"><h2>构建、测试和本地交接</h2><p>核心433 PASS／52类，新增8方法覆盖最大深链、隐藏计数、共享卡片、异常循环、完整子树平衡、稳定分区、多根／小数尺寸、不交叠和局部布局撤销。app主代码及app/data-local AndroidTest编译PASS，lint无Error/Fatal，175 Warning、2 Hint。</p>
+<p>本轮没有新增Android测试方法或执行设备测试；V81–V83 pending保持NOT_RUN。完整MuPDF依赖云端仍受原有HTTP403影响，编译/lint仅用同版本官方API-only AAR，未生成完整APK。</p>
+<ul><li>本地构建安装84，验证深大纲的展开／折叠／聚焦及大纲→脑图切换。</li><li>高低子树交错的双侧图：预览→取消或应用→撤销／重做，核对来源、父子顺序、线条和返回视野。</li><li>预览中改变标题、字体或结构，确认原有指纹拒绝旧提案；局部整支布局不改变未选支。</li><li>继续执行V83五方法与V81／V82继承测试，保留实际源码／APK身份和失败分母。</li></ul>
+<p><a href="validation.json">验证总表</a> · <a href="device-pending.json">待测范围</a> · <a href="tested-source-sha256.json">受测源码SHA</a> · <a href="core-junit/TEST-org.inkweft.core.MubuInspiredMapRegressionTest.xml">新增核心回执</a> · <a href="compile-verification.log">编译</a> · <a href="lint-verification.log">lint</a> · <a href="../simulation-informed-v83/LOCAL-TESTS.md">既有本地命令</a> · <a href="../simulation-informed-v83/RESULTS.html">V83报告</a></p>
+<p class="small">公开仅墨织原始实现、探针、聚合判定、资产与模块SHA。幕布APK、脚本、界面资产、上传文档和私有路径未复制到墨织仓库。</p></section></main></html>

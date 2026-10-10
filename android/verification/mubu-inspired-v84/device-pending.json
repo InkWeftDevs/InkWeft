@@ -1,0 +1,17 @@
+{
+  "candidate_version": 84,
+  "status": "NOT_RUN",
+  "new_android_test_methods": 0,
+  "inherited_pending": [
+    "../simulation-informed-v83/device-pending.json",
+    "../simulation-informed-v82/device-pending.json",
+    "../device-informed-v81/device-pending.json"
+  ],
+  "checks": [
+    "Open a 1024-theme/deep outline; collapse/focus and switch outline/map while checking shared source and focus path. Observe UI responsiveness separately from JVM timings.",
+    "In a bilateral map with alternating short and tall branches, preview/apply/undo/redo layout; check all titles, source previews, connectors, logical sibling order and metadata. Cancel leaves current authored coordinates unchanged.",
+    "Change card text, node font size or structure while preview open; stale preview must refuse commit through existing fingerprint check.",
+    "Arrange a selected whole branch; unselected branches and their references stay put. Check panning/zoom and overview after layout changes.",
+    "Re-run V81-V83 inherited Android tests with complete native dependencies; old V80 receipts do not certify V84."
+  ]
+}

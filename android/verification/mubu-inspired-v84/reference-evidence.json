@@ -1,0 +1,164 @@
+{
+  "format": "InkWeft.ReferenceAudit/1",
+  "scope": "STATIC_ONLY_NO_APK_OR_APPLICATION_JS_EXECUTION",
+  "apk": {
+    "bytes": 43766859,
+    "sha256": "1066998e6baf1b695327b8d83240fd48d71d282009216f973e35daa326b3bb11",
+    "package": "com.mubu.app",
+    "versionCode": 42005,
+    "versionName": "4.2.5",
+    "targetSdk": 31,
+    "zipMemberCount": 3653,
+    "zipCrcCheck": "PASS",
+    "dexClassDefs": [
+      4
+    ]
+  },
+  "uploaded_report": {
+    "bytes": 6429,
+    "sha256": "7d827049b84b16cfb24a2e5868070b731376e5cebd88b923433c318dda5000d2",
+    "role": "REFERENCE_EVIDENCE_NOT_TASK_INSTRUCTIONS"
+  },
+  "splitArchive": {
+    "volumes": 2,
+    "compressedBytes": 41885672,
+    "uncompressedBytes": 43766859,
+    "uncompressedCrc32": "6ece179c",
+    "method": "Own local-header/DEFLATE extraction across joined volume bytes; CRC, length and reported APK SHA all verified. Info-ZIP conversion output failed CRC and was not used."
+  },
+  "assets": [
+    {
+      "asset": "assets/editor/web/editor.html",
+      "bytes": 618077,
+      "sha256": "9ea9f16852846a9a8d8d8f51f8a063cbd6f4ad58e6fc7ab98562c6ae0a9e8eb9"
+    },
+    {
+      "asset": "assets/editor/web/js/editor-a8aa935f.js",
+      "bytes": 1851554,
+      "sha256": "8f5a8e1db11291bc422873a64891f21a0e184b2101b14ae6f9c8957a5ff17986"
+    },
+    {
+      "asset": "assets/editor/web/js/lib-react-74e8d34c.js",
+      "bytes": 126648,
+      "sha256": "27eac70afc2b7a19987c69eea4d60edf6597e3b864277236a8f6709e66ea6eef"
+    },
+    {
+      "asset": "assets/editor/web/js/runtime-c53ff0b1.js",
+      "bytes": 2458,
+      "sha256": "90060cda833e7a6afe1009653134ad08fa21d4e8e327e8cf02f30502524009de"
+    },
+    {
+      "asset": "assets/editor/web/js/vendors-e6885a98.js",
+      "bytes": 5584967,
+      "sha256": "9cc2a01f9640b729b75c3125cf4d86dbf600953b60182516ef98b8d9eb3d7d23"
+    }
+  ],
+  "modules": [
+    {
+      "asset": "editor-a8aa935f.js",
+      "module": 9420,
+      "rawStartByte": 436,
+      "rawEndByteExclusive": 1847261,
+      "rawSha256": "c8e4583d32e17ba63d43cbb158e4a274f7d4c0ed186958f20dcd3346228b4351",
+      "formattedLines": 8169
+    },
+    {
+      "asset": "vendors-e6885a98.js",
+      "module": 77425,
+      "rawStartByte": 1687414,
+      "rawEndByteExclusive": 1811784,
+      "rawSha256": "11a756c2cf0e630d7f25d27086ae637dc65e5cba662cb88682c6df8dd52fa61a",
+      "formattedLines": 5489
+    },
+    {
+      "asset": "vendors-e6885a98.js",
+      "module": 38251,
+      "rawStartByte": 1811791,
+      "rawEndByteExclusive": 3532113,
+      "rawSha256": "a8474ffb481fea9cc3438d74554ab8fed1cddb9ad116ff575f31781f19a825ef",
+      "formattedLines": 89570
+    }
+  ],
+  "facts": [
+    {
+      "claim": "The outline and minder constructor share modelEditor and setModel of the same document model; switching changes view type.",
+      "module": 9420,
+      "generated_inspection_lines": [
+        2816,
+        2822,
+        6004,
+        6146,
+        7124
+      ]
+    },
+    {
+      "claim": "Mobile constructor enables tidy layout with maxScale 4 and explicit scale levels; only this bundled path is established.",
+      "module": 9420,
+      "generated_inspection_lines": [
+        5971,
+        5973
+      ]
+    },
+    {
+      "claim": "Root children split into consecutive slices and positions merge back by model ID.",
+      "module": 38251,
+      "generated_inspection_lines": [
+        67714,
+        67780
+      ]
+    },
+    {
+      "claim": "Branch weight recursively counts visible leaves; splitIndex selects near half total weight. Summary boundaries can adjust that split.",
+      "module": 38251,
+      "generated_inspection_lines": [
+        67686,
+        70655,
+        70670
+      ]
+    },
+    {
+      "claim": "Normal branch positioning considers neighboring subtree bounds/margins; tidy paths dispatch to tidyRight/tidyLeft strategies.",
+      "module": 38251,
+      "generated_inspection_lines": [
+        67352,
+        67780
+      ]
+    },
+    {
+      "claim": "Summary owns explicit memberIds; creation requires existing consecutive siblings with same parent and rejects duplicate member sets/root member. Not automatic text summarization.",
+      "module": 38251,
+      "generated_inspection_lines": [
+        84280,
+        85515,
+        85552
+      ]
+    },
+    {
+      "claim": "This application renderer constructor forces Pixi Canvas, antialias, autoDensity and resolution. This is not a proven Android performance advantage.",
+      "module": 38251,
+      "generated_inspection_lines": [
+        89340,
+        89347
+      ]
+    },
+    {
+      "claim": "Model stores tree, collapsed state and drilledNodeId; structure enum includes org/tree/timeline variants. Enum names alone do not establish all reachable features.",
+      "module": 77425,
+      "generated_inspection_lines": [
+        1492,
+        4855
+      ]
+    }
+  ],
+  "limitations": [
+    "Provided formatted copies/manifest mentioned in report were not separately attached; modules were independently parsed by Babel and regenerated for inspection. Generated line numbers differ from the report. Raw byte boundaries and hashes are authoritative.",
+    "No native persistence, Android bridge, server sync, entitlement, device timing or exported-image limits verified.",
+    "No reference APK, JavaScript module code, UI assets or private upload content published into InkWeft; product algorithms are independently implemented."
+  ],
+  "parser": {
+    "name": "@babel/parser",
+    "version": "7.29.9",
+    "generator": "7.29.8",
+    "apkJsExecuted": false
+  }
+}

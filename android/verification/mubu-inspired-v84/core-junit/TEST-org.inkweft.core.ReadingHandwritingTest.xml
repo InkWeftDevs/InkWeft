@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="org.inkweft.core.ReadingHandwritingTest" tests="10" skipped="0" failures="0" errors="0" timestamp="2026-10-10T11:37:59.197Z" hostname="4d22d97528bf" time="0.665">
+  <properties/>
+  <testcase name="upperDotJoinsBodyWhileDistantColumnsRemainSeparate" classname="org.inkweft.core.ReadingHandwritingTest" time="0.001"/>
+  <testcase name="singlePageIncludesWholeOriginalAndChecksDigest" classname="org.inkweft.core.ReadingHandwritingTest" time="0.002"/>
+  <testcase name="splittingColumnsCannotBypassRecognitionBudget" classname="org.inkweft.core.ReadingHandwritingTest" time="0.002"/>
+  <testcase name="lineGroupingIgnoresHighlighterAndKeepsSeparateRows" classname="org.inkweft.core.ReadingHandwritingTest" time="0.0"/>
+  <testcase name="oneShortMarkDoesNotBecomeTheHeightOfASingleTallBody" classname="org.inkweft.core.ReadingHandwritingTest" time="0.0"/>
+  <testcase name="fontAndOriginalReferencesRoundTrip" classname="org.inkweft.core.ReadingHandwritingTest" time="0.001"/>
+  <testcase name="sourceBytesCannotBeMutatedByCaller" classname="org.inkweft.core.ReadingHandwritingTest" time="0.0"/>
+  <testcase name="absentOriginalIsNotExportedAsDanglingReference" classname="org.inkweft.core.ReadingHandwritingTest" time="0.0"/>
+  <testcase name="bookStoresSharedSourceOnceAndRetainsPageOrder" classname="org.inkweft.core.ReadingHandwritingTest" time="0.007"/>
+  <testcase name="sourceBookByteLimitIncludesReferencesAndChecksum" classname="org.inkweft.core.ReadingHandwritingTest" time="0.651"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

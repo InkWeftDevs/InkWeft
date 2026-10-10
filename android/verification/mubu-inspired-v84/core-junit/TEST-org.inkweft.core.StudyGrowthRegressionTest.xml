@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="org.inkweft.core.StudyGrowthRegressionTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-10-10T11:37:59.954Z" hostname="4d22d97528bf" time="0.183">
+  <properties/>
+  <testcase name="maximumWideAndDeepMapsCanArrangeSaveAndReopenWithoutOverlap" classname="org.inkweft.core.StudyGrowthRegressionTest" time="0.111"/>
+  <testcase name="cyclesInRemovedHistoryRemainRejectedAndSmallLayoutKeepsOldCoordinates" classname="org.inkweft.core.StudyGrowthRegressionTest" time="0.002"/>
+  <testcase name="largeDefinitionsTemplatesOrdersAndAnchorsRoundTrip" classname="org.inkweft.core.StudyGrowthRegressionTest" time="0.07"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

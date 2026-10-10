@@ -1,0 +1,76 @@
+{
+  "format": "InkWeft.Verification/1",
+  "candidate": {
+    "version_code": 84,
+    "version_name": "0.0.84-outline-and-balanced-map",
+    "baseline_commit": "5e90daca5a97bf22921d4fa59ecd068d31dcf505",
+    "date": "2026-10-10",
+    "timezone": "Asia/Shanghai",
+    "room_schema": 16,
+    "source_manifest": "tested-source-sha256.json"
+  },
+  "cloud": {
+    "core_junit": {
+      "tests": 433,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "suites": 52,
+      "status": "PASS",
+      "new_methods": [
+        "maximumDeepOutlineKeepsDepthCountsCollapseAndFocus",
+        "multiRootAndFractionalNodeSizesStayDisjointAndBounded",
+        "localLayoutKeepsOtherBranchesAndCanUndo",
+        "malformedCyclesStayBoundedWithoutAuthorWrites",
+        "outlineCountsRemainIndependentOfVisibleRowsAndSharedCards",
+        "unequalSubtreesUseContiguousHeightBalancedSides",
+        "evenSizeTieRetainsContiguousOrderAndSingleBranchSide",
+        "splitMeasuresWholeBranchesRatherThanOnlyTheirRootCards"
+      ]
+    },
+    "compilation": {
+      "status": "PASS",
+      "tasks": [
+        ":app:compileDebugKotlin",
+        ":app:compileDebugAndroidTestKotlin",
+        ":data-local:compileDebugAndroidTestKotlin"
+      ],
+      "mupdf": "TEMPORARY_OFFICIAL_1.28.5_API_ONLY_AAR_NOT_NATIVE_CERTIFICATION"
+    },
+    "lint": {
+      "Error": 0,
+      "Fatal": 0,
+      "Warning": 175,
+      "Hint": 2,
+      "status": "PASS"
+    },
+    "algorithm_probes": {
+      "scope": "WARM_HOST_JVM_SYNTHETIC_ALGORITHMS_NOT_ANDROID_UI_OR_MUBU_BENCHMARK",
+      "projectionHashesEqual": true,
+      "scenarios": 82,
+      "medianDeepOutlineMs": {
+        "v83": 22.932958,
+        "v84": 0.999073
+      },
+      "singleSidedCoordinatesUnchanged": true
+    },
+    "reference_static_check": {
+      "status": "PASS",
+      "apkSha256": "1066998e6baf1b695327b8d83240fd48d71d282009216f973e35daa326b3bb11",
+      "apkCrcMembers": 3653,
+      "parsedModules": [
+        9420,
+        77425,
+        38251
+      ],
+      "execution": "APK_AND_APP_JS_NOT_EXECUTED"
+    }
+  },
+  "device": {
+    "status": "NOT_RUN",
+    "new_android_methods": 0,
+    "manual_and_inherited_checks": "device-pending.json"
+  },
+  "apk": "NOT_PRODUCED_NORMAL_MUPDF_DEPENDENCY_REMAINS_BLOCKED_IN_CLOUD",
+  "scope": "Two independently implemented algorithm changes; no new persisted map group, layout type, zoom UX or standalone map image export implemented."
+}

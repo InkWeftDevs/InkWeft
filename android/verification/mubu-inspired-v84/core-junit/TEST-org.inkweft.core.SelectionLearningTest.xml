@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="org.inkweft.core.SelectionLearningTest" tests="20" skipped="0" failures="0" errors="0" timestamp="2026-10-10T11:37:59.888Z" hostname="4d22d97528bf" time="0.065">
+  <properties/>
+  <testcase name="graphRejectsCyclesMissingParentAndInvalidNumbers" classname="org.inkweft.core.SelectionLearningTest" time="0.001"/>
+  <testcase name="removedParentCannotOwnVisibleChild" classname="org.inkweft.core.SelectionLearningTest" time="0.0"/>
+  <testcase name="smoothingKeepsAxesTimeEndpointsAndSharpCorners" classname="org.inkweft.core.SelectionLearningTest" time="0.0"/>
+  <testcase name="unknownReplaceKeepsSameOperation" classname="org.inkweft.core.SelectionLearningTest" time="0.0"/>
+  <testcase name="excerptPreviewIsImmutableAndBindsObjectVersionToReceipt" classname="org.inkweft.core.SelectionLearningTest" time="0.001"/>
+  <testcase name="exactRegionDoesNotContainBlankOrDegenerateSelection" classname="org.inkweft.core.SelectionLearningTest" time="0.001"/>
+  <testcase name="multipleOccurrencesShareOneCardAndLayoutDoesNotChangeIdentity" classname="org.inkweft.core.SelectionLearningTest" time="0.0"/>
+  <testcase name="studyDigestBindsPayloadAndGraphRevision" classname="org.inkweft.core.SelectionLearningTest" time="0.001"/>
+  <testcase name="newMaskSurvivesStrokeAndPageCodecs" classname="org.inkweft.core.SelectionLearningTest" time="0.0"/>
+  <testcase name="reversedRectangleIsNormalizedAndPolygonSelects" classname="org.inkweft.core.SelectionLearningTest" time="0.0"/>
+  <testcase name="smoothingRejectsErasedInkAndZeroStrengthLeavesSamples" classname="org.inkweft.core.SelectionLearningTest" time="0.002"/>
+  <testcase name="roundMaskLegacyEncodingUnchanged" classname="org.inkweft.core.SelectionLearningTest" time="0.0"/>
+  <testcase name="rectangleSelectsOnlyEntireStroke" classname="org.inkweft.core.SelectionLearningTest" time="0.001"/>
+  <testcase name="replaceUndoRedoRestoresOriginalSamplingAndVisibility" classname="org.inkweft.core.SelectionLearningTest" time="0.0"/>
+  <testcase name="copyMovesMasksAndSamplesWithIndependentIds" classname="org.inkweft.core.SelectionLearningTest" time="0.0"/>
+  <testcase name="sourceIdentityDefensivelyCopiesLists" classname="org.inkweft.core.SelectionLearningTest" time="0.0"/>
+  <testcase name="recolorPreservesMasksAndHighlighterAlpha" classname="org.inkweft.core.SelectionLearningTest" time="0.0"/>
+  <testcase name="pendingReplaceReservesFullDrawingBudget" classname="org.inkweft.core.SelectionLearningTest" time="0.05"/>
+  <testcase name="graphCapacityDistinguishesActiveNodesFromRetainedRecords" classname="org.inkweft.core.SelectionLearningTest" time="0.007"/>
+  <testcase name="masksEncodeTheirExactShape" classname="org.inkweft.core.SelectionLearningTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
