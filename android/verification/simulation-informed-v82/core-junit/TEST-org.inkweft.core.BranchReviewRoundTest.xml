@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="org.inkweft.core.BranchReviewRoundTest" tests="14" skipped="0" failures="0" errors="0" timestamp="2026-10-10T10:25:56.830Z" hostname="4d22d97528bf" time="0.107">
+  <properties/>
+  <testcase name="duplicateSkipDoesNotSkipTheNextQuestionOrOverwriteAConfirmedResult" classname="org.inkweft.core.BranchReviewRoundTest" time="0.028"/>
+  <testcase name="pendingUnknownKeepsTheExactOperationAndCannotAdvanceOrGenerateRetry" classname="org.inkweft.core.BranchReviewRoundTest" time="0.002"/>
+  <testcase name="duplicateCompletionCannotConsumeTheNextPendingOperation" classname="org.inkweft.core.BranchReviewRoundTest" time="0.001"/>
+  <testcase name="restoringBoundedStateCopiesCallerListsAndKeepsPendingIdentity" classname="org.inkweft.core.BranchReviewRoundTest" time="0.001"/>
+  <testcase name="retryReviewOnlyAcceptsExactCausalRevisionAndPreservesAnswerRevision" classname="org.inkweft.core.BranchReviewRoundTest" time="0.002"/>
+  <testcase name="onlyExplicitReviewStatesAndTheCurrentIndexCanBeginAMark" classname="org.inkweft.core.BranchReviewRoundTest" time="0.002"/>
+  <testcase name="malformedRestoredLedgerCannotDuplicateOrMoveOutcomes" classname="org.inkweft.core.BranchReviewRoundTest" time="0.002"/>
+  <testcase name="pureSkipRetryWithIdenticalRefsStartsANewEmptyRoundIdentity" classname="org.inkweft.core.BranchReviewRoundTest" time="0.001"/>
+  <testcase name="maximumRoundBudgetRemainsBoundedAndCountsCannotBecomeImpossible" classname="org.inkweft.core.BranchReviewRoundTest" time="0.047"/>
+  <testcase name="mixedResultsAreExclusiveAndUseIndependentOriginalQuestionIndices" classname="org.inkweft.core.BranchReviewRoundTest" time="0.001"/>
+  <testcase name="revisionLimitCannotOverflowIntoAnInventedCausalVersion" classname="org.inkweft.core.BranchReviewRoundTest" time="0.002"/>
+  <testcase name="retrySkippedUsesExactFrozenRefsAndRecomputesFilteredPlanCounts" classname="org.inkweft.core.BranchReviewRoundTest" time="0.007"/>
+  <testcase name="zeroCandidatesCannotStartRetryAndAnEmptyRoundDoesNotInventResults" classname="org.inkweft.core.BranchReviewRoundTest" time="0.001"/>
+  <testcase name="rejectedSkipRemainsUnmarkedAndRejectionNotificationsAreIdempotent" classname="org.inkweft.core.BranchReviewRoundTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

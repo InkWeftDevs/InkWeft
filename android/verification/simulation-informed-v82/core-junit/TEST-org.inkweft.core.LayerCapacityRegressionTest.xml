@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="org.inkweft.core.LayerCapacityRegressionTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-10-10T10:25:58.796Z" hostname="4d22d97528bf" time="0.369">
+  <properties/>
+  <testcase name="compactStackStillRejectsTrailingDataAndTheUnchangedByteCeiling" classname="org.inkweft.core.LayerCapacityRegressionTest" time="0.055"/>
+  <testcase name="legacySizedStateKeepsTheFrozenIwa3BytesAndReadsAllPreviousHeaders" classname="org.inkweft.core.LayerCapacityRegressionTest" time="0.002"/>
+  <testcase name="compactStackPreservesNonCanonicalIdentitySpellingAndEmbeddedPageRoundtrip" classname="org.inkweft.core.LayerCapacityRegressionTest" time="0.121"/>
+  <testcase name="deletingHalfOfAFullRetainedStackDoesNotFallBackToOversizedLegacyEncoding" classname="org.inkweft.core.LayerCapacityRegressionTest" time="0.075"/>
+  <testcase name="fullRetainedInkAndObjectIdentitiesFitTheExistingAuthoringByteCeiling" classname="org.inkweft.core.LayerCapacityRegressionTest" time="0.083"/>
+  <testcase name="largeDeletedProjectionStaysDisjointAndCannotReassignOriginalIdentity" classname="org.inkweft.core.LayerCapacityRegressionTest" time="0.019"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

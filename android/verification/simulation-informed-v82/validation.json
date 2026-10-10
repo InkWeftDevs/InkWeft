@@ -1,0 +1,128 @@
+{
+  "format": "InkWeft.Verification/1",
+  "candidate": {
+    "version_code": 82,
+    "version_name": "0.0.82-card-return-and-layer-capacity",
+    "baseline_commit": "ee98b4cc1ca4733481bed0c05184a76ae5bf38e4",
+    "date": "2026-10-10",
+    "timezone": "Asia/Shanghai",
+    "room_schema": 16,
+    "source_manifest": "tested-source-sha256.json"
+  },
+  "cloud": {
+    "core_junit": {
+      "tests": 415,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "suites": 50,
+      "status": "PASS",
+      "new_methods": 6,
+      "receipts": "core-junit/"
+    },
+    "compilation": {
+      "status": "PASS",
+      "tasks": [
+        ":core-domain:test",
+        ":app:compileDebugKotlin",
+        ":app:compileDebugAndroidTestKotlin",
+        ":data-local:compileDebugAndroidTestKotlin"
+      ],
+      "receipt": "compile-verification.log"
+    },
+    "lint": {
+      "status": "PASS",
+      "error": 0,
+      "fatal": 0,
+      "warning": 175,
+      "hint": 2,
+      "receipt": "lint-verification.log"
+    },
+    "dependency_scope": "Compile/lint use same-version official MuPDF 1.28.5 Java API-only AAR via temporary init script; no native library, product dependency unchanged.",
+    "normal_apk_build": {
+      "status": "BLOCKED",
+      "task": ":app:assembleDebug -PinkweftInsertionPreview=true",
+      "cause": "MuPDF 1.28.5 POM HTTP403",
+      "apk_produced": false,
+      "receipt": "native-dependency-build.log"
+    },
+    "host_projection_query": {
+      "status": "PASS",
+      "checks": 4,
+      "payload_reads": 0,
+      "scope": "HOST_SQLITE_NOT_ANDROID_ROOM",
+      "receipt": "projection-query-check.json"
+    },
+    "host_layer_comparison": {
+      "status": "PASS",
+      "scope": "WARM_HOST_JVM_NOT_ANDROID",
+      "warmups": 2,
+      "measured_runs": 5,
+      "authoring_hash_equal": true,
+      "receipt": "layer-benchmark-summary.json"
+    },
+    "capacity_identity_roundtrip": {
+      "status": "PASS",
+      "memberships": 40800,
+      "scope": "CORE_IDENTITIES_NOT_SIMULTANEOUS_MAX_ANNOTATION_GEOMETRY",
+      "receipt": "capacity-probe.json"
+    }
+  },
+  "uploaded_v80": {
+    "source_commit": "a8177df0aaa6c0fbd684af0965bd8d7c78ca71a9",
+    "status": "OFFLINE_EVIDENCE_VERIFIED_NOT_NEW_CLOUD_DEVICE_RUN",
+    "bundle_integrity": {
+      "archives": 29,
+      "included_file_occurrences": 7132,
+      "crc": "PASS",
+      "manifest_sha256": "PASS",
+      "receipt": "bundle-verification.json"
+    },
+    "formal_performance": {
+      "attempts": 225,
+      "pass": 191,
+      "fail": 34,
+      "observation_timeouts": 7,
+      "test_runtime_thread_exceptions": 27,
+      "receipt": "capture-audit.json"
+    },
+    "regression": {
+      "verified_raw_method_pass": 12,
+      "environment": "API35 x86_64 isolated emulator",
+      "not_physical_or_v82": true,
+      "receipt": "capture-audit.json"
+    },
+    "native_output": {
+      "unique_correlated_pen_pairs": 1816,
+      "nonempty_return_arrays": 6508,
+      "captured_numeric_values": 543399,
+      "truncation_or_length_mismatch": 0,
+      "receipt": "capture-audit.json"
+    }
+  },
+  "v82_android_instrumentation": {
+    "status": "NOT_RUN",
+    "new_methods": 4,
+    "list": "device-pending.json"
+  },
+  "compatibility": {
+    "normal_state_encoding": "IWA3 byte-compatible",
+    "large_or_byte_overflow_state_encoding": "IWA4 compact UUID identities; requires V82 reader",
+    "older_headers_read": [
+      "IWA1",
+      "IWA2",
+      "IWA3"
+    ],
+    "max_authoring_bytes": 1900000,
+    "original_ink_and_history_preserved": true,
+    "room_schema_change": false
+  },
+  "claims_not_established": [
+    "V82 Android frame/PSS or large-page timeout resolution",
+    "PDF thread failure root cause or resolution",
+    "Complete native filter/pressure/shape algorithm reconstruction",
+    "Real handwriting or formula accuracy",
+    "StarNote has unlimited capacity"
+  ],
+  "privacy": "Only aggregate evidence, hashes, own synthetic probes and code test receipts published. No uploaded raw archives/databases, device descriptors, trajectories or private host paths."
+}

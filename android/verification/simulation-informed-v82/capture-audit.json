@@ -1,0 +1,468 @@
+{
+  "scope": "OFFLINE_AUDIT_OF_UPLOADED_V80_SYNTHETIC_CAPTURE_NOT_NEW_DEVICE_RUN",
+  "source_commit": "a8177df0aaa6c0fbd684af0965bd8d7c78ca71a9",
+  "case_status_counts": {
+    "CAPTURED": 4,
+    "PARTIAL": 11,
+    "FAIL": 7,
+    "PASS": 12
+  },
+  "regression": {
+    "scope": "UPLOADED_V80_API35_X86_64_EMULATOR_NOT_ARM64_PHYSICAL_NOT_V82",
+    "verified_pass": 12,
+    "methods": [
+      {
+        "method": "org.inkweft.app.InputRenderingRegressionTest#penUpConsumesItsEntireHistoryBeforeCommitWithoutInventingHardwareAxes",
+        "status": "VERIFIED_UPLOADED_V80_EMULATOR_PASS",
+        "raw_sha256": "cec52545b3e2932d2668c0fca3b08f875b9c0e8602e7ca7ec6402bb4ec3d55aa",
+        "junit_sha256": "276adc102e89407d7561a3046b2807b10dea2f3d5de27f01e084e9766e138699"
+      },
+      {
+        "method": "org.inkweft.app.InputRenderingRegressionTest#canceledTerminalHistoryCannotBecomeAnAuthorStroke",
+        "status": "VERIFIED_UPLOADED_V80_EMULATOR_PASS",
+        "raw_sha256": "d204142f7c586159791ab553332663f2eaee74477af777702b79b76813808e8a",
+        "junit_sha256": "eb7f68a5b14219aa4baa937fdc6c2405f5288f2ddfbe2a67ae4db6341749a753"
+      },
+      {
+        "method": "org.inkweft.app.InputRenderingRegressionTest#stationaryPressureChangesReopenThroughNativeInkWithoutLosingAuthorReadings",
+        "status": "VERIFIED_UPLOADED_V80_EMULATOR_PASS",
+        "raw_sha256": "9274e5a03a9d01f7ca00bf79b27055b66036d04aab929f0e64c09b4af1cd3073",
+        "junit_sha256": "66cbd107ac7f3938a199b635cf639e5fae46c000890338b7733fe871cf935142"
+      },
+      {
+        "method": "org.inkweft.app.InputRenderingRegressionTest#sameIdInteriorPencilChangesMatchFreshRasterPixels",
+        "status": "VERIFIED_UPLOADED_V80_EMULATOR_PASS",
+        "raw_sha256": "e972d7993c5ae7d610e293ad954fe00a69b4a38c448f5c2fcfdf74e04b657eaa",
+        "junit_sha256": "0b9544c1561cff5141ca13d2ca279252b662d922433680474273aa72b0f73e05"
+      },
+      {
+        "method": "org.inkweft.app.InputRenderingRegressionTest#stationaryPencilUpdateUsesTheLastReadingRatherThanAccumulatingOldPressure",
+        "status": "VERIFIED_UPLOADED_V80_EMULATOR_PASS",
+        "raw_sha256": "68143369e8c1bc9d698abd1335ba7304476f63a09f9456cdf57f85cb40bb1a53",
+        "junit_sha256": "73d35ffeeee9e19320a26e5641076c25519082a93ebf5367e4fc5bf5e3c6ff6c"
+      },
+      {
+        "method": "org.inkweft.app.FastPencilTest#longLiveStrokeDoesNotRerasterizeOldTiles",
+        "status": "VERIFIED_UPLOADED_V80_EMULATOR_PASS",
+        "raw_sha256": "3b6e3f598ae5f8781407818e8fafa13a5e0ad6d8885c91631ed4a1c906514fd0",
+        "junit_sha256": "4467e2bc91dee226320193755ef44c3b96a34836cbbf53c664d4932b148a8d60"
+      },
+      {
+        "method": "org.inkweft.app.SelectionPerformanceTest#repeatedPageDrawKeepsPencilRasterWorkBounded",
+        "status": "VERIFIED_UPLOADED_V80_EMULATOR_PASS",
+        "raw_sha256": "292b3288f2884a5b6cbc7dba33fdd8ee429ac7f55393a0e1a325a82d100bddca",
+        "junit_sha256": "206e814dc0c51f5cfc84c953e6a1225a3faf0ded7e23568c6cc4e4c3cea73ce3"
+      },
+      {
+        "method": "org.inkweft.app.SelectionPerformanceTest#cachedInkMatchesDirectPixelsAfterAppendEraseAndViewportChange",
+        "status": "VERIFIED_UPLOADED_V80_EMULATOR_PASS",
+        "raw_sha256": "0819698c0e662c6c5059496a14b71c31decbb3e64c5ccfe2da074038f257bc94",
+        "junit_sha256": "7fa702485c17087ad964b3ca7d25c142308c90fc83819877749b7927b15f6762"
+      },
+      {
+        "method": "org.inkweft.app.FormulaFlowTest#editingResizedFormulaKeepsItsDisplayScaleAndColorOnlyEditKeepsMasks",
+        "status": "VERIFIED_UPLOADED_V80_EMULATOR_PASS",
+        "raw_sha256": "da2681082c28cbc889c468bffa9e818b4fd3972346cbf111ab835c88abe23154",
+        "junit_sha256": "f602469e1d6d723d3acec1390e2e7730b0e4d06b68bcc6f5108ec1a19e1a9441"
+      },
+      {
+        "method": "org.inkweft.app.ExcerptLassoRegressionTest#freehandExcerptExcludesTheOtherCornerOfItsBoundingBox",
+        "status": "VERIFIED_UPLOADED_V80_EMULATOR_PASS",
+        "raw_sha256": "2123e87a7bdce9bb4959d0f675b984fc63b2aa04b2706bb50753a3f032906328",
+        "junit_sha256": "2bc2430bbee99595d5c98fe3dce5024bc6ab9d6dab89b0c61988e09b98ce634a"
+      },
+      {
+        "method": "org.inkweft.data.InkRepositoryTest#visiblePreviewMatchesFullReadAfterCutsReplacementAndUndo",
+        "status": "VERIFIED_UPLOADED_V80_EMULATOR_PASS",
+        "raw_sha256": "84d4d21da392c2d77805610a3f54fbeb0e050c908b2bc18e249c538e4a1e8e54",
+        "junit_sha256": "f557f8e914adddef04732039828a6aae882e5621ac1757d61d5edcbed427ddf6"
+      },
+      {
+        "method": "org.inkweft.data.InkRepositoryTest#previewSkipsHiddenPayloadWhileFullReadStillValidatesHistory",
+        "status": "VERIFIED_UPLOADED_V80_EMULATOR_PASS",
+        "raw_sha256": "e3aeea7746a21787652a9a2a56b6e6cf4e53c5156ca204a25f9be479c8854146",
+        "junit_sha256": "ee513cffcfadfb1792a44033dbe21b75ba48710f11933666ba60e34e8b73688d"
+      }
+    ]
+  },
+  "performance": {
+    "raw_report_hashes_verified": 225,
+    "formal_attempts": 225,
+    "complete_pass": 191,
+    "complete_fail": 34,
+    "outcomes": {
+      "SUCCESS": 191,
+      "PRESENTATION_OBSERVATION_TIMEOUT": 7,
+      "COMPOSE_TEST_RUNTIME_THREAD_EXCEPTION": 27
+    },
+    "scenes": [
+      {
+        "case": "LOAD-01",
+        "scene": "ink-1000-sparse-formal",
+        "attempts": 5,
+        "pass": 5,
+        "fail": 0,
+        "primary": "step.coldOpen.firstActualReadableScreenshotMs",
+        "success_n": 5,
+        "success_median_ms": 3357.082519
+      },
+      {
+        "case": "LOAD-01",
+        "scene": "ink-1000-dense-formal",
+        "attempts": 5,
+        "pass": 5,
+        "fail": 0,
+        "primary": "step.coldOpen.firstActualReadableScreenshotMs",
+        "success_n": 5,
+        "success_median_ms": 3426.803854
+      },
+      {
+        "case": "LOAD-01",
+        "scene": "ink-5000-sparse-formal",
+        "attempts": 5,
+        "pass": 5,
+        "fail": 0,
+        "primary": "step.coldOpen.firstActualReadableScreenshotMs",
+        "success_n": 5,
+        "success_median_ms": 7861.536501
+      },
+      {
+        "case": "LOAD-01",
+        "scene": "ink-5000-dense-formal",
+        "attempts": 5,
+        "pass": 5,
+        "fail": 0,
+        "primary": "step.coldOpen.firstActualReadableScreenshotMs",
+        "success_n": 5,
+        "success_median_ms": 7794.470407
+      },
+      {
+        "case": "LOAD-01",
+        "scene": "ink-10000-sparse-formal",
+        "attempts": 5,
+        "pass": 5,
+        "fail": 0,
+        "primary": "step.coldOpen.firstActualReadableScreenshotMs",
+        "success_n": 5,
+        "success_median_ms": 12457.302808
+      },
+      {
+        "case": "LOAD-01",
+        "scene": "ink-10000-dense-formal",
+        "attempts": 10,
+        "pass": 10,
+        "fail": 0,
+        "primary": "step.coldOpen.firstActualReadableScreenshotMs",
+        "success_n": 10,
+        "success_median_ms": 15089.8802955
+      },
+      {
+        "case": "LOAD-01",
+        "scene": "ink-15000-sparse-formal",
+        "attempts": 10,
+        "pass": 7,
+        "fail": 3,
+        "primary": "step.coldOpen.firstActualReadableScreenshotMs",
+        "success_n": 7,
+        "success_median_ms": 27699.068289
+      },
+      {
+        "case": "LOAD-01",
+        "scene": "ink-15000-dense-formal",
+        "attempts": 10,
+        "pass": 6,
+        "fail": 4,
+        "primary": "step.coldOpen.firstActualReadableScreenshotMs",
+        "success_n": 6,
+        "success_median_ms": 25190.112616500002
+      },
+      {
+        "case": "LOAD-02",
+        "scene": "points-250000-n10000-formal",
+        "attempts": 10,
+        "pass": 10,
+        "fail": 0,
+        "primary": "step.coldOpen.firstActualReadableScreenshotMs",
+        "success_n": 10,
+        "success_median_ms": 10615.4777815
+      },
+      {
+        "case": "LOAD-02",
+        "scene": "points-250000-n5000-formal",
+        "attempts": 5,
+        "pass": 5,
+        "fail": 0,
+        "primary": "step.coldOpen.firstActualReadableScreenshotMs",
+        "success_n": 5,
+        "success_median_ms": 7359.528392
+      },
+      {
+        "case": "LOAD-02",
+        "scene": "points-250000-n1000-formal",
+        "attempts": 10,
+        "pass": 10,
+        "fail": 0,
+        "primary": "step.coldOpen.firstActualReadableScreenshotMs",
+        "success_n": 10,
+        "success_median_ms": 7507.429552
+      },
+      {
+        "case": "LOAD-02",
+        "scene": "points-250000-n100-formal",
+        "attempts": 5,
+        "pass": 5,
+        "fail": 0,
+        "primary": "step.coldOpen.firstActualReadableScreenshotMs",
+        "success_n": 5,
+        "success_median_ms": 3376.05792
+      },
+      {
+        "case": "LOAD-02",
+        "scene": "points-250000-n31-formal",
+        "attempts": 10,
+        "pass": 10,
+        "fail": 0,
+        "primary": "step.coldOpen.firstActualReadableScreenshotMs",
+        "success_n": 10,
+        "success_median_ms": 5000.789857
+      },
+      {
+        "case": "LOAD-03",
+        "scene": "history-1x-formal",
+        "attempts": 10,
+        "pass": 10,
+        "fail": 0,
+        "primary": "step.coldOpen.firstActualReadableScreenshotMs",
+        "success_n": 10,
+        "success_median_ms": 9222.495911
+      },
+      {
+        "case": "LOAD-03",
+        "scene": "history-2x-formal",
+        "attempts": 10,
+        "pass": 10,
+        "fail": 0,
+        "primary": "step.coldOpen.firstActualReadableScreenshotMs",
+        "success_n": 10,
+        "success_median_ms": 10621.5133255
+      },
+      {
+        "case": "LOAD-03",
+        "scene": "history-3x-formal",
+        "attempts": 5,
+        "pass": 5,
+        "fail": 0,
+        "primary": "step.coldOpen.firstActualReadableScreenshotMs",
+        "success_n": 5,
+        "success_median_ms": 10301.326894
+      },
+      {
+        "case": "LOAD-03",
+        "scene": "history-4x-formal",
+        "attempts": 10,
+        "pass": 10,
+        "fail": 0,
+        "primary": "step.coldOpen.firstActualReadableScreenshotMs",
+        "success_n": 10,
+        "success_median_ms": 14634.5958215
+      },
+      {
+        "case": "LOAD-05",
+        "scene": "text-001-formal",
+        "attempts": 10,
+        "pass": 10,
+        "fail": 0,
+        "primary": "step.coldOpenFirstReadableFrame.firstActualReadableScreenshotMs",
+        "success_n": 10,
+        "success_median_ms": 1905.2541955000002
+      },
+      {
+        "case": "LOAD-05",
+        "scene": "text-050-formal",
+        "attempts": 10,
+        "pass": 10,
+        "fail": 0,
+        "primary": "step.coldOpenFirstReadableFrame.firstActualReadableScreenshotMs",
+        "success_n": 10,
+        "success_median_ms": 2212.7357545
+      },
+      {
+        "case": "LOAD-05",
+        "scene": "text-200-formal",
+        "attempts": 10,
+        "pass": 5,
+        "fail": 5,
+        "primary": "step.coldOpenFirstReadableFrame.firstActualReadableScreenshotMs",
+        "success_n": 5,
+        "success_median_ms": 2021.454891
+      },
+      {
+        "case": "LOAD-05",
+        "scene": "text-500-formal",
+        "attempts": 10,
+        "pass": 0,
+        "fail": 10,
+        "primary": "step.coldOpenFirstReadableFrame.firstActualReadableScreenshotMs",
+        "success_n": 0,
+        "success_median_ms": null
+      },
+      {
+        "case": "LOAD-05",
+        "scene": "scan-001-formal",
+        "attempts": 10,
+        "pass": 10,
+        "fail": 0,
+        "primary": "step.coldOpenFirstReadableFrame.firstActualReadableScreenshotMs",
+        "success_n": 10,
+        "success_median_ms": 2020.353381
+      },
+      {
+        "case": "LOAD-05",
+        "scene": "scan-050-formal",
+        "attempts": 5,
+        "pass": 4,
+        "fail": 1,
+        "primary": "step.coldOpenFirstReadableFrame.firstActualReadableScreenshotMs",
+        "success_n": 4,
+        "success_median_ms": 2032.3424579999999
+      },
+      {
+        "case": "LOAD-05",
+        "scene": "scan-200-formal",
+        "attempts": 5,
+        "pass": 3,
+        "fail": 2,
+        "primary": "step.coldOpenFirstReadableFrame.firstActualReadableScreenshotMs",
+        "success_n": 3,
+        "success_median_ms": 3421.932564
+      },
+      {
+        "case": "LOAD-05",
+        "scene": "scan-500-formal",
+        "attempts": 10,
+        "pass": 1,
+        "fail": 9,
+        "primary": "step.coldOpenFirstReadableFrame.firstActualReadableScreenshotMs",
+        "success_n": 1,
+        "success_median_ms": 5692.366144
+      },
+      {
+        "case": "LOAD-06",
+        "scene": "b20-c200-n128",
+        "attempts": 5,
+        "pass": 5,
+        "fail": 0,
+        "primary": "libraryActivityToReadableFramesMs",
+        "success_n": 5,
+        "success_median_ms": 4547.517476
+      },
+      {
+        "case": "LOAD-06",
+        "scene": "b100-c1000-n512",
+        "attempts": 10,
+        "pass": 10,
+        "fail": 0,
+        "primary": "libraryActivityToReadableFramesMs",
+        "success_n": 10,
+        "success_median_ms": 4904.273037499999
+      },
+      {
+        "case": "LOAD-06",
+        "scene": "b300-c2000-n1024",
+        "attempts": 10,
+        "pass": 10,
+        "fail": 0,
+        "primary": "libraryActivityToReadableFramesMs",
+        "success_n": 10,
+        "success_median_ms": 4963.3665775
+      }
+    ],
+    "primary_scope": "All 28 scene primary values independently read from raw reports. Library proxies remain separate from screenshot boundaries. Failures retained in denominator."
+  },
+  "native": {
+    "java_log_sha256": "a10f260d961a520782548c2478ba8f19a8930841660f7e5f46f8394c733646d2",
+    "arm_log_sha256": "47f58c70b4371ae8ae94e5657b80992ddfb32da7090a6216db26ba60205ff72f",
+    "java_enter_return_pairs": 1982,
+    "pen_pairs": 1816,
+    "arm_pairs_uniquely_correlated": 1816,
+    "nonempty_return_arrays": 6508,
+    "captured_numeric_values": 543399,
+    "truncated_or_length_mismatch": 0,
+    "getter_field_identity_matches": {
+      "getRealInk": 245,
+      "getPoints": 1755,
+      "getPointSizeArray": 1756,
+      "getPredictionInk": 244
+    },
+    "getter_limit": "identityHashCode association only; collisions not excluded; getter observations capped at 4000.",
+    "segment_counts": [
+      {
+        "pen_type": "4",
+        "field": "a",
+        "segment_float_count": 5,
+        "segments": 30815
+      },
+      {
+        "pen_type": "4",
+        "field": "b",
+        "segment_float_count": 5,
+        "segments": 40574
+      },
+      {
+        "pen_type": "6",
+        "field": "a",
+        "segment_float_count": 12,
+        "segments": 3284
+      },
+      {
+        "pen_type": "6",
+        "field": "b",
+        "segment_float_count": 8,
+        "segments": 195
+      },
+      {
+        "pen_type": "6",
+        "field": "b",
+        "segment_float_count": 12,
+        "segments": 3659
+      }
+    ],
+    "nonempty_outputs": [
+      {
+        "pen_type": "4",
+        "field": "a",
+        "calls": 352
+      },
+      {
+        "pen_type": "4",
+        "field": "b",
+        "calls": 341
+      },
+      {
+        "pen_type": "6",
+        "field": "a",
+        "calls": 1292
+      },
+      {
+        "pen_type": "6",
+        "field": "b",
+        "calls": 1269
+      }
+    ],
+    "formal_dense_horizontal_line": {
+      "move_calls": 60,
+      "nonempty_a": 58,
+      "nonempty_b": 60,
+      "field_a_x_extent_minus_input_x_median_local_units": -25.846923828125,
+      "field_b_x_extent_minus_input_x_median_local_units": 1.4969482421875,
+      "interpretation": "Array x-extent difference, including cap/control coordinates. Not centerline lag, filter reconstruction, latency or rendered pixels."
+    }
+  },
+  "limits": [
+    "Pencil/type4 quintuple trailing semantics UNKNOWN; no formula invented from constants.",
+    "ALG04 tilt/direction disabled in captured reference configuration; no hardware pressure/tilt capability established.",
+    "Reference CANCEL commit and active stylus POINTER_UP loss are observed reference behavior, not behavior to copy into InkWeft.",
+    "PDF test runtime thread exceptions and presentation timeouts retain unknown root cause.",
+    "Recognition synthetic scores and asymmetric pipelines do not rank real handwriting accuracy."
+  ]
+}

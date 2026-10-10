@@ -1,4 +1,16 @@
-# 最新云端候选 V81 — 2026-10-10
+# 最新云端候选 V82 — 2026-10-10
+
+继续草稿PR18，分支 `codex/cloud/starnote-inspired-editor-20261009`，起点V81 `ee98b4cc1ca4733481bed0c05184a76ae5bf38e4`。版本82／`0.0.82-card-return-and-layer-capacity`：摘要卡正文关联记录CARD来源并返回重开原卡；图层只读全部笔迹ID，IO观察解码；图层校验/批量替换复用集合、按来源层分组；身份配套到40800并在旧字节超限或超过2.2万时使用IWA4紧凑UUID。正常旧状态IWA3字节保持，Room16、原迹与隐藏历史保留，作者字段1.9MB上限保持。IWA4大状态需V82读取；身份额度不保证注释几何同时满额。
+
+核心415 PASS／50类，新增6核心回归；应用及app/data-local AndroidTest编译PASS，lint零错误、175 Warning、2 Hint。新4项Android方法与V81新5项均NOT_RUN。主机JVM构造1.5万成员+1.5万删除中位738.069→3.355ms，添加1024身份837.107→1.540ms，原大小作者SHA相同；只代表计算，Android PSS/GC/帧、加载超时是否改善未测。正常MuPDF原生依赖仍HTTP403，无V82 APK。
+
+新30附件中29ZIP、7132包内清单文件出现项CRC/SHA全部通过，local-only原件仍未上传；冻结受测源为V80 a817。225正式性能尝试191完整成功/34失败（7截图观测超时、27Compose测试线程异常），全部失败分母保留，根因未确立。12项V80模拟器原始方法回执已独立核对，不并入V82。1816对JNI/Java唯一关联、6508非空返回数组及543399数值核对通过，实际/预测字段有getter关联；类型4末三字段含义未知。公式27有真值中3相同/简单等价、结构14保留/3部分/10丢失；合成输入与不对称管线不代表真人准确率，也不从夹具真值替换模型结果。
+
+见 [V82报告](verification/simulation-informed-v82/RESULTS.html)、[验证](verification/simulation-informed-v82/validation.json)、[受测源码](verification/simulation-informed-v82/tested-source-sha256.json)、[精确待测](verification/simulation-informed-v82/device-pending.json)。以下保留前序批次当时的身份与结论。
+
+---
+
+# 历史云端候选 V81 — 2026-10-10
 
 分支 `codex/cloud/starnote-inspired-editor-20261009`，继续草稿PR18，起点V80 `a8177df0aaa6c0fbd684af0965bd8d7c78ca71a9`。版本81／`0.0.81-search-and-pencil-cache`：大页编辑准入、搜索免载荷版次检查、铅笔来源缓存、摘录来源一致性、刷新率诊断快照5项已落实。Room16、编码及V79容量安全边界保持。
 

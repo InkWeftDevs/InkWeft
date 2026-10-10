@@ -22,6 +22,8 @@ data class InkCutRow(@PrimaryKey val id:String,val noteId:String,val payload:Byt
 interface InkDao {
     @Query("SELECT * FROM ink_pages WHERE noteId=:id") suspend fun page(id:String):InkPageRow?
     @Query("SELECT * FROM ink_strokes WHERE noteId=:id ORDER BY createdRevision,id") suspend fun strokes(id:String):List<InkStrokeRow>
+    /** Layer ownership needs every retained identity, including hidden history, but no ink payload. */
+    @Query("SELECT id FROM ink_strokes WHERE noteId=:id ORDER BY createdRevision,id") suspend fun strokeIds(id:String):List<String>
     @Query("SELECT * FROM ink_strokes WHERE noteId=:id AND visible=1 ORDER BY createdRevision,id") suspend fun visibleStrokes(id:String):List<InkStrokeRow>
     @Query("SELECT revision FROM ink_pages WHERE noteId=:id") fun observeRevision(id:String):kotlinx.coroutines.flow.Flow<Long?>
     @Query("SELECT * FROM ink_strokes WHERE id=:id") suspend fun stroke(id:String):InkStrokeRow?

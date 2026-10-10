@@ -1,0 +1,21 @@
+{
+  "scope": "WARM_HOST_JVM_NOT_ANDROID",
+  "version": "V81",
+  "warmups": 2,
+  "measured_runs": 5,
+  "construct_15000_members_and_15000_deleted_ms": [
+    683.097459,
+    700.874239,
+    738.069105,
+    1893.030424,
+    1812.171387
+  ],
+  "assign_1024_on_15000_ms": [
+    807.469201,
+    837.107269,
+    919.214255,
+    871.124769,
+    830.288362
+  ],
+  "final_authoring_sha256": "ae65f6fcfcd7bf7afa8904338eb1ac17b97d898ae652d13c12f717cc6b759816"
+}

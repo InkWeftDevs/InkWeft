@@ -27,11 +27,13 @@ class UserLayers(layers:List<UserLayer> = listOf(UserLayer(DEFAULT_ID,"基础层
         require(layers.size in 1..MAX_LAYERS&&layers.map{it.id}.distinct().size==layers.size)
         require(layers.any{it.writable}){"LAYER_LAST_WRITABLE"}
         require(currentId==null||layers.any{it.id==currentId&&it.writable}){"LAYER_CHOOSE_WRITABLE"}
-        require(memberships.size<=MAX_CONTENT&&memberships.map{it.content}.distinct().size==memberships.size)
-        require(memberships.all{m->layers.any{it.id==m.layerId}})
-        require(deleted.size<=MAX_CONTENT&&deleted.distinct().size==deleted.size&&deleted.none{d->memberships.any{it.content==d}})
+        require(memberships.size<=MAX_CONTENT&&byContent.size==memberships.size)
+        require(memberships.all{it.layerId in byId})
+        require(deleted.size<=MAX_CONTENT&&deletedSet.size==deleted.size&&deleted.none{it in byContent})
     }
     fun layer(content:LayerContent)=byContent[content]?.let{byId[it.layerId]}
+    fun owns(content:LayerContent)=content in byContent||content in deletedSet
+    fun isDeleted(content:LayerContent)=content in deletedSet
     fun visible(content:LayerContent)=content !in deletedSet&&layer(content)?.visible==true
     fun editable(content:LayerContent)=content !in deletedSet&&layer(content)?.writable==true
     fun selected(ids:Collection<LayerContent>):LayerSelection {
@@ -58,13 +60,14 @@ class UserLayers(layers:List<UserLayer> = listOf(UserLayer(DEFAULT_ID,"基础层
     fun assignNew(ids:Collection<LayerContent>,targetId:String?=currentId):UserLayers {
         val current=checkNotNull(targetId){"LAYER_CHOOSE_WRITABLE"}
         require(layers.any{it.id==current&&it.writable}){"LAYER_TARGET_NOT_WRITABLE"}
-        require(ids.distinct().size==ids.size&&ids.none{c->c in deleted||memberships.any{it.content==c}})
+        require(ids.distinct().size==ids.size&&ids.none{owns(it)})
         return UserLayers(layers,currentId,memberships+ids.map{LayerMembership(it,current)},deleted)
     }
     fun transfer(ids:Collection<LayerContent>,targetId:String):UserLayers {
         require(ids.isNotEmpty());requireEditable(ids)
         require(layers.any{it.id==targetId&&it.writable}){"LAYER_TARGET_NOT_WRITABLE"}
-        return UserLayers(layers,currentId,memberships.map{if(it.content in ids)it.copy(layerId=targetId)else it},deleted)
+        val selected=ids.toSet()
+        return UserLayers(layers,currentId,memberships.map{if(it.content in selected)it.copy(layerId=targetId)else it},deleted)
     }
     /** A null decision is permitted only for an empty layer. Never silently picks a destination. */
     fun remove(id:String,decision:LayerDelete?=null):UserLayers {
@@ -83,7 +86,8 @@ class UserLayers(layers:List<UserLayer> = listOf(UserLayer(DEFAULT_ID,"基础层
     companion object {
         const val DEFAULT_ID="00000000-0000-0000-0000-000000000001"
         const val MAX_LAYERS=32
-        const val MAX_CONTENT=22_000
+        const val LEGACY_MAX_CONTENT=22_000
+        const val MAX_CONTENT=InkLimits.MAX_RETAINED_STROKES+PageObjectCodec.MAX_RECORDS+PageAuthoring.MAX_ANNOTATIONS
         fun legacy(contents:Collection<LayerContent>)=UserLayers(memberships=contents.map{LayerMembership(it,DEFAULT_ID)})
     }
 }
@@ -108,7 +112,7 @@ fun UserLayers.requireBeautyOwnership(objects:List<PageObject>) {
     objects.filter{it.sourceStrokeIds.isNotEmpty()}.forEach{o->
         val objectRef=LayerContent(LayerContentKind.OBJECT,o.id)
         require(o.sourceStrokeIds.all{id->val source=LayerContent(LayerContentKind.INK,id)
-            if(objectRef in deleted)source in deleted else layer(objectRef)?.id!=null&&layer(objectRef)?.id==layer(source)?.id
+            if(isDeleted(objectRef))isDeleted(source) else layer(objectRef)?.id!=null&&layer(objectRef)?.id==layer(source)?.id
         }){"LAYER_BEAUTY_MOVE_TOGETHER"}
     }
 }

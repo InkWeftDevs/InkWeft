@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="org.inkweft.core.PageAuthoringTest" tests="16" skipped="0" failures="0" errors="0" timestamp="2026-10-10T10:25:59.298Z" hostname="4d22d97528bf" time="0.092">
+  <properties/>
+  <testcase name="pageAndBookCopiesCarryHiddenInkAndRemapEveryLocalIdentity" classname="org.inkweft.core.PageAuthoringTest" time="0.004"/>
+  <testcase name="boundInkMovesExactlyOnceAndDetachFreezesWorldPosition" classname="org.inkweft.core.PageAuthoringTest" time="0.0"/>
+  <testcase name="sourceAuthoringScopeChangesDigestWhileOldNullScopeBytesStayCompatible" classname="org.inkweft.core.PageAuthoringTest" time="0.004"/>
+  <testcase name="nonemptyDeletionRequiresChoiceTransferIsExplicitAndSnapshotUndoesEverything" classname="org.inkweft.core.PageAuthoringTest" time="0.001"/>
+  <testcase name="lockedMixedSelectionIsExplicitlyAllOrNothingAndOrderingDoesNotChangeOwnership" classname="org.inkweft.core.PageAuthoringTest" time="0.002"/>
+  <testcase name="twoQueuedPensKeepCapturedScopeWithoutSelfConflictingAndRetryKeepsDigest" classname="org.inkweft.core.PageAuthoringTest" time="0.001"/>
+  <testcase name="declaredCapacityRejectsWithoutDiscardingTheAcceptedState" classname="org.inkweft.core.PageAuthoringTest" time="0.001"/>
+  <testcase name="beautyAndRetainedAuthorInkCannotBeSeparatedByOneLayerTransfer" classname="org.inkweft.core.PageAuthoringTest" time="0.001"/>
+  <testcase name="writingRequiresTheLayerAndConfigurationCapturedAtPointerDown" classname="org.inkweft.core.PageAuthoringTest" time="0.0"/>
+  <testcase name="fixedThousandStrokeMembershipUsesStableIndexedLookup" classname="org.inkweft.core.PageAuthoringTest" time="0.049"/>
+  <testcase name="backupCodecPreservesHiddenLockedLayersBlanksAndOverflowInk" classname="org.inkweft.core.PageAuthoringTest" time="0.002"/>
+  <testcase name="twoWhitespacesSeparateOriginalLocalAndDisplayCoordinates" classname="org.inkweft.core.PageAuthoringTest" time="0.001"/>
+  <testcase name="defaultPageCopyStillUsesLegacyBytesAndScopedCommandDigestIncludesTarget" classname="org.inkweft.core.PageAuthoringTest" time="0.001"/>
+  <testcase name="occurrenceRegionResizeFoldAndCopyPreserveAllOverflowSamples" classname="org.inkweft.core.PageAuthoringTest" time="0.001"/>
+  <testcase name="changingCurrentLayerStopsWritingWithoutChoosingAnother" classname="org.inkweft.core.PageAuthoringTest" time="0.021"/>
+  <testcase name="extremeDisplayScaleAndDetachUsePureGeometryWithoutClampingAuthorWidths" classname="org.inkweft.core.PageAuthoringTest" time="0.001"/>
+  <system-out><![CDATA[B4 JVM: 1000 memberships / 1000000 lookups = 44 ms; native frame/input performance NOT_RUN
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

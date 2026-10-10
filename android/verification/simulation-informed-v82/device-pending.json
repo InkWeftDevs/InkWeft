@@ -1,0 +1,65 @@
+{
+  "candidate_version": 82,
+  "status": "NOT_RUN",
+  "reason": "No Android device attached to this workspace. Uploaded evidence covers frozen V80, not V82.",
+  "new_methods": [
+    "org.inkweft.app.LinkedCardReturnRegressionTest#bodyKeywordReturnsToOriginCardAndUnavailableOriginKeepsTheReturnRecord",
+    "org.inkweft.data.AuthoringProjectionRegressionTest#firstStrokePast22000RetainedRowsCommitsAndKeepsHiddenAuthorBytes",
+    "org.inkweft.data.AuthoringProjectionRegressionTest#projectedIdsIncludeHistoryButFullInkAndObjectReadsStillValidatePayloads",
+    "org.inkweft.data.AuthoringProjectionRegressionTest#bulkReplacementInheritsEachSourceLayerAndLockedBatchRemainsAtomic"
+  ],
+  "new_method_count": 4,
+  "additional_v81_methods": "../device-informed-v81/device-pending.json",
+  "related_v80_methods": [
+    "org.inkweft.app.InputRenderingRegressionTest#penUpConsumesItsEntireHistoryBeforeCommitWithoutInventingHardwareAxes",
+    "org.inkweft.app.InputRenderingRegressionTest#canceledTerminalHistoryCannotBecomeAnAuthorStroke",
+    "org.inkweft.app.InputRenderingRegressionTest#stationaryPressureChangesReopenThroughNativeInkWithoutLosingAuthorReadings",
+    "org.inkweft.app.InputRenderingRegressionTest#sameIdInteriorPencilChangesMatchFreshRasterPixels",
+    "org.inkweft.app.InputRenderingRegressionTest#stationaryPencilUpdateUsesTheLastReadingRatherThanAccumulatingOldPressure",
+    "org.inkweft.app.FastPencilTest#longLiveStrokeDoesNotRerasterizeOldTiles",
+    "org.inkweft.app.SelectionPerformanceTest#repeatedPageDrawKeepsPencilRasterWorkBounded",
+    "org.inkweft.app.SelectionPerformanceTest#cachedInkMatchesDirectPixelsAfterAppendEraseAndViewportChange",
+    "org.inkweft.app.FormulaFlowTest#editingResizedFormulaKeepsItsDisplayScaleAndColorOnlyEditKeepsMasks",
+    "org.inkweft.app.ExcerptLassoRegressionTest#freehandExcerptExcludesTheOtherCornerOfItsBoundingBox",
+    "org.inkweft.data.InkRepositoryTest#visiblePreviewMatchesFullReadAfterCutsReplacementAndUndo",
+    "org.inkweft.data.InkRepositoryTest#previewSkipsHiddenPayloadWhileFullReadStillValidatesHistory"
+  ],
+  "manual_cases": [
+    {
+      "priority": 1,
+      "case": "NAV-01/NAV-02/UX-01",
+      "steps": "正文关联真实点击→预览取消→跨本目标→返回原摘要卡；在返回前回收来源，失败须保留位置与返回记录，恢复后可重试。继续检查多层跳转与旋转。"
+    },
+    {
+      "priority": 1,
+      "case": "LOAD-01",
+      "steps": "相同环境1.5万笔稀疏/密集各10次。分开记录事务冻结、图层解码、页面ready、首个实际可读截图；保留失败尝试和截图扫描成本，控制主机并行负载。"
+    },
+    {
+      "priority": 1,
+      "case": "CAPACITY/LAYERS",
+      "steps": "独立合成库超过22000保留笔迹，达到40000保留/20000可见后重开、删层、撤销、复制、IWP8/整本/备份往返；逐ID/原始载荷核验。另测同时存在注释/对象的字节额度。"
+    },
+    {
+      "priority": 2,
+      "case": "LOAD-05",
+      "steps": "保留原失败栈。先在普通未插桩MainActivity执行200/500页搜索，再单独运行Compose测试；记录实际调度器/线程/焦点调用，原断言与失败分母保留。"
+    },
+    {
+      "priority": 2,
+      "case": "MEMORY",
+      "steps": "观察图层集合索引新增内存、IO解码、连续加载/替换/撤销的PSS、GC、帧分布；主机计算中位数不替代这些数据。"
+    },
+    {
+      "priority": 2,
+      "case": "ALGORITHM",
+      "steps": "真实笔的坐标/压力/时间与处理后输出、显示帧按相同触笔关联；类型4五元组字段需调用点/绘制消费参数验证。预测轨迹只用于呈现，不自动写作者原迹。"
+    },
+    {
+      "priority": 2,
+      "case": "REC/UX",
+      "steps": "真人文字/二维公式标注与未修正候选另计；取消、校对、应用、编辑、恢复原迹、字体导入/缺字体替代/移动重开、摘要框调整与注释撤销单独验收。"
+    }
+  ],
+  "environment": "Use complete original MuPDF native dependency and independent synthetic install/data; record source/APK/cert SHA, ABI, device and per-method receipts. Existing V80 PASS cannot certify V82."
+}

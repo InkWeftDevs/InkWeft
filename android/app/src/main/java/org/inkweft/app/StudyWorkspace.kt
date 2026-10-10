@@ -467,9 +467,12 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
         if(!preserve){reviewStateHolder.removeState(reviewSessionKey);reviewPlan=null;reviewCardOnly=false}
         return true
     }
-    fun openRelatedTarget(target:TargetRef){
+    fun openRelatedTarget(target:TargetRef,origin:TargetRef?=null){
         if(!leaveReviewContext())return
         navigation.cancelSourceNavigation()
+        // Capture the reading card before closing it. KnowledgeWorkspace may
+        // already supply a more specific origin for its own preview route.
+        if(origin!=null)app.knowledgeTargetOrigin.value=origin
         app.openKnowledgeTarget.value=target;closeCardKnowledge();chosenCardId=null;chosenNodeId=null;inspectSource=false;dismiss()
     }
     fun openCapacity(){
@@ -1272,7 +1275,7 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
                 Text("正文 / 既有内容",style=MaterialTheme.typography.labelMedium,color=Quiet,modifier=Modifier.testTag("card-body-heading").semantics{heading()})
                 if(card.id in structureCards.map{it.id})androidx.compose.foundation.text.selection.SelectionContainer{Text(card.body.ifBlank{"尚未填写摘要"},modifier=Modifier.testTag("card-full-body"))}
                 else KnowledgeLinkedCardBody(TargetRef(TargetKind.CARD,card.id),card.body,browseReady){target->
-                    openRelatedTarget(target)
+                    openRelatedTarget(target,TargetRef(TargetKind.CARD,card.id))
                 }
             }
             if(!inspectSource&&card.id !in structureCards.map{it.id}){
@@ -1419,7 +1422,7 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
         })
     }}
     knowledgeCard?.let{card->
-        val openKnowledgeTarget:(TargetRef)->Unit=::openRelatedTarget
+        val openKnowledgeTarget:(TargetRef)->Unit={openRelatedTarget(it)}
         if(knowledgeBacklinks)KnowledgeWorkspace(note.base.id,TargetRef(TargetKind.CARD,card.id),initialBacklinks=true,includeAllRelationKinds=knowledgeAllRelationKinds,dismiss=::closeCardKnowledge,openTarget=openKnowledgeTarget)
         else knowledgeState.SaveableStateProvider(card.id){KnowledgeWorkspace(note.base.id,TargetRef(TargetKind.CARD,card.id),dismiss=::closeCardKnowledge,openTarget=openKnowledgeTarget)}
     }

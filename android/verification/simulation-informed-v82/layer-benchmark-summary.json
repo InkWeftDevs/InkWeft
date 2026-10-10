@@ -1,0 +1,19 @@
+{
+  "scope": "WARM_HOST_JVM_NOT_ANDROID",
+  "baseline": "Exact V81 UserLayers.kt and PageAuthoring.kt override classes; V81 per-item assignment vs V82 per-layer batch on the same public API.",
+  "warmups": 2,
+  "runs": 5,
+  "content_hash_equal": true,
+  "cases": [
+    {
+      "case": "construct_15000_members_and_15000_deleted_ms",
+      "V81_median_ms": 738.069105,
+      "V82_median_ms": 3.354864
+    },
+    {
+      "case": "assign_1024_on_15000_ms",
+      "V81_median_ms": 837.107269,
+      "V82_median_ms": 1.539972
+    }
+  ]
+}
