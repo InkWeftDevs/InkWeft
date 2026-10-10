@@ -19,7 +19,10 @@ object ContentTransfer {
         class Book(val value: NotebookFile) : Content { override val title get() = value.title }
     }
     class Prepared internal constructor(val kind: Kind, val content: Content,
-        val sha256: String, val byteCount: Int)
+        val sha256: String, val byteCount: Int,private val cleanup:()->Unit={}) : java.io.Closeable {
+        private var closed=false
+        override fun close(){if(!closed){closed=true;cleanup()}}
+    }
 
     fun kind(header: ByteArray): Kind {
         require(header.size >= 4) { "CONTENT_HEADER_MISSING" }
@@ -74,10 +77,10 @@ object ContentTransfer {
         return Prepared(type, content, hash(bytes), bytes.size)
     }
     /** Stable import intent uses original document identity, independent of converter PDF metadata. */
-    fun document(title:String,pdf:PdfDocumentSource,originalHash:String):Prepared {
+    fun document(title:String,pdf:PdfDocumentSource,originalHash:String,cleanup:()->Unit={}):Prepared {
         require(originalHash.matches(Regex("[0-9a-f]{64}")))
         val book=NotebookFile(title,"",List(pdf.pages){i->InkPageFile(title,"",emptyList(),paper=PaperStyle.BLANK,source=PdfPageSource(pdf,i))})
-        return Prepared(Kind.BOOK,Content.Book(book),hash(("InkWeft.Document/1\n"+originalHash+"\n"+title).toByteArray()),pdf.size)
+        return Prepared(Kind.BOOK,Content.Book(book),hash(("InkWeft.Document/1\n"+originalHash+"\n"+title).toByteArray()),pdf.size,cleanup)
     }
     fun hash(bytes: ByteArray) = MessageDigest.getInstance("SHA-256").digest(bytes)
         .joinToString("") { "%02x".format(it.toInt() and 255) }

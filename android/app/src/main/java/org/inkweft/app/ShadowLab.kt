@@ -88,5 +88,5 @@ internal suspend fun shadowSample(context:Context,r:ShadowReplica):String{
             if(active!=null&&book.isNotEmpty())Box(Modifier.weight(1f)){key(active){ShadowReplicaPanel(active,book,tick){editing=it}}}
         }}
     }
-    DisposableEffect(Unit){onDispose{a?.replica?.close();b?.replica?.close()}}
+    DisposableEffect(Unit){onDispose{a?.close();b?.close()}}
 }

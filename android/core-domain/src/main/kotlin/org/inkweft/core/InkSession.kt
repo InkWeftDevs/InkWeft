@@ -30,6 +30,20 @@ class InkSession(initial:InkPage) {
     val canRedo get()=queued==0&&blocked==null&&redo.isNotEmpty()
     val undoIdentity:InkMutation? get()=undo.lastOrNull()
     val redoIdentity:InkMutation? get()=redo.lastOrNull()
+    fun hasHistoryIdentity(value:InkMutation)=undo.any{it===value}||redo.any{it===value}
+    class History internal constructor(val noteId:String,val revision:Long,internal val undo:List<InkMutation>,internal val redo:List<InkMutation>)
+    /** Committed inverses hold identities, never stroke geometry or point arrays. */
+    fun suspendHistory():History {
+        check(queued==0&&blocked==null&&historyMove==null)
+        val entries=undo+redo
+        check(entries.none{it is InkMutation.Add||it is InkMutation.Replace||it is InkMutation.Cut})
+        return History(page.noteId,page.revision,undo.toList(),redo.toList())
+    }
+    fun restoreHistory(value:History) {
+        require(value.noteId==page.noteId&&value.revision==page.revision){"INK_HISTORY_REVISION_CHANGED"}
+        check(queued==0&&blocked==null&&undo.isEmpty()&&redo.isEmpty())
+        undo.addAll(value.undo);redo.addAll(value.redo)
+    }
     private fun apply(change:InkMutation,revision:Long,rows:LinkedHashMap<String,StoredInk>,cuts:LinkedHashMap<String,StoredCut>):InkMutation=when(change){
         is InkMutation.Replace->{
             require(change.hidden.all{rows[it]?.visible==true});require(change.added.none{rows.containsKey(it.id)})

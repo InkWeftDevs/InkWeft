@@ -33,6 +33,7 @@ interface NoteDao {
 abstract class NoteDatabase:RoomDatabase() {
     internal val inkGroupMutex=kotlinx.coroutines.sync.Mutex()
     internal var documentScratch:java.io.File?=null
+    val originalFiles by lazy{OriginalFileCache(java.io.File(checkNotNull(documentScratch),"original-cache/"+org.inkweft.core.ContentTransfer.hash((openHelper.databaseName?:java.util.UUID.randomUUID().toString()).toByteArray())))}
     internal var checkpointRoot:java.io.File?=null
     abstract fun notes():NoteDao
     abstract fun ink():InkDao

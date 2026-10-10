@@ -9,7 +9,7 @@ import org.inkweft.data.*
 import java.util.UUID
 
 internal data class ObjectsUi(val objects:List<PageObject> = emptyList(),val loading:Boolean=true,
-    val busy:Boolean=false,val error:String?=null,val pending:Boolean=false,val undo:Boolean=false,val redo:Boolean=false,val automaticPending:Boolean=false)
+    val busy:Boolean=false,val error:String?=null,val pending:Boolean=false,val undo:Boolean=false,val redo:Boolean=false,val automaticPending:Boolean=false,val suspended:Boolean=false)
 internal class PageObjectViewModel(private val pageId:String,private val repo:PageObjectRepository,
     private val recognition:(suspend (List<InkStroke>,BeautyLanguage,Boolean)->RecognizedWriting)?=null):ViewModel() {
     private val state=MutableStateFlow(ObjectsUi());val ui=state.asStateFlow()
@@ -182,6 +182,16 @@ internal class PageObjectViewModel(private val pageId:String,private val repo:Pa
         catch(_:Exception){runCatching{trace?.finish("UNAVAILABLE")};beautyState.value="这段字暂未美化，已保留原迹";return true}
     }
     init{reload()}
+    private var displays=0
+    internal fun attachPage(){displays++;resumePage()}
+    internal fun detachPage(){check(displays>0);displays--;releasePage()}
+    internal fun resumePage(){if(state.value.suspended)reload()}
+    /** Edited objects keep their immutable inverse snapshots; clean reading pages can be rebuilt. */
+    internal fun releasePage():Boolean {
+        if(displays>0||reading||state.value.loading||state.value.busy||state.value.pending||state.value.error!=null||pending!=null||external||undo.isNotEmpty()||redo.isNotEmpty()||groupUndo.isNotEmpty()||groupRedo.isNotEmpty()||beautyJob?.isActive==true||reviewState.value!=null||beautyWaiting.isNotEmpty())return false
+        snapshot=ObjectSnapshot();latestInk=InkUi();beautyKnown=null;beautyKey=null;beautyAttempts.clear()
+        state.value=ObjectsUi(loading=false,suspended=true);return true
+    }
     fun reload(){if(state.value.busy||reading)return;reading=true;viewModelScope.launch{
         state.value=state.value.copy(loading=true)
         try{snapshot=withContext(Dispatchers.IO){repo.read(pageId)};pending=null;beautyKey=null;undo.clear();redo.clear();publish()}
@@ -205,10 +215,7 @@ internal class PageObjectViewModel(private val pageId:String,private val repo:Pa
             try{
                 val revision=withContext(Dispatchers.IO){repo.save(pageId,p.before.revision,p.id,p.after,p.expectedInk,p.originals,p.layerScope)}
                 completeExternal(revision)
-            }catch(c:CancellationException){throw c}catch(_:ImageOriginalCapacity){
-                // This rejection is raised inside the transaction before its receipt commits.
-                pending=null;external=false;publish("图片未保存：原件总量已达 32 MB 上限。原文件和已有内容均未更改；可另存较小副本后导入。")
-            }catch(_:Exception){publish("对象保存尚未确认。请核对重试；如有版本冲突，可重新读取已保存对象。")}
+            }catch(c:CancellationException){throw c}catch(_:Exception){publish("对象保存尚未确认。请核对重试；如有版本冲突，可重新读取已保存对象。")}
         }
     }
     internal fun validateExternal(objects:List<PageObject>){check(authorAllowed());check(!state.value.loading&&!state.value.busy&&!state.value.pending);PageObjectCodec.encode(objects)}
@@ -317,7 +324,7 @@ internal class PageObjectViewModel(private val pageId:String,private val repo:Pa
                         image=java.util.Base64.getEncoder().encodeToString(bytes),imageSource=original.sha256)
                 }
                 publish();change(snapshot.objects+added,originals=sources.map{it.first},accepted={cleanup?.delete();onSelected(added.last().id)})
-            }catch(c:CancellationException){throw c}catch(_:Exception){publish("这批图片未加入，已有内容保留。每页最多 32 项；支持静态 JPG、PNG、WebP、HEIF，单个原图最多 20 MB，原件整库上限 32 MB。请减少数量或缩小图片后重试。")}
+            }catch(c:CancellationException){throw c}catch(_:Exception){publish("这批图片未加入，已有内容保留。每页最多 32 项；支持静态 JPG、PNG、WebP、HEIF，单个原图最多 20 MB，原件按可用空间保存。请减少数量或缩小图片后重试。")}
         }
     }
     class Factory(private val id:String,private val repo:PageObjectRepository):ViewModelProvider.Factory {

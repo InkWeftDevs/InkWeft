@@ -1,0 +1,97 @@
+{
+  "format": "StarNote.PdfSdkEvidence/1",
+  "status": "OFFLINE_SDK_CAPABILITIES; APPLICATION_IMPORT_PATH_NOT_CAPTURED",
+  "apk_version_code": 5703,
+  "apk_sha256": "c4053f1980e144c0b8c09478d447ad4a05e678c9234d156e6f5ce6a910f041a9",
+  "library": "lib/arm64-v8a/libengine_sdk.so",
+  "library_sha256": "3a0b8c129b5d3a6d7f3dd88ad8f437a8e5d1d794c22b2f019d0529fc32ae9a3d",
+  "decompiler": "Ghidra 12.1.4; no whole-library analysis; four bodies bounded to ELF symbol lengths; guessed types",
+  "ghidra_image_base": "00100000",
+  "functions": [
+    {
+      "name": "Java_com_onyx_android_sdk_neopdf_NeoPdfNative_nativeOpenDocument",
+      "elf_address": "1ee6b3c",
+      "elf_symbol_size": 600,
+      "body_addresses": 600,
+      "decompiled": true,
+      "error": "",
+      "pseudocode_has_warning": false,
+      "pseudocode_sha256": "3547dbeb4325424dec2f591aeabee8bdfd70a63f875f63ba3a495d07cf95971e"
+    },
+    {
+      "name": "Java_com_onyx_android_sdk_neopdf_NeoPdfNative_nativeOpenDocumentStream",
+      "elf_address": "1ee7328",
+      "elf_symbol_size": 1160,
+      "body_addresses": 1160,
+      "decompiled": true,
+      "error": "",
+      "pseudocode_has_warning": false,
+      "pseudocode_sha256": "5d41909525af0eb33d4023bd26dfe5b2c2df0342814c59e6e5ca9f09b6d70ce1"
+    },
+    {
+      "name": "neopdf_openDocument",
+      "elf_address": "1f751c8",
+      "elf_symbol_size": 960,
+      "body_addresses": 960,
+      "decompiled": true,
+      "error": "",
+      "pseudocode_has_warning": false,
+      "pseudocode_sha256": "e9b243a4d516a2853a0cbe9eef718438b50c74b4129a914e52f536fc570da30d"
+    },
+    {
+      "name": "neopdf_renderPage",
+      "elf_address": "1f79984",
+      "elf_symbol_size": 1012,
+      "body_addresses": 1012,
+      "decompiled": true,
+      "error": "",
+      "pseudocode_has_warning": false,
+      "pseudocode_sha256": "0a66a49c20cff3725b551f423725836dbb7596bcf852f2c3397aa7aec1641f8f"
+    }
+  ],
+  "observations": [
+    {
+      "function": "nativeOpenDocument",
+      "elf_address": "1ee6b3c",
+      "jni_string_function_offset": "0x548",
+      "jni_string_release_offset": "0x550",
+      "engine_call_ghidra_address": "03576270",
+      "engine_call_elf_address": "03476270",
+      "plt_got_elf_address": "035af130",
+      "relocation_symbol": "neopdf_openDocument",
+      "scope": "JNI wrapper obtains a UTF string and passes it to the native document open interface"
+    },
+    {
+      "function": "nativeOpenDocumentStream",
+      "elf_address": "1ee7328",
+      "method_name": "read",
+      "method_signature": "(J[B)J",
+      "name_method": "name()Ljava/lang/String;",
+      "length_method": "length()J",
+      "strings_elf_addresses": {
+        "read": "007df0ac",
+        "read_signature": "007eab3e",
+        "name": "00813327",
+        "length": "00803f49"
+      },
+      "scope": "Offset plus caller-provided byte buffer and 64-bit length support positional reads; method behavior/application use not dynamically captured"
+    },
+    {
+      "function": "neopdf_renderPage",
+      "elf_address": "1f79984",
+      "scope": "Document handle, bitmap data/dimensions, page integer and viewport/render arguments are passed separately; guessed parameter types"
+    },
+    {
+      "scope": "ELF strings identify pdfium namespace and CPDF_Document; this is embedded-engine evidence, not an exact SDK release or runtime route"
+    }
+  ],
+  "runtime_5704_import_pdf": "NOT_CAPTURED",
+  "user_300MB_StarNote_observation": "USER_REPORTED; NOT_IN_CAPTURE",
+  "not_proved": [
+    "StarNote 5704 exact PDF import call chain",
+    "which storage container stores its imported PDF",
+    "unlimited notebook bytes",
+    "its renderer/cache memory limits",
+    "its whole business DEX/source recovery"
+  ]
+}

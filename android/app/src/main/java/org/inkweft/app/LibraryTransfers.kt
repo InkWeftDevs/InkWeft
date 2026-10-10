@@ -23,8 +23,12 @@ import org.inkweft.core.*
 import org.inkweft.data.*
 import java.util.UUID
 
-internal fun Throwable.mapExportExplanation():String? = if(message=="LIVE_MAP_REQUIRES_FULL_BACKUP_OR_SNAPSHOT")
-    "笔记含实时导图，请使用完整资料库备份，或先选中页内导图并固定此视图后再复制或导出。原资料未改动。" else null
+internal fun Throwable.mapExportExplanation():String? = when(message){
+    "LIVE_MAP_REQUIRES_FULL_BACKUP_OR_SNAPSHOT"->"笔记含实时导图，请使用完整资料库备份，或先选中页内导图并固定此视图后再复制或导出。原资料未改动。"
+    "CONTENT_SIZE_LIMIT_USE_FULL_BACKUP"->"这份资料超过内容副本格式的大小，请使用完整资料库备份保存原件和笔记。原资料未改动。"
+    "ORIGINAL_LOW_SPACE"->"可用空间不足以保存原件、临时文件和数据库事务，请释放空间后重试。原资料保留。"
+    else->null
+}
 
 internal data class LibraryTransferUi(val mode:String="",val busy:Boolean=false,
     val message:String="",val needsFile:Boolean=false,val result:Note?=null,val export:ContentExport?=null)
@@ -44,7 +48,8 @@ class LibraryTransfersViewModel(app:Application,private val saved:SavedStateHand
         saved["transfer-kind"]=kind;saved["transfer-id"]=UUID.randomUUID().toString()
         saved["transfer-dest"]=UUID.randomUUID().toString();saved["transfer-source"]=source;saved["transfer-sha"]=sha
     }
-    private fun forget(){keys.forEach{saved.remove<String>(it)};prepared=null}
+    private fun forget(){keys.forEach{saved.remove<String>(it)};prepared?.close();prepared=null}
+    override fun onCleared(){prepared?.close();super.onCleared()}
     private fun copyCommand()=CopyNotebook(value("id"),value("source"),value("dest"))
     private fun importCommand()=ImportNotebook(value("id"),value("dest"),value("sha"))
     private fun digest()=if(value("kind")=="COPY")copyCommand().digest()else importCommand().digest()
@@ -62,16 +67,14 @@ class LibraryTransfersViewModel(app:Application,private val saved:SavedStateHand
         mutable.value=LibraryTransferUi("READING",true,"正在校验副本，没有写入资料库…")
         viewModelScope.launch{
             try{
-                val parsed=withContext(Dispatchers.IO){
-                    DocumentImports.read(ownerApp,uri)
-                }
-                if(hasPending())require(value("sha")==parsed.sha256){"IMPORT_CONTENT_CHANGED"}
+                val parsed=DocumentImports.read(ownerApp,uri)
+                if(hasPending()&&value("sha")!=parsed.sha256){parsed.close();error("IMPORT_CONTENT_CHANGED")}
                 else remember("IMPORT",sha=parsed.sha256)
-                prepared=parsed
+                prepared?.close();prepared=parsed
                 val count=when(val c=parsed.content){is ContentTransfer.Content.Page->1;is ContentTransfer.Content.Book->c.value.pages.size}
                 mutable.value=LibraryTransferUi("IMPORT",message="已校验 ${parsed.byteCount} 字节、$count 页。将导入为新笔记，不覆盖现有资料。副本不是完整资料库备份；不包含账号或云服务配置。")
             }catch(c:CancellationException){throw c}
-            catch(e:Exception){mutable.value=LibraryTransferUi("ERROR",message=(e as? DocumentImportException)?.explanation?:"无法完整导入：文件损坏、已加密或超出上限。源文档最多 32 MB / 500 页，页面副本 64 MB、整本副本 96 MB。原资料未改动。待核对导入请选择同一文件。",needsFile=hasPending())}
+            catch(e:Exception){mutable.value=LibraryTransferUi("ERROR",message=(e as? DocumentImportException)?.explanation?:e.mapExportExplanation()?:"无法完整导入：文件损坏、已加密或超出上限。PDF 最多 512 MB / 500 页；EPUB/MOBI 源文件 32 MB，页面副本 64 MB、整本副本 96 MB。原资料未改动。待核对导入请选择同一文件。",needsFile=hasPending())}
         }
     }
     fun commit(){

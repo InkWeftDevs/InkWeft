@@ -60,6 +60,7 @@ import org.inkweft.core.*
                     TextButton(onClick={prefs.edit().remove("case-x").remove("case-y").remove("case-collapsed").remove("favorites-x").remove("favorites-y").remove("favorites-collapsed").apply();reset=true},modifier=Modifier.testTag("settings-reset-case")){Text(if(reset)"笔盒位置已重置"else"重置笔盒位置")}
                 }}
                 SettingsGroup("数据","folder","本地保存","完整备份保留已保存的资料与历史。导出副本可保留笔迹、图片与文档。")
+                OriginalStorageSummary()
                 OutlinedButton(onClick=libraryBackup::open,modifier=Modifier.fillMaxWidth().heightIn(min=48.dp).testTag("library-backup-open")){Glyph("export");Spacer(Modifier.width(8.dp));Text("资料库备份与恢复")}
                 OutlinedButton(onClick={backupOpen=true},modifier=Modifier.fillMaxWidth().heightIn(min=48.dp).testTag("open-encrypted-backup")){Text("加密备份与恢复（实验）")}
                 OutlinedButton(onClick={resourcesOpen=true},modifier=Modifier.fillMaxWidth().heightIn(min=48.dp).testTag("open-resource-packs")){Text("本地模板包")}

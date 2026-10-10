@@ -1,0 +1,50 @@
+V86 本地复测 · 聚焦原件与按页加载
+
+云端没有可用安卓模拟器或 ADB 设备；云端 APK_NOT_BUILT，以下设备项目均 NOT_RUN。
+本轮无需重跑 V84/V85 整套长时间 UI 矩阵。先运行以下 4 个小方法，再做一个大文件存储场景。
+请使用独立的空白测试安装，保留原资料备份；不需要清空真实资料库。
+
+1. 本地构建：使用完整 MuPDF 1.28.5 官方原生依赖，不使用云端的 API-only 编译替代。
+   cd android
+   ./gradlew -PinkweftInsertionPreview=true :app:assembleDebug :app:assembleDebugAndroidTest :data-local:assembleDebugAndroidTest
+   记录 git HEAD、APK SHA-256、设备 ABI、安卓版本、应用 versionCode=86 和测试设备 ID。
+   V86 沿用 Room16；大于旧额度的资料与新 v2 全库备份需要 V86 或更新版本，请勿降级读取。
+
+2. 快速设备检查（4 方法，真实 Room + 平台 PDF 读取，不跑全 UI 矩阵）：
+   ./gradlew -PinkweftInsertionPreview=true :app:connectedDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=org.inkweft.app.StreamedPageLifecycleTest
+   - 两个显示位置共享页面时，关闭其中一个不会释放另一位置正在用的数据。
+   - 离屏重载保留铅笔压感原样、撤销和重做。
+   - 写入已提交但回执丢失时保留草稿；幂等确认完成后才释放。
+   - 其他位置改变页面版本时不重放旧版本撤销。
+   - 小 PDF 输入流摘要正确，关闭导入预览后暂存文件被清理。
+   （其中首个方法同时覆盖显示引用、压感和撤销/重做，共 4 个测试方法。）
+
+3. 单独的大文件存储检查（至少 6 GiB 测试空间，1 方法；不足会 SKIP，不能计 PASS）：
+   ./gradlew -PinkweftInsertionPreview=true :data-local:connectedDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=org.inkweft.data.StreamedStorageRepositoryTest
+   生成精确 300,000,000 字节的合法 2 页 PDF；导入与 receipt 重试、整本复制、600 MB 全库原件、逐块读取、文件缓存、备份校验及恢复重放。
+   核对 SHA-256、页次、原件长度；完整读写必须逐块，不能把 300 MB 原件还原成 byte[]。
+   合成 PDF 的大块是未使用的数据流，不代表图片课件、复杂字体或损坏 PDF 的原生负载。
+
+4. 人工设备验证（两个真实文件即可，建议先做模拟器，再做平板）：
+   - 用系统文件选择器导入约 300 MB 的真实图片/扫描 PDF；选另一份文本/矢量 PDF。
+   - 核对首、中、末页、总页数、文字跳转、摘录和批注。系统进程退出后重新打开，再复制和全库备份恢复。
+   - 记录选择文件→导入预览→提交→可见首帧的各段时间、峰值 Java/原生/PSS 内存及前后台变化。
+   - 快翻 30 页、反向返回、改变缩放与屏幕方向；错误页与加载状态不能显示成已有笔迹已丢失。
+   - 连续书写跨页后离开、回来、整笔撤销/重做；在其他已配置图层的页上继续跨页测试。
+   - 撤销历史、待确认队列、美化校对以及分屏另一侧在使用的页面应继续保留。
+   - 设置→设置与数据核对原件占用和设备可用空间；清理原件缓存后重新打开同一份 PDF。
+   - 导入时取消或空间不足应保留旧资料，无半本、无重复 receipt；未完成文件不得作为可用原件发布。
+   - 大原件的 .iwpage/.iwbook 导出应明确指向全库备份；新 v2 备份用 V86 恢复，旧 v1 备份仍可读。
+
+5. 仅在继续确定 StarNote 的实际存储路径时补采（无需等待它再使用墨织改造）：
+   使用同一约 300 MB PDF，确认 StarNote APK 5704 的版本、SHA 和本次 libengine_sdk.so SHA。
+   记录导入时 NeoPdfNative.nativeOpenDocument / nativeOpenDocumentStream 是否实际调用；流回调 read(long,byte[]) 的偏移、缓冲大小、返回长度与 length()。
+   记录创建时和普通翻页时是否调用 C4Blob getContents/read/write/seek，以及页请求和保存的所属文档 ID。
+   只需摘要、长度、偏移与调用栈；无需导出 PDF 全文或私有笔记内容。
+   对比是否保留原件文件、数据库 Blob，还是两者共同使用；测试进程重启后的读取。
+   性能测量单独关闭 Frida 重跑，以免将跟踪开销计为正常性能。
+
+云端规模探针可复现：
+   ./gradlew :core-domain:storageScaleProbe
+   它使用 64 MiB 堆，生成 300 MB PDF 和超过旧 1 GiB 边界的 v2 备份，再全流校验。
+   输出位于 core-domain/build/storage-scale；产生约 1.4 GB 合成文件，可在验证后删除。

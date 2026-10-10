@@ -28,7 +28,12 @@ class LibraryBackupRepository(private val context:Context,private val db:NoteDat
     }
     private val scratch=File(context.cacheDir,"library-backup").apply{mkdirs()}
     private fun reserve(){require(scratch.usableSpace>=32L*1024*1024){"BACKUP_LOW_SPACE"}}
-    suspend fun snapshot():Snapshot=withContext(Dispatchers.IO){
+    suspend fun snapshot():Snapshot {
+        var returned:Snapshot?=null
+        try{return withContext(Dispatchers.IO){snapshotInIo().also{returned=it}}}
+        catch(t:Throwable){returned?.close();throw t}
+    }
+    private suspend fun snapshotInIo():Snapshot {
         reserve();val path=File(scratch,"snapshot-${UUID.randomUUID()}.iwbackup")
         try {
             val summary=db.withTransaction {
@@ -40,11 +45,16 @@ class LibraryBackupRepository(private val context:Context,private val db:NoteDat
                     buffer.flush();file.fd.sync();result
                 }
             }
-            Snapshot(path,summary)
+            return Snapshot(path,summary)
         }catch(t:Throwable){path.delete();throw t}
     }
     /** Caller owns the input. Only staging is touched before digest, FK and semantic validation. */
-    suspend fun inspect(input:InputStream):Preview=withContext(Dispatchers.IO){
+    suspend fun inspect(input:InputStream):Preview {
+        var returned:Preview?=null
+        try{return withContext(Dispatchers.IO){inspectInIo(input).also{returned=it}}}
+        catch(t:Throwable){returned?.close();throw t}
+    }
+    private suspend fun inspectInIo(input:InputStream):Preview {
         reserve();val root=File(scratch,"stage-${UUID.randomUUID()}").apply{check(mkdirs())}
         val stage=NoteDatabase.open(context,File(root,"candidate.db").absolutePath)
         try {
@@ -65,7 +75,7 @@ class LibraryBackupRepository(private val context:Context,private val db:NoteDat
             val notes=count(sql,"notes").toInt();val pages=count(sql,"notebook_pages").toInt()
             val trash=sql.query("SELECT COUNT(*) FROM notebook_workspace WHERE trashedAt IS NOT NULL").use{it.moveToFirst();it.getInt(0)}
             val recycled=sql.query("SELECT COUNT(*) FROM notebook_pages WHERE trashedAt IS NOT NULL").use{it.moveToFirst();it.getInt(0)}
-            Preview(stage,root,parsed,notes,pages,trash,recycled,fingerprint(sql))
+            return Preview(stage,root,parsed,notes,pages,trash,recycled,fingerprint(sql))
         }catch(t:Throwable){stage.close();root.deleteRecursively();throw t}
     }
     suspend fun restore(preview:Preview):RestoreResult=withContext(Dispatchers.IO){
@@ -95,8 +105,6 @@ class LibraryBackupRepository(private val context:Context,private val db:NoteDat
                     }
                 }
                 require(db.recall().answerInkBytes()+preview.stage.recall().answerInkBytes()<=RecallLimits.MAX_INK_LIBRARY_BYTES){"RECALL_ANSWER_LIBRARY_BUDGET"}
-                require(db.images().totalBytes()+preview.stage.images().totalBytes()<=ImageSource.LIBRARY_BYTES){"IMAGE_LIBRARY_BUDGET"}
-                require(db.documents().totalBytes()+preview.stage.documents().totalBytes()<=80_000_000){"DOCUMENT_LIBRARY_BUDGET"}
                 require(db.covers().otherBytes("")+preview.stage.covers().otherBytes("")<=32_000_000){"COVER_LIBRARY_BUDGET"}
                 if(db.study().snapshotBytes()+preview.stage.study().snapshotBytes()>StudyCapacity.MAX_SNAPSHOT_BYTES)
                     return@live RestoreResult.SNAPSHOT_CAPACITY_EXCEEDED
@@ -117,7 +125,6 @@ class LibraryBackupRepository(private val context:Context,private val db:NoteDat
         check(sql.query("PRAGMA integrity_check").use{it.moveToFirst()&&it.getString(0)=="ok"&&!it.moveToNext()})
         check(sql.query("PRAGMA foreign_key_check").use{!it.moveToFirst()})
         require(count(sql,"notes")<=500 && count(sql,"notebook_pages")<=20_000){"BACKUP_LIBRARY_BUDGET"}
-        require(stage.documents().totalBytes()<=80_000_000)
         val documentCache=mutableMapOf<String,PdfDocumentSource>()
         val notes=sql.query("SELECT id FROM notes ORDER BY id").use{c->buildList{while(c.moveToNext())add(c.getString(0))}}
         require(count(sql,"notebook_workspace")==notes.size.toLong())
@@ -143,13 +150,13 @@ class LibraryBackupRepository(private val context:Context,private val db:NoteDat
         require(sql.query("SELECT COALESCE(SUM(length(payload)),0) FROM notebook_covers").use{it.moveToFirst();it.getLong(0)}<=32_000_000){"COVER_LIBRARY_BUDGET"}
         sql.query("SELECT payload FROM notebook_covers").use{c->while(c.moveToNext())validateCoverPayload(c.getBlob(0))}
         noRows("SELECT 1 FROM notebook_workspace w LEFT JOIN notebook_covers c ON c.noteId=w.noteId WHERE w.coverKey='custom' AND c.noteId IS NULL")
-        noRows("SELECT 1 FROM document_sources WHERE pageCount NOT BETWEEN 1 AND 500 OR byteCount NOT BETWEEN 8 AND 32000000")
+        noRows("SELECT 1 FROM document_sources WHERE pageCount NOT BETWEEN 1 AND 500 OR byteCount NOT BETWEEN 8 AND ${PdfDocumentSource.MAX_BYTES}")
         noRows("SELECT 1 FROM document_pages p JOIN document_sources s ON s.id=p.documentId WHERE sourcePage<0 OR sourcePage>=s.pageCount")
-        noRows("SELECT 1 FROM document_chunks WHERE position NOT BETWEEN 0 AND 62 OR length(payload) NOT BETWEEN 1 AND 512000")
-        require(stage.images().totalBytes()<=ImageSource.LIBRARY_BYTES){"IMAGE_LIBRARY_BUDGET"}
+        noRows("SELECT 1 FROM document_chunks WHERE position NOT BETWEEN 0 AND ${(PdfDocumentSource.MAX_BYTES+DocumentRepository.CHUNK-1)/DocumentRepository.CHUNK-1} OR length(payload) NOT BETWEEN 1 AND ${DocumentRepository.CHUNK}")
         noRows("SELECT 1 FROM image_sources WHERE byteCount NOT BETWEEN 1 AND ${ImageSource.MAX_BYTES}")
         noRows("SELECT 1 FROM image_chunks WHERE position NOT BETWEEN 0 AND 40 OR length(payload) NOT BETWEEN 1 AND 512000")
-        for(image in stage.images().all())ImageSourceRepository.validate(ImageSourceRepository(stage).read(image.notebookId,image.digest))
+        val imageValidationContext=currentCoroutineContext()
+        for(image in stage.images().all()){currentCoroutineContext().ensureActive();ImageSourceRepository.validate(ImageSourceRepository(stage).read(image.notebookId,image.digest),checkNotNull(stage.documentScratch)){imageValidationContext.ensureActive()}}
         noRows("SELECT 1 FROM study_card_source_sets WHERE complete NOT IN (0,1)")
         noRows("SELECT 1 FROM card_transform_operations WHERE undone NOT IN (0,1)")
         noRows("SELECT 1 FROM canvas_authoring WHERE kind NOT IN ('PAGE','MAP') OR revision<0 OR length(payload) NOT BETWEEN 8 AND ${PageAuthoringCodec.MAX_BYTES}")
@@ -208,7 +215,8 @@ class LibraryBackupRepository(private val context:Context,private val db:NoteDat
                 stage.pages().search(p.id)?.let{s->require(s.inkRevision in 0..ink.revision&&s.text.length<=20_000&&s.method in listOf("MANUAL","OCR"))}
             }
         }
-        documentCache.values.forEach{DocumentRepository.validatePdf(it,checkNotNull(stage.documentScratch))}
+        val validationContext=currentCoroutineContext()
+        documentCache.values.forEach{DocumentRepository.validatePdf(it,checkNotNull(stage.documentScratch)){validationContext.ensureActive()}}
         noRows("SELECT 1 FROM document_sources s WHERE NOT EXISTS (SELECT 1 FROM document_pages p WHERE p.documentId=s.id)")
         noRows("SELECT 1 FROM note_revisions r LEFT JOIN notes n ON n.id=r.noteId WHERE n.id IS NULL OR r.revision<1 OR r.revision>n.revision OR length(r.title)>120 OR length(r.text)>100000")
         noRows("SELECT 1 FROM command_receipts r LEFT JOIN notes n ON n.id=r.noteId WHERE n.id IS NULL OR r.committedRevision<1 OR r.committedRevision>n.revision")

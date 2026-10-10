@@ -8,7 +8,6 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import org.inkweft.core.*
-import java.io.ByteArrayInputStream
 import kotlin.math.*
 
 /** A region in oriented image fractions, independent of the object's author-space placement. */
@@ -97,13 +96,12 @@ internal class ImageRendering(private val context:Context,private val changed:()
                                 BackgroundBudget.await(context);ensureActive()
                                 val byteCount=readSize(request.objectValue)?:error("IMAGE_ORIGINAL_MISSING")
                                 require(byteCount in 1..ImageSource.MAX_BYTES)
-                                // Repository reconstruction holds chunks, a join buffer and owned bytes.
-                                // Afterwards this same lease covers owned bytes, decoder input and its stream.
-                                BackgroundBudget.memory(byteCount.toLong()*3){
+                                // One database chunk and bounded file-copy/decoder scratch, independent of original length.
+                                BackgroundBudget.memory(4L*1024*1024){
                                     val source=read(request.objectValue)?:error("IMAGE_ORIGINAL_MISSING")
                                     require(source.sha256==request.key.source&&source.size<=byteCount)
                                     ensureActive()
-                                    val result=try{decode(source,request.key)}catch(busy:RenderBudgetBusy){decodeBudgetFailure=busy;throw busy}
+                                    val result=try{(context.applicationContext as InkWeftApplication).pageObjects.originalFile(source).use{lease->decode(lease.file,source.sha256,request.key)}}catch(busy:RenderBudgetBusy){decodeBudgetFailure=busy;throw busy}
                                     var published=false
                                     try{
                                         ensureActive()
@@ -137,11 +135,10 @@ internal class ImageRendering(private val context:Context,private val changed:()
             finally{RenderResources.inFlightJobs.decrementAndGet();if(token==generation){job=null;budgetDeferred=false;changed()}}
         }
     }
-    private suspend fun decode(source:ImageSource,key:Key):ImageFrame {
+    private suspend fun decode(file:java.io.File,hash:String,key:Key):ImageFrame {
         currentCoroutineContext().ensureActive()
-        val bytes=source.bytes()
-        val orientation=ByteArrayInputStream(bytes).use{ExifInterface(it).getAttributeInt(ExifInterface.TAG_ORIENTATION,1)}
-        val decoder=BitmapRegionDecoder.newInstance(bytes,0,bytes.size)
+        val orientation=ExifInterface(file.absolutePath).getAttributeInt(ExifInterface.TAG_ORIENTATION,1)
+        val decoder=BitmapRegionDecoder.newInstance(file.absolutePath,false)
         try{
             val w=decoder.width;val h=decoder.height
             require(w in 1..20000&&h in 1..20000&&w.toLong()*h<=100_000_000)
@@ -157,7 +154,7 @@ internal class ImageRendering(private val context:Context,private val changed:()
             RenderResources.admit(pixels*4)
             val bitmap=checkNotNull(decoder.decodeRegion(region,BitmapFactory.Options().apply{inSampleSize=sample;inPreferredConfig=Bitmap.Config.ARGB_8888}))
             RenderResources.track(bitmap,bitmap.allocationByteCount.toLong(),"image-region",owner,RenderResources.Role.IN_FLIGHT)
-            return ImageFrame(source.sha256,bitmap,region,w,h,orientation)
+            return ImageFrame(hash,bitmap,region,w,h,orientation)
         }finally{decoder.recycle()}
     }
     companion object {

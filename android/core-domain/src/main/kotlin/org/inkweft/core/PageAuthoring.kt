@@ -42,6 +42,14 @@ class PageAuthoring(val layers:UserLayers=UserLayers(),blanks:List<DocumentWhite
 /** Bounded, closed payload; old page files remain valid with an empty/default state. */
 object PageAuthoringCodec {
     const val MAX_BYTES=1_900_000 // Below the existing archive field ceiling; reject before author writes.
+    const val LAYER_HEADER_BYTES=8192 // 32 UUIDs, 60-character modified-UTF names and current UUID fit below 8 KiB.
+    /** Permission projection of an already validated stored row. It does not validate or replace its contents. */
+    fun layerHeader(prefix:ByteArray):UserLayers=DataInputStream(ByteArrayInputStream(prefix)).use{d->
+        require(d.readInt() in listOf(0x49574131,0x49574132,0x49574133,0x49574134)){"Unsupported authoring state; retain original bytes"}
+        val count=d.readInt();require(count in 1..UserLayers.MAX_LAYERS)
+        val layers=List(count){UserLayer(d.readUTF(),d.readUTF(),d.readBoolean(),d.readBoolean())}
+        UserLayers(layers,if(d.readBoolean())d.readUTF()else null)
+    }
     fun encode(state:PageAuthoring):ByteArray {
         // Existing-size configurations retain their exact IWA3 representation.
         // Larger stacks use IWA4 compact identities within the same byte ceiling.

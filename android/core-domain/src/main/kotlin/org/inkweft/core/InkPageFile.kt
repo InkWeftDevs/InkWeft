@@ -20,7 +20,7 @@ class InkPageFile(val title:String,val text:String,strokes:List<InkStroke>,val w
             strokes.forEach{val b=InkStrokeCodec.encode(it);require(body.size().toLong()+b.size+36<=MAX_BYTES);out.writeInt(b.size);out.write(b)}
             if(objects.isNotEmpty()||withSource||authoring!=null){val encoded=PageObjectCodec.encode(objects);out.writeInt(encoded.size);out.write(encoded)}
             if(imageSources.isNotEmpty()||authoring!=null)out.writeBoolean(withSource)
-            if(withSource){val src=checkNotNull(source);val bytes=src.document.bytes();out.writeInt(src.document.pages);out.writeInt(src.page);out.writeInt(bytes.size);out.write(bytes)}
+            if(withSource){val src=checkNotNull(source);require(body.size().toLong()+src.document.size+48<=MAX_BYTES){"CONTENT_SIZE_LIMIT_USE_FULL_BACKUP"};val bytes=src.document.bytes();out.writeInt(src.document.pages);out.writeInt(src.page);out.writeInt(bytes.size);out.write(bytes)}
             if(imageSources.isNotEmpty()||authoring!=null){
                 out.writeInt(imageSources.size)
                 imageSources.forEach{source->val bytes=source.bytes();require(body.size().toLong()+bytes.size+36<=MAX_BYTES);out.writeInt(bytes.size);out.write(bytes)}
@@ -41,7 +41,7 @@ class InkPageFile(val title:String,val text:String,strokes:List<InkStroke>,val w
                 val title=field(480);val text=field(400_000);val count=input.readInt();require(count in 0..InkLimits.MAX_STROKES);var points=0
                 val strokes=List(count){val n=input.readInt();require(n in 1..InkLimits.MAX_STROKE_BYTES&&n<=input.available());val b=ByteArray(n);input.readFully(b);InkStrokeCodec.decode(b).also{points+=it.samples.size;require(points<=InkLimits.MAX_PAGE_POINTS)}}
                 val objects=if(magic>=0x49575035){val n=input.readInt();require(n in 8..PageObjectCodec.MAX_BYTES&&n<=input.available());val b=ByteArray(n);input.readFully(b);PageObjectCodec.decode(b)}else emptyList()
-                val source=if(magic==0x49575036||magic>=0x49575037&&input.readBoolean()){val pages=input.readInt();val page=input.readInt();val size=input.readInt();require(size in 8..PdfDocumentSource.MAX_BYTES&&size<=input.available());val pdf=ByteArray(size);input.readFully(pdf);PdfPageSource(PdfDocumentSource(pdf,pages),page)}else null
+                val source=if(magic==0x49575036||magic>=0x49575037&&input.readBoolean()){val pages=input.readInt();val page=input.readInt();val size=input.readInt();require(size in 8..PdfDocumentSource.ARRAY_MAX_BYTES&&size<=input.available());val pdf=ByteArray(size);input.readFully(pdf);PdfPageSource(PdfDocumentSource(pdf,pages),page)}else null
                 val images=if(magic>=0x49575037){val count=input.readInt();require(count in (if(magic==0x49575038)0 else 1)..PageObjectCodec.MAX_OBJECTS);List(count){val size=input.readInt();require(size in 1..ImageSource.MAX_BYTES&&size<=input.available());ImageSource(ByteArray(size).also(input::readFully))}}else emptyList()
                 val authoring=if(magic==0x49575038){val size=input.readInt();require(size in 8..PageAuthoringCodec.MAX_BYTES&&size<=input.available());PageAuthoringCodec.decode(ByteArray(size).also(input::readFully))}else null
                 require(input.available()==0);InkPageFile(title,text,strokes,world,paper,objects,source,images,authoring)

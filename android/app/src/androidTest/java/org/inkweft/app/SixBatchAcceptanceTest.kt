@@ -134,21 +134,24 @@ class SixBatchAcceptanceTest {
             waitFor("card-full-title");compose.onNodeWithTag("card-full-title").assertTextEquals("条件概率的完整推导与边界")
             tap("card-back");tap("study-close");tap("back-library");waitFor("new-note")
         }}
-        runBlocking{f.step("over-budget-originals-rollback-with-old-data-intact"){
+        runBlocking{f.step("originals-over-old-library-budget-preserve-old-data"){
             val db=NoteDatabase.open(app)
             try{
                 val beforeImages=db.images().all();val page=f.documentPages[0];val before=app.pageObjects.read(page)
-                val size=((ImageSource.LIBRARY_BYTES-db.images().totalBytes())/2+1).toInt()
+                val size=16_500_000
                 require(size in 1..ImageSource.MAX_BYTES)
                 val png=File(f.root,"synthetic-original-1.png").readBytes()
                 val originals=List(2){ImageSource(paddedPng(png,size,it))}
                 val objectTemplate=before.objects.single()
                 val added=originals.mapIndexed{i,source->objectTemplate.copy(id=f.id("budget-object-$i"),imageSource=source.sha256)}
-                var rejected=false
-                try{app.pageObjects.save(page,before.revision,f.id("budget-rejected-operation"),before.objects+added,originals=originals)}catch(_:ImageOriginalCapacity){rejected=true}
-                assertTrue("Capacity rejection must occur at the production writer",rejected)
-                assertEquals(before,app.pageObjects.read(page));assertEquals(beforeImages,db.images().all())
-                f.manifest.put("rejectedOriginalPayloadBytesEach",size)
+                val sample=app.workspaceRepository.create("合成原件扩容验收",false,PaperStyle.BLANK)
+                app.pageObjects.save(sample.id,0,f.id("expanded-original-operation"),added,originals=originals)
+                val after=app.pageObjects.read(sample.id)
+                assertEquals(added,after.objects)
+                assertEquals(before,app.pageObjects.read(page))
+                assertTrue(db.images().totalBytes()>32_000_000L)
+                beforeImages.forEach{old->assertEquals(old,db.images().source(old.notebookId,old.digest))}
+                f.manifest.put("expandedOriginalPayloadBytesEach",size)
             }finally{db.close()}
         }}
         runBlocking{f.verify();backupRoundTrip(f)}

@@ -13,6 +13,7 @@ class NotebookFile(val title:String,val text:String,pages:List<InkPageFile>) {
         val body=ChecksummedBuffer()
         DataOutputStream(body).use{d->
             val sources=pages.mapNotNull{it.source?.document}.distinctBy{it.sha256}
+            require(sources.sumOf{it.size.toLong()}<MAX_BYTES&&sources.all{it.size<=PdfDocumentSource.ARRAY_MAX_BYTES}){"CONTENT_SIZE_LIMIT_USE_FULL_BACKUP"}
             d.writeInt(if(sources.isEmpty())MAGIC else MAGIC2);for(t in listOf(title,text)){val b=t.toByteArray(Charsets.UTF_8);d.writeInt(b.size);d.write(b)}
             if(sources.isNotEmpty()){d.writeInt(sources.size);for(source in sources){val bytes=source.bytes();require(body.size().toLong()+bytes.size<MAX_BYTES);d.writeInt(source.pages);d.writeInt(bytes.size);d.write(bytes)}}
             d.writeInt(pages.size)
@@ -31,7 +32,7 @@ class NotebookFile(val title:String,val text:String,pages:List<InkPageFile>) {
                 val magic=d.readInt();require(magic in listOf(MAGIC,MAGIC2))
                 fun field(max:Int):String{val n=d.readInt();require(n in 0..max&&n<=d.available());val b=ByteArray(n);d.readFully(b);val s=b.toString(Charsets.UTF_8);require(s.toByteArray(Charsets.UTF_8).contentEquals(b));return s}
                 val title=field(480);val text=field(400_000)
-                val sources=if(magic==MAGIC2){val count=d.readInt();require(count in 1..500);List(count){val pages=d.readInt();val size=d.readInt();require(size in 8..PdfDocumentSource.MAX_BYTES&&size<=d.available());val pdf=ByteArray(size);d.readFully(pdf);PdfDocumentSource(pdf,pages)}}else emptyList()
+                val sources=if(magic==MAGIC2){val count=d.readInt();require(count in 1..500);List(count){val pages=d.readInt();val size=d.readInt();require(size in 8..PdfDocumentSource.ARRAY_MAX_BYTES&&size<=d.available());val pdf=ByteArray(size);d.readFully(pdf);PdfDocumentSource(pdf,pages)}}else emptyList()
                 val n=d.readInt();require(n in 1..500)
                 val pages=List(n){val size=d.readInt();require(size in 1..InkPageFile.MAX_BYTES&&size<=d.available())
                     val offset=bytes.size-32-d.available()
