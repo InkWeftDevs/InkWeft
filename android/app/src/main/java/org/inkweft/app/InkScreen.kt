@@ -76,8 +76,10 @@ private data class SourceFocusPulse(
 internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:NotebookPageRow,onCanNavigate:(Boolean)->Unit,onSearch:(Long)->Unit,externalEnabled:Boolean=true,onExcerpt:(SelectedInk)->Unit={},onMapExcerpt:(SelectedInk)->Unit={},onAssociate:(SelectedInk)->Unit={},focusRegion:CanvasBounds?=null,focusRequest:Int=0,onFocusConsumed:()->Unit={},pageNavigation:@Composable ()->Unit={},continuousPages:List<NotebookPageRow>?=null,onContinuousPage:(String)->Unit={},leaveContinuous:()->Unit={},onTags:()->Unit={},onDocumentAction:(String)->Unit={},canAddPage:Boolean=false,excerptRequest:Int=0,fullScreen:Boolean=false,embedRequest:EmbedInsertion?=null,onEmbedConsumed:()->Unit={},onEditMap:(MapEmbed)->Unit={},onFullScreen:(Boolean)->Unit={},onAppendPage:(()->Unit)?=null,readOnlyRequest:MutableState<((Boolean)->Boolean)?>?=null,workspaceModesProvided:Boolean=false,pageToolRequest:MutableState<((String)->Unit)?>?=null,onAuthorDraft:(Boolean)->Unit={}){
     val context=LocalContext.current;val app=context.applicationContext as InkWeftApplication
     val vm:InkViewModel=viewModel(key="ink-${page.id}",factory=InkViewModel.Factory(page.id,app.inkRepository))
+    DisposableEffect(vm){vm.attachPage();onDispose{vm.detachPage()}}
     val ui by vm.ui.collectAsStateWithLifecycle()
     val objectsVm:PageObjectViewModel=viewModel(key="objects-${page.id}",factory=PageObjectViewModel.Factory(page.id,app.pageObjects))
+    DisposableEffect(objectsVm){objectsVm.attachPage();onDispose{objectsVm.detachPage()}}
     val objectsUi by objectsVm.ui.collectAsStateWithLifecycle()
     val authoringVm:PageAuthoringViewModel=viewModel(key="authoring-${page.id}",factory=PageAuthoringViewModel.Factory(AuthoringScope.page(note.base.id,page.id),app.authoring))
     val authoringUi by authoringVm.ui.collectAsStateWithLifecycle()

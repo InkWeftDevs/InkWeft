@@ -33,6 +33,8 @@ import androidx.lifecycle.ViewModelProvider
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.delay
 import kotlin.math.roundToInt
 import org.inkweft.core.*
 import org.inkweft.data.NotebookPageRow
@@ -48,24 +50,33 @@ internal data class ContinuousTools(val pen:InkPen,val color:Int,val width:Float
     val state=rememberLazyListState(initialFirstVisibleItemIndex=pages.indexOfFirst{it.id==selected}.coerceAtLeast(0))
     val dragged by state.interactionSource.collectIsDraggedAsState()
     val currentAuthorAllowed by rememberUpdatedState(authorAllowed)
-    val models=remember{mutableStateMapOf<String,InkViewModel>()}
-    val objectModels=remember{mutableStateMapOf<String,PageObjectViewModel>()}
-    val views=remember{mutableMapOf<String,InkCanvasView>()}
-    val writer:ContinuousInkWriter=viewModel(key="continuous-writer-${pages.firstOrNull()?.notebookId}")
     val book=pages.first().notebookId
-    var authorRows by remember(book){mutableStateOf<List<org.inkweft.data.PageAuthoringRow>?>(null)}
-    LaunchedEffect(book){app.authoring.observeBook(book).collect{authorRows=it}}
-    val authorStates=remember(authorRows){authorRows.orEmpty().associate{it.scopeId to it.data()}}
-    fun authorRow(id:String)=authorRows?.firstOrNull{it.kind==AuthoringScopeKind.PAGE.name&&it.scopeId==id}
+    val models=remember(book){mutableStateMapOf<String,InkViewModel>()}
+    val objectModels=remember(book){mutableStateMapOf<String,PageObjectViewModel>()}
+    val views=remember(book){mutableMapOf<String,InkCanvasView>()}
+    val writer:ContinuousInkWriter=viewModel(key="continuous-writer-${pages.firstOrNull()?.notebookId}")
+    DisposableEffect(book){onDispose{models.values.forEach{it.retainForWindow(false)};objectModels.values.forEach{it.releasePage()}}}
+    val loadIndices=PageLoadWindow.indices(pages.size,state.layoutInfo.visibleItemsInfo.map{it.index}.filter{it in pages.indices},pages.indexOfFirst{it.id==selected}.coerceAtLeast(0))
+    val loadIds=loadIndices.map{pages[it].id}.toSet()
+    var writeScopes by remember(book){mutableStateOf<Map<String,LayerWriteScope?>?>(null)}
+    LaunchedEffect(book){try{app.authoring.observePageWriteScopes(book).collect{writeScopes=it}}catch(c:CancellationException){throw c}catch(_:Exception){writeScopes=null;onNotice("图层权限读取失败，请重新打开笔记；已保存资料保留。")}}
+    var authorRows by remember(book){mutableStateOf<List<org.inkweft.data.AuthoringPageState>?>(null)}
+    var loadedAuthorIds by remember(book){mutableStateOf(emptySet<String>())}
+    LaunchedEffect(book,loadIds){
+        authorRows=null;loadedAuthorIds=emptySet()
+        app.authoring.observePages(book,loadIds.toList()).collect{authorRows=it;loadedAuthorIds=loadIds}
+    }
+    val authorStates=remember(authorRows){authorRows.orEmpty().associate{it.scopeId to it.state}}
     fun authorState(id:String)=if(id==selected&&selectedAuthoring?.loading==false)selectedAuthoring.state else authorStates[id]
-    fun layerScope(id:String):LayerWriteScope? {check(authorRows!=null)
+    fun layerScope(id:String):LayerWriteScope? {check(writeScopes!=null)
         if(id==selected&&selectedAuthoring!=null){check(selectedAuthoring.canWrite);return selectedAuthoring.state.layers.writeScope(selectedAuthoring.revision)}
-        val row=authorRow(id);return if(row==null)LayerWriteScope(UserLayers.DEFAULT_ID,0)else authorStates.getValue(id).layers.writeScope(row.revision)
+        val headers=checkNotNull(writeScopes)
+        return if(id !in headers)LayerWriteScope(UserLayers.DEFAULT_ID,0)else checkNotNull(headers[id]){"LAYER_CHOOSE_WRITABLE"}
     }
     val readLock=rememberBookReadLock(book)
     val readOnly by readLock.readOnly.collectAsStateWithLifecycle()
     val owner=checkNotNull(LocalViewModelStoreOwner.current)
-    fun modelFor(id:String):InkViewModel=models.getOrPut(id){ViewModelProvider(owner,InkViewModel.Factory(id,app.inkRepository))["ink-$id",InkViewModel::class.java]}.also{model->model.authorAllowed={currentAuthorAllowed()};model.layerScopeProvider={layerScope(id)};model.editableContent={key->authorState(id)?.layers?.editable(LayerContent(LayerContentKind.INK,key))?:true}}
+    fun modelFor(id:String):InkViewModel=models.getOrPut(id){ViewModelProvider(owner,InkViewModel.Factory(id,app.inkRepository))["ink-$id",InkViewModel::class.java]}.also{model->model.retainForWindow(true);model.load();model.authorAllowed={currentAuthorAllowed()};model.layerScopeProvider={layerScope(id)};model.editableContent={key->authorState(id)?.layers?.editable(LayerContent(LayerContentKind.INK,key))?:true}}
     val recovery:ContinuousGroupSession=viewModel(key="continuous-recovery-$book",factory=ContinuousGroupSession.Factory(book,app.inkRepository))
     val recovering by recovery.busy.collectAsStateWithLifecycle()
     val recoveryProblem by recovery.problem.collectAsStateWithLifecycle()
@@ -82,6 +93,17 @@ internal data class ContinuousTools(val pen:InkPen,val color:Int,val width:Float
     var pending=false
     models.values.forEach{model->val ui by model.ui.collectAsStateWithLifecycle();if(ui.loading||ui.queued>0||ui.processing||ui.blocked!=null||ui.readFailed)pending=true}
     objectModels.values.forEach{model->val ui by model.ui.collectAsStateWithLifecycle();if(ui.loading||ui.busy||ui.pending)pending=true}
+    val settleKey=models.map{(id,m)->listOf(id,m.ui.value.loading,m.ui.value.queued,m.ui.value.processing,m.ui.value.suspended)}+
+        objectModels.map{(id,m)->listOf(id,m.ui.value.loading,m.ui.value.busy,m.ui.value.pending,m.ui.value.suspended)}
+    LaunchedEffect(book,loadIds,settleKey,writing,groupBlocked,recovering,recoveryProblem){
+        if(writing||groupBlocked||recovering||recoveryProblem!=null)return@LaunchedEffect
+        // Wait for the visible page's first load, then prefetch its neighbours and release settled offscreen actors.
+        if(models.any{it.key in loadIds&&it.value.ui.value.loading})return@LaunchedEffect
+        delay(250)
+        loadIds.forEach{modelFor(it)}
+        models.filterKeys{it !in loadIds}.values.forEach{it.retainForWindow(false)}
+        objectModels.filterKeys{it !in loadIds}.values.forEach{it.releasePage()}
+    }
     val latestAppend by rememberUpdatedState(onAppendPage)
     val latestAppendReady by rememberUpdatedState(tools.enabled&&!pending&&!groupBlocked&&!recovering&&recoveryProblem==null)
     val latestWriting by rememberUpdatedState(writing)
@@ -246,6 +268,7 @@ internal data class ContinuousTools(val pen:InkPen,val color:Int,val width:Float
         contentPadding=PaddingValues(0.dp),verticalArrangement=Arrangement.spacedBy(0.dp),horizontalAlignment=Alignment.CenterHorizontally){
         items(pages,key={it.id}){page->
             val model:InkViewModel=viewModel(key="ink-${page.id}",factory=InkViewModel.Factory(page.id,app.inkRepository))
+            DisposableEffect(model){model.attachPage();onDispose{model.detachPage()}}
             val ui by model.ui.collectAsStateWithLifecycle()
             val objectModel:PageObjectViewModel=viewModel(key="objects-${page.id}",factory=PageObjectViewModel.Factory(page.id,app.pageObjects))
             SideEffect{model.authorAllowed={currentAuthorAllowed()};objectModel.authorAllowed={currentAuthorAllowed()};readLock.observeObjects(page.id,objectModel)
@@ -254,6 +277,7 @@ internal data class ContinuousTools(val pen:InkPen,val color:Int,val width:Float
                 objectModel.editableInk=model.editableContent
                 objectModel.editableContent={authorState(page.id)?.layers?.editable(LayerContent(LayerContentKind.OBJECT,it))?:true}
             }
+            DisposableEffect(objectModel){objectModel.attachPage();onDispose{objectModel.detachPage()}}
             val objectUi by objectModel.ui.collectAsStateWithLifecycle()
             val beautyReview by objectModel.beautyReview.collectAsStateWithLifecycle()
             SideEffect{models[page.id]=model;objectModels[page.id]=objectModel;objectModel.history=model.history;model.suppressedIds=objectUi.objects.flatMap{it.sourceStrokeIds}.toSet()}
@@ -265,7 +289,7 @@ internal data class ContinuousTools(val pen:InkPen,val color:Int,val width:Float
                         v.configure(false,PaperStyle.entries[page.paper],null)
                         v.fingerWrites=tools.fingerWrites
                         views[page.id]=v
-                        v.allowInput=authorRows!=null&&!recovering&&recoveryProblem==null&&(if(tools.erasing)!groupBlocked else drawingReady)&&tools.enabled&&!objectUi.loading&&(!(objectUi.pending||objectUi.busy)||(!tools.erasing&&objectUi.automaticPending))&&(if(tools.erasing)!ui.loading&&!ui.readFailed&&ui.blocked==null&&!ui.processing&&ui.queued<16 else ui.canStart)&&(gestureOwner==null||gestureOwner==page.id)
+                        v.allowInput=authorRows!=null&&page.id in loadedAuthorIds&&writeScopes!=null&&!recovering&&recoveryProblem==null&&(if(tools.erasing)!groupBlocked else drawingReady)&&tools.enabled&&!objectUi.loading&&(!(objectUi.pending||objectUi.busy)||(!tools.erasing&&objectUi.automaticPending))&&(if(tools.erasing)!ui.loading&&!ui.readFailed&&ui.blocked==null&&!ui.processing&&ui.queued<16 else ui.canStart)&&(gestureOwner==null||gestureOwner==page.id)
                         v.finishStroke={polishNewStroke(it,tools.beauty)}
                         v.pen=tools.pen;v.penColor=tools.color;v.penWidth=tools.width;v.brushRecipe=tools.recipe
                         v.eraserTapeOnly=tools.onlyTape;v.eraseMode=tools.erasing;v.eraserWhole=tools.whole;v.eraserHighlighterOnly=tools.highlighterOnly;v.eraserDiameterDp=tools.diameter

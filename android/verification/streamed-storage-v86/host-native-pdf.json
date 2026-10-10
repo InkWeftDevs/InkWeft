@@ -1,0 +1,12 @@
+{
+  "status": "PASS",
+  "engine": "host PyMuPDF 1.26.6",
+  "pages": 2,
+  "first_last_text": [
+    "InkWeft streamed original\n",
+    "InkWeft streamed original\n"
+  ],
+  "file_bytes": 300000000,
+  "device_import": "NOT_RUN",
+  "fixture": "unused large stream; not representative of scanned images"
+}

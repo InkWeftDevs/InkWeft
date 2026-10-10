@@ -190,15 +190,17 @@ class InkCanvasView(context:Context):View(context){
         val generation=++documentGeneration
         documentJob=CoroutineScope(Dispatchers.Main.immediate).launch {
             delay(80)
+            var unclaimed:DocumentTile?=null
             try{val tile=(authorSession?.rendering?:(context.applicationContext as InkWeftApplication).documentRendering).render(id,rect,pixels)
-                ensureActive();if(documentRequest==request&&documentGeneration==generation){releaseDocumentTile();documentTile=tile;documentKnownAbsent=tile==null;documentError=false;completedDocumentGeneration=generation;invalidate()}
+                unclaimed=tile
+                ensureActive();if(documentRequest==request&&documentGeneration==generation){releaseDocumentTile();documentTile=tile;unclaimed=null;documentKnownAbsent=tile==null;documentError=false;completedDocumentGeneration=generation;invalidate()}
             }catch(c:CancellationException){throw c}catch(busy:RenderBudgetBusy){
                 if(documentRequest==request&&documentGeneration==generation){
                     documentTile?.takeIf{completedDocumentGeneration!=generation&&RenderResources.canReplace(it.bitmap,id,busy)}?.let{releaseDocumentTile();invalidate()}
                 }
                 delay(500);if(documentRequest==request&&documentGeneration==generation){documentRequest=null;documentJob=null;requestDocument()}
             }
-            catch(_:Exception){if(documentRequest==request&&documentGeneration==generation){documentError=true;failedDocumentGeneration=generation;invalidate();onNotice("文档页面读取失败，请离开后重新打开；原文件保留。")}}
+            catch(_:Exception){if(documentRequest==request&&documentGeneration==generation){documentError=true;failedDocumentGeneration=generation;invalidate();onNotice("文档页面读取失败，请离开后重新打开；原文件保留。")}}finally{unclaimed?.let{RenderResources.release(it.bitmap,id);it.bitmap.recycle()}}
         }
     }
     override fun onAttachedToWindow(){super.onAttachedToWindow();viewTreeObserver.addOnPreDrawListener(visibleAreaListener);observeMapScenes();documentRequest=null;requestDocument()}

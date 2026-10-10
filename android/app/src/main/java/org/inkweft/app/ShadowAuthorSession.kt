@@ -5,7 +5,7 @@ import android.content.Context
 import org.inkweft.data.*
 
 /** Explicit lab author context. No method resolves an application-owned repository. */
-internal class ShadowAuthorSession(context:Context,val replica:ShadowReplica){
+internal class ShadowAuthorSession(context:Context,val replica:ShadowReplica):java.io.Closeable{
     val pages=NotebookPages(replica.db)
     val notes=NoteRepository(replica.db)
     val ink=InkRepository(replica.db)
@@ -15,4 +15,5 @@ internal class ShadowAuthorSession(context:Context,val replica:ShadowReplica){
     val knowledge=KnowledgeRepository(replica.db)
     val maps=MapGraphAccess(replica.db)
     val rendering=DocumentRendering(context,DocumentRepository(replica.db),java.io.File(replica.directory,"render"))
+    override fun close(){rendering.close();replica.close()}
 }

@@ -1,0 +1,260 @@
+{
+  "format": "InkWeft.SourceFreeze/1",
+  "base_commit": "331a6be90155aeb17071771f34ed574c5b411860",
+  "branch": "codex/cloud/streamed-storage-v86-20261010",
+  "version_code": 86,
+  "version_name": "0.0.86-streamed-originals",
+  "room_schema": 16,
+  "files": [
+    {
+      "path": "android/app/build.gradle.kts",
+      "bytes": 5066,
+      "sha256": "de3701f8ca402fe78e11ea265b3c45558ce4512621fe51b0f250d192bb05ef8d"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/SixBatchAcceptanceTest.kt",
+      "bytes": 16929,
+      "sha256": "66349c5889042b2fa0cc7c96fceb0a593ddc4ef14ba508189160229501fa3e8f"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/StreamedPageLifecycleTest.kt",
+      "bytes": 5253,
+      "sha256": "8f2677f59017a05d291901b8aeda73ff7d35e207d5dcb46a78f7dd9e90a5bc61"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/BackupJobs.kt",
+      "bytes": 23037,
+      "sha256": "f3019ff3c593b9f4b0566bf3487d56d678cd6759a4895056595148032b934e4a"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/BackupSettings.kt",
+      "bytes": 11768,
+      "sha256": "bbee6587a67d19f7bb0639172fe087abadea55adc0f0992f336292f94aae160d"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/ContinuousPages.kt",
+      "bytes": 29153,
+      "sha256": "fa5583ff0d212b23eefd61cbb40bfb1f575c03d812587a76e44fd02a485b092f"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/DocumentImports.kt",
+      "bytes": 9617,
+      "sha256": "7bf11c32f6d1d401609b0b00567fa39bc294bbcc0d6fbbab6119630a4ac1fb07"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/DocumentRendering.kt",
+      "bytes": 10383,
+      "sha256": "f4ce36d12fcd707e438aaf681b06610924d550d139d0e9d7b05261692dcd885f"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/EncryptedBackupFile.kt",
+      "bytes": 5292,
+      "sha256": "f2969e8dfa7cd1b9618d98b909cfb089768bd9b42a23757282d7f3cb4e9fd7ac"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/ImageRendering.kt",
+      "bytes": 11215,
+      "sha256": "7f69946127463f3c9d3593556d763e1263070edb5c4ebc3ee979971f3aa2257b"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/InkCanvasView.kt",
+      "bytes": 49400,
+      "sha256": "9975f7fd2e1d73d3d01eba35d8ccf5d2bb0bbe253345be0ef1e0435aed4bf0c9"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/InkScreen.kt",
+      "bytes": 79144,
+      "sha256": "d7d5a22dcb6015a3bdbef2506eab5796391a8a6321abdb3fa1598617ef322513"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/InkViewModel.kt",
+      "bytes": 15019,
+      "sha256": "29f66bbd6d3d9f7991116c3ce03b237dbf08ab6e0ce43a16bf4c5b7aa8ef4114"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/LibraryBackupUi.kt",
+      "bytes": 10043,
+      "sha256": "f844586cf88305a74f4aab75f49e43ebd55ae2f76669f88c457a5c14614f9070"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/LibraryDestinations.kt",
+      "bytes": 6680,
+      "sha256": "4cd3b72b1b8161ada5e285cea0d95b121710577cb8826c071844a328a0967dee"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/LibraryTransfers.kt",
+      "bytes": 12001,
+      "sha256": "8a105f6281024b5425d5747f0edacc7c858974feb21e30231953afd1afb789ae"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/NotebookReferencePane.kt",
+      "bytes": 3596,
+      "sha256": "e2c786f64ce4ae7b0e5020753871a292d5063a9e5eeb560575bff0b5a5bf222e"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/OriginalStorageSummary.kt",
+      "bytes": 2294,
+      "sha256": "09a972a24c63455d37c2e5dbbd2660c8c033e487e33210f2baab0b809f4d7151"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/PageObjectViewModel.kt",
+      "bytes": 27927,
+      "sha256": "95b33aad24003b9fc10c34508b3e0afb7a8179a110fdb0f802ba386408a9656a"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/RenderResources.kt",
+      "bytes": 4233,
+      "sha256": "f627ad17c7eb3b3e4e2c472d11c2f3222c167d3f021d2338ea65205f46454e00"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/ShadowAuthorSession.kt",
+      "bytes": 847,
+      "sha256": "b40739d31689a2877b0e6367fbdf29802a89e1cc1f5b087580ba88a4ac2dc88e"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/ShadowLab.kt",
+      "bytes": 8889,
+      "sha256": "8377c9b240e98101d21f3e250ae52f14014c993dca4aba6fd3a3e1cc035de0ef"
+    },
+    {
+      "path": "android/core-domain/build.gradle.kts",
+      "bytes": 413,
+      "sha256": "53c676e10285996c9ad2c1c8fd708c5aef888297a59af8e645db42f34b622839"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/ContentTransfer.kt",
+      "bytes": 5573,
+      "sha256": "d71d7ef0c6ca43a744a5a6bc66a438d7459ed3775ad6a22ef514e2e7e4f7aac2"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/ImageSource.kt",
+      "bytes": 1052,
+      "sha256": "7f9a2cbb1710d7626c3ac440cfa3e1e32facb5465870d36aad6dd7366bf8227e"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/InkPageFile.kt",
+      "bytes": 6169,
+      "sha256": "c30fb3a99767a998395b786e0d6a3bb3c9d648818eac071ae25fa4ddbe4dc113"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/InkSession.kt",
+      "bytes": 9409,
+      "sha256": "1d48427a6026622c19c2cf0a41b0aecdc3dff6b29c8640242d8ccef5b1894a7a"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/LibraryArchive.kt",
+      "bytes": 7564,
+      "sha256": "7e5c2cda46be8babe75278937debefc2fbc19ec7540e4808e98d02c24c529582"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/NotebookFile.kt",
+      "bytes": 3610,
+      "sha256": "ed0e05c66407efc01dc21c0090f7cd02514fe9674d9b899752c65de2ff6b9b49"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/OriginalBytes.kt",
+      "bytes": 2862,
+      "sha256": "aa74035ed38b8d7186563a71e775be8117d8a05cd6b7e695bb78966befbfe8ed"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/PageAuthoring.kt",
+      "bytes": 11776,
+      "sha256": "e18cb7606dfaa9dfcf4f7f5b4a33070c7cd0be09980f2077a8856338aacd3520"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/PageLoadWindow.kt",
+      "bytes": 611,
+      "sha256": "91e59be856ddf9d093f0854d3c052b1aea2a30cf42f8dd2c1f50a2de9d377aa8"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/PdfPageSource.kt",
+      "bytes": 1694,
+      "sha256": "a1f0ff8f6d2cfa426d8a136ba0678b990dda978b146a29346a37eb35f61526a8"
+    },
+    {
+      "path": "android/core-domain/src/test/kotlin/org/inkweft/core/InkHistorySuspensionTest.kt",
+      "bytes": 2996,
+      "sha256": "4ed6240b7c0050f88166ce3ed4c22e07e21af91842699db99e89d4ea010ce5a5"
+    },
+    {
+      "path": "android/core-domain/src/test/kotlin/org/inkweft/core/LayerHeaderProjectionTest.kt",
+      "bytes": 1852,
+      "sha256": "586e368586263880c48f74d668b30845f122330adea70b2d00d95bec35cd0249"
+    },
+    {
+      "path": "android/core-domain/src/test/kotlin/org/inkweft/core/ReadingHandwritingTest.kt",
+      "bytes": 5890,
+      "sha256": "40adcf93d5088687ff0ba2728de9955989d17a7ec3c627e1aa000b5524952c8a"
+    },
+    {
+      "path": "android/core-domain/src/test/kotlin/org/inkweft/core/StorageScaleProbe.kt",
+      "bytes": 4106,
+      "sha256": "589b2758f4db74ef29c2627fe5b8f8f25c622af6071c06fe1a16961455e866a7"
+    },
+    {
+      "path": "android/core-domain/src/test/kotlin/org/inkweft/core/StreamedStorageTest.kt",
+      "bytes": 4293,
+      "sha256": "589bd8b58fc3bf48870b13403959e93595adf5f5afeced7c3df22b92a32932bf"
+    },
+    {
+      "path": "android/data-local/build.gradle.kts",
+      "bytes": 1118,
+      "sha256": "db4932a216bd72f99386df01d9097540b51fa50bac3cdf0de076d5ccb98f0d02"
+    },
+    {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/StreamedStorageRepositoryTest.kt",
+      "bytes": 5256,
+      "sha256": "954ad638a9d0c5f3126548fc600a40c14395e671dcf5bd2c70e53c562caab791"
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/DocumentRepository.kt",
+      "bytes": 5806,
+      "sha256": "4461607c9affbc6c6ac0a19987599c5c48059b0d5f8194c5edbc91ead1e6d749"
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/ImageSourceRepository.kt",
+      "bytes": 5234,
+      "sha256": "43982c9b390654ff1f197bfaec2b3d6a20b60efae8af7329d587f9572a0cb41d"
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/LibraryBackupRepository.kt",
+      "bytes": 30974,
+      "sha256": "c5dcb32c934c325de2da3fe6569933c4e083944e2e8f52781b1bc54efe948f19"
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/LibraryContentRepository.kt",
+      "bytes": 9207,
+      "sha256": "e135dd068980d0f74438dad66dc93e8a24b7c8b737dc141e6bcfa4328d28ab45"
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/NoteDatabase.kt",
+      "bytes": 20248,
+      "sha256": "d8424edf82193ff7f46de11ff8973d2738ff9421c578533bf8f04923fcd36942"
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/OriginalFileCache.kt",
+      "bytes": 4858,
+      "sha256": "408e02edc956c10a6c57f1fae721ee1992d5f2a66fdb0dd0905a3afce5897a34"
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/OriginalStreams.kt",
+      "bytes": 2287,
+      "sha256": "627f556106689f705cfbead9c149d194aeccb33c98229e0e21e651a085c14d44"
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/PageAuthoringRepository.kt",
+      "bytes": 15836,
+      "sha256": "5068a9760f86f7d13af579ec03c57a23c684edb679271ccb8bbc8f8bf600fdb8"
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/PageObjectRepository.kt",
+      "bytes": 6938,
+      "sha256": "a56cee38feede34dedc723af532dc875c0a51b3624adf0baef6446a64095bf5b"
+    },
+    {
+      "path": "android/data-local/src/test/kotlin/org/inkweft/data/OriginalFileCacheTest.kt",
+      "bytes": 3698,
+      "sha256": "519a0296587458b8b8cf6e5d860c20f2e80269865c0e116623774dfab9f608cb"
+    }
+  ]
+}

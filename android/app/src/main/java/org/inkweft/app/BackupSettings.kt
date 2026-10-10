@@ -54,6 +54,7 @@ import kotlinx.coroutines.*
                 "main"->{
                     if(vm.identityLabel().isNotBlank())Text(vm.identityLabel())
                     Text("实验功能 · 自建服务器",style=MaterialTheme.typography.labelLarge,color=Quiet)
+                    Text("加密云备份单次最多 500 MiB。较大的资料库请使用设置中的本地全库备份。",color=Quiet)
                     if(BuildConfig.DEBUG&&vm.connection()?.url?.let{java.net.URI(it).host in setOf("127.0.0.1","localhost")}==true)
                         TextButton({shadowLab=true},enabled=!ui.busy){Text("隔离同步实验 · 合成资料")}
                     TextButton(onClick={screen="connection"}){Text(if(ui.connected)"连接设置"else"连接服务器")}

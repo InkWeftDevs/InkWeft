@@ -44,14 +44,11 @@ class LibraryContentRepository(private val db:NoteDatabase,
             val target=create(command.destinationId,title,source.text,metadata.world,pages.first().paper,
                 metadata.copy(coverKey=NotebookCover.fromKey(metadata.coverKey).resolved(source.id).key))
             db.covers().get(source.id)?.let{require(db.covers().otherBytes(target.id)+it.payload.size<=32_000_000){"COVER_LIBRARY_BUDGET"};db.covers().put(it.copy(noteId=target.id))}
-            var encodedBytes=0L
             val documents=mutableMapOf<String,PdfDocumentSource>()
             pages.forEachIndexed { index,page ->
                 val state=InkRepository(db).read(page.id)
                 val visible=InkSession(state).visibleDraft()
                 val copy=InkPageFile(title,"",visible,page.world,PaperStyle.entries[page.paper],PageObjectRepository(db).read(page.id).objects,DocumentRepository(db).read(page.id,documents),ImageSourceRepository(db).forPage(page.id,PageObjectRepository(db).read(page.id).objects),PageAuthoringRepository(db).readPage(page.id).state.takeUnless{it.legacy})
-                encodedBytes+=copy.encode(false).size
-                require(encodedBytes<NotebookFile.MAX_BYTES-500_000){"COPY_SIZE_LIMIT"}
                 val pageId=if(index==0)target.id else UUID.randomUUID().toString()
                 if(index>0)db.pages().insert(NotebookPageRow(pageId,target.id,index,page.world,page.paper))
                 populate(pageId,copy)

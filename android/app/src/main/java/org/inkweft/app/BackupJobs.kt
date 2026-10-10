@@ -73,7 +73,7 @@ internal class BackupEngine(private val app:InkWeftApplication,private val fault
                 state.value=state.value.copy(message=when(e.status){401->"会话失效，请重新连接同一账号后继续";403,404->"目标不可用，请核对原服务器与账号";409->"任务内容或状态冲突，请查看版本后处理";429->"服务器繁忙，已有限重试，请稍后继续";507->"配额或空间不足，请管理旧版本或释放服务器空间";else->"服务器未确认（${e.status}），保留原任务"})
             }
             catch(e:javax.net.ssl.SSLException){state.value=state.value.copy(message="TLS 证书校验失败，请核对服务器证书与地址；待办保留");BackupScheduler.cancel(app);runCatching{readQueue().put("automatic",false).also(::writeQueue)}}
-            catch(e:Exception){state.value=state.value.copy(message=when(e.message){"INPUT_UNSEALED"->"仍有未完成书写，请抬笔并等待保存；中断的笔迹请先打开原笔记恢复或确认，再创建备份";"QUEUE_BINDING"->"此任务属于另一账号、服务器或资料库，请切回原目标继续";"KEY_REQUIRED"->"请先保存或输入有效的恢复密钥";"QUEUE_PENDING"->"先继续或完成已有任务，再创建新备份";"DELETE_PENDING"->"先继续确认上一次删除，再删除其他版本";"TASK_LIMIT"->"自动续传已达到时限或重试上限，请手动继续";else->"操作未确认：请检查连接、密钥与剩余空间后重试。原资料保留"})}
+            catch(e:Exception){state.value=state.value.copy(message=when(e.message){"BACKUP_TOO_LARGE"->"加密云备份超过 500 MiB，请使用本地全库备份；原资料保留";"INPUT_UNSEALED"->"仍有未完成书写，请抬笔并等待保存；中断的笔迹请先打开原笔记恢复或确认，再创建备份";"QUEUE_BINDING"->"此任务属于另一账号、服务器或资料库，请切回原目标继续";"KEY_REQUIRED"->"请先保存或输入有效的恢复密钥";"QUEUE_PENDING"->"先继续或完成已有任务，再创建新备份";"DELETE_PENDING"->"先继续确认上一次删除，再删除其他版本";"TASK_LIMIT"->"自动续传已达到时限或重试上限，请手动继续";else->"操作未确认：请检查连接、密钥与剩余空间后重试。原资料保留"})}
             finally{state.value=state.value.copy(busy=false,connected=identity!=null&&state.value.auth==BackupAuth.VALID);if(mayResume())BackupScheduler.schedule(app)}}
         return running
     }

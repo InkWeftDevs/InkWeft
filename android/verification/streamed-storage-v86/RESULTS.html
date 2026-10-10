@@ -1,0 +1,43 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>墨织 V86 · 原件、容量与按页加载</title><style>body{font:16px/1.8 system-ui,sans-serif;color:#243e35;background:#f4f6f1;margin:0}main{max-width:1000px;margin:36px auto;padding:28px;background:white;border-radius:16px}h1{font-size:30px;line-height:1.4}h2{margin-top:30px;font-size:21px}p{max-width:90ch}table{border-collapse:collapse;width:100%;font-size:14px}th,td{text-align:left;vertical-align:top;padding:10px;border-bottom:1px solid #dfe7df}th{background:#edf3ee}a{color:#176b4e}code{background:#eef3ec;padding:2px 5px;border-radius:4px;overflow-wrap:anywhere}.status{padding:14px;background:#eaf5ec;border-left:4px solid #458764}.pending{padding:14px;background:#fff4df;border-left:4px solid #d6a452}li{margin:6px 0}small{color:#51675c}@media(max-width:700px){main{margin:0;padding:18px;border-radius:0}table{font-size:12px}th,td{padding:6px}}</style><main>
+<small>2026-10-10 · V86 / 0.0.86-streamed-originals · 基于用户 V85 修复 331a6be · Room16</small>
+<h1>让大原件按流进入、按页使用</h1>
+<p class="status">已实现原件逐块读取、512 MB PDF 导入通道、PDF／图片全库字节门槛移除、8 GiB 本地全库备份和安全离屏页面释放。64 MiB Java 堆完整处理 300 MB 合成 PDF 与超过 1 GiB 的备份流；安卓原生和真实课件验收仍待本地。</p>
+<p>这次扩容先改变读取和存储路径：数据库仍保存权威原件；每次只取一个 512,000 字节块，用 64 KiB 缓冲增量校验。需要随机访问的原生引擎使用完整校验后发布的文件，连续页复用同一文档句柄。导入流写入暂存文件时同步计算摘要，取消或失败只清理未完成文件。</p>
+<h2>本轮落实</h2>
+<ul><li>PDF 和图片读取返回长度、SHA-256 和可重复打开的流；渲染、EXIF、区域解码与文字搜索改用文件。完整复制检查长度、尾部和摘要，存储块在原有作者事务内写入，receipt 保持幂等。</li>
+<li>PDF 文件缓存复用 SHA 身份；1 GiB 缓存预算只约束可重建副本，租约保护正在使用的文件。重启后首次使用会校验缓存，损坏则重建；空间不足或取消不会发布半成品。设置新增原件占用、设备剩余空间与缓存清理。</li>
+<li>移除 PDF 全库 80,000,000 字节、图片全库 32,000,000 字节的写入和备份恢复判断。整本复制直接按页复制原件，不再先编码成受 96 MB 上限约束的交换文件。当前数据结构中的单原件长度仍为 Int；512 MB 范围内统计与空间预算用 Long 运算。</li>
+<li>本地备份 v2 上限 8 GiB，旧 v1 的 1 GiB 流仍可读；保持摘要、外键、语义验证、隔离暂存和恢复原子性。验证逐件使用原件流，不再在 documentCache 中保留整库 PDF 数组；取消时收回未交付的快照和暂存库。</li>
+<li>连续阅读正文只观察可见页、相邻一页及选中页。批注在 IO 解码，全本只观察每页最多 8 KiB 的图层权限头，保留远处跨页写入的原权限和版本。</li>
+<li>未被显示且保存已确认的普通笔迹页可释放几何；撤销逆操作只保留 ID，重载后核对 revision。版本改变时不重放旧逆操作。队列、草稿、检查点、跨页联动撤销、美化校对、对象编辑历史和另一显示位置仍在使用的页继续保留。取消／过期 PDF 帧释放尚未接收的位图。</li></ul>
+<h2>容量边界保持一致</h2>
+<table><thead><tr><th>范围</th><th>V86 策略</th><th>说明</th></tr></thead><tbody>
+<tr><td>直接 PDF</td><td>512,000,000 字节；最多 500 页</td><td>工程边界；覆盖 300 MB 目标。真实扫描 PDF 的导入与原生内存仍待测。</td></tr>
+<tr><td>全库 PDF／图片原件</td><td>取消旧 80 MB／32 MB 字节门槛</td><td>受可用空间及单文件、操作和记录边界约束，不能称为无限容量。</td></tr>
+<tr><td>单图／批量图片导入</td><td>单图 20 MiB；一次选图总原件 32 MiB</td><td>批次预算仍存在；原件累计已入库容量不受旧 32 MB 门槛限制。</td></tr>
+<tr><td>PDF 文件缓存</td><td>1 GiB；至少 32 MiB 空间预留</td><td>派生缓存，清理可重建；正在使用的原件文件不会被驱逐。</td></tr>
+<tr><td>本地全库备份</td><td>v2：8 GiB；500,000 行；单字段 2 MB</td><td>新备份最低 V86；旧 v1 可读。Room16 无结构迁移。</td></tr>
+<tr><td>加密云备份</td><td>仍为 500 MiB</td><td>服务端／客户端现有协议；大库使用本地备份，界面和超限结果均解释此边界。</td></tr>
+<tr><td>旧内容交换</td><td>.iwpage 64 MB，.iwbook 96 MB；嵌入单 PDF 32 MB</td><td>提前检查，过大明确指向全库备份；本地复制已与该交换预算分开。</td></tr>
+<tr><td>页数与作者记录</td><td>沿用现有数量、单页笔迹、对象、学习历史及封面边界</td><td>未把原件扩容解释成取消全部记录限制。副本当前仍各保存其所属原件块，文件缓存可按 SHA 共享。</td></tr></tbody></table>
+<h2>StarNote：新的 PDF 原生证据</h2>
+<p>针对静态 APK 5703 的 <code>libengine_sdk.so</code>，按 ELF 符号体长分别恢复了 <code>nativeOpenDocument</code>、<code>nativeOpenDocumentStream</code>、<code>neopdf_openDocument</code> 和 <code>neopdf_renderPage</code>，四个入口均完成有界伪代码恢复。没有执行 APK／原生目标或复制第三方实现到墨织。</p>
+<table><thead><tr><th>证据</th><th>可以确认</th><th>范围</th></tr></thead><tbody>
+<tr><td>JNI 取得 UTF 字符串，经 ELF PLT 重定位调用 neopdf_openDocument</td><td>原生 SDK 提供按字符串路径打开文档的入口</td><td>SDK 静态能力；JNI 类型与内部类型仍需结合运行时核对</td></tr>
+<tr><td>流对象 read 的签名 <code>(J[B)J</code>，同时查询 name 和 <code>length()J</code></td><td>SDK 支持以偏移和字节缓冲进行位置读取，以及 64 位长度</td><td>只读取少量接口元数据；实际应用选择该接口尚未采集</td></tr>
+<tr><td>renderPage 独立传入文档句柄、位图尺寸、页参数与绘制范围；ELF 包含 pdfium / CPDF_Document 类型字符串</td><td>原生页绘制与文档读取可分开；存在 PDFium 相关引擎证据</td><td>未确定 PDFium 具体发行版、缓存限额或 StarNote 5704 页面实际路由</td></tr></tbody></table>
+<p>之前的 5704 采集支持 Java 按页取数据／保存的观察，967 个调用配对；它没有覆盖大 PDF 导入或实际 Blob 读取。用户报告 StarNote 能导入 300 MB PDF，因此墨织按该规模推进；不能据此认定 StarNote 不限容量，或认定原件必定存为 C4Blob。标准用户的最大笔记本数量仍是计数配额，未当成字节配额。</p>
+<p>见 <a href="reference-pdf-evidence.json">原生证据和身份</a>。后续只需本地补采导入与翻页时路径／位置读取／Blob 的调用关联；现有证据足以指导墨织的流式文件方案。</p>
+<h2>验证与实际限制</h2>
+<table><thead><tr><th>检查</th><th>结果</th><th>能说明什么</th></tr></thead><tbody>
+<tr><td>核心回归</td><td>458 PASS，0 失败／跳过</td><td>含原件长度／摘要／取消、旧备份读取、页面窗口、权限投影和撤销历史恢复</td></tr>
+<tr><td>缓存及分块 JVM 测试</td><td>5 PASS，0 失败／跳过</td><td>保护租约、清理缓存、重启复用、损坏重建、取消以及缺失／错长块</td></tr>
+<tr><td>64 MiB Java 堆规模探针</td><td>300,000,000 字节 PDF；1,105,950,332 字节备份完整读写校验 PASS</td><td>原件最大复制写入 65,536 字节；2,160 备份行；全程 2,910 ms 为本机一次观察，非安卓性能指标</td></tr>
+<tr><td>主机 PyMuPDF 1.26.6</td><td>合成 PDF 两页提取文字和渲染 PASS</td><td>PDF 格式可被原生主机引擎读取。大流未用于页面，不代表真实 300 MB 扫描课件复杂度。</td></tr>
+<tr><td>Android 主代码、App／Data 测试代码编译与 lint</td><td>见 <a href="validation.json">最终回执</a></td><td>MuPDF 官方原生 AAR 下载受阻，编译使用同版本 1.28.5 API-only 临时替代，产品依赖未改</td></tr>
+<tr><td>新增设备测试</td><td>5 方法执行 NOT_RUN</td><td>4 个小 actor／输入方法，加 1 个 300 MB 导入、复制、备份恢复场景；完整 APK 未构建</td></tr>
+<tr><td>真实课件、实机笔感、首帧与 PSS／原生内存</td><td>NOT_RUN</td><td>云端没有可连接安卓设备；输入流有界不保证原生复杂页面内存恒定</td></tr></tbody></table>
+<p class="pending">本轮不提供“真机 300 MB 导入已经通过”或“全库不限容量”的承诺。新格式和已扩容原件请使用 V86+，避免降级读取；合并前按精简清单验证平台渲染、跨页撤销与大文件恢复。</p>
+<h2>交付与本地接续</h2>
+<p><a href="LOCAL-TESTS.txt">精简本地清单与 Gradle 命令</a> · <a href="storage-scale.json">规模结果</a> · <a href="host-native-pdf.json">主机原生 PDF 回执</a> · <a href="source-freeze.json">源文件冻结</a> · <a href="validation.json">验证状态</a></p>
+<p>使用 <code>python3 android/verification/streamed-storage-v86/verify_delivery.py</code> 核对冻结文件和主机规模证据。修改从用户最新修复接续，发布在独立分支供审查；没有覆盖或合并用户分支。</p></main></html>

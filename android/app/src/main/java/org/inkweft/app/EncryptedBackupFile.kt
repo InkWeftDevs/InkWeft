@@ -28,7 +28,7 @@ internal object EncryptedBackupFile {
         return Cipher.getInstance("AES/GCM/NoPadding").run{init(mode,SecretKeySpec(key,"AES"),GCMParameterSpec(128,nonce));updateAAD(aad);doFinal(value)}
     }
     fun encrypt(source:File,output:File,library:String,recovery:ByteArray,checkpoint:()->Unit={}){
-        UUID.fromString(library);require(recovery.size==32&&source.length() in 1..LIMIT&&!output.exists())
+        UUID.fromString(library);require(source.length()<=LIMIT){"BACKUP_TOO_LARGE"};require(recovery.size==32&&source.length()>0&&!output.exists())
         val key=random(32);val nonce=random(12);val prefix=random(8);val backup=UUID.randomUUID().toString();val size=source.length()
         val wrapped=cipher(Cipher.ENCRYPT_MODE,recovery,nonce,"inkweft-backup-key-v1|$library|$backup".toByteArray(),key)
         val header=JSONObject().put("format",1).put("library",library).put("backup",backup).put("plainBytes",size).put("chunkSize",BLOCK)

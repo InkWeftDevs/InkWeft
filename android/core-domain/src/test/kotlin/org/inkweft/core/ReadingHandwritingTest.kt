@@ -18,7 +18,7 @@ class ReadingHandwritingTest {
     @Test fun sourceBookByteLimitIncludesReferencesAndChecksum(){
         val overhead=sourceBook(9,10,11).encode().size-30
         for(excess in listOf(0,1,8)){
-            val book=sourceBook(PdfDocumentSource.MAX_BYTES,PdfDocumentSource.MAX_BYTES-1,NotebookFile.MAX_BYTES-overhead-2*PdfDocumentSource.MAX_BYTES+1+excess)
+            val book=sourceBook(PdfDocumentSource.ARRAY_MAX_BYTES,PdfDocumentSource.ARRAY_MAX_BYTES-1,NotebookFile.MAX_BYTES-overhead-2*PdfDocumentSource.ARRAY_MAX_BYTES+1+excess)
             if(excess==0){
                 val bytes=book.encode();assertEquals(NotebookFile.MAX_BYTES,bytes.size)
                 val copy=NotebookFile.decode(bytes);assertEquals(book.title,copy.title);assertEquals(4,copy.pages.size)

@@ -37,6 +37,7 @@ import org.inkweft.core.*
         }
         if(page!=null)key(page.id){
             val inkVm:InkViewModel=viewModel(key="ink-${page.id}",factory=InkViewModel.Factory(page.id,app.inkRepository))
+    DisposableEffect(inkVm){inkVm.attachPage();onDispose{inkVm.detachPage()}}
             val ink by inkVm.ui.collectAsStateWithLifecycle()
             val objects by remember(page.id){app.pageObjects.observe(page.id)}.collectAsStateWithLifecycle(initialValue=null)
             val strokes=ink.strokes

@@ -1,0 +1,114 @@
+{
+  "format": "InkWeft.Validation/1",
+  "date": "2026-10-10",
+  "base_commit": "331a6be90155aeb17071771f34ed574c5b411860",
+  "version_code": 86,
+  "core_and_data_jvm": [
+    {
+      "module": "core-domain",
+      "classes": 56,
+      "tests": 458,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "data-local",
+      "classes": 1,
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  ],
+  "total_host_tests": 463,
+  "lint_previous_completed": {
+    "Warning": 177,
+    "Hint": 2
+  },
+  "final_device_compile": "PASS",
+  "device_method_execution": "NOT_RUN",
+  "new_device_methods": 5,
+  "full_cloud_apk": "NOT_BUILT",
+  "mupdf_compile": "1.28.5 same-version official Java API-only external init override; no native SO; product dependency unchanged",
+  "source_freeze": "source-freeze.json",
+  "scale_probe": "storage-scale.json",
+  "host_pdf": "host-native-pdf.json",
+  "build_history": [
+    {
+      "log": "initial-compile.log",
+      "sha256": "49578a3dc805d05a46539c3735d22037298856033abb768f3751d3908aeeaca8",
+      "build": "BUILD FAILED in 58s"
+    },
+    {
+      "log": "second-compile.log",
+      "sha256": "99edc5e95798b777276ad40708d3f32ecfa3aae4c9eaec3a7dae12324d031c19",
+      "build": "BUILD SUCCESSFUL in 1m 57s"
+    },
+    {
+      "log": "validation-round1.log",
+      "sha256": "795de26287174e204f421523b9b21c31fd0eb43132afaaa2162bf42e7c3784ca",
+      "build": "BUILD FAILED in 1m 21s"
+    },
+    {
+      "log": "validation-round2.log",
+      "sha256": "226eccf3cd08191bd671c34a48283b747bcc20683cca5a521ecd94764f967b08",
+      "build": "BUILD SUCCESSFUL in 5m 9s"
+    },
+    {
+      "log": "final-validation.log",
+      "sha256": "2bff71d095d3a331e19f94183a251c83d09e34712ae54ac91828839a17a8e624",
+      "build": "BUILD FAILED in 1m"
+    },
+    {
+      "log": "final-validation-round2.log",
+      "sha256": "5b7935c14694d5c7b920b7c4dba83d176f6a9eaed5bf2a5d09939fd99710af63",
+      "build": "BUILD SUCCESSFUL in 5m 8s"
+    },
+    {
+      "log": "frozen-validation.log",
+      "sha256": "37b2337453eba61060b7bedfde3b1d35d6ab005c27e4d1d92bef560ad6462c6f",
+      "build": "BUILD SUCCESSFUL in 4m 38s"
+    },
+    {
+      "log": "publication-validation.log",
+      "sha256": "a6cdda397ef40a0dce9c93cc5a43c820f11dbbaeda117f8449c56fdaab00c8aa",
+      "build": "BUILD FAILED in 3m 44s"
+    },
+    {
+      "log": "publication-final.log",
+      "sha256": "cc806aa9bc7bd246e9bc0cd7ff480a8a5c7368bc7fb1056b625037de96e14f4c",
+      "build": "BUILD SUCCESSFUL in 1m 51s"
+    }
+  ],
+  "corrected_failures": [
+    "Room query args array needs Array<Any>",
+    "legacy format boundary test incorrectly allocated new 512 MB single-file size; now uses old 32 MB array bound",
+    "new device test called accept by wrong method name; corrected",
+    "platform PdfDocument needs explicit close rather than Closeable.use; corrected",
+    "inspect JUnit bytecode; make generated device tests return void explicitly"
+  ],
+  "junit_device_method_signatures": "5 public void methods verified using javap; execution NOT_RUN",
+  "android_main_compile": "PASS",
+  "app_lint": "PASS",
+  "lint": {
+    "Fatal": 0,
+    "Error": 0,
+    "Warning": 177,
+    "Hint": 2
+  },
+  "final_builds": [
+    {
+      "log": "publication-final.log",
+      "sha256": "cc806aa9bc7bd246e9bc0cd7ff480a8a5c7368bc7fb1056b625037de96e14f4c",
+      "status": "PASS"
+    },
+    {
+      "log": "device-signatures-final.log",
+      "sha256": "316077cfb1b4d3283fa9ce2dd40aaadd9c78bb034d142f0be6e688db310ce90d",
+      "status": "PASS"
+    }
+  ],
+  "delivery_verifier": "PASS",
+  "diff_check": "PASS with core.whitespace=cr-at-eol for existing CRLF files"
+}

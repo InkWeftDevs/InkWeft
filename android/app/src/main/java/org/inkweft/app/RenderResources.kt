@@ -32,7 +32,7 @@ internal object RenderResources {
         values.groupBy{it.category}.forEach{(k,v)->out["category.$k"]=v.sumOf{it.bytes}}
         return out
     }
-    fun onTrim(callback:()->Unit){trimmers.add(callback)}
+    fun onTrim(callback:()->Unit):()->Unit {trimmers.add(callback);return {trimmers.remove(callback)}}
     fun trim(){trimmers.forEach{it()}}
     /** Active input has priority; background frames are deferred when pinned allocations fill the budget. */
     fun admit(bytes:Long,live:Boolean=false){

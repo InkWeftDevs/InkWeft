@@ -15,10 +15,14 @@ data class PageAuthoringRow(val kind:String,val scopeId:String,val notebookId:St
 }
 @Entity(tableName="authoring_receipts",indices=[Index("notebookId")],foreignKeys=[ForeignKey(entity=NoteRow::class,parentColumns=["id"],childColumns=["notebookId"],onDelete=ForeignKey.NO_ACTION)])
 data class AuthoringReceiptRow(@PrimaryKey val commandId:String,val notebookId:String,val kind:String,val scopeId:String,val digest:String,val revision:Long)
+data class PageLayerHeaderRow(val scopeId:String,val revision:Long,val header:ByteArray)
+data class AuthoringPageState(val scopeId:String,val revision:Long,val state:PageAuthoring)
 @Dao interface PageAuthoringDao {
     @Query("SELECT * FROM canvas_authoring WHERE kind=:kind AND scopeId=:id") suspend fun get(kind:String,id:String):PageAuthoringRow?
     @Query("SELECT * FROM canvas_authoring WHERE kind=:kind AND scopeId=:id") fun observe(kind:String,id:String):kotlinx.coroutines.flow.Flow<PageAuthoringRow?>
     @Query("SELECT * FROM canvas_authoring WHERE notebookId=:book ORDER BY kind,scopeId") fun observeBook(book:String):kotlinx.coroutines.flow.Flow<List<PageAuthoringRow>>
+    @Query("SELECT * FROM canvas_authoring WHERE notebookId=:book AND kind='PAGE' AND scopeId IN (:ids) ORDER BY scopeId") fun observePages(book:String,ids:List<String>):kotlinx.coroutines.flow.Flow<List<PageAuthoringRow>>
+    @Query("SELECT scopeId,revision,SUBSTR(payload,1,8192) AS header FROM canvas_authoring WHERE notebookId=:book AND kind='PAGE' ORDER BY scopeId") fun observePageLayerHeaders(book:String):kotlinx.coroutines.flow.Flow<List<PageLayerHeaderRow>>
     @Query("SELECT * FROM canvas_authoring WHERE notebookId=:book ORDER BY kind,scopeId") suspend fun forBook(book:String):List<PageAuthoringRow>
     @Query("SELECT * FROM authoring_receipts WHERE commandId=:id") suspend fun receipt(id:String):AuthoringReceiptRow?
     @Insert(onConflict=OnConflictStrategy.REPLACE) suspend fun put(row:PageAuthoringRow)
@@ -41,6 +45,10 @@ class PageAuthoringRepository(private val db:NoteDatabase,private val fault:(Aut
     }
     fun observe(scope:AuthoringScope)=db.invalidationTracker.createFlow(*(if(scope.kind==AuthoringScopeKind.PAGE)arrayOf("canvas_authoring","ink_pages","page_objects")else arrayOf("canvas_authoring","study_nodes","study_cards","knowledge_records"))).map{read(scope)}.flowOn(Dispatchers.IO)
     fun observeBook(book:String)=db.authoring().observeBook(book)
+    fun observePages(book:String,ids:List<String>)=db.authoring().observePages(book,ids).map{rows->rows.map{AuthoringPageState(it.scopeId,it.revision,it.data())}}.flowOn(Dispatchers.IO)
+    fun observePageWriteScopes(book:String)=db.authoring().observePageLayerHeaders(book).map{rows->
+        rows.associate{row->val layers=PageAuthoringCodec.layerHeader(row.header);row.scopeId to layers.currentId?.let{LayerWriteScope(it,row.revision)}}
+    }.flowOn(Dispatchers.IO)
     private suspend fun owner(scope:AuthoringScope,active:Boolean=true) {
         require(db.notes().note(scope.notebookId)!=null)
         if(active)require(db.workspace().get(scope.notebookId)?.trashedAt==null){"AUTHORING_OWNER_UNAVAILABLE"}
