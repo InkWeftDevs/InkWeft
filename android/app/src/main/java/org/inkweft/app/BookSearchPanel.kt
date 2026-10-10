@@ -66,9 +66,13 @@ internal data class PageSearchDraft(val pageId:String,val inkRevision:Long,val o
                 for((i,page)in currentPages.withIndex()){
                     ensureActive()
                     try{
+                        // Object/layer edits invalidate the index. Check its cheap revision first,
+                        // so reopening search never decodes complete pages that are already indexed.
+                        val indexed=withContext(Dispatchers.IO){
+                            app.pages.hasCurrentSearchText(page.id)
+                        }
+                        if(indexed){processed=i+1;continue}
                         val frozen=withContext(Dispatchers.IO){app.authoring.exportPage(page.id)}
-                        val old=withContext(Dispatchers.IO){app.pages.searchText(page.id)}
-                        if(old?.inkRevision==frozen.authoring.inkRevision){processed=i+1;continue}
                         val layers=frozen.authoring.state.layers
                         val visibleObjects=frozen.objects.filter{layers.visible(LayerContent(LayerContentKind.OBJECT,it.id))}
                         val suppressed=visibleObjects.flatMap{it.sourceStrokeIds}.toSet()

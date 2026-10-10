@@ -1,0 +1,52 @@
+{
+  "candidate_version": 82,
+  "baseline_commit": "ee98b4cc1ca4733481bed0c05184a76ae5bf38e4",
+  "scope": "Six production files and three regression files compiled/tested before this report; no later production edits.",
+  "files": [
+    {
+      "path": "android/app/build.gradle.kts",
+      "bytes": 5078,
+      "sha256": "e473313f0e355d77e25b79b45f1ebea2a984f3c9cd109ccaf2df4e7c3869bba0"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/StudyWorkspace.kt",
+      "bytes": 144473,
+      "sha256": "c3fea26a9be36617d530652add5e2fefa213a0ef1e310e5a7e34a1683f5ade4c"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/PageAuthoring.kt",
+      "bytes": 11058,
+      "sha256": "43fa01dea8698321a7995af373e9a79153126dea5b5a4f41b687c957dc5a4070"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/UserLayers.kt",
+      "bytes": 7632,
+      "sha256": "b8f65dfe111597a8904220f6cb82b0d2e9b70fcf753e4af75d84a68a47376c9f"
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/InkRepository.kt",
+      "bytes": 24925,
+      "sha256": "b3387157daa21d176cb3a3cc5c338eb06c9a289b71c8076c51bc0ebe72002096"
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/PageAuthoringRepository.kt",
+      "bytes": 14419,
+      "sha256": "3caf4c8cd24cb9e4c1de1c5a54badcd4007ee3a1da1e114ba3f8cb8c515faab0"
+    },
+    {
+      "path": "android/core-domain/src/test/kotlin/org/inkweft/core/LayerCapacityRegressionTest.kt",
+      "bytes": 5982,
+      "sha256": "aab98bc142e20daae6643a509b13e411a546f964fa6066347aecc184703ace5c"
+    },
+    {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/AuthoringProjectionRegressionTest.kt",
+      "bytes": 5868,
+      "sha256": "e2438711dc15c039352a65e057acd5ade72745f4af7b37ac46903e8871bc6c95"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/LinkedCardReturnRegressionTest.kt",
+      "bytes": 5200,
+      "sha256": "e16d67898455f127d2edb9a813a7dab319c6e4da63ca55b082ff48b23c8be86e"
+    }
+  ]
+}

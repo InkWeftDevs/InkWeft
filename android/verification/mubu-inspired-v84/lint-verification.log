@@ -1,0 +1,3 @@
+app:lintDebug PASS
+{"Error": 0, "Fatal": 0, "Warning": 175, "Hint": 2}
+MuPDF API-only substitution applies. Existing warnings retained.

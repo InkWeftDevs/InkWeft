@@ -70,14 +70,12 @@ internal class SelectionOverlayView(context:Context):View(context){
                 moving=(selected.mapNotNull{geometry.bounds(it)}+selectedObjects).reduceOrNull{a,b->a.union(b)}?.padded(8.0)?.let{start.x>=it.left&&start.x<=it.right&&start.y>=it.top&&start.y<=it.bottom}==true
                 if(moving){
                     // Cache translation bounds once, not a page-sized allocation at every move.
-                    val samples=selected.asSequence().flatMap{it.samples.asSequence()}.toList()
+                    val bounds=(selected.map{it.sampleBounds()}+selectedObjects).reduce{a,b->a.union(b)}
                     val world=worldSelection
-                    val xs=samples.map{it.x}+selectedObjects.flatMap{listOf(it.left.toFloat(),it.right.toFloat())}
-                    val ys=samples.map{it.y}+selectedObjects.flatMap{listOf(it.top.toFloat(),it.bottom.toFloat())}
-                    minDx=(if(world)-BoardLimits.WORLD else 0f)-xs.min()
-                    maxDx=(if(world)BoardLimits.WORLD else InkLimits.WIDTH)-xs.max()
-                    minDy=(if(world)-BoardLimits.WORLD else 0f)-ys.min()
-                    maxDy=(if(world)BoardLimits.WORLD else InkLimits.HEIGHT)-ys.max()
+                    minDx=(if(world)-BoardLimits.WORLD else 0f)-bounds.left.toFloat()
+                    maxDx=(if(world)BoardLimits.WORLD else InkLimits.WIDTH)-bounds.right.toFloat()
+                    minDy=(if(world)-BoardLimits.WORLD else 0f)-bounds.top.toFloat()
+                    maxDy=(if(world)BoardLimits.WORLD else InkLimits.HEIGHT)-bounds.bottom.toFloat()
                     if(world)selectedObjects.forEach{b->
                         minDx=maxOf(minDx,(-BoardLimits.WORLD+(b.right-b.left)-b.left).toFloat())
                         minDy=maxOf(minDy,(-BoardLimits.WORLD+(b.bottom-b.top)-b.top).toFloat())

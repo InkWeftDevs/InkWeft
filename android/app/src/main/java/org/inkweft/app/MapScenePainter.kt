@@ -72,7 +72,7 @@ internal data class MapViewStyle(val selection:Int,val selectionFill:Int,val con
 internal object MapScenePainter {
     internal fun titleLayout(title:String,fontScale:Float=1f):StaticLayout = MapNodeMetrics.textLayout(title.replace('\n',' '),16f,fontScale,2,true)
     fun draw(c:Canvas,nodes:List<MapSceneNode>,selected:String?=null,collapsed:Map<String,Int> = emptyMap(),fontScale:Float=1f,detail:Boolean=true,hierarchy:Boolean=true,viewStyle:MapViewStyle?=null,
-             nodeLayouts:Map<String,MapNodeLayout> = emptyMap(),previews:Map<String,MapSourceFrame> = emptyMap(),presentations:Map<String,KnowledgeData.CardPresentation> = emptyMap()){
+             nodeLayouts:Map<String,MapNodeLayout> = emptyMap(),previews:Map<String,MapSourceFrame> = emptyMap(),presentations:Map<String,KnowledgeData.CardPresentation> = emptyMap(),layout:String="right"){
         val paint=Paint(Paint.ANTI_ALIAS_FLAG or Paint.FILTER_BITMAP_FLAG)
         val lookup=nodes.associateBy{it.id}
         // Document and embedded painting deliberately ignore live source and expansion state.
@@ -82,9 +82,16 @@ internal object MapScenePainter {
             paint.style=Paint.Style.STROKE;paint.strokeWidth=1.5f;paint.color=viewStyle?.connector?:0xffd9dee7.toInt()
             nodes.forEach{n->lookup[n.parentId]?.let{p->
                 val parent=layouts.getValue(p.id);val child=layouts.getValue(n.id)
-                val right=n.x>=p.x;val sx=p.x.toFloat()+if(right)parent.width else 0f;val ex=n.x.toFloat()+if(right)0f else child.width;val sign=if(right)1 else -1
-                val sy=p.y.toFloat()+parent.height/2;val ey=n.y.toFloat()+child.height/2
-                c.drawPath(Path().apply{moveTo(sx,sy);cubicTo(sx+28*sign,sy,ex-28*sign,ey,ex,ey)},paint)
+                val horizontal=layout!="organization"
+                if(horizontal){
+                    val right=n.x+child.width/2>=p.x+parent.width/2;val sx=p.x.toFloat()+if(right)parent.width else 0f;val ex=n.x.toFloat()+if(right)0f else child.width;val sign=if(right)1 else -1
+                    val sy=p.y.toFloat()+parent.height/2;val ey=n.y.toFloat()+child.height/2
+                    c.drawPath(Path().apply{moveTo(sx,sy);cubicTo(sx+28*sign,sy,ex-28*sign,ey,ex,ey)},paint)
+                }else{
+                    val down=n.y+child.height/2>=p.y+parent.height/2;val sx=p.x.toFloat()+parent.width/2;val ex=n.x.toFloat()+child.width/2
+                    val sy=p.y.toFloat()+if(down)parent.height else 0f;val ey=n.y.toFloat()+if(down)0f else child.height;val sign=if(down)1 else -1
+                    c.drawPath(Path().apply{moveTo(sx,sy);cubicTo(sx,sy+28*sign,ex,ey-28*sign,ex,ey)},paint)
+                }
             }}
         }
         val ordered=if(viewStyle!=null)nodes.sortedBy{it.id==selected}else nodes
@@ -140,9 +147,11 @@ internal object MapScenePainter {
             c.drawText(if(scene==null)"正在读取导图…"else if(!scene.available)"源图或分支不可用，可恢复后继续"else"空导图 · 选择后编辑",o.x+12,o.y+32,paint)
         }else{
             val nodes=scene.nodes;val layouts=nodes.associate{it.id to MapNodeMetrics.measure(it.title,it.body,structural=it.cardId==null)}
-            val left=nodes.minOf{it.x};val top=nodes.minOf{it.y};val right=nodes.maxOf{it.x+layouts.getValue(it.id).width};val bottom=nodes.maxOf{it.y+layouts.getValue(it.id).height}
-            val scale=min((o.width-24)/(right-left).toFloat(),(o.height-40)/(bottom-top).toFloat()).coerceAtLeast(.01f)
-            c.translate(o.x+o.width/2-((left+right)/2*scale).toFloat(),o.y+12+(o.height-40)/2-((top+bottom)/2*scale).toFloat());c.scale(scale,scale);draw(c,nodes,detail=scale>=.3f)
+            val summaries=MapSummaryPainter.measure(nodes,layouts,scene.summaryGroups,layout=scene.layout)
+            val boxes=nodes.map{n->val size=layouts.getValue(n.id);RectF(n.x.toFloat(),n.y.toFloat(),n.x.toFloat()+size.width,n.y.toFloat()+size.height)}+summaries.map{it.bounds}
+            val left=boxes.minOf{it.left.toDouble()};val top=boxes.minOf{it.top.toDouble()};val right=boxes.maxOf{it.right.toDouble()};val bottom=boxes.maxOf{it.bottom.toDouble()}
+            val scale=min((o.width-24)/(right-left).toFloat(),(o.height-40)/(bottom-top).toFloat()).coerceAtLeast(.001f)
+            c.translate(o.x+o.width/2-((left+right)/2*scale).toFloat(),o.y+12+(o.height-40)/2-((top+bottom)/2*scale).toFloat());c.scale(scale,scale);MapSummaryPainter.draw(c,summaries);draw(c,nodes,detail=scale>=.3f,layout=scene.layout)
         }
         c.restoreToCount(save);paint.color=0xff626d7e.toInt();paint.textSize=12f
         c.drawText(if(o.mapEmbed?.policy==MapEmbedPolicy.PINNED)"固定快照"else"实时导图 · 选择后编辑",o.x+10,o.y+o.height-10,paint)

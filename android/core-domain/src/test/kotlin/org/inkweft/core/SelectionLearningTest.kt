@@ -33,11 +33,11 @@ class SelectionLearningTest {
     }
     @Test fun graphRejectsCyclesMissingParentAndInvalidNumbers(){val a=StudyNode(id(),id(),null,0.0,0.0);val b=StudyNode(id(),id(),a.id,100.0,0.0);reject{StudyGraph.validate(listOf(a.copy(parentId=b.id),b))};reject{StudyGraph.validate(listOf(a.copy(parentId=id())))};reject{StudyGraph.validate(listOf(a.copy(x=Double.NaN)))}}
     @Test fun graphCapacityDistinguishesActiveNodesFromRetainedRecords(){
-        val card=id();val nodes=List(257){StudyNode(id(),card,null,0.0,0.0)}
-        StudyGraph.validate(nodes.take(127));StudyGraph.validate(nodes.take(128))
-        try{StudyGraph.validate(nodes.take(129));fail()}catch(e:IllegalArgumentException){assertEquals("STUDY_NODE_BUDGET",e.message)}
-        val history=nodes.mapIndexed{i,n->n.copy(removed=i>=127)}
-        StudyGraph.validate(history.take(255));StudyGraph.validate(history.take(256))
+        val card=id();val nodes=List(StudyGraph.MAX_RECORDS+1){StudyNode(id(),card,null,0.0,0.0)}
+        StudyGraph.validate(nodes.take(StudyGraph.MAX_NODES-1));StudyGraph.validate(nodes.take(StudyGraph.MAX_NODES))
+        try{StudyGraph.validate(nodes.take(StudyGraph.MAX_NODES+1));fail()}catch(e:IllegalArgumentException){assertEquals("STUDY_NODE_BUDGET",e.message)}
+        val history=nodes.mapIndexed{i,n->n.copy(removed=i>=StudyGraph.MAX_NODES-1)}
+        StudyGraph.validate(history.take(StudyGraph.MAX_RECORDS-1));StudyGraph.validate(history.take(StudyGraph.MAX_RECORDS))
         try{StudyGraph.validate(history);fail()}catch(e:IllegalArgumentException){assertEquals("STUDY_NODE_RECORD_BUDGET",e.message)}
         try{StudyGraph.validate(listOf(nodes.first(),nodes.first()));fail()}catch(e:IllegalArgumentException){assertFalse(e.message.orEmpty().startsWith("STUDY_NODE_"))}
     }

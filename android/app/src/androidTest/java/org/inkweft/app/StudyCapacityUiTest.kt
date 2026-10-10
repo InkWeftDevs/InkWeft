@@ -160,9 +160,9 @@ class StudyCapacityUiTest {
     }
 
     private fun counts(active: Int, total: Int, cards: Int) {
-        compose.onNodeWithTag("capacity-map-active").assertTextContains("$active / 128", substring = true)
-        compose.onNodeWithTag("capacity-map-total").assertTextContains("$total / 256", substring = true)
-        compose.onNodeWithTag("capacity-book-cards").assertTextContains("$cards / 200", substring = true)
+        compose.onNodeWithTag("capacity-map-active").assertTextContains("$active / ${StudyGraph.MAX_NODES}", substring = true)
+        compose.onNodeWithTag("capacity-map-total").assertTextContains("$total / ${StudyGraph.MAX_RECORDS}", substring = true)
+        compose.onNodeWithTag("capacity-book-cards").assertTextContains("$cards / ${StudyCapacity.MAX_CARDS_PER_NOTEBOOK}", substring = true)
     }
 
     private fun hideKeyboard() {
@@ -262,7 +262,7 @@ class StudyCapacityUiTest {
                 val isolatedNote = WorkspaceRepository(isolated).create(note.title, false, PaperStyle.BLANK, operationId = note.id)
                 assertEquals("The isolated capacity fixture must share the shell identity", note.id, isolatedNote.id)
                 isolated.withTransaction {
-                    repeat(200) { index ->
+                    repeat(StudyCapacity.MAX_CARDS_PER_NOTEBOOK) { index ->
                         val row = StudyCardRow(id(), note.id, 1, "合成已有卡片 $index", "容量拒绝检查")
                         isolated.study().addCard(row)
                         isolated.study().revision(StudyCardRevisionRow(row.id, row.revision, row.title, row.body, null))
@@ -280,7 +280,7 @@ class StudyCapacityUiTest {
             compose.runOnIdle {
                 assertSame(injected, study(note.id))
                 assertSame(isolatedRepository, study(note.id).repo)
-                assertEquals(200, study(note.id).ui.value.cards.size)
+                assertEquals(StudyCapacity.MAX_CARDS_PER_NOTEBOOK, study(note.id).ui.value.cards.size)
             }
             mapAction("study-add-card")
             waitFor("study-card-editor")
@@ -299,12 +299,12 @@ class StudyCapacityUiTest {
             compose.onNodeWithTag("study-card-editor").assertExists()
             compose.onNodeWithTag("study-card-title").assertTextContains(title, substring = false)
             compose.onNodeWithTag("study-card-body").assertTextContains(body, substring = false)
-            compose.onNode(hasText("未提交：本次操作会超过本笔记 200 张卡片上限（含回收区）。可编辑或复用已有卡片，或在另一笔记中新建。草稿已保留。") and
+            compose.onNode(hasText("未提交：本次操作会超过本笔记 ${StudyCapacity.MAX_CARDS_PER_NOTEBOOK} 张卡片上限（含回收区）。可编辑或复用已有卡片，或在另一笔记中新建。草稿已保留。") and
                 hasAnyAncestor(hasTestTag("study-card-editor"))).assertExists()
             compose.onNodeWithTag("study-save-card").assertIsEnabled()
             compose.onNodeWithTag("study-cancel-card").assertIsEnabled()
             val after = author(note.id, isolated)
-            assertEquals(200, after.cards.size)
+            assertEquals(StudyCapacity.MAX_CARDS_PER_NOTEBOOK, after.cards.size)
             assertTrue(after.nodes.isEmpty())
             assertEquals("Rejected save must not change cards, graph, receipts or notebook revision", before, after)
             assertEquals("The actual app database must retain only its empty synthetic shell", actualBefore, author(note.id))

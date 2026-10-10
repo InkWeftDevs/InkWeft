@@ -1,0 +1,47 @@
+{
+  "base_commit": "fd8c4477a84188c00e18352717c2d3585d4b2884",
+  "branch": "codex/cloud/starnote-inspired-editor-20261009",
+  "version_code": 79,
+  "core_tests": {
+    "tests": 390,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "android_compile": "PASS using Java API classes compiled from official MuPDF 1.28.5 sources; native AAR/packaging and Android runtime NOT_RUN",
+  "mupdf_android_fitz_commit": "2f0328165b08fd9c91720d95702cbef3a3d35706",
+  "mupdf_source_commit": "8ad45e92f0935d3d87f1db3f873086472a5e1b24",
+  "archive_stream": {
+    "bytes": 144001436,
+    "rows": 96,
+    "sha256": "e736dcbacfd9371548fbdc1e9ae7a3affc0e14edb22cbdeabb8e7c3f5a2ed606",
+    "write_read_byte_comparison": "PASS"
+  },
+  "hardware_tests": "NOT_RUN; no accessible Android device",
+  "not_changed": [
+    "Room schema 16",
+    "pressure response curves",
+    "live stroke smoothing",
+    "recognition model weights",
+    "shape recognition thresholds"
+  ],
+  "remaining_limits": {
+    "pdf_source_bytes": 32000000,
+    "pdf_source_pages": 500,
+    "page_copy_bytes": 64000000,
+    "notebook_copy_bytes": 96000000,
+    "snapshot_per_source_bytes": 1800000,
+    "local_backup_rows": 500000,
+    "remote_encrypted_plain_bytes": 524288000,
+    "render_memory_bytes": 134217728
+  },
+  "core_test_classes": 44,
+  "source_book_96mb_boundary": "PASS with default Gradle test heap (512 MiB)",
+  "checked_gradle_tasks": [
+    ":core-domain:test",
+    ":app:compileDebugKotlin",
+    ":app:compileDebugAndroidTestKotlin",
+    ":data-local:compileDebugAndroidTestKotlin"
+  ],
+  "log_normalization": "Only trailing whitespace removed; full original logs remain in the execution workspace."
+}

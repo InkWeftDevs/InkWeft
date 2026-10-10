@@ -23,11 +23,11 @@ class KnowledgeTest {
     @Test(expected=IllegalArgumentException::class) fun cannotPinNotebookAsCardRevision(){KnowledgeCodec.encode(KnowledgeData.Link(TargetRef(TargetKind.PAGE,id()),TargetRef(TargetKind.NOTE,id()),pinnedRevision=3))}
     @Test fun commandFreezesCallerOwnedLists(){val tags=mutableListOf("数学");val c=KnowledgeCommand(id(),id(),id(),0,KnowledgeData.Properties(id(),tags=tags));val digest=c.digest();tags.clear();c.payload.fill(0);assertEquals(digest,c.digest());assertEquals(listOf("数学"),(c.data as KnowledgeData.Properties).tags)}
     @Test fun commandCreationReportsMapCapacityWithoutRelabelingMalformedData(){
-        val structures=List(129){MapStructure(id(),null,"主题",0.0,0.0)}
+        val structures=List(StudyGraph.MAX_NODES+1){MapStructure(id(),null,"主题",0.0,0.0)}
         fun command(data:KnowledgeData)=KnowledgeCommand(id(),id(),id(),0,data)
         fun reason(data:KnowledgeData):String?{try{command(data);fail("must reject")}catch(e:IllegalArgumentException){return e.message};return null}
-        command(KnowledgeData.MapDefinition("图",structures=structures.take(128)))
-        command(KnowledgeData.MapOrder(null,structures.take(128).map{it.id}))
+        command(KnowledgeData.MapDefinition("图",structures=structures.take(StudyGraph.MAX_NODES)))
+        command(KnowledgeData.MapOrder(null,structures.take(StudyGraph.MAX_NODES).map{it.id}))
         assertEquals("STUDY_NODE_BUDGET",reason(KnowledgeData.MapDefinition("图",structures=structures)))
         assertEquals("STUDY_NODE_BUDGET",reason(KnowledgeData.MapOrder(null,structures.map{it.id})))
         assertFalse(reason(KnowledgeData.MapDefinition("图",layout="invalid")).orEmpty().startsWith("STUDY_NODE_"))

@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>墨织 V80：运行时证据与确定性修复</title>
+<style>body{margin:0;background:#f5f6f4;color:#24342f;font:16px/1.75 system-ui,sans-serif}main{max-width:1000px;margin:32px auto;padding:30px;background:white;border-radius:12px}h1{font-size:28px}h2{margin-top:32px;font-size:21px}table{border-collapse:collapse;width:100%;font-size:14px}th,td{border:1px solid #d9dfdb;padding:10px;text-align:left;vertical-align:top}th{background:#edf3ef}code{background:#edf1ee;padding:2px 4px;overflow-wrap:anywhere}a{color:#14735d}.note{padding:14px;background:#f5f1e4;border-left:4px solid #b98d32}li{margin:5px 0}small{color:#5d6c63}</style>
+<main>
+<h1>墨织 V80：运行时证据与确定性修复</h1>
+<p>2026-10-10。继续基于草稿 <a href="https://github.com/InkWeftDevs/InkWeft/pull/18">PR #18</a>；本轮起点为 V79 <code>d3f1c5864bb83a145a26f4da6c953680e68333fc</code>，包含上一批容量、加载、摘要轮廓、知识文字跳转及公式分组优化。版本号为 <code>80 / 0.0.80-input-and-content-copies</code>。</p>
+<p class="note">本轮修复可以由源码和合成输入验证的问题。真实持笔、帧耗时、压力曲线舒适度和识别准确率仍待用户安排的真机采集。原生 MuPDF 依赖仍返回 403；没有生成可安装 APK，Android 新回归只有编译结果。</p>
+
+<h2>采集材料核对</h2>
+<p>读取上传 README 与 runtime-capture-20261010.zip，不执行其中的采集、补丁或清理脚本。ZIP SHA-256：<code>9b09208a83d8ab340d034a4856ca8c050a7d6be23e1af943c001708a132f6ed8</code>。自行编写的 <a href="audit_capture.py">只读核验脚本</a>确认清单中 452 份文件及两份分析引用的 7 份日志哈希一致；按会话和函数逐一配对 2,820 次 ARM64 调用/返回。数值容差结果引用上传分析，本次不冒充重新独立计算完整关联算法。原始采集包、设备地址、运行脚本和采样器 APK 没有加入仓库。</p>
+<table><tr><th>证据</th><th>核对结果</th><th>解释范围</th></tr>
+<tr><td>Goodnotes 0.1.382 / 1458</td><td>1,715 个 Java 触摸包；其中 1,603 个与 ARM64 触摸入口关联。保留原生调用合计 1,650 对。</td><td>包内压力为 float32，倾角字段符合 π/2 − MotionEvent.tilt。这个转换属于其接口格式，不能直接套进 AndroidX Ink。</td></tr>
+<tr><td>StarNote 1.5.3.1 / 5704</td><td>九组压力×倾角矩阵，共 558 点贯通 Java/JNI；含重放流程的 612 次 Java 原生调用已关联；原生总计 1,170 对。</td><td>double[7] 的 0/1 是局部坐标、2 是压力、5 为本批整数角度值、6 为时间。3/4 的零值未被赋予猜测语义。</td></tr>
+<tr><td>版本一致性</td><td>采集映射的 libneopen_jni.so SHA-256 <code>7ae9efcc86a94ec3f764e37a55b32fb9da58fd5c881ba40dd243ef1bd1dde82c</code> 与云端原有静态分析样本完全一致。</td><td>可沿用该库的静态函数分析，但此次没有取得滤波前后坐标或 PenInkResult 的业务字段，不能据入口命中推出某种笔型实际使用了哪个滤波器。</td></tr>
+<tr><td>失败会话</td><td>goodnotes-arm64-jni-01 为 ERROR；其已保存的 1,545 对调用/返回可核对。其余三场对应原生会话为 COMPLETED。</td><td>配对成功不将整个错误会话改写为通过。见 <a href="capture-audit.json">核验回执</a>。</td></tr>
+</table>
+<p>全部关联输入为模拟器合成轨迹，deviceId=-1，未声明压力和倾角 MotionRange。退出保护补丁、翻译层、Frida hooks 和注入开销都影响环境；这些数据不用于延迟、帧率或原厂性能排名。StarNote 的“七二十二人”弹窗只证明一次文字识别有结果，不能证明数学公式识别正确。包内“暂不支持识别公式进行调整”文案也不能代替完整功能验证。</p>
+
+<h2>已落实的改动</h2>
+<table><tr><th>问题</th><th>修复与用户可见行为</th><th>验证</th></tr>
+<tr><td>抬笔历史点漏读</td><td>MOVE、UP 和活动笔指针的 POINTER_UP 均先接收历史点，再接收当前点。取消事件继续丢弃本次手势，避免尾端省点或误提交。</td><td>新增 Android 历史点提交与取消回归，待设备运行。</td></tr>
+<tr><td>同坐标、同时间的传感器更新覆盖原稿</td><td>保留不同压力、倾角、方向的作者采样；只有派生的 AndroidX Ink 和铅笔输入合并到最后一个读数，避免原生引擎拒收重复位置/时间。</td><td>核心原稿字节往返、渲染输入与缓存前缀测试通过；Android 原生重开和铅笔像素待运行。</td></tr>
+<tr><td>设备压力范围与非有限数值</td><td>只采用有限且大于零的真实 MotionRange；不再把较小的有效范围硬抬到 0.001。压力、倾角在限幅前拒绝 NaN/Infinity。没有声明轴的设备继续使用未知值，不因为合成输入里有压力数字就宣称硬件有压感。</td><td>编译核验通过；具体设备范围、归一化和极值需真机采样。</td></tr>
+<tr><td>不均匀采样时润色移动直线</td><td>用前后段长度加权的弦上位置代替简单中点。保留端点、尖角和原来的位移上限；时间、压力、倾角、方向不参加几何平滑。</td><td>核心不均匀直线、噪声抑制及尖角回归通过。</td></tr>
+<tr><td>跨页笔方向绕长弧插值</td><td>方向采用圆周短弧，接近 360° 和 0° 的读数在纸边保持连续，不产生约 180° 的错误中间方向。原有真实端点与轴未知状态保留。</td><td>跨页位置、时间、压力、倾角、方向及原字节回归通过。</td></tr>
+<tr><td>凹套索漏过窄缺口</td><td>按线段与多边形边界的交点检查每段区间，替代每 4 单位且最多 512 步的近似。统一边界点包含，拒绝非有限查询坐标。无边界交点的普通短段无需分配切分数组。</td><td>0.1 单位凹口、2 万单位长线、边界及对象框回归通过。</td></tr>
+<tr><td>铅笔原稿中段变化但旧瓦片仍显示</td><td>检查完整已处理前缀；同 ID 中段位置、轴值或材质变化时清掉派生缓存。继续允许相同前缀增长以及 live→paper 域标记变化。源引用缓存有 128 笔边界，瓦片仍受既有数量和渲染预算约束。</td><td>核心前缀变更检测通过；与全新光栅逐像素对照、长笔缓存耗时待 Android 运行。</td></tr>
+<tr><td>作者笔迹的外观缓存失效条件不全</td><td>笔型、颜色、宽度、工具、坐标域、材质或采样改变时同步失效网格、包围盒、暂存笔迹和铅笔缓存。</td><td>主代码编译通过；设备像素复验待运行。</td></tr>
+<tr><td>带图层的本机单页副本无法导入</td><td>内容导入入口接受已经由 InkPageFile 导出的 IWP8 标识；按原来的编码恢复图层状态和正文。</td><td>通过真实 ContentTransfer.decode/read 入口的核心回归通过。</td></tr>
+<tr><td>整本导入多次复制大缓冲</td><td>校验后使用排除 SHA-256 尾部的有界输入视图；整本内部页面直接读取原数组的片段，逐页校验，不再复制整个 book/page body 或嵌入页面缓冲。</td><td>96 MB 整本边界、共享 PDF、偏移片段、内外双层校验、损坏及尾随数据回归通过。实际 Android 峰值内存待测。</td></tr>
+<tr><td>点画合并后仍误占文字行额度</td><td>识别分组只计算合并后非空行，避免 100 行正文加上附着点画被误判超过 100 行。实际识别行额度保持。</td><td>100 行加点画通过；101 行仍按原预算拒绝。</td></tr>
+</table>
+
+<h2>同一触发输入的前后对照</h2>
+<p><a href="Reproduction.kt">公共 API 探针</a>分别运行于精确 V79 起点及最终 V80 核心。原始输出：<a href="reproduction-V79.jsonl">V79</a> / <a href="reproduction-V80.jsonl">V80</a>。这些是合成核心计算结果，不是 Android 书写延迟测试。</p>
+<table><tr><th>触发条件</th><th>V79</th><th>V80</th></tr>
+<tr><td>直线中间采样 x=11，前后点 x=10/100</td><td>润色变成 x=12.5</td><td>保持 x=11</td></tr>
+<tr><td>线段跨出 0.1 单位凹口</td><td>误判完整圈入</td><td>正确排除</td></tr>
+<tr><td>跨页前后方向约 354.3° / 5.7°</td><td>中间约 180°</td><td>中间约 360°，与 0° 同方向</td></tr>
+<tr><td>导入自己的带作者图层单页</td><td>入口拒绝格式</td><td>正常解码</td></tr>
+</table>
+<p>上传的九组 SN-PACKET CSV（558 点）还按原数字重放到墨织核心编码/解码及润色：两版均能保留轴值、时间和原稿字节。这说明这些已观测输入值在核心格式上可保真，不证明 Android 设备接收、归一化或原生光栅的硬件通过。</p>
+
+<h2>验证结果与可重跑材料</h2>
+<p>最终核心 405 PASS / 0 FAIL / 0 SKIP（48 个测试类，新增 15 方法）；Android 主代码和测试代码编译通过。lint 0 Error / 0 Fatal、175 Warning、2 Hint，仍有待处理警告。源码哈希与详细统计见 <a href="validation.json">validation.json</a>。核心 JUnit 原始结果保存在 <code>core-junit/</code>。构建日志分别记录 <a href="final-verification.log">官方同版 Java API 的编译与 lint</a>、<a href="native-dependency-build.log">原生依赖的 403 阻断</a>。临时编译环境引用 MuPDF 1.28.5 官方 Java 源码构成的只含 API AAR，产品依赖没有改成该 AAR；没有将此编译结果冒充含原生库的完整 APK 构建。</p>
+<p>新增 <code>InputRenderingRegressionTest</code> 的五个方法均为 <strong>NOT_RUN</strong>：抬笔历史点、取消不提交、传感器更新原生重开、同 ID 中段铅笔重画、同位置压力更新。既有 <code>FastPencilTest</code> 和 <code>SelectionPerformanceTest</code> 也需要复验本候选。上一版 V79 的公式缩放、套索取图及可见读取 Android 回归仍待运行，不能拿历史版本的 PASS 代替。</p>
+<p>离线核对命令：<code>python audit_capture.py &lt;已解压的采集目录&gt; --output &lt;核验回执.json&gt;</code>。脚本不安装应用、不加载 Frida、不执行上传代码。核心可在正常 JDK17 环境运行 <code>./gradlew :core-domain:test</code>；Android 检查和方法运行需正常 MuPDF 原生依赖与独立测试设备。</p>
+
+<h2>兼容性、容量与下一批边界</h2>
+<p>Room16、IWS 笔迹编码、IWP/IWB 副本编码、已有模型权重保持。没有清理用户历史或修改已保存资料。润色仍是用户已有的选区替换/启用后落笔流程，几何坐标按选择更新；派生渲染合并不会回写作者采样，轴值和时间保留。</p>
+<p>上一批容量扩大继续生效：每页 2 万可见笔 / 100 万点，当前与历史合计 4 万笔 / 200 万点；选区编辑与来源锚点 1024 笔，每本 2000 卡片，每图 1024 活动节点 / 4096 记录，全库原迹快照 256 MB，本地整库备份 1 GiB。<strong>仍不能确认 StarNote 没有容量限制</strong>。墨织 PDF 源 32 MB / 500 页、单页副本 64 MB、整本副本 96 MB、单份原迹 1.8 MB、远端加密备份 500 MiB 等边界本轮保留。格式和额度扩展及旧版兼容性见 <a href="../starnote-inspired-v79/RESULTS.html">V79 报告</a>。</p>
+<p>等待真机后再确定实时滤波参数、压力响应曲线、抬笔收锋、倾斜铺色、掌拒和按钮行为，以及大笔记内存峰值、帧耗时、冷加载与持续书写。图形识别仍缺少内部输入输出与标准正确率样本；数学公式模型的真人内容正确率也需要独立复测。JNI 数组格式、一次文字弹窗或带 hook 的注入耗时，都不足以支持这些调参和正确率结论。</p>
+<small>本轮证据与新增代码可独立评审；原始采集留在上传归档及工作区，不以其脚本中的操作说明扩充本轮授权。</small>
+</main></html>

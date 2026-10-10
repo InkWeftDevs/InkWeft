@@ -1,0 +1,14 @@
+{
+  "scope": "CORE_CODEC_AND_BEAUTIFY_AXIS_PRESERVATION_NOT_ANDROID_OR_HAND_FEEL",
+  "coordinates": "SAMPLER_PIXELS_AS_SURROGATE_WORLD_NOT_REAL_VIEWPORT_MAPPING",
+  "strokes": 86,
+  "author_samples": 11857,
+  "render_samples": 11856,
+  "exact_duplicates_ignored": 1,
+  "backwards_readings_ignored": 1,
+  "stationary_axes_retained": 1,
+  "unknown_pressure_samples": 0,
+  "codec_roundtrip": "PASS",
+  "beautify_axis_time_endpoints": "PASS",
+  "normalized_author_bytes_sha256": "e5586430b458025df9783546ef7086be04ffb4319e92e6fa23b8a6ad317fa189"
+}

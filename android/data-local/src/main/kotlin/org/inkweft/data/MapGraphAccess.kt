@@ -22,7 +22,7 @@ class MapGraphAccess(private val db:NoteDatabase){
                 if(structure!=null)MapSceneNode(n.id,n.parentId,null,structure.title,"",n.x,n.y,n.revision,n.revision)
                 else byCard[n.cardId]?.let{c->MapSceneNode(n.id,n.parentId,c.id,c.title,c.body,n.x,n.y,n.revision,c.revision,if(c.id in sourced)"已保存原迹"else"无来源")}
             }
-            MapScene(snapshot.ref,definition?.title?:"主图",nodes,snapshot.graphFingerprint,available)
+            MapScene(snapshot.ref,definition?.title?:"主图",nodes,snapshot.graphFingerprint,available,snapshot.state.layout,snapshot.state.summaryGroups.map{it.data})
         }
     }
 }

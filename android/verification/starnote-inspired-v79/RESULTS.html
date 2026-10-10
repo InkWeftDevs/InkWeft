@@ -1,0 +1,28 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>墨织 V79 更新与验证</title><style>body{font:16px/1.75 system-ui,sans-serif;color:#20332d;max-width:1050px;margin:40px auto;padding:0 22px;background:#fafbf8}h1{font-size:30px}h2{margin-top:32px;font-size:22px}table{border-collapse:collapse;width:100%;background:white;font-size:14px}th,td{text-align:left;padding:10px;border:1px solid #d5dfd9;vertical-align:top}th{background:#e9f0ea}code{font-size:13px;overflow-wrap:anywhere}li{margin:10px 0}a{color:#1e6c55}@media(max-width:640px){table{font-size:12px}td,th{padding:6px}}</style><body><h1>墨织 V79：容量、加载、套索与公式改进</h1>
+<p>基于已推送的 V78 <code>fd8c4477</code> 实施。参考 StarNote 的使用体验与此前研究结论，改进墨织现有实现；没有取得“StarNote 无容量上限”的证据。</p>
+<h2>已落实</h2>
+<ul><li><strong>摘要套索：</strong>自由套索预览按多边形裁剪，轮廓外保留白底；手写与文字对象只提取完整圈入的内容，PDF 按字符中心判断选区。支持 1024 笔复制、改色、缩放、翻转、关联、摘录及其撤销。OCR/字体美化仍以 256 笔为一批。</li>
+<li><strong>文字跳转：</strong>逐词扫描换为有内存边界的 Unicode 码点前缀树，保留原文 UTF-16 位置、最长优先、ASCII 单词边界及同名多链接。候选目标 128→512、词条 512→2048、文本标记 256→1024。已有有效搜索索引先检查版次，避免反复读取、识别整页。</li>
+<li><strong>笔记加载：</strong>缩略图只读取可见笔迹；笔迹和对象按版次刷新，邻页变化不会反复解码所有对象。完整编辑读取先冻结数据库行，再在事务外解码，可取消。编辑器缓存当前显示笔迹及容量计数；拖动、变换使用缓存的采样包围盒。单页/整本导出添加 SHA-256 尾部时减少一次整包复制，96 MB 整本边界回归通过。</li>
+<li><strong>绘制开销：</strong>即时补画重用画笔渲染器、铅笔图块及受数量/采样点约束的网格缓存，减少重复构造。真正帧耗时、峰值内存仍需实机验证。</li>
+<li><strong>导图：</strong>同步扩大结构、模板、顺序、固定副本和操作计划的编解码边界。父链校验与遍历改为迭代；极宽或极深的大图使用保留节点尺寸和间距的紧凑分栏。小图布局由原回归测试验证。</li>
+<li><strong>两项公式问题：</strong>手动识别使用完整二维公式区域，自动候选按空间连通分组，分数不再按普通文字基线拆开；缩放后的公式改内容时保留显示比例。公式模型和识别精度没有借此获得实机证明。</li></ul>
+<h2>容量调整</h2><table><thead><tr><th>项目</th><th>V78</th><th>V79</th></tr></thead><tbody><tr><td>每页可见笔迹 / 采样点</td><td>1万 / 50万</td><td>2万 / 100万</td></tr><tr><td>每页当前与历史合计</td><td>2万笔 / 100万点</td><td>4万笔 / 200万点</td></tr><tr><td>每次套索编辑 / 来源锚点</td><td>256笔</td><td>1024笔</td></tr><tr><td>每本已保存卡片（含回收）</td><td>200张</td><td>2000张</td></tr><tr><td>每图活动节点 / 保留记录</td><td>128 / 256</td><td>1024 / 4096</td></tr><tr><td>每本知识记录（含移除）</td><td>2000条</td><td>20000条</td></tr><tr><td>全库已保存原迹快照（含历史）</td><td>32 MB</td><td>256 MB</td></tr><tr><td>本地整库备份</td><td>128 MiB</td><td>1 GiB</td></tr></tbody></table>
+<p>仍有明确边界：PDF 源文档 32 MB / 500 页，页面副本 64 MB、整本副本 96 MB，单份原迹 1.8 MB，整库备份 50 万行，远端加密备份明文 500 MiB，绘制预算 128 MiB。整库原迹额度继续包含回收资料和历史。这一轮没有实现磁盘分页 PDF/笔迹编辑，也没有自动清理用户历史。</p>
+<h2>验证结果</h2>
+<table><thead><tr><th>验证</th><th>结果</th><th>实际覆盖</th></tr></thead><tbody>
+<tr><td>核心 JUnit</td><td>390 PASS / 0 FAIL</td><td>原 379 项与新增 11 项；分数分组、Unicode 对照、1024 笔撤销、大图布局/保存/模板/固定副本、容量边界。</td></tr>
+<tr><td>144 MB 真实流式备份</td><td>PASS</td><td>96 行逐字节比较，写入、读取摘要一致；测试文件已删除。</td></tr>
+<tr><td>Android 主代码和测试代码编译</td><td>PASS（官方 API 编译验证）</td><td>app/data-local 的 Debug Kotlin 和 AndroidTest Kotlin。MuPDF 服务器 403，临时用同版本官方 Java API 源码生成编译依赖；没有替换产品依赖或打 APK。</td></tr>
+<tr><td>Android 回归方法运行</td><td>NOT_RUN</td><td>已补公式缩放、自由套索像素、可见读取与隐藏历史校验方法；需要正常原生依赖和安卓设备。</td></tr>
+<tr><td>真实手感 / OCR 内容正确率 / 大库内存</td><td>NOT_RUN</td><td>等待正在采集的原始笔触、压力时间数据和设备结果。</td></tr></tbody></table>
+<h2>云端 JVM 微基准</h2>
+<p>同机 V78/V79，相同合成输入；5 批预热，9 批取中位数，JVM 最大堆 2 GiB。下表是每批总耗时，包含算法计算，不包含 Android 绘制、Room、磁盘或触笔延迟。缓存结果行衡量重复读取同一状态，不代表每次修改页面都无开销。</p>
+<table><thead><tr><th>操作</th><th>每批次数</th><th>V78</th><th>V79</th></tr></thead><tbody>
+<tr><td>canStart（16000 条当前与历史，8000 可见）</td><td>500</td><td>158.04 ms</td><td>0.444 ms</td></tr>
+<tr><td>visibleDraft（同一页状态）</td><td>25</td><td>41.98 ms</td><td>0.00224 ms</td></tr>
+<tr><td>关键词匹配（128 目标 / 512 词 / 14000 字符）</td><td>3</td><td>1067.25 ms</td><td>6.67 ms</td></tr></tbody></table>
+<p><a href="Benchmark.kt">复现实验源码</a> · <a href="benchmark-V78.txt">V78 原始记录</a> · <a href="benchmark-V79.txt">V79 原始记录</a> · <a href="android-api-compile.log">最终编译记录</a> · <a href="native-dependency-block.log">原生依赖阻断记录</a> · <a href="validation.json">验证与边界记录</a> · <a href="tested-source-sha256.json">接受验证的源码哈希</a></p>
+<h2>版本兼容和接续测试</h2>
+<p>Room 仍为 16，没有数据库迁移或历史删除。超过 V78 读取边界的数据需用 V79 或更新版读取；旧版可能拒绝导入超限副本/备份，避免用旧版回写新大资料。原始笔触与模型权重保持；压感曲线、实时平滑和图形识别阈值等硬件相关调参等待采集。</p>
+<p>在常规依赖环境执行 <code>cd android &amp;&amp; ./gradlew :core-domain:test :app:compileDebugKotlin :app:compileDebugAndroidTestKotlin :data-local:compileDebugAndroidTestKotlin -PinkweftInsertionPreview=true</code>。设备回归优先运行新增的 <code>FormulaFlowTest#editingResizedFormulaKeepsItsDisplayScaleAndColorOnlyEditKeepsMasks</code>、<code>ExcerptLassoRegressionTest</code>、<code>InkRepositoryTest#visiblePreviewMatchesFullReadAfterCutsReplacementAndUndo</code>、<code>InkRepositoryTest#previewSkipsHiddenPayloadWhileFullReadStillValidatesHistory</code>，再进行容量、截图、内存和真实笔感复核。不要用云端临时 API 依赖打可安装 APK。</p></body></html>

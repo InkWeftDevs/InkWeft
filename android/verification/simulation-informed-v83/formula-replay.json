@@ -1,0 +1,306 @@
+{
+  "scope": "HOST_CPU_REPLAY_OF_CAPTURED_PREPROCESSED_PNG_NOT_ANDROID_RASTER_OR_NEW_ACCURACY",
+  "onnxruntime": "1.30.0",
+  "cases": [
+    {
+      "case": "formula-01-linear_equation",
+      "inputPngSha256": "573a6ed419d8ec2590bfcd9ead8ba519dd4220bfa3e7f90a669e9ad8e498de04",
+      "normalizedTensorSha256": "3d82d7128fde6fc9cd4c13d65379d306c4f60517cee75fb2af04952a03bb4fc5",
+      "capturedTokens": 6,
+      "replayTokens": 6,
+      "equalCapturedTokenIds": true,
+      "eos": true,
+      "hostElapsedMs": 129
+    },
+    {
+      "case": "formula-02-superscript",
+      "inputPngSha256": "d1e9e398b63c24d54a98b27cc763dc30a3378abc555ac1c056b167ebcd08570e",
+      "normalizedTensorSha256": "ca607b8a71acaadcef3f4bd4c872dffd5336a4e86bea4a158a9ecbf6195c2c4a",
+      "capturedTokens": 6,
+      "replayTokens": 6,
+      "equalCapturedTokenIds": true,
+      "eos": true,
+      "hostElapsedMs": 129
+    },
+    {
+      "case": "formula-03-subscript",
+      "inputPngSha256": "d88bd5567d4855e299a37c208b3e22755a70776b4385209ba7999c2d865d188d",
+      "normalizedTensorSha256": "ec3a495b16ad8e2083f113057df75e4a2ac77fb3e704156f826bf7a442ae4d58",
+      "capturedTokens": 6,
+      "replayTokens": 6,
+      "equalCapturedTokenIds": true,
+      "eos": true,
+      "hostElapsedMs": 124
+    },
+    {
+      "case": "formula-04-both_scripts",
+      "inputPngSha256": "fb43a59b8a2579f7877c43f8a80dc550ad7f2cb73e53f427b87deb6a616f8730",
+      "normalizedTensorSha256": "23a2b95b4004c21122ec67c1519de9b0678b7f5368743015f665a4cfa6fdb68b",
+      "capturedTokens": 10,
+      "replayTokens": 10,
+      "equalCapturedTokenIds": true,
+      "eos": true,
+      "hostElapsedMs": 144
+    },
+    {
+      "case": "formula-05-fraction_ab",
+      "inputPngSha256": "44b5ab75703ae4bc9b59c2953822e2015f814de2ee2497ab036c21659fd95e72",
+      "normalizedTensorSha256": "1decbd9628ae444d5af4b88e054f267f0273d02415468e0afa0c8f0fe1f28203",
+      "capturedTokens": 8,
+      "replayTokens": 8,
+      "equalCapturedTokenIds": true,
+      "eos": true,
+      "hostElapsedMs": 134
+    },
+    {
+      "case": "formula-06-fraction_xplus1",
+      "inputPngSha256": "636ee25c4f9c8e86be76d3ed5ae3dfdd5c3f8eede0d6b2df474257ecb50146da",
+      "normalizedTensorSha256": "2faca9f5323b40430d1861dd6735395c6dbcd80cf785a07fef940dcd939cfb22",
+      "capturedTokens": 10,
+      "replayTokens": 10,
+      "equalCapturedTokenIds": true,
+      "eos": true,
+      "hostElapsedMs": 139
+    },
+    {
+      "case": "formula-07-fraction_power_denominator",
+      "inputPngSha256": "511bbc5dda040af0ae3f475ab7a4f7aa51238a5e53a72de6eba84ddde5694cae",
+      "normalizedTensorSha256": "75a2fefcc92fab8b4c1ff0810f7e0ccff746693766b3bd153b39341e862f2b6a",
+      "capturedTokens": 8,
+      "replayTokens": 8,
+      "equalCapturedTokenIds": true,
+      "eos": true,
+      "hostElapsedMs": 132
+    },
+    {
+      "case": "formula-08-root_x",
+      "inputPngSha256": "f391ca13cfc9afbd5cb44e3802b96893aa7b2eea7a33f3d206d104de7d73aa25",
+      "normalizedTensorSha256": "dc227255e58eb1887f576b4530c0362351e6c7af83c985d989ef1f4778c18238",
+      "capturedTokens": 3,
+      "replayTokens": 3,
+      "equalCapturedTokenIds": true,
+      "eos": true,
+      "hostElapsedMs": 114
+    },
+    {
+      "case": "formula-09-root_xplus1",
+      "inputPngSha256": "67cdf13fb755f9eb4aa50bd75872babc128764914bc64794dafffc112aeb2421",
+      "normalizedTensorSha256": "1f777b026598e392509e4da21227a67361fba00c18d642258446a2bb6a58b66b",
+      "capturedTokens": 8,
+      "replayTokens": 8,
+      "equalCapturedTokenIds": true,
+      "eos": true,
+      "hostElapsedMs": 134
+    },
+    {
+      "case": "formula-10-cube_root",
+      "inputPngSha256": "be7d56d2d6d5eb19e783f6f38697b7ffefb714b4de7ad0c7f45e1a674ac12545",
+      "normalizedTensorSha256": "2fcb52ff054b669ef2ed70a1f2e6f09d9b454dbe720c0a13df0591ff2ecaa82e",
+      "capturedTokens": 4,
+      "replayTokens": 4,
+      "equalCapturedTokenIds": true,
+      "eos": true,
+      "hostElapsedMs": 145
+    },
+    {
+      "case": "formula-11-greek_alpha_beta",
+      "inputPngSha256": "0c8b530999b1ddd08a8e2de614f6976804d5afaa43ced3cfc6e7f30387dac36b",
+      "normalizedTensorSha256": "2f1113f5643d06e32347228e4084f1582e7b8150a0fee539e3a1e9437844776d",
+      "capturedTokens": 4,
+      "replayTokens": 4,
+      "equalCapturedTokenIds": true,
+      "eos": true,
+      "hostElapsedMs": 172
+    },
+    {
+      "case": "formula-12-greek_theta",
+      "inputPngSha256": "5a5de5f77e1130582f517126c47257284684e25e91940daacf4b1d90f2c66c9b",
+      "normalizedTensorSha256": "d8a7f972993b106f69a67b87289accf1a331736f301f282a43231a050144bec7",
+      "capturedTokens": 4,
+      "replayTokens": 4,
+      "equalCapturedTokenIds": true,
+      "eos": true,
+      "hostElapsedMs": 171
+    },
+    {
+      "case": "formula-13-pi_r_squared",
+      "inputPngSha256": "dd422f5c091b1fa84e8725f7b116ba6fe1d5c9aca6ac9a16013d9a7266cb6398",
+      "normalizedTensorSha256": "02fac72bcc2c75fef0a88a61961fb20f5458faf3b98f8265a6f36394e02c8ab9",
+      "capturedTokens": 11,
+      "replayTokens": 11,
+      "equalCapturedTokenIds": true,
+      "eos": true,
+      "hostElapsedMs": 146
+    },
+    {
+      "case": "formula-14-sin_x",
+      "inputPngSha256": "1bb7bbbb71714a562b001a514bf27e95e808a4f0c98e8dee4fddc01d4a1712b6",
+      "normalizedTensorSha256": "1524714fc24852db4beba8f4d5b0ce1d60c287345b7078862a69d3711076463d",
+      "capturedTokens": 5,
+      "replayTokens": 5,
+      "equalCapturedTokenIds": true,
+      "eos": true,
+      "hostElapsedMs": 114
+    },
+    {
+      "case": "formula-15-cos_x",
+      "inputPngSha256": "cc65560d0281e806967bd56282e7d7efe2c91d373dcefbbfc9be6125dca602bc",
+      "normalizedTensorSha256": "38585d83d3d3547e46e3bf4b5b1de76f43a86e785078546f37194cf4dd941970",
+      "capturedTokens": 5,
+      "replayTokens": 5,
+      "equalCapturedTokenIds": true,
+      "eos": true,
+      "hostElapsedMs": 108
+    },
+    {
+      "case": "formula-16-tan_x",
+      "inputPngSha256": "c9f578fd5935246968fcc311925fe3ed58aaf0acea16e9944834b1ed5f7a3079",
+      "normalizedTensorSha256": "5fe713d9e7d57e5684b32383f47400ab56c2b16cb533af1076b9cd10060bee5b",
+      "capturedTokens": 7,
+      "replayTokens": 7,
+      "equalCapturedTokenIds": true,
+      "eos": true,
+      "hostElapsedMs": 114
+    },
+    {
+      "case": "formula-17-integral",
+      "inputPngSha256": "19da9f7d20616888f2e6c7f9499618ff3313b1a6397b39f4c7178b541610c4e3",
+      "normalizedTensorSha256": "9c7a3c53defa3b10f88469a43bc71cc33ab03a99ee902aadbb5885f1cee6d21d",
+      "capturedTokens": 7,
+      "replayTokens": 7,
+      "equalCapturedTokenIds": true,
+      "eos": true,
+      "hostElapsedMs": 113
+    },
+    {
+      "case": "formula-18-definite_integral",
+      "inputPngSha256": "52ed977c1c2ac4181b657d08b7d472c044779114e265dc1e0b465bce7200414c",
+      "normalizedTensorSha256": "0dd59219f53e866fdedee85d7d64662af9a247f13c90d66da11cd044717616c2",
+      "capturedTokens": 9,
+      "replayTokens": 9,
+      "equalCapturedTokenIds": true,
+      "eos": true,
+      "hostElapsedMs": 149
+    },
+    {
+      "case": "formula-19-sum_i",
+      "inputPngSha256": "6d91acb371fe966fdf909e4a612b95a7b1c1b408faee6371b5a7c7e5b6bb5a84",
+      "normalizedTensorSha256": "950fc286ba9818ee9e6e99171148149cd8125032d21b2917a2cdf3a541971c79",
+      "capturedTokens": 12,
+      "replayTokens": 12,
+      "equalCapturedTokenIds": true,
+      "eos": true,
+      "hostElapsedMs": 131
+    },
+    {
+      "case": "formula-20-sum_power",
+      "inputPngSha256": "935f32d61d0703b9ce64cc41df8b5643b9af6f7e5f13f9734b268cd2f96781c8",
+      "normalizedTensorSha256": "d3b91b35785d0c92eb0b6eb704f9c36b9d1fa03f6cb995475832fea56754ee88",
+      "capturedTokens": 17,
+      "replayTokens": 17,
+      "equalCapturedTokenIds": true,
+      "eos": true,
+      "hostElapsedMs": 143
+    },
+    {
+      "case": "formula-21-derivative",
+      "inputPngSha256": "29c4d153162bbe02f33aa6e5f4fde068775f72da9be2692221495b1ef71a155b",
+      "normalizedTensorSha256": "9db7e18e705e4c41f10a67062c81cbfb9002c1a83340048527fd401f86636e4a",
+      "capturedTokens": 14,
+      "replayTokens": 14,
+      "equalCapturedTokenIds": true,
+      "eos": true,
+      "hostElapsedMs": 165
+    },
+    {
+      "case": "formula-22-aligned_equations",
+      "inputPngSha256": "f6a6972db261f8674053dd504a2383156a68b1ec1f5cc5a0dfa5a68270d15a47",
+      "normalizedTensorSha256": "7ae965bf7db6aa556c87cb9ccf32c5f6a1cfa45080ead7c734f6bec542f02699",
+      "capturedTokens": 11,
+      "replayTokens": 11,
+      "equalCapturedTokenIds": true,
+      "eos": true,
+      "hostElapsedMs": 190
+    },
+    {
+      "case": "formula-23-identity_matrix",
+      "inputPngSha256": "3d6af5e507e472d549f61e13243c7a89119048e949612373a1ac35fdbd20166c",
+      "normalizedTensorSha256": "de49ccd9390020f83e6c5970e5d3f77bae76446c6f55b704f930363326516139",
+      "capturedTokens": 26,
+      "replayTokens": 26,
+      "equalCapturedTokenIds": true,
+      "eos": true,
+      "hostElapsedMs": 205
+    },
+    {
+      "case": "formula-24-symbol_matrix",
+      "inputPngSha256": "6def12fad9278a8b2a382fe9d8cbf50186dd9208bdd9f1c6a1942cc2e34e3f5f",
+      "normalizedTensorSha256": "b7013a0485f26f7d9691df1ddbf282383bbbafa94d937cfd601870ae2205fd0e",
+      "capturedTokens": 12,
+      "replayTokens": 12,
+      "equalCapturedTokenIds": true,
+      "eos": true,
+      "hostElapsedMs": 138
+    },
+    {
+      "case": "formula-25-two_fractions",
+      "inputPngSha256": "f395511a31a1364521113842e53919a35db94b2c1c5324aa3310b1e53c61a7d8",
+      "normalizedTensorSha256": "9cc4616cbdadc93e1c5cf19710c344aa76627870c7dc6762fcd27dd4bfcdfeaf",
+      "capturedTokens": 16,
+      "replayTokens": 16,
+      "equalCapturedTokenIds": true,
+      "eos": true,
+      "hostElapsedMs": 176
+    },
+    {
+      "case": "formula-26-root_fraction",
+      "inputPngSha256": "7f599d1af1038caf57940a39f2b99f0550843d63e489180216ec9bc31534c4b7",
+      "normalizedTensorSha256": "d9d2f8069e6717d3a3bf459ed4a1900cdc12934eb80b93e5ebc80b9c4c5bc108",
+      "capturedTokens": 11,
+      "replayTokens": 11,
+      "equalCapturedTokenIds": true,
+      "eos": true,
+      "hostElapsedMs": 137
+    },
+    {
+      "case": "formula-27-rational_equation",
+      "inputPngSha256": "5fd7cf61200b7c613c313d37fafabdd7534947b5012eade102a183a37313101a",
+      "normalizedTensorSha256": "9ab3a7975dbc6497e84e398c197473d37c3e2dbb382165b6ae1b3d64cd286ac8",
+      "capturedTokens": 16,
+      "replayTokens": 16,
+      "equalCapturedTokenIds": true,
+      "eos": true,
+      "hostElapsedMs": 179
+    },
+    {
+      "case": "formula-28-negative_scribble",
+      "inputPngSha256": "34cbe1d5e77f3c1e43fc1dc472eae34c6bc15b900d3b80c46e26cfa6f898e932",
+      "normalizedTensorSha256": "4f5984a600a4b369960714046a4e0fef6af4ae92e121c3838c02c79c9fb7c9fa",
+      "capturedTokens": 2,
+      "replayTokens": 2,
+      "equalCapturedTokenIds": true,
+      "eos": true,
+      "hostElapsedMs": 115
+    },
+    {
+      "case": "formula-29-invalid_syntax",
+      "inputPngSha256": "4fb474cfb3693b9e6b70d2ee33dcff3bc15d845edaaa0177d7d2abad6ed32afb",
+      "normalizedTensorSha256": "f5f18511896800893942af580b3b1d4e30ccc20fc9b86bcda34e56eed5fd7cb0",
+      "capturedTokens": 4,
+      "replayTokens": 4,
+      "equalCapturedTokenIds": true,
+      "eos": true,
+      "hostElapsedMs": 136
+    },
+    {
+      "case": "formula-30-euler_identity",
+      "inputPngSha256": "3873ca88618c3ecd98cbb0c4ea23ca91a7c537a7c7556724edba5e529a9418e0",
+      "normalizedTensorSha256": "8bca9c1e93f511c4edda9e23f22dbb80e750a6875d880c068f5a7a7590e40113",
+      "capturedTokens": 11,
+      "replayTokens": 11,
+      "equalCapturedTokenIds": true,
+      "eos": true,
+      "hostElapsedMs": 173
+    }
+  ]
+}

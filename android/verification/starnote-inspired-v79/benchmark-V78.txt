@@ -1,0 +1,5 @@
+metric,iterations,median_ms,min_ms,max_ms
+canStart,500,158.037571,132.439972,196.386487
+visibleDraft,25,41.975184,39.236849,59.518364
+keywordSpans,3,1067.24791,910.793749,1195.441363
+consumed=2807000

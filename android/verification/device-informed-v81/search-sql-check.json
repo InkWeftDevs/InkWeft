@@ -1,0 +1,82 @@
+{
+  "scope": "HOST_SQLITE_NOT_ANDROID_ROOM",
+  "sqlite_version": "3.53.1",
+  "production_query": "SELECT EXISTS(SELECT 1 FROM page_search_text s JOIN notebook_pages p ON p.id=s.pageId LEFT JOIN ink_pages h ON h.noteId=p.id WHERE p.id=:id AND p.trashedAt IS NULL AND s.inkRevision=COALESCE(h.revision,0))",
+  "checks": [
+    {
+      "case": "no_index",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "case": "empty_page_index",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "case": "stale_ink_revision",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "case": "matching_header",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "case": "object_or_layer_transaction_invalidated_index",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "case": "trashed_page",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "case": "restored_page",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "case": "missing_page",
+      "expected": false,
+      "actual": false
+    }
+  ],
+  "read_columns": [
+    [
+      "notebook_pages",
+      "id"
+    ],
+    [
+      "notebook_pages",
+      "trashedAt"
+    ],
+    [
+      "page_search_text",
+      "inkRevision"
+    ],
+    [
+      "ink_pages",
+      "revision"
+    ],
+    [
+      "notebook_pages",
+      "id"
+    ],
+    [
+      "page_search_text",
+      "pageId"
+    ],
+    [
+      "ink_pages",
+      "noteId"
+    ],
+    [
+      "notebook_pages",
+      "id"
+    ]
+  ],
+  "payload_reads": 0
+}

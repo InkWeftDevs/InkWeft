@@ -75,17 +75,21 @@ internal class DocumentRendering(context:Context,private val repo:DocumentReposi
             }finally{document.destroy()}
         }
     }
-    suspend fun text(pageId:String,bounds:CanvasBounds):String=withContext(Dispatchers.IO){lock.withLock {
+    suspend fun text(pageId:String,bounds:CanvasBounds):String=text(pageId,InkRegion(listOf(
+        EraserPoint(bounds.left.toFloat(),bounds.top.toFloat()),EraserPoint(bounds.right.toFloat(),bounds.bottom.toFloat()))))
+    suspend fun text(pageId:String,region:InkRegion):String=withContext(Dispatchers.IO){lock.withLock {
+        ensureActive()
         val source=repo.read(pageId)?:return@withLock ""
         val document=com.artifex.mupdf.fitz.Document.openDocument(source.document.bytes(),"application/pdf")
         try{val page=document.loadPage(source.page)
-            try{val r=page.bounds;val fit=min(1000f/(r.x1-r.x0),1414f/(r.y1-r.y0));val left=(1000-(r.x1-r.x0)*fit)/2;val top=(1414-(r.y1-r.y0)*fit)/2
+            try{val r=page.bounds
                 val structured=page.toStructuredText()
                 try{structured.blocks.flatMap{it.lines.toList()}.mapNotNull{line->
+                    ensureActive()
                     val box=paperBounds(r,line.bbox)
-                    if(!box.intersects(bounds))null else buildString{line.chars.forEach{char->
-                        val x=left+(char.origin.x-r.x0)*fit
-                        if(x>=bounds.left&&x<=bounds.right)appendCodePoint(char.c)
+                    if(!box.intersects(region.bounds))null else buildString{line.chars.forEach{char->
+                        val glyph=paperBounds(r,char.quad.toRect())
+                        if(region.contains((glyph.left+glyph.right)/2,(glyph.top+glyph.bottom)/2))appendCodePoint(char.c)
                     }}.takeIf{it.isNotBlank()}
                 }.joinToString("\n").take(20000)}finally{structured.destroy()}
             }finally{page.destroy()}

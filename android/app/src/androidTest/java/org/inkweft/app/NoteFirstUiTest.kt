@@ -164,10 +164,12 @@ class NoteFirstUiTest {
   compose.waitUntil(15000){runBlocking{app.knowledge.observe().first()}.any{(it.data() as? KnowledgeData.MapTemplate)?.title=="复习结构"}}
   val template=runBlocking{app.knowledge.observe().first()}.mapNotNull{it.data() as? KnowledgeData.MapTemplate}.single()
   assertTrue(template.nodes.all{it.title.startsWith("主题 ")});assertTrue(runBlocking{app.study.cards(book).first()}.isEmpty())
-  tap("study-new-map");tap("map-template-6");tap("study-new-map-save");ready()
+  tap("study-new-map");tap("map-template-${MapTemplates.builtins.size}");tap("study-new-map-save");ready()
   compose.waitUntil(15000){runBlocking{app.knowledge.observe().first()}.count{it.data() is KnowledgeData.MapDefinition}==2}
   val definitions=runBlocking{app.knowledge.observe().first()}.mapNotNull{it.data() as? KnowledgeData.MapDefinition}
   assertTrue(definitions[0].structures.map{it.id}.intersect(definitions[1].structures.map{it.id}.toSet()).isEmpty())
+  val reused=definitions.single{it.title=="复习结构"};assertEquals(template.layout,reused.layout)
+  assertEquals(template.nodes.map{it.title},reused.structures.map{it.title})
   tap("study-management");tap("study-add-card");compose.onNodeWithTag("study-card-title").performTextInput("保留未保存标题")
   compose.onNodeWithTag("study-card-body").performTextInput("关闭浮窗仍保留草稿")
   tap("study-close");tap("quick-study");compose.onNodeWithTag("study-card-title").assertTextContains("保留未保存标题");compose.onNodeWithTag("study-card-body").assertTextContains("关闭浮窗仍保留草稿")

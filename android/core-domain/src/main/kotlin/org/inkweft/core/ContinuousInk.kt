@@ -35,7 +35,7 @@ object ContinuousInk {
                 if(t==0f)return a
                 if(t==1f)return b
                 fun f(x:Float,y:Float)=if(x<0f)-1f else x+(y-x)*t
-                return InkSample(a.x+(b.x-a.x)*t,a.y+(b.y-a.y)*t,a.elapsedMs+((b.elapsedMs-a.elapsedMs)*t).toLong(),f(a.pressure,b.pressure),f(a.tilt,b.tilt),f(a.orientation,b.orientation),true)
+                return InkSample(a.x+(b.x-a.x)*t,a.y+(b.y-a.y)*t,a.elapsedMs+((b.elapsedMs-a.elapsedMs)*t).toLong(),f(a.pressure,b.pressure),f(a.tilt,b.tilt),InkSampling.orientationBetween(a.orientation,b.orientation,t),true)
             }
             ts.sorted().zipWithNext().forEach{(s,e)->val p=page(a.y+(b.y-a.y)*(s+e)/2);emit(p,lerp(s),before=a);emit(p,lerp(e),after=b)}
         }

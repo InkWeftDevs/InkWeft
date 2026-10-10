@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="org.inkweft.core.InkEditingTest" tests="12" skipped="0" failures="0" errors="0" timestamp="2026-10-10T08:34:09.918Z" hostname="4d22d97528bf" time="0.007">
+  <properties/>
+  <testcase name="maskValidationRejectsInvalidSizeAndEmptyPath" classname="org.inkweft.core.InkEditingTest" time="0.0"/>
+  <testcase name="noCloudProvidersAreEnabledByDefault" classname="org.inkweft.core.InkEditingTest" time="0.001"/>
+  <testcase name="oldUnmaskedCodecStillRoundTrips" classname="org.inkweft.core.InkEditingTest" time="0.001"/>
+  <testcase name="newInkIsNotErasedByAnOldMask" classname="org.inkweft.core.InkEditingTest" time="0.0"/>
+  <testcase name="wholeBookRoundTripIncludesEveryPageAndMask" classname="org.inkweft.core.InkEditingTest" time="0.0"/>
+  <testcase name="partialMaskKeepsOriginalSamplesAndOnlyItsTargets" classname="org.inkweft.core.InkEditingTest" time="0.001"/>
+  <testcase name="partialEraseSurvivesPageContentExport" classname="org.inkweft.core.InkEditingTest" time="0.0"/>
+  <testcase name="staleRecognizedRegionDoesNotFollowInkRevision" classname="org.inkweft.core.InkEditingTest" time="0.001"/>
+  <testcase name="effectiveMaskedStrokeCodecRoundTrip" classname="org.inkweft.core.InkEditingTest" time="0.001"/>
+  <testcase name="unknownEraseKeepsTheSameCommand" classname="org.inkweft.core.InkEditingTest" time="0.001"/>
+  <testcase name="eraserChangesSemanticCommandDigest" classname="org.inkweft.core.InkEditingTest" time="0.0"/>
+  <testcase name="maskUndoRedoIsOneOperationAndPreservesHistory" classname="org.inkweft.core.InkEditingTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

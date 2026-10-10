@@ -69,7 +69,9 @@ internal fun graphSnapshot(
     val versions = cards.filter { it.id in cardIds }.sortedBy { it.id }.map { StudyCardVersion(it.id, it.revision, it.trashedAt) }
     require(versions.map { it.cardId }.toSet() == cardIds) { "MAP_CARD_UNAVAILABLE" }
     val state = StudyGraphState(ref, orderedNodes.map { it.model() }, orderedIds,
-        order?.revision ?: 0, definition?.revision ?: 0, structural, versions)
+        order?.revision ?: 0, definition?.revision ?: 0, structural, versions,
+        ownRows.filterNot{it.removed}.mapNotNull{r->(r.data() as? KnowledgeData.MapSummaryGroup)?.takeIf{it.mapId==ref.mapId}?.let{StudySummaryGroup(r.id,r.revision,it)}},
+        (order?.data() as? KnowledgeData.MapOrder)?.layout?:(definition?.data() as? KnowledgeData.MapDefinition)?.layout?:"right")
     return StudyGraphSnapshot(ref, cards, orderedNodes, main, definition, order, orderedIds,
         StudyOrganization.fingerprint(state), state)
 }

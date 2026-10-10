@@ -22,7 +22,7 @@ class PageAuthoring(val layers:UserLayers=UserLayers(),blanks:List<DocumentWhite
         require(regions.size<=AnnotationRegion.MAX_REGIONS&&regions.map{it.target}.distinct().size==regions.size)
         require(annotations.size<=MAX_ANNOTATIONS&&annotations.map{it.stroke.id}.distinct().size==annotations.size)
         require(annotations.sumOf{it.stroke.samples.size}<=MAX_POINTS)
-        require(annotations.all{a->val ref=LayerContent(LayerContentKind.ANNOTATION,a.stroke.id);layers.layer(ref)!=null||ref in layers.deleted}){"ANNOTATION_LAYER_MISSING"}
+        require(annotations.all{a->layers.owns(LayerContent(LayerContentKind.ANNOTATION,a.stroke.id))}){"ANNOTATION_LAYER_MISSING"}
         require(annotations.all{a->a.target.kind!=AnnotationTargetKind.WHITESPACE||blanks.any{it.id==a.target.id}}){"ANNOTATION_BLANK_MISSING"}
     }
     val legacy get()=blanks.isEmpty()&&annotations.isEmpty()&&regions.isEmpty()&&layers.deleted.isEmpty()&&layers.layers==listOf(UserLayer(UserLayers.DEFAULT_ID,"基础层"))&&layers.currentId==UserLayers.DEFAULT_ID
@@ -43,14 +43,32 @@ class PageAuthoring(val layers:UserLayers=UserLayers(),blanks:List<DocumentWhite
 object PageAuthoringCodec {
     const val MAX_BYTES=1_900_000 // Below the existing archive field ceiling; reject before author writes.
     fun encode(state:PageAuthoring):ByteArray {
+        // Existing-size configurations retain their exact IWA3 representation.
+        // Larger stacks use IWA4 compact identities within the same byte ceiling.
+        val compact=state.layers.memberships.size>UserLayers.LEGACY_MAX_CONTENT||state.layers.deleted.size>UserLayers.LEGACY_MAX_CONTENT
+        if(compact)return encode(state,true)
+        return try{encode(state,false)}catch(e:IllegalArgumentException){
+            if(e.message!="ANNOTATION_CAPACITY")throw e
+            // A large stack can move from memberships to deleted identities.
+            // Keep it readable even when neither list alone exceeds 22,000.
+            encode(state,true)
+        }
+    }
+    private fun encode(state:PageAuthoring,compact:Boolean):ByteArray {
         val buffer=ByteArrayOutputStream()
         DataOutputStream(buffer).use{d->
-            d.writeInt(0x49574133)
+            d.writeInt(if(compact)0x49574134 else 0x49574133)
             d.writeInt(state.layers.layers.size)
             state.layers.layers.forEach{d.writeUTF(it.id);d.writeUTF(it.name);d.writeBoolean(it.visible);d.writeBoolean(it.locked)}
             d.writeBoolean(state.layers.currentId!=null);state.layers.currentId?.let(d::writeUTF)
-            fun content(c:LayerContent){d.writeByte(c.kind.ordinal);d.writeUTF(c.id)}
-            d.writeInt(state.layers.memberships.size);state.layers.memberships.sortedWith(compareBy<LayerMembership>{it.content.kind.ordinal}.thenBy{it.content.id}).forEach{content(it.content);d.writeUTF(it.layerId)}
+            fun identity(id:String){
+                if(!compact){d.writeUTF(id);return}
+                val uuid=UUID.fromString(id);val canonical=uuid.toString()==id
+                d.writeBoolean(canonical)
+                if(canonical){d.writeLong(uuid.mostSignificantBits);d.writeLong(uuid.leastSignificantBits)}else d.writeUTF(id)
+            }
+            fun content(c:LayerContent){d.writeByte(c.kind.ordinal);identity(c.id)}
+            d.writeInt(state.layers.memberships.size);state.layers.memberships.sortedWith(compareBy<LayerMembership>{it.content.kind.ordinal}.thenBy{it.content.id}).forEach{content(it.content);identity(it.layerId)}
             d.writeInt(state.layers.deleted.size);state.layers.deleted.sortedWith(compareBy<LayerContent>{it.kind.ordinal}.thenBy{it.id}).forEach(::content)
             d.writeInt(state.blanks.size);state.blanks.forEach{d.writeUTF(it.id);d.writeDouble(it.beforeY);d.writeDouble(it.height);d.writeBoolean(it.collapsed)}
             d.writeInt(state.annotations.size);state.annotations.forEach{a->
@@ -64,12 +82,13 @@ object PageAuthoringCodec {
     fun decode(bytes:ByteArray):PageAuthoring {
         require(bytes.size in 8..MAX_BYTES)
         return DataInputStream(ByteArrayInputStream(bytes)).use{d->
-            val version=d.readInt();require(version in listOf(0x49574131,0x49574132,0x49574133)){"Unsupported authoring state; retain original bytes"}
+            val version=d.readInt();require(version in listOf(0x49574131,0x49574132,0x49574133,0x49574134)){"Unsupported authoring state; retain original bytes"}
             fun count(max:Int,min:Int=0)=d.readInt().also{require(it in min..max)}
-            fun content()=LayerContent(LayerContentKind.entries.getOrNull(d.readUnsignedByte())?:error("Unknown layer content"),d.readUTF())
+            fun identity()=if(version<0x49574134||!d.readBoolean())d.readUTF()else UUID(d.readLong(),d.readLong()).toString()
+            fun content()=LayerContent(LayerContentKind.entries.getOrNull(d.readUnsignedByte())?:error("Unknown layer content"),identity())
             val layers=List(count(UserLayers.MAX_LAYERS,1)){UserLayer(d.readUTF(),d.readUTF(),d.readBoolean(),d.readBoolean())}
             val current=if(d.readBoolean())d.readUTF()else null
-            val membership=List(count(UserLayers.MAX_CONTENT)){LayerMembership(content(),d.readUTF())}
+            val membership=List(count(UserLayers.MAX_CONTENT)){LayerMembership(content(),identity())}
             val deleted=List(count(UserLayers.MAX_CONTENT)){content()}
             val blanks=List(count(DocumentWhitespaceLayout.MAX_BLANKS)){DocumentWhitespace(d.readUTF(),d.readDouble(),d.readDouble(),d.readBoolean())}
             var points=0

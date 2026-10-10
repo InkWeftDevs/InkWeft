@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="org.inkweft.core.HandwritingLineBudgetRegressionTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-10-10T02:36:20.311Z" hostname="4d22d97528bf" time="0.041">
+  <properties/>
+  <testcase name="actualRowsStillRespectTheRecognitionBudget" classname="org.inkweft.core.HandwritingLineBudgetRegressionTest" time="0.019"/>
+  <testcase name="dotsAttachedToTheirBodiesDoNotConsumeExtraLineBudget" classname="org.inkweft.core.HandwritingLineBudgetRegressionTest" time="0.022"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

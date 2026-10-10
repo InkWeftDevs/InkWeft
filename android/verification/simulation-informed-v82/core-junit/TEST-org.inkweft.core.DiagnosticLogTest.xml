@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="org.inkweft.core.DiagnosticLogTest" tests="14" skipped="0" failures="0" errors="0" timestamp="2026-10-10T10:25:57.605Z" hostname="4d22d97528bf" time="0.04">
+  <properties/>
+  <testcase name="unknownCodeRejectedEvenWithChecksum" classname="org.inkweft.core.DiagnosticLogTest" time="0.001"/>
+  <testcase name="invalidHashRejected" classname="org.inkweft.core.DiagnosticLogTest" time="0.001"/>
+  <testcase name="historyPreservesFreshProcessEvents" classname="org.inkweft.core.DiagnosticLogTest" time="0.001"/>
+  <testcase name="arbitrarySessionCannotCarryPrivateText" classname="org.inkweft.core.DiagnosticLogTest" time="0.0"/>
+  <testcase name="invalidNumericValueRejected" classname="org.inkweft.core.DiagnosticLogTest" time="0.001"/>
+  <testcase name="tooManyHistoryRowsRejected" classname="org.inkweft.core.DiagnosticLogTest" time="0.0"/>
+  <testcase name="archiveHasFixedEntriesAndHashes" classname="org.inkweft.core.DiagnosticLogTest" time="0.016"/>
+  <testcase name="boundedRingKeepsNewest200" classname="org.inkweft.core.DiagnosticLogTest" time="0.011"/>
+  <testcase name="exportedEventsOnlyAllowlistedValues" classname="org.inkweft.core.DiagnosticLogTest" time="0.0"/>
+  <testcase name="oversizedReportRejected" classname="org.inkweft.core.DiagnosticLogTest" time="0.002"/>
+  <testcase name="extraFieldRejected" classname="org.inkweft.core.DiagnosticLogTest" time="0.001"/>
+  <testcase name="codecRoundTripsEmptyAndEvents" classname="org.inkweft.core.DiagnosticLogTest" time="0.0"/>
+  <testcase name="snapshotsDoNotMutateAfterChanges" classname="org.inkweft.core.DiagnosticLogTest" time="0.001"/>
+  <testcase name="oversizedJournalRejected" classname="org.inkweft.core.DiagnosticLogTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

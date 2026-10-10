@@ -1,0 +1,2122 @@
+{
+  "baseline": "5e90daca5a97bf22921d4fa59ecd068d31dcf505",
+  "scope": "Final Kotlin/build source files covered by core tests and compilation before publishing commit.",
+  "files": [
+    {
+      "path": "android/app/build.gradle.kts",
+      "sha256": "78c9bcb8fe943e761f8bd48a781f1fa3caabb34d048b9ec9e611eff02755d616"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/AndroidTemporarySpaceProbe.kt",
+      "sha256": "fbdde1fd5531fd1252a912b09cdd5b59ca43d98150970246a1791487f7ac088d"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/AsyncRasterTest.kt",
+      "sha256": "667e618fd90b2902ff43e1ad7bfa8df815d00fbb4feded25dec08fc4d870fd49"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/AuthoringReadinessTest.kt",
+      "sha256": "b75c09d8482aeb521faad390156a8a0df19275b67e8c3cbee934604e93e7b605"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/AutomaticBeautyCanvasTest.kt",
+      "sha256": "6676bea30b057fd6151c141536de99a350a852fd4f9130380e3265720ee0c302"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/AutomaticBeautyRegressionTest.kt",
+      "sha256": "076a95d35cf58cb53f2b2e8cddad3d98e50fe13a6d02e9f45b7a56382f4daaaf"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/BackupCrashProbe.kt",
+      "sha256": "8349909ff44c2f200d2f503c9aa41fa9cbac403364ae16ae73e8cbf0ae40fd3b"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/BackupDeadlineProbe.kt",
+      "sha256": "97dccbd7cd4820b9456f7f9f973eea0ddd596ca1ce966ecdfcbd51a74cacd828"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/BackupReliabilityUiTest.kt",
+      "sha256": "bc0da37bccfed3ab83836c3588fe2c1a19f73c0ef20f5777320499216b29a115"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/BackupResourceUiTest.kt",
+      "sha256": "0bf9eb7561da14a9a1ff3a150067798975b09a561f51410588878bd9daf58416"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/BackupRetryTest.kt",
+      "sha256": "bf4254b9adf88409ea7cb5b1440a1399098e667afc05a258a0900c980312a4ee"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/BeautyColorTest.kt",
+      "sha256": "348c49d35849160214d06601da402fb4df0247f27e74b032def6ccd14b4bf111"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/BeautyLayoutUiTest.kt",
+      "sha256": "e91af80f62bb61f17e986c90325ba5041f278cb48fd8831fd5f8a48f59e16115"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/BeautyNativeReplayTest.kt",
+      "sha256": "12259d799eccb805d23961b67800ba35e8d3fac0315c2968e8574474b852e34c"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/BeautyPairedEntryTest.kt",
+      "sha256": "f2b6421aaaac4d3320b18ffedbef0cb6112dd32d7146f4a7016ccbc76fb24da6"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/BeautyQualityTest.kt",
+      "sha256": "76674f59e67dbb42effa16e0eb7d021c4d6066fb384374d831b6b7e57dcfb600"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/BeautyReviewUiTest.kt",
+      "sha256": "e93359f959255a725304724a6ca1ee00ecd781abd7c8a8f54a6126baf5642654"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/BeautySettingsUiTest.kt",
+      "sha256": "03268e08c1ccdbaf748a625e6c2bc1732f9763e6a2ab4143abcf60ef7a7cb2df"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/BookPagesSelectAwaitUiTest.kt",
+      "sha256": "e5cac32511812e5ebf0fcad231c760ac80992d87f6c19f407daede014704f86a"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/BookSourceSelectAwaitUiTest.kt",
+      "sha256": "700030ba6b8afccd359f3a10e4e0ced4485db73998894be7544acf8c71d08340"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/BoundAnnotationFlowUiTest.kt",
+      "sha256": "929d02dbbafd4b71127bd02ae9ed7c9ebf4f2c5bd32a21cb1119e839eaba9f38"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/BranchReviewRoundUiTest.kt",
+      "sha256": "2264ca954934715f49998055d461cdcf423559aeae62b2145e69a826cdab3c4b"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/BranchReviewUiTest.kt",
+      "sha256": "ff63f99d5be5f31b5da8eaef44485bc501ca8093e1ca3a162a016fbea407c96a"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/BrushB1DeviceFixtureTest.kt",
+      "sha256": "73a1a3a0324792e55e24dee5a23cbc8edb70c75744b25eca03195b582513604c"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/BrushB1InputTest.kt",
+      "sha256": "b17c5347233e5911076f3b6a9e5cb2df243bcc606e4b155d6c09ed34b65880d7"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/BrushB1RenderTest.kt",
+      "sha256": "7d0f5b784d0c0d4facf25b06ff7f0a9beb036e5ea961da4fe0f84d74e287d868"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/BrushB1UiTest.kt",
+      "sha256": "2d8c86a7f4820199f145774e70b60140d46e0f4cbf31098dd0700b515c2c99ed"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/CanvasNavigationGestureTest.kt",
+      "sha256": "e884d795c9e7a2ca537447f395e56773f17236aa72d65e7ceee1d88917b8eb52"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/CaptureJobRegistrationTest.kt",
+      "sha256": "09ec77e9146cc1a5a6682e3c4872feacff62aee487f890ed0d36c4fb665e3ee0"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/CardPresentationUiTest.kt",
+      "sha256": "7c49fa59cc7f45bc4b5956c725099e52d48c9064911cd2c7f6f4b83c43d483c0"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/CardReuseDialogUiTest.kt",
+      "sha256": "039ba171b56ecd9b4389aef4b101d4f70eee38e1d6f0820a4a2415691fc1e909"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/CardReuseStoreTest.kt",
+      "sha256": "5b6db4e20c479c9c8783207683cb9681403f6d5efa2a18d067f8143ffec16c84"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/CardSourceNavigationUiTest.kt",
+      "sha256": "72e9b5ccdde06007f073321a4a1614918bd03c2824b1c2bd2d0ca5ab55bec300"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/CardTransformUiTest.kt",
+      "sha256": "0d1f70fcbb075f4f689e291cd28afa27ed5256306c2a6a73821530009527794e"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/CardTrashRestorationTest.kt",
+      "sha256": "e7c30bc0ab993f36c2db85bd3fc333e5e100cf3798dd03fe1f1118b9d3de4d6c"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/CardTrashUiTest.kt",
+      "sha256": "239e3a724e3ec699c917b0209282034dc196fb3a93d6ef74a52ced4683dfce7d"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/CollectionReviewUiTest.kt",
+      "sha256": "fe78ab40bff2b9a30b551f2df7b825aac1ad127c374bf676916a8e3bbe5c55e5"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/CompactEditorUiTest.kt",
+      "sha256": "0d2a0ce972f5955aaa5240cd5c89e35681ca71aeaa7ceca1b1adb099ce1154bd"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/CompactInkTest.kt",
+      "sha256": "5f5501834be437cbe95c75dab66b0c4d4d3a5c28ad56a6334a943f871bd21477"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/ComputePerformanceProbe.kt",
+      "sha256": "b2b8acc15126c228466450ca4a92e3d5dd2c0aefc0afcbe65f2f31589911a54f"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/ConcurrentWritingTest.kt",
+      "sha256": "473011f01eb51e79270ec5a58713286972c51de70a3d934ea1b7c2681530cc8c"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/ContinuousCrashProbe.kt",
+      "sha256": "6b769934d8d3ff77b0510890ebe7a56f46ae989dab01dab0dc0a482fdd7ac1fe"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/ContinuousPageGestureUiTest.kt",
+      "sha256": "5ea568485eb8d569446bb1d2172e32711b5e55b10a61ee53c4514febe31fcc46"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/ContinuousWritingUiTest.kt",
+      "sha256": "eca260511a75cb939234cbbf3530e70236b877f625aa2e6b0ed425e714ace025"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/CustomCoverUiTest.kt",
+      "sha256": "4b49bc68c117af9f032b5815bb0eba0830ad13c96ffb138189c1cdbdeea31732"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/DenseNotesTest.kt",
+      "sha256": "8ad824ca42c33a4c5b6620c28ee31f931e62ce1bd4f9c77638eada01d3dda2e2"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/DiagnosticsUiTest.kt",
+      "sha256": "10820a41dcf65d2dcbc23c5ac62df80d372b063cf1147d2c4ce083d45d817d92"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/DisplayDiagnosticsRegressionTest.kt",
+      "sha256": "d5db4a532a3729cb8bb5b843fc5cea46aafa06a28ec3f58be9b869b268f862bf"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/DocumentPanelsUiTest.kt",
+      "sha256": "dad46c9825a6cf4d1ca306f5d1b64d4f30f5d0f4dc0c2690fd2b0e324cd9c2c3"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/DocumentShortcutPreferencesUiTest.kt",
+      "sha256": "7079d23173bc0e8f66c16a37d8f621baa5a91a85e35fd3ae8485bbd9c6c8eef3"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/EditorAffordanceTest.kt",
+      "sha256": "c83805e43b6b0a3a1655325578e76d0c27fae902f1fa334496f390a70b06ca3e"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/EditorChromeUiTest.kt",
+      "sha256": "a8ff9c8d8f5ed95604f2025f7784a816d7c679828a091ef08f0e9eb02d110617"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/EditorFramePerformanceProbe.kt",
+      "sha256": "f204db6ee19a45825a9f167d038774e899bfc436e44787cb1e9a1f2d796ddacf"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/EditorRedesignUiTest.kt",
+      "sha256": "12bc03f645a2954089c592639c2a91617d66187f936577864830d647da09ea7d"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/EditorTestNavigation.kt",
+      "sha256": "ccccca178567c83013b52c169e22aff02dc209e3413ce4f436a13dd825611092"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/EditorToolsUiTest.kt",
+      "sha256": "4a68d9414c3b487bd71a7fd339e351244eadbba96f271bde430d925465b4412f"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/EditorUiEvidenceTest.kt",
+      "sha256": "1708373222f12f0d15288ede9d5250c6cf07503c052e82bde153ec9b07cb416e"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/EditorVisualContractTest.kt",
+      "sha256": "b7e5e12bad959cd7a244edc55efb1985f666326ac0c023b550ee5a57e4b824ea"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/EditorWritingIntegrationUiTest.kt",
+      "sha256": "db938c3d5b4a7a9cdf21fee4223618a0b85555bc2e787ac175059693f065a6d0"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/EncryptedBackupIntegrationTest.kt",
+      "sha256": "529f7c0412a11414fbc5adc318ea8883254d8c2a3b363f64c048e8f5e1823ddb"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/ExcerptHistoryStateTest.kt",
+      "sha256": "b4728961b2867b1465d985662dea85c2990053d43217482c42f81a6196db92d4"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/ExcerptLassoRegressionTest.kt",
+      "sha256": "726cd5159abd985bb60b7f50d1ff1aab6f9621b6e9ad63b7258bf5d35c58c67c"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/FastPencilTest.kt",
+      "sha256": "90b454888bb1a6b2edf7f9128eb3fa932e9eaf2926422a9c995bb2038c8c987a"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/FontQualityLayoutTest.kt",
+      "sha256": "3d895a4df83899770e5a185719eb6d075528fcae846dd4ffe57a1e16af56ecb4"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/FormulaDiagnosticsTest.kt",
+      "sha256": "6cb8a4be579d474ce88a33b89f52eed6008f042e326a56f553363ce8c884677f"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/FormulaEditorUiTest.kt",
+      "sha256": "2c04cc3d2456760640b1dbd6a48833ef70ea88bd61eb539b2cf6b3091a3adcdf"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/FormulaFlowTest.kt",
+      "sha256": "30f266d43c18622b7c4cd8cf3b06e7f3a60097a7df1131172f873a4eec87032c"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/FormulaPersistenceTest.kt",
+      "sha256": "45440d39b2c27b91d454863d810458e5ad070ec01e410e14be14b8add7eac84a"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/ImageMemoryProbeTest.kt",
+      "sha256": "43196fbde271faa4fb99508dc0f52076e1fab18e9a8fbdf9cb7fc29831296472"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/ImageRenderingTest.kt",
+      "sha256": "aafe7e5480d6ef984d50ef2e45af30b95df78982cb13a29abebb638eb1687aaa"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/InkUiTest.kt",
+      "sha256": "fc25ef04422a6d48b133d66360aeed27c6d7ce8ebe35a1c3e3a48dcd8da463df"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/InputRenderingRegressionTest.kt",
+      "sha256": "15c1b2cfd2b8430a2f984b35d47b5ec4a91ea0b8a1e2e85f79b28934834be045"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/IntegratedMapUiTest.kt",
+      "sha256": "9a7ea97563a48eeed7403cde149ea1314c3a661b5ab32517a93438820c416adc"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/IntegratedPerformanceTest.kt",
+      "sha256": "123969907624fb610bfd30e6a16f497c2e323d3ea796b77b317a164b24c48e16"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/KnowledgeRelationEditorUiTest.kt",
+      "sha256": "0fff29651f3e02508827465baad8958a226c6525f28074313b4b26024044c43e"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/KnowledgeTextLinksUiTest.kt",
+      "sha256": "778f443bbfd93bd6549ddfaa794dbf6447fdda6a8bbc24c31b2decbd4820d3af"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/LayerAuthoringNativeTest.kt",
+      "sha256": "37c8d622c74b47ee151e0fe4d8150c79f3859aad0a46d39be0376a7843ee45a3"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/LayerSnapshotPreviewTest.kt",
+      "sha256": "b069605ac8cabe31b3b7a1d0771943d2dc49b6b0835e6c0e50f9fafbc29f6ff3"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/LearningJourneyProbe.kt",
+      "sha256": "ca578b27308352f0832abbc660b58a387bc859de8efc14961c2b1a8734ee619a"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/LearningWorkbenchTest.kt",
+      "sha256": "f33995d75b47036439a6b875ea1244db812f169d06e580576a8f9f23a4d895ec"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/LearningWorkspacePolishUiTest.kt",
+      "sha256": "f4750c930287e149a7fc431dad015084f2bdeff73670af0afe625e321e44be8e"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/LegacyBeautyFixture.kt",
+      "sha256": "31357c530f1590529f2e2c44d20db4778f125dd8c42367d332ade90c9b97c64e"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/LibraryBackupUiTest.kt",
+      "sha256": "f30f5d038e5fe0d7796ce39d5f7991f43d53da4331b1d6398bf26567322d5f44"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/LibrarySourceNavigationUiTest.kt",
+      "sha256": "dbe8aadafd0f6d8edb408a973b323edca25a7016cc33b87d74ff7b1a45531250"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/LibraryTransfersUiTest.kt",
+      "sha256": "3ad11b2093b5f0e5588b01f1e2114b76de0c44b362464c34d474f1784d27650d"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/LinkedCardReturnRegressionTest.kt",
+      "sha256": "e16d67898455f127d2edb9a813a7dab319c6e4da63ca55b082ff48b23c8be86e"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/LiveBeautyEraseTest.kt",
+      "sha256": "40335ff8aca2b5cf0e09fbffb06219b8c243cd2109fd7459a3b60e1035ed9938"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/LocalBeautySamples.kt",
+      "sha256": "342071fa2c9d9a56ff824643fe48d6c32b8b225a1e9cb551c5969f14e22934b2"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/LocalEraserRenderTest.kt",
+      "sha256": "33f48ec28c23fbedae461e1a3f0b40cdd6dda581964baa75c6735006a446c83b"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/LocalFormulaSamples.kt",
+      "sha256": "5d60a60d0a2e2e09c7b9157fc51d225d5509d08dc0e22dcfb2b5b59bf1531df7"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/LocalMotionUiTest.kt",
+      "sha256": "69c4ad7e7957abfa53f9dfc14c352c91cce7f73627df95be7d7250ca861b854e"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/MapAddendumUiTest.kt",
+      "sha256": "f11806a1fe11cd3aab54db3ca2915c243752d28bf6627c4c8844cc5021aaa3c4"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/MapInteractionUiTest.kt",
+      "sha256": "b84ec5896c833931a741c0d15760bc0b291e181851e6ee5bc725420793a0af8b"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/MapPortalUiTest.kt",
+      "sha256": "30a526a1e25f84410d37ed8ac9ae8cf460960e0f1f05d33a6ef5eb294cec823f"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/MixedSelectionTest.kt",
+      "sha256": "a07bd2cfc23eb81bcd7a463435988e265f2dc3d313901f42a1967c0e164f5027"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/MixedSelectionUiTest.kt",
+      "sha256": "8a65b98b37bfee4dcd82ae8b3d5298da2e4a345f4585dff8134f4a0aae780043"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/ModernWorkspaceUiTest.kt",
+      "sha256": "9f48dea966eccd91fc59d1d81fcec55d97286cc5475ed4423443e3b5d0a058bc"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/NativeEditorVisualProbe.kt",
+      "sha256": "8e326e1e0e8532afb29a152f0745a4daf014e57abd86255561d5191f51f9b80a"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/NoteFirstUiTest.kt",
+      "sha256": "e839d2a03fd9cc2e5431de304cc49580efc70999afa03e679c6372c371b62e94"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/NotebookMenuUiTest.kt",
+      "sha256": "11cbbc44b7f09a751e220971a8195371a58dd2583d9012315f46e08aec4c9f97"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/NotebookNavigationUiTest.kt",
+      "sha256": "99880d24d1aaa2f677047ab16d47995909b9efcf2540499dc2dc1ad8178097a7"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/NotebookShelfUiTest.kt",
+      "sha256": "ef9df4f421bed0afd30e884e2932111e5cbab32e4a4d8efa6aabe89b6c2011d2"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/OfflineBackupProbe.kt",
+      "sha256": "ddcb82443828c23eee0852149366b00008b0333242297527d49c9bc1df1b76c4"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/OverviewRecoveryTest.kt",
+      "sha256": "99f61955b0db8b7017354d0e3617754db2d10b222dd7dfac4d62baa755d49862"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/OverviewTabsUiTest.kt",
+      "sha256": "23bc59373f5148f7807f6c11ec5cd92739b6e2f8ccf708764b6d1f3dea22d365"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/PageEditingUiTest.kt",
+      "sha256": "9d04b900d2ae0cd6ac3d8e5438db3992888bc83c0fa14fd911b97347b13a760a"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/PageInsertionUiTest.kt",
+      "sha256": "69f1c7a70d684d48c606076df049ce6adb4818c7173abd77df5dae0cac838030"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/PageObjectsUiTest.kt",
+      "sha256": "c12d5f04f816a53d1013fd9cf6fd5fcc15e1961b42cb2ead5edb625b7545ed4b"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/PaperTemplateUiTest.kt",
+      "sha256": "3703718bf2c3ea992757343f4146d883c4575e3361fef4bb1461ab1f16c0a597"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/PdfTextSearchTest.kt",
+      "sha256": "bd80017ce6c3ebca8e3bc94c5084b306119669dfb3e80a56a075285fc14eeab6"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/PdfTextSearchUiTest.kt",
+      "sha256": "9becb18050d6f6ddb73afc55a887d0b3333bf5cd34ea43c30b5dbf19cd141611"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/PdfViewportRasterTest.kt",
+      "sha256": "ae959f49f144fa9dd35e08ca573e16a3e0ab31f943426e0577bba20131c84727"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/PenKindsRenderTest.kt",
+      "sha256": "4d87aa375ab5cfd9c250b3c8a961240c54c4fe057821b591574061d45d6016f3"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/PenPresetUiTest.kt",
+      "sha256": "297089f699fa6596a621bdef6b53133e44c14291927858c39c7489d91461a1cd"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/PencilMaterialProbeTest.kt",
+      "sha256": "842bae2a9c86e3d335ee16172e2b846417551cf0a9537d69aa35b5e65da07032"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/PencilWorkingSetRegressionTest.kt",
+      "sha256": "f641e1bcc445646d32a6ebafd5523df35d356247f5f4d078d2f4c63693e11a21"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/PrivacyExitProbe.kt",
+      "sha256": "ab8a561418de7a08b6b803202b0ac19a7a55d4fda00863fdc815f5628fc6bb33"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/QuestionMaintenanceUiTest.kt",
+      "sha256": "f13b9b7567d9b83134b471d0f7838f1ac48b505530cd217227a4d71c7b9b5267"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/ReadLockCompatibilityTest.kt",
+      "sha256": "cb242f8dd2d385317edeee5040bccc1af4817815009636933eea3c4efec79ab0"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/ReadLockUiTest.kt",
+      "sha256": "0f4fee8c425a0a6c85067ddbe56fb8c74696df160ebefa5e6a289e9fa9120149"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/ReadingAccessUiTest.kt",
+      "sha256": "3706dd6af2c6f2e228c15d2b40824455fc2614676e49691ba32cbc9a477a6c8b"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/ReadingHandwritingTest.kt",
+      "sha256": "dfc051d3228936bb7e4f7077b2e10e423e632f09ca134f7ab177aa4f4d66ad20"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/ReadingHandwritingUiTest.kt",
+      "sha256": "5a3b55a55ad4bc5898dedf951957f605aafd291ba952a04da5b99069e52fca15"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/ReadingToolsUiTest.kt",
+      "sha256": "3bfee41d63cb1d4e13dccf9a5470b34188eec2d428e92e5916e76b69bc262e0c"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/RecallAnswerPadUiTest.kt",
+      "sha256": "20a489b493e8924a74f5e085e1e7123c0187cc52f2f7c3b8f5a516528520420d"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/RecallDurableRecoveryTest.kt",
+      "sha256": "3772058c1a4b4e8de4229e2243db8846b85f9c7065e444d878d29e10909972a7"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/RecallMaskCompatibilityTest.kt",
+      "sha256": "aec7e1a8a4ebc49b2ea000871f0ba79581a497d20582ed6f122aa237848c13e5"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/RecallMaskNativeTest.kt",
+      "sha256": "fdd242e4efcb5a574dc0d48293d4f1a9326f50555c64cd38f1e9c5fb8c3d6b4f"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/RecallMaskUiTest.kt",
+      "sha256": "20ea2f1ef96210bf7178fa67e7fb89a6352da8e2d8daaa3444021a015d7785ae"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/RecallOriginalSourceUiTest.kt",
+      "sha256": "3012440a744cef72e2e4ba780fd200233f245c8eca5fd014ba33defc3e61c3d6"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/RecallQuestionEditorUiTest.kt",
+      "sha256": "6b48b5dbe1b0ad1632b260682f69f5883f2affd3f66eaf8496b3baa6785c275a"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/RenderResourcesTest.kt",
+      "sha256": "40e7d8d88a9f8de1d6bc0a282f4c89b8e7ee0938bee7b633c594674f7b61c1d1"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/ResourceCrashProbe.kt",
+      "sha256": "020b6035011a2b0a22f010d7d3764458f1c3a9d828c9ff9183ed529a331e268a"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/ResourcePackTest.kt",
+      "sha256": "5d0cef28b265948573fed1e16add28be5976e4e1b2561864ed42922787fa9455"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/ReviewStateUiTest.kt",
+      "sha256": "f15056bcb33d8c51082a5393f72656d6843c4cb5c8c794c38d599b37863765da"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/SelectAwaitTestSupport.kt",
+      "sha256": "9c61ce9067aee1044aeb4df0474ff37cbff4169c3bcbee702aca42eac31fcdcd"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/SelectionPerformanceTest.kt",
+      "sha256": "c9653df8db5cccc37f7a187d8aa31a2d7228ad0308dbfd0f658b6fb47a127225"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/SelectionStudyUiTest.kt",
+      "sha256": "f03206b66ce5fbb821af54e727fb605defc2b1cadc29007e306425452e54877a"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/ShadowCrashProbe.kt",
+      "sha256": "90c1c76be99d75922774dca30c48e33dc1094cee9ade06b49dd52ce762c1512c"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/ShadowNativeTest.kt",
+      "sha256": "022ae4e9527fc3bb8ca59fe0621de8f5d0916360cf69f37a6c5159fab346831e"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/ShadowSemanticTest.kt",
+      "sha256": "fc35eb2db91e2acb34f3da7daa0bac662f1c840801fee658aaff1398ffb643a8"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/ShadowSyncTest.kt",
+      "sha256": "d40143c2c72fbd0778513c25f43946d8b444de6b1632a6985612da33fb93eca4"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/SixBatchAcceptanceTest.kt",
+      "sha256": "0a796473f6bd9ab4661de7d0df4ac92d3d97c8eccd207fa43f580daf7504013d"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/SixBatchFixture.kt",
+      "sha256": "1a91dec30700434c6e208ead765d2a7011f103ea5bf6c794a0145b1a222a5b00"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/SixBatchNativeEvidence.kt",
+      "sha256": "68a7d82c47bb50b30aa6b1142c842e9834aac555cb76154b633d6197fa76a703"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/SixBatchNativeRecallTest.kt",
+      "sha256": "d784a83305104ec044b20104c5795fe7f227df9a92e619b66d7db46f159631aa"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/SixBatchRecallFixture.kt",
+      "sha256": "d87e74efb4dc9e8e873c628b107c3b0f3c7b0cdb3ee0259cac085beebd0993be"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/SixBatchVisualTest.kt",
+      "sha256": "d30a35af1a7a05c25682ac8105f860aaebff8249a34326007b59345560b531cd"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/SourceFocusVisibilityUiTest.kt",
+      "sha256": "80def9febdcbee25deb0320a98615f173dc2641be8ddd4131d00230ed55aab6b"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/StarNoteInteractionsUiTest.kt",
+      "sha256": "885bc2346a5a744979bd6e60a3260b758c5d3708b95f940bc66a084e11d93b93"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/StudyCapacityPanelUiTest.kt",
+      "sha256": "f987f6ca862dff43378941f37ebf3bff0cdfb391401c7694f59bfd888d1b3031"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/StudyCapacityUiTest.kt",
+      "sha256": "844bc3a364c8efde108d3345ead1e7053cb494bb08f3429aec0dd93c5bed27cd"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/StudyMapReadinessTest.kt",
+      "sha256": "866697459b896a2f9a319f25209a6187ba59d57238aff5700886f1b3197f6ca1"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/StudyNavigationStateTest.kt",
+      "sha256": "cea383f3dd66509f266eedda9575c9cbd7dde36e5dc10a3e3b68bac5192e6c22"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/StudyOrganizationUiTest.kt",
+      "sha256": "af8819fb27338981b39634b9c8788fd524709f6b9beeb8cca533292ec43334db"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/StudyProcessRestorationUiTest.kt",
+      "sha256": "d5c6758cad2537cddcc23fe63e8125b21685a6b0f3a1fc968d68bb9b0b873a10"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/StudyRelationPaintTest.kt",
+      "sha256": "e43ec56a760a1eb4ea27b638c005b289bc0e0b1046cc96e174e11b843259b7e8"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/StudyRelationsUiTest.kt",
+      "sha256": "07475d1df4a50b9f1996a2da2d3c760882f107383a3476ee726fa166681818cf"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/StudySourceScopeRestorationTest.kt",
+      "sha256": "418488c257c3a52d1fc06d59aa0c0cb32ce93bb1cc4b8212068f63e81d3c0f28"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/StudyTransformNavigationUiTest.kt",
+      "sha256": "353e17e3fd770de47593e69fd229479ee7dc6bb7dd631275562f7dae12cf42fc"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/StudyWindowGeometryUiTest.kt",
+      "sha256": "a5fb944b949649c1075390df6250e8d41935f254b3d4d52eeccb88a973c99e9a"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/TabletFeedbackRegressionTest.kt",
+      "sha256": "fbd1c8addc87e53f61005b76d0abeb4a246ed10a39fe3a9f5d1b4c906cbfc91f"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/TabletFeedbackUiTest.kt",
+      "sha256": "b96e9671b4ad443e60b2379cc9bb50e86a50307427bf850fd548e1c648b607ac"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/TapeStylesUiTest.kt",
+      "sha256": "f5eee240bf7b11de84ed3ce27b9fbf9481d0925e6f1665b659e6856506f8857c"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/TemplateCreationUiTest.kt",
+      "sha256": "254b08e32f7c8e85eff3c226b42ebeeece16480cf960e015f7b27ec9562b6e0b"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/TlsBackupProbe.kt",
+      "sha256": "d7e82ee4f721752b137a4074b479eec397314101f1bcec1abf1bf10c6c596e09"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/UiR2Test.kt",
+      "sha256": "32a4d76533ea9a15ca7cbe02cc19a51b6c0b56d86e4d87a0ced2fb214be6bc08"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/ViewportRasterTest.kt",
+      "sha256": "63422bbee08b76b6c5ea20cd7ef22a69c1f53313fae53e6f2257185e78e50902"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/VisibleEditingTest.kt",
+      "sha256": "7fae460bb8b3853376abf05f8901d8c823511457c662e9724362ab51a4c75ad3"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/VisibleEditingUiTest.kt",
+      "sha256": "02d57e58c2369ad2602bcc4f660958f2cd5697cf1bd021866e13fa9d33c70792"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/VisiblePageExportTest.kt",
+      "sha256": "bef3640f6e5418878daabff2011e8a12880e23c51b5bfb60a62396976565c716"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/WorkflowPerformanceTest.kt",
+      "sha256": "4752e6596f653267c08a61cc751fa88d9f60ffbbe3201b4ddcb49f9fc7483482"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/WorkspaceUiTest.kt",
+      "sha256": "7db3966913cbc8ce29e6804b052d418cca3c100309ca4a04dc9333b4b640b0f9"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/WritingRepairUiTest.kt",
+      "sha256": "a4680bb5e7b5fad1538f229a69d4163879b3c23ae875e8815d05b11a4a194007"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/WritingWorkspaceUiTest.kt",
+      "sha256": "45c54f8c3429d4add89733b5d5584106d3f1aefa4752e9ec61a9c30b19792043"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/ZoomRasterTest.kt",
+      "sha256": "d6769c56cd0c32007a922ac6241d93b9c92e788921f12e0248f060ed4f891780"
+    },
+    {
+      "path": "android/app/src/androidTestDebug/java/org/inkweft/app/EditorDesignReviewTest.kt",
+      "sha256": "5b8618277e4e8727134856acc486060271aa55d157c544a3a2feed628ec42b28"
+    },
+    {
+      "path": "android/app/src/androidTestDebug/java/org/inkweft/app/WritingStudyReviewTest.kt",
+      "sha256": "528a04332b7b4eb047f2e4104c2c305342839eb1b21d75a395ef5e7e7b391c5e"
+    },
+    {
+      "path": "android/app/src/debug/java/org/inkweft/app/EditorDesignReviewActivity.kt",
+      "sha256": "dd83b62d4bc2dccd491bb2844af76940b7c939d18548dd3da183582b3574f287"
+    },
+    {
+      "path": "android/app/src/debug/java/org/inkweft/app/WritingStudyReviewActivity.kt",
+      "sha256": "aeb0a980fe5363f4f205ac42fb61ba0f3d9c6a5f33708fab08ac079a32773616"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/AnnotationPainter.kt",
+      "sha256": "0c9643882e29de2bd342fa3d611d6c24add1c093fdace493b5a7626c0224397a"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/AppDiagnostics.kt",
+      "sha256": "13912c0c998f4d7a694691cae26e0a3eeb3c5c47bc735b34286dcb11375ebe16"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/AsyncInkRaster.kt",
+      "sha256": "3a2fdaba9cb85143a1fbf07a1adb23b9302a5828506eb594fa38d3b917a4858d"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/AuthoringRecoveryActions.kt",
+      "sha256": "8fbf4617b8b49e3fea97249c69631c6b61738ed685174c5ed195da870c704b99"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/AutomaticBeauty.kt",
+      "sha256": "3016ebab9565155130349aa98637c783b31df2b234233c6fb449bec69e64dca2"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/BackupJobs.kt",
+      "sha256": "d12649b2ec4b198dc39ed7a0fdb55d84a019dc0557c10cb58000053a246ad31b"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/BackupScheduler.kt",
+      "sha256": "6e4dba7d1019b7b89d422ce18143f874c3047a1ded3e692d07be22353c715756"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/BackupSessionStore.kt",
+      "sha256": "d79426b4eaa48b8642c68882427b71b39acd34a94b797cec7b00c1735587e5dd"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/BackupSettings.kt",
+      "sha256": "4012978de4962ee1b7ebd4ab44d216f0da8cf71a33b5cd9fd89561cabe7c48e0"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/BackupTransport.kt",
+      "sha256": "71d11e408f9e34092141b4fc24b884f9c532e8c734357a93d40f6572a93f7e57"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/BeautifyPreview.kt",
+      "sha256": "91aa17590e1a0ef82f3017a4c14a5d330d317b6abb33c03d6d1fabb440173383"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/BeautyAppearance.kt",
+      "sha256": "6c21c34cb6bd1b42bf0d95a4490b819a6a57940f7da1ab5498cdab17ccd024b6"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/BeautyDiagnostics.kt",
+      "sha256": "f12abbdb794e484f2ac8807db44d9b23cd2b6fea191719fb2c913d339be2203c"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/BeautyQuality.kt",
+      "sha256": "1947eb6f277b243b53a13859308f1ac5296569fbe28df8a069ced3ff8e539d76"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/BeautyReview.kt",
+      "sha256": "6a81cf64b932bef0e8c46d8d8a5918ac8dba1ad41c3a2ec15db24a7fd706d5e1"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/BeautyReviewPanel.kt",
+      "sha256": "294595d86f8412783be2f006bbacf369a5e8dfcbe6f8276bd8cc42c15831291a"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/BeautySettingsMenu.kt",
+      "sha256": "7016c83eb63375466608a34bc062fa27519cee9a5b3491e0f7d1cb89fb50d90e"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/BookInkScreen.kt",
+      "sha256": "43c7bcfa87ccf2e52e74074aca0135c1de6437eb12998b75d5cfb8a145f3ec22"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/BookPagesViewModel.kt",
+      "sha256": "c643e5e609623461ce1cc633d8952bf452f90a6932c047704645c9bb3870b99e"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/BookReadLockSession.kt",
+      "sha256": "d53c08aab9776acaadf18b8bf57d0277e53bbfb1695ea7fc91a1330dff6106ba"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/BookSearchPanel.kt",
+      "sha256": "5b54243b709249a9f3c149f0aeb8aa099b7fa138ba8195cbe55af628e6b1cd4c"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/BoundAnnotationPanel.kt",
+      "sha256": "ea66e8dbfdb0522984b94fe3199730f90f001b1355b34bbb74730178b79ca557"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/BranchReviewDetailsDialog.kt",
+      "sha256": "aa84db2f570e7f406a8d16b9f26631eb0af1ac84b29a33db33116a98e4c017fc"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/BranchReviewDialog.kt",
+      "sha256": "049331391c1c32ed5acbcbdf06ca213b20057dc0ce13fe7d2416da234f949f5e"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/BrushParameters.kt",
+      "sha256": "fcdc04fce8cc6a601d6831dc6d94bc960d7e83274eab1ddb905e151de0f993bb"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/CanvasSelection.kt",
+      "sha256": "fcb970198fb73a442c2d51020d26b705eb3b33880b121964efcc5c4b99f7fdc1"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/CaptureDestination.kt",
+      "sha256": "fcd949aeb9954bbcbd401de3ac3e25ce1986c6b0a146954575ac042f432ccd8c"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/CaptureTransfer.kt",
+      "sha256": "0961eafd82365badcc2d18acf191e43e97858623abb2a9822d568f243859e532"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/CardInspector.kt",
+      "sha256": "35e67743e66ab2fa4a4cc6e36b1c8f2ed24919302815958d259899e414781551"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/CardPresentationEditor.kt",
+      "sha256": "d3c5d2f9e5a5db7822e2f29b6f836aae621d497cc65da3afca968a561b9025d7"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/CardPropertiesDialog.kt",
+      "sha256": "8bf41f678b13d6172b710422ed8fe2735a116b0caa8628031924e670477b1c4d"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/CardReuseDialog.kt",
+      "sha256": "1b369210c806182fdf075dd2e19cf04226eeebce178d8bc624dea6944dfdb253"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/CardReuseStore.kt",
+      "sha256": "a86d8291f3684c5f529b1056b3a63466273cfee0b55382801e34c87742f3ca34"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/CardTransformDialog.kt",
+      "sha256": "2890ccc400d8eb72e974530256c9fe6633f4a92a9148d5df0ae6f20eeaee059f"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/CardTrashDialog.kt",
+      "sha256": "b69b05905a33449e0cf335a53e415b28ff7e4c54479e69261e9e19f4770e19bd"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/ContinuousGroupSession.kt",
+      "sha256": "4571363b622d9f61a3bc0e62072d341355f071b354985137f0a6bfdffd6b07f2"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/ContinuousInkWriter.kt",
+      "sha256": "d958869993b2ca38fd8c9e87cdaaeb56a06c99fd8bf14ad31483f8d8be46db87"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/ContinuousPages.kt",
+      "sha256": "283daa417f69f4a4f10e8708d9303a0b65400b1a646c771512102dd1a1dea227"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/CoverEditor.kt",
+      "sha256": "d37f2a1ede37201f6a7e4ecf7923ac308adc66e9fd119024478261c906deec55"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/CoverImages.kt",
+      "sha256": "a50075ede141ddee59e33dcd3757fb4c96efd5fb1c4cc8373e193d61ee426763"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/CustomCoverArt.kt",
+      "sha256": "d0bb835d5646714eec6f36a37fab53f6dee7117bc34fa012012035e8680d83f5"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/DiagnosticsApp.kt",
+      "sha256": "663391ee2c553b05a5cb71c8d30c0940ef7c2169afe1acbf38db344d15bdc5b0"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/DocumentImports.kt",
+      "sha256": "fab96908018fd9462a518d1d83832291f84f5427605cc420b092a415fa3d348f"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/DocumentRendering.kt",
+      "sha256": "14c867cff6990fc3bc9a155b49638e97d1bb0ec52085caaf2cef52bdb9690b54"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/DocumentSidePanel.kt",
+      "sha256": "94078acb3ef251aa984f1f61fa2dc4370274b3b64725e0e9ce1ff20f097c77ee"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/DocumentWhitespacePanel.kt",
+      "sha256": "72052f7857c03cfdbd6a28a0d3c75ab481ee563c6e4a2610d2e6df5d72b5c8af"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/EditorControls.kt",
+      "sha256": "eaa67fa2f6ad2de50bbe7c19f3abf6366407e7e17f8b9bb4a585a47ba404b0ae"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/EditorHistory.kt",
+      "sha256": "4a70e02c61e1faec61203d07dbf2a8831ef94a1d1c703a40b333fd83c844fc40"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/EditorInkPresets.kt",
+      "sha256": "fcf90c2374f3fcd200d756ceb0efc37c42e779c06a83f98725d9a37d565fbebd"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/EditorToolbar.kt",
+      "sha256": "88d2949237543003c8329721956ca4060e45e02b2e97509cf9d84f7f3366fc8d"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/EditorToolbarPreferences.kt",
+      "sha256": "c535f3ae864b7d809453bab01958e326d43aa3060079c89fb6f4c2f3a041dd36"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/EncryptedBackupFile.kt",
+      "sha256": "fa64ee23a5cbc7a7107d69402f88c6243940e5ae1a9e79bdf045709676af0539"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/EraserSettings.kt",
+      "sha256": "42af79a967169633a1c6f22bf3cedd6309a437daca14a3ef7454a7febe1fe60a"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/ExcerptCollection.kt",
+      "sha256": "24982866f3499049ba2fd2828d15a738e18967368d252a4a97fe9cbae3c89b4f"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/ExcerptEditor.kt",
+      "sha256": "c9ffc0d27c6ac93a763eab122a92eab93a62934c1b0157c680d686858c0d4dd1"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/ExcerptResizeOverlay.kt",
+      "sha256": "c3de9eb4a6f1e031c3e91ebcc0c75d163e1dc1a29cfde2b65df64732ffe21f0a"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/FavoritePens.kt",
+      "sha256": "834b824594365df5072e373c900dcc3213f18cd7b2041257fa6875699e06b881"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/FloatingPenCase.kt",
+      "sha256": "b5ee7be3876ef988c3d93bd31692be7e9b5b453db25f1e7f44f14597473b363c"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/FloatingStudyWindow.kt",
+      "sha256": "14b2ba68de8fef7c7c14fd73c558ba3bc8fa71bdc0cf10b77ac4ad1cd416ff63"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/FontBeautyDialog.kt",
+      "sha256": "81d839df2ab5bbe354def8f5c98eb390c60a96fe28b8a6d52b308710319ad1c0"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/FormulaEditor.kt",
+      "sha256": "3087d7b63875de761ced5c58012d3f6e98fc028eda517b03024ab4410a9d7fa8"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/FormulaLayout.kt",
+      "sha256": "c0529cd782f17f81eb6b550b6bc0450aef46e110ffeebb5722705ad4f1c694b3"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/FormulaRecognizer.kt",
+      "sha256": "6fd84ed9113e71fe330e5e64eff85cabaa6ff76ea7f581d6b53801498f44e09e"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/HandwritingRecognizer.kt",
+      "sha256": "1b7d2983e163abb1e68f48d6a798529f4807219260430543e5510cd50084ccb2"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/ImageRendering.kt",
+      "sha256": "d68a2fd0af0e8b0f7ce610b58e174177f761f43ec07b0a8aae01c0ceb3eedd03"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/InkBrushes.kt",
+      "sha256": "0eb3c5185d0cbf2d37374745a735cbc1d9f8387adb64f6f082ccc1e9b943569f"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/InkCanvasView.kt",
+      "sha256": "41a300b45a873ae9b9cba4d9f12c09fd1a2eb8457c04a72673970d5706e17126"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/InkPageRaster.kt",
+      "sha256": "e7ffdd6f1f79b3e4a59b5e8fd2f2d104c5416cea627e8e437cd33c3a2d5e6276"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/InkScreen.kt",
+      "sha256": "ce69b8711641a9e9ad2075f1aed71acd17fa3962c3ae83a69a47f638d425f173"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/InkViewModel.kt",
+      "sha256": "a64d4e45e2318a74d326140313cd98d76b54fa173e96198a6d8e37bb30446c22"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/InkWeftApplication.kt",
+      "sha256": "216bf12b514e2b830031bca06d009ba258700b8176f8cf2fde82bb264b4ea1c7"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/InsertPagesDialog.kt",
+      "sha256": "59d1835c9aedbff6a8cec5b1c3e3e31e0930af8e13877ae8598e5e2e14ed40c2"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/KnowledgeBoard.kt",
+      "sha256": "b87210de51800578b85f16dfc65f21824b167e1fcffee8138163928bd7792fd5"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/KnowledgeCanvasExport.kt",
+      "sha256": "21f3eac62e3931909326bab7068d0bf5b93aa69e73ce859150f81c3133334ec1"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/KnowledgeConnectionCard.kt",
+      "sha256": "976cb97eca2462403881be197ae3a94f2d3d83156fc836dd4de60fb2226099f1"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/KnowledgeGraph.kt",
+      "sha256": "0b14e59ca2ab785c2ec4ef99a03ffa2fcc7e02bfa91233cfa215b090a7963881"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/KnowledgeLinkPreview.kt",
+      "sha256": "a900649fbc19ca81a718840249ac9d6dfce1907138b917bb2ea0d9f933622265"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/KnowledgeLinkedCardBody.kt",
+      "sha256": "54fd38f1b502a68a77f8ce1ced1d841a50064d7de5115ed49d5822f546572078"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/KnowledgeRelationEditor.kt",
+      "sha256": "a34d763f1a2c286c8ceebca15be067ba643ff840f74246c5dfbb3738d62d899a"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/KnowledgeReturnAction.kt",
+      "sha256": "d7319e8507b23b731c87a0145b81c7d86777efbe891e0c7290b1c05f7c946021"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/KnowledgeWorkspace.kt",
+      "sha256": "50835f66f2596148216a2c18df4122035469d28f96bc0d8b5d6ab5f5f1401a89"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/LastPagePull.kt",
+      "sha256": "89920785fff7610221384358726913e5d2866e46c191e6f81880f5929725ae10"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/LearningStore.kt",
+      "sha256": "5ad807f1c86241f4ebcf20d90d49df96aff54ed5b42d1167942f8f5fe801316f"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/LearningWorkbench.kt",
+      "sha256": "d93e42c2360b8ba7801216b51cd8294c041820ddb38b26c9413b9def1e036d44"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/LibraryBackupUi.kt",
+      "sha256": "53c0368d001744156f3bbddc9c7580b1168bcdc5b24e20262f85f581656b7d62"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/LibraryDestinations.kt",
+      "sha256": "8811e79a2ab2a5f04d12fde5ef9b4dedad3db845d178de2364577b4c656fb081"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/LibraryScreen.kt",
+      "sha256": "64856c23a80e374dfde4db18b1eb9cadfa2cc790e16dbaf4199748f0318d2cb9"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/LibraryTransfers.kt",
+      "sha256": "4eb5fe4952dbdfbd151f4dfe3b5ecf1998205ff56db67ccd97f8e031b8aab87d"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/MainActivity.kt",
+      "sha256": "3e2d20bfbb9982237cc4e9d6f2914ee82299243d9bc4e488be8c0cd3212e7511"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/MapInsertPanel.kt",
+      "sha256": "644b532335f7c0e593836badbad8d2f3596fe231dc2637ce6aabce3efc0b1fd3"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/MapMenu.kt",
+      "sha256": "0eb0734b2473c00401c6dd2836d0c903304301c6dea80d22550ba3ed5ef3151b"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/MapPortalPanel.kt",
+      "sha256": "edc4446400c8c132510fd3e2bc964dab66bbdbb912e7cdbc7985d8c118e737bc"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/MapScenePainter.kt",
+      "sha256": "44df6badba7726a928617c17c67a207721e40450973aa4b26a453fcc5ead4756"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/MapSearchPanel.kt",
+      "sha256": "4b17757e97a7bc95fd865aa6cda323d0633b96537664d45300ad4d65d205d2c9"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/MapSourcePreview.kt",
+      "sha256": "a37435c390aae70251d37ad531717a974f6313681f4407de3e2cba69f7d14a42"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/MindMapView.kt",
+      "sha256": "c94b411b826cd6519f493ecc93c5d6f522fc1ee0b399bdb97aed6903d90b0625"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/NaturalText.kt",
+      "sha256": "dc409b4905157df654186d4e537558f3ba372e6d836ca175c5fee7636e8783d3"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/NewNotebookScreen.kt",
+      "sha256": "2af3b2a2ff9cd5758eaa61438bc07ca2195429229254e483f1281f180eb7b1c3"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/NewPagePaperPreference.kt",
+      "sha256": "e1fb1fba903a6fe78e2875f0ecf96c3ff905c9ade48bc3bd824a56a85bcb0b23"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/NodeActions.kt",
+      "sha256": "9f1536229647a3b399a7a9d12b5d8eaa09ffa92bdfcd50bb97d825bfbe96150b"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/NotebookApp.kt",
+      "sha256": "621b453690c64e6016b8d1e111d9763f416a37d32c91bde18b9640f840b14f13"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/NotebookClassificationDialog.kt",
+      "sha256": "ad64fa6b814d7544d0a054e1704b14278f036927f6112bf2b76d0a0c35f0fd49"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/NotebookCovers.kt",
+      "sha256": "bace744bb0471a01098e40a35125e381a5769d7d9b622917f3dc8f97ecb075bb"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/NotebookReferencePane.kt",
+      "sha256": "6d288a2084d16fd3216f5bf78fdaab62b42d75ea3db57b2981d4f5cd93380fc7"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/NotebookTabs.kt",
+      "sha256": "93b6bfd7f6fff154b98769f55eb048ba29d3a294dba50f4deb0a653f9f5167db"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/NotebookTimer.kt",
+      "sha256": "8860ce4eab7b29474c1d23e202ec0507c965e3eec5aec58256658801200157a6"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/NotebookViewModel.kt",
+      "sha256": "17725c625f396e183708159bf410ff572e7273b5e1f5919a2351bdbe06278f67"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/ObjectGeometry.kt",
+      "sha256": "ac9d5aa06815c8af5976dd471fb5a1ff6541e58c3f202d7264bab568a9fe1520"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/OverviewCollections.kt",
+      "sha256": "9e102040e0c57d2930ae36658543dd858ef99339c2b1aacea250740db1d50c7d"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/PageAuthoringViewModel.kt",
+      "sha256": "1bb4069770e6ff5c92234ffed13338d611989eca226149f0147db97140a3f7fc"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/PageEditDialog.kt",
+      "sha256": "9bc2284ce0904f0854a0b46b94e241fc1ec4b9e944174a625bb05ae67cf8c904"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/PageLayersPanel.kt",
+      "sha256": "303cf5f7889ab6c92aab32f8b964b35d26f19bb7efcf185204f9790444642f99"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/PageObjectOverlay.kt",
+      "sha256": "246b868bb20b0fae1437e1252e52a249e5089c3a44f23cac46a9077735caeac2"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/PageObjectPainter.kt",
+      "sha256": "2eb8730b2261e52130999c6c03048a55efaefb18bbc45a9b16fc621f15a9f6d6"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/PageObjectTools.kt",
+      "sha256": "9065138662758f942c085c4a6ea2d6bc40b60c7cca4c27dc7d271cecb402785d"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/PageObjectViewModel.kt",
+      "sha256": "0eec4799a1ca810b251cb6f26df5c6e2d8663e75dea69f0c10e69607a1c3f9c5"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/PageVersionPreview.kt",
+      "sha256": "22a09bb72e8d13289cc352f9f5b1dddb006c6348ddcd64dba08c05b757d0c372"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/PaperPainter.kt",
+      "sha256": "14f0aac3b148701a03c730b7431322cf392bed7b04b9cf38524abf604e742529"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/PaperPickerDialog.kt",
+      "sha256": "da8bbb790bb94e1c0d6bb021df2335b4b5ddeaa6f8f708ce9cf5e191b24d8c4c"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/PenCaseColors.kt",
+      "sha256": "574c0cb65883cc43f8842d0675cfc94b3be0101e55478f71fc5c2b204dc58668"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/PenStrokePreview.kt",
+      "sha256": "32d1d22d8bc97b66f6c13dd9308606d7c09ce26ed937f5fcd07e7284d0a82f1f"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/PenWidthSettings.kt",
+      "sha256": "5711d1b9508941e24bcbad565168349189fcbdbe16c0fa4de3a29dc943e79683"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/PencilRenderer.kt",
+      "sha256": "b71dbb94e4e70aec05b8b902de3ef1665a1044b3eeb24199b1072f67c0017704"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/ReadingToolbar.kt",
+      "sha256": "073bc4320a3506b712be125979dfb83cf01b61179c34c20c2fca3a55a9683f83"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/RecallAnswerPad.kt",
+      "sha256": "4b39d97733778249f43e26f282537cbd1f019f8a6258795cbcbb83937c394ec3"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/RecallContextPanel.kt",
+      "sha256": "9e60950da876961894db0774ec51cfbaf23e19824a00d1efa79bb20a28232698"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/RecallMaskProjection.kt",
+      "sha256": "7730eb63dde0f1bd8abf9cfda4b6ee6de034ac03ebfef684b213a94f47643854"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/RecallOriginalGate.kt",
+      "sha256": "f489a479d39cb43d2dbe8a45b81b88882b656720e12046f9493eb3e2021ac40d"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/RecallQuestionEditor.kt",
+      "sha256": "d2f72031ebf632aaa3cc0f2ebbf5ea5413c7dbe19b63688cce13b8aeb9ccc8c2"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/RecallStudyDialog.kt",
+      "sha256": "5d350d7731a8d4137cdac433f063f1b3503b32af5829ef4e539a1073418a3dc1"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/RecallStudyViewModel.kt",
+      "sha256": "5b1b13483a489a947ba102b8444df0a7bdbd6883527f727913b9c94fd0cecfc6"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/RecallWindowShield.kt",
+      "sha256": "9213a1e6e9a0d422fecdefbb70c6f5a70af4f8ab930b0fa543357c9c4eae871a"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/RenderResources.kt",
+      "sha256": "fb17c7342c61ba56a10ca56eddad8c7e325803d57d9d38e992393de65ed5b078"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/ResourcePackSettings.kt",
+      "sha256": "095ae50e94d2a14e8f9083da57ea9e513644ea0835ccf2c63633b9ac80d1bd48"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/ResourcePacks.kt",
+      "sha256": "ac74bd502356808bfd0832c5860849c7541d5c965bfd656480243ec743a56dc4"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/ReviewSourceDialog.kt",
+      "sha256": "a0a16cc5a64377779bfacea56c7d8803606003cbc36e489cd95255e49daec80c"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/SelectionActions.kt",
+      "sha256": "66783bf410b9880c76feeee0912c81c1c4166e7d147dda93347cedb62ddf01e2"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/SelectionOverlayView.kt",
+      "sha256": "e0a2a880bd175226b0c2d9a65dbf323226a9576b61687f9df4468f9091e15816"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/SelectionToolbar.kt",
+      "sha256": "908cfdd0d22655c6735a4a48584e643c52b5d3b3b30fbcead5eee51204b07b0d"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/ShadowAuthorSession.kt",
+      "sha256": "970f82a2c23224e984282681c562c714c9623a5f7cd7a3ace57de8e323aef339"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/ShadowLab.kt",
+      "sha256": "3275670ed7ad57bd415a2d2ed2fc12a3bf53b7501cd2cd229845f094e5528bb9"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/ShadowReplicaPanel.kt",
+      "sha256": "f3d266df67a74f55ba1a91bb2bd5dbb56c2c84e968beb6ebea2b9ac954ca9a91"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/ShapeInk.kt",
+      "sha256": "a1625ea4b5e341aa8638ce35bbfbd5b1cab9fc3c1492c05f305e869cd1ac8448"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/StudyCapacityPanel.kt",
+      "sha256": "b4713d2f81980c9ac5bbf6bb2636c6192cdb87a1eba6865811b287c49bfeb2f4"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/StudyDialog.kt",
+      "sha256": "b21c79c5779fde3a0539f3ba7f624c189d55e916c0f31b36a7377f38c95822ff"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/StudyNavigationState.kt",
+      "sha256": "ed0004d7e3d651937a5f262b70812b566dc68e2878e77ad7a53566d13b4f6821"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/StudyOrganizationUi.kt",
+      "sha256": "4774a6e7c2d063f6d86dae424d85da459dbf89797c644b105d0a6a49cfed42c9"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/StudyRelations.kt",
+      "sha256": "01eb3b955df23d474efad828527f37af063e80e6719aec69af01070352572836"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/StudySession.kt",
+      "sha256": "c421f0c2dd1b3f54c2fd4cfb662f7b96c2492be3358c50b67b36ddc717c372dc"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/StudySnapshotViewer.kt",
+      "sha256": "58ce2e702a84a1f6fdd916b29a2e1ecd8efc65bcc107adc228e42bf798ae7e63"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/StudyWorkMode.kt",
+      "sha256": "28fde968883cb3f2ac0d0eb58d06fe7751174e59b851a4b900d02c978425d4ef"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/StudyWorkspace.kt",
+      "sha256": "c3fea26a9be36617d530652add5e2fefa213a0ef1e310e5a7e34a1683f5ade4c"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/TapeArt.kt",
+      "sha256": "c0205720e855355c39c390b2fcf268cde4cace49531ff77fd505036604335ddd"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/TapeOverlay.kt",
+      "sha256": "066eb1ebd4faa82a7127f1ff34b3e239ab7f6fdf9692f38ba638db8017d6fd47"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/TapeSettingsCard.kt",
+      "sha256": "f0b201ea38db430ddc748d368bd77e299f9e6337c56c814471c58ec9f7c3ff79"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/TemplateCatalog.kt",
+      "sha256": "0a1528bdbdbfc9ca2db5caabbedc7ae8e72fd2c7dd6c30df38b269e817e71077"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/TextStyles.kt",
+      "sha256": "f60fbe2cc7ce7ce1327bff2609550dd07bb01811753158bce2a94d310f30b0ff"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/VisibleInkGeometry.kt",
+      "sha256": "46a249286f9989cfc97698bfc7fe8139132072b1a8f233ac92acef3f05dcfc89"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/VisiblePageExport.kt",
+      "sha256": "659aeed89ed7cff83518a00e049f2b0dd24485be889cccf06c6ab0495b2e1f59"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/WholeEraseTracker.kt",
+      "sha256": "af1bc16c626e5b039866f86818013af97dd523f9f4593b996b2767ee8f13fb15"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/WorkspaceStyle.kt",
+      "sha256": "14be715b27d86b5ada8da2451909810ce3ea8ced19ca96c2cd857bb9fad765de"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/WorkspaceViewModel.kt",
+      "sha256": "ae0de200e5189e989b9d2acdd284eb5f3c7ba33c931eede7f0f667b431258a4a"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/ui/components/ContextPanel.kt",
+      "sha256": "13339717fad7c7df08059efd83c67a49292568eb28884aea2ca7718b8245099e"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/ui/designsystem/InkTheme.kt",
+      "sha256": "07ae1e2b1c1fb0283e9494820b0c7a3304cd19a89aa9aaab5f1c758ef3486ea5"
+    },
+    {
+      "path": "android/build.gradle.kts",
+      "sha256": "267dc91204956dd91e3732f30c7527b3a745d6ec3670974305d1101d753c845e"
+    },
+    {
+      "path": "android/core-domain/build.gradle.kts",
+      "sha256": "6216873f7ef70034a8ed48a831a99f4189e47e1861b2bb15b53640e7af37fc0a"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/BoundAnnotations.kt",
+      "sha256": "1d058d100bdab3c7b9f24acee8cdc38ea7f0274180b6558f16f0172ef6d477b8"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/BranchReview.kt",
+      "sha256": "72b89639d1a0833ab560129433dd7eda35fe26a52a7ba20b39ed662a4502a290"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/BranchReviewRound.kt",
+      "sha256": "6e664537769c80c268644d271a99d5e15896ceafe55a8bf1bc2110bbb1dac69d"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/BrushRecipe.kt",
+      "sha256": "17d90a6c0e94057a08620a9a754d637e853d7a3fc40406924496444801fd63da"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/CanvasViewport.kt",
+      "sha256": "b50940ec025213063cabda523537de69d81e843a74d3a54da301951a80e7872c"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/CardPresentation.kt",
+      "sha256": "50429eaeca7013df8f190373d1cbb45a0fbc21e32f03ad92b8e07e5d63d5e20c"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/CardTransform.kt",
+      "sha256": "1c19319ee4ad9c5c44aebdd9ecc886526a8187f4c8b196237170cdfa65430c48"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/ChecksummedBuffer.kt",
+      "sha256": "962a0b960d214ba36ce6090b1b994422e7143b4521e06278fc85646d772326b7"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/CloudServicePorts.kt",
+      "sha256": "b7ec7a70174052fa8801379033fe98ec63d78f5b14ef6ec3f3b476c99c2eba8f"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/ContentTransfer.kt",
+      "sha256": "158eac6b9f457c8dc7b42bf659d2892d1496385d73b49e23c3f17e533303b6dd"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/ContinuousInk.kt",
+      "sha256": "ddb554e8732251170dcfd4348ad5299269b4b8b921e8b664d11d3f87ab85f850"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/CustomCover.kt",
+      "sha256": "a3d757fd24bd7d9c2521036597b7e00a948efecf57c3a8f316e451222e038dc6"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/DiagnosticLog.kt",
+      "sha256": "acd25f8b64f54b4987fe1d5dd482e6354df106d78463b96bf02f83c4327fc482"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/DocumentWhitespace.kt",
+      "sha256": "6834214bef98168b8f3c668499d0c32c0954d7b982c922a26379bb63175e16c0"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/DraftReload.kt",
+      "sha256": "4336fb8f669664063bbb694c321724c10a1bfa4fa4bd86f316bdba056e0f48b5"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/ExcerptBounds.kt",
+      "sha256": "b1ec0dfab23092f063148424c0cec131f405eb7fdd9f76bd1a3aee461e66f1ce"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/FormulaGroups.kt",
+      "sha256": "c0a9416a5956dd8c3236ea40db8ab920efa989422621a838e061b471738c2e0a"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/FormulaText.kt",
+      "sha256": "065bdd3e81515c634a613a8a1414770bc07c28b46ab8c534a40efa90bd3c76dd"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/HandwritingLines.kt",
+      "sha256": "75d20d0a97a9b945b06d04bb31e5dee18994677057e2c8c506e5d8ab583027da"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/ImageSource.kt",
+      "sha256": "7d1cc91d8ce9a7a3d7f22a0540331bdbc064d15a7458ef91783dfacd8f1db937"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/InkModels.kt",
+      "sha256": "a3b250dfac6e8d4d8730bc708562e80a1bc88a5ea4cfdea447e379c52df9748e"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/InkPageFile.kt",
+      "sha256": "83ac855e3a877406dd2bdab5946d33e96223b361f0068d598c28a57d5bf6ba64"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/InkSampling.kt",
+      "sha256": "a9c015d81e3b80037d26fbcace50e4fc232b1cb91fc6757ff8d20c09e13e072f"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/InkSelection.kt",
+      "sha256": "86064e971ad79e66211b7c8d8ed1b9f2061a7c5010c3ee322235229df3cfdb72"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/InkSession.kt",
+      "sha256": "8c0836735d5144a468be21c729bdbf6ea2232655639713981011cf65aceaed46"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/Knowledge.kt",
+      "sha256": "12aaf577c362687a0d7145878587ad2036272a4142ed690ecc5aa5aa4435a6b4"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/KnowledgeTextLinks.kt",
+      "sha256": "ec2bc9058337c51d8ba158f0832b0cf0339e2a3a7c7625a3ccdeba753427b73e"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/LearningWidgets.kt",
+      "sha256": "c6ef07c1f5c02af3d88d95cc07ef21dca01910d391af7a8d1fa83f64f2af1736"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/LibraryArchive.kt",
+      "sha256": "331585be82b2031e48a034157ae5dfac12f3754b34871bae2e0d212f40d8220a"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/MapEmbed.kt",
+      "sha256": "1362098b79703e21db1af4b736f004f94f23b25534532c9776727405f1b4a96c"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/MapScene.kt",
+      "sha256": "6691b67a6639ac5246b4098bb0ee880994ec1b7bab70c48f16e4745bef3e5dd3"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/MapTemplates.kt",
+      "sha256": "ee5dcc40ca90a77d641bcf120c674aa19e67aa8d0445c45792261fe8eba0288f"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/NoteDraft.kt",
+      "sha256": "39a5df195ecb0e49b0a99fd0f9eb09def3c573f5d75b7d489345ff348af7c7e9"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/NotebookAppearance.kt",
+      "sha256": "79930b7cc2c3a462d71a1b04d17d5550b6f55b46154d8fea665cffe80f60adae"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/NotebookFile.kt",
+      "sha256": "7ab8a03a48eb585dca9749e51f9e0524024447c8da85c72a5543fb56ed525c4f"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/PageAuthoring.kt",
+      "sha256": "43fa01dea8698321a7995af373e9a79153126dea5b5a4f41b687c957dc5a4070"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/PageEditing.kt",
+      "sha256": "abb20b82e46c0154a9e64035cbe642f40fcafcd755d60f96ea0246dd7e6ab1b1"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/PageInsertion.kt",
+      "sha256": "439e0a86360a350c19d388cc95485f23a39affb0f6ff6c84cc3529e40d4e3d4b"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/PageObjects.kt",
+      "sha256": "5dbd571babebf0eb442363bffae6fef4168f4d9886bd7f82f3b28711c59dc0ab"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/PaperTemplates.kt",
+      "sha256": "31031e5e797ca2d6060808d09ca407bb992fbbfd2bdbbbe8334c0443225dc6f7"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/PdfPageSource.kt",
+      "sha256": "cb61c3264b468367a3160c4ee77da1f0d928f4a023d19e5265b70056299c8d23"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/PenKinds.kt",
+      "sha256": "f9ce29af637d13a86f487ee74f2c4a89d847d801731a5528484694c03fa43473"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/PlannerTemplates.kt",
+      "sha256": "e322ff91be9b8682e9e024516d160a596d59e0bfa07e10846c6a8bcd70598f7b"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/ReadTiming.kt",
+      "sha256": "826d90f40ab8b58cf6a16a65a71958f400f3f395c0594b9a85de595c11258ed7"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/RecallStudy.kt",
+      "sha256": "b13cef89fbe791888d5451d64265f7efbacfa7896f7764c9ac58722b117ad1c7"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/SearchRequestVersion.kt",
+      "sha256": "b2a7cfa3a5dc9ca70604531fb0133385444eb8f3716192dc34a3be12ce2becdd"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/Sm2Schedule.kt",
+      "sha256": "aa666edba3ba0449eac721fee87be4fee90b7d8e9e7c0e25df763478995a1653"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/StudyModels.kt",
+      "sha256": "81f04f9c2ac0899b48162b88b4a5c40c4c616f6300a9cd786eaa31074cd33db2"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/StudyOrganization.kt",
+      "sha256": "cd0687f61d824bdf436eeacb02dfb087ca216d215d40ed1fead5fd5520f85ecf"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/StudyOutline.kt",
+      "sha256": "dbcd598cf69de4c392823733b3d7471c5c3e17a9d374a6c07270e2cf8cb3ca2a"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/StudyText.kt",
+      "sha256": "566dd2248579e75625f32d50c7b876707eef3877196a7330d704a8d76db95ee7"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/SuperMemo2Kernel.kt",
+      "sha256": "13f3b69b862b117a9f03381e5e8e1534b135fb4c96d1b8df2a935cdd311d4748"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/TextRun.kt",
+      "sha256": "d3903d3d67b27e7680ed7e469b98fe38602d651a526d0b7f3d82531f58ec4aa0"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/UserLayers.kt",
+      "sha256": "b8f65dfe111597a8904220f6cb82b0d2e9b70fcf753e4af75d84a68a47376c9f"
+    },
+    {
+      "path": "android/core-domain/src/test/kotlin/org/inkweft/core/BranchReviewRoundTest.kt",
+      "sha256": "fc894bbc5d1ebf3616d71fe34b2a2fe03ca16ce9e520c11e52f4784baeb9951c"
+    },
+    {
+      "path": "android/core-domain/src/test/kotlin/org/inkweft/core/BranchReviewTest.kt",
+      "sha256": "d2a4fbb4f76c01428b86fbf955199162db19e3ba319b4cbbfe8f7159052156cc"
+    },
+    {
+      "path": "android/core-domain/src/test/kotlin/org/inkweft/core/BrushRecipeTest.kt",
+      "sha256": "75d87eef9434c82dd82109a3816e48a0a805ad08fbe93f0b69f5e4347a060f96"
+    },
+    {
+      "path": "android/core-domain/src/test/kotlin/org/inkweft/core/CanvasViewportTest.kt",
+      "sha256": "ad08aa9488f51be11cbb0618310bc6bc60732843befc9a8d0dcbdf93aa847267"
+    },
+    {
+      "path": "android/core-domain/src/test/kotlin/org/inkweft/core/CardPresentationTest.kt",
+      "sha256": "59062184b844be96ebf1f85ce8b183d2fe585fb39d2ae24418157bacf49ebb3d"
+    },
+    {
+      "path": "android/core-domain/src/test/kotlin/org/inkweft/core/CardTransformTest.kt",
+      "sha256": "a3756e8ecb129efa4594db524cba763bf862bbbc222ccf4a6672be5843e81fef"
+    },
+    {
+      "path": "android/core-domain/src/test/kotlin/org/inkweft/core/CardTrashCommandTest.kt",
+      "sha256": "0cf5b7a63af21e9a80307eb7f86378379737457bd5f0e0bdd20ec32e81c189db"
+    },
+    {
+      "path": "android/core-domain/src/test/kotlin/org/inkweft/core/ContentCopyRegressionTest.kt",
+      "sha256": "1d4c394c80b542f758e5839a5db9830d486c1ef8a9fe9f7c11541c29502eb954"
+    },
+    {
+      "path": "android/core-domain/src/test/kotlin/org/inkweft/core/ContentTransferTest.kt",
+      "sha256": "439b0904793e4f5b07f189d7453eacde9b16d83ba469afc2c1a8d7c710a36e77"
+    },
+    {
+      "path": "android/core-domain/src/test/kotlin/org/inkweft/core/ContinuousWritingTest.kt",
+      "sha256": "0f5786b8a2ce87e9e8117ca0769045b1b332f1d8df48741c5818d86e0425ee60"
+    },
+    {
+      "path": "android/core-domain/src/test/kotlin/org/inkweft/core/CustomCoverTest.kt",
+      "sha256": "46be5cb647df292ddf7efa24c51874ef0182f2e122476d5296f00af5861f6d98"
+    },
+    {
+      "path": "android/core-domain/src/test/kotlin/org/inkweft/core/DiagnosticLogTest.kt",
+      "sha256": "fc48a5194dd0a7162f1dd8862a26f4d6fb0d1788e6551d93eac43feb31a62e77"
+    },
+    {
+      "path": "android/core-domain/src/test/kotlin/org/inkweft/core/DraftReloadTest.kt",
+      "sha256": "e04b811dd6529a236959e28bb1b745c13e350cbf8219d9b4ac1022069ac12e63"
+    },
+    {
+      "path": "android/core-domain/src/test/kotlin/org/inkweft/core/ExcerptBoundsTest.kt",
+      "sha256": "587f7effc473da7dff223f23273a85601ef088d4ada8fe204549da9f107a1dc8"
+    },
+    {
+      "path": "android/core-domain/src/test/kotlin/org/inkweft/core/FormulaGroupsTest.kt",
+      "sha256": "dd723800136f8ba67e508801e5cd218a7edd0028f1ad4b17accf7ba7260ff0b9"
+    },
+    {
+      "path": "android/core-domain/src/test/kotlin/org/inkweft/core/FormulaTextTest.kt",
+      "sha256": "735d6ab9957b7c80844ca4c6a0a25549466d241f067b80c550b4c162486724ce"
+    },
+    {
+      "path": "android/core-domain/src/test/kotlin/org/inkweft/core/HandwritingLineBudgetRegressionTest.kt",
+      "sha256": "43361317081c07e7d576a410c384bfb9a80ccf2c9ae9357a8eff1774cf3bc0bf"
+    },
+    {
+      "path": "android/core-domain/src/test/kotlin/org/inkweft/core/InkAdmissionRegressionTest.kt",
+      "sha256": "f6d2fea2877883b81fbc07dad95350796627652f1754d6f0ed65c799ff5c9adf"
+    },
+    {
+      "path": "android/core-domain/src/test/kotlin/org/inkweft/core/InkCapacityRegressionTest.kt",
+      "sha256": "cb850cc70ccddab83113c41c63216a43f24ea87e17b156b5060ce87a6c04d785"
+    },
+    {
+      "path": "android/core-domain/src/test/kotlin/org/inkweft/core/InkDraftRegressionTest.kt",
+      "sha256": "4607a80f901e1cad2e7032e4987abd451469fc22304380e8f202526719fdc3f1"
+    },
+    {
+      "path": "android/core-domain/src/test/kotlin/org/inkweft/core/InkEditingTest.kt",
+      "sha256": "95fb45a64b0f8aaf237bf25080dd30290ceec85a60f1414ba7a8a2ca952c0284"
+    },
+    {
+      "path": "android/core-domain/src/test/kotlin/org/inkweft/core/InkModelsTest.kt",
+      "sha256": "4471d083cb76685ba4809579d79145aa1e2c26a960ffca9af88d7c83fe93cb2b"
+    },
+    {
+      "path": "android/core-domain/src/test/kotlin/org/inkweft/core/InkSamplingRegressionTest.kt",
+      "sha256": "00019829a3fc3b9db420653f25b207ea1c8d314245118cab3f8b7baa7e8a7b44"
+    },
+    {
+      "path": "android/core-domain/src/test/kotlin/org/inkweft/core/KnowledgeTest.kt",
+      "sha256": "8ffa004ce84e5bcf8b68c943d539cdba76d338b94e174b466bfd8a8e443e0dfc"
+    },
+    {
+      "path": "android/core-domain/src/test/kotlin/org/inkweft/core/KnowledgeTextLinksTest.kt",
+      "sha256": "183a2de5bda18cccd99961b9fb0ed57d4f1f410f04e10f00ccdda1a50b01b331"
+    },
+    {
+      "path": "android/core-domain/src/test/kotlin/org/inkweft/core/LassoGeometryRegressionTest.kt",
+      "sha256": "edcb41d783cc5f1530edd8670aa72a54ffa94356728c1d3b3b59c74e5ee1d983"
+    },
+    {
+      "path": "android/core-domain/src/test/kotlin/org/inkweft/core/LayerCapacityRegressionTest.kt",
+      "sha256": "aab98bc142e20daae6643a509b13e411a546f964fa6066347aecc184703ace5c"
+    },
+    {
+      "path": "android/core-domain/src/test/kotlin/org/inkweft/core/LearningWidgetsTest.kt",
+      "sha256": "c76739dee314b69fefb929402fc12df1bc7f8afb86c2598de26d233b267afafc"
+    },
+    {
+      "path": "android/core-domain/src/test/kotlin/org/inkweft/core/LibraryArchiveTest.kt",
+      "sha256": "e86506f85f838bc7de36316d83e9ce1d34a8e7bc47826565601eca263aafb442"
+    },
+    {
+      "path": "android/core-domain/src/test/kotlin/org/inkweft/core/MapAddendumTest.kt",
+      "sha256": "463530a82bebc15dfbdff857958efa1e2440c649add06ada35de54d041c937ca"
+    },
+    {
+      "path": "android/core-domain/src/test/kotlin/org/inkweft/core/MapPortalTest.kt",
+      "sha256": "818c50ccbc3e0609bdd0b2d86a25f281bcb40dd8b5a51fb8bcca462ecc9c97a7"
+    },
+    {
+      "path": "android/core-domain/src/test/kotlin/org/inkweft/core/MapTemplatesTest.kt",
+      "sha256": "4c8d983bc780dc1cdc135e7ff92b66ef05fc72a5282fab94fbab1c204ef20fc4"
+    },
+    {
+      "path": "android/core-domain/src/test/kotlin/org/inkweft/core/MubuInspiredMapRegressionTest.kt",
+      "sha256": "b5c380390bb859728f0fb3553eb386dce41e3528a7519b3b24d1d9f6f1e89718"
+    },
+    {
+      "path": "android/core-domain/src/test/kotlin/org/inkweft/core/NoteDraftTest.kt",
+      "sha256": "9f9c587b90ee091f97dec1cf832f974b936eaa36edc08aafcad0acebb9b87eac"
+    },
+    {
+      "path": "android/core-domain/src/test/kotlin/org/inkweft/core/NotebookAppearanceTest.kt",
+      "sha256": "ae3523982c28c7e7e554ab0b7d3390a6be59ec8abd73393faa9852d2fd433d5a"
+    },
+    {
+      "path": "android/core-domain/src/test/kotlin/org/inkweft/core/PageAuthoringTest.kt",
+      "sha256": "2a90f5bdebbb8f1284b64ec5c9edddc27a80867bb3565a5687855fa065f97612"
+    },
+    {
+      "path": "android/core-domain/src/test/kotlin/org/inkweft/core/PageEditingTest.kt",
+      "sha256": "4522bab399a1ebedb2cceb4dc9cc0cfcf0136cec7a202da09d89ddddc7fe7bbb"
+    },
+    {
+      "path": "android/core-domain/src/test/kotlin/org/inkweft/core/PageInsertionTest.kt",
+      "sha256": "64facbd76921dc5e51b458ab94afdf0d8cb56baf9b0bf9fe55776335c119696c"
+    },
+    {
+      "path": "android/core-domain/src/test/kotlin/org/inkweft/core/PageObjectTest.kt",
+      "sha256": "75f4ee1682b23757c78b69914dee0d49caf8498d717bebfdd306acc92a27b64b"
+    },
+    {
+      "path": "android/core-domain/src/test/kotlin/org/inkweft/core/PaperTemplatesTest.kt",
+      "sha256": "b5b6ff693af839c2eff4af19efbfed554174926601cb54bde7d6208897ea9698"
+    },
+    {
+      "path": "android/core-domain/src/test/kotlin/org/inkweft/core/PenKindsTest.kt",
+      "sha256": "ab9933e7be62f7c5a45c36f1841b5f24fd600e68c5a0d9a9ba0b3bca5db50280"
+    },
+    {
+      "path": "android/core-domain/src/test/kotlin/org/inkweft/core/ReadingHandwritingTest.kt",
+      "sha256": "db89494900edbb948faef918c734d5973e762cdfaf8f3ec81b9f0cd7536c4a3a"
+    },
+    {
+      "path": "android/core-domain/src/test/kotlin/org/inkweft/core/RecallStudyTest.kt",
+      "sha256": "e8ea78f8971132d30c3973ed70447ab70e54629efcdd090c51dfbb4ab8e85909"
+    },
+    {
+      "path": "android/core-domain/src/test/kotlin/org/inkweft/core/RecognitionAndHistoryRegressionTest.kt",
+      "sha256": "ff9834fc51c83a8ef6b6dbce3f3f306954b8e4826b98f339450e84ac633f9e25"
+    },
+    {
+      "path": "android/core-domain/src/test/kotlin/org/inkweft/core/SearchRequestVersionTest.kt",
+      "sha256": "6b9d78541af2f7c90cdb9effe7a2e88f7c1c6bef0d09774bd36c6bb5b89a58f0"
+    },
+    {
+      "path": "android/core-domain/src/test/kotlin/org/inkweft/core/SelectionLearningTest.kt",
+      "sha256": "1e8b3a290a1b4f73ac30acc5f9f03aad0666fc5afdcfda5e64c19a68272e9f65"
+    },
+    {
+      "path": "android/core-domain/src/test/kotlin/org/inkweft/core/StudyGrowthRegressionTest.kt",
+      "sha256": "b83e8f91f2069cd11d0bd14d1d515fdba57b97ad59ad24d550beae04aa61d24a"
+    },
+    {
+      "path": "android/core-domain/src/test/kotlin/org/inkweft/core/StudyOrganizationTest.kt",
+      "sha256": "577f2ec89f4be9b722dae76f9be0697a81e457106e0ebcd6c597a2f950e35cc1"
+    },
+    {
+      "path": "android/core-domain/src/test/kotlin/org/inkweft/core/StudyOutlineTest.kt",
+      "sha256": "c5bcb378cfae8ff0de5177c1b0dfc170189aa12460ce3662683eb393a6a7c235"
+    },
+    {
+      "path": "android/core-domain/src/test/kotlin/org/inkweft/core/StudyTextTest.kt",
+      "sha256": "10021a08bb471fdbcb2bb2f6f6b20a2e4e1dada9802fc8f006d6c91b48642d0d"
+    },
+    {
+      "path": "android/core-domain/src/test/kotlin/org/inkweft/core/SuperMemo2PortTest.kt",
+      "sha256": "57121fab868d8ce514ed718ab9be107889e4cc02d438f0de010c58527ae3e6dc"
+    },
+    {
+      "path": "android/core-domain/src/test/kotlin/org/inkweft/core/TextGlyphTest.kt",
+      "sha256": "762e2d42390165208656834ca22cbe587404313e8f044ad10828d4b4287ae290"
+    },
+    {
+      "path": "android/data-local/build.gradle.kts",
+      "sha256": "55199e71e6ba25b5bd248c3d4d47fed3fde99599a0fd45c542d9864d4f23f7dd"
+    },
+    {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/AuthoringPendingStoreTest.kt",
+      "sha256": "eebdbf14141e069405c133edac4c802db7f6ee1a04d808845fd2b4ad44c3cc73"
+    },
+    {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/AuthoringProjectionRegressionTest.kt",
+      "sha256": "e2438711dc15c039352a65e057acd5ade72745f4af7b37ac46903e8871bc6c95"
+    },
+    {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/BranchReviewRepositoryTest.kt",
+      "sha256": "1e587231a3aa9e3f54ecba69f452826731b67e10f33551f54afc0b69fb2eb1a1"
+    },
+    {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/BranchReviewRoundRepositoryTest.kt",
+      "sha256": "77267820d111996429a1eaa60944233d9a6d018c9f0feb9aa95dc5d25a824fce"
+    },
+    {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/CardPresentationRepositoryTest.kt",
+      "sha256": "d9d3bf8b504b0918a411a477dd0eeb6038b6c0567fd1dfd1ceace37c1d0e8c51"
+    },
+    {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/CardReuseRepositoryTest.kt",
+      "sha256": "33882fef1d22a150617ec50f2235ce3277e6235989e081ef9f8f4ad801d6a56e"
+    },
+    {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/CardTransformRepositoryTest.kt",
+      "sha256": "c62efacdd7c9dea72cf8b10f1caa41383c533e4c0bdbf503879e2d5226d37d1b"
+    },
+    {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/CardTrashRepositoryTest.kt",
+      "sha256": "d39644a64e1fbcc61125ddc178d0707188b738a3eb9403700ca711116b65912c"
+    },
+    {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/ContinuousWritingRepositoryTest.kt",
+      "sha256": "10e302ed5ab69197699dec73a3407d97cbb15b1c4d456cd83632a85ee625ffac"
+    },
+    {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/CustomCoverRepositoryTest.kt",
+      "sha256": "3d7a59f327c912c7e59ecf63458289113dd51a44c416270c3e55e5f483383270"
+    },
+    {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/InkCheckpointTest.kt",
+      "sha256": "cd7540537ab3a4ccbb42a90ee12747c5c513c0bbfc17a24568470394a012250e"
+    },
+    {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/InkGroupRecoveryTest.kt",
+      "sha256": "5cc31255aebf08273e38df1bd5b454d1b385e8ba0b859e186ab262bc8e83ee20"
+    },
+    {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/InkRepositoryTest.kt",
+      "sha256": "62ce3d28a5eefeaa3ef1a11ce2c0539bab06ff146e48909719b3f9d4e1e8ecb0"
+    },
+    {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/KnowledgeRepositoryTest.kt",
+      "sha256": "0f1b21cc1a37610753c0691e5f227b91c474d2cf6429874c88878e51582cfb0a"
+    },
+    {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/KnowledgeTextRepositoryTest.kt",
+      "sha256": "682c755f95d6e22bb94b5bfca6c08754d18dddf19a5a5d73968ac9991a262bf8"
+    },
+    {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibraryBackupGuardTest.kt",
+      "sha256": "63043d234753ee7ec6d6967fe81d59fb5a1d87f434d1d064b0af35aa60e35e58"
+    },
+    {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibraryBackupRepositoryTest.kt",
+      "sha256": "a93764d431ba5748b04daa219cde9606d03159ed01e98988b8331fa462716161"
+    },
+    {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibraryContentRepositoryTest.kt",
+      "sha256": "ed0be57c8ec8f0139474d8095bf6242248be3a094b7c6560a8311bd49debef8d"
+    },
+    {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/MapAddendumRepositoryTest.kt",
+      "sha256": "f7ba8880c996da27925ef1113c4be18d992b5c956748d8f16421b375d7f7ec99"
+    },
+    {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/MapPortalBranchRepositoryTest.kt",
+      "sha256": "6b027fd0d103c9e77350886723c903eacd50521cac0dd6242a6387dbba82a448"
+    },
+    {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/MapPortalRepositoryTest.kt",
+      "sha256": "8d16726347db4494354acd6d6aa74da04517120fa7959150070f8cf5971a73f2"
+    },
+    {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/NoteFirstRepositoryTest.kt",
+      "sha256": "36daf5e0655f1cdd72c4caf0d995104ac16364462155a68dd732cef688fdef1d"
+    },
+    {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/NoteRepositoryTest.kt",
+      "sha256": "46b05ed501cf4f62d65ad7f178fa3f7989e3d169da5dbdc1c1a7795061d9479a"
+    },
+    {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/NotebookEditingRepositoryTest.kt",
+      "sha256": "7f34d3fc3ed00fafe7425873eb7e47065831d96d9a8f34f2b7362d39ea89a112"
+    },
+    {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/NotebookMetadataTest.kt",
+      "sha256": "358720aeb3abdfc8d5ad70bca112823cff86457ca515b126ab9ffcecfac2c9b4"
+    },
+    {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/PageAuthoringRepositoryTest.kt",
+      "sha256": "9a4851213678888902f75d69c45c2197def7aff1e2e1b1040245346a5dbcc81d"
+    },
+    {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/PageEditingRepositoryTest.kt",
+      "sha256": "2954465de078e86335918a6c2d657f594d2113bd6e2e7f166288930078a0ff8d"
+    },
+    {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/PageInsertionRepositoryTest.kt",
+      "sha256": "27bb5fe25dd3459e7fd299cff5985a0e96ebbae943146c55b728dde46298f2ba"
+    },
+    {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/PageObjectRepositoryTest.kt",
+      "sha256": "49e0c5e7673dd8f97bc881d0aaac82770f7ef7d9412699e87a5ca93e3a74b948"
+    },
+    {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/PageSelectionPersistenceTest.kt",
+      "sha256": "fbe536558e11b1ea1d782cc9ff3a6a1f6518913f93e74c3036836d18ba29f794"
+    },
+    {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/ReadingHandwritingRepositoryTest.kt",
+      "sha256": "e177d0c5114de0c44c78a092756fdc35a78c2ff860b9aeef77ce9bedca6782ae"
+    },
+    {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/RecallStudyRepositoryTest.kt",
+      "sha256": "c3dec2b9de1b9f6e5e952ec41158ce882e12c5b8db9deb053550e1e57d82611f"
+    },
+    {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/SearchIndexFreshnessTest.kt",
+      "sha256": "980a38dd005e30eb26262de9c003980928050d1b9f633067524d3474002a0fb2"
+    },
+    {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/StudyAndSelectionRepositoryTest.kt",
+      "sha256": "64e85077f7672040a91c8d19dc250e06ff6ea81d1ce09a81da9bd7061a9e4e62"
+    },
+    {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/StudyCapacityRepositoryTest.kt",
+      "sha256": "44c995a66f91cd19820c4f9ceed17b601464293b117e37415d71d8fed17929bb"
+    },
+    {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/StudyOrganizationRepositoryTest.kt",
+      "sha256": "72502ba465286dfb772a5a64bc8de9d94dc38414c9cb79d26e0d7f4f5a7e338f"
+    },
+    {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/WorkspaceRepositoryTest.kt",
+      "sha256": "7fdf3bcf72a4b4fcf198d9a77a6a401b1a9840b6619efbc4d5755ea981437094"
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/AuthoringPendingStore.kt",
+      "sha256": "0184e6cdfbc8197d3b0f81e837f37413deedd6477049900a61247f68c6aa5603"
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/BranchReviewRepository.kt",
+      "sha256": "d1acb8b9ef44b92c3b48fb8282d65ea1b1f7dd54c93f542bc874afe49ec113fd"
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/CardReuseRepository.kt",
+      "sha256": "dbfe46e4d19ec764264a68a8a5e1d46330a85c564fdac893cd8e2b6b27ae00fe"
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/CardTransformRepository.kt",
+      "sha256": "0af081ab2ea7ecfea995ac80d047a4e32120dca0027f8f90805f172c540d6469"
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/CardTrashPreview.kt",
+      "sha256": "8da7675f77261469dab4d3dfa45145ed8c8508f2ac79e54fcf2ff983a211ec99"
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/DocumentRepository.kt",
+      "sha256": "37b1539267a9810c794616d2cd566828425ccfb951439df37e08e1e091c32472"
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/ImageSourceRepository.kt",
+      "sha256": "7b9507ceab17d626b56f2a874e7579a5faeb10eed457849833f1ba00a39efb0f"
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/InkCheckpoints.kt",
+      "sha256": "c6a67cdf2223d59d25c96c1e893b36324b407fbe1c2ae85d67861d79602e44e3"
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/InkGroupCheckpoints.kt",
+      "sha256": "5249d6eb1473279ffcc8c7abc1c297f2d41ddba30379a04fba92b513fc8c96d3"
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/InkRepository.kt",
+      "sha256": "b9147b8fc772adcb9a07c8cd21bd8405e1aad34f3aabc226bc2e66e1e0d528a6"
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/KnowledgeRepository.kt",
+      "sha256": "9488f0031abfd7483b3fa2b3551d64e3418e0843ddf8a554396e26e20ef8d49f"
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/KnowledgeTextRepository.kt",
+      "sha256": "cdc802308be722d0b36e422f36856c412f763f79f83afe252a52c987d9b01554"
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/LearningDirectory.kt",
+      "sha256": "34276508cc19a593a28a56e4e6b337a5ee3c7b2d132897807e7efba3b2f2868d"
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/LibraryBackupRepository.kt",
+      "sha256": "1dcb3a8c8f85524f084c9c2ae407465c8c4c2e4930c246c09f6aaa46e4c7279c"
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/LibraryContentRepository.kt",
+      "sha256": "78cc247688fb8231a978d75000f60c942dce8d08050c0ca59a00511772a5b2d4"
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/MapEmbedRepository.kt",
+      "sha256": "477f176f41b63dbb3e7b66f71adfbc67d931de8691e11c22e6e3f36328ded5fa"
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/MapGraphAccess.kt",
+      "sha256": "2ba5c83ab3471e37e34a876b8eeec1360f72b21852d1e8ef58fcd7e3497b6837"
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/MapPortalRepository.kt",
+      "sha256": "41323d6f9df63c35ec957fda54b73ea65aa09b96d553834ac55cc1f9cb6c047b"
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/NoteDatabase.kt",
+      "sha256": "9306f8cf9184cd736bf00a5bbe2975a15a50be93a2f83387645046149f1c7778"
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/NoteRepository.kt",
+      "sha256": "07fd11cb54e4512bd371250a017d20fdd84c4fbff8fc39258b377166048b5155"
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/NotebookCoverData.kt",
+      "sha256": "8296c273a942c8d35d0d1f872dd0764fbae4de2c377435f4136cfe36b8b151a9"
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/NotebookPages.kt",
+      "sha256": "dff55a1b00fdfdcea39513fd25c483e024604fdfee27ae865126d02bbefacb90"
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/PageAuthoringRepository.kt",
+      "sha256": "ae1f21949cc0f1bbb06c74dd5e0ec7781abc24a3a645aea7c7293c3a1d6195e4"
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/PageEditingRepository.kt",
+      "sha256": "77e64717429a94b5be8d60b9906bbfd0595f700df8ba3ff8dd867531bb654adc"
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/PageInsertionRepository.kt",
+      "sha256": "f5d27c6307e7f1fe055f1ec4b0ecfb55c4a0b9c58b96e8f4b7ceccad23342b17"
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/PageObjectRepository.kt",
+      "sha256": "851753ffde6cb8388557d91b51e06ec0ba85deee1a15f6ebaef733f206ed7f87"
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/PreservingOpenHelperFactory.kt",
+      "sha256": "1e374a137ead11fd2c8fb80240ce686b2bd73e81c85fad84d69562b44132bc8e"
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/RecallStorage.kt",
+      "sha256": "e82eb2f9f157b9bfb806573d27bcf353981216d3c97422760b9dda4b2db6444c"
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/RecallStudyQueries.kt",
+      "sha256": "7bd7b61b66d4ca0e1cb587e5c1dbe2c80af73a075ac0a5416f2be2ddc69f2e95"
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/RecallStudyRepository.kt",
+      "sha256": "1da7adce6650fb6bb37961547536edabe48a84ff02184bd4f649ea52784dea36"
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/ResourceTemplates.kt",
+      "sha256": "e5c232c091da5c4eab892e0f4f91e162f187663c2c67b10b9910dd25d6621a84"
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/ShadowBundles.kt",
+      "sha256": "6f970921fc20bc71c6ac96a3ced9a73e24a14f0a9d3d2ad6984a68608b23ee17"
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/ShadowReplica.kt",
+      "sha256": "1cc9dfaaca0dfc28883d0e54e7c890c34225fb18c8c503a0c4c2a85f2dd2f06b"
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/StudyGraphSnapshot.kt",
+      "sha256": "79befa7804235a02ce06cf66a18a77fb9ebe507e5ee73f46e4674c6360300aea"
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/StudyRepository.kt",
+      "sha256": "961b42a1415a281d2bff97f5ae95120025a51bfd2e3134b74aec65a0fc5d19f0"
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/StudySourceVersions.kt",
+      "sha256": "1a5b4344eeebac2cf6d25c31119cf227b1e1b128e5b72f944abcf1f098be77a1"
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/WorkspaceRepository.kt",
+      "sha256": "38df45f4b011b961a54a31b7ff49aefcfef9802f980e20f051eaeb9a8757c3d7"
+    },
+    {
+      "path": "android/gradle/libs.versions.toml",
+      "sha256": "682b0dc857760542be6aad8ed6ad67c7d93b061f7efa63a2465f7778357801db"
+    },
+    {
+      "path": "android/settings.gradle.kts",
+      "sha256": "6a18e6904b57d3d42b97e88495cd5777e01d0cb04167437cc282a43ad6e976f0"
+    }
+  ]
+}

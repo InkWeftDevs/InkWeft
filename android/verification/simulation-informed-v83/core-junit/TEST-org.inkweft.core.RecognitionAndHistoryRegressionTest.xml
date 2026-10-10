@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="org.inkweft.core.RecognitionAndHistoryRegressionTest" tests="10" skipped="0" failures="0" errors="0" timestamp="2026-10-10T11:16:26.190Z" hostname="4d22d97528bf" time="0.004">
+  <properties/>
+  <testcase name="highlighterNeverBecomesRecognitionInput" classname="org.inkweft.core.RecognitionAndHistoryRegressionTest" time="0.0"/>
+  <testcase name="restorationCannotTargetFutureOrMissingHistory" classname="org.inkweft.core.RecognitionAndHistoryRegressionTest" time="0.001"/>
+  <testcase name="nearbyDotDoesNotBridgeUnrelatedRowsOrColumns" classname="org.inkweft.core.RecognitionAndHistoryRegressionTest" time="0.0"/>
+  <testcase name="lateVerticalConnectsTopAndBottomWithoutChangingInk" classname="org.inkweft.core.RecognitionAndHistoryRegressionTest" time="0.0"/>
+  <testcase name="negativeReadTimingIsRejected" classname="org.inkweft.core.RecognitionAndHistoryRegressionTest" time="0.002"/>
+  <testcase name="restoreRequestBindsBothCardRevisionAndHistoricalSource" classname="org.inkweft.core.RecognitionAndHistoryRegressionTest" time="0.0"/>
+  <testcase name="existingReceiptDigestIsUnchanged" classname="org.inkweft.core.RecognitionAndHistoryRegressionTest" time="0.0"/>
+  <testcase name="timingUnitsAndAllowlistedJournalRoundTrip" classname="org.inkweft.core.RecognitionAndHistoryRegressionTest" time="0.001"/>
+  <testcase name="delayedDotsAcrossSeveralCharactersJoinBodies" classname="org.inkweft.core.RecognitionAndHistoryRegressionTest" time="0.0"/>
+  <testcase name="separateShortHorizontalRowsStayAmbiguous" classname="org.inkweft.core.RecognitionAndHistoryRegressionTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

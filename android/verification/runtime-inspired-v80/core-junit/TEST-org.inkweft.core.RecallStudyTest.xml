@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="org.inkweft.core.RecallStudyTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-10-10T02:36:22.056Z" hostname="4d22d97528bf" time="0.013">
+  <properties/>
+  <testcase name="clozeProjectionContainsOnlyAllowedTextAndQuestionCannotUseIt" classname="org.inkweft.core.RecallStudyTest" time="0.003"/>
+  <testcase name="failureFloorAssistanceAndUtcDueAreExplicit" classname="org.inkweft.core.RecallStudyTest" time="0.001"/>
+  <testcase name="frozenAlgorithmHasDocumentedUpperIntervalSafetyBoundary" classname="org.inkweft.core.RecallStudyTest" time="0.0"/>
+  <testcase name="branchQueueUsesAuthorCardOrderAndInputQuestionOrder" classname="org.inkweft.core.RecallStudyTest" time="0.001"/>
+  <testcase name="presentationVersionRoundTripsAndLegacyAnswerNeverReadsCurrentAnnotation" classname="org.inkweft.core.RecallStudyTest" time="0.0"/>
+  <testcase name="scheduleSnapshotsAndAnswerBudgetsRoundTripWithoutExternalContent" classname="org.inkweft.core.RecallStudyTest" time="0.001"/>
+  <testcase name="localDateFilterUsesZoneBoundariesWithoutChangingUtcSchedule" classname="org.inkweft.core.RecallStudyTest" time="0.005"/>
+  <testcase name="vectorsDerivedFromOfficialCeilFormulaAreDeterministic" classname="org.inkweft.core.RecallStudyTest" time="0.0"/>
+  <testcase name="sourceMasksRequireFrozenCompleteReferencesAndBoundedRegions" classname="org.inkweft.core.RecallStudyTest" time="0.002"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

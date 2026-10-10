@@ -2,6 +2,8 @@
 package org.inkweft.data
 
 import androidx.room.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import org.inkweft.core.*
 import java.util.UUID
@@ -28,6 +30,7 @@ enum class AuthoringFault { BEFORE_RECEIPT, AFTER_TRANSACTION }
 
 /** Configuration and its contents are one local author transaction, not display preferences. */
 class PageAuthoringRepository(private val db:NoteDatabase,private val fault:(AuthoringFault)->Unit={}) {
+    @Volatile var readObserver:((ReadTiming)->Unit)?=null
     private val pending by lazy{AuthoringPendingStore(checkNotNull(db.checkpointRoot))}
     fun stagePending(value:AuthoringPending)=pending.save(value)
     fun pending(scope:AuthoringScope)=pending.read(scope)
@@ -36,7 +39,7 @@ class PageAuthoringRepository(private val db:NoteDatabase,private val fault:(Aut
     suspend fun confirmed(value:AuthoringPending):Long?=db.authoring().receipt(value.commandId)?.let{receipt->
         require(receipt.notebookId==value.scope.notebookId&&receipt.kind==value.scope.kind.name&&receipt.scopeId==value.scope.id&&receipt.digest==digest(value.scope,value.before,value.afterPayload())){"AUTHORING_COMMAND_REUSED"};receipt.revision
     }
-    fun observe(scope:AuthoringScope)=db.invalidationTracker.createFlow(*(if(scope.kind==AuthoringScopeKind.PAGE)arrayOf("canvas_authoring","ink_pages","page_objects")else arrayOf("canvas_authoring","study_nodes","study_cards","knowledge_records"))).map{read(scope)}
+    fun observe(scope:AuthoringScope)=db.invalidationTracker.createFlow(*(if(scope.kind==AuthoringScopeKind.PAGE)arrayOf("canvas_authoring","ink_pages","page_objects")else arrayOf("canvas_authoring","study_nodes","study_cards","knowledge_records"))).map{read(scope)}.flowOn(Dispatchers.IO)
     fun observeBook(book:String)=db.authoring().observeBook(book)
     private suspend fun owner(scope:AuthoringScope,active:Boolean=true) {
         require(db.notes().note(scope.notebookId)!=null)
@@ -46,19 +49,32 @@ class PageAuthoringRepository(private val db:NoteDatabase,private val fault:(Aut
             AuthoringScopeKind.MAP->if(scope.id!=scope.notebookId){val row=checkNotNull(db.knowledge().get(scope.id));require(row.notebookId==scope.notebookId&&row.data() is KnowledgeData.MapDefinition&&(!active||!row.removed))}
         }
     }
-    suspend fun read(scope:AuthoringScope):AuthoringSnapshot=db.withTransaction {
-        owner(scope,false)
-        val row=db.authoring().get(scope.kind.name,scope.id);require(row==null||row.notebookId==scope.notebookId&&row.revision>=0)
-        if(scope.kind==AuthoringScopeKind.PAGE){
-            val contents=db.ink().strokes(scope.id).map{LayerContent(LayerContentKind.INK,it.id)}+
-                (db.objects().get(scope.id)?.let{PageObjectCodec.decode(it.payload)}.orEmpty().map{LayerContent(LayerContentKind.OBJECT,it.id)})
-            val state=row?.data()?:PageAuthoring(UserLayers.legacy(contents))
-            require(contents.all{c->state.layers.layer(c)!=null||c in state.layers.deleted}){"LAYER_CONTENT_UNASSIGNED"}
-            AuthoringSnapshot(row?.revision?:0,state,db.ink().page(scope.id)?.revision?:0,db.objects().get(scope.id)?.revision?:0)
-        }else{
+    private data class PageRows(val authoring:PageAuthoringRow?,val strokeIds:List<String>,val objects:PageObjectRow?,val inkRevision:Long)
+    suspend fun read(scope:AuthoringScope):AuthoringSnapshot {
+        if(scope.kind==AuthoringScopeKind.MAP)return db.withTransaction {
+            owner(scope,false)
+            val row=db.authoring().get(scope.kind.name,scope.id);require(row==null||row.notebookId==scope.notebookId&&row.revision>=0)
             val graph=StudyRepository(db).readGraph(scope.notebookId,scope.id.takeUnless{it==scope.notebookId})
             AuthoringSnapshot(row?.revision?:0,row?.data()?:PageAuthoring(),graphFingerprint=graph.graphFingerprint)
         }
+        // Freeze headers, identities and the two author payloads together. No
+        // ink geometry is needed to validate layer ownership, including history.
+        val started=System.nanoTime()
+        val frozen=db.withTransaction {
+            owner(scope,false)
+            val row=db.authoring().get(scope.kind.name,scope.id);require(row==null||row.notebookId==scope.notebookId&&row.revision>=0)
+            PageRows(row,db.ink().strokeIds(scope.id),db.objects().get(scope.id),db.ink().page(scope.id)?.revision?:0)
+        }
+        val frozenAt=System.nanoTime()
+        // Observation runs on IO; normal reads release their own transaction
+        // before decoding. A surrounding author write still retains its lock.
+        val contents=frozen.strokeIds.map{LayerContent(LayerContentKind.INK,it)}+
+            frozen.objects?.let{PageObjectCodec.decode(it.payload)}.orEmpty().map{LayerContent(LayerContentKind.OBJECT,it.id)}
+        val state=frozen.authoring?.data()?:PageAuthoring(UserLayers.legacy(contents))
+        require(contents.all{state.layers.owns(it)}){"LAYER_CONTENT_UNASSIGNED"}
+        val decodedAt=System.nanoTime()
+        runCatching{readObserver?.invoke(ReadTiming(ReadKind.AUTHORING,frozenAt-started,decodedAt-frozenAt,contents.size))}
+        return AuthoringSnapshot(frozen.authoring?.revision?:0,state,frozen.inkRevision,frozen.objects?.revision?:0)
     }
     suspend fun exportPage(id:String):AuthoringPageExport=db.withTransaction {
         val page=checkNotNull(db.pages().get(id));owner(AuthoringScope.page(page.notebookId,id))
@@ -76,7 +92,7 @@ class PageAuthoringRepository(private val db:NoteDatabase,private val fault:(Aut
             require(current.revision==before.revision&&current.inkRevision==before.inkRevision&&current.objectRevision==before.objectRevision&&current.graphFingerprint==before.graphFingerprint){"AUTHORING_CONFLICT"}
             validate(scope,after)
             val required=(current.state.layers.memberships.map{it.content}+current.state.layers.deleted).filter{it.kind!=LayerContentKind.ANNOTATION}
-            require(required.all{c->after.layers.layer(c)!=null||c in after.layers.deleted}){"LAYER_CONTENT_LOST"}
+            require(required.all{after.layers.owns(it)}){"LAYER_CONTENT_LOST"}
             // Layer deletion keeps original author bytes; undo restores membership and geometry together.
             val next=before.revision+1;require(next>0)
             db.authoring().put(PageAuthoringRow(scope.kind.name,scope.id,scope.notebookId,next,payload))
@@ -123,13 +139,15 @@ class PageAuthoringRepository(private val db:NoteDatabase,private val fault:(Aut
         val inherited=affected.mapNotNull{snapshot.state.layers.layer(it)?.id}.distinct()
         val sources=(command.mutation as? InkMutation.Replace)?.layerSources.orEmpty()
         require(inherited.size<=1||sources.size==added.size){"LAYER_EDIT_SEPARATE_LAYERS"}
-        var assigned=snapshot.state.layers
+        val grouped=linkedMapOf<String?,MutableList<LayerContent>>()
         for((index,id) in added.withIndex()){
             val copied=(command.mutation as? InkMutation.Replace)?.hidden?.isEmpty()==true
             val layer=if(copied)snapshot.state.layers.currentId else sources.getOrNull(index)?.let{snapshot.state.layers.layer(LayerContent(LayerContentKind.INK,it))?.id}
                 ?:inherited.singleOrNull()?:snapshot.state.layers.currentId
-            assigned=assigned.assignNew(listOf(LayerContent(LayerContentKind.INK,id)),layer)
+            grouped.getOrPut(layer){mutableListOf()}.add(LayerContent(LayerContentKind.INK,id))
         }
+        var assigned=snapshot.state.layers
+        grouped.forEach{(layer,contents)->assigned=assigned.assignNew(contents,layer)}
         val next=snapshot.state.withLayers(assigned)
         return PageAuthoringRow(AuthoringScopeKind.PAGE.name,command.noteId,owner.notebookId,snapshot.revision,PageAuthoringCodec.encode(next))
     }

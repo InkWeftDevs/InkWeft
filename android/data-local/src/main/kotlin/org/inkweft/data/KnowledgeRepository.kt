@@ -27,7 +27,7 @@ data class KnowledgeReceiptRow(@PrimaryKey val operationId:String,val notebookId
     @Insert(onConflict=OnConflictStrategy.ABORT) suspend fun receipt(row:KnowledgeReceiptRow)
 }
 
-enum class KnowledgeRejection { CONFLICT, DUPLICATE, UNAVAILABLE, INVALID, STUDY_NODE_BUDGET, STUDY_NODE_RECORD_BUDGET, KNOWLEDGE_BUDGET }
+enum class KnowledgeRejection { CONFLICT, DUPLICATE, UNAVAILABLE, INVALID, STUDY_NODE_BUDGET, STUDY_NODE_RECORD_BUDGET, KNOWLEDGE_BUDGET, MAP_SUMMARY_CONFLICT }
 class KnowledgeRejected(val reason:KnowledgeRejection):IllegalArgumentException(reason.name)
 sealed interface KnowledgeOutcome {
     data class Success(val id:String):KnowledgeOutcome
@@ -84,7 +84,7 @@ class KnowledgeRepository(private val db:NoteDatabase,private val fault:(Knowled
                 ?:StudyOrganization.legacyOrder(oldNodes.map{it.model()}))
             val addedStructures=(definition?.data() as? KnowledgeData.MapDefinition)?.structures.orEmpty().map{it.id}
             val order=canonicalGraphOrder(nextNodes.map{it.model()},seed+addedStructures)
-            val payload=KnowledgeCodec.encode(KnowledgeData.MapOrder(mapId,order))
+            val payload=KnowledgeCodec.encode(KnowledgeData.MapOrder(mapId,order,(existingOrder?.data() as? KnowledgeData.MapOrder)?.layout))
             if(existingOrder==null){
                 val id=orderId(book,mapId);require(previous.none{it.id==id}){"MAP_ORDER_ID_CONFLICT"}
                 updates[id]=KnowledgeRow(id,book,1,payload)
@@ -101,11 +101,11 @@ class KnowledgeRepository(private val db:NoteDatabase,private val fault:(Knowled
         require(changes.map{it.id}.distinct().size==changes.size)
         changes.forEach{row->
             val old=dao.get(row.id);require(row.notebookId==book&&row.revision in 1 until Long.MAX_VALUE)
-            require(row.data() is KnowledgeData.MapDefinition||row.data() is KnowledgeData.MapOccurrence||row.data() is KnowledgeData.MapOrder)
+            require(row.data() is KnowledgeData.MapDefinition||row.data() is KnowledgeData.MapOccurrence||row.data() is KnowledgeData.MapOrder||row.data() is KnowledgeData.MapSummaryGroup)
             require(if(old==null)row.revision==1L else old.notebookId==book&&row.revision==old.revision+1&&old.data()::class==row.data()::class)
         }
         val changedIds=changes.map{it.id}.toSet();val finalRows=previous.filter{it.id !in changedIds}+changes
-        require(finalRows.size<=2000){"KNOWLEDGE_BUDGET"}
+        require(finalRows.size<=KnowledgeCodec.MAX_RECORDS_PER_NOTEBOOK){"KNOWLEDGE_BUDGET"}
         val oldMain=db.study().nodes(book);val finalMain=mainNodes?:oldMain
         if(mainNodes!=null){
             require(oldMain.all{old->mainNodes.any{it.id==old.id}}){"MAP_NODE_HISTORY_MISSING"}
@@ -155,7 +155,7 @@ class KnowledgeRepository(private val db:NoteDatabase,private val fault:(Knowled
             require(old==null||old.notebookId==c.notebookId&&old.data()::class==c.data::class)
             require(!c.removed||old!=null)
             if(c.removed)require(old!!.payload.contentEquals(c.payload)){"REMOVE_MUST_PRESERVE_PAYLOAD"}
-            val records=dao.all();require(old!=null||records.count{it.notebookId==c.notebookId}<2000){"KNOWLEDGE_BUDGET"}
+            val records=dao.forBook(c.notebookId);require(old!=null||records.size<KnowledgeCodec.MAX_RECORDS_PER_NOTEBOOK){"KNOWLEDGE_BUDGET"}
             validateData(c.notebookId,c.data,!c.removed)
             if(c.data is KnowledgeData.Anchor&&old==null){val a=c.data as KnowledgeData.Anchor;require((db.ink().page(a.pageId)?.revision?:0)==a.inkRevision){"SOURCE_CHANGED"}
                 val visible=InkSession(InkRepository(db).read(a.pageId)).visibleDraft().associateBy{it.id}
@@ -182,7 +182,7 @@ class KnowledgeRepository(private val db:NoteDatabase,private val fault:(Knowled
                     "STUDY_NODE_BUDGET"->KnowledgeRejection.STUDY_NODE_BUDGET
                     "STUDY_NODE_RECORD_BUDGET"->KnowledgeRejection.STUDY_NODE_RECORD_BUDGET
                     "KNOWLEDGE_BUDGET"->KnowledgeRejection.KNOWLEDGE_BUDGET
-                    else->KnowledgeRejection.INVALID
+                    else->if(e.message.orEmpty().startsWith("MAP_SUMMARY_"))KnowledgeRejection.MAP_SUMMARY_CONFLICT else KnowledgeRejection.INVALID
                 })
             }
             if(c.data is KnowledgeData.MapDefinition||c.data is KnowledgeData.MapOccurrence||c.data is KnowledgeData.MapOrder){
@@ -194,7 +194,7 @@ class KnowledgeRepository(private val db:NoteDatabase,private val fault:(Knowled
                     "STUDY_NODE_BUDGET"->KnowledgeRejection.STUDY_NODE_BUDGET
                     "STUDY_NODE_RECORD_BUDGET"->KnowledgeRejection.STUDY_NODE_RECORD_BUDGET
                     "KNOWLEDGE_BUDGET"->KnowledgeRejection.KNOWLEDGE_BUDGET
-                    else->KnowledgeRejection.INVALID
+                    else->if(e.message.orEmpty().startsWith("MAP_SUMMARY_"))KnowledgeRejection.MAP_SUMMARY_CONFLICT else KnowledgeRejection.INVALID
                 })}
             }else{
                 if(old==null)dao.insert(next)else check(dao.update(next)==1)
@@ -228,6 +228,12 @@ class KnowledgeRepository(private val db:NoteDatabase,private val fault:(Knowled
             is KnowledgeData.Alias->card(data.cardId)
             is KnowledgeData.MapDefinition,is KnowledgeData.MapTemplate->Unit
             is KnowledgeData.MapOccurrence->{card(data.cardId);val map=requireNotNull(db.knowledge().get(data.mapId));require(map.notebookId==book&&map.data() is KnowledgeData.MapDefinition);if(active)require(!map.removed)}
+            is KnowledgeData.MapSummaryGroup->{
+                data.mapId?.let{mapId->val map=requireNotNull(db.knowledge().get(mapId));require(map.notebookId==book&&map.data() is KnowledgeData.MapDefinition);if(active)require(!map.removed)}
+                // Tombstones preserve historical members even after a structural topic is removed.
+                if(active){val graph=StudyRepository(db).readGraph(book,data.mapId)
+                    MapSummaries.validate(graph.state.nodes,graph.orderedNodeIds,listOf(data))}
+            }
             is KnowledgeData.MapOrder->validateOrderOwnership(book,data,active)
             is KnowledgeData.MapPortal->MapPortalRepository(db).validateData(book,data,active)
             is KnowledgeData.Decoration->{for(id in listOf(data.from,data.to)){val p=requireNotNull(db.knowledge().get(id));require(p.notebookId==book&&p.data() is KnowledgeData.Placement);if(active)require(!p.removed)}}
@@ -235,8 +241,8 @@ class KnowledgeRepository(private val db:NoteDatabase,private val fault:(Knowled
         }
     }
     suspend fun validateArchive(){
-        val rows=db.knowledge().all();require(rows.size<=500*2000)
-        require(rows.groupBy{it.notebookId}.values.all{it.size<=2000})
+        val rows=db.knowledge().all();require(rows.size<=500*KnowledgeCodec.MAX_RECORDS_PER_NOTEBOOK)
+        require(rows.groupBy{it.notebookId}.values.all{it.size<=KnowledgeCodec.MAX_RECORDS_PER_NOTEBOOK})
         for(row in rows){
             UUID.fromString(row.id);require(row.revision in 1 until Long.MAX_VALUE)
             validateData(row.notebookId,row.data(),false)
@@ -297,6 +303,13 @@ class KnowledgeRepository(private val db:NoteDatabase,private val fault:(Knowled
             val byMap=mutableMapOf<String?,List<StudyNode>>(null to main.map{it.model()})
             maps.keys.forEach{id->
                 val models=graphNodes(book,id,main,own).map{it.model()};StudyGraph.validate(models);byMap[id]=models
+            }
+            val groups=own.filterNot{it.removed}.mapNotNull{it.data() as? KnowledgeData.MapSummaryGroup}.groupBy{it.mapId}
+            groups.forEach{(mapId,values)->
+                if(mapId!=null)require(maps[mapId]?.removed==false){"MAP_SUMMARY_MAP_UNAVAILABLE"}
+                val models=requireNotNull(byMap[mapId])
+                val order=graphOrder(own,mapId)?.let{(it.data() as KnowledgeData.MapOrder).orderedNodeIds}?:StudyOrganization.legacyOrder(models)
+                MapSummaries.validate(models,order,values)
             }
             val orders=own.filterNot{it.removed}.mapNotNull{(it.data() as? KnowledgeData.MapOrder)}
             require(orders.map{it.mapId}.distinct().size==orders.size){"MAP_ORDER_EXISTS"}

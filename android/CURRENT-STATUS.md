@@ -1,3 +1,75 @@
+# V85 — 脑图模板、四向布局、括号归纳与独立输出 · 2026-10-10
+
+已落实右向／双侧／左向／向下组织图预览、保存、撤销／重做；12个原创结构模板（90主题，8个多层学习／规划模板），增加分类、搜索和创建前只读预览。布局切换进入顺序修订与图指纹，保留逻辑顺序、卡片与原迹。
+
+括号归纳绑定具体主题出现ID，每图128互不重叠组，每组2–128个连续同级非根成员。通过知识CAS／修订／receipt保存、改名、解除和单步撤销／重做，待确认逆操作可从SavedState恢复；独立副本重建成员身份并保留当前布局与归纳；组修订参与布局指纹，双侧分界不拆组。拆开或删除成员须先解除归纳，极大分组退化网格会拒绝并保留原图。Markdown、共享导图与固定快照保留归纳。
+
+缩放百分比、中心锚点100%回正、全图／可读／所选适配；独立PNG/PDF输出当前展开内容或全图，含可见文字摘要、配色及归纳。PNG最长4096、最多8388608像素；PDF单页Canvas图形，未包含原迹缩略图／手写批注／知识关系，完整资料用备份。
+
+核心447 PASS／53类（新增14），主代码与AndroidTest编译、lint通过。新增10设备方法仅编译、NOT_RUN；完整原生依赖与设备效果仍待本地。Room16、原容量边界保留；新增MAP_SUMMARY_V1／MAP_ORDER_V2／IWO2／固定快照扩展需要V85，先备份，不建议降级。时间线、全局主题、完整tidy与分页输出未实现。
+
+见[报告与模板预览](verification/map-completion-v85/RESULTS.html)、[验证](verification/map-completion-v85/validation.json)、[本地步骤](verification/map-completion-v85/LOCAL-TESTS.md)、[设备待测](verification/map-completion-v85/device-pending.json)。
+
+# V84 — 幕布参考：大纲计算与双侧布局 · 2026-10-10
+
+独立核对幕布4.2.5 APK SHA、3653 ZIP成员CRC及三核心脚本AST模块，确认共享模型、按叶权重连续分割、括号摘要同父连续成员与Canvas配置；未运行APK/脚本或验证设备性能。参考报告作为证据，未当指令执行，也未将幕布代码/资产复制到产品。
+
+墨织大纲改为一次迭代后序计数与迭代投影，深层有效树O(n)。双侧布局用实测完整子树高度选择连续分支分界，保留作者顺序/父子关系，经既有预览与事务应用，可撤销。82组合大纲投影SHA一致；主机1024层中位22.933→0.999ms（10暖机/15测量），两组双侧样例高度1848→1028，单侧坐标一致；不代表Android帧或幕布性能。
+
+核心433 PASS/52类，新增8项回归；主代码及AndroidTest编译/lint通过，无设备执行或云端完整APK。Room16与容量配套沿用。括号摘要组、组织图/时间线、缩放控件、脑图主题与独立图像导出列为后续，未标成实现。见[报告](verification/mubu-inspired-v84/RESULTS.html)、[验证](verification/mubu-inspired-v84/validation.json)、[待测](verification/mubu-inspired-v84/device-pending.json)。
+
+# V83 — 识别分组、摘录历史与加载诊断 · 2026-10-10
+
+云端实现竖画桥接和逐笔延迟点画归行；实际V80原迹核心回放中29有真值例从24到27分组匹配，30例来源和原迹字节SHA守恒，不代表新OCR准确率。30公式实际384图以相同ORT1.30.0与模型逐步token完全复现；私有诊断新增原始栅格和实际Float32张量SHA，保持原容量限制。
+
+摘录范围和个人注释加入分别命名的单步撤销/重做；范围复用不可变历史来源、CAS拒绝其他位置新版本；注释保留墓碑、原命令和逆操作直到确认，并支持SavedState恢复。成功笔迹/作者读取记录匿名配对的冻结和解码微秒，不当首帧或设备性能结论。
+
+核心425 PASS/51类，新增10回归；Android主代码/测试编译PASS，lint无Error/Fatal，新增5Android方法NOT_RUN。Room16与容量配套沿用，MuPDF编译仅官方同版本API-only临时替代，无云端APK。见[报告](verification/simulation-informed-v83/RESULTS.html)、[精确复测](verification/simulation-informed-v83/device-pending.json)、[本地交接](verification/simulation-informed-v83/LOCAL-TESTS.md)。
+
+# 最新云端候选 V82 — 2026-10-10
+
+继续草稿PR18，分支 `codex/cloud/starnote-inspired-editor-20261009`，起点V81 `ee98b4cc1ca4733481bed0c05184a76ae5bf38e4`。版本82／`0.0.82-card-return-and-layer-capacity`：摘要卡正文关联记录CARD来源并返回重开原卡；图层只读全部笔迹ID，IO观察解码；图层校验/批量替换复用集合、按来源层分组；身份配套到40800并在旧字节超限或超过2.2万时使用IWA4紧凑UUID。正常旧状态IWA3字节保持，Room16、原迹与隐藏历史保留，作者字段1.9MB上限保持。IWA4大状态需V82读取；身份额度不保证注释几何同时满额。
+
+核心415 PASS／50类，新增6核心回归；应用及app/data-local AndroidTest编译PASS，lint零错误、175 Warning、2 Hint。新4项Android方法与V81新5项均NOT_RUN。主机JVM构造1.5万成员+1.5万删除中位738.069→3.355ms，添加1024身份837.107→1.540ms，原大小作者SHA相同；只代表计算，Android PSS/GC/帧、加载超时是否改善未测。正常MuPDF原生依赖仍HTTP403，无V82 APK。
+
+新30附件中29ZIP、7132包内清单文件出现项CRC/SHA全部通过，local-only原件仍未上传；冻结受测源为V80 a817。225正式性能尝试191完整成功/34失败（7截图观测超时、27Compose测试线程异常），全部失败分母保留，根因未确立。12项V80模拟器原始方法回执已独立核对，不并入V82。1816对JNI/Java唯一关联、6508非空返回数组及543399数值核对通过，实际/预测字段有getter关联；类型4末三字段含义未知。公式27有真值中3相同/简单等价、结构14保留/3部分/10丢失；合成输入与不对称管线不代表真人准确率，也不从夹具真值替换模型结果。
+
+见 [V82报告](verification/simulation-informed-v82/RESULTS.html)、[验证](verification/simulation-informed-v82/validation.json)、[受测源码](verification/simulation-informed-v82/tested-source-sha256.json)、[精确待测](verification/simulation-informed-v82/device-pending.json)。以下保留前序批次当时的身份与结论。
+
+---
+
+# 历史云端候选 V81 — 2026-10-10
+
+分支 `codex/cloud/starnote-inspired-editor-20261009`，继续草稿PR18，起点V80 `a8177df0aaa6c0fbd684af0965bd8d7c78ca71a9`。版本81／`0.0.81-search-and-pencil-cache`：大页编辑准入、搜索免载荷版次检查、铅笔来源缓存、摘录来源一致性、刷新率诊断快照5项已落实。Room16、编码及V79容量安全边界保持。
+
+核心409 PASS／49类，应用及AndroidTest编译通过，lint零错误／175 Warning／2 Hint。暖JVM中1.6万笔替换1024笔的准入中位254.402→0.570ms，准备1.125→2.617ms；这是主机计算对照，真机内存／帧未测。正常MuPDF原生依赖仍HTTP403，无V81 APK；编译／lint临时使用同版官方Java API无原生库AAR。
+
+新上传工作簿报告V80独立ARM64包12项PASS（方法已匹配、原始回执未上传），用户反馈掌拒无问题。真人输入JSON SHA与报告一致：86笔核心回放，11859原迹接触含UP点→11857作者点→11856渲染点；保留轴更新，拒绝1次倒退、忽略1次完全重复。作者编码／润色轴与时间保留通过，未认证Android／native或真人手感。V81新增5项Android方法仍NOT_RUN，不合并V80结果。摘要来源手工走查、PSS／GC／帧与处理后算法输出继续等待；压力观测最大0.5025不当硬件上限，公式准确率另计。
+
+见 [报告](verification/device-informed-v81/RESULTS.html)、[机器验证](verification/device-informed-v81/validation.json)、[受测源码](verification/device-informed-v81/tested-source-sha256.json)、[V81待测](verification/device-informed-v81/device-pending.json)。以下保留旧批次当时结论。
+
+---
+
+# 历史云端候选 V80 — 2026-10-10
+
+继续草稿 PR #18 和 `codex/cloud/starnote-inspired-editor-20261009`，本轮起点 `d3f1c5864bb83a145a26f4da6c953680e68333fc`。落实抬笔历史点、轴更新保真、润色段长加权、跨页方向短弧、凹套索准确性、铅笔与外观缓存失效、带图层单页导入、读取缓冲复制和文字行预算修复。版本80／`0.0.80-input-and-content-copies`，Room16 和文件编码保持。
+
+采集包清单452份文件及2820对原生调用／返回离线核对；九组558点在核心编码和轴值保留重放通过。Goodnotes错误会话保持ERROR，采集全部为模拟器合成输入；StarNote neopen库与既存静态样本SHA一致，仍缺滤波输出、真实硬件和识别器内部证据。真机采集按用户安排等待。
+
+核心405 PASS / 0 FAIL，编译通过、lint 0 Error / 0 Fatal（175 Warning、2 Hint）。最终源码和回归回执见 [V80 报告](verification/runtime-inspired-v80/RESULTS.html)、[验证 JSON](verification/runtime-inspired-v80/validation.json)。Android 新方法只有编译检查，NOT_RUN；正常MuPDF原生依赖仍403，无APK。先在正常依赖环境运行新增五项输入／铅笔方法和V79待测，再记录真实传感器、帧与大资料内存；不要合并旧候选PASS为本候选通过。
+
+---
+
+# 历史云端候选 V79 — 2026-10-09
+
+分支 `codex/cloud/starnote-inspired-editor-20261009`，基于本地已推送的 V78 `fd8c4477a84188c00e18352717c2d3585d4b2884`。已落实容量、加载、摘要套索、文字跳转、导图编解码和两项公式问题；详见 [更新与验证报告](verification/starnote-inspired-v79/RESULTS.html)。
+
+核心 390 PASS；大图/大套索/Unicode 对照和 144 MB 流式备份已验证。Android 主代码与 AndroidTest 代码使用同版本 MuPDF 官方 Java API 编译通过；原生 AAR 网络阻断，本轮没有 APK，也没有实机方法 PASS。云端 JVM 微基准只覆盖计算与缓存，不代表 Android 帧耗时或实际笔感。
+
+Room16 不变，原始笔迹与用户历史保留。新增数据超过旧版边界时需 V79 或更新版读取。等待本地正常依赖构建、新增方法与大资料内存测试，以及正在采集的真实触笔/压力/时间/帧数据；届时继续调压感、实时平滑和图形识别。不要覆盖或混记下方历史版本的实机回执。
+
+---
+
 # 当前：V77 平板反馈修复与公式编辑 · 2026-10-08
 
 V77 已覆盖安装到日常使用的 insertion 应用，原笔记、设置和附件核验保留。修复擦除重绘闪烁、自动美化入口和切笔橡皮时的参数框行为；新增离线公式识别、数学排版与可恢复编辑。核心 376/376、最终公式及相关实机方法 9/9 通过；第一批擦除／入口候选 5/5 记录单列。单页 7 行真人样本只有 2 行数学内容正确，函数名识别仍需改进，必须校对。构件和实际范围见 [本轮报告](TABLET-FEEDBACK-V77.md) 与 [验证记录](verification/tablet-feedback-v77/RESULTS.md)，真人待测见 [设备清单](DEVICE-TEST-CHECKLIST.md)。仪器测试使用独立反馈包。

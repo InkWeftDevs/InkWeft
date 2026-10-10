@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="org.inkweft.core.DraftReloadTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-10-10T10:25:57.648Z" hostname="4d22d97528bf" time="0.002">
+  <properties/>
+  <testcase name="unknownOutcomeCannotLoseItsOriginalCommand" classname="org.inkweft.core.DraftReloadTest" time="0.002"/>
+  <testcase name="explicitReloadReplacesTheUnchangedRequestedDraft" classname="org.inkweft.core.DraftReloadTest" time="0.0"/>
+  <testcase name="foreignNoteCannotReplaceDraft" classname="org.inkweft.core.DraftReloadTest" time="0.0"/>
+  <testcase name="duplicateLateReadCannotUndoAnAlreadyAcceptedRead" classname="org.inkweft.core.DraftReloadTest" time="0.0"/>
+  <testcase name="lateReadDoesNotOverwriteNewTyping" classname="org.inkweft.core.DraftReloadTest" time="0.0"/>
+  <testcase name="lateReadCannotInterruptNewSave" classname="org.inkweft.core.DraftReloadTest" time="0.0"/>
+  <testcase name="savingDraftCannotBeDiscardedEvenIfPassedAsRequest" classname="org.inkweft.core.DraftReloadTest" time="0.0"/>
+  <testcase name="structurallyEqualReplacementStillInvalidatesOldRequest" classname="org.inkweft.core.DraftReloadTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

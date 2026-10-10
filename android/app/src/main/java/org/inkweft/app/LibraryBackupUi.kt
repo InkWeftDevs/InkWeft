@@ -105,7 +105,7 @@ fun LibraryBackupHost(content:@Composable ()->Unit){
                         OutlinedButton(onClick={open.launch(arrayOf("application/octet-stream","*/*"))},modifier=Modifier.fillMaxWidth().testTag("backup-select")){Text("选择备份并校验")}
                     }
                     BackupMode.EXPORT_CONFIRM->{
-                        Text("备份为明文，包含回收站、隐藏笔迹和已保存历史。任何获得文件的人都可能读取这些内容。当前仅支持已实现的资料库格式，最大128MiB；请先保存草稿。")
+                        Text("备份为明文，包含回收站、隐藏笔迹和已保存历史。任何获得文件的人都可能读取这些内容。当前仅支持已实现的资料库格式，最大1GiB；请先保存草稿。")
                         Row{Checkbox(checked=ui.consent,onCheckedChange=vm::consent,modifier=Modifier.testTag("backup-consent"));Text("我了解明文与历史数据的范围，并自行选择保存位置。")}
                     }
                     else->Text(ui.message,modifier=Modifier.testTag("backup-message"))

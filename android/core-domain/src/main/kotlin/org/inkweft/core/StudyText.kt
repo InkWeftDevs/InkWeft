@@ -11,25 +11,35 @@ object StudyText {
     private fun inline(text:String)=text.replace('\n',' ').replace('\r',' ')
         .replace("\\","\\\\").replace("[","\\[").replace("]","\\]")
         .replace("*","\\*").replace("_","\\_").replace("`","\\`").replace("#","\\#")
-    fun markdown(title:String,cards:List<StudyTextCard>,nodes:List<StudyNode>):String {
+    fun markdown(title:String,cards:List<StudyTextCard>,nodes:List<StudyNode>,groups:List<KnowledgeData.MapSummaryGroup> = emptyList()):String {
         StudyGraph.validate(nodes)
         val byId=cards.associateBy{it.id}
         require(byId.size==cards.size)
         val active=nodes.filter{!it.removed}
         require(active.all{it.cardId in byId})
         val children=active.groupBy{it.parentId}
+        MapSummaries.validate(nodes,StudyOrganization.canonicalOrder(nodes,active.map{it.id}),groups)
         return buildString {
             append("# ").append(inline(title)).append("\n\n")
             if(active.isNotEmpty()){
                 append("## 大纲\n\n")
-                fun visit(parent:String?,depth:Int){
-                    children[parent].orEmpty().forEach{n->
-                        append("  ".repeat(depth)).append("- [").append(inline(byId.getValue(n.cardId).title))
-                            .append("](#card-").append(n.cardId).append(")\n")
-                        visit(n.id,depth+1)
-                    }
+                val pending=ArrayDeque<Pair<StudyNode,Int>>()
+                children[null].orEmpty().asReversed().forEach{pending.addLast(it to 0)}
+                while(pending.isNotEmpty()){
+                    val (n,depth)=pending.removeLast()
+                    append("  ".repeat(depth)).append("- [").append(inline(byId.getValue(n.cardId).title))
+                        .append("](#card-").append(n.cardId).append(")\n")
+                    children[n.id].orEmpty().asReversed().forEach{pending.addLast(it to depth+1)}
                 }
-                visit(null,0);append('\n')
+                append('\n')
+            }
+            if(groups.isNotEmpty()){
+                val byNode=active.associateBy{it.id};append("## 括号归纳\n\n")
+                groups.forEach{group->
+                    append("- **").append(inline(group.label)).append("**：")
+                    append(group.memberIds.joinToString("、"){id->val card=byId.getValue(byNode.getValue(id).cardId);"[${inline(card.title)}](#card-${card.id})"}).append('\n')
+                }
+                append('\n')
             }
             append("## 摘要卡\n\n")
             cards.forEach{c->

@@ -9,7 +9,7 @@ import java.util.zip.ZipEntry
 import java.util.zip.ZipOutputStream
 
 /** Strict allow-list: never pass exception messages, note identifiers or text. */
-enum class DiagnosticCode { APP_START, ACTIVITY_START, ACTIVITY_STOP, NOTEBOOK_UI, INK_UI, INPUT_AXES, USER_MARK, EXPORT, HISTORY, PAGE_OBJECT_UI, BEAUTY_INPUT, BEAUTY_REVIEW, BEAUTY_COMMIT }
+enum class DiagnosticCode { APP_START, ACTIVITY_START, ACTIVITY_STOP, NOTEBOOK_UI, INK_UI, INPUT_AXES, USER_MARK, EXPORT, HISTORY, PAGE_OBJECT_UI, BEAUTY_INPUT, BEAUTY_REVIEW, BEAUTY_COMMIT, INK_FREEZE, INK_DECODE, AUTHORING_FREEZE, AUTHORING_DECODE }
 enum class DiagnosticResult { OBSERVED, LOADING, EDITING, SAVING, SAVED, UNKNOWN, CONFLICT, REJECTED, READ_FAILED, CANCELLED, OK, IO_FAILED, INVALID_DATA, NOT_AVAILABLE }
 data class DiagnosticEvent(val session: String, val wallMillis: Long, val elapsedMillis: Long,
     val code: DiagnosticCode, val result: DiagnosticResult, val count: Long = -1, val auxiliary: Long = -1) {
@@ -69,6 +69,7 @@ object DiagnosticArchive {
 不包含笔记标题、正文、笔迹坐标、图片、PDF、数据库、系统logcat、异常消息或堆栈、密码、令牌、设备序列号、账号或文件URI。
 包括设备型号/系统、应用版本/构建、内存/电量/热状态快照、最近200条固定类型事件及部分已观察状态的数量。
 事件UTC可能受系统时钟影响；elapsed_ms只在本次系统启动中有意义，session是每次应用进程随机生成的短标识，不是设备标识。
+INK/AUTHORING_FREEZE及DECODE事件的count是成功读取的阶段耗时（微秒），auxiliary是进程内随机会话中的配对序号；不含页ID，不代表首帧可读时间。冻结包括调度与查询，解码包括验证；可能来自外层写事务中的读取。
 计数来自界面观察，不是数据库完整性/持久性证明。旧进程最后约1秒的诊断记录可能未落盘。日志不可用不等于笔记损坏。
 系统退出原因仅附数值信息（可用时）；不读退出描述或trace。没有捕获旧版本的日志，也没有执行Gradle/Room/Compose/Pencil3测试。
 诊断包是明文。仅由用户导出/分享，不自动上传；选择云盘或分享目标后由该提供方处理。

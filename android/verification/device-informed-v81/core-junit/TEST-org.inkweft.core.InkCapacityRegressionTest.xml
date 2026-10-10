@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="org.inkweft.core.InkCapacityRegressionTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-10-10T08:34:09.645Z" hostname="4d22d97528bf" time="0.221">
+  <properties/>
+  <testcase name="wholeEraseFreesWritingCapacityWhileKeepingUndoAndOriginalSamples" classname="org.inkweft.core.InkCapacityRegressionTest" time="0.077"/>
+  <testcase name="movingAtTheVisibleLimitDoesNotChargeTheSameInkTwiceAndUndoRestoresIt" classname="org.inkweft.core.InkCapacityRegressionTest" time="0.138"/>
+  <testcase name="existingThousandStrokePageCanContinueWithoutDiscardingItsHistory" classname="org.inkweft.core.InkCapacityRegressionTest" time="0.005"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

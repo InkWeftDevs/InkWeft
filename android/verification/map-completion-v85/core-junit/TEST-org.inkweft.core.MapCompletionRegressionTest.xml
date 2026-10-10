@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="org.inkweft.core.MapCompletionRegressionTest" tests="14" skipped="0" failures="0" errors="0" timestamp="2026-10-10T12:13:59.154Z" hostname="4d22d97528bf" time="0.331">
+  <properties/>
+  <testcase name="summarySelectionUsesOccurrenceIdentitiesAndRequiresContiguousNonRootPeers" classname="org.inkweft.core.MapCompletionRegressionTest" time="0.002"/>
+  <testcase name="fixedMapSceneRoundTripsLayoutGroupsAndFiltersPartialBranch" classname="org.inkweft.core.MapCompletionRegressionTest" time="0.008"/>
+  <testcase name="layoutOnlyChangeIsTransactionalAndVersionedEvenForOneNode" classname="org.inkweft.core.MapCompletionRegressionTest" time="0.029"/>
+  <testcase name="legacyOrderBytesAndNewLayoutBytesAreUnambiguous" classname="org.inkweft.core.MapCompletionRegressionTest" time="0.01"/>
+  <testcase name="summaryRevisionAndMembershipInvalidateFrozenLayoutAndUndo" classname="org.inkweft.core.MapCompletionRegressionTest" time="0.011"/>
+  <testcase name="leftLayoutKeepsWholeBranchesOnLeftAndUndoRestoresLayout" classname="org.inkweft.core.MapCompletionRegressionTest" time="0.006"/>
+  <testcase name="organizationUsesActualWidthAndHeightAndFitsDeepWideTrees" classname="org.inkweft.core.MapCompletionRegressionTest" time="0.178"/>
+  <testcase name="extremeGroupedLayoutRejectsWrappingAndPreservesAuthorState" classname="org.inkweft.core.MapCompletionRegressionTest" time="0.002"/>
+  <testcase name="arrangementWireFormatPreservesOldPlansAndRoundTripsLayoutUndo" classname="org.inkweft.core.MapCompletionRegressionTest" time="0.003"/>
+  <testcase name="bilateralSplitNeverCutsAWholeSummaryAndOneFullGroupStaysTogether" classname="org.inkweft.core.MapCompletionRegressionTest" time="0.002"/>
+  <testcase name="exportSizingBoundsExtremeWorldAndIncludesNegativeOrigins" classname="org.inkweft.core.MapCompletionRegressionTest" time="0.002"/>
+  <testcase name="summaryRejectsOverlapMissingMembersAndUnsafeStructuralChanges" classname="org.inkweft.core.MapCompletionRegressionTest" time="0.003"/>
+  <testcase name="markdownKeepsSummaryMembersAndSharedBodyOnceAndHandlesDeepOutline" classname="org.inkweft.core.MapCompletionRegressionTest" time="0.06"/>
+  <testcase name="templatesHaveNestedLearningContentAndNoOverlapOrPrivateIdentity" classname="org.inkweft.core.MapCompletionRegressionTest" time="0.012"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

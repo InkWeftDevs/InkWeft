@@ -15,13 +15,49 @@ class InkRegion(points:List<EraserPoint>,val rectangle:Boolean=true) {
         require(bounds.right-bounds.left>=.01&&bounds.bottom-bounds.top>=.01)
     }
     fun contains(x:Double,y:Double):Boolean {
+        if(!x.isFinite()||!y.isFinite())return false
         if(x<bounds.left||x>bounds.right||y<bounds.top||y>bounds.bottom)return false
         if(rectangle)return true
         var inside=false;var j=points.lastIndex
         for(i in points.indices){val a=points[i];val b=points[j]
-            if((a.y>y)!=(b.y>y)&&x<(b.x-a.x)*(y-a.y)/(b.y-a.y)+a.x)inside=!inside
+            val ax=a.x.toDouble();val ay=a.y.toDouble();val bx=b.x.toDouble();val by=b.y.toDouble()
+            if(x>=min(ax,bx)&&x<=max(ax,bx)&&y>=min(ay,by)&&y<=max(ay,by)&&
+                abs((bx-ax)*(y-ay)-(by-ay)*(x-ax))<=1e-7*max(1.0,hypot(bx-ax,by-ay)))return true
+            if((ay>y)!=(by>y)&&x<(bx-ax)*(y-ay)/(by-ay)+ax)inside=!inside
             j=i
         };return inside
+    }
+    /** Test every interval cut by a polygon edge. Fixed-step sampling misses narrow notches. */
+    fun containsSegment(ax:Double,ay:Double,bx:Double,by:Double):Boolean {
+        if(!contains(ax,ay)||!contains(bx,by))return false
+        if(rectangle||ax==bx&&ay==by)return true
+        val dx=bx-ax;val dy=by-ay;val length=dx*dx+dy*dy
+        var splits:DoubleArray?=null;var count=2
+        fun split(t:Double){if(t>0.0&&t<1.0){
+            val values=splits?:DoubleArray(points.size*2+2).also{it[1]=1.0;splits=it}
+            values[count++]=t
+        }}
+        for(i in points.indices){
+            val a=points[i];val b=points[(i+1)%points.size]
+            if(max(a.x,b.x)<min(ax,bx)||min(a.x,b.x)>max(ax,bx)||max(a.y,b.y)<min(ay,by)||min(a.y,b.y)>max(ay,by))continue
+            val ex=b.x.toDouble()-a.x;val ey=b.y.toDouble()-a.y;val qx=a.x.toDouble()-ax;val qy=a.y.toDouble()-ay
+            val cross=dx*ey-dy*ex
+            if(cross!=0.0){
+                val t=(qx*ey-qy*ex)/cross;val u=(qx*dy-qy*dx)/cross
+                if(u>=0.0&&u<=1.0)split(t)
+            }else if(qx*dy-qy*dx==0.0){
+                split((qx*dx+qy*dy)/length);split(((b.x-ax)*dx+(b.y-ay)*dy)/length)
+            }
+        }
+        // Most author segments stay away from the contour. Allocate only at a crossing.
+        val values=splits?:return true
+        java.util.Arrays.sort(values,0,count)
+        for(i in 1 until count){
+            if(values[i]==values[i-1])continue
+            val t=(values[i]+values[i-1])/2
+            if(!contains(ax+dx*t,ay+dy*t))return false
+        }
+        return true
     }
     /** Full containment avoids silently deleting a neighbouring long stroke. */
     fun selects(box:CanvasBounds):Boolean {
@@ -31,28 +67,22 @@ class InkRegion(points:List<EraserPoint>,val rectangle:Boolean=true) {
         if(corners.any{!contains(it.first,it.second)})return false
         // A concave notch may cross the object even when all four corners lie inside.
         if(points.any{it.x>box.left&&it.x<box.right&&it.y>box.top&&it.y<box.bottom})return false
-        fun side(a:Pair<Double,Double>,b:Pair<Double,Double>,p:Pair<Double,Double>)=(b.first-a.first)*(p.second-a.second)-(b.second-a.second)*(p.first-a.first)
-        val polygon=points.map{it.x.toDouble() to it.y.toDouble()}
-        return polygon.indices.none{i->val a=polygon[i];val b=polygon[(i+1)%polygon.size];corners.indices.any{j->
-            val c=corners[j];val d=corners[(j+1)%4]
-            side(a,b,c)*side(a,b,d)<0&&side(c,d,a)*side(c,d,b)<0
-        }}
+        return corners.indices.all{i->val a=corners[i];val b=corners[(i+1)%4];containsSegment(a.first,a.second,b.first,b.second)}
     }
     fun selects(stroke:InkStroke):Boolean {
         val b=stroke.bounds()
         if(rectangle)return b.left>=bounds.left&&b.right<=bounds.right&&b.top>=bounds.top&&b.bottom<=bounds.bottom
         if(!bounds.intersects(b))return false
-        return stroke.samples.all{contains(it.x.toDouble(),it.y.toDouble())}&&stroke.samples.zipWithNext().all{(a,b)->
-            val steps=ceil(hypot(b.x-a.x,b.y-a.y)/4).toInt().coerceIn(1,512)
-            (1 until steps).all{n->contains((a.x+(b.x-a.x)*n/steps).toDouble(),(a.y+(b.y-a.y)*n/steps).toDouble())}
-        }
+        return contains(stroke.samples.first().x.toDouble(),stroke.samples.first().y.toDouble())&&
+            (1 until stroke.samples.size).all{i->val a=stroke.samples[i-1];val b=stroke.samples[i]
+                containsSegment(a.x.toDouble(),a.y.toDouble(),b.x.toDouble(),b.y.toDouble())}
     }
     fun mask(id:String=UUID.randomUUID().toString()):InkCut = if(rectangle)InkCut(id,.01f,listOf(
         EraserPoint(bounds.left.toFloat(),bounds.top.toFloat()),EraserPoint(bounds.right.toFloat(),bounds.bottom.toFloat())),InkCutShape.RECTANGLE)
         else InkCut(id,.01f,points,InkCutShape.POLYGON)
 }
 object InkSelectionEdit {
-    const val MAX_SELECTED=256
+    const val MAX_SELECTED=1024
     fun copy(strokes:List<InkStroke>,dx:Float,dy:Float):List<InkStroke> {
         require(strokes.size in 1..MAX_SELECTED&&dx.isFinite()&&dy.isFinite())
         val cuts=mutableMapOf<String,String>()
@@ -71,9 +101,12 @@ object InkSelectionEdit {
                 if(i==0||i==s.samples.lastIndex||strength==0f)p else {
                     val a=s.samples[i-1];val b=s.samples[i+1]
                     val ux=p.x-a.x;val uy=p.y-a.y;val vx=b.x-p.x;val vy=b.y-p.y
-                    val product=hypot(ux,uy)*hypot(vx,vy)
+                    val before=hypot(ux,uy);val after=hypot(vx,vy);val product=before*after
                     if(product<.001f||(ux*vx+uy*vy)/product<.75f)p else {
-                        val dx=((a.x+b.x)/2-p.x)*strength*.6f;val dy=((a.y+b.y)/2-p.y)*strength*.6f
+                        // MotionEvent sampling is not evenly spaced. A simple midpoint
+                        // moves a perfectly straight stroke when the pen changes speed.
+                        val t=before/(before+after)
+                        val dx=(a.x+(b.x-a.x)*t-p.x)*strength*.6f;val dy=(a.y+(b.y-a.y)*t-p.y)*strength*.6f
                         val limit=minOf(1.5f,s.width*.4f);val factor=minOf(1f,limit/maxOf(.0001f,hypot(dx,dy)))
                         p.copy(x=p.x+dx*factor,y=p.y+dy*factor)
                     }
@@ -87,7 +120,7 @@ object InkSelectionEdit {
     /** Uniform resize/reflection keeps pressure and moves erase masks with their ink. */
     fun transform(strokes:List<InkStroke>,scale:Float=1f,flipX:Boolean=false,flipY:Boolean=false):List<InkStroke>{
         require(strokes.size in 1..MAX_SELECTED&&scale in .1f..10f)
-        val points=strokes.flatMap{it.samples};val cx=(points.minOf{it.x}+points.maxOf{it.x})/2;val cy=(points.minOf{it.y}+points.maxOf{it.y})/2
+        val bounds=strokes.map{it.sampleBounds()}.reduce{a,b->a.union(b)};val cx=((bounds.left+bounds.right)/2).toFloat();val cy=((bounds.top+bounds.bottom)/2).toFloat()
         fun point(x:Float,y:Float)=EraserPoint(cx+(x-cx)*scale*(if(flipX)-1 else 1),cy+(y-cy)*scale*(if(flipY)-1 else 1))
         fun sample(p:InkSample):InkSample {val q=point(p.x,p.y);return p.copy(x=q.x,y=q.y)}
         val cuts=mutableMapOf<String,String>()

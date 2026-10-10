@@ -1,0 +1,208 @@
+{
+  "scope": "AGGREGATES_FROM_UPLOADED_V80_SYNTHETIC_CAPTURE_NOT_NEW_MODEL_RUN_OR_UI_COMMIT",
+  "reports": {
+    "text_model": {
+      "report": "REC-02-model-analysis.json",
+      "report_sha256": "d1bece6fc8594e396468ee67be1be29addcf9fe77c5218c0f6930957d9640031",
+      "status": "VERIFIED_REAL_MODEL_CAPTURE",
+      "summary": {
+        "captured": 30,
+        "eligible": 29,
+        "excluded": 1,
+        "geometrySamplesVerified": 2722,
+        "geometryStrokesVerified": 160,
+        "rawStringExact": 11,
+        "driverNormalizedExact": 11,
+        "orderedLineGroupsExact": 24,
+        "casesWithSplitLines": [
+          "text-02-zh_two",
+          "text-03-zh_three",
+          "text-16-zh_king_work",
+          "text-23-point_letters_i_j",
+          "text-29-delayed_dots"
+        ],
+        "casesWithMergedLines": [],
+        "allCodepoints": {
+          "editDistance": 55,
+          "referenceCodepoints": 78,
+          "operationCounts": {
+            "insert": 28,
+            "substitute": 18,
+            "delete": 9
+          }
+        },
+        "contentCodepointsWithoutWhitespace": {
+          "editDistance": 48,
+          "referenceCodepoints": 71,
+          "operationCounts": {
+            "insert": 24,
+            "substitute": 17,
+            "delete": 7
+          }
+        }
+      },
+      "actual_repository_assets_match": true,
+      "assets": [
+        {
+          "asset": "ocr/recognition.onnx",
+          "bytes": 16534782,
+          "sha256": "da72dc72ca4dc220df0dfde68c1dedc31c58d3e76a25871122e5056227d50092"
+        },
+        {
+          "asset": "ocr/characters.json",
+          "bytes": 129163,
+          "sha256": "c9007c1e471102735d65ed5e6bf2c197f4c3b926f7005c61143ac9c37c25adce"
+        }
+      ]
+    },
+    "formula_model": {
+      "report": "REC-03-model-analysis.json",
+      "report_sha256": "09942c671fb19b4e5a2b945561a7e73e71c6fc2848224cc36d673748afe6879b",
+      "status": "VERIFIED_REAL_MODEL_CAPTURE",
+      "summary": {
+        "captured": 30,
+        "eligible": 27,
+        "excluded": 3,
+        "geometrySamplesVerified": 5011,
+        "geometryStrokesVerified": 220,
+        "rawStringExact": 0,
+        "driverNormalizedExact": 1,
+        "confirmedEquivalent": 3,
+        "confirmedEquivalentIds": [
+          "formula-23-identity_matrix",
+          "formula-27-rational_equation",
+          "formula-30-euler_identity"
+        ],
+        "structureReviewCounts": {
+          "PRESERVED": 14,
+          "PARTIAL": 3,
+          "NOT_PRESERVED": 10
+        },
+        "negativeCasesWithCandidate": [
+          "formula-28-negative_scribble",
+          "formula-29-invalid_syntax"
+        ],
+        "negativeUiDisposition": "UNKNOWN_NOT_EXECUTED_BY_MODEL_DRIVER"
+      },
+      "actual_repository_assets_match": true,
+      "assets": [
+        {
+          "asset": "formula/encoder_model.onnx",
+          "bytes": 54168561,
+          "sha256": "fbd69cf63cf833db1e2ef40013d859b560671c1253278441a01bde4516b624ae"
+        },
+        {
+          "asset": "formula/decoder_model.onnx",
+          "bytes": 25872372,
+          "sha256": "00f07add62d74c78750cfda60ce8f1cff3d1774f913ca3f412e2e72f4189d7d4"
+        },
+        {
+          "asset": "formula/tokenizer.json",
+          "bytes": 17318,
+          "sha256": "1240f9d178e1ad2a0076fe95ba62e332871c702accdd5ce3ae3ef33ffd6c3a1e"
+        }
+      ]
+    },
+    "text_reference": {
+      "report": "REC-02-StarNote-comparison.json",
+      "report_sha256": "aa23ba26bb604161de77f6ee1200600da00382fe6db4b4ddc05b7849743cfa60",
+      "status": "VERIFIED_FROZEN_UI_AND_MODEL_COMPARISON",
+      "summary": {
+        "cases": 30,
+        "eligible": 29,
+        "excluded": 1,
+        "allSourceFixtureHashesMatch": true,
+        "stableXmlCandidatePairs": 30,
+        "explicitUnrecognizableUiMessages": 1,
+        "injectedAuthorSamples": 2722,
+        "injectedStrokes": 160,
+        "starNote": {
+          "rawExact": 4,
+          "nfcCrLfExact": 4,
+          "contentWithoutWhitespaceExact": 4,
+          "allCodepoints": {
+            "distance": 68,
+            "referenceCodepoints": 78,
+            "operationCounts": {
+              "substitute": 37,
+              "insert": 6,
+              "delete": 25
+            }
+          },
+          "withoutWhitespace": {
+            "distance": 61,
+            "referenceCodepoints": 71,
+            "operationCounts": {
+              "substitute": 32,
+              "insert": 4,
+              "delete": 25
+            }
+          }
+        },
+        "inkWeft": {
+          "rawExact": 11,
+          "nfcCrLfExact": 11,
+          "contentWithoutWhitespaceExact": 11,
+          "allCodepoints": {
+            "distance": 55,
+            "referenceCodepoints": 78,
+            "operationCounts": {
+              "insert": 28,
+              "substitute": 18,
+              "delete": 9
+            }
+          },
+          "withoutWhitespace": {
+            "distance": 48,
+            "referenceCodepoints": 71,
+            "operationCounts": {
+              "insert": 24,
+              "substitute": 17,
+              "delete": 7
+            }
+          }
+        },
+        "pixelEquality": {
+          "finalToAfterCancel": {
+            "rgbEqual": 1,
+            "nonWhite": 5,
+            "neutralBlack": 5
+          },
+          "afterCancelToReopened": {
+            "rgbEqual": 23,
+            "nonWhite": 28,
+            "neutralBlack": 28
+          },
+          "finalToReopened": {
+            "rgbEqual": 1,
+            "nonWhite": 5,
+            "neutralBlack": 5
+          }
+        },
+        "onePixelNeighborhood": {
+          "finalToAfterCancel": {
+            "casesMutuallyCovered": 30
+          },
+          "afterCancelToReopened": {
+            "casesMutuallyCovered": 30
+          },
+          "finalToReopened": {
+            "casesMutuallyCovered": 30
+          }
+        },
+        "pairedExactOutcomes": {
+          "bothDiffer": 17,
+          "inkWeftOnly": 8,
+          "starNoteOnly": 1,
+          "bothCorrect": 3
+        }
+      }
+    }
+  },
+  "limits": [
+    "Reference and InkWeft language, width, rasterization, app entry and OS differ; not controlled model comparison.",
+    "A structure-preserved formula may contain wrong symbols; not mathematical correctness.",
+    "Model traces are EVALUATED_NOT_COMMITTED; negative candidate presence does not establish UI acceptance.",
+    "No model weights or confidence thresholds retuned from these fixtures."
+  ]
+}

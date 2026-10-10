@@ -68,6 +68,35 @@ internal class StudyViewModel(val book:String,val repo:StudyRepository,private v
         private set
     var organizationRedo by mutableStateOf(restoreOrganization("study.organizationRedo"))
         private set
+    var excerptUndo by mutableStateOf(restoreExcerpt("study.excerptUndo"))
+        private set
+    var excerptRedo by mutableStateOf(restoreExcerpt("study.excerptRedo"))
+        private set
+    private var pendingExcerptInverse:StudyCommand?=restoreExcerpt("study.pendingExcerptInverse")
+    private var pendingExcerptDirection=saved.get<Int>("study.pendingExcerptDirection")?:0
+    fun canUndoExcerpt(id:String)=canReplayExcerpt(excerptUndo,id)
+    fun canRedoExcerpt(id:String)=canReplayExcerpt(excerptRedo,id)
+    private fun canReplayExcerpt(c:StudyCommand?,id:String)=c?.cardId==id&&ui.value.cards.any{it.id==id&&it.revision==c.expectedRevision&&it.trashedAt==null}
+    fun recropExcerpt(c:StudyCommand){require(c.action==StudyAction.RECROP_EXCERPT);submitExcerpt(c,0)}
+    fun undoExcerpt(id:String){if(canUndoExcerpt(id))submitExcerpt(checkNotNull(excerptUndo),-1)}
+    fun redoExcerpt(id:String){if(canRedoExcerpt(id))submitExcerpt(checkNotNull(excerptRedo),1)}
+    private fun submitExcerpt(c:StudyCommand,direction:Int){
+        if(ui.value.loading||ui.value.readFailed||ui.value.busy||pending!=null||!authorAllowed())return
+        pendingExcerptInverse=StudyCommand(UUID.randomUUID().toString(),book,StudyAction.RESTORE_EXCERPT,cardId=c.cardId,
+            expectedRevision=c.expectedRevision+1,restoreSourceRevision=c.expectedRevision)
+        pendingExcerptDirection=direction;submit(c)
+    }
+    private fun finishExcerptHistory(){
+        if(pendingExcerptInverse!=null){
+            if(pendingExcerptDirection<0){excerptUndo=null;excerptRedo=pendingExcerptInverse}
+            else{excerptUndo=pendingExcerptInverse;excerptRedo=null}
+            persistExcerpt("study.excerptUndo",excerptUndo);persistExcerpt("study.excerptRedo",excerptRedo)
+        }
+    }
+    private fun persistExcerpt(key:String,c:StudyCommand?){saved[key]=c?.let{arrayListOf(it.id,it.cardId!!,it.expectedRevision.toString(),it.restoreSourceRevision.toString())}}
+    private fun restoreExcerpt(key:String):StudyCommand?=saved.get<ArrayList<String>>(key)?.let{
+        require(it.size==4);StudyCommand(it[0],book,StudyAction.RESTORE_EXCERPT,cardId=it[1],expectedRevision=it[2].toLong(),restoreSourceRevision=it[3].toLong())
+    }
     val revealByMap=mutableMapOf<String,String>()
     fun undoCapture(){undoCaptureAt(mapId.value)}
     fun undoCaptureAt(target:String?){val c=captureUndo[target?:"main"]?:return;submit(c)}
@@ -156,8 +185,8 @@ internal class StudyViewModel(val book:String,val repo:StudyRepository,private v
                 try{repo.lookup(c)?.let{StudyOutcome.Success(it)}?:StudyOutcome.Rejected("TRASH_READ_ONLY")}
                 catch(cancel:CancellationException){throw cancel}catch(_:Exception){StudyOutcome.Unknown}
             }else repo.outcome(c)}){
-            is StudyOutcome.Success->{if(c.action==StudyAction.CREATE_EXCERPT)captureGeneration++;if(c.action==StudyAction.UNDO_CAPTURE)captureUndo.remove(c.mapId?:"main");if(c.action==StudyAction.CREATE&&c.source!=null){captureGeneration++;c.nodeId?.let{revealByMap[c.mapId?:"main"]=it;selectedByMap[c.mapId?:"main"]=it}};if(c.action==StudyAction.CREATE&&c.source!=null)captureUndo[c.mapId?:"main"]=StudyCommand(UUID.randomUUID().toString(),book,StudyAction.UNDO_CAPTURE,cardId=c.cardId,nodeId=c.nodeId,expectedRevision=1,mapId=c.mapId);if(pendingHistoryDirection<0){organizationUndo=null;organizationRedo=pendingOrganizationUndo}else{organizationUndo=pendingOrganizationUndo;organizationRedo=null};persistOrganization("study.organizationUndo",organizationUndo);persistOrganization("study.organizationRedo",organizationRedo);pending=null;pendingOrganizationUndo=null;pendingHistoryDirection=0;persistPending();state.update{it.copy(busy=false,unknown=false,completed=result.id)}}
-            is StudyOutcome.Rejected->{pending=null;pendingOrganizationUndo=null;pendingHistoryDirection=0;persistPending();state.update{it.copy(busy=false,unknown=false,message=cardTrashRejection(result.reason)?:studyCapacityRejection(result.reason)?:"未提交：来源或内容已变化，请核对当前图和分支后重新保存（${result.reason}）。")}}
+            is StudyOutcome.Success->{if(c.action==StudyAction.CREATE_EXCERPT)captureGeneration++;if(c.action==StudyAction.UNDO_CAPTURE)captureUndo.remove(c.mapId?:"main");if(c.action==StudyAction.CREATE&&c.source!=null){captureGeneration++;c.nodeId?.let{revealByMap[c.mapId?:"main"]=it;selectedByMap[c.mapId?:"main"]=it}};if(c.action==StudyAction.CREATE&&c.source!=null)captureUndo[c.mapId?:"main"]=StudyCommand(UUID.randomUUID().toString(),book,StudyAction.UNDO_CAPTURE,cardId=c.cardId,nodeId=c.nodeId,expectedRevision=1,mapId=c.mapId);if(pendingHistoryDirection<0){organizationUndo=null;organizationRedo=pendingOrganizationUndo}else{organizationUndo=pendingOrganizationUndo;organizationRedo=null};persistOrganization("study.organizationUndo",organizationUndo);persistOrganization("study.organizationRedo",organizationRedo);finishExcerptHistory();pending=null;pendingOrganizationUndo=null;pendingHistoryDirection=0;pendingExcerptInverse=null;pendingExcerptDirection=0;persistPending();state.update{it.copy(busy=false,unknown=false,completed=result.id)}}
+            is StudyOutcome.Rejected->{pending=null;pendingOrganizationUndo=null;pendingHistoryDirection=0;pendingExcerptInverse=null;pendingExcerptDirection=0;persistPending();state.update{it.copy(busy=false,unknown=false,message=(if(result.reason.startsWith("MAP_SUMMARY_"))"未提交：此操作会拆开括号归纳。请整组移动，或先到归纳管理中解除归纳。"else null)?:cardTrashRejection(result.reason)?:studyCapacityRejection(result.reason)?:"未提交：来源或内容已变化，请核对当前图和分支后重新保存（${result.reason}）。")}}
             StudyOutcome.Unknown->state.update{it.copy(busy=false,unknown=true,message="操作结果待核对。重试核对同一操作，不重复建卡。")}
         }}catch(cancel:CancellationException){state.update{it.copy(busy=false,unknown=true)};throw cancel}}
     }
@@ -168,6 +197,9 @@ internal class StudyViewModel(val book:String,val repo:StudyRepository,private v
     private fun persistPending(){
         val c=pending
         saved["study.pendingHistoryDirection"]=pendingHistoryDirection
+        saved["study.pendingExcerptDirection"]=pendingExcerptDirection
+        persistExcerpt("study.pendingExcerptInverse",pendingExcerptInverse)
+        saved["study.restoreSourceRevision"]=c?.restoreSourceRevision
         saved.set<ArrayList<String>?>("study.command",c?.let{arrayListOf(it.id,it.notebookId,it.action.name,it.cardId.orEmpty(),it.nodeId.orEmpty(),it.expectedRevision.toString(),it.parentId.orEmpty(),it.title,it.body,it.x.toString(),it.y.toString(),it.expectedGraph,it.mapId.orEmpty())})
         saved["study.preview"]=c?.source?.previewBytes();saved["study.objectRevision"]=c?.source?.objectRevision;saved["study.authoringRevision"]=c?.source?.authoringRevision
         saved["study.organization"]=c?.organization?.let(StudyOrganization::encode)
@@ -179,8 +211,8 @@ internal class StudyViewModel(val book:String,val repo:StudyRepository,private v
     private fun restorePending():StudyCommand?{
         val values=saved.get<ArrayList<String>>("study.command")?:return null
         require(values.size in 12..13&&values[1]==book)
-        val s=saved.get<ArrayList<String>>("study.source")?.let{require(it.size in 6..262);StudySourceDraft(it[0],it[1].toLong(),CanvasBounds(it[2].toDouble(),it[3].toDouble(),it[4].toDouble(),it[5].toDouble()),it.drop(6),saved["study.preview"],saved["study.objectRevision"],saved["study.authoringRevision"])}
-        return StudyCommand(values[0],book,StudyAction.valueOf(values[2]),values[3].ifEmpty{null},values[4].ifEmpty{null},values[5].toLong(),values[6].ifEmpty{null},values[7],values[8],values[9].toDouble(),values[10].toDouble(),s,values[11],values.getOrNull(12)?.ifEmpty{null},saved.get<ByteArray>("study.organization")?.let(StudyOrganization::decode),saved["study.afterNodeId"],saved.get<String>("study.trashImpact").orEmpty())
+        val s=saved.get<ArrayList<String>>("study.source")?.let{require(it.size in 6..(6+InkSelectionEdit.MAX_SELECTED));StudySourceDraft(it[0],it[1].toLong(),CanvasBounds(it[2].toDouble(),it[3].toDouble(),it[4].toDouble(),it[5].toDouble()),it.drop(6),saved["study.preview"],saved["study.objectRevision"],saved["study.authoringRevision"])}
+        return StudyCommand(values[0],book,StudyAction.valueOf(values[2]),values[3].ifEmpty{null},values[4].ifEmpty{null},values[5].toLong(),values[6].ifEmpty{null},values[7],values[8],values[9].toDouble(),values[10].toDouble(),s,values[11],values.getOrNull(12)?.ifEmpty{null},saved.get<ByteArray>("study.organization")?.let(StudyOrganization::decode),saved["study.afterNodeId"],saved.get<String>("study.trashImpact").orEmpty(),restoreSourceRevision=saved["study.restoreSourceRevision"])
     }
     private fun persistOrganization(key:String,c:StudyCommand?){saved["$key.id"]=c?.id;saved[key]=c?.organization?.let(StudyOrganization::encode)}
     private fun restoreOrganization(key:String):StudyCommand?{

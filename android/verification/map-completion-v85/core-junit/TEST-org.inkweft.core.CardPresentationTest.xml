@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="org.inkweft.core.CardPresentationTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-10-10T12:13:56.697Z" hostname="4d22d97528bf" time="0.022">
+  <properties/>
+  <testcase name="overLimitAnnotationFailsBeforeAnyCommand" classname="org.inkweft.core.CardPresentationTest" time="0.004"/>
+  <testcase name="annotationAndIndependentPresetsRoundTripWithoutInferringLegacyBody" classname="org.inkweft.core.CardPresentationTest" time="0.006"/>
+  <testcase name="allPresetsRemainOpaqueAndHighContrastWithCardText" classname="org.inkweft.core.CardPresentationTest" time="0.0"/>
+  <testcase name="annotationSearchReturnsOriginalCardAndEachActualOccurrence" classname="org.inkweft.core.CardPresentationTest" time="0.01"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

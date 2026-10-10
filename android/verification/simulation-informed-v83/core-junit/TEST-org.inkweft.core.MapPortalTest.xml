@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="org.inkweft.core.MapPortalTest" tests="10" skipped="0" failures="0" errors="0" timestamp="2026-10-10T11:16:24.893Z" hostname="4d22d97528bf" time="0.003">
+  <properties/>
+  <testcase name="branchPayloadRejectsInvalidIdentityEmptyV2AndTrailingBytes" classname="org.inkweft.core.MapPortalTest" time="0.001"/>
+  <testcase name="sameMapAndMainToMainAreRejected" classname="org.inkweft.core.MapPortalTest" time="0.0"/>
+  <testcase name="changingBranchChangesFrozenCommandDigest" classname="org.inkweft.core.MapPortalTest" time="0.0"/>
+  <testcase name="commandsFreezeExactSourceOccurrenceTargetAndRemovalState" classname="org.inkweft.core.MapPortalTest" time="0.001"/>
+  <testcase name="eachEndpointIdMustBeAUuid" classname="org.inkweft.core.MapPortalTest" time="0.0"/>
+  <testcase name="namedMapsRoundTripWithAnExplicitVersionedTag" classname="org.inkweft.core.MapPortalTest" time="0.0"/>
+  <testcase name="exactBranchesUseV2WhileWholeMapBytesRemainV1" classname="org.inkweft.core.MapPortalTest" time="0.0"/>
+  <testcase name="trailingBytesAndUnknownPortalVersionsNeverFallBack" classname="org.inkweft.core.MapPortalTest" time="0.001"/>
+  <testcase name="portalDoesNotChangeContentTargetKindsOrLegacyMapRecords" classname="org.inkweft.core.MapPortalTest" time="0.0"/>
+  <testcase name="nullAlwaysRepresentsMainMapInEitherDirection" classname="org.inkweft.core.MapPortalTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

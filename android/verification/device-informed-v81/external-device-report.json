@@ -1,0 +1,151 @@
+{
+  "format": "InkWeft.ExternalDeviceReport/1",
+  "source_attachment": {
+    "name": "墨织实机采样报告与清单-20261010.xlsx",
+    "sha256": "368438405847b19f75a7d7cd5697b1117582191dbfc584d208aec0d7aed4eaba",
+    "bytes": 23549
+  },
+  "review_scope": "Workbook and regression method inventory reviewed. Uploaded physical input JSON SHA and aggregate counts/ranges independently verified. Individual device receipts and optical videos remain unavailable.",
+  "reported_candidate": {
+    "version": 80,
+    "source_commit": "a8177df0aaa6c0fbd684af0965bd8d7c78ca71a9",
+    "package": "org.inkweft.app.a0.insertion.tlsprobe"
+  },
+  "reported_device": {
+    "model": "vivo iPA2673 / DPD2540",
+    "api": 36,
+    "android": "16",
+    "abi": "arm64-v8a",
+    "resolution": [
+      2512,
+      3840
+    ],
+    "dpi": 480,
+    "font_scale": 1.0,
+    "power_save": false,
+    "max_refresh_setting_hz": 144,
+    "initial_reported_hz_about": 60,
+    "video_app_version": "UNKNOWN",
+    "stylus_model": "UNKNOWN"
+  },
+  "checklist_reported_status_counts": {
+    "PARTIAL": 6,
+    "NOT_RUN": 21,
+    "PASS": 1
+  },
+  "regressions": {
+    "scope": "V80 physical ARM64 device with synthetic logical/pixel/storage inputs",
+    "reported_pass": 12,
+    "method_inventory_matches_v80": true,
+    "raw_receipts_uploaded": false,
+    "receipts": [
+      {
+        "method": "org.inkweft.app.InputRenderingRegressionTest#penUpConsumesItsEntireHistoryBeforeCommitWithoutInventingHardwareAxes",
+        "reported_result": "PASS",
+        "receipt_sha256": "d7f6f2c1b5f9440aa22362c44a1c0b21da61e1de0667f67545b04a11739b2734"
+      },
+      {
+        "method": "org.inkweft.app.InputRenderingRegressionTest#canceledTerminalHistoryCannotBecomeAnAuthorStroke",
+        "reported_result": "PASS",
+        "receipt_sha256": "afa82312c53e7fc3f69828cf2b90d166837f4210fd85f5b24bc77a3717d53b41"
+      },
+      {
+        "method": "org.inkweft.app.InputRenderingRegressionTest#stationaryPressureChangesReopenThroughNativeInkWithoutLosingAuthorReadings",
+        "reported_result": "PASS",
+        "receipt_sha256": "f0bebd286cefbcb35f4c91d3b74d4301e15da1133110c220018be403374ff7cc"
+      },
+      {
+        "method": "org.inkweft.app.InputRenderingRegressionTest#sameIdInteriorPencilChangesMatchFreshRasterPixels",
+        "reported_result": "PASS",
+        "receipt_sha256": "eb789c72825e9294c1f1bf707a6c6a750cecfb31a8f499d8a5ad2ec8884c9e52"
+      },
+      {
+        "method": "org.inkweft.app.InputRenderingRegressionTest#stationaryPencilUpdateUsesTheLastReadingRatherThanAccumulatingOldPressure",
+        "reported_result": "PASS",
+        "receipt_sha256": "996fc50ec44f69535486b02f454fadb922960f85fae515e23d37ec7bc2cc341b"
+      },
+      {
+        "method": "org.inkweft.app.FastPencilTest#longLiveStrokeDoesNotRerasterizeOldTiles",
+        "reported_result": "PASS",
+        "receipt_sha256": "38bebfc43b4938bcf768b8e7a14aca21e3a54bcb991744f861c8b1627706ed77"
+      },
+      {
+        "method": "org.inkweft.app.SelectionPerformanceTest#repeatedPageDrawKeepsPencilRasterWorkBounded",
+        "reported_result": "PASS",
+        "receipt_sha256": "91aa236c7b101fbdddd19ba0151f334728526f5e484569556503710f8cea1048"
+      },
+      {
+        "method": "org.inkweft.app.SelectionPerformanceTest#cachedInkMatchesDirectPixelsAfterAppendEraseAndViewportChange",
+        "reported_result": "PASS",
+        "receipt_sha256": "64816f3215f2549ad1e68866bb2f91c525ea98eda6ca572d55a26d92b8b31c12"
+      },
+      {
+        "method": "org.inkweft.app.FormulaFlowTest#editingResizedFormulaKeepsItsDisplayScaleAndColorOnlyEditKeepsMasks",
+        "reported_result": "PASS",
+        "receipt_sha256": "b0db43a0675bf74c370f7664ceb4fb645fb11b900458b8c0a86821b617a5e905"
+      },
+      {
+        "method": "org.inkweft.app.ExcerptLassoRegressionTest#freehandExcerptExcludesTheOtherCornerOfItsBoundingBox",
+        "reported_result": "PASS",
+        "receipt_sha256": "7d756798fc03d5241830f01abf5055f4509377b8955fe712c99162fd0ad0fe50"
+      },
+      {
+        "method": "org.inkweft.data.InkRepositoryTest#visiblePreviewMatchesFullReadAfterCutsReplacementAndUndo",
+        "reported_result": "PASS",
+        "receipt_sha256": "0d2be8a5d5e7c1b1357dfdc78fa94f8dad1b1b412eb40f424e8a0aa34c915af5"
+      },
+      {
+        "method": "org.inkweft.data.InkRepositoryTest#previewSkipsHiddenPayloadWhileFullReadStillValidatesHistory",
+        "reported_result": "PASS",
+        "receipt_sha256": "829a1c1e0fe6cb2b7bb05f29b6205c9e5b4a84405593c1ee816bfd054aebc246"
+      }
+    ]
+  },
+  "reported_input": {
+    "events": 6514,
+    "samples_including_history": 16435,
+    "stylus_samples": 15596,
+    "finger_samples": 839,
+    "contact_stylus_samples": 11773,
+    "pressure_range": [
+      0.0003052503161597997,
+      0.5025030970573425
+    ],
+    "tilt_radians_range": [
+      0.21228629350662231,
+      1.077937126159668
+    ],
+    "orientation_radians_range": [
+      -3.1169161796569824,
+      3.141592502593994
+    ],
+    "raw_input_uploaded": true,
+    "raw_input_sha256": "2960ccee9c69b4aabed57b19a2373427ef99095c02468098cd775b3df5dbb5b6",
+    "raw_input_hash_verified": true,
+    "audit": "physical-input-audit.json"
+  },
+  "palm_rejection": {
+    "reported_user_feedback": "墨织掌拒没有问题",
+    "action": "No new palm rejection tuning; do not interpret sampler finger/palm points as application failure.",
+    "full_matrix_status": "PARTIAL"
+  },
+  "optical_latency": {
+    "status": "PARTIAL",
+    "reported_camera_fps": 120,
+    "reported_playback_slowdown_about": 4,
+    "frame_interval_ms_about": 8.3333,
+    "measured_latency_ms": null,
+    "mean_ms": null,
+    "p95_ms": null,
+    "videos_uploaded": false,
+    "reason": "Contact occlusion, motion blur/camera movement, application version and recording-time display rate unknown."
+  },
+  "extra_compose_test": {
+    "name": "DiagnosticsUiTest",
+    "reported_status": "BLOCKED",
+    "not_in_regression_12": true,
+    "process_stopped_by_test_operator": true,
+    "interpretation": "Do not label the stop receipt as a spontaneous application crash."
+  },
+  "v81_status": "NOT_RUN_ON_DEVICE; V80 observations do not certify this new source."
+}

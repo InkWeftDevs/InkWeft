@@ -5,6 +5,10 @@ import androidx.room.*
 import org.inkweft.core.*
 import java.util.UUID
 import kotlinx.coroutines.sync.withLock
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.ensureActive
 
 @Entity(tableName="ink_pages",foreignKeys=[ForeignKey(entity=NotebookPageRow::class,parentColumns=["id"],childColumns=["noteId"],onDelete=ForeignKey.NO_ACTION)])
 data class InkPageRow(@PrimaryKey val noteId:String,val revision:Long)
@@ -18,9 +22,14 @@ data class InkCutRow(@PrimaryKey val id:String,val noteId:String,val payload:Byt
 interface InkDao {
     @Query("SELECT * FROM ink_pages WHERE noteId=:id") suspend fun page(id:String):InkPageRow?
     @Query("SELECT * FROM ink_strokes WHERE noteId=:id ORDER BY createdRevision,id") suspend fun strokes(id:String):List<InkStrokeRow>
+    /** Layer ownership needs every retained identity, including hidden history, but no ink payload. */
+    @Query("SELECT id FROM ink_strokes WHERE noteId=:id ORDER BY createdRevision,id") suspend fun strokeIds(id:String):List<String>
+    @Query("SELECT * FROM ink_strokes WHERE noteId=:id AND visible=1 ORDER BY createdRevision,id") suspend fun visibleStrokes(id:String):List<InkStrokeRow>
+    @Query("SELECT revision FROM ink_pages WHERE noteId=:id") fun observeRevision(id:String):kotlinx.coroutines.flow.Flow<Long?>
     @Query("SELECT * FROM ink_strokes WHERE id=:id") suspend fun stroke(id:String):InkStrokeRow?
     @Query("SELECT * FROM ink_receipts WHERE commandId=:id") suspend fun receipt(id:String):InkReceiptRow?
     @Query("SELECT * FROM ink_cuts WHERE noteId=:id ORDER BY createdRevision,id") suspend fun cuts(id:String):List<InkCutRow>
+    @Query("SELECT * FROM ink_cuts WHERE noteId=:id AND visible=1 ORDER BY createdRevision,id") suspend fun visibleCuts(id:String):List<InkCutRow>
     @Query("SELECT * FROM ink_cuts WHERE id=:id") suspend fun cut(id:String):InkCutRow?
     @Query("SELECT COUNT(*) FROM ink_strokes WHERE noteId=:id") suspend fun count(id:String):Int
     @Query("SELECT COALESCE(SUM(pointCount),0) FROM ink_strokes WHERE noteId=:id") suspend fun pointCount(id:String):Int
@@ -39,6 +48,7 @@ data class ObjectWrite(val pageId:String,val expected:Long,val commandId:String,
 data class CanvasBatchResult(val ink:List<InkCommitResult> = emptyList(),val objects:List<Long> = emptyList(),val failure:InkCommitResult?=null)
 data class InkGroupCommit(val group:InkGroupPrefix,val results:List<InkCommitResult.Committed>,val replayed:Boolean)
 class InkRepository(private val db:NoteDatabase,private val fault:(InkFaultPoint)->Unit={}) {
+    @Volatile var readObserver:((ReadTiming)->Unit)?=null
     private class GroupAbort(val result:InkCommitResult):RuntimeException()
     /** A seam gesture either commits on every sheet or on none; receipts make a retry idempotent. */
     suspend fun saveGroup(commands:List<CommitInk>):List<InkCommitResult> {
@@ -130,17 +140,46 @@ class InkRepository(private val db:NoteDatabase,private val fault:(InkFaultPoint
     }
 
     private suspend fun owner(id:String)=db.pages().get(id)?:NotebookPages(db).ensureFirst(id)
-    suspend fun read(noteId:String):InkPage=db.withTransaction {
-        val owner=owner(noteId);val page=dao.page(noteId);val rows=dao.strokes(noteId)
+    private data class ReadRows(val owner:NotebookPageRow,val page:InkPageRow?,val strokes:List<InkStrokeRow>,val cuts:List<InkCutRow>)
+    suspend fun read(noteId:String):InkPage {
+        // Freeze rows atomically; decoding immutable blobs must not hold the Room
+        // transaction executor while another page is trying to save handwriting.
+        val started=System.nanoTime()
+        val frozen=db.withTransaction{ReadRows(owner(noteId),dao.page(noteId),dao.strokes(noteId),dao.cuts(noteId))}
+        val frozenAt=System.nanoTime()
+        val owner=frozen.owner;val page=frozen.page;val rows=frozen.strokes
         check(rows.size<=InkLimits.MAX_RETAINED_STROKES&&rows.sumOf{it.pointCount}<=InkLimits.MAX_RETAINED_POINTS)
         check(rows.count{it.visible}<=InkLimits.MAX_STROKES&&rows.sumOf{if(it.visible)it.pointCount else 0}<=InkLimits.MAX_PAGE_POINTS)
-        val decoded=rows.map{val s=InkStrokeCodec.decode(it.payload);check(s.id==it.id&&s.samples.size==it.pointCount&&s.world==owner.world);StoredInk(s,it.visible,it.createdRevision)}
+        val context=currentCoroutineContext()
+        val decoded=rows.map{context.ensureActive();val s=InkStrokeCodec.decode(it.payload);check(s.id==it.id&&s.samples.size==it.pointCount&&s.world==owner.world);StoredInk(s,it.visible,it.createdRevision)}
         val ids=decoded.map{it.stroke.id}.toSet()
-        val cuts=dao.cuts(noteId);check(cuts.size<=InkLimits.MAX_RETAINED_CUTS)
+        val cuts=frozen.cuts;check(cuts.size<=InkLimits.MAX_RETAINED_CUTS)
         val masks=cuts.map{r->val cut=InkCutCodec.decode(r.payload);check(cut.id==r.id);val target=r.strokeIds.split(',');check(target.all{it in ids});StoredCut(EraseSelection(cut,target),r.visible,r.createdRevision)}
         check(page!=null||(rows.isEmpty()&&masks.isEmpty()))
-        InkPage(noteId,page?.revision?:0,decoded,masks).also{InkSession(it).visibleDraft()}
+        return InkPage(noteId,page?.revision?:0,decoded,masks).also{
+            InkSession(it).visibleDraft()
+            val decodedAt=System.nanoTime()
+            // Diagnostics are observational and may never turn a successful read into failure.
+            runCatching{readObserver?.invoke(ReadTiming(ReadKind.INK,frozenAt-started,decodedAt-frozenAt,rows.size+cuts.size))}
+        }
     }
+    /** Preview reads never deserialize hidden move/erase history. Masks remain exact. */
+    suspend fun readVisible(noteId:String):List<InkStroke> {
+        val frozen=db.withTransaction{ReadRows(owner(noteId),dao.page(noteId),dao.visibleStrokes(noteId),dao.visibleCuts(noteId))}
+        val rows=frozen.strokes
+        check(rows.size<=InkLimits.MAX_STROKES&&rows.sumOf{it.pointCount}<=InkLimits.MAX_PAGE_POINTS)
+        val context=currentCoroutineContext()
+        val strokes=rows.map{row->context.ensureActive();InkStrokeCodec.decode(row.payload).also{check(it.id==row.id&&it.samples.size==row.pointCount&&it.world==frozen.owner.world)}}
+        val visible=strokes.map{it.id}.toSet();val byStroke=mutableMapOf<String,MutableList<InkCut>>()
+        check(frozen.cuts.size<=InkLimits.MAX_RETAINED_CUTS)
+        frozen.cuts.forEach{row->val cut=InkCutCodec.decode(row.payload);check(cut.id==row.id)
+            val targets=row.strokeIds.split(',');check(targets.distinct().size==targets.size)
+            targets.filter{it in visible}.forEach{byStroke.getOrPut(it){mutableListOf()}.add(cut)}
+        }
+        check(frozen.page!=null||(rows.isEmpty()&&frozen.cuts.isEmpty()))
+        return strokes.map{it.withCuts(byStroke[it.id].orEmpty())}
+    }
+    fun observeVisible(noteId:String)=dao.observeRevision(noteId).distinctUntilChanged().map{readVisible(noteId)}
     suspend fun save(command:CommitInk):InkCommitResult {
         val result=db.withTransaction {
             val digest=command.digest();val old=dao.receipt(command.commandId)

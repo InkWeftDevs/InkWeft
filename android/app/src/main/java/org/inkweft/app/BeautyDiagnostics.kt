@@ -66,8 +66,9 @@ internal class BeautyDiagnostics {
         private fun truncate(){meta.put("capture_truncated",true);mutable.value=mutable.value.copy(truncated=true)}
         fun attach(name:String,data:ByteArray){synchronized(this@BeautyDiagnostics){
             if(epoch!=generation||!mutable.value.active||!privateAttachments||this !in records)return
-            if(data.size>4*1024*1024||records.sumOf{it.bytes}+data.size>8*1024*1024){truncate();return}
-            attachments[name]=data;bytes+=data.size
+            val replaced=attachments[name]?.size?:0
+            if(data.size>4*1024*1024||records.sumOf{it.bytes}+data.size-replaced>8*1024*1024){truncate();return}
+            attachments[name]=data;bytes+=data.size-replaced
         }}
         fun group(pass:String,index:Int,line:HandwritingLine)=record("$pass-group-$index",JSONObject().put("bounds",bounds(line.bounds)).put("extra_world_margin",if(pass in listOf("padded","formula"))3 else 0)
             .put("raster_bounds",bounds(if(pass in listOf("padded","formula"))line.bounds.padded(3.0)else line.bounds)).put("stroke_ids",JSONArray(line.strokes.map{it.id})))
@@ -75,7 +76,17 @@ internal class BeautyDiagnostics {
             record("formula-input-$index",JSONObject().put("raster_width",raster.width).put("raster_height",raster.height)
                 .put("shape",JSONArray(listOf(1,3,384,384))).put("channel_order","RGB_GRAYSCALE")
                 .put("normalization","(pixel/255-0.7931)/0.1738").put("padding","CENTERED_BLACK_BEFORE_NORMALIZATION"))
-            if(privateAttachments)ByteArrayOutputStream().also{input.compress(Bitmap.CompressFormat.PNG,100,it)}.toByteArray().let{attach("formula-input-$index.png",it)}
+            if(privateAttachments){
+                ByteArrayOutputStream().also{raster.compress(Bitmap.CompressFormat.PNG,100,it)}.toByteArray().let{attach("formula-raster-$index.png",it)}
+                ByteArrayOutputStream().also{input.compress(Bitmap.CompressFormat.PNG,100,it)}.toByteArray().let{attach("formula-input-$index.png",it)}
+            }
+        }
+        fun formulaTensor(index:Int,data:FloatArray){
+            if(!privateAttachments)return
+            val bytes=java.nio.ByteBuffer.allocate(data.size*4).order(java.nio.ByteOrder.LITTLE_ENDIAN)
+            data.forEach(bytes::putFloat)
+            record("formula-tensor-$index",JSONObject().put("contract","RGB_GRAY_FLOAT32_CHW_384_V1")
+                .put("byte_order","LITTLE_ENDIAN").put("bytes",bytes.capacity()).put("sha256",DiagnosticLog.hash(bytes.array())))
         }
         fun input(pass:String,index:Int,bitmap:Bitmap,scaledWidth:Int,width:Int,data:FloatArray){
             // This is the actual normalized ONNX input, including zero-valued right padding.

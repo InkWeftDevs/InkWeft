@@ -1,0 +1,50 @@
+{
+  "baseline_commit": "a8177df0aaa6c0fbd684af0965bd8d7c78ca71a9",
+  "identity": "SHA256_OF_FINAL_SOURCE_AND_TEST_BYTES_USED_BY_CHECKS_NOT_AN_APK_IDENTITY",
+  "files": [
+    {
+      "path": "android/app/build.gradle.kts",
+      "sha256": "2f28659416633950cc4abc7007f6a93399d3f38390b43f366a2ed5270fc03862"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/DisplayDiagnosticsRegressionTest.kt",
+      "sha256": "d5db4a532a3729cb8bb5b843fc5cea46aafa06a28ec3f58be9b869b268f862bf"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/PencilWorkingSetRegressionTest.kt",
+      "sha256": "f641e1bcc445646d32a6ebafd5523df35d356247f5f4d078d2f4c63693e11a21"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/AppDiagnostics.kt",
+      "sha256": "87cc143e7a61a01b14f9d08523be41ae3fc4b62597bed44d8b50ae5830c3096e"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/BookSearchPanel.kt",
+      "sha256": "5b54243b709249a9f3c149f0aeb8aa099b7fa138ba8195cbe55af628e6b1cd4c"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/ExcerptCollection.kt",
+      "sha256": "24982866f3499049ba2fd2828d15a738e18967368d252a4a97fe9cbae3c89b4f"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/PencilRenderer.kt",
+      "sha256": "b71dbb94e4e70aec05b8b902de3ef1665a1044b3eeb24199b1072f67c0017704"
+    },
+    {
+      "path": "android/core-domain/src/main/kotlin/org/inkweft/core/InkSession.kt",
+      "sha256": "8c0836735d5144a468be21c729bdbf6ea2232655639713981011cf65aceaed46"
+    },
+    {
+      "path": "android/core-domain/src/test/kotlin/org/inkweft/core/InkAdmissionRegressionTest.kt",
+      "sha256": "f6d2fea2877883b81fbc07dad95350796627652f1754d6f0ed65c799ff5c9adf"
+    },
+    {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/SearchIndexFreshnessTest.kt",
+      "sha256": "980a38dd005e30eb26262de9c003980928050d1b9f633067524d3474002a0fb2"
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/NotebookPages.kt",
+      "sha256": "dff55a1b00fdfdcea39513fd25c483e024604fdfee27ae865126d02bbefacb90"
+    }
+  ]
+}

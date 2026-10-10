@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="org.inkweft.core.KnowledgeTest" tests="16" skipped="0" failures="0" errors="0" timestamp="2026-10-09T15:44:24.793Z" hostname="3892303cc95a" time="0.041">
+  <properties/>
+  <testcase name="styledRelationsRoundTripAndDefaultsKeepTheLegacyWireTag" classname="org.inkweft.core.KnowledgeTest" time="0.001"/>
+  <testcase name="cannotPinNotebookAsCardRevision" classname="org.inkweft.core.KnowledgeTest" time="0.0"/>
+  <testcase name="originalPaperOrdinalsRemainReadable" classname="org.inkweft.core.KnowledgeTest" time="0.0"/>
+  <testcase name="cornellDefinesRealCueColumnAndSummary" classname="org.inkweft.core.KnowledgeTest" time="0.001"/>
+  <testcase name="collectionAndOrAreTypedAndDoNotCreateData" classname="org.inkweft.core.KnowledgeTest" time="0.003"/>
+  <testcase name="everyKnowledgeKindRoundTrips" classname="org.inkweft.core.KnowledgeTest" time="0.002"/>
+  <testcase name="invalidPlacementRejected" classname="org.inkweft.core.KnowledgeTest" time="0.0"/>
+  <testcase name="graphDepthAndBudgetAreExplicit" classname="org.inkweft.core.KnowledgeTest" time="0.002"/>
+  <testcase name="trailingDataIsRejected" classname="org.inkweft.core.KnowledgeTest" time="0.0"/>
+  <testcase name="commandFreezesCallerOwnedLists" classname="org.inkweft.core.KnowledgeTest" time="0.001"/>
+  <testcase name="wideCornellAndBlankVariantAreDistinct" classname="org.inkweft.core.KnowledgeTest" time="0.0"/>
+  <testcase name="commandCreationReportsMapCapacityWithoutRelabelingMalformedData" classname="org.inkweft.core.KnowledgeTest" time="0.026"/>
+  <testcase name="cycleExpansionAndDeepChainsStop" classname="org.inkweft.core.KnowledgeTest" time="0.0"/>
+  <testcase name="farAwayBoardGuidesAreBounded" classname="org.inkweft.core.KnowledgeTest" time="0.003"/>
+  <testcase name="backlinksDoNotNeedAnInverseAuthorEdge" classname="org.inkweft.core.KnowledgeTest" time="0.0"/>
+  <testcase name="operationReuseWithOtherPayloadChangesDigest" classname="org.inkweft.core.KnowledgeTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,67 @@
+{
+  "format": "InkWeft.Verification/1",
+  "candidate": {
+    "version_code": 83,
+    "version_name": "0.0.83-recognition-and-excerpt-history",
+    "baseline_commit": "a778addac0e9e0cd9e741248269efafe05aea33b",
+    "date": "2026-10-10",
+    "timezone": "Asia/Shanghai",
+    "room_schema": 16,
+    "source_manifest": "tested-source-sha256.json"
+  },
+  "cloud": {
+    "core_junit": {
+      "tests": 425,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "suites": 51,
+      "status": "PASS",
+      "new_methods": 10,
+      "receipts": "core-junit/"
+    },
+    "compilation": {
+      "status": "PASS",
+      "tasks": [
+        ":app:compileDebugKotlin",
+        ":app:compileDebugAndroidTestKotlin",
+        ":data-local:compileDebugAndroidTestKotlin"
+      ],
+      "mupdf": "TEMPORARY_OFFICIAL_1.28.5_API_ONLY_AAR_NOT_NATIVE_CERTIFICATION"
+    },
+    "lint": {
+      "Error": 0,
+      "Fatal": 0,
+      "Warning": 175,
+      "Hint": 2,
+      "Information": 0,
+      "status": "PASS"
+    },
+    "formula_contract_replay": {
+      "status": "PASS",
+      "captured_inputs": 30,
+      "exact_step_token_matches": 30,
+      "onnxruntime": "1.30.0",
+      "scope": "HOST_CPU_REPLAY_OF_CAPTURED_PREPROCESSED_PNG_NOT_ANDROID_RASTER_OR_NEW_ACCURACY"
+    },
+    "text_line_replay": {
+      "eligible": 29,
+      "baseline_partition_matches": 24,
+      "candidate_partition_matches": 27,
+      "unknown_truth_excluded": 1,
+      "all_30_source_identity_conservation": true,
+      "all_30_unchanged_author_byte_hashes": true,
+      "recognition_accuracy": "NOT_MEASURED_ON_NEW_SPLITS"
+    }
+  },
+  "android_device": {
+    "status": "NOT_RUN",
+    "new_methods": 5,
+    "exact_list": "device-pending.json"
+  },
+  "normal_apk": {
+    "status": "NOT_PRODUCED",
+    "reason": "Normal MuPDF 1.28.5 resolution was blocked by HTTP403 in the V82 environment; product dependency is unchanged. No API-only APK is delivered."
+  },
+  "historical_evidence": "Uploaded runs cover frozen V80 a8177df0aaa6c0fbd684af0965bd8d7c78ca71a9. They are not candidate-device PASS. Original 225 attempts, 34 failures and their denominator remain in V82 audit."
+}

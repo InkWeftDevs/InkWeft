@@ -1,0 +1,21 @@
+{
+  "scope": "WARM_HOST_JVM_PUBLIC_API_NOT_ANDROID",
+  "runs": [
+    {
+      "case": "replace_1024_on_16000_rows",
+      "V80_admission_median_ms": 254.401833,
+      "V81_admission_median_ms": 0.569782,
+      "V80_prepare_median_ms": 1.125272,
+      "V81_prepare_median_ms": 2.616732,
+      "content_equal": true
+    },
+    {
+      "case": "add_on_16000_rows",
+      "V80_admission_median_ms": 7.090602,
+      "V81_admission_median_ms": 0.0263,
+      "V80_prepare_median_ms": 1.014937,
+      "V81_prepare_median_ms": 2.17367,
+      "content_equal": true
+    }
+  ]
+}

@@ -1,0 +1,87 @@
+{
+  "manifest_files_verified": 452,
+  "reports": [
+    {
+      "report": "touch-pipeline-analysis",
+      "source_files": 4,
+      "reported_numeric_mismatches": 0
+    },
+    {
+      "report": "starnote-pipeline-analysis",
+      "source_files": 3,
+      "reported_numeric_mismatches": 0
+    }
+  ],
+  "native_sessions": [
+    {
+      "run": "goodnotes-arm64-jni-01",
+      "retained_call_return_pairs": 1545,
+      "reported_session_status": "ERROR"
+    },
+    {
+      "run": "goodnotes-arm64-features-01",
+      "retained_call_return_pairs": 105,
+      "reported_session_status": "COMPLETED"
+    },
+    {
+      "run": "starnote-arm64-neopen-01",
+      "retained_call_return_pairs": 1116,
+      "reported_session_status": "COMPLETED"
+    },
+    {
+      "run": "starnote-arm64-hwr-01",
+      "retained_call_return_pairs": 54,
+      "reported_session_status": "COMPLETED"
+    }
+  ],
+  "total_retained_native_pairs": 2820,
+  "matrix_cases": [
+    {
+      "id": "SN-PACKET-01",
+      "points": 62,
+      "csv_sha256": "8817fb9b1cef1b1471cf1a3aa324b8141abed0f12af123d7a2925272a45fcc9e"
+    },
+    {
+      "id": "SN-PACKET-02",
+      "points": 62,
+      "csv_sha256": "b872bfa72b4ee92c04863a339f4b5b95552dc63d41f77cd8a2e9a093a30de298"
+    },
+    {
+      "id": "SN-PACKET-03",
+      "points": 62,
+      "csv_sha256": "c50ce12c849eeffdccc91b9596e85712ad414e97b067916239ad2c95fdaf6036"
+    },
+    {
+      "id": "SN-PACKET-04",
+      "points": 62,
+      "csv_sha256": "d18906f69a37e21779a9e9f29bc26bd65c3a678e64a243b1503e7a06e75ea5f9"
+    },
+    {
+      "id": "SN-PACKET-05",
+      "points": 62,
+      "csv_sha256": "362f35911f8254a3cf96bf3caa2e0033440a5cd83645c96bdf297656adddd90a"
+    },
+    {
+      "id": "SN-PACKET-06",
+      "points": 62,
+      "csv_sha256": "2662a8146fa9d3f24a633445352c51fc2675d4760d894733ba095ec0de27dbbf"
+    },
+    {
+      "id": "SN-PACKET-07",
+      "points": 62,
+      "csv_sha256": "e771f5e6095648d8588b7d2f544ca2f2b95e77ecebd5f4366ee6b19e082ab550"
+    },
+    {
+      "id": "SN-PACKET-08",
+      "points": 62,
+      "csv_sha256": "1e8e77e3d41e791097051d123f034f20195b328e71681c81449fe24837f71749"
+    },
+    {
+      "id": "SN-PACKET-09",
+      "points": 62,
+      "csv_sha256": "a13c769c000c82b08ef9ad7375e5a35c3be4af9d00e15eb02e3abd84fc83a09a"
+    }
+  ],
+  "physical_pen": "NOT_RUN",
+  "scope": "offline hash, count and call identity audit; numeric relations are the supplied analysis results, not independently recomputed"
+}

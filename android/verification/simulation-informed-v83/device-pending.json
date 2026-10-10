@@ -1,0 +1,23 @@
+{
+  "candidate_version": 83,
+  "status": "NOT_RUN",
+  "reason": "No attached Android device. Uploaded captures tested frozen V80, not this candidate.",
+  "new_methods": [
+    "org.inkweft.data.StudyAndSelectionRepositoryTest#excerptUndoRedoRestoresFrozenBytesAndReceiptsWithoutNewSnapshotPayload",
+    "org.inkweft.data.StudyAndSelectionRepositoryTest#successfulReadTimingObserverCannotChangeRepositoryOutcome",
+    "org.inkweft.app.ExcerptHistoryStateTest#personalCommentUndoRedoSurvivesWriterRecreationAndRespectsReadLock",
+    "org.inkweft.app.ExcerptHistoryStateTest#pendingCommentUndoRetainsSameReceiptAndInverseUntilConfirmed",
+    "org.inkweft.app.ExcerptHistoryStateTest#excerptRangeInverseSurvivesSavedStateAndRejectsNewerCardRevision"
+  ],
+  "inherited_pending": [
+    "../simulation-informed-v82/device-pending.json",
+    "../device-informed-v81/device-pending.json"
+  ],
+  "additional_device_checks": [
+    "Re-run LOAD with the new successful-read freeze/decode timing pairs; separately measure navigation, VM ready and first readable frame. Keep attempts/failures and distinguish Compose driver thread exceptions.",
+    "Observe excerpt action toolbar wrapping, comments/resize/history controls on small windows; double-tap, read-only, stale revisions, close/reopen and activity recreation.",
+    "Recrop/undo/redo then backup, export and reimport; compare immutable source refs, annotation colors, comment body, ink and source storage byte counts.",
+    "With explicit private recognition tracing enabled, compare raw raster, normalized 384 PNG and Float32 tensor hash. Keep the 3-attempt/8-MiB cap; do not upload raw user notes automatically.",
+    "Pen pressure/tilt, optical latency, palm rejection and real handwriting remain device evaluation; thresholds and model weights were not fitted to synthetic ground truth."
+  ]
+}

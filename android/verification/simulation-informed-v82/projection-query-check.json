@@ -1,0 +1,12 @@
+{
+  "scope": "HOST_SQLITE_NOT_ANDROID_ROOM",
+  "status": "PASS",
+  "query": "SELECT id FROM ink_strokes WHERE noteId=:id ORDER BY createdRevision,id",
+  "checks": [
+    "includes hidden rows and stable revision/id order",
+    "page isolation",
+    "missing page empty result",
+    "authorizer blocks payload reads"
+  ],
+  "projection_payload_reads": 0
+}

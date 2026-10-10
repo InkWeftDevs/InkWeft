@@ -23,7 +23,7 @@ data class CaptureDraft(val notebookId:String,val source:StudySourceDraft,val te
 /** Shared immutable display projection. No Room row, view or editor is stored in a scene. */
 data class MapSceneNode(val id:String,val parentId:String?,val cardId:String?,val title:String,val body:String,
     val x:Double,val y:Double,val revision:Long,val contentRevision:Long,val sourceState:String="无来源")
-data class MapScene(val ref:MapRef,val title:String,val nodes:List<MapSceneNode>,val graphHash:String,val available:Boolean=true){
+data class MapScene(val ref:MapRef,val title:String,val nodes:List<MapSceneNode>,val graphHash:String,val available:Boolean=true,val layout:String="right",val summaryGroups:List<KnowledgeData.MapSummaryGroup> = emptyList()){
     fun branch(id:String?,depth:Int=32):MapScene{
         require(depth in 0..32)
         if(id==null)return this
@@ -31,12 +31,14 @@ data class MapScene(val ref:MapRef,val title:String,val nodes:List<MapSceneNode>
             var current:MapSceneNode?=n;var steps=0;val seen=mutableSetOf<String>()
             while(current!=null&&steps<=depth&&seen.add(current.id)){if(current.id==id)return@filter true;current=byId[current.parentId];steps++};false
         }
-        return copy(nodes=selected,available=available&&selected.isNotEmpty())
+        val ids=selected.map{it.id}.toSet()
+        return copy(nodes=selected,available=available&&selected.isNotEmpty(),summaryGroups=summaryGroups.filter{g->g.memberIds.all{it in ids}&&byId[g.memberIds.first()]?.parentId in ids})
     }
     fun signature():String=contentSignature
     private val contentSignature:String by lazy { ContentTransfer.hash(buildString{
         append("scene-v1|").append(ref).append('|').append(title).append('|').append(available).append('|').append(graphHash)
         nodes.sortedBy{it.id}.forEach{append('|').append(it)}
+        if(layout!="right"||summaryGroups.isNotEmpty()){append("|layout:").append(layout);summaryGroups.forEach{append("|summary:").append(it)}}
     }.toByteArray()) }
 }
 data class MapSearchHit(val ref:MapRef,val nodeId:String,val cardId:String?,val mapTitle:String,val title:String,

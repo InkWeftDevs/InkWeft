@@ -1,0 +1,81 @@
+{
+  "format": "InkWeft.Verification/1",
+  "candidate": {
+    "version_code": 85,
+    "version_name": "0.0.85-map-templates-and-summaries",
+    "baseline_commit": "53863831f3c6f2e268855838ff2284329e7ab032",
+    "date": "2026-10-10",
+    "timezone": "Asia/Shanghai",
+    "room_schema": 16,
+    "source_manifest": "tested-source-sha256.json"
+  },
+  "cloud": {
+    "core_junit": {
+      "tests": 447,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "suites": 53,
+      "status": "PASS",
+      "new_methods": [
+        "summarySelectionUsesOccurrenceIdentitiesAndRequiresContiguousNonRootPeers",
+        "fixedMapSceneRoundTripsLayoutGroupsAndFiltersPartialBranch",
+        "layoutOnlyChangeIsTransactionalAndVersionedEvenForOneNode",
+        "legacyOrderBytesAndNewLayoutBytesAreUnambiguous",
+        "summaryRevisionAndMembershipInvalidateFrozenLayoutAndUndo",
+        "leftLayoutKeepsWholeBranchesOnLeftAndUndoRestoresLayout",
+        "organizationUsesActualWidthAndHeightAndFitsDeepWideTrees",
+        "extremeGroupedLayoutRejectsWrappingAndPreservesAuthorState",
+        "arrangementWireFormatPreservesOldPlansAndRoundTripsLayoutUndo",
+        "bilateralSplitNeverCutsAWholeSummaryAndOneFullGroupStaysTogether",
+        "exportSizingBoundsExtremeWorldAndIncludesNegativeOrigins",
+        "summaryRejectsOverlapMissingMembersAndUnsafeStructuralChanges",
+        "markdownKeepsSummaryMembersAndSharedBodyOnceAndHandlesDeepOutline",
+        "templatesHaveNestedLearningContentAndNoOverlapOrPrivateIdentity"
+      ]
+    },
+    "compilation": {
+      "status": "PASS",
+      "tasks": [
+        ":app:compileDebugKotlin",
+        ":app:compileDebugAndroidTestKotlin",
+        ":data-local:compileDebugAndroidTestKotlin"
+      ],
+      "mupdf": "TEMPORARY_OFFICIAL_1.28.5_API_ONLY_AAR_NOT_NATIVE_CERTIFICATION"
+    },
+    "lint": {
+      "Error": 0,
+      "Fatal": 0,
+      "Warning": 175,
+      "Hint": 2,
+      "status": "PASS",
+      "scope": "Final production and new Android tests; legacy template test target/assertions subsequently recompiled, no production changes after lint."
+    },
+    "catalog": {
+      "templates": 12,
+      "nodes": 90,
+      "source": "TemplateCatalogProbe.kt",
+      "scope": "HOST_CORE_FIXED_232x64_COORDINATES_NOT_ANDROID_SCREENSHOTS"
+    }
+  },
+  "device": {
+    "status": "NOT_RUN",
+    "new_android_methods": 10,
+    "scope": "device-pending.json"
+  },
+  "compatibility": {
+    "room_schema": 16,
+    "legacy": "Existing IWK1 kinds, MAP_ORDER_V1, IWO1 and plain right/no-group IWM1 remain readable; null-layout MAP_ORDER_V1 encodes byte-identically.",
+    "new": "MAP_SUMMARY_V1; optional MAP_ORDER_V2 for saved layout; IWO2 for layout-changing plans; optional MAP_SCENE_V2 extension in fixed IWM1 snapshots. New content requires V85, old readers reject it; no downgrade recommended.",
+    "capacity": "Existing book/page/map/backup byte and count limits unchanged. Each map permits 128 disjoint groups, 2..128 consecutive non-root siblings each."
+  },
+  "apk": "NOT_PRODUCED_NORMAL_MUPDF_DEPENDENCY_REMAINS_BLOCKED_IN_CLOUD",
+  "not_implemented": [
+    "Timeline layouts",
+    "Whole-map visual themes",
+    "Contour tidy compression",
+    "Source thumbnail/handwritten overlay/knowledge relation rendering in standalone PNG/PDF",
+    "Multi-page or tiled map PDF export",
+    "Any new device performance or recognition accuracy certification"
+  ]
+}

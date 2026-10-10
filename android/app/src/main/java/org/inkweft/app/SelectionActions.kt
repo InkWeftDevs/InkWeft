@@ -35,22 +35,22 @@ internal fun SelectionActions(selection:SelectedInk?,all:List<InkStroke>,enabled
             }
             if(s!=null&&count>0){
                 TextButton(onClick={if(apply(s.revision,InkMutation.Visibility(s.strokes.map{it.id},false)))clear()},enabled=enabled&&count>0,modifier=Modifier.testTag("selection-delete")){Text("删除")}
-                TextButton(onClick={runCatching{InkSelectionEdit.copy(s.strokes,0f,0f)}.getOrNull()?.let{if(apply(s.revision,InkMutation.Replace(emptyList(),it,s.strokes.map{it.id})))clear()}},enabled=enabled&&count in 1..256,modifier=Modifier.testTag("selection-copy")){Text("复制到当前层")}
-                TextButton(onClick={color=true},enabled=enabled&&count in 1..256,modifier=Modifier.testTag("selection-recolor")){Text("改色")}
+                TextButton(onClick={runCatching{InkSelectionEdit.copy(s.strokes,0f,0f)}.getOrNull()?.let{if(apply(s.revision,InkMutation.Replace(emptyList(),it,s.strokes.map{it.id})))clear()}},enabled=enabled&&count in 1..InkSelectionEdit.MAX_SELECTED,modifier=Modifier.testTag("selection-copy")){Text("复制到当前层")}
+                TextButton(onClick={color=true},enabled=enabled&&count in 1..InkSelectionEdit.MAX_SELECTED,modifier=Modifier.testTag("selection-recolor")){Text("改色")}
                 TextButton(onClick={fontBeauty(s)},enabled=enabled&&count in 1..256&&s.strokes.none{it.pen==InkPen.HIGHLIGHTER},modifier=Modifier.testTag("selection-font-beauty")){Text("美化字迹")}
                 Box {
                     TextButton(onClick={more=true},modifier=Modifier.testTag("selection-more")){Text("更多")}
                     DropdownMenu(more,{more=false}){
                         listOf("放大 10%","缩小 10%","水平翻转","垂直翻转").forEachIndexed{i,title->
-                            DropdownMenuItem(text={Text(title)},enabled=enabled&&count in 1..256,onClick={more=false
+                            DropdownMenuItem(text={Text(title)},enabled=enabled&&count in 1..InkSelectionEdit.MAX_SELECTED,onClick={more=false
                                 runCatching{InkSelectionEdit.transform(s.strokes,if(i==0)1.1f else if(i==1).9f else 1f,i==2,i==3)}.onSuccess{changed->if(apply(s.revision,InkMutation.Replace(s.strokes.map{it.id},changed,s.strokes.map{it.id})))clear()}.onFailure{transformError=true}
                             },modifier=Modifier.testTag("selection-transform-$i"))
                         }
-                        DropdownMenuItem(text={Text("摘录")},onClick={more=false;excerpt(s)},enabled=enabled&&count in 1..256,modifier=Modifier.testTag("selection-excerpt"))
-                        DropdownMenuItem(text={Text("加入导图")},onClick={more=false;mapExcerpt(s)},enabled=enabled&&count in 1..256,modifier=Modifier.testTag("selection-map"))
-                        DropdownMenuItem(text={Text("笔形润色")},onClick={more=false;beauty=true},enabled=enabled&&count in 1..256&&s.strokes.all{it.pen!=InkPen.HIGHLIGHTER&&it.cuts.isEmpty()},modifier=Modifier.testTag("selection-beautify"))
+                        DropdownMenuItem(text={Text("摘录")},onClick={more=false;excerpt(s)},enabled=enabled&&count in 1..InkSelectionEdit.MAX_SELECTED,modifier=Modifier.testTag("selection-excerpt"))
+                        DropdownMenuItem(text={Text("加入导图")},onClick={more=false;mapExcerpt(s)},enabled=enabled&&count in 1..InkSelectionEdit.MAX_SELECTED,modifier=Modifier.testTag("selection-map"))
+                        DropdownMenuItem(text={Text("笔形润色")},onClick={more=false;beauty=true},enabled=enabled&&count in 1..InkSelectionEdit.MAX_SELECTED&&s.strokes.all{it.pen!=InkPen.HIGHLIGHTER&&it.cuts.isEmpty()},modifier=Modifier.testTag("selection-beautify"))
                         DropdownMenuItem(text={Text("只擦框内部分")},onClick={more=false;val ids=all.filter{it.bounds().intersects(s.region.bounds)}.map{it.id};if(ids.isNotEmpty()&&apply(s.revision,InkMutation.Cut(EraseSelection(s.region.mask(),ids))))clear()},enabled=enabled,modifier=Modifier.testTag("selection-erase-inside"))
-                        DropdownMenuItem(text={Text("关联")},onClick={more=false;associate(s)},enabled=enabled&&count in 1..256,modifier=Modifier.testTag("selection-associate"))
+                        DropdownMenuItem(text={Text("关联")},onClick={more=false;associate(s)},enabled=enabled&&count in 1..InkSelectionEdit.MAX_SELECTED,modifier=Modifier.testTag("selection-associate"))
                     }
                 }
                 IconButton(onClick=clear,modifier=Modifier.describedAs("取消选择")){Glyph("close")}

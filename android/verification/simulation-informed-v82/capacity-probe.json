@@ -1,0 +1,11 @@
+{
+  "scope": "HOST_CORE_IDENTITY_PAYLOAD_ONLY_NOT_ROOM_OR_FULL_ANNOTATION_MAX",
+  "membership_count": 40800,
+  "membership_bytes": 1428118,
+  "magic": "IWA4",
+  "mixed_member_count": 20000,
+  "mixed_deleted_count": 20000,
+  "mixed_bytes": 1060118,
+  "max_bytes": 1900000,
+  "roundtrip": "PASS"
+}

@@ -89,7 +89,7 @@ class StudyOrganizationTest {
             leaf.id to StudyNodeSize(700.0,860.0),right.id to StudyNodeSize(360.0,700.0),other.id to StudyNodeSize(900.0,1400.0))
         for(layout in listOf("right","bilateral")){
             val plan=StudyOrganization.arrange(initial,sizes,layout);val arranged=StudyOrganization.apply(initial,plan)
-            assertEquals(initial.orderedNodeIds,arranged.orderedNodeIds);assertEquals(8L,arranged.orderRevision)
+            assertEquals(initial.orderedNodeIds,arranged.orderedNodeIds);assertEquals(if(layout==initial.layout)8L else 9L,arranged.orderRevision);assertEquals(layout,arranged.layout)
             assertEquals(initial.nodes.map{it.id to it.parentId}.toMap(),arranged.nodes.map{it.id to it.parentId}.toMap())
             val positions=plan.after.placements
             positions.forEachIndexed{i,a->positions.drop(i+1).forEach{b->
@@ -144,7 +144,7 @@ class StudyOrganizationTest {
         val order=nodes.map{it.id};val mapOrder=KnowledgeData.MapOrder(id(),order)
         assertEquals(mapOrder,KnowledgeCodec.decode(KnowledgeCodec.encode(mapOrder)))
         reject{KnowledgeCodec.encode(mapOrder.copy(orderedNodeIds=listOf(a.id,a.id)))}
-        reject{KnowledgeCodec.encode(mapOrder.copy(orderedNodeIds=List(129){id()}))}
+        reject{KnowledgeCodec.encode(mapOrder.copy(orderedNodeIds=List(StudyGraph.MAX_NODES+1){id()}))}
         reject{StudyOrganization.canonicalOrder(nodes,listOf(b.id,child.id))}
         val cards=listOf(StudyTextCard(a.cardId,"末项",""),StudyTextCard(b.cardId,"首项",""),StudyTextCard(child.cardId,"子项",""))
         val text=StudyText.markdown("顺序",cards,nodes)

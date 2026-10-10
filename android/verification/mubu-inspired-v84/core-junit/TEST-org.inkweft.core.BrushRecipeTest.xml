@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="org.inkweft.core.BrushRecipeTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-10-10T11:37:57.682Z" hostname="4d22d97528bf" time="0.015">
+  <properties/>
+  <testcase name="codecAndContentCopyKeepRecipeMasksAndRawAxes" classname="org.inkweft.core.BrushRecipeTest" time="0.007"/>
+  <testcase name="legacyBytesAndEnumIdentityRemainStable" classname="org.inkweft.core.BrushRecipeTest" time="0.0"/>
+  <testcase name="editingKeepsAppearanceAndTranslation" classname="org.inkweft.core.BrushRecipeTest" time="0.0"/>
+  <testcase name="crossPagePiecesShareMaterialSpaceAndConservativeCoverage" classname="org.inkweft.core.BrushRecipeTest" time="0.006"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

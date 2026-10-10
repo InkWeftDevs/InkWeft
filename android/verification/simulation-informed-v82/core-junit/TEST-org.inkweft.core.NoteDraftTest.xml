@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="org.inkweft.core.NoteDraftTest" tests="12" skipped="0" failures="0" errors="0" timestamp="2026-10-10T10:25:59.261Z" hostname="4d22d97528bf" time="0.01">
+  <properties/>
+  <testcase name="draftKeepsOriginalExpectedRevision" classname="org.inkweft.core.NoteDraftTest" time="0.001"/>
+  <testcase name="digestIncludesExpectedRevisionAndPayload" classname="org.inkweft.core.NoteDraftTest" time="0.004"/>
+  <testcase name="mismatchedReceiptCannotReplaceDraft" classname="org.inkweft.core.NoteDraftTest" time="0.0"/>
+  <testcase name="unknownOutcomeCannotShowSaved" classname="org.inkweft.core.NoteDraftTest" time="0.0"/>
+  <testcase name="lengthDelimitedDigestAvoidsFieldConcatenationAmbiguity" classname="org.inkweft.core.NoteDraftTest" time="0.001"/>
+  <testcase name="unknownCommandCannotChangePayload" classname="org.inkweft.core.NoteDraftTest" time="0.0"/>
+  <testcase name="emptyContentRemainsEmpty" classname="org.inkweft.core.NoteDraftTest" time="0.0"/>
+  <testcase name="conflictDoesNotRebaseOrLoseDraft" classname="org.inkweft.core.NoteDraftTest" time="0.0"/>
+  <testcase name="outOfBoundsTextRejected" classname="org.inkweft.core.NoteDraftTest" time="0.0"/>
+  <testcase name="newOperationGetsNewIdentity" classname="org.inkweft.core.NoteDraftTest" time="0.0"/>
+  <testcase name="twoNotesHaveIndependentDrafts" classname="org.inkweft.core.NoteDraftTest" time="0.0"/>
+  <testcase name="saveFailurePreservesTextAndCommandIdentity" classname="org.inkweft.core.NoteDraftTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

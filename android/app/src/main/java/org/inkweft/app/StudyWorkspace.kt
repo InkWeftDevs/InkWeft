@@ -91,7 +91,9 @@ internal fun StudyWorkspace(note:NoteDraft,initialSource:StudySourceDraft?,dismi
     val vm:StudyViewModel=viewModel(key="study-${note.base.id}",factory=StudyViewModel.Factory(note.base.id,app.study));val ui by vm.ui.collectAsStateWithLifecycle()
     val mapWriter:KnowledgeViewModel=viewModel(key="study-map-writer-${note.base.id}",factory=KnowledgeViewModel.Factory(app.knowledge,app.resourcePacks));val mapWrite by mapWriter.ui.collectAsStateWithLifecycle()
     val portalWriter:KnowledgeViewModel=viewModel(key="map-portal-writer-${note.base.id}",factory=KnowledgeViewModel.Factory(app.knowledge,app.resourcePacks));val portalWrite by portalWriter.ui.collectAsStateWithLifecycle()
-    val canLeave=!hasDraft&&!ui.busy&&!ui.unknown&&!mapWrite.busy&&!mapWrite.unknown&&!portalWrite.busy&&!portalWrite.unknown
+    val summaryWriter:KnowledgeViewModel=viewModel(key="map-summary-writer-${note.base.id}",factory=KnowledgeViewModel.Factory(app.knowledge,app.resourcePacks))
+    val summaryWrite by summaryWriter.ui.collectAsStateWithLifecycle()
+    val canLeave=!hasDraft&&!ui.busy&&!ui.unknown&&!mapWrite.busy&&!mapWrite.unknown&&!portalWrite.busy&&!portalWrite.unknown&&!summaryWrite.busy&&!summaryWrite.unknown
     val reviewLeaveRequest=remember(note.base.id){mutableStateOf<(() -> Boolean)?>(null)}
     Dialog(onDismissRequest={if(canLeave&&reviewLeaveRequest.value?.invoke()!=false)dismiss()},properties=DialogProperties(usePlatformDefaultWidth=false)){
         val chrome=StudyWindowChrome(Modifier){IconButton(onClick={if(canLeave&&reviewLeaveRequest.value?.invoke()!=false)dismiss()},enabled=canLeave,modifier=Modifier.size(48.dp).testTag("study-close").describedAs("返回学习")){Glyph("close")}}
@@ -224,7 +226,12 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
     val portalWriter:KnowledgeViewModel=viewModel(key="map-portal-writer-${note.base.id}",factory=KnowledgeViewModel.Factory(app.knowledge,app.resourcePacks))
     BindKnowledgeReadLock(portalWriter)
     val portalWrite by portalWriter.ui.collectAsStateWithLifecycle()
-    val mapSaving=mapWrite.busy||mapWrite.unknown||portalWrite.busy||portalWrite.unknown
+    val summaryWriter:KnowledgeViewModel=viewModel(key="map-summary-writer-${note.base.id}",factory=KnowledgeViewModel.Factory(app.knowledge,app.resourcePacks))
+    BindKnowledgeReadLock(summaryWriter)
+    val summaryWrite by summaryWriter.ui.collectAsStateWithLifecycle()
+    var summaryDraft by rememberSaveable(note.base.id,stateSaver=MapSummaryDraftSaver){mutableStateOf<MapSummaryDraft?>(null)}
+    var summaryManager by rememberSaveable{mutableStateOf(false)}
+    val mapSaving=mapWrite.busy||mapWrite.unknown||portalWrite.busy||portalWrite.unknown||summaryWrite.busy||summaryWrite.unknown
     LaunchedEffect(mapWrite.completed){if(titleSubmitted&&titleDraft?.structural==true)return@LaunchedEffect;mapWrite.completed?.let{if(newMapTitle!=null)vm.selectMap(it);newMapTitle=null;saveTemplate=false;if(structuralEditorSubmitted){vm.editorState.value=null;structuralEditorSubmitted=false};mapWriter.consumed()}}
     val mainNodes=ui.mainNodes
     val graph=ui.graph?.takeIf{it.ref==MapRef(note.base.id,currentMap)}
@@ -254,6 +261,7 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
     val sourceLoadFailed=navigation.sourceLoadFailed
     var sourceReload by remember{mutableIntStateOf(0)}
     var map by remember{mutableStateOf<MindMapView?>(null)};var dragging by remember{mutableStateOf(false)}
+    var mapScale by remember(mapKey){mutableFloatStateOf(vm.viewports[mapKey]?.scale?:.8f)}
     LaunchedEffect(graph?.graphFingerprint,layoutFitGraph,layoutRestoreGraph,map,tab,mapKey){
         val canvas=map?:return@LaunchedEffect;val stamp=graph?.graphFingerprint?:return@LaunchedEffect
         if(tab!=2)return@LaunchedEffect
@@ -269,6 +277,9 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
     LaunchedEffect(mapKey,map){if(vm.viewports[mapKey]==null)app.learningStore.viewport(MapRef(note.base.id,currentMap))?.let{vm.viewports[mapKey]=it;map?.restoreViewport(it)}}
     DisposableEffect(vm,mapKey){val ref=MapRef(note.base.id,currentMap);onDispose{vm.viewports[mapKey]?.let{app.learningStore.viewport(ref,it)}}}
     var pendingExport by remember{mutableStateOf<String?>(null)};var localMessage by remember{mutableStateOf<String?>(null)}
+    val drawingExport=rememberMapDrawingExport{localMessage=it}
+    var drawingExportMenu by remember{mutableStateOf(false)}
+    var drawingExportAll by rememberSaveable{mutableStateOf(false)}
     var knowledgeCardId by rememberSaveable{mutableStateOf<String?>(null)}
     var knowledgeBacklinks by rememberSaveable{mutableStateOf(false)}
     var knowledgeAllRelationKinds by rememberSaveable{mutableStateOf(false)}
@@ -315,7 +326,7 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
         projectStudyRelations(relationNodeId,relationNodes,mapWrite.rows.filter{it.notebookId in availableBooks})
     }else StudyRelationProjection(emptyList(),0)
     val browseReady=graph!=null&&annotationUi.ready&&documentReady&&!ui.loading&&!ui.readFailed&&!ui.busy&&!ui.unknown&&!mapSaving&&!resolutionPending&&!transformPending
-    val editable=browseReady&&!readOnly&&!missingPortalBranch&&titleDraft==null&&layoutPreview==null&&graph!=null
+    val editable=browseReady&&!readOnly&&!missingPortalBranch&&titleDraft==null&&layoutPreview==null&&summaryDraft==null&&graph!=null
     fun openTransform(kind:CardTransformKind,cardIds:List<String>){
         if(!editable||hasDraft)return
         val ids=cardIds.distinct().filter{id->ui.cards.any{it.id==id&&it.trashedAt==null}}
@@ -420,15 +431,30 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
         val size=MapNodeMetrics.measure(card?.title.orEmpty(),card?.body.orEmpty(),previewSourceInfo(n.cardId),mapFontScale,n.id==expandedNodeId,n.cardId in structureCards.map{it.id})
         n.id to StudyNodeSize(size.width.toDouble(),size.height.toDouble())
     }
-    fun previewLayout(selectionOnly:Boolean=false){
+    fun previewLayout(selectionOnly:Boolean=false,layout:String=graph?.state?.layout?:"right"){
         if(!editable||!readLock.canWrite)return
         val snapshot=graph?:return
         val sizes=measuredNodeSizes()
         val selected=selectedGroup.toSet().takeIf{selectionOnly}.orEmpty()
-        val plan=runCatching{if(selected.isEmpty())StudyOrganization.arrange(snapshot.state,sizes,definition?.layout?:"right")else StudyOrganization.arrangeSelection(snapshot.state,selected,sizes,definition?.layout?:"right")}.getOrElse{localMessage="当前主题无法在布局范围内排布，请先整理分支。";return}
+        val plan=runCatching{if(selected.isEmpty())StudyOrganization.arrange(snapshot.state,sizes,layout)else StudyOrganization.arrangeSelection(snapshot.state,selected,sizes,layout)}.getOrElse{localMessage="当前主题无法在布局范围内排布，请先整理分支。";return}
         val frozenSources=mapSources.mapValues{(card,info)->(previewSourceInfo(card)?:info).let{it.copy(contentRatio=it.previewRatio)}}
-        layoutPreview=StudyLayoutPreview(snapshot.state,plan,displayCards,frozenSources,structureCards.map{it.id}.toSet(),sizes,mapFontScale,expandedNodeId,selected)
+        layoutPreview=StudyLayoutPreview(snapshot.state,plan,displayCards,frozenSources,structureCards.map{it.id}.toSet(),sizes,mapFontScale,expandedNodeId,selected,layout)
         management=false;nodeMenu=false
+    }
+    fun startSummary(){
+        val snapshot=graph?:return
+        if(!editable||!readLock.canWrite)return
+        val group=runCatching{MapSummaries.selection(snapshot.state,selectedGroup.toSet(),"归纳标题")}.getOrElse{
+            localMessage="请选择 2–128 个连续同级主题，避开根主题和已有归纳成员。";return}
+        summaryDraft=MapSummaryDraft(snapshot.graphFingerprint,group,null);summaryManager=false
+    }
+    fun drawingSnapshot():MapDrawingSnapshot?{
+        val source=if(drawingExportAll)active else shown
+        if(source.isEmpty())return null
+        val ids=source.map{it.id}.toSet()
+        val nodes=source.map{n->val card=cardById[n.cardId];MapSceneNode(n.id,n.parentId.takeIf{it in ids},n.cardId.takeUnless{it in structureCards.map{c->c.id}},card?.title.orEmpty(),card?.body.orEmpty(),n.x,n.y,n.revision,card?.revision?:n.revision)}
+        val groups=graph?.state?.summaryGroups.orEmpty().map{it.data}.filter{g->g.memberIds.all{it in ids}&&nodeById[g.memberIds.first()]?.parentId in ids}
+        return MapDrawingSnapshot(definition?.title?:note.title,nodes,graph?.state?.layout?:"right",groups,presentations.toMap())
     }
     fun nodeSourceContext()=StudyNavigationState.NodeOwner(vm.mapId.value,vm.selectedByMap[vm.mapId.value?:"main"],vm.lastTab,chosenCardId,knowledgeCardId,reviewPlan,titleDraft?.token,vm.editorState.value)
     val nodeSourceOwner=nodeSourceContext()
@@ -442,6 +468,7 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
     }
     val authorDraft=reuseCardId!=null||transformKind!=null||resolutionPending||outlineDrag!=null||groupTarget!=null||presentationCardId!=null||titleDraft!=null||editor!=null||newMapTitle!=null||saveTemplate||templatePicker||reparentId!=null||insertMap||layoutPreview!=null
     ReadLockGuard(readLock,guardKey,blocked=ui.busy||ui.unknown||mapSaving||authorDraft,draft=authorDraft)
+    ReadLockGuard(readLock,"$guardKey-summary",blocked=summaryWrite.busy||summaryWrite.unknown||summaryDraft!=null,draft=summaryDraft!=null)
     ReadLockGuard(readLock,"$guardKey-annotation",blocked=annotationUi.busy||annotationUi.pending||annotationNodeId!=null,draft=annotationNodeId!=null)
     ReadLockGuard(readLock,"$guardKey-transform",transformPending,draft=transformKind!=null)
     ReadLockGuard(readLock,"$guardKey-resolution",resolutionPending,draft=resolutionPending)
@@ -467,9 +494,12 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
         if(!preserve){reviewStateHolder.removeState(reviewSessionKey);reviewPlan=null;reviewCardOnly=false}
         return true
     }
-    fun openRelatedTarget(target:TargetRef){
+    fun openRelatedTarget(target:TargetRef,origin:TargetRef?=null){
         if(!leaveReviewContext())return
         navigation.cancelSourceNavigation()
+        // Capture the reading card before closing it. KnowledgeWorkspace may
+        // already supply a more specific origin for its own preview route.
+        if(origin!=null)app.knowledgeTargetOrigin.value=origin
         app.openKnowledgeTarget.value=target;closeCardKnowledge();chosenCardId=null;chosenNodeId=null;inspectSource=false;dismiss()
     }
     fun openCapacity(){
@@ -749,6 +779,7 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
                     trailingIcon={Switch(knowledgeRelations,onCheckedChange=null)},modifier=Modifier.testTag("study-knowledge-relations-toggle"))
                 DropdownMenuItem(text={Text("查看全图")},onClick={map?.fitOverview();management=false},enabled=tab==2,modifier=Modifier.testTag("study-fit-overview"))
                 DropdownMenuItem(text={Text("可读大小")},onClick={map?.fit();management=false},enabled=tab==2,modifier=Modifier.testTag("study-fit-readable"))
+                DropdownMenuItem(text={Text("恢复 100% 大小")},onClick={map?.zoomTo(1f);management=false},enabled=tab==2,modifier=Modifier.testTag("study-zoom-reset"))
                 DropdownMenuItem(text={Text("查找导图内容")},onClick={contentSearch=true;management=false},modifier=Modifier.testTag("study-search-content"))
             }
             if(managementGroup==1)MapMenuSection("整理"){
@@ -762,12 +793,14 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
                 DropdownMenuItem(text={Text("展开全部")},onClick={changeCollapsed(emptyList());management=false},enabled=browseReady&&titleDraft==null&&collapsed.isNotEmpty(),modifier=Modifier.testTag("study-expand-all"))
                 DropdownMenuItem(text={Text("收起分支")},onClick={changeCollapsed(active.mapNotNull{it.parentId}.distinct());management=false},enabled=browseReady&&titleDraft==null,modifier=Modifier.testTag("study-collapse-all"))
                 DropdownMenuItem(text={Text("全部主题")},onClick={focusBranch(null);management=false},modifier=Modifier.testTag("study-focus-all"))
+                DropdownMenuItem(text={Text("括号归纳管理")},onClick={summaryManager=true;management=false},enabled=browseReady,modifier=Modifier.testTag("study-summary-manager"))
                 DropdownMenuItem(text={Text("自动布局预览")},onClick={previewLayout();management=false},enabled=editable,modifier=Modifier.testTag("study-arrange"))
             }
             if(managementGroup==2)MapMenuSection("输出"){
+                DropdownMenuItem(text={Text(if(drawingExport.busy())"正在导出…"else"导出导图 PNG / PDF")},onClick={drawingExportMenu=true;management=false},enabled=browseReady&&!drawingExport.busy()&&active.isNotEmpty(),modifier=Modifier.testTag("study-drawing-export"))
                 if(onInsertEmbed!=null)DropdownMenuItem(text={Text("把导图放入笔记")},onClick={insertMap=true;management=false},enabled=editable,modifier=Modifier.testTag("study-insert-map"))
                 DropdownMenuItem(text={Text("另存为结构模板")},onClick={saveTemplate=true;management=false},enabled=editable,modifier=Modifier.testTag("study-save-template"))
-                DropdownMenuItem(text={Text("导出节点大纲")},onClick={pendingExport=StudyText.markdown(note.title,displayCards.map{StudyTextCard(it.id,it.title,it.body,annotations[it.id].orEmpty())},ui.nodes.map{it.model()})+"\n\n节点内容快照，不包含跨图入口关系；完整恢复请使用资料库备份。\n";export.launch("墨织大纲.md");management=false},enabled=browseReady)
+                DropdownMenuItem(text={Text("导出节点大纲")},onClick={pendingExport=StudyText.markdown(note.title,displayCards.map{StudyTextCard(it.id,it.title,it.body,annotations[it.id].orEmpty())},ui.nodes.map{it.model()},graph?.state?.summaryGroups.orEmpty().map{it.data})+"\n\n节点内容快照，不包含跨图入口关系；完整恢复请使用资料库备份。\n";export.launch("墨织大纲.md");management=false},enabled=browseReady)
             }
         }}
         if(showReadControl)readControl()
@@ -789,8 +822,8 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
         val installedMaps=rememberTemplateCatalog().filter{it.resource.map!=null}
         Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(12.dp)){
             Row(verticalAlignment=Alignment.CenterVertically){Text("新建导图",Modifier.weight(1f));TextButton({templatePicker=false}){Text("返回")}}
-            (MapTemplates.builtins+extraRows.filter{!it.removed&&it.notebookId==note.base.id}.mapNotNull{it.data() as? KnowledgeData.MapTemplate}).forEachIndexed{i,t->
-                TextButton({installedMapHash=null;installedMapId=null;template=t;templatePicker=false;newMapTitle=t.title},enabled=editable,modifier=Modifier.fillMaxWidth().heightIn(min=48.dp).testTag("map-template-$i")){Text(t.title,Modifier.weight(1f));Text("${t.nodes.size} 个结构主题",style=MaterialTheme.typography.labelSmall)}
+            MapTemplateChoices(MapTemplates.builtins+extraRows.filter{!it.removed&&it.notebookId==note.base.id}.mapNotNull{it.data() as? KnowledgeData.MapTemplate},editable){t->
+                installedMapHash=null;installedMapId=null;template=t;templatePicker=false;newMapTitle=t.title
             }
             if(installedMaps.isNotEmpty())Text("我的模板",style=MaterialTheme.typography.labelLarge,color=Quiet)
             installedMaps.forEach{entry->TextButton({template=checkNotNull(entry.resource.map);installedMapHash=entry.ref.hash;installedMapId=entry.ref.id;templatePicker=false;newMapTitle=entry.title},enabled=editable,modifier=Modifier.fillMaxWidth().heightIn(min=48.dp).testTag("installed-map-${entry.ref.id}")){Text(entry.title,Modifier.weight(1f));Text("v${entry.version}",style=MaterialTheme.typography.labelSmall)}}
@@ -802,7 +835,7 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
                 TextButton(onClick={app.learningStore.shortcut(vm.selectedByMap[mapKey]?.let{StableTargetRef(LearningTargetKind.BRANCH,note.base.id,it,currentMap)}?:StableTargetRef(LearningTargetKind.MAP,note.base.id,currentMap),true);localMessage="已固定到学习快捷入口"},enabled=browseReady,modifier=Modifier.testTag("study-pin-map")){Text(if(vm.selectedByMap[mapKey]!=null)"固定分支"else"固定到学习")}
                 TextButton(onClick={editor=CardEditor()},enabled=editable,modifier=Modifier.testTag("study-add-card")){Text("＋ 新摘要卡")}
                 TextButton(onClick={saveTemplate=true},enabled=editable,modifier=Modifier.testTag("study-save-template")){Text("另存为模板")}
-                TextButton(onClick={pendingExport=StudyText.markdown(note.title,ui.cards.filter{it.trashedAt==null}.map{StudyTextCard(it.id,it.title,it.body,annotations[it.id].orEmpty())},ui.nodes.map{it.model()})+"\n\n节点内容快照，不包含跨图入口关系；完整恢复请使用资料库备份。\n";export.launch("墨织摘要.md")},enabled=browseReady&&ui.cards.isNotEmpty()){Text("导出节点大纲")}
+                TextButton(onClick={pendingExport=StudyText.markdown(note.title,displayCards.filter{it.trashedAt==null}.map{StudyTextCard(it.id,it.title,it.body,annotations[it.id].orEmpty())},ui.nodes.map{it.model()},graph?.state?.summaryGroups.orEmpty().map{it.data})+"\n\n节点内容快照，不包含跨图入口关系；完整恢复请使用资料库备份。\n";export.launch("墨织摘要.md")},enabled=browseReady&&ui.cards.isNotEmpty()){Text("导出节点大纲")}
             }
 
             if(!compactWindow)BoxWithConstraints(Modifier.fillMaxWidth()){
@@ -902,6 +935,7 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
                 if(selectedGroup.isNotEmpty()){
                     Text("已选 ${selectedGroup.size} 项 · 整支 ${selectedBranches.size} 主题",style=MaterialTheme.typography.labelSmall,modifier=Modifier.align(Alignment.CenterVertically).testTag("study-selection-count"))
                     TextButton({graph?.state?.let{groupTarget=it to selectedGroup.toSet()}},enabled=editable&&!hasDraft,modifier=Modifier.testTag("study-group-selection")){Text("分组")}
+                    TextButton({startSummary()},enabled=editable&&!hasDraft,modifier=Modifier.testTag("study-summary-selection")){Text("括号归纳")}
                     TextButton({previewLayout(true)},enabled=editable&&!hasDraft,modifier=Modifier.testTag("study-arrange-selection")){Text("布局预览")}
                     val selectedCards=selectedGroup.mapNotNull{nodeById[it]?.cardId}.filter{it !in structureCards.map{card->card.id}}.distinct()
                     TextButton({openTransform(CardTransformKind.MERGE,selectedCards)},enabled=editable&&!hasDraft&&selectedCards.size in 2..16,modifier=Modifier.testTag("study-merge-selection")){Text("合并 ${selectedCards.size} 卡")}
@@ -939,7 +973,7 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
             val mapAnnotationState=annotationUi.state
             val mapRevealNodeId=vm.revealByMap[mapKey]
             val mapRevealShouldFocus=mapRevealNodeId!=null&&(vm.searchHit?.nodeId==mapRevealNodeId||vm.focusedByMap[mapKey]==mapRevealNodeId)
-            BoxWithConstraints(Modifier.fillMaxWidth().weight(1f)){key(mapKey){AndroidView(factory={MindMapView(it).also{v->map=v;vm.viewports[mapKey]?.let(v::restoreViewport);v.onViewport={vp->vm.viewports[mapKey]=vp}}},onReset=null,onRelease={v->if(map===v)map=null},update={v->Snapshot.withoutReadObservation{v.captureBook=note.base.id;v.captureMapKey=mapKey;v.captureGraph=graph?.graphFingerprint.orEmpty();v.onCapture={transfer,parent,x,y,graph->
+            BoxWithConstraints(Modifier.fillMaxWidth().weight(1f)){key(mapKey){AndroidView(factory={MindMapView(it).also{v->map=v;vm.viewports[mapKey]?.let(v::restoreViewport);v.onViewport={vp->vm.viewports[mapKey]=vp};v.onScaleChanged={mapScale=it}}},onReset=null,onRelease={v->if(map===v)map=null},update={v->Snapshot.withoutReadObservation{v.captureBook=note.base.id;v.captureMapKey=mapKey;v.captureGraph=graph?.graphFingerprint.orEmpty();v.mapLayout=graph?.state?.layout?:"right";v.summaryGroups=graph?.state?.summaryGroups.orEmpty().map{it.data};v.onCapture={transfer,parent,x,y,graph->
                 if(editable&&readLock.canWrite)vm.submit(transfer.command(MapRef(note.base.id,currentMap),parent?.id,graph,x,y))
             };v.movementNodes=active;v.selectionMode=mapSelectionMode;v.selectedNodeIds=mapSelectedIds;v.onSelectMany={selectedGroup=it.toList()};v.onGestureMessage={localMessage=it};v.onMoveSelection={roots,dx,dy,stamp->
                 val snapshot=graph
@@ -1135,13 +1169,7 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
         }
         val studyFooterContent:@Composable ColumnScope.()->Unit={
             if(tab!=2&&vm.captureUndo[mapKey]!=null)TextButton(vm::undoCapture,enabled=editable,modifier=Modifier.testTag("study-undo-capture")){Text("撤销此次摘录添加")}
-            if(tab==2&&!compactWindow)Row(Modifier.fillMaxWidth().heightIn(min=48.dp).padding(end=if(compactWindow)48.dp else 0.dp),verticalAlignment=Alignment.CenterVertically){
-                IconButton({map?.zoom(1/1.2f)},modifier=Modifier.describedAs("缩小思维导图")){Text("−")}
-                TextButton({map?.fit()}){Text("适配")}
-                IconButton({map?.zoom(1.2f)},modifier=Modifier.describedAs("放大思维导图")){Text("＋")}
-                if(vm.captureUndo[mapKey]!=null)IconButton(vm::undoCapture,enabled=editable,modifier=Modifier.size(48.dp).testTag("study-undo-capture").describedAs("撤销此次摘录添加")){Glyph("undo")}
-                else if(focusId==null)Text("${shown.size} / ${active.size} 个主题",Modifier.weight(1f),style=MaterialTheme.typography.labelSmall,color=Quiet)
-            }
+            if(tab==2)MapZoomControls(map,mapScale,selectedBranches.ifEmpty{vm.selectedByMap[mapKey]?.let{setOf(it)}.orEmpty()},browseReady&&!dragging)
         }
         Surface(Modifier.fillMaxSize().padding(end=inspectorInset).testTag("study-primary-content"),shape=RoundedCornerShape(if(compactWindow)0.dp else 20.dp),color=Color.White,border=if(compactWindow)null else BorderStroke(1.dp,Line)){Column(Modifier.fillMaxSize().padding(if(compactWindow)4.dp else 16.dp)){
             studyHeaderContent()
@@ -1149,6 +1177,24 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
             studyFooterContent()
         }}
     }
+    if(drawingExportMenu)StudyDialog(compactWindow,onDismissRequest={drawingExportMenu=false},title={Text("导出导图")},text={Column{
+        Text("包含主题标题、正文摘要、卡片配色和括号归纳；原迹缩略图、手写批注及知识关联请用完整备份保存。",style=MaterialTheme.typography.bodySmall)
+        Row{FilterChip(!drawingExportAll,{drawingExportAll=false},label={Text("当前展开内容")});Spacer(Modifier.width(8.dp));FilterChip(drawingExportAll,{drawingExportAll=true},label={Text("全图")})}
+        Text("PNG 适合分享；PDF 保留可放大的文字与图形。大图会缩放到单页。",style=MaterialTheme.typography.bodySmall,color=Quiet)
+        MapDrawingFormat.entries.forEach{format->TextButton({drawingSnapshot()?.let{drawingExport.start(it,format)};drawingExportMenu=false},enabled=browseReady&&!drawingExport.busy(),modifier=Modifier.testTag("map-export-${format.extension}")){Text("导出 ${format.name}")}}
+    }},confirmButton={TextButton({drawingExportMenu=false}){Text("返回")}})
+    if(summaryManager)StudyDialog(compactWindow,onDismissRequest={summaryManager=false},title={Text("括号归纳")},modifier=Modifier.testTag("map-summary-manager"),text={Column(Modifier.heightIn(max=400.dp).verticalScroll(rememberScrollState())){
+        Text("选择连续同级主题后添加归纳；原主题保持独立。解除归纳不会删除主题。",style=MaterialTheme.typography.bodySmall)
+        TextButton({startSummary()},enabled=editable&&selectedGroup.size in 2..128,modifier=Modifier.testTag("map-summary-create")){Text("归纳所选 ${selectedGroup.size} 个主题")}
+        graph?.state?.summaryGroups.orEmpty().forEach{group->TextButton({summaryWrite.rows.firstOrNull{it.id==group.id&&!it.removed}?.let{row->summaryDraft=MapSummaryDraft(graph!!.graphFingerprint,group.data,row);summaryManager=false}},enabled=editable,modifier=Modifier.fillMaxWidth().testTag("map-summary-edit-${group.id}")){Text("${group.data.label} · ${group.data.memberIds.size} 主题")}}
+        TextButton(summaryWriter::undoProperties,enabled=editable&&summaryWriter.canUndoSummary(currentMap),modifier=Modifier.testTag("map-summary-undo")){Text("撤销归纳操作")}
+        TextButton(summaryWriter::redoProperties,enabled=editable&&summaryWriter.canRedoSummary(currentMap),modifier=Modifier.testTag("map-summary-redo")){Text("重做归纳操作")}
+        if(summaryWrite.unknown)TextButton(summaryWriter::retry,enabled=!summaryWrite.busy){Text("核对原操作")}
+        summaryWrite.message?.let{Text(it,style=MaterialTheme.typography.bodySmall)}
+    }},confirmButton={TextButton({summaryManager=false}){Text("完成")}})
+    summaryDraft?.let{draft->key(draft.old?.id,draft.value.memberIds){MapSummaryEditor(note.base.id,draft.value,draft.old,summaryWriter,summaryWrite,
+        browseReady&&!readOnly&&graph?.graphFingerprint==draft.stamp,compactWindow){summaryDraft=null}}}
+    if(summaryWrite.unknown&&summaryDraft==null&&!summaryManager)StudyDialog(compactWindow,onDismissRequest={},title={Text("核对归纳操作")},text={Text("上次操作结果待核对，重试保留同一笔操作。")},confirmButton={TextButton(summaryWriter::retry,enabled=!summaryWrite.busy){Text("核对原操作")}})
     if(annotationLayers)PageLayersPanel(mapAuthoring,annotationUi,!readOnly&&!dragging,dismiss={annotationLayers=false})
     annotationNodeId?.let{targetId->
         val node=nodeById[targetId]
@@ -1196,10 +1242,11 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
         active.take(6).forEachIndexed{i,n->Text(if(keepTemplateTitles)cardById[n.cardId]?.title.orEmpty()else"主题 ${i+1}",style=MaterialTheme.typography.bodySmall)}
         localMessage?.let{Text(it)}
         mapWrite.message?.let{Text(it)}
-    }},confirmButton={TextButton({if(mapWrite.unknown)mapWriter.retry()else {val draft=runCatching{MapTemplates.anonymize(templateTitle.trim(),definition?.layout?:"right",ui.nodes.map{it.model()},displayCards.associate{it.id to it.title},keepTemplateTitles)}.getOrElse{localMessage="模板最多支持 128 个主题、32 层；原图保留。";return@TextButton};mapWriter.submit(note.base.id,draft)}},enabled=!mapWrite.busy&&(mapWrite.unknown||(editable&&templateTitle.isNotBlank())),modifier=Modifier.testTag("save-map-template-confirm")){Text(if(mapWrite.unknown)"核对原操作"else"保存模板")}},dismissButton={TextButton({saveTemplate=false},enabled=!mapSaving){Text("取消")}})
+    }},confirmButton={TextButton({if(mapWrite.unknown)mapWriter.retry()else {val draft=runCatching{MapTemplates.anonymize(templateTitle.trim(),graph?.state?.layout?:"right",ui.nodes.map{it.model()},displayCards.associate{it.id to it.title},keepTemplateTitles)}.getOrElse{localMessage="模板最多支持 1024 个主题；请核对结构与标题，原图保留。";return@TextButton};mapWriter.submit(note.base.id,draft)}},enabled=!mapWrite.busy&&(mapWrite.unknown||(editable&&templateTitle.isNotBlank())),modifier=Modifier.testTag("save-map-template-confirm")){Text(if(mapWrite.unknown)"核对原操作"else"保存模板")}},dismissButton={TextButton({saveTemplate=false},enabled=!mapSaving){Text("取消")}})
     if(mapWrite.unknown&&newMapTitle==null&&!saveTemplate&&titleDraft?.structural!=true&&!structuralEditorSubmitted)StudyDialog(compactWindow,onDismissRequest={},title={Text("核对新建图")},text={Text("上次操作结果尚未确认，继续核对不会重复创建。")},confirmButton={TextButton(mapWriter::retry,enabled=!mapWrite.busy){Text("核对原操作")}})
     newMapTitle?.let{title->StudyDialog(compactWindow,onDismissRequest={if(!mapSaving)newMapTitle=null},title={Text("新建独立图")},text={Column(Modifier.verticalScroll(rememberScrollState())){
         OutlinedTextField(title,{if(it.length<=120)newMapTitle=it},enabled=editable,modifier=Modifier.testTag("study-new-map-title"))
+        MapTemplatePreview(template)
         Text("${template.nodes.size} 个结构主题",style=MaterialTheme.typography.labelMedium)
         template.nodes.take(6).forEach{Text(it.title,style=MaterialTheme.typography.bodySmall)}
         mapWrite.message?.let{Text(it)}
@@ -1272,7 +1319,7 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
                 Text("正文 / 既有内容",style=MaterialTheme.typography.labelMedium,color=Quiet,modifier=Modifier.testTag("card-body-heading").semantics{heading()})
                 if(card.id in structureCards.map{it.id})androidx.compose.foundation.text.selection.SelectionContainer{Text(card.body.ifBlank{"尚未填写摘要"},modifier=Modifier.testTag("card-full-body"))}
                 else KnowledgeLinkedCardBody(TargetRef(TargetKind.CARD,card.id),card.body,browseReady){target->
-                    openRelatedTarget(target)
+                    openRelatedTarget(target,TargetRef(TargetKind.CARD,card.id))
                 }
             }
             if(!inspectSource&&card.id !in structureCards.map{it.id}){
@@ -1419,7 +1466,7 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
         })
     }}
     knowledgeCard?.let{card->
-        val openKnowledgeTarget:(TargetRef)->Unit=::openRelatedTarget
+        val openKnowledgeTarget:(TargetRef)->Unit={openRelatedTarget(it)}
         if(knowledgeBacklinks)KnowledgeWorkspace(note.base.id,TargetRef(TargetKind.CARD,card.id),initialBacklinks=true,includeAllRelationKinds=knowledgeAllRelationKinds,dismiss=::closeCardKnowledge,openTarget=openKnowledgeTarget)
         else knowledgeState.SaveableStateProvider(card.id){KnowledgeWorkspace(note.base.id,TargetRef(TargetKind.CARD,card.id),dismiss=::closeCardKnowledge,openTarget=openKnowledgeTarget)}
     }
@@ -1436,14 +1483,17 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
     layoutPreview?.let{preview->
         val current=browseReady&&!readOnly&&graph?.graphFingerprint==preview.plan.expectedGraph&&
             mapFontScale==preview.fontScale&&expandedNodeId==preview.expandedNodeId&&measuredNodeSizes()==preview.sizes
-        StudyLayoutPreviewDialog(preview,compactWindow,current,{layoutPreview=null}){
+        StudyLayoutPreviewDialog(preview,compactWindow,current,{layoutPreview=null},apply={
             if(current&&readLock.canWrite){
                 layoutCamera=PortalReturn(currentMap,"",vm.selectedByMap[mapKey],map?.readingReturnViewport()?:vm.viewports[mapKey],collapsed,focusId).saved()
                 layoutUndoGraph=preview.plan.expectedAfterGraph;layoutFitGraph=preview.plan.expectedAfterGraph;layoutRestoreGraph=null
                 mapChangeFeedback=MapChangeFeedback(preview.plan.expectedAfterGraph,null,active.map{it.id}.toSet(),vm.selectedByMap[mapKey])
                 vm.organize(preview.state,preview.plan);layoutPreview=null;localMessage="布局已提交，撤销可恢复原位置和视野。"
             }
-        }
+        },changeLayout={layout->
+            val plan=runCatching{if(preview.selection.isEmpty())StudyOrganization.arrange(preview.state,preview.sizes,layout)else StudyOrganization.arrangeSelection(preview.state,preview.selection,preview.sizes,layout)}.getOrElse{localMessage="此布局无法保持主题或归纳组，请换一种布局。";return@StudyLayoutPreviewDialog}
+            layoutPreview=preview.copy(plan=plan,layout=layout)
+        })
     }
     reparent?.let{node->StudyDialog(compactWindow,onDismissRequest={if(!ui.busy&&!ui.unknown)reparentId=null},title={Text("移入主题（分组）")},text={Column(Modifier.heightIn(max=350.dp).verticalScroll(rememberScrollState())){
         Text("将整个分支放到所选主题末尾。卡片内容、出处和引用保留。",style=MaterialTheme.typography.bodySmall,color=Quiet)

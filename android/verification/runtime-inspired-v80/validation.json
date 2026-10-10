@@ -1,0 +1,44 @@
+{
+  "candidate_version": 80,
+  "generated_utc": "2026-10-10T02:40:38.485580+00:00",
+  "baseline_commit": "d3f1c5864bb83a145a26f4da6c953680e68333fc",
+  "ancestor_user_commit": "fd8c4477a84188c00e18352717c2d3585d4b2884",
+  "pr": "https://github.com/InkWeftDevs/InkWeft/pull/18",
+  "core": {
+    "status": "PASS",
+    "suites": 48,
+    "tests": 405,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "new_methods": 15
+  },
+  "android": {
+    "main_and_test_compile": "PASS",
+    "instrumentation": "NOT_RUN",
+    "new_methods_not_run": 5,
+    "apk_build": "BLOCKED",
+    "blocker": "MuPDF 1.28.5 Maven POM HTTP 403",
+    "compile_dependency_scope": "Same-version official MuPDF Java API, compile-only AAR with no native library; product dependency unchanged"
+  },
+  "lint": {
+    "errors": 0,
+    "fatal": 0,
+    "warnings": 175,
+    "hints": 2,
+    "scope": "Official same-version Java API compile environment"
+  },
+  "synthetic_replay": {
+    "cases": 9,
+    "points": 558,
+    "scope": "Core codec and immutable axes/time preservation only",
+    "physical_pen": "NOT_RUN"
+  },
+  "capture_zip_sha256": "9b09208a83d8ab340d034a4856ca8c050a7d6be23e1af943c001708a132f6ed8",
+  "matched_neopen_sha256": "7ae9efcc86a94ec3f764e37a55b32fb9da58fd5c881ba40dd243ef1bd1dde82c",
+  "source_manifest_sha256": "7968b7902ef33403f842be4e282db243108efe4633c9b8733d14ec75fabb7e04",
+  "source_manifest_files": 21,
+  "logs": "Trailing whitespace normalized for Git; original logs retained in cloud tool directory",
+  "storage": "Room16 and file wire formats unchanged; V79 capacity limits retained",
+  "deferred": "Physical stylus, runtime smoothing and pressure tuning, frame/memory measurements, shape and mathematical recognition accuracy"
+}

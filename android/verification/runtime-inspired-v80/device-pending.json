@@ -1,0 +1,30 @@
+{
+  "candidate_version": 80,
+  "status": "NOT_RUN",
+  "reason": "用户安排真机实测延后；云端没有运行 Android instrumentation",
+  "new_methods": [
+    "org.inkweft.app.InputRenderingRegressionTest#penUpConsumesItsEntireHistoryBeforeCommitWithoutInventingHardwareAxes",
+    "org.inkweft.app.InputRenderingRegressionTest#canceledTerminalHistoryCannotBecomeAnAuthorStroke",
+    "org.inkweft.app.InputRenderingRegressionTest#stationaryPressureChangesReopenThroughNativeInkWithoutLosingAuthorReadings",
+    "org.inkweft.app.InputRenderingRegressionTest#sameIdInteriorPencilChangesMatchFreshRasterPixels",
+    "org.inkweft.app.InputRenderingRegressionTest#stationaryPencilUpdateUsesTheLastReadingRatherThanAccumulatingOldPressure"
+  ],
+  "related_existing_methods": [
+    "org.inkweft.app.FastPencilTest#longLiveStrokeDoesNotRerasterizeOldTiles",
+    "org.inkweft.app.SelectionPerformanceTest#repeatedPageDrawKeepsPencilRasterWorkBounded",
+    "org.inkweft.app.SelectionPerformanceTest#cachedInkMatchesDirectPixelsAfterAppendEraseAndViewportChange",
+    "org.inkweft.app.FormulaFlowTest#editingResizedFormulaKeepsItsDisplayScaleAndColorOnlyEditKeepsMasks",
+    "org.inkweft.app.ExcerptLassoRegressionTest#freehandExcerptExcludesTheOtherCornerOfItsBoundingBox",
+    "org.inkweft.data.InkRepositoryTest#visiblePreviewMatchesFullReadAfterCutsReplacementAndUndo",
+    "org.inkweft.data.InkRepositoryTest#previewSkipsHiddenPayloadWhileFullReadStillValidatesHistory"
+  ],
+  "physical_observations": [
+    "真实设备的 MotionRange、完整事件和批次历史，压力、倾角、方向、悬停、橡皮端与笔按钮",
+    "实时滤波前后坐标、笔型输出与帧，抬笔收锋和压力曲线舒适度",
+    "长铅笔及大页的峰值内存、缓存复用、持续书写和冷加载",
+    "图形识别内部输入输出与固定正确率样本",
+    "公式识别完整二维真人样本及校对前后的内容正确率"
+  ],
+  "environment": "需完整正常 MuPDF 原生依赖；独立测试安装身份及测试资料。记录实际源码、APK、签名、架构和具体方法回执；不得合入旧候选 PASS。",
+  "synthetic_matrix_scope": "核心编码和润色轴值保留；不是设备、Android 输入归一化、原生像素或识别准确率通过"
+}

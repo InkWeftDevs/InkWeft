@@ -78,6 +78,32 @@ class InkRepositoryTest {
         repo.save(CommitInk(id(),note.id,2,InkMutation.Visibility(listOf(s.id),true)))
         assertArrayEquals(before,db.ink().stroke(s.id)!!.payload);assertTrue(repo.read(note.id).strokes.single().visible)
     }
+    @Test fun visiblePreviewMatchesFullReadAfterCutsReplacementAndUndo()=runBlocking{
+        val repo=InkRepository(db);val a=stroke();val b=stroke()
+        repo.save(CommitInk(id(),note.id,0,InkMutation.Add(a)))
+        repo.save(CommitInk(id(),note.id,1,InkMutation.Add(b)))
+        val cut=InkCut(id(),5f,listOf(EraserPoint(40f,50f)))
+        repo.save(CommitInk(id(),note.id,2,InkMutation.Cut(EraseSelection(cut,listOf(a.id,b.id)))))
+        suspend fun compare(){
+            val full=InkSession(repo.read(note.id)).visibleDraft();val visible=repo.readVisible(note.id)
+            assertEquals(full.map{it.id},visible.map{it.id})
+            full.zip(visible).forEach{(x,y)->assertArrayEquals(InkStrokeCodec.encode(x),InkStrokeCodec.encode(y))}
+        }
+        compare()
+        repo.save(CommitInk(id(),note.id,3,InkMutation.Visibility(listOf(a.id),false)));compare()
+        repo.save(CommitInk(id(),note.id,4,InkMutation.Visibility(listOf(a.id),true)));compare()
+        repo.save(CommitInk(id(),note.id,5,InkMutation.CutVisibility(cut.id,false)));compare()
+    }
+    @Test fun previewSkipsHiddenPayloadWhileFullReadStillValidatesHistory()=runBlocking{
+        val repo=InkRepository(db);val hidden=stroke();val visible=stroke()
+        repo.save(CommitInk(id(),note.id,0,InkMutation.Add(hidden)))
+        repo.save(CommitInk(id(),note.id,1,InkMutation.Add(visible)))
+        repo.save(CommitInk(id(),note.id,2,InkMutation.Visibility(listOf(hidden.id),false)))
+        // Isolated test database: a malformed tombstone proves preview never decodes it.
+        db.openHelper.writableDatabase.execSQL("UPDATE ink_strokes SET payload=? WHERE id=?",arrayOf(byteArrayOf(0),hidden.id))
+        assertEquals(listOf(visible.id),repo.readVisible(note.id).map{it.id})
+        try{repo.read(note.id);fail("author read must validate retained history")}catch(_:Exception){}
+    }
     @Test fun importedPageIsNewIdentityAndDoesNotOverwriteText()=runBlocking {
         val a=stroke();val b=stroke()
         val file=InkPageFile.decode(InkPageFile("页面","可编辑文字",listOf(a,b)).encode())
