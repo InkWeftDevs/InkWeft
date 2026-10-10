@@ -82,12 +82,7 @@ internal object InkBrushes {
         // Ink permits pressure-only author samples; the native renderer requires a
         // new position or timestamp. Coalesce only the derived render input, keeping
         // the final sensor values and the immutable source/backup bytes unchanged.
-        val samples=ArrayList<InkSample>()
-        stroke.renderSamples().forEach{sample->
-            val previous=samples.lastOrNull()
-            if(previous!=null&&previous.x==sample.x&&previous.y==sample.y&&previous.elapsedMs==sample.elapsedMs)samples[samples.lastIndex]=sample
-            else samples.add(sample)
-        }
+        val samples=InkSampling.forRendering(stroke.renderSamples())
         val batch=MutableStrokeInputBatch();samples.forEach{add(batch,it,stroke.tool,stroke.pen,stroke.appearance)}
         return Stroke(brush(stroke.pen,stroke.color,stroke.width,stroke.samples.first().pressure>=0,stroke.appearance),batch)
     }

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="org.inkweft.core.PenKindsTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-10-10T02:36:21.213Z" hostname="4d22d97528bf" time="0.002">
+  <properties/>
+  <testcase name="beautificationOfNewWritingPensRetainsRawPressureAndType" classname="org.inkweft.core.PenKindsTest" time="0.001"/>
+  <testcase name="noPressureHasExplicitFallbackAndBrushCurveKeepsEndpoints" classname="org.inkweft.core.PenKindsTest" time="0.0"/>
+  <testcase name="allPenKindsSurviveEditablePageRoundTripWithoutChangingAuthorAxes" classname="org.inkweft.core.PenKindsTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 package org.inkweft.core
 import java.io.*
-import java.security.MessageDigest
 import java.util.Collections
 
 /** Visible content copy, including effective masks; not vault or undo history. */
@@ -31,10 +30,10 @@ class InkPageFile(val title:String,val text:String,strokes:List<InkStroke>,val w
     }
     companion object {
         const val MAX_BYTES=64_000_000
-        fun decode(bytes:ByteArray):InkPageFile {
-            require(bytes.size in 48..MAX_BYTES);val body=bytes.copyOfRange(0,bytes.size-32)
-            require(MessageDigest.isEqual(MessageDigest.getInstance("SHA-256").digest(body),bytes.copyOfRange(bytes.size-32,bytes.size)))
-            return DataInputStream(ByteArrayInputStream(body)).use{input->
+        fun decode(bytes:ByteArray):InkPageFile=decodeRange(bytes,0,bytes.size)
+        internal fun decodeRange(bytes:ByteArray,offset:Int,length:Int):InkPageFile {
+            require(length in 48..MAX_BYTES)
+            return ChecksummedBuffer.checkedInput(bytes,offset,length).use{input->
                 val magic=input.readInt();require(magic in listOf(0x49575031,0x49575032,0x49575033,0x49575034,0x49575035,0x49575036,0x49575037,0x49575038)){"Unknown page copy version"}
                 val world=if(magic!=0x49575031)input.readBoolean()else false
                 val paper=if(magic!=0x49575031)PaperStyle.entries.getOrNull(input.readUnsignedByte())?:error("Unknown paper")else PaperStyle.RULED

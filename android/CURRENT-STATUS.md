@@ -1,4 +1,14 @@
-# 最新云端候选 V79 — 2026-10-09
+# 最新云端候选 V80 — 2026-10-10
+
+继续草稿 PR #18 和 `codex/cloud/starnote-inspired-editor-20261009`，本轮起点 `d3f1c5864bb83a145a26f4da6c953680e68333fc`。落实抬笔历史点、轴更新保真、润色段长加权、跨页方向短弧、凹套索准确性、铅笔与外观缓存失效、带图层单页导入、读取缓冲复制和文字行预算修复。版本80／`0.0.80-input-and-content-copies`，Room16 和文件编码保持。
+
+采集包清单452份文件及2820对原生调用／返回离线核对；九组558点在核心编码和轴值保留重放通过。Goodnotes错误会话保持ERROR，采集全部为模拟器合成输入；StarNote neopen库与既存静态样本SHA一致，仍缺滤波输出、真实硬件和识别器内部证据。真机采集按用户安排等待。
+
+核心405 PASS / 0 FAIL，编译通过、lint 0 Error / 0 Fatal（175 Warning、2 Hint）。最终源码和回归回执见 [V80 报告](verification/runtime-inspired-v80/RESULTS.html)、[验证 JSON](verification/runtime-inspired-v80/validation.json)。Android 新方法只有编译检查，NOT_RUN；正常MuPDF原生依赖仍403，无APK。先在正常依赖环境运行新增五项输入／铅笔方法和V79待测，再记录真实传感器、帧与大资料内存；不要合并旧候选PASS为本候选通过。
+
+---
+
+# 历史云端候选 V79 — 2026-10-09
 
 分支 `codex/cloud/starnote-inspired-editor-20261009`，基于本地已推送的 V78 `fd8c4477a84188c00e18352717c2d3585d4b2884`。已落实容量、加载、摘要套索、文字跳转、导图编解码和两项公式问题；详见 [更新与验证报告](verification/starnote-inspired-v79/RESULTS.html)。
 

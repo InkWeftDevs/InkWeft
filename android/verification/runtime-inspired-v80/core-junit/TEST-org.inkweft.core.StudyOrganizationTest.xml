@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="org.inkweft.core.StudyOrganizationTest" tests="10" skipped="0" failures="0" errors="0" timestamp="2026-10-10T02:36:22.534Z" hostname="4d22d97528bf" time="0.018">
+  <properties/>
+  <testcase name="layoutUsesEveryMeasuredNodeAndNeverOverlapsForRightOrBilateralTrees" classname="org.inkweft.core.StudyOrganizationTest" time="0.003"/>
+  <testcase name="mapOrderIsBoundedAndCanonicalExportUsesTheAuthorSequence" classname="org.inkweft.core.StudyOrganizationTest" time="0.001"/>
+  <testcase name="reparentBeforeSiblingKeepsDescendantsAndRemovedRows" classname="org.inkweft.core.StudyOrganizationTest" time="0.001"/>
+  <testcase name="selectedBranchesMoveOnceKeepContentAndCanUndoThenRedo" classname="org.inkweft.core.StudyOrganizationTest" time="0.002"/>
+  <testcase name="movingSiblingsMovesWholeSubtreesAndIndentOutdentKeepAuthorGeometry" classname="org.inkweft.core.StudyOrganizationTest" time="0.002"/>
+  <testcase name="firstMoveFreezesLegacyOrderBeforeGeometryAndReopenKeepsIt" classname="org.inkweft.core.StudyOrganizationTest" time="0.002"/>
+  <testcase name="previewBindsRelevantCardRevisionDeletionAndGraphMetadata" classname="org.inkweft.core.StudyOrganizationTest" time="0.002"/>
+  <testcase name="planCodecAndCommandFreezeRetryPayloadAndBindSiblingAnchor" classname="org.inkweft.core.StudyOrganizationTest" time="0.002"/>
+  <testcase name="overlappingSelectionGroupsOnceAndLayoutKeepsUnselectedBranches" classname="org.inkweft.core.StudyOrganizationTest" time="0.002"/>
+  <testcase name="mixedStructureOccurrenceReparentUpdatesOneDefinitionAndUndoCannotResetVersions" classname="org.inkweft.core.StudyOrganizationTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

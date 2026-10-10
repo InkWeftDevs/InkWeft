@@ -1,0 +1,23 @@
+{
+  "android/app/build.gradle.kts": "c0d90ba96540c667ed8c79a1375efe50d57c1dc5354d23ed7329d7cc65efb8af",
+  "android/app/src/androidTest/java/org/inkweft/app/InputRenderingRegressionTest.kt": "15c1b2cfd2b8430a2f984b35d47b5ec4a91ea0b8a1e2e85f79b28934834be045",
+  "android/app/src/main/java/org/inkweft/app/InkBrushes.kt": "0eb3c5185d0cbf2d37374745a735cbc1d9f8387adb64f6f082ccc1e9b943569f",
+  "android/app/src/main/java/org/inkweft/app/InkCanvasView.kt": "41a300b45a873ae9b9cba4d9f12c09fd1a2eb8457c04a72673970d5706e17126",
+  "android/app/src/main/java/org/inkweft/app/PencilRenderer.kt": "018040ffdf917f3dcdcfebea22409dd11264674759e2c58a509a7b6fb210e2dc",
+  "android/core-domain/src/main/kotlin/org/inkweft/core/ChecksummedBuffer.kt": "962a0b960d214ba36ce6090b1b994422e7143b4521e06278fc85646d772326b7",
+  "android/core-domain/src/main/kotlin/org/inkweft/core/ContentTransfer.kt": "158eac6b9f457c8dc7b42bf659d2892d1496385d73b49e23c3f17e533303b6dd",
+  "android/core-domain/src/main/kotlin/org/inkweft/core/ContinuousInk.kt": "ddb554e8732251170dcfd4348ad5299269b4b8b921e8b664d11d3f87ab85f850",
+  "android/core-domain/src/main/kotlin/org/inkweft/core/HandwritingLines.kt": "db7ae1d73d39bfda014430ab83246d6666e9ed94b27a8682d79ce71f85e3e63b",
+  "android/core-domain/src/main/kotlin/org/inkweft/core/InkPageFile.kt": "83ac855e3a877406dd2bdab5946d33e96223b361f0068d598c28a57d5bf6ba64",
+  "android/core-domain/src/main/kotlin/org/inkweft/core/InkSampling.kt": "a9c015d81e3b80037d26fbcace50e4fc232b1cb91fc6757ff8d20c09e13e072f",
+  "android/core-domain/src/main/kotlin/org/inkweft/core/InkSelection.kt": "86064e971ad79e66211b7c8d8ed1b9f2061a7c5010c3ee322235229df3cfdb72",
+  "android/core-domain/src/main/kotlin/org/inkweft/core/NotebookFile.kt": "7ab8a03a48eb585dca9749e51f9e0524024447c8da85c72a5543fb56ed525c4f",
+  "android/core-domain/src/test/kotlin/org/inkweft/core/ContentCopyRegressionTest.kt": "1d4c394c80b542f758e5839a5db9830d486c1ef8a9fe9f7c11541c29502eb954",
+  "android/core-domain/src/test/kotlin/org/inkweft/core/HandwritingLineBudgetRegressionTest.kt": "43361317081c07e7d576a410c384bfb9a80ccf2c9ae9357a8eff1774cf3bc0bf",
+  "android/core-domain/src/test/kotlin/org/inkweft/core/InkSamplingRegressionTest.kt": "00019829a3fc3b9db420653f25b207ea1c8d314245118cab3f8b7baa7e8a7b44",
+  "android/core-domain/src/test/kotlin/org/inkweft/core/LassoGeometryRegressionTest.kt": "edcb41d783cc5f1530edd8670aa72a54ffa94356728c1d3b3b59c74e5ee1d983",
+  "android/core-domain/build.gradle.kts": "6216873f7ef70034a8ed48a831a99f4189e47e1861b2bb15b53640e7af37fc0a",
+  "android/build.gradle.kts": "267dc91204956dd91e3732f30c7527b3a745d6ec3670974305d1101d753c845e",
+  "android/settings.gradle.kts": "6a18e6904b57d3d42b97e88495cd5777e01d0cb04167437cc282a43ad6e976f0",
+  "android/gradle/libs.versions.toml": "682b0dc857760542be6aad8ed6ad67c7d93b061f7efa63a2465f7778357801db"
+}

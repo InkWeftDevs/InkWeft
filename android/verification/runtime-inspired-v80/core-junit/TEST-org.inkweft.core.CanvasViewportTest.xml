@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="org.inkweft.core.CanvasViewportTest" tests="25" skipped="0" failures="0" errors="0" timestamp="2026-10-10T02:36:19.733Z" hostname="4d22d97528bf" time="0.008">
+  <properties/>
+  <testcase name="viewportRoundTripAtFarNegativePosition" classname="org.inkweft.core.CanvasViewportTest" time="0.001"/>
+  <testcase name="finiteWorldBudget" classname="org.inkweft.core.CanvasViewportTest" time="0.0"/>
+  <testcase name="boardDigestDiffersFromPageForSamePoints" classname="org.inkweft.core.CanvasViewportTest" time="0.003"/>
+  <testcase name="viewDoesNotMutateAuthorSamples" classname="org.inkweft.core.CanvasViewportTest" time="0.0"/>
+  <testcase name="explicitOverviewZoomIsNotReplacedByReadingDefaultOnResize" classname="org.inkweft.core.CanvasViewportTest" time="0.0"/>
+  <testcase name="boardCannotMixCoordinateModes" classname="org.inkweft.core.CanvasViewportTest" time="0.001"/>
+  <testcase name="viewportSafeBounds" classname="org.inkweft.core.CanvasViewportTest" time="0.0"/>
+  <testcase name="resizingRetainsPannedReadingOriginAndChosenZoom" classname="org.inkweft.core.CanvasViewportTest" time="0.0"/>
+  <testcase name="boardCoordinatesSurviveCodec" classname="org.inkweft.core.CanvasViewportTest" time="0.0"/>
+  <testcase name="viewportInputRejectsInfinity" classname="org.inkweft.core.CanvasViewportTest" time="0.0"/>
+  <testcase name="boardEraserSweptIntersection" classname="org.inkweft.core.CanvasViewportTest" time="0.0"/>
+  <testcase name="widthFitIsLargerThanPageOnLandscape" classname="org.inkweft.core.CanvasViewportTest" time="0.0"/>
+  <testcase name="dockingWidthFitCannotCropThePagesLeadingText" classname="org.inkweft.core.CanvasViewportTest" time="0.001"/>
+  <testcase name="narrowNewSheetStartsReadableAtItsLeadingEdge" classname="org.inkweft.core.CanvasViewportTest" time="0.0"/>
+  <testcase name="wideNewSheetKeepsExistingWidthFit" classname="org.inkweft.core.CanvasViewportTest" time="0.0"/>
+  <testcase name="cullingRejectsFarStroke" classname="org.inkweft.core.CanvasViewportTest" time="0.0"/>
+  <testcase name="cullingIncludesTouchingEdge" classname="org.inkweft.core.CanvasViewportTest" time="0.0"/>
+  <testcase name="pageCannotAcceptBoardSamples" classname="org.inkweft.core.CanvasViewportTest" time="0.0"/>
+  <testcase name="legacyEmptyPageFileReadable" classname="org.inkweft.core.CanvasViewportTest" time="0.001"/>
+  <testcase name="negativeRequiresExplicitWorld" classname="org.inkweft.core.CanvasViewportTest" time="0.0"/>
+  <testcase name="boardCopyCannotMislabelAsPaper" classname="org.inkweft.core.CanvasViewportTest" time="0.0"/>
+  <testcase name="pageCopyKeepsModePaperAndCoordinates" classname="org.inkweft.core.CanvasViewportTest" time="0.001"/>
+  <testcase name="panBeyondPaperNotClampedToPaper" classname="org.inkweft.core.CanvasViewportTest" time="0.0"/>
+  <testcase name="fitContentContainsAllCorners" classname="org.inkweft.core.CanvasViewportTest" time="0.0"/>
+  <testcase name="pinchPreservesFocusWorldCoordinate" classname="org.inkweft.core.CanvasViewportTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

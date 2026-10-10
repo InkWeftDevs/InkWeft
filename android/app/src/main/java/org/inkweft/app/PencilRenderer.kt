@@ -39,22 +39,32 @@ internal class PencilTileRenderer(private val unit:Float=.5f,private val live:Bo
         var last:InkSample?=null
     }
     private val tiles=object:LinkedHashMap<Key,Tile>(256,.75f,true){override fun removeEldestEntry(eldest:MutableMap.MutableEntry<Key,Tile>?):Boolean{if(size<=2048)return false;eldest?.value?.let(::release);return true}}
+    private data class Source(val samples:List<InkSample>,val appearance:StrokeAppearance,val color:Int,val width:Float)
+    private val sources=LinkedHashMap<String,Source>(128,.75f,true)
     private val grain=GraphiteMaterial.alpha()
     private val paint=Paint(Paint.FILTER_BITMAP_FLAG)
     private val pixels=IntArray(SIDE*SIDE)
     private val destination=RectF()
     private fun release(tile:Tile){ownedTiles--;account()}
-    @Synchronized fun clear(){tiles.clear();ownedTiles=0;account()}
-    @Synchronized fun forget(ids:Set<String>){val it=tiles.iterator();while(it.hasNext()){val entry=it.next();if(entry.key.id in ids){release(entry.value);it.remove()}}}
+    @Synchronized fun clear(){tiles.clear();sources.clear();ownedTiles=0;account()}
+    @Synchronized fun forget(ids:Set<String>){sources.keys.removeAll(ids);val it=tiles.iterator();while(it.hasNext()){val entry=it.next();if(entry.key.id in ids){release(entry.value);it.remove()}}}
     private fun pressure(s:InkSample)=sqrt(if(s.pressure<0).5f else s.pressure)
     private fun tilt(s:InkSample,stroke:InkStroke)=if(s.tilt<0||!stroke.appearance.recipe.tiltShading)1f else 1+3*((s.tilt-(PI/6).toFloat())/(PI/6).toFloat()).coerceIn(0f,1f)
     private fun segmentRadius(p:InkSample,q:InkSample,s:InkStroke)=s.width*.5f*(.85f+.15f*max(pressure(p),pressure(q)))*max(tilt(p,s),tilt(q,s))
     @Synchronized fun draw(canvas:Canvas,stroke:InkStroke) {
-        val source=stroke.renderSamples()
+        val source=InkSampling.forRendering(stroke.renderSamples())
         val clip=canvas.clipBounds;val bounds=stroke.bounds();val a=stroke.appearance;val r=a.recipe
         val left=max(bounds.left.toFloat()-UNIT,clip.left.toFloat());val right=min(bounds.right.toFloat()+UNIT,clip.right.toFloat())
         val top=max(bounds.top.toFloat()-UNIT,clip.top.toFloat());val bottom=min(bounds.bottom.toFloat()+UNIT,clip.bottom.toFloat())
         if(left>=right||top>=bottom)return
+        if(live){
+            val previous=sources[stroke.id]
+            // Pen-up polishing keeps the stroke id and endpoints. Checking only
+            // the last sample misses edits to positions/pressure in its interior.
+            if(previous!=null&&(previous.appearance!=a||previous.color!=stroke.color||previous.width!=stroke.width||!InkSampling.renderPrefix(previous.samples,source)))forget(setOf(stroke.id))
+            sources[stroke.id]=Source(source,a,stroke.color,stroke.width)
+            while(sources.size>128)forget(setOf(sources.keys.first()))
+        }
         val firstX=floor((left-a.originX)/TILE).toInt();val lastX=floor((right-a.originX)/TILE).toInt()
         val firstY=floor((top-a.originY)/TILE).toInt();val lastY=floor((bottom-a.originY)/TILE).toInt()
         // Only allocate tiles touched by a segment, never the whole bounding box.

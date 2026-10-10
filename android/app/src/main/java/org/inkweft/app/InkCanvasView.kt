@@ -281,7 +281,8 @@ class InkCanvasView(context:Context):View(context){
         if(content===strokes)return
         val removed=content.map{it.id}.toSet()-strokes.map{it.id}.toSet();transient.keys.removeAll(removed);transientPencils.keys.removeAll(removed)
         val before=content.associateBy{it.id}
-        val changed=strokes.filter{s->before[s.id]?.let{it!==s&&it.samples!=s.samples}==true}.map{it.id}.toSet();meshes.keys.removeAll(changed);bounds.keys.removeAll(changed)
+        val changed=strokes.filter{s->before[s.id]?.let{it!==s&&(it.samples!=s.samples||it.pen!=s.pen||it.color!=s.color||it.width!=s.width||it.tool!=s.tool||it.world!=s.world||it.appearance!=s.appearance)}==true}.map{it.id}.toSet()
+        meshes.keys.removeAll(changed);bounds.keys.removeAll(changed);transient.keys.removeAll(changed);transientPencils.keys.removeAll(changed);PencilRenderer.forget(removed+changed)
         content=strokes;drawnViewport=null;restoreAppearance();val ids=strokes.map{it.id}.toSet();meshes.keys.retainAll(ids);bounds.keys.retainAll(ids)
         for(s in strokes){if(!bounds.containsKey(s.id))bounds[s.id]=s.bounds();transient[s.id]?.let{meshes[s.id]=it}}
         if(preview&&width>0&&height>0)if(world)fitContent(false)else fitPage(false)
@@ -504,7 +505,8 @@ class InkCanvasView(context:Context):View(context){
             eraseTargets=content.filter{editableStroke(it)&&it.id !in suppressedStrokeIds&&(!gestureOnlyHighlighter||it.pen==InkPen.HIGHLIGHTER)}.map{it.id}.toSet();cursor=CanvasPoint(e.x.toDouble(),e.y.toDouble())
             wholeErase=if(gestureErase&&gestureWhole&&!gestureOnlyTape)WholeEraseTracker(content.filter{it.id in eraseTargets},gestureRadius)else null
             raw=ArrayList();checkpointAt=0;val device=e.device;val pressure=device?.getMotionRange(MotionEvent.AXIS_PRESSURE,e.source)
-            hasPressure=inputKind==InkTool.STYLUS&&pressure!=null&&pressure.max>pressure.min;pressureMin=pressure?.min?:0f;pressureSpan=(pressure?.range?:1f).coerceAtLeast(.001f)
+            hasPressure=inputKind==InkTool.STYLUS&&pressure!=null&&pressure.min.isFinite()&&pressure.max.isFinite()&&pressure.range.isFinite()&&pressure.range>0f
+            pressureMin=if(hasPressure)pressure!!.min else 0f;pressureSpan=if(hasPressure)pressure!!.range else 1f
             hasTilt=inputKind==InkTool.STYLUS&&device?.getMotionRange(MotionEvent.AXIS_TILT,e.source)!=null;hasOrientation=inputKind==InkTool.STYLUS&&device?.getMotionRange(MotionEvent.AXIS_ORIENTATION,e.source)!=null
             onAxes(hasPressure,hasTilt);BackgroundBudget.input(this,true);onGesture(true);if(!gestureErase&&gesturePen!=InkPen.PENCIL)live.start(InkBrushes.brush(gesturePen,gestureColor,gestureWidth,hasPressure,gestureAppearance));append(e,downIndex,-1);if(seamWriting&&!gestureErase)onLiveSamples(raw);postInvalidateOnAnimation();return true
         }
@@ -514,7 +516,7 @@ class InkCanvasView(context:Context):View(context){
             if(e.actionMasked==MotionEvent.ACTION_UP){val hit=tapImage;tapImage=null;panPointer=-1;multiPanIds=emptySet();finishViewport();if(hit!=null)onObjectTap(hit);performClick()};return true
         }
         val index=e.findPointerIndex(inputId);if(index<0){cancelGesture();return true}
-        when(e.actionMasked){MotionEvent.ACTION_MOVE->{if(scaleDetector.isInProgress&&inputKind!=InkTool.STYLUS){cancelGesture();return true};for(i in 0 until e.historySize)append(e,index,i);append(e,index,-1);if(seamWriting&&!gestureErase)onLiveSamples(raw);postInvalidateOnAnimation()};MotionEvent.ACTION_UP,MotionEvent.ACTION_POINTER_UP->{if(e.getPointerId(e.actionIndex)!=inputId)return true;append(e,index,-1);finishGesture();performClick()}}
+        when(e.actionMasked){MotionEvent.ACTION_MOVE->{if(scaleDetector.isInProgress&&inputKind!=InkTool.STYLUS){cancelGesture();return true};appendEvent(e,index);if(seamWriting&&!gestureErase)onLiveSamples(raw);postInvalidateOnAnimation()};MotionEvent.ACTION_UP,MotionEvent.ACTION_POINTER_UP->{if(e.getPointerId(e.actionIndex)!=inputId)return true;appendEvent(e,index);finishGesture();performClick()}}
         return true
     }
     private fun trackMultiPan(e:MotionEvent,move:Boolean){
@@ -529,15 +531,23 @@ class InkCanvasView(context:Context):View(context){
         }
         multiPanIds=ids;multiPanX=x;multiPanY=y
     }
+    private fun appendEvent(e:MotionEvent,index:Int){
+        // A terminal event can carry the final batched movement, too.
+        for(i in 0 until e.historySize)append(e,index,i)
+        append(e,index,-1)
+    }
     private fun append(e:MotionEvent,index:Int,history:Int){
         if(raw.size>=InkLimits.MAX_POINTS)return
         fun axis(a:Int)=if(history<0)e.getAxisValue(a,index)else e.getHistoricalAxisValue(a,index,history)
         val x=if(history<0)e.getX(index)else e.getHistoricalX(index,history);val y=if(history<0)e.getY(index)else e.getHistoricalY(index,history);val time=(if(history<0)e.eventTime else e.getHistoricalEventTime(history))-startTime
         if(!x.isFinite()||!y.isFinite()||time<0||time>3_600_000)return
         cursor=CanvasPoint(x.toDouble(),y.toDouble())
-        val pressure=if(hasPressure)((axis(MotionEvent.AXIS_PRESSURE)-pressureMin)/pressureSpan).coerceIn(0f,1f)else -1f
-        val tilt=if(hasTilt)axis(MotionEvent.AXIS_TILT).coerceIn(0f,Math.PI.toFloat()/2)else -1f
-        val orientation=if(hasOrientation)((axis(MotionEvent.AXIS_ORIENTATION)%(2*Math.PI.toFloat()))+2*Math.PI.toFloat())%(2*Math.PI.toFloat())else -1f
+        val pressureRaw=if(hasPressure)axis(MotionEvent.AXIS_PRESSURE)else -1f
+        val tiltRaw=if(hasTilt)axis(MotionEvent.AXIS_TILT)else -1f
+        if(!pressureRaw.isFinite()||!tiltRaw.isFinite())return
+        val pressure=if(hasPressure)((pressureRaw-pressureMin)/pressureSpan).coerceIn(0f,1f)else -1f
+        val tilt=if(hasTilt)tiltRaw.coerceIn(0f,Math.PI.toFloat()/2)else -1f
+        val orientation=if(hasOrientation)InkSampling.orientation(axis(MotionEvent.AXIS_ORIENTATION))?:return else -1f
         if(!pressure.isFinite()||!tilt.isFinite()||!orientation.isFinite())return
         val w=viewport.screenToWorld(x.toDouble(),y.toDouble(),width.toDouble(),height.toDouble(),density)
         if((world||gestureErase)&&(abs(w.x)>BoardLimits.WORLD||abs(w.y)>BoardLimits.WORLD)){onNotice("边界外采样未接收，请抬笔返回内容区域。");return}
@@ -548,12 +558,14 @@ class InkCanvasView(context:Context):View(context){
         val point=InkSample(if(freeGesture)w.x.toFloat()else w.x.toFloat().coerceIn(0f,1000f),if(freeGesture)w.y.toFloat()else w.y.toFloat().coerceIn(0f,1414f),time,pressure,tilt,orientation,freeGesture)
         val previous=raw.lastOrNull()
         if(previous==point||previous!=null&&previous.elapsedMs>time)return
-        if(previous!=null&&previous.x==point.x&&previous.y==point.y&&previous.elapsedMs==time){
-            raw[raw.lastIndex]=point
-            if(!gestureErase&&gesturePen!=InkPen.PENCIL){live.start(InkBrushes.brush(gesturePen,gestureColor,gestureWidth,hasPressure,gestureAppearance));incremental.clear();raw.forEach{InkBrushes.add(incremental,it,inputKind,gesturePen,gestureAppearance)};live.enqueueInputs(incremental,empty)}
-            return
-        }
-        try{if(!gestureErase&&gesturePen!=InkPen.PENCIL){incremental.clear();InkBrushes.add(incremental,point,inputKind,gesturePen,gestureAppearance);live.enqueueInputs(incremental,empty)};raw.add(point)
+        val stationaryUpdate=previous!=null&&previous.x==point.x&&previous.y==point.y&&previous.elapsedMs==time
+        try{if(!gestureErase&&gesturePen!=InkPen.PENCIL){incremental.clear()
+                if(stationaryUpdate){
+                    live.start(InkBrushes.brush(gesturePen,gestureColor,gestureWidth,hasPressure,gestureAppearance))
+                    InkSampling.forRendering(raw+point).forEach{InkBrushes.add(incremental,it,inputKind,gesturePen,gestureAppearance)}
+                }else InkBrushes.add(incremental,point,inputKind,gesturePen,gestureAppearance)
+                live.enqueueInputs(incremental,empty)
+            };raw.add(point)
             if(!gestureErase&&raw.size>=128&&(raw.size%256==0||time-checkpointAt>=1000)){
                 checkpointAt=time;onCheckpoint(InkStroke(gestureId,gesturePen,gestureColor,gestureWidth,inputKind,raw.toList(),world||seamWriting,appearance=gestureAppearance))
             };if(raw.size==InkLimits.MAX_POINTS)onNotice("达到单笔采样上限，请抬笔提交后继续。")}catch(_:IllegalArgumentException){onNotice("无效设备采样未进入笔迹。")}
