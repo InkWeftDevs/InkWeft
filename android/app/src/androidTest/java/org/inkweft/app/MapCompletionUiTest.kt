@@ -6,6 +6,7 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.pdf.PdfRenderer
 import android.os.ParcelFileDescriptor
+import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -93,25 +94,51 @@ class MapCompletionUiTest {
         val book=id();val root=id();val a=id();val b=id()
         val nodes=listOf(MapSceneNode(root,null,null,"项目","",-400.0,200.0,1,1),MapSceneNode(a,root,null,"知识点甲","",20.0,80.0,1,1),MapSceneNode(b,root,null,"知识点乙","",20.0,280.0,1,1))
         val snapshot=MapDrawingSnapshot("导图",nodes,"right",listOf(KnowledgeData.MapSummaryGroup(null,"共有结论",listOf(a,b))),emptyMap())
-        val png=ByteArrayOutputStream().also{MapDrawingExport.write(snapshot,MapDrawingFormat.PNG,it)}.toByteArray()
+        val png=ByteArrayOutputStream().also{MapDrawingExport.write(snapshot,MapDrawingFormat.PNG,it,app.cacheDir)}.toByteArray()
         val bitmap=BitmapFactory.decodeByteArray(png,0,png.size);assertNotNull(bitmap)
         try{assertTrue(bitmap.width<=4096&&bitmap.height<=4096&&bitmap.width.toLong()*bitmap.height<=MapExportSizing.MAX_PIXELS)
             assertTrue((0 until bitmap.height step 8).sumOf{y->(0 until bitmap.width step 8).count{x->bitmap.getPixel(x,y)!=Color.WHITE}}>20)
         }finally{bitmap.recycle()}
-        val pdf=ByteArrayOutputStream().also{MapDrawingExport.write(snapshot,MapDrawingFormat.PDF,it)}.toByteArray();assertEquals("%PDF",pdf.take(4).toByteArray().toString(Charsets.US_ASCII))
+        val pdf=ByteArrayOutputStream().also{MapDrawingExport.write(snapshot,MapDrawingFormat.PDF,it,app.cacheDir)}.toByteArray();assertEquals("%PDF",pdf.take(4).toByteArray().toString(Charsets.US_ASCII))
         val file=File(app.cacheDir,"map-export-test-${id()}.pdf")
         try{file.writeBytes(pdf);ParcelFileDescriptor.open(file,ParcelFileDescriptor.MODE_READ_ONLY).use{descriptor->PdfRenderer(descriptor).use{renderer->assertEquals(1,renderer.pageCount);renderer.openPage(0).use{page->assertTrue(page.width>0&&page.height>0)}}}}
         finally{file.delete()}
     }
     @Test fun templateSearchRetainsStableIndicesAndCreationPreviewIsReadOnly(){
         val chosen=androidx.compose.runtime.mutableStateOf<KnowledgeData.MapTemplate?>(null)
-        compose.setContent{org.inkweft.app.ui.designsystem.InkTheme.Content{Column(Modifier.verticalScroll(rememberScrollState())){
+        compose.runOnUiThread{compose.activity.setContent{org.inkweft.app.ui.designsystem.InkTheme.Content{Column(Modifier.verticalScroll(rememberScrollState())){
             val template=chosen.value
             if(template==null)MapTemplateChoices(MapTemplates.builtins,true){chosen.value=it}else MapTemplatePreview(template)
-        }}}
+        }}}}
         compose.onNodeWithTag("map-template-search").performTextInput("项目")
         compose.onNodeWithTag("map-template-11").performScrollTo().assertIsDisplayed().performClick()
         assertEquals("项目拆解",chosen.value?.title);assertEquals("organization",chosen.value?.layout)
         compose.onNodeWithTag("map-template-preview").assertIsDisplayed()
+    }
+    @Test fun pdfPreservesLiteralUnicodeIncludingSharedGlyphRadicalsAndVisibleEllipsis(){
+        val book=id();val root=id();val a=id();val b=id();val alias=id();val long=id()
+        val nodes=listOf(
+            MapSceneNode(root,null,null,"进行中","",0.0,250.0,1,1),
+            MapSceneNode(a,root,null,"依赖与风险","",300.0,0.0,1,1),
+            MapSceneNode(b,root,null,"里程碑","",300.0,120.0,1,1),
+            MapSceneNode(alias,root,null,"行⾏ 风⻛ 里⾥","",300.0,240.0,1,1),
+            MapSceneNode(long,root,null,"可见标题".repeat(25)+"HIDDEN_TAIL","",300.0,360.0,1,1))
+        val snapshot=MapDrawingSnapshot("Unicode export",nodes,"right",listOf(KnowledgeData.MapSummaryGroup(null,"归纳 行⾏ 风⻛",listOf(a,b))),emptyMap())
+        val output=File(app.getExternalFilesDir(null),"fix-v85").apply{mkdirs()}
+        val pdf=ByteArrayOutputStream().also{MapDrawingExport.write(snapshot,MapDrawingFormat.PDF,it,app.cacheDir)}.toByteArray()
+        File(output,"unicode-map.pdf").writeBytes(pdf)
+        File(output,"unicode-map.png").outputStream().use{MapDrawingExport.write(snapshot,MapDrawingFormat.PNG,it,app.cacheDir)}
+        val document=com.artifex.mupdf.fitz.Document.openDocument(pdf,"application/pdf")
+        try{
+            assertEquals(1,document.countPages());val page=document.loadPage(0)
+            try{val structured=page.toStructuredText()
+                try{val text=buildString{structured.blocks.forEach{block->block.lines.forEach{line->line.chars.forEach{appendCodePoint(it.c)};append('\n')}}}
+                    File(output,"unicode-map.txt").writeText(text)
+                    listOf("进行中","依赖与风险","里程碑","行⾏ 风⻛ 里⾥","归纳 行⾏ 风⻛").forEach{assertTrue("Literal author text lost: $it in $text",text.contains(it))}
+                    assertEquals(2,text.count{it=='⻛'});assertEquals(2,text.count{it=='⾏'});assertEquals(1,text.count{it=='⾥'})
+                    assertEquals(1,text.count{it=='…'});assertFalse(text.contains("HIDDEN_TAIL"))
+                }finally{structured.destroy()}
+            }finally{page.destroy()}
+        }finally{document.destroy()}
     }
 }

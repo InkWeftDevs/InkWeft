@@ -72,13 +72,14 @@ internal data class MapViewStyle(val selection:Int,val selectionFill:Int,val con
 internal object MapScenePainter {
     internal fun titleLayout(title:String,fontScale:Float=1f):StaticLayout = MapNodeMetrics.textLayout(title.replace('\n',' '),16f,fontScale,2,true)
     fun draw(c:Canvas,nodes:List<MapSceneNode>,selected:String?=null,collapsed:Map<String,Int> = emptyMap(),fontScale:Float=1f,detail:Boolean=true,hierarchy:Boolean=true,viewStyle:MapViewStyle?=null,
-             nodeLayouts:Map<String,MapNodeLayout> = emptyMap(),previews:Map<String,MapSourceFrame> = emptyMap(),presentations:Map<String,KnowledgeData.CardPresentation> = emptyMap(),layout:String="right"){
+             nodeLayouts:Map<String,MapNodeLayout> = emptyMap(),previews:Map<String,MapSourceFrame> = emptyMap(),presentations:Map<String,KnowledgeData.CardPresentation> = emptyMap(),layout:String="right",
+             connectors:Boolean=hierarchy,paintNodes:List<MapSceneNode> = nodes){
         val paint=Paint(Paint.ANTI_ALIAS_FLAG or Paint.FILTER_BITMAP_FLAG)
         val lookup=nodes.associateBy{it.id}
-        // Document and embedded painting deliberately ignore live source and expansion state.
-        val layouts=nodes.associate{n->n.id to (nodeLayouts[n.id]?.takeIf{viewStyle!=null}
-            ?:MapNodeMetrics.measure(n.title,n.body,fontScale=fontScale,structural=hierarchy&&n.cardId==null))}
-        if(hierarchy){
+        // Interactive geometry must never leak into document/embed/export projections.
+        val layouts=if(viewStyle!=null&&nodeLayouts.isNotEmpty())nodeLayouts else nodes.associate{n->n.id to
+            MapNodeMetrics.measure(n.title,n.body,fontScale=fontScale,structural=hierarchy&&n.cardId==null)}
+        if(hierarchy&&connectors){
             paint.style=Paint.Style.STROKE;paint.strokeWidth=1.5f;paint.color=viewStyle?.connector?:0xffd9dee7.toInt()
             nodes.forEach{n->lookup[n.parentId]?.let{p->
                 val parent=layouts.getValue(p.id);val child=layouts.getValue(n.id)
@@ -94,7 +95,7 @@ internal object MapScenePainter {
                 }
             }}
         }
-        val ordered=if(viewStyle!=null)nodes.sortedBy{it.id==selected}else nodes
+        val ordered=if(viewStyle!=null)paintNodes.sortedBy{it.id==selected}else paintNodes
         ordered.forEach{n->
             val layout=layouts.getValue(n.id);val left=n.x.toFloat();val top=n.y.toFloat()
             val structural=hierarchy&&n.cardId==null

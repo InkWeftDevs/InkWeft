@@ -62,6 +62,8 @@ internal fun studyPaneLayout(width:Dp,height:Dp,fontScale:Float):StudyPaneLayout
     val holder=androidx.compose.runtime.saveable.rememberSaveableStateHolder()
     val prefs=LocalContext.current.getSharedPreferences("inkweft-study-window",0)
     val density=LocalDensity.current.density
+    val keyboardVisible=WindowInsets.ime.getBottom(LocalDensity.current)>0
+    var authorDraft by remember(book){mutableStateOf(false)}
     // Old persisted FOCUS must not make a newly opened map replace the page by default.
     // Saveable state still restores an explicitly focused window across recreation/source visits.
     var modeName by rememberSaveable(book){mutableStateOf(prefs.getString("$book-mode",StudyWindowMode.ORGANIZE.name)
@@ -94,7 +96,11 @@ internal fun studyPaneLayout(width:Dp,height:Dp,fontScale:Float):StudyPaneLayout
         val collapsed=minimized||(floating&&!maximized&&availableH<180&&enabled)
         val visible=if(sourceReading)paneLayout.sideBySide&&!minimized else minimized||paneLayout.sideBySide||paneActive
         // Reserve reading space above a compact map; saved drag coordinates remain authoritative.
-        val compactH=if(paneLayout.sideBySide)availableH else (availableH*.58f).coerceAtLeast(48f)
+        // The host already excludes the IME. Use that remaining space while typing;
+        // reserving another reading strip would clip the editor's commit controls.
+        // After Activity recreation Android may resize the host before reporting an IME inset.
+        // Keep the draft's viewport usable throughout that transition and with a hardware keyboard.
+        val compactH=if(paneLayout.sideBySide||keyboardVisible||authorDraft)availableH else (availableH*.58f).coerceAtLeast(48f)
         val w=if(floating&&collapsed)minOf(availableW,320f)else if(effectiveDocked)paneLayout.mapWidth.value else if(!floating||maximized)availableW else width.coerceIn(minOf(320f,availableW),availableW)
         val h=if(floating&&collapsed)minOf(48f,availableH)else if(!floating||maximized)availableH else height.coerceIn(minOf(300f,compactH),compactH)
         val travelX=(availableW-w).coerceAtLeast(0f);val travelY=(availableH-h).coerceAtLeast(0f)
@@ -132,8 +138,8 @@ internal fun studyPaneLayout(width:Dp,height:Dp,fontScale:Float):StudyPaneLayout
                 if(collapsed)Row(Modifier.fillMaxWidth().height(48.dp),verticalAlignment=Alignment.CenterVertically){
                     Row(drag.weight(1f).fillMaxHeight().padding(start=12.dp),verticalAlignment=Alignment.CenterVertically){Glyph("drag-handle",Quiet);Text("导图",Modifier.padding(start=8.dp))};controls()
                 }else {
-                    holder.SaveableStateProvider(book){CompositionLocalProvider(LocalStudyWindowChrome provides StudyWindowChrome(drag,sourceReading,onAuthorDraft,controls)){content()}}
-                    if(floating&&!maximized)Box(Modifier.align(Alignment.BottomEnd).size(48.dp).testTag("study-window-resize").describedAs("拖动调整导图窗口大小")
+                    holder.SaveableStateProvider(book){CompositionLocalProvider(LocalStudyWindowChrome provides StudyWindowChrome(drag,sourceReading,{authorDraft=it;onAuthorDraft(it)},controls)){content()}}
+                    if(floating&&!maximized&&!authorDraft)Box(Modifier.align(Alignment.BottomEnd).size(48.dp).testTag("study-window-resize").describedAs("拖动调整导图窗口大小")
                         .pointerInput(availableW,availableH,compactH,effectiveDocked,maximized,sourceReading){detectDragGestures(onDragStart={dragging=true},onDragEnd={if(!sourceReading)save();dragging=false},onDragCancel={if(!sourceReading)save();dragging=false}){change,delta->
                             change.consume();if(currentFrameEnabled&&floating&&!maximized){val oldW=width.coerceIn(minOf(320f,availableW),availableW);val oldH=height.coerceIn(minOf(300f,compactH),compactH);val oldX=x*(availableW-oldW);val oldY=y*(availableH-oldH)
                                 width=(oldW+delta.x/density).coerceIn(minOf(320f,availableW),availableW);height=(oldH+delta.y/density).coerceIn(minOf(300f,compactH),compactH)

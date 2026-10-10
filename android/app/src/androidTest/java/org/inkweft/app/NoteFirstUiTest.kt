@@ -55,6 +55,36 @@ class NoteFirstUiTest {
   tap("study-close");compose.openCurrentPen();screenshot("pen-basic");tap("pen-advanced");screenshot("pen-advanced");tap("pen-custom-open");compose.onNodeWithTag("pen-custom-color").performScrollTo().assertIsDisplayed();compose.closePenSettings()
   assertEquals(12L,runBlocking{app.inkRepository.read(book).revision})
  }
+ @Test fun keyboardKeepsOutlineTitleSaveAndCancelFullyVisible(){
+  val book=fixture();tap("quick-study");tap("study-new-map");tap("map-template-11");tap("study-new-map-save");ready()
+  val row=runBlocking{app.knowledge.observeBook(book).first()}.single{it.data() is KnowledgeData.MapDefinition}
+  val root=(row.data() as KnowledgeData.MapDefinition).structures.single{it.parentId==null}.id
+  tap("study-tab-1");tap("outline-actions-$root");tap("outline-rename-$root")
+  compose.onNodeWithTag("node-title-input").performTextReplacement("V85FixedTitle")
+  fun assertControls(){
+   compose.waitUntil(15_000){compose.runOnIdle{
+    androidx.core.view.ViewCompat.getRootWindowInsets(compose.activity.window.decorView)
+     ?.isVisible(androidx.core.view.WindowInsetsCompat.Type.ime())==true
+   }}
+   val panel=compose.onNodeWithTag("study-panel").fetchSemanticsNode().boundsInRoot
+   val minimum=48*compose.activity.resources.displayMetrics.density-.5f
+   for(tag in listOf("node-title-input","node-title-cancel","node-title-save")){
+    val bounds=compose.onNodeWithTag(tag).assertIsDisplayed().assertIsEnabled().fetchSemanticsNode().boundsInRoot
+    assertTrue("$tag clipped with keyboard: $bounds inside $panel",bounds.height>=minimum&&bounds.width>=minimum&&
+      bounds.left>=panel.left&&bounds.right<=panel.right&&bounds.top>=panel.top&&bounds.bottom<=panel.bottom)
+   }
+  }
+  screenshot("fixed-title-keyboard");assertControls()
+  compose.onNodeWithTag("node-title-save").performTouchInput{click()}
+  compose.waitUntil(15_000){runBlocking{app.knowledge.observeBook(book).first()}.any{
+   (it.data() as? KnowledgeData.MapDefinition)?.structures?.any{n->n.id==root&&n.title=="V85FixedTitle"}==true}}
+  tap("outline-rename-$root");compose.onNodeWithTag("node-title-input").performTextReplacement("DiscardThis")
+  assertControls();compose.onNodeWithTag("node-title-cancel").performTouchInput{click()}
+  compose.onNodeWithTag("node-title-editor").assertDoesNotExist()
+  val restored=runBlocking{app.knowledge.observeBook(book).first()}.single{it.id==row.id}.data() as KnowledgeData.MapDefinition
+  assertEquals("V85FixedTitle",restored.structures.single{it.id==root}.title)
+  assertEquals(10,restored.structures.size);assertEquals(12L,runBlocking{app.inkRepository.read(book).revision})
+ }
  @Test fun fullscreenKeepsMapAndCaptureReachable(){
   val book=fixture();tap("toolbar-more");tap("toolbar-customize")
   compose.onNodeWithTag("toolbar-visible-fullscreen").performScrollTo().performClick();tap("toolbar-done")

@@ -37,8 +37,10 @@ import kotlin.math.abs
 /** PS56: synthetic PDFs, real MainActivity navigation and native canvas/input.
  * Screenshot calls follow successful assertions, without a separate screenshot run.
  */
+@OptIn(androidx.compose.ui.test.ExperimentalTestApi::class,kotlinx.coroutines.ExperimentalCoroutinesApi::class)
 class PdfTextSearchUiTest {
-    @get:Rule val compose = createAndroidComposeRule<MainActivity>()
+    // Queue IO completions for the main test clock instead of resuming recomposition on the IO thread.
+    @get:Rule val compose = createAndroidComposeRule<MainActivity>(effectContext=kotlinx.coroutines.test.StandardTestDispatcher())
     private val app get() = compose.activity.application as InkWeftApplication
     private var probeDatabase: NoteDatabase? = null
     private val probe get() = probeDatabase ?: NoteDatabase.open(app).also { probeDatabase = it }

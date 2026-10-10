@@ -58,6 +58,7 @@ class KnowledgeRepository(private val db:NoteDatabase,private val fault:(Knowled
             is KnowledgeData.MapDefinition->affected+=r.id
             is KnowledgeData.MapOccurrence->affected+=data.mapId
             is KnowledgeData.MapOrder->affected+=data.mapId
+            is KnowledgeData.MapSummaryGroup->affected+=data.mapId
             else->error("NOT_A_MAP_RECORD")
         }}}
         fun records()=previous.filter{it.id !in updates}+updates.values

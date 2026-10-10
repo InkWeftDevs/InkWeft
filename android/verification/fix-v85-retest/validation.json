@@ -1,0 +1,318 @@
+{
+  "status": "PASS",
+  "identity": {
+    "label": "candidate-4",
+    "version_code": 85,
+    "version_name": "0.0.85-retest-fixes",
+    "source_sha": "ff67a288d6093adbad760bf0b66c3ef0ed30a5fc",
+    "source_worktree": "E:\\Inkweft\\worktrees\\retest-v85",
+    "worktree_dirty": true,
+    "product_source_changed": true,
+    "working_patch_sha256": "49b350c09b3db2c9799b79abbdedb372fdce71009d9c94db58deaa28fab3625b",
+    "untracked_product_source": "MapDrawingPdf.kt; complete bytes retained under untracked-source",
+    "source_freeze_sha256": "3eff53c141cf4564a97f033c59ac820ef86448ea51b7a9f7e772d5419ee9b3b7",
+    "apks": [
+      {
+        "kind": "app",
+        "path": "E:\\Inkweft\\archives\\2026-10-10\\Fix-V85-Retest\\builds\\candidate-4\\app-debug.apk",
+        "bytes": 235976151,
+        "sha256": "5b9e1f5e60a78ab7dcd5a823d6cb91db3d833d048eb4fc203b55175bd9e6566c"
+      },
+      {
+        "kind": "appTest",
+        "path": "E:\\Inkweft\\archives\\2026-10-10\\Fix-V85-Retest\\builds\\candidate-4\\app-debug-androidTest.apk",
+        "bytes": 16780368,
+        "sha256": "c9c3b92da0633efe3faf702b7e3a44146dce26ad42c9d23967dd1849de2f2e74"
+      },
+      {
+        "kind": "dataAndroidTest",
+        "path": "E:\\Inkweft\\archives\\2026-10-10\\Fix-V85-Retest\\builds\\candidate-4\\data-local-debug-androidTest.apk",
+        "bytes": 14920909,
+        "sha256": "16751400eb83d685ccf31a63f038d29155be9cd21a6f83a9b131e76d37d11e89"
+      }
+    ],
+    "mupdf_matches_original_v85": true,
+    "serial": "emulator-5586",
+    "build_status": "PASS"
+  },
+  "core": {
+    "tests": 447,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "lint": {
+    "Error": 0,
+    "Fatal": 0,
+    "Warning": 171,
+    "status": "PASS"
+  },
+  "total_attempts": 51,
+  "all_attempts_by_status": {
+    "PASS": 45,
+    "FAIL": 6,
+    "TIMEOUT": 0
+  },
+  "latest_regression_configurations": 28,
+  "latest_regression_pass": 28,
+  "formal_pdf_runs": 4,
+  "formal_pdf_pass": 4,
+  "preparations": 2,
+  "physical_device_status": "NOT_RUN",
+  "final_regressions": [
+    {
+      "method": "org.inkweft.data.MapCompletionRepositoryTest#independentCopyRemapsSummaryMembersAndKeepsCurrentLayoutWithOneReceipt",
+      "configuration": "default",
+      "status": "PASS",
+      "receipt": "E:\\Inkweft\\archives\\2026-10-10\\Fix-V85-Retest\\runs\\REG-01\\candidate1-05\\result.json",
+      "tested_build": "candidate-1"
+    },
+    {
+      "method": "org.inkweft.app.MapCompletionUiTest#pdfPreservesLiteralUnicodeIncludingSharedGlyphRadicalsAndVisibleEllipsis",
+      "configuration": "default",
+      "status": "PASS",
+      "receipt": "E:\\Inkweft\\archives\\2026-10-10\\Fix-V85-Retest\\runs\\REG-01\\candidate3-11\\result.json",
+      "tested_build": "candidate-3"
+    },
+    {
+      "method": "org.inkweft.app.NoteFirstUiTest#personalTemplateIsAnonymousAndClosingWindowKeepsDraft",
+      "configuration": "default",
+      "status": "PASS",
+      "receipt": "E:\\Inkweft\\archives\\2026-10-10\\Fix-V85-Retest\\runs\\REG-01\\candidate1-19\\result.json",
+      "tested_build": "candidate-1"
+    },
+    {
+      "method": "org.inkweft.app.NoteFirstUiTest#keyboardKeepsOutlineTitleSaveAndCancelFullyVisible",
+      "configuration": "default",
+      "status": "PASS",
+      "receipt": "E:\\Inkweft\\archives\\2026-10-10\\Fix-V85-Retest\\runs\\REG-01\\candidate4-20\\result.json",
+      "tested_build": "candidate-4"
+    },
+    {
+      "method": "org.inkweft.data.MapCompletionRepositoryTest#summaryCreateReplayDissolveAndRestoreKeepOccurrenceIdsAndVersions",
+      "configuration": "default",
+      "status": "PASS",
+      "receipt": "E:\\Inkweft\\archives\\2026-10-10\\Fix-V85-Retest\\runs\\REG-01\\candidate1-01\\result.json",
+      "tested_build": "candidate-1"
+    },
+    {
+      "method": "org.inkweft.data.MapCompletionRepositoryTest#summaryInvalidStructureAndOverlapRollBackWithNoExtraReceipt",
+      "configuration": "default",
+      "status": "PASS",
+      "receipt": "E:\\Inkweft\\archives\\2026-10-10\\Fix-V85-Retest\\runs\\REG-01\\candidate1-02\\result.json",
+      "tested_build": "candidate-1"
+    },
+    {
+      "method": "org.inkweft.data.MapCompletionRepositoryTest#layoutMetadataPersistsForMainAndNamedMapsAndUndoRestoresIt",
+      "configuration": "default",
+      "status": "PASS",
+      "receipt": "E:\\Inkweft\\archives\\2026-10-10\\Fix-V85-Retest\\runs\\REG-01\\candidate1-03\\result.json",
+      "tested_build": "candidate-1"
+    },
+    {
+      "method": "org.inkweft.data.MapCompletionRepositoryTest#namedStructuralSummaryAppearsInSharedSceneAndFixedSnapshot",
+      "configuration": "default",
+      "status": "PASS",
+      "receipt": "E:\\Inkweft\\archives\\2026-10-10\\Fix-V85-Retest\\runs\\REG-01\\candidate1-04\\result.json",
+      "tested_build": "candidate-1"
+    },
+    {
+      "method": "org.inkweft.app.MapCompletionUiTest#summaryUndoRedoSurvivesSavedStateAndReadModeBlocksWrites",
+      "configuration": "default",
+      "status": "PASS",
+      "receipt": "E:\\Inkweft\\archives\\2026-10-10\\Fix-V85-Retest\\runs\\REG-01\\candidate1-06\\result.json",
+      "tested_build": "candidate-1"
+    },
+    {
+      "method": "org.inkweft.app.MapCompletionUiTest#pendingSummaryInverseKeepsReceiptWhenWriterIsRecreated",
+      "configuration": "default",
+      "status": "PASS",
+      "receipt": "E:\\Inkweft\\archives\\2026-10-10\\Fix-V85-Retest\\runs\\REG-01\\candidate1-07\\result.json",
+      "tested_build": "candidate-1"
+    },
+    {
+      "method": "org.inkweft.app.MapCompletionUiTest#zoomResetKeepsCenterAnchorAndOverviewIncludesSummaryLabels",
+      "configuration": "default",
+      "status": "PASS",
+      "receipt": "E:\\Inkweft\\archives\\2026-10-10\\Fix-V85-Retest\\runs\\REG-01\\candidate1-08\\result.json",
+      "tested_build": "candidate-1"
+    },
+    {
+      "method": "org.inkweft.app.MapCompletionUiTest#pngAndVectorPdfIncludeGroupsAndStayWithinAllocationBudget",
+      "configuration": "default",
+      "status": "PASS",
+      "receipt": "E:\\Inkweft\\archives\\2026-10-10\\Fix-V85-Retest\\runs\\REG-01\\candidate2-09\\result.json",
+      "tested_build": "candidate-2"
+    },
+    {
+      "method": "org.inkweft.app.MapCompletionUiTest#templateSearchRetainsStableIndicesAndCreationPreviewIsReadOnly",
+      "configuration": "default",
+      "status": "PASS",
+      "receipt": "E:\\Inkweft\\archives\\2026-10-10\\Fix-V85-Retest\\runs\\REG-01\\candidate1-10\\result.json",
+      "tested_build": "candidate-1"
+    },
+    {
+      "method": "org.inkweft.app.StudyWindowGeometryUiTest#returningFromSourceToFocusKeepsCloseTargetInsideEveryFrame",
+      "configuration": "default",
+      "status": "PASS",
+      "receipt": "E:\\Inkweft\\archives\\2026-10-10\\Fix-V85-Retest\\runs\\REG-01\\candidate3-12\\result.json",
+      "tested_build": "candidate-3"
+    },
+    {
+      "method": "org.inkweft.app.StudyWindowGeometryUiTest#restoringBottomRightWindowKeepsExpandedFrameInsideEveryFrame",
+      "configuration": "default",
+      "status": "PASS",
+      "receipt": "E:\\Inkweft\\archives\\2026-10-10\\Fix-V85-Retest\\runs\\REG-01\\candidate3-13\\result.json",
+      "tested_build": "candidate-3"
+    },
+    {
+      "method": "org.inkweft.app.StudyWindowGeometryUiTest#narrowDefaultKeepsPageSpaceEvenWithLegacyFocusPreference",
+      "configuration": "default",
+      "status": "PASS",
+      "receipt": "E:\\Inkweft\\archives\\2026-10-10\\Fix-V85-Retest\\runs\\REG-01\\candidate3-14\\result.json",
+      "tested_build": "candidate-3"
+    },
+    {
+      "method": "org.inkweft.app.StudyWindowGeometryUiTest#narrowLargeTextKeepsCompactRestoreAndCloseTargetsReachable",
+      "configuration": "default",
+      "status": "PASS",
+      "receipt": "E:\\Inkweft\\archives\\2026-10-10\\Fix-V85-Retest\\runs\\REG-01\\candidate3-15\\result.json",
+      "tested_build": "candidate-3"
+    },
+    {
+      "method": "org.inkweft.data.MapAddendumRepositoryTest#liveAndPinnedFollowContentAndIndependentCopyReplaysOnce",
+      "configuration": "default",
+      "status": "PASS",
+      "receipt": "E:\\Inkweft\\archives\\2026-10-10\\Fix-V85-Retest\\runs\\REG-01\\candidate1-16\\result.json",
+      "tested_build": "candidate-1"
+    },
+    {
+      "method": "org.inkweft.data.MapAddendumRepositoryTest#pageOccurrenceCopyDeleteAndBackupKeepClosure",
+      "configuration": "default",
+      "status": "PASS",
+      "receipt": "E:\\Inkweft\\archives\\2026-10-10\\Fix-V85-Retest\\runs\\REG-01\\candidate1-17\\result.json",
+      "tested_build": "candidate-1"
+    },
+    {
+      "method": "org.inkweft.data.MapPortalRepositoryTest#independentCopyRejectsOutgoingEntriesBeforeWritingAndReplaysFinishedCopies",
+      "configuration": "default",
+      "status": "PASS",
+      "receipt": "E:\\Inkweft\\archives\\2026-10-10\\Fix-V85-Retest\\runs\\REG-01\\candidate1-18\\result.json",
+      "tested_build": "candidate-1"
+    },
+    {
+      "method": "org.inkweft.app.PdfTextSearchUiTest#pdfAndManualHitsMergeByPageAndOpenTheOriginalRegionInReadMode",
+      "configuration": "default",
+      "status": "PASS",
+      "receipt": "E:\\Inkweft\\archives\\2026-10-10\\Fix-V85-Retest\\runs\\REG-01\\candidate1-21\\result.json",
+      "tested_build": "candidate-1"
+    },
+    {
+      "method": "org.inkweft.app.PdfTextSearchUiTest#rotationRapidReplacementClearAndCloseDoNotPublishAnOldQuery",
+      "configuration": "default",
+      "status": "PASS",
+      "receipt": "E:\\Inkweft\\archives\\2026-10-10\\Fix-V85-Retest\\runs\\REG-01\\candidate1-22\\result.json",
+      "tested_build": "candidate-1"
+    },
+    {
+      "method": "org.inkweft.app.PdfTextSearchUiTest#returningToSearchRestoresTheLastPageResultWithoutAnotherSearchOrScroll",
+      "configuration": "default",
+      "status": "PASS",
+      "receipt": "E:\\Inkweft\\archives\\2026-10-10\\Fix-V85-Retest\\runs\\REG-01\\candidate1-23\\result.json",
+      "tested_build": "candidate-1"
+    },
+    {
+      "method": "org.inkweft.app.EditorVisualContractTest#viewSelectionIsAbsentFromDocumentPainting",
+      "configuration": "default",
+      "status": "PASS",
+      "receipt": "E:\\Inkweft\\archives\\2026-10-10\\Fix-V85-Retest\\runs\\REG-01\\candidate2-24\\result.json",
+      "tested_build": "candidate-2"
+    },
+    {
+      "method": "org.inkweft.app.MapInteractionUiTest#structureRenameDoesNotCreateCardOrChangePlacement",
+      "configuration": "default",
+      "status": "PASS",
+      "receipt": "E:\\Inkweft\\archives\\2026-10-10\\Fix-V85-Retest\\runs\\REG-01\\candidate2-25\\result.json",
+      "tested_build": "candidate-2"
+    },
+    {
+      "method": "org.inkweft.app.MapInteractionUiTest#outlineTitlesKeepSharedContentAndContinueAtTheSameParent",
+      "configuration": "default",
+      "status": "PASS",
+      "receipt": "E:\\Inkweft\\archives\\2026-10-10\\Fix-V85-Retest\\runs\\REG-02\\candidate4-outline-1\\result.json",
+      "tested_build": "candidate-4"
+    },
+    {
+      "method": "org.inkweft.app.MapInteractionUiTest#narrowLargeTextKeepsActionsDraftAndCanvas",
+      "configuration": "default",
+      "status": "PASS",
+      "receipt": "E:\\Inkweft\\archives\\2026-10-10\\Fix-V85-Retest\\runs\\REG-02\\candidate3-outline-2\\result.json",
+      "tested_build": "candidate-3"
+    },
+    {
+      "method": "org.inkweft.app.NoteFirstUiTest#keyboardKeepsOutlineTitleSaveAndCancelFullyVisible",
+      "configuration": "wm 750x1600 density 320 font_scale 1.3; real software keyboard",
+      "status": "PASS",
+      "receipt": "E:\\Inkweft\\archives\\2026-10-10\\Fix-V85-Retest\\runs\\REG-03\\candidate4-outline-375dp-font130\\result.json",
+      "tested_build": "candidate-4"
+    }
+  ],
+  "formal_pdf": [
+    {
+      "scene": "text-200-formal",
+      "repeat": 1,
+      "status": "PASS",
+      "receipt": "E:\\Inkweft\\archives\\2026-10-10\\Fix-V85-Retest\\runs\\LOAD-05\\text-200-formal-fix-r1\\result.json"
+    },
+    {
+      "scene": "text-200-formal",
+      "repeat": 2,
+      "status": "PASS",
+      "receipt": "E:\\Inkweft\\archives\\2026-10-10\\Fix-V85-Retest\\runs\\LOAD-05\\text-200-formal-fix-r2\\result.json"
+    },
+    {
+      "scene": "scan-500-formal",
+      "repeat": 1,
+      "status": "PASS",
+      "receipt": "E:\\Inkweft\\archives\\2026-10-10\\Fix-V85-Retest\\runs\\LOAD-05\\scan-500-formal-fix-r1\\result.json"
+    },
+    {
+      "scene": "scan-500-formal",
+      "repeat": 2,
+      "status": "PASS",
+      "receipt": "E:\\Inkweft\\archives\\2026-10-10\\Fix-V85-Retest\\runs\\LOAD-05\\scan-500-formal-fix-r2\\result.json"
+    }
+  ],
+  "failed_attempts": [
+    {
+      "method": "org.inkweft.app.MapCompletionUiTest#pdfPreservesLiteralUnicodeIncludingSharedGlyphRadicalsAndVisibleEllipsis",
+      "label": "candidate1-11",
+      "receipt": "E:\\Inkweft\\archives\\2026-10-10\\Fix-V85-Retest\\runs\\REG-01\\candidate1-11\\result.json"
+    },
+    {
+      "method": "org.inkweft.app.NoteFirstUiTest#keyboardKeepsOutlineTitleSaveAndCancelFullyVisible",
+      "label": "candidate1-20",
+      "receipt": "E:\\Inkweft\\archives\\2026-10-10\\Fix-V85-Retest\\runs\\REG-01\\candidate1-20\\result.json"
+    },
+    {
+      "method": "org.inkweft.app.EditorVisualContractTest#viewSelectionIsAbsentFromDocumentPainting",
+      "label": "candidate1-24",
+      "receipt": "E:\\Inkweft\\archives\\2026-10-10\\Fix-V85-Retest\\runs\\REG-01\\candidate1-24\\result.json"
+    },
+    {
+      "method": "org.inkweft.app.MapInteractionUiTest#outlineTitlesKeepSharedContentAndContinueAtTheSameParent",
+      "label": "candidate2-outline-1",
+      "receipt": "E:\\Inkweft\\archives\\2026-10-10\\Fix-V85-Retest\\runs\\REG-02\\candidate2-outline-1\\result.json"
+    },
+    {
+      "method": "org.inkweft.app.MapInteractionUiTest#narrowLargeTextKeepsActionsDraftAndCanvas",
+      "label": "candidate2-outline-2",
+      "receipt": "E:\\Inkweft\\archives\\2026-10-10\\Fix-V85-Retest\\runs\\REG-02\\candidate2-outline-2\\result.json"
+    },
+    {
+      "method": "org.inkweft.app.MapInteractionUiTest#outlineTitlesKeepSharedContentAndContinueAtTheSameParent",
+      "label": "candidate3-outline-1",
+      "receipt": "E:\\Inkweft\\archives\\2026-10-10\\Fix-V85-Retest\\runs\\REG-02\\candidate3-outline-1\\result.json"
+    }
+  ]
+}

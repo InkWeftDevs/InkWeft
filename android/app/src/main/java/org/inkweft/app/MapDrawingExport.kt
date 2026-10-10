@@ -2,7 +2,6 @@
 package org.inkweft.app
 
 import android.graphics.*
-import android.graphics.pdf.PdfDocument
 import androidx.core.graphics.createBitmap
 import androidx.core.graphics.withTranslation
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -21,7 +20,7 @@ internal data class MapDrawingSnapshot(val title:String,val nodes:List<MapSceneN
 
 /** Text/cards and manual summaries; source pixels and author overlays stay in the full backup. */
 internal object MapDrawingExport {
-    fun write(snapshot:MapDrawingSnapshot,format:MapDrawingFormat,output:OutputStream){
+    fun write(snapshot:MapDrawingSnapshot,format:MapDrawingFormat,output:OutputStream,cacheDir:File){
         require(snapshot.nodes.isNotEmpty()&&snapshot.nodes.size<=StudyGraph.MAX_NODES&&snapshot.layout in MapLayouts.supported)
         val layouts=snapshot.nodes.associate{it.id to MapNodeMetrics.measure(it.title,it.body,structural=it.cardId==null)}
         val groups=MapSummaryPainter.measure(snapshot.nodes,layouts,snapshot.groups,layout=snapshot.layout)
@@ -39,8 +38,7 @@ internal object MapDrawingExport {
         when(format){
             MapDrawingFormat.PNG->{val bitmap=createBitmap(fit.width,fit.height,Bitmap.Config.ARGB_8888)
                 try{draw(Canvas(bitmap));check(bitmap.compress(Bitmap.CompressFormat.PNG,100,output))}finally{bitmap.recycle()}}
-            MapDrawingFormat.PDF->{val document=PdfDocument()
-                try{val page=document.startPage(PdfDocument.PageInfo.Builder(fit.width,fit.height,1).create());draw(page.canvas);document.finishPage(page);document.writeTo(output)}finally{document.close()}}
+            MapDrawingFormat.PDF->MapDrawingPdf.write(snapshot,layouts,groups,fit,output,cacheDir)
         }
     }
 }
@@ -65,7 +63,7 @@ internal class MapDrawingExportControl(val busy:()->Boolean,val start:(MapDrawin
     return MapDrawingExportControl({writing||pendingPath!=null},{snapshot,format->
         if(!writing&&pendingPath==null){writing=true;scope.launch{
             val file=File(context.cacheDir,"inkweft-map-export-${UUID.randomUUID()}.${format.extension}")
-            try{withContext(Dispatchers.Default){file.outputStream().use{MapDrawingExport.write(snapshot,format,it)}}
+            try{withContext(Dispatchers.Default){file.outputStream().use{MapDrawingExport.write(snapshot,format,it,context.cacheDir)}}
                 pendingPath=file.absolutePath;writing=false
                 val name=snapshot.title.replace(Regex("[\\\\/:*?\"<>|\\r\\n]"),"_").take(80).ifBlank{"墨织导图"}+".${format.extension}"
                 if(format==MapDrawingFormat.PNG)png.launch(name)else pdf.launch(name)

@@ -925,7 +925,7 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
                 vm.organizationRedo?.organization?.let{plan->vm.selectedByMap[mapKey]?.let{organizationReveal=plan.expectedAfterGraph to it}}
                 vm.redoOrganization()
             },enabled=editable&&vm.organizationRedo?.expectedGraph==graph?.graphFingerprint,modifier=Modifier.heightIn(min=48.dp).testTag("study-redo-organization")){Text("重做上一步整理")}
-            if(tab!=0)FlowRow(Modifier.fillMaxWidth(),verticalArrangement=Arrangement.Center){
+            if(tab!=0&&titleDraft==null)FlowRow(Modifier.fillMaxWidth(),verticalArrangement=Arrangement.Center){
                 if(compactWindow){
                     TextButton({chooseTab(1)},enabled=browseReady&&!hasDraft,modifier=Modifier.heightIn(min=48.dp).testTag("study-direct-outline").editorSelected(tab==1)){Text("大纲")}
                     TextButton({chooseTab(2)},enabled=browseReady&&!hasDraft,modifier=Modifier.heightIn(min=48.dp).testTag("study-direct-map").editorSelected(tab==2)){Text("导图")}
@@ -952,7 +952,7 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
                 TextButton({transformedCardIds=emptyList()}){Text("收起结果入口")}
             }
             if(tab==2&&selectionMode)Text("在空白处拖框，点主题增减选择；拖动所选主题会移动各自整支。双指仍可缩放。",style=MaterialTheme.typography.bodySmall)
-            if(tab==1)Text(outlineDrag?.preview?.message?:if(outlineDrag!=null)"移出大纲松手可取消"else"拖柄移动整支：上／下方为同级，中间为下级。整理按钮与键盘也可操作。",
+            if(tab==1&&titleDraft==null)Text(outlineDrag?.preview?.message?:if(outlineDrag!=null)"移出大纲松手可取消"else"拖柄移动整支：上／下方为同级，中间为下级。整理按钮与键盘也可操作。",
                 style=MaterialTheme.typography.bodySmall,modifier=Modifier.fillMaxWidth().heightIn(min=36.dp).testTag("outline-drag-feedback").semantics{liveRegion=LiveRegionMode.Polite})
             if(missingPortalBranch&&!ui.loading)Text("指定分支已变化或移除，暂不显示其他主题。可返回原图或明确查看全部主题。",fontSize=12.sp,modifier=Modifier.testTag("map-portal-branch-unavailable"))
             if(ui.unknown)TextButton(onClick=vm::retry,enabled=!ui.busy,modifier=Modifier.testTag("study-retry")){Text("核对原操作")}
@@ -1070,9 +1070,15 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
         val studyListContent:@Composable ColumnScope.()->Unit={
             val cards=ui.cards.filter{(it.trashedAt!=null)==showTrash&&StudyText.matches(StudyTextCard(it.id,it.title,it.body,annotations[it.id].orEmpty()),query)}
             BoxWithConstraints(Modifier.fillMaxWidth().weight(1f).imePadding()){
-                val editorMaxHeight=(maxHeight-16.dp).coerceAtLeast(96.dp)
+                // Reserve the anchor row and list padding so the full editor fits in one viewport.
+                val editorMaxHeight=(maxHeight-72.dp).coerceAtLeast(96.dp)
                 val inlineTitle:@Composable (NodeTitleDraft)->Unit={draft->
-                    Box(Modifier.fillMaxWidth().testTag("outline-title-${draft.anchorId}")){
+                    val editorAnchor=remember{BringIntoViewRequester()}
+                    LaunchedEffect(draft.token,editorMaxHeight){
+                        withFrameNanos{}
+                        editorAnchor.bringIntoView()
+                    }
+                    Box(Modifier.fillMaxWidth().bringIntoViewRequester(editorAnchor).testTag("outline-title-${draft.anchorId}")){
                         NodeTitleEditor(draft,occurrenceCount(draft.cardId),ui.busy||mapWrite.busy||(titleSubmitted&&!titleCheckFailed&&!ui.unknown&&!mapWrite.unknown),
                             ui.unknown||mapWrite.unknown||titleCheckFailed,localMessage?:if(draft.structural)mapWrite.message else ui.message,
                             Modifier.fillMaxWidth().heightIn(max=editorMaxHeight),text=titleInput,onText={titleInput=it},
@@ -1155,7 +1161,7 @@ internal fun StudyContent(note:NoteDraft,initialSource:StudySourceDraft?,dismiss
                             if(card.body.isNotBlank()&&!repeatsExcerptBody(card.title,card.body))Text(card.body,maxLines=1,overflow=TextOverflow.Ellipsis,fontSize=12.sp,color=Quiet,modifier=Modifier.padding(start=56.dp,end=8.dp,bottom=4.dp))
                             titleDraft?.takeIf{it.mapId==currentMap&&it.anchorId==node.id}?.let{inlineTitle(it)}
                             // Keep this group distinct from the clickable card in the merged accessibility tree.
-                            if(isSelected)FlowRow(Modifier.fillMaxWidth().semantics(mergeDescendants=true){}.testTag("outline-context-actions")){
+                            if(isSelected&&titleDraft==null)FlowRow(Modifier.fillMaxWidth().semantics(mergeDescendants=true){}.testTag("outline-context-actions")){
                                 TextButton(onClick={editTitle(node)},enabled=editable,modifier=Modifier.heightIn(min=48.dp).testTag("outline-rename-${node.id}")){Text("修改标题")}
                                 TextButton(onClick={editTitle(node,true)},enabled=editable,modifier=Modifier.heightIn(min=48.dp).testTag("outline-child-${node.id}")){Text("＋ 子主题")}
                                 TextButton(onClick={editTitle(node,true,true)},enabled=editable,modifier=Modifier.heightIn(min=48.dp).testTag("outline-sibling-${node.id}")){Text("＋ 同级")}
