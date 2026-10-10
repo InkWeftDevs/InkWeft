@@ -6,12 +6,14 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
+import android.hardware.display.DisplayManager
 import android.os.BatteryManager
 import android.os.Build
 import android.os.Debug
 import android.os.PowerManager
 import android.os.SystemClock
 import android.util.AtomicFile
+import android.view.Display
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.sync.Mutex
@@ -141,6 +143,18 @@ class AppDiagnostics(private val context: Context) {
                 put("abis", JSONArray(Build.SUPPORTED_ABIS.take(8).map(::publicText)))
                 put("window_width_px", dm.widthPixels); put("window_height_px", dm.heightPixels); put("density_dpi", dm.densityDpi)
                 put("font_scale", context.resources.configuration.fontScale.toDouble()); put("orientation", context.resources.configuration.orientation)
+                put("display_snapshot",optional {
+                    context.getSystemService(DisplayManager::class.java)?.getDisplay(Display.DEFAULT_DISPLAY)?.let{display->
+                        val mode=display.mode
+                        JSONObject().apply {
+                            put("scope","DEFAULT_DISPLAY_POINT_IN_TIME_NOT_MEASURED_FPS_OR_RECORDING_HISTORY")
+                            put("mode_width_px",mode.physicalWidth);put("mode_height_px",mode.physicalHeight)
+                            put("mode_refresh_hz",mode.refreshRate.takeIf{it.isFinite()&&it>0}?.toDouble()?:JSONObject.NULL)
+                            put("reported_refresh_hz",display.refreshRate.takeIf{it.isFinite()&&it>0}?.toDouble()?:JSONObject.NULL)
+                            put("supported_mode_refresh_hz",JSONArray(display.supportedModes.mapNotNull{it.refreshRate.takeIf{hz->hz.isFinite()&&hz>0}?.toDouble()}.distinct().sorted().take(32)))
+                        }
+                    }
+                })
             })
             put("resources_snapshot", JSONObject().apply {
                 put("page_objects_status",objectResult.name);put("page_objects_utc_ms",objectObservedAt)

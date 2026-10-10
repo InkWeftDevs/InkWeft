@@ -26,8 +26,17 @@ import java.util.UUID
 
 /** An explicitly chosen frozen source must never fall back to the card's current crop. */
 @Composable internal fun SourceThumbnail(source:StudySourceRow?,modifier:Modifier=Modifier,card:String=source?.cardId.orEmpty()){
-    val snapshot by produceState<InkPageFile?>(null,source){value=withContext(Dispatchers.IO){runCatching{source?.let{InkPageFile.decode(it.snapshot)}}.getOrNull()}}
-    Box(modifier){snapshot?.let{file->AndroidView(factory={InkCanvasView(it).apply{preview=true}},onRelease={v->v.showObjects(emptyList());v.showStrokes(emptyList())},update={v->v.configure(true,PaperStyle.BLANK,null);v.showAuthoring(file.authoring);v.showImageSources(file.imageSources);v.showStrokes(file.strokes);v.showObjects(file.objects)},modifier=Modifier.fillMaxSize().testTag("excerpt-preview-$card"))}}
+    val snapshot by produceState<Pair<StudySourceRow,InkPageFile>?>(null,source){
+        value=withContext(Dispatchers.IO){source?.let{original->runCatching{original to InkPageFile.decode(original.snapshot)}.getOrNull()}}
+    }
+    // produceState retains its last value until the new decode completes. Never
+    // show that older crop with a click target belonging to a different source.
+    Box(modifier){snapshot?.takeIf{it.first==source}?.second?.let{file->
+        AndroidView(factory={InkCanvasView(it).apply{preview=true}},
+            onRelease={v->v.showObjects(emptyList());v.showStrokes(emptyList())},
+            update={v->v.configure(true,PaperStyle.BLANK,null);v.showAuthoring(file.authoring);v.showImageSources(file.imageSources);v.showStrokes(file.strokes);v.showObjects(file.objects)},
+            modifier=Modifier.fillMaxSize().testTag("excerpt-preview-$card"))
+    }}
 }
 
 /** Excerpts keep their source image; map placement is an optional follow-up. */
@@ -61,10 +70,10 @@ import java.util.UUID
     LazyColumn(Modifier.weight(1f).testTag("excerpt-list"),contentPadding=PaddingValues(8.dp),verticalArrangement=Arrangement.spacedBy(12.dp)){
         if(cards.isEmpty())item{Text(if(query.isBlank())"使用摘要笔框选页面区域"else"没有匹配的摘录",color=Quiet,modifier=Modifier.padding(12.dp))}
         items(cards,key={it.id}){card->
-            val source by produceState<StudySourceRow?>(null,card.id,card.revision){value=withContext(Dispatchers.IO){vm.repo.source(card.id)}}
+            val source by remember(vm.repo,card.id){vm.repo.observeSource(card.id)}.collectAsStateWithLifecycle(initialValue=null)
             source?.let{original->
                 Surface(shape=androidx.compose.foundation.shape.RoundedCornerShape(12.dp),border=BorderStroke(1.dp,Line),color=androidx.compose.ui.graphics.Color.White){Column(Modifier.padding(10.dp).testTag("excerpt-item-${card.id}")){
-                    SourceThumbnail(card.id,Modifier.fillMaxWidth().height(150.dp).clickable(enabled=browseReady&&editing==null&&pages.any{it.id==original.pageId}){open(original)})
+                    SourceThumbnail(original,Modifier.fillMaxWidth().height(150.dp).clickable(enabled=browseReady&&editing==null&&pages.any{it.id==original.pageId}){open(original)},card.id)
                     Row(verticalAlignment=Alignment.CenterVertically){
                         Text(pages.find{it.id==original.pageId}?.let{"第${it.position+1}页"}?:"来源页已回收",Modifier.weight(1f),style=MaterialTheme.typography.labelMedium,color=Quiet)
                         TextButton({if(editing==card.id)editing=null else{editing=card.id}},enabled=enabled&&editing==null,modifier=Modifier.testTag("excerpt-comment-${card.id}")){Text("备注")}

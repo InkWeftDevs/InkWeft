@@ -1,0 +1,79 @@
+{
+  "scope": "UPLOADED_PHYSICAL_SAMPLER_INPUT_NOT_APPLICATION_ALGORITHM_OUTPUT",
+  "input_sha256": "2960ccee9c69b4aabed57b19a2373427ef99095c02468098cd775b3df5dbb5b6",
+  "bytes": 16802026,
+  "report_input_hash_matches": true,
+  "events": 6514,
+  "samples_including_history": 16435,
+  "tools": {
+    "STYLUS": 15596,
+    "FINGER": 839
+  },
+  "actions": {
+    "ACTION_HOVER_ENTER": 106,
+    "ACTION_HOVER_MOVE": 1827,
+    "ACTION_HOVER_EXIT": 106,
+    "ACTION_DOWN": 98,
+    "ACTION_MOVE": 4249,
+    "ACTION_UP": 98,
+    "ACTION_POINTER_DOWN(1)": 5,
+    "ACTION_POINTER_DOWN(2)": 2,
+    "ACTION_POINTER_UP(0)": 12,
+    "ACTION_POINTER_UP(1)": 2,
+    "ACTION_POINTER_DOWN(3)": 2,
+    "ACTION_POINTER_DOWN(4)": 1,
+    "ACTION_POINTER_DOWN(5)": 1,
+    "ACTION_POINTER_DOWN(6)": 1,
+    "ACTION_POINTER_DOWN(7)": 1,
+    "ACTION_POINTER_DOWN(8)": 1,
+    "ACTION_POINTER_UP(3)": 1,
+    "ACTION_POINTER_DOWN(9)": 1
+  },
+  "history_size_counts": {
+    "0": 842,
+    "1": 1978,
+    "3": 132,
+    "4": 11,
+    "2": 3551
+  },
+  "contact_samples_excluding_up": 11773,
+  "terminal_stylus_samples": 86,
+  "pressure_contact_min_max": [
+    0.0003052503161597997,
+    0.5025030970573425
+  ],
+  "declared_pressure_ranges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "tilt_contact_radians_min_max": [
+    0.21228629350662231,
+    1.077937126159668
+  ],
+  "orientation_contact_radians_min_max": [
+    -3.1169161796569824,
+    3.141592502593994
+  ],
+  "negative_contact_orientations": 4848,
+  "terminal_pressure_min_max": [
+    0.0006105006323195994,
+    0.13614164292812347
+  ],
+  "completed_pen_strokes": 86,
+  "replay_samples_with_up": 11859,
+  "stroke_samples_min_max": [
+    21,
+    1290
+  ],
+  "same_position_time_different_axes": 1,
+  "exact_consecutive_duplicates": 1,
+  "backwards_stroke_times": 1,
+  "notes": [
+    "Observed pressure max near 0.5025 is not the declared hardware maximum of 1.",
+    "Terminal pressure need not be zero; preserve actual readings.",
+    "FINGER points cannot be classified as finger versus palm individually.",
+    "Raw sampler input cannot establish StarNote or InkWeft smoothing output or optical latency."
+  ]
+}

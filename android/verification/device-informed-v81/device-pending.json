@@ -1,0 +1,40 @@
+{
+  "candidate_version": 81,
+  "status": "NOT_RUN",
+  "reason": "No Android device attached to this cloud workspace; user collection remains in progress.",
+  "new_methods": [
+    "org.inkweft.app.PencilWorkingSetRegressionTest#moreThan128ShortPencilsRedrawWithoutRebuildingTilesAndKeepIdenticalPixels",
+    "org.inkweft.app.PencilWorkingSetRegressionTest#longStrokeSourcesStayWithinSampleBudgetAndEvictedInkCanRebuild",
+    "org.inkweft.app.DisplayDiagnosticsRegressionTest#displaySnapshotIsBoundedAndNeverClaimsMeasuredFpsOrOpticalLatency",
+    "org.inkweft.data.SearchIndexFreshnessTest#freshnessFollowsInkObjectLayerAndPageChanges",
+    "org.inkweft.data.SearchIndexFreshnessTest#checkingIndexNeverDecodesPayloadWhileFullAuthoringReadStillValidates"
+  ],
+  "related_existing_methods": [
+    "org.inkweft.app.InputRenderingRegressionTest#penUpConsumesItsEntireHistoryBeforeCommitWithoutInventingHardwareAxes",
+    "org.inkweft.app.InputRenderingRegressionTest#canceledTerminalHistoryCannotBecomeAnAuthorStroke",
+    "org.inkweft.app.InputRenderingRegressionTest#stationaryPressureChangesReopenThroughNativeInkWithoutLosingAuthorReadings",
+    "org.inkweft.app.InputRenderingRegressionTest#sameIdInteriorPencilChangesMatchFreshRasterPixels",
+    "org.inkweft.app.InputRenderingRegressionTest#stationaryPencilUpdateUsesTheLastReadingRatherThanAccumulatingOldPressure",
+    "org.inkweft.app.FastPencilTest#longLiveStrokeDoesNotRerasterizeOldTiles",
+    "org.inkweft.app.SelectionPerformanceTest#repeatedPageDrawKeepsPencilRasterWorkBounded",
+    "org.inkweft.app.SelectionPerformanceTest#cachedInkMatchesDirectPixelsAfterAppendEraseAndViewportChange",
+    "org.inkweft.app.FormulaFlowTest#editingResizedFormulaKeepsItsDisplayScaleAndColorOnlyEditKeepsMasks",
+    "org.inkweft.app.ExcerptLassoRegressionTest#freehandExcerptExcludesTheOtherCornerOfItsBoundingBox",
+    "org.inkweft.data.InkRepositoryTest#visiblePreviewMatchesFullReadAfterCutsReplacementAndUndo",
+    "org.inkweft.data.InkRepositoryTest#previewSkipsHiddenPayloadWhileFullReadStillValidatesHistory"
+  ],
+  "manual_excerpt_cases": [
+    "保持摘录列表打开，更新某张卡片的来源页与裁剪快照：缩略图、页码、点击打开应使用同一来源；新解码期间不得显示旧裁剪。",
+    "快速滚动复用列表项，更新来源或切换笔记，旧异步解码不得挂到新卡片；返回原列表仍显示正确来源。",
+    "来源页回收后不能跳转；恢复来源页后可打开；备注与编辑入口仍遵守书写门控。",
+    "改变卡片为多来源：使用既有多来源入口；没有唯一原貌时不回退成旧单来源。"
+  ],
+  "physical_observations": [
+    "大页冷加载、连续写入、替换／擦除／撤销后的 PSS、GC 和帧耗时；本轮 lookup 增加一份按 ID 的页级索引。",
+    "160+ 短铅笔反复重画、8192 点长笔和缓存逐出后的像素一致性与内存预算。",
+    "正常依赖构建后记录 display_snapshot：API 当前模式快照不能代替实际刷新率／光学延迟。",
+    "固定触笔输入与应用处理后输出配对，才可调整实时平滑、压力曲线及抬笔手感。",
+    "图形与完整二维公式真人输入／识别输出和人工标注，另计准确率。"
+  ],
+  "environment": "Use complete unmodified MuPDF native dependency, independent test install/data; record exact source SHA, APK SHA, signing identity, ABI and method receipts. V80 external reported PASS does not certify V81."
+}

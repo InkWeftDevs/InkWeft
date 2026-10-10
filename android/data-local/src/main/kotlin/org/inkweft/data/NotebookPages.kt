@@ -30,6 +30,9 @@ interface NotebookPageDao {
     @Query("UPDATE notebook_pages SET centerX=:x,centerY=:y,zoom=:zoom WHERE id=:id") suspend fun viewport(id:String,x:Double,y:Double,zoom:Double):Int
     @Query("UPDATE notebook_pages SET paper=:paper WHERE id=:id") suspend fun paper(id:String,paper:Int):Int
     @Query("SELECT * FROM page_search_text WHERE pageId=:id") suspend fun search(id:String):PageSearchRow?
+    /** Same validity rule as observeSearch, without reading text, ink or object payloads. */
+    @Query("SELECT EXISTS(SELECT 1 FROM page_search_text s JOIN notebook_pages p ON p.id=s.pageId LEFT JOIN ink_pages h ON h.noteId=p.id WHERE p.id=:id AND p.trashedAt IS NULL AND s.inkRevision=COALESCE(h.revision,0))")
+    suspend fun hasCurrentSearchText(id:String):Boolean
     @Query("UPDATE page_search_text SET inkRevision=:next WHERE pageId=:id AND inkRevision=:expected") suspend fun carrySearch(id:String,expected:Long,next:Long):Int
     @Query("DELETE FROM page_search_text WHERE pageId=:id") suspend fun invalidateSearch(id:String)
     @Insert(onConflict=OnConflictStrategy.REPLACE) suspend fun putSearch(row:PageSearchRow)
@@ -69,6 +72,7 @@ class NotebookPages(private val db:NoteDatabase) {
         check(db.workspace().selectPage(notebookId,pageId)==1)
     }
     suspend fun searchText(pageId:String):PageSearchRow?=db.pages().search(pageId)
+    suspend fun hasCurrentSearchText(pageId:String):Boolean=db.pages().hasCurrentSearchText(pageId)
     /** Version-bound derived text. OCR checks both ink and object snapshots; object writes invalidate the index. */
     suspend fun saveSearchText(pageId:String,expectedInkRevision:Long,text:String,expectedObjects:Long?=null,method:String="MANUAL",authoringRevision:Long?=null):Boolean=db.withTransaction {
         require(db.pages().get(pageId)?.trashedAt==null && db.pages().get(pageId)!=null);require(text.length<=20_000)

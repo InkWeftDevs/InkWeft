@@ -1,4 +1,16 @@
-# 最新云端候选 V80 — 2026-10-10
+# 最新云端候选 V81 — 2026-10-10
+
+分支 `codex/cloud/starnote-inspired-editor-20261009`，继续草稿PR18，起点V80 `a8177df0aaa6c0fbd684af0965bd8d7c78ca71a9`。版本81／`0.0.81-search-and-pencil-cache`：大页编辑准入、搜索免载荷版次检查、铅笔来源缓存、摘录来源一致性、刷新率诊断快照5项已落实。Room16、编码及V79容量安全边界保持。
+
+核心409 PASS／49类，应用及AndroidTest编译通过，lint零错误／175 Warning／2 Hint。暖JVM中1.6万笔替换1024笔的准入中位254.402→0.570ms，准备1.125→2.617ms；这是主机计算对照，真机内存／帧未测。正常MuPDF原生依赖仍HTTP403，无V81 APK；编译／lint临时使用同版官方Java API无原生库AAR。
+
+新上传工作簿报告V80独立ARM64包12项PASS（方法已匹配、原始回执未上传），用户反馈掌拒无问题。真人输入JSON SHA与报告一致：86笔核心回放，11859原迹接触含UP点→11857作者点→11856渲染点；保留轴更新，拒绝1次倒退、忽略1次完全重复。作者编码／润色轴与时间保留通过，未认证Android／native或真人手感。V81新增5项Android方法仍NOT_RUN，不合并V80结果。摘要来源手工走查、PSS／GC／帧与处理后算法输出继续等待；压力观测最大0.5025不当硬件上限，公式准确率另计。
+
+见 [报告](verification/device-informed-v81/RESULTS.html)、[机器验证](verification/device-informed-v81/validation.json)、[受测源码](verification/device-informed-v81/tested-source-sha256.json)、[V81待测](verification/device-informed-v81/device-pending.json)。以下保留旧批次当时结论。
+
+---
+
+# 历史云端候选 V80 — 2026-10-10
 
 继续草稿 PR #18 和 `codex/cloud/starnote-inspired-editor-20261009`，本轮起点 `d3f1c5864bb83a145a26f4da6c953680e68333fc`。落实抬笔历史点、轴更新保真、润色段长加权、跨页方向短弧、凹套索准确性、铅笔与外观缓存失效、带图层单页导入、读取缓冲复制和文字行预算修复。版本80／`0.0.80-input-and-content-copies`，Room16 和文件编码保持。
 

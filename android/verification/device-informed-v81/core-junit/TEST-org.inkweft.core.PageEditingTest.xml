@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="org.inkweft.core.PageEditingTest" tests="14" skipped="0" failures="0" errors="0" timestamp="2026-10-10T08:34:10.313Z" hostname="4d22d97528bf" time="0.011">
+  <properties/>
+  <testcase name="restoreRequiresExactTombstoneIdentity" classname="org.inkweft.core.PageEditingTest" time="0.003"/>
+  <testcase name="copyCanBePlacedNextToItsOwnSource" classname="org.inkweft.core.PageEditingTest" time="0.001"/>
+  <testcase name="orderHashesDistinguishDeletedAndMovedPages" classname="org.inkweft.core.PageEditingTest" time="0.0"/>
+  <testcase name="frozenCommandRestoresFromSavedFields" classname="org.inkweft.core.PageEditingTest" time="0.001"/>
+  <testcase name="movingToSelfOrUnknownAnchorIsRejected" classname="org.inkweft.core.PageEditingTest" time="0.001"/>
+  <testcase name="restoreChoosesCurrentOrderNotHistoricPageNumber" classname="org.inkweft.core.PageEditingTest" time="0.0"/>
+  <testcase name="copyRequiresIndependentNewIdentity" classname="org.inkweft.core.PageEditingTest" time="0.001"/>
+  <testcase name="oldCompiledArchiveSchemaCanBeExplicitlyReadButNotGuessed" classname="org.inkweft.core.PageEditingTest" time="0.002"/>
+  <testcase name="trashCannotEncodeAnAmbiguousPlacement" classname="org.inkweft.core.PageEditingTest" time="0.0"/>
+  <testcase name="differentParametersNeverShareTheSameSemanticDigest" classname="org.inkweft.core.PageEditingTest" time="0.001"/>
+  <testcase name="moveBeforeAndAfterUseTargetIdentity" classname="org.inkweft.core.PageEditingTest" time="0.0"/>
+  <testcase name="movingFirstAndLastToStartPreservesIndexMeaning" classname="org.inkweft.core.PageEditingTest" time="0.0"/>
+  <testcase name="moveEndRemovesSourceBeforeCalculatingIndex" classname="org.inkweft.core.PageEditingTest" time="0.001"/>
+  <testcase name="nonCanonicalIdentityAndNegativeRevisionRejected" classname="org.inkweft.core.PageEditingTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

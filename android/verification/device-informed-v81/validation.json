@@ -1,0 +1,105 @@
+{
+  "format": "InkWeft.Verification/1",
+  "candidate": {
+    "version_code": 81,
+    "version_name": "0.0.81-search-and-pencil-cache",
+    "baseline_commit": "a8177df0aaa6c0fbd684af0965bd8d7c78ca71a9",
+    "date": "2026-10-10",
+    "timezone": "Asia/Shanghai",
+    "room_schema": 16,
+    "source_manifest": "tested-source-sha256.json"
+  },
+  "cloud": {
+    "core_junit": {
+      "tests": 409,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "suites": 49,
+      "status": "PASS",
+      "new_methods": 4,
+      "receipts": "core-junit/"
+    },
+    "compilation": {
+      "status": "PASS",
+      "tasks": [
+        ":core-domain:test",
+        ":app:compileDebugKotlin",
+        ":app:compileDebugAndroidTestKotlin",
+        ":data-local:compileDebugAndroidTestKotlin"
+      ],
+      "receipt": "compile-verification.log"
+    },
+    "lint": {
+      "status": "PASS",
+      "error": 0,
+      "fatal": 0,
+      "warning": 175,
+      "hint": 2,
+      "receipt": "lint-verification.log"
+    },
+    "dependency_scope": "Compile/lint use same-version official MuPDF 1.28.5 Java API-only AAR via temporary init script; no native library, product dependency unchanged.",
+    "normal_apk_build": {
+      "status": "BLOCKED",
+      "task": ":app:assembleDebug -PinkweftInsertionPreview=true",
+      "cause": "MuPDF 1.28.5 POM HTTP403",
+      "apk_produced": false,
+      "receipt": "native-dependency-build.log"
+    },
+    "host_sql": {
+      "status": "PASS",
+      "cases": 8,
+      "payload_reads": 0,
+      "scope": "HOST_SQLITE_NOT_ROOM",
+      "receipt": "search-sql-check.json"
+    },
+    "admission_comparison": {
+      "status": "PASS",
+      "scope": "WARM_HOST_JVM_NOT_ANDROID",
+      "baseline": "Exact V80 InkSession overrides current classpath; other production core sources unchanged.",
+      "warmups": 3,
+      "measured_runs": 7,
+      "receipt": "admission-summary.json"
+    },
+    "physical_input_replay": {
+      "status": "PASS",
+      "scope": "CORE_CODEC_AND_BEAUTIFY_AXIS_PRESERVATION_NOT_ANDROID_OR_HAND_FEEL",
+      "input_hash_matches_report": true,
+      "strokes": 86,
+      "author_samples": 11857,
+      "render_samples": 11856,
+      "input_samples_with_up": 11859,
+      "backwards_readings_ignored": 1,
+      "exact_duplicates_ignored": 1,
+      "stationary_axes_retained": 1,
+      "coordinate_limit": "Sampler pixels are surrogate core world coordinates; no real viewport/Android/native path exercised.",
+      "baseline_comparison_equal": true,
+      "receipts": [
+        "physical-input-audit.json",
+        "physical-replay-V80.json",
+        "physical-replay-V81.json"
+      ]
+    }
+  },
+  "external_v80": {
+    "status": "REPORTED_DEVICE_PASS_12_NOT_NEW_CLOUD_TESTS",
+    "source": "external-device-report.json",
+    "raw_method_receipts_available": false,
+    "raw_sampler_input_hash_verified": true,
+    "optical_latency_measured": false,
+    "palm_feedback": "用户报告墨织掌拒没有问题；未新增掌拒调参"
+  },
+  "v81_android_instrumentation": {
+    "status": "NOT_RUN",
+    "new_methods": 5,
+    "list": "device-pending.json"
+  },
+  "claims_not_established": [
+    "V81 device/frame/memory performance",
+    "Optical latency",
+    "Pressure curve comfort or smoothing superiority over StarNote",
+    "Shape/formula recognition accuracy",
+    "StarNote has unlimited storage"
+  ],
+  "privacy": "Original workbook, raw JSON, hardware descriptor, coordinates and private CSV are not included in repository/delivery; only aggregate audit and hashes are included."
+}

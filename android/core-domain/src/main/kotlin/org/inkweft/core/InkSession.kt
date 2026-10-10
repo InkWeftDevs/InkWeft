@@ -13,6 +13,8 @@ class InkSession(initial:InkPage) {
     private val redo=ArrayDeque<InkMutation>()
     private var historyMove:Boolean?=null
     private var visibleCache:List<InkStroke>?=null
+    private var draftPoints=0
+    private var storedById=initial.strokes.associateByTo(LinkedHashMap()){it.stroke.id}
     private var visibleCount=initial.strokes.count{it.visible}
     private var visiblePoints=initial.strokes.sumOf{if(it.visible)it.stroke.samples.size else 0}
     private var retainedPoints=initial.strokes.sumOf{it.stroke.samples.size}
@@ -48,30 +50,34 @@ class InkSession(initial:InkPage) {
     }
     fun visibleDraft():List<InkStroke> {
         visibleCache?.let{return it}
-        val rows=page.strokes.associateByTo(LinkedHashMap()){it.stroke.id}
+        val rows=LinkedHashMap(storedById)
         val cuts=page.cuts.associateByTo(LinkedHashMap()){it.selection.cut.id}
         (listOfNotNull(pending?.mutation)+queue).forEach{apply(it,page.revision+1,rows,cuts)}
         val byStroke=mutableMapOf<String,MutableList<InkCut>>()
         cuts.values.filter{it.visible}.forEach{c->c.selection.strokeIds.forEach{id->byStroke.getOrPut(id){mutableListOf()}.add(c.selection.cut)}}
-        return java.util.Collections.unmodifiableList(rows.values.filter{it.visible}.map{it.stroke.withCuts(byStroke[it.stroke.id].orEmpty())}).also{visibleCache=it}
+        return java.util.Collections.unmodifiableList(rows.values.filter{it.visible}.map{it.stroke.withCuts(byStroke[it.stroke.id].orEmpty())}).also{
+            draftPoints=it.sumOf{stroke->stroke.samples.size};visibleCache=it
+        }
     }
     fun enqueue(change:InkMutation,finishInFlight:Boolean=false,layerScope:LayerWriteScope?=null){
         check(canStart||(finishInFlight&&queued<17&&blocked==null)||(change !is InkMutation.Add&&queued==0&&blocked==null)){"Resolve pending storage before more input"}
         when(change){
             is InkMutation.Replace->{
                 require(queued==0)
-                val retained=page.strokes.filter{it.visible&&it.stroke.id !in change.hidden}
-                require(retained.size+change.added.size<=InkLimits.MAX_STROKES)
-                require(retained.sumOf{it.stroke.samples.size}+change.added.sumOf{it.samples.size}<=InkLimits.MAX_PAGE_POINTS)
+                require(change.hidden.all{storedById[it]?.visible==true})
+                require(change.added.none{it.id in storedById})
+                val hiddenPoints=change.hidden.sumOf{checkNotNull(storedById[it]).stroke.samples.size}
+                val addedPoints=change.added.sumOf{it.samples.size}
+                require(visibleCount-change.hidden.size+change.added.size<=InkLimits.MAX_STROKES)
+                require(visiblePoints-hiddenPoints+addedPoints<=InkLimits.MAX_PAGE_POINTS)
                 require(page.strokes.size+change.added.size<=InkLimits.MAX_RETAINED_STROKES)
-                require(page.strokes.sumOf{it.stroke.samples.size}+change.added.sumOf{it.samples.size}<=InkLimits.MAX_RETAINED_POINTS)
-                require(change.hidden.all{id->page.strokes.any{it.stroke.id==id&&it.visible}})
-                require(change.added.none{s->page.strokes.any{it.stroke.id==s.id}})
+                require(retainedPoints+addedPoints<=InkLimits.MAX_RETAINED_POINTS)
             }
-            is InkMutation.Add->{val current=visibleDraft();require(current.size<InkLimits.MAX_STROKES);require(current.sumOf{it.samples.size}+change.stroke.samples.size<=InkLimits.MAX_PAGE_POINTS)
-                require(page.strokes.size+additions().size<InkLimits.MAX_RETAINED_STROKES)
-                require(page.strokes.sumOf{it.stroke.samples.size}+additions().sumOf{it.samples.size}+change.stroke.samples.size<=InkLimits.MAX_RETAINED_POINTS)
-                require(page.strokes.none{it.stroke.id==change.stroke.id}&&current.none{it.id==change.stroke.id})}
+            is InkMutation.Add->{val current=visibleDraft();val added=additions()
+                require(current.size<InkLimits.MAX_STROKES);require(draftPoints+change.stroke.samples.size<=InkLimits.MAX_PAGE_POINTS)
+                require(page.strokes.size+added.size<InkLimits.MAX_RETAINED_STROKES)
+                require(retainedPoints+added.sumOf{it.samples.size}+change.stroke.samples.size<=InkLimits.MAX_RETAINED_POINTS)
+                require(change.stroke.id !in storedById&&added.none{it.id==change.stroke.id})}
             is InkMutation.Cut->{val current=visibleDraft().associateBy{it.id};require(page.cuts.size+(listOfNotNull(pending?.mutation)+queue).count{it is InkMutation.Cut}<InkLimits.MAX_RETAINED_CUTS);change.selection.strokeIds.forEach{id->val s=checkNotNull(current[id]);require(s.cuts.size<InkLimits.MAX_CUTS&&s.cuts.sumOf{it.points.size}+change.selection.cut.points.size<=InkLimits.MAX_CUT_POINTS)}}
             else->Unit
         };queue.add(change);scopes[change]=layerScope;visibleCache=null
@@ -80,9 +86,10 @@ class InkSession(initial:InkPage) {
     fun retry():CommitInk?{if(blocked!=InkCommitResult.Unknown)return null;blocked=null;return pending}
     fun complete(command:CommitInk,result:InkCommitResult){
         check(command===pending);if(result !is InkCommitResult.Committed){blocked=result;return};require(result.revision==command.expectedRevision+1)
-        val rows=page.strokes.associateByTo(LinkedHashMap()){it.stroke.id};val cuts=page.cuts.associateByTo(LinkedHashMap()){it.selection.cut.id}
+        val rows=LinkedHashMap(storedById);val cuts=page.cuts.associateByTo(LinkedHashMap()){it.selection.cut.id}
         val inverse=apply(command.mutation,result.revision,rows,cuts)
         page=InkPage(page.noteId,result.revision,rows.values.toList(),cuts.values.toList())
+        storedById=rows
         visibleCount=page.strokes.count{it.visible};visiblePoints=page.strokes.sumOf{if(it.visible)it.stroke.samples.size else 0};retainedPoints=page.strokes.sumOf{it.stroke.samples.size}
         when(historyMove){true->{undo.removeLast();redo.add(inverse)};false->{redo.removeLast();undo.add(inverse)};null->{undo.add(inverse);redo.clear()}}
         while(undo.size>50)undo.removeFirst();historyMove=null;pending=null;blocked=null
