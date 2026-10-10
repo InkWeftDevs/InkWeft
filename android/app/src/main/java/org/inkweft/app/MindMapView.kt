@@ -72,6 +72,10 @@ internal class MindMapView(context:Context):View(context){
         set(value){if(field!=value){field=value;remeasure();value?.let{id->nodes.find{it.id==id}?.let{sourcePreviews.retry(it.cardId)}};requestSourcePreviews();publishBounds();invalidate()}}
     fun canExpandNode(id:String)=nodes.find{it.id==id}?.let{nodeLayout(it).canExpand}==true
     var onViewport:(MapViewport)->Unit={}
+    var onScaleChanged:(Float)->Unit={}
+    var mapLayout:String="right"
+    var summaryGroups:List<KnowledgeData.MapSummaryGroup> = emptyList()
+        set(value){if(field!=value){field=value;invalidate()}}
     private var positioned=false
     // Reading panes temporarily resize the map; closing them restores the user's camera.
     private var readingViewport:MapViewport?=null
@@ -100,12 +104,14 @@ internal class MindMapView(context:Context):View(context){
     fun snapshotViewport()=MapViewport(scale,tx,ty)
     fun readingReturnViewport()=readingViewport?:snapshotViewport()
     fun restoreViewport(v:MapViewport){
+        if(!v.scale.isFinite()||!v.x.isFinite()||!v.y.isFinite())return
         if(readingViewport!=null){
-            readingViewport=v;readingFocusPending=true;focusReadingSelection();return
+            readingViewport=v.copy(scale=v.scale.coerceIn(.001f,2.5f));readingFocusPending=true;focusReadingSelection();return
         }
-        scale=v.scale;tx=v.x;ty=v.y;positioned=true;requestSourcePreviews();publishBounds();invalidate()
+        if(!v.scale.isFinite()||!v.x.isFinite()||!v.y.isFinite())return
+        scale=v.scale.coerceIn(.001f,2.5f);tx=v.x;ty=v.y;positioned=true;onScaleChanged(scale);requestSourcePreviews();publishBounds();invalidate()
     }
-    private fun changedViewport(){positioned=true;if(readingViewport==null)onViewport(snapshotViewport());requestSourcePreviews();publishBounds()}
+    private fun changedViewport(){positioned=true;onScaleChanged(scale);if(readingViewport==null)onViewport(snapshotViewport());requestSourcePreviews();publishBounds()}
     var onOpen:(StudyNodeRow)->Unit={} // Other knowledge canvases retain their own activation contract.
     var onSelect:((StudyNodeRow?)->Unit)?=null
     var onEditTitle:(StudyNodeRow)->Unit={}
@@ -259,9 +265,16 @@ internal class MindMapView(context:Context):View(context){
         if(empty&&nodes.isNotEmpty()&&width>0)fit();publishBounds();invalidate()
     }
     fun decorations(edges:List<Pair<String,String>>){relationEdges=edges;invalidate()}
+    private fun summaryVisuals():List<MapSummaryVisual>{
+        val scene=nodes.map{n->MapSceneNode(n.id,n.parentId,n.cardId.takeUnless{it in structuralCardIds},titles[n.cardId].orEmpty(),bodies[n.cardId].orEmpty(),x(n).toDouble(),y(n).toDouble(),n.revision,revisions[n.cardId]?:n.revision)}
+        return MapSummaryPainter.measure(scene,layouts,summaryGroups,resources.configuration.fontScale,mapLayout)
+    }
     fun fitOverview(){fit(.001f)}
-    fun fit(minScale:Float=.8f){if(nodes.isEmpty()||width==0||height==0)return
-        val bounds=nodes.map(::worldBounds);val left=bounds.minOf{it.left};val right=bounds.maxOf{it.right}+24;val top=bounds.minOf{it.top};val bottom=bounds.maxOf{it.bottom}
+    fun fitSelection(ids:Set<String>){fit(.001f,ids)}
+    fun fit(minScale:Float=.8f,ids:Set<String>?=null){if(nodes.isEmpty()||width==0||height==0)return
+        val bounds=nodes.filter{ids==null||it.id in ids}.map(::worldBounds)+summaryVisuals().takeIf{ids==null}.orEmpty().map{it.bounds}
+        if(bounds.isEmpty())return
+        val left=bounds.minOf{it.left};val right=bounds.maxOf{it.right}+24;val top=bounds.minOf{it.top};val bottom=bounds.maxOf{it.bottom}
         scale=min((width-48*d)/((right-left)*d),(height-48*d)/((bottom-top)*d)).coerceIn(minScale,1.3f)
         // Keep the leading nodes whole when readable scaling requires panning.
         tx=max(width/2-((left+right)/2*d*scale).toFloat(),24*d-(left*d*scale).toFloat())
@@ -280,7 +293,11 @@ internal class MindMapView(context:Context):View(context){
         ty+=if(box.height()>height-2*pad)pad-box.top else if(box.bottom>height-pad)height-pad-box.bottom else if(box.top<pad)pad-box.top else 0f
         changedViewport();invalidate();return true
     }
-    fun zoom(f:Float){val old=scale;scale=(scale*f).coerceIn(.001f,2.5f);tx=width/2-(width/2-tx)*scale/old;ty=height/2-(height/2-ty)*scale/old;changedViewport();invalidate()}
+    fun zoom(f:Float){if(f.isFinite()&&f>0)zoomTo(scale*f)}
+    fun zoomTo(value:Float){
+        if(!value.isFinite()||value<=0)return
+        val old=scale;scale=value.coerceIn(.001f,2.5f);tx=width/2-(width/2-tx)*scale/old;ty=height/2-(height/2-ty)*scale/old;changedViewport();invalidate()
+    }
     private fun x(n:StudyNodeRow)=n.x.toFloat()+if(n.id in movingIds)dx else 0f
     private fun y(n:StudyNodeRow)=n.y.toFloat()+if(n.id in movingIds)dy else 0f
     override fun onSizeChanged(w:Int,h:Int,oldw:Int,oldh:Int){
@@ -357,9 +374,10 @@ internal class MindMapView(context:Context):View(context){
         val layer=if(isSceneTransitionRunning)c.saveLayerAlpha(0f,0f,width.toFloat(),height.toFloat(),(200+55*transitionProgress).toInt())else null
         val save=c.save();c.translate(tx,ty);c.scale(scale*d,scale*d)
         val lookup=nodes.associateBy{it.id}
+        MapSummaryPainter.draw(c,summaryVisuals())
         drawKnowledgeRelations(c,lookup)
         MapScenePainter.draw(c,nodes.map{n->org.inkweft.core.MapSceneNode(n.id,n.parentId,n.cardId.takeUnless{it in structuralCardIds},titles[if(relationMode)n.id else n.cardId].orEmpty(),bodies[n.cardId].orEmpty(),x(n).toDouble(),y(n).toDouble(),n.revision,revisions[n.cardId]?:n.revision)},active?.id?:selectedNodeId,hiddenCounts,resources.configuration.fontScale,scale>=.35f,!relationMode,
-            viewStyle,layouts,sourcePreviews.frames(),presentations)
+            viewStyle,layouts,sourcePreviews.frames(),presentations,mapLayout)
         paint.style=Paint.Style.STROKE;paint.strokeWidth=1.5f;paint.pathEffect=relationDash
         paint.color=InkTheme.Accent.toArgb()
         for((a,b) in relationEdges){val start=lookup[a]?:continue;val end=lookup[b]?:continue

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="org.inkweft.core.PageObjectTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-10-10T12:13:59.610Z" hostname="4d22d97528bf" time="0.009">
+  <properties/>
+  <testcase name="rejectsNonFiniteCoordinatesAndObjectBudget" classname="org.inkweft.core.PageObjectTest" time="0.001"/>
+  <testcase name="contentRoundTripRetainsObjectGeometryTextAndTapeState" classname="org.inkweft.core.PageObjectTest" time="0.0"/>
+  <testcase name="originalsRemainByteExactAcrossPageBookAndMissingClosureIsRejected" classname="org.inkweft.core.PageObjectTest" time="0.003"/>
+  <testcase name="rejectsDuplicateIdsAndTrailingBytes" classname="org.inkweft.core.PageObjectTest" time="0.001"/>
+  <testcase name="drawnTapeAndEditableShapesSurviveTransfer" classname="org.inkweft.core.PageObjectTest" time="0.004"/>
+  <testcase name="everyTapePatternSurvivesBackupPayload" classname="org.inkweft.core.PageObjectTest" time="0.0"/>
+  <testcase name="pageCopyDetectsObjectCorruption" classname="org.inkweft.core.PageObjectTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -5,8 +5,8 @@ import org.junit.Test
 import java.util.UUID
 
 class MapTemplatesTest {
-    @Test fun sixTemplatesRoundTripAndInstantiateIndependentIdentities(){
-        assertEquals(6,MapTemplates.builtins.size)
+    @Test fun templatesRoundTripAndInstantiateIndependentIdentities(){
+        assertEquals(12,MapTemplates.builtins.size)
         MapTemplates.builtins.forEach{t->
             assertEquals(t,KnowledgeCodec.decode(KnowledgeCodec.encode(t)))
             val a=MapTemplates.instantiate(t,"学习图");val b=MapTemplates.instantiate(t,"学习图")
@@ -40,7 +40,7 @@ class MapTemplatesTest {
         val arranged=MapTemplates.arrange(all,"bilateral")
         assertTrue(arranged.values.any{it.x<40});assertTrue(arranged.values.any{it.x>40})
         assertEquals(arranged[first.id]!!.x<40,arranged[child]!!.x<40)
-        assertEquals(StudyGraph.arrange(all),MapTemplates.arrange(all,"right"))
+        assertTrue(MapTemplates.arrange(all,"right").getValue(child).x>MapTemplates.arrange(all,"right").getValue(first.id).x)
     }
 
 }

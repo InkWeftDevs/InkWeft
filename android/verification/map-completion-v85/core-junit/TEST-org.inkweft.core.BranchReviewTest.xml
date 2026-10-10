@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="org.inkweft.core.BranchReviewTest" tests="16" skipped="0" failures="0" errors="0" timestamp="2026-10-10T12:13:56.585Z" hostname="4d22d97528bf" time="0.046">
+  <properties/>
+  <testcase name="namedCollectionKeepsFullTitleAndIndependentQuestionsWithinMatchedCards" classname="org.inkweft.core.BranchReviewTest" time="0.014"/>
+  <testcase name="notebookIncludesUnplacedCardsAndCopiesCallerOwnedQueue" classname="org.inkweft.core.BranchReviewTest" time="0.004"/>
+  <testcase name="repeatedCardPositionsKeepTwoQuestionsAndDoNotCountStructureAsCard" classname="org.inkweft.core.BranchReviewTest" time="0.003"/>
+  <testcase name="missingBranchAndUnavailableMapNeverFallBackToWholeGraph" classname="org.inkweft.core.BranchReviewTest" time="0.001"/>
+  <testcase name="branchTraversesFortyLevelsWithoutEmbedDepthTruncation" classname="org.inkweft.core.BranchReviewTest" time="0.005"/>
+  <testcase name="stateScopeCountsRealUnaskedAndOtherStateOnlyCardsSeparately" classname="org.inkweft.core.BranchReviewTest" time="0.0"/>
+  <testcase name="currentCardDistinguishesUnaskedAndOtherStatesAndRejectsStaleRevision" classname="org.inkweft.core.BranchReviewTest" time="0.002"/>
+  <testcase name="reviewOnlyUsesQuestionDefaultAndKeepsOtherManualStatesInAll" classname="org.inkweft.core.BranchReviewTest" time="0.001"/>
+  <testcase name="conflictingQuestionIdentityAndCardRevisionAreRejected" classname="org.inkweft.core.BranchReviewTest" time="0.001"/>
+  <testcase name="emptyOrUnaskedCollectionNeverBorrowsQuestionsAndRetainsTitleLimit" classname="org.inkweft.core.BranchReviewTest" time="0.0"/>
+  <testcase name="stateSelectionCannotHideIdentityRevisionOrUnfilteredBudgetFailures" classname="org.inkweft.core.BranchReviewTest" time="0.005"/>
+  <testcase name="selectionRequiresExplicitStatesAndAnOriginalAllPlan" classname="org.inkweft.core.BranchReviewTest" time="0.002"/>
+  <testcase name="planRejectsFalseStateCountsAndCopiesTheSelectedQueue" classname="org.inkweft.core.BranchReviewTest" time="0.001"/>
+  <testcase name="currentCardKeepsIndependentQuestionsAndExcludesOtherCardsBeforeStateSelection" classname="org.inkweft.core.BranchReviewTest" time="0.001"/>
+  <testcase name="noSelectedQuestionsDistinguishAllUnderstoodEmptyAndRealUnaskedRanges" classname="org.inkweft.core.BranchReviewTest" time="0.0"/>
+  <testcase name="fullMapDoesNotIncludeQuestionsForUnplacedCards" classname="org.inkweft.core.BranchReviewTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

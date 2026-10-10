@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="org.inkweft.core.LibraryArchiveTest" tests="14" skipped="0" failures="0" errors="0" timestamp="2026-10-10T12:13:59.098Z" hostname="4d22d97528bf" time="0.024">
+  <properties/>
+  <testcase name="deterministicFingerprintDoesNotUseExternalState" classname="org.inkweft.core.LibraryArchiveTest" time="0.011"/>
+  <testcase name="typedRecordsRoundTripIncludingNullAndExactBlob" classname="org.inkweft.core.LibraryArchiveTest" time="0.001"/>
+  <testcase name="oversizedFieldRejected" classname="org.inkweft.core.LibraryArchiveTest" time="0.001"/>
+  <testcase name="footerDamageIsRejected" classname="org.inkweft.core.LibraryArchiveTest" time="0.001"/>
+  <testcase name="finiteNumbersRequiredAndNullabilityEnforced" classname="org.inkweft.core.LibraryArchiveTest" time="0.0"/>
+  <testcase name="headerDamageIsRejected" classname="org.inkweft.core.LibraryArchiveTest" time="0.0"/>
+  <testcase name="maliciousRowCountRejectedBeforeAllocation" classname="org.inkweft.core.LibraryArchiveTest" time="0.002"/>
+  <testcase name="trailingBytesAreRejected" classname="org.inkweft.core.LibraryArchiveTest" time="0.0"/>
+  <testcase name="changedColumnOrTableSchemaIsRejected" classname="org.inkweft.core.LibraryArchiveTest" time="0.0"/>
+  <testcase name="cancellationPropagatesAndCallerKeepsStreamOwnership" classname="org.inkweft.core.LibraryArchiveTest" time="0.001"/>
+  <testcase name="sourceCountCannotLie" classname="org.inkweft.core.LibraryArchiveTest" time="0.001"/>
+  <testcase name="emptyLibraryStreamIsValid" classname="org.inkweft.core.LibraryArchiveTest" time="0.0"/>
+  <testcase name="truncationNeverSucceeds" classname="org.inkweft.core.LibraryArchiveTest" time="0.002"/>
+  <testcase name="shortReadsAndZeroProgressWorkWithoutUsingAvailable" classname="org.inkweft.core.LibraryArchiveTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

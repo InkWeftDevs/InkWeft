@@ -22,7 +22,7 @@ class MapEmbedRepository(private val db:NoteDatabase){
         val ids=scene.nodes.associate{it.id to fresh("node:${it.id}")}
         val structure=scene.nodes.filter{it.cardId==null}.map{MapStructure(ids.getValue(it.id),it.parentId?.let(ids::get),it.title,it.x,it.y)}
         val knowledge=KnowledgeRepository(db)
-        val layout=ref.mapId?.let{(db.knowledge().get(it)?.data() as? KnowledgeData.MapDefinition)?.layout}?:"right"
+        val layout=scene.layout
         val changes=mutableListOf(KnowledgeRow(newMapId,ref.notebookId,1,
             KnowledgeCodec.encode(KnowledgeData.MapDefinition((scene.title.take(112)+" · 独立副本").take(120),layout,structure))))
         val presentations=db.knowledge().forBook(ref.notebookId).filterNot{it.removed}.mapNotNull{it.data() as? KnowledgeData.CardPresentation}.associateBy{it.cardId}
@@ -38,6 +38,8 @@ class MapEmbedRepository(private val db:NoteDatabase){
         }
         scene.nodes.forEach{n->n.cardId?.let{card->changes+=KnowledgeRow(ids.getValue(n.id),ref.notebookId,1,
             KnowledgeCodec.encode(KnowledgeData.MapOccurrence(newMapId,cardIds.getValue(card),n.parentId?.let(ids::get),n.x,n.y)))}}
+        scene.summaryGroups.forEachIndexed{index,group->changes+=KnowledgeRow(fresh("summary:$index"),ref.notebookId,1,
+            KnowledgeCodec.encode(group.copy(mapId=newMapId,memberIds=group.memberIds.map(ids::getValue))))}
         knowledge.commitGraph(ref.notebookId,knowledge.graphChanges(ref.notebookId,changes,
             mapOf<String?,List<String>>(newMapId to scene.nodes.map{ids.getValue(it.id)})))
         db.knowledge().receipt(KnowledgeReceiptRow(operationId,ref.notebookId,digest,newMapId))

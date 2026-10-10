@@ -106,10 +106,11 @@ class StudyRepository(private val db:NoteDatabase,private val fault:(StudyFault)
                 }
             }
             val order=canonicalGraphOrder(nodes.map{it.model()},requestedOrder)
-            val orderRevision=if(before.order==null)1L else before.order.revision+if(order!=before.orderedNodeIds)1 else 0
+            val layout=organized?.layout?:before.state.layout
+            val orderRevision=if(before.order==null)1L else before.order.revision+if(order!=before.orderedNodeIds||layout!=before.state.layout)1 else 0
             if(before.order==null||orderRevision!=before.order.revision){
                 changes+=KnowledgeRow(before.order?.id?:knowledge.orderId(book,mapId),book,orderRevision,
-                    KnowledgeCodec.encode(KnowledgeData.MapOrder(mapId,order)))
+                    KnowledgeCodec.encode(KnowledgeData.MapOrder(mapId,order,if(layout!=before.state.layout)layout else (before.order?.data() as? KnowledgeData.MapOrder)?.layout)))
             }
             if(organized!=null){
                 studyRequire(order==organized.orderedNodeIds&&orderRevision==organized.orderRevision&&definitionRevision==organized.definitionRevision){"MAP_PLAN_VERSION_MISMATCH"}

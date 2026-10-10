@@ -15,11 +15,11 @@ import org.inkweft.data.*
 internal data class StudyLayoutPreview(
     val state:StudyGraphState,val plan:StudyOrganizationPlan,val cards:List<StudyCardRow>,
     val sources:Map<String,MapSourceInfo>,val structuralIds:Set<String>,val sizes:Map<String,StudyNodeSize>,
-    val fontScale:Float,val expandedNodeId:String?,val selection:Set<String> = emptySet(),
+    val fontScale:Float,val expandedNodeId:String?,val selection:Set<String> = emptySet(),val layout:String="right",
 )
 
 @Composable internal fun StudyLayoutPreviewDialog(preview:StudyLayoutPreview,embedded:Boolean,current:Boolean,
-    cancel:()->Unit,apply:()->Unit){
+    cancel:()->Unit,apply:()->Unit,changeLayout:(String)->Unit={}){
     var map by remember(preview){mutableStateOf<MindMapView?>(null)}
     val placements=remember(preview){preview.plan.after.placements.associateBy{it.nodeId}}
     val nodes=remember(preview){preview.state.nodes.filterNot{it.removed}.map{n->
@@ -30,10 +30,13 @@ internal data class StudyLayoutPreview(
         title={Text("自动布局预览")},text={
             Column(if(embedded)Modifier.fillMaxSize()else Modifier.height(400.dp)){
                 Text(if(preview.selection.isEmpty())"按大纲顺序排布全部 ${nodes.size} 个主题，包含收起的分支。应用会更新位置，可撤销恢复手动布局。"else"只排布所选整支 ${StudyOrganization.selectedBranchIds(preview.state,preview.selection).size} 个主题；其他主题与来源保持。应用后可撤销、重做。",style=MaterialTheme.typography.bodySmall)
+                FlowRow(horizontalArrangement=Arrangement.spacedBy(6.dp)){
+                    MapLayouts.labels.filterKeys{preview.selection.isEmpty()||it==preview.state.layout}.forEach{(layout,label)->FilterChip(preview.layout==layout,{changeLayout(layout)},enabled=current,label={Text(label)},modifier=Modifier.testTag("study-layout-$layout"))}
+                }
                 AndroidView(factory={MindMapView(it).apply{contentDescription="自动布局预览";authorEditing=false;map=this
                     addOnLayoutChangeListener{_,l,t,r,b,oldL,oldT,oldR,oldB->if(r>l&&b>t&&(oldR==oldL||oldB==oldT))fitOverview()}
                 }},
-                    update={v->v.authorEditing=false;v.selectedNodeIds=preview.selection;v.expandedNodeId=preview.expandedNodeId;v.show(nodes,preview.cards,sources=preview.sources,structuralCardIds=preview.structuralIds)},
+                    update={v->v.authorEditing=false;v.mapLayout=preview.layout;v.selectedNodeIds=preview.selection;v.expandedNodeId=preview.expandedNodeId;v.summaryGroups=preview.state.summaryGroups.map{it.data};v.show(nodes,preview.cards,sources=preview.sources,structuralCardIds=preview.structuralIds)},
                     modifier=Modifier.fillMaxWidth().weight(1f).padding(vertical=8.dp).describedAs("自动布局预览").testTag("study-layout-canvas"))
                 TextButton({map?.fitOverview()},modifier=Modifier.heightIn(min=48.dp).testTag("study-layout-fit")){Text("适配全部主题")}
                 Text(if(current)"双指缩放、拖动空白查看。取消后回到原视野。"else"内容或字号已变化，请取消后重新预览。",style=MaterialTheme.typography.bodySmall,color=Quiet)

@@ -60,6 +60,8 @@ internal class KnowledgeViewModel(private val repo:KnowledgeRepository,private v
         ui.value.rows.any{it.id==c.id&&it.notebookId==c.notebookId&&it.revision==c.expectedRevision}&&authorAllowed(c.notebookId)
     fun canUndoPresentation(id:String)=available(undoRequest)&&(undoRequest?.data as? KnowledgeData.CardPresentation)?.cardId==id
     fun canRedoPresentation(id:String)=available(redoRequest)&&(redoRequest?.data as? KnowledgeData.CardPresentation)?.cardId==id
+    fun canUndoSummary(mapId:String?)=available(undoRequest)&&(undoRequest?.data as? KnowledgeData.MapSummaryGroup)?.let{it.mapId==mapId}==true
+    fun canRedoSummary(mapId:String?)=available(redoRequest)&&(redoRequest?.data as? KnowledgeData.MapSummaryGroup)?.let{it.mapId==mapId}==true
     fun undoProperties()=replay(undoRequest,-1)
     fun redoProperties()=replay(redoRequest,1)
     private fun replay(request:KnowledgeCommand?,direction:Int){
@@ -93,7 +95,7 @@ internal class KnowledgeViewModel(private val repo:KnowledgeRepository,private v
             state.update{it.copy(busy=false,unknown=false,completed=null,completedOperation=null,rejectedOperation=operation,message=message)}
             return null
         }
-        val inverse=if(data is KnowledgeData.Properties||data is KnowledgeData.CardPresentation)KnowledgeCommand(UUID.randomUUID().toString(),book,command.id,(old?.revision?:0)+1,old?.data()?:data,old?.removed?:true)else null
+        val inverse=if(data is KnowledgeData.Properties||data is KnowledgeData.CardPresentation||data is KnowledgeData.MapSummaryGroup)KnowledgeCommand(UUID.randomUUID().toString(),book,command.id,(old?.revision?:0)+1,old?.data()?:data,old?.removed?:true)else null
         saved["knowledge.template"]=template?.let{arrayListOf(it.hash,it.id)};saved["knowledge.reviewCardRevision"]=reviewCardRevision
         pending=command;pendingUndo=inverse;historyDirection=0;persist();retry();return command.operationId
     }
@@ -105,7 +107,7 @@ internal class KnowledgeViewModel(private val repo:KnowledgeRepository,private v
             else->KnowledgeRejection.INVALID
         })}}){
             is KnowledgeOutcome.Success->{persistResult(result.id,c.operationId);pending=null;if(historyDirection<0){undoRequest=null;redoRequest=pendingUndo}else{undoRequest=pendingUndo;redoRequest=null};pendingUndo=null;historyDirection=0;persist();state.update{it.copy(busy=false,unknown=false,completed=result.id,completedOperation=c.operationId,rejectedOperation=null,message="已保存",canUndoProperties=undoRequest?.data is KnowledgeData.Properties)}}
-            is KnowledgeOutcome.Rejected->{val message=studyCapacityRejection(result.reason.name)?:"未提交：来源、版本或引用已变化，或内容重复。请重新核对。";persistResult(rejectedOperation=c.operationId,message=message);pending=null;pendingUndo=null;historyDirection=0;persist();state.update{it.copy(busy=false,unknown=false,rejectedOperation=c.operationId,message=message)}}
+            is KnowledgeOutcome.Rejected->{val message=(if(result.reason==KnowledgeRejection.MAP_SUMMARY_CONFLICT)"未提交：归纳成员必须保持连续同级。请先解除归纳，再修改成员层级或删除主题。"else null)?:studyCapacityRejection(result.reason.name)?:"未提交：来源、版本或引用已变化，或内容重复。请重新核对。";persistResult(rejectedOperation=c.operationId,message=message);pending=null;pendingUndo=null;historyDirection=0;persist();state.update{it.copy(busy=false,unknown=false,rejectedOperation=c.operationId,message=message)}}
             KnowledgeOutcome.Unknown->state.update{it.copy(busy=false,unknown=true,message="结果待核对，请重试原操作。")}
         }}
         catch(c:CancellationException){state.update{it.copy(busy=false,unknown=true)};throw c}

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="org.inkweft.core.CustomCoverTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-10-10T12:13:57.303Z" hostname="4d22d97528bf" time="0.003">
+  <properties/>
+  <testcase name="allLayoutsRoundTripWithoutChangingImageOrCrop" classname="org.inkweft.core.CustomCoverTest" time="0.001"/>
+  <testcase name="binaryImageIsCopiedAndBlankTitleMeansFollowNotebook" classname="org.inkweft.core.CustomCoverTest" time="0.0"/>
+  <testcase name="rejectsInvalidColorsCoordinatesAndOversizePayloads" classname="org.inkweft.core.CustomCoverTest" time="0.001"/>
+  <testcase name="rejectsTruncatedOrTrailingData" classname="org.inkweft.core.CustomCoverTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

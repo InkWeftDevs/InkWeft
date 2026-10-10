@@ -11,14 +11,14 @@ import java.util.UUID
 data class StudyCardVersion(val cardId:String,val revision:Long,val trashedAt:Long?=null)
 data class StudyGraphState(val ref:MapRef,val nodes:List<StudyNode>,val orderedNodeIds:List<String>,
     val orderRevision:Long=0,val definitionRevision:Long=0,val structuralNodeIds:Set<String> = emptySet(),
-    val cardVersions:List<StudyCardVersion> = emptyList())
+    val cardVersions:List<StudyCardVersion> = emptyList(),val summaryGroups:List<StudySummaryGroup> = emptyList(),val layout:String="right")
 data class StudyNodeSize(val width:Double,val height:Double)
 data class StudyNodePlacement(val nodeId:String,val parentId:String?,val x:Double,val y:Double)
 data class StudyGraphPatch(val orderedNodeIds:List<String>,val placements:List<StudyNodePlacement>)
 enum class StudyOrganizationKind { REORDER, REPARENT, MOVE, ARRANGE, RESTORE }
 enum class StudyOrganizationAction { UP, DOWN, INDENT, OUTDENT }
 data class StudyOrganizationPlan(val ref:MapRef,val kind:StudyOrganizationKind,val expectedGraph:String,
-    val expectedAfterGraph:String,val before:StudyGraphPatch,val after:StudyGraphPatch) {
+    val expectedAfterGraph:String,val before:StudyGraphPatch,val after:StudyGraphPatch,val beforeLayout:String?=null,val afterLayout:String?=null) {
     fun command(operationId:String)=StudyCommand(operationId,ref.notebookId,StudyAction.ORGANIZE,
         expectedGraph=expectedGraph,mapId=ref.mapId,organization=this)
 }
@@ -49,8 +49,12 @@ object StudyOrganization {
         nodes.filterNot{it.removed}.sortedWith(compareBy<StudyNode>{it.y}.thenBy{it.x}.thenBy{it.id}).map{it.id})
 
     private fun validate(state:StudyGraphState){
+        require(state.layout in MapLayouts.supported)
         require(state.orderRevision in 0 until Long.MAX_VALUE&&state.definitionRevision in 0 until Long.MAX_VALUE)
         require(canonicalOrder(state.nodes,state.orderedNodeIds)==state.orderedNodeIds){"MAP_ORDER_DFS"}
+        MapSummaries.validate(state.nodes,state.orderedNodeIds,state.summaryGroups.map{it.data})
+        require(state.summaryGroups.map{it.id}.distinct().size==state.summaryGroups.size)
+        state.summaryGroups.forEach{UUID.fromString(it.id);require(it.revision in 1 until Long.MAX_VALUE&&it.data.mapId==state.ref.mapId)}
         val byId=state.nodes.associateBy{it.id}
         require(state.structuralNodeIds.all{byId[it]?.let{n->!n.removed&&n.revision==state.definitionRevision}==true})
         require(state.structuralNodeIds.isEmpty()||state.ref.mapId!=null&&state.definitionRevision>0)
@@ -75,6 +79,12 @@ object StudyOrganization {
             d.writeInt(versions.size);versions.forEach{
                 d.writeUTF(it.cardId);d.writeLong(it.revision);d.writeLong(it.trashedAt?:-1)
             }
+            if(state.layout!="right"){d.writeUTF("map-layout.v1");d.writeUTF(state.layout)}
+            // Empty-group graphs keep their v2 stamp and existing receipts exactly.
+            if(state.summaryGroups.isNotEmpty()){
+                d.writeUTF("map-summary.v1");d.writeInt(state.summaryGroups.size)
+                state.summaryGroups.sortedBy{it.id}.forEach{g->d.writeUTF(g.id);d.writeLong(g.revision);val payload=KnowledgeCodec.encode(g.data);d.writeInt(payload.size);d.write(payload)}
+            }
         }
         return ContentTransfer.hash(bytes.toByteArray())
     }
@@ -89,6 +99,9 @@ object StudyOrganization {
         require(patch.placements.map{it.nodeId}==patch.orderedNodeIds)
     }
     private fun validate(plan:StudyOrganizationPlan){
+        require((plan.beforeLayout==null)==(plan.afterLayout==null))
+        require(plan.beforeLayout==null||plan.beforeLayout in MapLayouts.supported&&plan.afterLayout in MapLayouts.supported)
+        require(plan.beforeLayout==null||plan.kind==StudyOrganizationKind.ARRANGE||plan.kind==StudyOrganizationKind.RESTORE)
         require(hashPattern.matches(plan.expectedGraph)&&hashPattern.matches(plan.expectedAfterGraph))
         validate(plan.before);validate(plan.after)
         require(plan.before.orderedNodeIds.toSet()==plan.after.orderedNodeIds.toSet())
@@ -106,7 +119,7 @@ object StudyOrganization {
     private fun increment(revision:Long):Long {require(revision<Long.MAX_VALUE-1){"MAP_REVISION_LIMIT"};return revision+1}
 
     /** This reducer is also used to compute preview stamps. Persistence writes exactly this result. */
-    private fun reduce(state:StudyGraphState,after:StudyGraphPatch):StudyGraphState {
+    private fun reduce(state:StudyGraphState,after:StudyGraphPatch,layout:String=state.layout):StudyGraphState {
         validate(state);validate(after)
         require(state.orderedNodeIds.toSet()==after.orderedNodeIds.toSet())
         val placements=after.placements.associateBy{it.nodeId}
@@ -120,19 +133,21 @@ object StudyOrganization {
         }
         return state.copy(nodes=frozen(after.orderedNodeIds.map{changedNodes.getValue(it)}+state.nodes.filter{it.removed}),
             orderedNodeIds=frozen(after.orderedNodeIds),definitionRevision=definitionRevision,
-            orderRevision=if(state.orderRevision==0L||after.orderedNodeIds!=state.orderedNodeIds)increment(state.orderRevision)else state.orderRevision)
+            orderRevision=if(state.orderRevision==0L||after.orderedNodeIds!=state.orderedNodeIds||layout!=state.layout)increment(state.orderRevision)else state.orderRevision,layout=layout)
     }
 
-    private fun prepare(state:StudyGraphState,kind:StudyOrganizationKind,after:StudyGraphPatch):StudyOrganizationPlan {
+    private fun prepare(state:StudyGraphState,kind:StudyOrganizationKind,after:StudyGraphPatch,layout:String?=null):StudyOrganizationPlan {
         val frozenAfter=StudyGraphPatch(frozen(after.orderedNodeIds),frozen(after.placements))
-        return StudyOrganizationPlan(state.ref,kind,fingerprint(state),fingerprint(reduce(state,frozenAfter)),patch(state),frozenAfter).also(::validate)
+        return StudyOrganizationPlan(state.ref,kind,fingerprint(state),fingerprint(reduce(state,frozenAfter,layout?:state.layout)),patch(state),frozenAfter,
+            state.layout.takeIf{layout!=null&&layout!=state.layout},layout.takeIf{it!=state.layout}).also(::validate)
     }
 
     fun apply(state:StudyGraphState,plan:StudyOrganizationPlan):StudyGraphState {
         validate(plan)
         require(state.ref==plan.ref&&fingerprint(state)==plan.expectedGraph){"MAP_GRAPH_CONFLICT"}
         require(patch(state)==plan.before){"MAP_PATCH_CONFLICT"}
-        return reduce(state,plan.after).also{require(fingerprint(it)==plan.expectedAfterGraph){"MAP_AFTER_CONFLICT"}}
+        require(plan.beforeLayout==null||plan.beforeLayout==state.layout){"MAP_LAYOUT_CONFLICT"}
+        return reduce(state,plan.after,plan.afterLayout?:state.layout).also{require(fingerprint(it)==plan.expectedAfterGraph){"MAP_AFTER_CONFLICT"}}
     }
 
     fun plan(state:StudyGraphState,nodeId:String,action:StudyOrganizationAction):StudyOrganizationPlan {
@@ -214,8 +229,14 @@ object StudyOrganization {
     }
 
     fun arrange(state:StudyGraphState,sizes:Map<String,StudyNodeSize>,layout:String="right"):StudyOrganizationPlan {
-        validate(state);require(layout in setOf("right","bilateral"));require(sizes.keys==state.orderedNodeIds.toSet()){"MAP_NODE_SIZES"}
+        validate(state);require(layout in MapLayouts.supported);require(sizes.keys==state.orderedNodeIds.toSet()){"MAP_NODE_SIZES"}
         sizes.values.forEach{require(it.width.isFinite()&&it.height.isFinite()&&it.width>0&&it.height>0&&it.width<=80_000&&it.height<=80_000)}
+        if(layout=="organization"){
+            // Rotate the measured horizontal algorithm, including its bounded fallback.
+            // Swap dimensions before planning so tall cards cannot overlap after rotation.
+            val rotated=arrange(state,sizes.mapValues{(_,s)->StudyNodeSize(s.height,s.width)},"right")
+            return prepare(state,StudyOrganizationKind.ARRANGE,rotated.after.copy(placements=rotated.after.placements.map{it.copy(x=it.y,y=it.x)}),layout)
+        }
         val byId=state.nodes.associateBy{it.id};val children=state.orderedNodeIds.map{byId.getValue(it)}.groupBy{it.parentId}
         val widths=mutableMapOf<Int,Double>();val heights=mutableMapOf<String,Double>();val depths=mutableMapOf<String,Int>()
         fun groupHeight(nodes:List<StudyNode>)=nodes.sumOf{heights.getValue(it.id)}+48.0*(nodes.size-1).coerceAtLeast(0)
@@ -229,9 +250,10 @@ object StudyOrganization {
         fun balancedSplit(kids:List<StudyNode>):Int {
             if(kids.size<=1)return kids.size
             val total=kids.sumOf{heights.getValue(it.id)};var prefix=0.0
-            var best=1;var bestHeight=Double.POSITIVE_INFINITY;val preferred=(kids.size+1)/2
+            var best=kids.size;var bestHeight=Double.POSITIVE_INFINITY;val preferred=(kids.size+1)/2
             for(index in 1 until kids.size){
                 prefix+=heights.getValue(kids[index-1].id)
+                if(!MapSummaries.splitAllowed(kids.map{it.id},index,state.summaryGroups))continue
                 val left=prefix+48.0*(index-1)
                 val right=total-prefix+48.0*(kids.size-index-1)
                 val occupied=maxOf(left,right)
@@ -251,7 +273,7 @@ object StudyOrganization {
         val rightX=DoubleArray(maxDepth+1){40.0};val leftX=DoubleArray(maxDepth+1){40.0}
         for(depth in 1..maxDepth){rightX[depth]=rightX[depth-1]+widths.getValue(depth-1)+96.0;leftX[depth]=leftX[depth-1]-widths.getValue(depth)-96.0}
         val requests=mutableMapOf<String,Pair<Double,Boolean>>();var top=80.0
-        children[null].orEmpty().forEach{requests[it.id]=top to false;top+=heights.getValue(it.id)+96.0}
+        children[null].orEmpty().forEach{requests[it.id]=top to (layout=="left");top+=heights.getValue(it.id)+96.0}
         val positions=mutableMapOf<String,CanvasPoint>()
         state.orderedNodeIds.forEach{id->
             val (nodeTop,left)=requests.getValue(id);val height=heights.getValue(id);val depth=depths.getValue(id)
@@ -267,6 +289,9 @@ object StudyOrganization {
             val spanX=positions.maxOf{(id,p)->p.x+sizes.getValue(id).width}-positions.values.minOf{it.x}
             val spanY=positions.maxOf{(id,p)->p.y+sizes.getValue(id).height}-positions.values.minOf{it.y}
             if(spanX>80_000||spanY>80_000){
+                // Compact columns can wrap a bracket around unrelated branches.
+                // Preserve the original scene instead of silently breaking its visual group.
+                require(state.summaryGroups.isEmpty()){"MAP_SUMMARY_LAYOUT_BOUNDS"}
                 // Very wide/deep trees use compact columns in author DFS order. Preserve
                 // node sizes, relationships and gaps instead of overlapping cards.
                 val cellWidth=sizes.values.maxOf{it.width}+96.0;val cellHeight=sizes.values.maxOf{it.height}+48.0
@@ -282,14 +307,15 @@ object StudyOrganization {
         val dx=if(maxX>40_000)40_000-maxX else if(minX< -40_000)-40_000-minX else 0.0
         val dy=if(maxY>40_000)40_000-maxY else if(minY< -40_000)-40_000-minY else 0.0
         val before=patch(state)
-        return prepare(state,StudyOrganizationKind.ARRANGE,before.copy(placements=before.placements.map{p->positions.getValue(p.nodeId).let{p.copy(x=it.x+dx,y=it.y+dy)}}))
+        return prepare(state,StudyOrganizationKind.ARRANGE,before.copy(placements=before.placements.map{p->positions.getValue(p.nodeId).let{p.copy(x=it.x+dx,y=it.y+dy)}}),layout)
     }
 
     /** Reuse the existing layout for selected whole branches; all unselected geometry stays put. */
     fun arrangeSelection(state:StudyGraphState,selection:Set<String>,sizes:Map<String,StudyNodeSize>,layout:String="right"):StudyOrganizationPlan {
         val ids=selectedBranchIds(state,selection);val roots=selectionRoots(state,selection)
         val subset=state.copy(nodes=state.nodes.filter{it.id in ids}.map{if(it.id in roots)it.copy(parentId=null)else it},
-            orderedNodeIds=state.orderedNodeIds.filter{it in ids},structuralNodeIds=state.structuralNodeIds.intersect(ids))
+            orderedNodeIds=state.orderedNodeIds.filter{it in ids},structuralNodeIds=state.structuralNodeIds.intersect(ids),
+            summaryGroups=state.summaryGroups.filter{g->g.data.memberIds.all{it in ids&&it !in roots}})
         val arranged=arrange(subset,sizes.filterKeys{it in ids},layout).after.placements.associateBy{it.nodeId}
         val old=patch(state);val minX=old.placements.filter{it.nodeId in ids}.minOf{it.x};val minY=old.placements.filter{it.nodeId in ids}.minOf{it.y}
         val dx=minX-arranged.values.minOf{it.x};val dy=minY-arranged.values.minOf{it.y}
@@ -301,30 +327,33 @@ object StudyOrganization {
     fun undo(current:StudyGraphState,appliedPlan:StudyOrganizationPlan):StudyOrganizationPlan {
         validate(appliedPlan)
         require(current.ref==appliedPlan.ref&&fingerprint(current)==appliedPlan.expectedAfterGraph&&patch(current)==appliedPlan.after){"MAP_UNDO_CONFLICT"}
-        return prepare(current,StudyOrganizationKind.RESTORE,appliedPlan.before)
+        return prepare(current,StudyOrganizationKind.RESTORE,appliedPlan.before,appliedPlan.beforeLayout)
     }
 
     fun encode(plan:StudyOrganizationPlan):ByteArray {
         validate(plan)
         val bytes=ByteArrayOutputStream()
         DataOutputStream(bytes).use{d->
-            d.writeInt(0x49574f31);d.writeUTF(plan.ref.notebookId);d.writeUTF(plan.ref.mapId.orEmpty());d.writeUTF(plan.kind.name)
+            d.writeInt(if(plan.beforeLayout==null)0x49574f31 else 0x49574f32);d.writeUTF(plan.ref.notebookId);d.writeUTF(plan.ref.mapId.orEmpty());d.writeUTF(plan.kind.name)
             d.writeUTF(plan.expectedGraph);d.writeUTF(plan.expectedAfterGraph)
             listOf(plan.before,plan.after).forEach{p->
                 d.writeInt(p.orderedNodeIds.size);p.orderedNodeIds.forEach(d::writeUTF)
                 d.writeInt(p.placements.size);p.placements.forEach{n->d.writeUTF(n.nodeId);d.writeUTF(n.parentId.orEmpty());d.writeDouble(n.x);d.writeDouble(n.y)}
             }
+            if(plan.beforeLayout!=null){d.writeUTF(plan.beforeLayout);d.writeUTF(requireNotNull(plan.afterLayout))}
         }
         return bytes.toByteArray().also{require(it.size<=MAX_BYTES)}
     }
     fun decode(bytes:ByteArray):StudyOrganizationPlan {
         require(bytes.size<=MAX_BYTES)
         return DataInputStream(ByteArrayInputStream(bytes)).use{d->
-            require(d.readInt()==0x49574f31);val ref=MapRef(d.readUTF(),d.readUTF().ifEmpty{null});val kind=StudyOrganizationKind.valueOf(d.readUTF())
+            val magic=d.readInt();require(magic==0x49574f31||magic==0x49574f32);val ref=MapRef(d.readUTF(),d.readUTF().ifEmpty{null});val kind=StudyOrganizationKind.valueOf(d.readUTF())
             val beforeHash=d.readUTF();val afterHash=d.readUTF()
             fun count()=d.readInt().also{require(it in 0..StudyGraph.MAX_NODES)}
             fun readPatch()=StudyGraphPatch(frozen(List(count()){d.readUTF()}),frozen(List(count()){StudyNodePlacement(d.readUTF(),d.readUTF().ifEmpty{null},d.readDouble(),d.readDouble())}))
-            StudyOrganizationPlan(ref,kind,beforeHash,afterHash,readPatch(),readPatch()).also{require(d.read()==-1);validate(it)}
+            val before=readPatch();val after=readPatch()
+            val beforeLayout=if(magic==0x49574f32)d.readUTF()else null;val afterLayout=if(magic==0x49574f32)d.readUTF()else null
+            StudyOrganizationPlan(ref,kind,beforeHash,afterHash,before,after,beforeLayout,afterLayout).also{require(d.read()==-1);validate(it)}
         }
     }
 }

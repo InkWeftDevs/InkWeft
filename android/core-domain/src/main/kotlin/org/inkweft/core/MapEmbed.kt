@@ -30,6 +30,15 @@ object MapEmbedCodec {
                     val text=n.body.toByteArray(Charsets.UTF_8);d.writeInt(text.size);d.write(text);d.writeDouble(n.x);d.writeDouble(n.y);d.writeLong(n.revision);d.writeLong(n.contentRevision);d.writeUTF(n.sourceState)
                     require(b.size()<=MAX_BYTES)
                 }
+                require(s.layout in MapLayouts.supported&&s.summaryGroups.size<=MapSummaries.MAX_GROUPS)
+                if(s.summaryGroups.isNotEmpty()){
+                    val models=s.nodes.map{StudyNode(it.id,it.cardId?:it.id,it.parentId,it.x,it.y,it.revision)}
+                    MapSummaries.validate(models,StudyOrganization.canonicalOrder(models,models.map{it.id}),s.summaryGroups)
+                }
+                if(s.layout!="right"||s.summaryGroups.isNotEmpty()){
+                    d.writeUTF("MAP_SCENE_V2");d.writeUTF(s.layout);d.writeInt(s.summaryGroups.size)
+                    s.summaryGroups.forEach{group->require(group.mapId==s.ref.mapId&&group.memberIds.all{id->s.nodes.any{it.id==id}});val payload=KnowledgeCodec.encode(group);d.writeInt(payload.size);d.write(payload)}
+                }
             }
         };return b.toByteArray().also{require(it.size<=MAX_BYTES)}
     }
@@ -44,7 +53,12 @@ object MapEmbedCodec {
                     val id=d.readUTF();val parent=d.readUTF().ifEmpty{null};val card=d.readUTF().ifEmpty{null};val name=d.readUTF()
                     val size=d.readInt();require(size in 0..80_000&&size<=d.available());val text=ByteArray(size);d.readFully(text);val body=text.toString(Charsets.UTF_8);require(body.toByteArray(Charsets.UTF_8).contentEquals(text))
                     MapSceneNode(id,parent,card,name,body,d.readDouble(),d.readDouble(),d.readLong(),d.readLong(),d.readUTF())
-                };require(nodes.map{it.id}.distinct().size==nodes.size);MapScene(ref,title,nodes,graph)
+                };require(nodes.map{it.id}.distinct().size==nodes.size)
+                val layout:String;val groups:List<KnowledgeData.MapSummaryGroup>
+                if(d.available()>0){require(d.readUTF()=="MAP_SCENE_V2");layout=d.readUTF();val groupsCount=d.readInt();require(groupsCount in 0..MapSummaries.MAX_GROUPS)
+                    groups=List(groupsCount){val size=d.readInt();require(size in 1..KnowledgeCodec.MAX_BYTES&&size<=d.available());val payload=ByteArray(size);d.readFully(payload);KnowledgeCodec.decode(payload) as KnowledgeData.MapSummaryGroup}
+                }else{layout="right";groups=emptyList()}
+                MapScene(ref,title,nodes,graph,layout=layout,summaryGroups=groups)
             }else null
             require(d.available()==0);MapEmbed(ref,branch,depth,policy,scene).also{encode(it)}
         }

@@ -29,7 +29,8 @@ sealed interface KnowledgeData {
     data class MapDefinition(val title:String,val layout:String="right",val structures:List<MapStructure> = emptyList()):KnowledgeData
     data class MapTemplate(val title:String,val version:Int=1,val layout:String="right",val nodes:List<TemplateNode> = emptyList()):KnowledgeData
     data class MapOccurrence(val mapId:String,val cardId:String,val parentId:String?,val x:Double,val y:Double):KnowledgeData
-    data class MapOrder(val mapId:String?,val orderedNodeIds:List<String>):KnowledgeData
+    data class MapSummaryGroup(val mapId:String?,val label:String,val memberIds:List<String>):KnowledgeData
+    data class MapOrder(val mapId:String?,val orderedNodeIds:List<String>,val layout:String?=null):KnowledgeData
     /** A same-notebook entry to a map or exact branch occurrence; null mapId denotes its main map. */
     data class MapPortal(val sourceMapId:String?,val sourceNodeId:String,val targetMapId:String?,val targetBranchId:String?=null):KnowledgeData
     data class Decoration(val from:String,val to:String,val label:String="装饰线"):KnowledgeData
@@ -53,7 +54,7 @@ object KnowledgeCodec {
             is KnowledgeData.Placement->{id(v.cardId);require(v.x.isFinite()&&v.y.isFinite()&&v.x in -40000.0..40000.0&&v.y in -40000.0..40000.0)}
             is KnowledgeData.Alias->{id(v.cardId);require(v.name.isNotBlank()&&v.name.length<=120)}
             is KnowledgeData.MapDefinition->{
-                require(v.title.isNotBlank()&&v.title.length<=120&&v.layout in setOf("right","bilateral"))
+                require(v.title.isNotBlank()&&v.title.length<=120&&v.layout in MapLayouts.supported)
                 require(v.structures.size<=StudyGraph.MAX_NODES){"STUDY_NODE_BUDGET"}
                 val structures=v.structures.associateBy{it.id};require(structures.size==v.structures.size)
                 v.structures.forEach{n->
@@ -66,7 +67,9 @@ object KnowledgeCodec {
             }
             is KnowledgeData.MapTemplate->{require(v.title.isNotBlank()&&v.title.length<=120&&v.version==1);MapTemplates.validate(v.layout,v.nodes)}
             is KnowledgeData.MapOccurrence->{id(v.mapId);id(v.cardId);v.parentId?.let(::id);require(v.x.isFinite()&&v.y.isFinite()&&v.x in -40000.0..40000.0&&v.y in -40000.0..40000.0)}
-            is KnowledgeData.MapOrder->{v.mapId?.let(::id);require(v.orderedNodeIds.size<=StudyGraph.MAX_NODES){"STUDY_NODE_BUDGET"};require(v.orderedNodeIds.distinct().size==v.orderedNodeIds.size);v.orderedNodeIds.forEach(::id)}
+            is KnowledgeData.MapSummaryGroup->{v.mapId?.let(::id);require(v.label.isNotBlank()&&v.label.length<=120)
+                require(v.memberIds.size in 2..MapSummaries.MAX_MEMBERS&&v.memberIds.distinct().size==v.memberIds.size);v.memberIds.forEach(::id)}
+            is KnowledgeData.MapOrder->{require(v.layout==null||v.layout in MapLayouts.supported);v.mapId?.let(::id);require(v.orderedNodeIds.size<=StudyGraph.MAX_NODES){"STUDY_NODE_BUDGET"};require(v.orderedNodeIds.distinct().size==v.orderedNodeIds.size);v.orderedNodeIds.forEach(::id)}
             is KnowledgeData.MapPortal->{v.sourceMapId?.let(::id);id(v.sourceNodeId);v.targetMapId?.let(::id);v.targetBranchId?.let(::id);require(v.sourceMapId!=v.targetMapId)}
             is KnowledgeData.Decoration->{id(v.from);id(v.to);require(v.from!=v.to&&v.label.length<=120)}
         }
@@ -93,7 +96,8 @@ object KnowledgeCodec {
                 is KnowledgeData.MapDefinition->{d.writeUTF("MAP_V2");d.writeUTF(v.title);d.writeUTF(v.layout);d.writeInt(v.structures.size);v.structures.forEach{n->d.writeUTF(n.id);d.writeUTF(n.parentId.orEmpty());d.writeUTF(n.title);d.writeDouble(n.x);d.writeDouble(n.y)}}
                 is KnowledgeData.MapTemplate->{d.writeUTF("MAP_TEMPLATE_V1");d.writeUTF(v.title);d.writeInt(v.version);d.writeUTF(v.layout);d.writeInt(v.nodes.size);v.nodes.forEach{n->d.writeUTF(n.title);d.writeInt(n.parent?:-1);d.writeDouble(n.x);d.writeDouble(n.y)}}
                 is KnowledgeData.MapOccurrence->{d.writeUTF("MAP_NODE");d.writeUTF(v.mapId);d.writeUTF(v.cardId);d.writeUTF(v.parentId.orEmpty());d.writeDouble(v.x);d.writeDouble(v.y)}
-                is KnowledgeData.MapOrder->{d.writeUTF("MAP_ORDER_V1");d.writeUTF(v.mapId.orEmpty());d.writeInt(v.orderedNodeIds.size);v.orderedNodeIds.forEach(d::writeUTF)}
+                is KnowledgeData.MapSummaryGroup->{d.writeUTF("MAP_SUMMARY_V1");d.writeUTF(v.mapId.orEmpty());d.writeUTF(v.label);d.writeInt(v.memberIds.size);v.memberIds.forEach(d::writeUTF)}
+                is KnowledgeData.MapOrder->{d.writeUTF(if(v.layout==null)"MAP_ORDER_V1"else"MAP_ORDER_V2");d.writeUTF(v.mapId.orEmpty());d.writeInt(v.orderedNodeIds.size);v.orderedNodeIds.forEach(d::writeUTF);v.layout?.let(d::writeUTF)}
                 is KnowledgeData.MapPortal->{d.writeUTF(if(v.targetBranchId==null)"MAP_PORTAL_V1"else"MAP_PORTAL_V2");d.writeUTF(v.sourceMapId.orEmpty());d.writeUTF(v.sourceNodeId);d.writeUTF(v.targetMapId.orEmpty());v.targetBranchId?.let(d::writeUTF)}
                 is KnowledgeData.Decoration->{d.writeUTF("DECORATION");d.writeUTF(v.from);d.writeUTF(v.to);d.writeUTF(v.label)}
             }
@@ -121,7 +125,9 @@ object KnowledgeCodec {
                 "MAP_V2"->{val title=d.readUTF();val layout=d.readUTF();val count=d.readInt();require(count in 0..StudyGraph.MAX_NODES);KnowledgeData.MapDefinition(title,layout,List(count){MapStructure(d.readUTF(),d.readUTF().ifEmpty{null},d.readUTF(),d.readDouble(),d.readDouble())})}
                 "MAP_TEMPLATE_V1"->{val title=d.readUTF();val version=d.readInt();val layout=d.readUTF();val count=d.readInt();require(count in 0..StudyGraph.MAX_NODES);KnowledgeData.MapTemplate(title,version,layout,List(count){TemplateNode(d.readUTF(),d.readInt().let{require(it>=-1);it.takeIf{it>=0}},d.readDouble(),d.readDouble())})}
                 "MAP_NODE"->KnowledgeData.MapOccurrence(d.readUTF(),d.readUTF(),d.readUTF().ifEmpty{null},d.readDouble(),d.readDouble())
+                "MAP_SUMMARY_V1"->KnowledgeData.MapSummaryGroup(d.readUTF().ifEmpty{null},d.readUTF(),list(MapSummaries.MAX_MEMBERS))
                 "MAP_ORDER_V1"->KnowledgeData.MapOrder(d.readUTF().ifEmpty{null},list(StudyGraph.MAX_NODES))
+                "MAP_ORDER_V2"->KnowledgeData.MapOrder(d.readUTF().ifEmpty{null},list(StudyGraph.MAX_NODES),d.readUTF())
                 "MAP_PORTAL_V1"->KnowledgeData.MapPortal(d.readUTF().ifEmpty{null},d.readUTF(),d.readUTF().ifEmpty{null})
                 "MAP_PORTAL_V2"->KnowledgeData.MapPortal(d.readUTF().ifEmpty{null},d.readUTF(),d.readUTF().ifEmpty{null},d.readUTF())
                 "DECORATION"->KnowledgeData.Decoration(d.readUTF(),d.readUTF(),d.readUTF())
