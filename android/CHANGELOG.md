@@ -1,3 +1,11 @@
+# V83 — 识别分组、摘录历史与加载诊断 · 2026-10-10
+
+云端实现竖画桥接和逐笔延迟点画归行；实际V80原迹核心回放中29有真值例从24到27分组匹配，30例来源和原迹字节SHA守恒，不代表新OCR准确率。30公式实际384图以相同ORT1.30.0与模型逐步token完全复现；私有诊断新增原始栅格和实际Float32张量SHA，保持原容量限制。
+
+摘录范围和个人注释加入分别命名的单步撤销/重做；范围复用不可变历史来源、CAS拒绝其他位置新版本；注释保留墓碑、原命令和逆操作直到确认，并支持SavedState恢复。成功笔迹/作者读取记录匿名配对的冻结和解码微秒，不当首帧或设备性能结论。
+
+核心425 PASS/51类，新增10回归；Android主代码/测试编译PASS，lint无Error/Fatal，新增5Android方法NOT_RUN。Room16与容量配套沿用，MuPDF编译仅官方同版本API-only临时替代，无云端APK。见[报告](verification/simulation-informed-v83/RESULTS.html)、[精确复测](verification/simulation-informed-v83/device-pending.json)、[本地交接](verification/simulation-informed-v83/LOCAL-TESTS.md)。
+
 # V82 — 卡片返回、图层容量与加载计算 · 2026-10-10
 
 摘要卡正文关联打开目标前保存原CARD上下文，返回恢复原摘要卡；图层读取改为全部笔迹ID投影，观察在IO解码，保持事务版次与历史/对象验证。图层交叉校验复用集合，1024替换按来源层批量分配，保留多层、锁定和CAS约束。

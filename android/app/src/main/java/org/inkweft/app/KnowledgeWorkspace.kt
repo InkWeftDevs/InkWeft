@@ -45,17 +45,39 @@ internal class KnowledgeViewModel(private val repo:KnowledgeRepository,private v
     var authorAllowed:(String)->Boolean={true}
     val pendingBook:String? get()=pending?.notebookId
     val pendingOperationId:String? get()=pending?.operationId
-    private fun restored():KnowledgeCommand?{val fields=saved.get<ArrayList<String>>("knowledge.request")?:return null;require(fields.size==5);return KnowledgeCommand(fields[0],fields[1],fields[2],fields[3].toLong(),KnowledgeCodec.decode(requireNotNull(saved.get<ByteArray>("knowledge.payload"))),fields[4].toBooleanStrict())}
+    private fun restored(key:String="knowledge.request",payload:String="knowledge.payload"):KnowledgeCommand?{val fields=saved.get<ArrayList<String>>(key)?:return null;require(fields.size==5);return KnowledgeCommand(fields[0],fields[1],fields[2],fields[3].toLong(),KnowledgeCodec.decode(requireNotNull(saved.get<ByteArray>(payload))),fields[4].toBooleanStrict())}
     private var pending=restored();private val state=MutableStateFlow(KnowledgeUi(unknown=pending!=null,completed=saved["knowledge.completed"],completedOperation=saved["knowledge.completedOperation"],rejectedOperation=saved["knowledge.rejectedOperation"],message=saved["knowledge.rejectedMessage"]));val ui=state.asStateFlow()
     private var readJob:Job?=null
-    init{reload()}
     fun reload(){readJob?.cancel();state.update{it.copy(loading=true,readFailed=false)}
-        readJob=viewModelScope.launch{try{combine(repo.observe(),repo.cards(),repo.notes(),repo.pages()){r,c,n,p->KnowledgeUi(rows=r,cards=c,notes=n,pages=p)}.collect{snapshot->state.update{it.copy(rows=snapshot.rows,cards=snapshot.cards,notes=snapshot.notes,pages=snapshot.pages,loading=false,readFailed=false)}}}catch(c:CancellationException){throw c}catch(_:Exception){state.update{it.copy(loading=false,readFailed=true)}}}
+        readJob=viewModelScope.launch{try{combine(repo.observe(),repo.cards(),repo.notes(),repo.pages()){r,c,n,p->KnowledgeUi(rows=r,cards=c,notes=n,pages=p)}.collect{snapshot->state.update{it.copy(rows=snapshot.rows,cards=snapshot.cards,notes=snapshot.notes,pages=snapshot.pages,loading=false,readFailed=false,canUndoProperties=undoRequest?.data is KnowledgeData.Properties)}}}catch(c:CancellationException){throw c}catch(_:Exception){state.update{it.copy(loading=false,readFailed=true)}}}
     }
-    private var pendingUndo:KnowledgeCommand?=null
-    private var undoRequest:KnowledgeCommand?=null
-    fun undoProperties(){if(ui.value.busy||pending!=null)return;val request=undoRequest?:return;if(!authorAllowed(request.notebookId)){state.update{it.copy(message="当前为阅读模式，请返回书写后编辑。")};return};pending=request;undoRequest=null;pendingUndo=null;state.update{it.copy(canUndoProperties=false)};persist();retry()}
-    private fun persist(){if(pending==null){saved.set<ArrayList<String>?>("knowledge.template",null);saved.set<Long?>("knowledge.reviewCardRevision",null)};saved["knowledge.request"]=pending?.let{arrayListOf(it.operationId,it.notebookId,it.id,it.expectedRevision.toString(),it.removed.toString())};saved["knowledge.payload"]=pending?.payload}
+    private var pendingUndo=restored("knowledge.pendingInverse","knowledge.pendingInversePayload")
+    private var undoRequest=restored("knowledge.undo","knowledge.undoPayload")
+    private var redoRequest=restored("knowledge.redo","knowledge.redoPayload")
+    private var historyDirection=saved.get<Int>("knowledge.historyDirection")?:0
+    init{reload()}
+    private fun available(c:KnowledgeCommand?)=c!=null&&!ui.value.loading&&!ui.value.readFailed&&!ui.value.busy&&pending==null&&
+        ui.value.rows.any{it.id==c.id&&it.notebookId==c.notebookId&&it.revision==c.expectedRevision}&&authorAllowed(c.notebookId)
+    fun canUndoPresentation(id:String)=available(undoRequest)&&(undoRequest?.data as? KnowledgeData.CardPresentation)?.cardId==id
+    fun canRedoPresentation(id:String)=available(redoRequest)&&(redoRequest?.data as? KnowledgeData.CardPresentation)?.cardId==id
+    fun undoProperties()=replay(undoRequest,-1)
+    fun redoProperties()=replay(redoRequest,1)
+    private fun replay(request:KnowledgeCommand?,direction:Int){
+        request?:return;if(!available(request))return
+        val old=ui.value.rows.single{it.id==request.id}
+        pending=request;pendingUndo=KnowledgeCommand(UUID.randomUUID().toString(),request.notebookId,request.id,
+            request.expectedRevision+1,old.data(),old.removed);historyDirection=direction;persist();retry()
+    }
+    private fun saveHistory(key:String,c:KnowledgeCommand?){
+        saved[key]=c?.let{arrayListOf(it.operationId,it.notebookId,it.id,it.expectedRevision.toString(),it.removed.toString())}
+        saved["${key}Payload"]=c?.payload
+    }
+    private fun persist(){
+        if(pending==null){saved.set<ArrayList<String>?>("knowledge.template",null);saved.set<Long?>("knowledge.reviewCardRevision",null)}
+        saved["knowledge.request"]=pending?.let{arrayListOf(it.operationId,it.notebookId,it.id,it.expectedRevision.toString(),it.removed.toString())};saved["knowledge.payload"]=pending?.payload
+        saveHistory("knowledge.pendingInverse",pendingUndo);saveHistory("knowledge.undo",undoRequest);saveHistory("knowledge.redo",redoRequest)
+        saved["knowledge.historyDirection"]=historyDirection
+    }
     private fun persistResult(id:String?=null,operation:String?=null,rejectedOperation:String?=null,message:String?=null){saved["knowledge.completed"]=id;saved["knowledge.completedOperation"]=operation;saved["knowledge.rejectedOperation"]=rejectedOperation;saved["knowledge.rejectedMessage"]=message}
     fun submitReview(book:String,old:KnowledgeRow,data:KnowledgeData.Question,cardRevision:Long):String?=submitInternal(book,data,old,reviewCardRevision=cardRevision,review=true)
     fun submit(book:String,data:KnowledgeData,old:KnowledgeRow?=null,remove:Boolean=false,template:TemplateRef?=null):String?=submitInternal(book,data,old,remove,template)
@@ -71,9 +93,9 @@ internal class KnowledgeViewModel(private val repo:KnowledgeRepository,private v
             state.update{it.copy(busy=false,unknown=false,completed=null,completedOperation=null,rejectedOperation=operation,message=message)}
             return null
         }
-        val inverse=if(data is KnowledgeData.Properties)KnowledgeCommand(UUID.randomUUID().toString(),book,command.id,(old?.revision?:0)+1,old?.data()?:data,old==null)else null
+        val inverse=if(data is KnowledgeData.Properties||data is KnowledgeData.CardPresentation)KnowledgeCommand(UUID.randomUUID().toString(),book,command.id,(old?.revision?:0)+1,old?.data()?:data,old?.removed?:true)else null
         saved["knowledge.template"]=template?.let{arrayListOf(it.hash,it.id)};saved["knowledge.reviewCardRevision"]=reviewCardRevision
-        pending=command;pendingUndo=inverse;persist();retry();return command.operationId
+        pending=command;pendingUndo=inverse;historyDirection=0;persist();retry();return command.operationId
     }
     fun retry(){val c=pending?:return;if(state.value.busy)return;persistResult();state.update{it.copy(busy=true,message=null,completed=null,completedOperation=null,rejectedOperation=null)}
         viewModelScope.launch{try{when(val result=withContext(Dispatchers.IO){val ref=saved.get<ArrayList<String>>("knowledge.template");if(ref==null)saved.get<Long>("knowledge.reviewCardRevision")?.let{repo.reviewOutcome(c,it)}?:repo.outcome(c)else try{KnowledgeOutcome.Success(packs.map(TemplateRef(ref[0],ref[1]),c))}catch(e:KnowledgeRejected){KnowledgeOutcome.Rejected(e.reason)}catch(e:IllegalArgumentException){KnowledgeOutcome.Rejected(when(e.message){
@@ -82,8 +104,8 @@ internal class KnowledgeViewModel(private val repo:KnowledgeRepository,private v
             "KNOWLEDGE_BUDGET"->KnowledgeRejection.KNOWLEDGE_BUDGET
             else->KnowledgeRejection.INVALID
         })}}){
-            is KnowledgeOutcome.Success->{persistResult(result.id,c.operationId);pending=null;persist();pendingUndo?.let{undoRequest=it};pendingUndo=null;state.update{it.copy(busy=false,unknown=false,completed=result.id,completedOperation=c.operationId,rejectedOperation=null,message="已保存",canUndoProperties=undoRequest!=null)}}
-            is KnowledgeOutcome.Rejected->{val message=studyCapacityRejection(result.reason.name)?:"未提交：来源、版本或引用已变化，或内容重复。请重新核对。";persistResult(rejectedOperation=c.operationId,message=message);pending=null;pendingUndo=null;persist();state.update{it.copy(busy=false,unknown=false,rejectedOperation=c.operationId,message=message)}}
+            is KnowledgeOutcome.Success->{persistResult(result.id,c.operationId);pending=null;if(historyDirection<0){undoRequest=null;redoRequest=pendingUndo}else{undoRequest=pendingUndo;redoRequest=null};pendingUndo=null;historyDirection=0;persist();state.update{it.copy(busy=false,unknown=false,completed=result.id,completedOperation=c.operationId,rejectedOperation=null,message="已保存",canUndoProperties=undoRequest?.data is KnowledgeData.Properties)}}
+            is KnowledgeOutcome.Rejected->{val message=studyCapacityRejection(result.reason.name)?:"未提交：来源、版本或引用已变化，或内容重复。请重新核对。";persistResult(rejectedOperation=c.operationId,message=message);pending=null;pendingUndo=null;historyDirection=0;persist();state.update{it.copy(busy=false,unknown=false,rejectedOperation=c.operationId,message=message)}}
             KnowledgeOutcome.Unknown->state.update{it.copy(busy=false,unknown=true,message="结果待核对，请重试原操作。")}
         }}
         catch(c:CancellationException){state.update{it.copy(busy=false,unknown=true)};throw c}

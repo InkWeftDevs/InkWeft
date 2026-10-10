@@ -48,6 +48,7 @@ data class ObjectWrite(val pageId:String,val expected:Long,val commandId:String,
 data class CanvasBatchResult(val ink:List<InkCommitResult> = emptyList(),val objects:List<Long> = emptyList(),val failure:InkCommitResult?=null)
 data class InkGroupCommit(val group:InkGroupPrefix,val results:List<InkCommitResult.Committed>,val replayed:Boolean)
 class InkRepository(private val db:NoteDatabase,private val fault:(InkFaultPoint)->Unit={}) {
+    @Volatile var readObserver:((ReadTiming)->Unit)?=null
     private class GroupAbort(val result:InkCommitResult):RuntimeException()
     /** A seam gesture either commits on every sheet or on none; receipts make a retry idempotent. */
     suspend fun saveGroup(commands:List<CommitInk>):List<InkCommitResult> {
@@ -143,7 +144,9 @@ class InkRepository(private val db:NoteDatabase,private val fault:(InkFaultPoint
     suspend fun read(noteId:String):InkPage {
         // Freeze rows atomically; decoding immutable blobs must not hold the Room
         // transaction executor while another page is trying to save handwriting.
+        val started=System.nanoTime()
         val frozen=db.withTransaction{ReadRows(owner(noteId),dao.page(noteId),dao.strokes(noteId),dao.cuts(noteId))}
+        val frozenAt=System.nanoTime()
         val owner=frozen.owner;val page=frozen.page;val rows=frozen.strokes
         check(rows.size<=InkLimits.MAX_RETAINED_STROKES&&rows.sumOf{it.pointCount}<=InkLimits.MAX_RETAINED_POINTS)
         check(rows.count{it.visible}<=InkLimits.MAX_STROKES&&rows.sumOf{if(it.visible)it.pointCount else 0}<=InkLimits.MAX_PAGE_POINTS)
@@ -153,7 +156,12 @@ class InkRepository(private val db:NoteDatabase,private val fault:(InkFaultPoint
         val cuts=frozen.cuts;check(cuts.size<=InkLimits.MAX_RETAINED_CUTS)
         val masks=cuts.map{r->val cut=InkCutCodec.decode(r.payload);check(cut.id==r.id);val target=r.strokeIds.split(',');check(target.all{it in ids});StoredCut(EraseSelection(cut,target),r.visible,r.createdRevision)}
         check(page!=null||(rows.isEmpty()&&masks.isEmpty()))
-        return InkPage(noteId,page?.revision?:0,decoded,masks).also{InkSession(it).visibleDraft()}
+        return InkPage(noteId,page?.revision?:0,decoded,masks).also{
+            InkSession(it).visibleDraft()
+            val decodedAt=System.nanoTime()
+            // Diagnostics are observational and may never turn a successful read into failure.
+            runCatching{readObserver?.invoke(ReadTiming(ReadKind.INK,frozenAt-started,decodedAt-frozenAt,rows.size+cuts.size))}
+        }
     }
     /** Preview reads never deserialize hidden move/erase history. Masks remain exact. */
     suspend fun readVisible(noteId:String):List<InkStroke> {

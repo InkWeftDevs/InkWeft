@@ -53,6 +53,7 @@ internal class FormulaRecognizer(context:Context) {
         val pixels=try{runCatching{trace?.formulaInput(index,bitmap,scaled)};IntArray(384*384).also{scaled.getPixels(it,0,384,0,0,384,384)}}finally{release(scaled)}
         val plane=pixels.size;val data=FloatArray(plane*3)
         for(i in pixels.indices){val gray=(pixels[i] and 255)/255f;val v=(gray-.7931f)/.1738f;data[i]=v;data[plane+i]=v;data[2*plane+i]=v}
+        runCatching{trace?.formulaTensor(index,data)}
         return OnnxTensor.createTensor(env,FloatBuffer.wrap(data),longArrayOf(1,3,384,384)).use{input->
             encoder.run(mapOf("pixel_values" to input)).use{encoded->
                 currentCoroutineContext().ensureActive()

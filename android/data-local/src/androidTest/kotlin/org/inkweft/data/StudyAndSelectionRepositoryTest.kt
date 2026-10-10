@@ -41,6 +41,37 @@ class StudyAndSelectionRepositoryTest {
         val stale=StudyCommand(id(),page,StudyAction.CREATE_EXCERPT,cardId=id(),title="过期对象",source=StudySourceDraft(page,0,source.bounds,emptyList(),bytes,PageObjectRepository(db).read(page).revision+1))
         assertTrue(repo.outcome(stale) is StudyOutcome.Rejected);assertEquals(1,db.study().cards(page).size)
     }
+    @Test fun excerptUndoRedoRestoresFrozenBytesAndReceiptsWithoutNewSnapshotPayload()=fixture{db,page->
+        val bitmap=android.graphics.Bitmap.createBitmap(20,20,android.graphics.Bitmap.Config.ARGB_8888)
+        fun jpeg(color:Int):ByteArray{bitmap.eraseColor(color);return java.io.ByteArrayOutputStream().also{bitmap.compress(android.graphics.Bitmap.CompressFormat.JPEG,85,it)}.toByteArray()}
+        val blue=jpeg(android.graphics.Color.BLUE);val red=jpeg(android.graphics.Color.RED);bitmap.recycle()
+        val repo=StudyRepository(db);val card=id()
+        repo.submit(StudyCommand(id(),page,StudyAction.CREATE_EXCERPT,cardId=card,title="excerpt",body="keep",source=StudySourceDraft(page,0,CanvasBounds(10.0,20.0,100.0,120.0),emptyList(),blue,0)))
+        val before=repo.source(card)!!
+        repo.submit(StudyCommand(id(),page,StudyAction.RECROP_EXCERPT,cardId=card,expectedRevision=1,source=StudySourceDraft(page,0,CanvasBounds(30.0,40.0,200.0,250.0),emptyList(),red,0)))
+        val after=repo.source(card)!!;val bytes=repo.snapshotBytes();val rows=db.sourceVersions().all().size
+        // Changing the page after capture must not replace immutable undo bytes.
+        seed(db,page)
+        val undo=StudyCommand(id(),page,StudyAction.RESTORE_EXCERPT,cardId=card,expectedRevision=2,restoreSourceRevision=1)
+        try{StudyRepository(db){if(it==StudyFault.BEFORE_RECEIPT)error("synthetic")}.submit(undo);fail()}catch(_:IllegalStateException){}
+        assertArrayEquals(after.snapshot,repo.source(card)!!.snapshot);assertNull(db.study().receipt(undo.id))
+        assertEquals(card,repo.submit(undo));assertEquals(card,repo.submit(undo));assertEquals(3L,db.study().card(card)!!.revision)
+        assertArrayEquals(before.snapshot,repo.source(card)!!.snapshot);assertEquals(before.left,repo.source(card)!!.left,0.0)
+        assertEquals(card,repo.submit(StudyCommand(id(),page,StudyAction.RESTORE_EXCERPT,cardId=card,expectedRevision=3,restoreSourceRevision=2)))
+        assertArrayEquals(after.snapshot,repo.source(card)!!.snapshot);assertEquals(rows,db.sourceVersions().all().size);assertEquals(bytes,repo.snapshotBytes())
+        assertEquals("keep",db.study().card(card)!!.body);assertEquals(1L,InkRepository(db).read(page).revision)
+        assertTrue(repo.outcome(StudyCommand(id(),page,StudyAction.RESTORE_EXCERPT,cardId=card,expectedRevision=3,restoreSourceRevision=1)) is StudyOutcome.Rejected)
+        assertArrayEquals(after.snapshot,repo.source(card)!!.snapshot)
+    }
+    @Test fun successfulReadTimingObserverCannotChangeRepositoryOutcome()=fixture{db,page->
+        seed(db,page);val observations=mutableListOf<ReadTiming>();val ink=InkRepository(db);ink.readObserver={observations.add(it)}
+        val before=ink.read(page);assertEquals(ReadKind.INK,observations.single().kind);assertEquals(1,observations.single().entries)
+        ink.readObserver={error("synthetic observer failure")};assertEquals(before.revision,ink.read(page).revision)
+        val authoring=PageAuthoringRepository(db);authoring.readObserver={observations.add(it)};val snapshot=authoring.readPage(page)
+        assertEquals(ReadKind.AUTHORING,observations.last().kind);assertEquals(1,observations.last().entries)
+        authoring.readObserver={error("synthetic observer failure")};assertEquals(snapshot.revision,authoring.readPage(page).revision)
+        assertTrue(observations.all{it.freezeNanos>=0&&it.decodeNanos>=0})
+    }
     @Test fun recropKeepsIdentityReferencesAndCommentAndRejectsStaleWrites()=fixture{db,page->
         val bitmap=android.graphics.Bitmap.createBitmap(40,40,android.graphics.Bitmap.Config.ARGB_8888)
         fun jpeg(color:Int):ByteArray{bitmap.eraseColor(color);return java.io.ByteArrayOutputStream().also{bitmap.compress(android.graphics.Bitmap.CompressFormat.JPEG,85,it)}.toByteArray()}

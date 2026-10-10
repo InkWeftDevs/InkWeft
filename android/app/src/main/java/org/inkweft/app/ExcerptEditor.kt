@@ -59,7 +59,7 @@ import java.util.UUID
             }else if(mode=="resize"){
                 Row{TextButton(::cancel,enabled=!waiting,modifier=Modifier.testTag("excerpt-resize-cancel")){Text("取消")};TextButton({
                     runCatching{check(checkNotNull(view).matchesAuthoring(authoring.state)){"图层画面正在更新，请稍后重试"};checkNotNull(view).excerptPreview(b)}.onSuccess{picture->
-                        message=null;submitted=true;vm.submit(StudyCommand(UUID.randomUUID().toString(),vm.book,StudyAction.RECROP_EXCERPT,cardId=id,expectedRevision=revision,
+                        message=null;submitted=true;vm.recropExcerpt(StudyCommand(UUID.randomUUID().toString(),vm.book,StudyAction.RECROP_EXCERPT,cardId=id,expectedRevision=revision,
                             source=StudySourceDraft(original.pageId,inkRevision,b,emptyList(),picture,objectRevision,authoring.revision)))
                     }.onFailure{message=it.message?:"范围未保存，请重试"}
                 },enabled=enabled&&draft!=null,modifier=Modifier.testTag("excerpt-resize-save")){Text("保存范围")}}
@@ -73,6 +73,13 @@ import java.util.UUID
                     },enabled=enabled,modifier=Modifier.testTag("excerpt-resize")){Text("调整范围")}
                     TextButton({trashOpen=true},enabled=enabled,modifier=Modifier.testTag("excerpt-inline-delete")){Text("删除")}
                     IconButton(dismiss,enabled=!waiting,modifier=Modifier.describedAs("取消摘录选择")){Glyph("close")}
+                }
+            }
+            if(mode=="actions"){
+                FlowRow{
+                    TextButton({vm.undoExcerpt(id)},enabled=enabled&&vm.canUndoExcerpt(id),modifier=Modifier.testTag("excerpt-range-undo")){Text("撤销范围")}
+                    TextButton({vm.redoExcerpt(id)},enabled=enabled&&vm.canRedoExcerpt(id),modifier=Modifier.testTag("excerpt-range-redo")){Text("重做范围")}
+                    CardPresentationHistory(vm.book,id,enabled)
                 }
             }
             if(waiting)LinearProgressIndicator(Modifier.fillMaxWidth())

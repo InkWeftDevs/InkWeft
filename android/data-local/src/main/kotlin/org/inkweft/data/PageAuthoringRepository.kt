@@ -30,6 +30,7 @@ enum class AuthoringFault { BEFORE_RECEIPT, AFTER_TRANSACTION }
 
 /** Configuration and its contents are one local author transaction, not display preferences. */
 class PageAuthoringRepository(private val db:NoteDatabase,private val fault:(AuthoringFault)->Unit={}) {
+    @Volatile var readObserver:((ReadTiming)->Unit)?=null
     private val pending by lazy{AuthoringPendingStore(checkNotNull(db.checkpointRoot))}
     fun stagePending(value:AuthoringPending)=pending.save(value)
     fun pending(scope:AuthoringScope)=pending.read(scope)
@@ -58,17 +59,21 @@ class PageAuthoringRepository(private val db:NoteDatabase,private val fault:(Aut
         }
         // Freeze headers, identities and the two author payloads together. No
         // ink geometry is needed to validate layer ownership, including history.
+        val started=System.nanoTime()
         val frozen=db.withTransaction {
             owner(scope,false)
             val row=db.authoring().get(scope.kind.name,scope.id);require(row==null||row.notebookId==scope.notebookId&&row.revision>=0)
             PageRows(row,db.ink().strokeIds(scope.id),db.objects().get(scope.id),db.ink().page(scope.id)?.revision?:0)
         }
+        val frozenAt=System.nanoTime()
         // Observation runs on IO; normal reads release their own transaction
         // before decoding. A surrounding author write still retains its lock.
         val contents=frozen.strokeIds.map{LayerContent(LayerContentKind.INK,it)}+
             frozen.objects?.let{PageObjectCodec.decode(it.payload)}.orEmpty().map{LayerContent(LayerContentKind.OBJECT,it.id)}
         val state=frozen.authoring?.data()?:PageAuthoring(UserLayers.legacy(contents))
         require(contents.all{state.layers.owns(it)}){"LAYER_CONTENT_UNASSIGNED"}
+        val decodedAt=System.nanoTime()
+        runCatching{readObserver?.invoke(ReadTiming(ReadKind.AUTHORING,frozenAt-started,decodedAt-frozenAt,contents.size))}
         return AuthoringSnapshot(frozen.authoring?.revision?:0,state,frozen.inkRevision,frozen.objects?.revision?:0)
     }
     suspend fun exportPage(id:String):AuthoringPageExport=db.withTransaction {

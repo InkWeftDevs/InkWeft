@@ -1,3 +1,11 @@
+# V83 — 识别分组、摘录历史与加载诊断 · 2026-10-10
+
+云端实现竖画桥接和逐笔延迟点画归行；实际V80原迹核心回放中29有真值例从24到27分组匹配，30例来源和原迹字节SHA守恒，不代表新OCR准确率。30公式实际384图以相同ORT1.30.0与模型逐步token完全复现；私有诊断新增原始栅格和实际Float32张量SHA，保持原容量限制。
+
+摘录范围和个人注释加入分别命名的单步撤销/重做；范围复用不可变历史来源、CAS拒绝其他位置新版本；注释保留墓碑、原命令和逆操作直到确认，并支持SavedState恢复。成功笔迹/作者读取记录匿名配对的冻结和解码微秒，不当首帧或设备性能结论。
+
+核心425 PASS/51类，新增10回归；Android主代码/测试编译PASS，lint无Error/Fatal，新增5Android方法NOT_RUN。Room16与容量配套沿用，MuPDF编译仅官方同版本API-only临时替代，无云端APK。见[报告](verification/simulation-informed-v83/RESULTS.html)、[精确复测](verification/simulation-informed-v83/device-pending.json)、[本地交接](verification/simulation-informed-v83/LOCAL-TESTS.md)。
+
 # 最新云端候选 V82 — 2026-10-10
 
 继续草稿PR18，分支 `codex/cloud/starnote-inspired-editor-20261009`，起点V81 `ee98b4cc1ca4733481bed0c05184a76ae5bf38e4`。版本82／`0.0.82-card-return-and-layer-capacity`：摘要卡正文关联记录CARD来源并返回重开原卡；图层只读全部笔迹ID，IO观察解码；图层校验/批量替换复用集合、按来源层分组；身份配套到40800并在旧字节超限或超过2.2万时使用IWA4紧凑UUID。正常旧状态IWA3字节保持，Room16、原迹与隐藏历史保留，作者字段1.9MB上限保持。IWA4大状态需V82读取；身份额度不保证注释几何同时满额。

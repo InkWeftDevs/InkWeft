@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="org.inkweft.core.MapAddendumTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-10-10T11:16:24.850Z" hostname="4d22d97528bf" time="0.017">
+  <properties/>
+  <testcase name="contentOnlyRevisionInvalidatesLiveCacheButNotPinned" classname="org.inkweft.core.MapAddendumTest" time="0.013"/>
+  <testcase name="explicitTargetAndTextAreIdenticalForThreeDeliveryPaths" classname="org.inkweft.core.MapAddendumTest" time="0.002"/>
+  <testcase name="invalidSnapshotGraphAndMissingBranchDoNotPretendToBeLive" classname="org.inkweft.core.MapAddendumTest" time="0.001"/>
+  <testcase name="searchRetainsEachOccurrenceAndStructureAndSeparatesScope" classname="org.inkweft.core.MapAddendumTest" time="0.0"/>
+  <testcase name="mapObjectWireRoundTripsLiveAndCompleteSnapshot" classname="org.inkweft.core.MapAddendumTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

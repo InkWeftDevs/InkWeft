@@ -27,6 +27,15 @@ import java.io.IOException
 
 /** Only fixed event codes and aggregate UI counts cross this boundary. No note objects. */
 class AppDiagnostics(private val context: Context) {
+    private var readSequence=0L
+    private val lastReads=mutableMapOf<ReadKind,Pair<Long,ReadTiming>>()
+    @Synchronized fun readTiming(timing:ReadTiming){
+        val sequence=++readSequence;lastReads[timing.kind]=sequence to timing
+        val codes=if(timing.kind==ReadKind.INK)DiagnosticCode.INK_FREEZE to DiagnosticCode.INK_DECODE
+            else DiagnosticCode.AUTHORING_FREEZE to DiagnosticCode.AUTHORING_DECODE
+        event(codes.first,DiagnosticResult.OK,timing.freezeMicros,sequence)
+        event(codes.second,DiagnosticResult.OK,timing.decodeMicros,sequence)
+    }
     private val log = DiagnosticLog()
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     private val writes = Channel<Unit>(Channel.CONFLATED)
@@ -106,6 +115,11 @@ class AppDiagnostics(private val context: Context) {
         initialized.await(); fileMutex.withLock { log.clear(); persist() }
     }
     @Synchronized private fun observations() = JSONObject().apply {
+        put("repository_read_phases",JSONObject().apply{
+            put("scope","SUCCESSFUL_READS_INCLUDING_NESTED_TRANSACTIONS_NOT_FRAME_OR_TOTAL_LOAD")
+            lastReads.forEach{(kind,value)->val (sequence,timing)=value;put(kind.name,JSONObject()
+                .put("sequence",sequence).put("freeze_us",timing.freezeMicros).put("decode_validate_us",timing.decodeMicros).put("entries",timing.entries))}
+        })
         put("page_objects_status",objectResult.name);put("page_objects_utc_ms",objectObservedAt)
         put("page_objects_counts_fields",JSONArray(listOf("loading","busy","pending","objects")));put("page_objects_counts",JSONArray(objectState))
         put("scope", "LATEST_UI_OBSERVATIONS_NOT_TRANSACTION_AUDIT")

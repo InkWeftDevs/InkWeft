@@ -4,7 +4,7 @@ package org.inkweft.core
 import java.io.*
 import java.util.UUID
 
-enum class StudyAction { CREATE, UNDO_CAPTURE, CREATE_EXCERPT, RECROP_EXCERPT, EDIT, REUSE, MOVE, REPARENT, REMOVE_NODE, TRASH_CARD, RESTORE_CARD, ARRANGE, ORGANIZE }
+enum class StudyAction { CREATE, UNDO_CAPTURE, CREATE_EXCERPT, RECROP_EXCERPT, EDIT, REUSE, MOVE, REPARENT, REMOVE_NODE, TRASH_CARD, RESTORE_CARD, ARRANGE, ORGANIZE, RESTORE_EXCERPT }
 /** Stored cards and source snapshots retain their capacity charge while recycled. */
 object StudyCapacity {
     const val MAX_CARDS_PER_NOTEBOOK=2000
@@ -72,13 +72,15 @@ object StudyGraph {
 class StudyCommand(val id:String,val notebookId:String,val action:StudyAction,val cardId:String?=null,
     val nodeId:String?=null,val expectedRevision:Long=0,val parentId:String?=null,val title:String="",val body:String="",
     val x:Double=40.0,val y:Double=80.0,val source:StudySourceDraft?=null,val expectedGraph:String="",val mapId:String?=null,
-    organization:StudyOrganizationPlan?=null,val afterNodeId:String?=null,val expectedTrashImpact:String="") {
+    organization:StudyOrganizationPlan?=null,val afterNodeId:String?=null,val expectedTrashImpact:String="",val restoreSourceRevision:Long?=null) {
     private val frozenOrganization=organization?.let(StudyOrganization::encode)
     val organization get()=frozenOrganization?.let(StudyOrganization::decode)
     init{UUID.fromString(id);UUID.fromString(notebookId);listOfNotNull(cardId,nodeId,parentId,mapId,afterNodeId).forEach{UUID.fromString(it)}
         require(expectedTrashImpact.isEmpty()||(action==StudyAction.TRASH_CARD&&expectedTrashImpact.matches(Regex("[0-9a-f]{64}"))))
         require(expectedRevision in 0 until Long.MAX_VALUE);require(title.length<=120&&body.length<=20_000)
         require(x.isFinite()&&y.isFinite()&&x in -40000.0..40000.0&&y in -40000.0..40000.0)
+        require((action==StudyAction.RESTORE_EXCERPT)==(restoreSourceRevision!=null))
+        require(restoreSourceRevision==null||restoreSourceRevision in 1..expectedRevision)
         require((action==StudyAction.ORGANIZE)==(organization!=null))
         require(afterNodeId==null||action in setOf(StudyAction.CREATE,StudyAction.REUSE)&&afterNodeId!=nodeId)
         when(action){
@@ -86,6 +88,7 @@ class StudyCommand(val id:String,val notebookId:String,val action:StudyAction,va
             StudyAction.UNDO_CAPTURE->{require(cardId!=null&&nodeId!=null&&expectedRevision>0&&source==null)}
             StudyAction.CREATE_EXCERPT->{require(cardId!=null&&nodeId==null&&title.isNotBlank()&&source!=null&&expectedRevision==0L&&mapId==null)}
             StudyAction.RECROP_EXCERPT->{require(cardId!=null&&nodeId==null&&expectedRevision>0&&source?.previewBytes()!=null&&mapId==null)}
+            StudyAction.RESTORE_EXCERPT->{require(cardId!=null&&nodeId==null&&expectedRevision>0&&source==null&&mapId==null)}
             StudyAction.EDIT->{require(cardId!=null&&expectedRevision>0&&title.isNotBlank()&&source==null)}
             StudyAction.REUSE->{require(cardId!=null&&nodeId!=null&&source==null)}
             StudyAction.MOVE,StudyAction.REPARENT,StudyAction.REMOVE_NODE->{require(nodeId!=null&&expectedRevision>0&&source==null)}
@@ -105,6 +108,7 @@ class StudyCommand(val id:String,val notebookId:String,val action:StudyAction,va
             frozenOrganization?.let{d.writeUTF("organization");d.writeInt(it.size);d.write(it)}
             afterNodeId?.let{d.writeUTF("after-node");d.writeUTF(it)}
             // Absent on legacy requests: keep their receipt digest readable, but require a preview for new writes.
+            restoreSourceRevision?.let{d.writeUTF("restore-source-v1");d.writeLong(it)}
             if(expectedTrashImpact.isNotEmpty()){d.writeUTF("trash-impact-v1");d.writeUTF(expectedTrashImpact)}
         };return ContentTransfer.hash(b.toByteArray())
     }

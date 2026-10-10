@@ -99,3 +99,18 @@ internal fun List<KnowledgeRow>.cardPresentations()=asSequence().filterNot{it.re
     if(inline)Column(Modifier.padding(12.dp).testTag("card-presentation-editor")){Text("个人注释",style=MaterialTheme.typography.titleSmall);form();FlowRow{cancel();save()}}
     else StudyDialog(embedded,{if(!waiting)dismiss()},title={Text(if(showColors)"个人注释与配色"else"个人注释")},text=form,confirmButton=save,dismissButton=cancel,modifier=Modifier.testTag("card-presentation-editor"))
 }
+
+/** Uses the editor's writer so a confirmed inverse survives closing the comment form. */
+@Composable internal fun CardPresentationHistory(book:String,cardId:String,enabled:Boolean){
+    val app=LocalContext.current.applicationContext as InkWeftApplication
+    val writer:KnowledgeViewModel=viewModel(key="card-presentation-$book-$cardId",factory=KnowledgeViewModel.Factory(app.knowledge,app.resourcePacks))
+    BindKnowledgeReadLock(writer)
+    val ui by writer.ui.collectAsStateWithLifecycle()
+    val lock=rememberBookReadLock(book)
+    ReadLockGuard(lock,"card-presentation-history-$cardId",blocked=ui.busy||ui.unknown,draft=false)
+    TextButton(writer::undoProperties,enabled=enabled&&writer.canUndoPresentation(cardId),modifier=Modifier.testTag("excerpt-comment-undo")){Text("撤销注释")}
+    TextButton(writer::redoProperties,enabled=enabled&&writer.canRedoPresentation(cardId),modifier=Modifier.testTag("excerpt-comment-redo")){Text("重做注释")}
+    if(ui.busy)LinearProgressIndicator(Modifier.fillMaxWidth())
+    if(ui.unknown)TextButton(writer::retry,enabled=!ui.busy){Text("核对注释操作")}
+    ui.message?.let{Text(it,style=MaterialTheme.typography.bodySmall)}
+}

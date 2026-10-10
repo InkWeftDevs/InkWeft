@@ -1,0 +1,489 @@
+{
+  "scope": "ACTUAL_CORE_SPLITTER_ON_CAPTURED_V80_INK_NOT_MODEL_OR_ANDROID_TEST",
+  "versions": {
+    "v82": [
+      {
+        "case": "text-01-zh_one",
+        "eligibleForLineTruth": true,
+        "partitionMatchesFixture": true,
+        "groups": 1,
+        "sourceIdsConserved": true,
+        "unchangedAuthorSha256": "018aba403d7c0e13d7e7d940bbd9ea27198e37bdaa8332845c7e243495f03951"
+      },
+      {
+        "case": "text-02-zh_two",
+        "eligibleForLineTruth": true,
+        "partitionMatchesFixture": false,
+        "groups": 2,
+        "sourceIdsConserved": true,
+        "unchangedAuthorSha256": "c6dc621b5c09ce0dd67985ccf8ca626f3ecedf50b3ecfdf11d8a803d5c4abad5"
+      },
+      {
+        "case": "text-03-zh_three",
+        "eligibleForLineTruth": true,
+        "partitionMatchesFixture": false,
+        "groups": 3,
+        "sourceIdsConserved": true,
+        "unchangedAuthorSha256": "f001869084033048dab516712b2fcd2db80a5b7e1f2f0ef3bb5b40e6164ea4f5"
+      },
+      {
+        "case": "text-04-zh_ten",
+        "eligibleForLineTruth": true,
+        "partitionMatchesFixture": true,
+        "groups": 1,
+        "sourceIdsConserved": true,
+        "unchangedAuthorSha256": "051823e0195b52087c6e978844644682736c2bcff0fa244deb93b423f352c239"
+      },
+      {
+        "case": "text-05-zh_person",
+        "eligibleForLineTruth": true,
+        "partitionMatchesFixture": true,
+        "groups": 1,
+        "sourceIdsConserved": true,
+        "unchangedAuthorSha256": "314e8a748e8507d67d16124aa6f4fe3d3a139d83c3c470ac01af8ecf906385de"
+      },
+      {
+        "case": "text-06-zh_big",
+        "eligibleForLineTruth": true,
+        "partitionMatchesFixture": true,
+        "groups": 1,
+        "sourceIdsConserved": true,
+        "unchangedAuthorSha256": "5c531e51b43173bc58aa3d2b0b4929caf277ea24b8c8dbb98a4e4486d172de3a"
+      },
+      {
+        "case": "text-07-zh_small",
+        "eligibleForLineTruth": true,
+        "partitionMatchesFixture": true,
+        "groups": 1,
+        "sourceIdsConserved": true,
+        "unchangedAuthorSha256": "8ab4c5787ce279a5f1e0a1abd3607cea31a20ee50271903bad96ce2f9845f716"
+      },
+      {
+        "case": "text-08-zh_mountain",
+        "eligibleForLineTruth": true,
+        "partitionMatchesFixture": true,
+        "groups": 1,
+        "sourceIdsConserved": true,
+        "unchangedAuthorSha256": "fab38288226e92ebae97986de950c77ab2273b0e22c994a6d5bed442b77cb715"
+      },
+      {
+        "case": "text-09-zh_mouth",
+        "eligibleForLineTruth": true,
+        "partitionMatchesFixture": true,
+        "groups": 1,
+        "sourceIdsConserved": true,
+        "unchangedAuthorSha256": "9ef1ae3008321622b7e3e20b35388e18d5ad1b509bf195b5281286e7022aa7b7"
+      },
+      {
+        "case": "text-10-zh_sun",
+        "eligibleForLineTruth": true,
+        "partitionMatchesFixture": true,
+        "groups": 1,
+        "sourceIdsConserved": true,
+        "unchangedAuthorSha256": "0d1e94c1d42b10f4149d0f9f167379e1a9d6b6173c262bad94d319bc49c0b92d"
+      },
+      {
+        "case": "text-11-zh_eye",
+        "eligibleForLineTruth": true,
+        "partitionMatchesFixture": true,
+        "groups": 1,
+        "sourceIdsConserved": true,
+        "unchangedAuthorSha256": "dfbfd379847f46a5ff9123b80aad95f3e9c4beffe624f23b01eff314f234fba4"
+      },
+      {
+        "case": "text-12-zh_field",
+        "eligibleForLineTruth": true,
+        "partitionMatchesFixture": true,
+        "groups": 1,
+        "sourceIdsConserved": true,
+        "unchangedAuthorSha256": "8a495a283439c05182eba4118aaae935094312291cc12a1e669e42db3b3e9f4c"
+      },
+      {
+        "case": "text-13-zh_middle",
+        "eligibleForLineTruth": true,
+        "partitionMatchesFixture": true,
+        "groups": 1,
+        "sourceIdsConserved": true,
+        "unchangedAuthorSha256": "4d47ebbf0af4a321ab9646e98251f66dd9fa726b3517c073dc76081529a04f83"
+      },
+      {
+        "case": "text-14-zh_up_down",
+        "eligibleForLineTruth": true,
+        "partitionMatchesFixture": true,
+        "groups": 1,
+        "sourceIdsConserved": true,
+        "unchangedAuthorSha256": "612de8f01ac1f25d18a19f11ec5853e45797f11737638c794f77a8a3f70ef6cf"
+      },
+      {
+        "case": "text-15-zh_earth_wood",
+        "eligibleForLineTruth": true,
+        "partitionMatchesFixture": true,
+        "groups": 1,
+        "sourceIdsConserved": true,
+        "unchangedAuthorSha256": "467aff3d813275e9b2069bb9250a16f3e0eba698e15a2c4869b9d975f503d26d"
+      },
+      {
+        "case": "text-16-zh_king_work",
+        "eligibleForLineTruth": true,
+        "partitionMatchesFixture": false,
+        "groups": 2,
+        "sourceIdsConserved": true,
+        "unchangedAuthorSha256": "6c0017984f0f40aa9ab47e89d157a33f5c78ea9ad2ef1e61eed3ea917b757e3b"
+      },
+      {
+        "case": "text-17-en_ink",
+        "eligibleForLineTruth": true,
+        "partitionMatchesFixture": true,
+        "groups": 1,
+        "sourceIdsConserved": true,
+        "unchangedAuthorSha256": "9ccc355fdaf92bd0d019751a12247a67189598c20ecbac08b62e0e792ca9220c"
+      },
+      {
+        "case": "text-18-en_note",
+        "eligibleForLineTruth": true,
+        "partitionMatchesFixture": true,
+        "groups": 1,
+        "sourceIdsConserved": true,
+        "unchangedAuthorSha256": "7eb9bb65d8cfde39803a3219292a21f46fe4ec4b85224e8c74b0017db0346e8c"
+      },
+      {
+        "case": "text-19-en_AI",
+        "eligibleForLineTruth": true,
+        "partitionMatchesFixture": true,
+        "groups": 1,
+        "sourceIdsConserved": true,
+        "unchangedAuthorSha256": "ebdccf8c6cd331db373a7ef1c5d13f46982519180ea7a0d28b33f130872468f9"
+      },
+      {
+        "case": "text-20-digits_0_to_9",
+        "eligibleForLineTruth": true,
+        "partitionMatchesFixture": true,
+        "groups": 1,
+        "sourceIdsConserved": true,
+        "unchangedAuthorSha256": "6ac764eeb5e9d242adf27f6a10ca18d68318447af337d88c770ed4f7ec8e61f4"
+      },
+      {
+        "case": "text-21-mixed_zh_latin_digit",
+        "eligibleForLineTruth": true,
+        "partitionMatchesFixture": true,
+        "groups": 1,
+        "sourceIdsConserved": true,
+        "unchangedAuthorSha256": "a0f94d36cba15266832dd094e998aa54e2eb280df04cf8cd642f9aee3f9ecea1"
+      },
+      {
+        "case": "text-22-mixed_spaced",
+        "eligibleForLineTruth": true,
+        "partitionMatchesFixture": true,
+        "groups": 1,
+        "sourceIdsConserved": true,
+        "unchangedAuthorSha256": "f7cb12afeacccc4345285e5465f73d9ed13a1ba9e31e922566ad6f372113b917"
+      },
+      {
+        "case": "text-23-point_letters_i_j",
+        "eligibleForLineTruth": true,
+        "partitionMatchesFixture": false,
+        "groups": 3,
+        "sourceIdsConserved": true,
+        "unchangedAuthorSha256": "a22fb96601e8dd13b49750ca2aaff63098cb4b435fe92fc281fbe41718bc6b6c"
+      },
+      {
+        "case": "text-24-decimal_point",
+        "eligibleForLineTruth": true,
+        "partitionMatchesFixture": true,
+        "groups": 1,
+        "sourceIdsConserved": true,
+        "unchangedAuthorSha256": "e97e037200cdb9558229625c7e85442d4885ca8b287bb527debdaf852fdb04f5"
+      },
+      {
+        "case": "text-25-close_lines",
+        "eligibleForLineTruth": true,
+        "partitionMatchesFixture": true,
+        "groups": 2,
+        "sourceIdsConserved": true,
+        "unchangedAuthorSha256": "939d6c064289245c3f55b73d30174148f1c0e4e4c256279c087267b522e5883f"
+      },
+      {
+        "case": "text-26-separate_lines",
+        "eligibleForLineTruth": true,
+        "partitionMatchesFixture": true,
+        "groups": 2,
+        "sourceIdsConserved": true,
+        "unchangedAuthorSha256": "a617c604e86151f9baccc3239299f66c576d0d6ea5a4dc615529816fe2eeeddc"
+      },
+      {
+        "case": "text-27-bottom_line_first",
+        "eligibleForLineTruth": true,
+        "partitionMatchesFixture": true,
+        "groups": 2,
+        "sourceIdsConserved": true,
+        "unchangedAuthorSha256": "bb53efb0501fb68745ed1826207cb9f326089d0a1d018a0945e60b81b6a1832a"
+      },
+      {
+        "case": "text-28-interleaved_line_order",
+        "eligibleForLineTruth": true,
+        "partitionMatchesFixture": true,
+        "groups": 2,
+        "sourceIdsConserved": true,
+        "unchangedAuthorSha256": "84e61e1054eca572480edf36384d6eca6984a1c5059085b847d71f52a8ed7895"
+      },
+      {
+        "case": "text-29-delayed_dots",
+        "eligibleForLineTruth": true,
+        "partitionMatchesFixture": false,
+        "groups": 2,
+        "sourceIdsConserved": true,
+        "unchangedAuthorSha256": "f8036869ffb6505aeb9f5c092d3d61b9695b6e51bd1a2caa3938d7091ad97f05"
+      },
+      {
+        "case": "text-30-isolated_points_unknown",
+        "eligibleForLineTruth": false,
+        "partitionMatchesFixture": null,
+        "groups": 3,
+        "sourceIdsConserved": true,
+        "unchangedAuthorSha256": "00947b689a7d0a4c91d0bf76c32df57b7ca9216c1c34bf18324392044ddff6e1"
+      }
+    ],
+    "v83": [
+      {
+        "case": "text-01-zh_one",
+        "eligibleForLineTruth": true,
+        "partitionMatchesFixture": true,
+        "groups": 1,
+        "sourceIdsConserved": true,
+        "unchangedAuthorSha256": "018aba403d7c0e13d7e7d940bbd9ea27198e37bdaa8332845c7e243495f03951"
+      },
+      {
+        "case": "text-02-zh_two",
+        "eligibleForLineTruth": true,
+        "partitionMatchesFixture": false,
+        "groups": 2,
+        "sourceIdsConserved": true,
+        "unchangedAuthorSha256": "c6dc621b5c09ce0dd67985ccf8ca626f3ecedf50b3ecfdf11d8a803d5c4abad5"
+      },
+      {
+        "case": "text-03-zh_three",
+        "eligibleForLineTruth": true,
+        "partitionMatchesFixture": false,
+        "groups": 3,
+        "sourceIdsConserved": true,
+        "unchangedAuthorSha256": "f001869084033048dab516712b2fcd2db80a5b7e1f2f0ef3bb5b40e6164ea4f5"
+      },
+      {
+        "case": "text-04-zh_ten",
+        "eligibleForLineTruth": true,
+        "partitionMatchesFixture": true,
+        "groups": 1,
+        "sourceIdsConserved": true,
+        "unchangedAuthorSha256": "051823e0195b52087c6e978844644682736c2bcff0fa244deb93b423f352c239"
+      },
+      {
+        "case": "text-05-zh_person",
+        "eligibleForLineTruth": true,
+        "partitionMatchesFixture": true,
+        "groups": 1,
+        "sourceIdsConserved": true,
+        "unchangedAuthorSha256": "314e8a748e8507d67d16124aa6f4fe3d3a139d83c3c470ac01af8ecf906385de"
+      },
+      {
+        "case": "text-06-zh_big",
+        "eligibleForLineTruth": true,
+        "partitionMatchesFixture": true,
+        "groups": 1,
+        "sourceIdsConserved": true,
+        "unchangedAuthorSha256": "5c531e51b43173bc58aa3d2b0b4929caf277ea24b8c8dbb98a4e4486d172de3a"
+      },
+      {
+        "case": "text-07-zh_small",
+        "eligibleForLineTruth": true,
+        "partitionMatchesFixture": true,
+        "groups": 1,
+        "sourceIdsConserved": true,
+        "unchangedAuthorSha256": "8ab4c5787ce279a5f1e0a1abd3607cea31a20ee50271903bad96ce2f9845f716"
+      },
+      {
+        "case": "text-08-zh_mountain",
+        "eligibleForLineTruth": true,
+        "partitionMatchesFixture": true,
+        "groups": 1,
+        "sourceIdsConserved": true,
+        "unchangedAuthorSha256": "fab38288226e92ebae97986de950c77ab2273b0e22c994a6d5bed442b77cb715"
+      },
+      {
+        "case": "text-09-zh_mouth",
+        "eligibleForLineTruth": true,
+        "partitionMatchesFixture": true,
+        "groups": 1,
+        "sourceIdsConserved": true,
+        "unchangedAuthorSha256": "9ef1ae3008321622b7e3e20b35388e18d5ad1b509bf195b5281286e7022aa7b7"
+      },
+      {
+        "case": "text-10-zh_sun",
+        "eligibleForLineTruth": true,
+        "partitionMatchesFixture": true,
+        "groups": 1,
+        "sourceIdsConserved": true,
+        "unchangedAuthorSha256": "0d1e94c1d42b10f4149d0f9f167379e1a9d6b6173c262bad94d319bc49c0b92d"
+      },
+      {
+        "case": "text-11-zh_eye",
+        "eligibleForLineTruth": true,
+        "partitionMatchesFixture": true,
+        "groups": 1,
+        "sourceIdsConserved": true,
+        "unchangedAuthorSha256": "dfbfd379847f46a5ff9123b80aad95f3e9c4beffe624f23b01eff314f234fba4"
+      },
+      {
+        "case": "text-12-zh_field",
+        "eligibleForLineTruth": true,
+        "partitionMatchesFixture": true,
+        "groups": 1,
+        "sourceIdsConserved": true,
+        "unchangedAuthorSha256": "8a495a283439c05182eba4118aaae935094312291cc12a1e669e42db3b3e9f4c"
+      },
+      {
+        "case": "text-13-zh_middle",
+        "eligibleForLineTruth": true,
+        "partitionMatchesFixture": true,
+        "groups": 1,
+        "sourceIdsConserved": true,
+        "unchangedAuthorSha256": "4d47ebbf0af4a321ab9646e98251f66dd9fa726b3517c073dc76081529a04f83"
+      },
+      {
+        "case": "text-14-zh_up_down",
+        "eligibleForLineTruth": true,
+        "partitionMatchesFixture": true,
+        "groups": 1,
+        "sourceIdsConserved": true,
+        "unchangedAuthorSha256": "612de8f01ac1f25d18a19f11ec5853e45797f11737638c794f77a8a3f70ef6cf"
+      },
+      {
+        "case": "text-15-zh_earth_wood",
+        "eligibleForLineTruth": true,
+        "partitionMatchesFixture": true,
+        "groups": 1,
+        "sourceIdsConserved": true,
+        "unchangedAuthorSha256": "467aff3d813275e9b2069bb9250a16f3e0eba698e15a2c4869b9d975f503d26d"
+      },
+      {
+        "case": "text-16-zh_king_work",
+        "eligibleForLineTruth": true,
+        "partitionMatchesFixture": true,
+        "groups": 1,
+        "sourceIdsConserved": true,
+        "unchangedAuthorSha256": "6c0017984f0f40aa9ab47e89d157a33f5c78ea9ad2ef1e61eed3ea917b757e3b"
+      },
+      {
+        "case": "text-17-en_ink",
+        "eligibleForLineTruth": true,
+        "partitionMatchesFixture": true,
+        "groups": 1,
+        "sourceIdsConserved": true,
+        "unchangedAuthorSha256": "9ccc355fdaf92bd0d019751a12247a67189598c20ecbac08b62e0e792ca9220c"
+      },
+      {
+        "case": "text-18-en_note",
+        "eligibleForLineTruth": true,
+        "partitionMatchesFixture": true,
+        "groups": 1,
+        "sourceIdsConserved": true,
+        "unchangedAuthorSha256": "7eb9bb65d8cfde39803a3219292a21f46fe4ec4b85224e8c74b0017db0346e8c"
+      },
+      {
+        "case": "text-19-en_AI",
+        "eligibleForLineTruth": true,
+        "partitionMatchesFixture": true,
+        "groups": 1,
+        "sourceIdsConserved": true,
+        "unchangedAuthorSha256": "ebdccf8c6cd331db373a7ef1c5d13f46982519180ea7a0d28b33f130872468f9"
+      },
+      {
+        "case": "text-20-digits_0_to_9",
+        "eligibleForLineTruth": true,
+        "partitionMatchesFixture": true,
+        "groups": 1,
+        "sourceIdsConserved": true,
+        "unchangedAuthorSha256": "6ac764eeb5e9d242adf27f6a10ca18d68318447af337d88c770ed4f7ec8e61f4"
+      },
+      {
+        "case": "text-21-mixed_zh_latin_digit",
+        "eligibleForLineTruth": true,
+        "partitionMatchesFixture": true,
+        "groups": 1,
+        "sourceIdsConserved": true,
+        "unchangedAuthorSha256": "a0f94d36cba15266832dd094e998aa54e2eb280df04cf8cd642f9aee3f9ecea1"
+      },
+      {
+        "case": "text-22-mixed_spaced",
+        "eligibleForLineTruth": true,
+        "partitionMatchesFixture": true,
+        "groups": 1,
+        "sourceIdsConserved": true,
+        "unchangedAuthorSha256": "f7cb12afeacccc4345285e5465f73d9ed13a1ba9e31e922566ad6f372113b917"
+      },
+      {
+        "case": "text-23-point_letters_i_j",
+        "eligibleForLineTruth": true,
+        "partitionMatchesFixture": true,
+        "groups": 1,
+        "sourceIdsConserved": true,
+        "unchangedAuthorSha256": "a22fb96601e8dd13b49750ca2aaff63098cb4b435fe92fc281fbe41718bc6b6c"
+      },
+      {
+        "case": "text-24-decimal_point",
+        "eligibleForLineTruth": true,
+        "partitionMatchesFixture": true,
+        "groups": 1,
+        "sourceIdsConserved": true,
+        "unchangedAuthorSha256": "e97e037200cdb9558229625c7e85442d4885ca8b287bb527debdaf852fdb04f5"
+      },
+      {
+        "case": "text-25-close_lines",
+        "eligibleForLineTruth": true,
+        "partitionMatchesFixture": true,
+        "groups": 2,
+        "sourceIdsConserved": true,
+        "unchangedAuthorSha256": "939d6c064289245c3f55b73d30174148f1c0e4e4c256279c087267b522e5883f"
+      },
+      {
+        "case": "text-26-separate_lines",
+        "eligibleForLineTruth": true,
+        "partitionMatchesFixture": true,
+        "groups": 2,
+        "sourceIdsConserved": true,
+        "unchangedAuthorSha256": "a617c604e86151f9baccc3239299f66c576d0d6ea5a4dc615529816fe2eeeddc"
+      },
+      {
+        "case": "text-27-bottom_line_first",
+        "eligibleForLineTruth": true,
+        "partitionMatchesFixture": true,
+        "groups": 2,
+        "sourceIdsConserved": true,
+        "unchangedAuthorSha256": "bb53efb0501fb68745ed1826207cb9f326089d0a1d018a0945e60b81b6a1832a"
+      },
+      {
+        "case": "text-28-interleaved_line_order",
+        "eligibleForLineTruth": true,
+        "partitionMatchesFixture": true,
+        "groups": 2,
+        "sourceIdsConserved": true,
+        "unchangedAuthorSha256": "84e61e1054eca572480edf36384d6eca6984a1c5059085b847d71f52a8ed7895"
+      },
+      {
+        "case": "text-29-delayed_dots",
+        "eligibleForLineTruth": true,
+        "partitionMatchesFixture": true,
+        "groups": 1,
+        "sourceIdsConserved": true,
+        "unchangedAuthorSha256": "f8036869ffb6505aeb9f5c092d3d61b9695b6e51bd1a2caa3938d7091ad97f05"
+      },
+      {
+        "case": "text-30-isolated_points_unknown",
+        "eligibleForLineTruth": false,
+        "partitionMatchesFixture": null,
+        "groups": 3,
+        "sourceIdsConserved": true,
+        "unchangedAuthorSha256": "00947b689a7d0a4c91d0bf76c32df57b7ca9216c1c34bf18324392044ddff6e1"
+      }
+    ]
+  }
+}
