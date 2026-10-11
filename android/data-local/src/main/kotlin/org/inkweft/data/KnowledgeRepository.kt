@@ -159,7 +159,8 @@ class KnowledgeRepository(private val db:NoteDatabase,private val fault:(Knowled
             val records=dao.forBook(c.notebookId);require(old!=null||records.size<KnowledgeCodec.MAX_RECORDS_PER_NOTEBOOK){"KNOWLEDGE_BUDGET"}
             validateData(c.notebookId,c.data,!c.removed)
             if(c.data is KnowledgeData.Anchor&&old==null){val a=c.data as KnowledgeData.Anchor;require((db.ink().page(a.pageId)?.revision?:0)==a.inkRevision){"SOURCE_CHANGED"}
-                val visible=InkSession(InkRepository(db).read(a.pageId)).visibleDraft().associateBy{it.id}
+                val snapshot=InkRepository(db).readVisibleSnapshot(a.pageId,a.strokeIds);require(snapshot.revision==a.inkRevision){"SOURCE_CHANGED"}
+                val visible=snapshot.strokes.associateBy{it.id}
                 a.strokeIds.forEach{id->val b=requireNotNull(visible[id]).bounds();require(b.left>=a.bounds.left-1&&b.right<=a.bounds.right+1&&b.top>=a.bounds.top-1&&b.bottom<=a.bounds.bottom+1)}
             }
             if(c.data is KnowledgeData.PageMark&&!c.removed){val d=c.data as KnowledgeData.PageMark;if(d.bookmark)require(records.none{it.id!=c.id&&!it.removed&&(it.data() as? KnowledgeData.PageMark)?.let{m->m.bookmark&&m.pageId==d.pageId}==true}){"BOOKMARK_EXISTS"}}

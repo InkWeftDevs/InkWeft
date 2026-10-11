@@ -43,6 +43,22 @@ class InkCanvasView(context:Context):View(context){
             drawnViewport==expectedViewport&&drawnWidth==expectedWidth&&drawnHeight==expectedHeight&&drawnDensity==expectedDensity&&
             viewport==expectedViewport&&width==expectedWidth&&height==expectedHeight&&density==expectedDensity
     internal val inputReady get()=allowInput&&documentContentReady
+    internal val displayedPageId:String? get()=documentId
+    internal val viewportFrameReady get()=isAttachedToWindow&&width>0&&height>0&&sourceContentReady&&
+        !inkWindowLoading&&!rasterPending&&!imageFramesPending&&drawnViewport==viewport&&drawnWidth==width&&drawnHeight==height&&drawnDensity==density
+    internal var onVisibleBounds:(CanvasBounds)->Unit={}
+    private var inkSource:InkRenderSource?=null
+    private var inkWindowLoading=false
+    private var fitContentJob:Job?=null
+    internal fun showInkSource(source:InkRenderSource?,loading:Boolean){
+        if(inkSource!=source||inkWindowLoading!=loading){inkSource=source;inkWindowLoading=loading;drawnViewport=null;invalidate()}
+        requestInkWindow()
+    }
+    private fun requestInkWindow(){
+        if(!isAttachedToWindow||width<=0||height<=0)return
+        val area=visiblePixels();if(area.isEmpty)return
+        onVisibleBounds(rasterViewport(area).visible(area.width().toDouble(),area.height().toDouble(),density).padded(32.0))
+    }
     var seamWriting=false
     var onLiveSamples:(List<InkSample>)->Unit={}
     var seamDraft:InkStroke? = null
@@ -89,7 +105,7 @@ class InkCanvasView(context:Context):View(context){
         val incompatible=old?.legacy!=value?.legacy||old?.layers?.layers!=value?.layers?.layers||moved||old?.layers?.deleted!=value?.layers?.deleted
         authoring=value
         val annotationIds=value?.annotations.orEmpty().map{it.stroke.id}.toSet();transient.keys.removeAll(annotationIds);transientPencils.keys.removeAll(annotationIds)
-        if(incompatible){pageRaster.clear();asyncRaster.clear();layerRasters.values.forEach{it.clear()};layerRasters.clear()}
+        if(incompatible){pageRaster.clear();asyncRaster.clear();layerRasters.values.forEach{it.clear()};layerRasters.clear();streamedRaster.clear();streamedLayers.values.forEach{it.clear()};streamedLayers.clear()}
         imageRendering.retain(objects.filter(::visibleObject));drawnViewport=null;invalidate()
     }
     private var fixedRegion:CanvasBounds?=null
@@ -164,7 +180,7 @@ class InkCanvasView(context:Context):View(context){
     // Parent scrolling can move an unchanged View/display list without calling onSizeChanged.
     private val visibleAreaListener=ViewTreeObserver.OnPreDrawListener {
         val pixels=visiblePixels()
-        if(pixels!=observedVisiblePixels){observedVisiblePixels.set(pixels);requestDocument();invalidate()}
+        if(pixels!=observedVisiblePixels){observedVisiblePixels.set(pixels);requestDocument();requestInkWindow();invalidate()}
         true
     }
     private fun visiblePixels():Rect {
@@ -203,7 +219,7 @@ class InkCanvasView(context:Context):View(context){
             catch(_:Exception){if(documentRequest==request&&documentGeneration==generation){documentError=true;failedDocumentGeneration=generation;invalidate();onNotice("文档页面读取失败，请离开后重新打开；原文件保留。")}}finally{unclaimed?.let{RenderResources.release(it.bitmap,id);it.bitmap.recycle()}}
         }
     }
-    override fun onAttachedToWindow(){super.onAttachedToWindow();viewTreeObserver.addOnPreDrawListener(visibleAreaListener);observeMapScenes();documentRequest=null;requestDocument()}
+    override fun onAttachedToWindow(){super.onAttachedToWindow();viewTreeObserver.addOnPreDrawListener(visibleAreaListener);observeMapScenes();documentRequest=null;requestDocument();requestInkWindow()}
 
     private var content=emptyList<InkStroke>()
     internal val displayedStrokeCount get()=content.size
@@ -216,9 +232,11 @@ class InkCanvasView(context:Context):View(context){
     private val pageRaster=InkPageRaster()
     private val asyncRaster=AsyncInkRaster({postInvalidateOnAnimation()},{onNotice("笔迹显示未完成，请退出后重开；原笔迹已保留。")})
     private val layerRasters=mutableMapOf<String,AsyncInkRaster>()
+    private val streamedRaster=StreamedInkRaster({postInvalidateOnAnimation()},{onNotice("笔迹显示未完成，请移动视口后重试；已保存内容保留。")})
+    private val streamedLayers=mutableMapOf<String,StreamedInkRaster>()
     private var layerBudgetBlocked=false
     private var incompleteInkFrame=false
-    internal val rasterPending get()=layerBudgetBlocked||incompleteInkFrame||asyncRaster.pending||layerRasters.values.any{it.pending}
+    internal val rasterPending get()=layerBudgetBlocked||incompleteInkFrame||asyncRaster.pending||layerRasters.values.any{it.pending}||streamedRaster.pending||streamedLayers.values.any{it.pending}
     private val live=InProgressStroke()
     private val incremental=MutableStrokeInputBatch()
     private val empty=MutableStrokeInputBatch()
@@ -291,13 +309,29 @@ class InkCanvasView(context:Context):View(context){
         invalidate()
     }
     private fun toInk(s:InkStroke):Stroke=InkBrushes.stroke(s)
-    private fun transform(){if(!world&&!preview&&!embeddedPage&&fixedRegion==null)viewport=viewport.constrainedToPaper(width/density,height/density);val f=(viewport.zoom*density).toFloat();matrix.setScale(f,f);matrix.postTranslate((width/2-viewport.centerX*f).toFloat(),(height/2-viewport.centerY*f).toFloat());onScale(viewport.zoom);requestDocument()}
+    private fun transform(){if(!world&&!preview&&!embeddedPage&&fixedRegion==null)viewport=viewport.constrainedToPaper(width/density,height/density);val f=(viewport.zoom*density).toFloat();matrix.setScale(f,f);matrix.postTranslate((width/2-viewport.centerX*f).toFloat(),(height/2-viewport.centerY*f).toFloat());onScale(viewport.zoom);requestDocument();requestInkWindow()}
     private fun initialFit(){viewport=if(world)CanvasViewport(0.0,0.0,.8)else CanvasViewport.readingStart(width/density,height/density);if(preview||embeddedPage)fitPage(false);transform()}
     fun fitPage(publish:Boolean=true){cancelGesture();viewport=if(embeddedPage)CanvasViewport(500.0,707.0,(width/density/1000.0).coerceIn(.02,8.0))else CanvasViewport.fit(CanvasBounds(0.0,0.0,1000.0,1414.0),width/density,height/density);transform();invalidate();if(publish)onViewport(viewport)}
     fun fitWidth(){cancelGesture();viewport=CanvasViewport.pageWidth(width/density,height/density);transform();invalidate();onViewport(viewport)}
     fun origin(){cancelGesture();viewport=if(world)CanvasViewport(0.0,0.0,.8)else CanvasViewport.pageWidth(width/density,height/density);transform();invalidate();onViewport(viewport)}
     internal var previewPadding=40.0
-    fun fitContent(publish:Boolean=true){cancelGesture();val allBounds=bounds.values+objects.map{it.bounds()};if(allBounds.isEmpty()){if(world)viewport=CanvasViewport(0.0,0.0,.8)else fitPage(false)}else viewport=CanvasViewport.fit(allBounds.reduce{a,b->a.union(b)}.padded(if(preview)previewPadding else 40.0),width/density,height/density);transform();invalidate();if(publish)onViewport(viewport)}
+    fun fitContent(publish:Boolean=true){
+        cancelGesture();fitContentJob?.cancel()
+        val source=inkSource
+        if(source!=null&&isAttachedToWindow){
+            val requestedViewport=viewport
+            fitContentJob=CoroutineScope(Dispatchers.Main.immediate).launch{
+                try{val all=withContext(Dispatchers.IO){source.repository.visibleBounds(source.page,source.revision)}
+                    if(isAttachedToWindow&&source==inkSource&&viewport==requestedViewport)fitBounds(listOfNotNull(all)+objects.map{it.bounds()},publish)
+                }catch(c:CancellationException){throw c}catch(_:Exception){onNotice("完整内容范围读取未完成，请稍后重试。")}
+            }
+        }else fitBounds(bounds.values+objects.map{it.bounds()},publish)
+    }
+    private fun fitBounds(allBounds:Collection<CanvasBounds>,publish:Boolean){
+        if(allBounds.isEmpty()){if(world)viewport=CanvasViewport(0.0,0.0,.8)else fitPage(false)}
+        else viewport=CanvasViewport.fit(allBounds.reduce{a,b->a.union(b)}.padded(if(preview)previewPadding else 40.0),width/density,height/density)
+        transform();invalidate();if(publish)onViewport(viewport)
+    }
     fun zoomBy(ratio:Double){cancelGesture();viewport=viewport.zoomAt(ratio,width/2.0,height/2.0,width.toDouble(),height.toDouble(),density);transform();invalidate();onViewport(viewport)}
     override fun onSizeChanged(w:Int,h:Int,oldw:Int,oldh:Int){
         cancelGesture()
@@ -341,9 +375,12 @@ class InkCanvasView(context:Context):View(context){
         if(layers!=null){
             val visibleLayers=layers.layers.layers.filter{it.visible}
             val memberships=layers.layers.memberships.associate{it.content to it.layerId}
+            val stream=inkSource.takeIf{isAttachedToWindow}
+            val streamIds=if(stream==null)emptyMap()else layers.layers.memberships.filter{it.content.kind==LayerContentKind.INK}.groupBy({it.layerId},{it.content.id}).mapValues{it.value.toSet()}
             val perLayer=content.filter{it.id !in suppressedStrokeIds&&it.id !in erased&&visibleStroke(it)}.groupBy{memberships[LayerContent(LayerContentKind.INK,it.id)]}
-            val needed=visibleLayers.filter{perLayer[it.id].orEmpty().isNotEmpty()}.map{it.id}.toSet()
+            val needed=visibleLayers.filter{if(stream!=null)streamIds[it.id].orEmpty().isNotEmpty()else perLayer[it.id].orEmpty().isNotEmpty()}.map{it.id}.toSet()
             layerRasters.keys.filter{it !in needed}.forEach{layerRasters.remove(it)?.clear()}
+            streamedLayers.keys.filter{it !in needed}.forEach{streamedLayers.remove(it)?.clear()}
             // One shared viewport cache per nonempty visible layer; retain native resolution, never downsample a hidden answer into another layer.
             val blocked=isAttachedToWindow&&area.width().toLong()*area.height()*needed.size>20_000_000L
             if(blocked){
@@ -356,12 +393,19 @@ class InkCanvasView(context:Context):View(context){
                 objectPainter.draw(canvas,layerObjects,false,objectVisible,if(layer.locked)null else beautyMask,gestureWhole)
                 val layerInk=perLayer[layer.id].orEmpty();val dynamic=selectedIds+if(eraseMask!=null&&gestureOnlyHighlighter&&!layer.locked)eraseTargets else emptySet()
                 val stable=layerInk.filter{it.id !in dynamic}
-                if(isAttachedToWindow&&stable.isNotEmpty()&&!area.isEmpty){
-                    val cached=layerRasters.getOrPut(layer.id){AsyncInkRaster({postInvalidateOnAnimation()},{onNotice("图层笔迹显示未完成，原笔迹保留")})}
+                if(isAttachedToWindow&&layer.id in needed&&!area.isEmpty){
                     val saved=canvas.save();canvas.setMatrix(screenTransform)
                     if(eraseMask!=null&&!layer.locked&&!gestureOnlyHighlighter){val screenMask=Path(eraseMask);screenMask.transform(matrix);canvas.clipOutPath(screenMask)}
-                    canvas.translate(area.left.toFloat(),area.top.toFloat());cached.draw(canvas,area.width(),area.height(),rasterViewport(area),density,world,embeddedPage,stable)
-                    incompleteInkFrame=incompleteInkFrame||!cached.frameReady;canvas.restoreToCount(saved)
+                    canvas.translate(area.left.toFloat(),area.top.toFloat())
+                    if(stream!=null){
+                        val cached=streamedLayers.getOrPut(layer.id){StreamedInkRaster({postInvalidateOnAnimation()},{onNotice("图层笔迹显示未完成，原笔迹保留")})}
+                        cached.draw(canvas,area.width(),area.height(),rasterViewport(area),density,world,embeddedPage,stream,streamIds[layer.id].orEmpty(),suppressedStrokeIds+erased+dynamic)
+                        incompleteInkFrame=incompleteInkFrame||!cached.frameReady
+                    }else{
+                        val cached=layerRasters.getOrPut(layer.id){AsyncInkRaster({postInvalidateOnAnimation()},{onNotice("图层笔迹显示未完成，原笔迹保留")})}
+                        cached.draw(canvas,area.width(),area.height(),rasterViewport(area),density,world,embeddedPage,stable)
+                        incompleteInkFrame=incompleteInkFrame||!cached.frameReady
+                    };canvas.restoreToCount(saved)
                 }
                 layerInk.filter{!isAttachedToWindow||it.id in dynamic}.forEach{s->
                     val saved=canvas.save();if(s.id in selectedIds)canvas.translate(selectedDx,selectedDy)
@@ -369,7 +413,7 @@ class InkCanvasView(context:Context):View(context){
                     drawSavedStroke(canvas,s);canvas.restoreToCount(saved)
                 }
                 annotationPainter.draw(canvas,layers.visibleAnnotations().filter{memberships[LayerContent(LayerContentKind.ANNOTATION,it.stroke.id)]==layer.id},drawn,matrix,regions=layers.regions)
-                transient.keys.removeAll{id->layerRasters.values.any{it.contains(id)}};transientPencils.keys.removeAll{id->layerRasters.values.any{it.contains(id)}}
+                transient.keys.removeAll{id->layerRasters.values.any{it.contains(id)}||streamedLayers.values.any{it.contains(id)}};transientPencils.keys.removeAll{id->layerRasters.values.any{it.contains(id)}||streamedLayers.values.any{it.contains(id)}}
                 if(layer.id==layers.layers.currentId){
                     transient.values.forEach{renderer.draw(canvas,it,matrix)};transientPencils.values.forEach{PencilRenderer.draw(canvas,it)}
                     if(inputId!=-1&&!gestureErase&&raw.isNotEmpty()){if(gesturePen==InkPen.PENCIL)PencilRenderer.draw(canvas,liveStroke(raw))else{live.updateShape();renderer.draw(canvas,live,matrix)}}
@@ -398,8 +442,9 @@ class InkCanvasView(context:Context):View(context){
             val area=visiblePixels()
             if(!area.isEmpty){
                 canvas.translate(area.left.toFloat(),area.top.toFloat())
-                asyncRaster.draw(canvas,area.width(),area.height(),rasterViewport(area),density,world,embeddedPage,stable)
-                incompleteInkFrame=!asyncRaster.frameReady
+                val stream=inkSource
+                if(stream!=null){streamedRaster.draw(canvas,area.width(),area.height(),rasterViewport(area),density,world,embeddedPage,stream,null,suppressedStrokeIds+erased+movingOrErasing);incompleteInkFrame=!streamedRaster.frameReady}
+                else{asyncRaster.draw(canvas,area.width(),area.height(),rasterViewport(area),density,world,embeddedPage,stable);incompleteInkFrame=!asyncRaster.frameReady}
             }
         }else pageRaster.draw(canvas,width,height,listOf(viewport,world),stable){c,s->
             val n=c.save();c.concat(matrix);if(!world&&!embeddedPage)c.clipRect(0f,0f,1000f,1414f)
@@ -414,15 +459,15 @@ class InkCanvasView(context:Context):View(context){
             if(activeMask!=null&&s.id in eraseTargets)canvas.clipOutPath(activeMask)
             drawSavedStroke(canvas,s);canvas.restoreToCount(clipped)
         }
-        transient.keys.removeAll{it in suppressedStrokeIds||asyncRaster.contains(it)}
-        transientPencils.keys.removeAll{it in suppressedStrokeIds||asyncRaster.contains(it)}
+        transient.keys.removeAll{it in suppressedStrokeIds||asyncRaster.contains(it)||streamedRaster.contains(it)}
+        transientPencils.keys.removeAll{it in suppressedStrokeIds||asyncRaster.contains(it)||streamedRaster.contains(it)}
         transient.values.forEach{renderer.draw(canvas,it,matrix)}
         transientPencils.values.forEach{PencilRenderer.draw(canvas,it)}
         if(inputId!=-1&&!gestureErase&&raw.isNotEmpty()){if(gesturePen==InkPen.PENCIL)PencilRenderer.draw(canvas,liveStroke(raw))else{live.updateShape();renderer.draw(canvas,live,matrix)}}
         seamDraft?.let{if(it.pen==InkPen.PENCIL)PencilRenderer.draw(canvas,it)else renderer.draw(canvas,InkBrushes.stroke(it),matrix)}
         objectPainter.draw(canvas,drawn,true,objectVisible)
         canvas.restoreToCount(inkSave)
-        if(!preview&&inputId==-1&&(imageFramesPending||asyncRaster.pending&&content.isNotEmpty())){
+        if(!preview&&inputId==-1&&(imageFramesPending||rasterPending)){
             paint.color=Color.GRAY;paint.textSize=(12*density).toFloat();paint.style=Paint.Style.FILL
             val status=if(imageFramesPending){if(imageRendering.budgetDeferred)"图片高清显示等待可用内存…"else"正在呈现图片…"}else"正在呈现笔迹…"
             canvas.drawText(status,(16*density).toFloat(),(height-18*density).toFloat(),paint)
@@ -583,6 +628,6 @@ class InkCanvasView(context:Context):View(context){
     }
     private fun finishViewport(){if(movingViewport){movingViewport=false;onViewport(viewport)}}
     fun cancelGesture(discardCheckpoint:Boolean=true){if(discardCheckpoint&&inputId!=-1&&!gestureErase)onCheckpointCancel(gestureId);tapImage=null;onLiveSamples(emptyList());val active=inputId!=-1;inputId=-1;BackgroundBudget.input(this,false);raw.clear();wholeErase=null;gestureErase=false;cursor=null;parent?.requestDisallowInterceptTouchEvent(false);if(active)onGesture(false);invalidate()}
-    override fun onDetachedFromWindow(){viewTreeObserver.removeOnPreDrawListener(visibleAreaListener);observedVisiblePixels.setEmpty();mapSceneJob?.cancel();mapSceneJob=null;PencilRenderer.forget(content.filter{it.pen==InkPen.PENCIL}.map{it.id}.toSet()+gestureId);pageRaster.clear();asyncRaster.clear();layerRasters.values.forEach{it.clear()};layerRasters.clear();documentJob?.cancel();releaseDocumentTile();documentRequest=null;imageRendering.clear();objectPainter.clear();cancelGesture(false);if(configured&&!preview)onViewport(viewport);super.onDetachedFromWindow()}
+    override fun onDetachedFromWindow(){fitContentJob?.cancel();fitContentJob=null;viewTreeObserver.removeOnPreDrawListener(visibleAreaListener);observedVisiblePixels.setEmpty();mapSceneJob?.cancel();mapSceneJob=null;PencilRenderer.forget(content.filter{it.pen==InkPen.PENCIL}.map{it.id}.toSet()+gestureId);pageRaster.clear();asyncRaster.clear();layerRasters.values.forEach{it.clear()};layerRasters.clear();streamedRaster.clear();streamedLayers.values.forEach{it.clear()};streamedLayers.clear();documentJob?.cancel();releaseDocumentTile();documentRequest=null;imageRendering.clear();objectPainter.clear();cancelGesture(false);if(configured&&!preview)onViewport(viewport);super.onDetachedFromWindow()}
     override fun performClick():Boolean{super.performClick();return true}
 }

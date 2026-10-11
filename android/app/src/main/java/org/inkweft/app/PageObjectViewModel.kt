@@ -93,12 +93,13 @@ internal class PageObjectViewModel(private val pageId:String,private val repo:Pa
         reviewState.value?.let{if(it.inkRevision!=ink.revision||it.objectRevision!=snapshot.revision||it.automatic&&!it.open&&it.options!=options)reviewState.value=null}
         if(!options.enabled||options.keepInk){beautyJob?.cancel();beautyJob=null;beautyKnown=null;beautyKey=null;beautyAttempts.clear();beautyWaiting.clear();beautyState.value=null;return}
         if(ink.loading)return
+        if(ink.windowLoading||!ink.windowComplete){beautyJob?.cancel();beautyJob=null;beautyKey=null;beautyState.value=null;return}
         if(reviewState.value?.open==true)return
         if(beautyKnown==null){beautyKnown=ink.strokes.map{it.id}.toSet();return}
         if(writing||ink.queued>0||ink.processing){beautyJob?.cancel();beautyJob=null;beautyKey=null;beautyState.value=null;return}
         if(ink.blocked!=null||ink.readFailed||state.value.loading||state.value.busy||state.value.pending)return
         val suppressed=snapshot.objects.flatMap{it.sourceStrokeIds}.toSet()
-        val fresh=ink.strokes.filter{editableInk(it.id)&&it.id !in beautyKnown!!&&it.id !in suppressed&&it.pen!=InkPen.HIGHLIGHTER}
+        val fresh=ink.strokes.filter{editableInk(it.id)&&it.id !in beautyKnown!!&&it.id !in suppressed&&it.pen!=InkPen.HIGHLIGHTER&&(ink.automaticSourceIds==null||it.id in ink.automaticSourceIds)}
         if(fresh.isEmpty()){showWaitingBeauty();return}
         val key="${ink.revision}:$options"
         if(key==beautyKey){showWaitingBeauty();return}

@@ -17,6 +17,64 @@ class InkModelsTest {
         val a=stroke(listOf(InkSample(1f,2f,0,.2f,.3f,.4f),InkSample(2f,3f,150,.8f,.4f,.5f)))
         val b=InkStrokeCodec.decode(InkStrokeCodec.encode(a));assertEquals(a.id,b.id);assertEquals(a.samples,b.samples);assertEquals(a.width,b.width)
     }
+    @Test fun compactStoragePreservesAllPayloadVariantsAndCanonicalBytes() {
+        val points=listOf(InkSample(-0.0f,2.5f,0,.25f,.5f,.75f),InkSample(1000f,1414f,3_600_000,1f,1f,6f))
+        val plain=stroke(points)
+        val round=InkCut(id(),2f,listOf(EraserPoint(10f,20f)))
+        val rectangle=InkCut(id(),3f,listOf(EraserPoint(10f,20f),EraserPoint(30f,40f)),InkCutShape.RECTANGLE)
+        val appearance=StrokeAppearance(BrushRecipe(),1234L,1f,2f,
+            points.first().copy(x=-10f,world=true),points.last().copy(x=1100f,world=true))
+        val variants=listOf(plain,
+            InkStroke(id(),InkPen.BRUSH,plain.color,4f,InkTool.STYLUS,points.map{it.copy(x=it.x-20f,world=true)},true),
+            plain.withCuts(listOf(round)),plain.withCuts(listOf(rectangle)),
+            InkStroke(id(),InkPen.PENCIL,plain.color,5f,InkTool.STYLUS,points,cuts=listOf(round,rectangle),appearance=appearance))
+        variants.forEach { original ->
+            val canonical=InkStrokeCodec.encode(original)
+            val stored=InkStrokeCodec.encodeStored(original)
+            assertEquals(canonical.size-original.samples.size*4,stored.size)
+            assertEquals(java.nio.ByteBuffer.wrap(canonical).int+5,java.nio.ByteBuffer.wrap(stored).int)
+            val restored=InkStrokeCodec.decode(stored)
+            assertArrayEquals(canonical,InkStrokeCodec.encode(restored))
+            assertArrayEquals(stored,InkStrokeCodec.encodeStored(restored))
+            val command=id();val page=id()
+            assertEquals(CommitInk(command,page,7,InkMutation.Add(original)).digest(),CommitInk(command,page,7,InkMutation.Add(restored)).digest())
+        }
+    }
+    @Test fun compactStoragePreservesMaximumSampleCountAndExactFloatBits() {
+        val points=List(InkLimits.MAX_POINTS){i->InkSample((i%1000).toFloat(),(i%1414).toFloat(),i.toLong()*400,
+            Float.fromBits(0x3eaaaaab),Float.fromBits(0x3f123456),Float.fromBits(0x40234567))}
+        val original=stroke(points);val stored=InkStrokeCodec.encodeStored(original)
+        assertEquals(InkStrokeCodec.encode(original).size-InkLimits.MAX_POINTS*4,stored.size)
+        val decoded=InkStrokeCodec.decode(stored)
+        assertEquals(points,decoded.samples)
+        points.zip(decoded.samples).forEach{(a,b)->
+            assertEquals(a.pressure.toRawBits(),b.pressure.toRawBits())
+            assertEquals(a.tilt.toRawBits(),b.tilt.toRawBits())
+            assertEquals(a.orientation.toRawBits(),b.orientation.toRawBits())
+        }
+    }
+    @Test fun compactStorageRejectsMalformedTimingCountTruncationAndUnknownVersion() {
+        val value=stroke();val bytes=InkStrokeCodec.encodeStored(value)
+        val firstPoint=bytes.size-value.samples.size*24
+        for(time in listOf(-1,3_600_001,Int.MAX_VALUE)){
+            val malformed=bytes.copyOf();java.nio.ByteBuffer.wrap(malformed).putInt(firstPoint+8,time)
+            rejects{InkStrokeCodec.decode(malformed)}
+        }
+        val badCount=bytes.copyOf();java.nio.ByteBuffer.wrap(badCount).putInt(firstPoint-4,InkLimits.MAX_POINTS+1)
+        rejects{InkStrokeCodec.decode(badCount)}
+        rejects{InkStrokeCodec.decode(bytes.copyOf(bytes.size-1))}
+        rejects{InkStrokeCodec.decode(bytes+byteArrayOf(0))}
+        val unknown=bytes.copyOf();java.nio.ByteBuffer.wrap(unknown).putInt(0x4957533b)
+        rejects{InkStrokeCodec.decode(unknown)}
+    }
+    @Test fun canonicalEncodingRemainsStableAcrossStorageOptimization() {
+        val original=InkStroke("00000000-0000-0000-0000-000000000001",InkPen.PEN,0xff22342f.toInt(),3f,InkTool.TOUCH,
+            listOf(InkSample(1.25f,2.5f,3_600_000,.25f,.5f,.75f)))
+        val canonical=InkStrokeCodec.encode(original)
+        assertEquals(84,canonical.size)
+        assertEquals("a41f5b2ae5616c054fdfc74047665350604c36d1bb6a8667b8175689166e5fee",ContentTransfer.hash(canonical))
+        assertArrayEquals(canonical,InkStrokeCodec.encode(InkStrokeCodec.decode(InkStrokeCodec.encodeStored(original))))
+    }
     @Test fun truncatedStrokeRejected() { val bytes=InkStrokeCodec.encode(stroke());rejects { InkStrokeCodec.decode(bytes.copyOf(bytes.size-1)) } }
     @Test fun trailingDataRejected() { rejects { InkStrokeCodec.decode(InkStrokeCodec.encode(stroke())+byteArrayOf(0)) } }
     @Test fun nanCoordinateRejected() { rejects { InkSample(Float.NaN,0f,0) } }

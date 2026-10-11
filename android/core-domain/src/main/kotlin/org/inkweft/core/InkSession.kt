@@ -13,25 +13,23 @@ class InkSession(initial:InkPage) {
     private val redo=ArrayDeque<InkMutation>()
     private var historyMove:Boolean?=null
     private var visibleCache:List<InkStroke>?=null
-    private var draftPoints=0
     private var storedById=initial.strokes.associateByTo(LinkedHashMap()){it.stroke.id}
-    private var visibleCount=initial.strokes.count{it.visible}
-    private var visiblePoints=initial.strokes.sumOf{if(it.visible)it.stroke.samples.size else 0}
-    private var retainedPoints=initial.strokes.sumOf{it.stroke.samples.size}
     val queued get()=queue.size+if(pending==null)0 else 1
     private fun additions()=(listOfNotNull(pending?.mutation)+queue).flatMap{when(it){is InkMutation.Add->listOf(it.stroke);is InkMutation.Replace->it.added;else->emptyList()}}
-    val canStart get():Boolean {
-        if(blocked!=null||queued>=16)return false
-        val added=additions();val points=added.sumOf{it.samples.size}
-        return visibleCount+added.size<InkLimits.MAX_STROKES&&visiblePoints+points+InkLimits.MAX_POINTS<=InkLimits.MAX_PAGE_POINTS&&
-            page.strokes.size+added.size<InkLimits.MAX_RETAINED_STROKES&&retainedPoints+points+InkLimits.MAX_POINTS<=InkLimits.MAX_RETAINED_POINTS
-    }
+    val canStart get()=blocked==null&&queued<16
     val canUndo get()=queued==0&&blocked==null&&undo.isNotEmpty()
     val canRedo get()=queued==0&&blocked==null&&redo.isNotEmpty()
     val undoIdentity:InkMutation? get()=undo.lastOrNull()
     val redoIdentity:InkMutation? get()=redo.lastOrNull()
     fun hasHistoryIdentity(value:InkMutation)=undo.any{it===value}||redo.any{it===value}
-    class History internal constructor(val noteId:String,val revision:Long,internal val undo:List<InkMutation>,internal val redo:List<InkMutation>)
+    class History internal constructor(val noteId:String,val revision:Long,internal val undo:List<InkMutation>,internal val redo:List<InkMutation>) {
+        val strokeIds:Set<String> = java.util.Collections.unmodifiableSet((undo+redo).flatMap{change->when(change){
+            is InkMutation.Visibility->change.ids
+            is InkMutation.Swap->change.hide+change.show
+            else->emptyList()
+        }}.toSet())
+        val cutIds:Set<String> = java.util.Collections.unmodifiableSet((undo+redo).mapNotNull{(it as? InkMutation.CutVisibility)?.cutId}.toSet())
+    }
     /** Committed inverses hold identities, never stroke geometry or point arrays. */
     fun suspendHistory():History {
         check(queued==0&&blocked==null&&historyMove==null)
@@ -41,8 +39,17 @@ class InkSession(initial:InkPage) {
     }
     fun restoreHistory(value:History) {
         require(value.noteId==page.noteId&&value.revision==page.revision){"INK_HISTORY_REVISION_CHANGED"}
+        require(value.strokeIds.all{it in storedById}&&value.cutIds.all{id->page.cuts.any{it.selection.cut.id==id}}){"INK_HISTORY_GEOMETRY_NOT_LOADED"}
         check(queued==0&&blocked==null&&undo.isEmpty()&&redo.isEmpty())
         undo.addAll(value.undo);redo.addAll(value.redo)
+    }
+    /** Change the loaded window at the same saved revision without changing undo identities. */
+    fun refreshWindow(value:InkPage) {
+        check(queued==0&&blocked==null&&historyMove==null)
+        require(value.noteId==page.noteId&&value.revision==page.revision)
+        val history=suspendHistory()
+        require(history.strokeIds.all{id->value.strokes.any{it.stroke.id==id}}&&history.cutIds.all{id->value.cuts.any{it.selection.cut.id==id}})
+        page=value;storedById=value.strokes.associateByTo(LinkedHashMap()){it.stroke.id};visibleCache=null
     }
     private fun apply(change:InkMutation,revision:Long,rows:LinkedHashMap<String,StoredInk>,cuts:LinkedHashMap<String,StoredCut>):InkMutation=when(change){
         is InkMutation.Replace->{
@@ -70,7 +77,7 @@ class InkSession(initial:InkPage) {
         val byStroke=mutableMapOf<String,MutableList<InkCut>>()
         cuts.values.filter{it.visible}.forEach{c->c.selection.strokeIds.forEach{id->byStroke.getOrPut(id){mutableListOf()}.add(c.selection.cut)}}
         return java.util.Collections.unmodifiableList(rows.values.filter{it.visible}.map{it.stroke.withCuts(byStroke[it.stroke.id].orEmpty())}).also{
-            draftPoints=it.sumOf{stroke->stroke.samples.size};visibleCache=it
+            visibleCache=it
         }
     }
     fun enqueue(change:InkMutation,finishInFlight:Boolean=false,layerScope:LayerWriteScope?=null){
@@ -79,20 +86,11 @@ class InkSession(initial:InkPage) {
             is InkMutation.Replace->{
                 require(queued==0)
                 require(change.hidden.all{storedById[it]?.visible==true})
-                require(change.added.none{it.id in storedById})
-                val hiddenPoints=change.hidden.sumOf{checkNotNull(storedById[it]).stroke.samples.size}
-                val addedPoints=change.added.sumOf{it.samples.size}
-                require(visibleCount-change.hidden.size+change.added.size<=InkLimits.MAX_STROKES)
-                require(visiblePoints-hiddenPoints+addedPoints<=InkLimits.MAX_PAGE_POINTS)
-                require(page.strokes.size+change.added.size<=InkLimits.MAX_RETAINED_STROKES)
-                require(retainedPoints+addedPoints<=InkLimits.MAX_RETAINED_POINTS)
+                require(change.added.none{it.id in storedById||it.id in page.unloaded.strokePoints})
             }
-            is InkMutation.Add->{val current=visibleDraft();val added=additions()
-                require(current.size<InkLimits.MAX_STROKES);require(draftPoints+change.stroke.samples.size<=InkLimits.MAX_PAGE_POINTS)
-                require(page.strokes.size+added.size<InkLimits.MAX_RETAINED_STROKES)
-                require(retainedPoints+added.sumOf{it.samples.size}+change.stroke.samples.size<=InkLimits.MAX_RETAINED_POINTS)
-                require(change.stroke.id !in storedById&&added.none{it.id==change.stroke.id})}
-            is InkMutation.Cut->{val current=visibleDraft().associateBy{it.id};require(page.cuts.size+(listOfNotNull(pending?.mutation)+queue).count{it is InkMutation.Cut}<InkLimits.MAX_RETAINED_CUTS);change.selection.strokeIds.forEach{id->val s=checkNotNull(current[id]);require(s.cuts.size<InkLimits.MAX_CUTS&&s.cuts.sumOf{it.points.size}+change.selection.cut.points.size<=InkLimits.MAX_CUT_POINTS)}}
+            is InkMutation.Add->{val added=additions()
+                require(change.stroke.id !in storedById&&change.stroke.id !in page.unloaded.strokePoints&&added.none{it.id==change.stroke.id})}
+            is InkMutation.Cut->{val current=visibleDraft().associateBy{it.id};change.selection.strokeIds.forEach{id->val s=checkNotNull(current[id]);require(s.cuts.size<InkLimits.MAX_CUTS&&s.cuts.sumOf{it.points.size}+change.selection.cut.points.size<=InkLimits.MAX_CUT_POINTS)}}
             else->Unit
         };queue.add(change);scopes[change]=layerScope;visibleCache=null
     }
@@ -102,9 +100,8 @@ class InkSession(initial:InkPage) {
         check(command===pending);if(result !is InkCommitResult.Committed){blocked=result;return};require(result.revision==command.expectedRevision+1)
         val rows=LinkedHashMap(storedById);val cuts=page.cuts.associateByTo(LinkedHashMap()){it.selection.cut.id}
         val inverse=apply(command.mutation,result.revision,rows,cuts)
-        page=InkPage(page.noteId,result.revision,rows.values.toList(),cuts.values.toList())
+        page=InkPage(page.noteId,result.revision,rows.values.toList(),cuts.values.toList(),page.unloaded,page.windowComplete)
         storedById=rows
-        visibleCount=page.strokes.count{it.visible};visiblePoints=page.strokes.sumOf{if(it.visible)it.stroke.samples.size else 0};retainedPoints=page.strokes.sumOf{it.stroke.samples.size}
         when(historyMove){true->{undo.removeLast();redo.add(inverse)};false->{redo.removeLast();undo.add(inverse)};null->{undo.add(inverse);redo.clear()}}
         while(undo.size>50)undo.removeFirst();historyMove=null;pending=null;blocked=null
     }

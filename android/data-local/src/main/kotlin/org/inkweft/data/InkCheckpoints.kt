@@ -19,7 +19,7 @@ internal class InkCheckpoints(private val root:File,private val fault:(String)->
             val checkpoint=read(target);require(checkpoint.layerScope==layerScope){"CHECKPOINT_LAYER_CHANGED"};val old=checkpoint.stroke;if(sequence<=old.samples.size){require(old.samples.take(sequence)==stroke.samples);return}
             require(stroke.samples.take(old.samples.size)==old.samples){"CHECKPOINT_PREFIX_CHANGED"}
         }
-        fault("before-serialize");val ink=InkStrokeCodec.encode(stroke)
+        fault("before-serialize");val ink=InkStrokeCodec.encodeStored(stroke)
         val bytes=if(layerScope==null)ink else ByteArrayOutputStream().also{buffer->DataOutputStream(buffer).use{d->d.writeInt(0x49574332);d.writeUTF(layerScope.layerId);d.writeLong(layerScope.configurationRevision);d.writeInt(ink.size);d.write(ink)}}.toByteArray();fault("after-serialize")
         val stream=target.startWrite()
         try{stream.write(bytes);fault("before-commit");target.finishWrite(stream)}catch(t:Throwable){target.failWrite(stream);throw t}

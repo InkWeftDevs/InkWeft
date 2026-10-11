@@ -14,7 +14,7 @@ import java.util.UUID
  * Only trusted, locally compiled DDL is used. The archive contains values only. */
 class LibraryBackupRepository(private val context:Context,private val db:NoteDatabase,
     private val fault:(BackupFault)->Unit={}) {
-    enum class BackupFault { BEFORE_RESTORE_COMMIT, AFTER_RESTORE_COMMIT }
+    enum class BackupFault { BEFORE_RESTORE_COMMIT, AFTER_RESTORE_COMMIT, BEFORE_SNAPSHOT_SYNC }
     enum class RestoreResult { RESTORED, ALREADY_PRESENT, IDENTITY_CONFLICT, SNAPSHOT_CAPACITY_EXCEEDED }
     class Preview internal constructor(internal val stage:NoteDatabase,internal val root:File,
         val summary:LibraryArchive.Summary,val notes:Int,val pages:Int,val trashed:Int,val recycledPages:Int,
@@ -36,17 +36,21 @@ class LibraryBackupRepository(private val context:Context,private val db:NoteDat
     private suspend fun snapshotInIo():Snapshot {
         reserve();val path=File(scratch,"snapshot-${UUID.randomUUID()}.iwbackup")
         try {
-            val summary=db.withTransaction {
-                val sql=db.openHelper.writableDatabase;checkSchema(sql);validate(db)
-                val ctx=currentCoroutineContext()
-                FileOutputStream(path).use{file->
-                    val buffer=BufferedOutputStream(file)
-                    val result=LibraryArchive.write(buffer,SCHEMA,SqlRows(sql),System.currentTimeMillis()){ctx.ensureActive()}
-                    buffer.flush();file.fd.sync();result
-                }
+            val summary=FileOutputStream(path).use{file->
+                val buffer=BufferedOutputStream(file)
+                val result=writeSnapshot(buffer)
+                // The archive bytes are fixed; syncing this private file needs no live database lock.
+                currentCoroutineContext().ensureActive()
+                fault(BackupFault.BEFORE_SNAPSHOT_SYNC)
+                buffer.flush();file.fd.sync();result
             }
             return Snapshot(path,summary)
         }catch(t:Throwable){path.delete();throw t}
+    }
+    private suspend fun writeSnapshot(output:OutputStream):LibraryArchive.Summary=db.withTransaction {
+        val sql=db.openHelper.writableDatabase;checkSchema(sql);validate(db)
+        val ctx=currentCoroutineContext()
+        LibraryArchive.write(output,SCHEMA,SqlRows(sql),System.currentTimeMillis()){ctx.ensureActive()}
     }
     /** Caller owns the input. Only staging is touched before digest, FK and semantic validation. */
     suspend fun inspect(input:InputStream):Preview {
@@ -65,9 +69,12 @@ class LibraryBackupRepository(private val context:Context,private val db:NoteDat
                     if(++count%128==0)reserve()
                     // Schema6 has no tombstone column; promote to live/default null.
                     val promoted=if(table==4&&row.size==SCHEMA[table].columns.size-1)row+listOf(null)else row
-                    insert(sql,table,promoted)
-                },legacySchema=SCHEMA_V6,otherLegacySchemas=listOf(SCHEMA_V7,SCHEMA_V8,SCHEMA_V9,SCHEMA_V10,SCHEMA_V11,SCHEMA_V12,SCHEMA_V13,SCHEMA_V14,SCHEMA_V15)){ctx.ensureActive()}
+                    if(table==22&&promoted.size==3){
+                        insert(sql,table,promoted.take(2));PageObjectStore.promote(sql,promoted[0] as String,promoted[2] as ByteArray)
+                    }else insert(sql,table,promoted)
+                },legacySchema=SCHEMA_V6,otherLegacySchemas=listOf(SCHEMA_V7,SCHEMA_V8,SCHEMA_V9,SCHEMA_V10,SCHEMA_V11,SCHEMA_V12,SCHEMA_V13,SCHEMA_V14,SCHEMA_V15,SCHEMA_V16,SCHEMA_V17)){ctx.ensureActive()}
                 if(parsed.rows.size<32)StudySourceVersions.promoteLegacy(sql)
+                if(parsed.rows.size<SCHEMA.size)PageLayerStore.promote(sql)
                 parsed
             }
             validate(stage)
@@ -101,7 +108,10 @@ class LibraryBackupRepository(private val context:Context,private val db:NoteDat
                         val argsKey=t.keys.map{key->row[t.columns.indexOfFirst{it.name==key}]}.toTypedArray()
                         val where=t.keys.joinToString(" AND "){"`$it`=?"}
                         val collision=target.query("SELECT 1 FROM `${t.name}` WHERE $where LIMIT 1",argsKey).use{it.moveToFirst()}
-                        require(!collision){"BACKUP_COMMAND_IDENTITY_CONFLICT"}
+                        if(collision&&t.name=="object_previews"){
+                            val existing=target.query("SELECT payload FROM object_previews WHERE digest=?",argsKey).use{check(it.moveToFirst());it.getBlob(0)}
+                            require(existing.contentEquals(row[1] as ByteArray)){"OBJECT_PREVIEW_CHANGED"}
+                        }else require(!collision){"BACKUP_COMMAND_IDENTITY_CONFLICT"}
                     }
                 }
                 require(db.recall().answerInkBytes()+preview.stage.recall().answerInkBytes()<=RecallLimits.MAX_INK_LIBRARY_BYTES){"RECALL_ANSWER_LIBRARY_BUDGET"}
@@ -109,7 +119,10 @@ class LibraryBackupRepository(private val context:Context,private val db:NoteDat
                 if(db.study().snapshotBytes()+preview.stage.study().snapshotBytes()>StudyCapacity.MAX_SNAPSHOT_BYTES)
                     return@live RestoreResult.SNAPSHOT_CAPACITY_EXCEEDED
                 val ctx=currentCoroutineContext()
-                SCHEMA.indices.forEach{index->SqlRows(source).visit(index){row->ctx.ensureActive();insert(target,index,row)}}
+                SCHEMA.indices.forEach{index->SqlRows(source).visit(index){row->
+                    ctx.ensureActive()
+                    if(SCHEMA[index].name!="object_previews"||!target.query("SELECT 1 FROM object_previews WHERE digest=?",arrayOf(row[0])).use{it.moveToFirst()})insert(target,index,row)
+                }}
                 check(target.query("PRAGMA foreign_key_check").use{!it.moveToFirst()})
                 check(fingerprint(target,ids)==preview.canonical){"BACKUP_RESTORE_MISMATCH"}
                 fault(BackupFault.BEFORE_RESTORE_COMMIT)
@@ -134,6 +147,9 @@ class LibraryBackupRepository(private val context:Context,private val db:NoteDat
         noRows("SELECT 1 FROM notebook_pages WHERE world NOT IN (0,1) OR position NOT BETWEEN 0 AND 499 OR paper NOT BETWEEN 0 AND ${PaperStyle.entries.lastIndex}")
         noRows("SELECT 1 FROM notebook_workspace WHERE world NOT IN (0,1) OR favorite NOT IN (0,1) OR pinned NOT IN (0,1) OR paper NOT BETWEEN 0 AND ${PaperStyle.entries.lastIndex}")
         noRows("SELECT 1 FROM ink_receipts WHERE visible NOT IN (0,1)")
+        noRows("SELECT 1 FROM page_objects WHERE revision<1")
+        noRows("SELECT 1 FROM page_object_records WHERE position NOT BETWEEN 0 AND ${PageObjectCodec.MAX_RECORDS-1} OR length(payload) NOT BETWEEN 8 AND ${PageObjectCodec.MAX_BYTES}")
+        noRows("SELECT 1 FROM object_previews p WHERE length(payload) NOT BETWEEN 5 AND ${PageObjectCodec.MAX_IMAGE} OR NOT EXISTS (SELECT 1 FROM page_object_records r WHERE r.previewHash=p.digest)")
         noRows("SELECT 1 FROM library_content_receipts WHERE kind NOT IN ('COPY','IMPORT','CREATE','RESOURCE','INK_GROUP')")
         noRows("SELECT 1 FROM notebook_pages WHERE trashedAt<0")
         noRows("SELECT 1 FROM study_nodes WHERE removed NOT IN (0,1)")
@@ -159,7 +175,8 @@ class LibraryBackupRepository(private val context:Context,private val db:NoteDat
         for(image in stage.images().all()){currentCoroutineContext().ensureActive();ImageSourceRepository.validate(ImageSourceRepository(stage).read(image.notebookId,image.digest),checkNotNull(stage.documentScratch)){imageValidationContext.ensureActive()}}
         noRows("SELECT 1 FROM study_card_source_sets WHERE complete NOT IN (0,1)")
         noRows("SELECT 1 FROM card_transform_operations WHERE undone NOT IN (0,1)")
-        noRows("SELECT 1 FROM canvas_authoring WHERE kind NOT IN ('PAGE','MAP') OR revision<0 OR length(payload) NOT BETWEEN 8 AND ${PageAuthoringCodec.MAX_BYTES}")
+        noRows("SELECT 1 FROM canvas_authoring WHERE kind NOT IN ('PAGE','MAP') OR revision<0 OR length(payload)<8")
+        noRows("SELECT 1 FROM page_layer_memberships m LEFT JOIN canvas_authoring a ON a.kind='PAGE' AND a.scopeId=m.pageId WHERE a.scopeId IS NULL OR m.kind NOT IN ('INK','OBJECT')")
         noRows("SELECT 1 FROM authoring_receipts r LEFT JOIN canvas_authoring a ON a.kind=r.kind AND a.scopeId=r.scopeId WHERE a.scopeId IS NULL OR a.notebookId!=r.notebookId OR r.revision<1 OR r.revision>a.revision")
         require(count(sql,"canvas_authoring")<=25_000){"AUTHORING_LIBRARY_BUDGET"}
         for(book in notes)for(row in stage.authoring().forBook(book)){
@@ -205,14 +222,14 @@ class LibraryBackupRepository(private val context:Context,private val db:NoteDat
                 UUID.fromString(p.id);require(p.paper in PaperStyle.entries.indices)
                 CanvasViewport(p.centerX,p.centerY,if(p.zoom==0.0).7 else p.zoom)
                 require(p.createdAfterId==null||pages.any{it.id==p.createdAfterId})
-                val ink=InkRepository(stage).read(p.id);require(ink.revision>=0)
+                val inkRevision=InkRepository(stage).validateStored(p.id);require(inkRevision>=0)
                 DocumentRepository(stage).read(p.id,documentCache)
                 val objects=PageObjectRepository(stage).read(p.id).objects
-                val refs=objects.flatMap{it.sourceStrokeIds};require(refs.distinct().size==refs.size);val owned=stage.ink().strokes(p.id).map{it.id}.toSet();require(refs.all{it in owned})
+                val refs=objects.flatMap{it.sourceStrokeIds};require(refs.distinct().size==refs.size);val owned=stage.ink().strokeIds(p.id).toSet();require(refs.all{it in owned})
                 MapEmbedRepository(stage).validateReferences(p.notebookId,objects)
                 ImageSourceRepository(stage).validateReferences(p.notebookId,objects)
                 PageObjectRepository.validateBounds(objects,p.world);PageObjectRepository.validateImages(objects)
-                stage.pages().search(p.id)?.let{s->require(s.inkRevision in 0..ink.revision&&s.text.length<=20_000&&s.method in listOf("MANUAL","OCR"))}
+                stage.pages().search(p.id)?.let{s->require(s.inkRevision in 0..inkRevision&&s.text.length<=20_000&&s.method in listOf("MANUAL","OCR"))}
             }
         }
         val validationContext=currentCoroutineContext()
@@ -244,6 +261,7 @@ class LibraryBackupRepository(private val context:Context,private val db:NoteDat
                 else if(col=="@search")" WHERE pageId IN (SELECT id FROM notebook_pages WHERE notebookId IN ($marks))"
                 else if(col=="@documents")" WHERE documentId IN (SELECT id FROM document_sources WHERE notebookId IN ($marks))"
                 else if(col=="@cards")" WHERE cardId IN (SELECT id FROM study_cards WHERE notebookId IN ($marks))"
+                else if(col=="@previews")" WHERE digest IN (SELECT previewHash FROM page_object_records WHERE pageId IN (SELECT id FROM notebook_pages WHERE notebookId IN ($marks)))"
                 else " WHERE `$col` IN ($marks)"
         }
         private fun query(sql:String)=if(ids==null)db.query(sql)else db.query(sql,ids.toTypedArray<Any?>())
@@ -260,7 +278,7 @@ class LibraryBackupRepository(private val context:Context,private val db:NoteDat
     companion object {
         private fun col(name:String,kind:Char,nullable:Boolean=false)=LibraryArchive.Column(name,kind,nullable)
         private fun table(name:String,keys:String,vararg cols:LibraryArchive.Column)=LibraryArchive.Table(name,cols.toList(),keys.split(','))
-        // Frozen author schema8; only explicitly compiled schema6/7 variants are also readable.
+        // Current author schema; older supported archives promote page objects into records.
         val SCHEMA=listOf(
             table("notes","id",col("id",'S'),col("revision",'I'),col("title",'S'),col("text",'S'),col("updatedAt",'I')),
             table("note_revisions","noteId,revision",col("noteId",'S'),col("revision",'I'),col("title",'S'),col("text",'S'),col("committedAt",'I')),
@@ -284,7 +302,7 @@ class LibraryBackupRepository(private val context:Context,private val db:NoteDat
             table("knowledge_revisions","id,revision",col("id",'S'),col("revision",'I'),col("notebookId",'S'),col("payload",'B'),col("removed",'I')),
             table("knowledge_receipts","operationId",col("operationId",'S'),col("notebookId",'S'),col("digest",'S'),col("resultId",'S')),
             table("notebook_covers","noteId",col("noteId",'S'),col("payload",'B')),
-            table("page_objects","pageId",col("pageId",'S'),col("revision",'I'),col("payload",'B')),
+            table("page_objects","pageId",col("pageId",'S'),col("revision",'I')),
             table("object_receipts","commandId",col("commandId",'S'),col("pageId",'S'),col("digest",'S'),col("revision",'I')),
             table("document_sources","id",col("id",'S'),col("notebookId",'S'),col("digest",'S'),col("pageCount",'I'),col("byteCount",'I')),
             table("document_chunks","documentId,position",col("documentId",'S'),col("position",'I'),col("payload",'B')),
@@ -296,18 +314,24 @@ class LibraryBackupRepository(private val context:Context,private val db:NoteDat
             table("card_transform_operations","operationId",col("operationId",'S'),col("notebookId",'S'),col("digest",'S'),col("payload",'B'),col("afterFingerprint",'S'),col("revision",'I'),col("undone",'I'),col("undoOperationId",'S',true),col("undoDigest",'S',true)),
             table("canvas_authoring","kind,scopeId",col("kind",'S'),col("scopeId",'S'),col("notebookId",'S'),col("revision",'I'),col("payload",'B')),
             table("authoring_receipts","commandId",col("commandId",'S'),col("notebookId",'S'),col("kind",'S'),col("scopeId",'S'),col("digest",'S'),col("revision",'I'))
-        )+RecallStorage.SCHEMA
-        val SCHEMA_V15=SCHEMA.take(34)
-        val SCHEMA_V14=SCHEMA.take(32)
-        val SCHEMA_V13=SCHEMA.take(29)
-        val SCHEMA_V12=SCHEMA.take(27)
-        val SCHEMA_V11=SCHEMA.take(24)
+        )+RecallStorage.SCHEMA+listOf(
+            table("object_previews","digest",col("digest",'S'),col("payload",'B')),
+            table("page_object_records","pageId,id",col("pageId",'S'),col("id",'S'),col("position",'I'),col("payload",'B'),col("previewHash",'S',true)),
+            table("page_layer_memberships","pageId,kind,contentId",col("pageId",'S'),col("kind",'S'),col("contentId",'S'),col("layerId",'S',true))
+        )
+        val SCHEMA_V17=SCHEMA.dropLast(1)
+        val SCHEMA_V16=SCHEMA_V17.dropLast(2).map{if(it.name=="page_objects")it.copy(columns=it.columns+col("payload",'B'))else it}
+        val SCHEMA_V15=SCHEMA_V16.take(34)
+        val SCHEMA_V14=SCHEMA_V16.take(32)
+        val SCHEMA_V13=SCHEMA_V16.take(29)
+        val SCHEMA_V12=SCHEMA_V16.take(27)
+        val SCHEMA_V11=SCHEMA_V16.take(24)
         val SCHEMA_V10=SCHEMA.take(22)
         val SCHEMA_V9=SCHEMA.take(21)
         val SCHEMA_V8=SCHEMA.take(18)
         val SCHEMA_V7=SCHEMA.take(13)
         val SCHEMA_V6=SCHEMA.take(12).mapIndexed{i,t->if(i==4)t.copy(columns=t.columns.dropLast(1))else t}
-        private val OWNERS=listOf("id","noteId","noteId","noteId","notebookId","@ink","@ink","@ink","@ink","@search","notebookId","noteId","notebookId","notebookId","@cards","@cards","notebookId","notebookId","notebookId","notebookId","notebookId","noteId","@search","@search","notebookId","@documents","@search","notebookId","notebookId","notebookId","@cards","notebookId","notebookId","notebookId")+List(RecallStorage.SCHEMA.size){"notebookId"}
+        private val OWNERS=listOf("id","noteId","noteId","noteId","notebookId","@ink","@ink","@ink","@ink","@search","notebookId","noteId","notebookId","notebookId","@cards","@cards","notebookId","notebookId","notebookId","notebookId","notebookId","noteId","@search","@search","notebookId","@documents","@search","notebookId","notebookId","notebookId","@cards","notebookId","notebookId","notebookId")+List(RecallStorage.SCHEMA.size){"notebookId"}+listOf("@previews","@search","@search")
         private fun count(sql:SupportSQLiteDatabase,table:String)=sql.query("SELECT COUNT(*) FROM `$table`").use{it.moveToFirst();it.getLong(0)}
         private fun insert(sql:SupportSQLiteDatabase,table:Int,row:List<Any?>){
             val t=SCHEMA[table]
@@ -317,7 +341,7 @@ class LibraryBackupRepository(private val context:Context,private val db:NoteDat
             LibraryArchive.write(object:OutputStream(){override fun write(b:Int){};override fun write(b:ByteArray,o:Int,n:Int){}},SCHEMA,SqlRows(sql,ids),0).sha256
         private fun checkSchema(sql:SupportSQLiteDatabase){
             val names=sql.query("SELECT name FROM sqlite_master WHERE type='table' AND name NOT GLOB 'sqlite_*' AND name NOT IN ('room_master_table','android_metadata')").use{c->buildSet{while(c.moveToNext())add(c.getString(0))}}
-            require(names==SCHEMA.map{it.name}.toSet()){"BACKUP_SCHEMA_COVERAGE_CHANGED"}
+            require(names==SCHEMA.map{it.name}.toSet()+SpatialIndex.tables){"BACKUP_SCHEMA_COVERAGE_CHANGED"}
             for(t in SCHEMA){
                 val cols=sql.query("PRAGMA table_info(`${t.name}`)").use{c->buildList{while(c.moveToNext()){
                     // Compare SQLite affinity, not spelling (e.g. VARCHAR is still text).

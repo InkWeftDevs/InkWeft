@@ -1,0 +1,8 @@
+// Isolated verification of new database page size and existing database preservation.
+gradle.beforeProject { project ->
+    if (project.path == ':data-local') {
+        project.pluginManager.withPlugin('com.android.library') {
+            project.android.defaultConfig.testApplicationId = 'org.inkweft.data.storageopt20261011b4r4.test'
+        }
+    }
+}

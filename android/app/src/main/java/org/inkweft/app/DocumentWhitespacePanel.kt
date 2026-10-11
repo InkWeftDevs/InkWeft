@@ -65,7 +65,7 @@ import java.util.UUID
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable internal fun DocumentWhitespacePanel(pageId:String,paper:PaperStyle,ink:List<InkStroke>,objects:List<PageObject>,model:PageAuthoringViewModel,
-    state:AuthoringUi,enabled:Boolean,embedded:Boolean=false,dismiss:()->Unit){
+    state:AuthoringUi,enabled:Boolean,embedded:Boolean=false,inkSource:InkRenderSource?=null,dismiss:()->Unit){
     var anchor by remember{mutableFloatStateOf(707f)}
     var layers by remember{mutableStateOf(false)}
     var notice by remember{mutableStateOf<String?>(null)}
@@ -94,7 +94,7 @@ import java.util.UUID
                 LazyColumn(Modifier.fillMaxWidth().weight(1f),state=listState){
                     var previous=0.0
                     for(blank in layout.blanks){
-                        if(blank.beforeY>previous){val bounds=CanvasBounds(0.0,previous,1000.0,blank.beforeY);item("source-${blank.id}"){OriginalDocumentSlice(pageId,paper,ink,objects,state.state,bounds)}}
+                        if(blank.beforeY>previous){val bounds=CanvasBounds(0.0,previous,1000.0,blank.beforeY);item("source-${blank.id}"){OriginalDocumentSlice(pageId,paper,ink,objects,state.state,bounds,inkSource)}}
                         item(blank.id){
                             Column(Modifier.padding(horizontal=8.dp)){
                                 Row {
@@ -109,7 +109,7 @@ import java.util.UUID
                             }
                         };previous=blank.beforeY
                     }
-                    if(previous<1414.0){val bounds=CanvasBounds(0.0,previous,1000.0,1414.0);item("source-last"){OriginalDocumentSlice(pageId,paper,ink,objects,state.state,bounds)}}
+                    if(previous<1414.0){val bounds=CanvasBounds(0.0,previous,1000.0,1414.0);item("source-last"){OriginalDocumentSlice(pageId,paper,ink,objects,state.state,bounds,inkSource)}}
                 }
                 state.message?.let{Text(it,Modifier.padding(8.dp),color=MaterialTheme.colorScheme.error)}
                 AuthoringRecoveryActions(model,state)
@@ -120,11 +120,11 @@ import java.util.UUID
     if(layers)PageLayersPanel(model,state,enabled,dismiss={layers=false})
 }
 
-@Composable private fun OriginalDocumentSlice(pageId:String,paper:PaperStyle,ink:List<InkStroke>,objects:List<PageObject>,authoring:PageAuthoring,bounds:CanvasBounds){
+@Composable private fun OriginalDocumentSlice(pageId:String,paper:PaperStyle,ink:List<InkStroke>,objects:List<PageObject>,authoring:PageAuthoring,bounds:CanvasBounds,inkSource:InkRenderSource?){
     BoxWithConstraints(Modifier.fillMaxWidth()){
         AndroidView(factory={InkCanvasView(it).apply{embeddedPage=true;configure(false,paper,null)}},update={view->
             view.embeddedPage=true;view.allowInput=false;view.fixedRegion(bounds);view.showAuthoring(authoring)
-            view.showDocument(pageId);view.showStrokes(ink);view.showObjects(objects)
+            view.showDocument(pageId);view.showInkSource(inkSource,false);view.showStrokes(ink);view.showObjects(objects)
         },modifier=Modifier.fillMaxWidth().height((maxWidth.value*(bounds.bottom-bounds.top)/1000).coerceAtLeast(1.0).dp))
     }
 }

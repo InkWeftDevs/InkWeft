@@ -60,28 +60,20 @@ class PageEditingRepository(private val db:NoteDatabase,private val fault:(PageE
                 }
                 PageEditKind.RESTORE->{ordered.add(c.targetIndex(ordered),source.id);selected=source.id}
                 PageEditKind.COPY->{
-                    val snapshot=InkRepository(db).read(source.id)
-                    val visible=InkSession(snapshot).visibleDraft()
                     resultId=checkNotNull(c.newPageId)
                     val at=c.targetIndex(ordered)
                     db.pages().insert(NotebookPageRow(resultId,c.notebookId,at,false,source.paper,
                         source.centerX,source.centerY,source.zoom,createdAfterId=ordered.getOrNull(at-1)))
                     DocumentRepository(db).attach(resultId,DocumentRepository(db).read(source.id))
-                    val strokeIds=visible.associate{it.id to UUID.randomUUID().toString()}
-                    val cuts=mutableMapOf<String,String>()
-                    db.ink().insertPage(InkPageRow(resultId,visible.size.toLong()))
-                    visible.forEachIndexed{i,s->
-                        val masks=s.cuts.map{cut->InkCut(cuts.getOrPut(cut.id){UUID.randomUUID().toString()},cut.radius,cut.points,cut.shape)}
-                        val copied=InkStroke(checkNotNull(strokeIds[s.id]),s.pen,s.color,s.width,s.tool,s.samples,s.world,masks,s.appearance)
-                        db.ink().insertStroke(InkStrokeRow(copied.id,resultId,InkStrokeCodec.encode(copied),copied.samples.size,true,i+1L))
-                    }
+                    val snapshot=InkRepository(db).copyVisibleTo(source.id,resultId);check(snapshot.sourceRevision==head)
+                    val strokeIds=snapshot.strokeIds
                     db.pages().search(source.id)?.takeIf{it.inkRevision==head&&it.method=="MANUAL"}?.let{
-                        db.pages().putSearch(PageSearchRow(resultId,visible.size.toLong(),it.text))
+                        db.pages().putSearch(PageSearchRow(resultId,strokeIds.size.toLong(),it.text))
                     }
                     val copiedObjects=PageObjectRepository(db).read(source.id).objects.let{objects->PageObjectRepository(db).import(resultId,objects,strokeIds,ImageSourceRepository(db).forPage(source.id,objects))}
                     val authoring=PageAuthoringRepository(db).readPage(source.id).state.copied(resultId,strokeIds,copiedObjects)
                     PageAuthoringRepository(db).validate(AuthoringScope.page(c.notebookId,resultId),authoring)
-                    db.authoring().put(PageAuthoringRow(AuthoringScopeKind.PAGE.name,resultId,c.notebookId,0,PageAuthoringCodec.encode(authoring)))
+                    PageAuthoringRepository(db).storePage(resultId,c.notebookId,0,authoring)
                     ordered.add(at,resultId);selected=resultId
                 }
             }

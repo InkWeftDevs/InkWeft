@@ -39,31 +39,48 @@ class PageAuthoring(val layers:UserLayers=UserLayers(),blanks:List<DocumentWhite
     companion object { const val MAX_ANNOTATIONS=512;const val MAX_POINTS=60_000 }
 }
 
-/** Bounded, closed payload; old page files remain valid with an empty/default state. */
+/** Complete author state for transfer/undo, with input-length bounds on unbounded ownership lists. */
 object PageAuthoringCodec {
-    const val MAX_BYTES=1_900_000 // Below the existing archive field ceiling; reject before author writes.
+    const val LEGACY_MAX_BYTES=1_900_000 // Historical encoding selection only, not a page capacity limit.
+    const val MAX_HEADER_BYTES=1_900_000 // Layer configuration, whitespace and bounded annotations only.
     const val LAYER_HEADER_BYTES=8192 // 32 UUIDs, 60-character modified-UTF names and current UUID fit below 8 KiB.
+    private const val HEADER_MAGIC=0x49574831
+    private const val COMPACT_HEADER_MAGIC=0x49574832
+    fun isHeader(bytes:ByteArray)=bytes.size>=4&&java.nio.ByteBuffer.wrap(bytes).int in listOf(HEADER_MAGIC,COMPACT_HEADER_MAGIC)
+    /** Ink/object ownership lives in separate database rows; annotation ownership stays with its bytes. */
+    fun encodeHeader(state:PageAuthoring):ByteArray {
+        val layers=state.layers
+        val header=state.withLayers(UserLayers(layers.layers,layers.currentId,
+            layers.memberships.filter{it.content.kind==LayerContentKind.ANNOTATION},layers.deleted.filter{it.kind==LayerContentKind.ANNOTATION}))
+        return encode(header).also{val data=java.nio.ByteBuffer.wrap(it);data.putInt(0,if(data.getInt(0)==0x49574134)COMPACT_HEADER_MAGIC else HEADER_MAGIC)}
+    }
+    fun decodeHeader(bytes:ByteArray):PageAuthoring {
+        require(isHeader(bytes)&&bytes.size<=MAX_HEADER_BYTES)
+        val state=decodeBytes(bytes,true)
+        require(state.layers.memberships.all{it.content.kind==LayerContentKind.ANNOTATION}&&state.layers.deleted.all{it.kind==LayerContentKind.ANNOTATION})
+        return state
+    }
     /** Permission projection of an already validated stored row. It does not validate or replace its contents. */
     fun layerHeader(prefix:ByteArray):UserLayers=DataInputStream(ByteArrayInputStream(prefix)).use{d->
-        require(d.readInt() in listOf(0x49574131,0x49574132,0x49574133,0x49574134)){"Unsupported authoring state; retain original bytes"}
+        require(d.readInt() in listOf(0x49574131,0x49574132,0x49574133,0x49574134,HEADER_MAGIC,COMPACT_HEADER_MAGIC)){"Unsupported authoring state; retain original bytes"}
         val count=d.readInt();require(count in 1..UserLayers.MAX_LAYERS)
         val layers=List(count){UserLayer(d.readUTF(),d.readUTF(),d.readBoolean(),d.readBoolean())}
         UserLayers(layers,if(d.readBoolean())d.readUTF()else null)
     }
     fun encode(state:PageAuthoring):ByteArray {
         // Existing-size configurations retain their exact IWA3 representation.
-        // Larger stacks use IWA4 compact identities within the same byte ceiling.
+        // Larger stacks use IWA4 compact identities without a whole-page byte ceiling.
         val compact=state.layers.memberships.size>UserLayers.LEGACY_MAX_CONTENT||state.layers.deleted.size>UserLayers.LEGACY_MAX_CONTENT
         if(compact)return encode(state,true)
-        return try{encode(state,false)}catch(e:IllegalArgumentException){
+        val ordinary=try{encode(state,false)}catch(e:IllegalArgumentException){
             if(e.message!="ANNOTATION_CAPACITY")throw e
-            // A large stack can move from memberships to deleted identities.
-            // Keep it readable even when neither list alone exceeds 22,000.
-            encode(state,true)
+            return encode(state,true)
         }
+        return if(ordinary.size<=LEGACY_MAX_BYTES)ordinary else encode(state,true)
     }
     private fun encode(state:PageAuthoring,compact:Boolean):ByteArray {
         val buffer=ByteArrayOutputStream()
+        var externalOwnershipBytes=0L
         DataOutputStream(buffer).use{d->
             d.writeInt(if(compact)0x49574134 else 0x49574133)
             d.writeInt(state.layers.layers.size)
@@ -76,28 +93,46 @@ object PageAuthoringCodec {
                 if(canonical){d.writeLong(uuid.mostSignificantBits);d.writeLong(uuid.leastSignificantBits)}else d.writeUTF(id)
             }
             fun content(c:LayerContent){d.writeByte(c.kind.ordinal);identity(c.id)}
-            d.writeInt(state.layers.memberships.size);state.layers.memberships.sortedWith(compareBy<LayerMembership>{it.content.kind.ordinal}.thenBy{it.content.id}).forEach{content(it.content);identity(it.layerId)}
-            d.writeInt(state.layers.deleted.size);state.layers.deleted.sortedWith(compareBy<LayerContent>{it.kind.ordinal}.thenBy{it.id}).forEach(::content)
+            d.writeInt(state.layers.memberships.size);state.layers.memberships.sortedWith(compareBy<LayerMembership>{it.content.kind.ordinal}.thenBy{it.content.id}).forEach{
+                val start=buffer.size();content(it.content);identity(it.layerId)
+                if(it.content.kind!=LayerContentKind.ANNOTATION)externalOwnershipBytes+=buffer.size()-start
+            }
+            d.writeInt(state.layers.deleted.size);state.layers.deleted.sortedWith(compareBy<LayerContent>{it.kind.ordinal}.thenBy{it.id}).forEach{
+                val start=buffer.size();content(it);if(it.kind!=LayerContentKind.ANNOTATION)externalOwnershipBytes+=buffer.size()-start
+            }
             d.writeInt(state.blanks.size);state.blanks.forEach{d.writeUTF(it.id);d.writeDouble(it.beforeY);d.writeDouble(it.height);d.writeBoolean(it.collapsed)}
             d.writeInt(state.annotations.size);state.annotations.forEach{a->
                 d.writeByte(a.target.kind.ordinal);d.writeUTF(a.target.id);d.writeDouble(a.referenceWidth);d.writeDouble(a.localFrame.x);d.writeDouble(a.localFrame.y);d.writeDouble(a.localFrame.scale)
-                val bytes=InkStrokeCodec.encode(a.stroke);require(buffer.size().toLong()+bytes.size+4<=MAX_BYTES){"ANNOTATION_CAPACITY"};d.writeInt(bytes.size);d.write(bytes)
+                val bytes=InkStrokeCodec.encode(a.stroke);require(buffer.size().toLong()-externalOwnershipBytes+bytes.size+4<=MAX_HEADER_BYTES){"ANNOTATION_CAPACITY"};d.writeInt(bytes.size);d.write(bytes)
             }
             d.writeInt(state.regions.size);state.regions.forEach{r->d.writeByte(r.target.kind.ordinal);d.writeUTF(r.target.id);d.writeDouble(r.width);d.writeDouble(r.height);d.writeBoolean(r.collapsed);d.writeDouble(r.referenceWidth)}
         }
-        return buffer.toByteArray().also{require(it.size<=MAX_BYTES){"ANNOTATION_CAPACITY"}}
+        return buffer.toByteArray().also{require(it.size-externalOwnershipBytes<=MAX_HEADER_BYTES){"ANNOTATION_CAPACITY"}}
     }
-    fun decode(bytes:ByteArray):PageAuthoring {
-        require(bytes.size in 8..MAX_BYTES)
+    fun decode(bytes:ByteArray):PageAuthoring=decodeBytes(bytes,false)
+    private fun decodeBytes(bytes:ByteArray,header:Boolean):PageAuthoring {
+        require(bytes.size>=8)
         return DataInputStream(ByteArrayInputStream(bytes)).use{d->
-            val version=d.readInt();require(version in listOf(0x49574131,0x49574132,0x49574133,0x49574134)){"Unsupported authoring state; retain original bytes"}
+            val marker=d.readInt();val version=when{header&&marker==HEADER_MAGIC->0x49574133;header&&marker==COMPACT_HEADER_MAGIC->0x49574134;else->marker}
+            require(version in listOf(0x49574131,0x49574132,0x49574133,0x49574134)){"Unsupported authoring state; retain original bytes"}
             fun count(max:Int,min:Int=0)=d.readInt().also{require(it in min..max)}
             fun identity()=if(version<0x49574134||!d.readBoolean())d.readUTF()else UUID(d.readLong(),d.readLong()).toString()
             fun content()=LayerContent(LayerContentKind.entries.getOrNull(d.readUnsignedByte())?:error("Unknown layer content"),identity())
             val layers=List(count(UserLayers.MAX_LAYERS,1)){UserLayer(d.readUTF(),d.readUTF(),d.readBoolean(),d.readBoolean())}
             val current=if(d.readBoolean())d.readUTF()else null
-            val membership=List(count(UserLayers.MAX_CONTENT)){LayerMembership(content(),identity())}
-            val deleted=List(count(UserLayers.MAX_CONTENT)){content()}
+            // Even noncanonical UUID spellings need at least 9 characters. Validate
+            // counts against bytes still present before allocating collection storage.
+            var externalOwnershipBytes=0L
+            val membership=List(count((d.available()-4).coerceAtLeast(0)/(if(version>=0x49574134)25 else 23))){
+                val start=d.available();val value=LayerMembership(content(),identity())
+                if(value.content.kind!=LayerContentKind.ANNOTATION)externalOwnershipBytes+=start-d.available()
+                value
+            }
+            val deleted=List(count((d.available()-4).coerceAtLeast(0)/(if(version>=0x49574134)13 else 12))){
+                val start=d.available();val value=content();if(value.kind!=LayerContentKind.ANNOTATION)externalOwnershipBytes+=start-d.available()
+                value
+            }
+            require(bytes.size.toLong()-externalOwnershipBytes<=MAX_HEADER_BYTES){"ANNOTATION_CAPACITY"}
             val blanks=List(count(DocumentWhitespaceLayout.MAX_BLANKS)){DocumentWhitespace(d.readUTF(),d.readDouble(),d.readDouble(),d.readBoolean())}
             var points=0
             val annotations=List(count(PageAuthoring.MAX_ANNOTATIONS)){

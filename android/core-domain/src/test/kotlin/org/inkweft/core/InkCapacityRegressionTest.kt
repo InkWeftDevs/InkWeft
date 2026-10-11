@@ -14,18 +14,18 @@ class InkCapacityRegressionTest {
         val added=stroke();session.enqueue(InkMutation.Add(added));commit(session)
         assertEquals(842,session.visibleDraft().size);assertEquals(rows.map{it.stroke},session.page.strokes.take(1000).map{it.stroke})
     }
-    @Test fun movingAtTheVisibleLimitDoesNotChargeTheSameInkTwiceAndUndoRestoresIt(){
-        val rows=List(InkLimits.MAX_STROKES){StoredInk(stroke(),true,1)};val session=page(rows)
+    @Test fun movingTwentyThousandStrokesPreservesTheirSourcesAndUndo(){
+        val rows=List(20_000){StoredInk(stroke(),true,1)};val session=page(rows)
         val original=rows.take(4).map{it.stroke};val moved=InkSelectionEdit.copy(original,20f,0f)
         session.enqueue(InkMutation.Replace(original.map{it.id},moved,original.map{it.id}));commit(session)
-        assertEquals(InkLimits.MAX_STROKES,session.visibleDraft().size)
+        assertEquals(20_000,session.visibleDraft().size)
         assertTrue(moved.all{m->session.visibleDraft().any{it.id==m.id}})
         session.requestUndo();commit(session)
         assertEquals(rows.map{it.stroke.id}.toSet(),session.visibleDraft().map{it.id}.toSet())
     }
-    @Test fun wholeEraseFreesWritingCapacityWhileKeepingUndoAndOriginalSamples(){
-        val rows=List(InkLimits.MAX_STROKES){StoredInk(stroke(),true,1)};val session=page(rows)
-        assertFalse(session.canStart)
+    @Test fun wholeErasePreservesUndoAndOriginalSamplesBeyondTheFormerLimit(){
+        val rows=List(20_000){StoredInk(stroke(),true,1)};val session=page(rows)
+        assertTrue(session.canStart)
         session.enqueue(InkMutation.Visibility(listOf(rows.first().stroke.id),false));commit(session)
         assertTrue("Hidden undo history must not consume the live writing quota",session.canStart)
         assertSame(rows.first().stroke,session.page.strokes.first().stroke)

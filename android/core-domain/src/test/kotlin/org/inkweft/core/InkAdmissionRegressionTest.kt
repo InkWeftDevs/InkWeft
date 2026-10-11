@@ -15,30 +15,30 @@ class InkAdmissionRegressionTest {
     }
     private fun commit(s:InkSession){val c=checkNotNull(s.nextCommand());s.complete(c,InkCommitResult.Committed(c.expectedRevision+1))}
 
-    @Test fun pendingReplacementAndAdditionUseTheCurrentDraftPointBudget(){
-        val originals=rows(InkLimits.MAX_PAGE_POINTS-100)
+    @Test fun replacementAndAdditionCrossTheFormerMillionPointLimit(){
+        val originals=rows(1_000_000-100)
         val s=InkSession(InkPage(id(),1,originals));val old=originals.first().stroke
         val shortened=stroke(InkLimits.MAX_POINTS-192)
         s.enqueue(InkMutation.Replace(listOf(old.id),listOf(shortened)))
         val first=checkNotNull(s.nextCommand())
         val extra=stroke(292)
         s.enqueue(InkMutation.Add(extra),finishInFlight=true)
-        assertEquals(InkLimits.MAX_PAGE_POINTS,s.visibleDraft().sumOf{it.samples.size})
-        assertThrows(IllegalArgumentException::class.java){s.enqueue(InkMutation.Add(stroke(1)),finishInFlight=true)}
-        s.complete(first,InkCommitResult.Committed(2));commit(s)
-        assertEquals(InkLimits.MAX_PAGE_POINTS,s.visibleDraft().sumOf{it.samples.size})
+        assertEquals(1_000_000,s.visibleDraft().sumOf{it.samples.size})
+        s.enqueue(InkMutation.Add(stroke(1)),finishInFlight=true)
+        s.complete(first,InkCommitResult.Committed(2));commit(s);commit(s)
+        assertEquals(1_000_001,s.visibleDraft().sumOf{it.samples.size})
         assertArrayEquals(InkStrokeCodec.encode(old),InkStrokeCodec.encode(s.page.strokes.first().stroke))
         assertFalse(s.page.strokes.first().visible)
     }
 
     @Test fun pendingEraseFreesLiveCountButDoesNotDiscardOriginalRows(){
-        val originals=List(InkLimits.MAX_STROKES){StoredInk(stroke(1),true,1)}
+        val originals=List(20_000){StoredInk(stroke(1),true,1)}
         val s=InkSession(InkPage(id(),1,originals));val original=originals.first().stroke
         s.enqueue(InkMutation.Visibility(listOf(original.id),false));val erase=checkNotNull(s.nextCommand())
         val added=stroke(1);s.enqueue(InkMutation.Add(added),finishInFlight=true)
-        assertEquals(InkLimits.MAX_STROKES,s.visibleDraft().size)
+        assertEquals(20_000,s.visibleDraft().size)
         s.complete(erase,InkCommitResult.Committed(2));commit(s)
-        assertEquals(InkLimits.MAX_STROKES+1,s.page.strokes.size)
+        assertEquals(20_001,s.page.strokes.size)
         assertSame(original,s.page.strokes.first().stroke)
         assertThrows(IllegalArgumentException::class.java){s.enqueue(InkMutation.Add(original),finishInFlight=true)}
     }
@@ -57,12 +57,12 @@ class InkAdmissionRegressionTest {
         assertThrows(IllegalArgumentException::class.java){s.enqueue(InkMutation.Replace(listOf(original.id),listOf(stroke())))}
     }
 
-    @Test fun hiddenHistoryStillChargesTheRetainedPointBudget(){
-        val originals=rows(InkLimits.MAX_RETAINED_POINTS,visible=false)
+    @Test fun hiddenHistoryBeyondTheFormerRetainedLimitDoesNotBlockWriting(){
+        val originals=rows(2_000_001,visible=false)
         val s=InkSession(InkPage(id(),1,originals))
-        assertTrue(s.visibleDraft().isEmpty());assertFalse(s.canStart)
-        assertThrows(IllegalArgumentException::class.java){s.enqueue(InkMutation.Add(stroke(1)),finishInFlight=true)}
-        assertThrows(IllegalArgumentException::class.java){s.enqueue(InkMutation.Replace(emptyList(),listOf(stroke(1))))}
-        assertEquals(0,s.queued);assertEquals(originals,s.page.strokes)
+        assertTrue(s.visibleDraft().isEmpty());assertTrue(s.canStart)
+        s.enqueue(InkMutation.Add(stroke(1)));commit(s)
+        assertEquals(originals,s.page.strokes.take(originals.size))
+        assertEquals(1,s.visibleDraft().size)
     }
 }

@@ -55,7 +55,7 @@ internal object InkBrushes {
     private val families=object:LinkedHashMap<Pair<InkPen,StrokeAppearance>,BrushFamily>(64,.75f,true){override fun removeEldestEntry(eldest:MutableMap.MutableEntry<Pair<InkPen,StrokeAppearance>,BrushFamily>?)=size>64}
     fun brush(pen:InkPen,color:Int,width:Float,hasPressure:Boolean,appearance:StrokeAppearance=StrokeAppearance()):Brush {
         val family=when {
-            appearance.recipe.version==1&&(pen==InkPen.PEN||pen==InkPen.PENCIL||pen==InkPen.BALLPOINT)->synchronized(families){
+            appearance.recipe.version>=1&&(pen==InkPen.PEN||pen==InkPen.PENCIL||pen==InkPen.BALLPOINT)->synchronized(families){
                 val familyAppearance=if(pen==InkPen.PENCIL)appearance else StrokeAppearance(appearance.recipe)
                 families.getOrPut(pen to familyAppearance){modern(pen,familyAppearance)}
             }
@@ -68,8 +68,8 @@ internal object InkBrushes {
     }
     fun add(batch:MutableStrokeInputBatch,sample:InkSample,tool:InkTool,pen:InkPen,appearance:StrokeAppearance=StrokeAppearance()){
         val input=when(tool){InkTool.STYLUS->InputToolType.STYLUS;InkTool.MOUSE->InputToolType.MOUSE;InkTool.TOUCH->InputToolType.TOUCH}
-        val p=if(appearance.recipe.version==1)when(pen){
-            InkPen.PEN->(if(sample.pressure<0).65f else sample.pressure).pow(appearance.recipe.pressureExponent)
+        val p=if(appearance.recipe.version>=1)when(pen){
+            InkPen.PEN->appearance.recipe.penPressure(sample.pressure)
             InkPen.PENCIL->sqrt(if(sample.pressure<0).5f else sample.pressure)
             else->PenKinds.renderPressure(pen,sample.pressure)
         }else PenKinds.renderPressure(pen,sample.pressure)

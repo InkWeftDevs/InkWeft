@@ -36,8 +36,8 @@ internal class InkGroupCheckpoints(private val root:File,private val fault:(Stri
         }
         val f=file(value.stroke.id);val out=ByteArrayOutputStream();DataOutputStream(out).use{d->
             d.writeInt(if(value.layerScopes.isEmpty())0x49474732 else 0x49474733);d.writeUTF(value.book);d.writeUTF(value.state);d.writeInt(value.origin);d.writeInt(value.pages.size)
-            value.pages.forEach(d::writeUTF);value.revisions.forEach(d::writeLong);value.layerScopes.forEach{scope->d.writeBoolean(scope!=null);scope?.let{d.writeUTF(it.layerId);d.writeLong(it.configurationRevision)}};val ink=InkStrokeCodec.encode(value.stroke);require(ink.size<=2_000_000);d.writeInt(ink.size);d.write(ink)
-            d.writeBoolean(value.finished!=null);value.finished?.let{val bytes=InkStrokeCodec.encode(it);require(bytes.size<=2_000_000);d.writeInt(bytes.size);d.write(bytes)}
+            value.pages.forEach(d::writeUTF);value.revisions.forEach(d::writeLong);value.layerScopes.forEach{scope->d.writeBoolean(scope!=null);scope?.let{d.writeUTF(it.layerId);d.writeLong(it.configurationRevision)}};val ink=InkStrokeCodec.encodeStored(value.stroke);require(ink.size<=2_000_000);d.writeInt(ink.size);d.write(ink)
+            d.writeBoolean(value.finished!=null);value.finished?.let{val bytes=InkStrokeCodec.encodeStored(it);require(bytes.size<=2_000_000);d.writeInt(bytes.size);d.write(bytes)}
         }
         fault("before-write");val stream=f.startWrite();try{stream.write(out.toByteArray());fault("before-commit");f.finishWrite(stream)}catch(t:Throwable){f.failWrite(stream);throw t};fault("after-commit");return true
     }

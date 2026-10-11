@@ -61,4 +61,31 @@ class PageObjectTest {
         assertThrows(IllegalArgumentException::class.java){item.copy(imageSource="not-a-hash")}
     }
 
+    @Test fun objectRecordsSeparatePreviewBytesAndPreserveTheStandaloneTransferFormat(){
+        val preview=ByteArray(100_000){7}.also{it[0]=0xff.toByte();it[1]=0xd8.toByte()}
+        val item=PageObject(UUID.randomUUID().toString(),PageObjectKind.IMAGE,image=java.util.Base64.getEncoder().encodeToString(preview))
+        val record=PageObjectCodec.encodeRecord(item)
+        assertTrue(record.size<500)
+        assertEquals(item,PageObjectCodec.decodeRecord(record,item.image))
+        preview[10]=42
+        val changed=item.copy(image=java.util.Base64.getEncoder().encodeToString(preview))
+        assertArrayEquals(record,PageObjectCodec.encodeRecord(changed))
+        assertEquals(changed,PageObjectCodec.decodeRecord(record,changed.image))
+        val transfer=PageObjectCodec.encode(listOf(item))
+        assertEquals(0x49574f39,java.nio.ByteBuffer.wrap(transfer).int)
+        assertEquals(listOf(item),PageObjectCodec.decode(transfer))
+        assertThrows(IllegalArgumentException::class.java){PageObjectCodec.decode(record)}
+        assertThrows(IllegalArgumentException::class.java){PageObjectCodec.decodeRecord(transfer,item.image)}
+        assertThrows(IllegalArgumentException::class.java){PageObjectCodec.decodeRecord(record,null)}
+        assertThrows(IllegalArgumentException::class.java){PageObjectCodec.decodeRecord(record+byteArrayOf(0),item.image)}
+    }
+
+    @Test fun textRecordKeepsOwnershipAndFormattingWithoutAcceptingAnExternalImage(){
+        val source=UUID.randomUUID().toString()
+        val item=text().copy(sourceStrokeIds=listOf(source),font=TextFont.WENKAI,bold=true,hidden=true)
+        val bytes=PageObjectCodec.encodeRecord(item)
+        assertEquals(item,PageObjectCodec.decodeRecord(bytes,null))
+        assertThrows(IllegalArgumentException::class.java){PageObjectCodec.decodeRecord(bytes,"unexpected")}
+    }
+
 }

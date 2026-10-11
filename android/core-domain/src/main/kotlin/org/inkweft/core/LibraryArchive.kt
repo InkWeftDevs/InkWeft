@@ -12,7 +12,6 @@ import java.security.*
 object LibraryArchive {
     const val MAX_BYTES = 8_589_934_592L
     const val LEGACY_MAX_BYTES = 1_073_741_824L
-    const val MAX_ROWS = 500_000L
     const val MAX_FIELD = 2_000_000
     private const val MAGIC = 0x49574C42 // IWLB
     data class Column(val name:String,val kind:Char,val nullable:Boolean=false)
@@ -49,15 +48,20 @@ object LibraryArchive {
             require(t.columns.map{it.name}.distinct().size==t.columns.size)
             require(t.columns.all{it.kind in "IFSB"&&it.name.matches(Regex("[A-Za-z_]+"))})}
     }
+    private fun minimumRowBytes(table:Table)=table.columns.sumOf{column->
+        if(column.nullable)1L else when(column.kind){'I','F'->9L;else->5L}
+    }
     fun write(output:OutputStream,schema:List<Table>,source:Rows,createdAt:Long,
               version:Int=2,checkActive:()->Unit={}):Summary {
         validateSchema(schema);require(createdAt>=0&&version in 1..2)
         val counter=CountOut(output,if(version==1)LEGACY_MAX_BYTES else MAX_BYTES);val hash=MessageDigest.getInstance("SHA-256")
         val hashed=DigestOutputStream(counter,hash);val d=DataOutputStream(hashed)
         d.writeInt(MAGIC);d.writeInt(version);d.writeLong(createdAt);d.write(signature(schema));d.writeInt(schema.size)
-        val counts=mutableListOf<Long>();var total=0L
+        val counts=mutableListOf<Long>()
         schema.forEachIndexed{index,t->
-            checkActive();val n=source.count(index);require(n>=0&&n<=MAX_ROWS-total){"BACKUP_ROW_LIMIT"};total+=n;counts+=n
+            checkActive();val n=source.count(index)
+            val remaining=counter.limit-counter.count-32L-(schema.size-index)*8L
+            require(remaining>=0&&n>=0&&n<=remaining/minimumRowBytes(t)){"BACKUP_ROW_LIMIT"};counts+=n
             d.writeLong(n);var seen=0L
             source.visit(index){row->
                 checkActive();require(++seen<=n&&row.size==t.columns.size){"BACKUP_ROW_MISMATCH"}
@@ -95,10 +99,13 @@ object LibraryArchive {
             else->throw IllegalArgumentException("BACKUP_SCHEMA_UNSUPPORTED")
         }
         require(d.readInt()==actualSchema.size){"BACKUP_SCHEMA_UNSUPPORTED"}
-        var total=0L;val counts=mutableListOf<Long>()
+        val counts=mutableListOf<Long>()
         actualSchema.forEachIndexed{index,t->
-            checkActive();val n=d.readLong();require(n>=0&&n<=MAX_ROWS-total){"BACKUP_ROW_LIMIT"};total+=n;counts+=n
-            repeat(n.toInt()){
+            checkActive();val n=d.readLong()
+            val remaining=counter.limit-counter.count-32L-(actualSchema.size-index-1)*8L
+            require(remaining>=0&&n>=0&&n<=remaining/minimumRowBytes(t)){"BACKUP_ROW_LIMIT"};counts+=n
+            var left=n
+            while(left>0){
                 checkActive();val row=t.columns.map{c->
                     when(val present=d.readUnsignedByte()){
                         0->{require(c.nullable);null}
@@ -113,7 +120,7 @@ object LibraryArchive {
                         }
                         else->throw IllegalArgumentException("BACKUP_NULL_FLAG_$present")
                     }
-                };onRow(index,row)
+                };onRow(index,row);left--
             }
         }
         checkActive();val expected=hash.digest();hashed.on(false);val actual=ByteArray(32);d.readFully(actual)

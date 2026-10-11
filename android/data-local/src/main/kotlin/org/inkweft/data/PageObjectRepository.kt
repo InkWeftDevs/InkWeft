@@ -2,32 +2,24 @@
 package org.inkweft.data
 
 import androidx.room.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.flowOn
 import org.inkweft.core.*
 import java.security.MessageDigest
 import java.util.UUID
 
-@Entity(tableName="page_objects",foreignKeys=[ForeignKey(entity=NotebookPageRow::class,parentColumns=["id"],childColumns=["pageId"],onDelete=ForeignKey.NO_ACTION)])
-data class PageObjectRow(@PrimaryKey val pageId:String,val revision:Long,val payload:ByteArray)
-@Entity(tableName="object_receipts",indices=[Index("pageId")],foreignKeys=[ForeignKey(entity=NotebookPageRow::class,parentColumns=["id"],childColumns=["pageId"],onDelete=ForeignKey.NO_ACTION)])
-data class ObjectReceiptRow(@PrimaryKey val commandId:String,val pageId:String,val digest:String,val revision:Long)
-@Dao interface PageObjectDao {
-    @Query("SELECT * FROM page_objects WHERE pageId=:id") suspend fun get(id:String):PageObjectRow?
-    @Query("SELECT * FROM page_objects WHERE pageId=:id") fun observe(id:String):Flow<PageObjectRow?>
-    @Query("SELECT revision FROM page_objects WHERE pageId=:id") fun observeRevision(id:String):Flow<Long?>
-    @Query("SELECT * FROM object_receipts WHERE commandId=:id") suspend fun receipt(id:String):ObjectReceiptRow?
-    @Insert(onConflict=OnConflictStrategy.REPLACE) suspend fun put(row:PageObjectRow)
-    @Insert(onConflict=OnConflictStrategy.ABORT) suspend fun record(row:ObjectReceiptRow)
-}
 data class ObjectSnapshot(val revision:Long=0,val objects:List<PageObject> = emptyList())
 
 /** Page-scoped CAS and durable replay receipts, including writes whose outcome was unknown. */
 class PageObjectRepository(private val db:NoteDatabase,private val afterCommit:()->Unit={}) {
+    private val previews=db.validatedImagePreviews
     suspend fun read(id:String):ObjectSnapshot {
         require(db.pages().get(id)!=null)
-        return db.objects().get(id)?.let{require(it.revision>0);ObjectSnapshot(it.revision,PageObjectCodec.decode(it.payload))}?:ObjectSnapshot()
+        return PageObjectStore(db).read(id)
     }
     suspend fun originals(id:String,objects:List<PageObject>)=ImageSourceRepository(db).forPage(id,objects)
     suspend fun originalFile(source:ImageSource)=ImageSourceRepository(db).openFile(source)
@@ -36,27 +28,30 @@ class PageObjectRepository(private val db:NoteDatabase,private val afterCommit:(
         val page=db.pages().get(pageId)?:return null
         return db.images().source(page.notebookId,hash)?.byteCount?.also{require(it in 1..ImageSource.MAX_BYTES)}
     }
-    fun observe(id:String)=db.objects().observe(id)
-    fun observePreview(id:String)=db.objects().observeRevision(id).distinctUntilChanged().map{read(id).objects}
+    fun observe(id:String)=db.objects().observeRevision(id).distinctUntilChanged().map{read(id)}.flowOn(Dispatchers.IO)
+    fun observePreview(id:String)=observe(id).map{it.objects}
     suspend fun save(pageId:String,expected:Long,command:String,objects:List<PageObject>,expectedInk:Long?=null,originals:List<ImageSource> = emptyList(),layerScope:LayerWriteScope?=null):Long {
         UUID.fromString(command);require(expected>=0)
-        val bytes=PageObjectCodec.encode(objects)
+        val bytes=PageObjectCodec.encode(objects.toList())
+        val content=PageObjectCodec.decode(bytes)
+        val prepared=PageObjectStore.prepare(pageId,content)
         val digest=MessageDigest.getInstance("SHA-256").digest((pageId+":"+expected+":"+expectedInk+":"+(layerScope?.let{"layers-v1:${it.layerId}:${it.configurationRevision}:"}?:"")).toByteArray()+bytes).joinToString(""){"%02x".format(it.toInt()and 255)}
+        if(content.any{it.kind==PageObjectKind.IMAGE})withContext(Dispatchers.Default){previews.validate(content){validateImages(listOf(it))}}
         val next=db.withTransaction {
             db.objects().receipt(command)?.let{require(it.pageId==pageId&&it.digest==digest){"OBJECT_COMMAND_REUSED"};return@withTransaction it.revision}
             val owner=checkNotNull(db.pages().get(pageId))
             require(owner.trashedAt==null&&db.workspace().get(owner.notebookId)?.trashedAt==null)
             require((db.objects().get(pageId)?.revision?:0)==expected){"OBJECT_CONFLICT"}
             if(expectedInk!=null)require((db.ink().page(pageId)?.revision?:0)==expectedInk){"INK_CONFLICT"}
-            val authoring=PageAuthoringRepository(db).acceptObjects(pageId,objects,layerScope)
-            MapEmbedRepository(db).validateReferences(owner.notebookId,objects)
+            val authoring=PageAuthoringRepository(db).acceptObjects(pageId,content,layerScope,prepared.records)
+            MapEmbedRepository(db).validateReferences(owner.notebookId,content)
             val images=ImageSourceRepository(db)
-            require(originals.all{source->objects.any{it.imageSource==source.sha256}})
-            images.attach(owner.notebookId,originals);images.validateReferences(owner.notebookId,objects)
-            validateSources(pageId,objects)
-            validateBounds(objects,owner.world);validateImages(objects)
+            require(originals.all{source->content.any{it.imageSource==source.sha256}})
+            images.attach(owner.notebookId,originals);images.validateReferences(owner.notebookId,content)
+            validateSources(pageId,content)
+            validateBounds(content,owner.world)
             db.pages().invalidateSearch(pageId)
-            db.objects().put(PageObjectRow(pageId,expected+1,bytes))
+            PageObjectStore(db).write(pageId,expected+1,prepared)
             authoring?.let{db.authoring().put(it)}
             db.objects().record(ObjectReceiptRow(command,pageId,digest,expected+1))
             db.notes().touch(owner.notebookId,System.currentTimeMillis());expected+1
@@ -65,19 +60,20 @@ class PageObjectRepository(private val db:NoteDatabase,private val afterCommit:(
     }
     private suspend fun validateSources(pageId:String,objects:List<PageObject>){
         val refs=objects.flatMap{it.sourceStrokeIds};require(refs.distinct().size==refs.size)
-        if(refs.isNotEmpty()){val owned=db.ink().strokes(pageId).map{it.id}.toSet();require(refs.all{it in owned})}
+        if(refs.isNotEmpty()){val owned=db.ink().strokeIds(pageId).toSet();require(refs.all{it in owned})}
     }
-    internal suspend fun import(pageId:String,objects:List<PageObject>,strokeIds:Map<String,String> = emptyMap(),originals:List<ImageSource> = emptyList()):Map<String,String> {
+    internal suspend fun import(pageId:String,objects:List<PageObject>,strokeIds:Map<String,String> = emptyMap(),originals:List<ImageSource> = emptyList(),validated:ValidatedImportOriginals?=null):Map<String,String> {
         if(objects.isEmpty())return emptyMap()
         require(db.objects().get(pageId)==null)
         val page=checkNotNull(db.pages().get(pageId))
-        ImageSourceRepository(db).attach(page.notebookId,originals)
+        ImageSourceRepository(db).attach(page.notebookId,originals,validated)
         ImageSourceRepository(db).validateReferences(page.notebookId,objects)
-        validateBounds(objects,page.world);validateImages(objects)
+        validateBounds(objects,page.world);previews.validate(objects){validateImages(listOf(it))}
         val mapped=objects.map{it.copy(id=UUID.randomUUID().toString(),sourceStrokeIds=it.sourceStrokeIds.mapNotNull(strokeIds::get),textRuns=it.textRuns.map{r->r.copy(sourceIds=r.sourceIds.mapNotNull(strokeIds::get))})}
         MapEmbedRepository(db).validateReferences(checkNotNull(db.pages().get(pageId)).notebookId,mapped)
         validateSources(pageId,mapped)
-        db.objects().put(PageObjectRow(pageId,1,PageObjectCodec.encode(mapped)))
+        PageObjectCodec.encode(mapped)
+        PageObjectStore(db).write(pageId,1,PageObjectStore.prepare(pageId,mapped))
         return objects.zip(mapped).associate{it.first.id to it.second.id}
     }
     companion object {

@@ -33,10 +33,33 @@ class InkRepositoryTest {
     @Test fun strokePersistsAcrossActualDatabaseReopen()=runBlocking {
         val s=stroke();val command=CommitInk(id(),note.id,0,InkMutation.Add(s))
         assertEquals(InkCommitResult.Committed(1),InkRepository(db).save(command))
+        assertEquals(InkStrokeCodec.encode(s).size-s.samples.size*4,db.ink().stroke(s.id)!!.payload.size)
         db.close();db=NoteDatabase.open(context,name)
         val page=InkRepository(db).read(note.id);assertEquals(1,page.revision)
         assertEquals(s.samples,page.strokes.single().stroke.samples)
         assertEquals("原文字",NoteRepository(db).read(note.id)?.text)
+    }
+    @Test fun mixedStoredFormatsReopenAndReplayWithUnchangedCanonicalReceipts()=runBlocking {
+        val old=stroke();val newer=stroke()
+        val first=CommitInk(id(),note.id,0,InkMutation.Add(old))
+        val second=CommitInk(id(),note.id,1,InkMutation.Add(newer))
+        val repo=InkRepository(db)
+        assertEquals(InkCommitResult.Committed(1),repo.save(first))
+        // Keep a prior-format row alongside new compact writes in this disposable database.
+        db.openHelper.writableDatabase.execSQL("UPDATE ink_strokes SET payload=? WHERE id=?",arrayOf(InkStrokeCodec.encode(old),old.id))
+        assertEquals(InkCommitResult.Committed(2),repo.save(second))
+        val compact=db.ink().stroke(newer.id)!!.payload
+        assertEquals(InkStrokeCodec.encode(newer).size-newer.samples.size*4,compact.size)
+        assertEquals(first.digest(),db.ink().receipt(first.commandId)!!.digest)
+        db.close();db=NoteDatabase.open(context,name)
+        val reopened=InkRepository(db)
+        val strokes=reopened.read(note.id).strokes.associateBy{it.stroke.id}
+        assertArrayEquals(InkStrokeCodec.encode(old),InkStrokeCodec.encode(strokes.getValue(old.id).stroke))
+        assertArrayEquals(InkStrokeCodec.encode(newer),InkStrokeCodec.encode(strokes.getValue(newer.id).stroke))
+        assertEquals(InkCommitResult.Committed(1),reopened.save(first))
+        assertEquals(InkCommitResult.Committed(2),reopened.save(second))
+        assertEquals(2,reopened.read(note.id).strokes.size)
+        assertArrayEquals(compact,db.ink().stroke(newer.id)!!.payload)
     }
     @Test fun sameCommandReplaysAndDifferentPayloadRejected()=runBlocking {
         val repo=InkRepository(db);val c=CommitInk(id(),note.id,0,InkMutation.Add(stroke()))

@@ -49,14 +49,14 @@ class DocumentRepository(private val db:NoteDatabase) {
     suspend fun openFile(source:PdfDocumentSource):OriginalFileCache.Lease=
         db.originalFiles.acquire(source.size,source.sha256){out,active->source.copyTo(out,active)}
     fun trimFiles()=db.originalFiles.trim()
-    internal suspend fun attach(pageId:String,source:PdfPageSource?) {
+    internal suspend fun attach(pageId:String,source:PdfPageSource?,validated:ValidatedImportOriginals?=null) {
         if(source==null)return
         val page=checkNotNull(db.pages().get(pageId));require(!page.world&&db.documents().page(pageId)==null)
         val doc=source.document
         val stored=db.documents().matching(page.notebookId,doc.sha256)?:run {
             val context=currentCoroutineContext()
             require(checkNotNull(db.documentScratch).usableSpace>=doc.size.toLong()*2+32L*1024*1024){"ORIGINAL_LOW_SPACE"}
-            validatePdf(doc,checkNotNull(db.documentScratch)){context.ensureActive()}
+            if(validated?.contains(doc)!=true)validatePdf(doc,checkNotNull(db.documentScratch)){context.ensureActive()}
             val id=UUID.randomUUID().toString();val row=DocumentSourceRow(id,page.notebookId,doc.sha256,doc.pages,doc.size)
             db.documents().insertSource(row)
             storeOriginal(doc.size,doc.sha256,CHUNK,doc::openStream){index,bytes->db.documents().insertChunk(DocumentChunkRow(id,index,bytes))};row

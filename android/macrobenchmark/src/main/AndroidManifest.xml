@@ -1,0 +1,4 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <uses-permission android:name="org.inkweft.app.a0.macrobenchmark.permission.BENCHMARK_FIXTURE" />
+    <queries><package android:name="org.inkweft.app.a0.macrobenchmark" /></queries>
+</manifest>

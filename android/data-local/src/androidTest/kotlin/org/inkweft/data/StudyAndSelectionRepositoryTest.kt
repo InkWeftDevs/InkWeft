@@ -139,6 +139,7 @@ class StudyAndSelectionRepositoryTest {
         assertEquals(InkCommitResult.Committed(2),ink.save(CommitInk(id(),page,1,InkMutation.Cut(EraseSelection(cut,listOf(s.id))))))
         val other=WorkspaceRepository(db).create("无目标的编辑页",false,PaperStyle.BLANK).id
         val before=ink.read(page);val sourceNote=db.notes().note(page);val targetNote=db.notes().note(other)
+        val sourcePayload=db.ink().stroke(s.id)!!.payload.copyOf()
         val layers=PageAuthoringCodec.fingerprint(PageAuthoringRepository(db).readPage(page).state)
         val changes=listOf(s.id,id()).flatMap{target->listOf(
             InkMutation.Replace(listOf(target),InkSelectionEdit.copy(listOf(s),0f,0f)),
@@ -151,7 +152,7 @@ class StudyAndSelectionRepositoryTest {
             assertEquals(InkCommitResult.Conflict,ink.save(command));assertNull(db.ink().receipt(command.commandId))
         }
         assertEquals(before.revision,ink.read(page).revision)
-        assertArrayEquals(InkStrokeCodec.encode(s),db.ink().stroke(s.id)!!.payload);assertTrue(db.ink().stroke(s.id)!!.visible)
+        assertArrayEquals(sourcePayload,db.ink().stroke(s.id)!!.payload);assertTrue(db.ink().stroke(s.id)!!.visible)
         assertArrayEquals(InkCutCodec.encode(cut),db.ink().cut(cut.id)!!.payload);assertTrue(db.ink().cut(cut.id)!!.visible)
         assertNull(db.ink().page(other));assertTrue(db.ink().strokes(other).isEmpty());assertTrue(db.ink().cuts(other).isEmpty())
         assertNull(db.authoring().get(AuthoringScopeKind.PAGE.name,other))
@@ -245,6 +246,6 @@ class StudyAndSelectionRepositoryTest {
             sql.execSQL("INSERT INTO notebook_workspace VALUES(?,0,1,'数学','复习',1,NULL,500,707,0,0,'auto',?,1)",arrayOf(book,book))
             sql.execSQL("INSERT INTO notebook_pages VALUES(?,?,0,0,1,500,707,0,NULL,NULL)",arrayOf(book,book));sql.execSQL("INSERT INTO ink_pages VALUES(?,1)",arrayOf(book));sql.execSQL("INSERT INTO ink_strokes VALUES(?,?,?,?,1,1)",arrayOf(s.id,book,bytes,3));sql.version=7
         }finally{sql.close()}
-        val db=NoteDatabase.open(context,name);try{assertEquals("原文",db.notes().note(book)!!.text);assertArrayEquals(bytes,db.ink().stroke(s.id)!!.payload);assertEquals(book,db.pages().list(book).single().id);assertTrue(db.workspace().get(book)!!.pinned);assertEquals(16,db.openHelper.writableDatabase.version);val c=create(book);StudyRepository(db).submit(c);assertNotNull(db.study().card(c.cardId!!))}finally{db.close();context.deleteDatabase(name)}
+        val db=NoteDatabase.open(context,name);try{assertEquals("原文",db.notes().note(book)!!.text);assertArrayEquals(bytes,db.ink().stroke(s.id)!!.payload);assertEquals(book,db.pages().list(book).single().id);assertTrue(db.workspace().get(book)!!.pinned);assertEquals(18,db.openHelper.writableDatabase.version);val c=create(book);StudyRepository(db).submit(c);assertNotNull(db.study().card(c.cardId!!))}finally{db.close();context.deleteDatabase(name)}
     }
 }

@@ -60,6 +60,7 @@ internal class PencilTileRenderer(private val unit:Float=.5f,private val live:Bo
     @Synchronized fun draw(canvas:Canvas,stroke:InkStroke) {
         val source=InkSampling.forRendering(stroke.renderSamples())
         val clip=canvas.clipBounds;val bounds=stroke.bounds();val a=stroke.appearance;val r=a.recipe
+        val baseRadius=stroke.width*.5f;val densityScale=r.hardnessFactor*r.density;val colorAlpha=(stroke.color ushr 24)/255f
         val left=max(bounds.left.toFloat()-UNIT,clip.left.toFloat());val right=min(bounds.right.toFloat()+UNIT,clip.right.toFloat())
         val top=max(bounds.top.toFloat()-UNIT,clip.top.toFloat());val bottom=min(bounds.bottom.toFloat()+UNIT,clip.bottom.toFloat())
         if(left>=right||top>=bottom)return
@@ -106,13 +107,15 @@ internal class PencilTileRenderer(private val unit:Float=.5f,private val live:Bo
                 dirtyLeft=min(dirtyLeft,sx);dirtyRight=max(dirtyRight,ex);dirtyTop=min(dirtyTop,sy);dirtyBottom=max(dirtyBottom,ey)
                 val fixedPressure=if(p.pressure<0||p.pressure==q.pressure)sqrt(if(p.pressure<0).5f else p.pressure)else null
                 val fixedTilt=if(p.tilt<0||!r.tiltShading)1f else if(p.tilt==q.tilt)1+3*((p.tilt-(PI/6).toFloat())/(PI/6).toFloat()).coerceIn(0f,1f)else null
+                val fixedRadius=if(fixedPressure!=null&&fixedTilt!=null)baseRadius*(.85f+.15f*fixedPressure)*fixedTilt else null
+                val fixedDensity=fixedPressure?.let{(densityScale*(.18f+.55f*it)).coerceIn(0f,1f)}
                 for(y in sy..ey)for(x in sx..ex){val px=ox+(x+.5f)*UNIT;val py=oy+(y+.5f)*UNIT
                     val t=if(length==0f)0f else ((px-p.x)*dx+(py-p.y)*dy).div(length).coerceIn(0f,1f)
                     val pEffective=fixedPressure?:sqrt(p.pressure+(q.pressure-p.pressure)*t)
                     val tiltEffective=fixedTilt?: (1+3*((p.tilt+(q.tilt-p.tilt)*t-(PI/6).toFloat())/(PI/6).toFloat()).coerceIn(0f,1f))
-                    val radius=stroke.width*.5f*(.85f+.15f*pEffective)*tiltEffective
+                    val radius=fixedRadius?:baseRadius*(.85f+.15f*pEffective)*tiltEffective
                     val coverage=((radius-hypot(px-p.x-t*dx,py-p.y-t*dy))/UNIT+.5f).coerceIn(0f,1f)
-                    val density=(r.hardnessFactor*r.density*(.18f+.55f*pEffective)).coerceIn(0f,1f)
+                    val density=fixedDensity?:(densityScale*(.18f+.55f*pEffective)).coerceIn(0f,1f)
                     val index=y*SIDE+x;tile.coverage[index]=max(tile.coverage[index],coverage*density)
                 }
             }
@@ -123,7 +126,7 @@ internal class PencilTileRenderer(private val unit:Float=.5f,private val live:Bo
                 val x=tx*SIDE+index%SIDE;val y=ty*SIDE+index/SIDE
                 val gx=(floor(x*UNIT/.5f/r.grain).toInt()+(a.grainSeed and 63).toInt()) and 63
                 val gy=(floor(y*UNIT/.5f/r.grain).toInt()+((a.grainSeed ushr 6) and 63).toInt()) and 63
-                val alpha=(tile.coverage[index]*(grain[gy*64+gx].toInt() and 255)*((stroke.color ushr 24)/255f)).roundToInt().coerceIn(0,255)
+                val alpha=(tile.coverage[index]*(grain[gy*64+gx].toInt() and 255)*colorAlpha).roundToInt().coerceIn(0,255)
                 pixels[index]=(alpha shl 24) or(stroke.color and 0xffffff)
             };tile.bitmap.setPixels(pixels,dirtyTop*SIDE+dirtyLeft,SIDE,dirtyLeft,dirtyTop,dirtyRight-dirtyLeft+1,dirtyBottom-dirtyTop+1)}
             destination.set(ox,oy,ox+TILE,oy+TILE);canvas.drawBitmap(tile.bitmap,null,destination,paint)

@@ -377,7 +377,7 @@ class RecallStudyRepositoryTest {
         }
         val db=NoteDatabase.open(context,name)
         try{
-            assertEquals(16,db.openHelper.readableDatabase.version);assertEquals("旧正文",db.study().card(card)!!.body)
+            assertEquals(18,db.openHelper.readableDatabase.version);assertEquals("旧正文",db.study().card(card)!!.body)
             assertEquals(WorkspaceRow(book,paper=0),db.workspace().get(book))
             assertArrayEquals(questionBytes,db.knowledge().get(question)!!.payload);assertArrayEquals(annotationBytes,db.knowledge().get(presentation)!!.payload)
             db.openHelper.readableDatabase.query("SELECT payload FROM ink_strokes WHERE id=?",arrayOf(stroke.id)).use{cursor->assertTrue(cursor.moveToFirst());assertArrayEquals(ink,cursor.getBlob(0))}

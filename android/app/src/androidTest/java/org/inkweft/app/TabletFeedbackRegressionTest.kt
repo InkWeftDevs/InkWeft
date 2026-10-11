@@ -29,14 +29,14 @@ class TabletFeedbackRegressionTest {
   val name="capacity-${id()}.db";var db=NoteDatabase.open(context,name)
   try{
    var repo=InkRepository(db)
-   val originals=List(InkLimits.MAX_STROKES){line(30f+(it%15)*50,30f+(it%20)*55)}
+   val originals=List(20_000){line(30f+(it%15)*50,30f+(it%20)*55)}
    val note=repo.importCopy(InkPageFile("容量回归","",originals))
    var page=repo.read(note.id);val before=page.strokes.associate{it.stroke.id to InkStrokeCodec.encode(it.stroke)}
    val moving=page.strokes.take(4).map{it.stroke};val moved=InkSelectionEdit.copy(moving,10f,10f)
    suspend fun save(change:InkMutation){assertEquals(InkCommitResult.Committed(page.revision+1),repo.save(CommitInk(id(),note.id,page.revision,change)));page=repo.read(note.id)}
    save(InkMutation.Replace(moving.map{it.id},moved,moving.map{it.id}))
-   assertEquals(InkLimits.MAX_STROKES+4,page.strokes.size)
-   assertEquals(InkLimits.MAX_STROKES,page.strokes.count{it.visible})
+   assertEquals(20_000+4,page.strokes.size)
+   assertEquals(20_000,page.strokes.count{it.visible})
    val erased=page.strokes.filter{it.visible}.take(1001).map{it.stroke.id}
    save(InkMutation.Visibility(erased,false)) // More than SQLite's conservative bind limit.
    val fresh=line();save(InkMutation.Add(fresh));assertTrue(InkSession(page).canStart)
@@ -46,7 +46,7 @@ class TabletFeedbackRegressionTest {
    assertEquals(before.keys,page.strokes.filter{it.visible}.map{it.stroke.id}.toSet())
    page.strokes.filter{it.stroke.id in before}.forEach{assertArrayEquals(before[it.stroke.id],InkStrokeCodec.encode(it.stroke))}
    val exported=InkPageFile.decode(InkPageFile("容量回归","",InkSession(page).visibleDraft()).encode())
-   assertEquals(InkLimits.MAX_STROKES,exported.strokes.size)
+   assertEquals(20_000,exported.strokes.size)
    val restoredName="capacity-restored-${id()}.db";val restored=NoteDatabase.open(context,restoredName)
    try{
     LibraryBackupRepository(context,db).snapshot().use{snapshot->

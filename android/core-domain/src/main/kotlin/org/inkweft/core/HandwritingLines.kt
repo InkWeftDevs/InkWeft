@@ -9,7 +9,7 @@ data class HandwritingLine(val strokes:List<InkStroke>,val bounds:CanvasBounds)
 object HandwritingLines {
     fun split(strokes:List<InkStroke>):List<HandwritingLine> {
         val writing=strokes.filter{it.pen!=InkPen.HIGHLIGHTER}
-        require(writing.size<=InkLimits.MAX_STROKES)
+        require(writing.size<=InkLimits.MAX_MUTATION_STROKES)
         if(writing.isEmpty())return emptyList()
         val bounds=writing.associateWith{it.bounds()}
         fun box(s:InkStroke)=checkNotNull(bounds[s])

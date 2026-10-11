@@ -38,14 +38,15 @@ class SearchIndexFreshnessTest {
         assertFalse(pages.hasCurrentSearchText(id()))
     }}
 
-    @Test fun checkingIndexNeverDecodesPayloadWhileFullAuthoringReadStillValidates(){fixture{db,page->
+    @Test fun checkingIndexNeverDecodesPayloadWhileFullObjectReadStillValidates(){fixture{db,page->
         val pages=NotebookPages(db)
         assertTrue(pages.saveSearchText(page,0,"已校对的独立索引",0))
         // Deliberately poison only a disposable test DB, bypassing application
         // writes. Freshness uses headers; opening/exporting still validates data.
-        db.objects().put(PageObjectRow(page,1,byteArrayOf(0)))
+        db.objects().put(PageObjectRow(page,1))
+        db.objects().putRecord(PageObjectRecordRow(page,id(),0,byteArrayOf(0),null))
         assertTrue(pages.hasCurrentSearchText(page))
-        assertTrue(runCatching{PageAuthoringRepository(db).readPage(page)}.isFailure)
+        assertTrue(runCatching{PageObjectRepository(db).read(page)}.isFailure)
         db.openHelper.writableDatabase.execSQL("INSERT OR REPLACE INTO ink_pages(noteId,revision) VALUES (?,1)",arrayOf(page))
         assertFalse(pages.hasCurrentSearchText(page))
         db.pages().invalidateSearch(page);assertFalse(pages.hasCurrentSearchText(page))

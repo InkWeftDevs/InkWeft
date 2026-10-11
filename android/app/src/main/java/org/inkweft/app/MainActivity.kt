@@ -5,12 +5,20 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.SystemBarStyle
+import androidx.compose.foundation.layout.Box
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTagsAsResourceId
 import org.inkweft.core.DiagnosticCode
 class MainActivity:ComponentActivity(){
     override fun onCreate(savedInstanceState:Bundle?){super.onCreate(savedInstanceState)
         val bars=SystemBarStyle.light(android.graphics.Color.TRANSPARENT,android.graphics.Color.TRANSPARENT)
         enableEdgeToEdge(statusBarStyle=bars,navigationBarStyle=bars)
-        acceptRegion(intent);setContent{LibraryBackupHost{WorkspaceApp()}}}
+        acceptRegion(intent);setContent{
+            Box(Modifier.semantics { testTagsAsResourceId = BuildConfig.BUILD_TYPE == "performance" }) {
+                LibraryBackupHost{WorkspaceApp()}
+            }
+        }}
     override fun onNewIntent(intent:android.content.Intent){super.onNewIntent(intent);setIntent(intent);acceptRegion(intent)}
     private fun acceptRegion(intent:android.content.Intent?){
         val uri=intent?.data?:return

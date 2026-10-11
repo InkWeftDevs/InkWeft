@@ -285,7 +285,7 @@ internal data class ContinuousTools(val pen:InkPen,val color:Int,val width:Float
             Column(Modifier.fillMaxWidth()){
 
                 Box(Modifier.fillMaxWidth().aspectRatio(1000f/1414f).background(Color.White).testTag("continuous-page-${page.position+1}").pointerInput(page.id,tools.enabled,tools.erasing,tools.fingerWrites){detectTapGestures{point->if(tools.enabled&&!tools.erasing&&!tools.fingerWrites)views[page.id]?.imageAt(point.x,point.y)?.let{id->val o=objectModel.ui.value.objects.find{it.id==id};if(o?.kind==PageObjectKind.TAPE)objectModel.put(o.copy(revealed=!o.revealed))else onObjectTap(page.id,id)}}}){
-                    AndroidView(factory={ctx->InkCanvasView(ctx).apply{embeddedPage=true;seamWriting=true;tag="ink-page-${page.id}"}},update={v->
+                    AndroidView(onReset=null,onRelease={v:InkCanvasView->if(views[page.id]===v)views.remove(page.id);LeakTracking.watchReleased(v,"Continuous-page canvas released")},factory={ctx->InkCanvasView(ctx).apply{embeddedPage=true;seamWriting=true;tag="ink-page-${page.id}"}},update={v->
                         v.configure(false,PaperStyle.entries[page.paper],null)
                         v.fingerWrites=tools.fingerWrites
                         views[page.id]=v
@@ -322,11 +322,11 @@ internal data class ContinuousTools(val pen:InkPen,val color:Int,val width:Float
                                 if(shifted.maxOf{it.y}+radius<0||shifted.minOf{it.y}-radius>1414f)null
                                 else PageEraseTarget(checkNotNull(models[target.id]),checkNotNull(objectModels[target.id]),shifted)
                             }
-                            writer.erase(targets,radius,whole,only,app.inkRepository,tools.onlyTape)
+                            if(tools.onlyTape||targets.all{it.ink.requireCompleteWindow()})writer.erase(targets,radius,whole,only,app.inkRepository,tools.onlyTape)
                         }
                         v.onGesture={active->if(active){recovery.begin(pages.map{it.id},page.id,pages.map{runCatching{layerScope(it.id)}.getOrNull()});gestureOwner=page.id;reported=page.id;latestSelect(page.id)}else if(gestureOwner==page.id)gestureOwner=null;onGesture(active)}
                         v.onAxes=app.diagnostics::inputAxes;v.onNotice=onNotice
-                        v.showAuthoring(authorState(page.id));v.showDocument(page.id);v.showStrokes(ui.strokes+drafts[model].orEmpty());v.showObjects(beautyPreviewObjects(objectUi.objects,beautyReview))
+                        v.showAuthoring(authorState(page.id));v.showDocument(page.id);v.onVisibleBounds=model::updateViewport;v.showInkSource(model.renderSource(),ui.windowLoading||ui.loading);v.showStrokes(ui.strokes+drafts[model].orEmpty());v.showObjects(beautyPreviewObjects(objectUi.objects,beautyReview))
                     },modifier=Modifier.fillMaxSize().testTag("continuous-ink-${page.position+1}"))
                     DisposableEffect(page.id){onDispose{views.remove(page.id)}}
                     if(ui.loading)CircularProgressIndicator(Modifier.align(Alignment.Center))

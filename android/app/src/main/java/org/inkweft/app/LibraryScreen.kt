@@ -259,7 +259,7 @@ private fun NoteTile(note:Note,row:WorkspaceRow,inkRevision:Long,count:Int,grid:
     val pagePreview by produceState<Pair<NotebookPageRow,List<InkStroke>>?>(null,note.id,inkRevision,style,row.revision){
         value=if(style!=NotebookCover.CONTENT)null else try{withContext(Dispatchers.IO){
             val first=app.pages.activePages(note.id).firstOrNull()
-            first?.let{it to InkSession(app.inkRepository.read(it.id)).visibleDraft()}
+            first?.let{it to app.inkRepository.readVisible(it.id)}
         }}catch(c:CancellationException){throw c}catch(_:Exception){null}
     }
     val customCover by produceState<CustomCover?>(null,note.id,row.revision,style){
@@ -268,7 +268,7 @@ private fun NoteTile(note:Note,row:WorkspaceRow,inkRevision:Long,count:Int,grid:
     val previewObjects by produceState<List<PageObject>>(emptyList(),pagePreview?.first?.id,style){
         val id=pagePreview?.first?.id
         if(style==NotebookCover.CONTENT&&id!=null)try{
-            app.pageObjects.observe(id).collect{row->value=withContext(Dispatchers.IO){row?.let{PageObjectCodec.decode(it.payload)}?:emptyList()}}
+            app.pageObjects.observePreview(id).collect{value=it}
         }catch(c:CancellationException){throw c}catch(_:Exception){value=emptyList()}
     }
     val strokes=pagePreview?.second

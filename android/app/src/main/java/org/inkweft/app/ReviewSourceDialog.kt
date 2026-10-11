@@ -17,7 +17,7 @@ import kotlinx.coroutines.*
 import org.inkweft.core.*
 import org.inkweft.data.*
 
-private data class ReviewPage(val title:String,val page:NotebookPageRow,val ink:InkPage,val objects:List<PageObject>,val authoring:PageAuthoring)
+private data class ReviewPage(val title:String,val page:NotebookPageRow,val ink:VisibleInkSnapshot,val objects:List<PageObject>,val authoring:PageAuthoring)
 
 /** Explicit diagnostic opt-in only; normal debug and release sessions stay silent. */
 @Volatile internal var studyReadPhaseEnabled=false
@@ -55,7 +55,7 @@ internal fun traceStudyRead(phase:String,job:Job?){
                     if(recallNotebookId==null)items else items.filter{it.mapEmbed?.target?.notebookId?.let{book->book==recallNotebookId}!=false}
                 }
                 traceStudyRead("source.objects.done",job)
-                val ink=(session?.ink?:app.inkRepository).read(page.id)
+                val ink=(session?.ink?:app.inkRepository).readVisibleSnapshot(page.id)
                 traceStudyRead("source.ink.done",job)
                 val authoring=(session?.authoring?:app.authoring).readPage(page.id).state
                 traceStudyRead("source.authoring.done",job)
@@ -84,7 +84,7 @@ internal fun traceStudyRead(phase:String,job:Job?){
                 Text("${result.title} · 第 ${result.page.position+1} 页",Modifier.padding(horizontal=16.dp))
                 if(result.ink.revision!=source.inkRevision)Text("来源已变化，以下显示当前原页；卡片摘录时的快照仍单独保留。",Modifier.padding(16.dp))
                 AndroidView(factory={InkCanvasView(it).also{v->v.authorSession=session;view=v;v.allowInput=false;v.fingerWrites=false}},update={v->
-                    v.configure(result.page.world,PaperStyle.entries[result.page.paper],null);v.allowInput=false;v.showAuthoring(result.authoring);v.showDocument(result.page.id);v.showObjects(result.objects);v.showStrokes(InkSession(result.ink).visibleDraft())
+                    v.configure(result.page.world,PaperStyle.entries[result.page.paper],null);v.allowInput=false;v.showAuthoring(result.authoring);v.showDocument(result.page.id);v.showObjects(result.objects);v.showStrokes(result.ink.strokes)
                 },modifier=Modifier.fillMaxWidth().weight(1f).testTag("review-source-canvas"))
             }else if(failure!=null)Text(failure,Modifier.weight(1f).fillMaxWidth().verticalScroll(rememberScrollState()).padding(24.dp).testTag("review-source-unavailable"))
             else Box(Modifier.weight(1f)){CircularProgressIndicator(Modifier.padding(24.dp))}

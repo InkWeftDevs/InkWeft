@@ -24,7 +24,12 @@ class OriginalBytes private constructor(val size:Int,val sha256:String,private v
     }
     fun bytes(limit:Int):ByteArray {
         require(size<=limit){"CONTENT_SIZE_LIMIT_USE_FULL_BACKUP"}
-        return ByteArrayOutputStream(size).also{copyTo(it)}.toByteArray()
+        val result=ByteArray(size);var position=0
+        copyTo(object:OutputStream(){
+            override fun write(value:Int){result[position++]=value.toByte()}
+            override fun write(bytes:ByteArray,offset:Int,length:Int){bytes.copyInto(result,position,offset,offset+length);position+=length}
+        })
+        return result
     }
     companion object {
         private fun hex(b:ByteArray)=b.joinToString(""){"%02x".format(it.toInt() and 255)}

@@ -1,0 +1,63 @@
+{
+    "debug": {
+        "leakCanary": [
+
+        ],
+        "benchmark": [
+
+        ]
+    },
+    "tlsProbe": {
+        "leakCanary": [
+
+        ],
+        "benchmark": [
+
+        ]
+    },
+    "performance": {
+        "leakCanary": [
+
+        ],
+        "benchmark": [
+
+        ]
+    },
+    "release": {
+        "leakCanary": [
+
+        ],
+        "benchmark": [
+
+        ]
+    },
+    "leakCheck": {
+        "leakCanary": [
+            "com.squareup.leakcanary:leakcanary-android-core:2.14",
+            "com.squareup.leakcanary:leakcanary-android-utils:2.14",
+            "com.squareup.leakcanary:leakcanary-android:2.14",
+            "com.squareup.leakcanary:leakcanary-object-watcher-android-androidx:2.14",
+            "com.squareup.leakcanary:leakcanary-object-watcher-android-core:2.14",
+            "com.squareup.leakcanary:leakcanary-object-watcher-android-support-fragments:2.14",
+            "com.squareup.leakcanary:leakcanary-object-watcher-android:2.14",
+            "com.squareup.leakcanary:leakcanary-object-watcher:2.14",
+            "com.squareup.leakcanary:plumber-android-core:2.14",
+            "com.squareup.leakcanary:plumber-android:2.14",
+            "com.squareup.leakcanary:shark-android:2.14",
+            "com.squareup.leakcanary:shark-graph:2.14",
+            "com.squareup.leakcanary:shark-hprof:2.14",
+            "com.squareup.leakcanary:shark-log:2.14",
+            "com.squareup.leakcanary:shark:2.14"
+        ],
+        "benchmark": [
+
+        ]
+    },
+    "driver": {
+        "macrobenchmark": "1.5.0",
+        "uiAutomator": "2.4.0",
+        "leakCanary": [
+
+        ]
+    }
+}

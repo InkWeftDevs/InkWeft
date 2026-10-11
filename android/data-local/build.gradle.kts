@@ -26,6 +26,7 @@ dependencies {
     implementation(project(":core-domain"))
     implementation(libs.room.runtime)
     implementation(libs.room.ktx)
+    implementation(libs.sqlite.requery)
     ksp(libs.room.compiler)
     implementation(libs.kotlinx.coroutines)
     testImplementation(libs.junit)

@@ -20,6 +20,7 @@ class InkCheckpointTest {
             val stroke=InkStroke(id(),InkPen.PENCIL,0xff335577.toInt(),3f,InkTool.STYLUS,listOf(InkSample(100f,1400f,0,world=true),InkSample(150f,1450f,10,world=true)),world=true)
             val prefix=InkGroupPrefix(book,listOf(book,next),listOf(0,0),0,stroke)
             val journal=InkGroupCheckpoints(File(directory,"groups"));journal.save(prefix)
+            assertEquals(prefix.digest(),journal.read(stroke.id)!!.digest())
             for(cut in listOf("before-write","before-commit")){
                 try{InkGroupCheckpoints(File(directory,"groups")){if(it==cut)error("injected")}.cancel(stroke.id);fail("Fault ignored")}catch(_:IllegalStateException){}
                 assertEquals("OPEN",journal.read(stroke.id)!!.state)
@@ -46,6 +47,7 @@ class InkCheckpointTest {
             val page=WorkspaceRepository(db).create("合成长笔",false,PaperStyle.BLANK).id
             val stroke=id();val first=ink(stroke,128);val full=ink(stroke,256)
             val journal=InkCheckpoints(db.checkpointRoot!!);journal.save(page,128,first)
+            assertEquals((InkStrokeCodec.encode(first).size-first.samples.size*4).toLong(),File(db.checkpointRoot!!,"$page/$stroke.inkpart").length())
             for(cut in listOf("before-serialize","after-serialize","before-commit")){
                 try{InkCheckpoints(db.checkpointRoot!!){if(it==cut)error("injected")}.save(page,256,full);fail("fault ignored")}catch(_:IllegalStateException){}
                 assertArrayEquals(InkStrokeCodec.encode(first),InkStrokeCodec.encode(journal.read(page).single()))

@@ -83,12 +83,15 @@ object PageObjectCodec {
     const val MAX_BYTES=1_600_000
     const val MAX_OBJECTS=32
     const val MAX_RECORDS=288
-    fun encode(objects:List<PageObject>):ByteArray {
+    fun encode(objects:List<PageObject>):ByteArray=encode(objects,false)
+    /** Database record metadata. The preview is stored once by its content hash. */
+    fun encodeRecord(value:PageObject):ByteArray=encode(listOf(value),true)
+    private fun encode(objects:List<PageObject>,externalImages:Boolean):ByteArray {
         require(objects.count{!it.hidden}<=MAX_OBJECTS && objects.size<=MAX_RECORDS && objects.map{it.id}.distinct().size==objects.size)
         val buffer=ByteArrayOutputStream()
         DataOutputStream(buffer).use { out ->
-            val originals=objects.any{it.imageSource!=null}
-            out.writeInt(if(originals)0x49574f3a else 0x49574f39);out.writeInt(objects.size)
+            val originals=externalImages||objects.any{it.imageSource!=null}
+            out.writeInt(if(externalImages)0x49574f3b else if(originals)0x49574f3a else 0x49574f39);out.writeInt(objects.size)
             objects.forEach { o ->
                 out.writeUTF(o.id);out.writeByte(o.kind.ordinal)
                 listOf(o.x,o.y,o.width,o.height,o.fontSize).forEach(out::writeFloat)
@@ -108,7 +111,7 @@ object PageObjectCodec {
                 val image=if(o.image.isEmpty())byteArrayOf()else Base64.getDecoder().decode(o.image)
                 require(image.size<=MAX_IMAGE)
                 if(image.isNotEmpty())require(image.size>4&&image[0]==0xff.toByte()&&image[1]==0xd8.toByte())
-                out.writeInt(image.size);out.write(image)
+                out.writeInt(if(externalImages)0 else image.size);if(!externalImages)out.write(image)
                 val embed=o.mapEmbed?.let(MapEmbedCodec::encode);out.writeInt(embed?.size?:0);embed?.let(out::write)
                 out.writeInt(o.textRuns.size);o.textRuns.forEach{r->
                     out.writeUTF(r.id);out.writeUTF(r.lineId);out.writeInt(r.start);out.writeInt(r.end)
@@ -122,11 +125,14 @@ object PageObjectCodec {
         }
         return buffer.toByteArray()
     }
-    fun decode(bytes:ByteArray):List<PageObject> {
+    fun decode(bytes:ByteArray):List<PageObject> = decode(bytes,false,null)
+    fun decodeRecord(bytes:ByteArray,image:String?):PageObject=decode(bytes,true,image).single()
+    private fun decode(bytes:ByteArray,externalImages:Boolean,preview:String?):List<PageObject> {
         require(bytes.size in 8..MAX_BYTES)
         return DataInputStream(ByteArrayInputStream(bytes)).use { input ->
-            val version=input.readInt();require(version in listOf(0x49574f31,0x49574f32,0x49574f33,0x49574f34,0x49574f35,0x49574f36,0x49574f37,0x49574f38,0x49574f39,0x49574f3a))
+            val version=input.readInt();require(if(externalImages)version==0x49574f3b else version in 0x49574f31..0x49574f3a)
             val count=input.readInt();require(count in 0..MAX_RECORDS)
+            if(externalImages)require(count==1)
             val objects=List(count) {
                 val id=input.readUTF();val kind=PageObjectKind.entries.getOrNull(input.readUnsignedByte())?:error("Object kind")
                 val x=input.readFloat();val y=input.readFloat();val w=input.readFloat();val h=input.readFloat();val fontSize=input.readFloat()
@@ -148,6 +154,7 @@ object PageObjectCodec {
                 val tapePattern=if(version>=0x49574f36)TapePattern.entries.getOrNull(input.readUnsignedByte())?:error("Tape pattern")else TapePattern.STRIPES
                 val tapePoints=if(version>=0x49574f35){val n=input.readInt();require(n in 0..2048&&n.toLong()*8<=input.available());List(n){TapePoint(input.readFloat(),input.readFloat())}}else emptyList()
                 val size=input.readInt();require(size in 0..MAX_IMAGE && size<=input.available())
+                if(externalImages)require(size==0&&(kind==PageObjectKind.IMAGE)==(preview!=null))
                 val image=ByteArray(size);input.readFully(image)
                 val embed=if(version>=0x49574f38){val n=input.readInt();require(n in 0..MapEmbedCodec.MAX_BYTES&&n<=input.available());if(n==0)null else MapEmbedCodec.decode(ByteArray(n).also(input::readFully))}else null
                 val runs=if(version>=0x49574f39){val n=input.readInt();require(n in 0..4000);List(n){
@@ -158,7 +165,7 @@ object PageObjectCodec {
                     TextRun(rid,line,start,end,rx,baseline,size,List(count){input.readUTF()},revision,policy,model,score)
                 }}else emptyList()
                 val original=if(version>=0x49574f3a)input.readUTF().ifEmpty{null}else null
-                PageObject(id,kind,x,y,w,h,text,if(size==0)""else Base64.getEncoder().encodeToString(image),color,fontSize,revealed,font,spacing,bold,source,hidden,glyphs,erasures,tapePoints,lineWidth,shape,tapePattern,embed,runs,original)
+                PageObject(id,kind,x,y,w,h,text,if(externalImages)preview.orEmpty()else if(size==0)""else Base64.getEncoder().encodeToString(image),color,fontSize,revealed,font,spacing,bold,source,hidden,glyphs,erasures,tapePoints,lineWidth,shape,tapePattern,embed,runs,original)
             }
             require(input.available()==0);encode(objects);objects
         }

@@ -11,12 +11,8 @@ object InkLimits {
     const val WIDTH=1000f
     const val HEIGHT=1414f
     const val MAX_POINTS=8192
-    const val MAX_STROKES=20_000
-    const val MAX_PAGE_POINTS=1_000_000
-    // Live-page capacity and retained undo/source storage are different budgets.
-    const val MAX_RETAINED_STROKES=40_000
-    const val MAX_RETAINED_POINTS=2_000_000
-    const val MAX_RETAINED_CUTS=2048
+    // A single edit is bounded independently of the amount already saved on a page.
+    const val MAX_MUTATION_STROKES=20_000
     const val MAX_STROKE_BYTES=2_000_000
     const val MAX_CUTS=128
     const val MAX_CUT_POINTS=32_768
@@ -45,7 +41,7 @@ class InkCut(val id:String,val radius:Float,points:List<EraserPoint>,val shape:I
 }
 class EraseSelection(val cut:InkCut,strokeIds:List<String>) {
     val strokeIds:List<String> = Collections.unmodifiableList(strokeIds.sorted())
-    init {require(strokeIds.size in 1..InkLimits.MAX_STROKES&&strokeIds.distinct().size==strokeIds.size);strokeIds.forEach{UUID.fromString(it)}}
+    init {require(strokeIds.size in 1..InkLimits.MAX_MUTATION_STROKES&&strokeIds.distinct().size==strokeIds.size);strokeIds.forEach{UUID.fromString(it)}}
 }
 class InkStroke(val id:String,val pen:InkPen,val color:Int,val width:Float,val tool:InkTool,
     samples:List<InkSample>,val world:Boolean=false,cuts:List<InkCut> = emptyList(),val appearance:StrokeAppearance=if(pen==InkPen.PENCIL)StrokeAppearance(BrushRecipe())else StrokeAppearance()) {
@@ -62,7 +58,7 @@ class InkStroke(val id:String,val pen:InkPen,val color:Int,val width:Float,val t
         require(samples.size in 1..InkLimits.MAX_POINTS)
         require(cuts.size<=InkLimits.MAX_CUTS&&cuts.sumOf{it.points.size}<=InkLimits.MAX_CUT_POINTS&&cuts.map{it.id}.distinct().size==cuts.size)
         val first=samples.first()
-        require(pen!=InkPen.PENCIL||appearance.recipe.version==1)
+        require(pen!=InkPen.PENCIL||appearance.recipe.version>=1)
         listOfNotNull(appearance.leading,appearance.trailing).forEach{p->require(p.world);require((p.pressure>=0)==(first.pressure>=0)&&(p.tilt>=0)==(first.tilt>=0)&&(p.orientation>=0)==(first.orientation>=0))}
         require(appearance.leading==null||appearance.leading.elapsedMs<=first.elapsedMs)
         require(appearance.trailing==null||appearance.trailing.elapsedMs>=samples.last().elapsedMs)
@@ -87,25 +83,34 @@ object InkStrokeCodec {
     private const val MASKED=0x49575333
     private const val SHAPED=0x49575334
     private const val RECIPE=0x49575335
-    fun encode(stroke:InkStroke):ByteArray=ByteArrayOutputStream().also{b->DataOutputStream(b).use{out->
+    private const val COMPACT_OFFSET=5
+    /** Stable self-contained encoding also used by durable command digests. */
+    fun encode(stroke:InkStroke):ByteArray=encode(stroke,compact=false)
+    /** New database/checkpoint payloads store the bounded elapsed time losslessly as Int. */
+    fun encodeStored(stroke:InkStroke):ByteArray=encode(stroke,compact=true)
+    private fun encode(stroke:InkStroke,compact:Boolean):ByteArray=ByteArrayOutputStream().also{b->DataOutputStream(b).use{out->
         val recipe=stroke.appearance.recipe.version!=0||stroke.pen==InkPen.PENCIL
-        out.writeInt(if(recipe)RECIPE else if(stroke.cuts.any{it.shape!=InkCutShape.ROUND})SHAPED else if(stroke.cuts.isEmpty())if(stroke.world)WORLD else PAGE else MASKED)
+        val format=if(recipe)RECIPE else if(stroke.cuts.any{it.shape!=InkCutShape.ROUND})SHAPED else if(stroke.cuts.isEmpty())if(stroke.world)WORLD else PAGE else MASKED
+        out.writeInt(format+if(compact)COMPACT_OFFSET else 0)
         if(recipe||stroke.cuts.isNotEmpty())out.writeBoolean(stroke.world)
         out.writeUTF(stroke.id);out.writeByte(stroke.pen.wireId);out.writeInt(stroke.color);out.writeFloat(stroke.width)
         out.writeByte(stroke.tool.ordinal);out.writeInt(stroke.samples.size)
-        stroke.samples.forEach{p->out.writeFloat(p.x);out.writeFloat(p.y);out.writeLong(p.elapsedMs);out.writeFloat(p.pressure);out.writeFloat(p.tilt);out.writeFloat(p.orientation)}
+        stroke.samples.forEach{p->out.writeFloat(p.x);out.writeFloat(p.y);if(compact)out.writeInt(p.elapsedMs.toInt())else out.writeLong(p.elapsedMs);out.writeFloat(p.pressure);out.writeFloat(p.tilt);out.writeFloat(p.orientation)}
         if(recipe||stroke.cuts.isNotEmpty()){out.writeInt(stroke.cuts.size);stroke.cuts.forEach{InkCutCodec.write(out,it)}}
         if(recipe)stroke.appearance.write(out)
     }}.toByteArray()
     fun decode(bytes:ByteArray):InkStroke {
         require(bytes.size in 1..InkLimits.MAX_STROKE_BYTES)
         return DataInputStream(ByteArrayInputStream(bytes)).use{input->
-            val magic=input.readInt();require(magic in listOf(PAGE,WORLD,MASKED,SHAPED,RECIPE)){"Unsupported ink format; retain original bytes"}
+            val storedMagic=input.readInt()
+            val compact=storedMagic in (PAGE+COMPACT_OFFSET)..(RECIPE+COMPACT_OFFSET)
+            val magic=storedMagic-if(compact)COMPACT_OFFSET else 0
+            require(magic in PAGE..RECIPE){"Unsupported ink format; retain original bytes"}
             val world=if(magic==MASKED||magic==SHAPED||magic==RECIPE)input.readBoolean()else magic==WORLD
             val id=input.readUTF();val penId=input.readUnsignedByte();val pen=InkPen.entries.find{it.wireId==penId&&(magic==RECIPE||it!=InkPen.PENCIL)}?:error("Unknown pen")
             val color=input.readInt();val width=input.readFloat();val tool=InkTool.entries.getOrNull(input.readUnsignedByte())?:error("Unknown tool")
-            val count=input.readInt();require(count in 1..InkLimits.MAX_POINTS&&count.toLong()*28<=input.available())
-            val points=List(count){InkSample(input.readFloat(),input.readFloat(),input.readLong(),input.readFloat(),input.readFloat(),input.readFloat(),world)}
+            val count=input.readInt();require(count in 1..InkLimits.MAX_POINTS&&count.toLong()*(if(compact)24 else 28)<=input.available())
+            val points=List(count){InkSample(input.readFloat(),input.readFloat(),if(compact)input.readInt().toLong()else input.readLong(),input.readFloat(),input.readFloat(),input.readFloat(),world)}
             val cuts=if(magic==MASKED||magic==SHAPED||magic==RECIPE){val n=input.readInt();require(n in (if(magic==RECIPE)0 else 1)..InkLimits.MAX_CUTS);var total=0;List(n){InkCutCodec.read(input).also{total+=it.points.size;require(total<=InkLimits.MAX_CUT_POINTS)}}}else emptyList()
             val appearance=if(magic==RECIPE)StrokeAppearance.read(input)else StrokeAppearance()
             require(input.available()==0){"Trailing ink data"};InkStroke(id,pen,color,width,tool,points,world,cuts,appearance)
@@ -132,7 +137,7 @@ sealed interface InkMutation {
     class Add(val stroke:InkStroke):InkMutation
     class Visibility(ids:List<String>,val visible:Boolean):InkMutation {
         val ids:List<String> = Collections.unmodifiableList(ids.sorted())
-        init{require(ids.size in 1..InkLimits.MAX_STROKES&&ids.size==ids.toSet().size);ids.forEach{UUID.fromString(it)}}
+        init{require(ids.size in 1..InkLimits.MAX_MUTATION_STROKES&&ids.size==ids.toSet().size);ids.forEach{UUID.fromString(it)}}
     }
     class Cut(val selection:EraseSelection):InkMutation
     data class CutVisibility(val cutId:String,val visible:Boolean):InkMutation{init{UUID.fromString(cutId)}}
@@ -164,8 +169,22 @@ sealed interface InkCommitResult {
 }
 data class StoredInk(val stroke:InkStroke,val visible:Boolean,val createdRevision:Long)
 data class StoredCut(val selection:EraseSelection,val visible:Boolean,val createdRevision:Long)
+/** Retained storage that this editing snapshot does not need to render or undo. */
+class UnloadedInk(strokePoints:Map<String,Int> = emptyMap(),cutIds:Set<String> = emptySet()) {
+    val strokePoints:Map<String,Int> = Collections.unmodifiableMap(LinkedHashMap(strokePoints))
+    val cutIds:Set<String> = Collections.unmodifiableSet(LinkedHashSet(cutIds))
+    val pointCount=strokePoints.values.sumOf{it.toLong()}
+    init {
+        require(strokePoints.values.all{it in 1..InkLimits.MAX_POINTS})
+        strokePoints.keys.forEach{UUID.fromString(it)};cutIds.forEach{UUID.fromString(it)}
+    }
+}
 /** noteId is the legacy name for the stable page ID, not the displayed page number. */
-data class InkPage(val noteId:String,val revision:Long,val strokes:List<StoredInk>,val cuts:List<StoredCut> = emptyList())
+data class InkPage(val noteId:String,val revision:Long,val strokes:List<StoredInk>,val cuts:List<StoredCut> = emptyList(),val unloaded:UnloadedInk=UnloadedInk(),val windowComplete:Boolean=true) {
+    val retainedStrokeCount get()=strokes.size+unloaded.strokePoints.size
+    val retainedCutCount get()=cuts.size+unloaded.cutIds.size
+    init {require(strokes.none{it.stroke.id in unloaded.strokePoints}&&cuts.none{it.selection.cut.id in unloaded.cutIds})}
+}
 object InkHitTest {
     private fun distance(p:InkSample,a:InkSample,b:InkSample):Float {val dx=b.x-a.x;val dy=b.y-a.y;val length=dx*dx+dy*dy;val t=if(length==0f)0f else (((p.x-a.x)*dx+(p.y-a.y)*dy)/length).coerceIn(0f,1f);return hypot(p.x-a.x-t*dx,p.y-a.y-t*dy)}
     private fun cross(a:InkSample,b:InkSample,c:InkSample)=(b.x-a.x)*(c.y-a.y)-(b.y-a.y)*(c.x-a.x)

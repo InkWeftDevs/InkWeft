@@ -5,17 +5,26 @@ import java.io.*
 import java.security.MessageDigest
 import kotlin.math.*
 
-/** Author data, never a reference to the mutable pen box. Version 0 freezes v24. */
-data class BrushRecipe(val version:Int=1,val sensitivity:Float=.5f,val sharpness:Float=.35f,
+/** Author data, never a reference to the mutable pen box. Versions 0/1 retain their render policy. */
+data class BrushRecipe(val version:Int=CURRENT_VERSION,val sensitivity:Float=.5f,val sharpness:Float=.35f,
     val roundNib:Boolean=false,val hardness:Int=1,val density:Float=1f,val grain:Float=1f,val tiltShading:Boolean=true) {
-    init { require(version in 0..1);require(sensitivity.isFinite()&&sensitivity in 0f..1f);require(sharpness.isFinite()&&sharpness in 0f..1f)
+    init { require(version in 0..CURRENT_VERSION);require(sensitivity.isFinite()&&sensitivity in 0f..1f);require(sharpness.isFinite()&&sharpness in 0f..1f)
         require(hardness in 0..2);require(density.isFinite()&&density in .5f..1.3f);require(grain.isFinite()&&grain in .5f..2f) }
-    val minimumWidth get()=.65f-.5f*sensitivity
+    val minimumWidth get()=if(version>=2).025f else .65f-.5f*sensitivity
     val pressureExponent get()=1.2f-.6f*sensitivity
-    val hardnessFactor get()=listOf(.8f,1f,1.15f)[hardness]
+    val hardnessFactor get()=when(hardness){0->.8f;1->1f;else->1.15f}
+    /** v2 uses a width floor, rather than adding that floor to every pressure.
+     * Undo the renderer's affine mapping here; sensor samples remain untouched. */
+    fun penPressure(pressure:Float):Float {
+        val shaped=(if(pressure<0).65f else pressure).pow(pressureExponent)
+        return if(version<2)shaped else ((max(minimumWidth,shaped)-minimumWidth)/(1f-minimumWidth)).coerceIn(0f,1f)
+    }
+    /** Upgrade mutable tool presets only; decoded author strokes keep their version. */
+    fun currentPreset()=if(version==CURRENT_VERSION)this else copy(version=CURRENT_VERSION)
     fun write(out:DataOutputStream){out.writeInt(version);out.writeFloat(sensitivity);out.writeFloat(sharpness);out.writeBoolean(roundNib);out.writeInt(hardness);out.writeFloat(density);out.writeFloat(grain);out.writeBoolean(tiltShading)}
     fun encode():ByteArray=ByteArrayOutputStream().also{b->DataOutputStream(b).use(::write)}.toByteArray()
     companion object {
+        const val CURRENT_VERSION=2
         val LEGACY=BrushRecipe(version=0)
         fun read(input:DataInputStream)=BrushRecipe(input.readInt(),input.readFloat(),input.readFloat(),input.readBoolean(),input.readInt(),input.readFloat(),input.readFloat(),input.readBoolean())
         fun decode(bytes:ByteArray):BrushRecipe=DataInputStream(ByteArrayInputStream(bytes)).use{val r=read(it);require(it.available()==0);r}
@@ -29,12 +38,12 @@ data class StrokeAppearance(val recipe:BrushRecipe=BrushRecipe.LEGACY,val grainS
     init {require(originX.isFinite()&&originY.isFinite());require(abs(originX)<=BoardLimits.WORLD*2&&abs(originY)<=BoardLimits.WORLD*2)}
     fun translated(dx:Float,dy:Float)=copy(originX=originX+dx,originY=originY+dy,
         leading=leading?.copy(x=leading.x+dx,y=leading.y+dy,world=true),trailing=trailing?.copy(x=trailing.x+dx,y=trailing.y+dy,world=true))
-    fun write(out:DataOutputStream){recipe.write(out);out.writeLong(grainSeed);out.writeFloat(originX);out.writeFloat(originY);out.writeUTF(if(recipe.version==1)GraphiteMaterial.digest else "legacy-v24")
+    fun write(out:DataOutputStream){recipe.write(out);out.writeLong(grainSeed);out.writeFloat(originX);out.writeFloat(originY);out.writeUTF(if(recipe.version!=0)GraphiteMaterial.digest else "legacy-v24")
         listOf(leading,trailing).forEach{p->out.writeBoolean(p!=null);if(p!=null){out.writeFloat(p.x);out.writeFloat(p.y);out.writeLong(p.elapsedMs);out.writeFloat(p.pressure);out.writeFloat(p.tilt);out.writeFloat(p.orientation)}}}
     companion object {
         fun read(input:DataInputStream):StrokeAppearance {
             val value=StrokeAppearance(BrushRecipe.read(input),input.readLong(),input.readFloat(),input.readFloat())
-            require(input.readUTF()==if(value.recipe.version==1)GraphiteMaterial.digest else "legacy-v24"){"Unknown brush material; retain original bytes"}
+            require(input.readUTF()==if(value.recipe.version!=0)GraphiteMaterial.digest else "legacy-v24"){"Unknown brush material; retain original bytes"}
             fun context()=if(input.readBoolean())InkSample(input.readFloat(),input.readFloat(),input.readLong(),input.readFloat(),input.readFloat(),input.readFloat(),true)else null
             return value.copy(leading=context(),trailing=context())
         }

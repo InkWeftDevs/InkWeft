@@ -17,7 +17,7 @@ internal class FavoritePenStore(context:Context,name:String="inkweft-favorite-pe
     fun read():List<FavoritePen> = runCatching{
         val rows=JSONArray(prefs.getString("pens","[]"))
         (0 until minOf(rows.length(),12)).mapNotNull{i->runCatching{
-            val r=rows.getJSONObject(i);val p=FavoritePen(r.getString("id"),InkPen.valueOf(r.getString("kind")),r.getDouble("width").toFloat(),r.getInt("color"),if(r.has("recipe"))BrushRecipe.decode(android.util.Base64.decode(r.getString("recipe"),android.util.Base64.NO_WRAP))else BrushRecipe())
+            val r=rows.getJSONObject(i);val p=FavoritePen(r.getString("id"),InkPen.valueOf(r.getString("kind")),r.getDouble("width").toFloat(),r.getInt("color"),if(r.has("recipe"))BrushRecipe.decode(android.util.Base64.decode(r.getString("recipe"),android.util.Base64.NO_WRAP)).currentPreset()else BrushRecipe())
             UUID.fromString(p.id);require(p.width.isFinite()&&p.width in PenWidthStore.range(p.slot)&&PenWidthStore.validColor(p.slot,p.color));p
         }.getOrNull()}.distinctBy{it.id}
     }.getOrDefault(emptyList())

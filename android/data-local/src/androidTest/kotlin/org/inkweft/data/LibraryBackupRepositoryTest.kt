@@ -41,14 +41,15 @@ class LibraryBackupRepositoryTest {
     }
     private suspend fun inspect(repo:LibraryBackupRepository,snapshot:LibraryBackupRepository.Snapshot)=snapshot.file.inputStream().use{repo.inspect(it)}
     /** Complete synthetic author rows with real encoded sources; snapshot + inspect still validate every row. */
-    private suspend fun seedSnapshotBudget(db:NoteDatabase,extraByte:Boolean):Pair<String,String> {
+    private suspend fun seedSnapshotBudget(db:NoteDatabase,extraByte:Boolean,totalBytes:Long=16_000_000L):Pair<String,String> {
         val book=WorkspaceRepository(db).create("合法合成备份容量",false,PaperStyle.BLANK).id
         val stroke=InkStroke(id(),InkPen.PEN,0xff123456.toInt(),2f,InkTool.STYLUS,listOf(InkSample(20f,20f,0)))
         assertTrue(InkRepository(db).save(CommitInk(id(),book,0,InkMutation.Add(stroke))) is InkCommitResult.Committed)
         val base=InkPageFile("合成来源","",listOf(stroke),false,PaperStyle.BLANK).encode().size
         val cache=mutableMapOf<Int,ByteArray>();var first=""
-        db.withTransaction {repeat(160){i->
-            val size=100_000+if(extraByte&&i==0)1 else 0
+        val count=((totalBytes+99_999)/100_000).toInt();require(count in 1..StudyCapacity.MAX_CARDS_PER_NOTEBOOK)
+        db.withTransaction {repeat(count){i->
+            val size=minOf(100_000L,totalBytes-i*100_000L).toInt()+if(extraByte&&i==0)1 else 0
             val bytes=cache.getOrPut(size){InkPageFile("合成来源","x".repeat(size-base),listOf(stroke),false,PaperStyle.BLANK).encode().also{
                 assertEquals(size,it.size);assertEquals(stroke.id,InkPageFile.decode(it).strokes.single().id)}}
             val card=StudyCardRow(id(),book,1,"容量来源 $i","");if(i==0)first=card.id
@@ -57,16 +58,18 @@ class LibraryBackupRepositoryTest {
         }};return book to first
     }
     @Test fun legalSnapshotArchivesRejectMergedOverflowAndReplayAtExactCapacity()=fixture{s,t->
-        val incomingBook=seedSnapshotBudget(s,false).first;val (existingBook,recycled)=seedSnapshotBudget(t,true)
+        val incomingBytes=StudyCapacity.MAX_SNAPSHOT_BYTES/2;val existingBytes=StudyCapacity.MAX_SNAPSHOT_BYTES-incomingBytes
+        val incomingBook=seedSnapshotBudget(s,false,incomingBytes).first;val (existingBook,recycled)=seedSnapshotBudget(t,true,existingBytes)
+        val expectedCards=s.study().cards(incomingBook).size+t.study().cards(existingBook).size
         StudyRepository(t).submit(StudyCommand(id(),existingBook,StudyAction.TRASH_CARD,cardId=recycled,expectedRevision=1,expectedTrashImpact=StudyRepository(t).previewTrash(existingBook,requireNotNull(recycled)).fingerprint))
-        assertEquals(16_000_000L,s.study().snapshotBytes());assertEquals(16_000_001L,t.study().snapshotBytes())
+        assertEquals(incomingBytes,s.study().snapshotBytes());assertEquals(existingBytes+1,t.study().snapshotBytes())
         val restore=LibraryBackupRepository(context,t)
         LibraryBackupRepository(context,s).snapshot().use{incoming->
             restore.snapshot().use{existing->inspect(restore,existing).use{original->
                 inspect(restore,incoming).use{preview->
                     assertEquals(1,original.notes);assertEquals(1,preview.notes)
                     assertEquals(LibraryBackupRepository.RestoreResult.SNAPSHOT_CAPACITY_EXCEEDED,restore.restore(preview))
-                    assertNull(t.notes().note(incomingBook));assertEquals(16_000_001L,t.study().snapshotBytes())
+                    assertNull(t.notes().note(incomingBook));assertEquals(existingBytes+1,t.study().snapshotBytes())
                     restore.snapshot().use{after->inspect(restore,after).use{assertEquals(original.canonical,it.canonical)}}
                     // Move this isolated fixture to the exact boundary by re-encoding one less ASCII byte.
                     // Adjust only an unfrozen fixture source; immutable historical snapshots are never rewritten.
@@ -76,11 +79,11 @@ class LibraryBackupRepositoryTest {
                     assertEquals(source.snapshot.size-1,smaller.size);assertEquals(1,t.study().updateSource(source.copy(snapshot=smaller)))
                     restore.snapshot().use{exact->inspect(restore,exact).use{assertEquals(1,it.notes)}}
                     assertEquals(LibraryBackupRepository.RestoreResult.RESTORED,restore.restore(preview))
-                    assertEquals(32_000_000L,t.study().snapshotBytes());assertNotNull(t.study().card(recycled)!!.trashedAt)
-                    assertEquals(320,t.study().cards(existingBook).size+t.study().cards(incomingBook).size)
+                    assertEquals(StudyCapacity.MAX_SNAPSHOT_BYTES,t.study().snapshotBytes());assertNotNull(t.study().card(recycled)!!.trashedAt)
+                    assertEquals(expectedCards,t.study().cards(existingBook).size+t.study().cards(incomingBook).size)
                     restore.snapshot().use{full->inspect(restore,full).use{beforeReplay->
                         assertEquals(LibraryBackupRepository.RestoreResult.ALREADY_PRESENT,restore.restore(preview))
-                        assertEquals(32_000_000L,t.study().snapshotBytes())
+                        assertEquals(StudyCapacity.MAX_SNAPSHOT_BYTES,t.study().snapshotBytes())
                         restore.snapshot().use{after->inspect(restore,after).use{assertEquals(beforeReplay.canonical,it.canonical)}}
                     }}
                 }
@@ -183,7 +186,7 @@ class LibraryBackupRepositoryTest {
         LibraryBackupRepository(context,s).snapshot().use{assertEquals(LibraryBackupRepository.SCHEMA.size,it.summary.rows.size)}
     }
     @Test fun allSupportedArchiveSchemasStillStageIntoTheCurrentRoomContract()=fixture{_,t->
-        val schemas=with(LibraryBackupRepository){listOf(SCHEMA_V6,SCHEMA_V7,SCHEMA_V8,SCHEMA_V9,SCHEMA_V10,SCHEMA_V11,SCHEMA_V12,SCHEMA_V13,SCHEMA_V14,SCHEMA_V15,SCHEMA)}
+        val schemas=with(LibraryBackupRepository){listOf(SCHEMA_V6,SCHEMA_V7,SCHEMA_V8,SCHEMA_V9,SCHEMA_V10,SCHEMA_V11,SCHEMA_V12,SCHEMA_V13,SCHEMA_V14,SCHEMA_V15,SCHEMA_V16,SCHEMA)}
         val empty=object:LibraryArchive.Rows{
             override fun count(table:Int)=0L
             override fun visit(table:Int,consume:(List<Any?>)->Unit){}

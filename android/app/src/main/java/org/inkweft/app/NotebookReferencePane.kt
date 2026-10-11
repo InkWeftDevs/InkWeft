@@ -39,9 +39,9 @@ import org.inkweft.core.*
             val inkVm:InkViewModel=viewModel(key="ink-${page.id}",factory=InkViewModel.Factory(page.id,app.inkRepository))
     DisposableEffect(inkVm){inkVm.attachPage();onDispose{inkVm.detachPage()}}
             val ink by inkVm.ui.collectAsStateWithLifecycle()
-            val objects by remember(page.id){app.pageObjects.observe(page.id)}.collectAsStateWithLifecycle(initialValue=null)
+            val objects by remember(page.id){app.pageObjects.observePreview(page.id)}.collectAsStateWithLifecycle(initialValue=emptyList())
             val strokes=ink.strokes
-            val content=remember(objects){objects?.let{PageObjectCodec.decode(it.payload)}.orEmpty()}
+            val content=objects
             AndroidView(factory={InkCanvasView(it)},update={v->v.configure(page.world,PaperStyle.entries[page.paper],null);v.allowInput=false;v.showDocument(page.id);v.showStrokes(strokes);v.showObjects(content)},modifier=Modifier.weight(1f).fillMaxWidth().testTag("reference-canvas"))
         }else Box(Modifier.weight(1f).fillMaxWidth(),contentAlignment=Alignment.Center){Text("正在载入笔记…")}
         FlowRow(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.Center){

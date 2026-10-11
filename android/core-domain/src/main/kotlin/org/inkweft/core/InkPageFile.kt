@@ -9,7 +9,7 @@ class InkPageFile(val title:String,val text:String,strokes:List<InkStroke>,val w
     val objects:List<PageObject> = Collections.unmodifiableList(objects.mapNotNull{o->val refs=o.sourceStrokeIds.filter{it in strokeIds};if(o.hidden&&refs.isEmpty())null else o.copy(sourceStrokeIds=refs,textRuns=o.textRuns.map{it.copy(sourceIds=it.sourceIds.filter{v->v in refs})})})
     val imageSources:List<ImageSource> = Collections.unmodifiableList(imageSources.distinctBy{it.sha256})
     val strokes:List<InkStroke> = Collections.unmodifiableList(ArrayList(strokes))
-    init{authoring?.let(PageAuthoringCodec::encode);require(objects.mapNotNull{it.imageSource}.toSet()==this.imageSources.map{it.sha256}.toSet()){"IMAGE_ORIGINAL_CLOSURE"};require(source==null||!world);PageObjectCodec.encode(objects);require(title.isNotBlank()&&title.length<=120&&text.length<=100_000);require(strokes.size<=InkLimits.MAX_STROKES&&strokes.map{it.id}.distinct().size==strokes.size);require(strokes.sumOf{it.samples.size}<=InkLimits.MAX_PAGE_POINTS);require(strokes.all{it.world==world})}
+    init{authoring?.let(PageAuthoringCodec::encode);require(objects.mapNotNull{it.imageSource}.toSet()==this.imageSources.map{it.sha256}.toSet()){"IMAGE_ORIGINAL_CLOSURE"};require(source==null||!world);PageObjectCodec.encode(objects);require(title.isNotBlank()&&title.length<=120&&text.length<=100_000);require(strokes.map{it.id}.distinct().size==strokes.size);require(strokes.all{it.world==world})}
     fun encode(includeSource:Boolean=true):ByteArray {
         require(objects.none{it.mapEmbed?.policy==MapEmbedPolicy.LIVE}){"LIVE_MAP_REQUIRES_FULL_BACKUP_OR_SNAPSHOT"}
         val body=ChecksummedBuffer();DataOutputStream(body).use{out->
@@ -38,12 +38,12 @@ class InkPageFile(val title:String,val text:String,strokes:List<InkStroke>,val w
                 val world=if(magic!=0x49575031)input.readBoolean()else false
                 val paper=if(magic!=0x49575031)PaperStyle.entries.getOrNull(input.readUnsignedByte())?:error("Unknown paper")else PaperStyle.RULED
                 fun field(limit:Int):String{val n=input.readInt();require(n in 0..limit&&n<=input.available());val b=ByteArray(n);input.readFully(b);val s=b.toString(Charsets.UTF_8);require(s.toByteArray(Charsets.UTF_8).contentEquals(b));return s}
-                val title=field(480);val text=field(400_000);val count=input.readInt();require(count in 0..InkLimits.MAX_STROKES);var points=0
-                val strokes=List(count){val n=input.readInt();require(n in 1..InkLimits.MAX_STROKE_BYTES&&n<=input.available());val b=ByteArray(n);input.readFully(b);InkStrokeCodec.decode(b).also{points+=it.samples.size;require(points<=InkLimits.MAX_PAGE_POINTS)}}
+                val title=field(480);val text=field(400_000);val count=input.readInt();require(count>=0&&count.toLong()*8<=input.available())
+                val strokes=List(count){val n=input.readInt();require(n in 1..InkLimits.MAX_STROKE_BYTES&&n<=input.available());val b=ByteArray(n);input.readFully(b);InkStrokeCodec.decode(b)}
                 val objects=if(magic>=0x49575035){val n=input.readInt();require(n in 8..PageObjectCodec.MAX_BYTES&&n<=input.available());val b=ByteArray(n);input.readFully(b);PageObjectCodec.decode(b)}else emptyList()
                 val source=if(magic==0x49575036||magic>=0x49575037&&input.readBoolean()){val pages=input.readInt();val page=input.readInt();val size=input.readInt();require(size in 8..PdfDocumentSource.ARRAY_MAX_BYTES&&size<=input.available());val pdf=ByteArray(size);input.readFully(pdf);PdfPageSource(PdfDocumentSource(pdf,pages),page)}else null
                 val images=if(magic>=0x49575037){val count=input.readInt();require(count in (if(magic==0x49575038)0 else 1)..PageObjectCodec.MAX_OBJECTS);List(count){val size=input.readInt();require(size in 1..ImageSource.MAX_BYTES&&size<=input.available());ImageSource(ByteArray(size).also(input::readFully))}}else emptyList()
-                val authoring=if(magic==0x49575038){val size=input.readInt();require(size in 8..PageAuthoringCodec.MAX_BYTES&&size<=input.available());PageAuthoringCodec.decode(ByteArray(size).also(input::readFully))}else null
+                val authoring=if(magic==0x49575038){val size=input.readInt();require(size>=8&&size<=input.available());PageAuthoringCodec.decode(ByteArray(size).also(input::readFully))}else null
                 require(input.available()==0);InkPageFile(title,text,strokes,world,paper,objects,source,images,authoring)
             }
         }

@@ -124,7 +124,7 @@ class CardTransformRepositoryTest {
         }
         val db=NoteDatabase.open(context,name)
         try{
-            assertEquals(16,db.openHelper.readableDatabase.version);assertEquals(body,db.study().card(card)!!.body);assertEquals(body,db.study().cardVersion(card,1)!!.body)
+            assertEquals(18,db.openHelper.readableDatabase.version);assertEquals(body,db.study().card(card)!!.body);assertEquals(body,db.study().cardVersion(card,1)!!.body)
             assertFalse(StudySourceVersions(db).read(card,1).complete);assertNull(StudySourceVersions(db).read(card,1).singleLegacy(card))
             val current=StudySourceVersions(db).read(card,2);assertTrue(current.complete);assertArrayEquals(snapshot,current.sources.single().snapshot)
             assertEquals(1L,current.refs.single().revision);assertEquals(0L,db.images().totalBytes());assertEquals(snapshot.size.toLong(),db.study().snapshotBytes())
@@ -139,6 +139,9 @@ class CardTransformRepositoryTest {
             override fun count(table:Int)=sql.query("SELECT COUNT(*) FROM `${schema[table].name}`").use{it.moveToFirst();it.getLong(0)}
             override fun visit(table:Int,consume:(List<Any?>)->Unit){
                 val t=schema[table]
+                // This legacy source-card fixture has no page objects. Do not query
+                // the removed whole-page payload column from the current schema.
+                if(t.name=="page_objects"){check(count(table)==0L);return}
                 sql.query("SELECT "+t.columns.joinToString(","){"`${it.name}`"}+" FROM `${t.name}` ORDER BY "+t.keys.joinToString(","){"`$it`"}).use{cursor->
                     while(cursor.moveToNext())consume(t.columns.mapIndexed{i,c->if(cursor.isNull(i))null else when(c.kind){
                         'I'->cursor.getLong(i);'F'->cursor.getDouble(i);'B'->cursor.getBlob(i);else->cursor.getString(i)

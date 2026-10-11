@@ -1,0 +1,31 @@
+import groovy.json.JsonOutput
+
+gradle.projectsEvaluated {
+    rootProject.tasks.register('verifyMemoryAndBenchmarkIsolation') {
+        doLast {
+            def modulesFor = { configuration ->
+                def graph = configuration.incoming.resolutionResult
+                assert !graph.allDependencies.any { it instanceof org.gradle.api.artifacts.result.UnresolvedDependencyResult }
+                graph.allComponents.collect { it.moduleVersion }.findAll { it != null }
+            }
+            def application = rootProject.project(':app')
+            def variants = ['debug', 'tlsProbe', 'performance', 'release', 'leakCheck']
+            def result = variants.collectEntries { variant ->
+                def modules = modulesFor(application.configurations.getByName(variant + 'RuntimeClasspath'))
+                def leak = modules.findAll { it.group == 'com.squareup.leakcanary' }.collect { it.toString() }.unique().sort()
+                def benchmark = modules.findAll { it.group == 'androidx.benchmark' }.collect { it.toString() }.unique().sort()
+                assert !leak.isEmpty() == (variant == 'leakCheck') : "Unexpected LeakCanary dependency in $variant"
+                assert benchmark.isEmpty() : "Benchmark driver dependency leaked into application $variant"
+                [(variant): [leakCanary: leak, benchmark: benchmark]]
+            }
+            def driver = modulesFor(rootProject.project(':macrobenchmark').configurations.getByName('performanceRuntimeClasspath'))
+            assert driver.any { it.group == 'androidx.benchmark' && it.name == 'benchmark-macro-junit4' && it.version == '1.5.0' }
+            assert driver.any { it.group == 'androidx.test.uiautomator' && it.name == 'uiautomator' && it.version == '2.4.0' }
+            assert !driver.any { it.group == 'com.squareup.leakcanary' }
+            result.driver = [macrobenchmark: '1.5.0', uiAutomator: '2.4.0', leakCanary: []]
+            def report = new File(rootProject.projectDir, 'verification/storage-optimization-20261011-tools/dependency-isolation.json')
+            report.text = JsonOutput.prettyPrint(JsonOutput.toJson(result)) + '\n'
+            println 'Memory and benchmark dependency isolation: PASS'
+        }
+    }
+}

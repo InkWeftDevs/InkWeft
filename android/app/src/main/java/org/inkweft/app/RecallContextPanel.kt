@@ -136,13 +136,13 @@ private fun sourceFailure(error:Exception):String = when(error) {
                     ?:throw RecallSourceUnavailable()
                 val (note,_)=app.knowledge.resolve(TargetRef(TargetKind.PAGE,owned.id))
                 if(note.id!=plan.ref.notebookId)throw RecallSourceUnavailable()
-                val ink=app.inkRepository.read(owned.id)
+                val ink=app.inkRepository.readVisibleSnapshot(owned.id)
                 if(ink.revision!=fresh.inkRevision)throw RecallSourceChanged()
                 // Do not load another notebook through a live page-map object.
                 val objects=app.pageObjects.read(owned.id).objects.filter{
                     it.mapEmbed?.target?.notebookId?.let{book->book==plan.ref.notebookId}!=false
                 }
-                RecallSourcePage(note.title,owned,InkSession(ink).visibleDraft(),objects,app.authoring.readPage(owned.id).state)
+                RecallSourcePage(note.title,owned,ink.strokes,objects,app.authoring.readPage(owned.id).state)
             }
             page=value
         } catch(c:CancellationException) { throw c }

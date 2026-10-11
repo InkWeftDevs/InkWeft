@@ -27,9 +27,9 @@ class UserLayers(layers:List<UserLayer> = listOf(UserLayer(DEFAULT_ID,"基础层
         require(layers.size in 1..MAX_LAYERS&&layers.map{it.id}.distinct().size==layers.size)
         require(layers.any{it.writable}){"LAYER_LAST_WRITABLE"}
         require(currentId==null||layers.any{it.id==currentId&&it.writable}){"LAYER_CHOOSE_WRITABLE"}
-        require(memberships.size<=MAX_CONTENT&&byContent.size==memberships.size)
+        require(byContent.size==memberships.size)
         require(memberships.all{it.layerId in byId})
-        require(deleted.size<=MAX_CONTENT&&deletedSet.size==deleted.size&&deleted.none{it in byContent})
+        require(deletedSet.size==deleted.size&&deleted.none{it in byContent})
     }
     fun layer(content:LayerContent)=byContent[content]?.let{byId[it.layerId]}
     fun owns(content:LayerContent)=content in byContent||content in deletedSet
@@ -87,7 +87,6 @@ class UserLayers(layers:List<UserLayer> = listOf(UserLayer(DEFAULT_ID,"基础层
         const val DEFAULT_ID="00000000-0000-0000-0000-000000000001"
         const val MAX_LAYERS=32
         const val LEGACY_MAX_CONTENT=22_000
-        const val MAX_CONTENT=InkLimits.MAX_RETAINED_STROKES+PageObjectCodec.MAX_RECORDS+PageAuthoring.MAX_ANNOTATIONS
         fun legacy(contents:Collection<LayerContent>)=UserLayers(memberships=contents.map{LayerMembership(it,DEFAULT_ID)})
     }
 }

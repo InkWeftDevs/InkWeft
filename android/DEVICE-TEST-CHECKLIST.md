@@ -1,3 +1,97 @@
+# V86 基点 · 压力与铅笔绘制优化 · 2026-10-11
+
+适用Room18、笔刷配方v2候选，以[本轮APK摘要](verification/pen-optimization-20261011/README.md)为准。MuMu5/API32的14个不同方法通过；核心累计471项通过，首次OOM及复核范围见本轮记录。以下物理设备项目均待测；原有不同设备/版本结果保留。新v2笔迹不供旧包直接读取，升级前保存备份，降级须在独立环境由升级前备份重建。
+
+| 稳定编号／类别 | 准备条件与具体操作 | 预期结果 | 结果记录及所需证据 |
+|---|---|---|---|
+| PEN2-PRESSURE-01／普通用户与硬件能力观察 | 支持压力的真实笔、空白测试页；同一宽度分别极轻/中/重压画线，缓慢渐变压力，再快速写长笔画；切换灵敏度后重复并关闭重开 | 轻压线更细且可见，压力变化连续；重开与落笔后的轮廓一致，原始轴保留；实际极轻压力与延迟按硬件记录 | 真机NOT_RUN；合成压力/原轴断言PASS。记录笔/设备型号、宽度/灵敏度、诊断轴和近拍，不用模拟器替代笔感 |
+| PEN2-LEGACY-01／普通用户及开发者协助 | 升级前保留测试本及备份，其中含v1钢笔、铅笔、擦除和跨页笔迹；升级当前候选，重开、复制和导出相同页，对照升级前图像 | 旧笔迹轮廓/颗粒/擦除保持，复制和重开不改成新配方；新笔迹可使用v2 | 真机NOT_RUN；旧钢笔/铅笔各54,400像素模拟器对照0差异。保存前后图像、配方身份和导出内容；不能回旧包读取新v2数据 |
+| PEN2-PRESET-01／普通用户 | 升级前保存自定义灵敏度、笔宽、颜色和收藏笔；升级后分别选择笔盒、笔种设置及收藏，写新线再重开 | 参数保留，新线使用当前压力规律，旧作者笔迹仍保持原配方 | 真机NOT_RUN；预设读写自动化PASS。记录参数画面、新旧线对比与诊断时间 |
+| PEN2-PENCIL-01／普通用户 | 有颗粒的铅笔，画轻重压、斜笔、同笔交叠与跨页长线；复制移动、局部擦除、关本重开，再连续写长线 | 颗粒随笔迹平移，擦除不重新排列颗粒，接缝连续；固定片段复用，重开一致 | 真机NOT_RUN；材质/瓦片/跨页自动化PASS。操作录像、前后同倍率截图，异常导出诊断ZIP |
+| PEN2-COST-01／开发者协助与硬件性能观察 | 同一物理设备、固定编译/电量/温度/刷新率；在隔离环境分别使用本轮与前轮APK运行同一增量材质方法，每包至少5轮，记录预热和全部样本；另近拍快速真实书写 | 产出可比较的中位数/P95/全部轮次；画面不回退，真实触笔延迟单独测量 | NOT_RUN。当前模拟器中位开销下降、P95未改善，不作真机结论。保留计时原文、构件身份、热状态及需要时的Perfetto；检测参考记录的耗时不当作无检测代码的性能 |
+
+按[本轮模板](verification/pen-optimization-20261011/results-template.md)逐设备追加。问题先在“诊断与导出”标记时间、复现并导出ZIP，只另补日志不能表达的步骤、画面和笔感；基础诊断包不含完整系统日志。本轮无新增需破坏性注入的备用设备用例；StarNote完整FIR/预测/收笔等价性尚未建立，不列为已实现能力。
+
+---
+
+# V86 基点 · 第四轮空间与容量优化 · 2026-10-11
+
+适用 Room18、RTree 空间索引和分批笔迹候选，版本号仍为 V86；以[存储构件记录](verification/storage-optimization-20261011-batch04/README.md)和[应用构件记录](verification/storage-optimization-20261011-viewport/README.md)中的 APK 摘要为准。核心 **469/469**、data-local 主机 **10/10**、存储设备回归 **99个不同方法**、应用回归 **12/12** 与最终 lint 已通过；后两组为 MuMu5/API32，物理设备仍待测。旧版本的实际结果保留在下方。
+
+RTree 通过固定 Requery 3.49.0 SQLite 引擎提供，继续使用现有 SupportSQLite/Room 事务和损坏库保留回调；不依赖设备系统是否编译该模块。首次系统 SQLite 候选在 MuMu 上开库失败的日志单独保留。新建数据库使用 4 KiB 页，已有数据库保留原页大小与内容；初始化采用同目录临时库和不覆盖目标的原子发布。
+
+取消整页活动/保留笔数、采样点数和图层成员门槛。编辑窗口最多保留 65,536 个候选采样点，另保留撤销所需几何；绘制按最多 256 笔、65,536 点、2 MB 载荷分批读取直到完整。此处是内存工作预算，不是整页写入配额；密集区域可继续书写，选择/擦除需放大到可完整加载的区域，不能对未加载部分静默漏操作。单笔、单次编辑和交换文件大小预算继续生效。
+
+| 稳定编号／类别 | 准备条件与具体操作 | 预期结果 | 结果记录与所需证据 |
+|---|---|---|---|
+| SO4-SPATIAL-01／开发者协助 | 空白隔离库；执行 `SpatialInkRepositoryTest` 的索引、密集窗口、修改版次/取消方法；再对页中远离原点的笔迹执行“适合内容” | 索引随写入/隐藏/恢复/删除更新；窗口候选有限，整帧完整；取消和版次改变不发布半帧；全页范围包含离屏笔迹 | 模拟器自动化 PASS；普通用户/真机待测。保存准确方法回执、范围/最后一笔像素断言及实际缩放截图 |
+| SO4-SQLITE-01／开发者协助及备用设备 | 在隔离测试包执行 `BundledSqliteFactoryTest`；分别新建数据库、重开已有1 KiB库、向测试库注入损坏头 | 新库实际4 KiB且WAL可用；既有1 KiB库的页大小和作者内容保持；损坏原文件不删除或替换，初始化不遗留临时库 | 修正后定向8/8 PASS；物理设备待测。PRAGMA、内容字节、原文件字节及临时文件集合断言；仅测试自有库允许损坏注入 |
+| SO4-CAPACITY-01／开发者协助与普通用户 | 合成页写入 40,001 笔、每笔 51 点，继续新增，再复制并完整校验；普通测试本持续书写，退出重开 | 跨越旧活动 20,000 笔/1,000,000 点及保留 40,000 笔/2,000,000 点阈值仍能保存、重读和复制 | 模拟器自动化 PASS；真人/真机待测。源/副本数量、轴/掩码、revision 和原始 runner；不宣称硬件容量无限 |
+| SO4-WINDOW-01／普通用户及界面自动化 | 准备密集大页；放大移动到别处、返回、继续写、撤销/重做；同页双显示并切离返回 | 视口切换卸载无关几何，已有笔迹绘制完整，新笔不丢；撤销所需几何保留，外部版次变化时不套用陈旧历史 | app 回归 PASS；真人/物理设备待测。`StreamedPageLifecycleTest`、`StreamedInkRasterTest` 回执，缩放前后录像及诊断 ZIP |
+| SO4-LAYER-01／开发者协助及备用设备 | 隔离库执行 `PageLayerStorageTest`；构造超旧图层成员阈值，新增笔迹、图层调整、回执重放、备份恢复；故障仅注入测试库 | 普通新增只写对应归属；版次/笔迹/归属/回执原子保存，错误首次作用域不遗留头；旧库提升与完整恢复保留状态 | 模拟器自动化 PASS；备用真机故障待测。逐方法回执与回滚/恢复前后断言；软件故障不代替物理断电 |
+| SO4-EXPORT-01／普通用户及开发者协助 | 大页有隐藏历史、擦除、图层与离屏内容；复制页、本及导出当前页，恢复全库备份；密集页开启全选、局部选中和擦除 | 复制/全页导出包含完整可见内容；完整备份校验隐藏历史；未完整加载的选择/擦除明确提示，不产生局部假成功 | 存储及 app 回归 PASS；普通用户/真机待测。数量/点轴/摘要、导出首尾内容及提示截图。PNG/PDF/交换导出仍有整结果内存和文件预算 |
+| SO4-AUTO-01／普通用户及界面自动化 | 开启自动美化后移动到旧笔迹区域；在该区域新写一段；密集窗口重复 | 载入旧笔迹不会当作新输入触发美化；不完整区域暂停自动识别，新写内容仍进入正常候选流程 | `AutomaticBeautyRegressionTest` 指定方法 PASS；物理设备待测。旧笔/新笔 ID、识别调用与作者写入断言 |
+| MEM-LEAK-01／开发者协助与硬件观察 | 安装独立 `leakCheck` 包；确认 LeakCanary 启动；打开/关闭标签、连续翻页、切本、面板与 Activity 退出各重复 10 次 | 永久释放的画布、InkViewModel 与 Activity 可回收；暂时离屏并保留历史的对象不误标释放；泄漏时显示引用链 | 构建与启动检查 PASS；真机泄漏分析 NOT_RUN。记录版本/设备/步骤、retained object、堆转储和引用链；一次未报告不能证明无泄漏 |
+| PERF-MACRO-01／开发者协助与硬件性能观察 | 独立宏基准包＋同签测试包；先执行 `FixtureNavigationSmokeTest`；真机 API31+ 按[工具说明](macrobenchmark/README.md)运行四个场景，每场景 5 轮 | 合成 24,000 笔/1,152,000 点大页真实完成绘制；冷启动、打开大页、快翻、切本产生 JSON 与 Perfetto；记录相同编译/电量/热/刷新率条件 | 功能冒烟1/1 PASS（37.482秒）；真机性能 NOT_RUN。保留全部样本与 trace，不将模拟器功能通过或 trace 累计量当作性能提升 |
+| SO4-HARDWARE-01／硬件能力观察 | 当前候选、真实手写笔；轻重压/斜笔/长笔连续书写，快翻后继续；标记诊断时间 | 点轴与重开原迹保持，记录笔感、掌拒、首帧、内存/热状态 | NOT_RUN。笔/设备型号、输入轴诊断、近拍与实际采样数据，不由合成手势替代 |
+
+使用[本轮结果模板](verification/storage-optimization-20261011-batch04/results-template.md)追加设备与版本记录；应用专项另见上述应用记录。问题先用软件内“诊断与导出”标记时间、复现、导出 ZIP；基础包不含完整系统日志，另补日志不能表达的操作、视觉与笔感。升级前保留备份；旧安装包不能读取 Room18/新 PAGE 头/紧凑点检查点，回旧版须在独立环境用升级前备份重建。
+
+---
+
+# V86 基点 · 第三轮存储优化 · 2026-10-11
+
+适用 Room17 对象分行、24-byte 点体和编辑快照候选；版本号仍为 V86，APK/源码身份以[本批记录](verification/storage-optimization-20261011-batch03/README.md)为准。MuMu5/API32 的 Room/平台 **86/86** 与独立 app 编辑器 **5/5** 通过，隔离包与设备均已清理；普通 UI 和物理设备仍待测。升级前保存备份；旧安装包不能读取新库/检查点，新备份也需当前候选或后续支持版本。
+
+| 编号／类别 | 准备条件与具体步骤 | 预期结果 | 结果记录与证据 |
+|---|---|---|---|
+| SO3-OBJECT-01／普通用户及开发者协助 | 隔离测试本插入两份同图，移动/缩放其中一份、调整堆叠、撤销/重做，关本重开；自动执行 `movingOneObjectWritesOneRecordAndSharedPreviewLivesUntilItsLastReference` | 仅变化对象写入，预览共享；画面和顺序保持，最后引用删除后回收预览 | 数据层 PASS；普通 UI/物理设备待测。对象/预览行数与原件断言见设备结果；重开录像另留 |
+| SO3-ATOMIC-01／备用测试环境故障注入 | 仅在测试自有临时库运行 `receiptFailureRollsBackHeadChangedRowsNewPreviewAndAuthoringTogether`；不在用户原库安装故障触发器 | 回执前失败时页头、记录、新预览、作者状态整批回滚；旧内容可重读 | 模拟器软件注入 PASS。逐方法回执、前后字节/版次/行数已归档；物理断电仍待测 |
+| SO3-SNAPSHOT-01／开发者协助 | 运行 `concurrentSnapshotsAndObserversKeepRevisionOrderMetadataAndPreviewTogether` 和 `authoringIdentityProjectionSkipsCorruptObjectAndPreviewPayloadsButFullReadsReject`；损坏注入只限临时库 | 并发快照头/顺序/记录/图片不混版；身份投影不读大块几何，完整读取拒绝损坏 | 模拟器 PASS；物理设备待测。每版断言、完整读取异常及观察最终状态已归档 |
+| SO3-MIGRATION-01／开发者协助及备用设备 | 升级前备份；运行 schema16 正常迁移/旧备份提升及损坏迁移两个新方法；备用设备用合成 Room16 库升级后重开 | 对象身份、顺序、版次、回执保持；损坏迁移不替换/清空旧库；旧备份提升可重放 | 模拟器真实 SQLite 升级与故障注入 PASS；备用真机待测。原库保留/回执断言已归档 |
+| SO3-BACKUP-01／普通用户及开发者协助 | 测试本含重复图片、原件、隐藏来源文字；复制单页/整本、导出导入、全库恢复到含相同预览的独立测试库；执行共享预览恢复/故障回滚方法 | 副本身份独立，原件与预览完整；恢复按内容共享预览，原本不受影响，回执可重放 | 数据层 PASS，含 256 MB 快照预算边界；普通 UI/物理设备待测。源/副本/恢复闭包与摘要已核对 |
+| SO3-POINT-01／开发者协助 | 执行 `InkRepositoryTest` 的持久化/新旧混合格式方法和 `InkCheckpointTest` 两方法；写入包含压力、倾角、方向与最大合法时间的合成笔迹，关闭重开/回执重试 | 点体实际24 bytes；时间与各轴无损，旧行仍读，规范 digest不变，检查点跨页/中断恢复正确 | 模拟器 PASS；物理笔感待测。落库/检查点长度、逐轴相等、旧/新 magic、回执断言已归档 |
+| SO3-EDITOR-01／普通用户及开发者协助 | 执行 `InkEditingSnapshotTest` 6 项与独立 app `StreamedPageLifecycleTest` 5 项；普通应用在有替换/擦除历史的多页本切离再返回，撤销/重做，同页双显示并在另一入口修改版次 | 进入页加载可见内容，离屏恢复只补必要历史；容量/去重仍包含保留历史，陈旧历史不覆盖新编辑 | Room 6/6、app 5/5 PASS；[编辑器结果](verification/storage-optimization-20261011-editor/README.md)另记构件与回执。普通 UI/真人操作录像待测 |
+| SO3-HARDWARE-01／硬件能力观察 | 真机手写笔连续轻重压、斜笔和快速长笔画；标记诊断时间，对照重开后的原迹 | 已支持的压力/倾角/方向/时间保持；笔感、掌拒和首帧依实际设备记录 | NOT_RUN。设备/笔型号、轴诊断及近拍录像，不由模拟器代填 |
+
+每次填写[结果模板](verification/storage-optimization-20261011-batch03/results-template.md)，保留不同设备和版本记录。问题先在应用内标记时间、复现并导出诊断 ZIP；基础包不含完整系统日志，视觉/笔感另补证据。固定每页笔数/点数门槛的取消及可见区域分块尚未在本批实现。
+
+---
+
+# V86 基点 · 第二轮存储优化 · 2026-10-11
+
+适用本轮冻结 APK `4943d49541b3c2c7bcf50d9ee3fce941b6f6dca0be2c9b129cbe477d244d43b5`，Room16、原格式/容量保持。专用 MuMu5/API32 的 8 项新增与 15 项相关方法 **23/23 PASS**；没有产品包安装。普通 UI 与物理设备检查仍待测；首轮结果保留，不能把本轮模拟器结果代填真机。[逐方法与清理](verification/storage-optimization-20261011-batch02/device-results.md)。
+
+| 编号／类别 | 准备条件与具体步骤 | 预期结果 | 实际记录与证据 |
+|---|---|---|---|
+| SO2-READ-01／开发者协助 | 空白隔离测试包；执行新类 `TransferReadPathRepositoryTest` 的 `visibleAndSelectedSnapshotsSkipUnrelatedBlobsButKeepEffectiveMasks`、`relevantDamagedMasksAndForeignTargetsStillFail`、`snapshotRevisionAndVisibilityStayConsistentWithConcurrentEdits`；损坏载荷仅写测试自有临时库 | 无关隐藏/未选中几何不读，所需掩码/点轴保持；必要损坏及跨页引用拒绝；并发版次不混合 | 模拟器 PASS；物理设备待测。精确开始/结束、断言与构件见结果；局部读取不代替全库健康校验 |
+| SO2-COPY-01／普通用户及开发者协助 | 自动化执行 `copiesAndVisibleExportsKeepMasksAxesAndCurrentManualIndexWithoutHiddenHistory`；另在测试本做整本复制/单页复制/普通导出，关本重开并比对有效掩码、文字来源与人工索引 | 副本身份独立，点轴/时间/掩码保持，仅当前人工索引传播，源本保留 | 模拟器断言 PASS；普通 UI、重开观感及物理设备待测。记录输入版本、前后身份/原件摘要与必要录像 |
+| SO2-SOURCE-01／普通用户及开发者协助 | 自动化执行 `selectedSourceCaptureKeepsFixedRevisionAndRejectsMissingOrChangedInk` 及既有摘录/图层检查；普通应用捕获摘录后修改源页，再打开固定快照与当前来源 | 固定摘录不跟随后续原迹变化，陈旧或隐藏来源拒绝；只读来源版次提示保持 | 模拟器 PASS；普通 UI/物理设备待测。固定快照字节、revision、原始回执；异常先诊断与导出 |
+| SO2-ORIGINAL-01／备用测试环境故障注入 | 隔离临时库；执行新类复制准备后的新增原件、原件变化及回执重放三个方法，禁止在用户原库改块 | 新增原件仍校验；摘要变化整本及 receipt 回滚；已确认复制可脱离后续源本状态重放 | 模拟器软件注入 PASS；物理断电与备用真机待测。异常、空目标/回执、重试摘要证据见结果 |
+| SO2-SCALE-01／开发者协助 | 空白隔离测试包、至少 6 GiB 可用空间；运行 `StreamedStorageRepositoryTest#pdf300MBImportDuplicateAndFullBackupRestorePreserveOriginals` | 300,000,000-byte 原件可导入复制；600,000,000-byte 逻辑原件备份恢复一致，流式摘要/长度通过，临时文件清理 | MuMu5/API32 PASS，未跳过；不是实际复杂课件性能。物理设备、真实 PDF 首帧/内存与临时峰值待测 |
+| SO2-UI-01／普通用户 | 真实测试设备准备含隐藏历史、图片及摘录的测试本；查看内容封面、复习原页、只读来源及同页双显示，返回编辑并撤销/重做 | 显示、版次提示、返回上下文及原有编辑历史保护正确，无内容/选择丢失 | NOT_RUN。操作录像、构件/设备身份；视觉或笔感问题配合诊断标记 ZIP |
+
+每次执行填写[新结果模板](verification/storage-optimization-20261011-batch02/results-template.md)，保留不同设备/版本结果。当前测试包已卸载、模拟器关机、root=false、旋转 1/0 未变，私有 ADB 结束；旧笔记和既有压测页保留。后续对象存储、编辑历史加载、空间回收及点格式改造不属于这份 APK 的通过范围。
+
+---
+
+# V86 基点 · 存储优化候选（首批 A/B 与部分 C）· 2026-10-11
+
+适用：`8596a981a76e27c38caf5220659e0e238141d319` 加本次存储优化工作树补丁；当前仍为 V86 / Room16，没有产品发布或安装。冻结隔离测试包在主调查释放的 MuMu5 / API32 完成 14 项整合检查，**14/14 PASS**，随后卸载并恢复关机。物理设备和普通用户 UI 项目仍待测，模拟器结果不替代真机；旧版本结果保留。APK、逐方法开始/结束与清理见[本轮实际结果](verification/storage-optimization-20261011/device-results.md)。
+
+| 稳定编号／类别 | 准备条件与具体操作 | 预期结果 | 结果记录与所需证据 |
+|---|---|---|---|
+| SO1-SOURCE-01／开发者协助 | 空白测试安装；运行 `StorageHotPathRepositoryTest#sourceOwnershipUsesIdsAndStillRejectsForeignOrRepeatedReferences`，仅在该方法自有临时库中放入超大损坏笔迹载荷，再保存同页来源文字、尝试未知来源和重复来源 | 身份检查只取 ID；合法同页关联可保存，非法关联拒绝且对象版次不变；完整笔迹读取仍报告损坏 | MuMu5/API32 自动化 PASS；物理设备待测。逐方法回执见本轮实际结果；不在用户笔记造损坏 |
+| SO1-IMAGE-01／普通用户 | 测试本插入两张图片；连续移动/缩放同一图 20 次，改旁边文字，撤销/重做，关本后重开 | 几何和堆叠正确；图片内容与原件不变，撤销/重做和重开一致；不依据主机缓存计数声称设备耗时下降 | 待测。操作录屏、前后图像/位置、诊断标记；有异常先用“诊断与导出”获取 ZIP |
+| SO1-IMAGE-02／开发者协助 | 隔离临时库；运行 `StorageHotPathRepositoryTest#movingImagesPreservesCasAndDamagedNewOrStoredPreviewsAreRejected`；再运行已有 `PageObjectRepositoryTest#originalSaveReplayCopyBackupAndMissingAssetAreAtomic` | 成功校验可复用；新损坏缩略图及首次读取的损坏旧缩略图拒绝；CAS、原件引用、复制和备份回放保持 | MuMu5/API32 自动化 PASS，已实际调用平台解码；物理设备/真实图片待测。逐方法回执见本轮实际结果 |
+| SO1-IMPORT-01／普通用户及开发者协助 | 留足独立测试空间；先运行 `sharedPdfIsValidatedBeforeTransactionAndRehashedOnceDuringAtomicImport`，再用同一大 PDF 做导入/重复确认/关本重开；使用已知页数与 SHA-256 的输入 | 预校验在主库写事务外；共享 PDF 只预校验一次，入库仍校验完整摘要；只产生一本和一份同本原件，页序/首中末页正确；重试不依赖已关闭的暂存输入 | 合成两页 PDF 的 MuMu5/API32 自动化 PASS；真实大 PDF、呈现/性能与物理设备仍待测。原 V86 300 MB 方法本轮未执行 |
+| SO1-FAULT-01／备用测试环境故障注入 | 仅隔离临时库；运行 `sourceChangedAfterValidationRollsBackTheWholeImportAndReceipt` 和 `failedFinalSnapshotSyncDoesNotPublishOrLeaveItsFile`，再重试原输入 | 预校验后原件变化导致整本与 receipt 回滚；同步失败不交付备份，不残留本任务暂存文件；原库不变，可安全重试 | MuMu5/API32 软件注入 PASS；物理断电/备用真机仍待测。异常、回滚、清理与重试断言见本轮实际结果 |
+| SO1-BACKUP-01／开发者协助 | 隔离临时库；运行 `backupSyncReleasesTheWriterWithoutChangingItsCapturedSnapshot`；随后运行已有 `LibraryBackupRepositoryTest#roundTripPreservesOriginalIdsHiddenInkMasksHistoryAndMetadata` 与 `cancellingWrittenSnapshotRemovesPartialAndPreservesAuthorLibrary` | 备份末尾同步阶段可提交新的作者编辑；备份仍是此前一致快照；恢复保留原 ID、隐藏历史和掩码；取消/失败不泄露部分文件 | MuMu5/API32 自动化 PASS；真实大库性能与物理设备待测。逐方法和清理回执见本轮实际结果；全库读取/校验仍在一致事务中 |
+
+结果按设备和构件追加到 [本轮结果模板](verification/storage-optimization-20261011/results-template.md)，执行入口和范围见 [本轮说明](verification/storage-optimization-20261011/README.md)。本批不改压力、倾角、方向、时间或容量；硬件笔感观察沿用已有编号。逐对象存储、可见笔迹按需加载和流式单本导出属于后续阶段，未在本批标成实现。
+
+---
+
 # V78 平板反馈 · 新增与受影响用例 · 2026-10-09
 
 适用 `78 / 0.0.78-tablet-feedback`。insertion APK `d22efce60d974912ee8cc8edf7386c7824e32fdef1499fd6f18eccc95f8513f1` 已安装；15项不同的定向实机方法通过。安装包身份与实际结果以 [本轮记录](verification/tablet-feedback-v78/RESULTS.md) 为准。两个正式预览应用均含用户资料，自动化只在 `org.inkweft.app.a0.feedback` 或测试自有临时数据库执行。以下真人项目均为待测，保留历次设备与版本结果。

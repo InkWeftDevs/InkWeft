@@ -7,6 +7,10 @@ val unsignedBuild = providers.gradleProperty("inkweftUnsignedBuild").orNull == "
 val tlsFixture = providers.gradleProperty("inkweftTlsFixture").orNull
 val performanceProbe = providers.gradleProperty("inkweftPerformanceProbe").orNull == "true"
 val insertionPreview = providers.gradleProperty("inkweftInsertionPreview").orNull == "true"
+val macrobenchmark = providers.gradleProperty("inkweftMacrobenchmark").orNull == "true"
+require(!macrobenchmark || (!diagnosticBuild && !insertionPreview && !unsignedBuild && tlsFixture == null)) {
+    "Macrobenchmark requires its dedicated signed application"
+}
 fun commitValue(name: String): String = System.getenv(name)?.takeIf { it.matches(Regex("[0-9a-f]{40}")) } ?: "local-unknown"
 android {
     namespace = "org.inkweft.app"
@@ -18,6 +22,7 @@ android {
         versionCode = 86
         versionName = "0.0.86-streamed-originals"
         manifestPlaceholders["appLabel"] = if (insertionPreview) "墨织整合预览" else if (diagnosticBuild) "墨织工作台预览" else "墨织"
+        manifestPlaceholders["benchmarkFixtureEnabled"] = macrobenchmark.toString()
         buildConfigField("String", "BUILD_COMMIT", "\"${commitValue("GITHUB_SHA")}\"")
         buildConfigField("String", "SOURCE_COMMIT", "\"${commitValue("INKWEFT_HEAD_SHA")}\"")
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -52,9 +57,18 @@ android {
     buildTypes.create("performance") {
         initWith(buildTypes.getByName("release"))
         signingConfig = buildTypes.getByName("debug").signingConfig
-        applicationIdSuffix = ".performance"
+        applicationIdSuffix = if (macrobenchmark) ".macrobenchmark" else ".performance"
         matchingFallbacks += listOf("release")
         isDebuggable = false
+    }
+    buildTypes.create("leakCheck") {
+        initWith(buildTypes.getByName("debug"))
+        applicationIdSuffix = ".leakcheck"
+        manifestPlaceholders["appLabel"] = "墨织内存检查"
+        matchingFallbacks += listOf("debug")
+    }
+    buildTypes.names.filter { it != "leakCheck" }.forEach {
+        sourceSets.getByName(it).kotlin.srcDir("src/noLeak/java")
     }
     if(performanceProbe){require(tlsFixture==null);testBuildType="performance"}
     if (tlsFixture != null) {
@@ -88,6 +102,7 @@ dependencies {
     implementation(libs.ink.strokes)
     implementation(libs.ink.geometry)
     implementation(libs.ink.rendering)
+    "leakCheckImplementation"(libs.leakcanary)
     androidTestImplementation(platform(libs.compose.bom))
     androidTestImplementation(libs.compose.ui.test)
     androidTestImplementation(libs.androidx.test.core)

@@ -32,6 +32,17 @@ class LibraryArchiveTest {
     @Test fun changedColumnOrTableSchemaIsRejected(){val other=listOf(schema.single().copy(name="other"));rejects{LibraryArchive.read(ByteArrayInputStream(bytes()),other,{_,_->})}}
     @Test fun sourceCountCannotLie(){val source=object:LibraryArchive.Rows{override fun count(table:Int)=2L;override fun visit(table:Int,consume:(List<Any?>)->Unit){consume(row)}};rejects{LibraryArchive.write(ByteArrayOutputStream(),schema,source,0)}}
     @Test fun maliciousRowCountRejectedBeforeAllocation(){val b=bytes();for(i in 52..59)b[i]=0x7f;rejects{LibraryArchive.read(ByteArrayInputStream(b),schema,{_,_->fail()})}}
+    @Test fun streamBeyondTheFormerHalfMillionRowLimitKeepsCountsWithoutCollectingRows(){
+        val schema=listOf(LibraryArchive.Table("rows",listOf(LibraryArchive.Column("id",'I')),listOf("id")))
+        val source=object:LibraryArchive.Rows {
+            override fun count(table:Int)=500_001L
+            override fun visit(table:Int,consume:(List<Any?>)->Unit){repeat(500_001){consume(listOf(it.toLong()))}}
+        }
+        val output=ByteArrayOutputStream();LibraryArchive.write(output,schema,source,0)
+        var seen=0L
+        val result=LibraryArchive.read(output.toByteArray().inputStream(),schema,{_,row->assertEquals(seen++,row.single())})
+        assertEquals(500_001L,seen);assertEquals(listOf(seen),result.rows)
+    }
     @Test fun finiteNumbersRequiredAndNullabilityEnforced(){rejects{bytes(listOf(row.toMutableList().apply{this[2]=Double.NaN}))};rejects{bytes(listOf(row.toMutableList().apply{this[0]=null}))}}
     @Test fun oversizedFieldRejected(){rejects{bytes(listOf(row.toMutableList().apply{this[3]=ByteArray(LibraryArchive.MAX_FIELD+1)}))}}
     @Test fun shortReadsAndZeroProgressWorkWithoutUsingAvailable(){val b=bytes();val input=object:ByteArrayInputStream(b){var zero=true;override fun available()=0;override fun read(b:ByteArray,o:Int,n:Int):Int{if(zero){zero=false;return 0};return super.read(b,o,minOf(n,2))}};assertEquals(listOf(1L),LibraryArchive.read(input,schema,{_,_->}).rows)}

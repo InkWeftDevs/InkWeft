@@ -16,7 +16,7 @@ interface LibraryContentDao {
     @Query("SELECT noteId FROM library_content_receipts WHERE kind='RESOURCE' AND digest=:hash") suspend fun resourceCopies(hash:String):List<String>
     @Insert(onConflict=OnConflictStrategy.ABORT) suspend fun insert(row:LibraryContentReceipt)
 }
-enum class LibraryContentFault { BEFORE_RECEIPT, AFTER_TRANSACTION }
+enum class LibraryContentFault { BEFORE_RECEIPT, AFTER_TRANSACTION, AFTER_IMPORT_VALIDATION, AFTER_COPY_VALIDATION }
 data class ContentExport(val title:String,val extension:String,val bytes:ByteArray)
 
 /** All transfer writes live in one transaction, with a durable replay receipt.
@@ -31,6 +31,21 @@ class LibraryContentRepository(private val db:NoteDatabase,
     suspend fun lookup(id:String,kind:String,digest:String):Note?=db.withTransaction{replay(id,kind,digest)}
 
     suspend fun duplicate(command:CopyNotebook):Note {
+        lookup(command.commandId,"COPY",command.digest())?.let{fault(LibraryContentFault.AFTER_TRANSACTION);return it}
+        val (documents,images)=db.withTransaction {
+            require(db.notes().note(command.sourceId)!=null){"SOURCE_MISSING"}
+            require(db.workspace().get(command.sourceId)?.trashedAt==null){"SOURCE_IN_TRASH"}
+            val documents=mutableMapOf<String,PdfDocumentSource>();val images=linkedMapOf<String,ImageSource>()
+            for(page in db.pages().list(command.sourceId)){
+                DocumentRepository(db).read(page.id,documents)
+                val objects=PageObjectRepository(db).read(page.id).objects
+                ImageSourceRepository(db).forPage(page.id,objects).forEach{images[it.sha256]=it}
+            }
+            documents.values.toList() to images.values.toList()
+        }
+        // This proof is content-bound; commit below still reads one current source snapshot and hashes inserted chunks.
+        val validated=ValidatedImportOriginals.prepare(documents,images,checkNotNull(db.documentScratch))
+        fault(LibraryContentFault.AFTER_COPY_VALIDATION)
         val result=db.withTransaction {
             replay(command.commandId,"COPY",command.digest())?.let{return@withTransaction it}
             val source=checkNotNull(db.notes().note(command.sourceId)){"SOURCE_MISSING"}
@@ -46,15 +61,24 @@ class LibraryContentRepository(private val db:NoteDatabase,
             db.covers().get(source.id)?.let{require(db.covers().otherBytes(target.id)+it.payload.size<=32_000_000){"COVER_LIBRARY_BUDGET"};db.covers().put(it.copy(noteId=target.id))}
             val documents=mutableMapOf<String,PdfDocumentSource>()
             pages.forEachIndexed { index,page ->
-                val state=InkRepository(db).read(page.id)
-                val visible=InkSession(state).visibleDraft()
-                val copy=InkPageFile(title,"",visible,page.world,PaperStyle.entries[page.paper],PageObjectRepository(db).read(page.id).objects,DocumentRepository(db).read(page.id,documents),ImageSourceRepository(db).forPage(page.id,PageObjectRepository(db).read(page.id).objects),PageAuthoringRepository(db).readPage(page.id).state.takeUnless{it.legacy})
                 val pageId=if(index==0)target.id else UUID.randomUUID().toString()
                 if(index>0)db.pages().insert(NotebookPageRow(pageId,target.id,index,page.world,page.paper))
-                populate(pageId,copy)
+                DocumentRepository(db).attach(pageId,DocumentRepository(db).read(page.id,documents),validated)
+                val copied=InkRepository(db).copyVisibleTo(page.id,pageId)
+                val objects=PageObjectRepository(db).read(page.id).objects.mapNotNull{o->
+                    val refs=o.sourceStrokeIds.filter{it in copied.strokeIds}
+                    if(o.hidden&&refs.isEmpty())null else o.copy(sourceStrokeIds=refs,textRuns=o.textRuns.map{it.copy(sourceIds=it.sourceIds.filter{v->v in refs})})
+                }
+                val objectIds=PageObjectRepository(db).import(pageId,objects,copied.strokeIds,ImageSourceRepository(db).forPage(page.id,objects),validated)
+                val state=PageAuthoringRepository(db).readPage(page.id).state
+                if(!state.legacy){
+                    val authoring=state.copied(pageId,copied.strokeIds,objectIds)
+                    PageAuthoringRepository(db).validate(AuthoringScope.page(target.id,pageId),authoring)
+                    PageAuthoringRepository(db).storePage(pageId,target.id,0,authoring)
+                }
                 // Only currently valid manual transcription travels to the new revision.
-                db.pages().search(page.id)?.takeIf{it.inkRevision==state.revision&&it.method=="MANUAL"}?.let{
-                    db.pages().putSearch(PageSearchRow(pageId,copy.strokes.size.toLong(),it.text))
+                db.pages().search(page.id)?.takeIf{it.inkRevision==copied.sourceRevision&&it.method=="MANUAL"}?.let{
+                    db.pages().putSearch(PageSearchRow(pageId,copied.strokeIds.size.toLong(),it.text))
                 }
             }
             fault(LibraryContentFault.BEFORE_RECEIPT)
@@ -67,22 +91,25 @@ class LibraryContentRepository(private val db:NoteDatabase,
 
     suspend fun import(command:ImportNotebook,prepared:ContentTransfer.Prepared):Note {
         require(command.contentSha256==prepared.sha256){"IMPORT_CONTENT_CHANGED"}
+        lookup(command.commandId,"IMPORT",command.digest())?.let{fault(LibraryContentFault.AFTER_TRANSACTION);return it}
+        val text:String
+        val pages:List<InkPageFile>
+        when(val content=prepared.content){
+            is ContentTransfer.Content.Page->{text=content.value.text;pages=listOf(content.value)}
+            is ContentTransfer.Content.Book->{text=content.value.text;pages=content.value.pages.toList()}
+        }
+        val validated=ValidatedImportOriginals.prepare(pages,checkNotNull(db.documentScratch))
+        fault(LibraryContentFault.AFTER_IMPORT_VALIDATION)
         val result=db.withTransaction {
             replay(command.commandId,"IMPORT",command.digest())?.let{return@withTransaction it}
             require(db.notes().note(command.destinationId)==null){"DESTINATION_EXISTS"}
             val title=prepared.content.title
-            val text:String
-            val pages:List<InkPageFile>
-            when(val content=prepared.content){
-                is ContentTransfer.Content.Page->{text=content.value.text;pages=listOf(content.value)}
-                is ContentTransfer.Content.Book->{text=content.value.text;pages=content.value.pages}
-            }
             val first=pages.first()
             val target=create(command.destinationId,title,text,first.world,first.paper.ordinal)
             pages.forEachIndexed{index,page->
                 val pageId=if(index==0)target.id else UUID.randomUUID().toString()
                 if(index>0)db.pages().insert(NotebookPageRow(pageId,target.id,index,page.world,page.paper.ordinal))
-                populate(pageId,page)
+                populate(pageId,page,validated)
             }
             fault(LibraryContentFault.BEFORE_RECEIPT)
             db.libraryContent().insert(LibraryContentReceipt(command.commandId,"IMPORT",command.digest(),target.id))
@@ -101,7 +128,7 @@ class LibraryContentRepository(private val db:NoteDatabase,
         validatePages(rows,metadata.world)
         if(metadata.world){
             val p=rows.single()
-            val file=InkPageFile(note.title,note.text,InkSession(InkRepository(db).read(p.id)).visibleDraft(),
+            val file=InkPageFile(note.title,note.text,InkRepository(db).readVisible(p.id),
                 true,PaperStyle.entries[p.paper],PageObjectRepository(db).read(p.id).objects,imageSources=ImageSourceRepository(db).forPage(p.id,PageObjectRepository(db).read(p.id).objects),authoring=PageAuthoringRepository(db).readPage(p.id).state.takeUnless{it.legacy})
             ContentExport(note.title,"iwpage",file.encode())
         }else ContentExport(note.title,"iwbook",NotebookPages(db).exportBook(notebookId).encode())
@@ -121,8 +148,8 @@ class LibraryContentRepository(private val db:NoteDatabase,
         db.pages().insert(NotebookPageRow(id,id,0,world,paper,centerX=if(world)0.0 else 500.0,centerY=if(world)0.0 else 707.0))
         return Note(id,1,title,text)
     }
-    private suspend fun populate(pageId:String,page:InkPageFile){
-        DocumentRepository(db).attach(pageId,page.source)
+    private suspend fun populate(pageId:String,page:InkPageFile,validated:ValidatedImportOriginals?=null){
+        DocumentRepository(db).attach(pageId,page.source,validated)
         require(db.ink().page(pageId)==null)
         val strokeIds=page.strokes.associate{it.id to UUID.randomUUID().toString()}
         val cuts=mutableMapOf<String,String>()
@@ -130,9 +157,9 @@ class LibraryContentRepository(private val db:NoteDatabase,
         page.strokes.forEachIndexed{index,old->
             val masks=old.cuts.map{c->InkCut(cuts.getOrPut(c.id){UUID.randomUUID().toString()},c.radius,c.points,c.shape)}
             val stroke=InkStroke(checkNotNull(strokeIds[old.id]),old.pen,old.color,old.width,old.tool,old.samples,old.world,masks,old.appearance)
-            db.ink().insertStroke(InkStrokeRow(stroke.id,pageId,InkStrokeCodec.encode(stroke),stroke.samples.size,true,index.toLong()+1))
+            db.ink().insertStroke(InkStrokeRow(stroke.id,pageId,InkStrokeCodec.encodeStored(stroke),stroke.samples.size,true,index.toLong()+1))
         }
-        val objects=PageObjectRepository(db).import(pageId,page.objects,strokeIds,page.imageSources)
-        page.authoring?.let{state->val owner=checkNotNull(db.pages().get(pageId));val copied=state.copied(pageId,strokeIds,objects);PageAuthoringRepository(db).validate(AuthoringScope.page(owner.notebookId,pageId),copied);db.authoring().put(PageAuthoringRow(AuthoringScopeKind.PAGE.name,pageId,owner.notebookId,0,PageAuthoringCodec.encode(copied)))}
+        val objects=PageObjectRepository(db).import(pageId,page.objects,strokeIds,page.imageSources,validated)
+        page.authoring?.let{state->val owner=checkNotNull(db.pages().get(pageId));val copied=state.copied(pageId,strokeIds,objects);PageAuthoringRepository(db).validate(AuthoringScope.page(owner.notebookId,pageId),copied);PageAuthoringRepository(db).storePage(pageId,owner.notebookId,0,copied)}
     }
 }

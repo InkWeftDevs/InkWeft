@@ -12,7 +12,8 @@ import java.util.UUID
 
 data class InkUi(val strokes:List<InkStroke> = emptyList(),val loading:Boolean=true,val readFailed:Boolean=false,
     val blocked:InkCommitResult?=null,val queued:Int=0,val canStart:Boolean=false,val canUndo:Boolean=false,
-    val canRedo:Boolean=false,val revision:Long=0,val processing:Boolean=false,val message:String?=null,val suspended:Boolean=false)
+    val canRedo:Boolean=false,val revision:Long=0,val processing:Boolean=false,val message:String?=null,val suspended:Boolean=false,
+    val windowComplete:Boolean=true,val windowLoading:Boolean=false,val automaticSourceIds:Set<String>?=null)
 class InkViewModel(private val noteId:String,private val repository:InkRepository):ViewModel(){
     internal var authorAllowed:()->Boolean={true}
     internal var layerScopeProvider:()->LayerWriteScope?={null}
@@ -22,10 +23,45 @@ class InkViewModel(private val noteId:String,private val repository:InkRepositor
     internal fun beginLayerWrite():Boolean=runCatching{capturedLayerScope=layerScopeProvider();true}.getOrElse{mutable.value=mutable.value.copy(message="请先选择可写图层");false}
     private val mutable=MutableStateFlow(InkUi());val ui=mutable.asStateFlow()
     private var session:InkSession?=null
+    private var automaticBaseline:Long?=null
+    internal fun renderSource():InkRenderSource? {
+        val s=session?:return null
+        return InkRenderSource(repository,noteId,s.page.revision,s.page.strokes.filter{it.visible}.map{it.stroke.id}.toSet())
+    }
     private var suspendedHistory:InkSession.History?=null
     private var displays=0
     private var retainedForWindow=false
     private var inactiveKnown=false
+    private var viewportBounds=CanvasBounds(0.0,0.0,1000.0,1414.0)
+    private var loadedBounds:CanvasBounds?=null
+    private var windowJob:Job?=null
+    private var windowPending=false
+    internal fun updateViewport(bounds:CanvasBounds){
+        if(viewportBounds==bounds)return
+        viewportBounds=bounds;refreshWindow()
+    }
+    private fun refreshWindow(){
+        val s=session?:return
+        if(loadedBounds==viewportBounds&&s.page.strokes.sumOf{it.stroke.samples.size.toLong()}<=WINDOW_POINTS){
+            windowJob?.cancel();windowJob=null
+            if(windowPending){windowPending=false;publish()}
+            return
+        }
+        windowJob?.cancel();windowPending=true;publish()
+        if(writing||reading||erasing||s.queued!=0||s.blocked!=null)return
+        val bounds=viewportBounds;val history=s.suspendHistory()
+        windowJob=viewModelScope.launch{
+            try{
+                delay(60)
+                val next=withContext(Dispatchers.IO){repository.readForEditing(noteId,history,bounds,WINDOW_POINTS)}
+                if(session===s&&s.queued==0&&s.blocked==null&&s.page.revision==next.revision&&viewportBounds==bounds){
+                    s.refreshWindow(next);loadedBounds=bounds;windowPending=false;publish()
+                }
+            }catch(c:CancellationException){throw c}catch(_:Exception){
+                if(session===s){windowPending=false;mutable.value=mutable.value.copy(windowLoading=false,windowComplete=false,message="当前区域读取未完成，请移动视口后重试；已保存笔迹保留。")}
+            }
+        }
+    }
     internal fun attachPage(){displays++;load()}
     internal fun detachPage(){check(displays>0);displays--;inactiveKnown=true;releasePage()}
     internal fun retainForWindow(value:Boolean){retainedForWindow=value;if(!value){inactiveKnown=true;releasePage()}}
@@ -34,6 +70,7 @@ class InkViewModel(private val noteId:String,private val repository:InkRepositor
     internal fun releasePage():Boolean {
         val s=session?:return false
         if(displays>0||retainedForWindow||reading||writing||erasing||s.queued!=0||s.blocked!=null||hasGroupHistory||checkpointJob?.isActive==true)return false
+        windowJob?.cancel();windowJob=null;loadedBounds=null;windowPending=false
         suspendedHistory=s.suspendHistory();session=null;suppressedIds=emptySet()
         mutable.value=mutable.value.copy(strokes=emptyList(),loading=false,canStart=false,canUndo=false,canRedo=false,suspended=true)
         return true
@@ -56,13 +93,14 @@ class InkViewModel(private val noteId:String,private val repository:InkRepositor
     var suppressedIds:Set<String> = emptySet()
     private var writing=false;private var reading=false;private var erasing=false
     init{load()}
-    fun load(){if(session!=null||reading)return;reading=true;mutable.value=InkUi();viewModelScope.launch{try{val p=withContext(Dispatchers.IO){repository.read(noteId)};session=InkSession(p)
+    fun load(){if(session!=null||reading)return;reading=true;mutable.value=InkUi();viewModelScope.launch{try{val bounds=viewportBounds;val p=withContext(Dispatchers.IO){repository.readForEditing(noteId,suspendedHistory,bounds,WINDOW_POINTS)};session=InkSession(p);loadedBounds=bounds
+        if(automaticBaseline==null||suspendedHistory?.let{it.revision!=p.revision}==true)automaticBaseline=p.revision
         suspendedHistory?.let{old->if(old.revision==p.revision)session!!.restoreHistory(old)else{history.forget(EditDomain.INK);mutable.value=mutable.value.copy(message="页面已更新，已读取当前内容；先前版本的撤销记录不再适用。")}};suspendedHistory=null
         val recovered=try{withContext(Dispatchers.IO){repository.recoverScopedCheckpoints(noteId)}}catch(c:CancellationException){throw c}catch(_:Exception){mutable.value=mutable.value.copy(message="长笔检查点待核对；已保存笔迹保留");emptyList()}
         recovered.forEach{session!!.enqueue(InkMutation.Add(it.stroke),layerScope=it.layerScope)};publish();if(recovered.isNotEmpty()){mutable.value=mutable.value.copy(message="已恢复长笔的已确认采样，可一次撤销整笔");pump()}
-        }catch(c:CancellationException){throw c}catch(_:Exception){mutable.value=InkUi(loading=false,readFailed=true)}finally{reading=false;if(inactiveKnown)releasePage()}}}
-    fun discardRejectedDraft(){val captured=session?:return;if(reading||erasing||captured.blocked !in listOf(InkCommitResult.Conflict,InkCommitResult.Rejected))return;reading=true;viewModelScope.launch{try{val p=withContext(Dispatchers.IO){repository.read(noteId)};if(session===captured){session=InkSession(p);historyDirection=0;groupUndo.clear();groupRedo.clear()};publish()}catch(c:CancellationException){throw c}catch(_:Exception){mutable.value=mutable.value.copy(readFailed=true)}finally{reading=false}}}
-    private fun publish(){val s=session?:return;groupUndo.keys.removeAll{!s.hasHistoryIdentity(it)};groupRedo.keys.removeAll{!s.hasHistoryIdentity(it)};mutable.value=InkUi(s.visibleDraft(),false,false,s.blocked,s.queued,s.canStart&&!erasing,s.canUndo&&!erasing,s.canRedo&&!erasing,s.page.revision,erasing,mutable.value.message)}
+        }catch(c:CancellationException){throw c}catch(_:Exception){session=null;mutable.value=InkUi(loading=false,readFailed=true)}finally{reading=false;refreshWindow();if(inactiveKnown)releasePage()}}}
+    fun discardRejectedDraft(){val captured=session?:return;if(reading||erasing||captured.blocked !in listOf(InkCommitResult.Conflict,InkCommitResult.Rejected))return;reading=true;viewModelScope.launch{try{val bounds=viewportBounds;val p=withContext(Dispatchers.IO){repository.readForEditing(noteId,bounds=bounds,pointBudget=WINDOW_POINTS)};if(session===captured){session=InkSession(p);automaticBaseline=p.revision;loadedBounds=bounds;historyDirection=0;groupUndo.clear();groupRedo.clear()};publish()}catch(c:CancellationException){throw c}catch(_:Exception){mutable.value=mutable.value.copy(readFailed=true)}finally{reading=false;refreshWindow()}}}
+    private fun publish(){val s=session?:return;groupUndo.keys.removeAll{!s.hasHistoryIdentity(it)};groupRedo.keys.removeAll{!s.hasHistoryIdentity(it)};mutable.value=InkUi(s.visibleDraft(),false,false,s.blocked,s.queued,s.canStart&&!erasing,s.canUndo&&!erasing,s.canRedo&&!erasing,s.page.revision,erasing,mutable.value.message,windowComplete=s.page.windowComplete&&!windowPending,windowLoading=windowPending,automaticSourceIds=s.page.strokes.filter{it.createdRevision>(automaticBaseline?:s.page.revision)}.map{it.stroke.id}.toSet())}
     fun clearMessage(){mutable.value=mutable.value.copy(message=null)}
     internal fun validateGroup(strokes:List<InkStroke>){
         validateChange(InkMutation.Replace(emptyList(),strokes))
@@ -95,7 +133,7 @@ class InkViewModel(private val noteId:String,private val repository:InkRepositor
         return if(whole)InkMutation.Visibility(ids,false)else InkMutation.Cut(EraseSelection(InkCut(UUID.randomUUID().toString(),radius,path.map{EraserPoint(it.x,it.y)}),ids))
     }
     internal fun completeGroup(command:CommitInk,result:InkCommitResult){
-        checkNotNull(session).complete(command,result);if(result is InkCommitResult.Committed){history.committed(EditDomain.INK,historyDirection);historyDirection=0};writing=false;publish()
+        checkNotNull(session).complete(command,result);if(result is InkCommitResult.Committed){history.committed(EditDomain.INK,historyDirection);historyDirection=0};writing=false;publish();refreshWindow()
     }
     private val recoveredGroups=mutableSetOf<String>()
     internal fun adoptRecovered(command:CommitInk,result:InkCommitResult.Committed){
@@ -112,11 +150,7 @@ class InkViewModel(private val noteId:String,private val repository:InkRepositor
     internal fun validateQueued(strokes:List<InkStroke>){
         val s=checkNotNull(session);check(s.blocked==null&&!erasing)
         val existing=(s.page.strokes.map{it.stroke}+ui.value.strokes).associateBy{it.id}
-        require(existing.size+strokes.size<=InkLimits.MAX_RETAINED_STROKES)
-        require(existing.values.sumOf{it.samples.size}+strokes.sumOf{it.samples.size}<=InkLimits.MAX_RETAINED_POINTS)
-        require(ui.value.strokes.size+strokes.size<=InkLimits.MAX_STROKES)
-        require(ui.value.strokes.sumOf{it.samples.size}+strokes.sumOf{it.samples.size}<=InkLimits.MAX_PAGE_POINTS)
-        require(strokes.map{it.id}.distinct().size==strokes.size&&strokes.none{it.id in existing})
+        require(strokes.map{it.id}.distinct().size==strokes.size&&strokes.none{it.id in existing||it.id in s.page.unloaded.strokePoints})
     }
     private var checkpointJob:Job?=null
     private var checkpointLatest:org.inkweft.data.InkCheckpoint?=null
@@ -142,9 +176,25 @@ class InkViewModel(private val noteId:String,private val repository:InkRepositor
         }
     }
     fun accept(stroke:InkStroke){if(!authorAllowed())return;val s=session?:return;s.enqueue(InkMutation.Add(stroke),finishInFlight=true,layerScope=capturedLayerScope);publish();pump()}
-    fun erase(ids:List<String>){if(!authorAllowed()||ids.isEmpty())return;val s=session?:return;s.enqueue(InkMutation.Visibility(ids,false),finishInFlight=true,layerScope=capturedLayerScope);publish();pump()}
+    internal fun requireCompleteWindow():Boolean {
+        if(ui.value.windowComplete)return true
+        mutable.value=mutable.value.copy(message=if(ui.value.windowLoading)"当前区域正在读取，请稍后操作。"else"当前区域笔迹过密，请放大后再选择或擦除；书写和保存可继续。")
+        return false
+    }
+    internal suspend fun prepareSelectAll():List<InkStroke>? {
+        val s=session?:return null
+        if(reading||writing||erasing||s.queued!=0||s.blocked!=null)return null
+        val history=s.suspendHistory();val bound=BoardLimits.WORLD.toDouble()
+        return try{
+            val next=withContext(Dispatchers.IO){repository.readForEditing(noteId,history,CanvasBounds(-bound,-bound,bound,bound),WINDOW_POINTS)}
+            if(session!==s||s.queued!=0||s.blocked!=null||s.page.revision!=next.revision)return null
+            if(!next.windowComplete){mutable.value=mutable.value.copy(message="本页笔迹较多，请使用框选分批操作。书写和保存可继续。");return null}
+            windowJob?.cancel();s.refreshWindow(next);loadedBounds=viewportBounds;windowPending=false;publish();s.visibleDraft()
+        }catch(c:CancellationException){throw c}catch(_:Exception){mutable.value=mutable.value.copy(message="全选读取未完成，原内容保留。");null}
+    }
+    fun erase(ids:List<String>){if(!authorAllowed()||!requireCompleteWindow()||ids.isEmpty())return;val s=session?:return;s.enqueue(InkMutation.Visibility(ids,false),finishInFlight=true,layerScope=capturedLayerScope);publish();pump()}
     fun erasePath(path:List<InkSample>,radius:Float=12f,whole:Boolean=true,onlyHighlighter:Boolean=false){
-        if(!authorAllowed())return
+        if(!authorAllowed()||!requireCompleteWindow())return
         val s=session?:return;if(erasing||path.isEmpty()||s.blocked!=null)return
         val snapshot=s.visibleDraft().filter{it.id !in suppressedIds&&editableContent(it.id)&&(!onlyHighlighter||it.pen==InkPen.HIGHLIGHTER)}
         if(!whole){
@@ -169,7 +219,7 @@ class InkViewModel(private val noteId:String,private val repository:InkRepositor
     }
     /** All selected edits are a single undo unit at the revision actually shown. */
     fun selectedEdit(expectedRevision:Long,change:InkMutation):Boolean {
-        if(!authorAllowed())return false
+        if(!authorAllowed()||!requireCompleteWindow())return false
         val s=session?:return false
         if(reading||erasing||s.queued!=0||s.blocked!=null||s.page.revision!=expectedRevision){
             mutable.value=mutable.value.copy(message="页面已更新，请重新框选；未修改原笔迹。");return false
@@ -182,6 +232,8 @@ class InkViewModel(private val noteId:String,private val repository:InkRepositor
     fun redo(){if(!authorAllowed())return;val s=session?:return;if(!s.canRedo||erasing)return;groupRedo[s.redoIdentity]?.let{it();return};historyDirection=1;s.requestRedo(layerScopeProvider());publish();pump()}
     internal fun historyBlocked(){mutable.value=mutable.value.copy(message="请先撤销相邻页上较新的编辑，再撤销这笔跨页书写。")}
     fun retry(){session?.retry();publish();pump()}
-    private fun pump(){if(writing)return;val s=session?:return;writing=true;viewModelScope.launch{try{while(true){val c=s.nextCommand()?:break;publish();val result=try{withContext(Dispatchers.IO){repository.save(c)}}catch(_:CancellationException){s.complete(c,InkCommitResult.Unknown);publish();return@launch}catch(_:Exception){InkCommitResult.Unknown};s.complete(c,result);if(result is InkCommitResult.Committed){history.committed(EditDomain.INK,historyDirection);historyDirection=0};publish();if(result !is InkCommitResult.Committed)break}}finally{writing=false;publish();if(inactiveKnown)releasePage()}}}
+    private fun pump(){if(writing)return;val s=session?:return;writing=true;viewModelScope.launch{try{while(true){val c=s.nextCommand()?:break;publish();val result=try{withContext(Dispatchers.IO){repository.save(c)}}catch(_:CancellationException){s.complete(c,InkCommitResult.Unknown);publish();return@launch}catch(_:Exception){InkCommitResult.Unknown};s.complete(c,result);if(result is InkCommitResult.Committed){history.committed(EditDomain.INK,historyDirection);historyDirection=0};publish();if(result !is InkCommitResult.Committed)break}}finally{writing=false;publish();refreshWindow();if(inactiveKnown)releasePage()}}}
+    override fun onCleared(){super.onCleared();LeakTracking.watchReleased(this,"Page ink actor cleared")}
+    private companion object {const val WINDOW_POINTS=65_536}
     class Factory(private val id:String,private val repo:InkRepository):ViewModelProvider.Factory{override fun <T:ViewModel> create(modelClass:Class<T>):T{require(modelClass.isAssignableFrom(InkViewModel::class.java));@Suppress("UNCHECKED_CAST")return InkViewModel(id,repo) as T}}
 }

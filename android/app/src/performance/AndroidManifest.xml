@@ -1,3 +1,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
-    <application><profileable android:shell="true" /></application>
+    <permission android:name="${applicationId}.permission.BENCHMARK_FIXTURE" android:protectionLevel="signature" />
+    <application>
+        <profileable android:shell="true" />
+        <provider android:name=".BenchmarkFixtureProvider"
+            android:authorities="${applicationId}.benchmark-fixture"
+            android:permission="${applicationId}.permission.BENCHMARK_FIXTURE"
+            android:enabled="${benchmarkFixtureEnabled}"
+            android:exported="true" />
+    </application>
 </manifest>

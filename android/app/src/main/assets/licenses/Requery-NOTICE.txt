@@ -1,0 +1,6 @@
+SQLite Android / Requery 3.49.0
+Upstream: https://github.com/requery/sqlite-android/tree/3.49.0
+Commit: fc24cc4284eaa77a391d48caaf47d15c37e7bbe3
+Artifact: com.github.requery:sqlite-android:3.49.0
+The Android bindings include code derived from AOSP and are distributed under Apache License 2.0. The license is included in Requery-LICENSE.txt.
+This application uses the published library without modifying its source. Its RTree-enabled SQLite engine supplies the existing SupportSQLite interfaces.

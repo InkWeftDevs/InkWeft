@@ -15,7 +15,7 @@ class NotebookFile(val title:String,val text:String,pages:List<InkPageFile>) {
             val sources=pages.mapNotNull{it.source?.document}.distinctBy{it.sha256}
             require(sources.sumOf{it.size.toLong()}<MAX_BYTES&&sources.all{it.size<=PdfDocumentSource.ARRAY_MAX_BYTES}){"CONTENT_SIZE_LIMIT_USE_FULL_BACKUP"}
             d.writeInt(if(sources.isEmpty())MAGIC else MAGIC2);for(t in listOf(title,text)){val b=t.toByteArray(Charsets.UTF_8);d.writeInt(b.size);d.write(b)}
-            if(sources.isNotEmpty()){d.writeInt(sources.size);for(source in sources){val bytes=source.bytes();require(body.size().toLong()+bytes.size<MAX_BYTES);d.writeInt(source.pages);d.writeInt(bytes.size);d.write(bytes)}}
+            if(sources.isNotEmpty()){d.writeInt(sources.size);for(source in sources){require(body.size().toLong()+source.size<MAX_BYTES);d.writeInt(source.pages);d.writeInt(source.size);source.copyTo(d)}}
             d.writeInt(pages.size)
             for(p in pages){val b=p.encode(false);require(body.size().toLong()+4+b.size+(if(sources.isEmpty())0 else 8)+32<=MAX_BYTES);d.writeInt(b.size);d.write(b);if(sources.isNotEmpty()){d.writeInt(p.source?.let{s->sources.indexOfFirst{it.sha256==s.document.sha256}}?:-1);d.writeInt(p.source?.page?:0)}}
         }

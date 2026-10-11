@@ -38,7 +38,8 @@ class AuthoringProjectionRegressionTest {
         assertEquals(InkCommitResult.Committed(2),InkRepository(db).save(CommitInk(id(),page,1,InkMutation.Add(added),before.state.layers.writeScope(before.revision))))
         val saved=meta.readPage(page)
         assertEquals(22001,saved.state.layers.memberships.size)
-        assertEquals(0x49574134,ByteBuffer.wrap(checkNotNull(db.authoring().get("PAGE",page)).payload).int)
+        assertTrue(PageAuthoringCodec.isHeader(checkNotNull(db.authoring().get("PAGE",page)).payload))
+        assertEquals(22001L,db.authoring().membershipCount(page))
         assertArrayEquals(InkStrokeCodec.encode(originals.last()),checkNotNull(db.ink().stroke(originals.last().id)).payload)
         val ink=InkRepository(db).read(page);assertEquals(22001,ink.strokes.size)
         assertEquals(1001,InkSession(ink).visibleDraft().size)
@@ -56,7 +57,8 @@ class AuthoringProjectionRegressionTest {
         assertEquals("LAYER_CONTENT_UNASSIGNED",runCatching{PageAuthoringRepository(db).readPage(page)}.exceptionOrNull()?.message)
         db.authoring().put(PageAuthoringRow("PAGE",page,page,2,PageAuthoringCodec.encode(PageAuthoring(UserLayers(memberships=listOf(LayerMembership(refs[0],UserLayers.DEFAULT_ID)),deleted=listOf(refs[1]))))))
         assertTrue(PageAuthoringRepository(db).readPage(page).state.layers.isDeleted(refs[1]))
-        db.objects().put(PageObjectRow(page,1,byteArrayOf(0)))
+        db.objects().put(PageObjectRow(page,1))
+        db.objects().putRecord(PageObjectRecordRow(page,id(),0,byteArrayOf(0),null))
         assertTrue(runCatching{PageAuthoringRepository(db).readPage(page)}.isFailure)
     }}
 

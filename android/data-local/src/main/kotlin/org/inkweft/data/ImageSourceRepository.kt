@@ -37,12 +37,12 @@ class ImageSourceRepository(private val db:NoteDatabase) {
         val book=requireNotNull(db.pages().get(pageId)).notebookId
         return objects.mapNotNull{it.imageSource}.distinct().map{read(book,it)}
     }
-    internal suspend fun attach(book:String,sources:List<ImageSource>) {
+    internal suspend fun attach(book:String,sources:List<ImageSource>,validated:ValidatedImportOriginals?=null) {
         for(source in sources.distinctBy{it.sha256}){
             if(db.images().source(book,source.sha256)!=null){require(read(book,source.sha256).size==source.size);continue}
             val context=currentCoroutineContext()
             require(checkNotNull(db.documentScratch).usableSpace>=source.size.toLong()*2+32L*1024*1024){"ORIGINAL_LOW_SPACE"}
-            validate(source,checkNotNull(db.documentScratch)){context.ensureActive()}
+            if(validated?.contains(source)!=true)validate(source,checkNotNull(db.documentScratch)){context.ensureActive()}
             db.images().insert(ImageSourceRow(book,source.sha256,source.size))
             storeOriginal(source.size,source.sha256,CHUNK,source::openStream){position,bytes->db.images().insert(ImageChunkRow(book,source.sha256,position,bytes))}
         }

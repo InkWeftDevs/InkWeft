@@ -6,11 +6,15 @@ compose-bom = "2026.03.00"
 activity = "1.13.0"
 lifecycle = "2.10.0"
 room = "2.8.5"
+sqlite-requery = "3.49.0"
 coroutines = "1.10.2"
 junit = "4.13.2"
 androidx-test = "1.7.0"
 androidx-junit = "1.3.0"
 ink = "1.1.0-alpha09"
+leakcanary = "2.14"
+benchmark = "1.5.0"
+uiautomator = "2.4.0"
 
 [libraries]
 mupdf = { module = "com.artifex.mupdf:fitz", version = "1.28.5" }
@@ -28,6 +32,7 @@ lifecycle-runtime-compose = { module = "androidx.lifecycle:lifecycle-runtime-com
 room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
 room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
 room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
+sqlite-requery = { module = "com.github.requery:sqlite-android", version.ref = "sqlite-requery" }
 kotlinx-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
 junit = { module = "junit:junit", version.ref = "junit" }
 androidx-test-core = { module = "androidx.test:core-ktx", version.ref = "androidx-test" }
@@ -37,6 +42,9 @@ ink-brush = { module = "androidx.ink:ink-brush", version.ref = "ink" }
 ink-strokes = { module = "androidx.ink:ink-strokes", version.ref = "ink" }
 ink-geometry = { module = "androidx.ink:ink-geometry", version.ref = "ink" }
 ink-rendering = { module = "androidx.ink:ink-rendering", version.ref = "ink" }
+leakcanary = { module = "com.squareup.leakcanary:leakcanary-android", version.ref = "leakcanary" }
+benchmark-macro = { module = "androidx.benchmark:benchmark-macro-junit4", version.ref = "benchmark" }
+uiautomator = { module = "androidx.test.uiautomator:uiautomator", version.ref = "uiautomator" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

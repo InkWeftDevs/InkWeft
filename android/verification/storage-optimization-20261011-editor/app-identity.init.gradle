@@ -1,0 +1,12 @@
+// Isolated application and instrumentation identities for real editor actor checks.
+gradle.beforeProject { project ->
+    if (project.path == ':app') {
+        project.pluginManager.withPlugin('com.android.application') {
+            project.androidComponents.finalizeDsl { android ->
+                android.defaultConfig.applicationId = 'org.inkweft.app.storageopt20261011'
+                android.defaultConfig.testApplicationId = 'org.inkweft.app.storageopt20261011.test'
+                android.defaultConfig.manifestPlaceholders['appLabel'] = '墨织存储验证'
+            }
+        }
+    }
+}

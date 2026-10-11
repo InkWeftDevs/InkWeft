@@ -1,0 +1,8 @@
+// Keep this storage integration run separate from products and prior test packages.
+gradle.beforeProject { project ->
+    if (project.path == ':data-local') {
+        project.pluginManager.withPlugin('com.android.library') {
+            project.android.defaultConfig.testApplicationId = 'org.inkweft.data.storageopt20261011b4.test'
+        }
+    }
+}

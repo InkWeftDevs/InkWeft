@@ -21,6 +21,30 @@ class AutomaticBeautyRegressionTest {
             text.mapIndexed{i,c->RecognizedToken(c.toString(),(i+.5f)/text.length,.95f)},.95f)))
     private suspend fun ready(vm:PageObjectViewModel){withTimeout(10000){while(vm.ui.value.loading||vm.ui.value.busy||vm.ui.value.pending)delay(20)}}
 
+    @Test fun viewportHydrationDoesNotRecognizeOldInkAndIncompleteWindowsPauseAutomaticRecognition()=runBlocking {
+        val name="beauty-window-${id()}.db";val db=NoteDatabase.open(ins.targetContext,name);val store=androidx.lifecycle.ViewModelStore()
+        try{
+            val page=org.inkweft.data.WorkspaceRepository(db).create("窗口美化回归",false,PaperStyle.BLANK).id
+            val repo=org.inkweft.data.InkRepository(db);val old=stroke();val added=stroke(y=400f)
+            repo.save(CommitInk(id(),page,0,InkMutation.Add(old)))
+            val recognized=CompletableDeferred<Set<String>>();lateinit var model:PageObjectViewModel
+            ins.runOnMainSync{model=PageObjectViewModel(page,PageObjectRepository(db)){sources,_,_->recognized.complete(sources.map{it.id}.toSet());result(sources).copy(confidence=.2f)};store.put("objects",model)}
+            ready(model);val options=BeautyOptions(enabled=true)
+            ins.runOnMainSync{
+                model.observeBeauty(InkUi(loading=false,revision=1,automaticSourceIds=emptySet()),false,options,false,app)
+                model.observeBeauty(InkUi(strokes=listOf(old),loading=false,revision=1,automaticSourceIds=emptySet()),false,options,false,app)
+            }
+            delay(900);assertFalse(recognized.isCompleted)
+            repo.save(CommitInk(id(),page,1,InkMutation.Add(added)))
+            val ink=InkUi(strokes=listOf(old,added),loading=false,revision=2,windowComplete=false,automaticSourceIds=setOf(added.id))
+            ins.runOnMainSync{model.observeBeauty(ink,false,options,false,app)}
+            delay(900);assertFalse(recognized.isCompleted)
+            ins.runOnMainSync{model.observeBeauty(ink.copy(windowComplete=true),false,options,false,app)}
+            assertEquals(setOf(added.id),withTimeout(5000){recognized.await()})
+            assertTrue(PageObjectRepository(db).read(page).objects.isEmpty())
+        }finally{ins.runOnMainSync{store.clear()};db.close();ins.targetContext.deleteDatabase(name)}
+    }
+
     @Test fun missingOrDuplicateSourcesCannotAutomaticallyHideInk(){
         val sources=listOf(stroke(),stroke(y=350f));val missing=result(sources.take(1))
         assertFalse(BeautyQuality.decide(sources,missing,missing,true).automatic)
