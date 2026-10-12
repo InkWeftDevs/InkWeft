@@ -12,6 +12,8 @@ enum class NoteFaultPoint { BEFORE_RENAME_RECEIPT, AFTER_RENAME_TRANSACTION }
 class NoteRepository(private val db:NoteDatabase,private val fault:(NoteFaultPoint)->Unit={}) {
     private val dao=db.notes()
     fun observeNotes():Flow<List<Note>> = dao.observeNotes().map{rows->rows.map{it.domain()}}
+    /** Directory entries are not editable heads; read(id) supplies the author body on open. */
+    fun observeNoteHeaders():Flow<List<Note>> = dao.observeNoteHeaders().map{rows->rows.map{it.domain()}}
     suspend fun read(id:String):Note?=dao.note(id)?.domain()
 
     suspend fun save(command:SaveNote):SaveResult=db.withTransaction {

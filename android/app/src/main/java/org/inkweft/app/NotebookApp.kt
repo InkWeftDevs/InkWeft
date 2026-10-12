@@ -69,7 +69,7 @@ fun NotebookApp(vm:NotebookViewModel=viewModel(),onDiagnostics:()->Unit={}){
             try{
                 val (destination,anchor)=withContext(Dispatchers.IO){app.knowledge.resolve(ref)}
                 val page=back?.page?:anchor?.pageId?:ref.id.takeIf{ref.kind==TargetKind.PAGE}
-                val opened=if(page!=null)workspace.openPageAwait(destination.id,page,anchor){vm.select(destination)}else{vm.select(destination);true}
+                val opened=if(page!=null)workspace.openPageAwait(destination.id,page,anchor){vm.selectAwait(destination)}else vm.selectAwait(destination)
                 if(opened){
                     if(back!=null){workspace.restoreKnowledgeViewport(back);workspace.consumeKnowledgeReturn()}
                     else if(originBook!=null&&originPage!=null)workspace.rememberKnowledgeReturn(origin?:TargetRef(TargetKind.PAGE,originPage),originBook,originPage)
@@ -122,7 +122,7 @@ fun NotebookApp(vm:NotebookViewModel=viewModel(),onDiagnostics:()->Unit={}){
             {id->if(vm.closeTab(id)){notebookStates.removeState(id);if(splitId==id)splitId=null}else Toast.makeText(context,"这份笔记有未保存文字或待核对操作，请先处理后再关闭标签。",Toast.LENGTH_SHORT).show()},{splitId=null;vm.back()},modifier=modifier,split={id,vertical->splitId=id;splitVertical=vertical},compact=compact)}
         if(ui.current!=null&&!immersive&&!inkMode)notebookTabs(false,Modifier)
         val draft=ui.current
-        if(draft==null)Box(Modifier.weight(1f)){LibraryScreen(ui,workspace,vm::select,::openCreate,{importGuide=true},onDiagnostics,::beginRename,{transfers.requestCopy(it.id)},{transfers.export(it.id)})}
+        if(draft==null)Box(Modifier.weight(1f)){LibraryScreen(ui,workspace,vm::selectAwait,::openCreate,{importGuide=true},onDiagnostics,::beginRename,{transfers.requestCopy(it.id)},{transfers.export(it.id)})}
         else{
             if(!inkMode)Row(Modifier.fillMaxWidth().heightIn(min=58.dp).padding(horizontal=12.dp),verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(8.dp)){
                 TextButton(onClick=vm::back,modifier=Modifier.testTag("back-library")){Glyph("back");Spacer(Modifier.width(5.dp));Text("资料库",fontSize=13.sp)}
@@ -138,7 +138,7 @@ fun NotebookApp(vm:NotebookViewModel=viewModel(),onDiagnostics:()->Unit={}){
             if(inkMode&&draft.base.revision>0)Box(Modifier.weight(1f)){
                 val editor:@Composable ()->Unit={notebookStates.SaveableStateProvider(draft.base.id){InkScreen(draft,workspace,{splitId=null;vm.back()},{beginRename(draft.base)},{inkMode=false;immersive=false},onDiagnostics,immersive,{immersive=it},notebookSwitcher={modifier->notebookTabs(true,modifier)})}}
                 val other=splitId?.let{id->ui.notes.find{it.id==id}}
-                val reference:@Composable ()->Unit={if(other!=null)NotebookReferencePane(other.id,other.title,navigationReady,splitVertical,{splitVertical=!splitVertical},{pageId->val previous=draft.base.id;workspace.openSearchPage(other.id,pageId){vm.select(other);splitId=previous}},{splitId=null})}
+                val reference:@Composable ()->Unit={if(other!=null)NotebookReferencePane(other.id,other.title,navigationReady,splitVertical,{splitVertical=!splitVertical},{pageId->val previous=draft.base.id;workspace.openSearchPage(other.id,pageId){vm.selectAwait(other).also{if(it)splitId=previous}}},{splitId=null})}
                 if(other==null)editorSlot(editor)
                 else if(splitVertical)Column{Box(Modifier.weight(1f)){editorSlot(editor)};HorizontalDivider(color=Line,thickness=2.dp);Box(Modifier.weight(1f)){reference()}}
                 else Row{Box(Modifier.weight(1f)){editorSlot(editor)};VerticalDivider(color=Line,thickness=2.dp);Box(Modifier.weight(1f)){reference()}}

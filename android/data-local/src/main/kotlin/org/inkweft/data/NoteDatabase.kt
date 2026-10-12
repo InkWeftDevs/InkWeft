@@ -17,7 +17,8 @@ data class ReceiptRow(@PrimaryKey val commandId:String,val noteId:String,val dig
 interface NoteDao {
     @Query("SELECT n.id,n.title,COALESCE(w.favorite,0) AS favorite,w.trashedAt FROM notes n LEFT JOIN notebook_workspace w ON w.noteId=n.id ORDER BY n.id") fun observeLearningNotes():Flow<List<LearningNoteRow>>
     @Query("SELECT n.* FROM notes n JOIN notebook_workspace w ON w.noteId=n.id WHERE w.trashedAt IS NULL ORDER BY n.updatedAt DESC") fun observeAvailableNotes():Flow<List<NoteRow>>
-    @Query("SELECT * FROM notes ORDER BY updatedAt DESC") fun observeNotes():Flow<List<NoteRow>>
+    @Query("SELECT * FROM notes ORDER BY updatedAt DESC,id") fun observeNotes():Flow<List<NoteRow>>
+    @Query("SELECT id,revision,title,'' AS text,updatedAt FROM notes ORDER BY updatedAt DESC,id") fun observeNoteHeaders():Flow<List<NoteRow>>
     @Query("SELECT * FROM notes WHERE id=:id") suspend fun note(id:String):NoteRow?
     @Query("SELECT * FROM command_receipts WHERE commandId=:id") suspend fun receipt(id:String):ReceiptRow?
     @Query("SELECT * FROM note_revisions WHERE noteId=:id AND revision=:revision") suspend fun revision(id:String,revision:Long):NoteRevisionRow?
