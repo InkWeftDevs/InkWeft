@@ -87,12 +87,14 @@ class BundledSqliteFactoryTest {
         val config = SupportSQLiteOpenHelper.Configuration.builder(context).name(name).callback(callback).build()
         try {
             RequerySQLiteOpenHelperFactory().create(config).use { helper ->
-                helper.setWriteAheadLoggingEnabled(true)
                 val db = helper.writableDatabase
                 // The bundled SQLite defaults to FULL auto-vacuum. Explicitly build
-                // the legacy NONE fixture before testing that opening preserves it.
+                // the legacy NONE fixture on one connection, then enable WAL.
+                db.disableWriteAheadLogging()
+                assertFalse(db.isWriteAheadLoggingEnabled)
                 db.execSQL("PRAGMA auto_vacuum=NONE")
                 db.execSQL("VACUUM")
+                helper.setWriteAheadLoggingEnabled(true)
                 assertEquals(1024L, db.pageSize)
                 assertEquals(0, mode(db))
                 db.execSQL("INSERT INTO authors VALUES (7,?)", arrayOf<Any>(bytes))
