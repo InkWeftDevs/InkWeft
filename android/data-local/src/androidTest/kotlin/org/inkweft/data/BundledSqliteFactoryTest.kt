@@ -89,6 +89,10 @@ class BundledSqliteFactoryTest {
             RequerySQLiteOpenHelperFactory().create(config).use { helper ->
                 helper.setWriteAheadLoggingEnabled(true)
                 val db = helper.writableDatabase
+                // The bundled SQLite defaults to FULL auto-vacuum. Explicitly build
+                // the legacy NONE fixture before testing that opening preserves it.
+                db.execSQL("PRAGMA auto_vacuum=NONE")
+                db.execSQL("VACUUM")
                 assertEquals(1024L, db.pageSize)
                 assertEquals(0, mode(db))
                 db.execSQL("INSERT INTO authors VALUES (7,?)", arrayOf<Any>(bytes))
@@ -189,6 +193,8 @@ class BundledSqliteFactoryTest {
         try {
             path.parentFile!!.mkdirs()
             io.requery.android.database.sqlite.SQLiteDatabase.openOrCreateDatabase(path, null).use { db ->
+                db.execSQL("PRAGMA auto_vacuum=NONE")
+                db.execSQL("VACUUM")
                 db.execSQL("CREATE TABLE author(payload BLOB NOT NULL)")
                 db.execSQL("INSERT INTO author VALUES (?)", arrayOf<Any>(bytes)); assertEquals(0, db.version)
             }
