@@ -18,6 +18,7 @@ class InkWeftApplication:Application(){
     val repository by lazy{NoteRepository(database)}
     val documents by lazy{DocumentRepository(database)}
     val originalMaintenance by lazy{OriginalStorageMaintenance(database)}
+    val historyStorage by lazy{HistoryStorage(database)}
     val pageObjects by lazy{PageObjectRepository(database)}
     val authoring by lazy{PageAuthoringRepository(database).also{it.readObserver=diagnostics::readTiming}}
     val inkRepository by lazy{InkRepository(database).also{it.readObserver=diagnostics::readTiming}}
@@ -47,8 +48,11 @@ class InkWeftApplication:Application(){
         // Capture only files from the previous process before any new transfer can start.
         val names=Regex("(?:content-(?:import-|export-)?|document-import-)[0-9a-f-]{36}(?:\\.part)?")
         val abandoned=cacheDir.listFiles().orEmpty().filter{names.matches(it.name)}+
-            java.io.File(cacheDir,"visible-exports").listFiles().orEmpty().filter{it.name.matches(Regex("page-[0-9]+\\.(pdf|png)"))}
-        if(abandoned.isNotEmpty())kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO).launchCleanup(abandoned)
+            java.io.File(cacheDir,"visible-exports").listFiles().orEmpty().filter{it.name.matches(Regex("page-[0-9]+\\.(pdf|png)"))}+
+            java.io.File(cacheDir,"library-backup").listFiles().orEmpty().filter{it.name.matches(Regex("(?:stage-|copy-)[0-9a-f-]{36}|snapshot-[0-9a-f-]{36}\\.iwbackup"))}+
+            java.io.File(filesDir,"encrypted-backup-jobs").listFiles().orEmpty().filter{it.name.matches(Regex("decrypt-[0-9a-f-]{36}\\.partial|restore-[0-9a-f-]{36}\\.iwbackup"))}
+        val owned=abandoned.filter{!java.nio.file.Files.isSymbolicLink(it.toPath())&&it.canonicalPath.startsWith((if(it.parentFile?.name=="encrypted-backup-jobs")filesDir else cacheDir).canonicalPath+java.io.File.separator)}
+        if(owned.isNotEmpty())kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO).launchCleanup(owned)
         TextStyles.initialize(this);diagnostics; if(backupEngine.mayResume())BackupScheduler.schedule(this)}
 }
 

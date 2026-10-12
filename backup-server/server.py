@@ -324,22 +324,4 @@ def create_app(path, before_publish=lambda: None, enable_shadow=False):
 
 
 if __name__=='__main__':
-    p=argparse.ArgumentParser();p.add_argument('--db',default=os.environ.get('INKWEFT_BACKUP_DB','state/backup.db'));p.add_argument('--add-user');p.add_argument('--reset-password');p.add_argument('--backup-to');p.add_argument('--port',type=int,default=18751);p.add_argument('--host',default='127.0.0.1');a=p.parse_args()
-    store=Store(a.db)
-    if a.add_user: print('Created user',store.add_user(a.add_user,getpass.getpass('Password (12+ characters): ')))
-    elif a.reset_password:
-        password=getpass.getpass('New password (12+ characters): ')
-        if len(password)<12: raise ValueError('Password too short')
-        with store.db() as c:
-            user=c.execute('SELECT id FROM users WHERE name=?',(a.reset_password,)).fetchone()
-            if user is None: raise ValueError('User not found')
-            c.execute('UPDATE users SET password=? WHERE id=?',(HASHER.hash(password),user['id']));c.execute('UPDATE sessions SET revoked=1 WHERE user=?',(user['id'],))
-        print('Authentication reset; encrypted backups still require the separate recovery key.')
-    elif a.backup_to:
-        target=Path(a.backup_to)
-        if target.exists(): raise ValueError('Backup destination already exists')
-        with store.db() as source,sqlite3.connect(target) as output: source.backup(output)
-        print('Server snapshot saved')
-    else:
-        import uvicorn
-        uvicorn.run(create_app(a.db),host=a.host,port=a.port,access_log=False)
+    raise SystemExit('Legacy v1 fixture only. Build and run inkweft-backup (Go); retain old data in its original directory.')

@@ -31,8 +31,9 @@ class InkModelsTest {
         variants.forEach { original ->
             val canonical=InkStrokeCodec.encode(original)
             val stored=InkStrokeCodec.encodeStored(original)
-            assertEquals(canonical.size-original.samples.size*4,stored.size)
-            assertEquals(java.nio.ByteBuffer.wrap(canonical).int+5,java.nio.ByteBuffer.wrap(stored).int)
+            assertEquals(canonical.size-original.samples.size*4+36,stored.size)
+            assertEquals(original.bounds(),InkStrokeCodec.storedBounds(stored.copyOf(36)))
+            assertEquals(java.nio.ByteBuffer.wrap(canonical).int+5,java.nio.ByteBuffer.wrap(stored,36,stored.size-36).int)
             val restored=InkStrokeCodec.decode(stored)
             assertArrayEquals(canonical,InkStrokeCodec.encode(restored))
             assertArrayEquals(stored,InkStrokeCodec.encodeStored(restored))
@@ -44,7 +45,7 @@ class InkModelsTest {
         val points=List(InkLimits.MAX_POINTS){i->InkSample((i%1000).toFloat(),(i%1414).toFloat(),i.toLong()*400,
             Float.fromBits(0x3eaaaaab),Float.fromBits(0x3f123456),Float.fromBits(0x40234567))}
         val original=stroke(points);val stored=InkStrokeCodec.encodeStored(original)
-        assertEquals(InkStrokeCodec.encode(original).size-InkLimits.MAX_POINTS*4,stored.size)
+        assertEquals(InkStrokeCodec.encode(original).size-InkLimits.MAX_POINTS*4+36,stored.size)
         val decoded=InkStrokeCodec.decode(stored)
         assertEquals(points,decoded.samples)
         points.zip(decoded.samples).forEach{(a,b)->
@@ -66,6 +67,9 @@ class InkModelsTest {
         rejects{InkStrokeCodec.decode(bytes+byteArrayOf(0))}
         val unknown=bytes.copyOf();java.nio.ByteBuffer.wrap(unknown).putInt(0x4957533b)
         rejects{InkStrokeCodec.decode(unknown)}
+        val wrongBounds=bytes.copyOf();java.nio.ByteBuffer.wrap(wrongBounds).putDouble(4,0.0)
+        rejects{InkStrokeCodec.decode(wrongBounds)}
+        val nested=bytes.copyOfRange(0,36)+bytes;rejects{InkStrokeCodec.decode(nested)}
     }
     @Test fun canonicalEncodingRemainsStableAcrossStorageOptimization() {
         val original=InkStroke("00000000-0000-0000-0000-000000000001",InkPen.PEN,0xff22342f.toInt(),3f,InkTool.TOUCH,

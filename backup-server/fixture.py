@@ -1,17 +1,15 @@
 """Ephemeral synthetic account fixture. Never points at an existing server database."""
 import argparse
 from pathlib import Path
-from server import Store,create_app
+from go_fixture import start_go,fixture_app
 
 if __name__=='__main__':
     parser=argparse.ArgumentParser();parser.add_argument('--directory',required=True);parser.add_argument('--port',type=int,default=18751);parser.add_argument('--upload-delay',type=float,default=0);args=parser.parse_args();assert 0<=args.upload_delay<=4
     root=Path(args.directory).resolve();root.mkdir(parents=True,exist_ok=True);db=root/'synthetic.db'
     if db.exists(): raise SystemExit('Fixture refuses to reuse an existing database')
-    store=Store(db)
-    store.add_user('synthetic-alice','synthetic-alice-password-123')
-    store.add_user('synthetic-bob','synthetic-bob-password-456')
+    go_db,base=start_go(root,args.port+100)
     import uvicorn
-    app=create_app(db,enable_shadow=True)
+    app=fixture_app(root,go_db,base)
     counts={};activity={"uploads":0};controls={"trickle":0.0}
     import asyncio
     from starlette.responses import StreamingResponse

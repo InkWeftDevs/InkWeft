@@ -60,8 +60,10 @@ fun LibraryScreen(ui:NotebookUi,workspace:WorkspaceViewModel,open:(Note)->Unit,c
     var filter by rememberSaveable{mutableStateOf("all")};var type by rememberSaveable{mutableStateOf("all")}
     var query by rememberSaveable{mutableStateOf("")};var grid by rememberSaveable{mutableStateOf(true)};var byTitle by rememberSaveable{mutableStateOf(false)}
     var searchGeneration by remember{mutableLongStateOf(0)}
-    LaunchedEffect(ui.notes,ui.drafts,query,filter,type,byTitle){
-        searchGeneration=workspace.searchLibrary(ui.notes,ui.drafts,query,filter,type,byTitle)
+    var pageStarts by remember(ui.notes,ui.drafts,query,filter,type,byTitle){mutableStateOf(listOf(0))}
+    val searchOffset=pageStarts.last()
+    LaunchedEffect(ui.notes,ui.drafts,query,filter,type,byTitle,searchOffset){
+        searchGeneration=workspace.searchLibrary(ui.notes,ui.drafts,query,filter,type,byTitle,searchOffset)
     }
     val drawer=rememberDrawerState(DrawerValue.Closed);val scope=rememberCoroutineScope()
     val focus=LocalFocusManager.current;val keyboard=LocalSoftwareKeyboardController.current
@@ -76,7 +78,7 @@ fun LibraryScreen(ui:NotebookUi,workspace:WorkspaceViewModel,open:(Note)->Unit,c
     BackHandler(enabled=drawer.isOpen||drawer.targetValue==DrawerValue.Open){closeDrawer()}
     val active=shelf.active
     val learningNote=active.find{it.id==learningNoteId}
-    val searchReady=shelf.generation==searchGeneration&&shelf.query==query&&shelf.filter==filter&&shelf.type==type&&shelf.byTitle==byTitle
+    val searchReady=shelf.generation==searchGeneration&&shelf.query==query&&shelf.filter==filter&&shelf.type==type&&shelf.byTitle==byTitle&&shelf.offset==searchOffset
     val shown=if(searchReady&&!shelf.failed)shelf.items else emptyList()
     val title=when{filter=="favorite"->"已收藏";filter=="trash"->"回收站";filter=="unfiled"->"未分类";filter.startsWith("folder:")->filter.removePrefix("folder:");filter.startsWith("tag:")->"标签 · "+filter.removePrefix("tag:");else->"全部笔记"}
     val nav:@Composable (Boolean)->Unit={search->
@@ -151,9 +153,10 @@ fun LibraryScreen(ui:NotebookUi,workspace:WorkspaceViewModel,open:(Note)->Unit,c
                         FlowRow(Modifier.weight(1f),horizontalArrangement=Arrangement.spacedBy(8.dp)){
                         listOf("all" to "全部","page" to "纸张笔记","board" to "无界笔记").forEach{(id,label)->FilterChip(selected=type==id,onClick={type=id},label={Text(label,fontSize=13.sp,maxLines=1)},shape=RoundedCornerShape(10.dp),border=BorderStroke(1.dp,if(type==id)Forest else Line),colors=FilterChipDefaults.filterChipColors(containerColor=Color.White,selectedContainerColor=Leaf,selectedLabelColor=Forest),modifier=Modifier.heightIn(min=48.dp).testTag("library-type-$id"))}
                         }
-                        if(!compact)Text("${shown.size} 份",fontSize=11.sp,color=Quiet,maxLines=1)
+                        if(!compact)Text("本页 ${shown.size} 份",fontSize=11.sp,color=Quiet,maxLines=1)
                     }
                     if(ui.loading||!searchReady)LinearProgressIndicator(Modifier.fillMaxWidth())
+                    if(searchReady&&query.isNotBlank()&&shelf.pendingIndex>0)Text("索引正在后台准备，当前结果已包含未建索引的内容。",color=Quiet,fontSize=12.sp,modifier=Modifier.testTag("library-index-building"))
                     if(filter=="trash")Text("笔记内容与封面仍保留，可从菜单恢复。",fontSize=12.sp,color=Quiet,modifier=Modifier.padding(vertical=12.dp))
                     val itemContent:@Composable (LibraryShelfItem)->Unit={item->val n=item.note;val meta=item.workspace;val hitPage=item.pageId
                         NoteTile(n,meta,counts[n.id]?.modifiedRevision?:0,counts[n.id]?.visibleCount?:0,grid,
@@ -168,6 +171,11 @@ fun LibraryScreen(ui:NotebookUi,workspace:WorkspaceViewModel,open:(Note)->Unit,c
                     }else LazyColumn(Modifier.weight(1f).testTag("library-list"),contentPadding=PaddingValues(vertical=18.dp),verticalArrangement=Arrangement.spacedBy(12.dp)){
                         if(filter!="trash"&&query.isBlank())item{OutlinedButton(onClick=create,modifier=Modifier.fillMaxWidth()){Glyph("add");Text("新建笔记")}}
                         items(shown,key={it.note.id}){itemContent(it)}
+                    }
+                    if(pageStarts.size>1||shelf.nextOffset!=null)Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.SpaceBetween,verticalAlignment=Alignment.CenterVertically){
+                        TextButton(onClick={pageStarts=pageStarts.dropLast(1)},enabled=searchReady&&pageStarts.size>1,modifier=Modifier.testTag("library-previous-page")){Text("上一页")}
+                        Text("第 ${pageStarts.size} 页",fontSize=12.sp,color=Quiet)
+                        TextButton(onClick={shelf.nextOffset?.let{pageStarts=pageStarts+it}},enabled=searchReady&&!shelf.failed&&shelf.nextOffset!=null,modifier=Modifier.testTag("library-next-page")){Text("下一页")}
                     }
                 }
             }

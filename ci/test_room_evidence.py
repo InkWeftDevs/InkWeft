@@ -125,7 +125,8 @@ class RoomEvidenceTest(unittest.TestCase):
         selections = []
         with self.assertRaises(SystemExit):
             run_regression(self.root, plan, 0, selections, failing=methods[1], shard_count=1)
-        self.assertEqual(methods[:2], selections)
+        self.assertEqual(methods[:2], [selection for selection in selections if "#" in selection])
+        self.assertTrue(all(selection in plan["room"] for selection in selections if "#" not in selection))
         directory = self.root / "android/build/evidence"
         summary = json.loads((directory / "app-summary.json").read_text())
         self.assertEqual((9, 2, 1), tuple(summary[key] for key in ("expected", "executed", "passed")))

@@ -49,9 +49,9 @@ class WorkspaceViewModel(app:Application,private val saved:androidx.lifecycle.Sa
         .filter{it.generation==searchRequests.value?.generation}
         .onEach{if(it.failed)failure.value="检索索引读取失败，不代表没有匹配的笔记。"}
         .stateIn(viewModelScope,SharingStarted.WhileSubscribed(0),LibrarySearchResult())
-    fun searchLibrary(notes:List<Note>,drafts:Map<String,NoteDraft>,query:String,filter:String,type:String,byTitle:Boolean):Long {
+    fun searchLibrary(notes:List<Note>,drafts:Map<String,NoteDraft>,query:String,filter:String,type:String,byTitle:Boolean,offset:Int=0):Long {
         val generation=++searchGeneration
-        searchRequests.value=LibrarySearchRequest(generation,notes,drafts,query,filter,type,byTitle)
+        searchRequests.value=LibrarySearchRequest(generation,notes,drafts,query,filter,type,byTitle,offset)
         return generation
     }
     private val mutable=MutableStateFlow<Map<String,WorkspaceRow>>(emptyMap());val entries=mutable.asStateFlow()

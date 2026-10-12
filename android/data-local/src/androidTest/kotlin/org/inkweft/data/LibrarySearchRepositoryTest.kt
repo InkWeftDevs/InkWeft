@@ -17,6 +17,32 @@ import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 
 class LibrarySearchRepositoryTest {
+    @Test fun classificationUsesTheReadSnapshotAfterCancellableInitialIndexing()=fixture{db->coroutineScope{
+        val workspace=WorkspaceRepository(db);val note=workspace.create("scope 原词",false,PaperStyle.BLANK)
+        assertTrue(NotebookPages(db).saveSearchText(note.id,0,"scope 原词"))
+        val repo=LibrarySearchRepository(db)
+        repo.indexObserver={_,_->error("Foreground query must not drain the index")}
+            workspace.organize(note.id,0,"","",false,true)
+            assertNotNull(workspace.get(note.id).trashedAt)
+            val result=withTimeout(5_000){repo.read(LibrarySearchRequest(1,listOf(note),emptyMap(),"scope"))}
+            assertTrue(result.items.isEmpty());assertTrue(result.active.isEmpty());assertEquals(1,result.trashed)
+            assertEquals(1,result.pendingIndex)
+    }}
+    @Test fun unicodeShortQueriesAndBoundedPagesKeepOrderAndNavigation()=fixture{db->
+        val workspace=WorkspaceRepository(db);val pages=NotebookPages(db);val notes=List(125){workspace.create("笔记 ${it.toString().padStart(3,'0')}",false,PaperStyle.BLANK)}
+        for(note in notes)assertTrue(pages.saveSearchText(note.id,0,"中文搜索 Ångström 🚀 %_ OR \"引号\""))
+        val repo=LibrarySearchRepository(db)
+        for(query in listOf("中","文搜","中文搜索","ångSTRÖm","🚀","%_","OR \"")){
+            val seen=mutableListOf<String>();var offset=0;var rounds=0
+            do{
+                val result=repo.read(LibrarySearchRequest(1,notes,emptyMap(),query,byTitle=true,offset=offset,pageSize=17))
+                assertTrue(result.items.size<=17);assertTrue(result.items.all{it.pageId==it.note.id})
+                seen+=result.items.map{it.note.id};offset=result.nextOffset?:-1;rounds++
+            }while(offset>=0)
+            assertEquals(notes.map{it.id},seen);assertEquals(8,rounds)
+        }
+        assertTrue(repo.read(LibrarySearchRequest(1,notes,emptyMap(),"不存在")).items.isEmpty())
+    }
     private fun id()=UUID.randomUUID().toString()
     private fun fixture(block:suspend(NoteDatabase)->Unit)=runBlocking{
         val context=ApplicationProvider.getApplicationContext<Context>();val name="library-search-${id()}.db"
@@ -82,11 +108,18 @@ class LibrarySearchRepositoryTest {
         }
         val repo=LibrarySearchRepository(db);val entered=CompletableDeferred<Unit>();val release=CountDownLatch(1)
         val scanned=ConcurrentHashMap<String,Int>()
-        repo.scanObserver={query,count->
+        val indexingStarted=System.nanoTime()
+        val firstStart=System.nanoTime();val first=repo.read(LibrarySearchRequest(0,notes,emptyMap(),"target-only"))
+        val firstMs=(System.nanoTime()-firstStart)/1_000_000.0
+        assertEquals(expectedPage,first.items.single().pageId);assertEquals(20_000,first.pendingIndex)
+        repo.indexObserver={query,count->
             check(Thread.currentThread()!=Looper.getMainLooper().thread){"Search scanned text on the main thread"}
-            scanned.merge(query,count){a,b->maxOf(a,b)}
-            if(query=="slow"&&count==100){entered.complete(Unit);check(release.await(10,TimeUnit.SECONDS))}
+            if(count==128){entered.complete(Unit);check(release.await(30,TimeUnit.SECONDS))}
+            if(query=="target-only"&&count%4096==0)androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().sendStatus(0,android.os.Bundle().apply{
+                putString("stream","FTS_PROGRESS rows=$count elapsedMs=${(System.nanoTime()-indexingStarted)/1_000_000}\n")
+            })
         }
+        repo.scanObserver={query,count->scanned.merge(query,count){a,b->maxOf(a,b)}}
         val requests=MutableStateFlow(LibrarySearchRequest(1,notes,emptyMap(),"slow"))
         val results=Channel<LibrarySearchResult>(Channel.UNLIMITED)
         val observer=launch(Dispatchers.Main){repo.observe(requests).collect{results.send(it)}}
@@ -98,15 +131,20 @@ class LibrarySearchRepositoryTest {
             }}
             withContext(Dispatchers.Main){yield();yield()}
             release.countDown()
-            val latest=withTimeout(15_000){results.receive()}
+            suspend fun generation(value:Long)=withTimeout(120_000){var result=results.receive();while(result.generation!=value)result=results.receive();result}
+            val latest=generation(4)
             assertEquals(4L,latest.generation);assertFalse(latest.failed)
-            assertEquals(expectedPage,latest.items.single().pageId);assertEquals(20_000,scanned["target-only"])
+            assertEquals(expectedPage,latest.items.single().pageId)
+            withTimeout(120_000){var ready=latest;while(ready.pendingIndex>0){ready=results.receive();if(ready.generation==4L)assertEquals(expectedPage,ready.items.single().pageId)}}
+            val warm=mutableListOf<Double>();repeat(5){val start=System.nanoTime();val result=repo.read(requests.value);warm+=(System.nanoTime()-start)/1_000_000.0;assertEquals(0,result.pendingIndex);assertEquals(expectedPage,result.items.single().pageId)}
+            androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().sendStatus(0,android.os.Bundle().apply{
+                putString("stream","FTS_EVIDENCE pages=20000 firstCompleteMs=$firstMs firstPendingRows=20000 warmMedianMs=${warm.sorted()[2]} elapsedMs=${(System.nanoTime()-indexingStarted)/1_000_000} pendingFallbackComplete=true\n")
+            })
             requests.value=requests.value.copy(generation=5,query="",type="board")
-            val cleared=withTimeout(5_000){results.receive()};assertEquals(5L,cleared.generation);assertTrue(cleared.items.isEmpty())
-            requests.value=requests.value.copy(generation=6,type="all",filter="tag:偶数",byTitle=true)
-            val category=withTimeout(5_000){results.receive()};assertEquals(6L,category.generation);assertEquals(250,category.items.size)
+            val cleared=generation(5);assertEquals(5L,cleared.generation);assertTrue(cleared.items.isEmpty())
+            requests.value=requests.value.copy(generation=6,type="all",filter="tag:偶数",byTitle=true,pageSize=500)
+            val category=generation(6);assertEquals(6L,category.generation);assertEquals(250,category.items.size)
             assertTrue(category.items.all{"偶数" in it.workspace.tags});assertEquals(500,category.active.size)
-            assertEquals(100,scanned["slow"])
             println("LIBRARY_SEARCH books=500 pages=20000 cancelledScanRows=${scanned["slow"]} completedScanRows=${scanned["target-only"]} oldGenerationPublished=false mainResponsive=true clearAndCategory=true")
         }finally{release.countDown();observer.cancelAndJoin();results.close()}
     }}

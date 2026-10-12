@@ -1,8 +1,13 @@
-FROM python:3.12-slim
-WORKDIR /app
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt && mkdir /state && chown 10001:10001 /state
-COPY server.py client.py shadow.py .
+FROM golang:1.27.2-bookworm AS build
+WORKDIR /src
+COPY go.mod go.sum ./
+RUN go mod download
+COPY *.go ./
+RUN CGO_ENABLED=0 go build -trimpath -o /inkweft-backup .
+FROM debian:bookworm-slim
+RUN mkdir /state && chown 10001:10001 /state
+COPY --from=build /inkweft-backup /usr/local/bin/inkweft-backup
+ENV GOMEMLIMIT=384MiB
 USER 10001:10001
 EXPOSE 18751
-CMD ["python", "server.py", "--db", "/state/backup.db", "--host", "0.0.0.0", "--port", "18751"]
+CMD ["inkweft-backup", "--db", "/state/backup-v2.db", "--host", "0.0.0.0", "--port", "18751"]

@@ -1,6 +1,7 @@
 # interpreter / editor noise
 __pycache__/
 *.py[cod]
+/backup-server/bin/
 .vscode/
 .idea/
 

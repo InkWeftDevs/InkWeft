@@ -15,6 +15,41 @@ import java.util.UUID
 /** Real loopback reference service; only two isolated synthetic databases are ever read/restored. */
 class EncryptedBackupIntegrationTest {
     private fun id()=UUID.randomUUID().toString()
+    @Test fun v2ManifestDigestMatchesIndependentCanonicalVector(){
+        val manifest=JSONObject().put("plainBytes",1048576L).put("format","inkweft.encrypted-backup.v2")
+            .put("chunks",JSONArray().put("a".repeat(64)).put("b".repeat(64))).put("bytes",1048800L)
+        assertEquals("6a454883e1b512dbd28e64b47902009a349743d3c1215c7ab3f4852ef7adeb3c",backupManifestDigest(manifest))
+    }
+    @Test fun foregroundMemoryPressureKeepsAutomaticUploadResumable()=runBlocking{
+        val i=InstrumentationRegistry.getInstrumentation();val app=i.targetContext.applicationContext as InkWeftApplication;val engine=app.backupEngine
+        app.libraryBackup.snapshot().use{s->s.file.inputStream().use{app.libraryBackup.inspect(it)}.use{require(it.notes==0)}}
+        suspend fun await(action:()->kotlinx.coroutines.Job?){var job:kotlinx.coroutines.Job?=null;i.runOnMainSync{job=action()};job?.join()}
+        engine.sessions.meteredAllowed=true;await{engine.login("http://127.0.0.1:18751","synthetic-alice","synthetic-alice-password-123")}
+        await{engine.create(id(),EncryptedBackupFile.b64(EncryptedBackupFile.random(32)))}
+        val queue=File(app.filesDir,"encrypted-backup-jobs/queue.json");val q=JSONObject(queue.readText()).put("automatic",true).put("deadline",System.currentTimeMillis()+600_000)
+        queue.writeText(q.toString())
+        val pinned=Any();val owner=id()
+        // Reserve accounting only; this represents a foreground frame without allocating 128 MiB.
+        RenderResources.track(pinned,RenderResources.BUDGET,"backup-pressure-test",owner,RenderResources.Role.ACTIVE)
+        try{await{engine.upload(background=true)}}finally{RenderResources.release(pinned,owner);BackupScheduler.cancel(app)}
+        assertTrue(engine.ui.value.message.contains("等待可用内存"));assertTrue(engine.mayResume())
+        assertTrue(JSONObject(queue.readText()).getBoolean("automatic"));assertEquals(q.getString("operation"),JSONObject(queue.readText()).getString("operation"))
+        await{engine.upload()};assertEquals("PUBLISHED",JSONObject(queue.readText()).getString("state"))
+    }
+    @Test fun damagedLocalCipherStopsAutomaticRetriesAndRetainsItsIdentity()=runBlocking{
+        val i=InstrumentationRegistry.getInstrumentation();val app=i.targetContext.applicationContext as InkWeftApplication;val engine=app.backupEngine
+        app.libraryBackup.snapshot().use{s->s.file.inputStream().use{app.libraryBackup.inspect(it)}.use{require(it.notes==0)}}
+        suspend fun await(action:()->kotlinx.coroutines.Job?){var job:kotlinx.coroutines.Job?=null;i.runOnMainSync{job=action()};job?.join()}
+        engine.sessions.meteredAllowed=true;await{engine.login("http://127.0.0.1:18751","synthetic-alice","synthetic-alice-password-123")}
+        val library=id();await{engine.create(library,EncryptedBackupFile.b64(EncryptedBackupFile.random(32)))}
+        val queue=File(app.filesDir,"encrypted-backup-jobs/queue.json");val q=JSONObject(queue.readText());val cipher=File(queue.parentFile,q.getString("file"))
+        val first=java.io.RandomAccessFile(cipher,"rw").use{f->val value=f.read();f.seek(0);f.write(value xor 1);f.fd.sync();value}
+        await{engine.upload()};assertFalse(engine.mayResume());assertTrue(engine.hasPendingUpload())
+        val retained=JSONObject(queue.readText());assertFalse(retained.getBoolean("automatic"));assertEquals(q.getString("operation"),retained.getString("operation"))
+        val remote=BackupTransport(engine.connection()!!,2).json("GET",library,"/uploads/${q.getString("operation")}");assertEquals(0,remote.getJSONArray("received").length())
+        java.io.RandomAccessFile(cipher,"rw").use{it.write(first);it.fd.sync()}
+        await{engine.upload()};assertEquals("PUBLISHED",JSONObject(queue.readText()).getString("state"))
+    }
     @Test fun durableClientQueueRejectsAccountSwitchAndResumesSameOperationAfterRecreation() {
         val instrumentation=InstrumentationRegistry.getInstrumentation()
         val app=instrumentation.targetContext.applicationContext as InkWeftApplication
@@ -86,7 +121,7 @@ class EncryptedBackupIntegrationTest {
         await{engine.login("http://127.0.0.1:18751","synthetic-alice","synthetic-alice-password-123")}
         val library=id();await{engine.create(library,EncryptedBackupFile.b64(EncryptedBackupFile.random(32)))}
         val queue=File(app.filesDir,"encrypted-backup-jobs/queue.json");val before=JSONObject(queue.readText()).getString("operation")
-        val queued=JSONObject(queue.readText());val transport=BackupTransport(engine.connection()!!)
+        val queued=JSONObject(queue.readText());val transport=BackupTransport(engine.connection()!!,2)
         transport.json("PUT",library);transport.json("PUT",library,"/uploads/$before",queued.getJSONObject("manifest"))
         val cipher=File(queue.parentFile,queued.getString("file"))
         val first=cipher.inputStream().use{it.readBackupChunk(EncryptedBackupFile.WIRE_BLOCK)}
@@ -99,10 +134,10 @@ class EncryptedBackupIntegrationTest {
         assertEquals("PUBLISHED",JSONObject(queue.readText()).getString("state"))
         await{engine.list(library)};assertEquals(1,engine.ui.value.details.size)
         val counts=JSONObject(java.net.URL("http://127.0.0.1:18751/__fixture__/counts").readText())
-        assertEquals("Already received block was resent",1,counts.getInt("PUT /v1/libraries/$library/uploads/$before/chunks/0"))
+        assertEquals("Already received block was resent",1,counts.getInt("PUT /v2/libraries/$library/uploads/$before/chunks/0"))
         val refreshed=engine.connection()!!
-        val deleteId=id();BackupTransport(refreshed).json("DELETE",library,"/versions/$before?operation_id=$deleteId")
-        File(queue.parentFile,"delete.json").writeText(JSONObject().put("library",library).put("target",before).put("operation",deleteId).put("binding",refreshed.binding(library)).toString())
+        val deleteId=id();BackupTransport(refreshed,2).json("DELETE",library,"/versions/$before?operation_id=$deleteId")
+        File(queue.parentFile,"delete.json").writeText(JSONObject().put("protocol",2).put("library",library).put("target",before).put("operation",deleteId).put("binding",refreshed.binding(library)).toString())
         await{engine.delete(library,before)};assertFalse(File(queue.parentFile,"delete.json").exists())
         assertFalse(cipher.exists());BackupTransport(refreshed).logout()
         instrumentation.runOnMainSync{engine.logout()}
@@ -144,25 +179,27 @@ class EncryptedBackupIntegrationTest {
             KnowledgeRepository(first).submit(KnowledgeCommand(id(),n.id,map,0,KnowledgeData.MapDefinition("概率图")))
             StudyRepository(first).submit(StudyCommand(id(),n.id,StudyAction.CREATE,cardId=card,nodeId=node,title="样本空间",body="P(A | B) = P(A ∩ B) / P(B)",mapId=map))
             val library=id();val recovery=EncryptedBackupFile.random(32);val encrypted=File(root,"source.iwbk")
-            source.snapshot().use{EncryptedBackupFile.encrypt(it.file,encrypted,library,recovery)}
+            var plainBytes=0L;source.snapshot().use{plainBytes=it.file.length();EncryptedBackupFile.encrypt(it.file,encrypted,library,recovery,format=2)}
             val alice=BackupTransport.login(base,"synthetic-alice","synthetic-alice-password-123",id())
-            val transport=BackupTransport(alice);transport.verifyServer();transport.json("PUT",library)
+            val transport=BackupTransport(alice,2);transport.verifyServer();transport.json("PUT",library)
             val chunks=encrypted.inputStream().use{input->buildList{while(true){val b=input.readBackupChunk(EncryptedBackupFile.WIRE_BLOCK);if(b.isEmpty())break;add(b)}}}
-            val manifest=JSONObject().put("bytes",encrypted.length()).put("chunks",JSONArray(chunks.map(EncryptedBackupFile::hex))).put("format","inkweft.encrypted-backup.v1")
+            val manifest=JSONObject().put("bytes",encrypted.length()).put("chunks",JSONArray(chunks.map(EncryptedBackupFile::hex))).put("format","inkweft.encrypted-backup.v2").put("plainBytes",plainBytes)
             val operation=id();transport.json("PUT",library,"/uploads/$operation",manifest)
             try{transport.json("POST",library,"/uploads/$operation/publish");fail("missing chunks published")}catch(e:BackupHttpError){assertEquals(409,e.status)}
             // Recreate the transport after a confirmed first block; resume only server-reported gaps.
             transport.request("PUT",library,"/uploads/$operation/chunks/0",bytes=chunks.first())
-            val resumed=BackupTransport(alice)
+            val resumed=BackupTransport(alice,2)
             val received=resumed.json("GET",library,"/uploads/$operation").getJSONArray("received")
             val existing=(0 until received.length()).map{received.getInt(it)}.toSet();assertTrue(0 in existing)
             chunks.indices.filterNot{it in existing}.forEach{i->resumed.request("PUT",library,"/uploads/$operation/chunks/$i",bytes=chunks[i])}
             val receipt=transport.json("POST",library,"/uploads/$operation/publish")
             assertEquals("PUBLISHED",receipt.getString("state"));assertEquals(receipt.toString(),transport.json("GET",library,"/operations/$operation").toString())
-            val bob=BackupTransport(BackupTransport.login(alice.url,"synthetic-bob","synthetic-bob-password-456",id()))
+            val bob=BackupTransport(BackupTransport.login(alice.url,"synthetic-bob","synthetic-bob-password-456",id()),2)
             try{bob.request("GET",library,"/versions/$operation/chunks/0");fail("foreign attachment readable")}catch(e:BackupHttpError){assertEquals(404,e.status)}
-            val other=BackupTransport(BackupTransport.login(alice.url,"synthetic-alice","synthetic-alice-password-123",id()))
-            val downloaded=File(root,"download.iwbk");downloaded.outputStream().use{out->chunks.indices.forEach{i->val b=other.request("GET",library,"/versions/$operation/chunks/$i");assertEquals(EncryptedBackupFile.hex(chunks[i]),EncryptedBackupFile.hex(b));out.write(b)}}
+            val other=BackupTransport(BackupTransport.login(alice.url,"synthetic-alice","synthetic-alice-password-123",id()),2)
+            val lease=other.json("POST",library,"/versions/$operation/leases").getString("lease")
+            val downloaded=File(root,"download.iwbk");downloaded.outputStream().use{out->chunks.indices.forEach{i->val b=other.request("GET",library,"/versions/$operation/chunks/$i?lease=$lease");assertEquals(EncryptedBackupFile.hex(chunks[i]),EncryptedBackupFile.hex(b));out.write(b)}}
+            other.json("DELETE",library,"/versions/$operation/leases/$lease")
             val clear=File(root,"restored.iwbackup");EncryptedBackupFile.decrypt(downloaded,clear,library,recovery)
             clear.inputStream().use{restored.inspect(it)}.use{preview->assertEquals(1,preview.notes);assertEquals(LibraryBackupRepository.RestoreResult.RESTORED,restored.restore(preview))}
             assertEquals(n.title,NoteRepository(second).read(n.id)!!.title)

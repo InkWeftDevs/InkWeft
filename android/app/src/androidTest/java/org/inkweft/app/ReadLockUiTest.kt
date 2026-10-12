@@ -532,8 +532,10 @@ class ReadLockUiTest {
             val f = seed(); openMap(f); setReadOnly(f, true)
             val before = authorStamp(f.note.id)
             compose.onNodeWithTag("study-readonly").assertDoesNotExist()
-            compose.onNodeWithTag("exit-readonly").assertIsDisplayed().assertIsEnabled()
-            compose.activityRule.scenario.recreate(); waitFor("exit-readonly")
+            compose.revealAction("exit-readonly")
+            waitFor("exit-readonly")
+            compose.onNodeWithTag("exit-readonly").performScrollTo().assertIsDisplayed().assertIsEnabled()
+            compose.activityRule.scenario.recreate(); waitFor("document-more")
             compose.runOnIdle { assertTrue(lock(f.note.id).readOnly.value); assertFalse(native<InkCanvasView>().allowInput) }
             tap("study-window-minimize", physical = true)
             compose.onNodeWithTag("study-map").assertDoesNotExist()
@@ -635,7 +637,7 @@ class ReadLockUiTest {
     }
 
     @Test fun unknownOriginalCommandRetriesItsReceiptUnderReadLock() {
-        val f = seed(open = false)
+        val f = seed(); openMap(f)
         val original = StudyCommand(id(), f.note.id, StudyAction.EDIT, cardId = f.card, expectedRevision = 1,
             title = "原确认标题", body = "已真实提交，模拟原保存回执未到达 UI。")
         runBlocking { app.study.submit(original) }
@@ -650,7 +652,9 @@ class ReadLockUiTest {
             compose.activity.viewModelStore.put("study-${f.note.id}", vm)
             compose.activity.viewModelStore.put("read-lock-${f.note.id}", BookReadLockViewModel(SavedStateHandle(mapOf("readLock.enabled" to true))))
         }
-        openPaper(f.note, settled = false); tap("quick-study"); waitFor("study-retry")
+        // Restore the open work window as well as the pending request; a new navigation
+        // intent is correctly blocked once an unconfirmed operation already exists.
+        compose.activityRule.scenario.recreate(); waitFor("study-retry")
         val before = authorStamp(f.note.id)
         compose.runOnIdle {
             assertSame(vm, study(f.note.id)); assertTrue(vm.ui.value.unknown)

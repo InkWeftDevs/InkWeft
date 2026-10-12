@@ -62,6 +62,7 @@ data class CanvasBatchResult(val ink:List<InkCommitResult> = emptyList(),val obj
 data class InkGroupCommit(val group:InkGroupPrefix,val results:List<InkCommitResult.Committed>,val replayed:Boolean)
 /** Saved display/copy content and its revision, without retained undo geometry. */
 data class VisibleInkSnapshot(val noteId:String,val revision:Long,val strokes:List<InkStroke>)
+data class InkRasterRegion(val signature:String,val committed:Set<String>)
 class InkRepository(private val db:NoteDatabase,private val fault:(InkFaultPoint)->Unit={}) {
     val authoringRepository by lazy{PageAuthoringRepository(db)}
     @Volatile var readObserver:((ReadTiming)->Unit)?=null
@@ -158,8 +159,8 @@ class InkRepository(private val db:NoteDatabase,private val fault:(InkFaultPoint
     private suspend fun owner(id:String)=db.pages().get(id)?:NotebookPages(db).ensureFirst(id)
     private data class ReadRows(val owner:NotebookPageRow,val page:InkPageRow?,val strokes:List<InkStrokeRow>,val cuts:List<InkCutRow>)
     private data class EditingRows(val rows:ReadRows,val unloaded:UnloadedInk,val complete:Boolean=true)
-    private suspend fun <T> spatialRead(noteId:String,needed:Boolean,read:suspend(androidx.sqlite.db.SupportSQLiteDatabase)->T):T =
-        if(needed)SpatialIndex.read(db,noteId,prepareCuts=true,read=read)else InkCutIndex.read(db,noteId,read=read)
+    private suspend fun <T> spatialRead(noteId:String,bounds:CanvasBounds?,read:suspend(androidx.sqlite.db.SupportSQLiteDatabase)->T):T =
+        if(bounds!=null)SpatialIndex.read(db,noteId,prepareCuts=true,bounds=bounds,read=read)else InkCutIndex.read(db,noteId,read=read)
     /** Visible author geometry plus only the identities needed to resume this revision's undo. */
     suspend fun readForEditing(noteId:String,history:InkSession.History?=null,bounds:CanvasBounds?=null,pointBudget:Int=65_536):InkPage {
         val trace=windowTraceIds.incrementAndGet();android.os.Trace.beginAsyncSection("InkWeft.ink.window",trace)
@@ -167,7 +168,7 @@ class InkRepository(private val db:NoteDatabase,private val fault:(InkFaultPoint
         require(pointBudget>=InkLimits.MAX_POINTS)
         val started=System.nanoTime()
         var candidateRows=0L
-        val frozen=spatialRead(noteId,bounds!=null) { sql->
+        val frozen=spatialRead(noteId,bounds) { sql->
             val owner=owner(noteId);val page=dao.page(noteId)
             val totals=InkTotals.read(sql,noteId);check(totals.invalidPointRows==0)
             val totalCuts=totals.cutCount
@@ -280,7 +281,7 @@ class InkRepository(private val db:NoteDatabase,private val fault:(InkFaultPoint
         var cursor:SpatialIndex.Cursor?=null
         while(true){
             currentCoroutineContext().ensureActive()
-            val candidates=spatialRead(noteId,bounds!=null){sql->
+            val candidates=spatialRead(noteId,bounds){sql->
                 owner(noteId);check((dao.page(noteId)?.revision?:0)==revision){"INK_WINDOW_REVISION_CHANGED"}
                 val layers=authoringRevision?.let{layerFilter(sql,noteId,it,layer,writableOnly)}
                 SpatialIndex.ink(sql,noteId,bounds,cursor,layers=layers).let{rows->
@@ -317,7 +318,33 @@ class InkRepository(private val db:NoteDatabase,private val fault:(InkFaultPoint
         return PageAuthoringCodec.layerHeader(header.second).layers.filter{it.visible&&(!writableOnly||!it.locked)&&(layer==null||it.id==layer)}.map{it.id}
     }
     /** Visible metadata only. Empty/offscreen layers allocate no full-viewport bitmap. */
-    suspend fun visibleLayerBounds(noteId:String,revision:Long,authoringRevision:Long,bounds:CanvasBounds):Map<String,CanvasBounds> = SpatialIndex.read(db,noteId){sql->
+    suspend fun rasterRegions(noteId:String,revision:Long,authoringRevision:Long?,layer:String?,regions:List<CanvasBounds>,
+        allowed:Set<String>?,omitted:Set<String>,committed:Set<String>):List<InkRasterRegion> = SpatialIndex.read(db,noteId,prepareCuts=true,bounds=regions.reduceOrNull{a,b->a.union(b)}){sql->
+        require(regions.size<=512)
+        owner(noteId);check((dao.page(noteId)?.revision?:0)==revision){"INK_WINDOW_REVISION_CHANGED"}
+        val layers=authoringRevision?.let{layerFilter(sql,noteId,it,layer,false)}
+        val epoch=sql.query("SELECT epoch FROM ink_raster_epochs WHERE pageId=?",arrayOf(noteId)).use{if(it.moveToFirst())it.getLong(0)else 0L}
+        val digests=regions.map{java.security.MessageDigest.getInstance("SHA-256").apply{update(epoch.toString().toByteArray())}}
+        val included=regions.map{HashSet<String>()};var after:SpatialIndex.Cursor?=null
+        val union=regions.reduceOrNull{a,b->a.union(b)}
+        if(union!=null)while(true){
+            currentCoroutineContext().ensureActive()
+            val rows=SpatialIndex.ink(sql,noteId,union,after,layers=layers)
+            if(rows.isEmpty())break
+            for(row in rows){
+                if(row.id in omitted||allowed!=null&&row.id !in allowed)continue
+                val signature=("|${row.id}:${row.spatialKey}:${row.revision}").toByteArray()
+                // One bounded metadata pass per layer, instead of a SQLite query per tile.
+                // The same conservative RTree intersection and stroke order define each digest.
+                regions.forEachIndexed{i,bounds->if(checkNotNull(row.bounds).intersects(bounds)){
+                    digests[i].update(signature);if(row.id in committed)included[i].add(row.id)
+                }}
+            }
+            val last=rows.last();after=SpatialIndex.Cursor(last.revision,last.id)
+        }
+        regions.indices.map{InkRasterRegion(digests[it].digest().joinToString(""){"%02x".format(it)},included[it])}
+    }
+    suspend fun visibleLayerBounds(noteId:String,revision:Long,authoringRevision:Long,bounds:CanvasBounds):Map<String,CanvasBounds> = SpatialIndex.read(db,noteId,bounds=bounds){sql->
         owner(noteId);check((dao.page(noteId)?.revision?:0)==revision){"INK_WINDOW_REVISION_CHANGED"}
         val layers=layerFilter(sql,noteId,authoringRevision,null,false)
         if(layers?.isEmpty()==true)emptyMap()else{
@@ -360,6 +387,11 @@ class InkRepository(private val db:NoteDatabase,private val fault:(InkFaultPoint
         }
     }
     suspend fun revision(noteId:String):Long=db.withTransaction{owner(noteId);dao.page(noteId)?.revision?:0}
+    suspend fun validateRenderRevision(noteId:String,revision:Long,authoringRevision:Long?)=db.withTransaction{
+        check((dao.page(noteId)?.revision?:0)==revision){"INK_WINDOW_REVISION_CHANGED"}
+        authoringRevision?.let{layerFilter(db.openHelper.readableDatabase,noteId,it,null,false)}
+        Unit
+    }
     suspend fun visibleBounds(noteId:String,revision:Long):CanvasBounds?=SpatialIndex.read(db,noteId){sql->
         owner(noteId);check((dao.page(noteId)?.revision?:0)==revision){"INK_WINDOW_REVISION_CHANGED"}
         sql.query("SELECT MIN(b.minX),MIN(b.minY),MAX(b.maxX),MAX(b.maxY) FROM page_spatial_bounds b JOIN page_spatial_entries e ON e.key=b.key WHERE e.pageId=? AND e.kind=0",arrayOf(noteId)).use{c->

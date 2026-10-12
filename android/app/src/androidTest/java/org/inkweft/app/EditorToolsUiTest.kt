@@ -23,6 +23,9 @@ class EditorToolsUiTest {
     @After fun restore(){val e=app.getSharedPreferences("inkweft-editor",0).edit().clear();old.forEach{(k,v)->when(v){is String->e.putString(k,v);is Float->e.putFloat(k,v);is Boolean->e.putBoolean(k,v);is Int->e.putInt(k,v);is Long->e.putLong(k,v);is Set<*>->e.putStringSet(k,v.filterIsInstance<String>().toSet())}};e.commit()}
     private fun open(seed:List<InkStroke> = emptyList()):Note{
         compose.waitUntil(15000){compose.onAllNodesWithTag("new-note").fetchSemanticsNodes().isNotEmpty()}
+        // These fixtures inject real finger gestures. With finger navigation selected,
+        // SelectionOverlayView correctly forwards them to the paper instead of editing.
+        app.getSharedPreferences("inkweft-editor",0).edit().putBoolean("finger-writes",true).commit()
         val n=runBlocking{app.workspaceRepository.create("V26 工具验收",false,PaperStyle.BLANK)}
         runBlocking{seed.forEachIndexed{i,stroke->app.inkRepository.save(CommitInk(java.util.UUID.randomUUID().toString(),n.id,i.toLong(),InkMutation.Add(stroke)))}}
         compose.runOnIdle{ViewModelProvider(compose.activity)[NotebookViewModel::class.java].select(n)}
@@ -31,8 +34,23 @@ class EditorToolsUiTest {
     private fun strokes(n:Note)=runBlocking{InkSession(app.inkRepository.read(n.id)).visibleDraft()}
     private fun objects(n:Note)=runBlocking{app.pageObjects.read(n.id).objects}
     private fun ready(){compose.waitUntil(15000){app.navigationReady.value}}
+    private fun canvas():InkCanvasView {
+        fun find(v:View):InkCanvasView?{if(v is InkCanvasView&&!v.preview&&!v.embeddedPage)return v;if(v is ViewGroup)for(i in 0 until v.childCount)find(v.getChildAt(i))?.let{return it};return null}
+        return checkNotNull(find(compose.activity.window.decorView))
+    }
+    private fun focusFixture(){compose.runOnIdle{canvas().restoreViewport(CanvasViewport(500.0,260.0,1.0))};compose.waitForSavedInk()}
     private fun tap(tag:String){compose.revealAction(tag);if(tag in setOf("add-page","object-shape","page-objects","object-sticker","top-area-erase","object-camera")){compose.openEditorAction(tag);return};if(tag=="top-draw"){compose.openCurrentPen();return};val node=compose.onNodeWithTag(tag);runCatching{node.performScrollTo()};node.performClick()}
     private fun screenshot(name:String){compose.waitForIdle();val b=checkNotNull(InstrumentationRegistry.getInstrumentation().uiAutomation.takeScreenshot());try{File(app.getExternalFilesDir(null),name).outputStream().use{b.compress(Bitmap.CompressFormat.PNG,100,it)}}finally{b.recycle()}}
+    @Test fun restoredAreaModeIsExclusiveAndObjectsReturnToLastWritingTool(){
+        open();tap("pen-kind-highlighter");tap("top-area-erase")
+        compose.onNodeWithText("圈住手写笔迹即可擦除").assertExists()
+        compose.activityRule.scenario.recreate();ready()
+        compose.onNodeWithText("圈住手写笔迹即可擦除").assertExists()
+        tap("ink-select");compose.onNodeWithText("圈住手写笔迹即可擦除").assertDoesNotExist()
+        tap("page-objects");tap("page-objects")
+        compose.revealAction("pen-kind-highlighter");compose.onNodeWithTag("pen-kind-highlighter").assertIsOn()
+        screenshot("v90-editor-return.png")
+    }
     @Test fun distinctPensRememberRecipesAndPaletteDoesNotRewriteOtherPens(){
         val n=open();val store=PenWidthStore(app,"inkweft-pen-widths-book-${n.id}")
         compose.onAllNodes(hasAnyAncestor(hasTestTag("floating-pen-case")) and hasTestTag("ink-select")).assertCountEquals(0)
@@ -74,18 +92,21 @@ class EditorToolsUiTest {
     @Test fun insertedShapeCanMoveTwiceAndUndo(){
         val n=open(ShapeInk.create("rectangle",CanvasViewport(500.0,260.0,1.0),false,android.graphics.Color.BLACK,3f));ready()
         fun drag(reselect:Boolean=false){
-            var start=Offset.Zero
+            var start=Offset.Zero;var hit=Offset.Zero
             compose.runOnIdle{
                 fun find(v:View):InkCanvasView?{if(v is InkCanvasView&&!v.preview&&!v.embeddedPage)return v;if(v is ViewGroup)for(i in 0 until v.childCount)find(v.getChildAt(i))?.let{return it};return null}
                 val v=checkNotNull(find(compose.activity.window.decorView));val b=strokes(n).single().bounds()
                 val p=v.snapshotViewport().worldToScreen((b.left+b.right)/2,(b.top+b.bottom)/2,v.width.toDouble(),v.height.toDouble(),v.resources.displayMetrics.density.toDouble())
                 start=Offset(p.x.toFloat(),p.y.toFloat())
+                val sample=strokes(n).single().samples.first();val edge=v.snapshotViewport().worldToScreen(sample.x.toDouble(),sample.y.toDouble(),v.width.toDouble(),v.height.toDouble(),v.resources.displayMetrics.density.toDouble())
+                hit=Offset(edge.x.toFloat(),edge.y.toFloat())
             }
-            if(reselect)compose.onNodeWithTag("selection-overlay").performTouchInput{click(start)}
+            if(reselect)compose.onNodeWithTag("selection-overlay").performTouchInput{click(hit)}
+            compose.waitUntil(10000){runCatching{compose.onNodeWithTag("selection-context-menu").assertIsDisplayed()}.isSuccess}
             compose.onNodeWithTag("selection-context-menu").assertIsDisplayed()
             compose.onNodeWithTag("selection-overlay").performTouchInput{swipe(start,start+Offset(65f,90f),400)}
         }
-        tap("ink-select");val first=strokes(n).single();drag(reselect=true);compose.waitUntil(10000){strokes(n).single().id!=first.id};ready()
+        tap("ink-select");focusFixture();val first=strokes(n).single();drag(reselect=true);compose.waitUntil(10000){strokes(n).single().id!=first.id};ready()
         val second=strokes(n).single();assertTrue(second.samples.first().x>first.samples.first().x+10)
         val beforeMenu=compose.onNodeWithTag("selection-context-menu").fetchSemanticsNode().layoutInfo.coordinates.positionOnScreen()
         compose.onNodeWithContentDescription("取消选择").performClick()
@@ -125,8 +146,9 @@ class EditorToolsUiTest {
             fun find(v:View):InkCanvasView?{if(v is InkCanvasView&&!v.preview&&!v.embeddedPage)return v;if(v is ViewGroup)for(i in 0 until v.childCount)find(v.getChildAt(i))?.let{return it};return null}
             val v=checkNotNull(find(compose.activity.window.decorView));val p=v.snapshotViewport().worldToScreen(a.toDouble(),b.toDouble(),v.width.toDouble(),v.height.toDouble(),v.resources.displayMetrics.density.toDouble());result=Offset(p.x.toFloat(),p.y.toFloat())
         };return result}
+        tap("top-area-erase");focusFixture()
         val points=listOf(point(x+70,y-30),point(x+170,y-30),point(x+170,y+30),point(x+70,y+30))
-        tap("top-area-erase");compose.onNodeWithTag("selection-overlay").performTouchInput{down(points[0]);points.drop(1).forEach{moveTo(it,120)};moveTo(points[0],120);up()}
+        compose.onNodeWithTag("selection-overlay").performTouchInput{down(points[0]);points.drop(1).forEach{moveTo(it,120)};moveTo(points[0],120);up()}
         compose.waitUntil(10000){strokes(n).single().cuts.isNotEmpty()};ready();val cut=strokes(n).single().cuts.single();assertEquals(InkCutShape.POLYGON,cut.shape)
         assertEquals(s.samples,strokes(n).single().samples);tap("ink-undo");compose.waitUntil(10000){strokes(n).single().cuts.isEmpty()}
     }

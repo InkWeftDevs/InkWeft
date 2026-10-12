@@ -54,7 +54,7 @@ import kotlinx.coroutines.*
                 "main"->{
                     if(vm.identityLabel().isNotBlank())Text(vm.identityLabel())
                     Text("实验功能 · 自建服务器",style=MaterialTheme.typography.labelLarge,color=Quiet)
-                    Text("加密云备份单次最多 500 MiB。较大的资料库请使用设置中的本地全库备份。",color=Quiet)
+                    Text("单份资料库最多 8 GiB，创建前核对服务器配额与本机空间。下载进度保留；恢复密钥由你保存。",color=Quiet)
                     if(BuildConfig.DEBUG&&vm.connection()?.url?.let{java.net.URI(it).host in setOf("127.0.0.1","localhost")}==true)
                         TextButton({shadowLab=true},enabled=!ui.busy){Text("隔离同步实验 · 合成资料")}
                     TextButton(onClick={screen="connection"}){Text(if(ui.connected)"连接设置"else"连接服务器")}
@@ -90,7 +90,7 @@ import kotlinx.coroutines.*
                     ui.details.forEach{version->
                         HorizontalDivider(color=Line)
                         Text(java.text.DateFormat.getDateTimeInstance().format(java.util.Date(version.created*1000)),style=MaterialTheme.typography.titleMedium)
-                        Text("${android.text.format.Formatter.formatFileSize(context,version.bytes)} · 加密备份 v1 · ${if(version.status=="PUBLISHED")"已完成"else"未完成"}",color=Quiet)
+                        Text("${android.text.format.Formatter.formatFileSize(context,version.bytes)} · 加密备份 v2 · ${when(version.status){"PUBLISHED"->"已完成";"DELETING"->"等待已有下载结束后删除";else->"未完成"}}",color=Quiet)
                         Text(if(version.operation in ui.checked)"本次已校验"else"本次尚未校验",style=MaterialTheme.typography.bodySmall,color=Quiet)
                         Row(horizontalArrangement=Arrangement.spacedBy(8.dp)){
                             if(version.status=="PUBLISHED")TextButton(onClick={if(!recoverySaved)screen="key"else vm.inspect(library,version.operation,recovery)},enabled=!ui.busy){Text("校验与恢复")}

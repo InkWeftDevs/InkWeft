@@ -43,7 +43,7 @@ def run_regression(root, plan, shard, selections, failing=None, shard_count=3):
     shutil.copyfile(ROOT / "ci/run_android_tests.py", script)
     source = root / "android/app/src/androidTest"
     source.parent.mkdir(parents=True, exist_ok=True)
-    source.symlink_to(ROOT / "android/app/src/androidTest", target_is_directory=True)
+    shutil.copytree(ROOT / "android/app/src/androidTest", source)
     (root / "android-plan.json").write_text(json.dumps(plan))
 
     def adb(command, **kwargs):
@@ -169,7 +169,13 @@ class SixBatchWorkflowTest(unittest.TestCase):
                 (root / "android-plan.json").write_text(json.dumps(plan))
                 if shard:
                     env = dict(os.environ, INKWEFT_HEAD_SHA="a" * 40, INKWEFT_SHARD_INDEX=str(shard), INKWEFT_SHARD_COUNT="3")
-                    subprocess.run(["bash", "-e", "-c", script], cwd=root, env=env, check=True)
+                    if os.name == "nt":
+                        # The workflow step contains only this Python heredoc; use the same
+                        # interpreter on Windows without invoking an unrelated WSL launcher.
+                        body = script.split("python3 - <<'PY'\n", 1)[1].rsplit("\nPY", 1)[0]
+                        subprocess.run([sys.executable, "-c", body], cwd=root, env=env, check=True)
+                    else:
+                        subprocess.run(["bash", "-e", "-c", script], cwd=root, env=env, check=True)
                     for key, total in (("room", plan["expected_room"]), ("fixture", plan["fixture"]["expected_methods"])):
                         summary = json.loads((root / f"android/build/evidence/{key}-summary.json").read_text())
                         self.assertEqual("NOT_ASSIGNED", summary["status"])

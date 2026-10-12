@@ -19,23 +19,23 @@ def unb64(value): return base64.b64decode(value,validate=True)
 def sha(value): return hashlib.sha256(value).hexdigest()
 
 
-def encrypt(source, output, library, recovery_key):
+def encrypt(source, output, library, recovery_key, format=1):
     uuid.UUID(library)
     if len(recovery_key)!=32: raise ValueError('Invalid recovery key')
     source, output=Path(source),Path(output)
     if output.exists(): raise ValueError('Destination exists')
     data_key=os.urandom(32);wrap_nonce=os.urandom(12);prefix=os.urandom(8);backup=str(uuid.uuid4())
     size=source.stat().st_size
-    if not 0<size<=500*WIRE_BLOCK: raise ValueError('Backup size limit')
-    aad=f'inkweft-backup-key-v1|{library}|{backup}'.encode()
-    header=json.dumps({'format':1,'library':library,'backup':backup,'plainBytes':size,'chunkSize':BLOCK,
+    if format not in (1,2) or not 0<size<=(8*1024**3 if format==2 else 500*WIRE_BLOCK): raise ValueError('Backup size limit')
+    aad=f'inkweft-backup-key-v{format}|{library}|{backup}'.encode()
+    header=json.dumps({'format':format,'library':library,'backup':backup,'plainBytes':size,'chunkSize':BLOCK,
         'noncePrefix':b64(prefix),'wrapNonce':b64(wrap_nonce),'wrappedKey':b64(AESGCM(recovery_key).encrypt(wrap_nonce,data_key,aad))},separators=(',',':')).encode()
     h=hashlib.sha256(header).digest();cipher=AESGCM(data_key)
     created=False
     try:
         with source.open('rb') as src,output.open('xb') as dst:
             created=True
-            dst.write(MAGIC+struct.pack('>I',len(header))+header)
+            dst.write(f'IWBK{format}\n'.encode()+struct.pack('>I',len(header))+header)
             for i in range(math.ceil(size/BLOCK)):
                 chunk=src.read(BLOCK);encrypted=cipher.encrypt(prefix+struct.pack('>I',i),chunk,h+struct.pack('>I',i))
                 dst.write(struct.pack('>I',len(encrypted))+encrypted)
@@ -56,15 +56,17 @@ def decrypt(source, output, library, recovery_key):
         return data
     try:
         with open(source,'rb') as src,temporary.open('xb') as dst:
-            if exact(src,6)!=MAGIC: raise ValueError('Invalid format')
+            mark=exact(src,6)
+            if mark not in (MAGIC,b'IWBK2\n'): raise ValueError('Invalid format')
+            format=int(chr(mark[4]))
             length=struct.unpack('>I',exact(src,4))[0]
             if not 1<=length<=4096: raise ValueError('Invalid header size')
             header=exact(src,length);j=json.loads(header)
-            if j['format']!=1 or j['library']!=library or j['chunkSize']!=BLOCK or not 0<j['plainBytes']<=500*WIRE_BLOCK: raise ValueError('Invalid header binding')
+            if j['format']!=format or j['library']!=library or j['chunkSize']!=BLOCK or not 0<j['plainBytes']<=(8*1024**3 if format==2 else 500*WIRE_BLOCK): raise ValueError('Invalid header binding')
             uuid.UUID(j['backup']);uuid.UUID(library)
             prefix=unb64(j['noncePrefix']);nonce=unb64(j['wrapNonce'])
             if len(prefix)!=8 or len(nonce)!=12 or len(recovery_key)!=32: raise ValueError('Invalid key envelope')
-            aad=f"inkweft-backup-key-v1|{library}|{j['backup']}".encode()
+            aad=f"inkweft-backup-key-v{format}|{library}|{j['backup']}".encode()
             key=AESGCM(recovery_key).decrypt(nonce,unb64(j['wrappedKey']),aad)
             h=hashlib.sha256(header).digest();cipher=AESGCM(key);remaining=j['plainBytes']
             for i in range(math.ceil(remaining/BLOCK)):

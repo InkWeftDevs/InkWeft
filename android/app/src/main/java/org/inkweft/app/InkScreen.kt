@@ -92,14 +92,9 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
     var visibleShare by remember{mutableStateOf(false)}
     var annotationTarget by remember{mutableStateOf<String?>(null)}
     var objectLayerScope by remember{mutableStateOf<LayerWriteScope?>(null)}
-    SideEffect{
-        authoringVm.history=vm.history;vm.layerScopeProvider=authoringVm::scopeForWrite;objectsVm.layerScopeProvider=authoringVm::scopeForWrite
-        vm.editableContent={authoringUi.state.layers.editable(LayerContent(LayerContentKind.INK,it))}
-        objectsVm.editableContent={authoringUi.state.layers.editable(LayerContent(LayerContentKind.OBJECT,it))}
-        objectsVm.editableInk={authoringUi.state.layers.editable(LayerContent(LayerContentKind.INK,it))}
-    }
+    SideEffect{bindPageEditor(vm,objectsVm,authoringVm)}
     val suppressed=remember(objectsUi.objects){objectsUi.objects.flatMap{it.sourceStrokeIds}.toSet()}
-    SideEffect{vm.suppressedIds=suppressed;objectsVm.history=vm.history}
+    SideEffect{vm.suppressedIds=suppressed}
     val historyHeads by vm.history.state.collectAsStateWithLifecycle()
     val selectable=projectedStrokes.filter{it.id !in suppressed&&authoringUi.state.layers.visible(LayerContent(LayerContentKind.INK,it.id))}
     var smoothSelection by remember(page.id){mutableStateOf<SelectedInk?>(null)}
@@ -120,7 +115,8 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
     val row=WorkspaceRow(page.id,page.world,page.paper,centerX=page.centerX,centerY=page.centerY,zoom=page.zoom)
     val scope=rememberCoroutineScope()
     var showPaperPicker by remember { mutableStateOf(false) }
-    var tool by rememberSaveable(note.base.id){mutableIntStateOf(0)}
+    val editorSession=rememberSaveable(note.base.id,saver=EditorSession.saver){EditorSession()}
+    var tool by editorSession
     val readLock=rememberBookReadLock(note.base.id)
     val readOnly by readLock.readOnly.collectAsStateWithLifecycle()
     SideEffect{authoringVm.authorAllowed={readLock.canWrite&&externalEnabled};vm.authorAllowed={readLock.canWrite};objectsVm.authorAllowed={readLock.canWrite};readLock.observeObjects(page.id,objectsVm)}
@@ -145,7 +141,7 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
     val excerptVm:StudyViewModel=viewModel(key="excerpt-${note.base.id}",factory=StudyViewModel.Factory(note.base.id,app.study))
     val mapSession:StudyViewModel=viewModel(key="study-${note.base.id}",factory=StudyViewModel.Factory(note.base.id,app.study))
     SideEffect{excerptVm.authorAllowed={readLock.canWrite};mapSession.authorAllowed={readLock.canWrite}}
-    var excerptMode by rememberSaveable{mutableStateOf(false)}
+    val excerptMode=editorSession.state.selection==CanvasSelectionMode.EXCERPT
     val excerptPrefs=remember{context.getSharedPreferences("inkweft-excerpts",0)}
     var excerptMarkMode by rememberSaveable{mutableStateOf(false)}
     var captureToMap by rememberSaveable{mutableStateOf(excerptPrefs.getBoolean("to-map",true))}
@@ -155,7 +151,7 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
     DisposableEffect(page.id){onDispose{excerptJob?.cancel()}}
     var showExcerptMarkers by rememberSaveable{mutableStateOf(excerptPrefs.getBoolean("markers",true))}
     val excerptRows by remember(note.base.id){app.study.excerpts(note.base.id)}.collectAsStateWithLifecycle(initialValue=emptyList())
-    var areaEraseMode by remember{mutableStateOf(false)}
+    val areaEraseMode=editorSession.state.selection==CanvasSelectionMode.ERASE
     var shapePicker by remember{mutableStateOf(false)}
     var tapeSettings by remember{mutableStateOf(false)}
     val tapePrefs=remember{context.getSharedPreferences("inkweft-tape",0)}
@@ -164,9 +160,8 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
     var tapeColor by rememberSaveable{mutableIntStateOf(tapePrefs.getInt("color",0xff91d8dc.toInt()))}
     var tapePatternIndex by rememberSaveable{mutableIntStateOf(tapePrefs.getInt("pattern",0).coerceIn(0,TapePattern.entries.lastIndex))}
     fun saveTape(){tapePrefs.edit().putInt("brush-mode-v30",tapeMode).putFloat("width",tapeWidth).putInt("color",tapeColor).putInt("pattern",tapePatternIndex).apply()}
-    var lastWritingTool by rememberSaveable{mutableIntStateOf(0)}
-    var lastPenTool by rememberSaveable(note.base.id){mutableIntStateOf(0)}
-    LaunchedEffect(tool){if(tool in 0..2)lastWritingTool=tool;if(tool in 0..1)lastPenTool=tool}
+    val lastWritingTool=editorSession.state.lastWriting
+    val lastPenTool=editorSession.state.lastPen
     var favoriteBusy by remember{mutableStateOf(false)}
     var favoritesOpen by rememberSaveable(note.base.id){mutableStateOf(false)}
     fun showFavorites(value:Boolean){favoritesOpen=value}
@@ -239,7 +234,7 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
             pendingSelection?.let{(region,ids)->val found=selectable.filter{it.id in ids};if(found.size==ids.size){selected=SelectedInk(region,ui.revision,found,authoringRevision=authoringUi.revision);pendingSelection=null}}
         }
     }
-    LaunchedEffect(page.id,continuousPages==null,pendingObject){pendingObject?.let{(target,id)->if(target==page.id&&continuousPages==null){selectedObject=id;tool=5;pendingObject=null}}}
+    LaunchedEffect(page.id,continuousPages==null,pendingObject){pendingObject?.let{(target,id)->if(target==page.id&&continuousPages==null){selectedObject=id;tool=CanvasTool.OBJECTS;pendingObject=null}}}
     LaunchedEffect(ui.revision,objectsUi.objects,mixedBlocked,pendingMixed){
         if(!mixedBlocked){
             val next=pendingMixed
@@ -253,7 +248,7 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
             }else{val s=mixedSelection;if(s!=null&&(s.revision!=ui.revision||s.snapshot!=objectsUi.objects))mixedSelection=null}
         }
     }
-    LaunchedEffect(tool){selectionGeneration.incrementAndGet();selectionJob?.cancel();if(tool!=4)selectedExcerpt=null;if(tool!=4&&tool!=6){mixedSelection=null;selected=null;view?.selectionPreview(emptySet());vm.clearOperationSelection()}}
+    LaunchedEffect(tool,editorSession.state.selection){selectionGeneration.incrementAndGet();selectionJob?.cancel();if(tool!=CanvasTool.SELECTION)selectedExcerpt=null;if(tool!=CanvasTool.SELECTION&&tool!=CanvasTool.BEAUTIFY){mixedSelection=null;selected=null;view?.selectionPreview(emptySet());vm.clearOperationSelection()}}
     LaunchedEffect(note.base.id,page.id,focusRequest,focusRegion,view,canvasSize){
         pendingSourcePulse?.let{pulse->
             if(pulse.request!=focusRequest||pulse.view!==view||pulse.size!=canvasSize||
@@ -327,7 +322,7 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
             Toast.makeText(context,if(ok)"页面副本已写入所选位置"else"导出失败；原笔迹仍保留",Toast.LENGTH_LONG).show()
         }else file?.close()
     }
-    LaunchedEffect(continuousPages==null){if(continuousPages==null)continuousBlocked=false else if(tool>=4)tool=0}
+    LaunchedEffect(continuousPages==null){if(continuousPages==null)continuousBlocked=false else editorSession.continuous()}
     val busy=excerptDraft||capturingExcerpt||gesture||ui.processing||objectsBlocked||mixedBlocked||exportingPage
     val authoringEnabled=externalEnabled&&!readOnly&&!busy&&ui.queued==0&&ui.blocked==null&&!objectsVm.authorOperationActive&&authoringVm.pageHeadsMatch(ui.revision,objectsVm.revision)
     val editingBlocked=!externalEnabled||excerptDraft||busy||readOnly||!authoringUi.ready
@@ -380,17 +375,17 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
     fun choosePen(kind:InkPen){
         val slot=when(kind){InkPen.HIGHLIGHTER->2;InkPen.PEN->1;else->0};val value=penStore.readPen(kind)
         recipes=recipes.mapIndexed{i,r->if(i==slot)value.recipe else r};penStore.applyRecipe(slot,value.recipe)
-        savePreset(slot,value.width,value.color,kind);tool=slot;settings=false
+        savePreset(slot,value.width,value.color,kind);tool=CanvasTool.writingSlot(slot);settings=false
     }
     fun selectAll(){
         selectionSettings=false
         scope.launch{
         val inkHead=vm.ui.value.revision;val objectHead=objectsVm.revision;val authorHead=authoringVm.ui.value.revision
-        val mode=tool;val options=selectionOptions
+        val mode=editorSession.state;val options=selectionOptions
         val all=vm.prepareSelectAll(options::accepts,options.types.any{it==SelectionType.INK||it==SelectionType.HIGHLIGHTER})?:return@launch
         val projected=try{authoringVm.prepareContents((vm.ui.value.strokes+all).distinctBy{it.id},inkHead,objectHead,authorHead)}catch(c:CancellationException){throw c}catch(_:Exception){null}
         if(projected==null){notice="页面或图层已变化，请重新全选";return@launch}
-        if(tool!=mode||selectionOptions!=options||!authoringVm.authorAllowed()||vm.ui.value.revision!=inkHead||objectsVm.revision!=objectHead||authoringVm.ui.value.revision!=authorHead)return@launch
+        if(editorSession.state!=mode||selectionOptions!=options||!authoringVm.authorAllowed()||vm.ui.value.revision!=inkHead||objectsVm.revision!=objectHead||authoringVm.ui.value.revision!=authorHead)return@launch
         val layers=projected.state.layers
         val bound=if(page.world)BoardLimits.WORLD else 0f
         val region=InkRegion(listOf(EraserPoint(-bound,-bound),EraserPoint(if(page.world)bound else InkLimits.WIDTH,if(page.world)bound else InkLimits.HEIGHT)))
@@ -405,7 +400,7 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
         }
         }
     }
-    fun chooseSelection(free:Boolean=selectionOptions.freehand,excerpt:Boolean=false,erase:Boolean=false){selectedExcerpt=null;mixedSelection=null;areaEraseMode=erase;if(continuousPages!=null)leaveContinuous();tool=4;freehand=free;excerptMode=excerpt;selected=null;if(excerpt)freehand=excerptMarkMode}
+    fun chooseSelection(free:Boolean=selectionOptions.freehand,excerpt:Boolean=false,erase:Boolean=false){selectedExcerpt=null;mixedSelection=null;if(continuousPages!=null)leaveContinuous();editorSession.select(when{erase->CanvasSelectionMode.ERASE;excerpt->CanvasSelectionMode.EXCERPT;else->CanvasSelectionMode.SELECT});freehand=free;selected=null;if(excerpt)freehand=excerptMarkMode}
     LaunchedEffect(excerptRequest){if(excerptRequest>0)chooseSelection(excerpt=true)}
     LaunchedEffect(embedRequest,objectsUi.loading,objectsUi.busy,continuousPages==null,readOnly){
         val request=embedRequest
@@ -413,16 +408,16 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
             val viewport=view?.snapshotViewport()?:CanvasViewport()
             val x=(viewport.centerX-300).toFloat();val y=(viewport.centerY-190).toFloat()
             val value=PageObject(request.objectId,PageObjectKind.MAP,if(page.world)x else x.coerceIn(0f,400f),if(page.world)y else y.coerceIn(0f,1034f),width=600f,height=380f,mapEmbed=request.embed)
-            objectsVm.put(value);selectedObject=value.id;tool=5;onEmbedConsumed()
+            objectsVm.put(value);selectedObject=value.id;tool=CanvasTool.OBJECTS;onEmbedConsumed()
         }
     }
-    fun insertObject(action:String){if(!readLock.canWrite)return;if(continuousPages!=null)leaveContinuous();if(action=="shape"){shapePicker=true}else{tool=5;objectRequest=action}}
+    fun insertObject(action:String){if(!readLock.canWrite)return;if(continuousPages!=null)leaveContinuous();if(action=="shape"){shapePicker=true}else{tool=CanvasTool.OBJECTS;objectRequest=action}}
     fun beautify(selection:SelectedInk){
         val writing=manualBeautySources(selection,visibleGeometry)
         if(writing.isEmpty()){notice="请完整圈入要美化的字；跨出边界的笔迹会保留原样。";return}
         if(writing.size>256){notice="这段笔迹较多，请缩小到一两行再试。";return}
         val target=selection.copy(strokes=writing)
-        if(beautyOptions.keepInk){val source=writing.filter{it.cuts.isEmpty()};if(source.isNotEmpty()&&applySelected(selection.revision,InkMutation.Replace(source.map{it.id},InkSelectionEdit.beautify(source,beautyOptions.inkStrength),source.map{it.id}))){selected=null;tool=4}}else if(beautyFont){objectsVm.beautify(target,beautyOptions,page.world,app);tool=4} else if(writing.any{it.cuts.isNotEmpty()})notice="已局部擦除的笔迹暂不能润色，可以选择换字体。"else smoothSelection=target
+        if(beautyOptions.keepInk){val source=writing.filter{it.cuts.isEmpty()};if(source.isNotEmpty()&&applySelected(selection.revision,InkMutation.Replace(source.map{it.id},InkSelectionEdit.beautify(source,beautyOptions.inkStrength),source.map{it.id}))){selected=null;tool=CanvasTool.SELECTION}}else if(beautyFont){objectsVm.beautify(target,beautyOptions,page.world,app);tool=CanvasTool.SELECTION} else if(writing.any{it.cuts.isNotEmpty()})notice="已局部擦除的笔迹暂不能润色，可以选择换字体。"else smoothSelection=target
     }
     fun captureExcerpt(selection:SelectedInk){
         if(!readLock.canWrite)return
@@ -457,8 +452,8 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
     fun selectRegion(region:InkRegion?){
         val token=selectionGeneration.incrementAndGet();val prior=selectionJob;prior?.cancel()
         if(region==null){mixedSelection=null;selected=null;return}
-        if(areaEraseMode&&tool==4){vm.eraseRegion(region,eraser.onlyHighlighter);selected=null;if(eraser.returnToPen)tool=lastWritingTool;return}
-        val mode=tool;val excerpt=excerptMode
+        if(areaEraseMode&&tool==CanvasTool.SELECTION){vm.eraseRegion(region,eraser.onlyHighlighter);selected=null;if(eraser.returnToPen)tool=lastWritingTool;return}
+        val mode=editorSession.state;val excerpt=excerptMode
         if(excerpt){
             val b=region.bounds;val min=if(page.world)-BoardLimits.WORLD.toDouble()else 0.0
             val maxX=if(page.world)BoardLimits.WORLD.toDouble()else 1000.0;val maxY=if(page.world)BoardLimits.WORLD.toDouble()else 1414.0
@@ -469,7 +464,7 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
             mixedSelection=null;selected=value
             selectionJob=scope.launch{
                 prior?.join()
-                fun current()=selectionGeneration.get()==token&&tool==mode&&selected===value&&readLock.canWrite&&vm.ui.value.revision==value.revision&&authoringVm.ui.value.revision==value.authoringRevision
+                fun current()=selectionGeneration.get()==token&&editorSession.state==mode&&selected===value&&readLock.canWrite&&vm.ui.value.revision==value.revision&&authoringVm.ui.value.revision==value.authoringRevision
                 val ready=withTimeoutOrNull(10_000){while(current()){
                     withFrameNanos{}
                     val native=view
@@ -479,28 +474,28 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
             }
             return
         }
-        val options=if(excerpt||mode==6)SelectionOptions(setOf(SelectionType.INK,SelectionType.HIGHLIGHTER),precise=excerpt||mode==6)else selectionOptions
+        val options=if(excerpt||mode.tool==CanvasTool.BEAUTIFY)SelectionOptions(setOf(SelectionType.INK,SelectionType.HIGHLIGHTER),precise=excerpt||mode.tool==CanvasTool.BEAUTIFY)else selectionOptions
         selectionJob=scope.launch{
             prior?.join()
             val read=vm.prepareOperation(region.bounds,readInk=options.types.any{it==SelectionType.INK||it==SelectionType.HIGHLIGHTER}){stroke,geometry->options.accepts(stroke)&&geometry.selects(region,stroke,options.precise)}?:return@launch
             val head=read.header.authoring
-            fun current()=selectionGeneration.get()==token&&tool==mode&&readLock.canWrite&&vm.ui.value.revision==head.inkRevision&&objectsVm.revision==head.objectRevision&&authoringVm.ui.value.revision==head.revision
+            fun current()=selectionGeneration.get()==token&&editorSession.state==mode&&readLock.canWrite&&vm.ui.value.revision==head.inkRevision&&objectsVm.revision==head.objectRevision&&authoringVm.ui.value.revision==head.revision
             if(!current())return@launch
             val projected=authoringVm.prepareContents((vm.ui.value.strokes+read.strokes).distinctBy{it.id},head.inkRevision,head.objectRevision,head.revision)?:return@launch
             val found=withContext(Dispatchers.Default){CanvasSelectionEdit.query(region,head.inkRevision,read.strokes,read.header.objects,options,VisibleInkGeometry(),projected.state.layers)}
             if(!current())return@launch
-            mixedSelection=found.takeIf{mode==4&&!excerpt&&it.objects.isNotEmpty()}
+            mixedSelection=found.takeIf{mode.tool==CanvasTool.SELECTION&&!excerpt&&it.objects.isNotEmpty()}
             selected=found.takeIf{mixedSelection==null}?.let{SelectedInk(it.region,it.revision,it.strokes,authoringRevision=head.revision)}
-            if(mode==6)selected?.let(::beautify)
+            if(mode.tool==CanvasTool.BEAUTIFY)selected?.let(::beautify)
         }
     }
     fun selectAt(x:Float,y:Float){
         val token=selectionGeneration.incrementAndGet();val prior=selectionJob;prior?.cancel()
         if(excerptMode){selected=null;selectedExcerpt=excerptRows.lastOrNull{it.pageId==page.id&&x>=it.left&&x<=it.right&&y>=it.top&&y<=it.bottom}?.id;return}
-        if(areaEraseMode||tool!=4)return
+        if(areaEraseMode||tool!=CanvasTool.SELECTION)return
         mixedSelection=null
         val objectHit=objectsVm.ui.value.objects.asReversed().firstOrNull{!it.hidden&&it.sourceStrokeIds.isEmpty()&&authoringVm.ui.value.state.layers.visible(LayerContent(LayerContentKind.OBJECT,it.id))&&selectionOptions.accepts(it)&&ObjectGeometry.hit(it,x,y)}
-        if(objectHit!=null){selected=null;selectedObject=objectHit.id;tool=5;return}
+        if(objectHit!=null){selected=null;selectedObject=objectHit.id;tool=CanvasTool.OBJECTS;return}
         val radius=(12/(selectionViewport.zoom*context.resources.displayMetrics.density)).toFloat();val options=selectionOptions
         selectionJob=scope.launch{
             prior?.join()
@@ -509,22 +504,22 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
                     (stroke.pen==InkPen.BALLPOINT&&stroke.cuts.isEmpty()&&stroke.samples.size>2&&stroke.samples.first().let{a->stroke.samples.last().let{b->a.x==b.x&&a.y==b.y}}&&stroke.bounds().let{b->x>=b.left&&x<=b.right&&y>=b.top&&y<=b.bottom}))
             }?:return@launch
             val head=read.header.authoring
-            if(selectionGeneration.get()!=token||tool!=4||!readLock.canWrite||objectsVm.revision!=head.objectRevision)return@launch
+            if(selectionGeneration.get()!=token||tool!=CanvasTool.SELECTION||!readLock.canWrite||objectsVm.revision!=head.objectRevision)return@launch
             authoringVm.prepareContents((vm.ui.value.strokes+read.strokes).distinctBy{it.id},head.inkRevision,head.objectRevision,head.revision)?:return@launch
-            if(selectionGeneration.get()!=token||tool!=4)return@launch
+            if(selectionGeneration.get()!=token||tool!=CanvasTool.SELECTION)return@launch
             selected=read.strokes.lastOrNull()?.let{s->val b=s.bounds().padded(2.0);SelectedInk(InkRegion(listOf(EraserPoint(b.left.toFloat(),b.top.toFloat()),EraserPoint(b.right.toFloat(),b.bottom.toFloat()))),head.inkRevision,listOf(s),authoringRevision=head.revision)}
         }
     }
     fun enterBeauty(){
         if(continuousPages!=null)leaveContinuous()
-        tool=6
+        tool=CanvasTool.BEAUTIFY
         if(selected?.strokes?.isNotEmpty()==true)beautify(selected!!)else{selected=null;freehand=false}
     }
     fun toggleFavorite(kind:InkPen,width:Float,color:Int){
         if(favoriteBusy)return
-        val match=favorites.firstOrNull{it.matches(kind,width,color,recipes[tool.coerceIn(0,2)])}
+        val match=favorites.firstOrNull{it.matches(kind,width,color,recipes[tool.penSlot])}
         if(match==null&&favorites.size>=12){notice="收藏笔盒已满，可在参数卡片取消已有收藏。";return}
-        val next=if(match!=null)favorites.filterNot{it.id==match.id} else favorites+FavoritePen(java.util.UUID.randomUUID().toString(),kind,width,color,recipes[tool.coerceIn(0,2)])
+        val next=if(match!=null)favorites.filterNot{it.id==match.id} else favorites+FavoritePen(java.util.UUID.randomUUID().toString(),kind,width,color,recipes[tool.penSlot])
         favoriteStore.apply(next);favorites=next;if(match==null)showFavorites(true)
     }
     if(continuousPages==null&&!readOnly)AutomaticBeautyBinding(objectsVm,ui,gesture,beautyOptions,page.world,app)
@@ -538,7 +533,7 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
         HorizontalDivider(color=Line)
     }
     val penSettings:@Composable ()->Unit={
-        val slot=tool.coerceIn(0,2)
+        val slot=tool.penSlot
         PenPresetMenu(settings,slot,widths[slot],colors[slot],kinds[slot],{settings=false},favorites,favoriteBusy,::toggleFavorite,
             recipe=recipes[slot],onRecipe={saveRecipe(slot,it)},attachedToToolbar=true,onChooseKind={choosePen(it);settings=true}){width,color,kind->savePreset(slot,width,color,kind)}
     }
@@ -564,22 +559,22 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
             Box(Modifier.fillMaxWidth().weight(1f)){DocumentWhitespacePanel(page.id,PaperStyle.entries[page.paper],ui.strokes,objectsUi.objects,authoringVm,authoringUi,authoringEnabled,embedded=true,inkSource=vm.renderSource()?.copy(authoringRevision=authoringUi.revision,layerCounts=authoringUi.inkLayerCounts),dismiss={whitespaceMode(false)})}
         }else if(continuousPages!=null){
             Box(Modifier.fillMaxWidth().weight(1f)){ContinuousPages(continuousPages,page.id,
-                ContinuousTools(kinds[tool.coerceIn(0,2)],colors[tool.coerceIn(0,2)],widths[tool.coerceIn(0,2)],tool==3,eraser.whole,eraser.onlyHighlighter,eraser.diameterDp,authoringUi.canWrite&&externalEnabled&&!readOnly&&tool<4&&!(if(tool==3)objectsBlocked else inkObjectsBlocked),beautyOptions,recipes[tool.coerceIn(0,2)],eraser.onlyTape,finger&&!readOnly),
-                gesture,onContinuousPage,{gesture=it;readLock.guard("ink-gesture-${page.id}",it);if(!it&&tool==3&&eraser.returnToPen)tool=lastWritingTool},{continuousBlocked=it},{notice=it},{id->onContinuousPage(id);leaveContinuous()},onAppendPage=onAppendPage.takeIf{!readOnly},authorAllowed={readLock.canWrite},returnViewport=returnViewport,onReturnViewportRestored={workspace.consumeReturnViewport(page.id)},onViewport={id,vp->workspace.viewport(id,vp)},initialViewport=workspace.cachedViewport(page.id)?:row.takeIf{it.zoom>0}?.let{CanvasViewport(it.centerX,it.centerY,it.zoom)},selectedAuthoring=authoringUi,onZoom={zoom=it;showViewportHint(true)},onScroll={showViewportHint(false)},onObjectTap={pageId,id->if(!readOnly){pendingObject=pageId to id;onContinuousPage(pageId);leaveContinuous()}})}
+                ContinuousTools(kinds[tool.penSlot],colors[tool.penSlot],widths[tool.penSlot],tool==CanvasTool.ERASER,eraser.whole,eraser.onlyHighlighter,eraser.diameterDp,authoringUi.canWrite&&externalEnabled&&!readOnly&&tool.supportsContinuous&&!(if(tool==CanvasTool.ERASER)objectsBlocked else inkObjectsBlocked),beautyOptions,recipes[tool.penSlot],eraser.onlyTape,finger&&!readOnly),
+                gesture,onContinuousPage,{gesture=it;readLock.guard("ink-gesture-${page.id}",it);if(!it&&tool==CanvasTool.ERASER&&eraser.returnToPen)tool=lastWritingTool},{continuousBlocked=it},{notice=it},{id->onContinuousPage(id);leaveContinuous()},onAppendPage=onAppendPage.takeIf{!readOnly},authorAllowed={readLock.canWrite},returnViewport=returnViewport,onReturnViewportRestored={workspace.consumeReturnViewport(page.id)},onViewport={id,vp->workspace.viewport(id,vp)},initialViewport=workspace.cachedViewport(page.id)?:row.takeIf{it.zoom>0}?.let{CanvasViewport(it.centerX,it.centerY,it.zoom)},selectedAuthoring=authoringUi,onZoom={zoom=it;showViewportHint(true)},onScroll={showViewportHint(false)},onObjectTap={pageId,id->if(!readOnly){pendingObject=pageId to id;onContinuousPage(pageId);leaveContinuous()}})}
         }else if(row!=null){
             val initial=remember(page.id){workspace.cachedViewport(page.id)?:row.takeIf{it.zoom>0}?.let{runCatching{CanvasViewport(it.centerX,it.centerY,it.zoom)}.getOrNull()}}
             Box(Modifier.fillMaxWidth().weight(1f)){
             key(page.id){AndroidView(onReset=null,onRelease={v:InkCanvasView->if(view===v)view=null;LeakTracking.watchReleased(v,"Single-page canvas released")},factory={ctx->InkCanvasView(ctx).also{v->
-                view=v;v.onWriteStart=vm::beginLayerWrite;v.onStroke=vm::accept;v.onCheckpoint=vm::checkpoint;v.onCheckpointCancel=vm::cancelCheckpoint;v.onErase=erase@{path,radius,whole,only->if(!authoringVm.ui.value.ready||!authoringVm.pageHeadsMatch(vm.ui.value.revision,objectsVm.revision)){notice="当前区域图层正在读取，请稍后擦除";return@erase};mixedWriter.erase(listOf(PageEraseTarget(vm,objectsVm,path)),radius,whole,only,app.inkRepository,eraser.onlyTape)};v.onGesture={if(it)cancelSourcePulse();gesture=it;readLock.guard("ink-gesture-${page.id}",it);if(!it&&tool==3&&eraser.returnToPen)tool=lastWritingTool}
+                view=v;v.onWriteStart=vm::beginLayerWrite;v.onStroke=vm::accept;v.onCheckpoint=vm::checkpoint;v.onCheckpointCancel=vm::cancelCheckpoint;v.onErase=erase@{path,radius,whole,only->if(!authoringVm.ui.value.ready||!authoringVm.pageHeadsMatch(vm.ui.value.revision,objectsVm.revision)){notice="当前区域图层正在读取，请稍后擦除";return@erase};mixedWriter.erase(listOf(PageEraseTarget(vm,objectsVm,path)),radius,whole,only,app.inkRepository,eraser.onlyTape)};v.onGesture={if(it)cancelSourcePulse();gesture=it;readLock.guard("ink-gesture-${page.id}",it);if(!it&&tool==CanvasTool.ERASER&&eraser.returnToPen)tool=lastWritingTool}
                 v.onNotice={notice=it;app.diagnostics.event(DiagnosticCode.INK_UI,DiagnosticResult.REJECTED)}
                 v.finishStroke={polishNewStroke(it,beautyOptions)};v.onViewportGesture={workspace.consumeReturnViewport(page.id);cancelSourcePulse();showViewportHint(it)};v.onAxes={pressure,tilt->app.diagnostics.inputAxes(pressure,tilt);axes="本次输入：压力${if(pressure)"已上报"else"未上报"} · 倾斜${if(tilt)"已上报"else"未上报"}"}
-                v.onObjectTap={id->if(readLock.canWrite){val o=objectsVm.ui.value.objects.find{it.id==id};if(o?.kind==PageObjectKind.TAPE)objectsVm.put(o.copy(revealed=!o.revealed))else{selectedObject=id;tool=5}}};v.onViewport={workspace.viewport(page.id,it)};v.onScale={zoom=it;val viewport=v.snapshotViewport();selectionViewport=viewport
+                v.onObjectTap={id->if(readLock.canWrite){val o=objectsVm.ui.value.objects.find{it.id==id};if(o?.kind==PageObjectKind.TAPE)objectsVm.put(o.copy(revealed=!o.revealed))else{selectedObject=id;tool=CanvasTool.OBJECTS}}};v.onViewport={workspace.viewport(page.id,it)};v.onScale={zoom=it;val viewport=v.snapshotViewport();selectionViewport=viewport
                     pendingSourcePulse?.let{pulse->if(pulse.view!==v||pulse.viewport!=viewport){if(v.sourceInteractionEpoch!=pulse.interactionEpoch)cancelSourcePulse()else pendingSourcePulse=null}}
                     sourcePulse?.let{pulse->if(pulse.view!==v||pulse.viewport!=viewport)sourcePulse=null}}
             }},update={v->
                 v.configure(row.world,PaperStyle.entries.getOrElse(row.paper){PaperStyle.RULED},initial)
-                v.allowInput=authoringUi.canWrite&&(tool!=3||authoringUi.ready&&authoringVm.pageHeadsMatch(ui.revision,objectsVm.revision))&&externalEnabled&&!readOnly&&tool<4&&!(if(tool==3)objectsBlocked else inkObjectsBlocked)&&(if(tool==3)!ui.loading&&!ui.readFailed&&ui.blocked==null&&!ui.processing&&ui.queued<16 else ui.canStart);v.eraserTapeOnly=eraser.onlyTape;v.eraserWhole=eraser.whole;v.eraserHighlighterOnly=eraser.onlyHighlighter;v.eraserDiameterDp=eraser.diameterDp;v.fingerWrites=finger&&!readOnly;v.eraseMode=tool==3;v.pen=kinds[tool.coerceIn(0,2)]
-                v.brushRecipe=recipes[tool.coerceAtMost(2)];v.penWidth=widths[tool.coerceAtMost(2)];v.penColor=colors[tool.coerceAtMost(2)]
+                v.allowInput=authoringUi.canWrite&&(tool!=CanvasTool.ERASER||authoringUi.ready&&authoringVm.pageHeadsMatch(ui.revision,objectsVm.revision))&&externalEnabled&&!readOnly&&tool.supportsContinuous&&!(if(tool==CanvasTool.ERASER)objectsBlocked else inkObjectsBlocked)&&(if(tool==CanvasTool.ERASER)!ui.loading&&!ui.readFailed&&ui.blocked==null&&!ui.processing&&ui.queued<16 else ui.canStart);v.eraserTapeOnly=eraser.onlyTape;v.eraserWhole=eraser.whole;v.eraserHighlighterOnly=eraser.onlyHighlighter;v.eraserDiameterDp=eraser.diameterDp;v.fingerWrites=finger&&!readOnly;v.eraseMode=tool==CanvasTool.ERASER;v.pen=kinds[tool.penSlot]
+                v.brushRecipe=recipes[tool.penSlot];v.penWidth=widths[tool.penSlot];v.penColor=colors[tool.penSlot]
                 v.showAuthoring(authoringUi.state);v.showDocument(page.id);v.onVisibleBounds=vm::updateViewport;v.showInkSource(vm.renderSource()?.copy(authoringRevision=authoringUi.revision,layerCounts=authoringUi.inkLayerCounts),ui.windowLoading||ui.loading);v.showStrokes(projectedStrokes);v.showObjects(beautyPreviewObjects(objectsUi.objects,beautyReview))
                 if(!gesture)v.selectionPreview((pendingSelection?.second?:selected?.strokes?.map{it.id}).orEmpty().toSet())
             },modifier=Modifier.fillMaxSize().onSizeChanged{canvasSize=it}.testTag("ink-surface"))
@@ -588,27 +583,27 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
                 (focusRegion==null||pulse.bounds==focusRegion)}?.let{pulse->
                 SourceFocusHighlight(pulse){finished->if(sourcePulse===finished)sourcePulse=null}
             }
-            if(showExcerptMarkers)ExcerptMarkers(excerptRows.filter{it.pageId==page.id&&(tool!=4||!excerptMode||it.id!=selectedExcerpt)},selectionViewport)
-            if(tool==7)AndroidView(factory={TapeOverlay(it)},update={v->
+            if(showExcerptMarkers)ExcerptMarkers(excerptRows.filter{it.pageId==page.id&&(tool!=CanvasTool.SELECTION||!excerptMode||it.id!=selectedExcerpt)},selectionViewport)
+            if(tool==CanvasTool.TAPE)AndroidView(factory={TapeOverlay(it)},update={v->
                 v.canvasView=view;v.objects=objectsUi.objects;v.world=page.world;v.enabledInput=editable&&!objectsUi.loading&&!objectsUi.busy&&!objectsUi.pending
                 v.pattern=TapePattern.entries[tapePatternIndex];v.mode=tapeMode;v.tapeWidth=tapeWidth;v.tapeColor=tapeColor;v.onActive={gesture=it;readLock.guard("ink-gesture-${page.id}",it)};v.onCreate=objectsVm::put;v.onToggle={objectsVm.put(it.copy(revealed=!it.revealed))}
             },modifier=Modifier.fillMaxSize().testTag("tape-overlay"))
-            if(tool==5)AndroidView(factory={PageObjectOverlay(it)},update={v->
+            if(tool==CanvasTool.OBJECTS)AndroidView(factory={PageObjectOverlay(it)},update={v->
                 v.canvasView=view;v.objects=objectsUi.objects.filter{!it.hidden&&authoringUi.state.layers.visible(LayerContent(LayerContentKind.OBJECT,it.id))};v.canEdit={authoringUi.state.layers.editable(LayerContent(LayerContentKind.OBJECT,it.id))};v.selected=selectedObject;v.world=page.world
                 v.enabledInput=editable&&!objectsUi.loading&&!objectsUi.busy&&!objectsUi.pending&&!objectInteraction
                 v.onSelect={selectedObject=it};v.onChange={objectsVm.put(it,layerScope=objectLayerScope)};v.onActive={if(it)objectLayerScope=authoringVm.scopeForWrite();gesture=it;readLock.guard("ink-gesture-${page.id}",it)};v.invalidate()
             },modifier=Modifier.fillMaxSize().testTag("object-overlay"))
-            if(tool==5&&!readOnly){
+            if(tool==CanvasTool.OBJECTS&&!readOnly){
                 val o=objectsUi.objects.find{it.id==selectedObject}
                 val region=o?.let{InkRegion(listOf(EraserPoint(it.x,it.y),EraserPoint(it.x+it.width,it.y+it.height)))}
                 SelectionToolbar(region,selectionViewport){
                 Column {
                 if(o!=null)TextButton({annotationTarget=o.id},enabled=!gesture&&!busy,modifier=Modifier.heightIn(min=48.dp).testTag("object-annotation-context")){Text("对象旁批注")}
-                PageObjectTools(objectsVm,objectsUi,page.id,page.world,tool==5,editable&&!gesture&&(selectedObject==null||authoringUi.state.layers.editable(LayerContent(LayerContentKind.OBJECT,selectedObject!!))),selectedObject,{selectedObject=it},{objectInteraction=it},{view?.snapshotViewport()},{notice=it},request=objectRequest.takeIf{continuousPages==null},onRequestConsumed={objectRequest=null},onDone={selectedObject=null;tool=lastWritingTool},onEditMap={selectedObject=null;tool=lastWritingTool;onEditMap(it)})
+                PageObjectTools(objectsVm,objectsUi,page.id,page.world,tool==CanvasTool.OBJECTS,editable&&!gesture&&(selectedObject==null||authoringUi.state.layers.editable(LayerContent(LayerContentKind.OBJECT,selectedObject!!))),selectedObject,{selectedObject=it},{objectInteraction=it},{view?.snapshotViewport()},{notice=it},request=objectRequest.takeIf{continuousPages==null},onRequestConsumed={objectRequest=null},onDone={selectedObject=null;tool=lastWritingTool},onEditMap={selectedObject=null;tool=lastWritingTool;onEditMap(it)})
                 }}
             }
-            if(tool!=5)PageObjectTools(objectsVm,objectsUi,page.id,page.world,false,editable&&!gesture,null,{selectedObject=it},{objectInteraction=it},{view?.snapshotViewport()},{notice=it})
-            if((tool==4||tool==6)&&selectedExcerpt==null)AndroidView(factory={SelectionOverlayView(it)},update={v->
+            if(tool!=CanvasTool.OBJECTS)PageObjectTools(objectsVm,objectsUi,page.id,page.world,false,editable&&!gesture,null,{selectedObject=it},{objectInteraction=it},{view?.snapshotViewport()},{notice=it})
+            if((tool==CanvasTool.SELECTION||tool==CanvasTool.BEAUTIFY)&&selectedExcerpt==null)AndroidView(factory={SelectionOverlayView(it)},update={v->
                 v.geometry=visibleGeometry;v.selectedObjects=mixedSelection?.objects.orEmpty().map{it.bounds()};v.objectIds=mixedSelection?.objects.orEmpty().map{it.id}.toSet();v.worldSelection=page.world;v.canvasView=view;v.region=mixedSelection?.region?:selected?.region;v.selected=mixedSelection?.strokes?:selected?.strokes.orEmpty();v.freehand=freehand;v.marker=excerptMode&&excerptMarkMode;v.enabledInput=editable
                 v.onCaptureDrag=if(excerptMode&&captureToMap){{selected?.takeIf{it.preview!=null}?.let{s->CaptureTransfer(note.base.id,StudySourceDraft(page.id,s.revision,s.region.bounds,s.strokes.map{it.id},s.preview,s.objectRevision,s.authoringRevision),s.excerptText)}}}else null
                 v.onActive={gesture=it;readLock.guard("ink-gesture-${page.id}",it)};v.onRegion=::selectRegion
@@ -616,14 +611,14 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
                 v.onShift={dx,dy->val mixed=mixedSelection;if(mixed!=null)moveMixed(mixed,dx,dy)else selected?.let{current->runCatching{InkSelectionEdit.copy(current.strokes,dx,dy)}.onSuccess{changed->if(applySelected(current.revision,InkMutation.Replace(current.strokes.map{it.id},changed,current.strokes.map{it.id})))selected=null}.onFailure{notice="移动超出画布或编辑预算，原笔迹保留。"}}}
                 v.invalidate()
             },modifier=Modifier.fillMaxSize().testTag("selection-overlay"))
-            if(tool==4&&excerptMode&&!readOnly)selectedExcerpt?.let{id->
+            if(tool==CanvasTool.SELECTION&&excerptMode&&!readOnly)selectedExcerpt?.let{id->
                 ExcerptEditor(id,excerptVm,view,selectionViewport,page.world,ui.revision,objectsVm.revision,authoringUi,editable&&!objectsBlocked,{selectedExcerpt=null},{gesture=it},{excerptDraft=it})
             }
-            if(tool==4&&excerptMode&&selected?.preview!=null&&!readOnly)SelectionToolbar(selected?.region,selectionViewport){
+            if(tool==CanvasTool.SELECTION&&excerptMode&&selected?.preview!=null&&!readOnly)SelectionToolbar(selected?.region,selectionViewport){
                 Column(Modifier.padding(horizontal=8.dp,vertical=6.dp)){Text(if(selected?.excerptText.isNullOrBlank())"图片 / 手写摘录 · 保留原貌"else"文字摘要 · 同时保留原貌",style=MaterialTheme.typography.labelMedium,color=Quiet)
                     Row{TextButton({selected?.let{if(captureToMap)onMapExcerpt(it)else{onExcerpt(it);selected=null}}},enabled=editable,modifier=Modifier.testTag("capture-confirm")){Text(if(captureToMap)"摘录到导图"else"存入摘录匣")};TextButton({excerptJob?.cancel();selected=null}){Text("取消")}}}
             }
-            if(tool==4&&!excerptMode&&!areaEraseMode&&!readOnly&&(selected!=null||mixedSelection!=null))SelectionToolbar(mixedSelection?.region?:selected?.region,selectionViewport){
+            if(tool==CanvasTool.SELECTION&&!excerptMode&&!areaEraseMode&&!readOnly&&(selected!=null||mixedSelection!=null))SelectionToolbar(mixedSelection?.region?:selected?.region,selectionViewport){
                 Column {
 
                     val mixed=mixedSelection
@@ -631,7 +626,7 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
                         copy={val b=(mixed.strokes.map{it.bounds()}+mixed.objects.map{it.bounds()}).reduce{a,v->a.union(v)}
                             val dx=if(page.world||b.right+24<=1000)24f else if(b.left>=24)-24f else 0f
                             val dy=if(page.world||b.bottom+24<=1414)24f else if(b.top>=24)-24f else 0f
-                            moveMixed(mixed,dx,dy,true)},delete={editMixed(mixed,CanvasSelectionEdit.deleted(mixed))},edit={selectedObject=mixed.objects.single().id;mixedSelection=null;tool=5},scale={factor->runCatching{CanvasSelectionEdit.scaled(mixed,factor,page.world)}.onSuccess{editMixed(mixed,it)}.onFailure{notice="缩放超出页面、笔宽或对象尺寸限制，原内容保留"}},dismiss={mixedSelection=null})
+                            moveMixed(mixed,dx,dy,true)},delete={editMixed(mixed,CanvasSelectionEdit.deleted(mixed))},edit={selectedObject=mixed.objects.single().id;mixedSelection=null;tool=CanvasTool.OBJECTS},scale={factor->runCatching{CanvasSelectionEdit.scaled(mixed,factor,page.world)}.onSuccess{editMixed(mixed,it)}.onFailure{notice="缩放超出页面、笔宽或对象尺寸限制，原内容保留"}},dismiss={mixedSelection=null})
                     else SelectionActions(selected,if(selectionOptions.types.any{it==SelectionType.INK||it==SelectionType.HIGHLIGHTER}){{region->vm.eraseRegion(region,accepts=selectionOptions::accepts)}}else null,editable&&!objectsBlocked&&selected?.strokes.orEmpty().all{authoringUi.state.layers.editable(LayerContent(LayerContentKind.INK,it.id))},freehand,{freehand=it;selectionOptions=selectionOptions.copy(freehand=it);selectionStore.save(selectionOptions)},::applySelected,{selected=null},::captureExcerpt,onAssociate,{beautify(it)},onMapExcerpt)
 
                 }
@@ -652,30 +647,30 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
                 onSearch={onSearch(ui.revision)},onOverview={onDocumentAction("overview")},
                 onFullScreen={onFullScreen(!fullScreen)},onExport={if(page.world)confirmExport=true else onDocumentAction("export")},onTimer={timerOpen=true},showWriteControl=true,pageActions={close->pageTools(true,close)})
             else if(!readOnly)EditorToolbar(fullScreen=fullScreen,pageActions=pageTools,inkProperties={
-                val slot=lastWritingTool
-                EditorInkPresets(slot,widths[slot],colors[slot],!editingBlocked&&tool in 0..2,
+                val slot=lastWritingTool.penSlot
+                EditorInkPresets(slot,widths[slot],colors[slot],!editingBlocked&&tool.isWriting,
                     onWidth={savePreset(slot,it,colors[slot],kinds[slot])},onColor={savePreset(slot,widths[slot],it,kinds[slot])})
             }) { action,closeOverflow -> when(action){
                 "undo" -> EditorIconButton("撤销","undo",tag="ink-undo",onClick={closeOverflow();when(historyHeads.undo){EditDomain.AUTHORING->authoringVm.undo();EditDomain.OBJECT->objectsVm.undo();else->vm.undo()}},enabled=(when(historyHeads.undo){EditDomain.AUTHORING->authoringUi.undo;EditDomain.OBJECT->objectsUi.undo;else->ui.canUndo})&&!editingBlocked)
                 "redo" -> EditorIconButton("重做","redo",tag="ink-redo",onClick={closeOverflow();when(historyHeads.redo){EditDomain.AUTHORING->authoringVm.redo();EditDomain.OBJECT->objectsVm.redo();else->vm.redo()}},enabled=(when(historyHeads.redo){EditDomain.AUTHORING->authoringUi.redo;EditDomain.OBJECT->objectsUi.redo;else->ui.canRedo})&&!editingBlocked)
                 "pen" -> Box {
-                    EditorTool("笔，再点调整","pen",tool in 0..1&&!readOnly,!editingBlocked,"top-draw",Modifier.semantics{toggleableState=ToggleableState(tool in 0..1)}){
-                        closeOverflow();selectedObject=null;if(tool in 0..1)settings=true else{tool=lastPenTool;settings=false}
+                    EditorTool("笔，再点调整","pen",tool.isPen&&!readOnly,!editingBlocked,"top-draw",Modifier.semantics{toggleableState=ToggleableState(tool.isPen)}){
+                        closeOverflow();selectedObject=null;if(tool.isPen)settings=true else{tool=lastPenTool;settings=false}
                     }
-                    if(tool in 0..1)penSettings()
+                    if(tool.isPen)penSettings()
                 }
                 "highlighter" -> Box {
-                    EditorTool("荧光笔，再点调整","highlighter",tool==2,!editingBlocked,"pen-kind-highlighter",Modifier.semantics{toggleableState=ToggleableState(tool==2)}){
-                        closeOverflow();selectedObject=null;if(tool==2)settings=true else choosePen(InkPen.HIGHLIGHTER)
+                    EditorTool("荧光笔，再点调整","highlighter",tool==CanvasTool.HIGHLIGHTER,!editingBlocked,"pen-kind-highlighter",Modifier.semantics{toggleableState=ToggleableState(tool==CanvasTool.HIGHLIGHTER)}){
+                        closeOverflow();selectedObject=null;if(tool==CanvasTool.HIGHLIGHTER)settings=true else choosePen(InkPen.HIGHLIGHTER)
                     }
-                    if(tool==2)penSettings()
+                    if(tool==CanvasTool.HIGHLIGHTER)penSettings()
                 }
                 "layers" -> EditorTool("图层","layers",layersOpen,!gesture&&!busy,"page-layers-open",Modifier.toolAnchor("layers")){closeOverflow();anchorFor("layers");layersOpen=true}
-                "tape" -> EditorTool("胶带，再点调整","tape",tool==7,!editingBlocked&&!continuousBlocked,"object-tape"){
-                    closeOverflow();if(tool==7)tapeSettings=true else{if(continuousPages!=null)leaveContinuous();selectedObject=null;tool=7}
+                "tape" -> EditorTool("胶带，再点调整","tape",tool==CanvasTool.TAPE,!editingBlocked&&!continuousBlocked,"object-tape"){
+                    closeOverflow();if(tool==CanvasTool.TAPE)tapeSettings=true else{if(continuousPages!=null)leaveContinuous();selectedObject=null;tool=CanvasTool.TAPE}
                 }
-                "eraser" -> EditorTool("橡皮","eraser",tool==3,!editingBlocked,"top-eraser",Modifier.toolAnchor("eraser").describedAs("橡皮").semantics{toggleableState=ToggleableState(tool==3)}){closeOverflow();if(tool==3){anchorFor("eraser");eraserDialog=true}else tool=3}
-                "lasso" -> EditorTool("套索","select",tool==4&&!excerptMode&&!areaEraseMode,!editingBlocked&&!continuousBlocked,"ink-select",Modifier.toolAnchor("lasso").describedAs("套索").semantics{toggleableState=ToggleableState(tool==4&&!excerptMode&&!areaEraseMode)}){closeOverflow();if(tool==4&&!excerptMode&&!areaEraseMode){anchorFor("lasso");selectionSettings=true}else chooseSelection()}
+                "eraser" -> EditorTool("橡皮","eraser",tool==CanvasTool.ERASER,!editingBlocked,"top-eraser",Modifier.toolAnchor("eraser").describedAs("橡皮").semantics{toggleableState=ToggleableState(tool==CanvasTool.ERASER)}){closeOverflow();if(tool==CanvasTool.ERASER){anchorFor("eraser");eraserDialog=true}else tool=CanvasTool.ERASER}
+                "lasso" -> EditorTool("套索","select",tool==CanvasTool.SELECTION&&!excerptMode&&!areaEraseMode,!editingBlocked&&!continuousBlocked,"ink-select",Modifier.toolAnchor("lasso").describedAs("套索").semantics{toggleableState=ToggleableState(tool==CanvasTool.SELECTION&&!excerptMode&&!areaEraseMode)}){closeOverflow();if(tool==CanvasTool.SELECTION&&!excerptMode&&!areaEraseMode){anchorFor("lasso");selectionSettings=true}else chooseSelection()}
                 "area" -> EditorIconButton("圈选擦除","area-erase",tag="top-area-erase",onClick={closeOverflow();chooseSelection(true,erase=true)},enabled=!editingBlocked&&!continuousBlocked)
                 "image" -> EditorIconButton("插入图片","image",tag="object-image",onClick={closeOverflow();insertObject("image")},enabled=!editingBlocked&&!continuousBlocked)
                 "camera" -> EditorIconButton("拍照","camera",tag="object-camera",onClick={closeOverflow();insertObject("camera")},enabled=!editingBlocked&&!continuousBlocked)
@@ -683,11 +678,11 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
                 "map" -> EditorTool("导图","mindmap",false,!busy,"quick-study",Modifier.describedAs("笔记导图")){closeOverflow();onDocumentAction("map")}
                 "associations" -> EditorTool("关联","link",false,navigationReady&&externalEnabled,"document-associations",Modifier.describedAs("笔记关联")){closeOverflow();onDocumentAction("associations")}
                 "excerpts" -> EditorTool("摘录列表","excerpt",false,navigationReady&&externalEnabled,"read-excerpts",Modifier.describedAs("查看本笔记摘录")){closeOverflow();onDocumentAction("excerpts")}
-                "excerpt" -> EditorTool("摘录","excerpt",tool==4&&excerptMode,!editingBlocked&&!continuousBlocked,"top-excerpt",Modifier.toolAnchor("excerpt").describedAs("摘录")){closeOverflow();if(tool==4&&excerptMode){anchorFor("excerpt");excerptSettings=true}else chooseSelection(excerpt=true)}
+                "excerpt" -> EditorTool("摘录","excerpt",tool==CanvasTool.SELECTION&&excerptMode,!editingBlocked&&!continuousBlocked,"top-excerpt",Modifier.toolAnchor("excerpt").describedAs("摘录")){closeOverflow();if(tool==CanvasTool.SELECTION&&excerptMode){anchorFor("excerpt");excerptSettings=true}else chooseSelection(excerpt=true)}
                 "tag" -> EditorIconButton("笔记标签","tag",tag="top-tags",onClick=onTags,enabled=!editingBlocked)
                 "shape" -> EditorIconButton("图形","shape",tag="object-shape",onClick={closeOverflow();insertObject("shape")},enabled=!editingBlocked&&!continuousBlocked)
                 "sticker" -> EditorIconButton("贴纸与符号","sticker",tag="object-sticker",onClick={closeOverflow();insertObject("sticker")},enabled=!editingBlocked&&!continuousBlocked)
-                "objects" -> EditorIconButton("选择图片与文字","objects",tag="page-objects",selected=tool==5,enabled=!editingBlocked&&!continuousBlocked){closeOverflow();if(continuousPages!=null)leaveContinuous();selectedObject=null;tool=if(tool==5)lastWritingTool else 5}
+                "objects" -> EditorIconButton("选择图片与文字","objects",tag="page-objects",selected=tool==CanvasTool.OBJECTS,enabled=!editingBlocked&&!continuousBlocked){closeOverflow();if(continuousPages!=null)leaveContinuous();selectedObject=null;tool=if(tool==CanvasTool.OBJECTS)lastWritingTool else CanvasTool.OBJECTS}
                 "favorites" -> EditorIconButton("收藏笔","favorite-pens",tag="favorite-pens-toggle",selected=favoritesOpen,enabled=!editingBlocked){closeOverflow();showFavorites(!favoritesOpen)}
                 "beauty" -> EditorIconButton("自动美化","beauty",tag="quick-beauty",onClick={closeOverflow();beautySettings=true},enabled=!editingBlocked)
                 "readonly" -> if(!workspaceModesProvided||fullScreen)EditorIconButton("只读模式","readonly",tag="quick-readonly",selected=readOnly){closeOverflow();changeReadOnly(!readOnly)}
@@ -735,13 +730,13 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
             if(favorites.isEmpty())Text("在笔参数卡片点星号收藏",Modifier.padding(16.dp),style=MaterialTheme.typography.bodySmall,color=Quiet)
             else Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()).padding(start=8.dp,end=8.dp,bottom=12.dp)){
                 favorites.forEach{p->Box{Column(horizontalAlignment=Alignment.CenterHorizontally){
-                    val active=tool==p.slot&&kinds[p.slot]==p.kind&&widths[p.slot]==p.width&&colors[p.slot]==p.color&&recipes[p.slot]==p.recipe
+                    val active=tool==CanvasTool.writingSlot(p.slot)&&kinds[p.slot]==p.kind&&widths[p.slot]==p.width&&colors[p.slot]==p.color&&recipes[p.slot]==p.recipe
                     Box(Modifier.size(64.dp,48.dp).testTag("favorite-pen-${p.id}").semantics{contentDescription="${PenKinds.title(p.kind)}，${PenWidthStore.label(p.width)}，长按调整";toggleableState=ToggleableState(active)}
-                        .combinedClickable(enabled=!editingBlocked,onClick={if(active)favoriteSettings=p.id else{choosePen(p.kind);saveRecipe(p.slot,p.recipe);savePreset(p.slot,p.width,p.color,p.kind);tool=p.slot}},onLongClickLabel="调整收藏笔",onLongClick={choosePen(p.kind);saveRecipe(p.slot,p.recipe);savePreset(p.slot,p.width,p.color,p.kind);tool=p.slot;favoriteSettings=p.id}),contentAlignment=Alignment.Center){PenSilhouette(p.kind,p.color,selected=active)}
+                        .combinedClickable(enabled=!editingBlocked,onClick={if(active)favoriteSettings=p.id else{choosePen(p.kind);saveRecipe(p.slot,p.recipe);savePreset(p.slot,p.width,p.color,p.kind);tool=CanvasTool.writingSlot(p.slot)}},onLongClickLabel="调整收藏笔",onLongClick={choosePen(p.kind);saveRecipe(p.slot,p.recipe);savePreset(p.slot,p.width,p.color,p.kind);tool=CanvasTool.writingSlot(p.slot);favoriteSettings=p.id}),contentAlignment=Alignment.Center){PenSilhouette(p.kind,p.color,selected=active)}
                     Text(PenWidthStore.label(p.width),style=MaterialTheme.typography.labelSmall,color=Quiet)
                 }
                     if(favoriteSettings==p.id)PenPresetMenu(true,p.slot,p.width,p.color,p.kind,{favoriteSettings=null},favorites,onFavorite={_,_,_->favorites=favorites.filterNot{it.id==p.id};favoriteStore.apply(favorites);favoriteSettings=null},favoriteSelected=true,recipe=p.recipe,onRecipe={r->favorites=favorites.map{if(it.id==p.id)it.copy(recipe=r)else it};favoriteStore.apply(favorites);saveRecipe(p.slot,r)}){width,color,kind->
-                        val updated=p.copy(kind=kind,width=width,color=color);favorites=favorites.map{if(it.id==p.id)updated else it};favoriteStore.apply(favorites);savePreset(updated.slot,width,color,kind);tool=updated.slot
+                        val updated=p.copy(kind=kind,width=width,color=color);favorites=favorites.map{if(it.id==p.id)updated else it};favoriteStore.apply(favorites);savePreset(updated.slot,width,color,kind);tool=CanvasTool.writingSlot(updated.slot)
                     }
                 }}
             }
@@ -749,29 +744,29 @@ internal fun InkPageScreen(note:NoteDraft,workspace:WorkspaceViewModel,page:Note
         if(!readOnly)Surface(Modifier.align(Alignment.TopCenter).padding(start=72.dp,end=8.dp,top=toolbarHeight).widthIn(max=620.dp),shape=RoundedCornerShape(12.dp),shadowElevation=3.dp){
             Column {
                 if(beautyReview!=null&&beautyReview?.open!=true)TextButton(objectsVm::openBeauty,modifier=Modifier.testTag("beauty-review-open")){Text("美化待校对")}
-                if(tool==4&&areaEraseMode)Row(verticalAlignment=Alignment.CenterVertically){Text("圈住手写笔迹即可擦除",Modifier.padding(horizontal=12.dp));TextButton(onClick={tool=lastWritingTool}){Text("完成")}}
-                if(tool==6)Row(Modifier.horizontalScroll(rememberScrollState()),verticalAlignment=Alignment.CenterVertically){
+                if(tool==CanvasTool.SELECTION&&areaEraseMode)Row(verticalAlignment=Alignment.CenterVertically){Text("圈住手写笔迹即可擦除",Modifier.padding(horizontal=12.dp));TextButton(onClick={tool=lastWritingTool}){Text("完成")}}
+                if(tool==CanvasTool.BEAUTIFY)Row(Modifier.horizontalScroll(rememberScrollState()),verticalAlignment=Alignment.CenterVertically){
                     Text("框选文字即可美化",Modifier.padding(horizontal=12.dp),style=MaterialTheme.typography.bodySmall)
                     TextButton(onClick={freehand=!freehand}){Text(if(freehand)"自由圈选"else"矩形框选")}
-                    TextButton(onClick={tool=0}){Text("完成")}
+                    TextButton(onClick={tool=CanvasTool.PEN}){Text("完成")}
                 }
 
             }
         }
     }
     if(timerOpen)NotebookTimer(note.base.id){timerOpen=false}
-    beautyReview?.takeIf{it.open}?.let{BeautyReviewPanel(it,objectsVm){saved->selected=null;pendingSelection=null;selectedObject=saved.id;tool=5}}
+    beautyReview?.takeIf{it.open}?.let{BeautyReviewPanel(it,objectsVm){saved->selected=null;pendingSelection=null;selectedObject=saved.id;tool=CanvasTool.OBJECTS}}
     if(shapePicker)ShapePicker({shapePicker=false}){kind->
         shapePicker=false
         val viewport=view?.snapshotViewport()?:CanvasViewport()
         val objectShape=PageObject(java.util.UUID.randomUUID().toString(),PageObjectKind.SHAPE,
             x=(viewport.centerX-120).toFloat().coerceIn(if(page.world)-BoardLimits.WORLD+4000 else 12f,if(page.world)BoardLimits.WORLD-4000 else 748f),
             y=(viewport.centerY-90).toFloat().coerceIn(if(page.world)-BoardLimits.WORLD+4000 else 12f,if(page.world)BoardLimits.WORLD-4000 else 1222f),
-            width=240f,height=180f,color=colors[lastWritingTool] or 0xff000000.toInt(),lineWidth=widths[lastWritingTool].coerceIn(.5f,12f),shape=ObjectShape.valueOf(kind.uppercase()))
-        objectsVm.put(objectShape);selectedObject=objectShape.id;tool=5
+            width=240f,height=180f,color=colors[lastWritingTool.penSlot] or 0xff000000.toInt(),lineWidth=widths[lastWritingTool.penSlot].coerceIn(.5f,12f),shape=ObjectShape.valueOf(kind.uppercase()))
+        objectsVm.put(objectShape);selectedObject=objectShape.id;tool=CanvasTool.OBJECTS
 
     }
-    smoothSelection?.let{s->BeautifyDialog(s.strokes,{smoothSelection=null;selected=null}){changed->if(applySelected(s.revision,InkMutation.Replace(s.strokes.map{it.id},changed,s.strokes.map{it.id}))){smoothSelection=null;selected=null;tool=4}}}
+    smoothSelection?.let{s->BeautifyDialog(s.strokes,{smoothSelection=null;selected=null}){changed->if(applySelected(s.revision,InkMutation.Replace(s.strokes.map{it.id},changed,s.strokes.map{it.id}))){smoothSelection=null;selected=null;tool=CanvasTool.SELECTION}}}
     CompositionLocalProvider(LocalEditorAnchor provides parameterAnchor){
     if(excerptSettings)EditorPanel("摘要笔","",{excerptSettings=false},"excerpt-settings",kind=PanelKind.SETTINGS){
         Column(Modifier.verticalScroll(rememberScrollState())){

@@ -23,8 +23,9 @@ internal class StreamedLayerLayout(private val changed:()->Unit,private val fail
                 source.repository===old.source.repository&&source.page==old.source.page&&source.authoringRevision==old.source.authoringRevision&&
                 old.viewport==viewport&&old.width==width&&old.height==height&&old.density==density}
             clear();key=next
-            // Until new extents arrive, a full viewport cannot clip a just-appended stroke.
-            rectangles=reusable?.mapValues{Rect(0,0,width,height)}
+            // Retain complete old tiles while bounds are refreshed. pending remains true,
+            // so the old crop cannot be accepted as a completed capture of the new revision.
+            rectangles=reusable
             RenderResources.inFlightJobs.incrementAndGet()
             job=CoroutineScope(Dispatchers.Main.immediate).launch{
                 try{

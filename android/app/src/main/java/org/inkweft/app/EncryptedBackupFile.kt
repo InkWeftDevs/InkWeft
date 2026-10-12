@@ -15,12 +15,13 @@ import javax.crypto.spec.SecretKeySpec
 internal object EncryptedBackupFile {
     const val BLOCK=262144
     const val WIRE_BLOCK=1048576
-    const val LIMIT=500L*WIRE_BLOCK
+    const val LIMIT=8L*1024*1024*1024
+    const val LEGACY_LIMIT=500L*WIRE_BLOCK
     fun maximumCipherBytes(plainBytes:Long):Long {
         require(plainBytes in 1..LIMIT){"BACKUP_TOO_LARGE"}
         return plainBytes+((plainBytes+BLOCK-1)/BLOCK)*20+4106 // header bound and GCM framing
     }
-    private val magic="IWBK1\n".toByteArray()
+    private fun magic(format:Int)="IWBK$format\n".toByteArray()
     fun random(size:Int)=ByteArray(size).also{SecureRandom().nextBytes(it)}
     fun b64(value:ByteArray)=Base64.encodeToString(value,Base64.NO_WRAP)
     fun unb64(value:String)=Base64.decode(value,Base64.NO_WRAP)
@@ -31,19 +32,21 @@ internal object EncryptedBackupFile {
         require(key.size==32&&nonce.size==12)
         return Cipher.getInstance("AES/GCM/NoPadding").run{init(mode,SecretKeySpec(key,"AES"),GCMParameterSpec(128,nonce));updateAAD(aad);doFinal(value)}
     }
-    fun encrypt(source:File,output:File,library:String,recovery:ByteArray,checkpoint:()->Unit={}){
-        UUID.fromString(library);require(source.length()<=LIMIT){"BACKUP_TOO_LARGE"};require(recovery.size==32&&source.length()>0&&!output.exists())
+    fun encrypt(source:File,output:File,library:String,recovery:ByteArray,format:Int=1,checkpoint:()->Unit={}){
+        require(format in 1..2)
+        UUID.fromString(library);require(source.length()<=if(format==2)LIMIT else LEGACY_LIMIT){"BACKUP_TOO_LARGE"};require(recovery.size==32&&source.length()>0&&!output.exists())
         require(checkNotNull(output.parentFile).usableSpace>=maximumCipherBytes(source.length())+32L*1024*1024){"BACKUP_LOW_SPACE"}
         val key=random(32);val nonce=random(12);val prefix=random(8);val backup=UUID.randomUUID().toString();val size=source.length()
-        val wrapped=cipher(Cipher.ENCRYPT_MODE,recovery,nonce,"inkweft-backup-key-v1|$library|$backup".toByteArray(),key)
-        val header=JSONObject().put("format",1).put("library",library).put("backup",backup).put("plainBytes",size).put("chunkSize",BLOCK)
+        val wrapped=cipher(Cipher.ENCRYPT_MODE,recovery,nonce,"inkweft-backup-key-v$format|$library|$backup".toByteArray(),key)
+        val header=JSONObject().put("format",format).put("library",library).put("backup",backup).put("plainBytes",size).put("chunkSize",BLOCK)
             .put("noncePrefix",b64(prefix)).put("wrapNonce",b64(nonce)).put("wrappedKey",b64(wrapped)).toString().toByteArray()
+        val headerHash=hash(header)
         var created=false
         try{check(output.createNewFile());created=true
-            source.inputStream().buffered().use{src->FileOutputStream(output).use{file->val out=DataOutputStream(BufferedOutputStream(file));out.write(magic);out.writeInt(header.size);out.write(header)
+            source.inputStream().buffered().use{src->FileOutputStream(output).use{file->val out=DataOutputStream(BufferedOutputStream(file));out.write(magic(format));out.writeInt(header.size);out.write(header)
                 var remaining=size;var i=0
                 while(remaining>0){checkpoint();val n=minOf(BLOCK.toLong(),remaining).toInt();val plain=ByteArray(n);DataInputStream(src).readFully(plain)
-                    val encoded=cipher(Cipher.ENCRYPT_MODE,key,prefix+int(i),hash(header)+int(i),plain);out.writeInt(encoded.size);out.write(encoded);remaining-=n;i++}
+                    val encoded=cipher(Cipher.ENCRYPT_MODE,key,prefix+int(i),headerHash+int(i),plain);out.writeInt(encoded.size);out.write(encoded);remaining-=n;i++}
                 require(src.read()==-1){"SOURCE_CHANGED"};out.flush();file.fd.sync()
             }}
         }catch(t:Throwable){if(created)output.delete();throw t}finally{key.fill(0)}
@@ -52,15 +55,16 @@ internal object EncryptedBackupFile {
         require(!output.exists()&&recovery.size==32);UUID.fromString(library)
         val temporary=File(output.parentFile,"decrypt-${UUID.randomUUID()}.partial")
         try{DataInputStream(source.inputStream().buffered()).use{input->
-            val mark=ByteArray(magic.size);input.readFully(mark);require(mark.contentEquals(magic))
+            val mark=ByteArray(6);input.readFully(mark);val format=when{mark.contentEquals(magic(1))->1;mark.contentEquals(magic(2))->2;else->error("BACKUP_FORMAT")}
             val length=input.readInt();require(length in 1..4096);val header=ByteArray(length);input.readFully(header);val j=JSONObject(header.toString(Charsets.UTF_8))
-            require(j.getInt("format")==1&&j.getString("library")==library&&j.getInt("chunkSize")==BLOCK)
-            val size=j.getLong("plainBytes");require(size in 1..LIMIT);val backup=j.getString("backup");UUID.fromString(backup)
+            require(j.getInt("format")==format&&j.getString("library")==library&&j.getInt("chunkSize")==BLOCK)
+            val size=j.getLong("plainBytes");require(size in 1..if(format==2)LIMIT else LEGACY_LIMIT);val backup=j.getString("backup");UUID.fromString(backup)
             val prefix=unb64(j.getString("noncePrefix"));require(prefix.size==8)
-            val key=cipher(Cipher.DECRYPT_MODE,recovery,unb64(j.getString("wrapNonce")),"inkweft-backup-key-v1|$library|$backup".toByteArray(),unb64(j.getString("wrappedKey")))
+            val key=cipher(Cipher.DECRYPT_MODE,recovery,unb64(j.getString("wrapNonce")),"inkweft-backup-key-v$format|$library|$backup".toByteArray(),unb64(j.getString("wrappedKey")))
+            val headerHash=hash(header)
             try{check(temporary.createNewFile());FileOutputStream(temporary).use{file->val out=BufferedOutputStream(file);var remaining=size;var i=0
                 while(remaining>0){checkpoint();val n=minOf(BLOCK.toLong(),remaining).toInt();require(input.readInt()==n+16)
-                    val encrypted=ByteArray(n+16);input.readFully(encrypted);out.write(cipher(Cipher.DECRYPT_MODE,key,prefix+int(i),hash(header)+int(i),encrypted));remaining-=n;i++}
+                    val encrypted=ByteArray(n+16);input.readFully(encrypted);out.write(cipher(Cipher.DECRYPT_MODE,key,prefix+int(i),headerHash+int(i),encrypted));remaining-=n;i++}
                 require(input.read()==-1);out.flush();file.fd.sync()
             }}finally{key.fill(0)}
         };require(!output.exists());check(temporary.renameTo(output))

@@ -16,11 +16,18 @@ internal data class BackupIdentity(val url:String,val server:String,val issuer:S
 internal class BackupHttpError(val status:Int,val retryAfterMillis:Long?=null):java.io.IOException("BACKUP_HTTP_$status")
 
 /** Separate from page-scoped CloudServicePort. No redirects, global credentials or author body access. */
-internal class BackupTransport(val identity:BackupIdentity){
-    suspend fun verifyServer(){val j=JSONObject(raw(identity.url,"GET","/v1/identity").toString(Charsets.UTF_8));require(j.getString("server")==identity.server&&j.getString("issuer")==identity.issuer){"SERVER_CHANGED"}}
+internal class BackupTransport(val identity:BackupIdentity,val protocol:Int=1){
+    init{require(protocol in 1..2)}
+    suspend fun verifyServer(){
+        val discovery=try{raw(identity.url,"GET","/v$protocol/identity")}catch(e:BackupHttpError){if(protocol==2&&e.status==404)throw IllegalArgumentException("BACKUP_CAPABILITY");throw e}
+        val j=JSONObject(discovery.toString(Charsets.UTF_8));require(j.getString("server")==identity.server&&j.getString("issuer")==identity.issuer){"SERVER_CHANGED"}
+        require(j.optInt("protocol")==protocol){"BACKUP_CAPABILITY"}
+        if(protocol==2)require(j.optLong("maxPlainBytes")==EncryptedBackupFile.LIMIT&&j.optInt("wireBlock")==EncryptedBackupFile.WIRE_BLOCK&&j.optInt("maxChunks")==8193){"BACKUP_CAPABILITY"}
+    }
+    suspend fun capacity()=JSONObject(raw(identity.url,"GET","/v2/capacity",token=identity.token).toString(Charsets.UTF_8))
     suspend fun request(method:String,library:String,path:String="",json:JSONObject?=null,bytes:ByteArray?=null):ByteArray {
         UUID.fromString(library)
-        return raw(identity.url,method,"/v1/libraries/$library$path",json?.toString()?.toByteArray()?:bytes,identity.token,if(bytes==null)"application/json"else"application/octet-stream")
+        return raw(identity.url,method,"/v$protocol/libraries/$library$path",json?.toString()?.toByteArray()?:bytes,identity.token,if(bytes==null)"application/json"else"application/octet-stream")
     }
     suspend fun json(method:String,library:String,path:String="",body:JSONObject?=null)=JSONObject(request(method,library,path,body).toString(Charsets.UTF_8))
     suspend fun versions(library:String)=JSONArray(request("GET",library,"/versions?include_pending=true").toString(Charsets.UTF_8))

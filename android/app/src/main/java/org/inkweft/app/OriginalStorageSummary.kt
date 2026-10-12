@@ -15,6 +15,7 @@ import org.inkweft.data.OriginalStorageStatus
 @Composable internal fun OriginalStorageSummary() {
     val context=LocalContext.current;val app=context.applicationContext as InkWeftApplication;val scope=rememberCoroutineScope()
     var status by remember{mutableStateOf<OriginalStorageStatus?>(null)};var busy by remember{mutableStateOf(true)};var message by remember{mutableStateOf<String?>(null)}
+    var history by remember{mutableStateOf<org.inkweft.data.HistoryStorageReport?>(null)}
     suspend fun refresh(){status=withContext(Dispatchers.IO){app.documents.storageStatus()}}
     LaunchedEffect(app){try{refresh()}catch(c:CancellationException){throw c}catch(_:Exception){message="暂时无法读取占用信息"}finally{busy=false}}
     fun size(bytes:Long)=Formatter.formatFileSize(context,bytes)
@@ -26,6 +27,21 @@ import org.inkweft.data.OriginalStorageStatus
             Text("原件归属量可重复计数；文件量按实际占用计算。整理会保留笔记、回收站和历史所需原件。",color=Quiet,style=MaterialTheme.typography.bodySmall)
         }
         if(busy)LinearProgressIndicator(Modifier.fillMaxWidth())
+        TextButton(onClick={scope.launch{
+            busy=true;message=null
+            try{history=app.historyStorage.audit()}
+            catch(c:CancellationException){throw c}catch(_:Exception){message="历史引用检查未完成，资料保留；请通过诊断与导出记录问题。"}finally{busy=false}
+        }},enabled=!busy,modifier=Modifier.testTag("audit-history-storage")){Text("检查历史占用")}
+        history?.let{h->
+            Text("历史与引用载荷 ${size(h.payloadBytes)} · 可安全整理 ${size(h.reclaimableBytes)}",style=MaterialTheme.typography.bodySmall)
+            h.groups.filter{it.rows>0}.forEach{g->Text("${g.label} · ${g.rows} 条 · ${size(g.payloadBytes)}",color=Quiet,style=MaterialTheme.typography.bodySmall)}
+            Text("保留撤销、固定关联、来源、复习和待核对操作所需历史及回执。载荷量不含索引和 SQLite 空闲页。"+(if(h.shadowProtected)"实验同步资料正在保护来源副本。"else""),color=Quiet,style=MaterialTheme.typography.bodySmall)
+            TextButton(onClick={scope.launch{
+                busy=true;message=null
+                try{val removed=app.historyStorage.collectDetached();history=app.historyStorage.audit();message="已安全整理 ${removed.detachedSources} 份无引用来源副本、${removed.detachedPreviews} 份孤立预览，回收载荷 ${size(removed.reclaimableBytes)}。"+if(removed.collectionDeferred)"资料在检查期间有更新，剩余内容保留，可稍后再次整理。"else"磁盘空间可继续通过原件与磁盘整理回收。"}
+                catch(c:CancellationException){throw c}catch(_:Exception){message="引用闭包尚未确认，本次历史整理停止；请通过诊断与导出记录问题。"}finally{busy=false}
+            }},enabled=!busy&&h.reclaimableBytes>0,modifier=Modifier.testTag("collect-detached-history")){Text("安全整理历史")}
+        }
         TextButton(onClick={scope.launch{
             busy=true;message=null
             try{app.documentRendering.clearOriginalCache();refresh();message="已清理可重建缓存，正在使用的文件暂时保留。"}

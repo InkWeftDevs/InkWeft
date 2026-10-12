@@ -1,0 +1,16 @@
+gradle.beforeProject { project ->
+    if (project.path == ':app') {
+        project.plugins.withId('com.android.application') {
+            project.androidComponents.finalizeDsl { a ->
+                a.defaultConfig.applicationId = 'org.inkweft.app.cloud20261012'
+                a.defaultConfig.testApplicationId = 'org.inkweft.app.cloud20261012.test'
+                a.defaultConfig.manifestPlaceholders['appLabel'] = '墨织云备份验证'
+            }
+        }
+    }
+    if (project.path == ':data-local') {
+        project.plugins.withId('com.android.library') {
+            project.androidComponents.finalizeDsl { a -> a.defaultConfig.testApplicationId = 'org.inkweft.data.cloud20261012.test' }
+        }
+    }
+}

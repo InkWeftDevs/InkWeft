@@ -84,10 +84,25 @@ object InkStrokeCodec {
     private const val SHAPED=0x49575334
     private const val RECIPE=0x49575335
     private const val COMPACT_OFFSET=5
+    private const val BOUNDED=0x49575340
     /** Stable self-contained encoding also used by durable command digests. */
     fun encode(stroke:InkStroke):ByteArray=encode(stroke,compact=false)
     /** New database/checkpoint payloads store the bounded elapsed time losslessly as Int. */
-    fun encodeStored(stroke:InkStroke):ByteArray=encode(stroke,compact=true)
+    fun encodeStored(stroke:InkStroke):ByteArray=ByteArrayOutputStream().also{b->DataOutputStream(b).use{out->
+        out.writeInt(BOUNDED);val bounds=stroke.bounds()
+        out.writeDouble(bounds.left);out.writeDouble(bounds.top);out.writeDouble(bounds.right);out.writeDouble(bounds.bottom)
+        out.write(encode(stroke,compact=true))
+    }}.toByteArray()
+    /** A current stored payload has a conservative geometry header before its sample bytes. */
+    fun storedBounds(prefix:ByteArray):CanvasBounds? {
+        if(prefix.size<4||DataInputStream(ByteArrayInputStream(prefix)).readInt()!=BOUNDED)return null
+        require(prefix.size>=36)
+        return DataInputStream(ByteArrayInputStream(prefix)).use{input->input.readInt()
+            val values=List(4){input.readDouble()};require(values.all{it.isFinite()})
+            require(values[0]<=values[2]&&values[1]<=values[3])
+            CanvasBounds(values[0],values[1],values[2],values[3])
+        }
+    }
     private fun encode(stroke:InkStroke,compact:Boolean):ByteArray=ByteArrayOutputStream().also{b->DataOutputStream(b).use{out->
         val recipe=stroke.appearance.recipe.version!=0||stroke.pen==InkPen.PENCIL
         val format=if(recipe)RECIPE else if(stroke.cuts.any{it.shape!=InkCutShape.ROUND})SHAPED else if(stroke.cuts.isEmpty())if(stroke.world)WORLD else PAGE else MASKED
@@ -101,6 +116,10 @@ object InkStrokeCodec {
     }}.toByteArray()
     fun decode(bytes:ByteArray):InkStroke {
         require(bytes.size in 1..InkLimits.MAX_STROKE_BYTES)
+        storedBounds(bytes)?.let{bounds->
+            val body=bytes.copyOfRange(36,bytes.size);require(storedBounds(body)==null){"Nested stored ink"}
+            val stroke=decode(body);require(stroke.bounds()==bounds){"Invalid stored ink bounds"};return stroke
+        }
         return DataInputStream(ByteArrayInputStream(bytes)).use{input->
             val storedMagic=input.readInt()
             val compact=storedMagic in (PAGE+COMPACT_OFFSET)..(RECIPE+COMPACT_OFFSET)

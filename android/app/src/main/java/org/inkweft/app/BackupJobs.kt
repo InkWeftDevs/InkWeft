@@ -48,6 +48,7 @@ internal class BackupEngine(private val app:InkWeftApplication,private val fault
     private var identity=sessions.read()
     private val directory=File(app.filesDir,"encrypted-backup-jobs").apply{mkdirs()}
     private val journal=AtomicFile(File(directory,"queue.json"))
+    private val downloadJournal=AtomicFile(File(directory,"download.json"))
     private fun cipherFile(queue:JSONObject):File {
         val name=queue.optString("file","upload.iwbk")
         require(name=="upload.iwbk" || name.matches(Regex("[0-9a-f-]{36}\\.iwbk")))
@@ -58,14 +59,15 @@ internal class BackupEngine(private val app:InkWeftApplication,private val fault
     private val state=MutableStateFlow(BackupTaskState(identity!=null&&!sessions.expired,auth=if(identity==null)BackupAuth.DISCONNECTED else if(sessions.expired)BackupAuth.REAUTHENTICATE else BackupAuth.VALID,message=if(journal.baseFile.exists())"有可继续的备份任务"else if(identity!=null)"已连接，可创建加密备份"else"尚未连接服务器"));val ui=state.asStateFlow()
     private var running:Job?=null
     private var preview:LibraryBackupRepository.Preview?=null
+    internal var lastUploadReadBytes=0L;private set
     fun identityLabel()=identity?.let{"${it.url}\n${it.name.ifBlank{it.user.take(8)}}"}.orEmpty()
     fun connection()=identity
-    fun mayResume()=!manuallyPaused && identity!=null && !sessions.expired && runCatching{val q=readQueue();q.optBoolean("automatic")&&!q.optBoolean("paused")&&q.optLong("deadline")>System.currentTimeMillis()&&q.optLong("operationDeadline")>System.currentTimeMillis()&&q.optInt("attempts")<5&&q.getString("binding")==identity!!.binding(q.getString("library"))}.getOrDefault(false)
+    fun mayResume()=!manuallyPaused && identity!=null && !sessions.expired && runCatching{val q=readQueue();q.optBoolean("automatic")&&!q.optBoolean("paused")&&q.optLong("deadline")>System.currentTimeMillis()&&(q.optInt("protocol",1)==2 || q.optLong("operationDeadline")>System.currentTimeMillis()&&q.optInt("attempts")<5)&&q.getString("binding")==identity!!.binding(q.getString("library"))}.getOrDefault(false)
     @Synchronized private fun readQueue()=JSONObject(journal.openRead().bufferedReader().use{it.readText()})
     @Synchronized private fun writeQueue(j:JSONObject){if(manuallyPaused)j.put("automatic",false);val stream=journal.startWrite();try{stream.write(j.toString().toByteArray());journal.finishWrite(stream)}catch(t:Throwable){journal.failWrite(stream);throw t}}
     private fun work(message:String,action:suspend CoroutineScope.()->Unit):Job?{if(ui.value.busy)return null
         state.value=state.value.copy(busy=true,message=message)
-        running=scope.launch{try{withTimeout(120_000){withContext(Dispatchers.IO){BackgroundBudget.memory(4L*1024*1024){action()}}}}catch(c:CancellationException){state.value=state.value.copy(message=when{c is TimeoutCancellationException->"本次任务已超时，待办与本地资料保留，可手动继续";c.message=="SYSTEM_STOP"->"系统暂缓任务，条件恢复后继续；本地资料保留";c.message=="SLICE_COMPLETE"->"本段执行已结束，后台按原期限继续";else->"任务已暂停，可继续；本地资料保留"});throw c}
+        running=scope.launch{try{withContext(Dispatchers.IO){BackgroundBudget.memory(4L*1024*1024){action()}}}catch(c:CancellationException){state.value=state.value.copy(message=when{c is TimeoutCancellationException->"本次请求已超时，待办与本地资料保留，可手动继续";c.message=="SYSTEM_STOP"->"系统暂缓任务，条件恢复后继续；本地资料保留";c.message=="SLICE_COMPLETE"->"本段执行已结束，后台按原期限继续";c.message=="DOWNLOAD_SLICE"->"下载进度已保存，再次点此版本的校验与恢复可继续";else->"任务已暂停，可继续；本地资料保留"});throw c}
             catch(e:BackupHttpError){
                 if(e.status==401){sessions.markExpired();state.value=state.value.copy(auth=BackupAuth.REAUTHENTICATE,connected=false)}
                 if(e.status==429){BackupScheduler.cancel(app);runCatching{readQueue().put("automatic",false).put("notBefore",(e.retryAfterMillis?:30_000).let{wait->if(wait>Long.MAX_VALUE-System.currentTimeMillis())Long.MAX_VALUE else System.currentTimeMillis()+wait}).also(::writeQueue)}}
@@ -73,7 +75,7 @@ internal class BackupEngine(private val app:InkWeftApplication,private val fault
                 state.value=state.value.copy(message=when(e.status){401->"会话失效，请重新连接同一账号后继续";403,404->"目标不可用，请核对原服务器与账号";409->"任务内容或状态冲突，请查看版本后处理";429->"服务器繁忙，已有限重试，请稍后继续";507->"配额或空间不足，请管理旧版本或释放服务器空间";else->"服务器未确认（${e.status}），保留原任务"})
             }
             catch(e:javax.net.ssl.SSLException){state.value=state.value.copy(message="TLS 证书校验失败，请核对服务器证书与地址；待办保留");BackupScheduler.cancel(app);runCatching{readQueue().put("automatic",false).also(::writeQueue)}}
-            catch(e:Exception){state.value=state.value.copy(message=when(e.message){"BACKUP_TOO_LARGE"->"加密云备份超过 500 MiB，请使用本地全库备份；原资料保留";"INPUT_UNSEALED"->"仍有未完成书写，请抬笔并等待保存；中断的笔迹请先打开原笔记恢复或确认，再创建备份";"QUEUE_BINDING"->"此任务属于另一账号、服务器或资料库，请切回原目标继续";"KEY_REQUIRED"->"请先保存或输入有效的恢复密钥";"QUEUE_PENDING"->"先继续或完成已有任务，再创建新备份";"DELETE_PENDING"->"先继续确认上一次删除，再删除其他版本";"TASK_LIMIT"->"自动续传已达到时限或重试上限，请手动继续";else->"操作未确认：请检查连接、密钥与剩余空间后重试。原资料保留"})}
+            catch(e:Exception){if((e is IllegalArgumentException||e is IllegalStateException||e is org.json.JSONException||e is java.io.FileNotFoundException)&&e !is RenderBudgetBusy&&e.message!="QUEUE_BINDING"){BackupScheduler.cancel(app);runCatching{readQueue().put("automatic",false).also(::writeQueue)}};state.value=state.value.copy(message=when(e.message){"RENDER_BUDGET_BUSY"->"正在等待可用内存，后台稍后继续；本地资料保留";"BACKUP_TOO_LARGE"->"加密云备份超过 8 GiB；原资料保留";"BACKUP_QUOTA"->"服务器可用配额不足，请管理版本后重试";"BACKUP_CAPABILITY"->"服务器备份协议不匹配，请核对服务器版本与原任务；本地资料保留";"SERVER_CHANGED"->"服务器身份已改变，请核对原服务器后重试；本地资料保留";"INPUT_UNSEALED"->"仍有未完成书写，请抬笔并等待保存；中断的笔迹请先打开原笔记恢复或确认，再创建备份";"QUEUE_BINDING"->"此任务属于另一账号、服务器或资料库，请切回原目标继续";"KEY_REQUIRED"->"请先保存或输入有效的恢复密钥";"QUEUE_PENDING"->"先继续或完成已有任务，再创建新备份";"DELETE_PENDING"->"先继续确认上一次删除，再删除其他版本";"TASK_LIMIT"->"待办有效期已结束，请手动继续核对";"DOWNLOAD_DAMAGED"->"已撤销损坏下载块的记录，再次校验与恢复将重下这些块";else->"操作未确认：请检查连接、密钥与剩余空间后重试。原资料保留"})}
             finally{state.value=state.value.copy(busy=false,connected=identity!=null&&state.value.auth==BackupAuth.VALID);if(mayResume())BackupScheduler.schedule(app)}}
         return running
     }
@@ -104,17 +106,18 @@ internal class BackupEngine(private val app:InkWeftApplication,private val fault
         require(!BackgroundBudget.writing()&&!app.inkRepository.hasUnsealedInput()){"INPUT_UNSEALED"}
         BackgroundBudget.await(app)
         UUID.fromString(library);val who=checkNotNull(identity);val key=EncryptedBackupFile.unb64(recovery);require(key.size==32){"KEY_REQUIRED"}
-        if(journal.baseFile.exists())require(readQueue().optString("state") in listOf("PUBLISHED","DELETED")){"QUEUE_PENDING"}
-        val transport=BackupTransport(who);transport.verifyServer()
+        if(journal.baseFile.exists())require(readQueue().optString("state") in listOf("PUBLISHED","DELETED","EXPIRED")){"QUEUE_PENDING"}
+        val transport=BackupTransport(who,2);transport.verifyServer();val available=transport.capacity().getLong("available")
         val retained=if(journal.baseFile.exists())cipherFile(readQueue()).name else null
         directory.listFiles().orEmpty().filter{it.name!=retained&&it.name.matches(Regex("[0-9a-f-]{36}\\.iwbk"))}.forEach{it.delete()}
         val candidate=File(directory,"${UUID.randomUUID()}.iwbk");var registered=false
         try{
             val context=currentCoroutineContext()
-            app.libraryBackup.snapshot(EncryptedBackupFile.LIMIT,EncryptedBackupFile::maximumCipherBytes).use{snapshot->EncryptedBackupFile.encrypt(snapshot.file,candidate,library,key){context.ensureActive()}}
+            var plainBytes=0L
+            app.libraryBackup.snapshot(EncryptedBackupFile.LIMIT,{bytes->EncryptedBackupFile.maximumCipherBytes(bytes).also{require(it<=available){"BACKUP_QUOTA"}}}).use{snapshot->plainBytes=snapshot.file.length();EncryptedBackupFile.encrypt(snapshot.file,candidate,library,key,format=2){context.ensureActive()}}
             fault("after-cipher");val hashes=JSONArray();candidate.inputStream().use{input->while(true){context.ensureActive();val bytes=input.readBackupChunk(EncryptedBackupFile.WIRE_BLOCK);if(bytes.isEmpty())break;hashes.put(EncryptedBackupFile.hex(bytes))}}
-            val manifest=JSONObject().put("bytes",candidate.length()).put("chunks",hashes).put("format","inkweft.encrypted-backup.v1")
-            val queue=JSONObject().put("binding",who.binding(library)).put("library",library).put("operation",UUID.randomUUID().toString()).put("manifest",manifest).put("state","PENDING").put("file",candidate.name).put("automatic",false)
+            val manifest=JSONObject().put("bytes",candidate.length()).put("chunks",hashes).put("format","inkweft.encrypted-backup.v2").put("plainBytes",plainBytes)
+            val queue=JSONObject().put("protocol",2).put("binding",who.binding(library)).put("library",library).put("operation",UUID.randomUUID().toString()).put("manifest",manifest).put("state","PENDING").put("file",candidate.name).put("automatic",false)
             // Immutable generation first, atomic pointer second. A crash leaves only an unreferenced file.
             java.io.RandomAccessFile(candidate,"rw").use{it.fd.sync()};fault("after-fsync")
             val previous=if(journal.baseFile.exists())cipherFile(readQueue())else null
@@ -134,6 +137,7 @@ internal class BackupEngine(private val app:InkWeftApplication,private val fault
         if(ui.value.busy)return null
         if(!background)manuallyPaused=false
         return work("正在核对备份任务…"){
+        lastUploadReadBytes=0L
         val started=android.os.SystemClock.elapsedRealtime()
         val queue=readQueue()
         if(queue.optLong("notBefore")>System.currentTimeMillis()){state.value=state.value.copy(message="服务器要求稍后重试，原任务保留；请等待后再继续");return@work}
@@ -143,43 +147,59 @@ internal class BackupEngine(private val app:InkWeftApplication,private val fault
         }
         val library=queue.getString("library");val who=checkNotNull(identity)
         require(queue.getString("binding")==who.binding(library)){"QUEUE_BINDING"}
-        if(!background){queue.put("automatic",true).put("paused",false).put("deadline",System.currentTimeMillis()+30*60_000).put("operationDeadline",System.currentTimeMillis()+120_000).put("attempts",0);writeQueue(queue);BackupScheduler.schedule(app)}
+        val protocol=queue.optInt("protocol",1)
+        if(!background){queue.put("automatic",true).put("paused",false).put("deadline",System.currentTimeMillis()+if(protocol==2)7*86400_000L else 30*60_000L).put("operationDeadline",System.currentTimeMillis()+120_000).put("attempts",0);writeQueue(queue);BackupScheduler.schedule(app)}
         if(!sessions.meteredAllowed&&app.getSystemService(android.net.ConnectivityManager::class.java).isActiveNetworkMetered){
             state.value=state.value.copy(message="等待非计量网络，可在连接设置允许计量网络");return@work
         }
         if(app.getSystemService(android.os.BatteryManager::class.java).getIntProperty(android.os.BatteryManager.BATTERY_PROPERTY_CAPACITY) in 0..14){
             state.value=state.value.copy(message="电量较低，备份等待充电后继续");return@work
         }
-        val remaining=queue.optLong("operationDeadline")-System.currentTimeMillis();require(remaining>0){"TASK_LIMIT"}
+        val remaining=if(protocol==2)90_000L else queue.optLong("operationDeadline")-System.currentTimeMillis();require(remaining>0){"TASK_LIMIT"}
         withTimeout(remaining){
-        val transport=BackupTransport(who);transport.verifyServer();val operation=queue.getString("operation");UUID.fromString(operation)
-        val manifest=queue.getJSONObject("manifest");val canonical="{\"bytes\":${manifest.getLong("bytes")},\"chunks\":${manifest.getJSONArray("chunks")},\"format\":\"inkweft.encrypted-backup.v1\"}"
-        val fingerprint=EncryptedBackupFile.hex(canonical.toByteArray())
+        val transport=BackupTransport(who,protocol);transport.verifyServer();val operation=queue.getString("operation");UUID.fromString(operation)
+        val manifest=queue.getJSONObject("manifest");val fingerprint=backupManifestDigest(manifest)
         fun verified(j:JSONObject):Boolean {require(j.getString("digest")==fingerprint&&j.getString("kind")=="UPLOAD");return j.getString("state")=="PUBLISHED"}
         val prior=try{transport.json("GET",library,"/operations/$operation")}catch(e:BackupHttpError){if(e.status!=404)throw e;null}
+        if(prior!=null&&prior.optString("state") in setOf("DELETED","EXPIRED")){
+            verified(prior);queue.put("state",prior.getString("state")).put("automatic",false);writeQueue(queue);BackupScheduler.cancel(app)
+            state.value=state.value.copy(message="原上传已删除或过期，可创建新的加密备份；本地资料保留");return@withTimeout
+        }
         if(prior!=null&&verified(prior)){queue.put("state","PUBLISHED").put("automatic",false);writeQueue(queue);BackupScheduler.cancel(app);state.value=state.value.copy(message="服务器已确认此备份，无需重复上传");return@withTimeout}
         val cipherFile=cipherFile(queue);require(cipherFile.length()==manifest.getLong("bytes"));transport.json("PUT",library);transport.json("PUT",library,"/uploads/$operation",manifest)
         val remote=transport.json("GET",library,"/uploads/$operation")
         verified(remote);require(remote.getString("state")=="PENDING"){"QUEUE_STATE"}
         val received=remote.getJSONArray("received");val present=(0 until received.length()).map{received.getInt(it)}.toSet()
         val hashes=manifest.getJSONArray("chunks");require(present.all{it in 0 until hashes.length()})
-        cipherFile.inputStream().use{input->for(i in 0 until hashes.length()){
-            currentCoroutineContext().ensureActive();val bytes=input.readBackupChunk(EncryptedBackupFile.WIRE_BLOCK);require(EncryptedBackupFile.hex(bytes)==hashes.getString(i))
+        try{java.io.RandomAccessFile(cipherFile,"r").use{input->for(i in 0 until hashes.length()){
+            if(i in present)continue
+            currentCoroutineContext().ensureActive()
             if(android.os.SystemClock.elapsedRealtime()-started>55_000)throw CancellationException("SLICE_COMPLETE")
             BackgroundBudget.await(app)
-            if(i !in present)transport.request("PUT",library,"/uploads/$operation/chunks/$i",bytes=bytes);state.value=state.value.copy(message="正在上传 ${i+1} / ${hashes.length()} 块")
-        };require(input.read()==-1)}
-        currentCoroutineContext().ensureActive();check(verified(transport.json("POST",library,"/uploads/$operation/publish")))
+            input.seek(i.toLong()*EncryptedBackupFile.WIRE_BLOCK);val bytes=ByteArray(minOf(EncryptedBackupFile.WIRE_BLOCK.toLong(),cipherFile.length()-input.filePointer).toInt());input.readFully(bytes);lastUploadReadBytes+=bytes.size;require(EncryptedBackupFile.hex(bytes)==hashes.getString(i))
+            transport.request("PUT",library,"/uploads/$operation/chunks/$i",bytes=bytes)
+            if(protocol==2)queue.put("deadline",System.currentTimeMillis()+7*86400_000L)
+            state.value=state.value.copy(message="正在上传 ${i+1} / ${hashes.length()} 块")
+        }}}finally{writeQueue(queue)}
+        currentCoroutineContext().ensureActive();val publication=transport.json("POST",library,"/uploads/$operation/publish")
+        if(!verified(publication)){
+            require(protocol==2&&publication.getString("state")=="PENDING")
+            state.value=state.value.copy(message="服务器校验进度 ${publication.getInt("verified")} / ${hashes.length()}，可继续确认发布");return@withTimeout
+        }
         queue.put("state","PUBLISHED").put("automatic",false);writeQueue(queue);BackupScheduler.cancel(app);state.value=state.value.copy(message="加密备份已发布，可在其他设备用恢复密钥导入")
         }
     }
     }
     fun list(library:String)=work("读取备份版本…"){
-        val transport=BackupTransport(checkNotNull(identity));transport.verifyServer();val versions=transport.versions(library)
+        val transport=BackupTransport(checkNotNull(identity),2);transport.verifyServer();val versions=transport.versions(library)
         val details=List(versions.length()){val v=versions.getJSONObject(it);BackupVersion(v.getString("operation"),v.getLong("created"),v.getLong("bytes"),v.getString("state"),v.getString("format"))}
         state.value=state.value.copy(versions=details.map{it.operation},details=details,message="共 ${versions.length()} 个备份／未完成上传")
     }
     fun inspect(library:String,operation:String,recovery:String)=work("正在下载并隔离校验…"){
+        preview?.close();preview=null;state.value=state.value.copy(restoreNotes=null)
+        if(state.value.details.firstOrNull{it.operation==operation}?.format!="inkweft.encrypted-backup.v1"){
+            inspectV2(library,operation,recovery);return@work
+        }
         preview?.close();preview=null;state.value=state.value.copy(restoreNotes=null)
         UUID.fromString(operation);val transport=BackupTransport(checkNotNull(identity));transport.verifyServer()
         val key=EncryptedBackupFile.unb64(recovery);require(key.size==32){"KEY_REQUIRED"}
@@ -192,6 +212,73 @@ internal class BackupEngine(private val app:InkWeftApplication,private val fault
             state.value=state.value.copy(checked=state.value.checked+operation,restoreNotes=preview!!.notes,message="已校验 ${preview!!.notes} 本笔记。确认后导入；身份冲突会停止，不覆盖现有资料")
         }finally{key.fill(0);encrypted.delete();clear.delete()}
     }
+    private fun saveDownload(q:JSONObject){val out=downloadJournal.startWrite();try{out.write(q.toString().toByteArray());downloadJournal.finishWrite(out)}catch(t:Throwable){downloadJournal.failWrite(out);throw t}}
+    private suspend fun inspectV2(library:String,operation:String,recovery:String){
+        UUID.fromString(library);UUID.fromString(operation);val who=checkNotNull(identity);val binding=who.binding(library)
+        val transport=BackupTransport(who,2);transport.verifyServer()
+        val key=EncryptedBackupFile.unb64(recovery);require(key.size==32){"KEY_REQUIRED"}
+        val clear=File(directory,"restore-${UUID.randomUUID()}.iwbackup")
+        preview?.close();preview=null;state.value=state.value.copy(restoreNotes=null)
+        try{
+            var q=if(downloadJournal.baseFile.exists())JSONObject(downloadJournal.openRead().bufferedReader().use{it.readText()})else null
+            if(q!=null && (q.getString("binding")!=binding||q.getString("operation")!=operation)){
+                // A different explicit restore selection retires only its app-owned ciphertext cache.
+                val old=q.getString("file");require(old.matches(Regex("download-[0-9a-f-]{36}\\.iwbk")))
+                File(directory,old).delete();downloadJournal.delete();q=null
+            }
+            if(q==null){
+                val lease=transport.json("POST",library,"/versions/$operation/leases");val manifest=lease.getJSONObject("manifest")
+                val fingerprint=backupManifestDigest(manifest);require(lease.getString("digest")==fingerprint)
+                q=JSONObject().put("binding",binding).put("library",library).put("operation",operation).put("manifest",manifest)
+                    .put("digest",fingerprint).put("lease",lease.getString("lease")).put("expires",lease.getLong("expires"))
+                    .put("file","download-${UUID.randomUUID()}.iwbk").put("received",JSONArray())
+                saveDownload(q)
+            }
+            val job=checkNotNull(q);val manifest=job.getJSONObject("manifest");require(backupManifestDigest(manifest)==job.getString("digest"))
+            val hashes=manifest.getJSONArray("chunks");val cipherBytes=manifest.getLong("bytes");val plainBytes=manifest.getLong("plainBytes")
+            require(manifest.getString("format")=="inkweft.encrypted-backup.v2"&&plainBytes in 1..EncryptedBackupFile.LIMIT&&hashes.length() in 1..8193)
+            require(cipherBytes in (hashes.length()-1L)*EncryptedBackupFile.WIRE_BLOCK+1..hashes.length().toLong()*EncryptedBackupFile.WIRE_BLOCK&&cipherBytes<=EncryptedBackupFile.maximumCipherBytes(plainBytes))
+            require((0 until hashes.length()).all{hashes.getString(it).matches(Regex("[0-9a-f]{64}"))})
+            val name=job.getString("file");require(name.matches(Regex("download-[0-9a-f-]{36}\\.iwbk")));val encrypted=File(directory,name)
+            require(directory.usableSpace>=maxOf(0,cipherBytes-encrypted.length())+plainBytes*3+32L*1024*1024){"BACKUP_LOW_SPACE"}
+            if(job.getLong("expires")*1000<=System.currentTimeMillis()){
+                val lease=transport.json("POST",library,"/versions/$operation/leases");require(lease.getString("digest")==job.getString("digest")&&backupManifestDigest(lease.getJSONObject("manifest"))==job.getString("digest"))
+                job.put("lease",lease.getString("lease")).put("expires",lease.getLong("expires"));saveDownload(job)
+            }
+            val received=job.getJSONArray("received");val present=(0 until received.length()).map{received.getInt(it)}.toMutableSet();require(present.all{it in 0 until hashes.length()})
+            val started=android.os.SystemClock.elapsedRealtime()
+            java.io.RandomAccessFile(encrypted,"rw").use{file->
+                fun valid(i:Int):Boolean{val offset=i.toLong()*EncryptedBackupFile.WIRE_BLOCK;val size=minOf(EncryptedBackupFile.WIRE_BLOCK.toLong(),cipherBytes-offset).toInt();if(file.length()<offset+size)return false
+                    file.seek(offset);val data=ByteArray(size);file.readFully(data);return EncryptedBackupFile.hex(data)==hashes.getString(i)}
+                present.maxOrNull()?.let{if(!valid(it))present.remove(it)}
+                fun checkpoint(){file.fd.sync();fault("download-before-bitmap");job.put("received",JSONArray(present.sorted()));saveDownload(job);fault("download-after-bitmap")}
+                try{for(i in 0 until hashes.length()){
+                    if(i in present)continue
+                    currentCoroutineContext().ensureActive()
+                    if(android.os.SystemClock.elapsedRealtime()-started>55_000)throw CancellationException("DOWNLOAD_SLICE")
+                    BackgroundBudget.await(app)
+                    if(job.getLong("expires")*1000-System.currentTimeMillis()<120_000){val lease=transport.json("PUT",library,"/versions/$operation/leases/${job.getString("lease")}");require(lease.getString("digest")==job.getString("digest"));job.put("expires",lease.getLong("expires"))}
+                    val data=transport.request("GET",library,"/versions/$operation/chunks/$i?lease=${job.getString("lease")}")
+                    require(data.size.toLong()==minOf(EncryptedBackupFile.WIRE_BLOCK.toLong(),cipherBytes-i.toLong()*EncryptedBackupFile.WIRE_BLOCK)&&EncryptedBackupFile.hex(data)==hashes.getString(i))
+                    file.seek(i.toLong()*EncryptedBackupFile.WIRE_BLOCK);file.write(data);fault("download-after-write");present.add(i)
+                    if(present.size%16==0)checkpoint()
+                    state.value=state.value.copy(message="正在下载 ${present.size} / ${hashes.length()} 块，进度可继续")
+                }}finally{checkpoint()}
+                require(file.length()==cipherBytes)
+                // Validate all cached blocks once at completion; incomplete resumes only revisit the last receipt.
+                var damaged=false;for(i in 0 until hashes.length()){currentCoroutineContext().ensureActive();if(!valid(i)){present.remove(i);damaged=true}}
+                if(damaged){checkpoint();error("DOWNLOAD_DAMAGED")}
+            }
+            val context=currentCoroutineContext();EncryptedBackupFile.decrypt(encrypted,clear,library,key){context.ensureActive()}
+            require(directory.usableSpace>=plainBytes*2+32L*1024*1024){"BACKUP_LOW_SPACE"}
+            preview=clear.inputStream().use{app.libraryBackup.inspect(it)}
+            // No recovery key is persisted. A process restart repeats authentication and isolated validation.
+            try{transport.json("DELETE",library,"/versions/$operation/leases/${job.getString("lease")}")}
+            catch(c:CancellationException){throw c}catch(_:java.io.IOException){/* The server lease expires; validated local staging is independent. */}
+            downloadJournal.delete();encrypted.delete()
+            state.value=state.value.copy(checked=state.value.checked+operation,restoreNotes=preview!!.notes,message="已校验 ${preview!!.notes} 本笔记。确认后导入；身份冲突会停止，不覆盖现有资料")
+        }catch(failure:Throwable){preview?.close();preview=null;throw failure}finally{key.fill(0);clear.delete()}
+    }
     fun restore()=work("正在导入已校验备份…"){
         val p=checkNotNull(preview)
         try{val result=app.libraryBackup.restore(p);state.value=state.value.copy(restoreNotes=null,message=when(result){LibraryBackupRepository.RestoreResult.RESTORED->"恢复完成";LibraryBackupRepository.RestoreResult.ALREADY_PRESENT->"相同资料已存在，无需重复导入";LibraryBackupRepository.RestoreResult.IDENTITY_CONFLICT->"资料身份存在冲突，已停止；请使用空白资料库恢复";LibraryBackupRepository.RestoreResult.SNAPSHOT_CAPACITY_EXCEEDED->STUDY_RESTORE_CAPACITY_MESSAGE})}finally{p.close();preview=null;state.value=state.value.copy(restoreNotes=null)}
@@ -201,7 +288,7 @@ internal class BackupEngine(private val app:InkWeftApplication,private val fault
     fun abandonLocal()=work("核对未完成备份是否已到达服务器…"){
         val q=readQueue();val library=q.getString("library");val who=checkNotNull(identity)
         require(q.getString("binding")==who.binding(library)){"QUEUE_BINDING"}
-        val transport=BackupTransport(who);transport.verifyServer()
+        val transport=BackupTransport(who,q.optInt("protocol",1));transport.verifyServer()
         val remote=try{transport.json("GET",library,"/operations/${q.getString("operation")}")}catch(e:BackupHttpError){if(e.status!=404)throw e;null}
         if(remote==null){q.put("state","DELETED").put("automatic",false);writeQueue(q);cipherFile(q).delete();BackupScheduler.cancel(app);state.value=state.value.copy(message="未上传的任务已放弃，本地笔记保留")}
         else state.value=state.value.copy(message="服务器已有此任务，请在版本列表核对状态后继续或删除")
@@ -209,13 +296,15 @@ internal class BackupEngine(private val app:InkWeftApplication,private val fault
     fun hasPendingDeletion()=deletion.baseFile.exists()
     fun retryDeletion(){if(deletion.baseFile.exists()){val j=JSONObject(deletion.openRead().bufferedReader().use{it.readText()});delete(j.getString("library"),j.getString("target"))}}
     fun delete(library:String,operation:String,pendingOnly:Boolean=false)=work("正在核对并删除云端版本…"){
-        UUID.fromString(library);UUID.fromString(operation);val who=checkNotNull(identity);val transport=BackupTransport(who);transport.verifyServer()
+        UUID.fromString(library);UUID.fromString(operation);val who=checkNotNull(identity)
+        val protocol=if(deletion.baseFile.exists())JSONObject(deletion.openRead().bufferedReader().use{it.readText()}).optInt("protocol",1) else if(state.value.details.firstOrNull{it.operation==operation}?.format=="inkweft.encrypted-backup.v1")1 else 2
+        val transport=BackupTransport(who,protocol);transport.verifyServer()
         if(pendingOnly&&!deletion.baseFile.exists()){
             val latest=transport.json("GET",library,"/operations/$operation")
             if(latest.getString("state")=="PUBLISHED"){state.value=state.value.copy(message="此上传已发布，请刷新版本后重新确认删除");return@work}
         }
         val command=if(deletion.baseFile.exists())JSONObject(deletion.openRead().bufferedReader().use{it.readText()})else
-            JSONObject().put("library",library).put("target",operation).put("pendingOnly",pendingOnly).put("operation",UUID.randomUUID().toString()).put("binding",who.binding(library)).also{j->
+            JSONObject().put("protocol",protocol).put("library",library).put("target",operation).put("pendingOnly",pendingOnly).put("operation",UUID.randomUUID().toString()).put("binding",who.binding(library)).also{j->
                 val out=deletion.startWrite();try{out.write(j.toString().toByteArray());deletion.finishWrite(out)}catch(t:Throwable){deletion.failWrite(out);throw t}}
         require(command.getString("binding")==who.binding(library)){"QUEUE_BINDING"}
         require(command.getString("target")==operation){"DELETE_PENDING"}
@@ -223,10 +312,18 @@ internal class BackupEngine(private val app:InkWeftApplication,private val fault
         val receipt=try{transport.json("GET",library,"/operations/$op")}catch(e:BackupHttpError){if(e.status!=404)throw e;null}
             ?:try{transport.json("DELETE",library,"/versions/$operation?operation_id=$op"+if(pending)"&expected_state=PENDING"else"")}catch(e:BackupHttpError){
                 if(e.status==409&&pending){deletion.delete();state.value=state.value.copy(message="上传状态已改变，请刷新版本后重新确认删除");return@work};throw e}
-        require(receipt.getString("kind")=="DELETE" && receipt.getString("state")=="DELETED" && receipt.getString("digest")==expected)
+        require(receipt.getString("kind")=="DELETE" && receipt.getString("digest")==expected)
+        if(receipt.getString("state")=="DELETING"){state.value=state.value.copy(message="版本已停止新的下载，等待已有下载租约结束后完成删除");return@work}
+        require(receipt.getString("state")=="DELETED")
         // Server serializes delete and publish. Only a confirmed delete retires local ciphertext.
         if(journal.baseFile.exists()){val q=readQueue();if(q.getString("binding")==who.binding(library)&&q.getString("operation")==operation){
             q.put("state","DELETED").put("automatic",false);writeQueue(q);cipherFile(q).delete();BackupScheduler.cancel(app)}}
         deletion.delete();state.value=state.value.copy(versions=state.value.versions-operation,details=state.value.details.filterNot{it.operation==operation},message="云端版本已删除，本地笔记与恢复密钥保留")
     }
+}
+
+internal fun backupManifestDigest(manifest:JSONObject):String {
+    val format=manifest.getString("format");require(format in setOf("inkweft.encrypted-backup.v1","inkweft.encrypted-backup.v2"))
+    val canonical="{\"bytes\":${manifest.getLong("bytes")},\"chunks\":${manifest.getJSONArray("chunks")},\"format\":\"$format\""+(if(format.endsWith(".v2"))",\"plainBytes\":${manifest.getLong("plainBytes")}"else"")+"}"
+    return EncryptedBackupFile.hex(canonical.toByteArray())
 }

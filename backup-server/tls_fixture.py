@@ -5,7 +5,7 @@ from cryptography import x509
 from cryptography.hazmat.primitives import hashes,serialization
 from cryptography.hazmat.primitives.asymmetric import rsa
 from cryptography.x509.oid import NameOID
-from server import Store,create_app
+from go_fixture import start_go,fixture_app
 import uvicorn
 from starlette.responses import JSONResponse,RedirectResponse
 
@@ -53,14 +53,12 @@ def generate(root):
 if __name__=='__main__':
     p=argparse.ArgumentParser();p.add_argument('--directory',required=True);p.add_argument('--generate-only',action='store_true');a=p.parse_args();root=Path(a.directory).resolve();generate(root)
     if a.generate_only:raise SystemExit(0)
-    db=root/'tls-synthetic.db'
-    if not db.exists():
-        store=Store(db);store.add_user('synthetic-alice','synthetic-alice-password-123');store.add_user('synthetic-bob','synthetic-bob-password-456')
+    go_db,base=start_go(root,18861)
     for offset,name in enumerate(('valid','expired','wrong','untrusted','redirect')):
-        app=observed(create_app(db,enable_shadow=True),name)
+        app=observed(fixture_app(root,go_db,base),name)
         certname='valid' if name=='redirect' else name
         config=uvicorn.Config(app,host='127.0.0.1',port=18761+offset,ssl_keyfile=str(root/(certname+'.key')),ssl_certfile=str(root/(certname+'.pem')),access_log=False)
         threading.Thread(target=uvicorn.Server(config).run,daemon=True).start()
-    sink=uvicorn.Config(observed(create_app(db),'sink'),host='127.0.0.1',port=18766,access_log=False)
+    sink=uvicorn.Config(observed(fixture_app(root,go_db,base),'sink'),host='127.0.0.1',port=18766,access_log=False)
     threading.Thread(target=uvicorn.Server(sink).run,daemon=True).start()
     while True:time.sleep(1)

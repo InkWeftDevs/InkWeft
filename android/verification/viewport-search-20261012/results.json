@@ -1,0 +1,3281 @@
+{
+  "at": "2026-10-12T05:37:12.331428+00:00",
+  "version": "89 / 0.0.89-viewport-search",
+  "room": 19,
+  "sourceBase": "b7594ac953338b56ca4e73050c43bb83137c23f5",
+  "committed": false,
+  "physicalDevice": "NOT_RUN",
+  "core": [
+    {
+      "class": "org.inkweft.core.BranchReviewRoundTest",
+      "tests": 14,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "org.inkweft.core.BranchReviewTest",
+      "tests": 16,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "org.inkweft.core.BrushRecipeTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "org.inkweft.core.CanvasViewportTest",
+      "tests": 25,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "org.inkweft.core.CardPresentationTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "org.inkweft.core.CardTransformTest",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "org.inkweft.core.CardTrashCommandTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "org.inkweft.core.ContentCopyRegressionTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "org.inkweft.core.ContentTransferTest",
+      "tests": 13,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "org.inkweft.core.ContinuousWritingTest",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "org.inkweft.core.CustomCoverTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "org.inkweft.core.DiagnosticLogTest",
+      "tests": 14,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "org.inkweft.core.DraftReloadTest",
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "org.inkweft.core.ExcerptBoundsTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "org.inkweft.core.FormulaGroupsTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "org.inkweft.core.FormulaTextTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "org.inkweft.core.HandwritingLineBudgetRegressionTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "org.inkweft.core.InkAdmissionRegressionTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "org.inkweft.core.InkCapacityRegressionTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "org.inkweft.core.InkDraftRegressionTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "org.inkweft.core.InkEditingTest",
+      "tests": 12,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "org.inkweft.core.InkHistorySuspensionTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "org.inkweft.core.InkModelsTest",
+      "tests": 30,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "org.inkweft.core.InkPartialHistoryTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "org.inkweft.core.InkSamplingRegressionTest",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "org.inkweft.core.KnowledgeTest",
+      "tests": 16,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "org.inkweft.core.KnowledgeTextLinksTest",
+      "tests": 10,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "org.inkweft.core.LassoGeometryRegressionTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "org.inkweft.core.LayerCapacityRegressionTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "org.inkweft.core.LayerHeaderProjectionTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "org.inkweft.core.LearningWidgetsTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "org.inkweft.core.LibraryArchiveTest",
+      "tests": 15,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "org.inkweft.core.MapAddendumTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "org.inkweft.core.MapCompletionRegressionTest",
+      "tests": 14,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "org.inkweft.core.MapPortalTest",
+      "tests": 10,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "org.inkweft.core.MapTemplatesTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "org.inkweft.core.MubuInspiredMapRegressionTest",
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "org.inkweft.core.NotebookAppearanceTest",
+      "tests": 12,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "org.inkweft.core.NoteDraftTest",
+      "tests": 12,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "org.inkweft.core.PageAuthoringTest",
+      "tests": 16,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "org.inkweft.core.PageEditingTest",
+      "tests": 14,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "org.inkweft.core.PageInsertionTest",
+      "tests": 14,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "org.inkweft.core.PageObjectTest",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "org.inkweft.core.PaperTemplatesTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "org.inkweft.core.PenKindsTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "org.inkweft.core.ReadingHandwritingTest",
+      "tests": 10,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "org.inkweft.core.RecallStudyTest",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "org.inkweft.core.RecognitionAndHistoryRegressionTest",
+      "tests": 10,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "org.inkweft.core.SearchRequestVersionTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "org.inkweft.core.SelectionLearningTest",
+      "tests": 20,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "org.inkweft.core.StreamedStorageTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "org.inkweft.core.StudyGrowthRegressionTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "org.inkweft.core.StudyOrganizationTest",
+      "tests": 10,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "org.inkweft.core.StudyOutlineTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "org.inkweft.core.StudyTextTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "org.inkweft.core.SuperMemo2PortTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "org.inkweft.core.TextGlyphTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  ],
+  "dataJvm": [
+    {
+      "name": "org.inkweft.data.LibrarySearchTermsTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "org.inkweft.data.OriginalFileCacheTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "org.inkweft.data.OriginalStoreTest",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "org.inkweft.data.StorageValidationTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  ],
+  "nativeAttempts": [
+    {
+      "classes": [
+        "SpatialInkRepositoryTest",
+        "LibrarySearchRepositoryTest",
+        "InkRepositoryTest",
+        "InkCutIndexQueryTest",
+        "InkCheckpointTest",
+        "InkGroupRecoveryTest",
+        "SearchIndexFreshnessTest",
+        "ContentArchiveTest#masksHiddenLayersAndRemappedReferencesRoundTripWithoutUndoGeometry",
+        "ContentArchiveTest#damagedArchiveAndCancellationRemoveStagingWithoutPublishingAuthorRows",
+        "LibraryBackupRepositoryTest#roundTripPreservesOriginalIdsHiddenInkMasksHistoryAndMetadata",
+        "LibraryBackupRepositoryTest#restoredRecordsRemainAfterRealCloseAndReopen",
+        "LibraryBackupRepositoryTest#allSupportedArchiveSchemasStillStageIntoTheCurrentRoomContract",
+        "LibraryBackupRepositoryTest#trashAndStaleIndexArePreservedButStaleTextIsNotSearchable"
+      ],
+      "exitCode": 0,
+      "passed": false,
+      "seconds": 199.516,
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-first\\app-debug.apk",
+          "bytes": 241246545,
+          "sha256": "d981f59abff439b03713a61365c5503a592e5e6d09f2f1549c058880e6f96637",
+          "package": "org.inkweft.app.viewport20261012"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-first\\app-debug-androidTest.apk",
+          "bytes": 10127887,
+          "sha256": "e2d801b4ca89d6e28a21e3802fae124115a46a0228bc3665378dd1f4ce8b6c0c",
+          "package": "org.inkweft.app.viewport20261012.test"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-first\\data-local-debug-androidTest.apk",
+          "bytes": 25586853,
+          "sha256": "3b8362fae2d2e97826f913f38c54446b4ee110288944aa3390e7c7c4d1f3fbd3",
+          "package": "org.inkweft.data.viewport20261012.test"
+        }
+      ],
+      "output": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\verification\\device-attempt01\\data-first-runner.txt",
+      "methods": [
+        {
+          "method": "org.inkweft.data.SpatialInkRepositoryTest#viewportCompletesBeforeOffscreenGeometryAndNewInvalidationsNeverEscapeCoverage",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.data.SpatialInkRepositoryTest#validationIncludesHiddenInkAndHiddenMasks",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.data.SpatialInkRepositoryTest#panningDropsUndoGeometryAndPreservesMaskUndoRedo",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.data.SpatialInkRepositoryTest#fortyThousandStrokesAndTwoMillionPointsRemainWritableCopyableAndVerifiable",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.data.SpatialInkRepositoryTest#pageChangeAndCancellationAbortStreamingRatherThanReturningACompletePrefix",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.data.SpatialInkRepositoryTest#viewportCandidatesRespectBoundaryVisibilityPayloadChangesAndDeletion",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.data.SpatialInkRepositoryTest#storedValidationUsesPageAndIdentityIndexWithoutRepeatedSorting",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.data.SpatialInkRepositoryTest#cancelledIndexBuildKeepsCommittedProgressAndYieldsToAuthorWrites",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.data.SpatialInkRepositoryTest#pageBucketCollisionStillFiltersFullIdentityAndOldOrMissingRtreeRebuilds",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.data.SpatialInkRepositoryTest#boundedWindowNeverPretendsDenseCandidatesAreCompleteAndStreamingHasNoMissingRows",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.data.LibrarySearchRepositoryTest#twentyThousandPageRapidInputClearAndCategoryCancelOldGenerationOffMain",
+          "code": -2,
+          "stack": "kotlinx.coroutines.TimeoutCancellationException: Timed out waiting for 120000 ms"
+        },
+        {
+          "method": "org.inkweft.data.LibrarySearchRepositoryTest#draftUnicodeFiltersPinsAndPageBeforeCardNavigationStayIntact",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.data.LibrarySearchRepositoryTest#unicodeShortQueriesAndBoundedPagesKeepOrderAndNavigation",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.data.LibrarySearchRepositoryTest#deletedOrStalePageAndTrashedCardCannotReviveSearchHits",
+          "code": -2,
+          "stack": "android.database.sqlite.SQLiteConstraintException: UNIQUE constraint failed: library_search_pending.kind, library_search_pending.target (code 1555)"
+        },
+        {
+          "method": "org.inkweft.data.InkRepositoryTest#sameCommandReplaysAndDifferentPayloadRejected",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.data.InkRepositoryTest#strokePersistsAcrossActualDatabaseReopen",
+          "code": -2,
+          "stack": "java.lang.AssertionError: expected:<104> but was:<140>"
+        },
+        {
+          "method": "org.inkweft.data.InkRepositoryTest#v1DatabaseMigratesWithoutLosingOriginalTextAndReceipts",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.data.InkRepositoryTest#mixedStoredFormatsReopenAndReplayWithUnchangedCanonicalReceipts",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.data.InkRepositoryTest#eraseAndUndoRetainExactlyOriginalBytes",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.data.InkRepositoryTest#twoDatabaseInstancesDoNotOverwriteSameBase",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.data.InkRepositoryTest#importedPageIsNewIdentityAndDoesNotOverwriteText",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.data.InkRepositoryTest#commitThenLostReceiptReconcilesByOriginalCommand",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.data.InkRepositoryTest#previewSkipsHiddenPayloadWhileFullReadStillValidatesHistory",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.data.InkRepositoryTest#visiblePreviewMatchesFullReadAfterCutsReplacementAndUndo",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.data.InkRepositoryTest#failureBeforeReceiptRollsBackInkAndPageRevision",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.data.InkCutIndexQueryTest#failedRebuildRetainsPendingRowsAndRollsBackPartialProjection",
+          "code": -2,
+          "stack": "android.database.sqlite.SQLiteConstraintException: UNIQUE constraint failed: ink_raster_epochs.pageId (code 1555)"
+        },
+        {
+          "method": "org.inkweft.data.InkCutIndexQueryTest#deletingIndexedTargetRejectsReadUntilCutIsRepaired",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.data.InkCutIndexQueryTest#targetUpdatesVisibilityDeleteAndRebuildRemainEquivalentToAuthorRows",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.data.InkCutIndexQueryTest#movingIndexedTargetToAnotherPageRejectsReadUntilCutIsRepaired",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.data.InkCutIndexQueryTest#cancelledCutBuildKeepsCommittedBatchesAndAllowsAuthorWritesBeforeResuming",
+          "code": -2,
+          "stack": "android.database.sqlite.SQLiteConstraintException: UNIQUE constraint failed: ink_raster_epochs.pageId (code 1555)"
+        },
+        {
+          "method": "org.inkweft.data.InkCutIndexQueryTest#realSelectionUsesStrokeIndexAndLoadsOneCutDespiteThousandsOfUnrelatedCuts",
+          "code": -2,
+          "stack": "android.database.sqlite.SQLiteConstraintException: UNIQUE constraint failed: ink_raster_epochs.pageId (code 1555)"
+        },
+        {
+          "method": "org.inkweft.data.InkCutIndexQueryTest#renamingIndexedTargetRejectsReadUntilCutIsRepaired",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.data.InkCheckpointTest#crossPageStorageSliceKeepsPageIdentityAndPersistentCancellation",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.data.InkCheckpointTest#checkpointCrashCutsKeepOneIdentityAndSealDeduplicates",
+          "code": -2,
+          "stack": "java.lang.AssertionError: expected:<3243> but was:<3279>"
+        },
+        {
+          "method": "org.inkweft.data.InkGroupRecoveryTest#cancelledBeforePrefixAndSealedBeforeLatePrefixNeverRevive",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.data.InkGroupRecoveryTest#transactionFaultsAndLostMarkerKeepOneLogicalReceipt",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.data.InkGroupRecoveryTest#frozenPagesSurviveReorderingAndConflictsDoNotOverwrite",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.data.SearchIndexFreshnessTest#freshnessFollowsInkObjectLayerAndPageChanges",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.data.SearchIndexFreshnessTest#checkingIndexNeverDecodesPayloadWhileFullObjectReadStillValidates",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.data.ContentArchiveTest#damagedArchiveAndCancellationRemoveStagingWithoutPublishingAuthorRows",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.data.ContentArchiveTest#masksHiddenLayersAndRemappedReferencesRoundTripWithoutUndoGeometry",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.data.LibraryBackupRepositoryTest#trashAndStaleIndexArePreservedButStaleTextIsNotSearchable",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.data.LibraryBackupRepositoryTest#allSupportedArchiveSchemasStillStageIntoTheCurrentRoomContract",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.data.LibraryBackupRepositoryTest#restoredRecordsRemainAfterRealCloseAndReopen",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.data.LibraryBackupRepositoryTest#roundTripPreservesOriginalIdsHiddenInkMasksHistoryAndMetadata",
+          "code": 0,
+          "stack": null
+        }
+      ],
+      "passedMethods": 38
+    },
+    {
+      "classes": [
+        "SpatialInkRepositoryTest",
+        "LibrarySearchRepositoryTest",
+        "InkRepositoryTest",
+        "InkCutIndexQueryTest",
+        "InkCheckpointTest",
+        "InkGroupRecoveryTest",
+        "SearchIndexFreshnessTest",
+        "ContentArchiveTest#masksHiddenLayersAndRemappedReferencesRoundTripWithoutUndoGeometry",
+        "ContentArchiveTest#damagedArchiveAndCancellationRemoveStagingWithoutPublishingAuthorRows",
+        "LibraryBackupRepositoryTest#roundTripPreservesOriginalIdsHiddenInkMasksHistoryAndMetadata",
+        "LibraryBackupRepositoryTest#restoredRecordsRemainAfterRealCloseAndReopen",
+        "LibraryBackupRepositoryTest#allSupportedArchiveSchemasStillStageIntoTheCurrentRoomContract",
+        "LibraryBackupRepositoryTest#trashAndStaleIndexArePreservedButStaleTextIsNotSearchable"
+      ],
+      "exitCode": 0,
+      "passed": true,
+      "seconds": 80.266,
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug.apk",
+          "bytes": 241246545,
+          "sha256": "0d3f9c5b4a01fdd29dade747178a9e2967766bc16c426afbb87115a47cbc291a",
+          "package": "org.inkweft.app.viewport20261012"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug-androidTest.apk",
+          "bytes": 10127887,
+          "sha256": "e2d801b4ca89d6e28a21e3802fae124115a46a0228bc3665378dd1f4ce8b6c0c",
+          "package": "org.inkweft.app.viewport20261012.test"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\data-local-debug-androidTest.apk",
+          "bytes": 26005925,
+          "sha256": "df942eec52d11349f82683108940d34e678851cdcf06d08b5414c21ffac7c810",
+          "package": "org.inkweft.data.viewport20261012.test"
+        }
+      ],
+      "output": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\verification\\device-attempt01\\data-repaired-runner.txt",
+      "methods": [
+        {
+          "method": "org.inkweft.data.SpatialInkRepositoryTest#viewportCompletesBeforeOffscreenGeometryAndNewInvalidationsNeverEscapeCoverage",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.data.SpatialInkRepositoryTest#validationIncludesHiddenInkAndHiddenMasks",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.data.SpatialInkRepositoryTest#panningDropsUndoGeometryAndPreservesMaskUndoRedo",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.data.SpatialInkRepositoryTest#fortyThousandStrokesAndTwoMillionPointsRemainWritableCopyableAndVerifiable",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.data.SpatialInkRepositoryTest#pageChangeAndCancellationAbortStreamingRatherThanReturningACompletePrefix",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.data.SpatialInkRepositoryTest#viewportCandidatesRespectBoundaryVisibilityPayloadChangesAndDeletion",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.data.SpatialInkRepositoryTest#storedValidationUsesPageAndIdentityIndexWithoutRepeatedSorting",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.data.SpatialInkRepositoryTest#cancelledIndexBuildKeepsCommittedProgressAndYieldsToAuthorWrites",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.data.SpatialInkRepositoryTest#pageBucketCollisionStillFiltersFullIdentityAndOldOrMissingRtreeRebuilds",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.data.SpatialInkRepositoryTest#boundedWindowNeverPretendsDenseCandidatesAreCompleteAndStreamingHasNoMissingRows",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.data.LibrarySearchRepositoryTest#twentyThousandPageRapidInputClearAndCategoryCancelOldGenerationOffMain",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.data.LibrarySearchRepositoryTest#draftUnicodeFiltersPinsAndPageBeforeCardNavigationStayIntact",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.data.LibrarySearchRepositoryTest#unicodeShortQueriesAndBoundedPagesKeepOrderAndNavigation",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.data.LibrarySearchRepositoryTest#deletedOrStalePageAndTrashedCardCannotReviveSearchHits",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.data.InkRepositoryTest#sameCommandReplaysAndDifferentPayloadRejected",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.data.InkRepositoryTest#strokePersistsAcrossActualDatabaseReopen",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.data.InkRepositoryTest#v1DatabaseMigratesWithoutLosingOriginalTextAndReceipts",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.data.InkRepositoryTest#mixedStoredFormatsReopenAndReplayWithUnchangedCanonicalReceipts",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.data.InkRepositoryTest#eraseAndUndoRetainExactlyOriginalBytes",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.data.InkRepositoryTest#twoDatabaseInstancesDoNotOverwriteSameBase",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.data.InkRepositoryTest#importedPageIsNewIdentityAndDoesNotOverwriteText",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.data.InkRepositoryTest#commitThenLostReceiptReconcilesByOriginalCommand",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.data.InkRepositoryTest#previewSkipsHiddenPayloadWhileFullReadStillValidatesHistory",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.data.InkRepositoryTest#visiblePreviewMatchesFullReadAfterCutsReplacementAndUndo",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.data.InkRepositoryTest#failureBeforeReceiptRollsBackInkAndPageRevision",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.data.InkCutIndexQueryTest#failedRebuildRetainsPendingRowsAndRollsBackPartialProjection",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.data.InkCutIndexQueryTest#deletingIndexedTargetRejectsReadUntilCutIsRepaired",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.data.InkCutIndexQueryTest#targetUpdatesVisibilityDeleteAndRebuildRemainEquivalentToAuthorRows",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.data.InkCutIndexQueryTest#movingIndexedTargetToAnotherPageRejectsReadUntilCutIsRepaired",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.data.InkCutIndexQueryTest#cancelledCutBuildKeepsCommittedBatchesAndAllowsAuthorWritesBeforeResuming",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.data.InkCutIndexQueryTest#realSelectionUsesStrokeIndexAndLoadsOneCutDespiteThousandsOfUnrelatedCuts",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.data.InkCutIndexQueryTest#renamingIndexedTargetRejectsReadUntilCutIsRepaired",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.data.InkCheckpointTest#crossPageStorageSliceKeepsPageIdentityAndPersistentCancellation",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.data.InkCheckpointTest#checkpointCrashCutsKeepOneIdentityAndSealDeduplicates",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.data.InkGroupRecoveryTest#cancelledBeforePrefixAndSealedBeforeLatePrefixNeverRevive",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.data.InkGroupRecoveryTest#transactionFaultsAndLostMarkerKeepOneLogicalReceipt",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.data.InkGroupRecoveryTest#frozenPagesSurviveReorderingAndConflictsDoNotOverwrite",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.data.SearchIndexFreshnessTest#freshnessFollowsInkObjectLayerAndPageChanges",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.data.SearchIndexFreshnessTest#checkingIndexNeverDecodesPayloadWhileFullObjectReadStillValidates",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.data.ContentArchiveTest#damagedArchiveAndCancellationRemoveStagingWithoutPublishingAuthorRows",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.data.ContentArchiveTest#masksHiddenLayersAndRemappedReferencesRoundTripWithoutUndoGeometry",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.data.LibraryBackupRepositoryTest#trashAndStaleIndexArePreservedButStaleTextIsNotSearchable",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.data.LibraryBackupRepositoryTest#allSupportedArchiveSchemasStillStageIntoTheCurrentRoomContract",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.data.LibraryBackupRepositoryTest#restoredRecordsRemainAfterRealCloseAndReopen",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.data.LibraryBackupRepositoryTest#roundTripPreservesOriginalIdsHiddenInkMasksHistoryAndMetadata",
+          "code": 0,
+          "stack": null
+        }
+      ],
+      "passedMethods": 45
+    },
+    {
+      "classes": [
+        "StreamedInkRasterTest",
+        "TileLocalRedrawTest",
+        "LayerRasterBudgetTest",
+        "LayerAuthoringNativeTest",
+        "LayerSnapshotPreviewTest",
+        "RenderResourcesTest",
+        "StreamedPageLifecycleTest",
+        "LibraryPaginationUiTest",
+        "NotebookShelfUiTest#shelfRenameCancelBlankAndPersistedIdentity"
+      ],
+      "exitCode": 0,
+      "passed": false,
+      "seconds": 32.891,
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug.apk",
+          "bytes": 241246545,
+          "sha256": "0d3f9c5b4a01fdd29dade747178a9e2967766bc16c426afbb87115a47cbc291a",
+          "package": "org.inkweft.app.viewport20261012"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug-androidTest.apk",
+          "bytes": 10127887,
+          "sha256": "e2d801b4ca89d6e28a21e3802fae124115a46a0228bc3665378dd1f4ce8b6c0c",
+          "package": "org.inkweft.app.viewport20261012.test"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\data-local-debug-androidTest.apk",
+          "bytes": 26005925,
+          "sha256": "df942eec52d11349f82683108940d34e678851cdcf06d08b5414c21ffac7c810",
+          "package": "org.inkweft.data.viewport20261012.test"
+        }
+      ],
+      "output": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\verification\\device-attempt01\\app-first-runner.txt",
+      "methods": [
+        {
+          "method": "org.inkweft.app.StreamedInkRasterTest#completeFrameIncludesGeometryBeyondTheEditorWindowAndReleasesItsWorker",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.app.StreamedInkRasterTest#omittedStrokeCannotReappearWhileItsReplacementFrameIsDelayed",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.app.TileLocalRedrawTest#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+          "code": -2,
+          "stack": "java.lang.AssertionError"
+        },
+        {
+          "method": "org.inkweft.app.LayerRasterBudgetTest#oneFourAndEightLayersDecodeEachVisibleStrokeOnceWithinOnePixelBudget",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.app.LayerAuthoringNativeTest#hiddenOriginalImageDoesNotReturnWhenItsPendingDecodeFinishes",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.app.LayerAuthoringNativeTest#thousandStrokeHiddenLayerCannotReappearAfterDelayedViewportFrame",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.app.LayerSnapshotPreviewTest#frozenMapThumbnailNeverRendersTheHiddenLayerFromItsFile",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.app.RenderResourcesTest#immutableEqualityMemoDoesNotHideNewErasures",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.app.RenderResourcesTest#replacementAdmissionDoesNotSubtractAnotherOwnersBitmap",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.app.RenderResourcesTest#budgetPressureDefersDerivedRasterAndRecoversWithoutReopening",
+          "code": -2,
+          "stack": "java.lang.AssertionError"
+        },
+        {
+          "method": "org.inkweft.app.RenderResourcesTest#allocationsAreNotDoubleCountedAndPinnedFrameSurvivesTrim",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.app.StreamedPageLifecycleTest#changedStoredRevisionAfterReleaseDoesNotReplayStaleUndo",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.app.StreamedPageLifecycleTest#enteringEditorDoesNotDecodeUnrelatedHiddenGeometry",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.app.StreamedPageLifecycleTest#directPdfProviderImportHashesTheStreamAndClosesItsStagingFile",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.app.StreamedPageLifecycleTest#offscreenReloadKeepsPressureUndoRedoAndOtherActiveView",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.app.StreamedPageLifecycleTest#denseViewportStaysWritableAndPanningReleasesGeometryWithoutLosingUndo",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.app.StreamedPageLifecycleTest#unknownCommitCannotReleaseDraftAndReceiptRetryReleasesOnlyAfterConfirmation",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.app.LibraryPaginationUiTest#nextPreviousAndQueryResetShowBoundedPages",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.app.NotebookShelfUiTest#shelfRenameCancelBlankAndPersistedIdentity",
+          "code": 0,
+          "stack": null
+        }
+      ],
+      "passedMethods": 17
+    },
+    {
+      "classes": [
+        "RenderResourcesTest#budgetPressureDefersDerivedRasterAndRecoversWithoutReopening"
+      ],
+      "exitCode": 0,
+      "passed": true,
+      "seconds": 2.312,
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug.apk",
+          "bytes": 241246545,
+          "sha256": "0d3f9c5b4a01fdd29dade747178a9e2967766bc16c426afbb87115a47cbc291a",
+          "package": "org.inkweft.app.viewport20261012"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug-androidTest.apk",
+          "bytes": 10127887,
+          "sha256": "e2d801b4ca89d6e28a21e3802fae124115a46a0228bc3665378dd1f4ce8b6c0c",
+          "package": "org.inkweft.app.viewport20261012.test"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\data-local-debug-androidTest.apk",
+          "bytes": 26005925,
+          "sha256": "df942eec52d11349f82683108940d34e678851cdcf06d08b5414c21ffac7c810",
+          "package": "org.inkweft.data.viewport20261012.test"
+        }
+      ],
+      "output": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\verification\\device-attempt01\\app-budget-isolated-runner.txt",
+      "methods": [
+        {
+          "method": "org.inkweft.app.RenderResourcesTest#budgetPressureDefersDerivedRasterAndRecoversWithoutReopening",
+          "code": 0,
+          "stack": null
+        }
+      ],
+      "passedMethods": 1
+    },
+    {
+      "classes": [
+        "TileLocalRedrawTest",
+        "LayerRasterBudgetTest",
+        "LayerAuthoringNativeTest",
+        "LayerSnapshotPreviewTest",
+        "RenderResourcesTest#budgetPressureDefersDerivedRasterAndRecoversWithoutReopening"
+      ],
+      "exitCode": 0,
+      "passed": true,
+      "seconds": 15.5,
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug.apk",
+          "bytes": 241246545,
+          "sha256": "0d3f9c5b4a01fdd29dade747178a9e2967766bc16c426afbb87115a47cbc291a",
+          "package": "org.inkweft.app.viewport20261012"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-test-fixtures\\app-debug-androidTest.apk",
+          "bytes": 17826292,
+          "sha256": "7a202bb681877872ecd3ab86ead504c68f3029787a09e0cfdd5169f32b42e3f0",
+          "package": "org.inkweft.app.viewport20261012.test"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\data-local-debug-androidTest.apk",
+          "bytes": 26005925,
+          "sha256": "df942eec52d11349f82683108940d34e678851cdcf06d08b5414c21ffac7c810",
+          "package": "org.inkweft.data.viewport20261012.test"
+        }
+      ],
+      "output": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\verification\\device-attempt01\\app-fixtures-repaired-runner.txt",
+      "methods": [
+        {
+          "method": "org.inkweft.app.TileLocalRedrawTest#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.app.LayerRasterBudgetTest#oneFourAndEightLayersDecodeEachVisibleStrokeOnceWithinOnePixelBudget",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.app.LayerAuthoringNativeTest#hiddenOriginalImageDoesNotReturnWhenItsPendingDecodeFinishes",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.app.LayerAuthoringNativeTest#thousandStrokeHiddenLayerCannotReappearAfterDelayedViewportFrame",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.app.LayerSnapshotPreviewTest#frozenMapThumbnailNeverRendersTheHiddenLayerFromItsFile",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.app.RenderResourcesTest#budgetPressureDefersDerivedRasterAndRecoversWithoutReopening",
+          "code": 0,
+          "stack": null
+        }
+      ],
+      "passedMethods": 6
+    },
+    {
+      "classes": [
+        "RenderResourcesTest#budgetPressureDefersDerivedRasterAndRecoversWithoutReopening"
+      ],
+      "exitCode": 0,
+      "passed": true,
+      "seconds": 2.312,
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug.apk",
+          "bytes": 241246545,
+          "sha256": "0d3f9c5b4a01fdd29dade747178a9e2967766bc16c426afbb87115a47cbc291a",
+          "package": "org.inkweft.app.viewport20261012"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-final-tests\\app-debug-androidTest.apk",
+          "bytes": 10127887,
+          "sha256": "e1a9e6347b1b46c345ee9737c0cd905053ec6bca0cd3c7cdf92fafcdfe79be5f",
+          "package": "org.inkweft.app.viewport20261012.test"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\data-local-debug-androidTest.apk",
+          "bytes": 26005925,
+          "sha256": "df942eec52d11349f82683108940d34e678851cdcf06d08b5414c21ffac7c810",
+          "package": "org.inkweft.data.viewport20261012.test"
+        }
+      ],
+      "output": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\verification\\device-attempt01\\app-budget-final-runner.txt",
+      "methods": [
+        {
+          "method": "org.inkweft.app.RenderResourcesTest#budgetPressureDefersDerivedRasterAndRecoversWithoutReopening",
+          "code": 0,
+          "stack": null
+        }
+      ],
+      "passedMethods": 1
+    },
+    {
+      "classes": [
+        "LibrarySearchRepositoryTest"
+      ],
+      "exitCode": 0,
+      "passed": true,
+      "seconds": 23.094,
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-search-snapshot\\app-debug.apk",
+          "bytes": 241246545,
+          "sha256": "dcce71b2e450596a4aa55cccdde2e87276733d74407b644e0d26cecb189368fc",
+          "package": "org.inkweft.app.viewport20261012"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-final-tests\\app-debug-androidTest.apk",
+          "bytes": 10127887,
+          "sha256": "e1a9e6347b1b46c345ee9737c0cd905053ec6bca0cd3c7cdf92fafcdfe79be5f",
+          "package": "org.inkweft.app.viewport20261012.test"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-search-snapshot\\data-local-debug-androidTest.apk",
+          "bytes": 26014681,
+          "sha256": "4455a80f8ea639d16563a9991418e965613e263940b8f73a70380788ec541500",
+          "package": "org.inkweft.data.viewport20261012.test"
+        }
+      ],
+      "output": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\verification\\device-attempt01\\data-search-snapshot-runner.txt",
+      "methods": [
+        {
+          "method": "org.inkweft.data.LibrarySearchRepositoryTest#twentyThousandPageRapidInputClearAndCategoryCancelOldGenerationOffMain",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.data.LibrarySearchRepositoryTest#classificationUsesTheReadSnapshotAfterCancellableInitialIndexing",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.data.LibrarySearchRepositoryTest#draftUnicodeFiltersPinsAndPageBeforeCardNavigationStayIntact",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.data.LibrarySearchRepositoryTest#unicodeShortQueriesAndBoundedPagesKeepOrderAndNavigation",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.data.LibrarySearchRepositoryTest#deletedOrStalePageAndTrashedCardCannotReviveSearchHits",
+          "code": 0,
+          "stack": null
+        }
+      ],
+      "passedMethods": 5
+    },
+    {
+      "classes": [
+        "LibraryPaginationUiTest",
+        "NotebookShelfUiTest#shelfRenameCancelBlankAndPersistedIdentity"
+      ],
+      "exitCode": 0,
+      "passed": true,
+      "seconds": 11.187,
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-search-snapshot\\app-debug.apk",
+          "bytes": 241246545,
+          "sha256": "dcce71b2e450596a4aa55cccdde2e87276733d74407b644e0d26cecb189368fc",
+          "package": "org.inkweft.app.viewport20261012"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-final-tests\\app-debug-androidTest.apk",
+          "bytes": 10127887,
+          "sha256": "e1a9e6347b1b46c345ee9737c0cd905053ec6bca0cd3c7cdf92fafcdfe79be5f",
+          "package": "org.inkweft.app.viewport20261012.test"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-search-snapshot\\data-local-debug-androidTest.apk",
+          "bytes": 26014681,
+          "sha256": "4455a80f8ea639d16563a9991418e965613e263940b8f73a70380788ec541500",
+          "package": "org.inkweft.data.viewport20261012.test"
+        }
+      ],
+      "output": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\verification\\device-attempt01\\app-search-snapshot-runner.txt",
+      "methods": [
+        {
+          "method": "org.inkweft.app.LibraryPaginationUiTest#nextPreviousAndQueryResetShowBoundedPages",
+          "code": 0,
+          "stack": null
+        },
+        {
+          "method": "org.inkweft.app.NotebookShelfUiTest#shelfRenameCancelBlankAndPersistedIdentity",
+          "code": 0,
+          "stack": null
+        }
+      ],
+      "passedMethods": 2
+    }
+  ],
+  "nativeLatest": [
+    {
+      "method": "org.inkweft.data.SpatialInkRepositoryTest#viewportCompletesBeforeOffscreenGeometryAndNewInvalidationsNeverEscapeCoverage",
+      "code": 0,
+      "stack": null,
+      "attempt": "data-repaired-result.json",
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug.apk",
+          "bytes": 241246545,
+          "sha256": "0d3f9c5b4a01fdd29dade747178a9e2967766bc16c426afbb87115a47cbc291a",
+          "package": "org.inkweft.app.viewport20261012"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug-androidTest.apk",
+          "bytes": 10127887,
+          "sha256": "e2d801b4ca89d6e28a21e3802fae124115a46a0228bc3665378dd1f4ce8b6c0c",
+          "package": "org.inkweft.app.viewport20261012.test"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\data-local-debug-androidTest.apk",
+          "bytes": 26005925,
+          "sha256": "df942eec52d11349f82683108940d34e678851cdcf06d08b5414c21ffac7c810",
+          "package": "org.inkweft.data.viewport20261012.test"
+        }
+      ]
+    },
+    {
+      "method": "org.inkweft.data.SpatialInkRepositoryTest#validationIncludesHiddenInkAndHiddenMasks",
+      "code": 0,
+      "stack": null,
+      "attempt": "data-repaired-result.json",
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug.apk",
+          "bytes": 241246545,
+          "sha256": "0d3f9c5b4a01fdd29dade747178a9e2967766bc16c426afbb87115a47cbc291a",
+          "package": "org.inkweft.app.viewport20261012"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug-androidTest.apk",
+          "bytes": 10127887,
+          "sha256": "e2d801b4ca89d6e28a21e3802fae124115a46a0228bc3665378dd1f4ce8b6c0c",
+          "package": "org.inkweft.app.viewport20261012.test"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\data-local-debug-androidTest.apk",
+          "bytes": 26005925,
+          "sha256": "df942eec52d11349f82683108940d34e678851cdcf06d08b5414c21ffac7c810",
+          "package": "org.inkweft.data.viewport20261012.test"
+        }
+      ]
+    },
+    {
+      "method": "org.inkweft.data.SpatialInkRepositoryTest#panningDropsUndoGeometryAndPreservesMaskUndoRedo",
+      "code": 0,
+      "stack": null,
+      "attempt": "data-repaired-result.json",
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug.apk",
+          "bytes": 241246545,
+          "sha256": "0d3f9c5b4a01fdd29dade747178a9e2967766bc16c426afbb87115a47cbc291a",
+          "package": "org.inkweft.app.viewport20261012"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug-androidTest.apk",
+          "bytes": 10127887,
+          "sha256": "e2d801b4ca89d6e28a21e3802fae124115a46a0228bc3665378dd1f4ce8b6c0c",
+          "package": "org.inkweft.app.viewport20261012.test"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\data-local-debug-androidTest.apk",
+          "bytes": 26005925,
+          "sha256": "df942eec52d11349f82683108940d34e678851cdcf06d08b5414c21ffac7c810",
+          "package": "org.inkweft.data.viewport20261012.test"
+        }
+      ]
+    },
+    {
+      "method": "org.inkweft.data.SpatialInkRepositoryTest#fortyThousandStrokesAndTwoMillionPointsRemainWritableCopyableAndVerifiable",
+      "code": 0,
+      "stack": null,
+      "attempt": "data-repaired-result.json",
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug.apk",
+          "bytes": 241246545,
+          "sha256": "0d3f9c5b4a01fdd29dade747178a9e2967766bc16c426afbb87115a47cbc291a",
+          "package": "org.inkweft.app.viewport20261012"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug-androidTest.apk",
+          "bytes": 10127887,
+          "sha256": "e2d801b4ca89d6e28a21e3802fae124115a46a0228bc3665378dd1f4ce8b6c0c",
+          "package": "org.inkweft.app.viewport20261012.test"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\data-local-debug-androidTest.apk",
+          "bytes": 26005925,
+          "sha256": "df942eec52d11349f82683108940d34e678851cdcf06d08b5414c21ffac7c810",
+          "package": "org.inkweft.data.viewport20261012.test"
+        }
+      ]
+    },
+    {
+      "method": "org.inkweft.data.SpatialInkRepositoryTest#pageChangeAndCancellationAbortStreamingRatherThanReturningACompletePrefix",
+      "code": 0,
+      "stack": null,
+      "attempt": "data-repaired-result.json",
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug.apk",
+          "bytes": 241246545,
+          "sha256": "0d3f9c5b4a01fdd29dade747178a9e2967766bc16c426afbb87115a47cbc291a",
+          "package": "org.inkweft.app.viewport20261012"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug-androidTest.apk",
+          "bytes": 10127887,
+          "sha256": "e2d801b4ca89d6e28a21e3802fae124115a46a0228bc3665378dd1f4ce8b6c0c",
+          "package": "org.inkweft.app.viewport20261012.test"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\data-local-debug-androidTest.apk",
+          "bytes": 26005925,
+          "sha256": "df942eec52d11349f82683108940d34e678851cdcf06d08b5414c21ffac7c810",
+          "package": "org.inkweft.data.viewport20261012.test"
+        }
+      ]
+    },
+    {
+      "method": "org.inkweft.data.SpatialInkRepositoryTest#viewportCandidatesRespectBoundaryVisibilityPayloadChangesAndDeletion",
+      "code": 0,
+      "stack": null,
+      "attempt": "data-repaired-result.json",
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug.apk",
+          "bytes": 241246545,
+          "sha256": "0d3f9c5b4a01fdd29dade747178a9e2967766bc16c426afbb87115a47cbc291a",
+          "package": "org.inkweft.app.viewport20261012"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug-androidTest.apk",
+          "bytes": 10127887,
+          "sha256": "e2d801b4ca89d6e28a21e3802fae124115a46a0228bc3665378dd1f4ce8b6c0c",
+          "package": "org.inkweft.app.viewport20261012.test"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\data-local-debug-androidTest.apk",
+          "bytes": 26005925,
+          "sha256": "df942eec52d11349f82683108940d34e678851cdcf06d08b5414c21ffac7c810",
+          "package": "org.inkweft.data.viewport20261012.test"
+        }
+      ]
+    },
+    {
+      "method": "org.inkweft.data.SpatialInkRepositoryTest#storedValidationUsesPageAndIdentityIndexWithoutRepeatedSorting",
+      "code": 0,
+      "stack": null,
+      "attempt": "data-repaired-result.json",
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug.apk",
+          "bytes": 241246545,
+          "sha256": "0d3f9c5b4a01fdd29dade747178a9e2967766bc16c426afbb87115a47cbc291a",
+          "package": "org.inkweft.app.viewport20261012"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug-androidTest.apk",
+          "bytes": 10127887,
+          "sha256": "e2d801b4ca89d6e28a21e3802fae124115a46a0228bc3665378dd1f4ce8b6c0c",
+          "package": "org.inkweft.app.viewport20261012.test"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\data-local-debug-androidTest.apk",
+          "bytes": 26005925,
+          "sha256": "df942eec52d11349f82683108940d34e678851cdcf06d08b5414c21ffac7c810",
+          "package": "org.inkweft.data.viewport20261012.test"
+        }
+      ]
+    },
+    {
+      "method": "org.inkweft.data.SpatialInkRepositoryTest#cancelledIndexBuildKeepsCommittedProgressAndYieldsToAuthorWrites",
+      "code": 0,
+      "stack": null,
+      "attempt": "data-repaired-result.json",
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug.apk",
+          "bytes": 241246545,
+          "sha256": "0d3f9c5b4a01fdd29dade747178a9e2967766bc16c426afbb87115a47cbc291a",
+          "package": "org.inkweft.app.viewport20261012"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug-androidTest.apk",
+          "bytes": 10127887,
+          "sha256": "e2d801b4ca89d6e28a21e3802fae124115a46a0228bc3665378dd1f4ce8b6c0c",
+          "package": "org.inkweft.app.viewport20261012.test"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\data-local-debug-androidTest.apk",
+          "bytes": 26005925,
+          "sha256": "df942eec52d11349f82683108940d34e678851cdcf06d08b5414c21ffac7c810",
+          "package": "org.inkweft.data.viewport20261012.test"
+        }
+      ]
+    },
+    {
+      "method": "org.inkweft.data.SpatialInkRepositoryTest#pageBucketCollisionStillFiltersFullIdentityAndOldOrMissingRtreeRebuilds",
+      "code": 0,
+      "stack": null,
+      "attempt": "data-repaired-result.json",
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug.apk",
+          "bytes": 241246545,
+          "sha256": "0d3f9c5b4a01fdd29dade747178a9e2967766bc16c426afbb87115a47cbc291a",
+          "package": "org.inkweft.app.viewport20261012"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug-androidTest.apk",
+          "bytes": 10127887,
+          "sha256": "e2d801b4ca89d6e28a21e3802fae124115a46a0228bc3665378dd1f4ce8b6c0c",
+          "package": "org.inkweft.app.viewport20261012.test"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\data-local-debug-androidTest.apk",
+          "bytes": 26005925,
+          "sha256": "df942eec52d11349f82683108940d34e678851cdcf06d08b5414c21ffac7c810",
+          "package": "org.inkweft.data.viewport20261012.test"
+        }
+      ]
+    },
+    {
+      "method": "org.inkweft.data.SpatialInkRepositoryTest#boundedWindowNeverPretendsDenseCandidatesAreCompleteAndStreamingHasNoMissingRows",
+      "code": 0,
+      "stack": null,
+      "attempt": "data-repaired-result.json",
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug.apk",
+          "bytes": 241246545,
+          "sha256": "0d3f9c5b4a01fdd29dade747178a9e2967766bc16c426afbb87115a47cbc291a",
+          "package": "org.inkweft.app.viewport20261012"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug-androidTest.apk",
+          "bytes": 10127887,
+          "sha256": "e2d801b4ca89d6e28a21e3802fae124115a46a0228bc3665378dd1f4ce8b6c0c",
+          "package": "org.inkweft.app.viewport20261012.test"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\data-local-debug-androidTest.apk",
+          "bytes": 26005925,
+          "sha256": "df942eec52d11349f82683108940d34e678851cdcf06d08b5414c21ffac7c810",
+          "package": "org.inkweft.data.viewport20261012.test"
+        }
+      ]
+    },
+    {
+      "method": "org.inkweft.data.LibrarySearchRepositoryTest#twentyThousandPageRapidInputClearAndCategoryCancelOldGenerationOffMain",
+      "code": 0,
+      "stack": null,
+      "attempt": "data-search-snapshot-result.json",
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-search-snapshot\\app-debug.apk",
+          "bytes": 241246545,
+          "sha256": "dcce71b2e450596a4aa55cccdde2e87276733d74407b644e0d26cecb189368fc",
+          "package": "org.inkweft.app.viewport20261012"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-final-tests\\app-debug-androidTest.apk",
+          "bytes": 10127887,
+          "sha256": "e1a9e6347b1b46c345ee9737c0cd905053ec6bca0cd3c7cdf92fafcdfe79be5f",
+          "package": "org.inkweft.app.viewport20261012.test"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-search-snapshot\\data-local-debug-androidTest.apk",
+          "bytes": 26014681,
+          "sha256": "4455a80f8ea639d16563a9991418e965613e263940b8f73a70380788ec541500",
+          "package": "org.inkweft.data.viewport20261012.test"
+        }
+      ]
+    },
+    {
+      "method": "org.inkweft.data.LibrarySearchRepositoryTest#draftUnicodeFiltersPinsAndPageBeforeCardNavigationStayIntact",
+      "code": 0,
+      "stack": null,
+      "attempt": "data-search-snapshot-result.json",
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-search-snapshot\\app-debug.apk",
+          "bytes": 241246545,
+          "sha256": "dcce71b2e450596a4aa55cccdde2e87276733d74407b644e0d26cecb189368fc",
+          "package": "org.inkweft.app.viewport20261012"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-final-tests\\app-debug-androidTest.apk",
+          "bytes": 10127887,
+          "sha256": "e1a9e6347b1b46c345ee9737c0cd905053ec6bca0cd3c7cdf92fafcdfe79be5f",
+          "package": "org.inkweft.app.viewport20261012.test"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-search-snapshot\\data-local-debug-androidTest.apk",
+          "bytes": 26014681,
+          "sha256": "4455a80f8ea639d16563a9991418e965613e263940b8f73a70380788ec541500",
+          "package": "org.inkweft.data.viewport20261012.test"
+        }
+      ]
+    },
+    {
+      "method": "org.inkweft.data.LibrarySearchRepositoryTest#unicodeShortQueriesAndBoundedPagesKeepOrderAndNavigation",
+      "code": 0,
+      "stack": null,
+      "attempt": "data-search-snapshot-result.json",
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-search-snapshot\\app-debug.apk",
+          "bytes": 241246545,
+          "sha256": "dcce71b2e450596a4aa55cccdde2e87276733d74407b644e0d26cecb189368fc",
+          "package": "org.inkweft.app.viewport20261012"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-final-tests\\app-debug-androidTest.apk",
+          "bytes": 10127887,
+          "sha256": "e1a9e6347b1b46c345ee9737c0cd905053ec6bca0cd3c7cdf92fafcdfe79be5f",
+          "package": "org.inkweft.app.viewport20261012.test"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-search-snapshot\\data-local-debug-androidTest.apk",
+          "bytes": 26014681,
+          "sha256": "4455a80f8ea639d16563a9991418e965613e263940b8f73a70380788ec541500",
+          "package": "org.inkweft.data.viewport20261012.test"
+        }
+      ]
+    },
+    {
+      "method": "org.inkweft.data.LibrarySearchRepositoryTest#deletedOrStalePageAndTrashedCardCannotReviveSearchHits",
+      "code": 0,
+      "stack": null,
+      "attempt": "data-search-snapshot-result.json",
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-search-snapshot\\app-debug.apk",
+          "bytes": 241246545,
+          "sha256": "dcce71b2e450596a4aa55cccdde2e87276733d74407b644e0d26cecb189368fc",
+          "package": "org.inkweft.app.viewport20261012"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-final-tests\\app-debug-androidTest.apk",
+          "bytes": 10127887,
+          "sha256": "e1a9e6347b1b46c345ee9737c0cd905053ec6bca0cd3c7cdf92fafcdfe79be5f",
+          "package": "org.inkweft.app.viewport20261012.test"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-search-snapshot\\data-local-debug-androidTest.apk",
+          "bytes": 26014681,
+          "sha256": "4455a80f8ea639d16563a9991418e965613e263940b8f73a70380788ec541500",
+          "package": "org.inkweft.data.viewport20261012.test"
+        }
+      ]
+    },
+    {
+      "method": "org.inkweft.data.InkRepositoryTest#sameCommandReplaysAndDifferentPayloadRejected",
+      "code": 0,
+      "stack": null,
+      "attempt": "data-repaired-result.json",
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug.apk",
+          "bytes": 241246545,
+          "sha256": "0d3f9c5b4a01fdd29dade747178a9e2967766bc16c426afbb87115a47cbc291a",
+          "package": "org.inkweft.app.viewport20261012"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug-androidTest.apk",
+          "bytes": 10127887,
+          "sha256": "e2d801b4ca89d6e28a21e3802fae124115a46a0228bc3665378dd1f4ce8b6c0c",
+          "package": "org.inkweft.app.viewport20261012.test"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\data-local-debug-androidTest.apk",
+          "bytes": 26005925,
+          "sha256": "df942eec52d11349f82683108940d34e678851cdcf06d08b5414c21ffac7c810",
+          "package": "org.inkweft.data.viewport20261012.test"
+        }
+      ]
+    },
+    {
+      "method": "org.inkweft.data.InkRepositoryTest#strokePersistsAcrossActualDatabaseReopen",
+      "code": 0,
+      "stack": null,
+      "attempt": "data-repaired-result.json",
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug.apk",
+          "bytes": 241246545,
+          "sha256": "0d3f9c5b4a01fdd29dade747178a9e2967766bc16c426afbb87115a47cbc291a",
+          "package": "org.inkweft.app.viewport20261012"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug-androidTest.apk",
+          "bytes": 10127887,
+          "sha256": "e2d801b4ca89d6e28a21e3802fae124115a46a0228bc3665378dd1f4ce8b6c0c",
+          "package": "org.inkweft.app.viewport20261012.test"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\data-local-debug-androidTest.apk",
+          "bytes": 26005925,
+          "sha256": "df942eec52d11349f82683108940d34e678851cdcf06d08b5414c21ffac7c810",
+          "package": "org.inkweft.data.viewport20261012.test"
+        }
+      ]
+    },
+    {
+      "method": "org.inkweft.data.InkRepositoryTest#v1DatabaseMigratesWithoutLosingOriginalTextAndReceipts",
+      "code": 0,
+      "stack": null,
+      "attempt": "data-repaired-result.json",
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug.apk",
+          "bytes": 241246545,
+          "sha256": "0d3f9c5b4a01fdd29dade747178a9e2967766bc16c426afbb87115a47cbc291a",
+          "package": "org.inkweft.app.viewport20261012"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug-androidTest.apk",
+          "bytes": 10127887,
+          "sha256": "e2d801b4ca89d6e28a21e3802fae124115a46a0228bc3665378dd1f4ce8b6c0c",
+          "package": "org.inkweft.app.viewport20261012.test"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\data-local-debug-androidTest.apk",
+          "bytes": 26005925,
+          "sha256": "df942eec52d11349f82683108940d34e678851cdcf06d08b5414c21ffac7c810",
+          "package": "org.inkweft.data.viewport20261012.test"
+        }
+      ]
+    },
+    {
+      "method": "org.inkweft.data.InkRepositoryTest#mixedStoredFormatsReopenAndReplayWithUnchangedCanonicalReceipts",
+      "code": 0,
+      "stack": null,
+      "attempt": "data-repaired-result.json",
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug.apk",
+          "bytes": 241246545,
+          "sha256": "0d3f9c5b4a01fdd29dade747178a9e2967766bc16c426afbb87115a47cbc291a",
+          "package": "org.inkweft.app.viewport20261012"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug-androidTest.apk",
+          "bytes": 10127887,
+          "sha256": "e2d801b4ca89d6e28a21e3802fae124115a46a0228bc3665378dd1f4ce8b6c0c",
+          "package": "org.inkweft.app.viewport20261012.test"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\data-local-debug-androidTest.apk",
+          "bytes": 26005925,
+          "sha256": "df942eec52d11349f82683108940d34e678851cdcf06d08b5414c21ffac7c810",
+          "package": "org.inkweft.data.viewport20261012.test"
+        }
+      ]
+    },
+    {
+      "method": "org.inkweft.data.InkRepositoryTest#eraseAndUndoRetainExactlyOriginalBytes",
+      "code": 0,
+      "stack": null,
+      "attempt": "data-repaired-result.json",
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug.apk",
+          "bytes": 241246545,
+          "sha256": "0d3f9c5b4a01fdd29dade747178a9e2967766bc16c426afbb87115a47cbc291a",
+          "package": "org.inkweft.app.viewport20261012"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug-androidTest.apk",
+          "bytes": 10127887,
+          "sha256": "e2d801b4ca89d6e28a21e3802fae124115a46a0228bc3665378dd1f4ce8b6c0c",
+          "package": "org.inkweft.app.viewport20261012.test"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\data-local-debug-androidTest.apk",
+          "bytes": 26005925,
+          "sha256": "df942eec52d11349f82683108940d34e678851cdcf06d08b5414c21ffac7c810",
+          "package": "org.inkweft.data.viewport20261012.test"
+        }
+      ]
+    },
+    {
+      "method": "org.inkweft.data.InkRepositoryTest#twoDatabaseInstancesDoNotOverwriteSameBase",
+      "code": 0,
+      "stack": null,
+      "attempt": "data-repaired-result.json",
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug.apk",
+          "bytes": 241246545,
+          "sha256": "0d3f9c5b4a01fdd29dade747178a9e2967766bc16c426afbb87115a47cbc291a",
+          "package": "org.inkweft.app.viewport20261012"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug-androidTest.apk",
+          "bytes": 10127887,
+          "sha256": "e2d801b4ca89d6e28a21e3802fae124115a46a0228bc3665378dd1f4ce8b6c0c",
+          "package": "org.inkweft.app.viewport20261012.test"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\data-local-debug-androidTest.apk",
+          "bytes": 26005925,
+          "sha256": "df942eec52d11349f82683108940d34e678851cdcf06d08b5414c21ffac7c810",
+          "package": "org.inkweft.data.viewport20261012.test"
+        }
+      ]
+    },
+    {
+      "method": "org.inkweft.data.InkRepositoryTest#importedPageIsNewIdentityAndDoesNotOverwriteText",
+      "code": 0,
+      "stack": null,
+      "attempt": "data-repaired-result.json",
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug.apk",
+          "bytes": 241246545,
+          "sha256": "0d3f9c5b4a01fdd29dade747178a9e2967766bc16c426afbb87115a47cbc291a",
+          "package": "org.inkweft.app.viewport20261012"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug-androidTest.apk",
+          "bytes": 10127887,
+          "sha256": "e2d801b4ca89d6e28a21e3802fae124115a46a0228bc3665378dd1f4ce8b6c0c",
+          "package": "org.inkweft.app.viewport20261012.test"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\data-local-debug-androidTest.apk",
+          "bytes": 26005925,
+          "sha256": "df942eec52d11349f82683108940d34e678851cdcf06d08b5414c21ffac7c810",
+          "package": "org.inkweft.data.viewport20261012.test"
+        }
+      ]
+    },
+    {
+      "method": "org.inkweft.data.InkRepositoryTest#commitThenLostReceiptReconcilesByOriginalCommand",
+      "code": 0,
+      "stack": null,
+      "attempt": "data-repaired-result.json",
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug.apk",
+          "bytes": 241246545,
+          "sha256": "0d3f9c5b4a01fdd29dade747178a9e2967766bc16c426afbb87115a47cbc291a",
+          "package": "org.inkweft.app.viewport20261012"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug-androidTest.apk",
+          "bytes": 10127887,
+          "sha256": "e2d801b4ca89d6e28a21e3802fae124115a46a0228bc3665378dd1f4ce8b6c0c",
+          "package": "org.inkweft.app.viewport20261012.test"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\data-local-debug-androidTest.apk",
+          "bytes": 26005925,
+          "sha256": "df942eec52d11349f82683108940d34e678851cdcf06d08b5414c21ffac7c810",
+          "package": "org.inkweft.data.viewport20261012.test"
+        }
+      ]
+    },
+    {
+      "method": "org.inkweft.data.InkRepositoryTest#previewSkipsHiddenPayloadWhileFullReadStillValidatesHistory",
+      "code": 0,
+      "stack": null,
+      "attempt": "data-repaired-result.json",
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug.apk",
+          "bytes": 241246545,
+          "sha256": "0d3f9c5b4a01fdd29dade747178a9e2967766bc16c426afbb87115a47cbc291a",
+          "package": "org.inkweft.app.viewport20261012"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug-androidTest.apk",
+          "bytes": 10127887,
+          "sha256": "e2d801b4ca89d6e28a21e3802fae124115a46a0228bc3665378dd1f4ce8b6c0c",
+          "package": "org.inkweft.app.viewport20261012.test"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\data-local-debug-androidTest.apk",
+          "bytes": 26005925,
+          "sha256": "df942eec52d11349f82683108940d34e678851cdcf06d08b5414c21ffac7c810",
+          "package": "org.inkweft.data.viewport20261012.test"
+        }
+      ]
+    },
+    {
+      "method": "org.inkweft.data.InkRepositoryTest#visiblePreviewMatchesFullReadAfterCutsReplacementAndUndo",
+      "code": 0,
+      "stack": null,
+      "attempt": "data-repaired-result.json",
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug.apk",
+          "bytes": 241246545,
+          "sha256": "0d3f9c5b4a01fdd29dade747178a9e2967766bc16c426afbb87115a47cbc291a",
+          "package": "org.inkweft.app.viewport20261012"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug-androidTest.apk",
+          "bytes": 10127887,
+          "sha256": "e2d801b4ca89d6e28a21e3802fae124115a46a0228bc3665378dd1f4ce8b6c0c",
+          "package": "org.inkweft.app.viewport20261012.test"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\data-local-debug-androidTest.apk",
+          "bytes": 26005925,
+          "sha256": "df942eec52d11349f82683108940d34e678851cdcf06d08b5414c21ffac7c810",
+          "package": "org.inkweft.data.viewport20261012.test"
+        }
+      ]
+    },
+    {
+      "method": "org.inkweft.data.InkRepositoryTest#failureBeforeReceiptRollsBackInkAndPageRevision",
+      "code": 0,
+      "stack": null,
+      "attempt": "data-repaired-result.json",
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug.apk",
+          "bytes": 241246545,
+          "sha256": "0d3f9c5b4a01fdd29dade747178a9e2967766bc16c426afbb87115a47cbc291a",
+          "package": "org.inkweft.app.viewport20261012"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug-androidTest.apk",
+          "bytes": 10127887,
+          "sha256": "e2d801b4ca89d6e28a21e3802fae124115a46a0228bc3665378dd1f4ce8b6c0c",
+          "package": "org.inkweft.app.viewport20261012.test"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\data-local-debug-androidTest.apk",
+          "bytes": 26005925,
+          "sha256": "df942eec52d11349f82683108940d34e678851cdcf06d08b5414c21ffac7c810",
+          "package": "org.inkweft.data.viewport20261012.test"
+        }
+      ]
+    },
+    {
+      "method": "org.inkweft.data.InkCutIndexQueryTest#failedRebuildRetainsPendingRowsAndRollsBackPartialProjection",
+      "code": 0,
+      "stack": null,
+      "attempt": "data-repaired-result.json",
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug.apk",
+          "bytes": 241246545,
+          "sha256": "0d3f9c5b4a01fdd29dade747178a9e2967766bc16c426afbb87115a47cbc291a",
+          "package": "org.inkweft.app.viewport20261012"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug-androidTest.apk",
+          "bytes": 10127887,
+          "sha256": "e2d801b4ca89d6e28a21e3802fae124115a46a0228bc3665378dd1f4ce8b6c0c",
+          "package": "org.inkweft.app.viewport20261012.test"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\data-local-debug-androidTest.apk",
+          "bytes": 26005925,
+          "sha256": "df942eec52d11349f82683108940d34e678851cdcf06d08b5414c21ffac7c810",
+          "package": "org.inkweft.data.viewport20261012.test"
+        }
+      ]
+    },
+    {
+      "method": "org.inkweft.data.InkCutIndexQueryTest#deletingIndexedTargetRejectsReadUntilCutIsRepaired",
+      "code": 0,
+      "stack": null,
+      "attempt": "data-repaired-result.json",
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug.apk",
+          "bytes": 241246545,
+          "sha256": "0d3f9c5b4a01fdd29dade747178a9e2967766bc16c426afbb87115a47cbc291a",
+          "package": "org.inkweft.app.viewport20261012"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug-androidTest.apk",
+          "bytes": 10127887,
+          "sha256": "e2d801b4ca89d6e28a21e3802fae124115a46a0228bc3665378dd1f4ce8b6c0c",
+          "package": "org.inkweft.app.viewport20261012.test"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\data-local-debug-androidTest.apk",
+          "bytes": 26005925,
+          "sha256": "df942eec52d11349f82683108940d34e678851cdcf06d08b5414c21ffac7c810",
+          "package": "org.inkweft.data.viewport20261012.test"
+        }
+      ]
+    },
+    {
+      "method": "org.inkweft.data.InkCutIndexQueryTest#targetUpdatesVisibilityDeleteAndRebuildRemainEquivalentToAuthorRows",
+      "code": 0,
+      "stack": null,
+      "attempt": "data-repaired-result.json",
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug.apk",
+          "bytes": 241246545,
+          "sha256": "0d3f9c5b4a01fdd29dade747178a9e2967766bc16c426afbb87115a47cbc291a",
+          "package": "org.inkweft.app.viewport20261012"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug-androidTest.apk",
+          "bytes": 10127887,
+          "sha256": "e2d801b4ca89d6e28a21e3802fae124115a46a0228bc3665378dd1f4ce8b6c0c",
+          "package": "org.inkweft.app.viewport20261012.test"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\data-local-debug-androidTest.apk",
+          "bytes": 26005925,
+          "sha256": "df942eec52d11349f82683108940d34e678851cdcf06d08b5414c21ffac7c810",
+          "package": "org.inkweft.data.viewport20261012.test"
+        }
+      ]
+    },
+    {
+      "method": "org.inkweft.data.InkCutIndexQueryTest#movingIndexedTargetToAnotherPageRejectsReadUntilCutIsRepaired",
+      "code": 0,
+      "stack": null,
+      "attempt": "data-repaired-result.json",
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug.apk",
+          "bytes": 241246545,
+          "sha256": "0d3f9c5b4a01fdd29dade747178a9e2967766bc16c426afbb87115a47cbc291a",
+          "package": "org.inkweft.app.viewport20261012"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug-androidTest.apk",
+          "bytes": 10127887,
+          "sha256": "e2d801b4ca89d6e28a21e3802fae124115a46a0228bc3665378dd1f4ce8b6c0c",
+          "package": "org.inkweft.app.viewport20261012.test"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\data-local-debug-androidTest.apk",
+          "bytes": 26005925,
+          "sha256": "df942eec52d11349f82683108940d34e678851cdcf06d08b5414c21ffac7c810",
+          "package": "org.inkweft.data.viewport20261012.test"
+        }
+      ]
+    },
+    {
+      "method": "org.inkweft.data.InkCutIndexQueryTest#cancelledCutBuildKeepsCommittedBatchesAndAllowsAuthorWritesBeforeResuming",
+      "code": 0,
+      "stack": null,
+      "attempt": "data-repaired-result.json",
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug.apk",
+          "bytes": 241246545,
+          "sha256": "0d3f9c5b4a01fdd29dade747178a9e2967766bc16c426afbb87115a47cbc291a",
+          "package": "org.inkweft.app.viewport20261012"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug-androidTest.apk",
+          "bytes": 10127887,
+          "sha256": "e2d801b4ca89d6e28a21e3802fae124115a46a0228bc3665378dd1f4ce8b6c0c",
+          "package": "org.inkweft.app.viewport20261012.test"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\data-local-debug-androidTest.apk",
+          "bytes": 26005925,
+          "sha256": "df942eec52d11349f82683108940d34e678851cdcf06d08b5414c21ffac7c810",
+          "package": "org.inkweft.data.viewport20261012.test"
+        }
+      ]
+    },
+    {
+      "method": "org.inkweft.data.InkCutIndexQueryTest#realSelectionUsesStrokeIndexAndLoadsOneCutDespiteThousandsOfUnrelatedCuts",
+      "code": 0,
+      "stack": null,
+      "attempt": "data-repaired-result.json",
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug.apk",
+          "bytes": 241246545,
+          "sha256": "0d3f9c5b4a01fdd29dade747178a9e2967766bc16c426afbb87115a47cbc291a",
+          "package": "org.inkweft.app.viewport20261012"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug-androidTest.apk",
+          "bytes": 10127887,
+          "sha256": "e2d801b4ca89d6e28a21e3802fae124115a46a0228bc3665378dd1f4ce8b6c0c",
+          "package": "org.inkweft.app.viewport20261012.test"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\data-local-debug-androidTest.apk",
+          "bytes": 26005925,
+          "sha256": "df942eec52d11349f82683108940d34e678851cdcf06d08b5414c21ffac7c810",
+          "package": "org.inkweft.data.viewport20261012.test"
+        }
+      ]
+    },
+    {
+      "method": "org.inkweft.data.InkCutIndexQueryTest#renamingIndexedTargetRejectsReadUntilCutIsRepaired",
+      "code": 0,
+      "stack": null,
+      "attempt": "data-repaired-result.json",
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug.apk",
+          "bytes": 241246545,
+          "sha256": "0d3f9c5b4a01fdd29dade747178a9e2967766bc16c426afbb87115a47cbc291a",
+          "package": "org.inkweft.app.viewport20261012"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug-androidTest.apk",
+          "bytes": 10127887,
+          "sha256": "e2d801b4ca89d6e28a21e3802fae124115a46a0228bc3665378dd1f4ce8b6c0c",
+          "package": "org.inkweft.app.viewport20261012.test"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\data-local-debug-androidTest.apk",
+          "bytes": 26005925,
+          "sha256": "df942eec52d11349f82683108940d34e678851cdcf06d08b5414c21ffac7c810",
+          "package": "org.inkweft.data.viewport20261012.test"
+        }
+      ]
+    },
+    {
+      "method": "org.inkweft.data.InkCheckpointTest#crossPageStorageSliceKeepsPageIdentityAndPersistentCancellation",
+      "code": 0,
+      "stack": null,
+      "attempt": "data-repaired-result.json",
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug.apk",
+          "bytes": 241246545,
+          "sha256": "0d3f9c5b4a01fdd29dade747178a9e2967766bc16c426afbb87115a47cbc291a",
+          "package": "org.inkweft.app.viewport20261012"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug-androidTest.apk",
+          "bytes": 10127887,
+          "sha256": "e2d801b4ca89d6e28a21e3802fae124115a46a0228bc3665378dd1f4ce8b6c0c",
+          "package": "org.inkweft.app.viewport20261012.test"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\data-local-debug-androidTest.apk",
+          "bytes": 26005925,
+          "sha256": "df942eec52d11349f82683108940d34e678851cdcf06d08b5414c21ffac7c810",
+          "package": "org.inkweft.data.viewport20261012.test"
+        }
+      ]
+    },
+    {
+      "method": "org.inkweft.data.InkCheckpointTest#checkpointCrashCutsKeepOneIdentityAndSealDeduplicates",
+      "code": 0,
+      "stack": null,
+      "attempt": "data-repaired-result.json",
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug.apk",
+          "bytes": 241246545,
+          "sha256": "0d3f9c5b4a01fdd29dade747178a9e2967766bc16c426afbb87115a47cbc291a",
+          "package": "org.inkweft.app.viewport20261012"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug-androidTest.apk",
+          "bytes": 10127887,
+          "sha256": "e2d801b4ca89d6e28a21e3802fae124115a46a0228bc3665378dd1f4ce8b6c0c",
+          "package": "org.inkweft.app.viewport20261012.test"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\data-local-debug-androidTest.apk",
+          "bytes": 26005925,
+          "sha256": "df942eec52d11349f82683108940d34e678851cdcf06d08b5414c21ffac7c810",
+          "package": "org.inkweft.data.viewport20261012.test"
+        }
+      ]
+    },
+    {
+      "method": "org.inkweft.data.InkGroupRecoveryTest#cancelledBeforePrefixAndSealedBeforeLatePrefixNeverRevive",
+      "code": 0,
+      "stack": null,
+      "attempt": "data-repaired-result.json",
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug.apk",
+          "bytes": 241246545,
+          "sha256": "0d3f9c5b4a01fdd29dade747178a9e2967766bc16c426afbb87115a47cbc291a",
+          "package": "org.inkweft.app.viewport20261012"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug-androidTest.apk",
+          "bytes": 10127887,
+          "sha256": "e2d801b4ca89d6e28a21e3802fae124115a46a0228bc3665378dd1f4ce8b6c0c",
+          "package": "org.inkweft.app.viewport20261012.test"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\data-local-debug-androidTest.apk",
+          "bytes": 26005925,
+          "sha256": "df942eec52d11349f82683108940d34e678851cdcf06d08b5414c21ffac7c810",
+          "package": "org.inkweft.data.viewport20261012.test"
+        }
+      ]
+    },
+    {
+      "method": "org.inkweft.data.InkGroupRecoveryTest#transactionFaultsAndLostMarkerKeepOneLogicalReceipt",
+      "code": 0,
+      "stack": null,
+      "attempt": "data-repaired-result.json",
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug.apk",
+          "bytes": 241246545,
+          "sha256": "0d3f9c5b4a01fdd29dade747178a9e2967766bc16c426afbb87115a47cbc291a",
+          "package": "org.inkweft.app.viewport20261012"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug-androidTest.apk",
+          "bytes": 10127887,
+          "sha256": "e2d801b4ca89d6e28a21e3802fae124115a46a0228bc3665378dd1f4ce8b6c0c",
+          "package": "org.inkweft.app.viewport20261012.test"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\data-local-debug-androidTest.apk",
+          "bytes": 26005925,
+          "sha256": "df942eec52d11349f82683108940d34e678851cdcf06d08b5414c21ffac7c810",
+          "package": "org.inkweft.data.viewport20261012.test"
+        }
+      ]
+    },
+    {
+      "method": "org.inkweft.data.InkGroupRecoveryTest#frozenPagesSurviveReorderingAndConflictsDoNotOverwrite",
+      "code": 0,
+      "stack": null,
+      "attempt": "data-repaired-result.json",
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug.apk",
+          "bytes": 241246545,
+          "sha256": "0d3f9c5b4a01fdd29dade747178a9e2967766bc16c426afbb87115a47cbc291a",
+          "package": "org.inkweft.app.viewport20261012"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug-androidTest.apk",
+          "bytes": 10127887,
+          "sha256": "e2d801b4ca89d6e28a21e3802fae124115a46a0228bc3665378dd1f4ce8b6c0c",
+          "package": "org.inkweft.app.viewport20261012.test"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\data-local-debug-androidTest.apk",
+          "bytes": 26005925,
+          "sha256": "df942eec52d11349f82683108940d34e678851cdcf06d08b5414c21ffac7c810",
+          "package": "org.inkweft.data.viewport20261012.test"
+        }
+      ]
+    },
+    {
+      "method": "org.inkweft.data.SearchIndexFreshnessTest#freshnessFollowsInkObjectLayerAndPageChanges",
+      "code": 0,
+      "stack": null,
+      "attempt": "data-repaired-result.json",
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug.apk",
+          "bytes": 241246545,
+          "sha256": "0d3f9c5b4a01fdd29dade747178a9e2967766bc16c426afbb87115a47cbc291a",
+          "package": "org.inkweft.app.viewport20261012"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug-androidTest.apk",
+          "bytes": 10127887,
+          "sha256": "e2d801b4ca89d6e28a21e3802fae124115a46a0228bc3665378dd1f4ce8b6c0c",
+          "package": "org.inkweft.app.viewport20261012.test"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\data-local-debug-androidTest.apk",
+          "bytes": 26005925,
+          "sha256": "df942eec52d11349f82683108940d34e678851cdcf06d08b5414c21ffac7c810",
+          "package": "org.inkweft.data.viewport20261012.test"
+        }
+      ]
+    },
+    {
+      "method": "org.inkweft.data.SearchIndexFreshnessTest#checkingIndexNeverDecodesPayloadWhileFullObjectReadStillValidates",
+      "code": 0,
+      "stack": null,
+      "attempt": "data-repaired-result.json",
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug.apk",
+          "bytes": 241246545,
+          "sha256": "0d3f9c5b4a01fdd29dade747178a9e2967766bc16c426afbb87115a47cbc291a",
+          "package": "org.inkweft.app.viewport20261012"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug-androidTest.apk",
+          "bytes": 10127887,
+          "sha256": "e2d801b4ca89d6e28a21e3802fae124115a46a0228bc3665378dd1f4ce8b6c0c",
+          "package": "org.inkweft.app.viewport20261012.test"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\data-local-debug-androidTest.apk",
+          "bytes": 26005925,
+          "sha256": "df942eec52d11349f82683108940d34e678851cdcf06d08b5414c21ffac7c810",
+          "package": "org.inkweft.data.viewport20261012.test"
+        }
+      ]
+    },
+    {
+      "method": "org.inkweft.data.ContentArchiveTest#damagedArchiveAndCancellationRemoveStagingWithoutPublishingAuthorRows",
+      "code": 0,
+      "stack": null,
+      "attempt": "data-repaired-result.json",
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug.apk",
+          "bytes": 241246545,
+          "sha256": "0d3f9c5b4a01fdd29dade747178a9e2967766bc16c426afbb87115a47cbc291a",
+          "package": "org.inkweft.app.viewport20261012"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug-androidTest.apk",
+          "bytes": 10127887,
+          "sha256": "e2d801b4ca89d6e28a21e3802fae124115a46a0228bc3665378dd1f4ce8b6c0c",
+          "package": "org.inkweft.app.viewport20261012.test"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\data-local-debug-androidTest.apk",
+          "bytes": 26005925,
+          "sha256": "df942eec52d11349f82683108940d34e678851cdcf06d08b5414c21ffac7c810",
+          "package": "org.inkweft.data.viewport20261012.test"
+        }
+      ]
+    },
+    {
+      "method": "org.inkweft.data.ContentArchiveTest#masksHiddenLayersAndRemappedReferencesRoundTripWithoutUndoGeometry",
+      "code": 0,
+      "stack": null,
+      "attempt": "data-repaired-result.json",
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug.apk",
+          "bytes": 241246545,
+          "sha256": "0d3f9c5b4a01fdd29dade747178a9e2967766bc16c426afbb87115a47cbc291a",
+          "package": "org.inkweft.app.viewport20261012"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug-androidTest.apk",
+          "bytes": 10127887,
+          "sha256": "e2d801b4ca89d6e28a21e3802fae124115a46a0228bc3665378dd1f4ce8b6c0c",
+          "package": "org.inkweft.app.viewport20261012.test"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\data-local-debug-androidTest.apk",
+          "bytes": 26005925,
+          "sha256": "df942eec52d11349f82683108940d34e678851cdcf06d08b5414c21ffac7c810",
+          "package": "org.inkweft.data.viewport20261012.test"
+        }
+      ]
+    },
+    {
+      "method": "org.inkweft.data.LibraryBackupRepositoryTest#trashAndStaleIndexArePreservedButStaleTextIsNotSearchable",
+      "code": 0,
+      "stack": null,
+      "attempt": "data-repaired-result.json",
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug.apk",
+          "bytes": 241246545,
+          "sha256": "0d3f9c5b4a01fdd29dade747178a9e2967766bc16c426afbb87115a47cbc291a",
+          "package": "org.inkweft.app.viewport20261012"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug-androidTest.apk",
+          "bytes": 10127887,
+          "sha256": "e2d801b4ca89d6e28a21e3802fae124115a46a0228bc3665378dd1f4ce8b6c0c",
+          "package": "org.inkweft.app.viewport20261012.test"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\data-local-debug-androidTest.apk",
+          "bytes": 26005925,
+          "sha256": "df942eec52d11349f82683108940d34e678851cdcf06d08b5414c21ffac7c810",
+          "package": "org.inkweft.data.viewport20261012.test"
+        }
+      ]
+    },
+    {
+      "method": "org.inkweft.data.LibraryBackupRepositoryTest#allSupportedArchiveSchemasStillStageIntoTheCurrentRoomContract",
+      "code": 0,
+      "stack": null,
+      "attempt": "data-repaired-result.json",
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug.apk",
+          "bytes": 241246545,
+          "sha256": "0d3f9c5b4a01fdd29dade747178a9e2967766bc16c426afbb87115a47cbc291a",
+          "package": "org.inkweft.app.viewport20261012"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug-androidTest.apk",
+          "bytes": 10127887,
+          "sha256": "e2d801b4ca89d6e28a21e3802fae124115a46a0228bc3665378dd1f4ce8b6c0c",
+          "package": "org.inkweft.app.viewport20261012.test"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\data-local-debug-androidTest.apk",
+          "bytes": 26005925,
+          "sha256": "df942eec52d11349f82683108940d34e678851cdcf06d08b5414c21ffac7c810",
+          "package": "org.inkweft.data.viewport20261012.test"
+        }
+      ]
+    },
+    {
+      "method": "org.inkweft.data.LibraryBackupRepositoryTest#restoredRecordsRemainAfterRealCloseAndReopen",
+      "code": 0,
+      "stack": null,
+      "attempt": "data-repaired-result.json",
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug.apk",
+          "bytes": 241246545,
+          "sha256": "0d3f9c5b4a01fdd29dade747178a9e2967766bc16c426afbb87115a47cbc291a",
+          "package": "org.inkweft.app.viewport20261012"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug-androidTest.apk",
+          "bytes": 10127887,
+          "sha256": "e2d801b4ca89d6e28a21e3802fae124115a46a0228bc3665378dd1f4ce8b6c0c",
+          "package": "org.inkweft.app.viewport20261012.test"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\data-local-debug-androidTest.apk",
+          "bytes": 26005925,
+          "sha256": "df942eec52d11349f82683108940d34e678851cdcf06d08b5414c21ffac7c810",
+          "package": "org.inkweft.data.viewport20261012.test"
+        }
+      ]
+    },
+    {
+      "method": "org.inkweft.data.LibraryBackupRepositoryTest#roundTripPreservesOriginalIdsHiddenInkMasksHistoryAndMetadata",
+      "code": 0,
+      "stack": null,
+      "attempt": "data-repaired-result.json",
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug.apk",
+          "bytes": 241246545,
+          "sha256": "0d3f9c5b4a01fdd29dade747178a9e2967766bc16c426afbb87115a47cbc291a",
+          "package": "org.inkweft.app.viewport20261012"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug-androidTest.apk",
+          "bytes": 10127887,
+          "sha256": "e2d801b4ca89d6e28a21e3802fae124115a46a0228bc3665378dd1f4ce8b6c0c",
+          "package": "org.inkweft.app.viewport20261012.test"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\data-local-debug-androidTest.apk",
+          "bytes": 26005925,
+          "sha256": "df942eec52d11349f82683108940d34e678851cdcf06d08b5414c21ffac7c810",
+          "package": "org.inkweft.data.viewport20261012.test"
+        }
+      ]
+    },
+    {
+      "method": "org.inkweft.app.StreamedInkRasterTest#completeFrameIncludesGeometryBeyondTheEditorWindowAndReleasesItsWorker",
+      "code": 0,
+      "stack": null,
+      "attempt": "app-first-result.json",
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug.apk",
+          "bytes": 241246545,
+          "sha256": "0d3f9c5b4a01fdd29dade747178a9e2967766bc16c426afbb87115a47cbc291a",
+          "package": "org.inkweft.app.viewport20261012"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug-androidTest.apk",
+          "bytes": 10127887,
+          "sha256": "e2d801b4ca89d6e28a21e3802fae124115a46a0228bc3665378dd1f4ce8b6c0c",
+          "package": "org.inkweft.app.viewport20261012.test"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\data-local-debug-androidTest.apk",
+          "bytes": 26005925,
+          "sha256": "df942eec52d11349f82683108940d34e678851cdcf06d08b5414c21ffac7c810",
+          "package": "org.inkweft.data.viewport20261012.test"
+        }
+      ]
+    },
+    {
+      "method": "org.inkweft.app.StreamedInkRasterTest#omittedStrokeCannotReappearWhileItsReplacementFrameIsDelayed",
+      "code": 0,
+      "stack": null,
+      "attempt": "app-first-result.json",
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug.apk",
+          "bytes": 241246545,
+          "sha256": "0d3f9c5b4a01fdd29dade747178a9e2967766bc16c426afbb87115a47cbc291a",
+          "package": "org.inkweft.app.viewport20261012"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug-androidTest.apk",
+          "bytes": 10127887,
+          "sha256": "e2d801b4ca89d6e28a21e3802fae124115a46a0228bc3665378dd1f4ce8b6c0c",
+          "package": "org.inkweft.app.viewport20261012.test"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\data-local-debug-androidTest.apk",
+          "bytes": 26005925,
+          "sha256": "df942eec52d11349f82683108940d34e678851cdcf06d08b5414c21ffac7c810",
+          "package": "org.inkweft.data.viewport20261012.test"
+        }
+      ]
+    },
+    {
+      "method": "org.inkweft.app.TileLocalRedrawTest#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "code": 0,
+      "stack": null,
+      "attempt": "app-fixtures-repaired-result.json",
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug.apk",
+          "bytes": 241246545,
+          "sha256": "0d3f9c5b4a01fdd29dade747178a9e2967766bc16c426afbb87115a47cbc291a",
+          "package": "org.inkweft.app.viewport20261012"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-test-fixtures\\app-debug-androidTest.apk",
+          "bytes": 17826292,
+          "sha256": "7a202bb681877872ecd3ab86ead504c68f3029787a09e0cfdd5169f32b42e3f0",
+          "package": "org.inkweft.app.viewport20261012.test"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\data-local-debug-androidTest.apk",
+          "bytes": 26005925,
+          "sha256": "df942eec52d11349f82683108940d34e678851cdcf06d08b5414c21ffac7c810",
+          "package": "org.inkweft.data.viewport20261012.test"
+        }
+      ]
+    },
+    {
+      "method": "org.inkweft.app.LayerRasterBudgetTest#oneFourAndEightLayersDecodeEachVisibleStrokeOnceWithinOnePixelBudget",
+      "code": 0,
+      "stack": null,
+      "attempt": "app-fixtures-repaired-result.json",
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug.apk",
+          "bytes": 241246545,
+          "sha256": "0d3f9c5b4a01fdd29dade747178a9e2967766bc16c426afbb87115a47cbc291a",
+          "package": "org.inkweft.app.viewport20261012"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-test-fixtures\\app-debug-androidTest.apk",
+          "bytes": 17826292,
+          "sha256": "7a202bb681877872ecd3ab86ead504c68f3029787a09e0cfdd5169f32b42e3f0",
+          "package": "org.inkweft.app.viewport20261012.test"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\data-local-debug-androidTest.apk",
+          "bytes": 26005925,
+          "sha256": "df942eec52d11349f82683108940d34e678851cdcf06d08b5414c21ffac7c810",
+          "package": "org.inkweft.data.viewport20261012.test"
+        }
+      ]
+    },
+    {
+      "method": "org.inkweft.app.LayerAuthoringNativeTest#hiddenOriginalImageDoesNotReturnWhenItsPendingDecodeFinishes",
+      "code": 0,
+      "stack": null,
+      "attempt": "app-fixtures-repaired-result.json",
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug.apk",
+          "bytes": 241246545,
+          "sha256": "0d3f9c5b4a01fdd29dade747178a9e2967766bc16c426afbb87115a47cbc291a",
+          "package": "org.inkweft.app.viewport20261012"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-test-fixtures\\app-debug-androidTest.apk",
+          "bytes": 17826292,
+          "sha256": "7a202bb681877872ecd3ab86ead504c68f3029787a09e0cfdd5169f32b42e3f0",
+          "package": "org.inkweft.app.viewport20261012.test"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\data-local-debug-androidTest.apk",
+          "bytes": 26005925,
+          "sha256": "df942eec52d11349f82683108940d34e678851cdcf06d08b5414c21ffac7c810",
+          "package": "org.inkweft.data.viewport20261012.test"
+        }
+      ]
+    },
+    {
+      "method": "org.inkweft.app.LayerAuthoringNativeTest#thousandStrokeHiddenLayerCannotReappearAfterDelayedViewportFrame",
+      "code": 0,
+      "stack": null,
+      "attempt": "app-fixtures-repaired-result.json",
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug.apk",
+          "bytes": 241246545,
+          "sha256": "0d3f9c5b4a01fdd29dade747178a9e2967766bc16c426afbb87115a47cbc291a",
+          "package": "org.inkweft.app.viewport20261012"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-test-fixtures\\app-debug-androidTest.apk",
+          "bytes": 17826292,
+          "sha256": "7a202bb681877872ecd3ab86ead504c68f3029787a09e0cfdd5169f32b42e3f0",
+          "package": "org.inkweft.app.viewport20261012.test"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\data-local-debug-androidTest.apk",
+          "bytes": 26005925,
+          "sha256": "df942eec52d11349f82683108940d34e678851cdcf06d08b5414c21ffac7c810",
+          "package": "org.inkweft.data.viewport20261012.test"
+        }
+      ]
+    },
+    {
+      "method": "org.inkweft.app.LayerSnapshotPreviewTest#frozenMapThumbnailNeverRendersTheHiddenLayerFromItsFile",
+      "code": 0,
+      "stack": null,
+      "attempt": "app-fixtures-repaired-result.json",
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug.apk",
+          "bytes": 241246545,
+          "sha256": "0d3f9c5b4a01fdd29dade747178a9e2967766bc16c426afbb87115a47cbc291a",
+          "package": "org.inkweft.app.viewport20261012"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-test-fixtures\\app-debug-androidTest.apk",
+          "bytes": 17826292,
+          "sha256": "7a202bb681877872ecd3ab86ead504c68f3029787a09e0cfdd5169f32b42e3f0",
+          "package": "org.inkweft.app.viewport20261012.test"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\data-local-debug-androidTest.apk",
+          "bytes": 26005925,
+          "sha256": "df942eec52d11349f82683108940d34e678851cdcf06d08b5414c21ffac7c810",
+          "package": "org.inkweft.data.viewport20261012.test"
+        }
+      ]
+    },
+    {
+      "method": "org.inkweft.app.RenderResourcesTest#immutableEqualityMemoDoesNotHideNewErasures",
+      "code": 0,
+      "stack": null,
+      "attempt": "app-first-result.json",
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug.apk",
+          "bytes": 241246545,
+          "sha256": "0d3f9c5b4a01fdd29dade747178a9e2967766bc16c426afbb87115a47cbc291a",
+          "package": "org.inkweft.app.viewport20261012"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug-androidTest.apk",
+          "bytes": 10127887,
+          "sha256": "e2d801b4ca89d6e28a21e3802fae124115a46a0228bc3665378dd1f4ce8b6c0c",
+          "package": "org.inkweft.app.viewport20261012.test"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\data-local-debug-androidTest.apk",
+          "bytes": 26005925,
+          "sha256": "df942eec52d11349f82683108940d34e678851cdcf06d08b5414c21ffac7c810",
+          "package": "org.inkweft.data.viewport20261012.test"
+        }
+      ]
+    },
+    {
+      "method": "org.inkweft.app.RenderResourcesTest#replacementAdmissionDoesNotSubtractAnotherOwnersBitmap",
+      "code": 0,
+      "stack": null,
+      "attempt": "app-first-result.json",
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug.apk",
+          "bytes": 241246545,
+          "sha256": "0d3f9c5b4a01fdd29dade747178a9e2967766bc16c426afbb87115a47cbc291a",
+          "package": "org.inkweft.app.viewport20261012"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug-androidTest.apk",
+          "bytes": 10127887,
+          "sha256": "e2d801b4ca89d6e28a21e3802fae124115a46a0228bc3665378dd1f4ce8b6c0c",
+          "package": "org.inkweft.app.viewport20261012.test"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\data-local-debug-androidTest.apk",
+          "bytes": 26005925,
+          "sha256": "df942eec52d11349f82683108940d34e678851cdcf06d08b5414c21ffac7c810",
+          "package": "org.inkweft.data.viewport20261012.test"
+        }
+      ]
+    },
+    {
+      "method": "org.inkweft.app.RenderResourcesTest#budgetPressureDefersDerivedRasterAndRecoversWithoutReopening",
+      "code": 0,
+      "stack": null,
+      "attempt": "app-budget-final-result.json",
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug.apk",
+          "bytes": 241246545,
+          "sha256": "0d3f9c5b4a01fdd29dade747178a9e2967766bc16c426afbb87115a47cbc291a",
+          "package": "org.inkweft.app.viewport20261012"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-final-tests\\app-debug-androidTest.apk",
+          "bytes": 10127887,
+          "sha256": "e1a9e6347b1b46c345ee9737c0cd905053ec6bca0cd3c7cdf92fafcdfe79be5f",
+          "package": "org.inkweft.app.viewport20261012.test"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\data-local-debug-androidTest.apk",
+          "bytes": 26005925,
+          "sha256": "df942eec52d11349f82683108940d34e678851cdcf06d08b5414c21ffac7c810",
+          "package": "org.inkweft.data.viewport20261012.test"
+        }
+      ]
+    },
+    {
+      "method": "org.inkweft.app.RenderResourcesTest#allocationsAreNotDoubleCountedAndPinnedFrameSurvivesTrim",
+      "code": 0,
+      "stack": null,
+      "attempt": "app-first-result.json",
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug.apk",
+          "bytes": 241246545,
+          "sha256": "0d3f9c5b4a01fdd29dade747178a9e2967766bc16c426afbb87115a47cbc291a",
+          "package": "org.inkweft.app.viewport20261012"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug-androidTest.apk",
+          "bytes": 10127887,
+          "sha256": "e2d801b4ca89d6e28a21e3802fae124115a46a0228bc3665378dd1f4ce8b6c0c",
+          "package": "org.inkweft.app.viewport20261012.test"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\data-local-debug-androidTest.apk",
+          "bytes": 26005925,
+          "sha256": "df942eec52d11349f82683108940d34e678851cdcf06d08b5414c21ffac7c810",
+          "package": "org.inkweft.data.viewport20261012.test"
+        }
+      ]
+    },
+    {
+      "method": "org.inkweft.app.StreamedPageLifecycleTest#changedStoredRevisionAfterReleaseDoesNotReplayStaleUndo",
+      "code": 0,
+      "stack": null,
+      "attempt": "app-first-result.json",
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug.apk",
+          "bytes": 241246545,
+          "sha256": "0d3f9c5b4a01fdd29dade747178a9e2967766bc16c426afbb87115a47cbc291a",
+          "package": "org.inkweft.app.viewport20261012"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug-androidTest.apk",
+          "bytes": 10127887,
+          "sha256": "e2d801b4ca89d6e28a21e3802fae124115a46a0228bc3665378dd1f4ce8b6c0c",
+          "package": "org.inkweft.app.viewport20261012.test"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\data-local-debug-androidTest.apk",
+          "bytes": 26005925,
+          "sha256": "df942eec52d11349f82683108940d34e678851cdcf06d08b5414c21ffac7c810",
+          "package": "org.inkweft.data.viewport20261012.test"
+        }
+      ]
+    },
+    {
+      "method": "org.inkweft.app.StreamedPageLifecycleTest#enteringEditorDoesNotDecodeUnrelatedHiddenGeometry",
+      "code": 0,
+      "stack": null,
+      "attempt": "app-first-result.json",
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug.apk",
+          "bytes": 241246545,
+          "sha256": "0d3f9c5b4a01fdd29dade747178a9e2967766bc16c426afbb87115a47cbc291a",
+          "package": "org.inkweft.app.viewport20261012"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug-androidTest.apk",
+          "bytes": 10127887,
+          "sha256": "e2d801b4ca89d6e28a21e3802fae124115a46a0228bc3665378dd1f4ce8b6c0c",
+          "package": "org.inkweft.app.viewport20261012.test"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\data-local-debug-androidTest.apk",
+          "bytes": 26005925,
+          "sha256": "df942eec52d11349f82683108940d34e678851cdcf06d08b5414c21ffac7c810",
+          "package": "org.inkweft.data.viewport20261012.test"
+        }
+      ]
+    },
+    {
+      "method": "org.inkweft.app.StreamedPageLifecycleTest#directPdfProviderImportHashesTheStreamAndClosesItsStagingFile",
+      "code": 0,
+      "stack": null,
+      "attempt": "app-first-result.json",
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug.apk",
+          "bytes": 241246545,
+          "sha256": "0d3f9c5b4a01fdd29dade747178a9e2967766bc16c426afbb87115a47cbc291a",
+          "package": "org.inkweft.app.viewport20261012"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug-androidTest.apk",
+          "bytes": 10127887,
+          "sha256": "e2d801b4ca89d6e28a21e3802fae124115a46a0228bc3665378dd1f4ce8b6c0c",
+          "package": "org.inkweft.app.viewport20261012.test"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\data-local-debug-androidTest.apk",
+          "bytes": 26005925,
+          "sha256": "df942eec52d11349f82683108940d34e678851cdcf06d08b5414c21ffac7c810",
+          "package": "org.inkweft.data.viewport20261012.test"
+        }
+      ]
+    },
+    {
+      "method": "org.inkweft.app.StreamedPageLifecycleTest#offscreenReloadKeepsPressureUndoRedoAndOtherActiveView",
+      "code": 0,
+      "stack": null,
+      "attempt": "app-first-result.json",
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug.apk",
+          "bytes": 241246545,
+          "sha256": "0d3f9c5b4a01fdd29dade747178a9e2967766bc16c426afbb87115a47cbc291a",
+          "package": "org.inkweft.app.viewport20261012"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug-androidTest.apk",
+          "bytes": 10127887,
+          "sha256": "e2d801b4ca89d6e28a21e3802fae124115a46a0228bc3665378dd1f4ce8b6c0c",
+          "package": "org.inkweft.app.viewport20261012.test"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\data-local-debug-androidTest.apk",
+          "bytes": 26005925,
+          "sha256": "df942eec52d11349f82683108940d34e678851cdcf06d08b5414c21ffac7c810",
+          "package": "org.inkweft.data.viewport20261012.test"
+        }
+      ]
+    },
+    {
+      "method": "org.inkweft.app.StreamedPageLifecycleTest#denseViewportStaysWritableAndPanningReleasesGeometryWithoutLosingUndo",
+      "code": 0,
+      "stack": null,
+      "attempt": "app-first-result.json",
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug.apk",
+          "bytes": 241246545,
+          "sha256": "0d3f9c5b4a01fdd29dade747178a9e2967766bc16c426afbb87115a47cbc291a",
+          "package": "org.inkweft.app.viewport20261012"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug-androidTest.apk",
+          "bytes": 10127887,
+          "sha256": "e2d801b4ca89d6e28a21e3802fae124115a46a0228bc3665378dd1f4ce8b6c0c",
+          "package": "org.inkweft.app.viewport20261012.test"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\data-local-debug-androidTest.apk",
+          "bytes": 26005925,
+          "sha256": "df942eec52d11349f82683108940d34e678851cdcf06d08b5414c21ffac7c810",
+          "package": "org.inkweft.data.viewport20261012.test"
+        }
+      ]
+    },
+    {
+      "method": "org.inkweft.app.StreamedPageLifecycleTest#unknownCommitCannotReleaseDraftAndReceiptRetryReleasesOnlyAfterConfirmation",
+      "code": 0,
+      "stack": null,
+      "attempt": "app-first-result.json",
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug.apk",
+          "bytes": 241246545,
+          "sha256": "0d3f9c5b4a01fdd29dade747178a9e2967766bc16c426afbb87115a47cbc291a",
+          "package": "org.inkweft.app.viewport20261012"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\app-debug-androidTest.apk",
+          "bytes": 10127887,
+          "sha256": "e2d801b4ca89d6e28a21e3802fae124115a46a0228bc3665378dd1f4ce8b6c0c",
+          "package": "org.inkweft.app.viewport20261012.test"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-repaired\\data-local-debug-androidTest.apk",
+          "bytes": 26005925,
+          "sha256": "df942eec52d11349f82683108940d34e678851cdcf06d08b5414c21ffac7c810",
+          "package": "org.inkweft.data.viewport20261012.test"
+        }
+      ]
+    },
+    {
+      "method": "org.inkweft.app.LibraryPaginationUiTest#nextPreviousAndQueryResetShowBoundedPages",
+      "code": 0,
+      "stack": null,
+      "attempt": "app-search-snapshot-result.json",
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-search-snapshot\\app-debug.apk",
+          "bytes": 241246545,
+          "sha256": "dcce71b2e450596a4aa55cccdde2e87276733d74407b644e0d26cecb189368fc",
+          "package": "org.inkweft.app.viewport20261012"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-final-tests\\app-debug-androidTest.apk",
+          "bytes": 10127887,
+          "sha256": "e1a9e6347b1b46c345ee9737c0cd905053ec6bca0cd3c7cdf92fafcdfe79be5f",
+          "package": "org.inkweft.app.viewport20261012.test"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-search-snapshot\\data-local-debug-androidTest.apk",
+          "bytes": 26014681,
+          "sha256": "4455a80f8ea639d16563a9991418e965613e263940b8f73a70380788ec541500",
+          "package": "org.inkweft.data.viewport20261012.test"
+        }
+      ]
+    },
+    {
+      "method": "org.inkweft.app.NotebookShelfUiTest#shelfRenameCancelBlankAndPersistedIdentity",
+      "code": 0,
+      "stack": null,
+      "attempt": "app-search-snapshot-result.json",
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-search-snapshot\\app-debug.apk",
+          "bytes": 241246545,
+          "sha256": "dcce71b2e450596a4aa55cccdde2e87276733d74407b644e0d26cecb189368fc",
+          "package": "org.inkweft.app.viewport20261012"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-final-tests\\app-debug-androidTest.apk",
+          "bytes": 10127887,
+          "sha256": "e1a9e6347b1b46c345ee9737c0cd905053ec6bca0cd3c7cdf92fafcdfe79be5f",
+          "package": "org.inkweft.app.viewport20261012.test"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-search-snapshot\\data-local-debug-androidTest.apk",
+          "bytes": 26014681,
+          "sha256": "4455a80f8ea639d16563a9991418e965613e263940b8f73a70380788ec541500",
+          "package": "org.inkweft.data.viewport20261012.test"
+        }
+      ]
+    },
+    {
+      "method": "org.inkweft.data.LibrarySearchRepositoryTest#classificationUsesTheReadSnapshotAfterCancellableInitialIndexing",
+      "code": 0,
+      "stack": null,
+      "attempt": "data-search-snapshot-result.json",
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-search-snapshot\\app-debug.apk",
+          "bytes": 241246545,
+          "sha256": "dcce71b2e450596a4aa55cccdde2e87276733d74407b644e0d26cecb189368fc",
+          "package": "org.inkweft.app.viewport20261012"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-final-tests\\app-debug-androidTest.apk",
+          "bytes": 10127887,
+          "sha256": "e1a9e6347b1b46c345ee9737c0cd905053ec6bca0cd3c7cdf92fafcdfe79be5f",
+          "package": "org.inkweft.app.viewport20261012.test"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-search-snapshot\\data-local-debug-androidTest.apk",
+          "bytes": 26014681,
+          "sha256": "4455a80f8ea639d16563a9991418e965613e263940b8f73a70380788ec541500",
+          "package": "org.inkweft.data.viewport20261012.test"
+        }
+      ]
+    }
+  ],
+  "lint": {
+    "counts": {
+      "Warning": 175,
+      "Hint": 2
+    },
+    "sourcePhase": "integration-third, before SQL trigger/token allocation repairs; later repairs compiled and exercised by native tests"
+  },
+  "artifacts": [
+    {
+      "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-search-snapshot\\app-debug.apk",
+      "bytes": 241246545,
+      "sha256": "dcce71b2e450596a4aa55cccdde2e87276733d74407b644e0d26cecb189368fc",
+      "package": "org.inkweft.app.viewport20261012"
+    },
+    {
+      "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-final-tests\\app-debug-androidTest.apk",
+      "bytes": 10127887,
+      "sha256": "e1a9e6347b1b46c345ee9737c0cd905053ec6bca0cd3c7cdf92fafcdfe79be5f",
+      "package": "org.inkweft.app.viewport20261012.test"
+    },
+    {
+      "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Viewport-Search\\artifacts\\candidate-search-snapshot\\data-local-debug-androidTest.apk",
+      "bytes": 26014681,
+      "sha256": "4455a80f8ea639d16563a9991418e965613e263940b8f73a70380788ec541500",
+      "package": "org.inkweft.data.viewport20261012.test"
+    }
+  ],
+  "metrics": [
+    {
+      "kind": "LAYER_RASTER_EVIDENCE",
+      "attempt": "app-first-runner.txt",
+      "value": {
+        "visibleLayers": 1,
+        "visibleStrokes": 320,
+        "decodedRows": 320,
+        "decodedPoints": 640,
+        "payloadBytes": 44800,
+        "geometryReads": 2,
+        "nativeExtentPixels": 3117845,
+        "inkBitmapBytes": 12471380,
+        "readyMs": 174.694661,
+        "softwareDrawP95Ms": 2.805898,
+        "javaUsedBytes": 27353224,
+        "processPssKiB": 181184
+      }
+    },
+    {
+      "kind": "LAYER_RASTER_EVIDENCE",
+      "attempt": "app-first-runner.txt",
+      "value": {
+        "visibleLayers": 4,
+        "visibleStrokes": 320,
+        "decodedRows": 320,
+        "decodedPoints": 640,
+        "payloadBytes": 44800,
+        "geometryReads": 4,
+        "nativeExtentPixels": 10530530,
+        "inkBitmapBytes": 10544352,
+        "readyMs": 1345.63398,
+        "softwareDrawP95Ms": 45.726117,
+        "javaUsedBytes": 35889288,
+        "processPssKiB": 191592
+      }
+    },
+    {
+      "kind": "LAYER_RASTER_EVIDENCE",
+      "attempt": "app-first-runner.txt",
+      "value": {
+        "visibleLayers": 8,
+        "visibleStrokes": 320,
+        "decodedRows": 320,
+        "decodedPoints": 640,
+        "payloadBytes": 44800,
+        "geometryReads": 8,
+        "nativeExtentPixels": 21061060,
+        "inkBitmapBytes": 21088704,
+        "readyMs": 2401.909437,
+        "softwareDrawP95Ms": 75.912598,
+        "javaUsedBytes": 28144160,
+        "processPssKiB": 181956
+      }
+    },
+    {
+      "kind": "TILE_LOCAL_EVIDENCE",
+      "attempt": "app-fixtures-repaired-runner.txt",
+      "value": {
+        "layers": 1,
+        "initialStrokes": 320,
+        "finalStrokes": 321,
+        "firstCompleteMs": 255.066814,
+        "appendCompleteMs": 73.846562,
+        "forcedFullCompleteMs": 140.727221,
+        "localDecoded": 13,
+        "fullDecoded": 321,
+        "localRebuiltTiles": 1,
+        "fullRebuiltTiles": 24,
+        "pixelsEqual": true,
+        "bitmapBytes": 14371200
+      }
+    },
+    {
+      "kind": "TILE_LOCAL_EVIDENCE",
+      "attempt": "app-fixtures-repaired-runner.txt",
+      "value": {
+        "layers": 4,
+        "initialStrokes": 320,
+        "finalStrokes": 321,
+        "firstCompleteMs": 200.242506,
+        "appendCompleteMs": 147.490906,
+        "forcedFullCompleteMs": 162.013523,
+        "localDecoded": 21,
+        "fullDecoded": 321,
+        "localRebuiltTiles": 1,
+        "fullRebuiltTiles": 24,
+        "pixelsEqual": true,
+        "bitmapBytes": 12147408
+      }
+    },
+    {
+      "kind": "TILE_LOCAL_EVIDENCE",
+      "attempt": "app-fixtures-repaired-runner.txt",
+      "value": {
+        "layers": 8,
+        "initialStrokes": 320,
+        "finalStrokes": 321,
+        "firstCompleteMs": 266.208268,
+        "appendCompleteMs": 265.577113,
+        "forcedFullCompleteMs": 250.728085,
+        "localDecoded": 11,
+        "fullDecoded": 321,
+        "localRebuiltTiles": 1,
+        "fullRebuiltTiles": 48,
+        "pixelsEqual": true,
+        "bitmapBytes": 24294816
+      }
+    },
+    {
+      "kind": "LAYER_RASTER_EVIDENCE",
+      "attempt": "app-fixtures-repaired-runner.txt",
+      "value": {
+        "visibleLayers": 1,
+        "visibleStrokes": 320,
+        "decodedRows": 320,
+        "decodedPoints": 640,
+        "payloadBytes": 44800,
+        "geometryReads": 2,
+        "nativeExtentPixels": 3117845,
+        "inkBitmapBytes": 12471380,
+        "readyMs": 169.687798,
+        "softwareDrawP95Ms": 3.186436,
+        "javaUsedBytes": 23431280,
+        "processPssKiB": 174455
+      }
+    },
+    {
+      "kind": "LAYER_RASTER_EVIDENCE",
+      "attempt": "app-fixtures-repaired-runner.txt",
+      "value": {
+        "visibleLayers": 4,
+        "visibleStrokes": 320,
+        "decodedRows": 320,
+        "decodedPoints": 640,
+        "payloadBytes": 44800,
+        "geometryReads": 4,
+        "nativeExtentPixels": 10530530,
+        "inkBitmapBytes": 10544352,
+        "readyMs": 1429.430238,
+        "softwareDrawP95Ms": 46.737744,
+        "javaUsedBytes": 31934576,
+        "processPssKiB": 185730
+      }
+    },
+    {
+      "kind": "LAYER_RASTER_EVIDENCE",
+      "attempt": "app-fixtures-repaired-runner.txt",
+      "value": {
+        "visibleLayers": 8,
+        "visibleStrokes": 320,
+        "decodedRows": 320,
+        "decodedPoints": 640,
+        "payloadBytes": 44800,
+        "geometryReads": 8,
+        "nativeExtentPixels": 21061060,
+        "inkBitmapBytes": 21088704,
+        "readyMs": 2543.500586,
+        "softwareDrawP95Ms": 82.257505,
+        "javaUsedBytes": 26704208,
+        "processPssKiB": 173382
+      }
+    },
+    {
+      "kind": "PAGE_COPY_EVIDENCE",
+      "attempt": "data-first-runner.txt",
+      "value": {
+        "kind": "large-page-copy",
+        "strokes": 40002,
+        "points": 2040053,
+        "largestGeometryBatch": 256,
+        "heapBeforeBytes": 1363808,
+        "heapAfterFirst8192Bytes": 2486936,
+        "heapAfterBytes": 1381960,
+        "observedHeapPeakBytes": 7689264,
+        "retainedGrowthAfter8192Bytes": -1104976,
+        "copiedMemberships": 40002,
+        "fullAuthoringStateRetainedBytes": 12058240
+      }
+    },
+    {
+      "kind": "PAGE_COPY_EVIDENCE",
+      "attempt": "data-repaired-runner.txt",
+      "value": {
+        "kind": "large-page-copy",
+        "strokes": 40002,
+        "points": 2040053,
+        "largestGeometryBatch": 256,
+        "heapBeforeBytes": 1364520,
+        "heapAfterFirst8192Bytes": 2487624,
+        "heapAfterBytes": 1382648,
+        "observedHeapPeakBytes": 7578504,
+        "retainedGrowthAfter8192Bytes": -1104976,
+        "copiedMemberships": 40002,
+        "fullAuthoringStateRetainedBytes": 12074624
+      }
+    },
+    {
+      "kind": "FTS_EVIDENCE",
+      "attempt": "data-repaired-runner.txt",
+      "value": "pages=20000 candidateRows=1 elapsedMs=16108"
+    },
+    {
+      "kind": "FTS_EVIDENCE",
+      "attempt": "data-search-snapshot-runner.txt",
+      "value": "pages=20000 candidateRows=1 elapsedMs=17230"
+    }
+  ]
+}

@@ -11,6 +11,26 @@ import org.junit.Test
 import java.util.UUID
 
 class SpatialInkRepositoryTest {
+    @Test fun viewportCompletesBeforeOffscreenGeometryAndNewInvalidationsNeverEscapeCoverage()=fixture{db,page->
+        val near=stroke();val far=List(600){stroke(10_000f,10_000f,512)}
+        seed(db,page,far+near);val repo=InkRepository(db);val region=CanvasBounds(90.0,90.0,110.0,110.0)
+        val sql=db.openHelper.writableDatabase
+        fun pending()=sql.query("SELECT COUNT(*) FROM page_spatial_pending WHERE pageId=?",arrayOf(page)).use{it.moveToFirst();it.getInt(0)}
+        val window=repo.readForEditing(page,bounds=region)
+        assertTrue(window.windowComplete);assertEquals(listOf(near.id),window.strokes.map{it.stroke.id});assertEquals(600,pending())
+        assertEquals(600,sql.query("SELECT COUNT(*) FROM page_spatial_hints WHERE pageId=?",arrayOf(page)).use{it.moveToFirst();it.getInt(0)})
+        val moved=InkStroke(far[0].id,far[0].pen,far[0].color,far[0].width,far[0].tool,near.samples,true)
+        sql.execSQL("UPDATE ink_strokes SET payload=?,pointCount=2 WHERE id=?",arrayOf<Any>(InkStrokeCodec.encodeStored(moved),moved.id))
+        assertEquals(setOf(near.id,moved.id),repo.readForEditing(page,bounds=region).strokes.map{it.stroke.id}.toSet())
+        // A prior-format payload has no coverage header and must be fully decoded, including
+        // the possibility of returning from outside the previously covered region.
+        val legacy=stroke(102f,102f)
+        db.ink().insertStroke(InkStrokeRow(legacy.id,page,InkStrokeCodec.encode(legacy),2,true,1))
+        assertEquals(3,repo.readForEditing(page,bounds=region).strokes.size)
+        assertTrue(pending()>0)
+        assertTrue(repo.visibleBounds(page,1)!!.right>9000);assertEquals(0,pending())
+        println("VIEWPORT_PRIORITY current=3 offscreen=600 complete=true pendingBeforeFull=599")
+    }
     private fun id()=UUID.randomUUID().toString()
     private fun stroke(x:Float=100f,y:Float=100f,count:Int=2)=InkStroke(id(),InkPen.PEN,0xff123456.toInt(),2f,InkTool.STYLUS,
         List(count){InkSample(x+(it%10)*.1f,y,it.toLong(),.2f+(it%5)*.1f,.3f,.4f,true)},true)
