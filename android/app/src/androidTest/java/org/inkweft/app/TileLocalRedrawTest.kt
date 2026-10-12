@@ -38,6 +38,8 @@ class TileLocalRedrawTest {
             withContext(Dispatchers.Main){cold.clear()};viewport=viewport.copy(zoom=1.2)
             assertFalse(draw(cached,target));assertFalse(cached.frameReady)
             ready(cached,target);ready(cold,reference);assertTrue(target.sameAs(reference))
+            assertEquals("A same-revision zoom rerasterizes retained geometry without decoding it",0,cached.lastBuild!!.decoded)
+            assertTrue(cached.lastBuild!!.reusedStrokes>0)
             assertTrue(cached.lastBuild!!.bitmapBytes<=StreamedLayerLayout.PIXELS*4)
             InstrumentationRegistry.getInstrumentation().sendStatus(0,android.os.Bundle().apply{putString("stream","TILE_PAN_EVIDENCE ${JSONObject().put("rebuilt",pan.rebuilt).put("tiles",pan.tiles).put("panPixelsEqual",true).put("zoomPixelsEqual",true).put("previewCaptureReady",false)}\n")})
         }finally{withContext(Dispatchers.Main){cached.clear();cold.clear()};events.close();target.recycle();reference.recycle();db.close();context.deleteDatabase(name)}

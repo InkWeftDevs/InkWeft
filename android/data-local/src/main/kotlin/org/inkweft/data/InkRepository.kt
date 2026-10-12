@@ -275,15 +275,26 @@ class InkRepository(private val db:NoteDatabase,private val fault:(InkFaultPoint
                 rows.sumOf{it.payload.size.toLong()}+frozen.cuts.sumOf{it.payload.size.toLong()},strokes.sumOf{it.samples.size.toLong()}+cutPoints,selected.orEmpty().size.toLong()))}
         }
     }
+    fun rasterCache()=InkRasterCache(this)
     /** Bounded geometry batches at one revision. Callers discard the entire result on revision
-     * change; cancellation releases the database between batches and never publishes a prefix. */
-    suspend fun visitVisible(noteId:String,revision:Long,bounds:CanvasBounds?=null,authoringRevision:Long?=null,layer:String?=null,writableOnly:Boolean=false,visit:suspend (List<InkStroke>)->Unit){
+     * change; cancellation releases the database between batches and never publishes a prefix.
+     * Optional regions filter metadata before decoding; caches are local to one raster worker. */
+    suspend fun visitVisible(noteId:String,revision:Long,bounds:CanvasBounds?=null,authoringRevision:Long?=null,layer:String?=null,writableOnly:Boolean=false,
+        regions:List<CanvasBounds>?=null,allowed:Set<String>?=null,omitted:Set<String> = emptySet(),cache:InkRasterCache?=null,visit:suspend (List<InkStroke>)->Unit){
+        require(regions==null||(bounds!=null&&regions.isNotEmpty()&&regions.size<=512))
+        require(cache==null||(cache.repository===this&&bounds!=null))
         var cursor:SpatialIndex.Cursor?=null
+        var cacheEpoch:Long?=null
         while(true){
             currentCoroutineContext().ensureActive()
             val candidates=spatialRead(noteId,bounds){sql->
                 owner(noteId);check((dao.page(noteId)?.revision?:0)==revision){"INK_WINDOW_REVISION_CHANGED"}
                 val layers=authoringRevision?.let{layerFilter(sql,noteId,it,layer,writableOnly)}
+                if(cache!=null){
+                    val epoch=sql.query("SELECT epoch FROM ink_raster_epochs WHERE pageId=?",arrayOf(noteId)).use{if(it.moveToFirst())it.getLong(0)else 0L}
+                    check(cacheEpoch==null||cacheEpoch==epoch){"INK_RASTER_EPOCH_CHANGED"}
+                    cacheEpoch=epoch;cache.prepare(noteId,revision,epoch)
+                }
                 SpatialIndex.ink(sql,noteId,bounds,cursor,layers=layers).let{rows->
                     var points=0;var bytes=0L
                     rows.takeWhile{row->
@@ -293,18 +304,40 @@ class InkRepository(private val db:NoteDatabase,private val fault:(InkFaultPoint
                 }
             }
             if(candidates.isEmpty())break
-            var batch=candidates
+            // Keep the metadata cursor moving through gaps, but never read payloads for
+            // clean tiles between separated dirty regions. One cursor preserves paint order
+            // and visits a stroke crossing several dirty tiles only once.
+            val selected=candidates.filter{row->row.id !in omitted&&(allowed==null||row.id in allowed)&&
+                (regions==null||regions.any{checkNotNull(row.bounds).intersects(it)})}
+            if(selected.isEmpty()){val last=candidates.last();cursor=SpatialIndex.Cursor(last.revision,last.id);continue}
+            var batch=selected
             lateinit var snapshot:VisibleInkSnapshot
+            var reused:Map<String,InkStroke>
             while(true){
-                try{snapshot=readVisibleSnapshot(noteId,batch.map{it.id});break}
+                reused=if(cache==null)emptyMap()else batch.mapNotNull{row->cache.get(row.id,row.spatialKey)?.let{row.id to it}}.toMap()
+                try{
+                    val missing=batch.filter{it.id !in reused}.map{it.id}
+                    snapshot=if(missing.isEmpty())VisibleInkSnapshot(noteId,revision,emptyList())else readVisibleSnapshot(noteId,missing)
+                    break
+                }
                 catch(e:InkReadBudgetExceeded){if(batch.size<=1)throw e;batch=batch.take((batch.size+1)/2)}
             }
-            check(snapshot.revision==revision&&snapshot.strokes.map{it.id}==batch.map{it.id}){"INK_WINDOW_REVISION_CHANGED"}
-            visit(snapshot.strokes)
-            val last=batch.last();cursor=SpatialIndex.Cursor(last.revision,last.id)
+            check(snapshot.revision==revision&&snapshot.strokes.map{it.id}==batch.filter{it.id !in reused}.map{it.id}){"INK_WINDOW_REVISION_CHANGED"}
+            if(cache==null)visit(snapshot.strokes)else{
+                val decoded=snapshot.strokes.associateBy{it.id}
+                cache.recordHits(reused.size)
+                visit(batch.map{row->reused[row.id]?:decoded.getValue(row.id).also{cache.put(it,row.spatialKey)}})
+            }
+            // Budget retries must not skip candidates beyond the reduced batch.
+            val last=if(batch.size==selected.size)candidates.last()else batch.last()
+            cursor=SpatialIndex.Cursor(last.revision,last.id)
         }
         db.withTransaction{
             check((dao.page(noteId)?.revision?:0)==revision){"INK_WINDOW_REVISION_CHANGED"}
+            cacheEpoch?.let{expected->
+                val epoch=db.openHelper.readableDatabase.query("SELECT epoch FROM ink_raster_epochs WHERE pageId=?",arrayOf(noteId)).use{if(it.moveToFirst())it.getLong(0)else 0L}
+                check(epoch==expected){"INK_RASTER_EPOCH_CHANGED"}
+            }
             authoringRevision?.let{layerFilter(db.openHelper.readableDatabase,noteId,it,layer,writableOnly)}
         }
     }
