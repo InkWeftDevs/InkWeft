@@ -11,8 +11,15 @@ import org.junit.Assert.*
 import org.junit.Test
 import java.io.File
 import java.util.UUID
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
+import java.util.concurrent.TimeoutException
+import java.util.concurrent.atomic.AtomicInteger
 
 class BundledSqliteFactoryTest {
+    private fun mode(db: SupportSQLiteDatabase) = db.query("PRAGMA auto_vacuum").use { it.moveToFirst(); it.getInt(0) }
+    private fun lockFile(path: File) = File(path.canonicalPath + ".inkweft-open-lock")
     @Test fun nativeRtreeTransactionsReopenAndCorruptionKeepOriginalFiles() {
         val context = ApplicationProvider.getApplicationContext<Context>()
         val name = "bundled-rtree-${UUID.randomUUID()}.db"
@@ -35,6 +42,7 @@ class BundledSqliteFactoryTest {
                 assertEquals(path.canonicalPath, File(sql.path).canonicalPath)
                 assertFalse(context.getDatabasePath(name).exists())
                 assertEquals(4096L, sql.pageSize)
+                assertEquals(2, mode(sql))
                 assertTrue(sql.isWriteAheadLoggingEnabled)
                 sql.execSQL("INSERT INTO bounds VALUES (1,10,20,30,40)")
                 sql.beginTransaction()
@@ -60,6 +68,7 @@ class BundledSqliteFactoryTest {
             assertEquals(seedsBefore, seeds())
         } finally {
             context.deleteDatabase(path.absolutePath)
+            lockFile(path).delete()
         }
     }
 
@@ -81,12 +90,14 @@ class BundledSqliteFactoryTest {
                 helper.setWriteAheadLoggingEnabled(true)
                 val db = helper.writableDatabase
                 assertEquals(1024L, db.pageSize)
+                assertEquals(0, mode(db))
                 db.execSQL("INSERT INTO authors VALUES (7,?)", arrayOf<Any>(bytes))
             }
             PreservingOpenHelperFactory().create(config).use { helper ->
                 helper.setWriteAheadLoggingEnabled(true)
                 val db = helper.writableDatabase
                 assertEquals(1024L, db.pageSize)
+                assertEquals(0, mode(db))
                 assertTrue(db.isWriteAheadLoggingEnabled)
                 db.query("SELECT id,payload FROM authors").use { cursor ->
                     assertTrue(cursor.moveToFirst()); assertEquals(7, cursor.getInt(0))
@@ -96,6 +107,104 @@ class BundledSqliteFactoryTest {
             assertEquals(seedsBefore, seeds())
         } finally {
             context.deleteDatabase(name)
+            lockFile(context.getDatabasePath(name)).delete()
         }
+    }
+
+    @Test fun independentHelpersWaitForCompleteCreationAndKeepTheSameAuthorRows() {
+        val context = ApplicationProvider.getApplicationContext<Context>()
+        val name = "bundled-concurrent-${UUID.randomUUID()}.db"
+        val path = context.getDatabasePath(name)
+        val entered = CountDownLatch(1); val release = CountDownLatch(1); val secondStarted = CountDownLatch(1)
+        val creations = AtomicInteger(); val pool = Executors.newFixedThreadPool(2)
+        val callback = object : SupportSQLiteOpenHelper.Callback(1) {
+            override fun onCreate(db: SupportSQLiteDatabase) {
+                creations.incrementAndGet()
+                db.execSQL("CREATE TABLE author(value TEXT NOT NULL)")
+                db.execSQL("INSERT INTO author VALUES ('complete author row')")
+                entered.countDown(); check(release.await(10, TimeUnit.SECONDS))
+            }
+            override fun onUpgrade(db: SupportSQLiteDatabase, oldVersion: Int, newVersion: Int) = error("Unexpected upgrade")
+        }
+        fun openAndRead(): String {
+            val config = SupportSQLiteOpenHelper.Configuration.builder(context).name(name).callback(callback).build()
+            return PreservingOpenHelperFactory().create(config).use { helper ->
+                helper.setWriteAheadLoggingEnabled(true)
+                val db = helper.writableDatabase
+                assertEquals(4096L, db.pageSize); assertEquals(2, mode(db))
+                db.query("SELECT value FROM author").use { assertTrue(it.moveToFirst()); val value = it.getString(0); assertFalse(it.moveToNext()); value }
+            }
+        }
+        try {
+            val first = pool.submit<String> { openAndRead() }
+            assertTrue(entered.await(10, TimeUnit.SECONDS))
+            val second = pool.submit<String> { secondStarted.countDown(); openAndRead() }
+            assertTrue(secondStarted.await(10, TimeUnit.SECONDS))
+            try { second.get(150, TimeUnit.MILLISECONDS); fail("Second helper observed unfinished creation") }
+            catch (_: TimeoutException) { }
+            release.countDown()
+            assertEquals("complete author row", first.get(10, TimeUnit.SECONDS))
+            assertEquals("complete author row", second.get(10, TimeUnit.SECONDS))
+            assertEquals(1, creations.get())
+        } finally {
+            release.countDown(); pool.shutdownNow(); assertTrue(pool.awaitTermination(10, TimeUnit.SECONDS))
+            context.deleteDatabase(name); lockFile(path).delete()
+        }
+    }
+
+    @Test fun emptyInterruptedCreationAndFailedSchemaCreationCanResume() {
+        val context = ApplicationProvider.getApplicationContext<Context>()
+        val name = "bundled-interrupted-${UUID.randomUUID()}.db"
+        val path = context.getDatabasePath(name)
+        val attempts = AtomicInteger()
+        val callback = object : SupportSQLiteOpenHelper.Callback(1) {
+            override fun onCreate(db: SupportSQLiteDatabase) {
+                db.execSQL("CREATE TABLE author(value TEXT NOT NULL)")
+                db.execSQL("INSERT INTO author VALUES ('resumed author row')")
+                if (attempts.incrementAndGet() == 1) error("synthetic schema interruption")
+            }
+            override fun onUpgrade(db: SupportSQLiteDatabase, oldVersion: Int, newVersion: Int) = error("Unexpected upgrade")
+        }
+        fun open() = PreservingOpenHelperFactory().create(SupportSQLiteOpenHelper.Configuration.builder(context).name(name).callback(callback).build())
+            .also { it.setWriteAheadLoggingEnabled(true) }
+        try {
+            // Models death after O_EXCL but before SQLite has committed its first header.
+            path.parentFile!!.mkdirs(); assertTrue(path.createNewFile()); assertEquals(0L, path.length())
+            open().use { helper -> assertEquals("synthetic schema interruption", runCatching { helper.writableDatabase }.exceptionOrNull()?.message) }
+            assertTrue(path.exists()); assertTrue(path.length() > 0L)
+            open().use { helper ->
+                val db = helper.writableDatabase
+                assertEquals(4096L, db.pageSize); assertEquals(2, mode(db)); assertEquals(1, db.version)
+                db.query("SELECT value FROM author").use { assertTrue(it.moveToFirst()); assertEquals("resumed author row", it.getString(0)); assertFalse(it.moveToNext()) }
+            }
+            assertEquals(2, attempts.get())
+        } finally { context.deleteDatabase(name); lockFile(path).delete() }
+    }
+
+    @Test fun nonemptyUnversionedDatabaseNeverEntersEmptyInitialization() {
+        val context = ApplicationProvider.getApplicationContext<Context>()
+        val name = "bundled-unversioned-${UUID.randomUUID()}.db"
+        val path = context.getDatabasePath(name)
+        val bytes = byteArrayOf(7, 11, 19, 23)
+        try {
+            path.parentFile!!.mkdirs()
+            io.requery.android.database.sqlite.SQLiteDatabase.openOrCreateDatabase(path, null).use { db ->
+                db.execSQL("CREATE TABLE author(payload BLOB NOT NULL)")
+                db.execSQL("INSERT INTO author VALUES (?)", arrayOf<Any>(bytes)); assertEquals(0, db.version)
+            }
+            val original = path.readBytes()
+            val callback = object : SupportSQLiteOpenHelper.Callback(1) {
+                override fun onCreate(db: SupportSQLiteDatabase) {
+                    assertEquals(1024L, db.pageSize); assertEquals(0, mode(db))
+                    db.query("SELECT payload FROM author").use { assertTrue(it.moveToFirst()); assertArrayEquals(bytes, it.getBlob(0)) }
+                    error("Existing unversioned database needs explicit recovery")
+                }
+                override fun onUpgrade(db: SupportSQLiteDatabase, oldVersion: Int, newVersion: Int) = error("Unexpected upgrade")
+            }
+            PreservingOpenHelperFactory().create(SupportSQLiteOpenHelper.Configuration.builder(context).name(name).callback(callback).build()).use { helper ->
+                assertEquals("Existing unversioned database needs explicit recovery", runCatching { helper.writableDatabase }.exceptionOrNull()?.message)
+            }
+            assertArrayEquals(original, path.readBytes())
+        } finally { context.deleteDatabase(name); lockFile(path).delete() }
     }
 }
