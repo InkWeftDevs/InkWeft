@@ -1,0 +1,246 @@
+{
+  "browser": "System Chromium via Playwright, cloud Linux",
+  "rendering": "Web, not native Android",
+  "url": "http://127.0.0.1:4180",
+  "passed": 59,
+  "checks": [
+    {
+      "check": "HTTP document renders successfully",
+      "passed": true
+    },
+    {
+      "check": "Default layout is writing with an unobscured paper",
+      "passed": true
+    },
+    {
+      "check": "Same substantive calculus note, definitions and example are present",
+      "passed": true
+    },
+    {
+      "check": "blend: selected style is truthful",
+      "passed": true
+    },
+    {
+      "check": "blend: paper is opaque and unfiltered",
+      "passed": true
+    },
+    {
+      "check": "blend: note text is unchanged",
+      "passed": true
+    },
+    {
+      "check": "blend: mind map keeps the paper visible",
+      "passed": true
+    },
+    {
+      "check": "card: selected style is truthful",
+      "passed": true
+    },
+    {
+      "check": "card: paper is opaque and unfiltered",
+      "passed": true
+    },
+    {
+      "check": "card: note text is unchanged",
+      "passed": true
+    },
+    {
+      "check": "card: mind map keeps the paper visible",
+      "passed": true
+    },
+    {
+      "check": "liquid: selected style is truthful",
+      "passed": true
+    },
+    {
+      "check": "liquid: paper is opaque and unfiltered",
+      "passed": true
+    },
+    {
+      "check": "liquid: note text is unchanged",
+      "passed": true
+    },
+    {
+      "check": "liquid: mind map keeps the paper visible",
+      "passed": true
+    },
+    {
+      "check": "Visible paper pixels are identical across all three material styles",
+      "passed": true
+    },
+    {
+      "check": "sky: environment theme switches",
+      "passed": true
+    },
+    {
+      "check": "warm: environment theme switches",
+      "passed": true
+    },
+    {
+      "check": "mist: environment theme switches",
+      "passed": true
+    },
+    {
+      "check": "Selected pen color and width affect a real trial stroke",
+      "passed": true
+    },
+    {
+      "check": "Undo removes the trial stroke",
+      "passed": true
+    },
+    {
+      "check": "Redo restores the trial stroke",
+      "passed": true
+    },
+    {
+      "check": "Hiding the active layer hides its ink and original annotations",
+      "passed": true
+    },
+    {
+      "check": "Hidden layers reject trial ink without silently switching layers",
+      "passed": true
+    },
+    {
+      "check": "Layer opacity changes the rendered ink",
+      "passed": true
+    },
+    {
+      "check": "Draft selection and visibility both work",
+      "passed": true
+    },
+    {
+      "check": "Highlighter creates translucent ink on selected layer",
+      "passed": true
+    },
+    {
+      "check": "Eraser removes hit trial stroke only",
+      "passed": true
+    },
+    {
+      "check": "Erasing a stroke can itself be undone",
+      "passed": true
+    },
+    {
+      "check": "Erasing can be redone",
+      "passed": true
+    },
+    {
+      "check": "Reading mode allows underlying document interaction",
+      "passed": true
+    },
+    {
+      "check": "Reading mode does not add ink",
+      "passed": true
+    },
+    {
+      "check": "Map source action scrolls actual corresponding section into view",
+      "passed": true
+    },
+    {
+      "check": "Closing map retains actual source scroll context",
+      "passed": true
+    },
+    {
+      "check": "Prototype limitations are visible in the dialog",
+      "passed": true
+    },
+    {
+      "check": "Dialog supports Escape and returns focus",
+      "passed": true
+    },
+    {
+      "check": "Reload resets trial ink and does not pretend to save",
+      "passed": true
+    },
+    {
+      "check": "No persistent storage is written",
+      "passed": true
+    },
+    {
+      "check": "1200: no page-level horizontal overflow",
+      "passed": true
+    },
+    {
+      "check": "1200: map is not fullscreen and source stays readable",
+      "passed": true
+    },
+    {
+      "check": "1200: simultaneous panels stay above status bar",
+      "passed": true
+    },
+    {
+      "check": "800: no page-level horizontal overflow",
+      "passed": true
+    },
+    {
+      "check": "800: map is not fullscreen and source stays readable",
+      "passed": true
+    },
+    {
+      "check": "800: simultaneous panels stay above status bar",
+      "passed": true
+    },
+    {
+      "check": "390: no page-level horizontal overflow",
+      "passed": true
+    },
+    {
+      "check": "390: map is not fullscreen and source stays readable",
+      "passed": true
+    },
+    {
+      "check": "390: selected definition is actually visible with map",
+      "passed": true
+    },
+    {
+      "check": "390: all four map concepts fit without clipping",
+      "passed": true
+    },
+    {
+      "check": "390: reading toggle stays reachable",
+      "passed": true
+    },
+    {
+      "check": "390: switching panels avoids cramped simultaneous narrow panels",
+      "passed": true
+    },
+    {
+      "check": "375: no page-level horizontal overflow",
+      "passed": true
+    },
+    {
+      "check": "375: map is not fullscreen and source stays readable",
+      "passed": true
+    },
+    {
+      "check": "375: selected definition is actually visible with map",
+      "passed": true
+    },
+    {
+      "check": "375: all four map concepts fit without clipping",
+      "passed": true
+    },
+    {
+      "check": "375: reading toggle stays reachable",
+      "passed": true
+    },
+    {
+      "check": "375: switching panels avoids cramped simultaneous narrow panels",
+      "passed": true
+    },
+    {
+      "check": "Reduced motion disables spring transitions",
+      "passed": true
+    },
+    {
+      "check": "No JavaScript runtime errors",
+      "passed": true
+    },
+    {
+      "check": "Application makes no external resource or data requests",
+      "passed": true
+    }
+  ],
+  "runtime_errors": [],
+  "note": "Synthetic content only. No device, native latency, pressure, palm rejection or persistence claims."
+}
