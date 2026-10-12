@@ -21,7 +21,7 @@ root=Path(__file__).resolve().parents[1]
 plan=json.loads((root/"android-plan.json").read_text())
 out=root/"android/build/evidence";out.mkdir(parents=True,exist_ok=True)
 
-def adb(*args): return subprocess.check_output(["adb",*args],text=True,errors="replace",timeout=180)
+def adb(*args,timeout=180): return subprocess.check_output(["adb",*args],text=True,errors="replace",timeout=timeout)
 
 suite_failures=[]
 for module,key,runner in [("data-local","room","org.inkweft.data.test/androidx.test.runner.AndroidJUnitRunner"),
@@ -79,8 +79,10 @@ for module,key,runner in [("data-local","room","org.inkweft.data.test/androidx.t
                 raise
             finally:
                 (case_dir/"setup.txt").write_text("\n".join(setup),encoding="utf-8")
+        # Ten durable v2 snapshots plus quota/delete recovery measured 244 s on the owned emulator.
+        case_timeout=360 if selection=="org.inkweft.app.BackupReliabilityUiTest#tenVersionsCanBeManagedFromUiWithoutDeletingLocalNotes" else 180
         try:
-            result=adb("shell","am","instrument","-w","-e","class",selection,runner)
+            result=adb("shell","am","instrument","-w","-e","class",selection,runner,timeout=case_timeout)
         except subprocess.TimeoutExpired as error:
             raw=error.stdout or b""
             result=(raw.decode("utf-8",errors="replace") if isinstance(raw,bytes) else raw)+"\nRUNNER_TIMEOUT\n"
@@ -93,7 +95,7 @@ for module,key,runner in [("data-local","room","org.inkweft.data.test/androidx.t
                 print(f"Timeout diagnostics unavailable: {type(diagnostic_error).__name__}",flush=True)
         (case_dir/"instrumentation.txt").write_text(result,encoding="utf-8")
         (case_dir/"selection.txt").write_text(selection,encoding="utf-8")
-        (case_dir/"round.json").write_text(json.dumps({"round":round_id,"selection":selection,"source":os.environ.get("INKWEFT_HEAD_SHA")}),encoding="utf-8")
+        (case_dir/"round.json").write_text(json.dumps({"round":round_id,"selection":selection,"source":os.environ.get("INKWEFT_HEAD_SHA"),"timeout_seconds":case_timeout}),encoding="utf-8")
         executed+=expected
         match=re.search(r"^OK \((\d+) tests?\)\s*$",result,re.M)
         passed=bool(match and int(match.group(1))==expected and "FAILURES!!!" not in result and "RUNNER_TIMEOUT" not in result)

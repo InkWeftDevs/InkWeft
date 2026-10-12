@@ -32,8 +32,9 @@
       "status": "PASS"
     },
     "ci": {
-      "tests": 68,
-      "status": "PASS"
+      "tests": 69,
+      "status": "PASS",
+      "scope": "Local workflow/scope/artifact host checks; no claim that GitHub jobs ran."
     },
     "androidJvm": {
       "core-domain": {
@@ -48,6 +49,12 @@
         "errors": 0,
         "xmlFiles": 4
       }
+    },
+    "lint": {
+      "Fatal": 0,
+      "Error": 0,
+      "Warning": 178,
+      "Hint": 2
     }
   },
   "docker": {
@@ -87,6 +94,15 @@
       "output": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\verification\\device-attempt01\\archive-2g-export-runner.txt",
       "name": "archive-2g-export",
       "tests": 1,
+      "methods": [
+        {
+          "className": "org.inkweft.data.LargeBackupArchiveBridgeTest",
+          "method": "exportOrRestoreActualAuthorArchive",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        }
+      ],
       "metrics": [
         {
           "kind": "LARGE_ARCHIVE_EVIDENCE",
@@ -133,6 +149,15 @@
       "output": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\verification\\device-attempt01\\archive-600m-export-runner.txt",
       "name": "archive-600m-export",
       "tests": 1,
+      "methods": [
+        {
+          "className": "org.inkweft.data.LargeBackupArchiveBridgeTest",
+          "method": "exportOrRestoreActualAuthorArchive",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        }
+      ],
       "metrics": [
         {
           "kind": "LARGE_ARCHIVE_EVIDENCE",
@@ -179,6 +204,15 @@
       "output": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\verification\\device-attempt01\\archive-8g-export-runner.txt",
       "name": "archive-8g-export",
       "tests": 1,
+      "methods": [
+        {
+          "className": "org.inkweft.data.LargeBackupArchiveBridgeTest",
+          "method": "exportOrRestoreActualAuthorArchive",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        }
+      ],
       "metrics": [
         {
           "kind": "LARGE_ARCHIVE_EVIDENCE",
@@ -252,6 +286,7 @@
       "output": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\verification\\device-attempt01\\cloud-2g-download-after-bitmap-runner.txt",
       "name": "cloud-2g-download-after-bitmap",
       "tests": null,
+      "methods": [],
       "metrics": [
         {
           "kind": "LARGE_CLOUD_EVIDENCE",
@@ -304,6 +339,7 @@
       "output": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\verification\\device-attempt01\\cloud-2g-download-after-write-runner.txt",
       "name": "cloud-2g-download-after-write",
       "tests": null,
+      "methods": [],
       "metrics": [
         {
           "kind": "LARGE_CLOUD_EVIDENCE",
@@ -356,6 +392,7 @@
       "output": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\verification\\device-attempt01\\cloud-2g-download-before-bitmap-runner.txt",
       "name": "cloud-2g-download-before-bitmap",
       "tests": null,
+      "methods": [],
       "metrics": [
         {
           "kind": "LARGE_CLOUD_EVIDENCE",
@@ -399,6 +436,15 @@
       "output": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\verification\\device-attempt01\\cloud-2g-prepare-ready-v91-runner.txt",
       "name": "cloud-2g-prepare-ready-v91",
       "tests": 1,
+      "methods": [
+        {
+          "className": "org.inkweft.app.LargeCloudEngineTest",
+          "method": "transferAndRestoreSyntheticLibraryWithDurableClientState",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        }
+      ],
       "metrics": [
         {
           "kind": "LARGE_CLOUD_EVIDENCE",
@@ -444,6 +490,15 @@
       "output": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\verification\\device-attempt01\\cloud-2g-restore-v91-runner.txt",
       "name": "cloud-2g-restore-v91",
       "tests": 1,
+      "methods": [
+        {
+          "className": "org.inkweft.app.LargeCloudEngineTest",
+          "method": "transferAndRestoreSyntheticLibraryWithDurableClientState",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        }
+      ],
       "metrics": [
         {
           "kind": "LARGE_CLOUD_EVIDENCE",
@@ -517,6 +572,15 @@
       "output": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\verification\\device-attempt01\\cloud-2g-upload-v91-runner.txt",
       "name": "cloud-2g-upload-v91",
       "tests": 1,
+      "methods": [
+        {
+          "className": "org.inkweft.app.LargeCloudEngineTest",
+          "method": "transferAndRestoreSyntheticLibraryWithDurableClientState",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        }
+      ],
       "metrics": [
         {
           "kind": "LARGE_CLOUD_EVIDENCE",
@@ -665,6 +729,22 @@
       "output": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\verification\\device-attempt01\\cloud-600m-prepare-v91-runner.txt",
       "name": "cloud-600m-prepare-v91",
       "tests": 2,
+      "methods": [
+        {
+          "className": "org.inkweft.app.LargeCloudEngineTest",
+          "method": "transferAndRestoreSyntheticLibraryWithDurableClientState",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.app.EncryptedBackupIntegrationTest",
+          "method": "v2ManifestDigestMatchesIndependentCanonicalVector",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        }
+      ],
       "metrics": [
         {
           "kind": "LARGE_CLOUD_EVIDENCE",
@@ -709,6 +789,15 @@
       "output": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\verification\\device-attempt01\\cloud-600m-restore-v91-runner.txt",
       "name": "cloud-600m-restore-v91",
       "tests": 1,
+      "methods": [
+        {
+          "className": "org.inkweft.app.LargeCloudEngineTest",
+          "method": "transferAndRestoreSyntheticLibraryWithDurableClientState",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        }
+      ],
       "metrics": [
         {
           "kind": "LARGE_CLOUD_EVIDENCE",
@@ -754,6 +843,15 @@
       "output": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\verification\\device-attempt01\\cloud-600m-upload-v91-runner.txt",
       "name": "cloud-600m-upload-v91",
       "tests": 1,
+      "methods": [
+        {
+          "className": "org.inkweft.app.LargeCloudEngineTest",
+          "method": "transferAndRestoreSyntheticLibraryWithDurableClientState",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        }
+      ],
       "metrics": [
         {
           "kind": "LARGE_CLOUD_EVIDENCE",
@@ -776,6 +874,827 @@
             "state": "PUBLISHED",
             "readBytesThisProcess": 629193904,
             "seconds": 49.398612349
+          }
+        }
+      ]
+    },
+    {
+      "classes": [
+        "LargeCloudEngineProbe"
+      ],
+      "exitCode": 0,
+      "passed": true,
+      "expectedTermination": null,
+      "seconds": 58.375,
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\artifacts\\candidate-v91-final-transient-memory\\app-debug.apk",
+          "bytes": 178717356,
+          "sha256": "4d9ce6717ca2b613c423333a27a4c125ab772d2717d9195da332599d1158dc01",
+          "package": "org.inkweft.app.cloud20261012"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\artifacts\\candidate-v91-final-transient-memory\\app-debug-androidTest.apk",
+          "bytes": 17940792,
+          "sha256": "4752e3482744f48a7ec8edd43467a56aa1396d9c8917baff2b241c20896cb1dc",
+          "package": "org.inkweft.app.cloud20261012.test"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\artifacts\\candidate-v91-final-transient-memory\\data-local-debug-androidTest.apk",
+          "bytes": 26273597,
+          "sha256": "e4e31e05ebd8f13ffc598fd2ef357897483109d7f7ab78d3a05bc82da873b317",
+          "package": "org.inkweft.data.cloud20261012.test"
+        }
+      ],
+      "output": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\verification\\device-attempt01\\cloud-8g-download-first-slice-v91-runner.txt",
+      "name": "cloud-8g-download-first-slice-v91",
+      "tests": 1,
+      "methods": [
+        {
+          "className": "org.inkweft.app.LargeCloudEngineProbe",
+          "method": "transferAndRestoreSyntheticLibraryWithDurableClientState",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        }
+      ],
+      "metrics": [
+        {
+          "kind": "LARGE_CLOUD_EVIDENCE",
+          "value": {
+            "phase": "download-slice",
+            "plainBytes": 8589934592,
+            "received": 682,
+            "slice": 1
+          }
+        }
+      ]
+    },
+    {
+      "classes": [
+        "LargeCloudEngineTest"
+      ],
+      "exitCode": 0,
+      "passed": true,
+      "expectedTermination": null,
+      "seconds": 225.157,
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\artifacts\\candidate-publication-checkpoints\\app-debug.apk",
+          "bytes": 178716324,
+          "sha256": "464c843445f9194270d3f9385ffe94331915f6118b0eebc9fb133cc147785ce2",
+          "package": "org.inkweft.app.cloud20261012"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\artifacts\\candidate-v91-native-fault-tests\\app-debug-androidTest.apk",
+          "bytes": 17924340,
+          "sha256": "451fe3f4f9a3382a63df4a269eea63a8f551a8f73e6be6d549d258852d09e64d",
+          "package": "org.inkweft.app.cloud20261012.test"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\artifacts\\candidate-publication-checkpoints\\data-local-debug-androidTest.apk",
+          "bytes": 26273549,
+          "sha256": "aa3510185c090b2f9bd281ed237073cc21bd70ef0101096964ad1e36ae3f228f",
+          "package": "org.inkweft.data.cloud20261012.test"
+        }
+      ],
+      "output": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\verification\\device-attempt01\\cloud-8g-prepare-v91-runner.txt",
+      "name": "cloud-8g-prepare-v91",
+      "tests": 1,
+      "methods": [
+        {
+          "className": "org.inkweft.app.LargeCloudEngineTest",
+          "method": "transferAndRestoreSyntheticLibraryWithDurableClientState",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        }
+      ],
+      "metrics": [
+        {
+          "kind": "LARGE_CLOUD_EVIDENCE",
+          "value": {
+            "phase": "prepared",
+            "plainBytes": 8589934592,
+            "cipherBytes": 8590590254,
+            "chunks": 8193,
+            "archiveChecksum": "db01b237e5972b3175b6d6b2de7ebda38cfdc2c0e036442b1145c7446134b553",
+            "seconds": 220.048464513
+          }
+        }
+      ]
+    },
+    {
+      "classes": [
+        "LargeCloudEngineProbe"
+      ],
+      "exitCode": 0,
+      "passed": true,
+      "expectedTermination": null,
+      "seconds": 1175.86,
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\artifacts\\candidate-v91-final-transient-memory\\app-debug.apk",
+          "bytes": 178717356,
+          "sha256": "4d9ce6717ca2b613c423333a27a4c125ab772d2717d9195da332599d1158dc01",
+          "package": "org.inkweft.app.cloud20261012"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\artifacts\\candidate-v91-final-transient-memory\\app-debug-androidTest.apk",
+          "bytes": 17940792,
+          "sha256": "4752e3482744f48a7ec8edd43467a56aa1396d9c8917baff2b241c20896cb1dc",
+          "package": "org.inkweft.app.cloud20261012.test"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\artifacts\\candidate-v91-final-transient-memory\\data-local-debug-androidTest.apk",
+          "bytes": 26273597,
+          "sha256": "e4e31e05ebd8f13ffc598fd2ef357897483109d7f7ab78d3a05bc82da873b317",
+          "package": "org.inkweft.data.cloud20261012.test"
+        }
+      ],
+      "output": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\verification\\device-attempt01\\cloud-8g-restore-resumed-v91-runner.txt",
+      "name": "cloud-8g-restore-resumed-v91",
+      "tests": 1,
+      "methods": [
+        {
+          "className": "org.inkweft.app.LargeCloudEngineProbe",
+          "method": "transferAndRestoreSyntheticLibraryWithDurableClientState",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        }
+      ],
+      "metrics": [
+        {
+          "kind": "LARGE_CLOUD_EVIDENCE",
+          "value": {
+            "phase": "download-slice",
+            "plainBytes": 8589934592,
+            "received": 1344,
+            "slice": 1
+          }
+        },
+        {
+          "kind": "LARGE_CLOUD_EVIDENCE",
+          "value": {
+            "phase": "download-slice",
+            "plainBytes": 8589934592,
+            "received": 2010,
+            "slice": 2
+          }
+        },
+        {
+          "kind": "LARGE_CLOUD_EVIDENCE",
+          "value": {
+            "phase": "download-slice",
+            "plainBytes": 8589934592,
+            "received": 2582,
+            "slice": 3
+          }
+        },
+        {
+          "kind": "LARGE_CLOUD_EVIDENCE",
+          "value": {
+            "phase": "download-slice",
+            "plainBytes": 8589934592,
+            "received": 3259,
+            "slice": 4
+          }
+        },
+        {
+          "kind": "LARGE_CLOUD_EVIDENCE",
+          "value": {
+            "phase": "download-slice",
+            "plainBytes": 8589934592,
+            "received": 3920,
+            "slice": 5
+          }
+        },
+        {
+          "kind": "LARGE_CLOUD_EVIDENCE",
+          "value": {
+            "phase": "download-slice",
+            "plainBytes": 8589934592,
+            "received": 4590,
+            "slice": 6
+          }
+        },
+        {
+          "kind": "LARGE_CLOUD_EVIDENCE",
+          "value": {
+            "phase": "download-slice",
+            "plainBytes": 8589934592,
+            "received": 5301,
+            "slice": 7
+          }
+        },
+        {
+          "kind": "LARGE_CLOUD_EVIDENCE",
+          "value": {
+            "phase": "download-slice",
+            "plainBytes": 8589934592,
+            "received": 5959,
+            "slice": 8
+          }
+        },
+        {
+          "kind": "LARGE_CLOUD_EVIDENCE",
+          "value": {
+            "phase": "download-slice",
+            "plainBytes": 8589934592,
+            "received": 6634,
+            "slice": 9
+          }
+        },
+        {
+          "kind": "LARGE_CLOUD_EVIDENCE",
+          "value": {
+            "phase": "download-slice",
+            "plainBytes": 8589934592,
+            "received": 7341,
+            "slice": 10
+          }
+        },
+        {
+          "kind": "LARGE_CLOUD_EVIDENCE",
+          "value": {
+            "phase": "download-slice",
+            "plainBytes": 8589934592,
+            "received": 8048,
+            "slice": 11
+          }
+        },
+        {
+          "kind": "LARGE_CLOUD_EVIDENCE",
+          "value": {
+            "phase": "native-client-empty-library-restored",
+            "plainBytes": 8589934592,
+            "notes": 17,
+            "slicesThisProcess": 12,
+            "archiveChecksum": "db01b237e5972b3175b6d6b2de7ebda38cfdc2c0e036442b1145c7446134b553",
+            "seconds": 1172.999548007,
+            "freeBytes": 91918962688
+          }
+        }
+      ]
+    },
+    {
+      "classes": [
+        "LargeCloudEngineProbe"
+      ],
+      "exitCode": 0,
+      "passed": true,
+      "expectedTermination": null,
+      "seconds": 58.343,
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\artifacts\\candidate-v91-final-transient-memory\\app-debug.apk",
+          "bytes": 178717356,
+          "sha256": "4d9ce6717ca2b613c423333a27a4c125ab772d2717d9195da332599d1158dc01",
+          "package": "org.inkweft.app.cloud20261012"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\artifacts\\candidate-v91-final-transient-memory\\app-debug-androidTest.apk",
+          "bytes": 17940792,
+          "sha256": "4752e3482744f48a7ec8edd43467a56aa1396d9c8917baff2b241c20896cb1dc",
+          "package": "org.inkweft.app.cloud20261012.test"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\artifacts\\candidate-v91-final-transient-memory\\data-local-debug-androidTest.apk",
+          "bytes": 26273597,
+          "sha256": "e4e31e05ebd8f13ffc598fd2ef357897483109d7f7ab78d3a05bc82da873b317",
+          "package": "org.inkweft.data.cloud20261012.test"
+        }
+      ],
+      "output": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\verification\\device-attempt01\\cloud-8g-upload-first-slice-v91-runner.txt",
+      "name": "cloud-8g-upload-first-slice-v91",
+      "tests": 1,
+      "methods": [
+        {
+          "className": "org.inkweft.app.LargeCloudEngineProbe",
+          "method": "transferAndRestoreSyntheticLibraryWithDurableClientState",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        }
+      ],
+      "metrics": [
+        {
+          "kind": "LARGE_CLOUD_EVIDENCE",
+          "value": {
+            "phase": "upload-slice",
+            "plainBytes": 8589934592,
+            "slice": 1,
+            "received": 443,
+            "verified": 0,
+            "state": "PENDING",
+            "localReadBytes": 464519168,
+            "message": "本段执行已结束，后台按原期限继续"
+          }
+        },
+        {
+          "kind": "LARGE_CLOUD_EVIDENCE",
+          "value": {
+            "phase": "upload-finished-or-resumable",
+            "plainBytes": 8589934592,
+            "state": "PENDING",
+            "readBytesThisProcess": 464519168,
+            "seconds": 55.343618015
+          }
+        }
+      ]
+    },
+    {
+      "classes": [
+        "LargeCloudEngineProbe"
+      ],
+      "exitCode": 0,
+      "passed": true,
+      "expectedTermination": null,
+      "seconds": 971.984,
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\artifacts\\candidate-v91-final-transient-memory\\app-debug.apk",
+          "bytes": 178717356,
+          "sha256": "4d9ce6717ca2b613c423333a27a4c125ab772d2717d9195da332599d1158dc01",
+          "package": "org.inkweft.app.cloud20261012"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\artifacts\\candidate-v91-final-transient-memory\\app-debug-androidTest.apk",
+          "bytes": 17940792,
+          "sha256": "4752e3482744f48a7ec8edd43467a56aa1396d9c8917baff2b241c20896cb1dc",
+          "package": "org.inkweft.app.cloud20261012.test"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\artifacts\\candidate-v91-final-transient-memory\\data-local-debug-androidTest.apk",
+          "bytes": 26273597,
+          "sha256": "e4e31e05ebd8f13ffc598fd2ef357897483109d7f7ab78d3a05bc82da873b317",
+          "package": "org.inkweft.data.cloud20261012.test"
+        }
+      ],
+      "output": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\verification\\device-attempt01\\cloud-8g-upload-resumed-v91-runner.txt",
+      "name": "cloud-8g-upload-resumed-v91",
+      "tests": 1,
+      "methods": [
+        {
+          "className": "org.inkweft.app.LargeCloudEngineProbe",
+          "method": "transferAndRestoreSyntheticLibraryWithDurableClientState",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        }
+      ],
+      "metrics": [
+        {
+          "kind": "LARGE_CLOUD_EVIDENCE",
+          "value": {
+            "phase": "upload-slice",
+            "plainBytes": 8589934592,
+            "slice": 1,
+            "received": 864,
+            "verified": 0,
+            "state": "PENDING",
+            "localReadBytes": 441450496,
+            "message": "本段执行已结束，后台按原期限继续"
+          }
+        },
+        {
+          "kind": "LARGE_CLOUD_EVIDENCE",
+          "value": {
+            "phase": "upload-slice",
+            "plainBytes": 8589934592,
+            "slice": 2,
+            "received": 1363,
+            "verified": 0,
+            "state": "PENDING",
+            "localReadBytes": 523239424,
+            "message": "本段执行已结束，后台按原期限继续"
+          }
+        },
+        {
+          "kind": "LARGE_CLOUD_EVIDENCE",
+          "value": {
+            "phase": "upload-slice",
+            "plainBytes": 8589934592,
+            "slice": 3,
+            "received": 1850,
+            "verified": 0,
+            "state": "PENDING",
+            "localReadBytes": 510656512,
+            "message": "本段执行已结束，后台按原期限继续"
+          }
+        },
+        {
+          "kind": "LARGE_CLOUD_EVIDENCE",
+          "value": {
+            "phase": "upload-slice",
+            "plainBytes": 8589934592,
+            "slice": 4,
+            "received": 2347,
+            "verified": 0,
+            "state": "PENDING",
+            "localReadBytes": 521142272,
+            "message": "本段执行已结束，后台按原期限继续"
+          }
+        },
+        {
+          "kind": "LARGE_CLOUD_EVIDENCE",
+          "value": {
+            "phase": "upload-slice",
+            "plainBytes": 8589934592,
+            "slice": 5,
+            "received": 2795,
+            "verified": 0,
+            "state": "PENDING",
+            "localReadBytes": 469762048,
+            "message": "本段执行已结束，后台按原期限继续"
+          }
+        },
+        {
+          "kind": "LARGE_CLOUD_EVIDENCE",
+          "value": {
+            "phase": "upload-slice",
+            "plainBytes": 8589934592,
+            "slice": 6,
+            "received": 3269,
+            "verified": 0,
+            "state": "PENDING",
+            "localReadBytes": 497025024,
+            "message": "本段执行已结束，后台按原期限继续"
+          }
+        },
+        {
+          "kind": "LARGE_CLOUD_EVIDENCE",
+          "value": {
+            "phase": "upload-slice",
+            "plainBytes": 8589934592,
+            "slice": 7,
+            "received": 3863,
+            "verified": 0,
+            "state": "PENDING",
+            "localReadBytes": 622854144,
+            "message": "本段执行已结束，后台按原期限继续"
+          }
+        },
+        {
+          "kind": "LARGE_CLOUD_EVIDENCE",
+          "value": {
+            "phase": "upload-slice",
+            "plainBytes": 8589934592,
+            "slice": 8,
+            "received": 4345,
+            "verified": 0,
+            "state": "PENDING",
+            "localReadBytes": 505413632,
+            "message": "本段执行已结束，后台按原期限继续"
+          }
+        },
+        {
+          "kind": "LARGE_CLOUD_EVIDENCE",
+          "value": {
+            "phase": "upload-slice",
+            "plainBytes": 8589934592,
+            "slice": 9,
+            "received": 4747,
+            "verified": 0,
+            "state": "PENDING",
+            "localReadBytes": 421527552,
+            "message": "本段执行已结束，后台按原期限继续"
+          }
+        },
+        {
+          "kind": "LARGE_CLOUD_EVIDENCE",
+          "value": {
+            "phase": "upload-slice",
+            "plainBytes": 8589934592,
+            "slice": 10,
+            "received": 5214,
+            "verified": 0,
+            "state": "PENDING",
+            "localReadBytes": 489684992,
+            "message": "本段执行已结束，后台按原期限继续"
+          }
+        },
+        {
+          "kind": "LARGE_CLOUD_EVIDENCE",
+          "value": {
+            "phase": "upload-slice",
+            "plainBytes": 8589934592,
+            "slice": 11,
+            "received": 5629,
+            "verified": 0,
+            "state": "PENDING",
+            "localReadBytes": 435159040,
+            "message": "本段执行已结束，后台按原期限继续"
+          }
+        },
+        {
+          "kind": "LARGE_CLOUD_EVIDENCE",
+          "value": {
+            "phase": "upload-slice",
+            "plainBytes": 8589934592,
+            "slice": 12,
+            "received": 6011,
+            "verified": 0,
+            "state": "PENDING",
+            "localReadBytes": 400556032,
+            "message": "本段执行已结束，后台按原期限继续"
+          }
+        },
+        {
+          "kind": "LARGE_CLOUD_EVIDENCE",
+          "value": {
+            "phase": "upload-slice",
+            "plainBytes": 8589934592,
+            "slice": 13,
+            "received": 6459,
+            "verified": 0,
+            "state": "PENDING",
+            "localReadBytes": 469762048,
+            "message": "本段执行已结束，后台按原期限继续"
+          }
+        },
+        {
+          "kind": "LARGE_CLOUD_EVIDENCE",
+          "value": {
+            "phase": "upload-slice",
+            "plainBytes": 8589934592,
+            "slice": 14,
+            "received": 6956,
+            "verified": 0,
+            "state": "PENDING",
+            "localReadBytes": 521142272,
+            "message": "本段执行已结束，后台按原期限继续"
+          }
+        },
+        {
+          "kind": "LARGE_CLOUD_EVIDENCE",
+          "value": {
+            "phase": "upload-slice",
+            "plainBytes": 8589934592,
+            "slice": 15,
+            "received": 7424,
+            "verified": 0,
+            "state": "PENDING",
+            "localReadBytes": 490733568,
+            "message": "本段执行已结束，后台按原期限继续"
+          }
+        },
+        {
+          "kind": "LARGE_CLOUD_EVIDENCE",
+          "value": {
+            "phase": "upload-slice",
+            "plainBytes": 8589934592,
+            "slice": 16,
+            "received": 7907,
+            "verified": 0,
+            "state": "PENDING",
+            "localReadBytes": 506462208,
+            "message": "本段执行已结束，后台按原期限继续"
+          }
+        },
+        {
+          "kind": "LARGE_CLOUD_EVIDENCE",
+          "value": {
+            "phase": "upload-slice",
+            "plainBytes": 8589934592,
+            "slice": 17,
+            "received": 8193,
+            "verified": 329,
+            "state": "PENDING",
+            "localReadBytes": 299499822,
+            "message": "服务器校验进度 329 / 8193，可继续确认发布"
+          }
+        },
+        {
+          "kind": "LARGE_CLOUD_EVIDENCE",
+          "value": {
+            "phase": "upload-slice",
+            "plainBytes": 8589934592,
+            "slice": 18,
+            "received": 8193,
+            "verified": 711,
+            "state": "PENDING",
+            "localReadBytes": 0,
+            "message": "服务器校验进度 711 / 8193，可继续确认发布"
+          }
+        },
+        {
+          "kind": "LARGE_CLOUD_EVIDENCE",
+          "value": {
+            "phase": "upload-slice",
+            "plainBytes": 8589934592,
+            "slice": 19,
+            "received": 8193,
+            "verified": 1087,
+            "state": "PENDING",
+            "localReadBytes": 0,
+            "message": "服务器校验进度 1087 / 8193，可继续确认发布"
+          }
+        },
+        {
+          "kind": "LARGE_CLOUD_EVIDENCE",
+          "value": {
+            "phase": "upload-slice",
+            "plainBytes": 8589934592,
+            "slice": 20,
+            "received": 8193,
+            "verified": 1488,
+            "state": "PENDING",
+            "localReadBytes": 0,
+            "message": "服务器校验进度 1488 / 8193，可继续确认发布"
+          }
+        },
+        {
+          "kind": "LARGE_CLOUD_EVIDENCE",
+          "value": {
+            "phase": "upload-slice",
+            "plainBytes": 8589934592,
+            "slice": 21,
+            "received": 8193,
+            "verified": 1924,
+            "state": "PENDING",
+            "localReadBytes": 0,
+            "message": "服务器校验进度 1924 / 8193，可继续确认发布"
+          }
+        },
+        {
+          "kind": "LARGE_CLOUD_EVIDENCE",
+          "value": {
+            "phase": "upload-slice",
+            "plainBytes": 8589934592,
+            "slice": 22,
+            "received": 8193,
+            "verified": 2368,
+            "state": "PENDING",
+            "localReadBytes": 0,
+            "message": "服务器校验进度 2368 / 8193，可继续确认发布"
+          }
+        },
+        {
+          "kind": "LARGE_CLOUD_EVIDENCE",
+          "value": {
+            "phase": "upload-slice",
+            "plainBytes": 8589934592,
+            "slice": 23,
+            "received": 8193,
+            "verified": 2854,
+            "state": "PENDING",
+            "localReadBytes": 0,
+            "message": "服务器校验进度 2854 / 8193，可继续确认发布"
+          }
+        },
+        {
+          "kind": "LARGE_CLOUD_EVIDENCE",
+          "value": {
+            "phase": "upload-slice",
+            "plainBytes": 8589934592,
+            "slice": 24,
+            "received": 8193,
+            "verified": 3254,
+            "state": "PENDING",
+            "localReadBytes": 0,
+            "message": "服务器校验进度 3254 / 8193，可继续确认发布"
+          }
+        },
+        {
+          "kind": "LARGE_CLOUD_EVIDENCE",
+          "value": {
+            "phase": "upload-slice",
+            "plainBytes": 8589934592,
+            "slice": 25,
+            "received": 8193,
+            "verified": 3730,
+            "state": "PENDING",
+            "localReadBytes": 0,
+            "message": "服务器校验进度 3730 / 8193，可继续确认发布"
+          }
+        },
+        {
+          "kind": "LARGE_CLOUD_EVIDENCE",
+          "value": {
+            "phase": "upload-slice",
+            "plainBytes": 8589934592,
+            "slice": 26,
+            "received": 8193,
+            "verified": 4231,
+            "state": "PENDING",
+            "localReadBytes": 0,
+            "message": "服务器校验进度 4231 / 8193，可继续确认发布"
+          }
+        },
+        {
+          "kind": "LARGE_CLOUD_EVIDENCE",
+          "value": {
+            "phase": "upload-slice",
+            "plainBytes": 8589934592,
+            "slice": 27,
+            "received": 8193,
+            "verified": 4699,
+            "state": "PENDING",
+            "localReadBytes": 0,
+            "message": "服务器校验进度 4699 / 8193，可继续确认发布"
+          }
+        },
+        {
+          "kind": "LARGE_CLOUD_EVIDENCE",
+          "value": {
+            "phase": "upload-slice",
+            "plainBytes": 8589934592,
+            "slice": 28,
+            "received": 8193,
+            "verified": 5079,
+            "state": "PENDING",
+            "localReadBytes": 0,
+            "message": "服务器校验进度 5079 / 8193，可继续确认发布"
+          }
+        },
+        {
+          "kind": "LARGE_CLOUD_EVIDENCE",
+          "value": {
+            "phase": "upload-slice",
+            "plainBytes": 8589934592,
+            "slice": 29,
+            "received": 8193,
+            "verified": 5489,
+            "state": "PENDING",
+            "localReadBytes": 0,
+            "message": "服务器校验进度 5489 / 8193，可继续确认发布"
+          }
+        },
+        {
+          "kind": "LARGE_CLOUD_EVIDENCE",
+          "value": {
+            "phase": "upload-slice",
+            "plainBytes": 8589934592,
+            "slice": 30,
+            "received": 8193,
+            "verified": 5976,
+            "state": "PENDING",
+            "localReadBytes": 0,
+            "message": "服务器校验进度 5976 / 8193，可继续确认发布"
+          }
+        },
+        {
+          "kind": "LARGE_CLOUD_EVIDENCE",
+          "value": {
+            "phase": "upload-slice",
+            "plainBytes": 8589934592,
+            "slice": 31,
+            "received": 8193,
+            "verified": 6449,
+            "state": "PENDING",
+            "localReadBytes": 0,
+            "message": "服务器校验进度 6449 / 8193，可继续确认发布"
+          }
+        },
+        {
+          "kind": "LARGE_CLOUD_EVIDENCE",
+          "value": {
+            "phase": "upload-slice",
+            "plainBytes": 8589934592,
+            "slice": 32,
+            "received": 8193,
+            "verified": 6976,
+            "state": "PENDING",
+            "localReadBytes": 0,
+            "message": "服务器校验进度 6976 / 8193，可继续确认发布"
+          }
+        },
+        {
+          "kind": "LARGE_CLOUD_EVIDENCE",
+          "value": {
+            "phase": "upload-slice",
+            "plainBytes": 8589934592,
+            "slice": 33,
+            "received": 8193,
+            "verified": 7618,
+            "state": "PENDING",
+            "localReadBytes": 0,
+            "message": "服务器校验进度 7618 / 8193，可继续确认发布"
+          }
+        },
+        {
+          "kind": "LARGE_CLOUD_EVIDENCE",
+          "value": {
+            "phase": "upload-slice",
+            "plainBytes": 8589934592,
+            "slice": 34,
+            "received": 8193,
+            "verified": 8193,
+            "state": "PUBLISHED",
+            "localReadBytes": 0,
+            "message": "加密备份已发布，可在其他设备用恢复密钥导入"
+          }
+        },
+        {
+          "kind": "LARGE_CLOUD_EVIDENCE",
+          "value": {
+            "phase": "upload-finished-or-resumable",
+            "plainBytes": 8589934592,
+            "state": "PUBLISHED",
+            "readBytesThisProcess": 8126071086,
+            "seconds": 968.198142422
           }
         }
       ]
@@ -810,6 +1729,43 @@
       "output": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\verification\\device-attempt01\\first-search-fts-driving-plan-runner.txt",
       "name": "first-search-fts-driving-plan",
       "tests": 5,
+      "methods": [
+        {
+          "className": "org.inkweft.data.LibrarySearchRepositoryTest",
+          "method": "twentyThousandPageRapidInputClearAndCategoryCancelOldGenerationOffMain",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.data.LibrarySearchRepositoryTest",
+          "method": "classificationUsesTheReadSnapshotAfterCancellableInitialIndexing",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.data.LibrarySearchRepositoryTest",
+          "method": "draftUnicodeFiltersPinsAndPageBeforeCardNavigationStayIntact",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.data.LibrarySearchRepositoryTest",
+          "method": "unicodeShortQueriesAndBoundedPagesKeepOrderAndNavigation",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.data.LibrarySearchRepositoryTest",
+          "method": "deletedOrStalePageAndTrashedCardCannotReviveSearchHits",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        }
+      ],
       "metrics": [
         {
           "kind": "FTS_EVIDENCE",
@@ -847,6 +1803,15 @@
       "output": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\verification\\device-attempt01\\history-baseline-runner.txt",
       "name": "history-baseline",
       "tests": 1,
+      "methods": [
+        {
+          "className": "org.inkweft.data.HistoryConcurrencyTest",
+          "method": "largeLibraryAuditAllowsAuthorCommitAndCancellation",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        }
+      ],
       "metrics": [
         {
           "kind": "HISTORY_CONCURRENCY_EVIDENCE",
@@ -897,6 +1862,64 @@
       "output": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\verification\\device-attempt01\\history-cancellation-fixed-runner.txt",
       "name": "history-cancellation-fixed",
       "tests": 8,
+      "methods": [
+        {
+          "className": "org.inkweft.data.HistoryStorageTest",
+          "method": "repeatedCollectionUsesMetadataForThousandsOfVersions",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.data.HistoryStorageTest",
+          "method": "invalidReferenceAbortsWholeCollectionIncludingOrphanPreview",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.data.HistoryStorageTest",
+          "method": "historicalCardSetsRetainEvenTrashedCardsAndOldSources",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.data.HistoryStorageTest",
+          "method": "shadowPayloadProtectsSourcesAndPreviewsUntilItsClosureIsKnown",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.data.HistoryStorageTest",
+          "method": "newReferenceBetweenAuditAndCommitDefersDeletion",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.data.HistoryStorageTest",
+          "method": "transformAndRecallPayloadsRetainIndependentSourceRoots",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.data.HistoryStorageTest",
+          "method": "detachedOldSourcesCollectedLatestSequenceAndAllReceiptsSurviveBackup",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.data.HistoryConcurrencyTest",
+          "method": "largeLibraryAuditAllowsAuthorCommitAndCancellation",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        }
+      ],
       "metrics": [
         {
           "kind": "HISTORY_CONCURRENCY_EVIDENCE",
@@ -959,6 +1982,603 @@
       "output": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\verification\\device-attempt01\\storage-contract-regression-v91-runner.txt",
       "name": "storage-contract-regression-v91",
       "tests": 85,
+      "methods": [
+        {
+          "className": "org.inkweft.data.InkCheckpointTest",
+          "method": "crossPageStorageSliceKeepsPageIdentityAndPersistentCancellation",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.data.InkCheckpointTest",
+          "method": "checkpointCrashCutsKeepOneIdentityAndSealDeduplicates",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.data.InkRepositoryTest",
+          "method": "sameCommandReplaysAndDifferentPayloadRejected",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.data.InkRepositoryTest",
+          "method": "strokePersistsAcrossActualDatabaseReopen",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.data.InkRepositoryTest",
+          "method": "v1DatabaseMigratesWithoutLosingOriginalTextAndReceipts",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.data.InkRepositoryTest",
+          "method": "mixedStoredFormatsReopenAndReplayWithUnchangedCanonicalReceipts",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.data.InkRepositoryTest",
+          "method": "eraseAndUndoRetainExactlyOriginalBytes",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.data.InkRepositoryTest",
+          "method": "twoDatabaseInstancesDoNotOverwriteSameBase",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.data.InkRepositoryTest",
+          "method": "importedPageIsNewIdentityAndDoesNotOverwriteText",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.data.InkRepositoryTest",
+          "method": "commitThenLostReceiptReconcilesByOriginalCommand",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.data.InkRepositoryTest",
+          "method": "previewSkipsHiddenPayloadWhileFullReadStillValidatesHistory",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.data.InkRepositoryTest",
+          "method": "visiblePreviewMatchesFullReadAfterCutsReplacementAndUndo",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.data.InkRepositoryTest",
+          "method": "failureBeforeReceiptRollsBackInkAndPageRevision",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.data.SpatialInkRepositoryTest",
+          "method": "viewportCompletesBeforeOffscreenGeometryAndNewInvalidationsNeverEscapeCoverage",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.data.SpatialInkRepositoryTest",
+          "method": "validationIncludesHiddenInkAndHiddenMasks",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.data.SpatialInkRepositoryTest",
+          "method": "panningDropsUndoGeometryAndPreservesMaskUndoRedo",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.data.SpatialInkRepositoryTest",
+          "method": "fortyThousandStrokesAndTwoMillionPointsRemainWritableCopyableAndVerifiable",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.data.SpatialInkRepositoryTest",
+          "method": "pageChangeAndCancellationAbortStreamingRatherThanReturningACompletePrefix",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.data.SpatialInkRepositoryTest",
+          "method": "viewportCandidatesRespectBoundaryVisibilityPayloadChangesAndDeletion",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.data.SpatialInkRepositoryTest",
+          "method": "storedValidationUsesPageAndIdentityIndexWithoutRepeatedSorting",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.data.SpatialInkRepositoryTest",
+          "method": "cancelledIndexBuildKeepsCommittedProgressAndYieldsToAuthorWrites",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.data.SpatialInkRepositoryTest",
+          "method": "pageBucketCollisionStillFiltersFullIdentityAndOldOrMissingRtreeRebuilds",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.data.SpatialInkRepositoryTest",
+          "method": "boundedWindowNeverPretendsDenseCandidatesAreCompleteAndStreamingHasNoMissingRows",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.data.StreamedStorageRepositoryTest",
+          "method": "pdf300MBImportDuplicateAndFullBackupRestorePreserveOriginals",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.data.StorageHotPathRepositoryTest",
+          "method": "movingImagesPreservesCasAndDamagedNewOrStoredPreviewsAreRejected",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.data.StorageHotPathRepositoryTest",
+          "method": "backupSyncReleasesTheWriterWithoutChangingItsCapturedSnapshot",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.data.StorageHotPathRepositoryTest",
+          "method": "sourceOwnershipUsesIdsAndStillRejectsForeignOrRepeatedReferences",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.data.StorageHotPathRepositoryTest",
+          "method": "failedFinalSnapshotSyncDoesNotPublishOrLeaveItsFile",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.data.StorageHotPathRepositoryTest",
+          "method": "sourceChangedAfterValidationRollsBackTheWholeImportAndReceipt",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.data.StorageHotPathRepositoryTest",
+          "method": "sharedPdfIsValidatedBeforeTransactionAndRehashedOnceDuringAtomicImport",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.data.LibraryBackupRepositoryTest",
+          "method": "trashAndStaleIndexArePreservedButStaleTextIsNotSearchable",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.data.LibraryBackupRepositoryTest",
+          "method": "cancellingWrittenSnapshotRemovesPartialAndPreservesAuthorLibrary",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.data.LibraryBackupRepositoryTest",
+          "method": "streamReadFailureOnlyAffectsIsolatedStage",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.data.LibraryBackupRepositoryTest",
+          "method": "allSupportedArchiveSchemasStillStageIntoTheCurrentRoomContract",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.data.LibraryBackupRepositoryTest",
+          "method": "reorderedCompositePrimaryKeyCannotChangeCanonicalBackupOrder",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.data.LibraryBackupRepositoryTest",
+          "method": "restoredRecordsRemainAfterRealCloseAndReopen",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.data.LibraryBackupRepositoryTest",
+          "method": "preCommitFailureRollsBackAllLiveTables",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.data.LibraryBackupRepositoryTest",
+          "method": "lostAcknowledgementReusesOriginalIdentities",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.data.LibraryBackupRepositoryTest",
+          "method": "legalSnapshotArchivesRejectMergedOverflowAndReplayAtExactCapacity",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.data.LibraryBackupRepositoryTest",
+          "method": "disjointExistingLibraryIsRetainedAndRepeatedRestoreIsNoOp",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.data.LibraryBackupRepositoryTest",
+          "method": "compatibleTextAffinitySpellingIsStillAccepted",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.data.LibraryBackupRepositoryTest",
+          "method": "sameNamedColumnsWithDifferentNullabilityCannotBeBackedUp",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.data.LibraryBackupRepositoryTest",
+          "method": "unknownTablesCannotBeSilentlyOmitted",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.data.LibraryBackupRepositoryTest",
+          "method": "sameNamedColumnsWithDifferentAffinityCannotBeCoercedIntoBackup",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.data.LibraryBackupRepositoryTest",
+          "method": "changedIdentityStopsEntireRestoreWithoutOverwritingNewWork",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.data.LibraryBackupRepositoryTest",
+          "method": "roundTripPreservesOriginalIdsHiddenInkMasksHistoryAndMetadata",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.data.LibraryBackupRepositoryTest",
+          "method": "orphanHistoricalReferencesPreventExport",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.data.LibraryBackupRepositoryTest",
+          "method": "damagedFooterNeverTouchesLiveLibrary",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.data.LibraryBackupRepositoryTest",
+          "method": "emptyBackupDoesNotEraseExistingData",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.data.LibraryBackupIsolationTest",
+          "method": "isolatedCopyFailureAndCancellationRemoveOnlyPrivateFiles",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.data.LibraryBackupIsolationTest",
+          "method": "exactPreflightIncludesRepeatedOriginalsAndLeavesSharedFilesOwnedByAuthor",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.data.LibraryBackupIsolationTest",
+          "method": "cloudLimitAndSpaceRejectBeforeIsolatedCopyOrArchive",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.data.LibraryBackupIsolationTest",
+          "method": "walSnapshotKeepsOneGenerationWhileAuthorTransactionCommits",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.data.LibraryBackupGuardTest",
+          "method": "unrelatedCommandIdCollisionRollsBackRestoredLibrary",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.data.LibraryBackupGuardTest",
+          "method": "rawOutOfRangeIntegersCannotMasqueradeAsValidRoomValues",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.data.LibraryBackupGuardTest",
+          "method": "invalidViewportAndUnknownReceiptKindAreRejected",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.data.LibraryBackupGuardTest",
+          "method": "extraTableWhoseNameResemblesSQLitePrefixIsNotIgnored",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.data.OriginalStorageRepositoryTest",
+          "method": "corruptOldChunksAreNeverRemovedByMigration",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.data.OriginalStorageRepositoryTest",
+          "method": "missingOwnedFileCannotBeMaskedByARebuildableRenderCache",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.data.OriginalStorageRepositoryTest",
+          "method": "oldChunksRetryAfterPublicationThenVacuumReturnsPhysicalDatabaseSpace",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.data.OriginalStorageRepositoryTest",
+          "method": "laterCorruptionStillReclaimsSuccessfullyMigratedDatabaseBytes",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.data.OriginalStorageRepositoryTest",
+          "method": "restoreRollbackLeavesNoReferencesAndOrphanCollectionReleasesItsBytes",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.data.OriginalStorageRepositoryTest",
+          "method": "lowSpaceDefersCompactionAndRetryReclaimsWithoutChangingOriginals",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.data.OriginalStorageRepositoryTest",
+          "method": "corruptionIsReportedAndBothReferenceAndDamagedFileRemain",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.data.OriginalStorageRepositoryTest",
+          "method": "referencedTrashedAndLeasedOriginalsSurviveUntilTheirLastRetainerIsReleased",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.data.OriginalStorageRepositoryTest",
+          "method": "cleanupFailureKeepsOriginalErrorAndRetryCompactsBeforeRevisitingBadSource",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.data.OriginalStorageRepositoryTest",
+          "method": "importCopyAndBackupUseOneFilePerDigestAndNoLiveSqliteBlobs",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.data.OriginalStorageRepositoryTest",
+          "method": "schema18MigrationAddsIndexedDigestLookupAndRetainsItsChunkOriginal",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.data.AuthoringProjectionRegressionTest",
+          "method": "projectedIdsIncludeHistoryButFullInkAndObjectReadsStillValidatePayloads",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.data.AuthoringProjectionRegressionTest",
+          "method": "firstStrokePast22000RetainedRowsCommitsAndKeepsHiddenAuthorBytes",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.data.AuthoringProjectionRegressionTest",
+          "method": "bulkReplacementInheritsEachSourceLayerAndLockedBatchRemainsAtomic",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.data.LibrarySearchRepositoryTest",
+          "method": "twentyThousandPageRapidInputClearAndCategoryCancelOldGenerationOffMain",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.data.LibrarySearchRepositoryTest",
+          "method": "classificationUsesTheReadSnapshotAfterCancellableInitialIndexing",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.data.LibrarySearchRepositoryTest",
+          "method": "draftUnicodeFiltersPinsAndPageBeforeCardNavigationStayIntact",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.data.LibrarySearchRepositoryTest",
+          "method": "unicodeShortQueriesAndBoundedPagesKeepOrderAndNavigation",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.data.LibrarySearchRepositoryTest",
+          "method": "deletedOrStalePageAndTrashedCardCannotReviveSearchHits",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.data.HistoryStorageTest",
+          "method": "repeatedCollectionUsesMetadataForThousandsOfVersions",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.data.HistoryStorageTest",
+          "method": "invalidReferenceAbortsWholeCollectionIncludingOrphanPreview",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.data.HistoryStorageTest",
+          "method": "historicalCardSetsRetainEvenTrashedCardsAndOldSources",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.data.HistoryStorageTest",
+          "method": "shadowPayloadProtectsSourcesAndPreviewsUntilItsClosureIsKnown",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.data.HistoryStorageTest",
+          "method": "newReferenceBetweenAuditAndCommitDefersDeletion",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.data.HistoryStorageTest",
+          "method": "transformAndRecallPayloadsRetainIndependentSourceRoots",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.data.HistoryStorageTest",
+          "method": "detachedOldSourcesCollectedLatestSequenceAndAllReceiptsSurviveBackup",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.data.BundledSqliteFactoryTest",
+          "method": "nativeRtreeTransactionsReopenAndCorruptionKeepOriginalFiles",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.data.BundledSqliteFactoryTest",
+          "method": "existing1024ByteDatabaseRetainsPageSizeAndAuthorContent",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        }
+      ],
       "metrics": [
         {
           "kind": "PAGE_COPY_EVIDENCE",
@@ -1060,6 +2680,15 @@
       "output": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\verification\\device-attempt01\\tile-baseline-01-runner.txt",
       "name": "tile-baseline-01",
       "tests": 1,
+      "methods": [
+        {
+          "className": "org.inkweft.app.TileLocalRedrawTest",
+          "method": "oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        }
+      ],
       "metrics": [
         {
           "kind": "TILE_LOCAL_EVIDENCE",
@@ -1153,6 +2782,15 @@
       "output": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\verification\\device-attempt01\\tile-baseline-02-runner.txt",
       "name": "tile-baseline-02",
       "tests": 1,
+      "methods": [
+        {
+          "className": "org.inkweft.app.TileLocalRedrawTest",
+          "method": "oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        }
+      ],
       "metrics": [
         {
           "kind": "TILE_LOCAL_EVIDENCE",
@@ -1246,6 +2884,15 @@
       "output": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\verification\\device-attempt01\\tile-baseline-03-runner.txt",
       "name": "tile-baseline-03",
       "tests": 1,
+      "methods": [
+        {
+          "className": "org.inkweft.app.TileLocalRedrawTest",
+          "method": "oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        }
+      ],
       "metrics": [
         {
           "kind": "TILE_LOCAL_EVIDENCE",
@@ -1339,6 +2986,15 @@
       "output": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\verification\\device-attempt01\\tile-baseline-04-runner.txt",
       "name": "tile-baseline-04",
       "tests": 1,
+      "methods": [
+        {
+          "className": "org.inkweft.app.TileLocalRedrawTest",
+          "method": "oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        }
+      ],
       "metrics": [
         {
           "kind": "TILE_LOCAL_EVIDENCE",
@@ -1432,6 +3088,15 @@
       "output": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\verification\\device-attempt01\\tile-baseline-05-runner.txt",
       "name": "tile-baseline-05",
       "tests": 1,
+      "methods": [
+        {
+          "className": "org.inkweft.app.TileLocalRedrawTest",
+          "method": "oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        }
+      ],
       "metrics": [
         {
           "kind": "TILE_LOCAL_EVIDENCE",
@@ -1525,6 +3190,22 @@
       "output": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\verification\\device-attempt01\\tile-optimized-01-runner.txt",
       "name": "tile-optimized-01",
       "tests": 2,
+      "methods": [
+        {
+          "className": "org.inkweft.app.TileLocalRedrawTest",
+          "method": "integralPanReusesInteriorTilesAndZoomPreviewNeverCompletesCapture",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.app.TileLocalRedrawTest",
+          "method": "oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        }
+      ],
       "metrics": [
         {
           "kind": "TILE_PAN_EVIDENCE",
@@ -1628,6 +3309,22 @@
       "output": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\verification\\device-attempt01\\tile-optimized-02-runner.txt",
       "name": "tile-optimized-02",
       "tests": 2,
+      "methods": [
+        {
+          "className": "org.inkweft.app.TileLocalRedrawTest",
+          "method": "integralPanReusesInteriorTilesAndZoomPreviewNeverCompletesCapture",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.app.TileLocalRedrawTest",
+          "method": "oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        }
+      ],
       "metrics": [
         {
           "kind": "TILE_PAN_EVIDENCE",
@@ -1731,6 +3428,22 @@
       "output": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\verification\\device-attempt01\\tile-optimized-03-runner.txt",
       "name": "tile-optimized-03",
       "tests": 2,
+      "methods": [
+        {
+          "className": "org.inkweft.app.TileLocalRedrawTest",
+          "method": "integralPanReusesInteriorTilesAndZoomPreviewNeverCompletesCapture",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.app.TileLocalRedrawTest",
+          "method": "oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        }
+      ],
       "metrics": [
         {
           "kind": "TILE_PAN_EVIDENCE",
@@ -1834,6 +3547,22 @@
       "output": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\verification\\device-attempt01\\tile-optimized-04-runner.txt",
       "name": "tile-optimized-04",
       "tests": 2,
+      "methods": [
+        {
+          "className": "org.inkweft.app.TileLocalRedrawTest",
+          "method": "integralPanReusesInteriorTilesAndZoomPreviewNeverCompletesCapture",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.app.TileLocalRedrawTest",
+          "method": "oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        }
+      ],
       "metrics": [
         {
           "kind": "TILE_PAN_EVIDENCE",
@@ -1937,6 +3666,22 @@
       "output": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\verification\\device-attempt01\\tile-optimized-05-runner.txt",
       "name": "tile-optimized-05",
       "tests": 2,
+      "methods": [
+        {
+          "className": "org.inkweft.app.TileLocalRedrawTest",
+          "method": "integralPanReusesInteriorTilesAndZoomPreviewNeverCompletesCapture",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.app.TileLocalRedrawTest",
+          "method": "oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        }
+      ],
       "metrics": [
         {
           "kind": "TILE_PAN_EVIDENCE",
@@ -2009,8 +3754,1216 @@
           }
         }
       ]
+    },
+    {
+      "classes": [
+        "BackupDeadlineProbe"
+      ],
+      "exitCode": 0,
+      "passed": true,
+      "expectedTermination": null,
+      "seconds": 164.907,
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\artifacts\\candidate-v91-final-transient-memory\\app-debug.apk",
+          "bytes": 178717356,
+          "sha256": "4d9ce6717ca2b613c423333a27a4c125ab772d2717d9195da332599d1158dc01",
+          "package": "org.inkweft.app.cloud20261012"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\artifacts\\candidate-v91-final-transient-memory\\app-debug-androidTest.apk",
+          "bytes": 17940792,
+          "sha256": "4752e3482744f48a7ec8edd43467a56aa1396d9c8917baff2b241c20896cb1dc",
+          "package": "org.inkweft.app.cloud20261012.test"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\artifacts\\candidate-v91-final-transient-memory\\data-local-debug-androidTest.apk",
+          "bytes": 26273597,
+          "sha256": "e4e31e05ebd8f13ffc598fd2ef357897483109d7f7ab78d3a05bc82da873b317",
+          "package": "org.inkweft.data.cloud20261012.test"
+        }
+      ],
+      "output": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\verification\\device-attempt01\\v91-deadline-reconstruction-runner.txt",
+      "name": "v91-deadline-reconstruction",
+      "tests": 1,
+      "methods": [
+        {
+          "className": "org.inkweft.app.BackupDeadlineProbe",
+          "method": "v2TricklingTransferResumesAfterReconstructionBeyondFormerDeadline",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        }
+      ],
+      "metrics": []
+    },
+    {
+      "classes": [
+        "EncryptedBackupIntegrationTest#durableClientQueueRejectsAccountSwitchAndResumesSameOperationAfterRecreation"
+      ],
+      "exitCode": 0,
+      "passed": true,
+      "expectedTermination": null,
+      "seconds": 53.094,
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\artifacts\\candidate-v91-final-transient-memory\\app-debug.apk",
+          "bytes": 178717356,
+          "sha256": "4d9ce6717ca2b613c423333a27a4c125ab772d2717d9195da332599d1158dc01",
+          "package": "org.inkweft.app.cloud20261012"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\artifacts\\candidate-v91-final-transient-memory\\app-debug-androidTest.apk",
+          "bytes": 17940792,
+          "sha256": "4752e3482744f48a7ec8edd43467a56aa1396d9c8917baff2b241c20896cb1dc",
+          "package": "org.inkweft.app.cloud20261012.test"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\artifacts\\candidate-v91-final-transient-memory\\data-local-debug-androidTest.apk",
+          "bytes": 26273597,
+          "sha256": "e4e31e05ebd8f13ffc598fd2ef357897483109d7f7ab78d3a05bc82da873b317",
+          "package": "org.inkweft.data.cloud20261012.test"
+        }
+      ],
+      "output": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\verification\\device-attempt01\\v91-final-account-runner.txt",
+      "name": "v91-final-account",
+      "tests": 1,
+      "methods": [
+        {
+          "className": "org.inkweft.app.EncryptedBackupIntegrationTest",
+          "method": "durableClientQueueRejectsAccountSwitchAndResumesSameOperationAfterRecreation",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        }
+      ],
+      "metrics": []
+    },
+    {
+      "classes": [
+        "EncryptedBackupIntegrationTest#encryptedBackupRoundTripPreservesAuthorClosureAndRejectsAnotherAccount"
+      ],
+      "exitCode": 0,
+      "passed": false,
+      "expectedTermination": null,
+      "seconds": 22.75,
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\artifacts\\candidate-v91-final-transient-memory\\app-debug.apk",
+          "bytes": 178717356,
+          "sha256": "4d9ce6717ca2b613c423333a27a4c125ab772d2717d9195da332599d1158dc01",
+          "package": "org.inkweft.app.cloud20261012"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\artifacts\\candidate-v91-final-transient-memory\\app-debug-androidTest.apk",
+          "bytes": 17940792,
+          "sha256": "4752e3482744f48a7ec8edd43467a56aa1396d9c8917baff2b241c20896cb1dc",
+          "package": "org.inkweft.app.cloud20261012.test"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\artifacts\\candidate-v91-final-transient-memory\\data-local-debug-androidTest.apk",
+          "bytes": 26273597,
+          "sha256": "e4e31e05ebd8f13ffc598fd2ef357897483109d7f7ab78d3a05bc82da873b317",
+          "package": "org.inkweft.data.cloud20261012.test"
+        }
+      ],
+      "output": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\verification\\device-attempt01\\v91-final-closure-runner.txt",
+      "name": "v91-final-closure",
+      "tests": null,
+      "methods": [
+        {
+          "className": "org.inkweft.app.EncryptedBackupIntegrationTest",
+          "method": "encryptedBackupRoundTripPreservesAuthorClosureAndRejectsAnotherAccount",
+          "code": -2,
+          "status": "FAIL",
+          "failure": "java.lang.AssertionError: expected:<404> but was:<422>"
+        }
+      ],
+      "metrics": []
+    },
+    {
+      "classes": [
+        "EncryptedBackupIntegrationTest#encryptedBackupRoundTripPreservesAuthorClosureAndRejectsAnotherAccount"
+      ],
+      "exitCode": 0,
+      "passed": true,
+      "expectedTermination": null,
+      "seconds": 42.282,
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\artifacts\\candidate-v91-final-transient-memory\\app-debug.apk",
+          "bytes": 178717356,
+          "sha256": "4d9ce6717ca2b613c423333a27a4c125ab772d2717d9195da332599d1158dc01",
+          "package": "org.inkweft.app.cloud20261012"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\artifacts\\candidate-v91-valid-lease-tests\\app-debug-androidTest.apk",
+          "bytes": 17939336,
+          "sha256": "62de958173c8536f1aa9853697c663903d8610f1ba6f29eb7509b8f9ac61a4e6",
+          "package": "org.inkweft.app.cloud20261012.test"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\artifacts\\candidate-v91-final-transient-memory\\data-local-debug-androidTest.apk",
+          "bytes": 26273597,
+          "sha256": "e4e31e05ebd8f13ffc598fd2ef357897483109d7f7ab78d3a05bc82da873b317",
+          "package": "org.inkweft.data.cloud20261012.test"
+        }
+      ],
+      "output": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\verification\\device-attempt01\\v91-final-closure-valid-lease-runner.txt",
+      "name": "v91-final-closure-valid-lease",
+      "tests": 1,
+      "methods": [
+        {
+          "className": "org.inkweft.app.EncryptedBackupIntegrationTest",
+          "method": "encryptedBackupRoundTripPreservesAuthorClosureAndRejectsAnotherAccount",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        }
+      ],
+      "metrics": []
+    },
+    {
+      "classes": [
+        "EncryptedBackupIntegrationTest#damagedLocalCipherStopsAutomaticRetriesAndRetainsItsIdentity"
+      ],
+      "exitCode": 0,
+      "passed": true,
+      "expectedTermination": null,
+      "seconds": 39.781,
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\artifacts\\candidate-v91-final-transient-memory\\app-debug.apk",
+          "bytes": 178717356,
+          "sha256": "4d9ce6717ca2b613c423333a27a4c125ab772d2717d9195da332599d1158dc01",
+          "package": "org.inkweft.app.cloud20261012"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\artifacts\\candidate-v91-final-transient-memory\\app-debug-androidTest.apk",
+          "bytes": 17940792,
+          "sha256": "4752e3482744f48a7ec8edd43467a56aa1396d9c8917baff2b241c20896cb1dc",
+          "package": "org.inkweft.app.cloud20261012.test"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\artifacts\\candidate-v91-final-transient-memory\\data-local-debug-androidTest.apk",
+          "bytes": 26273597,
+          "sha256": "e4e31e05ebd8f13ffc598fd2ef357897483109d7f7ab78d3a05bc82da873b317",
+          "package": "org.inkweft.data.cloud20261012.test"
+        }
+      ],
+      "output": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\verification\\device-attempt01\\v91-final-damaged-runner.txt",
+      "name": "v91-final-damaged",
+      "tests": 1,
+      "methods": [
+        {
+          "className": "org.inkweft.app.EncryptedBackupIntegrationTest",
+          "method": "damagedLocalCipherStopsAutomaticRetriesAndRetainsItsIdentity",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        }
+      ],
+      "metrics": []
+    },
+    {
+      "classes": [
+        "EncryptedBackupIntegrationTest#expiredSessionCanReconnectAndOfflineDisconnectKeepsQueue"
+      ],
+      "exitCode": 0,
+      "passed": true,
+      "expectedTermination": null,
+      "seconds": 36.266,
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\artifacts\\candidate-v91-final-transient-memory\\app-debug.apk",
+          "bytes": 178717356,
+          "sha256": "4d9ce6717ca2b613c423333a27a4c125ab772d2717d9195da332599d1158dc01",
+          "package": "org.inkweft.app.cloud20261012"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\artifacts\\candidate-v91-final-transient-memory\\app-debug-androidTest.apk",
+          "bytes": 17940792,
+          "sha256": "4752e3482744f48a7ec8edd43467a56aa1396d9c8917baff2b241c20896cb1dc",
+          "package": "org.inkweft.app.cloud20261012.test"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\artifacts\\candidate-v91-final-transient-memory\\data-local-debug-androidTest.apk",
+          "bytes": 26273597,
+          "sha256": "e4e31e05ebd8f13ffc598fd2ef357897483109d7f7ab78d3a05bc82da873b317",
+          "package": "org.inkweft.data.cloud20261012.test"
+        }
+      ],
+      "output": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\verification\\device-attempt01\\v91-final-expired-runner.txt",
+      "name": "v91-final-expired",
+      "tests": 1,
+      "methods": [
+        {
+          "className": "org.inkweft.app.EncryptedBackupIntegrationTest",
+          "method": "expiredSessionCanReconnectAndOfflineDisconnectKeepsQueue",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        }
+      ],
+      "metrics": []
+    },
+    {
+      "classes": [
+        "HistoryStorageUiTest",
+        "LibraryPaginationUiTest"
+      ],
+      "exitCode": 0,
+      "passed": false,
+      "expectedTermination": null,
+      "seconds": 6.875,
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\artifacts\\candidate-v91-final-transient-memory\\app-debug.apk",
+          "bytes": 178717356,
+          "sha256": "4d9ce6717ca2b613c423333a27a4c125ab772d2717d9195da332599d1158dc01",
+          "package": "org.inkweft.app.cloud20261012"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\artifacts\\candidate-v91-valid-lease-tests\\app-debug-androidTest.apk",
+          "bytes": 17939336,
+          "sha256": "62de958173c8536f1aa9853697c663903d8610f1ba6f29eb7509b8f9ac61a4e6",
+          "package": "org.inkweft.app.cloud20261012.test"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\artifacts\\candidate-v91-final-transient-memory\\data-local-debug-androidTest.apk",
+          "bytes": 26273597,
+          "sha256": "e4e31e05ebd8f13ffc598fd2ef357897483109d7f7ab78d3a05bc82da873b317",
+          "package": "org.inkweft.data.cloud20261012.test"
+        }
+      ],
+      "output": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\verification\\device-attempt01\\v91-final-history-search-ui-runner.txt",
+      "name": "v91-final-history-search-ui",
+      "tests": null,
+      "methods": [
+        {
+          "className": "org.inkweft.app.HistoryStorageUiTest",
+          "method": "auditDisplaysCountsWithoutOfferingDeletionOfAuthorHistory",
+          "code": -2,
+          "status": "FAIL",
+          "failure": "java.lang.AssertionError: Failed: assertExists."
+        },
+        {
+          "className": "org.inkweft.app.LibraryPaginationUiTest",
+          "method": "nextPreviousAndQueryResetShowBoundedPages",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        }
+      ],
+      "metrics": []
+    },
+    {
+      "classes": [
+        "HistoryStorageUiTest"
+      ],
+      "exitCode": 0,
+      "passed": true,
+      "expectedTermination": null,
+      "seconds": 3.453,
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\artifacts\\candidate-v91-final-transient-memory\\app-debug.apk",
+          "bytes": 178717356,
+          "sha256": "4d9ce6717ca2b613c423333a27a4c125ab772d2717d9195da332599d1158dc01",
+          "package": "org.inkweft.app.cloud20261012"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\artifacts\\candidate-v91-history-receipt-tests\\app-debug-androidTest.apk",
+          "bytes": 17939352,
+          "sha256": "15982060714248842105b1e8751518fb14b0bbc8e87dad56a706ea5a5e141e09",
+          "package": "org.inkweft.app.cloud20261012.test"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\artifacts\\candidate-v91-final-transient-memory\\data-local-debug-androidTest.apk",
+          "bytes": 26273597,
+          "sha256": "e4e31e05ebd8f13ffc598fd2ef357897483109d7f7ab78d3a05bc82da873b317",
+          "package": "org.inkweft.data.cloud20261012.test"
+        }
+      ],
+      "output": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\verification\\device-attempt01\\v91-final-history-ui-receipt-runner.txt",
+      "name": "v91-final-history-ui-receipt",
+      "tests": 1,
+      "methods": [
+        {
+          "className": "org.inkweft.app.HistoryStorageUiTest",
+          "method": "auditDisplaysCountsWithoutOfferingDeletionOfAuthorHistory",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        }
+      ],
+      "metrics": []
+    },
+    {
+      "classes": [
+        "EncryptedBackupIntegrationTest#foregroundMemoryPressureKeepsAutomaticUploadResumable"
+      ],
+      "exitCode": 0,
+      "passed": true,
+      "expectedTermination": null,
+      "seconds": 23.125,
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\artifacts\\candidate-v91-final-transient-memory\\app-debug.apk",
+          "bytes": 178717356,
+          "sha256": "4d9ce6717ca2b613c423333a27a4c125ab772d2717d9195da332599d1158dc01",
+          "package": "org.inkweft.app.cloud20261012"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\artifacts\\candidate-v91-final-transient-memory\\app-debug-androidTest.apk",
+          "bytes": 17940792,
+          "sha256": "4752e3482744f48a7ec8edd43467a56aa1396d9c8917baff2b241c20896cb1dc",
+          "package": "org.inkweft.app.cloud20261012.test"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\artifacts\\candidate-v91-final-transient-memory\\data-local-debug-androidTest.apk",
+          "bytes": 26273597,
+          "sha256": "e4e31e05ebd8f13ffc598fd2ef357897483109d7f7ab78d3a05bc82da873b317",
+          "package": "org.inkweft.data.cloud20261012.test"
+        }
+      ],
+      "output": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\verification\\device-attempt01\\v91-final-pressure-runner.txt",
+      "name": "v91-final-pressure",
+      "tests": 1,
+      "methods": [
+        {
+          "className": "org.inkweft.app.EncryptedBackupIntegrationTest",
+          "method": "foregroundMemoryPressureKeepsAutomaticUploadResumable",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        }
+      ],
+      "metrics": []
+    },
+    {
+      "classes": [
+        "AsyncRasterTest",
+        "ViewportRasterTest",
+        "ZoomRasterTest",
+        "LayerRasterBudgetTest",
+        "LayerSnapshotPreviewTest",
+        "ReadLockCompatibilityTest",
+        "RenderResourcesTest"
+      ],
+      "exitCode": 0,
+      "passed": false,
+      "expectedTermination": null,
+      "seconds": 13.641,
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\artifacts\\candidate-v91-final-transient-memory\\app-debug.apk",
+          "bytes": 178717356,
+          "sha256": "4d9ce6717ca2b613c423333a27a4c125ab772d2717d9195da332599d1158dc01",
+          "package": "org.inkweft.app.cloud20261012"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\artifacts\\candidate-v91-final-transient-memory\\app-debug-androidTest.apk",
+          "bytes": 17940792,
+          "sha256": "4752e3482744f48a7ec8edd43467a56aa1396d9c8917baff2b241c20896cb1dc",
+          "package": "org.inkweft.app.cloud20261012.test"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\artifacts\\candidate-v91-final-transient-memory\\data-local-debug-androidTest.apk",
+          "bytes": 26273597,
+          "sha256": "e4e31e05ebd8f13ffc598fd2ef357897483109d7f7ab78d3a05bc82da873b317",
+          "package": "org.inkweft.data.cloud20261012.test"
+        }
+      ],
+      "output": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\verification\\device-attempt01\\v91-final-render-regression-runner.txt",
+      "name": "v91-final-render-regression",
+      "tests": null,
+      "methods": [
+        {
+          "className": "org.inkweft.app.AsyncRasterTest",
+          "method": "editedFallbackPreservesOverlappingPencilAndHighlighterPixels",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.app.AsyncRasterTest",
+          "method": "eraseKeepsUnaffectedInkVisibleBeforeReplacementFrameCompletes",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.app.AsyncRasterTest",
+          "method": "panPaintsNewlyExposedInkBeforeWorkerCanPublish",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.app.AsyncRasterTest",
+          "method": "firstPreviewCoversBothEndsAndReopeningUsesCompleteMemoryCache",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.app.AsyncRasterTest",
+          "method": "backgroundRasterPreservesPixelsAndRejectsStaleWork",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.app.ViewportRasterTest",
+          "method": "finalFrameKeepsNativePixelsAboveTheOldWholePageBudget",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.app.ViewportRasterTest",
+          "method": "sixMillionPixelFrameFinishesUnderPinnedFramePressure",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.app.ViewportRasterTest",
+          "method": "zoomNeverPublishesACoarsePencilFrameOverRetainedInk",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.app.ViewportRasterTest",
+          "method": "graphiteCanSampleBelowHalfAnAuthorUnitAtDeepZoom",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.app.ViewportRasterTest",
+          "method": "enlargedEmbeddedPageRendersOnlyItsWindowAndTracksParentScroll",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.app.ZoomRasterTest",
+          "method": "embeddedResizeKeepsVisibleAnchorBeforeReplacementFrame",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.app.ZoomRasterTest",
+          "method": "zoomInKeepsVisibleAnchorWhenEdgeStrokeLeaves",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.app.ZoomRasterTest",
+          "method": "zoomOutKeepsVisibleAnchorWhenEdgeStrokeEnters",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.app.LayerRasterBudgetTest",
+          "method": "oneFourAndEightLayersDecodeEachVisibleStrokeOnceWithinOnePixelBudget",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.app.LayerSnapshotPreviewTest",
+          "method": "frozenMapThumbnailNeverRendersTheHiddenLayerFromItsFile",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.app.ReadLockCompatibilityTest",
+          "method": "a_seedV51FixtureAndExport",
+          "code": -2,
+          "status": "FAIL",
+          "failure": "java.lang.AssertionError: Run this stage on the actual requested main APK, not the runner's BuildConfig expected:<51> but was:<91>"
+        },
+        {
+          "className": "org.inkweft.app.ReadLockCompatibilityTest",
+          "method": "b_verifyV52ReadsAndBackupRoundTrips",
+          "code": -2,
+          "status": "FAIL",
+          "failure": "java.lang.AssertionError: Run this stage on the actual requested main APK, not the runner's BuildConfig expected:<52> but was:<91>"
+        },
+        {
+          "className": "org.inkweft.app.ReadLockCompatibilityTest",
+          "method": "c_verifyV51ReadsV52Data",
+          "code": -2,
+          "status": "FAIL",
+          "failure": "java.lang.AssertionError: Run this stage on the actual requested main APK, not the runner's BuildConfig expected:<51> but was:<91>"
+        },
+        {
+          "className": "org.inkweft.app.RenderResourcesTest",
+          "method": "immutableEqualityMemoDoesNotHideNewErasures",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.app.RenderResourcesTest",
+          "method": "replacementAdmissionDoesNotSubtractAnotherOwnersBitmap",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.app.RenderResourcesTest",
+          "method": "budgetPressureDefersDerivedRasterAndRecoversWithoutReopening",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.app.RenderResourcesTest",
+          "method": "allocationsAreNotDoubleCountedAndPinnedFrameSurvivesTrim",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        }
+      ],
+      "metrics": [
+        {
+          "kind": "LAYER_RASTER_EVIDENCE",
+          "value": {
+            "visibleLayers": 1,
+            "visibleStrokes": 320,
+            "decodedRows": 320,
+            "decodedPoints": 640,
+            "payloadBytes": 44800,
+            "geometryReads": 2,
+            "nativeExtentPixels": 3117845,
+            "inkBitmapBytes": 12471380,
+            "readyMs": 474.861933,
+            "softwareDrawP95Ms": 4.587814,
+            "javaUsedBytes": 47762912,
+            "processPssKiB": 205129
+          }
+        },
+        {
+          "kind": "LAYER_RASTER_EVIDENCE",
+          "value": {
+            "visibleLayers": 4,
+            "visibleStrokes": 320,
+            "decodedRows": 320,
+            "decodedPoints": 640,
+            "payloadBytes": 44800,
+            "geometryReads": 4,
+            "nativeExtentPixels": 10530530,
+            "inkBitmapBytes": 10544352,
+            "readyMs": 1663.862891,
+            "softwareDrawP95Ms": 51.555897,
+            "javaUsedBytes": 34913536,
+            "processPssKiB": 190084
+          }
+        },
+        {
+          "kind": "LAYER_RASTER_EVIDENCE",
+          "value": {
+            "visibleLayers": 8,
+            "visibleStrokes": 320,
+            "decodedRows": 320,
+            "decodedPoints": 640,
+            "payloadBytes": 44800,
+            "geometryReads": 8,
+            "nativeExtentPixels": 21061060,
+            "inkBitmapBytes": 21088704,
+            "readyMs": 2986.553009,
+            "softwareDrawP95Ms": 96.606773,
+            "javaUsedBytes": 28757672,
+            "processPssKiB": 185004
+          }
+        }
+      ],
+      "v91EligibleMethods": {
+        "tests": 19,
+        "status": "PASS",
+        "excludedStagedLegacyFixture": "ReadLockCompatibilityTest requires actual V51/V52 APKs; three version-precondition failures retained, not V91 regressions."
+      }
+    },
+    {
+      "classes": [
+        "BackupReliabilityUiTest"
+      ],
+      "exitCode": 0,
+      "passed": true,
+      "expectedTermination": null,
+      "seconds": 246.234,
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\artifacts\\candidate-v91-final-transient-memory\\app-debug.apk",
+          "bytes": 178717356,
+          "sha256": "4d9ce6717ca2b613c423333a27a4c125ab772d2717d9195da332599d1158dc01",
+          "package": "org.inkweft.app.cloud20261012"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\artifacts\\candidate-v91-backup-management-tests\\app-debug-androidTest.apk",
+          "bytes": 17939356,
+          "sha256": "9e9ff2abc37be1f6f9dee501c5e02d16984b9c20bfcae65111cdefef59ea6d40",
+          "package": "org.inkweft.app.cloud20261012.test"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\artifacts\\candidate-v91-final-transient-memory\\data-local-debug-androidTest.apk",
+          "bytes": 26273597,
+          "sha256": "e4e31e05ebd8f13ffc598fd2ef357897483109d7f7ab78d3a05bc82da873b317",
+          "package": "org.inkweft.data.cloud20261012.test"
+        }
+      ],
+      "output": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\verification\\device-attempt01\\v91-final-v2-version-management-ui-runner.txt",
+      "name": "v91-final-v2-version-management-ui",
+      "tests": 1,
+      "methods": [
+        {
+          "className": "org.inkweft.app.BackupReliabilityUiTest",
+          "method": "tenVersionsCanBeManagedFromUiWithoutDeletingLocalNotes",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        }
+      ],
+      "metrics": []
+    },
+    {
+      "classes": [
+        "EncryptedBackupIntegrationTest#v2ManifestDigestMatchesIndependentCanonicalVector",
+        "EncryptedBackupIntegrationTest#cancellationInterruptsSlowSocketWithinBound"
+      ],
+      "exitCode": 0,
+      "passed": true,
+      "expectedTermination": null,
+      "seconds": 2.828,
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\artifacts\\candidate-v91-final-transient-memory\\app-debug.apk",
+          "bytes": 178717356,
+          "sha256": "4d9ce6717ca2b613c423333a27a4c125ab772d2717d9195da332599d1158dc01",
+          "package": "org.inkweft.app.cloud20261012"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\artifacts\\candidate-v91-final-transient-memory\\app-debug-androidTest.apk",
+          "bytes": 17940792,
+          "sha256": "4752e3482744f48a7ec8edd43467a56aa1396d9c8917baff2b241c20896cb1dc",
+          "package": "org.inkweft.app.cloud20261012.test"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\artifacts\\candidate-v91-final-transient-memory\\data-local-debug-androidTest.apk",
+          "bytes": 26273597,
+          "sha256": "e4e31e05ebd8f13ffc598fd2ef357897483109d7f7ab78d3a05bc82da873b317",
+          "package": "org.inkweft.data.cloud20261012.test"
+        }
+      ],
+      "output": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\verification\\device-attempt01\\v91-final-vector-cancel-runner.txt",
+      "name": "v91-final-vector-cancel",
+      "tests": 2,
+      "methods": [
+        {
+          "className": "org.inkweft.app.EncryptedBackupIntegrationTest",
+          "method": "v2ManifestDigestMatchesIndependentCanonicalVector",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        },
+        {
+          "className": "org.inkweft.app.EncryptedBackupIntegrationTest",
+          "method": "cancellationInterruptsSlowSocketWithinBound",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        }
+      ],
+      "metrics": []
+    },
+    {
+      "classes": [
+        "BackupCrashProbe"
+      ],
+      "exitCode": 0,
+      "passed": false,
+      "expectedTermination": {
+        "cut": "after-cipher",
+        "oldOperation": "32b1096b-91bc-42ed-9797-a06dae63e3a8",
+        "currentOperation": "32b1096b-91bc-42ed-9797-a06dae63e3a8",
+        "processAbsent": true,
+        "verified": true
+      },
+      "seconds": 37.656,
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\artifacts\\candidate-v91-final-transient-memory\\app-debug.apk",
+          "bytes": 178717356,
+          "sha256": "4d9ce6717ca2b613c423333a27a4c125ab772d2717d9195da332599d1158dc01",
+          "package": "org.inkweft.app.cloud20261012"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\artifacts\\candidate-v91-final-transient-memory\\app-debug-androidTest.apk",
+          "bytes": 17940792,
+          "sha256": "4752e3482744f48a7ec8edd43467a56aa1396d9c8917baff2b241c20896cb1dc",
+          "package": "org.inkweft.app.cloud20261012.test"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\artifacts\\candidate-v91-final-transient-memory\\data-local-debug-androidTest.apk",
+          "bytes": 26273597,
+          "sha256": "e4e31e05ebd8f13ffc598fd2ef357897483109d7f7ab78d3a05bc82da873b317",
+          "package": "org.inkweft.data.cloud20261012.test"
+        }
+      ],
+      "output": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\verification\\device-attempt01\\v91-generation-after-cipher-prepare-runner.txt",
+      "name": "v91-generation-after-cipher-prepare",
+      "tests": null,
+      "methods": [],
+      "metrics": []
+    },
+    {
+      "classes": [
+        "BackupCrashProbe"
+      ],
+      "exitCode": 0,
+      "passed": true,
+      "expectedTermination": null,
+      "seconds": 8.0,
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\artifacts\\candidate-v91-final-transient-memory\\app-debug.apk",
+          "bytes": 178717356,
+          "sha256": "4d9ce6717ca2b613c423333a27a4c125ab772d2717d9195da332599d1158dc01",
+          "package": "org.inkweft.app.cloud20261012"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\artifacts\\candidate-v91-final-transient-memory\\app-debug-androidTest.apk",
+          "bytes": 17940792,
+          "sha256": "4752e3482744f48a7ec8edd43467a56aa1396d9c8917baff2b241c20896cb1dc",
+          "package": "org.inkweft.app.cloud20261012.test"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\artifacts\\candidate-v91-final-transient-memory\\data-local-debug-androidTest.apk",
+          "bytes": 26273597,
+          "sha256": "e4e31e05ebd8f13ffc598fd2ef357897483109d7f7ab78d3a05bc82da873b317",
+          "package": "org.inkweft.data.cloud20261012.test"
+        }
+      ],
+      "output": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\verification\\device-attempt01\\v91-generation-after-cipher-verify-runner.txt",
+      "name": "v91-generation-after-cipher-verify",
+      "tests": 1,
+      "methods": [
+        {
+          "className": "org.inkweft.app.BackupCrashProbe",
+          "method": "generationCutKeepsACompletePointer",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        }
+      ],
+      "metrics": []
+    },
+    {
+      "classes": [
+        "BackupCrashProbe"
+      ],
+      "exitCode": 0,
+      "passed": false,
+      "expectedTermination": {
+        "cut": "after-fsync",
+        "oldOperation": "5bb3ec49-23a3-49e6-946b-7a156d8ec630",
+        "currentOperation": "5bb3ec49-23a3-49e6-946b-7a156d8ec630",
+        "processAbsent": true,
+        "verified": true
+      },
+      "seconds": 36.328,
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\artifacts\\candidate-v91-final-transient-memory\\app-debug.apk",
+          "bytes": 178717356,
+          "sha256": "4d9ce6717ca2b613c423333a27a4c125ab772d2717d9195da332599d1158dc01",
+          "package": "org.inkweft.app.cloud20261012"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\artifacts\\candidate-v91-final-transient-memory\\app-debug-androidTest.apk",
+          "bytes": 17940792,
+          "sha256": "4752e3482744f48a7ec8edd43467a56aa1396d9c8917baff2b241c20896cb1dc",
+          "package": "org.inkweft.app.cloud20261012.test"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\artifacts\\candidate-v91-final-transient-memory\\data-local-debug-androidTest.apk",
+          "bytes": 26273597,
+          "sha256": "e4e31e05ebd8f13ffc598fd2ef357897483109d7f7ab78d3a05bc82da873b317",
+          "package": "org.inkweft.data.cloud20261012.test"
+        }
+      ],
+      "output": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\verification\\device-attempt01\\v91-generation-after-fsync-prepare-runner.txt",
+      "name": "v91-generation-after-fsync-prepare",
+      "tests": null,
+      "methods": [],
+      "metrics": []
+    },
+    {
+      "classes": [
+        "BackupCrashProbe"
+      ],
+      "exitCode": 0,
+      "passed": true,
+      "expectedTermination": null,
+      "seconds": 7.969,
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\artifacts\\candidate-v91-final-transient-memory\\app-debug.apk",
+          "bytes": 178717356,
+          "sha256": "4d9ce6717ca2b613c423333a27a4c125ab772d2717d9195da332599d1158dc01",
+          "package": "org.inkweft.app.cloud20261012"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\artifacts\\candidate-v91-final-transient-memory\\app-debug-androidTest.apk",
+          "bytes": 17940792,
+          "sha256": "4752e3482744f48a7ec8edd43467a56aa1396d9c8917baff2b241c20896cb1dc",
+          "package": "org.inkweft.app.cloud20261012.test"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\artifacts\\candidate-v91-final-transient-memory\\data-local-debug-androidTest.apk",
+          "bytes": 26273597,
+          "sha256": "e4e31e05ebd8f13ffc598fd2ef357897483109d7f7ab78d3a05bc82da873b317",
+          "package": "org.inkweft.data.cloud20261012.test"
+        }
+      ],
+      "output": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\verification\\device-attempt01\\v91-generation-after-fsync-verify-runner.txt",
+      "name": "v91-generation-after-fsync-verify",
+      "tests": 1,
+      "methods": [
+        {
+          "className": "org.inkweft.app.BackupCrashProbe",
+          "method": "generationCutKeepsACompletePointer",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        }
+      ],
+      "metrics": []
+    },
+    {
+      "classes": [
+        "BackupCrashProbe"
+      ],
+      "exitCode": 0,
+      "passed": false,
+      "expectedTermination": {
+        "cut": "after-pointer",
+        "oldOperation": "dff716f9-7e17-4726-b68e-4cc9062ea209",
+        "currentOperation": "d5a74f9f-b0b9-4008-b59f-1fccb08f077f",
+        "processAbsent": true,
+        "verified": true
+      },
+      "seconds": 34.391,
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\artifacts\\candidate-v91-final-transient-memory\\app-debug.apk",
+          "bytes": 178717356,
+          "sha256": "4d9ce6717ca2b613c423333a27a4c125ab772d2717d9195da332599d1158dc01",
+          "package": "org.inkweft.app.cloud20261012"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\artifacts\\candidate-v91-final-transient-memory\\app-debug-androidTest.apk",
+          "bytes": 17940792,
+          "sha256": "4752e3482744f48a7ec8edd43467a56aa1396d9c8917baff2b241c20896cb1dc",
+          "package": "org.inkweft.app.cloud20261012.test"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\artifacts\\candidate-v91-final-transient-memory\\data-local-debug-androidTest.apk",
+          "bytes": 26273597,
+          "sha256": "e4e31e05ebd8f13ffc598fd2ef357897483109d7f7ab78d3a05bc82da873b317",
+          "package": "org.inkweft.data.cloud20261012.test"
+        }
+      ],
+      "output": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\verification\\device-attempt01\\v91-generation-after-pointer-prepare-runner.txt",
+      "name": "v91-generation-after-pointer-prepare",
+      "tests": null,
+      "methods": [],
+      "metrics": []
+    },
+    {
+      "classes": [
+        "BackupCrashProbe"
+      ],
+      "exitCode": 0,
+      "passed": true,
+      "expectedTermination": null,
+      "seconds": 16.11,
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\artifacts\\candidate-v91-final-transient-memory\\app-debug.apk",
+          "bytes": 178717356,
+          "sha256": "4d9ce6717ca2b613c423333a27a4c125ab772d2717d9195da332599d1158dc01",
+          "package": "org.inkweft.app.cloud20261012"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\artifacts\\candidate-v91-final-transient-memory\\app-debug-androidTest.apk",
+          "bytes": 17940792,
+          "sha256": "4752e3482744f48a7ec8edd43467a56aa1396d9c8917baff2b241c20896cb1dc",
+          "package": "org.inkweft.app.cloud20261012.test"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\artifacts\\candidate-v91-final-transient-memory\\data-local-debug-androidTest.apk",
+          "bytes": 26273597,
+          "sha256": "e4e31e05ebd8f13ffc598fd2ef357897483109d7f7ab78d3a05bc82da873b317",
+          "package": "org.inkweft.data.cloud20261012.test"
+        }
+      ],
+      "output": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\verification\\device-attempt01\\v91-generation-after-pointer-verify-runner.txt",
+      "name": "v91-generation-after-pointer-verify",
+      "tests": 1,
+      "methods": [
+        {
+          "className": "org.inkweft.app.BackupCrashProbe",
+          "method": "generationCutKeepsACompletePointer",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        }
+      ],
+      "metrics": []
+    },
+    {
+      "classes": [
+        "BackupCrashProbe"
+      ],
+      "exitCode": 0,
+      "passed": false,
+      "expectedTermination": {
+        "cut": "after-retire",
+        "oldOperation": "721fe954-cc8c-4efc-a99a-8bfb81f55301",
+        "currentOperation": "ddcb3f7b-e841-4b48-b584-a7dc196e7df5",
+        "processAbsent": true,
+        "verified": true
+      },
+      "seconds": 31.688,
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\artifacts\\candidate-v91-final-transient-memory\\app-debug.apk",
+          "bytes": 178717356,
+          "sha256": "4d9ce6717ca2b613c423333a27a4c125ab772d2717d9195da332599d1158dc01",
+          "package": "org.inkweft.app.cloud20261012"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\artifacts\\candidate-v91-final-transient-memory\\app-debug-androidTest.apk",
+          "bytes": 17940792,
+          "sha256": "4752e3482744f48a7ec8edd43467a56aa1396d9c8917baff2b241c20896cb1dc",
+          "package": "org.inkweft.app.cloud20261012.test"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\artifacts\\candidate-v91-final-transient-memory\\data-local-debug-androidTest.apk",
+          "bytes": 26273597,
+          "sha256": "e4e31e05ebd8f13ffc598fd2ef357897483109d7f7ab78d3a05bc82da873b317",
+          "package": "org.inkweft.data.cloud20261012.test"
+        }
+      ],
+      "output": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\verification\\device-attempt01\\v91-generation-after-retire-prepare-runner.txt",
+      "name": "v91-generation-after-retire-prepare",
+      "tests": null,
+      "methods": [],
+      "metrics": []
+    },
+    {
+      "classes": [
+        "BackupCrashProbe"
+      ],
+      "exitCode": 0,
+      "passed": true,
+      "expectedTermination": null,
+      "seconds": 17.078,
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\artifacts\\candidate-v91-final-transient-memory\\app-debug.apk",
+          "bytes": 178717356,
+          "sha256": "4d9ce6717ca2b613c423333a27a4c125ab772d2717d9195da332599d1158dc01",
+          "package": "org.inkweft.app.cloud20261012"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\artifacts\\candidate-v91-final-transient-memory\\app-debug-androidTest.apk",
+          "bytes": 17940792,
+          "sha256": "4752e3482744f48a7ec8edd43467a56aa1396d9c8917baff2b241c20896cb1dc",
+          "package": "org.inkweft.app.cloud20261012.test"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\artifacts\\candidate-v91-final-transient-memory\\data-local-debug-androidTest.apk",
+          "bytes": 26273597,
+          "sha256": "e4e31e05ebd8f13ffc598fd2ef357897483109d7f7ab78d3a05bc82da873b317",
+          "package": "org.inkweft.data.cloud20261012.test"
+        }
+      ],
+      "output": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\verification\\device-attempt01\\v91-generation-after-retire-verify-runner.txt",
+      "name": "v91-generation-after-retire-verify",
+      "tests": 1,
+      "methods": [
+        {
+          "className": "org.inkweft.app.BackupCrashProbe",
+          "method": "generationCutKeepsACompletePointer",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        }
+      ],
+      "metrics": []
+    },
+    {
+      "classes": [
+        "BackupCrashProbe"
+      ],
+      "exitCode": 0,
+      "passed": false,
+      "expectedTermination": {
+        "cut": "before-pointer",
+        "oldOperation": "9be1adf2-1a19-4952-a2b1-f5bc72a3f68d",
+        "currentOperation": "9be1adf2-1a19-4952-a2b1-f5bc72a3f68d",
+        "processAbsent": true,
+        "verified": true
+      },
+      "seconds": 36.219,
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\artifacts\\candidate-v91-final-transient-memory\\app-debug.apk",
+          "bytes": 178717356,
+          "sha256": "4d9ce6717ca2b613c423333a27a4c125ab772d2717d9195da332599d1158dc01",
+          "package": "org.inkweft.app.cloud20261012"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\artifacts\\candidate-v91-final-transient-memory\\app-debug-androidTest.apk",
+          "bytes": 17940792,
+          "sha256": "4752e3482744f48a7ec8edd43467a56aa1396d9c8917baff2b241c20896cb1dc",
+          "package": "org.inkweft.app.cloud20261012.test"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\artifacts\\candidate-v91-final-transient-memory\\data-local-debug-androidTest.apk",
+          "bytes": 26273597,
+          "sha256": "e4e31e05ebd8f13ffc598fd2ef357897483109d7f7ab78d3a05bc82da873b317",
+          "package": "org.inkweft.data.cloud20261012.test"
+        }
+      ],
+      "output": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\verification\\device-attempt01\\v91-generation-before-pointer-prepare-runner.txt",
+      "name": "v91-generation-before-pointer-prepare",
+      "tests": null,
+      "methods": [],
+      "metrics": []
+    },
+    {
+      "classes": [
+        "BackupCrashProbe"
+      ],
+      "exitCode": 0,
+      "passed": true,
+      "expectedTermination": null,
+      "seconds": 10.125,
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\artifacts\\candidate-v91-final-transient-memory\\app-debug.apk",
+          "bytes": 178717356,
+          "sha256": "4d9ce6717ca2b613c423333a27a4c125ab772d2717d9195da332599d1158dc01",
+          "package": "org.inkweft.app.cloud20261012"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\artifacts\\candidate-v91-final-transient-memory\\app-debug-androidTest.apk",
+          "bytes": 17940792,
+          "sha256": "4752e3482744f48a7ec8edd43467a56aa1396d9c8917baff2b241c20896cb1dc",
+          "package": "org.inkweft.app.cloud20261012.test"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\artifacts\\candidate-v91-final-transient-memory\\data-local-debug-androidTest.apk",
+          "bytes": 26273597,
+          "sha256": "e4e31e05ebd8f13ffc598fd2ef357897483109d7f7ab78d3a05bc82da873b317",
+          "package": "org.inkweft.data.cloud20261012.test"
+        }
+      ],
+      "output": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\verification\\device-attempt01\\v91-generation-before-pointer-verify-runner.txt",
+      "name": "v91-generation-before-pointer-verify",
+      "tests": 1,
+      "methods": [
+        {
+          "className": "org.inkweft.app.BackupCrashProbe",
+          "method": "generationCutKeepsACompletePointer",
+          "code": 0,
+          "status": "PASS",
+          "failure": null
+        }
+      ],
+      "metrics": []
     }
   ],
+  "largeRestartAndCardinalityProofs": {
+    "cloud-8g-client-restart-before.json": {
+      "serverIdentity": "fcf8c9ca-f7fa-4b79-8e88-5438670c4e04",
+      "library": "0400a09d-cd8e-4f62-9a5a-0007d8cd11c7",
+      "operation": "6b2a179b-b23a-481e-a8d8-1b135064632a",
+      "manifestDigest": "787f7a84c37459fa3b8f81b4565349bf068669045535ea78f1f34d4f3cdb0fd1",
+      "state": "PENDING",
+      "cipherBytes": 8590590254,
+      "verifiedChunks": 0,
+      "receivedChunks": 443,
+      "receivedBytes": 464519168,
+      "clientQueueSha256": "881cbae97bb6b8a8dc07a6a5727ac1a92bb48114bf2a54b8d11bd964b1f52dab"
+    },
+    "cloud-8g-client-restart-after.json": {
+      "serverIdentity": "fcf8c9ca-f7fa-4b79-8e88-5438670c4e04",
+      "library": "0400a09d-cd8e-4f62-9a5a-0007d8cd11c7",
+      "operation": "6b2a179b-b23a-481e-a8d8-1b135064632a",
+      "manifestDigest": "787f7a84c37459fa3b8f81b4565349bf068669045535ea78f1f34d4f3cdb0fd1",
+      "state": "PENDING",
+      "cipherBytes": 8590590254,
+      "verifiedChunks": 0,
+      "receivedChunks": 443,
+      "receivedBytes": 464519168,
+      "clientQueueSha256": "881cbae97bb6b8a8dc07a6a5727ac1a92bb48114bf2a54b8d11bd964b1f52dab"
+    },
+    "cloud-8g-download-restart-before.json": {
+      "operation": "6b2a179b-b23a-481e-a8d8-1b135064632a",
+      "library": "0400a09d-cd8e-4f62-9a5a-0007d8cd11c7",
+      "manifestDigest": "787f7a84c37459fa3b8f81b4565349bf068669045535ea78f1f34d4f3cdb0fd1",
+      "cipherBytes": 8590590254,
+      "plainBytes": 8589934592,
+      "file": "download-b8b6227f-757c-4ccd-803e-9d624105cecc.iwbk",
+      "fileBytes": 715128832,
+      "journalSha256": "104b6af9016ceffb5fdefae2f3d211a1fb21c13b0418babd5038dcb140de98f4",
+      "receivedChunks": 682
+    },
+    "cloud-8g-download-restart-after.json": {
+      "operation": "6b2a179b-b23a-481e-a8d8-1b135064632a",
+      "library": "0400a09d-cd8e-4f62-9a5a-0007d8cd11c7",
+      "manifestDigest": "787f7a84c37459fa3b8f81b4565349bf068669045535ea78f1f34d4f3cdb0fd1",
+      "cipherBytes": 8590590254,
+      "plainBytes": 8589934592,
+      "file": "download-b8b6227f-757c-4ccd-803e-9d624105cecc.iwbk",
+      "fileBytes": 715128832,
+      "journalSha256": "104b6af9016ceffb5fdefae2f3d211a1fb21c13b0418babd5038dcb140de98f4",
+      "receivedChunks": 682
+    },
+    "cloud-8g-restored-cardinality.json": {
+      "status": "PASS",
+      "notes": 17,
+      "documentSources": 17,
+      "uniqueOriginals": 2,
+      "physicalOriginalBytes": 908999518,
+      "originals": [
+        {
+          "sha256": "a5034490f5ad26bbfac8ec0376aa511dcad801158b8e99a2107867b70cccd8b9",
+          "bytes": 396999518
+        },
+        {
+          "sha256": "ed42320a03f4609ef25bef2499ccceff19e392cc718d9797165d9e03ef8f4c7e",
+          "bytes": 512000000
+        }
+      ],
+      "quickCheck": "ok",
+      "foreignKeyViolations": 0,
+      "databaseEvidence": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\evidence\\8g-empty-restored-db"
+    }
+  },
   "tileAppendPerformance": {
     "baseline-1-layers": {
       "samplesMs": [
@@ -2090,16 +5043,294 @@
       "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\evidence\\go-process-resources-03.json",
       "pid": 44704,
       "peakResidentBytes": 204828672,
-      "samples": 5720
+      "samples": 7150
+    },
+    {
+      "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\evidence\\go-process-resources-04.json",
+      "pid": 44704,
+      "peakResidentBytes": 204828672,
+      "samples": 1794
+    },
+    {
+      "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\evidence\\android-process-memory-04.json",
+      "package": "org.inkweft.app.cloud20261012",
+      "peakPssBytes": 237081600,
+      "samples": 374
     },
     {
       "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\evidence\\android-process-memory.json",
       "package": "org.inkweft.app.cloud20261012",
-      "peakPssBytes": 182269952,
-      "samples": 147
+      "peakPssBytes": 183361536,
+      "samples": 381
     }
   ],
-  "delivery": {},
+  "delivery": {
+    "arm64-artifact.json": {
+      "head": "769a0fb503aa334396ff60415afc22e2201c8bc8",
+      "dirty": false,
+      "build_commit": "e8f8e885c5533708a68b2d9add55cf99937c621f",
+      "source_commit": "e8f8e885c5533708a68b2d9add55cf99937c621f",
+      "formal": false,
+      "abis": [
+        "arm64-v8a"
+      ],
+      "assets": [
+        {
+          "asset": "ocr/characters.json",
+          "bytes": 129163,
+          "compressed_bytes": 54170,
+          "sha256": "c9007c1e471102735d65ed5e6bf2c197f4c3b926f7005c61143ac9c37c25adce"
+        },
+        {
+          "asset": "ocr/inference.yml",
+          "bytes": 148345,
+          "compressed_bytes": 55284,
+          "sha256": "5dfeb2777f6d0db8177d8128a8acfcf6e6276dc4ac73ea3bf0dc06d6a5e85d8e"
+        },
+        {
+          "asset": "ocr/recognition.onnx",
+          "bytes": 16534782,
+          "compressed_bytes": 14244741,
+          "sha256": "da72dc72ca4dc220df0dfde68c1dedc31c58d3e76a25871122e5056227d50092"
+        },
+        {
+          "asset": "fonts/LXGWWenKaiLite-Regular.ttf",
+          "bytes": 13872424,
+          "compressed_bytes": 8892711,
+          "sha256": "140c99ba4e28e817cec49bf82a0c5fcdc4fe633fb9dfda16d0ee8d59a8545f15"
+        },
+        {
+          "asset": "formula/config.json",
+          "bytes": 5065,
+          "compressed_bytes": 1322,
+          "sha256": "4a6db2899d540ab44ca4c219e0e76381c52f441781e41bd027c1844208b88e34"
+        },
+        {
+          "asset": "formula/decoder_model.onnx",
+          "bytes": 25872372,
+          "compressed_bytes": 24043382,
+          "sha256": "00f07add62d74c78750cfda60ce8f1cff3d1774f913ca3f412e2e72f4189d7d4"
+        },
+        {
+          "asset": "formula/encoder_model.onnx",
+          "bytes": 54168561,
+          "compressed_bytes": 50514056,
+          "sha256": "fbd69cf63cf833db1e2ef40013d859b560671c1253278441a01bde4516b624ae"
+        },
+        {
+          "asset": "formula/generation_config.json",
+          "bytes": 213,
+          "compressed_bytes": 128,
+          "sha256": "8065912018ef63e9d9399f0e8513fb32809b58938a18393278e01608ded745a5"
+        },
+        {
+          "asset": "formula/MODEL-SOURCE.json",
+          "bytes": 330,
+          "compressed_bytes": 229,
+          "sha256": "6f813a9e44a7586319841beda3622055bae732d298d71b5313f0624c3639cead"
+        },
+        {
+          "asset": "formula/preprocessor_config.json",
+          "bytes": 255,
+          "compressed_bytes": 178,
+          "sha256": "e8a5028a07af148f16c525577fc41d0646756c4bb26e395a47a6fbb303fc5a58"
+        },
+        {
+          "asset": "formula/tokenizer.json",
+          "bytes": 17318,
+          "compressed_bytes": 5057,
+          "sha256": "1240f9d178e1ad2a0076fe95ba62e332871c702accdd5ce3ae3ef33ffd6c3a1e"
+        }
+      ],
+      "embedded_identity": {
+        "schema": 1,
+        "build_commit": "e8f8e885c5533708a68b2d9add55cf99937c621f",
+        "source_commit": "e8f8e885c5533708a68b2d9add55cf99937c621f",
+        "formal": false,
+        "target_abis": [
+          "arm64-v8a"
+        ],
+        "application_id": "org.inkweft.app.a0",
+        "version_name": "0.0.91-cloud-performance"
+      },
+      "native_compressed_bytes": 20810909,
+      "apk": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\artifacts\\arm64-final\\app-debug.apk",
+      "apk_bytes": 164114872,
+      "apk_sha256": "e3568163098c2a7d66d93a69e445158318eec59d260f525ee40726f1d73b45c7",
+      "signature": {
+        "status": "PASS",
+        "certificateSha256": "345a1e67b72623000c611b0a17e70a8fdf1438768ec79a1144c407c28c14d2f2",
+        "kind": "Android Debug"
+      },
+      "alignmentCheck": "PASS",
+      "physicalDeviceRun": "NOT_RUN"
+    },
+    "native-arm64-unchanged.json": [
+      {
+        "entry": "lib/arm64-v8a/libandroidx.graphics.path.so",
+        "sha256": "41e9a793c43a0f4fddb19e33f346bace464f30f888ba7b9eaf96294ea115bfb6",
+        "unchanged_from_v89_and_v90": true
+      },
+      {
+        "entry": "lib/arm64-v8a/libink.so",
+        "sha256": "0b06501882909d2e2747308229128036b8a959dc60c17d4bf813b1d688b6c44d",
+        "unchanged_from_v89_and_v90": true
+      },
+      {
+        "entry": "lib/arm64-v8a/libmupdf_java.so",
+        "sha256": "5c7872c5e12ae3c00f68e14e371d3467cbfb2fd3dfefc7bb2a03d2cd491f6a4f",
+        "unchanged_from_v89_and_v90": true
+      },
+      {
+        "entry": "lib/arm64-v8a/libonnxruntime.so",
+        "sha256": "df5d25c72a868dca773597c71e2000756d43fe4d70ade516d3693c54e12e0ada",
+        "unchanged_from_v89_and_v90": true
+      },
+      {
+        "entry": "lib/arm64-v8a/libonnxruntime4j_jni.so",
+        "sha256": "0695257178815f8c58c1719ba07d6d5d91a2b339634328cca2a0a98aa7ff2952",
+        "unchanged_from_v89_and_v90": true
+      },
+      {
+        "entry": "lib/arm64-v8a/libsqlite3x.so",
+        "sha256": "a013a7ff1b85dd8ee51a2a6065e4f68d7450b7a81254384feaf6696ee61e4c68",
+        "unchanged_from_v89_and_v90": true
+      }
+    ],
+    "go-committed-artifacts.json": {
+      "sourceCodeCommit": "e8f8e885c5533708a68b2d9add55cf99937c621f",
+      "sourceInputs": [
+        {
+          "path": "backup-server\\backup.go",
+          "sha256": "2e2eebc965d9b88dd05897e3f967498312f497e9c0c0a296fed106a8678b4169"
+        },
+        {
+          "path": "backup-server\\backup_test.go",
+          "sha256": "2643735bdb8b83600e69750a9e869e9236a661560d6de8d3752f526b160ab5ed"
+        },
+        {
+          "path": "backup-server\\files_unix.go",
+          "sha256": "634bf95a542879f76d613b66cb38b9e0e1a99be627fb26d2481e1d24c8ede216"
+        },
+        {
+          "path": "backup-server\\files_windows.go",
+          "sha256": "e696c92b1d6a6bd1969d98571a9219d9d9481857df88e4de110491c3302dc0ec"
+        },
+        {
+          "path": "backup-server\\main.go",
+          "sha256": "75b08dcecc191914763fb835729bcf16fd815c84bb30796665c77f0e8b8245d3"
+        },
+        {
+          "path": "backup-server/go.mod",
+          "sha256": "6a2ba0cff80e1f48a4c121cf81c484eb7ab79aae7f6279436c686bfeb789d071"
+        },
+        {
+          "path": "backup-server/go.sum",
+          "sha256": "298e0b6b0f9e5b3536e14c1e716939f5eadb303a1fa62a841aed06ac9c0029cb"
+        }
+      ],
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\artifacts\\go-committed-final\\inkweft-backup-linux-amd64",
+          "bytes": 18202065,
+          "sha256": "f6565d30be082fd1e7a66fcfa0461827f30762470caba23f1f24e66878587690",
+          "buildInfo": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\artifacts\\go-committed-final\\inkweft-backup-linux-amd64: go1.27.2\n\tpath\tinkweft/backup\n\tmod\tinkweft/backup\t(devel)\t\n\tdep\tgithub.com/dustin/go-humanize\tv1.0.1\th1:GzkhY7T5VNhEkwH0PVJgjz+fX1rhBrR7pRT3mDkpeCY=\n\tdep\tgithub.com/google/uuid\tv1.6.0\th1:NIvaJDMOsjHA8n1jAhLSgzrAzy1Hgr+hNrb57e+94F0=\n\tdep\tgithub.com/remyoudompheng/bigfft\tv0.0.0-20230129092748-24d4a6f8daec\th1:W09IVJc94icq4NjY3clb7Lk8O1qJ8BdBEF8z0ibU0rE=\n\tdep\tgolang.org/x/crypto\tv0.58.0\th1:COkYLr4k7nDI4r6QtMML2AfzeIswWHAJthLS6K/M/54=\n\tdep\tgolang.org/x/sys\tv0.49.0\th1:XbzkgYJHdqh/8m2Uu0W/dQv8nktxx4BFHp1M0gROTXA=\n\tdep\tgolang.org/x/term\tv0.47.0\th1:cpyOwQkr2Nzxe2p6KnrTG7Ei2wtzjsuSjhpXXepZ/BM=\n\tdep\tmodernc.org/libc\tv1.77.1\th1:Ct8j47QtiZ1Enj2DtFXQtUqrPCAjdCmPjtCuvrYQ0Hs=\n\tdep\tmodernc.org/mathutil\tv1.7.1\th1:GCZVGXdaN8gTqB1Mf/usp1Y/hSqgI2vAGGP4jZMCxOU=\n\tdep\tmodernc.org/memory\tv1.12.1\th1:nFMiWrpStgZczNl6XI9GnIk/rWhYIyHGUaR04pGbp9g=\n\tdep\tmodernc.org/sqlite\tv1.60.1\th1:/blz53O951KWFOso4QQvEs/Fq6cDBKLtMVrYNSeJVKw=\n\tbuild\t-buildmode=exe\n\tbuild\t-compiler=gc\n\tbuild\t-trimpath=true\n\tbuild\tCGO_ENABLED=0\n\tbuild\tGOARCH=amd64\n\tbuild\tGOOS=linux\n\tbuild\tGOAMD64=v1\n\tbuild\tvcs=git\n\tbuild\tvcs.revision=e8f8e885c5533708a68b2d9add55cf99937c621f\n\tbuild\tvcs.time=2026-10-12T13:01:27Z\n\tbuild\tvcs.modified=false\n"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\artifacts\\go-committed-final\\inkweft-backup-linux-arm64",
+          "bytes": 17253897,
+          "sha256": "e9b640eaf8f3c4ccb583c139c550b31ae8d3f5b317acf6c97c44d9bd62d4f899",
+          "buildInfo": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\artifacts\\go-committed-final\\inkweft-backup-linux-arm64: go1.27.2\n\tpath\tinkweft/backup\n\tmod\tinkweft/backup\t(devel)\t\n\tdep\tgithub.com/dustin/go-humanize\tv1.0.1\th1:GzkhY7T5VNhEkwH0PVJgjz+fX1rhBrR7pRT3mDkpeCY=\n\tdep\tgithub.com/google/uuid\tv1.6.0\th1:NIvaJDMOsjHA8n1jAhLSgzrAzy1Hgr+hNrb57e+94F0=\n\tdep\tgithub.com/remyoudompheng/bigfft\tv0.0.0-20230129092748-24d4a6f8daec\th1:W09IVJc94icq4NjY3clb7Lk8O1qJ8BdBEF8z0ibU0rE=\n\tdep\tgolang.org/x/crypto\tv0.58.0\th1:COkYLr4k7nDI4r6QtMML2AfzeIswWHAJthLS6K/M/54=\n\tdep\tgolang.org/x/sys\tv0.49.0\th1:XbzkgYJHdqh/8m2Uu0W/dQv8nktxx4BFHp1M0gROTXA=\n\tdep\tgolang.org/x/term\tv0.47.0\th1:cpyOwQkr2Nzxe2p6KnrTG7Ei2wtzjsuSjhpXXepZ/BM=\n\tdep\tmodernc.org/libc\tv1.77.1\th1:Ct8j47QtiZ1Enj2DtFXQtUqrPCAjdCmPjtCuvrYQ0Hs=\n\tdep\tmodernc.org/mathutil\tv1.7.1\th1:GCZVGXdaN8gTqB1Mf/usp1Y/hSqgI2vAGGP4jZMCxOU=\n\tdep\tmodernc.org/memory\tv1.12.1\th1:nFMiWrpStgZczNl6XI9GnIk/rWhYIyHGUaR04pGbp9g=\n\tdep\tmodernc.org/sqlite\tv1.60.1\th1:/blz53O951KWFOso4QQvEs/Fq6cDBKLtMVrYNSeJVKw=\n\tbuild\t-buildmode=exe\n\tbuild\t-compiler=gc\n\tbuild\t-trimpath=true\n\tbuild\tCGO_ENABLED=0\n\tbuild\tGOARCH=arm64\n\tbuild\tGOOS=linux\n\tbuild\tGOARM64=v8.0\n\tbuild\tvcs=git\n\tbuild\tvcs.revision=e8f8e885c5533708a68b2d9add55cf99937c621f\n\tbuild\tvcs.time=2026-10-12T13:01:27Z\n\tbuild\tvcs.modified=false\n"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\artifacts\\go-committed-final\\inkweft-backup-windows-amd64.exe",
+          "bytes": 18258944,
+          "sha256": "dc4fa7ac1d55a3256f040c9d2c71c82c93f6a0d6724cf799197281fc6a1d9fd1",
+          "buildInfo": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\artifacts\\go-committed-final\\inkweft-backup-windows-amd64.exe: go1.27.2\n\tpath\tinkweft/backup\n\tmod\tinkweft/backup\t(devel)\t\n\tdep\tgithub.com/dustin/go-humanize\tv1.0.1\th1:GzkhY7T5VNhEkwH0PVJgjz+fX1rhBrR7pRT3mDkpeCY=\n\tdep\tgithub.com/mattn/go-isatty\tv0.0.24\th1:tGZZoVgT/KiqK1c8ocVLeDS8BSWMRd47J3Lbz7vsReI=\n\tdep\tgithub.com/ncruces/go-strftime\tv1.0.0\th1:HMFp8mLCTPp341M/ZnA4qaf7ZlsbTc+miZjCLOFAw7w=\n\tdep\tgithub.com/remyoudompheng/bigfft\tv0.0.0-20230129092748-24d4a6f8daec\th1:W09IVJc94icq4NjY3clb7Lk8O1qJ8BdBEF8z0ibU0rE=\n\tdep\tgolang.org/x/crypto\tv0.58.0\th1:COkYLr4k7nDI4r6QtMML2AfzeIswWHAJthLS6K/M/54=\n\tdep\tgolang.org/x/sys\tv0.49.0\th1:XbzkgYJHdqh/8m2Uu0W/dQv8nktxx4BFHp1M0gROTXA=\n\tdep\tgolang.org/x/term\tv0.47.0\th1:cpyOwQkr2Nzxe2p6KnrTG7Ei2wtzjsuSjhpXXepZ/BM=\n\tdep\tmodernc.org/libc\tv1.77.1\th1:Ct8j47QtiZ1Enj2DtFXQtUqrPCAjdCmPjtCuvrYQ0Hs=\n\tdep\tmodernc.org/mathutil\tv1.7.1\th1:GCZVGXdaN8gTqB1Mf/usp1Y/hSqgI2vAGGP4jZMCxOU=\n\tdep\tmodernc.org/memory\tv1.12.1\th1:nFMiWrpStgZczNl6XI9GnIk/rWhYIyHGUaR04pGbp9g=\n\tdep\tmodernc.org/sqlite\tv1.60.1\th1:/blz53O951KWFOso4QQvEs/Fq6cDBKLtMVrYNSeJVKw=\n\tbuild\t-buildmode=exe\n\tbuild\t-compiler=gc\n\tbuild\t-trimpath=true\n\tbuild\tCGO_ENABLED=0\n\tbuild\tGOARCH=amd64\n\tbuild\tGOOS=windows\n\tbuild\tGOAMD64=v1\n\tbuild\tvcs=git\n\tbuild\tvcs.revision=e8f8e885c5533708a68b2d9add55cf99937c621f\n\tbuild\tvcs.time=2026-10-12T13:01:27Z\n\tbuild\tvcs.modified=false\n"
+        }
+      ],
+      "actualNativeServer": {
+        "pid": 44704,
+        "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\artifacts\\inkweft-backup-v91-final-windows-amd64.exe",
+        "sha256": "bb26b274540298321bae249e471d2a86e452c05be194096383d83f5e4ba7c5fa",
+        "buildInfo": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\artifacts\\inkweft-backup-v91-final-windows-amd64.exe: go1.27.2\n\tpath\tinkweft/backup\n\tmod\tinkweft/backup\t(devel)\t\n\tdep\tgithub.com/dustin/go-humanize\tv1.0.1\th1:GzkhY7T5VNhEkwH0PVJgjz+fX1rhBrR7pRT3mDkpeCY=\n\tdep\tgithub.com/mattn/go-isatty\tv0.0.24\th1:tGZZoVgT/KiqK1c8ocVLeDS8BSWMRd47J3Lbz7vsReI=\n\tdep\tgithub.com/ncruces/go-strftime\tv1.0.0\th1:HMFp8mLCTPp341M/ZnA4qaf7ZlsbTc+miZjCLOFAw7w=\n\tdep\tgithub.com/remyoudompheng/bigfft\tv0.0.0-20230129092748-24d4a6f8daec\th1:W09IVJc94icq4NjY3clb7Lk8O1qJ8BdBEF8z0ibU0rE=\n\tdep\tgolang.org/x/crypto\tv0.58.0\th1:COkYLr4k7nDI4r6QtMML2AfzeIswWHAJthLS6K/M/54=\n\tdep\tgolang.org/x/sys\tv0.49.0\th1:XbzkgYJHdqh/8m2Uu0W/dQv8nktxx4BFHp1M0gROTXA=\n\tdep\tgolang.org/x/term\tv0.47.0\th1:cpyOwQkr2Nzxe2p6KnrTG7Ei2wtzjsuSjhpXXepZ/BM=\n\tdep\tmodernc.org/libc\tv1.77.1\th1:Ct8j47QtiZ1Enj2DtFXQtUqrPCAjdCmPjtCuvrYQ0Hs=\n\tdep\tmodernc.org/mathutil\tv1.7.1\th1:GCZVGXdaN8gTqB1Mf/usp1Y/hSqgI2vAGGP4jZMCxOU=\n\tdep\tmodernc.org/memory\tv1.12.1\th1:nFMiWrpStgZczNl6XI9GnIk/rWhYIyHGUaR04pGbp9g=\n\tdep\tmodernc.org/sqlite\tv1.60.1\th1:/blz53O951KWFOso4QQvEs/Fq6cDBKLtMVrYNSeJVKw=\n\tbuild\t-buildmode=exe\n\tbuild\t-compiler=gc\n\tbuild\t-trimpath=true\n\tbuild\tCGO_ENABLED=0\n\tbuild\tGOARCH=amd64\n\tbuild\tGOOS=windows\n\tbuild\tGOAMD64=v1\n\tbuild\tvcs=git\n\tbuild\tvcs.revision=b7594ac953338b56ca4e73050c43bb83137c23f5\n\tbuild\tvcs.time=2026-10-12T03:37:18Z\n\tbuild\tvcs.modified=true\n"
+      },
+      "runtimeComparedWithCommittedBuild": {
+        "nonVcsBuildInfoEqual": true,
+        "vcsOnlyDifferences": [
+          "\tbuild\tvcs.modified=false",
+          "\tbuild\tvcs.modified=true",
+          "\tbuild\tvcs.revision=b7594ac953338b56ca4e73050c43bb83137c23f5",
+          "\tbuild\tvcs.revision=e8f8e885c5533708a68b2d9add55cf99937c621f",
+          "\tbuild\tvcs.time=2026-10-12T03:37:18Z",
+          "\tbuild\tvcs.time=2026-10-12T13:01:27Z"
+        ],
+        "productionGoSourcesUnchangedAfterNativeBuild": true
+      }
+    },
+    "git-push-implementation.json": {
+      "stage": "implementation",
+      "commit": "769a0fb503aa334396ff60415afc22e2201c8bc8",
+      "branch": "codex/storage-optimization-20261011",
+      "remoteCommit": "769a0fb503aa334396ff60415afc22e2201c8bc8",
+      "url": "https://github.com/InkWeftDevs/InkWeft/tree/codex/storage-optimization-20261011",
+      "docker": "NOT_RUN"
+    },
+    "cleanup-final.json": {
+      "temporaryCopyChunkAbsent": true,
+      "pythonRelayStopped": true,
+      "localTabletAuditExcluded": true,
+      "remainingOwnedGo": {
+        "binary": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\artifacts\\inkweft-backup-v91-final-windows-amd64.exe",
+        "address": "127.0.0.1:18851",
+        "pid": 44704,
+        "reason": "Automatic approval review rejected stopping this Go process; only policy-blocked reason returned. No retry or bypass."
+      },
+      "preserved": [
+        "Source and user uncommitted changes",
+        "Delivery APKs and Go binaries",
+        "Signed build material, toolchains and caches",
+        "Raw passing, failing and intentional-exit evidence",
+        "Synthetic capacity archives and encrypted service directory"
+      ],
+      "device": {
+        "at": "2026-10-12T22:22:01.4216+08:00",
+        "instance": {
+          "android_version": "12.0",
+          "created_timestamp": 1790410425875068,
+          "disk_size_bytes": 61698262342,
+          "error_code": 0,
+          "hyperv_enabled": true,
+          "index": "5",
+          "info_source": "local",
+          "is_android_started": false,
+          "is_main": false,
+          "is_process_started": false,
+          "name": "InkWeft-Test"
+        },
+        "root": {
+          "root_permission": "false"
+        },
+        "private_adb_running": false,
+        "test_packages_removed": true,
+        "rotation_unchanged": true,
+        "other_packages_touched": false
+      },
+      "resourceProbesEnded": true,
+      "dockerProcesses": [],
+      "stopMarkerRemoved": true,
+      "laterIndependentFixtureStopped": true
+    },
+    "source-final-manifest.json": {
+      "commit": "769a0fb503aa334396ff60415afc22e2201c8bc8",
+      "codeCommit": "e8f8e885c5533708a68b2d9add55cf99937c621f",
+      "archive": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Cloud-Go-Performance\\sources\\source-implementation-769a0fb.zip",
+      "bytes": 135186905,
+      "sha256": "57280c358683e8a38d73f63aac6d660e055663a77a4d528d2382b88e429c0d5c",
+      "scope": "Committed implementation and interim verification; final evidence is committed separately.",
+      "fileCount": 1891
+    }
+  },
   "limits": [
     "Native large cloud queues are prepared from actual author archives by opt-in test infrastructure; they are not backup-button UI tests.",
     "Software bitmap completion times do not measure hardware FPS or pen latency.",
@@ -2118,6 +5349,22 @@
     {
       "case": "8 GiB input copy timeout",
       "resolution": "Existing prefix SHA verified before bounded append; full SHA verified afterward."
+    },
+    {
+      "case": "8 GiB additional server restart command blocked by automatic approval review",
+      "resolution": "No retry or bypass; large run validates client restart. Independent actual Go process-restart/crash tests passed."
+    },
+    {
+      "case": "V1 round-trip fixture lacked mandatory v2 download lease",
+      "resolution": "Original 422 retained; corrected request uses a valid owner lease to test foreign-account 404."
+    },
+    {
+      "case": "Three staged V51/V52 compatibility methods selected on V91",
+      "resolution": "Wrong host selection; version guards correctly rejected V91. All 19 eligible renderer/resource methods passed. Staged fixture renamed Probe to exclude default current-version CI."
+    },
+    {
+      "case": "History UI fixture created a notebook without an operation receipt",
+      "resolution": "Fixture now supplies operation identity; standalone receipt/count check and screenshot passed."
     }
   ]
 }

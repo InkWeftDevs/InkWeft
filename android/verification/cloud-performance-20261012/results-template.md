@@ -1,6 +1,6 @@
 # V91 逐设备结果记录
 
-本轮新增 CLOUD91-01～04、RENDER91-01、SEARCH91-01、HIST91-01。影响旧版 CLOUD90、VIEW89、SEARCH89、HIST90 及 V46-09；保留既有设备实际结果。本模板默认 NOT_RUN，模拟器/云端不能替代真机栏。
+本轮新增 CLOUD91-01～06、RENDER91-01、SEARCH91-01、HIST91-01。影响旧版 CLOUD90、VIEW89、SEARCH89、HIST90 及 V46-09；保留既有设备实际结果。本模板默认 NOT_RUN，模拟器/云端不能替代真机栏。
 
 - 用例 ID、执行日期与开始/异常时间：
 - 应用版本、APK SHA-256、源码 commit；Go 二进制/镜像摘要及 schema：

@@ -1,6 +1,6 @@
 # 8 GiB 加密云备份协议设计
 
-状态：Go 服务与 Android v2 正在完成本地联调与分项验收；实际结果以本轮验证报告为准。目标经用户确认：单份完整资料库明文最多 8 GiB。部署入口与 schema 重建规则见 GO-DEPLOYMENT.md；尚未部署公网。
+状态：Go 服务与 Android v2 已完成本地进程、600 MiB/2 GiB/8 GiB 实际传输及分项验收，结果见 Android 本轮验证报告。Docker 按用户安排留待云端执行，物理设备另测。目标经用户确认：单份完整资料库明文最多 8 GiB。部署入口与 schema 重建规则见 GO-DEPLOYMENT.md；尚未部署公网。
 
 ## 容量与发现
 

@@ -2,6 +2,13 @@ import unittest
 from android_plan import plan, inventory
 
 class PlanTest(unittest.TestCase):
+    def test_staged_legacy_and_capacity_probes_are_not_current_version_runs(self):
+        from pathlib import Path
+        current=inventory('app')
+        for name in ['ReadLockCompatibilityProbe','LargeCloudEngineProbe','BackupDeadlineProbe','BackupCrashProbe']:
+            self.assertNotIn('org.inkweft.app.'+name,current)
+            self.assertTrue((Path(__file__).resolve().parents[1]/'android/app/src/androidTest/java/org/inkweft/app'/f'{name}.kt').is_file())
+        self.assertIn('org.inkweft.app.BackupReliabilityUiTest',plan([],True)['app'])
     def test_explicit_methods_keep_source_order_and_reject_missing_or_repeated(self):
         from android_plan import select_methods
         self.assertEqual(["a", "b"], select_methods(["a", "b"]))

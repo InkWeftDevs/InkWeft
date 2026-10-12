@@ -194,10 +194,10 @@ class EncryptedBackupIntegrationTest {
             chunks.indices.filterNot{it in existing}.forEach{i->resumed.request("PUT",library,"/uploads/$operation/chunks/$i",bytes=chunks[i])}
             val receipt=transport.json("POST",library,"/uploads/$operation/publish")
             assertEquals("PUBLISHED",receipt.getString("state"));assertEquals(receipt.toString(),transport.json("GET",library,"/operations/$operation").toString())
-            val bob=BackupTransport(BackupTransport.login(alice.url,"synthetic-bob","synthetic-bob-password-456",id()),2)
-            try{bob.request("GET",library,"/versions/$operation/chunks/0");fail("foreign attachment readable")}catch(e:BackupHttpError){assertEquals(404,e.status)}
             val other=BackupTransport(BackupTransport.login(alice.url,"synthetic-alice","synthetic-alice-password-123",id()),2)
             val lease=other.json("POST",library,"/versions/$operation/leases").getString("lease")
+            val bob=BackupTransport(BackupTransport.login(alice.url,"synthetic-bob","synthetic-bob-password-456",id()),2)
+            try{bob.request("GET",library,"/versions/$operation/chunks/0?lease=$lease");fail("foreign attachment readable")}catch(e:BackupHttpError){assertEquals(404,e.status)}
             val downloaded=File(root,"download.iwbk");downloaded.outputStream().use{out->chunks.indices.forEach{i->val b=other.request("GET",library,"/versions/$operation/chunks/$i?lease=$lease");assertEquals(EncryptedBackupFile.hex(chunks[i]),EncryptedBackupFile.hex(b));out.write(b)}}
             other.json("DELETE",library,"/versions/$operation/leases/$lease")
             val clear=File(root,"restored.iwbackup");EncryptedBackupFile.decrypt(downloaded,clear,library,recovery)

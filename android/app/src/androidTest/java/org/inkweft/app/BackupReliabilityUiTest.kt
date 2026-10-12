@@ -47,13 +47,13 @@ class BackupReliabilityUiTest {
             compose.onNodeWithText("查看版本与恢复").performClick();await();assertEquals(10,app.backupEngine.ui.value.details.size)
             compose.onAllNodesWithText("删除",substring=false).onFirst().performScrollTo().performClick();compose.onNodeWithText("确认删除").performClick();await()
             var job:kotlinx.coroutines.Job?=null;compose.runOnIdle{job=app.backupEngine.create(library,key)};runBlocking{job?.join()};val pending=queue();val identity=app.backupEngine.connection()!!
-            runBlocking{BackupTransport(identity).json("PUT",library,"/uploads/${pending.getString("operation")}",pending.getJSONObject("manifest"))}
+            runBlocking{BackupTransport(identity,2).json("PUT",library,"/uploads/${pending.getString("operation")}",pending.getJSONObject("manifest"))}
             compose.onNodeWithText("刷新").performScrollTo().performClick();await()
             compose.onNodeWithText("放弃上传",substring=false).performScrollTo().performClick();compose.onNodeWithText("确认删除").performClick();await()
             assertEquals("DELETED",queue().getString("state"));assertEquals(9,app.backupEngine.ui.value.details.size)
             // The confirmation was opened while pending; another actor publishes before confirming.
             compose.runOnIdle{job=app.backupEngine.create(library,key)};runBlocking{job?.join()}
-            val racing=queue();val transport=BackupTransport(identity);val operation=racing.getString("operation")
+            val racing=queue();val transport=BackupTransport(identity,2);val operation=racing.getString("operation")
             runBlocking{transport.json("PUT",library,"/uploads/$operation",racing.getJSONObject("manifest"))}
             compose.onNodeWithText("刷新").performScrollTo().performClick();await()
             compose.onNodeWithText("放弃上传",substring=false).performScrollTo().performClick()
@@ -63,7 +63,7 @@ class BackupReliabilityUiTest {
             // Model a received server delete with the final acknowledgement lost, then recover through UI.
             val deletion=java.util.UUID.randomUUID().toString()
             runBlocking{transport.json("DELETE",library,"/versions/$operation?operation_id=$deletion")}
-            File(app.filesDir,"encrypted-backup-jobs/delete.json").writeText(JSONObject().put("library",library).put("target",operation).put("operation",deletion).put("binding",identity.binding(library)).toString())
+            File(app.filesDir,"encrypted-backup-jobs/delete.json").writeText(JSONObject().put("protocol",2).put("library",library).put("target",operation).put("operation",deletion).put("binding",identity.binding(library)).toString())
             compose.onNodeWithText("刷新").performScrollTo().performClick();await()
             compose.onNodeWithText("继续确认上一次删除").performScrollTo().performClick();await()
             assertFalse(app.backupEngine.hasPendingDeletion());assertEquals("DELETED",queue().getString("state"))

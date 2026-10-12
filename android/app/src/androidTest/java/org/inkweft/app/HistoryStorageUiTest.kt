@@ -21,7 +21,7 @@ class HistoryStorageUiTest {
     @get:Rule val compose=createComposeRule()
     @Test fun auditDisplaysCountsWithoutOfferingDeletionOfAuthorHistory(){
         val app=InstrumentationRegistry.getInstrumentation().targetContext.applicationContext as InkWeftApplication
-        runBlocking{app.workspaceRepository.create("历史整理检查",false,PaperStyle.BLANK)}
+        runBlocking{app.workspaceRepository.create("历史整理检查",false,PaperStyle.BLANK,operationId=java.util.UUID.randomUUID().toString())}
         compose.setContent{MaterialTheme{Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState())){OriginalStorageSummary()}}}
         compose.waitUntil(15_000){runCatching{compose.onNodeWithTag("audit-history-storage").assertIsEnabled()}.isSuccess}
         compose.onNodeWithTag("audit-history-storage").performClick()
@@ -30,6 +30,6 @@ class HistoryStorageUiTest {
         compose.onNodeWithTag("collect-detached-history").assertIsNotEnabled()
         compose.onNodeWithTag("audit-history-storage").performScrollTo()
         val bitmap=checkNotNull(InstrumentationRegistry.getInstrumentation().uiAutomation.takeScreenshot())
-        try{File(app.getExternalFilesDir(null),"v90-history-storage.png").outputStream().use{bitmap.compress(Bitmap.CompressFormat.PNG,100,it)}}finally{bitmap.recycle()}
+        try{File(app.getExternalFilesDir(null),"v91-history-storage.png").outputStream().use{bitmap.compress(Bitmap.CompressFormat.PNG,100,it)}}finally{bitmap.recycle()}
     }
 }

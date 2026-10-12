@@ -28,7 +28,7 @@ import java.util.UUID
  * It never clears the application DB. Only its private round-trip DBs are deleted.
  */
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-class ReadLockCompatibilityTest {
+class ReadLockCompatibilityProbe {
     private val app get() = InstrumentationRegistry.getInstrumentation().targetContext.applicationContext as InkWeftApplication
     private val evidence get() = File(app.filesDir, "RL52-compat-evidence").apply { check(isDirectory || mkdirs()) }
     private fun id(name: String) = UUID.nameUUIDFromBytes(("RL52-compat:" + name).toByteArray(Charsets.UTF_8)).toString()
