@@ -1,0 +1,127 @@
+[
+  {
+    "Id": "sha256:071c206260fb994f1c81e5c88e585413031ee42ae9b6b9e25ea5ef6b3e6d1577",
+    "RepoTags": [
+      "inkweft-cloud-check:a128bb07-20261012"
+    ],
+    "Created": "2026-10-12T14:29:08.777396984Z",
+    "Architecture": "amd64",
+    "Os": "linux",
+    "Size": 93065754,
+    "RootFS": {
+      "Type": "layers",
+      "Layers": [
+        "sha256:e58989146fcec76699871403b9897b5c014af1ccd85f5a9300a215e7975525d7",
+        "sha256:71e4cad0bc32baadd053d33e8c2a45aa27c26a6d84d0f200884a6c15a1dafc3c",
+        "sha256:84ad24b29e091cca5c50221b96456e61fa7e4572cd1276df3f77672332dc48c5"
+      ]
+    },
+    "Config": {
+      "ArgsEscaped": true,
+      "Cmd": [
+        "inkweft-backup",
+        "--db",
+        "/state/backup-v2.db",
+        "--host",
+        "0.0.0.0",
+        "--port",
+        "18751"
+      ],
+      "Entrypoint": null,
+      "Env": [
+        "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+        "GOMEMLIMIT=384MiB"
+      ],
+      "ExposedPorts": {
+        "18751/tcp": {}
+      },
+      "Labels": null,
+      "OnBuild": null,
+      "User": "10001:10001",
+      "Volumes": null,
+      "WorkingDir": ""
+    }
+  },
+  {
+    "Id": "sha256:42ce3060e72235b15389833a89b0b85f381c0918a542f6bee246230a7d1031af",
+    "RepoTags": [],
+    "Created": "2026-10-12T14:29:08.777396984Z",
+    "Architecture": "amd64",
+    "Os": "linux",
+    "Size": 93065754,
+    "RootFS": {
+      "Type": "layers",
+      "Layers": [
+        "sha256:e58989146fcec76699871403b9897b5c014af1ccd85f5a9300a215e7975525d7",
+        "sha256:71e4cad0bc32baadd053d33e8c2a45aa27c26a6d84d0f200884a6c15a1dafc3c",
+        "sha256:84ad24b29e091cca5c50221b96456e61fa7e4572cd1276df3f77672332dc48c5"
+      ]
+    },
+    "Config": {
+      "ArgsEscaped": true,
+      "Cmd": [
+        "inkweft-backup",
+        "--db",
+        "/state/backup-v2.db",
+        "--host",
+        "0.0.0.0",
+        "--port",
+        "18751"
+      ],
+      "Entrypoint": null,
+      "Env": [
+        "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+        "GOMEMLIMIT=384MiB"
+      ],
+      "ExposedPorts": {
+        "18751/tcp": {}
+      },
+      "Labels": null,
+      "OnBuild": null,
+      "User": "10001:10001",
+      "Volumes": null,
+      "WorkingDir": ""
+    }
+  },
+  {
+    "Id": "sha256:cc9dc5a0540041cffbae5b738367bc1dc2cb742591fdb3467e9678fe087b9cd4",
+    "RepoTags": [],
+    "Created": "2026-10-12T14:29:08.777396984Z",
+    "Architecture": "amd64",
+    "Os": "linux",
+    "Size": 93065754,
+    "RootFS": {
+      "Type": "layers",
+      "Layers": [
+        "sha256:e58989146fcec76699871403b9897b5c014af1ccd85f5a9300a215e7975525d7",
+        "sha256:71e4cad0bc32baadd053d33e8c2a45aa27c26a6d84d0f200884a6c15a1dafc3c",
+        "sha256:84ad24b29e091cca5c50221b96456e61fa7e4572cd1276df3f77672332dc48c5"
+      ]
+    },
+    "Config": {
+      "ArgsEscaped": true,
+      "Cmd": [
+        "inkweft-backup",
+        "--db",
+        "/state/backup-v2.db",
+        "--host",
+        "0.0.0.0",
+        "--port",
+        "18751"
+      ],
+      "Entrypoint": null,
+      "Env": [
+        "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+        "GOMEMLIMIT=384MiB"
+      ],
+      "ExposedPorts": {
+        "18751/tcp": {}
+      },
+      "Labels": null,
+      "OnBuild": null,
+      "User": "10001:10001",
+      "Volumes": null,
+      "WorkingDir": ""
+    }
+  }
+]

@@ -1,0 +1,49 @@
+#!/usr/bin/env python3
+"""Evidence wrapper: preserve acceptance commands; supply the established build CA."""
+import datetime
+import json
+import os
+from pathlib import Path
+import subprocess
+import sys
+
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
+from run_recorded import sanitize
+
+args = sys.argv[1:]
+effective = list(args)
+if args and args[0] == 'build':
+    effective = ['build', '--progress=plain', '--file', str(ROOT/'Dockerfile.session-ca'),
+                 '--secret', 'id=session_ca,src=/etc/ssl/certs/ca-certificates.crt', *args[1:]]
+env = dict(os.environ, BUILDX_CONFIG=str(ROOT/'buildx'))
+entry = {'started_utc': datetime.datetime.now(datetime.timezone.utc).isoformat(),
+         'requested': args, 'executed': ['/usr/local/bin/docker', *effective]}
+
+def capture(container, suffix):
+    result = subprocess.run(['/usr/local/bin/docker', 'inspect', container], capture_output=True, text=True, env=env)
+    if result.returncode == 0:
+        i = json.loads(result.stdout)[0]
+        safe = {'Id': i['Id'], 'Name': i['Name'], 'Image': i['Image'], 'State': i['State'],
+                'User': i['Config']['User'],
+                'HostConfig': {k: i['HostConfig'].get(k) for k in ['ReadonlyRootfs', 'CapDrop', 'SecurityOpt', 'PortBindings', 'Tmpfs']},
+                'Ports': i['NetworkSettings']['Ports'],
+                'Mounts': [{k: m.get(k) for k in ['Type', 'Name', 'Destination', 'RW']} for m in i['Mounts']]}
+        (ROOT/'evidence'/f'{container}-{suffix}.json').write_text(json.dumps(safe, indent=2))
+    if suffix == 'final':
+        logs = subprocess.run(['/usr/local/bin/docker', 'logs', container], capture_output=True, text=True, env=env)
+        if logs.returncode == 0:
+            (ROOT/'evidence'/f'{container}.log').write_text(sanitize(logs.stdout + logs.stderr))
+
+if args[:2] == ['rm', '-f'] and len(args) == 3:
+    capture(args[2], 'final')
+result = subprocess.run(['/usr/local/bin/docker', *effective], capture_output=True, text=True, env=env)
+entry.update(exit_code=result.returncode, stdout=sanitize(result.stdout), stderr=sanitize(result.stderr),
+             finished_utc=datetime.datetime.now(datetime.timezone.utc).isoformat())
+with (ROOT/'evidence/container-docker-commands.jsonl').open('a') as f:
+    f.write(json.dumps(entry) + '\n')
+if result.returncode == 0 and args[:2] == ['run', '-d']:
+    capture(args[args.index('--name')+1], 'started')
+sys.stdout.write(result.stdout)
+sys.stderr.write(sanitize(result.stderr))
+sys.exit(result.returncode)

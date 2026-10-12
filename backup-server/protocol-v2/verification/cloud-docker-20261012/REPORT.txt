@@ -1,0 +1,50 @@
+2026-10-12 云端 Docker 验证与夹具修复
+
+结果：已突破此前依赖下载阻塞；Docker 完整构建成功。已修复仓库容器测试在重启时重复初始化夹具的问题，并直接运行提交后的 container_check.py，GO-CLOUD-01 至 GO-CLOUD-05 全部通过。
+
+源码身份
+原分支：codex/storage-optimization-20261011
+初始固定及 14:36:34 UTC fetch 后远端 HEAD：a128bb07e34cb82f00eeafc8e62a47bf7b95b128
+实际验证的修复提交：4ee5c671b3bfcd1c22a2dfb82f5f49e642190a8e
+隔离草稿分支：codex/docker-validation-20261012-a128bb07
+仅 backup-server/container_check.py 增加 4 行；初始化结束后保留独立卷，停止/移除带 --fixture 的容器，启动不带 --fixture 的正常服务，再执行原有全部断言及真实 docker restart。未改变生产 Go 代码、接口、数据库保护、Dockerfile 或 Android 文件。随后证据/交接文档提交不改变执行代码。
+
+构建
+原 Dockerfile 使用 golang:1.27.2-bookworm、debian:bookworm-slim 和 go mod download。镜像层拉取成功，但容器缺少当前云环境的 CA，依赖下载在 TLS 验证阶段失败（退出 1），实际地址：proxy.golang.org/github.com/dustin/go-humanize/@v/v1.0.1.mod；错误 x509: certificate signed by unknown authority，无 HTTP 状态。
+按照 CLOUD-TEST-HANDOFF 的会话 CA 说明，只在仓库外 Dockerfile.session-ca 的 go mod download 步骤挂载环境已有的 /etc/ssl/certs/ca-certificates.crt 为 BuildKit secret，TLS 校验继续启用。未修改代理、daemon 网络、安全策略或凭据；CA 不进入最终镜像。原始 Dockerfile 保留不变。
+完整下载耗时 8.8 秒，CGO_ENABLED=0 go build -trimpath 耗时 22.3 秒，最终镜像导出成功，退出 0。go mod verify 成功，SQLite v1.60.1 和 libc v1.77.1 的下载 zip SHA-256、模块校验值和二进制依赖身份见 go-toolchain-and-dependencies.log。本次没有遇到 storage.googleapis.com Forbidden 或明确白名单/策略拒绝；未输出的成功重定向 URL 不作推测。
+原始 Buildx 状态目录只读的问题通过本任务 BUILDX_CONFIG 可写目录解决，没有改 daemon 配置。
+最终验收镜像：sha256:ab36304d7f7dfbc358bc570869923c5e71d07c4d3a5aaa714c71f1ad3c671b58
+各次构建完整摘要见日志；前 3 个镜像的 RootFS 和运行配置一致，ID 不同。最终镜像由相同源文件与缓存构建步骤导出。
+
+通过清单
+GO-CLOUD-01：非 root UID 10001:10001、只读根、ALL capabilities 移除、就绪检查；主机端口均仅绑定 127.0.0.1。
+GO-CLOUD-02：实际分块上传/发布、docker restart、身份/操作回执保持、下载解密和摘要一致。
+GO-CLOUD-03：停止原服务，以同一镜像 UID 将整个状态目录（含存在的 WAL/SHM 及分块）cp -a 到独立卷，恢复身份、回执及数据。
+GO-CLOUD-04：专用 48 MiB tmpfs 接收块 0 后真正填满，df available=0，dd 返回 No space left on device；上传返回 507，received 保持 [0] 和 PENDING；删除本次填充文件后用原 operation 续传、发布并解密一致。
+GO-CLOUD-05：满盘故障后独立恢复卷仍可恢复已发布数据，摘要一致。
+go mod verify：退出 0。go test -race ./...：退出 0。Python unittest：24 项通过，无跳过。verify_design.py：4 项通过。
+只改动容器脚本，已对已提交修复重跑完整 Docker 容器验收；Go、依赖和 Python 回归源码未变，因此沿用同源的通过结果，不作无必要重复测试。Go 命令由构建阶段内 Go 1.27.2 执行；Python 使用 3.12.14，实际进程验收使用从镜像提取的 CGO_ENABLED=0 二进制。
+
+历史失败（保留，未冒充通过）
+原 container_check.py：启动/上传/发布成功，重启携带 --fixture 后服务退出 1，直接日志 Fixture refuses a populated database。GO-CLOUD-01 通过，02 失败，03-05 当时未跑。原结果、仓库外验证副本结果、最终提交脚本结果均单独保存。
+首次 Go race 临时 /tmp tmpfs 上执行测试二进制时报 permission denied，退出 1；改用普通临时构建容器可写层后通过。生产容器权限未改变。
+
+未跑与边界
+容器数据为独立合成约 2 MiB 明文，不代表重跑 Android/模拟器/真机或 600 MiB、2 GiB、8 GiB 端到端大容量测试。未触发/核验远端 GitHub Actions。容量验算单列，不替代实测。
+仅云端操作，未触碰用户电脑、真实备份/凭据，无公网部署/镜像发布。rea 无修改。全部本次容器、卷和服务已清理，镜像及必要证据保留；未清理用户既有资源。
+当前 Docker 验收无剩余阻塞。草稿分支仅保留在本地，未推送、未合并；按用户最新要求等待父侧与 Android 四项优化完成后统一推送。本环境复现仍需要记录的会话 CA 挂载。
+
+证据
+summary.json 与 source-identity.json：通过矩阵和精确代码身份。
+docker-build-session-ca.log：首次真实完整依赖下载、编译、镜像导出。
+container-check-fixed-branch-results.json / .log：已提交修复的完整 PASS。
+container-check-results.json / .log：原脚本失败。
+container-docker-commands.jsonl：请求/实际 Docker 命令、退出码、dd/df 与清理操作。
+inkweft-go-check-*-started/final.json 和 *.log：运行权限、回环端口、服务端 507 与原失败证据。
+cleanup.json：无残留资源。
+各命令 .json/.log 的首尾记录准确参数、工作目录、UTC 起止与退出码。URL userinfo 和查询串脱敏，归档日志仅规范化行尾空白（原始脱敏日志另留云端）；未存储凭据、CA 私钥、用户数据或会话 token。SHA256SUMS 用于校验归档文件。
+
+执行方式（原始绝对路径及精确参数以命令日志为准）
+BUILDX_CONFIG=<本次可写目录> docker build --progress=plain --secret id=session_ca,src=/etc/ssl/certs/ca-certificates.crt --file <仓库外 Dockerfile.session-ca> --iidfile <证据 image-id.txt> --tag <本次临时镜像> backup-server
+已提交容器脚本：在 backup-server 目录设置 PATH 为记录包装器、虚拟环境、系统目录后，执行 python container_check.py --output <container-check-fixed-branch-results.json>。包装器仅给 build 加相同 CA 选项，记录命令/容器状态/清理前日志；不改变断言或 Docker 返回值。

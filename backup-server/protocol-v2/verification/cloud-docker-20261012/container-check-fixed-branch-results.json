@@ -1,0 +1,12 @@
+{
+  "status": "PASS",
+  "scope": "Go container, private-volume recovery and bounded-disk rejection",
+  "schema": 2003,
+  "image": "sha256:ab36304d7f7dfbc358bc570869923c5e71d07c4d3a5aaa714c71f1ad3c671b58",
+  "uid": "10001",
+  "restart_download": "PASS",
+  "independent_volume_restore": "PASS",
+  "full_volume_available_bytes": 0,
+  "physical_full_volume_and_resume": "PASS",
+  "original_after_full_volume": "PASS"
+}

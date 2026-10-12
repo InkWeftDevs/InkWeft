@@ -1,0 +1,39 @@
+{
+  "base_commit": "a128bb07e34cb82f00eeafc8e62a47bf7b95b128",
+  "tested_fix_commit": "4ee5c671b3bfcd1c22a2dfb82f5f49e642190a8e",
+  "overall": "PASS_WITH_CLOUD_CA_SETUP",
+  "tests": {
+    "GO-CLOUD-01": "PASS",
+    "GO-CLOUD-02": "PASS",
+    "GO-CLOUD-03": "PASS",
+    "GO-CLOUD-04": "PASS",
+    "GO-CLOUD-05": "PASS",
+    "go_mod_verify": "PASS",
+    "go_test_race": "PASS",
+    "python_unittest": {
+      "status": "PASS",
+      "tests": 24,
+      "skipped": 0
+    },
+    "design_arithmetic": {
+      "status": "PASS",
+      "tests": 4
+    }
+  },
+  "production_image": "sha256:ab36304d7f7dfbc358bc570869923c5e71d07c4d3a5aaa714c71f1ad3c671b58",
+  "full_volume_available_bytes": 0,
+  "historical_failures": [
+    "Initial Buildx state path read-only",
+    "Original Dockerfile dependency TLS trust missing",
+    "Original container_check.py repeats --fixture on restart",
+    "Initial race test execution from temporary tmpfs denied"
+  ],
+  "not_run": [
+    "Android/physical-device and 600 MiB/2 GiB/8 GiB end-to-end tests",
+    "Remote GitHub Actions"
+  ],
+  "test_delta": "Only container_check.py changed; reran its complete Docker acceptance on the committed fix. Go source/dependencies/Python regression tests unchanged from the passing base run.",
+  "cleanup": "No containers, volumes or owned backup processes remain",
+  "network_policy_denials_observed": false,
+  "delivery": "LOCAL_ONLY; hold push until parent combines all tasks"
+}

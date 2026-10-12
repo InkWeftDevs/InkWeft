@@ -1,0 +1,22 @@
+{
+  "command": [
+    "docker",
+    "run",
+    "--rm",
+    "--name",
+    "inkweft-cloud-dependencies-a128bb07",
+    "--read-only",
+    "--cap-drop=ALL",
+    "--security-opt=no-new-privileges",
+    "inkweft-cloud-check-builder:a128bb07-20261012",
+    "sh",
+    "-ec",
+    "go version\ngo env GOPROXY GOSUMDB\nsha256sum /go/pkg/mod/cache/download/modernc.org/sqlite/@v/v1.60.1.zip /go/pkg/mod/cache/download/modernc.org/libc/@v/v1.77.1.zip\ncat /go/pkg/mod/cache/download/modernc.org/sqlite/@v/v1.60.1.ziphash /go/pkg/mod/cache/download/modernc.org/libc/@v/v1.77.1.ziphash\ngo version -m /inkweft-backup"
+  ],
+  "shell_display": "docker run --rm --name inkweft-cloud-dependencies-a128bb07 --read-only --cap-drop=ALL --security-opt=no-new-privileges inkweft-cloud-check-builder:a128bb07-20261012 sh -ec 'go version\ngo env GOPROXY GOSUMDB\nsha256sum /go/pkg/mod/cache/download/modernc.org/sqlite/@v/v1.60.1.zip /go/pkg/mod/cache/download/modernc.org/libc/@v/v1.77.1.zip\ncat /go/pkg/mod/cache/download/modernc.org/sqlite/@v/v1.60.1.ziphash /go/pkg/mod/cache/download/modernc.org/libc/@v/v1.77.1.ziphash\ngo version -m /inkweft-backup'",
+  "cwd": "/workspace/inkweft-cloud-verification-20261012/InkWeft/backup-server",
+  "started_utc": "2026-10-12T14:32:14.802824+00:00",
+  "sanitization": "URL userinfo and query strings removed",
+  "exit_code": 0,
+  "finished_utc": "2026-10-12T14:32:23.579366+00:00"
+}

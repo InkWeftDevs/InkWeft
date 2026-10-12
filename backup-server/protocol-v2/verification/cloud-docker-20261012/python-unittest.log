@@ -1,0 +1,34 @@
+{"command": ["env", "PYTHONDONTWRITEBYTECODE=1", "INKWEFT_BACKUP_BIN=/workspace/inkweft-cloud-verification-20261012/inkweft-backup", "/workspace/inkweft-cloud-verification-20261012/venv/bin/python", "-m", "unittest", "discover", "-v"], "shell_display": "env PYTHONDONTWRITEBYTECODE=1 INKWEFT_BACKUP_BIN=/workspace/inkweft-cloud-verification-20261012/inkweft-backup /workspace/inkweft-cloud-verification-20261012/venv/bin/python -m unittest discover -v", "cwd": "/workspace/inkweft-cloud-verification-20261012/InkWeft/backup-server", "started_utc": "2026-10-12T14:30:59.173579+00:00", "sanitization": "URL userinfo and query strings removed"}
+/workspace/inkweft-cloud-verification-20261012/venv/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+  from starlette.testclient import TestClient as TestClient  # noqa
+test_account_and_global_reserved_bytes_budget (test_backup.BackupProtocolTest.test_account_and_global_reserved_bytes_budget) ... ok
+test_bad_recovery_tampering_truncation_and_existing_output_preserved (test_backup.BackupProtocolTest.test_bad_recovery_tampering_truncation_and_existing_output_preserved) ... ok
+test_chunk_inventory_quota_and_pending_delete_preserve_receipts (test_backup.BackupProtocolTest.test_chunk_inventory_quota_and_pending_delete_preserve_receipts) ... ok
+test_delete_requires_new_explicit_operation_and_is_idempotent (test_backup.BackupProtocolTest.test_delete_requires_new_explicit_operation_and_is_idempotent) ... ok
+test_disk_failure_during_publication_keeps_previous_and_receipt_pending (test_backup.BackupProtocolTest.test_disk_failure_during_publication_keeps_previous_and_receipt_pending) ... ok
+test_health_pending_expiry_and_account_budget (test_backup.BackupProtocolTest.test_health_pending_expiry_and_account_budget) ... ok
+test_missing_changed_chunks_and_operation_payload_are_not_published (test_backup.BackupProtocolTest.test_missing_changed_chunks_and_operation_payload_are_not_published) ... ok
+test_payload_size_and_password_reset_do_not_grant_decryption (test_backup.BackupProtocolTest.test_payload_size_and_password_reset_do_not_grant_decryption) ... ok
+test_pending_abandon_cannot_delete_a_concurrently_published_version (test_backup.BackupProtocolTest.test_pending_abandon_cannot_delete_a_concurrently_published_version) ... ok
+test_readonly_and_bounded_sqlite_full_preserve_published_bytes (test_backup.BackupProtocolTest.test_readonly_and_bounded_sqlite_full_preserve_published_bytes) ... ok
+test_revoke_expire_and_switch_preserve_queue_binding (test_backup.BackupProtocolTest.test_revoke_expire_and_switch_preserve_queue_binding) ... ok
+test_roundtrip_restart_second_device_unknown_receipt_and_acl (test_backup.BackupProtocolTest.test_roundtrip_restart_second_device_unknown_receipt_and_acl) ... ok
+test_unknown_schema_is_rejected_without_rewriting_it (test_backup.BackupProtocolTest.test_unknown_schema_is_rejected_without_rewriting_it) ... ok
+test_cancelled_response_recovers_committed_chunk_by_receipt_and_retry (test_chunk_workers.ChunkWorkerTest.test_cancelled_response_recovers_committed_chunk_by_receipt_and_retry) ... ok
+test_writer_lock_keeps_live_health_responsive_and_chunk_workers_bounded (test_chunk_workers.ChunkWorkerTest.test_writer_lock_keeps_live_health_responsive_and_chunk_workers_bounded) ... ok
+test_closed_wal_backup_is_sealed_without_changing_live_wal_or_content (test_container_faults.SnapshotProbeTest.test_closed_wal_backup_is_sealed_without_changing_live_wal_or_content) ... ok
+test_full_probe_refuses_a_non_tmpfs_directory_before_writing (test_container_faults.SnapshotProbeTest.test_full_probe_refuses_a_non_tmpfs_directory_before_writing) ... ok
+test_sealing_cannot_be_applied_to_the_live_database_path (test_container_faults.SnapshotProbeTest.test_sealing_cannot_be_applied_to_the_live_database_path) ... ok
+test_parallel_quota_missing_blocks_changed_payload_and_log_privacy (test_go_protocol.GoProtocolTest.test_parallel_quota_missing_blocks_changed_payload_and_log_privacy) ... ok
+test_publication_progress_survives_real_process_exit_without_rereading_cipher (test_go_protocol.GoProtocolTest.test_publication_progress_survives_real_process_exit_without_rereading_cipher) ... ok
+test_real_process_crashes_keep_only_durable_receipts (test_go_protocol.GoProtocolTest.test_real_process_crashes_keep_only_durable_receipts) ... ok
+test_resume_seek_download_restart_crypto_and_isolation (test_go_protocol.GoProtocolTest.test_resume_seek_download_restart_crypto_and_isolation) ... ok
+test_http_process_restart_keeps_session_sequence_and_replay (test_shadow.ShadowTest.test_http_process_restart_keeps_session_sequence_and_replay) ... ok
+test_persistent_replay_cursor_and_closed_default (test_shadow.ShadowTest.test_persistent_replay_cursor_and_closed_default) ... ok
+
+----------------------------------------------------------------------
+Ran 24 tests in 9.006s
+
+OK
+
+{"exit_code": 0, "finished_utc": "2026-10-12T14:31:08.595584+00:00"}

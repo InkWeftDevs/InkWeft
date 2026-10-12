@@ -1,0 +1,11 @@
+--- backup-server/Dockerfile (unchanged)
++++ external Dockerfile.session-ca
+@@ -1,7 +1,7 @@
+ FROM golang:1.27.2-bookworm AS build
+ WORKDIR /src
+ COPY go.mod go.sum ./
+-RUN go mod download
++RUN --mount=type=secret,id=session_ca,target=/run/secrets/session-ca.pem,required=true SSL_CERT_FILE=/run/secrets/session-ca.pem go mod download
+ COPY *.go ./
+ RUN CGO_ENABLED=0 go build -trimpath -o /inkweft-backup .
+ FROM debian:bookworm-slim

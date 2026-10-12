@@ -1,0 +1,28 @@
+{"command": ["docker", "run", "--rm", "--name", "inkweft-cloud-dependencies-a128bb07", "--read-only", "--cap-drop=ALL", "--security-opt=no-new-privileges", "inkweft-cloud-check-builder:a128bb07-20261012", "sh", "-ec", "go version\ngo env GOPROXY GOSUMDB\nsha256sum /go/pkg/mod/cache/download/modernc.org/sqlite/@v/v1.60.1.zip /go/pkg/mod/cache/download/modernc.org/libc/@v/v1.77.1.zip\ncat /go/pkg/mod/cache/download/modernc.org/sqlite/@v/v1.60.1.ziphash /go/pkg/mod/cache/download/modernc.org/libc/@v/v1.77.1.ziphash\ngo version -m /inkweft-backup"], "shell_display": "docker run --rm --name inkweft-cloud-dependencies-a128bb07 --read-only --cap-drop=ALL --security-opt=no-new-privileges inkweft-cloud-check-builder:a128bb07-20261012 sh -ec 'go version\ngo env GOPROXY GOSUMDB\nsha256sum /go/pkg/mod/cache/download/modernc.org/sqlite/@v/v1.60.1.zip /go/pkg/mod/cache/download/modernc.org/libc/@v/v1.77.1.zip\ncat /go/pkg/mod/cache/download/modernc.org/sqlite/@v/v1.60.1.ziphash /go/pkg/mod/cache/download/modernc.org/libc/@v/v1.77.1.ziphash\ngo version -m /inkweft-backup'", "cwd": "/workspace/inkweft-cloud-verification-20261012/InkWeft/backup-server", "started_utc": "2026-10-12T14:32:14.802824+00:00", "sanitization": "URL userinfo and query strings removed"}
+go version go1.27.2 linux/amd64
+https://proxy.golang.org,direct
+sum.golang.org
+60b6851c02b568c7ffb2b33599ef5a7e0ade9e48ebe1cf7265f1bfa831ab2ec0  /go/pkg/mod/cache/download/modernc.org/sqlite/@v/v1.60.1.zip
+82bd4796a07426308b138699c1d1bfa0f47acd6b3ce91cf765bd21f2274e417b  /go/pkg/mod/cache/download/modernc.org/libc/@v/v1.77.1.zip
+h1:/blz53O951KWFOso4QQvEs/Fq6cDBKLtMVrYNSeJVKw=h1:Ct8j47QtiZ1Enj2DtFXQtUqrPCAjdCmPjtCuvrYQ0Hs=/inkweft-backup: go1.27.2
+	path	inkweft/backup
+	mod	inkweft/backup	(devel)
+	dep	github.com/dustin/go-humanize	v1.0.1	h1:GzkhY7T5VNhEkwH0PVJgjz+fX1rhBrR7pRT3mDkpeCY=
+	dep	github.com/google/uuid	v1.6.0	h1:NIvaJDMOsjHA8n1jAhLSgzrAzy1Hgr+hNrb57e+94F0=
+	dep	github.com/remyoudompheng/bigfft	v0.0.0-20230129092748-24d4a6f8daec	h1:W09IVJc94icq4NjY3clb7Lk8O1qJ8BdBEF8z0ibU0rE=
+	dep	golang.org/x/crypto	v0.58.0	h1:COkYLr4k7nDI4r6QtMML2AfzeIswWHAJthLS6K/M/54=
+	dep	golang.org/x/sys	v0.49.0	h1:XbzkgYJHdqh/8m2Uu0W/dQv8nktxx4BFHp1M0gROTXA=
+	dep	golang.org/x/term	v0.47.0	h1:cpyOwQkr2Nzxe2p6KnrTG7Ei2wtzjsuSjhpXXepZ/BM=
+	dep	modernc.org/libc	v1.77.1	h1:Ct8j47QtiZ1Enj2DtFXQtUqrPCAjdCmPjtCuvrYQ0Hs=
+	dep	modernc.org/mathutil	v1.7.1	h1:GCZVGXdaN8gTqB1Mf/usp1Y/hSqgI2vAGGP4jZMCxOU=
+	dep	modernc.org/memory	v1.12.1	h1:nFMiWrpStgZczNl6XI9GnIk/rWhYIyHGUaR04pGbp9g=
+	dep	modernc.org/sqlite	v1.60.1	h1:/blz53O951KWFOso4QQvEs/Fq6cDBKLtMVrYNSeJVKw=
+	build	-buildmode=exe
+	build	-compiler=gc
+	build	-trimpath=true
+	build	CGO_ENABLED=0
+	build	GOARCH=amd64
+	build	GOOS=linux
+	build	GOAMD64=v1
+
+{"exit_code": 0, "finished_utc": "2026-10-12T14:32:23.579366+00:00"}

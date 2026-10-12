@@ -1,0 +1,8 @@
+{
+  "status": "FAIL",
+  "scope": "Go container, private-volume recovery and bounded-disk rejection",
+  "schema": 2003,
+  "image": "sha256:42ce3060e72235b15389833a89b0b85f381c0918a542f6bee246230a7d1031af",
+  "uid": "10001",
+  "error_type": "RuntimeError"
+}

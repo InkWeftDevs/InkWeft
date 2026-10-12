@@ -1,0 +1,4 @@
+{"command": ["docker", "run", "--rm", "--name", "inkweft-cloud-race-workdir-a128bb07", "--cap-drop=ALL", "--security-opt=no-new-privileges", "-e", "GOCACHE=/tmp/go-build-cache", "inkweft-cloud-check-builder:a128bb07-20261012", "go", "test", "-race", "./..."], "shell_display": "docker run --rm --name inkweft-cloud-race-workdir-a128bb07 --cap-drop=ALL --security-opt=no-new-privileges -e GOCACHE=/tmp/go-build-cache inkweft-cloud-check-builder:a128bb07-20261012 go test -race ./...", "cwd": "/workspace/inkweft-cloud-verification-20261012/InkWeft/backup-server", "started_utc": "2026-10-12T14:32:13.479483+00:00", "sanitization": "URL userinfo and query strings removed"}
+ok  	inkweft/backup	2.336s
+
+{"exit_code": 0, "finished_utc": "2026-10-12T14:33:04.196648+00:00"}
