@@ -22,23 +22,21 @@ data class HistoryStorageReport(val groups:List<HistoryStorageGroup>,val detache
 class HistoryStorage(private val db:NoteDatabase,private val phase:(String)->Unit={}) {
     suspend fun audit():HistoryStorageReport=run(false)
     suspend fun collectDetached():HistoryStorageReport=run(true)
-    private suspend fun run(collect:Boolean):HistoryStorageReport=withContext(Dispatchers.IO){
-        var first:HistoryStorageReport?=null;var sources=0L;var sourceBytes=0L;var previews=0L;var previewBytes=0L
-        while(true){
-            currentCoroutineContext().ensureActive();val result=round(collect)
-            if(!collect)return@withContext result.report
-            if(first==null)first=result.report
-            sources+=result.sources;sourceBytes+=result.sourceBytes;previews+=result.previews;previewBytes+=result.previewBytes
-            if(result.changed||result.sources+result.previews==0L)return@withContext checkNotNull(first).copy(detachedSources=sources,detachedSourceBytes=sourceBytes,
-                detachedPreviews=previews,detachedPreviewBytes=previewBytes,collectionDeferred=result.changed)
-            yield()
-        }
-        @Suppress("UNREACHABLE_CODE") error("unreachable")
+    private data class Candidate(val sequence:Long,val kind:Int,val id:String,val revision:Long,val bytes:Long)
+    private data class WriterVersion(val external:Long,val changes:Long)
+    private fun writerVersion(sql:SupportSQLiteDatabase):WriterVersion {
+        check(sql.inTransaction())
+        val external=sql.query("PRAGMA data_version").use{it.moveToFirst();it.getLong(0)}
+        // Requery transactions pin the primary connection. Its data_version detects other
+        // connections; total_changes detects author writes through this Room connection.
+        // Room 2.8.5 resets invalidated=1 rows after commit: each reset adds one change and
+        // removes one pending row. Include pending rows so that reset alone is neutral.
+        // Query failures (including a changed/missing Room log) abort collection, never
+        // substitute zero or guess how many data_version changes were our own commits.
+        val changes=sql.query("SELECT total_changes()+(SELECT COUNT(*) FROM room_table_modification_log WHERE invalidated=1)").use{it.moveToFirst();it.getLong(0)}
+        return WriterVersion(external,changes)
     }
-    private data class Source(val id:String,val revision:Long,val bytes:Long)
-    private data class Plan(val report:HistoryStorageReport,val sources:List<Source>,val previews:List<Pair<String,Long>>)
-    private data class Round(val report:HistoryStorageReport,val sources:Long=0,val sourceBytes:Long=0,val previews:Long=0,val previewBytes:Long=0,val changed:Boolean=false)
-    private suspend fun round(collect:Boolean):Round=coroutineScope{
+    private suspend fun run(collect:Boolean):HistoryStorageReport=withContext(Dispatchers.IO){coroutineScope{
         val active=currentCoroutineContext();val cancellation=android.os.CancellationSignal()
         val watcher=launch(Dispatchers.IO,start=CoroutineStart.UNDISPATCHED){try{awaitCancellation()}finally{cancellation.cancel()}}
         try{SQLiteDatabase.openDatabase(db.openHelper.readableDatabase.path,null,SQLiteDatabase.OPEN_READONLY){
@@ -48,26 +46,50 @@ class HistoryStorage(private val db:NoteDatabase,private val phase:(String)->Uni
                 override fun query(query:String)=reader.query(SimpleSQLiteQuery(query),cancellation)
                 override fun query(query:String,bindArgs:Array<out Any?>)=reader.query(SimpleSQLiteQuery(query,bindArgs),cancellation)
             }
+            var expected=if(collect)db.originalMaintenanceMutex.withLock{db.withTransaction{writerVersion(db.openHelper.writableDatabase)}}else null
+            // Candidate identities live on the private connection, not in author storage or
+            // an unbounded Kotlin list. The WAL read snapshot ends before any deletion.
+            if(collect)sql.execSQL("CREATE TEMP TABLE history_candidates(sequence INTEGER PRIMARY KEY,kind INTEGER NOT NULL,id TEXT NOT NULL,revision INTEGER NOT NULL,bytes INTEGER NOT NULL)")
             reader.beginTransactionDeferred()
-            val before:Long;val plan:Plan
+            val report:HistoryStorageReport
             try{
-                before=sql.query("PRAGMA data_version").use{it.moveToFirst();it.getLong(0)}
-                plan=scan(sql,collect)
+                report=scan(sql,collect)
+                reader.setTransactionSuccessful() // Persist only this connection's TEMP candidates.
             }finally{reader.endTransaction()}
-            if(!collect)return@use Round(plan.report)
-            db.originalMaintenanceMutex.withLock{db.withTransaction{
-                // This is the same independent connection after its read snapshot ends.
-                // Room now owns the writer; no author commit can race the version check.
-                val now=sql.query("PRAGMA data_version").use{it.moveToFirst();it.getLong(0)}
-                if(now!=before)return@withTransaction Round(plan.report,changed=true)
-                val writer=db.openHelper.writableDatabase
-                for(source in plan.sources){active.ensureActive();writer.execSQL("DELETE FROM study_source_revisions WHERE sourceId=? AND revision=?",arrayOf<Any>(source.id,source.revision))}
-                for(preview in plan.previews){active.ensureActive();writer.execSQL("DELETE FROM object_previews WHERE digest=?",arrayOf(preview.first))}
-                Round(plan.report,plan.sources.size.toLong(),plan.sources.sumOf{it.bytes},plan.previews.size.toLong(),plan.previews.sumOf{it.second})
-            }}
+            if(!collect)return@use report
+            phase("after-scan")
+            var sources=0L;var sourceBytes=0L;var previews=0L;var previewBytes=0L;var sequence=0L;var changed=false
+            while(true){
+                active.ensureActive()
+                val candidates=sql.query("SELECT sequence,kind,id,revision,bytes FROM history_candidates WHERE sequence>? ORDER BY sequence LIMIT 256",arrayOf(sequence)).use{c->
+                    buildList{while(c.moveToNext())add(Candidate(c.getLong(0),c.getInt(1),c.getString(2),c.getLong(3),c.getLong(4)))}
+                }
+                val committed=db.originalMaintenanceMutex.withLock{db.withTransaction{
+                    val writer=db.openHelper.writableDatabase
+                    if(writerVersion(writer)!=expected)return@withTransaction false
+                    for(candidate in candidates){
+                        active.ensureActive()
+                        if(candidate.kind==0)writer.execSQL("DELETE FROM study_source_revisions WHERE sourceId=? AND revision=?",arrayOf<Any>(candidate.id,candidate.revision))
+                        else writer.execSQL("DELETE FROM object_previews WHERE digest=?",arrayOf(candidate.id))
+                    }
+                    if(candidates.isNotEmpty())phase("before-batch-commit")
+                    expected=writerVersion(writer)
+                    true
+                }}
+                if(!committed){changed=true;break}
+                if(candidates.isEmpty())break
+                for(candidate in candidates){
+                    if(candidate.kind==0){sources++;sourceBytes+=candidate.bytes}else{previews++;previewBytes+=candidate.bytes}
+                }
+                sequence=candidates.last().sequence
+                phase("after-batch")
+                yield()
+            }
+            report.copy(detachedSources=sources,detachedSourceBytes=sourceBytes,detachedPreviews=previews,
+                detachedPreviewBytes=previewBytes,collectionDeferred=changed)
         }}catch(failure:Exception){active.ensureActive();throw failure}finally{watcher.cancel()}
-    }
-    private suspend fun scan(sql:SupportSQLiteDatabase,collect:Boolean):Plan {
+    }}
+    private suspend fun scan(sql:SupportSQLiteDatabase,collect:Boolean):HistoryStorageReport {
             val active=currentCoroutineContext()
             fun count(query:String)=sql.query(query).use{it.moveToFirst();it.getLong(0)}
             fun stats(table:String,bytes:String,where:String="1")=sql.query("SELECT COUNT(*),COALESCE(SUM($bytes),0) FROM $table WHERE $where").use{it.moveToFirst();it.getLong(0) to it.getLong(1)}
@@ -116,9 +138,14 @@ class HistoryStorage(private val db:NoteDatabase,private val phase:(String)->Uni
                     }
                     add(HistoryStorageGroup("操作回执",receiptRows,receiptBytes,"原操作身份与重试结果"))
                 }
-                val sourceKeys=if(!collect)emptyList()else sql.query("SELECT sourceId,revision,length(snapshot) FROM study_source_revisions WHERE $sourceWhere ORDER BY sourceId,revision LIMIT 256").use{c->buildList{while(c.moveToNext())add(Source(c.getString(0),c.getLong(1),c.getLong(2)))}}
-                val previewKeys=if(!collect)emptyList()else sql.query("SELECT digest,length(payload) FROM object_previews WHERE $previewWhere ORDER BY digest LIMIT ${256-sourceKeys.size}").use{c->buildList{while(c.moveToNext())add(c.getString(0) to c.getLong(1))}}
-                return Plan(HistoryStorageReport(groups,sources.first,sources.second,previews.first,previews.second,shadow),sourceKeys,previewKeys)
+                phase("after-stats")
+                if(collect){
+                    active.ensureActive()
+                    sql.execSQL("INSERT INTO history_candidates(kind,id,revision,bytes) SELECT 0,sourceId,revision,length(snapshot) FROM study_source_revisions WHERE $sourceWhere ORDER BY sourceId,revision")
+                    active.ensureActive()
+                    sql.execSQL("INSERT INTO history_candidates(kind,id,revision,bytes) SELECT 1,digest,0,length(payload) FROM object_previews WHERE $previewWhere ORDER BY digest")
+                }
+                return HistoryStorageReport(groups,sources.first,sources.second,previews.first,previews.second,shadow)
             }finally{sql.execSQL("DROP TABLE history_source_roots")}
     }
 }
