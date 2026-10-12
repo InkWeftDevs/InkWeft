@@ -13,13 +13,70 @@ BASE = Path(__file__).resolve().parent
 OUT = BASE / 'evidence'
 OUT.mkdir(exist_ok=True)
 URL = sys.argv[1] if len(sys.argv) > 1 else 'http://127.0.0.1:4180'
-checks, errors, requests = [], [], []
+checks, errors, requests, geometry_evidence = [], [], [], []
 
 
 def check(name, condition):
     checks.append({'check': name, 'passed': bool(condition)})
     if not condition:
         raise AssertionError(name)
+
+
+def paper_geometry(page):
+    return page.evaluate("""() => {
+      const paper=document.getElementById('paper'), area=document.getElementById('paperArea'), ink=document.getElementById('ink');
+      const rect=e=>{const r=e.getBoundingClientRect();return [r.x,r.y,r.width,r.height]};
+      const style=getComputedStyle(paper), matrix=ink.getScreenCTM();
+      return {paper:rect(paper), viewport:rect(area), transform:style.transform, zoom:style.zoom,
+        scroll:[area.scrollLeft,area.scrollTop,scrollX,scrollY], inkMatrix:[matrix.a,matrix.b,matrix.c,matrix.d,matrix.e,matrix.f]};
+    }""")
+
+
+def verify_layer_interactions(page, check):
+    for width, height in [(1440, 1000), (375, 800)]:
+        page.set_viewport_size({'width': width, 'height': height})
+        page.goto(URL, wait_until='networkidle')
+        page.locator('#paperArea').evaluate('e=>e.scrollTop=120')
+        before=paper_geometry(page)
+        paper=page.locator('#paper').bounding_box()
+        x=paper['x']+50
+        y=page.locator('#paperArea').bounding_box()['y']+70
+        page.mouse.move(x,y);page.mouse.down();page.mouse.move(x+70,y+8,steps=8);page.mouse.up()
+        check(f'{width}: paper can receive trial ink before opening layers', page.locator('#ink path').count()==1)
+        ink_before=page.locator('#ink').inner_html()
+        page.locator('#layerToggle').click()
+        check(f'{width}: scrolled paper and ink transform remain fixed under popup',paper_geometry(page)==before)
+        box=page.locator('#layerPanel').bounding_box()
+        check(f'{width}: layer popup overlaps the retained paper',
+              box['x']<paper['x']+paper['width'] and box['x']+box['width']>paper['x'] and box['y']<paper['y']+paper['height'])
+        # Dragging the opacity control must not start or erase a stroke behind it.
+        slider=page.locator('#opacity').bounding_box()
+        page.mouse.move(slider['x']+slider['width']*.8,slider['y']+slider['height']/2)
+        page.mouse.down();page.mouse.move(slider['x']+slider['width']*.4,slider['y']+slider['height']/2,steps=8);page.mouse.up()
+        page.locator('#opacity').fill('100')
+        check(f'{width}: popup gestures do not leak through into ink',page.locator('#ink').inner_html()==ink_before)
+        # The dismissal gesture is consumed rather than becoming a click-sized stroke.
+        page.mouse.click(x,y)
+        page.wait_for_function("!document.getElementById('layerPanel').open")
+        check(f'{width}: outside click closes without writing and returns focus',
+              page.locator('#ink').inner_html()==ink_before and paper_geometry(page)==before and page.locator('#layerToggle').evaluate('e=>e===document.activeElement'))
+        page.mouse.move(x,y+25);page.mouse.down();page.mouse.move(x+70,y+30,steps=8);page.mouse.up()
+        check(f'{width}: writing resumes after popup dismissal',page.locator('#ink path').count()==2)
+        page.locator('#layerToggle').click();page.keyboard.press('Escape')
+        page.wait_for_function("!document.getElementById('layerPanel').open")
+        check(f'{width}: Escape closes popup without moving paper',paper_geometry(page)==before and page.locator('#layerToggle').evaluate('e=>e===document.activeElement'))
+        page.locator('#layerToggle').click()
+        page.go_back()
+        page.wait_for_function("!document.getElementById('layerPanel').open")
+        check(f'{width}: browser Back dismisses popup instead of leaving the demo',page.url.rstrip('/')==URL.rstrip('/') and paper_geometry(page)==before and page.locator('#layerToggle').evaluate('e=>e===document.activeElement'))
+        page.locator('#mapToggle').click()
+        page.locator('[data-section=instant]').click();page.locator('#sourceJump').click()
+        with_map=paper_geometry(page);mapbox=page.locator('#mapPanel').bounding_box()
+        page.locator('#layerToggle').click()
+        page.go_back()
+        page.wait_for_function("!document.getElementById('layerPanel').open")
+        check(f'{width}: Back closes layers while keeping map selection, bounds and source context',
+              page.locator('#mapPanel').is_visible() and page.locator('#mapPanel').bounding_box()==mapbox and paper_geometry(page)==with_map and page.locator('[data-section=instant]').get_attribute('aria-pressed')=='true')
 
 
 with sync_playwright() as p:
@@ -54,9 +111,14 @@ with sync_playwright() as p:
         box = page.locator('#paper').bounding_box()
         paper_pixels.append(page.screenshot(clip={'x': box['x'] + 4, 'y': box['y'] + 4,
                                                 'width': box['width'] - 8, 'height': 600}))
+        before = paper_geometry(page)
         page.locator('#layerToggle').click()
+        opened=paper_geometry(page)
+        check(style + ': layer popup leaves paper geometry and view transform unchanged', opened == before)
+        geometry_evidence.append({'style':style,'viewport':[1440,1000],'map_open':False,'before':before,'open':opened})
         shot(style + '-layers.png')
-        page.locator('#layerToggle').click()
+        page.locator('#closeLayers').click()
+        check(style + ': closing layers preserves paper and restores trigger focus', paper_geometry(page) == before and page.locator('#layerToggle').evaluate('e=>e===document.activeElement'))
         page.locator('#mapToggle').click()
         shot(style + '-map.png')
         check(style + ': mind map keeps the paper visible',
@@ -91,22 +153,32 @@ with sync_playwright() as p:
 
     page.locator('#layerToggle').click()
     page.get_by_role('button', name='隐藏学习批注', exact=True).click()
+    check('Last writable layer is not hidden', page.get_by_role('button', name='隐藏学习批注', exact=True).count() == 1)
+    page.locator('[data-layer-select=draft]').click()
+    check('Inspecting a hidden layer does not change the writing target', '学习批注' in page.locator('#layerStatus').inner_text())
+    page.get_by_role('button', name='显示推导草稿', exact=True).click()
+    check('Making a hidden layer visible does not silently select it', '学习批注' in page.locator('#layerStatus').inner_text())
+    page.locator('[data-layer-select=notes]').click()
+    page.get_by_role('button', name='隐藏学习批注', exact=True).click()
     page.wait_for_function("getComputedStyle(document.querySelector('.annotation-text')).opacity==='0'")
     check('Hiding the active layer hides its ink and original annotations',
           page.locator('#ink path').count() == 0 and
           page.locator('.annotation-text').first.evaluate("e=>getComputedStyle(e).opacity==='0'"))
+    page.locator('#closeLayers').click()
     page.mouse.move(x, y + 50)
     page.mouse.down()
     page.mouse.move(x + 70, y + 50)
     page.mouse.up()
+    page.locator('#layerToggle').click()
     page.get_by_role('button', name='显示学习批注', exact=True).click()
+    check('Re-showing a hidden current layer requires explicit writing selection', '暂停书写' in page.locator('#layerStatus').inner_text())
+    page.locator('[data-layer-select=notes]').click()
     check('Hidden layers reject trial ink without silently switching layers',
           page.locator('#ink path').count() == 1)
     page.locator('#opacity').fill('40')
     check('Layer opacity changes the rendered ink',
           page.locator('#ink path').get_attribute('opacity') == '0.4')
     page.locator('#opacity').fill('100')
-    page.get_by_role('button', name='显示推导草稿', exact=True).click()
     page.locator('[data-layer-select=draft]').click()
     check('Draft selection and visibility both work',
           page.locator('#draftNote').is_visible() and '推导草稿' in page.locator('#layerStatus').inner_text())
@@ -169,12 +241,14 @@ with sync_playwright() as p:
         page.set_viewport_size({'width': width, 'height': height})
         page.goto(URL + '?panel=map', wait_until='networkidle')
         page.wait_for_timeout(200)
+        check(f'{width}: opening map does not automatically navigate the note', page.locator('#paperArea').evaluate('e=>e.scrollTop') == 0)
         check(f'{width}: no page-level horizontal overflow', page.evaluate('document.documentElement.scrollWidth===innerWidth'))
         area = page.locator('#paperArea').bounding_box()
         panel = page.locator('#mapPanel').bounding_box()
         check(f'{width}: map is not fullscreen and source stays readable',
               area['height'] >= 180 and area['width'] >= 280 and panel['height'] >= 220)
         if width < 650:
+            page.locator('#sourceJump').click()
             instant = page.locator('#instant').bounding_box()
             check(f'{width}: selected definition is actually visible with map',
                   area['y'] <= instant['y'] < area['y'] + area['height'] - 100)
@@ -185,18 +259,38 @@ with sync_playwright() as p:
             read = page.locator('#readToggle').bounding_box()
             check(f'{width}: reading toggle stays reachable', 0 <= read['x'] and read['x'] + read['width'] <= width)
         shot(f'map-{width}.png')
+        before = paper_geometry(page)
+        map_before = page.locator('#mapPanel').bounding_box()
         page.locator('#layerToggle').click()
-        side = page.locator('#side').bounding_box()
-        footer = page.locator('.statusbar').bounding_box()
-        if width < 650:
-            check(f'{width}: switching panels avoids cramped simultaneous narrow panels',
-                  page.locator('#mapPanel').is_hidden() and page.locator('#layerPanel').is_visible())
-        else:
-            mapbox = page.locator('#mapPanel').bounding_box()
-            check(f'{width}: simultaneous panels stay above status bar',
-                  mapbox['y'] + mapbox['height'] <= footer['y'] + 1)
+        opened=paper_geometry(page)
+        check(f'{width}: layers do not change paper geometry, transform or reading position with map open', opened == before)
+        geometry_evidence.append({'style':'blend','viewport':[width,height],'map_open':True,'before':before,'open':opened})
+        check(f'{width}: layers do not close or rearrange the independent map', page.locator('#mapPanel').is_visible() and page.locator('#mapPanel').bounding_box() == map_before)
+        page.locator('#closeLayers').click()
+        check(f'{width}: closing layers retains map and source geometry', paper_geometry(page) == before and page.locator('#mapPanel').is_visible())
         if width == 375:
+            page.locator('#closeMap').click()
+            page.locator('#layerToggle').click()
             shot('narrow-layers.png')
+            page.locator('#closeLayers').click()
+
+    verify_layer_interactions(page, check)
+
+    touch = browser.new_page(viewport={'width':375,'height':800}, has_touch=True)
+    touch.on('pageerror', lambda error: errors.append(str(error)))
+    touch.on('request', lambda request: requests.append(request.url))
+    touch.goto(URL,wait_until='networkidle')
+    touch_before=paper_geometry(touch)
+    touch.locator('#layerToggle').tap()
+    check('Touch: layer sheet keeps paper viewport and transform fixed',paper_geometry(touch)==touch_before)
+    touch.get_by_role('button',name='显示推导草稿',exact=True).tap()
+    check('Touch: layer controls work without creating ink behind the sheet',touch.locator('#draftNote').is_visible() and touch.locator('#ink path').count()==0)
+    touch.touchscreen.tap(55,260)
+    touch.wait_for_function("!document.getElementById('layerPanel').open")
+    check('Touch: outside tap dismisses sheet without an accidental stroke',touch.locator('#ink path').count()==0 and paper_geometry(touch)==touch_before)
+    touch.touchscreen.tap(55,260)
+    check('Touch: trial writing resumes after the dismissal tap',touch.locator('#ink path').count()==1)
+    touch.close()
 
     page.emulate_media(reduced_motion='reduce')
     page.locator('.styles [data-style=liquid]').click()
@@ -211,5 +305,6 @@ report = {'browser': 'System Chromium via Playwright, cloud Linux',
           'rendering': 'Web, not native Android', 'url': URL,
           'passed': len(checks), 'checks': checks, 'runtime_errors': errors,
           'note': 'Synthetic content only. No device, native latency, pressure, palm rejection or persistence claims.'}
+(OUT / 'layer-geometry.json').write_text(json.dumps(geometry_evidence,ensure_ascii=False,indent=2))
 (OUT / 'validation.json').write_text(json.dumps(report, ensure_ascii=False, indent=2))
 print(json.dumps({'passed': len(checks), 'runtime_errors': errors}, ensure_ascii=False))

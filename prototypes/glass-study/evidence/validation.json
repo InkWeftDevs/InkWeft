@@ -2,7 +2,7 @@
   "browser": "System Chromium via Playwright, cloud Linux",
   "rendering": "Web, not native Android",
   "url": "http://127.0.0.1:4180",
-  "passed": 59,
+  "passed": 103,
   "checks": [
     {
       "check": "HTTP document renders successfully",
@@ -29,6 +29,14 @@
       "passed": true
     },
     {
+      "check": "blend: layer popup leaves paper geometry and view transform unchanged",
+      "passed": true
+    },
+    {
+      "check": "blend: closing layers preserves paper and restores trigger focus",
+      "passed": true
+    },
+    {
       "check": "blend: mind map keeps the paper visible",
       "passed": true
     },
@@ -45,6 +53,14 @@
       "passed": true
     },
     {
+      "check": "card: layer popup leaves paper geometry and view transform unchanged",
+      "passed": true
+    },
+    {
+      "check": "card: closing layers preserves paper and restores trigger focus",
+      "passed": true
+    },
+    {
       "check": "card: mind map keeps the paper visible",
       "passed": true
     },
@@ -58,6 +74,14 @@
     },
     {
       "check": "liquid: note text is unchanged",
+      "passed": true
+    },
+    {
+      "check": "liquid: layer popup leaves paper geometry and view transform unchanged",
+      "passed": true
+    },
+    {
+      "check": "liquid: closing layers preserves paper and restores trigger focus",
       "passed": true
     },
     {
@@ -93,7 +117,23 @@
       "passed": true
     },
     {
+      "check": "Last writable layer is not hidden",
+      "passed": true
+    },
+    {
+      "check": "Inspecting a hidden layer does not change the writing target",
+      "passed": true
+    },
+    {
+      "check": "Making a hidden layer visible does not silently select it",
+      "passed": true
+    },
+    {
       "check": "Hiding the active layer hides its ink and original annotations",
+      "passed": true
+    },
+    {
+      "check": "Re-showing a hidden current layer requires explicit writing selection",
       "passed": true
     },
     {
@@ -157,6 +197,10 @@
       "passed": true
     },
     {
+      "check": "1200: opening map does not automatically navigate the note",
+      "passed": true
+    },
+    {
       "check": "1200: no page-level horizontal overflow",
       "passed": true
     },
@@ -165,7 +209,19 @@
       "passed": true
     },
     {
-      "check": "1200: simultaneous panels stay above status bar",
+      "check": "1200: layers do not change paper geometry, transform or reading position with map open",
+      "passed": true
+    },
+    {
+      "check": "1200: layers do not close or rearrange the independent map",
+      "passed": true
+    },
+    {
+      "check": "1200: closing layers retains map and source geometry",
+      "passed": true
+    },
+    {
+      "check": "800: opening map does not automatically navigate the note",
       "passed": true
     },
     {
@@ -177,7 +233,19 @@
       "passed": true
     },
     {
-      "check": "800: simultaneous panels stay above status bar",
+      "check": "800: layers do not change paper geometry, transform or reading position with map open",
+      "passed": true
+    },
+    {
+      "check": "800: layers do not close or rearrange the independent map",
+      "passed": true
+    },
+    {
+      "check": "800: closing layers retains map and source geometry",
+      "passed": true
+    },
+    {
+      "check": "390: opening map does not automatically navigate the note",
       "passed": true
     },
     {
@@ -201,7 +269,19 @@
       "passed": true
     },
     {
-      "check": "390: switching panels avoids cramped simultaneous narrow panels",
+      "check": "390: layers do not change paper geometry, transform or reading position with map open",
+      "passed": true
+    },
+    {
+      "check": "390: layers do not close or rearrange the independent map",
+      "passed": true
+    },
+    {
+      "check": "390: closing layers retains map and source geometry",
+      "passed": true
+    },
+    {
+      "check": "375: opening map does not automatically navigate the note",
       "passed": true
     },
     {
@@ -225,7 +305,103 @@
       "passed": true
     },
     {
-      "check": "375: switching panels avoids cramped simultaneous narrow panels",
+      "check": "375: layers do not change paper geometry, transform or reading position with map open",
+      "passed": true
+    },
+    {
+      "check": "375: layers do not close or rearrange the independent map",
+      "passed": true
+    },
+    {
+      "check": "375: closing layers retains map and source geometry",
+      "passed": true
+    },
+    {
+      "check": "1440: paper can receive trial ink before opening layers",
+      "passed": true
+    },
+    {
+      "check": "1440: scrolled paper and ink transform remain fixed under popup",
+      "passed": true
+    },
+    {
+      "check": "1440: layer popup overlaps the retained paper",
+      "passed": true
+    },
+    {
+      "check": "1440: popup gestures do not leak through into ink",
+      "passed": true
+    },
+    {
+      "check": "1440: outside click closes without writing and returns focus",
+      "passed": true
+    },
+    {
+      "check": "1440: writing resumes after popup dismissal",
+      "passed": true
+    },
+    {
+      "check": "1440: Escape closes popup without moving paper",
+      "passed": true
+    },
+    {
+      "check": "1440: browser Back dismisses popup instead of leaving the demo",
+      "passed": true
+    },
+    {
+      "check": "1440: Back closes layers while keeping map selection, bounds and source context",
+      "passed": true
+    },
+    {
+      "check": "375: paper can receive trial ink before opening layers",
+      "passed": true
+    },
+    {
+      "check": "375: scrolled paper and ink transform remain fixed under popup",
+      "passed": true
+    },
+    {
+      "check": "375: layer popup overlaps the retained paper",
+      "passed": true
+    },
+    {
+      "check": "375: popup gestures do not leak through into ink",
+      "passed": true
+    },
+    {
+      "check": "375: outside click closes without writing and returns focus",
+      "passed": true
+    },
+    {
+      "check": "375: writing resumes after popup dismissal",
+      "passed": true
+    },
+    {
+      "check": "375: Escape closes popup without moving paper",
+      "passed": true
+    },
+    {
+      "check": "375: browser Back dismisses popup instead of leaving the demo",
+      "passed": true
+    },
+    {
+      "check": "375: Back closes layers while keeping map selection, bounds and source context",
+      "passed": true
+    },
+    {
+      "check": "Touch: layer sheet keeps paper viewport and transform fixed",
+      "passed": true
+    },
+    {
+      "check": "Touch: layer controls work without creating ink behind the sheet",
+      "passed": true
+    },
+    {
+      "check": "Touch: outside tap dismisses sheet without an accidental stroke",
+      "passed": true
+    },
+    {
+      "check": "Touch: trial writing resumes after the dismissal tap",
       "passed": true
     },
     {

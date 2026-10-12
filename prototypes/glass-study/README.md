@@ -10,7 +10,8 @@ GitHub 的文件页面展示源码，本身不是交互网站。下载 [`downloa
 - `compare.html`：同时嵌入三种方案的对照页，需要与 `index.html` 放在同一目录。
 - `evidence/three-styles.png`：浏览器直接渲染三个真实 iframe 的对照截图，没有合成或生成式修图。
 - `evidence/blend-writing.png`、`blend-layers.png`、`blend-map.png`：推荐方案的书写、图层和导图状态。
-- `evidence/map-375.png`：375px 窄屏，原文定义与四个导图概念同时可见。
+- `evidence/map-375.png`：375px 窄屏，显式点击「定位原文」后的定义与导图。
+- `evidence/layer-geometry.json`：三种材质及多种视口下，图层打开前后的纸面、阅读视口、滚动位置和 SVG 变换实测值。
 
 在此目录启动静态服务即可查看：
 
@@ -26,9 +27,9 @@ python -m http.server 4180 --bind 127.0.0.1
 
 1. 切换三种材质、三种环境主题；同一篇合成数学学习笔记保持不透明、高对比。
 2. 选钢笔、荧光笔、颜色和笔宽，进行临时试写；可撤销、重做及擦除。擦除也可撤销。
-3. 图层选择、显隐和浓度会实际影响批注与试写。隐藏层拒绝落笔；隐藏高亮不隐藏印刷正文。
-4. 导图默认与原文对照，点击节点后可以定位到实际对应段落。窄屏打开导图时直接显示选中概念的定义。关闭后保留阅读位置。
-5. 窄屏图层和导图互相切换，避免两个面板挤成无法阅读的细栏；宽屏可同时打开。
+3. 图层是覆盖纸面的弹窗，窄屏为覆盖式底部 sheet；开关不占用文档布局，不改变纸面尺寸、缩放或阅读位置。关闭按钮、外部点击、Escape、浏览器返回均可关闭并恢复图层按钮焦点。弹窗内部操作和关闭手势不会穿透成笔迹。
+4. 导图独立处理：宽屏默认停靠对照，较窄视口使用覆盖式非全屏浮窗并保留纸面视口。打开时不自动跳段落；只有点击「定位原文」才滚动。图层开关不会关闭、重排或重置导图。
+5. 图层显隐和浓度会实际影响批注与试写；浏览隐藏层不改变落笔目标。保留至少一个可写层；隐藏当前书写层后暂停落笔，重新显示不会自动恢复选择，须明确点选可写层。隐藏高亮不会隐藏印刷正文。
 6. 阅读按钮切换正文选择和触屏滚动。试写只在内存中，刷新即重置；界面没有保存、同步、导出等假成功状态。
 
 ## 两个参考的实际核验
@@ -46,18 +47,29 @@ Glass Card 为 MIT，版权 2026 Chunlong Ko。Liquid Companion 设计署名为 
 
 沿用用户认可的 `0219ca84` / `5916cb0` 的轻量双行导航、书写工具和大纸面方向；明确排除了记录中已被用户否定的整页设计。只在 `prototypes/glass-study/` 新增文件，没有修改 Android、正式编辑器、数据库、已有分支或共挂载 AniMemo。
 
+## 图层与导图行为依据
+
+本次修正对照 PR19/V86 的生产代码，而不是沿用先前 demo 的占位侧栏：
+
+- [`EditorControls.kt`](../../android/app/src/main/java/org/inkweft/app/EditorControls.kt) 的 `EditorPanel` 使用可获取焦点的 `Popup`；`PanelKind.LAYERS` 在窄屏采用底部位置，最大高度受限。它不参与纸面测量布局。
+- [`InkScreen.kt`](../../android/app/src/main/java/org/inkweft/app/InkScreen.kt) 为图层按钮提供锚点，并独立调用 `PageLayersPanel`。
+- [`PageLayersPanel.kt`](../../android/app/src/main/java/org/inkweft/app/PageLayersPanel.kt) 区分浏览层与当前书写层，隐藏/锁定层只供浏览；[`UserLayers.kt`](../../android/core-domain/src/main/kotlin/org/inkweft/core/UserLayers.kt) 要求至少一个可写层，隐藏当前层会清空书写选择。本原型遵循所展示子集的这些规则，未扩展真实数据操作。
+- [`BookInkScreen.kt`](../../android/app/src/main/java/org/inkweft/app/BookInkScreen.kt) / [`FloatingStudyWindow.kt`](../../android/app/src/main/java/org/inkweft/app/FloatingStudyWindow.kt) 独立处理导图：默认宽屏停靠，紧凑布局浮在保留的纸面上，默认不全屏。原型只展示这两种有限状态，没有冒充生产导图的拖动、尺寸偏好、最小化、专注模式或完整来源返回流程。
+
 ## 验证与界限
 
 `python verify.py http://127.0.0.1:4180` 使用云环境已有的 Playwright 和 Chromium。运行时不需要它们，原型不引入 React、Vite、SDK 或生产依赖。
 
-最终 **59 项检查通过**，证据在 `evidence/validation.json`：
+最终 **103 项检查通过**，证据在 `evidence/validation.json`：
 
 - 三方案切换、相同正文、透明度与无滤镜纸面；可见纸面截取逐字节像素一致。
 - 笔色笔宽、荧光、撤销重做、擦除撤销、图层显隐/浓度、隐藏层拒写、阅读模式。
-- 真正段落滚动定位、关闭导图保留上下文、弹窗 Escape/焦点返回、刷新重置。
-- 1440×1000 主截图；1200×800、800×1100、390×844、375×800 布局检查；窄屏四节点及定义可见。
+- 图层开关前后纸面 bounds、阅读视口、滚动位置、CSS transform/zoom、SVG 坐标矩阵一致；三种材质均检查，已打开导图时亦保持。
+- 弹窗内拖动、外部点击、Escape、浏览器返回、焦点返回、关闭后恢复试写；补充 Chromium 触屏模拟的控制点按和关闭点按事件隔离。
+- 真正段落滚动定位、打开导图不自动定位、图层不改变导图选中节点/几何/阅读上下文、刷新重置。
+- 1440×1000 主截图；1200×800、800×1100、390×844、375×800 布局检查；显式定位后窄屏四节点及定义可见。
 - 减弱动态效果、无 JavaScript 运行错误、无外部资源/数据请求、无 localStorage/sessionStorage 写入。
 
-截图均是云端 **Web 原始渲染**，没有运行用户电脑或真机。原型 SVG 试写是材质与操作演示，不是生产 Ink 引擎；笔迹采用相对纸面的展示坐标，响应式正文重排时不承诺与某个字的生产级锚定。压感、掌拒、原生输入延迟、Android 模糊性能、正式保存/恢复及跨设备一致性均未验证。
+截图均是云端 **Web 原始渲染**，没有运行用户电脑或真机。原型 SVG 试写是材质与操作演示，不是生产 Ink 引擎；笔迹采用相对纸面的展示坐标，图层弹窗已验证不触发重排；真正的浏览器尺寸改变或导图宽屏停靠仍可使 Web 正文重排，不承诺与某个字的生产级锚定。压感、掌拒、原生输入延迟、Android 模糊性能、正式保存/恢复及跨设备一致性均未验证。
 
 Android 后续适配应继续使用既有 Compose / Ink / 数据路径，只把这里的色彩、圆角、边缘光与面板状态映射过去。SwiftUI 显式重绘底图和 CSS backdrop-filter 都不能直接视为 Android 可复用组件。当前成果未合并、未部署生产、未公开托管。
