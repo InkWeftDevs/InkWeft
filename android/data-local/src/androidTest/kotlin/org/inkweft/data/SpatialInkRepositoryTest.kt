@@ -23,6 +23,56 @@ class SpatialInkRepositoryTest {
         values.forEach{s->db.ink().insertStroke(InkStrokeRow(s.id,page,InkStrokeCodec.encodeStored(s),s.samples.size,true,1))}
     }}
 
+    @Test fun cancelledIndexBuildKeepsCommittedProgressAndYieldsToAuthorWrites()=fixture{db,page->coroutineScope {
+        seed(db,page,List(700){stroke(count=512)})
+        fun pending()=db.openHelper.readableDatabase.query("SELECT COUNT(*) FROM page_spatial_pending WHERE pageId=?",arrayOf(page)).use{it.moveToFirst();it.getInt(0)}
+        var published=false
+        val cancelled=runCatching{SpatialIndex.read(db,page,onBatch={batch->
+            assertTrue(batch.rows in 1..128);assertTrue(batch.payloadBytes<=InkLimits.MAX_STROKE_BYTES)
+            throw CancellationException("cancel after committed progress")
+        }){published=true}}
+        assertTrue(cancelled.exceptionOrNull() is CancellationException);assertFalse(published)
+        val retained=pending();assertTrue(retained in 1 until 700)
+        val reached=CompletableDeferred<Unit>();val resume=CompletableDeferred<Unit>();var batches=0
+        val build=async(Dispatchers.IO){SpatialIndex.read(db,page,onBatch={batch->
+            batches++;assertTrue(batch.rows<=128);assertTrue(batch.payloadBytes<=InkLimits.MAX_STROKE_BYTES)
+            if(batches==1){reached.complete(Unit);resume.await()}
+        }){sql->assertEquals(0,pending());sql.query("SELECT COUNT(*) FROM page_spatial_entries WHERE pageId=? AND kind=0",arrayOf(page)).use{it.moveToFirst();it.getInt(0)}}}
+        try{
+            withTimeout(5000){reached.await()}
+            val added=stroke(300f,300f)
+            val result=withTimeout(5000){withContext(Dispatchers.IO){InkRepository(db).save(CommitInk(id(),page,1,InkMutation.Add(added)))}}
+            assertTrue(result is InkCommitResult.Committed)
+            resume.complete(Unit);assertEquals(701,withTimeout(15_000){build.await()})
+            assertEquals(2L,InkRepository(db).revision(page))
+        }finally{resume.complete(Unit);build.cancelAndJoin()}
+    }}
+    @Test fun pageBucketCollisionStillFiltersFullIdentityAndOldOrMissingRtreeRebuilds()=fixture{db,book->
+        val a="00000000-0000-0000-0000-0000000000Aa";val b="00000000-0000-0000-0000-0000000000BB"
+        assertEquals(SpatialIndex.pageBucket(a),SpatialIndex.pageBucket(b));assertNotEquals(a,b)
+        val first=stroke();val second=stroke()
+        db.withTransaction{
+            db.pages().insert(NotebookPageRow(a,book,1,true,0));db.pages().insert(NotebookPageRow(b,book,2,true,0))
+            seed(db,a,listOf(first));seed(db,b,listOf(second))
+        }
+        val repo=InkRepository(db);val region=CanvasBounds(90.0,90.0,110.0,110.0)
+        assertEquals(listOf(first.id),repo.readForEditing(a,bounds=region).strokes.map{it.stroke.id})
+        assertEquals(listOf(second.id),repo.readForEditing(b,bounds=region).strokes.map{it.stroke.id})
+        val sql=db.openHelper.writableDatabase;val payload=checkNotNull(db.ink().stroke(first.id)).payload
+        for(oldTable in listOf(true,false)){
+            db.withTransaction{
+                sql.execSQL("DROP TABLE page_spatial_bounds")
+                if(oldTable)sql.execSQL("CREATE VIRTUAL TABLE page_spatial_bounds USING rtree(key,minX,maxX,minY,maxY)")
+                SpatialIndex.install(sql)
+            }
+            assertEquals(2,sql.query("SELECT COUNT(*) FROM page_spatial_pending WHERE pageId IN (?,?)",arrayOf(a,b)).use{it.moveToFirst();it.getInt(0)})
+            assertEquals(listOf(first.id),repo.readForEditing(a,bounds=region).strokes.map{it.stroke.id})
+            assertEquals(listOf(second.id),repo.readForEditing(b,bounds=region).strokes.map{it.stroke.id})
+            assertArrayEquals(payload,checkNotNull(db.ink().stroke(first.id)).payload)
+            assertEquals(1L,repo.revision(a));assertEquals(1L,repo.revision(b))
+        }
+    }
+
     @Test fun viewportCandidatesRespectBoundaryVisibilityPayloadChangesAndDeletion()=fixture{db,page->
         val near=stroke();val far=stroke(10_000f,10_000f);seed(db,page,listOf(near,far));val repo=InkRepository(db)
         val bounds=CanvasBounds(98.0,98.0,103.0,103.0)
@@ -62,19 +112,31 @@ class SpatialInkRepositoryTest {
         assertEquals(1,batches);assertEquals(2L,repo.revision(page))
     }
 
-    @Test fun panningRetainsOnlyUndoGeometryAndPreservesMaskUndoRedo()=fixture{db,page->
+    @Test fun panningDropsUndoGeometryAndPreservesMaskUndoRedo()=fixture{db,page->
         val repo=InkRepository(db);val old=stroke();val far=stroke(10_000f,10_000f)
         seed(db,page,listOf(old,far));val session=InkSession(repo.readForEditing(page,bounds=old.bounds()))
         val cut=InkCut(id(),2f,listOf(EraserPoint(100f,100f)))
         session.enqueue(InkMutation.Cut(EraseSelection(cut,listOf(old.id))));val command=session.nextCommand()!!;session.complete(command,repo.save(command))
         val history=session.suspendHistory();val snapshot=repo.readForEditing(page,history,far.bounds())
-        assertEquals(listOf(far.id),snapshot.strokes.map{it.stroke.id});assertEquals(setOf(cut.id),snapshot.cuts.map{it.selection.cut.id}.toSet())
+        assertEquals(listOf(far.id),snapshot.strokes.map{it.stroke.id});assertTrue(snapshot.cuts.isEmpty());assertEquals(1,snapshot.unloaded.cutCount)
         val identity=session.undoIdentity;session.refreshWindow(snapshot);assertSame(identity,session.undoIdentity)
         session.requestUndo();val undo=session.nextCommand()!!;session.complete(undo,repo.save(undo))
         val returned=repo.readForEditing(page,session.suspendHistory(),old.bounds());session.refreshWindow(returned)
         assertTrue(session.visibleDraft().single().cuts.isEmpty())
         session.requestRedo();val redo=session.nextCommand()!!;session.complete(redo,repo.save(redo))
+        session.refreshWindow(repo.readForEditing(page,session.suspendHistory(),old.bounds()))
         assertEquals(cut.id,session.visibleDraft().single().cuts.single().id)
+    }
+
+    @Test fun storedValidationUsesPageAndIdentityIndexWithoutRepeatedSorting()=fixture{db,page->
+        for(table in listOf("ink_strokes","ink_cuts")){
+            val details=mutableListOf<String>()
+            db.openHelper.readableDatabase.query("EXPLAIN QUERY PLAN SELECT id,payload FROM $table WHERE noteId=? AND id>? ORDER BY id LIMIT 256",arrayOf(page,"")).use{cursor->
+                while(cursor.moveToNext())details+=cursor.getString(3)
+            }
+            assertTrue(details.joinToString(),details.any{it.contains("index_${table}_noteId_id")})
+            assertFalse(details.joinToString(),details.any{it.contains("TEMP B-TREE",ignoreCase=true)})
+        }
     }
 
     @Test fun validationIncludesHiddenInkAndHiddenMasks()=fixture{db,page->
@@ -102,8 +164,33 @@ class SpatialInkRepositoryTest {
         var count=0;var points=0L;repo.visitVisible(page,2){count+=it.size;points+=it.sumOf{s->s.samples.size.toLong()}}
         assertEquals(40_002,count);assertEquals(40_001L*51+2,points);assertEquals(2L,repo.validateStored(page))
         val target=WorkspaceRepository(db).create("大页复制",true,PaperStyle.BLANK).id
-        val copied=db.withTransaction{repo.copyVisibleTo(page,target)}
-        assertEquals(40_002,copied.strokeIds.size);assertEquals(40_002L,repo.validateStored(target))
-        val newId=copied.strokeIds[added.id]!!;assertEquals(added.samples,repo.readVisibleSnapshot(target,listOf(newId)).strokes.single().samples)
+        val sourceHeader=checkNotNull(db.authoring().get("PAGE",page)).payload
+        val runtime=Runtime.getRuntime()
+        fun heap()=runtime.totalMemory()-runtime.freeMemory()
+        fun retainedHeap():Long {System.gc();System.runFinalization();System.gc();return heap()}
+        val before=retainedHeap();var firstQuarter:Long?=null;var peak=before;var largestBatch=0;var visited=0
+        repo.readObserver={timing->
+            visited+=timing.entries;largestBatch=maxOf(largestBatch,timing.entries);peak=maxOf(peak,heap())
+            if(firstQuarter==null&&visited>=8192)firstQuarter=retainedHeap()
+        }
+        val copied=try{db.withTransaction{PageCopy(db,repo).copy(page,target)}}finally{repo.readObserver=null}
+        val after=retainedHeap();val growth=after-checkNotNull(firstQuarter)
+        assertEquals(40_002L,copied.strokeCount);assertEquals(2L,copied.sourceRevision);assertEquals(page,copied.source);assertEquals(target,copied.target)
+        assertTrue("Retained copy state grew by $growth bytes after the first 8192 strokes",growth<=3L*1024*1024)
+        assertTrue(largestBatch<=256);assertEquals(40_002,visited)
+        assertEquals(40_002L,db.authoring().membershipCount(target));assertEquals(40_002L,repo.validateStored(target))
+        assertArrayEquals(sourceHeader,checkNotNull(db.authoring().get("PAGE",page)).payload)
+        val newId=copied.strokeId(added.id);assertNotEquals(added.id,newId)
+        assertEquals(newId,copied.strokeId(added.id));assertNotEquals(newId,copied.cutId(added.id))
+        assertEquals(added.samples,repo.readVisibleSnapshot(target,listOf(newId)).strokes.single().samples)
+        val beforeFullAuthoring=retainedHeap()
+        val fullAuthoring=PageAuthoringRepository(db).readPage(target)
+        val fullAuthoringBytes=retainedHeap()-beforeFullAuthoring
+        assertEquals(40_002,fullAuthoring.state.layers.memberships.size)
+        val evidence=org.json.JSONObject().put("kind","large-page-copy").put("strokes",copied.strokeCount).put("points",points)
+            .put("largestGeometryBatch",largestBatch).put("heapBeforeBytes",before).put("heapAfterFirst8192Bytes",firstQuarter)
+            .put("heapAfterBytes",after).put("observedHeapPeakBytes",peak).put("retainedGrowthAfter8192Bytes",growth)
+            .put("copiedMemberships",db.authoring().membershipCount(target)).put("fullAuthoringStateRetainedBytes",fullAuthoringBytes)
+        androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().sendStatus(0,android.os.Bundle().apply{putString("stream","PAGE_COPY_EVIDENCE $evidence\n")})
     }
 }

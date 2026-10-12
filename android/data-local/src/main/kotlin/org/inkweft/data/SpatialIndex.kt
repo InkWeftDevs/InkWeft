@@ -2,8 +2,10 @@
 package org.inkweft.data
 
 import androidx.sqlite.db.SupportSQLiteDatabase
+import androidx.room.withTransaction
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.ensureActive
+import kotlinx.coroutines.yield
 import org.inkweft.core.*
 import java.io.ByteArrayInputStream
 import java.io.DataInputStream
@@ -14,16 +16,22 @@ import java.util.UUID
 internal object SpatialIndex {
     const val INK=0
     const val OBJECT=1
+    // Exactly representable in RTree's float32 coordinates. Collisions only add candidates;
+    // every query still checks the complete page UUID in the authoritative entry row.
+    fun pageBucket(page:String)=page.hashCode() and 0x00ffffff
     val tables=setOf("page_spatial_entries","page_spatial_pending","page_spatial_bounds",
-        "page_spatial_bounds_node","page_spatial_bounds_parent","page_spatial_bounds_rowid")
+        "page_spatial_bounds_node","page_spatial_bounds_parent","page_spatial_bounds_rowid",PageLayerTotals.TABLE)+InkCutIndex.tables+InkTotals.tables
 
     fun install(sql:SupportSQLiteDatabase) {
         val own=!sql.inTransaction();if(own)sql.beginTransaction()
         try {
+            InkCutIndex.install(sql);InkTotals.install(sql);PageLayerTotals.install(sql)
             val exists=sql.query("SELECT 1 FROM sqlite_master WHERE type='table' AND name='page_spatial_entries'").use{it.moveToFirst()}
             sql.execSQL("CREATE TABLE IF NOT EXISTS page_spatial_entries (key INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,pageId TEXT NOT NULL,kind INTEGER NOT NULL,contentId TEXT NOT NULL,UNIQUE(pageId,kind,contentId))")
             sql.execSQL("CREATE TABLE IF NOT EXISTS page_spatial_pending (pageId TEXT NOT NULL,kind INTEGER NOT NULL,contentId TEXT NOT NULL,PRIMARY KEY(pageId,kind,contentId))")
-            sql.execSQL("CREATE VIRTUAL TABLE IF NOT EXISTS page_spatial_bounds USING rtree(key,minX,maxX,minY,maxY)")
+            val pageDimension=sql.query("PRAGMA table_info(page_spatial_bounds)").use{c->var found=false;while(c.moveToNext())if(c.getString(1)=="minPage")found=true;found}
+            if(!pageDimension)sql.execSQL("DROP TABLE IF EXISTS page_spatial_bounds")
+            sql.execSQL("CREATE VIRTUAL TABLE IF NOT EXISTS page_spatial_bounds USING rtree(key,minX,maxX,minY,maxY,minPage,maxPage)")
             sql.execSQL("CREATE TRIGGER IF NOT EXISTS spatial_entry_delete AFTER DELETE ON page_spatial_entries BEGIN DELETE FROM page_spatial_bounds WHERE key=OLD.key; END")
             for((table,page,kind) in listOf(Triple("ink_strokes","noteId",INK),Triple("page_object_records","pageId",OBJECT))){
                 val visible=if(kind==INK)" WHEN NEW.visible=1" else ""
@@ -38,7 +46,7 @@ internal object SpatialIndex {
             }
             sql.execSQL("CREATE TRIGGER IF NOT EXISTS spatial_page_delete AFTER DELETE ON notebook_pages BEGIN "+
                 "DELETE FROM page_spatial_entries WHERE pageId=OLD.id; DELETE FROM page_spatial_pending WHERE pageId=OLD.id; END")
-            if(!exists){
+            if(!exists||!pageDimension){
                 sql.execSQL("INSERT OR IGNORE INTO page_spatial_pending SELECT noteId,0,id FROM ink_strokes WHERE visible=1")
                 sql.execSQL("INSERT OR IGNORE INTO page_spatial_pending SELECT pageId,1,id FROM page_object_records")
             }
@@ -50,24 +58,45 @@ internal object SpatialIndex {
         check(sql.inTransaction())
         sql.execSQL("INSERT OR IGNORE INTO page_spatial_entries(pageId,kind,contentId) VALUES(?,?,?)",arrayOf<Any>(page,kind,id))
         val key=sql.query("SELECT key FROM page_spatial_entries WHERE pageId=? AND kind=? AND contentId=?",arrayOf<Any>(page,kind,id)).use{check(it.moveToFirst());it.getLong(0)}
-        sql.execSQL("INSERT OR REPLACE INTO page_spatial_bounds VALUES(?,?,?,?,?)",arrayOf<Any>(key,bounds.left,bounds.right,bounds.top,bounds.bottom))
+        val bucket=pageBucket(page)
+        sql.execSQL("INSERT OR REPLACE INTO page_spatial_bounds VALUES(?,?,?,?,?,?,?)",arrayOf<Any>(key,bounds.left,bounds.right,bounds.top,bounds.bottom,bucket,bucket))
         sql.execSQL("DELETE FROM page_spatial_pending WHERE pageId=? AND kind=? AND contentId=?",arrayOf<Any>(page,kind,id))
     }
 
-    /** Cursor windows never contain a page's complete geometry, including first-time indexing. */
-    suspend fun prepare(sql:SupportSQLiteDatabase,page:String) {
+    data class BuildBatch(val rows:Int,val payloadBytes:Long)
+    private class Ready<T>(val value:T)
+    /** Pending rows are the durable progress marker. Commit one bounded batch before yielding
+     * the writer; execute the read only in a transaction that sees no pending rows. */
+    suspend fun <T> read(db:NoteDatabase,page:String,onBatch:suspend(BuildBatch)->Unit={},prepareCuts:Boolean=false,read:suspend(SupportSQLiteDatabase)->T):T {
+        check(!db.inTransaction()){"Spatial reads must not inherit a writer transaction"}
+        while(true){
+            var built:BuildBatch?=null
+            val ready=db.withTransaction {
+                val sql=db.openHelper.writableDatabase
+                built=prepareBatch(sql,page)
+                if(built==null&&prepareCuts){val cuts=InkCutIndex.prepareBatch(sql,page);if(cuts>0)built=BuildBatch(cuts,0)}
+                if(built==null)Ready(read(sql))else null
+            }
+            if(ready!=null)return ready.value
+            onBatch(checkNotNull(built));yield()
+        }
+    }
+    /** Both decoding and transaction work are bounded, including first-time indexing. */
+    private suspend fun prepareBatch(sql:SupportSQLiteDatabase,page:String):BuildBatch? {
         check(sql.inTransaction())
         val context=currentCoroutineContext()
-        while(true){
             val pending=sql.query("SELECT kind,contentId FROM page_spatial_pending WHERE pageId=? ORDER BY kind,contentId LIMIT 128",arrayOf<Any>(page)).use{c->
                 buildList{while(c.moveToNext())add(c.getInt(0) to c.getString(1))}
             }
-            if(pending.isEmpty())return
+            if(pending.isEmpty())return null
+            var rows=0;var bytes=0L
             for((kind,id) in pending){
                 context.ensureActive()
                 val table=if(kind==INK)"ink_strokes" else "page_object_records"
                 val column=if(kind==INK)"noteId" else "pageId"
-                val payload=sql.query("SELECT payload FROM $table WHERE $column=? AND id=?${if(kind==INK)" AND visible=1" else ""}",arrayOf<Any>(page,id)).use{c->if(c.moveToFirst())c.getBlob(0)else null}
+                val value=if(kind==INK)"payload"else "substr(payload,1,128)"
+                val payload=sql.query("SELECT $value FROM $table WHERE $column=? AND id=?${if(kind==INK)" AND visible=1" else ""}",arrayOf<Any>(page,id)).use{c->if(c.moveToFirst())c.getBlob(0)else null}
+                if(rows>0&&bytes+(payload?.size?:0)>InkLimits.MAX_STROKE_BYTES)break
                 if(payload==null){
                     sql.execSQL("DELETE FROM page_spatial_entries WHERE pageId=? AND kind=? AND contentId=?",arrayOf<Any>(page,kind,id))
                     sql.execSQL("DELETE FROM page_spatial_pending WHERE pageId=? AND kind=? AND contentId=?",arrayOf<Any>(page,kind,id))
@@ -75,8 +104,9 @@ internal object SpatialIndex {
                     val bounds=if(kind==INK)InkStrokeCodec.decode(payload).also{check(it.id==id)}.bounds()else objectBounds(payload,id)
                     put(sql,page,kind,id,bounds)
                 }
+                rows++;bytes+=payload?.size?:0
             }
-        }
+            return BuildBatch(rows,bytes)
     }
 
     /** Geometry prefix only; JPEG previews are neither read nor decoded for candidate selection.
@@ -97,29 +127,35 @@ internal object SpatialIndex {
     data class Cursor(val revision:Long,val id:String)
     data class InkCandidate(val id:String,val revision:Long,val pointCount:Int,val byteCount:Int)
 
-    fun ink(sql:SupportSQLiteDatabase,page:String,bounds:CanvasBounds?,after:Cursor?=null,limit:Int=256):List<InkCandidate> {
+    fun ink(sql:SupportSQLiteDatabase,page:String,bounds:CanvasBounds?,after:Cursor?=null,limit:Int=256,layers:List<String>?=null):List<InkCandidate> {
         android.os.Trace.beginSection("InkWeft.spatial.query")
         try{
         require(limit in 1..1024)
+        if(layers?.isEmpty()==true)return emptyList()
         val args=mutableListOf<Any>(page)
         val spatial=if(bounds==null)"" else{
-            args.addAll(listOf(bounds.right,bounds.left,bounds.bottom,bounds.top))
-            " AND b.minX<=? AND b.maxX>=? AND b.minY<=? AND b.maxY>=?"
+            val bucket=pageBucket(page)
+            args.addAll(listOf(bounds.right,bounds.left,bounds.bottom,bounds.top,bucket,bucket))
+            " AND b.minX<=? AND b.maxX>=? AND b.minY<=? AND b.maxY>=? AND b.minPage<=? AND b.maxPage>=?"
+        }
+        val owned=if(layers==null)""else{
+            args.addAll(layers)
+            " AND EXISTS (SELECT 1 FROM page_layer_memberships m WHERE m.pageId=s.noteId AND m.kind='INK' AND m.contentId=s.id AND m.layerId IN (${layers.joinToString(","){"?"}}))"
         }
         val cursor=if(after==null)""else{args.addAll(listOf(after.revision,after.revision,after.id));" AND (s.createdRevision>? OR (s.createdRevision=? AND s.id>?))"}
         args.add(limit)
         val from=if(bounds==null)"FROM ink_strokes s WHERE s.noteId=? AND s.visible=1"else "FROM page_spatial_bounds b "+
-            "JOIN page_spatial_entries e ON e.key=b.key JOIN ink_strokes s ON s.id=e.contentId AND s.noteId=e.pageId "+
+            "CROSS JOIN page_spatial_entries e ON e.key=b.key CROSS JOIN ink_strokes s ON s.id=e.contentId AND s.noteId=e.pageId "+
             "WHERE e.pageId=? AND e.kind=0 AND s.visible=1$spatial"
-        return sql.query("SELECT s.id,s.createdRevision,s.pointCount,length(s.payload) $from$cursor ORDER BY s.createdRevision,s.id LIMIT ?",args.toTypedArray()).use{c->
+        return sql.query("SELECT s.id,s.createdRevision,s.pointCount,length(s.payload) $from$owned$cursor ORDER BY s.createdRevision,s.id LIMIT ?",args.toTypedArray()).use{c->
                 buildList{while(c.moveToNext())add(InkCandidate(c.getString(0),c.getLong(1),c.getInt(2),c.getInt(3)))}
             }
         }finally{android.os.Trace.endSection()}
     }
 
     fun objects(sql:SupportSQLiteDatabase,page:String,bounds:CanvasBounds):List<String> = sql.query(
-        "SELECT o.id FROM page_spatial_bounds b JOIN page_spatial_entries e ON e.key=b.key "+
-            "JOIN page_object_records o ON o.pageId=e.pageId AND o.id=e.contentId "+
-            "WHERE e.pageId=? AND e.kind=1 AND b.minX<=? AND b.maxX>=? AND b.minY<=? AND b.maxY>=? ORDER BY o.position,o.id",
-        arrayOf<Any>(page,bounds.right,bounds.left,bounds.bottom,bounds.top)).use{c->buildList{while(c.moveToNext())add(c.getString(0))}}
+        "SELECT o.id FROM page_spatial_bounds b CROSS JOIN page_spatial_entries e ON e.key=b.key "+
+            "CROSS JOIN page_object_records o ON o.pageId=e.pageId AND o.id=e.contentId "+
+            "WHERE e.pageId=? AND e.kind=1 AND b.minX<=? AND b.maxX>=? AND b.minY<=? AND b.maxY>=? AND b.minPage<=? AND b.maxPage>=? ORDER BY o.position,o.id",
+        arrayOf<Any>(page,bounds.right,bounds.left,bounds.bottom,bounds.top,pageBucket(page),pageBucket(page))).use{c->buildList{while(c.moveToNext())add(c.getString(0))}}
 }

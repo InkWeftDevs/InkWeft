@@ -11,9 +11,9 @@ import org.inkweft.data.*
 import java.util.UUID
 
 internal data class AuthoringUi(val state:PageAuthoring=PageAuthoring(),val revision:Long=0,val loading:Boolean=true,
-    val busy:Boolean=false,val pending:Boolean=false,val message:String?=null,val undo:Boolean=false,val redo:Boolean=false) {
-    val ready get()=!loading&&!busy&&!pending
-    val canWrite get()=ready&&state.layers.currentId!=null
+    val busy:Boolean=false,val pending:Boolean=false,val message:String?=null,val undo:Boolean=false,val redo:Boolean=false,val layerCounts:Map<String,Long>?=null,val inkLayerCounts:Map<String,Long>?=null,val projectionLoading:Boolean=false,val inkRevision:Long=0,val objectRevision:Long=0) {
+    val ready get()=!loading&&!projectionLoading&&!busy&&!pending
+    val canWrite get()=!loading&&!busy&&!pending&&state.layers.currentId!=null
 }
 /** The same author gate and chronological history as page ink/objects; unknown writes retain their command. */
 internal class PageAuthoringViewModel(val scope:AuthoringScope,private val repo:PageAuthoringRepository):ViewModel() {
@@ -21,7 +21,32 @@ internal class PageAuthoringViewModel(val scope:AuthoringScope,private val repo:
     var authorAllowed:()->Boolean={true}
     var writing by androidx.compose.runtime.mutableStateOf(false)
     var history:EditorHistory?=null
-    private val undo=ArrayDeque<PageAuthoring>();private val redo=ArrayDeque<PageAuthoring>()
+    private data class History(val state:PageAuthoring,val token:String,val reverse:Boolean=true)
+    private val undo=ArrayDeque<History>();private val redo=ArrayDeque<History>()
+    private val contents=MutableStateFlow<List<LayerContent>>(emptyList())
+    private var lastContents=java.lang.ref.WeakReference<List<InkStroke>>(null)
+    fun contents(strokes:List<InkStroke>){
+        if(scope.kind!=AuthoringScopeKind.PAGE||lastContents.get()===strokes)return
+        lastContents=java.lang.ref.WeakReference(strokes)
+        val refs=strokes.map{LayerContent(LayerContentKind.INK,it.id)}
+        if(refs!=contents.value){contents.value=refs;if(pending==null)mutable.value=ui.value.copy(projectionLoading=true)}
+    }
+    /** Full selection still uses the ink reader's fixed geometry budget; only that result's identities are projected. */
+    suspend fun prepareContents(strokes:List<InkStroke>,ink:Long,objects:Long,configuration:Long):AuthoringSnapshot? {
+        if(scope.kind!=AuthoringScopeKind.PAGE||!authorAllowed()||ui.value.loading||ui.value.busy||ui.value.pending||snapshot?.revision!=configuration)return null
+        contents(strokes);val requested=contents.value
+        val saved=withContext(Dispatchers.IO){repo.readEditor(scope,requested)}
+        currentCoroutineContext().ensureActive()
+        if(!authorAllowed()||contents.value!=requested||ui.value.busy||ui.value.pending||snapshot?.revision!=configuration||
+            saved.revision!=configuration||saved.inkRevision!=ink||saved.objectRevision!=objects)return null
+        publish(saved);return saved
+    }
+    private suspend fun read()=if(scope.kind==AuthoringScopeKind.PAGE)repo.readEditor(scope,contents.value)else repo.read(scope)
+    internal fun historical(state:PageAuthoring):PageAuthoring {
+        if(scope.kind!=AuthoringScopeKind.PAGE)return state
+        val layers=state.layers
+        return state.withLayers(UserLayers(layers.layers,layers.currentId,layers.memberships.filter{it.content.kind==LayerContentKind.ANNOTATION},layers.deleted.filter{it.kind==LayerContentKind.ANNOTATION}))
+    }
     private var pending:AuthoringPending?=null
     private var snapshot:AuthoringSnapshot?=null
     private var unreadablePending=false
@@ -31,7 +56,7 @@ internal class PageAuthoringViewModel(val scope:AuthoringScope,private val repo:
             pending?.let{p->snapshot=p.before;mutable.value=AuthoringUi(p.after,p.before.revision,false,pending=true,message="发现未确认作者操作，正在核对原回执");retry()}
         }catch(c:CancellationException){throw c}catch(_:Exception){unreadablePending=true;mutable.value=mutable.value.copy(loading=false,message="图层或恢复材料读取失败；原文件保留，请核对或明确放弃未确认草稿",pending=true)}
         // A corrupt recovery file must not permanently stop observation after explicit recovery.
-        repo.observe(scope).catch{e->if(e is CancellationException)throw e;mutable.value=mutable.value.copy(loading=false,pending=true,message="作者状态读取失败，请核对已保存版本")}
+        (if(scope.kind==AuthoringScopeKind.PAGE)contents.flatMapLatest{repo.observeEditor(scope,it)}else repo.observe(scope)).catch{e->if(e is CancellationException)throw e;mutable.value=mutable.value.copy(loading=false,pending=true,message="作者状态读取失败，请核对已保存版本")}
             .collect{saved->if(pending==null&&!unreadablePending&&!mutable.value.busy){
                 val before=snapshot
                 if(before!=null&&(before.revision!=saved.revision||before.inkRevision!=saved.inkRevision||before.objectRevision!=saved.objectRevision||before.graphFingerprint!=saved.graphFingerprint)){
@@ -40,19 +65,19 @@ internal class PageAuthoringViewModel(val scope:AuthoringScope,private val repo:
                 publish(saved)
             }}
     } }
-    private fun publish(snapshot:AuthoringSnapshot,message:String?=null){this.snapshot=snapshot;mutable.value=AuthoringUi(snapshot.state,snapshot.revision,false,message=message,undo=undo.isNotEmpty(),redo=redo.isNotEmpty())}
+    private fun publish(snapshot:AuthoringSnapshot,message:String?=null){this.snapshot=snapshot;mutable.value=AuthoringUi(snapshot.state,snapshot.revision,false,message=message,undo=undo.isNotEmpty(),redo=redo.isNotEmpty(),layerCounts=snapshot.layerCounts.takeIf{snapshot.editorProjection},inkLayerCounts=snapshot.inkLayerCounts.takeIf{snapshot.editorProjection},inkRevision=snapshot.inkRevision,objectRevision=snapshot.objectRevision)}
     fun pageHeadsMatch(ink:Long,objects:Long)=snapshot?.let{it.inkRevision==ink&&it.objectRevision==objects}==true
     fun scopeForWrite():LayerWriteScope {check(ui.value.canWrite){"请先选择可写图层"};return ui.value.state.layers.writeScope(ui.value.revision)}
-    fun change(transform:(PageAuthoring)->PageAuthoring,direction:Int=0,expectedRevision:Long?=null):Boolean{
+    fun change(transform:(PageAuthoring)->PageAuthoring,direction:Int=0,expectedRevision:Long?=null,ownershipEdit:LayerOwnershipEdit?=null):Boolean{
         if(!authorAllowed()||!ui.value.ready)return false
         return try {
             val before=checkNotNull(snapshot)
             require(before.revision==(expectedRevision?:ui.value.revision)){"图层已变化，请重新操作"}
             val after=transform(before.state);PageAuthoringCodec.encode(after)
-            val accepted=AuthoringPending(scope,UUID.randomUUID().toString(),before,after,direction)
+            val accepted=AuthoringPending(scope,UUID.randomUUID().toString(),before,after,direction,ownershipEdit=ownershipEdit,retainedHistory=(undo.map{it.token}+redo.map{it.token}).distinct())
             // Keep the visible draft blocked until the IO-thread journal and author transaction are confirmed.
             // Process death before the first journal fsync remains an explicitly unconfirmed recovery window.
-            pending=accepted;mutable.value=ui.value.copy(state=after,pending=true,message="批注尚未保存，正在写入恢复材料");retry();true
+            pending=accepted;mutable.value=ui.value.copy(state=if(ownershipEdit is LayerOwnershipEdit.Replay)ui.value.state else after,pending=true,message="批注尚未保存，正在写入恢复材料");retry();true
         }catch(e:Exception){mutable.value=ui.value.copy(busy=false,message=explain(e));false}
     }
     fun retry(){
@@ -60,13 +85,15 @@ internal class PageAuthoringViewModel(val scope:AuthoringScope,private val repo:
         mutable.value=ui.value.copy(busy=true,pending=true,message=null)
         viewModelScope.launch {
             try {
-                val next=withContext(Dispatchers.IO){repo.stagePending(p);repo.save(scope,p.before,p.commandId,p.after,p.afterPayload())}
-                val saved=withContext(Dispatchers.IO){repo.read(scope)}
+                val next=withContext(Dispatchers.IO){repo.stagePending(p);repo.save(scope,p.before,p.commandId,p.after,p.afterPayload(),p.ownershipEdit,p.retainedHistory)}
+                val saved=withContext(Dispatchers.IO){read()}
                 withContext(Dispatchers.IO){repo.clearPending(scope,p.commandId)}
                 val exact=saved.revision==next&&saved.inkRevision==p.before.inkRevision&&saved.objectRevision==p.before.objectRevision&&saved.graphFingerprint==p.before.graphFingerprint
                 val direction=if(p.direction==-1&&undo.isEmpty()||p.direction==1&&redo.isEmpty())0 else p.direction
                 if(exact){
-                    when(direction){-1->{undo.removeLast();redo.addLast(p.before.state)};1->{redo.removeLast();undo.addLast(p.before.state)};else->{undo.addLast(p.before.state);redo.clear()}}
+                    val token=(p.ownershipEdit as? LayerOwnershipEdit.Replay)?.command?:p.commandId
+                    val entry=History(historical(p.before.state),token,(p.ownershipEdit as? LayerOwnershipEdit.Replay)?.let{!it.reverse}?:true)
+                    when(direction){-1->{undo.removeLast();redo.addLast(entry)};1->{redo.removeLast();undo.addLast(entry)};else->{undo.addLast(entry);redo.clear()}}
                     while(undo.size>10)undo.removeFirst();history?.committed(EditDomain.AUTHORING,direction)
                 }else{undo.clear();redo.clear();history?.forget(EditDomain.AUTHORING)}
                 pending=null
@@ -78,21 +105,28 @@ internal class PageAuthoringViewModel(val scope:AuthoringScope,private val repo:
         try{
             val p=pending?:withContext(Dispatchers.IO){repo.pending(scope)}
             if(p!=null&&withContext(Dispatchers.IO){repo.confirmed(p)}==null){pending=p;mutable.value=ui.value.copy(busy=false,pending=true,message="没有找到已提交回执，恢复材料保留。可重试原操作，或明确放弃未确认草稿");return@launch}
-            val saved=withContext(Dispatchers.IO){repo.read(scope)}
+            val saved=withContext(Dispatchers.IO){read()}
             if(p!=null)withContext(Dispatchers.IO){repo.clearPending(scope,p.commandId)}
             pending=null;unreadablePending=false;undo.clear();redo.clear();history?.forget(EditDomain.AUTHORING);publish(saved)
         }catch(c:CancellationException){throw c}catch(_:Exception){mutable.value=ui.value.copy(busy=false,pending=true,message="仍无法核对已保存状态，恢复材料保留")}
     }}
     /** Called only by the explicit discard confirmation; a committed receipt is kept in the database. */
     fun discardPending(){if(ui.value.busy)return;mutable.value=ui.value.copy(busy=true);viewModelScope.launch{
-        try{val saved=withContext(Dispatchers.IO){val current=repo.read(scope);repo.clearPending(scope);current};pending=null;unreadablePending=false;undo.clear();redo.clear();history?.forget(EditDomain.AUTHORING);publish(saved,"未确认草稿已放弃，所有已提交内容保留")}
+        try{val saved=withContext(Dispatchers.IO){val current=read();repo.clearPending(scope);current};pending=null;unreadablePending=false;undo.clear();redo.clear();history?.forget(EditDomain.AUTHORING);publish(saved,"未确认草稿已放弃，所有已提交内容保留")}
         catch(c:CancellationException){throw c}catch(_:Exception){mutable.value=ui.value.copy(busy=false,pending=true,message="未能放弃草稿，恢复材料仍保留")}
     }}
-    fun undo(){if(undo.isNotEmpty())change({undo.last()},-1)}
-    fun redo(){if(redo.isNotEmpty())change({redo.last()},1)}
+    fun undo(){if(undo.isNotEmpty()){val entry=undo.last();change({entry.state},-1,ownershipEdit=if(scope.kind==AuthoringScopeKind.PAGE)LayerOwnershipEdit.Replay(entry.token,entry.reverse)else null)}}
+    fun redo(){if(redo.isNotEmpty()){val entry=redo.last();change({entry.state},1,ownershipEdit=if(scope.kind==AuthoringScopeKind.PAGE)LayerOwnershipEdit.Replay(entry.token,entry.reverse)else null)}}
     fun clearMessage(){mutable.value=ui.value.copy(message=null)}
     fun change(transform:(PageAuthoring)->PageAuthoring)=change(transform,0,null)
     fun layers(transform:(UserLayers)->UserLayers)=change{it.withLayers(transform(it.layers))}
+    fun removeLayer(id:String,decision:LayerDelete?)=change({require((snapshot?.layerCounts?.get(id)?:0)==0L||decision!=null){"LAYER_DELETE_CHOOSE_CONTENT"};it.withLayers(it.layers.remove(id,decision))},ownershipEdit=if(scope.kind==AuthoringScopeKind.PAGE)LayerOwnershipEdit.Layer(id,(decision as? LayerDelete.Transfer)?.targetId)else null)
+    fun transferLayer(source:String,target:String)=change({state->
+        require(state.layers.layers.single{it.id==source}.writable){"LAYER_SELECTION_LOCKED"}
+        require(state.layers.layers.any{it.id==target&&it.writable}){"LAYER_TARGET_NOT_WRITABLE"}
+        val refs=state.layers.memberships.filter{it.layerId==source}.map{it.content}
+        if(refs.isEmpty())state else state.withLayers(state.layers.transfer(refs,target))
+    },ownershipEdit=if(scope.kind==AuthoringScopeKind.PAGE&&source!=target)LayerOwnershipEdit.Layer(source,target)else null)
     companion object {
         fun explain(e:Throwable)=when(e.message){
             "LAYER_BEAUTY_MOVE_TOGETHER"->"美化文字和保留的原迹需一起转层；请重新选择整组"

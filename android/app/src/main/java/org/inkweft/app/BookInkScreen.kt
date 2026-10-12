@@ -71,7 +71,7 @@ fun InkScreen(note:NoteDraft,workspace:WorkspaceViewModel=viewModel(),onBack:()-
         Toast.makeText(context,"请先抬笔或核对当前操作，笔记仍保持在当前页。",Toast.LENGTH_SHORT).show()
     }
     var searchTarget by remember{mutableStateOf<PageSearchDraft?>(null)}
-    var exportBytes by remember{mutableStateOf<ByteArray?>(null)};var exporting by remember{mutableStateOf(false)}
+    var exportBytes by remember{mutableStateOf<org.inkweft.data.ContentFile?>(null)};var exporting by remember{mutableStateOf(false)}
     var confirmBook by remember{mutableStateOf(false)}
     var insertion by remember{mutableStateOf<Pair<String,PageInsertLocation>?>(null)}
     var pageActionId by rememberSaveable{mutableStateOf<String?>(null)}
@@ -114,8 +114,10 @@ fun InkScreen(note:NoteDraft,workspace:WorkspaceViewModel=viewModel(),onBack:()-
     fun requestAction(p:NotebookPageRow,kind:PageEditKind){if(!readLock.canWrite)return;directory=false;pageActionKind=kind.name;pageActionId=p.id}
     val export=rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("application/octet-stream")){uri->
         val bytes=exportBytes;exportBytes=null
-        if(uri!=null&&bytes!=null)scope.launch{val ok=try{withContext(Dispatchers.IO){checkNotNull(context.contentResolver.openOutputStream(uri,"wt")).use{it.write(bytes)}};true}catch(c:CancellationException){throw c}catch(_:Exception){false};Toast.makeText(context,if(ok)"整本内容副本已导出"else"导出失败，原笔记保留",Toast.LENGTH_LONG).show()}
+        if(uri!=null&&bytes!=null)scope.launch{val ok=try{withContext(Dispatchers.IO){checkNotNull(context.contentResolver.openOutputStream(uri,"wt")).use{bytes.copyTo(it){ensureActive()}}};true}catch(c:CancellationException){throw c}catch(_:Exception){false}finally{bytes.close()};Toast.makeText(context,if(ok)"整本内容副本已导出"else"导出失败，原笔记保留",Toast.LENGTH_LONG).show()}
+        else bytes?.close()
     }
+    DisposableEffect(Unit){onDispose{exportBytes?.close()}}
     val page=ui.pages.firstOrNull{it.id==ui.selectedId}
     LaunchedEffect(note.base.id,page?.id){page?.let{app.learningStore.visit(StableTargetRef(LearningTargetKind.PAGE,note.base.id,it.id))}}
     var paperPicker by remember{mutableStateOf(false)}
@@ -480,25 +482,36 @@ fun InkScreen(note:NoteDraft,workspace:WorkspaceViewModel=viewModel(),onBack:()-
             if(readLock.canWrite&&canNavigate&&!ui.busy&&!ui.insertionUnknown&&!ui.actionUnknown)vm.insert(where,id,paper,count,open,order,installed)
         }
     }
-    if(confirmBook)AlertDialog(onDismissRequest={confirmBook=false},title={Text("导出整本内容副本")},text={Text("包括本笔记所有可用页面、图片、文本框、胶带状态、局部擦除效果和已保存键入文字；不含页面回收区。明文 .iwbook，不含摘要卡/脑图、撤销历史、账号或密钥；不是完整资料库备份。目标可能由云盘提供。")},confirmButton={TextButton(onClick={confirmBook=false;exporting=true;scope.launch{try{val bytes=withContext(Dispatchers.IO){app.pages.exportBook(note.base.id).encode()};exportBytes=bytes;export.launch("墨织笔记本.iwbook")}catch(c:CancellationException){throw c}catch(e:Exception){Toast.makeText(context,e.mapExportExplanation()?:"无法导出整本内容，原数据保留；可尝试逐页导出",Toast.LENGTH_LONG).show()}finally{exporting=false}}}){Text("选择位置")}},dismissButton={TextButton(onClick={confirmBook=false}){Text("取消")}})
+    if(confirmBook)AlertDialog(onDismissRequest={confirmBook=false},title={Text("导出整本内容副本")},text={Text("包括本笔记所有可用页面、图片、文本框、胶带状态、局部擦除效果和已保存键入文字；不含页面回收区。明文 .iwbook，不含摘要卡/脑图、撤销历史、账号或密钥；不是完整资料库备份。目标可能由云盘提供。")},confirmButton={TextButton(onClick={confirmBook=false;exporting=true;scope.launch{try{val bytes=withContext(Dispatchers.IO){app.libraryContent.prepareExport(note.base.id)};exportBytes?.close();exportBytes=bytes;export.launch("墨织笔记本.iwbook")}catch(c:CancellationException){throw c}catch(e:Exception){Toast.makeText(context,e.mapExportExplanation()?:"无法导出整本内容，原数据保留；可尝试逐页导出",Toast.LENGTH_LONG).show()}finally{exporting=false}}}){Text("选择位置")}},dismissButton={TextButton(onClick={confirmBook=false}){Text("取消")}})
     searchTarget?.let{draft->PageSearchDialog(draft){searchTarget=null}}
     }
     }
 }
+private data class PageThumbState(val ink:InkRenderSource,val objects:List<PageObject>,val authoring:PageAuthoring,val hasInk:Boolean)
+
 @Composable
-internal fun PageThumb(page:NotebookPageRow,modifier:Modifier=Modifier.size(84.dp,110.dp)){
+internal fun PageThumb(page:NotebookPageRow,modifier:Modifier=Modifier.size(84.dp,110.dp),fallbackText:String=""){
     val app=LocalContext.current.applicationContext as InkWeftApplication
-    val strokes by produceState<List<InkStroke>?>(null,page.id){
-        try{withContext(Dispatchers.IO){app.inkRepository.observeVisible(page.id).collect{value=it}}}
+    val snapshot by produceState<PageThumbState?>(null,page.id,page.notebookId){
+        value=null
+        try{withContext(Dispatchers.IO){app.authoring.observeEditor(AuthoringScope.page(page.notebookId,page.id),emptyList()).collect{authoring->
+            val objects=app.pageObjects.read(page.id)
+            if(objects.revision!=authoring.objectRevision)return@collect
+            try{app.authoring.checkExportHeads(page.id,authoring)}
+            catch(e:IllegalStateException){if(e.message=="EXPORT_REVISION_CHANGED")return@collect;throw e}
+            value=PageThumbState(InkRenderSource(app.inkRepository,page.id,authoring.inkRevision,emptySet(),authoring.revision,authoring.inkLayerCounts),objects.objects,authoring.state,authoring.hasVisibleInk)
+        }}}
         catch(c:CancellationException){throw c}catch(_:Exception){value=null}
     }
-    val objects by produceState<List<PageObject>>(emptyList(),page.id){
-        try{withContext(Dispatchers.IO){app.pageObjects.observePreview(page.id).collect{value=it}}}
-        catch(c:CancellationException){throw c}catch(_:Exception){value=emptyList()}
-    }
     Box(modifier){
-        val loaded=strokes
-        AndroidView(factory={InkCanvasView(it).apply{preview=true}},update={it.configure(false,PaperStyle.entries[page.paper],null);it.showDocument(page.id);it.showStrokes(loaded.orEmpty());it.showObjects(objects)},modifier=Modifier.fillMaxSize())
+        val loaded=snapshot
+        key(page.id){AndroidView(factory={InkCanvasView(it).apply{preview=true;importantForAccessibility=android.view.View.IMPORTANT_FOR_ACCESSIBILITY_NO}},onRelease={v->
+            v.showInkSource(null,false);v.showDocument(null);v.showObjects(emptyList());v.showStrokes(emptyList());v.showAuthoring(null)
+        },update={v->
+            v.configure(page.world,PaperStyle.entries[page.paper],null);v.showAuthoring(loaded?.authoring);v.showDocument(page.id)
+            v.showObjects(loaded?.objects.orEmpty());v.showStrokes(emptyList());v.showInkSource(loaded?.ink,loaded==null)
+        },modifier=Modifier.fillMaxSize())}
+        if(loaded!=null&&!loaded.hasInk&&loaded.objects.isEmpty()&&fallbackText.isNotBlank())Text(fallbackText,fontSize=8.sp,lineHeight=13.sp,maxLines=10,color=Quiet,modifier=Modifier.padding(12.dp))
     }
 }
 @Composable
@@ -511,16 +524,15 @@ private fun PageSearchDialog(draft:PageSearchDraft,dismiss:()->Unit){
     EditorPanel("校对手写识别","",{if(!busy)dismiss()},"page-search-dialog",footer={Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.End){TextButton(onClick=dismiss,enabled=!busy){Text("取消")};TextButton(onClick={busy=true;scope.launch{try{if(withContext(Dispatchers.IO){app.pages.saveSearchText(pageId,revision,text,objectRevision,if(ocr)"OCR"else"MANUAL",draft.authoringRevision)})dismiss()else message="页面内容或图层已更新，没有套用到新版本。请关闭后重新核对。"}catch(c:CancellationException){throw c}catch(_:Exception){message="校对尚未保存，请重试。"}finally{busy=false}}},enabled=!busy,modifier=Modifier.testTag("save-page-search")){Text("保存校对")}}}){Column(Modifier.verticalScroll(rememberScrollState()),verticalArrangement=Arrangement.spacedBy(4.dp)){
         Text("只修正查找用的文字，保留纸面手写。",fontSize=12.sp,color=Quiet)
         TextButton(onClick={busy=true;message="正在离线识别…";scope.launch{try{
-            val frozen=withContext(Dispatchers.IO){app.authoring.exportPage(pageId)}
+            val frozen=withContext(Dispatchers.IO){app.authoring.readForRecognition(pageId)}
             check(frozen.authoring.inkRevision==revision&&frozen.authoring.revision==draft.authoringRevision)
             objectRevision=frozen.authoring.objectRevision
-            val layers=frozen.authoring.state.layers
-            val visibleObjects=frozen.objects.filter{layers.visible(LayerContent(LayerContentKind.OBJECT,it.id))}
-            val suppressed=visibleObjects.flatMap{it.sourceStrokeIds}.toSet()
-            val result=app.handwriting.recognize(frozen.ink.filter{layers.visible(LayerContent(LayerContentKind.INK,it.id))&&it.id !in suppressed})
+            val visibleObjects=frozen.objects
+            val result=app.handwriting.recognizePage(pageId,frozen,app.inkRepository)
+            withContext(Dispatchers.IO){app.authoring.checkExportHeads(pageId,frozen.authoring)}
             text=(listOf(result.text)+visibleObjects.filter{!it.hidden&&it.kind in setOf(PageObjectKind.TEXT,PageObjectKind.FORMULA)}.map{it.visibleText()}).filter{it.isNotBlank()}.joinToString("\n").also{require(it.length<=20000)}
             ocr=true;message=if(text.isBlank())"未识别到文字，可手动补充关键词。"else"识别完成，请核对后保存。"
-        }catch(c:CancellationException){throw c}catch(_:Exception){message="识别未完成或页面已经变化。原笔迹保留，可关闭后重试。"}finally{busy=false}}},enabled=!busy,modifier=Modifier.testTag("recognize-page")){Text("识别本页手写")}
+        }catch(c:CancellationException){throw c}catch(e:Exception){message=if(e.message=="PAGE_RECOGNITION_BUDGET")"本页手写超出单次识别范围，请使用选区识别或手动填写查找文字。"else"识别未完成或页面已经变化。原笔迹保留，可关闭后重试。"}finally{busy=false}}},enabled=!busy,modifier=Modifier.testTag("recognize-page")){Text("识别本页手写")}
         if(busy)LinearProgressIndicator(Modifier.fillMaxWidth())
         OutlinedTextField(text,{if(it.length<=20_000)text=it},enabled=!busy,modifier=Modifier.fillMaxWidth().heightIn(min=96.dp,max=160.dp).testTag("page-search-text"),label={Text("识别出的文字")})
         message?.let{Text(it,fontSize=12.sp)}

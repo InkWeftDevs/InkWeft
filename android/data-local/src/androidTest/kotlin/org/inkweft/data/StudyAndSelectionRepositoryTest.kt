@@ -70,6 +70,10 @@ class StudyAndSelectionRepositoryTest {
         val authoring=PageAuthoringRepository(db);authoring.readObserver={observations.add(it)};val snapshot=authoring.readPage(page)
         assertEquals(ReadKind.AUTHORING,observations.last().kind);assertEquals(1,observations.last().entries)
         authoring.readObserver={error("synthetic observer failure")};assertEquals(snapshot.revision,authoring.readPage(page).revision)
+        val refs=before.strokes.map{LayerContent(LayerContentKind.INK,it.stroke.id)}
+        authoring.readObserver={observations.add(it)};authoring.readPageEditor(page,refs)
+        assertEquals(ReadKind.AUTHORING,observations.last().kind);assertEquals(1,observations.last().entries)
+        authoring.readObserver={error("synthetic observer failure")};assertEquals(snapshot.revision,authoring.readPageEditor(page,refs).revision)
         assertTrue(observations.all{it.freezeNanos>=0&&it.decodeNanos>=0})
     }
     @Test fun recropKeepsIdentityReferencesAndCommentAndRejectsStaleWrites()=fixture{db,page->
@@ -246,6 +250,6 @@ class StudyAndSelectionRepositoryTest {
             sql.execSQL("INSERT INTO notebook_workspace VALUES(?,0,1,'数学','复习',1,NULL,500,707,0,0,'auto',?,1)",arrayOf(book,book))
             sql.execSQL("INSERT INTO notebook_pages VALUES(?,?,0,0,1,500,707,0,NULL,NULL)",arrayOf(book,book));sql.execSQL("INSERT INTO ink_pages VALUES(?,1)",arrayOf(book));sql.execSQL("INSERT INTO ink_strokes VALUES(?,?,?,?,1,1)",arrayOf(s.id,book,bytes,3));sql.version=7
         }finally{sql.close()}
-        val db=NoteDatabase.open(context,name);try{assertEquals("原文",db.notes().note(book)!!.text);assertArrayEquals(bytes,db.ink().stroke(s.id)!!.payload);assertEquals(book,db.pages().list(book).single().id);assertTrue(db.workspace().get(book)!!.pinned);assertEquals(18,db.openHelper.writableDatabase.version);val c=create(book);StudyRepository(db).submit(c);assertNotNull(db.study().card(c.cardId!!))}finally{db.close();context.deleteDatabase(name)}
+        val db=NoteDatabase.open(context,name);try{assertEquals("原文",db.notes().note(book)!!.text);assertArrayEquals(bytes,db.ink().stroke(s.id)!!.payload);assertEquals(book,db.pages().list(book).single().id);assertTrue(db.workspace().get(book)!!.pinned);assertEquals(19,db.openHelper.writableDatabase.version);val c=create(book);StudyRepository(db).submit(c);assertNotNull(db.study().card(c.cardId!!))}finally{db.close();context.deleteDatabase(name)}
     }
 }

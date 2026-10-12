@@ -66,6 +66,7 @@ internal class PreservingOpenHelperFactory : SupportSQLiteOpenHelper.Factory {
                 .setJournalMode("DELETE").setSynchronousMode("FULL").build()
             SQLiteDatabase.openDatabase(seed, options).use { db ->
                 db.pageSize = 4096
+                db.execSQL("PRAGMA auto_vacuum=INCREMENTAL")
                 db.version = 0
                 check(db.pageSize == 4096L)
             }

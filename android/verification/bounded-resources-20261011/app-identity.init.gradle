@@ -1,0 +1,15 @@
+// Isolated package used by this delivery's emulator and optional physical-device checks.
+gradle.beforeProject { project ->
+    if (project.path == ':app') project.pluginManager.withPlugin('com.android.application') {
+        project.androidComponents.finalizeDsl { android ->
+            android.defaultConfig.applicationId = 'org.inkweft.app.bounded20261011'
+            android.defaultConfig.testApplicationId = 'org.inkweft.app.bounded20261011.test'
+            android.defaultConfig.manifestPlaceholders['appLabel'] = '墨织资源验证'
+        }
+    }
+    if (project.path == ':data-local') project.pluginManager.withPlugin('com.android.library') {
+        project.androidComponents.finalizeDsl { android ->
+            android.defaultConfig.testApplicationId = 'org.inkweft.data.bounded20261011.test'
+        }
+    }
+}

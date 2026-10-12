@@ -8,6 +8,8 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import org.inkweft.core.*
+import org.inkweft.data.InkRepository
+import org.inkweft.data.PageRecognitionInput
 import org.json.JSONArray
 import org.json.JSONObject
 import java.nio.FloatBuffer
@@ -41,6 +43,17 @@ internal class HandwritingRecognizer(context:Context) {
         }
         progress(lines.size,lines.size)
         RecognizedWriting(texts.joinToString("\n").trim(),if(lines.isEmpty())0f else total/lines.size,lines.size,regions)
+    }
+    /** Page grouping uses the same bounds as recognize(); only one line's raster is retained. */
+    suspend fun recognizePage(pageId:String,input:PageRecognitionInput,repository:InkRepository):RecognizedWriting=withContext(Dispatchers.Default){
+        val lines=HandwritingLines.fromBounds(input.strokes);val texts=mutableListOf<String>();var confidence=0f
+        for(line in lines){
+            ensureActive()
+            val bitmap=rasterStoredLine(pageId,input.authoring.inkRevision,line,repository)
+            val result=try{recognizeBitmap(bitmap)}finally{RenderResources.release(bitmap,"ocr");bitmap.recycle()}
+            texts.add(result.text);confidence+=result.confidence
+        }
+        RecognizedWriting(texts.joinToString("\n").trim(),if(lines.isEmpty())0f else confidence/lines.size,lines.size)
     }
     internal suspend fun recognizeBitmap(bitmap:Bitmap,language:BeautyLanguage=BeautyLanguage.MIXED,trace:BeautyDiagnostics.Trace?=null,pass:String="base",group:Int=0):RecognizedWriting=withContext(Dispatchers.Default){lock.withLock {
         ensureActive()
@@ -80,17 +93,26 @@ internal class HandwritingRecognizer(context:Context) {
             }
         }
     }}
-    private fun raster(line:HandwritingLine,padded:Boolean=false):Bitmap {
-        val b=if(padded)line.bounds.padded(3.0)else line.bounds;val scale=min(3.0,96.0/(b.bottom-b.top).coerceAtLeast(1.0))
+    internal suspend fun raster(line:HandwritingLine,padded:Boolean=false):Bitmap=
+        raster(line.bounds,padded){canvas->drawInk(canvas,line.strokes)}
+    internal suspend fun rasterStoredLine(pageId:String,revision:Long,line:HandwritingLineBounds,repository:InkRepository):Bitmap=
+        raster(line.bounds,false){canvas->repository.visitVisibleSelection(pageId,revision,line.strokeIds){batch->drawInk(canvas,batch)}}
+    private suspend fun raster(bounds:CanvasBounds,padded:Boolean,draw:suspend(Canvas)->Unit):Bitmap {
+        val b=if(padded)bounds.padded(3.0)else bounds;val scale=min(3.0,96.0/(b.bottom-b.top).coerceAtLeast(1.0))
         val width=ceil((b.right-b.left)*scale).toInt().coerceAtLeast(1);val height=ceil((b.bottom-b.top)*scale).toInt().coerceAtLeast(1)
         require(width<=4096&&height<=512){"文字行过长，请缩小选区后识别"}
         RenderResources.admit(width.toLong()*height*4)
-        return Bitmap.createBitmap(width,height,Bitmap.Config.ARGB_8888).also{bitmap->
+        val bitmap=Bitmap.createBitmap(width,height,Bitmap.Config.ARGB_8888)
+        return try{
             RenderResources.track(bitmap,bitmap.allocationByteCount.toLong(),"ocr","ocr",RenderResources.Role.IN_FLIGHT)
             val canvas=Canvas(bitmap);canvas.drawColor(Color.WHITE);canvas.scale(scale.toFloat(),scale.toFloat());canvas.translate(-b.left.toFloat(),-b.top.toFloat())
+            draw(canvas);bitmap
+        }catch(failure:Throwable){RenderResources.release(bitmap,"ocr");bitmap.recycle();throw failure}
+    }
+    private fun drawInk(canvas:Canvas,strokes:List<InkStroke>){
             val paint=Paint(Paint.ANTI_ALIAS_FLAG).apply{color=Color.BLACK;style=Paint.Style.STROKE;strokeCap=Paint.Cap.ROUND;strokeJoin=Paint.Join.ROUND}
             val geometry=VisibleInkGeometry()
-            for(s in line.strokes){val save=canvas.save()
+            for(s in strokes){val save=canvas.save()
                 if(s.pen==InkPen.PENCIL){paint.style=Paint.Style.FILL;canvas.drawPath(geometry.path(s),paint);paint.style=Paint.Style.STROKE;canvas.restoreToCount(save);continue}
                 for(cut in s.cuts){val path=Path();val first=cut.points.first();path.moveTo(first.x,first.y);cut.points.drop(1).forEach{path.lineTo(it.x,it.y)}
                     if(cut.shape==InkCutShape.RECTANGLE){val last=cut.points.last();path.reset();path.addRect(first.x,first.y,last.x,last.y,Path.Direction.CW);canvas.clipOutPath(path)}
@@ -102,6 +124,5 @@ internal class HandwritingRecognizer(context:Context) {
                 if(s.samples.size==1)canvas.drawPoint(first.x,first.y,paint)else canvas.drawPath(path,paint)
                 canvas.restoreToCount(save)
             }
-        }
     }
 }

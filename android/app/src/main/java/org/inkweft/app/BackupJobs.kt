@@ -111,7 +111,7 @@ internal class BackupEngine(private val app:InkWeftApplication,private val fault
         val candidate=File(directory,"${UUID.randomUUID()}.iwbk");var registered=false
         try{
             val context=currentCoroutineContext()
-            app.libraryBackup.snapshot().use{snapshot->EncryptedBackupFile.encrypt(snapshot.file,candidate,library,key){context.ensureActive()}}
+            app.libraryBackup.snapshot(EncryptedBackupFile.LIMIT,EncryptedBackupFile::maximumCipherBytes).use{snapshot->EncryptedBackupFile.encrypt(snapshot.file,candidate,library,key){context.ensureActive()}}
             fault("after-cipher");val hashes=JSONArray();candidate.inputStream().use{input->while(true){context.ensureActive();val bytes=input.readBackupChunk(EncryptedBackupFile.WIRE_BLOCK);if(bytes.isEmpty())break;hashes.put(EncryptedBackupFile.hex(bytes))}}
             val manifest=JSONObject().put("bytes",candidate.length()).put("chunks",hashes).put("format","inkweft.encrypted-backup.v1")
             val queue=JSONObject().put("binding",who.binding(library)).put("library",library).put("operation",UUID.randomUUID().toString()).put("manifest",manifest).put("state","PENDING").put("file",candidate.name).put("automatic",false)

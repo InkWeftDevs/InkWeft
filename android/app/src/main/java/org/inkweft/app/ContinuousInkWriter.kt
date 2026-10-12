@@ -53,9 +53,13 @@ internal class ContinuousInkWriter:ViewModel() {
     }
     private fun prepare(ink:List<Pair<InkViewModel,InkMutation>>,objects:List<Pair<PageObjectViewModel,List<PageObject>>>,repo:InkRepository,scopes:Map<InkViewModel,LayerWriteScope?> = emptyMap()){
         check(empty())
-        ink.forEach{it.first.validateChange(it.second)};objects.forEach{it.first.validateExternal(it.second)}
-        pending=ink.map{it.first to if(scopes.containsKey(it.first))it.first.prepareChange(it.second,scopes[it.first])else it.first.prepareChange(it.second)}
-        pendingObjects=objects.map{it.first to it.first.prepareExternal(it.second)}
+        require(ink.map{it.first}.distinct().size==ink.size&&objects.map{it.first}.distinct().size==objects.size)
+        // No session becomes pending until every participant has a valid frozen scope.
+        val inkScopes=ink.associate{it.first to if(scopes.containsKey(it.first))scopes[it.first]else it.first.layerScopeProvider()}
+        val objectScopes=objects.associate{it.first to it.first.layerScopeProvider()}
+        ink.forEach{it.first.validateChange(it.second,inkScopes[it.first])};objects.forEach{it.first.validateExternal(it.second)}
+        pending=ink.map{it.first to it.first.prepareChange(it.second,inkScopes[it.first])}
+        pendingObjects=objects.map{it.first to it.first.prepareExternal(it.second,layerScope=objectScopes[it.first])}
         direction=0;if(empty())erasing=false;refresh();if(!empty())retry(repo)
     }
     fun erase(targets:List<PageEraseTarget>,radius:Float,whole:Boolean,onlyHighlighter:Boolean,repo:InkRepository,onlyTape:Boolean=false){
@@ -65,26 +69,29 @@ internal class ContinuousInkWriter:ViewModel() {
         running=true;refresh()
         viewModelScope.launch {
             try {
-                val ink=if(onlyTape)emptyList()else withContext(Dispatchers.Default){targets.mapIndexedNotNull{i,t->ensureActive();t.ink.eraseChange(snapshots[i].strokes,t.path,radius,whole,onlyHighlighter)?.let{t.ink to it}}}
+                val ink=if(onlyTape)emptyList()else targets.mapNotNull{t->ensureActive();t.ink.prepareErase(t.path,radius,whole,onlyHighlighter)?.let{t.ink to it}}
+                check(onlyTape||targets.all{it.ink.operationReadSucceeded}){"ERASE_READ_INCOMPLETE"}
                 check(targets.indices.all{i->targets[i].ink.ui.value.revision==snapshots[i].revision&&targets[i].ink.ui.value.queued==0&&targets[i].objects.ui.value.objects==originals[i]})
                 val objects=if(onlyHighlighter)emptyList()else targets.mapNotNull{t->(if(onlyTape)t.objects.erasedTapes(t.path,radius)else t.objects.erasedBeauty(t.path,radius,whole)).takeIf{it!=t.objects.ui.value.objects}?.let{t.objects to it}}
                 running=false;mutable.value=false;prepare(ink,objects,repo)
-            }catch(c:CancellationException){throw c}
+            }catch(c:CancellationException){running=false;erasing=false;refresh();throw c}
             catch(_:Exception){running=false;erasing=false;refresh();onNotice("页面已变化，本次擦除未应用，请重试。")}
         }
     }
     private data class Member(val history:EditorHistory,val identity:(Boolean)->Any?,val ready:(Boolean)->Boolean,
-        val prepare:(Boolean)->Unit,val register:(Boolean,()->Unit)->Unit)
+        val scope:()->LayerWriteScope?,val prepare:(Boolean,LayerWriteScope?)->Unit,val register:(Boolean,()->Unit)->Unit)
     private fun linkHistory(captured:List<Pair<InkViewModel,CommitInk>>,capturedObjects:List<Pair<PageObjectViewModel,ObjectWrite>>,back:Boolean,repo:InkRepository){
-        val members=captured.map{(m,_)->Member(m.history,m::historyIdentity,{undo->m.ui.value.let{if(undo)it.canUndo else it.canRedo}},
-            {undo->pending=pending+(m to m.prepareHistoryGroup(undo))},m::registerGroupHistory)}+
-            capturedObjects.map{(m,_)->Member(checkNotNull(m.history),m::historyIdentity,m::historyReady,
-                {undo->pendingObjects=pendingObjects+(m to m.prepareHistoryGroup(undo))},m::registerGroupHistory)}
+        val members=captured.map{(m,_)->Member(m.history,m::historyIdentity,{undo->m.authorAllowed()&&m.ui.value.let{if(undo)it.canUndo else it.canRedo}},
+            {m.layerScopeProvider()},{undo,scope->pending=pending+(m to m.prepareHistoryGroup(undo,scope))},m::registerGroupHistory)}+
+            capturedObjects.map{(m,_)->Member(checkNotNull(m.history),m::historyIdentity,{undo->m.authorAllowed()&&m.historyReady(undo)},
+                {m.layerScopeProvider()},{undo,scope->pendingObjects=pendingObjects+(m to m.prepareHistoryGroup(undo,scope))},m::registerGroupHistory)}
         if(members.size<=1)return
         val identities=members.map{it.identity(back)};val heads=members.associate{it.history to it.history.state.value}
         val action:()->Unit={
             if(empty()&&members.zip(identities).all{(m,key)->m.identity(back)===key&&m.ready(back)&&(if(back)m.history.state.value.undo==heads[m.history]?.undo else m.history.state.value.redo==heads[m.history]?.redo)}){
-                members.forEach{it.prepare(back)};direction=if(back)-1 else 1;mutable.value=true;retry(repo)
+                val scopes=runCatching{members.map{it.scope()}}.getOrNull()
+                if(scopes==null)onNotice("请先为相关页面选择可写图层；本次撤销未应用。")
+                else{members.zip(scopes).forEach{(member,scope)->member.prepare(back,scope)};direction=if(back)-1 else 1;mutable.value=true;retry(repo)}
             }else onNotice("请先撤销相关页上较新的编辑，再撤销这次跨页操作。")
         }
         members.forEach{it.register(back,action)}

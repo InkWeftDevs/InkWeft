@@ -2,12 +2,15 @@
 package org.inkweft.data
 
 import android.content.Context
+import android.database.Cursor
+import androidx.sqlite.db.SupportSQLiteDatabase
 import androidx.room.withTransaction
 import androidx.test.core.app.ApplicationProvider
 import kotlinx.coroutines.runBlocking
 import org.inkweft.core.*
 import org.junit.Assert.*
 import org.junit.Test
+import androidx.test.platform.app.InstrumentationRegistry
 import java.util.UUID
 
 class InkEditingSnapshotTest {
@@ -23,6 +26,7 @@ class InkEditingSnapshotTest {
     private suspend fun commit(session:InkSession,repo:InkRepository,change:InkMutation?=null){
         change?.let{session.enqueue(it)};val command=checkNotNull(session.nextCommand());val result=repo.save(command)
         assertTrue(result is InkCommitResult.Committed);session.complete(command,result)
+        session.refreshWindow(repo.readForEditing(session.page.noteId,session.suspendHistory()))
     }
 
     @Test fun enteringPageSkipsUnrelatedHiddenInkAndMasksButPreservesTheirBudgets()=fixture{db,page->
@@ -37,7 +41,8 @@ class InkEditingSnapshotTest {
         db.openHelper.writableDatabase.execSQL("UPDATE ink_cuts SET payload=? WHERE id=?",arrayOf(byteArrayOf(0),cut.id))
         val snapshot=repo.readForEditing(page)
         assertEquals(4L,snapshot.revision);assertEquals(listOf(visible.id),snapshot.strokes.map{it.stroke.id})
-        assertEquals(mapOf(hidden.id to 2),snapshot.unloaded.strokePoints);assertEquals(setOf(cut.id),snapshot.unloaded.cutIds)
+        assertEquals(1,snapshot.unloaded.strokeCount);assertEquals(2L,snapshot.unloaded.pointCount);assertEquals(1,snapshot.unloaded.cutCount)
+        assertTrue(snapshot.unloaded.strokePoints.isEmpty()&&snapshot.unloaded.cutIds.isEmpty())
         assertTrue(runCatching{repo.read(page)}.isFailure)
         val session=InkSession(snapshot);commit(session,repo,InkMutation.Add(stroke()))
         assertEquals(3,session.page.retainedStrokeCount);assertEquals(1,session.page.retainedCutCount)
@@ -45,7 +50,7 @@ class InkEditingSnapshotTest {
         commit(session,repo,InkMutation.Cut(EraseSelection(visibleCut,listOf(visible.id))))
         assertEquals(visibleCut.id,session.visibleDraft().first{it.id==visible.id}.cuts.single().id)
     }
-    @Test fun resumeLoadsOnlyHistoryIdsAndPreservesReplacementMaskUndoRedo()=fixture{db,page->
+    @Test fun resumeRetainsNoHiddenGeometryAndPreservesReplacementMaskUndoRedo()=fixture{db,page->
         val repo=InkRepository(db);val unrelated=stroke()
         repo.save(CommitInk(id(),page,0,InkMutation.Add(unrelated)))
         repo.save(CommitInk(id(),page,1,InkMutation.Visibility(listOf(unrelated.id),false)))
@@ -59,9 +64,9 @@ class InkEditingSnapshotTest {
         val history=session.suspendHistory()
         db.openHelper.writableDatabase.execSQL("UPDATE ink_strokes SET payload=? WHERE id=?",arrayOf(byteArrayOf(0),unrelated.id))
         val loaded=repo.readForEditing(page,history)
-        assertEquals(setOf(original.id,moved.single().id),loaded.strokes.map{it.stroke.id}.toSet())
-        assertEquals(setOf(mask.id),loaded.cuts.map{it.selection.cut.id}.toSet())
-        assertEquals(setOf(unrelated.id),loaded.unloaded.strokePoints.keys)
+        assertEquals(setOf(moved.single().id),loaded.strokes.map{it.stroke.id}.toSet())
+        assertTrue(loaded.cuts.isEmpty())
+        assertEquals(2,loaded.unloaded.strokeCount);assertTrue(loaded.unloaded.strokePoints.isEmpty())
         val resumed=InkSession(loaded);resumed.restoreHistory(history)
         resumed.requestRedo();commit(resumed,repo);assertEquals(mask.id,resumed.visibleDraft().single().cuts.single().id)
         resumed.requestUndo();commit(resumed,repo);assertTrue(resumed.visibleDraft().single().cuts.isEmpty())
@@ -114,5 +119,46 @@ class InkEditingSnapshotTest {
         val mask=InkCut(id(),2f,listOf(EraserPoint(20f,30f)))
         db.ink().insertCut(InkCutRow(mask.id,page,InkCutCodec.encode(mask),id(),false,2))
         assertTrue(runCatching{repo.readForEditing(page)}.isFailure)
+    }
+    @Test fun fixedViewportDecodesConstantBytesAndPointsAcrossHundredfoldStoredHistory()=fixture{db,page->
+        val repo=InkRepository(db);val sql=db.openHelper.writableDatabase
+        if(db.ink().page(page)==null)db.ink().insertPage(InkPageRow(page,1))
+        val measures=mutableListOf<ReadTiming>();repo.readObserver={measures.add(it)}
+        var previous=0;var expectedBytes:Long?=null
+        for(total in listOf(1_000,10_000,100_000)){
+            db.withTransaction{
+                sql.compileStatement("INSERT INTO ink_strokes VALUES(?,?,?,2,?,1)").use{insert->
+                    for(index in previous until total){
+                        val source=stroke();val stroke=if(index<8)source else InkStroke(source.id,source.pen,source.color,source.width,source.tool,
+                            source.samples.map{it.copy(x=it.x+800,y=it.y+1000)})
+                        insert.bindString(1,stroke.id);insert.bindString(2,page);insert.bindBlob(3,InkStrokeCodec.encodeStored(stroke));insert.bindLong(4,1);insert.executeInsert()
+                    }
+                }
+            }
+            previous=total
+            // Prepare once; the following measured read covers the steady state at this scale.
+            repo.readForEditing(page,bounds=CanvasBounds(0.0,0.0,50.0,60.0));measures.clear()
+            val loaded=repo.readForEditing(page,bounds=CanvasBounds(0.0,0.0,50.0,60.0));val timing=measures.single()
+            assertEquals(8,loaded.strokes.size);assertEquals(total,loaded.retainedStrokeCount)
+            assertEquals(8L,timing.candidateRows);assertEquals(16L,timing.decodedPoints)
+            expectedBytes?.let{assertEquals(it,timing.payloadBytes)};expectedBytes=timing.payloadBytes
+            var actual:Pair<String,Array<out Any?>>?=null
+            val observing=object:SupportSQLiteDatabase by sql {
+                override fun query(query:String,bindArgs:Array<out Any?>):Cursor {
+                    actual=query to bindArgs.copyOf();return sql.query(query,bindArgs)
+                }
+            }
+            assertEquals(8,SpatialIndex.ink(observing,page,CanvasBounds(0.0,0.0,50.0,60.0)).size)
+            val query=checkNotNull(actual)
+            val plan=sql.query("EXPLAIN QUERY PLAN "+query.first,query.second).use{c->buildList{while(c.moveToNext())add(c.getString(3))}}
+            assertTrue(plan.toString(),plan.first().contains("SCAN b VIRTUAL TABLE")&&plan.first().contains("B0D1B2D3B4D5"))
+            assertTrue(plan.toString(),plan.any{it.contains("SEARCH s")&&it.contains("id=?")})
+            assertFalse(plan.toString(),plan.any{it.contains("SEARCH s")&&!it.contains("id=?")})
+            val evidence=org.json.JSONObject().put("storedInk",total).put("returnedCandidates",timing.candidateRows)
+                .put("decodedPoints",timing.decodedPoints).put("payloadBytes",timing.payloadBytes).put("freezeMs",timing.freezeNanos/1_000_000.0)
+                .put("decodeMs",timing.decodeNanos/1_000_000.0).put("javaUsedBytes",Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory()).put("plan",org.json.JSONArray(plan))
+            InstrumentationRegistry.getInstrumentation().sendStatus(0,android.os.Bundle().apply{putString("stream","INK_FIXED_VIEWPORT_EVIDENCE $evidence\n")})
+        }
+        repo.readObserver=null
     }
 }

@@ -89,7 +89,7 @@ private const val RecallPlaceholderColor:Int = 0xfff4f7f5.toInt()
     },modifier=Modifier.fillMaxWidth().height(160.dp).testTag(tag))
 }
 
-private data class RecallSourcePage(val title:String,val page:NotebookPageRow,val strokes:List<InkStroke>,val objects:List<PageObject>,val authoring:PageAuthoring)
+private data class RecallSourcePage(val title:String,val page:NotebookPageRow,val ink:InkRenderSource,val objects:List<PageObject>,val authoring:PageAuthoring)
 private class RecallSourceChanged:Exception()
 private class RecallSourceUnavailable:Exception()
 private class RecallMapUnrelated:Exception()
@@ -136,13 +136,15 @@ private fun sourceFailure(error:Exception):String = when(error) {
                     ?:throw RecallSourceUnavailable()
                 val (note,_)=app.knowledge.resolve(TargetRef(TargetKind.PAGE,owned.id))
                 if(note.id!=plan.ref.notebookId)throw RecallSourceUnavailable()
-                val ink=app.inkRepository.readVisibleSnapshot(owned.id)
-                if(ink.revision!=fresh.inkRevision)throw RecallSourceChanged()
                 // Do not load another notebook through a live page-map object.
-                val objects=app.pageObjects.read(owned.id).objects.filter{
+                val objectSnapshot=app.pageObjects.read(owned.id)
+                val objects=objectSnapshot.objects.filter{
                     it.mapEmbed?.target?.notebookId?.let{book->book==plan.ref.notebookId}!=false
                 }
-                RecallSourcePage(note.title,owned,ink.strokes,objects,app.authoring.readPage(owned.id).state)
+                val authoring=app.authoring.readPageEditor(owned.id)
+                if(authoring.inkRevision!=fresh.inkRevision||authoring.objectRevision!=objectSnapshot.revision)throw RecallSourceChanged()
+                try{app.authoring.checkExportHeads(owned.id,authoring)}catch(e:IllegalStateException){if(e.message=="EXPORT_REVISION_CHANGED")throw RecallSourceChanged();throw e}
+                RecallSourcePage(note.title,owned,InkRenderSource(app.inkRepository,owned.id,authoring.inkRevision,emptySet(),authoring.revision,authoring.inkLayerCounts),objects,authoring.state)
             }
             page=value
         } catch(c:CancellationException) { throw c }
@@ -162,19 +164,19 @@ private fun sourceFailure(error:Exception):String = when(error) {
     }
     Text("${loaded.title} · 第 ${loaded.page.position+1} 页 · 原页视图（不含展开留白），只读",
         maxLines=2,overflow=TextOverflow.Ellipsis,modifier=Modifier.testTag("recall-context-source-title"))
-    AndroidView(factory={context->InkCanvasView(context).also { native->
+    key(loaded.page.id){AndroidView(factory={context->InkCanvasView(context).also { native->
         native.allowInput=false;native.fingerWrites=false
         native.contentDescription="本题当前来源页，只读；已许可查看提示，可能包含答案，可平移与缩放。"
         view=native
     }},onRelease={native->
-        native.showDocument(null);native.showObjects(emptyList());native.showStrokes(emptyList())
-        native.onNotice={};view=null
+        native.onNotice={};native.showInkSource(null,false);native.showDocument(null);native.showObjects(emptyList());native.showStrokes(emptyList());native.showAuthoring(null)
+        if(view===native)view=null
     },update={native->
         native.allowInput=false;native.fingerWrites=false
         native.onNotice={error="来源呈现失败，本题固定问答仍保留。"}
         native.configure(loaded.page.world,PaperStyle.entries[loaded.page.paper],null)
-        native.showAuthoring(loaded.authoring);native.showDocument(loaded.page.id);native.showObjects(loaded.objects);native.showStrokes(loaded.strokes)
-    },modifier=Modifier.fillMaxWidth().height(280.dp).testTag("recall-context-source-canvas"))
+        native.showAuthoring(loaded.authoring);native.showDocument(loaded.page.id);native.showObjects(loaded.objects);native.showStrokes(emptyList());native.showInkSource(loaded.ink,false)
+    },modifier=Modifier.fillMaxWidth().height(280.dp).testTag("recall-context-source-canvas"))}
     Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState())) {
         TextButton({view?.zoomBy(1/1.2)},modifier=Modifier.heightIn(min=48.dp).testTag("recall-context-source-zoom-out")){Text("缩小")}
         TextButton({view?.zoomBy(1.2)},modifier=Modifier.heightIn(min=48.dp).testTag("recall-context-source-zoom-in")){Text("放大")}

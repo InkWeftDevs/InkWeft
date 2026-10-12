@@ -23,17 +23,29 @@ class ShadowReplica private constructor(private val context:Context,val director
     private fun id()=UUID.randomUUID().toString()
     private fun hash(text:String)=ContentTransfer.hash(text.toByteArray())
     private fun rows():Map<String,JSONObject>{
-        val result=linkedMapOf<String,JSONObject>()
+        val result=linkedMapOf<String,JSONObject>();var bytes=0L
         val tables=sql.query("SELECT name FROM sqlite_master WHERE type='table' AND name NOT GLOB 'sqlite_*' AND name NOT GLOB 'shadow_*' AND name NOT IN ('room_master_table','android_metadata')").use{c->buildSet{while(c.moveToNext())add(c.getString(0))}}
-        require(tables==schema.map{it.name}.toSet()){"SHADOW_SCHEMA"}
+        require(tables-SpatialIndex.tables-PageLayerEditorStore.TABLE==schema.map{it.name}.toSet()){"SHADOW_SCHEMA"}
         for(t in schema){val columns=sql.query("PRAGMA table_info(`${t.name}`)").use{c->buildList{while(c.moveToNext())add(c.getString(1))}};require(columns==t.columns.map{it.name}){"SHADOW_COLUMNS"}}
-
-        schema.forEachIndexed{index,t->sql.query("SELECT * FROM `${t.name}` ORDER BY "+t.keys.joinToString(","){"`$it`"}).use{c->while(c.moveToNext()){
-            val row=JSONArray();t.columns.forEachIndexed{i,col->row.put(if(c.isNull(i))JSONObject.NULL else when(col.kind){'S'->c.getString(i);'I'->c.getLong(i);'F'->c.getDouble(i);'B'->Base64.getEncoder().encodeToString(c.getBlob(i));else->error("SHADOW_TYPE")})}
+        fun append(index:Int,values:List<Any?>){
+            require(result.size<2048){"SHADOW_SAMPLE_BUDGET"}
+            val t=schema[index];val row=JSONArray()
+            values.forEach{value->
+                if(value is ByteArray)require((value.size.toLong()+2)/3*4<=8L*1024*1024-bytes){"SHADOW_SAMPLE_BUDGET"}
+                row.put(when(value){null->JSONObject.NULL;is ByteArray->Base64.getEncoder().encodeToString(value);else->value})
+            }
             val key=index.toString()+":"+hash(JSONArray(t.keys.map{row.get(t.columns.indexOfFirst{c->c.name==it})}).toString())
-            result[key]=JSONObject().put("table",index).put("key",key).put("row",row)
-        }}}
-        require(result.size<=2048&&result.values.sumOf{it.toString().toByteArray().size}<=8*1024*1024){"SHADOW_SAMPLE_BUDGET"}
+            val entry=JSONObject().put("table",index).put("key",key).put("row",row)
+            bytes+=entry.toString().toByteArray().size;require(bytes<=8L*1024*1024){"SHADOW_SAMPLE_BUDGET"}
+            result[key]=entry
+        }
+        val originals=OriginalArchiveRows(db)
+        schema.forEachIndexed{index,t->
+            if(t.name=="document_chunks"||t.name=="image_chunks")originals.visit(t.name=="document_chunks"){append(index,it)}
+            else sql.query("SELECT * FROM `${t.name}` ORDER BY "+t.keys.joinToString(","){"`$it`"}).use{c->while(c.moveToNext()){
+                append(index,t.columns.mapIndexed{i,col->if(c.isNull(i))null else when(col.kind){'S'->c.getString(i);'I'->c.getLong(i);'F'->c.getDouble(i);'B'->c.getBlob(i);else->error("SHADOW_TYPE")}})
+            }}
+        }
         return result
     }
     private fun heads(key:String):List<JSONObject> = sql.query("SELECT value FROM shadow_versions WHERE entity=? ORDER BY revision",arrayOf(key)).use{c->buildList{while(c.moveToNext())add(JSONObject(c.getString(0)))}}
@@ -74,11 +86,29 @@ class ShadowReplica private constructor(private val context:Context,val director
         }
     }
     private suspend fun materialize(){
-        val records=chosen();require(records.size<=2048)
+        val records=chosen();require(records.size<=2048){"SHADOW_SAMPLE_BUDGET"}
+        var bytes=0L
+        for(c in records.values){
+            bytes+=JSONObject().put("table",c.getInt("table")).put("key",c.getString("key")).put("row",c.getJSONArray("row")).toString().toByteArray().size
+            require(bytes<=8L*1024*1024){"SHADOW_SAMPLE_BUDGET"}
+        }
         sql.execSQL("PRAGMA defer_foreign_keys=ON")
         schema.asReversed().forEach{sql.execSQL("DELETE FROM `${it.name}`")}
+        val active=currentCoroutineContext()
+        OriginalArchiveRows.Import(db){active.ensureActive()}.use{originals->
         for(index in schema.indices){val table=schema[index]
-            for(c in records.values.filter{it.getInt("table")==index}){
+            val chunks=table.name=="document_chunks"||table.name=="image_chunks"
+            var rows=records.values.filter{it.getInt("table")==index}
+            if(chunks){
+                val keys=table.keys.map{key->table.columns.indexOfFirst{it.name==key}}
+                rows=rows.sortedWith(Comparator{a,b->
+                    val left=a.getJSONArray("row");val right=b.getJSONArray("row");var order=0
+                    for(key in keys){order=if(table.columns[key].kind=='I')left.getLong(key).compareTo(right.getLong(key))else left.getString(key).compareTo(right.getString(key));if(order!=0)break}
+                    order
+                })
+                require(rows.size.toLong()==OriginalArchiveRows(db).count(table.name=="document_chunks")){"SHADOW_ORIGINAL_CLOSURE"}
+            }
+            for(c in rows){
                 val row=c.getJSONArray("row");val values=table.columns.mapIndexed{i,col->
                     if(row.isNull(i)){require(col.nullable);null}else when(col.kind){
                         'S'->row.getString(i)
@@ -88,8 +118,11 @@ class ShadowReplica private constructor(private val context:Context,val director
                         else->error("SHADOW_TYPE")
                     }
                 }.toTypedArray()
-                sql.execSQL("INSERT INTO `${table.name}` VALUES ("+values.joinToString(","){"?"}+")",values)
+                if(chunks)originals.accept(table.name=="document_chunks",values.toList())
+                else sql.execSQL("INSERT INTO `${table.name}` VALUES ("+values.joinToString(","){"?"}+")",values)
             }
+        }
+        originals.finish()
         }
         LibraryBackupRepository(context,db).validate(db)
     }

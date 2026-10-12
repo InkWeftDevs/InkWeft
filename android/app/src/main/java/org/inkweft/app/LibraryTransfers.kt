@@ -31,10 +31,10 @@ internal fun Throwable.mapExportExplanation():String? = when(message){
 }
 
 internal data class LibraryTransferUi(val mode:String="",val busy:Boolean=false,
-    val message:String="",val needsFile:Boolean=false,val result:Note?=null,val export:ContentExport?=null)
+    val message:String="",val needsFile:Boolean=false,val result:Note?=null,val export:ContentFile?=null)
 
 /** Contains no author database path or credentials. Android saved state stores
- * request identity only; byte buffers live only in this ViewModel's lifetime. */
+ * request identity only; prepared files live only in this ViewModel's lifetime. */
 class LibraryTransfersViewModel(app:Application,private val saved:SavedStateHandle):AndroidViewModel(app){
     private val ownerApp=app as InkWeftApplication
     private val repo=ownerApp.libraryContent
@@ -48,8 +48,8 @@ class LibraryTransfersViewModel(app:Application,private val saved:SavedStateHand
         saved["transfer-kind"]=kind;saved["transfer-id"]=UUID.randomUUID().toString()
         saved["transfer-dest"]=UUID.randomUUID().toString();saved["transfer-source"]=source;saved["transfer-sha"]=sha
     }
-    private fun forget(){keys.forEach{saved.remove<String>(it)};prepared?.close();prepared=null}
-    override fun onCleared(){prepared?.close();super.onCleared()}
+    private fun forget(){mutable.value.export?.close();keys.forEach{saved.remove<String>(it)};prepared?.close();prepared=null}
+    override fun onCleared(){mutable.value.export?.close();prepared?.close();super.onCleared()}
     private fun copyCommand()=CopyNotebook(value("id"),value("source"),value("dest"))
     private fun importCommand()=ImportNotebook(value("id"),value("dest"),value("sha"))
     private fun digest()=if(value("kind")=="COPY")copyCommand().digest()else importCommand().digest()
@@ -71,10 +71,10 @@ class LibraryTransfersViewModel(app:Application,private val saved:SavedStateHand
                 if(hasPending()&&value("sha")!=parsed.sha256){parsed.close();error("IMPORT_CONTENT_CHANGED")}
                 else remember("IMPORT",sha=parsed.sha256)
                 prepared?.close();prepared=parsed
-                val count=when(val c=parsed.content){is ContentTransfer.Content.Page->1;is ContentTransfer.Content.Book->c.value.pages.size}
+                val count=when(val c=parsed.content){is ContentTransfer.Content.Page->1;is ContentTransfer.Content.Book->c.value.pages.size;is ContentTransfer.Content.Streamed->c.pageCount}
                 mutable.value=LibraryTransferUi("IMPORT",message="已校验 ${parsed.byteCount} 字节、$count 页。将导入为新笔记，不覆盖现有资料。副本不是完整资料库备份；不包含账号或云服务配置。")
             }catch(c:CancellationException){throw c}
-            catch(e:Exception){mutable.value=LibraryTransferUi("ERROR",message=(e as? DocumentImportException)?.explanation?:e.mapExportExplanation()?:"无法完整导入：文件损坏、已加密或超出上限。PDF 最多 512 MB / 500 页；EPUB/MOBI 源文件 32 MB，页面副本 64 MB、整本副本 96 MB。原资料未改动。待核对导入请选择同一文件。",needsFile=hasPending())}
+            catch(e:Exception){mutable.value=LibraryTransferUi("ERROR",message=(e as? DocumentImportException)?.explanation?:e.mapExportExplanation()?:"无法完整导入：文件损坏、已加密或超出上限。PDF 最多 512 MB / 500 页；EPUB/MOBI 源文件 32 MB；流式页面或整本副本最多 8 GiB。原资料未改动。待核对导入请选择同一文件。",needsFile=hasPending())}
         }
     }
     fun commit(){
@@ -121,8 +121,8 @@ class LibraryTransfersViewModel(app:Application,private val saved:SavedStateHand
         mutable.value=LibraryTransferUi("EXPORTING",true,"正在准备已保存内容的一致副本…")
         viewModelScope.launch{
             try{
-                val content=withContext(Dispatchers.IO){repo.export(noteId)}
-                mutable.value=LibraryTransferUi("EXPORT",message="导出已保存可编辑内容，包含页面隐藏图层、留白及页面绑定批注。${if(content.extension=="iwbook")"整本所有页面"else"无界页面"}，${content.bytes.size} 字节。明文，不含摘要卡/脑图、历史、分类、搜索索引或未保存草稿；不是完整备份。你选择的文件提供方可能是云盘。",export=content)
+                val content=withContext(Dispatchers.IO){repo.prepareExport(noteId)}
+                mutable.value=LibraryTransferUi("EXPORT",message="导出已保存可编辑内容，包含页面隐藏图层、留白及页面绑定批注。${if(content.extension=="iwbook")"整本所有页面"else"无界页面"}，${content.byteCount} 字节。明文，不含摘要卡/脑图、历史、分类、搜索索引或未保存草稿；不是完整备份。你选择的文件提供方可能是云盘。",export=content)
             }catch(c:CancellationException){throw c}
             catch(e:Exception){mutable.value=LibraryTransferUi("ERROR",message=e.mapExportExplanation()?:"无法生成内容副本，可能超出容量或存在读取错误。原资料保留；可尝试逐页导出。")}
         }
@@ -134,8 +134,8 @@ class LibraryTransfersViewModel(app:Application,private val saved:SavedStateHand
         mutable.value=ui.value.copy(busy=true,message="正在写入你选择的位置…")
         viewModelScope.launch{
             try{
-                withContext(Dispatchers.IO){checkNotNull(ownerApp.contentResolver.openOutputStream(uri,"wt")).use{it.write(content.bytes);it.flush()}}
-                mutable.value=LibraryTransferUi("DONE",message="已完成向所选文件提供方写入。请保管该副本；这不代表云提供方的远端上传已完成。")
+                withContext(Dispatchers.IO){checkNotNull(ownerApp.contentResolver.openOutputStream(uri,"wt")).use{content.copyTo(it){ensureActive()};it.flush()}}
+                content.close();mutable.value=LibraryTransferUi("DONE",message="已完成向所选文件提供方写入。请保管该副本；这不代表云提供方的远端上传已完成。")
             }catch(c:CancellationException){throw c}
             catch(_:Exception){mutable.value=LibraryTransferUi("EXPORT",message="写入未确认；目标可能存在不完整文件，原笔记未修改。请检查目标，或重新选择位置保存。",export=content)}
         }

@@ -60,7 +60,10 @@ class PageObjectRepository(private val db:NoteDatabase,private val afterCommit:(
     }
     private suspend fun validateSources(pageId:String,objects:List<PageObject>){
         val refs=objects.flatMap{it.sourceStrokeIds};require(refs.distinct().size==refs.size)
-        if(refs.isNotEmpty()){val owned=db.ink().strokeIds(pageId).toSet();require(refs.all{it in owned})}
+        for(batch in refs.chunked(500)){
+            val count=db.openHelper.writableDatabase.query("SELECT COUNT(*) FROM ink_strokes WHERE noteId=? AND id IN (${batch.joinToString(","){"?"}})",(listOf(pageId)+batch).toTypedArray()).use{check(it.moveToFirst());it.getInt(0)}
+            require(count==batch.size)
+        }
     }
     internal suspend fun import(pageId:String,objects:List<PageObject>,strokeIds:Map<String,String> = emptyMap(),originals:List<ImageSource> = emptyList(),validated:ValidatedImportOriginals?=null):Map<String,String> {
         if(objects.isEmpty())return emptyMap()

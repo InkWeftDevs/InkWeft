@@ -146,7 +146,9 @@ class CommitInk(val commandId:String,val noteId:String,val expectedRevision:Long
     init{UUID.fromString(commandId);UUID.fromString(noteId);require(expectedRevision in 0 until Long.MAX_VALUE-1)}
     val strokeIds:List<String> get()=when(val m=mutation){is InkMutation.Add->listOf(m.stroke.id);is InkMutation.Visibility->m.ids;is InkMutation.Cut->m.selection.strokeIds;is InkMutation.CutVisibility->emptyList();is InkMutation.Replace->m.hidden+m.added.map{it.id};is InkMutation.Swap->m.hide+m.show}
     fun digest():String {
-        val out=ByteArrayOutputStream();DataOutputStream(out).use{d->
+        val hash=MessageDigest.getInstance("SHA-256")
+        val discard=object:OutputStream(){override fun write(value:Int){};override fun write(bytes:ByteArray,offset:Int,length:Int){}}
+        DataOutputStream(java.security.DigestOutputStream(discard,hash)).use{d->
             val layered=layerScope!=null||(mutation is InkMutation.Replace&&mutation.layerSources.isNotEmpty())
             d.writeUTF(if(!layered)"inkweft.ink-command.v1" else "inkweft.ink-command.v2");d.writeUTF(commandId);d.writeUTF(noteId);d.writeLong(expectedRevision)
             if(layered){d.writeBoolean(layerScope!=null);layerScope?.let{d.writeUTF(it.layerId);d.writeLong(it.configurationRevision)}}
@@ -158,7 +160,7 @@ class CommitInk(val commandId:String,val noteId:String,val expectedRevision:Long
                 is InkMutation.Replace->{d.writeByte(5);d.writeInt(m.hidden.size);m.hidden.forEach(d::writeUTF);d.writeInt(m.added.size);m.added.forEach{val b=InkStrokeCodec.encode(it);d.writeInt(b.size);d.write(b)};if(layered){d.writeInt(m.layerSources.size);m.layerSources.forEach(d::writeUTF)}}
                 is InkMutation.Swap->{d.writeByte(6);d.writeInt(m.hide.size);m.hide.forEach(d::writeUTF);d.writeInt(m.show.size);m.show.forEach(d::writeUTF)}
             }
-        };return MessageDigest.getInstance("SHA-256").digest(out.toByteArray()).joinToString(""){"%02x".format(it.toInt() and 255)}
+        };return hash.digest().joinToString(""){"%02x".format(it.toInt() and 255)}
     }
 }
 sealed interface InkCommitResult {
@@ -170,19 +172,20 @@ sealed interface InkCommitResult {
 data class StoredInk(val stroke:InkStroke,val visible:Boolean,val createdRevision:Long)
 data class StoredCut(val selection:EraseSelection,val visible:Boolean,val createdRevision:Long)
 /** Retained storage that this editing snapshot does not need to render or undo. */
-class UnloadedInk(strokePoints:Map<String,Int> = emptyMap(),cutIds:Set<String> = emptySet()) {
+class UnloadedInk(strokePoints:Map<String,Int> = emptyMap(),cutIds:Set<String> = emptySet(),
+    val strokeCount:Int=strokePoints.size,val cutCount:Int=cutIds.size,val pointCount:Long=strokePoints.values.sumOf{it.toLong()}) {
     val strokePoints:Map<String,Int> = Collections.unmodifiableMap(LinkedHashMap(strokePoints))
     val cutIds:Set<String> = Collections.unmodifiableSet(LinkedHashSet(cutIds))
-    val pointCount=strokePoints.values.sumOf{it.toLong()}
     init {
+        require(strokeCount>=strokePoints.size&&cutCount>=cutIds.size&&pointCount>=strokePoints.values.sumOf{it.toLong()})
         require(strokePoints.values.all{it in 1..InkLimits.MAX_POINTS})
         strokePoints.keys.forEach{UUID.fromString(it)};cutIds.forEach{UUID.fromString(it)}
     }
 }
 /** noteId is the legacy name for the stable page ID, not the displayed page number. */
 data class InkPage(val noteId:String,val revision:Long,val strokes:List<StoredInk>,val cuts:List<StoredCut> = emptyList(),val unloaded:UnloadedInk=UnloadedInk(),val windowComplete:Boolean=true) {
-    val retainedStrokeCount get()=strokes.size+unloaded.strokePoints.size
-    val retainedCutCount get()=cuts.size+unloaded.cutIds.size
+    val retainedStrokeCount get()=strokes.size+unloaded.strokeCount
+    val retainedCutCount get()=cuts.size+unloaded.cutCount
     init {require(strokes.none{it.stroke.id in unloaded.strokePoints}&&cuts.none{it.selection.cut.id in unloaded.cutIds})}
 }
 object InkHitTest {

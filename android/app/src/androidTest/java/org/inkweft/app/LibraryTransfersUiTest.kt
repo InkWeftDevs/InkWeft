@@ -53,23 +53,39 @@ class LibraryTransfersUiTest {
             // Activity-result receiver with an app-owned URI; do not claim a cloud target.
             compose.runOnIdle{ViewModelProvider(compose.activity)[LibraryTransfersViewModel::class.java].writeExport(Uri.fromFile(out))}
             compose.waitUntil(15_000){runCatching{compose.onNodeWithTag("library-transfer-message").assertTextContains("已完成向所选",substring=true)}.isSuccess}
-            val file=out.inputStream().use{ContentTransfer.read(it)}.content as ContentTransfer.Content.Book
-            assertEquals(n.title,file.value.title);assertEquals(1,file.value.pages.size)
+            runBlocking{DocumentImports.read(app,Uri.fromFile(out)).use{prepared->
+                val file=prepared.content as ContentTransfer.Content.Streamed
+                assertEquals(n.title,file.title);assertEquals(1,file.pageCount)
+            }}
             assertEquals(n,runBlocking{app.repository.read(n.id)})
         }finally{out.delete()}
     }
     @Test fun importPreviewChecksThenCommitsWithoutOverwritingExistingNote(){
         ready();val n=note();val path=File(app.cacheDir,"synthetic-import-${UUID.randomUUID()}.iwbook")
         val book=NotebookFile("导入测试-${UUID.randomUUID()}","合成正文",listOf(InkPageFile("页","",emptyList())))
-        path.writeBytes(book.encode())
+        val source=runBlocking{ContentTransfer.decode(book.encode()).use{prepared->
+            app.libraryContent.import(ImportNotebook(UUID.randomUUID().toString(),UUID.randomUUID().toString(),prepared.sha256),prepared)
+        }}
+        runBlocking{app.libraryContent.prepareExport(source.id).use{export->path.outputStream().use{export.copyTo(it)}}}
         try{
             compose.runOnIdle{ViewModelProvider(compose.activity)[LibraryTransfersViewModel::class.java].readUri(Uri.fromFile(path))}
             compose.waitUntil(15_000){compose.onAllNodesWithTag("confirm-content-import").fetchSemanticsNodes().isNotEmpty()}
-            assertTrue(runBlocking{app.repository.observeNotes().first()}.none{it.title==book.title})
+            assertEquals(listOf(source.id),runBlocking{app.repository.observeNotes().first()}.filter{it.title==book.title}.map{it.id})
             compose.onNodeWithTag("confirm-content-import").performClick()
             compose.waitUntil(15_000){compose.onAllNodesWithTag("open-transfer-result").fetchSemanticsNodes().isNotEmpty()}
-            val imported=runBlocking{app.repository.observeNotes().first()}.single{it.title==book.title}
+            val imported=runBlocking{app.repository.observeNotes().first()}.single{it.title==book.title&&it.id!=source.id}
             assertEquals("合成正文",imported.text);assertNotEquals(n.id,imported.id);assertEquals(n,runBlocking{app.repository.read(n.id)})
+        }finally{path.delete()}
+    }
+    @Test fun legacyContentFileExplainsReexportWithoutChangingLibrary(){
+        ready();val before=runBlocking{app.repository.observeNotes().first()}.map{it.id}.toSet()
+        val path=File(app.cacheDir,"synthetic-legacy-${UUID.randomUUID()}.iwbook")
+        try{
+            path.writeBytes(NotebookFile("旧版副本","",listOf(InkPageFile("页","",emptyList()))).encode())
+            val failure=runBlocking{runCatching{DocumentImports.read(app,Uri.fromFile(path)).close()}.exceptionOrNull()}
+            assertTrue(failure is DocumentImportException)
+            assertTrue((failure as DocumentImportException).explanation.contains("重新导出流式副本"))
+            assertEquals(before,runBlocking{app.repository.observeNotes().first()}.map{it.id}.toSet())
         }finally{path.delete()}
     }
 }

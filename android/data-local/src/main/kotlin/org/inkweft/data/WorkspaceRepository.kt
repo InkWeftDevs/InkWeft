@@ -20,6 +20,7 @@ data class LibraryInkCount(val noteId:String,val visibleCount:Int,val modifiedRe
 @Dao
 interface WorkspaceDao {
     @Query("SELECT * FROM notebook_workspace") fun observe():Flow<List<WorkspaceRow>>
+    @Query("SELECT * FROM notebook_workspace") suspend fun all():List<WorkspaceRow>
     @Query("SELECT * FROM notebook_workspace WHERE noteId=:id") suspend fun get(id:String):WorkspaceRow?
     @Insert(onConflict=OnConflictStrategy.ABORT) suspend fun insert(row:WorkspaceRow)
     @Update suspend fun update(row:WorkspaceRow):Int
@@ -32,6 +33,7 @@ interface WorkspaceDao {
 }
 
 class WorkspaceRepository(private val db:NoteDatabase) {
+    fun observeLibrarySearch(requests:Flow<LibrarySearchRequest>)=LibrarySearchRepository(db).observe(requests)
     fun observe()=db.workspace().observe()
     fun observeInkCounts()=db.workspace().observeInkCounts()
     suspend fun get(id:String):WorkspaceRow=db.withTransaction {

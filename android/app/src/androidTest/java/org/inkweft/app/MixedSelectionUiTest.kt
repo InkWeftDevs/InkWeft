@@ -25,7 +25,7 @@ class MixedSelectionUiTest {
   val high=InkStroke(id(),InkPen.HIGHLIGHTER,0x80ffee00.toInt(),20f,InkTool.STYLUS,pen.samples)
   runBlocking{app.inkRepository.save(CommitInk(id(),n.id,0,InkMutation.Add(pen)));app.inkRepository.save(CommitInk(id(),n.id,1,InkMutation.Add(high)))}
   compose.runOnIdle{ViewModelProvider(compose.activity)[NotebookViewModel::class.java].select(n)};compose.singlePageEditor();ready()
-  tap("ink-tool-3");tap("ink-tool-3");tap("eraser-circle")
+  tap("top-eraser");tap("top-eraser");tap("eraser-circle")
   compose.runOnIdle{checkNotNull(overlay(compose.activity.window.decorView)).onRegion(InkRegion(listOf(EraserPoint(150f,180f),EraserPoint(490f,490f))))}
   compose.waitUntil(10000){runBlocking{app.inkRepository.read(n.id).revision}==3L};ready()
   val result=runBlocking{InkSession(app.inkRepository.read(n.id)).visibleDraft()};assertTrue(result.first{it.id==pen.id}.cuts.isEmpty());assertEquals(1,result.first{it.id==high.id}.cuts.size)
@@ -57,9 +57,9 @@ class MixedSelectionUiTest {
   tap("ink-select");tap("selection-all");compose.onNodeWithText("2 项").assertExists();tap("mixed-dismiss")
   tap("ink-select");tap("lasso-filter-TAPE");tap("lasso-rectangle");assertFalse(SelectionStore(app).read().freehand)
   compose.onNodeWithContentDescription("关闭套索").performClick()
-  tap("ink-tool-3");tap("ink-select");tap("ink-select");compose.onNodeWithTag("lasso-rectangle").assertIsSelected()
+  tap("top-eraser");tap("ink-select");tap("ink-select");compose.onNodeWithTag("lasso-rectangle").assertIsSelected()
   tap("lasso-free");compose.onNodeWithContentDescription("关闭套索").performClick()
-  tap("ink-tool-3");tap("ink-tool-3");tap("eraser-advanced");tap("erase-tape-only");assertTrue(EraserSettingsStore(app).read().onlyTape);tap("eraser-basic");compose.onNodeWithTag("eraser-local").assertIsNotEnabled();tap("eraser-advanced");tap("erase-highlighter-only");assertFalse(EraserSettingsStore(app).read().onlyTape);tap("erase-highlighter-only")
+  tap("top-eraser");tap("top-eraser");tap("eraser-advanced");tap("erase-tape-only");assertTrue(EraserSettingsStore(app).read().onlyTape);tap("eraser-basic");compose.onNodeWithTag("eraser-local").assertIsNotEnabled();tap("eraser-advanced");tap("erase-highlighter-only");assertFalse(EraserSettingsStore(app).read().onlyTape);tap("erase-highlighter-only")
   compose.onNodeWithContentDescription("关闭橡皮").performClick()
  }
 }

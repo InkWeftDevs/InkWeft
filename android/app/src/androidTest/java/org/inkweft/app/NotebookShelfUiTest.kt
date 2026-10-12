@@ -33,7 +33,9 @@ class NotebookShelfUiTest {
         compose.onNodeWithTag("rename-title").performTextReplacement("   ");compose.onNodeWithTag("confirm-rename").assertIsNotEnabled();compose.onNodeWithTag("cancel-rename").performClick();assertEquals(n.title,runBlocking{app.repository.read(n.id)?.title})
         val renamed="高数 · 公式与推导-${n.id.take(8)}"
         compose.onNodeWithTag("note-menu-${n.id}").performClick();compose.onNodeWithTag("rename-note-${n.id}").performClick();rename(renamed)
-        assertEquals(renamed,runBlocking{app.repository.read(n.id)?.title});compose.onNodeWithTag("library-search").performTextInput("公式与推导");compose.onNodeWithText(renamed).assertExists();compose.onNodeWithTag("library-search").performTextClearance();noKeyboard()
+        assertEquals(renamed,runBlocking{app.repository.read(n.id)?.title});compose.onNodeWithTag("library-search").performTextInput("公式与推导")
+        compose.waitUntil(10_000){compose.onAllNodesWithText(renamed).fetchSemanticsNodes().isNotEmpty()}
+        compose.onNodeWithText(renamed).assertExists();compose.onNodeWithTag("library-search").performTextClearance();noKeyboard()
         runBlocking{for((i,c) in listOf(NotebookCover.INK,NotebookCover.SAND,NotebookCover.ROSE,NotebookCover.GRID,NotebookCover.WAVE).withIndex())app.workspaceRepository.create(listOf("英语 · 阅读积累","专业课 · 知识整理","每日复习","数学 · 易错题","灵感与草稿")[i],i==4,PaperStyle.DOTS,c)}
         compose.waitUntil(10_000){compose.onAllNodesWithText("英语 · 阅读积累").fetchSemanticsNodes().isNotEmpty()};shot("shelf-covers-emulator.png")
     }
@@ -48,7 +50,12 @@ class NotebookShelfUiTest {
         compose.waitUntil(10_000){runBlocking{app.workspaceRepository.get(n.id).coverKey}=="content"};assertEquals(before.id,runBlocking{app.inkRepository.read(n.id).strokes.single().stroke.id})
     }
     @Test fun editorRenameKeepsUnsavedBodyUntilExplicitTextSave(){
-        val n=create();compose.onNodeWithTag("quick-settings").performClick();compose.onNodeWithTag("mode-text").performClick();compose.onNodeWithTag("note-body").performTextInput("未保存的个人理解，不随改名提交")
+        val n=create();compose.revealAction("quick-settings");compose.onNodeWithTag("quick-settings").performClick()
+        compose.onNodeWithTag("mode-text").performScrollTo()
+        compose.waitUntil(10_000){runCatching{compose.onNodeWithTag("mode-text").assertIsDisplayed().assertIsEnabled()}.isSuccess}
+        compose.onNodeWithTag("mode-text").performClick()
+        compose.waitUntil(10_000){compose.onAllNodesWithTag("note-body").fetchSemanticsNodes().isNotEmpty()}
+        compose.onNodeWithTag("note-body").performTextInput("未保存的个人理解，不随改名提交")
         compose.onNodeWithTag("rename-from-editor").performClick();rename("新的标题但保留草稿")
         assertEquals("",runBlocking{app.repository.read(n.id)?.text});compose.onNodeWithTag("note-body").assertTextEquals("未保存的个人理解，不随改名提交")
         compose.onNodeWithTag("save-text").performClick();compose.waitUntil(10_000){runBlocking{app.repository.read(n.id)?.text}=="未保存的个人理解，不随改名提交"}

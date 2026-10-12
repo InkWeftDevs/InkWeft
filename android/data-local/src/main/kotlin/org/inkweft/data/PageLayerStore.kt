@@ -6,7 +6,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import org.inkweft.core.*
 
 /** A null layer is an author tombstone, independent of ink/object visibility. */
-@Entity(tableName="page_layer_memberships",primaryKeys=["pageId","kind","contentId"],foreignKeys=[
+@Entity(tableName="page_layer_memberships",primaryKeys=["pageId","kind","contentId"],indices=[Index(value=["pageId","layerId"])],foreignKeys=[
     ForeignKey(entity=NotebookPageRow::class,parentColumns=["id"],childColumns=["pageId"],onDelete=ForeignKey.NO_ACTION)])
 data class PageLayerMembershipRow(val pageId:String,val kind:String,val contentId:String,val layerId:String?) {
     fun content():LayerContent {

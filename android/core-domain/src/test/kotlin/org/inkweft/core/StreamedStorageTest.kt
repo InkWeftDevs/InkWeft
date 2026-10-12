@@ -37,7 +37,7 @@ class StreamedStorageTest {
         val pdf=PdfDocumentSource.fromStream(OriginalBytes.stream(300_000_000,"a".repeat(64)){throw AssertionError("No eager original read")},2)
         var cleaned=0
         val prepared=ContentTransfer.document("large",pdf,"a".repeat(64)){cleaned++}
-        assertEquals(300_000_000,prepared.byteCount);assertEquals(2,(prepared.content as ContentTransfer.Content.Book).value.pages.size)
+        assertEquals(300_000_000L,prepared.byteCount);assertEquals(2,(prepared.content as ContentTransfer.Content.Book).value.pages.size)
         rejects("CONTENT_SIZE_LIMIT_USE_FULL_BACKUP"){pdf.bytes()}
         rejects("CONTENT_SIZE_LIMIT_USE_FULL_BACKUP"){(prepared.content as ContentTransfer.Content.Book).value.encode()}
         rejects("CONTENT_SIZE_LIMIT_USE_FULL_BACKUP"){InkPageFile("large","",emptyList(),source=PdfPageSource(pdf,0)).encode()}

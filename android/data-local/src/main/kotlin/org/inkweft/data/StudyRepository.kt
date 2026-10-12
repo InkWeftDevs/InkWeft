@@ -157,8 +157,8 @@ class StudyRepository(private val db:NoteDatabase,private val fault:(StudyFault)
             suspend fun captureSource(s:StudySourceDraft):StudySourceRow {
                 val p=studyNotNull(db.pages().get(s.pageId));studyRequire(p.notebookId==c.notebookId&&p.trashedAt==null)
                 val ink=InkRepository(db).readVisibleSnapshot(s.pageId,s.strokeIds);studyRequire(ink.revision==s.inkRevision){"SOURCE_VERSION_CHANGED"}
-                val authoring=PageAuthoringRepository(db).readPage(s.pageId)
-                studyRequire(s.authoringRevision?.let{it==authoring.revision}?:authoring.state.legacy){"SOURCE_AUTHORING_CHANGED"}
+                val authoring=PageAuthoringRepository(db).readPageEditor(s.pageId,s.strokeIds.map{LayerContent(LayerContentKind.INK,it)})
+                studyRequire(s.authoringRevision?.let{it==authoring.revision}?:authoring.legacy){"SOURCE_AUTHORING_CHANGED"}
                 studyRequire(s.strokeIds.all{authoring.state.layers.visible(LayerContent(LayerContentKind.INK,it))}){"SOURCE_LAYER_HIDDEN"}
                 val visible=ink.strokes.associateBy{it.id};val selected=s.strokeIds.map{studyNotNull(visible[it])}
                 val picture=s.previewBytes()

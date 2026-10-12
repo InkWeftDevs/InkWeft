@@ -16,10 +16,14 @@ class HandwritingLineBudgetRegressionTest {
         val source=page(100);val lines=HandwritingLines.split(source)
         assertEquals(100,lines.size);assertTrue(lines.all{it.strokes.size==2})
         assertEquals(source.map{it.id}.toSet(),lines.flatMap{it.strokes}.map{it.id}.toSet())
+        val metadata=HandwritingLines.fromBounds(source.map{HandwritingStrokeBounds(it.id,it.bounds())})
+        assertEquals(lines.map{it.strokes.map{stroke->stroke.id} to it.bounds},metadata.map{it.strokeIds to it.bounds})
     }
 
     @Test fun actualRowsStillRespectTheRecognitionBudget(){
         val error=assertThrows(IllegalArgumentException::class.java){HandwritingLines.split(page(101))}
         assertEquals("HANDWRITING_LINE_BUDGET",error.message)
+        val metadataError=assertThrows(IllegalArgumentException::class.java){HandwritingLines.fromBounds(page(101).map{HandwritingStrokeBounds(it.id,it.bounds())})}
+        assertEquals("HANDWRITING_LINE_BUDGET",metadataError.message)
     }
 }

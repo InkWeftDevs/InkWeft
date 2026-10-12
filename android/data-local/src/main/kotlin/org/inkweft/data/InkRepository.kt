@@ -14,11 +14,11 @@ private val windowTraceIds=java.util.concurrent.atomic.AtomicInteger()
 
 @Entity(tableName="ink_pages",foreignKeys=[ForeignKey(entity=NotebookPageRow::class,parentColumns=["id"],childColumns=["noteId"],onDelete=ForeignKey.NO_ACTION)])
 data class InkPageRow(@PrimaryKey val noteId:String,val revision:Long)
-@Entity(tableName="ink_strokes",indices=[Index("noteId"),Index(value=["noteId","visible","createdRevision","id"])],foreignKeys=[ForeignKey(entity=NotebookPageRow::class,parentColumns=["id"],childColumns=["noteId"],onDelete=ForeignKey.NO_ACTION)])
+@Entity(tableName="ink_strokes",indices=[Index("noteId"),Index(value=["noteId","id"]),Index(value=["noteId","visible","createdRevision","id"])],foreignKeys=[ForeignKey(entity=NotebookPageRow::class,parentColumns=["id"],childColumns=["noteId"],onDelete=ForeignKey.NO_ACTION)])
 data class InkStrokeRow(@PrimaryKey val id:String,val noteId:String,val payload:ByteArray,val pointCount:Int,val visible:Boolean,val createdRevision:Long)
 @Entity(tableName="ink_receipts",indices=[Index("noteId")],foreignKeys=[ForeignKey(entity=NotebookPageRow::class,parentColumns=["id"],childColumns=["noteId"],onDelete=ForeignKey.NO_ACTION)])
 data class InkReceiptRow(@PrimaryKey val commandId:String,val noteId:String,val digest:String,val committedRevision:Long,val strokeIds:String,val visible:Boolean)
-@Entity(tableName="ink_cuts",indices=[Index("noteId")],foreignKeys=[ForeignKey(entity=NotebookPageRow::class,parentColumns=["id"],childColumns=["noteId"],onDelete=ForeignKey.NO_ACTION)])
+@Entity(tableName="ink_cuts",indices=[Index("noteId"),Index(value=["noteId","id"])],foreignKeys=[ForeignKey(entity=NotebookPageRow::class,parentColumns=["id"],childColumns=["noteId"],onDelete=ForeignKey.NO_ACTION)])
 data class InkCutRow(@PrimaryKey val id:String,val noteId:String,val payload:ByteArray,val strokeIds:String,val visible:Boolean,val createdRevision:Long)
 data class InkCutReferenceRow(val id:String,val strokeIds:String)
 data class InkStrokeMetadataRow(val id:String,val pointCount:Int,val visible:Boolean,val createdRevision:Long)
@@ -32,6 +32,7 @@ interface InkDao {
     /** Layer ownership needs every retained identity, including hidden history, but no ink payload. */
     @Query("SELECT id FROM ink_strokes WHERE noteId=:id ORDER BY createdRevision,id") suspend fun strokeIds(id:String):List<String>
     @Query("SELECT * FROM ink_strokes WHERE noteId=:id AND visible=1 ORDER BY createdRevision,id") suspend fun visibleStrokes(id:String):List<InkStrokeRow>
+    @Query("SELECT id FROM ink_strokes WHERE noteId=:id AND visible=1 AND id IN (:ids)") suspend fun visibleStrokeIds(id:String,ids:List<String>):List<String>
     @Query("SELECT * FROM ink_strokes WHERE noteId=:id AND visible=1 AND id IN (:ids) ORDER BY createdRevision,id") suspend fun visibleStrokes(id:String,ids:List<String>):List<InkStrokeRow>
     @Query("SELECT revision FROM ink_pages WHERE noteId=:id") fun observeRevision(id:String):kotlinx.coroutines.flow.Flow<Long?>
     @Query("SELECT * FROM ink_strokes WHERE id=:id") suspend fun stroke(id:String):InkStrokeRow?
@@ -62,6 +63,7 @@ data class InkGroupCommit(val group:InkGroupPrefix,val results:List<InkCommitRes
 /** Saved display/copy content and its revision, without retained undo geometry. */
 data class VisibleInkSnapshot(val noteId:String,val revision:Long,val strokes:List<InkStroke>)
 class InkRepository(private val db:NoteDatabase,private val fault:(InkFaultPoint)->Unit={}) {
+    val authoringRepository by lazy{PageAuthoringRepository(db)}
     @Volatile var readObserver:((ReadTiming)->Unit)?=null
     private class GroupAbort(val result:InkCommitResult):RuntimeException()
     /** A seam gesture either commits on every sheet or on none; receipts make a retry idempotent. */
@@ -156,47 +158,40 @@ class InkRepository(private val db:NoteDatabase,private val fault:(InkFaultPoint
     private suspend fun owner(id:String)=db.pages().get(id)?:NotebookPages(db).ensureFirst(id)
     private data class ReadRows(val owner:NotebookPageRow,val page:InkPageRow?,val strokes:List<InkStrokeRow>,val cuts:List<InkCutRow>)
     private data class EditingRows(val rows:ReadRows,val unloaded:UnloadedInk,val complete:Boolean=true)
+    private suspend fun <T> spatialRead(noteId:String,needed:Boolean,read:suspend(androidx.sqlite.db.SupportSQLiteDatabase)->T):T =
+        if(needed)SpatialIndex.read(db,noteId,prepareCuts=true,read=read)else InkCutIndex.read(db,noteId,read=read)
     /** Visible author geometry plus only the identities needed to resume this revision's undo. */
-    suspend fun readForEditing(noteId:String,history:InkSession.History?=null,bounds:CanvasBounds?=null,pointBudget:Int=Int.MAX_VALUE):InkPage {
+    suspend fun readForEditing(noteId:String,history:InkSession.History?=null,bounds:CanvasBounds?=null,pointBudget:Int=65_536):InkPage {
         val trace=windowTraceIds.incrementAndGet();android.os.Trace.beginAsyncSection("InkWeft.ink.window",trace)
         try{
         require(pointBudget>=InkLimits.MAX_POINTS)
         val started=System.nanoTime()
-        val frozen=db.withTransaction {
+        var candidateRows=0L
+        val frozen=spatialRead(noteId,bounds!=null) { sql->
             val owner=owner(noteId);val page=dao.page(noteId)
-            val metadata=dao.strokeMetadata(noteId);val masks=dao.cutMetadata(noteId)
-            check(metadata.all{it.pointCount in 1..InkLimits.MAX_POINTS})
-            val ids=metadata.map{it.id}.toSet();ids.forEach{UUID.fromString(it)}
-            val resume=history?.takeIf{it.noteId==noteId&&it.revision==(page?.revision?:0)}
-            if(resume!=null)check(resume.strokeIds.all{it in ids}&&resume.cutIds.all{id->masks.any{it.id==id}})
-            var complete=true
-            val visible=if(bounds==null)metadata.filter{it.visible}.map{it.id}.toSet()else{
-                val sql=db.openHelper.writableDatabase;SpatialIndex.prepare(sql,noteId)
-                val selected=linkedSetOf<String>();var cursor:SpatialIndex.Cursor?=null;var points=0L
-                scan@while(true){
-                    val batch=SpatialIndex.ink(sql,noteId,bounds,cursor)
-                    if(batch.isEmpty())break
-                    for(row in batch){
-                        check(row.pointCount in 1..InkLimits.MAX_POINTS)
-                        if(points+row.pointCount>pointBudget){complete=false;break@scan}
-                        selected.add(row.id);points+=row.pointCount;cursor=SpatialIndex.Cursor(row.revision,row.id)
-                    }
-                };selected
+            val totals=InkTotals.read(sql,noteId);check(totals.invalidPointRows==0)
+            val totalCuts=totals.cutCount
+            check(page!=null||(totals.strokeCount==0&&totalCuts==0))
+            var complete=true;val selected=mutableListOf<String>();var cursor:SpatialIndex.Cursor?=null;var points=0L;var bytes=0L
+            scan@while(true){
+                val batch=SpatialIndex.ink(sql,noteId,bounds,cursor)
+                candidateRows+=batch.size
+                if(batch.isEmpty())break
+                for(row in batch){
+                    check(row.pointCount in 1..InkLimits.MAX_POINTS&&row.byteCount in 1..InkLimits.MAX_STROKE_BYTES)
+                    if(points+row.pointCount>pointBudget||bytes+row.byteCount>InkLimits.MAX_STROKE_BYTES){complete=false;break@scan}
+                    selected.add(row.id);points+=row.pointCount;bytes+=row.byteCount;cursor=SpatialIndex.Cursor(row.revision,row.id)
+                }
             }
-            val needed=visible+resume?.strokeIds.orEmpty()
-            val neededMasks=masks.filter{row->
-                UUID.fromString(row.id)
-                val targets=row.strokeIds.split(',')
-                check(targets.size in 1..InkLimits.MAX_MUTATION_STROKES&&targets.distinct().size==targets.size&&targets.all{it in ids})
-                (row.visible&&targets.any{it in needed})||row.id in resume?.cutIds.orEmpty()
-            }.map{it.id}.toSet()
-            val rows=needed.toList().chunked(900).flatMap{dao.strokes(noteId,it)}.sortedWith(compareBy({it.createdRevision},{it.id}))
-            val cuts=neededMasks.toList().chunked(900).flatMap{dao.cuts(noteId,it)}.sortedWith(compareBy({it.createdRevision},{it.id}))
-            check(rows.map{it.id}.toSet()==needed&&cuts.map{it.id}.toSet()==neededMasks)
-            check(page!=null||(metadata.isEmpty()&&masks.isEmpty()))
-            EditingRows(ReadRows(owner,page,rows,cuts),UnloadedInk(
-                metadata.filter{it.id !in needed}.associate{it.id to it.pointCount},
-                masks.filter{it.id !in neededMasks}.map{it.id}.toSet()),complete)
+            var cuts:List<InkCutRow>
+            while(true){
+                try{cuts=InkCutIndex.selected(sql,noteId,selected.toSet(),InkLimits.MAX_STROKE_BYTES.toLong());break}
+                catch(e:InkReadBudgetExceeded){if(selected.size<=1)throw e;selected.subList((selected.size+1)/2,selected.size).clear();complete=false}
+            }
+            val rows=selected.chunked(500).flatMap{dao.strokes(noteId,it)}.sortedWith(compareBy({it.createdRevision},{it.id}))
+            check(rows.size==selected.size)
+            EditingRows(ReadRows(owner,page,rows,cuts),UnloadedInk(strokeCount=totals.strokeCount-rows.size,
+                cutCount=totalCuts-cuts.size,pointCount=totals.pointCount-rows.sumOf{it.pointCount.toLong()}),complete)
         }
         val frozenAt=System.nanoTime();val context=currentCoroutineContext();val rows=frozen.rows
         val strokes=rows.strokes.map{row->context.ensureActive();val stroke=InkStrokeCodec.decode(row.payload)
@@ -209,7 +204,9 @@ class InkRepository(private val db:NoteDatabase,private val fault:(InkFaultPoint
         return InkPage(noteId,rows.page?.revision?:0,strokes,cuts,frozen.unloaded,frozen.complete).also{
             InkSession(it).visibleDraft()
             val decodedAt=System.nanoTime()
-            runCatching{readObserver?.invoke(ReadTiming(ReadKind.INK,frozenAt-started,decodedAt-frozenAt,strokes.size+cuts.size))}
+            runCatching{readObserver?.invoke(ReadTiming(ReadKind.INK,frozenAt-started,decodedAt-frozenAt,strokes.size+cuts.size,
+                rows.strokes.sumOf{it.payload.size.toLong()}+rows.cuts.sumOf{it.payload.size.toLong()},
+                strokes.sumOf{it.stroke.samples.size.toLong()}+cuts.sumOf{it.selection.cut.points.size.toLong()},candidateRows))}
         }
         }finally{android.os.Trace.endAsyncSection("InkWeft.ink.window",trace)}
     }
@@ -236,56 +233,57 @@ class InkRepository(private val db:NoteDatabase,private val fault:(InkFaultPoint
     /** IDs, revision, selected geometry and relevant masks are frozen in the same transaction. */
     suspend fun readVisibleSnapshot(noteId:String,strokeIds:List<String>?=null):VisibleInkSnapshot {
         if(strokeIds==null){
-            val revision=db.withTransaction{owner(noteId);dao.page(noteId)?.revision?:0}
-            val strokes=mutableListOf<InkStroke>()
-            visitVisible(noteId,revision){strokes.addAll(it)}
-            return VisibleInkSnapshot(noteId,revision,strokes)
+            // Materialized legacy codecs require an atomic snapshot. Large-page UI,
+            // copy and archive paths use visitVisible directly and release each batch.
+            return db.withTransaction{
+                owner(noteId);val revision=dao.page(noteId)?.revision?:0
+                val strokes=mutableListOf<InkStroke>()
+                visitVisible(noteId,revision){strokes.addAll(it)}
+                VisibleInkSnapshot(noteId,revision,strokes)
+            }
         }
         val started=System.nanoTime()
         val selected=strokeIds?.toList()
         selected?.let{require(it.distinct().size==it.size);it.forEach{value->UUID.fromString(value)}}
-        val frozen=db.withTransaction{
+        val frozen=InkCutIndex.read(db,noteId){sql->
             val owner=owner(noteId);val page=dao.page(noteId)
-            val rows=if(selected==null)dao.visibleStrokes(noteId)else selected.chunked(900)
-                .flatMap{dao.visibleStrokes(noteId,it)}.sortedWith(compareBy({it.createdRevision},{it.id}))
+            var payloadBytes=0L
+            for(batch in selected.orEmpty().chunked(500)){
+                payloadBytes+=db.openHelper.writableDatabase.query("SELECT COALESCE(SUM(length(payload)),0) FROM ink_strokes WHERE noteId=? AND visible=1 AND id IN (${batch.joinToString(","){"?"}})",(listOf(noteId)+batch).toTypedArray()).use{c->check(c.moveToFirst());c.getLong(0)}
+                if(payloadBytes>InkLimits.MAX_STROKE_BYTES)throw InkReadBudgetExceeded()
+            }
+            val rows=selected.orEmpty().chunked(500).flatMap{dao.visibleStrokes(noteId,it)}.sortedWith(compareBy({it.createdRevision},{it.id}))
             val visible=rows.map{it.id}.toSet()
-            val references=if(visible.isEmpty())emptyList()else dao.visibleCutReferences(noteId)
-            val owned=if(references.isEmpty())emptySet()else dao.strokeIds(noteId).toSet()
-            val relevant=references.filter{row->
-                val targets=row.strokeIds.split(',')
-                check(targets.size in 1..InkLimits.MAX_MUTATION_STROKES&&targets.distinct().size==targets.size&&targets.all{it in owned})
-                targets.any{it in visible}
-            }.map{it.id}
-            val cuts=relevant.chunked(900).flatMap{dao.visibleCuts(noteId,it)}
-            check(cuts.map{it.id}==relevant)
+            if(rows.sumOf{it.payload.size.toLong()}>InkLimits.MAX_STROKE_BYTES)throw InkReadBudgetExceeded()
+            val cuts=InkCutIndex.selected(db.openHelper.writableDatabase,noteId,visible,InkLimits.MAX_STROKE_BYTES.toLong())
             ReadRows(owner,page,rows,cuts)
         }
         val frozenAt=System.nanoTime()
         val rows=frozen.strokes
         val context=currentCoroutineContext()
         val strokes=rows.map{row->context.ensureActive();InkStrokeCodec.decode(row.payload).also{check(it.id==row.id&&it.samples.size==row.pointCount&&it.world==frozen.owner.world)}}
-        val visible=strokes.map{it.id}.toSet();val byStroke=mutableMapOf<String,MutableList<InkCut>>()
-        frozen.cuts.forEach{row->val cut=InkCutCodec.decode(row.payload);check(cut.id==row.id)
+        val visible=strokes.map{it.id}.toSet();val byStroke=mutableMapOf<String,MutableList<InkCut>>();var cutPoints=0L
+        frozen.cuts.forEach{row->val cut=InkCutCodec.decode(row.payload);check(cut.id==row.id);cutPoints+=cut.points.size
             val targets=row.strokeIds.split(',');check(targets.distinct().size==targets.size)
             targets.filter{it in visible}.forEach{byStroke.getOrPut(it){mutableListOf()}.add(cut)}
         }
         check(frozen.page!=null||(rows.isEmpty()&&frozen.cuts.isEmpty()))
         return VisibleInkSnapshot(noteId,frozen.page?.revision?:0,strokes.map{it.withCuts(byStroke[it.id].orEmpty())}).also{
             val decodedAt=System.nanoTime()
-            runCatching{readObserver?.invoke(ReadTiming(ReadKind.INK,frozenAt-started,decodedAt-frozenAt,rows.size+frozen.cuts.size))}
+            runCatching{readObserver?.invoke(ReadTiming(ReadKind.INK,frozenAt-started,decodedAt-frozenAt,rows.size+frozen.cuts.size,
+                rows.sumOf{it.payload.size.toLong()}+frozen.cuts.sumOf{it.payload.size.toLong()},strokes.sumOf{it.samples.size.toLong()}+cutPoints,selected.orEmpty().size.toLong()))}
         }
     }
     /** Bounded geometry batches at one revision. Callers discard the entire result on revision
      * change; cancellation releases the database between batches and never publishes a prefix. */
-    suspend fun visitVisible(noteId:String,revision:Long,bounds:CanvasBounds?=null,visit:suspend (List<InkStroke>)->Unit){
+    suspend fun visitVisible(noteId:String,revision:Long,bounds:CanvasBounds?=null,authoringRevision:Long?=null,layer:String?=null,writableOnly:Boolean=false,visit:suspend (List<InkStroke>)->Unit){
         var cursor:SpatialIndex.Cursor?=null
         while(true){
             currentCoroutineContext().ensureActive()
-            val candidates=db.withTransaction{
+            val candidates=spatialRead(noteId,bounds!=null){sql->
                 owner(noteId);check((dao.page(noteId)?.revision?:0)==revision){"INK_WINDOW_REVISION_CHANGED"}
-                val sql=db.openHelper.writableDatabase
-                if(bounds!=null)SpatialIndex.prepare(sql,noteId)
-                SpatialIndex.ink(sql,noteId,bounds,cursor).let{rows->
+                val layers=authoringRevision?.let{layerFilter(sql,noteId,it,layer,writableOnly)}
+                SpatialIndex.ink(sql,noteId,bounds,cursor,layers=layers).let{rows->
                     var points=0;var bytes=0L
                     rows.takeWhile{row->
                         check(row.pointCount in 1..InkLimits.MAX_POINTS&&row.byteCount in 1..InkLimits.MAX_STROKE_BYTES)
@@ -294,62 +292,147 @@ class InkRepository(private val db:NoteDatabase,private val fault:(InkFaultPoint
                 }
             }
             if(candidates.isEmpty())break
-            val snapshot=readVisibleSnapshot(noteId,candidates.map{it.id})
-            check(snapshot.revision==revision&&snapshot.strokes.map{it.id}==candidates.map{it.id}){"INK_WINDOW_REVISION_CHANGED"}
+            var batch=candidates
+            lateinit var snapshot:VisibleInkSnapshot
+            while(true){
+                try{snapshot=readVisibleSnapshot(noteId,batch.map{it.id});break}
+                catch(e:InkReadBudgetExceeded){if(batch.size<=1)throw e;batch=batch.take((batch.size+1)/2)}
+            }
+            check(snapshot.revision==revision&&snapshot.strokes.map{it.id}==batch.map{it.id}){"INK_WINDOW_REVISION_CHANGED"}
             visit(snapshot.strokes)
-            val last=candidates.last();cursor=SpatialIndex.Cursor(last.revision,last.id)
+            val last=batch.last();cursor=SpatialIndex.Cursor(last.revision,last.id)
         }
-        check((dao.page(noteId)?.revision?:0)==revision){"INK_WINDOW_REVISION_CHANGED"}
+        db.withTransaction{
+            check((dao.page(noteId)?.revision?:0)==revision){"INK_WINDOW_REVISION_CHANGED"}
+            authoringRevision?.let{layerFilter(db.openHelper.readableDatabase,noteId,it,layer,writableOnly)}
+        }
+    }
+    /** Null denotes an unconfigured legacy page; empty denotes no eligible layers. */
+    private fun layerFilter(sql:androidx.sqlite.db.SupportSQLiteDatabase,page:String,revision:Long,layer:String?,writableOnly:Boolean):List<String>? {
+        val header=sql.query("SELECT revision,SUBSTR(payload,1,8192) FROM canvas_authoring WHERE kind='PAGE' AND scopeId=?",arrayOf(page)).use{c->
+            if(c.moveToFirst())c.getLong(0) to c.getBlob(1)else null
+        }
+        check((header?.first?:0)==revision){"EXPORT_REVISION_CHANGED"}
+        if(header==null)return if(layer==null||layer==UserLayers.DEFAULT_ID)null else emptyList()
+        return PageAuthoringCodec.layerHeader(header.second).layers.filter{it.visible&&(!writableOnly||!it.locked)&&(layer==null||it.id==layer)}.map{it.id}
+    }
+    /** Visible metadata only. Empty/offscreen layers allocate no full-viewport bitmap. */
+    suspend fun visibleLayerBounds(noteId:String,revision:Long,authoringRevision:Long,bounds:CanvasBounds):Map<String,CanvasBounds> = SpatialIndex.read(db,noteId){sql->
+        owner(noteId);check((dao.page(noteId)?.revision?:0)==revision){"INK_WINDOW_REVISION_CHANGED"}
+        val layers=layerFilter(sql,noteId,authoringRevision,null,false)
+        if(layers?.isEmpty()==true)emptyMap()else{
+            val args=mutableListOf<Any>()
+            val column=if(layers==null){args.add(UserLayers.DEFAULT_ID);"?"}else "m.layerId"
+            val join=if(layers==null)""else " CROSS JOIN page_layer_memberships m ON m.pageId=s.noteId AND m.kind='INK' AND m.contentId=s.id"
+            args.addAll(listOf(noteId,bounds.right,bounds.left,bounds.bottom,bounds.top,SpatialIndex.pageBucket(noteId),SpatialIndex.pageBucket(noteId)))
+            val filter=if(layers==null)""else{args.addAll(layers);" AND m.layerId IN (${layers.joinToString(","){"?"}})"}
+            sql.query("SELECT $column,MIN(b.minX),MIN(b.minY),MAX(b.maxX),MAX(b.maxY) FROM page_spatial_bounds b "+
+                "CROSS JOIN page_spatial_entries e ON e.key=b.key CROSS JOIN ink_strokes s ON s.noteId=e.pageId AND s.id=e.contentId$join "+
+                "WHERE e.pageId=? AND e.kind=0 AND s.visible=1 AND b.minX<=? AND b.maxX>=? AND b.minY<=? AND b.maxY>=? AND b.minPage<=? AND b.maxPage>=?$filter"+
+                (if(layers==null)""else " GROUP BY m.layerId"),args.toTypedArray()).use{c->buildMap{
+                    while(c.moveToNext())if(!c.isNull(1))put(c.getString(0),CanvasBounds(c.getDouble(1),c.getDouble(2),c.getDouble(3),c.getDouble(4)))
+                }}
+        }
+    }
+    /** Exact visible selection at one saved revision, without retaining every selected payload. */
+    suspend fun visitVisibleSelection(noteId:String,expectedRevision:Long,ids:List<String>,visit:suspend(List<InkStroke>)->Unit){
+        require(ids.distinct().size==ids.size)
+        check(revision(noteId)==expectedRevision){"INK_WINDOW_REVISION_CHANGED"}
+        var seen=0
+        visitSelected(noteId,ids){batch->
+            check(revision(noteId)==expectedRevision){"INK_WINDOW_REVISION_CHANGED"}
+            seen+=batch.size;visit(batch)
+        }
+        check(seen==ids.size&&revision(noteId)==expectedRevision){"INK_WINDOW_REVISION_CHANGED"}
+    }
+    private suspend fun visitSelected(noteId:String,ids:List<String>,visit:suspend(List<InkStroke>)->Unit){
+        var offset=0
+        while(offset<ids.size){
+            currentCoroutineContext().ensureActive()
+            var size=minOf(256,ids.size-offset)
+            lateinit var batch:VisibleInkSnapshot
+            while(true){
+                try{batch=readVisibleSnapshot(noteId,ids.subList(offset,offset+size));break}
+                catch(e:InkReadBudgetExceeded){if(size==1)throw e;size=(size+1)/2}
+            }
+            val byId=batch.strokes.associateBy{it.id}
+            visit(ids.subList(offset,offset+size).mapNotNull(byId::get));offset+=size
+        }
     }
     suspend fun revision(noteId:String):Long=db.withTransaction{owner(noteId);dao.page(noteId)?.revision?:0}
-    suspend fun visibleBounds(noteId:String,revision:Long):CanvasBounds?=db.withTransaction{
+    suspend fun visibleBounds(noteId:String,revision:Long):CanvasBounds?=SpatialIndex.read(db,noteId){sql->
         owner(noteId);check((dao.page(noteId)?.revision?:0)==revision){"INK_WINDOW_REVISION_CHANGED"}
-        val sql=db.openHelper.writableDatabase;SpatialIndex.prepare(sql,noteId)
         sql.query("SELECT MIN(b.minX),MIN(b.minY),MAX(b.maxX),MAX(b.maxY) FROM page_spatial_bounds b JOIN page_spatial_entries e ON e.key=b.key WHERE e.pageId=? AND e.kind=0",arrayOf(noteId)).use{c->
             check(c.moveToFirst());if(c.isNull(0))null else CanvasBounds(c.getDouble(0),c.getDouble(1),c.getDouble(2),c.getDouble(3))
         }
     }
     /** Validate backups without retaining a page of raw geometry, including hidden originals/masks. */
     suspend fun validateStored(noteId:String):Long {
-        val (owner,head,metadata)=db.withTransaction{Triple(owner(noteId),dao.page(noteId),dao.strokeMetadata(noteId))}
-        val revision=head?.revision?:0
-        check(revision>=0&&metadata.all{it.pointCount in 1..InkLimits.MAX_POINTS})
-        val ids=metadata.map{it.id}.toSet();ids.forEach{UUID.fromString(it)}
-        check(ids.size==metadata.size&&(head!=null||ids.isEmpty()))
-        for(batch in metadata.filterNot{it.visible}.chunked(16)){
+        val (owner,head)=db.withTransaction{owner(noteId) to dao.page(noteId)}
+        val revision=head?.revision?:0;check(revision>=0)
+        var after="";var stored=0L
+        while(true){
             currentCoroutineContext().ensureActive()
-            val rows=db.withTransaction{check((dao.page(noteId)?.revision?:0)==revision);dao.strokes(noteId,batch.map{it.id})}
-            check(rows.size==batch.size)
-            rows.forEach{row->val stroke=InkStrokeCodec.decode(row.payload);check(stroke.id==row.id&&stroke.world==owner.world&&stroke.samples.size==row.pointCount)}
+            val rows=db.withTransaction{
+                check((dao.page(noteId)?.revision?:0)==revision)
+                db.openHelper.writableDatabase.query("SELECT id,payload,pointCount,length(payload) FROM ink_strokes WHERE noteId=? AND id>? ORDER BY id LIMIT 256",arrayOf(noteId,after)).use{c->
+                    var bytes=0L
+                    buildList{while(c.moveToNext()){
+                        val size=c.getLong(3);check(size in 1..InkLimits.MAX_STROKE_BYTES.toLong())
+                        if(bytes+size>InkLimits.MAX_STROKE_BYTES)break
+                        bytes+=size;add(Triple(c.getString(0),c.getBlob(1),c.getInt(2)))
+                    }}
+                }
+            }
+            if(rows.isEmpty())break
+            for(row in rows){currentCoroutineContext().ensureActive()
+                val stroke=InkStrokeCodec.decode(row.second);check(stroke.id==row.first&&stroke.world==owner.world&&stroke.samples.size==row.third)
+                after=row.first;stored++
+            }
         }
         var visible=0L;visitVisible(noteId,revision){visible+=it.size}
-        check(visible==metadata.count{it.visible}.toLong())
-        val masks=db.withTransaction{check((dao.page(noteId)?.revision?:0)==revision);dao.cutMetadata(noteId)}
-        check(head!=null||masks.isEmpty())
-        for(batch in masks.chunked(16)){
+        after="";var masks=0L
+        while(true){
             currentCoroutineContext().ensureActive()
-            val rows=db.withTransaction{check((dao.page(noteId)?.revision?:0)==revision);dao.cuts(noteId,batch.map{it.id})}
-            check(rows.size==batch.size)
-            rows.forEach{row->val cut=InkCutCodec.decode(row.payload);check(cut.id==row.id);val selection=EraseSelection(cut,row.strokeIds.split(','));check(selection.strokeIds.all{it in ids})}
+            val row=db.withTransaction{
+                check((dao.page(noteId)?.revision?:0)==revision)
+                db.openHelper.writableDatabase.query("SELECT id,payload,strokeIds FROM ink_cuts WHERE noteId=? AND id>? ORDER BY id LIMIT 1",arrayOf(noteId,after)).use{c->
+                    if(c.moveToFirst())Triple(c.getString(0),c.getBlob(1),c.getString(2))else null
+                }
+            }?:break
+            val cut=InkCutCodec.decode(row.second);check(cut.id==row.first)
+            val selection=EraseSelection(cut,row.third.split(','))
+            for(batch in selection.strokeIds.chunked(500)){
+                val count=db.openHelper.writableDatabase.query("SELECT COUNT(*) FROM ink_strokes WHERE noteId=? AND id IN (${batch.joinToString(","){"?"}})",(listOf(noteId)+batch).toTypedArray()).use{c->check(c.moveToFirst());c.getInt(0)}
+                check(count==batch.size)
+            }
+            after=row.first;masks++
         }
+        check(head!=null||(stored==0L&&masks==0L))
         check((dao.page(noteId)?.revision?:0)==revision){"INK_WINDOW_REVISION_CHANGED"}
+        check(visible==dao.visibleCount(noteId).toLong())
         return revision
     }
-    internal data class CopiedInk(val sourceRevision:Long,val strokeIds:Map<String,String>)
-    /** Caller owns the encompassing copy/receipt transaction. Geometry never accumulates across batches. */
+
+    internal data class CopiedInk(val source:String,val target:String,val sourceRevision:Long,val strokeCount:Long) {
+        private fun identity(kind:String,id:String)=UUID.nameUUIDFromBytes("inkweft-copy:$source:$target:$kind:$id".toByteArray(Charsets.UTF_8)).toString()
+        fun strokeId(id:String)=identity("stroke",id)
+        fun cutId(id:String)=identity("cut",id)
+    }
+    /** Caller owns the copy/receipt transaction. Geometry and identity maps never accumulate. */
     internal suspend fun copyVisibleTo(source:String,target:String):CopiedInk {
         check(db.inTransaction());require(source!=target&&dao.page(target)==null)
-        val revision=dao.page(source)?.revision?:0;val ids=linkedMapOf<String,String>();val cuts=mutableMapOf<String,String>()
+        val revision=dao.page(source)?.revision?:0;val identities=CopiedInk(source,target,revision,0)
         dao.insertPage(InkPageRow(target,0));var count=0L
         visitVisible(source,revision){batch->batch.forEach{old->
-            val id=UUID.randomUUID().toString();ids[old.id]=id
-            val masks=old.cuts.map{cut->InkCut(cuts.getOrPut(cut.id){UUID.randomUUID().toString()},cut.radius,cut.points,cut.shape)}
+            val id=identities.strokeId(old.id)
+            val masks=old.cuts.map{cut->InkCut(identities.cutId(cut.id),cut.radius,cut.points,cut.shape)}
             val copied=InkStroke(id,old.pen,old.color,old.width,old.tool,old.samples,old.world,masks,old.appearance)
             dao.insertStroke(InkStrokeRow(id,target,InkStrokeCodec.encodeStored(copied),copied.samples.size,true,++count))
             SpatialIndex.put(db.openHelper.writableDatabase,target,SpatialIndex.INK,id,copied.bounds())
         }}
         if(count>0)check(dao.compareAndSet(target,0,count)==1)
-        return CopiedInk(revision,ids)
+        return identities.copy(strokeCount=count)
     }
     /** Read-only previews never deserialize hidden move/erase history. */
     suspend fun readVisible(noteId:String):List<InkStroke> = readVisibleSnapshot(noteId).strokes
@@ -380,8 +463,10 @@ class InkRepository(private val db:NoteDatabase,private val fault:(InkFaultPoint
                 is InkMutation.Cut->{
                     val c=change.selection
                     if(dao.cut(c.cut.id)!=null)return@withTransaction InkCommitResult.Rejected
-                    val effective=readVisibleSnapshot(command.noteId,c.strokeIds).strokes.associateBy{it.id}
-                    for(id in c.strokeIds){val s=effective[id]?:return@withTransaction InkCommitResult.Conflict;if(s.cuts.size>=InkLimits.MAX_CUTS||s.cuts.sumOf{it.points.size}+c.cut.points.size>InkLimits.MAX_CUT_POINTS)return@withTransaction InkCommitResult.Rejected}
+                    var seen=0;var overflow=false
+                    visitSelected(command.noteId,c.strokeIds){batch->seen+=batch.size;overflow=overflow||batch.any{it.cuts.size>=InkLimits.MAX_CUTS||it.cuts.sumOf{cut->cut.points.size}+c.cut.points.size>InkLimits.MAX_CUT_POINTS}}
+                    if(seen!=c.strokeIds.size)return@withTransaction InkCommitResult.Conflict
+                    if(overflow)return@withTransaction InkCommitResult.Rejected
                     true
                 }
                 is InkMutation.CutVisibility->{
@@ -390,9 +475,11 @@ class InkRepository(private val db:NoteDatabase,private val fault:(InkFaultPoint
                     if(change.visible){
                         val cut=InkCutCodec.decode(oldCut.payload);check(cut.id==oldCut.id)
                         val selection=EraseSelection(cut,oldCut.strokeIds.split(','))
-                        val owned=dao.strokeIds(command.noteId).toSet();check(selection.strokeIds.all{it in owned})
-                        val targets=readVisibleSnapshot(command.noteId,selection.strokeIds).strokes
-                        try{targets.forEach{it.withCuts(listOf(cut))}}catch(_:IllegalArgumentException){return@withTransaction InkCommitResult.Rejected}
+                        for(batch in selection.strokeIds.chunked(500)){
+                            val count=db.openHelper.writableDatabase.query("SELECT COUNT(*) FROM ink_strokes WHERE noteId=? AND id IN (${batch.joinToString(","){"?"}})",(listOf(command.noteId)+batch).toTypedArray()).use{check(it.moveToFirst());it.getInt(0)}
+                            check(count==batch.size)
+                        }
+                        try{visitSelected(command.noteId,selection.strokeIds){targets->targets.forEach{it.withCuts(listOf(cut))}}}catch(_:IllegalArgumentException){return@withTransaction InkCommitResult.Rejected}
                     }
                     change.visible
                 }

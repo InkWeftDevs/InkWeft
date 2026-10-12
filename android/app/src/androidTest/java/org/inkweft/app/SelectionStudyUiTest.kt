@@ -55,8 +55,8 @@ class SelectionStudyUiTest {
         ready();val n=runBlocking{app.workspaceRepository.create("学习整合-${id().take(6)}",false,PaperStyle.BLANK)}
         val s=InkStroke(id(),InkPen.PEN,0xff000000.toInt(),3f,InkTool.STYLUS,listOf(InkSample(200f,600f,0,.5f),InkSample(300f,600.6f,30,.5f),InkSample(400f,600f,60,.5f),InkSample(600f,600f,100,.5f)))
         runBlocking{app.inkRepository.save(CommitInk(id(),n.id,0,InkMutation.Add(s)))}
-        compose.runOnIdle{ViewModelProvider(compose.activity)[NotebookViewModel::class.java].select(n)};compose.singlePageEditor();saved(1)
-        compose.frameCanvasFixture();return n to s
+        compose.runOnIdle{ViewModelProvider(compose.activity)[NotebookViewModel::class.java].select(n)};compose.singlePageEditor()
+        compose.frameCanvasFixture();saved(1);return n to s
     }
     private fun nativeCanvas():InkCanvasView{
         fun find(v:View):InkCanvasView?{if(v is InkCanvasView&&!v.preview)return v;if(v is ViewGroup)for(i in 0 until v.childCount)find(v.getChildAt(i))?.let{return it};return null}
@@ -67,7 +67,8 @@ class SelectionStudyUiTest {
         compose.onNodeWithTag("ink-select").performClick();compose.onNodeWithTag("lasso-rectangle").performClick();compose.onNodeWithContentDescription("关闭套索").performClick()
         var a=Offset.Zero;var b=Offset.Zero
         compose.runOnIdle{val v=nativeCanvas();val vp=v.snapshotViewport();val d=v.resources.displayMetrics.density.toDouble();val p=vp.worldToScreen(left,top,v.width.toDouble(),v.height.toDouble(),d);val q=vp.worldToScreen(right,bottom,v.width.toDouble(),v.height.toDouble(),d);a=Offset(p.x.toFloat(),p.y.toFloat());b=Offset(q.x.toFloat(),q.y.toFloat())}
-        compose.onNodeWithTag("selection-overlay").performTouchInput{swipe(a,b,300)};compose.waitForIdle()
+        compose.onNodeWithTag("selection-overlay").performTouchInput{swipe(a,b,300)}
+        compose.waitUntil(10_000){listOf("selection-more","selection-erase-inside").any{tag->runCatching{compose.onNodeWithTag(tag).assertIsDisplayed().assertIsEnabled()}.isSuccess}}
     }
     private fun shot(name:String){compose.waitForIdle();val b=checkNotNull(InstrumentationRegistry.getInstrumentation().uiAutomation.takeScreenshot());try{File(compose.activity.getExternalFilesDir(null),name).outputStream().use{b.compress(Bitmap.CompressFormat.PNG,100,it)}}finally{b.recycle()}}
     private fun addCard(title:String,body:String){

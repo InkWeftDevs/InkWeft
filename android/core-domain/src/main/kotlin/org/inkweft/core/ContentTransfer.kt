@@ -17,9 +17,11 @@ object ContentTransfer {
         val title: String
         class Page(val value: InkPageFile) : Content { override val title get() = value.title }
         class Book(val value: NotebookFile) : Content { override val title get() = value.title }
+        /** Validated file-backed staging owned by the application until commit or dismissal. */
+        class Streamed(val directory:java.io.File,override val title:String,val pageCount:Int):Content
     }
     class Prepared internal constructor(val kind: Kind, val content: Content,
-        val sha256: String, val byteCount: Int,private val cleanup:()->Unit={}) : java.io.Closeable {
+        val sha256: String, val byteCount: Long,private val cleanup:()->Unit={}) : java.io.Closeable {
         private var closed=false
         override fun close(){if(!closed){closed=true;cleanup()}}
     }
@@ -74,13 +76,17 @@ object ContentTransfer {
             Kind.BOOK -> Content.Book(NotebookFile.decode(bytes))
         }
         checkActive()
-        return Prepared(type, content, hash(bytes), bytes.size)
+        return Prepared(type, content, hash(bytes), bytes.size.toLong())
     }
     /** Stable import intent uses original document identity, independent of converter PDF metadata. */
     fun document(title:String,pdf:PdfDocumentSource,originalHash:String,cleanup:()->Unit={}):Prepared {
         require(originalHash.matches(Regex("[0-9a-f]{64}")))
         val book=NotebookFile(title,"",List(pdf.pages){i->InkPageFile(title,"",emptyList(),paper=PaperStyle.BLANK,source=PdfPageSource(pdf,i))})
-        return Prepared(Kind.BOOK,Content.Book(book),hash(("InkWeft.Document/1\n"+originalHash+"\n"+title).toByteArray()),pdf.size,cleanup)
+        return Prepared(Kind.BOOK,Content.Book(book),hash(("InkWeft.Document/1\n"+originalHash+"\n"+title).toByteArray()),pdf.size.toLong(),cleanup)
+    }
+    fun staged(kind:Kind,title:String,pages:Int,directory:java.io.File,sha256:String,bytes:Long,cleanup:()->Unit):Prepared {
+        require(pages in 1..500&&bytes in 1..LibraryArchive.MAX_BYTES+4&&sha256.matches(Regex("[0-9a-f]{64}")))
+        return Prepared(kind,Content.Streamed(directory,title,pages),sha256,bytes,cleanup)
     }
     fun hash(bytes: ByteArray) = MessageDigest.getInstance("SHA-256").digest(bytes)
         .joinToString("") { "%02x".format(it.toInt() and 255) }

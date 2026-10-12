@@ -65,15 +65,10 @@ class PageEditingRepository(private val db:NoteDatabase,private val fault:(PageE
                     db.pages().insert(NotebookPageRow(resultId,c.notebookId,at,false,source.paper,
                         source.centerX,source.centerY,source.zoom,createdAfterId=ordered.getOrNull(at-1)))
                     DocumentRepository(db).attach(resultId,DocumentRepository(db).read(source.id))
-                    val snapshot=InkRepository(db).copyVisibleTo(source.id,resultId);check(snapshot.sourceRevision==head)
-                    val strokeIds=snapshot.strokeIds
+                    val snapshot=PageCopy(db).copy(source.id,resultId);check(snapshot.sourceRevision==head)
                     db.pages().search(source.id)?.takeIf{it.inkRevision==head&&it.method=="MANUAL"}?.let{
-                        db.pages().putSearch(PageSearchRow(resultId,strokeIds.size.toLong(),it.text))
+                        db.pages().putSearch(PageSearchRow(resultId,snapshot.strokeCount,it.text))
                     }
-                    val copiedObjects=PageObjectRepository(db).read(source.id).objects.let{objects->PageObjectRepository(db).import(resultId,objects,strokeIds,ImageSourceRepository(db).forPage(source.id,objects))}
-                    val authoring=PageAuthoringRepository(db).readPage(source.id).state.copied(resultId,strokeIds,copiedObjects)
-                    PageAuthoringRepository(db).validate(AuthoringScope.page(c.notebookId,resultId),authoring)
-                    PageAuthoringRepository(db).storePage(resultId,c.notebookId,0,authoring)
                     ordered.add(at,resultId);selected=resultId
                 }
             }

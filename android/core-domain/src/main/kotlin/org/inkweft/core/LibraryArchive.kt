@@ -51,33 +51,53 @@ object LibraryArchive {
     private fun minimumRowBytes(table:Table)=table.columns.sumOf{column->
         if(column.nullable)1L else when(column.kind){'I','F'->9L;else->5L}
     }
+    /** Push writer allows suspendable producers to release their database between batches. */
+    class Writer(output:OutputStream,private val schema:List<Table>,private val createdAt:Long,version:Int=2) {
+        private val counter=CountOut(output,if(version==1)LEGACY_MAX_BYTES else MAX_BYTES)
+        private val hash=MessageDigest.getInstance("SHA-256")
+        private val hashed=DigestOutputStream(counter,hash)
+        private val d=DataOutputStream(hashed)
+        private val counts=mutableListOf<Long>()
+        private var left=0L
+        private var closed=false
+        init {
+            validateSchema(schema);require(createdAt>=0&&version in 1..2)
+            d.writeInt(MAGIC);d.writeInt(version);d.writeLong(createdAt);d.write(signature(schema));d.writeInt(schema.size)
+        }
+        fun beginTable(count:Long){
+            check(!closed);require(left==0L&&counts.size<schema.size){"BACKUP_ROW_MISMATCH"}
+            val remaining=counter.limit-counter.count-32L-(schema.size-counts.size)*8L
+            require(remaining>=0&&count>=0&&count<=remaining/minimumRowBytes(schema[counts.size])){"BACKUP_ROW_LIMIT"}
+            counts+=count;left=count;d.writeLong(count)
+        }
+        fun row(row:List<Any?>){
+            check(!closed);require(counts.isNotEmpty()&&left>0){"BACKUP_ROW_MISMATCH"}
+            val table=schema[counts.lastIndex];require(row.size==table.columns.size){"BACKUP_ROW_MISMATCH"}
+            row.forEachIndexed{index,value->val column=table.columns[index]
+                d.writeBoolean(value!=null)
+                if(value==null)require(column.nullable)else when(column.kind){
+                    'I'->d.writeLong(value as Long)
+                    'F'->{val number=value as Double;require(number.isFinite());d.writeDouble(number)}
+                    'S','B'->{val bytes=if(column.kind=='S')(value as String).toByteArray(Charsets.UTF_8)else value as ByteArray
+                        require(bytes.size<=MAX_FIELD){"BACKUP_FIELD_LIMIT"};d.writeInt(bytes.size);d.write(bytes)}
+                }
+            }
+            left--
+        }
+        fun finish():Summary {
+            check(!closed);require(left==0L&&counts.size==schema.size){"BACKUP_ROW_MISMATCH"};closed=true
+            d.flush();val digest=hash.digest();hashed.on(false);d.write(digest);d.flush()
+            return Summary(createdAt,counts.toList(),counter.count,digest.hex())
+        }
+    }
     fun write(output:OutputStream,schema:List<Table>,source:Rows,createdAt:Long,
               version:Int=2,checkActive:()->Unit={}):Summary {
-        validateSchema(schema);require(createdAt>=0&&version in 1..2)
-        val counter=CountOut(output,if(version==1)LEGACY_MAX_BYTES else MAX_BYTES);val hash=MessageDigest.getInstance("SHA-256")
-        val hashed=DigestOutputStream(counter,hash);val d=DataOutputStream(hashed)
-        d.writeInt(MAGIC);d.writeInt(version);d.writeLong(createdAt);d.write(signature(schema));d.writeInt(schema.size)
-        val counts=mutableListOf<Long>()
-        schema.forEachIndexed{index,t->
-            checkActive();val n=source.count(index)
-            val remaining=counter.limit-counter.count-32L-(schema.size-index)*8L
-            require(remaining>=0&&n>=0&&n<=remaining/minimumRowBytes(t)){"BACKUP_ROW_LIMIT"};counts+=n
-            d.writeLong(n);var seen=0L
-            source.visit(index){row->
-                checkActive();require(++seen<=n&&row.size==t.columns.size){"BACKUP_ROW_MISMATCH"}
-                row.forEachIndexed{j,value->val c=t.columns[j]
-                    d.writeBoolean(value!=null)
-                    if(value==null)require(c.nullable) else when(c.kind){
-                        'I'->d.writeLong(value as Long)
-                        'F'->{val f=value as Double;require(f.isFinite());d.writeDouble(f)}
-                        'S','B'->{val bytes=if(c.kind=='S')(value as String).toByteArray(Charsets.UTF_8)else value as ByteArray
-                            require(bytes.size<=MAX_FIELD){"BACKUP_FIELD_LIMIT"};d.writeInt(bytes.size);d.write(bytes)}
-                    }
-                }
-            };require(seen==n){"BACKUP_ROW_MISMATCH"}
+        val writer=Writer(output,schema,createdAt,version)
+        schema.indices.forEach{index->
+            checkActive();writer.beginTable(source.count(index))
+            source.visit(index){row->checkActive();writer.row(row)}
         }
-        checkActive();d.flush();val digest=hash.digest();hashed.on(false);d.write(digest);d.flush()
-        return Summary(createdAt,counts.toList(),counter.count,digest.hex())
+        checkActive();return writer.finish()
     }
     /** onRow may write only to an isolated staging transaction. Footer validation
      * happens after rows; never call this with the live library as the sink. */

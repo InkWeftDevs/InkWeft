@@ -20,10 +20,10 @@ class InkPageFile(val title:String,val text:String,strokes:List<InkStroke>,val w
             strokes.forEach{val b=InkStrokeCodec.encode(it);require(body.size().toLong()+b.size+36<=MAX_BYTES);out.writeInt(b.size);out.write(b)}
             if(objects.isNotEmpty()||withSource||authoring!=null){val encoded=PageObjectCodec.encode(objects);out.writeInt(encoded.size);out.write(encoded)}
             if(imageSources.isNotEmpty()||authoring!=null)out.writeBoolean(withSource)
-            if(withSource){val src=checkNotNull(source);require(body.size().toLong()+src.document.size+48<=MAX_BYTES){"CONTENT_SIZE_LIMIT_USE_FULL_BACKUP"};val bytes=src.document.bytes();out.writeInt(src.document.pages);out.writeInt(src.page);out.writeInt(bytes.size);out.write(bytes)}
+            if(withSource){val src=checkNotNull(source);require(body.size().toLong()+src.document.size+48<=MAX_BYTES){"CONTENT_SIZE_LIMIT_USE_FULL_BACKUP"};out.writeInt(src.document.pages);out.writeInt(src.page);out.writeInt(src.document.size);src.document.copyTo(out)}
             if(imageSources.isNotEmpty()||authoring!=null){
                 out.writeInt(imageSources.size)
-                imageSources.forEach{source->val bytes=source.bytes();require(body.size().toLong()+bytes.size+36<=MAX_BYTES);out.writeInt(bytes.size);out.write(bytes)}
+                imageSources.forEach{source->require(body.size().toLong()+source.size+36<=MAX_BYTES);out.writeInt(source.size);source.copyTo(out)}
             }
             authoring?.let{val bytes=PageAuthoringCodec.encode(it);out.writeInt(bytes.size);out.write(bytes)}
         };return body.finish(MAX_BYTES)

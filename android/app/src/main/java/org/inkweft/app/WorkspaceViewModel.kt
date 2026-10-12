@@ -43,7 +43,17 @@ class WorkspaceViewModel(app:Application,private val saved:androidx.lifecycle.Sa
     private val pages=(app as InkWeftApplication).pages
     private val pageNavigation=MutableStateFlow<Map<String,String>>(emptyMap());val pendingPageNavigation=pageNavigation.asStateFlow()
     fun consumePageNavigation(bookId:String,pageId:String){pageNavigation.update{if(it[bookId]==pageId)it-bookId else it}}
-    private val searchState=MutableStateFlow<List<PageSearchHit>>(emptyList());val searchable=searchState.asStateFlow()
+    private var searchGeneration=0L
+    private val searchRequests=MutableStateFlow<LibrarySearchRequest?>(null)
+    val librarySearch=repo.observeLibrarySearch(searchRequests.filterNotNull())
+        .filter{it.generation==searchRequests.value?.generation}
+        .onEach{if(it.failed)failure.value="检索索引读取失败，不代表没有匹配的笔记。"}
+        .stateIn(viewModelScope,SharingStarted.WhileSubscribed(0),LibrarySearchResult())
+    fun searchLibrary(notes:List<Note>,drafts:Map<String,NoteDraft>,query:String,filter:String,type:String,byTitle:Boolean):Long {
+        val generation=++searchGeneration
+        searchRequests.value=LibrarySearchRequest(generation,notes,drafts,query,filter,type,byTitle)
+        return generation
+    }
     private val mutable=MutableStateFlow<Map<String,WorkspaceRow>>(emptyMap());val entries=mutable.asStateFlow()
     private val counts=MutableStateFlow<Map<String,LibraryInkCount>>(emptyMap());val inkCounts=counts.asStateFlow()
     private val failure=MutableStateFlow<String?>(null);val error=failure.asStateFlow()
@@ -51,9 +61,8 @@ class WorkspaceViewModel(app:Application,private val saved:androidx.lifecycle.Sa
     private val viewWrites=Mutex();private val viewGeneration=mutableMapOf<String,Long>()
     private val liveViews=mutableMapOf<String,CanvasViewport>()
     init{
-        viewModelScope.launch{try{pages.observeSearch().collect{searchState.value=it}}catch(c:CancellationException){throw c}catch(_:Exception){failure.value="检索索引读取失败，不代表没有匹配的笔记。"}}
-        viewModelScope.launch{try{repo.observe().collect{rows->mutable.value=rows.associateBy{it.noteId}}}catch(c:CancellationException){throw c}catch(_:Exception){failure.value="无法读取资料分类，原数据未删除。"}}
-        viewModelScope.launch{try{repo.observeInkCounts().collect{rows->counts.value=rows.associateBy{it.noteId}}}catch(c:CancellationException){throw c}catch(_:Exception){failure.value="缩略统计读取失败，可继续尝试打开笔记。"}}
+        viewModelScope.launch{try{repo.observe().map{rows->rows.associateBy{it.noteId}}.flowOn(Dispatchers.IO).collect{mutable.value=it}}catch(c:CancellationException){throw c}catch(_:Exception){failure.value="无法读取资料分类，原数据未删除。"}}
+        viewModelScope.launch{try{repo.observeInkCounts().map{rows->rows.associateBy{it.noteId}}.flowOn(Dispatchers.IO).collect{counts.value=it}}catch(c:CancellationException){throw c}catch(_:Exception){failure.value="缩略统计读取失败，可继续尝试打开笔记。"}}
     }
     fun cachedViewport(id:String)=liveViews[id]
     fun ensure(id:String){viewModelScope.launch{try{val row=withContext(Dispatchers.IO){repo.get(id)};mutable.update{it+(id to row)}}catch(c:CancellationException){throw c}catch(_:Exception){failure.value="无法读取页面设置"}}}

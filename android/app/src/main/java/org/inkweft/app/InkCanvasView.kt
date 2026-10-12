@@ -97,15 +97,26 @@ class InkCanvasView(context:Context):View(context){
     private var viewport=CanvasViewport()
     private var objects=emptyList<PageObject>()
     private var authoring:PageAuthoring?=null
+    private data class LayerInkPlan(val source:List<InkStroke>,val authoring:PageAuthoring,val suppressed:Set<String>,
+        val memberships:Map<LayerContent,String>,val visible:List<UserLayer>,val ink:Map<String?,List<InkStroke>>,val ids:Map<String,Set<String>>)
+    private var layerInkPlan:LayerInkPlan?=null
+    private fun layerInkPlan(value:PageAuthoring):LayerInkPlan {
+        layerInkPlan?.let{if(it.source===content&&it.authoring===value&&it.suppressed==suppressedStrokeIds)return it}
+        val memberships=value.layers.memberships.associate{it.content to it.layerId}
+        return LayerInkPlan(content,value,suppressedStrokeIds,memberships,value.layers.layers.filter{it.visible},
+            content.filter{it.id !in suppressedStrokeIds&&visibleStroke(it)}.groupBy{memberships[LayerContent(LayerContentKind.INK,it.id)]},
+            value.layers.memberships.filter{it.content.kind==LayerContentKind.INK}.groupBy({it.layerId},{it.content.id}).mapValues{it.value.toSet()}
+        ).also{layerInkPlan=it}
+    }
     internal fun matchesAuthoring(value:PageAuthoring)=authoring===value||(authoring==null&&value.legacy)
     fun showAuthoring(value:PageAuthoring?){
         if(authoring===value)return
         val old=authoring
         val moved=old?.layers?.memberships.orEmpty().any{before->value?.layers?.layer(before.content)?.id!=before.layerId}
         val incompatible=old?.legacy!=value?.legacy||old?.layers?.layers!=value?.layers?.layers||moved||old?.layers?.deleted!=value?.layers?.deleted
-        authoring=value
+        authoring=value;layerInkPlan=null
         val annotationIds=value?.annotations.orEmpty().map{it.stroke.id}.toSet();transient.keys.removeAll(annotationIds);transientPencils.keys.removeAll(annotationIds)
-        if(incompatible){pageRaster.clear();asyncRaster.clear();layerRasters.values.forEach{it.clear()};layerRasters.clear();streamedRaster.clear();streamedLayers.values.forEach{it.clear()};streamedLayers.clear()}
+        if(incompatible){streamedLayerLayout.clear();pageRaster.clear();asyncRaster.clear();layerRasters.values.forEach{it.clear()};layerRasters.clear();streamedRaster.clear();streamedLayers.values.forEach{it.clear()};streamedLayers.clear()}
         imageRendering.retain(objects.filter(::visibleObject));drawnViewport=null;invalidate()
     }
     private var fixedRegion:CanvasBounds?=null
@@ -234,9 +245,9 @@ class InkCanvasView(context:Context):View(context){
     private val layerRasters=mutableMapOf<String,AsyncInkRaster>()
     private val streamedRaster=StreamedInkRaster({postInvalidateOnAnimation()},{onNotice("笔迹显示未完成，请移动视口后重试；已保存内容保留。")})
     private val streamedLayers=mutableMapOf<String,StreamedInkRaster>()
-    private var layerBudgetBlocked=false
+    private val streamedLayerLayout=StreamedLayerLayout({postInvalidateOnAnimation()},{onNotice("图层范围读取未完成，请移动视口后重试；原内容保留")})
     private var incompleteInkFrame=false
-    internal val rasterPending get()=layerBudgetBlocked||incompleteInkFrame||asyncRaster.pending||layerRasters.values.any{it.pending}||streamedRaster.pending||streamedLayers.values.any{it.pending}
+    internal val rasterPending get()=incompleteInkFrame||streamedLayerLayout.pending||asyncRaster.pending||layerRasters.values.any{it.pending}||streamedRaster.pending||streamedLayers.values.any{it.pending}
     private val live=InProgressStroke()
     private val incremental=MutableStrokeInputBatch()
     private val empty=MutableStrokeInputBatch()
@@ -303,7 +314,7 @@ class InkCanvasView(context:Context):View(context){
         val before=content.associateBy{it.id}
         val changed=strokes.filter{s->before[s.id]?.let{it!==s&&(it.samples!=s.samples||it.pen!=s.pen||it.color!=s.color||it.width!=s.width||it.tool!=s.tool||it.world!=s.world||it.appearance!=s.appearance)}==true}.map{it.id}.toSet()
         meshes.keys.removeAll(changed);bounds.keys.removeAll(changed);transient.keys.removeAll(changed);transientPencils.keys.removeAll(changed);PencilRenderer.forget(removed+changed)
-        content=strokes;drawnViewport=null;restoreAppearance();val ids=strokes.map{it.id}.toSet();meshes.keys.retainAll(ids);bounds.keys.retainAll(ids)
+        content=strokes;layerInkPlan=null;drawnViewport=null;restoreAppearance();val ids=strokes.map{it.id}.toSet();meshes.keys.retainAll(ids);bounds.keys.retainAll(ids)
         for(s in strokes){if(!bounds.containsKey(s.id))bounds[s.id]=s.bounds();transient[s.id]?.let{meshes[s.id]=it}}
         if(preview&&width>0&&height>0)if(world)fitContent(false)else fitPage(false)
         invalidate()
@@ -373,33 +384,34 @@ class InkCanvasView(context:Context):View(context){
         if(isAttachedToWindow&&!capturingExcerpt)requestImages(drawn,objectVisible)
         val layers=authoring?.takeUnless{it.legacy}
         if(layers!=null){
-            val visibleLayers=layers.layers.layers.filter{it.visible}
-            val memberships=layers.layers.memberships.associate{it.content to it.layerId}
+            val plan=layerInkPlan(layers)
+            val visibleLayers=plan.visible
+            val memberships=plan.memberships
             val stream=inkSource.takeIf{isAttachedToWindow}
-            val streamIds=if(stream==null)emptyMap()else layers.layers.memberships.filter{it.content.kind==LayerContentKind.INK}.groupBy({it.layerId},{it.content.id}).mapValues{it.value.toSet()}
-            val perLayer=content.filter{it.id !in suppressedStrokeIds&&it.id !in erased&&visibleStroke(it)}.groupBy{memberships[LayerContent(LayerContentKind.INK,it.id)]}
-            val needed=visibleLayers.filter{if(stream!=null)streamIds[it.id].orEmpty().isNotEmpty()else perLayer[it.id].orEmpty().isNotEmpty()}.map{it.id}.toSet()
+            val streamIds=if(stream==null||stream.authoringRevision!=null)emptyMap()else plan.ids
+            val perLayer=plan.ink
+            val layout=if(stream?.authoringRevision!=null&&!area.isEmpty)streamedLayerLayout.request(stream,rasterViewport(area),area.width(),area.height(),density)else null
+            if(stream?.authoringRevision!=null&&layout==null&&!area.isEmpty)incompleteInkFrame=true
+            val needed=visibleLayers.filter{if(stream?.authoringRevision!=null)it.id in layout.orEmpty()else if(stream!=null)streamIds[it.id].orEmpty().isNotEmpty()else perLayer[it.id].orEmpty().isNotEmpty()}.map{it.id}.toSet()
+            val pixelBudgets=layout?.let{StreamedLayerLayout.budgets(it)}.orEmpty()
             layerRasters.keys.filter{it !in needed}.forEach{layerRasters.remove(it)?.clear()}
             streamedLayers.keys.filter{it !in needed}.forEach{streamedLayers.remove(it)?.clear()}
-            // One shared viewport cache per nonempty visible layer; retain native resolution, never downsample a hidden answer into another layer.
-            val blocked=isAttachedToWindow&&area.width().toLong()*area.height()*needed.size>20_000_000L
-            if(blocked){
-                if(!layerBudgetBlocked)post{onNotice("当前可见图层合计超过 2000 万视窗像素显示预算；请隐藏部分图层或缩小窗口。原内容完整保留，分享仍按选定范围处理。")}
-                layerBudgetBlocked=true;canvas.restoreToCount(save);paint.color=Color.DKGRAY;paint.textSize=(16*density).toFloat();canvas.drawText("图层显示未完成 · 超出视窗预算",(16*density).toFloat(),(40*density).toFloat(),paint);return
-            };layerBudgetBlocked=false
+            // Crop to actual visible ink and share a fixed pixel budget. Each layer remains
+            // isolated and complete; dense stacks change cache resolution, never visibility.
             val eraseMask=liveMask.takeUnless{gestureWhole}
             for(layer in visibleLayers){
                 val layerObjects=drawn.filter{memberships[LayerContent(LayerContentKind.OBJECT,it.id)]==layer.id}
                 objectPainter.draw(canvas,layerObjects,false,objectVisible,if(layer.locked)null else beautyMask,gestureWhole)
-                val layerInk=perLayer[layer.id].orEmpty();val dynamic=selectedIds+if(eraseMask!=null&&gestureOnlyHighlighter&&!layer.locked)eraseTargets else emptySet()
-                val stable=layerInk.filter{it.id !in dynamic}
+                val layerInk=perLayer[layer.id].orEmpty().let{if(erased.isEmpty())it else it.filterNot{s->s.id in erased}}
+                val dynamic=if(eraseMask!=null&&gestureOnlyHighlighter&&!layer.locked)selectedIds+eraseTargets else selectedIds
+                val stable=if(dynamic.isEmpty())layerInk else layerInk.filter{it.id !in dynamic}
                 if(isAttachedToWindow&&layer.id in needed&&!area.isEmpty){
                     val saved=canvas.save();canvas.setMatrix(screenTransform)
                     if(eraseMask!=null&&!layer.locked&&!gestureOnlyHighlighter){val screenMask=Path(eraseMask);screenMask.transform(matrix);canvas.clipOutPath(screenMask)}
                     canvas.translate(area.left.toFloat(),area.top.toFloat())
                     if(stream!=null){
                         val cached=streamedLayers.getOrPut(layer.id){StreamedInkRaster({postInvalidateOnAnimation()},{onNotice("图层笔迹显示未完成，原笔迹保留")})}
-                        cached.draw(canvas,area.width(),area.height(),rasterViewport(area),density,world,embeddedPage,stream,streamIds[layer.id].orEmpty(),suppressedStrokeIds+erased+dynamic)
+                        cached.draw(canvas,area.width(),area.height(),rasterViewport(area),density,world,embeddedPage,stream,if(stream.authoringRevision==null)streamIds[layer.id].orEmpty()else null,suppressedStrokeIds+erased+dynamic,layer.id,layout?.get(layer.id),pixelBudgets[layer.id]?:StreamedLayerLayout.PIXELS/maxOf(1,needed.size))
                         incompleteInkFrame=incompleteInkFrame||!cached.frameReady
                     }else{
                         val cached=layerRasters.getOrPut(layer.id){AsyncInkRaster({postInvalidateOnAnimation()},{onNotice("图层笔迹显示未完成，原笔迹保留")})}
@@ -501,6 +513,9 @@ class InkCanvasView(context:Context):View(context){
             }
             capturingExcerpt=true
             try{draw(canvas)}finally{capturingExcerpt=false}
+            // draw() may start the first job for a newly invalidated source or viewport.
+            // Never encode the loading/partial image produced before that job finishes.
+            check(!inkWindowLoading&&!rasterPending&&!imageFramesPending&&sourceContentReady){"页面仍在呈现，请稍后重试"}
             for(quality in listOf(90,75,55,35)){
                 val stream=java.io.ByteArrayOutputStream();bitmap.compress(Bitmap.CompressFormat.JPEG,quality,stream)
                 val bytes=stream.toByteArray();if(bytes.size<=240_000)return bytes
@@ -628,6 +643,6 @@ class InkCanvasView(context:Context):View(context){
     }
     private fun finishViewport(){if(movingViewport){movingViewport=false;onViewport(viewport)}}
     fun cancelGesture(discardCheckpoint:Boolean=true){if(discardCheckpoint&&inputId!=-1&&!gestureErase)onCheckpointCancel(gestureId);tapImage=null;onLiveSamples(emptyList());val active=inputId!=-1;inputId=-1;BackgroundBudget.input(this,false);raw.clear();wholeErase=null;gestureErase=false;cursor=null;parent?.requestDisallowInterceptTouchEvent(false);if(active)onGesture(false);invalidate()}
-    override fun onDetachedFromWindow(){fitContentJob?.cancel();fitContentJob=null;viewTreeObserver.removeOnPreDrawListener(visibleAreaListener);observedVisiblePixels.setEmpty();mapSceneJob?.cancel();mapSceneJob=null;PencilRenderer.forget(content.filter{it.pen==InkPen.PENCIL}.map{it.id}.toSet()+gestureId);pageRaster.clear();asyncRaster.clear();layerRasters.values.forEach{it.clear()};layerRasters.clear();streamedRaster.clear();streamedLayers.values.forEach{it.clear()};streamedLayers.clear();documentJob?.cancel();releaseDocumentTile();documentRequest=null;imageRendering.clear();objectPainter.clear();cancelGesture(false);if(configured&&!preview)onViewport(viewport);super.onDetachedFromWindow()}
+    override fun onDetachedFromWindow(){layerInkPlan=null;streamedLayerLayout.clear();fitContentJob?.cancel();fitContentJob=null;viewTreeObserver.removeOnPreDrawListener(visibleAreaListener);observedVisiblePixels.setEmpty();mapSceneJob?.cancel();mapSceneJob=null;PencilRenderer.forget(content.filter{it.pen==InkPen.PENCIL}.map{it.id}.toSet()+gestureId);pageRaster.clear();asyncRaster.clear();layerRasters.values.forEach{it.clear()};layerRasters.clear();streamedRaster.clear();streamedLayers.values.forEach{it.clear()};streamedLayers.clear();documentJob?.cancel();releaseDocumentTile();documentRequest=null;imageRendering.clear();objectPainter.clear();cancelGesture(false);if(configured&&!preview)onViewport(viewport);super.onDetachedFromWindow()}
     override fun performClick():Boolean{super.performClick();return true}
 }

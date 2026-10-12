@@ -23,7 +23,9 @@ internal class VisibleInkGeometry {
         stroke.cuts.forEach{result.op(cutPath(it),Path.Op.DIFFERENCE)}
         if(!stroke.world)result.op(Path().apply{addRect(0f,0f,1000f,1414f,Path.Direction.CW)},Path.Op.INTERSECT)
         cache[stroke]=result
+        while(cache.size>128||cache.keys.sumOf{it.samples.size.toLong()+it.cuts.sumOf{cut->cut.points.size.toLong()}}>65_536)cache.remove(cache.keys.first())
     }
+    fun clear()=cache.clear()
     fun bounds(stroke:InkStroke)=bounds(path(stroke))
     fun hits(stroke:InkStroke,eraser:List<InkSample>,radius:Float):Boolean {
         if(eraser.isEmpty())return false

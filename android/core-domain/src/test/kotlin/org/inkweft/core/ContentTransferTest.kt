@@ -21,7 +21,7 @@ class ContentTransferTest {
         }
         val result = ContentTransfer.read(source)
         assertEquals(ContentTransfer.Kind.PAGE,result.kind)
-        assertEquals(bytes.size,result.byteCount)
+        assertEquals(bytes.size.toLong(),result.byteCount)
         assertEquals("正文",(result.content as ContentTransfer.Content.Page).value.text)
     }
     @Test fun handlesOneZeroProgressReadWithoutLooping() {
@@ -30,7 +30,7 @@ class ContentTransferTest {
             var zero = true
             override fun read(b: ByteArray, o: Int, n: Int): Int { if(zero){zero=false;return 0};return super.read(b,o,n) }
         }
-        assertEquals(bytes.size,ContentTransfer.read(source).byteCount)
+        assertEquals(bytes.size.toLong(),ContentTransfer.read(source).byteCount)
     }
     @Test fun actualBookOverFourMegabytesRoundTrips() {
         val strokes = List(10) { n -> InkStroke(id(),InkPen.PEN,0xff223344.toInt(),3f,InkTool.STYLUS,

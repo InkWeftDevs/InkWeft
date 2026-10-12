@@ -72,11 +72,10 @@ internal data class PageSearchDraft(val pageId:String,val inkRevision:Long,val o
                             app.pages.hasCurrentSearchText(page.id)
                         }
                         if(indexed){processed=i+1;continue}
-                        val frozen=withContext(Dispatchers.IO){app.authoring.exportPage(page.id)}
-                        val layers=frozen.authoring.state.layers
-                        val visibleObjects=frozen.objects.filter{layers.visible(LayerContent(LayerContentKind.OBJECT,it.id))}
-                        val suppressed=visibleObjects.flatMap{it.sourceStrokeIds}.toSet()
-                        val result=app.handwriting.recognize(frozen.ink.filter{layers.visible(LayerContent(LayerContentKind.INK,it.id))&&it.id !in suppressed})
+                        val frozen=withContext(Dispatchers.IO){app.authoring.readForRecognition(page.id)}
+                        val visibleObjects=frozen.objects
+                        val result=app.handwriting.recognizePage(page.id,frozen,app.inkRepository)
+                        withContext(Dispatchers.IO){app.authoring.checkExportHeads(page.id,frozen.authoring)}
                         val text=(listOf(result.text)+visibleObjects.filter{!it.hidden&&it.kind in setOf(PageObjectKind.TEXT,PageObjectKind.FORMULA)}.map{it.visibleText()}).filter{it.isNotBlank()}.joinToString("\n")
                         require(text.length<=20_000)
                         if(!withContext(Dispatchers.IO){app.pages.saveSearchText(page.id,frozen.authoring.inkRevision,text,frozen.authoring.objectRevision,"OCR",frozen.authoring.revision)})failed++
@@ -175,8 +174,8 @@ internal data class PageSearchDraft(val pageId:String,val inkRevision:Long,val o
                     Text(if(missing>0)"$missing 页待识别"else"已识别 ${rows.size} 页",Modifier.weight(1f),style=MaterialTheme.typography.bodySmall,color=Quiet)
                     TextButton(onClick={automaticStarted=true;recognize()},enabled=pages.isNotEmpty(),modifier=Modifier.testTag("recognize-book")){Text(if(message?.contains("未识别成功")==true)"重试"else"识别手写")}
                     if(currentPageId!=null)TextButton(onClick={openingCorrection=true;scope.launch{try{
-                    val draft=withContext(Dispatchers.IO){val frozen=app.authoring.readPage(currentPageId);val old=app.pages.searchText(currentPageId)
-                        check(app.authoring.readPage(currentPageId).let{it.revision==frozen.revision&&it.inkRevision==frozen.inkRevision&&it.objectRevision==frozen.objectRevision})
+                    val draft=withContext(Dispatchers.IO){val frozen=app.authoring.readPageEditor(currentPageId);val old=app.pages.searchText(currentPageId)
+                        check(app.authoring.readPageEditor(currentPageId).let{it.revision==frozen.revision&&it.inkRevision==frozen.inkRevision&&it.objectRevision==frozen.objectRevision})
                         PageSearchDraft(currentPageId,frozen.inkRevision,frozen.objectRevision,old?.text.orEmpty(),old!=null&&old.inkRevision!=frozen.inkRevision,frozen.revision)}
                     correctPage(draft)
                 }catch(c:CancellationException){throw c}catch(_:Exception){message="暂时无法打开校对，请重试"}finally{openingCorrection=false}}},enabled=!openingCorrection&&openingPage==null,modifier=Modifier.testTag("search-correct-page")){Text(if(openingCorrection)"正在打开…"else"校对当前页")}

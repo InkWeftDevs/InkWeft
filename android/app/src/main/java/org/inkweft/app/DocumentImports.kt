@@ -34,7 +34,11 @@ internal object DocumentImports {
         try{input.use{stream->
             val header=ByteArray(5);java.io.DataInputStream(stream).readFully(header)
             val whole=java.io.SequenceInputStream(header.inputStream(),stream)
-            if(runCatching{ContentTransfer.kind(header)}.isSuccess)return@withContext ContentTransfer.read(whole){ensureActive()}
+            if(org.inkweft.data.ContentArchive.isArchive(header)){
+                val folder=File(context.cacheDir,"content-import-${UUID.randomUUID()}").apply{check(mkdirs())};stage=folder
+                val result=org.inkweft.data.ContentArchive.prepare(whole,folder);stage=null;returned=result;return@withContext result
+            }
+            if(runCatching{ContentTransfer.kind(header)}.isSuccess)throw DocumentImportException("这是旧版内容副本。请先用原版本导入，在升级至 V87 后重新导出流式副本；也可用原版本创建完整资料库备份后恢复。此文件和现有资料未修改。")
             val pdfInput=header.contentEquals("%PDF-".toByteArray())
             val extension=name.substringAfterLast('.',"").lowercase(java.util.Locale.ROOT)
             if(!pdfInput&&extension !in listOf("epub","mobi"))throw DocumentImportException(HELP)

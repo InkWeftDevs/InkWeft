@@ -114,7 +114,9 @@ class WorkspaceUiTest {
             val b=runBlocking{app.workspaceRepository.create("$prefix 思维草稿",true,PaperStyle.DOTS)}
             compose.waitUntil(10_000){compose.onAllNodesWithText("$prefix 思维草稿").fetchSemanticsNodes().isNotEmpty()}
             compose.onNodeWithTag("library-search").performTextInput(prefix)
-            compose.onNodeWithTag("library-type-board").performClick();compose.onNodeWithText("$prefix 思维草稿").assertExists();compose.onNodeWithText("$prefix 原文笔记").assertDoesNotExist()
+            compose.onNodeWithTag("library-type-board").performClick()
+            compose.waitUntil(10_000){compose.onAllNodesWithTag("note-tile-${b.id}").fetchSemanticsNodes().isNotEmpty()&&compose.onAllNodesWithTag("note-tile-${a.id}").fetchSemanticsNodes().isEmpty()}
+            compose.onNodeWithText("$prefix 思维草稿").assertExists();compose.onNodeWithText("$prefix 原文笔记").assertDoesNotExist()
             compose.onNodeWithTag("note-menu-${b.id}").performScrollTo().assertIsDisplayed().performClick()
             compose.waitUntil(5_000){compose.onAllNodesWithTag("notebook-actions-menu").fetchSemanticsNodes().isNotEmpty()}
             compose.onNodeWithTag("notebook-actions-menu").assertIsDisplayed()

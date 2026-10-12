@@ -13,6 +13,7 @@ import secrets
 import sqlite3
 import time
 import uuid
+import anyio
 
 from fastapi import FastAPI, Depends, HTTPException, Request, Response
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
@@ -91,6 +92,7 @@ def create_app(path, before_publish=lambda: None, enable_shadow=False):
     app.state.store = store
     security = HTTPBearer(auto_error=False)
     password_slots=threading.BoundedSemaphore(4)
+    chunk_slots=anyio.CapacityLimiter(4)
 
     # Bounded body readers; SQLite BEGIN IMMEDIATE serializes quota, publish and delete.
     # Receipts are retained indefinitely in v1; payload GC never removes operation identity.
@@ -231,6 +233,11 @@ def create_app(path, before_publish=lambda: None, enable_shadow=False):
     @app.put('/v1/libraries/{library}/uploads/{op}/chunks/{ordinal}')
     async def put_chunk(library:uuid.UUID,op:uuid.UUID,ordinal:int,request:Request,user=Depends(session)):
         data=await request.body()
+        # Keep lock waits, hashing, BLOB I/O and connection lifetime in one bounded worker.
+        # A cancelled response may still commit; the existing receipt makes retries safe.
+        return await anyio.to_thread.run_sync(store_chunk,library,op,ordinal,data,user,limiter=chunk_slots)
+
+    def store_chunk(library,op,ordinal,data,user):
         with store.db() as c:
             c.execute('BEGIN IMMEDIATE');row=operation(c,library,op,user);m=json.loads(row['manifest'])
             if row['kind']!='UPLOAD' or row['state'] not in ('PENDING','PUBLISHED'): raise HTTPException(409,'Upload unavailable')

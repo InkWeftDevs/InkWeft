@@ -16,7 +16,7 @@ import org.inkweft.core.*
 
 internal data class SelectedInk(val region:InkRegion,val revision:Long,val strokes:List<InkStroke>,val preview:ByteArray?=null,val objectRevision:Long?=null,val excerptText:String="",val authoringRevision:Long?=null)
 @Composable
-internal fun SelectionActions(selection:SelectedInk?,all:List<InkStroke>,enabled:Boolean,
+internal fun SelectionActions(selection:SelectedInk?,eraseInside:((InkRegion)->Unit)?,enabled:Boolean,
     freehand:Boolean,onMode:(Boolean)->Unit,apply:(Long,InkMutation)->Boolean,
     clear:()->Unit,excerpt:(SelectedInk)->Unit,associate:(SelectedInk)->Unit={},fontBeauty:(SelectedInk)->Unit={},mapExcerpt:(SelectedInk)->Unit={}){
     var more by remember{mutableStateOf(false)}
@@ -30,8 +30,8 @@ internal fun SelectionActions(selection:SelectedInk?,all:List<InkStroke>,enabled
             FilterChip(selected=!freehand,onClick={onMode(false);clear()},label={Text("矩形框选")},modifier=Modifier.testTag("selection-rectangle"))
             FilterChip(selected=freehand,onClick={onMode(true);clear()},label={Text("自由套索")},modifier=Modifier.testTag("selection-lasso"))
             }
-            if(s!=null&&count==0&&all.any{it.bounds().intersects(s.region.bounds)}){
-                TextButton(onClick={val ids=all.filter{it.bounds().intersects(s.region.bounds)}.map{it.id};if(ids.isNotEmpty()&&apply(s.revision,InkMutation.Cut(EraseSelection(s.region.mask(),ids))))clear()},enabled=enabled,modifier=Modifier.testTag("selection-erase-inside")){Text("只擦框内部分")}
+            if(s!=null&&count==0&&eraseInside!=null){
+                TextButton(onClick={eraseInside(s.region);clear()},enabled=enabled,modifier=Modifier.testTag("selection-erase-inside")){Text("只擦框内部分")}
             }
             if(s!=null&&count>0){
                 TextButton(onClick={if(apply(s.revision,InkMutation.Visibility(s.strokes.map{it.id},false)))clear()},enabled=enabled&&count>0,modifier=Modifier.testTag("selection-delete")){Text("删除")}
@@ -49,7 +49,7 @@ internal fun SelectionActions(selection:SelectedInk?,all:List<InkStroke>,enabled
                         DropdownMenuItem(text={Text("摘录")},onClick={more=false;excerpt(s)},enabled=enabled&&count in 1..InkSelectionEdit.MAX_SELECTED,modifier=Modifier.testTag("selection-excerpt"))
                         DropdownMenuItem(text={Text("加入导图")},onClick={more=false;mapExcerpt(s)},enabled=enabled&&count in 1..InkSelectionEdit.MAX_SELECTED,modifier=Modifier.testTag("selection-map"))
                         DropdownMenuItem(text={Text("笔形润色")},onClick={more=false;beauty=true},enabled=enabled&&count in 1..InkSelectionEdit.MAX_SELECTED&&s.strokes.all{it.pen!=InkPen.HIGHLIGHTER&&it.cuts.isEmpty()},modifier=Modifier.testTag("selection-beautify"))
-                        DropdownMenuItem(text={Text("只擦框内部分")},onClick={more=false;val ids=all.filter{it.bounds().intersects(s.region.bounds)}.map{it.id};if(ids.isNotEmpty()&&apply(s.revision,InkMutation.Cut(EraseSelection(s.region.mask(),ids))))clear()},enabled=enabled,modifier=Modifier.testTag("selection-erase-inside"))
+                        DropdownMenuItem(text={Text("只擦框内部分")},onClick={more=false;eraseInside?.invoke(s.region);clear()},enabled=enabled&&eraseInside!=null,modifier=Modifier.testTag("selection-erase-inside"))
                         DropdownMenuItem(text={Text("关联")},onClick={more=false;associate(s)},enabled=enabled&&count in 1..InkSelectionEdit.MAX_SELECTED,modifier=Modifier.testTag("selection-associate"))
                     }
                 }

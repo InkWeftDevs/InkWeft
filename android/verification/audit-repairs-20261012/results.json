@@ -1,0 +1,2924 @@
+{
+  "at": "2026-10-12T03:29:23.507448+00:00",
+  "version": "88 / 0.0.88-audit-repairs",
+  "sourceBase": "bf2c091",
+  "branch": "codex/storage-optimization-20261011",
+  "committed": false,
+  "device": "MuMu5 / Android 12 / API32 / private ADB55133",
+  "physicalDevice": "NOT_RUN",
+  "jvm": [
+    {
+      "module": "core-domain",
+      "suites": [
+        {
+          "class": "org.inkweft.core.BranchReviewRoundTest",
+          "tests": 14,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "org.inkweft.core.BranchReviewTest",
+          "tests": 16,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "org.inkweft.core.BrushRecipeTest",
+          "tests": 6,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "org.inkweft.core.CanvasViewportTest",
+          "tests": 25,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "org.inkweft.core.CardPresentationTest",
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "org.inkweft.core.CardTransformTest",
+          "tests": 7,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "org.inkweft.core.CardTrashCommandTest",
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "org.inkweft.core.ContentCopyRegressionTest",
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "org.inkweft.core.ContentTransferTest",
+          "tests": 13,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "org.inkweft.core.ContinuousWritingTest",
+          "tests": 9,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "org.inkweft.core.CustomCoverTest",
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "org.inkweft.core.DiagnosticLogTest",
+          "tests": 14,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "org.inkweft.core.DraftReloadTest",
+          "tests": 8,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "org.inkweft.core.ExcerptBoundsTest",
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "org.inkweft.core.FormulaGroupsTest",
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "org.inkweft.core.FormulaTextTest",
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "org.inkweft.core.HandwritingLineBudgetRegressionTest",
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "org.inkweft.core.InkAdmissionRegressionTest",
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "org.inkweft.core.InkCapacityRegressionTest",
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "org.inkweft.core.InkDraftRegressionTest",
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "org.inkweft.core.InkEditingTest",
+          "tests": 12,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "org.inkweft.core.InkHistorySuspensionTest",
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "org.inkweft.core.InkModelsTest",
+          "tests": 30,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "org.inkweft.core.InkPartialHistoryTest",
+          "tests": 6,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "org.inkweft.core.InkSamplingRegressionTest",
+          "tests": 7,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "org.inkweft.core.KnowledgeTest",
+          "tests": 16,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "org.inkweft.core.KnowledgeTextLinksTest",
+          "tests": 10,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "org.inkweft.core.LassoGeometryRegressionTest",
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "org.inkweft.core.LayerCapacityRegressionTest",
+          "tests": 6,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "org.inkweft.core.LayerHeaderProjectionTest",
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "org.inkweft.core.LearningWidgetsTest",
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "org.inkweft.core.LibraryArchiveTest",
+          "tests": 15,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "org.inkweft.core.MapAddendumTest",
+          "tests": 5,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "org.inkweft.core.MapCompletionRegressionTest",
+          "tests": 14,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "org.inkweft.core.MapPortalTest",
+          "tests": 10,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "org.inkweft.core.MapTemplatesTest",
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "org.inkweft.core.MubuInspiredMapRegressionTest",
+          "tests": 8,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "org.inkweft.core.NotebookAppearanceTest",
+          "tests": 12,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "org.inkweft.core.NoteDraftTest",
+          "tests": 12,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "org.inkweft.core.PageAuthoringTest",
+          "tests": 16,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "org.inkweft.core.PageEditingTest",
+          "tests": 14,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "org.inkweft.core.PageInsertionTest",
+          "tests": 14,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "org.inkweft.core.PageObjectTest",
+          "tests": 9,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "org.inkweft.core.PaperTemplatesTest",
+          "tests": 6,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "org.inkweft.core.PenKindsTest",
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "org.inkweft.core.ReadingHandwritingTest",
+          "tests": 10,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "org.inkweft.core.RecallStudyTest",
+          "tests": 9,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "org.inkweft.core.RecognitionAndHistoryRegressionTest",
+          "tests": 10,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "org.inkweft.core.SearchRequestVersionTest",
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "org.inkweft.core.SelectionLearningTest",
+          "tests": 20,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "org.inkweft.core.StreamedStorageTest",
+          "tests": 6,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "org.inkweft.core.StudyGrowthRegressionTest",
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "org.inkweft.core.StudyOrganizationTest",
+          "tests": 10,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "org.inkweft.core.StudyOutlineTest",
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "org.inkweft.core.StudyTextTest",
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "org.inkweft.core.SuperMemo2PortTest",
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "org.inkweft.core.TextGlyphTest",
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        }
+      ],
+      "total": 473
+    },
+    {
+      "module": "data-local",
+      "suites": [
+        {
+          "class": "org.inkweft.data.OriginalFileCacheTest",
+          "tests": 5,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "org.inkweft.data.OriginalStoreTest",
+          "tests": 9,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "org.inkweft.data.StorageValidationTest",
+          "tests": 5,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        }
+      ],
+      "total": 19
+    }
+  ],
+  "server": {
+    "uniqueMethods": 17,
+    "passed": 17,
+    "strengthenedMethodsRetested": 2,
+    "evidence": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Audit-Repairs\\verification\\server-tests.txt",
+    "evidenceType": "recorded execution summary"
+  },
+  "counts": {
+    "data": {
+      "uniqueMethods": 232,
+      "passed": 232
+    },
+    "app": {
+      "uniqueMethods": 55,
+      "passed": 55
+    }
+  },
+  "allLatestPassed": true,
+  "unresolved": [],
+  "repairedInitialFailures": [
+    "org.inkweft.app.ContinuousPreparationAtomicityTest#secondObjectScopeFailureLeavesAllModelsAndAuthorRowsUnchanged",
+    "org.inkweft.app.ContinuousWritingUiTest#continuousSeamHasNoGapAndOneGesturePersistsOnBothSides",
+    "org.inkweft.app.ContinuousWritingUiTest#polygonSelectionHighlightsAndDeletesOnlyContainedBeauty",
+    "org.inkweft.app.MixedSelectionUiTest#circleEraserHonoursHighlighterOnly",
+    "org.inkweft.app.MixedSelectionUiTest#mixedCopyDeleteUndoAndFilterSettings",
+    "org.inkweft.app.NotebookShelfUiTest#editorRenameKeepsUnsavedBodyUntilExplicitTextSave",
+    "org.inkweft.app.PageLayerEditorViewModelTest#fullSelectionProjectsOffscreenVisibleAndLockedLayersAndRejectsAStaleInkHead",
+    "org.inkweft.app.SelectionStudyUiTest#beautifyPreviewCancelThenApplyIsReversible",
+    "org.inkweft.app.SelectionStudyUiTest#excerptCreatesSharedCardAndReturnsToSource",
+    "org.inkweft.app.SelectionStudyUiTest#regionEraseCutsOnlyInsideAndUndoRestoresOnRealCanvas",
+    "org.inkweft.app.SelectionStudyUiTest#selectionDuplicateThenDeleteDoesNotChangeOriginal"
+  ],
+  "attempts": [
+    {
+      "name": "data-first",
+      "seconds": 52.922,
+      "passed": true,
+      "methods": 31,
+      "runner": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Audit-Repairs\\verification\\device-attempt01\\data-first-runner.txt",
+      "runnerSha256": "d901a62c8f319c45bba1185ea2e5548d2487fa76c939e9c54651bdaa0fc14ea4",
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Audit-Repairs\\artifacts\\integration-third\\app-debug.apk",
+          "bytes": 241153365,
+          "sha256": "6b798411d1fe89b0a8c1102efb7f5c06a4f624967ff437376ce2720bdb9223e0",
+          "package": "org.inkweft.app.audit20261012",
+          "generation": "integration-third"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Audit-Repairs\\artifacts\\integration-third\\app-debug-androidTest.apk",
+          "bytes": 17645864,
+          "sha256": "cd3e12b601ea816b89f07b4b58e8780cca0a0bb08c6dc1c6b2ebe0ddb875cd59",
+          "package": "org.inkweft.app.audit20261012.test",
+          "generation": "integration-third"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Audit-Repairs\\artifacts\\integration-third\\data-local-debug-androidTest.apk",
+          "bytes": 25925301,
+          "sha256": "183048dee9069ff24d42ca066290e5c97b0a795a28f81bab58e52abd0144b814",
+          "package": "org.inkweft.data.audit20261012.test",
+          "generation": "integration-third"
+        }
+      ]
+    },
+    {
+      "name": "app-first",
+      "seconds": 31.125,
+      "passed": false,
+      "methods": 12,
+      "runner": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Audit-Repairs\\verification\\device-attempt01\\app-first-runner.txt",
+      "runnerSha256": "bc2a178bed55892fac7ec97c202af48cb99ecfea0c3bd31c5e3da91a2754f8a2",
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Audit-Repairs\\artifacts\\integration-third\\app-debug.apk",
+          "bytes": 241153365,
+          "sha256": "6b798411d1fe89b0a8c1102efb7f5c06a4f624967ff437376ce2720bdb9223e0",
+          "package": "org.inkweft.app.audit20261012",
+          "generation": "integration-third"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Audit-Repairs\\artifacts\\integration-third\\app-debug-androidTest.apk",
+          "bytes": 17645864,
+          "sha256": "cd3e12b601ea816b89f07b4b58e8780cca0a0bb08c6dc1c6b2ebe0ddb875cd59",
+          "package": "org.inkweft.app.audit20261012.test",
+          "generation": "integration-third"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Audit-Repairs\\artifacts\\integration-third\\data-local-debug-androidTest.apk",
+          "bytes": 25925301,
+          "sha256": "183048dee9069ff24d42ca066290e5c97b0a795a28f81bab58e52abd0144b814",
+          "package": "org.inkweft.data.audit20261012.test",
+          "generation": "integration-third"
+        }
+      ]
+    },
+    {
+      "name": "app-ui-first",
+      "seconds": 117.671,
+      "passed": false,
+      "methods": 17,
+      "runner": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Audit-Repairs\\verification\\device-attempt01\\app-ui-first-runner.txt",
+      "runnerSha256": "50bbcb7dc87c7ef5b7263c105096726858d41cc521377fde6e7533d5cf973835",
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Audit-Repairs\\artifacts\\integration-third\\app-debug.apk",
+          "bytes": 241153365,
+          "sha256": "6b798411d1fe89b0a8c1102efb7f5c06a4f624967ff437376ce2720bdb9223e0",
+          "package": "org.inkweft.app.audit20261012",
+          "generation": "integration-third"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Audit-Repairs\\artifacts\\integration-third\\app-debug-androidTest.apk",
+          "bytes": 17645864,
+          "sha256": "cd3e12b601ea816b89f07b4b58e8780cca0a0bb08c6dc1c6b2ebe0ddb875cd59",
+          "package": "org.inkweft.app.audit20261012.test",
+          "generation": "integration-third"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Audit-Repairs\\artifacts\\integration-third\\data-local-debug-androidTest.apk",
+          "bytes": 25925301,
+          "sha256": "183048dee9069ff24d42ca066290e5c97b0a795a28f81bab58e52abd0144b814",
+          "package": "org.inkweft.data.audit20261012.test",
+          "generation": "integration-third"
+        }
+      ]
+    },
+    {
+      "name": "data-contracts",
+      "seconds": 265.875,
+      "passed": true,
+      "methods": 186,
+      "runner": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Audit-Repairs\\verification\\device-attempt01\\data-contracts-runner.txt",
+      "runnerSha256": "d68f49193a4223cedf0e31030ffb5f480d73cb3b909b83ea63687d67a956353c",
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Audit-Repairs\\artifacts\\integration-third\\app-debug.apk",
+          "bytes": 241153365,
+          "sha256": "6b798411d1fe89b0a8c1102efb7f5c06a4f624967ff437376ce2720bdb9223e0",
+          "package": "org.inkweft.app.audit20261012",
+          "generation": "integration-third"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Audit-Repairs\\artifacts\\integration-third\\app-debug-androidTest.apk",
+          "bytes": 17645864,
+          "sha256": "cd3e12b601ea816b89f07b4b58e8780cca0a0bb08c6dc1c6b2ebe0ddb875cd59",
+          "package": "org.inkweft.app.audit20261012.test",
+          "generation": "integration-third"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Audit-Repairs\\artifacts\\integration-third\\data-local-debug-androidTest.apk",
+          "bytes": 25925301,
+          "sha256": "183048dee9069ff24d42ca066290e5c97b0a795a28f81bab58e52abd0144b814",
+          "package": "org.inkweft.data.audit20261012.test",
+          "generation": "integration-third"
+        }
+      ]
+    },
+    {
+      "name": "data-large-content",
+      "seconds": 227.843,
+      "passed": true,
+      "methods": 15,
+      "runner": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Audit-Repairs\\verification\\device-attempt01\\data-large-content-runner.txt",
+      "runnerSha256": "406807d81c9a53b9e3787c70f68e867402df11a1053cf20c07fffd4ef33b4d51",
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Audit-Repairs\\artifacts\\integration-third\\app-debug.apk",
+          "bytes": 241153365,
+          "sha256": "6b798411d1fe89b0a8c1102efb7f5c06a4f624967ff437376ce2720bdb9223e0",
+          "package": "org.inkweft.app.audit20261012",
+          "generation": "integration-third"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Audit-Repairs\\artifacts\\integration-third\\app-debug-androidTest.apk",
+          "bytes": 17645864,
+          "sha256": "cd3e12b601ea816b89f07b4b58e8780cca0a0bb08c6dc1c6b2ebe0ddb875cd59",
+          "package": "org.inkweft.app.audit20261012.test",
+          "generation": "integration-third"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Audit-Repairs\\artifacts\\integration-third\\data-local-debug-androidTest.apk",
+          "bytes": 25925301,
+          "sha256": "183048dee9069ff24d42ca066290e5c97b0a795a28f81bab58e52abd0144b814",
+          "package": "org.inkweft.data.audit20261012.test",
+          "generation": "integration-third"
+        }
+      ]
+    },
+    {
+      "name": "app-repaired-fixtures",
+      "seconds": 50.469,
+      "passed": false,
+      "methods": 9,
+      "runner": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Audit-Repairs\\verification\\device-attempt01\\app-repaired-fixtures-runner.txt",
+      "runnerSha256": "cbc069e1541128d1916fb448d230a534464be5f6c1526c0290be43bbf5ab77b7",
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Audit-Repairs\\artifacts\\verified-candidate\\app-debug.apk",
+          "bytes": 241153585,
+          "sha256": "58f45955ec103bec0337a1349d3b99ce84e151eaea6b247b5559fd6531e33924",
+          "package": "org.inkweft.app.audit20261012",
+          "generation": "verified-candidate"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Audit-Repairs\\artifacts\\verified-candidate\\app-debug-androidTest.apk",
+          "bytes": 17649080,
+          "sha256": "729a8e6eac65a29f00fd5a12204c9f6153f5295cb33d49f9b3dab5664770e815",
+          "package": "org.inkweft.app.audit20261012.test",
+          "generation": "verified-candidate"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Audit-Repairs\\artifacts\\integration-third\\data-local-debug-androidTest.apk",
+          "bytes": 25925301,
+          "sha256": "183048dee9069ff24d42ca066290e5c97b0a795a28f81bab58e52abd0144b814",
+          "package": "org.inkweft.data.audit20261012.test",
+          "generation": "integration-third"
+        }
+      ]
+    },
+    {
+      "name": "app-lifecycle-render",
+      "seconds": 25.938,
+      "passed": false,
+      "methods": 26,
+      "runner": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Audit-Repairs\\verification\\device-attempt01\\app-lifecycle-render-runner.txt",
+      "runnerSha256": "dafa0d4b928f96f6a0b3983955c17689b51f6505be2c2927b3faddc0ee7e0b86",
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Audit-Repairs\\artifacts\\verified-candidate\\app-debug.apk",
+          "bytes": 241153585,
+          "sha256": "58f45955ec103bec0337a1349d3b99ce84e151eaea6b247b5559fd6531e33924",
+          "package": "org.inkweft.app.audit20261012",
+          "generation": "verified-candidate"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Audit-Repairs\\artifacts\\verified-candidate\\app-debug-androidTest.apk",
+          "bytes": 17649080,
+          "sha256": "729a8e6eac65a29f00fd5a12204c9f6153f5295cb33d49f9b3dab5664770e815",
+          "package": "org.inkweft.app.audit20261012.test",
+          "generation": "verified-candidate"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Audit-Repairs\\artifacts\\integration-third\\data-local-debug-androidTest.apk",
+          "bytes": 25925301,
+          "sha256": "183048dee9069ff24d42ca066290e5c97b0a795a28f81bab58e52abd0144b814",
+          "package": "org.inkweft.data.audit20261012.test",
+          "generation": "integration-third"
+        }
+      ]
+    },
+    {
+      "name": "app-final-fixtures",
+      "seconds": 19.688,
+      "passed": false,
+      "methods": 4,
+      "runner": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Audit-Repairs\\verification\\device-attempt01\\app-final-fixtures-runner.txt",
+      "runnerSha256": "848377b84c257e6d4aa8194cbd7569f964621368085d6f8afdeb01d346e1006f",
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Audit-Repairs\\artifacts\\verified-candidate\\app-debug.apk",
+          "bytes": 241153585,
+          "sha256": "58f45955ec103bec0337a1349d3b99ce84e151eaea6b247b5559fd6531e33924",
+          "package": "org.inkweft.app.audit20261012",
+          "generation": "verified-candidate"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Audit-Repairs\\artifacts\\final-test-fixtures\\app-debug-androidTest.apk",
+          "bytes": 17650584,
+          "sha256": "dbc2728d3be0f0a9615be32773e33eb7806adc47ec8f14120e57b2eef13869ef",
+          "package": "org.inkweft.app.audit20261012.test",
+          "generation": "final-test-fixtures"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Audit-Repairs\\artifacts\\integration-third\\data-local-debug-androidTest.apk",
+          "bytes": 25925301,
+          "sha256": "183048dee9069ff24d42ca066290e5c97b0a795a28f81bab58e52abd0144b814",
+          "package": "org.inkweft.data.audit20261012.test",
+          "generation": "integration-third"
+        }
+      ]
+    },
+    {
+      "name": "app-isolated-fixtures",
+      "seconds": 15.282,
+      "passed": true,
+      "methods": 3,
+      "runner": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Audit-Repairs\\verification\\device-attempt01\\app-isolated-fixtures-runner.txt",
+      "runnerSha256": "f1ae4222cc55a4f79459b77e351d4b3cd74c3bd882b653d858ac4ef3a26f1399",
+      "artifacts": [
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Audit-Repairs\\artifacts\\verified-candidate\\app-debug.apk",
+          "bytes": 241153585,
+          "sha256": "58f45955ec103bec0337a1349d3b99ce84e151eaea6b247b5559fd6531e33924",
+          "package": "org.inkweft.app.audit20261012",
+          "generation": "verified-candidate"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Audit-Repairs\\artifacts\\isolated-test-fixtures\\app-debug-androidTest.apk",
+          "bytes": 17652420,
+          "sha256": "006f5560aee3795f2e0e5013cd0b3a287b21a5891cf2a7b24e9988a5d598199b",
+          "package": "org.inkweft.app.audit20261012.test",
+          "generation": "isolated-test-fixtures"
+        },
+        {
+          "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Audit-Repairs\\artifacts\\integration-third\\data-local-debug-androidTest.apk",
+          "bytes": 25925301,
+          "sha256": "183048dee9069ff24d42ca066290e5c97b0a795a28f81bab58e52abd0144b814",
+          "package": "org.inkweft.data.audit20261012.test",
+          "generation": "integration-third"
+        }
+      ]
+    }
+  ],
+  "methods": [
+    {
+      "method": "org.inkweft.app.AuthoringReadinessTest#readinessRequiresLoadingBusyAndPendingToBeClear",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "app-lifecycle-render"
+    },
+    {
+      "method": "org.inkweft.app.ContinuousPreparationAtomicityTest#secondObjectScopeFailureLeavesAllModelsAndAuthorRowsUnchanged",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "app-repaired-fixtures"
+    },
+    {
+      "method": "org.inkweft.app.ContinuousWritingUiTest#cancellingLongGestureDoesNotResurrectItsCheckpointOnReopen",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "app-lifecycle-render"
+    },
+    {
+      "method": "org.inkweft.app.ContinuousWritingUiTest#continuousSeamHasNoGapAndOneGesturePersistsOnBothSides",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "app-isolated-fixtures"
+    },
+    {
+      "method": "org.inkweft.app.ContinuousWritingUiTest#crossPageEraserGroupsInkAndBeautyInBothDirections",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "app-isolated-fixtures"
+    },
+    {
+      "method": "org.inkweft.app.ContinuousWritingUiTest#erasingEmptyPaperDoesNotBlockTheNextStroke",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "app-ui-first"
+    },
+    {
+      "method": "org.inkweft.app.ContinuousWritingUiTest#polygonSelectionHighlightsAndDeletesOnlyContainedBeauty",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "app-repaired-fixtures"
+    },
+    {
+      "method": "org.inkweft.app.ContinuousWritingUiTest#rapidSuccessiveStrokesRemainQueuedUntilAllAreSaved",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "app-lifecycle-render"
+    },
+    {
+      "method": "org.inkweft.app.DenseExcerptUiTest#denseImageExcerptCrossesSelectionLimitClipsPaperAndKeepsPictureWhenOcrIsOverBudget",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "app-first"
+    },
+    {
+      "method": "org.inkweft.app.DenseInkOperationsTest#cancelledOrStaleOperationPublishesNoPartialSelectionOrEdit",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "app-first"
+    },
+    {
+      "method": "org.inkweft.app.DenseInkOperationsTest#denseLocalSelectionIncludesUnloadedStrokesAndDeletesInOneUndoUnit",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "app-first"
+    },
+    {
+      "method": "org.inkweft.app.DenseInkOperationsTest#densePartialEraserKeepsOnlyIdsAndOneSharedMaskForAllTargets",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "app-first"
+    },
+    {
+      "method": "org.inkweft.app.DenseInkOperationsTest#leavingDenseSelectionReleasesUiGeometryAndExternalHeadReloadClearsStaleUndo",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "app-first"
+    },
+    {
+      "method": "org.inkweft.app.DenseInkOperationsTest#localOperationQueriesExcludeHiddenLayersAndRespectLockedLayerWrites",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "app-first"
+    },
+    {
+      "method": "org.inkweft.app.DenseInkOperationsTest#readingSavedAfterConflictedDenseEditDropsThePreparedGeometry",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "app-first"
+    },
+    {
+      "method": "org.inkweft.app.DenseInkOperationsTest#typeFilteringAndObjectOnlySelectionApplyBeforeTheGeometryBudget",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "app-first"
+    },
+    {
+      "method": "org.inkweft.app.ExcerptLassoRegressionTest#freehandExcerptExcludesTheOtherCornerOfItsBoundingBox",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "app-lifecycle-render"
+    },
+    {
+      "method": "org.inkweft.app.LayerAuthoringNativeTest#hiddenOriginalImageDoesNotReturnWhenItsPendingDecodeFinishes",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "app-lifecycle-render"
+    },
+    {
+      "method": "org.inkweft.app.LayerAuthoringNativeTest#thousandStrokeHiddenLayerCannotReappearAfterDelayedViewportFrame",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "app-lifecycle-render"
+    },
+    {
+      "method": "org.inkweft.app.LayerRasterBudgetTest#oneFourAndEightLayersDecodeEachVisibleStrokeOnceWithinOnePixelBudget",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "app-first"
+    },
+    {
+      "method": "org.inkweft.app.LayerSnapshotPreviewTest#frozenMapThumbnailNeverRendersTheHiddenLayerFromItsFile",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "app-lifecycle-render"
+    },
+    {
+      "method": "org.inkweft.app.LibraryBackupUiTest#backupRequiresConsentThenSavesActualLibraryArchive",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "app-ui-first"
+    },
+    {
+      "method": "org.inkweft.app.LibraryBackupUiTest#badArchiveShowsFailureWithoutWritingLibrary",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "app-ui-first"
+    },
+    {
+      "method": "org.inkweft.app.LibraryBackupUiTest#isolatedPreviewRequiresConfirmationAndRestoresOnDevice",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "app-ui-first"
+    },
+    {
+      "method": "org.inkweft.app.MixedSelectionUiTest#circleEraserHonoursHighlighterOnly",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "app-repaired-fixtures"
+    },
+    {
+      "method": "org.inkweft.app.MixedSelectionUiTest#mixedCopyDeleteUndoAndFilterSettings",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "app-repaired-fixtures"
+    },
+    {
+      "method": "org.inkweft.app.NotebookShelfUiTest#coverChangesPersistWithoutChangingInkAndCanReturnToContentPreview",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "app-ui-first"
+    },
+    {
+      "method": "org.inkweft.app.NotebookShelfUiTest#drawerUsesOneSearchAndClosesWithBackWithAnimationsEnabled",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "app-ui-first"
+    },
+    {
+      "method": "org.inkweft.app.NotebookShelfUiTest#editorRenameKeepsUnsavedBodyUntilExplicitTextSave",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "app-isolated-fixtures"
+    },
+    {
+      "method": "org.inkweft.app.NotebookShelfUiTest#shelfRenameCancelBlankAndPersistedIdentity",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "app-ui-first"
+    },
+    {
+      "method": "org.inkweft.app.PageLayerEditorViewModelTest#blockedMembershipRefreshKeepsNewStrokeAdmissionButBlocksAuthorEdits",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "app-lifecycle-render"
+    },
+    {
+      "method": "org.inkweft.app.PageLayerEditorViewModelTest#fullSelectionProjectsOffscreenVisibleAndLockedLayersAndRejectsAStaleInkHead",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "app-final-fixtures"
+    },
+    {
+      "method": "org.inkweft.app.PageLayerEditorViewModelTest#pendingUndoAfterModelRecreationCanBeUndoneAndTenHeaderHistoryStepsStayUsable",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "app-lifecycle-render"
+    },
+    {
+      "method": "org.inkweft.app.ReadOnlyStreamedPreviewUiTest#contentCoverTextFallbackTracksBoundedInkAndObjectMetadata",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "app-lifecycle-render"
+    },
+    {
+      "method": "org.inkweft.app.ReadOnlyStreamedPreviewUiTest#recallContextStreamsTheFixedRevisionAndRemovesItsCanvasWhenCluesAreHidden",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "app-lifecycle-render"
+    },
+    {
+      "method": "org.inkweft.app.ReadOnlyStreamedPreviewUiTest#reviewDialogStreamsOnlyItsShadowRepositoryAndKeepsHiddenLayerPixelsAbsent",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "app-lifecycle-render"
+    },
+    {
+      "method": "org.inkweft.app.ReadOnlyStreamedPreviewUiTest#thumbnailKeepsLayersWhileObjectsAndAuthoringUpdateAtTheSameInkRevision",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "app-lifecycle-render"
+    },
+    {
+      "method": "org.inkweft.app.SelectionStudyUiTest#beautifyPreviewCancelThenApplyIsReversible",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "app-repaired-fixtures"
+    },
+    {
+      "method": "org.inkweft.app.SelectionStudyUiTest#excerptCreatesSharedCardAndReturnsToSource",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "app-repaired-fixtures"
+    },
+    {
+      "method": "org.inkweft.app.SelectionStudyUiTest#regionEraseCutsOnlyInsideAndUndoRestoresOnRealCanvas",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "app-final-fixtures"
+    },
+    {
+      "method": "org.inkweft.app.SelectionStudyUiTest#selectionDuplicateThenDeleteDoesNotChangeOriginal",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "app-repaired-fixtures"
+    },
+    {
+      "method": "org.inkweft.app.StreamedInkRasterTest#completeFrameIncludesGeometryBeyondTheEditorWindowAndReleasesItsWorker",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "app-first"
+    },
+    {
+      "method": "org.inkweft.app.StreamedInkRasterTest#omittedStrokeCannotReappearWhileItsReplacementFrameIsDelayed",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "app-first"
+    },
+    {
+      "method": "org.inkweft.app.StreamedPageLifecycleTest#changedStoredRevisionAfterReleaseDoesNotReplayStaleUndo",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "app-lifecycle-render"
+    },
+    {
+      "method": "org.inkweft.app.StreamedPageLifecycleTest#denseViewportStaysWritableAndPanningReleasesGeometryWithoutLosingUndo",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "app-lifecycle-render"
+    },
+    {
+      "method": "org.inkweft.app.StreamedPageLifecycleTest#directPdfProviderImportHashesTheStreamAndClosesItsStagingFile",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "app-lifecycle-render"
+    },
+    {
+      "method": "org.inkweft.app.StreamedPageLifecycleTest#enteringEditorDoesNotDecodeUnrelatedHiddenGeometry",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "app-lifecycle-render"
+    },
+    {
+      "method": "org.inkweft.app.StreamedPageLifecycleTest#offscreenReloadKeepsPressureUndoRedoAndOtherActiveView",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "app-lifecycle-render"
+    },
+    {
+      "method": "org.inkweft.app.StreamedPageLifecycleTest#unknownCommitCannotReleaseDraftAndReceiptRetryReleasesOnlyAfterConfirmation",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "app-lifecycle-render"
+    },
+    {
+      "method": "org.inkweft.app.StreamedRecognitionRasterTest#batchedInkAndMasksProduceTheSameLineRasterInTheSameOrder",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "app-lifecycle-render"
+    },
+    {
+      "method": "org.inkweft.app.StreamedRecognitionRasterTest#changedRevisionAbortsRasterAndReleasesItsTrackedBitmap",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "app-lifecycle-render"
+    },
+    {
+      "method": "org.inkweft.app.VisiblePageExportTest#imageBudgetFailureReturnsNoPdfAndRetryPreservesPixelsAndAuthorData",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "app-lifecycle-render"
+    },
+    {
+      "method": "org.inkweft.app.VisiblePageExportTest#malformedVisiblePreviewIsRejectedButInteractivePlaceholderStillWorks",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "app-lifecycle-render"
+    },
+    {
+      "method": "org.inkweft.app.VisiblePageExportTest#unavailablePdfRasterRejectsExportInsteadOfSubstitutingPaperAndCanRetry",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "app-lifecycle-render"
+    },
+    {
+      "method": "org.inkweft.app.WorkspaceUiTest#libraryHasRealSearchFilterFavoriteAndRecycle",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "app-ui-first"
+    },
+    {
+      "method": "org.inkweft.data.AuthoringPendingStoreTest#journalFaultPrecedesDatabaseAndDurableReopenKeepsOneOperation",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.AuthoringPendingStoreTest#lostCommitResponseAndCorruptJournalNeverCreateNewIdentityOrOverwrite",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.BundledSqliteFactoryTest#existing1024ByteDatabaseRetainsPageSizeAndAuthorContent",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.BundledSqliteFactoryTest#nativeRtreeTransactionsReopenAndCorruptionKeepOriginalFiles",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.CardTransformRepositoryTest#independentMapCopyKeepsAllSourcesAndCopiesPresentationWithoutSharingQuestions",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.CardTransformRepositoryTest#inverseRejectsASecondTransformationThatDependsOnTheNewIdentity",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.CardTransformRepositoryTest#previewCancelMergeReplayUndoAndFixedSourcesRetainAllOriginalIdentities",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.CardTransformRepositoryTest#recropKeepsExactOldCardSourceAndOldReviewNeverReadsCurrentCrop",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.CardTransformRepositoryTest#reopenAndFullBackupRestoreExactTransformSourceVersionsAndUndoReceipt",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.CardTransformRepositoryTest#schema13BackupPromotionAndCorruptSourceReferenceAreCheckedBeforeLiveWrites",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.CardTransformRepositoryTest#schema13MigrationPreservesLegacyBodyAndOnlyFreezesSurvivingSource",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.CardTransformRepositoryTest#sharedSourceBytesAreReadOnceForDifferentFrozenCardsInOneReviewLoad",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.CardTransformRepositoryTest#splitRequiresExplicitMultipleTargetsAndUndoRejectsLaterDependencies",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.CardTransformRepositoryTest#staleSummaryGraphAndNodeCapacityRejectEntireContentTransaction",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.CardTransformRepositoryTest#summaryDoesNotGuessFirstOccurrenceAndUncommittedLegacyPlanRequiresNewPreview",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.CardTransformRepositoryTest#summaryInNamedMapHasStableOccurrenceAndAtomicUndoAfterBackupRestore",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.CardTransformRepositoryTest#transactionFaultStalePreviewAndSummaryUseOneAtomicSemanticGraph",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.ContentArchiveTest#damagedArchiveAndCancellationRemoveStagingWithoutPublishingAuthorRows",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-large-content"
+    },
+    {
+      "method": "org.inkweft.data.ContentArchiveTest#fortyThousandStrokePageExportsAndImportsWithBoundedWindows",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-large-content"
+    },
+    {
+      "method": "org.inkweft.data.ContentArchiveTest#masksHiddenLayersAndRemappedReferencesRoundTripWithoutUndoGeometry",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-large-content"
+    },
+    {
+      "method": "org.inkweft.data.ContentArchiveTest#sharedLargeOriginalTravelsOnceAndImportsWithoutAnOriginalSizedArray",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-large-content"
+    },
+    {
+      "method": "org.inkweft.data.InkCutIndexQueryTest#cancelledCutBuildKeepsCommittedBatchesAndAllowsAuthorWritesBeforeResuming",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-first"
+    },
+    {
+      "method": "org.inkweft.data.InkCutIndexQueryTest#deletingIndexedTargetRejectsReadUntilCutIsRepaired",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-first"
+    },
+    {
+      "method": "org.inkweft.data.InkCutIndexQueryTest#failedRebuildRetainsPendingRowsAndRollsBackPartialProjection",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-first"
+    },
+    {
+      "method": "org.inkweft.data.InkCutIndexQueryTest#movingIndexedTargetToAnotherPageRejectsReadUntilCutIsRepaired",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-first"
+    },
+    {
+      "method": "org.inkweft.data.InkCutIndexQueryTest#realSelectionUsesStrokeIndexAndLoadsOneCutDespiteThousandsOfUnrelatedCuts",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-first"
+    },
+    {
+      "method": "org.inkweft.data.InkCutIndexQueryTest#renamingIndexedTargetRejectsReadUntilCutIsRepaired",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-first"
+    },
+    {
+      "method": "org.inkweft.data.InkCutIndexQueryTest#targetUpdatesVisibilityDeleteAndRebuildRemainEquivalentToAuthorRows",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-first"
+    },
+    {
+      "method": "org.inkweft.data.InkEditingSnapshotTest#changedRevisionDoesNotReadOrRestoreStaleHistoryGeometry",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-first"
+    },
+    {
+      "method": "org.inkweft.data.InkEditingSnapshotTest#enteringPageSkipsUnrelatedHiddenInkAndMasksButPreservesTheirBudgets",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-first"
+    },
+    {
+      "method": "org.inkweft.data.InkEditingSnapshotTest#fixedViewportDecodesConstantBytesAndPointsAcrossHundredfoldStoredHistory",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-first"
+    },
+    {
+      "method": "org.inkweft.data.InkEditingSnapshotTest#invalidHiddenMetadataAndBrokenMaskReferencesPreventEditingSnapshot",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-first"
+    },
+    {
+      "method": "org.inkweft.data.InkEditingSnapshotTest#restoringMaskRejectsPerStrokeOverflowWithoutPublishingRevisionOrReceipt",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-first"
+    },
+    {
+      "method": "org.inkweft.data.InkEditingSnapshotTest#resumeRetainsNoHiddenGeometryAndPreservesReplacementMaskUndoRedo",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-first"
+    },
+    {
+      "method": "org.inkweft.data.InkEditingSnapshotTest#selectedGeometryQueriesCrossSqliteBindChunksWithoutReordering",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-first"
+    },
+    {
+      "method": "org.inkweft.data.InkRepositoryTest#commitThenLostReceiptReconcilesByOriginalCommand",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.InkRepositoryTest#eraseAndUndoRetainExactlyOriginalBytes",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.InkRepositoryTest#failureBeforeReceiptRollsBackInkAndPageRevision",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.InkRepositoryTest#importedPageIsNewIdentityAndDoesNotOverwriteText",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.InkRepositoryTest#mixedStoredFormatsReopenAndReplayWithUnchangedCanonicalReceipts",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.InkRepositoryTest#previewSkipsHiddenPayloadWhileFullReadStillValidatesHistory",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.InkRepositoryTest#sameCommandReplaysAndDifferentPayloadRejected",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.InkRepositoryTest#strokePersistsAcrossActualDatabaseReopen",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.InkRepositoryTest#twoDatabaseInstancesDoNotOverwriteSameBase",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.InkRepositoryTest#v1DatabaseMigratesWithoutLosingOriginalTextAndReceipts",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.InkRepositoryTest#visiblePreviewMatchesFullReadAfterCutsReplacementAndUndo",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.InkTotalsTest#archiveExcludesProjectionAndRestoreReconstructsCountersFromAuthorRows",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-first"
+    },
+    {
+      "method": "org.inkweft.data.InkTotalsTest#firstBackfillAggregatesOnlyMetadataAndNeverLoadsLargeGeometryBlobs",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-first"
+    },
+    {
+      "method": "org.inkweft.data.InkTotalsTest#rollbackAndDerivedTableRebuildPreserveTheSameCounters",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-first"
+    },
+    {
+      "method": "org.inkweft.data.InkTotalsTest#sourceInsertsDeletesMovesAndPointCountChangesMaintainExactRetainedCounts",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-first"
+    },
+    {
+      "method": "org.inkweft.data.LibraryBackupGuardTest#extraTableWhoseNameResemblesSQLitePrefixIsNotIgnored",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.LibraryBackupGuardTest#invalidViewportAndUnknownReceiptKindAreRejected",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.LibraryBackupGuardTest#rawOutOfRangeIntegersCannotMasqueradeAsValidRoomValues",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.LibraryBackupGuardTest#unrelatedCommandIdCollisionRollsBackRestoredLibrary",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.LibraryBackupIsolationTest#cloudLimitAndSpaceRejectBeforeIsolatedCopyOrArchive",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-first"
+    },
+    {
+      "method": "org.inkweft.data.LibraryBackupIsolationTest#exactPreflightIncludesRepeatedOriginalsAndLeavesSharedFilesOwnedByAuthor",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-first"
+    },
+    {
+      "method": "org.inkweft.data.LibraryBackupIsolationTest#isolatedCopyFailureAndCancellationRemoveOnlyPrivateFiles",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-first"
+    },
+    {
+      "method": "org.inkweft.data.LibraryBackupIsolationTest#walSnapshotKeepsOneGenerationWhileAuthorTransactionCommits",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-first"
+    },
+    {
+      "method": "org.inkweft.data.LibraryBackupRepositoryTest#allSupportedArchiveSchemasStillStageIntoTheCurrentRoomContract",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.LibraryBackupRepositoryTest#cancellingWrittenSnapshotRemovesPartialAndPreservesAuthorLibrary",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.LibraryBackupRepositoryTest#changedIdentityStopsEntireRestoreWithoutOverwritingNewWork",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.LibraryBackupRepositoryTest#compatibleTextAffinitySpellingIsStillAccepted",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.LibraryBackupRepositoryTest#damagedFooterNeverTouchesLiveLibrary",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.LibraryBackupRepositoryTest#disjointExistingLibraryIsRetainedAndRepeatedRestoreIsNoOp",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.LibraryBackupRepositoryTest#emptyBackupDoesNotEraseExistingData",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.LibraryBackupRepositoryTest#legalSnapshotArchivesRejectMergedOverflowAndReplayAtExactCapacity",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.LibraryBackupRepositoryTest#lostAcknowledgementReusesOriginalIdentities",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.LibraryBackupRepositoryTest#orphanHistoricalReferencesPreventExport",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.LibraryBackupRepositoryTest#preCommitFailureRollsBackAllLiveTables",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.LibraryBackupRepositoryTest#reorderedCompositePrimaryKeyCannotChangeCanonicalBackupOrder",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.LibraryBackupRepositoryTest#restoredRecordsRemainAfterRealCloseAndReopen",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.LibraryBackupRepositoryTest#roundTripPreservesOriginalIdsHiddenInkMasksHistoryAndMetadata",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.LibraryBackupRepositoryTest#sameNamedColumnsWithDifferentAffinityCannotBeCoercedIntoBackup",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.LibraryBackupRepositoryTest#sameNamedColumnsWithDifferentNullabilityCannotBeBackedUp",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.LibraryBackupRepositoryTest#streamReadFailureOnlyAffectsIsolatedStage",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.LibraryBackupRepositoryTest#trashAndStaleIndexArePreservedButStaleTextIsNotSearchable",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.LibraryBackupRepositoryTest#unknownTablesCannotBeSilentlyOmitted",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.LibraryContentRepositoryTest#boardExportAndCopyRemainWorldWithEffectiveMasks",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.LibraryContentRepositoryTest#copyBeforeReceiptFaultLeavesNoPartialBook",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.LibraryContentRepositoryTest#copyRetainsPagesMasksCoverTagsAndValidManualIndexWithNewIdentity",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.LibraryContentRepositoryTest#copySameIdentityDifferentPayloadIsRejected",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.LibraryContentRepositoryTest#copyUnknownThenSourceChangesReplaysOriginalCopy",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.LibraryContentRepositoryTest#exportIsSavedSnapshotUnaffectedByLaterEdits",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.LibraryContentRepositoryTest#importBeforeReceiptRollsBackEveryPage",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.LibraryContentRepositoryTest#importUnknownRetryPreservesSameNewIds",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.LibraryContentRepositoryTest#pinIsIndependentOfFavoriteAndIdempotent",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.LibraryContentRepositoryTest#receiptAndPinSurviveActualDatabaseReopen",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.LibraryContentRepositoryTest#schemaFiveMigratesWithoutChangingOldBytesOrIndex",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.LibraryContentRepositoryTest#trashedSourceCannotBeNewlyCopiedOrPinned",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.LibraryContentRepositoryTest#validBookAboveFourMegabytesImportsThroughCommonReader",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.LibrarySearchRepositoryTest#deletedOrStalePageAndTrashedCardCannotReviveSearchHits",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-first"
+    },
+    {
+      "method": "org.inkweft.data.LibrarySearchRepositoryTest#draftUnicodeFiltersPinsAndPageBeforeCardNavigationStayIntact",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-first"
+    },
+    {
+      "method": "org.inkweft.data.LibrarySearchRepositoryTest#twentyThousandPageRapidInputClearAndCategoryCancelOldGenerationOffMain",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-first"
+    },
+    {
+      "method": "org.inkweft.data.OriginalStorageRepositoryTest#cleanupFailureKeepsOriginalErrorAndRetryCompactsBeforeRevisitingBadSource",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.OriginalStorageRepositoryTest#corruptOldChunksAreNeverRemovedByMigration",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.OriginalStorageRepositoryTest#corruptionIsReportedAndBothReferenceAndDamagedFileRemain",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.OriginalStorageRepositoryTest#importCopyAndBackupUseOneFilePerDigestAndNoLiveSqliteBlobs",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.OriginalStorageRepositoryTest#laterCorruptionStillReclaimsSuccessfullyMigratedDatabaseBytes",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.OriginalStorageRepositoryTest#lowSpaceDefersCompactionAndRetryReclaimsWithoutChangingOriginals",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.OriginalStorageRepositoryTest#missingOwnedFileCannotBeMaskedByARebuildableRenderCache",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.OriginalStorageRepositoryTest#oldChunksRetryAfterPublicationThenVacuumReturnsPhysicalDatabaseSpace",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.OriginalStorageRepositoryTest#referencedTrashedAndLeasedOriginalsSurviveUntilTheirLastRetainerIsReleased",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.OriginalStorageRepositoryTest#restoreRollbackLeavesNoReferencesAndOrphanCollectionReleasesItsBytes",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.OriginalStorageRepositoryTest#schema18MigrationAddsIndexedDigestLookupAndRetainsItsChunkOriginal",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.PageAuthoringRepositoryTest#capturedScopeRejectsStaleOrMissingLayerButConsecutivePensDoNotConflict",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.PageAuthoringRepositoryTest#hiddenLockedMembershipPersistsAndWholeMixedEditIsRejected",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.PageAuthoringRepositoryTest#lateSearchIndexCannotRepublishWordsFromAHiddenLayer",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.PageAuthoringRepositoryTest#nonemptyLayerDeletionUndoBackupAndEditableCopyKeepHiddenPayloads",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.PageAuthoringRepositoryTest#oldReceiptReplaysAfterLayerLockAndStaleMetadataCannotEraseNewMembership",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.PageAuthoringRepositoryTest#removedStructuralOccurrenceKeepsAnnotationOwnerThroughCompleteBackup",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.PageAuthoringRepositoryTest#rollbackAndUnknownReceiptKeepLayerAndInkAtomic",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.PageAuthoringRepositoryTest#scopedCheckpointRoundTripPreservesLayerAcrossReopen",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.PageAuthoringRepositoryTest#source14ArchiveIsNotPromotedTwiceAfterAddingLayerTables",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.PageAuthoringRepositoryTest#sourceCaptureRejectsChangedOrHiddenAuthoringButReplaysConfirmedReceipt",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.PageCopyRepositoryTest#bothCopyEntrypointsPreserveSharedCutIdentityLayersAnnotationsAndReceipts",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.PageCopyRepositoryTest#legacyDefaultOwnershipCopiesWithoutMaterializingOrChangingSourceHeader",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.PageCopyRepositoryTest#missingOwnershipOnHiddenHistoryRejectsBothCopiesAndLeavesRetryableReceipts",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.PageEditingRepositoryTest#actionsAndTombstonesSurviveActualDatabaseReopen",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.PageEditingRepositoryTest#backupRestoresRecycledPagesAndActionReceipts",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.PageEditingRepositoryTest#beforeReceiptExceptionRollsBackReorderAndCopy",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.PageEditingRepositoryTest#contentExportAndNotebookCopyExcludeRecycledRootPage",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.PageEditingRepositoryTest#copyDoesNotReviveHiddenStrokesOrStaleIndex",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.PageEditingRepositoryTest#copyHasIndependentIdsAndPreservesEffectiveCuts",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.PageEditingRepositoryTest#insertionIgnoresRecycledPositionsButRetainsTombstones",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.PageEditingRepositoryTest#lastAvailablePageCannotBeRecycled",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.PageEditingRepositoryTest#lostReplyReplaysWithoutRepeatingPageCopyOrChangingNewSelection",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.PageEditingRepositoryTest#movePreservesInkBytesMasksIdentityAndSearchPage",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.PageEditingRepositoryTest#mutationsAgainstRecycledPageAreRejectedButReadRemainsPossible",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.PageEditingRepositoryTest#recycleCurrentPageUsesNextAndKeepsOriginalRecord",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.PageEditingRepositoryTest#restoringToChosenPositionBringsBackSamePageAndValidIndex",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.PageEditingRepositoryTest#sameCommandDifferentPayloadIsNotAccepted",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.PageEditingRepositoryTest#schemaSixArchiveIsPromotedWithoutChangingOriginalIdentity",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.PageEditingRepositoryTest#schemaSixMigrationPreservesOriginalInkAndPages",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.PageEditingRepositoryTest#staleOrderAndSourceHeadRefuseWithoutChanges",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.PageEditingRepositoryTest#worldNotebookAndForeignAnchorsCannotBeEdited",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.PageLayerEditorTest#pendingReplaySurvivesLostReplyAndArchiveKeepsAuthorRowsWithoutSessionDeltas",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-large-content"
+    },
+    {
+      "method": "org.inkweft.data.PageLayerEditorTest#projectedReadsArePureAndSelectedBeautyOwnershipStillMovesTogether",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-large-content"
+    },
+    {
+      "method": "org.inkweft.data.PageLayerEditorTest#projectionJournalAndBulkUndoKeepAConstantLoadedIdentityWindowAtThreeScales",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-large-content"
+    },
+    {
+      "method": "org.inkweft.data.PageLayerStorageTest#editableCopyAndBackupPreserveHiddenAndDeletedExternalMemberships",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.PageLayerStorageTest#invalidScopeOnTheFirstPenCannotCommitAnyImplicitAuthorState",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.PageLayerStorageTest#largeHistoricalOwnershipWritesOnlyTheNewMemberAndPendingStateExceedsTheOldFileLimit",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.PageLayerStorageTest#schema17AndItsArchiveSplitOwnershipWithoutChangingAuthorReceipts",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.PageLayerTotalsTest#abortConflictAndTransactionRollbackLeaveNoCounterPrefix",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-first"
+    },
+    {
+      "method": "org.inkweft.data.PageLayerTotalsTest#insertsMovesKindChangesTombstonesAndDeletesMatchAuthorRows",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-first"
+    },
+    {
+      "method": "org.inkweft.data.PageLayerTotalsTest#reopenAndMissingDerivedTableRebuildPreserveAuthorRows",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-first"
+    },
+    {
+      "method": "org.inkweft.data.PageLayerTotalsTest#replaceAndIgnorePreserveCountsOnWriterConnection",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-first"
+    },
+    {
+      "method": "org.inkweft.data.PageObjectRepositoryTest#backupRestoresObjectsAndReceipts",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.PageObjectRepositoryTest#duplicateAndContentImportCarryIndependentObjects",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.PageObjectRepositoryTest#invalidBoundsAndRecycledPageCannotBeWritten",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.PageObjectRepositoryTest#originalSaveReplayCopyBackupAndMissingAssetAreAtomic",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.PageObjectRepositoryTest#schema12UpgradesWithoutRewritingExistingAuthorRows",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.PageObjectRepositoryTest#unknownCommitCanReplayAndStaleWriterCannotOverwrite",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.PageObjectStorageTest#authoringIdentityProjectionSkipsCorruptObjectAndPreviewPayloadsButFullReadsReject",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.PageObjectStorageTest#concurrentSnapshotsAndObserversKeepRevisionOrderMetadataAndPreviewTogether",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.PageObjectStorageTest#corruptSchema16ObjectAbortsMigrationAndKeepsTheOriginalDatabaseIntact",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.PageObjectStorageTest#deduplicatedImagesStillRespectTheExistingAggregatePageBudget",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.PageObjectStorageTest#movingOneObjectWritesOneRecordAndSharedPreviewLivesUntilItsLastReference",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.PageObjectStorageTest#receiptFailureRollsBackHeadChangedRowsNewPreviewAndAuthoringTogether",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.PageObjectStorageTest#schema16AndItsArchivePromoteObjectsWithOrderIdentityAndReceiptUnchanged",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.PageObjectStorageTest#sharedPreviewRestoreMergesByContentAndAnInjectedFailureRollsBackAllNewRows",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.PageRecognitionReadTest#largePointCountProducesOnlyIdentitiesAndBoundsWithoutNarrowingRecognition",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.PageRecognitionReadTest#oneBoundedInputPreservesVisibleLayerAndBeautySuppressionSemantics",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.ReadingHandwritingRepositoryTest#beautyPreservesInkRemapsCopiesAndInvalidatesSearch",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.ReadingHandwritingRepositoryTest#corruptPdfRollsBackWholeImport",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.ReadingHandwritingRepositoryTest#pdfCopyExportBackupAndRestoreRetainOwnedBytes",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.ReadingHandwritingRepositoryTest#staleBeautyDoesNotApplyAndForeignOriginalIsRejected",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.RecallStudyRepositoryTest#afterAnswerOriginalIsComparisonAndPracticeNeverChangesSchedule",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.RecallStudyRepositoryTest#answerCapacityRejectsWithoutAnyPartialScoreOrInkWrite",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.RecallStudyRepositoryTest#backwardClockAndPostSealHintsRejectBeforeWrites",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.RecallStudyRepositoryTest#changedContentCannotScoreOldVersionButExplicitPracticeRetainsOldAnswer",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.RecallStudyRepositoryTest#clozeAndRegionMasksAreFrozenAndOnlyExplicitHintsReveal",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.RecallStudyRepositoryTest#correctionMustFollowSuccessorChainAndKeepsOriginalRows",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.RecallStudyRepositoryTest#detailCommandsAndArchiveShareTheFrozenPresentationValidation",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.RecallStudyRepositoryTest#historyAndClosedSessionQueriesDoNotHydrateFixedSourcesOrUnstartedAttempts",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.RecallStudyRepositoryTest#manualStateOnlyChangeKeepsFrozenQuestionEligibleForFormalGrade",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.RecallStudyRepositoryTest#normalSealedComparisonRetainsRawAndEffectiveAndOneScoreAcrossCollections",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.RecallStudyRepositoryTest#prematureOriginalPersistsThroughReopenAndCapsEffectiveOnly",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.RecallStudyRepositoryTest#readQueriesKeepFrozenHistoryDescriptionsAndCurrentScheduleFiltersWithoutWrites",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.RecallStudyRepositoryTest#reassociatedQuestionCannotScoreFrozenAnswerAgainstAnotherCard",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.RecallStudyRepositoryTest#rollbackAndLostGradeResponseAreAtomicWithIdempotentSameId",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.RecallStudyRepositoryTest#saveReopenResumeFullBackupRestoreAndReceiptKeepAnswerBytes",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.RecallStudyRepositoryTest#schema15MigrationAddsRecallWithoutRewritingAuthorInkQuestionOrAnnotation",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.RecallStudyRepositoryTest#sharedAnnotationFreezesIndependentlyWhileColorChangeDoesNotInvalidateAnswer",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.RecallStudyRepositoryTest#skippedDurableTextAndInkReopenAtNextQuestionWithoutChangingSchedules",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.RecallStudyRepositoryTest#timezoneChangeAndDatabaseReopenKeepUtcScheduleAndSameOpenAttempt",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.SpatialInkRepositoryTest#boundedWindowNeverPretendsDenseCandidatesAreCompleteAndStreamingHasNoMissingRows",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-large-content"
+    },
+    {
+      "method": "org.inkweft.data.SpatialInkRepositoryTest#cancelledIndexBuildKeepsCommittedProgressAndYieldsToAuthorWrites",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-first"
+    },
+    {
+      "method": "org.inkweft.data.SpatialInkRepositoryTest#fortyThousandStrokesAndTwoMillionPointsRemainWritableCopyableAndVerifiable",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-large-content"
+    },
+    {
+      "method": "org.inkweft.data.SpatialInkRepositoryTest#pageBucketCollisionStillFiltersFullIdentityAndOldOrMissingRtreeRebuilds",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-first"
+    },
+    {
+      "method": "org.inkweft.data.SpatialInkRepositoryTest#pageChangeAndCancellationAbortStreamingRatherThanReturningACompletePrefix",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-large-content"
+    },
+    {
+      "method": "org.inkweft.data.SpatialInkRepositoryTest#panningDropsUndoGeometryAndPreservesMaskUndoRedo",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-large-content"
+    },
+    {
+      "method": "org.inkweft.data.SpatialInkRepositoryTest#storedValidationUsesPageAndIdentityIndexWithoutRepeatedSorting",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-large-content"
+    },
+    {
+      "method": "org.inkweft.data.SpatialInkRepositoryTest#validationIncludesHiddenInkAndHiddenMasks",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-large-content"
+    },
+    {
+      "method": "org.inkweft.data.SpatialInkRepositoryTest#viewportCandidatesRespectBoundaryVisibilityPayloadChangesAndDeletion",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-large-content"
+    },
+    {
+      "method": "org.inkweft.data.StorageHotPathRepositoryTest#backupSyncReleasesTheWriterWithoutChangingItsCapturedSnapshot",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.StorageHotPathRepositoryTest#failedFinalSnapshotSyncDoesNotPublishOrLeaveItsFile",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.StorageHotPathRepositoryTest#movingImagesPreservesCasAndDamagedNewOrStoredPreviewsAreRejected",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.StorageHotPathRepositoryTest#sharedPdfIsValidatedBeforeTransactionAndRehashedOnceDuringAtomicImport",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.StorageHotPathRepositoryTest#sourceChangedAfterValidationRollsBackTheWholeImportAndReceipt",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.StorageHotPathRepositoryTest#sourceOwnershipUsesIdsAndStillRejectsForeignOrRepeatedReferences",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.StreamedStorageRepositoryTest#pdf300MBImportDuplicateAndFullBackupRestorePreserveOriginals",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-large-content"
+    },
+    {
+      "method": "org.inkweft.data.StudyAndSelectionRepositoryTest#arrangeUsesGraphRevisionAndRetainsCardContent",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.StudyAndSelectionRepositoryTest#backupRestoresCardsSourcesHierarchyAndTypedMasks",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.StudyAndSelectionRepositoryTest#cardFailureBeforeReceiptHasNoPartialRows",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.StudyAndSelectionRepositoryTest#cardTrashAndRestoreKeepRevisionHistory",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.StudyAndSelectionRepositoryTest#cardUnknownOutcomeReplaysSameSnapshotAndIds",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.StudyAndSelectionRepositoryTest#cycleAndRemovingParentWithChildrenAreRejected",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.StudyAndSelectionRepositoryTest#exactEraseAndRecolorInvalidateManualIndex",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.StudyAndSelectionRepositoryTest#excerptSnapshotIsImmutableAfterSourceEraseAndPageMove",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.StudyAndSelectionRepositoryTest#excerptUndoRedoRestoresFrozenBytesAndReceiptsWithoutNewSnapshotPayload",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.StudyAndSelectionRepositoryTest#migrationSevenToEightRetainsOriginalInkAndPageIdentity",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.StudyAndSelectionRepositoryTest#missingAndForeignInkTargetsConflictWithoutChangingInkOrLayers",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.StudyAndSelectionRepositoryTest#movingNodeNeverModifiesSharedCard",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.StudyAndSelectionRepositoryTest#oneCardContentHasTwoIndependentMapPositions",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.StudyAndSelectionRepositoryTest#recropKeepsIdentityReferencesAndCommentAndRejectsStaleWrites",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.StudyAndSelectionRepositoryTest#regionExcerptHasNoMapNodeAndReplayPreservesSnapshot",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.StudyAndSelectionRepositoryTest#removingOccurrenceKeepsCardAndAllowsReuse",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.StudyAndSelectionRepositoryTest#replaceBeforeReceiptFailureRollsBackEverything",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.StudyAndSelectionRepositoryTest#replaceWithLostAcknowledgementReplaysWithoutDuplicates",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.StudyAndSelectionRepositoryTest#replacingInkPreservesOriginalBytesAndCanAtomicallyUndo",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.StudyAndSelectionRepositoryTest#sameStudyCommandIdDifferentPayloadIsRejected",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.StudyAndSelectionRepositoryTest#staleAndCrossPageEditsCannotOverwriteInk",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.StudyAndSelectionRepositoryTest#staleSourceRejectsWholeCardTransaction",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.StudyAndSelectionRepositoryTest#successfulReadTimingObserverCannotChangeRepositoryOutcome",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.TransferReadPathRepositoryTest#changedOriginalRollsBackCopyAndCommittedReplaySkipsUnavailableSource",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.TransferReadPathRepositoryTest#copiesAndVisibleExportsKeepMasksAxesAndCurrentManualIndexWithoutHiddenHistory",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.TransferReadPathRepositoryTest#copyPreparationReleasesWriterAndCommitIncludesCurrentSourceAndNewOriginal",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.TransferReadPathRepositoryTest#newUnvalidatedOriginalAfterCopyPreparationCannotBypassFormatChecks",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.TransferReadPathRepositoryTest#relevantDamagedMasksAndForeignTargetsStillFail",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.TransferReadPathRepositoryTest#selectedSourceCaptureKeepsFixedRevisionAndRejectsMissingOrChangedInk",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.TransferReadPathRepositoryTest#snapshotRevisionAndVisibilityStayConsistentWithConcurrentEdits",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    },
+    {
+      "method": "org.inkweft.data.TransferReadPathRepositoryTest#visibleAndSelectedSnapshotsSkipUnrelatedBlobsButKeepEffectiveMasks",
+      "code": 0,
+      "passed": true,
+      "failure": null,
+      "attempt": "data-contracts"
+    }
+  ],
+  "measurements": {
+    "INK_FIXED_VIEWPORT_EVIDENCE": [
+      {
+        "storedInk": 1000,
+        "returnedCandidates": 8,
+        "decodedPoints": 16,
+        "payloadBytes": 832,
+        "freezeMs": 2.608505,
+        "decodeMs": 0.372708,
+        "javaUsedBytes": 3793664,
+        "plan": [
+          "SCAN b VIRTUAL TABLE INDEX 2:B0D1B2D3B4D5",
+          "SEARCH e USING INTEGER PRIMARY KEY (rowid=?)",
+          "SEARCH s USING INDEX index_ink_strokes_noteId_id (noteId=? AND id=?)",
+          "USE TEMP B-TREE FOR ORDER BY"
+        ]
+      },
+      {
+        "storedInk": 10000,
+        "returnedCandidates": 8,
+        "decodedPoints": 16,
+        "payloadBytes": 832,
+        "freezeMs": 2.048087,
+        "decodeMs": 0.262382,
+        "javaUsedBytes": 4340920,
+        "plan": [
+          "SCAN b VIRTUAL TABLE INDEX 2:B0D1B2D3B4D5",
+          "SEARCH e USING INTEGER PRIMARY KEY (rowid=?)",
+          "SEARCH s USING INDEX index_ink_strokes_noteId_id (noteId=? AND id=?)",
+          "USE TEMP B-TREE FOR ORDER BY"
+        ]
+      },
+      {
+        "storedInk": 100000,
+        "returnedCandidates": 8,
+        "decodedPoints": 16,
+        "payloadBytes": 832,
+        "freezeMs": 2.170193,
+        "decodeMs": 0.158038,
+        "javaUsedBytes": 3036952,
+        "plan": [
+          "SCAN b VIRTUAL TABLE INDEX 2:B0D1B2D3B4D5",
+          "SEARCH e USING INTEGER PRIMARY KEY (rowid=?)",
+          "SEARCH s USING INDEX index_ink_strokes_noteId_id (noteId=? AND id=?)",
+          "USE TEMP B-TREE FOR ORDER BY"
+        ]
+      }
+    ],
+    "LAYER_RASTER_EVIDENCE": [
+      {
+        "visibleLayers": 1,
+        "visibleStrokes": 320,
+        "decodedRows": 320,
+        "decodedPoints": 640,
+        "payloadBytes": 33280,
+        "geometryReads": 2,
+        "nativeExtentPixels": 3117845,
+        "inkBitmapBytes": 12471380,
+        "readyMs": 277.700965,
+        "softwareDrawP95Ms": 6.128725,
+        "javaUsedBytes": 21872424,
+        "processPssKiB": 154796
+      },
+      {
+        "visibleLayers": 4,
+        "visibleStrokes": 320,
+        "decodedRows": 320,
+        "decodedPoints": 640,
+        "payloadBytes": 33280,
+        "geometryReads": 4,
+        "nativeExtentPixels": 10530530,
+        "inkBitmapBytes": 31988216,
+        "readyMs": 1872.38332,
+        "softwareDrawP95Ms": 64.950751,
+        "javaUsedBytes": 25673512,
+        "processPssKiB": 160610
+      },
+      {
+        "visibleLayers": 8,
+        "visibleStrokes": 320,
+        "decodedRows": 320,
+        "decodedPoints": 640,
+        "payloadBytes": 33280,
+        "geometryReads": 8,
+        "nativeExtentPixels": 21061060,
+        "inkBitmapBytes": 31963872,
+        "readyMs": 3518.882068,
+        "softwareDrawP95Ms": 121.410515,
+        "javaUsedBytes": 20652088,
+        "processPssKiB": 153850
+      }
+    ]
+  },
+  "artifacts": {
+    "tag": "isolated-test-fixtures",
+    "at": "2026-10-12T03:26:31.526689+00:00",
+    "artifacts": [
+      {
+        "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Audit-Repairs\\artifacts\\verified-candidate\\app-debug.apk",
+        "bytes": 241153585,
+        "sha256": "58f45955ec103bec0337a1349d3b99ce84e151eaea6b247b5559fd6531e33924",
+        "package": "org.inkweft.app.audit20261012",
+        "generation": "verified-candidate"
+      },
+      {
+        "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Audit-Repairs\\artifacts\\isolated-test-fixtures\\app-debug-androidTest.apk",
+        "bytes": 17652420,
+        "sha256": "006f5560aee3795f2e0e5013cd0b3a287b21a5891cf2a7b24e9988a5d598199b",
+        "package": "org.inkweft.app.audit20261012.test",
+        "generation": "isolated-test-fixtures"
+      },
+      {
+        "path": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Audit-Repairs\\artifacts\\integration-third\\data-local-debug-androidTest.apk",
+        "bytes": 25925301,
+        "sha256": "183048dee9069ff24d42ca066290e5c97b0a795a28f81bab58e52abd0144b814",
+        "package": "org.inkweft.data.audit20261012.test",
+        "generation": "integration-third"
+      }
+    ]
+  },
+  "lint": {
+    "passed": true,
+    "counts": {
+      "Fatal": 0,
+      "Error": 0,
+      "Warning": 176,
+      "Hint": 2
+    },
+    "evidence": "E:\\Inkweft\\archives\\2026-10-12\\InkWeft-Audit-Repairs\\verification\\lint-final.log"
+  },
+  "cleanup": {
+    "device": {
+      "at": "2026-10-12T03:28:28.152985+00:00",
+      "instance": {
+        "android_version": "12.0",
+        "created_timestamp": 1790410425875068,
+        "disk_size_bytes": 21868100066,
+        "error_code": 0,
+        "hyperv_enabled": true,
+        "index": "5",
+        "info_source": "local",
+        "is_android_started": false,
+        "is_main": false,
+        "is_process_started": false,
+        "name": "InkWeft-Test"
+      },
+      "root": {
+        "root_permission": "false"
+      },
+      "private_adb_running": false,
+      "test_packages_removed": true,
+      "rotation_unchanged": true,
+      "other_packages_touched": false
+    },
+    "retainedBytecodeFiles": 6,
+    "retentionReason": "Automatic approval rejected deletion: blocked by policy."
+  }
+}

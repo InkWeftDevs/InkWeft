@@ -154,7 +154,7 @@ class PageObjectStorageTest {
         }.toByteArray()}finally{old.close()}
         val db=NoteDatabase.open(context,name)
         try{
-            assertEquals(ObjectSnapshot(1,objects),PageObjectRepository(db).read(page));assertEquals(18,db.openHelper.readableDatabase.version)
+            assertEquals(ObjectSnapshot(1,objects),PageObjectRepository(db).read(page));assertEquals(19,db.openHelper.readableDatabase.version)
             assertEquals(1,count(db,"object_previews"));assertEquals(objects.map{it.id},db.objects().ids(page));assertEquals(digest,db.objects().receipt(command)!!.digest)
             assertEquals(1L,PageObjectRepository(db).save(page,0,command,objects));assertEquals(1234L,db.notes().note(page)!!.updatedAt)
             val restore=LibraryBackupRepository(context,db)

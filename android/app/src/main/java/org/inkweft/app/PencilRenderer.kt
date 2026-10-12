@@ -43,7 +43,20 @@ internal class PencilTileRenderer(private val unit:Float=.5f,private val live:Bo
         var last:InkSample?=null
     }
     private val tiles=object:LinkedHashMap<Key,Tile>(256,.75f,true){override fun removeEldestEntry(eldest:MutableMap.MutableEntry<Key,Tile>?):Boolean{if(size<=2048)return false;eldest?.value?.let(::release);return true}}
-    private data class Source(val samples:List<InkSample>,val appearance:StrokeAppearance,val color:Int,val width:Float)
+    private class Segments {
+        var size=0;private set
+        private var values=IntArray(8)
+        fun add(value:Int){if(size==values.size)values=values.copyOf(size*2);values[size++]=value}
+        operator fun get(index:Int)=values[index]
+    }
+    private class Source(var samples:List<InkSample>,val appearance:StrokeAppearance,val color:Int,val width:Float){
+        var clip:List<Int>?=null
+        var candidates=linkedMapOf<Pair<Int,Int>,Segments>()
+        var indexed=0
+        var weight=0
+    }
+    internal var indexedSegments=0L;private set
+    internal var retainedCandidateWeight=0;private set
     private val sources=LinkedHashMap<String,Source>(128,.75f,true)
     internal var retainedSourceSamples=0;private set
     internal val retainedSources get()=sources.size
@@ -52,8 +65,8 @@ internal class PencilTileRenderer(private val unit:Float=.5f,private val live:Bo
     private val pixels=IntArray(SIDE*SIDE)
     private val destination=RectF()
     private fun release(tile:Tile){ownedTiles--;account()}
-    @Synchronized fun clear(){tiles.clear();sources.clear();retainedSourceSamples=0;ownedTiles=0;account()}
-    @Synchronized fun forget(ids:Set<String>){ids.forEach{id->sources.remove(id)?.let{retainedSourceSamples-=it.samples.size}};val it=tiles.iterator();while(it.hasNext()){val entry=it.next();if(entry.key.id in ids){release(entry.value);it.remove()}}}
+    @Synchronized fun clear(){tiles.clear();sources.clear();retainedSourceSamples=0;retainedCandidateWeight=0;ownedTiles=0;account()}
+    @Synchronized fun forget(ids:Set<String>){ids.forEach{id->sources.remove(id)?.let{retainedSourceSamples-=it.samples.size;retainedCandidateWeight-=it.weight}};val it=tiles.iterator();while(it.hasNext()){val entry=it.next();if(entry.key.id in ids){release(entry.value);it.remove()}}}
     private fun pressure(s:InkSample)=sqrt(if(s.pressure<0).5f else s.pressure)
     private fun tilt(s:InkSample,stroke:InkStroke)=if(s.tilt<0||!stroke.appearance.recipe.tiltShading)1f else 1+3*((s.tilt-(PI/6).toFloat())/(PI/6).toFloat()).coerceIn(0f,1f)
     private fun segmentRadius(p:InkSample,q:InkSample,s:InkStroke)=s.width*.5f*(.85f+.15f*max(pressure(p),pressure(q)))*max(tilt(p,s),tilt(q,s))
@@ -64,22 +77,18 @@ internal class PencilTileRenderer(private val unit:Float=.5f,private val live:Bo
         val left=max(bounds.left.toFloat()-UNIT,clip.left.toFloat());val right=min(bounds.right.toFloat()+UNIT,clip.right.toFloat())
         val top=max(bounds.top.toFloat()-UNIT,clip.top.toFloat());val bottom=min(bounds.bottom.toFloat()+UNIT,clip.bottom.toFloat())
         if(left>=right||top>=bottom)return
-        if(live){
-            val previous=sources[stroke.id]
-            // Pen-up polishing keeps the stroke id and endpoints. Checking only
-            // the last sample misses edits to positions/pressure in its interior.
-            if(previous!=null&&(previous.appearance!=a||previous.color!=stroke.color||previous.width!=stroke.width||!InkSampling.renderPrefix(previous.samples,source)))forget(setOf(stroke.id))
-            sources.put(stroke.id,Source(source,a,stroke.color,stroke.width))?.let{retainedSourceSamples-=it.samples.size}
-            retainedSourceSamples+=source.size
-            // A page with 129 short strokes must not evict every earlier stroke
-            // on each paint. Bound actual samples as well as entry count.
-            while(sources.size>MAX_SOURCES||retainedSourceSamples>MAX_SOURCE_SAMPLES)forget(setOf(sources.keys.first()))
-        }
-        val firstX=floor((left-a.originX)/TILE).toInt();val lastX=floor((right-a.originX)/TILE).toInt()
-        val firstY=floor((top-a.originY)/TILE).toInt();val lastY=floor((bottom-a.originY)/TILE).toInt()
+        var cached=if(live)sources[stroke.id]else null
+        // A preserved identity can receive polished interior samples at pen-up.
+        if(cached!=null&&(cached.appearance!=a||cached.color!=stroke.color||cached.width!=stroke.width||!InkSampling.renderPrefix(cached.samples,source))){forget(setOf(stroke.id));cached=null}
+        if(cached==null){cached=Source(source,a,stroke.color,stroke.width);if(live){sources[stroke.id]=cached;retainedSourceSamples+=source.size}}
+        else{retainedSourceSamples+=source.size-cached.samples.size;cached.samples=source}
+        val firstX=floor((clip.left-a.originX)/TILE).toInt();val lastX=floor((clip.right-a.originX)/TILE).toInt()
+        val firstY=floor((clip.top-a.originY)/TILE).toInt();val lastY=floor((clip.bottom-a.originY)/TILE).toInt()
+        val clipKey=listOf(firstX,lastX,firstY,lastY)
+        if(cached.clip!=clipKey){if(live)retainedCandidateWeight-=cached.weight;cached.candidates=linkedMapOf();cached.indexed=0;cached.weight=0;cached.clip=clipKey}
         // Only allocate tiles touched by a segment, never the whole bounding box.
-        val candidates=linkedMapOf<Pair<Int,Int>,MutableList<Int>>()
-        source.indices.forEach{i->val p=source[if(i==0)0 else i-1];val q=source[i];val pad=segmentRadius(p,q,stroke)+UNIT
+        val candidates=cached.candidates
+        for(i in cached.indexed until source.size){indexedSegments++;val oldWeight=cached.weight;val p=source[if(i==0)0 else i-1];val q=source[i];val pad=segmentRadius(p,q,stroke)+UNIT
             val x0=max(firstX,floor((min(p.x,q.x)-pad-a.originX)/TILE).toInt());val x1=min(lastX,floor((max(p.x,q.x)+pad-a.originX)/TILE).toInt())
             val y0=max(firstY,floor((min(p.y,q.y)-pad-a.originY)/TILE).toInt());val y1=min(lastY,floor((max(p.y,q.y)+pad-a.originY)/TILE).toInt())
             for(y in y0..y1){
@@ -88,8 +97,15 @@ internal class PencilTileRenderer(private val unit:Float=.5f,private val live:Bo
                 val t1=if(p.y==q.y)1f else ((yEnd-p.y)/(q.y-p.y)).coerceIn(0f,1f)
                 val ax=p.x+(q.x-p.x)*t0;val bx=p.x+(q.x-p.x)*t1
                 val row0=max(x0,floor((min(ax,bx)-pad-a.originX)/TILE).toInt());val row1=min(x1,floor((max(ax,bx)+pad-a.originX)/TILE).toInt())
-                for(x in row0..row1)candidates.getOrPut(x to y){mutableListOf()}.add(i)
+                for(x in row0..row1){candidates.getOrPut(x to y){cached.weight+=4;Segments()}.add(i);cached.weight++}
             }
+            if(live)retainedCandidateWeight+=cached.weight-oldWeight
+        }
+        cached.indexed=source.size
+        // Keep both geometry and its segment index bounded across short strokes and panning.
+        if(live){
+            while(sources.size>MAX_SOURCES||retainedSourceSamples>MAX_SOURCE_SAMPLES)forget(setOf(sources.keys.first()))
+            while(retainedCandidateWeight>131_072){val old=sources.values.first{it.weight>0};retainedCandidateWeight-=old.weight;old.weight=0;old.indexed=0;old.clip=null;old.candidates=linkedMapOf()}
         }
         for((position,segments) in candidates){
             checkpoint()
@@ -98,7 +114,7 @@ internal class PencilTileRenderer(private val unit:Float=.5f,private val live:Bo
             if(tile==null||tile.count>source.size||tile.count>0&&source[tile.count-1].copy(world=tile.last!!.world)!=tile.last){tile?.let(::release);tile=Tile();tiles[key]=tile}
             val ox=a.originX+tx*TILE;val oy=a.originY+ty*TILE
             var dirtyLeft=SIDE;var dirtyTop=SIDE;var dirtyRight=-1;var dirtyBottom=-1
-            for(i in segments){if(i<tile.count)continue
+            for(segment in 0 until segments.size){val i=segments[segment];if(i<tile.count)continue
                 val p=source[if(i==0)0 else i-1];val q=source[i];val dx=q.x-p.x;val dy=q.y-p.y;val length=dx*dx+dy*dy
                 val pad=segmentRadius(p,q,stroke)+UNIT
                 val sx=max(0,floor((min(p.x,q.x)-pad-ox)/UNIT).toInt());val ex=min(SIDE-1,ceil((max(p.x,q.x)+pad-ox)/UNIT).toInt())

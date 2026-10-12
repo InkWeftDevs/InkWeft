@@ -1,0 +1,15 @@
+// This candidate has its own synthetic library; it never replaces the user's application.
+gradle.beforeProject { project ->
+    if (project.path == ':app') project.pluginManager.withPlugin('com.android.application') {
+        project.androidComponents.finalizeDsl { android ->
+            android.defaultConfig.applicationId = 'org.inkweft.app.audit20261012'
+            android.defaultConfig.testApplicationId = 'org.inkweft.app.audit20261012.test'
+            android.defaultConfig.manifestPlaceholders['appLabel'] = '墨织审计验证'
+        }
+    }
+    if (project.path == ':data-local') project.pluginManager.withPlugin('com.android.library') {
+        project.androidComponents.finalizeDsl { android ->
+            android.defaultConfig.testApplicationId = 'org.inkweft.data.audit20261012.test'
+        }
+    }
+}

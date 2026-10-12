@@ -12,6 +12,43 @@ import java.util.UUID
 /** Real encodings and real Room transactions; no production database is accepted by ShadowReplica. */
 class ShadowSyncTest {
     private fun id()=UUID.randomUUID().toString()
+    @Test fun immutablePdfAndImageOriginalsRoundTripReplayAndReopenWithoutSqliteChunks()=runBlocking {
+        val context=InstrumentationRegistry.getInstrumentation().targetContext
+        val scope=listOf("synthetic","original-files","account",id());val keys=mapOf(1 to EncryptedBackupFile.random(32));val receiver=id()
+        val a=ShadowReplica.open(context,scope,id(),keys);var b=ShadowReplica.open(context,scope,receiver,keys);val targetDirectory=b.directory
+        val pdf=android.graphics.pdf.PdfDocument()
+        val pdfBytes=try{val page=pdf.startPage(android.graphics.pdf.PdfDocument.PageInfo.Builder(300,400,1).create());pdf.finishPage(page)
+            java.io.ByteArrayOutputStream().also{pdf.writeTo(it)}.toByteArray()}finally{pdf.close()}
+        val bitmap=android.graphics.Bitmap.createBitmap(16,16,android.graphics.Bitmap.Config.ARGB_8888)
+        val (previewBytes,imageBytes)=try{
+            bitmap.eraseColor(android.graphics.Color.GREEN)
+            java.io.ByteArrayOutputStream().also{bitmap.compress(android.graphics.Bitmap.CompressFormat.JPEG,90,it)}.toByteArray() to
+                java.io.ByteArrayOutputStream().also{bitmap.compress(android.graphics.Bitmap.CompressFormat.PNG,100,it)}.toByteArray()
+        }finally{bitmap.recycle()}
+        val original=PdfDocumentSource(pdfBytes,1);val image=ImageSource(imageBytes);var book=""
+        fun count(replica:ShadowReplica,table:String)=replica.db.openHelper.readableDatabase.query("SELECT COUNT(*) FROM $table").use{it.moveToFirst();it.getLong(0)}
+        suspend fun checkOriginals(replica:ShadowReplica){
+            assertEquals(0L,count(replica,"document_chunks"));assertEquals(0L,count(replica,"image_chunks"))
+            val repo=DocumentRepository(replica.db);val document=checkNotNull(repo.read(book)).document
+            repo.openFile(document).use{assertEquals(original.sha256,OriginalBytes.file(it.file,original.size).sha256)}
+            assertArrayEquals(imageBytes,ImageSourceRepository(replica.db).read(book,image.sha256).bytes())
+            assertEquals((pdfBytes.size+imageBytes.size).toLong(),repo.storageStatus().originalFileBytes)
+        }
+        try{
+            a.author{db->
+                book=ResourceTemplates(db).instantiate("b".repeat(64),"合成文件原件",PaperStyle.BLANK,PdfPageSource(original,0),null).id
+                PageObjectRepository(db).save(book,0,id(),listOf(PageObject(id(),PageObjectKind.IMAGE,image=java.util.Base64.getEncoder().encodeToString(previewBytes),imageSource=image.sha256)),originals=listOf(image))
+            }
+            checkOriginals(a);val envelope=a.outgoing().single();val expected=a.authorFingerprint()
+            b.receive(1,listOf(envelope));checkOriginals(b);assertEquals(expected,b.authorFingerprint())
+            b.receive(1,listOf(envelope));checkOriginals(b);assertEquals(expected,b.authorFingerprint())
+            a.receive(1,listOf(envelope));a.acknowledged(JSONObject(envelope).getString("operation"));assertTrue(a.outgoing().isEmpty())
+            b.close();b=ShadowReplica.open(context,scope,receiver,keys,directory=targetDirectory)
+            assertEquals(1L,b.cursor());checkOriginals(b);assertEquals(expected,b.authorFingerprint())
+        }finally{a.close();b.close();for(directory in listOf(a.directory,targetDirectory)){
+            require(directory.canonicalFile.parentFile==java.io.File(context.cacheDir,"shadow-sync").canonicalFile);check(directory.deleteRecursively())
+        }}
+    }
     private suspend fun sync(r:ShadowReplica,t:BackupTransport,library:String){
         val pending=r.outgoing()
         pending.forEach{t.json("POST",library,"/shadow/events",JSONObject(it))}

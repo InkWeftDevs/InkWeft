@@ -17,7 +17,7 @@ import kotlinx.coroutines.*
 import org.inkweft.core.*
 import org.inkweft.data.*
 
-private data class ReviewPage(val title:String,val page:NotebookPageRow,val ink:VisibleInkSnapshot,val objects:List<PageObject>,val authoring:PageAuthoring)
+private data class ReviewPage(val title:String,val page:NotebookPageRow,val ink:InkRenderSource,val objects:List<PageObject>,val authoring:PageAuthoring)
 
 /** Explicit diagnostic opt-in only; normal debug and release sessions stay silent. */
 @Volatile internal var studyReadPhaseEnabled=false
@@ -35,10 +35,10 @@ internal fun traceStudyRead(phase:String,job:Job?){
 @Composable internal fun ReviewSourceDialog(source:StudySourceRow,dismiss:()->Unit,session:ShadowAuthorSession?=null,recallNotebookId:String?=null,
     onViewSnapshot:(()->Unit)?=null){
     val app=LocalContext.current.applicationContext as InkWeftApplication
-    var loaded by remember(source,recallNotebookId){mutableStateOf<ReviewPage?>(null)};var error by remember(source,recallNotebookId){mutableStateOf<String?>(null)}
-    var view by remember{mutableStateOf<InkCanvasView?>(null)}
-    val readJob=remember(source,recallNotebookId){if(BuildConfig.DEBUG)java.util.concurrent.atomic.AtomicReference<Job?>(null)else null}
-    LaunchedEffect(source,recallNotebookId){
+    var loaded by remember(source,recallNotebookId,session){mutableStateOf<ReviewPage?>(null)};var error by remember(source,recallNotebookId,session){mutableStateOf<String?>(null)}
+    var view by remember(session){mutableStateOf<InkCanvasView?>(null)}
+    val readJob=remember(source,recallNotebookId,session){if(BuildConfig.DEBUG)java.util.concurrent.atomic.AtomicReference<Job?>(null)else null}
+    LaunchedEffect(source,recallNotebookId,session){
         val job=coroutineContext[Job];readJob?.set(job);traceStudyRead("source.effect.start",job)
         try{
             val result=withContext(Dispatchers.IO){
@@ -51,13 +51,18 @@ internal fun traceStudyRead(phase:String,job:Job?){
                 traceStudyRead("source.scope.accepted",job)
                 val page=requireNotNull((session?.pages?:app.pages).activePages(note.id).find{it.id==source.pageId})
                 traceStudyRead("source.page.done",job)
-                val objects=(session?.objects?:app.pageObjects).read(page.id).objects.let{items->
+                val objectSnapshot=(session?.objects?:app.pageObjects).read(page.id)
+                val objects=objectSnapshot.objects.let{items->
                     if(recallNotebookId==null)items else items.filter{it.mapEmbed?.target?.notebookId?.let{book->book==recallNotebookId}!=false}
                 }
                 traceStudyRead("source.objects.done",job)
-                val ink=(session?.ink?:app.inkRepository).readVisibleSnapshot(page.id)
+                val authoringRepository=session?.authoring?:app.authoring
+                val snapshot=authoringRepository.readPageEditor(page.id)
+                require(snapshot.objectRevision==objectSnapshot.revision){"EXPORT_REVISION_CHANGED"}
+                authoringRepository.checkExportHeads(page.id,snapshot)
+                val ink=InkRenderSource(session?.ink?:app.inkRepository,page.id,snapshot.inkRevision,emptySet(),snapshot.revision,snapshot.inkLayerCounts)
                 traceStudyRead("source.ink.done",job)
-                val authoring=(session?.authoring?:app.authoring).readPage(page.id).state
+                val authoring=snapshot.state
                 traceStudyRead("source.authoring.done",job)
                 ReviewPage(note.title,page,ink,objects,authoring).also{traceStudyRead("source.io.return",job)}
             }
@@ -78,18 +83,22 @@ internal fun traceStudyRead(phase:String,job:Job?){
             Row(Modifier.fillMaxWidth().padding(horizontal=16.dp)){
                 Text("来源页 · 只读",Modifier.weight(1f));TextButton(onClick=dismiss,modifier=Modifier.heightIn(min=48.dp).testTag("return-to-review")){Text(if(session==null)"返回此题"else"返回知识卡")}
             }
-            val renderPhase=if(result!=null)"source.compose.loaded"else if(failure!=null)"source.compose.error"else "source.compose.loading"
+            val renderPhase=if(failure!=null)"source.compose.error"else if(result!=null)"source.compose.loaded"else "source.compose.loading"
             SideEffect{traceStudyRead(renderPhase,readJob?.get())}
-            if(result!=null){
+            if(result!=null&&failure==null){
                 Text("${result.title} · 第 ${result.page.position+1} 页",Modifier.padding(horizontal=16.dp))
                 if(result.ink.revision!=source.inkRevision)Text("来源已变化，以下显示当前原页；卡片摘录时的快照仍单独保留。",Modifier.padding(16.dp))
-                AndroidView(factory={InkCanvasView(it).also{v->v.authorSession=session;view=v;v.allowInput=false;v.fingerWrites=false}},update={v->
-                    v.configure(result.page.world,PaperStyle.entries[result.page.paper],null);v.allowInput=false;v.showAuthoring(result.authoring);v.showDocument(result.page.id);v.showObjects(result.objects);v.showStrokes(result.ink.strokes)
-                },modifier=Modifier.fillMaxWidth().weight(1f).testTag("review-source-canvas"))
+                key(session,result.page.id){AndroidView(factory={InkCanvasView(it).also{v->v.authorSession=session;view=v;v.allowInput=false;v.fingerWrites=false}},onRelease={v->
+                    v.onNotice={};v.showInkSource(null,false);v.showDocument(null);v.showObjects(emptyList());v.showStrokes(emptyList());v.showAuthoring(null);if(view===v)view=null
+                },update={v->
+                    v.onNotice={error="来源呈现失败，已保存的摘录快照仍保留；请关闭后重试。"}
+                    v.configure(result.page.world,PaperStyle.entries[result.page.paper],null);v.allowInput=false
+                    v.showAuthoring(result.authoring);v.showDocument(result.page.id);v.showObjects(result.objects);v.showStrokes(emptyList());v.showInkSource(result.ink,false)
+                },modifier=Modifier.fillMaxWidth().weight(1f).testTag("review-source-canvas"))}
             }else if(failure!=null)Text(failure,Modifier.weight(1f).fillMaxWidth().verticalScroll(rememberScrollState()).padding(24.dp).testTag("review-source-unavailable"))
             else Box(Modifier.weight(1f)){CircularProgressIndicator(Modifier.padding(24.dp))}
             FlowRow(Modifier.fillMaxWidth().padding(horizontal=8.dp)){
-                if(result!=null){
+                if(result!=null&&failure==null){
                     TextButton(onClick={view?.zoomBy(1/1.2)},modifier=Modifier.heightIn(min=48.dp)){Text("缩小")}
                     TextButton(onClick={view?.zoomBy(1.2)},modifier=Modifier.heightIn(min=48.dp)){Text("放大")}
                     TextButton(onClick={view?.fitContent()},modifier=Modifier.heightIn(min=48.dp)){Text("全部内容")}

@@ -26,7 +26,7 @@ class StreamedPageLifecycleTest {
         }finally{main{store.clear()};db.close();context.deleteDatabase(name)}
     }
     private fun stroke()=InkStroke(id(),InkPen.PENCIL,0xff223344.toInt(),3f,InkTool.STYLUS,listOf(InkSample(10f,20f,0,.2f),InkSample(120f,200f,50,.9f)))
-    private suspend fun ready(model:InkViewModel,revision:Long)=withTimeout(15_000){model.ui.first{!it.loading&&!it.suspended&&it.queued==0&&it.blocked==null&&it.revision==revision}}
+    private suspend fun ready(model:InkViewModel,revision:Long)=withTimeout(15_000){model.ui.first{!it.loading&&!it.windowLoading&&!it.suspended&&it.queued==0&&it.blocked==null&&it.revision==revision}}
     @Test fun directPdfProviderImportHashesTheStreamAndClosesItsStagingFile()=runBlocking {
         val context=ApplicationProvider.getApplicationContext<Context>();val file=java.io.File(context.cacheDir,"provider-${id()}.pdf")
         try{
@@ -38,7 +38,7 @@ class StreamedPageLifecycleTest {
             val expected=OriginalBytes.file(file,PdfDocumentSource.MAX_BYTES)
             val prepared=DocumentImports.read(context,android.net.Uri.fromFile(file))
             val source=(prepared.content as ContentTransfer.Content.Book).value.pages.single().source!!.document
-            try{assertEquals(expected.size,prepared.byteCount);assertEquals(expected.sha256,source.sha256);source.copyTo(object:java.io.OutputStream(){override fun write(b:Int){};override fun write(b:ByteArray,o:Int,n:Int){}})}
+            try{assertEquals(expected.size.toLong(),prepared.byteCount);assertEquals(expected.sha256,source.sha256);source.copyTo(object:java.io.OutputStream(){override fun write(b:Int){};override fun write(b:ByteArray,o:Int,n:Int){}})}
             finally{prepared.close()}
             assertThrows(IllegalArgumentException::class.java){source.openStream()}
         }finally{file.delete()}
@@ -97,7 +97,7 @@ class StreamedPageLifecycleTest {
         main{assertFalse(model.requireCompleteWindow());model.accept(stroke())};ready(model,2)
         assertEquals(1,model.ui.value.automaticSourceIds!!.size)
         main{model.updateViewport(CanvasBounds(800.0,1000.0,950.0,1300.0))}
-        withTimeout(15_000){model.ui.first{!it.windowLoading&&it.windowComplete&&it.strokes.size==1}}
+        withTimeout(15_000){model.ui.first{!it.windowLoading&&it.windowComplete&&it.strokes.isEmpty()}}
         main{
             model.updateViewport(CanvasBounds(0.0,0.0,1000.0,1414.0))
             assertTrue(model.ui.value.windowLoading)

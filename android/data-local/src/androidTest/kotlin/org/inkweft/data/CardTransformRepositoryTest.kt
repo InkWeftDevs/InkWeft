@@ -124,7 +124,7 @@ class CardTransformRepositoryTest {
         }
         val db=NoteDatabase.open(context,name)
         try{
-            assertEquals(18,db.openHelper.readableDatabase.version);assertEquals(body,db.study().card(card)!!.body);assertEquals(body,db.study().cardVersion(card,1)!!.body)
+            assertEquals(19,db.openHelper.readableDatabase.version);assertEquals(body,db.study().card(card)!!.body);assertEquals(body,db.study().cardVersion(card,1)!!.body)
             assertFalse(StudySourceVersions(db).read(card,1).complete);assertNull(StudySourceVersions(db).read(card,1).singleLegacy(card))
             val current=StudySourceVersions(db).read(card,2);assertTrue(current.complete);assertArrayEquals(snapshot,current.sources.single().snapshot)
             assertEquals(1L,current.refs.single().revision);assertEquals(0L,db.images().totalBytes());assertEquals(snapshot.size.toLong(),db.study().snapshotBytes())

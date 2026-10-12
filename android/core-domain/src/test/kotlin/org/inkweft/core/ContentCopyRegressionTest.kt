@@ -17,7 +17,7 @@ class ContentCopyRegressionTest {
             val copy=(parsed.content as ContentTransfer.Content.Page).value
             assertEquals(original.title,copy.title);assertEquals(original.text,copy.text)
             assertEquals(PageAuthoringCodec.fingerprint(original.authoring!!),PageAuthoringCodec.fingerprint(copy.authoring!!))
-            assertEquals(ContentTransfer.hash(bytes),parsed.sha256);assertEquals(bytes.size,parsed.byteCount)
+            assertEquals(ContentTransfer.hash(bytes),parsed.sha256);assertEquals(bytes.size.toLong(),parsed.byteCount)
         }
     }
 

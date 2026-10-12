@@ -47,7 +47,6 @@ import java.util.Locale
 @OptIn(ExperimentalLayoutApi::class)
 fun LibraryScreen(ui:NotebookUi,workspace:WorkspaceViewModel,open:(Note)->Unit,create:()->Unit,importPage:()->Unit,diagnostics:()->Unit,rename:(Note)->Unit,duplicate:(Note)->Unit,export:(Note)->Unit){
     val app=LocalContext.current.applicationContext as InkWeftApplication
-    val summaryFlow=remember(app){app.knowledge.cards()};val summaries by summaryFlow.collectAsState(initial=emptyList())
     var destination by rememberSaveable{mutableStateOf("")};var learningNoteId by rememberSaveable{mutableStateOf<String?>(null)}
     var sourceNavigation by remember{mutableStateOf<Job?>(null)}
     var learningQuery by rememberSaveable{mutableStateOf("")}
@@ -57,9 +56,13 @@ fun LibraryScreen(ui:NotebookUi,workspace:WorkspaceViewModel,open:(Note)->Unit,c
     val learningDirectory=remember(app){app.learningDirectory.observe()}
     val learningState=rememberSaveableStateHolder()
     val entries by workspace.entries.collectAsState();val counts by workspace.inkCounts.collectAsState()
-    val searchRows by workspace.searchable.collectAsState()
+    val shelf by workspace.librarySearch.collectAsState()
     var filter by rememberSaveable{mutableStateOf("all")};var type by rememberSaveable{mutableStateOf("all")}
     var query by rememberSaveable{mutableStateOf("")};var grid by rememberSaveable{mutableStateOf(true)};var byTitle by rememberSaveable{mutableStateOf(false)}
+    var searchGeneration by remember{mutableLongStateOf(0)}
+    LaunchedEffect(ui.notes,ui.drafts,query,filter,type,byTitle){
+        searchGeneration=workspace.searchLibrary(ui.notes,ui.drafts,query,filter,type,byTitle)
+    }
     val drawer=rememberDrawerState(DrawerValue.Closed);val scope=rememberCoroutineScope()
     val focus=LocalFocusManager.current;val keyboard=LocalSoftwareKeyboardController.current
     var drawerJob by remember{mutableStateOf<Job?>(null)}
@@ -71,17 +74,10 @@ fun LibraryScreen(ui:NotebookUi,workspace:WorkspaceViewModel,open:(Note)->Unit,c
     fun closeDrawer(){drawerJob?.cancel();drawerJob=scope.launch{drawer.close()}}
     fun choose(value:String){filter=value;closeDrawer()}
     BackHandler(enabled=drawer.isOpen||drawer.targetValue==DrawerValue.Open){closeDrawer()}
-    val display=LinkedHashMap<String,Note>();ui.notes.forEach{display[it.id]=it};ui.drafts.values.forEach{display[it.base.id]=it.base.copy(title=it.title,text=it.text)}
-    val all=display.values.toList()
-    fun row(n:Note)=entries[n.id]?:WorkspaceRow(n.id)
-    val active=all.filter{row(it).trashedAt==null}
+    val active=shelf.active
     val learningNote=active.find{it.id==learningNoteId}
-    val folders=active.map{row(it).folder}.filter{it.isNotBlank()}.distinct().sorted()
-    val tags=active.flatMap{row(it).tags.split('\n')}.filter{it.isNotBlank()}.distinct().sorted()
-    val shown=all.filter{n->val r=row(n)
-        (if(filter=="trash")r.trashedAt!=null else r.trashedAt==null)&&
-        when{filter=="favorite"->r.favorite;filter=="unfiled"->r.folder.isBlank();filter.startsWith("folder:")->r.folder==filter.removePrefix("folder:");filter.startsWith("tag:")->filter.removePrefix("tag:") in r.tags.split('\n');else->true}&&
-        (type=="all"||(type=="board")==r.world)&&(query.isBlank()||n.title.contains(query,true)||n.text.contains(query,true)||r.tags.contains(query,true)||summaries.any{it.notebookId==n.id&&it.trashedAt==null&&(it.title.contains(query,true)||it.body.contains(query,true))}||searchRows.any{it.notebookId==n.id&&it.text.contains(query,true)})}.let{ShelfOrder.arrange(it,{n->row(n).pinned},{n->n.title},byTitle)}
+    val searchReady=shelf.generation==searchGeneration&&shelf.query==query&&shelf.filter==filter&&shelf.type==type&&shelf.byTitle==byTitle
+    val shown=if(searchReady&&!shelf.failed)shelf.items else emptyList()
     val title=when{filter=="favorite"->"已收藏";filter=="trash"->"回收站";filter=="unfiled"->"未分类";filter.startsWith("folder:")->filter.removePrefix("folder:");filter.startsWith("tag:")->"标签 · "+filter.removePrefix("tag:");else->"全部笔记"}
     val nav:@Composable (Boolean)->Unit={search->
         Column(Modifier.fillMaxHeight().width(224.dp).background(InkTheme.Navigation).padding(horizontal=12.dp)){
@@ -96,17 +92,17 @@ fun LibraryScreen(ui:NotebookUi,workspace:WorkspaceViewModel,open:(Note)->Unit,c
             NavigationLine("复习","review",null,false){closeDrawer();destination="review"}
             HorizontalDivider(Modifier.padding(vertical=12.dp),color=Line)
             NavigationLine("全部笔记","note",active.size,filter=="all"){choose("all")}
-            NavigationLine("已收藏","star",active.count{row(it).favorite},filter=="favorite"){choose("favorite")}
-            NavigationLine("未分类","folder",active.count{row(it).folder.isBlank()},filter=="unfiled"){choose("unfiled")}
-            NavigationLine("回收站","trash",all.size-active.size,filter=="trash"){choose("trash")}
+            NavigationLine("已收藏","star",shelf.favorites,filter=="favorite"){choose("favorite")}
+            NavigationLine("未分类","folder",shelf.unfiled,filter=="unfiled"){choose("unfiled")}
+            NavigationLine("回收站","trash",shelf.trashed,filter=="trash"){choose("trash")}
             HorizontalDivider(Modifier.padding(vertical=17.dp),color=Line)
             Text("文件夹",fontSize=11.sp,color=Quiet,modifier=Modifier.padding(12.dp,6.dp))
-            if(folders.isEmpty())Text("从笔记菜单添加分类",fontSize=11.sp,color=Quiet,modifier=Modifier.padding(12.dp,8.dp))
-            folders.forEach{folder->NavigationLine(folder,"folder",active.count{row(it).folder==folder},filter=="folder:$folder"){choose("folder:$folder")}}
+            if(shelf.folders.isEmpty())Text("从笔记菜单添加分类",fontSize=11.sp,color=Quiet,modifier=Modifier.padding(12.dp,8.dp))
+            shelf.folders.forEach{(folder,count)->NavigationLine(folder,"folder",count,filter=="folder:$folder"){choose("folder:$folder")}}
             HorizontalDivider(Modifier.padding(vertical=17.dp),color=Line)
             Text("标签",fontSize=11.sp,color=Quiet,modifier=Modifier.padding(12.dp,6.dp))
-            if(tags.isEmpty())Text("从笔记菜单添加标签",fontSize=11.sp,color=Quiet,modifier=Modifier.padding(12.dp,8.dp))
-            tags.forEach{tag->NavigationLine(tag,"tag",null,filter=="tag:$tag"){choose("tag:$tag")}}
+            if(shelf.tags.isEmpty())Text("从笔记菜单添加标签",fontSize=11.sp,color=Quiet,modifier=Modifier.padding(12.dp,8.dp))
+            shelf.tags.forEach{tag->NavigationLine(tag,"tag",null,filter=="tag:$tag"){choose("tag:$tag")}}
             Spacer(Modifier.height(12.dp))
             }
             HorizontalDivider(color=Line)
@@ -157,21 +153,21 @@ fun LibraryScreen(ui:NotebookUi,workspace:WorkspaceViewModel,open:(Note)->Unit,c
                         }
                         if(!compact)Text("${shown.size} 份",fontSize=11.sp,color=Quiet,maxLines=1)
                     }
-                    if(ui.loading)LinearProgressIndicator(Modifier.fillMaxWidth())
+                    if(ui.loading||!searchReady)LinearProgressIndicator(Modifier.fillMaxWidth())
                     if(filter=="trash")Text("笔记内容与封面仍保留，可从菜单恢复。",fontSize=12.sp,color=Quiet,modifier=Modifier.padding(vertical=12.dp))
-                    val itemContent:@Composable (Note)->Unit={n->val meta=row(n)
+                    val itemContent:@Composable (LibraryShelfItem)->Unit={item->val n=item.note;val meta=item.workspace;val hitPage=item.pageId
                         NoteTile(n,meta,counts[n.id]?.modifiedRevision?:0,counts[n.id]?.visibleCount?:0,grid,
-                            {if(meta.trashedAt==null){val hit=searchRows.firstOrNull{it.notebookId==n.id&&query.isNotBlank()&&it.text.contains(query,true)};if(hit!=null)workspace.openSearchPage(n.id,hit.pageId){open(n)}else if(query.isNotBlank()&&summaries.any{it.notebookId==n.id&&it.trashedAt==null&&(it.title.contains(query,true)||it.body.contains(query,true))}){learningTarget=null;learningQuery=query;learningNoteId=n.id}else open(n)}},{rename(n)},{coverError=null;coverExpected=meta.revision;coverTargetId=n.id},
+                            {if(searchReady&&meta.trashedAt==null){if(hitPage!=null)workspace.openSearchPage(n.id,hitPage){open(n)}else if(item.cardMatch){learningTarget=null;learningQuery=query;learningNoteId=n.id}else open(n)}},{rename(n)},{coverError=null;coverExpected=meta.revision;coverTargetId=n.id},
                             {workspace.organize(meta,favorite=!meta.favorite)},{editing=meta},{if(meta.trashedAt!=null)workspace.organize(meta,trash=false)else removing=meta},
                             {duplicate(n)},{export(n)},{workspace.pin(meta,!meta.pinned)})
                     }
                     if(grid)LazyVerticalGrid(columns=GridCells.Adaptive(if(compact)144.dp else 180.dp),modifier=Modifier.weight(1f).testTag("library-grid"),contentPadding=PaddingValues(top=12.dp,bottom=24.dp),horizontalArrangement=Arrangement.spacedBy(16.dp),verticalArrangement=Arrangement.spacedBy(24.dp)){
                         if(filter!="trash"&&query.isBlank())item(key="new-tile"){NewTile(create)}
-                        items(shown,key={it.id}){itemContent(it)}
-                        if(shown.isEmpty())item(span={GridItemSpan(maxLineSpan)}){Text(if(query.isNotBlank())"没有匹配内容。打开笔记，点顶部“查找”输入关键词，即可识别并查找手写。"else if(filter=="trash")"回收站为空。"else"新建一份纸张或无界笔记，开始记录。",color=Quiet,fontSize=13.sp,modifier=Modifier.padding(vertical=28.dp))}
+                        items(shown,key={it.note.id}){itemContent(it)}
+                        if(shown.isEmpty()&&searchReady)item(span={GridItemSpan(maxLineSpan)}){Text(if(shelf.failed)"检索暂不可用，请重试。原资料保留。"else if(query.isNotBlank())"没有匹配内容。打开笔记，点顶部“查找”输入关键词，即可识别并查找手写。"else if(filter=="trash")"回收站为空。"else"新建一份纸张或无界笔记，开始记录。",color=Quiet,fontSize=13.sp,modifier=Modifier.padding(vertical=28.dp))}
                     }else LazyColumn(Modifier.weight(1f).testTag("library-list"),contentPadding=PaddingValues(vertical=18.dp),verticalArrangement=Arrangement.spacedBy(12.dp)){
                         if(filter!="trash"&&query.isBlank())item{OutlinedButton(onClick=create,modifier=Modifier.fillMaxWidth()){Glyph("add");Text("新建笔记")}}
-                        items(shown,key={it.id}){itemContent(it)}
+                        items(shown,key={it.note.id}){itemContent(it)}
                     }
                 }
             }
@@ -256,22 +252,13 @@ private fun NoteTile(note:Note,row:WorkspaceRow,inkRevision:Long,count:Int,grid:
     val context=LocalContext.current;val app=context.applicationContext as InkWeftApplication
     val style=NotebookCover.fromKey(row.coverKey)
     // Decorated covers do not load or decode the author's strokes just to draw the shelf.
-    val pagePreview by produceState<Pair<NotebookPageRow,List<InkStroke>>?>(null,note.id,inkRevision,style,row.revision){
-        value=if(style!=NotebookCover.CONTENT)null else try{withContext(Dispatchers.IO){
-            val first=app.pages.activePages(note.id).firstOrNull()
-            first?.let{it to app.inkRepository.readVisible(it.id)}
-        }}catch(c:CancellationException){throw c}catch(_:Exception){null}
+    val pagePreview by produceState<NotebookPageRow?>(null,note.id,inkRevision,style,row.revision){
+        value=if(style!=NotebookCover.CONTENT)null else try{withContext(Dispatchers.IO){app.pages.activePages(note.id).firstOrNull()}}
+            catch(c:CancellationException){throw c}catch(_:Exception){null}
     }
     val customCover by produceState<CustomCover?>(null,note.id,row.revision,style){
         value=if(style!=NotebookCover.CUSTOM)null else try{withContext(Dispatchers.IO){app.workspaceRepository.customCover(note.id)?.let(CustomCoverCodec::decode)}}catch(c:CancellationException){throw c}catch(_:Exception){null}
     }
-    val previewObjects by produceState<List<PageObject>>(emptyList(),pagePreview?.first?.id,style){
-        val id=pagePreview?.first?.id
-        if(style==NotebookCover.CONTENT&&id!=null)try{
-            app.pageObjects.observePreview(id).collect{value=it}
-        }catch(c:CancellationException){throw c}catch(_:Exception){value=emptyList()}
-    }
-    val strokes=pagePreview?.second
     val date by produceState("",note.id,inkRevision,note.revision){val at=withContext(Dispatchers.IO){runCatching{app.workspaceRepository.modifiedAt(note.id)}.getOrDefault(0L)};value=if(at>0)SimpleDateFormat("yyyy/MM/dd",Locale.getDefault()).format(Date(at))else""}
     val art:@Composable (Modifier)->Unit={m->
         Surface(m,shape=RoundedCornerShape(10.dp),color=Color.White,shadowElevation=1.dp,border=BorderStroke(1.dp,Line)){
@@ -279,10 +266,12 @@ private fun NoteTile(note:Note,row:WorkspaceRow,inkRevision:Long,count:Int,grid:
                 if(style==NotebookCover.CUSTOM){customCover?.let{CustomCoverArt(it,note.title,Modifier.fillMaxSize())}?:Text("封面暂不可用",fontSize=11.sp,color=Quiet,modifier=Modifier.padding(8.dp))}
                 else if(style!=NotebookCover.CONTENT)NotebookCoverArt(style,note.id,note.title,row.world,Modifier.fillMaxSize())
                 else{
-                    val loaded=strokes
-                    if(pagePreview?.first!=null||!loaded.isNullOrEmpty()||previewObjects.isNotEmpty())AndroidView(factory={c->InkCanvasView(c).apply{preview=true;importantForAccessibility=android.view.View.IMPORTANT_FOR_ACCESSIBILITY_NO}},update={v->v.configure(row.world,PaperStyle.entries.getOrElse(pagePreview?.first?.paper?:row.paper){PaperStyle.RULED},null);v.showDocument(pagePreview?.first?.id);v.showStrokes(loaded.orEmpty());v.showObjects(previewObjects)},modifier=Modifier.fillMaxSize())
-                    else PaperThumbnail(row.world,PaperStyle.entries.getOrElse(pagePreview?.first?.paper?:row.paper){PaperStyle.RULED})
-                    if(loaded?.isEmpty()!=false&&previewObjects.isEmpty()&&note.text.isNotBlank())Text(note.text,fontSize=8.sp,lineHeight=13.sp,maxLines=10,color=Quiet,modifier=Modifier.padding(12.dp))
+                    val loaded=pagePreview
+                    if(loaded!=null)PageThumb(loaded,Modifier.fillMaxSize(),fallbackText=note.text)
+                    else{
+                        PaperThumbnail(row.world,PaperStyle.entries.getOrElse(row.paper){PaperStyle.RULED})
+                        if(note.text.isNotBlank())Text(note.text,fontSize=8.sp,lineHeight=13.sp,maxLines=10,color=Quiet,modifier=Modifier.padding(12.dp))
+                    }
                 }
                 if(row.favorite)Box(Modifier.align(Alignment.TopEnd).padding(7.dp).background(Color.White,RoundedCornerShape(6.dp)).padding(3.dp)){Glyph("star",Forest,Modifier.size(14.dp))}
                 if(row.world)Text("无界",fontSize=9.sp,color=Forest,modifier=Modifier.align(Alignment.BottomEnd).padding(7.dp).background(Leaf,RoundedCornerShape(4.dp)).padding(4.dp))

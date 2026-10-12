@@ -1,0 +1,644 @@
+{
+  "version": "87 / 0.0.87-bounded-resources",
+  "baselineCommit": "bf2c091c96ec5323ddc6aa13461d9f8d99d01315",
+  "counting": "Cumulative distinct methods; the latest completed result for each method supersedes its prior result. Earlier failed attempts remain in run records.",
+  "jvm": {
+    "core": {
+      "tests": 471,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "data": {
+      "tests": 19,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  "device": "MuMu5, Android 12 / API32, physical device NOT_RUN",
+  "deviceSuites": {
+    "data": {
+      "distinctMethods": 217,
+      "passingMethods": 217,
+      "runs": [
+        {
+          "name": "data-seventh-contracts",
+          "methods": 202,
+          "passing": 196,
+          "seconds": 204.797,
+          "suitePassed": false
+        },
+        {
+          "name": "data-seventh-large-pages",
+          "methods": 14,
+          "passing": 14,
+          "seconds": 169.812,
+          "suitePassed": true
+        },
+        {
+          "name": "data-seventh-300mb",
+          "methods": 1,
+          "passing": 1,
+          "seconds": 90.281,
+          "suitePassed": true
+        },
+        {
+          "name": "data-ninth-repairs",
+          "methods": 6,
+          "passing": 5,
+          "seconds": 4.61,
+          "suitePassed": false
+        },
+        {
+          "name": "data-tenth-vacuum",
+          "methods": 1,
+          "passing": 1,
+          "seconds": 1.641,
+          "suitePassed": true
+        }
+      ]
+    },
+    "app": {
+      "distinctMethods": 39,
+      "passingMethods": 39,
+      "runs": [
+        {
+          "name": "app-eighth-editing",
+          "methods": 24,
+          "passing": 19,
+          "seconds": 26.906,
+          "suitePassed": false
+        },
+        {
+          "name": "app-eighth-transfer-and-render",
+          "methods": 14,
+          "passing": 14,
+          "seconds": 14.75,
+          "suitePassed": true
+        },
+        {
+          "name": "app-tenth-repairs",
+          "methods": 7,
+          "passing": 7,
+          "seconds": 14.343,
+          "suitePassed": true
+        }
+      ]
+    }
+  },
+  "measurements": [
+    {
+      "run": "data-seventh-contracts",
+      "kind": "ORIGINAL_STORAGE_EVIDENCE",
+      "values": {
+        "kind": "partial-migration-reclamation",
+        "databaseBytesBefore": 5931008,
+        "databaseBytesAfter": 1724416,
+        "migratedBytes": 4194304,
+        "retainedDamagedChunkRows": 3
+      }
+    },
+    {
+      "run": "data-seventh-large-pages",
+      "kind": "PAGE_COPY_EVIDENCE",
+      "values": {
+        "kind": "large-page-copy",
+        "strokes": 40002,
+        "points": 2040053,
+        "largestGeometryBatch": 256,
+        "heapBeforeBytes": 1299336,
+        "heapAfterFirst8192Bytes": 2374072,
+        "heapAfterBytes": 1317656,
+        "observedHeapPeakBytes": 5852216,
+        "retainedGrowthAfter8192Bytes": -1056416,
+        "copiedMemberships": 40002,
+        "fullAuthoringStateRetainedBytes": 12074864
+      }
+    },
+    {
+      "run": "data-seventh-large-pages",
+      "kind": "CONTENT_PAGE_EVIDENCE",
+      "values": {
+        "strokes": 40001,
+        "points": 2040051,
+        "archiveBytes": 60921935,
+        "peakJavaUsedBytes": 26798912,
+        "windowPoints": 8160
+      }
+    },
+    {
+      "run": "data-seventh-large-pages",
+      "kind": "CONTENT_ORIGINAL_EVIDENCE",
+      "values": {
+        "sourceBytes": 67109375,
+        "archiveBytes": 67121216,
+        "physicalBytes": 67109375,
+        "pages": 2
+      }
+    },
+    {
+      "run": "data-seventh-large-pages",
+      "kind": "AUTHORING_PROJECTION_EVIDENCE",
+      "values": {
+        "storedInk": 1000,
+        "loadedMemberships": 32,
+        "authorBytes": 2687,
+        "pendingBytes": 5580,
+        "readMs": 4.713026,
+        "javaUsedBytes": 5059176
+      }
+    },
+    {
+      "run": "data-seventh-large-pages",
+      "kind": "AUTHORING_PROJECTION_EVIDENCE",
+      "values": {
+        "storedInk": 20000,
+        "loadedMemberships": 32,
+        "authorBytes": 2687,
+        "pendingBytes": 5580,
+        "readMs": 13.781169,
+        "javaUsedBytes": 2615808
+      }
+    },
+    {
+      "run": "data-seventh-large-pages",
+      "kind": "AUTHORING_PROJECTION_EVIDENCE",
+      "values": {
+        "storedInk": 100000,
+        "loadedMemberships": 32,
+        "authorBytes": 2687,
+        "pendingBytes": 5580,
+        "readMs": 34.551053,
+        "javaUsedBytes": 2770016
+      }
+    },
+    {
+      "run": "data-seventh-300mb",
+      "kind": "STREAMED_300MB_EVIDENCE",
+      "values": {
+        "originalBytes": 300000000,
+        "books": 3,
+        "pages": 6,
+        "sourcePhysicalOriginalBytes": 300000000,
+        "restoredPhysicalOriginalBytes": 300000000,
+        "logicalOriginalBytes": 900000000,
+        "observedPeakJavaUsedBytes": 27881040,
+        "javaMaxHeapBytes": 201326592
+      }
+    },
+    {
+      "run": "data-ninth-repairs",
+      "kind": "INK_CUT_INDEX_EVIDENCE",
+      "values": {
+        "kind": "cut-index-query",
+        "unrelatedCuts": 2000,
+        "selectedCuts": 1,
+        "workingBytes": 214,
+        "plan": [
+          "CO-ROUTINE t",
+          "SEARCH ink_cut_targets USING COVERING INDEX ink_cut_targets_stroke (strokeId=?)",
+          "USE TEMP B-TREE FOR DISTINCT",
+          "SCAN t",
+          "SEARCH c USING INDEX index_ink_cuts_noteId_id (noteId=? AND id=?)",
+          "USE TEMP B-TREE FOR ORDER BY"
+        ],
+        "pendingPlan": [
+          "SEARCH p USING COVERING INDEX ink_cut_pending_page (noteId=?)",
+          "SEARCH c USING INDEX sqlite_autoindex_ink_cuts_1 (id=?)"
+        ]
+      }
+    },
+    {
+      "run": "data-ninth-repairs",
+      "kind": "ORIGINAL_STORAGE_EVIDENCE",
+      "values": {
+        "kind": "deduplicated-files",
+        "logicalPdfBytes": 16777216,
+        "logicalImageBytes": 208,
+        "physicalOriginalBytes": 8388712,
+        "databaseFileBytes": 4096,
+        "documentChunkRows": 0,
+        "imageChunkRows": 0,
+        "restoredPhysicalBytes": 8388712
+      }
+    },
+    {
+      "run": "data-tenth-vacuum",
+      "kind": "ORIGINAL_STORAGE_EVIDENCE",
+      "values": {
+        "kind": "legacy-physical-reclamation",
+        "databaseBytesBefore": 7004160,
+        "databaseBytesAfter": 708608,
+        "migratedBytes": 6291456,
+        "originalBytesAfter": 6291456,
+        "freePagesAfter": 0,
+        "pageSize": 4096
+      }
+    },
+    {
+      "run": "app-eighth-editing",
+      "kind": "READONLY_STREAM_EVIDENCE",
+      "values": {
+        "kind": "live-thumbnail",
+        "sourceStrokes": 1002,
+        "geometryBatches": 12,
+        "largestGeometryBatch": 256,
+        "trackedBytes": 2289600
+      }
+    },
+    {
+      "run": "app-eighth-editing",
+      "kind": "READONLY_STREAM_EVIDENCE",
+      "values": {
+        "kind": "fixed-recall",
+        "sourceStrokes": 1002,
+        "geometryBatches": 4,
+        "largestGeometryBatch": 256,
+        "trackedBytes": 0
+      }
+    },
+    {
+      "run": "app-eighth-editing",
+      "kind": "READONLY_STREAM_EVIDENCE",
+      "values": {
+        "kind": "shadow-review",
+        "sourceStrokes": 1002,
+        "geometryBatches": 8,
+        "largestGeometryBatch": 256,
+        "trackedBytes": 7557120
+      }
+    },
+    {
+      "run": "app-tenth-repairs",
+      "kind": "READONLY_STREAM_EVIDENCE",
+      "values": {
+        "kind": "live-thumbnail",
+        "sourceStrokes": 1002,
+        "geometryBatches": 12,
+        "largestGeometryBatch": 256,
+        "trackedBytes": 3434400
+      }
+    },
+    {
+      "run": "app-tenth-repairs",
+      "kind": "READONLY_STREAM_EVIDENCE",
+      "values": {
+        "kind": "fixed-recall",
+        "sourceStrokes": 1002,
+        "geometryBatches": 4,
+        "largestGeometryBatch": 256,
+        "trackedBytes": 1144800
+      }
+    },
+    {
+      "run": "app-tenth-repairs",
+      "kind": "READONLY_STREAM_EVIDENCE",
+      "values": {
+        "kind": "shadow-review",
+        "sourceStrokes": 1002,
+        "geometryBatches": 8,
+        "largestGeometryBatch": 256,
+        "trackedBytes": 8701920
+      }
+    }
+  ],
+  "lint": {
+    "buildLog": "app-eighth.log",
+    "severityCounts": {
+      "Warning": 176,
+      "Hint": 2
+    }
+  },
+  "artifacts": [
+    {
+      "path": "E:\\Inkweft\\archives\\2026-10-11\\InkWeft-Bounded-Resources\\artifacts\\app-tenth\\app-debug.apk",
+      "bytes": 240775613,
+      "sha256": "6ba93210716221214a795d40dd346835c402b148822b35c0662d29b9854a3f3f",
+      "package": "org.inkweft.app.bounded20261011",
+      "generation": "app-tenth"
+    },
+    {
+      "path": "E:\\Inkweft\\archives\\2026-10-11\\InkWeft-Bounded-Resources\\artifacts\\app-tenth\\app-debug-androidTest.apk",
+      "bytes": 17089492,
+      "sha256": "d8301a18dd456205621784ff037705ec22d086539950cd1661fd592226873ff8",
+      "package": "org.inkweft.app.bounded20261011.test",
+      "generation": "app-tenth"
+    },
+    {
+      "path": "E:\\Inkweft\\archives\\2026-10-11\\InkWeft-Bounded-Resources\\artifacts\\data-tenth\\data-local-debug-androidTest.apk",
+      "bytes": 25260681,
+      "sha256": "26cfcb1c4da73db056a6088f9014c574fac881f8755b9f38c9a4715989dec5e0",
+      "package": "org.inkweft.data.bounded20261011.test",
+      "generation": "data-tenth"
+    }
+  ],
+  "scopedSeconds": {
+    "scoped-final-core": {
+      "totalSeconds": 4.641,
+      "commands": [
+        {
+          "args": [
+            "E:\\Inkweft\\worktrees\\storage-optimization-20261011\\android\\gradlew.bat",
+            ":core-domain:test",
+            "--tests",
+            "org.inkweft.core.HandwritingLineBudgetRegressionTest",
+            "--daemon",
+            "--max-workers=1",
+            "-Dorg.gradle.jvmargs=-Xmx2048m -Dfile.encoding=UTF-8",
+            "-Pkotlin.compiler.execution.strategy=in-process",
+            "--init-script",
+            "E:\\Inkweft\\archives\\2026-10-11\\InkWeft-Bounded-Resources\\verification\\scoped-final-core\\application-id.init.gradle",
+            "--offline"
+          ],
+          "exitCode": 0,
+          "seconds": 4.625,
+          "log": "gradle.log"
+        }
+      ],
+      "status": "PASS"
+    },
+    "scoped-final-core-warm": {
+      "totalSeconds": 3.125,
+      "commands": [
+        {
+          "args": [
+            "E:\\Inkweft\\worktrees\\storage-optimization-20261011\\android\\gradlew.bat",
+            ":core-domain:test",
+            "--tests",
+            "org.inkweft.core.HandwritingLineBudgetRegressionTest",
+            "--daemon",
+            "--max-workers=1",
+            "-Dorg.gradle.jvmargs=-Xmx2048m -Dfile.encoding=UTF-8",
+            "-Pkotlin.compiler.execution.strategy=in-process",
+            "--init-script",
+            "E:\\Inkweft\\archives\\2026-10-11\\InkWeft-Bounded-Resources\\verification\\scoped-final-core-warm\\application-id.init.gradle",
+            "--offline"
+          ],
+          "exitCode": 0,
+          "seconds": 3.125,
+          "log": "gradle.log"
+        }
+      ],
+      "status": "PASS"
+    },
+    "scoped-final-data": {
+      "totalSeconds": 5.203,
+      "commands": [
+        {
+          "args": [
+            "E:\\Inkweft\\worktrees\\storage-optimization-20261011\\android\\gradlew.bat",
+            ":data-local:testDebugUnitTest",
+            "--tests",
+            "org.inkweft.data.OriginalStoreTest",
+            "--daemon",
+            "--max-workers=1",
+            "-Dorg.gradle.jvmargs=-Xmx2048m -Dfile.encoding=UTF-8",
+            "-Pkotlin.compiler.execution.strategy=in-process",
+            "--init-script",
+            "E:\\Inkweft\\archives\\2026-10-11\\InkWeft-Bounded-Resources\\verification\\scoped-final-data\\application-id.init.gradle",
+            "--offline"
+          ],
+          "exitCode": 0,
+          "seconds": 5.203,
+          "log": "gradle.log"
+        }
+      ],
+      "status": "PASS"
+    }
+  },
+  "lockCheck": {
+    "result": "PASS",
+    "contendingProcessExit": 1,
+    "seconds": 0.156,
+    "scope": "Second verification entry refuses the workspace lock before launching Gradle."
+  },
+  "settingsUi": {
+    "result": "PASS",
+    "package": "org.inkweft.app.bounded20261011",
+    "apkSha256": "6ba93210716221214a795d40dd346835c402b148822b35c0662d29b9854a3f3f",
+    "scope": "Synthetic app library on MuMu5; actual settings action and resulting message",
+    "visibleTexts": [
+      "自动美化",
+      "在笔盒的美化参数中选择整理笔迹或字体替换，识别结果可先校对。",
+      "重置笔盒位置",
+      "数据",
+      "本地保存",
+      "完整备份保留已保存的资料与历史。导出副本可保留笔迹、图片与文档。",
+      "PDF 原件 732 B · 图片原件 0 B",
+      "去重原件文件 732 B · 数据库 4.89 MB",
+      "原件缓存 0 B · 设备可用空间 122 GB",
+      "原件归属量可重复计数；文件量按实际占用计算。整理会保留笔记、回收站和历史所需原件。",
+      "清理原件缓存",
+      "整理原件与磁盘空间",
+      "已整理 0 份原件，释放 0.92 MB。",
+      "资料库备份与恢复",
+      "加密备份与恢复（实验）",
+      "本地模板包",
+      "诊断与导出"
+    ]
+  },
+  "physicalChecklist": "../../DEVICE-TEST-CHECKLIST.md",
+  "rawEvidenceRoot": "E:\\Inkweft\\archives\\2026-10-11\\InkWeft-Bounded-Resources\\verification",
+  "pencilComparison": {
+    "source": "E:\\Inkweft\\archives\\2026-10-11\\InkWeft-Bounded-Resources\\verification\\device-attempt01\\app-fifth-repair-and-performance-runner.txt",
+    "baselineCommit": "bf2c091",
+    "framesPerRound": 120,
+    "summary": [
+      {
+        "phase": "incremental",
+        "engine": "baseline",
+        "rounds": 5,
+        "medianMs": 0.917671,
+        "p95Ms": 1.615846,
+        "p99Ms": 1.742849,
+        "allocatedBytes": 12353536,
+        "collections": 1,
+        "gcTime": 4,
+        "roundValues": [
+          {
+            "round": 0,
+            "medianMs": 1.168196,
+            "p95Ms": 1.883058,
+            "allocatedBytes": 12353536,
+            "collections": 0
+          },
+          {
+            "round": 1,
+            "medianMs": 0.904071,
+            "p95Ms": 1.611423,
+            "allocatedBytes": 12304384,
+            "collections": 0
+          },
+          {
+            "round": 2,
+            "medianMs": 1.000996,
+            "p95Ms": 1.530613,
+            "allocatedBytes": 12386304,
+            "collections": 1
+          },
+          {
+            "round": 3,
+            "medianMs": 0.898651,
+            "p95Ms": 1.615846,
+            "allocatedBytes": 12337152,
+            "collections": 1
+          },
+          {
+            "round": 4,
+            "medianMs": 0.917671,
+            "p95Ms": 1.630826,
+            "allocatedBytes": 12369920,
+            "collections": 1
+          }
+        ]
+      },
+      {
+        "phase": "incremental",
+        "engine": "current",
+        "rounds": 5,
+        "medianMs": 0.728606,
+        "p95Ms": 1.098051,
+        "p99Ms": 1.190203,
+        "allocatedBytes": 2637824,
+        "collections": 0,
+        "gcTime": 0,
+        "roundValues": [
+          {
+            "round": 0,
+            "medianMs": 0.788582,
+            "p95Ms": 1.494837,
+            "allocatedBytes": 2605056,
+            "collections": 0
+          },
+          {
+            "round": 1,
+            "medianMs": 0.728606,
+            "p95Ms": 1.18853,
+            "allocatedBytes": 2654208,
+            "collections": 0
+          },
+          {
+            "round": 2,
+            "medianMs": 0.623018,
+            "p95Ms": 1.00906,
+            "allocatedBytes": 2637824,
+            "collections": 1
+          },
+          {
+            "round": 3,
+            "medianMs": 0.673169,
+            "p95Ms": 1.0069,
+            "allocatedBytes": 2654208,
+            "collections": 0
+          },
+          {
+            "round": 4,
+            "medianMs": 0.750628,
+            "p95Ms": 1.098051,
+            "allocatedBytes": 2605056,
+            "collections": 0
+          }
+        ]
+      },
+      {
+        "phase": "unchanged",
+        "engine": "baseline",
+        "rounds": 5,
+        "medianMs": 1.172572,
+        "p95Ms": 1.472431,
+        "p99Ms": 1.702772,
+        "allocatedBytes": 20627456,
+        "collections": 1,
+        "gcTime": 4,
+        "roundValues": [
+          {
+            "round": 0,
+            "medianMs": 1.420271,
+            "p95Ms": 1.699295,
+            "allocatedBytes": 20627456,
+            "collections": 0
+          },
+          {
+            "round": 1,
+            "medianMs": 1.157859,
+            "p95Ms": 1.459803,
+            "allocatedBytes": 20627456,
+            "collections": 1
+          },
+          {
+            "round": 2,
+            "medianMs": 1.172572,
+            "p95Ms": 1.472431,
+            "allocatedBytes": 20611072,
+            "collections": 1
+          },
+          {
+            "round": 3,
+            "medianMs": 1.166323,
+            "p95Ms": 1.314042,
+            "allocatedBytes": 20611072,
+            "collections": 1
+          },
+          {
+            "round": 4,
+            "medianMs": 1.270898,
+            "p95Ms": 1.616109,
+            "allocatedBytes": 20643840,
+            "collections": 2
+          }
+        ]
+      },
+      {
+        "phase": "unchanged",
+        "engine": "current",
+        "rounds": 5,
+        "medianMs": 0.549137,
+        "p95Ms": 0.671486,
+        "p99Ms": 0.744752,
+        "allocatedBytes": 851968,
+        "collections": 0,
+        "gcTime": 0,
+        "roundValues": [
+          {
+            "round": 0,
+            "medianMs": 0.701269,
+            "p95Ms": 1.223848,
+            "allocatedBytes": 868608,
+            "collections": 0
+          },
+          {
+            "round": 1,
+            "medianMs": 0.549137,
+            "p95Ms": 0.611118,
+            "allocatedBytes": 851968,
+            "collections": 0
+          },
+          {
+            "round": 2,
+            "medianMs": 0.55015,
+            "p95Ms": 0.710306,
+            "allocatedBytes": 884736,
+            "collections": 1
+          },
+          {
+            "round": 3,
+            "medianMs": 0.54775,
+            "p95Ms": 0.669501,
+            "allocatedBytes": 851968,
+            "collections": 0
+          },
+          {
+            "round": 4,
+            "medianMs": 0.539763,
+            "p95Ms": 0.671486,
+            "allocatedBytes": 851968,
+            "collections": 0
+          }
+        ]
+      }
+    ],
+    "scope": "One process; separate warmup; alternating engine order; synthetic CPU draw and Java allocation. Not physical stylus latency.",
+    "pixels": "Test compares final pixel hashes in every paired round; method passed."
+  }
+}

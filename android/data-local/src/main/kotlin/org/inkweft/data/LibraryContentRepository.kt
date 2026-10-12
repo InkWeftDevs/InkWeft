@@ -64,21 +64,10 @@ class LibraryContentRepository(private val db:NoteDatabase,
                 val pageId=if(index==0)target.id else UUID.randomUUID().toString()
                 if(index>0)db.pages().insert(NotebookPageRow(pageId,target.id,index,page.world,page.paper))
                 DocumentRepository(db).attach(pageId,DocumentRepository(db).read(page.id,documents),validated)
-                val copied=InkRepository(db).copyVisibleTo(page.id,pageId)
-                val objects=PageObjectRepository(db).read(page.id).objects.mapNotNull{o->
-                    val refs=o.sourceStrokeIds.filter{it in copied.strokeIds}
-                    if(o.hidden&&refs.isEmpty())null else o.copy(sourceStrokeIds=refs,textRuns=o.textRuns.map{it.copy(sourceIds=it.sourceIds.filter{v->v in refs})})
-                }
-                val objectIds=PageObjectRepository(db).import(pageId,objects,copied.strokeIds,ImageSourceRepository(db).forPage(page.id,objects),validated)
-                val state=PageAuthoringRepository(db).readPage(page.id).state
-                if(!state.legacy){
-                    val authoring=state.copied(pageId,copied.strokeIds,objectIds)
-                    PageAuthoringRepository(db).validate(AuthoringScope.page(target.id,pageId),authoring)
-                    PageAuthoringRepository(db).storePage(pageId,target.id,0,authoring)
-                }
+                val copied=PageCopy(db).copy(page.id,pageId,validated)
                 // Only currently valid manual transcription travels to the new revision.
                 db.pages().search(page.id)?.takeIf{it.inkRevision==copied.sourceRevision&&it.method=="MANUAL"}?.let{
-                    db.pages().putSearch(PageSearchRow(pageId,copied.strokeIds.size.toLong(),it.text))
+                    db.pages().putSearch(PageSearchRow(pageId,copied.strokeCount,it.text))
                 }
             }
             fault(LibraryContentFault.BEFORE_RECEIPT)
@@ -92,11 +81,17 @@ class LibraryContentRepository(private val db:NoteDatabase,
     suspend fun import(command:ImportNotebook,prepared:ContentTransfer.Prepared):Note {
         require(command.contentSha256==prepared.sha256){"IMPORT_CONTENT_CHANGED"}
         lookup(command.commandId,"IMPORT",command.digest())?.let{fault(LibraryContentFault.AFTER_TRANSACTION);return it}
+        if(prepared.content is ContentTransfer.Content.Streamed){
+            fault(LibraryContentFault.AFTER_IMPORT_VALIDATION)
+            val result=ContentArchive(db).import(command,prepared){fault(LibraryContentFault.BEFORE_RECEIPT)}
+            fault(LibraryContentFault.AFTER_TRANSACTION);return result
+        }
         val text:String
         val pages:List<InkPageFile>
         when(val content=prepared.content){
             is ContentTransfer.Content.Page->{text=content.value.text;pages=listOf(content.value)}
             is ContentTransfer.Content.Book->{text=content.value.text;pages=content.value.pages.toList()}
+            is ContentTransfer.Content.Streamed->error("Streamed content was handled above")
         }
         val validated=ValidatedImportOriginals.prepare(pages,checkNotNull(db.documentScratch))
         fault(LibraryContentFault.AFTER_IMPORT_VALIDATION)
@@ -119,6 +114,8 @@ class LibraryContentRepository(private val db:NoteDatabase,
         return result
     }
 
+    suspend fun prepareExport(notebookId:String,pageId:String?=null):ContentFile=ContentArchive(db).export(notebookId,pageId)
+
     /** One consistent saved snapshot, prepared before the system destination picker. */
     suspend fun export(notebookId:String):ContentExport=db.withTransaction {
         val note=checkNotNull(db.notes().note(notebookId))
@@ -137,7 +134,7 @@ class LibraryContentRepository(private val db:NoteDatabase,
         require(rows.size in 1..500 && rows.withIndex().all{(index,p)->p.position==index&&p.world==world}){"PAGE_ORDER_INVALID"}
         require(!world||rows.size==1){"WORLD_NOTE_HAS_MULTIPLE_PAGES"}
     }
-    private suspend fun create(id:String,title:String,text:String,world:Boolean,paper:Int,metadata:WorkspaceRow?=null):Note {
+    internal suspend fun create(id:String,title:String,text:String,world:Boolean,paper:Int,metadata:WorkspaceRow?=null):Note {
         require(RenameNote.validTitle(title) && text.length<=100_000)
         val at=System.currentTimeMillis()
         db.notes().insertNote(NoteRow(id,1,title,text,at))

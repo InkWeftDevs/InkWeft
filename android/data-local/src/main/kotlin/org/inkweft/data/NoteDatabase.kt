@@ -28,12 +28,18 @@ interface NoteDao {
     @Insert(onConflict=OnConflictStrategy.ABORT) suspend fun insertRevision(row:NoteRevisionRow)
     @Insert(onConflict=OnConflictStrategy.ABORT) suspend fun insertReceipt(row:ReceiptRow)
 }
-@Database(entities=[NoteRow::class,NoteRevisionRow::class,ReceiptRow::class,InkPageRow::class,InkStrokeRow::class,InkReceiptRow::class,WorkspaceRow::class,NotebookPageRow::class,InkCutRow::class,PageSearchRow::class,PageInsertReceiptRow::class,LibraryContentReceipt::class,PageEditReceiptRow::class,StudyCardRow::class,StudyCardRevisionRow::class,StudySourceRow::class,StudyNodeRow::class,StudyReceiptRow::class,KnowledgeRow::class,KnowledgeRevisionRow::class,KnowledgeReceiptRow::class,NotebookCoverRow::class,PageObjectRow::class,PageObjectRecordRow::class,ObjectPreviewRow::class,ObjectReceiptRow::class,DocumentSourceRow::class,DocumentChunkRow::class,DocumentPageRow::class,ImageSourceRow::class,ImageChunkRow::class,StudySourceRevisionRow::class,StudyCardSourceSetRow::class,CardTransformOperationRow::class,PageAuthoringRow::class,PageLayerMembershipRow::class,AuthoringReceiptRow::class,RecallQuestionRow::class,RecallQuestionVersionRow::class,RecallScheduleRow::class,RecallSessionRow::class,RecallAttemptRow::class,RecallHintRow::class,RecallCorrectionRow::class,RecallReceiptRow::class],
-    version=18,exportSchema=true,autoMigrations=[AutoMigration(from=1,to=2)])
+@Database(entities=[NoteRow::class,NoteRevisionRow::class,ReceiptRow::class,InkPageRow::class,InkStrokeRow::class,InkReceiptRow::class,WorkspaceRow::class,NotebookPageRow::class,InkCutRow::class,PageSearchRow::class,PageInsertReceiptRow::class,LibraryContentReceipt::class,PageEditReceiptRow::class,StudyCardRow::class,StudyCardRevisionRow::class,StudySourceRow::class,StudyNodeRow::class,StudyReceiptRow::class,KnowledgeRow::class,KnowledgeRevisionRow::class,KnowledgeReceiptRow::class,NotebookCoverRow::class,PageObjectRow::class,PageObjectRecordRow::class,ObjectPreviewRow::class,ObjectReceiptRow::class,DocumentSourceRow::class,DocumentChunkRow::class,DocumentPageRow::class,ImageSourceRow::class,ImageChunkRow::class,StudySourceRevisionRow::class,StudyCardSourceSetRow::class,CardTransformOperationRow::class,PageAuthoringRow::class,PageLayerMembershipRow::class,PageLayerChangeRow::class,AuthoringReceiptRow::class,RecallQuestionRow::class,RecallQuestionVersionRow::class,RecallScheduleRow::class,RecallSessionRow::class,RecallAttemptRow::class,RecallHintRow::class,RecallCorrectionRow::class,RecallReceiptRow::class],
+    version=19,exportSchema=true,autoMigrations=[AutoMigration(from=1,to=2)])
 abstract class NoteDatabase:RoomDatabase() {
     internal val inkGroupMutex=kotlinx.coroutines.sync.Mutex()
+    internal val originalMaintenanceMutex=kotlinx.coroutines.sync.Mutex()
     internal val validatedImagePreviews=ValidatedImagePreviews()
     internal var documentScratch:java.io.File?=null
+    internal var originalRoot:java.io.File?=null
+    internal val originalStore by lazy{OriginalStore(checkNotNull(originalRoot)){directory->
+        val fd=android.system.Os.open(directory.absolutePath,android.system.OsConstants.O_RDONLY,0)
+        try{android.system.Os.fsync(fd)}finally{android.system.Os.close(fd)}
+    }}
     val originalFiles by lazy{OriginalFileCache(java.io.File(checkNotNull(documentScratch),"original-cache/"+org.inkweft.core.ContentTransfer.hash((openHelper.databaseName?:java.util.UUID.randomUUID().toString()).toByteArray())))}
     internal var checkpointRoot:java.io.File?=null
     abstract fun notes():NoteDao
@@ -162,12 +168,24 @@ abstract class NoteDatabase:RoomDatabase() {
             PageLayerStore.migrate(db)
             db.execSQL("CREATE INDEX IF NOT EXISTS index_ink_strokes_noteId_visible_createdRevision_id ON ink_strokes(noteId,visible,createdRevision,id)")
         }}
+        val MIGRATION_18_19=object:Migration(18,19){override fun migrate(db:SupportSQLiteDatabase){
+            PageLayerEditorStore.create(db)
+            db.execSQL("CREATE INDEX IF NOT EXISTS index_document_sources_digest ON document_sources(digest)")
+            db.execSQL("CREATE INDEX IF NOT EXISTS index_image_sources_digest ON image_sources(digest)")
+            db.execSQL("CREATE INDEX IF NOT EXISTS index_ink_strokes_noteId_id ON ink_strokes(noteId,id)")
+            db.execSQL("CREATE INDEX IF NOT EXISTS index_ink_cuts_noteId_id ON ink_cuts(noteId,id)")
+            db.execSQL("CREATE INDEX IF NOT EXISTS index_page_layer_memberships_pageId_layerId ON page_layer_memberships(pageId,layerId)")
+        }}
         fun open(context:Context,name:String="inkweft-a0.db"):NoteDatabase=
             Room.databaseBuilder(context.applicationContext,NoteDatabase::class.java,name)
                 .openHelperFactory(PreservingOpenHelperFactory())
                 .setJournalMode(JournalMode.WRITE_AHEAD_LOGGING)
-                .addMigrations(MIGRATION_2_3,MIGRATION_3_4,MIGRATION_4_5,MIGRATION_5_6,MIGRATION_6_7,MIGRATION_7_8,MIGRATION_8_9,MIGRATION_9_10,MIGRATION_10_11,MIGRATION_11_12,MIGRATION_12_13,MIGRATION_13_14,MIGRATION_14_15,MIGRATION_15_16,MIGRATION_16_17,MIGRATION_17_18)
+                .addMigrations(MIGRATION_2_3,MIGRATION_3_4,MIGRATION_4_5,MIGRATION_5_6,MIGRATION_6_7,MIGRATION_7_8,MIGRATION_8_9,MIGRATION_9_10,MIGRATION_10_11,MIGRATION_11_12,MIGRATION_12_13,MIGRATION_13_14,MIGRATION_14_15,MIGRATION_15_16,MIGRATION_16_17,MIGRATION_17_18,MIGRATION_18_19)
                 .addCallback(object:Callback(){override fun onOpen(db:SupportSQLiteDatabase){db.execSQL("PRAGMA synchronous=FULL");SpatialIndex.install(db)}})
-                .build().also{it.documentScratch=context.cacheDir;it.checkpointRoot=java.io.File(context.filesDir,"ink-checkpoints/"+org.inkweft.core.ContentTransfer.hash(name.toByteArray()))}
+                .build().also{
+                    it.documentScratch=context.cacheDir
+                    it.originalRoot=java.io.File(context.getDatabasePath(name).absolutePath+".originals")
+                    it.checkpointRoot=java.io.File(context.filesDir,"ink-checkpoints/"+org.inkweft.core.ContentTransfer.hash(name.toByteArray()))
+                }
     }
 }

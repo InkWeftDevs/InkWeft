@@ -32,7 +32,7 @@ class VisiblePageExportTest {
         val image=image();app.pageObjects.save(note.id,0,id(),listOf(image))
         val before=app.pageObjects.read(note.id)
         val authoring=PageAuthoringCodec.fingerprint(app.authoring.readPage(note.id).state)
-        // PDF does not reserve a PNG output bitmap, so this fails specifically at the image decoder.
+        // Both output formats reserve bounded raster memory and must fail before publication.
         withoutRenderBudget {
             assertThrows(RenderBudgetBusy::class.java){runBlocking{VisiblePageExport.encode(app,note.id,false,true)}}
         }

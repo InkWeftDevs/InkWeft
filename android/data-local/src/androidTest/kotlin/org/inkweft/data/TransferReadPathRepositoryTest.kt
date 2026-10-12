@@ -182,14 +182,18 @@ class TransferReadPathRepositoryTest {
     @Test fun changedOriginalRollsBackCopyAndCommittedReplaySkipsUnavailableSource()=fixture{db,_->
         val bytes=pdf();val source=pdfBook(db,bytes);val document=db.documents().page(source.id)!!.documentId
         val command=CopyNotebook(id(),source.id,id());val changed=bytes.copyOf().also{it[it.lastIndex]=(it.last().toInt() xor 1).toByte()}
+        val file=DocumentRepository(db).openFile(checkNotNull(DocumentRepository(db).read(source.id)).document).use{it.file}
+        fun replace(content:ByteArray){file.writeBytes(content);check(file.setLastModified(file.lastModified()+1000))}
         val repo=LibraryContentRepository(db){if(it==LibraryContentFault.AFTER_COPY_VALIDATION){
-            assertFalse(db.inTransaction());db.openHelper.writableDatabase.execSQL("UPDATE document_chunks SET payload=? WHERE documentId=?",arrayOf(changed,document))
+            assertFalse(db.inTransaction());replace(changed)
         }}
         assertEquals("ORIGINAL_CHECKSUM_CHANGED",runCatching{repo.duplicate(command)}.exceptionOrNull()?.message)
         assertNull(db.notes().note(command.destinationId));assertTrue(db.pages().list(command.destinationId).isEmpty());assertNull(db.libraryContent().receipt(command.commandId))
-        db.openHelper.writableDatabase.execSQL("UPDATE document_chunks SET payload=? WHERE documentId=?",arrayOf(bytes,document))
+        replace(bytes)
         assertTrue(runCatching{LibraryContentRepository(db){if(it==LibraryContentFault.AFTER_TRANSACTION)error("lost result")}.duplicate(command)}.isFailure)
-        db.openHelper.writableDatabase.execSQL("UPDATE document_chunks SET payload=? WHERE documentId=?",arrayOf(changed,document))
+        // Immutable bytes are shared across notebooks. Retire this source reference without
+        // damaging the same digest still owned by the successfully committed destination.
+        db.openHelper.writableDatabase.execSQL("UPDATE document_sources SET digest=? WHERE id=?",arrayOf("a".repeat(64),document))
         assertTrue(WorkspaceRepository(db).organize(source.id,0,"","",false,true))
         val replay=LibraryContentRepository(db){if(it==LibraryContentFault.AFTER_COPY_VALIDATION)fail("Replay must not prepare the retired source")}.duplicate(command)
         assertEquals(command.destinationId,replay.id);assertArrayEquals(bytes,DocumentRepository(db).read(replay.id)!!.document.bytes())

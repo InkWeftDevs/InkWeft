@@ -3,7 +3,7 @@ package org.inkweft.data
 
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.*
 import org.inkweft.core.*
 import org.junit.Assert.*
 import org.junit.Assume.assumeTrue
@@ -21,6 +21,8 @@ class StreamedStorageRepositoryTest {
         val a="stream-source-${id()}.db";val b="stream-target-${id()}.db"
         val source=NoteDatabase.open(context,a);val target=NoteDatabase.open(context,b)
         val file=File(context.cacheDir,"stream-300MB-${id()}.pdf")
+        val runtime=Runtime.getRuntime();val peak=java.util.concurrent.atomic.AtomicLong(runtime.totalMemory()-runtime.freeMemory())
+        val sampler=launch(Dispatchers.Default){while(isActive){peak.updateAndGet{maxOf(it,runtime.totalMemory()-runtime.freeMemory())};delay(20)}}
         try {
             syntheticPdf(file,300_000_000)
             val original=PdfDocumentSource.fromFile(file,2)
@@ -38,21 +40,36 @@ class StreamedStorageRepositoryTest {
                     repo.openFile(last.document).use{lease->assertEquals(original.sha256,OriginalBytes.file(lease.file,PdfDocumentSource.MAX_BYTES).sha256)}
                     repo.trimFiles()
                 }
+                imports.prepareExport(note.id).use{archive->
+                    assertTrue(archive.byteCount>NotebookFile.MAX_BYTES)
+                    assertTrue(archive.byteCount<original.size+100_000L)
+                    val stage=File(context.cacheDir,"stream-content-${id()}").also{check(it.mkdirs())}
+                    archive.file.inputStream().use{ContentArchive.prepare(it,stage)}.use{content->
+                        val imported=imports.import(ImportNotebook(id(),id(),content.sha256),content)
+                        assertEquals(original.sha256,checkNotNull(DocumentRepository(source).read(imported.id)).document.sha256)
+                    }
+                }
+                assertEquals(300_000_000L,source.originalStore.diskBytes())
                 val backup=LibraryBackupRepository(context,source);val destination=LibraryBackupRepository(context,target)
                 backup.snapshot().use{snapshot->
                     snapshot.file.inputStream().use{input->destination.inspect(input)}.use{preview->
-                        assertEquals(2,preview.notes);assertEquals(4,preview.pages)
+                        assertEquals(3,preview.notes);assertEquals(6,preview.pages)
                         assertEquals(LibraryBackupRepository.RestoreResult.RESTORED,destination.restore(preview))
                         assertEquals(LibraryBackupRepository.RestoreResult.ALREADY_PRESENT,destination.restore(preview))
                     }
                 }
-                assertEquals(600_000_000L,target.documents().totalBytes())
+                assertEquals(900_000_000L,target.documents().totalBytes())
+                assertEquals(300_000_000L,target.originalStore.diskBytes())
                 val restored=checkNotNull(DocumentRepository(target).read(copy.id))
                 var seen=0L;restored.document.copyTo(object:OutputStream(){override fun write(b:Int){seen++};override fun write(b:ByteArray,o:Int,n:Int){assertTrue(n<=65_536);seen+=n}})
                 assertEquals(300_000_000L,seen);assertEquals(original.sha256,restored.document.sha256)
                 assertThrows(IllegalArgumentException::class.java){restored.document.bytes()}
+                val evidence=org.json.JSONObject().put("originalBytes",300_000_000).put("books",3).put("pages",6)
+                    .put("sourcePhysicalOriginalBytes",source.originalStore.diskBytes()).put("restoredPhysicalOriginalBytes",target.originalStore.diskBytes())
+                    .put("logicalOriginalBytes",target.documents().totalBytes()).put("observedPeakJavaUsedBytes",peak.get()).put("javaMaxHeapBytes",runtime.maxMemory())
+                androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().sendStatus(0,android.os.Bundle().apply{putString("stream","STREAMED_300MB_EVIDENCE $evidence\n")})
             }
-        }finally{source.originalFiles.trim();target.originalFiles.trim();source.close();target.close();context.deleteDatabase(a);context.deleteDatabase(b);file.delete()}
+        }finally{sampler.cancelAndJoin();source.originalFiles.trim();target.originalFiles.trim();source.close();target.close();context.deleteDatabase(a);context.deleteDatabase(b);file.delete()}
         Unit
     }
     private fun syntheticPdf(file:File,size:Int) {

@@ -38,6 +38,7 @@ import java.util.UUID
     var name by remember{mutableStateOf("")}
     var deleting by remember{mutableStateOf<UserLayer?>(null)}
     var transferring by remember{mutableStateOf<List<LayerContent>?>(null)}
+    var transferringLayer by remember{mutableStateOf<UserLayer?>(null)}
     val ready=enabled&&state.ready&&!model.writing
     val layers=state.state.layers
     // Inspecting a locked/hidden row never selects it as the author's writable layer.
@@ -90,7 +91,7 @@ import java.util.UUID
                                 DropdownMenuItem(text={Text("命名")},onClick={more=false;rename=layer;name=layer.name},modifier=Modifier.testTag("layer-rename-${layer.id}"))
                                 DropdownMenuItem(text={Text("上移")},onClick={more=false;model.layers{it.move(layer.id,index+1)}},enabled=ready&&index<layers.layers.lastIndex,modifier=Modifier.testTag("layer-up-${layer.id}"))
                                 DropdownMenuItem(text={Text("下移")},onClick={more=false;model.layers{it.move(layer.id,index-1)}},enabled=ready&&index>0,modifier=Modifier.testTag("layer-down-${layer.id}"))
-                                DropdownMenuItem(text={Text("内容转层")},onClick={more=false;transferring=members.toList()},enabled=ready&&layer.writable&&members.isNotEmpty(),modifier=Modifier.testTag("layer-transfer-${layer.id}"))
+                                DropdownMenuItem(text={Text("内容转层")},onClick={more=false;transferringLayer=layer},enabled=ready&&layer.writable&&(state.layerCounts?.get(layer.id)?:members.size.toLong())>0,modifier=Modifier.testTag("layer-transfer-${layer.id}"))
                                 HorizontalDivider()
                                 DropdownMenuItem(text={Text("删除层")},leadingIcon={Glyph("trash")},onClick={more=false;deleting=layer},enabled=ready,modifier=Modifier.testTag("layer-delete-${layer.id}"))
                             }
@@ -106,12 +107,16 @@ import java.util.UUID
     }
     rename?.let{layer->AlertDialog(onDismissRequest={rename=null},title={Text("命名图层")},text={OutlinedTextField(name,{name=it.take(60)},singleLine=true,label={Text("图层名称")})},confirmButton={TextButton({model.layers{it.update(layer.copy(name=name.trim()))};rename=null},enabled=name.isNotBlank()){Text("保存")}},dismissButton={TextButton({rename=null}){Text("取消")}})}
     deleting?.let{layer->
-        val count=state.state.layers.memberships.count{it.layerId==layer.id}
+        val count=state.layerCounts?.get(layer.id)?:state.state.layers.memberships.count{it.layerId==layer.id}.toLong()
         AlertDialog(onDismissRequest={deleting=null},title={Text("删除“${layer.name}”？")},text={Column{
-            Text(if(count==0)"空层可删除并撤销"else"该层含 $count 项归属（包含原迹历史）。请选择删除内容，或转至指定可写层后删除；可撤销。")
-            if(count>0)state.state.layers.layers.filter{it.id!=layer.id&&it.writable}.forEach{target->TextButton({model.layers{it.remove(layer.id,LayerDelete.Transfer(target.id))};deleting=null},enabled=ready){Text("内容转至“${target.name}”后删除")}}
-        }},confirmButton={TextButton({model.layers{it.remove(layer.id,if(count==0)null else LayerDelete.DeleteContents)};deleting=null},enabled=ready){Text(if(count==0)"删除空层"else"连同内容删除")}},dismissButton={TextButton({deleting=null}){Text("取消")}})
+            Text(if(count==0L)"空层可删除并撤销"else"该层含 $count 项归属（包含原迹历史）。请选择删除内容，或转至指定可写层后删除；可撤销。")
+            if(count>0L)state.state.layers.layers.filter{it.id!=layer.id&&it.writable}.forEach{target->TextButton({model.removeLayer(layer.id,LayerDelete.Transfer(target.id));deleting=null},enabled=ready){Text("内容转至“${target.name}”后删除")}}
+        }},confirmButton={TextButton({model.removeLayer(layer.id,if(count==0L)null else LayerDelete.DeleteContents);deleting=null},enabled=ready){Text(if(count==0L)"删除空层"else"连同内容删除")}},dismissButton={TextButton({deleting=null}){Text("取消")}})
     }
+    transferringLayer?.let{layer->AlertDialog(onDismissRequest={transferringLayer=null},title={Text("转移整层内容")},text={Column{
+        Text("整层转移，包括当前视窗外的笔迹与原迹历史；可撤销。")
+        state.state.layers.layers.filter{it.writable&&it.id!=layer.id}.forEach{target->TextButton({model.transferLayer(layer.id,target.id);transferringLayer=null},enabled=ready){Text("转至“${target.name}”")}}
+    }},confirmButton={},dismissButton={TextButton({transferringLayer=null}){Text("取消")}})}
     transferring?.let{ids->AlertDialog(onDismissRequest={transferring=null},title={Text("转移 ${ids.size} 项")},text={Column{
         Text("整组转移；隐藏或锁定成员会阻止整次操作。归属与叠放一同更改。")
         state.state.layers.layers.filter{it.writable}.forEach{target->TextButton({model.layers{it.transfer(ids,target.id)};transferring=null},enabled=ready&&ids.isNotEmpty()){Text("转至“${target.name}”")}}

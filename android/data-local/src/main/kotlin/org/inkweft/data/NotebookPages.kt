@@ -78,8 +78,8 @@ class NotebookPages(private val db:NoteDatabase) {
         require(db.pages().get(pageId)?.trashedAt==null && db.pages().get(pageId)!=null);require(text.length<=20_000)
         if((db.ink().page(pageId)?.revision?:0)!=expectedInkRevision)return@withTransaction false
         if(expectedObjects!=null&&(db.objects().get(pageId)?.revision?:0)!=expectedObjects)return@withTransaction false
-        val authoring=PageAuthoringRepository(db).readPage(pageId)
-        if(authoringRevision?.let{it!=authoring.revision}?:!authoring.state.legacy)return@withTransaction false
+        val authoring=PageAuthoringRepository(db).readPageEditor(pageId)
+        if(authoringRevision?.let{it!=authoring.revision}?:!authoring.legacy)return@withTransaction false
         require(method in listOf("MANUAL","OCR"))
         db.pages().putSearch(PageSearchRow(pageId,expectedInkRevision,text,method));true
     }

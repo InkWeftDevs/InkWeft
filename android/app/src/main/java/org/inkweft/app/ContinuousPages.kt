@@ -62,12 +62,26 @@ internal data class ContinuousTools(val pen:InkPen,val color:Int,val width:Float
     LaunchedEffect(book){try{app.authoring.observePageWriteScopes(book).collect{writeScopes=it}}catch(c:CancellationException){throw c}catch(_:Exception){writeScopes=null;onNotice("图层权限读取失败，请重新打开笔记；已保存资料保留。")}}
     var authorRows by remember(book){mutableStateOf<List<org.inkweft.data.AuthoringPageState>?>(null)}
     var loadedAuthorIds by remember(book){mutableStateOf(emptySet<String>())}
-    LaunchedEffect(book,loadIds){
-        authorRows=null;loadedAuthorIds=emptySet()
-        app.authoring.observePages(book,loadIds.toList()).collect{authorRows=it;loadedAuthorIds=loadIds}
+    var authorRefs by remember(book){mutableStateOf(emptyMap<String,List<LayerContent>>())}
+    var projectedRefs by remember(book){mutableStateOf(emptyMap<String,List<LayerContent>>())}
+    SideEffect{if(authorRefs.keys.any{it !in loadIds})authorRefs=authorRefs.filterKeys{it in loadIds}}
+    LaunchedEffect(book,loadIds,authorRefs){
+        val requested=authorRefs
+        app.authoring.observePages(book,loadIds.toList(),requested).collect{authorRows=it;loadedAuthorIds=loadIds;projectedRefs=requested}
     }
     val authorStates=remember(authorRows){authorRows.orEmpty().associate{it.scopeId to it.state}}
     fun authorState(id:String)=if(id==selected&&selectedAuthoring?.loading==false)selectedAuthoring.state else authorStates[id]
+    fun projectionReady(id:String):Boolean {
+        val ink=models[id]?.ui?.value?:return false;val objects=objectModels[id]?.ui?.value?:return false
+        if(id==selected&&selectedAuthoring!=null)return selectedAuthoring.ready&&selectedAuthoring.inkRevision==ink.revision&&selectedAuthoring.objectRevision==objectModels[id]?.revision
+        val author=authorRows?.find{it.scopeId==id}?:return false
+        return id in loadedAuthorIds&&projectedRefs[id]==authorRefs[id]&&authorRefs[id]!=null&&author.inkRevision==ink.revision&&author.objectRevision==objectModels[id]?.revision&&!objects.loading
+    }
+    fun renderSource(id:String,source:InkRenderSource?):InkRenderSource? {
+        if(id==selected&&selectedAuthoring?.loading==false)return source?.copy(authoringRevision=selectedAuthoring.revision,layerCounts=selectedAuthoring.inkLayerCounts)
+        val author=authorRows?.find{it.scopeId==id}?:return null
+        return source?.takeIf{it.revision==author.inkRevision}?.copy(authoringRevision=author.revision,layerCounts=author.inkLayerCounts)
+    }
     fun layerScope(id:String):LayerWriteScope? {check(writeScopes!=null)
         if(id==selected&&selectedAuthoring!=null){check(selectedAuthoring.canWrite);return selectedAuthoring.state.layers.writeScope(selectedAuthoring.revision)}
         val headers=checkNotNull(writeScopes)
@@ -91,7 +105,11 @@ internal data class ContinuousTools(val pen:InkPen,val color:Int,val width:Float
     val latestSelect by rememberUpdatedState(onSelect)
     val latestPages by rememberUpdatedState(pages)
     var pending=false
-    models.values.forEach{model->val ui by model.ui.collectAsStateWithLifecycle();if(ui.loading||ui.queued>0||ui.processing||ui.blocked!=null||ui.readFailed)pending=true}
+    models.forEach{(id,model)->val ui by model.ui.collectAsStateWithLifecycle()
+        if(ui.loading||ui.queued>0||ui.processing||ui.blocked!=null||ui.readFailed)pending=true
+        val refs=remember(ui.strokes){ui.strokes.map{LayerContent(LayerContentKind.INK,it.id)}}
+        SideEffect{if(id in loadIds&&authorRefs[id]!=refs)authorRefs=authorRefs+(id to refs)}
+    }
     objectModels.values.forEach{model->val ui by model.ui.collectAsStateWithLifecycle();if(ui.loading||ui.busy||ui.pending)pending=true}
     val settleKey=models.map{(id,m)->listOf(id,m.ui.value.loading,m.ui.value.queued,m.ui.value.processing,m.ui.value.suspended)}+
         objectModels.map{(id,m)->listOf(id,m.ui.value.loading,m.ui.value.busy,m.ui.value.pending,m.ui.value.suspended)}
@@ -289,7 +307,7 @@ internal data class ContinuousTools(val pen:InkPen,val color:Int,val width:Float
                         v.configure(false,PaperStyle.entries[page.paper],null)
                         v.fingerWrites=tools.fingerWrites
                         views[page.id]=v
-                        v.allowInput=authorRows!=null&&page.id in loadedAuthorIds&&writeScopes!=null&&!recovering&&recoveryProblem==null&&(if(tools.erasing)!groupBlocked else drawingReady)&&tools.enabled&&!objectUi.loading&&(!(objectUi.pending||objectUi.busy)||(!tools.erasing&&objectUi.automaticPending))&&(if(tools.erasing)!ui.loading&&!ui.readFailed&&ui.blocked==null&&!ui.processing&&ui.queued<16 else ui.canStart)&&(gestureOwner==null||gestureOwner==page.id)
+                        v.allowInput=authorRows!=null&&page.id in loadedAuthorIds&&(!tools.erasing||projectionReady(page.id))&&writeScopes!=null&&!recovering&&recoveryProblem==null&&(if(tools.erasing)!groupBlocked else drawingReady)&&tools.enabled&&!objectUi.loading&&(!(objectUi.pending||objectUi.busy)||(!tools.erasing&&objectUi.automaticPending))&&(if(tools.erasing)!ui.loading&&!ui.readFailed&&ui.blocked==null&&!ui.processing&&ui.queued<16 else ui.canStart)&&(gestureOwner==null||gestureOwner==page.id)
                         v.finishStroke={polishNewStroke(it,tools.beauty)}
                         v.pen=tools.pen;v.penColor=tools.color;v.penWidth=tools.width;v.brushRecipe=tools.recipe
                         v.eraserTapeOnly=tools.onlyTape;v.eraseMode=tools.erasing;v.eraserWhole=tools.whole;v.eraserHighlighterOnly=tools.highlighterOnly;v.eraserDiameterDp=tools.diameter
@@ -317,16 +335,17 @@ internal data class ContinuousTools(val pen:InkPen,val color:Int,val width:Float
                             val origin=pages.indexOfFirst{it.id==page.id}
                             val first=kotlin.math.floor((origin*1414f+path.minOf{it.y}-radius)/1414f).toInt().coerceIn(0,pages.lastIndex)
                             val last=kotlin.math.floor((origin*1414f+path.maxOf{it.y}+radius)/1414f).toInt().coerceIn(0,pages.lastIndex)
+                            if((first..last).any{!projectionReady(pages[it].id)}){onNotice("相邻页图层正在读取，请稍后擦除");return@erase}
                             val targets=(first..last).mapNotNull{index->val target=pages[index]
                                 val shifted=path.map{it.copy(y=it.y+(origin-index)*1414f,world=true)}
                                 if(shifted.maxOf{it.y}+radius<0||shifted.minOf{it.y}-radius>1414f)null
                                 else PageEraseTarget(checkNotNull(models[target.id]),checkNotNull(objectModels[target.id]),shifted)
                             }
-                            if(tools.onlyTape||targets.all{it.ink.requireCompleteWindow()})writer.erase(targets,radius,whole,only,app.inkRepository,tools.onlyTape)
+                            writer.erase(targets,radius,whole,only,app.inkRepository,tools.onlyTape)
                         }
                         v.onGesture={active->if(active){recovery.begin(pages.map{it.id},page.id,pages.map{runCatching{layerScope(it.id)}.getOrNull()});gestureOwner=page.id;reported=page.id;latestSelect(page.id)}else if(gestureOwner==page.id)gestureOwner=null;onGesture(active)}
                         v.onAxes=app.diagnostics::inputAxes;v.onNotice=onNotice
-                        v.showAuthoring(authorState(page.id));v.showDocument(page.id);v.onVisibleBounds=model::updateViewport;v.showInkSource(model.renderSource(),ui.windowLoading||ui.loading);v.showStrokes(ui.strokes+drafts[model].orEmpty());v.showObjects(beautyPreviewObjects(objectUi.objects,beautyReview))
+                        v.showAuthoring(authorState(page.id));v.showDocument(page.id);v.onVisibleBounds=model::updateViewport;v.showInkSource(renderSource(page.id,model.renderSource()),ui.windowLoading||ui.loading||authorState(page.id)==null);v.showStrokes(if(authorState(page.id)==null)emptyList()else ui.strokes+drafts[model].orEmpty());v.showObjects(beautyPreviewObjects(objectUi.objects,beautyReview))
                     },modifier=Modifier.fillMaxSize().testTag("continuous-ink-${page.position+1}"))
                     DisposableEffect(page.id){onDispose{views.remove(page.id)}}
                     if(ui.loading)CircularProgressIndicator(Modifier.align(Alignment.Center))

@@ -20,11 +20,22 @@ import java.util.UUID
 class ContinuousWritingUiTest {
     @get:Rule val compose=createAndroidComposeRule<MainActivity>()
     private val app get()=compose.activity.application as InkWeftApplication
-    @After fun restorePreferences(){BeautyStore(app).save(BeautyOptions());app.getSharedPreferences("inkweft-editor",0).edit().remove("case-x").remove("case-y").commit()}
+    private var fingerWritesBefore:Boolean?=null
+    @After fun restorePreferences(){
+        BeautyStore(app).save(BeautyOptions())
+        app.getSharedPreferences("inkweft-editor",0).edit().remove("case-x").remove("case-y").apply{
+            fingerWritesBefore?.let{putBoolean("finger-writes",it)}
+        }.commit()
+    }
     private fun id()=UUID.randomUUID().toString()
     private fun open(pages:Int=1,beauty:BeautyOptions=BeautyOptions(),seed:suspend(Note)->Unit={}):Note {
         compose.waitUntil(15_000){runCatching{compose.onNodeWithTag("new-note").assertIsEnabled()}.isSuccess}
-        compose.runOnIdle{BeautyStore(app).save(beauty)}
+        compose.runOnIdle{
+            BeautyStore(app).save(beauty)
+            val preferences=app.getSharedPreferences("inkweft-editor",0)
+            if(fingerWritesBefore==null)fingerWritesBefore=preferences.getBoolean("finger-writes",false)
+            check(preferences.edit().putBoolean("finger-writes",false).commit())
+        }
         val note=runBlocking{app.workspaceRepository.create("连续书写验收",false,PaperStyle.BLANK).also{n->var previous=n.id;repeat(pages-1){previous=app.pages.addAfter(n.id,previous,id()).id};app.pages.select(n.id,n.id);seed(n)}}
         compose.runOnIdle{ViewModelProvider(compose.activity)[NotebookViewModel::class.java].select(note)}
         compose.waitUntil(15_000){app.navigationReady.value&&compose.onAllNodesWithTag("continuous-pages").fetchSemanticsNodes().isNotEmpty()}
@@ -101,6 +112,7 @@ class ContinuousWritingUiTest {
 
     @Test fun continuousSeamHasNoGapAndOneGesturePersistsOnBothSides(){
         val note=open(2);val pages=runBlocking{app.pages.activePages(note.id)}
+        compose.waitUntil(10_000){runCatching{compose.onNodeWithTag("continuous-pages").assert(hasScrollToIndexAction())}.isSuccess}
         compose.onNodeWithTag("continuous-pages").performScrollToIndex(1)
         compose.onNodeWithTag("continuous-pages").performTouchInput{swipe(Offset(centerX,height*.2f),Offset(centerX,height*.7f),500)}
         compose.waitUntil(10_000){var ready=false;compose.runOnIdle{ready=pages.all{canvas(it.id).inputReady}};app.navigationReady.value&&ready}
@@ -144,8 +156,11 @@ class ContinuousWritingUiTest {
             val image=checkNotNull(InstrumentationRegistry.getInstrumentation().uiAutomation.takeScreenshot())
             try{for(y in origin[1]+v.height-1..origin[1]+v.height){val color=image.getPixel((origin[0]+p.x).toInt(),y);assertTrue("Paper seam must not punch a white row through ink",android.graphics.Color.red(color)<120)}}finally{image.recycle()}
         }
-        compose.onNodeWithTag("ink-tool-3").performScrollTo().performClick()
-        fun erased(value:Boolean){compose.waitUntil(10_000){runBlocking{pages.all{p->app.pageObjects.read(p.id).objects.single().glyphs.any{it.hidden}==value&&app.inkRepository.read(p.id).strokes.count{it.visible}==if(value)1 else 2}}}}
+        compose.waitUntil(10_000){runCatching{compose.onNodeWithTag("top-eraser").assertIsEnabled()}.isSuccess}
+        compose.onNodeWithTag("top-eraser").performScrollTo().performClick()
+        fun inputReady(){compose.waitUntil(10_000){var ready=false;compose.runOnIdle{ready=pages.all{canvas(it.id).inputReady}};ready}}
+        fun erased(value:Boolean){compose.waitUntil(10_000){runBlocking{pages.all{p->app.pageObjects.read(p.id).objects.single().glyphs.any{it.hidden}==value&&app.inkRepository.read(p.id).strokes.count{it.visible}==if(value)1 else 2}}};inputReady()}
+        inputReady()
         compose.runOnIdle{line(canvas(pages[0].id),listOf(430f to 1300f,430f to 1500f))};erased(true);shot("v20-cross-erase-after.png")
         compose.onNodeWithTag("ink-undo").performClick();erased(false);shot("v20-cross-erase-undo.png")
         compose.onNodeWithTag("ink-redo").performClick();erased(true)
@@ -165,10 +180,11 @@ class ContinuousWritingUiTest {
                 val current=app.pageObjects.read(n.id);app.pageObjects.save(n.id,current.revision,id(),current.objects+o)
             }
         }
-        val v=single();compose.onNodeWithTag("ink-select").performClick();compose.onNodeWithTag("ink-select").performClick();compose.onNodeWithTag("lasso-free").performClick();compose.onNodeWithContentDescription("关闭套索").performClick()
+        val v=single();compose.frameCanvasFixture();compose.onNodeWithTag("ink-select").performClick();compose.onNodeWithTag("ink-select").performClick();compose.onNodeWithTag("lasso-free").performClick();compose.onNodeWithContentDescription("关闭套索").performClick()
         var points=emptyList<Offset>()
         compose.runOnIdle{points=listOf(200.0 to 200.0,600.0 to 200.0,200.0 to 600.0,200.0 to 200.0).map{(x,y)->val p=v.snapshotViewport().worldToScreen(x,y,v.width.toDouble(),v.height.toDouble(),v.resources.displayMetrics.density.toDouble());Offset(p.x.toFloat(),p.y.toFloat())}}
         compose.onNodeWithTag("selection-overlay").performTouchInput{down(points[0]);points.drop(1).forEach{moveTo(it)};up()}
+        compose.waitUntil(10_000){runCatching{compose.onNodeWithTag("mixed-delete").assertIsDisplayed().assertIsEnabled()}.isSuccess}
         shot("v20-lasso-contained.png")
         compose.onNodeWithTag("mixed-delete").assertIsDisplayed().performClick()
         compose.waitUntil(10_000){runBlocking{app.pageObjects.read(note.id).objects.first{it.id==inside}.hidden}}
@@ -184,7 +200,8 @@ class ContinuousWritingUiTest {
         val beauty=runBlocking{app.pageObjects.read(note.id).objects.single()}
         assertEquals(6,beauty.sourceStrokeIds.size);assertTrue(beauty.text.isNotBlank());assertEquals(TextFont.WENKAI,beauty.font)
         compose.onNodeWithTag("font-beauty-dialog").assertDoesNotExist();shot("v20-auto-beauty.png")
-        compose.onNodeWithTag("ink-tool-3").performScrollTo().performClick()
+        compose.waitUntil(10_000){runCatching{compose.onNodeWithTag("top-eraser").assertIsEnabled()}.isSuccess}
+        compose.onNodeWithTag("top-eraser").performScrollTo().performClick()
         compose.runOnIdle{line(canvas(note.id),listOf((beauty.x+8) to (beauty.y+12),(beauty.x+beauty.width-8) to (beauty.y+12)))}
         compose.waitUntil(10_000){runBlocking{app.pageObjects.read(note.id).objects.single().erasures.isNotEmpty()}}
         compose.onNodeWithTag("ink-undo").performClick()

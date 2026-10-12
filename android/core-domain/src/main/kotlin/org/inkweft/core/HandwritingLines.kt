@@ -4,19 +4,25 @@ package org.inkweft.core
 import kotlin.math.*
 
 data class HandwritingLine(val strokes:List<InkStroke>,val bounds:CanvasBounds)
+data class HandwritingStrokeBounds(val id:String,val bounds:CanvasBounds)
+data class HandwritingLineBounds(val strokeIds:List<String>,val bounds:CanvasBounds)
 
 /** Uses author coordinates, never screen zoom. Recognition remains a derived, reviewable result. */
 object HandwritingLines {
-    fun split(strokes:List<InkStroke>):List<HandwritingLine> {
-        val writing=strokes.filter{it.pen!=InkPen.HIGHLIGHTER}
+    fun split(strokes:List<InkStroke>):List<HandwritingLine> =
+        group(strokes.filter{it.pen!=InkPen.HIGHLIGHTER}){it.bounds()}.map{HandwritingLine(it.first,it.second)}
+    /** The same grouping operates on metadata when page geometry stays in storage. */
+    fun fromBounds(strokes:List<HandwritingStrokeBounds>):List<HandwritingLineBounds> =
+        group(strokes){it.bounds}.map{HandwritingLineBounds(it.first.map{stroke->stroke.id},it.second)}
+    private fun <T:Any> group(writing:List<T>,boundsOf:(T)->CanvasBounds):List<Pair<List<T>,CanvasBounds>> {
         require(writing.size<=InkLimits.MAX_MUTATION_STROKES)
         if(writing.isEmpty())return emptyList()
-        val bounds=writing.associateWith{it.bounds()}
-        fun box(s:InkStroke)=checkNotNull(bounds[s])
+        val bounds=writing.associateWith(boundsOf)
+        fun box(s:T)=checkNotNull(bounds[s])
         val heights=writing.map{(box(it).bottom-box(it).top).coerceAtLeast(2.0)}.sorted()
         // Short horizontal strokes dominate many Han characters; the median is not a line height.
         val typical=heights[ceil(heights.lastIndex*.75).toInt()].coerceIn(12.0,100.0)
-        val groups=mutableListOf<MutableList<InkStroke>>()
+        val groups=mutableListOf<MutableList<T>>()
         val boxes=mutableListOf<CanvasBounds>()
         for(stroke in writing.sortedBy{(box(it).top+box(it).bottom)/2}) {
             val b=box(stroke);val center=(b.top+b.bottom)/2
@@ -29,7 +35,7 @@ object HandwritingLines {
         }
         // A late vertical stroke can connect bars that the centre-based pass split.
         // Test individual boxes: the union of unrelated columns is not a connection.
-        val groupOf=java.util.IdentityHashMap<InkStroke,Int>()
+        val groupOf=java.util.IdentityHashMap<T,Int>()
         groups.forEachIndexed{i,g->g.forEach{groupOf[it]=i}}
         fun intersects(a:CanvasBounds,b:CanvasBounds)=min(a.right,b.right)>=max(a.left,b.left)&&min(a.bottom,b.bottom)>=max(a.top,b.top)
         for(stroke in writing){
@@ -71,13 +77,13 @@ object HandwritingLines {
         }
         require(groups.count{it.isNotEmpty()}<=100){"HANDWRITING_LINE_BUDGET"}
         val lines=groups.indices.filter{groups[it].isNotEmpty()}.sortedBy{boxes[it].top}.flatMap{i->
-            val parts=mutableListOf<MutableList<InkStroke>>();var right=Double.NEGATIVE_INFINITY
+            val parts=mutableListOf<MutableList<T>>();var right=Double.NEGATIVE_INFINITY
             for(s in groups[i].sortedBy{box(it).left}){
                 val b=box(s)
                 if(parts.isEmpty()||b.left-right>max(80.0,typical*2.5))parts.add(mutableListOf())
                 parts.last().add(s);right=max(right,b.right)
             }
-            parts.map{p->HandwritingLine(p,p.map{box(it)}.reduce{a,b->a.union(b)}.padded(5.0))}
+            parts.map{p->p.toList() to p.map{box(it)}.reduce{a,b->a.union(b)}.padded(5.0)}
         }
         require(lines.size<=100){"HANDWRITING_LINE_BUDGET"}
         return lines

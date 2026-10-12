@@ -220,8 +220,8 @@ internal class PageObjectViewModel(private val pageId:String,private val repo:Pa
         }
     }
     internal fun validateExternal(objects:List<PageObject>){check(authorAllowed());check(!state.value.loading&&!state.value.busy&&!state.value.pending);PageObjectCodec.encode(objects)}
-    internal fun prepareExternal(objects:List<PageObject>,direction:Int=0):ObjectWrite {
-        validateExternal(objects);val p=Pending(UUID.randomUUID().toString(),snapshot,objects.toList(),direction,layerScope=layerScopeProvider())
+    internal fun prepareExternal(objects:List<PageObject>,direction:Int=0,layerScope:LayerWriteScope?=layerScopeProvider()):ObjectWrite {
+        validateExternal(objects);val p=Pending(UUID.randomUUID().toString(),snapshot,objects.toList(),direction,layerScope=layerScope)
         pending=p;external=true;state.value=state.value.copy(objects=p.after,busy=true,pending=true,error=null)
         return ObjectWrite(pageId,p.before.revision,p.id,p.after,p.layerScope)
     }
@@ -235,7 +235,7 @@ internal class PageObjectViewModel(private val pageId:String,private val repo:Pa
     internal fun discardExternal(){external=false;state.value=state.value.copy(busy=false);reload()}
     internal fun historyIdentity(back:Boolean)=if(back)undo.lastOrNull()else redo.lastOrNull()
     internal fun historyReady(back:Boolean)=!state.value.loading&&!state.value.busy&&!state.value.pending&&if(back)undo.isNotEmpty()else redo.isNotEmpty()
-    internal fun prepareHistoryGroup(back:Boolean)=prepareExternal(checkNotNull(historyIdentity(back)),if(back)-1 else 1)
+    internal fun prepareHistoryGroup(back:Boolean,scope:LayerWriteScope?=layerScopeProvider())=prepareExternal(checkNotNull(historyIdentity(back)),if(back)-1 else 1,scope)
     internal fun registerGroupHistory(back:Boolean,action:()->Unit){historyIdentity(back)?.let{(if(back)groupUndo else groupRedo)[it]=action}}
     fun undo(){if(!authorAllowed())return;if(undo.isNotEmpty()){groupUndo[undo.last()]?.let{it();return};change(undo.last(),-1)}}
     fun redo(){if(!authorAllowed())return;if(redo.isNotEmpty()){groupRedo[redo.last()]?.let{it();return};change(redo.last(),1)}}

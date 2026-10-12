@@ -2,6 +2,7 @@
 package org.inkweft.app
 
 import android.app.Application
+import kotlinx.coroutines.launch
 import org.inkweft.data.*
 import org.inkweft.core.CloudServicePort
 import org.inkweft.core.DisabledCloudServices
@@ -16,6 +17,7 @@ class InkWeftApplication:Application(){
     internal val backupEngine by lazy{BackupEngine(this)}
     val repository by lazy{NoteRepository(database)}
     val documents by lazy{DocumentRepository(database)}
+    val originalMaintenance by lazy{OriginalStorageMaintenance(database)}
     val pageObjects by lazy{PageObjectRepository(database)}
     val authoring by lazy{PageAuthoringRepository(database).also{it.readObserver=diagnostics::readTiming}}
     val inkRepository by lazy{InkRepository(database).also{it.readObserver=diagnostics::readTiming}}
@@ -40,5 +42,16 @@ class InkWeftApplication:Application(){
     internal val formulas by lazy{FormulaRecognizer(this)}
     override fun onTrimMemory(level:Int){super.onTrimMemory(level);if(level>=android.content.ComponentCallbacks2.TRIM_MEMORY_RUNNING_LOW)RenderResources.trim()}
     override fun onLowMemory(){super.onLowMemory();RenderResources.trim()}
-    override fun onCreate(){super.onCreate();TextStyles.initialize(this);diagnostics; if(backupEngine.mayResume())BackupScheduler.schedule(this)}
+    override fun onCreate(){super.onCreate();
+        // These transfers cannot resume without reselecting their input after process death.
+        // Capture only files from the previous process before any new transfer can start.
+        val names=Regex("(?:content-(?:import-|export-)?|document-import-)[0-9a-f-]{36}(?:\\.part)?")
+        val abandoned=cacheDir.listFiles().orEmpty().filter{names.matches(it.name)}+
+            java.io.File(cacheDir,"visible-exports").listFiles().orEmpty().filter{it.name.matches(Regex("page-[0-9]+\\.(pdf|png)"))}
+        if(abandoned.isNotEmpty())kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO).launchCleanup(abandoned)
+        TextStyles.initialize(this);diagnostics; if(backupEngine.mayResume())BackupScheduler.schedule(this)}
+}
+
+private fun kotlinx.coroutines.CoroutineScope.launchCleanup(files:List<java.io.File>) {
+    launch{files.forEach{runCatching{it.deleteRecursively()}}}
 }

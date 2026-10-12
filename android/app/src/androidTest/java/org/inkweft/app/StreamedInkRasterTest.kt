@@ -13,11 +13,42 @@ import org.inkweft.data.*
 import org.junit.Assert.*
 import org.junit.Test
 import java.util.UUID
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit
+import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 
 class StreamedInkRasterTest {
     private fun id()=UUID.randomUUID().toString()
     private fun main(action:()->Unit)=InstrumentationRegistry.getInstrumentation().runOnMainSync{action()}
+    @Test fun omittedStrokeCannotReappearWhileItsReplacementFrameIsDelayed()=runBlocking {
+        val context=ApplicationProvider.getApplicationContext<Context>();val name="stream-semantics-${id()}.db";val db=NoteDatabase.open(context,name)
+        val bitmap=Bitmap.createBitmap(200,200,Bitmap.Config.ARGB_8888)
+        val events=Channel<Unit>(Channel.CONFLATED);val entered=CountDownLatch(1);val release=CountDownLatch(1)
+        val hold=AtomicBoolean(false);val baseline=RenderResources.inFlightJobs.get();var raster:StreamedInkRaster?=null
+        try{
+            val page=WorkspaceRepository(db).create("选区旧帧隔离",true,PaperStyle.BLANK).id
+            val stroke=InkStroke(id(),InkPen.PEN,Color.RED,12f,InkTool.STYLUS,listOf(InkSample(40f,100f,0,world=true),InkSample(60f,100f,10,world=true)),true)
+            val repo=InkRepository(db);assertTrue(repo.save(CommitInk(id(),page,0,InkMutation.Add(stroke))) is InkCommitResult.Committed)
+            val source=InkRenderSource(repo,page,1,setOf(stroke.id));val viewport=CanvasViewport(100.0,100.0,1.0)
+            var failed=false;var ready=false
+            fun draw(omitted:Set<String>){bitmap.eraseColor(Color.WHITE);raster!!.draw(Canvas(bitmap),200,200,viewport,1.0,true,false,source,null,omitted);ready=raster!!.frameReady}
+            main{raster=StreamedInkRaster({events.trySend(Unit)},{failed=true;events.trySend(Unit)});draw(emptySet())}
+            withTimeout(10_000){while(!ready){events.receive();main{draw(emptySet())};check(!failed)}}
+            assertNotEquals(Color.WHITE,bitmap.getPixel(50,100))
+            repo.readObserver={if(hold.compareAndSet(true,false)){entered.countDown();check(release.await(10,TimeUnit.SECONDS))}}
+            hold.set(true);main{draw(setOf(stroke.id))}
+            assertTrue(entered.await(5,TimeUnit.SECONDS))
+            // Observe the whole 500 ms pending interval, not just the completed frame.
+            repeat(25){main{draw(setOf(stroke.id));assertFalse(ready);assertEquals(Color.WHITE,bitmap.getPixel(50,100))};delay(20)}
+            release.countDown()
+            withTimeout(10_000){while(!ready){events.receive();main{draw(setOf(stroke.id))};check(!failed)}}
+            assertEquals(Color.WHITE,bitmap.getPixel(50,100))
+            main{draw(emptySet())}
+            withTimeout(10_000){while(!ready){events.receive();main{draw(emptySet())};check(!failed)}}
+            assertNotEquals(Color.WHITE,bitmap.getPixel(50,100))
+        }finally{release.countDown();main{raster?.clear()};withTimeoutOrNull(5000){while(RenderResources.inFlightJobs.get()>baseline)delay(20)};events.close();bitmap.recycle();db.close();context.deleteDatabase(name)}
+    }
     @Test fun completeFrameIncludesGeometryBeyondTheEditorWindowAndReleasesItsWorker()=runBlocking {
         val context=ApplicationProvider.getApplicationContext<Context>();val name="stream-frame-${id()}.db";val db=NoteDatabase.open(context,name)
         var raster:StreamedInkRaster?=null;val events=Channel<Unit>(Channel.CONFLATED)
