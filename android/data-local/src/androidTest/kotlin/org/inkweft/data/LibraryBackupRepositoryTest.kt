@@ -258,6 +258,9 @@ class LibraryBackupRepositoryTest {
                 val outcome=runCatching{withTimeout(15_000){generation.await()}}
                 outcome.getOrNull()?.close()
                 val failure=outcome.exceptionOrNull()
+                androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().sendStatus(0,android.os.Bundle().apply{
+                    putString("stream","SNAPSHOT_CANCELLATION_OUTCOME failure=${failure?.javaClass?.name} partialObserved=${written.isCompleted} cancelled=${generation.isCancelled}\n")
+                })
                 assertTrue("Snapshot must be cancelled, not finish normally or time out",failure is CancellationException&&failure !is TimeoutCancellationException)
                 assertTrue("A partial file must be observed before cancellation",written.isCompleted)
                 val partial=written.await()

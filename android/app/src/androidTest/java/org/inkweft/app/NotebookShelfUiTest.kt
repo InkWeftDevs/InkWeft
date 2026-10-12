@@ -21,14 +21,18 @@ import java.util.UUID
 class NotebookShelfUiTest {
     @get:Rule val compose=createAndroidComposeRule<MainActivity>()
     private val app get()=compose.activity.application as InkWeftApplication
-    private fun ready(){compose.waitUntil(10_000){runCatching{compose.onNodeWithTag("new-note").assertIsEnabled()}.isSuccess}}
+    private fun ready(noteId:String?=null){compose.waitUntil(10_000){runCatching{
+        compose.onNodeWithTag("new-note").assertIsEnabled()
+        // Header readiness does not imply that the asynchronous shelf page is laid out.
+        if(noteId!=null)compose.onNodeWithTag("note-menu-$noteId").assertIsDisplayed()
+    }.isSuccess}}
     private fun noKeyboard(){compose.activityRule.scenario.onActivity{a->a.currentFocus?.clearFocus();WindowCompat.getInsetsController(a.window,a.window.decorView).hide(WindowInsetsCompat.Type.ime())};compose.waitUntil(10_000){androidx.core.view.ViewCompat.getRootWindowInsets(compose.activity.window.decorView)?.isVisible(WindowInsetsCompat.Type.ime())==false};compose.waitForIdle()}
     private fun saved(n:Int){compose.waitUntil(10_000){runCatching{compose.onNodeWithTag("ink-surface").assertSavedInkCount(n)}.isSuccess}}
     private fun create():Note{ready();val title="封面测试-"+UUID.randomUUID().toString().take(6);compose.onNodeWithTag("new-note").performClick();compose.onNodeWithTag("create-page").performClick();compose.onNodeWithTag("new-title").performTextInput(title);compose.onNodeWithTag("cover-choice-forest").performScrollTo().performClick();compose.onNodeWithTag("create-note").performClick();compose.singlePageEditor();saved(0);noKeyboard();return runBlocking{app.repository.observeNotes().first()}.single{it.title==title}}
     private fun shot(name:String){compose.waitForIdle();val b=checkNotNull(InstrumentationRegistry.getInstrumentation().uiAutomation.takeScreenshot());try{File(compose.activity.getExternalFilesDir(null),name).outputStream().use{b.compress(Bitmap.CompressFormat.PNG,100,it)}}finally{b.recycle()}}
     private fun rename(value:String){compose.onNodeWithTag("rename-title").performTextReplacement(value);compose.onNodeWithTag("confirm-rename").performClick();compose.waitUntil(10_000){compose.onAllNodesWithTag("rename-dialog").fetchSemanticsNodes().isEmpty()};noKeyboard()}
     @Test fun shelfRenameCancelBlankAndPersistedIdentity(){
-        val n=create();assertEquals("forest",runBlocking{app.workspaceRepository.get(n.id).coverKey});compose.onNodeWithTag("back-library").performClick();ready()
+        val n=create();assertEquals("forest",runBlocking{app.workspaceRepository.get(n.id).coverKey});compose.onNodeWithTag("back-library").performClick();ready(n.id)
         compose.onNodeWithTag("note-menu-${n.id}").performClick();compose.onNodeWithTag("rename-note-${n.id}").performClick()
         compose.onNodeWithTag("rename-title").performTextReplacement("   ");compose.onNodeWithTag("confirm-rename").assertIsNotEnabled();compose.onNodeWithTag("cancel-rename").performClick();assertEquals(n.title,runBlocking{app.repository.read(n.id)?.title})
         val renamed="高数 · 公式与推导-${n.id.take(8)}"
@@ -41,10 +45,10 @@ class NotebookShelfUiTest {
     }
     @Test fun coverChangesPersistWithoutChangingInkAndCanReturnToContentPreview(){
         val n=create();compose.openEditorAction("quick-finger");compose.onNodeWithTag("ink-surface").performTouchInput{swipe(Offset(width*.2f,height*.3f),Offset(width*.45f,height*.55f),230)};saved(1)
-        val before=runBlocking{app.inkRepository.read(n.id).strokes.single().stroke};compose.onNodeWithTag("back-library").performClick();ready()
+        val before=runBlocking{app.inkRepository.read(n.id).strokes.single().stroke};compose.onNodeWithTag("back-library").performClick();ready(n.id)
         fun pick(){compose.onNodeWithTag("note-menu-${n.id}").performClick();compose.onNodeWithTag("change-cover-${n.id}").performClick()}
         pick();compose.onNodeWithTag("cover-choice-wave").performScrollTo().performClick();noKeyboard();shot("cover-picker-emulator.png");compose.onNodeWithTag("confirm-cover").performClick()
-        compose.waitUntil(10_000){runBlocking{app.workspaceRepository.get(n.id).coverKey}=="wave"};compose.activityRule.scenario.recreate();ready()
+        compose.waitUntil(10_000){runBlocking{app.workspaceRepository.get(n.id).coverKey}=="wave"};compose.activityRule.scenario.recreate();ready(n.id)
         assertEquals(before.samples,runBlocking{app.inkRepository.read(n.id).strokes.single().stroke.samples})
         pick();compose.onNodeWithTag("cover-choice-content").performScrollTo().performClick();compose.onNodeWithTag("confirm-cover").performClick()
         compose.waitUntil(10_000){runBlocking{app.workspaceRepository.get(n.id).coverKey}=="content"};assertEquals(before.id,runBlocking{app.inkRepository.read(n.id).strokes.single().stroke.id})
