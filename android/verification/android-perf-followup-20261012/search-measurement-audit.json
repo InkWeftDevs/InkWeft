@@ -1,0 +1,44 @@
+{
+  "probe": "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibraryReadPerformanceTest.kt",
+  "unchanged_on_both_revisions": true,
+  "fixture": {
+    "books": 500,
+    "pages": 20000,
+    "chars_per_note": 20020,
+    "cold_pending_page_sources": 20000,
+    "warm_pending_sources_asserted": 0
+  },
+  "cold_sampling": {
+    "runs_per_invocation": 1,
+    "saves": 30,
+    "save_launch": "after first scanObserver source callback",
+    "save_arrival_model": "one writer coroutine; next save starts only after previous commit returns; not fixed-rate open-loop load",
+    "save_dispatcher": "Dispatchers.IO",
+    "p50": "sorted index 15 of 30 (upper median)",
+    "p95": "nearest-rank ceil(0.95 * 30) = rank 29",
+    "max": "rank 30",
+    "raw_latency_vector_exported": false
+  },
+  "warm_sampling": {
+    "queries_per_invocation": 5,
+    "reported": "sorted index 2, median of five",
+    "ordering": "after all cold concurrent saves, paused-reader save, and awaited LibraryTextIndex.build",
+    "background_competition": "probe uses read(), not observe(); its warm section launches no index builder or writer"
+  },
+  "path_differences": {
+    "baseline": "Room transaction for search; request preloads all 10,010,000 note-body characters and warm matching uses those Kotlin strings",
+    "candidate": "separate deferred read-only WAL snapshot; authoritative candidate note bodies are loaded on demand for each query, then matched by Kotlin Unicode contains through SQLite callback",
+    "notes_fts": "none on either revision; existing FTS covers page and card sources"
+  },
+  "interpretation": [
+    "The same offered serial-save workload has different overlap: the baseline writer first waits for the search transaction, then can issue remaining saves after search; the candidate permits saves during scanning.",
+    "The higher candidate save p50/p95 therefore includes different actual overlap and shared CPU competition; this probe alone does not isolate intrinsic save-path cost.",
+    "Warm regression is measured after writes/indexing finish and cannot be explained by those probe tasks running concurrently.",
+    "Extra snapshot and candidate-body read/JNI costs are consistent with warm regression; without stage timing their individual contributions are unmeasured.",
+    "One or two matched runs are exploratory measurements on a software emulator, not a statistical confidence claim or physical-device performance result.",
+    "Concurrent CPU/I/O work and a pinned WAL snapshot can contribute to changed overlap costs; no stage trace isolates their contributions."
+  ],
+  "local_opportunity_review": "Cheap tag/page/card matches could short-circuit before body reading, but this fixture has one page hit; skipping one body read is insufficient to explain or eliminate the measured difference. No cache/index framework or freshness compromise added.",
+  "repeat_plan": "Run the identical already-built probe again on candidate then baseline, using the same software emulator, final signed APKs and fresh synthetic databases. Preserve both runs separately; do not pool medians.",
+  "ui_scope": "Repository-level probe: initial headers are read with Flow.first(); no live shelf/header UI collector is kept during the 30 saves. This does not measure full application UI rendering or repeated header invalidation work."
+}

@@ -1,0 +1,21 @@
+{
+  "baseline_commit": "a128bb07e34cb82f00eeafc8e62a47bf7b95b128",
+  "baseline_method": "git archive production tree; only these identical new instrumentation probes added",
+  "probes": [
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/RasterPerformanceProbe.kt",
+      "sha256": "beecce2278a3f1feefc582eada25e6fc591e827eba0e5a6f782d9d831d9e0aa4",
+      "identical_on_baseline": true
+    },
+    {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibraryReadPerformanceTest.kt",
+      "sha256": "754559835bcc48d5a837838f201cdc8af6319e3354c7167ab301d113676546b4",
+      "identical_on_baseline": true
+    },
+    {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/HistoryCollectionBenchmarkTest.kt",
+      "sha256": "d4b9510dd9c4c7f79a8e4c925cddb76a62147f07b50779d7140602d5655e7e8f",
+      "identical_on_baseline": true
+    }
+  ]
+}

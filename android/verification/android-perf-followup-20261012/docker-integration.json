@@ -1,0 +1,17 @@
+{
+  "base": "a128bb07e34cb82f00eeafc8e62a47bf7b95b128",
+  "source_commits": [
+    "4ee5c671b3bfcd1c22a2dfb82f5f49e642190a8e",
+    "528b67c771ee72ea61f9f4244c375ac76bd82029"
+  ],
+  "integrated_commits": [
+    "68253aa",
+    "1594ac8ff5748a4c7f9771b8d1ae68d6edff6b6b"
+  ],
+  "bundle_size": 37697,
+  "bundle_sha256": "209b968e9992c8bbd9a6cb900c12a8c8a7f09dc2982e7b91aec525632e6257a9",
+  "bundle_verified": true,
+  "evidence_checksums_verified": true,
+  "backup_server_tree_identical": true,
+  "docker_rerun_in_android_environment": false
+}

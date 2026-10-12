@@ -1,0 +1,25 @@
+
+org.inkweft.data.BundledSqliteFactoryTest:....
+Error in existing1024ByteDatabaseRetainsPageSizeAndAuthorContent(org.inkweft.data.BundledSqliteFactoryTest):
+java.lang.AssertionError: expected:<0> but was:<1>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at org.inkweft.data.BundledSqliteFactoryTest.existing1024ByteDatabaseRetainsPageSizeAndAuthorContent(BundledSqliteFactoryTest.kt:97)
+
+
+Time: 9.842
+There was 1 failure:
+1) existing1024ByteDatabaseRetainsPageSizeAndAuthorContent(org.inkweft.data.BundledSqliteFactoryTest)
+java.lang.AssertionError: expected:<0> but was:<1>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at org.inkweft.data.BundledSqliteFactoryTest.existing1024ByteDatabaseRetainsPageSizeAndAuthorContent(BundledSqliteFactoryTest.kt:97)
+
+FAILURES!!!
+Tests run: 5,  Failures: 1
+
+

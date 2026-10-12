@@ -1,0 +1,48 @@
+{
+  "baseline": {
+    "core-domain": {
+      "suites": 58,
+      "tests": 478,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "data-local": {
+      "suites": 4,
+      "tests": 20,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "lint": {
+      "Fatal": 0,
+      "Error": 0,
+      "Warning": 188,
+      "Information": 0
+    },
+    "build_successful": true
+  },
+  "candidate": {
+    "core-domain": {
+      "suites": 58,
+      "tests": 478,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "data-local": {
+      "suites": 4,
+      "tests": 20,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "lint": {
+      "Fatal": 0,
+      "Error": 0,
+      "Warning": 188,
+      "Information": 0
+    },
+    "build_successful": true
+  }
+}

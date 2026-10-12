@@ -1,0 +1,34 @@
+{
+  "utc": "2026-10-12T20:12:14.156195+00:00",
+  "purpose": "Explain larger signed follow-up app-test containers: record archive entries separately from whole-file size; no package was repacked or substituted. Main APK unchanged, signatures separately verified.",
+  "pairs": [
+    {
+      "phase": "baseline",
+      "old_apk_bytes": 10263871,
+      "new_apk_bytes": 18104848,
+      "old_compressed_entry_bytes": 10246051,
+      "new_compressed_entry_bytes": 10253807,
+      "changed_entries": [
+        {
+          "entry": "classes3.dex",
+          "old_size": 7833176,
+          "new_size": 7840932
+        }
+      ]
+    },
+    {
+      "phase": "candidate",
+      "old_apk_bytes": 10376155,
+      "new_apk_bytes": 18329332,
+      "old_compressed_entry_bytes": 10358335,
+      "new_compressed_entry_bytes": 10366007,
+      "changed_entries": [
+        {
+          "entry": "classes3.dex",
+          "old_size": 7945460,
+          "new_size": 7953132
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+[
+  {
+    "path": "app/build/outputs/apk/debug/app-debug.apk",
+    "bytes": 229654219,
+    "sha256": "39d5a5ac956abe557e1e4620450a303d3eb17f332bec46562b3a0f7acd8abcb8",
+    "mupdf_native": [
+      {
+        "path": "lib/arm64-v8a/libmupdf_java.so",
+        "size": 10840392,
+        "sha256": "5c7872c5e12ae3c00f68e14e371d3467cbfb2fd3dfefc7bb2a03d2cd491f6a4f"
+      },
+      {
+        "path": "lib/armeabi-v7a/libmupdf_java.so",
+        "size": 7582088,
+        "sha256": "2b24af301ba54d70c4cac09a1ae22af2c20f62b5f1046a2e8b352ca702e2ffd6"
+      },
+      {
+        "path": "lib/x86/libmupdf_java.so",
+        "size": 11187796,
+        "sha256": "46f512805c693c07f6e7fac50cdf3d2e028c5078f92e7d230f4c1e6e1b165ed9"
+      },
+      {
+        "path": "lib/x86_64/libmupdf_java.so",
+        "size": 11264136,
+        "sha256": "e9907d1e11f886662915376a1f059608e539c75cb1bc5ef57ccdf887a0367349"
+      }
+    ]
+  },
+  {
+    "path": "app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk",
+    "bytes": 10263871,
+    "sha256": "050ec8c2c4212cbcd04aae2fb9b96ac27b9cace816c772121320bc3775936c85",
+    "mupdf_native": []
+  },
+  {
+    "path": "data-local/build/outputs/apk/androidTest/debug/data-local-debug-androidTest.apk",
+    "bytes": 22506440,
+    "sha256": "baa2d1108562ece39870bed181a435cd4baf8e87490ec50afae74759c2d61723",
+    "mupdf_native": []
+  }
+]

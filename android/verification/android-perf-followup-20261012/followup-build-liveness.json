@@ -1,0 +1,40 @@
+{
+  "utc": "2026-10-12T19:51:43.323032+00:00",
+  "processes": [
+    {
+      "pid": 2661,
+      "kind": "owned emulator",
+      "status": [
+        "State:\tS (sleeping)",
+        "VmRSS:\t 4611996 kB",
+        "VmSwap:\t       0 kB",
+        "Threads:\t92"
+      ],
+      "cpu_ticks": 1428828
+    },
+    {
+      "pid": 24149,
+      "kind": "GradleDaemon",
+      "status": [
+        "State:\tS (sleeping)",
+        "VmRSS:\t  343596 kB",
+        "VmSwap:\t       0 kB",
+        "Threads:\t47"
+      ],
+      "cpu_ticks": 2491
+    }
+  ],
+  "host_memory": [
+    "MemTotal:       18440136 kB",
+    "MemAvailable:   12543852 kB",
+    "SwapTotal:             0 kB",
+    "SwapFree:              0 kB"
+  ],
+  "log_tail": [
+    "> Task :app:lintReportDebug UP-TO-DATE",
+    "> Task :app:lintDebug",
+    "",
+    "BUILD SUCCESSFUL in 9m 9s",
+    "136 actionable tasks: 14 executed, 122 up-to-date"
+  ]
+}

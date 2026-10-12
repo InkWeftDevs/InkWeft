@@ -1,0 +1,31 @@
+{
+  "phase": "baseline",
+  "selection": "org.inkweft.data.HistoryCollectionBenchmarkTest",
+  "command": [
+    "/workspace/.setup/tools/android-sdk/platform-tools/adb",
+    "-s",
+    "emulator-5554",
+    "shell",
+    "am",
+    "instrument",
+    "-w",
+    "-e",
+    "class",
+    "org.inkweft.data.HistoryCollectionBenchmarkTest",
+    "-e",
+    "historyScanBaseline",
+    "true",
+    "org.inkweft.data.test/androidx.test.runner.AndroidJUnitRunner"
+  ],
+  "started_utc": "2026-10-12T15:37:45.046921+00:00",
+  "seconds": 13.952969630000098,
+  "exit_code": 0,
+  "expected": 1,
+  "tests": null,
+  "passed": false,
+  "environment": "API35 x86_64 software Android emulator; no KVM; not physical-device performance",
+  "executed": 1,
+  "failures": 1,
+  "measurement_reached": false,
+  "failure_stage": "PreservingOpenHelperFactory.prepareNewDatabase: Os.link rejected by SELinux before fixture setup completed"
+}

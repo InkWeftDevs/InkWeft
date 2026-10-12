@@ -1,0 +1,32 @@
+
+org.inkweft.app.NotebookHeaderLoadingTest:....
+org.inkweft.app.StreamedInkRasterTest:.
+Error in completeFrameIncludesGeometryBeyondTheEditorWindowAndReleasesItsWorker(org.inkweft.app.StreamedInkRasterTest):
+kotlinx.coroutines.TimeoutCancellationException: Timed out waiting for 30000 ms
+	at kotlinx.coroutines.TimeoutKt.TimeoutCancellationException(Timeout.kt:189)
+	at kotlinx.coroutines.TimeoutCoroutine.run(Timeout.kt:157)
+	at kotlinx.coroutines.EventLoopImplBase$DelayedRunnableTask.run(EventLoop.common.kt:505)
+	at kotlinx.coroutines.EventLoopImplBase.processNextEvent(EventLoop.common.kt:263)
+	at kotlinx.coroutines.DefaultExecutor.run(DefaultExecutor.kt:105)
+	at java.lang.Thread.run(Thread.java:1012)
+.
+org.inkweft.app.LayerRasterBudgetTest:LAYER_RASTER_EVIDENCE {"visibleLayers":1,"visibleStrokes":320,"decodedRows":320,"decodedPoints":640,"payloadBytes":44800,"geometryReads":2,"nativeExtentPixels":3117845,"inkBitmapBytes":12471380,"readyMs":11558.677901,"softwareDrawP95Ms":109.928693,"javaUsedBytes":32723280,"processPssKiB":152754}
+LAYER_RASTER_EVIDENCE {"visibleLayers":4,"visibleStrokes":320,"decodedRows":320,"decodedPoints":640,"payloadBytes":44800,"geometryReads":4,"nativeExtentPixels":10530530,"inkBitmapBytes":10544352,"readyMs":56024.460585,"softwareDrawP95Ms":2217.840406,"javaUsedBytes":21811488,"processPssKiB":142183}
+LAYER_RASTER_EVIDENCE {"visibleLayers":8,"visibleStrokes":320,"decodedRows":320,"decodedPoints":640,"payloadBytes":44800,"geometryReads":8,"nativeExtentPixels":21061060,"inkBitmapBytes":21088704,"readyMs":99762.078498,"softwareDrawP95Ms":4380.922938,"javaUsedBytes":28201296,"processPssKiB":151895}
+.
+
+Time: 294.73
+There was 1 failure:
+1) completeFrameIncludesGeometryBeyondTheEditorWindowAndReleasesItsWorker(org.inkweft.app.StreamedInkRasterTest)
+kotlinx.coroutines.TimeoutCancellationException: Timed out waiting for 30000 ms
+	at kotlinx.coroutines.TimeoutKt.TimeoutCancellationException(Timeout.kt:189)
+	at kotlinx.coroutines.TimeoutCoroutine.run(Timeout.kt:157)
+	at kotlinx.coroutines.EventLoopImplBase$DelayedRunnableTask.run(EventLoop.common.kt:505)
+	at kotlinx.coroutines.EventLoopImplBase.processNextEvent(EventLoop.common.kt:263)
+	at kotlinx.coroutines.DefaultExecutor.run(DefaultExecutor.kt:105)
+	at java.lang.Thread.run(Thread.java:1012)
+
+FAILURES!!!
+Tests run: 8,  Failures: 1
+
+

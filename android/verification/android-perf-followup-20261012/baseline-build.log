@@ -1,0 +1,362 @@
+Picked up JAVA_TOOL_OPTIONS: -Duser.home=/workspace/.setup/java-home -Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts -Dhttps.proxyHost=proxy -Dhttps.proxyPort=8080 -Dhttp.proxyHost=proxy -Dhttp.proxyPort=8080
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/9.4.1/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+
+> Configure project :app
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/app/build.gradle.kts:80:41: 'fun srcDir(srcDir: Any): Any' is deprecated. Use `directories` mutable set instead.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/app/build.gradle.kts:85:46: 'fun srcDir(srcDir: Any): Any' is deprecated. Use `directories` mutable set instead.
+
+> Task :core-domain:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :core-domain:processResources NO-SOURCE
+> Task :core-domain:processTestResources NO-SOURCE
+> Task :data-local:preBuild UP-TO-DATE
+> Task :data-local:preDebugBuild UP-TO-DATE
+> Task :data-local:generateDebugResources
+> Task :data-local:packageDebugResources
+> Task :data-local:processDebugNavigationResources
+> Task :data-local:parseDebugLocalResources
+> Task :data-local:generateDebugRFile
+> Task :data-local:javaPreCompileDebug
+> Task :data-local:preDebugUnitTestBuild UP-TO-DATE
+> Task :data-local:generateDebugUnitTestStubRFile
+> Task :data-local:javaPreCompileDebugUnitTest
+> Task :data-local:checkDebugAarMetadata
+> Task :data-local:mergeDebugJniLibFolders
+> Task :data-local:mergeDebugNativeLibs NO-SOURCE
+> Task :data-local:stripDebugDebugSymbols NO-SOURCE
+> Task :data-local:copyDebugJniLibsProjectAndLocalJars
+> Task :data-local:extractDeepLinksForAarDebug
+> Task :data-local:generateDebugAssets UP-TO-DATE
+> Task :data-local:mergeDebugAssets
+> Task :data-local:prepareDebugArtProfile
+> Task :data-local:prepareLintJarForPublish
+> Task :data-local:processDebugManifest
+> Task :data-local:writeDebugAarMetadata
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :app:generateDebugBuildConfig
+> Task :app:generateDebugResources
+> Task :app:packageDebugResources
+> Task :core-domain:compileKotlin
+> Task :app:processDebugNavigationResources
+> Task :core-domain:compileJava NO-SOURCE
+> Task :core-domain:classes UP-TO-DATE
+> Task :core-domain:jar
+> Task :core-domain:compileTestKotlin
+> Task :data-local:kspDebugKotlin
+
+> Task :core-domain:compileTestKotlin
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/core-domain/src/test/kotlin/org/inkweft/core/NoteDraftTest.kt:72:34 Unnecessary non-null assertion (!!) on a non-null receiver of type 'SaveNote'.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/core-domain/src/test/kotlin/org/inkweft/core/PageAuthoringTest.kt:107:37 Unnecessary non-null assertion (!!) on a non-null receiver of type 'PageAuthoring'.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/core-domain/src/test/kotlin/org/inkweft/core/ReadingHandwritingTest.kt:43:79 Unnecessary non-null assertion (!!) on a non-null receiver of type 'PdfPageSource'.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/core-domain/src/test/kotlin/org/inkweft/core/StreamedStorageTest.kt:42:73 No cast needed.
+
+> Task :core-domain:compileTestJava NO-SOURCE
+> Task :core-domain:testClasses UP-TO-DATE
+
+> Task :core-domain:test
+Picked up JAVA_TOOL_OPTIONS: -Duser.home=/workspace/.setup/java-home -Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts -Dhttps.proxyHost=proxy -Dhttps.proxyPort=8080 -Dhttp.proxyHost=proxy -Dhttp.proxyPort=8080
+
+> Task :data-local:extractDebugAnnotations
+> Task :app:parseDebugLocalResources
+> Task :app:generateDebugRFile
+> Task :app:javaPreCompileDebug FROM-CACHE
+> Task :app:checkDebugAarMetadata
+> Task :app:mapDebugSourceSetPaths
+> Task :app:compileDebugNavigationResources
+> Task :app:mergeDebugResources
+> Task :app:createDebugCompatibleScreenManifests
+> Task :app:extractDeepLinksDebug
+> Task :data-local:extractDeepLinksDebug
+> Task :app:processDebugMainManifest
+> Task :app:processDebugManifest
+> Task :app:processDebugManifestForPackage
+> Task :data-local:mapDebugSourceSetPaths
+> Task :data-local:compileDebugLibraryResources
+> Task :app:processDebugResources
+> Task :app:preDebugAndroidTestBuild SKIPPED
+> Task :data-local:writeDebugLintModelMetadata
+> Task :app:extractProguardFiles
+> Task :data-local:extractProguardFiles
+> Task :app:preDebugUnitTestBuild UP-TO-DATE
+> Task :data-local:preDebugAndroidTestBuild UP-TO-DATE
+> Task :app:mergeDebugNativeDebugMetadata NO-SOURCE
+> Task :app:generateDebugAssets UP-TO-DATE
+> Task :app:generateInkWeftBuildIdentity
+> Task :app:mergeDebugAssets
+> Task :data-local:compileDebugKotlin
+> Task :app:compressDebugAssets
+> Task :app:generateDebugGlobalSynthetics
+> Task :app:checkDebugDuplicateClasses
+> Task :app:desugarDebugFileDependencies
+> Task :app:mergeExtDexDebug
+
+> Task :data-local:compileDebugKotlin
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/data-local/src/main/kotlin/org/inkweft/data/DocumentRepository.kt:38:47 Java type mismatch: inferred type is 'String?', but 'String' was expected.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/data-local/src/main/kotlin/org/inkweft/data/InkRepository.kt:247:31 Unnecessary safe call on a non-null receiver of type 'List<String>'.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/data-local/src/main/kotlin/org/inkweft/data/KnowledgeTextRepository.kt:140:34 Condition is always 'true'.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/data-local/src/main/kotlin/org/inkweft/data/KnowledgeTextRepository.kt:140:65 Condition is always 'true'.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/data-local/src/main/kotlin/org/inkweft/data/OriginalStorage.kt:61:27 Java type mismatch: inferred type is 'String?', but 'String' was expected.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/data-local/src/main/kotlin/org/inkweft/data/OriginalStorage.kt:73:44 Java type mismatch: inferred type is 'String?', but 'String' was expected.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/data-local/src/main/kotlin/org/inkweft/data/PreservingOpenHelperFactory.kt:34:58 Java type mismatch: inferred type is 'String?', but 'String' was expected.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/data-local/src/main/kotlin/org/inkweft/data/RecallStudyRepository.kt:37:37 Unnecessary non-null assertion (!!) on a non-null receiver of type 'KnowledgeData.Question'.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/data-local/src/main/kotlin/org/inkweft/data/StudyRepository.kt:185:51 Unnecessary non-null assertion (!!) on a non-null receiver of type 'StudySourceRow'.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/data-local/src/main/kotlin/org/inkweft/data/StudyRepository.kt:185:95 Unnecessary non-null assertion (!!) on a non-null receiver of type 'StudySourceRow'.
+
+> Task :data-local:compileDebugJavaWithJavac NO-SOURCE
+> Task :data-local:bundleLibRuntimeToJarDebug
+> Task :data-local:bundleLibCompileToJarDebug
+> Task :data-local:kspDebugUnitTestKotlin
+> Task :data-local:processDebugJavaRes
+> Task :data-local:mergeDebugGeneratedProguardFiles
+> Task :data-local:mergeDebugConsumerProguardFiles
+> Task :data-local:mergeDebugJavaResource
+> Task :data-local:syncDebugLibJars
+> Task :data-local:bundleDebugLocalLintAar
+> Task :data-local:compileDebugUnitTestKotlin
+> Task :data-local:compileDebugUnitTestJavaWithJavac NO-SOURCE
+> Task :data-local:processDebugUnitTestJavaRes
+
+> Task :data-local:testDebugUnitTest
+Picked up JAVA_TOOL_OPTIONS: -Duser.home=/workspace/.setup/java-home -Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts -Dhttps.proxyHost=proxy -Dhttps.proxyPort=8080 -Dhttp.proxyHost=proxy -Dhttp.proxyPort=8080
+
+> Task :data-local:createFullJarDebug
+> Task :data-local:generateDebugLintModel
+> Task :app:compileDebugKotlin
+> Task :data-local:lintAnalyzeDebug
+> Task :data-local:generateDebugAndroidTestLintModel
+> Task :data-local:generateDebugUnitTestLintModel
+
+> Task :app:compileDebugKotlin
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/app/src/debug/java/org/inkweft/app/EditorDesignReviewActivity.kt:162:51 'fun rememberTooltipPositionProvider(spacingBetweenTooltipAndAnchor: Dp = ...): PopupPositionProvider' is deprecated. Deprecated in favor of rememberTooltipPositionProvider API that takes a preferred positioning. Please use rememberTooltipPositionProvider with TooltipAnchorPosition.Above if this same behavior is desired.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/app/src/main/java/org/inkweft/app/AutomaticBeauty.kt:38:222 Unnecessary non-null assertion (!!) on a non-null receiver of type 'TextRun'.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/app/src/main/java/org/inkweft/app/AutomaticBeauty.kt:45:192 Unnecessary non-null assertion (!!) on a non-null receiver of type 'TextRun'.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/app/src/main/java/org/inkweft/app/EditorControls.kt:50:55 'fun rememberTooltipPositionProvider(spacingBetweenTooltipAndAnchor: Dp = ...): PopupPositionProvider' is deprecated. Deprecated in favor of rememberTooltipPositionProvider API that takes a preferred positioning. Please use rememberTooltipPositionProvider with TooltipAnchorPosition.Above if this same behavior is desired.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/app/src/main/java/org/inkweft/app/EditorControls.kt:118:40 The corresponding parameter in the supertype 'PopupPositionProvider' is named 'anchorBounds'. This may cause problems when calling this function with named arguments.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/app/src/main/java/org/inkweft/app/EditorControls.kt:118:50 The corresponding parameter in the supertype 'PopupPositionProvider' is named 'windowSize'. This may cause problems when calling this function with named arguments.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/app/src/main/java/org/inkweft/app/EditorControls.kt:118:60 The corresponding parameter in the supertype 'PopupPositionProvider' is named 'layoutDirection'. This may cause problems when calling this function with named arguments.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/app/src/main/java/org/inkweft/app/EditorControls.kt:118:78 The corresponding parameter in the supertype 'PopupPositionProvider' is named 'popupContentSize'. This may cause problems when calling this function with named arguments.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/app/src/main/java/org/inkweft/app/ImageRendering.kt:141:41 'static fun newInstance(p0: String, p1: Boolean): BitmapRegionDecoder' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/app/src/main/java/org/inkweft/app/InkCanvasView.kt:374:116 'val matrix: Matrix' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/app/src/main/java/org/inkweft/app/InkScreen.kt:550:72 Condition is always 'false'.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/app/src/main/java/org/inkweft/app/InkScreen.kt:564:18 Condition is always 'true'.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/app/src/main/java/org/inkweft/app/InkScreen.kt:602:357 Condition is always 'true'.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/app/src/main/java/org/inkweft/app/InkWeftApplication.kt:44:114 'static field TRIM_MEMORY_RUNNING_LOW: Int' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/app/src/main/java/org/inkweft/app/KnowledgeRelationEditor.kt:72:48 Unnecessary non-null assertion (!!) on a non-null receiver of type 'KnowledgeRow'.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/app/src/main/java/org/inkweft/app/MapScenePainter.kt:125:42 Unnecessary safe call on a non-null receiver of type 'MapSourceFrame'.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/app/src/main/java/org/inkweft/app/MindMapView.kt:280:49 Redundant call of conversion method.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/app/src/main/java/org/inkweft/app/MindMapView.kt:280:79 Redundant call of conversion method.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/app/src/main/java/org/inkweft/app/MindMapView.kt:281:50 Redundant call of conversion method.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/app/src/main/java/org/inkweft/app/MindMapView.kt:281:79 Redundant call of conversion method.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/app/src/main/java/org/inkweft/app/NodeActions.kt:35:32 'fun rememberPlainTooltipPositionProvider(spacingBetweenTooltipAndAnchor: Dp = ...): PopupPositionProvider' is deprecated. Deprecated in favor of rememberTooltipPositionProvider API.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/app/src/main/java/org/inkweft/app/OverviewCollections.kt:69:41 The corresponding parameter in the supertype 'Factory' is named 'modelClass'. This may cause problems when calling this function with named arguments.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/app/src/main/java/org/inkweft/app/PageAuthoringViewModel.kt:59:58 This declaration needs opt-in. Its usage should be marked with '@kotlinx.coroutines.ExperimentalCoroutinesApi' or '@OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)'
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/app/src/main/java/org/inkweft/app/PenWidthSettings.kt:120:154 'fun quadraticBezierTo(x1: Float, y1: Float, x2: Float, y2: Float): Unit' is deprecated. Use quadraticTo() for consistency with cubicTo().
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/app/src/main/java/org/inkweft/app/RecallStudyViewModel.kt:80:38 Unnecessary non-null assertion (!!) on a non-null receiver of type 'JSONObject'.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/app/src/main/java/org/inkweft/app/RecallStudyViewModel.kt:81:51 Unnecessary non-null assertion (!!) on a non-null receiver of type 'JSONObject'.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/app/src/main/java/org/inkweft/app/ReviewSourceDialog.kt:29:111 'val id: Long' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/app/src/main/java/org/inkweft/app/StudySession.kt:223:119 The corresponding parameter in the supertype 'Factory' is named 'modelClass'. This may cause problems when calling this function with named arguments.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/app/src/main/java/org/inkweft/app/StudyWorkspace.kt:329:123 Condition is always 'true'.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/app/src/main/java/org/inkweft/app/StudyWorkspace.kt:340:27 Elvis operator (?:) always returns the left operand of non-nullable type 'StudyGraphSnapshot'.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/app/src/main/java/org/inkweft/app/StudyWorkspace.kt:436:27 Elvis operator (?:) always returns the left operand of non-nullable type 'StudyGraphSnapshot'.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/app/src/main/java/org/inkweft/app/StudyWorkspace.kt:667:81 Unnecessary safe call on a non-null receiver of type 'StudyGraphSnapshot'.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/app/src/main/java/org/inkweft/app/StudyWorkspace.kt:922:74 Unnecessary safe call on a non-null receiver of type 'StudyGraphSnapshot'.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/app/src/main/java/org/inkweft/app/StudyWorkspace.kt:927:74 Unnecessary safe call on a non-null receiver of type 'StudyGraphSnapshot'.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/app/src/main/java/org/inkweft/app/StudyWorkspace.kt:980:49 Condition is always 'true'.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/app/src/main/java/org/inkweft/app/StudyWorkspace.kt:984:1791 Unnecessary safe call on a non-null receiver of type 'StudyGraphSnapshot'.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/app/src/main/java/org/inkweft/app/StudyWorkspace.kt:1202:38 Unnecessary safe call on a non-null receiver of type 'StudyGraphSnapshot'.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/app/src/main/java/org/inkweft/app/StudyWorkspace.kt:1490:50 Unnecessary safe call on a non-null receiver of type 'StudyGraphSnapshot'.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/app/src/main/java/org/inkweft/app/TapeSettingsCard.kt:22:34 The corresponding parameter in the supertype 'PopupPositionProvider' is named 'anchorBounds'. This may cause problems when calling this function with named arguments.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/app/src/main/java/org/inkweft/app/TapeSettingsCard.kt:22:44 The corresponding parameter in the supertype 'PopupPositionProvider' is named 'windowSize'. This may cause problems when calling this function with named arguments.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/app/src/main/java/org/inkweft/app/TapeSettingsCard.kt:22:54 The corresponding parameter in the supertype 'PopupPositionProvider' is named 'layoutDirection'. This may cause problems when calling this function with named arguments.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/app/src/main/java/org/inkweft/app/TapeSettingsCard.kt:22:72 The corresponding parameter in the supertype 'PopupPositionProvider' is named 'popupContentSize'. This may cause problems when calling this function with named arguments.
+
+> Task :data-local:lintAnalyzeDebugAndroidTest
+
+> Task :app:compileDebugJavaWithJavac
+Picked up JAVA_TOOL_OPTIONS: -Duser.home=/workspace/.setup/java-home -Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts -Dhttps.proxyHost=proxy -Dhttps.proxyPort=8080 -Dhttp.proxyHost=proxy -Dhttp.proxyPort=8080
+
+Picked up JAVA_TOOL_OPTIONS: -Duser.home=/workspace/.setup/java-home -Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts -Dhttps.proxyHost=proxy -Dhttps.proxyPort=8080 -Dhttp.proxyHost=proxy -Dhttp.proxyPort=8080
+
+Picked up JAVA_TOOL_OPTIONS: -Duser.home=/workspace/.setup/java-home -Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts -Dhttps.proxyHost=proxy -Dhttps.proxyPort=8080 -Dhttp.proxyHost=proxy -Dhttp.proxyPort=8080
+
+
+> Task :app:bundleDebugClassesToCompileJar
+> Task :app:generateDebugAndroidTestLintModel
+> Task :app:generateDebugLintReportModel
+> Task :app:generateDebugUnitTestLintModel
+> Task :app:lintAnalyzeDebug
+> Task :app:lintAnalyzeDebugAndroidTest
+> Task :app:lintAnalyzeDebugUnitTest
+> Task :data-local:lintAnalyzeDebugUnitTest
+> Task :app:processDebugJavaRes
+> Task :app:mergeDebugJavaResource
+> Task :data-local:bundleLibRuntimeToDirDebug
+> Task :app:mergeLibDexDebug
+> Task :app:dexBuilderDebug
+> Task :app:mergeProjectDexDebug
+> Task :app:mergeDebugJniLibFolders
+> Task :data-local:copyDebugJniLibsProjectOnly
+> Task :app:mergeDebugNativeLibs
+
+> Task :app:stripDebugDebugSymbols
+Unable to strip the following libraries, packaging them as they are: libandroidx.graphics.path.so, libink.so, libmupdf_java.so, libonnxruntime.so, libonnxruntime4j_jni.so, libsqlite3x.so. Run with --info option to learn more.
+
+> Task :app:validateSigningDebug
+> Task :app:writeDebugAppMetadata
+> Task :app:writeDebugSigningConfigVersions
+> Task :app:packageDebug
+> Task :app:createDebugApkListingFileRedirect
+> Task :app:assembleDebug
+> Task :data-local:generateDebugAndroidTestResources FROM-CACHE
+> Task :data-local:packageDebugAndroidTestResources FROM-CACHE
+> Task :data-local:processDebugAndroidTestNavigationResources FROM-CACHE
+> Task :data-local:parseDebugAndroidTestLocalResources FROM-CACHE
+> Task :data-local:generateDebugAndroidTestRFile FROM-CACHE
+> Task :data-local:kspDebugAndroidTestKotlin
+> Task :data-local:compileDebugAndroidTestKotlin
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/data-local/src/androidTest/kotlin/org/inkweft/data/BranchReviewRepositoryTest.kt:206:26 Unnecessary non-null assertion (!!) on a non-null receiver of type 'StudyCommand'.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/data-local/src/androidTest/kotlin/org/inkweft/data/BundledSqliteFactoryTest.kt:35:55 Java type mismatch: inferred type is 'String?', but 'String' was expected.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/data-local/src/androidTest/kotlin/org/inkweft/data/LibraryBackupRepositoryTest.kt:247:33 'constructor(p0: String!, p1: Int): FileObserver' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/data-local/src/androidTest/kotlin/org/inkweft/data/OriginalStorageRepositoryTest.kt:78:25 Java type mismatch: inferred type is 'String?', but 'String' was expected.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/data-local/src/androidTest/kotlin/org/inkweft/data/OriginalStorageRepositoryTest.kt:93:97 Java type mismatch: inferred type is 'String?', but 'String' was expected.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/data-local/src/androidTest/kotlin/org/inkweft/data/OriginalStorageRepositoryTest.kt:121:25 Java type mismatch: inferred type is 'String?', but 'String' was expected.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/data-local/src/androidTest/kotlin/org/inkweft/data/OriginalStorageRepositoryTest.kt:131:25 Java type mismatch: inferred type is 'String?', but 'String' was expected.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/data-local/src/androidTest/kotlin/org/inkweft/data/OriginalStorageRepositoryTest.kt:201:102 Java type mismatch: inferred type is 'String?', but 'String' was expected.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/data-local/src/androidTest/kotlin/org/inkweft/data/OriginalStorageRepositoryTest.kt:207:70 Java type mismatch: inferred type is 'String?', but 'String' was expected.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/data-local/src/androidTest/kotlin/org/inkweft/data/OriginalStorageRepositoryTest.kt:209:111 Java type mismatch: inferred type is 'String?', but 'String' was expected.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/data-local/src/androidTest/kotlin/org/inkweft/data/OriginalStorageRepositoryTest.kt:223:102 Java type mismatch: inferred type is 'String?', but 'String' was expected.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/data-local/src/androidTest/kotlin/org/inkweft/data/OriginalStorageRepositoryTest.kt:226:70 Java type mismatch: inferred type is 'String?', but 'String' was expected.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/data-local/src/androidTest/kotlin/org/inkweft/data/PageAuthoringRepositoryTest.kt:134:42 The corresponding parameter in the supertype 'Rows' is named 'consume'. This may cause problems when calling this function with named arguments.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/data-local/src/androidTest/kotlin/org/inkweft/data/RecallStudyRepositoryTest.kt:206:62 Unnecessary non-null assertion (!!) on a non-null receiver of type 'RecallLoadedAttempt'.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/data-local/src/androidTest/kotlin/org/inkweft/data/RecallStudyRepositoryTest.kt:212:72 Unnecessary non-null assertion (!!) on a non-null receiver of type 'RecallLoadedAttempt'.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/data-local/src/androidTest/kotlin/org/inkweft/data/RecallStudyRepositoryTest.kt:232:61 Unnecessary non-null assertion (!!) on a non-null receiver of type 'RecallLoadedAttempt'.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/data-local/src/androidTest/kotlin/org/inkweft/data/RecallStudyRepositoryTest.kt:233:74 Unnecessary non-null assertion (!!) on a non-null receiver of type 'RecallLoadedAttempt'.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/data-local/src/androidTest/kotlin/org/inkweft/data/RecallStudyRepositoryTest.kt:268:102 Unnecessary non-null assertion (!!) on a non-null receiver of type 'KnowledgeData.CardPresentation'.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/data-local/src/androidTest/kotlin/org/inkweft/data/StudyOrganizationRepositoryTest.kt:135:39 Unnecessary non-null assertion (!!) on a non-null receiver of type 'KnowledgeRow'.
+
+> Task :data-local:javaPreCompileDebugAndroidTest FROM-CACHE
+> Task :data-local:compileDebugAndroidTestJavaWithJavac NO-SOURCE
+> Task :data-local:generateDebugAndroidTestAssets UP-TO-DATE
+> Task :data-local:mergeDebugAndroidTestAssets
+> Task :data-local:compressDebugAndroidTestAssets FROM-CACHE
+> Task :data-local:generateDebugAndroidTestGlobalSynthetics FROM-CACHE
+> Task :data-local:processDebugAndroidTestJavaRes
+> Task :data-local:mergeDebugAndroidTestJavaResource
+> Task :data-local:checkDebugAndroidTestDuplicateClasses
+> Task :data-local:desugarDebugAndroidTestFileDependencies FROM-CACHE
+> Task :data-local:mergeExtDexDebugAndroidTest FROM-CACHE
+> Task :data-local:mergeLibDexDebugAndroidTest FROM-CACHE
+> Task :data-local:checkDebugAndroidTestAarMetadata
+> Task :data-local:mapDebugAndroidTestSourceSetPaths
+> Task :data-local:compileDebugAndroidTestNavigationResources FROM-CACHE
+> Task :data-local:mergeDebugAndroidTestResources FROM-CACHE
+> Task :data-local:processDebugAndroidTestManifest
+> Task :data-local:processDebugAndroidTestResources FROM-CACHE
+> Task :data-local:dexBuilderDebugAndroidTest
+
+> Task :app:lintReportDebug
+Wrote HTML report to file:///workspace/scratch/inkweft-baseline-a128bb07/android/app/build/reports/lint-results-debug.html
+
+> Task :data-local:mergeProjectDexDebugAndroidTest
+> Task :data-local:mergeDebugAndroidTestJniLibFolders
+> Task :app:lintDebug
+> Task :data-local:validateSigningDebugAndroidTest
+> Task :data-local:writeDebugAndroidTestSigningConfigVersions
+> Task :data-local:mergeDebugAndroidTestNativeLibs
+> Task :app:processDebugAndroidTestManifest
+> Task :app:generateDebugAndroidTestBuildConfig
+> Task :app:generateDebugAndroidTestResources FROM-CACHE
+> Task :app:packageDebugAndroidTestResources
+> Task :app:processDebugAndroidTestNavigationResources
+> Task :app:parseDebugAndroidTestLocalResources FROM-CACHE
+> Task :app:generateDebugAndroidTestRFile
+
+> Task :data-local:stripDebugAndroidTestDebugSymbols
+Unable to strip the following libraries, packaging them as they are: libsqlite3x.so. Run with --info option to learn more.
+
+> Task :data-local:packageDebugAndroidTest
+> Task :data-local:createDebugAndroidTestApkListingFileRedirect
+> Task :data-local:assembleDebugAndroidTest
+> Task :app:javaPreCompileDebugAndroidTest FROM-CACHE
+> Task :app:generateDebugAndroidTestAssets UP-TO-DATE
+> Task :app:mergeDebugAndroidTestAssets
+> Task :app:compressDebugAndroidTestAssets
+> Task :app:generateDebugAndroidTestGlobalSynthetics FROM-CACHE
+> Task :app:checkDebugAndroidTestDuplicateClasses
+> Task :app:desugarDebugAndroidTestFileDependencies FROM-CACHE
+> Task :app:mergeExtDexDebugAndroidTest
+> Task :app:mergeLibDexDebugAndroidTest
+> Task :app:checkDebugAndroidTestAarMetadata
+> Task :app:mapDebugAndroidTestSourceSetPaths
+> Task :app:compileDebugAndroidTestNavigationResources FROM-CACHE
+> Task :app:mergeDebugAndroidTestResources
+> Task :app:processDebugAndroidTestResources
+> Task :app:mergeDebugAndroidTestJniLibFolders
+> Task :app:mergeDebugAndroidTestNativeLibs NO-SOURCE
+> Task :app:stripDebugAndroidTestDebugSymbols NO-SOURCE
+> Task :app:validateSigningDebugAndroidTest
+> Task :app:writeDebugAndroidTestSigningConfigVersions
+> Task :app:compileDebugAndroidTestKotlin
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/app/src/androidTest/java/org/inkweft/app/AndroidTemporarySpaceProbe.kt:72:49 Unnecessary non-null assertion (!!) on a non-null receiver of type 'LibraryBackupRepository.Snapshot'.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/app/src/androidTest/java/org/inkweft/app/AndroidTemporarySpaceProbe.kt:73:101 Unnecessary non-null assertion (!!) on a non-null receiver of type 'LibraryBackupRepository.Snapshot'.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/app/src/androidTest/java/org/inkweft/app/AndroidTemporarySpaceProbe.kt:88:81 Unnecessary non-null assertion (!!) on a non-null receiver of type 'LibraryBackupRepository.Snapshot'.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/app/src/androidTest/java/org/inkweft/app/BeautyNativeReplayTest.kt:126:33 Unnecessary non-null assertion (!!) on a non-null receiver of type 'BeautyDiagnostics.Trace'.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/app/src/androidTest/java/org/inkweft/app/BeautyReviewUiTest.kt:30:92 The corresponding parameter in the supertype 'Factory' is named 'modelClass'. This may cause problems when calling this function with named arguments.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/app/src/androidTest/java/org/inkweft/app/CardPresentationUiTest.kt:39:24 'static fun getWindowInsetsController(p0: View): WindowInsetsControllerCompat?' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/app/src/androidTest/java/org/inkweft/app/CollectionReviewUiTest.kt:450:71 This class is not recommended for use in Kotlin. Use 'kotlin.collections.Collection' instead.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/app/src/androidTest/java/org/inkweft/app/ComputePerformanceProbe.kt:43:300 Unnecessary non-null assertion (!!) on a non-null receiver of type 'MindMapView'.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/app/src/androidTest/java/org/inkweft/app/ComputePerformanceProbe.kt:72:97 Unnecessary non-null assertion (!!) on a non-null receiver of type 'MindMapView'.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/app/src/androidTest/java/org/inkweft/app/ConcurrentWritingTest.kt:63:85 Unnecessary non-null assertion (!!) on a non-null receiver of type 'Job'.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/app/src/androidTest/java/org/inkweft/app/ConcurrentWritingTest.kt:76:111 Unnecessary non-null assertion (!!) on a non-null receiver of type 'Job'.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/app/src/androidTest/java/org/inkweft/app/EditorFramePerformanceProbe.kt:145:27 Unnecessary safe call on a non-null receiver of type 'Deferred<Unit>'.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/app/src/androidTest/java/org/inkweft/app/EditorTestNavigation.kt:211:24 'static fun getWindowInsetsController(p0: View): WindowInsetsControllerCompat?' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/app/src/androidTest/java/org/inkweft/app/EditorWritingIntegrationUiTest.kt:180:142 Redundant call of conversion method.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/app/src/androidTest/java/org/inkweft/app/EditorWritingIntegrationUiTest.kt:180:184 Redundant call of conversion method.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/app/src/androidTest/java/org/inkweft/app/LibraryBackupUiTest.kt:63:64 Unnecessary non-null assertion (!!) on a non-null receiver of type 'LibraryBackupRepository.Snapshot'.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/app/src/androidTest/java/org/inkweft/app/LibrarySourceNavigationUiTest.kt:466:51 This class is not recommended for use in Kotlin. Use 'kotlin.collections.Collection' instead.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/app/src/androidTest/java/org/inkweft/app/NotebookNavigationUiTest.kt:136:51 Unnecessary safe call on a non-null receiver of type 'Region'.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/app/src/androidTest/java/org/inkweft/app/PrivacyExitProbe.kt:102:49 Unnecessary non-null assertion (!!) on a non-null receiver of type 'LibraryBackupRepository.Snapshot'.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/app/src/androidTest/java/org/inkweft/app/PrivacyExitProbe.kt:113:63 Unnecessary non-null assertion (!!) on a non-null receiver of type 'LibraryBackupRepository.Snapshot'.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/app/src/androidTest/java/org/inkweft/app/PrivacyExitProbe.kt:128:56 Unnecessary non-null assertion (!!) on a non-null receiver of type 'Uri'.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/app/src/androidTest/java/org/inkweft/app/QuestionMaintenanceUiTest.kt:306:42 'static fun getWindowInsetsController(p0: View): WindowInsetsControllerCompat?' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/app/src/androidTest/java/org/inkweft/app/RecallDurableRecoveryTest.kt:98:33 Unnecessary non-null assertion (!!) on a non-null receiver of type 'RecallStudyViewModel'.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/app/src/androidTest/java/org/inkweft/app/RecallDurableRecoveryTest.kt:98:65 Unnecessary non-null assertion (!!) on a non-null receiver of type 'RecallStudyViewModel'.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/app/src/androidTest/java/org/inkweft/app/RecallDurableRecoveryTest.kt:99:33 Unnecessary non-null assertion (!!) on a non-null receiver of type 'RecallStudyViewModel'.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/app/src/androidTest/java/org/inkweft/app/RecallDurableRecoveryTest.kt:100:26 Unnecessary non-null assertion (!!) on a non-null receiver of type 'RecallStudyViewModel'.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/app/src/androidTest/java/org/inkweft/app/RecallDurableRecoveryTest.kt:101:19 Unnecessary non-null assertion (!!) on a non-null receiver of type 'RecallStudyViewModel'.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/app/src/androidTest/java/org/inkweft/app/RecallDurableRecoveryTest.kt:101:65 Unnecessary non-null assertion (!!) on a non-null receiver of type 'RecallStudyViewModel'.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/app/src/androidTest/java/org/inkweft/app/RecallDurableRecoveryTest.kt:103:19 Unnecessary non-null assertion (!!) on a non-null receiver of type 'RecallStudyViewModel'.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/app/src/androidTest/java/org/inkweft/app/RecallDurableRecoveryTest.kt:103:62 Unnecessary non-null assertion (!!) on a non-null receiver of type 'RecallStudyViewModel'.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/app/src/androidTest/java/org/inkweft/app/RecallDurableRecoveryTest.kt:103:96 Unnecessary non-null assertion (!!) on a non-null receiver of type 'RecallStudyViewModel'.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/app/src/androidTest/java/org/inkweft/app/RecallDurableRecoveryTest.kt:105:33 Unnecessary non-null assertion (!!) on a non-null receiver of type 'RecallStudyViewModel'.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/app/src/androidTest/java/org/inkweft/app/RecallDurableRecoveryTest.kt:106:35 Unnecessary non-null assertion (!!) on a non-null receiver of type 'RecallStudyViewModel'.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/app/src/androidTest/java/org/inkweft/app/RecallDurableRecoveryTest.kt:106:99 Unnecessary non-null assertion (!!) on a non-null receiver of type 'RecallStudyViewModel'.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/app/src/androidTest/java/org/inkweft/app/RecallDurableRecoveryTest.kt:107:72 Unnecessary non-null assertion (!!) on a non-null receiver of type 'RecallStudyViewModel'.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/app/src/androidTest/java/org/inkweft/app/RecallDurableRecoveryTest.kt:109:19 Unnecessary non-null assertion (!!) on a non-null receiver of type 'RecallStudyViewModel'.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/app/src/androidTest/java/org/inkweft/app/RecallDurableRecoveryTest.kt:109:50 Unnecessary non-null assertion (!!) on a non-null receiver of type 'RecallStudyViewModel'.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/app/src/androidTest/java/org/inkweft/app/RecallDurableRecoveryTest.kt:138:33 Unnecessary non-null assertion (!!) on a non-null receiver of type 'RecallStudyViewModel'.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/app/src/androidTest/java/org/inkweft/app/RecallDurableRecoveryTest.kt:139:35 Unnecessary non-null assertion (!!) on a non-null receiver of type 'RecallStudyViewModel'.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/app/src/androidTest/java/org/inkweft/app/RecallDurableRecoveryTest.kt:139:67 Unnecessary non-null assertion (!!) on a non-null receiver of type 'RecallStudyViewModel'.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/app/src/androidTest/java/org/inkweft/app/RecallDurableRecoveryTest.kt:140:29 Unnecessary non-null assertion (!!) on a non-null receiver of type 'RecallStudyViewModel'.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/app/src/androidTest/java/org/inkweft/app/RecallOriginalSourceUiTest.kt:86:20 Check for instance is always 'true'.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/app/src/androidTest/java/org/inkweft/app/RecallOriginalSourceUiTest.kt:146:57 'val id: Long' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/app/src/androidTest/java/org/inkweft/app/RecallOriginalSourceUiTest.kt:170:108 'static fun getWindowInsetsController(p0: View): WindowInsetsControllerCompat?' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/app/src/androidTest/java/org/inkweft/app/RecallQuestionEditorUiTest.kt:96:85 'static fun getWindowInsetsController(p0: View): WindowInsetsControllerCompat?' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/app/src/androidTest/java/org/inkweft/app/ReviewStateUiTest.kt:488:71 This class is not recommended for use in Kotlin. Use 'kotlin.collections.Collection' instead.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/app/src/androidTest/java/org/inkweft/app/StarNoteInteractionsUiTest.kt:111:84 'static fun getWindowInsetsController(p0: View): WindowInsetsControllerCompat?' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/app/src/androidTest/java/org/inkweft/app/StreamedInkRasterTest.kt:73:108 Unnecessary non-null assertion (!!) on a non-null receiver of type 'StreamedInkRaster'.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/app/src/androidTest/java/org/inkweft/app/StreamedInkRasterTest.kt:74:167 Unnecessary non-null assertion (!!) on a non-null receiver of type 'StreamedInkRaster'.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/app/src/androidTest/java/org/inkweft/app/StudyCapacityUiTest.kt:170:24 'static fun getWindowInsetsController(p0: View): WindowInsetsControllerCompat?' is deprecated. Deprecated in Java.
+
+> Task :app:compileDebugAndroidTestJavaWithJavac
+> Task :app:processDebugAndroidTestJavaRes
+> Task :app:mergeDebugAndroidTestJavaResource
+> Task :app:dexBuilderDebugAndroidTest
+> Task :app:mergeProjectDexDebugAndroidTest
+> Task :app:packageDebugAndroidTest
+> Task :app:createDebugAndroidTestApkListingFileRedirect
+> Task :app:assembleDebugAndroidTest
+
+BUILD SUCCESSFUL in 37m 41s
+162 actionable tasks: 141 executed, 21 from cache

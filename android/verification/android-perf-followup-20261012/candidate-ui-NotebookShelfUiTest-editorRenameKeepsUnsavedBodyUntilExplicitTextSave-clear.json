@@ -1,0 +1,16 @@
+{
+  "command": [
+    "/workspace/.setup/tools/android-sdk/platform-tools/adb",
+    "-s",
+    "emulator-5554",
+    "shell",
+    "pm",
+    "clear",
+    "org.inkweft.app.a0"
+  ],
+  "utc": "2026-10-12T18:47:28.303147+00:00",
+  "exit_code": 0,
+  "stdout": "Success\n",
+  "stderr": "",
+  "scope": "Disposable cloud emulator and synthetic test application only"
+}

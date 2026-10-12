@@ -1,0 +1,21 @@
+{
+  "utc": "2026-10-12T21:04:33.626200+00:00",
+  "reviewer": "integration_review agent",
+  "scope": [
+    "README.md",
+    "matched-followup-summary.json",
+    "PR draft validation and measurement text"
+  ],
+  "critical_conflicts_found": false,
+  "counts_verified": [
+    "22 paired native executions passed",
+    "initial regression suite 54/66 passed",
+    "candidate pre-follow-up Awake UI rerun 4/8 passed",
+    "final identical eight-case controls 3/8 passed on each revision"
+  ],
+  "remaining_failures_kept_unverified": true,
+  "unsupported_universal_failure_attribution": false,
+  "minor_wording_correction": "Clarified that the earlier Awake UI rerun used the candidate pre-follow-up APK, not the comparator APK.",
+  "production_commit": "300e8c908b4c53a35b9c44cd2f99b044c4449767",
+  "followup_test_commit": "d2003a019be6aecf3b9aa7a4a05f69032fd6fb8f"
+}

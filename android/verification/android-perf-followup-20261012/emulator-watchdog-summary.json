@@ -1,0 +1,22 @@
+{
+  "kill_records_before_multiplier_framework_restart": [
+    "10-12 15:09:11.850  1149  1183 W Watchdog: *** WATCHDOG KILLING SYSTEM PROCESS: Blocked in handler on main thread (main) for 73s",
+    "10-12 15:13:52.990  1694  1723 W Watchdog: *** WATCHDOG KILLING SYSTEM PROCESS: Blocked in handler on main thread (main) for 71s",
+    "10-12 15:20:43.490  2227  2276 W Watchdog: *** WATCHDOG KILLING SYSTEM PROCESS: Blocked in handler on main thread (main) for 71s"
+  ],
+  "official_property": "ro.hw_timeout_multiplier",
+  "property_value": 10,
+  "global_watchdog_timeout_millis": "deleted; readback null",
+  "framework_restart": "adb shell stop && start",
+  "real_boot_completed_verified": true,
+  "test_timeouts_modified": false,
+  "apk_installation": "success; all three baseline APKs installed with adb install -r -t, exit 0 and Success; see baseline-apk-installation.json",
+  "stable_system_server_pid": 3441,
+  "watchdog_base_timeout_millis": 60000,
+  "adb_root_restored_to_shell_uid": 2000,
+  "selinux": "Enforcing",
+  "updated_utc": "2026-10-12T15:38:36.975526+00:00",
+  "application_tests_run_by_runtime_setup_agent": false,
+  "instrumentation_handed_to_parent": true,
+  "adb_activity_stopped_for_parent_measurement": true
+}

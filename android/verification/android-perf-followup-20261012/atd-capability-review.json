@@ -1,0 +1,18 @@
+{
+  "status": "read-only; no device changes",
+  "installed_images": [
+    "system-images;android-35;aosp_atd;x86_64 revision1"
+  ],
+  "atd_limit": "Hardware rendering disabled; screenshots depending on hardware rendering unsupported. Does not imply Compose semantic or software Canvas tests unsupported. Original candidate editor rename and drawer/paging UI tests passed with Awake precondition.",
+  "official_sources": [
+    "https://developer.android.com/studio/test/managed-devices#atd",
+    "https://developer.android.com/reference/android/view/ViewTreeObserver#registerFrameCommitCallback(java.lang.Runnable)"
+  ],
+  "alternative_available_but_not_downloaded": {
+    "package": "system-images;android-35;default;x86_64",
+    "revision": 2,
+    "compressed_bytes": 782404023,
+    "official_archive": "https://dl.google.com/android/repository/sys-img/android/x86_64-35_r02.zip"
+  },
+  "decision": "Continue existing semantic/directBitmap controls. No verified hardware-rendering failure justifies switching image; standard image would not remove no-KVM TCG timing limitations."
+}

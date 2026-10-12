@@ -1,0 +1,6 @@
+{
+  "review": "read-only search/paging UI failure review",
+  "confirmed_existing_window": "new-note enabled depends on notebook directory loading/readFailed, not current library search generation. Re-entering library can have empty shown list until async generation result returns; same behavior/test ready() in comparator.",
+  "candidate_new_behavior": "sourceVersion resets pageStarts to zero; existing first page has no additional offset change. No confirmed persistent omission path for one nontrashed note in an empty all-category query.",
+  "limits": "This is code review, not failure attribution. Actual query generation/failed/items were not captured in original cover test failure; matched controls pending. No assertion or timeout changed."
+}

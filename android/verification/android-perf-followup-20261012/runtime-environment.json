@@ -1,0 +1,97 @@
+{
+  "device_type": "Android Emulator; software CPU (TCG), software GPU (SwiftShader), not a physical device",
+  "kvm_available": false,
+  "emulator_source": "https://dl.google.com/android/repository/ (installed through sdkmanager official metadata)",
+  "system_image": "system-images;android-35;aosp_atd;x86_64",
+  "avd": "inkweft-perf-api35",
+  "launch_command": "ANDROID_HOME=/workspace/.setup/tools/android-sdk ANDROID_USER_HOME=/workspace/.setup/android-user ANDROID_AVD_HOME=/workspace/.setup/android-user/avd /workspace/.setup/tools/android-sdk/emulator/emulator -avd inkweft-perf-api35 -port 5554 -accel off -gpu swiftshader -cores 2 -memory 2048 -no-window -no-audio -no-boot-anim -no-snapshot -feature -Vulkan",
+  "files": {
+    "emulator/source.properties": {
+      "sha256": "ba13085f647fb8389a4d06a1de0e4104ac4e841733e50f67223ac230e1ce685a",
+      "contents": "Pkg.UserSrc=false\nPkg.Revision=37.2.12\nPkg.Path=emulator\nPkg.Desc=Android Emulator\nPkg.BuildId=16428233"
+    },
+    "system-images/android-35/aosp_atd/x86_64/source.properties": {
+      "sha256": "7c2bd52d9282f53fc24a57c9a1738f17ff2c51d436c0e8f9272ed0208c06abc5",
+      "contents": "Pkg.Desc=AOSP Automated Test Device System Image x86_64\nPkg.Revision=1\nPkg.Dependencies=emulator#30.9.2\nAndroidVersion.ApiLevel=35\nSystemImage.Abi=x86_64\nSystemImage.TagId=aosp_atd\nSystemImage.TagDisplay=AOSP ATD\nSystemImage.GpuSupport=true\nAddon.VendorId=google\nAddon.VendorDisplay=Google Inc.\n\n"
+    },
+    "platform-tools/source.properties": {
+      "sha256": "2dccd788c0234d8cf7f7457377e57f57527a86a629c6ed54feb8af0f549dac38",
+      "contents": "Pkg.UserSrc=false\nPkg.Revision=37.0.1\n"
+    }
+  },
+  "host": {
+    "platform": "Linux-6.18.44-x86_64-with-glibc2.41",
+    "available_cpu_count": 5,
+    "machine": "x86_64",
+    "cpu_model": "INTEL(R) XEON(R) PLATINUM 8573C",
+    "cgroup_cpu_max": "400000 100000",
+    "cgroup_memory_max_bytes": 17179869184
+  },
+  "documentation": [
+    "https://developer.android.com/studio/run/emulator-commandline",
+    "https://developer.android.com/studio/run/emulator-acceleration"
+  ],
+  "adb_serial": "emulator-5554",
+  "guest_build_fingerprint": "Android/sdk_slim_x86_64/emu64x:15/AE3A.240806.019/12368160:userdebug/test-keys",
+  "guest_abi": "x86_64",
+  "adb_status": "online; real sys.boot_completed=1 verified twice at least 30 seconds apart; activity and package services available",
+  "limitations": [
+    "No /dev/kvm: all guest CPU execution is software TCG.",
+    "GPU rendering is SwiftShader software.",
+    "Absolute latency is not physical-device latency; baseline/candidate must be run serially on this same device.",
+    "Emulator console unavailable because console token path is outside writable roots; standard ADB works.",
+    "AOSP software-emulator hardware timeout multiplier is 10 for both baseline/candidate; application test timeout values are unchanged."
+  ],
+  "boot_diagnosis": {
+    "observed_watchdog_kills": [
+      "2026-10-12 15:09:11.850",
+      "2026-10-12 15:13:52.990"
+    ],
+    "blocked_thread": "system_server main thread in RoleService.maybeGrantDefaultRolesSync during onUserStarting",
+    "observed_blocked_duration_seconds": [
+      73,
+      71
+    ],
+    "source": "https://android.googlesource.com/platform/frameworks/base/+/android-15.0.0_r1/services/core/java/com/android/server/Watchdog.java",
+    "mitigation": "Official AOSP software-emulation property ro.hw_timeout_multiplier=10 set through userdebug adb root, then Android framework restarted with stop && start; no system image/product code edit. Remains identical for paired baseline/candidate. First attempted Settings.Global.watchdog_timeout_millis=600000 was deleted (verified null); it only applies after startOtherServices and did not fix early boot.",
+    "product_code_modified": false,
+    "multiplier_source": "https://android.googlesource.com/platform/frameworks/base/+/android-15.0.0_r1/core/java/android/os/Build.java"
+  },
+  "guest_hardware_timeout_multiplier": 10,
+  "test_timeouts_modified": false,
+  "guest_system_server_pid": 3441,
+  "adb_shell_uid": 2000,
+  "adb_root_used_for_setup_and_restored": true,
+  "selinux": "Enforcing",
+  "selinux_or_verity_settings_modified": false,
+  "display": {
+    "physical_size": "1080x1920",
+    "override_size": "1920x1200",
+    "physical_density": 420,
+    "override_density": 240,
+    "font_scale": 1.0
+  },
+  "real_boot_evidence": [
+    "emulator-ready-first.txt",
+    "emulator-ready-confirmed.txt",
+    "emulator-adb-unroot.log"
+  ],
+  "display_evidence": "emulator-display-configuration.log",
+  "fresh_boot_additional_setup_commands": [
+    "adb -s emulator-5554 root",
+    "adb -s emulator-5554 wait-for-device",
+    "adb -s emulator-5554 shell setprop ro.hw_timeout_multiplier 10",
+    "adb -s emulator-5554 shell stop",
+    "adb -s emulator-5554 shell start",
+    "Wait for real sys.boot_completed=1 and stable system services",
+    "adb -s emulator-5554 unroot",
+    "adb -s emulator-5554 wait-for-device",
+    "adb -s emulator-5554 shell wm size 1920x1200",
+    "adb -s emulator-5554 shell wm density 240",
+    "adb -s emulator-5554 shell settings put system font_scale 1.0"
+  ],
+  "updated_utc": "2026-10-12T15:38:36.976187+00:00",
+  "baseline_installation_evidence": "baseline-apk-installation.json",
+  "baseline_installation_status": "all three APKs installed successfully",
+  "setup_handoff": "Parent runs serialized baseline/candidate instrumentation; runtime setup agent stopped all ADB commands before parent measurement."
+}

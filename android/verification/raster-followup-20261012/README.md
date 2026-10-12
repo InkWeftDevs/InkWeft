@@ -55,8 +55,24 @@ change removes intervening payload reads and decodes; it does not claim to remov
 all intervening metadata work, reduce fractional-transform tile rebuild counts,
 or reuse geometry beyond the explicit cache bound.
 
-At authoring time: `git diff --check` passed. Device execution and paired timings
-are **NOT_RUN** until the integrating task supplies an available isolated Android
-runtime and attaches its actual runner results. The older 299 → 191 ms eight-layer
-figures belong to previous evidence; they are not a result of this change. Host
-compilation is not native performance verification.
+Actual paired execution is available in [the integration evidence](../android-perf-followup-20261012/README.md).
+Both sides used the same API 35 x86_64 TCG/SwiftShader software emulator and
+identical probes, with the common database-initialization fix applied to the
+`a128bb07` comparator. This is real Android instrumentation, not a physical-device
+performance claim.
+
+All 14 continuous-transform/append frames and the pan, zoom and 1/4/8-layer local
+frames match fresh full rebuilds within each revision pixel for pixel. Cross-revision
+pixel hashes were not exported. Across 12 transforms, newly decoded
+strokes and payload snapshot rows fell from 3,760 to zero; rebuilt tiles remained
+212. The mixed-transform median was 6,590 to 6,136 ms. Opposite-corner updates
+read/decode 24 instead of 322 strokes and still rebuild two tiles; frame completion
+was 2,411 to 2,041 ms. Local append completion at 1/4/8 layers was respectively
+1,398/5,851/11,011 to 1,509/4,826/8,650 ms, one sample per layer rather than repeated
+medians. The single-layer sample did not improve. The previously reported 299 to 191 ms figures are prior measurements from a
+different run; their environment was not reproduced here.
+
+Raw records: `baseline-raster-probe.log`, `candidate-raster-probe.log`,
+`baseline-tile-local.log`, `candidate-tile-local.log` and their runner receipts in
+the integration directory. Correctness regression execution is tracked separately
+there; paired timings do not replace the broader cancellation/undo/live-root tests.

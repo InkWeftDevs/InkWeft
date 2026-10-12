@@ -1,0 +1,6 @@
+{
+  "test": "android/app/src/androidTest/java/org/inkweft/app/LibrarySourceNavigationUiTest.kt",
+  "sha256": "a603fadb86cee424b5fa81dbff243fcfb76a67ad9d2444f9acc55e3a07160b7b",
+  "identical_on_both_revisions": true,
+  "change": "Failure-only existing ViewModel and redacted semantics diagnostics after unchanged seed wait; rethrows original failure. Not included in earlier measured or regression APKs."
+}

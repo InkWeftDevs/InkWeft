@@ -1,0 +1,12 @@
+{
+  "same_observations": true,
+  "phases": [
+    "baseline",
+    "candidate",
+    "candidate-repeat",
+    "baseline-repeat"
+  ],
+  "same_baseline_apk_hashes": true,
+  "note": "Candidate-repeat preflight metadata reads overlapped its initial runner/fixture setup from 17:40:36 to 17:40:46 UTC; no Gradle or second instrumentation ran. Do not describe the entire run as free of diagnostics.",
+  "parent_requested_liveness_check": "baseline-library-repeat-liveness-1.json at 18:14:42–45 UTC; read-only process/file metadata while probe ran. Record this diagnostic overlap when interpreting timing."
+}

@@ -1,0 +1,27 @@
+{
+  "original_baseline": "a128bb07e34cb82f00eeafc8e62a47bf7b95b128",
+  "original_native_outcome": "FAILED_SETUP: SELinux denied hard link before any performance measurement",
+  "comparison_baseline": "a128bb07 + identical common database-initialization compatibility fix",
+  "common_fix_paths": [
+    "android/data-local/src/main/kotlin/org/inkweft/data/PreservingOpenHelperFactory.kt",
+    "android/data-local/src/androidTest/kotlin/org/inkweft/data/BundledSqliteFactoryTest.kt"
+  ],
+  "performance_probes_changed": false,
+  "security_settings_relaxed": false,
+  "test_assertions_relaxed": false,
+  "common_fix_files": [
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/PreservingOpenHelperFactory.kt",
+      "sha256": "0d8cb3d9b24615c5a3fd62412b91daed7c9b9ed2e16e64dffd159d3f012b7307",
+      "identical_on_baseline": true
+    },
+    {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/BundledSqliteFactoryTest.kt",
+      "sha256": "6e97d617f609f9faabad237ba55ce8ed860b2ab91303e08308e85c485b4659d4",
+      "identical_on_baseline": true
+    }
+  ],
+  "common_fix_commit": "50c7208cd3b2856b06f4a28796a95c43da5b254f",
+  "legacy_fixture_correction": "Disable WAL, explicitly set NONE/VACUUM on one connection, then enable WAL; all original assertions retained.",
+  "common_fixture_commit": "300e8c908b4c53a35b9c44cd2f99b044c4449767"
+}

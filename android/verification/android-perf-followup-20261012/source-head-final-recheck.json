@@ -1,0 +1,22 @@
+{
+  "utc": "2026-10-12T21:02:26.001095+00:00",
+  "command": [
+    "git",
+    "fetch",
+    "--no-tags",
+    "origin",
+    "refs/heads/codex/storage-optimization-20261011"
+  ],
+  "exit_code": 0,
+  "fetch_head": "a128bb07e34cb82f00eeafc8e62a47bf7b95b128",
+  "expected_source_head": "a128bb07e34cb82f00eeafc8e62a47bf7b95b128",
+  "source_unchanged": true,
+  "remote_heads": [
+    [
+      "a128bb07e34cb82f00eeafc8e62a47bf7b95b128",
+      "refs/heads/codex/storage-optimization-20261011"
+    ]
+  ],
+  "draft_remote_branch_absent": true,
+  "note": "Read-only remote fetch/recheck; no source-branch write or remote push."
+}

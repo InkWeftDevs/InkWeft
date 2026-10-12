@@ -1,0 +1,5 @@
+10-12 15:37:57.241  4994  4994 W arch_disk_io_0: type=1400 audit(0.0:49): avc:  denied  { link } for  name=".inkweft-empty-5144727859358554826.db" dev="dm-43" ino=352320 scontext=u:r:untrusted_app:s0:c140,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c140,c256,c512,c768 tclass=file permissive=0 app=org.inkweft.data.test
+10-12 15:37:57.430  4994  5008 E TestRunner: android.system.ErrnoException: link failed: EACCES (Permission denied)
+10-12 15:37:57.430  4994  5008 E TestRunner: 	at org.inkweft.data.PreservingOpenHelperFactory.prepareNewDatabase(PreservingOpenHelperFactory.kt:75)
+10-12 15:37:57.430  4994  5008 E TestRunner: 	at org.inkweft.data.PreservingOpenHelperFactory.access$prepareNewDatabase(PreservingOpenHelperFactory.kt:16)
+10-12 15:37:57.430  4994  5008 E TestRunner: 	at org.inkweft.data.PreservingOpenHelperFactory$create$1.getWritableDatabase(PreservingOpenHelperFactory.kt:44)

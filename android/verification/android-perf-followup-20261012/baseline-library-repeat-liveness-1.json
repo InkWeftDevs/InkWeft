@@ -1,0 +1,62 @@
+{
+  "reason": "Parent requested active process/environment verification after stale cloud status; metadata only, no application data reads",
+  "checked_utc": "2026-10-12T18:14:45.844404+00:00",
+  "observations": [
+    {
+      "command": [
+        "ps",
+        "-eo",
+        "pid,ppid,stat,etime,time,args"
+      ],
+      "started_utc": "2026-10-12T18:14:42.118246+00:00",
+      "exit_code": 0,
+      "stdout": "   2661    2658 Sl      03:28:08 02:30:00 /workspace/.setup/tools/android-sdk/emulator/qemu/linux-x86_64/qemu-system-x86_64-headless -avd inkweft-perf-api35 -port 5554 -accel off -gpu swiftshader -cores 2 -memory 2048 -no-window -no-audio -no-boot-anim -no-snapshot -feature -Vulkan\n  18771   18770 S          16:23 00:00:01 python3 /workspace/scratch/run-inkweft-instrumentation.py baseline library-repeat data org.inkweft.data.LibraryReadPerformanceTest 1\n  18774   18771 S          16:23 00:00:00 /workspace/.setup/tools/android-sdk/platform-tools/adb -s emulator-5554 shell am instrument -w -e class org.inkweft.data.LibraryReadPerformanceTest -e historyScanBaseline true org.inkweft.data.test/androidx.test.runner.AndroidJUnitRunner",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/workspace/.setup/tools/android-sdk/platform-tools/adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "getprop",
+        "sys.boot_completed"
+      ],
+      "started_utc": "2026-10-12T18:14:42.127303+00:00",
+      "exit_code": 0,
+      "stdout": "1\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/workspace/.setup/tools/android-sdk/platform-tools/adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "pidof",
+        "org.inkweft.data.test"
+      ],
+      "started_utc": "2026-10-12T18:14:43.019579+00:00",
+      "exit_code": 0,
+      "stdout": "6074\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/workspace/.setup/tools/android-sdk/platform-tools/adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "run-as",
+        "org.inkweft.data.test",
+        "ls",
+        "-lt",
+        "databases"
+      ],
+      "started_utc": "2026-10-12T18:14:44.029926+00:00",
+      "exit_code": 0,
+      "stdout": "total 64084\n-rw------- 1 u0_a140 u0_a140  3687432 2026-10-12 18:14 library-read-probe-bbe2609b-1375-4f65-8c75-8394374c1085.db-wal\n-rw------- 1 u0_a140 u0_a140   131072 2026-10-12 18:14 library-read-probe-bbe2609b-1375-4f65-8c75-8394374c1085.db-shm\n-rw------- 1 u0_a140 u0_a140 61763584 2026-10-12 18:14 library-read-probe-bbe2609b-1375-4f65-8c75-8394374c1085.db\n-rw------- 1 u0_a140 u0_a140        0 2026-10-12 17:58 library-read-probe-bbe2609b-1375-4f65-8c75-8394374c1085.db.inkweft-open-lock\n-rw------- 1 u0_a140 u0_a140        0 2026-10-12 17:40 library-read-probe-ca7eb39f-d917-4285-aa17-ab1ed0d19abb.db.inkweft-open-lock\n-rw------- 1 u0_a140 u0_a140        0 2026-10-12 17:10 library-read-probe-230b1395-df31-4e3c-ae18-6063b7ff0b4a.db.inkweft-open-lock\n-rw------- 1 u0_a140 u0_a140        0 2026-10-12 17:06 history-collection-probe-d6b9bf4f-8a81-4514-8e8c-02129db0a296.db.inkweft-open-lock\n-rw------- 1 u0_a140 u0_a140        0 2026-10-12 16:40 library-read-probe-9eda906c-7c4b-4249-a700-53fe5e5f00bf.db.inkweft-open-lock\n-rw------- 1 u0_a140 u0_a140        0 2026-10-12 16:34 history-collection-probe-fb962e26-7586-4c76-bd18-f279c05451c0.db.inkweft-open-lock\n",
+      "stderr": ""
+    }
+  ]
+}

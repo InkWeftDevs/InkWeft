@@ -1,0 +1,32 @@
+{
+  "updated_utc": "2026-10-12T21:03:32.969642+00:00",
+  "workspace_accessible": true,
+  "source_baseline": "a128bb07e34cb82f00eeafc8e62a47bf7b95b128",
+  "measured_candidate_commit": "300e8c908b4c53a35b9c44cd2f99b044c4449767",
+  "published_followup_test_commit": "d2003a019be6aecf3b9aa7a4a05f69032fd6fb8f",
+  "branch": "codex/android-perf-integration-20261012",
+  "pushed": false,
+  "builds": "Both full fixture-final builds and both follow-up test APK/lint builds passed; no build active",
+  "paired_native": "22/22 passed, including two full search pairs",
+  "initial_native_regressions": "54/66 passed; original failures retained",
+  "original_awake_candidate_ui": "4/8 passed; original failures retained",
+  "final_matched_controls": {
+    "baseline": "3/8 passed",
+    "candidate": "3/8 passed",
+    "plan": "matched-final-followup-plan.json",
+    "summary": "matched-followup-summary.json"
+  },
+  "active_runner": null,
+  "environment_blocker": null,
+  "remaining_validation_gaps": [
+    "HistoryConcurrency original 30000ms timeout, exact wait unlocated",
+    "Rapid-input search first-index-batch 10000ms gate",
+    "Backup partial-file cancellation not reached before 15000ms timeout",
+    "Large complete-frame 30000ms deadline",
+    "Shelf rename preparation, different failing stages on comparator/candidate",
+    "Physical-device performance and hardware-window screenshots",
+    "Independent-process initialization stress and noncooperating-creator race"
+  ],
+  "status": "All planned current-environment runs complete; final source HEAD verified unchanged; prepared for authorized isolated draft delivery.",
+  "scope": "Pre-publication verification snapshot; remote publication is confirmed by the draft PR metadata."
+}

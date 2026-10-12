@@ -1,0 +1,10 @@
+{
+  "test": "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibraryBackupRepositoryTest.kt",
+  "original_sha256": "f520ef2e3678389c66d77f1db1bf1609791d3537d5df552d9b177086b268758e",
+  "diagnostic_sha256": "55fc952e0310a6161b4cc1adc50ee8a48604124ffc1a6772f5363cf95a7c3bf4",
+  "candidate_commit": "d151558fa954e233879c93d09a89c64c8c53b805",
+  "identical_on_both_revisions": true,
+  "change": "Emit actual failure class/partial observation/cancellation after await before existing assertion; no timeout, assertion or production change. Only applies subsequent diagnostic builds; paired measurements and initial66 retain previous APK hashes.",
+  "published_test_commit": "d2003a019be6aecf3b9aa7a4a05f69032fd6fb8f",
+  "checkpoint_note": "Earlier commit IDs in this receipt are local build/worklog checkpoints. Final test source is retained at published_test_commit; recorded source hashes and installed APK hashes remain unchanged."
+}

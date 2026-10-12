@@ -1,0 +1,50 @@
+{
+  "source": "https://maven.ghostscript.com/com/artifex/mupdf/fitz/1.28.5/fitz-1.28.5.aar",
+  "official_checksum_source": "https://maven.ghostscript.com/com/artifex/mupdf/fitz/1.28.5/fitz-1.28.5.aar.sha256",
+  "size_bytes": 21636412,
+  "sha256": "e6887a242882cdd2dce062430bb46b6727513e3eb94e222255cc1a37db7a7d8e",
+  "official_sha256": "e6887a242882cdd2dce062430bb46b6727513e3eb94e222255cc1a37db7a7d8e",
+  "checksum_match": true,
+  "jni": [
+    {
+      "path": "jni/arm64-v8a/libmupdf_java.so",
+      "size_bytes": 10840392,
+      "elf_magic": "7f454c46",
+      "elf_class": 2,
+      "elf_machine": 183,
+      "sha256": "5c7872c5e12ae3c00f68e14e371d3467cbfb2fd3dfefc7bb2a03d2cd491f6a4f"
+    },
+    {
+      "path": "jni/armeabi-v7a/libmupdf_java.so",
+      "size_bytes": 7582088,
+      "elf_magic": "7f454c46",
+      "elf_class": 1,
+      "elf_machine": 40,
+      "sha256": "2b24af301ba54d70c4cac09a1ae22af2c20f62b5f1046a2e8b352ca702e2ffd6"
+    },
+    {
+      "path": "jni/x86/libmupdf_java.so",
+      "size_bytes": 11187796,
+      "elf_magic": "7f454c46",
+      "elf_class": 1,
+      "elf_machine": 3,
+      "sha256": "46f512805c693c07f6e7fac50cdf3d2e028c5078f92e7d230f4c1e6e1b165ed9"
+    },
+    {
+      "path": "jni/x86_64/libmupdf_java.so",
+      "size_bytes": 11264136,
+      "elf_magic": "7f454c46",
+      "elf_class": 2,
+      "elf_machine": 62,
+      "sha256": "e9907d1e11f886662915376a1f059608e539c75cb1bc5ef57ccdf887a0367349"
+    }
+  ],
+  "archive_integrity": true,
+  "contains_classes_jar": true,
+  "gradle_cache": [
+    {
+      "path": "/workspace/.setup/gradle/caches/modules-2/files-2.1/com.artifex.mupdf/fitz/1.28.5/3483fd70a4dbe8b13b374354dfa237b85ea8d494/fitz-1.28.5.aar",
+      "sha256": "e6887a242882cdd2dce062430bb46b6727513e3eb94e222255cc1a37db7a7d8e"
+    }
+  ]
+}

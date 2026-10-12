@@ -1,0 +1,65 @@
+{
+  "adb_serial": "emulator-5554",
+  "status": "success",
+  "artifacts": [
+    {
+      "path": "/workspace/scratch/inkweft-baseline-a128bb07/android/app/build/outputs/apk/debug/app-debug.apk",
+      "size_bytes": 233089097,
+      "sha256": "825566a0ee27ca76489bcc825deda18cb0b2bd9644483acfad05e5715dee9d89",
+      "command": [
+        "/workspace/.setup/tools/android-sdk/platform-tools/adb",
+        "-s",
+        "emulator-5554",
+        "install",
+        "-r",
+        "-t",
+        "/workspace/scratch/inkweft-baseline-a128bb07/android/app/build/outputs/apk/debug/app-debug.apk"
+      ],
+      "started_utc": "2026-10-12T16:33:27.204530+00:00",
+      "exit_code": 0,
+      "stdout": "Performing Streamed Install\nSuccess\n",
+      "stderr": "",
+      "completed_utc": "2026-10-12T16:33:56.406648+00:00"
+    },
+    {
+      "path": "/workspace/scratch/inkweft-baseline-a128bb07/android/app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk",
+      "size_bytes": 10263871,
+      "sha256": "050ec8c2c4212cbcd04aae2fb9b96ac27b9cace816c772121320bc3775936c85",
+      "command": [
+        "/workspace/.setup/tools/android-sdk/platform-tools/adb",
+        "-s",
+        "emulator-5554",
+        "install",
+        "-r",
+        "-t",
+        "/workspace/scratch/inkweft-baseline-a128bb07/android/app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk"
+      ],
+      "started_utc": "2026-10-12T16:33:56.436642+00:00",
+      "exit_code": 0,
+      "stdout": "Performing Streamed Install\nSuccess\n",
+      "stderr": "",
+      "completed_utc": "2026-10-12T16:34:00.560848+00:00"
+    },
+    {
+      "path": "/workspace/scratch/inkweft-baseline-a128bb07/android/data-local/build/outputs/apk/androidTest/debug/data-local-debug-androidTest.apk",
+      "size_bytes": 26554949,
+      "sha256": "2dc5e7624a02cc845e0132b86b35d357acb16fd5b2a45bf113670929af4fd154",
+      "command": [
+        "/workspace/.setup/tools/android-sdk/platform-tools/adb",
+        "-s",
+        "emulator-5554",
+        "install",
+        "-r",
+        "-t",
+        "/workspace/scratch/inkweft-baseline-a128bb07/android/data-local/build/outputs/apk/androidTest/debug/data-local-debug-androidTest.apk"
+      ],
+      "started_utc": "2026-10-12T16:34:00.625749+00:00",
+      "exit_code": 0,
+      "stdout": "Performing Streamed Install\nSuccess\n",
+      "stderr": "",
+      "completed_utc": "2026-10-12T16:34:05.530769+00:00"
+    }
+  ],
+  "started_utc": "2026-10-12T16:33:26.191133+00:00",
+  "completed_utc": "2026-10-12T16:34:05.535863+00:00"
+}

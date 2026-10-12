@@ -1,0 +1,26 @@
+{
+  "phase": "candidate",
+  "selection": "org.inkweft.data.LibraryBackupRepositoryTest#roundTripPreservesOriginalIdsHiddenInkMasksHistoryAndMetadata,org.inkweft.data.LibraryBackupRepositoryTest#restoredRecordsRemainAfterRealCloseAndReopen,org.inkweft.data.LibraryBackupRepositoryTest#preCommitFailureRollsBackAllLiveTables,org.inkweft.data.LibraryBackupRepositoryTest#damagedFooterNeverTouchesLiveLibrary,org.inkweft.data.LibraryBackupRepositoryTest#streamReadFailureOnlyAffectsIsolatedStage,org.inkweft.data.LibraryBackupRepositoryTest#cancellingWrittenSnapshotRemovesPartialAndPreservesAuthorLibrary",
+  "command": [
+    "/workspace/.setup/tools/android-sdk/platform-tools/adb",
+    "-s",
+    "emulator-5554",
+    "shell",
+    "am",
+    "instrument",
+    "-w",
+    "-e",
+    "class",
+    "org.inkweft.data.LibraryBackupRepositoryTest#roundTripPreservesOriginalIdsHiddenInkMasksHistoryAndMetadata,org.inkweft.data.LibraryBackupRepositoryTest#restoredRecordsRemainAfterRealCloseAndReopen,org.inkweft.data.LibraryBackupRepositoryTest#preCommitFailureRollsBackAllLiveTables,org.inkweft.data.LibraryBackupRepositoryTest#damagedFooterNeverTouchesLiveLibrary,org.inkweft.data.LibraryBackupRepositoryTest#streamReadFailureOnlyAffectsIsolatedStage,org.inkweft.data.LibraryBackupRepositoryTest#cancellingWrittenSnapshotRemovesPartialAndPreservesAuthorLibrary",
+    "org.inkweft.data.test/androidx.test.runner.AndroidJUnitRunner"
+  ],
+  "started_utc": "2026-10-12T18:35:42.444357+00:00",
+  "seconds": 214.14819536400137,
+  "exit_code": 0,
+  "expected": 6,
+  "tests": null,
+  "executed": 6,
+  "failures": 1,
+  "passed": false,
+  "environment": "API35 x86_64 software Android emulator; no KVM; not physical-device performance"
+}

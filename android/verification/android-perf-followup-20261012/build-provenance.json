@@ -1,0 +1,17 @@
+{
+  "baseline": "a128bb07e34cb82f00eeafc8e62a47bf7b95b128",
+  "candidate_implementation": "161198a",
+  "gradle_commands": [
+    ":core-domain:test",
+    ":data-local:testDebugUnitTest",
+    ":app:lintDebug",
+    ":app:assembleDebug",
+    ":data-local:assembleDebugAndroidTest",
+    ":app:assembleDebugAndroidTest"
+  ],
+  "baseline_elapsed": "37m 41s",
+  "candidate_elapsed": "19m 58s",
+  "build_time_comparison_is_performance_claim": false,
+  "build_note": "Build durations differ in cache warmth and contention; they are not an Android performance result. Default local debug configuration, not a formal release build.",
+  "no_live_gradle_processes_before_measurement": true
+}

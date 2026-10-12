@@ -1,0 +1,12 @@
+{
+  "utc": "2026-10-12T20:31:59.436928+00:00",
+  "worklog_branch": "codex/android-perf-worklog-20261012",
+  "worklog_head": "e5c352b9af59c8b9ea298a8491b92da4093c8032",
+  "measured_ancestor_preserved": "300e8c908b4c53a35b9c44cd2f99b044c4449767",
+  "published_test_commit": "d2003a019be6aecf3b9aa7a4a05f69032fd6fb8f",
+  "local_evidence_commit": "0d95da29a1e79f41bffb84dd3733339a6805cde7",
+  "tree_before": "9d091e637c64e73fb5bff056ae4e3edcd7008612",
+  "tree_after": "9d091e637c64e73fb5bff056ae4e3edcd7008612",
+  "trees_identical": true,
+  "scope": "Only local task branches reorganized; original source branch untouched; no remote push. Worklog remains locally recoverable."
+}

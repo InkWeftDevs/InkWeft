@@ -1,0 +1,16 @@
+{
+  "test": "android/app/src/androidTest/java/org/inkweft/app/NotebookShelfUiTest.kt",
+  "old_sha256": "ec3b210da1eb7b9297588e965fe56819351c46c3c5ab391e3c73af377fc19faa",
+  "corrected_sha256": "c7493664b532a5bae2a542b48635905f5020d68637c1b7ed32c9fffa774b618d",
+  "timeout_ms_before_and_after": 10000,
+  "changed_precondition": "When a known note menu will be used, wait for both new-note enabled and that target menu displayed within the same original waitUntil deadline.",
+  "unchanged": [
+    "first editor 15000ms wait",
+    "behavior assertions",
+    "production code",
+    "performance thresholds"
+  ],
+  "original_apks_preserved": true,
+  "parent_authorization": "Correct demonstrably incorrect list-ready precondition after preserving original failures and matched baseline controls.",
+  "execution_status": "Both test builds, lint and signatures passed. Final comparator and candidate cover cases passed all original assertions. Shelf rename remained blocked during creation before the corrected target-menu wait (comparator Compose idling; candidate first-editor 15000ms wait)."
+}

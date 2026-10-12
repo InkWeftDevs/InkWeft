@@ -1,0 +1,65 @@
+[
+  {
+    "label": "history-concurrency-control",
+    "module": "data",
+    "selection": "org.inkweft.data.HistoryConcurrencyTest",
+    "expected": 1,
+    "reason": "Recheck the failed case alone on both revisions with explicit Awake precondition; original 39-case candidate run remains preserved",
+    "source_git_blob": "ca36f7a5ff908aa806fe0da672e8e03523b431cb"
+  },
+  {
+    "label": "search-regressions-control",
+    "module": "data",
+    "selection": "org.inkweft.data.LibrarySearchRepositoryTest#twentyThousandPageRapidInputClearAndCategoryCancelOldGenerationOffMain",
+    "expected": 1,
+    "reason": "Recheck the failed first case alone on both revisions with explicit Awake precondition; retain the unchanged 10000 ms index-start deadline",
+    "source_git_blob": "19fca189d7f91b2a85767b3666150d3feb598528"
+  },
+  {
+    "label": "backup-cancellation-control",
+    "module": "data",
+    "selection": "org.inkweft.data.LibraryBackupRepositoryTest#cancellingWrittenSnapshotRemovesPartialAndPreservesAuthorLibrary",
+    "expected": 1,
+    "reason": "Unchanged first case failed its non-timeout cancellation assertion; no assertion/timeout changes. Failure log does not distinguish a normal return from a 15000 ms timeout.",
+    "source_git_blob": "a24e0669a48453dffefcd472b47023abbac17de5"
+  },
+  {
+    "label": "streamed-frame-control",
+    "module": "app",
+    "selection": "org.inkweft.app.StreamedInkRasterTest#completeFrameIncludesGeometryBeyondTheEditorWindowAndReleasesItsWorker",
+    "expected": 1,
+    "reason": "Existing fixture and 30000 ms full-frame deadline unchanged; candidate only additionally verifies final geometry-reservation release, after the timed section"
+  },
+  {
+    "label": "ui-NotebookShelfUiTest-shelfRenameCancelBlankAndPersistedIdentity",
+    "module": "app",
+    "selection": "org.inkweft.app.NotebookShelfUiTest#shelfRenameCancelBlankAndPersistedIdentity",
+    "expected": 1,
+    "clear_owned_app_first": true,
+    "reason": "After matched 10s target-menu readiness fix; preserve all behavior assertions and unchanged 15s first editor wait."
+  },
+  {
+    "label": "ui-NotebookShelfUiTest-coverChangesPersistWithoutChangingInkAndCanReturnToContentPreview",
+    "module": "app",
+    "selection": "org.inkweft.app.NotebookShelfUiTest#coverChangesPersistWithoutChangingInkAndCanReturnToContentPreview",
+    "expected": 1,
+    "clear_owned_app_first": true,
+    "reason": "After matched 10s target-menu readiness fix; preserve all behavior assertions and unchanged 15s first editor wait."
+  },
+  {
+    "label": "ui-LibrarySourceNavigationUiTest-learningSourceAwaitsRealPageSelectionThenFocusesOriginalBoundsWithReadLock",
+    "module": "app",
+    "selection": "org.inkweft.app.LibrarySourceNavigationUiTest#learningSourceAwaitsRealPageSelectionThenFocusesOriginalBoundsWithReadLock",
+    "expected": 1,
+    "clear_owned_app_first": true,
+    "reason": "Unchanged source-navigation assertions and preparation deadline with failure-only diagnostics; verify cases that failed seed preparation in prior candidate run."
+  },
+  {
+    "label": "ui-LibrarySourceNavigationUiTest-closingOrRecreatingPendingLibrarySourceCannotJumpOrCloseAnotherCard",
+    "module": "app",
+    "selection": "org.inkweft.app.LibrarySourceNavigationUiTest#closingOrRecreatingPendingLibrarySourceCannotJumpOrCloseAnotherCard",
+    "expected": 1,
+    "clear_owned_app_first": true,
+    "reason": "Unchanged source-navigation assertions and preparation deadline with failure-only diagnostics; verify cases that failed seed preparation in prior candidate run."
+  }
+]

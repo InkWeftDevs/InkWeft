@@ -1,0 +1,29 @@
+{
+  "phase": "baseline",
+  "selection": "org.inkweft.app.RasterPerformanceProbe",
+  "command": [
+    "/workspace/.setup/tools/android-sdk/platform-tools/adb",
+    "-s",
+    "emulator-5554",
+    "shell",
+    "am",
+    "instrument",
+    "-w",
+    "-e",
+    "class",
+    "org.inkweft.app.RasterPerformanceProbe",
+    "-e",
+    "historyScanBaseline",
+    "true",
+    "org.inkweft.app.a0.test/androidx.test.runner.AndroidJUnitRunner"
+  ],
+  "started_utc": "2026-10-12T16:56:35.599032+00:00",
+  "seconds": 217.07694177399935,
+  "exit_code": 0,
+  "expected": 1,
+  "tests": 1,
+  "executed": 1,
+  "failures": 0,
+  "passed": true,
+  "environment": "API35 x86_64 software Android emulator; no KVM; not physical-device performance"
+}

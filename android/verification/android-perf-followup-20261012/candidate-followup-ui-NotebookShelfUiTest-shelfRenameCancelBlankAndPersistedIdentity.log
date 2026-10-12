@@ -1,0 +1,27 @@
+
+org.inkweft.app.NotebookShelfUiTest:
+Error in shelfRenameCancelBlankAndPersistedIdentity(org.inkweft.app.NotebookShelfUiTest):
+androidx.compose.ui.test.ComposeTimeoutException: Condition still not satisfied after 15000 ms
+	at androidx.compose.ui.test.AndroidComposeUiTestEnvironment$AndroidComposeUiTestImpl.waitUntil(ComposeUiTest.android.kt:809)
+	at androidx.compose.ui.test.junit4.AndroidComposeTestRule.waitUntil(AndroidComposeTestRule.android.kt:378)
+	at org.inkweft.app.EditorTestNavigationKt.singlePageEditor(EditorTestNavigation.kt:10)
+	at org.inkweft.app.EditorTestNavigationKt.singlePageEditor$default(EditorTestNavigation.kt:9)
+	at org.inkweft.app.NotebookShelfUiTest.create(NotebookShelfUiTest.kt:31)
+	at org.inkweft.app.NotebookShelfUiTest.shelfRenameCancelBlankAndPersistedIdentity(NotebookShelfUiTest.kt:35)
+
+
+Time: 134.266
+There was 1 failure:
+1) shelfRenameCancelBlankAndPersistedIdentity(org.inkweft.app.NotebookShelfUiTest)
+androidx.compose.ui.test.ComposeTimeoutException: Condition still not satisfied after 15000 ms
+	at androidx.compose.ui.test.AndroidComposeUiTestEnvironment$AndroidComposeUiTestImpl.waitUntil(ComposeUiTest.android.kt:809)
+	at androidx.compose.ui.test.junit4.AndroidComposeTestRule.waitUntil(AndroidComposeTestRule.android.kt:378)
+	at org.inkweft.app.EditorTestNavigationKt.singlePageEditor(EditorTestNavigation.kt:10)
+	at org.inkweft.app.EditorTestNavigationKt.singlePageEditor$default(EditorTestNavigation.kt:9)
+	at org.inkweft.app.NotebookShelfUiTest.create(NotebookShelfUiTest.kt:31)
+	at org.inkweft.app.NotebookShelfUiTest.shelfRenameCancelBlankAndPersistedIdentity(NotebookShelfUiTest.kt:35)
+
+FAILURES!!!
+Tests run: 1,  Failures: 1
+
+

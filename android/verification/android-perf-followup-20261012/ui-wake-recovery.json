@@ -1,0 +1,63 @@
+{
+  "reason": "Synthetic UI cases could not reach enabled library button while owned emulator display was Asleep. Wake/unsecured keyguard dismissal only; no timeout/assertion/SELinux changes.",
+  "records": [
+    {
+      "utc": "2026-10-12T18:51:26.078793+00:00",
+      "command": [
+        "/workspace/.setup/tools/android-sdk/platform-tools/adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "dumpsys",
+        "power"
+      ],
+      "exit_code": 0,
+      "stdout": "  mWakefulness=Asleep\n  mIsPowered=true\n  mStayOn=true\n  mScreenOffTimeoutSetting=2147483647\n  mIsPowered=true",
+      "stderr": ""
+    },
+    {
+      "utc": "2026-10-12T18:51:29.488686+00:00",
+      "command": [
+        "/workspace/.setup/tools/android-sdk/platform-tools/adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "input",
+        "keyevent",
+        "KEYCODE_WAKEUP"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "utc": "2026-10-12T18:51:32.133896+00:00",
+      "command": [
+        "/workspace/.setup/tools/android-sdk/platform-tools/adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "wm",
+        "dismiss-keyguard"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "utc": "2026-10-12T18:51:34.071252+00:00",
+      "command": [
+        "/workspace/.setup/tools/android-sdk/platform-tools/adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "dumpsys",
+        "power"
+      ],
+      "exit_code": 0,
+      "stdout": "  mWakefulness=Awake\n  mIsPowered=true\n  mStayOn=true\n  mScreenOffTimeoutSetting=2147483647\n  mIsPowered=true",
+      "stderr": ""
+    }
+  ],
+  "rerun": "Run all 8 UI methods again with explicit awake precondition and preserve the original logs."
+}

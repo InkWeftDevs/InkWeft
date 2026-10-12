@@ -1,0 +1,52 @@
+{
+  "utc": "2026-10-12T20:56:32.293253+00:00",
+  "measured_candidate_commit": "300e8c908b4c53a35b9c44cd2f99b044c4449767",
+  "published_test_commit": "d2003a019be6aecf3b9aa7a4a05f69032fd6fb8f",
+  "production_trees": [
+    {
+      "path": "android/app/src/main",
+      "measured_tree": "1a214f11940092f4ca714773eb56a972e502e7ca",
+      "final_code_tree": "1a214f11940092f4ca714773eb56a972e502e7ca",
+      "equal": true
+    },
+    {
+      "path": "android/data-local/src/main",
+      "measured_tree": "70146e6953062e479801ba9d8f3ceb35c02adb19",
+      "final_code_tree": "70146e6953062e479801ba9d8f3ceb35c02adb19",
+      "equal": true
+    },
+    {
+      "path": "android/core-domain/src/main",
+      "measured_tree": "5e37b8acb990c7d903c8becfa24be8926815dbed",
+      "final_code_tree": "5e37b8acb990c7d903c8becfa24be8926815dbed",
+      "equal": true
+    }
+  ],
+  "matched_followup_test_sources": [
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/LibrarySourceNavigationUiTest.kt",
+      "candidate_sha256": "a603fadb86cee424b5fa81dbff243fcfb76a67ad9d2444f9acc55e3a07160b7b",
+      "comparator_sha256": "a603fadb86cee424b5fa81dbff243fcfb76a67ad9d2444f9acc55e3a07160b7b",
+      "published_source_sha256": "a603fadb86cee424b5fa81dbff243fcfb76a67ad9d2444f9acc55e3a07160b7b",
+      "equal": true
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/NotebookShelfUiTest.kt",
+      "candidate_sha256": "c7493664b532a5bae2a542b48635905f5020d68637c1b7ed32c9fffa774b618d",
+      "comparator_sha256": "c7493664b532a5bae2a542b48635905f5020d68637c1b7ed32c9fffa774b618d",
+      "published_source_sha256": "c7493664b532a5bae2a542b48635905f5020d68637c1b7ed32c9fffa774b618d",
+      "equal": true
+    },
+    {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibraryBackupRepositoryTest.kt",
+      "candidate_sha256": "55fc952e0310a6161b4cc1adc50ee8a48604124ffc1a6772f5363cf95a7c3bf4",
+      "comparator_sha256": "55fc952e0310a6161b4cc1adc50ee8a48604124ffc1a6772f5363cf95a7c3bf4",
+      "published_source_sha256": "55fc952e0310a6161b4cc1adc50ee8a48604124ffc1a6772f5363cf95a7c3bf4",
+      "equal": true
+    }
+  ],
+  "docker_tree": "1ea18e39d51ca989f02c65cd8f8f250d32eb8ad2",
+  "docker_handoff_tree": "1ea18e39d51ca989f02c65cd8f8f250d32eb8ad2",
+  "docker_manifest_files_verified": 63,
+  "scope": "Read-only source and evidence integrity checks; no Docker build or test repeated. Native last source control still running."
+}

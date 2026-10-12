@@ -1,0 +1,58 @@
+[
+  {
+    "label": "ui-NotebookShelfUiTest-shelfRenameCancelBlankAndPersistedIdentity",
+    "module": "app",
+    "selection": "org.inkweft.app.NotebookShelfUiTest#shelfRenameCancelBlankAndPersistedIdentity",
+    "expected": 1,
+    "clear_owned_app_first": true
+  },
+  {
+    "label": "ui-NotebookShelfUiTest-coverChangesPersistWithoutChangingInkAndCanReturnToContentPreview",
+    "module": "app",
+    "selection": "org.inkweft.app.NotebookShelfUiTest#coverChangesPersistWithoutChangingInkAndCanReturnToContentPreview",
+    "expected": 1,
+    "clear_owned_app_first": true
+  },
+  {
+    "label": "ui-NotebookShelfUiTest-editorRenameKeepsUnsavedBodyUntilExplicitTextSave",
+    "module": "app",
+    "selection": "org.inkweft.app.NotebookShelfUiTest#editorRenameKeepsUnsavedBodyUntilExplicitTextSave",
+    "expected": 1,
+    "clear_owned_app_first": true
+  },
+  {
+    "label": "ui-NotebookShelfUiTest-drawerUsesOneSearchAndClosesWithBackWithAnimationsEnabled",
+    "module": "app",
+    "selection": "org.inkweft.app.NotebookShelfUiTest#drawerUsesOneSearchAndClosesWithBackWithAnimationsEnabled",
+    "expected": 1,
+    "clear_owned_app_first": true
+  },
+  {
+    "label": "ui-LibraryPaginationUiTest-nextPreviousAndQueryResetShowBoundedPages",
+    "module": "app",
+    "selection": "org.inkweft.app.LibraryPaginationUiTest#nextPreviousAndQueryResetShowBoundedPages",
+    "expected": 1,
+    "clear_owned_app_first": true
+  },
+  {
+    "label": "ui-LibrarySourceNavigationUiTest-learningSourceAwaitsRealPageSelectionThenFocusesOriginalBoundsWithReadLock",
+    "module": "app",
+    "selection": "org.inkweft.app.LibrarySourceNavigationUiTest#learningSourceAwaitsRealPageSelectionThenFocusesOriginalBoundsWithReadLock",
+    "expected": 1,
+    "clear_owned_app_first": true
+  },
+  {
+    "label": "ui-LibrarySourceNavigationUiTest-recycledLibrarySourceRetainsCurrentCardSnapshotAndMapWithoutNavigating",
+    "module": "app",
+    "selection": "org.inkweft.app.LibrarySourceNavigationUiTest#recycledLibrarySourceRetainsCurrentCardSnapshotAndMapWithoutNavigating",
+    "expected": 1,
+    "clear_owned_app_first": true
+  },
+  {
+    "label": "ui-LibrarySourceNavigationUiTest-closingOrRecreatingPendingLibrarySourceCannotJumpOrCloseAnotherCard",
+    "module": "app",
+    "selection": "org.inkweft.app.LibrarySourceNavigationUiTest#closingOrRecreatingPendingLibrarySourceCannotJumpOrCloseAnotherCard",
+    "expected": 1,
+    "clear_owned_app_first": true
+  }
+]

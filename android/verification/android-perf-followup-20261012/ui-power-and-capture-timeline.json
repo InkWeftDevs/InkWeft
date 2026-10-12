@@ -1,0 +1,13 @@
+{
+  "first_black_capture_utc": "2026-10-12T18:49:06.505792+00:00",
+  "first_black_capture_limit": "No simultaneous focused-window or power observation; later Asleep observation does not establish exact cause at capture time.",
+  "original_ui_first_five": "No per-case wakefulness sample; all failed at new-note readiness.",
+  "first_source_started_utc": "2026-10-12T18:51:22.007911+00:00",
+  "asleep_observed_utc": "2026-10-12T18:51:26.078793+00:00",
+  "wake_command_utc": "2026-10-12T18:51:29.488686+00:00",
+  "awake_observed_utc": "2026-10-12T18:51:34.071252+00:00",
+  "last_two_original_ui_started_after_wake": true,
+  "second_black_capture_utc": "2026-10-12T19:11:01.786250+00:00",
+  "second_capture_context": "Cover test ran19:08:04..19:11:31 including teardown; focused EmptyHomeActivity observed19:11:39 after test. Screenshot is not positive app-rendering failure evidence. Focus was not sampled at exact screenshot instant.",
+  "measured_backend_runs": "No per-case wakefulness sample; do not retrospectively assign a state."
+}

@@ -1,0 +1,25 @@
+{
+  "tests": [
+    {
+      "module": "core-domain",
+      "suites": 58,
+      "tests": 478,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "data-local",
+      "suites": 4,
+      "tests": 20,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  ],
+  "lint": {
+    "Warning": 188,
+    "Hint": 2
+  },
+  "jvm_result_origin": "Previous fixture-final JVM run; not re-run in this follow-up test-APK build"
+}

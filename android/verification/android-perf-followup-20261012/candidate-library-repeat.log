@@ -1,0 +1,9 @@
+
+org.inkweft.data.LibraryReadPerformanceTest:LIBRARY_READ_EVIDENCE {"books":500,"pages":20000,"noteBodyChars":20020,"headerReadMs":694.936259,"headerReturnedBodyChars":0,"coldMs":41107.791711,"coldSourceChecks":20000,"warmMedianMs":10180.026496,"saveCount":30,"saveP50Ms":130.988359,"saveP95Ms":241.552212,"saveMaxMs":252.961759,"writerCompletedDuringPausedSearch":true,"shelfReturnedPreviewChars":35418,"shelfDirectoryBodyChars":0,"projectionRows":61,"projectionChars":36018,"fullBodyOnDemandMatches":true}
+.
+
+Time: 925.925
+
+OK (1 test)
+
+
