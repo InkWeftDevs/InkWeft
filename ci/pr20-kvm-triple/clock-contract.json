@@ -1,0 +1,22 @@
+{
+  "schema": 1,
+  "status": "FROZEN",
+  "anchor_kind": "github_pull_request_updated_at",
+  "source_repository": "InkWeftDevs/InkWeft",
+  "source_pull_request": 20,
+  "source_url": "https://github.com/InkWeftDevs/InkWeft/pull/20",
+  "updated_at": "2026-10-13T16:49:10Z",
+  "budget_anchor_epoch": 1791910150,
+  "server_receipt_sha256": "701649e0b71b4cb6b4d44ea19a5e9d70590ded24e962e16342372f4718b52a81",
+  "phase_cutoff_minutes": {
+    "setup": 32,
+    "correctness": 38,
+    "common": 52,
+    "diagnostics": 55
+  },
+  "work_deadline_minutes": 55,
+  "job_timeout_minutes": 60,
+  "actual_job_started_epoch": null,
+  "causal_order": "Successful necessary PR20 update response received before this frozen controller is committed, pushed and activated.",
+  "anchor_policy": "Immutable earlier server timestamp; never rebase or move later. Future or expired setup anchor stops. Actual job start requires later external metadata."
+}
