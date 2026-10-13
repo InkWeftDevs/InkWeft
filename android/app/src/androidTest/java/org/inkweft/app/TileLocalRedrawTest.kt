@@ -107,6 +107,98 @@ class TileLocalRedrawTest {
             finally{if(jobs.joined){events.close();target.recycle();reference.recycle();db.close();context.deleteDatabase(name)}}
         }
     }
+    @Test fun appendRetainsGeometryAcrossIdleLayerRevisionsAndDestructiveChangesMatchColdFrames()=runBlocking{
+        val context=ApplicationProvider.getApplicationContext<Context>();val name="tile-append-cache-${id()}.db";val db=NoteDatabase.open(context,name)
+        val target=Bitmap.createBitmap(512,512,Bitmap.Config.ARGB_8888);val reference=Bitmap.createBitmap(512,512,Bitmap.Config.ARGB_8888)
+        val events=Channel<Unit>(Channel.CONFLATED);val jobs=RasterJobs();var failed=false;var primaryFailure:Throwable?=null
+        fun raster()=StreamedInkRaster({events.trySend(Unit)},{failed=true;events.trySend(Unit)})
+        val active=List(2){raster()};val full=List(2){raster()}
+        fun stroke(x:Float)=InkStroke(id(),InkPen.PEN,Color.BLUE,5f,InkTool.STYLUS,
+            listOf(InkSample(x,100f,0,world=true),InkSample(x+12,112f,10,world=true)),true)
+        try{
+            val page=WorkspaceRepository(db).create("追加几何缓存",true,PaperStyle.BLANK).id;val repo=InkRepository(db)
+            val layers=List(2){UserLayer(id(),"层 $it")};val values=listOf(stroke(100f),stroke(150f))
+            db.withTransaction{
+                if(db.ink().page(page)==null)db.ink().insertPage(InkPageRow(page,1))else check(db.ink().compareAndSet(page,0,1)==1)
+                values.forEach{db.ink().insertStroke(InkStrokeRow(it.id,page,InkStrokeCodec.encodeStored(it),2,true,1))}
+            }
+            repo.authoringRepository.storePage(page,page,1,PageAuthoring(UserLayers(layers,layers.first().id,
+                values.mapIndexed{i,s->LayerMembership(LayerContent(LayerContentKind.INK,s.id),layers[i].id)})))
+            var source=InkRenderSource(repo,page,1,values.map{it.id}.toSet(),1,appendGeneration=Any())
+            var viewport=CanvasViewport(256.0,256.0,1.0)
+            suspend fun ready(rasters:List<StreamedInkRaster>,bitmap:Bitmap){
+                withTimeout(30_000){while(true){
+                    val complete=withContext(Dispatchers.Main){
+                        bitmap.eraseColor(Color.WHITE);val canvas=Canvas(bitmap);var done=true
+                        rasters.forEachIndexed{i,r->
+                            jobs.remember(r)
+                            try{r.draw(canvas,512,512,viewport,1.0,true,false,source,null,emptySet(),layers[i].id);done=done&&r.frameReady}
+                            finally{jobs.remember(r)}
+                        };done
+                    }
+                    if(complete)break
+                    events.receive();check(!failed)
+                }}
+            }
+            suspend fun compareCold(){
+                withContext(Dispatchers.Main){full.forEach{it.clear()}}
+                ready(full,reference);assertTrue("All pixels match the independent cold frame",target.sameAs(reference))
+            }
+            suspend fun append(x:Float):InkStroke{
+                val added=stroke(x)
+                assertTrue(repo.save(CommitInk(id(),page,source.revision,InkMutation.Add(added),LayerWriteScope(layers[0].id,1))) is InkCommitResult.Committed)
+                source=source.copy(revision=source.revision+1,committedIds=source.committedIds+added.id)
+                return added
+            }
+            ready(active,target);assertEquals(2,active.sumOf{it.lastBuild!!.decoded})
+            // Legal writes stay on the current layer. Offscreen appends advance the
+            // page head without dirtying either visible layer or changing its configuration.
+            for(x in listOf(1000f,1200f)){
+                append(x);ready(active,target)
+                assertEquals("Offscreen appends do not decode visible geometry",0,active.sumOf{it.lastBuild!!.decoded})
+                assertEquals("Both visible layers retain their complete tiles",0,active.sumOf{it.lastBuild!!.rebuilt})
+                compareCold()
+            }
+            val added=append(280f);ready(active,target)
+            assertEquals("The idle layer's cache may skip several page revisions",1,active.sumOf{it.lastBuild!!.decoded})
+            assertEquals(1,active[0].lastBuild!!.reusedStrokes);assertEquals(2,active[0].lastBuild!!.nativeStrokeBuilds)
+            assertEquals("The other layer still keeps its complete tile",0,active[1].lastBuild!!.rebuilt)
+            compareCold()
+            for(visible in listOf(false,true)){
+                assertTrue(repo.save(CommitInk(id(),page,source.revision,InkMutation.Visibility(listOf(added.id),visible),LayerWriteScope(layers[0].id,1))) is InkCommitResult.Committed)
+                source=source.copy(revision=source.revision+1,appendGeneration=Any())
+                ready(active,target);assertEquals("Hide/undo starts a new append identity",0,active.sumOf{it.lastBuild!!.reusedStrokes})
+                compareCold()
+            }
+            val cut=InkCut(id(),5f,listOf(EraserPoint(105f,105f)))
+            assertTrue(repo.save(CommitInk(id(),page,source.revision,InkMutation.Cut(EraseSelection(cut,listOf(values[0].id))),LayerWriteScope(layers[0].id,1))) is InkCommitResult.Committed)
+            source=source.copy(revision=source.revision+1,appendGeneration=Any())
+            ready(active,target);assertEquals(0,active.sumOf{it.lastBuild!!.reusedStrokes});compareCold()
+            append(320f);viewport=viewport.copy(centerX=256.25)
+            ready(active,target);assertEquals("A simultaneous viewport change must not grant append reuse",0,active.sumOf{it.lastBuild!!.reusedStrokes})
+            compareCold()
+            assertTrue(active.all{it.lastBuild!!.geometryBytes in 1..InkRasterCache.MAX_BYTES})
+            append(360f)
+            val entered=CompletableDeferred<Unit>();val release=CompletableDeferred<Unit>()
+            val blocked=async(Dispatchers.IO){db.withTransaction{entered.complete(Unit);release.await()}}
+            try{
+                withTimeout(5000){entered.await()}
+                withContext(Dispatchers.Main){active.forEachIndexed{i,r->
+                    jobs.remember(r)
+                    try{r.draw(Canvas(target),512,512,viewport,1.0,true,false,source,null,emptySet(),layers[i].id);assertTrue(r.pending)}
+                    finally{jobs.remember(r);r.clear()}
+                    assertFalse(r.frameReady);assertNull(r.lastBuild)
+                }}
+            }finally{release.complete(Unit);withContext(NonCancellable){blocked.await()}}
+            // The shared cache is still pinned by each cancelled worker until the outer
+            // clearAndJoin finishes; its exact ownership total is checked there.
+        }catch(error:Throwable){primaryFailure=error;throw error}
+        finally{
+            try{jobs.clearAndJoin(active+full)}
+            catch(cleanup:Throwable){if(primaryFailure!=null)primaryFailure.addSuppressed(cleanup)else throw cleanup}
+            finally{if(jobs.joined){events.close();target.recycle();reference.recycle();db.close();context.deleteDatabase(name)}}
+        }
+    }
     @Test fun oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions()=runBlocking{
         val metadataDiagnostics=InstrumentationRegistry.getArguments().getString("rasterMetadataDiagnostics")=="true"
         val context=ApplicationProvider.getApplicationContext<Context>();val name="tile-local-${id()}.db";val db=NoteDatabase.open(context,name)

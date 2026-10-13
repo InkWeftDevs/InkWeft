@@ -73,7 +73,9 @@ internal class StreamedInkRaster(private val changed:()->Unit,private val failed
         if(frame?.key!=key&&requested==null&&rejected!=key){
             requested=key;val token=++generation
             val previous=frame
-            val geometry=previous?.takeIf{it.key.source.repository===source.repository&&it.key.source.page==source.page&&it.key.source.revision==source.revision}?.geometry?:source.repository.rasterCache()
+            val append=previous?.let{it.key.source.revision<source.revision&&compatible(it.key,key)}==true
+            val geometry=previous?.takeIf{it.key.source.repository===source.repository&&it.key.source.page==source.page&&
+                (it.key.source.revision==source.revision||append)}?.geometry?:source.repository.rasterCache()
             val workerOwner="$owner-$token"
             // Pin shared tiles before leaving Main; clear cannot unaccount worker references.
             previous?.tiles?.forEach{RenderResources.track(it.bitmap,it.bitmap.allocationByteCount.toLong(),"ink-frame",workerOwner,RenderResources.Role.IN_FLIGHT)}
@@ -143,7 +145,7 @@ internal class StreamedInkRaster(private val changed:()->Unit,private val failed
                         if(dirty.isNotEmpty()){
                             val region=dirty.map{regions[it]}.reduce{a,b->a.union(b)}
                             source.repository.visitVisible(source.page,source.revision,region,source.authoringRevision,layer,
-                                regions=dirty.map{regions[it]},allowed=allowed,omitted=omitted,cache=geometry){batch->
+                                regions=dirty.map{regions[it]},allowed=allowed,omitted=omitted,cache=geometry,allowRevisionAdvance=append){batch->
                                 for(stroke in batch){
                                     context.ensureActive();decoded++
                                     if(stroke.id in omitted||allowed!=null&&stroke.id !in allowed)continue

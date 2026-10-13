@@ -62,6 +62,75 @@ class RasterReadCacheTest {
         assertTrue("A cached batch must still validate the final revision",failure is IllegalStateException)
         assertTrue(read(3).cuts.isEmpty())
     }
+    @Test fun explicitAppendReuseSkipsOldPayloadsAcrossRevisionJumpsAndDefaultsToInvalidation()=fixture {db,page,repo->
+        val values=listOf(stroke(1,100f),stroke(2,150f));seed(db,page,values)
+        val cache=repo.rasterCache();val ordinary=repo.rasterCache();val bounds=CanvasBounds(0.0,0.0,500.0,500.0)
+        var decoded=0;repo.readObserver={decoded+=it.entries}
+        suspend fun read(cache:InkRasterCache,revision:Long,advance:Boolean=false):List<InkStroke>{
+            val rows=mutableListOf<InkStroke>()
+            repo.visitVisible(page,revision,bounds,cache=cache,allowRevisionAdvance=advance){rows+=it}
+            return rows
+        }
+        val old=read(cache,1);read(ordinary,1)
+        assertTrue(repo.save(CommitInk(id(10),page,1,InkMutation.Add(stroke(3,200f)))) is InkCommitResult.Committed)
+        assertTrue(repo.save(CommitInk(id(11),page,2,InkMutation.Add(stroke(4,250f)))) is InkCommitResult.Committed)
+        decoded=0;val added=read(cache,3,true)
+        assertEquals(2,decoded);assertEquals(2,cache.hits)
+        assertEquals(listOf(id(1),id(2),id(3),id(4)),added.map{it.id})
+        old.forEachIndexed{i,stroke->assertSame(stroke,added[i])}
+        decoded=0;read(ordinary,3);assertEquals("Ordinary callers still invalidate on revision changes",4,decoded)
+        assertEquals(0,ordinary.hits)
+        assertTrue(runCatching{read(cache,2,true)}.exceptionOrNull() is IllegalStateException)
+        assertTrue(cache.retainedBytes in 1..InkRasterCache.MAX_BYTES)
+    }
+    @Test fun appendPermissionStillRefreshesChangedPayloadVisibilityUndoAndMasks()=fixture {db,page,repo->
+        seed(db,page,listOf(stroke(1,100f),stroke(2,150f)))
+        val cache=repo.rasterCache();val bounds=CanvasBounds(0.0,0.0,500.0,500.0)
+        suspend fun read(revision:Long):List<InkStroke>{
+            val rows=mutableListOf<InkStroke>()
+            repo.visitVisible(page,revision,bounds,cache=cache,allowRevisionAdvance=true){rows+=it}
+            return rows
+        }
+        val original=read(1)
+        val moved=stroke(1,200f)
+        db.openHelper.writableDatabase.execSQL("UPDATE ink_strokes SET payload=? WHERE id=?",arrayOf<Any>(InkStrokeCodec.encodeStored(moved),moved.id))
+        assertTrue(repo.save(CommitInk(id(10),page,1,InkMutation.Add(stroke(3,250f)))) is InkCommitResult.Committed)
+        val appended=read(2)
+        assertEquals(200f,appended.first().samples.first().x,0f)
+        assertNotSame(original.first(),appended.first());assertSame(original[1],appended[1])
+        assertTrue(repo.save(CommitInk(id(11),page,2,InkMutation.Visibility(listOf(id(1)),false))) is InkCommitResult.Committed)
+        assertEquals(listOf(id(2),id(3)),read(3).map{it.id})
+        assertTrue(repo.save(CommitInk(id(12),page,3,InkMutation.Visibility(listOf(id(1)),true))) is InkCommitResult.Committed)
+        val restored=read(4);assertEquals(listOf(id(1),id(2),id(3)),restored.map{it.id})
+        assertNotSame("Undo receives the new spatial identity",appended.first(),restored.first())
+        val cut=InkCut(id(20),5f,listOf(EraserPoint(205f,105f)))
+        assertTrue(repo.save(CommitInk(id(13),page,4,InkMutation.Cut(EraseSelection(cut,listOf(id(1)))))) is InkCommitResult.Committed)
+        val masked=read(5);assertEquals(cut.id,masked.first().cuts.single().id)
+        assertNotSame("A cut epoch change invalidates even unaffected cached strokes",restored[1],masked[1])
+        assertEquals(1,db.ink().cutVisibility(cut.id,page,false));assertTrue(read(5).all{it.cuts.isEmpty()})
+    }
+    @Test fun appendReuseRejectsHeadOrMaskChangesDuringCachedBatches()=fixture {db,page,repo->
+        seed(db,page,List(300){stroke(it+1,100f)})
+        val cache=repo.rasterCache();val bounds=CanvasBounds(0.0,0.0,500.0,500.0)
+        repo.visitVisible(page,1,bounds,cache=cache){}
+        assertTrue(repo.save(CommitInk(id(1000),page,1,InkMutation.Add(stroke(301,150f)))) is InkCommitResult.Committed)
+        var batches=0
+        val failure=runCatching{repo.visitVisible(page,2,bounds,cache=cache,allowRevisionAdvance=true){
+            batches++;if(batches==1)check(db.ink().compareAndSet(page,2,3)==1)
+        }}.exceptionOrNull()
+        assertTrue(failure is IllegalStateException);assertEquals("INK_WINDOW_REVISION_CHANGED",failure?.message)
+        assertEquals("Do not publish a second batch after the writer commits",1,batches)
+        val cut=InkCut(id(2000),5f,listOf(EraserPoint(105f,105f)))
+        assertTrue(repo.save(CommitInk(id(1001),page,3,InkMutation.Cut(EraseSelection(cut,listOf(id(1)))))) is InkCommitResult.Committed)
+        repo.visitVisible(page,4,bounds,cache=cache){}
+        assertTrue(repo.save(CommitInk(id(1002),page,4,InkMutation.Add(stroke(302,200f)))) is InkCommitResult.Committed)
+        batches=0
+        val maskFailure=runCatching{repo.visitVisible(page,5,bounds,cache=cache,allowRevisionAdvance=true){
+            batches++;if(batches==1)assertEquals(1,db.ink().cutVisibility(cut.id,page,false))
+        }}.exceptionOrNull()
+        assertTrue(maskFailure is IllegalStateException);assertEquals("INK_RASTER_EPOCH_CHANGED",maskFailure?.message)
+        assertEquals("Append permission cannot combine batches from different mask epochs",1,batches)
+    }
     @Test fun decodedCacheRemainsBoundedForManyStrokesAndDenseMasks()=fixture {db,page,repo->
         val values=List(600){stroke(it+1,100f)};seed(db,page,values)
         val cache=repo.rasterCache();val bounds=CanvasBounds(0.0,0.0,500.0,500.0)

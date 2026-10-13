@@ -12,6 +12,7 @@ import org.junit.Test
 import java.util.UUID
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
+import java.util.concurrent.atomic.AtomicInteger
 
 class LibraryPagingTest {
     private fun id()=UUID.randomUUID().toString()
@@ -74,6 +75,33 @@ class LibraryPagingTest {
             val after=repo.read(request);assertTrue(after.items.isEmpty());assertEquals(1,after.trashed)
             assertEquals("New title",repo.read(request.copy(query="new body",filter="trash")).items.single().note.title)
         }finally{release.countDown();reading.cancelAndJoin()}
+    }}
+    @Test fun cancelledSourceReadSkipsDirectoryAssemblyAndNextReadKeepsClassification()=fixture{db->coroutineScope{
+        val workspace=WorkspaceRepository(db)
+        val note=workspace.create("合成目录标题",false,PaperStyle.BLANK)
+        val trashed=workspace.create("合成回收标题",false,PaperStyle.BLANK)
+        assertTrue(workspace.organize(note.id,0,"课程","复习\n项目",true,false))
+        assertTrue(workspace.organize(trashed.id,0,"废弃","",false,true))
+        assertTrue(NotebookPages(db).saveSearchText(note.id,0,"target-only"))
+        val repo=LibrarySearchRepository(db);val metadataRows=AtomicInteger()
+        val entered=CompletableDeferred<Unit>();val release=CountDownLatch(1)
+        repo.readObserver={kind,rows,_->if(kind=="metadata")metadataRows.set(rows)}
+        repo.scanObserver={_,count->if(count==1){entered.complete(Unit);check(release.await(10,TimeUnit.SECONDS))}}
+        val request=LibrarySearchRequest(1,listOf(note,trashed),emptyMap(),"target-only")
+        val reading=async(Dispatchers.IO){repo.read(request)}
+        try{
+            withTimeout(5_000){entered.await()}
+            assertEquals("A source read must not eagerly assemble directory headers",0,metadataRows.get())
+            reading.cancel();release.countDown();reading.join()
+            assertTrue(reading.isCancelled);assertEquals(0,metadataRows.get())
+        }finally{release.countDown();reading.cancelAndJoin();repo.scanObserver=null}
+        val complete=repo.read(request)
+        assertEquals(note.id,complete.items.single().pageId)
+        assertEquals(listOf(note.copy(text="")),complete.active)
+        assertEquals(mapOf("课程" to 1),complete.folders)
+        assertEquals(listOf("复习","项目"),complete.tags)
+        assertEquals(1,complete.favorites);assertEquals(0,complete.unfiled);assertEquals(1,complete.trashed)
+        assertEquals(2,metadataRows.get())
     }}
     @Test fun refreshedNoteBodyAndUnicodeBlankFolderUseAuthorState()=fixture{db->
         val workspace=WorkspaceRepository(db);val note=workspace.create("Saved title",false,PaperStyle.BLANK)

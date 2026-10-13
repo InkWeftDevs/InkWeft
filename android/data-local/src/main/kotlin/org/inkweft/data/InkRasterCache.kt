@@ -12,8 +12,12 @@ class InkRasterCache internal constructor(internal val repository:InkRepository)
     private var page:String?=null;private var revision=-1L;private var epoch=-1L
     var retainedBytes=0L;private set
     var hits=0;private set
-    internal fun prepare(page:String,revision:Long,epoch:Long){
-        if(this.page==page&&this.revision==revision&&this.epoch==epoch)return
+    internal fun prepare(page:String,revision:Long,epoch:Long,allowRevisionAdvance:Boolean=false){
+        if(this.page==page&&this.epoch==epoch&&(this.revision==revision||allowRevisionAdvance&&this.revision<revision)){
+            // Unchanged layers can skip several append revisions without visiting geometry.
+            // Each hit still requires the current spatial identity; any mask change clears all.
+            this.revision=revision;return
+        }
         entries.clear();retainedBytes=0;this.page=page;this.revision=revision;this.epoch=epoch
     }
     internal fun get(id:String,spatialKey:Long):InkStroke? = entries[id]?.takeIf{it.spatialKey==spatialKey}?.stroke

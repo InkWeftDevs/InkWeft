@@ -305,11 +305,13 @@ class InkRepository(private val db:NoteDatabase,private val fault:(InkFaultPoint
     fun rasterCache()=InkRasterCache(this)
     /** Bounded geometry batches at one revision. Callers discard the entire result on revision
      * change; cancellation releases the database between batches and never publishes a prefix.
-     * Optional regions filter metadata before decoding; caches are local to one raster worker. */
+     * Optional regions filter metadata before decoding; caches are local to one raster worker.
+     * Only a caller retaining an append-compatible frame may permit cache revision advances. */
     suspend fun visitVisible(noteId:String,revision:Long,bounds:CanvasBounds?=null,authoringRevision:Long?=null,layer:String?=null,writableOnly:Boolean=false,
-        regions:List<CanvasBounds>?=null,allowed:Set<String>?=null,omitted:Set<String> = emptySet(),cache:InkRasterCache?=null,visit:suspend (List<InkStroke>)->Unit){
+        regions:List<CanvasBounds>?=null,allowed:Set<String>?=null,omitted:Set<String> = emptySet(),cache:InkRasterCache?=null,allowRevisionAdvance:Boolean=false,visit:suspend (List<InkStroke>)->Unit){
         require(regions==null||(bounds!=null&&regions.isNotEmpty()&&regions.size<=512))
         require(cache==null||(cache.repository===this&&bounds!=null))
+        require(!allowRevisionAdvance||cache!=null)
         var cursor:SpatialIndex.Cursor?=null
         var cacheEpoch:Long?=null
         while(true){
@@ -320,7 +322,7 @@ class InkRepository(private val db:NoteDatabase,private val fault:(InkFaultPoint
                 if(cache!=null){
                     val epoch=sql.query("SELECT epoch FROM ink_raster_epochs WHERE pageId=?",arrayOf(noteId)).use{if(it.moveToFirst())it.getLong(0)else 0L}
                     check(cacheEpoch==null||cacheEpoch==epoch){"INK_RASTER_EPOCH_CHANGED"}
-                    cacheEpoch=epoch;cache.prepare(noteId,revision,epoch)
+                    cacheEpoch=epoch;cache.prepare(noteId,revision,epoch,allowRevisionAdvance)
                 }
                 SpatialIndex.ink(sql,noteId,bounds,cursor,layers=layers).let{rows->
                     var points=0;var bytes=0L

@@ -114,21 +114,6 @@ class LibrarySearchRepository(private val db:NoteDatabase) {
                 FROM library_drafts d WHERE NOT EXISTS(SELECT 1 FROM notes n WHERE n.id=d.id)
             )
         """.trimIndent()
-        val active=ArrayList<Note>();val folders=sortedMapOf<String,Int>();val tags=sortedSetOf<String>()
-        var favorites=0;var unfiled=0;var trashed=0;var metadataRows=0
-        // This small directory supports existing learning navigation/counts; no body column
-        // or shelf sort is materialized in Kotlin. The shelf itself is LIMITed below.
-        trace?.event("metadata-start")
-        sql.query("$shelf SELECT id,revision,title,folder,tags,favorite,trashedAt FROM shelf ORDER BY updatedAt DESC,draftPosition,id").use{rows->while(rows.moveToNext()){
-            check();metadataRows++
-            if(!rows.isNull(6)){trashed++;continue}
-            active+=Note(rows.getString(0),rows.getLong(1),rows.getString(2),"")
-            if(rows.getInt(5)!=0)favorites++
-            val folder=rows.getString(3);if(folder.isBlank())unfiled++ else folders[folder]=(folders[folder]?:0)+1
-            tags+=rows.getString(4).split('\n').filter{it.isNotBlank()}
-        }}
-        trace?.event("metadata-end",metadataRows)
-        readObserver?.invoke("metadata",metadataRows,0)
         val args=ArrayList<Any>()
         val filter=buildList {
             add(if(request.filter=="trash")"trashedAt IS NOT NULL" else "trashedAt IS NULL")
@@ -211,6 +196,23 @@ class LibrarySearchRepository(private val db:NoteDatabase) {
         trace?.event("page-end",matched.size)
         readObserver?.invoke("previews",matched.size,previewChars)
         val nextOffset=if(matched.size>request.pageSize)request.offset+request.pageSize else null
+        check()
+        val active=ArrayList<Note>();val folders=sortedMapOf<String,Int>();val tags=sortedSetOf<String>()
+        var favorites=0;var unfiled=0;var trashed=0;var metadataRows=0
+        // Assemble the directory only after hits and the bounded page have completed.
+        // Superseded reads can then cancel without constructing discarded note headers
+        // and classifications. This still reads the same author snapshot, without bodies.
+        trace?.event("metadata-start")
+        sql.query("$shelf SELECT id,revision,title,folder,tags,favorite,trashedAt FROM shelf ORDER BY updatedAt DESC,draftPosition,id").use{rows->while(rows.moveToNext()){
+            check();metadataRows++
+            if(!rows.isNull(6)){trashed++;continue}
+            active+=Note(rows.getString(0),rows.getLong(1),rows.getString(2),"")
+            if(rows.getInt(5)!=0)favorites++
+            val folder=rows.getString(3);if(folder.isBlank())unfiled++ else folders[folder]=(folders[folder]?:0)+1
+            tags+=rows.getString(4).split('\n').filter{it.isNotBlank()}
+        }}
+        trace?.event("metadata-end",metadataRows)
+        readObserver?.invoke("metadata",metadataRows,0)
         trace?.event("pending-start")
         val pending=sql.query("SELECT COUNT(*) FROM library_search_pending").use{it.moveToFirst();it.getInt(0)}
         trace?.event("pending-end",pending)
