@@ -1,0 +1,557 @@
+[
+  {
+    "marker": "KVM_PAIR_FIXTURE",
+    "data": {
+      "label": "history-before",
+      "seed": 4103,
+      "logicalSha256": "c2b159054ad87ce78b235cb400a21e672db3b27d169dad7dbefeeccb516988c4",
+      "rowCounts": {
+        "notes": 1,
+        "note_revisions": 1,
+        "notebook_workspace": 1,
+        "notebook_pages": 1,
+        "study_cards": 1,
+        "study_card_revisions": 2000,
+        "study_source_revisions": 6097,
+        "study_card_source_sets": 2000
+      },
+      "writerSqlite": {
+        "page_size": 1024,
+        "auto_vacuum": 1,
+        "journal_mode": "wal",
+        "synchronous": 2
+      }
+    }
+  },
+  {
+    "marker": "KVM_HISTORY_INTERVALS",
+    "data": {
+      "paused": [
+        {
+          "sample": 0,
+          "startNs": 343673556207,
+          "endNs": 343677745293,
+          "committed": true,
+          "revision": 2
+        },
+        {
+          "sample": 1,
+          "startNs": 343678201160,
+          "endNs": 343680535910,
+          "committed": true,
+          "revision": 3
+        },
+        {
+          "sample": 2,
+          "startNs": 343680922914,
+          "endNs": 343683193019,
+          "committed": true,
+          "revision": 4
+        },
+        {
+          "sample": 3,
+          "startNs": 343683555973,
+          "endNs": 343685850257,
+          "committed": true,
+          "revision": 5
+        },
+        {
+          "sample": 4,
+          "startNs": 343686254627,
+          "endNs": 343688229883,
+          "committed": true,
+          "revision": 6
+        },
+        {
+          "sample": 5,
+          "startNs": 343688645517,
+          "endNs": 343690959703,
+          "committed": true,
+          "revision": 7
+        },
+        {
+          "sample": 6,
+          "startNs": 343691356999,
+          "endNs": 343693931919,
+          "committed": true,
+          "revision": 8
+        },
+        {
+          "sample": 7,
+          "startNs": 343694308162,
+          "endNs": 343696285517,
+          "committed": true,
+          "revision": 9
+        },
+        {
+          "sample": 8,
+          "startNs": 343696656634,
+          "endNs": 343699263788,
+          "committed": true,
+          "revision": 10
+        },
+        {
+          "sample": 9,
+          "startNs": 343699702459,
+          "endNs": 343702293043,
+          "committed": true,
+          "revision": 11
+        },
+        {
+          "sample": 10,
+          "startNs": 343702711294,
+          "endNs": 343705233572,
+          "committed": true,
+          "revision": 12
+        },
+        {
+          "sample": 11,
+          "startNs": 343705606486,
+          "endNs": 343707532839,
+          "committed": true,
+          "revision": 13
+        },
+        {
+          "sample": 12,
+          "startNs": 343707938074,
+          "endNs": 343710663362,
+          "committed": true,
+          "revision": 14
+        },
+        {
+          "sample": 13,
+          "startNs": 343711050833,
+          "endNs": 343713938864,
+          "committed": true,
+          "revision": 15
+        },
+        {
+          "sample": 14,
+          "startNs": 343714309319,
+          "endNs": 343716330124,
+          "committed": true,
+          "revision": 16
+        },
+        {
+          "sample": 15,
+          "startNs": 343716721098,
+          "endNs": 343719363744,
+          "committed": true,
+          "revision": 17
+        },
+        {
+          "sample": 16,
+          "startNs": 343719786607,
+          "endNs": 343722513002,
+          "committed": true,
+          "revision": 18
+        },
+        {
+          "sample": 17,
+          "startNs": 343722909999,
+          "endNs": 343725501560,
+          "committed": true,
+          "revision": 19
+        },
+        {
+          "sample": 18,
+          "startNs": 343725887574,
+          "endNs": 343727800696,
+          "committed": true,
+          "revision": 20
+        },
+        {
+          "sample": 19,
+          "startNs": 343728179322,
+          "endNs": 343730605145,
+          "committed": true,
+          "revision": 21
+        },
+        {
+          "sample": 20,
+          "startNs": 343731021410,
+          "endNs": 343733500096,
+          "committed": true,
+          "revision": 22
+        },
+        {
+          "sample": 21,
+          "startNs": 343733872554,
+          "endNs": 343735956122,
+          "committed": true,
+          "revision": 23
+        },
+        {
+          "sample": 22,
+          "startNs": 343736367659,
+          "endNs": 343739450311,
+          "committed": true,
+          "revision": 24
+        },
+        {
+          "sample": 23,
+          "startNs": 343739892714,
+          "endNs": 343742998582,
+          "committed": true,
+          "revision": 25
+        },
+        {
+          "sample": 24,
+          "startNs": 343743378881,
+          "endNs": 343745768126,
+          "committed": true,
+          "revision": 26
+        },
+        {
+          "sample": 25,
+          "startNs": 343746114551,
+          "endNs": 343748135874,
+          "committed": true,
+          "revision": 27
+        },
+        {
+          "sample": 26,
+          "startNs": 343748436013,
+          "endNs": 343750750694,
+          "committed": true,
+          "revision": 28
+        },
+        {
+          "sample": 27,
+          "startNs": 343751196964,
+          "endNs": 343753396007,
+          "committed": true,
+          "revision": 29
+        },
+        {
+          "sample": 28,
+          "startNs": 343753802552,
+          "endNs": 343756800123,
+          "committed": true,
+          "revision": 30
+        },
+        {
+          "sample": 29,
+          "startNs": 343757147111,
+          "endNs": 343762424789,
+          "committed": true,
+          "revision": 31
+        }
+      ],
+      "live": [
+        {
+          "sample": 0,
+          "startNs": 343838064142,
+          "endNs": 343840514479,
+          "committed": true,
+          "revision": 32
+        },
+        {
+          "sample": 1,
+          "startNs": 343840949092,
+          "endNs": 343843298787,
+          "committed": true,
+          "revision": 33
+        },
+        {
+          "sample": 2,
+          "startNs": 343843579838,
+          "endNs": 343846000381,
+          "committed": true,
+          "revision": 34
+        },
+        {
+          "sample": 3,
+          "startNs": 343846292508,
+          "endNs": 343848505418,
+          "committed": true,
+          "revision": 35
+        },
+        {
+          "sample": 4,
+          "startNs": 343848902868,
+          "endNs": 343854143598,
+          "committed": true,
+          "revision": 36
+        },
+        {
+          "sample": 5,
+          "startNs": 343854526530,
+          "endNs": 343858230940,
+          "committed": true,
+          "revision": 37
+        },
+        {
+          "sample": 6,
+          "startNs": 343858618303,
+          "endNs": 343861993258,
+          "committed": true,
+          "revision": 38
+        },
+        {
+          "sample": 7,
+          "startNs": 343862375607,
+          "endNs": 343864193378,
+          "committed": true,
+          "revision": 39
+        },
+        {
+          "sample": 8,
+          "startNs": 343864560740,
+          "endNs": 343866674403,
+          "committed": true,
+          "revision": 40
+        },
+        {
+          "sample": 9,
+          "startNs": 343867021155,
+          "endNs": 343869208966,
+          "committed": true,
+          "revision": 41
+        },
+        {
+          "sample": 10,
+          "startNs": 343869549206,
+          "endNs": 343871322263,
+          "committed": true,
+          "revision": 42
+        },
+        {
+          "sample": 11,
+          "startNs": 343871722483,
+          "endNs": 343873785366,
+          "committed": true,
+          "revision": 43
+        },
+        {
+          "sample": 12,
+          "startNs": 343874121571,
+          "endNs": 343875872277,
+          "committed": true,
+          "revision": 44
+        },
+        {
+          "sample": 13,
+          "startNs": 343876267967,
+          "endNs": 343878427255,
+          "committed": true,
+          "revision": 45
+        },
+        {
+          "sample": 14,
+          "startNs": 343878824756,
+          "endNs": 343881004581,
+          "committed": true,
+          "revision": 46
+        },
+        {
+          "sample": 15,
+          "startNs": 343881348069,
+          "endNs": 343883060340,
+          "committed": true,
+          "revision": 47
+        },
+        {
+          "sample": 16,
+          "startNs": 343883406446,
+          "endNs": 343885977026,
+          "committed": true,
+          "revision": 48
+        },
+        {
+          "sample": 17,
+          "startNs": 343886245940,
+          "endNs": 343888459638,
+          "committed": true,
+          "revision": 49
+        },
+        {
+          "sample": 18,
+          "startNs": 343888849574,
+          "endNs": 343890789131,
+          "committed": true,
+          "revision": 50
+        },
+        {
+          "sample": 19,
+          "startNs": 343891130593,
+          "endNs": 343893175571,
+          "committed": true,
+          "revision": 51
+        },
+        {
+          "sample": 20,
+          "startNs": 343893516030,
+          "endNs": 343895153239,
+          "committed": true,
+          "revision": 52
+        },
+        {
+          "sample": 21,
+          "startNs": 343895919623,
+          "endNs": 343898128797,
+          "committed": true,
+          "revision": 53
+        },
+        {
+          "sample": 22,
+          "startNs": 343898472204,
+          "endNs": 343900255333,
+          "committed": true,
+          "revision": 54
+        },
+        {
+          "sample": 23,
+          "startNs": 343900620245,
+          "endNs": 343902655146,
+          "committed": true,
+          "revision": 55
+        },
+        {
+          "sample": 24,
+          "startNs": 343902979659,
+          "endNs": 343905017573,
+          "committed": true,
+          "revision": 56
+        },
+        {
+          "sample": 25,
+          "startNs": 343905338872,
+          "endNs": 343906953457,
+          "committed": true,
+          "revision": 57
+        },
+        {
+          "sample": 26,
+          "startNs": 343907271751,
+          "endNs": 343909328052,
+          "committed": true,
+          "revision": 58
+        },
+        {
+          "sample": 27,
+          "startNs": 343909670732,
+          "endNs": 343911462060,
+          "committed": true,
+          "revision": 59
+        },
+        {
+          "sample": 28,
+          "startNs": 343911811216,
+          "endNs": 343913846278,
+          "committed": true,
+          "revision": 60
+        },
+        {
+          "sample": 29,
+          "startNs": 343914178967,
+          "endNs": 343915822506,
+          "committed": true,
+          "revision": 61
+        }
+      ],
+      "collectionStartNs": 343784154067,
+      "collectionEndNs": 343860819876,
+      "afterRootsNs": [
+        343834130451
+      ],
+      "finishStartNs": 343915837795,
+      "finishEndNs": 344124165426,
+      "firstDeleted": 0,
+      "finishDeleted": 4096,
+      "finalRevision": 61
+    }
+  },
+  {
+    "marker": "HISTORY_COLLECTION_EVIDENCE",
+    "data": {
+      "baseline": false,
+      "historicalRoots": 2000,
+      "detachedSources": 4096,
+      "writerSqlite": {
+        "page_size": 1024,
+        "auto_vacuum": 1,
+        "journal_mode": "wal",
+        "synchronous": 2
+      },
+      "collectionRootScans": 1,
+      "collectionMs": 232.780579,
+      "pausedConcurrentRootScans": 1,
+      "pausedScanSaves": 30,
+      "liveConcurrentRootScans": 2,
+      "liveCollectionAndSavesMs": 340.303992,
+      "liveFirstPassDeferred": true,
+      "observerNotifications": 33,
+      "pausedScanSaveP50Ms": 2.425823,
+      "pausedScanSaveP95Ms": 4.189086,
+      "pausedScanSaveMaxMs": 5.277678,
+      "pausedScanSaveSamplesMs": [
+        4.189086,
+        2.33475,
+        2.270105,
+        2.294284,
+        1.975256,
+        2.314186,
+        2.57492,
+        1.977355,
+        2.607154,
+        2.590584,
+        2.522278,
+        1.926353,
+        2.725288,
+        2.888031,
+        2.020805,
+        2.642646,
+        2.726395,
+        2.591561,
+        1.913122,
+        2.425823,
+        2.478686,
+        2.083568,
+        3.082652,
+        3.105868,
+        2.389245,
+        2.021323,
+        2.314681,
+        2.199043,
+        2.997571,
+        5.277678
+      ],
+      "liveSaveP50Ms": 2.056301,
+      "liveSaveP95Ms": 3.70441,
+      "liveSaveMaxMs": 5.24073,
+      "liveSaveSamplesMs": [
+        2.450337,
+        2.349695,
+        2.420543,
+        2.21291,
+        5.24073,
+        3.70441,
+        3.374955,
+        1.817771,
+        2.113663,
+        2.187811,
+        1.773057,
+        2.062883,
+        1.750706,
+        2.159288,
+        2.179825,
+        1.712271,
+        2.57058,
+        2.213698,
+        1.939557,
+        2.044978,
+        1.637209,
+        2.209174,
+        1.783129,
+        2.034901,
+        2.037914,
+        1.614585,
+        2.056301,
+        1.791328,
+        2.035062,
+        1.643539
+      ]
+    }
+  }
+]

@@ -1,0 +1,8 @@
+{
+  "uid": 1001,
+  "cpu_count": 4,
+  "kernel": "6.17.0-1022-azure",
+  "cpu_model": "INTEL(R) XEON(R) PLATINUM 8573C",
+  "memory_kib": "MemTotal:       16372440 kB",
+  "java": "openjdk version \"17.0.20.1\" 2026-08-18\nOpenJDK Runtime Environment Temurin-17.0.20.1+1 (build 17.0.20.1+1)\nOpenJDK 64-Bit Server VM Temurin-17.0.20.1+1 (build 17.0.20.1+1, mixed mode, sharing)"
+}

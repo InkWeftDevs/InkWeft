@@ -1,0 +1,7 @@
+side,path,bytes,sha256
+B,app/build/outputs/apk/debug/app-debug.apk,229655255,e198784caba4cbdd9bc35bd4e2da406d13901a47b72084aded98e747f8e3e774
+B,app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk,10308467,e2a9615d9a60456f380f4f4829f78e2a21d8976de3c217ecad68a37d55a15ab2
+B,data-local/build/outputs/apk/androidTest/debug/data-local-debug-androidTest.apk,22588360,91a1e2362270cfdb1f231bd6fbedaabc0e2af6f3db1e28fdad7a6c0d083cb44c
+C,app/build/outputs/apk/debug/app-debug.apk,229736415,45514a47cf2edc0a77bbf08f7c8b46d1eefdca284d23665d005ee6f7655364c9
+C,app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk,10550067,4973d1f656b2c71528ba859111c9e3b8c0d8557f3a400a4940dce7455e955a67
+C,data-local/build/outputs/apk/androidTest/debug/data-local-debug-androidTest.apk,23145496,d8689eb6dd798487010f0168581d6568cf8f9cbe89921556b6d155f533364fe5

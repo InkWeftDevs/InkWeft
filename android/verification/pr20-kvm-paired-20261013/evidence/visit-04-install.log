@@ -1,0 +1,9 @@
+org.inkweft.app.a0: uninstalled
+org.inkweft.app.a0.test: uninstalled
+org.inkweft.data.test: uninstalled
+app/build/outputs/apk/debug/app-debug.apk: Performing Streamed Install
+Success
+app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk: Performing Streamed Install
+Success
+data-local/build/outputs/apk/androidTest/debug/data-local-debug-androidTest.apk: Performing Streamed Install
+Success

@@ -1,0 +1,35 @@
+{
+  "baseline_git": "a128bb07e34cb82f00eeafc8e62a47bf7b95b128",
+  "candidate_git": "7949011ca2b84492f6438d275a09d28faef3b472",
+  "report_only_head": "320ca865ce17efeed1c112f115be57e1bd05a1fb",
+  "baseline_production_override": {
+    "path": "android/data-local/src/main/kotlin/org/inkweft/data/PreservingOpenHelperFactory.kt",
+    "from_git": "7949011ca2b84492f6438d275a09d28faef3b472",
+    "sha256": "a049af775caa688cd0dfd938acdf1539d34ee13de272ed35c930de9ef4e3d15d"
+  },
+  "candidate_production_overrides": [],
+  "common_probes": [
+    {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/KvmLibraryPairProbe.kt",
+      "from_candidate_path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibraryReadPerformanceTest.kt",
+      "bytes": 18281,
+      "sha256": "90525d56efe48b32441be890e29c021d0f699fe7d82389d1e049283cfb10f98c"
+    },
+    {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/KvmHistoryPairProbe.kt",
+      "from_candidate_path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/HistoryCollectionBenchmarkTest.kt",
+      "bytes": 12961,
+      "sha256": "b4998cd0a1f29658a4faf3ec61c3f02e43a4ad002caa4b3637ee55ddc3d25d5b"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/KvmLocalAppendPairProbe.kt",
+      "from_candidate_path": "android/app/src/androidTest/java/org/inkweft/app/TileLocalRedrawTest.kt",
+      "bytes": 12932,
+      "sha256": "a916d2470d54f069d1d6071d0b56a15ac6b07d05ab0b033d0aa7d4420fa74338"
+    }
+  ],
+  "status": "PREPARED_SOURCE_ONLY_NOT_COMPILED_NOT_RUN",
+  "workflows_added": false,
+  "git_branches_changed": false,
+  "native_executions": 0
+}

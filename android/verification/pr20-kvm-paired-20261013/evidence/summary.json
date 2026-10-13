@@ -1,0 +1,2077 @@
+{
+  "run_id": "38379928087",
+  "run_attempt": "1",
+  "workflow_sha": "371d461cc069f8a090ccc2f844068fae68e0770d",
+  "source_spec": {
+    "baseline_git": "a128bb07e34cb82f00eeafc8e62a47bf7b95b128",
+    "candidate_git": "7949011ca2b84492f6438d275a09d28faef3b472",
+    "report_only_head": "320ca865ce17efeed1c112f115be57e1bd05a1fb",
+    "baseline_production_override": {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/PreservingOpenHelperFactory.kt",
+      "from_git": "7949011ca2b84492f6438d275a09d28faef3b472",
+      "sha256": "a049af775caa688cd0dfd938acdf1539d34ee13de272ed35c930de9ef4e3d15d"
+    },
+    "candidate_production_overrides": [],
+    "common_probes": [
+      {
+        "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/KvmLibraryPairProbe.kt",
+        "from_candidate_path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibraryReadPerformanceTest.kt",
+        "bytes": 18281,
+        "sha256": "90525d56efe48b32441be890e29c021d0f699fe7d82389d1e049283cfb10f98c"
+      },
+      {
+        "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/KvmHistoryPairProbe.kt",
+        "from_candidate_path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/HistoryCollectionBenchmarkTest.kt",
+        "bytes": 12961,
+        "sha256": "b4998cd0a1f29658a4faf3ec61c3f02e43a4ad002caa4b3637ee55ddc3d25d5b"
+      },
+      {
+        "path": "android/app/src/androidTest/java/org/inkweft/app/KvmLocalAppendPairProbe.kt",
+        "from_candidate_path": "android/app/src/androidTest/java/org/inkweft/app/TileLocalRedrawTest.kt",
+        "bytes": 12932,
+        "sha256": "a916d2470d54f069d1d6071d0b56a15ac6b07d05ab0b033d0aa7d4420fa74338"
+      }
+    ],
+    "status": "PREPARED_SOURCE_ONLY_NOT_COMPILED_NOT_RUN",
+    "workflows_added": false,
+    "git_branches_changed": false,
+    "native_executions": 0
+  },
+  "protocol_sha256": "1065177d7809426d949c4b4b67bd639a47c3fc1943f706a77c2dfabb985e9aba",
+  "job_started_epoch": 1791885406,
+  "setup_cutoff_epoch": 1791886966,
+  "work_deadline_epoch": 1791888706,
+  "status": "EXECUTION_COMPLETE_ANALYSIS_PENDING",
+  "phases": [
+    {
+      "name": "source-fetch",
+      "status": "PASS",
+      "started_epoch": 1791885416.8622406,
+      "exit_code": 0,
+      "seconds": 0.36501002311706543
+    },
+    {
+      "name": "source-reconstruction",
+      "status": "PASS",
+      "started_epoch": 1791885417.227884,
+      "exit_code": 0,
+      "seconds": 2.9713571071624756
+    },
+    {
+      "name": "sdk",
+      "status": "PASS",
+      "started_epoch": 1791885421.3091848,
+      "exit_code": 0,
+      "seconds": 37.397141218185425
+    },
+    {
+      "name": "build-B",
+      "status": "PASS",
+      "started_epoch": 1791885458.8713655,
+      "exit_code": 0,
+      "seconds": 514.6073269844055
+    },
+    {
+      "name": "build-C",
+      "status": "PASS",
+      "started_epoch": 1791885975.6757252,
+      "exit_code": 0,
+      "seconds": 379.3379817008972
+    },
+    {
+      "name": "acceleration",
+      "status": "PASS",
+      "started_epoch": 1791886356.8191824,
+      "exit_code": 0,
+      "seconds": 0.032445430755615234
+    },
+    {
+      "name": "avd",
+      "status": "PASS",
+      "started_epoch": 1791886356.8522475,
+      "exit_code": 0,
+      "seconds": 1.2812068462371826
+    }
+  ],
+  "methods": [
+    {
+      "visit": 1,
+      "pair": 1,
+      "seed": 4101,
+      "side": "C",
+      "name": "local-append",
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "status": "PASS",
+      "started_epoch": 1791886387.4928024,
+      "seconds": 4.486210584640503,
+      "log_sha256": "901eec7b2048468e62de012b6456e37da4d77dc8aaaf0757a8e2466f3ee35c0b",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "junit_ok_counts": [
+        "1"
+      ],
+      "status_codes": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "fixtures": [
+        {
+          "label": "raster-1-before",
+          "seed": 4101,
+          "logicalSha256": "e42134ad686969604696eca0c8b1e509642eb8cb0f394806f4463a7a0c51b4f5",
+          "rowCounts": {
+            "notes": 1,
+            "note_revisions": 1,
+            "notebook_workspace": 1,
+            "notebook_pages": 1,
+            "ink_pages": 1,
+            "ink_strokes": 320,
+            "canvas_authoring": 1,
+            "page_layer_memberships": 320
+          },
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          }
+        },
+        {
+          "label": "raster-4-before",
+          "seed": 4101,
+          "logicalSha256": "ce90b22b09e96ba9c39c605ab6789cf87d488152388a36d473416cdbd9b4c241",
+          "rowCounts": {
+            "notes": 2,
+            "note_revisions": 2,
+            "notebook_workspace": 2,
+            "notebook_pages": 2,
+            "ink_pages": 2,
+            "ink_strokes": 641,
+            "canvas_authoring": 2,
+            "page_layer_memberships": 641
+          },
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          }
+        },
+        {
+          "label": "raster-8-before",
+          "seed": 4101,
+          "logicalSha256": "0df59d18c4c4dea150455471d713e6110524e93bbb78b82d0389c1ea29e36990",
+          "rowCounts": {
+            "notes": 3,
+            "note_revisions": 3,
+            "notebook_workspace": 3,
+            "notebook_pages": 3,
+            "ink_pages": 3,
+            "ink_strokes": 962,
+            "canvas_authoring": 3,
+            "page_layer_memberships": 962
+          },
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          }
+        }
+      ],
+      "processes_after": {
+        "org.inkweft.app.a0": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.app.a0.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.data.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "visit": 1,
+      "pair": 1,
+      "seed": 4101,
+      "side": "C",
+      "name": "library",
+      "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+      "status": "PASS",
+      "started_epoch": 1791886392.0280707,
+      "seconds": 39.68519043922424,
+      "log_sha256": "9d1e329c5083975febec36a286bda2b69eca57ba78c24256cc99ea99c5639584",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "junit_ok_counts": [
+        "1"
+      ],
+      "status_codes": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "fixtures": [
+        {
+          "label": "library-before",
+          "seed": 4101,
+          "logicalSha256": "1c69bba77781ba0c0b642309b8e869ff21c9a440fd7714894e67c572b95c9dcf",
+          "rowCounts": {
+            "notes": 501,
+            "note_revisions": 501,
+            "notebook_workspace": 501,
+            "notebook_pages": 20001,
+            "page_search_text": 20000,
+            "library_search_pending": 20000
+          },
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          }
+        }
+      ],
+      "processes_after": {
+        "org.inkweft.app.a0": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.app.a0.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.data.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "visit": 1,
+      "pair": 1,
+      "seed": 4101,
+      "side": "C",
+      "name": "history",
+      "selection": "org.inkweft.data.KvmHistoryPairProbe#collectLargeGarbageWithRootsAndConcurrentAuthorSaves",
+      "status": "PASS",
+      "started_epoch": 1791886431.7666068,
+      "seconds": 2.9700825214385986,
+      "log_sha256": "d603bbe09b953abb7a8fb353d6d51c6939e46f7b65f88d4c7b6aec3e9fb07e6b",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "junit_ok_counts": [
+        "1"
+      ],
+      "status_codes": [
+        1,
+        0,
+        0,
+        0,
+        0
+      ],
+      "fixtures": [
+        {
+          "label": "history-before",
+          "seed": 4101,
+          "logicalSha256": "e50251bc95a4ec61557d2588621e32d21dbbdb7033e247e54206fd635a2e1d70",
+          "rowCounts": {
+            "notes": 1,
+            "note_revisions": 1,
+            "notebook_workspace": 1,
+            "notebook_pages": 1,
+            "study_cards": 1,
+            "study_card_revisions": 2000,
+            "study_source_revisions": 6097,
+            "study_card_source_sets": 2000
+          },
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          }
+        }
+      ],
+      "processes_after": {
+        "org.inkweft.app.a0": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.app.a0.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.data.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "visit": 2,
+      "pair": 1,
+      "seed": 4101,
+      "side": "B",
+      "name": "local-append",
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "status": "PASS",
+      "started_epoch": 1791886437.5004442,
+      "seconds": 4.223646402359009,
+      "log_sha256": "d8d4980a053f52748208dc2f5a00187ccad19d96e4df310d05b5ae3f202c005f",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "junit_ok_counts": [
+        "1"
+      ],
+      "status_codes": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "fixtures": [
+        {
+          "label": "raster-1-before",
+          "seed": 4101,
+          "logicalSha256": "e42134ad686969604696eca0c8b1e509642eb8cb0f394806f4463a7a0c51b4f5",
+          "rowCounts": {
+            "notes": 1,
+            "note_revisions": 1,
+            "notebook_workspace": 1,
+            "notebook_pages": 1,
+            "ink_pages": 1,
+            "ink_strokes": 320,
+            "canvas_authoring": 1,
+            "page_layer_memberships": 320
+          },
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          }
+        },
+        {
+          "label": "raster-4-before",
+          "seed": 4101,
+          "logicalSha256": "ce90b22b09e96ba9c39c605ab6789cf87d488152388a36d473416cdbd9b4c241",
+          "rowCounts": {
+            "notes": 2,
+            "note_revisions": 2,
+            "notebook_workspace": 2,
+            "notebook_pages": 2,
+            "ink_pages": 2,
+            "ink_strokes": 641,
+            "canvas_authoring": 2,
+            "page_layer_memberships": 641
+          },
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          }
+        },
+        {
+          "label": "raster-8-before",
+          "seed": 4101,
+          "logicalSha256": "0df59d18c4c4dea150455471d713e6110524e93bbb78b82d0389c1ea29e36990",
+          "rowCounts": {
+            "notes": 3,
+            "note_revisions": 3,
+            "notebook_workspace": 3,
+            "notebook_pages": 3,
+            "ink_pages": 3,
+            "ink_strokes": 962,
+            "canvas_authoring": 3,
+            "page_layer_memberships": 962
+          },
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          }
+        }
+      ],
+      "processes_after": {
+        "org.inkweft.app.a0": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.app.a0.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.data.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "visit": 2,
+      "pair": 1,
+      "seed": 4101,
+      "side": "B",
+      "name": "library",
+      "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+      "status": "PASS",
+      "started_epoch": 1791886441.773239,
+      "seconds": 43.99045538902283,
+      "log_sha256": "c4fda95d54c7297962db22724ecc9eaf0f5aef2ef401951b97b8b27021449021",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "junit_ok_counts": [
+        "1"
+      ],
+      "status_codes": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "fixtures": [
+        {
+          "label": "library-before",
+          "seed": 4101,
+          "logicalSha256": "1c69bba77781ba0c0b642309b8e869ff21c9a440fd7714894e67c572b95c9dcf",
+          "rowCounts": {
+            "notes": 501,
+            "note_revisions": 501,
+            "notebook_workspace": 501,
+            "notebook_pages": 20001,
+            "page_search_text": 20000,
+            "library_search_pending": 20000
+          },
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          }
+        }
+      ],
+      "processes_after": {
+        "org.inkweft.app.a0": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.app.a0.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.data.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "visit": 2,
+      "pair": 1,
+      "seed": 4101,
+      "side": "B",
+      "name": "history",
+      "selection": "org.inkweft.data.KvmHistoryPairProbe#collectLargeGarbageWithRootsAndConcurrentAuthorSaves",
+      "status": "PASS",
+      "started_epoch": 1791886485.8137639,
+      "seconds": 5.624486207962036,
+      "log_sha256": "ef896f8f6377368d5ecd2700b9313bafa388c0ae12c26b9e06c3676819f41554",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "junit_ok_counts": [
+        "1"
+      ],
+      "status_codes": [
+        1,
+        0,
+        0,
+        0,
+        0
+      ],
+      "fixtures": [
+        {
+          "label": "history-before",
+          "seed": 4101,
+          "logicalSha256": "e50251bc95a4ec61557d2588621e32d21dbbdb7033e247e54206fd635a2e1d70",
+          "rowCounts": {
+            "notes": 1,
+            "note_revisions": 1,
+            "notebook_workspace": 1,
+            "notebook_pages": 1,
+            "study_cards": 1,
+            "study_card_revisions": 2000,
+            "study_source_revisions": 6097,
+            "study_card_source_sets": 2000
+          },
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          }
+        }
+      ],
+      "processes_after": {
+        "org.inkweft.app.a0": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.app.a0.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.data.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "visit": 3,
+      "pair": 2,
+      "seed": 4102,
+      "side": "B",
+      "name": "local-append",
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "status": "PASS",
+      "started_epoch": 1791886494.0668309,
+      "seconds": 4.0738890171051025,
+      "log_sha256": "f61f939b62a2f8a38c7ea65639f7236787c7f44f2372877e14cd661db298f635",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "junit_ok_counts": [
+        "1"
+      ],
+      "status_codes": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "fixtures": [
+        {
+          "label": "raster-1-before",
+          "seed": 4102,
+          "logicalSha256": "a041ece6c5b1a6fd1cbec080ffc738c6ad63b374516cb722d4266ca0023909df",
+          "rowCounts": {
+            "notes": 1,
+            "note_revisions": 1,
+            "notebook_workspace": 1,
+            "notebook_pages": 1,
+            "ink_pages": 1,
+            "ink_strokes": 320,
+            "canvas_authoring": 1,
+            "page_layer_memberships": 320
+          },
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          }
+        },
+        {
+          "label": "raster-4-before",
+          "seed": 4102,
+          "logicalSha256": "21519a3876f8f6c9ac6434a0111d1da10fec364ce0ea31ddefe6a0a2d2967386",
+          "rowCounts": {
+            "notes": 2,
+            "note_revisions": 2,
+            "notebook_workspace": 2,
+            "notebook_pages": 2,
+            "ink_pages": 2,
+            "ink_strokes": 641,
+            "canvas_authoring": 2,
+            "page_layer_memberships": 641
+          },
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          }
+        },
+        {
+          "label": "raster-8-before",
+          "seed": 4102,
+          "logicalSha256": "fd5134454ed2f4518823fb0265a0fe40c9089ce0c645bb5a39dde3af070cfc16",
+          "rowCounts": {
+            "notes": 3,
+            "note_revisions": 3,
+            "notebook_workspace": 3,
+            "notebook_pages": 3,
+            "ink_pages": 3,
+            "ink_strokes": 962,
+            "canvas_authoring": 3,
+            "page_layer_memberships": 962
+          },
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          }
+        }
+      ],
+      "processes_after": {
+        "org.inkweft.app.a0": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.app.a0.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.data.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "visit": 3,
+      "pair": 2,
+      "seed": 4102,
+      "side": "B",
+      "name": "library",
+      "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+      "status": "PASS",
+      "started_epoch": 1791886498.1880772,
+      "seconds": 44.79004502296448,
+      "log_sha256": "a08b652f6fc8495611eaf8ccd8777ee396fb8b427a4181b9eec1c3f51e42e434",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "junit_ok_counts": [
+        "1"
+      ],
+      "status_codes": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "fixtures": [
+        {
+          "label": "library-before",
+          "seed": 4102,
+          "logicalSha256": "40f13cbf979307a3db39146d7849d8af7fd9cfdbf9216f569d99565d8949bdc5",
+          "rowCounts": {
+            "notes": 501,
+            "note_revisions": 501,
+            "notebook_workspace": 501,
+            "notebook_pages": 20001,
+            "page_search_text": 20000,
+            "library_search_pending": 20000
+          },
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          }
+        }
+      ],
+      "processes_after": {
+        "org.inkweft.app.a0": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.app.a0.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.data.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "visit": 3,
+      "pair": 2,
+      "seed": 4102,
+      "side": "B",
+      "name": "history",
+      "selection": "org.inkweft.data.KvmHistoryPairProbe#collectLargeGarbageWithRootsAndConcurrentAuthorSaves",
+      "status": "PASS",
+      "started_epoch": 1791886543.0281227,
+      "seconds": 5.7249369621276855,
+      "log_sha256": "b6e1b019e151781114049d9218d750413915b9deaa9768749120859739fcb312",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "junit_ok_counts": [
+        "1"
+      ],
+      "status_codes": [
+        1,
+        0,
+        0,
+        0,
+        0
+      ],
+      "fixtures": [
+        {
+          "label": "history-before",
+          "seed": 4102,
+          "logicalSha256": "d92b3febd681f7b95b7e0f7a5bffb02fc01247ad26eac4bcd647f98a688b5eed",
+          "rowCounts": {
+            "notes": 1,
+            "note_revisions": 1,
+            "notebook_workspace": 1,
+            "notebook_pages": 1,
+            "study_cards": 1,
+            "study_card_revisions": 2000,
+            "study_source_revisions": 6097,
+            "study_card_source_sets": 2000
+          },
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          }
+        }
+      ],
+      "processes_after": {
+        "org.inkweft.app.a0": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.app.a0.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.data.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "visit": 4,
+      "pair": 2,
+      "seed": 4102,
+      "side": "C",
+      "name": "local-append",
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "status": "PASS",
+      "started_epoch": 1791886551.395406,
+      "seconds": 4.174630403518677,
+      "log_sha256": "6be3b3625a524e3b39ae0f6810d3f88d7cc25435a1cb631104527b4b51d426be",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "junit_ok_counts": [
+        "1"
+      ],
+      "status_codes": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "fixtures": [
+        {
+          "label": "raster-1-before",
+          "seed": 4102,
+          "logicalSha256": "a041ece6c5b1a6fd1cbec080ffc738c6ad63b374516cb722d4266ca0023909df",
+          "rowCounts": {
+            "notes": 1,
+            "note_revisions": 1,
+            "notebook_workspace": 1,
+            "notebook_pages": 1,
+            "ink_pages": 1,
+            "ink_strokes": 320,
+            "canvas_authoring": 1,
+            "page_layer_memberships": 320
+          },
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          }
+        },
+        {
+          "label": "raster-4-before",
+          "seed": 4102,
+          "logicalSha256": "21519a3876f8f6c9ac6434a0111d1da10fec364ce0ea31ddefe6a0a2d2967386",
+          "rowCounts": {
+            "notes": 2,
+            "note_revisions": 2,
+            "notebook_workspace": 2,
+            "notebook_pages": 2,
+            "ink_pages": 2,
+            "ink_strokes": 641,
+            "canvas_authoring": 2,
+            "page_layer_memberships": 641
+          },
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          }
+        },
+        {
+          "label": "raster-8-before",
+          "seed": 4102,
+          "logicalSha256": "fd5134454ed2f4518823fb0265a0fe40c9089ce0c645bb5a39dde3af070cfc16",
+          "rowCounts": {
+            "notes": 3,
+            "note_revisions": 3,
+            "notebook_workspace": 3,
+            "notebook_pages": 3,
+            "ink_pages": 3,
+            "ink_strokes": 962,
+            "canvas_authoring": 3,
+            "page_layer_memberships": 962
+          },
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          }
+        }
+      ],
+      "processes_after": {
+        "org.inkweft.app.a0": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.app.a0.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.data.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "visit": 4,
+      "pair": 2,
+      "seed": 4102,
+      "side": "C",
+      "name": "library",
+      "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+      "status": "PASS",
+      "started_epoch": 1791886555.617434,
+      "seconds": 38.88307523727417,
+      "log_sha256": "7af4fac2d84050d2e81f685f8efcedfbaf06a59230bb15c31d7c387c31840b5e",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "junit_ok_counts": [
+        "1"
+      ],
+      "status_codes": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "fixtures": [
+        {
+          "label": "library-before",
+          "seed": 4102,
+          "logicalSha256": "40f13cbf979307a3db39146d7849d8af7fd9cfdbf9216f569d99565d8949bdc5",
+          "rowCounts": {
+            "notes": 501,
+            "note_revisions": 501,
+            "notebook_workspace": 501,
+            "notebook_pages": 20001,
+            "page_search_text": 20000,
+            "library_search_pending": 20000
+          },
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          }
+        }
+      ],
+      "processes_after": {
+        "org.inkweft.app.a0": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.app.a0.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.data.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "visit": 4,
+      "pair": 2,
+      "seed": 4102,
+      "side": "C",
+      "name": "history",
+      "selection": "org.inkweft.data.KvmHistoryPairProbe#collectLargeGarbageWithRootsAndConcurrentAuthorSaves",
+      "status": "PASS",
+      "started_epoch": 1791886594.551422,
+      "seconds": 2.9202253818511963,
+      "log_sha256": "484e14d753daa05e02b507209b4b101c5cc251488f034952226b2e1887962dc3",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "junit_ok_counts": [
+        "1"
+      ],
+      "status_codes": [
+        1,
+        0,
+        0,
+        0,
+        0
+      ],
+      "fixtures": [
+        {
+          "label": "history-before",
+          "seed": 4102,
+          "logicalSha256": "d92b3febd681f7b95b7e0f7a5bffb02fc01247ad26eac4bcd647f98a688b5eed",
+          "rowCounts": {
+            "notes": 1,
+            "note_revisions": 1,
+            "notebook_workspace": 1,
+            "notebook_pages": 1,
+            "study_cards": 1,
+            "study_card_revisions": 2000,
+            "study_source_revisions": 6097,
+            "study_card_source_sets": 2000
+          },
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          }
+        }
+      ],
+      "processes_after": {
+        "org.inkweft.app.a0": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.app.a0.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.data.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "visit": 5,
+      "pair": 3,
+      "seed": 4103,
+      "side": "B",
+      "name": "local-append",
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "status": "PASS",
+      "started_epoch": 1791886600.1071982,
+      "seconds": 4.152327537536621,
+      "log_sha256": "b1ebbd5ff52dadaab67f5966ea5e720f3dad276000361e1c5c1f786a3e98626b",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "junit_ok_counts": [
+        "1"
+      ],
+      "status_codes": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "fixtures": [
+        {
+          "label": "raster-1-before",
+          "seed": 4103,
+          "logicalSha256": "dab1c2e0041b38f5d3ffd8c89e17ee9fff375a4f41bec6ac426e34b8c69386c9",
+          "rowCounts": {
+            "notes": 1,
+            "note_revisions": 1,
+            "notebook_workspace": 1,
+            "notebook_pages": 1,
+            "ink_pages": 1,
+            "ink_strokes": 320,
+            "canvas_authoring": 1,
+            "page_layer_memberships": 320
+          },
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          }
+        },
+        {
+          "label": "raster-4-before",
+          "seed": 4103,
+          "logicalSha256": "5ad5ed9192a0eeb43b6978c2ae8d5a410fef1ab67099888cdd62f643511d50e8",
+          "rowCounts": {
+            "notes": 2,
+            "note_revisions": 2,
+            "notebook_workspace": 2,
+            "notebook_pages": 2,
+            "ink_pages": 2,
+            "ink_strokes": 641,
+            "canvas_authoring": 2,
+            "page_layer_memberships": 641
+          },
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          }
+        },
+        {
+          "label": "raster-8-before",
+          "seed": 4103,
+          "logicalSha256": "f1107ae9b0de2b2bd16830b423bc32aa9b8f890d6c91bb54bd1b00f4ec4f900d",
+          "rowCounts": {
+            "notes": 3,
+            "note_revisions": 3,
+            "notebook_workspace": 3,
+            "notebook_pages": 3,
+            "ink_pages": 3,
+            "ink_strokes": 962,
+            "canvas_authoring": 3,
+            "page_layer_memberships": 962
+          },
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          }
+        }
+      ],
+      "processes_after": {
+        "org.inkweft.app.a0": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.app.a0.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.data.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "visit": 5,
+      "pair": 3,
+      "seed": 4103,
+      "side": "B",
+      "name": "library",
+      "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+      "status": "PASS",
+      "started_epoch": 1791886604.3083138,
+      "seconds": 44.592562675476074,
+      "log_sha256": "0ad74c84458a62e4e8a72ee519940c2eef8180519c747db7c796eb9112e0733b",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "junit_ok_counts": [
+        "1"
+      ],
+      "status_codes": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "fixtures": [
+        {
+          "label": "library-before",
+          "seed": 4103,
+          "logicalSha256": "9322d8eff726e4dea3987ebf016c4700cab0351a8d7344e29d10306075f4a5f4",
+          "rowCounts": {
+            "notes": 501,
+            "note_revisions": 501,
+            "notebook_workspace": 501,
+            "notebook_pages": 20001,
+            "page_search_text": 20000,
+            "library_search_pending": 20000
+          },
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          }
+        }
+      ],
+      "processes_after": {
+        "org.inkweft.app.a0": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.app.a0.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.data.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "visit": 5,
+      "pair": 3,
+      "seed": 4103,
+      "side": "B",
+      "name": "history",
+      "selection": "org.inkweft.data.KvmHistoryPairProbe#collectLargeGarbageWithRootsAndConcurrentAuthorSaves",
+      "status": "PASS",
+      "started_epoch": 1791886648.9504378,
+      "seconds": 5.675574541091919,
+      "log_sha256": "e34e146177b197a018fe38b3dab67838e7093a6fc5e69e562b9773fef6c33852",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "junit_ok_counts": [
+        "1"
+      ],
+      "status_codes": [
+        1,
+        0,
+        0,
+        0,
+        0
+      ],
+      "fixtures": [
+        {
+          "label": "history-before",
+          "seed": 4103,
+          "logicalSha256": "c2b159054ad87ce78b235cb400a21e672db3b27d169dad7dbefeeccb516988c4",
+          "rowCounts": {
+            "notes": 1,
+            "note_revisions": 1,
+            "notebook_workspace": 1,
+            "notebook_pages": 1,
+            "study_cards": 1,
+            "study_card_revisions": 2000,
+            "study_source_revisions": 6097,
+            "study_card_source_sets": 2000
+          },
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          }
+        }
+      ],
+      "processes_after": {
+        "org.inkweft.app.a0": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.app.a0.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.data.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "visit": 6,
+      "pair": 3,
+      "seed": 4103,
+      "side": "C",
+      "name": "local-append",
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "status": "PASS",
+      "started_epoch": 1791886657.224703,
+      "seconds": 4.073278188705444,
+      "log_sha256": "d98df5aba73bfd207b418e56d4664dd049e4687bbd3aa0ecffd113b8eedb8be1",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "junit_ok_counts": [
+        "1"
+      ],
+      "status_codes": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "fixtures": [
+        {
+          "label": "raster-1-before",
+          "seed": 4103,
+          "logicalSha256": "dab1c2e0041b38f5d3ffd8c89e17ee9fff375a4f41bec6ac426e34b8c69386c9",
+          "rowCounts": {
+            "notes": 1,
+            "note_revisions": 1,
+            "notebook_workspace": 1,
+            "notebook_pages": 1,
+            "ink_pages": 1,
+            "ink_strokes": 320,
+            "canvas_authoring": 1,
+            "page_layer_memberships": 320
+          },
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          }
+        },
+        {
+          "label": "raster-4-before",
+          "seed": 4103,
+          "logicalSha256": "5ad5ed9192a0eeb43b6978c2ae8d5a410fef1ab67099888cdd62f643511d50e8",
+          "rowCounts": {
+            "notes": 2,
+            "note_revisions": 2,
+            "notebook_workspace": 2,
+            "notebook_pages": 2,
+            "ink_pages": 2,
+            "ink_strokes": 641,
+            "canvas_authoring": 2,
+            "page_layer_memberships": 641
+          },
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          }
+        },
+        {
+          "label": "raster-8-before",
+          "seed": 4103,
+          "logicalSha256": "f1107ae9b0de2b2bd16830b423bc32aa9b8f890d6c91bb54bd1b00f4ec4f900d",
+          "rowCounts": {
+            "notes": 3,
+            "note_revisions": 3,
+            "notebook_workspace": 3,
+            "notebook_pages": 3,
+            "ink_pages": 3,
+            "ink_strokes": 962,
+            "canvas_authoring": 3,
+            "page_layer_memberships": 962
+          },
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          }
+        }
+      ],
+      "processes_after": {
+        "org.inkweft.app.a0": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.app.a0.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.data.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "visit": 6,
+      "pair": 3,
+      "seed": 4103,
+      "side": "C",
+      "name": "library",
+      "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+      "status": "PASS",
+      "started_epoch": 1791886661.34632,
+      "seconds": 39.63594675064087,
+      "log_sha256": "2aeeaa27c850e0b9cafd8342369eddf2077f3bd9adf06aab2c3da2fce341a243",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "junit_ok_counts": [
+        "1"
+      ],
+      "status_codes": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "fixtures": [
+        {
+          "label": "library-before",
+          "seed": 4103,
+          "logicalSha256": "9322d8eff726e4dea3987ebf016c4700cab0351a8d7344e29d10306075f4a5f4",
+          "rowCounts": {
+            "notes": 501,
+            "note_revisions": 501,
+            "notebook_workspace": 501,
+            "notebook_pages": 20001,
+            "page_search_text": 20000,
+            "library_search_pending": 20000
+          },
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          }
+        }
+      ],
+      "processes_after": {
+        "org.inkweft.app.a0": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.app.a0.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.data.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "visit": 6,
+      "pair": 3,
+      "seed": 4103,
+      "side": "C",
+      "name": "history",
+      "selection": "org.inkweft.data.KvmHistoryPairProbe#collectLargeGarbageWithRootsAndConcurrentAuthorSaves",
+      "status": "PASS",
+      "started_epoch": 1791886701.0313342,
+      "seconds": 2.920698881149292,
+      "log_sha256": "b2a59e17ceb5b30a3576ee5b383c01b5741f59bb5cde66efa91f323bb02efc53",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "junit_ok_counts": [
+        "1"
+      ],
+      "status_codes": [
+        1,
+        0,
+        0,
+        0,
+        0
+      ],
+      "fixtures": [
+        {
+          "label": "history-before",
+          "seed": 4103,
+          "logicalSha256": "c2b159054ad87ce78b235cb400a21e672db3b27d169dad7dbefeeccb516988c4",
+          "rowCounts": {
+            "notes": 1,
+            "note_revisions": 1,
+            "notebook_workspace": 1,
+            "notebook_pages": 1,
+            "study_cards": 1,
+            "study_card_revisions": 2000,
+            "study_source_revisions": 6097,
+            "study_card_source_sets": 2000
+          },
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          }
+        }
+      ],
+      "processes_after": {
+        "org.inkweft.app.a0": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.app.a0.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.data.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "visit": 7,
+      "pair": 4,
+      "seed": 4104,
+      "side": "C",
+      "name": "local-append",
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "status": "PASS",
+      "started_epoch": 1791886706.628096,
+      "seconds": 4.073944568634033,
+      "log_sha256": "c45bf3fc283eae2e10cedb6918bce0b8bceca82c20ea54226624e356f64e20fa",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "junit_ok_counts": [
+        "1"
+      ],
+      "status_codes": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "fixtures": [
+        {
+          "label": "raster-1-before",
+          "seed": 4104,
+          "logicalSha256": "3b22700197bc4a81a3676386a52337b08263d01f28ea83f33f3303ecea9ceea4",
+          "rowCounts": {
+            "notes": 1,
+            "note_revisions": 1,
+            "notebook_workspace": 1,
+            "notebook_pages": 1,
+            "ink_pages": 1,
+            "ink_strokes": 320,
+            "canvas_authoring": 1,
+            "page_layer_memberships": 320
+          },
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          }
+        },
+        {
+          "label": "raster-4-before",
+          "seed": 4104,
+          "logicalSha256": "0f853304b0164070ce18cd74c855e4a926c3481b1eab24f3830ea85dc9c57fe8",
+          "rowCounts": {
+            "notes": 2,
+            "note_revisions": 2,
+            "notebook_workspace": 2,
+            "notebook_pages": 2,
+            "ink_pages": 2,
+            "ink_strokes": 641,
+            "canvas_authoring": 2,
+            "page_layer_memberships": 641
+          },
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          }
+        },
+        {
+          "label": "raster-8-before",
+          "seed": 4104,
+          "logicalSha256": "8f3d7c1e08bee55f9efa2504f70b3b7fe346e15a76b8b16a15043bca5e21dbf2",
+          "rowCounts": {
+            "notes": 3,
+            "note_revisions": 3,
+            "notebook_workspace": 3,
+            "notebook_pages": 3,
+            "ink_pages": 3,
+            "ink_strokes": 962,
+            "canvas_authoring": 3,
+            "page_layer_memberships": 962
+          },
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          }
+        }
+      ],
+      "processes_after": {
+        "org.inkweft.app.a0": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.app.a0.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.data.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "visit": 7,
+      "pair": 4,
+      "seed": 4104,
+      "side": "C",
+      "name": "library",
+      "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+      "status": "PASS",
+      "started_epoch": 1791886710.7514343,
+      "seconds": 39.18425750732422,
+      "log_sha256": "58707af26a89e4c32252242e93369129de167fd3c692e0c2e14151ae73ce1890",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "junit_ok_counts": [
+        "1"
+      ],
+      "status_codes": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "fixtures": [
+        {
+          "label": "library-before",
+          "seed": 4104,
+          "logicalSha256": "77bfe6ade61386e8bcf755c3735ead8dd0bc8e2f14a6f4d430cac81d4d279042",
+          "rowCounts": {
+            "notes": 501,
+            "note_revisions": 501,
+            "notebook_workspace": 501,
+            "notebook_pages": 20001,
+            "page_search_text": 20000,
+            "library_search_pending": 20000
+          },
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          }
+        }
+      ],
+      "processes_after": {
+        "org.inkweft.app.a0": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.app.a0.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.data.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "visit": 7,
+      "pair": 4,
+      "seed": 4104,
+      "side": "C",
+      "name": "history",
+      "selection": "org.inkweft.data.KvmHistoryPairProbe#collectLargeGarbageWithRootsAndConcurrentAuthorSaves",
+      "status": "PASS",
+      "started_epoch": 1791886749.9867308,
+      "seconds": 2.921447515487671,
+      "log_sha256": "d90b90c93aa386683ada14687d51b97766195acb923339e44e8f3c331d13d597",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "junit_ok_counts": [
+        "1"
+      ],
+      "status_codes": [
+        1,
+        0,
+        0,
+        0,
+        0
+      ],
+      "fixtures": [
+        {
+          "label": "history-before",
+          "seed": 4104,
+          "logicalSha256": "dae95bf2a4c2b8e663ed7af7816ab5cb824bcdaa9ac6a9bcba60defe627c4310",
+          "rowCounts": {
+            "notes": 1,
+            "note_revisions": 1,
+            "notebook_workspace": 1,
+            "notebook_pages": 1,
+            "study_cards": 1,
+            "study_card_revisions": 2000,
+            "study_source_revisions": 6097,
+            "study_card_source_sets": 2000
+          },
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          }
+        }
+      ],
+      "processes_after": {
+        "org.inkweft.app.a0": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.app.a0.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.data.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "visit": 8,
+      "pair": 4,
+      "seed": 4104,
+      "side": "B",
+      "name": "local-append",
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "status": "PASS",
+      "started_epoch": 1791886755.4896579,
+      "seconds": 4.224123954772949,
+      "log_sha256": "a1c19862311859e5eeafb385b9c90f5e3e93cc0053270c484661bf3cbce5df35",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "junit_ok_counts": [
+        "1"
+      ],
+      "status_codes": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "fixtures": [
+        {
+          "label": "raster-1-before",
+          "seed": 4104,
+          "logicalSha256": "3b22700197bc4a81a3676386a52337b08263d01f28ea83f33f3303ecea9ceea4",
+          "rowCounts": {
+            "notes": 1,
+            "note_revisions": 1,
+            "notebook_workspace": 1,
+            "notebook_pages": 1,
+            "ink_pages": 1,
+            "ink_strokes": 320,
+            "canvas_authoring": 1,
+            "page_layer_memberships": 320
+          },
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          }
+        },
+        {
+          "label": "raster-4-before",
+          "seed": 4104,
+          "logicalSha256": "0f853304b0164070ce18cd74c855e4a926c3481b1eab24f3830ea85dc9c57fe8",
+          "rowCounts": {
+            "notes": 2,
+            "note_revisions": 2,
+            "notebook_workspace": 2,
+            "notebook_pages": 2,
+            "ink_pages": 2,
+            "ink_strokes": 641,
+            "canvas_authoring": 2,
+            "page_layer_memberships": 641
+          },
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          }
+        },
+        {
+          "label": "raster-8-before",
+          "seed": 4104,
+          "logicalSha256": "8f3d7c1e08bee55f9efa2504f70b3b7fe346e15a76b8b16a15043bca5e21dbf2",
+          "rowCounts": {
+            "notes": 3,
+            "note_revisions": 3,
+            "notebook_workspace": 3,
+            "notebook_pages": 3,
+            "ink_pages": 3,
+            "ink_strokes": 962,
+            "canvas_authoring": 3,
+            "page_layer_memberships": 962
+          },
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          }
+        }
+      ],
+      "processes_after": {
+        "org.inkweft.app.a0": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.app.a0.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.data.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "visit": 8,
+      "pair": 4,
+      "seed": 4104,
+      "side": "B",
+      "name": "library",
+      "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+      "status": "PASS",
+      "started_epoch": 1791886759.763034,
+      "seconds": 44.843411684036255,
+      "log_sha256": "1ec0aaead512ba8acbdd0f47caf073d1fa60da67d4618b66b69d5787f65e5605",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "junit_ok_counts": [
+        "1"
+      ],
+      "status_codes": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "fixtures": [
+        {
+          "label": "library-before",
+          "seed": 4104,
+          "logicalSha256": "77bfe6ade61386e8bcf755c3735ead8dd0bc8e2f14a6f4d430cac81d4d279042",
+          "rowCounts": {
+            "notes": 501,
+            "note_revisions": 501,
+            "notebook_workspace": 501,
+            "notebook_pages": 20001,
+            "page_search_text": 20000,
+            "library_search_pending": 20000
+          },
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          }
+        }
+      ],
+      "processes_after": {
+        "org.inkweft.app.a0": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.app.a0.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.data.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "visit": 8,
+      "pair": 4,
+      "seed": 4104,
+      "side": "B",
+      "name": "history",
+      "selection": "org.inkweft.data.KvmHistoryPairProbe#collectLargeGarbageWithRootsAndConcurrentAuthorSaves",
+      "status": "PASS",
+      "started_epoch": 1791886804.6579647,
+      "seconds": 5.725515365600586,
+      "log_sha256": "594e142d86e1978fc82049dfeef8a1150e8485aead5b6267d119388fa1a8a6b0",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "junit_ok_counts": [
+        "1"
+      ],
+      "status_codes": [
+        1,
+        0,
+        0,
+        0,
+        0
+      ],
+      "fixtures": [
+        {
+          "label": "history-before",
+          "seed": 4104,
+          "logicalSha256": "dae95bf2a4c2b8e663ed7af7816ab5cb824bcdaa9ac6a9bcba60defe627c4310",
+          "rowCounts": {
+            "notes": 1,
+            "note_revisions": 1,
+            "notebook_workspace": 1,
+            "notebook_pages": 1,
+            "study_cards": 1,
+            "study_card_revisions": 2000,
+            "study_source_revisions": 6097,
+            "study_card_source_sets": 2000
+          },
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          }
+        }
+      ],
+      "processes_after": {
+        "org.inkweft.app.a0": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.app.a0.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.data.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      }
+    }
+  ],
+  "scope": "Four pairs on one KVM emulator; debug synthetic workload only. Raw observations do not prove absence of all performance regressions.",
+  "setup_seconds": 978.7945694923401,
+  "cleanup_verified": true
+}
