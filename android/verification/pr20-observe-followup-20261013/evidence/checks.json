@@ -1,0 +1,46 @@
+{
+  "baseline": "cd98df001715c4a5d68f15b5ac8dce931dbd146e",
+  "scope": "cloud offline compilation and JVM behavior; no Android execution",
+  "final_command": [
+    "bash",
+    "/workspace/scratch/run-inkweft-gradle-pan",
+    "--offline",
+    ":data-local:testDebugUnitTest",
+    ":data-local:compileDebugAndroidTestKotlin",
+    ":app:compileDebugAndroidTestKotlin"
+  ],
+  "working_directory": "/workspace/InkWeft/android",
+  "max_workers": 1,
+  "jdk": "17.0.16+8",
+  "gradle": "9.4.1",
+  "final_exit_code": 0,
+  "final_build_result": "BUILD SUCCESSFUL in 4m 58s",
+  "final_jvm": {
+    "tests": 28,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "new_observation_tests": 8,
+  "mutant_failed_tests": 7,
+  "initial_check_note": "Initial data build passed before two extra assertions were added; final JVM XML validates all final assertions.",
+  "device_room": "NOT_RUN",
+  "device_ui": "NOT_RUN",
+  "native_performance": "NOT_RUN",
+  "new_kvm_or_github_run": false,
+  "unchanged_from_baseline": [
+    "android/verification/pr20-kvm-paired-20261013",
+    "android/verification/pr20-kvm-second-20261013",
+    "backup-server",
+    ".github",
+    "android/data-local/src/main/kotlin/org/inkweft/data/HistoryStorage.kt",
+    "android/app/src/main/java/org/inkweft/app/StreamedInkRaster.kt",
+    "android/app/src/main/java/org/inkweft/app/LibraryScreen.kt"
+  ],
+  "workflow_sha256": {
+    ".github/workflows/android-a0.yml": "93152771ed075686b2ddc744cb17c9200f144d2a87bc2bf988049eec77883ae7",
+    ".github/workflows/android-runner-diagnostics.yml": "2a8b334c321d367058b8c624c2bab08458969a3a71044a0658be6801d7293b63",
+    ".github/workflows/android-six-batches.yml": "09cab4d9091e4964e775cc7b406fb257b2f51e34251b74f1165379fb4a86fac8",
+    ".github/workflows/android-source-snapshot.yml": "e982a61c52a37b5a31f61941a66b0eb80c17eab45dbb2ebfcc31b9037eda7c4d"
+  }
+}

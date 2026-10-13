@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="org.inkweft.data.StorageValidationTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-10-13T11:04:46.803Z" hostname="de1aed537721" time="0.029">
+  <properties/>
+  <testcase name="boundedValidationMemoryEvictsLeastRecentlyUsedProofsAndRechecksThem" classname="org.inkweft.data.StorageValidationTest" time="0.014"/>
+  <testcase name="invalidChangedBytesNeverBecomeTrustedEvenAfterRepeatedFailures" classname="org.inkweft.data.StorageValidationTest" time="0.002"/>
+  <testcase name="geometryAndObjectIdentityDoNotRepeatSuccessfulContentDecoding" classname="org.inkweft.data.StorageValidationTest" time="0.002"/>
+  <testcase name="concurrentSavesShareOnlyCompletedContentValidation" classname="org.inkweft.data.StorageValidationTest" time="0.006"/>
+  <testcase name="changedOriginalCannotPassTheTransactionalWriterUsingAnEarlierValidationDigest" classname="org.inkweft.data.StorageValidationTest" time="0.005"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

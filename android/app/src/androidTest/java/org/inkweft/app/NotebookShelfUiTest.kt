@@ -133,6 +133,69 @@ class NotebookShelfUiTest {
         compose.onNodeWithTag("save-text").performClick();compose.waitUntil(10_000){runBlocking{app.repository.read(n.id)?.text}=="未保存的个人理解，不随改名提交"}
         assertEquals("新的标题但保留草稿",runBlocking{app.repository.read(n.id)?.title})
     }
+    @Test fun pageSourceEditResetsSecondShelfPageWithoutDirectoryChanges(){
+        ready()
+        val query="source-only-"+UUID.randomUUID()
+        val titlePrefix="来源分页-"+UUID.randomUUID().toString().take(8)
+        val notes=runBlocking{List(65){index->
+            app.workspaceRepository.create("$titlePrefix ${index.toString().padStart(3,'0')}",false,PaperStyle.BLANK).also{note->
+                assertTrue(app.pages.saveSearchText(note.id,0,query))
+            }
+        }}
+        val fixtureIds=notes.map{it.id}.toSet()
+        val (workspace,notebook)=compose.runOnIdle{
+            val store=compose.activity.viewModelStore
+            val owned=store.keys().mapNotNull{store.get(it)}
+            owned.filterIsInstance<WorkspaceViewModel>().single() to owned.filterIsInstance<NotebookViewModel>().single()
+        }
+        compose.onNodeWithTag("library-search").performTextReplacement(query);noKeyboard()
+        fun pageReady(offset:Int,count:Int)=workspace.librarySearch.value.let{
+            !it.failed&&it.query==query&&it.offset==offset&&it.items.size==count&&it.pendingIndex==0&&it.sourceVersion>0
+        }
+        compose.waitUntil(30_000){
+            pageReady(0,60)&&notebook.ui.value.notes.map{it.id}.containsAll(fixtureIds)&&workspace.entries.value.keys.containsAll(fixtureIds)&&runCatching{
+                compose.onNodeWithTag("library-next-page").assertIsEnabled()
+                compose.onNodeWithTag("library-previous-page").assertIsNotEnabled()
+                compose.onNodeWithText("第 1 页").assertExists()
+            }.isSuccess
+        }
+        val first=workspace.librarySearch.value
+        val removed=first.items.first()
+        assertTrue(removed.note.id in fixtureIds);assertEquals(removed.note.id,removed.pageId)
+        compose.onNodeWithTag("library-next-page").performClick()
+        compose.waitUntil(10_000){pageReady(60,5)&&workspace.librarySearch.value.sourceVersion==first.sourceVersion&&runCatching{
+            compose.onNodeWithTag("library-previous-page").assertIsEnabled()
+            compose.onNodeWithTag("library-next-page").assertIsNotEnabled()
+            compose.onNodeWithText("第 2 页").assertExists()
+        }.isSuccess}
+        val headersBefore=notebook.ui.value.notes;val draftsBefore=notebook.ui.value.drafts;val entriesBefore=workspace.entries.value
+        val authorBefore=runBlocking{checkNotNull(app.repository.read(removed.note.id))}
+        assertEquals("",authorBefore.text);assertFalse(authorBefore.title.contains(query))
+        // Only page_search_text changes: notes/drafts/workspace are remember keys that
+        // would otherwise reset pagination and hide a missing sourceVersion reset.
+        val replacement="不再匹配的页面原文"
+        runBlocking{assertTrue(app.pages.saveSearchText(checkNotNull(removed.pageId),0,replacement))}
+        compose.waitUntil(10_000){pageReady(0,60)&&workspace.librarySearch.value.sourceVersion>first.sourceVersion&&runCatching{
+            compose.onNodeWithTag("library-previous-page").assertIsNotEnabled()
+            compose.onNodeWithTag("library-next-page").assertIsEnabled()
+            compose.onNodeWithText("第 1 页").assertExists()
+            compose.onNodeWithText("第 2 页").assertDoesNotExist()
+        }.isSuccess}
+        val reset=workspace.librarySearch.value
+        assertFalse(reset.items.any{it.note.id==removed.note.id})
+        assertEquals(authorBefore,runBlocking{app.repository.read(removed.note.id)})
+        assertEquals(replacement,runBlocking{app.pages.searchText(checkNotNull(removed.pageId))?.text})
+        compose.onNodeWithTag("library-next-page").performClick()
+        compose.waitUntil(10_000){pageReady(60,4)&&workspace.librarySearch.value.sourceVersion==reset.sourceVersion&&runCatching{
+            compose.onNodeWithTag("library-previous-page").assertIsEnabled()
+            compose.onNodeWithTag("library-next-page").assertIsNotEnabled()
+            compose.onNodeWithText("第 2 页").assertExists()
+        }.isSuccess}
+        val shownIds=reset.items.map{it.note.id}+workspace.librarySearch.value.items.map{it.note.id}
+        assertEquals(64,shownIds.distinct().size);assertEquals(fixtureIds-removed.note.id,shownIds.toSet())
+        assertEquals(headersBefore,notebook.ui.value.notes);assertEquals(draftsBefore,notebook.ui.value.drafts)
+        assertEquals(entriesBefore,workspace.entries.value)
+    }
     @Test fun drawerUsesOneSearchAndClosesWithBackWithAnimationsEnabled(){
         val automation=InstrumentationRegistry.getInstrumentation().uiAutomation
         fun shell(c:String):String=automation.executeShellCommand(c).use{android.os.ParcelFileDescriptor.AutoCloseInputStream(it).use{input->input.readBytes().toString(Charsets.UTF_8).trim()}}

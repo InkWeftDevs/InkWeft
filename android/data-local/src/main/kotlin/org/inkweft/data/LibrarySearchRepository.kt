@@ -28,25 +28,16 @@ class LibrarySearchRepository(private val db:NoteDatabase) {
     internal var readObserver:((String,Int,Int)->Unit)?=null
     internal var queryPlanObserver:((List<String>)->Unit)?=null
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     fun observe(requests:Flow<LibrarySearchRequest>):Flow<LibrarySearchResult> = channelFlow {
-        var previous:LibrarySearchRequest?=null
+        val observation=LibrarySearchObservation(::read)
         val completed=MutableStateFlow(0);var indexed=0
         launch(Dispatchers.IO){db.invalidationTracker.createFlow("page_search_text","study_cards").collectLatest{
-            LibraryTextIndex.build(db,onFirstBatchStep=indexFirstBatchStepObserver){indexed+=it;indexObserver?.invoke(previous?.query.orEmpty(),indexed)}
+            LibraryTextIndex.build(db,onFirstBatchStep=indexFirstBatchStepObserver){indexed+=it;indexObserver?.invoke(observation.query,indexed)}
             completed.value++
         }}
-        combine(requests,db.invalidationTracker.createFlow(
+        observation.results(requests,db.invalidationTracker.createFlow(
             "notes","notebook_workspace","notebook_pages","page_search_text","ink_pages","study_cards"
-        ).runningFold(0L){version,_->version+1},completed){request,version,_->request to version}.mapLatest{(request,version)->
-            val before=previous;previous=request
-            // Text edits debounce; deleting the query and changing a category take effect immediately.
-            if(request.query.isNotBlank()&&before?.query!=request.query&&
-                (before==null||before.filter==request.filter&&before.type==request.type&&before.byTitle==request.byTitle))delay(150)
-            try{read(request).copy(sourceVersion=version)}catch(c:CancellationException){throw c}
-            catch(_:Exception){LibrarySearchResult(generation=request.generation,failed=true,query=request.query,
-                filter=request.filter,type=request.type,byTitle=request.byTitle,offset=request.offset)}
-        }.collect{send(it)}
+        ),completed).collect{send(it)}
     }
 
     suspend fun read(request:LibrarySearchRequest):LibrarySearchResult=withContext(Dispatchers.IO){
