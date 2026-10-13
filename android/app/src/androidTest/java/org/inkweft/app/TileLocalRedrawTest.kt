@@ -10,10 +10,12 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 import org.inkweft.core.*
 import org.inkweft.data.*
+import org.json.JSONArray
 import org.json.JSONObject
 import org.junit.Assert.*
 import org.junit.Test
 import java.util.UUID
+import java.util.concurrent.CopyOnWriteArrayList
 
 class TileLocalRedrawTest {
     private fun id()=UUID.randomUUID().toString()
@@ -45,6 +47,7 @@ class TileLocalRedrawTest {
         }finally{withContext(Dispatchers.Main){cached.clear();cold.clear()};events.close();target.recycle();reference.recycle();db.close();context.deleteDatabase(name)}
     }
     @Test fun oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions()=runBlocking{
+        val metadataDiagnostics=InstrumentationRegistry.getArguments().getString("rasterMetadataDiagnostics")=="true"
         val context=ApplicationProvider.getApplicationContext<Context>();val name="tile-local-${id()}.db";val db=NoteDatabase.open(context,name)
         val target=Bitmap.createBitmap(3000,2000,Bitmap.Config.ARGB_8888);val reference=Bitmap.createBitmap(3000,2000,Bitmap.Config.ARGB_8888)
         val events=Channel<Unit>(Channel.CONFLATED);val active=mutableListOf<StreamedInkRaster>();val full=mutableListOf<StreamedInkRaster>()
@@ -86,9 +89,16 @@ class TileLocalRedrawTest {
                 val scope=LayerWriteScope(layers.first().id,1)
                 assertTrue(repo.save(CommitInk(id(),page,1,InkMutation.Add(added),scope)) is InkCommitResult.Committed)
                 source=source.copy(revision=2,committedIds=source.committedIds+added.id)
-                val local=ready(active,target);val cold=ready(full,reference)
+                val metadataTimings=if(metadataDiagnostics)CopyOnWriteArrayList<InkRasterMetadataTiming>()else null
+                if(metadataTimings!=null)repo.rasterMetadataObserver={metadataTimings.add(it);Unit}
+                val local=try{ready(active,target)}finally{repo.rasterMetadataObserver=null}
+                val cold=ready(full,reference)
                 val metadataMs=active.sumOf{it.lastBuild!!.metadataMs};val rasterMs=active.sumOf{it.lastBuild!!.rasterMs};val publicationMs=active.sumOf{it.lastBuild!!.publicationMs}
                 val localDecoded=active.sumOf{it.lastBuild!!.decoded};val localTiles=active.sumOf{it.lastBuild!!.rebuilt}
+                // The same diagnostic patch runs on the baseline, where this counter is absent.
+                val nativeStrokeBuilds=active.map{raster->raster.lastBuild!!.let{stats->
+                    (stats.javaClass.methods.firstOrNull{it.name=="getNativeStrokeBuilds"&&it.parameterCount==0}?.invoke(stats) as? Number)?.toLong()
+                }}.takeIf{counts->counts.all{it!=null}}?.sumOf{it!!}
                 val totalTiles=full.sumOf{it.lastBuild!!.rebuilt}
                 assertTrue("Local decoding $localDecoded versus full 321",localDecoded in 1 until 321)
                 assertTrue("Local tiles $localTiles versus $totalTiles",localTiles in 1 until totalTiles)
@@ -107,6 +117,16 @@ class TileLocalRedrawTest {
                     .put("localDecoded",localDecoded).put("fullDecoded",321).put("localRebuiltTiles",localTiles).put("fullRebuiltTiles",totalTiles)
                     .put("metadataMs",metadataMs).put("rasterMs",rasterMs).put("publicationMs",publicationMs)
                     .put("pixelsEqual",true).put("bitmapBytes",active.sumOf{it.lastBuild!!.bitmapBytes})
+                nativeStrokeBuilds?.let{evidence.put("nativeStrokeBuilds",it)}
+                metadataTimings?.let{timings->evidence.put("rasterMetadataDiagnostics",JSONArray().apply{timings.forEach{t->
+                    put(JSONObject().put("layerIndex",layers.indexOfFirst{it.id==t.layer}).put("regions",t.regions)
+                        .put("preparationBatches",t.preparationBatches).put("preparationRows",t.preparationRows)
+                        .put("queryBatches",t.queryBatches).put("metadataRows",t.metadataRows)
+                        .put("admissionAndPreparationNanos",t.admissionAndPreparationNanos)
+                        .put("queryAndDigestNanos",t.queryAndDigestNanos).put("queryAndDigestCpuNanos",t.queryAndDigestCpuNanos?:JSONObject.NULL)
+                        .put("hexAndResultNanos",t.hexAndResultNanos).put("hexAndResultCpuNanos",t.hexAndResultCpuNanos?:JSONObject.NULL)
+                        .put("queryStartThreadId",t.queryStartThreadId).put("hexStartThreadId",t.hexStartThreadId).put("hexEndThreadId",t.hexEndThreadId))
+                }})}
                 InstrumentationRegistry.getInstrumentation().sendStatus(0,android.os.Bundle().apply{putString("stream","TILE_LOCAL_EVIDENCE $evidence\n")})
                 withContext(Dispatchers.Main){active.forEach{it.clear()};full.forEach{it.clear()};active.clear();full.clear()}
             }

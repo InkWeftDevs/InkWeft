@@ -63,9 +63,36 @@ data class InkGroupCommit(val group:InkGroupPrefix,val results:List<InkCommitRes
 /** Saved display/copy content and its revision, without retained undo geometry. */
 data class VisibleInkSnapshot(val noteId:String,val revision:Long,val strokes:List<InkStroke>)
 data class InkRasterRegion(val signature:String,val committed:Set<String>)
+/** Opt-in metadata diagnostics. Admission includes preparation, yields and Room scheduling,
+ * not just lock waiting. CPU is cumulative on the sampled thread, not exclusive coroutine CPU.
+ * Hex/result includes SHA finalization, hex conversion and result allocation. */
+data class InkRasterMetadataTiming(
+    val layer:String?,val regions:Int,val preparationBatches:Int,val preparationRows:Long,
+    val queryBatches:Int,val metadataRows:Long,val admissionAndPreparationNanos:Long,
+    val queryAndDigestNanos:Long,val queryAndDigestCpuNanos:Long?,
+    val hexAndResultNanos:Long,val hexAndResultCpuNanos:Long?,
+    val queryStartThreadId:Int,val hexStartThreadId:Int,val hexEndThreadId:Int
+)
+private data class RasterMetadataClock(val wall:Long,val cpu:Long,val threadId:Int) {
+    fun cpuSince(start:RasterMetadataClock):Long? =
+        (cpu-start.cpu).takeIf{threadId==start.threadId&&cpu>=0&&start.cpu>=0&&it>=0}
+}
+private fun rasterMetadataClock()=RasterMetadataClock(System.nanoTime(),android.os.Debug.threadCpuTimeNanos(),android.os.Process.myTid())
+private class RasterMetadataProbe {
+    val started=System.nanoTime()
+    var preparationBatches=0;var preparationRows=0L;var queryBatches=0;var metadataRows=0L
+    lateinit var queryStart:RasterMetadataClock
+    lateinit var hexStart:RasterMetadataClock
+    lateinit var hexEnd:RasterMetadataClock
+    fun timing(layer:String?,regions:Int)=InkRasterMetadataTiming(layer,regions,preparationBatches,preparationRows,
+        queryBatches,metadataRows,queryStart.wall-started,hexStart.wall-queryStart.wall,hexStart.cpuSince(queryStart),
+        hexEnd.wall-hexStart.wall,hexEnd.cpuSince(hexStart),queryStart.threadId,hexStart.threadId,hexEnd.threadId)
+}
 class InkRepository(private val db:NoteDatabase,private val fault:(InkFaultPoint)->Unit={}) {
     val authoringRepository by lazy{PageAuthoringRepository(db)}
     @Volatile var readObserver:((ReadTiming)->Unit)?=null
+    /** Disabled by default; called outside the read transaction after a successful metadata read. */
+    @Volatile var rasterMetadataObserver:((InkRasterMetadataTiming)->Unit)?=null
     private class GroupAbort(val result:InkCommitResult):RuntimeException()
     /** A seam gesture either commits on every sheet or on none; receipts make a retry idempotent. */
     suspend fun saveGroup(commands:List<CommitInk>):List<InkCommitResult> {
@@ -352,7 +379,14 @@ class InkRepository(private val db:NoteDatabase,private val fault:(InkFaultPoint
     }
     /** Visible metadata only. Empty/offscreen layers allocate no full-viewport bitmap. */
     suspend fun rasterRegions(noteId:String,revision:Long,authoringRevision:Long?,layer:String?,regions:List<CanvasBounds>,
-        allowed:Set<String>?,omitted:Set<String>,committed:Set<String>):List<InkRasterRegion> = SpatialIndex.read(db,noteId,prepareCuts=true,bounds=regions.reduceOrNull{a,b->a.union(b)}){sql->
+        allowed:Set<String>?,omitted:Set<String>,committed:Set<String>):List<InkRasterRegion> {
+        val observer=rasterMetadataObserver
+        val probe=if(observer==null)null else RasterMetadataProbe()
+        val onBatch:suspend(SpatialIndex.BuildBatch)->Unit=if(probe==null)({ _ -> })else({batch->
+            probe.preparationBatches++;probe.preparationRows+=batch.rows
+        })
+        val result=SpatialIndex.read(db,noteId,onBatch=onBatch,prepareCuts=true,bounds=regions.reduceOrNull{a,b->a.union(b)}){sql->
+        probe?.queryStart=rasterMetadataClock()
         require(regions.size<=512)
         owner(noteId);check((dao.page(noteId)?.revision?:0)==revision){"INK_WINDOW_REVISION_CHANGED"}
         val layers=authoringRevision?.let{layerFilter(sql,noteId,it,layer,false)}
@@ -363,6 +397,8 @@ class InkRepository(private val db:NoteDatabase,private val fault:(InkFaultPoint
         if(union!=null)while(true){
             currentCoroutineContext().ensureActive()
             val rows=SpatialIndex.ink(sql,noteId,union,after,layers=layers)
+            // Count returned metadata, including the terminating empty query; no per-row timers.
+            if(probe!=null){probe.queryBatches++;probe.metadataRows+=rows.size}
             if(rows.isEmpty())break
             for(row in rows){
                 if(row.id in omitted||allowed!=null&&row.id !in allowed)continue
@@ -375,7 +411,13 @@ class InkRepository(private val db:NoteDatabase,private val fault:(InkFaultPoint
             }
             val last=rows.last();after=SpatialIndex.Cursor(last.revision,last.id)
         }
-        regions.indices.map{InkRasterRegion(digests[it].digest().joinToString(""){"%02x".format(it)},included[it])}
+        probe?.hexStart=rasterMetadataClock()
+        val values=regions.indices.map{InkRasterRegion(digests[it].digest().toHexString(),included[it])}
+        probe?.hexEnd=rasterMetadataClock()
+        values
+        }
+        if(probe!=null)observer!!.invoke(probe.timing(layer,regions.size))
+        return result
     }
     suspend fun visibleLayerBounds(noteId:String,revision:Long,authoringRevision:Long,bounds:CanvasBounds):Map<String,CanvasBounds> = SpatialIndex.read(db,noteId,bounds=bounds){sql->
         owner(noteId);check((dao.page(noteId)?.revision?:0)==revision){"INK_WINDOW_REVISION_CHANGED"}
