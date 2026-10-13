@@ -1,0 +1,18 @@
+{
+  "status": "INDEPENDENT_READ_ONLY_REVIEW_NO_BLOCKER",
+  "scope": "Budget3 offline verifier adaptation only; no real ZIP received or verified.",
+  "reviewer": "/root/integration_review",
+  "reviewed_verifier_sha256": "f44e5a1e9631cfb136e14a0d8461059ad15faf9ee2a7331b496f2d6d55542bea",
+  "reviewed_checker_sha256": "ca4792b82a50d7a3457dcd3a5fcef8dc1b0bb36c8d95ac7ad6472da01bd8b0f3",
+  "synthetic_check_sha256": "a05e721fcce10750731476271bc1682ef377e96d52e7211c0693a17cc85f890c",
+  "checks": 43,
+  "prior_checks_retained": 27,
+  "new_checks": 16,
+  "conclusion": "Fixed run identity/branch/clock/cutoff update and explicit budget_override only; original failure/partial/raw-host/completion/ACL/helper semantics unchanged. Frozen byte/hash binding retained.",
+  "nonblocking_note": "Last synthetic old-budget case mutates only clock.deadlines_minutes; README clarifies the imprecise existing both-ledger comment. No behavioral code change or redundant rerun.",
+  "remaining_evidence": [
+    "Original run38441089594 ZIP and matching official artifact metadata.",
+    "Terminal local job metadata for external end/conclusion/60-minute check.",
+    "Final manual helper observation-window and ordering review if method17 uses its allowed helper cleanup."
+  ]
+}

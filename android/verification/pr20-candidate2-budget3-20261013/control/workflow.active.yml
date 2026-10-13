@@ -1,0 +1,250 @@
+name: PR20 一次性三端集中原生复验
+'on':
+  push:
+    branches:
+    - codex/kvm-pr20-candidate2-budget3-20261013
+    paths:
+    - .github/workflows/pr20-kvm-triple.yml
+permissions:
+  contents: read
+concurrency:
+  group: pr20-kvm-candidate2-budget3-20261013
+  cancel-in-progress: false
+jobs:
+  triple:
+    name: PR20 fixed three-source native validation
+    if: github.event_name == 'push' && github.ref == 'refs/heads/codex/kvm-pr20-candidate2-budget3-20261013' && github.event.created == false && github.event.before == '6e3438e0d03fe473979cc7e4b5f7d909ca148e0c'
+      && github.run_attempt == 1
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+    - name: 从冻结PR服务器时间保守固定38/41/53/55分钟截止
+      timeout-minutes: 1
+      run: |
+        set -euo pipefail
+        export KVM_ONCE="$RUNNER_TEMP/pr20-kvm-triple"
+        export ANDROID_AVD_HOME="$KVM_ONCE/avd"
+        export ANDROID_USER_HOME="$KVM_ONCE/android-user"
+        export ANDROID_EMULATOR_HOME="$KVM_ONCE/android-user"
+        python3 - <<'PYENV'
+        import os
+        with open(os.environ['GITHUB_ENV'],'a') as output:
+            for key in ['KVM_ONCE','ANDROID_AVD_HOME','ANDROID_USER_HOME','ANDROID_EMULATOR_HOME']:
+                output.write(key+'='+os.environ[key]+'\n')
+        PYENV
+        mkdir -p "$KVM_ONCE/evidence"
+        python3 - <<'PYCODE'
+        import datetime,json,os,pathlib,re,time
+        anchor_literal='1791913339'
+        updated_at='2026-10-13T17:42:19Z'
+        contract_sha='27c0402923b91c024485bba9b9c9a8d93f6a87f2fff6c408f3f7c1de46e61939'
+        receipt_sha='81b628032f60fc90b6b29881189123304e0b7666efa7cda5b76d55fcee051bc7'
+        observed=time.time()
+        clock={'status':'FAIL','anchor_kind':'github_pull_request_updated_at',
+               'updated_at':updated_at,'clock_contract_sha256':contract_sha,'server_receipt_sha256':receipt_sha,
+               'actual_job_started_epoch':None,'first_step_observed_epoch':observed}
+        try:
+            assert re.fullmatch(r'[0-9a-f]{64}',contract_sha) and re.fullmatch(r'[0-9a-f]{64}',receipt_sha),'Unfrozen clock hashes'
+            assert re.fullmatch(r'[1-9][0-9]*',anchor_literal),'Unfrozen anchor epoch'
+            start=int(anchor_literal)
+            parsed=datetime.datetime.strptime(updated_at,'%Y-%m-%dT%H:%M:%SZ').replace(tzinfo=datetime.timezone.utc)
+            assert parsed.strftime('%Y-%m-%dT%H:%M:%SZ')==updated_at and int(parsed.timestamp())==start,'Timestamp/epoch mismatch'
+            values={'KVM_BUDGET_ANCHOR':start,'KVM_SETUP_CUTOFF':start+38*60,'KVM_CORRECTNESS_CUTOFF':start+41*60,'KVM_COMMON_CUTOFF':start+53*60,'KVM_WORK_DEADLINE':start+55*60}
+            clock.update(budget_anchor_epoch=start,deadlines_minutes=[38,41,53,55,60],deadline_epochs=values)
+            assert start<=observed,'Future anchor rejected'
+            assert observed<values['KVM_SETUP_CUTOFF'],'Setup anchor already expired; no rebase'
+            with open(os.environ['GITHUB_ENV'],'a') as output:
+                for key,value in values.items():output.write(f'{key}={value}\n')
+            clock['status']='PASS'
+        except Exception as error:
+            clock['error']=type(error).__name__+': '+str(error)
+            raise
+        finally:
+            pathlib.Path(os.environ['KVM_ONCE'],'evidence','clock.json').write_text(json.dumps(clock,indent=2)+'\n')
+        PYCODE
+    - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      timeout-minutes: 3
+      with:
+        persist-credentials: false
+        path: control
+    - uses: actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3
+      timeout-minutes: 3
+      with:
+        distribution: temurin
+        java-version: '17'
+    - name: 冻结并重建B/C0/C1源码与SDK
+      shell: bash
+      run: |
+        set -euo pipefail
+        cleanup_on_failure() {
+          code=$?
+          trap - EXIT INT TERM
+          if test "$code" -ne 0; then
+            timeout --signal=TERM --kill-after=2 45s python3 control/ci/pr20-kvm-triple/cleanup.py trap || code=1
+          fi
+          exit "$code"
+        }
+        trap cleanup_on_failure EXIT
+        trap 'exit 130' INT
+        trap 'exit 143' TERM
+        remaining=$((KVM_SETUP_CUTOFF - $(date +%s) - 2))
+        test "$remaining" -gt 0
+        timeout --signal=TERM --kill-after=2 "${remaining}s" python3 control/ci/pr20-kvm-triple/run.py setup
+    - name: 构建B的三个真实debug APK
+      shell: bash
+      run: |
+        set -euo pipefail
+        cleanup_on_failure() {
+          code=$?
+          trap - EXIT INT TERM
+          if test "$code" -ne 0; then
+            timeout --signal=TERM --kill-after=2 45s python3 control/ci/pr20-kvm-triple/cleanup.py trap || code=1
+          fi
+          exit "$code"
+        }
+        trap cleanup_on_failure EXIT
+        trap 'exit 130' INT
+        trap 'exit 143' TERM
+        remaining=$((KVM_SETUP_CUTOFF - $(date +%s) - 2))
+        test "$remaining" -gt 0
+        timeout --signal=TERM --kill-after=2 "${remaining}s" python3 control/ci/pr20-kvm-triple/run.py build B
+    - name: 构建C0的三个真实debug APK
+      shell: bash
+      run: |
+        set -euo pipefail
+        cleanup_on_failure() {
+          code=$?
+          trap - EXIT INT TERM
+          if test "$code" -ne 0; then
+            timeout --signal=TERM --kill-after=2 45s python3 control/ci/pr20-kvm-triple/cleanup.py trap || code=1
+          fi
+          exit "$code"
+        }
+        trap cleanup_on_failure EXIT
+        trap 'exit 130' INT
+        trap 'exit 143' TERM
+        remaining=$((KVM_SETUP_CUTOFF - $(date +%s) - 2))
+        test "$remaining" -gt 0
+        timeout --signal=TERM --kill-after=2 "${remaining}s" python3 control/ci/pr20-kvm-triple/run.py build C0
+    - name: 构建C1的三个真实debug APK
+      shell: bash
+      run: |
+        set -euo pipefail
+        cleanup_on_failure() {
+          code=$?
+          trap - EXIT INT TERM
+          if test "$code" -ne 0; then
+            timeout --signal=TERM --kill-after=2 45s python3 control/ci/pr20-kvm-triple/cleanup.py trap || code=1
+          fi
+          exit "$code"
+        }
+        trap cleanup_on_failure EXIT
+        trap 'exit 130' INT
+        trap 'exit 143' TERM
+        remaining=$((KVM_SETUP_CUTOFF - $(date +%s) - 2))
+        test "$remaining" -gt 0
+        timeout --signal=TERM --kill-after=2 "${remaining}s" python3 control/ci/pr20-kvm-triple/run.py build C1
+    - name: 最小临时ACL与同一KVM模拟器
+      shell: bash
+      run: |
+        set -euo pipefail
+        cleanup_on_failure() {
+          code=$?
+          trap - EXIT INT TERM
+          if test "$code" -ne 0; then
+            timeout --signal=TERM --kill-after=2 45s python3 control/ci/pr20-kvm-triple/cleanup.py trap || code=1
+          fi
+          exit "$code"
+        }
+        trap cleanup_on_failure EXIT
+        trap 'exit 130' INT
+        trap 'exit 143' TERM
+        remaining=$((KVM_SETUP_CUTOFF - $(date +%s) - 2))
+        test "$remaining" -gt 0
+        timeout --signal=TERM --kill-after=2 "${remaining}s" python3 control/ci/pr20-kvm-triple/run.py emulator
+    - name: C1的30项正确性：失败停止性能部分
+      shell: bash
+      run: |
+        set -euo pipefail
+        cleanup_on_failure() {
+          code=$?
+          trap - EXIT INT TERM
+          if test "$code" -ne 0; then
+            timeout --signal=TERM --kill-after=2 45s python3 control/ci/pr20-kvm-triple/cleanup.py trap || code=1
+          fi
+          exit "$code"
+        }
+        trap cleanup_on_failure EXIT
+        trap 'exit 130' INT
+        trap 'exit 143' TERM
+        remaining=$((KVM_CORRECTNESS_CUTOFF - $(date +%s) - 2))
+        test "$remaining" -gt 0
+        timeout --signal=TERM --kill-after=2 "${remaining}s" python3 control/ci/pr20-kvm-triple/run.py methods correctness
+    - name: 四组三端固定顺序的24项公共比较
+      shell: bash
+      run: |
+        set -euo pipefail
+        cleanup_on_failure() {
+          code=$?
+          trap - EXIT INT TERM
+          if test "$code" -ne 0; then
+            timeout --signal=TERM --kill-after=2 45s python3 control/ci/pr20-kvm-triple/cleanup.py trap || code=1
+          fi
+          exit "$code"
+        }
+        trap cleanup_on_failure EXIT
+        trap 'exit 130' INT
+        trap 'exit 143' TERM
+        remaining=$((KVM_COMMON_CUTOFF - $(date +%s) - 2))
+        test "$remaining" -gt 0
+        timeout --signal=TERM --kill-after=2 "${remaining}s" python3 control/ci/pr20-kvm-triple/run.py methods common
+    - name: C1自然GC两种连接及独立阶段诊断
+      shell: bash
+      run: |
+        set -euo pipefail
+        cleanup_on_failure() {
+          code=$?
+          trap - EXIT INT TERM
+          if test "$code" -ne 0; then
+            timeout --signal=TERM --kill-after=2 45s python3 control/ci/pr20-kvm-triple/cleanup.py trap || code=1
+          fi
+          exit "$code"
+        }
+        trap cleanup_on_failure EXIT
+        trap 'exit 130' INT
+        trap 'exit 143' TERM
+        remaining=$((KVM_WORK_DEADLINE - $(date +%s) - 2))
+        test "$remaining" -gt 0
+        timeout --signal=TERM --kill-after=2 "${remaining}s" python3 control/ci/pr20-kvm-triple/run.py methods diagnostics
+    - name: 成功路径停止拥有进程并精确恢复ACL
+      timeout-minutes: 1
+      run: timeout --signal=TERM --kill-after=2 45s python3 control/ci/pr20-kvm-triple/cleanup.py trap
+    - name: always再次核验进程与ACL恢复
+      if: always()
+      timeout-minutes: 1
+      run: |
+        if test -f control/ci/pr20-kvm-triple/cleanup.py; then
+          timeout --signal=TERM --kill-after=2 45s python3 control/ci/pr20-kvm-triple/cleanup.py always
+        else
+          mkdir -p "$KVM_ONCE/evidence"
+          echo '{"emulator":"NOT_STARTED","command_groups":"NOT_STARTED","acl":"NOT_TOUCHED","errors":[]}' > "$KVM_ONCE/evidence/cleanup-always.json"
+        fi
+    - name: 只打包白名单原始文本，最大20MiB
+      if: always()
+      timeout-minutes: 1
+      run: |
+        if test -f control/ci/pr20-kvm-triple/package.py; then
+          timeout --signal=TERM --kill-after=2 45s python3 control/ci/pr20-kvm-triple/package.py
+        else
+          mkdir -p "$KVM_ONCE/upload"
+          if test -f "$KVM_ONCE/evidence/clock.json"; then cp "$KVM_ONCE/evidence/clock.json" "$KVM_ONCE/upload/clock.json"; fi
+          echo '{"status":"SETUP_BLOCKED_BEFORE_SOURCE_CHECKOUT","tests":"NOT_RUN","kvm":"NOT_TOUCHED"}' > "$KVM_ONCE/upload/setup-failure.json"
+        fi
+    - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+      if: always()
+      timeout-minutes: 2
+      with:
+        name: pr20-kvm-triple-${{ github.run_id }}
+        retention-days: 3
+        if-no-files-found: error
+        path: ${{ runner.temp }}/pr20-kvm-triple/upload/*

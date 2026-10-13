@@ -1,0 +1,10 @@
+{
+  "status": "FROZEN_NOT_EXECUTED",
+  "anchor_utc": "2026-10-13T17:42:19Z",
+  "budget_anchor_epoch": 1791913339,
+  "clock_contract_sha256": "27c0402923b91c024485bba9b9c9a8d93f6a87f2fff6c408f3f7c1de46e61939",
+  "server_receipt_sha256": "81b628032f60fc90b6b29881189123304e0b7666efa7cda5b76d55fcee051bc7",
+  "budget_sha256": "0de35f7063e25c9c75daa7f4a1719eb525d40d2bdbc311c380133669dcfd582a",
+  "authorization_sha256": "e22b58660ae1262ae3fdfe6a20b03eb5cab2aff759e7293e89a91d52567a9555",
+  "native_execution": "NOT_RUN"
+}

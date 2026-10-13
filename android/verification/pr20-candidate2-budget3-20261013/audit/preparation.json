@@ -1,0 +1,83 @@
+{
+  "status": "PREPARED_SYNTHETIC_CHECKS_PASS_REAL_ZIP_NOT_AVAILABLE",
+  "run_id": 38441089594,
+  "job_id": 115447545993,
+  "active_git": "6b180ef65fa0d966f42967fe6a592f7bfe0a8ae5",
+  "preparation_git": "6e3438e0d03fe473979cc7e4b5f7d909ca148e0c",
+  "branch": "codex/kvm-pr20-candidate2-budget3-20261013",
+  "readiness_git": "6c72fd8b20228cc324fd835efa3f505f1f179997",
+  "source_spec_sha256": "6e9c422d8be60728967226de674b750cb7b3633485956d537dd0c2dac21a6dfb",
+  "method_plan_sha256": "808dd0cf1fece09185c59ae94ce41f51fdbc26dcde5ed196df7e803860f49765",
+  "C0": "ebb48481e7e995288c1844d43011398c513b4f4e",
+  "C1": "45b4861ae23ac19eda3246fcd34cf3d2132dc1ee",
+  "clock_contract_sha256": "27c0402923b91c024485bba9b9c9a8d93f6a87f2fff6c408f3f7c1de46e61939",
+  "clock_server_receipt_sha256": "81b628032f60fc90b6b29881189123304e0b7666efa7cda5b76d55fcee051bc7",
+  "budget_revision_sha256": "0de35f7063e25c9c75daa7f4a1719eb525d40d2bdbc311c380133669dcfd582a",
+  "anchor_utc": "2026-10-13T17:42:19Z",
+  "anchor_epoch": 1791913339,
+  "actual_job_started_at_from_initial_metadata": "2026-10-13T17:44:33Z",
+  "anchor_lead_seconds": 134,
+  "initial_job_metadata": {
+    "path": "/workspace/scratch/pr20-candidate2-budget3-execution/jobs-initial.json",
+    "sha256": "1cc5f89976055f9afdc0e0cebeb0c5b6cc51acd46ed1d67101738c64999f288b",
+    "terminal": false,
+    "scope": "Read-only local initial metadata corroborates A<=J/start; final runtime audit still requires terminal metadata for end/conclusion."
+  },
+  "expected_methods": 57,
+  "phase_methods": [
+    30,
+    24,
+    3
+  ],
+  "install_groups": 14,
+  "limits": {
+    "uncompressed_bytes": 20971520,
+    "retention_days": 3,
+    "cutoff_minutes": [
+      38,
+      41,
+      53,
+      55
+    ],
+    "job_minutes": 60
+  },
+  "files_sha256": {
+    "verify_artifact.py": "f44e5a1e9631cfb136e14a0d8461059ad15faf9ee2a7331b496f2d6d55542bea",
+    "check_verifier.py": "ca4792b82a50d7a3457dcd3a5fcef8dc1b0bb36c8d95ac7ad6472da01bd8b0f3",
+    "synthetic-check.json": "a05e721fcce10750731476271bc1682ef377e96d52e7211c0693a17cc85f890c"
+  },
+  "copied_from_immutable_prior": {
+    "directory": "/workspace/scratch/pr20-candidate2-clock2-artifact-audit",
+    "verify_artifact.py": "aee9eb7734c688f6c80bb5a4b9a3c8e296eaf421a95b50cc65a891293a906c8a",
+    "check_verifier.py": "a1e5b49cbbaad84dbbc4ff21eb845f7b9ae5a905f786248edcc3f369a8fb1e17",
+    "synthetic-check.json": "d380cda33cfc60132ebe8aa4ebbe368323a6df38e1c6a6919e7f8703768725dd"
+  },
+  "checks": {
+    "status": "PASS",
+    "synthetic_cases": 43,
+    "prior_cases_retained": 27,
+    "new_budget3_cases": 16,
+    "actual_archive_checked": false,
+    "download_calls": 0,
+    "build_native_permission_calls": 0
+  },
+  "required_pending_inputs": [
+    "Original ZIP for this run, provided through an authorized route; this tool performs no retrieval.",
+    "Official local artifact metadata containing matching run/head/branch/size/digest.",
+    "Local terminal job metadata for start/end/conclusion; omission remains explicitly pending."
+  ],
+  "not_required_for_this_preparation": [
+    "No prior run ZIP is required to justify or implement the already authorized budget repair."
+  ],
+  "boundaries": [
+    "No extraction before archive/manifest/frozen-source/control binding checks.",
+    "Refuse existing output/receipt; never alter original ZIP.",
+    "No APK/AAR/DB/credentials/full logcat in whitelist.",
+    "FAILED/INCOMPLETE/NOT_RUN and raw PASS versus host FAIL preserved.",
+    "APK signature/native/source receipt consistency only; absent APK binaries are not independently reverified.",
+    "Performance uses unchanged frozen analyzer; verifier produces no performance acceptance verdict.",
+    "All prior completion/partial-raw/helper/ACL fixes retained.",
+    "Helper observation time windows/app/data-before-helper ordering remain explicit final manual review items."
+  ],
+  "budget_override": "Explicit new authorization binds historical PLAN ff2459 unchanged to effective38/41/53/55/60, source/method unchanged, no-build-cache, cleanup261+39 and no clock rebase."
+}

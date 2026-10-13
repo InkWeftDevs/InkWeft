@@ -1,0 +1,247 @@
+{
+  "status": "OFFICIAL_JOB_LOG_AND_METADATA_VERIFIED_FULL_ZIP_PENDING",
+  "run_id": 38441089594,
+  "job_id": 115447545993,
+  "run_attempt": 1,
+  "head_sha": "6b180ef65fa0d966f42967fe6a592f7bfe0a8ae5",
+  "job_started_at": "2026-10-13T17:44:33Z",
+  "job_completed_at": "2026-10-13T18:25:31Z",
+  "job_duration_seconds": 2458.0,
+  "budget_anchor_epoch": 1791913339,
+  "anchor_precedes_job_seconds": 134,
+  "setup_from_anchor_seconds": 1850,
+  "setup_before_hypothetical_old_32_minute_cutoff_seconds": 70,
+  "steps": [
+    {
+      "number": 1,
+      "name": "Set up job",
+      "conclusion": "success",
+      "started_at": "2026-10-13T17:44:34Z",
+      "completed_at": "2026-10-13T17:44:35Z",
+      "seconds": 1.0
+    },
+    {
+      "number": 2,
+      "name": "从冻结PR服务器时间保守固定38/41/53/55分钟截止",
+      "conclusion": "success",
+      "started_at": "2026-10-13T17:44:35Z",
+      "completed_at": "2026-10-13T17:44:35Z",
+      "seconds": 0.0
+    },
+    {
+      "number": 3,
+      "name": "Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+      "conclusion": "success",
+      "started_at": "2026-10-13T17:44:35Z",
+      "completed_at": "2026-10-13T17:44:42Z",
+      "seconds": 7.0
+    },
+    {
+      "number": 4,
+      "name": "Run actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3",
+      "conclusion": "success",
+      "started_at": "2026-10-13T17:44:42Z",
+      "completed_at": "2026-10-13T17:44:43Z",
+      "seconds": 1.0
+    },
+    {
+      "number": 5,
+      "name": "冻结并重建B/C0/C1源码与SDK",
+      "conclusion": "success",
+      "started_at": "2026-10-13T17:44:43Z",
+      "completed_at": "2026-10-13T17:45:16Z",
+      "seconds": 33.0
+    },
+    {
+      "number": 6,
+      "name": "构建B的三个真实debug APK",
+      "conclusion": "success",
+      "started_at": "2026-10-13T17:45:16Z",
+      "completed_at": "2026-10-13T17:55:41Z",
+      "seconds": 625.0
+    },
+    {
+      "number": 7,
+      "name": "构建C0的三个真实debug APK",
+      "conclusion": "success",
+      "started_at": "2026-10-13T17:55:41Z",
+      "completed_at": "2026-10-13T18:04:43Z",
+      "seconds": 542.0
+    },
+    {
+      "number": 8,
+      "name": "构建C1的三个真实debug APK",
+      "conclusion": "success",
+      "started_at": "2026-10-13T18:04:43Z",
+      "completed_at": "2026-10-13T18:12:36Z",
+      "seconds": 473.0
+    },
+    {
+      "number": 9,
+      "name": "最小临时ACL与同一KVM模拟器",
+      "conclusion": "success",
+      "started_at": "2026-10-13T18:12:36Z",
+      "completed_at": "2026-10-13T18:13:09Z",
+      "seconds": 33.0
+    },
+    {
+      "number": 10,
+      "name": "C1的30项正确性：失败停止性能部分",
+      "conclusion": "success",
+      "started_at": "2026-10-13T18:13:09Z",
+      "completed_at": "2026-10-13T18:13:52Z",
+      "seconds": 43.0
+    },
+    {
+      "number": 11,
+      "name": "四组三端固定顺序的24项公共比较",
+      "conclusion": "success",
+      "started_at": "2026-10-13T18:13:52Z",
+      "completed_at": "2026-10-13T18:24:04Z",
+      "seconds": 612.0
+    },
+    {
+      "number": 12,
+      "name": "C1自然GC两种连接及独立阶段诊断",
+      "conclusion": "success",
+      "started_at": "2026-10-13T18:24:04Z",
+      "completed_at": "2026-10-13T18:24:58Z",
+      "seconds": 54.0
+    },
+    {
+      "number": 13,
+      "name": "成功路径停止拥有进程并精确恢复ACL",
+      "conclusion": "success",
+      "started_at": "2026-10-13T18:24:58Z",
+      "completed_at": "2026-10-13T18:25:17Z",
+      "seconds": 19.0
+    },
+    {
+      "number": 14,
+      "name": "always再次核验进程与ACL恢复",
+      "conclusion": "success",
+      "started_at": "2026-10-13T18:25:17Z",
+      "completed_at": "2026-10-13T18:25:25Z",
+      "seconds": 8.0
+    },
+    {
+      "number": 15,
+      "name": "只打包白名单原始文本，最大20MiB",
+      "conclusion": "success",
+      "started_at": "2026-10-13T18:25:25Z",
+      "completed_at": "2026-10-13T18:25:25Z",
+      "seconds": 0.0
+    },
+    {
+      "number": 16,
+      "name": "Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+      "conclusion": "success",
+      "started_at": "2026-10-13T18:25:25Z",
+      "completed_at": "2026-10-13T18:25:26Z",
+      "seconds": 1.0
+    },
+    {
+      "number": 31,
+      "name": "Post Run actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3",
+      "conclusion": "success",
+      "started_at": "2026-10-13T18:25:26Z",
+      "completed_at": "2026-10-13T18:25:27Z",
+      "seconds": 1.0
+    },
+    {
+      "number": 32,
+      "name": "Post Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+      "conclusion": "success",
+      "started_at": "2026-10-13T18:25:27Z",
+      "completed_at": "2026-10-13T18:25:28Z",
+      "seconds": 1.0
+    },
+    {
+      "number": 33,
+      "name": "Complete job",
+      "conclusion": "success",
+      "started_at": "2026-10-13T18:25:28Z",
+      "completed_at": "2026-10-13T18:25:28Z",
+      "seconds": 0.0
+    }
+  ],
+  "method_log_receipts": {
+    "count": 57,
+    "phase_counts": {
+      "correctness": 30,
+      "common-comparison": 24,
+      "candidate-diagnostics": 3
+    },
+    "host_status_counts": {
+      "PASS": 57
+    },
+    "junit_status_counts": {
+      "PASS": 57
+    },
+    "process_outcome_counts": {
+      "NATURAL_EXIT": 56,
+      "AUXILIARY_AM_KILL_CONFIRMED": 1
+    },
+    "frozen_plan_match": true,
+    "original_instrumentation_files_independently_checked": false,
+    "distinct_selection_count": 35
+  },
+  "raw_log": {
+    "bytes": 63523,
+    "sha256": "6717e63192b2dd43b6ca66f378f659efcdcd7b291354885e89b92466f6198b97",
+    "utf8_bom_preserved": true,
+    "source": "Official fetch_workflow_job_logs decoded content; exact bytes preserved",
+    "raw_instrumentation_marker_count": 0
+  },
+  "cleanup_log_receipts": [
+    {
+      "timestamp": "2026-10-13T18:25:17.4957263Z",
+      "line": 525,
+      "value": {
+        "emulator": "STOPPED_CONFIRMED",
+        "command_groups": "STOPPED_CONFIRMED",
+        "acl": "RESTORED_EXACT",
+        "errors": []
+      }
+    },
+    {
+      "timestamp": "2026-10-13T18:25:25.0344407Z",
+      "line": 547,
+      "value": {
+        "emulator": "STOPPED_CONFIRMED",
+        "command_groups": "STOPPED_CONFIRMED",
+        "acl": "RESTORED_EXACT",
+        "errors": []
+      }
+    }
+  ],
+  "artifact": {
+    "id": 11837544923,
+    "name": "pr20-kvm-triple-38441089594",
+    "size_in_bytes": 769104,
+    "official_digest": "sha256:e3218dda22503f2bc085cf2e96284ce0bd24f5b05c40dcee772c13b2ec7318aa",
+    "expires_at": "2026-10-16T18:25:25Z",
+    "download_url": "https://github.com/InkWeftDevs/InkWeft/actions/runs/38441089594/artifacts/11837544923",
+    "local_archive_verified": false,
+    "packaging_stdout": {
+      "timestamp": "2026-10-13T18:25:25.1996269Z",
+      "line": 570,
+      "value": {
+        "files": 289,
+        "bytes": 3555071,
+        "omitted": 0,
+        "truncated": 0
+      }
+    },
+    "packaging_scope": "Official job-log output only; ZIP/manifest not independently verified"
+  },
+  "limits": [
+    "57 compact controller/JUnit status receipts are not independent inspection of 57 original instrumentation logs.",
+    "Helper observation window/PID ordering and ACL original bytes remain in the unavailable ZIP.",
+    "APK/native/dependency/install/environment receipts have not been independently inspected; APK binaries are not in the allowed text artifact.",
+    "The job log contains no original instrumentation metrics; no 720-save distribution, decode/pixel count or GC exposure/performance comparison was reconstructed.",
+    "The successful setup also fit inside the former 32-minute cutoff; no sole-cause attribution to the increased budget.",
+    "Previous performance regression/inconclusive and insufficient-exposure conclusions remain unchanged pending this run original data."
+  ],
+  "next_action": "Obtain this run original ZIP through an authorized route, verify its fixed identity and full manifest, then run the unchanged frozen analyzer. No rerun is required to recover existing results."
+}
