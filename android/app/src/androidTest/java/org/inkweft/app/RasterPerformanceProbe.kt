@@ -63,9 +63,9 @@ class RasterPerformanceProbe {
                     .put("metadataMs",stats.metadataMs).put("rasterMs",stats.rasterMs).put("publicationMs",stats.publicationMs)
                     .put("coldMs",fullMs).put("coldDecoded",cold.lastBuild!!.decoded).put("coldSnapshotReadRows",fullRows)
                     .put("coldRebuilt",cold.lastBuild!!.rebuilt).put("pixelsEqual",true)
-                for(field in listOf("reusedStrokes","geometryBytes")){
+                for(field in listOf("reusedStrokes","geometryBytes","nativeStrokeBuilds")){
                     val getter="get"+field.replaceFirstChar{it.uppercase()}
-                    stats.javaClass.methods.firstOrNull{it.name==getter}?.let{result.put(field,it.invoke(stats))}
+                    result.put(field,stats.javaClass.methods.firstOrNull{it.name==getter}?.invoke(stats)?:JSONObject.NULL)
                 }
                 InstrumentationRegistry.getInstrumentation().sendStatus(0,android.os.Bundle().apply{putString("stream","RASTER_PAIRED_EVIDENCE $result\n")})
             }
@@ -89,6 +89,15 @@ class RasterPerformanceProbe {
                 source=source.copy(revision=source.revision+1,committedIds=source.committedIds+s.id)
             }
             compare("separated-append")
+            // After every timed frame, pin connection-local PRAGMAs to the primary writer.
+            val writerSqlite=db.withTransaction{
+                val settings=JSONObject();val sql=db.openHelper.writableDatabase
+                for(setting in listOf("page_size","auto_vacuum","journal_mode","synchronous")){
+                    sql.query("PRAGMA $setting").use{it.moveToFirst();settings.put(setting,if(setting=="journal_mode")it.getString(0) else it.getLong(0))}
+                }
+                settings
+            }
+            InstrumentationRegistry.getInstrumentation().sendStatus(0,android.os.Bundle().apply{putString("stream","RASTER_SQLITE_EVIDENCE ${JSONObject().put("writerSqlite",writerSqlite)}\n")})
         }finally{
             withContext(Dispatchers.Main){active.clear();cold.clear()}
             withTimeoutOrNull(5000){while(RenderResources.inFlightJobs.get()>initialJobs)delay(20)}

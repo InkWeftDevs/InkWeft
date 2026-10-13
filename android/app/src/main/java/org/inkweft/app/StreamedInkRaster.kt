@@ -3,6 +3,7 @@ package org.inkweft.app
 
 import android.graphics.*
 import android.os.Trace
+import androidx.ink.strokes.Stroke
 import kotlinx.coroutines.*
 import org.inkweft.core.*
 import org.inkweft.data.InkRepository
@@ -26,7 +27,7 @@ internal class StreamedInkRaster(private val changed:()->Unit,private val failed
         val world:Boolean,val embedded:Boolean,val source:InkRenderSource,val allowed:Set<String>?,val omitted:Set<String>,val layer:String?,val pixels:Rect,val budget:Long)
     private data class Tile(val pixels:Rect,val signature:String,val bitmap:Bitmap)
     private data class Frame(val key:Key,val tiles:List<Tile>,val committed:Set<String>,val geometry:InkRasterCache)
-    internal data class BuildStats(val tiles:Int,val rebuilt:Int,val decoded:Int,val bitmapBytes:Long,val metadataMs:Double=0.0,val rasterMs:Double=0.0,val publicationMs:Double=0.0,val reusedStrokes:Int=0,val geometryBytes:Long=0)
+    internal data class BuildStats(val tiles:Int,val rebuilt:Int,val decoded:Int,val bitmapBytes:Long,val metadataMs:Double=0.0,val rasterMs:Double=0.0,val publicationMs:Double=0.0,val reusedStrokes:Int=0,val geometryBytes:Long=0,val nativeStrokeBuilds:Int=0)
     internal var lastBuild:BuildStats?=null;private set
     private val owner="streamed-ink-"+java.util.UUID.randomUUID()
     private var frame:Frame?=null
@@ -137,7 +138,7 @@ internal class StreamedInkRaster(private val changed:()->Unit,private val failed
                     }}
                     val renderer=InkBrushes.renderer()
                     val pencil=PencilTileRenderer(min(.5f,(1/(factor*scale)).toFloat()),false){context.ensureActive()}
-                    var decoded=0
+                    var decoded=0;var nativeStrokeBuilds=0
                     try{
                         if(dirty.isNotEmpty()){
                             val region=dirty.map{regions[it]}.reduce{a,b->a.union(b)}
@@ -147,10 +148,16 @@ internal class StreamedInkRaster(private val changed:()->Unit,private val failed
                                     context.ensureActive();decoded++
                                     if(stroke.id in omitted||allowed!=null&&stroke.id !in allowed)continue
                                     val inkBounds=stroke.bounds()
+                                    // Stroke and its mesh are immutable. Retain only this
+                                    // stroke's native shape until all its dirty tiles finish.
+                                    var nativeStroke:Stroke?=null
                                     for(i in dirty){if(!inkBounds.intersects(regions[i]))continue
                                         val painter=painters.getValue(i);val saved=painter.save()
                                         try{stroke.cuts.forEach{painter.clipOutPath(VisibleInkGeometry.cutPath(it))}
-                                            if(stroke.pen==InkPen.PENCIL)pencil.draw(painter,stroke)else renderer.draw(painter,InkBrushes.stroke(stroke),matrix)
+                                            if(stroke.pen==InkPen.PENCIL)pencil.draw(painter,stroke)else{
+                                                val ink=nativeStroke?:InkBrushes.stroke(stroke).also{nativeStroke=it;nativeStrokeBuilds++}
+                                                renderer.draw(painter,ink,matrix)
+                                            }
                                         }finally{painter.restoreToCount(saved)}
                                     }
                                 }
@@ -167,7 +174,7 @@ internal class StreamedInkRaster(private val changed:()->Unit,private val failed
                             frame?.takeIf{it.geometry!==geometry}?.let{RenderResources.release(it.geometry,owner)}
                             frame=Frame(key,tiles,states.flatMap{it.committed}.toSet(),geometry)
                             val reused=geometry.hits-previousHits
-                            lastBuild=BuildStats(tiles.size,dirty.size,decoded-reused,tiles.sumOf{it.bitmap.allocationByteCount.toLong()},metadataMs,rasterMs,(System.nanoTime()-publicationStart)/1_000_000.0,reused,geometry.retainedBytes)
+                            lastBuild=BuildStats(tiles.size,dirty.size,decoded-reused,tiles.sumOf{it.bitmap.allocationByteCount.toLong()},metadataMs,rasterMs,(System.nanoTime()-publicationStart)/1_000_000.0,reused,geometry.retainedBytes,nativeStrokeBuilds)
                             published=true;notifyChanged()
                         }}
                     }finally{pencil.clear()}
