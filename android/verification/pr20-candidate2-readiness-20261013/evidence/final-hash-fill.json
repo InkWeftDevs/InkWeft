@@ -1,0 +1,34 @@
+{
+  "status": "FINAL_HASH_FILLED_NOT_EXECUTED",
+  "candidate_commit": "45b4861ae23ac19eda3246fcd34cf3d2132dc1ee",
+  "previous_candidate_commit": "ebb48481e7e995288c1844d43011398c513b4f4e",
+  "verified_local_frozen_files": {
+    "source-spec.json": "6e9c422d8be60728967226de674b750cb7b3633485956d537dd0c2dac21a6dfb",
+    "method-plan.json": "bdca5a5477893500150a2ed58115e363f053876573cba46c2b59b56b94d3e96b",
+    "PLAN.md": "ff2459abb0b8582d20e570c5afb0c4e9a0df5216bed8bc5191e4d008b5c4dacd"
+  },
+  "changes": [
+    {
+      "path": "controller/run.py",
+      "before_sha256": "8e2c661d922fae4cd5461b78852583742c7c2d89d0b0b0516f8fa58a04024090",
+      "after_sha256": "05bdb1535d759131960aa21309a95a30b8385bdfbf65d5259031891003a3f2b2",
+      "change": "Only pending source-spec SHA256 literal filled"
+    },
+    {
+      "path": "controller/package.py",
+      "before_sha256": "d10b8d1e40b536295763a8f95ed039048c2e575caffd7cf65874c20dfd23e229",
+      "after_sha256": "ce6316671465c8d8d2f90ef9dbc71e1b4c83f88afe66a6c7d01b9aa2abeaafa9",
+      "change": "Only pending source-spec SHA256 literal filled"
+    },
+    {
+      "path": "analyze.new.py",
+      "before_sha256": "adf0870b63402d46352f94661b2e30e276cc245e5ec72f84e4d537f4ef68f1b1",
+      "after_sha256": "19a6a372a332ee3ee4dc42d2eedea61ca91139924821cc9e3188fadafa38c85e",
+      "change": "Only pending source-spec SHA256 literal filled"
+    }
+  ],
+  "historical_prefill_receipt": "preparation-check-5ud150c7.json",
+  "historical_prefill_receipt_sha256": "e53dcf77856b0d2c310558ef8622c45725e89b5c3aab24f1c65f1e020953390e",
+  "historical_scope_note": "Prior receipt and diffs describe templates before this literal fill; preserved unchanged. Full 57-method preflight must run on the parent finalized execution worktree. No new native result or workflow launch.",
+  "checked_utc": "2026-10-13T16:27:32.835090+00:00"
+}
