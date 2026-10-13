@@ -1,0 +1,294 @@
+{
+  "schema": "raster-hex-v1-fixed-followup-plan-v1",
+  "created_utc": "2026-10-13T03:09:33.399788+00:00",
+  "status": "FIXED_PLAN_ONLY_NO_RUNS_BY_RASTER_AGENT",
+  "authorization": "Parent requested the listed fixed sequence after candidate-only one-line hex substitution; no additional source change authorized here.",
+  "artifacts": {
+    "candidate": {
+      "phase": "candidate-raster-hex-v1",
+      "status": "Root build in progress; freeze source/build receipt and exact signed app/appTest hashes before running. Do not use diagnostic-v2 candidate APK as a substitute.",
+      "source_change_record": "candidate-raster-hex-v1-source-change.json",
+      "expected_ink_repository_sha256": "3cb60b773e4f358cc871e59f0837bb9304d8ae114bf12997bf3b897527801d34"
+    },
+    "baseline": {
+      "phase": "baseline-raster-diagnostic-v2",
+      "algorithm": "Original Formatter, same optional diagnostics default off for performance runs; not the older baseline-final APK.",
+      "source_ink_repository_sha256": "612db8dcf1e87ce76f194fae4962b5a2a626f2368703164da41690829ddaa4eb",
+      "artifacts": {
+        "app": {
+          "path": "/workspace/scratch/pr20-preserved-apks/baseline-raster-diagnostic-v2/app-debug.apk",
+          "sha256": "a7e964809b12e937c7c54e23e27114a54bedaba49530363d1c345a73d2f7e9ed"
+        },
+        "appTest": {
+          "path": "/workspace/scratch/pr20-preserved-apks/baseline-raster-diagnostic-v2/app-debug-androidTest.apk",
+          "sha256": "a500d8bb925adce209945acbe2de6672cb499b45f0b43706d58a9fa14ef8881e"
+        }
+      }
+    }
+  },
+  "test_source_audit": [
+    {
+      "selection": "org.inkweft.app.TileLocalRedrawTest",
+      "expected_tests": 2,
+      "methods": [
+        "integralPanReusesInteriorTilesAndZoomPreviewNeverCompletesCapture",
+        "oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions"
+      ],
+      "source_path": "/workspace/InkWeft/android/app/src/androidTest/java/org/inkweft/app/TileLocalRedrawTest.kt",
+      "audit": "Read source annotations and existing deadlines; no build or device execution."
+    },
+    {
+      "selection": "org.inkweft.app.RasterPerformanceProbe",
+      "expected_tests": 1,
+      "methods": [
+        "continuousTransformsAndSeparatedDirtyTiles"
+      ],
+      "source_path": "/workspace/InkWeft/android/app/src/androidTest/java/org/inkweft/app/RasterPerformanceProbe.kt",
+      "audit": "Read source annotations and existing deadlines; no build or device execution."
+    },
+    {
+      "selection": "org.inkweft.app.NativeStrokeTileReuseTest",
+      "expected_tests": 1,
+      "methods": [
+        "oneNativeShapePerStrokeMatchesPerTileConstructionThroughTransformsAndClips"
+      ],
+      "source_path": "/workspace/InkWeft/android/app/src/androidTest/java/org/inkweft/app/NativeStrokeTileReuseTest.kt",
+      "audit": "Read source annotations and existing deadlines; no build or device execution."
+    },
+    {
+      "selection": "org.inkweft.app.StreamedInkRasterTest",
+      "expected_tests": 4,
+      "methods": [
+        "clearingPendingTransformReleasesPinnedGeometryWithoutPublishing",
+        "omittedStrokeCannotReappearWhileItsReplacementFrameIsDelayed",
+        "completeFrameIncludesGeometryBeyondTheEditorWindowAndReleasesItsWorker",
+        "completeFrameCrossesBothTheEditorPointWindowAndDatabaseBatchBoundary"
+      ],
+      "source_path": "/workspace/InkWeft/android/app/src/androidTest/java/org/inkweft/app/StreamedInkRasterTest.kt",
+      "audit": "Read source annotations and existing deadlines; no build or device execution."
+    }
+  ],
+  "runs_in_fixed_order": [
+    {
+      "order": 1,
+      "phase": "candidate-raster-hex-v1-diagnostic-tile",
+      "side": "candidate",
+      "apk_identity": "candidate-raster-hex-v1",
+      "selection": "org.inkweft.app.TileLocalRedrawTest",
+      "instrumentation_argument": {
+        "rasterMetadataDiagnostics": "true"
+      },
+      "expected_tests": 2,
+      "purpose": "One full-class diagnostic-on run; compare query/hex phases to retained diagnostic-v2 records, not pooled production-off statistics.",
+      "diagnostic_flag_usage": "Use runner --diagnostics; it adds instrumentation rasterMetadataDiagnostics=true."
+    },
+    {
+      "order": 2,
+      "phase": "candidate-raster-hex-v1-off-tile-repeat1",
+      "side": "candidate",
+      "apk_identity": "candidate-raster-hex-v1",
+      "selection": "org.inkweft.app.TileLocalRedrawTest",
+      "instrumentation_argument": {},
+      "expected_tests": 2,
+      "purpose": "First candidate default-off sample; retain pan/zoom warm-up and 1/4/8 loop.",
+      "diagnostic_flag_usage": "Omit runner --diagnostics and omit instrumentation rasterMetadataDiagnostics argument; test defaults off, receipt diagnostics=false."
+    },
+    {
+      "order": 3,
+      "phase": "baseline-raster-diagnostic-v2-off-tile-repeat1",
+      "side": "baseline",
+      "apk_identity": "baseline-raster-diagnostic-v2",
+      "selection": "org.inkweft.app.TileLocalRedrawTest",
+      "instrumentation_argument": {},
+      "expected_tests": 2,
+      "purpose": "First baseline default-off sample.",
+      "diagnostic_flag_usage": "Omit runner --diagnostics and omit instrumentation rasterMetadataDiagnostics argument; test defaults off, receipt diagnostics=false."
+    },
+    {
+      "order": 4,
+      "phase": "baseline-raster-diagnostic-v2-off-tile-repeat2",
+      "side": "baseline",
+      "apk_identity": "baseline-raster-diagnostic-v2",
+      "selection": "org.inkweft.app.TileLocalRedrawTest",
+      "instrumentation_argument": {},
+      "expected_tests": 2,
+      "purpose": "Second baseline default-off sample, as a fresh full-class invocation.",
+      "diagnostic_flag_usage": "Omit runner --diagnostics and omit instrumentation rasterMetadataDiagnostics argument; test defaults off, receipt diagnostics=false."
+    },
+    {
+      "order": 5,
+      "phase": "candidate-raster-hex-v1-off-tile-repeat2",
+      "side": "candidate",
+      "apk_identity": "candidate-raster-hex-v1",
+      "selection": "org.inkweft.app.TileLocalRedrawTest",
+      "instrumentation_argument": {},
+      "expected_tests": 2,
+      "purpose": "Second candidate default-off sample; completes fixed C/B/B/C block.",
+      "diagnostic_flag_usage": "Omit runner --diagnostics and omit instrumentation rasterMetadataDiagnostics argument; test defaults off, receipt diagnostics=false."
+    },
+    {
+      "order": 6,
+      "phase": "candidate-raster-hex-v1-frame-probe",
+      "side": "candidate",
+      "apk_identity": "candidate-raster-hex-v1",
+      "selection": "org.inkweft.app.RasterPerformanceProbe",
+      "instrumentation_argument": {},
+      "expected_tests": 1,
+      "purpose": "One complete 14-frame probe; preserve initial, 12 mixed transform and separated append cases.",
+      "diagnostic_flag_usage": "Omit runner --diagnostics and omit instrumentation rasterMetadataDiagnostics argument; test defaults off, receipt diagnostics=false."
+    },
+    {
+      "order": 7,
+      "phase": "baseline-raster-diagnostic-v2-frame-probe",
+      "side": "baseline",
+      "apk_identity": "baseline-raster-diagnostic-v2",
+      "selection": "org.inkweft.app.RasterPerformanceProbe",
+      "instrumentation_argument": {},
+      "expected_tests": 1,
+      "purpose": "One identical complete 14-frame probe on baseline.",
+      "diagnostic_flag_usage": "Omit runner --diagnostics and omit instrumentation rasterMetadataDiagnostics argument; test defaults off, receipt diagnostics=false."
+    },
+    {
+      "order": 8,
+      "phase": "candidate-raster-hex-v1-native-stroke",
+      "side": "candidate",
+      "apk_identity": "candidate-raster-hex-v1",
+      "selection": "org.inkweft.app.NativeStrokeTileReuseTest",
+      "instrumentation_argument": {},
+      "expected_tests": 1,
+      "purpose": "One existing four-phase within-version per-tile differential test.",
+      "diagnostic_flag_usage": "Omit runner --diagnostics and omit instrumentation rasterMetadataDiagnostics argument; test defaults off, receipt diagnostics=false."
+    },
+    {
+      "order": 9,
+      "phase": "candidate-raster-hex-v1-streamed-full",
+      "side": "candidate",
+      "apk_identity": "candidate-raster-hex-v1",
+      "selection": "org.inkweft.app.StreamedInkRasterTest",
+      "instrumentation_argument": {},
+      "expected_tests": 4,
+      "purpose": "Whole existing class, including the original dense 30-second gate; scheduled last so any unfinished dense cleanup cannot contaminate planned performance runs.",
+      "diagnostic_flag_usage": "Omit runner --diagnostics and omit instrumentation rasterMetadataDiagnostics argument; test defaults off, receipt diagnostics=false."
+    }
+  ],
+  "totals": {
+    "instrumentation_invocations": 9,
+    "planned_junit_test_executions": 17,
+    "distinct_test_methods": 8,
+    "candidate_tile_runs": 3,
+    "baseline_tile_runs": 2,
+    "default_off_tile_runs_per_side": 2,
+    "frame_probe_runs_per_side": 1,
+    "frame_records_per_side": 14,
+    "native_stroke_phases": 4,
+    "streamed_tests": 4,
+    "expected_passes": "Not assumed; original dense may fail and must remain counted."
+  },
+  "fixed_execution_rules": [
+    "Root runs all instrumentations serially in this order, using whole class selectors; no source edits, Gradle, compatibility benchmarks, APK/tree hashing or competing instrumentation during timing.",
+    "Record exact installed app/appTest hashes and source/build bindings before first use and every side switch; verify each run uses the planned bytes. Preserve APKs and immutable raw receipts.",
+    "Record environment immediately before and after each native invocation. Matching configuration is required for pairing but does not prove equal instantaneous load, ART/GC or caches.",
+    "Run the existing entire Tile class; retain its pan/zoom prelude and unchanged local 1/4/8-layer loop. Record any observed test ordering change instead of silently pooling altered order.",
+    "Keep every original method deadline/assertion. Process-level outer timeout does not replace or extend a 30/60/90-second inner gate.",
+    "Use existing synthetic test setup/cleanup. Do not add prewarming, reinstall loops, forced GC, database clearing or fixture reductions to select faster results.",
+    "If instrumentation fails, retain its log/exit/test count, confirm process/worker cleanup before another invocation, and do not silently substitute a rerun."
+  ],
+  "measurements_and_acceptance": {
+    "diagnostic_tile": {
+      "expected_cases": [
+        1,
+        4,
+        8
+      ],
+      "expected_counts": {
+        "metadata_rows_total": [
+          321,
+          321,
+          321
+        ],
+        "regions_total": [
+          24,
+          24,
+          48
+        ],
+        "query_batches_total": [
+          3,
+          8,
+          16
+        ],
+        "preparation_batches_total": [
+          0,
+          0,
+          0
+        ],
+        "preparation_rows_total": [
+          0,
+          0,
+          0
+        ],
+        "local_decoded": [
+          13,
+          21,
+          11
+        ],
+        "dirty_tiles": [
+          1,
+          1,
+          1
+        ],
+        "candidate_native_stroke_builds": [
+          13,
+          21,
+          11
+        ]
+      },
+      "evidence": "Retain every per-layer wall/CPU endpoint sample. Check metadata work/counters and pixels remain consistent while measuring the new hex/result interval. CPU is cumulative guest-thread CPU, not exclusive coroutine CPU or host cycles. Hex now includes SHA finalization+stdlib conversion+result allocation.",
+      "success_boundary": "A real drop in hex/result cost supports this targeted change; it does not alone close append regression. No timing threshold invented from a single diagnostic sample."
+    },
+    "tile_default_off": {
+      "required": "Both tests pass every invocation, all 1/4/8 append/destructive-frame pixel assertions pass, same workload/counters and resource assertions remain. No diagnostic array should appear when disabled. Disable diagnostics by omitting runner --diagnostics and the instrumentation diagnostic argument; test default is false and receipt diagnostics=false. Do not modify the runner to pass an explicit false value.",
+      "latency_reporting": "Report each of the four raw runs, per-layer initial/append/forced-full values and metadata/raster/publication. Report new two-per-side median/range descriptively; never claim significance or mix with old APK samples. Keep original 1435.516→6427.580ms regression visible.",
+      "acceptance": "Assess each layer separately; do not hide a single-layer regression behind 4/8-layer means. One fast tail sample or hex-stage improvement is insufficient to declare closure. Material persistent regression keeps delivery on hold and requires a specific next diagnostic."
+    },
+    "frame_probe": {
+      "required": "One test/14 frame records per side: initial + 12 mixed transforms + separated append, all same-version cold pixelsEqual, bitmap budget and existing assertions; retain writer SQLite settings.",
+      "metrics": "Per-frame wall/stage/decode/snapshotReadRows/rebuilt/native/cache counters; separately compare initial, the 12-case mixed sequence median and separated append. Candidate geometry reuse should preserve zero decode/read for transforms and sparse dirty-region read savings; unexpected count changes require inspection.",
+      "limits": "Twelve different transforms are not twelve repetitions of one workload. Baseline missing optional counters remain null, never zero; pixel oracle is within version."
+    },
+    "native_stroke": "One test/four phases; existing expected native counts 2/2/1/0, greater per-tile reference counts when nonzero, whole bitmap equality, cut masks, crop and finite page clipping and bitmap bounds must pass. Per-tile reference counts are same-process differential evidence, not measured old-production baseline counters.",
+    "streamed_full": "All four methods must be executed and reported. Cancel/pending geometry release and omitted-frame isolation assertions remain. Dense is 1201 strokes/76802 points; bounded is 258/8226. Both frame deadlines remain 30000ms with fixture/editor setup outside; successful frame cases must reach final red pixel, full snapshot rows, >1 batch and verified-and-released assertions. Bounded PASS cannot replace dense FAIL."
+  },
+  "compatibility_and_risks": [
+    "Only SHA digest hex representation changed; clocks, transaction/revision/epoch checks, spatial queries, cache and drawing algorithm are unchanged. Signature identity affects tile reuse, so pixel/work-count regressions are blockers.",
+    "The exact Kotlin 2.3.10 stdlib passed 1869 host equivalence checks (all byte values, empty/full byte arrays, six SHA arrays, 7 locales). This establishes tested host output compatibility, not Android linkage, ART execution or native speed; APK build and these native runs must cover the latter.",
+    "No new wrapper/encoder/dependency or duplicate stdlib unit tests. Retain host compatibility receipt separately from runtime results.",
+    "Current diagnosis does not prove Formatter is the source of the complete slowdown; query+digest also regressed and shared source, guest CPU and GC observations do not establish its cause."
+  ],
+  "failure_handling": {
+    "missing_tests_or_metrics": "Mark incomplete; preserve exact executed/expected counts and missing stage, do not count compile success as runtime PASS.",
+    "pixels_or_state_or_release_failure": "Functional blocker. Preserve raw failure/stacks and compare the one-line change/signature results before proposing the smallest relevant correction; no deadline/fixture relaxation.",
+    "dense_timeout": "Keep original dense gate FAILED and report reached/unreached assertions and stage/worker/resource evidence. Do not attribute solely to TCG or use the smaller test to close it.",
+    "hex_stage_does_not_improve": "Do not claim optimization success. Check representation/runtime path and phase overhead; avoid speculative broad cache/query refactors.",
+    "default_off_regression_persists": "Hold completion. Retain all samples and prioritize a minimal query+digest split or specific reproducible code issue; no blind native reuse rollback without supporting evidence.",
+    "environment_or_artifact_mismatch": "Flag that run as not directly paired, preserve it, and obtain an explicitly recorded next run plan rather than choosing favorable samples."
+  },
+  "historical_data_policy": {
+    "separate_groups": [
+      "Original candidate-v4 vs baseline-final default-off pair",
+      "Four unchanged v4/baseline-final repeat runs (C/B/B/C)",
+      "Diagnostic-v2 Formatter pair (diagnostics on)",
+      "New candidate-hex-v1 vs baseline-diagnostic-v2 default-off block",
+      "New candidate-hex-v1 diagnostic-on run"
+    ],
+    "preserve": [
+      "raster-repeat-review.json",
+      "raster-metadata-diagnostic-v2-paired-review.json",
+      "candidate-raster-diagnostic-v1-build.log",
+      "candidate-raster-hex-v1-source-change.json",
+      "raster-hex-v1-host-compatibility.json"
+    ],
+    "rule": "No group is relabeled as another APK or pooled into a larger same-build sample. No significance claim with two default-off samples per side."
+  },
+  "actions_by_plan_author": "Read four existing test files and small evidence JSON; wrote this scratch plan only. No source edits, build, ADB, new CPU check, large hashes, commit or push.",
+  "plan_correction": "2026-10-13 runner-flag erratum: diagnostic-off runs omit the diagnostic argument; sequence, versions, fixtures, counts, gates and acceptance unchanged. Prior plan hashes retained in candidate-raster-hex-v1-followup-plan-erratum-1.json."
+}

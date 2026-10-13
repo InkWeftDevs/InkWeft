@@ -1,0 +1,6 @@
+{
+  "utc": "2026-10-12T23:08:07.439806+00:00",
+  "scope": "Only previous README gains a current-stage pointer; previous raw measurements unchanged. Its SHA256SUMS refreshed; original checksum list preserved here.",
+  "previous_checksums_sha256": "64c83be18ebc95bfb0289ca1c5467cf71fbe80c497382a90380e68b96a766914",
+  "updated_checksums_sha256": "c3e031d64c70d14ed12613ba8a5f06e152ce854b066448c1cc432003ee5ff336"
+}

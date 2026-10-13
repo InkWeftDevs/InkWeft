@@ -1,0 +1,50 @@
+{
+  "utc": "2026-10-13T02:37:36.496678+00:00",
+  "status": "ONLY_ONE_DEX_ENTRY_CHANGED_PER_APK",
+  "reason": "Investigated larger total APK file sizes after incremental packing before using diagnostic baseline.",
+  "results": [
+    {
+      "role": "app",
+      "old_apk_bytes": 229655127,
+      "new_apk_bytes": 233099741,
+      "entry_count": 332,
+      "old_sum_uncompressed_entry_bytes": 345675376,
+      "new_sum_uncompressed_entry_bytes": 345689080,
+      "changed_entries": [
+        {
+          "name": "classes2.dex",
+          "old_size": 3430868,
+          "new_size": 3444572,
+          "old_crc": 477850487,
+          "new_crc": 4005511500,
+          "old_header_offset": 18449700,
+          "new_header_offset": 229621094
+        }
+      ]
+    },
+    {
+      "role": "appTest",
+      "old_apk_bytes": 10266683,
+      "new_apk_bytes": 18113484,
+      "entry_count": 89,
+      "old_sum_uncompressed_entry_bytes": 10433884,
+      "new_sum_uncompressed_entry_bytes": 10444652,
+      "changed_entries": [
+        {
+          "name": "classes3.dex",
+          "old_size": 7835988,
+          "new_size": 7846756,
+          "old_crc": 3273708249,
+          "new_crc": 2390062072,
+          "old_header_offset": 2181676,
+          "new_header_offset": 10255023
+        }
+      ]
+    }
+  ],
+  "limits": [
+    "Central-directory entry inventory/CRC/size comparison; APK signatures independently verified.",
+    "APK file size growth is much larger than the changed entry payload growth; total archive size must not be equated with an increase in loaded program content.",
+    "Source/build manifests remain the production-source identity; this inventory does not replace them."
+  ]
+}

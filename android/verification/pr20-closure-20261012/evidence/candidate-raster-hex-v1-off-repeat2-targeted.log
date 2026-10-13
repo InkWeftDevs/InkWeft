@@ -1,0 +1,30 @@
+
+org.inkweft.app.TileLocalRedrawTest:
+Error in integralPanReusesInteriorTilesAndZoomPreviewNeverCompletesCapture(org.inkweft.app.TileLocalRedrawTest):
+kotlinx.coroutines.TimeoutCancellationException: Timed out waiting for 30000 ms
+	at kotlinx.coroutines.TimeoutKt.TimeoutCancellationException(Timeout.kt:189)
+	at kotlinx.coroutines.TimeoutCoroutine.run(Timeout.kt:157)
+	at kotlinx.coroutines.EventLoopImplBase$DelayedRunnableTask.run(EventLoop.common.kt:505)
+	at kotlinx.coroutines.EventLoopImplBase.processNextEvent(EventLoop.common.kt:263)
+	at kotlinx.coroutines.DefaultExecutor.run(DefaultExecutor.kt:105)
+	at java.lang.Thread.run(Thread.java:1012)
+TILE_LOCAL_EVIDENCE {"layers":1,"initialStrokes":320,"finalStrokes":321,"firstCompleteMs":8970.178216,"appendCompleteMs":2047.746376,"forcedFullCompleteMs":6876.269731,"localDecoded":13,"fullDecoded":321,"localRebuiltTiles":1,"fullRebuiltTiles":24,"metadataMs":629.92002,"rasterMs":825.138786,"publicationMs":36.281573,"pixelsEqual":true,"bitmapBytes":14371200,"nativeStrokeBuilds":13}
+TILE_LOCAL_EVIDENCE {"layers":4,"initialStrokes":320,"finalStrokes":321,"firstCompleteMs":10128.511005,"appendCompleteMs":5128.053622,"forcedFullCompleteMs":9367.277983,"localDecoded":21,"fullDecoded":321,"localRebuiltTiles":1,"fullRebuiltTiles":24,"metadataMs":1243.459159,"rasterMs":2046.7642889999997,"publicationMs":4245.365219,"pixelsEqual":true,"bitmapBytes":12147408,"nativeStrokeBuilds":21}
+TILE_LOCAL_EVIDENCE {"layers":8,"initialStrokes":320,"finalStrokes":321,"firstCompleteMs":13177.205362,"appendCompleteMs":10283.710904,"forcedFullCompleteMs":12119.979665,"localDecoded":11,"fullDecoded":321,"localRebuiltTiles":1,"fullRebuiltTiles":48,"metadataMs":2198.866043,"rasterMs":2456.479295,"publicationMs":23210.169347000003,"pixelsEqual":true,"bitmapBytes":24294816,"nativeStrokeBuilds":11}
+.
+
+Time: 213.971
+There was 1 failure:
+1) integralPanReusesInteriorTilesAndZoomPreviewNeverCompletesCapture(org.inkweft.app.TileLocalRedrawTest)
+kotlinx.coroutines.TimeoutCancellationException: Timed out waiting for 30000 ms
+	at kotlinx.coroutines.TimeoutKt.TimeoutCancellationException(Timeout.kt:189)
+	at kotlinx.coroutines.TimeoutCoroutine.run(Timeout.kt:157)
+	at kotlinx.coroutines.EventLoopImplBase$DelayedRunnableTask.run(EventLoop.common.kt:505)
+	at kotlinx.coroutines.EventLoopImplBase.processNextEvent(EventLoop.common.kt:263)
+	at kotlinx.coroutines.DefaultExecutor.run(DefaultExecutor.kt:105)
+	at java.lang.Thread.run(Thread.java:1012)
+
+FAILURES!!!
+Tests run: 2,  Failures: 1
+
+

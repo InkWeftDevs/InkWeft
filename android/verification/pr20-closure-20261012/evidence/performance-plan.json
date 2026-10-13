@@ -1,0 +1,26 @@
+[
+  {
+    "label": "history-probe",
+    "module": "data",
+    "selection": "org.inkweft.data.HistoryCollectionBenchmarkTest",
+    "expected": 1
+  },
+  {
+    "label": "library-probe",
+    "module": "data",
+    "selection": "org.inkweft.data.LibraryReadPerformanceTest",
+    "expected": 1
+  },
+  {
+    "label": "raster-probe",
+    "module": "app",
+    "selection": "org.inkweft.app.RasterPerformanceProbe",
+    "expected": 1
+  },
+  {
+    "label": "tile-local",
+    "module": "app",
+    "selection": "org.inkweft.app.TileLocalRedrawTest",
+    "expected": 2
+  }
+]

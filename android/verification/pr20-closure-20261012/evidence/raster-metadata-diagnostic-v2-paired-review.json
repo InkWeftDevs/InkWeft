@@ -1,0 +1,1111 @@
+{
+  "schema": "raster-metadata-diagnostic-v2-paired-review-v1",
+  "reviewed_utc": "2026-10-13T02:57:15.472389+00:00",
+  "status": "DIAGNOSTIC_NATIVE_PASS_REGRESSION_STILL_OPEN_NO_SOURCE_CHANGE",
+  "bindings": {
+    "baseline": {
+      "source_manifest": {
+        "path": "baseline-raster-diagnostic-v2-source-sha256.json",
+        "sha256": "ea53d39f9dc02b118c95f18cec166d8c4ca2c64b88dabe83adaecb65b9f8e1e2",
+        "file_count": 734
+      },
+      "build": {
+        "started_utc": "2026-10-13T02:30:30.806209+00:00",
+        "seconds": 317.33186675999605,
+        "exit_code": 0,
+        "command": [
+          "bash",
+          "/workspace/scratch/run-inkweft-gradle",
+          ":app:assembleDebug",
+          ":app:assembleDebugAndroidTest"
+        ],
+        "cwd": "/workspace/scratch/inkweft-baseline-closure-a128bb07/android",
+        "source_files": 734,
+        "source_unchanged_during_build": true
+      },
+      "apk_hashes": {
+        "app": "a7e964809b12e937c7c54e23e27114a54bedaba49530363d1c345a73d2f7e9ed",
+        "appTest": "a500d8bb925adce209945acbe2de6672cb499b45f0b43706d58a9fa14ef8881e"
+      },
+      "signature_and_installation_receipts_pass": true,
+      "app_mupdf_abis": [
+        "lib/arm64-v8a/libmupdf_java.so",
+        "lib/armeabi-v7a/libmupdf_java.so",
+        "lib/x86/libmupdf_java.so",
+        "lib/x86_64/libmupdf_java.so"
+      ],
+      "native_receipt": {
+        "phase": "baseline-raster-diagnostic-v2",
+        "selection": "org.inkweft.app.TileLocalRedrawTest",
+        "expected": 2,
+        "diagnostics": true,
+        "command": [
+          "/workspace/.setup/tools/android-sdk/platform-tools/adb",
+          "-s",
+          "emulator-5554",
+          "shell",
+          "am",
+          "instrument",
+          "-w",
+          "-e",
+          "class",
+          "org.inkweft.app.TileLocalRedrawTest",
+          "-e",
+          "rasterMetadataDiagnostics",
+          "true",
+          "org.inkweft.app.a0.test/androidx.test.runner.AndroidJUnitRunner"
+        ],
+        "adb_serial": "emulator-5554",
+        "script_sha256": "1ee0c088e32a67a92480c24c9d6b06dfbb3104b3255e206114ed62fd8c1034fc",
+        "status": "PASS",
+        "outer_timeout_seconds": 1800,
+        "passed": true,
+        "environment": "API35 x86_64 software Android emulator; no KVM; not physical-device performance",
+        "started_utc": "2026-10-13T02:49:11.099635+00:00",
+        "tests": 2,
+        "executed": 2,
+        "failures": 0,
+        "exit_code": 0,
+        "seconds": 198.27562823799963,
+        "completed_utc": "2026-10-13T02:52:29.375532+00:00",
+        "requires_device_process_review_before_next_run": false,
+        "log_sha256": "5b5f78194b1207a3f2d473a55b8eb31fe15b49b53faa0884d2d54aecaec6f3bc"
+      },
+      "environment_comparison_hashes": {
+        "baseline-raster-diagnostic-v2-environment.json": "425d701e4a8711a84ca963b1c4769b76c47d1644970d72e2941666412be56378",
+        "baseline-raster-diagnostic-v2-environment-after.json": "425d701e4a8711a84ca963b1c4769b76c47d1644970d72e2941666412be56378"
+      }
+    },
+    "candidate": {
+      "source_manifest": {
+        "path": "candidate-raster-diagnostic-v2-source-sha256.json",
+        "sha256": "730b12637f1ee898b2b439603017c787c6323ba5411412662e003eb1066edf0f",
+        "file_count": 744
+      },
+      "build": {
+        "started_utc": "2026-10-13T02:21:51.397830+00:00",
+        "seconds": 484.22870993000106,
+        "exit_code": 0,
+        "command": [
+          "bash",
+          "/workspace/scratch/run-inkweft-gradle",
+          ":app:assembleDebug",
+          ":app:assembleDebugAndroidTest"
+        ],
+        "cwd": "/workspace/InkWeft/android",
+        "source_files": 744,
+        "source_unchanged_during_build": true
+      },
+      "apk_hashes": {
+        "app": "825f59bf50c1104a51fcb4aac108822a712e768502c3c606d029bb450612253d",
+        "appTest": "5ce3e01030cc7ce27d93ed3aed7027a4f670716785235c569c0d4e84e3528407"
+      },
+      "signature_and_installation_receipts_pass": true,
+      "app_mupdf_abis": [
+        "lib/arm64-v8a/libmupdf_java.so",
+        "lib/armeabi-v7a/libmupdf_java.so",
+        "lib/x86/libmupdf_java.so",
+        "lib/x86_64/libmupdf_java.so"
+      ],
+      "native_receipt": {
+        "phase": "candidate-raster-diagnostic-v2",
+        "selection": "org.inkweft.app.TileLocalRedrawTest",
+        "expected": 2,
+        "diagnostics": true,
+        "command": [
+          "/workspace/.setup/tools/android-sdk/platform-tools/adb",
+          "-s",
+          "emulator-5554",
+          "shell",
+          "am",
+          "instrument",
+          "-w",
+          "-e",
+          "class",
+          "org.inkweft.app.TileLocalRedrawTest",
+          "-e",
+          "rasterMetadataDiagnostics",
+          "true",
+          "org.inkweft.app.a0.test/androidx.test.runner.AndroidJUnitRunner"
+        ],
+        "adb_serial": "emulator-5554",
+        "script_sha256": "1ee0c088e32a67a92480c24c9d6b06dfbb3104b3255e206114ed62fd8c1034fc",
+        "status": "PASS",
+        "outer_timeout_seconds": 1800,
+        "passed": true,
+        "environment": "API35 x86_64 software Android emulator; no KVM; not physical-device performance",
+        "started_utc": "2026-10-13T02:39:48.977057+00:00",
+        "tests": 2,
+        "executed": 2,
+        "failures": 0,
+        "exit_code": 0,
+        "seconds": 343.64379984800325,
+        "completed_utc": "2026-10-13T02:45:32.621207+00:00",
+        "requires_device_process_review_before_next_run": false,
+        "log_sha256": "9abd1f79dd56eb53c5e40eb67c766c961b1dafa6dc8e8f373d7d0fa6426eda44"
+      },
+      "environment_comparison_hashes": {
+        "candidate-raster-diagnostic-v2-environment.json": "425d701e4a8711a84ca963b1c4769b76c47d1644970d72e2941666412be56378",
+        "candidate-raster-diagnostic-v2-environment-after.json": "425d701e4a8711a84ca963b1c4769b76c47d1644970d72e2941666412be56378"
+      }
+    }
+  },
+  "source_chain": {
+    "utc": "2026-10-13T02:31:15.729853+00:00",
+    "source_delta_status": "EXACT_TWO_PATHS_PER_SIDE",
+    "bindings": [
+      {
+        "label": "candidate",
+        "source_count": 744,
+        "changed_paths": [
+          "android/app/src/androidTest/java/org/inkweft/app/TileLocalRedrawTest.kt",
+          "android/data-local/src/main/kotlin/org/inkweft/data/InkRepository.kt"
+        ],
+        "old_manifest": {
+          "path": "candidate-v4-source-sha256.json",
+          "sha256": "8285c54019d0a4409a6dbf6f5d36e87298b5be9b6d47f93801ea9123bb7d859f"
+        },
+        "diagnostic_manifest": {
+          "path": "candidate-raster-diagnostic-v2-source-sha256.json",
+          "sha256": "730b12637f1ee898b2b439603017c787c6323ba5411412662e003eb1066edf0f"
+        }
+      },
+      {
+        "label": "baseline",
+        "source_count": 734,
+        "changed_paths": [
+          "android/app/src/androidTest/java/org/inkweft/app/TileLocalRedrawTest.kt",
+          "android/data-local/src/main/kotlin/org/inkweft/data/InkRepository.kt"
+        ],
+        "old_manifest": {
+          "path": "baseline-final-source-sha256.json",
+          "sha256": "386046c9c28eb27d33fd3977fb2baa06c94a855511f024f4a83188a4c304bbfd"
+        },
+        "diagnostic_manifest": {
+          "path": "baseline-raster-diagnostic-v2-source-sha256.json",
+          "sha256": "ea53d39f9dc02b118c95f18cec166d8c4ca2c64b88dabe83adaecb65b9f8e1e2"
+        }
+      }
+    ],
+    "algorithm_changes": "NONE; optional default-off metadata diagnostics and optional existing native counter output only",
+    "patch": {
+      "path": "raster-metadata-diagnostics-v2-portable.patch",
+      "sha256": "3449bdb9dc5063e4386a9d5f9d0b3061a5bbb8834362dcb897777b05605352ac"
+    },
+    "native_status": "NOT_RUN_YET",
+    "build_status": "See separate immutable build receipts; baseline may still be running."
+  },
+  "shared_environment_configuration_sha256": "425d701e4a8711a84ca963b1c4769b76c47d1644970d72e2941666412be56378",
+  "raw_cases": {
+    "baseline": [
+      {
+        "layers": 1,
+        "initialStrokes": 320,
+        "finalStrokes": 321,
+        "firstCompleteMs": 6956.689384,
+        "appendCompleteMs": 1413.978614,
+        "forcedFullCompleteMs": 6905.426986,
+        "localDecoded": 13,
+        "fullDecoded": 321,
+        "localRebuiltTiles": 1,
+        "fullRebuiltTiles": 24,
+        "metadataMs": 706.128662,
+        "rasterMs": 513.384944,
+        "publicationMs": 9.099364,
+        "pixelsEqual": true,
+        "bitmapBytes": 14371200,
+        "rasterMetadataDiagnostics": [
+          {
+            "layerIndex": 0,
+            "regions": 24,
+            "preparationBatches": 0,
+            "preparationRows": 0,
+            "queryBatches": 3,
+            "metadataRows": 321,
+            "admissionAndPreparationNanos": 85688853,
+            "queryAndDigestNanos": 341189280,
+            "queryAndDigestCpuNanos": 316040558,
+            "hexAndResultNanos": 253398036,
+            "hexAndResultCpuNanos": 242913644,
+            "queryStartThreadId": 15026,
+            "hexStartThreadId": 15026,
+            "hexEndThreadId": 15026
+          }
+        ],
+        "diagnosticTotals": {
+          "regions": 24,
+          "preparationBatches": 0,
+          "preparationRows": 0,
+          "queryBatches": 3,
+          "metadataRows": 321,
+          "admissionAndPreparationMs": 85.688853,
+          "queryAndDigestMs": 341.18928,
+          "queryAndDigestCpuMs": 316.040558,
+          "hexAndResultMs": 253.398036,
+          "hexAndResultCpuMs": 242.913644,
+          "hexWallShareOfMetadataPercent": 35.88553327976935,
+          "queryPlusHexCpuMs": 558.954202
+        },
+        "nativeStrokeBuilds": null
+      },
+      {
+        "layers": 4,
+        "initialStrokes": 320,
+        "finalStrokes": 321,
+        "firstCompleteMs": 8303.27785,
+        "appendCompleteMs": 4750.426475,
+        "forcedFullCompleteMs": 8871.937263,
+        "localDecoded": 21,
+        "fullDecoded": 321,
+        "localRebuiltTiles": 1,
+        "fullRebuiltTiles": 24,
+        "metadataMs": 2415.474991,
+        "rasterMs": 3390.049729,
+        "publicationMs": 1500.30272,
+        "pixelsEqual": true,
+        "bitmapBytes": 12147408,
+        "rasterMetadataDiagnostics": [
+          {
+            "layerIndex": 0,
+            "regions": 6,
+            "preparationBatches": 0,
+            "preparationRows": 0,
+            "queryBatches": 2,
+            "metadataRows": 81,
+            "admissionAndPreparationNanos": 39147286,
+            "queryAndDigestNanos": 211592647,
+            "queryAndDigestCpuNanos": 180945909,
+            "hexAndResultNanos": 157593498,
+            "hexAndResultCpuNanos": 140053200,
+            "queryStartThreadId": 15027,
+            "hexStartThreadId": 15027,
+            "hexEndThreadId": 15027
+          },
+          {
+            "layerIndex": 1,
+            "regions": 6,
+            "preparationBatches": 0,
+            "preparationRows": 0,
+            "queryBatches": 2,
+            "metadataRows": 80,
+            "admissionAndPreparationNanos": 150438363,
+            "queryAndDigestNanos": 228123315,
+            "queryAndDigestCpuNanos": 185357250,
+            "hexAndResultNanos": 145536886,
+            "hexAndResultCpuNanos": 128476489,
+            "queryStartThreadId": 15025,
+            "hexStartThreadId": 15025,
+            "hexEndThreadId": 15025
+          },
+          {
+            "layerIndex": 2,
+            "regions": 6,
+            "preparationBatches": 0,
+            "preparationRows": 0,
+            "queryBatches": 2,
+            "metadataRows": 80,
+            "admissionAndPreparationNanos": 454501473,
+            "queryAndDigestNanos": 204349279,
+            "queryAndDigestCpuNanos": 169859163,
+            "hexAndResultNanos": 176213246,
+            "hexAndResultCpuNanos": 156280590,
+            "queryStartThreadId": 15023,
+            "hexStartThreadId": 15023,
+            "hexEndThreadId": 15023
+          },
+          {
+            "layerIndex": 3,
+            "regions": 6,
+            "preparationBatches": 0,
+            "preparationRows": 0,
+            "queryBatches": 2,
+            "metadataRows": 80,
+            "admissionAndPreparationNanos": 286999769,
+            "queryAndDigestNanos": 164306696,
+            "queryAndDigestCpuNanos": 146916851,
+            "hexAndResultNanos": 120890298,
+            "hexAndResultCpuNanos": 114172915,
+            "queryStartThreadId": 15026,
+            "hexStartThreadId": 15026,
+            "hexEndThreadId": 15026
+          }
+        ],
+        "diagnosticTotals": {
+          "regions": 24,
+          "preparationBatches": 0,
+          "preparationRows": 0,
+          "queryBatches": 8,
+          "metadataRows": 321,
+          "admissionAndPreparationMs": 931.086891,
+          "queryAndDigestMs": 808.371937,
+          "queryAndDigestCpuMs": 683.079173,
+          "hexAndResultMs": 600.233928,
+          "hexAndResultCpuMs": 538.983194,
+          "hexWallShareOfMetadataPercent": 24.849519462484885,
+          "queryPlusHexCpuMs": 1222.062367
+        },
+        "nativeStrokeBuilds": null
+      },
+      {
+        "layers": 8,
+        "initialStrokes": 320,
+        "finalStrokes": 321,
+        "firstCompleteMs": 11672.994448,
+        "appendCompleteMs": 8275.651223,
+        "forcedFullCompleteMs": 11725.902229,
+        "localDecoded": 11,
+        "fullDecoded": 321,
+        "localRebuiltTiles": 1,
+        "fullRebuiltTiles": 48,
+        "metadataMs": 3040.826406,
+        "rasterMs": 1858.0808900000004,
+        "publicationMs": 17416.160761999996,
+        "pixelsEqual": true,
+        "bitmapBytes": 24294816,
+        "rasterMetadataDiagnostics": [
+          {
+            "layerIndex": 0,
+            "regions": 6,
+            "preparationBatches": 0,
+            "preparationRows": 0,
+            "queryBatches": 2,
+            "metadataRows": 41,
+            "admissionAndPreparationNanos": 29614367,
+            "queryAndDigestNanos": 161257071,
+            "queryAndDigestCpuNanos": 149509574,
+            "hexAndResultNanos": 122169479,
+            "hexAndResultCpuNanos": 110251415,
+            "queryStartThreadId": 15026,
+            "hexStartThreadId": 15026,
+            "hexEndThreadId": 15026
+          },
+          {
+            "layerIndex": 1,
+            "regions": 6,
+            "preparationBatches": 0,
+            "preparationRows": 0,
+            "queryBatches": 2,
+            "metadataRows": 40,
+            "admissionAndPreparationNanos": 189672396,
+            "queryAndDigestNanos": 159412472,
+            "queryAndDigestCpuNanos": 140054238,
+            "hexAndResultNanos": 141611643,
+            "hexAndResultCpuNanos": 124944965,
+            "queryStartThreadId": 15023,
+            "hexStartThreadId": 15023,
+            "hexEndThreadId": 15023
+          },
+          {
+            "layerIndex": 2,
+            "regions": 6,
+            "preparationBatches": 0,
+            "preparationRows": 0,
+            "queryBatches": 2,
+            "metadataRows": 40,
+            "admissionAndPreparationNanos": 124902093,
+            "queryAndDigestNanos": 132046539,
+            "queryAndDigestCpuNanos": 120316857,
+            "hexAndResultNanos": 121787627,
+            "hexAndResultCpuNanos": 104115667,
+            "queryStartThreadId": 15025,
+            "hexStartThreadId": 15025,
+            "hexEndThreadId": 15025
+          },
+          {
+            "layerIndex": 3,
+            "regions": 6,
+            "preparationBatches": 0,
+            "preparationRows": 0,
+            "queryBatches": 2,
+            "metadataRows": 40,
+            "admissionAndPreparationNanos": 39304056,
+            "queryAndDigestNanos": 159959159,
+            "queryAndDigestCpuNanos": 139239205,
+            "hexAndResultNanos": 140492269,
+            "hexAndResultCpuNanos": 125087031,
+            "queryStartThreadId": 15025,
+            "hexStartThreadId": 15025,
+            "hexEndThreadId": 15025
+          },
+          {
+            "layerIndex": 4,
+            "regions": 6,
+            "preparationBatches": 0,
+            "preparationRows": 0,
+            "queryBatches": 2,
+            "metadataRows": 40,
+            "admissionAndPreparationNanos": 37700054,
+            "queryAndDigestNanos": 165290199,
+            "queryAndDigestCpuNanos": 139654699,
+            "hexAndResultNanos": 134560856,
+            "hexAndResultCpuNanos": 104888974,
+            "queryStartThreadId": 15025,
+            "hexStartThreadId": 15025,
+            "hexEndThreadId": 15025
+          },
+          {
+            "layerIndex": 5,
+            "regions": 6,
+            "preparationBatches": 0,
+            "preparationRows": 0,
+            "queryBatches": 2,
+            "metadataRows": 40,
+            "admissionAndPreparationNanos": 38476780,
+            "queryAndDigestNanos": 172023164,
+            "queryAndDigestCpuNanos": 148975835,
+            "hexAndResultNanos": 136081958,
+            "hexAndResultCpuNanos": 120629657,
+            "queryStartThreadId": 15027,
+            "hexStartThreadId": 15027,
+            "hexEndThreadId": 15027
+          },
+          {
+            "layerIndex": 6,
+            "regions": 6,
+            "preparationBatches": 0,
+            "preparationRows": 0,
+            "queryBatches": 2,
+            "metadataRows": 40,
+            "admissionAndPreparationNanos": 38803409,
+            "queryAndDigestNanos": 165606881,
+            "queryAndDigestCpuNanos": 147943894,
+            "hexAndResultNanos": 143734243,
+            "hexAndResultCpuNanos": 125721386,
+            "queryStartThreadId": 15027,
+            "hexStartThreadId": 15027,
+            "hexEndThreadId": 15027
+          },
+          {
+            "layerIndex": 7,
+            "regions": 6,
+            "preparationBatches": 0,
+            "preparationRows": 0,
+            "queryBatches": 2,
+            "metadataRows": 40,
+            "admissionAndPreparationNanos": 32866180,
+            "queryAndDigestNanos": 162520347,
+            "queryAndDigestCpuNanos": 145209875,
+            "hexAndResultNanos": 145523175,
+            "hexAndResultCpuNanos": 127779767,
+            "queryStartThreadId": 15026,
+            "hexStartThreadId": 15026,
+            "hexEndThreadId": 15026
+          }
+        ],
+        "diagnosticTotals": {
+          "regions": 48,
+          "preparationBatches": 0,
+          "preparationRows": 0,
+          "queryBatches": 16,
+          "metadataRows": 321,
+          "admissionAndPreparationMs": 531.339335,
+          "queryAndDigestMs": 1278.115832,
+          "queryAndDigestCpuMs": 1130.904177,
+          "hexAndResultMs": 1085.96125,
+          "hexAndResultCpuMs": 943.418862,
+          "hexWallShareOfMetadataPercent": 35.712701253094814,
+          "queryPlusHexCpuMs": 2074.323039
+        },
+        "nativeStrokeBuilds": null
+      }
+    ],
+    "candidate": [
+      {
+        "layers": 1,
+        "initialStrokes": 320,
+        "finalStrokes": 321,
+        "firstCompleteMs": 10870.567675,
+        "appendCompleteMs": 3362.609066,
+        "forcedFullCompleteMs": 12490.425041,
+        "localDecoded": 13,
+        "fullDecoded": 321,
+        "localRebuiltTiles": 1,
+        "fullRebuiltTiles": 24,
+        "metadataMs": 1857.754744,
+        "rasterMs": 877.530094,
+        "publicationMs": 70.003727,
+        "pixelsEqual": true,
+        "bitmapBytes": 14371200,
+        "nativeStrokeBuilds": 13,
+        "rasterMetadataDiagnostics": [
+          {
+            "layerIndex": 0,
+            "regions": 24,
+            "preparationBatches": 0,
+            "preparationRows": 0,
+            "queryBatches": 3,
+            "metadataRows": 321,
+            "admissionAndPreparationNanos": 109566081,
+            "queryAndDigestNanos": 1205126920,
+            "queryAndDigestCpuNanos": 1006581044,
+            "hexAndResultNanos": 520045713,
+            "hexAndResultCpuNanos": 477805212,
+            "queryStartThreadId": 14861,
+            "hexStartThreadId": 14861,
+            "hexEndThreadId": 14861
+          }
+        ],
+        "diagnosticTotals": {
+          "regions": 24,
+          "preparationBatches": 0,
+          "preparationRows": 0,
+          "queryBatches": 3,
+          "metadataRows": 321,
+          "admissionAndPreparationMs": 109.566081,
+          "queryAndDigestMs": 1205.12692,
+          "queryAndDigestCpuMs": 1006.581044,
+          "hexAndResultMs": 520.045713,
+          "hexAndResultCpuMs": 477.805212,
+          "hexWallShareOfMetadataPercent": 27.993238325973557,
+          "queryPlusHexCpuMs": 1484.386256
+        }
+      },
+      {
+        "layers": 4,
+        "initialStrokes": 320,
+        "finalStrokes": 321,
+        "firstCompleteMs": 17781.881497,
+        "appendCompleteMs": 16124.940366,
+        "forcedFullCompleteMs": 25497.136545,
+        "localDecoded": 21,
+        "fullDecoded": 321,
+        "localRebuiltTiles": 1,
+        "fullRebuiltTiles": 24,
+        "metadataMs": 10573.859768,
+        "rasterMs": 9778.779344,
+        "publicationMs": 7178.522637,
+        "pixelsEqual": true,
+        "bitmapBytes": 12147408,
+        "nativeStrokeBuilds": 21,
+        "rasterMetadataDiagnostics": [
+          {
+            "layerIndex": 0,
+            "regions": 6,
+            "preparationBatches": 0,
+            "preparationRows": 0,
+            "queryBatches": 2,
+            "metadataRows": 81,
+            "admissionAndPreparationNanos": 88899497,
+            "queryAndDigestNanos": 604094295,
+            "queryAndDigestCpuNanos": 489189193,
+            "hexAndResultNanos": 626957113,
+            "hexAndResultCpuNanos": 517770752,
+            "queryStartThreadId": 14859,
+            "hexStartThreadId": 14859,
+            "hexEndThreadId": 14859
+          },
+          {
+            "layerIndex": 1,
+            "regions": 6,
+            "preparationBatches": 0,
+            "preparationRows": 0,
+            "queryBatches": 2,
+            "metadataRows": 80,
+            "admissionAndPreparationNanos": 1136983437,
+            "queryAndDigestNanos": 1442222877,
+            "queryAndDigestCpuNanos": 769588241,
+            "hexAndResultNanos": 1365033693,
+            "hexAndResultCpuNanos": 421004342,
+            "queryStartThreadId": 14860,
+            "hexStartThreadId": 14860,
+            "hexEndThreadId": 14860
+          },
+          {
+            "layerIndex": 2,
+            "regions": 6,
+            "preparationBatches": 0,
+            "preparationRows": 0,
+            "queryBatches": 2,
+            "metadataRows": 80,
+            "admissionAndPreparationNanos": 3082909508,
+            "queryAndDigestNanos": 447964526,
+            "queryAndDigestCpuNanos": 352569712,
+            "hexAndResultNanos": 285536369,
+            "hexAndResultCpuNanos": 189312579,
+            "queryStartThreadId": 14859,
+            "hexStartThreadId": 14859,
+            "hexEndThreadId": 14859
+          },
+          {
+            "layerIndex": 3,
+            "regions": 6,
+            "preparationBatches": 0,
+            "preparationRows": 0,
+            "queryBatches": 2,
+            "metadataRows": 80,
+            "admissionAndPreparationNanos": 698022278,
+            "queryAndDigestNanos": 409785026,
+            "queryAndDigestCpuNanos": 355981283,
+            "hexAndResultNanos": 247057970,
+            "hexAndResultCpuNanos": 187921688,
+            "queryStartThreadId": 14860,
+            "hexStartThreadId": 14860,
+            "hexEndThreadId": 14860
+          }
+        ],
+        "diagnosticTotals": {
+          "regions": 24,
+          "preparationBatches": 0,
+          "preparationRows": 0,
+          "queryBatches": 8,
+          "metadataRows": 321,
+          "admissionAndPreparationMs": 5006.81472,
+          "queryAndDigestMs": 2904.066724,
+          "queryAndDigestCpuMs": 1967.328429,
+          "hexAndResultMs": 2524.585145,
+          "hexAndResultCpuMs": 1316.009361,
+          "hexWallShareOfMetadataPercent": 23.87571993947026,
+          "queryPlusHexCpuMs": 3283.3377899999996
+        }
+      },
+      {
+        "layers": 8,
+        "initialStrokes": 320,
+        "finalStrokes": 321,
+        "firstCompleteMs": 21071.265301,
+        "appendCompleteMs": 11640.256678,
+        "forcedFullCompleteMs": 15875.738838,
+        "localDecoded": 11,
+        "fullDecoded": 321,
+        "localRebuiltTiles": 1,
+        "fullRebuiltTiles": 48,
+        "metadataMs": 4510.068249,
+        "rasterMs": 2293.671718,
+        "publicationMs": 27519.829872999995,
+        "pixelsEqual": true,
+        "bitmapBytes": 24294816,
+        "nativeStrokeBuilds": 11,
+        "rasterMetadataDiagnostics": [
+          {
+            "layerIndex": 0,
+            "regions": 6,
+            "preparationBatches": 0,
+            "preparationRows": 0,
+            "queryBatches": 2,
+            "metadataRows": 41,
+            "admissionAndPreparationNanos": 40289366,
+            "queryAndDigestNanos": 182178436,
+            "queryAndDigestCpuNanos": 146778515,
+            "hexAndResultNanos": 176535537,
+            "hexAndResultCpuNanos": 130264266,
+            "queryStartThreadId": 14861,
+            "hexStartThreadId": 14861,
+            "hexEndThreadId": 14861
+          },
+          {
+            "layerIndex": 1,
+            "regions": 6,
+            "preparationBatches": 0,
+            "preparationRows": 0,
+            "queryBatches": 2,
+            "metadataRows": 40,
+            "admissionAndPreparationNanos": 154180645,
+            "queryAndDigestNanos": 176103330,
+            "queryAndDigestCpuNanos": 159756912,
+            "hexAndResultNanos": 131238827,
+            "hexAndResultCpuNanos": 121933983,
+            "queryStartThreadId": 14861,
+            "hexStartThreadId": 14861,
+            "hexEndThreadId": 14861
+          },
+          {
+            "layerIndex": 2,
+            "regions": 6,
+            "preparationBatches": 0,
+            "preparationRows": 0,
+            "queryBatches": 2,
+            "metadataRows": 40,
+            "admissionAndPreparationNanos": 31650031,
+            "queryAndDigestNanos": 248560833,
+            "queryAndDigestCpuNanos": 218672411,
+            "hexAndResultNanos": 365449776,
+            "hexAndResultCpuNanos": 318029149,
+            "queryStartThreadId": 14859,
+            "hexStartThreadId": 14859,
+            "hexEndThreadId": 14859
+          },
+          {
+            "layerIndex": 3,
+            "regions": 6,
+            "preparationBatches": 0,
+            "preparationRows": 0,
+            "queryBatches": 2,
+            "metadataRows": 40,
+            "admissionAndPreparationNanos": 37434979,
+            "queryAndDigestNanos": 213667325,
+            "queryAndDigestCpuNanos": 151557160,
+            "hexAndResultNanos": 242865527,
+            "hexAndResultCpuNanos": 226687112,
+            "queryStartThreadId": 14859,
+            "hexStartThreadId": 14859,
+            "hexEndThreadId": 14859
+          },
+          {
+            "layerIndex": 4,
+            "regions": 6,
+            "preparationBatches": 0,
+            "preparationRows": 0,
+            "queryBatches": 2,
+            "metadataRows": 40,
+            "admissionAndPreparationNanos": 68281033,
+            "queryAndDigestNanos": 329208683,
+            "queryAndDigestCpuNanos": 259708663,
+            "hexAndResultNanos": 150132862,
+            "hexAndResultCpuNanos": 135621877,
+            "queryStartThreadId": 14859,
+            "hexStartThreadId": 14859,
+            "hexEndThreadId": 14859
+          },
+          {
+            "layerIndex": 5,
+            "regions": 6,
+            "preparationBatches": 0,
+            "preparationRows": 0,
+            "queryBatches": 2,
+            "metadataRows": 40,
+            "admissionAndPreparationNanos": 48112115,
+            "queryAndDigestNanos": 178454691,
+            "queryAndDigestCpuNanos": 145484732,
+            "hexAndResultNanos": 153563886,
+            "hexAndResultCpuNanos": 139417339,
+            "queryStartThreadId": 14859,
+            "hexStartThreadId": 14859,
+            "hexEndThreadId": 14859
+          },
+          {
+            "layerIndex": 6,
+            "regions": 6,
+            "preparationBatches": 0,
+            "preparationRows": 0,
+            "queryBatches": 2,
+            "metadataRows": 40,
+            "admissionAndPreparationNanos": 66252814,
+            "queryAndDigestNanos": 382735815,
+            "queryAndDigestCpuNanos": 308483429,
+            "hexAndResultNanos": 345785327,
+            "hexAndResultCpuNanos": 254203380,
+            "queryStartThreadId": 14859,
+            "hexStartThreadId": 14859,
+            "hexEndThreadId": 14859
+          },
+          {
+            "layerIndex": 7,
+            "regions": 6,
+            "preparationBatches": 0,
+            "preparationRows": 0,
+            "queryBatches": 2,
+            "metadataRows": 40,
+            "admissionAndPreparationNanos": 53826978,
+            "queryAndDigestNanos": 252050604,
+            "queryAndDigestCpuNanos": 180033991,
+            "hexAndResultNanos": 228927120,
+            "hexAndResultCpuNanos": 184823232,
+            "queryStartThreadId": 14860,
+            "hexStartThreadId": 14860,
+            "hexEndThreadId": 14860
+          }
+        ],
+        "diagnosticTotals": {
+          "regions": 48,
+          "preparationBatches": 0,
+          "preparationRows": 0,
+          "queryBatches": 16,
+          "metadataRows": 321,
+          "admissionAndPreparationMs": 500.027961,
+          "queryAndDigestMs": 1962.959717,
+          "queryAndDigestCpuMs": 1570.475813,
+          "hexAndResultMs": 1794.498862,
+          "hexAndResultCpuMs": 1510.980338,
+          "hexWallShareOfMetadataPercent": 39.78872963613992,
+          "queryPlusHexCpuMs": 3081.4561510000003
+        }
+      }
+    ]
+  },
+  "paired_phases": [
+    {
+      "layers": 1,
+      "append_ms": {
+        "baseline": 1413.978614,
+        "candidate": 3362.609066,
+        "candidate_minus_baseline": 1948.6304519999999,
+        "candidate_over_baseline": 2.3781187584496237,
+        "change_percent": 137.81187584496237
+      },
+      "initial_ms": {
+        "baseline": 6956.689384,
+        "candidate": 10870.567675,
+        "candidate_minus_baseline": 3913.878291,
+        "candidate_over_baseline": 1.5626064461066356,
+        "change_percent": 56.260644610663554
+      },
+      "metadata_ms": {
+        "baseline": 706.128662,
+        "candidate": 1857.754744,
+        "candidate_minus_baseline": 1151.6260820000002,
+        "candidate_over_baseline": 2.6309011997023286,
+        "change_percent": 163.09011997023285
+      },
+      "raster_ms": {
+        "baseline": 513.384944,
+        "candidate": 877.530094,
+        "candidate_minus_baseline": 364.14514999999994,
+        "candidate_over_baseline": 1.7093023553881237,
+        "change_percent": 70.93023553881237
+      },
+      "publication_ms": {
+        "baseline": 9.099364,
+        "candidate": 70.003727,
+        "candidate_minus_baseline": 60.904363,
+        "candidate_over_baseline": 7.693254935180085,
+        "change_percent": 669.3254935180084
+      },
+      "diagnostic_sums": {
+        "admissionAndPreparationMs": {
+          "baseline": 85.688853,
+          "candidate": 109.566081,
+          "candidate_minus_baseline": 23.877228000000002,
+          "candidate_over_baseline": 1.2786503397355546,
+          "change_percent": 27.865033973555462
+        },
+        "queryAndDigestMs": {
+          "baseline": 341.18928,
+          "candidate": 1205.12692,
+          "candidate_minus_baseline": 863.9376399999999,
+          "candidate_over_baseline": 3.5321359451856162,
+          "change_percent": 253.21359451856162
+        },
+        "queryAndDigestCpuMs": {
+          "baseline": 316.040558,
+          "candidate": 1006.581044,
+          "candidate_minus_baseline": 690.5404860000001,
+          "candidate_over_baseline": 3.1849742652333886,
+          "change_percent": 218.49742652333885
+        },
+        "hexAndResultMs": {
+          "baseline": 253.398036,
+          "candidate": 520.045713,
+          "candidate_minus_baseline": 266.647677,
+          "candidate_over_baseline": 2.0522878598790717,
+          "change_percent": 105.22878598790717
+        },
+        "hexAndResultCpuMs": {
+          "baseline": 242.913644,
+          "candidate": 477.805212,
+          "candidate_minus_baseline": 234.89156799999998,
+          "candidate_over_baseline": 1.9669756055365912,
+          "change_percent": 96.69756055365912
+        }
+      }
+    },
+    {
+      "layers": 4,
+      "append_ms": {
+        "baseline": 4750.426475,
+        "candidate": 16124.940366,
+        "candidate_minus_baseline": 11374.513891,
+        "candidate_over_baseline": 3.394419522301942,
+        "change_percent": 239.44195223019423
+      },
+      "initial_ms": {
+        "baseline": 8303.27785,
+        "candidate": 17781.881497,
+        "candidate_minus_baseline": 9478.603646999998,
+        "candidate_over_baseline": 2.1415496166974584,
+        "change_percent": 114.15496166974583
+      },
+      "metadata_ms": {
+        "baseline": 2415.474991,
+        "candidate": 10573.859768,
+        "candidate_minus_baseline": 8158.384777,
+        "candidate_over_baseline": 4.377548849562897,
+        "change_percent": 337.75488495628974
+      },
+      "raster_ms": {
+        "baseline": 3390.049729,
+        "candidate": 9778.779344,
+        "candidate_minus_baseline": 6388.729615,
+        "candidate_over_baseline": 2.8845533622554127,
+        "change_percent": 188.45533622554126
+      },
+      "publication_ms": {
+        "baseline": 1500.30272,
+        "candidate": 7178.522637,
+        "candidate_minus_baseline": 5678.219917,
+        "candidate_over_baseline": 4.784716138487038,
+        "change_percent": 378.47161384870384
+      },
+      "diagnostic_sums": {
+        "admissionAndPreparationMs": {
+          "baseline": 931.086891,
+          "candidate": 5006.81472,
+          "candidate_minus_baseline": 4075.7278290000004,
+          "candidate_over_baseline": 5.3773871895270835,
+          "change_percent": 437.7387189527083
+        },
+        "queryAndDigestMs": {
+          "baseline": 808.371937,
+          "candidate": 2904.066724,
+          "candidate_minus_baseline": 2095.694787,
+          "candidate_over_baseline": 3.5924882978712307,
+          "change_percent": 259.24882978712304
+        },
+        "queryAndDigestCpuMs": {
+          "baseline": 683.079173,
+          "candidate": 1967.328429,
+          "candidate_minus_baseline": 1284.249256,
+          "candidate_over_baseline": 2.8800884388843753,
+          "change_percent": 188.00884388843753
+        },
+        "hexAndResultMs": {
+          "baseline": 600.233928,
+          "candidate": 2524.585145,
+          "candidate_minus_baseline": 1924.351217,
+          "candidate_over_baseline": 4.206002072245407,
+          "change_percent": 320.60020722454067
+        },
+        "hexAndResultCpuMs": {
+          "baseline": 538.983194,
+          "candidate": 1316.009361,
+          "candidate_minus_baseline": 777.0261669999999,
+          "candidate_over_baseline": 2.441651939522255,
+          "change_percent": 144.16519395222548
+        }
+      }
+    },
+    {
+      "layers": 8,
+      "append_ms": {
+        "baseline": 8275.651223,
+        "candidate": 11640.256678,
+        "candidate_minus_baseline": 3364.605454999999,
+        "candidate_over_baseline": 1.4065668506726046,
+        "change_percent": 40.656685067260455
+      },
+      "initial_ms": {
+        "baseline": 11672.994448,
+        "candidate": 21071.265301,
+        "candidate_minus_baseline": 9398.270853,
+        "candidate_over_baseline": 1.8051293860257305,
+        "change_percent": 80.51293860257304
+      },
+      "metadata_ms": {
+        "baseline": 3040.826406,
+        "candidate": 4510.068249,
+        "candidate_minus_baseline": 1469.2418429999998,
+        "candidate_over_baseline": 1.483171890411425,
+        "change_percent": 48.317189041142505
+      },
+      "raster_ms": {
+        "baseline": 1858.0808900000004,
+        "candidate": 2293.671718,
+        "candidate_minus_baseline": 435.59082799999965,
+        "candidate_over_baseline": 1.2344304978024931,
+        "change_percent": 23.443049780249314
+      },
+      "publication_ms": {
+        "baseline": 17416.160761999996,
+        "candidate": 27519.829872999995,
+        "candidate_minus_baseline": 10103.669111,
+        "candidate_over_baseline": 1.5801318240610762,
+        "change_percent": 58.013182406107624
+      },
+      "diagnostic_sums": {
+        "admissionAndPreparationMs": {
+          "baseline": 531.339335,
+          "candidate": 500.027961,
+          "candidate_minus_baseline": -31.311374,
+          "candidate_over_baseline": 0.9410708525842529,
+          "change_percent": -5.892914741574707
+        },
+        "queryAndDigestMs": {
+          "baseline": 1278.115832,
+          "candidate": 1962.959717,
+          "candidate_minus_baseline": 684.843885,
+          "candidate_over_baseline": 1.53582301999057,
+          "change_percent": 53.582301999057
+        },
+        "queryAndDigestCpuMs": {
+          "baseline": 1130.904177,
+          "candidate": 1570.475813,
+          "candidate_minus_baseline": 439.5716360000001,
+          "candidate_over_baseline": 1.3886904345565965,
+          "change_percent": 38.86904345565965
+        },
+        "hexAndResultMs": {
+          "baseline": 1085.96125,
+          "candidate": 1794.498862,
+          "candidate_minus_baseline": 708.5376119999999,
+          "candidate_over_baseline": 1.6524520207327837,
+          "change_percent": 65.24520207327838
+        },
+        "hexAndResultCpuMs": {
+          "baseline": 943.418862,
+          "candidate": 1510.980338,
+          "candidate_minus_baseline": 567.5614760000001,
+          "candidate_over_baseline": 1.6016007299205346,
+          "change_percent": 60.16007299205346
+        }
+      }
+    }
+  ],
+  "source_audit": {
+    "compared": "a128bb07e34cb82f00eeafc8e62a47bf7b95b128 to c60fba7455cfc0b919d6f9c2d3b06f17ec25713d",
+    "unchanged": [
+      "InkRepository.owner",
+      "InkDao.page",
+      "InkRepository.layerFilter",
+      "NotebookPages.kt (NotebookPageDao.get and ensureFirst)",
+      "core/PageAuthoring.kt (PageAuthoringCodec.layerHeader)",
+      "PageAuthoringRepository.kt",
+      "SpatialIndex.kt",
+      "root/app/data-local build.gradle.kts"
+    ],
+    "NoteDatabase_diff": "Only NoteDao list ordering plus header observation API; neither is on the successful owner/get path for this fixture. The common factory initialization fix is present on both paired trees.",
+    "conclusion": "No relevant owner/layer DAO source delta identified. Shared source does not prove identical runtime costs."
+  },
+  "retained_historical_evidence": {
+    "review": "raster-repeat-review.json",
+    "sha256": "e55ba54f88c7804c8fd311f92ef2f2698289f228df26d7628dceb32f36ff89c8",
+    "policy": "Original pair plus all four repeat runs remain separate; do not replace slow original or choose fast tail. Original single-layer append baseline1435.515577ms vs candidate6427.580419ms remains recorded."
+  },
+  "recommendation": {
+    "decision": "Recommend a minimal candidate-only stdlib hex substitution, pending parent authorization; no source modified during this review.",
+    "proposed_expression": "digests[it].digest().toHexString()",
+    "scope": "Replace only existing digest().joinToString(\"\"){\"%02x\".format(it)} within rasterRegions; no new wrapper, encoder, dependency, cache rollback or query rewrite. Baseline retains Formatter for before/after evidence.",
+    "reason": "Both sides show material hex/result CPU for 24/24/48 digests (768/768/1536 current Formatter calls). Removing the known per-byte Formatter work is a small, output-preserving hotspot optimization, not a diagnosis of the entire candidate regression.",
+    "compatibility_check": "After authorization and outside native measurement, use a one-off scratch check over all 256 byte values and representative SHA-256 32-byte arrays across locales against the original Formatter expression. Do not create a production wrapper or generic encoder test framework.",
+    "runtime_validation": "Freeze new source/APKs; run relevant existing Tile, NativeStrokeReuse, Streamed release/cancel coverage, original dense deadline and paired FrameProbe. Separate diagnostic-on phase evidence from default-off end-to-end performance, retain every old sample and fail.",
+    "if_regression_persists": "Do not declare completion from the hex micro-change. Consider minimal queryAndDigest sub-stage evidence before any DAO/spatial/cache change; current source diff and counters do not justify blind rollback or identify a specific query regression."
+  },
+  "limits": [
+    "One new diagnostic-on full-class run per side, candidate then baseline; not repeated identical trials or a significance test. Do not pool with diagnostic-off original/repeat results.",
+    "Software Android API35 x86_64 TCG/no KVM with SwiftShader. Endpoint thread CPU is cumulative guest thread CPU, not host CPU cycles or exclusive coroutine CPU; host load, ART JIT and GC attribution remain unmeasured.",
+    "Four environment configuration hashes match; this does not establish identical instantaneous contention, cache, GC or CPU conditions.",
+    "Multi-layer metadata/raster/publication and diagnostic wall sums overlap; they must not be added to or substituted for append wall latency.",
+    "AdmissionAndPreparation includes scheduling, transaction admission and preparation; it is not a pure lock-wait measure. prepRows=0 does not mean no queries checking preparation readiness.",
+    "QueryAndDigest includes owner/revision checks, layer/epoch queries, spatial queries, allocation and digest updates; it does not independently identify SQL versus hashing cost.",
+    "HexAndResult includes SHA finalization, Formatter encoding and result allocation; material cost does not isolate Formatter or prove it caused the regression.",
+    "Candidate native counter is measured; baseline getter remains absent and is represented as null in this review, never zero or a reconstructed measured value.",
+    "Pixel equality is between cached and forced-full rendering within each version, not cross-version pixel identity. previewCaptureReady=false is not hardware screenshot verification.",
+    "Reported bitmapBytes is collected after destructive update, not append peak.",
+    "Original dense 1201-stroke 30-second failure remains open and was not rerun by this Tile-only diagnostic. V1 compiler failure remains preserved."
+  ],
+  "raw_sha256": {
+    "baseline-raster-diagnostic-v2-targeted.log": "5b5f78194b1207a3f2d473a55b8eb31fe15b49b53faa0884d2d54aecaec6f3bc",
+    "baseline-raster-diagnostic-v2-targeted.json": "d6e3208e06b3ee36bd904666b5173f34017dc7ce47e10dff2394edfa403e824a",
+    "baseline-raster-diagnostic-v2-build.json": "01a73d4214c27e5b23c5aebe15210b97f9e88d01bec30c4326bd3a5bcc6041c5",
+    "baseline-raster-diagnostic-v2-install-targeted-apks.json": "7f77082a3bd6ebe20f99eba4d1d0f397bba31edd262e241ac263a5a2d4db3b06",
+    "baseline-raster-diagnostic-v2-source-sha256.json": "ea53d39f9dc02b118c95f18cec166d8c4ca2c64b88dabe83adaecb65b9f8e1e2",
+    "baseline-raster-diagnostic-v2-environment.json": "009762947b06de72e5629a2a6d33016654e3ea204d1ad56f8b929896faa0501d",
+    "baseline-raster-diagnostic-v2-environment-after.json": "32ba14e2f8eb9ed472af6319ef9e661cbe5587ced5958faaa2b03770cf7c3831",
+    "candidate-raster-diagnostic-v2-targeted.log": "9abd1f79dd56eb53c5e40eb67c766c961b1dafa6dc8e8f373d7d0fa6426eda44",
+    "candidate-raster-diagnostic-v2-targeted.json": "619d1e88002c5065417e5d094181751783c4f04a49b5d8b31f2b82eb2bcf3110",
+    "candidate-raster-diagnostic-v2-build.json": "e2b0c064099ad7295e13809716986ccad13f2855482cf70a09890e9dcf96fd7b",
+    "candidate-raster-diagnostic-v2-install-targeted-apks.json": "597a37bdce9727cc16adeabbfc0deb9a7d6c435e9a4de13f1cbc5abc48c1044b",
+    "candidate-raster-diagnostic-v2-source-sha256.json": "730b12637f1ee898b2b439603017c787c6323ba5411412662e003eb1066edf0f",
+    "candidate-raster-diagnostic-v2-environment.json": "93d99b831c2bd266039a70ed365103b72f9ad0b4a808d5d7a1a72661e6200d64",
+    "candidate-raster-diagnostic-v2-environment-after.json": "944392cb2a67c55fedc93d3f5c57d77d803b294994ac5bb6215dcd1557d8d5a3"
+  },
+  "reviewer_actions": "Read small source diffs/logs/receipts and wrote this scratch review only; no source change, build, ADB, CPU benchmark, APK rehash, commit or push."
+}

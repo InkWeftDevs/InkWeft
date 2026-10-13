@@ -1,0 +1,48 @@
+{
+  "phase": "candidate-raster-hex-v1",
+  "reports": [
+    {
+      "path": "/workspace/InkWeft/android/data-local/build/test-results/testDebugUnitTest/TEST-org.inkweft.data.LibrarySearchTermsTest.xml",
+      "sha256": "3a74f9c270cb433348fdfeda5cf3a3bc31efede64fbf53dbc7107326fcade404",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "path": "/workspace/InkWeft/android/data-local/build/test-results/testDebugUnitTest/TEST-org.inkweft.data.OriginalFileCacheTest.xml",
+      "sha256": "52673ea0783ec80491960d5370e8105c96ccd9f4313e144686ec7b677dac10aa",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "path": "/workspace/InkWeft/android/data-local/build/test-results/testDebugUnitTest/TEST-org.inkweft.data.OriginalStoreTest.xml",
+      "sha256": "3211b3b20c6046e551507c6b9852ee184903af40582f467b8517e85a96c1673a",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "path": "/workspace/InkWeft/android/data-local/build/test-results/testDebugUnitTest/TEST-org.inkweft.data.StorageValidationTest.xml",
+      "sha256": "c8e79c4d2ef6ce7249a40510d89fea00b7051beb0c51f032dbc5feb65f64fd42",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  ],
+  "totals": {
+    "tests": 20,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "task": ":data-local:testDebugUnitTest",
+  "execution": "EXECUTED; see same-phase build log",
+  "core": "NOT_RUN",
+  "lint": "NOT_RUN",
+  "native": "NOT_RUN_BY_THIS_CHECK"
+}

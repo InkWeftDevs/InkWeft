@@ -1,0 +1,468 @@
+{
+  "utc": "2026-10-13T03:57:44.188267+00:00",
+  "status": "COMPLETED_EVIDENCE_AUDIT_ONLY_NOT_ACCEPTANCE_CLOSURE",
+  "issues": [],
+  "old_source_commit": "c60fba7455cfc0b919d6f9c2d3b06f17ec25713d",
+  "historical_payload_changes": [],
+  "payloads_changed_during_audit": [],
+  "source_manifest_deltas": [
+    {
+      "old": "candidate-v4-source-sha256.json",
+      "new": "candidate-raster-diagnostic-v1-source-sha256.json",
+      "allowed_changed_paths": [
+        "android/app/src/androidTest/java/org/inkweft/app/TileLocalRedrawTest.kt",
+        "android/data-local/src/main/kotlin/org/inkweft/data/InkRepository.kt"
+      ],
+      "meaning": "Uncompiled diagnostic-v1 source; build failure retained.",
+      "changed_paths": [
+        "android/app/src/androidTest/java/org/inkweft/app/TileLocalRedrawTest.kt",
+        "android/data-local/src/main/kotlin/org/inkweft/data/InkRepository.kt"
+      ],
+      "matches_exact_allowlist": true
+    },
+    {
+      "old": "candidate-raster-diagnostic-v1-source-sha256.json",
+      "new": "candidate-raster-diagnostic-v2-source-sha256.json",
+      "allowed_changed_paths": [
+        "android/data-local/src/main/kotlin/org/inkweft/data/InkRepository.kt"
+      ],
+      "meaning": "Diagnostic syntax correction; test bytes unchanged.",
+      "changed_paths": [
+        "android/data-local/src/main/kotlin/org/inkweft/data/InkRepository.kt"
+      ],
+      "matches_exact_allowlist": true
+    },
+    {
+      "old": "baseline-final-source-sha256.json",
+      "new": "baseline-raster-diagnostic-v2-source-sha256.json",
+      "allowed_changed_paths": [
+        "android/app/src/androidTest/java/org/inkweft/app/TileLocalRedrawTest.kt",
+        "android/data-local/src/main/kotlin/org/inkweft/data/InkRepository.kt"
+      ],
+      "meaning": "Baseline diagnostics have their own source/APK identity.",
+      "changed_paths": [
+        "android/app/src/androidTest/java/org/inkweft/app/TileLocalRedrawTest.kt",
+        "android/data-local/src/main/kotlin/org/inkweft/data/InkRepository.kt"
+      ],
+      "matches_exact_allowlist": true
+    },
+    {
+      "old": "candidate-raster-diagnostic-v2-source-sha256.json",
+      "new": "candidate-raster-hex-v1-source-sha256.json",
+      "allowed_changed_paths": [
+        "android/data-local/src/main/kotlin/org/inkweft/data/InkRepository.kt"
+      ],
+      "meaning": "Candidate-only one-line hex conversion; default-off diagnostics remain present.",
+      "changed_paths": [
+        "android/data-local/src/main/kotlin/org/inkweft/data/InkRepository.kt"
+      ],
+      "matches_exact_allowlist": true
+    },
+    {
+      "old": "candidate-raster-hex-v1-source-sha256.json",
+      "new": "candidate-raster-final-doc-source-sha256.json",
+      "allowed_changed_paths": [
+        "android/data-local/src/main/kotlin/org/inkweft/data/InkRepository.kt"
+      ],
+      "meaning": "Comment-only wording correction; independent exact inverse check and equal APK receipts separately bind final commit to native-tested bytes.",
+      "changed_paths": [
+        "android/data-local/src/main/kotlin/org/inkweft/data/InkRepository.kt"
+      ],
+      "matches_exact_allowlist": true
+    }
+  ],
+  "native_receipt_checks": [
+    {
+      "phase": "candidate-raster-diagnostic-v2",
+      "cohort": "diagnostic_v2_prior_pair",
+      "expected": 2,
+      "receipt_passed": true,
+      "raw_pass": true,
+      "raw_and_receipt_agree": true,
+      "raw_executed": 2,
+      "raw_failures": 0,
+      "raw_counts_match_receipt": true,
+      "raw_log_hash_matches_receipt": true,
+      "diagnostics_requested": true,
+      "diagnostics_recorded": true,
+      "environment_before": "425d701e4a8711a84ca963b1c4769b76c47d1644970d72e2941666412be56378",
+      "environment_after": "425d701e4a8711a84ca963b1c4769b76c47d1644970d72e2941666412be56378",
+      "recorded_environments_equal": true,
+      "environment_hashes_recomputed": true,
+      "artifact_receipt": "candidate-raster-diagnostic-v2-install-targeted-apks.json",
+      "artifact_status": "VERIFIED_AND_INSTALLED",
+      "artifact_hashes": [
+        {
+          "role": "app",
+          "sha256": "825f59bf50c1104a51fcb4aac108822a712e768502c3c606d029bb450612253d"
+        },
+        {
+          "role": "appTest",
+          "sha256": "5ce3e01030cc7ce27d93ed3aed7027a4f670716785235c569c0d4e84e3528407"
+        }
+      ],
+      "scope": "Saved native receipts only; diagnostic-on observations retain overhead and do not replace default-off results."
+    },
+    {
+      "phase": "baseline-raster-diagnostic-v2",
+      "cohort": "diagnostic_v2_prior_pair",
+      "expected": 2,
+      "receipt_passed": true,
+      "raw_pass": true,
+      "raw_and_receipt_agree": true,
+      "raw_executed": 2,
+      "raw_failures": 0,
+      "raw_counts_match_receipt": true,
+      "raw_log_hash_matches_receipt": true,
+      "diagnostics_requested": true,
+      "diagnostics_recorded": true,
+      "environment_before": "425d701e4a8711a84ca963b1c4769b76c47d1644970d72e2941666412be56378",
+      "environment_after": "425d701e4a8711a84ca963b1c4769b76c47d1644970d72e2941666412be56378",
+      "recorded_environments_equal": true,
+      "environment_hashes_recomputed": true,
+      "artifact_receipt": "baseline-raster-diagnostic-v2-install-targeted-apks.json",
+      "artifact_status": "VERIFIED_AND_INSTALLED",
+      "artifact_hashes": [
+        {
+          "role": "app",
+          "sha256": "a7e964809b12e937c7c54e23e27114a54bedaba49530363d1c345a73d2f7e9ed"
+        },
+        {
+          "role": "appTest",
+          "sha256": "a500d8bb925adce209945acbe2de6672cb499b45f0b43706d58a9fa14ef8881e"
+        }
+      ],
+      "scope": "Saved native receipts only; diagnostic-on observations retain overhead and do not replace default-off results."
+    },
+    {
+      "phase": "candidate-raster-hex-v1-diagnostic",
+      "cohort": "hex_fixed_9_calls",
+      "expected": 2,
+      "receipt_passed": true,
+      "raw_pass": true,
+      "raw_and_receipt_agree": true,
+      "raw_executed": 2,
+      "raw_failures": 0,
+      "raw_counts_match_receipt": true,
+      "raw_log_hash_matches_receipt": true,
+      "diagnostics_requested": true,
+      "diagnostics_recorded": true,
+      "environment_before": "425d701e4a8711a84ca963b1c4769b76c47d1644970d72e2941666412be56378",
+      "environment_after": "425d701e4a8711a84ca963b1c4769b76c47d1644970d72e2941666412be56378",
+      "recorded_environments_equal": true,
+      "environment_hashes_recomputed": true,
+      "artifact_receipt": "candidate-raster-hex-v1-targeted-apks.json",
+      "artifact_status": "VERIFIED_AND_INSTALLED",
+      "artifact_hashes": [
+        {
+          "role": "app",
+          "sha256": "d4af16103b601e7d73af673eeb89d6511003a0f0ef4c86785862d5e202714b5e"
+        },
+        {
+          "role": "appTest",
+          "sha256": "5ce3e01030cc7ce27d93ed3aed7027a4f670716785235c569c0d4e84e3528407"
+        }
+      ],
+      "scope": "Saved native receipts only; diagnostic-on observations retain overhead and do not replace default-off results."
+    },
+    {
+      "phase": "candidate-raster-hex-v1-off-repeat1",
+      "cohort": "hex_fixed_9_calls",
+      "expected": 2,
+      "receipt_passed": true,
+      "raw_pass": true,
+      "raw_and_receipt_agree": true,
+      "raw_executed": 2,
+      "raw_failures": 0,
+      "raw_counts_match_receipt": true,
+      "raw_log_hash_matches_receipt": true,
+      "diagnostics_requested": false,
+      "diagnostics_recorded": false,
+      "environment_before": "425d701e4a8711a84ca963b1c4769b76c47d1644970d72e2941666412be56378",
+      "environment_after": "425d701e4a8711a84ca963b1c4769b76c47d1644970d72e2941666412be56378",
+      "recorded_environments_equal": true,
+      "environment_hashes_recomputed": true,
+      "artifact_receipt": "candidate-raster-hex-v1-targeted-apks.json",
+      "artifact_status": "VERIFIED_AND_INSTALLED",
+      "artifact_hashes": [
+        {
+          "role": "app",
+          "sha256": "d4af16103b601e7d73af673eeb89d6511003a0f0ef4c86785862d5e202714b5e"
+        },
+        {
+          "role": "appTest",
+          "sha256": "5ce3e01030cc7ce27d93ed3aed7027a4f670716785235c569c0d4e84e3528407"
+        }
+      ],
+      "scope": "Saved native receipts only; diagnostic-on observations retain overhead and do not replace default-off results."
+    },
+    {
+      "phase": "baseline-raster-hex-pair-off-repeat1",
+      "cohort": "hex_fixed_9_calls",
+      "expected": 2,
+      "receipt_passed": true,
+      "raw_pass": true,
+      "raw_and_receipt_agree": true,
+      "raw_executed": 2,
+      "raw_failures": 0,
+      "raw_counts_match_receipt": true,
+      "raw_log_hash_matches_receipt": true,
+      "diagnostics_requested": false,
+      "diagnostics_recorded": false,
+      "environment_before": "425d701e4a8711a84ca963b1c4769b76c47d1644970d72e2941666412be56378",
+      "environment_after": "425d701e4a8711a84ca963b1c4769b76c47d1644970d72e2941666412be56378",
+      "recorded_environments_equal": true,
+      "environment_hashes_recomputed": true,
+      "artifact_receipt": "baseline-raster-hex-pair-install1-targeted-apks.json",
+      "artifact_status": "VERIFIED_AND_INSTALLED",
+      "artifact_hashes": [
+        {
+          "role": "app",
+          "sha256": "a7e964809b12e937c7c54e23e27114a54bedaba49530363d1c345a73d2f7e9ed"
+        },
+        {
+          "role": "appTest",
+          "sha256": "a500d8bb925adce209945acbe2de6672cb499b45f0b43706d58a9fa14ef8881e"
+        }
+      ],
+      "scope": "Saved native receipts only; diagnostic-on observations retain overhead and do not replace default-off results."
+    },
+    {
+      "phase": "baseline-raster-hex-pair-off-repeat2",
+      "cohort": "hex_fixed_9_calls",
+      "expected": 2,
+      "receipt_passed": true,
+      "raw_pass": true,
+      "raw_and_receipt_agree": true,
+      "raw_executed": 2,
+      "raw_failures": 0,
+      "raw_counts_match_receipt": true,
+      "raw_log_hash_matches_receipt": true,
+      "diagnostics_requested": false,
+      "diagnostics_recorded": false,
+      "environment_before": "425d701e4a8711a84ca963b1c4769b76c47d1644970d72e2941666412be56378",
+      "environment_after": "425d701e4a8711a84ca963b1c4769b76c47d1644970d72e2941666412be56378",
+      "recorded_environments_equal": true,
+      "environment_hashes_recomputed": true,
+      "artifact_receipt": "baseline-raster-hex-pair-install1-targeted-apks.json",
+      "artifact_status": "VERIFIED_AND_INSTALLED",
+      "artifact_hashes": [
+        {
+          "role": "app",
+          "sha256": "a7e964809b12e937c7c54e23e27114a54bedaba49530363d1c345a73d2f7e9ed"
+        },
+        {
+          "role": "appTest",
+          "sha256": "a500d8bb925adce209945acbe2de6672cb499b45f0b43706d58a9fa14ef8881e"
+        }
+      ],
+      "scope": "Saved native receipts only; diagnostic-on observations retain overhead and do not replace default-off results."
+    },
+    {
+      "phase": "candidate-raster-hex-v1-off-repeat2",
+      "cohort": "hex_fixed_9_calls",
+      "expected": 2,
+      "receipt_passed": false,
+      "raw_pass": false,
+      "raw_and_receipt_agree": true,
+      "raw_executed": 2,
+      "raw_failures": 1,
+      "raw_counts_match_receipt": true,
+      "raw_log_hash_matches_receipt": true,
+      "diagnostics_requested": false,
+      "diagnostics_recorded": false,
+      "environment_before": "425d701e4a8711a84ca963b1c4769b76c47d1644970d72e2941666412be56378",
+      "environment_after": "425d701e4a8711a84ca963b1c4769b76c47d1644970d72e2941666412be56378",
+      "recorded_environments_equal": true,
+      "environment_hashes_recomputed": true,
+      "artifact_receipt": "candidate-raster-hex-v1-install2-targeted-apks.json",
+      "artifact_status": "VERIFIED_AND_INSTALLED",
+      "artifact_hashes": [
+        {
+          "role": "app",
+          "sha256": "d4af16103b601e7d73af673eeb89d6511003a0f0ef4c86785862d5e202714b5e"
+        },
+        {
+          "role": "appTest",
+          "sha256": "5ce3e01030cc7ce27d93ed3aed7027a4f670716785235c569c0d4e84e3528407"
+        }
+      ],
+      "scope": "Saved native receipts only; diagnostic-on observations retain overhead and do not replace default-off results."
+    },
+    {
+      "phase": "candidate-raster-hex-v1-frame",
+      "cohort": "hex_fixed_9_calls",
+      "expected": 1,
+      "receipt_passed": true,
+      "raw_pass": true,
+      "raw_and_receipt_agree": true,
+      "raw_executed": 1,
+      "raw_failures": 0,
+      "raw_counts_match_receipt": true,
+      "raw_log_hash_matches_receipt": true,
+      "diagnostics_requested": false,
+      "diagnostics_recorded": false,
+      "environment_before": "425d701e4a8711a84ca963b1c4769b76c47d1644970d72e2941666412be56378",
+      "environment_after": "425d701e4a8711a84ca963b1c4769b76c47d1644970d72e2941666412be56378",
+      "recorded_environments_equal": true,
+      "environment_hashes_recomputed": true,
+      "artifact_receipt": "candidate-raster-hex-v1-install2-targeted-apks.json",
+      "artifact_status": "VERIFIED_AND_INSTALLED",
+      "artifact_hashes": [
+        {
+          "role": "app",
+          "sha256": "d4af16103b601e7d73af673eeb89d6511003a0f0ef4c86785862d5e202714b5e"
+        },
+        {
+          "role": "appTest",
+          "sha256": "5ce3e01030cc7ce27d93ed3aed7027a4f670716785235c569c0d4e84e3528407"
+        }
+      ],
+      "scope": "Saved native receipts only; diagnostic-on observations retain overhead and do not replace default-off results."
+    },
+    {
+      "phase": "baseline-raster-hex-pair-frame",
+      "cohort": "hex_fixed_9_calls",
+      "expected": 1,
+      "receipt_passed": true,
+      "raw_pass": true,
+      "raw_and_receipt_agree": true,
+      "raw_executed": 1,
+      "raw_failures": 0,
+      "raw_counts_match_receipt": true,
+      "raw_log_hash_matches_receipt": true,
+      "diagnostics_requested": false,
+      "diagnostics_recorded": false,
+      "environment_before": "425d701e4a8711a84ca963b1c4769b76c47d1644970d72e2941666412be56378",
+      "environment_after": "425d701e4a8711a84ca963b1c4769b76c47d1644970d72e2941666412be56378",
+      "recorded_environments_equal": true,
+      "environment_hashes_recomputed": true,
+      "artifact_receipt": "baseline-raster-hex-pair-install2-targeted-apks.json",
+      "artifact_status": "VERIFIED_AND_INSTALLED",
+      "artifact_hashes": [
+        {
+          "role": "app",
+          "sha256": "a7e964809b12e937c7c54e23e27114a54bedaba49530363d1c345a73d2f7e9ed"
+        },
+        {
+          "role": "appTest",
+          "sha256": "a500d8bb925adce209945acbe2de6672cb499b45f0b43706d58a9fa14ef8881e"
+        }
+      ],
+      "scope": "Saved native receipts only; diagnostic-on observations retain overhead and do not replace default-off results."
+    },
+    {
+      "phase": "candidate-raster-hex-v1-native-reuse",
+      "cohort": "hex_fixed_9_calls",
+      "expected": 1,
+      "receipt_passed": true,
+      "raw_pass": true,
+      "raw_and_receipt_agree": true,
+      "raw_executed": 1,
+      "raw_failures": 0,
+      "raw_counts_match_receipt": true,
+      "raw_log_hash_matches_receipt": true,
+      "diagnostics_requested": false,
+      "diagnostics_recorded": false,
+      "environment_before": "425d701e4a8711a84ca963b1c4769b76c47d1644970d72e2941666412be56378",
+      "environment_after": "425d701e4a8711a84ca963b1c4769b76c47d1644970d72e2941666412be56378",
+      "recorded_environments_equal": true,
+      "environment_hashes_recomputed": true,
+      "artifact_receipt": "candidate-raster-hex-v1-install3-targeted-apks.json",
+      "artifact_status": "VERIFIED_AND_INSTALLED",
+      "artifact_hashes": [
+        {
+          "role": "app",
+          "sha256": "d4af16103b601e7d73af673eeb89d6511003a0f0ef4c86785862d5e202714b5e"
+        },
+        {
+          "role": "appTest",
+          "sha256": "5ce3e01030cc7ce27d93ed3aed7027a4f670716785235c569c0d4e84e3528407"
+        }
+      ],
+      "scope": "Saved native receipts only; diagnostic-on observations retain overhead and do not replace default-off results."
+    },
+    {
+      "phase": "candidate-raster-hex-v1-streamed",
+      "cohort": "hex_fixed_9_calls",
+      "expected": 4,
+      "receipt_passed": false,
+      "raw_pass": false,
+      "raw_and_receipt_agree": true,
+      "raw_executed": 4,
+      "raw_failures": 1,
+      "raw_counts_match_receipt": true,
+      "raw_log_hash_matches_receipt": true,
+      "diagnostics_requested": false,
+      "diagnostics_recorded": false,
+      "environment_before": "425d701e4a8711a84ca963b1c4769b76c47d1644970d72e2941666412be56378",
+      "environment_after": "425d701e4a8711a84ca963b1c4769b76c47d1644970d72e2941666412be56378",
+      "recorded_environments_equal": true,
+      "environment_hashes_recomputed": true,
+      "artifact_receipt": "candidate-raster-hex-v1-install3-targeted-apks.json",
+      "artifact_status": "VERIFIED_AND_INSTALLED",
+      "artifact_hashes": [
+        {
+          "role": "app",
+          "sha256": "d4af16103b601e7d73af673eeb89d6511003a0f0ef4c86785862d5e202714b5e"
+        },
+        {
+          "role": "appTest",
+          "sha256": "5ce3e01030cc7ce27d93ed3aed7027a4f670716785235c569c0d4e84e3528407"
+        }
+      ],
+      "scope": "Saved native receipts only; diagnostic-on observations retain overhead and do not replace default-off results."
+    }
+  ],
+  "native_cohort_totals": {
+    "diagnostic_v2_prior_pair": {
+      "calls": 2,
+      "executed": 4,
+      "passed": 4,
+      "failures": 0,
+      "unknown_counts": []
+    },
+    "hex_fixed_9_calls": {
+      "calls": 9,
+      "executed": 17,
+      "passed": 15,
+      "failures": 2,
+      "unknown_counts": []
+    }
+  },
+  "strict_parser_incomplete_preserved": true,
+  "incomplete_off_pair_policy": "Coff2 local rows remain in raw ledger only; no completed paired statistics or substitution. Process absence is not normal-release assertion success.",
+  "diagnostic_v1_build_exit_code": 1,
+  "hex_host_checks": {
+    "status": "PASS",
+    "checks": 1869,
+    "scope": "HOST_REPRESENTATION_COMPATIBILITY_ONLY_NOT_NATIVE_PERFORMANCE",
+    "native_performance": "NOT_ESTABLISHED_BY_HOST_CHECKS"
+  },
+  "cross_history_gc": "Excluded entirely; file was not read by this audit. Cgroup deltas alone are not causal proof.",
+  "preserved_rules": [
+    "Retain all previous 247 entries and original slow/default-off samples; no trimming or replacement.",
+    "Retain diagnostic-v1 failed build and inaccurate initial static-pass record alongside explicit v2 correction.",
+    "Diagnostic-on timings include observation overhead and cannot replace default-off measurements.",
+    "Host 1869-case compatibility checks are representation equivalence only, not Android/native performance.",
+    "Current candidate and baseline checkout bytes have changed since v4; use frozen source manifests plus c60/patch provenance for old identities. Never run the old v4 checker against current sources as a false failure.",
+    "APK receipt hashes are documentary bindings; this planned audit will not read APK binaries, keys, databases or full logcat.",
+    "No original acceptance gate is closed merely because this evidence audit passes.",
+    "Artifact recorder NOT_RUN fields describe that recorder only. candidate-raster-hex-v1-jvm.json separately records the new 20-test data-local JVM execution; core and lint remain NOT_RUN for hex. Do not reuse old v4 JVM/lint counts as new executions.",
+    "Default-off targeted runs omit --diagnostics entirely; they do not pass -e rasterMetadataDiagnostics false. Retain fixed-plan erratum 1 and its historical plan hashes.",
+    "Exclude raster-diagnostic-v2-filtered-gc-observation.json in full (152 historical entries). No cross-history GC data is part of this new hex evidence.",
+    "Retain strict parser exit2/INCOMPLETE with no completed summary. Coff2 local rows remain isolated in raw ledger, not normal paired performance.",
+    "Final process absence does not establish strict normal release; pan30s and dense30s remain failed.",
+    "Cgroup deltas are supporting context only and do not uniquely attribute the regression.",
+    "Final-doc build changes one KDoc line only. Final 744 committed blobs match frozen sources and both verified APK hashes equal tested hex-v1; no new native sample is claimed. Debug metadata remains local-unknown."
+  ],
+  "actions_not_performed": [
+    "build",
+    "ADB/native",
+    "APK copy/read/hash",
+    "current full-source-tree hash",
+    "repository write",
+    "commit/push",
+    "Docker operation"
+  ]
+}

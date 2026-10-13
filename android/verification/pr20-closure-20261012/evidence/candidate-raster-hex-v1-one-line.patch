@@ -1,0 +1,11 @@
+--- a/android/data-local/src/main/kotlin/org/inkweft/data/InkRepository.kt
++++ b/android/data-local/src/main/kotlin/org/inkweft/data/InkRepository.kt
+@@ -412,7 +412,7 @@
+             val last=rows.last();after=SpatialIndex.Cursor(last.revision,last.id)
+         }
+         probe?.hexStart=rasterMetadataClock()
+-        val values=regions.indices.map{InkRasterRegion(digests[it].digest().joinToString(""){"%02x".format(it)},included[it])}
++        val values=regions.indices.map{InkRasterRegion(digests[it].digest().toHexString(),included[it])}
+         probe?.hexEnd=rasterMetadataClock()
+         values
+         }

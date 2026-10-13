@@ -1,0 +1,47 @@
+{
+  "utc": "2026-10-13T02:21:25.371332+00:00",
+  "status": "V2_SOURCE_FIXED_STATIC_DIFF_CHECK_PASS_BUILD_NOT_RUN",
+  "v1_failure": "Candidate diagnostic-v1 compiler rejected the if null branch as Unit/block; expression was inferred as Any rather than suspend (BuildBatch) -> Unit. V1 static review did not catch this syntax error. No v1 native measurement was possible.",
+  "change": "Only parenthesize both onBatch lambda branch expressions, making the ignored-argument null branch explicit. Both candidate and baseline InkRepository received the same two-line syntax correction; TileLocalRedrawTest unchanged from v1.",
+  "portable_patch": {
+    "path": "/workspace/scratch/pr20-closure-evidence/raster-metadata-diagnostics-v2-portable.patch",
+    "sha256": "3449bdb9dc5063e4386a9d5f9d0b3061a5bbb8834362dcb897777b05605352ac",
+    "candidate_base": "c60fba7455cfc0b919d6f9c2d3b06f17ec25713d"
+  },
+  "candidate_sources": {
+    "android/data-local/src/main/kotlin/org/inkweft/data/InkRepository.kt": "a3bdf761ad7d768db82f10a8a7f22ea5197dcdd07e0e72cda3e6c3018ecd080d",
+    "android/app/src/androidTest/java/org/inkweft/app/TileLocalRedrawTest.kt": "31325f357e719d4fe61354645f499ce06ecf8079e64fddb471c069f44ad3f5ec"
+  },
+  "baseline_sources": {
+    "android/data-local/src/main/kotlin/org/inkweft/data/InkRepository.kt": "612db8dcf1e87ce76f194fae4962b5a2a626f2368703164da41690829ddaa4eb",
+    "android/app/src/androidTest/java/org/inkweft/app/TileLocalRedrawTest.kt": "149ebd22a274268f1521f5153c44b9c461fdfae1211be71ae7d899848f485b2f"
+  },
+  "v2_baseline_dry_run": {
+    "root": "/workspace/scratch/baseline-final-before-raster-diagnostics",
+    "exit_code": 0,
+    "fuzz": 0,
+    "stdout": "checking file android/app/src/androidTest/java/org/inkweft/app/TileLocalRedrawTest.kt\nHunk #2 succeeded at 45 (offset -2 lines).\nHunk #3 succeeded at 87 (offset -2 lines).\nHunk #4 succeeded at 115 (offset -2 lines).\nchecking file android/data-local/src/main/kotlin/org/inkweft/data/InkRepository.kt\nHunk #2 succeeded at 346 (offset -33 lines).\nHunk #3 succeeded at 364 (offset -33 lines).\nHunk #4 succeeded at 378 (offset -33 lines).\n",
+    "stderr": "",
+    "applied_to_preserved_original": false
+  },
+  "v2_baseline_reconstruction": "Applied v2 full scoped patch to temporary copies of the preserved pre-diagnostics baseline files; outputs match the current baseline after the authorized syntax-only fix.",
+  "baseline_reconstruction_matches": {
+    "android/data-local/src/main/kotlin/org/inkweft/data/InkRepository.kt": true,
+    "android/app/src/androidTest/java/org/inkweft/app/TileLocalRedrawTest.kt": true
+  },
+  "candidate_diff_from_v1_only_syntax_fix": true,
+  "preserved_v1_evidence": {
+    "raster-metadata-diagnostics-portable.patch": "1fc0348e2b4aae0ecf38cace3959fad5c4798871acee6ec1aac7d46452883d08",
+    "raster-metadata-diagnostics-patch-check.json": "09efb0898e93184bac42ea535a94c852b5268f5a741470407ab6e0c7abc4d988",
+    "raster-metadata-diagnostics-implementation.json": "64b7afc35ae675666fd91c87cee581191d1ac7c4faa2a84a3835c15f35d290d9",
+    "raster-metadata-diagnostics-implementation.md": "66ac830ef790e01592735d47ffa84232444ca98eb86819a59b358e955a1b10c0",
+    "candidate-raster-diagnostic-v1-build.json": "85bcaf8578e8aaa5b9af0210923c4f45995e9bc8d92151b3b85d3da528e09a77",
+    "candidate-raster-diagnostic-v1-build.log": "bfbfcd62d05249de54d30b5b54e2b46d186973a51c963d82257b6b3b1acf021a"
+  },
+  "v1_evidence_unchanged": true,
+  "git_diff_check": "PASS",
+  "build": "NOT_RUN_BY_RASTER_AGENT",
+  "native": "NOT_RUN_BY_RASTER_AGENT",
+  "commit": "NOT_RUN",
+  "push": "NOT_RUN"
+}

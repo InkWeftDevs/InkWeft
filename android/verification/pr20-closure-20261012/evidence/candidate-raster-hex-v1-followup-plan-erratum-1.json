@@ -1,0 +1,36 @@
+{
+  "utc": "2026-10-13T03:11:37.166442+00:00",
+  "status": "PLAN_ONLY_CORRECTION",
+  "reason": "Existing pr20-raster-targeted-instrumentation.py exposes --diagnostics only. Diagnostic-off runs omit that flag/argument; test does not install observer by default and receipt diagnostics=false.",
+  "old_plan_sha256": {
+    "candidate-raster-hex-v1-followup-plan.json": "ecdb4d761df66b392b95a16661704a0599fb99d758008630dcbbe32eb8ca70a9",
+    "candidate-raster-hex-v1-followup-plan.md": "637a8f2dd76c82621623109be7b34c8cf92173fd22bd8e66e783bc3b5e99ce4a"
+  },
+  "corrected_plan_sha256": {
+    "candidate-raster-hex-v1-followup-plan.json": "ff0b2e6b3bc377b69ba0a87959370096b0693adedcc42c6bc9bfdf0c864126c3",
+    "candidate-raster-hex-v1-followup-plan.md": "2c905e2e7bebbc1b003416bd4483f60dda25ffb0a5f45cadd594bc229d49423f"
+  },
+  "affected_run_orders": [
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "unchanged": [
+    "9-run sequence",
+    "17 planned JUnit executions",
+    "APK identities",
+    "fixtures",
+    "inner deadlines",
+    "assertions",
+    "acceptance and failure handling"
+  ],
+  "runner_modified": false,
+  "android_source_modified": false,
+  "device_or_build_commands_run": false,
+  "note": "Candidate diagnostic-on run already active; its true flag behavior is unchanged."
+}

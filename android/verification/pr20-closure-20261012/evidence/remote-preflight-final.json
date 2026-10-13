@@ -1,0 +1,24 @@
+{
+  "utc": "2026-10-13T03:57:46.470959+00:00",
+  "fetched_refs": {
+    "origin/codex/storage-optimization-20261011": "a128bb07e34cb82f00eeafc8e62a47bf7b95b128",
+    "origin/codex/android-perf-integration-20261012": "a75d7457cfa3ec2e15c802c07ee93bfc07753a6c",
+    "HEAD": "721b2ffa362f9ae77121d963b71dcfe78de443f3"
+  },
+  "isolated_remote_is_ancestor": true,
+  "pull_request": {
+    "base": {
+      "ref": "codex/storage-optimization-20261011",
+      "sha": "a128bb07e34cb82f00eeafc8e62a47bf7b95b128"
+    },
+    "draft": true,
+    "head": {
+      "ref": "codex/android-perf-integration-20261012",
+      "sha": "a75d7457cfa3ec2e15c802c07ee93bfc07753a6c"
+    },
+    "html_url": "https://github.com/InkWeftDevs/InkWeft/pull/20",
+    "number": 20,
+    "state": "open"
+  },
+  "status": "READ_ONLY_PREFLIGHT_COMPLETE_NOT_PUSHED"
+}

@@ -1,0 +1,403 @@
+{
+  "schema": "final-raster-acceptance-independent-review-v1",
+  "reviewed_utc": "2026-10-13T03:53:41.491654+00:00",
+  "status": "NO_GO_FOR_COMPLETE_ACCEPTANCE",
+  "scope": "Lightweight read-only review of existing native receipts/logs and narrow source excerpts; scratch review files only. No build, test, device, source change or APK/full-tree hashing.",
+  "native_artifact": {
+    "candidate": "candidate-raster-hex-v1",
+    "app_sha256": "d4af16103b601e7d73af673eeb89d6511003a0f0ef4c86785862d5e202714b5e",
+    "app_test_sha256": "5ce3e01030cc7ce27d93ed3aed7027a4f670716785235c569c0d4e84e3528407",
+    "identity_source": "candidate-raster-hex-v1-frame-paired-review.md; existing receipts, not rehashed here",
+    "baseline": "baseline-raster-diagnostic-v2; not baseline-final",
+    "doc_only_successor": "Parent reports a one-line KDoc Formatter -> hex conversion build underway. No new native result or APK byte-equality claim is made by this review."
+  },
+  "fixed_sequence": {
+    "invocations": 9,
+    "executed": 17,
+    "passed": 15,
+    "failed": 2,
+    "all_scheduled_invocations_completed": true,
+    "acceptance_complete": false,
+    "receipts": [
+      {
+        "phase": "candidate-raster-hex-v1-diagnostic",
+        "status": "PASS",
+        "executed": 2,
+        "failures": 0,
+        "diagnostics": true,
+        "seconds": 274.8024065619975,
+        "log_sha256": "b932551bfa1b5d0c419f6bf43420b181defa85c54823635f6c6f61c8490d9521",
+        "receipt": "candidate-raster-hex-v1-diagnostic-targeted.json",
+        "receipt_sha256": "52a7a3273924c80ef884707231e9746cdbce65c160969e696168bd6c00fc0e10"
+      },
+      {
+        "phase": "candidate-raster-hex-v1-off-repeat1",
+        "status": "PASS",
+        "executed": 2,
+        "failures": 0,
+        "diagnostics": false,
+        "seconds": 209.0177094210012,
+        "log_sha256": "74e281d2ef34b0ccb0153c111ce86e62db356c9d10ade120a32e6d17965960ba",
+        "receipt": "candidate-raster-hex-v1-off-repeat1-targeted.json",
+        "receipt_sha256": "a2e3b3e237844a747371cf09d2e6ea9b6fe05affdc2c6945279332e51e6f906b"
+      },
+      {
+        "phase": "baseline-raster-hex-pair-off-repeat1",
+        "status": "PASS",
+        "executed": 2,
+        "failures": 0,
+        "diagnostics": false,
+        "seconds": 199.6400236949994,
+        "log_sha256": "9ead72ab9828f24f0fbcd871c3e2a99e59874f0c58a57df8bbd7e908224adb1f",
+        "receipt": "baseline-raster-hex-pair-off-repeat1-targeted.json",
+        "receipt_sha256": "ed9d0331f7958f72aa0e4647f2de6578a7e6545be4dbee61cb3d7e6e66ba86bd"
+      },
+      {
+        "phase": "baseline-raster-hex-pair-off-repeat2",
+        "status": "PASS",
+        "executed": 2,
+        "failures": 0,
+        "diagnostics": false,
+        "seconds": 241.32795430700207,
+        "log_sha256": "c9a60fd7c084909e20e594e326f99fb309f05a508f385e9e808f45890fd59c22",
+        "receipt": "baseline-raster-hex-pair-off-repeat2-targeted.json",
+        "receipt_sha256": "391d385e8ec9153c7065e9341a596846eee665c29201e2f6c73fb3c69155fc80"
+      },
+      {
+        "phase": "candidate-raster-hex-v1-off-repeat2",
+        "status": "FAIL",
+        "executed": 2,
+        "failures": 1,
+        "diagnostics": false,
+        "seconds": 242.3634499050022,
+        "log_sha256": "d460b4d818f413317a18ff1908ca989b94a66ed57ab9a033802552e1d437cc0f",
+        "receipt": "candidate-raster-hex-v1-off-repeat2-targeted.json",
+        "receipt_sha256": "16313d981906c418df547b469819cf285dfad648fd0dba5eee996adb762760f6"
+      },
+      {
+        "phase": "candidate-raster-hex-v1-frame",
+        "status": "PASS",
+        "executed": 1,
+        "failures": 0,
+        "diagnostics": false,
+        "seconds": 210.27807835899875,
+        "log_sha256": "2c641483812f79408be81386f59edac66fa077a4f9ca4d43b23000f16f3b688e",
+        "receipt": "candidate-raster-hex-v1-frame-targeted.json",
+        "receipt_sha256": "1d26600e0f77f338b14d8dfe4197936daed2309fba8beaec4765717c06f7e899"
+      },
+      {
+        "phase": "baseline-raster-hex-pair-frame",
+        "status": "PASS",
+        "executed": 1,
+        "failures": 0,
+        "diagnostics": false,
+        "seconds": 215.9682607440045,
+        "log_sha256": "f62248f613eb158b5086c290ab06fa03c3d82b5be0d77c8b8f56c37d9a31665e",
+        "receipt": "baseline-raster-hex-pair-frame-targeted.json",
+        "receipt_sha256": "6ee1e8985c97ee6fb64ee736d61edbe4b0f0c8b3ff7e31dd769bfe9b98fe777b"
+      },
+      {
+        "phase": "candidate-raster-hex-v1-native-reuse",
+        "status": "PASS",
+        "executed": 1,
+        "failures": 0,
+        "diagnostics": false,
+        "seconds": 44.26786597799946,
+        "log_sha256": "8e74c9d90eccfc2a3bfa92634f573ca724c3a2722aceec443e7cbd49e3ff0811",
+        "receipt": "candidate-raster-hex-v1-native-reuse-targeted.json",
+        "receipt_sha256": "8e4a279d70c020d4c99aad6ba69ba8f307c179eefe03b3ac5f649586fcb53497"
+      },
+      {
+        "phase": "candidate-raster-hex-v1-streamed",
+        "status": "FAIL",
+        "executed": 4,
+        "failures": 1,
+        "diagnostics": false,
+        "seconds": 140.8769508829937,
+        "log_sha256": "6e2855e52c151387c802d342d8363b201b8c02fd7d06705e8bc93becebb5bf95",
+        "receipt": "candidate-raster-hex-v1-streamed-targeted.json",
+        "receipt_sha256": "5cdd75150022b81115472171adf43ed40d605aeaf0751c6fa6da2e3e61d945da"
+      }
+    ]
+  },
+  "tile_fixed_block": {
+    "order": "C/B/B/C",
+    "executed": 8,
+    "passed": 7,
+    "failed": 1,
+    "strict_summary": "INCOMPLETE",
+    "failed_method": "integralPanReusesInteriorTilesAndZoomPreviewNeverCompletesCapture",
+    "timeout_ms": 30000,
+    "which_of_five_ready_calls": "UNKNOWN",
+    "final_pan_evidence_present": false,
+    "local_append_all_cases_have_pixel_evidence": true,
+    "candidate_repeat2_local_values": "Retained as observations after failed prelude; normal warmed-up comparability and no cleanup overlap are not established. No aggregate or regression-closure claim."
+  },
+  "native_stroke": {
+    "passed": 1,
+    "executed": 1,
+    "phases": [
+      {
+        "phase": 0,
+        "nativeStrokeBuilds": 2,
+        "perTileReferenceBuilds": 24,
+        "tiles": 16,
+        "rebuilt": 16,
+        "pixelsEqual": true
+      },
+      {
+        "phase": 1,
+        "nativeStrokeBuilds": 2,
+        "perTileReferenceBuilds": 32,
+        "tiles": 16,
+        "rebuilt": 16,
+        "pixelsEqual": true
+      },
+      {
+        "phase": 2,
+        "nativeStrokeBuilds": 1,
+        "perTileReferenceBuilds": 16,
+        "tiles": 16,
+        "rebuilt": 16,
+        "pixelsEqual": true
+      },
+      {
+        "phase": 3,
+        "nativeStrokeBuilds": 0,
+        "perTileReferenceBuilds": 0,
+        "tiles": 16,
+        "rebuilt": 16,
+        "pixelsEqual": true
+      }
+    ],
+    "oracle_scope": "Same-version per-tile construction differential, not measured old-production native counters or cross-version image hashes. finally uses withTimeoutOrNull; do not promote it to strict-release proof."
+  },
+  "streamed": {
+    "passed": 3,
+    "executed": 4,
+    "failed": 1,
+    "bounded_frame": {
+      "frameElapsedMs": 12755.215927,
+      "snapshotReads": [
+        {
+          "frameElapsedMs": 2019.87955,
+          "rows": 256,
+          "points": 8192,
+          "freezeMs": 492.637261,
+          "decodeMs": 758.290207
+        },
+        {
+          "frameElapsedMs": 12452.993892,
+          "rows": 2,
+          "points": 34,
+          "freezeMs": 111.041083,
+          "decodeMs": 12.663661
+        }
+      ],
+      "snapshotRows": 258,
+      "changeCallbacks": 2,
+      "publishedStats": "BuildStats(tiles=4, rebuilt=4, decoded=258, bitmapBytes=800000, metadataMs=357.888542, rasterMs=12263.870215, publicationMs=14.177361, reusedStrokes=0, geometryBytes=658560, nativeStrokeBuilds=258)",
+      "case": "bounded-two-batch",
+      "stage": "frame-complete",
+      "elapsedMs": 33064.801558,
+      "fixtureStrokes": 258,
+      "fixturePoints": 8226,
+      "frameDeadlineMs": 30000
+    },
+    "bounded_verified_and_released": true,
+    "dense_timeout": {
+      "frameElapsedMs": 30222.207101,
+      "snapshotReads": [
+        {
+          "frameElapsedMs": 3518.271613,
+          "rows": 256,
+          "points": 16384,
+          "freezeMs": 430.119129,
+          "decodeMs": 586.745017
+        },
+        {
+          "frameElapsedMs": 16494.206556,
+          "rows": 256,
+          "points": 16384,
+          "freezeMs": 429.662808,
+          "decodeMs": 611.943919
+        },
+        {
+          "frameElapsedMs": 28875.752869,
+          "rows": 256,
+          "points": 16384,
+          "freezeMs": 552.536713,
+          "decodeMs": 613.867368
+        }
+      ],
+      "snapshotRows": 768,
+      "changeCallbacks": 0,
+      "threads": [
+        {
+          "name": "main",
+          "state": "RUNNABLE",
+          "stack": [
+            "android.os.MessageQueue.nativePollOnce(Native Method)",
+            "android.os.MessageQueue.next(MessageQueue.java:346)",
+            "android.os.Looper.loopOnce(Looper.java:189)",
+            "android.os.Looper.loop(Looper.java:317)",
+            "android.app.ActivityThread.main(ActivityThread.java:8705)",
+            "java.lang.reflect.Method.invoke(Native Method)",
+            "com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:580)",
+            "com.android.internal.os.ZygoteInit.main(ZygoteInit.java:886)"
+          ]
+        },
+        {
+          "name": "InkWeft-streamed-raster",
+          "state": "RUNNABLE",
+          "stack": [
+            "kotlin.jvm.internal.Intrinsics.areEqual(Intrinsics.java:169)",
+            "androidx.ink.brush.ColorExtensionsKt.isSupportedInInk(ColorExtensions.kt:51)",
+            "androidx.ink.brush.ColorExtensionsKt.toColorInInkSupportedColorSpace-eZ_SJCw(ColorExtensions.kt:29)",
+            "androidx.ink.brush.Brush._init_$lambda$0(Brush.kt:123)",
+            "androidx.ink.brush.Brush$$ExternalSyntheticLambda1.invoke(D8$$SyntheticClass:0)",
+            "androidx.ink.nativeloader.NativePointer.<init>(NativePointer.jvmAndAndroid.kt:35)",
+            "androidx.ink.brush.Brush.<init>(Brush.kt:51)",
+            "androidx.ink.brush.Brush.<init>(Brush.kt:121)",
+            "androidx.ink.brush.Brush.<init>(Unknown Source:0)",
+            "androidx.ink.brush.Brush$Companion.createWithColorIntArgb(Brush.kt:444)",
+            "org.inkweft.app.InkBrushes.brush(InkBrushes.kt:67)",
+            "org.inkweft.app.InkBrushes.stroke(InkBrushes.kt:87)",
+            "org.inkweft.app.StreamedInkRaster$draw$4$1$2.invokeSuspend(StreamedInkRaster.kt:158)",
+            "org.inkweft.app.StreamedInkRaster$draw$4$1$2.invoke(Unknown Source:8)",
+            "org.inkweft.app.StreamedInkRaster$draw$4$1$2.invoke(Unknown Source:4)",
+            "org.inkweft.data.InkRepository.visitVisible(InkRepository.kt:356)",
+            "org.inkweft.data.InkRepository$visitVisible$1.invokeSuspend(Unknown Source:31)",
+            "kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:34)",
+            "kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:100)",
+            "java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)",
+            "java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:644)",
+            "java.lang.Thread.run(Thread.java:1012)"
+          ]
+        }
+      ],
+      "resources": {
+        "totalBytes": 1848576,
+        "budgetBytes": 134217728,
+        "peakTrackedBytes": 1848576,
+        "inFlightJobs": 1,
+        "cancelledJobs": 1,
+        "cacheBytes": 0,
+        "in_flightBytes": 1848576,
+        "activeBytes": 0,
+        "live_inkBytes": 0,
+        "category.ink-frame": 800000,
+        "category.ink-geometry-reservation": 1048576
+      },
+      "pending": true,
+      "frameReady": false,
+      "publishedStats": null,
+      "case": "original-dense",
+      "stage": "frame-timeout",
+      "elapsedMs": 71212.193437,
+      "fixtureStrokes": 1201,
+      "fixturePoints": 76802,
+      "frameDeadlineMs": 30000
+    },
+    "dense_verified_and_released": false,
+    "dense_limits": [
+      "Read observer records 768 decoded snapshot rows; it does not prove all those rows completed native rasterization.",
+      "One worker stack in Brush creation and Main nativePoll is not a whole-interval profile or unique root cause.",
+      "Tracked 1848576 < 134217728 bytes is the recorded tracker snapshot, not total process/native heap or strict release.",
+      "Timeout rethrows before final red-pixel/full-row/strict-release assertions; best-effort finally cleanup and later process absence cannot substitute."
+    ]
+  },
+  "four_unclosed_original_test_gates": [
+    {
+      "id": "search-20k-128-in-10s",
+      "last_native": "candidate-v4",
+      "status": "FAIL_NOT_RERUN_IN_HEX_BLOCK",
+      "closure": "Run the original 20k method through its unchanged 128 rows/10 s, Main 1 s and index-ready 120 s gates and later freshness/clear/category assertions."
+    },
+    {
+      "id": "backup-cancel-within-15s",
+      "last_native": "candidate-v2",
+      "status": "FAIL_NOT_RERUN_IN_HEX_BLOCK",
+      "closure": "Reach partial writing and observer cancellation within the original 15 s operation window, then pass partial cleanup, author-content and reopen assertions."
+    },
+    {
+      "id": "dense-1201-76802-in-30s",
+      "last_native": "candidate-raster-hex-v1-streamed",
+      "status": "FAIL",
+      "closure": "Complete all 1201 rows within the original 30 s frame gate, publish the frame, verify last-batch pixels and pass strict worker/geometry release assertions."
+    },
+    {
+      "id": "tile-original-pan-zoom-ready-in-30s",
+      "last_native": "candidate-raster-hex-v1-off-repeat2",
+      "status": "FAIL_STAGE_UNKNOWN",
+      "closure": "Pass the unchanged full original method and its 30 s ready gates, preview/pixel/cache/resource assertions; retain the failed fixed-block sample even if any separately authorized later run passes."
+    }
+  ],
+  "additional_acceptance_limit": "Local append regression is not formally accepted: the fixed off block is incomplete, the original slow samples remain, and hex-stage or passing FrameProbe improvements do not close it.",
+  "environment_comparison_hashes": {
+    "candidate-raster-hex-v1-native-reuse-environment.json": "425d701e4a8711a84ca963b1c4769b76c47d1644970d72e2941666412be56378",
+    "candidate-raster-hex-v1-native-reuse-environment-after.json": "425d701e4a8711a84ca963b1c4769b76c47d1644970d72e2941666412be56378",
+    "candidate-raster-hex-v1-streamed-environment.json": "425d701e4a8711a84ca963b1c4769b76c47d1644970d72e2941666412be56378",
+    "candidate-raster-hex-v1-streamed-environment-after.json": "425d701e4a8711a84ca963b1c4769b76c47d1644970d72e2941666412be56378"
+  },
+  "environment_limit": "Matching software API35 x86_64 TCG/SwiftShader configuration is not physical-device performance and does not prove equal transient load or the cause of either failure.",
+  "final_process_receipt": {
+    "utc": "2026-10-13T03:50:10.708271+00:00",
+    "native_runner_finished": true,
+    "checks": [
+      {
+        "command": [
+          "/workspace/.setup/tools/android-sdk/platform-tools/adb",
+          "-s",
+          "emulator-5554",
+          "shell",
+          "pidof",
+          "org.inkweft.app.a0"
+        ],
+        "exit_code": 1,
+        "stdout": "",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "/workspace/.setup/tools/android-sdk/platform-tools/adb",
+          "-s",
+          "emulator-5554",
+          "shell",
+          "pidof",
+          "org.inkweft.app.a0.test"
+        ],
+        "exit_code": 1,
+        "stdout": "",
+        "stderr": ""
+      }
+    ],
+    "target_processes_absent": true,
+    "scope": "Process absence only; failed original dense frame did not reach strict normal-release assertions.",
+    "force_stop_requested": false
+  },
+  "cleanup_limit": "Confirms both target processes absent after all runs with no requested force-stop; no retroactive strict in-process release assertion or no-overlap proof.",
+  "historical_evidence_policy": "Retain all original v4/baseline-final, unchanged-repeat, diagnostic-v1 failure, diagnostic-v2, current Coff2 and earlier dense failures as distinct artifacts. No sample replacement, deadline relaxation, pooling across APKs or relabeling old failures as new reruns.",
+  "publication_wording": {
+    "correct": "All nine planned invocations completed; 15/17 tests passed and acceptance remains incomplete.",
+    "incorrect": "All raster tests passed; dense resource release passed; local regression resolved; search/backup revalidated."
+  },
+  "inputs_sha256": {
+    "candidate-raster-hex-v1-native-reuse-targeted.log": "8e74c9d90eccfc2a3bfa92634f573ca724c3a2722aceec443e7cbd49e3ff0811",
+    "candidate-raster-hex-v1-streamed-targeted.log": "6e2855e52c151387c802d342d8363b201b8c02fd7d06705e8bc93becebb5bf95",
+    "candidate-raster-hex-v1-final-process-review.json": "5b77cff4c0e77939fae2c7ee62c51e0b26b0d678a2754a556b02ab556ff545e8",
+    "candidate-raster-hex-v1-off-pair-raw-ledger.md": "bbc5244f07023f1690c67d1ec7922a95d69dee098c3ccce4562aa0f64b39d6f6",
+    "raster-hex-v1-off-repeat2-failure-review.json": "a8c28d69be163bf932afb0e36e59458905cd8d307ec06e00d40e45f05ac603c6",
+    "candidate-raster-hex-v1-frame-paired-review.md": "19a2eb9db51d8d2bb5179ee2be70510bac2b3c5683b54f99303599c94d2ce6ba",
+    "remaining-acceptance-gates.md": "6bfa0216d9ac5edb31a22ccd52c6cee505ee466f5dff6458b3b93c6ce228beb6"
+  },
+  "source_locations": [
+    "android/app/src/androidTest/java/org/inkweft/app/TileLocalRedrawTest.kt:35",
+    "android/app/src/androidTest/java/org/inkweft/app/TileLocalRedrawTest.kt:47",
+    "android/app/src/androidTest/java/org/inkweft/app/StreamedInkRasterTest.kt:130",
+    "android/app/src/androidTest/java/org/inkweft/app/StreamedInkRasterTest.kt:147",
+    "android/app/src/androidTest/java/org/inkweft/app/StreamedInkRasterTest.kt:150",
+    "android/app/src/androidTest/java/org/inkweft/app/NativeStrokeTileReuseTest.kt:77",
+    "android/app/src/androidTest/java/org/inkweft/app/NativeStrokeTileReuseTest.kt:90"
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "utc": "2026-10-13T03:00:19.850782+00:00",
+  "status": "SOURCE_COMPLETE_HOST_COMPATIBILITY_PASS_NATIVE_PENDING",
+  "change": "Candidate-only rasterRegions SHA digest hex conversion uses existing Kotlin stdlib toHexString(); exactly one source line changes from diagnostic-v2. Baseline retains Formatter.",
+  "source_path": "android/data-local/src/main/kotlin/org/inkweft/data/InkRepository.kt",
+  "candidate_before_sha256": "a3bdf761ad7d768db82f10a8a7f22ea5197dcdd07e0e72cda3e6c3018ecd080d",
+  "candidate_after_sha256": "3cb60b773e4f358cc871e59f0837bb9304d8ae114bf12997bf3b897527801d34",
+  "baseline_sha256": "612db8dcf1e87ce76f194fae4962b5a2a626f2368703164da41690829ddaa4eb",
+  "baseline_unchanged_from_diagnostic_v2": true,
+  "test_path": "android/app/src/androidTest/java/org/inkweft/app/TileLocalRedrawTest.kt",
+  "candidate_test_sha256": "31325f357e719d4fe61354645f499ce06ecf8079e64fddb471c069f44ad3f5ec",
+  "test_unchanged_from_diagnostic_v2": true,
+  "one_line_patch": {
+    "path": "candidate-raster-hex-v1-one-line.patch",
+    "sha256": "3f165ca3fbf8faa30be8429fd3ff712ed5c46d9b086752ec859a079193f8ca41"
+  },
+  "host_compatibility": {
+    "path": "raster-hex-v1-host-compatibility.json",
+    "sha256": "928b470048f0827f8c1416aeb51c668ed360e46b7208f50fe768b76181efb505",
+    "checks": 1869,
+    "status": "PASS",
+    "scope": "Host byte/string representation compatibility only; no native performance measured."
+  },
+  "frozen_prior_evidence": {
+    "raster-metadata-diagnostics-portable.patch": "1fc0348e2b4aae0ecf38cace3959fad5c4798871acee6ec1aac7d46452883d08",
+    "raster-metadata-diagnostics-v2-portable.patch": "3449bdb9dc5063e4386a9d5f9d0b3061a5bbb8834362dcb897777b05605352ac",
+    "candidate-raster-diagnostic-v1-build.log": "bfbfcd62d05249de54d30b5b54e2b46d186973a51c963d82257b6b3b1acf021a",
+    "candidate-raster-diagnostic-v1-build.json": "85bcaf8578e8aaa5b9af0210923c4f45995e9bc8d92151b3b85d3da528e09a77",
+    "candidate-raster-diagnostic-v2-targeted.log": "9abd1f79dd56eb53c5e40eb67c766c961b1dafa6dc8e8f373d7d0fa6426eda44",
+    "candidate-raster-diagnostic-v2-targeted.json": "619d1e88002c5065417e5d094181751783c4f04a49b5d8b31f2b82eb2bcf3110",
+    "baseline-raster-diagnostic-v2-targeted.log": "5b5f78194b1207a3f2d473a55b8eb31fe15b49b53faa0884d2d54aecaec6f3bc",
+    "baseline-raster-diagnostic-v2-targeted.json": "d6e3208e06b3ee36bd904666b5173f34017dc7ce47e10dff2394edfa403e824a",
+    "raster-metadata-diagnostic-v2-paired-review.md": "a01333f938a3fede6e7fb0d7208b64be4806a1e607ecd880b266c12b792de8e7",
+    "raster-metadata-diagnostic-v2-paired-review.json": "617b1455ce0fc2a5dfad9d5892b350dff6a025c727fe750048de7a1ec37cd1b5"
+  },
+  "git_diff_check": "PASS",
+  "android_build": "NOT_RUN_BY_RASTER_AGENT",
+  "adb": "NOT_RUN",
+  "native_performance": "NOT_MEASURED",
+  "production_wrapper_added": false,
+  "new_dependency": false,
+  "limitations": [
+    "Measured diagnostic-v2 hex stage includes SHA finalization, Formatter and allocation; candidate hex-v1 will instead include stdlib conversion.",
+    "The unchanged v2 timing KDoc says existing Formatter calls; for candidate hex-v1 that phrase describes the prior implementation and must not be used to label new timings as Formatter CPU. No timing code changed.",
+    "Removing per-byte Formatter work does not establish the cause or closure of the whole raster regression.",
+    "Original dense 30-second failure and every prior default-off/diagnostic sample remain retained."
+  ],
+  "next_owner": "Root to freeze candidate-raster-hex-v1, build and run existing native tests/paired performance. No more source writes by this agent."
+}

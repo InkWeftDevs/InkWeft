@@ -1,0 +1,92 @@
+{
+  "utc": "2026-10-13T03:56:45.912552+00:00",
+  "status": "FINAL_SOURCE_AND_RECORDED_APK_BINDING_MATCH_NATIVE_ACCEPTANCE_NOT_CLOSED",
+  "source_commit": "721b2ffa362f9ae77121d963b71dcfe78de443f3",
+  "observed_head": "721b2ffa362f9ae77121d963b71dcfe78de443f3",
+  "manifest": "candidate-raster-final-doc-source-sha256.json",
+  "manifest_sha256_matches_binding": true,
+  "candidate_checked_files": 744,
+  "current_candidate_mismatches": [],
+  "committed_blob_mismatches": [],
+  "baseline_identity": "baseline-raster-diagnostic-v2, not historical baseline-final",
+  "baseline_checked_files": 734,
+  "current_baseline_diagnostic_mismatches": [],
+  "final_doc_changed_paths": [
+    "android/data-local/src/main/kotlin/org/inkweft/data/InkRepository.kt"
+  ],
+  "comment_only_exact_inverse_reproduces_prior_hex_source_hash": true,
+  "final_build": {
+    "started_utc": "2026-10-13T03:50:12.505380+00:00",
+    "seconds": 87.82168132500374,
+    "exit_code": 0,
+    "command": [
+      "bash",
+      "/workspace/scratch/run-inkweft-gradle",
+      ":app:assembleDebug",
+      ":app:assembleDebugAndroidTest"
+    ],
+    "cwd": "/workspace/InkWeft/android",
+    "source_files": 744,
+    "source_unchanged_during_build": true
+  },
+  "recorded_apk_comparison": [
+    {
+      "role": "app",
+      "sha256": "d4af16103b601e7d73af673eeb89d6511003a0f0ef4c86785862d5e202714b5e",
+      "same_hash_as_tested_hex_v1": true,
+      "same_size_as_tested": true,
+      "signature_exit_code": 0,
+      "signature_verifies": true,
+      "unchanged_after_verification": true,
+      "mupdf_native_entries": 4,
+      "mupdf_elf_flags_all_true": true,
+      "mupdf_entries_same_as_tested": true
+    },
+    {
+      "role": "appTest",
+      "sha256": "5ce3e01030cc7ce27d93ed3aed7027a4f670716785235c569c0d4e84e3528407",
+      "same_hash_as_tested_hex_v1": true,
+      "same_size_as_tested": true,
+      "signature_exit_code": 0,
+      "signature_verifies": true,
+      "unchanged_after_verification": true,
+      "mupdf_native_entries": 0,
+      "mupdf_elf_flags_all_true": true,
+      "mupdf_entries_same_as_tested": true
+    }
+  ],
+  "debug_metadata": {
+    "generated_file": "android/app/build/generated/source/buildConfig/debug/org/inkweft/app/BuildConfig.java",
+    "sha256": "8b6caa35c577c59b5cdb5cb2aa2c701aa0d4faee543f8d1f3e32a7de2e4a5645",
+    "selected_fields": [
+      "public static final String BUILD_COMMIT = \"local-unknown\";",
+      "public static final boolean FORMAL_BUILD = false;",
+      "public static final String SOURCE_COMMIT = \"local-unknown\";"
+    ],
+    "meaning": "Debug APKs embed local-unknown and FORMAL_BUILD=false; external source/APK records bind tested bytes, not an embedded final Git commit."
+  },
+  "backup_server_tree": "1ea18e39d51ca989f02c65cd8f8f250d32eb8ad2",
+  "backup_server_tree_matches_prior": true,
+  "native_totals": {
+    "invocations": 9,
+    "executed": 17,
+    "passed": 15,
+    "failed": 2,
+    "acceptance": "NO-GO; four original gates remain, see final-raster-acceptance-review.md"
+  },
+  "limitations": [
+    "APK bytes were not read by this audit; the independently saved SHA/size/native/signature receipts are compared. Root performed the final binary verification.",
+    "No native rerun after the comment-only build; identical APK hashes do not create a new performance sample.",
+    "No old c60/v4 manifest was checked against the newer working tree.",
+    "Four acceptance gates remain open; 15/17 PASS does not close acceptance."
+  ],
+  "actions_not_performed": [
+    "build",
+    "ADB/native",
+    "APK read/copy/hash",
+    "Docker execution",
+    "source edit",
+    "Git mutation",
+    "README edit"
+  ]
+}

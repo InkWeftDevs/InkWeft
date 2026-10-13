@@ -1,0 +1,18 @@
+{
+  "utc": "2026-10-13T03:19:02.200652+00:00",
+  "artifacts": [
+    {
+      "role": "app",
+      "path": "/workspace/scratch/pr20-preserved-apks/candidate-raster-hex-v1/app-debug.apk",
+      "sha256": "d4af16103b601e7d73af673eeb89d6511003a0f0ef4c86785862d5e202714b5e",
+      "match": true
+    },
+    {
+      "role": "appTest",
+      "path": "/workspace/scratch/pr20-preserved-apks/candidate-raster-hex-v1/app-debug-androidTest.apk",
+      "sha256": "5ce3e01030cc7ce27d93ed3aed7027a4f670716785235c569c0d4e84e3528407",
+      "match": true
+    }
+  ],
+  "status": "MATCH"
+}

@@ -1,0 +1,26 @@
+[
+  {
+    "label": "index-preparation",
+    "module": "data",
+    "selection": "org.inkweft.data.LibraryTextIndexPreparationTest",
+    "expected": 11
+  },
+  {
+    "label": "original-storage",
+    "module": "data",
+    "selection": "org.inkweft.data.OriginalStorageRepositoryTest",
+    "expected": 11
+  },
+  {
+    "label": "search-regressions",
+    "module": "data",
+    "selection": "org.inkweft.data.LibrarySearchRepositoryTest#classificationUsesTheReadSnapshotAfterCancellableInitialIndexing,org.inkweft.data.LibrarySearchRepositoryTest#unicodeShortQueriesAndBoundedPagesKeepOrderAndNavigation,org.inkweft.data.LibrarySearchRepositoryTest#draftUnicodeFiltersPinsAndPageBeforeCardNavigationStayIntact,org.inkweft.data.LibrarySearchRepositoryTest#pausedSourceReadCancelsOnRapidInputThenClearAndCategoryStayFresh,org.inkweft.data.LibrarySearchRepositoryTest#deletedOrStalePageAndTrashedCardCannotReviveSearchHits",
+    "expected": 5
+  },
+  {
+    "label": "rapid-search",
+    "module": "data",
+    "selection": "org.inkweft.data.LibrarySearchRepositoryTest#twentyThousandPageRapidInputClearAndCategoryCancelOldGenerationOffMain",
+    "expected": 1
+  }
+]

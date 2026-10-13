@@ -1,0 +1,1799 @@
+{
+  "checked_utc": "2026-10-13T00:47:20.472277+00:00",
+  "status": "NO_CONFIGURED_SENSITIVE_PATTERNS_FOUND_IN_REVIEWED_COMPLETED_SNAPSHOTS",
+  "scope": {
+    "root": "/workspace/scratch/pr20-closure-evidence",
+    "selected_scratch_scripts": [
+      "pr20-closure-build.py",
+      "pr20-closure-apks.py",
+      "pr20-closure-awake-checks.py",
+      "pr20-closure-instrumentation.py",
+      "pr20-closure-record-build.py",
+      "pr20-closure-record-baseline-build.py",
+      "record-inkweft-performance-environment.py",
+      "summarize-pr20-closure-performance.py",
+      "run-inkweft-gradle"
+    ],
+    "reviewed_files": 248,
+    "reviewed_bytes": 4802390
+  },
+  "patterns_checked": [
+    "private_key_pem",
+    "github_token",
+    "aws_access_key",
+    "credential_url",
+    "bearer_value",
+    "sensitive_assignment",
+    "jwt",
+    "personal_home_path",
+    "environment_dump_hint"
+  ],
+  "findings_without_values": [],
+  "excluded_mutable_or_in_progress_files": [
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/baseline-final-build.log",
+      "reason": "baseline-final phase still active at delegation; defer build/runtime inputs and outputs to final closure"
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/baseline-final-source-sha256.json",
+      "reason": "baseline-final phase still active at delegation; defer build/runtime inputs and outputs to final closure"
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/paired-performance-summary-new-format.json",
+      "reason": "derived paired summary remains provisional while baseline-final is running"
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/performance-summary-input.json",
+      "reason": "mutable input manifest; do not freeze until paired runs and summary inputs are final"
+    }
+  ],
+  "inventory": [
+    {
+      "path": "/workspace/scratch/pr20-closure-apks.py",
+      "name": "pr20-closure-apks.py",
+      "sha256": "5933e107e013bd3d415812506b1d0d41e4553edb9af695d0458419fdc33d332b",
+      "bytes": 1788,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-awake-checks.py",
+      "name": "pr20-closure-awake-checks.py",
+      "sha256": "a0822da56e0b263876d8529cac2e4d342dc46bd47383f9c4739cc593a0d47169",
+      "bytes": 2466,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-build.py",
+      "name": "pr20-closure-build.py",
+      "sha256": "44e46bcc13ae5c60b4314495ec90088ae979532244def198b0cfd6574e5e72a4",
+      "bytes": 1736,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/LibraryBackupIsolationTest-v2-before-diagnostics.kt",
+      "name": "LibraryBackupIsolationTest-v2-before-diagnostics.kt",
+      "sha256": "d5dd1072bedeae268191a6f208a893ef00cb93f0970d3a17bc4cc07eafdf0fde",
+      "bytes": 9580,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/OriginalStorageRepositoryTest-v2-before-fixture-vacuum.kt",
+      "name": "OriginalStorageRepositoryTest-v2-before-fixture-vacuum.kt",
+      "sha256": "7645cf9bf542385d8468b4bdb3299cafb87137ef59113183699034bca490bd58",
+      "bytes": 24641,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/OriginalStorageRepositoryTest-v3-before-single-connection.kt",
+      "name": "OriginalStorageRepositoryTest-v3-before-single-connection.kt",
+      "sha256": "6f71c49df4ef7ead6d501aaa55a5d193876ec94a8550035ae00c338390255c1f",
+      "bytes": 24758,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/baseline-candidate-v2-frozen-source-check.json",
+      "name": "baseline-candidate-v2-frozen-source-check.json",
+      "sha256": "90dd63393ea96891df5aec7734379cb9300c76897405b59924078699c84b6a63",
+      "bytes": 3606,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/baseline-candidate-v2-frozen-source-check.md",
+      "name": "baseline-candidate-v2-frozen-source-check.md",
+      "sha256": "64f8584ed7ecf44ea66b005f56b05efebdb15fb56beea56cab0523d24527b84e",
+      "bytes": 1604,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/baseline-closure-performance-plan.json",
+      "name": "baseline-closure-performance-plan.json",
+      "sha256": "4f24f63f1259ae6b7797a07ef363a6b5dda28c398e9d78fe84628bf0d54bc854",
+      "bytes": 5594,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/baseline-closure-probe-evidence.patch",
+      "name": "baseline-closure-probe-evidence.patch",
+      "sha256": "c2099ab10e4a36cee4758a1476ae8f83251d94e35f32cfc2c26f97c86fe48a54",
+      "bytes": 5623,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/baseline-closure-probe-writer-connection.patch",
+      "name": "baseline-closure-probe-writer-connection.patch",
+      "sha256": "4586f14b002453a9d12720f53e3a8f2585ef1c05a2f6460d0e0978ddc4a8e40e",
+      "bytes": 5823,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/baseline-closure-provenance.json",
+      "name": "baseline-closure-provenance.json",
+      "sha256": "e26c62ca8417b269fbe2e82bec7753dfc2a38f5cab8ac51532cc70ce5d18cd40",
+      "bytes": 14530,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/baseline-closure-source-manifest.json",
+      "name": "baseline-closure-source-manifest.json",
+      "sha256": "da1b62bde6a628e898e68f1a94621c295b06d88fb13a6cbd5a6139853e5fa195",
+      "bytes": 680027,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/baseline-final-provenance.json",
+      "name": "baseline-final-provenance.json",
+      "sha256": "4894d42bf5605880fd2ba5545d53df7a4de500cbe4870e4a8b120f94e1392fee",
+      "bytes": 13051,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/baseline-final-source-manifest.json",
+      "name": "baseline-final-source-manifest.json",
+      "sha256": "485c50705454ab09d5ba15d618f9fc7fc2c7abe40eb105c8609533d25cc4af71",
+      "bytes": 680788,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/baseline-v3-provenance.json",
+      "name": "baseline-v3-provenance.json",
+      "sha256": "f49050613a8e7c659556ffcee08186221cca4bc7af972e32da0f99b571fa4ce0",
+      "bytes": 11992,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/baseline-v3-source-manifest.json",
+      "name": "baseline-v3-source-manifest.json",
+      "sha256": "d06be09c0e147618e692ac062dba3f2921796dd3fbf82966e8cac5c1c59ce674",
+      "bytes": 680778,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-build.json",
+      "name": "candidate-build.json",
+      "sha256": "b142035fd8cc75b0f37af23f1e48f49e01a89e3bb06cdda3285ce90d09b376d0",
+      "bytes": 373,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-build.log",
+      "name": "candidate-build.log",
+      "sha256": "bfb4ef9f3412d29426a61b7f227dd6e51a3da33439638999349eddbf33911501",
+      "bytes": 36657,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v2-apk-installation.json",
+      "name": "candidate-v2-apk-installation.json",
+      "sha256": "4a50334573e5778bd30669f3856f06fe02cf82e9516e8c7ed4e4b79adfbc0048",
+      "bytes": 2374,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v2-artifacts.json",
+      "name": "candidate-v2-artifacts.json",
+      "sha256": "6ea7e1e54ef3d100790df426c351fc7b288219a1add2ea296287ae089ae5242a",
+      "bytes": 1356,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v2-backup-cancel-setup.json",
+      "name": "candidate-v2-backup-cancel-setup.json",
+      "sha256": "a93484c4c050292a6e646fd0f96e84192b85270baa73ecdbd5ff345819112ec5",
+      "bytes": 987,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v2-backup-cancel.json",
+      "name": "candidate-v2-backup-cancel.json",
+      "sha256": "c59bf321146f45821a699065f2433934e0cdf53a3e0cc6835086fe6073632ff5",
+      "bytes": 820,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v2-backup-cancel.log",
+      "name": "candidate-v2-backup-cancel.log",
+      "sha256": "c61b8c97e4b26cdaeddb719994f00343d556994798962168aeaabf6e43258fa7",
+      "bytes": 4644,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v2-backup-isolation-setup.json",
+      "name": "candidate-v2-backup-isolation-setup.json",
+      "sha256": "169d087b775c360c0711de7430172428a0819e012fd83f9ad02b2e6eb1d8e818",
+      "bytes": 987,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v2-backup-isolation.json",
+      "name": "candidate-v2-backup-isolation.json",
+      "sha256": "bb5b71875bd9fdcb7538138c44aeb198e6d2188d5225d55e27597272adfeadc4",
+      "bytes": 688,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v2-backup-isolation.log",
+      "name": "candidate-v2-backup-isolation.log",
+      "sha256": "05cc76633fc44f457c25219a95e5d5e655b1c05e099e41c35dde5c32710a8cb7",
+      "bytes": 1359,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v2-build.json",
+      "name": "candidate-v2-build.json",
+      "sha256": "5d2dbef05d6bcc96ade30782f59a40c7bf0307a769d8bbffbd2aaf8718fc4162",
+      "bytes": 476,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v2-build.log",
+      "name": "candidate-v2-build.log",
+      "sha256": "b0541c4445129fd66c49c3c737e49cbb0f97395369c016e5b3ae7942f6baab16",
+      "bytes": 36646,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v2-factory-setup.json",
+      "name": "candidate-v2-factory-setup.json",
+      "sha256": "b7ffd8beaa9a5d02f6a412491b557ff937aece733b107df428979fd330a6d00f",
+      "bytes": 987,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v2-factory.json",
+      "name": "candidate-v2-factory.json",
+      "sha256": "6f140b3aec9280adb0b97b6cb259e2749cdd91a4e1872954aa73247743cc3293",
+      "bytes": 681,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v2-factory.log",
+      "name": "candidate-v2-factory.log",
+      "sha256": "44e3b86cf32d6c103fae8020ddd3842ae261f057951b32cfa7297e42c4ea9c57",
+      "bytes": 80,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v2-history-collection-setup.json",
+      "name": "candidate-v2-history-collection-setup.json",
+      "sha256": "cde54acf2d5a6f42d2c48cea493b5a29947572baa486df3dd65d597affd8f242",
+      "bytes": 987,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v2-history-collection.json",
+      "name": "candidate-v2-history-collection.json",
+      "sha256": "f9b373a2047112f3b821ba0fdb9e676de916a206245ac98b27fa7e92da39c768",
+      "bytes": 675,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v2-history-collection.log",
+      "name": "candidate-v2-history-collection.log",
+      "sha256": "6aab4c535d3fd7ab8dac3cc750c6f029c9734ea57ea8d1d2e4197135d6bcdf2a",
+      "bytes": 78,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v2-history-setup.json",
+      "name": "candidate-v2-history-setup.json",
+      "sha256": "8a44d21bec61274bb9d099d6f6089fea74068987a6f1034f943b95ad7e3e2e5c",
+      "bytes": 987,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v2-history.json",
+      "name": "candidate-v2-history.json",
+      "sha256": "802ab2e45d99da4e69b70a8788aa52a8a8a07d948dac8b265a268443839a1184",
+      "bytes": 677,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v2-history.log",
+      "name": "candidate-v2-history.log",
+      "sha256": "71a1cd6ba0b9c5998b3b4da02685c90112a777ba7c4ecff6b3485493d38db1d9",
+      "bytes": 1800,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v2-jvm-and-lint-status.json",
+      "name": "candidate-v2-jvm-and-lint-status.json",
+      "sha256": "7fb210fba7c0357ea52d3f2ae950c5e105ab065c8a3a3c77665ea2dbef498939",
+      "bytes": 354,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v2-native-stroke-review.md",
+      "name": "candidate-v2-native-stroke-review.md",
+      "sha256": "32fcfe46a4a1dcc1b68d37c05f5e6641d779f8a9d028cdc9ee9711419c9139dd",
+      "bytes": 2390,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v2-native-stroke-setup.json",
+      "name": "candidate-v2-native-stroke-setup.json",
+      "sha256": "ac46f3a0a10e6989e3aeaf6a82d86f4cd81111e4e65db031a6e18a40562b9583",
+      "bytes": 987,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v2-native-stroke.json",
+      "name": "candidate-v2-native-stroke.json",
+      "sha256": "153ce6abc0165e98f7b36692d5935ee805e358a0ef19a195d3e3957ae8577f41",
+      "bytes": 682,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v2-native-stroke.log",
+      "name": "candidate-v2-native-stroke.log",
+      "sha256": "008c505b5c4d19f9df223f91e2455650008da767d218c26b2b20ca74628b2144",
+      "bytes": 609,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v2-process-initialization-setup.json",
+      "name": "candidate-v2-process-initialization-setup.json",
+      "sha256": "36bcdf15cb00aa79ae1642c7c082c5bace685cc20c655b400574cb71743941fa",
+      "bytes": 987,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v2-process-initialization.json",
+      "name": "candidate-v2-process-initialization.json",
+      "sha256": "215794f3ff3d72828b3ab5ef102e7795917b6ac3b2eaad8f9039e7f3d8779823",
+      "bytes": 687,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v2-process-initialization.log",
+      "name": "candidate-v2-process-initialization.log",
+      "sha256": "cead2c2f62ff5ba0125cd054513a4da19ad84e9764f229c686f7777b03a6ac30",
+      "bytes": 1197,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v2-rapid-search-setup.json",
+      "name": "candidate-v2-rapid-search-setup.json",
+      "sha256": "8c0d48380839fbf08035004da745ae5d5366a7e1ab531bb259188bceca6ee4f8",
+      "bytes": 987,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v2-rapid-search.json",
+      "name": "candidate-v2-rapid-search.json",
+      "sha256": "d373ce353a9675418dce3c5d3350957cb2e8523d68954a9dc8e8b73d56b1606b",
+      "bytes": 832,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v2-rapid-search.log",
+      "name": "candidate-v2-rapid-search.log",
+      "sha256": "f1ffdb70187633509a54afd2af91243375859410907514f32ca67dac2c0fb7e3",
+      "bytes": 2191,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v2-raster-acceptance-review.md",
+      "name": "candidate-v2-raster-acceptance-review.md",
+      "sha256": "10d909ba3a4b4be60b680d44a9fdd2716b417ce59bd12bebb869b9d6687b21bf",
+      "bytes": 9094,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v2-reconstruction-matches.json",
+      "name": "candidate-v2-reconstruction-matches.json",
+      "sha256": "97a5f2109e478269dd53556a0bcbc864d20fedc4d54787fbb06b21351ecc2e41",
+      "bytes": 249313,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v2-reconstruction-provenance.json",
+      "name": "candidate-v2-reconstruction-provenance.json",
+      "sha256": "f3dae06f0100c7e9e0eab31fa6a7c7d954bad8612f84d34187d1f9b69c089636",
+      "bytes": 15811,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v2-reconstruction.md",
+      "name": "candidate-v2-reconstruction.md",
+      "sha256": "1161f21ac3bc41efa7f25d5efb77ab744f282e1df24da6dde186b40493d291cb",
+      "bytes": 1790,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v2-reconstruction.patch",
+      "name": "candidate-v2-reconstruction.patch",
+      "sha256": "584bc7ad3405c05962b76a1693311ee284eef8aa0692c8a1dd086f861bb4e4d5",
+      "bytes": 102520,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v2-regression-backup-regressions-setup.json",
+      "name": "candidate-v2-regression-backup-regressions-setup.json",
+      "sha256": "8b9708bffcc3ae40f0042e76334cb33267f3cc0d361489105f37ec4477f1d63b",
+      "bytes": 987,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v2-regression-backup-regressions.json",
+      "name": "candidate-v2-regression-backup-regressions.json",
+      "sha256": "cc6d42308e6b7d3fb71842b94d903cdc0e5fadeec50e3ca6365bd33f2c985c90",
+      "bytes": 2100,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v2-regression-backup-regressions.log",
+      "name": "candidate-v2-regression-backup-regressions.log",
+      "sha256": "b94e51146e2b3e6f6ae9d27c5f2843c612fed356592764db1e62cc9cb739152f",
+      "bytes": 86,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v2-regression-header-loading-setup.json",
+      "name": "candidate-v2-regression-header-loading-setup.json",
+      "sha256": "03fc665584bda45242367115db9f42e4accdf0d874cbe82183beeefbee427ed1",
+      "bytes": 2210,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v2-regression-header-loading.json",
+      "name": "candidate-v2-regression-header-loading.json",
+      "sha256": "15b3d7d2ca17a1391ff81e9a5911229074d75922fd50b6c499244a3b9284be0b",
+      "bytes": 693,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v2-regression-header-loading.log",
+      "name": "candidate-v2-regression-header-loading.log",
+      "sha256": "cb0534f3d3038ba427a72dbb13bca5e48615517393e4c03e3417e1c27d72dd3d",
+      "bytes": 78,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v2-regression-history-storage-setup.json",
+      "name": "candidate-v2-regression-history-storage-setup.json",
+      "sha256": "162fa7f3ceed37849cabac9b94c95afd239f51f8851c18f931f7053c0c985836",
+      "bytes": 987,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v2-regression-history-storage.json",
+      "name": "candidate-v2-regression-history-storage.json",
+      "sha256": "46a80c00386241e2a748eef7d57e9bb1755c3b96f7c38ed187fe44a09591d677",
+      "bytes": 679,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v2-regression-history-storage.log",
+      "name": "candidate-v2-regression-history-storage.log",
+      "sha256": "f2b36f37fda9fa050b03d7180ad1f91a253f632363422caec802d0fe9c1508b1",
+      "bytes": 76,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v2-regression-layer-budget-setup.json",
+      "name": "candidate-v2-regression-layer-budget-setup.json",
+      "sha256": "3c3f79f34461cee240098b678875ec628d3960cd9aef3b2b698c63213eeaeca6",
+      "bytes": 987,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v2-regression-layer-budget.json",
+      "name": "candidate-v2-regression-layer-budget.json",
+      "sha256": "766e0252ae4a3220a55f97e420377d76b7a3369143133feec2cf3d1339edd354",
+      "bytes": 685,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v2-regression-layer-budget.log",
+      "name": "candidate-v2-regression-layer-budget.log",
+      "sha256": "f7f89a1bdf80cdabf69c3f8b8d7589a4329ca231752d4326ec67d036f9343be6",
+      "bytes": 967,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v2-regression-library-paging-setup.json",
+      "name": "candidate-v2-regression-library-paging-setup.json",
+      "sha256": "7681c321ed30880a8a672bcf1c90c016fe5db38dd804227eb0f15be39df0c77f",
+      "bytes": 987,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v2-regression-library-paging.json",
+      "name": "candidate-v2-regression-library-paging.json",
+      "sha256": "1370f99b001996b17dbf0a9200de512586171c1507798cf267d3ad92f4ce9b8b",
+      "bytes": 677,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v2-regression-library-paging.log",
+      "name": "candidate-v2-regression-library-paging.log",
+      "sha256": "6782fd5783e18d434626d5966b0bc574392b0c3a463542a42ef770e99946f7c5",
+      "bytes": 70,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v2-regression-original-storage-setup.json",
+      "name": "candidate-v2-regression-original-storage-setup.json",
+      "sha256": "d52529ae655d46daf69ba9f3d350969159b79cb36daa92a5818f568748e4dbc9",
+      "bytes": 987,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v2-regression-original-storage.json",
+      "name": "candidate-v2-regression-original-storage.json",
+      "sha256": "359416051c53cc7a165d2db69f06648a57ef9e91c9af12e7bc86fc2c248220ab",
+      "bytes": 708,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v2-regression-original-storage.log",
+      "name": "candidate-v2-regression-original-storage.log",
+      "sha256": "b31e3ce7d7b4fac1584105173caa69db25c30e02c40e91e61a0824e9730e1fdc",
+      "bytes": 4340,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v2-regression-results.json",
+      "name": "candidate-v2-regression-results.json",
+      "sha256": "f0ba1b5f505658d04a468b55f4525539f69e1e10aa87f947ffd3f0209dcb0f6e",
+      "bytes": 10046,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v2-regression-search-regressions-setup.json",
+      "name": "candidate-v2-regression-search-regressions-setup.json",
+      "sha256": "31cfdb292294c457dc4ade5e4c42fc6e38b39bfb089086d9aa537c3a141628dc",
+      "bytes": 987,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v2-regression-search-regressions.json",
+      "name": "candidate-v2-regression-search-regressions.json",
+      "sha256": "c71ebf569a54249f2daed3b63e095381d7678038bc846935cf9550156dc1cfda",
+      "bytes": 1664,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v2-regression-search-regressions.log",
+      "name": "candidate-v2-regression-search-regressions.log",
+      "sha256": "11e8a07311c6a62d43b01a7832524fa4de13f962dced577b18c52438d191d7b2",
+      "bytes": 81,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v2-regression-streamed-dense-original-setup.json",
+      "name": "candidate-v2-regression-streamed-dense-original-setup.json",
+      "sha256": "af138b00a32ea8a0019678842d79c99ea6987e2425a3dd6aca19287b8d212792",
+      "bytes": 987,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v2-regression-streamed-dense-original.json",
+      "name": "candidate-v2-regression-streamed-dense-original.json",
+      "sha256": "4d08b26b84df55e8472f044e1c6e4804bbb356a089f1dedd343ceabee0d1d6fa",
+      "bytes": 832,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v2-regression-streamed-dense-original.log",
+      "name": "candidate-v2-regression-streamed-dense-original.log",
+      "sha256": "b2ba96b526a76faa7cac07f397b1c2bf09a993aedac5f6dd5bf5ad8b68c4309d",
+      "bytes": 4661,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v2-regression-streamed-regressions-setup.json",
+      "name": "candidate-v2-regression-streamed-regressions-setup.json",
+      "sha256": "03b72215b49b411804fb0bf818822aaac664df10abb0a92f4224fc5f260d679a",
+      "bytes": 987,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v2-regression-streamed-regressions.json",
+      "name": "candidate-v2-regression-streamed-regressions.json",
+      "sha256": "77237f4939df95df468d71cf5f34183adf97c4a4839c35218898cdfc276e544e",
+      "bytes": 1225,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v2-regression-streamed-regressions.log",
+      "name": "candidate-v2-regression-streamed-regressions.log",
+      "sha256": "5bfc8e666d4d4ed4f0d9a7b24724014c12e8a2f16235a1d1fb49c1aff1a61db2",
+      "bytes": 1619,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v2-results.json",
+      "name": "candidate-v2-results.json",
+      "sha256": "99b530d0478b3efc27b2335ccfd647e206d84fa6ecfd6cd744115fd1943954a0",
+      "bytes": 7251,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v2-shelf-rename-setup.json",
+      "name": "candidate-v2-shelf-rename-setup.json",
+      "sha256": "d4bfa47d37d15ec4b5b7773db91645279ed277abf50aa520e4566ad953c00d8e",
+      "bytes": 2210,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v2-shelf-rename.json",
+      "name": "candidate-v2-shelf-rename.json",
+      "sha256": "2d70b5b068161ae782dc8f138f978dc8991dc5ca61ad1e33a5bb876126a22337",
+      "bytes": 756,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v2-shelf-rename.log",
+      "name": "candidate-v2-shelf-rename.log",
+      "sha256": "37e7ccb49357e8d0e2f021b59cf3ac934037f1fe329bbbfd6944097e54c3955a",
+      "bytes": 69,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v2-signatures.json",
+      "name": "candidate-v2-signatures.json",
+      "sha256": "04884c77d341fbb596b1ba97d4fd552e5d2bb582e61c3f5b023c3e987dd71b0b",
+      "bytes": 1481,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v2-source-sha256.json",
+      "name": "candidate-v2-source-sha256.json",
+      "sha256": "141f13c85e1fac7d71b5623f14650eaff4b2cd11c3e4bcdf5ccbc6e25b3cc0ae",
+      "bytes": 106710,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v3-apk-installation.json",
+      "name": "candidate-v3-apk-installation.json",
+      "sha256": "8fa9a5b16f0092672848e3aeb62dda8779c9d6a9b9a99f566ac375fd89bcec38",
+      "bytes": 2374,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v3-artifacts.json",
+      "name": "candidate-v3-artifacts.json",
+      "sha256": "d02096d643b73a3970437af8fe0e9428020b123f63da390f33c3960944b8cd19",
+      "bytes": 1356,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v3-build.json",
+      "name": "candidate-v3-build.json",
+      "sha256": "91300b26953eeb37b778336d0b7d12e4e8792daa95f126b377c46e57c8c12b7b",
+      "bytes": 476,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v3-build.log",
+      "name": "candidate-v3-build.log",
+      "sha256": "5fafadd832270167fbb05a8114c4c856345dd26ff18121f0779c0be789f93532",
+      "bytes": 14783,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v3-followup-backup-isolation-paused-setup.json",
+      "name": "candidate-v3-followup-backup-isolation-paused-setup.json",
+      "sha256": "6686d5f2974e5c822e719f1ae805ed7e6b9cfef5cfa370839b2e3f7208bff1b1",
+      "bytes": 987,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v3-followup-backup-isolation-paused.json",
+      "name": "candidate-v3-followup-backup-isolation-paused.json",
+      "sha256": "b27ab8a8f987e50a83087673d9e646a30a91961ab995febe351a2cba4d81ddc5",
+      "bytes": 819,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v3-followup-backup-isolation-paused.log",
+      "name": "candidate-v3-followup-backup-isolation-paused.log",
+      "sha256": "b8318cdb91554d9bd8daa40390fa17e367bde7f44f981d7b5564680dac0a9f0b",
+      "bytes": 1457,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v3-followup-original-later-corruption-setup.json",
+      "name": "candidate-v3-followup-original-later-corruption-setup.json",
+      "sha256": "46de99994e6e4fb4ad6258b4f91372077ca1d383337e7d89365c8682637764ec",
+      "bytes": 987,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v3-followup-original-later-corruption.json",
+      "name": "candidate-v3-followup-original-later-corruption.json",
+      "sha256": "e97e5a4c54664d525b4b4002c30a847c9d3c6b8119134dc742c22e3930be65fe",
+      "bytes": 828,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v3-followup-original-later-corruption.log",
+      "name": "candidate-v3-followup-original-later-corruption.log",
+      "sha256": "59e070dd5e1c3ea83fe1882eeca69981db43f3b654a7be4ca0b0a809a9edc8c7",
+      "bytes": 3877,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v3-followup-results.json",
+      "name": "candidate-v3-followup-results.json",
+      "sha256": "727957320caf14cc4633e0ceb4e424e265f1f63a8855507163bf50f9579b667e",
+      "bytes": 1838,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v3-jvm-and-lint-status.json",
+      "name": "candidate-v3-jvm-and-lint-status.json",
+      "sha256": "7fb210fba7c0357ea52d3f2ae950c5e105ab065c8a3a3c77665ea2dbef498939",
+      "bytes": 354,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v3-performance-artifact-continuity.json",
+      "name": "candidate-v3-performance-artifact-continuity.json",
+      "sha256": "b1e5e6f2d6cddb176b9992fe02814ef638a8f5a5f5bb65981882e14d2a974d96",
+      "bytes": 875,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v3-performance-environment-after.json",
+      "name": "candidate-v3-performance-environment-after.json",
+      "sha256": "5dcc16a675ff22fde0d4a0a3665af9176d35e3674d62a5421dc80fcdef9e17ef",
+      "bytes": 11790,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v3-performance-environment.json",
+      "name": "candidate-v3-performance-environment.json",
+      "sha256": "b61609b452231643a8cd8af6d8505ecda3ddb64c9aa28ad42e31276da4837517",
+      "bytes": 11784,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v3-performance-history-probe-setup.json",
+      "name": "candidate-v3-performance-history-probe-setup.json",
+      "sha256": "4e108e9fc3ca4703f68762d86f6a501efd28c5f50d889e38b67a3d42e89a464c",
+      "bytes": 987,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v3-performance-history-probe.json",
+      "name": "candidate-v3-performance-history-probe.json",
+      "sha256": "5baceb5d6be08570a41a30b44735ab0a67b1c07ceca5badbc5bec26c9a4d8523",
+      "bytes": 704,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v3-performance-history-probe.log",
+      "name": "candidate-v3-performance-history-probe.log",
+      "sha256": "b94eed466be0210dd3a8b6b89238730277c3f1474ee3f08a60ee4a337244005d",
+      "bytes": 1320,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v3-performance-library-probe-setup.json",
+      "name": "candidate-v3-performance-library-probe-setup.json",
+      "sha256": "10888aff7e57d1f81ac7ad870495d7afc26fa190e9c0660ce3c845527d757a60",
+      "bytes": 987,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v3-performance-library-probe.json",
+      "name": "candidate-v3-performance-library-probe.json",
+      "sha256": "a3bd7683cb7d7a79ad455ab9fb208b9c3ceb2550a86401309717f0cfb0c6efb0",
+      "bytes": 697,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v3-performance-library-probe.log",
+      "name": "candidate-v3-performance-library-probe.log",
+      "sha256": "ee33451e1a7f7a5c49b3e5dd3536d23e7905fc081fb56a8ef69576fbc65c13d4",
+      "bytes": 10950,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v3-performance-raster-probe-setup.json",
+      "name": "candidate-v3-performance-raster-probe-setup.json",
+      "sha256": "c738adcf284edc87da1187a6deb04a077dba4dd03ff1ef902d0c9e498ebc0151",
+      "bytes": 987,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v3-performance-raster-probe.json",
+      "name": "candidate-v3-performance-raster-probe.json",
+      "sha256": "4ae71612d598a28e47a33de058dcc187a9de9f6b1c2bd4accb74866404e9d639",
+      "bytes": 688,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v3-performance-raster-probe.log",
+      "name": "candidate-v3-performance-raster-probe.log",
+      "sha256": "45ed12a26645157d6f2e4ae0ec8f20d422e6953ed71780e6d7daaecba8ab9f19",
+      "bytes": 5396,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v3-performance-results.json",
+      "name": "candidate-v3-performance-results.json",
+      "sha256": "44a55634b51569be12196618ca860b958742c606e9d152b1ed462e28cdc15e09",
+      "bytes": 3102,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v3-performance-tile-local-setup.json",
+      "name": "candidate-v3-performance-tile-local-setup.json",
+      "sha256": "87f3f8129b9f98e7ae6cffdc8bcae74875bde089e7fc9be5049085ee6d701040",
+      "bytes": 987,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v3-performance-tile-local.json",
+      "name": "candidate-v3-performance-tile-local.json",
+      "sha256": "74850c6f5b352ce65d704c25b7bf45efa38657eb53757d3bb6f40141221cf676",
+      "bytes": 682,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v3-performance-tile-local.log",
+      "name": "candidate-v3-performance-tile-local.log",
+      "sha256": "034f030c93ed63ca363b97af4c3ae8138150b3eafee23743263823fad88e8b85",
+      "bytes": 1309,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v3-signatures.json",
+      "name": "candidate-v3-signatures.json",
+      "sha256": "04884c77d341fbb596b1ba97d4fd552e5d2bb582e61c3f5b023c3e987dd71b0b",
+      "bytes": 1481,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v3-source-continuity.json",
+      "name": "candidate-v3-source-continuity.json",
+      "sha256": "1215a26726e08e1c1f418c0a6fefb19af5b48c21708ac0e3f9360627b47139ca",
+      "bytes": 18613,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v3-source-continuity.md",
+      "name": "candidate-v3-source-continuity.md",
+      "sha256": "ac7837c73e6256b67b051e46b4e7d50689209f9de6d67f60a4aa0002f0fa44db",
+      "bytes": 3508,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v3-source-sha256.json",
+      "name": "candidate-v3-source-sha256.json",
+      "sha256": "c52cbf318ce52a660d7040ad75f2a3c3c1828027c6f61633bf886deae8a214f7",
+      "bytes": 106710,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v4-apk-installation.json",
+      "name": "candidate-v4-apk-installation.json",
+      "sha256": "d6541c7a3e962adabfa42ceb7252d009e554dd16d6feb94df1c1fac6dae2a889",
+      "bytes": 2374,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v4-artifacts.json",
+      "name": "candidate-v4-artifacts.json",
+      "sha256": "84ce38bb2acacb53e027e7f56a43253e717bd9e53ed47a547d3acfa7e5b79851",
+      "bytes": 1356,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v4-build.json",
+      "name": "candidate-v4-build.json",
+      "sha256": "d87398633fd15b53e83db3b55c9d6b13ff8e2bc8628319150fe1ec63ace4f29f",
+      "bytes": 476,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v4-build.log",
+      "name": "candidate-v4-build.log",
+      "sha256": "ac73bae67001943ccf491642e2364ef501c70b06cec630bded8b309e2f217129",
+      "bytes": 36723,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v4-evidence-closure-check.json",
+      "name": "candidate-v4-evidence-closure-check.json",
+      "sha256": "5505124b9720753e9b1caa2330a6f30d2bd91f56691dbaca50b6775e56660fb5",
+      "bytes": 26194,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v4-evidence-closure-check.md",
+      "name": "candidate-v4-evidence-closure-check.md",
+      "sha256": "be88d5e4091f4df758c6d37c063fc35e34cacfc8c1b9331480c7bc433ed77d72",
+      "bytes": 2143,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v4-jvm-and-lint-status.json",
+      "name": "candidate-v4-jvm-and-lint-status.json",
+      "sha256": "7fb210fba7c0357ea52d3f2ae950c5e105ab065c8a3a3c77665ea2dbef498939",
+      "bytes": 354,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v4-library-review.json",
+      "name": "candidate-v4-library-review.json",
+      "sha256": "096a72fea12ff55b4e57aeacd5bb4a9bad770cde2f130a8784c07888af0a28c0",
+      "bytes": 16841,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v4-library-review.md",
+      "name": "candidate-v4-library-review.md",
+      "sha256": "7947907202d33656cd7960d3bfd6692d74f8bfdae68cf83cddd647e651a1f5fa",
+      "bytes": 5763,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v4-original-storage-review.md",
+      "name": "candidate-v4-original-storage-review.md",
+      "sha256": "4fed19daf01a1413f58c83202fd28c58667063ee96c9c92aef705cda4de47717",
+      "bytes": 4689,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v4-performance-artifact-continuity.json",
+      "name": "candidate-v4-performance-artifact-continuity.json",
+      "sha256": "a917e236ce3e45472aa204e50a351bf8cb15ad6ff46b7cac82d42ac041f228a0",
+      "bytes": 875,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v4-performance-environment-after.json",
+      "name": "candidate-v4-performance-environment-after.json",
+      "sha256": "9dbbe1b3b8194253ba44dfab30cd3b5fbb077a14b1e700c37a02dd25b252fd8e",
+      "bytes": 11790,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v4-performance-environment.json",
+      "name": "candidate-v4-performance-environment.json",
+      "sha256": "841602a7ea1bf7444ce28a8faf6b695f483a4f94d9f75a09970432f945ac3d39",
+      "bytes": 11784,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v4-performance-history-probe-setup.json",
+      "name": "candidate-v4-performance-history-probe-setup.json",
+      "sha256": "dd6dea371c14ed1ceb39cb8f8f0c1d5faeef8c680c7c6a1a54fd3f363f6f2b7c",
+      "bytes": 987,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v4-performance-history-probe.json",
+      "name": "candidate-v4-performance-history-probe.json",
+      "sha256": "cf79086ca4eb1e12e8229c810710663e15c28d137ec16bfc42b0a97275081bc6",
+      "bytes": 705,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v4-performance-history-probe.log",
+      "name": "candidate-v4-performance-history-probe.log",
+      "sha256": "f3d471a977144c3d5402668036efead72617c5193104e96a42114bef26d3da49",
+      "bytes": 1327,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v4-performance-library-probe-setup.json",
+      "name": "candidate-v4-performance-library-probe-setup.json",
+      "sha256": "b0b6da66a03ff4874c7a5a45627d072600d8a74b5835bd0d97e5856fe7036285",
+      "bytes": 987,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v4-performance-library-probe.json",
+      "name": "candidate-v4-performance-library-probe.json",
+      "sha256": "2e24cf1ee7c3a1756cd7694560da50d42d575b2af51c670182a4da9ab195d110",
+      "bytes": 696,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v4-performance-library-probe.log",
+      "name": "candidate-v4-performance-library-probe.log",
+      "sha256": "3ff495eec29fb24b8da80c881689c0aaf19c7f4173fcd049f6230f17b4d5cc33",
+      "bytes": 10609,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v4-performance-raster-probe-setup.json",
+      "name": "candidate-v4-performance-raster-probe-setup.json",
+      "sha256": "5f3cf614a458b823951e255d7c36314128f0e5d6742a7d12942cbec867bdfefa",
+      "bytes": 987,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v4-performance-raster-probe.json",
+      "name": "candidate-v4-performance-raster-probe.json",
+      "sha256": "df42e0bbf6a113224c95a244449fae3b091fd3e1a627449ea0afb5043bde2ae4",
+      "bytes": 688,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v4-performance-raster-probe.log",
+      "name": "candidate-v4-performance-raster-probe.log",
+      "sha256": "60875b751b7adda89221fcaaffc92ef07dc978e3faf95cf874cd2d0ce1c9148c",
+      "bytes": 5382,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v4-performance-results.json",
+      "name": "candidate-v4-performance-results.json",
+      "sha256": "f8627e7e31ee969008846fed2350e23ccb8ae76674b3c2540de56e504cf14888",
+      "bytes": 3102,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v4-performance-tile-local-setup.json",
+      "name": "candidate-v4-performance-tile-local-setup.json",
+      "sha256": "192e561e44becb3c1cb84ff2ee42bf5e8faef6130ecede52d24cf1344135e138",
+      "bytes": 987,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v4-performance-tile-local.json",
+      "name": "candidate-v4-performance-tile-local.json",
+      "sha256": "f0de25b9617712f3dfd64c537688c781d88236d49e72f495cc4c080c4f8f1829",
+      "bytes": 682,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v4-performance-tile-local.log",
+      "name": "candidate-v4-performance-tile-local.log",
+      "sha256": "fdfa2736aab5b05f97a8dacd090ff7754efe977d91472ec5e50aef46f246f1d8",
+      "bytes": 1313,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v4-raster-review.json",
+      "name": "candidate-v4-raster-review.json",
+      "sha256": "6a6f8b5f8fe15212b32a5ca9171b105c2cd55229b641f85ac983b8043277d465",
+      "bytes": 17869,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v4-raster-review.md",
+      "name": "candidate-v4-raster-review.md",
+      "sha256": "e76081f6559f3e3a8e28fe54908359f08df68ef787805deefd4cad21a043925e",
+      "bytes": 7258,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v4-reconstruction-matches.json",
+      "name": "candidate-v4-reconstruction-matches.json",
+      "sha256": "1d4d7fde14bfdf5af7b1b3d9917ea7885969ac667ce3c1c83d8f203938bb45be",
+      "bytes": 249906,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v4-reconstruction-provenance.json",
+      "name": "candidate-v4-reconstruction-provenance.json",
+      "sha256": "baf182ea8bcfae5c5a697b75d8a8dbf0ea690ed099030736b02eb17149820ca5",
+      "bytes": 15738,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v4-reconstruction.patch",
+      "name": "candidate-v4-reconstruction.patch",
+      "sha256": "4c5cbb21e327d89578731f03f5c63167aa14b0aeb6c6335216316a26e1bb87a9",
+      "bytes": 128224,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v4-signatures.json",
+      "name": "candidate-v4-signatures.json",
+      "sha256": "04884c77d341fbb596b1ba97d4fd552e5d2bb582e61c3f5b023c3e987dd71b0b",
+      "bytes": 1481,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v4-source-continuity.json",
+      "name": "candidate-v4-source-continuity.json",
+      "sha256": "66b6e286fadd6811a03c95736083624720d7dc29d417b63e77898096b6cf9629",
+      "bytes": 26149,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v4-source-continuity.md",
+      "name": "candidate-v4-source-continuity.md",
+      "sha256": "c98b5823067150223a2312d5fc1b9225c9d275ee4763ce21a9eb5287f912e153",
+      "bytes": 2661,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v4-source-sha256.json",
+      "name": "candidate-v4-source-sha256.json",
+      "sha256": "8285c54019d0a4409a6dbf6f5d36e87298b5be9b6d47f93801ea9123bb7d859f",
+      "bytes": 106879,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v4-validation-index-preparation-setup.json",
+      "name": "candidate-v4-validation-index-preparation-setup.json",
+      "sha256": "2991e53661511a48bb45519d3ea34525937a5ca0fd6e3283112c7fbdada1f288",
+      "bytes": 987,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v4-validation-index-preparation.json",
+      "name": "candidate-v4-validation-index-preparation.json",
+      "sha256": "213dddcca941999b1d5c26fb38c7643c5f1f314c6f99da32a7f4b117538a5b3b",
+      "bytes": 708,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v4-validation-index-preparation.log",
+      "name": "candidate-v4-validation-index-preparation.log",
+      "sha256": "7367bcb15893181383b0929cbf9ba5cf1ebf2aba02b65d4575c5c991af68b242",
+      "bytes": 93,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v4-validation-original-storage-setup.json",
+      "name": "candidate-v4-validation-original-storage-setup.json",
+      "sha256": "28d1a190afe5a921a6e52fe146d1a81912434bd666fad1de8f578954b2fdb35e",
+      "bytes": 987,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v4-validation-original-storage.json",
+      "name": "candidate-v4-validation-original-storage.json",
+      "sha256": "052028294103e837fedc19609f10f7b307e4d8c55cc7499381ed09b12b4ba4a4",
+      "bytes": 705,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v4-validation-original-storage.log",
+      "name": "candidate-v4-validation-original-storage.log",
+      "sha256": "b7a8c7c2aba3072fb61502f1019b35a894306fee992914ac6ce1c1cc1582fd20",
+      "bytes": 719,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v4-validation-plan.json",
+      "name": "candidate-v4-validation-plan.json",
+      "sha256": "a47267b57545617c9bf73fa7f71ebf3f26384c2a4bb5389fb959ea0968a239ca",
+      "bytes": 1152,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v4-validation-rapid-search-setup.json",
+      "name": "candidate-v4-validation-rapid-search-setup.json",
+      "sha256": "46688d0cd35eabcaee2f975ddfb88751e4c9417994e395b8c5be3d97b26ba595",
+      "bytes": 987,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v4-validation-rapid-search.json",
+      "name": "candidate-v4-validation-rapid-search.json",
+      "sha256": "4c2ef51c0b14d6056113fac8d289ed62c19d88f09d5e6e306aaf5ae5be5ee967",
+      "bytes": 843,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v4-validation-rapid-search.log",
+      "name": "candidate-v4-validation-rapid-search.log",
+      "sha256": "9a9195bc98cbbcb9cc4672c17f022fb431dc122d46f5793e06dc78f66eedef69",
+      "bytes": 2439,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v4-validation-results.json",
+      "name": "candidate-v4-validation-results.json",
+      "sha256": "49df2babf5307c2f24bc4190ac537365fc1dbc603070cc7fb205786a4f0c9e22",
+      "bytes": 4266,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v4-validation-search-regressions-setup.json",
+      "name": "candidate-v4-validation-search-regressions-setup.json",
+      "sha256": "026dd820752bc869d69f9db497a804bee73c2c799de2a0562e7c246ca88735c2",
+      "bytes": 987,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v4-validation-search-regressions.json",
+      "name": "candidate-v4-validation-search-regressions.json",
+      "sha256": "6382758e5b4dd679d32e52290067f0f50cbc9702890d06f01036e7c691cbc0db",
+      "bytes": 1664,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v4-validation-search-regressions.log",
+      "name": "candidate-v4-validation-search-regressions.log",
+      "sha256": "43caf22f149f4c557cf18217cf2334cd15a038256aebc539e5a025c28b0b6a12",
+      "bytes": 82,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/ci-environment-review.md",
+      "name": "ci-environment-review.md",
+      "sha256": "aa355bae733db8835b25cb16ef6faf3fc4fc958cffec43a98d81233f3af1c577",
+      "bytes": 9878,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/closure-curated-manifest-v4.json",
+      "name": "closure-curated-manifest-v4.json",
+      "sha256": "e61e754fb766c8be4bc40f91e02de0a0dd803e7518acfe4cc546f152c29af66a",
+      "bytes": 42440,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/closure-evidence-curation-v4.md",
+      "name": "closure-evidence-curation-v4.md",
+      "sha256": "3dc24049d44b0b0874f2889cb82b9b935ef176713a69da464026a4b0da7e0af3",
+      "bytes": 2502,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/closure-evidence-privacy-review-v4.json",
+      "name": "closure-evidence-privacy-review-v4.json",
+      "sha256": "4d1007c0612fdb5a076198ae9eb45391036f32263320adb5e4b0918e4cee8130",
+      "bytes": 74530,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/closure-readme-v3-review-suggestions.md",
+      "name": "closure-readme-v3-review-suggestions.md",
+      "sha256": "eaad7854f463651ef8fe06bc749253e4c075dd42237ff8961fcb097c7b65945b",
+      "bytes": 2900,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/closure-review-checklist-v2.json",
+      "name": "closure-review-checklist-v2.json",
+      "sha256": "bbfa1a0335c15d52b8862d60706f414f4c6e9c2ac72b251fc821cb9be1bff74e",
+      "bytes": 25179,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/diagnostic-plan.json",
+      "name": "diagnostic-plan.json",
+      "sha256": "959396c202bcbe22b4f2acdff8a0368631914c86e5e7abf22c8287de0926b1fb",
+      "bytes": 1386,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/diagnostic-source-sha256.json",
+      "name": "diagnostic-source-sha256.json",
+      "sha256": "e3190c306307cf220c8f7e193f93446c4c52f9c87b1552ceec822935f7f1c75b",
+      "bytes": 105851,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/diagnostic-v1-apk-installation.json",
+      "name": "diagnostic-v1-apk-installation.json",
+      "sha256": "86d4abbaf6b9d9db00b3a62c1a2a8fa7a25988c0c1c8bf22f3f55117bf622283",
+      "bytes": 2374,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/diagnostic-v1-artifacts.json",
+      "name": "diagnostic-v1-artifacts.json",
+      "sha256": "7b54aaf32b4f9c734a8723e796686021f2166233dee7448a696438dd365c844f",
+      "bytes": 1356,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/diagnostic-v1-assessment.md",
+      "name": "diagnostic-v1-assessment.md",
+      "sha256": "433376a4c068577d5e7868b1a33d508a6148225e69d9fbb98360d44ba8709d8f",
+      "bytes": 20311,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/diagnostic-v1-backup-cancel-setup.json",
+      "name": "diagnostic-v1-backup-cancel-setup.json",
+      "sha256": "57a3e97ab7c9dea55a6bfc95830d1003cd8b71856549d55c48416e7d6990f13a",
+      "bytes": 987,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/diagnostic-v1-backup-cancel.json",
+      "name": "diagnostic-v1-backup-cancel.json",
+      "sha256": "bf6bf430a567b3f9737b41e389a0a7d5ae9f906d1c183f76ed7eea939dd840b6",
+      "bytes": 821,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/diagnostic-v1-backup-cancel.log",
+      "name": "diagnostic-v1-backup-cancel.log",
+      "sha256": "1426e7ca58b771117dac93a3769f0c670b7a47c025ad3593f8ae7271d5870982",
+      "bytes": 4645,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/diagnostic-v1-history-setup.json",
+      "name": "diagnostic-v1-history-setup.json",
+      "sha256": "845561c4b903a4c9174a16c610a4e9a31d44743f36239a7efdc987b442d3d4c0",
+      "bytes": 987,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/diagnostic-v1-history.json",
+      "name": "diagnostic-v1-history.json",
+      "sha256": "664be798274268f03c40c5d91133450eaf67b248318a474724adaa0a89aeb4d4",
+      "bytes": 682,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/diagnostic-v1-history.log",
+      "name": "diagnostic-v1-history.log",
+      "sha256": "3decdacec0fe8ed53fca2ccd3f1a883028351f5535bd3293f897011e069e6187",
+      "bytes": 1624,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/diagnostic-v1-jvm-and-lint-status.json",
+      "name": "diagnostic-v1-jvm-and-lint-status.json",
+      "sha256": "7fb210fba7c0357ea52d3f2ae950c5e105ab065c8a3a3c77665ea2dbef498939",
+      "bytes": 354,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/diagnostic-v1-large-frame-setup.json",
+      "name": "diagnostic-v1-large-frame-setup.json",
+      "sha256": "4f6fff02cde84a52c3a942bf26781a97d4987baac035c6f734701eed6c28929e",
+      "bytes": 987,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/diagnostic-v1-large-frame.json",
+      "name": "diagnostic-v1-large-frame.json",
+      "sha256": "577b78a5b9b6bee590169b40df4e562bbda190dbe8b8864f127bd355a610d95c",
+      "bytes": 822,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/diagnostic-v1-large-frame.log",
+      "name": "diagnostic-v1-large-frame.log",
+      "sha256": "5b6ee97241761e6d431ea4918c535888f48da953691326e93af45cd834bbbe72",
+      "bytes": 4564,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/diagnostic-v1-rapid-search-setup.json",
+      "name": "diagnostic-v1-rapid-search-setup.json",
+      "sha256": "fe576a644403a054f00ca583be597008970729b4ad8559acf7bd682bc0aa264d",
+      "bytes": 987,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/diagnostic-v1-rapid-search.json",
+      "name": "diagnostic-v1-rapid-search.json",
+      "sha256": "5005cd99826d422d38f1fffb468b5ce7ff23a28a132341dc0fe3ed4b80b4fe47",
+      "bytes": 834,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/diagnostic-v1-rapid-search.log",
+      "name": "diagnostic-v1-rapid-search.log",
+      "sha256": "7a3700f541c51a3a65a53b029ddaca16790f5ca0cce9c3ff648a585f8a069f84",
+      "bytes": 1676,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/diagnostic-v1-reconstruction-matches.json",
+      "name": "diagnostic-v1-reconstruction-matches.json",
+      "sha256": "14e2e0e5eef071ff16704a5c54d13ad82b17dad4b24b90fdb6e79f1f12c4ff85",
+      "bytes": 462915,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/diagnostic-v1-reconstruction-provenance.json",
+      "name": "diagnostic-v1-reconstruction-provenance.json",
+      "sha256": "92a4b73d532934c432ed6de3da7e8bd2126607f24db42c3b7ef9e369888844a0",
+      "bytes": 8301,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/diagnostic-v1-reconstruction.patch",
+      "name": "diagnostic-v1-reconstruction.patch",
+      "sha256": "fa8aa24faeb7d12a9ae9dca1f2dcd982551eaa4090056b8a9bca9e57b7a2a0cd",
+      "bytes": 61642,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/diagnostic-v1-results.json",
+      "name": "diagnostic-v1-results.json",
+      "sha256": "ef0e6eb8d31246ad3fc9e099015311c2166f3fca391ed9794906620bdbb10554",
+      "bytes": 6123,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/diagnostic-v1-shelf-rename-setup.json",
+      "name": "diagnostic-v1-shelf-rename-setup.json",
+      "sha256": "d47fe1810e989b1828561fc5e91d1e89f0a6b15066fbb9843717ed2d9cc50874",
+      "bytes": 2210,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/diagnostic-v1-shelf-rename.json",
+      "name": "diagnostic-v1-shelf-rename.json",
+      "sha256": "90f74b4710c62244aad20a3833418aece20e50575387f493100693158e634ead",
+      "bytes": 762,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/diagnostic-v1-shelf-rename.log",
+      "name": "diagnostic-v1-shelf-rename.log",
+      "sha256": "a114d8b63968b531c25cfe40d4a7e61e96a7a927bc8059e99509ace2eaed5b85",
+      "bytes": 3247,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/diagnostic-v1-signatures.json",
+      "name": "diagnostic-v1-signatures.json",
+      "sha256": "04884c77d341fbb596b1ba97d4fd552e5d2bb582e61c3f5b023c3e987dd71b0b",
+      "bytes": 1481,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/diagnostic-v1-small-frame-setup.json",
+      "name": "diagnostic-v1-small-frame-setup.json",
+      "sha256": "2715fd150aa7fc92135d915d81bd00d18a6129ad3f7638935249f793d7e0b775",
+      "bytes": 987,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/diagnostic-v1-small-frame.json",
+      "name": "diagnostic-v1-small-frame.json",
+      "sha256": "8f7918c2b47ada93a19422248806c7aff48c776a225aa4be952eb77cb0d2c2f3",
+      "bytes": 813,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/diagnostic-v1-small-frame.log",
+      "name": "diagnostic-v1-small-frame.log",
+      "sha256": "1ec142aef07a2071479cb305cb63606ca35ec315ebe783553836d0a653f668d1",
+      "bytes": 1593,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/diagnostic-v1-small-search-setup.json",
+      "name": "diagnostic-v1-small-search-setup.json",
+      "sha256": "d17135cb921bef9a23a2bf81e940145a5a75ec8056eeeb9e015166d165c5eb52",
+      "bytes": 987,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/diagnostic-v1-small-search.json",
+      "name": "diagnostic-v1-small-search.json",
+      "sha256": "779729d2e7ad12784de3d4148f70a232ed85abaf61d29d5b3b3a197c74f858cd",
+      "bytes": 818,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/diagnostic-v1-small-search.log",
+      "name": "diagnostic-v1-small-search.log",
+      "sha256": "9ee2b98c09dc65cc288158335a7bd8dc898fec840558e485d4aa483402768d06",
+      "bytes": 77,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/final-readonly-delivery-checks.md",
+      "name": "final-readonly-delivery-checks.md",
+      "sha256": "78bef6ac4ba679648fe8abff9db1b4ef52af49e0ca0130b188921e182d84f999",
+      "bytes": 3315,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/final-v3-source-review.md",
+      "name": "final-v3-source-review.md",
+      "sha256": "986d323af0ca708537b0b99eaa8dada2e1fdf69fa1e0d2c46fd91e83132742ea",
+      "bytes": 6620,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/final-v4-index-source-review.md",
+      "name": "final-v4-index-source-review.md",
+      "sha256": "0e1d1d087d1aad3d34efe5a3a8498eaafbcd2472f14ec40f250ed648b4fe35c0",
+      "bytes": 3869,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/followup-v3-plan.json",
+      "name": "followup-v3-plan.json",
+      "sha256": "59b2bcee256bd47a1de7e236a23b9f9366b0839b6d3aeb154e318864d9d4dcc5",
+      "bytes": 439,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/followup-v4-plan.json",
+      "name": "followup-v4-plan.json",
+      "sha256": "40efc8537d78c7f2b14d9f0a1395fc259156cdb9476a3141437538d4717b2d4a",
+      "bytes": 153,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/index-writer-LibraryTextIndex.before.kt",
+      "name": "index-writer-LibraryTextIndex.before.kt",
+      "sha256": "7f9067f21faf38130a01e35814d3d5013540bc9682f15f01ab8a075ba21a7e05",
+      "bytes": 5540,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/index-writer-before.sha256",
+      "name": "index-writer-before.sha256",
+      "sha256": "0a9f09ee05274ed005daa8c012e341d43668f66efbfbd013c706a2a2408f9a96",
+      "bytes": 139,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/index-writer-precompute-outside-writer.patch",
+      "name": "index-writer-precompute-outside-writer.patch",
+      "sha256": "02236cf1bb19354d559654d83a99e5dd8e15a46416bc087f5e64df08c5ee7661",
+      "bytes": 18196,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/index-writer-sha256.json",
+      "name": "index-writer-sha256.json",
+      "sha256": "a0b6542bf8fdd659c09efeb745cec0370c7c21e519c2e4f9c79265da4ad5841a",
+      "bytes": 911,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/initial-plan.json",
+      "name": "initial-plan.json",
+      "sha256": "ffea75e894f1e2e9b67408a1dc79928872e22c0bd484c6b84e5e3a1a38af6b84",
+      "bytes": 291,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/initial-v1-factory-setup.json",
+      "name": "initial-v1-factory-setup.json",
+      "sha256": "96d7e5801721cec43a52a2a507b64ef2e6df10eae7435f8a5ddb573116d4efd8",
+      "bytes": 987,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/initial-v1-factory.json",
+      "name": "initial-v1-factory.json",
+      "sha256": "d15bd3f1e28bbf156d4c0f89d4314613c9d9417d9aed14d580f4f1bc45afd7c2",
+      "bytes": 679,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/initial-v1-factory.log",
+      "name": "initial-v1-factory.log",
+      "sha256": "1ea6fe145fcece2301c08386a051fc712a8681e1c8cac23d6728d8b1732f5eb8",
+      "bytes": 79,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/initial-v1-process-initialization-setup.json",
+      "name": "initial-v1-process-initialization-setup.json",
+      "sha256": "aa04cf5179bb311625901b6222d0b703fcc78a903a17858bf4e38239412f5725",
+      "bytes": 987,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/initial-v1-process-initialization.json",
+      "name": "initial-v1-process-initialization.json",
+      "sha256": "291821da5010cc0f3daa26495667b3b4bb48695afee807a56060de6518bad632",
+      "bytes": 685,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/initial-v1-process-initialization.log",
+      "name": "initial-v1-process-initialization.log",
+      "sha256": "77d45f7f345801619a8abbf8e0bc8689ca8906ed3d78bc78fdb0cd3029f64e27",
+      "bytes": 1176,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/initial-v1-results.json",
+      "name": "initial-v1-results.json",
+      "sha256": "bd4b167e513c0d7b672544f6f9723d6b0dc88c336d5cdad5c2482edc1866f07a",
+      "bytes": 1536,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/performance-environment-recorder-review.json",
+      "name": "performance-environment-recorder-review.json",
+      "sha256": "c9fabe23ad722d6b664c0b01f17f259a20774e527abef15b8652feb578c44d14",
+      "bytes": 2597,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/performance-fixture-comparability.md",
+      "name": "performance-fixture-comparability.md",
+      "sha256": "be84f55d4ac3d3d06e3dc878b9474be7fab9dd7fece37dde5d003aeb371d1c51",
+      "bytes": 6152,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/performance-plan.json",
+      "name": "performance-plan.json",
+      "sha256": "ebb04fa63547a08ff1cfa4b72101ae1aad107f19e1473911e9c5a400e98367fe",
+      "bytes": 560,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/performance-summary-usage.md",
+      "name": "performance-summary-usage.md",
+      "sha256": "215c51fc9a58e2fcdda2293b193cfc670092e9a535deb40587613be61505fe6b",
+      "bytes": 5843,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/priority-v2-plan.json",
+      "name": "priority-v2-plan.json",
+      "sha256": "d4ef3ad9d1766f8d7f0f255f369812ce006865ece58229302c6988cb1d1c26a5",
+      "bytes": 1487,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/regression-batched-plan.json",
+      "name": "regression-batched-plan.json",
+      "sha256": "ecddde47dbfdb2839a649bfe75b1346801e6f07fadefcc193aa184c59c6e72fd",
+      "bytes": 2848,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/regression-v2-plan.json",
+      "name": "regression-v2-plan.json",
+      "sha256": "f93cf8cbdea9d876b07d685a4760550ae8a8e226cbbbea9d37d3b341818a3852",
+      "bytes": 4193,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/remaining-acceptance-gates.md",
+      "name": "remaining-acceptance-gates.md",
+      "sha256": "91c9c8ffb67da7391d2993d164d83f156b4abf4d4fc497ccc0fc53eb88b508c5",
+      "bytes": 3768,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/source-freeze-confirm-build.json",
+      "name": "source-freeze-confirm-build.json",
+      "sha256": "978f1e6c391dd3c501eaea703ec9c3c6afb071acb0ba6fee782cd7bd71d4adbc",
+      "bytes": 334,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/source-freeze-confirm-build.log",
+      "name": "source-freeze-confirm-build.log",
+      "sha256": "f30dfea2aa376535eec6bd433228f6cedbf36fe8b327deb5a08b36a2f9fc6f61",
+      "bytes": 4348,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/v2-history-backup-review.md",
+      "name": "v2-history-backup-review.md",
+      "sha256": "e5da213729b01b3d475ce812defe2b1407d27e20dd5cb9d2146202baf294fe9d",
+      "bytes": 11431,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/v3-backup-isolation-diagnostic-source-check.json",
+      "name": "v3-backup-isolation-diagnostic-source-check.json",
+      "sha256": "4008100ed024a8dc7d0714b89d23248c5538e5becba27e4e81a5ba9f0cf3e6f2",
+      "bytes": 392,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/v3-history-backup-followup-review.md",
+      "name": "v3-history-backup-followup-review.md",
+      "sha256": "5d2062bd76d42513643121e1df236037659bee0608bbb2f9447e7ea2e4702cf2",
+      "bytes": 6069,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/v3-original-fixture-source-check.json",
+      "name": "v3-original-fixture-source-check.json",
+      "sha256": "db8f12c0c01fbc74c4d4fcddbef14c1179244ff7c95194e74310191ffdc20145",
+      "bytes": 635,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/v3-performance-intermediate-facts.json",
+      "name": "v3-performance-intermediate-facts.json",
+      "sha256": "45cc2d3d353c99896f77003d8eb65314b6fe5a43ad7983594860802458a2827d",
+      "bytes": 35826,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/v3-performance-intermediate-review.md",
+      "name": "v3-performance-intermediate-review.md",
+      "sha256": "50266428d84a0038757dea0ad7155287eff2172367555db4cbe40906f081d393",
+      "bytes": 10442,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/v4-original-fixture-source-check.json",
+      "name": "v4-original-fixture-source-check.json",
+      "sha256": "b6850cc74da8b32b05dec18c631c3cfe53f2cceab6992500e9bbfc04e4c7e1db",
+      "bytes": 959,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/v4-original-single-connection-fixture.patch",
+      "name": "v4-original-single-connection-fixture.patch",
+      "sha256": "ec680226e8872cbedd40ce7093c6beadb8dea00f879688891ca1770a531cd98f",
+      "bytes": 2995,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-instrumentation.py",
+      "name": "pr20-closure-instrumentation.py",
+      "sha256": "21cb306143c0aedf0280280c0af8f835719cc7716d5789fd09661b1708de991f",
+      "bytes": 2061,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-record-baseline-build.py",
+      "name": "pr20-closure-record-baseline-build.py",
+      "sha256": "eccf930aecf08629b9dc96258265e7fdd87f78496d472bf4089e8476268d2d19",
+      "bytes": 8322,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-record-build.py",
+      "name": "pr20-closure-record-build.py",
+      "sha256": "9aee9207b07921a9e0a8eab3f0c1ed64b7d7fd3da256f38c5fda83b1aad93f49",
+      "bytes": 2530,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/record-inkweft-performance-environment.py",
+      "name": "record-inkweft-performance-environment.py",
+      "sha256": "e33900329dd307e6d9b38e5e1611b9bcc865fbdc4d01624f279bb37acec00630",
+      "bytes": 10533,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/run-inkweft-gradle",
+      "name": "run-inkweft-gradle",
+      "sha256": "d38003b3ac698ade56d447ebd37ae7f5ccea37388ef247ba16634980a1dd191c",
+      "bytes": 923,
+      "same_hash_after_scan": true
+    },
+    {
+      "path": "/workspace/scratch/summarize-pr20-closure-performance.py",
+      "name": "summarize-pr20-closure-performance.py",
+      "sha256": "a70d1cb4eb50abbc0ff88891c7bc5bd3850fd4609ffdab02c5a6bf625cb9aadc",
+      "bytes": 21611,
+      "same_hash_after_scan": true
+    }
+  ],
+  "limitations": [
+    "Only exact listed snapshot hashes were reviewed. Later/new/changed records require another hash/privacy check.",
+    "Pattern scanning and focused prior script review are not a universal guarantee against arbitrary secrets or personal content.",
+    "No credentials, runtime environment dump, database files, notes, APK contents, full logcat, screenshots or Docker state were opened in this task.",
+    "Known cloud paths, device/build identifiers, public artifact hashes and synthetic fixture diagnostics remain as evidence."
+  ],
+  "actions": {
+    "build_native_adb_docker_executed": false,
+    "source_or_old_evidence_modified": false,
+    "commit_or_push": false
+  }
+}

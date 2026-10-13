@@ -1,0 +1,65 @@
+{
+  "adb_serial": "emulator-5554",
+  "status": "success",
+  "artifacts": [
+    {
+      "path": "/workspace/scratch/inkweft-baseline-closure-a128bb07/android/app/build/outputs/apk/debug/app-debug.apk",
+      "size_bytes": 229655127,
+      "sha256": "c820103a3dae3b52f7a6d30aa345112c5c71c47f00ad89900eb6fe8ec5dd70fe",
+      "command": [
+        "/workspace/.setup/tools/android-sdk/platform-tools/adb",
+        "-s",
+        "emulator-5554",
+        "install",
+        "-r",
+        "-t",
+        "/workspace/scratch/inkweft-baseline-closure-a128bb07/android/app/build/outputs/apk/debug/app-debug.apk"
+      ],
+      "started_utc": "2026-10-13T00:50:18.350317+00:00",
+      "exit_code": 0,
+      "stdout": "Performing Streamed Install\nSuccess\n",
+      "stderr": "",
+      "completed_utc": "2026-10-13T00:50:51.863387+00:00"
+    },
+    {
+      "path": "/workspace/scratch/inkweft-baseline-closure-a128bb07/android/app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk",
+      "size_bytes": 10266683,
+      "sha256": "d706b3b015d6111e7721f6881405726fe97da66c6799a456531b7bccf50909cd",
+      "command": [
+        "/workspace/.setup/tools/android-sdk/platform-tools/adb",
+        "-s",
+        "emulator-5554",
+        "install",
+        "-r",
+        "-t",
+        "/workspace/scratch/inkweft-baseline-closure-a128bb07/android/app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk"
+      ],
+      "started_utc": "2026-10-13T00:50:51.900388+00:00",
+      "exit_code": 0,
+      "stdout": "Performing Streamed Install\nSuccess\n",
+      "stderr": "",
+      "completed_utc": "2026-10-13T00:50:56.232564+00:00"
+    },
+    {
+      "path": "/workspace/scratch/inkweft-baseline-closure-a128bb07/android/data-local/build/outputs/apk/androidTest/debug/data-local-debug-androidTest.apk",
+      "size_bytes": 22588360,
+      "sha256": "bbd78f8daa9139acdaeaac7c01fd0dc9fe762723c3750a0f26a55f5df2e2b505",
+      "command": [
+        "/workspace/.setup/tools/android-sdk/platform-tools/adb",
+        "-s",
+        "emulator-5554",
+        "install",
+        "-r",
+        "-t",
+        "/workspace/scratch/inkweft-baseline-closure-a128bb07/android/data-local/build/outputs/apk/androidTest/debug/data-local-debug-androidTest.apk"
+      ],
+      "started_utc": "2026-10-13T00:50:56.334715+00:00",
+      "exit_code": 0,
+      "stdout": "Performing Streamed Install\nSuccess\n",
+      "stderr": "",
+      "completed_utc": "2026-10-13T00:51:01.337634+00:00"
+    }
+  ],
+  "started_utc": "2026-10-13T00:50:17.859531+00:00",
+  "completed_utc": "2026-10-13T00:51:01.337718+00:00"
+}

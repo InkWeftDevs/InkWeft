@@ -1,5 +1,7 @@
 # Android 性能后续与 Docker 整合
 
+> 后续状态：本目录保留首轮 4096 / INCREMENTAL 初始化路径的历史实测。该平台预初始化已在后续删除；当前初始化、原生回归及 1024 / FULL 配对请参阅 [PR #20 后续记录](../pr20-closure-20261012/README.md)。本目录旧性能数字不能替代当前格式的验收。
+
 固定起点为远端 `codex/storage-optimization-20261011` 的 `a128bb07e34cb82f00eeafc8e62a47bf7b95b128`。本轮仅使用保存的隔离云环境和合成数据；没有访问用户电脑、真实笔记或 AniMemo。交付分支为 `codex/android-perf-integration-20261012`，用于统一草稿交付；源分支保持原状。
 
 ## 配对性能结果

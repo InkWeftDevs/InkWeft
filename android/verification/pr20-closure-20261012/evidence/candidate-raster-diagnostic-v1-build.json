@@ -1,0 +1,14 @@
+{
+  "started_utc": "2026-10-13T02:18:05.945342+00:00",
+  "seconds": 66.59552982899913,
+  "exit_code": 1,
+  "command": [
+    "bash",
+    "/workspace/scratch/run-inkweft-gradle",
+    ":app:assembleDebug",
+    ":app:assembleDebugAndroidTest"
+  ],
+  "cwd": "/workspace/InkWeft/android",
+  "source_files": 744,
+  "source_unchanged_during_build": true
+}

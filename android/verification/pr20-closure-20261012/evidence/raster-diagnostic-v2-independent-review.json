@@ -1,0 +1,170 @@
+{
+  "schema": 1,
+  "reviewedUtc": "2026-10-13T02:57:30.308730+00:00",
+  "status": "NATIVE_DIAGNOSTIC_EVIDENCE_SUPPORTS_ONE_LINE_HEX_OPTIMIZATION_NOT_FULL_REGRESSION_CAUSE",
+  "scope": "Read two small native logs/receipts and four environment metadata files; no APK or source-tree hashing.",
+  "runs": {
+    "candidate": {
+      "receipt": "PASS_2_OF_2",
+      "perLayerRecords": 13,
+      "cases": [
+        {
+          "layers": 1,
+          "appendMs": 3362.609066,
+          "metadataMs": 1857.754744,
+          "rasterMs": 877.530094,
+          "publicationMs": 70.003727,
+          "diagnosticSumsMs": {
+            "admissionAndPreparationNanos": 109.566081,
+            "queryAndDigestNanos": 1205.12692,
+            "queryAndDigestCpuNanos": 1006.581044,
+            "hexAndResultNanos": 520.045713,
+            "hexAndResultCpuNanos": 477.805212
+          },
+          "hexShareOfMeasuredCallbackThreadCpu": 0.32188738616291795,
+          "nativeStrokeBuilds": 13,
+          "records": 1,
+          "allPreparationCountsZero": true,
+          "allCpuEndpointsSameThread": true
+        },
+        {
+          "layers": 4,
+          "appendMs": 16124.940366,
+          "metadataMs": 10573.859768,
+          "rasterMs": 9778.779344,
+          "publicationMs": 7178.522637,
+          "diagnosticSumsMs": {
+            "admissionAndPreparationNanos": 5006.81472,
+            "queryAndDigestNanos": 2904.066724,
+            "queryAndDigestCpuNanos": 1967.328429,
+            "hexAndResultNanos": 2524.585145,
+            "hexAndResultCpuNanos": 1316.009361
+          },
+          "hexShareOfMeasuredCallbackThreadCpu": 0.40081448975738804,
+          "nativeStrokeBuilds": 21,
+          "records": 4,
+          "allPreparationCountsZero": true,
+          "allCpuEndpointsSameThread": true
+        },
+        {
+          "layers": 8,
+          "appendMs": 11640.256678,
+          "metadataMs": 4510.068249,
+          "rasterMs": 2293.671718,
+          "publicationMs": 27519.829872999995,
+          "diagnosticSumsMs": {
+            "admissionAndPreparationNanos": 500.027961,
+            "queryAndDigestNanos": 1962.959717,
+            "queryAndDigestCpuNanos": 1570.475813,
+            "hexAndResultNanos": 1794.498862,
+            "hexAndResultCpuNanos": 1510.980338
+          },
+          "hexShareOfMeasuredCallbackThreadCpu": 0.4903462077529981,
+          "nativeStrokeBuilds": 11,
+          "records": 8,
+          "allPreparationCountsZero": true,
+          "allCpuEndpointsSameThread": true
+        }
+      ]
+    },
+    "baseline": {
+      "receipt": "PASS_2_OF_2",
+      "perLayerRecords": 13,
+      "cases": [
+        {
+          "layers": 1,
+          "appendMs": 1413.978614,
+          "metadataMs": 706.128662,
+          "rasterMs": 513.384944,
+          "publicationMs": 9.099364,
+          "diagnosticSumsMs": {
+            "admissionAndPreparationNanos": 85.688853,
+            "queryAndDigestNanos": 341.18928,
+            "queryAndDigestCpuNanos": 316.040558,
+            "hexAndResultNanos": 253.398036,
+            "hexAndResultCpuNanos": 242.913644
+          },
+          "hexShareOfMeasuredCallbackThreadCpu": 0.4345859519989797,
+          "nativeStrokeBuilds": null,
+          "records": 1,
+          "allPreparationCountsZero": true,
+          "allCpuEndpointsSameThread": true
+        },
+        {
+          "layers": 4,
+          "appendMs": 4750.426475,
+          "metadataMs": 2415.474991,
+          "rasterMs": 3390.049729,
+          "publicationMs": 1500.30272,
+          "diagnosticSumsMs": {
+            "admissionAndPreparationNanos": 931.086891,
+            "queryAndDigestNanos": 808.371937,
+            "queryAndDigestCpuNanos": 683.079173,
+            "hexAndResultNanos": 600.233928,
+            "hexAndResultCpuNanos": 538.983194
+          },
+          "hexShareOfMeasuredCallbackThreadCpu": 0.4410439340531628,
+          "nativeStrokeBuilds": null,
+          "records": 4,
+          "allPreparationCountsZero": true,
+          "allCpuEndpointsSameThread": true
+        },
+        {
+          "layers": 8,
+          "appendMs": 8275.651223,
+          "metadataMs": 3040.826406,
+          "rasterMs": 1858.0808900000004,
+          "publicationMs": 17416.160761999996,
+          "diagnosticSumsMs": {
+            "admissionAndPreparationNanos": 531.339335,
+            "queryAndDigestNanos": 1278.115832,
+            "queryAndDigestCpuNanos": 1130.904177,
+            "hexAndResultNanos": 1085.96125,
+            "hexAndResultCpuNanos": 943.418862
+          },
+          "hexShareOfMeasuredCallbackThreadCpu": 0.4548080719649183,
+          "nativeStrokeBuilds": null,
+          "records": 8,
+          "allPreparationCountsZero": true,
+          "allCpuEndpointsSameThread": true
+        }
+      ]
+    }
+  },
+  "environmentComparisonSha256": "425d701e4a8711a84ca963b1c4769b76c47d1644970d72e2941666412be56378",
+  "environmentRecordCount": 4,
+  "inputSha256": {
+    "candidate-raster-diagnostic-v2-targeted.json": "619d1e88002c5065417e5d094181751783c4f04a49b5d8b31f2b82eb2bcf3110",
+    "candidate-raster-diagnostic-v2-targeted.log": "9abd1f79dd56eb53c5e40eb67c766c961b1dafa6dc8e8f373d7d0fa6426eda44",
+    "candidate-raster-diagnostic-v2-environment.json": "93d99b831c2bd266039a70ed365103b72f9ad0b4a808d5d7a1a72661e6200d64",
+    "candidate-raster-diagnostic-v2-environment-after.json": "944392cb2a67c55fedc93d3f5c57d77d803b294994ac5bb6215dcd1557d8d5a3",
+    "baseline-raster-diagnostic-v2-targeted.json": "d6e3208e06b3ee36bd904666b5173f34017dc7ce47e10dff2394edfa403e824a",
+    "baseline-raster-diagnostic-v2-targeted.log": "5b5f78194b1207a3f2d473a55b8eb31fe15b49b53faa0884d2d54aecaec6f3bc",
+    "baseline-raster-diagnostic-v2-environment.json": "009762947b06de72e5629a2a6d33016654e3ea204d1ad56f8b929896faa0501d",
+    "baseline-raster-diagnostic-v2-environment-after.json": "32ba14e2f8eb9ed472af6319ef9e661cbe5587ced5958faaa2b03770cf7c3831"
+  },
+  "singleLayerRatios": {
+    "queryAndDigestCpuCandidateOverBaseline": 3.1849742652333886,
+    "hexAndResultCpuCandidateOverBaseline": 1.9669756055365912,
+    "appendCandidateMinusBaselineMs": 1948.6304519999999
+  },
+  "recommendation": "Candidate-only one-line replacement of digest().joinToString(\"\"){\"%02x\".format(it)} with digest().toHexString(); keep digest/order/epoch/query and baseline unchanged. Verify signature equivalence and native on/off evidence before any closure claim.",
+  "limits": [
+    "Hex/result includes SHA finalization and result creation; telemetry does not isolate Formatter alone.",
+    "Both sides share the old metadata/query/Formatter path; measured CPU disparity is not proof of a newly introduced code cause.",
+    "Preparation counts zero means no productive onBatch preparation, not absence of admission/check SQL.",
+    "Multiple layers have overlapping wall phases and cumulative CPU; do not sum wall phases into end-to-end latency.",
+    "All previous slow samples and original unmet gates remain; no statistical significance or physical-device claim.",
+    "Candidate native counts 13/21/11 are observed; baseline field is absent, not zero.",
+    "Official current API documentation was read and marks ByteArray.toHexString Since Kotlin 2.2 with two digits per byte/default lowercase examples; actual project compilation remains required."
+  ],
+  "officialApi": "https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.text/to-hex-string.html",
+  "actions": {
+    "code_edits": false,
+    "builds": false,
+    "adb": false,
+    "tests": false,
+    "apk_or_full_source_hashing": false,
+    "writes": "Scratch review JSON/MD only"
+  }
+}

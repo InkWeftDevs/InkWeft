@@ -1,0 +1,50 @@
+{
+  "schema": 1,
+  "reviewed_utc": "2026-10-13T02:22:46.181183+00:00",
+  "version": "raster-diagnostic-v2",
+  "status": "TWO_LINE_STATIC_CORRECTION_REVIEWED_BUILD_AND_NATIVE_NOT_VERIFIED",
+  "v1_failure": {
+    "receipt": "candidate-raster-diagnostic-v1-build.json",
+    "exit_code": 1,
+    "elapsed_seconds": 66.59552982899913,
+    "compiler_error": "InkRepository.kt:385:60 Initializer type mismatch: expected SuspendFunction1<SpatialIndex.BuildBatch, Unit>, actual Any.",
+    "review_error": "The v1 static review failed to catch the if-branch empty block/lambda inference error. Its no-blocking-findings conclusion did not establish compilability; the original static record and build failure are retained."
+  },
+  "candidate_sources": {
+    "android/data-local/src/main/kotlin/org/inkweft/data/InkRepository.kt": "a3bdf761ad7d768db82f10a8a7f22ea5197dcdd07e0e72cda3e6c3018ecd080d",
+    "android/app/src/androidTest/java/org/inkweft/app/TileLocalRedrawTest.kt": "31325f357e719d4fe61354645f499ce06ecf8079e64fddb471c069f44ad3f5ec"
+  },
+  "portable_patch": {
+    "path": "raster-metadata-diagnostics-v2-portable.patch",
+    "sha256": "3449bdb9dc5063e4386a9d5f9d0b3061a5bbb8834362dcb897777b05605352ac"
+  },
+  "change": "Parenthesize both onBatch lambda expressions and provide an explicit ignored argument in the disabled arm. No other source changes relative to v1.",
+  "two_side_exact_reconstruction": {
+    "candidate": {
+      "current_sha256": "a3bdf761ad7d768db82f10a8a7f22ea5197dcdd07e0e72cda3e6c3018ecd080d",
+      "reconstructed_v1_sha256": "aebfc90c0a9354a15995b47ed0f9d62037adb9009ecfb5fbf21c7749d7e0c7ea",
+      "only_two_syntax_lines_differ": true
+    },
+    "baseline": {
+      "current_sha256": "612db8dcf1e87ce76f194fae4962b5a2a626f2368703164da41690829ddaa4eb",
+      "reconstructed_v1_sha256": "907034177d39047216ade1fe84c804f67370f59213134657fde3159ff3d3052b",
+      "only_two_syntax_lines_differ": true
+    }
+  },
+  "scope_preserved": [
+    "Tile source unchanged from v1; original 18 assert-containing and 3 timeout-containing lines remain unchanged.",
+    "Disabled branch is explicitly a one-argument empty lambda. Enabled branch retains identical counters.",
+    "No change to observer/cancellation, clocks, CPU checks, signature expression, SpatialIndex, fixtures or deadlines.",
+    "Baseline missing native counter remains omitted, not zero."
+  ],
+  "verification_limit": "This is a small static diff check only. Root has started the separate v2 build; no v2 successful build receipt or native diagnostic timing is asserted here.",
+  "actions": {
+    "source_edits": false,
+    "builds": false,
+    "adb": false,
+    "native_tests": false,
+    "network": false,
+    "full_tree_hashing": false,
+    "writes": "Only new v2 static-review JSON/MD; v1 records untouched"
+  }
+}

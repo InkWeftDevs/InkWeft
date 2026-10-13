@@ -1,0 +1,158 @@
+{
+  "schema": 1,
+  "reviewed_utc": "2026-10-13T03:36:34.336537+00:00",
+  "status": "NEW_UNCLOSED_PAN_READY_TIMEOUT_FIXED_BLOCK_ACCEPTANCE_INCOMPLETE",
+  "failed_phase": "candidate-raster-hex-v1-off-repeat2",
+  "failed_test": "integralPanReusesInteriorTilesAndZoomPreviewNeverCompletesCapture",
+  "observed_error": "TimeoutCancellationException: Timed out waiting for 30000 ms",
+  "source_locations": {
+    "ready_helper": "android/app/src/androidTest/java/org/inkweft/app/TileLocalRedrawTest.kt:35",
+    "ready_calls_lines": [
+      36,
+      38,
+      42
+    ],
+    "final_pan_evidence_line": 46,
+    "cleanup_line": 47
+  },
+  "candidate_ready_stages": [
+    "initial cached target",
+    "pan cached target",
+    "pan cold reference",
+    "zoom cached target",
+    "zoom cold reference"
+  ],
+  "actual_stage": null,
+  "stage_identification_reason": "All five ready calls share one helper; exception has no call-site frame or phase marker; final evidence emitted only after all assertions is absent.",
+  "known": [
+    "Final class receipt: 2 executed, 1 failure, 242.3634499050022 host seconds; ADB exit 0 is not a pass.",
+    "The other localAppend method completed 1/4/8 and all original assertions before their evidence outputs; local decoded/native 13/21/11, dirty tiles 1.",
+    "The fixed C/B/B/C calls all ran: 8 executions, 7 passing, 1 failure; acceptance remains INCOMPLETE."
+  ],
+  "unknown": [
+    "Which of the five ready calls timed out and which preceding pan/zoom assertions were reached.",
+    "Whether time was spent in Main draw dispatch, worker scheduling, metadata/database reads, rendering, publication or event delivery.",
+    "Whether cancelled pan work overlapped any later localAppend interval; final process absence cannot retroactively prove in-process strict cleanup.",
+    "No attribution to hex conversion, native reuse or emulator-only cause is established."
+  ],
+  "block": [
+    {
+      "phase": "candidate-raster-hex-v1-off-repeat1",
+      "executed": 2,
+      "failures": 0,
+      "status": "PASS",
+      "seconds": 209.0177094210012,
+      "diagnostics": false
+    },
+    {
+      "phase": "baseline-raster-hex-pair-off-repeat1",
+      "executed": 2,
+      "failures": 0,
+      "status": "PASS",
+      "seconds": 199.6400236949994,
+      "diagnostics": false
+    },
+    {
+      "phase": "baseline-raster-hex-pair-off-repeat2",
+      "executed": 2,
+      "failures": 0,
+      "status": "PASS",
+      "seconds": 241.32795430700207,
+      "diagnostics": false
+    },
+    {
+      "phase": "candidate-raster-hex-v1-off-repeat2",
+      "executed": 2,
+      "failures": 1,
+      "status": "FAIL",
+      "seconds": 242.3634499050022,
+      "diagnostics": false
+    }
+  ],
+  "block_executions": 8,
+  "block_passed_executions": 7,
+  "block_failures": 1,
+  "block_acceptance": "INCOMPLETE",
+  "local_append_evidence_after_failed_prelude": [
+    {
+      "layers": 1,
+      "initialStrokes": 320,
+      "finalStrokes": 321,
+      "firstCompleteMs": 8970.178216,
+      "appendCompleteMs": 2047.746376,
+      "forcedFullCompleteMs": 6876.269731,
+      "localDecoded": 13,
+      "fullDecoded": 321,
+      "localRebuiltTiles": 1,
+      "fullRebuiltTiles": 24,
+      "metadataMs": 629.92002,
+      "rasterMs": 825.138786,
+      "publicationMs": 36.281573,
+      "pixelsEqual": true,
+      "bitmapBytes": 14371200,
+      "nativeStrokeBuilds": 13
+    },
+    {
+      "layers": 4,
+      "initialStrokes": 320,
+      "finalStrokes": 321,
+      "firstCompleteMs": 10128.511005,
+      "appendCompleteMs": 5128.053622,
+      "forcedFullCompleteMs": 9367.277983,
+      "localDecoded": 21,
+      "fullDecoded": 321,
+      "localRebuiltTiles": 1,
+      "fullRebuiltTiles": 24,
+      "metadataMs": 1243.459159,
+      "rasterMs": 2046.7642889999997,
+      "publicationMs": 4245.365219,
+      "pixelsEqual": true,
+      "bitmapBytes": 12147408,
+      "nativeStrokeBuilds": 21
+    },
+    {
+      "layers": 8,
+      "initialStrokes": 320,
+      "finalStrokes": 321,
+      "firstCompleteMs": 13177.205362,
+      "appendCompleteMs": 10283.710904,
+      "forcedFullCompleteMs": 12119.979665,
+      "localDecoded": 11,
+      "fullDecoded": 321,
+      "localRebuiltTiles": 1,
+      "fullRebuiltTiles": 48,
+      "metadataMs": 2198.866043,
+      "rasterMs": 2456.479295,
+      "publicationMs": 23210.169347000003,
+      "pixelsEqual": true,
+      "bitmapBytes": 24294816,
+      "nativeStrokeBuilds": 11
+    }
+  ],
+  "cleanup": {
+    "pan_finally": "clear/cancel, close channel/bitmaps/db; no worker join in this test. StreamedInkRaster.clear cancels job before async finally releases worker ownership.",
+    "process_receipt": "candidate-raster-hex-v1-off-repeat2-process-review.json",
+    "pidof_targets_absent": true,
+    "force_stop_requested": false,
+    "boundary": "Supports another independent fresh-process native invocation; does not prove normal in-process strict worker/resource release."
+  },
+  "minimum_next_checks": [
+    "Keep this failure and fixed block; do not replace Coff2 with a rerun or label the block all green.",
+    "Proceed with remaining original Frame/resource plan only after recorded target-process absence, preserving failures independently.",
+    "For a separately authorized stage diagnostic, add only before/after labels to all five ready calls and capture current stage plus existing pending/frameReady/lastBuild/resource snapshot on timeout; keep original deadline/fixture/class order and report as new evidence, never a replacement run.",
+    "Retain Coff2 local raw values under failed-prelude provenance; any two-sample median/range must disclose the failed class and cannot close the pan gate."
+  ],
+  "input_sha256": {
+    "candidate-raster-hex-v1-off-repeat2-targeted.log": "d460b4d818f413317a18ff1908ca989b94a66ed57ab9a033802552e1d437cc0f",
+    "candidate-raster-hex-v1-off-repeat2-targeted.json": "16313d981906c418df547b469819cf285dfad648fd0dba5eee996adb762760f6",
+    "candidate-raster-hex-v1-off-repeat2-process-review.json": "6191b6fc4042ba7e235563fcd9a88cac1bd02519cfa0198f631a9f679272edfc"
+  },
+  "actions": {
+    "source_edits": false,
+    "builds": false,
+    "adb": false,
+    "native_tests": false,
+    "large_hashing": false,
+    "writes": "Only this scratch review MD/JSON"
+  }
+}

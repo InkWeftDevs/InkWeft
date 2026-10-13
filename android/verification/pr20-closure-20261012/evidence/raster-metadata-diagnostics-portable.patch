@@ -1,0 +1,141 @@
+diff --git a/android/app/src/androidTest/java/org/inkweft/app/TileLocalRedrawTest.kt b/android/app/src/androidTest/java/org/inkweft/app/TileLocalRedrawTest.kt
+index 5326b12..e9a1c0c 100644
+--- a/android/app/src/androidTest/java/org/inkweft/app/TileLocalRedrawTest.kt
++++ b/android/app/src/androidTest/java/org/inkweft/app/TileLocalRedrawTest.kt
+@@ -10,10 +10,12 @@ import kotlinx.coroutines.*
+ import kotlinx.coroutines.channels.Channel
+ import org.inkweft.core.*
+ import org.inkweft.data.*
++import org.json.JSONArray
+ import org.json.JSONObject
+ import org.junit.Assert.*
+ import org.junit.Test
+ import java.util.UUID
++import java.util.concurrent.CopyOnWriteArrayList
+ 
+ class TileLocalRedrawTest {
+     private fun id()=UUID.randomUUID().toString()
+@@ -45,6 +47,7 @@ class TileLocalRedrawTest {
+         }finally{withContext(Dispatchers.Main){cached.clear();cold.clear()};events.close();target.recycle();reference.recycle();db.close();context.deleteDatabase(name)}
+     }
+     @Test fun oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions()=runBlocking{
++        val metadataDiagnostics=InstrumentationRegistry.getArguments().getString("rasterMetadataDiagnostics")=="true"
+         val context=ApplicationProvider.getApplicationContext<Context>();val name="tile-local-${id()}.db";val db=NoteDatabase.open(context,name)
+         val target=Bitmap.createBitmap(3000,2000,Bitmap.Config.ARGB_8888);val reference=Bitmap.createBitmap(3000,2000,Bitmap.Config.ARGB_8888)
+         val events=Channel<Unit>(Channel.CONFLATED);val active=mutableListOf<StreamedInkRaster>();val full=mutableListOf<StreamedInkRaster>()
+@@ -86,9 +89,16 @@ class TileLocalRedrawTest {
+                 val scope=LayerWriteScope(layers.first().id,1)
+                 assertTrue(repo.save(CommitInk(id(),page,1,InkMutation.Add(added),scope)) is InkCommitResult.Committed)
+                 source=source.copy(revision=2,committedIds=source.committedIds+added.id)
+-                val local=ready(active,target);val cold=ready(full,reference)
++                val metadataTimings=if(metadataDiagnostics)CopyOnWriteArrayList<InkRasterMetadataTiming>()else null
++                if(metadataTimings!=null)repo.rasterMetadataObserver={metadataTimings.add(it);Unit}
++                val local=try{ready(active,target)}finally{repo.rasterMetadataObserver=null}
++                val cold=ready(full,reference)
+                 val metadataMs=active.sumOf{it.lastBuild!!.metadataMs};val rasterMs=active.sumOf{it.lastBuild!!.rasterMs};val publicationMs=active.sumOf{it.lastBuild!!.publicationMs}
+                 val localDecoded=active.sumOf{it.lastBuild!!.decoded};val localTiles=active.sumOf{it.lastBuild!!.rebuilt}
++                // The same diagnostic patch runs on the baseline, where this counter is absent.
++                val nativeStrokeBuilds=active.map{raster->raster.lastBuild!!.let{stats->
++                    (stats.javaClass.methods.firstOrNull{it.name=="getNativeStrokeBuilds"&&it.parameterCount==0}?.invoke(stats) as? Number)?.toLong()
++                }}.takeIf{counts->counts.all{it!=null}}?.sumOf{it!!}
+                 val totalTiles=full.sumOf{it.lastBuild!!.rebuilt}
+                 assertTrue("Local decoding $localDecoded versus full 321",localDecoded in 1 until 321)
+                 assertTrue("Local tiles $localTiles versus $totalTiles",localTiles in 1 until totalTiles)
+@@ -107,6 +117,16 @@ class TileLocalRedrawTest {
+                     .put("localDecoded",localDecoded).put("fullDecoded",321).put("localRebuiltTiles",localTiles).put("fullRebuiltTiles",totalTiles)
+                     .put("metadataMs",metadataMs).put("rasterMs",rasterMs).put("publicationMs",publicationMs)
+                     .put("pixelsEqual",true).put("bitmapBytes",active.sumOf{it.lastBuild!!.bitmapBytes})
++                nativeStrokeBuilds?.let{evidence.put("nativeStrokeBuilds",it)}
++                metadataTimings?.let{timings->evidence.put("rasterMetadataDiagnostics",JSONArray().apply{timings.forEach{t->
++                    put(JSONObject().put("layerIndex",layers.indexOfFirst{it.id==t.layer}).put("regions",t.regions)
++                        .put("preparationBatches",t.preparationBatches).put("preparationRows",t.preparationRows)
++                        .put("queryBatches",t.queryBatches).put("metadataRows",t.metadataRows)
++                        .put("admissionAndPreparationNanos",t.admissionAndPreparationNanos)
++                        .put("queryAndDigestNanos",t.queryAndDigestNanos).put("queryAndDigestCpuNanos",t.queryAndDigestCpuNanos?:JSONObject.NULL)
++                        .put("hexAndResultNanos",t.hexAndResultNanos).put("hexAndResultCpuNanos",t.hexAndResultCpuNanos?:JSONObject.NULL)
++                        .put("queryStartThreadId",t.queryStartThreadId).put("hexStartThreadId",t.hexStartThreadId).put("hexEndThreadId",t.hexEndThreadId))
++                }})}
+                 InstrumentationRegistry.getInstrumentation().sendStatus(0,android.os.Bundle().apply{putString("stream","TILE_LOCAL_EVIDENCE $evidence\n")})
+                 withContext(Dispatchers.Main){active.forEach{it.clear()};full.forEach{it.clear()};active.clear();full.clear()}
+             }
+diff --git a/android/data-local/src/main/kotlin/org/inkweft/data/InkRepository.kt b/android/data-local/src/main/kotlin/org/inkweft/data/InkRepository.kt
+index 9b9fed2..efbaaae 100644
+--- a/android/data-local/src/main/kotlin/org/inkweft/data/InkRepository.kt
++++ b/android/data-local/src/main/kotlin/org/inkweft/data/InkRepository.kt
+@@ -63,9 +63,36 @@ data class InkGroupCommit(val group:InkGroupPrefix,val results:List<InkCommitRes
+ /** Saved display/copy content and its revision, without retained undo geometry. */
+ data class VisibleInkSnapshot(val noteId:String,val revision:Long,val strokes:List<InkStroke>)
+ data class InkRasterRegion(val signature:String,val committed:Set<String>)
++/** Opt-in metadata diagnostics. Admission includes preparation, yields and Room scheduling,
++ * not just lock waiting. CPU is cumulative on the sampled thread, not exclusive coroutine CPU.
++ * Hex/result includes SHA finalization, the existing Formatter calls and result allocation. */
++data class InkRasterMetadataTiming(
++    val layer:String?,val regions:Int,val preparationBatches:Int,val preparationRows:Long,
++    val queryBatches:Int,val metadataRows:Long,val admissionAndPreparationNanos:Long,
++    val queryAndDigestNanos:Long,val queryAndDigestCpuNanos:Long?,
++    val hexAndResultNanos:Long,val hexAndResultCpuNanos:Long?,
++    val queryStartThreadId:Int,val hexStartThreadId:Int,val hexEndThreadId:Int
++)
++private data class RasterMetadataClock(val wall:Long,val cpu:Long,val threadId:Int) {
++    fun cpuSince(start:RasterMetadataClock):Long? =
++        (cpu-start.cpu).takeIf{threadId==start.threadId&&cpu>=0&&start.cpu>=0&&it>=0}
++}
++private fun rasterMetadataClock()=RasterMetadataClock(System.nanoTime(),android.os.Debug.threadCpuTimeNanos(),android.os.Process.myTid())
++private class RasterMetadataProbe {
++    val started=System.nanoTime()
++    var preparationBatches=0;var preparationRows=0L;var queryBatches=0;var metadataRows=0L
++    lateinit var queryStart:RasterMetadataClock
++    lateinit var hexStart:RasterMetadataClock
++    lateinit var hexEnd:RasterMetadataClock
++    fun timing(layer:String?,regions:Int)=InkRasterMetadataTiming(layer,regions,preparationBatches,preparationRows,
++        queryBatches,metadataRows,queryStart.wall-started,hexStart.wall-queryStart.wall,hexStart.cpuSince(queryStart),
++        hexEnd.wall-hexStart.wall,hexEnd.cpuSince(hexStart),queryStart.threadId,hexStart.threadId,hexEnd.threadId)
++}
+ class InkRepository(private val db:NoteDatabase,private val fault:(InkFaultPoint)->Unit={}) {
+     val authoringRepository by lazy{PageAuthoringRepository(db)}
+     @Volatile var readObserver:((ReadTiming)->Unit)?=null
++    /** Disabled by default; called outside the read transaction after a successful metadata read. */
++    @Volatile var rasterMetadataObserver:((InkRasterMetadataTiming)->Unit)?=null
+     private class GroupAbort(val result:InkCommitResult):RuntimeException()
+     /** A seam gesture either commits on every sheet or on none; receipts make a retry idempotent. */
+     suspend fun saveGroup(commands:List<CommitInk>):List<InkCommitResult> {
+@@ -352,7 +379,14 @@ class InkRepository(private val db:NoteDatabase,private val fault:(InkFaultPoint
+     }
+     /** Visible metadata only. Empty/offscreen layers allocate no full-viewport bitmap. */
+     suspend fun rasterRegions(noteId:String,revision:Long,authoringRevision:Long?,layer:String?,regions:List<CanvasBounds>,
+-        allowed:Set<String>?,omitted:Set<String>,committed:Set<String>):List<InkRasterRegion> = SpatialIndex.read(db,noteId,prepareCuts=true,bounds=regions.reduceOrNull{a,b->a.union(b)}){sql->
++        allowed:Set<String>?,omitted:Set<String>,committed:Set<String>):List<InkRasterRegion> {
++        val observer=rasterMetadataObserver
++        val probe=if(observer==null)null else RasterMetadataProbe()
++        val onBatch:suspend(SpatialIndex.BuildBatch)->Unit=if(probe==null){}else{batch->
++            probe.preparationBatches++;probe.preparationRows+=batch.rows
++        }
++        val result=SpatialIndex.read(db,noteId,onBatch=onBatch,prepareCuts=true,bounds=regions.reduceOrNull{a,b->a.union(b)}){sql->
++        probe?.queryStart=rasterMetadataClock()
+         require(regions.size<=512)
+         owner(noteId);check((dao.page(noteId)?.revision?:0)==revision){"INK_WINDOW_REVISION_CHANGED"}
+         val layers=authoringRevision?.let{layerFilter(sql,noteId,it,layer,false)}
+@@ -363,6 +397,8 @@ class InkRepository(private val db:NoteDatabase,private val fault:(InkFaultPoint
+         if(union!=null)while(true){
+             currentCoroutineContext().ensureActive()
+             val rows=SpatialIndex.ink(sql,noteId,union,after,layers=layers)
++            // Count returned metadata, including the terminating empty query; no per-row timers.
++            if(probe!=null){probe.queryBatches++;probe.metadataRows+=rows.size}
+             if(rows.isEmpty())break
+             for(row in rows){
+                 if(row.id in omitted||allowed!=null&&row.id !in allowed)continue
+@@ -375,7 +411,13 @@ class InkRepository(private val db:NoteDatabase,private val fault:(InkFaultPoint
+             }
+             val last=rows.last();after=SpatialIndex.Cursor(last.revision,last.id)
+         }
+-        regions.indices.map{InkRasterRegion(digests[it].digest().joinToString(""){"%02x".format(it)},included[it])}
++        probe?.hexStart=rasterMetadataClock()
++        val values=regions.indices.map{InkRasterRegion(digests[it].digest().joinToString(""){"%02x".format(it)},included[it])}
++        probe?.hexEnd=rasterMetadataClock()
++        values
++        }
++        if(probe!=null)observer!!.invoke(probe.timing(layer,regions.size))
++        return result
+     }
+     suspend fun visibleLayerBounds(noteId:String,revision:Long,authoringRevision:Long,bounds:CanvasBounds):Map<String,CanvasBounds> = SpatialIndex.read(db,noteId,bounds=bounds){sql->
+         owner(noteId);check((dao.page(noteId)?.revision?:0)==revision){"INK_WINDOW_REVISION_CHANGED"}

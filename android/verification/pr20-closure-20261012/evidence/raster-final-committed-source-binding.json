@@ -1,0 +1,34 @@
+{
+  "utc": "2026-10-13T03:54:28.476903+00:00",
+  "source_commit": "721b2ffa362f9ae77121d963b71dcfe78de443f3",
+  "source_manifest": "candidate-raster-final-doc-source-sha256.json",
+  "source_manifest_sha256": "5485ab2911956a09e36a94164934887a6aca0ef7c5a60a2996e4c6cc8f24edac",
+  "source_files": 744,
+  "all_committed_blobs_match_frozen_build_sources": true,
+  "mismatches": [],
+  "final_build": "candidate-raster-final-doc-build.json",
+  "comment_only_delta": "candidate-raster-final-doc-source-delta.json",
+  "tested_phase": "candidate-raster-hex-v1",
+  "tested_apk_receipt": "candidate-raster-hex-v1-targeted-apks.json",
+  "final_apk_receipt": "candidate-raster-final-doc-targeted-apks.json",
+  "both_apks_byte_identical_to_native_tested_phase": true,
+  "apk_sha256": {
+    "app": "d4af16103b601e7d73af673eeb89d6511003a0f0ef4c86785862d5e202714b5e",
+    "appTest": "5ce3e01030cc7ce27d93ed3aed7027a4f670716785235c569c0d4e84e3528407"
+  },
+  "new_native_after_comment": "NOT_RERUN; APK bytes are identical, not a new performance sample.",
+  "debug_metadata": {
+    "BUILD_COMMIT": "local-unknown",
+    "SOURCE_COMMIT": "local-unknown",
+    "FORMAL_BUILD": false
+  },
+  "backup_server_tree": "1ea18e39d51ca989f02c65cd8f8f250d32eb8ad2",
+  "native_stage": {
+    "invocations": 9,
+    "executed": 17,
+    "passed": 15,
+    "failed": 2,
+    "acceptance": "NO-GO; four original gates remain, see final-raster-acceptance-review.md"
+  },
+  "delivery": "SOURCE_COMMITTED_LOCALLY; NOT_PUSHED"
+}

@@ -1,0 +1,1091 @@
+{
+  "schema": 1,
+  "drafted_utc": "2026-10-13T03:57:43.434058+00:00",
+  "status": "FINAL_EVIDENCE_READY_NATIVE_ACCEPTANCE_NO_GO",
+  "base_manifest": "/workspace/scratch/pr20-closure-evidence/closure-curated-manifest-v4-stage-hold.json",
+  "base_manifest_sha256": "4d6f332f6dc35e7fe06dd6367a4fd26bbf3025827bd78af1399edcd1fc100d6a",
+  "old_source_commit": "c60fba7455cfc0b919d6f9c2d3b06f17ec25713d",
+  "entries": [
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/closure-curated-manifest-v4-stage-hold.json",
+      "archive_path": "evidence/closure-curated-manifest-v4-stage-hold.json",
+      "lineage": "v4_stage_records",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/closure-privacy-review-v4-stage-hold.json",
+      "archive_path": "evidence/closure-privacy-review-v4-stage-hold.json",
+      "lineage": "v4_stage_records",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/closure-source-evidence-v4-stage-hold.json",
+      "archive_path": "evidence/closure-source-evidence-v4-stage-hold.json",
+      "lineage": "v4_stage_records",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/closure-source-evidence-v4-stage-hold.md",
+      "archive_path": "evidence/closure-source-evidence-v4-stage-hold.md",
+      "lineage": "v4_stage_records",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/raster-repeat-cgroup-deltas.json",
+      "archive_path": "evidence/raster-repeat-cgroup-deltas.json",
+      "lineage": "v4_stage_records",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/raster-targeted-tools-review.json",
+      "archive_path": "evidence/raster-targeted-tools-review.json",
+      "lineage": "tools",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/raster-targeted-tools-usage.md",
+      "archive_path": "evidence/raster-targeted-tools-usage.md",
+      "lineage": "tools",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/raster-metadata-diagnostic-plan.json",
+      "archive_path": "evidence/raster-metadata-diagnostic-plan.json",
+      "lineage": "diagnostic_v1_failed",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/raster-metadata-diagnostics-implementation.json",
+      "archive_path": "evidence/raster-metadata-diagnostics-implementation.json",
+      "lineage": "diagnostic_v1_failed",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/raster-metadata-diagnostics-implementation.md",
+      "archive_path": "evidence/raster-metadata-diagnostics-implementation.md",
+      "lineage": "diagnostic_v1_failed",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/raster-metadata-diagnostics-patch-check.json",
+      "archive_path": "evidence/raster-metadata-diagnostics-patch-check.json",
+      "lineage": "diagnostic_v1_failed",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/raster-metadata-diagnostics-portable.patch",
+      "archive_path": "evidence/raster-metadata-diagnostics-portable.patch",
+      "lineage": "diagnostic_v1_failed",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/raster-metadata-diagnostics-static-review.json",
+      "archive_path": "evidence/raster-metadata-diagnostics-static-review.json",
+      "lineage": "diagnostic_v1_failed",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/raster-metadata-diagnostics-static-review.md",
+      "archive_path": "evidence/raster-metadata-diagnostics-static-review.md",
+      "lineage": "diagnostic_v1_failed",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-diagnostic-v1-build.json",
+      "archive_path": "evidence/candidate-raster-diagnostic-v1-build.json",
+      "lineage": "diagnostic_v1_failed",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-diagnostic-v1-build.log",
+      "archive_path": "evidence/candidate-raster-diagnostic-v1-build.log",
+      "lineage": "diagnostic_v1_failed",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-diagnostic-v1-source-sha256.json",
+      "archive_path": "evidence/candidate-raster-diagnostic-v1-source-sha256.json",
+      "lineage": "diagnostic_v1_failed",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/raster-metadata-diagnostics-v2-implementation.json",
+      "archive_path": "evidence/raster-metadata-diagnostics-v2-implementation.json",
+      "lineage": "diagnostic_v2",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/raster-metadata-diagnostics-v2-implementation.md",
+      "archive_path": "evidence/raster-metadata-diagnostics-v2-implementation.md",
+      "lineage": "diagnostic_v2",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/raster-metadata-diagnostics-v2-patch-check.json",
+      "archive_path": "evidence/raster-metadata-diagnostics-v2-patch-check.json",
+      "lineage": "diagnostic_v2",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/raster-metadata-diagnostics-v2-portable.patch",
+      "archive_path": "evidence/raster-metadata-diagnostics-v2-portable.patch",
+      "lineage": "diagnostic_v2",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/raster-metadata-diagnostics-v2-static-review.json",
+      "archive_path": "evidence/raster-metadata-diagnostics-v2-static-review.json",
+      "lineage": "diagnostic_v2",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/raster-metadata-diagnostics-v2-static-review.md",
+      "archive_path": "evidence/raster-metadata-diagnostics-v2-static-review.md",
+      "lineage": "diagnostic_v2",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-raster-diagnostic-patch-application.json",
+      "archive_path": "evidence/baseline-raster-diagnostic-patch-application.json",
+      "lineage": "diagnostic_v2",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-raster-diagnostic-v2-apk-entry-diff.json",
+      "archive_path": "evidence/baseline-raster-diagnostic-v2-apk-entry-diff.json",
+      "lineage": "diagnostic_v2",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/raster-diagnostic-v2-apk-preservation.json",
+      "archive_path": "evidence/raster-diagnostic-v2-apk-preservation.json",
+      "lineage": "diagnostic_v2",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/raster-diagnostic-v2-independent-review.json",
+      "archive_path": "evidence/raster-diagnostic-v2-independent-review.json",
+      "lineage": "diagnostic_v2",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/raster-diagnostic-v2-independent-review.md",
+      "archive_path": "evidence/raster-diagnostic-v2-independent-review.md",
+      "lineage": "diagnostic_v2",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/raster-diagnostic-v2-source-chain.json",
+      "archive_path": "evidence/raster-diagnostic-v2-source-chain.json",
+      "lineage": "diagnostic_v2",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/raster-metadata-diagnostic-v2-paired-review.json",
+      "archive_path": "evidence/raster-metadata-diagnostic-v2-paired-review.json",
+      "lineage": "diagnostic_v2",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/raster-metadata-diagnostic-v2-paired-review.md",
+      "archive_path": "evidence/raster-metadata-diagnostic-v2-paired-review.md",
+      "lineage": "diagnostic_v2",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-diagnostic-v2-build.json",
+      "archive_path": "evidence/candidate-raster-diagnostic-v2-build.json",
+      "lineage": "diagnostic_v2",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-diagnostic-v2-build.log",
+      "archive_path": "evidence/candidate-raster-diagnostic-v2-build.log",
+      "lineage": "diagnostic_v2",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-diagnostic-v2-source-sha256.json",
+      "archive_path": "evidence/candidate-raster-diagnostic-v2-source-sha256.json",
+      "lineage": "diagnostic_v2",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-diagnostic-v2-environment.json",
+      "archive_path": "evidence/candidate-raster-diagnostic-v2-environment.json",
+      "lineage": "diagnostic_v2",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-diagnostic-v2-environment-after.json",
+      "archive_path": "evidence/candidate-raster-diagnostic-v2-environment-after.json",
+      "lineage": "diagnostic_v2",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-diagnostic-v2-install-targeted-apks.json",
+      "archive_path": "evidence/candidate-raster-diagnostic-v2-install-targeted-apks.json",
+      "lineage": "diagnostic_v2",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-diagnostic-v2-targeted-apks.json",
+      "archive_path": "evidence/candidate-raster-diagnostic-v2-targeted-apks.json",
+      "lineage": "diagnostic_v2",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-diagnostic-v2-targeted-setup.json",
+      "archive_path": "evidence/candidate-raster-diagnostic-v2-targeted-setup.json",
+      "lineage": "diagnostic_v2",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-diagnostic-v2-targeted.json",
+      "archive_path": "evidence/candidate-raster-diagnostic-v2-targeted.json",
+      "lineage": "diagnostic_v2",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-diagnostic-v2-targeted.log",
+      "archive_path": "evidence/candidate-raster-diagnostic-v2-targeted.log",
+      "lineage": "diagnostic_v2",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-raster-diagnostic-v2-build.json",
+      "archive_path": "evidence/baseline-raster-diagnostic-v2-build.json",
+      "lineage": "diagnostic_v2",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-raster-diagnostic-v2-build.log",
+      "archive_path": "evidence/baseline-raster-diagnostic-v2-build.log",
+      "lineage": "diagnostic_v2",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-raster-diagnostic-v2-source-sha256.json",
+      "archive_path": "evidence/baseline-raster-diagnostic-v2-source-sha256.json",
+      "lineage": "diagnostic_v2",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-raster-diagnostic-v2-environment.json",
+      "archive_path": "evidence/baseline-raster-diagnostic-v2-environment.json",
+      "lineage": "diagnostic_v2",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-raster-diagnostic-v2-environment-after.json",
+      "archive_path": "evidence/baseline-raster-diagnostic-v2-environment-after.json",
+      "lineage": "diagnostic_v2",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-raster-diagnostic-v2-install-targeted-apks.json",
+      "archive_path": "evidence/baseline-raster-diagnostic-v2-install-targeted-apks.json",
+      "lineage": "diagnostic_v2",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-raster-diagnostic-v2-targeted-apks.json",
+      "archive_path": "evidence/baseline-raster-diagnostic-v2-targeted-apks.json",
+      "lineage": "diagnostic_v2",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-raster-diagnostic-v2-targeted-setup.json",
+      "archive_path": "evidence/baseline-raster-diagnostic-v2-targeted-setup.json",
+      "lineage": "diagnostic_v2",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-raster-diagnostic-v2-targeted.json",
+      "archive_path": "evidence/baseline-raster-diagnostic-v2-targeted.json",
+      "lineage": "diagnostic_v2",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-raster-diagnostic-v2-targeted.log",
+      "archive_path": "evidence/baseline-raster-diagnostic-v2-targeted.log",
+      "lineage": "diagnostic_v2",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-one-line.patch",
+      "archive_path": "evidence/candidate-raster-hex-v1-one-line.patch",
+      "lineage": "hex_host_only",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-source-change.json",
+      "archive_path": "evidence/candidate-raster-hex-v1-source-change.json",
+      "lineage": "hex_host_only",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-source-change.md",
+      "archive_path": "evidence/candidate-raster-hex-v1-source-change.md",
+      "lineage": "hex_host_only",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/raster-hex-v1-host-compatibility.json",
+      "archive_path": "evidence/raster-hex-v1-host-compatibility.json",
+      "lineage": "hex_host_only",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/raster-hex-v1-host-compatibility.log",
+      "archive_path": "evidence/raster-hex-v1-host-compatibility.log",
+      "lineage": "hex_host_only",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/RasterHexCompatibility.java",
+      "archive_path": "evidence/RasterHexCompatibility.java",
+      "lineage": "hex_host_only",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-build.json",
+      "archive_path": "evidence/candidate-raster-hex-v1-build.json",
+      "lineage": "hex_build_completed",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-build.log",
+      "archive_path": "evidence/candidate-raster-hex-v1-build.log",
+      "lineage": "hex_build_completed",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-source-sha256.json",
+      "archive_path": "evidence/candidate-raster-hex-v1-source-sha256.json",
+      "lineage": "hex_build_completed",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-raster-targeted-instrumentation.py",
+      "archive_path": "scripts/pr20-raster-targeted-instrumentation.py",
+      "lineage": "tools",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-raster-targeted-apks.py",
+      "archive_path": "scripts/pr20-raster-targeted-apks.py",
+      "lineage": "tools",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-preserved-apks/v4-baseline-app-preservation.json",
+      "archive_path": "evidence/v4-baseline-app-preservation.json",
+      "lineage": "v4_stage_records",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-followup-plan.json",
+      "archive_path": "evidence/candidate-raster-hex-v1-followup-plan.json",
+      "lineage": "hex_build_completed_or_fixed_plan",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-followup-plan.md",
+      "archive_path": "evidence/candidate-raster-hex-v1-followup-plan.md",
+      "lineage": "hex_build_completed_or_fixed_plan",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-jvm.json",
+      "archive_path": "evidence/candidate-raster-hex-v1-jvm.json",
+      "lineage": "hex_build_completed_or_fixed_plan",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-source-binding.json",
+      "archive_path": "evidence/candidate-raster-hex-v1-source-binding.json",
+      "lineage": "hex_build_completed_or_fixed_plan",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-targeted-apks.json",
+      "archive_path": "evidence/candidate-raster-hex-v1-targeted-apks.json",
+      "lineage": "hex_build_completed_or_fixed_plan",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-raster-observed-run.py",
+      "archive_path": "scripts/pr20-raster-observed-run.py",
+      "lineage": "tools",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-raster-followup-curation-audit.py",
+      "archive_path": "scripts/pr20-raster-followup-curation-audit.py",
+      "lineage": "tools",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-diagnostic-environment.json",
+      "archive_path": "evidence/candidate-raster-hex-v1-diagnostic-environment.json",
+      "lineage": "hex_native_pending",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-diagnostic-environment-after.json",
+      "archive_path": "evidence/candidate-raster-hex-v1-diagnostic-environment-after.json",
+      "lineage": "hex_native_pending",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-diagnostic-targeted-setup.json",
+      "archive_path": "evidence/candidate-raster-hex-v1-diagnostic-targeted-setup.json",
+      "lineage": "hex_native_pending",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-diagnostic-targeted.json",
+      "archive_path": "evidence/candidate-raster-hex-v1-diagnostic-targeted.json",
+      "lineage": "hex_native_pending",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-diagnostic-targeted.log",
+      "archive_path": "evidence/candidate-raster-hex-v1-diagnostic-targeted.log",
+      "lineage": "hex_native_pending",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-followup-plan-erratum-1.json",
+      "archive_path": "evidence/candidate-raster-hex-v1-followup-plan-erratum-1.json",
+      "lineage": "hex_fixed_plan_erratum",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-off-repeat1-environment.json",
+      "archive_path": "evidence/candidate-raster-hex-v1-off-repeat1-environment.json",
+      "lineage": "hex_completed_native",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-off-repeat1-environment-after.json",
+      "archive_path": "evidence/candidate-raster-hex-v1-off-repeat1-environment-after.json",
+      "lineage": "hex_completed_native",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-off-repeat1-targeted-setup.json",
+      "archive_path": "evidence/candidate-raster-hex-v1-off-repeat1-targeted-setup.json",
+      "lineage": "hex_completed_native",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-off-repeat1-targeted.json",
+      "archive_path": "evidence/candidate-raster-hex-v1-off-repeat1-targeted.json",
+      "lineage": "hex_completed_native",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-off-repeat1-targeted.log",
+      "archive_path": "evidence/candidate-raster-hex-v1-off-repeat1-targeted.log",
+      "lineage": "hex_completed_native",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-raster-hex-pair-off-repeat1-environment.json",
+      "archive_path": "evidence/baseline-raster-hex-pair-off-repeat1-environment.json",
+      "lineage": "hex_completed_native",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-raster-hex-pair-off-repeat1-environment-after.json",
+      "archive_path": "evidence/baseline-raster-hex-pair-off-repeat1-environment-after.json",
+      "lineage": "hex_completed_native",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-raster-hex-pair-off-repeat1-targeted-setup.json",
+      "archive_path": "evidence/baseline-raster-hex-pair-off-repeat1-targeted-setup.json",
+      "lineage": "hex_completed_native",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-raster-hex-pair-off-repeat1-targeted.json",
+      "archive_path": "evidence/baseline-raster-hex-pair-off-repeat1-targeted.json",
+      "lineage": "hex_completed_native",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-raster-hex-pair-off-repeat1-targeted.log",
+      "archive_path": "evidence/baseline-raster-hex-pair-off-repeat1-targeted.log",
+      "lineage": "hex_completed_native",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-raster-hex-pair-install1-targeted-apks.json",
+      "archive_path": "evidence/baseline-raster-hex-pair-install1-targeted-apks.json",
+      "lineage": "hex_completed_native",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-raster-hex-pair-off-repeat2-environment.json",
+      "archive_path": "evidence/baseline-raster-hex-pair-off-repeat2-environment.json",
+      "lineage": "hex_completed_native",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-raster-hex-pair-off-repeat2-environment-after.json",
+      "archive_path": "evidence/baseline-raster-hex-pair-off-repeat2-environment-after.json",
+      "lineage": "hex_completed_native",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-raster-hex-pair-off-repeat2-targeted-setup.json",
+      "archive_path": "evidence/baseline-raster-hex-pair-off-repeat2-targeted-setup.json",
+      "lineage": "hex_completed_native",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-raster-hex-pair-off-repeat2-targeted.json",
+      "archive_path": "evidence/baseline-raster-hex-pair-off-repeat2-targeted.json",
+      "lineage": "hex_completed_native",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-raster-hex-pair-off-repeat2-targeted.log",
+      "archive_path": "evidence/baseline-raster-hex-pair-off-repeat2-targeted.log",
+      "lineage": "hex_completed_native",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-off-repeat2-environment.json",
+      "archive_path": "evidence/candidate-raster-hex-v1-off-repeat2-environment.json",
+      "lineage": "hex_completed_native",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-off-repeat2-environment-after.json",
+      "archive_path": "evidence/candidate-raster-hex-v1-off-repeat2-environment-after.json",
+      "lineage": "hex_completed_native",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-off-repeat2-targeted-setup.json",
+      "archive_path": "evidence/candidate-raster-hex-v1-off-repeat2-targeted-setup.json",
+      "lineage": "hex_completed_native",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-off-repeat2-targeted.json",
+      "archive_path": "evidence/candidate-raster-hex-v1-off-repeat2-targeted.json",
+      "lineage": "hex_completed_native",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-off-repeat2-targeted.log",
+      "archive_path": "evidence/candidate-raster-hex-v1-off-repeat2-targeted.log",
+      "lineage": "hex_completed_native",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-install2-targeted-apks.json",
+      "archive_path": "evidence/candidate-raster-hex-v1-install2-targeted-apks.json",
+      "lineage": "hex_completed_native",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-frame-environment.json",
+      "archive_path": "evidence/candidate-raster-hex-v1-frame-environment.json",
+      "lineage": "hex_completed_native",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-frame-environment-after.json",
+      "archive_path": "evidence/candidate-raster-hex-v1-frame-environment-after.json",
+      "lineage": "hex_completed_native",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-frame-targeted-setup.json",
+      "archive_path": "evidence/candidate-raster-hex-v1-frame-targeted-setup.json",
+      "lineage": "hex_completed_native",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-frame-targeted.json",
+      "archive_path": "evidence/candidate-raster-hex-v1-frame-targeted.json",
+      "lineage": "hex_completed_native",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-frame-targeted.log",
+      "archive_path": "evidence/candidate-raster-hex-v1-frame-targeted.log",
+      "lineage": "hex_completed_native",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-raster-hex-pair-frame-environment.json",
+      "archive_path": "evidence/baseline-raster-hex-pair-frame-environment.json",
+      "lineage": "hex_completed_native",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-raster-hex-pair-frame-environment-after.json",
+      "archive_path": "evidence/baseline-raster-hex-pair-frame-environment-after.json",
+      "lineage": "hex_completed_native",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-raster-hex-pair-frame-targeted-setup.json",
+      "archive_path": "evidence/baseline-raster-hex-pair-frame-targeted-setup.json",
+      "lineage": "hex_completed_native",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-raster-hex-pair-frame-targeted.json",
+      "archive_path": "evidence/baseline-raster-hex-pair-frame-targeted.json",
+      "lineage": "hex_completed_native",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-raster-hex-pair-frame-targeted.log",
+      "archive_path": "evidence/baseline-raster-hex-pair-frame-targeted.log",
+      "lineage": "hex_completed_native",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-raster-hex-pair-install2-targeted-apks.json",
+      "archive_path": "evidence/baseline-raster-hex-pair-install2-targeted-apks.json",
+      "lineage": "hex_completed_native",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-native-reuse-environment.json",
+      "archive_path": "evidence/candidate-raster-hex-v1-native-reuse-environment.json",
+      "lineage": "hex_completed_native",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-native-reuse-environment-after.json",
+      "archive_path": "evidence/candidate-raster-hex-v1-native-reuse-environment-after.json",
+      "lineage": "hex_completed_native",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-native-reuse-targeted-setup.json",
+      "archive_path": "evidence/candidate-raster-hex-v1-native-reuse-targeted-setup.json",
+      "lineage": "hex_completed_native",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-native-reuse-targeted.json",
+      "archive_path": "evidence/candidate-raster-hex-v1-native-reuse-targeted.json",
+      "lineage": "hex_completed_native",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-native-reuse-targeted.log",
+      "archive_path": "evidence/candidate-raster-hex-v1-native-reuse-targeted.log",
+      "lineage": "hex_completed_native",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-install3-targeted-apks.json",
+      "archive_path": "evidence/candidate-raster-hex-v1-install3-targeted-apks.json",
+      "lineage": "hex_completed_native",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-streamed-environment.json",
+      "archive_path": "evidence/candidate-raster-hex-v1-streamed-environment.json",
+      "lineage": "hex_completed_native",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-streamed-environment-after.json",
+      "archive_path": "evidence/candidate-raster-hex-v1-streamed-environment-after.json",
+      "lineage": "hex_completed_native",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-streamed-targeted-setup.json",
+      "archive_path": "evidence/candidate-raster-hex-v1-streamed-targeted-setup.json",
+      "lineage": "hex_completed_native",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-streamed-targeted.json",
+      "archive_path": "evidence/candidate-raster-hex-v1-streamed-targeted.json",
+      "lineage": "hex_completed_native",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-streamed-targeted.log",
+      "archive_path": "evidence/candidate-raster-hex-v1-streamed-targeted.log",
+      "lineage": "hex_completed_native",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-apk-preservation.json",
+      "archive_path": "evidence/candidate-raster-hex-v1-apk-preservation.json",
+      "lineage": "hex_completed_native",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-diagnostic-stage-review.json",
+      "archive_path": "evidence/candidate-raster-hex-v1-diagnostic-stage-review.json",
+      "lineage": "hex_completed_native",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-diagnostic-stage-review.md",
+      "archive_path": "evidence/candidate-raster-hex-v1-diagnostic-stage-review.md",
+      "lineage": "hex_completed_native",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-final-process-review.json",
+      "archive_path": "evidence/candidate-raster-hex-v1-final-process-review.json",
+      "lineage": "hex_completed_native",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-off-repeat2-process-review.json",
+      "archive_path": "evidence/candidate-raster-hex-v1-off-repeat2-process-review.json",
+      "lineage": "hex_completed_native",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-off-pair-strict-parser-receipt.json",
+      "archive_path": "evidence/candidate-raster-hex-v1-off-pair-strict-parser-receipt.json",
+      "lineage": "hex_completed_native",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-off-pair-strict-parser.stdout.json",
+      "archive_path": "evidence/candidate-raster-hex-v1-off-pair-strict-parser.stdout.json",
+      "lineage": "hex_completed_native",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-off-pair-strict-parser.stderr.log",
+      "archive_path": "evidence/candidate-raster-hex-v1-off-pair-strict-parser.stderr.log",
+      "lineage": "hex_completed_native",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-off-pair-raw-ledger.json",
+      "archive_path": "evidence/candidate-raster-hex-v1-off-pair-raw-ledger.json",
+      "lineage": "hex_completed_native",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-off-pair-raw-ledger.md",
+      "archive_path": "evidence/candidate-raster-hex-v1-off-pair-raw-ledger.md",
+      "lineage": "hex_completed_native",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/raster-hex-v1-off-repeat2-failure-review.json",
+      "archive_path": "evidence/raster-hex-v1-off-repeat2-failure-review.json",
+      "lineage": "hex_completed_native",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/raster-hex-v1-off-repeat2-failure-review.md",
+      "archive_path": "evidence/raster-hex-v1-off-repeat2-failure-review.md",
+      "lineage": "hex_completed_native",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-frame-paired-review.json",
+      "archive_path": "evidence/candidate-raster-hex-v1-frame-paired-review.json",
+      "lineage": "hex_completed_native",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-frame-paired-review.md",
+      "archive_path": "evidence/candidate-raster-hex-v1-frame-paired-review.md",
+      "lineage": "hex_completed_native",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/summarize-raster-hex-off-pair.py",
+      "archive_path": "scripts/summarize-raster-hex-off-pair.py",
+      "lineage": "strict_parser_original_bytes",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/raster-followup-curation-plan-completed-native.json",
+      "archive_path": "evidence/raster-followup-curation-plan-completed-native.json",
+      "lineage": "completed_native_curation_plan",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-final-doc-build.json",
+      "archive_path": "evidence/candidate-raster-final-doc-build.json",
+      "lineage": "final_doc_source_and_completed_evidence",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-final-doc-build.log",
+      "archive_path": "evidence/candidate-raster-final-doc-build.log",
+      "lineage": "final_doc_source_and_completed_evidence",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-final-doc-source-sha256.json",
+      "archive_path": "evidence/candidate-raster-final-doc-source-sha256.json",
+      "lineage": "final_doc_source_and_completed_evidence",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-final-doc-targeted-apks.json",
+      "archive_path": "evidence/candidate-raster-final-doc-targeted-apks.json",
+      "lineage": "final_doc_source_and_completed_evidence",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-final-doc-source-delta.json",
+      "archive_path": "evidence/candidate-raster-final-doc-source-delta.json",
+      "lineage": "final_doc_source_and_completed_evidence",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/raster-final-committed-source-binding.json",
+      "archive_path": "evidence/raster-final-committed-source-binding.json",
+      "lineage": "final_doc_source_and_completed_evidence",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/raster-final-source-and-artifact-audit.json",
+      "archive_path": "evidence/raster-final-source-and-artifact-audit.json",
+      "lineage": "final_doc_source_and_completed_evidence",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/final-raster-acceptance-review.json",
+      "archive_path": "evidence/final-raster-acceptance-review.json",
+      "lineage": "final_doc_source_and_completed_evidence",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/final-raster-acceptance-review.md",
+      "archive_path": "evidence/final-raster-acceptance-review.md",
+      "lineage": "final_doc_source_and_completed_evidence",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/raster-followup-native-completed-manifest.json",
+      "archive_path": "evidence/raster-followup-native-completed-manifest.json",
+      "lineage": "final_doc_source_and_completed_evidence",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/raster-followup-native-completed-privacy.json",
+      "archive_path": "evidence/raster-followup-native-completed-privacy.json",
+      "lineage": "final_doc_source_and_completed_evidence",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/raster-followup-native-completed-audit.json",
+      "archive_path": "evidence/raster-followup-native-completed-audit.json",
+      "lineage": "final_doc_source_and_completed_evidence",
+      "completion": "RECORDED_COMPLETE"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/raster-final-delivery-curation-plan.json",
+      "archive_path": "evidence/raster-final-delivery-curation-plan.json",
+      "lineage": "final_doc_source_and_completed_evidence",
+      "completion": "RECORDED_COMPLETE"
+    }
+  ],
+  "unresolved_slots": [],
+  "source_deltas": [
+    {
+      "old": "candidate-v4-source-sha256.json",
+      "new": "candidate-raster-diagnostic-v1-source-sha256.json",
+      "allowed_changed_paths": [
+        "android/app/src/androidTest/java/org/inkweft/app/TileLocalRedrawTest.kt",
+        "android/data-local/src/main/kotlin/org/inkweft/data/InkRepository.kt"
+      ],
+      "meaning": "Uncompiled diagnostic-v1 source; build failure retained."
+    },
+    {
+      "old": "candidate-raster-diagnostic-v1-source-sha256.json",
+      "new": "candidate-raster-diagnostic-v2-source-sha256.json",
+      "allowed_changed_paths": [
+        "android/data-local/src/main/kotlin/org/inkweft/data/InkRepository.kt"
+      ],
+      "meaning": "Diagnostic syntax correction; test bytes unchanged."
+    },
+    {
+      "old": "baseline-final-source-sha256.json",
+      "new": "baseline-raster-diagnostic-v2-source-sha256.json",
+      "allowed_changed_paths": [
+        "android/app/src/androidTest/java/org/inkweft/app/TileLocalRedrawTest.kt",
+        "android/data-local/src/main/kotlin/org/inkweft/data/InkRepository.kt"
+      ],
+      "meaning": "Baseline diagnostics have their own source/APK identity."
+    },
+    {
+      "old": "candidate-raster-diagnostic-v2-source-sha256.json",
+      "new": "candidate-raster-hex-v1-source-sha256.json",
+      "allowed_changed_paths": [
+        "android/data-local/src/main/kotlin/org/inkweft/data/InkRepository.kt"
+      ],
+      "meaning": "Candidate-only one-line hex conversion; default-off diagnostics remain present."
+    },
+    {
+      "old": "candidate-raster-hex-v1-source-sha256.json",
+      "new": "candidate-raster-final-doc-source-sha256.json",
+      "allowed_changed_paths": [
+        "android/data-local/src/main/kotlin/org/inkweft/data/InkRepository.kt"
+      ],
+      "meaning": "Comment-only wording correction; independent exact inverse check and equal APK receipts separately bind final commit to native-tested bytes."
+    }
+  ],
+  "native_runs": [
+    {
+      "phase": "candidate-raster-diagnostic-v2",
+      "expected": 2,
+      "diagnostics": true,
+      "artifact_receipt": "candidate-raster-diagnostic-v2-install-targeted-apks.json",
+      "environment_before": "candidate-raster-diagnostic-v2-environment.json",
+      "environment_after": "candidate-raster-diagnostic-v2-environment-after.json",
+      "cohort": "diagnostic_v2_prior_pair"
+    },
+    {
+      "phase": "baseline-raster-diagnostic-v2",
+      "expected": 2,
+      "diagnostics": true,
+      "artifact_receipt": "baseline-raster-diagnostic-v2-install-targeted-apks.json",
+      "environment_before": "baseline-raster-diagnostic-v2-environment.json",
+      "environment_after": "baseline-raster-diagnostic-v2-environment-after.json",
+      "cohort": "diagnostic_v2_prior_pair"
+    },
+    {
+      "phase": "candidate-raster-hex-v1-diagnostic",
+      "cohort": "hex_fixed_9_calls",
+      "expected": 2,
+      "diagnostics": true,
+      "artifact_receipt": "candidate-raster-hex-v1-targeted-apks.json",
+      "environment_before": "candidate-raster-hex-v1-diagnostic-environment.json",
+      "environment_after": "candidate-raster-hex-v1-diagnostic-environment-after.json"
+    },
+    {
+      "phase": "candidate-raster-hex-v1-off-repeat1",
+      "cohort": "hex_fixed_9_calls",
+      "expected": 2,
+      "diagnostics": false,
+      "artifact_receipt": "candidate-raster-hex-v1-targeted-apks.json",
+      "environment_before": "candidate-raster-hex-v1-off-repeat1-environment.json",
+      "environment_after": "candidate-raster-hex-v1-off-repeat1-environment-after.json"
+    },
+    {
+      "phase": "baseline-raster-hex-pair-off-repeat1",
+      "cohort": "hex_fixed_9_calls",
+      "expected": 2,
+      "diagnostics": false,
+      "artifact_receipt": "baseline-raster-hex-pair-install1-targeted-apks.json",
+      "environment_before": "baseline-raster-hex-pair-off-repeat1-environment.json",
+      "environment_after": "baseline-raster-hex-pair-off-repeat1-environment-after.json"
+    },
+    {
+      "phase": "baseline-raster-hex-pair-off-repeat2",
+      "cohort": "hex_fixed_9_calls",
+      "expected": 2,
+      "diagnostics": false,
+      "artifact_receipt": "baseline-raster-hex-pair-install1-targeted-apks.json",
+      "environment_before": "baseline-raster-hex-pair-off-repeat2-environment.json",
+      "environment_after": "baseline-raster-hex-pair-off-repeat2-environment-after.json"
+    },
+    {
+      "phase": "candidate-raster-hex-v1-off-repeat2",
+      "cohort": "hex_fixed_9_calls",
+      "expected": 2,
+      "diagnostics": false,
+      "artifact_receipt": "candidate-raster-hex-v1-install2-targeted-apks.json",
+      "environment_before": "candidate-raster-hex-v1-off-repeat2-environment.json",
+      "environment_after": "candidate-raster-hex-v1-off-repeat2-environment-after.json"
+    },
+    {
+      "phase": "candidate-raster-hex-v1-frame",
+      "cohort": "hex_fixed_9_calls",
+      "expected": 1,
+      "diagnostics": false,
+      "artifact_receipt": "candidate-raster-hex-v1-install2-targeted-apks.json",
+      "environment_before": "candidate-raster-hex-v1-frame-environment.json",
+      "environment_after": "candidate-raster-hex-v1-frame-environment-after.json"
+    },
+    {
+      "phase": "baseline-raster-hex-pair-frame",
+      "cohort": "hex_fixed_9_calls",
+      "expected": 1,
+      "diagnostics": false,
+      "artifact_receipt": "baseline-raster-hex-pair-install2-targeted-apks.json",
+      "environment_before": "baseline-raster-hex-pair-frame-environment.json",
+      "environment_after": "baseline-raster-hex-pair-frame-environment-after.json"
+    },
+    {
+      "phase": "candidate-raster-hex-v1-native-reuse",
+      "cohort": "hex_fixed_9_calls",
+      "expected": 1,
+      "diagnostics": false,
+      "artifact_receipt": "candidate-raster-hex-v1-install3-targeted-apks.json",
+      "environment_before": "candidate-raster-hex-v1-native-reuse-environment.json",
+      "environment_after": "candidate-raster-hex-v1-native-reuse-environment-after.json"
+    },
+    {
+      "phase": "candidate-raster-hex-v1-streamed",
+      "cohort": "hex_fixed_9_calls",
+      "expected": 4,
+      "diagnostics": false,
+      "artifact_receipt": "candidate-raster-hex-v1-install3-targeted-apks.json",
+      "environment_before": "candidate-raster-hex-v1-streamed-environment.json",
+      "environment_after": "candidate-raster-hex-v1-streamed-environment-after.json"
+    }
+  ],
+  "preservation_rules": [
+    "Retain all previous 247 entries and original slow/default-off samples; no trimming or replacement.",
+    "Retain diagnostic-v1 failed build and inaccurate initial static-pass record alongside explicit v2 correction.",
+    "Diagnostic-on timings include observation overhead and cannot replace default-off measurements.",
+    "Host 1869-case compatibility checks are representation equivalence only, not Android/native performance.",
+    "Current candidate and baseline checkout bytes have changed since v4; use frozen source manifests plus c60/patch provenance for old identities. Never run the old v4 checker against current sources as a false failure.",
+    "APK receipt hashes are documentary bindings; this planned audit will not read APK binaries, keys, databases or full logcat.",
+    "No original acceptance gate is closed merely because this evidence audit passes.",
+    "Artifact recorder NOT_RUN fields describe that recorder only. candidate-raster-hex-v1-jvm.json separately records the new 20-test data-local JVM execution; core and lint remain NOT_RUN for hex. Do not reuse old v4 JVM/lint counts as new executions.",
+    "Default-off targeted runs omit --diagnostics entirely; they do not pass -e rasterMetadataDiagnostics false. Retain fixed-plan erratum 1 and its historical plan hashes.",
+    "Exclude raster-diagnostic-v2-filtered-gc-observation.json in full (152 historical entries). No cross-history GC data is part of this new hex evidence.",
+    "Retain strict parser exit2/INCOMPLETE with no completed summary. Coff2 local rows remain isolated in raw ledger, not normal paired performance.",
+    "Final process absence does not establish strict normal release; pan30s and dense30s remain failed.",
+    "Cgroup deltas are supporting context only and do not uniquely attribute the regression.",
+    "Final-doc build changes one KDoc line only. Final 744 committed blobs match frozen sources and both verified APK hashes equal tested hex-v1; no new native sample is claimed. Debug metadata remains local-unknown."
+  ],
+  "audit_actions_not_allowed": [
+    "build",
+    "ADB/native",
+    "APK copy/read/hash",
+    "current full-source-tree hash",
+    "repository write",
+    "commit/push",
+    "Docker operation"
+  ],
+  "audit_ready": true,
+  "planned_to_actual_phase_aliases": [
+    {
+      "planned": "candidate-raster-hex-v1-diagnostic-tile",
+      "actual": "candidate-raster-hex-v1-diagnostic",
+      "basis": "Root start notification; actual saved phase prefix takes precedence."
+    }
+  ],
+  "future_pending": [],
+  "expected_hex_fixed_totals": {
+    "calls": 9,
+    "executed": 17,
+    "passed": 15,
+    "failures": 2
+  },
+  "source_commit": "721b2ffa362f9ae77121d963b71dcfe78de443f3"
+}

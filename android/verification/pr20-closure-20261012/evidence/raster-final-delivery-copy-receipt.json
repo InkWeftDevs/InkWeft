@@ -1,0 +1,2956 @@
+{
+  "utc": "2026-10-13T04:01:44.938413+00:00",
+  "status": "CURATED_TEXT_COPY_VERIFIED_NATIVE_ACCEPTANCE_NOT_CLOSED",
+  "destination": "/workspace/InkWeft/android/verification/pr20-closure-20261012",
+  "manifest": "/workspace/scratch/pr20-closure-evidence/raster-final-delivery-complete-manifest.json",
+  "manifest_sha256": "4cd04559247d1c5d45bf83d90436af9d19b8d5c80a122cb07a268d10b14e6b02",
+  "selected_manifest_payloads": 401,
+  "delivered_payloads_including_audit_metadata": 405,
+  "newly_copied_payloads": 217,
+  "already_present_matching_payloads": 188,
+  "payloads": [
+    {
+      "archive_path": "evidence/RasterHexCompatibility.java",
+      "source": "/workspace/scratch/pr20-closure-evidence/RasterHexCompatibility.java",
+      "bytes": 3243,
+      "sha256": "c981acdd3552352695add64f62d8d45f4fe37fed45e979c440ee5df60477bebb",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/baseline-closure-performance-plan.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-closure-performance-plan.json",
+      "bytes": 5594,
+      "sha256": "4f24f63f1259ae6b7797a07ef363a6b5dda28c398e9d78fe84628bf0d54bc854",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/baseline-final-apk-installation.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-final-apk-installation.json",
+      "bytes": 2578,
+      "sha256": "1dfe133d4f9d8144c120b45604affc4e0b512ff51dbb56f4fa92ff5771dfd632",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/baseline-final-artifacts.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-final-artifacts.json",
+      "bytes": 1522,
+      "sha256": "2595faf440b7978a61468401b6db147f954b4dbd77bf6c7759a444f1a9487648",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/baseline-final-build.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-final-build.json",
+      "bytes": 426,
+      "sha256": "76567e6eccb98dac7a8a116dc5fe8ab21f5afc55429c05437311b4b7abce322b",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/baseline-final-build.log",
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-final-build.log",
+      "bytes": 36726,
+      "sha256": "1664c121dbc65d5f847c8891d14085d776afac9863ffee7ad9057a8d9941eb40",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/baseline-final-jvm-and-lint-status.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-final-jvm-and-lint-status.json",
+      "bytes": 957,
+      "sha256": "d6d74d87f292cf546f16233c46c2d56b89273c6393b19e41cbbb20c7467ef3ce",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/baseline-final-performance-artifact-continuity.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-final-performance-artifact-continuity.json",
+      "bytes": 1215,
+      "sha256": "435914891621d0fde109369f4766d37da383e2d09696530fee6a55f86b58c4aa",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/baseline-final-performance-environment-after.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-final-performance-environment-after.json",
+      "bytes": 11792,
+      "sha256": "5a9aba85e38a80868d9f70aa30bb394ddc5336e457ea95e7df93422e1dddc2cf",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/baseline-final-performance-environment.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-final-performance-environment.json",
+      "bytes": 11786,
+      "sha256": "16533e270b8a3d1e31c1c8511e10e2e535cec4ff770c2e10d115046160dd63ef",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/baseline-final-performance-history-probe-setup.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-final-performance-history-probe-setup.json",
+      "bytes": 987,
+      "sha256": "6eb42b4efe5feacc33b98bf5aee8ff26a731c6cefd70a70e864a03cd199ef0e5",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/baseline-final-performance-history-probe.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-final-performance-history-probe.json",
+      "bytes": 800,
+      "sha256": "1ab18bb64841d39307595e317b96d9e9bc92b0e32449721af0778ea8fa62300e",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/baseline-final-performance-history-probe.log",
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-final-performance-history-probe.log",
+      "bytes": 1324,
+      "sha256": "450fe6f2a53133a1803f9b818a05a4202ac99faea7a197ce906de8ca0f1ab513",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/baseline-final-performance-library-probe-setup.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-final-performance-library-probe-setup.json",
+      "bytes": 987,
+      "sha256": "8fce126e866bd1fa81beccde28f86d6922bfe11c25febdce2f4249029c9e6ea9",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/baseline-final-performance-library-probe.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-final-performance-library-probe.json",
+      "bytes": 792,
+      "sha256": "d9f0ff138fb5a4b2bc9d7c87fbdfb45a58dde938c64ab71830414fb5a3421bff",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/baseline-final-performance-library-probe.log",
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-final-performance-library-probe.log",
+      "bytes": 10964,
+      "sha256": "facdc622ab8392a74b9fde3ccd745f5be1fea44344f1d048d3c2999b70d8c7f9",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/baseline-final-performance-raster-probe-setup.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-final-performance-raster-probe-setup.json",
+      "bytes": 987,
+      "sha256": "5eb745b1ddad6c306a17ab0dd0b63479eafa72d34acc35982106223a18a5b099",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/baseline-final-performance-raster-probe.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-final-performance-raster-probe.json",
+      "bytes": 785,
+      "sha256": "51f90064e05311f088355c36d9d17e02bccd0177b69ab2d48721b6ab0ff31b32",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/baseline-final-performance-raster-probe.log",
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-final-performance-raster-probe.log",
+      "bytes": 5449,
+      "sha256": "f16fa5ba7d7c5ef0174ee12b87154bfa60398d8048ac2aebc18e7aa935deb2bb",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/baseline-final-performance-results.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-final-performance-results.json",
+      "bytes": 3533,
+      "sha256": "252936f413066303b7235b9b7dcf82f244049577cdbd6c15d4b20d51d9cd0272",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/baseline-final-performance-tile-local-setup.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-final-performance-tile-local-setup.json",
+      "bytes": 987,
+      "sha256": "6a436dcb644003eb0e03ec285ebfbf199480c3fb40908179e46ef997ed62f2b5",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/baseline-final-performance-tile-local.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-final-performance-tile-local.json",
+      "bytes": 777,
+      "sha256": "1e361cd408989b7bc0b8fa390a5b28627cef51e94b09db00f7d62ae61a8a4e62",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/baseline-final-performance-tile-local.log",
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-final-performance-tile-local.log",
+      "bytes": 1306,
+      "sha256": "83521a5bc8a270a1d10edc3b17af497928cb456fbca6af8a2261f7e4a3415836",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/baseline-final-provenance.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-final-provenance.json",
+      "bytes": 13051,
+      "sha256": "4894d42bf5605880fd2ba5545d53df7a4de500cbe4870e4a8b120f94e1392fee",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/baseline-final-raster-repeat-apk-installation.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-final-raster-repeat-apk-installation.json",
+      "bytes": 2578,
+      "sha256": "6fc2d13b0a432e463cdcfb473c26860f4d1cfe610edf80d705e90399cd208c37",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/baseline-final-raster-repeat1-environment-after.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-final-raster-repeat1-environment-after.json",
+      "bytes": 11795,
+      "sha256": "7ec20a6a08a8b0df124010bff09d5ae2eb351f99bdaf253fa73dd371c36f178b",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/baseline-final-raster-repeat1-environment.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-final-raster-repeat1-environment.json",
+      "bytes": 11789,
+      "sha256": "328abd145b09d7c2a9f9c6a9b45c48a6f09c9d3c3adbe7d77bd182edd8bb06aa",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/baseline-final-raster-repeat1-results.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-final-raster-repeat1-results.json",
+      "bytes": 875,
+      "sha256": "44c1806be17d556f3e697fe83fe6efabcb9d3cbf6164984e6f82d5fc89dff15b",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/baseline-final-raster-repeat1-tile-local-setup.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-final-raster-repeat1-tile-local-setup.json",
+      "bytes": 987,
+      "sha256": "ece6ec842e7f507e7df4d20557a6dce9a5b206467cbd7801575b557fbeef1ffb",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/baseline-final-raster-repeat1-tile-local.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-final-raster-repeat1-tile-local.json",
+      "bytes": 780,
+      "sha256": "6baadc1e24337a0d0a55d5a23fb72cd74a0654e276fb6df9e3f987d3f38b13bb",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/baseline-final-raster-repeat1-tile-local.log",
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-final-raster-repeat1-tile-local.log",
+      "bytes": 1296,
+      "sha256": "1880a893a0ad88f6da5caa53442129dded5a00913dbe7acf35a0af02cbb2ad0b",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/baseline-final-raster-repeat2-environment-after.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-final-raster-repeat2-environment-after.json",
+      "bytes": 11795,
+      "sha256": "f94572044767130ea9832c286d52b1cd3438418ac40236dc0976e4742d24fd6c",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/baseline-final-raster-repeat2-environment.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-final-raster-repeat2-environment.json",
+      "bytes": 11789,
+      "sha256": "c845cffd0e408ab3bb1ea31426bf9a213f9f750f23e0ab0e7c2963b8a2819261",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/baseline-final-raster-repeat2-results.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-final-raster-repeat2-results.json",
+      "bytes": 876,
+      "sha256": "38c497f2f7a5c5266d3f2a38faa9716e760e0b884027ca3f3f31ad8e8b9f27b2",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/baseline-final-raster-repeat2-tile-local-setup.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-final-raster-repeat2-tile-local-setup.json",
+      "bytes": 987,
+      "sha256": "a7ba1ed63e410a4fd730c0494d7b4010d964d8cf836ca11267be62a406e9b95a",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/baseline-final-raster-repeat2-tile-local.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-final-raster-repeat2-tile-local.json",
+      "bytes": 781,
+      "sha256": "3f37658c15cdcb1032ce84ce7f5650cf689aeb8f719d3272f94a0abd79ce2a63",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/baseline-final-raster-repeat2-tile-local.log",
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-final-raster-repeat2-tile-local.log",
+      "bytes": 1295,
+      "sha256": "3cc60f6a6406e550cbbf2f311f08397797c49e5eb14ebaeb36d62be67b0b0d2c",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/baseline-final-recording.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-final-recording.json",
+      "bytes": 420,
+      "sha256": "d8f8d482c5d13f60d0c4f63fb525a6daac770f8ff5f27e3ebb554db34f0a1b1b",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/baseline-final-signatures.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-final-signatures.json",
+      "bytes": 2341,
+      "sha256": "e2a34658a796999782a07f3520a6220569f9dd58ad5398cce1f39450d76cbd31",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/baseline-final-source-manifest.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-final-source-manifest.json",
+      "bytes": 680788,
+      "sha256": "485c50705454ab09d5ba15d618f9fc7fc2c7abe40eb105c8609533d25cc4af71",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/baseline-final-source-sha256.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-final-source-sha256.json",
+      "bytes": 105362,
+      "sha256": "386046c9c28eb27d33fd3977fb2baa06c94a855511f024f4a83188a4c304bbfd",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/baseline-raster-diagnostic-patch-application.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-raster-diagnostic-patch-application.json",
+      "bytes": 1867,
+      "sha256": "87d8d37410f66297ba3a320ed6f80916e1d8a82e4f450982597e5c0306a67ced",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/baseline-raster-diagnostic-v2-apk-entry-diff.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-raster-diagnostic-v2-apk-entry-diff.json",
+      "bytes": 1686,
+      "sha256": "0f060b697b8bcbdd6cb3b6bb0c8880d43d608865b530e298ef190ab2d3f39413",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/baseline-raster-diagnostic-v2-build.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-raster-diagnostic-v2-build.json",
+      "bytes": 383,
+      "sha256": "01a73d4214c27e5b23c5aebe15210b97f9e88d01bec30c4326bd3a5bcc6041c5",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/baseline-raster-diagnostic-v2-build.log",
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-raster-diagnostic-v2-build.log",
+      "bytes": 30019,
+      "sha256": "1c9da63e7ff5d07b65344ad5daf201631afb33259878fe73d2bf9a96f2672ec8",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/baseline-raster-diagnostic-v2-environment-after.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-raster-diagnostic-v2-environment-after.json",
+      "bytes": 11795,
+      "sha256": "32ba14e2f8eb9ed472af6319ef9e661cbe5587ced5958faaa2b03770cf7c3831",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/baseline-raster-diagnostic-v2-environment.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-raster-diagnostic-v2-environment.json",
+      "bytes": 11789,
+      "sha256": "009762947b06de72e5629a2a6d33016654e3ea204d1ad56f8b929896faa0501d",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/baseline-raster-diagnostic-v2-install-targeted-apks.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-raster-diagnostic-v2-install-targeted-apks.json",
+      "bytes": 5493,
+      "sha256": "7f77082a3bd6ebe20f99eba4d1d0f397bba31edd262e241ac263a5a2d4db3b06",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/baseline-raster-diagnostic-v2-source-sha256.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-raster-diagnostic-v2-source-sha256.json",
+      "bytes": 105362,
+      "sha256": "ea53d39f9dc02b118c95f18cec166d8c4ca2c64b88dabe83adaecb65b9f8e1e2",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/baseline-raster-diagnostic-v2-targeted-apks.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-raster-diagnostic-v2-targeted-apks.json",
+      "bytes": 4117,
+      "sha256": "b5d3cc720f9cb7f629ea3c8f67585c9e9859afe7a2c9fe4ee4a75af3f631c9f6",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/baseline-raster-diagnostic-v2-targeted-setup.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-raster-diagnostic-v2-targeted-setup.json",
+      "bytes": 987,
+      "sha256": "a8155307c1394828457f17cdd20bf03d49784ff24edf0f17bcbefce5a61d0ad1",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/baseline-raster-diagnostic-v2-targeted.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-raster-diagnostic-v2-targeted.json",
+      "bytes": 1137,
+      "sha256": "d6e3208e06b3ee36bd904666b5173f34017dc7ce47e10dff2394edfa403e824a",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/baseline-raster-diagnostic-v2-targeted.log",
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-raster-diagnostic-v2-targeted.log",
+      "bytes": 5971,
+      "sha256": "5b5f78194b1207a3f2d473a55b8eb31fe15b49b53faa0884d2d54aecaec6f3bc",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/baseline-raster-hex-pair-frame-environment-after.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-raster-hex-pair-frame-environment-after.json",
+      "bytes": 11796,
+      "sha256": "53e6337e63b2c5b04eb4a4a06d5af705165d5816d152c8f61eed036e6e4dfa00",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/baseline-raster-hex-pair-frame-environment.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-raster-hex-pair-frame-environment.json",
+      "bytes": 11790,
+      "sha256": "9cc2859b6db585230dc50c6a2da1e8bbe2f451faeb9c3454f64752b169e914ac",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/baseline-raster-hex-pair-frame-targeted-setup.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-raster-hex-pair-frame-targeted-setup.json",
+      "bytes": 987,
+      "sha256": "e1b7c59eec5f2796ba5816285b06d0cb355a6f083b03899ce01cb501fd059635",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/baseline-raster-hex-pair-frame-targeted.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-raster-hex-pair-frame-targeted.json",
+      "bytes": 1089,
+      "sha256": "6ee1e8985c97ee6fb64ee736d61edbe4b0f0c8b3ff7e31dd769bfe9b98fe777b",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/baseline-raster-hex-pair-frame-targeted.log",
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-raster-hex-pair-frame-targeted.log",
+      "bytes": 5448,
+      "sha256": "f62248f613eb158b5086c290ab06fa03c3d82b5be0d77c8b8f56c37d9a31665e",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/baseline-raster-hex-pair-install1-targeted-apks.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-raster-hex-pair-install1-targeted-apks.json",
+      "bytes": 5333,
+      "sha256": "5964bce4461ce9835b8b391e85ebb292a0c74693c8bd576af5fc7e48061eda8e",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/baseline-raster-hex-pair-install2-targeted-apks.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-raster-hex-pair-install2-targeted-apks.json",
+      "bytes": 5333,
+      "sha256": "4b365aa86e615aec95891a80c4508d8f76d9726614f4c31943e88624c0e279eb",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/baseline-raster-hex-pair-off-repeat1-environment-after.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-raster-hex-pair-off-repeat1-environment-after.json",
+      "bytes": 11802,
+      "sha256": "acc7cc4352781f8bce84a267c7dd20c2fe976dca361a2257601b4d392b0a837d",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/baseline-raster-hex-pair-off-repeat1-environment.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-raster-hex-pair-off-repeat1-environment.json",
+      "bytes": 11796,
+      "sha256": "afac3dc17e2e28dcdf226de564bffaa271923b450f33df62a7f12050293863c9",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/baseline-raster-hex-pair-off-repeat1-targeted-setup.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-raster-hex-pair-off-repeat1-targeted-setup.json",
+      "bytes": 987,
+      "sha256": "b1c8e81950ac34e20d1caaad08b98f4dc238223889133b31d155712a57b969de",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/baseline-raster-hex-pair-off-repeat1-targeted.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-raster-hex-pair-off-repeat1-targeted.json",
+      "bytes": 1089,
+      "sha256": "ed9d0331f7958f72aa0e4647f2de6578a7e6545be4dbee61cb3d7e6e66ba86bd",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/baseline-raster-hex-pair-off-repeat1-targeted.log",
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-raster-hex-pair-off-repeat1-targeted.log",
+      "bytes": 1299,
+      "sha256": "9ead72ab9828f24f0fbcd871c3e2a99e59874f0c58a57df8bbd7e908224adb1f",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/baseline-raster-hex-pair-off-repeat2-environment-after.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-raster-hex-pair-off-repeat2-environment-after.json",
+      "bytes": 11802,
+      "sha256": "de507ae7ddf258eae11dbc9026b725eff38f49feaa00868326139727570cb770",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/baseline-raster-hex-pair-off-repeat2-environment.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-raster-hex-pair-off-repeat2-environment.json",
+      "bytes": 11796,
+      "sha256": "cd2d684b9a3b14d658e6d884d054bfa34ab9e6b1ecff4b2539436c261b13a141",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/baseline-raster-hex-pair-off-repeat2-targeted-setup.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-raster-hex-pair-off-repeat2-targeted-setup.json",
+      "bytes": 987,
+      "sha256": "efb1ccc7995a8584ddc6d153ed74f03c0c66acdd1369b0171d775cc69acaee30",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/baseline-raster-hex-pair-off-repeat2-targeted.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-raster-hex-pair-off-repeat2-targeted.json",
+      "bytes": 1090,
+      "sha256": "391d385e8ec9153c7065e9341a596846eee665c29201e2f6c73fb3c69155fc80",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/baseline-raster-hex-pair-off-repeat2-targeted.log",
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-raster-hex-pair-off-repeat2-targeted.log",
+      "bytes": 1314,
+      "sha256": "c9a60fd7c084909e20e594e326f99fb309f05a508f385e9e808f45890fd59c22",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/candidate-raster-diagnostic-v1-build.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-diagnostic-v1-build.json",
+      "bytes": 348,
+      "sha256": "85bcaf8578e8aaa5b9af0210923c4f45995e9bc8d92151b3b85d3da528e09a77",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/candidate-raster-diagnostic-v1-build.log",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-diagnostic-v1-build.log",
+      "bytes": 5685,
+      "sha256": "bfbfcd62d05249de54d30b5b54e2b46d186973a51c963d82257b6b3b1acf021a",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/candidate-raster-diagnostic-v1-source-sha256.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-diagnostic-v1-source-sha256.json",
+      "bytes": 106879,
+      "sha256": "2bad1ae27bbe33c3e45287fe523cfdde310e1d06c7a354ac7b497b5867ede24a",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/candidate-raster-diagnostic-v2-build.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-diagnostic-v2-build.json",
+      "bytes": 349,
+      "sha256": "e2b0c064099ad7295e13809716986ccad13f2855482cf70a09890e9dcf96fd7b",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/candidate-raster-diagnostic-v2-build.log",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-diagnostic-v2-build.log",
+      "bytes": 27937,
+      "sha256": "9c6915ad89cc56b2a7256b553b4dbf0a441812d00f187baff54e62319d902401",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/candidate-raster-diagnostic-v2-environment-after.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-diagnostic-v2-environment-after.json",
+      "bytes": 11796,
+      "sha256": "944392cb2a67c55fedc93d3f5c57d77d803b294994ac5bb6215dcd1557d8d5a3",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/candidate-raster-diagnostic-v2-environment.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-diagnostic-v2-environment.json",
+      "bytes": 11790,
+      "sha256": "93d99b831c2bd266039a70ed365103b72f9ad0b4a808d5d7a1a72661e6200d64",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/candidate-raster-diagnostic-v2-install-targeted-apks.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-diagnostic-v2-install-targeted-apks.json",
+      "bytes": 5290,
+      "sha256": "597a37bdce9727cc16adeabbfc0deb9a7d6c435e9a4de13f1cbc5abc48c1044b",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/candidate-raster-diagnostic-v2-source-sha256.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-diagnostic-v2-source-sha256.json",
+      "bytes": 106879,
+      "sha256": "730b12637f1ee898b2b439603017c787c6323ba5411412662e003eb1066edf0f",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/candidate-raster-diagnostic-v2-targeted-apks.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-diagnostic-v2-targeted-apks.json",
+      "bytes": 3982,
+      "sha256": "205b353413711d56165357375c3914a078d6e4f3479dfee271f9fd3c3b61c09e",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/candidate-raster-diagnostic-v2-targeted-setup.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-diagnostic-v2-targeted-setup.json",
+      "bytes": 987,
+      "sha256": "d9281a6a6d1533942f545b5463e363da3044b83e02742e24cb094b8a7f4bbe42",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/candidate-raster-diagnostic-v2-targeted.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-diagnostic-v2-targeted.json",
+      "bytes": 1138,
+      "sha256": "619d1e88002c5065417e5d094181751783c4f04a49b5d8b31f2b82eb2bcf3110",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/candidate-raster-diagnostic-v2-targeted.log",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-diagnostic-v2-targeted.log",
+      "bytes": 6053,
+      "sha256": "9abd1f79dd56eb53c5e40eb67c766c961b1dafa6dc8e8f373d7d0fa6426eda44",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/candidate-raster-final-doc-build.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-final-doc-build.json",
+      "bytes": 348,
+      "sha256": "c5ad8c17d64990d7ea1f7d99f1f92dee1006f44af16a6865636b61049117bcde",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/candidate-raster-final-doc-build.log",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-final-doc-build.log",
+      "bytes": 7958,
+      "sha256": "3965451818116e1647b748313e645af6485ab1031ff1206f114f4801d56130ff",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/candidate-raster-final-doc-source-delta.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-final-doc-source-delta.json",
+      "bytes": 781,
+      "sha256": "e67e9d9e7089f9e7fb4481a666ac1a3e306c5e7ace4e808788f9983b0bf1d9b8",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/candidate-raster-final-doc-source-sha256.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-final-doc-source-sha256.json",
+      "bytes": 106879,
+      "sha256": "5485ab2911956a09e36a94164934887a6aca0ef7c5a60a2996e4c6cc8f24edac",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/candidate-raster-final-doc-targeted-apks.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-final-doc-targeted-apks.json",
+      "bytes": 3978,
+      "sha256": "9dc331f1509c896acc6ba50f1f799b7b5963e8c1ad419613155aecbfaf9161f5",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/candidate-raster-hex-v1-apk-preservation.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-apk-preservation.json",
+      "bytes": 570,
+      "sha256": "1f77fe7c762c6f06d9a87c38718463cd5708b292082549413c79ad2a49fbc442",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/candidate-raster-hex-v1-build.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-build.json",
+      "bytes": 386,
+      "sha256": "8c32d096abcb17b7742b347f658dffe8c5a6e2eb648ed0037417b1618edb49f2",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/candidate-raster-hex-v1-build.log",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-build.log",
+      "bytes": 8584,
+      "sha256": "2d552c129f430c8dbd9e4d5cb93929049144f7921efae74bdde8e1b6598d70b8",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/candidate-raster-hex-v1-diagnostic-environment-after.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-diagnostic-environment-after.json",
+      "bytes": 11800,
+      "sha256": "75ae677728e2de8e5572894a24a15544333f9e8a60ce7c39debf291b4a0bc9d1",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/candidate-raster-hex-v1-diagnostic-environment.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-diagnostic-environment.json",
+      "bytes": 11794,
+      "sha256": "9490f4a89d0a4ce5542648d2ed560ddb6b57e811e5af650189aa2906a15fbdb8",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/candidate-raster-hex-v1-diagnostic-stage-review.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-diagnostic-stage-review.json",
+      "bytes": 50645,
+      "sha256": "70a398836c5c602d03e98b6d32b8a2b8bf2c0d25220b90e24b6c4c78d6eb3c76",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/candidate-raster-hex-v1-diagnostic-stage-review.md",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-diagnostic-stage-review.md",
+      "bytes": 4860,
+      "sha256": "d9205d3a9fca0a601e3c5de3623bb00ce28bf4fb750a58f58fa5af8818da60b6",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/candidate-raster-hex-v1-diagnostic-targeted-setup.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-diagnostic-targeted-setup.json",
+      "bytes": 987,
+      "sha256": "517f1c89ef2df426380a9853fd2fa3ac142fc85aec99dc8fc74c45b9d5bbf3dd",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/candidate-raster-hex-v1-diagnostic-targeted.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-diagnostic-targeted.json",
+      "bytes": 1141,
+      "sha256": "52a7a3273924c80ef884707231e9746cdbce65c160969e696168bd6c00fc0e10",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/candidate-raster-hex-v1-diagnostic-targeted.log",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-diagnostic-targeted.log",
+      "bytes": 5981,
+      "sha256": "b932551bfa1b5d0c419f6bf43420b181defa85c54823635f6c6f61c8490d9521",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/candidate-raster-hex-v1-final-process-review.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-final-process-review.json",
+      "bytes": 825,
+      "sha256": "5b77cff4c0e77939fae2c7ee62c51e0b26b0d678a2754a556b02ab556ff545e8",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/candidate-raster-hex-v1-followup-plan-erratum-1.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-followup-plan-erratum-1.json",
+      "bytes": 1304,
+      "sha256": "cbdf04e872e908092d1858095318c76c1eade79d70423054e1ba50baa75be3c4",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/candidate-raster-hex-v1-followup-plan.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-followup-plan.json",
+      "bytes": 17682,
+      "sha256": "ff0b2e6b3bc377b69ba0a87959370096b0693adedcc42c6bc9bfdf0c864126c3",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/candidate-raster-hex-v1-followup-plan.md",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-followup-plan.md",
+      "bytes": 7144,
+      "sha256": "2c905e2e7bebbc1b003416bd4483f60dda25ffb0a5f45cadd594bc229d49423f",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/candidate-raster-hex-v1-frame-environment-after.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-frame-environment-after.json",
+      "bytes": 11795,
+      "sha256": "7ed477de6eadd92b4ce8fa3d0833291c61f4aa2639177d8ce31156e52abb3151",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/candidate-raster-hex-v1-frame-environment.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-frame-environment.json",
+      "bytes": 11789,
+      "sha256": "6822d5071cb9a4471643563178d5924ab180e6ffdba91c5f0d3d8bcf82f7dbef",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/candidate-raster-hex-v1-frame-paired-review.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-frame-paired-review.json",
+      "bytes": 36360,
+      "sha256": "d1e5f678d25ec2f0a3fb2aaa066cf20aaeb6f2441a93243569651a5d30e068ae",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/candidate-raster-hex-v1-frame-paired-review.md",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-frame-paired-review.md",
+      "bytes": 4840,
+      "sha256": "19a2eb9db51d8d2bb5179ee2be70510bac2b3c5683b54f99303599c94d2ce6ba",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/candidate-raster-hex-v1-frame-targeted-setup.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-frame-targeted-setup.json",
+      "bytes": 987,
+      "sha256": "2eb312b634b40d8d6ef9a50db1cd868509078ffeae021f8e8c59498ae18db4e0",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/candidate-raster-hex-v1-frame-targeted.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-frame-targeted.json",
+      "bytes": 1089,
+      "sha256": "1d26600e0f77f338b14d8dfe4197936daed2309fba8beaec4765717c06f7e899",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/candidate-raster-hex-v1-frame-targeted.log",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-frame-targeted.log",
+      "bytes": 5387,
+      "sha256": "2c641483812f79408be81386f59edac66fa077a4f9ca4d43b23000f16f3b688e",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/candidate-raster-hex-v1-install2-targeted-apks.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-install2-targeted-apks.json",
+      "bytes": 5296,
+      "sha256": "8c0c9d2392e9b11dd3bca45a75a4c0275a0d5fed76bc3cc532bac74a204ee873",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/candidate-raster-hex-v1-install3-targeted-apks.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-install3-targeted-apks.json",
+      "bytes": 5296,
+      "sha256": "6f531afd903543beb5cee83cb6d9846dc17acbec9471af33510261cc90aadecb",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/candidate-raster-hex-v1-jvm.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-jvm.json",
+      "bytes": 1577,
+      "sha256": "7f1e8035691e5b7c6ce1e08724ccc9bf0766c3862af76ce9bc5a7ca55f3709cb",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/candidate-raster-hex-v1-native-reuse-environment-after.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-native-reuse-environment-after.json",
+      "bytes": 11802,
+      "sha256": "b6cfe600fba07aabb44c971c1be0f570734c1eedbe0a539ecc9091e9608db6dc",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/candidate-raster-hex-v1-native-reuse-environment.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-native-reuse-environment.json",
+      "bytes": 11796,
+      "sha256": "badd76e6de52208f80c4b7e343193d6519902c51634db2e0022ac1453a530661",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/candidate-raster-hex-v1-native-reuse-targeted-setup.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-native-reuse-targeted-setup.json",
+      "bytes": 987,
+      "sha256": "32f2ca3927bd69e2ce13f2c4a20d9b2037556e1d1ba19f1d1373489923fe3b99",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/candidate-raster-hex-v1-native-reuse-targeted.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-native-reuse-targeted.json",
+      "bytes": 1101,
+      "sha256": "8e4a279d70c020d4c99aad6ba69ba8f307c179eefe03b3ac5f649586fcb53497",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/candidate-raster-hex-v1-native-reuse-targeted.log",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-native-reuse-targeted.log",
+      "bytes": 609,
+      "sha256": "8e74c9d90eccfc2a3bfa92634f573ca724c3a2722aceec443e7cbd49e3ff0811",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/candidate-raster-hex-v1-off-pair-raw-ledger.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-off-pair-raw-ledger.json",
+      "bytes": 24286,
+      "sha256": "df4c43104eb4171992bdc4021aa37f05d834f0c5c5373bc3df658ff4d14f6c7c",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/candidate-raster-hex-v1-off-pair-raw-ledger.md",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-off-pair-raw-ledger.md",
+      "bytes": 4719,
+      "sha256": "bbc5244f07023f1690c67d1ec7922a95d69dee098c3ccce4562aa0f64b39d6f6",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/candidate-raster-hex-v1-off-pair-strict-parser-receipt.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-off-pair-strict-parser-receipt.json",
+      "bytes": 867,
+      "sha256": "2a9f5527cb420dd9e9548d5d99220a0c25b4cf9a65a56fd47e8ded14fbf09436",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/candidate-raster-hex-v1-off-pair-strict-parser.stderr.log",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-off-pair-strict-parser.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/candidate-raster-hex-v1-off-pair-strict-parser.stdout.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-off-pair-strict-parser.stdout.json",
+      "bytes": 386,
+      "sha256": "33942151b1dd970a590b31470908b9f4845dcd9fdafc6b54a3243335ae8a9c4f",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/candidate-raster-hex-v1-off-repeat1-environment-after.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-off-repeat1-environment-after.json",
+      "bytes": 11801,
+      "sha256": "4ad90c5fdf2cce4900fb6ef8035a24c973e20639684d8196169196a8431d5fc7",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/candidate-raster-hex-v1-off-repeat1-environment.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-off-repeat1-environment.json",
+      "bytes": 11795,
+      "sha256": "52995af14f881d611908356551ac845531f57417d9428438b2e5e92fe514df53",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/candidate-raster-hex-v1-off-repeat1-targeted-setup.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-off-repeat1-targeted-setup.json",
+      "bytes": 987,
+      "sha256": "2ef3f0f0ab76335184642dacbc702043adf1eb17d8ca16555e6b4e5d24bdd493",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/candidate-raster-hex-v1-off-repeat1-targeted.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-off-repeat1-targeted.json",
+      "bytes": 1088,
+      "sha256": "a2e3b3e237844a747371cf09d2e6ea9b6fe05affdc2c6945279332e51e6f906b",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/candidate-raster-hex-v1-off-repeat1-targeted.log",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-off-repeat1-targeted.log",
+      "bytes": 1364,
+      "sha256": "74e281d2ef34b0ccb0153c111ce86e62db356c9d10ade120a32e6d17965960ba",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/candidate-raster-hex-v1-off-repeat2-environment-after.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-off-repeat2-environment-after.json",
+      "bytes": 11801,
+      "sha256": "e9cec0392f8b2aedd8ae44f18bf967a08cfa44fb318367b00f60f8b762581b1e",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/candidate-raster-hex-v1-off-repeat2-environment.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-off-repeat2-environment.json",
+      "bytes": 11795,
+      "sha256": "4268c3e2a172255d9b57c828cf8b19e9848188ec208a1c1ede7d9520980a792c",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/candidate-raster-hex-v1-off-repeat2-process-review.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-off-repeat2-process-review.json",
+      "bytes": 812,
+      "sha256": "6191b6fc4042ba7e235563fcd9a88cac1bd02519cfa0198f631a9f679272edfc",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/candidate-raster-hex-v1-off-repeat2-targeted-setup.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-off-repeat2-targeted-setup.json",
+      "bytes": 987,
+      "sha256": "83747a4d59226cc1e01b25a28bb20f0c3c53f19b24a0be914451a4182cbfca91",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/candidate-raster-hex-v1-off-repeat2-targeted.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-off-repeat2-targeted.json",
+      "bytes": 1092,
+      "sha256": "16313d981906c418df547b469819cf285dfad648fd0dba5eee996adb762760f6",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/candidate-raster-hex-v1-off-repeat2-targeted.log",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-off-repeat2-targeted.log",
+      "bytes": 2525,
+      "sha256": "d460b4d818f413317a18ff1908ca989b94a66ed57ab9a033802552e1d437cc0f",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/candidate-raster-hex-v1-one-line.patch",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-one-line.patch",
+      "bytes": 617,
+      "sha256": "3f165ca3fbf8faa30be8429fd3ff712ed5c46d9b086752ec859a079193f8ca41",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/candidate-raster-hex-v1-source-binding.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-source-binding.json",
+      "bytes": 569,
+      "sha256": "29fbba5573239fd28be92c8ec8a59f56ff556bab4ee1a053e5508d0c7e167da0",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/candidate-raster-hex-v1-source-change.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-source-change.json",
+      "bytes": 3614,
+      "sha256": "2e147b5aa6607ce4d215378374d9f20c88dcbb452a7f5b45b335a39614ee052f",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/candidate-raster-hex-v1-source-change.md",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-source-change.md",
+      "bytes": 1747,
+      "sha256": "6cd0991b61f265759558d80ba8e42a7b9d616b076165c1951c16c22c83fcf9a1",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/candidate-raster-hex-v1-source-sha256.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-source-sha256.json",
+      "bytes": 106879,
+      "sha256": "f06615ffe9ae2faaf81ffcae984d82b018307c874755273339f62586f5fbe4ab",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/candidate-raster-hex-v1-streamed-environment-after.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-streamed-environment-after.json",
+      "bytes": 11798,
+      "sha256": "460221878d324e6d11dde72298d31f9f894937ec1c9e37f0295a42b2b7e458de",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/candidate-raster-hex-v1-streamed-environment.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-streamed-environment.json",
+      "bytes": 11792,
+      "sha256": "765ae492e5e9bb7e8449f50e053da0753a2e5313d01504f56de5a967a7832908",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/candidate-raster-hex-v1-streamed-targeted-setup.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-streamed-targeted-setup.json",
+      "bytes": 987,
+      "sha256": "ca4e8621d94a6e96c1b8929cb1630c58070dd36f3b4d9e1c2469b2fc1a2f4d14",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/candidate-raster-hex-v1-streamed-targeted.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-streamed-targeted.json",
+      "bytes": 1093,
+      "sha256": "5cdd75150022b81115472171adf43ed40d605aeaf0751c6fa6da2e3e61d945da",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/candidate-raster-hex-v1-streamed-targeted.log",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-streamed-targeted.log",
+      "bytes": 6594,
+      "sha256": "6e2855e52c151387c802d342d8363b201b8c02fd7d06705e8bc93becebb5bf95",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/candidate-raster-hex-v1-targeted-apks.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-targeted-apks.json",
+      "bytes": 5275,
+      "sha256": "e83f36a6fd3368d1afe9847293ed7a4c9600d5c4691df9bf0b8f05573e4a0286",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/candidate-v2-artifacts.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v2-artifacts.json",
+      "bytes": 1356,
+      "sha256": "6ea7e1e54ef3d100790df426c351fc7b288219a1add2ea296287ae089ae5242a",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v2-backup-cancel-setup.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v2-backup-cancel-setup.json",
+      "bytes": 987,
+      "sha256": "a93484c4c050292a6e646fd0f96e84192b85270baa73ecdbd5ff345819112ec5",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v2-backup-cancel.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v2-backup-cancel.json",
+      "bytes": 820,
+      "sha256": "c59bf321146f45821a699065f2433934e0cdf53a3e0cc6835086fe6073632ff5",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v2-backup-cancel.log",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v2-backup-cancel.log",
+      "bytes": 4644,
+      "sha256": "c61b8c97e4b26cdaeddb719994f00343d556994798962168aeaabf6e43258fa7",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v2-backup-isolation-setup.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v2-backup-isolation-setup.json",
+      "bytes": 987,
+      "sha256": "169d087b775c360c0711de7430172428a0819e012fd83f9ad02b2e6eb1d8e818",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v2-backup-isolation.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v2-backup-isolation.json",
+      "bytes": 688,
+      "sha256": "bb5b71875bd9fdcb7538138c44aeb198e6d2188d5225d55e27597272adfeadc4",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v2-backup-isolation.log",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v2-backup-isolation.log",
+      "bytes": 1359,
+      "sha256": "05cc76633fc44f457c25219a95e5d5e655b1c05e099e41c35dde5c32710a8cb7",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v2-build.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v2-build.json",
+      "bytes": 476,
+      "sha256": "5d2dbef05d6bcc96ade30782f59a40c7bf0307a769d8bbffbd2aaf8718fc4162",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v2-factory-setup.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v2-factory-setup.json",
+      "bytes": 987,
+      "sha256": "b7ffd8beaa9a5d02f6a412491b557ff937aece733b107df428979fd330a6d00f",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v2-factory.log",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v2-factory.log",
+      "bytes": 80,
+      "sha256": "44e3b86cf32d6c103fae8020ddd3842ae261f057951b32cfa7297e42c4ea9c57",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v2-history-collection-setup.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v2-history-collection-setup.json",
+      "bytes": 987,
+      "sha256": "cde54acf2d5a6f42d2c48cea493b5a29947572baa486df3dd65d597affd8f242",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v2-history-collection.log",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v2-history-collection.log",
+      "bytes": 78,
+      "sha256": "6aab4c535d3fd7ab8dac3cc750c6f029c9734ea57ea8d1d2e4197135d6bcdf2a",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v2-history-setup.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v2-history-setup.json",
+      "bytes": 987,
+      "sha256": "8a44d21bec61274bb9d099d6f6089fea74068987a6f1034f943b95ad7e3e2e5c",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v2-history.log",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v2-history.log",
+      "bytes": 1800,
+      "sha256": "71a1cd6ba0b9c5998b3b4da02685c90112a777ba7c4ecff6b3485493d38db1d9",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v2-jvm-and-lint-status.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v2-jvm-and-lint-status.json",
+      "bytes": 354,
+      "sha256": "7fb210fba7c0357ea52d3f2ae950c5e105ab065c8a3a3c77665ea2dbef498939",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v2-native-stroke-setup.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v2-native-stroke-setup.json",
+      "bytes": 987,
+      "sha256": "ac46f3a0a10e6989e3aeaf6a82d86f4cd81111e4e65db031a6e18a40562b9583",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v2-native-stroke.log",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v2-native-stroke.log",
+      "bytes": 609,
+      "sha256": "008c505b5c4d19f9df223f91e2455650008da767d218c26b2b20ca74628b2144",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v2-process-initialization-setup.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v2-process-initialization-setup.json",
+      "bytes": 987,
+      "sha256": "36bcdf15cb00aa79ae1642c7c082c5bace685cc20c655b400574cb71743941fa",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v2-process-initialization.log",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v2-process-initialization.log",
+      "bytes": 1197,
+      "sha256": "cead2c2f62ff5ba0125cd054513a4da19ad84e9764f229c686f7777b03a6ac30",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v2-rapid-search-setup.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v2-rapid-search-setup.json",
+      "bytes": 987,
+      "sha256": "8c0d48380839fbf08035004da745ae5d5366a7e1ab531bb259188bceca6ee4f8",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v2-rapid-search.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v2-rapid-search.json",
+      "bytes": 832,
+      "sha256": "d373ce353a9675418dce3c5d3350957cb2e8523d68954a9dc8e8b73d56b1606b",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v2-rapid-search.log",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v2-rapid-search.log",
+      "bytes": 2191,
+      "sha256": "f1ffdb70187633509a54afd2af91243375859410907514f32ca67dac2c0fb7e3",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v2-reconstruction-provenance.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v2-reconstruction-provenance.json",
+      "bytes": 15811,
+      "sha256": "f3dae06f0100c7e9e0eab31fa6a7c7d954bad8612f84d34187d1f9b69c089636",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v2-reconstruction.patch",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v2-reconstruction.patch",
+      "bytes": 102520,
+      "sha256": "584bc7ad3405c05962b76a1693311ee284eef8aa0692c8a1dd086f861bb4e4d5",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v2-regression-backup-regressions-setup.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v2-regression-backup-regressions-setup.json",
+      "bytes": 987,
+      "sha256": "8b9708bffcc3ae40f0042e76334cb33267f3cc0d361489105f37ec4477f1d63b",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v2-regression-backup-regressions.log",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v2-regression-backup-regressions.log",
+      "bytes": 86,
+      "sha256": "b94e51146e2b3e6f6ae9d27c5f2843c612fed356592764db1e62cc9cb739152f",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v2-regression-header-loading-setup.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v2-regression-header-loading-setup.json",
+      "bytes": 2210,
+      "sha256": "03fc665584bda45242367115db9f42e4accdf0d874cbe82183beeefbee427ed1",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v2-regression-header-loading.log",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v2-regression-header-loading.log",
+      "bytes": 78,
+      "sha256": "cb0534f3d3038ba427a72dbb13bca5e48615517393e4c03e3417e1c27d72dd3d",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v2-regression-history-storage-setup.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v2-regression-history-storage-setup.json",
+      "bytes": 987,
+      "sha256": "162fa7f3ceed37849cabac9b94c95afd239f51f8851c18f931f7053c0c985836",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v2-regression-history-storage.log",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v2-regression-history-storage.log",
+      "bytes": 76,
+      "sha256": "f2b36f37fda9fa050b03d7180ad1f91a253f632363422caec802d0fe9c1508b1",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v2-regression-layer-budget-setup.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v2-regression-layer-budget-setup.json",
+      "bytes": 987,
+      "sha256": "3c3f79f34461cee240098b678875ec628d3960cd9aef3b2b698c63213eeaeca6",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v2-regression-layer-budget.log",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v2-regression-layer-budget.log",
+      "bytes": 967,
+      "sha256": "f7f89a1bdf80cdabf69c3f8b8d7589a4329ca231752d4326ec67d036f9343be6",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v2-regression-library-paging-setup.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v2-regression-library-paging-setup.json",
+      "bytes": 987,
+      "sha256": "7681c321ed30880a8a672bcf1c90c016fe5db38dd804227eb0f15be39df0c77f",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v2-regression-library-paging.log",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v2-regression-library-paging.log",
+      "bytes": 70,
+      "sha256": "6782fd5783e18d434626d5966b0bc574392b0c3a463542a42ef770e99946f7c5",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v2-regression-original-storage-setup.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v2-regression-original-storage-setup.json",
+      "bytes": 987,
+      "sha256": "d52529ae655d46daf69ba9f3d350969159b79cb36daa92a5818f568748e4dbc9",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v2-regression-original-storage.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v2-regression-original-storage.json",
+      "bytes": 708,
+      "sha256": "359416051c53cc7a165d2db69f06648a57ef9e91c9af12e7bc86fc2c248220ab",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v2-regression-original-storage.log",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v2-regression-original-storage.log",
+      "bytes": 4340,
+      "sha256": "b31e3ce7d7b4fac1584105173caa69db25c30e02c40e91e61a0824e9730e1fdc",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v2-regression-results.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v2-regression-results.json",
+      "bytes": 10046,
+      "sha256": "f0ba1b5f505658d04a468b55f4525539f69e1e10aa87f947ffd3f0209dcb0f6e",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v2-regression-search-regressions-setup.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v2-regression-search-regressions-setup.json",
+      "bytes": 987,
+      "sha256": "31cfdb292294c457dc4ade5e4c42fc6e38b39bfb089086d9aa537c3a141628dc",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v2-regression-search-regressions.log",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v2-regression-search-regressions.log",
+      "bytes": 81,
+      "sha256": "11e8a07311c6a62d43b01a7832524fa4de13f962dced577b18c52438d191d7b2",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v2-regression-streamed-dense-original-setup.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v2-regression-streamed-dense-original-setup.json",
+      "bytes": 987,
+      "sha256": "af138b00a32ea8a0019678842d79c99ea6987e2425a3dd6aca19287b8d212792",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v2-regression-streamed-dense-original.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v2-regression-streamed-dense-original.json",
+      "bytes": 832,
+      "sha256": "4d08b26b84df55e8472f044e1c6e4804bbb356a089f1dedd343ceabee0d1d6fa",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v2-regression-streamed-dense-original.log",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v2-regression-streamed-dense-original.log",
+      "bytes": 4661,
+      "sha256": "b2ba96b526a76faa7cac07f397b1c2bf09a993aedac5f6dd5bf5ad8b68c4309d",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v2-regression-streamed-regressions-setup.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v2-regression-streamed-regressions-setup.json",
+      "bytes": 987,
+      "sha256": "03b72215b49b411804fb0bf818822aaac664df10abb0a92f4224fc5f260d679a",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v2-regression-streamed-regressions.log",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v2-regression-streamed-regressions.log",
+      "bytes": 1619,
+      "sha256": "5bfc8e666d4d4ed4f0d9a7b24724014c12e8a2f16235a1d1fb49c1aff1a61db2",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v2-results.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v2-results.json",
+      "bytes": 7251,
+      "sha256": "99b530d0478b3efc27b2335ccfd647e206d84fa6ecfd6cd744115fd1943954a0",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v2-shelf-rename-setup.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v2-shelf-rename-setup.json",
+      "bytes": 2210,
+      "sha256": "d4bfa47d37d15ec4b5b7773db91645279ed277abf50aa520e4566ad953c00d8e",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v2-shelf-rename.log",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v2-shelf-rename.log",
+      "bytes": 69,
+      "sha256": "37e7ccb49357e8d0e2f021b59cf3ac934037f1fe329bbbfd6944097e54c3955a",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v2-signatures.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v2-signatures.json",
+      "bytes": 1481,
+      "sha256": "04884c77d341fbb596b1ba97d4fd552e5d2bb582e61c3f5b023c3e987dd71b0b",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v2-source-sha256.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v2-source-sha256.json",
+      "bytes": 106710,
+      "sha256": "141f13c85e1fac7d71b5623f14650eaff4b2cd11c3e4bcdf5ccbc6e25b3cc0ae",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v3-artifacts.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v3-artifacts.json",
+      "bytes": 1356,
+      "sha256": "d02096d643b73a3970437af8fe0e9428020b123f63da390f33c3960944b8cd19",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v3-build.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v3-build.json",
+      "bytes": 476,
+      "sha256": "91300b26953eeb37b778336d0b7d12e4e8792daa95f126b377c46e57c8c12b7b",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v3-followup-backup-isolation-paused-setup.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v3-followup-backup-isolation-paused-setup.json",
+      "bytes": 987,
+      "sha256": "6686d5f2974e5c822e719f1ae805ed7e6b9cfef5cfa370839b2e3f7208bff1b1",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v3-followup-backup-isolation-paused.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v3-followup-backup-isolation-paused.json",
+      "bytes": 819,
+      "sha256": "b27ab8a8f987e50a83087673d9e646a30a91961ab995febe351a2cba4d81ddc5",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v3-followup-backup-isolation-paused.log",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v3-followup-backup-isolation-paused.log",
+      "bytes": 1457,
+      "sha256": "b8318cdb91554d9bd8daa40390fa17e367bde7f44f981d7b5564680dac0a9f0b",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v3-followup-original-later-corruption-setup.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v3-followup-original-later-corruption-setup.json",
+      "bytes": 987,
+      "sha256": "46de99994e6e4fb4ad6258b4f91372077ca1d383337e7d89365c8682637764ec",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v3-followup-original-later-corruption.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v3-followup-original-later-corruption.json",
+      "bytes": 828,
+      "sha256": "e97e5a4c54664d525b4b4002c30a847c9d3c6b8119134dc742c22e3930be65fe",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v3-followup-original-later-corruption.log",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v3-followup-original-later-corruption.log",
+      "bytes": 3877,
+      "sha256": "59e070dd5e1c3ea83fe1882eeca69981db43f3b654a7be4ca0b0a809a9edc8c7",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v3-followup-results.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v3-followup-results.json",
+      "bytes": 1838,
+      "sha256": "727957320caf14cc4633e0ceb4e424e265f1f63a8855507163bf50f9579b667e",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v3-jvm-and-lint-status.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v3-jvm-and-lint-status.json",
+      "bytes": 354,
+      "sha256": "7fb210fba7c0357ea52d3f2ae950c5e105ab065c8a3a3c77665ea2dbef498939",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v3-performance-artifact-continuity.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v3-performance-artifact-continuity.json",
+      "bytes": 875,
+      "sha256": "b1e5e6f2d6cddb176b9992fe02814ef638a8f5a5f5bb65981882e14d2a974d96",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v3-performance-environment-after.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v3-performance-environment-after.json",
+      "bytes": 11790,
+      "sha256": "5dcc16a675ff22fde0d4a0a3665af9176d35e3674d62a5421dc80fcdef9e17ef",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v3-performance-environment.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v3-performance-environment.json",
+      "bytes": 11784,
+      "sha256": "b61609b452231643a8cd8af6d8505ecda3ddb64c9aa28ad42e31276da4837517",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v3-performance-history-probe-setup.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v3-performance-history-probe-setup.json",
+      "bytes": 987,
+      "sha256": "4e108e9fc3ca4703f68762d86f6a501efd28c5f50d889e38b67a3d42e89a464c",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v3-performance-history-probe.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v3-performance-history-probe.json",
+      "bytes": 704,
+      "sha256": "5baceb5d6be08570a41a30b44735ab0a67b1c07ceca5badbc5bec26c9a4d8523",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v3-performance-history-probe.log",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v3-performance-history-probe.log",
+      "bytes": 1320,
+      "sha256": "b94eed466be0210dd3a8b6b89238730277c3f1474ee3f08a60ee4a337244005d",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v3-performance-library-probe-setup.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v3-performance-library-probe-setup.json",
+      "bytes": 987,
+      "sha256": "10888aff7e57d1f81ac7ad870495d7afc26fa190e9c0660ce3c845527d757a60",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v3-performance-library-probe.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v3-performance-library-probe.json",
+      "bytes": 697,
+      "sha256": "a3bd7683cb7d7a79ad455ab9fb208b9c3ceb2550a86401309717f0cfb0c6efb0",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v3-performance-library-probe.log",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v3-performance-library-probe.log",
+      "bytes": 10950,
+      "sha256": "ee33451e1a7f7a5c49b3e5dd3536d23e7905fc081fb56a8ef69576fbc65c13d4",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v3-performance-raster-probe-setup.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v3-performance-raster-probe-setup.json",
+      "bytes": 987,
+      "sha256": "c738adcf284edc87da1187a6deb04a077dba4dd03ff1ef902d0c9e498ebc0151",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v3-performance-raster-probe.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v3-performance-raster-probe.json",
+      "bytes": 688,
+      "sha256": "4ae71612d598a28e47a33de058dcc187a9de9f6b1c2bd4accb74866404e9d639",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v3-performance-raster-probe.log",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v3-performance-raster-probe.log",
+      "bytes": 5396,
+      "sha256": "45ed12a26645157d6f2e4ae0ec8f20d422e6953ed71780e6d7daaecba8ab9f19",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v3-performance-results.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v3-performance-results.json",
+      "bytes": 3102,
+      "sha256": "44a55634b51569be12196618ca860b958742c606e9d152b1ed462e28cdc15e09",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v3-performance-tile-local-setup.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v3-performance-tile-local-setup.json",
+      "bytes": 987,
+      "sha256": "87f3f8129b9f98e7ae6cffdc8bcae74875bde089e7fc9be5049085ee6d701040",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v3-performance-tile-local.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v3-performance-tile-local.json",
+      "bytes": 682,
+      "sha256": "74850c6f5b352ce65d704c25b7bf45efa38657eb53757d3bb6f40141221cf676",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v3-performance-tile-local.log",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v3-performance-tile-local.log",
+      "bytes": 1309,
+      "sha256": "034f030c93ed63ca363b97af4c3ae8138150b3eafee23743263823fad88e8b85",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v3-signatures.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v3-signatures.json",
+      "bytes": 1481,
+      "sha256": "04884c77d341fbb596b1ba97d4fd552e5d2bb582e61c3f5b023c3e987dd71b0b",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v3-source-continuity.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v3-source-continuity.json",
+      "bytes": 18613,
+      "sha256": "1215a26726e08e1c1f418c0a6fefb19af5b48c21708ac0e3f9360627b47139ca",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v3-source-continuity.md",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v3-source-continuity.md",
+      "bytes": 3508,
+      "sha256": "ac7837c73e6256b67b051e46b4e7d50689209f9de6d67f60a4aa0002f0fa44db",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v3-source-sha256.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v3-source-sha256.json",
+      "bytes": 106710,
+      "sha256": "c52cbf318ce52a660d7040ad75f2a3c3c1828027c6f61633bf886deae8a214f7",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-apk-installation.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-apk-installation.json",
+      "bytes": 2374,
+      "sha256": "d6541c7a3e962adabfa42ceb7252d009e554dd16d6feb94df1c1fac6dae2a889",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-artifacts.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-artifacts.json",
+      "bytes": 1356,
+      "sha256": "84ce38bb2acacb53e027e7f56a43253e717bd9e53ed47a547d3acfa7e5b79851",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-build.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-build.json",
+      "bytes": 476,
+      "sha256": "d87398633fd15b53e83db3b55c9d6b13ff8e2bc8628319150fe1ec63ace4f29f",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-build.log",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-build.log",
+      "bytes": 36723,
+      "sha256": "ac73bae67001943ccf491642e2364ef501c70b06cec630bded8b309e2f217129",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-evidence-closure-check.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-evidence-closure-check.json",
+      "bytes": 26194,
+      "sha256": "5505124b9720753e9b1caa2330a6f30d2bd91f56691dbaca50b6775e56660fb5",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-evidence-closure-check.md",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-evidence-closure-check.md",
+      "bytes": 2143,
+      "sha256": "be88d5e4091f4df758c6d37c063fc35e34cacfc8c1b9331480c7bc433ed77d72",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-finalrestore-apk-installation.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-finalrestore-apk-installation.json",
+      "bytes": 2374,
+      "sha256": "a20e1678a56bc89a89ed21022ab987bf43196792ddc05a1d594340fec59b7366",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-jvm-and-lint-status.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-jvm-and-lint-status.json",
+      "bytes": 354,
+      "sha256": "7fb210fba7c0357ea52d3f2ae950c5e105ab065c8a3a3c77665ea2dbef498939",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-library-review.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-library-review.json",
+      "bytes": 16841,
+      "sha256": "096a72fea12ff55b4e57aeacd5bb4a9bad770cde2f130a8784c07888af0a28c0",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-library-review.md",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-library-review.md",
+      "bytes": 5763,
+      "sha256": "7947907202d33656cd7960d3bfd6692d74f8bfdae68cf83cddd647e651a1f5fa",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-original-storage-review.md",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-original-storage-review.md",
+      "bytes": 4689,
+      "sha256": "4fed19daf01a1413f58c83202fd28c58667063ee96c9c92aef705cda4de47717",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-performance-artifact-continuity.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-performance-artifact-continuity.json",
+      "bytes": 875,
+      "sha256": "a917e236ce3e45472aa204e50a351bf8cb15ad6ff46b7cac82d42ac041f228a0",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-performance-environment-after.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-performance-environment-after.json",
+      "bytes": 11790,
+      "sha256": "9dbbe1b3b8194253ba44dfab30cd3b5fbb077a14b1e700c37a02dd25b252fd8e",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-performance-environment.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-performance-environment.json",
+      "bytes": 11784,
+      "sha256": "841602a7ea1bf7444ce28a8faf6b695f483a4f94d9f75a09970432f945ac3d39",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-performance-history-probe-setup.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-performance-history-probe-setup.json",
+      "bytes": 987,
+      "sha256": "dd6dea371c14ed1ceb39cb8f8f0c1d5faeef8c680c7c6a1a54fd3f363f6f2b7c",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-performance-history-probe.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-performance-history-probe.json",
+      "bytes": 705,
+      "sha256": "cf79086ca4eb1e12e8229c810710663e15c28d137ec16bfc42b0a97275081bc6",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-performance-history-probe.log",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-performance-history-probe.log",
+      "bytes": 1327,
+      "sha256": "f3d471a977144c3d5402668036efead72617c5193104e96a42114bef26d3da49",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-performance-library-probe-setup.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-performance-library-probe-setup.json",
+      "bytes": 987,
+      "sha256": "b0b6da66a03ff4874c7a5a45627d072600d8a74b5835bd0d97e5856fe7036285",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-performance-library-probe.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-performance-library-probe.json",
+      "bytes": 696,
+      "sha256": "2e24cf1ee7c3a1756cd7694560da50d42d575b2af51c670182a4da9ab195d110",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-performance-library-probe.log",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-performance-library-probe.log",
+      "bytes": 10609,
+      "sha256": "3ff495eec29fb24b8da80c881689c0aaf19c7f4173fcd049f6230f17b4d5cc33",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-performance-raster-probe-setup.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-performance-raster-probe-setup.json",
+      "bytes": 987,
+      "sha256": "5f3cf614a458b823951e255d7c36314128f0e5d6742a7d12942cbec867bdfefa",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-performance-raster-probe.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-performance-raster-probe.json",
+      "bytes": 688,
+      "sha256": "df42e0bbf6a113224c95a244449fae3b091fd3e1a627449ea0afb5043bde2ae4",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-performance-raster-probe.log",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-performance-raster-probe.log",
+      "bytes": 5382,
+      "sha256": "60875b751b7adda89221fcaaffc92ef07dc978e3faf95cf874cd2d0ce1c9148c",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-performance-results.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-performance-results.json",
+      "bytes": 3102,
+      "sha256": "f8627e7e31ee969008846fed2350e23ccb8ae76674b3c2540de56e504cf14888",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-performance-tile-local-setup.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-performance-tile-local-setup.json",
+      "bytes": 987,
+      "sha256": "192e561e44becb3c1cb84ff2ee42bf5e8faef6130ecede52d24cf1344135e138",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-performance-tile-local.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-performance-tile-local.json",
+      "bytes": 682,
+      "sha256": "f0de25b9617712f3dfd64c537688c781d88236d49e72f495cc4c080c4f8f1829",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-performance-tile-local.log",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-performance-tile-local.log",
+      "bytes": 1313,
+      "sha256": "fdfa2736aab5b05f97a8dacd090ff7754efe977d91472ec5e50aef46f246f1d8",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-raster-repeat1-environment-after.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-raster-repeat1-environment-after.json",
+      "bytes": 11793,
+      "sha256": "b906da7ef7dfccb97791236295e87766e4d94ee3b82747c2d0a7511dc967cd63",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-raster-repeat1-environment.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-raster-repeat1-environment.json",
+      "bytes": 11787,
+      "sha256": "c13e61d0ad7b67fbdc2a07101d1be367a9411cbf5e9000b55a9049d8eb03c5ef",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-raster-repeat1-results.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-raster-repeat1-results.json",
+      "bytes": 769,
+      "sha256": "c4e9c1221dfd8079bf2e8fd3971ba4fbec14d9ac9be3f8e611a3a539e601b711",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-raster-repeat1-tile-local-setup.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-raster-repeat1-tile-local-setup.json",
+      "bytes": 987,
+      "sha256": "b1aead6377b4818821071b97a2993c60a7355f69d05b2dd76e9628bfbec46be5",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-raster-repeat1-tile-local.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-raster-repeat1-tile-local.json",
+      "bytes": 686,
+      "sha256": "4d7ef10674d5081d69d01b24262cac1df6ee25242f575019efe9a2673ea181ee",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-raster-repeat1-tile-local.log",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-raster-repeat1-tile-local.log",
+      "bytes": 1305,
+      "sha256": "ad44d83b74ae7621cee7380e81e8a4fc708c616c764773f8d27884e92cc53b51",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-raster-repeat2-apk-installation.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-raster-repeat2-apk-installation.json",
+      "bytes": 2374,
+      "sha256": "4ebcc699d2216e2d0048ede16e1ccc680ad7d4c4f90717e73c0ba03962783c5f",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-raster-repeat2-environment-after.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-raster-repeat2-environment-after.json",
+      "bytes": 11793,
+      "sha256": "03e9418fd3e4457dfb3c9e67fc9f2046ee661dc2dbf2ade20b6da77a4903245f",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-raster-repeat2-environment.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-raster-repeat2-environment.json",
+      "bytes": 11787,
+      "sha256": "ff63cd42f150e3c80c6b47a079b7572d2e1b533ebbc1555f22b88702fa257ed1",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-raster-repeat2-results.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-raster-repeat2-results.json",
+      "bytes": 769,
+      "sha256": "b91abc6f42014fdeadc380bfcd1dbbeafa6b94deb9b668f2bf7469ea53f274c3",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-raster-repeat2-tile-local-setup.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-raster-repeat2-tile-local-setup.json",
+      "bytes": 987,
+      "sha256": "3bc4a0362c1719f32675e03ed073a700e8cb637a1aa99d97ff50a22c6bc8c48d",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-raster-repeat2-tile-local.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-raster-repeat2-tile-local.json",
+      "bytes": 686,
+      "sha256": "cec0409d6835f9e4721f90d39dbc69ee6b8cc11212431358563f4261af067768",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-raster-repeat2-tile-local.log",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-raster-repeat2-tile-local.log",
+      "bytes": 1304,
+      "sha256": "c7de9200e9c88db6ff4dc3e4ee0a24243b439237873a27cef89e1cf310b5ca4d",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-raster-review.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-raster-review.json",
+      "bytes": 17869,
+      "sha256": "6a6f8b5f8fe15212b32a5ca9171b105c2cd55229b641f85ac983b8043277d465",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-raster-review.md",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-raster-review.md",
+      "bytes": 7258,
+      "sha256": "e76081f6559f3e3a8e28fe54908359f08df68ef787805deefd4cad21a043925e",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-reconstruction-matches.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-reconstruction-matches.json",
+      "bytes": 249906,
+      "sha256": "1d4d7fde14bfdf5af7b1b3d9917ea7885969ac667ce3c1c83d8f203938bb45be",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-reconstruction-provenance.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-reconstruction-provenance.json",
+      "bytes": 15738,
+      "sha256": "baf182ea8bcfae5c5a697b75d8a8dbf0ea690ed099030736b02eb17149820ca5",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-reconstruction.patch",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-reconstruction.patch",
+      "bytes": 128224,
+      "sha256": "4c5cbb21e327d89578731f03f5c63167aa14b0aeb6c6335216316a26e1bb87a9",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-signatures.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-signatures.json",
+      "bytes": 1481,
+      "sha256": "04884c77d341fbb596b1ba97d4fd552e5d2bb582e61c3f5b023c3e987dd71b0b",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-source-continuity.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-source-continuity.json",
+      "bytes": 26149,
+      "sha256": "66b6e286fadd6811a03c95736083624720d7dc29d417b63e77898096b6cf9629",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-source-continuity.md",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-source-continuity.md",
+      "bytes": 2661,
+      "sha256": "c98b5823067150223a2312d5fc1b9225c9d275ee4763ce21a9eb5287f912e153",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-source-sha256.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-source-sha256.json",
+      "bytes": 106879,
+      "sha256": "8285c54019d0a4409a6dbf6f5d36e87298b5be9b6d47f93801ea9123bb7d859f",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-validation-index-preparation-setup.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-validation-index-preparation-setup.json",
+      "bytes": 987,
+      "sha256": "2991e53661511a48bb45519d3ea34525937a5ca0fd6e3283112c7fbdada1f288",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-validation-index-preparation.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-validation-index-preparation.json",
+      "bytes": 708,
+      "sha256": "213dddcca941999b1d5c26fb38c7643c5f1f314c6f99da32a7f4b117538a5b3b",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-validation-index-preparation.log",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-validation-index-preparation.log",
+      "bytes": 93,
+      "sha256": "7367bcb15893181383b0929cbf9ba5cf1ebf2aba02b65d4575c5c991af68b242",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-validation-original-storage-setup.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-validation-original-storage-setup.json",
+      "bytes": 987,
+      "sha256": "28d1a190afe5a921a6e52fe146d1a81912434bd666fad1de8f578954b2fdb35e",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-validation-original-storage.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-validation-original-storage.json",
+      "bytes": 705,
+      "sha256": "052028294103e837fedc19609f10f7b307e4d8c55cc7499381ed09b12b4ba4a4",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-validation-original-storage.log",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-validation-original-storage.log",
+      "bytes": 719,
+      "sha256": "b7a8c7c2aba3072fb61502f1019b35a894306fee992914ac6ce1c1cc1582fd20",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-validation-plan.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-validation-plan.json",
+      "bytes": 1152,
+      "sha256": "a47267b57545617c9bf73fa7f71ebf3f26384c2a4bb5389fb959ea0968a239ca",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-validation-rapid-search-setup.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-validation-rapid-search-setup.json",
+      "bytes": 987,
+      "sha256": "46688d0cd35eabcaee2f975ddfb88751e4c9417994e395b8c5be3d97b26ba595",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-validation-rapid-search.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-validation-rapid-search.json",
+      "bytes": 843,
+      "sha256": "4c2ef51c0b14d6056113fac8d289ed62c19d88f09d5e6e306aaf5ae5be5ee967",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-validation-rapid-search.log",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-validation-rapid-search.log",
+      "bytes": 2439,
+      "sha256": "9a9195bc98cbbcb9cc4672c17f022fb431dc122d46f5793e06dc78f66eedef69",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-validation-results.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-validation-results.json",
+      "bytes": 4266,
+      "sha256": "49df2babf5307c2f24bc4190ac537365fc1dbc603070cc7fb205786a4f0c9e22",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-validation-search-regressions-setup.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-validation-search-regressions-setup.json",
+      "bytes": 987,
+      "sha256": "026dd820752bc869d69f9db497a804bee73c2c799de2a0562e7c246ca88735c2",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-validation-search-regressions.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-validation-search-regressions.json",
+      "bytes": 1664,
+      "sha256": "6382758e5b4dd679d32e52290067f0f50cbc9702890d06f01036e7c691cbc0db",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-validation-search-regressions.log",
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-validation-search-regressions.log",
+      "bytes": 82,
+      "sha256": "43caf22f149f4c557cf18217cf2334cd15a038256aebc539e5a025c28b0b6a12",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/ci-environment-review.md",
+      "source": "/workspace/scratch/pr20-closure-evidence/ci-environment-review.md",
+      "bytes": 9878,
+      "sha256": "aa355bae733db8835b25cb16ef6faf3fc4fc958cffec43a98d81233f3af1c577",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/closure-curated-manifest-v4-completed.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/closure-curated-manifest-v4-completed.json",
+      "bytes": 87293,
+      "sha256": "f030df27b21167f00c0b9de13c23cdc868016477eb328e998c6297080eb7033d",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/closure-curated-manifest-v4-stage-hold.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/closure-curated-manifest-v4-stage-hold.json",
+      "bytes": 97666,
+      "sha256": "4d6f332f6dc35e7fe06dd6367a4fd26bbf3025827bd78af1399edcd1fc100d6a",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/closure-curation-extension-baseline-build-history.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/closure-curation-extension-baseline-build-history.json",
+      "bytes": 12484,
+      "sha256": "ab54695775201439ed570da6c580a868542e250a0fff8f0860843b6d660f5481",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/closure-curation-extension-baseline-build-history.md",
+      "source": "/workspace/scratch/pr20-closure-evidence/closure-curation-extension-baseline-build-history.md",
+      "bytes": 1996,
+      "sha256": "0307ce2c5a31fa01456fb35e5bbf0876387e327c62798855228707504c91dcc8",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/closure-evidence-curation-v4-completed.md",
+      "source": "/workspace/scratch/pr20-closure-evidence/closure-evidence-curation-v4-completed.md",
+      "bytes": 1795,
+      "sha256": "32e3c1d156e5802c4d03eadb8e467b5dd1c56dc84e0cd3d5b60bc9e0057df4fe",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/closure-evidence-privacy-review-v4-completed.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/closure-evidence-privacy-review-v4-completed.json",
+      "bytes": 77533,
+      "sha256": "e92da032c9bd24058876e48edf90f0aba63cb418f59a1259edffd678c7da6ee9",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/closure-privacy-extension-baseline-build-history.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/closure-privacy-extension-baseline-build-history.json",
+      "bytes": 4250,
+      "sha256": "653c1956cb6236e0c10903659772770a129254b28b093fba9b92e1a216859f01",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/closure-privacy-review-v4-stage-hold.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/closure-privacy-review-v4-stage-hold.json",
+      "bytes": 97152,
+      "sha256": "e35f66f33edd4f667981e4360965fd60ad5365b23c102f9c0625556e21bc63bb",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/closure-review-checklist-v2.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/closure-review-checklist-v2.json",
+      "bytes": 25179,
+      "sha256": "bbfa1a0335c15d52b8862d60706f414f4c6e9c2ac72b251fc821cb9be1bff74e",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/closure-source-evidence-v4-stage-hold.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/closure-source-evidence-v4-stage-hold.json",
+      "bytes": 59484,
+      "sha256": "91ef41fa96e83bbe086c74c82060b78f68635de4f8a3068a1180cdc4a7524a12",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/closure-source-evidence-v4-stage-hold.md",
+      "source": "/workspace/scratch/pr20-closure-evidence/closure-source-evidence-v4-stage-hold.md",
+      "bytes": 3179,
+      "sha256": "07d7a429e08940e44c25b62c0b7d515eb092eeeb4d819882f5b288f713a1f1dd",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/diagnostic-source-sha256.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/diagnostic-source-sha256.json",
+      "bytes": 105851,
+      "sha256": "e3190c306307cf220c8f7e193f93446c4c52f9c87b1552ceec822935f7f1c75b",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/diagnostic-v1-artifacts.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/diagnostic-v1-artifacts.json",
+      "bytes": 1356,
+      "sha256": "7b54aaf32b4f9c734a8723e796686021f2166233dee7448a696438dd365c844f",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/diagnostic-v1-assessment.md",
+      "source": "/workspace/scratch/pr20-closure-evidence/diagnostic-v1-assessment.md",
+      "bytes": 20311,
+      "sha256": "433376a4c068577d5e7868b1a33d508a6148225e69d9fbb98360d44ba8709d8f",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/diagnostic-v1-backup-cancel-setup.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/diagnostic-v1-backup-cancel-setup.json",
+      "bytes": 987,
+      "sha256": "57a3e97ab7c9dea55a6bfc95830d1003cd8b71856549d55c48416e7d6990f13a",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/diagnostic-v1-backup-cancel.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/diagnostic-v1-backup-cancel.json",
+      "bytes": 821,
+      "sha256": "bf6bf430a567b3f9737b41e389a0a7d5ae9f906d1c183f76ed7eea939dd840b6",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/diagnostic-v1-backup-cancel.log",
+      "source": "/workspace/scratch/pr20-closure-evidence/diagnostic-v1-backup-cancel.log",
+      "bytes": 4645,
+      "sha256": "1426e7ca58b771117dac93a3769f0c670b7a47c025ad3593f8ae7271d5870982",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/diagnostic-v1-history-setup.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/diagnostic-v1-history-setup.json",
+      "bytes": 987,
+      "sha256": "845561c4b903a4c9174a16c610a4e9a31d44743f36239a7efdc987b442d3d4c0",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/diagnostic-v1-history.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/diagnostic-v1-history.json",
+      "bytes": 682,
+      "sha256": "664be798274268f03c40c5d91133450eaf67b248318a474724adaa0a89aeb4d4",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/diagnostic-v1-history.log",
+      "source": "/workspace/scratch/pr20-closure-evidence/diagnostic-v1-history.log",
+      "bytes": 1624,
+      "sha256": "3decdacec0fe8ed53fca2ccd3f1a883028351f5535bd3293f897011e069e6187",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/diagnostic-v1-large-frame-setup.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/diagnostic-v1-large-frame-setup.json",
+      "bytes": 987,
+      "sha256": "4f6fff02cde84a52c3a942bf26781a97d4987baac035c6f734701eed6c28929e",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/diagnostic-v1-large-frame.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/diagnostic-v1-large-frame.json",
+      "bytes": 822,
+      "sha256": "577b78a5b9b6bee590169b40df4e562bbda190dbe8b8864f127bd355a610d95c",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/diagnostic-v1-large-frame.log",
+      "source": "/workspace/scratch/pr20-closure-evidence/diagnostic-v1-large-frame.log",
+      "bytes": 4564,
+      "sha256": "5b6ee97241761e6d431ea4918c535888f48da953691326e93af45cd834bbbe72",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/diagnostic-v1-rapid-search-setup.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/diagnostic-v1-rapid-search-setup.json",
+      "bytes": 987,
+      "sha256": "fe576a644403a054f00ca583be597008970729b4ad8559acf7bd682bc0aa264d",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/diagnostic-v1-rapid-search.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/diagnostic-v1-rapid-search.json",
+      "bytes": 834,
+      "sha256": "5005cd99826d422d38f1fffb468b5ce7ff23a28a132341dc0fe3ed4b80b4fe47",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/diagnostic-v1-rapid-search.log",
+      "source": "/workspace/scratch/pr20-closure-evidence/diagnostic-v1-rapid-search.log",
+      "bytes": 1676,
+      "sha256": "7a3700f541c51a3a65a53b029ddaca16790f5ca0cce9c3ff648a585f8a069f84",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/diagnostic-v1-reconstruction-provenance.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/diagnostic-v1-reconstruction-provenance.json",
+      "bytes": 8301,
+      "sha256": "92a4b73d532934c432ed6de3da7e8bd2126607f24db42c3b7ef9e369888844a0",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/diagnostic-v1-reconstruction.patch",
+      "source": "/workspace/scratch/pr20-closure-evidence/diagnostic-v1-reconstruction.patch",
+      "bytes": 61642,
+      "sha256": "fa8aa24faeb7d12a9ae9dca1f2dcd982551eaa4090056b8a9bca9e57b7a2a0cd",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/diagnostic-v1-results.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/diagnostic-v1-results.json",
+      "bytes": 6123,
+      "sha256": "ef0e6eb8d31246ad3fc9e099015311c2166f3fca391ed9794906620bdbb10554",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/diagnostic-v1-shelf-rename-setup.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/diagnostic-v1-shelf-rename-setup.json",
+      "bytes": 2210,
+      "sha256": "d47fe1810e989b1828561fc5e91d1e89f0a6b15066fbb9843717ed2d9cc50874",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/diagnostic-v1-shelf-rename.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/diagnostic-v1-shelf-rename.json",
+      "bytes": 762,
+      "sha256": "90f74b4710c62244aad20a3833418aece20e50575387f493100693158e634ead",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/diagnostic-v1-shelf-rename.log",
+      "source": "/workspace/scratch/pr20-closure-evidence/diagnostic-v1-shelf-rename.log",
+      "bytes": 3247,
+      "sha256": "a114d8b63968b531c25cfe40d4a7e61e96a7a927bc8059e99509ace2eaed5b85",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/diagnostic-v1-signatures.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/diagnostic-v1-signatures.json",
+      "bytes": 1481,
+      "sha256": "04884c77d341fbb596b1ba97d4fd552e5d2bb582e61c3f5b023c3e987dd71b0b",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/final-committed-source-binding.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/final-committed-source-binding.json",
+      "bytes": 1301,
+      "sha256": "e509936ae55a855c49ce297aa77a62e96c3e411c9c10897366dfb49a5e8100ec",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/final-paired-history-review.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/final-paired-history-review.json",
+      "bytes": 34962,
+      "sha256": "03d1b8193d55f63174c640849949a8dd41fc1aacf1f08cc7732cf79a57a3eacb",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/final-paired-history-review.md",
+      "source": "/workspace/scratch/pr20-closure-evidence/final-paired-history-review.md",
+      "bytes": 8742,
+      "sha256": "ba8a3ad3d2759f361200d4ed8a46cf9981ba95af3e8b524c43b13ad8725aa2bf",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/final-paired-library-review.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/final-paired-library-review.json",
+      "bytes": 50132,
+      "sha256": "3bf63b6e1062663797a5fa1869c38dd2a5f1f08a50a46e104dcbd307f2fa44e6",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/final-paired-library-review.md",
+      "source": "/workspace/scratch/pr20-closure-evidence/final-paired-library-review.md",
+      "bytes": 10780,
+      "sha256": "89c61679995bcd6789ba51fd74e6d5020f414b5ab330f2c4a96797f6f722857b",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/final-paired-raster-review.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/final-paired-raster-review.json",
+      "bytes": 49637,
+      "sha256": "be510d00aa1338c957c65b69c91e7856c80cc8069c6dfb32d742cc0e064b93ab",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/final-paired-raster-review.md",
+      "source": "/workspace/scratch/pr20-closure-evidence/final-paired-raster-review.md",
+      "bytes": 9146,
+      "sha256": "a08f45801be1781c886148ac1d35cca05421f75a71a4a1298aa6a27e863c81db",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/final-publication-doc-review.md",
+      "source": "/workspace/scratch/pr20-closure-evidence/final-publication-doc-review.md",
+      "bytes": 5149,
+      "sha256": "a64b6fd2394006a1ff4fbbda64798370c9502b65f4c220f5658f214ad57bb7e2",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/final-raster-acceptance-review.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/final-raster-acceptance-review.json",
+      "bytes": 18097,
+      "sha256": "e20e6871bd38be389359b4dd909402f5024a9bbb734b6da9e0751d6cb20c15f9",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/final-raster-acceptance-review.md",
+      "source": "/workspace/scratch/pr20-closure-evidence/final-raster-acceptance-review.md",
+      "bytes": 4738,
+      "sha256": "aa10e82ce828cef71f8cfd3e89d484c465c5054a3d963dc554b36184ee2b8436",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/final-readonly-delivery-checks.md",
+      "source": "/workspace/scratch/pr20-closure-evidence/final-readonly-delivery-checks.md",
+      "bytes": 3315,
+      "sha256": "78bef6ac4ba679648fe8abff9db1b4ef52af49e0ca0130b188921e182d84f999",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/final-source-commits.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/final-source-commits.json",
+      "bytes": 3399,
+      "sha256": "8cdc222006dbc34eb44fea03c325df034c35f20c60f1df72a190c65d1f6b9087",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/final-v4-index-source-review.md",
+      "source": "/workspace/scratch/pr20-closure-evidence/final-v4-index-source-review.md",
+      "bytes": 3869,
+      "sha256": "0e1d1d087d1aad3d34efe5a3a8498eaafbcd2472f14ec40f250ed648b4fe35c0",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/paired-performance-summary-new-format.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/paired-performance-summary-new-format.json",
+      "bytes": 84201,
+      "sha256": "e3da6da6cbcbc3a1f64764de788a72fd54edaff8239dc800e81b993a01ee608e",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/performance-environment-recorder-review.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/performance-environment-recorder-review.json",
+      "bytes": 2597,
+      "sha256": "c9fabe23ad722d6b664c0b01f17f259a20774e527abef15b8652feb578c44d14",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/performance-fixture-comparability.md",
+      "source": "/workspace/scratch/pr20-closure-evidence/performance-fixture-comparability.md",
+      "bytes": 6152,
+      "sha256": "be84f55d4ac3d3d06e3dc878b9474be7fab9dd7fece37dde5d003aeb371d1c51",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/performance-plan.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/performance-plan.json",
+      "bytes": 560,
+      "sha256": "ebb04fa63547a08ff1cfa4b72101ae1aad107f19e1473911e9c5a400e98367fe",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/performance-summary-input.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/performance-summary-input.json",
+      "bytes": 1328,
+      "sha256": "046e2aab719e42d60a1a92310079143dfbf8c9c4846147abe9ac86c118885d14",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/performance-summary-usage.md",
+      "source": "/workspace/scratch/pr20-closure-evidence/performance-summary-usage.md",
+      "bytes": 5843,
+      "sha256": "215c51fc9a58e2fcdda2293b193cfc670092e9a535deb40587613be61505fe6b",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "evidence/raster-diagnostic-v2-apk-preservation.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/raster-diagnostic-v2-apk-preservation.json",
+      "bytes": 1456,
+      "sha256": "14be73df8d868c042a5aa56087aaf96b861081290c66da7617948ffae4200c2b",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/raster-diagnostic-v2-independent-review.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/raster-diagnostic-v2-independent-review.json",
+      "bytes": 7557,
+      "sha256": "e7f5aba9c91f0b654a34092d12bf12f84e8dc745ead5554e1851a90008a63d5b",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/raster-diagnostic-v2-independent-review.md",
+      "source": "/workspace/scratch/pr20-closure-evidence/raster-diagnostic-v2-independent-review.md",
+      "bytes": 3594,
+      "sha256": "ca95187fe6deb5a9b865c4dd96a68ca69cb837242d010d81aaf16a649009b20f",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/raster-diagnostic-v2-source-chain.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/raster-diagnostic-v2-source-chain.json",
+      "bytes": 1781,
+      "sha256": "97b62dcd1dd7dcbebefe4816c72d005b7f26e035ed80ce11568e9a67eb565aeb",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/raster-final-committed-source-binding.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/raster-final-committed-source-binding.json",
+      "bytes": 1482,
+      "sha256": "ce646cda43986e7aa25457b37f5e0815da5aae83da0925e490eb996bbef322e1",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/raster-final-delivery-audit.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/raster-final-delivery-audit.json",
+      "bytes": 20312,
+      "sha256": "962d409eec253e16ec2c59872d508d12a031a9a38a660d6651a2bc2e55778a9f",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/raster-final-delivery-complete-plan.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/raster-final-delivery-complete-plan.json",
+      "bytes": 52820,
+      "sha256": "468453f62d7ecfdcd4215720bfef031f1f1ba79fdc3e41d8a2162c79e369856b",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/raster-final-delivery-curation-plan.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/raster-final-delivery-curation-plan.json",
+      "bytes": 51389,
+      "sha256": "3d3dc1e95f0c57933868659772c4e805efcba176a0164cd3ef730a73aa750bd3",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/raster-final-delivery-manifest.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/raster-final-delivery-manifest.json",
+      "bytes": 138557,
+      "sha256": "4cc5554009801b77d86e04e108c183f1faac3410221f7459be55fba9c4a23711",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/raster-final-delivery-privacy.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/raster-final-delivery-privacy.json",
+      "bytes": 138187,
+      "sha256": "41bc0e280ed85a6f78181fdb077c6a48944f3d99078d68eaf938ab80072cec9d",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/raster-final-source-and-artifact-audit.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/raster-final-source-and-artifact-audit.json",
+      "bytes": 3638,
+      "sha256": "bbd501e0f78a625503bcab353cbe83183fa0c269bf3cedb30010ab34f032f5b5",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/raster-followup-curation-plan-completed-native.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/raster-followup-curation-plan-completed-native.json",
+      "bytes": 47160,
+      "sha256": "fec3f0ef860c06d8bf4a522186788fd8ae1cb4166627c19d7af8c758a322bcd1",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/raster-followup-native-completed-audit.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/raster-followup-native-completed-audit.json",
+      "bytes": 19526,
+      "sha256": "3f726d8225b96c1e701b44939448399cbd9dec97b0dce56ddfc3bd57cb359e40",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/raster-followup-native-completed-manifest.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/raster-followup-native-completed-manifest.json",
+      "bytes": 134052,
+      "sha256": "f86cf615dd11465c717394de592481d3e027619752a3fbd77cbc6f097b5cf041",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/raster-followup-native-completed-privacy.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/raster-followup-native-completed-privacy.json",
+      "bytes": 133433,
+      "sha256": "55c21ee329bdc64d8c3ff235b1ccd0f86ff3c0d036138959bae0e87b603f66cb",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/raster-hex-v1-host-compatibility.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/raster-hex-v1-host-compatibility.json",
+      "bytes": 3219,
+      "sha256": "928b470048f0827f8c1416aeb51c668ed360e46b7208f50fe768b76181efb505",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/raster-hex-v1-host-compatibility.log",
+      "source": "/workspace/scratch/pr20-closure-evidence/raster-hex-v1-host-compatibility.log",
+      "bytes": 378,
+      "sha256": "ec10a39171219647ac01ad8b616932d705c964f57f94f4e171099cd592f86cf0",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/raster-hex-v1-off-repeat2-failure-review.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/raster-hex-v1-off-repeat2-failure-review.json",
+      "bytes": 6233,
+      "sha256": "a8c28d69be163bf932afb0e36e59458905cd8d307ec06e00d40e45f05ac603c6",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/raster-hex-v1-off-repeat2-failure-review.md",
+      "source": "/workspace/scratch/pr20-closure-evidence/raster-hex-v1-off-repeat2-failure-review.md",
+      "bytes": 2869,
+      "sha256": "c48e34ecd49944b5584ccd1e110199f3c0316c6e6ef985d46b17ea727013d265",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/raster-metadata-diagnostic-plan.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/raster-metadata-diagnostic-plan.json",
+      "bytes": 5618,
+      "sha256": "4fdc271ffff675796f0680878d5b3b431063f8408d5b681b42e950bdc8ac983e",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/raster-metadata-diagnostic-v2-paired-review.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/raster-metadata-diagnostic-v2-paired-review.json",
+      "bytes": 44176,
+      "sha256": "617b1455ce0fc2a5dfad9d5892b350dff6a025c727fe750048de7a1ec37cd1b5",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/raster-metadata-diagnostic-v2-paired-review.md",
+      "source": "/workspace/scratch/pr20-closure-evidence/raster-metadata-diagnostic-v2-paired-review.md",
+      "bytes": 6565,
+      "sha256": "a01333f938a3fede6e7fb0d7208b64be4806a1e607ecd880b266c12b792de8e7",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/raster-metadata-diagnostics-implementation.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/raster-metadata-diagnostics-implementation.json",
+      "bytes": 3744,
+      "sha256": "64b7afc35ae675666fd91c87cee581191d1ac7c4faa2a84a3835c15f35d290d9",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/raster-metadata-diagnostics-implementation.md",
+      "source": "/workspace/scratch/pr20-closure-evidence/raster-metadata-diagnostics-implementation.md",
+      "bytes": 3240,
+      "sha256": "66ac830ef790e01592735d47ffa84232444ca98eb86819a59b358e955a1b10c0",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/raster-metadata-diagnostics-patch-check.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/raster-metadata-diagnostics-patch-check.json",
+      "bytes": 1964,
+      "sha256": "09efb0898e93184bac42ea535a94c852b5268f5a741470407ab6e0c7abc4d988",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/raster-metadata-diagnostics-portable.patch",
+      "source": "/workspace/scratch/pr20-closure-evidence/raster-metadata-diagnostics-portable.patch",
+      "bytes": 11171,
+      "sha256": "1fc0348e2b4aae0ecf38cace3959fad5c4798871acee6ec1aac7d46452883d08",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/raster-metadata-diagnostics-static-review.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/raster-metadata-diagnostics-static-review.json",
+      "bytes": 3984,
+      "sha256": "99255990e3c6d8965304016fc295fa3613705b4e221da9c710b5a168316a9caa",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/raster-metadata-diagnostics-static-review.md",
+      "source": "/workspace/scratch/pr20-closure-evidence/raster-metadata-diagnostics-static-review.md",
+      "bytes": 2363,
+      "sha256": "7fa767aae905353903c230aa535375c7733ef02e9f7db741afd58b93f6107793",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/raster-metadata-diagnostics-v2-implementation.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/raster-metadata-diagnostics-v2-implementation.json",
+      "bytes": 4388,
+      "sha256": "c1c69e7c2fe8f9b8aea07e5a3e49ccaf83ccde7c39b150ca59d07125c3d11095",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/raster-metadata-diagnostics-v2-implementation.md",
+      "source": "/workspace/scratch/pr20-closure-evidence/raster-metadata-diagnostics-v2-implementation.md",
+      "bytes": 1469,
+      "sha256": "419676444d1024330635574fff9f55d85c5349a41b09d64f14d9cc3cc50db79b",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/raster-metadata-diagnostics-v2-patch-check.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/raster-metadata-diagnostics-v2-patch-check.json",
+      "bytes": 3597,
+      "sha256": "82cb36ece9a625b7e4880169b9cac227993ddd64f2fe3fd4753c2acda0b57ad1",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/raster-metadata-diagnostics-v2-portable.patch",
+      "source": "/workspace/scratch/pr20-closure-evidence/raster-metadata-diagnostics-v2-portable.patch",
+      "bytes": 11181,
+      "sha256": "3449bdb9dc5063e4386a9d5f9d0b3061a5bbb8834362dcb897777b05605352ac",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/raster-metadata-diagnostics-v2-static-review.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/raster-metadata-diagnostics-v2-static-review.json",
+      "bytes": 2797,
+      "sha256": "8a4eeb8a08dba5b30c26c22f58f7bae9db42d19ef96c803987db0c6994aacdbe",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/raster-metadata-diagnostics-v2-static-review.md",
+      "source": "/workspace/scratch/pr20-closure-evidence/raster-metadata-diagnostics-v2-static-review.md",
+      "bytes": 1611,
+      "sha256": "96702491a1f721080aa14bc7bfa367981378d894408701d46d0113403af4bc70",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/raster-regression-followup-plan.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/raster-regression-followup-plan.json",
+      "bytes": 1302,
+      "sha256": "464d0348908a25c9e8204498f47a733336c1a0303b09e7939433f9ee8909bf57",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/raster-repeat-cgroup-deltas.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/raster-repeat-cgroup-deltas.json",
+      "bytes": 3713,
+      "sha256": "86c9513f0e165f92aaaca6aa97e72065602b9a1f70b9fb372ef76a2156d58d2f",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/raster-repeat-plan.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/raster-repeat-plan.json",
+      "bytes": 134,
+      "sha256": "a25dfa5b569535f174dcde712755514da242dfb9d7eed83c876e76df604abf00",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/raster-repeat-review.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/raster-repeat-review.json",
+      "bytes": 32721,
+      "sha256": "e55ba54f88c7804c8fd311f92ef2f2698289f228df26d7628dceb32f36ff89c8",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/raster-repeat-review.md",
+      "source": "/workspace/scratch/pr20-closure-evidence/raster-repeat-review.md",
+      "bytes": 7957,
+      "sha256": "64213073a800eefd792d68d9698bc00eb21334b9d00deee92185115072b4275a",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/raster-single-tile-regression-investigation.md",
+      "source": "/workspace/scratch/pr20-closure-evidence/raster-single-tile-regression-investigation.md",
+      "bytes": 8316,
+      "sha256": "f3db0ddbc708a9a7a6dc722ab24c94518640a2a969893ec345c9b3d1d969388d",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/raster-targeted-tools-review.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/raster-targeted-tools-review.json",
+      "bytes": 7976,
+      "sha256": "c721f987d443be4f47ffc0f4ecd85c064311ea310ae4c0dc1346c1f006a9416a",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/raster-targeted-tools-usage.md",
+      "source": "/workspace/scratch/pr20-closure-evidence/raster-targeted-tools-usage.md",
+      "bytes": 3918,
+      "sha256": "1a7c36b76060277e379df6a24fc9b6657c0dab4d086e6be1f5472eb9cefe22c1",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/remaining-acceptance-gates.md",
+      "source": "/workspace/scratch/pr20-closure-evidence/remaining-acceptance-gates.md",
+      "bytes": 4656,
+      "sha256": "6bfa0216d9ac5edb31a22ccd52c6cee505ee466f5dff6458b3b93c6ce228beb6",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/remote-preflight-final.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/remote-preflight-final.json",
+      "bytes": 824,
+      "sha256": "ff4a1aa2e6c2c9fd9acf0d0882a0f4fa75a45a74fbf9523621bc4930747d89f2",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/v4-baseline-app-preservation.json",
+      "source": "/workspace/scratch/pr20-preserved-apks/v4-baseline-app-preservation.json",
+      "bytes": 2977,
+      "sha256": "422acdbfef0600a932834dc21555e2680ef61eb99eba093c6992a1effdeea01f",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/v4-original-fixture-source-check.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/v4-original-fixture-source-check.json",
+      "bytes": 959,
+      "sha256": "b6850cc74da8b32b05dec18c631c3cfe53f2cceab6992500e9bbfc04e4c7e1db",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "scripts/pr20-closure-apks.py",
+      "source": "/workspace/scratch/pr20-closure-apks.py",
+      "bytes": 1788,
+      "sha256": "5933e107e013bd3d415812506b1d0d41e4553edb9af695d0458419fdc33d332b",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "scripts/pr20-closure-awake-checks.py",
+      "source": "/workspace/scratch/pr20-closure-awake-checks.py",
+      "bytes": 2466,
+      "sha256": "a0822da56e0b263876d8529cac2e4d342dc46bd47383f9c4739cc593a0d47169",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "scripts/pr20-closure-build.py",
+      "source": "/workspace/scratch/pr20-closure-build.py",
+      "bytes": 1736,
+      "sha256": "44e46bcc13ae5c60b4314495ec90088ae979532244def198b0cfd6574e5e72a4",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "scripts/pr20-closure-instrumentation.py",
+      "source": "/workspace/scratch/pr20-closure-instrumentation.py",
+      "bytes": 2061,
+      "sha256": "21cb306143c0aedf0280280c0af8f835719cc7716d5789fd09661b1708de991f",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "scripts/pr20-closure-record-baseline-build.py",
+      "source": "/workspace/scratch/pr20-closure-record-baseline-build.py",
+      "bytes": 8322,
+      "sha256": "eccf930aecf08629b9dc96258265e7fdd87f78496d472bf4089e8476268d2d19",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "scripts/pr20-closure-record-build.py",
+      "source": "/workspace/scratch/pr20-closure-record-build.py",
+      "bytes": 2530,
+      "sha256": "9aee9207b07921a9e0a8eab3f0c1ed64b7d7fd3da256f38c5fda83b1aad93f49",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "scripts/pr20-raster-followup-curation-audit.py",
+      "source": "/workspace/scratch/pr20-raster-followup-curation-audit.py",
+      "bytes": 13317,
+      "sha256": "bdbae3a79377d37d47b73e6e0311addc8193e6e37d366d840db7fc6cbf2ff151",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "scripts/pr20-raster-observed-run.py",
+      "source": "/workspace/scratch/pr20-raster-observed-run.py",
+      "bytes": 1000,
+      "sha256": "24e611d917f361ebcaaa28096f05cf0df13d6e498947d21168ebbb826fe211ec",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "scripts/pr20-raster-targeted-apks.py",
+      "source": "/workspace/scratch/pr20-raster-targeted-apks.py",
+      "bytes": 6392,
+      "sha256": "346971c46fd58ccdf1fcf12bf4025da4489126753ad997c726a28015beb7a854",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "scripts/pr20-raster-targeted-instrumentation.py",
+      "source": "/workspace/scratch/pr20-raster-targeted-instrumentation.py",
+      "bytes": 5403,
+      "sha256": "1ee0c088e32a67a92480c24c9d6b06dfbb3104b3255e206114ed62fd8c1034fc",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "scripts/record-inkweft-performance-environment.py",
+      "source": "/workspace/scratch/record-inkweft-performance-environment.py",
+      "bytes": 10533,
+      "sha256": "e33900329dd307e6d9b38e5e1611b9bcc865fbdc4d01624f279bb37acec00630",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "scripts/record-v4-stage-handoff-review.py",
+      "source": "/workspace/scratch/record-v4-stage-handoff-review.py",
+      "bytes": 25368,
+      "sha256": "22e3821fdc0b80791e9b0386a08504c36802c9c9580c6588a61248bc89215379",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "scripts/run-inkweft-gradle",
+      "source": "/workspace/scratch/run-inkweft-gradle",
+      "bytes": 923,
+      "sha256": "d38003b3ac698ade56d447ebd37ae7f5ccea37388ef247ba16634980a1dd191c",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "scripts/summarize-pr20-closure-performance.py",
+      "source": "/workspace/scratch/summarize-pr20-closure-performance.py",
+      "bytes": 21611,
+      "sha256": "a70d1cb4eb50abbc0ff88891c7bc5bd3850fd4609ffdab02c5a6bf625cb9aadc",
+      "copy_state": "ALREADY_PRESENT_MATCH"
+    },
+    {
+      "archive_path": "scripts/summarize-raster-hex-off-pair.py",
+      "source": "/workspace/scratch/pr20-closure-evidence/summarize-raster-hex-off-pair.py",
+      "bytes": 11260,
+      "sha256": "1db5044da6cf294f742ed725affaaaf1ea557cb88aaeabbf2c794c1cf40586ab",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/raster-final-delivery-complete-manifest.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/raster-final-delivery-complete-manifest.json",
+      "bytes": 140348,
+      "sha256": "4cd04559247d1c5d45bf83d90436af9d19b8d5c80a122cb07a268d10b14e6b02",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/raster-final-delivery-complete-privacy.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/raster-final-delivery-complete-privacy.json",
+      "bytes": 139978,
+      "sha256": "3ca07ee51b594834578f80d40c2dd7085186a16ece141a369bb1b3160794f570",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/raster-final-delivery-complete-audit.json",
+      "source": "/workspace/scratch/pr20-closure-evidence/raster-final-delivery-complete-audit.json",
+      "bytes": 20312,
+      "sha256": "b41f3a93fe853210abe01d25fee1e236281591db617b617c4e1243877430606b",
+      "copy_state": "COPIED"
+    },
+    {
+      "archive_path": "evidence/raster-final-delivery-verification.md",
+      "source": "/workspace/scratch/pr20-closure-evidence/raster-final-delivery-verification.md",
+      "bytes": 3657,
+      "sha256": "7e641632e8cc725345d13a7d47d4c98ba5997cdd8d4d1dd7f8a20b2191b3ac00",
+      "copy_state": "COPIED"
+    }
+  ],
+  "unchanged_root_metadata": [
+    {
+      "path": "README.md",
+      "bytes": 25069,
+      "sha256": "5f5af6b123c0a2afeaa77102fa1eb2b3f7caeccc73aee05fbc75f281ae4b4320"
+    },
+    {
+      "path": "historical-pointer-update.json",
+      "bytes": 413,
+      "sha256": "0bdaf1a3f9072aec6c1738f23e8cb772d9b16575098dc61a17c44eca882134a8"
+    },
+    {
+      "path": "previous-delivery-SHA256SUMS.txt",
+      "bytes": 32417,
+      "sha256": "64c83be18ebc95bfb0289ca1c5467cf71fbe80c497382a90380e68b96a766914"
+    }
+  ],
+  "readme_relative_links": [
+    {
+      "target": "../android-perf-followup-20261012/README.md",
+      "exists": true
+    },
+    {
+      "target": "evidence/final-committed-source-binding.json",
+      "exists": true
+    },
+    {
+      "target": "evidence/raster-final-committed-source-binding.json",
+      "exists": true
+    },
+    {
+      "target": "evidence/remaining-acceptance-gates.md",
+      "exists": true
+    },
+    {
+      "target": "evidence/final-raster-acceptance-review.md",
+      "exists": true
+    },
+    {
+      "target": "evidence/candidate-raster-hex-v1-diagnostic-stage-review.md",
+      "exists": true
+    },
+    {
+      "target": "evidence/candidate-raster-hex-v1-off-pair-raw-ledger.md",
+      "exists": true
+    },
+    {
+      "target": "evidence/raster-hex-v1-off-repeat2-failure-review.md",
+      "exists": true
+    },
+    {
+      "target": "evidence/candidate-raster-hex-v1-frame-paired-review.md",
+      "exists": true
+    },
+    {
+      "target": "evidence/raster-final-committed-source-binding.json",
+      "exists": true
+    },
+    {
+      "target": "evidence/final-paired-library-review.md",
+      "exists": true
+    },
+    {
+      "target": "evidence/final-paired-history-review.md",
+      "exists": true
+    },
+    {
+      "target": "evidence/final-paired-raster-review.md",
+      "exists": true
+    },
+    {
+      "target": "evidence/paired-performance-summary-new-format.json",
+      "exists": true
+    },
+    {
+      "target": "../../../backup-server/protocol-v2/verification/cloud-docker-20261012/REPORT.txt",
+      "exists": true
+    }
+  ],
+  "privacy": {
+    "exact_text_payloads_scanned_before_copy": 408,
+    "pattern_categories": [
+      "private_key",
+      "github_token",
+      "aws_access_key",
+      "credential_url",
+      "bearer_value",
+      "sensitive_assignment",
+      "jwt",
+      "personal_home",
+      "environment_dump"
+    ],
+    "findings": [],
+    "scope": "Selected evidence/scripts plus frozen README and the two pre-existing root metadata files. Copy receipt itself is scanned before publishing below."
+  },
+  "excluded": "No APK/AAR/DB/native binary/key/env dump/full logcat; raster-diagnostic-v2-filtered-gc-observation.json excluded in full.",
+  "source_commit": "721b2ffa362f9ae77121d963b71dcfe78de443f3",
+  "native_fixed_stage": {
+    "calls": 9,
+    "executed": 17,
+    "passed": 15,
+    "failed": 2,
+    "off_pair": "INCOMPLETE_NO_COMPLETED_SUMMARY"
+  },
+  "acceptance": "NO-GO; four gates remain. This is a delivery evidence verification, not acceptance approval.",
+  "git_operations": "NONE",
+  "readme_edits": "NONE",
+  "checksum_policy": "SHA256SUMS covers every final file except SHA256SUMS itself, including this receipt."
+}

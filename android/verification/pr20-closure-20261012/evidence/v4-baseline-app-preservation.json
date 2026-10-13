@@ -1,0 +1,51 @@
+{
+  "utc": "2026-10-13T02:13:14.386569+00:00",
+  "status": "FOUR_APKS_PRESERVED_HASH_MATCH",
+  "scope": "app and appTest APK only; no source/build/device action; current checkout may already contain later diagnostic source",
+  "files": [
+    {
+      "label": "candidate-v4",
+      "source": "/workspace/InkWeft/android/app/build/outputs/apk/debug/app-debug.apk",
+      "preserved": "/workspace/scratch/pr20-preserved-apks/candidate-v4/app-debug.apk",
+      "bytes": 241512357,
+      "sha256": "79fe8a40024d0cbd7283145f52febc3d54a6312ec231acea11182822e8f6aaf4",
+      "expected_sha256": "79fe8a40024d0cbd7283145f52febc3d54a6312ec231acea11182822e8f6aaf4",
+      "matches": true,
+      "artifact_manifest": "/workspace/scratch/pr20-closure-evidence/candidate-v4-artifacts.json",
+      "artifact_manifest_sha256": "84ce38bb2acacb53e027e7f56a43253e717bd9e53ed47a547d3acfa7e5b79851"
+    },
+    {
+      "label": "candidate-v4",
+      "source": "/workspace/InkWeft/android/app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk",
+      "preserved": "/workspace/scratch/pr20-preserved-apks/candidate-v4/app-debug-androidTest.apk",
+      "bytes": 18387376,
+      "sha256": "37dc4f858fdf13fde56fd514515f6e043356e482db0a8a0bc7339fce4504c5b2",
+      "expected_sha256": "37dc4f858fdf13fde56fd514515f6e043356e482db0a8a0bc7339fce4504c5b2",
+      "matches": true,
+      "artifact_manifest": "/workspace/scratch/pr20-closure-evidence/candidate-v4-artifacts.json",
+      "artifact_manifest_sha256": "84ce38bb2acacb53e027e7f56a43253e717bd9e53ed47a547d3acfa7e5b79851"
+    },
+    {
+      "label": "baseline-final",
+      "source": "/workspace/scratch/inkweft-baseline-closure-a128bb07/android/app/build/outputs/apk/debug/app-debug.apk",
+      "preserved": "/workspace/scratch/pr20-preserved-apks/baseline-final/app-debug.apk",
+      "bytes": 229655127,
+      "sha256": "c820103a3dae3b52f7a6d30aa345112c5c71c47f00ad89900eb6fe8ec5dd70fe",
+      "expected_sha256": "c820103a3dae3b52f7a6d30aa345112c5c71c47f00ad89900eb6fe8ec5dd70fe",
+      "matches": true,
+      "artifact_manifest": "/workspace/scratch/pr20-closure-evidence/baseline-final-artifacts.json",
+      "artifact_manifest_sha256": "2595faf440b7978a61468401b6db147f954b4dbd77bf6c7759a444f1a9487648"
+    },
+    {
+      "label": "baseline-final",
+      "source": "/workspace/scratch/inkweft-baseline-closure-a128bb07/android/app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk",
+      "preserved": "/workspace/scratch/pr20-preserved-apks/baseline-final/app-debug-androidTest.apk",
+      "bytes": 10266683,
+      "sha256": "d706b3b015d6111e7721f6881405726fe97da66c6799a456531b7bccf50909cd",
+      "expected_sha256": "d706b3b015d6111e7721f6881405726fe97da66c6799a456531b7bccf50909cd",
+      "matches": true,
+      "artifact_manifest": "/workspace/scratch/pr20-closure-evidence/baseline-final-artifacts.json",
+      "artifact_manifest_sha256": "2595faf440b7978a61468401b6db147f954b4dbd77bf6c7759a444f1a9487648"
+    }
+  ]
+}

@@ -1,0 +1,262 @@
+{
+  "checked_utc": "2026-10-13T01:13:56.165252+00:00",
+  "status": "PARTIAL_BASELINE_EXTENSION_COMPLETED_BUILD_AND_HISTORY_ONLY",
+  "extends_manifest": {
+    "path": "/workspace/scratch/pr20-closure-evidence/closure-curated-manifest-v4-completed.json",
+    "sha256": "f030df27b21167f00c0b9de13c23cdc868016477eb328e998c6297080eb7033d",
+    "inherited_files": 172,
+    "all_inherited_hashes_rechecked": true,
+    "historical_failed_runs_preserved": 12
+  },
+  "new_files": [
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-final-apk-installation.json",
+      "suggested_archive_path": "evidence/baseline-final-apk-installation.json",
+      "sha256": "1dfe133d4f9d8144c120b45604affc4e0b512ff51dbb56f4fa92ff5771dfd632",
+      "bytes": 2578,
+      "role": "completed baseline-final build/artifact/install/pre-run environment/History evidence"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-final-artifacts.json",
+      "suggested_archive_path": "evidence/baseline-final-artifacts.json",
+      "sha256": "2595faf440b7978a61468401b6db147f954b4dbd77bf6c7759a444f1a9487648",
+      "bytes": 1522,
+      "role": "completed baseline-final build/artifact/install/pre-run environment/History evidence"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-final-build.json",
+      "suggested_archive_path": "evidence/baseline-final-build.json",
+      "sha256": "76567e6eccb98dac7a8a116dc5fe8ab21f5afc55429c05437311b4b7abce322b",
+      "bytes": 426,
+      "role": "completed baseline-final build/artifact/install/pre-run environment/History evidence"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-final-build.log",
+      "suggested_archive_path": "evidence/baseline-final-build.log",
+      "sha256": "1664c121dbc65d5f847c8891d14085d776afac9863ffee7ad9057a8d9941eb40",
+      "bytes": 36726,
+      "role": "completed baseline-final build/artifact/install/pre-run environment/History evidence"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-final-jvm-and-lint-status.json",
+      "suggested_archive_path": "evidence/baseline-final-jvm-and-lint-status.json",
+      "sha256": "d6d74d87f292cf546f16233c46c2d56b89273c6393b19e41cbbb20c7467ef3ce",
+      "bytes": 957,
+      "role": "completed baseline-final build/artifact/install/pre-run environment/History evidence"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-final-performance-environment.json",
+      "suggested_archive_path": "evidence/baseline-final-performance-environment.json",
+      "sha256": "16533e270b8a3d1e31c1c8511e10e2e535cec4ff770c2e10d115046160dd63ef",
+      "bytes": 11786,
+      "role": "completed baseline-final build/artifact/install/pre-run environment/History evidence"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-final-performance-history-probe-setup.json",
+      "suggested_archive_path": "evidence/baseline-final-performance-history-probe-setup.json",
+      "sha256": "6eb42b4efe5feacc33b98bf5aee8ff26a731c6cefd70a70e864a03cd199ef0e5",
+      "bytes": 987,
+      "role": "completed baseline-final build/artifact/install/pre-run environment/History evidence"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-final-performance-history-probe.json",
+      "suggested_archive_path": "evidence/baseline-final-performance-history-probe.json",
+      "sha256": "1ab18bb64841d39307595e317b96d9e9bc92b0e32449721af0778ea8fa62300e",
+      "bytes": 800,
+      "role": "completed baseline-final build/artifact/install/pre-run environment/History evidence"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-final-performance-history-probe.log",
+      "suggested_archive_path": "evidence/baseline-final-performance-history-probe.log",
+      "sha256": "450fe6f2a53133a1803f9b818a05a4202ac99faea7a197ce906de8ca0f1ab513",
+      "bytes": 1324,
+      "role": "completed baseline-final build/artifact/install/pre-run environment/History evidence"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-final-recording.json",
+      "suggested_archive_path": "evidence/baseline-final-recording.json",
+      "sha256": "d8f8d482c5d13f60d0c4f63fb525a6daac770f8ff5f27e3ebb554db34f0a1b1b",
+      "bytes": 420,
+      "role": "completed baseline-final build/artifact/install/pre-run environment/History evidence"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-final-signatures.json",
+      "suggested_archive_path": "evidence/baseline-final-signatures.json",
+      "sha256": "e2a34658a796999782a07f3520a6220569f9dd58ad5398cce1f39450d76cbd31",
+      "bytes": 2341,
+      "role": "completed baseline-final build/artifact/install/pre-run environment/History evidence"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-final-source-sha256.json",
+      "suggested_archive_path": "evidence/baseline-final-source-sha256.json",
+      "sha256": "386046c9c28eb27d33fd3977fb2baa06c94a855511f024f4a83188a4c304bbfd",
+      "bytes": 105362,
+      "role": "completed baseline-final build/artifact/install/pre-run environment/History evidence"
+    }
+  ],
+  "new_completed_files": 12,
+  "privacy_review": {
+    "path": "/workspace/scratch/pr20-closure-evidence/closure-privacy-extension-baseline-build-history.json",
+    "sha256": "653c1956cb6236e0c10903659772770a129254b28b093fba9b92e1a216859f01"
+  },
+  "source_checks": [
+    {
+      "root": "/workspace/InkWeft",
+      "manifest": "/workspace/scratch/pr20-closure-evidence/candidate-v4-source-sha256.json",
+      "manifest_sha256": "8285c54019d0a4409a6dbf6f5d36e87298b5be9b6d47f93801ea9123bb7d859f",
+      "expected": 744,
+      "matched": 744,
+      "unmatched": []
+    },
+    {
+      "root": "/workspace/scratch/inkweft-baseline-closure-a128bb07",
+      "manifest": "/workspace/scratch/pr20-closure-evidence/baseline-final-source-sha256.json",
+      "manifest_sha256": "386046c9c28eb27d33fd3977fb2baa06c94a855511f024f4a83188a4c304bbfd",
+      "expected": 734,
+      "matched": 734,
+      "unmatched": []
+    }
+  ],
+  "four_shared_paths": [
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/PreservingOpenHelperFactory.kt",
+      "sha256": "a049af775caa688cd0dfd938acdf1539d34ee13de272ed35c930de9ef4e3d15d",
+      "baseline_candidate_identical": true
+    },
+    {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibraryReadPerformanceTest.kt",
+      "sha256": "a47f892262d656dcc6ec65e984681265d593e19f88ecaa13d135d2a9f3e65bd2",
+      "baseline_candidate_identical": true
+    },
+    {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/HistoryCollectionBenchmarkTest.kt",
+      "sha256": "2b04bd2de3bc4cd6d030b14b8c12096c3a3604ddaa39324a65703cee1de30e34",
+      "baseline_candidate_identical": true
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/RasterPerformanceProbe.kt",
+      "sha256": "91ceacc2db7557509f923a2046ba0f8d8ccf9691265dbee12e10e674a9ba33c9",
+      "baseline_candidate_identical": true
+    }
+  ],
+  "baseline_provenance_and_full_source_manifest": "Already inherited unchanged from the completed-v4 curation; no duplicate or overwrite.",
+  "baseline_build": {
+    "exit_code": 0,
+    "source_files": 734,
+    "source_unchanged_during_build": true,
+    "raw_build_successful_marker": true,
+    "jvm_and_lint": "NOT_RUN with null counts, not a zero-test pass",
+    "artifact_recorder_native_tests_not_run_scope": "The recorder itself did not run instrumentation; the later separate History receipt is the native execution evidence."
+  },
+  "apk_chain": {
+    "expected": 3,
+    "joined": 3,
+    "gaps": [],
+    "artifacts": [
+      {
+        "path": "app/build/outputs/apk/debug/app-debug.apk",
+        "sha256": "c820103a3dae3b52f7a6d30aa345112c5c71c47f00ad89900eb6fe8ec5dd70fe",
+        "bytes": 229655127,
+        "recorded_artifact_matches_install": true,
+        "signature_status": "PASS",
+        "mupdf_native_members": [
+          {
+            "path": "lib/arm64-v8a/libmupdf_java.so",
+            "bytes": 10840392,
+            "sha256": "5c7872c5e12ae3c00f68e14e371d3467cbfb2fd3dfefc7bb2a03d2cd491f6a4f",
+            "elf": true
+          },
+          {
+            "path": "lib/armeabi-v7a/libmupdf_java.so",
+            "bytes": 7582088,
+            "sha256": "2b24af301ba54d70c4cac09a1ae22af2c20f62b5f1046a2e8b352ca702e2ffd6",
+            "elf": true
+          },
+          {
+            "path": "lib/x86/libmupdf_java.so",
+            "bytes": 11187796,
+            "sha256": "46f512805c693c07f6e7fac50cdf3d2e028c5078f92e7d230f4c1e6e1b165ed9",
+            "elf": true
+          },
+          {
+            "path": "lib/x86_64/libmupdf_java.so",
+            "bytes": 11264136,
+            "sha256": "e9907d1e11f886662915376a1f059608e539c75cb1bc5ef57ccdf887a0367349",
+            "elf": true
+          }
+        ]
+      },
+      {
+        "path": "app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk",
+        "sha256": "d706b3b015d6111e7721f6881405726fe97da66c6799a456531b7bccf50909cd",
+        "bytes": 10266683,
+        "recorded_artifact_matches_install": true,
+        "signature_status": "PASS",
+        "mupdf_native_members": []
+      },
+      {
+        "path": "data-local/build/outputs/apk/androidTest/debug/data-local-debug-androidTest.apk",
+        "sha256": "bbd78f8daa9139acdaeaac7c01fd0dc9fe762723c3750a0f26a55f5df2e2b505",
+        "bytes": 22588360,
+        "recorded_artifact_matches_install": true,
+        "signature_status": "PASS",
+        "mupdf_native_members": []
+      }
+    ],
+    "boundary": "Saved build/artifact/signature/install receipts verified; no new APK hashing/signature tool invoked. End-of-all-performance artifact continuity remains pending."
+  },
+  "baseline_pre_performance_environment": {
+    "status": "RECORDED",
+    "matches_candidate_v4_recorded_settings": true,
+    "comparison_sha256": "425d701e4a8711a84ca963b1c4769b76c47d1644970d72e2941666412be56378",
+    "after_environment": "PENDING; do not claim a completed baseline before/after comparison yet."
+  },
+  "completed_baseline_history": {
+    "executed": 1,
+    "passed": 1,
+    "failed": 0,
+    "raw_log_and_receipt_match": true,
+    "historyScanBaseline_true": true,
+    "paused_save_samples": 30,
+    "live_save_samples": 30,
+    "writerSqlite": {
+      "page_size": 1024,
+      "auto_vacuum": 1,
+      "journal_mode": "wal",
+      "synchronous": 2
+    },
+    "writerSqlite_matches_candidate_v4_history": true
+  },
+  "gradle_runner_literal_review": {
+    "path": "/workspace/scratch/run-inkweft-gradle",
+    "sha256": "d38003b3ac698ade56d447ebd37ae7f5ccea37388ef247ba16634980a1dd191c",
+    "identical_to_previous_curated_script": true,
+    "literal_contents_suitable_for_publication_under_reviewed_scope": true,
+    "reasons": [
+      "Literal content contains only cloud SDK/JDK/cache paths, TLS trust-store path, Gradle arguments and environment-variable names.",
+      "HTTPS_PROXY is parsed at runtime; only hostname and port are passed through the helper. No URL username/password is referenced or embedded.",
+      "No private key, credential literal, token pattern, environment dump or xtrace was found."
+    ],
+    "not_claimed": "This task did not run the script, read HTTPS_PROXY or any other runtime environment value, or certify future modified script bytes."
+  },
+  "deferred_until_root_notification": [
+    "baseline-final-performance-library-probe* (currently active at delegation)",
+    "baseline-final-performance-raster-probe*",
+    "baseline-final-performance-tile-local*",
+    "baseline-final-performance-results.json (mutable aggregate)",
+    "baseline-final-performance-environment-after.json",
+    "baseline-final end-of-performance APK continuity",
+    "performance-summary-input.json and final paired summary"
+  ],
+  "limitations": [
+    "Equal fixture code/scale and recorded settings do not establish identical database bytes, cache state, host load or physical-device performance.",
+    "Keep all inherited historical failed runs and the v4 20,000-page 10-second failure visible.",
+    "Do not include partial/active output as a completed measurement; extend only after the parent reports completion."
+  ],
+  "actions": {
+    "source_or_historical_log_modified": false,
+    "copied_into_repository": false,
+    "build_native_adb_docker_run": false,
+    "commit_or_push": false
+  }
+}

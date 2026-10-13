@@ -1,0 +1,66 @@
+{
+  "utc": "2026-10-13T01:12:15.155984+00:00",
+  "previous_head": "a75d7457cfa3ec2e15c802c07ee93bfc07753a6c",
+  "commits": [
+    {
+      "sha": "619eace90351a6ac72afe85ccf20aa2bc386d615",
+      "message": "fix(android): leave database creation to SQLite and preserve legacy writers",
+      "paths": [
+        "android/data-local/src/main/kotlin/org/inkweft/data/PreservingOpenHelperFactory.kt",
+        "android/data-local/src/androidTest/kotlin/org/inkweft/data/BundledSqliteFactoryTest.kt",
+        "android/data-local/src/androidTest/AndroidManifest.xml",
+        "android/data-local/src/androidTest/kotlin/org/inkweft/data/DatabaseCreationPeerService.kt",
+        "android/data-local/src/androidTest/kotlin/org/inkweft/data/DatabaseCreationProcessTest.kt",
+        "android/data-local/src/androidTest/kotlin/org/inkweft/data/OriginalStorageRepositoryTest.kt"
+      ]
+    },
+    {
+      "sha": "4c185a595331ae8bea9c38b5c2a8d80e357d2399",
+      "message": "perf(android): prepare search terms outside the author write transaction",
+      "paths": [
+        "android/data-local/src/main/kotlin/org/inkweft/data/LibraryTextIndex.kt",
+        "android/data-local/src/main/kotlin/org/inkweft/data/LibrarySearchRepository.kt",
+        "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibraryTextIndexPreparationTest.kt",
+        "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibrarySearchRepositoryTest.kt",
+        "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibraryReadPerformanceTest.kt"
+      ]
+    },
+    {
+      "sha": "daf3fc0b65bb03c77d33278899639f39cb4e17d1",
+      "message": "perf(android): batch temporary history roots without weakening collection guards",
+      "paths": [
+        "android/data-local/src/main/kotlin/org/inkweft/data/HistoryStorage.kt",
+        "android/data-local/src/androidTest/kotlin/org/inkweft/data/HistoryCollectionBenchmarkTest.kt",
+        "android/data-local/src/androidTest/kotlin/org/inkweft/data/HistoryCollectionTest.kt",
+        "android/data-local/src/androidTest/kotlin/org/inkweft/data/HistoryConcurrencyTest.kt"
+      ]
+    },
+    {
+      "sha": "f10f21580be1890ed5337a22abec496236d47009",
+      "message": "perf(android): validate private backup copies in their own transaction",
+      "paths": [
+        "android/data-local/src/main/kotlin/org/inkweft/data/LibraryBackupRepository.kt",
+        "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibraryBackupIsolationTest.kt",
+        "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibraryBackupRepositoryTest.kt"
+      ]
+    },
+    {
+      "sha": "537878dc89e6c9ef15126ec080077deac55afe2c",
+      "message": "perf(android): reuse each native stroke across its dirty tiles",
+      "paths": [
+        "android/app/src/main/java/org/inkweft/app/StreamedInkRaster.kt",
+        "android/app/src/androidTest/java/org/inkweft/app/NativeStrokeTileReuseTest.kt",
+        "android/app/src/androidTest/java/org/inkweft/app/RasterPerformanceProbe.kt"
+      ]
+    },
+    {
+      "sha": "c60fba7455cfc0b919d6f9c2d3b06f17ec25713d",
+      "message": "test(android): retain timing diagnostics for original UI acceptance gates",
+      "paths": [
+        "android/app/src/androidTest/java/org/inkweft/app/NotebookShelfUiTest.kt",
+        "android/app/src/androidTest/java/org/inkweft/app/StreamedInkRasterTest.kt"
+      ]
+    }
+  ],
+  "push": "NOT_RUN"
+}

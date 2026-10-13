@@ -1,0 +1,12 @@
+
+org.inkweft.app.NativeStrokeTileReuseTest:NATIVE_STROKE_TILE_EVIDENCE {"phase":0,"nativeStrokeBuilds":2,"perTileReferenceBuilds":24,"tiles":16,"rebuilt":16,"pixelsEqual":true}
+NATIVE_STROKE_TILE_EVIDENCE {"phase":1,"nativeStrokeBuilds":2,"perTileReferenceBuilds":32,"tiles":16,"rebuilt":16,"pixelsEqual":true}
+NATIVE_STROKE_TILE_EVIDENCE {"phase":2,"nativeStrokeBuilds":1,"perTileReferenceBuilds":16,"tiles":16,"rebuilt":16,"pixelsEqual":true}
+NATIVE_STROKE_TILE_EVIDENCE {"phase":3,"nativeStrokeBuilds":0,"perTileReferenceBuilds":0,"tiles":16,"rebuilt":16,"pixelsEqual":true}
+.
+
+Time: 29.106
+
+OK (1 test)
+
+

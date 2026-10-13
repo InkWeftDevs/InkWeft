@@ -1,0 +1,2223 @@
+{
+  "schema": 1,
+  "generatedUtc": "2026-10-13T01:31:21.417623+00:00",
+  "status": "SEE_PER_PROBE_STATUS",
+  "inputManifest": "/workspace/scratch/pr20-closure-evidence/performance-summary-input.json",
+  "inputManifestSha256": "046e2aab719e42d60a1a92310079143dfbf8c9c4846147abe9ac86c118885d14",
+  "provenanceReferences": [
+    "baseline-final-provenance.json",
+    "baseline-final-source-manifest.json",
+    "baseline-final-build.json",
+    "baseline-final-artifacts.json",
+    "candidate-v4-source-sha256.json",
+    "candidate-v4-build.json",
+    "candidate-v4-artifacts.json",
+    "candidate-v4-reconstruction-provenance.json"
+  ],
+  "environmentReferences": [
+    "candidate-v4-performance-environment.json",
+    "candidate-v4-performance-environment-after.json",
+    "baseline-final-performance-environment.json",
+    "baseline-final-performance-environment-after.json"
+  ],
+  "sourceAndEnvironmentReferencesNotAutomaticallyAttested": true,
+  "requiredFormat": {
+    "page_size": 1024,
+    "auto_vacuum": 1,
+    "auto_vacuum_name": "FULL"
+  },
+  "percentileDefinitions": {
+    "library": {
+      "sampleCount": 30,
+      "p50SortedZeroBasedIndex": 15,
+      "p50Definition": "Upper middle of 30 ordered samples; not average of middle two",
+      "p95SortedZeroBasedIndex": 28,
+      "maxSortedZeroBasedIndex": 29
+    },
+    "history": {
+      "sampleCount": 30,
+      "p50SortedZeroBasedIndex": 14,
+      "p50Definition": "Lower middle of 30 ordered samples; not average of middle two",
+      "p95SortedZeroBasedIndex": 28,
+      "maxSortedZeroBasedIndex": 29
+    },
+    "rasterTransforms": {
+      "sampleCount": 12,
+      "medianDefinition": "Arithmetic mean of sorted positions 5 and 6 (zero based)"
+    },
+    "libraryObserveIndexConcurrentSaves": {
+      "sampleCount": 30,
+      "p50SortedZeroBasedIndex": 15,
+      "p50Definition": "Upper middle of 30 ordered samples; not average of middle two",
+      "p95SortedZeroBasedIndex": 28,
+      "maxSortedZeroBasedIndex": 29
+    }
+  },
+  "pairs": [
+    {
+      "id": "1024-full-final-v4-vs-a128-common-factory-probes",
+      "probes": {
+        "library": {
+          "baseline": {
+            "side": "baseline",
+            "label": "a128bb07 + shared safe factory and probes",
+            "status": "VERIFIED_NATIVE_RUN",
+            "issues": [],
+            "writerSqlite": {
+              "page_size": 1024,
+              "auto_vacuum": 1,
+              "journal_mode": "wal",
+              "synchronous": 2
+            },
+            "measurements": [
+              {
+                "books": 500,
+                "pages": 20000,
+                "noteBodyChars": 20020,
+                "writerSqlite": {
+                  "page_size": 1024,
+                  "auto_vacuum": 1,
+                  "journal_mode": "wal",
+                  "synchronous": 2
+                },
+                "headerReadMs": 8570.677222,
+                "headerReturnedBodyChars": 10010000,
+                "coldMs": 178905.009183,
+                "coldSourceChecks": 20000,
+                "warmMedianMs": 13667.067241,
+                "saveCount": 30,
+                "saveP50Ms": 83.45697,
+                "saveP95Ms": 339.203508,
+                "saveMaxMs": 167728.722903,
+                "saveSamplesMs": [
+                  167728.722903,
+                  80.633036,
+                  80.863386,
+                  78.539414,
+                  88.924155,
+                  87.628851,
+                  78.154938,
+                  79.945777,
+                  77.020348,
+                  79.394174,
+                  339.203508,
+                  80.544803,
+                  83.303853,
+                  87.85711,
+                  99.208082,
+                  78.165578,
+                  118.607485,
+                  83.45697,
+                  77.430042,
+                  273.703825,
+                  92.209543,
+                  88.896717,
+                  88.147145,
+                  85.096338,
+                  80.537392,
+                  104.237404,
+                  79.722331,
+                  82.794576,
+                  82.055427,
+                  95.07705
+                ],
+                "observeIndexConcurrentSaves": {
+                  "indexRowsBeforeSaves": 64,
+                  "indexRowsAfterSaves": 1920,
+                  "firstCommittedBatchMs": 3414.330862,
+                  "saveCount": 30,
+                  "saveP50Ms": 2156.253233,
+                  "saveP95Ms": 2392.470354,
+                  "saveMaxMs": 91932.643366,
+                  "saveSamplesMs": [
+                    91932.643366,
+                    2382.777812,
+                    2256.701491,
+                    2155.554177,
+                    2297.101672,
+                    2141.721397,
+                    2392.470354,
+                    2047.296903,
+                    2156.253233,
+                    2299.903284,
+                    2034.878713,
+                    2188.708892,
+                    1978.65214,
+                    2051.384505,
+                    2330.017578,
+                    2042.515104,
+                    2160.676913,
+                    2082.810303,
+                    1986.600355,
+                    2302.464398,
+                    1962.03663,
+                    2331.535828,
+                    2097.533155,
+                    2150.973144,
+                    2352.986417,
+                    1949.972219,
+                    2210.977373,
+                    1975.937443,
+                    1979.935643,
+                    2277.859286
+                  ],
+                  "saveProgressSamples": [
+                    {
+                      "sample": 0,
+                      "elapsedMs": 91932.643366,
+                      "indexRowsStart": 64,
+                      "indexRowsEnd": 64,
+                      "sourceChecksStart": 0,
+                      "sourceChecksEnd": 19936
+                    },
+                    {
+                      "sample": 1,
+                      "elapsedMs": 2382.777812,
+                      "indexRowsStart": 64,
+                      "indexRowsEnd": 128,
+                      "sourceChecksStart": 19936,
+                      "sourceChecksEnd": 19936
+                    },
+                    {
+                      "sample": 2,
+                      "elapsedMs": 2256.701491,
+                      "indexRowsStart": 128,
+                      "indexRowsEnd": 192,
+                      "sourceChecksStart": 19936,
+                      "sourceChecksEnd": 19936
+                    },
+                    {
+                      "sample": 3,
+                      "elapsedMs": 2155.554177,
+                      "indexRowsStart": 192,
+                      "indexRowsEnd": 256,
+                      "sourceChecksStart": 19936,
+                      "sourceChecksEnd": 19936
+                    },
+                    {
+                      "sample": 4,
+                      "elapsedMs": 2297.101672,
+                      "indexRowsStart": 256,
+                      "indexRowsEnd": 320,
+                      "sourceChecksStart": 19936,
+                      "sourceChecksEnd": 19936
+                    },
+                    {
+                      "sample": 5,
+                      "elapsedMs": 2141.721397,
+                      "indexRowsStart": 320,
+                      "indexRowsEnd": 384,
+                      "sourceChecksStart": 19936,
+                      "sourceChecksEnd": 19936
+                    },
+                    {
+                      "sample": 6,
+                      "elapsedMs": 2392.470354,
+                      "indexRowsStart": 384,
+                      "indexRowsEnd": 448,
+                      "sourceChecksStart": 19936,
+                      "sourceChecksEnd": 19936
+                    },
+                    {
+                      "sample": 7,
+                      "elapsedMs": 2047.296903,
+                      "indexRowsStart": 448,
+                      "indexRowsEnd": 512,
+                      "sourceChecksStart": 19936,
+                      "sourceChecksEnd": 19936
+                    },
+                    {
+                      "sample": 8,
+                      "elapsedMs": 2156.253233,
+                      "indexRowsStart": 512,
+                      "indexRowsEnd": 576,
+                      "sourceChecksStart": 19936,
+                      "sourceChecksEnd": 19936
+                    },
+                    {
+                      "sample": 9,
+                      "elapsedMs": 2299.903284,
+                      "indexRowsStart": 576,
+                      "indexRowsEnd": 640,
+                      "sourceChecksStart": 19936,
+                      "sourceChecksEnd": 19936
+                    },
+                    {
+                      "sample": 10,
+                      "elapsedMs": 2034.878713,
+                      "indexRowsStart": 640,
+                      "indexRowsEnd": 704,
+                      "sourceChecksStart": 19936,
+                      "sourceChecksEnd": 19936
+                    },
+                    {
+                      "sample": 11,
+                      "elapsedMs": 2188.708892,
+                      "indexRowsStart": 704,
+                      "indexRowsEnd": 768,
+                      "sourceChecksStart": 19936,
+                      "sourceChecksEnd": 19936
+                    },
+                    {
+                      "sample": 12,
+                      "elapsedMs": 1978.65214,
+                      "indexRowsStart": 768,
+                      "indexRowsEnd": 832,
+                      "sourceChecksStart": 19936,
+                      "sourceChecksEnd": 19936
+                    },
+                    {
+                      "sample": 13,
+                      "elapsedMs": 2051.384505,
+                      "indexRowsStart": 832,
+                      "indexRowsEnd": 896,
+                      "sourceChecksStart": 19936,
+                      "sourceChecksEnd": 19936
+                    },
+                    {
+                      "sample": 14,
+                      "elapsedMs": 2330.017578,
+                      "indexRowsStart": 896,
+                      "indexRowsEnd": 960,
+                      "sourceChecksStart": 19936,
+                      "sourceChecksEnd": 19936
+                    },
+                    {
+                      "sample": 15,
+                      "elapsedMs": 2042.515104,
+                      "indexRowsStart": 960,
+                      "indexRowsEnd": 1024,
+                      "sourceChecksStart": 19936,
+                      "sourceChecksEnd": 19936
+                    },
+                    {
+                      "sample": 16,
+                      "elapsedMs": 2160.676913,
+                      "indexRowsStart": 1024,
+                      "indexRowsEnd": 1088,
+                      "sourceChecksStart": 19936,
+                      "sourceChecksEnd": 19936
+                    },
+                    {
+                      "sample": 17,
+                      "elapsedMs": 2082.810303,
+                      "indexRowsStart": 1088,
+                      "indexRowsEnd": 1152,
+                      "sourceChecksStart": 19936,
+                      "sourceChecksEnd": 19936
+                    },
+                    {
+                      "sample": 18,
+                      "elapsedMs": 1986.600355,
+                      "indexRowsStart": 1152,
+                      "indexRowsEnd": 1216,
+                      "sourceChecksStart": 19936,
+                      "sourceChecksEnd": 19936
+                    },
+                    {
+                      "sample": 19,
+                      "elapsedMs": 2302.464398,
+                      "indexRowsStart": 1216,
+                      "indexRowsEnd": 1280,
+                      "sourceChecksStart": 19936,
+                      "sourceChecksEnd": 19936
+                    },
+                    {
+                      "sample": 20,
+                      "elapsedMs": 1962.03663,
+                      "indexRowsStart": 1280,
+                      "indexRowsEnd": 1344,
+                      "sourceChecksStart": 19936,
+                      "sourceChecksEnd": 19936
+                    },
+                    {
+                      "sample": 21,
+                      "elapsedMs": 2331.535828,
+                      "indexRowsStart": 1344,
+                      "indexRowsEnd": 1408,
+                      "sourceChecksStart": 19936,
+                      "sourceChecksEnd": 19936
+                    },
+                    {
+                      "sample": 22,
+                      "elapsedMs": 2097.533155,
+                      "indexRowsStart": 1408,
+                      "indexRowsEnd": 1472,
+                      "sourceChecksStart": 19936,
+                      "sourceChecksEnd": 19936
+                    },
+                    {
+                      "sample": 23,
+                      "elapsedMs": 2150.973144,
+                      "indexRowsStart": 1472,
+                      "indexRowsEnd": 1536,
+                      "sourceChecksStart": 19936,
+                      "sourceChecksEnd": 19936
+                    },
+                    {
+                      "sample": 24,
+                      "elapsedMs": 2352.986417,
+                      "indexRowsStart": 1536,
+                      "indexRowsEnd": 1600,
+                      "sourceChecksStart": 19936,
+                      "sourceChecksEnd": 19936
+                    },
+                    {
+                      "sample": 25,
+                      "elapsedMs": 1949.972219,
+                      "indexRowsStart": 1600,
+                      "indexRowsEnd": 1664,
+                      "sourceChecksStart": 19936,
+                      "sourceChecksEnd": 19936
+                    },
+                    {
+                      "sample": 26,
+                      "elapsedMs": 2210.977373,
+                      "indexRowsStart": 1664,
+                      "indexRowsEnd": 1728,
+                      "sourceChecksStart": 19936,
+                      "sourceChecksEnd": 19936
+                    },
+                    {
+                      "sample": 27,
+                      "elapsedMs": 1975.937443,
+                      "indexRowsStart": 1728,
+                      "indexRowsEnd": 1792,
+                      "sourceChecksStart": 19936,
+                      "sourceChecksEnd": 19936
+                    },
+                    {
+                      "sample": 28,
+                      "elapsedMs": 1979.935643,
+                      "indexRowsStart": 1792,
+                      "indexRowsEnd": 1856,
+                      "sourceChecksStart": 19936,
+                      "sourceChecksEnd": 19936
+                    },
+                    {
+                      "sample": 29,
+                      "elapsedMs": 2277.859286,
+                      "indexRowsStart": 1856,
+                      "indexRowsEnd": 1920,
+                      "sourceChecksStart": 19936,
+                      "sourceChecksEnd": 19936
+                    }
+                  ],
+                  "sourceChecksAfterSaves": 19936,
+                  "indexRowsFinal": 20000,
+                  "allIndexRowsCommittedMs": 855496.790244,
+                  "searchIndexReadyMs": 868629.185926,
+                  "sourceChecks": 19937
+                },
+                "writerCompletedDuringPausedSearch": false,
+                "shelfReturnedPreviewChars": 1181180,
+                "shelfDirectoryBodyChars": 10010000,
+                "projectionRows": null,
+                "projectionChars": null,
+                "fullBodyOnDemandMatches": true
+              }
+            ],
+            "aggregate": null,
+            "receipt": {
+              "phase": "baseline-final-performance",
+              "selection": "org.inkweft.data.LibraryReadPerformanceTest",
+              "started_utc": "2026-10-13T00:57:57.995775+00:00",
+              "seconds": 1540.107665137999,
+              "exit_code": 0,
+              "expected": 1,
+              "executed": 1,
+              "failures": 0,
+              "passed": true,
+              "environment": "API35 x86_64 software Android emulator; no KVM; not physical-device performance"
+            },
+            "log": "/workspace/scratch/pr20-closure-evidence/baseline-final-performance-library-probe.log",
+            "receiptPath": "/workspace/scratch/pr20-closure-evidence/baseline-final-performance-library-probe.json",
+            "logSha256": "facdc622ab8392a74b9fde3ccd745f5be1fea44344f1d048d3c2999b70d8c7f9",
+            "receiptSha256": "d9f0ff138fb5a4b2bc9d7c87fbdfb45a58dde938c64ab71830414fb5a3421bff",
+            "recordedDevice": {
+              "serial": "emulator-5554",
+              "environment": "API35 x86_64 software Android emulator; no KVM; not physical-device performance"
+            },
+            "recordCounts": {
+              "measurements": 1,
+              "sqliteSettings": 1
+            },
+            "observeIndexConcurrentSavesAssessment": {
+              "status": "RECORDED",
+              "issues": [],
+              "progressPerSave": [
+                {
+                  "sample": 0,
+                  "indexRowsAdvanced": 0,
+                  "sourceChecksAdvanced": 19936
+                },
+                {
+                  "sample": 1,
+                  "indexRowsAdvanced": 64,
+                  "sourceChecksAdvanced": 0
+                },
+                {
+                  "sample": 2,
+                  "indexRowsAdvanced": 64,
+                  "sourceChecksAdvanced": 0
+                },
+                {
+                  "sample": 3,
+                  "indexRowsAdvanced": 64,
+                  "sourceChecksAdvanced": 0
+                },
+                {
+                  "sample": 4,
+                  "indexRowsAdvanced": 64,
+                  "sourceChecksAdvanced": 0
+                },
+                {
+                  "sample": 5,
+                  "indexRowsAdvanced": 64,
+                  "sourceChecksAdvanced": 0
+                },
+                {
+                  "sample": 6,
+                  "indexRowsAdvanced": 64,
+                  "sourceChecksAdvanced": 0
+                },
+                {
+                  "sample": 7,
+                  "indexRowsAdvanced": 64,
+                  "sourceChecksAdvanced": 0
+                },
+                {
+                  "sample": 8,
+                  "indexRowsAdvanced": 64,
+                  "sourceChecksAdvanced": 0
+                },
+                {
+                  "sample": 9,
+                  "indexRowsAdvanced": 64,
+                  "sourceChecksAdvanced": 0
+                },
+                {
+                  "sample": 10,
+                  "indexRowsAdvanced": 64,
+                  "sourceChecksAdvanced": 0
+                },
+                {
+                  "sample": 11,
+                  "indexRowsAdvanced": 64,
+                  "sourceChecksAdvanced": 0
+                },
+                {
+                  "sample": 12,
+                  "indexRowsAdvanced": 64,
+                  "sourceChecksAdvanced": 0
+                },
+                {
+                  "sample": 13,
+                  "indexRowsAdvanced": 64,
+                  "sourceChecksAdvanced": 0
+                },
+                {
+                  "sample": 14,
+                  "indexRowsAdvanced": 64,
+                  "sourceChecksAdvanced": 0
+                },
+                {
+                  "sample": 15,
+                  "indexRowsAdvanced": 64,
+                  "sourceChecksAdvanced": 0
+                },
+                {
+                  "sample": 16,
+                  "indexRowsAdvanced": 64,
+                  "sourceChecksAdvanced": 0
+                },
+                {
+                  "sample": 17,
+                  "indexRowsAdvanced": 64,
+                  "sourceChecksAdvanced": 0
+                },
+                {
+                  "sample": 18,
+                  "indexRowsAdvanced": 64,
+                  "sourceChecksAdvanced": 0
+                },
+                {
+                  "sample": 19,
+                  "indexRowsAdvanced": 64,
+                  "sourceChecksAdvanced": 0
+                },
+                {
+                  "sample": 20,
+                  "indexRowsAdvanced": 64,
+                  "sourceChecksAdvanced": 0
+                },
+                {
+                  "sample": 21,
+                  "indexRowsAdvanced": 64,
+                  "sourceChecksAdvanced": 0
+                },
+                {
+                  "sample": 22,
+                  "indexRowsAdvanced": 64,
+                  "sourceChecksAdvanced": 0
+                },
+                {
+                  "sample": 23,
+                  "indexRowsAdvanced": 64,
+                  "sourceChecksAdvanced": 0
+                },
+                {
+                  "sample": 24,
+                  "indexRowsAdvanced": 64,
+                  "sourceChecksAdvanced": 0
+                },
+                {
+                  "sample": 25,
+                  "indexRowsAdvanced": 64,
+                  "sourceChecksAdvanced": 0
+                },
+                {
+                  "sample": 26,
+                  "indexRowsAdvanced": 64,
+                  "sourceChecksAdvanced": 0
+                },
+                {
+                  "sample": 27,
+                  "indexRowsAdvanced": 64,
+                  "sourceChecksAdvanced": 0
+                },
+                {
+                  "sample": 28,
+                  "indexRowsAdvanced": 64,
+                  "sourceChecksAdvanced": 0
+                },
+                {
+                  "sample": 29,
+                  "indexRowsAdvanced": 64,
+                  "sourceChecksAdvanced": 0
+                }
+              ],
+              "indexRowsAdvancedDuringSaveSeries": 1856,
+              "saveWindowsWithIndexProgress": 29,
+              "saveWindowsWithSourceProgress": 1,
+              "saveWindowsWithBothProgress": 0,
+              "overlapInterpretation": "No save window records both index and source-check progress; three-way overlap is not established"
+            },
+            "indexingProtocolFromEvidenceFields": "automatic-observe"
+          },
+          "candidate": {
+            "side": "candidate",
+            "label": "candidate-v4 frozen 744 sources",
+            "status": "VERIFIED_NATIVE_RUN",
+            "issues": [],
+            "writerSqlite": {
+              "page_size": 1024,
+              "auto_vacuum": 1,
+              "journal_mode": "wal",
+              "synchronous": 2
+            },
+            "measurements": [
+              {
+                "books": 500,
+                "pages": 20000,
+                "noteBodyChars": 20020,
+                "writerSqlite": {
+                  "page_size": 1024,
+                  "auto_vacuum": 1,
+                  "journal_mode": "wal",
+                  "synchronous": 2
+                },
+                "headerReadMs": 794.462369,
+                "headerReturnedBodyChars": 0,
+                "coldMs": 46567.368791,
+                "coldSourceChecks": 20000,
+                "warmMedianMs": 9561.469462,
+                "saveCount": 30,
+                "saveP50Ms": 157.757855,
+                "saveP95Ms": 254.405466,
+                "saveMaxMs": 285.396616,
+                "saveSamplesMs": [
+                  285.396616,
+                  173.777703,
+                  207.319275,
+                  187.651578,
+                  176.191391,
+                  144.925388,
+                  143.636176,
+                  161.451853,
+                  153.218758,
+                  157.757855,
+                  158.905857,
+                  115.39208,
+                  167.716566,
+                  187.899422,
+                  254.405466,
+                  145.667017,
+                  130.899051,
+                  164.975269,
+                  149.697861,
+                  151.062231,
+                  144.410961,
+                  131.655357,
+                  167.119831,
+                  130.612127,
+                  164.252374,
+                  167.138715,
+                  148.614379,
+                  145.060115,
+                  148.369521,
+                  129.906793
+                ],
+                "observeIndexConcurrentSaves": {
+                  "indexRowsBeforeSaves": 64,
+                  "indexRowsAfterSaves": 128,
+                  "firstCommittedBatchMs": 10212.73752,
+                  "saveCount": 30,
+                  "saveP50Ms": 408.262836,
+                  "saveP95Ms": 1066.333241,
+                  "saveMaxMs": 2935.302117,
+                  "saveSamplesMs": [
+                    659.773659,
+                    338.671531,
+                    420.883777,
+                    514.797568,
+                    355.966109,
+                    368.111084,
+                    361.619457,
+                    619.710903,
+                    506.886226,
+                    309.78066,
+                    439.794209,
+                    608.048189,
+                    1066.333241,
+                    458.345267,
+                    408.262836,
+                    278.999717,
+                    484.211689,
+                    491.659476,
+                    375.431353,
+                    360.051637,
+                    296.563676,
+                    2935.302117,
+                    562.631408,
+                    354.620759,
+                    339.184784,
+                    336.964283,
+                    323.637874,
+                    455.985537,
+                    331.221,
+                    303.753444
+                  ],
+                  "saveProgressSamples": [
+                    {
+                      "sample": 0,
+                      "elapsedMs": 659.773659,
+                      "indexRowsStart": 64,
+                      "indexRowsEnd": 64,
+                      "sourceChecksStart": 2283,
+                      "sourceChecksEnd": 2407
+                    },
+                    {
+                      "sample": 1,
+                      "elapsedMs": 338.671531,
+                      "indexRowsStart": 64,
+                      "indexRowsEnd": 64,
+                      "sourceChecksStart": 2407,
+                      "sourceChecksEnd": 2429
+                    },
+                    {
+                      "sample": 2,
+                      "elapsedMs": 420.883777,
+                      "indexRowsStart": 64,
+                      "indexRowsEnd": 64,
+                      "sourceChecksStart": 2429,
+                      "sourceChecksEnd": 2429
+                    },
+                    {
+                      "sample": 3,
+                      "elapsedMs": 514.797568,
+                      "indexRowsStart": 64,
+                      "indexRowsEnd": 64,
+                      "sourceChecksStart": 2429,
+                      "sourceChecksEnd": 2429
+                    },
+                    {
+                      "sample": 4,
+                      "elapsedMs": 355.966109,
+                      "indexRowsStart": 64,
+                      "indexRowsEnd": 64,
+                      "sourceChecksStart": 2429,
+                      "sourceChecksEnd": 2429
+                    },
+                    {
+                      "sample": 5,
+                      "elapsedMs": 368.111084,
+                      "indexRowsStart": 64,
+                      "indexRowsEnd": 64,
+                      "sourceChecksStart": 2429,
+                      "sourceChecksEnd": 2429
+                    },
+                    {
+                      "sample": 6,
+                      "elapsedMs": 361.619457,
+                      "indexRowsStart": 64,
+                      "indexRowsEnd": 64,
+                      "sourceChecksStart": 2429,
+                      "sourceChecksEnd": 2429
+                    },
+                    {
+                      "sample": 7,
+                      "elapsedMs": 619.710903,
+                      "indexRowsStart": 64,
+                      "indexRowsEnd": 64,
+                      "sourceChecksStart": 2429,
+                      "sourceChecksEnd": 2429
+                    },
+                    {
+                      "sample": 8,
+                      "elapsedMs": 506.886226,
+                      "indexRowsStart": 64,
+                      "indexRowsEnd": 64,
+                      "sourceChecksStart": 2429,
+                      "sourceChecksEnd": 2429
+                    },
+                    {
+                      "sample": 9,
+                      "elapsedMs": 309.78066,
+                      "indexRowsStart": 64,
+                      "indexRowsEnd": 64,
+                      "sourceChecksStart": 2429,
+                      "sourceChecksEnd": 2429
+                    },
+                    {
+                      "sample": 10,
+                      "elapsedMs": 439.794209,
+                      "indexRowsStart": 64,
+                      "indexRowsEnd": 64,
+                      "sourceChecksStart": 2429,
+                      "sourceChecksEnd": 2429
+                    },
+                    {
+                      "sample": 11,
+                      "elapsedMs": 608.048189,
+                      "indexRowsStart": 64,
+                      "indexRowsEnd": 64,
+                      "sourceChecksStart": 2429,
+                      "sourceChecksEnd": 2429
+                    },
+                    {
+                      "sample": 12,
+                      "elapsedMs": 1066.333241,
+                      "indexRowsStart": 64,
+                      "indexRowsEnd": 64,
+                      "sourceChecksStart": 2429,
+                      "sourceChecksEnd": 2429
+                    },
+                    {
+                      "sample": 13,
+                      "elapsedMs": 458.345267,
+                      "indexRowsStart": 64,
+                      "indexRowsEnd": 64,
+                      "sourceChecksStart": 2429,
+                      "sourceChecksEnd": 2429
+                    },
+                    {
+                      "sample": 14,
+                      "elapsedMs": 408.262836,
+                      "indexRowsStart": 64,
+                      "indexRowsEnd": 64,
+                      "sourceChecksStart": 2429,
+                      "sourceChecksEnd": 2429
+                    },
+                    {
+                      "sample": 15,
+                      "elapsedMs": 278.999717,
+                      "indexRowsStart": 64,
+                      "indexRowsEnd": 64,
+                      "sourceChecksStart": 2429,
+                      "sourceChecksEnd": 2429
+                    },
+                    {
+                      "sample": 16,
+                      "elapsedMs": 484.211689,
+                      "indexRowsStart": 64,
+                      "indexRowsEnd": 64,
+                      "sourceChecksStart": 2429,
+                      "sourceChecksEnd": 2429
+                    },
+                    {
+                      "sample": 17,
+                      "elapsedMs": 491.659476,
+                      "indexRowsStart": 64,
+                      "indexRowsEnd": 64,
+                      "sourceChecksStart": 2429,
+                      "sourceChecksEnd": 2429
+                    },
+                    {
+                      "sample": 18,
+                      "elapsedMs": 375.431353,
+                      "indexRowsStart": 64,
+                      "indexRowsEnd": 64,
+                      "sourceChecksStart": 2429,
+                      "sourceChecksEnd": 2429
+                    },
+                    {
+                      "sample": 19,
+                      "elapsedMs": 360.051637,
+                      "indexRowsStart": 64,
+                      "indexRowsEnd": 64,
+                      "sourceChecksStart": 2429,
+                      "sourceChecksEnd": 2429
+                    },
+                    {
+                      "sample": 20,
+                      "elapsedMs": 296.563676,
+                      "indexRowsStart": 64,
+                      "indexRowsEnd": 64,
+                      "sourceChecksStart": 2429,
+                      "sourceChecksEnd": 2429
+                    },
+                    {
+                      "sample": 21,
+                      "elapsedMs": 2935.302117,
+                      "indexRowsStart": 64,
+                      "indexRowsEnd": 128,
+                      "sourceChecksStart": 2429,
+                      "sourceChecksEnd": 2540
+                    },
+                    {
+                      "sample": 22,
+                      "elapsedMs": 562.631408,
+                      "indexRowsStart": 128,
+                      "indexRowsEnd": 128,
+                      "sourceChecksStart": 2540,
+                      "sourceChecksEnd": 2562
+                    },
+                    {
+                      "sample": 23,
+                      "elapsedMs": 354.620759,
+                      "indexRowsStart": 128,
+                      "indexRowsEnd": 128,
+                      "sourceChecksStart": 2562,
+                      "sourceChecksEnd": 2562
+                    },
+                    {
+                      "sample": 24,
+                      "elapsedMs": 339.184784,
+                      "indexRowsStart": 128,
+                      "indexRowsEnd": 128,
+                      "sourceChecksStart": 2562,
+                      "sourceChecksEnd": 2562
+                    },
+                    {
+                      "sample": 25,
+                      "elapsedMs": 336.964283,
+                      "indexRowsStart": 128,
+                      "indexRowsEnd": 128,
+                      "sourceChecksStart": 2562,
+                      "sourceChecksEnd": 2562
+                    },
+                    {
+                      "sample": 26,
+                      "elapsedMs": 323.637874,
+                      "indexRowsStart": 128,
+                      "indexRowsEnd": 128,
+                      "sourceChecksStart": 2562,
+                      "sourceChecksEnd": 2562
+                    },
+                    {
+                      "sample": 27,
+                      "elapsedMs": 455.985537,
+                      "indexRowsStart": 128,
+                      "indexRowsEnd": 128,
+                      "sourceChecksStart": 2562,
+                      "sourceChecksEnd": 2562
+                    },
+                    {
+                      "sample": 28,
+                      "elapsedMs": 331.221,
+                      "indexRowsStart": 128,
+                      "indexRowsEnd": 128,
+                      "sourceChecksStart": 2562,
+                      "sourceChecksEnd": 2562
+                    },
+                    {
+                      "sample": 29,
+                      "elapsedMs": 303.753444,
+                      "indexRowsStart": 128,
+                      "indexRowsEnd": 128,
+                      "sourceChecksStart": 2562,
+                      "sourceChecksEnd": 2562
+                    }
+                  ],
+                  "sourceChecksAfterSaves": 2562,
+                  "indexRowsFinal": 20000,
+                  "allIndexRowsCommittedMs": 1060403.503966,
+                  "searchIndexReadyMs": 1070059.683763,
+                  "sourceChecks": 22435
+                },
+                "writerCompletedDuringPausedSearch": true,
+                "shelfReturnedPreviewChars": 35425,
+                "shelfDirectoryBodyChars": 0,
+                "projectionRows": 61,
+                "projectionChars": 36025,
+                "fullBodyOnDemandMatches": true
+              }
+            ],
+            "aggregate": null,
+            "receipt": {
+              "phase": "candidate-v4-performance",
+              "selection": "org.inkweft.data.LibraryReadPerformanceTest",
+              "started_utc": "2026-10-13T00:11:26.244121+00:00",
+              "seconds": 1389.931083948999,
+              "exit_code": 0,
+              "expected": 1,
+              "executed": 1,
+              "failures": 0,
+              "passed": true,
+              "environment": "API35 x86_64 software Android emulator; no KVM; not physical-device performance"
+            },
+            "log": "/workspace/scratch/pr20-closure-evidence/candidate-v4-performance-library-probe.log",
+            "receiptPath": "/workspace/scratch/pr20-closure-evidence/candidate-v4-performance-library-probe.json",
+            "logSha256": "3ff495eec29fb24b8da80c881689c0aaf19c7f4173fcd049f6230f17b4d5cc33",
+            "receiptSha256": "2e24cf1ee7c3a1756cd7694560da50d42d575b2af51c670182a4da9ab195d110",
+            "recordedDevice": {
+              "serial": "emulator-5554",
+              "environment": "API35 x86_64 software Android emulator; no KVM; not physical-device performance"
+            },
+            "recordCounts": {
+              "measurements": 1,
+              "sqliteSettings": 1
+            },
+            "observeIndexConcurrentSavesAssessment": {
+              "status": "RECORDED",
+              "issues": [],
+              "progressPerSave": [
+                {
+                  "sample": 0,
+                  "indexRowsAdvanced": 0,
+                  "sourceChecksAdvanced": 124
+                },
+                {
+                  "sample": 1,
+                  "indexRowsAdvanced": 0,
+                  "sourceChecksAdvanced": 22
+                },
+                {
+                  "sample": 2,
+                  "indexRowsAdvanced": 0,
+                  "sourceChecksAdvanced": 0
+                },
+                {
+                  "sample": 3,
+                  "indexRowsAdvanced": 0,
+                  "sourceChecksAdvanced": 0
+                },
+                {
+                  "sample": 4,
+                  "indexRowsAdvanced": 0,
+                  "sourceChecksAdvanced": 0
+                },
+                {
+                  "sample": 5,
+                  "indexRowsAdvanced": 0,
+                  "sourceChecksAdvanced": 0
+                },
+                {
+                  "sample": 6,
+                  "indexRowsAdvanced": 0,
+                  "sourceChecksAdvanced": 0
+                },
+                {
+                  "sample": 7,
+                  "indexRowsAdvanced": 0,
+                  "sourceChecksAdvanced": 0
+                },
+                {
+                  "sample": 8,
+                  "indexRowsAdvanced": 0,
+                  "sourceChecksAdvanced": 0
+                },
+                {
+                  "sample": 9,
+                  "indexRowsAdvanced": 0,
+                  "sourceChecksAdvanced": 0
+                },
+                {
+                  "sample": 10,
+                  "indexRowsAdvanced": 0,
+                  "sourceChecksAdvanced": 0
+                },
+                {
+                  "sample": 11,
+                  "indexRowsAdvanced": 0,
+                  "sourceChecksAdvanced": 0
+                },
+                {
+                  "sample": 12,
+                  "indexRowsAdvanced": 0,
+                  "sourceChecksAdvanced": 0
+                },
+                {
+                  "sample": 13,
+                  "indexRowsAdvanced": 0,
+                  "sourceChecksAdvanced": 0
+                },
+                {
+                  "sample": 14,
+                  "indexRowsAdvanced": 0,
+                  "sourceChecksAdvanced": 0
+                },
+                {
+                  "sample": 15,
+                  "indexRowsAdvanced": 0,
+                  "sourceChecksAdvanced": 0
+                },
+                {
+                  "sample": 16,
+                  "indexRowsAdvanced": 0,
+                  "sourceChecksAdvanced": 0
+                },
+                {
+                  "sample": 17,
+                  "indexRowsAdvanced": 0,
+                  "sourceChecksAdvanced": 0
+                },
+                {
+                  "sample": 18,
+                  "indexRowsAdvanced": 0,
+                  "sourceChecksAdvanced": 0
+                },
+                {
+                  "sample": 19,
+                  "indexRowsAdvanced": 0,
+                  "sourceChecksAdvanced": 0
+                },
+                {
+                  "sample": 20,
+                  "indexRowsAdvanced": 0,
+                  "sourceChecksAdvanced": 0
+                },
+                {
+                  "sample": 21,
+                  "indexRowsAdvanced": 64,
+                  "sourceChecksAdvanced": 111
+                },
+                {
+                  "sample": 22,
+                  "indexRowsAdvanced": 0,
+                  "sourceChecksAdvanced": 22
+                },
+                {
+                  "sample": 23,
+                  "indexRowsAdvanced": 0,
+                  "sourceChecksAdvanced": 0
+                },
+                {
+                  "sample": 24,
+                  "indexRowsAdvanced": 0,
+                  "sourceChecksAdvanced": 0
+                },
+                {
+                  "sample": 25,
+                  "indexRowsAdvanced": 0,
+                  "sourceChecksAdvanced": 0
+                },
+                {
+                  "sample": 26,
+                  "indexRowsAdvanced": 0,
+                  "sourceChecksAdvanced": 0
+                },
+                {
+                  "sample": 27,
+                  "indexRowsAdvanced": 0,
+                  "sourceChecksAdvanced": 0
+                },
+                {
+                  "sample": 28,
+                  "indexRowsAdvanced": 0,
+                  "sourceChecksAdvanced": 0
+                },
+                {
+                  "sample": 29,
+                  "indexRowsAdvanced": 0,
+                  "sourceChecksAdvanced": 0
+                }
+              ],
+              "indexRowsAdvancedDuringSaveSeries": 64,
+              "saveWindowsWithIndexProgress": 1,
+              "saveWindowsWithSourceProgress": 4,
+              "saveWindowsWithBothProgress": 1,
+              "overlapInterpretation": "Both index and source-check counters advanced across some enclosing save windows; this is windowed progress evidence, not simultaneous CPU execution or lock-wait measurement"
+            },
+            "indexingProtocolFromEvidenceFields": "automatic-observe"
+          },
+          "comparison": {
+            "status": "PAIRED_RECORDED_ENVIRONMENT",
+            "issues": [],
+            "changesPercent": {
+              "coldMs": -73.97089717964982,
+              "warmMedianMs": -30.04007887429989,
+              "headerReadMs": -90.73045981756609,
+              "saveP50Ms": 89.02897505145467,
+              "saveP95Ms": -24.999164218549296,
+              "saveMaxMs": -99.8298463071438
+            },
+            "observeIndexConcurrentSavesChangesPercent": {
+              "saveP50Ms": -81.06609976268962,
+              "saveP95Ms": -55.42961528375119,
+              "saveMaxMs": -96.807116591531,
+              "firstCommittedBatchMs": 199.1138800771558,
+              "allIndexRowsCommittedMs": 23.95178053953395,
+              "searchIndexReadyMs": 23.189469235052872
+            }
+          }
+        },
+        "history": {
+          "baseline": {
+            "side": "baseline",
+            "label": "a128bb07 + shared safe factory and probes",
+            "status": "VERIFIED_NATIVE_RUN",
+            "issues": [],
+            "writerSqlite": {
+              "page_size": 1024,
+              "auto_vacuum": 1,
+              "journal_mode": "wal",
+              "synchronous": 2
+            },
+            "measurements": [
+              {
+                "baseline": true,
+                "historicalRoots": 2000,
+                "detachedSources": 4096,
+                "writerSqlite": {
+                  "page_size": 1024,
+                  "auto_vacuum": 1,
+                  "journal_mode": "wal",
+                  "synchronous": 2
+                },
+                "collectionRootScans": 17,
+                "collectionMs": 131305.840304,
+                "pausedConcurrentRootScans": 1,
+                "pausedScanSaves": 30,
+                "liveConcurrentRootScans": 18,
+                "liveCollectionAndSavesMs": 120266.00014,
+                "liveFirstPassDeferred": true,
+                "observerNotifications": 33,
+                "pausedScanSaveP50Ms": 76.064526,
+                "pausedScanSaveP95Ms": 92.799203,
+                "pausedScanSaveMaxMs": 154.892666,
+                "pausedScanSaveSamplesMs": [
+                  154.892666,
+                  72.337061,
+                  76.541517,
+                  78.212031,
+                  92.799203,
+                  77.778276,
+                  75.976624,
+                  75.182664,
+                  85.888738,
+                  76.064526,
+                  72.496094,
+                  71.935703,
+                  73.583238,
+                  88.254404,
+                  71.037712,
+                  79.561653,
+                  69.557759,
+                  73.152347,
+                  76.742595,
+                  70.896833,
+                  70.142976,
+                  76.701763,
+                  80.052972,
+                  73.065725,
+                  86.719528,
+                  86.653716,
+                  80.96951,
+                  72.179153,
+                  74.824844,
+                  76.828804
+                ],
+                "liveSaveP50Ms": 72.554328,
+                "liveSaveP95Ms": 146.327721,
+                "liveSaveMaxMs": 188.410436,
+                "liveSaveSamplesMs": [
+                  124.959968,
+                  133.875432,
+                  139.097992,
+                  130.126757,
+                  146.327721,
+                  131.766737,
+                  112.158036,
+                  188.410436,
+                  122.238675,
+                  69.556696,
+                  79.458065,
+                  81.49157,
+                  63.738612,
+                  72.036808,
+                  66.017913,
+                  61.553842,
+                  62.066451,
+                  91.662103,
+                  76.220875,
+                  72.554328,
+                  66.759217,
+                  76.773818,
+                  70.72119,
+                  66.012421,
+                  65.278435,
+                  75.648085,
+                  60.749074,
+                  65.573525,
+                  63.980562,
+                  63.998402
+                ]
+              }
+            ],
+            "aggregate": null,
+            "receipt": {
+              "phase": "baseline-final-performance",
+              "selection": "org.inkweft.data.HistoryCollectionBenchmarkTest",
+              "started_utc": "2026-10-13T00:51:39.428709+00:00",
+              "seconds": 374.7358721720011,
+              "exit_code": 0,
+              "expected": 1,
+              "executed": 1,
+              "failures": 0,
+              "passed": true,
+              "environment": "API35 x86_64 software Android emulator; no KVM; not physical-device performance"
+            },
+            "log": "/workspace/scratch/pr20-closure-evidence/baseline-final-performance-history-probe.log",
+            "receiptPath": "/workspace/scratch/pr20-closure-evidence/baseline-final-performance-history-probe.json",
+            "logSha256": "450fe6f2a53133a1803f9b818a05a4202ac99faea7a197ce906de8ca0f1ab513",
+            "receiptSha256": "1ab18bb64841d39307595e317b96d9e9bc92b0e32449721af0778ea8fa62300e",
+            "recordedDevice": {
+              "serial": "emulator-5554",
+              "environment": "API35 x86_64 software Android emulator; no KVM; not physical-device performance"
+            },
+            "recordCounts": {
+              "measurements": 1,
+              "sqliteSettings": 1
+            }
+          },
+          "candidate": {
+            "side": "candidate",
+            "label": "candidate-v4 frozen 744 sources",
+            "status": "VERIFIED_NATIVE_RUN",
+            "issues": [],
+            "writerSqlite": {
+              "page_size": 1024,
+              "auto_vacuum": 1,
+              "journal_mode": "wal",
+              "synchronous": 2
+            },
+            "measurements": [
+              {
+                "baseline": false,
+                "historicalRoots": 2000,
+                "detachedSources": 4096,
+                "writerSqlite": {
+                  "page_size": 1024,
+                  "auto_vacuum": 1,
+                  "journal_mode": "wal",
+                  "synchronous": 2
+                },
+                "collectionRootScans": 1,
+                "collectionMs": 11354.422681,
+                "pausedConcurrentRootScans": 1,
+                "pausedScanSaves": 30,
+                "liveConcurrentRootScans": 2,
+                "liveCollectionAndSavesMs": 15765.75648,
+                "liveFirstPassDeferred": true,
+                "observerNotifications": 33,
+                "pausedScanSaveP50Ms": 79.642262,
+                "pausedScanSaveP95Ms": 160.745357,
+                "pausedScanSaveMaxMs": 237.565828,
+                "pausedScanSaveSamplesMs": [
+                  237.565828,
+                  76.414528,
+                  92.556004,
+                  78.864312,
+                  84.207336,
+                  78.850653,
+                  101.000294,
+                  160.745357,
+                  118.196129,
+                  78.590262,
+                  98.477461,
+                  75.052151,
+                  106.343747,
+                  95.867796,
+                  79.226222,
+                  79.642262,
+                  79.43978,
+                  120.87128,
+                  89.186664,
+                  102.317498,
+                  113.329903,
+                  80.38807,
+                  69.355842,
+                  69.082128,
+                  88.873975,
+                  68.987126,
+                  78.631365,
+                  73.657048,
+                  75.621127,
+                  66.957093
+                ],
+                "liveSaveP50Ms": 76.398991,
+                "liveSaveP95Ms": 181.048899,
+                "liveSaveMaxMs": 197.854903,
+                "liveSaveSamplesMs": [
+                  149.72452,
+                  140.928608,
+                  145.967063,
+                  177.46058,
+                  155.224816,
+                  181.048899,
+                  114.560577,
+                  137.011002,
+                  64.287713,
+                  91.395866,
+                  68.494571,
+                  74.240334,
+                  68.547272,
+                  76.877633,
+                  151.738389,
+                  63.353383,
+                  172.2608,
+                  101.60368,
+                  76.706733,
+                  67.640912,
+                  63.248207,
+                  66.577771,
+                  73.691463,
+                  197.854903,
+                  67.167889,
+                  59.374918,
+                  70.522777,
+                  64.131944,
+                  76.398991,
+                  72.354538
+                ]
+              }
+            ],
+            "aggregate": null,
+            "receipt": {
+              "phase": "candidate-v4-performance",
+              "selection": "org.inkweft.data.HistoryCollectionBenchmarkTest",
+              "started_utc": "2026-10-13T00:09:14.290863+00:00",
+              "seconds": 128.96728325000004,
+              "exit_code": 0,
+              "expected": 1,
+              "executed": 1,
+              "failures": 0,
+              "passed": true,
+              "environment": "API35 x86_64 software Android emulator; no KVM; not physical-device performance"
+            },
+            "log": "/workspace/scratch/pr20-closure-evidence/candidate-v4-performance-history-probe.log",
+            "receiptPath": "/workspace/scratch/pr20-closure-evidence/candidate-v4-performance-history-probe.json",
+            "logSha256": "f3d471a977144c3d5402668036efead72617c5193104e96a42114bef26d3da49",
+            "receiptSha256": "cf79086ca4eb1e12e8229c810710663e15c28d137ec16bfc42b0a97275081bc6",
+            "recordedDevice": {
+              "serial": "emulator-5554",
+              "environment": "API35 x86_64 software Android emulator; no KVM; not physical-device performance"
+            },
+            "recordCounts": {
+              "measurements": 1,
+              "sqliteSettings": 1
+            }
+          },
+          "comparison": {
+            "status": "PAIRED_RECORDED_ENVIRONMENT",
+            "issues": [],
+            "changesPercent": {
+              "collectionRootScans": -94.11764705882352,
+              "collectionMs": -91.35269028802361,
+              "pausedConcurrentRootScans": 0.0,
+              "liveConcurrentRootScans": -88.88888888888889,
+              "liveCollectionAndSavesMs": -86.89092805809847,
+              "pausedScanSaveP50Ms": 4.703553927358994,
+              "pausedScanSaveP95Ms": 73.21846718877532,
+              "pausedScanSaveMaxMs": 53.37448449625111,
+              "liveSaveP50Ms": 5.2990126240298085,
+              "liveSaveP95Ms": 23.72836654785324,
+              "liveSaveMaxMs": 5.012709062464027
+            }
+          }
+        },
+        "raster": {
+          "baseline": {
+            "side": "baseline",
+            "label": "a128bb07 + shared safe factory and probes",
+            "status": "VERIFIED_NATIVE_RUN",
+            "issues": [],
+            "writerSqlite": {
+              "page_size": 1024,
+              "auto_vacuum": 1,
+              "journal_mode": "wal",
+              "synchronous": 2
+            },
+            "measurements": [
+              {
+                "case": "initial",
+                "completeMs": 12140.887597,
+                "decoded": 320,
+                "snapshotReadRows": 320,
+                "rebuilt": 20,
+                "tiles": 20,
+                "metadataMs": 844.199913,
+                "rasterMs": 10523.520719,
+                "publicationMs": 39.041602,
+                "coldMs": 8187.219754,
+                "coldDecoded": 320,
+                "coldSnapshotReadRows": 320,
+                "coldRebuilt": 20,
+                "pixelsEqual": true,
+                "reusedStrokes": null,
+                "geometryBytes": null,
+                "nativeStrokeBuilds": null
+              },
+              {
+                "case": "transform-0-0",
+                "completeMs": 4054.31079,
+                "decoded": 320,
+                "snapshotReadRows": 320,
+                "rebuilt": 8,
+                "tiles": 20,
+                "metadataMs": 894.067223,
+                "rasterMs": 2891.085748,
+                "publicationMs": 20.51791,
+                "coldMs": 7508.410701,
+                "coldDecoded": 320,
+                "coldSnapshotReadRows": 320,
+                "coldRebuilt": 20,
+                "pixelsEqual": true,
+                "reusedStrokes": null,
+                "geometryBytes": null,
+                "nativeStrokeBuilds": null
+              },
+              {
+                "case": "transform-0-1",
+                "completeMs": 7504.968879,
+                "decoded": 320,
+                "snapshotReadRows": 320,
+                "rebuilt": 20,
+                "tiles": 20,
+                "metadataMs": 1018.455446,
+                "rasterMs": 6171.712888,
+                "publicationMs": 27.395086,
+                "coldMs": 6421.622211,
+                "coldDecoded": 320,
+                "coldSnapshotReadRows": 320,
+                "coldRebuilt": 20,
+                "pixelsEqual": true,
+                "reusedStrokes": null,
+                "geometryBytes": null,
+                "nativeStrokeBuilds": null
+              },
+              {
+                "case": "transform-0-2",
+                "completeMs": 7365.080131,
+                "decoded": 304,
+                "snapshotReadRows": 304,
+                "rebuilt": 20,
+                "tiles": 20,
+                "metadataMs": 884.342794,
+                "rasterMs": 6189.486086,
+                "publicationMs": 16.95832,
+                "coldMs": 5717.633658,
+                "coldDecoded": 304,
+                "coldSnapshotReadRows": 304,
+                "coldRebuilt": 20,
+                "pixelsEqual": true,
+                "reusedStrokes": null,
+                "geometryBytes": null,
+                "nativeStrokeBuilds": null
+              },
+              {
+                "case": "transform-0-3",
+                "completeMs": 7097.110807,
+                "decoded": 320,
+                "snapshotReadRows": 320,
+                "rebuilt": 20,
+                "tiles": 20,
+                "metadataMs": 992.717369,
+                "rasterMs": 5805.598476,
+                "publicationMs": 17.953624,
+                "coldMs": 6116.83559,
+                "coldDecoded": 320,
+                "coldSnapshotReadRows": 320,
+                "coldRebuilt": 20,
+                "pixelsEqual": true,
+                "reusedStrokes": null,
+                "geometryBytes": null,
+                "nativeStrokeBuilds": null
+              },
+              {
+                "case": "transform-1-0",
+                "completeMs": 3219.983256,
+                "decoded": 320,
+                "snapshotReadRows": 320,
+                "rebuilt": 8,
+                "tiles": 20,
+                "metadataMs": 879.244821,
+                "rasterMs": 2120.771142,
+                "publicationMs": 11.553939,
+                "coldMs": 5492.705958,
+                "coldDecoded": 320,
+                "coldSnapshotReadRows": 320,
+                "coldRebuilt": 20,
+                "pixelsEqual": true,
+                "reusedStrokes": null,
+                "geometryBytes": null,
+                "nativeStrokeBuilds": null
+              },
+              {
+                "case": "transform-1-1",
+                "completeMs": 7148.218068,
+                "decoded": 320,
+                "snapshotReadRows": 320,
+                "rebuilt": 20,
+                "tiles": 20,
+                "metadataMs": 1176.720091,
+                "rasterMs": 5698.814907,
+                "publicationMs": 9.697433,
+                "coldMs": 5552.580965,
+                "coldDecoded": 320,
+                "coldSnapshotReadRows": 320,
+                "coldRebuilt": 20,
+                "pixelsEqual": true,
+                "reusedStrokes": null,
+                "geometryBytes": null,
+                "nativeStrokeBuilds": null
+              },
+              {
+                "case": "transform-1-2",
+                "completeMs": 7100.81383,
+                "decoded": 304,
+                "snapshotReadRows": 304,
+                "rebuilt": 20,
+                "tiles": 20,
+                "metadataMs": 947.201991,
+                "rasterMs": 5854.663618,
+                "publicationMs": 16.026977,
+                "coldMs": 6754.1727,
+                "coldDecoded": 304,
+                "coldSnapshotReadRows": 304,
+                "coldRebuilt": 20,
+                "pixelsEqual": true,
+                "reusedStrokes": null,
+                "geometryBytes": null,
+                "nativeStrokeBuilds": null
+              },
+              {
+                "case": "transform-1-3",
+                "completeMs": 8162.789362,
+                "decoded": 320,
+                "snapshotReadRows": 320,
+                "rebuilt": 20,
+                "tiles": 20,
+                "metadataMs": 1022.679635,
+                "rasterMs": 6753.386768,
+                "publicationMs": 26.569247,
+                "coldMs": 6018.942926,
+                "coldDecoded": 320,
+                "coldSnapshotReadRows": 320,
+                "coldRebuilt": 20,
+                "pixelsEqual": true,
+                "reusedStrokes": null,
+                "geometryBytes": null,
+                "nativeStrokeBuilds": null
+              },
+              {
+                "case": "transform-2-0",
+                "completeMs": 3688.430034,
+                "decoded": 304,
+                "snapshotReadRows": 304,
+                "rebuilt": 12,
+                "tiles": 24,
+                "metadataMs": 765.77329,
+                "rasterMs": 2691.288776,
+                "publicationMs": 11.136498,
+                "coldMs": 5247.556985,
+                "coldDecoded": 304,
+                "coldSnapshotReadRows": 304,
+                "coldRebuilt": 24,
+                "pixelsEqual": true,
+                "reusedStrokes": null,
+                "geometryBytes": null,
+                "nativeStrokeBuilds": null
+              },
+              {
+                "case": "transform-2-1",
+                "completeMs": 6512.01338,
+                "decoded": 304,
+                "snapshotReadRows": 304,
+                "rebuilt": 24,
+                "tiles": 24,
+                "metadataMs": 950.98358,
+                "rasterMs": 5271.432433,
+                "publicationMs": 17.860861,
+                "coldMs": 5960.279923,
+                "coldDecoded": 304,
+                "coldSnapshotReadRows": 304,
+                "coldRebuilt": 24,
+                "pixelsEqual": true,
+                "reusedStrokes": null,
+                "geometryBytes": null,
+                "nativeStrokeBuilds": null
+              },
+              {
+                "case": "transform-2-2",
+                "completeMs": 6342.656409,
+                "decoded": 304,
+                "snapshotReadRows": 304,
+                "rebuilt": 20,
+                "tiles": 20,
+                "metadataMs": 1004.590905,
+                "rasterMs": 5046.350841,
+                "publicationMs": 6.719516,
+                "coldMs": 5186.215337,
+                "coldDecoded": 304,
+                "coldSnapshotReadRows": 304,
+                "coldRebuilt": 20,
+                "pixelsEqual": true,
+                "reusedStrokes": null,
+                "geometryBytes": null,
+                "nativeStrokeBuilds": null
+              },
+              {
+                "case": "transform-2-3",
+                "completeMs": 7797.058023,
+                "decoded": 320,
+                "snapshotReadRows": 320,
+                "rebuilt": 20,
+                "tiles": 20,
+                "metadataMs": 891.532583,
+                "rasterMs": 6650.881157,
+                "publicationMs": 9.280053,
+                "coldMs": 5707.553086,
+                "coldDecoded": 320,
+                "coldSnapshotReadRows": 320,
+                "coldRebuilt": 20,
+                "pixelsEqual": true,
+                "reusedStrokes": null,
+                "geometryBytes": null,
+                "nativeStrokeBuilds": null
+              },
+              {
+                "case": "separated-append",
+                "completeMs": 2462.406964,
+                "decoded": 322,
+                "snapshotReadRows": 322,
+                "rebuilt": 2,
+                "tiles": 20,
+                "metadataMs": 794.395703,
+                "rasterMs": 1478.250316,
+                "publicationMs": 15.034929,
+                "coldMs": 5193.380032,
+                "coldDecoded": 322,
+                "coldSnapshotReadRows": 322,
+                "coldRebuilt": 20,
+                "pixelsEqual": true,
+                "reusedStrokes": null,
+                "geometryBytes": null,
+                "nativeStrokeBuilds": null
+              }
+            ],
+            "aggregate": {
+              "transformCases": 12,
+              "transformMedianCompleteMs": 7098.9623185,
+              "decodedTotal": 3760,
+              "snapshotReadRowsTotal": 3760,
+              "rebuiltTotal": 212,
+              "reusedStrokesTotal": null,
+              "nativeStrokeBuildsTotal": null,
+              "coldNativeStrokeBuilds": null,
+              "coldNativeStrokeBuildsNote": "The shared probe does not emit the cold reference native shape counter"
+            },
+            "receipt": {
+              "phase": "baseline-final-performance",
+              "selection": "org.inkweft.app.RasterPerformanceProbe",
+              "started_utc": "2026-10-13T01:23:42.844445+00:00",
+              "seconds": 229.16381469299813,
+              "exit_code": 0,
+              "expected": 1,
+              "executed": 1,
+              "failures": 0,
+              "passed": true,
+              "environment": "API35 x86_64 software Android emulator; no KVM; not physical-device performance"
+            },
+            "log": "/workspace/scratch/pr20-closure-evidence/baseline-final-performance-raster-probe.log",
+            "receiptPath": "/workspace/scratch/pr20-closure-evidence/baseline-final-performance-raster-probe.json",
+            "logSha256": "f16fa5ba7d7c5ef0174ee12b87154bfa60398d8048ac2aebc18e7aa935deb2bb",
+            "receiptSha256": "51f90064e05311f088355c36d9d17e02bccd0177b69ab2d48721b6ab0ff31b32",
+            "recordedDevice": {
+              "serial": "emulator-5554",
+              "environment": "API35 x86_64 software Android emulator; no KVM; not physical-device performance"
+            },
+            "recordCounts": {
+              "measurements": 14,
+              "sqliteSettings": 1
+            }
+          },
+          "candidate": {
+            "side": "candidate",
+            "label": "candidate-v4 frozen 744 sources",
+            "status": "VERIFIED_NATIVE_RUN",
+            "issues": [],
+            "writerSqlite": {
+              "page_size": 1024,
+              "auto_vacuum": 1,
+              "journal_mode": "wal",
+              "synchronous": 2
+            },
+            "measurements": [
+              {
+                "case": "initial",
+                "completeMs": 12580.62183,
+                "decoded": 320,
+                "snapshotReadRows": 320,
+                "rebuilt": 20,
+                "tiles": 20,
+                "metadataMs": 885.054228,
+                "rasterMs": 10847.415728,
+                "publicationMs": 41.859339,
+                "coldMs": 9177.714713,
+                "coldDecoded": 320,
+                "coldSnapshotReadRows": 320,
+                "coldRebuilt": 20,
+                "pixelsEqual": true,
+                "reusedStrokes": 0,
+                "geometryBytes": 204800,
+                "nativeStrokeBuilds": 300
+              },
+              {
+                "case": "transform-0-0",
+                "completeMs": 3363.896531,
+                "decoded": 0,
+                "snapshotReadRows": 0,
+                "rebuilt": 8,
+                "tiles": 20,
+                "metadataMs": 984.317871,
+                "rasterMs": 2058.608934,
+                "publicationMs": 23.060411,
+                "coldMs": 7890.611073,
+                "coldDecoded": 320,
+                "coldSnapshotReadRows": 320,
+                "coldRebuilt": 20,
+                "pixelsEqual": true,
+                "reusedStrokes": 96,
+                "geometryBytes": 204800,
+                "nativeStrokeBuilds": 92
+              },
+              {
+                "case": "transform-0-1",
+                "completeMs": 6286.930321,
+                "decoded": 0,
+                "snapshotReadRows": 0,
+                "rebuilt": 20,
+                "tiles": 20,
+                "metadataMs": 1112.774202,
+                "rasterMs": 4864.054006,
+                "publicationMs": 38.786009,
+                "coldMs": 6424.985487,
+                "coldDecoded": 320,
+                "coldSnapshotReadRows": 320,
+                "coldRebuilt": 20,
+                "pixelsEqual": true,
+                "reusedStrokes": 320,
+                "geometryBytes": 204800,
+                "nativeStrokeBuilds": 300
+              },
+              {
+                "case": "transform-0-2",
+                "completeMs": 6812.704551,
+                "decoded": 0,
+                "snapshotReadRows": 0,
+                "rebuilt": 20,
+                "tiles": 20,
+                "metadataMs": 943.675514,
+                "rasterMs": 5369.330672,
+                "publicationMs": 6.0671,
+                "coldMs": 5440.040206,
+                "coldDecoded": 304,
+                "coldSnapshotReadRows": 304,
+                "coldRebuilt": 20,
+                "pixelsEqual": true,
+                "reusedStrokes": 304,
+                "geometryBytes": 204800,
+                "nativeStrokeBuilds": 288
+              },
+              {
+                "case": "transform-0-3",
+                "completeMs": 5603.905837,
+                "decoded": 0,
+                "snapshotReadRows": 0,
+                "rebuilt": 20,
+                "tiles": 20,
+                "metadataMs": 970.365181,
+                "rasterMs": 4361.336646,
+                "publicationMs": 13.538622,
+                "coldMs": 5906.181809,
+                "coldDecoded": 320,
+                "coldSnapshotReadRows": 320,
+                "coldRebuilt": 20,
+                "pixelsEqual": true,
+                "reusedStrokes": 320,
+                "geometryBytes": 204800,
+                "nativeStrokeBuilds": 300
+              },
+              {
+                "case": "transform-1-0",
+                "completeMs": 2107.349312,
+                "decoded": 0,
+                "snapshotReadRows": 0,
+                "rebuilt": 8,
+                "tiles": 20,
+                "metadataMs": 731.604891,
+                "rasterMs": 1160.816461,
+                "publicationMs": 13.07815,
+                "coldMs": 5089.504219,
+                "coldDecoded": 320,
+                "coldSnapshotReadRows": 320,
+                "coldRebuilt": 20,
+                "pixelsEqual": true,
+                "reusedStrokes": 96,
+                "geometryBytes": 204800,
+                "nativeStrokeBuilds": 92
+              },
+              {
+                "case": "transform-1-1",
+                "completeMs": 5854.509464,
+                "decoded": 0,
+                "snapshotReadRows": 0,
+                "rebuilt": 20,
+                "tiles": 20,
+                "metadataMs": 922.937845,
+                "rasterMs": 4646.015483,
+                "publicationMs": 20.992388,
+                "coldMs": 5695.302978,
+                "coldDecoded": 320,
+                "coldSnapshotReadRows": 320,
+                "coldRebuilt": 20,
+                "pixelsEqual": true,
+                "reusedStrokes": 320,
+                "geometryBytes": 204800,
+                "nativeStrokeBuilds": 300
+              },
+              {
+                "case": "transform-1-2",
+                "completeMs": 5226.215293,
+                "decoded": 0,
+                "snapshotReadRows": 0,
+                "rebuilt": 20,
+                "tiles": 20,
+                "metadataMs": 824.610397,
+                "rasterMs": 4148.341316,
+                "publicationMs": 10.034395,
+                "coldMs": 5108.346126,
+                "coldDecoded": 304,
+                "coldSnapshotReadRows": 304,
+                "coldRebuilt": 20,
+                "pixelsEqual": true,
+                "reusedStrokes": 304,
+                "geometryBytes": 204800,
+                "nativeStrokeBuilds": 288
+              },
+              {
+                "case": "transform-1-3",
+                "completeMs": 5815.276522,
+                "decoded": 0,
+                "snapshotReadRows": 0,
+                "rebuilt": 20,
+                "tiles": 20,
+                "metadataMs": 1030.203001,
+                "rasterMs": 4509.784269,
+                "publicationMs": 16.050831,
+                "coldMs": 5089.804598,
+                "coldDecoded": 320,
+                "coldSnapshotReadRows": 320,
+                "coldRebuilt": 20,
+                "pixelsEqual": true,
+                "reusedStrokes": 320,
+                "geometryBytes": 204800,
+                "nativeStrokeBuilds": 300
+              },
+              {
+                "case": "transform-2-0",
+                "completeMs": 1926.161881,
+                "decoded": 0,
+                "snapshotReadRows": 0,
+                "rebuilt": 12,
+                "tiles": 24,
+                "metadataMs": 702.84506,
+                "rasterMs": 1009.546286,
+                "publicationMs": 12.482384,
+                "coldMs": 4894.53061,
+                "coldDecoded": 304,
+                "coldSnapshotReadRows": 304,
+                "coldRebuilt": 24,
+                "pixelsEqual": true,
+                "reusedStrokes": 80,
+                "geometryBytes": 204800,
+                "nativeStrokeBuilds": 80
+              },
+              {
+                "case": "transform-2-1",
+                "completeMs": 5742.582062,
+                "decoded": 0,
+                "snapshotReadRows": 0,
+                "rebuilt": 24,
+                "tiles": 24,
+                "metadataMs": 875.779234,
+                "rasterMs": 4589.812465,
+                "publicationMs": 6.585128,
+                "coldMs": 4859.379212,
+                "coldDecoded": 304,
+                "coldSnapshotReadRows": 304,
+                "coldRebuilt": 24,
+                "pixelsEqual": true,
+                "reusedStrokes": 304,
+                "geometryBytes": 204800,
+                "nativeStrokeBuilds": 288
+              },
+              {
+                "case": "transform-2-2",
+                "completeMs": 5109.359215,
+                "decoded": 0,
+                "snapshotReadRows": 0,
+                "rebuilt": 20,
+                "tiles": 20,
+                "metadataMs": 825.176,
+                "rasterMs": 4019.665177,
+                "publicationMs": 15.47139,
+                "coldMs": 5394.01014,
+                "coldDecoded": 304,
+                "coldSnapshotReadRows": 304,
+                "coldRebuilt": 20,
+                "pixelsEqual": true,
+                "reusedStrokes": 304,
+                "geometryBytes": 204800,
+                "nativeStrokeBuilds": 288
+              },
+              {
+                "case": "transform-2-3",
+                "completeMs": 5007.63087,
+                "decoded": 0,
+                "snapshotReadRows": 0,
+                "rebuilt": 20,
+                "tiles": 20,
+                "metadataMs": 824.429058,
+                "rasterMs": 3929.554561,
+                "publicationMs": 6.908752,
+                "coldMs": 5086.183468,
+                "coldDecoded": 320,
+                "coldSnapshotReadRows": 320,
+                "coldRebuilt": 20,
+                "pixelsEqual": true,
+                "reusedStrokes": 320,
+                "geometryBytes": 204800,
+                "nativeStrokeBuilds": 300
+              },
+              {
+                "case": "separated-append",
+                "completeMs": 1713.317153,
+                "decoded": 24,
+                "snapshotReadRows": 24,
+                "rebuilt": 2,
+                "tiles": 20,
+                "metadataMs": 691.083231,
+                "rasterMs": 806.889093,
+                "publicationMs": 10.059537,
+                "coldMs": 5674.108064,
+                "coldDecoded": 322,
+                "coldSnapshotReadRows": 322,
+                "coldRebuilt": 20,
+                "pixelsEqual": true,
+                "reusedStrokes": 0,
+                "geometryBytes": 15360,
+                "nativeStrokeBuilds": 21
+              }
+            ],
+            "aggregate": {
+              "transformCases": 12,
+              "transformMedianCompleteMs": 5415.060565,
+              "decodedTotal": 0,
+              "snapshotReadRowsTotal": 0,
+              "rebuiltTotal": 212,
+              "reusedStrokesTotal": 3088,
+              "nativeStrokeBuildsTotal": 2916,
+              "coldNativeStrokeBuilds": null,
+              "coldNativeStrokeBuildsNote": "The shared probe does not emit the cold reference native shape counter"
+            },
+            "receipt": {
+              "phase": "candidate-v4-performance",
+              "selection": "org.inkweft.app.RasterPerformanceProbe",
+              "started_utc": "2026-10-13T00:34:39.483805+00:00",
+              "seconds": 196.7342961339964,
+              "exit_code": 0,
+              "expected": 1,
+              "executed": 1,
+              "failures": 0,
+              "passed": true,
+              "environment": "API35 x86_64 software Android emulator; no KVM; not physical-device performance"
+            },
+            "log": "/workspace/scratch/pr20-closure-evidence/candidate-v4-performance-raster-probe.log",
+            "receiptPath": "/workspace/scratch/pr20-closure-evidence/candidate-v4-performance-raster-probe.json",
+            "logSha256": "60875b751b7adda89221fcaaffc92ef07dc978e3faf95cf874cd2d0ce1c9148c",
+            "receiptSha256": "df42e0bbf6a113224c95a244449fae3b091fd3e1a627449ea0afb5043bde2ae4",
+            "recordedDevice": {
+              "serial": "emulator-5554",
+              "environment": "API35 x86_64 software Android emulator; no KVM; not physical-device performance"
+            },
+            "recordCounts": {
+              "measurements": 14,
+              "sqliteSettings": 1
+            }
+          },
+          "comparison": {
+            "status": "PAIRED_RECORDED_ENVIRONMENT",
+            "issues": [],
+            "changesPercent": [
+              {
+                "case": "initial",
+                "completeMs": 3.6219282114814844,
+                "decoded": 0.0,
+                "snapshotReadRows": 0.0,
+                "rebuilt": 0.0,
+                "nativeStrokeBuilds": null
+              },
+              {
+                "case": "transform-0-0",
+                "completeMs": -17.02913996388521,
+                "decoded": -100.0,
+                "snapshotReadRows": -100.0,
+                "rebuilt": 0.0,
+                "nativeStrokeBuilds": null
+              },
+              {
+                "case": "transform-0-1",
+                "completeMs": -16.229761610447845,
+                "decoded": -100.0,
+                "snapshotReadRows": -100.0,
+                "rebuilt": 0.0,
+                "nativeStrokeBuilds": null
+              },
+              {
+                "case": "transform-0-2",
+                "completeMs": -7.49992627609064,
+                "decoded": -100.0,
+                "snapshotReadRows": -100.0,
+                "rebuilt": 0.0,
+                "nativeStrokeBuilds": null
+              },
+              {
+                "case": "transform-0-3",
+                "completeMs": -21.039617537424192,
+                "decoded": -100.0,
+                "snapshotReadRows": -100.0,
+                "rebuilt": 0.0,
+                "nativeStrokeBuilds": null
+              },
+              {
+                "case": "transform-1-0",
+                "completeMs": -34.55402887349673,
+                "decoded": -100.0,
+                "snapshotReadRows": -100.0,
+                "rebuilt": 0.0,
+                "nativeStrokeBuilds": null
+              },
+              {
+                "case": "transform-1-1",
+                "completeMs": -18.098337119728736,
+                "decoded": -100.0,
+                "snapshotReadRows": -100.0,
+                "rebuilt": 0.0,
+                "nativeStrokeBuilds": null
+              },
+              {
+                "case": "transform-1-2",
+                "completeMs": -26.399770249996823,
+                "decoded": -100.0,
+                "snapshotReadRows": -100.0,
+                "rebuilt": 0.0,
+                "nativeStrokeBuilds": null
+              },
+              {
+                "case": "transform-1-3",
+                "completeMs": -28.75870901346922,
+                "decoded": -100.0,
+                "snapshotReadRows": -100.0,
+                "rebuilt": 0.0,
+                "nativeStrokeBuilds": null
+              },
+              {
+                "case": "transform-2-0",
+                "completeMs": -47.778272510401095,
+                "decoded": -100.0,
+                "snapshotReadRows": -100.0,
+                "rebuilt": 0.0,
+                "nativeStrokeBuilds": null
+              },
+              {
+                "case": "transform-2-1",
+                "completeMs": -11.815567215557532,
+                "decoded": -100.0,
+                "snapshotReadRows": -100.0,
+                "rebuilt": 0.0,
+                "nativeStrokeBuilds": null
+              },
+              {
+                "case": "transform-2-2",
+                "completeMs": -19.44449004442359,
+                "decoded": -100.0,
+                "snapshotReadRows": -100.0,
+                "rebuilt": 0.0,
+                "nativeStrokeBuilds": null
+              },
+              {
+                "case": "transform-2-3",
+                "completeMs": -35.775380210993205,
+                "decoded": -100.0,
+                "snapshotReadRows": -100.0,
+                "rebuilt": 0.0,
+                "nativeStrokeBuilds": null
+              },
+              {
+                "case": "separated-append",
+                "completeMs": -30.42104014289979,
+                "decoded": -92.54658385093167,
+                "snapshotReadRows": -92.54658385093167,
+                "rebuilt": 0.0,
+                "nativeStrokeBuilds": null
+              }
+            ],
+            "transformMedianCompleteChangePercent": -23.720392896180442
+          }
+        }
+      }
+    }
+  ],
+  "limits": [
+    "Only explicitly selected logs are read. Older 4096/INCREMENTAL or missing-format measurements are excluded.",
+    "Matching receipt device/environment and actual SQLite settings do not prove equal display, font scale, timeout multiplier, thermal/load conditions, no overlapping builds, or matching APK/source hashes; inspect referenced environment/provenance evidence.",
+    "Native software-emulator observations are not physical-device performance. Passed compilation is never input evidence.",
+    "Raw saveSamplesMs, pausedScanSaveSamplesMs and liveSaveSamplesMs retain their original emission/operation order; only copies are sorted to check reported quantiles.",
+    "Nested observeIndexConcurrentSaves.saveSamplesMs and saveProgressSamples are a separate second set of 30 original-order saves. Its p50 is sorted[15], p95 sorted[28], max sorted[29]; it is never pooled with the initial cold-read save set.",
+    "Automatic-index counters are recorded before/after the series and every save; per-save deltas describe enclosing sampling windows. Zero index or source progress must not be described as proven three-way overlap. Positive deltas do not measure simultaneous execution or SQL lock waiting.",
+    "firstCommittedBatchMs and allIndexRowsCommittedMs measure observe-start to the actual committed-batch callbacks. searchIndexReadyMs is sampled only after all 30 saves finish and both allRowsCommitted.await() and observedIndexReady.await() return: it is saves/index/search joint-completion time, not the first zero-pending callback instant or pure index duration.",
+    "A manual-builder library probe cannot be paired with the newer automatic-observe probe. Identical raw fixture size does not remove the difference in workload preceding warm queries.",
+    "Library p50 uses sorted[15]; GC p50 uses sorted[14]. Neither is the arithmetic median of 30. No samples or medians are pooled across runs or these different probe windows.",
+    "Library saves arrive sequentially during the actual cold read; actual overlap differs if a writer blocks. writerCompletedDuringPausedSearch observes a separate 750 ms paused-read window.",
+    "GC pausedScanSave samples exclude time waiting to reach the paused root-scan gate; each timed save has a 5 s budget. liveCollectionAndSavesMs includes unpaused collection, 30 serial saves and a subsequent finishing collection; it is not isolated GC duration.",
+    "GC collectionMs is the separate uncontended full cleanup; root scan counters count after-roots callbacks, not every SQL statement. observerNotifications is not a save latency.",
+    "Library read-scale fields count returned rows/UTF-16 characters, not OS storage reads. Full directory metadata can still be read; on-demand body correctness is separately asserted.",
+    "Raster decoded/snapshotReadRows/nativeStrokeBuilds measure different stages. Missing counters and their totals remain null. Each case compares output with a full cold rebuild in the same run; not with the other revision bitmap.",
+    "Raster transform median combines twelve distinct specified pan/zoom steps; it is not twelve repeated independent samples. This script does not cover the separate TileLocalRedrawTest or all acceptance tests.",
+    "Percent changes are candidate / baseline minus one, times 100; negative values mean reductions for time/work counts. Zero denominators or unavailable counters yield null."
+  ]
+}

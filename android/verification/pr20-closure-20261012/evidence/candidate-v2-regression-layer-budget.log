@@ -1,0 +1,11 @@
+
+org.inkweft.app.LayerRasterBudgetTest:LAYER_RASTER_EVIDENCE {"visibleLayers":1,"visibleStrokes":320,"decodedRows":320,"decodedPoints":640,"payloadBytes":44800,"geometryReads":2,"nativeExtentPixels":3117845,"inkBitmapBytes":12471380,"readyMs":16443.609287,"softwareDrawP95Ms":154.989032,"javaUsedBytes":27160752,"processPssKiB":144890}
+LAYER_RASTER_EVIDENCE {"visibleLayers":4,"visibleStrokes":320,"decodedRows":320,"decodedPoints":640,"payloadBytes":44800,"geometryReads":4,"nativeExtentPixels":10530530,"inkBitmapBytes":10544352,"readyMs":56321.418059,"softwareDrawP95Ms":1755.584773,"javaUsedBytes":22297792,"processPssKiB":137439}
+LAYER_RASTER_EVIDENCE {"visibleLayers":8,"visibleStrokes":320,"decodedRows":320,"decodedPoints":640,"payloadBytes":44800,"geometryReads":8,"nativeExtentPixels":21061060,"inkBitmapBytes":21088704,"readyMs":139499.511193,"softwareDrawP95Ms":5858.026874,"javaUsedBytes":28564720,"processPssKiB":148026}
+.
+
+Time: 246.971
+
+OK (1 test)
+
+

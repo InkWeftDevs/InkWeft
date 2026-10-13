@@ -1,0 +1,107 @@
+[
+  {
+    "command": [
+      "/workspace/.setup/tools/android-sdk/platform-tools/adb",
+      "-s",
+      "emulator-5554",
+      "shell",
+      "pm",
+      "clear",
+      "org.inkweft.app.a0"
+    ],
+    "utc": "2026-10-12T22:22:59.041400+00:00",
+    "exit_code": 0,
+    "stdout": "Success\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "/workspace/.setup/tools/android-sdk/platform-tools/adb",
+      "-s",
+      "emulator-5554",
+      "shell",
+      "settings",
+      "put",
+      "system",
+      "font_scale",
+      "1.0"
+    ],
+    "utc": "2026-10-12T22:23:00.990471+00:00",
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "/workspace/.setup/tools/android-sdk/platform-tools/adb",
+      "-s",
+      "emulator-5554",
+      "shell",
+      "wm",
+      "size",
+      "1920x1200"
+    ],
+    "utc": "2026-10-12T22:23:02.044037+00:00",
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "/workspace/.setup/tools/android-sdk/platform-tools/adb",
+      "-s",
+      "emulator-5554",
+      "shell",
+      "wm",
+      "density",
+      "240"
+    ],
+    "utc": "2026-10-12T22:23:03.157534+00:00",
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "/workspace/.setup/tools/android-sdk/platform-tools/adb",
+      "-s",
+      "emulator-5554",
+      "shell",
+      "input",
+      "keyevent",
+      "KEYCODE_WAKEUP"
+    ],
+    "utc": "2026-10-12T22:23:03.860709+00:00",
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "/workspace/.setup/tools/android-sdk/platform-tools/adb",
+      "-s",
+      "emulator-5554",
+      "shell",
+      "wm",
+      "dismiss-keyguard"
+    ],
+    "utc": "2026-10-12T22:23:04.616309+00:00",
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "/workspace/.setup/tools/android-sdk/platform-tools/adb",
+      "-s",
+      "emulator-5554",
+      "shell",
+      "dumpsys",
+      "power"
+    ],
+    "utc": "2026-10-12T22:23:05.923645+00:00",
+    "exit_code": 0,
+    "stdout": "  mWakefulness=Awake\n  mIsPowered=true\n  mStayOn=true\n  mScreenOffTimeoutSetting=2147483647\n  mIsPowered=true",
+    "stderr": ""
+  }
+]

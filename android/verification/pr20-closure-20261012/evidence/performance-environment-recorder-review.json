@@ -1,0 +1,49 @@
+{
+  "created_utc": "2026-10-12T22:46:43.968856+00:00",
+  "script": "/workspace/scratch/record-inkweft-performance-environment.py",
+  "script_sha256": "e33900329dd307e6d9b38e5e1611b9bcc865fbdc4d01624f279bb37acec00630",
+  "validation": [
+    "AST_PARSE_PASS",
+    "SYNTHETIC_DISPLAY_PARSER_PASS",
+    "COMPARISON_HASH_IGNORES_DYNAMIC_MEMORY_PASS",
+    "COMPARISON_HASH_DETECTS_PID_AND_FONT_CHANGES_PASS",
+    "EXISTING_OUTPUT_REFUSED_BEFORE_RUNTIME_DISCOVERY_PASS"
+  ],
+  "runtime_script_executed": false,
+  "adb_commands_run_by_this_task": 0,
+  "builds_run_by_this_task": 0,
+  "environment_or_credentials_collected": false,
+  "source_files_modified": false,
+  "same_probe_sources": [
+    {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibraryReadPerformanceTest.kt",
+      "sha256": "a47f892262d656dcc6ec65e984681265d593e19f88ecaa13d135d2a9f3e65bd2",
+      "baseline_candidate_byte_identical": true
+    },
+    {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/HistoryCollectionBenchmarkTest.kt",
+      "sha256": "2b04bd2de3bc4cd6d030b14b8c12096c3a3604ddaa39324a65703cee1de30e34",
+      "baseline_candidate_byte_identical": true
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/RasterPerformanceProbe.kt",
+      "sha256": "91ceacc2db7557509f923a2046ba0f8d8ccf9691265dbee12e10e674a9ba33c9",
+      "baseline_candidate_byte_identical": true
+    }
+  ],
+  "usage": [
+    "python3",
+    "/workspace/scratch/record-inkweft-performance-environment.py",
+    "baseline-final-library",
+    "/workspace/scratch/pr20-closure-evidence/baseline-final-library-environment.json"
+  ],
+  "followup_usage": [
+    "python3",
+    "/workspace/scratch/record-inkweft-performance-environment.py",
+    "candidate-v3-library",
+    "/workspace/scratch/pr20-closure-evidence/candidate-v3-library-environment.json"
+  ],
+  "execution_boundary": "Parent invokes the script before each phase only after other builds/instrumentation have stopped; choose a new output filename every time. Compare status RECORDED, comparison_values/hash and full dynamic observations. No actual device environment JSON was produced by this preparation task.",
+  "process_identity_note": "Host-only inspection saw the known qemu argv0/AVD/port and readable start-time fields; exe symlink read is permission denied. The script records that limitation and does not request permission changes.",
+  "fixture_database_byte_identity": "NOT_ESTABLISHED; all three probes use random DB names and repository-generated IDs/timestamps; see performance-fixture-comparability.md"
+}

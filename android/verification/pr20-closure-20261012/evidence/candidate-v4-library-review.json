@@ -1,0 +1,540 @@
+{
+  "reviewed_utc": "2026-10-13T00:38:33.587405+00:00",
+  "status": "VERIFIED_V4_CANDIDATE_LIBRARY_RUN_ONLY",
+  "final_pair": false,
+  "baseline": null,
+  "parser": {
+    "path": "/workspace/scratch/summarize-pr20-closure-performance.py",
+    "sha256": "a70d1cb4eb50abbc0ff88891c7bc5bd3850fd4609ffdab02c5a6bf625cb9aadc",
+    "entry_point": "read_run",
+    "v4_status": "VERIFIED_NATIVE_RUN",
+    "v3_status": "VERIFIED_NATIVE_RUN",
+    "issues": []
+  },
+  "execution": {
+    "junit_passed": 1,
+    "junit_failures": 0,
+    "junit_seconds": 1380.4,
+    "host_seconds": 1389.931083948999,
+    "environment": {
+      "serial": "emulator-5554",
+      "environment": "API35 x86_64 software Android emulator; no KVM; not physical-device performance"
+    }
+  },
+  "quantile_definition": {
+    "sampleCount": 30,
+    "p50SortedZeroBasedIndex": 15,
+    "p50Definition": "Upper middle of 30 ordered samples; not average of middle two",
+    "p95SortedZeroBasedIndex": 28,
+    "maxSortedZeroBasedIndex": 29
+  },
+  "quantile_audit": {
+    "direct": {
+      "sample_count": 30,
+      "all_reported_values_match": true,
+      "recomputed": {
+        "p50Ms": 157.757855,
+        "p95Ms": 254.405466,
+        "maxMs": 285.396616
+      }
+    },
+    "automatic_observe": {
+      "sample_count": 30,
+      "all_reported_values_match": true,
+      "recomputed": {
+        "p50Ms": 408.262836,
+        "p95Ms": 1066.333241,
+        "maxMs": 2935.302117
+      }
+    }
+  },
+  "checkpoint_audit": {
+    "direct_shared_fields_match_final": true,
+    "observe_shared_fields_match_final": true,
+    "progress_events": [
+      {
+        "rows": 64,
+        "elapsedMs": 10214.462877
+      },
+      {
+        "rows": 4096,
+        "elapsedMs": 297739.261694
+      },
+      {
+        "rows": 8192,
+        "elapsedMs": 458174.877072
+      },
+      {
+        "rows": 12288,
+        "elapsedMs": 677505.331464
+      },
+      {
+        "rows": 16384,
+        "elapsedMs": 917290.366842
+      },
+      {
+        "rows": 20000,
+        "elapsedMs": 1060407.699942
+      }
+    ],
+    "all_events_monotonic": true
+  },
+  "measurements": {
+    "books": 500,
+    "pages": 20000,
+    "noteBodyChars": 20020,
+    "writerSqlite": {
+      "page_size": 1024,
+      "auto_vacuum": 1,
+      "journal_mode": "wal",
+      "synchronous": 2
+    },
+    "headerReadMs": 794.462369,
+    "headerReturnedBodyChars": 0,
+    "coldMs": 46567.368791,
+    "coldSourceChecks": 20000,
+    "warmMedianMs": 9561.469462,
+    "saveCount": 30,
+    "saveP50Ms": 157.757855,
+    "saveP95Ms": 254.405466,
+    "saveMaxMs": 285.396616,
+    "saveSamplesMs": [
+      285.396616,
+      173.777703,
+      207.319275,
+      187.651578,
+      176.191391,
+      144.925388,
+      143.636176,
+      161.451853,
+      153.218758,
+      157.757855,
+      158.905857,
+      115.39208,
+      167.716566,
+      187.899422,
+      254.405466,
+      145.667017,
+      130.899051,
+      164.975269,
+      149.697861,
+      151.062231,
+      144.410961,
+      131.655357,
+      167.119831,
+      130.612127,
+      164.252374,
+      167.138715,
+      148.614379,
+      145.060115,
+      148.369521,
+      129.906793
+    ],
+    "observeIndexConcurrentSaves": {
+      "indexRowsBeforeSaves": 64,
+      "indexRowsAfterSaves": 128,
+      "firstCommittedBatchMs": 10212.73752,
+      "saveCount": 30,
+      "saveP50Ms": 408.262836,
+      "saveP95Ms": 1066.333241,
+      "saveMaxMs": 2935.302117,
+      "saveSamplesMs": [
+        659.773659,
+        338.671531,
+        420.883777,
+        514.797568,
+        355.966109,
+        368.111084,
+        361.619457,
+        619.710903,
+        506.886226,
+        309.78066,
+        439.794209,
+        608.048189,
+        1066.333241,
+        458.345267,
+        408.262836,
+        278.999717,
+        484.211689,
+        491.659476,
+        375.431353,
+        360.051637,
+        296.563676,
+        2935.302117,
+        562.631408,
+        354.620759,
+        339.184784,
+        336.964283,
+        323.637874,
+        455.985537,
+        331.221,
+        303.753444
+      ],
+      "saveProgressSamples": [
+        {
+          "sample": 0,
+          "elapsedMs": 659.773659,
+          "indexRowsStart": 64,
+          "indexRowsEnd": 64,
+          "sourceChecksStart": 2283,
+          "sourceChecksEnd": 2407
+        },
+        {
+          "sample": 1,
+          "elapsedMs": 338.671531,
+          "indexRowsStart": 64,
+          "indexRowsEnd": 64,
+          "sourceChecksStart": 2407,
+          "sourceChecksEnd": 2429
+        },
+        {
+          "sample": 2,
+          "elapsedMs": 420.883777,
+          "indexRowsStart": 64,
+          "indexRowsEnd": 64,
+          "sourceChecksStart": 2429,
+          "sourceChecksEnd": 2429
+        },
+        {
+          "sample": 3,
+          "elapsedMs": 514.797568,
+          "indexRowsStart": 64,
+          "indexRowsEnd": 64,
+          "sourceChecksStart": 2429,
+          "sourceChecksEnd": 2429
+        },
+        {
+          "sample": 4,
+          "elapsedMs": 355.966109,
+          "indexRowsStart": 64,
+          "indexRowsEnd": 64,
+          "sourceChecksStart": 2429,
+          "sourceChecksEnd": 2429
+        },
+        {
+          "sample": 5,
+          "elapsedMs": 368.111084,
+          "indexRowsStart": 64,
+          "indexRowsEnd": 64,
+          "sourceChecksStart": 2429,
+          "sourceChecksEnd": 2429
+        },
+        {
+          "sample": 6,
+          "elapsedMs": 361.619457,
+          "indexRowsStart": 64,
+          "indexRowsEnd": 64,
+          "sourceChecksStart": 2429,
+          "sourceChecksEnd": 2429
+        },
+        {
+          "sample": 7,
+          "elapsedMs": 619.710903,
+          "indexRowsStart": 64,
+          "indexRowsEnd": 64,
+          "sourceChecksStart": 2429,
+          "sourceChecksEnd": 2429
+        },
+        {
+          "sample": 8,
+          "elapsedMs": 506.886226,
+          "indexRowsStart": 64,
+          "indexRowsEnd": 64,
+          "sourceChecksStart": 2429,
+          "sourceChecksEnd": 2429
+        },
+        {
+          "sample": 9,
+          "elapsedMs": 309.78066,
+          "indexRowsStart": 64,
+          "indexRowsEnd": 64,
+          "sourceChecksStart": 2429,
+          "sourceChecksEnd": 2429
+        },
+        {
+          "sample": 10,
+          "elapsedMs": 439.794209,
+          "indexRowsStart": 64,
+          "indexRowsEnd": 64,
+          "sourceChecksStart": 2429,
+          "sourceChecksEnd": 2429
+        },
+        {
+          "sample": 11,
+          "elapsedMs": 608.048189,
+          "indexRowsStart": 64,
+          "indexRowsEnd": 64,
+          "sourceChecksStart": 2429,
+          "sourceChecksEnd": 2429
+        },
+        {
+          "sample": 12,
+          "elapsedMs": 1066.333241,
+          "indexRowsStart": 64,
+          "indexRowsEnd": 64,
+          "sourceChecksStart": 2429,
+          "sourceChecksEnd": 2429
+        },
+        {
+          "sample": 13,
+          "elapsedMs": 458.345267,
+          "indexRowsStart": 64,
+          "indexRowsEnd": 64,
+          "sourceChecksStart": 2429,
+          "sourceChecksEnd": 2429
+        },
+        {
+          "sample": 14,
+          "elapsedMs": 408.262836,
+          "indexRowsStart": 64,
+          "indexRowsEnd": 64,
+          "sourceChecksStart": 2429,
+          "sourceChecksEnd": 2429
+        },
+        {
+          "sample": 15,
+          "elapsedMs": 278.999717,
+          "indexRowsStart": 64,
+          "indexRowsEnd": 64,
+          "sourceChecksStart": 2429,
+          "sourceChecksEnd": 2429
+        },
+        {
+          "sample": 16,
+          "elapsedMs": 484.211689,
+          "indexRowsStart": 64,
+          "indexRowsEnd": 64,
+          "sourceChecksStart": 2429,
+          "sourceChecksEnd": 2429
+        },
+        {
+          "sample": 17,
+          "elapsedMs": 491.659476,
+          "indexRowsStart": 64,
+          "indexRowsEnd": 64,
+          "sourceChecksStart": 2429,
+          "sourceChecksEnd": 2429
+        },
+        {
+          "sample": 18,
+          "elapsedMs": 375.431353,
+          "indexRowsStart": 64,
+          "indexRowsEnd": 64,
+          "sourceChecksStart": 2429,
+          "sourceChecksEnd": 2429
+        },
+        {
+          "sample": 19,
+          "elapsedMs": 360.051637,
+          "indexRowsStart": 64,
+          "indexRowsEnd": 64,
+          "sourceChecksStart": 2429,
+          "sourceChecksEnd": 2429
+        },
+        {
+          "sample": 20,
+          "elapsedMs": 296.563676,
+          "indexRowsStart": 64,
+          "indexRowsEnd": 64,
+          "sourceChecksStart": 2429,
+          "sourceChecksEnd": 2429
+        },
+        {
+          "sample": 21,
+          "elapsedMs": 2935.302117,
+          "indexRowsStart": 64,
+          "indexRowsEnd": 128,
+          "sourceChecksStart": 2429,
+          "sourceChecksEnd": 2540
+        },
+        {
+          "sample": 22,
+          "elapsedMs": 562.631408,
+          "indexRowsStart": 128,
+          "indexRowsEnd": 128,
+          "sourceChecksStart": 2540,
+          "sourceChecksEnd": 2562
+        },
+        {
+          "sample": 23,
+          "elapsedMs": 354.620759,
+          "indexRowsStart": 128,
+          "indexRowsEnd": 128,
+          "sourceChecksStart": 2562,
+          "sourceChecksEnd": 2562
+        },
+        {
+          "sample": 24,
+          "elapsedMs": 339.184784,
+          "indexRowsStart": 128,
+          "indexRowsEnd": 128,
+          "sourceChecksStart": 2562,
+          "sourceChecksEnd": 2562
+        },
+        {
+          "sample": 25,
+          "elapsedMs": 336.964283,
+          "indexRowsStart": 128,
+          "indexRowsEnd": 128,
+          "sourceChecksStart": 2562,
+          "sourceChecksEnd": 2562
+        },
+        {
+          "sample": 26,
+          "elapsedMs": 323.637874,
+          "indexRowsStart": 128,
+          "indexRowsEnd": 128,
+          "sourceChecksStart": 2562,
+          "sourceChecksEnd": 2562
+        },
+        {
+          "sample": 27,
+          "elapsedMs": 455.985537,
+          "indexRowsStart": 128,
+          "indexRowsEnd": 128,
+          "sourceChecksStart": 2562,
+          "sourceChecksEnd": 2562
+        },
+        {
+          "sample": 28,
+          "elapsedMs": 331.221,
+          "indexRowsStart": 128,
+          "indexRowsEnd": 128,
+          "sourceChecksStart": 2562,
+          "sourceChecksEnd": 2562
+        },
+        {
+          "sample": 29,
+          "elapsedMs": 303.753444,
+          "indexRowsStart": 128,
+          "indexRowsEnd": 128,
+          "sourceChecksStart": 2562,
+          "sourceChecksEnd": 2562
+        }
+      ],
+      "sourceChecksAfterSaves": 2562,
+      "indexRowsFinal": 20000,
+      "allIndexRowsCommittedMs": 1060403.503966,
+      "searchIndexReadyMs": 1070059.683763,
+      "sourceChecks": 22435
+    },
+    "writerCompletedDuringPausedSearch": true,
+    "shelfReturnedPreviewChars": 35425,
+    "shelfDirectoryBodyChars": 0,
+    "projectionRows": 61,
+    "projectionChars": 36025,
+    "fullBodyOnDemandMatches": true
+  },
+  "overlap_audit": {
+    "index_progress_sample_ids": [
+      21
+    ],
+    "source_progress_sample_ids": [
+      0,
+      1,
+      21,
+      22
+    ],
+    "both_progress_sample_ids": [
+      21
+    ],
+    "source_checks_in_save_windows": 279,
+    "source_checks_across_series": 279,
+    "source_checks_between_windows": 0,
+    "timed_save_calls_sum_ms": 15667.20347,
+    "interpretation": "Both index and source-check counters advanced across some enclosing save windows; this is windowed progress evidence, not simultaneous CPU execution or lock-wait measurement"
+  },
+  "source_binding": {
+    "frozen_files_checked": 744,
+    "all_current_frozen_files_match": true,
+    "mismatches": [],
+    "relevant_sha256": {
+      "android/data-local/src/main/kotlin/org/inkweft/data/LibraryTextIndex.kt": "9861462b2eb3328020dcdc0396b1ed380d4b56fa4dd0646b030fb7a1a4f77fdf",
+      "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibraryTextIndexPreparationTest.kt": "2b0bf878258086f80e349bf6360b833dd3b4c652aa8f5c7fcf6cce6ec892badb",
+      "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibraryReadPerformanceTest.kt": "a47f892262d656dcc6ec65e984681265d593e19f88ecaa13d135d2a9f3e65bd2",
+      "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibrarySearchRepositoryTest.kt": "6c8de5807f85f739f65eb0d99a9e6ceb0328841a2d9a03c2b583eab9d551700d"
+    },
+    "same_probe_in_v3_v4": true,
+    "recorded_build_source_unchanged": true,
+    "recorded_data_test_apk_sha256": "79a7280c9667ef4721b4606ffc17a4bd7c476ceeb661d4d015ec9c19769324a3",
+    "artifact_installation_sha256_match": true,
+    "device_apk_reextracted": false
+  },
+  "intermediate_v3_sequence": {
+    "status": "PREVIOUS_CANDIDATE_DIAGNOSTIC_SEQUENCE_NOT_A128_BASELINE",
+    "same_probe": true,
+    "same_recorded_environment": true,
+    "comparison_sha256": "425d701e4a8711a84ca963b1c4769b76c47d1644970d72e2941666412be56378",
+    "same_measured_writer_settings": true,
+    "observed_changes": {
+      "saveP50Ms": {
+        "previous_candidate_v3": 6770.844838,
+        "candidate_v4": 408.262836,
+        "change_percent": -93.97028220601501
+      },
+      "saveP95Ms": {
+        "previous_candidate_v3": 10680.983713,
+        "candidate_v4": 1066.333241,
+        "change_percent": -90.01652591509762
+      },
+      "saveMaxMs": {
+        "previous_candidate_v3": 11866.999606,
+        "candidate_v4": 2935.302117,
+        "change_percent": -75.2650019848665
+      },
+      "firstCommittedBatchMs": {
+        "previous_candidate_v3": 9448.7397,
+        "candidate_v4": 10212.73752,
+        "change_percent": 8.085711367411253
+      },
+      "allIndexRowsCommittedMs": {
+        "previous_candidate_v3": 910033.518859,
+        "candidate_v4": 1060403.503966,
+        "change_percent": 16.523565560039355
+      },
+      "searchIndexReadyMs": {
+        "previous_candidate_v3": 920239.09832,
+        "candidate_v4": 1070059.683763,
+        "change_percent": 16.280615083244587
+      },
+      "warmMedianMs": {
+        "previous_candidate_v3": 9655.881255,
+        "candidate_v4": 9561.469462,
+        "change_percent": -0.9777646442277077
+      }
+    },
+    "v3_window_index_progress_count": 29,
+    "v4_window_index_progress_count": 1,
+    "repeated_runs_or_confidence_interval": false
+  },
+  "remaining_acceptance": {
+    "original_20000_page_rapid_gate": "FAIL: 10s/128 committed rows; later rapid/clear/category/120s-ready assertions not reached",
+    "fixed_a128_new_format_comparison": "NOT_RUN",
+    "warm_raw_5_samples": "NOT_EMITTED: cannot independently recompute warm median",
+    "physical_device_performance": "NOT_RUN"
+  },
+  "limits": [
+    "Counter advancement is enclosing-window evidence, not simultaneous CPU execution or direct lock-wait duration.",
+    "No index counter advancement does not mean no outside-writer preparation.",
+    "Source checks may revisit pages; they are not distinct source counts.",
+    "First batch and all-index callback times include scheduling and earlier progress-log overhead; joint ready time also requires author saves and a valid pending=0 search result.",
+    "Projection rows/chars count returned previews including one lookahead, not every metadata scan or OS I/O bytes.",
+    "Matching environment comparison hashes do not establish identical transient load, caches, DB bytes or settings throughout execution.",
+    "The performance probe has no original rapid-test 10s/128 or 120s-ready deadline; its PASS does not supersede that separate failure.",
+    "No baseline values were substituted from older formats or intermediate candidate runs."
+  ],
+  "provenance": {
+    "candidate-v4-performance-library-probe.log": "3ff495eec29fb24b8da80c881689c0aaf19c7f4173fcd049f6230f17b4d5cc33",
+    "candidate-v4-performance-library-probe.json": "2e24cf1ee7c3a1756cd7694560da50d42d575b2af51c670182a4da9ab195d110",
+    "candidate-v4-source-sha256.json": "8285c54019d0a4409a6dbf6f5d36e87298b5be9b6d47f93801ea9123bb7d859f",
+    "candidate-v4-build.json": "d87398633fd15b53e83db3b55c9d6b13ff8e2bc8628319150fe1ec63ace4f29f",
+    "candidate-v4-artifacts.json": "84ce38bb2acacb53e027e7f56a43253e717bd9e53ed47a547d3acfa7e5b79851",
+    "candidate-v4-apk-installation.json": "d6541c7a3e962adabfa42ceb7252d009e554dd16d6feb94df1c1fac6dae2a889",
+    "candidate-v4-performance-environment.json": "841602a7ea1bf7444ce28a8faf6b695f483a4f94d9f75a09970432f945ac3d39",
+    "candidate-v3-performance-library-probe.log": "ee33451e1a7f7a5c49b3e5dd3536d23e7905fc081fb56a8ef69576fbc65c13d4",
+    "candidate-v3-performance-library-probe.json": "a3bd7683cb7d7a79ad455ab9fb208b9c3ceb2550a86401309717f0cfb0c6efb0",
+    "candidate-v3-source-sha256.json": "c52cbf318ce52a660d7040ad75f2a3c3c1828027c6f61633bf886deae8a214f7",
+    "candidate-v3-performance-environment.json": "b61609b452231643a8cd8af6d8505ecda3ddb64c9aa28ad42e31276da4837517",
+    "candidate-v4-validation-rapid-search.log": "9a9195bc98cbbcb9cc4672c17f022fb431dc122d46f5793e06dc78f66eedef69"
+  }
+}

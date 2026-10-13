@@ -1,0 +1,65 @@
+{
+  "adb_serial": "emulator-5554",
+  "status": "success",
+  "artifacts": [
+    {
+      "path": "/workspace/InkWeft/android/app/build/outputs/apk/debug/app-debug.apk",
+      "size_bytes": 241512357,
+      "sha256": "79fe8a40024d0cbd7283145f52febc3d54a6312ec231acea11182822e8f6aaf4",
+      "command": [
+        "/workspace/.setup/tools/android-sdk/platform-tools/adb",
+        "-s",
+        "emulator-5554",
+        "install",
+        "-r",
+        "-t",
+        "/workspace/InkWeft/android/app/build/outputs/apk/debug/app-debug.apk"
+      ],
+      "started_utc": "2026-10-13T01:57:58.230670+00:00",
+      "exit_code": 0,
+      "stdout": "Performing Streamed Install\nSuccess\n",
+      "stderr": "",
+      "completed_utc": "2026-10-13T01:58:31.454770+00:00"
+    },
+    {
+      "path": "/workspace/InkWeft/android/app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk",
+      "size_bytes": 18387376,
+      "sha256": "37dc4f858fdf13fde56fd514515f6e043356e482db0a8a0bc7339fce4504c5b2",
+      "command": [
+        "/workspace/.setup/tools/android-sdk/platform-tools/adb",
+        "-s",
+        "emulator-5554",
+        "install",
+        "-r",
+        "-t",
+        "/workspace/InkWeft/android/app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk"
+      ],
+      "started_utc": "2026-10-13T01:58:31.553265+00:00",
+      "exit_code": 0,
+      "stdout": "Performing Streamed Install\nSuccess\n",
+      "stderr": "",
+      "completed_utc": "2026-10-13T01:58:37.275051+00:00"
+    },
+    {
+      "path": "/workspace/InkWeft/android/data-local/build/outputs/apk/androidTest/debug/data-local-debug-androidTest.apk",
+      "size_bytes": 27073737,
+      "sha256": "79a7280c9667ef4721b4606ffc17a4bd7c476ceeb661d4d015ec9c19769324a3",
+      "command": [
+        "/workspace/.setup/tools/android-sdk/platform-tools/adb",
+        "-s",
+        "emulator-5554",
+        "install",
+        "-r",
+        "-t",
+        "/workspace/InkWeft/android/data-local/build/outputs/apk/androidTest/debug/data-local-debug-androidTest.apk"
+      ],
+      "started_utc": "2026-10-13T01:58:37.425444+00:00",
+      "exit_code": 0,
+      "stdout": "Performing Streamed Install\nSuccess\n",
+      "stderr": "",
+      "completed_utc": "2026-10-13T01:58:42.704995+00:00"
+    }
+  ],
+  "started_utc": "2026-10-13T01:57:56.385227+00:00",
+  "completed_utc": "2026-10-13T01:58:42.705346+00:00"
+}

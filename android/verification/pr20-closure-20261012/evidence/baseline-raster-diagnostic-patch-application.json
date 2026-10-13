@@ -1,0 +1,38 @@
+{
+  "utc": "2026-10-13T02:18:33.320525+00:00",
+  "command": [
+    "patch",
+    "-p1",
+    "--batch",
+    "--fuzz=0",
+    "-i",
+    "/workspace/scratch/pr20-closure-evidence/raster-metadata-diagnostics-portable.patch"
+  ],
+  "exit_code": 0,
+  "stdout": "patching file android/app/src/androidTest/java/org/inkweft/app/TileLocalRedrawTest.kt\nHunk #2 succeeded at 45 (offset -2 lines).\nHunk #3 succeeded at 87 (offset -2 lines).\nHunk #4 succeeded at 115 (offset -2 lines).\npatching file android/data-local/src/main/kotlin/org/inkweft/data/InkRepository.kt\nHunk #2 succeeded at 346 (offset -33 lines).\nHunk #3 succeeded at 364 (offset -33 lines).\nHunk #4 succeeded at 378 (offset -33 lines).\n",
+  "stderr": "",
+  "before_matches_frozen_baseline": true,
+  "source_count": 734,
+  "changed_paths": [
+    "android/app/src/androidTest/java/org/inkweft/app/TileLocalRedrawTest.kt",
+    "android/data-local/src/main/kotlin/org/inkweft/data/InkRepository.kt"
+  ],
+  "only_expected_changed": true,
+  "patch_sha256": "1fc0348e2b4aae0ecf38cace3959fad5c4798871acee6ec1aac7d46452883d08",
+  "changed_hashes": [
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/TileLocalRedrawTest.kt",
+      "before": "28d62ffd20123af1fd9806b601563ddf2707e562c9dadaa31dcdf7936c93a302",
+      "after": "149ebd22a274268f1521f5153c44b9c461fdfae1211be71ae7d899848f485b2f"
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/InkRepository.kt",
+      "before": "8211f46304ae6af076de7da33fba96f5f8bb5ff5c69bc8caffecd6df041af686",
+      "after": "907034177d39047216ade1fe84c804f67370f59213134657fde3159ff3d3052b"
+    }
+  ],
+  "patch_generated_backups_removed_after_old_hash_match": [
+    "android/app/src/androidTest/java/org/inkweft/app/TileLocalRedrawTest.kt.orig",
+    "android/data-local/src/main/kotlin/org/inkweft/data/InkRepository.kt.orig"
+  ]
+}

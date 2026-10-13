@@ -1,0 +1,1450 @@
+{
+  "created_utc": "2026-10-13T00:47:20.472277+00:00",
+  "status": "COMPLETED_V4_CURATED_SNAPSHOTS_WITH_BASELINE_FINAL_PENDING",
+  "previous_curation_preserved": {
+    "path": "/workspace/scratch/pr20-closure-evidence/closure-curated-manifest-v4.json",
+    "sha256": "e61e754fb766c8be4bc40f91e02de0a0dd803e7518acfe4cc546f152c29af66a"
+  },
+  "privacy_review": {
+    "path": "/workspace/scratch/pr20-closure-evidence/closure-evidence-privacy-review-v4-completed.json",
+    "sha256": "e92da032c9bd24058876e48edf90f0aba63cb418f59a1259edffd678c7da6ee9"
+  },
+  "v4_closure_check": {
+    "path": "/workspace/scratch/pr20-closure-evidence/candidate-v4-evidence-closure-check.json",
+    "sha256": "5505124b9720753e9b1caa2330a6f30d2bd91f56691dbaca50b6775e56660fb5",
+    "source_matches": 744,
+    "apk_receipt_chain_matches": 3,
+    "performance_passed": 5,
+    "performance_failed": 0,
+    "validation_passed": 27,
+    "validation_failed": 1,
+    "environment_before_after_sha256": "425d701e4a8711a84ca963b1c4769b76c47d1644970d72e2941666412be56378"
+  },
+  "files": [
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-closure-performance-plan.json",
+      "suggested_archive_path": "evidence/baseline-closure-performance-plan.json",
+      "sha256": "4f24f63f1259ae6b7797a07ef363a6b5dda28c398e9d78fe84628bf0d54bc854",
+      "bytes": 5594,
+      "role": "source/build/provenance or validation-scope record",
+      "reviewed_current_sha256": "4f24f63f1259ae6b7797a07ef363a6b5dda28c398e9d78fe84628bf0d54bc854"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-final-provenance.json",
+      "suggested_archive_path": "evidence/baseline-final-provenance.json",
+      "sha256": "4894d42bf5605880fd2ba5545d53df7a4de500cbe4870e4a8b120f94e1392fee",
+      "bytes": 13051,
+      "role": "source/build/provenance or validation-scope record",
+      "reviewed_current_sha256": "4894d42bf5605880fd2ba5545d53df7a4de500cbe4870e4a8b120f94e1392fee"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/baseline-final-source-manifest.json",
+      "suggested_archive_path": "evidence/baseline-final-source-manifest.json",
+      "sha256": "485c50705454ab09d5ba15d618f9fc7fc2c7abe40eb105c8609533d25cc4af71",
+      "bytes": 680788,
+      "role": "source/build/provenance or validation-scope record",
+      "reviewed_current_sha256": "485c50705454ab09d5ba15d618f9fc7fc2c7abe40eb105c8609533d25cc4af71"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v2-artifacts.json",
+      "suggested_archive_path": "evidence/candidate-v2-artifacts.json",
+      "sha256": "6ea7e1e54ef3d100790df426c351fc7b288219a1add2ea296287ae089ae5242a",
+      "bytes": 1356,
+      "role": "source/build/provenance or validation-scope record",
+      "reviewed_current_sha256": "6ea7e1e54ef3d100790df426c351fc7b288219a1add2ea296287ae089ae5242a"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v2-backup-cancel-setup.json",
+      "suggested_archive_path": "evidence/candidate-v2-backup-cancel-setup.json",
+      "sha256": "a93484c4c050292a6e646fd0f96e84192b85270baa73ecdbd5ff345819112ec5",
+      "bytes": 987,
+      "role": "historical failed execution receipt/log/setup; retain version identity and later resolution",
+      "reviewed_current_sha256": "a93484c4c050292a6e646fd0f96e84192b85270baa73ecdbd5ff345819112ec5"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v2-backup-cancel.json",
+      "suggested_archive_path": "evidence/candidate-v2-backup-cancel.json",
+      "sha256": "c59bf321146f45821a699065f2433934e0cdf53a3e0cc6835086fe6073632ff5",
+      "bytes": 820,
+      "role": "historical failed execution receipt/log/setup; retain version identity and later resolution",
+      "reviewed_current_sha256": "c59bf321146f45821a699065f2433934e0cdf53a3e0cc6835086fe6073632ff5"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v2-backup-cancel.log",
+      "suggested_archive_path": "evidence/candidate-v2-backup-cancel.log",
+      "sha256": "c61b8c97e4b26cdaeddb719994f00343d556994798962168aeaabf6e43258fa7",
+      "bytes": 4644,
+      "role": "historical failed execution receipt/log/setup; retain version identity and later resolution",
+      "reviewed_current_sha256": "c61b8c97e4b26cdaeddb719994f00343d556994798962168aeaabf6e43258fa7"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v2-backup-isolation-setup.json",
+      "suggested_archive_path": "evidence/candidate-v2-backup-isolation-setup.json",
+      "sha256": "169d087b775c360c0711de7430172428a0819e012fd83f9ad02b2e6eb1d8e818",
+      "bytes": 987,
+      "role": "historical failed execution receipt/log/setup; retain version identity and later resolution",
+      "reviewed_current_sha256": "169d087b775c360c0711de7430172428a0819e012fd83f9ad02b2e6eb1d8e818"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v2-backup-isolation.json",
+      "suggested_archive_path": "evidence/candidate-v2-backup-isolation.json",
+      "sha256": "bb5b71875bd9fdcb7538138c44aeb198e6d2188d5225d55e27597272adfeadc4",
+      "bytes": 688,
+      "role": "historical failed execution receipt/log/setup; retain version identity and later resolution",
+      "reviewed_current_sha256": "bb5b71875bd9fdcb7538138c44aeb198e6d2188d5225d55e27597272adfeadc4"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v2-backup-isolation.log",
+      "suggested_archive_path": "evidence/candidate-v2-backup-isolation.log",
+      "sha256": "05cc76633fc44f457c25219a95e5d5e655b1c05e099e41c35dde5c32710a8cb7",
+      "bytes": 1359,
+      "role": "historical failed execution receipt/log/setup; retain version identity and later resolution",
+      "reviewed_current_sha256": "05cc76633fc44f457c25219a95e5d5e655b1c05e099e41c35dde5c32710a8cb7"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v2-build.json",
+      "suggested_archive_path": "evidence/candidate-v2-build.json",
+      "sha256": "5d2dbef05d6bcc96ade30782f59a40c7bf0307a769d8bbffbd2aaf8718fc4162",
+      "bytes": 476,
+      "role": "source/build/provenance or validation-scope record",
+      "reviewed_current_sha256": "5d2dbef05d6bcc96ade30782f59a40c7bf0307a769d8bbffbd2aaf8718fc4162"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v2-factory-setup.json",
+      "suggested_archive_path": "evidence/candidate-v2-factory-setup.json",
+      "sha256": "b7ffd8beaa9a5d02f6a412491b557ff937aece733b107df428979fd330a6d00f",
+      "bytes": 987,
+      "role": "v2 device setup provenance",
+      "reviewed_current_sha256": "b7ffd8beaa9a5d02f6a412491b557ff937aece733b107df428979fd330a6d00f"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v2-factory.log",
+      "suggested_archive_path": "evidence/candidate-v2-factory.log",
+      "sha256": "44e3b86cf32d6c103fae8020ddd3842ae261f057951b32cfa7297e42c4ea9c57",
+      "bytes": 80,
+      "role": "v2 native outcome/raw evidence; preserve failure history",
+      "reviewed_current_sha256": "44e3b86cf32d6c103fae8020ddd3842ae261f057951b32cfa7297e42c4ea9c57"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v2-history-collection-setup.json",
+      "suggested_archive_path": "evidence/candidate-v2-history-collection-setup.json",
+      "sha256": "cde54acf2d5a6f42d2c48cea493b5a29947572baa486df3dd65d597affd8f242",
+      "bytes": 987,
+      "role": "v2 device setup provenance",
+      "reviewed_current_sha256": "cde54acf2d5a6f42d2c48cea493b5a29947572baa486df3dd65d597affd8f242"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v2-history-collection.log",
+      "suggested_archive_path": "evidence/candidate-v2-history-collection.log",
+      "sha256": "6aab4c535d3fd7ab8dac3cc750c6f029c9734ea57ea8d1d2e4197135d6bcdf2a",
+      "bytes": 78,
+      "role": "v2 native outcome/raw evidence; preserve failure history",
+      "reviewed_current_sha256": "6aab4c535d3fd7ab8dac3cc750c6f029c9734ea57ea8d1d2e4197135d6bcdf2a"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v2-history-setup.json",
+      "suggested_archive_path": "evidence/candidate-v2-history-setup.json",
+      "sha256": "8a44d21bec61274bb9d099d6f6089fea74068987a6f1034f943b95ad7e3e2e5c",
+      "bytes": 987,
+      "role": "v2 device setup provenance",
+      "reviewed_current_sha256": "8a44d21bec61274bb9d099d6f6089fea74068987a6f1034f943b95ad7e3e2e5c"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v2-history.log",
+      "suggested_archive_path": "evidence/candidate-v2-history.log",
+      "sha256": "71a1cd6ba0b9c5998b3b4da02685c90112a777ba7c4ecff6b3485493d38db1d9",
+      "bytes": 1800,
+      "role": "v2 native outcome/raw evidence; preserve failure history",
+      "reviewed_current_sha256": "71a1cd6ba0b9c5998b3b4da02685c90112a777ba7c4ecff6b3485493d38db1d9"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v2-jvm-and-lint-status.json",
+      "suggested_archive_path": "evidence/candidate-v2-jvm-and-lint-status.json",
+      "sha256": "7fb210fba7c0357ea52d3f2ae950c5e105ab065c8a3a3c77665ea2dbef498939",
+      "bytes": 354,
+      "role": "source/build/provenance or validation-scope record",
+      "reviewed_current_sha256": "7fb210fba7c0357ea52d3f2ae950c5e105ab065c8a3a3c77665ea2dbef498939"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v2-native-stroke-setup.json",
+      "suggested_archive_path": "evidence/candidate-v2-native-stroke-setup.json",
+      "sha256": "ac46f3a0a10e6989e3aeaf6a82d86f4cd81111e4e65db031a6e18a40562b9583",
+      "bytes": 987,
+      "role": "v2 device setup provenance",
+      "reviewed_current_sha256": "ac46f3a0a10e6989e3aeaf6a82d86f4cd81111e4e65db031a6e18a40562b9583"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v2-native-stroke.log",
+      "suggested_archive_path": "evidence/candidate-v2-native-stroke.log",
+      "sha256": "008c505b5c4d19f9df223f91e2455650008da767d218c26b2b20ca74628b2144",
+      "bytes": 609,
+      "role": "v2 native outcome/raw evidence; preserve failure history",
+      "reviewed_current_sha256": "008c505b5c4d19f9df223f91e2455650008da767d218c26b2b20ca74628b2144"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v2-process-initialization-setup.json",
+      "suggested_archive_path": "evidence/candidate-v2-process-initialization-setup.json",
+      "sha256": "36bcdf15cb00aa79ae1642c7c082c5bace685cc20c655b400574cb71743941fa",
+      "bytes": 987,
+      "role": "v2 device setup provenance",
+      "reviewed_current_sha256": "36bcdf15cb00aa79ae1642c7c082c5bace685cc20c655b400574cb71743941fa"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v2-process-initialization.log",
+      "suggested_archive_path": "evidence/candidate-v2-process-initialization.log",
+      "sha256": "cead2c2f62ff5ba0125cd054513a4da19ad84e9764f229c686f7777b03a6ac30",
+      "bytes": 1197,
+      "role": "v2 native outcome/raw evidence; preserve failure history",
+      "reviewed_current_sha256": "cead2c2f62ff5ba0125cd054513a4da19ad84e9764f229c686f7777b03a6ac30"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v2-rapid-search-setup.json",
+      "suggested_archive_path": "evidence/candidate-v2-rapid-search-setup.json",
+      "sha256": "8c0d48380839fbf08035004da745ae5d5366a7e1ab531bb259188bceca6ee4f8",
+      "bytes": 987,
+      "role": "historical failed execution receipt/log/setup; retain version identity and later resolution",
+      "reviewed_current_sha256": "8c0d48380839fbf08035004da745ae5d5366a7e1ab531bb259188bceca6ee4f8"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v2-rapid-search.json",
+      "suggested_archive_path": "evidence/candidate-v2-rapid-search.json",
+      "sha256": "d373ce353a9675418dce3c5d3350957cb2e8523d68954a9dc8e8b73d56b1606b",
+      "bytes": 832,
+      "role": "historical failed execution receipt/log/setup; retain version identity and later resolution",
+      "reviewed_current_sha256": "d373ce353a9675418dce3c5d3350957cb2e8523d68954a9dc8e8b73d56b1606b"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v2-rapid-search.log",
+      "suggested_archive_path": "evidence/candidate-v2-rapid-search.log",
+      "sha256": "f1ffdb70187633509a54afd2af91243375859410907514f32ca67dac2c0fb7e3",
+      "bytes": 2191,
+      "role": "historical failed execution receipt/log/setup; retain version identity and later resolution",
+      "reviewed_current_sha256": "f1ffdb70187633509a54afd2af91243375859410907514f32ca67dac2c0fb7e3"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v2-reconstruction-provenance.json",
+      "suggested_archive_path": "evidence/candidate-v2-reconstruction-provenance.json",
+      "sha256": "f3dae06f0100c7e9e0eab31fa6a7c7d954bad8612f84d34187d1f9b69c089636",
+      "bytes": 15811,
+      "role": "source/build/provenance or validation-scope record",
+      "reviewed_current_sha256": "f3dae06f0100c7e9e0eab31fa6a7c7d954bad8612f84d34187d1f9b69c089636"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v2-reconstruction.patch",
+      "suggested_archive_path": "evidence/candidate-v2-reconstruction.patch",
+      "sha256": "584bc7ad3405c05962b76a1693311ee284eef8aa0692c8a1dd086f861bb4e4d5",
+      "bytes": 102520,
+      "role": "source/build/provenance or validation-scope record",
+      "reviewed_current_sha256": "584bc7ad3405c05962b76a1693311ee284eef8aa0692c8a1dd086f861bb4e4d5"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v2-regression-backup-regressions-setup.json",
+      "suggested_archive_path": "evidence/candidate-v2-regression-backup-regressions-setup.json",
+      "sha256": "8b9708bffcc3ae40f0042e76334cb33267f3cc0d361489105f37ec4477f1d63b",
+      "bytes": 987,
+      "role": "v2 device setup provenance",
+      "reviewed_current_sha256": "8b9708bffcc3ae40f0042e76334cb33267f3cc0d361489105f37ec4477f1d63b"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v2-regression-backup-regressions.log",
+      "suggested_archive_path": "evidence/candidate-v2-regression-backup-regressions.log",
+      "sha256": "b94e51146e2b3e6f6ae9d27c5f2843c612fed356592764db1e62cc9cb739152f",
+      "bytes": 86,
+      "role": "v2 native outcome/raw evidence; preserve failure history",
+      "reviewed_current_sha256": "b94e51146e2b3e6f6ae9d27c5f2843c612fed356592764db1e62cc9cb739152f"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v2-regression-header-loading-setup.json",
+      "suggested_archive_path": "evidence/candidate-v2-regression-header-loading-setup.json",
+      "sha256": "03fc665584bda45242367115db9f42e4accdf0d874cbe82183beeefbee427ed1",
+      "bytes": 2210,
+      "role": "v2 device setup provenance",
+      "reviewed_current_sha256": "03fc665584bda45242367115db9f42e4accdf0d874cbe82183beeefbee427ed1"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v2-regression-header-loading.log",
+      "suggested_archive_path": "evidence/candidate-v2-regression-header-loading.log",
+      "sha256": "cb0534f3d3038ba427a72dbb13bca5e48615517393e4c03e3417e1c27d72dd3d",
+      "bytes": 78,
+      "role": "v2 native outcome/raw evidence; preserve failure history",
+      "reviewed_current_sha256": "cb0534f3d3038ba427a72dbb13bca5e48615517393e4c03e3417e1c27d72dd3d"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v2-regression-history-storage-setup.json",
+      "suggested_archive_path": "evidence/candidate-v2-regression-history-storage-setup.json",
+      "sha256": "162fa7f3ceed37849cabac9b94c95afd239f51f8851c18f931f7053c0c985836",
+      "bytes": 987,
+      "role": "v2 device setup provenance",
+      "reviewed_current_sha256": "162fa7f3ceed37849cabac9b94c95afd239f51f8851c18f931f7053c0c985836"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v2-regression-history-storage.log",
+      "suggested_archive_path": "evidence/candidate-v2-regression-history-storage.log",
+      "sha256": "f2b36f37fda9fa050b03d7180ad1f91a253f632363422caec802d0fe9c1508b1",
+      "bytes": 76,
+      "role": "v2 native outcome/raw evidence; preserve failure history",
+      "reviewed_current_sha256": "f2b36f37fda9fa050b03d7180ad1f91a253f632363422caec802d0fe9c1508b1"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v2-regression-layer-budget-setup.json",
+      "suggested_archive_path": "evidence/candidate-v2-regression-layer-budget-setup.json",
+      "sha256": "3c3f79f34461cee240098b678875ec628d3960cd9aef3b2b698c63213eeaeca6",
+      "bytes": 987,
+      "role": "v2 device setup provenance",
+      "reviewed_current_sha256": "3c3f79f34461cee240098b678875ec628d3960cd9aef3b2b698c63213eeaeca6"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v2-regression-layer-budget.log",
+      "suggested_archive_path": "evidence/candidate-v2-regression-layer-budget.log",
+      "sha256": "f7f89a1bdf80cdabf69c3f8b8d7589a4329ca231752d4326ec67d036f9343be6",
+      "bytes": 967,
+      "role": "v2 native outcome/raw evidence; preserve failure history",
+      "reviewed_current_sha256": "f7f89a1bdf80cdabf69c3f8b8d7589a4329ca231752d4326ec67d036f9343be6"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v2-regression-library-paging-setup.json",
+      "suggested_archive_path": "evidence/candidate-v2-regression-library-paging-setup.json",
+      "sha256": "7681c321ed30880a8a672bcf1c90c016fe5db38dd804227eb0f15be39df0c77f",
+      "bytes": 987,
+      "role": "v2 device setup provenance",
+      "reviewed_current_sha256": "7681c321ed30880a8a672bcf1c90c016fe5db38dd804227eb0f15be39df0c77f"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v2-regression-library-paging.log",
+      "suggested_archive_path": "evidence/candidate-v2-regression-library-paging.log",
+      "sha256": "6782fd5783e18d434626d5966b0bc574392b0c3a463542a42ef770e99946f7c5",
+      "bytes": 70,
+      "role": "v2 native outcome/raw evidence; preserve failure history",
+      "reviewed_current_sha256": "6782fd5783e18d434626d5966b0bc574392b0c3a463542a42ef770e99946f7c5"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v2-regression-original-storage-setup.json",
+      "suggested_archive_path": "evidence/candidate-v2-regression-original-storage-setup.json",
+      "sha256": "d52529ae655d46daf69ba9f3d350969159b79cb36daa92a5818f568748e4dbc9",
+      "bytes": 987,
+      "role": "historical failed execution receipt/log/setup; retain version identity and later resolution",
+      "reviewed_current_sha256": "d52529ae655d46daf69ba9f3d350969159b79cb36daa92a5818f568748e4dbc9"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v2-regression-original-storage.json",
+      "suggested_archive_path": "evidence/candidate-v2-regression-original-storage.json",
+      "sha256": "359416051c53cc7a165d2db69f06648a57ef9e91c9af12e7bc86fc2c248220ab",
+      "bytes": 708,
+      "role": "historical failed execution receipt/log/setup; retain version identity and later resolution",
+      "reviewed_current_sha256": "359416051c53cc7a165d2db69f06648a57ef9e91c9af12e7bc86fc2c248220ab"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v2-regression-original-storage.log",
+      "suggested_archive_path": "evidence/candidate-v2-regression-original-storage.log",
+      "sha256": "b31e3ce7d7b4fac1584105173caa69db25c30e02c40e91e61a0824e9730e1fdc",
+      "bytes": 4340,
+      "role": "historical failed execution receipt/log/setup; retain version identity and later resolution",
+      "reviewed_current_sha256": "b31e3ce7d7b4fac1584105173caa69db25c30e02c40e91e61a0824e9730e1fdc"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v2-regression-results.json",
+      "suggested_archive_path": "evidence/candidate-v2-regression-results.json",
+      "sha256": "f0ba1b5f505658d04a468b55f4525539f69e1e10aa87f947ffd3f0209dcb0f6e",
+      "bytes": 10046,
+      "role": "source/build/provenance or validation-scope record",
+      "reviewed_current_sha256": "f0ba1b5f505658d04a468b55f4525539f69e1e10aa87f947ffd3f0209dcb0f6e"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v2-regression-search-regressions-setup.json",
+      "suggested_archive_path": "evidence/candidate-v2-regression-search-regressions-setup.json",
+      "sha256": "31cfdb292294c457dc4ade5e4c42fc6e38b39bfb089086d9aa537c3a141628dc",
+      "bytes": 987,
+      "role": "v2 device setup provenance",
+      "reviewed_current_sha256": "31cfdb292294c457dc4ade5e4c42fc6e38b39bfb089086d9aa537c3a141628dc"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v2-regression-search-regressions.log",
+      "suggested_archive_path": "evidence/candidate-v2-regression-search-regressions.log",
+      "sha256": "11e8a07311c6a62d43b01a7832524fa4de13f962dced577b18c52438d191d7b2",
+      "bytes": 81,
+      "role": "v2 native outcome/raw evidence; preserve failure history",
+      "reviewed_current_sha256": "11e8a07311c6a62d43b01a7832524fa4de13f962dced577b18c52438d191d7b2"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v2-regression-streamed-dense-original-setup.json",
+      "suggested_archive_path": "evidence/candidate-v2-regression-streamed-dense-original-setup.json",
+      "sha256": "af138b00a32ea8a0019678842d79c99ea6987e2425a3dd6aca19287b8d212792",
+      "bytes": 987,
+      "role": "historical failed execution receipt/log/setup; retain version identity and later resolution",
+      "reviewed_current_sha256": "af138b00a32ea8a0019678842d79c99ea6987e2425a3dd6aca19287b8d212792"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v2-regression-streamed-dense-original.json",
+      "suggested_archive_path": "evidence/candidate-v2-regression-streamed-dense-original.json",
+      "sha256": "4d08b26b84df55e8472f044e1c6e4804bbb356a089f1dedd343ceabee0d1d6fa",
+      "bytes": 832,
+      "role": "historical failed execution receipt/log/setup; retain version identity and later resolution",
+      "reviewed_current_sha256": "4d08b26b84df55e8472f044e1c6e4804bbb356a089f1dedd343ceabee0d1d6fa"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v2-regression-streamed-dense-original.log",
+      "suggested_archive_path": "evidence/candidate-v2-regression-streamed-dense-original.log",
+      "sha256": "b2ba96b526a76faa7cac07f397b1c2bf09a993aedac5f6dd5bf5ad8b68c4309d",
+      "bytes": 4661,
+      "role": "historical failed execution receipt/log/setup; retain version identity and later resolution",
+      "reviewed_current_sha256": "b2ba96b526a76faa7cac07f397b1c2bf09a993aedac5f6dd5bf5ad8b68c4309d"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v2-regression-streamed-regressions-setup.json",
+      "suggested_archive_path": "evidence/candidate-v2-regression-streamed-regressions-setup.json",
+      "sha256": "03b72215b49b411804fb0bf818822aaac664df10abb0a92f4224fc5f260d679a",
+      "bytes": 987,
+      "role": "v2 device setup provenance",
+      "reviewed_current_sha256": "03b72215b49b411804fb0bf818822aaac664df10abb0a92f4224fc5f260d679a"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v2-regression-streamed-regressions.log",
+      "suggested_archive_path": "evidence/candidate-v2-regression-streamed-regressions.log",
+      "sha256": "5bfc8e666d4d4ed4f0d9a7b24724014c12e8a2f16235a1d1fb49c1aff1a61db2",
+      "bytes": 1619,
+      "role": "v2 native outcome/raw evidence; preserve failure history",
+      "reviewed_current_sha256": "5bfc8e666d4d4ed4f0d9a7b24724014c12e8a2f16235a1d1fb49c1aff1a61db2"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v2-results.json",
+      "suggested_archive_path": "evidence/candidate-v2-results.json",
+      "sha256": "99b530d0478b3efc27b2335ccfd647e206d84fa6ecfd6cd744115fd1943954a0",
+      "bytes": 7251,
+      "role": "source/build/provenance or validation-scope record",
+      "reviewed_current_sha256": "99b530d0478b3efc27b2335ccfd647e206d84fa6ecfd6cd744115fd1943954a0"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v2-shelf-rename-setup.json",
+      "suggested_archive_path": "evidence/candidate-v2-shelf-rename-setup.json",
+      "sha256": "d4bfa47d37d15ec4b5b7773db91645279ed277abf50aa520e4566ad953c00d8e",
+      "bytes": 2210,
+      "role": "v2 device setup provenance",
+      "reviewed_current_sha256": "d4bfa47d37d15ec4b5b7773db91645279ed277abf50aa520e4566ad953c00d8e"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v2-shelf-rename.log",
+      "suggested_archive_path": "evidence/candidate-v2-shelf-rename.log",
+      "sha256": "37e7ccb49357e8d0e2f021b59cf3ac934037f1fe329bbbfd6944097e54c3955a",
+      "bytes": 69,
+      "role": "v2 native outcome/raw evidence; preserve failure history",
+      "reviewed_current_sha256": "37e7ccb49357e8d0e2f021b59cf3ac934037f1fe329bbbfd6944097e54c3955a"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v2-signatures.json",
+      "suggested_archive_path": "evidence/candidate-v2-signatures.json",
+      "sha256": "04884c77d341fbb596b1ba97d4fd552e5d2bb582e61c3f5b023c3e987dd71b0b",
+      "bytes": 1481,
+      "role": "source/build/provenance or validation-scope record",
+      "reviewed_current_sha256": "04884c77d341fbb596b1ba97d4fd552e5d2bb582e61c3f5b023c3e987dd71b0b"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v2-source-sha256.json",
+      "suggested_archive_path": "evidence/candidate-v2-source-sha256.json",
+      "sha256": "141f13c85e1fac7d71b5623f14650eaff4b2cd11c3e4bcdf5ccbc6e25b3cc0ae",
+      "bytes": 106710,
+      "role": "source/build/provenance or validation-scope record",
+      "reviewed_current_sha256": "141f13c85e1fac7d71b5623f14650eaff4b2cd11c3e4bcdf5ccbc6e25b3cc0ae"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v3-artifacts.json",
+      "suggested_archive_path": "evidence/candidate-v3-artifacts.json",
+      "sha256": "d02096d643b73a3970437af8fe0e9428020b123f63da390f33c3960944b8cd19",
+      "bytes": 1356,
+      "role": "source/build/provenance or validation-scope record",
+      "reviewed_current_sha256": "d02096d643b73a3970437af8fe0e9428020b123f63da390f33c3960944b8cd19"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v3-build.json",
+      "suggested_archive_path": "evidence/candidate-v3-build.json",
+      "sha256": "91300b26953eeb37b778336d0b7d12e4e8792daa95f126b377c46e57c8c12b7b",
+      "bytes": 476,
+      "role": "source/build/provenance or validation-scope record",
+      "reviewed_current_sha256": "91300b26953eeb37b778336d0b7d12e4e8792daa95f126b377c46e57c8c12b7b"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v3-followup-backup-isolation-paused-setup.json",
+      "suggested_archive_path": "evidence/candidate-v3-followup-backup-isolation-paused-setup.json",
+      "sha256": "6686d5f2974e5c822e719f1ae805ed7e6b9cfef5cfa370839b2e3f7208bff1b1",
+      "bytes": 987,
+      "role": "v3 followup outcome and diagnostics, including failures",
+      "reviewed_current_sha256": "6686d5f2974e5c822e719f1ae805ed7e6b9cfef5cfa370839b2e3f7208bff1b1"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v3-followup-backup-isolation-paused.json",
+      "suggested_archive_path": "evidence/candidate-v3-followup-backup-isolation-paused.json",
+      "sha256": "b27ab8a8f987e50a83087673d9e646a30a91961ab995febe351a2cba4d81ddc5",
+      "bytes": 819,
+      "role": "v3 followup outcome and diagnostics, including failures",
+      "reviewed_current_sha256": "b27ab8a8f987e50a83087673d9e646a30a91961ab995febe351a2cba4d81ddc5"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v3-followup-backup-isolation-paused.log",
+      "suggested_archive_path": "evidence/candidate-v3-followup-backup-isolation-paused.log",
+      "sha256": "b8318cdb91554d9bd8daa40390fa17e367bde7f44f981d7b5564680dac0a9f0b",
+      "bytes": 1457,
+      "role": "v3 followup outcome and diagnostics, including failures",
+      "reviewed_current_sha256": "b8318cdb91554d9bd8daa40390fa17e367bde7f44f981d7b5564680dac0a9f0b"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v3-followup-original-later-corruption-setup.json",
+      "suggested_archive_path": "evidence/candidate-v3-followup-original-later-corruption-setup.json",
+      "sha256": "46de99994e6e4fb4ad6258b4f91372077ca1d383337e7d89365c8682637764ec",
+      "bytes": 987,
+      "role": "historical failed execution receipt/log/setup; retain version identity and later resolution",
+      "reviewed_current_sha256": "46de99994e6e4fb4ad6258b4f91372077ca1d383337e7d89365c8682637764ec"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v3-followup-original-later-corruption.json",
+      "suggested_archive_path": "evidence/candidate-v3-followup-original-later-corruption.json",
+      "sha256": "e97e5a4c54664d525b4b4002c30a847c9d3c6b8119134dc742c22e3930be65fe",
+      "bytes": 828,
+      "role": "historical failed execution receipt/log/setup; retain version identity and later resolution",
+      "reviewed_current_sha256": "e97e5a4c54664d525b4b4002c30a847c9d3c6b8119134dc742c22e3930be65fe"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v3-followup-original-later-corruption.log",
+      "suggested_archive_path": "evidence/candidate-v3-followup-original-later-corruption.log",
+      "sha256": "59e070dd5e1c3ea83fe1882eeca69981db43f3b654a7be4ca0b0a809a9edc8c7",
+      "bytes": 3877,
+      "role": "historical failed execution receipt/log/setup; retain version identity and later resolution",
+      "reviewed_current_sha256": "59e070dd5e1c3ea83fe1882eeca69981db43f3b654a7be4ca0b0a809a9edc8c7"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v3-followup-results.json",
+      "suggested_archive_path": "evidence/candidate-v3-followup-results.json",
+      "sha256": "727957320caf14cc4633e0ceb4e424e265f1f63a8855507163bf50f9579b667e",
+      "bytes": 1838,
+      "role": "v3 followup outcome and diagnostics, including failures",
+      "reviewed_current_sha256": "727957320caf14cc4633e0ceb4e424e265f1f63a8855507163bf50f9579b667e"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v3-jvm-and-lint-status.json",
+      "suggested_archive_path": "evidence/candidate-v3-jvm-and-lint-status.json",
+      "sha256": "7fb210fba7c0357ea52d3f2ae950c5e105ab065c8a3a3c77665ea2dbef498939",
+      "bytes": 354,
+      "role": "source/build/provenance or validation-scope record",
+      "reviewed_current_sha256": "7fb210fba7c0357ea52d3f2ae950c5e105ab065c8a3a3c77665ea2dbef498939"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v3-performance-artifact-continuity.json",
+      "suggested_archive_path": "evidence/candidate-v3-performance-artifact-continuity.json",
+      "sha256": "b1e5e6f2d6cddb176b9992fe02814ef638a8f5a5f5bb65981882e14d2a974d96",
+      "bytes": 875,
+      "role": "v3 completed performance evidence; retain v3 identity",
+      "reviewed_current_sha256": "b1e5e6f2d6cddb176b9992fe02814ef638a8f5a5f5bb65981882e14d2a974d96"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v3-performance-environment-after.json",
+      "suggested_archive_path": "evidence/candidate-v3-performance-environment-after.json",
+      "sha256": "5dcc16a675ff22fde0d4a0a3665af9176d35e3674d62a5421dc80fcdef9e17ef",
+      "bytes": 11790,
+      "role": "v3 completed performance evidence; retain v3 identity",
+      "reviewed_current_sha256": "5dcc16a675ff22fde0d4a0a3665af9176d35e3674d62a5421dc80fcdef9e17ef"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v3-performance-environment.json",
+      "suggested_archive_path": "evidence/candidate-v3-performance-environment.json",
+      "sha256": "b61609b452231643a8cd8af6d8505ecda3ddb64c9aa28ad42e31276da4837517",
+      "bytes": 11784,
+      "role": "v3 completed performance evidence; retain v3 identity",
+      "reviewed_current_sha256": "b61609b452231643a8cd8af6d8505ecda3ddb64c9aa28ad42e31276da4837517"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v3-performance-history-probe-setup.json",
+      "suggested_archive_path": "evidence/candidate-v3-performance-history-probe-setup.json",
+      "sha256": "4e108e9fc3ca4703f68762d86f6a501efd28c5f50d889e38b67a3d42e89a464c",
+      "bytes": 987,
+      "role": "v3 completed performance evidence; retain v3 identity",
+      "reviewed_current_sha256": "4e108e9fc3ca4703f68762d86f6a501efd28c5f50d889e38b67a3d42e89a464c"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v3-performance-history-probe.json",
+      "suggested_archive_path": "evidence/candidate-v3-performance-history-probe.json",
+      "sha256": "5baceb5d6be08570a41a30b44735ab0a67b1c07ceca5badbc5bec26c9a4d8523",
+      "bytes": 704,
+      "role": "v3 completed performance evidence; retain v3 identity",
+      "reviewed_current_sha256": "5baceb5d6be08570a41a30b44735ab0a67b1c07ceca5badbc5bec26c9a4d8523"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v3-performance-history-probe.log",
+      "suggested_archive_path": "evidence/candidate-v3-performance-history-probe.log",
+      "sha256": "b94eed466be0210dd3a8b6b89238730277c3f1474ee3f08a60ee4a337244005d",
+      "bytes": 1320,
+      "role": "v3 completed performance evidence; retain v3 identity",
+      "reviewed_current_sha256": "b94eed466be0210dd3a8b6b89238730277c3f1474ee3f08a60ee4a337244005d"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v3-performance-library-probe-setup.json",
+      "suggested_archive_path": "evidence/candidate-v3-performance-library-probe-setup.json",
+      "sha256": "10888aff7e57d1f81ac7ad870495d7afc26fa190e9c0660ce3c845527d757a60",
+      "bytes": 987,
+      "role": "v3 completed performance evidence; retain v3 identity",
+      "reviewed_current_sha256": "10888aff7e57d1f81ac7ad870495d7afc26fa190e9c0660ce3c845527d757a60"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v3-performance-library-probe.json",
+      "suggested_archive_path": "evidence/candidate-v3-performance-library-probe.json",
+      "sha256": "a3bd7683cb7d7a79ad455ab9fb208b9c3ceb2550a86401309717f0cfb0c6efb0",
+      "bytes": 697,
+      "role": "v3 completed performance evidence; retain v3 identity",
+      "reviewed_current_sha256": "a3bd7683cb7d7a79ad455ab9fb208b9c3ceb2550a86401309717f0cfb0c6efb0"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v3-performance-library-probe.log",
+      "suggested_archive_path": "evidence/candidate-v3-performance-library-probe.log",
+      "sha256": "ee33451e1a7f7a5c49b3e5dd3536d23e7905fc081fb56a8ef69576fbc65c13d4",
+      "bytes": 10950,
+      "role": "v3 completed performance evidence; retain v3 identity",
+      "reviewed_current_sha256": "ee33451e1a7f7a5c49b3e5dd3536d23e7905fc081fb56a8ef69576fbc65c13d4"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v3-performance-raster-probe-setup.json",
+      "suggested_archive_path": "evidence/candidate-v3-performance-raster-probe-setup.json",
+      "sha256": "c738adcf284edc87da1187a6deb04a077dba4dd03ff1ef902d0c9e498ebc0151",
+      "bytes": 987,
+      "role": "v3 completed performance evidence; retain v3 identity",
+      "reviewed_current_sha256": "c738adcf284edc87da1187a6deb04a077dba4dd03ff1ef902d0c9e498ebc0151"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v3-performance-raster-probe.json",
+      "suggested_archive_path": "evidence/candidate-v3-performance-raster-probe.json",
+      "sha256": "4ae71612d598a28e47a33de058dcc187a9de9f6b1c2bd4accb74866404e9d639",
+      "bytes": 688,
+      "role": "v3 completed performance evidence; retain v3 identity",
+      "reviewed_current_sha256": "4ae71612d598a28e47a33de058dcc187a9de9f6b1c2bd4accb74866404e9d639"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v3-performance-raster-probe.log",
+      "suggested_archive_path": "evidence/candidate-v3-performance-raster-probe.log",
+      "sha256": "45ed12a26645157d6f2e4ae0ec8f20d422e6953ed71780e6d7daaecba8ab9f19",
+      "bytes": 5396,
+      "role": "v3 completed performance evidence; retain v3 identity",
+      "reviewed_current_sha256": "45ed12a26645157d6f2e4ae0ec8f20d422e6953ed71780e6d7daaecba8ab9f19"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v3-performance-results.json",
+      "suggested_archive_path": "evidence/candidate-v3-performance-results.json",
+      "sha256": "44a55634b51569be12196618ca860b958742c606e9d152b1ed462e28cdc15e09",
+      "bytes": 3102,
+      "role": "v3 completed performance evidence; retain v3 identity",
+      "reviewed_current_sha256": "44a55634b51569be12196618ca860b958742c606e9d152b1ed462e28cdc15e09"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v3-performance-tile-local-setup.json",
+      "suggested_archive_path": "evidence/candidate-v3-performance-tile-local-setup.json",
+      "sha256": "87f3f8129b9f98e7ae6cffdc8bcae74875bde089e7fc9be5049085ee6d701040",
+      "bytes": 987,
+      "role": "v3 completed performance evidence; retain v3 identity",
+      "reviewed_current_sha256": "87f3f8129b9f98e7ae6cffdc8bcae74875bde089e7fc9be5049085ee6d701040"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v3-performance-tile-local.json",
+      "suggested_archive_path": "evidence/candidate-v3-performance-tile-local.json",
+      "sha256": "74850c6f5b352ce65d704c25b7bf45efa38657eb53757d3bb6f40141221cf676",
+      "bytes": 682,
+      "role": "v3 completed performance evidence; retain v3 identity",
+      "reviewed_current_sha256": "74850c6f5b352ce65d704c25b7bf45efa38657eb53757d3bb6f40141221cf676"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v3-performance-tile-local.log",
+      "suggested_archive_path": "evidence/candidate-v3-performance-tile-local.log",
+      "sha256": "034f030c93ed63ca363b97af4c3ae8138150b3eafee23743263823fad88e8b85",
+      "bytes": 1309,
+      "role": "v3 completed performance evidence; retain v3 identity",
+      "reviewed_current_sha256": "034f030c93ed63ca363b97af4c3ae8138150b3eafee23743263823fad88e8b85"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v3-signatures.json",
+      "suggested_archive_path": "evidence/candidate-v3-signatures.json",
+      "sha256": "04884c77d341fbb596b1ba97d4fd552e5d2bb582e61c3f5b023c3e987dd71b0b",
+      "bytes": 1481,
+      "role": "source/build/provenance or validation-scope record",
+      "reviewed_current_sha256": "04884c77d341fbb596b1ba97d4fd552e5d2bb582e61c3f5b023c3e987dd71b0b"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v3-source-continuity.json",
+      "suggested_archive_path": "evidence/candidate-v3-source-continuity.json",
+      "sha256": "1215a26726e08e1c1f418c0a6fefb19af5b48c21708ac0e3f9360627b47139ca",
+      "bytes": 18613,
+      "role": "source/build/provenance or validation-scope record",
+      "reviewed_current_sha256": "1215a26726e08e1c1f418c0a6fefb19af5b48c21708ac0e3f9360627b47139ca"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v3-source-continuity.md",
+      "suggested_archive_path": "evidence/candidate-v3-source-continuity.md",
+      "sha256": "ac7837c73e6256b67b051e46b4e7d50689209f9de6d67f60a4aa0002f0fa44db",
+      "bytes": 3508,
+      "role": "source/build/provenance or validation-scope record",
+      "reviewed_current_sha256": "ac7837c73e6256b67b051e46b4e7d50689209f9de6d67f60a4aa0002f0fa44db"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v3-source-sha256.json",
+      "suggested_archive_path": "evidence/candidate-v3-source-sha256.json",
+      "sha256": "c52cbf318ce52a660d7040ad75f2a3c3c1828027c6f61633bf886deae8a214f7",
+      "bytes": 106710,
+      "role": "source/build/provenance or validation-scope record",
+      "reviewed_current_sha256": "c52cbf318ce52a660d7040ad75f2a3c3c1828027c6f61633bf886deae8a214f7"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-apk-installation.json",
+      "suggested_archive_path": "evidence/candidate-v4-apk-installation.json",
+      "sha256": "d6541c7a3e962adabfa42ceb7252d009e554dd16d6feb94df1c1fac6dae2a889",
+      "bytes": 2374,
+      "role": "completed v4 frozen source/build/artifact/native/performance evidence; includes failed validation",
+      "reviewed_current_sha256": "d6541c7a3e962adabfa42ceb7252d009e554dd16d6feb94df1c1fac6dae2a889"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-artifacts.json",
+      "suggested_archive_path": "evidence/candidate-v4-artifacts.json",
+      "sha256": "84ce38bb2acacb53e027e7f56a43253e717bd9e53ed47a547d3acfa7e5b79851",
+      "bytes": 1356,
+      "role": "completed v4 frozen source/build/artifact/native/performance evidence; includes failed validation",
+      "reviewed_current_sha256": "84ce38bb2acacb53e027e7f56a43253e717bd9e53ed47a547d3acfa7e5b79851"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-build.json",
+      "suggested_archive_path": "evidence/candidate-v4-build.json",
+      "sha256": "d87398633fd15b53e83db3b55c9d6b13ff8e2bc8628319150fe1ec63ace4f29f",
+      "bytes": 476,
+      "role": "completed v4 frozen source/build/artifact/native/performance evidence; includes failed validation",
+      "reviewed_current_sha256": "d87398633fd15b53e83db3b55c9d6b13ff8e2bc8628319150fe1ec63ace4f29f"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-build.log",
+      "suggested_archive_path": "evidence/candidate-v4-build.log",
+      "sha256": "ac73bae67001943ccf491642e2364ef501c70b06cec630bded8b309e2f217129",
+      "bytes": 36723,
+      "role": "completed v4 frozen source/build/artifact/native/performance evidence; includes failed validation",
+      "reviewed_current_sha256": "ac73bae67001943ccf491642e2364ef501c70b06cec630bded8b309e2f217129"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-evidence-closure-check.json",
+      "suggested_archive_path": "evidence/candidate-v4-evidence-closure-check.json",
+      "sha256": "5505124b9720753e9b1caa2330a6f30d2bd91f56691dbaca50b6775e56660fb5",
+      "bytes": 26194,
+      "role": "completed v4 frozen source/build/artifact/native/performance evidence; includes failed validation",
+      "reviewed_current_sha256": "5505124b9720753e9b1caa2330a6f30d2bd91f56691dbaca50b6775e56660fb5"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-evidence-closure-check.md",
+      "suggested_archive_path": "evidence/candidate-v4-evidence-closure-check.md",
+      "sha256": "be88d5e4091f4df758c6d37c063fc35e34cacfc8c1b9331480c7bc433ed77d72",
+      "bytes": 2143,
+      "role": "completed v4 frozen source/build/artifact/native/performance evidence; includes failed validation",
+      "reviewed_current_sha256": "be88d5e4091f4df758c6d37c063fc35e34cacfc8c1b9331480c7bc433ed77d72"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-jvm-and-lint-status.json",
+      "suggested_archive_path": "evidence/candidate-v4-jvm-and-lint-status.json",
+      "sha256": "7fb210fba7c0357ea52d3f2ae950c5e105ab065c8a3a3c77665ea2dbef498939",
+      "bytes": 354,
+      "role": "completed v4 frozen source/build/artifact/native/performance evidence; includes failed validation",
+      "reviewed_current_sha256": "7fb210fba7c0357ea52d3f2ae950c5e105ab065c8a3a3c77665ea2dbef498939"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-library-review.json",
+      "suggested_archive_path": "evidence/candidate-v4-library-review.json",
+      "sha256": "096a72fea12ff55b4e57aeacd5bb4a9bad770cde2f130a8784c07888af0a28c0",
+      "bytes": 16841,
+      "role": "completed v4 frozen source/build/artifact/native/performance evidence; includes failed validation",
+      "reviewed_current_sha256": "096a72fea12ff55b4e57aeacd5bb4a9bad770cde2f130a8784c07888af0a28c0"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-library-review.md",
+      "suggested_archive_path": "evidence/candidate-v4-library-review.md",
+      "sha256": "7947907202d33656cd7960d3bfd6692d74f8bfdae68cf83cddd647e651a1f5fa",
+      "bytes": 5763,
+      "role": "completed v4 frozen source/build/artifact/native/performance evidence; includes failed validation",
+      "reviewed_current_sha256": "7947907202d33656cd7960d3bfd6692d74f8bfdae68cf83cddd647e651a1f5fa"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-original-storage-review.md",
+      "suggested_archive_path": "evidence/candidate-v4-original-storage-review.md",
+      "sha256": "4fed19daf01a1413f58c83202fd28c58667063ee96c9c92aef705cda4de47717",
+      "bytes": 4689,
+      "role": "completed v4 frozen source/build/artifact/native/performance evidence; includes failed validation",
+      "reviewed_current_sha256": "4fed19daf01a1413f58c83202fd28c58667063ee96c9c92aef705cda4de47717"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-performance-artifact-continuity.json",
+      "suggested_archive_path": "evidence/candidate-v4-performance-artifact-continuity.json",
+      "sha256": "a917e236ce3e45472aa204e50a351bf8cb15ad6ff46b7cac82d42ac041f228a0",
+      "bytes": 875,
+      "role": "completed v4 frozen source/build/artifact/native/performance evidence; includes failed validation",
+      "reviewed_current_sha256": "a917e236ce3e45472aa204e50a351bf8cb15ad6ff46b7cac82d42ac041f228a0"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-performance-environment-after.json",
+      "suggested_archive_path": "evidence/candidate-v4-performance-environment-after.json",
+      "sha256": "9dbbe1b3b8194253ba44dfab30cd3b5fbb077a14b1e700c37a02dd25b252fd8e",
+      "bytes": 11790,
+      "role": "completed v4 frozen source/build/artifact/native/performance evidence; includes failed validation",
+      "reviewed_current_sha256": "9dbbe1b3b8194253ba44dfab30cd3b5fbb077a14b1e700c37a02dd25b252fd8e"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-performance-environment.json",
+      "suggested_archive_path": "evidence/candidate-v4-performance-environment.json",
+      "sha256": "841602a7ea1bf7444ce28a8faf6b695f483a4f94d9f75a09970432f945ac3d39",
+      "bytes": 11784,
+      "role": "completed v4 frozen source/build/artifact/native/performance evidence; includes failed validation",
+      "reviewed_current_sha256": "841602a7ea1bf7444ce28a8faf6b695f483a4f94d9f75a09970432f945ac3d39"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-performance-history-probe-setup.json",
+      "suggested_archive_path": "evidence/candidate-v4-performance-history-probe-setup.json",
+      "sha256": "dd6dea371c14ed1ceb39cb8f8f0c1d5faeef8c680c7c6a1a54fd3f363f6f2b7c",
+      "bytes": 987,
+      "role": "completed v4 frozen source/build/artifact/native/performance evidence; includes failed validation",
+      "reviewed_current_sha256": "dd6dea371c14ed1ceb39cb8f8f0c1d5faeef8c680c7c6a1a54fd3f363f6f2b7c"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-performance-history-probe.json",
+      "suggested_archive_path": "evidence/candidate-v4-performance-history-probe.json",
+      "sha256": "cf79086ca4eb1e12e8229c810710663e15c28d137ec16bfc42b0a97275081bc6",
+      "bytes": 705,
+      "role": "completed v4 frozen source/build/artifact/native/performance evidence; includes failed validation",
+      "reviewed_current_sha256": "cf79086ca4eb1e12e8229c810710663e15c28d137ec16bfc42b0a97275081bc6"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-performance-history-probe.log",
+      "suggested_archive_path": "evidence/candidate-v4-performance-history-probe.log",
+      "sha256": "f3d471a977144c3d5402668036efead72617c5193104e96a42114bef26d3da49",
+      "bytes": 1327,
+      "role": "completed v4 frozen source/build/artifact/native/performance evidence; includes failed validation",
+      "reviewed_current_sha256": "f3d471a977144c3d5402668036efead72617c5193104e96a42114bef26d3da49"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-performance-library-probe-setup.json",
+      "suggested_archive_path": "evidence/candidate-v4-performance-library-probe-setup.json",
+      "sha256": "b0b6da66a03ff4874c7a5a45627d072600d8a74b5835bd0d97e5856fe7036285",
+      "bytes": 987,
+      "role": "completed v4 frozen source/build/artifact/native/performance evidence; includes failed validation",
+      "reviewed_current_sha256": "b0b6da66a03ff4874c7a5a45627d072600d8a74b5835bd0d97e5856fe7036285"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-performance-library-probe.json",
+      "suggested_archive_path": "evidence/candidate-v4-performance-library-probe.json",
+      "sha256": "2e24cf1ee7c3a1756cd7694560da50d42d575b2af51c670182a4da9ab195d110",
+      "bytes": 696,
+      "role": "completed v4 frozen source/build/artifact/native/performance evidence; includes failed validation",
+      "reviewed_current_sha256": "2e24cf1ee7c3a1756cd7694560da50d42d575b2af51c670182a4da9ab195d110"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-performance-library-probe.log",
+      "suggested_archive_path": "evidence/candidate-v4-performance-library-probe.log",
+      "sha256": "3ff495eec29fb24b8da80c881689c0aaf19c7f4173fcd049f6230f17b4d5cc33",
+      "bytes": 10609,
+      "role": "completed v4 frozen source/build/artifact/native/performance evidence; includes failed validation",
+      "reviewed_current_sha256": "3ff495eec29fb24b8da80c881689c0aaf19c7f4173fcd049f6230f17b4d5cc33"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-performance-raster-probe-setup.json",
+      "suggested_archive_path": "evidence/candidate-v4-performance-raster-probe-setup.json",
+      "sha256": "5f3cf614a458b823951e255d7c36314128f0e5d6742a7d12942cbec867bdfefa",
+      "bytes": 987,
+      "role": "completed v4 frozen source/build/artifact/native/performance evidence; includes failed validation",
+      "reviewed_current_sha256": "5f3cf614a458b823951e255d7c36314128f0e5d6742a7d12942cbec867bdfefa"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-performance-raster-probe.json",
+      "suggested_archive_path": "evidence/candidate-v4-performance-raster-probe.json",
+      "sha256": "df42e0bbf6a113224c95a244449fae3b091fd3e1a627449ea0afb5043bde2ae4",
+      "bytes": 688,
+      "role": "completed v4 frozen source/build/artifact/native/performance evidence; includes failed validation",
+      "reviewed_current_sha256": "df42e0bbf6a113224c95a244449fae3b091fd3e1a627449ea0afb5043bde2ae4"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-performance-raster-probe.log",
+      "suggested_archive_path": "evidence/candidate-v4-performance-raster-probe.log",
+      "sha256": "60875b751b7adda89221fcaaffc92ef07dc978e3faf95cf874cd2d0ce1c9148c",
+      "bytes": 5382,
+      "role": "completed v4 frozen source/build/artifact/native/performance evidence; includes failed validation",
+      "reviewed_current_sha256": "60875b751b7adda89221fcaaffc92ef07dc978e3faf95cf874cd2d0ce1c9148c"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-performance-results.json",
+      "suggested_archive_path": "evidence/candidate-v4-performance-results.json",
+      "sha256": "f8627e7e31ee969008846fed2350e23ccb8ae76674b3c2540de56e504cf14888",
+      "bytes": 3102,
+      "role": "completed v4 frozen source/build/artifact/native/performance evidence; includes failed validation",
+      "reviewed_current_sha256": "f8627e7e31ee969008846fed2350e23ccb8ae76674b3c2540de56e504cf14888"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-performance-tile-local-setup.json",
+      "suggested_archive_path": "evidence/candidate-v4-performance-tile-local-setup.json",
+      "sha256": "192e561e44becb3c1cb84ff2ee42bf5e8faef6130ecede52d24cf1344135e138",
+      "bytes": 987,
+      "role": "completed v4 frozen source/build/artifact/native/performance evidence; includes failed validation",
+      "reviewed_current_sha256": "192e561e44becb3c1cb84ff2ee42bf5e8faef6130ecede52d24cf1344135e138"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-performance-tile-local.json",
+      "suggested_archive_path": "evidence/candidate-v4-performance-tile-local.json",
+      "sha256": "f0de25b9617712f3dfd64c537688c781d88236d49e72f495cc4c080c4f8f1829",
+      "bytes": 682,
+      "role": "completed v4 frozen source/build/artifact/native/performance evidence; includes failed validation",
+      "reviewed_current_sha256": "f0de25b9617712f3dfd64c537688c781d88236d49e72f495cc4c080c4f8f1829"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-performance-tile-local.log",
+      "suggested_archive_path": "evidence/candidate-v4-performance-tile-local.log",
+      "sha256": "fdfa2736aab5b05f97a8dacd090ff7754efe977d91472ec5e50aef46f246f1d8",
+      "bytes": 1313,
+      "role": "completed v4 frozen source/build/artifact/native/performance evidence; includes failed validation",
+      "reviewed_current_sha256": "fdfa2736aab5b05f97a8dacd090ff7754efe977d91472ec5e50aef46f246f1d8"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-raster-review.json",
+      "suggested_archive_path": "evidence/candidate-v4-raster-review.json",
+      "sha256": "6a6f8b5f8fe15212b32a5ca9171b105c2cd55229b641f85ac983b8043277d465",
+      "bytes": 17869,
+      "role": "completed v4 frozen source/build/artifact/native/performance evidence; includes failed validation",
+      "reviewed_current_sha256": "6a6f8b5f8fe15212b32a5ca9171b105c2cd55229b641f85ac983b8043277d465"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-raster-review.md",
+      "suggested_archive_path": "evidence/candidate-v4-raster-review.md",
+      "sha256": "e76081f6559f3e3a8e28fe54908359f08df68ef787805deefd4cad21a043925e",
+      "bytes": 7258,
+      "role": "completed v4 frozen source/build/artifact/native/performance evidence; includes failed validation",
+      "reviewed_current_sha256": "e76081f6559f3e3a8e28fe54908359f08df68ef787805deefd4cad21a043925e"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-reconstruction-matches.json",
+      "suggested_archive_path": "evidence/candidate-v4-reconstruction-matches.json",
+      "sha256": "1d4d7fde14bfdf5af7b1b3d9917ea7885969ac667ce3c1c83d8f203938bb45be",
+      "bytes": 249906,
+      "role": "completed v4 frozen source/build/artifact/native/performance evidence; includes failed validation",
+      "reviewed_current_sha256": "1d4d7fde14bfdf5af7b1b3d9917ea7885969ac667ce3c1c83d8f203938bb45be"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-reconstruction-provenance.json",
+      "suggested_archive_path": "evidence/candidate-v4-reconstruction-provenance.json",
+      "sha256": "baf182ea8bcfae5c5a697b75d8a8dbf0ea690ed099030736b02eb17149820ca5",
+      "bytes": 15738,
+      "role": "completed v4 frozen source/build/artifact/native/performance evidence; includes failed validation",
+      "reviewed_current_sha256": "baf182ea8bcfae5c5a697b75d8a8dbf0ea690ed099030736b02eb17149820ca5"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-reconstruction.patch",
+      "suggested_archive_path": "evidence/candidate-v4-reconstruction.patch",
+      "sha256": "4c5cbb21e327d89578731f03f5c63167aa14b0aeb6c6335216316a26e1bb87a9",
+      "bytes": 128224,
+      "role": "completed v4 frozen source/build/artifact/native/performance evidence; includes failed validation",
+      "reviewed_current_sha256": "4c5cbb21e327d89578731f03f5c63167aa14b0aeb6c6335216316a26e1bb87a9"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-signatures.json",
+      "suggested_archive_path": "evidence/candidate-v4-signatures.json",
+      "sha256": "04884c77d341fbb596b1ba97d4fd552e5d2bb582e61c3f5b023c3e987dd71b0b",
+      "bytes": 1481,
+      "role": "completed v4 frozen source/build/artifact/native/performance evidence; includes failed validation",
+      "reviewed_current_sha256": "04884c77d341fbb596b1ba97d4fd552e5d2bb582e61c3f5b023c3e987dd71b0b"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-source-continuity.json",
+      "suggested_archive_path": "evidence/candidate-v4-source-continuity.json",
+      "sha256": "66b6e286fadd6811a03c95736083624720d7dc29d417b63e77898096b6cf9629",
+      "bytes": 26149,
+      "role": "completed v4 frozen source/build/artifact/native/performance evidence; includes failed validation",
+      "reviewed_current_sha256": "66b6e286fadd6811a03c95736083624720d7dc29d417b63e77898096b6cf9629"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-source-continuity.md",
+      "suggested_archive_path": "evidence/candidate-v4-source-continuity.md",
+      "sha256": "c98b5823067150223a2312d5fc1b9225c9d275ee4763ce21a9eb5287f912e153",
+      "bytes": 2661,
+      "role": "completed v4 frozen source/build/artifact/native/performance evidence; includes failed validation",
+      "reviewed_current_sha256": "c98b5823067150223a2312d5fc1b9225c9d275ee4763ce21a9eb5287f912e153"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-source-sha256.json",
+      "suggested_archive_path": "evidence/candidate-v4-source-sha256.json",
+      "sha256": "8285c54019d0a4409a6dbf6f5d36e87298b5be9b6d47f93801ea9123bb7d859f",
+      "bytes": 106879,
+      "role": "completed v4 frozen source/build/artifact/native/performance evidence; includes failed validation",
+      "reviewed_current_sha256": "8285c54019d0a4409a6dbf6f5d36e87298b5be9b6d47f93801ea9123bb7d859f"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-validation-index-preparation-setup.json",
+      "suggested_archive_path": "evidence/candidate-v4-validation-index-preparation-setup.json",
+      "sha256": "2991e53661511a48bb45519d3ea34525937a5ca0fd6e3283112c7fbdada1f288",
+      "bytes": 987,
+      "role": "completed v4 frozen source/build/artifact/native/performance evidence; includes failed validation",
+      "reviewed_current_sha256": "2991e53661511a48bb45519d3ea34525937a5ca0fd6e3283112c7fbdada1f288"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-validation-index-preparation.json",
+      "suggested_archive_path": "evidence/candidate-v4-validation-index-preparation.json",
+      "sha256": "213dddcca941999b1d5c26fb38c7643c5f1f314c6f99da32a7f4b117538a5b3b",
+      "bytes": 708,
+      "role": "completed v4 frozen source/build/artifact/native/performance evidence; includes failed validation",
+      "reviewed_current_sha256": "213dddcca941999b1d5c26fb38c7643c5f1f314c6f99da32a7f4b117538a5b3b"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-validation-index-preparation.log",
+      "suggested_archive_path": "evidence/candidate-v4-validation-index-preparation.log",
+      "sha256": "7367bcb15893181383b0929cbf9ba5cf1ebf2aba02b65d4575c5c991af68b242",
+      "bytes": 93,
+      "role": "completed v4 frozen source/build/artifact/native/performance evidence; includes failed validation",
+      "reviewed_current_sha256": "7367bcb15893181383b0929cbf9ba5cf1ebf2aba02b65d4575c5c991af68b242"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-validation-original-storage-setup.json",
+      "suggested_archive_path": "evidence/candidate-v4-validation-original-storage-setup.json",
+      "sha256": "28d1a190afe5a921a6e52fe146d1a81912434bd666fad1de8f578954b2fdb35e",
+      "bytes": 987,
+      "role": "completed v4 frozen source/build/artifact/native/performance evidence; includes failed validation",
+      "reviewed_current_sha256": "28d1a190afe5a921a6e52fe146d1a81912434bd666fad1de8f578954b2fdb35e"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-validation-original-storage.json",
+      "suggested_archive_path": "evidence/candidate-v4-validation-original-storage.json",
+      "sha256": "052028294103e837fedc19609f10f7b307e4d8c55cc7499381ed09b12b4ba4a4",
+      "bytes": 705,
+      "role": "completed v4 frozen source/build/artifact/native/performance evidence; includes failed validation",
+      "reviewed_current_sha256": "052028294103e837fedc19609f10f7b307e4d8c55cc7499381ed09b12b4ba4a4"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-validation-original-storage.log",
+      "suggested_archive_path": "evidence/candidate-v4-validation-original-storage.log",
+      "sha256": "b7a8c7c2aba3072fb61502f1019b35a894306fee992914ac6ce1c1cc1582fd20",
+      "bytes": 719,
+      "role": "completed v4 frozen source/build/artifact/native/performance evidence; includes failed validation",
+      "reviewed_current_sha256": "b7a8c7c2aba3072fb61502f1019b35a894306fee992914ac6ce1c1cc1582fd20"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-validation-plan.json",
+      "suggested_archive_path": "evidence/candidate-v4-validation-plan.json",
+      "sha256": "a47267b57545617c9bf73fa7f71ebf3f26384c2a4bb5389fb959ea0968a239ca",
+      "bytes": 1152,
+      "role": "completed v4 frozen source/build/artifact/native/performance evidence; includes failed validation",
+      "reviewed_current_sha256": "a47267b57545617c9bf73fa7f71ebf3f26384c2a4bb5389fb959ea0968a239ca"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-validation-rapid-search-setup.json",
+      "suggested_archive_path": "evidence/candidate-v4-validation-rapid-search-setup.json",
+      "sha256": "46688d0cd35eabcaee2f975ddfb88751e4c9417994e395b8c5be3d97b26ba595",
+      "bytes": 987,
+      "role": "historical failed execution receipt/log/setup; retain version identity and later resolution",
+      "reviewed_current_sha256": "46688d0cd35eabcaee2f975ddfb88751e4c9417994e395b8c5be3d97b26ba595"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-validation-rapid-search.json",
+      "suggested_archive_path": "evidence/candidate-v4-validation-rapid-search.json",
+      "sha256": "4c2ef51c0b14d6056113fac8d289ed62c19d88f09d5e6e306aaf5ae5be5ee967",
+      "bytes": 843,
+      "role": "historical failed execution receipt/log/setup; retain version identity and later resolution",
+      "reviewed_current_sha256": "4c2ef51c0b14d6056113fac8d289ed62c19d88f09d5e6e306aaf5ae5be5ee967"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-validation-rapid-search.log",
+      "suggested_archive_path": "evidence/candidate-v4-validation-rapid-search.log",
+      "sha256": "9a9195bc98cbbcb9cc4672c17f022fb431dc122d46f5793e06dc78f66eedef69",
+      "bytes": 2439,
+      "role": "historical failed execution receipt/log/setup; retain version identity and later resolution",
+      "reviewed_current_sha256": "9a9195bc98cbbcb9cc4672c17f022fb431dc122d46f5793e06dc78f66eedef69"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-validation-results.json",
+      "suggested_archive_path": "evidence/candidate-v4-validation-results.json",
+      "sha256": "49df2babf5307c2f24bc4190ac537365fc1dbc603070cc7fb205786a4f0c9e22",
+      "bytes": 4266,
+      "role": "completed v4 frozen source/build/artifact/native/performance evidence; includes failed validation",
+      "reviewed_current_sha256": "49df2babf5307c2f24bc4190ac537365fc1dbc603070cc7fb205786a4f0c9e22"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-validation-search-regressions-setup.json",
+      "suggested_archive_path": "evidence/candidate-v4-validation-search-regressions-setup.json",
+      "sha256": "026dd820752bc869d69f9db497a804bee73c2c799de2a0562e7c246ca88735c2",
+      "bytes": 987,
+      "role": "completed v4 frozen source/build/artifact/native/performance evidence; includes failed validation",
+      "reviewed_current_sha256": "026dd820752bc869d69f9db497a804bee73c2c799de2a0562e7c246ca88735c2"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-validation-search-regressions.json",
+      "suggested_archive_path": "evidence/candidate-v4-validation-search-regressions.json",
+      "sha256": "6382758e5b4dd679d32e52290067f0f50cbc9702890d06f01036e7c691cbc0db",
+      "bytes": 1664,
+      "role": "completed v4 frozen source/build/artifact/native/performance evidence; includes failed validation",
+      "reviewed_current_sha256": "6382758e5b4dd679d32e52290067f0f50cbc9702890d06f01036e7c691cbc0db"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-validation-search-regressions.log",
+      "suggested_archive_path": "evidence/candidate-v4-validation-search-regressions.log",
+      "sha256": "43caf22f149f4c557cf18217cf2334cd15a038256aebc539e5a025c28b0b6a12",
+      "bytes": 82,
+      "role": "completed v4 frozen source/build/artifact/native/performance evidence; includes failed validation",
+      "reviewed_current_sha256": "43caf22f149f4c557cf18217cf2334cd15a038256aebc539e5a025c28b0b6a12"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/ci-environment-review.md",
+      "suggested_archive_path": "evidence/ci-environment-review.md",
+      "sha256": "aa355bae733db8835b25cb16ef6faf3fc4fc958cffec43a98d81233f3af1c577",
+      "bytes": 9878,
+      "role": "source/build/provenance or validation-scope record",
+      "reviewed_current_sha256": "aa355bae733db8835b25cb16ef6faf3fc4fc958cffec43a98d81233f3af1c577"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/closure-review-checklist-v2.json",
+      "suggested_archive_path": "evidence/closure-review-checklist-v2.json",
+      "sha256": "bbfa1a0335c15d52b8862d60706f414f4c6e9c2ac72b251fc821cb9be1bff74e",
+      "bytes": 25179,
+      "role": "source/build/provenance or validation-scope record",
+      "reviewed_current_sha256": "bbfa1a0335c15d52b8862d60706f414f4c6e9c2ac72b251fc821cb9be1bff74e"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/diagnostic-source-sha256.json",
+      "suggested_archive_path": "evidence/diagnostic-source-sha256.json",
+      "sha256": "e3190c306307cf220c8f7e193f93446c4c52f9c87b1552ceec822935f7f1c75b",
+      "bytes": 105851,
+      "role": "source/build/provenance or validation-scope record",
+      "reviewed_current_sha256": "e3190c306307cf220c8f7e193f93446c4c52f9c87b1552ceec822935f7f1c75b"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/diagnostic-v1-artifacts.json",
+      "suggested_archive_path": "evidence/diagnostic-v1-artifacts.json",
+      "sha256": "7b54aaf32b4f9c734a8723e796686021f2166233dee7448a696438dd365c844f",
+      "bytes": 1356,
+      "role": "source/build/provenance or validation-scope record",
+      "reviewed_current_sha256": "7b54aaf32b4f9c734a8723e796686021f2166233dee7448a696438dd365c844f"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/diagnostic-v1-assessment.md",
+      "suggested_archive_path": "evidence/diagnostic-v1-assessment.md",
+      "sha256": "433376a4c068577d5e7868b1a33d508a6148225e69d9fbb98360d44ba8709d8f",
+      "bytes": 20311,
+      "role": "source/build/provenance or validation-scope record",
+      "reviewed_current_sha256": "433376a4c068577d5e7868b1a33d508a6148225e69d9fbb98360d44ba8709d8f"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/diagnostic-v1-backup-cancel-setup.json",
+      "suggested_archive_path": "evidence/diagnostic-v1-backup-cancel-setup.json",
+      "sha256": "57a3e97ab7c9dea55a6bfc95830d1003cd8b71856549d55c48416e7d6990f13a",
+      "bytes": 987,
+      "role": "historical failed execution receipt/log/setup; retain version identity and later resolution",
+      "reviewed_current_sha256": "57a3e97ab7c9dea55a6bfc95830d1003cd8b71856549d55c48416e7d6990f13a"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/diagnostic-v1-backup-cancel.json",
+      "suggested_archive_path": "evidence/diagnostic-v1-backup-cancel.json",
+      "sha256": "bf6bf430a567b3f9737b41e389a0a7d5ae9f906d1c183f76ed7eea939dd840b6",
+      "bytes": 821,
+      "role": "historical failed execution receipt/log/setup; retain version identity and later resolution",
+      "reviewed_current_sha256": "bf6bf430a567b3f9737b41e389a0a7d5ae9f906d1c183f76ed7eea939dd840b6"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/diagnostic-v1-backup-cancel.log",
+      "suggested_archive_path": "evidence/diagnostic-v1-backup-cancel.log",
+      "sha256": "1426e7ca58b771117dac93a3769f0c670b7a47c025ad3593f8ae7271d5870982",
+      "bytes": 4645,
+      "role": "historical failed execution receipt/log/setup; retain version identity and later resolution",
+      "reviewed_current_sha256": "1426e7ca58b771117dac93a3769f0c670b7a47c025ad3593f8ae7271d5870982"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/diagnostic-v1-history-setup.json",
+      "suggested_archive_path": "evidence/diagnostic-v1-history-setup.json",
+      "sha256": "845561c4b903a4c9174a16c610a4e9a31d44743f36239a7efdc987b442d3d4c0",
+      "bytes": 987,
+      "role": "historical failed execution receipt/log/setup; retain version identity and later resolution",
+      "reviewed_current_sha256": "845561c4b903a4c9174a16c610a4e9a31d44743f36239a7efdc987b442d3d4c0"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/diagnostic-v1-history.json",
+      "suggested_archive_path": "evidence/diagnostic-v1-history.json",
+      "sha256": "664be798274268f03c40c5d91133450eaf67b248318a474724adaa0a89aeb4d4",
+      "bytes": 682,
+      "role": "historical failed execution receipt/log/setup; retain version identity and later resolution",
+      "reviewed_current_sha256": "664be798274268f03c40c5d91133450eaf67b248318a474724adaa0a89aeb4d4"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/diagnostic-v1-history.log",
+      "suggested_archive_path": "evidence/diagnostic-v1-history.log",
+      "sha256": "3decdacec0fe8ed53fca2ccd3f1a883028351f5535bd3293f897011e069e6187",
+      "bytes": 1624,
+      "role": "historical failed execution receipt/log/setup; retain version identity and later resolution",
+      "reviewed_current_sha256": "3decdacec0fe8ed53fca2ccd3f1a883028351f5535bd3293f897011e069e6187"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/diagnostic-v1-large-frame-setup.json",
+      "suggested_archive_path": "evidence/diagnostic-v1-large-frame-setup.json",
+      "sha256": "4f6fff02cde84a52c3a942bf26781a97d4987baac035c6f734701eed6c28929e",
+      "bytes": 987,
+      "role": "historical failed execution receipt/log/setup; retain version identity and later resolution",
+      "reviewed_current_sha256": "4f6fff02cde84a52c3a942bf26781a97d4987baac035c6f734701eed6c28929e"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/diagnostic-v1-large-frame.json",
+      "suggested_archive_path": "evidence/diagnostic-v1-large-frame.json",
+      "sha256": "577b78a5b9b6bee590169b40df4e562bbda190dbe8b8864f127bd355a610d95c",
+      "bytes": 822,
+      "role": "historical failed execution receipt/log/setup; retain version identity and later resolution",
+      "reviewed_current_sha256": "577b78a5b9b6bee590169b40df4e562bbda190dbe8b8864f127bd355a610d95c"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/diagnostic-v1-large-frame.log",
+      "suggested_archive_path": "evidence/diagnostic-v1-large-frame.log",
+      "sha256": "5b6ee97241761e6d431ea4918c535888f48da953691326e93af45cd834bbbe72",
+      "bytes": 4564,
+      "role": "historical failed execution receipt/log/setup; retain version identity and later resolution",
+      "reviewed_current_sha256": "5b6ee97241761e6d431ea4918c535888f48da953691326e93af45cd834bbbe72"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/diagnostic-v1-rapid-search-setup.json",
+      "suggested_archive_path": "evidence/diagnostic-v1-rapid-search-setup.json",
+      "sha256": "fe576a644403a054f00ca583be597008970729b4ad8559acf7bd682bc0aa264d",
+      "bytes": 987,
+      "role": "historical failed execution receipt/log/setup; retain version identity and later resolution",
+      "reviewed_current_sha256": "fe576a644403a054f00ca583be597008970729b4ad8559acf7bd682bc0aa264d"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/diagnostic-v1-rapid-search.json",
+      "suggested_archive_path": "evidence/diagnostic-v1-rapid-search.json",
+      "sha256": "5005cd99826d422d38f1fffb468b5ce7ff23a28a132341dc0fe3ed4b80b4fe47",
+      "bytes": 834,
+      "role": "historical failed execution receipt/log/setup; retain version identity and later resolution",
+      "reviewed_current_sha256": "5005cd99826d422d38f1fffb468b5ce7ff23a28a132341dc0fe3ed4b80b4fe47"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/diagnostic-v1-rapid-search.log",
+      "suggested_archive_path": "evidence/diagnostic-v1-rapid-search.log",
+      "sha256": "7a3700f541c51a3a65a53b029ddaca16790f5ca0cce9c3ff648a585f8a069f84",
+      "bytes": 1676,
+      "role": "historical failed execution receipt/log/setup; retain version identity and later resolution",
+      "reviewed_current_sha256": "7a3700f541c51a3a65a53b029ddaca16790f5ca0cce9c3ff648a585f8a069f84"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/diagnostic-v1-reconstruction-provenance.json",
+      "suggested_archive_path": "evidence/diagnostic-v1-reconstruction-provenance.json",
+      "sha256": "92a4b73d532934c432ed6de3da7e8bd2126607f24db42c3b7ef9e369888844a0",
+      "bytes": 8301,
+      "role": "source/build/provenance or validation-scope record",
+      "reviewed_current_sha256": "92a4b73d532934c432ed6de3da7e8bd2126607f24db42c3b7ef9e369888844a0"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/diagnostic-v1-reconstruction.patch",
+      "suggested_archive_path": "evidence/diagnostic-v1-reconstruction.patch",
+      "sha256": "fa8aa24faeb7d12a9ae9dca1f2dcd982551eaa4090056b8a9bca9e57b7a2a0cd",
+      "bytes": 61642,
+      "role": "source/build/provenance or validation-scope record",
+      "reviewed_current_sha256": "fa8aa24faeb7d12a9ae9dca1f2dcd982551eaa4090056b8a9bca9e57b7a2a0cd"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/diagnostic-v1-results.json",
+      "suggested_archive_path": "evidence/diagnostic-v1-results.json",
+      "sha256": "ef0e6eb8d31246ad3fc9e099015311c2166f3fca391ed9794906620bdbb10554",
+      "bytes": 6123,
+      "role": "source/build/provenance or validation-scope record",
+      "reviewed_current_sha256": "ef0e6eb8d31246ad3fc9e099015311c2166f3fca391ed9794906620bdbb10554"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/diagnostic-v1-shelf-rename-setup.json",
+      "suggested_archive_path": "evidence/diagnostic-v1-shelf-rename-setup.json",
+      "sha256": "d47fe1810e989b1828561fc5e91d1e89f0a6b15066fbb9843717ed2d9cc50874",
+      "bytes": 2210,
+      "role": "historical failed execution receipt/log/setup; retain version identity and later resolution",
+      "reviewed_current_sha256": "d47fe1810e989b1828561fc5e91d1e89f0a6b15066fbb9843717ed2d9cc50874"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/diagnostic-v1-shelf-rename.json",
+      "suggested_archive_path": "evidence/diagnostic-v1-shelf-rename.json",
+      "sha256": "90f74b4710c62244aad20a3833418aece20e50575387f493100693158e634ead",
+      "bytes": 762,
+      "role": "historical failed execution receipt/log/setup; retain version identity and later resolution",
+      "reviewed_current_sha256": "90f74b4710c62244aad20a3833418aece20e50575387f493100693158e634ead"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/diagnostic-v1-shelf-rename.log",
+      "suggested_archive_path": "evidence/diagnostic-v1-shelf-rename.log",
+      "sha256": "a114d8b63968b531c25cfe40d4a7e61e96a7a927bc8059e99509ace2eaed5b85",
+      "bytes": 3247,
+      "role": "historical failed execution receipt/log/setup; retain version identity and later resolution",
+      "reviewed_current_sha256": "a114d8b63968b531c25cfe40d4a7e61e96a7a927bc8059e99509ace2eaed5b85"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/diagnostic-v1-signatures.json",
+      "suggested_archive_path": "evidence/diagnostic-v1-signatures.json",
+      "sha256": "04884c77d341fbb596b1ba97d4fd552e5d2bb582e61c3f5b023c3e987dd71b0b",
+      "bytes": 1481,
+      "role": "source/build/provenance or validation-scope record",
+      "reviewed_current_sha256": "04884c77d341fbb596b1ba97d4fd552e5d2bb582e61c3f5b023c3e987dd71b0b"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/final-readonly-delivery-checks.md",
+      "suggested_archive_path": "evidence/final-readonly-delivery-checks.md",
+      "sha256": "78bef6ac4ba679648fe8abff9db1b4ef52af49e0ca0130b188921e182d84f999",
+      "bytes": 3315,
+      "role": "source/build/provenance or validation-scope record",
+      "reviewed_current_sha256": "78bef6ac4ba679648fe8abff9db1b4ef52af49e0ca0130b188921e182d84f999"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/final-v4-index-source-review.md",
+      "suggested_archive_path": "evidence/final-v4-index-source-review.md",
+      "sha256": "0e1d1d087d1aad3d34efe5a3a8498eaafbcd2472f14ec40f250ed648b4fe35c0",
+      "bytes": 3869,
+      "role": "source/build/provenance or validation-scope record",
+      "reviewed_current_sha256": "0e1d1d087d1aad3d34efe5a3a8498eaafbcd2472f14ec40f250ed648b4fe35c0"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/performance-environment-recorder-review.json",
+      "suggested_archive_path": "evidence/performance-environment-recorder-review.json",
+      "sha256": "c9fabe23ad722d6b664c0b01f17f259a20774e527abef15b8652feb578c44d14",
+      "bytes": 2597,
+      "role": "source/build/provenance or validation-scope record",
+      "reviewed_current_sha256": "c9fabe23ad722d6b664c0b01f17f259a20774e527abef15b8652feb578c44d14"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/performance-fixture-comparability.md",
+      "suggested_archive_path": "evidence/performance-fixture-comparability.md",
+      "sha256": "be84f55d4ac3d3d06e3dc878b9474be7fab9dd7fece37dde5d003aeb371d1c51",
+      "bytes": 6152,
+      "role": "source/build/provenance or validation-scope record",
+      "reviewed_current_sha256": "be84f55d4ac3d3d06e3dc878b9474be7fab9dd7fece37dde5d003aeb371d1c51"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/performance-plan.json",
+      "suggested_archive_path": "evidence/performance-plan.json",
+      "sha256": "ebb04fa63547a08ff1cfa4b72101ae1aad107f19e1473911e9c5a400e98367fe",
+      "bytes": 560,
+      "role": "source/build/provenance or validation-scope record",
+      "reviewed_current_sha256": "ebb04fa63547a08ff1cfa4b72101ae1aad107f19e1473911e9c5a400e98367fe"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/performance-summary-usage.md",
+      "suggested_archive_path": "evidence/performance-summary-usage.md",
+      "sha256": "215c51fc9a58e2fcdda2293b193cfc670092e9a535deb40587613be61505fe6b",
+      "bytes": 5843,
+      "role": "source/build/provenance or validation-scope record",
+      "reviewed_current_sha256": "215c51fc9a58e2fcdda2293b193cfc670092e9a535deb40587613be61505fe6b"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-evidence/v4-original-fixture-source-check.json",
+      "suggested_archive_path": "evidence/v4-original-fixture-source-check.json",
+      "sha256": "b6850cc74da8b32b05dec18c631c3cfe53f2cceab6992500e9bbfc04e4c7e1db",
+      "bytes": 959,
+      "role": "source/build/provenance or validation-scope record",
+      "reviewed_current_sha256": "b6850cc74da8b32b05dec18c631c3cfe53f2cceab6992500e9bbfc04e4c7e1db"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-apks.py",
+      "suggested_archive_path": "scripts/pr20-closure-apks.py",
+      "sha256": "5933e107e013bd3d415812506b1d0d41e4553edb9af695d0458419fdc33d332b",
+      "bytes": 1788,
+      "role": "execution-helper-source; do not auto-run",
+      "reviewed_current_sha256": "5933e107e013bd3d415812506b1d0d41e4553edb9af695d0458419fdc33d332b"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-awake-checks.py",
+      "suggested_archive_path": "scripts/pr20-closure-awake-checks.py",
+      "sha256": "a0822da56e0b263876d8529cac2e4d342dc46bd47383f9c4739cc593a0d47169",
+      "bytes": 2466,
+      "role": "execution-helper-source; do not auto-run",
+      "reviewed_current_sha256": "a0822da56e0b263876d8529cac2e4d342dc46bd47383f9c4739cc593a0d47169"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-build.py",
+      "suggested_archive_path": "scripts/pr20-closure-build.py",
+      "sha256": "44e46bcc13ae5c60b4314495ec90088ae979532244def198b0cfd6574e5e72a4",
+      "bytes": 1736,
+      "role": "execution-helper-source; do not auto-run",
+      "reviewed_current_sha256": "44e46bcc13ae5c60b4314495ec90088ae979532244def198b0cfd6574e5e72a4"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-instrumentation.py",
+      "suggested_archive_path": "scripts/pr20-closure-instrumentation.py",
+      "sha256": "21cb306143c0aedf0280280c0af8f835719cc7716d5789fd09661b1708de991f",
+      "bytes": 2061,
+      "role": "execution-helper-source; do not auto-run",
+      "reviewed_current_sha256": "21cb306143c0aedf0280280c0af8f835719cc7716d5789fd09661b1708de991f"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-record-baseline-build.py",
+      "suggested_archive_path": "scripts/pr20-closure-record-baseline-build.py",
+      "sha256": "eccf930aecf08629b9dc96258265e7fdd87f78496d472bf4089e8476268d2d19",
+      "bytes": 8322,
+      "role": "execution-helper-source; do not auto-run",
+      "reviewed_current_sha256": "eccf930aecf08629b9dc96258265e7fdd87f78496d472bf4089e8476268d2d19"
+    },
+    {
+      "source": "/workspace/scratch/pr20-closure-record-build.py",
+      "suggested_archive_path": "scripts/pr20-closure-record-build.py",
+      "sha256": "9aee9207b07921a9e0a8eab3f0c1ed64b7d7fd3da256f38c5fda83b1aad93f49",
+      "bytes": 2530,
+      "role": "execution-helper-source; do not auto-run",
+      "reviewed_current_sha256": "9aee9207b07921a9e0a8eab3f0c1ed64b7d7fd3da256f38c5fda83b1aad93f49"
+    },
+    {
+      "source": "/workspace/scratch/record-inkweft-performance-environment.py",
+      "suggested_archive_path": "scripts/record-inkweft-performance-environment.py",
+      "sha256": "e33900329dd307e6d9b38e5e1611b9bcc865fbdc4d01624f279bb37acec00630",
+      "bytes": 10533,
+      "role": "execution-helper-source; do not auto-run",
+      "reviewed_current_sha256": "e33900329dd307e6d9b38e5e1611b9bcc865fbdc4d01624f279bb37acec00630"
+    },
+    {
+      "source": "/workspace/scratch/run-inkweft-gradle",
+      "suggested_archive_path": "scripts/run-inkweft-gradle",
+      "sha256": "d38003b3ac698ade56d447ebd37ae7f5ccea37388ef247ba16634980a1dd191c",
+      "bytes": 923,
+      "role": "execution-helper-source; do not auto-run",
+      "reviewed_current_sha256": "d38003b3ac698ade56d447ebd37ae7f5ccea37388ef247ba16634980a1dd191c"
+    },
+    {
+      "source": "/workspace/scratch/summarize-pr20-closure-performance.py",
+      "suggested_archive_path": "scripts/summarize-pr20-closure-performance.py",
+      "sha256": "a70d1cb4eb50abbc0ff88891c7bc5bd3850fd4609ffdab02c5a6bf625cb9aadc",
+      "bytes": 21611,
+      "role": "execution-helper-source; do not auto-run",
+      "reviewed_current_sha256": "a70d1cb4eb50abbc0ff88891c7bc5bd3850fd4609ffdab02c5a6bf625cb9aadc"
+    }
+  ],
+  "selected_files": 172,
+  "selected_bytes": 2253891,
+  "completed_v4_available_files": 49,
+  "completed_v4_curated_files": 49,
+  "historical_failed_runs_preserved": 12,
+  "retained_failure_receipts": [
+    "candidate-v2-backup-cancel.json",
+    "candidate-v2-backup-isolation.json",
+    "candidate-v2-rapid-search.json",
+    "candidate-v2-regression-original-storage.json",
+    "candidate-v2-regression-streamed-dense-original.json",
+    "candidate-v3-followup-original-later-corruption.json",
+    "candidate-v4-validation-rapid-search.json",
+    "diagnostic-v1-backup-cancel.json",
+    "diagnostic-v1-history.json",
+    "diagnostic-v1-large-frame.json",
+    "diagnostic-v1-rapid-search.json",
+    "diagnostic-v1-shelf-rename.json"
+  ],
+  "explicit_exclusions": [
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/baseline-final-build.log",
+      "reason": "baseline-final phase still active at delegation; defer build/runtime inputs and outputs to final closure"
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/baseline-final-source-sha256.json",
+      "reason": "baseline-final phase still active at delegation; defer build/runtime inputs and outputs to final closure"
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/paired-performance-summary-new-format.json",
+      "reason": "derived paired summary remains provisional while baseline-final is running"
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/performance-summary-input.json",
+      "reason": "mutable input manifest; do not freeze until paired runs and summary inputs are final"
+    }
+  ],
+  "remaining_closure_only": [
+    "Wait for the already-running baseline-final build; verify its completed source/build/APK/signature receipts without concurrent build/native work.",
+    "Use the existing planned baseline-final native/performance acceptance, then freeze the input manifest and paired summary with exact source/APK/env identity.",
+    "Add final repository/PR/Actions readback after authorized parent delivery; no workflow dispatch or extra optimization is implied."
+  ],
+  "delivery_rules": [
+    "Do not wildcard-copy scratch or overwrite old version records.",
+    "Recheck selected hashes before staging; include this index and its privacy review alongside the listed evidence.",
+    "Keep v4 rapid-search failure explicit; process exit 0 does not override its JUnit failure.",
+    "Historical failures are attempts, not all unresolved current tests. Retain later resolution receipts separately.",
+    "No new reconstruction, source change, build/native/Docker operation, commit or push was performed by this support task."
+  ]
+}

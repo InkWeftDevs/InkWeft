@@ -1,0 +1,26 @@
+{
+  "phase": "candidate-v4-validation",
+  "selection": "org.inkweft.data.LibrarySearchRepositoryTest#classificationUsesTheReadSnapshotAfterCancellableInitialIndexing,org.inkweft.data.LibrarySearchRepositoryTest#unicodeShortQueriesAndBoundedPagesKeepOrderAndNavigation,org.inkweft.data.LibrarySearchRepositoryTest#draftUnicodeFiltersPinsAndPageBeforeCardNavigationStayIntact,org.inkweft.data.LibrarySearchRepositoryTest#pausedSourceReadCancelsOnRapidInputThenClearAndCategoryStayFresh,org.inkweft.data.LibrarySearchRepositoryTest#deletedOrStalePageAndTrashedCardCannotReviveSearchHits",
+  "command": [
+    "/workspace/.setup/tools/android-sdk/platform-tools/adb",
+    "-s",
+    "emulator-5554",
+    "shell",
+    "am",
+    "instrument",
+    "-w",
+    "-e",
+    "class",
+    "org.inkweft.data.LibrarySearchRepositoryTest#classificationUsesTheReadSnapshotAfterCancellableInitialIndexing,org.inkweft.data.LibrarySearchRepositoryTest#unicodeShortQueriesAndBoundedPagesKeepOrderAndNavigation,org.inkweft.data.LibrarySearchRepositoryTest#draftUnicodeFiltersPinsAndPageBeforeCardNavigationStayIntact,org.inkweft.data.LibrarySearchRepositoryTest#pausedSourceReadCancelsOnRapidInputThenClearAndCategoryStayFresh,org.inkweft.data.LibrarySearchRepositoryTest#deletedOrStalePageAndTrashedCardCannotReviveSearchHits",
+    "org.inkweft.data.test/androidx.test.runner.AndroidJUnitRunner"
+  ],
+  "started_utc": "2026-10-13T00:02:13.938949+00:00",
+  "seconds": 103.59198290899803,
+  "exit_code": 0,
+  "expected": 5,
+  "tests": 5,
+  "executed": 5,
+  "failures": 0,
+  "passed": true,
+  "environment": "API35 x86_64 software Android emulator; no KVM; not physical-device performance"
+}
