@@ -10,8 +10,9 @@ concurrency:
   cancel-in-progress: false
 jobs:
   verify:
-    # Only the authorized initial branch-creation push can execute this job.
-    if: github.event.created == true && github.run_attempt == 1
+    # The separately approved second round is limited to this one transition.
+    # Subsequent pushes and reruns cannot execute the job.
+    if: github.event.created == false && github.event.before == '8d927024ee76f30e7970d44d4e55efa1b896d8ff' && github.run_attempt == 1
     runs-on: ubuntu-24.04
     timeout-minutes: 60
     env:
@@ -165,6 +166,13 @@ jobs:
               finally: entry['seconds']=time.time()-entry['started_epoch'];save()
           adb=['adb','-s','emulator-5554']
           def shell(*args): return capture(adb+['shell',*args])
+          def emulator_version(log):
+              # The running emulator already logged its version. Metadata must
+              # not launch a second executable or block the original test gates.
+              try:
+                  return next((line.split('|',1)[-1].strip() for line in log.read_text(errors='replace').splitlines()
+                               if 'Android emulator version ' in line),None)
+              except OSError: return None
           def environment():
               return {'sdk':shell('getprop','ro.build.version.sdk'),'abi':shell('getprop','ro.product.cpu.abi'),
                       'fingerprint':shell('getprop','ro.build.fingerprint'),'qemu':shell('getprop','ro.kernel.qemu'),
@@ -233,7 +241,7 @@ jobs:
               for args in [('wm','size','1920x1200'),('wm','density','240'),('settings','put','system','font_scale','1.0'),
                            ('settings','put','global','window_animation_scale','1.0'),('settings','put','global','transition_animation_scale','1.0'),
                            ('settings','delete','global','animator_duration_scale'),('svc','power','stayon','true'),('input','keyevent','KEYCODE_WAKEUP'),('wm','dismiss-keyguard')]: shell(*args)
-              env=environment();env['emulator_command']=command;env['emulator_version']=capture([sdk/'emulator/emulator','-version'])
+              env=environment();env['emulator_command']=command;env['emulator_version']=emulator_version(out/'emulator.log')
               env['image_source_properties']=(sdk/'system-images/android-35/aosp_atd/x86_64/source.properties').read_text()
               (out/'device-before.json').write_text(json.dumps(env,indent=2))
               phase('install',adb+['install','-t',apks[0]],180)
@@ -271,6 +279,8 @@ jobs:
               report['status']='PASS' if all(x['status']=='PASS' for x in report['methods']) else 'TEST_FAILURE'
           except Exception as e:
               report['status']='BLOCKED';report['error']=type(e).__name__+': '+str(e)
+              if isinstance(e,subprocess.CalledProcessError):
+                  report['failed_command_output']=str(e.stdout or '')[-8192:]
               for entry in report['methods']:
                   if entry['status']=='RUNNING': entry['status']='INCOMPLETE';entry['seconds']=time.time()-entry['started_epoch']
           finally: save();print(json.dumps(report),flush=True)
