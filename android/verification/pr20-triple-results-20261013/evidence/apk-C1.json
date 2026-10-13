@@ -1,0 +1,73 @@
+{
+  "identity": "C1",
+  "base_commit": "ebb48481e7e995288c1844d43011398c513b4f4e",
+  "source_manifest_sha256": "c0e3b9a4cfa9b5a602e47422f080add43353d64acacea505cc8f3ebee4c91e63",
+  "overlay_identity": "Embedded source_commit is the Git base; source-spec plus source manifest bind overlays.",
+  "apks": [
+    {
+      "path": "app/build/outputs/apk/debug/app-debug.apk",
+      "bytes": 229747843,
+      "sha256": "1d569a54b11f46f6ebdd520e60f109f7cbdb091431c33b8ef26acffc7eda9250",
+      "signature": "Signer #1 certificate DN: C=US, O=Android, CN=Android Debug\nSigner #1 certificate SHA-256 digest: 0ec799965ff90972b06ec57f79b1b2324c7c514ebe2b5ec37224d43df890c913\nSigner #1 certificate SHA-1 digest: fe48fc437551a240caad9ec8619a2c8e4e0da794\nSigner #1 certificate MD5 digest: 909e487b5d22439c4d5936f6c946e748",
+      "signer_sha256": [
+        "0ec799965ff90972b06ec57f79b1b2324c7c514ebe2b5ec37224d43df890c913"
+      ],
+      "build_identity": {
+        "schema": 1,
+        "build_commit": "30acef2e082eb1cd2d70471737824da32fbe9c24",
+        "source_commit": "ebb48481e7e995288c1844d43011398c513b4f4e",
+        "formal": false,
+        "target_abis": [
+          "arm64-v8a",
+          "armeabi-v7a",
+          "x86",
+          "x86_64"
+        ],
+        "application_id": "org.inkweft.app.a0",
+        "version_name": "0.0.91-cloud-performance"
+      },
+      "mupdf_native": [
+        {
+          "path": "lib/arm64-v8a/libmupdf_java.so",
+          "bytes": 10840392,
+          "sha256": "5c7872c5e12ae3c00f68e14e371d3467cbfb2fd3dfefc7bb2a03d2cd491f6a4f"
+        },
+        {
+          "path": "lib/armeabi-v7a/libmupdf_java.so",
+          "bytes": 7582088,
+          "sha256": "2b24af301ba54d70c4cac09a1ae22af2c20f62b5f1046a2e8b352ca702e2ffd6"
+        },
+        {
+          "path": "lib/x86/libmupdf_java.so",
+          "bytes": 11187796,
+          "sha256": "46f512805c693c07f6e7fac50cdf3d2e028c5078f92e7d230f4c1e6e1b165ed9"
+        },
+        {
+          "path": "lib/x86_64/libmupdf_java.so",
+          "bytes": 11264136,
+          "sha256": "e9907d1e11f886662915376a1f059608e539c75cb1bc5ef57ccdf887a0367349"
+        }
+      ]
+    },
+    {
+      "path": "app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk",
+      "bytes": 10566911,
+      "sha256": "ff985798f3f7608db1a7ff065e118e9929d180ae19293c366e469928ac67160d",
+      "signature": "Signer #1 certificate DN: C=US, O=Android, CN=Android Debug\nSigner #1 certificate SHA-256 digest: 0ec799965ff90972b06ec57f79b1b2324c7c514ebe2b5ec37224d43df890c913\nSigner #1 certificate SHA-1 digest: fe48fc437551a240caad9ec8619a2c8e4e0da794\nSigner #1 certificate MD5 digest: 909e487b5d22439c4d5936f6c946e748",
+      "signer_sha256": [
+        "0ec799965ff90972b06ec57f79b1b2324c7c514ebe2b5ec37224d43df890c913"
+      ]
+    },
+    {
+      "path": "data-local/build/outputs/apk/androidTest/debug/data-local-debug-androidTest.apk",
+      "bytes": 23243800,
+      "sha256": "3ff0c72aad07ae552c84cb6f72c3527a1c615815b29df75b7beb814f8d1f3f56",
+      "signature": "Signer #1 certificate DN: C=US, O=Android, CN=Android Debug\nSigner #1 certificate SHA-256 digest: 0ec799965ff90972b06ec57f79b1b2324c7c514ebe2b5ec37224d43df890c913\nSigner #1 certificate SHA-1 digest: fe48fc437551a240caad9ec8619a2c8e4e0da794\nSigner #1 certificate MD5 digest: 909e487b5d22439c4d5936f6c946e748",
+      "signer_sha256": [
+        "0ec799965ff90972b06ec57f79b1b2324c7c514ebe2b5ec37224d43df890c913"
+      ]
+    }
+  ],
+  "jvm_tests": "NOT_RUN",
+  "lint": "NOT_RUN"
+}

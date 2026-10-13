@@ -1,0 +1,50 @@
+INSTRUMENTATION_STATUS: class=org.inkweft.app.KvmLocalAppendPairProbe
+INSTRUMENTATION_STATUS: current=1
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=1
+INSTRUMENTATION_STATUS: stream=
+org.inkweft.app.KvmLocalAppendPairProbe:
+INSTRUMENTATION_STATUS: test=oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: stream=KVM_PAIR_FIXTURE {"label":"raster-1-before","seed":4101,"logicalSha256":"e42134ad686969604696eca0c8b1e509642eb8cb0f394806f4463a7a0c51b4f5","rowCounts":{"notes":1,"note_revisions":1,"notebook_workspace":1,"notebook_pages":1,"ink_pages":1,"ink_strokes":320,"canvas_authoring":1,"page_layer_memberships":320},"writerSqlite":{"page_size":1024,"auto_vacuum":1,"journal_mode":"wal","synchronous":2}}
+
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: stream=TILE_LOCAL_EVIDENCE {"layers":1,"initialStrokes":320,"finalStrokes":321,"firstCompleteMs":236.480229,"appendCompleteMs":51.070296,"forcedFullCompleteMs":170.731917,"localDecoded":13,"fullDecoded":321,"localRebuiltTiles":1,"fullRebuiltTiles":24,"metadataMs":18.09156,"rasterMs":15.135303,"publicationMs":0.401625,"pixelsEqual":true,"bitmapBytes":14371200}
+
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: stream=KVM_RASTER_CLEANUP {"layers":1,"joined":true,"resources":{"totalBytes":0,"budgetBytes":134217728,"peakTrackedBytes":28742400,"inFlightJobs":0,"cancelledJobs":0,"cacheBytes":0,"in_flightBytes":0,"activeBytes":0,"live_inkBytes":0}}
+
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: stream=KVM_PAIR_FIXTURE {"label":"raster-4-before","seed":4101,"logicalSha256":"ce90b22b09e96ba9c39c605ab6789cf87d488152388a36d473416cdbd9b4c241","rowCounts":{"notes":2,"note_revisions":2,"notebook_workspace":2,"notebook_pages":2,"ink_pages":2,"ink_strokes":641,"canvas_authoring":2,"page_layer_memberships":641},"writerSqlite":{"page_size":1024,"auto_vacuum":1,"journal_mode":"wal","synchronous":2}}
+
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: stream=TILE_LOCAL_EVIDENCE {"layers":4,"initialStrokes":320,"finalStrokes":321,"firstCompleteMs":172.607531,"appendCompleteMs":120.393796,"forcedFullCompleteMs":149.778686,"localDecoded":21,"fullDecoded":321,"localRebuiltTiles":1,"fullRebuiltTiles":24,"metadataMs":69.122758,"rasterMs":89.050162,"publicationMs":75.30556899999999,"pixelsEqual":true,"bitmapBytes":12147408}
+
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: stream=KVM_RASTER_CLEANUP {"layers":4,"joined":true,"resources":{"totalBytes":0,"budgetBytes":134217728,"peakTrackedBytes":28742400,"inFlightJobs":0,"cancelledJobs":0,"cacheBytes":0,"in_flightBytes":0,"activeBytes":0,"live_inkBytes":0}}
+
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: stream=KVM_PAIR_FIXTURE {"label":"raster-8-before","seed":4101,"logicalSha256":"0df59d18c4c4dea150455471d713e6110524e93bbb78b82d0389c1ea29e36990","rowCounts":{"notes":3,"note_revisions":3,"notebook_workspace":3,"notebook_pages":3,"ink_pages":3,"ink_strokes":962,"canvas_authoring":3,"page_layer_memberships":962},"writerSqlite":{"page_size":1024,"auto_vacuum":1,"journal_mode":"wal","synchronous":2}}
+
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: stream=TILE_LOCAL_EVIDENCE {"layers":8,"initialStrokes":320,"finalStrokes":321,"firstCompleteMs":220.136518,"appendCompleteMs":122.158722,"forcedFullCompleteMs":211.381274,"localDecoded":11,"fullDecoded":321,"localRebuiltTiles":1,"fullRebuiltTiles":48,"metadataMs":44.768995,"rasterMs":44.33017400000001,"publicationMs":182.830264,"pixelsEqual":true,"bitmapBytes":24294816}
+
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: stream=KVM_RASTER_CLEANUP {"layers":8,"joined":true,"resources":{"totalBytes":0,"budgetBytes":134217728,"peakTrackedBytes":48589632,"inFlightJobs":0,"cancelledJobs":0,"cacheBytes":0,"in_flightBytes":0,"activeBytes":0,"live_inkBytes":0}}
+
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=org.inkweft.app.KvmLocalAppendPairProbe
+INSTRUMENTATION_STATUS: current=1
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=1
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_RESULT: stream=
+
+Time: 3.19
+
+OK (1 test)
+
+
+INSTRUMENTATION_CODE: -1

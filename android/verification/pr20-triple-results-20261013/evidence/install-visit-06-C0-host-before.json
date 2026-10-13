@@ -1,0 +1,23 @@
+{
+  "epoch": 1791905484.5451546,
+  "uid": 1001,
+  "cpu_count": 4,
+  "kernel": "6.17.0-1022-azure",
+  "load_1_5_15": [
+    1.12744140625,
+    1.98291015625,
+    2.0615234375
+  ],
+  "cpu_model": "Intel(R) Xeon(R) 6973P-C",
+  "memory": {
+    "MemTotal": "16372440 kB",
+    "MemAvailable": "11794260 kB",
+    "SwapTotal": "3145724 kB",
+    "SwapFree": "3145684 kB"
+  },
+  "disk_bytes": {
+    "total": 154894188544,
+    "used": 74106515456,
+    "free": 80770895872
+  }
+}
