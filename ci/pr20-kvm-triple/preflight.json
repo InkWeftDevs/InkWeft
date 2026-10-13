@@ -1,0 +1,196 @@
+{
+  "status": "PASS",
+  "scope": "Offline static/synthetic controller checks only; no network, Android, Gradle, emulator, adb or permission actions.",
+  "checked_utc": "2026-10-13T13:08:42.748424+00:00",
+  "checker_sha256": "012a387af0047016bdd0c093459fb79ed40a510dc7d03715b3b61c8d2448bdc2",
+  "synthetic_work_directory": "/workspace/scratch/pr20-budget2-check-sjpucdf3",
+  "input_sha256": {
+    "/workspace/InkWeft-native-triple-budget2/ci/pr20-kvm-triple/run.py": "1128cffc5d7a5deb543bc97622d6c53397ea37eb9ce98c6808c9d60c29984f47",
+    "/workspace/InkWeft-native-triple-budget2/ci/pr20-kvm-triple/cleanup.py": "49e4337f483de46179466ae1c0fcf9ef18772e6a9388cce5cb6826a60d634576",
+    "/workspace/InkWeft-native-triple-budget2/ci/pr20-kvm-triple/package.py": "f3445328b516d0e0b48aba34796ce95b8c480f2baa53be59da42105ae7714c3f",
+    "/workspace/InkWeft-native-triple-budget2/ci/pr20-kvm-triple/authorization.json": "fcc2876e033e3956ce5e26b0251dc9e9d9412eb65775c0dc4d40d0043cbceea3",
+    "/workspace/InkWeft-native-triple-budget2/ci/pr20-kvm-triple/budget-revision.json": "37802241b962e6c3d347b6359bac361c351ad81e63766b78c782edaa1a601f28",
+    "/workspace/InkWeft-native-triple-budget2/ci/pr20-kvm-triple/workflow.proposed.yml": "f16661d05556a677e68deef98a1d7b305b477a1f6c0e4bcd065b09e315954b20",
+    "/workspace/InkWeft-native-triple-budget2/android/verification/pr20-native-readiness-20261013/PLAN.md": "d5efd83c08b6bb6e107c397db8ca3999337693dc2af45f0615c5e198bac93077",
+    "/workspace/InkWeft-native-triple-budget2/android/verification/pr20-native-readiness-20261013/method-plan.json": "797b64fcdfe9576e2c678e37a541161c0b795276ad99574dc92f81aa789d2913",
+    "/workspace/InkWeft-native-triple-budget2/android/verification/pr20-native-readiness-20261013/source-spec.json": "0a38b7e6348c0e1be7bf2d0ce7bbb115665fbfa56d49875ac6ccab8e6851dbcd",
+    "/workspace/InkWeft-native-triple-budget2/android/verification/pr20-native-readiness-20261013/original-protocol.json": "1065177d7809426d949c4b4b67bd639a47c3fc1943f706a77c2dfabb985e9aba",
+    "/workspace/InkWeft-native-triple-budget2/android/verification/pr20-kvm-paired-20261013/evidence/visit-01-C-history-instrumentation.log": "d603bbe09b953abb7a8fb353d6d51c6939e46f7b65f88d4c7b6aec3e9fb07e6b",
+    "/workspace/InkWeft-native-triple-budget2/android/verification/pr20-kvm-paired-20261013/evidence/visit-01-C-library-instrumentation.log": "9d1e329c5083975febec36a286bda2b69eca57ba78c24256cc99ea99c5639584",
+    "/workspace/InkWeft-native-triple-budget2/android/verification/pr20-kvm-paired-20261013/evidence/visit-01-C-local-append-instrumentation.log": "901eec7b2048468e62de012b6456e37da4d77dc8aaaf0757a8e2466f3ee35c0b",
+    "/workspace/InkWeft-native-triple-budget2/android/verification/pr20-kvm-paired-20261013/evidence/visit-02-B-history-instrumentation.log": "ef896f8f6377368d5ecd2700b9313bafa388c0ae12c26b9e06c3676819f41554",
+    "/workspace/InkWeft-native-triple-budget2/android/verification/pr20-kvm-paired-20261013/evidence/visit-02-B-library-instrumentation.log": "c4fda95d54c7297962db22724ecc9eaf0f5aef2ef401951b97b8b27021449021",
+    "/workspace/InkWeft-native-triple-budget2/android/verification/pr20-kvm-paired-20261013/evidence/visit-02-B-local-append-instrumentation.log": "d8d4980a053f52748208dc2f5a00187ccad19d96e4df310d05b5ae3f202c005f",
+    "/workspace/InkWeft-native-triple-budget2/android/verification/pr20-kvm-paired-20261013/evidence/visit-03-B-history-instrumentation.log": "b6e1b019e151781114049d9218d750413915b9deaa9768749120859739fcb312",
+    "/workspace/InkWeft-native-triple-budget2/android/verification/pr20-kvm-paired-20261013/evidence/visit-03-B-library-instrumentation.log": "a08b652f6fc8495611eaf8ccd8777ee396fb8b427a4181b9eec1c3f51e42e434",
+    "/workspace/InkWeft-native-triple-budget2/android/verification/pr20-kvm-paired-20261013/evidence/visit-03-B-local-append-instrumentation.log": "f61f939b62a2f8a38c7ea65639f7236787c7f44f2372877e14cd661db298f635",
+    "/workspace/InkWeft-native-triple-budget2/android/verification/pr20-kvm-paired-20261013/evidence/visit-04-C-history-instrumentation.log": "484e14d753daa05e02b507209b4b101c5cc251488f034952226b2e1887962dc3",
+    "/workspace/InkWeft-native-triple-budget2/android/verification/pr20-kvm-paired-20261013/evidence/visit-04-C-library-instrumentation.log": "7af4fac2d84050d2e81f685f8efcedfbaf06a59230bb15c31d7c387c31840b5e",
+    "/workspace/InkWeft-native-triple-budget2/android/verification/pr20-kvm-paired-20261013/evidence/visit-04-C-local-append-instrumentation.log": "6be3b3625a524e3b39ae0f6810d3f88d7cc25435a1cb631104527b4b51d426be",
+    "/workspace/InkWeft-native-triple-budget2/android/verification/pr20-kvm-paired-20261013/evidence/visit-05-B-history-instrumentation.log": "e34e146177b197a018fe38b3dab67838e7093a6fc5e69e562b9773fef6c33852",
+    "/workspace/InkWeft-native-triple-budget2/android/verification/pr20-kvm-paired-20261013/evidence/visit-05-B-library-instrumentation.log": "0ad74c84458a62e4e8a72ee519940c2eef8180519c747db7c796eb9112e0733b",
+    "/workspace/InkWeft-native-triple-budget2/android/verification/pr20-kvm-paired-20261013/evidence/visit-05-B-local-append-instrumentation.log": "b1ebbd5ff52dadaab67f5966ea5e720f3dad276000361e1c5c1f786a3e98626b",
+    "/workspace/InkWeft-native-triple-budget2/android/verification/pr20-kvm-paired-20261013/evidence/visit-06-C-history-instrumentation.log": "b2a59e17ceb5b30a3576ee5b383c01b5741f59bb5cde66efa91f323bb02efc53",
+    "/workspace/InkWeft-native-triple-budget2/android/verification/pr20-kvm-paired-20261013/evidence/visit-06-C-library-instrumentation.log": "2aeeaa27c850e0b9cafd8342369eddf2077f3bd9adf06aab2c3da2fce341a243",
+    "/workspace/InkWeft-native-triple-budget2/android/verification/pr20-kvm-paired-20261013/evidence/visit-06-C-local-append-instrumentation.log": "d98df5aba73bfd207b418e56d4664dd049e4687bbd3aa0ecffd113b8eedb8be1",
+    "/workspace/InkWeft-native-triple-budget2/android/verification/pr20-kvm-paired-20261013/evidence/visit-07-C-history-instrumentation.log": "d90b90c93aa386683ada14687d51b97766195acb923339e44e8f3c331d13d597",
+    "/workspace/InkWeft-native-triple-budget2/android/verification/pr20-kvm-paired-20261013/evidence/visit-07-C-library-instrumentation.log": "58707af26a89e4c32252242e93369129de167fd3c692e0c2e14151ae73ce1890",
+    "/workspace/InkWeft-native-triple-budget2/android/verification/pr20-kvm-paired-20261013/evidence/visit-07-C-local-append-instrumentation.log": "c45bf3fc283eae2e10cedb6918bce0b8bceca82c20ea54226624e356f64e20fa",
+    "/workspace/InkWeft-native-triple-budget2/android/verification/pr20-kvm-paired-20261013/evidence/visit-08-B-history-instrumentation.log": "594e142d86e1978fc82049dfeef8a1150e8485aead5b6267d119388fa1a8a6b0",
+    "/workspace/InkWeft-native-triple-budget2/android/verification/pr20-kvm-paired-20261013/evidence/visit-08-B-library-instrumentation.log": "1ec0aaead512ba8acbdd0f47caf073d1fa60da67d4618b66b69d5787f65e5605",
+    "/workspace/InkWeft-native-triple-budget2/android/verification/pr20-kvm-paired-20261013/evidence/visit-08-B-local-append-instrumentation.log": "a1c19862311859e5eeafb385b9c90f5e3e93cc0053270c484661bf3cbce5df35",
+    "/workspace/scratch/pr20-triple-run-38396134768/evidence/summary.json": "3512207b5d6117db0eb144e51cb5dcc0aa03b7d836f64f2b9c3bb38932c76854",
+    "/workspace/scratch/pr20-triple-run-38396134768/evidence/clock.json": "4e1157bb7760d113a08561f17a798d10858039cc51dfe7b39bdff5a3027be94a",
+    "/workspace/scratch/pr20-triple-run-38396134768/evidence/cleanup-trap.json": "1f5147063ce4119cc1819849e1fa25d5c27e347f76f74379f631486a1d448ade",
+    "/workspace/scratch/pr20-triple-run-38396134768/evidence/cleanup-always.json": "1f5147063ce4119cc1819849e1fa25d5c27e347f76f74379f631486a1d448ade"
+  },
+  "checks": [
+    {
+      "check": "controller AST and frozen 44-method plan",
+      "status": "PASS",
+      "detail": {
+        "modules": 3,
+        "methods": 44,
+        "install_groups": 14,
+        "native_execution": false
+      }
+    },
+    {
+      "check": "actual raw_result: 24 historical logs, invalid variants and markers",
+      "status": "PASS",
+      "detail": {
+        "original_raw_logs": 24,
+        "invalid_variants_rejected": 11,
+        "required_markers": [
+          "HISTORY_DELETE_WRITER_CORRECTNESS",
+          "HISTORY_DELETION_EXPOSURE_TRIAL",
+          "HISTORY_DELETION_EXPOSURE_SUMMARY",
+          "LIBRARY_STAGE_DIAGNOSTICS"
+        ],
+        "malformed_marker_preserved": true,
+        "incomplete_not_promoted": true
+      }
+    },
+    {
+      "check": "actual method: preserve raw PASS vs host failure and budget abort",
+      "status": "PASS",
+      "detail": [
+        {
+          "case": "complete-malformed-marker",
+          "status": "FAIL",
+          "raw_junit_status": "PASS"
+        },
+        {
+          "case": "budget-truncated-marker",
+          "status": "INCOMPLETE",
+          "raw_junit_status": "INCOMPLETE"
+        }
+      ]
+    },
+    {
+      "check": "actual controller/workflow clock, exports, authorization and boundaries",
+      "status": "PASS",
+      "detail": {
+        "derived_controller_minutes": {
+          "setup": 32.0,
+          "correctness": 38.0,
+          "common": 52.0,
+          "diagnostics": 55.0
+        },
+        "workflow_clock_and_actual_exports_match": true,
+        "authorization_hashes_match": true,
+        "four_phase_boundaries_and_global_55min": true
+      }
+    },
+    {
+      "check": "actionlint, bash syntax, embedded Python and per-step deadline selection",
+      "status": "PASS",
+      "detail": {
+        "actionlint": "1.7.12",
+        "bash_syntax_blocks": 12,
+        "embedded_python_blocks": 2,
+        "bounded_controller_calls": [
+          "setup",
+          "build B",
+          "build C0",
+          "build C1",
+          "emulator",
+          "methods correctness",
+          "methods common",
+          "methods diagnostics"
+        ],
+        "launch_guard_bound": false,
+        "launch_note": "Static/synthetic PASS does not authorize or launch a workflow."
+      }
+    },
+    {
+      "check": "fresh actual package execution on immutable timeout copy and synthetic states",
+      "status": "PASS",
+      "detail": {
+        "actual_package_sha256": "f3445328b516d0e0b48aba34796ce95b8c480f2baa53be59da42105ae7714c3f",
+        "fresh_synthetic_invocations": 12,
+        "cases": [
+          {
+            "case": "actual-raw-timeout",
+            "status": "INCOMPLETE_OUTER_TIMEOUT_OR_INTERRUPTION",
+            "raw_original_preserved": true
+          },
+          {
+            "case": "all-state-layers",
+            "preserved_PASS_FAIL_NOT_RUN_junit_and_times": true
+          },
+          {
+            "case": "boundary-PREPARING",
+            "status": "INCOMPLETE_EXECUTION_NOT_FINISHED"
+          },
+          {
+            "case": "boundary-SOURCES_FROZEN",
+            "status": "INCOMPLETE_EXECUTION_NOT_FINISHED"
+          },
+          {
+            "case": "boundary-MEASURING",
+            "status": "INCOMPLETE_EXECUTION_NOT_FINISHED"
+          },
+          {
+            "case": "complete44-both",
+            "status": "EXECUTION_COMPLETE_ANALYSIS_PENDING"
+          },
+          {
+            "case": "complete44-missing-always",
+            "status": "CLEANUP_UNCONFIRMED"
+          },
+          {
+            "case": "complete44-bad-always",
+            "status": "CLEANUP_UNCONFIRMED"
+          },
+          {
+            "case": "existing-failure",
+            "original_failure_preserved": true
+          },
+          {
+            "case": "whitelist",
+            "synthetic_non_whitelist_excluded": true
+          },
+          {
+            "case": "credential-pattern",
+            "refused": true
+          },
+          {
+            "case": "oversize",
+            "refused_without_truncation": true
+          }
+        ],
+        "execution_manifest_input": "synthetic-placeholder-final-manifest-still-required",
+        "prior_PASS_receipts_reused_as_test_results": false
+      }
+    },
+    {
+      "check": "read-only input continuity",
+      "status": "PASS",
+      "detail": {
+        "immutable_read_inputs": 38,
+        "all_matched": true
+      }
+    }
+  ]
+}
