@@ -19,39 +19,101 @@ import java.util.concurrent.CopyOnWriteArrayList
 
 class TileLocalRedrawTest {
     private fun id()=UUID.randomUUID().toString()
-    @Test fun integralPanReusesInteriorTilesAndZoomPreviewNeverCompletesCapture()=runBlocking{
+    // Keep actual Jobs, including jobs replaced by a later draw. A global counter
+    // or clear() alone cannot prove that this test's worker finally has completed.
+    private class RasterJobs {
+        private val field=StreamedInkRaster::class.java.getDeclaredField("job").apply{isAccessible=true}
+        private val jobs=linkedSetOf<Job>()
+        private val baselineJobs=RenderResources.inFlightJobs.get()
+        private val baselineGeometry=RenderResources.snapshot()["category.ink-geometry-reservation"]?:0L
+        var joined=false;private set
+        fun remember(raster:StreamedInkRaster){(field.get(raster) as Job?)?.let{jobs.add(it);joined=false}}
+        suspend fun clearAndJoin(rasters:List<StreamedInkRaster>)=withContext(NonCancellable){
+            joined=false
+            withContext(Dispatchers.Main){rasters.forEach{remember(it);it.clear()};jobs.forEach{it.cancel()}}
+            // Deliberately no withTimeoutOrNull: a stuck worker must not let the
+            // runner start the next method or close a database it can still use.
+            jobs.joinAll()
+            joined=true
+            assertTrue("All owned raster jobs must complete",jobs.all{it.isCompleted})
+            assertEquals("Raster worker count after join",baselineJobs,RenderResources.inFlightJobs.get())
+            assertEquals("Geometry ownership after join",baselineGeometry,RenderResources.snapshot()["category.ink-geometry-reservation"]?:0L)
+            jobs.clear()
+        }
+    }
+    private class InterruptedPanWait:RuntimeException("Synthetic interruption after the initial draw")
+    @Test fun interruptedPanWaitJoinsItsWorkerBeforeClosingResources()=runBlocking{
+        val failure=runCatching{panAndZoom(interruptFirstWait=true)}.exceptionOrNull()
+        assertTrue("The intended wait must be interrupted",failure is InterruptedPanWait)
+        assertEquals("Cleanup must not fail",0,failure!!.suppressed.size)
+    }
+    @Test fun integralPanReusesInteriorTilesAndZoomPreviewNeverCompletesCapture()=runBlocking{panAndZoom()}
+    private suspend fun panAndZoom(interruptFirstWait:Boolean=false){
+        val diagnostics=InstrumentationRegistry.getArguments().getString("tilePanDiagnostics")=="true"
+        val jobs=RasterJobs()
         val context=ApplicationProvider.getApplicationContext<Context>();val name="tile-pan-${id()}.db";val db=NoteDatabase.open(context,name)
         val target=Bitmap.createBitmap(2000,1600,Bitmap.Config.ARGB_8888);val reference=Bitmap.createBitmap(2000,1600,Bitmap.Config.ARGB_8888)
         val events=Channel<Unit>(Channel.CONFLATED);var failed=false
         val cached=StreamedInkRaster({events.trySend(Unit)},{failed=true;events.trySend(Unit)})
         val cold=StreamedInkRaster({events.trySend(Unit)},{failed=true;events.trySend(Unit)})
+        var primaryFailure:Throwable?=null
+        fun evidence(value:JSONObject){InstrumentationRegistry.getInstrumentation().sendStatus(0,android.os.Bundle().apply{putString("stream","TILE_PAN_STAGE $value\n")})}
         try{
             val page=WorkspaceRepository(db).create("平移与缩放",true,PaperStyle.BLANK).id;val repo=InkRepository(db)
             val values=List(96){index->val x=50f+(index%12)*150;val y=50f+(index/12)*180
                 InkStroke(id(),if(index%3==0)InkPen.PENCIL else InkPen.PEN,Color.BLUE,5f,InkTool.STYLUS,listOf(InkSample(x,y,0,world=true),InkSample(x+30,y+20,10,world=true)),true)}
             db.withTransaction{if(db.ink().page(page)==null)db.ink().insertPage(InkPageRow(page,1))else check(db.ink().compareAndSet(page,0,1)==1);values.forEach{db.ink().insertStroke(InkStrokeRow(it.id,page,InkStrokeCodec.encodeStored(it),2,true,1))}}
             val source=InkRenderSource(repo,page,1,values.map{it.id}.toSet());var viewport=CanvasViewport(1000.0,800.0,1.0)
-            suspend fun draw(raster:StreamedInkRaster,bitmap:Bitmap)=withContext(Dispatchers.Main){bitmap.eraseColor(Color.WHITE);raster.draw(Canvas(bitmap),2000,1600,viewport,1.0,true,false,source,null,emptySet());raster.frameReady}
-            suspend fun ready(raster:StreamedInkRaster,bitmap:Bitmap){withTimeout(30_000){while(!draw(raster,bitmap)){events.receive();check(!failed)}}}
-            ready(cached,target);viewport=viewport.copy(centerX=1256.0)
+            suspend fun draw(raster:StreamedInkRaster,bitmap:Bitmap)=withContext(Dispatchers.Main){
+                jobs.remember(raster)
+                try{bitmap.eraseColor(Color.WHITE);raster.draw(Canvas(bitmap),2000,1600,viewport,1.0,true,false,source,null,emptySet());raster.frameReady}
+                finally{jobs.remember(raster)}
+            }
+            suspend fun ready(stage:String,raster:StreamedInkRaster,bitmap:Bitmap){
+                if(diagnostics)evidence(JSONObject().put("stage",stage).put("event","start").put("deadlineMs",30_000))
+                val started=System.nanoTime()
+                try{
+                    withTimeout(30_000){while(!draw(raster,bitmap)){
+                        if(interruptFirstWait&&stage=="initial-cached")throw InterruptedPanWait()
+                        events.receive();check(!failed)
+                    }}
+                    if(diagnostics)evidence(JSONObject().put("stage",stage).put("event","complete").put("elapsedMs",(System.nanoTime()-started)/1_000_000.0))
+                }catch(error:Throwable){
+                    try{
+                        val details=withContext(NonCancellable+Dispatchers.Main){JSONObject().put("stage",stage).put("event","failed")
+                            .put("error",error.javaClass.simpleName).put("elapsedMs",(System.nanoTime()-started)/1_000_000.0)
+                            .put("pending",raster.pending).put("frameReady",raster.frameReady)
+                            .put("lastCompletedBuild",raster.lastBuild?.toString()?:JSONObject.NULL).put("resources",JSONObject(RenderResources.snapshot()))}
+                        evidence(details)
+                    }catch(diagnostic:Throwable){error.addSuppressed(diagnostic)}
+                    throw error
+                }
+            }
+            ready("initial-cached",cached,target);viewport=viewport.copy(centerX=1256.0)
             assertFalse(draw(cached,target));assertFalse(cached.contains(values.first().id))
-            ready(cached,target);ready(cold,reference);assertTrue(target.sameAs(reference))
+            ready("pan-cached",cached,target);ready("pan-cold",cold,reference);assertTrue(target.sameAs(reference))
             val pan=cached.lastBuild!!;assertTrue("Pan rebuilt ${pan.rebuilt}/${pan.tiles}",pan.rebuilt in 1 until pan.tiles)
             withContext(Dispatchers.Main){cold.clear()};viewport=viewport.copy(zoom=1.2)
             assertFalse(draw(cached,target));assertFalse(cached.frameReady)
-            ready(cached,target);ready(cold,reference);assertTrue(target.sameAs(reference))
+            ready("zoom-cached",cached,target);ready("zoom-cold",cold,reference);assertTrue(target.sameAs(reference))
             assertEquals("A same-revision zoom rerasterizes retained geometry without decoding it",0,cached.lastBuild!!.decoded)
             assertTrue(cached.lastBuild!!.reusedStrokes>0)
             assertTrue(cached.lastBuild!!.bitmapBytes<=StreamedLayerLayout.PIXELS*4)
             InstrumentationRegistry.getInstrumentation().sendStatus(0,android.os.Bundle().apply{putString("stream","TILE_PAN_EVIDENCE ${JSONObject().put("rebuilt",pan.rebuilt).put("tiles",pan.tiles).put("panPixelsEqual",true).put("zoomPixelsEqual",true).put("previewCaptureReady",false)}\n")})
-        }finally{withContext(Dispatchers.Main){cached.clear();cold.clear()};events.close();target.recycle();reference.recycle();db.close();context.deleteDatabase(name)}
+        }catch(error:Throwable){primaryFailure=error;throw error}
+        finally{
+            try{jobs.clearAndJoin(listOf(cached,cold));if(diagnostics)evidence(JSONObject().put("event","workers-joined").put("resources",JSONObject(RenderResources.snapshot())))}
+            catch(cleanup:Throwable){if(primaryFailure!=null)primaryFailure.addSuppressed(cleanup)else throw cleanup}
+            finally{if(jobs.joined){events.close();target.recycle();reference.recycle();db.close();context.deleteDatabase(name)}}
+        }
     }
     @Test fun oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions()=runBlocking{
         val metadataDiagnostics=InstrumentationRegistry.getArguments().getString("rasterMetadataDiagnostics")=="true"
         val context=ApplicationProvider.getApplicationContext<Context>();val name="tile-local-${id()}.db";val db=NoteDatabase.open(context,name)
         val target=Bitmap.createBitmap(3000,2000,Bitmap.Config.ARGB_8888);val reference=Bitmap.createBitmap(3000,2000,Bitmap.Config.ARGB_8888)
         val events=Channel<Unit>(Channel.CONFLATED);val active=mutableListOf<StreamedInkRaster>();val full=mutableListOf<StreamedInkRaster>()
-        val baselineJobs=RenderResources.inFlightJobs.get();var failed=false
+        val jobs=RasterJobs();var failed=false
+        var primaryFailure:Throwable?=null
         fun raster()=StreamedInkRaster({events.trySend(Unit)},{failed=true;events.trySend(Unit)})
         fun stroke(x:Float,y:Float,color:Int=Color.BLUE)=InkStroke(id(),InkPen.PEN,color,5f,InkTool.STYLUS,
             listOf(InkSample(x,y,0,world=true),InkSample(x+15,y+5,10,world=true)),true)
@@ -73,7 +135,11 @@ class TileLocalRedrawTest {
                 withContext(Dispatchers.Main){repeat(count){active+=raster();full+=raster()}}
                 suspend fun draw(rasters:List<StreamedInkRaster>,bitmap:Bitmap):Boolean=withContext(Dispatchers.Main){
                     bitmap.eraseColor(Color.WHITE);val canvas=Canvas(bitmap);var ready=true
-                    layers.forEachIndexed{i,l->rasters[i].draw(canvas,3000,2000,viewport,1.0,true,false,source,null,emptySet(),l.id,rectangles.getValue(l.id),budgets.getValue(l.id));ready=ready&&rasters[i].frameReady}
+                    layers.forEachIndexed{i,l->
+                        jobs.remember(rasters[i])
+                        try{rasters[i].draw(canvas,3000,2000,viewport,1.0,true,false,source,null,emptySet(),l.id,rectangles.getValue(l.id),budgets.getValue(l.id));ready=ready&&rasters[i].frameReady}
+                        finally{jobs.remember(rasters[i])}
+                    }
                     ready
                 }
                 suspend fun ready(rasters:List<StreamedInkRaster>,bitmap:Bitmap):Double{
@@ -110,7 +176,9 @@ class TileLocalRedrawTest {
                 withContext(Dispatchers.Main){full.forEach{it.clear()}}
                 assertTrue(repo.save(CommitInk(id(),page,2,InkMutation.Visibility(listOf(added.id),false),scope)) is InkCommitResult.Committed)
                 source=source.copy(revision=3,appendGeneration=Any())
-                withContext(Dispatchers.Main){target.eraseColor(Color.WHITE);layers.forEachIndexed{i,l->active[i].draw(Canvas(target),3000,2000,viewport,1.0,true,false,source,null,emptySet(),l.id,rectangles.getValue(l.id),budgets.getValue(l.id))};assertEquals(Color.WHITE,target.getPixel(175,171))}
+                withContext(Dispatchers.Main){target.eraseColor(Color.WHITE);layers.forEachIndexed{i,l->
+                    jobs.remember(active[i]);try{active[i].draw(Canvas(target),3000,2000,viewport,1.0,true,false,source,null,emptySet(),l.id,rectangles.getValue(l.id),budgets.getValue(l.id))}finally{jobs.remember(active[i])}
+                };assertEquals(Color.WHITE,target.getPixel(175,171))}
                 ready(active,target);ready(full,reference);assertTrue(target.sameAs(reference))
                 val evidence=JSONObject().put("layers",count).put("initialStrokes",320).put("finalStrokes",321)
                     .put("firstCompleteMs",first).put("appendCompleteMs",local).put("forcedFullCompleteMs",cold)
@@ -128,12 +196,13 @@ class TileLocalRedrawTest {
                         .put("queryStartThreadId",t.queryStartThreadId).put("hexStartThreadId",t.hexStartThreadId).put("hexEndThreadId",t.hexEndThreadId))
                 }})}
                 InstrumentationRegistry.getInstrumentation().sendStatus(0,android.os.Bundle().apply{putString("stream","TILE_LOCAL_EVIDENCE $evidence\n")})
-                withContext(Dispatchers.Main){active.forEach{it.clear()};full.forEach{it.clear()};active.clear();full.clear()}
+                jobs.clearAndJoin(active+full);active.clear();full.clear()
             }
-        }finally{
-            withContext(Dispatchers.Main){active.forEach{it.clear()};full.forEach{it.clear()}}
-            withTimeoutOrNull(5000){while(RenderResources.inFlightJobs.get()>baselineJobs)delay(20)}
-            events.close();target.recycle();reference.recycle();db.close();context.deleteDatabase(name)
+        }catch(error:Throwable){primaryFailure=error;throw error}
+        finally{
+            try{jobs.clearAndJoin(active+full)}
+            catch(cleanup:Throwable){if(primaryFailure!=null)primaryFailure.addSuppressed(cleanup)else throw cleanup}
+            finally{if(jobs.joined){events.close();target.recycle();reference.recycle();db.close();context.deleteDatabase(name)}}
         }
     }
 }
