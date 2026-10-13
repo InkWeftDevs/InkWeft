@@ -1,0 +1,23 @@
+{
+  "approved": true,
+  "plan_git": "6e6391c7de228b69453499ea106ffed7615afb29",
+  "approved_plan_sha256": "d5efd83c08b6bb6e107c397db8ca3999337693dc2af45f0615c5e198bac93077",
+  "source_spec_sha256": "0a38b7e6348c0e1be7bf2d0ce7bbb115665fbfa56d49875ac6ccab8e6851dbcd",
+  "method_plan_sha256": "797b64fcdfe9576e2c678e37a541161c0b795276ad99574dc92f81aa789d2913",
+  "original_protocol_sha256": "1065177d7809426d949c4b4b67bd639a47c3fc1943f706a77c2dfabb985e9aba",
+  "approval_utc": "2026-10-13T11:54:51Z",
+  "followup_utc": "2026-10-13T11:55:28Z",
+  "user_approval": "允许",
+  "user_followup": "不必向我申请直接往后进行即可",
+  "source_thread": "01a0f1a6-931e-713a-845e-7e62ceb3300a",
+  "scope": "One standard ubuntu-24.04 runner, <=60 minutes, nine APKs, 44 exact calls; fixed cumulative 32/38/52/55/60 minute deadlines; minimal temporary UID-only KVM ACL if needed, exact restore and double cleanup; <=20 MiB whitelisted text, retention 3 days. No paid runner, credentials expansion, security expansion, main merge or deployment. No automatic retries within this attempt.",
+  "prior_execution_git": "54a1f5cc7ac757125f8ccb9cc27f5a21b87a50c9",
+  "phase_cutoff_minutes": {
+    "setup": 32,
+    "correctness": 38,
+    "common": 52,
+    "diagnostics": 55
+  },
+  "budget_revision_sha256": "37802241b962e6c3d347b6359bac361c351ad81e63766b78c782edaa1a601f28",
+  "continuation": "Existing user follow-up authorizes ordinary fixes and necessary bounded retries; parent explicitly instructed continuation after uploaded artifact and cleanup verification. This is a new isolated once-only attempt, not a rerun or overlap; the original 6e plan remains historical and this hash-bound budget amendment supersedes only its cumulative phase allocation. Second attempt 38403076172 original archive and both cleanups verified. Same official POM single bounded fail-fast GET added; no dependency cache injection, redirects, retries, mirror, credentials, TLS downgrade or fixture change."
+}
