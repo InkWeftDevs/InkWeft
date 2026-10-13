@@ -2,10 +2,6 @@
 package org.inkweft.data
 
 import android.database.sqlite.SQLiteDatabaseCorruptException
-import android.database.sqlite.SQLiteDatabase
-import android.system.ErrnoException
-import android.system.Os
-import android.system.OsConstants
 import androidx.sqlite.db.SupportSQLiteDatabase
 import androidx.sqlite.db.SupportSQLiteOpenHelper
 import io.requery.android.database.sqlite.RequerySQLiteOpenHelperFactory
@@ -57,7 +53,6 @@ internal class PreservingOpenHelperFactory : SupportSQLiteOpenHelper.Factory {
                         // on its inode. The JVM lock prevents overlapping local file locks.
                         RandomAccessFile(File(directory, target.name + ".inkweft-open-lock"), "rw").use { lock ->
                             lock.channel.lock().use {
-                                prepareNewDatabase(target)
                                 read().also { opened = true }
                             }
                         }
@@ -68,42 +63,12 @@ internal class PreservingOpenHelperFactory : SupportSQLiteOpenHelper.Factory {
         }
     }
 
-    private fun prepareNewDatabase(target: File) {
-        // Nonempty files and recovery sidecars belong to SQLite's existing recovery
-        // path. A lone zero-byte file contains no author data and can be an interrupted
-        // exclusive creation; all cooperating openers are still behind the file lock.
-        val sidecars = listOf("-wal", "-journal", "-shm").map { File(target.path + it) }
-        if (target.length() != 0L || sidecars.any { it.exists() }) return
-        try { Os.close(Os.open(target.path, OsConstants.O_WRONLY or OsConstants.O_CREAT or OsConstants.O_EXCL or OsConstants.O_CLOEXEC,
-            OsConstants.S_IRUSR or OsConstants.S_IWUSR)) }
-        catch (failure: ErrnoException) {
-            if (failure.errno != OsConstants.EEXIST) throw failure
-            if (target.length() != 0L || sidecars.any { it.exists() }) return
-        }
-        // Requery 3.49 writes its 1024-byte header before onConfigure. The platform
-        // connection can configure an empty file before any schema/WAL writes, without
-        // SELinux-forbidden hard links or a rename that could replace another creator.
-        val options = SQLiteDatabase.OpenParams.Builder()
-            .addOpenFlags(SQLiteDatabase.NO_LOCALIZED_COLLATORS)
-            .setJournalMode("DELETE").setSynchronousMode("FULL")
-            .setErrorHandler { throw SQLiteDatabaseCorruptException("Database corruption reported; original files retained") }
-            .build()
-        SQLiteDatabase.openDatabase(target, options).use { db ->
-            db.pageSize = 4096
-            db.execSQL("PRAGMA auto_vacuum=INCREMENTAL")
-            db.beginTransaction()
-            try {
-                // Never reset another creator's version or schema. Parameters above
-                // must precede BEGIN; SQLite fixes an empty database's page format then.
-                check(db.version == 0 && db.rawQuery("SELECT COUNT(*) FROM sqlite_master", null).use { it.moveToFirst(); it.getLong(0) == 0L })
-                db.version = 0
-                check(db.pageSize == 4096L)
-                check(db.rawQuery("PRAGMA auto_vacuum", null).use { it.moveToFirst(); it.getInt(0) == 2 })
-                db.setTransactionSuccessful()
-            } finally { db.endTransaction() }
-        }
-        // On failure retain the database and every journal; SQLite handles recovery.
-    }
+    // Do not pre-initialize the shared target through another SQLite connection.
+    // File existence/size checks and O_EXCL do not exclude older processes which
+    // bypass our sidecar lock. A preflight PRAGMA could modify their committed DB
+    // before schema checks reject it. Let Requery perform ordinary SQLite creation
+    // and recovery; new DBs use its native page-size/auto-vacuum defaults. Existing
+    // DBs are never reformatted or switched to INCREMENTAL by this factory.
 
     private companion object { val openLock = Any() }
 }

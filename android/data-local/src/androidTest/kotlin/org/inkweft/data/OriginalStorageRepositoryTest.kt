@@ -15,17 +15,18 @@ import java.security.MessageDigest
 
 class OriginalStorageRepositoryTest {
     private fun id()=UUID.randomUUID().toString()
-    private fun fixture(legacyVacuum:Boolean=false,block:suspend(Context,File,NoteDatabase,NoteDatabase)->Unit)=runBlocking {
+    private fun fixture(legacyVacuum:Boolean=false,incrementalVacuum:Boolean=false,block:suspend(Context,File,NoteDatabase,NoteDatabase)->Unit)=runBlocking {
         val context=ApplicationProvider.getApplicationContext<Context>()
         val root=File(context.cacheDir,"original-store-${id()}").apply{check(mkdirs())}
-        if(legacyVacuum){
-            // Establish an actual pre-existing NONE database before Room opens a WAL pool.
+        if(legacyVacuum||incrementalVacuum){
+            // Establish the requested pre-existing format on one connection before Room's WAL pool.
+            val mode=if(incrementalVacuum)2 else 0
             val options=android.database.sqlite.SQLiteDatabase.OpenParams.Builder()
                 .addOpenFlags(android.database.sqlite.SQLiteDatabase.CREATE_IF_NECESSARY or android.database.sqlite.SQLiteDatabase.NO_LOCALIZED_COLLATORS)
                 .setJournalMode("DELETE").build()
             android.database.sqlite.SQLiteDatabase.openDatabase(File(root,"source.db"),options).use{sql->
-                sql.execSQL("PRAGMA auto_vacuum=NONE");sql.execSQL("VACUUM");sql.version=0
-                assertEquals(0,sql.rawQuery("PRAGMA auto_vacuum",null).use{it.moveToFirst();it.getInt(0)})
+                sql.execSQL("PRAGMA auto_vacuum=$mode");sql.execSQL("VACUUM");sql.version=0
+                assertEquals(mode,sql.rawQuery("PRAGMA auto_vacuum",null).use{it.moveToFirst();it.getInt(0)})
             }
         }
         val source=NoteDatabase.open(context,File(root,"source.db").absolutePath)
@@ -192,7 +193,7 @@ class OriginalStorageRepositoryTest {
         assertNull(completed.compactionDeferred);assertEquals(0L,completed.freePagesAfter)
         assertTrue(completed.databaseBytesAfter<completed.databaseBytesBefore-original.size/2)
     }
-    @Test fun laterCorruptionStillReclaimsSuccessfullyMigratedDatabaseBytes()=fixture{_,root,db,_->
+    @Test fun laterCorruptionStillReclaimsSuccessfullyMigratedDatabaseBytes()=fixture(incrementalVacuum=true){_,root,db,_->
         val sql=db.openHelper.writableDatabase;assertEquals(2L,number(db,"auto_vacuum"))
         val goodFile=File(root,"good.pdf");pdf(goodFile,4*1024*1024);val good=PdfDocumentSource.fromFile(goodFile,1)
         val badFile=File(root,"bad.pdf");pdf(badFile,1024*1024);val bad=PdfDocumentSource.fromFile(badFile,1)

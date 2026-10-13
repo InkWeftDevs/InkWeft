@@ -41,8 +41,8 @@ class BundledSqliteFactoryTest {
                 val sql = helper.writableDatabase
                 assertEquals(path.canonicalPath, File(sql.path).canonicalPath)
                 assertFalse(context.getDatabasePath(name).exists())
-                assertEquals(4096L, sql.pageSize)
-                assertEquals(2, mode(sql))
+                assertEquals(1024L, sql.pageSize)
+                assertEquals(1, mode(sql))
                 assertTrue(sql.isWriteAheadLoggingEnabled)
                 sql.execSQL("INSERT INTO bounds VALUES (1,10,20,30,40)")
                 sql.beginTransaction()
@@ -117,6 +117,52 @@ class BundledSqliteFactoryTest {
         }
     }
 
+    @Test fun existing4096IncrementalDatabaseRetainsFormatVersionAndAuthorContent() {
+        val context = ApplicationProvider.getApplicationContext<Context>()
+        val name = "bundled-existing-4096-${UUID.randomUUID()}.db"
+        val bytes = ByteArray(64 * 1024) { (it * 31 + (it ushr 8)).toByte() }
+        val callback = object : SupportSQLiteOpenHelper.Callback(7) {
+            override fun onCreate(db: SupportSQLiteDatabase) {
+                db.execSQL("CREATE TABLE authors(id INTEGER PRIMARY KEY, payload BLOB NOT NULL)")
+            }
+            override fun onUpgrade(db: SupportSQLiteDatabase, oldVersion: Int, newVersion: Int) = error("Unexpected upgrade")
+        }
+        val config = SupportSQLiteOpenHelper.Configuration.builder(context).name(name).callback(callback).build()
+        try {
+            RequerySQLiteOpenHelperFactory().create(config).use { helper ->
+                val db = helper.writableDatabase
+                // Seed the previous production format before enabling WAL; page-size
+                // changes need VACUUM on a single rollback-journal connection.
+                db.disableWriteAheadLogging()
+                assertFalse(db.isWriteAheadLoggingEnabled)
+                db.execSQL("PRAGMA page_size=4096")
+                db.execSQL("PRAGMA auto_vacuum=INCREMENTAL")
+                db.execSQL("VACUUM")
+                assertEquals(4096L, db.pageSize)
+                assertEquals(2, mode(db))
+                assertEquals(7, db.version)
+                helper.setWriteAheadLoggingEnabled(true)
+                assertTrue(db.isWriteAheadLoggingEnabled)
+                db.execSQL("INSERT INTO authors VALUES (7,?)", arrayOf<Any>(bytes))
+            }
+            PreservingOpenHelperFactory().create(config).use { helper ->
+                helper.setWriteAheadLoggingEnabled(true)
+                val db = helper.writableDatabase
+                assertEquals(4096L, db.pageSize)
+                assertEquals(2, mode(db))
+                assertEquals(7, db.version)
+                assertTrue(db.isWriteAheadLoggingEnabled)
+                db.query("SELECT id,payload FROM authors").use { cursor ->
+                    assertTrue(cursor.moveToFirst()); assertEquals(7, cursor.getInt(0))
+                    assertArrayEquals(bytes, cursor.getBlob(1)); assertFalse(cursor.moveToNext())
+                }
+            }
+        } finally {
+            context.deleteDatabase(name)
+            lockFile(context.getDatabasePath(name)).delete()
+        }
+    }
+
     @Test fun independentHelpersWaitForCompleteCreationAndKeepTheSameAuthorRows() {
         val context = ApplicationProvider.getApplicationContext<Context>()
         val name = "bundled-concurrent-${UUID.randomUUID()}.db"
@@ -137,7 +183,7 @@ class BundledSqliteFactoryTest {
             return PreservingOpenHelperFactory().create(config).use { helper ->
                 helper.setWriteAheadLoggingEnabled(true)
                 val db = helper.writableDatabase
-                assertEquals(4096L, db.pageSize); assertEquals(2, mode(db))
+                assertEquals(1024L, db.pageSize); assertEquals(1, mode(db))
                 db.query("SELECT value FROM author").use { assertTrue(it.moveToFirst()); val value = it.getString(0); assertFalse(it.moveToNext()); value }
             }
         }
@@ -174,13 +220,13 @@ class BundledSqliteFactoryTest {
         fun open() = PreservingOpenHelperFactory().create(SupportSQLiteOpenHelper.Configuration.builder(context).name(name).callback(callback).build())
             .also { it.setWriteAheadLoggingEnabled(true) }
         try {
-            // Models death after O_EXCL but before SQLite has committed its first header.
+            // Models an older creator dying before SQLite has committed its first header.
             path.parentFile!!.mkdirs(); assertTrue(path.createNewFile()); assertEquals(0L, path.length())
             open().use { helper -> assertEquals("synthetic schema interruption", runCatching { helper.writableDatabase }.exceptionOrNull()?.message) }
             assertTrue(path.exists()); assertTrue(path.length() > 0L)
             open().use { helper ->
                 val db = helper.writableDatabase
-                assertEquals(4096L, db.pageSize); assertEquals(2, mode(db)); assertEquals(1, db.version)
+                assertEquals(1024L, db.pageSize); assertEquals(1, mode(db)); assertEquals(1, db.version)
                 db.query("SELECT value FROM author").use { assertTrue(it.moveToFirst()); assertEquals("resumed author row", it.getString(0)); assertFalse(it.moveToNext()) }
             }
             assertEquals(2, attempts.get())
