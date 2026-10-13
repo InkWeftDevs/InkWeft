@@ -11,18 +11,24 @@ concurrency:
 jobs:
   paired:
     name: PR20 fixed four paired rounds
-    if: github.event.created == false && github.event.before == 'c37ba03232b1a0985e85cbaec4d349dbab945919' && github.run_attempt == 1
+    if: github.event.created == false && github.event.before == '7821bdd425a579199a60767550f2e9d1ccf808c8' && github.run_attempt == 1
     runs-on: ubuntu-24.04
     timeout-minutes: 60
-    env:
-      KVM_ONCE: ${{ runner.temp }}/pr20-kvm-paired
-      ANDROID_AVD_HOME: ${{ runner.temp }}/pr20-kvm-paired/avd
-      ANDROID_USER_HOME: ${{ runner.temp }}/pr20-kvm-paired/android-user
-      ANDROID_EMULATOR_HOME: ${{ runner.temp }}/pr20-kvm-paired/android-user
     steps:
       - name: 从真实job开始时间固定26/55/60分钟边界
         timeout-minutes: 1
         run: |
+          set -euo pipefail
+          export KVM_ONCE="$RUNNER_TEMP/pr20-kvm-paired"
+          export ANDROID_AVD_HOME="$KVM_ONCE/avd"
+          export ANDROID_USER_HOME="$KVM_ONCE/android-user"
+          export ANDROID_EMULATOR_HOME="$KVM_ONCE/android-user"
+          python3 - <<'PYENV'
+          import os
+          with open(os.environ['GITHUB_ENV'],'a') as output:
+              for key in ['KVM_ONCE','ANDROID_AVD_HOME','ANDROID_USER_HOME','ANDROID_EMULATOR_HOME']:
+                  output.write(key+'='+os.environ[key]+'\n')
+          PYENV
           mkdir -p "$KVM_ONCE/evidence"
           python3 - <<'PYCODE'
           import datetime,json,os,pathlib,urllib.request
