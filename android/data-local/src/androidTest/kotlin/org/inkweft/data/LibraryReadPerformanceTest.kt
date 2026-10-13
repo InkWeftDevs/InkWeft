@@ -8,6 +8,7 @@ import androidx.test.platform.app.InstrumentationRegistry
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import org.inkweft.core.*
+import org.json.JSONArray
 import org.json.JSONObject
 import org.junit.Assert.*
 import org.junit.Test
@@ -17,9 +18,14 @@ import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicInteger
 
 /** Also compiles unchanged at a128bb07. The optional new projection observer is discovered
- * reflectively; timing and correctness use the same fixture/API on both revisions. */
+ * reflectively; timing and correctness use the same fixture/API on both revisions.
+ * Save checkpoints are emitted outside measured save calls. Index progress is emitted
+ * after commits; logging can contribute to index wall time and concurrent scheduling. */
 class LibraryReadPerformanceTest {
     private fun id()=UUID.randomUUID().toString()
+    private fun checkpoint(marker:String,value:JSONObject){
+        InstrumentationRegistry.getInstrumentation().sendStatus(0,android.os.Bundle().apply{putString("stream","$marker $value\n")})
+    }
     @Test fun coldSearchConcurrentSavesAndShelfReadScale()=runBlocking{coroutineScope{
         val context=ApplicationProvider.getApplicationContext<Context>()
         val name="library-read-probe-${id()}.db";val db=NoteDatabase.open(context,name)
@@ -63,7 +69,7 @@ class LibraryReadPerformanceTest {
                 assertTrue(result is SaveResult.Committed);writer=(result as SaveResult.Committed).note
                 add((System.nanoTime()-start)/1e6)
             }}}
-            val first=cold.await();val coldMs=(System.nanoTime()-coldStart)/1e6;val latencies=saves.await().sorted()
+            val first=cold.await();val coldMs=(System.nanoTime()-coldStart)/1e6;val saveSamples=saves.await();val latencies=saveSamples.sorted()
             assertEquals(targetBook,first.items.single().note.id);assertEquals(targetPage,first.items.single().pageId)
             assertEquals(20_000,first.pendingIndex)
             val coldScanned=scanned.get()
@@ -82,7 +88,84 @@ class LibraryReadPerformanceTest {
             }finally{release.countDown();paused.cancelAndJoin()}
             if(headerMethod!=null)assertTrue("Independent WAL reader must not reserve the Room writer",completedWhilePaused)
             repo.scanObserver=null
-            LibraryTextIndex.build(db)
+            checkpoint("LIBRARY_DIRECT_SAVE_CHECKPOINT",JSONObject()
+                .put("coldMs",coldMs).put("coldSourceChecks",coldScanned)
+                .put("saveCount",latencies.size).put("saveSamplesMs",JSONArray(saveSamples))
+                .put("saveP50Ms",latencies[latencies.size/2])
+                .put("saveP95Ms",latencies[(latencies.size*95+99)/100-1]).put("saveMaxMs",latencies.last())
+                .put("writerCompletedDuringPausedSearch",completedWhilePaused))
+            // Additional scenario: the real observe() path builds FTS while author saves run.
+            // The paused-reader save advanced the head; refresh before issuing the next edit.
+            writer=checkNotNull(noteRepo.read(writer.id))
+            val observedAuthorStartRevision=writer.revision
+            val observeRows=AtomicInteger();val observeChecks=AtomicInteger()
+            val firstObservedBatch=CompletableDeferred<Unit>()
+            val allRowsCommitted=CompletableDeferred<Unit>()
+            val observedIndexReady=CompletableDeferred<LibrarySearchResult>()
+            val observeStart=System.nanoTime()
+            var firstObservedBatchMs=0.0;var allObservedRowsMs=0.0
+            repo.scanObserver={_,_->observeChecks.incrementAndGet()}
+            repo.indexObserver={_,count->
+                observeRows.set(count)
+                val firstBatch=!firstObservedBatch.isCompleted
+                if(firstBatch){
+                    firstObservedBatchMs=(System.nanoTime()-observeStart)/1e6
+                    firstObservedBatch.complete(Unit)
+                }
+                if(count==first.pendingIndex){
+                    allObservedRowsMs=(System.nanoTime()-observeStart)/1e6
+                    allRowsCommitted.complete(Unit)
+                }
+                if(firstBatch||count%4096==0||count==first.pendingIndex){
+                    checkpoint("INDEX_SAVE_PROGRESS",JSONObject().put("rows",count)
+                        .put("elapsedMs",(System.nanoTime()-observeStart)/1e6))
+                }
+            }
+            val observeJob=launch(Dispatchers.Main){
+                repo.observe(flowOf(request.copy(generation=2))).collect{result->
+                    assertFalse(result.failed)
+                    assertEquals(targetBook,result.items.single().note.id)
+                    assertEquals(targetPage,result.items.single().pageId)
+                    if(result.pendingIndex==0)observedIndexReady.complete(result)
+                }
+            }
+            val observeEvidence=try{
+                // Natural first committed batch: no sleeps or artificial index/writer pauses.
+                firstObservedBatch.await()
+                val rowsBeforeSaves=observeRows.get()
+                val samples=JSONArray();val durations=ArrayList<Double>()
+                withContext(Dispatchers.IO){repeat(30){i->
+                    val rowsBefore=observeRows.get();val checksBefore=observeChecks.get()
+                    val start=System.nanoTime()
+                    val result=noteRepo.save(SaveNote(id(),writer.id,writer.revision,writer.title,"Synthetic indexed edit $i"))
+                    val elapsed=(System.nanoTime()-start)/1e6
+                    val rowsAfter=observeRows.get();val checksAfter=observeChecks.get()
+                    assertTrue(result is SaveResult.Committed);writer=(result as SaveResult.Committed).note
+                    durations+=elapsed
+                    samples.put(JSONObject().put("sample",i).put("elapsedMs",elapsed)
+                        .put("indexRowsStart",rowsBefore).put("indexRowsEnd",rowsAfter)
+                        .put("sourceChecksStart",checksBefore).put("sourceChecksEnd",checksAfter))
+                }}
+                val rowsAfterSaves=observeRows.get()
+                val sorted=durations.sorted()
+                val savedSamples=JSONObject().put("indexRowsBeforeSaves",rowsBeforeSaves).put("indexRowsAfterSaves",rowsAfterSaves)
+                    .put("firstCommittedBatchMs",firstObservedBatchMs)
+                    .put("saveCount",durations.size).put("saveP50Ms",sorted[sorted.size/2])
+                    .put("saveP95Ms",sorted[(sorted.size*95+99)/100-1]).put("saveMaxMs",sorted.last())
+                    .put("saveSamplesMs",JSONArray(durations)).put("saveProgressSamples",samples)
+                    .put("sourceChecksAfterSaves",observeChecks.get())
+                checkpoint("LIBRARY_INDEX_SAVE_CHECKPOINT",savedSamples)
+                allRowsCommitted.await()
+                observedIndexReady.await()
+                val readyMs=(System.nanoTime()-observeStart)/1e6
+                assertEquals(first.pendingIndex,observeRows.get())
+                savedSamples.put("indexRowsFinal",observeRows.get())
+                    .put("allIndexRowsCommittedMs",allObservedRowsMs).put("searchIndexReadyMs",readyMs)
+                    .put("sourceChecks",observeChecks.get())
+            }finally{
+                withContext(NonCancellable){observeJob.cancelAndJoin()}
+                repo.indexObserver=null;repo.scanObserver=null
+            }
             val warm=buildList{repeat(5){val start=System.nanoTime();val result=repo.read(request)
                 add((System.nanoTime()-start)/1e6);assertEquals(targetPage,result.items.single().pageId);assertEquals(0,result.pendingIndex)}}.sorted()
             val observed=HashMap<String,Pair<Int,Int>>()
@@ -96,11 +179,25 @@ class LibraryReadPerformanceTest {
                 assertTrue(observed.getValue("previews").second<=61*600)
                 assertEquals(body,noteRepo.read(targetBook)!!.text)
             }
-            val evidence=JSONObject().put("books",500).put("pages",20000).put("noteBodyChars",body.length)
+            val persistedAuthor=checkNotNull(noteRepo.read(writer.id))
+            assertEquals(observedAuthorStartRevision+30L,persistedAuthor.revision)
+            assertEquals("Synthetic indexed edit 29",persistedAuthor.text)
+            assertEquals(writer,persistedAuthor)
+            // After timing, pin connection-local PRAGMAs to the primary writer without setting them.
+            val writerSqlite=db.withTransaction{
+                val settings=JSONObject();val sql=db.openHelper.writableDatabase
+                for(setting in listOf("page_size","auto_vacuum","journal_mode","synchronous")){
+                    sql.query("PRAGMA $setting").use{it.moveToFirst();settings.put(setting,if(setting=="journal_mode")it.getString(0) else it.getLong(0))}
+                }
+                settings
+            }
+            val evidence=JSONObject().put("books",500).put("pages",20000).put("noteBodyChars",body.length).put("writerSqlite",writerSqlite)
                 .put("headerReadMs",headerMs).put("headerReturnedBodyChars",notes.sumOf{it.text.length})
                 .put("coldMs",coldMs).put("coldSourceChecks",coldScanned).put("warmMedianMs",warm[2])
                 .put("saveCount",latencies.size).put("saveP50Ms",latencies[latencies.size/2])
                 .put("saveP95Ms",latencies[(latencies.size*95+99)/100-1]).put("saveMaxMs",latencies.last())
+                .put("saveSamplesMs",JSONArray(saveSamples))
+                .put("observeIndexConcurrentSaves",observeEvidence)
                 .put("writerCompletedDuringPausedSearch",completedWhilePaused)
                 .put("shelfReturnedPreviewChars",shelf.items.sumOf{it.note.text.length})
                 .put("shelfDirectoryBodyChars",shelf.active.sumOf{it.text.length})

@@ -15,6 +15,9 @@ import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
+import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicInteger
+import java.util.concurrent.atomic.AtomicReference
 
 class LibrarySearchRepositoryTest {
     @Test fun classificationUsesTheReadSnapshotAfterCancellableInitialIndexing()=fixture{db->coroutineScope{
@@ -44,6 +47,9 @@ class LibrarySearchRepositoryTest {
         assertTrue(repo.read(LibrarySearchRequest(1,notes,emptyMap(),"不存在")).items.isEmpty())
     }
     private fun id()=UUID.randomUUID().toString()
+    private fun evidence(value:String){androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().sendStatus(0,android.os.Bundle().apply{
+        putString("stream","LIBRARY_SEARCH_STAGE $value\n")
+    })}
     private fun fixture(block:suspend(NoteDatabase)->Unit)=runBlocking{
         val context=ApplicationProvider.getApplicationContext<Context>();val name="library-search-${id()}.db"
         val db=NoteDatabase.open(context,name)
@@ -88,6 +94,41 @@ class LibrarySearchRepositoryTest {
         assertTrue(repo.read(request.copy(query="",filter="unfiled")).items.none{it.note.id==page.id})
     }
 
+    @Test fun pausedSourceReadCancelsOnRapidInputThenClearAndCategoryStayFresh()=fixture{db->coroutineScope{
+        val workspace=WorkspaceRepository(db);val pages=NotebookPages(db)
+        val first=workspace.create("合成一",false,PaperStyle.BLANK)
+        val second=workspace.create("合成二",false,PaperStyle.BLANK)
+        assertTrue(workspace.organize(second.id,0,"","目标分类",false,false))
+        assertTrue(pages.saveSearchText(first.id,0,"old source"))
+        assertTrue(pages.saveSearchText(second.id,0,"target-only"))
+        val repo=LibrarySearchRepository(db);val entered=CompletableDeferred<Unit>();val release=CountDownLatch(1)
+        val paused=AtomicBoolean(false)
+        repo.scanObserver={query,_->
+            check(Thread.currentThread()!=Looper.getMainLooper().thread)
+            if(query=="old"&&paused.compareAndSet(false,true)){
+                entered.complete(Unit);check(release.await(10,TimeUnit.SECONDS))
+            }
+        }
+        val requests=MutableStateFlow(LibrarySearchRequest(1,listOf(first,second),emptyMap(),"old"))
+        val results=Channel<LibrarySearchResult>(Channel.UNLIMITED);val published=mutableListOf<Long>()
+        val observer=launch(Dispatchers.Main){repo.observe(requests).collect{published+=it.generation;results.send(it)}}
+        try{
+            withTimeout(5_000){entered.await()}
+            withTimeout(1_000){withContext(Dispatchers.Main){
+                for((i,term) in listOf("t","tar","target-only").withIndex())requests.value=requests.value.copy(generation=i+2L,query=term)
+                yield();yield()
+            }}
+            release.countDown()
+            suspend fun result(generation:Long)=withTimeout(5_000){var value=results.receive();while(value.generation!=generation)value=results.receive();value}
+            val latest=result(4);assertFalse(latest.failed);assertEquals(second.id,latest.items.single().pageId)
+            requests.value=requests.value.copy(generation=5,query="",type="board")
+            val cleared=result(5);assertFalse(cleared.failed);assertTrue(cleared.items.isEmpty())
+            requests.value=requests.value.copy(generation=6,type="all",filter="tag:目标分类")
+            val category=result(6);assertFalse(category.failed);assertEquals(second.id,category.items.single().note.id)
+            withContext(Dispatchers.Main){assertFalse("The paused old query must never publish",1L in published)}
+        }finally{release.countDown();observer.cancelAndJoin();results.close()}
+    }}
+
     @Test fun twentyThousandPageRapidInputClearAndCategoryCancelOldGenerationOffMain()=fixture{db->coroutineScope{
         val notes=ArrayList<Note>();var expectedPage=""
         db.withTransaction{
@@ -106,14 +147,25 @@ class LibrarySearchRepositoryTest {
                 }
             }
         }
+        evidence("fixtureReady books=500 pages=20000")
         val repo=LibrarySearchRepository(db);val entered=CompletableDeferred<Unit>();val release=CountDownLatch(1)
         val scanned=ConcurrentHashMap<String,Int>()
+        val indexed=AtomicInteger(0)
         val indexingStarted=System.nanoTime()
         val firstStart=System.nanoTime();val first=repo.read(LibrarySearchRequest(0,notes,emptyMap(),"target-only"))
         val firstMs=(System.nanoTime()-firstStart)/1_000_000.0
         assertEquals(expectedPage,first.items.single().pageId);assertEquals(20_000,first.pendingIndex)
+        evidence("foregroundComplete elapsedMs=$firstMs pending=${first.pendingIndex}")
+        val observeStart=System.nanoTime()
+        val indexStep=AtomicReference("not-started")
+        repo.indexFirstBatchStepObserver={step->
+            indexStep.set(step)
+            evidence("indexFirstBatch step=$step observeElapsedMs=${(System.nanoTime()-observeStart)/1_000_000}")
+        }
         repo.indexObserver={query,count->
             check(Thread.currentThread()!=Looper.getMainLooper().thread){"Search scanned text on the main thread"}
+            indexed.set(count)
+            if(count<=128)evidence("indexBatch rows=$count observeElapsedMs=${(System.nanoTime()-observeStart)/1_000_000}")
             if(count==128){entered.complete(Unit);check(release.await(30,TimeUnit.SECONDS))}
             if(query=="target-only"&&count%4096==0)androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().sendStatus(0,android.os.Bundle().apply{
                 putString("stream","FTS_PROGRESS rows=$count elapsedMs=${(System.nanoTime()-indexingStarted)/1_000_000}\n")
@@ -124,8 +176,11 @@ class LibrarySearchRepositoryTest {
         val results=Channel<LibrarySearchResult>(Channel.UNLIMITED)
         val observer=launch(Dispatchers.Main){repo.observe(requests).collect{results.send(it)}}
         try{
-            withTimeout(10_000){entered.await()}
-            // The actual scan is paused on IO. Main remains runnable and newer requests cancel it.
+            try{withTimeout(10_000){entered.await()}}catch(failure:Throwable){
+                runCatching{evidence("indexGateFailed requiredRows=128 completedRows=${indexed.get()} lastIndexStep=${indexStep.get()} observeElapsedMs=${(System.nanoTime()-observeStart)/1_000_000} slowScanRows=${scanned["slow"]?:0} observerActive=${observer.isActive} failure=${failure.javaClass.simpleName}")}
+                throw failure
+            }
+            // Background indexing is paused after 128 rows; request reads remain on IO.
             withTimeout(1_000){withContext(Dispatchers.Main){
                 for((i,term) in listOf("t","tar","target-only").withIndex())requests.value=requests.value.copy(generation=i+2L,query=term)
             }}

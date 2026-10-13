@@ -23,6 +23,7 @@ data class LibrarySearchResult(val generation:Long=0,val items:List<LibraryShelf
 class LibrarySearchRepository(private val db:NoteDatabase) {
     internal var scanObserver:((String,Int)->Unit)?=null
     internal var indexObserver:((String,Int)->Unit)?=null
+    internal var indexFirstBatchStepObserver:((String)->Unit)?=null
     // Counts rows/UTF-16 characters crossing the cursor boundary, excluding draft inputs.
     internal var readObserver:((String,Int,Int)->Unit)?=null
     internal var queryPlanObserver:((List<String>)->Unit)?=null
@@ -32,7 +33,7 @@ class LibrarySearchRepository(private val db:NoteDatabase) {
         var previous:LibrarySearchRequest?=null
         val completed=MutableStateFlow(0);var indexed=0
         launch(Dispatchers.IO){db.invalidationTracker.createFlow("page_search_text","study_cards").collectLatest{
-            LibraryTextIndex.build(db){indexed+=it;indexObserver?.invoke(previous?.query.orEmpty(),indexed)}
+            LibraryTextIndex.build(db,onFirstBatchStep=indexFirstBatchStepObserver){indexed+=it;indexObserver?.invoke(previous?.query.orEmpty(),indexed)}
             completed.value++
         }}
         combine(requests,db.invalidationTracker.createFlow(
