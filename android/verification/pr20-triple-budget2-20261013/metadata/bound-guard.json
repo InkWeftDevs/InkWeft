@@ -1,0 +1,10 @@
+{
+  "status": "BOUND_GUARD_STATIC_PASS",
+  "preparation_commit": "2ea991e51b5fed103012d3ee2e5bd94cc1ec6f0d",
+  "workflow_sha256": "a62e2c8b56aad76f47ec5e06e4edd7a1cf2655ba517335c2716f2cee0ebedd85",
+  "active_file_is_exact_template_except_before": true,
+  "zero_runs_before_activation": true,
+  "single_standard_job_hard_minutes": 60,
+  "trigger": "push-only; exact branch/path/before; created=false; attempt=1",
+  "tests": "syntax and guard only; no native execution"
+}
