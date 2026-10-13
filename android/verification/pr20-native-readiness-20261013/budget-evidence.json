@@ -1,0 +1,56 @@
+{
+  "source_run": 38379928087,
+  "setup_seconds_includes_both_builds": 978.7945694923401,
+  "build_B_seconds": 514.6073269844055,
+  "build_C0_seconds": 379.3379817008972,
+  "three_build_setup_extrapolation_seconds": 1358.1325511932373,
+  "old_public_16_calls_seconds": 369.0869953632355,
+  "proposed_public_24_calls_extrapolation_seconds": 543.2835290431976,
+  "method_samples": {
+    "local-append": [
+      4.486210584640503,
+      4.223646402359009,
+      4.0738890171051025,
+      4.174630403518677,
+      4.152327537536621,
+      4.073278188705444,
+      4.073944568634033,
+      4.224123954772949
+    ],
+    "library": [
+      39.68519043922424,
+      43.99045538902283,
+      44.79004502296448,
+      38.88307523727417,
+      44.592562675476074,
+      39.63594675064087,
+      39.18425750732422,
+      44.843411684036255
+    ],
+    "history": [
+      2.9700825214385986,
+      5.624486207962036,
+      5.7249369621276855,
+      2.9202253818511963,
+      5.675574541091919,
+      2.920698881149292,
+      2.921447515487671,
+      5.725515365600586
+    ]
+  },
+  "new_methods_native_timings": "UNKNOWN_NOT_RUN",
+  "cumulative_deadlines_minutes": {
+    "setup": 26,
+    "correctness": 32,
+    "public_comparisons": 48,
+    "candidate_diagnostics": 55,
+    "job_hard_limit": 60
+  },
+  "assumptions": [
+    "C1 setup and common-method time temporarily estimated from C0; no performance claim.",
+    "Allow another 30-60 seconds for 12 public comparison reinstall/process-check visits; two additional installations are inside the correctness/diagnostic phase budgets. New methods have no measured native bound.",
+    "Phases advance as soon as complete. Deadlines remain fixed; do not wait for minute boundaries.",
+    "Setup time includes serial builds; no double counting or assumed overlap."
+  ],
+  "new_runs_authorized": false
+}
