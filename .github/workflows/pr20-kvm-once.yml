@@ -1,0 +1,338 @@
+name: PR20 一次性 KVM 原门槛验证
+on:
+  push:
+    branches: [codex/kvm-pr20-7949011-once]
+    paths: [.github/workflows/pr20-kvm-once.yml]
+permissions:
+  contents: read
+concurrency:
+  group: pr20-kvm-7949011-once
+  cancel-in-progress: false
+jobs:
+  verify:
+    # Only the authorized initial branch-creation push can execute this job.
+    if: github.event.created == true && github.run_attempt == 1
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    env:
+      INKWEFT_HEAD_SHA: 7949011ca2b84492f6438d275a09d28faef3b472
+    steps:
+      - name: 固定55分钟工作预算并初始化最小证据目录
+        run: |
+          echo "KVM_WORK_DEADLINE=$(( $(date +%s) + 55*60 ))" >> "$GITHUB_ENV"
+          echo "KVM_ONCE=$RUNNER_TEMP/pr20-kvm-once" >> "$GITHUB_ENV"
+          echo "ANDROID_AVD_HOME=$RUNNER_TEMP/pr20-kvm-once/avd" >> "$GITHUB_ENV"
+          echo "ANDROID_USER_HOME=$RUNNER_TEMP/pr20-kvm-once/android-user" >> "$GITHUB_ENV"
+          echo "ANDROID_EMULATOR_HOME=$RUNNER_TEMP/pr20-kvm-once/android-user" >> "$GITHUB_ENV"
+          mkdir -p "$RUNNER_TEMP/pr20-kvm-once/evidence"
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        timeout-minutes: 5
+        with:
+          ref: 7949011ca2b84492f6438d275a09d28faef3b472
+          persist-credentials: false
+          path: source
+      - uses: actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3
+        timeout-minutes: 3
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: 准备可审查的执行与双重清理脚本（不改被测源码）
+        timeout-minutes: 1
+        shell: bash
+        run: |
+          cat > "$KVM_ONCE/cleanup.py" <<'PY'
+          import json, os, pathlib, signal, stat, subprocess, sys, time
+          root=pathlib.Path(os.environ['KVM_ONCE']); out=root/'evidence'
+          receipt={'emulator':'NOT_STARTED','command_groups':'NOT_STARTED','acl':'NOT_TOUCHED','errors':[]}
+          def identity(path):
+              s=os.lstat(path)
+              if not stat.S_ISCHR(s.st_mode): raise RuntimeError('KVM is not a character node')
+              return [s.st_dev,s.st_ino,s.st_rdev]
+          def process(pid):
+              p=pathlib.Path(f'/proc/{pid}')
+              if not p.exists(): return None
+              fields=(p/'stat').read_text().rsplit(')',1)[1].split()
+              if fields[0]=='Z': return None
+              return {'pid':pid,'uid':p.stat().st_uid,'start':fields[19]}
+          try:
+              if (root/'emulator.json').exists():
+                  saved=json.loads((root/'emulator.json').read_text()); current=process(saved['pid'])
+                  if current is not None:
+                      if current!=saved: raise RuntimeError('Emulator PID identity changed; no signal sent')
+                      os.killpg(saved['pid'],signal.SIGTERM)
+                      for _ in range(100):
+                          if process(saved['pid']) is None: break
+                          time.sleep(.1)
+                      if process(saved['pid']) is not None:
+                          os.killpg(saved['pid'],signal.SIGKILL)
+                          time.sleep(1)
+                      if process(saved['pid']) is not None: raise RuntimeError('Owned emulator still running')
+                  receipt['emulator']='STOPPED_CONFIRMED'
+          except Exception as e: receipt['errors'].append(str(e))
+          try:
+              if (root/'command-groups.json').exists():
+                  groups=json.loads((root/'command-groups.json').read_text())
+                  if (root/'emulator.json').exists(): groups.append(json.loads((root/'emulator.json').read_text()))
+                  def members(group):
+                      leader=process(group['pid'])
+                      if leader is not None and leader!=group: raise RuntimeError('Command group leader identity changed')
+                      found=[]
+                      for p in pathlib.Path('/proc').iterdir():
+                          if not p.name.isdecimal(): continue
+                          try:
+                              f=(p/'stat').read_text().rsplit(')',1)[1].split()
+                              if int(f[2])==group['pid'] and f[0]!='Z':
+                                  if p.stat().st_uid!=group['uid'] or int(f[19])<int(group['start']):
+                                      raise RuntimeError('Command group identity mismatch')
+                                  found.append(int(p.name))
+                          except (FileNotFoundError,ProcessLookupError): pass
+                      return found
+                  for group in groups:
+                      if members(group):
+                          os.killpg(group['pid'],signal.SIGTERM)
+                          for _ in range(20):
+                              if not members(group): break
+                              time.sleep(.1)
+                          if members(group): os.killpg(group['pid'],signal.SIGKILL)
+                  time.sleep(.2)
+                  if any(members(g) for g in groups): raise RuntimeError('Owned command group remains active')
+                  receipt['command_groups']='STOPPED_CONFIRMED'
+          except Exception as e:
+              receipt['command_groups']='STOP_UNCONFIRMED'
+              if (root/'emulator.json').exists(): receipt['emulator']='STOP_UNCONFIRMED'
+              receipt['errors'].append(str(e))
+          try:
+              if (out/'kvm-before.acl').exists():
+                  if identity('/dev/kvm')!=json.loads((out/'kvm-identity.json').read_text()):
+                      raise RuntimeError('KVM node identity changed; no restore attempted')
+                  if (root/'acl-may-have-changed').exists():
+                      subprocess.run(['sudo','-n','setfacl','--restore='+str(out/'kvm-before.acl')],check=True,timeout=15)
+                  after=subprocess.check_output(['getfacl','-pn','/dev/kvm'],timeout=15)
+                  (out/('kvm-after-'+sys.argv[1]+'.acl')).write_bytes(after)
+                  if after!=(out/'kvm-before.acl').read_bytes(): raise RuntimeError('ACL exact comparison failed')
+                  receipt['acl']='RESTORED_EXACT' if (root/'acl-may-have-changed').exists() else 'UNCHANGED_EXACT'
+          except Exception as e:
+              receipt['acl']='RESTORATION_UNCONFIRMED';receipt['errors'].append(str(e))
+          (out/('cleanup-'+sys.argv[1]+'.json')).write_text(json.dumps(receipt,indent=2))
+          print(json.dumps(receipt));sys.exit(bool(receipt['errors']))
+          PY
+          cat > "$KVM_ONCE/run.py" <<'PY'
+          import hashlib, json, os, pathlib, re, shutil, signal, stat, subprocess, time, xml.etree.ElementTree as ET, zipfile
+          root=pathlib.Path(os.environ['KVM_ONCE']); out=root/'evidence'
+          source=pathlib.Path(os.environ['GITHUB_WORKSPACE'])/'source'
+          sdk=pathlib.Path(os.environ['ANDROID_HOME']); deadline=int(os.environ['KVM_WORK_DEADLINE'])
+          os.environ['PATH']=str(sdk/'platform-tools')+':'+str(sdk/'cmdline-tools/latest/bin')+':'+os.environ['PATH']
+          methods=[
+            ('search','org.inkweft.data.LibrarySearchRepositoryTest#twentyThousandPageRapidInputClearAndCategoryCancelOldGenerationOffMain','org.inkweft.data.test'),
+            ('backup','org.inkweft.data.LibraryBackupRepositoryTest#cancellingWrittenSnapshotRemovesPartialAndPreservesAuthorLibrary','org.inkweft.data.test'),
+            ('dense','org.inkweft.app.StreamedInkRasterTest#completeFrameIncludesGeometryBeyondTheEditorWindowAndReleasesItsWorker','org.inkweft.app.a0.test'),
+            ('pan','org.inkweft.app.TileLocalRedrawTest#integralPanReusesInteriorTilesAndZoomPreviewNeverCompletesCapture','org.inkweft.app.a0.test'),
+            ('local-append','org.inkweft.app.TileLocalRedrawTest#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions','org.inkweft.app.a0.test')]
+          report={'source_sha':os.environ['INKWEFT_HEAD_SHA'],'workflow_sha':os.environ['GITHUB_SHA'],
+                  'run_id':os.environ['GITHUB_RUN_ID'],'run_attempt':os.environ['GITHUB_RUN_ATTEMPT'],
+                  'status':'SETUP','phases':[], 'methods':[{'name':n,'selection':s,'status':'NOT_RUN'} for n,s,_ in methods],
+                  'limitation':'One candidate execution per method, no paired baseline, no physical-device performance claim.'}
+          def save(): (out/'summary.json').write_text(json.dumps(report,indent=2))
+          def budget(limit=1800):
+              left=deadline-time.time()
+              if left<1: raise RuntimeError('55-minute work deadline reached; reserve cleanup/upload')
+              return min(limit,left)
+          command_groups=[]
+          def run(argv,limit=1800,check=True,**kwargs):
+              argv=[str(a) for a in argv]; seconds=budget(limit); data=kwargs.pop('input',None)
+              if data is not None: kwargs['stdin']=subprocess.PIPE
+              with subprocess.Popen(argv,start_new_session=True,**kwargs) as p:
+                  fields=pathlib.Path(f'/proc/{p.pid}/stat').read_text().rsplit(')',1)[1].split()
+                  command_groups.append({'pid':p.pid,'uid':os.getuid(),'start':fields[19]})
+                  temporary=root/'command-groups.tmp';temporary.write_text(json.dumps(command_groups));temporary.replace(root/'command-groups.json')
+                  try: stdout,stderr=p.communicate(input=data,timeout=seconds)
+                  except subprocess.TimeoutExpired:
+                      os.killpg(p.pid,signal.SIGKILL);p.wait();raise
+                  result=subprocess.CompletedProcess(argv,p.returncode,stdout,stderr)
+                  if check: result.check_returncode()
+                  return result
+          def capture(argv,limit=30): return run(argv,limit,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,text=True).stdout.strip()
+          def phase(name,argv,limit=1800,cwd=None,stdin=None):
+              entry={'name':name,'started_epoch':time.time(),'status':'RUNNING'};report['phases'].append(entry);save()
+              try:
+                  with (out/(name+'.log')).open('w') as log:
+                      result=run(argv,limit,cwd=cwd,input=stdin,stdout=log,stderr=subprocess.STDOUT,text=True,check=False)
+                  entry['exit_code']=result.returncode
+                  if result.returncode: raise RuntimeError(name+' failed; see whitelisted log')
+                  entry['status']='PASS'
+              except Exception:
+                  entry['status']='FAIL';raise
+              finally: entry['seconds']=time.time()-entry['started_epoch'];save()
+          adb=['adb','-s','emulator-5554']
+          def shell(*args): return capture(adb+['shell',*args])
+          def environment():
+              return {'sdk':shell('getprop','ro.build.version.sdk'),'abi':shell('getprop','ro.product.cpu.abi'),
+                      'fingerprint':shell('getprop','ro.build.fingerprint'),'qemu':shell('getprop','ro.kernel.qemu'),
+                      'hw_timeout_multiplier':shell('getprop','ro.hw_timeout_multiplier'),
+                      'size':shell('wm','size'),'density':shell('wm','density'),
+                      'font_scale':shell('settings','get','system','font_scale'),
+                      'animations':{k:shell('settings','get','global',k) for k in ['window_animation_scale','transition_animation_scale','animator_duration_scale']}}
+          save()
+          try:
+              assert capture(['git','-C',source,'rev-parse','HEAD'])==report['source_sha']
+              assert not capture(['git','-C',source,'status','--porcelain'])
+              assert shutil.which('getfacl') and shutil.which('setfacl')
+              node=os.lstat('/dev/kvm'); assert stat.S_ISCHR(node.st_mode)
+              (out/'kvm-identity.json').write_text(json.dumps([node.st_dev,node.st_ino,node.st_rdev]))
+              # Preserve exact getfacl bytes, including its trailing blank line.
+              (out/'kvm-before.acl').write_bytes(run(['getfacl','-pn','/dev/kvm'],stdout=subprocess.PIPE).stdout)
+              if not (os.access('/dev/kvm',os.R_OK) and os.access('/dev/kvm',os.W_OK)):
+                  (root/'acl-may-have-changed').touch()
+                  run(['sudo','-n','setfacl','--no-mask','-m',f'u:{os.getuid()}:rw','/dev/kvm'],15)
+              assert os.access('/dev/kvm',os.R_OK) and os.access('/dev/kvm',os.W_OK), 'Current mask prevents rw; stop without widening it'
+              (out/'kvm-granted.acl').write_bytes(run(['getfacl','-pn','/dev/kvm'],stdout=subprocess.PIPE).stdout)
+              host={'uid':os.getuid(),'kernel':os.uname().release,'cpu_count':os.cpu_count(),
+                    'cpu_model':next((x.split(':',1)[1].strip() for x in pathlib.Path('/proc/cpuinfo').read_text().splitlines() if x.startswith('model name')),None),
+                    'memory_kib':pathlib.Path('/proc/meminfo').read_text().splitlines()[0],
+                    'java':capture(['java','-version']),'source_sha':report['source_sha'],'workflow_sha':report['workflow_sha']}
+              (out/'host.json').write_text(json.dumps(host,indent=2))
+              phase('sdk',['sdkmanager','platforms;android-36','build-tools;36.0.0','platform-tools','emulator','system-images;android-35;aosp_atd;x86_64'],900)
+              phase('acceleration',[sdk/'emulator/emulator','-accel-check'],30)
+              phase('build',['./gradlew','--no-daemon','--max-workers=1','--no-build-cache',
+                '-Pkotlin.compiler.execution.strategy=in-process','-Dorg.gradle.jvmargs=-Xmx3g -XX:MaxMetaspaceSize=1g -Dfile.encoding=UTF-8',
+                ':app:assembleDebug',':app:assembleDebugAndroidTest',':data-local:assembleDebugAndroidTest'],2400,cwd=source/'android')
+              assert not capture(['git','-C',source,'status','--porcelain']), 'Build changed tracked source or generated unignored files'
+              apks=[source/'android'/p for p in ['app/build/outputs/apk/debug/app-debug.apk',
+                    'app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk',
+                    'data-local/build/outputs/apk/androidTest/debug/data-local-debug-androidTest.apk']]
+              hashes=[]
+              for apk in apks:
+                  hashes.append({'path':str(apk.relative_to(source)),'bytes':apk.stat().st_size,'sha256':hashlib.file_digest(apk.open('rb'),'sha256').hexdigest()})
+              with zipfile.ZipFile(apks[0]) as z:
+                  hashes[0]['build_identity']=json.loads(z.read('assets/inkweft-build-identity.json'))
+                  assert hashes[0]['build_identity']['source_commit']==report['source_sha']
+                  native=[]
+                  for abi in ['arm64-v8a','armeabi-v7a','x86','x86_64']:
+                      names=[n for n in z.namelist() if n.startswith('lib/'+abi+'/') and 'mupdf' in n and n.endswith('.so')]
+                      assert names, 'Missing real MuPDF native ABI '+abi
+                      for n in names:
+                          payload=z.read(n);assert payload.startswith(b'\x7fELF') and len(payload)>100000
+                          native.append({'path':n,'bytes':len(payload),'sha256':hashlib.sha256(payload).hexdigest()})
+                  hashes[0]['mupdf_native']=native
+              (out/'apk-hashes.json').write_text(json.dumps(hashes,indent=2))
+              for apk in apks: run([sdk/'build-tools/36.0.0/apksigner','verify',apk],60,stdout=subprocess.DEVNULL)
+              phase('avd',['avdmanager','create','avd','--name','pr20-kvm-once','--package','system-images;android-35;aosp_atd;x86_64','--device','pixel_2'],120,stdin='no\n')
+              command=[str(sdk/'emulator/emulator'),'-avd','pr20-kvm-once','-port','5554','-no-window','-no-snapshot','-noaudio','-no-boot-anim','-gpu','swiftshader','-accel','on','-cores','2','-memory','2048']
+              with (out/'emulator.log').open('w') as log:
+                  emulator=subprocess.Popen(command,stdout=log,stderr=subprocess.STDOUT,start_new_session=True)
+              fields=pathlib.Path(f'/proc/{emulator.pid}/stat').read_text().rsplit(')',1)[1].split()
+              (root/'emulator.json').write_text(json.dumps({'pid':emulator.pid,'uid':os.getuid(),'start':fields[19]}))
+              boot_deadline=min(deadline,time.time()+240)
+              while time.time()<boot_deadline:
+                  if emulator.poll() is not None: raise RuntimeError('Emulator exited before boot')
+                  result=run(adb+['shell','getprop','sys.boot_completed'],10,check=False,stdout=subprocess.PIPE,stderr=subprocess.DEVNULL,text=True)
+                  if result.stdout.strip()=='1': break
+                  time.sleep(2)
+              else: raise RuntimeError('Emulator boot timeout')
+              assert shell('getprop','ro.build.version.sdk')=='35' and shell('getprop','ro.kernel.qemu')=='1'
+              for args in [('wm','size','1920x1200'),('wm','density','240'),('settings','put','system','font_scale','1.0'),
+                           ('settings','put','global','window_animation_scale','1.0'),('settings','put','global','transition_animation_scale','1.0'),
+                           ('settings','delete','global','animator_duration_scale'),('svc','power','stayon','true'),('input','keyevent','KEYCODE_WAKEUP'),('wm','dismiss-keyguard')]: shell(*args)
+              env=environment();env['emulator_command']=command;env['emulator_version']=capture([sdk/'emulator/emulator','-version'])
+              env['image_source_properties']=(sdk/'system-images/android-35/aosp_atd/x86_64/source.properties').read_text()
+              (out/'device-before.json').write_text(json.dumps(env,indent=2))
+              phase('install',adb+['install','-t',apks[0]],180)
+              phase('install-app-test',adb+['install','-t',apks[1]],120)
+              phase('install-room-test',adb+['install','-t',apks[2]],120)
+              for entry,(_,selection,package) in zip(report['methods'],methods):
+                  if budget()<120: raise RuntimeError('Insufficient remaining work budget; no next method started')
+                  entry.update(status='RUNNING',started_epoch=time.time());save()
+                  logpath=out/(entry['name']+'-instrumentation.log')
+                  argv=adb+['shell','am','instrument','-w','-r','-e','class',selection,'-e','tilePanDiagnostics','true','-e','rasterMetadataDiagnostics','true',package+'/androidx.test.runner.AndroidJUnitRunner']
+                  with logpath.open('w') as log:
+                      result=run(argv,1800,check=False,stdout=log,stderr=subprocess.STDOUT,text=True)
+                  raw=logpath.read_text(errors='replace');entry['seconds']=time.time()-entry['started_epoch']
+                  ok=re.findall(r'^OK \((\d+) tests?\)\s*$',raw,re.M)
+                  failure=re.findall(r'Tests run: (\d+),\s+Failures: (\d+)',raw)
+                  codes=[int(x) for x in re.findall(r'^INSTRUMENTATION_STATUS_CODE: (-?\d+)',raw,re.M)]
+                  entry.update(adb_exit=result.returncode,junit_ok_counts=ok,junit_failures=failure,status_codes=codes,
+                    log_sha256=hashlib.sha256(logpath.read_bytes()).hexdigest())
+                  entry['status']='PASS' if (result.returncode==0 and ok==['1'] and not failure and 1 in codes and not any(c<0 for c in codes)
+                    and re.search(r'^INSTRUMENTATION_CODE: -1\s*$',raw,re.M) and 'FAILURES!!!' not in raw and 'INSTRUMENTATION_FAILED' not in raw) else 'FAIL'
+                  suite=ET.Element('testsuite',name=selection,tests='1',failures=str(int(entry['status']!='PASS')),time=str(entry['seconds']))
+                  case=ET.SubElement(suite,'testcase',classname=selection.split('#')[0],name=selection.split('#')[1],time=str(entry['seconds']))
+                  if entry['status']!='PASS': ET.SubElement(case,'failure',message='AndroidJUnitRunner raw result did not pass').text=raw
+                  ET.ElementTree(suite).write(out/(entry['name']+'-junit.xml'),encoding='utf-8',xml_declaration=True)
+                  entry['processes_after']={}
+                  for pkg in ['org.inkweft.app.a0','org.inkweft.app.a0.test','org.inkweft.data.test']:
+                      p=run(adb+['shell','pidof',pkg],10,check=False,stdout=subprocess.PIPE,stderr=subprocess.PIPE,text=True)
+                      entry['processes_after'][pkg]={'exit':p.returncode,'stdout':p.stdout.strip(),'stderr':p.stderr.strip()}
+                  save();print(json.dumps(entry),flush=True)
+                  if any(p['exit']!=1 or p['stdout'] or p['stderr'] for p in entry['processes_after'].values()):
+                      raise RuntimeError('Instrumentation process cleanup unconfirmed; remaining methods NOT_RUN')
+                  if result.returncode!=0 or not (ok==['1'] or failure and failure[-1][0]=='1'):
+                      raise RuntimeError('Instrumentation infrastructure/result incomplete; remaining methods NOT_RUN')
+              (out/'device-after.json').write_text(json.dumps(environment(),indent=2))
+              report['status']='PASS' if all(x['status']=='PASS' for x in report['methods']) else 'TEST_FAILURE'
+          except Exception as e:
+              report['status']='BLOCKED';report['error']=type(e).__name__+': '+str(e)
+              for entry in report['methods']:
+                  if entry['status']=='RUNNING': entry['status']='INCOMPLETE';entry['seconds']=time.time()-entry['started_epoch']
+          finally: save();print(json.dumps(report),flush=True)
+          raise SystemExit(0 if report['status']=='PASS' else 1)
+          PY
+      - name: 原方法各一次；退出时关闭模拟器并恢复ACL
+        shell: bash
+        run: |
+          set -euo pipefail
+          cleanup() {
+            code=$?
+            trap - EXIT INT TERM
+            python3 "$KVM_ONCE/cleanup.py" trap || code=1
+            exit "$code"
+          }
+          trap cleanup EXIT
+          trap 'exit 130' INT
+          trap 'exit 143' TERM
+          remaining=$((KVM_WORK_DEADLINE - $(date +%s)))
+          test "$remaining" -gt 0
+          timeout --signal=TERM --kill-after=20 "${remaining}s" python3 "$KVM_ONCE/run.py"
+      - name: always再次核验关闭与完整ACL恢复
+        if: always()
+        timeout-minutes: 1
+        run: |
+          if test -f "$KVM_ONCE/cleanup.py"; then
+            python3 "$KVM_ONCE/cleanup.py" always
+          else
+            echo '{"emulator":"NOT_STARTED","acl":"NOT_TOUCHED","reason":"setup did not reach execution"}' > "$KVM_ONCE/evidence/cleanup-always.json"
+          fi
+      - name: 只打包白名单文本且合计不超过10MiB
+        if: always()
+        run: |
+          python3 - <<'PY'
+          import hashlib,json,os,pathlib
+          root=pathlib.Path(os.environ['KVM_ONCE']);out=root/'upload';out.mkdir(exist_ok=True)
+          names=['summary.json','host.json','apk-hashes.json','device-before.json','device-after.json',
+                 'kvm-identity.json','kvm-before.acl','kvm-granted.acl','kvm-after-trap.acl','kvm-after-always.acl',
+                 'cleanup-trap.json','cleanup-always.json']
+          names += [x+'.log' for x in ['sdk','acceleration','build','avd','emulator','install','install-app-test','install-room-test']]
+          names += [n+s for n in ['search','backup','dense','pan','local-append'] for s in ['-instrumentation.log','-junit.xml']]
+          manifest=[]
+          for name in names:
+              p=root/'evidence'/name
+              if not p.is_file() or p.is_symlink(): continue
+              data=p.read_bytes(); original=len(data)
+              # 31 allowlisted files * 256 KiB remains below 10 MiB, plus manifest.
+              data.decode('utf-8') # Refuse binary artifacts before truncating.
+              if len(data)>256*1024:
+                  data=data[:128*1024].decode('utf-8',errors='ignore').encode()+b'\n[TRUNCATED: original length recorded in manifest]\n'+data[-128*1024:].decode('utf-8',errors='ignore').encode()
+              (out/name).write_bytes(data)
+              manifest.append({'name':name,'original_bytes':original,'uploaded_bytes':len(data),
+                               'original_sha256':hashlib.sha256(p.read_bytes()).hexdigest(),'uploaded_sha256':hashlib.sha256(data).hexdigest()})
+          (out/'manifest.json').write_text(json.dumps(manifest,indent=2))
+          total=sum(p.stat().st_size for p in out.iterdir());assert total<=10*1024*1024
+          print(json.dumps({'files':len(manifest)+1,'bytes':total,'limit_bytes':10*1024*1024,'retention_days':3}))
+          PY
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        timeout-minutes: 2
+        with:
+          name: pr20-kvm-once-${{ github.run_id }}
+          retention-days: 3
+          if-no-files-found: error
+          path: ${{ runner.temp }}/pr20-kvm-once/upload/*
