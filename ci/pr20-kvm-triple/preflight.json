@@ -1,0 +1,410 @@
+{
+  "status": "PASS",
+  "scope": "Finalized candidate2 offline static/synthetic controller checks only; no network, Android, Gradle, emulator, adb or permission actions.",
+  "checked_utc": "2026-10-13T16:29:46.274946+00:00",
+  "checker_sha256": "ef12f25423e408a5320f266c2db33d76449b31c9d743f6e5df7224b725fc3931",
+  "synthetic_work_directory": "/workspace/scratch/pr20-candidate2-final-check-vwbd42co",
+  "input_sha256": {
+    "/workspace/InkWeft-native-candidate2/ci/pr20-kvm-triple/run.py": "05bdb1535d759131960aa21309a95a30b8385bdfbf65d5259031891003a3f2b2",
+    "/workspace/InkWeft-native-candidate2/ci/pr20-kvm-triple/cleanup.py": "49e4337f483de46179466ae1c0fcf9ef18772e6a9388cce5cb6826a60d634576",
+    "/workspace/InkWeft-native-candidate2/ci/pr20-kvm-triple/package.py": "ce6316671465c8d8d2f90ef9dbc71e1b4c83f88afe66a6c7d01b9aa2abeaafa9",
+    "/workspace/InkWeft-native-candidate2/ci/pr20-kvm-triple/authorization.json": "77dd8463602d4c69df60d3ec1b72986fd0b154c5c42e3aa472b4ef71d5f1763f",
+    "/workspace/InkWeft-native-candidate2/ci/pr20-kvm-triple/budget-revision.json": "27e09d771034e4bf8d47527d668bf5a08263f746b815fddf6eedb00b4bcc6fce",
+    "/workspace/InkWeft-native-candidate2/ci/pr20-kvm-triple/workflow.proposed.yml": "3df0aed9e5d623c07d053483e22fdad2383338cae8f6d1c1b2913e744cc53919",
+    "/workspace/InkWeft-native-candidate2/android/verification/pr20-candidate2-readiness-20261013/PLAN.md": "ff2459abb0b8582d20e570c5afb0c4e9a0df5216bed8bc5191e4d008b5c4dacd",
+    "/workspace/InkWeft-native-candidate2/android/verification/pr20-candidate2-readiness-20261013/method-plan.json": "808dd0cf1fece09185c59ae94ce41f51fdbc26dcde5ed196df7e803860f49765",
+    "/workspace/InkWeft-native-candidate2/android/verification/pr20-candidate2-readiness-20261013/source-spec.json": "6e9c422d8be60728967226de674b750cb7b3633485956d537dd0c2dac21a6dfb",
+    "/workspace/InkWeft-native-candidate2/android/verification/pr20-candidate2-readiness-20261013/original-protocol.json": "1065177d7809426d949c4b4b67bd639a47c3fc1943f706a77c2dfabb985e9aba",
+    "/workspace/InkWeft-native-candidate2/android/verification/pr20-kvm-paired-20261013/evidence/visit-01-C-history-instrumentation.log": "d603bbe09b953abb7a8fb353d6d51c6939e46f7b65f88d4c7b6aec3e9fb07e6b",
+    "/workspace/InkWeft-native-candidate2/android/verification/pr20-kvm-paired-20261013/evidence/visit-01-C-library-instrumentation.log": "9d1e329c5083975febec36a286bda2b69eca57ba78c24256cc99ea99c5639584",
+    "/workspace/InkWeft-native-candidate2/android/verification/pr20-kvm-paired-20261013/evidence/visit-01-C-local-append-instrumentation.log": "901eec7b2048468e62de012b6456e37da4d77dc8aaaf0757a8e2466f3ee35c0b",
+    "/workspace/InkWeft-native-candidate2/android/verification/pr20-kvm-paired-20261013/evidence/visit-02-B-history-instrumentation.log": "ef896f8f6377368d5ecd2700b9313bafa388c0ae12c26b9e06c3676819f41554",
+    "/workspace/InkWeft-native-candidate2/android/verification/pr20-kvm-paired-20261013/evidence/visit-02-B-library-instrumentation.log": "c4fda95d54c7297962db22724ecc9eaf0f5aef2ef401951b97b8b27021449021",
+    "/workspace/InkWeft-native-candidate2/android/verification/pr20-kvm-paired-20261013/evidence/visit-02-B-local-append-instrumentation.log": "d8d4980a053f52748208dc2f5a00187ccad19d96e4df310d05b5ae3f202c005f",
+    "/workspace/InkWeft-native-candidate2/android/verification/pr20-kvm-paired-20261013/evidence/visit-03-B-history-instrumentation.log": "b6e1b019e151781114049d9218d750413915b9deaa9768749120859739fcb312",
+    "/workspace/InkWeft-native-candidate2/android/verification/pr20-kvm-paired-20261013/evidence/visit-03-B-library-instrumentation.log": "a08b652f6fc8495611eaf8ccd8777ee396fb8b427a4181b9eec1c3f51e42e434",
+    "/workspace/InkWeft-native-candidate2/android/verification/pr20-kvm-paired-20261013/evidence/visit-03-B-local-append-instrumentation.log": "f61f939b62a2f8a38c7ea65639f7236787c7f44f2372877e14cd661db298f635",
+    "/workspace/InkWeft-native-candidate2/android/verification/pr20-kvm-paired-20261013/evidence/visit-04-C-history-instrumentation.log": "484e14d753daa05e02b507209b4b101c5cc251488f034952226b2e1887962dc3",
+    "/workspace/InkWeft-native-candidate2/android/verification/pr20-kvm-paired-20261013/evidence/visit-04-C-library-instrumentation.log": "7af4fac2d84050d2e81f685f8efcedfbaf06a59230bb15c31d7c387c31840b5e",
+    "/workspace/InkWeft-native-candidate2/android/verification/pr20-kvm-paired-20261013/evidence/visit-04-C-local-append-instrumentation.log": "6be3b3625a524e3b39ae0f6810d3f88d7cc25435a1cb631104527b4b51d426be",
+    "/workspace/InkWeft-native-candidate2/android/verification/pr20-kvm-paired-20261013/evidence/visit-05-B-history-instrumentation.log": "e34e146177b197a018fe38b3dab67838e7093a6fc5e69e562b9773fef6c33852",
+    "/workspace/InkWeft-native-candidate2/android/verification/pr20-kvm-paired-20261013/evidence/visit-05-B-library-instrumentation.log": "0ad74c84458a62e4e8a72ee519940c2eef8180519c747db7c796eb9112e0733b",
+    "/workspace/InkWeft-native-candidate2/android/verification/pr20-kvm-paired-20261013/evidence/visit-05-B-local-append-instrumentation.log": "b1ebbd5ff52dadaab67f5966ea5e720f3dad276000361e1c5c1f786a3e98626b",
+    "/workspace/InkWeft-native-candidate2/android/verification/pr20-kvm-paired-20261013/evidence/visit-06-C-history-instrumentation.log": "b2a59e17ceb5b30a3576ee5b383c01b5741f59bb5cde66efa91f323bb02efc53",
+    "/workspace/InkWeft-native-candidate2/android/verification/pr20-kvm-paired-20261013/evidence/visit-06-C-library-instrumentation.log": "2aeeaa27c850e0b9cafd8342369eddf2077f3bd9adf06aab2c3da2fce341a243",
+    "/workspace/InkWeft-native-candidate2/android/verification/pr20-kvm-paired-20261013/evidence/visit-06-C-local-append-instrumentation.log": "d98df5aba73bfd207b418e56d4664dd049e4687bbd3aa0ecffd113b8eedb8be1",
+    "/workspace/InkWeft-native-candidate2/android/verification/pr20-kvm-paired-20261013/evidence/visit-07-C-history-instrumentation.log": "d90b90c93aa386683ada14687d51b97766195acb923339e44e8f3c331d13d597",
+    "/workspace/InkWeft-native-candidate2/android/verification/pr20-kvm-paired-20261013/evidence/visit-07-C-library-instrumentation.log": "58707af26a89e4c32252242e93369129de167fd3c692e0c2e14151ae73ce1890",
+    "/workspace/InkWeft-native-candidate2/android/verification/pr20-kvm-paired-20261013/evidence/visit-07-C-local-append-instrumentation.log": "c45bf3fc283eae2e10cedb6918bce0b8bceca82c20ea54226624e356f64e20fa",
+    "/workspace/InkWeft-native-candidate2/android/verification/pr20-kvm-paired-20261013/evidence/visit-08-B-history-instrumentation.log": "594e142d86e1978fc82049dfeef8a1150e8485aead5b6267d119388fa1a8a6b0",
+    "/workspace/InkWeft-native-candidate2/android/verification/pr20-kvm-paired-20261013/evidence/visit-08-B-library-instrumentation.log": "1ec0aaead512ba8acbdd0f47caf073d1fa60da67d4618b66b69d5787f65e5605",
+    "/workspace/InkWeft-native-candidate2/android/verification/pr20-kvm-paired-20261013/evidence/visit-08-B-local-append-instrumentation.log": "a1c19862311859e5eeafb385b9c90f5e3e93cc0053270c484661bf3cbce5df35",
+    "/workspace/scratch/pr20-triple-run-38396134768/evidence/summary.json": "3512207b5d6117db0eb144e51cb5dcc0aa03b7d836f64f2b9c3bb38932c76854",
+    "/workspace/scratch/pr20-triple-run-38396134768/evidence/clock.json": "4e1157bb7760d113a08561f17a798d10858039cc51dfe7b39bdff5a3027be94a",
+    "/workspace/scratch/pr20-triple-run-38396134768/evidence/cleanup-trap.json": "1f5147063ce4119cc1819849e1fa25d5c27e347f76f74379f631486a1d448ade",
+    "/workspace/scratch/pr20-triple-run-38396134768/evidence/cleanup-always.json": "1f5147063ce4119cc1819849e1fa25d5c27e347f76f74379f631486a1d448ade"
+  },
+  "checks": [
+    {
+      "check": "actual process-exit function: 19 strict state/deadline paths",
+      "status": "PASS",
+      "detail": {
+        "cases": [
+          {
+            "case": "absent",
+            "outcome": "NATURAL_EXIT",
+            "exception": null,
+            "am_kill_calls": 0,
+            "synthetic_seconds": 0.03,
+            "observations": 1
+          },
+          {
+            "case": "natural-helper-exit",
+            "outcome": "NATURAL_EXIT",
+            "exception": null,
+            "am_kill_calls": 0,
+            "synthetic_seconds": 0.42,
+            "observations": 4
+          },
+          {
+            "case": "background-helper-exit",
+            "outcome": "AUXILIARY_AM_KILL_CONFIRMED",
+            "exception": null,
+            "am_kill_calls": 1,
+            "synthetic_seconds": 3.06,
+            "observations": 25
+          },
+          {
+            "case": "background-refused",
+            "outcome": "UNCONFIRMED",
+            "exception": "AssertionError",
+            "am_kill_calls": 1,
+            "synthetic_seconds": 4.51,
+            "observations": 36
+          },
+          {
+            "case": "raw-junit-fail",
+            "outcome": "UNCONFIRMED",
+            "exception": "AssertionError",
+            "am_kill_calls": 0,
+            "synthetic_seconds": 2.76,
+            "observations": 22
+          },
+          {
+            "case": "adb-fail",
+            "outcome": "UNCONFIRMED",
+            "exception": "AssertionError",
+            "am_kill_calls": 0,
+            "synthetic_seconds": 2.76,
+            "observations": 22
+          },
+          {
+            "case": "app-active",
+            "outcome": "UNCONFIRMED",
+            "exception": "AssertionError",
+            "am_kill_calls": 0,
+            "synthetic_seconds": 2.76,
+            "observations": 22
+          },
+          {
+            "case": "data-active",
+            "outcome": "UNCONFIRMED",
+            "exception": "AssertionError",
+            "am_kill_calls": 0,
+            "synthetic_seconds": 2.76,
+            "observations": 22
+          },
+          {
+            "case": "wrong-phase",
+            "outcome": "UNCONFIRMED",
+            "exception": "AssertionError",
+            "am_kill_calls": 0,
+            "synthetic_seconds": 2.76,
+            "observations": 22
+          },
+          {
+            "case": "wrong-identity",
+            "outcome": "UNCONFIRMED",
+            "exception": "AssertionError",
+            "am_kill_calls": 0,
+            "synthetic_seconds": 2.76,
+            "observations": 22
+          },
+          {
+            "case": "wrong-selection",
+            "outcome": "UNCONFIRMED",
+            "exception": "AssertionError",
+            "am_kill_calls": 0,
+            "synthetic_seconds": 2.76,
+            "observations": 22
+          },
+          {
+            "case": "wrong-runner",
+            "outcome": "UNCONFIRMED",
+            "exception": "AssertionError",
+            "am_kill_calls": 0,
+            "synthetic_seconds": 2.76,
+            "observations": 22
+          },
+          {
+            "case": "invalid-pid",
+            "outcome": "UNCONFIRMED",
+            "exception": "AssertionError",
+            "am_kill_calls": 0,
+            "synthetic_seconds": 0.02,
+            "observations": 1
+          },
+          {
+            "case": "stderr",
+            "outcome": "UNCONFIRMED",
+            "exception": "AssertionError",
+            "am_kill_calls": 0,
+            "synthetic_seconds": 0.02,
+            "observations": 1
+          },
+          {
+            "case": "bad-exit",
+            "outcome": "UNCONFIRMED",
+            "exception": "AssertionError",
+            "am_kill_calls": 0,
+            "synthetic_seconds": 0.02,
+            "observations": 1
+          },
+          {
+            "case": "kill-error",
+            "outcome": "UNCONFIRMED",
+            "exception": "AssertionError",
+            "am_kill_calls": 1,
+            "synthetic_seconds": 2.77,
+            "observations": 22
+          },
+          {
+            "case": "kill-stderr",
+            "outcome": "UNCONFIRMED",
+            "exception": "AssertionError",
+            "am_kill_calls": 1,
+            "synthetic_seconds": 2.77,
+            "observations": 22
+          },
+          {
+            "case": "phase-expiry",
+            "outcome": "UNCONFIRMED",
+            "exception": "Abort",
+            "am_kill_calls": 0,
+            "synthetic_seconds": 1.0,
+            "observations": 9
+          },
+          {
+            "case": "slow-probe",
+            "outcome": "UNCONFIRMED",
+            "exception": "Abort",
+            "am_kill_calls": 0,
+            "synthetic_seconds": 1,
+            "observations": 1
+          }
+        ],
+        "actual_adb_calls": 0,
+        "count_changes_explicitly_allowlisted": true,
+        "raw_JUnit_and_historical_host_status_unchanged": true
+      }
+    },
+    {
+      "check": "single official POM gate on success/redirect/refusal/timeout/TLS/hash/size/deadline",
+      "status": "PASS",
+      "detail": {
+        "cases": [
+          {
+            "case": "valid",
+            "receipt_status": "PASS",
+            "single_call": true
+          },
+          {
+            "case": "redirect",
+            "receipt_status": "FAIL",
+            "single_call": true
+          },
+          {
+            "case": "forbidden",
+            "receipt_status": "FAIL",
+            "single_call": true
+          },
+          {
+            "case": "timeout",
+            "receipt_status": "FAIL",
+            "single_call": true
+          },
+          {
+            "case": "tls_failure",
+            "receipt_status": "FAIL",
+            "single_call": true
+          },
+          {
+            "case": "bad_hash",
+            "receipt_status": "FAIL",
+            "single_call": true
+          },
+          {
+            "case": "bad_size",
+            "receipt_status": "FAIL",
+            "single_call": true
+          },
+          {
+            "case": "outer_deadline",
+            "receipt_status": "FAIL",
+            "single_call": true
+          }
+        ],
+        "setup_main_count_and_reviewed_process_method_changes_only": true,
+        "cleanup_bytes_unchanged": true,
+        "actual_network_calls": 0
+      }
+    },
+    {
+      "check": "controller AST and frozen 57-method plan",
+      "status": "PASS",
+      "detail": {
+        "modules": 3,
+        "methods": 57,
+        "install_groups": 14,
+        "native_execution": false
+      }
+    },
+    {
+      "check": "actual raw_result: 24 historical logs, invalid variants and markers",
+      "status": "PASS",
+      "detail": {
+        "original_raw_logs": 24,
+        "invalid_variants_rejected": 11,
+        "required_markers": [
+          "HISTORY_DELETE_WRITER_CORRECTNESS",
+          "HISTORY_DELETION_EXPOSURE_TRIAL",
+          "HISTORY_DELETION_EXPOSURE_SUMMARY",
+          "LIBRARY_STAGE_DIAGNOSTICS"
+        ],
+        "malformed_marker_preserved": true,
+        "incomplete_not_promoted": true
+      }
+    },
+    {
+      "check": "actual method: preserve raw PASS vs host failure and budget abort",
+      "status": "PASS",
+      "detail": [
+        {
+          "case": "complete-malformed-marker",
+          "status": "FAIL",
+          "raw_junit_status": "PASS"
+        },
+        {
+          "case": "budget-truncated-marker",
+          "status": "INCOMPLETE",
+          "raw_junit_status": "INCOMPLETE"
+        }
+      ]
+    },
+    {
+      "check": "actual controller/workflow clock, exports, authorization and boundaries",
+      "status": "PASS",
+      "detail": {
+        "derived_controller_minutes": {
+          "setup": 32.0,
+          "correctness": 38.0,
+          "common": 52.0,
+          "diagnostics": 55.0
+        },
+        "workflow_clock_and_actual_exports_match": true,
+        "authorization_hashes_match": true,
+        "four_phase_boundaries_and_global_55min": true
+      }
+    },
+    {
+      "check": "actionlint, bash syntax, embedded Python and per-step deadline selection",
+      "status": "PASS",
+      "detail": {
+        "actionlint": "1.7.12",
+        "bash_syntax_blocks": 12,
+        "embedded_python_blocks": 2,
+        "bounded_controller_calls": [
+          "setup",
+          "build B",
+          "build C0",
+          "build C1",
+          "emulator",
+          "methods correctness",
+          "methods common",
+          "methods diagnostics"
+        ],
+        "launch_guard_bound": false,
+        "launch_note": "Static/synthetic PASS does not authorize or launch a workflow."
+      }
+    },
+    {
+      "check": "fresh actual package execution on immutable timeout copy and synthetic states",
+      "status": "PASS",
+      "detail": {
+        "actual_package_sha256": "ce6316671465c8d8d2f90ef9dbc71e1b4c83f88afe66a6c7d01b9aa2abeaafa9",
+        "fresh_synthetic_invocations": 12,
+        "cases": [
+          {
+            "case": "actual-raw-timeout",
+            "status": "INCOMPLETE_OUTER_TIMEOUT_OR_INTERRUPTION",
+            "raw_original_preserved": true
+          },
+          {
+            "case": "all-state-layers",
+            "preserved_PASS_FAIL_NOT_RUN_junit_and_times": true
+          },
+          {
+            "case": "boundary-PREPARING",
+            "status": "INCOMPLETE_EXECUTION_NOT_FINISHED"
+          },
+          {
+            "case": "boundary-SOURCES_FROZEN",
+            "status": "INCOMPLETE_EXECUTION_NOT_FINISHED"
+          },
+          {
+            "case": "boundary-MEASURING",
+            "status": "INCOMPLETE_EXECUTION_NOT_FINISHED"
+          },
+          {
+            "case": "complete57-both",
+            "status": "EXECUTION_COMPLETE_ANALYSIS_PENDING"
+          },
+          {
+            "case": "complete57-missing-always",
+            "status": "CLEANUP_UNCONFIRMED"
+          },
+          {
+            "case": "complete57-bad-always",
+            "status": "CLEANUP_UNCONFIRMED"
+          },
+          {
+            "case": "existing-failure",
+            "original_failure_preserved": true
+          },
+          {
+            "case": "whitelist",
+            "synthetic_non_whitelist_excluded": true
+          },
+          {
+            "case": "credential-pattern",
+            "refused": true
+          },
+          {
+            "case": "oversize",
+            "refused_without_truncation": true
+          }
+        ],
+        "execution_manifest_input": "synthetic-placeholder-final-manifest-still-required",
+        "prior_PASS_receipts_reused_as_test_results": false
+      }
+    },
+    {
+      "check": "read-only input continuity",
+      "status": "PASS",
+      "detail": {
+        "immutable_read_inputs": 38,
+        "all_matched": true
+      }
+    }
+  ]
+}
