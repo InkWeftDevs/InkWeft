@@ -1,0 +1,43 @@
+{
+  "scope": "Static/controller synthetic checks only. No Android, KVM or native performance execution.",
+  "checked_utc": "2026-10-13T12:15:36.832316+00:00",
+  "checks": [
+    {
+      "check": "all three Python modules AST",
+      "status": "PASS"
+    },
+    {
+      "check": "parse 24 immutable prior raw JUnit logs with custom progress status0",
+      "status": "PASS",
+      "count": 24
+    },
+    {
+      "check": "reject five invalid JUnit variants; preserve incomplete JSON; capture four new markers",
+      "status": "PASS"
+    },
+    {
+      "check": "four absolute deadline boundaries, synthetic clock only",
+      "status": "PASS"
+    },
+    {
+      "check": "actionlint1.7.12, all Shell blocks bash-n, two embedded Python blocks",
+      "status": "PASS",
+      "context_reference": "https://docs.github.com/en/actions/reference/workflows-and-actions/contexts#context-availability"
+    },
+    {
+      "case": "complete-public-text",
+      "status": "PASS",
+      "exit": 0
+    },
+    {
+      "case": "oversize",
+      "status": "PASS",
+      "exit": 1
+    },
+    {
+      "case": "credential-pattern",
+      "status": "PASS",
+      "exit": 1
+    }
+  ]
+}
