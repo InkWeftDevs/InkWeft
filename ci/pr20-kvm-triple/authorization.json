@@ -1,0 +1,47 @@
+{
+  "approved": true,
+  "plan_git": "6c72fd8b20228cc324fd835efa3f505f1f179997",
+  "approved_plan_sha256": "ff2459abb0b8582d20e570c5afb0c4e9a0df5216bed8bc5191e4d008b5c4dacd",
+  "source_spec_sha256": "6e9c422d8be60728967226de674b750cb7b3633485956d537dd0c2dac21a6dfb",
+  "method_plan_sha256": "808dd0cf1fece09185c59ae94ce41f51fdbc26dcde5ed196df7e803860f49765",
+  "original_protocol_sha256": "1065177d7809426d949c4b4b67bd639a47c3fc1943f706a77c2dfabb985e9aba",
+  "approval_utc": "2026-10-13T11:54:51Z",
+  "followup_utc": "2026-10-13T11:55:28Z",
+  "user_approval": "允许",
+  "user_followup": "不必向我申请直接往后进行即可",
+  "source_thread": "01a0f1a6-931e-713a-845e-7e62ceb3300a",
+  "scope": "One standard ubuntu-24.04 runner, <=60 minutes, nine APKs, 57 exact calls (30 correctness, 24 unchanged common, 3 unchanged diagnostics); cumulative 38/41/53/55 minute deadlines from the immutable earlier conservative PR server anchor; 60 minute actual job hard timeout; minimal temporary UID-only KVM ACL if needed, exact restore and double cleanup; <=20 MiB whitelisted text, retention3days. No paid runner, credentials/security expansion, main merge or deployment. No automatic retries within this attempt.",
+  "prior_execution_git": "9907a8f96fe0d20061f0a7deba6a69d4416ced50",
+  "phase_cutoff_minutes": {
+    "setup": 38,
+    "correctness": 41,
+    "common": 53,
+    "diagnostics": 55
+  },
+  "budget_revision_sha256": "0de35f7063e25c9c75daa7f4a1719eb525d40d2bdbc311c380133669dcfd582a",
+  "continuation": "Explicit user continuation authorizes the documented budget-only repair after run38433834125 stopped during C1 build under the old setup32 cap. The immutable readiness PLAN stays historical: this hash-bound budget amendment replaces only cumulative phase offsets with38/41/53/55, preserving actual job60, work55, all57 methods, all9 real APKs, all3 frozen sources, fixtures, thresholds, internal timeouts, --no-build-cache, single worker, cleanup and the method17-only helper exception. No same-configuration blind retry, credentials/permission expansion, API clock retry or denied artifact download. The next necessary PR20 response supplies one fresh immutable conservative anchor for this new attempt; actual job start remains null until externally verified.",
+  "clock_contract_sha256": "27c0402923b91c024485bba9b9c9a8d93f6a87f2fff6c408f3f7c1de46e61939",
+  "server_receipt_sha256": "81b628032f60fc90b6b29881189123304e0b7666efa7cda5b76d55fcee051bc7",
+  "budget_anchor_epoch": 1791913339,
+  "clock_status": "FROZEN",
+  "phase_budget_override": {
+    "kind": "EXPLICIT_USER_AUTHORIZED_PHASE_BUDGET_OVERRIDE",
+    "historical_plan_sha256": "ff2459abb0b8582d20e570c5afb0c4e9a0df5216bed8bc5191e4d008b5c4dacd",
+    "historical_cutoffs_minutes": [
+      32,
+      38,
+      52,
+      55,
+      60
+    ],
+    "replacement_cutoffs_minutes": [
+      38,
+      41,
+      53,
+      55,
+      60
+    ],
+    "terminal_report_git": "9c9e490ee4e579946a744cb1d0555643812b91c7",
+    "user_authorization_quote_as_relayed": "请利用官方日志能证明的退出和清理事实继续合理修复预算/构建安排…保持每轮60分钟总上限、原始样本及正确性门禁，可根据已完成第四轮的实测测试阶段时长重新合理分配预算或评估可信构建缓存…不要盲目同配置重跑。"
+  }
+}
