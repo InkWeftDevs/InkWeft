@@ -56,6 +56,38 @@ class HistoryCollectionTest {
     @Test fun sameRoomWriterAddingRootAfterFirstBatchDefersRemainingCandidates()=newRootBetweenBatches(false)
     @Test fun separateRoomWriterAddingRootAfterFirstBatchDefersRemainingCandidates()=newRootBetweenBatches(true)
 
+    @Test fun overlappingRootSetsAcrossFullAndPartialBatchesRetainEveryVersion()=fixture{db,_,book,source->
+        val card=UUID.randomUUID().toString()
+        db.withTransaction{
+            db.study().addCard(StudyCardRow(card,book,2,"跨批引用",""))
+            for((revision,range) in listOf(1L to (1L..129L),2L to (128L..257L))){
+                db.study().revision(StudyCardRevisionRow(card,revision,"跨批引用","",null))
+                db.sourceVersions().insert(StudyCardSourceSetRow(card,revision,
+                    StudySourceRefs.encode(range.map{StudySourceVersionRef(source,it)}),true))
+            }
+        }
+        val report=HistoryStorage(db).collectDetached()
+        assertFalse(report.collectionDeferred);assertEquals(1023L,report.detachedSources)
+        assertEquals((1L..257L).toList()+1281L,db.sourceVersions().all().map{it.revision})
+    }
+
+    @Test fun malformedTransformAfterAFullRootBatchAbortsBeforeAnyDeletion()=fixture{db,_,book,source->
+        val card=UUID.randomUUID().toString()
+        db.withTransaction{
+            db.study().addCard(StudyCardRow(card,book,1,"损坏引用",""))
+            db.study().revision(StudyCardRevisionRow(card,1,"损坏引用","",null))
+            db.sourceVersions().insert(StudyCardSourceSetRow(card,1,
+                StudySourceRefs.encode((1L..129L).map{StudySourceVersionRef(source,it)}),true))
+            // Transform payloads are decoded after all card source sets, so one complete
+            // root batch has been inserted before this deliberately damaged payload.
+            db.cardTransforms().insert(CardTransformOperationRow(UUID.randomUUID().toString(),book,
+                "a".repeat(64),ByteArray(4),"b".repeat(64)))
+        }
+        try{HistoryStorage(db).collectDetached();fail("malformed historical root accepted")}catch(_:IllegalArgumentException){}
+        assertEquals(1281,db.sourceVersions().all().size)
+        assertNotNull(db.sourceVersions().get(source,130))
+    }
+
     private fun newRootBetweenBatches(separate:Boolean)=fixture{db,name,book,source->coroutineScope{
         val other=if(separate)NoteDatabase.open(context,name)else db
         // Open the second helper before the collection snapshot.

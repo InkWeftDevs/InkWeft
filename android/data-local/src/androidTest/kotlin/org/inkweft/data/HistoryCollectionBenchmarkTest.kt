@@ -8,6 +8,7 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.platform.app.InstrumentationRegistry
 import kotlinx.coroutines.*
 import org.inkweft.core.*
+import org.json.JSONArray
 import org.json.JSONObject
 import org.junit.Assert.*
 import org.junit.Test
@@ -92,8 +93,17 @@ class HistoryCollectionBenchmarkTest {
                 fun JSONObject.timings(prefix:String,values:List<Double>):JSONObject {
                     val sorted=values.sorted()
                     return put(prefix+"P50Ms",sorted[14]).put(prefix+"P95Ms",sorted[28]).put(prefix+"MaxMs",sorted.last())
+                        .put(prefix+"SamplesMs",JSONArray(values))
                 }
-                val evidence=JSONObject().put("baseline",baseline).put("historicalRoots",roots).put("detachedSources",garbage)
+                // After timing, pin connection-local PRAGMAs to the primary writer without setting them.
+                val writerSqlite=db.withTransaction{
+                    val settings=JSONObject();val sql=db.openHelper.writableDatabase
+                    for(setting in listOf("page_size","auto_vacuum","journal_mode","synchronous")){
+                        sql.query("PRAGMA $setting").use{it.moveToFirst();settings.put(setting,if(setting=="journal_mode")it.getString(0) else it.getLong(0))}
+                    }
+                    settings
+                }
+                val evidence=JSONObject().put("baseline",baseline).put("historicalRoots",roots).put("detachedSources",garbage).put("writerSqlite",writerSqlite)
                     .put("collectionRootScans",scans.get()).put("collectionMs",collectionMs)
                     .put("pausedConcurrentRootScans",concurrentScans.get()).put("pausedScanSaves",saves.size)
                     .put("liveConcurrentRootScans",liveScans.get()).put("liveCollectionAndSavesMs",liveMs)

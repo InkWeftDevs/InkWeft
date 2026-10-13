@@ -97,9 +97,21 @@ class HistoryStorage(private val db:NoteDatabase,private val phase:(String)->Uni
             // Derived roots contain only identities; source geometry is never decoded here.
             sql.execSQL("CREATE TEMP TABLE history_source_roots (sourceId TEXT NOT NULL,revision INTEGER NOT NULL,PRIMARY KEY(sourceId,revision))")
             try {
+                // Decode every reference as before, but cross into SQLite once per 128
+                // identities. The private TEMP primary key deduplicates roots across all
+                // history formats; at most 256 bound values are buffered at a time.
+                val pending=ArrayList<Any>(256)
+                fun flushRoots(){
+                    if(pending.isEmpty())return
+                    active.ensureActive()
+                    val values=List(pending.size/2){"(?,?)"}.joinToString(",")
+                    sql.execSQL("INSERT OR IGNORE INTO history_source_roots(sourceId,revision) VALUES $values",pending.toTypedArray())
+                    pending.clear()
+                }
                 fun retain(refs:List<StudySourceVersionRef>){refs.forEach{ref->
                     active.ensureActive()
-                    sql.execSQL("INSERT INTO history_source_roots SELECT ?,? WHERE NOT EXISTS(SELECT 1 FROM history_source_roots WHERE sourceId=? AND revision=?)",arrayOf<Any>(ref.sourceId,ref.revision,ref.sourceId,ref.revision))
+                    pending.add(ref.sourceId);pending.add(ref.revision)
+                    if(pending.size==256)flushRoots()
                 }}
                 sql.query("SELECT sourceRefs FROM study_card_source_sets").use{c->while(c.moveToNext()){active.ensureActive();retain(StudySourceRefs.decode(c.getString(0)))}}
                 sql.query("SELECT length(payload),payload FROM card_transform_operations").use{c->while(c.moveToNext()){
@@ -109,6 +121,7 @@ class HistoryStorage(private val db:NoteDatabase,private val phase:(String)->Uni
                 sql.query("SELECT length(payload),payload FROM recall_question_revisions").use{c->while(c.moveToNext()){
                     active.ensureActive();require(c.getLong(0)<=RecallLimits.MAX_SPEC_BYTES);retain(RecallCodec.spec(c.getBlob(1)).sourceRefs)
                 }}
+                flushRoots()
                 phase("after-roots")
                 absent("SELECT r.sourceId FROM history_source_roots r LEFT JOIN study_source_revisions s ON s.sourceId=r.sourceId AND s.revision=r.revision WHERE s.sourceId IS NULL")
                 absent("SELECT r.commandId FROM command_receipts r LEFT JOIN note_revisions v ON v.noteId=r.noteId AND v.revision=r.committedRevision WHERE v.noteId IS NULL")
