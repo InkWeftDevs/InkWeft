@@ -1,5 +1,5 @@
 {
-  "status": "DRAFT_METHOD_PLAN_SOURCE_COMMIT_PENDING_NOT_RUN",
+  "status": "FROZEN_METHOD_PLAN_NOT_RUN",
   "instrumentation_calls": 57,
   "expected_junit_methods": 57,
   "correctness_methods": 30,

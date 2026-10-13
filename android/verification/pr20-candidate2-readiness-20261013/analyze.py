@@ -18,7 +18,7 @@ SEEDS = (4101, 4102, 4103, 4104)
 IDENTITIES = ('B', 'C0', 'C1')
 COMPARISONS = (('B', 'C0', 'order-unbalanced ancillary'),
                ('B', 'C1', 'primary total effect'), ('C0', 'C1', 'primary current change'))
-PLAN_SHA = 'bdca5a5477893500150a2ed58115e363f053876573cba46c2b59b56b94d3e96b'
+PLAN_SHA = '808dd0cf1fece09185c59ae94ce41f51fdbc26dcde5ed196df7e803860f49765'
 PROTOCOL_SHA = '1065177d7809426d949c4b4b67bd639a47c3fc1943f706a77c2dfabb985e9aba'
 SOURCE_SPEC_SHA = '6e9c422d8be60728967226de674b750cb7b3633485956d537dd0c2dac21a6dfb'
 VERSION_ALIASES = {'B': 'controlled_baseline', 'C0': 'previous_candidate', 'C1': 'new_candidate'}
