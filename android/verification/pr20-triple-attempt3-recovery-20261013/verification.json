@@ -1,0 +1,48 @@
+{
+  "run_id": "38411448143",
+  "archive_sha256": "d3d3d31af26afd83eb8182cd0562b0f14277e8de03ea5cf5c566b9d8843ff2c5",
+  "raw_junit_pass": 17,
+  "host_pass": 16,
+  "host_fail_ordinal": 17,
+  "not_run": 27,
+  "failed_host_check": "Owned package process cleanup unconfirmed",
+  "method17_processes_after": {
+    "org.inkweft.app.a0": {
+      "exit": 1,
+      "stdout": "",
+      "stderr": ""
+    },
+    "org.inkweft.app.a0.test": {
+      "exit": 0,
+      "stdout": "2707",
+      "stderr": ""
+    },
+    "org.inkweft.data.test": {
+      "exit": 1,
+      "stdout": "",
+      "stderr": ""
+    }
+  },
+  "cleanup": {
+    "trap": {
+      "emulator": "STOPPED_CONFIRMED",
+      "command_groups": "STOPPED_CONFIRMED",
+      "acl": "RESTORED_EXACT",
+      "errors": []
+    },
+    "always": {
+      "emulator": "STOPPED_CONFIRMED",
+      "command_groups": "STOPPED_CONFIRMED",
+      "acl": "RESTORED_EXACT",
+      "errors": []
+    }
+  },
+  "ACL_three_snapshots_sha256": "f3fffbc1c7ccf8e0e966c07730ac09719c1040b79090df185e9009e75b601f89",
+  "verified_APK_receipts": 9,
+  "same_debug_signer": true,
+  "same_MuPDF_four_ABI_receipts": true,
+  "identical_dependency_records": 879,
+  "APKs_locally_reverified": false,
+  "new_performance_results": false,
+  "unknown": "Only one immediate pidof sample was recorded. Whether the test APK process would exit later, remain cached, or host active components is not determined by this artifact."
+}

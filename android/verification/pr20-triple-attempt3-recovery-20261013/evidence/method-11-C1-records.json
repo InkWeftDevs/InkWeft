@@ -1,0 +1,21 @@
+[
+  {
+    "marker": "HISTORY_DELETE_WRITER_CORRECTNESS",
+    "data": {
+      "connection": "same-room",
+      "artificialGates": true,
+      "performanceMeasurement": false,
+      "firstDeleted": 256,
+      "firstDeferred": true,
+      "finishDeleted": 1023,
+      "authorCommitted": true,
+      "initialRevision": 2,
+      "finalRevision": 3,
+      "retainedRevisions": [
+        300,
+        1281
+      ],
+      "contentVerified": true
+    }
+  }
+]

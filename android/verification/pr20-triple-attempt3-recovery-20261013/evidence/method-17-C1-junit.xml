@@ -1,0 +1,2 @@
+<?xml version='1.0' encoding='utf-8'?>
+<testsuite name="org.inkweft.app.NotebookShelfUiTest#pageSourceEditResetsSecondShelfPageWithoutDirectoryChanges" tests="1" failures="0" errors="1" time="7.277287244796753"><testcase classname="org.inkweft.app.NotebookShelfUiTest" name="pageSourceEditResetsSecondShelfPageWithoutDirectoryChanges" time="7.277287244796753"><error type="AssertionError" message="Owned package process cleanup unconfirmed">See complete raw instrumentation and summary.</error></testcase></testsuite>

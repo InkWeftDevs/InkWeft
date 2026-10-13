@@ -1,0 +1,2 @@
+<?xml version='1.0' encoding='utf-8'?>
+<testsuite name="org.inkweft.data.HistoryCollectionTest#overlappingRootSetsAcrossFullAndPartialBatchesRetainEveryVersion" tests="1" failures="0" errors="0" time="0.7536206245422363"><testcase classname="org.inkweft.data.HistoryCollectionTest" name="overlappingRootSetsAcrossFullAndPartialBatchesRetainEveryVersion" time="0.7536206245422363" /></testsuite>
