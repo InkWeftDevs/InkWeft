@@ -1,0 +1,11 @@
+{
+  "run_id": 38433834125,
+  "job_id": 115422592925,
+  "anchor_epoch": 1791910150,
+  "actual_job_started_epoch": 1791910255,
+  "started_at": "2026-10-13T16:50:55Z",
+  "anchor_precedes_job_seconds": 105,
+  "phase_cutoffs_no_later_than_job_based_cutoffs": true,
+  "source": "Authorized external jobs metadata; raw initial metadata saved separately",
+  "not_mutating_runner_clock": true
+}

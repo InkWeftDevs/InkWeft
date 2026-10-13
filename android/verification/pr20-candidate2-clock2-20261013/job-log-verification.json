@@ -1,0 +1,77 @@
+{
+  "status": "OFFICIAL_JOB_LOG_AND_METADATA_VERIFIED_FULL_ZIP_PENDING",
+  "run_id": 38433834125,
+  "job_id": 115422592925,
+  "run_attempt": 1,
+  "head_sha": "9907a8f96fe0d20061f0a7deba6a69d4416ced50",
+  "job_started_at": "2026-10-13T16:50:55Z",
+  "job_completed_at": "2026-10-13T17:21:15Z",
+  "job_duration_seconds": 1820.0,
+  "budget_anchor_epoch": 1791910150,
+  "anchor_precedes_job_seconds": 105,
+  "setup_cutoff_epoch": 1791912070,
+  "failed_step": 8,
+  "failed_step_exit": 124,
+  "stop_reason": "outer cumulative setup timeout; detailed Gradle log is in the unavailable ZIP",
+  "build_step_seconds": {
+    "B": {
+      "seconds": 733.0,
+      "conclusion": "success"
+    },
+    "C0": {
+      "seconds": 589.0,
+      "conclusion": "success"
+    },
+    "C1": {
+      "seconds": 434.0,
+      "conclusion": "failure"
+    }
+  },
+  "native_method_count": 57,
+  "native_methods_status": "NOT_RUN",
+  "raw_log": {
+    "bytes": 35289,
+    "sha256": "ea473725e383204daae37ac4ad4ae44c6ceeaa843d2914e857dfe8ffe80b87ad",
+    "source": "official fetch_workflow_job_logs decoded content; exact bytes preserved"
+  },
+  "cleanup_log_receipts": [
+    {
+      "timestamp": "2026-10-13T17:21:09.3103820Z",
+      "emulator": "NOT_STARTED",
+      "command_groups": "STOPPED_CONFIRMED",
+      "acl": "NOT_TOUCHED",
+      "errors": []
+    },
+    {
+      "timestamp": "2026-10-13T17:21:09.7467916Z",
+      "emulator": "NOT_STARTED",
+      "command_groups": "STOPPED_CONFIRMED",
+      "acl": "NOT_TOUCHED",
+      "errors": []
+    }
+  ],
+  "artifact": {
+    "id": 11834012592,
+    "name": "pr20-kvm-triple-38433834125",
+    "size_in_bytes": 345179,
+    "official_digest": "sha256:ba2420bb9217f6ed2185bea66dc46451589f0a097e0119ebf86bb3f443577ebb",
+    "uploaded_files_from_job_log": 36,
+    "expires_at": "2026-10-16T17:21:10Z",
+    "download_url": "https://github.com/InkWeftDevs/InkWeft/actions/runs/38433834125/artifacts/11834012592",
+    "local_archive_verified": false,
+    "packaging_stdout": {
+      "files": 34,
+      "bytes": 1268679,
+      "omitted": 0,
+      "truncated": 0
+    },
+    "packaging_scope": "Job-log output only; actual ZIP/manifest not independently verified"
+  },
+  "limits": [
+    "No raw Gradle task timings/source/APK manifests independently verified without original ZIP.",
+    "NOT_TOUCHED is not RESTORED_EXACT; no KVM ACL grant occurred.",
+    "B/C0 step success is not independent local verification of APK binaries.",
+    "No candidate2 native correctness or performance conclusion."
+  ],
+  "next_action": "Budget/build allocation correction is authorized and not blocked on obtaining the original ZIP; source/test/performance conclusions remain unchanged."
+}

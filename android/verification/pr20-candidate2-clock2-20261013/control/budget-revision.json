@@ -1,0 +1,99 @@
+{
+  "status": "CLOCK_ANCHOR_AMENDMENT_FROZEN_NOT_PERFORMANCE_EVIDENCE",
+  "prior_run": "38419007471",
+  "prior_execution_git": "30acef2e082eb1cd2d70471737824da32fbe9c24",
+  "prior_archive_sha256": "aab2be49c45bb833c9b8304f05698a3c392d561cdd92bb997f0a9b3a69dc8485",
+  "prior_cleanup_verified_locally": true,
+  "historical_budget_revision_sha256": "37802241b962e6c3d347b6359bac361c351ad81e63766b78c782edaa1a601f28",
+  "original_plan_git": "6e6391c7de228b69453499ea106ffed7615afb29",
+  "old_cutoffs_minutes": [
+    32,
+    38,
+    52,
+    55,
+    60
+  ],
+  "new_cutoffs_minutes": [
+    32,
+    38,
+    52,
+    55,
+    60
+  ],
+  "amendments": {
+    "C0": "Previous candidate ebb4848 replaces historical C0=7949011.",
+    "C1": "45b4861ae23ac19eda3246fcd34cf3d2132dc1ee",
+    "methods": {
+      "old": 44,
+      "new": 57,
+      "old_phases": [
+        17,
+        24,
+        3
+      ],
+      "new_phases": [
+        30,
+        24,
+        3
+      ]
+    },
+    "correctness": "Original 1-17 unchanged; 13 inserted at18-30; old18-44 shift+13 only."
+  },
+  "unchanged": {
+    "source_identities": 3,
+    "debug_apks": 9,
+    "common_calls": 24,
+    "diagnostic_calls": 3,
+    "install_groups": 14,
+    "serial_single_worker": true,
+    "task_build_cache": false,
+    "work_deadline_minutes": 55,
+    "job_hard_minutes": 60,
+    "text_artifact_limit_bytes": 20971520,
+    "retention_days": 3,
+    "original_protocol_sha256": "1065177d7809426d949c4b4b67bd639a47c3fc1943f706a77c2dfabb985e9aba"
+  },
+  "fourth_observed_seconds": {
+    "setup": 1323.998,
+    "correctness_17": 28.079,
+    "common_24": 499.498,
+    "diagnostics_3": 44.921
+  },
+  "sensitivity_only": {
+    "old_C0_build_seconds": 339.202,
+    "previous_C1_build_seconds": 405.452,
+    "predicted_setup_replacing_only_C0_build_seconds": 1390.248,
+    "margin_to_32m_seconds": 529.752,
+    "new_13_correctness_duration": "UNKNOWN",
+    "new_candidate_build_duration": "UNKNOWN"
+  },
+  "cleanup_budget": {
+    "trap_cap_seconds": 45,
+    "kill_after_seconds": 2,
+    "always_cap_seconds": 45,
+    "package_cap_seconds": 45,
+    "upload_step_cap_seconds": 120,
+    "nominal_max_seconds_including_kill_grace": 261,
+    "remaining_seconds_for_step_overhead_before_60m": 39,
+    "caveat": "Time caps are not proof of process/ACL restoration; require both original receipts and exact restoration. Step scheduling overhead remains subject to job hard limit."
+  },
+  "limitations": [
+    "Prior timing and sensitivity are not bounds or native performance evidence for this candidate.",
+    "Any deadline abort retains all evidence and leaves later methods NOT_RUN; no smaller sample, method retries or automatic rerun.",
+    "Only the existing method17 auxiliary-package cleanup exception remains; no added method joins its allowlist.",
+    "No paid runner, permission expansion, baseline optimization overlay, common fixture/threshold change, merge or deployment."
+  ],
+  "clock_amendment": {
+    "prior_run": "38431279425",
+    "reason": "Unauthenticated jobs API rate-limit refusal before checkout; no retry or replacement network clock query.",
+    "anchor_kind": "github_pull_request_updated_at",
+    "budget_anchor_epoch": 1791910150,
+    "clock_contract_sha256": "d5a49759faa66743a17a3f463abd5e3fbbf835a7a60957cb70abc0395bf11bdc",
+    "server_receipt_sha256": "701649e0b71b4cb6b4d44ea19a5e9d70590ded24e962e16342372f4718b52a81",
+    "actual_job_started_epoch": null,
+    "effect": "Only shortens available runtime by time between the earlier server timestamp and actual job start; offsets 32/38/52/55 and hard job timeout60 unchanged.",
+    "no_rebase": true,
+    "network_clock_requests": 0,
+    "prior_execution_git": "b63e5272479478964b36c778b1af52974617cf3a"
+  }
+}

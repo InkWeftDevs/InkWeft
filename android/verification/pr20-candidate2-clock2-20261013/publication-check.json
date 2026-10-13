@@ -1,0 +1,193 @@
+{
+  "status": "PASS_FOR_SELECTED_PUBLIC_CONTROL_AND_METADATA",
+  "checked_utc": "2026-10-13T17:28:21.790234+00:00",
+  "scope": "Selected controller, public official decoded job log/metadata and synthetic audit-tool/check notes. No actual runner ZIP inspected. Full PR HTTP response, APKs, credentials and device data were not copied.",
+  "files": [
+    {
+      "path": "README.md",
+      "bytes": 4558,
+      "sha256": "2eebe3746543968ca5dd6d59eeab192129de73194d2d63d16d2189147f597a72"
+    },
+    {
+      "path": "audit-tool/README.md",
+      "bytes": 3757,
+      "sha256": "5ac1c2e30febc4067f17f701edcfa79af2742c6d7222fb437c972e5ae8badd46"
+    },
+    {
+      "path": "audit-tool/audit-review.md",
+      "bytes": 3137,
+      "sha256": "2601fdf1e12cee56ae48fc33b90a14a2edf8bb88b166921c525d7f2a98eb2b5c"
+    },
+    {
+      "path": "audit-tool/check_verifier.py",
+      "bytes": 15583,
+      "sha256": "a1e5b49cbbaad84dbbc4ff21eb845f7b9ae5a905f786248edcc3f369a8fb1e17"
+    },
+    {
+      "path": "audit-tool/preparation.json",
+      "bytes": 3166,
+      "sha256": "867538c7f950b5a8c2bc8602bcb3be11925ac3c82e7aa8338466105706002244"
+    },
+    {
+      "path": "audit-tool/review-fixes.json",
+      "bytes": 688,
+      "sha256": "da62462d94ca2db878177d1cfd03bb2384c36b1ad1b2f1a0bb701a3a704e706c"
+    },
+    {
+      "path": "audit-tool/synthetic-check.json",
+      "bytes": 4009,
+      "sha256": "d380cda33cfc60132ebe8aa4ebbe368323a6df38e1c6a6919e7f8703768725dd"
+    },
+    {
+      "path": "audit-tool/verify_artifact.py",
+      "bytes": 29863,
+      "sha256": "aee9eb7734c688f6c80bb5a4b9a3c8e296eaf421a95b50cc65a891293a906c8a"
+    },
+    {
+      "path": "control/EXECUTION_SHA256SUMS",
+      "bytes": 822,
+      "sha256": "c35aa5cf2fb42f98453a003b517b095aca123927739854aec02e9e5c9799691e"
+    },
+    {
+      "path": "control/README.md",
+      "bytes": 1879,
+      "sha256": "40b7e7ced2052afb07c7a3c7d0a199e10de192b662a8ab4511306a940a68b7a5"
+    },
+    {
+      "path": "control/authorization.json",
+      "bytes": 2731,
+      "sha256": "7f66eaac912b6eaa8eb86967dbf0548d37092a5f1ad395c1e32217090d494b4d"
+    },
+    {
+      "path": "control/budget-revision.json",
+      "bytes": 3721,
+      "sha256": "d0a041c82cbf9238a8466c7e4a33c4fac825b327e7d4ff28cc00b85e4f869a11"
+    },
+    {
+      "path": "control/cleanup.py",
+      "bytes": 4068,
+      "sha256": "49e4337f483de46179466ae1c0fcf9ef18772e6a9388cce5cb6826a60d634576"
+    },
+    {
+      "path": "control/clock-contract.json",
+      "bytes": 926,
+      "sha256": "d5a49759faa66743a17a3f463abd5e3fbbf835a7a60957cb70abc0395bf11bdc"
+    },
+    {
+      "path": "control/clock-server-receipt.json",
+      "bytes": 218,
+      "sha256": "701649e0b71b4cb6b4d44ea19a5e9d70590ded24e962e16342372f4718b52a81"
+    },
+    {
+      "path": "control/package.py",
+      "bytes": 6106,
+      "sha256": "ba7618e5011e5baf2540b85588569073628d5342c8a201228b175732c6de3b61"
+    },
+    {
+      "path": "control/preflight.json",
+      "bytes": 25622,
+      "sha256": "d81a3ec54305ee86b3a44db9c6242656a091b6e12371ef4f4e505fd9ea89a6f2"
+    },
+    {
+      "path": "control/run.py",
+      "bytes": 40020,
+      "sha256": "b4a2ee36ec067311e30066281c16e3530787a2551a9df06201121d3dd25496e1"
+    },
+    {
+      "path": "control/workflow.active.yml",
+      "bytes": 10784,
+      "sha256": "493b2c5538b9b6696f4841af6f2b3beb2fd352e4e05c299215fba6e695966d7d"
+    },
+    {
+      "path": "control/workflow.proposed.yml",
+      "bytes": 10784,
+      "sha256": "cdca1485b0943f59ac3171097f1b27921e64503274e17c3f45bda591e541e198"
+    },
+    {
+      "path": "job-decoded.log",
+      "bytes": 35289,
+      "sha256": "ea473725e383204daae37ac4ad4ae44c6ceeaa843d2914e857dfe8ffe80b87ad"
+    },
+    {
+      "path": "job-log-verification.json",
+      "bytes": 2673,
+      "sha256": "a6c4c5b615de10573fc1cf91b0d632a4898bf58cf90311d7487bac3f297822dc"
+    },
+    {
+      "path": "metadata/anchor-vs-job-start.json",
+      "bytes": 386,
+      "sha256": "da9d08f88623d5af936c5f3bc909d527fc85a17c2126c2b5515ab95c5154b603"
+    },
+    {
+      "path": "metadata/artifacts.json",
+      "bytes": 762,
+      "sha256": "27154c00373a2000417f4bc8a9fd26ccdf43e7aceb38ecb814bad789daeca147"
+    },
+    {
+      "path": "metadata/bound-guard.json",
+      "bytes": 540,
+      "sha256": "75cf3b7c5609f4184fe741350b40b6de8abb94dceee3bf0fa32de6181824e7ce"
+    },
+    {
+      "path": "metadata/clock-server-receipt.json",
+      "bytes": 218,
+      "sha256": "701649e0b71b4cb6b4d44ea19a5e9d70590ded24e962e16342372f4718b52a81"
+    },
+    {
+      "path": "metadata/final-activation-review.md",
+      "bytes": 2419,
+      "sha256": "61161dc6621b3ebebc69e171d315945deac2feeb822764dae86dfe65d2835b3a"
+    },
+    {
+      "path": "metadata/in-progress-before.json",
+      "bytes": 36,
+      "sha256": "a2790a384d7d281e7395679000c35d27768d89dbd7052f725b8f4688beb59915"
+    },
+    {
+      "path": "metadata/jobs-initial.json",
+      "bytes": 3776,
+      "sha256": "104ca59f981406c43c97f3bceeed172a9ee449298cb7c38dd2cdfa9e88a528b6"
+    },
+    {
+      "path": "metadata/jobs-terminal.json",
+      "bytes": 4531,
+      "sha256": "81270a051be1524012443d3f09b69194bf4cbf03f624cb5b38999b61c5f95be2"
+    },
+    {
+      "path": "metadata/preparation-runs.json",
+      "bytes": 36,
+      "sha256": "a2790a384d7d281e7395679000c35d27768d89dbd7052f725b8f4688beb59915"
+    },
+    {
+      "path": "metadata/queued-before.json",
+      "bytes": 36,
+      "sha256": "a2790a384d7d281e7395679000c35d27768d89dbd7052f725b8f4688beb59915"
+    },
+    {
+      "path": "metadata/raster-interpretation-review.md",
+      "bytes": 8020,
+      "sha256": "caf5a3290cdc13ed6b16573f5a1d827d75cfe923a5339638c42299581b94ee54"
+    },
+    {
+      "path": "metadata/remote-before-report.tsv",
+      "bytes": 237,
+      "sha256": "b299997ad0ea9f7e456d3cc27abb4f28910a18c7bd24ead2eb3d83ea79ea6865"
+    },
+    {
+      "path": "metadata/run-terminal.json",
+      "bytes": 12712,
+      "sha256": "1bf6092327fde511621fdff7ef4f77321aee2940bdb25aaa61978ba44c19c861"
+    },
+    {
+      "path": "metadata/search-interpretation-review.md",
+      "bytes": 12373,
+      "sha256": "6d3c5f60adc6cdbb41680c58385723e89d1ee4450748b41d8a363eab4df174c0"
+    },
+    {
+      "path": "metadata/terminal-review.md",
+      "bytes": 3501,
+      "sha256": "36d71459fc31405199d4edfc098c66722a5fb063548f13a0654dc12743ff398c"
+    }
+  ],
+  "sensitive_pattern_findings": []
+}
