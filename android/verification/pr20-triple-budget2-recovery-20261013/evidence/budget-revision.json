@@ -1,0 +1,126 @@
+{
+  "status": "BOUNDED_RETRY_BUDGET_NOT_PERFORMANCE_EVIDENCE",
+  "prior_run": "38396134768",
+  "prior_archive_sha256": "8022e2ea3510bbef1e68d91795f55e8d5237945c5ea60dc13791ef42ab8021eb",
+  "prior_cleanup_verified_locally": true,
+  "prior_cleanup_receipt_sha256": {
+    "cleanup-trap.json": "1f5147063ce4119cc1819849e1fa25d5c27e347f76f74379f631486a1d448ade",
+    "cleanup-always.json": "1f5147063ce4119cc1819849e1fa25d5c27e347f76f74379f631486a1d448ade"
+  },
+  "original_plan_git": "6e6391c7de228b69453499ea106ffed7615afb29",
+  "old_cutoffs_minutes": [
+    26,
+    32,
+    48,
+    55,
+    60
+  ],
+  "new_cutoffs_minutes": [
+    32,
+    38,
+    52,
+    55,
+    60
+  ],
+  "observed_seconds": {
+    "job_to_B_action": 43.61551117897034,
+    "B_action_includes_apk_checks": 664.4710767269135,
+    "C0_action_includes_apk_checks": 501.24763798713684,
+    "B_gradle_phase": 662.1569783687592,
+    "C0_gradle_phase": 499.1015269756317,
+    "prefix_to_C1_action": 1209.4862415790558,
+    "C1_complete_action": null
+  },
+  "assumptions": {
+    "C1_action_equals_C0_not_measured": 501.24763798713684,
+    "remaining_emulator_and_transition_seconds_not_measured": [
+      30,
+      60,
+      90
+    ],
+    "common_calls_previous_extrapolation_seconds": 543.2835290431976,
+    "correctness_17_and_diagnostics_3_native_duration": "UNKNOWN",
+    "correctness_seconds": null,
+    "natural_gc_seconds": null,
+    "library_diagnostics_seconds": null
+  },
+  "setup_sensitivity": [
+    {
+      "assumed_remaining_seconds": 30,
+      "assumed_C1_seconds": 501.24763798713684,
+      "predicted_setup_seconds": 1740.7338795661926,
+      "margin_to_32_minutes_seconds": 179.26612043380737,
+      "maximum_C1_seconds_given_other_assumptions": 680.5137584209442
+    },
+    {
+      "assumed_remaining_seconds": 60,
+      "assumed_C1_seconds": 501.24763798713684,
+      "predicted_setup_seconds": 1770.7338795661926,
+      "margin_to_32_minutes_seconds": 149.26612043380737,
+      "maximum_C1_seconds_given_other_assumptions": 650.5137584209442
+    },
+    {
+      "assumed_remaining_seconds": 90,
+      "assumed_C1_seconds": 501.24763798713684,
+      "predicted_setup_seconds": 1800.7338795661926,
+      "margin_to_32_minutes_seconds": 119.26612043380737,
+      "maximum_C1_seconds_given_other_assumptions": 620.5137584209442
+    }
+  ],
+  "unchanged": {
+    "source_identities": 3,
+    "debug_apks": 9,
+    "methods": 44,
+    "correctness_common_diagnostics": [
+      17,
+      24,
+      3
+    ],
+    "install_groups": 14,
+    "serial_single_worker": true,
+    "task_build_cache": false,
+    "work_deadline_minutes": 55,
+    "job_hard_minutes": 60,
+    "text_artifact_limit_bytes": 20971520,
+    "retention_days": 3
+  },
+  "cleanup_budget": {
+    "trap_cap_seconds": 45,
+    "kill_after_seconds": 2,
+    "always_cap_seconds": 45,
+    "package_cap_seconds": 45,
+    "upload_step_cap_seconds": 120,
+    "nominal_max_seconds_including_kill_grace": 261,
+    "remaining_seconds_for_step_overhead_before_60m": 39,
+    "caveat": "Time caps are not proof of process/ACL restoration; require both original receipts and exact restoration. Step scheduling overhead remains subject to job hard limit."
+  },
+  "limitations": [
+    "No old setup remainder is added to observed whole build actions, avoiding mixed-boundary double counting.",
+    "Remaining AVD/boot/transition values are sensitivity assumptions, not measured new runner timings.",
+    "No runtime multiplier is calibrated from Gradle speed. New correctness and 60-fixture diagnostics have no measured upper bound.",
+    "Phases advance immediately; cutoff, exposure insufficiency and partial evidence remain INCOMPLETE.",
+    "No samples, source, fixture, thresholds, method-local timeouts, no-cache policy, single-runner comparison or cleanup permissions are changed."
+  ],
+  "source_summary_sha256": "3512207b5d6117db0eb144e51cb5dcc0aa03b7d836f64f2b9c3bb38932c76854",
+  "source_clock_sha256": "4e1157bb7760d113a08561f17a798d10858039cc51dfe7b39bdff5a3027be94a",
+  "common_sensitivity": [
+    {
+      "assumed_native_runtime_multiplier_not_calibrated": 1,
+      "assumed_install_and_checks_seconds": 60,
+      "predicted_phase_seconds": 603.2835290431976,
+      "margin_to_14_minutes_seconds": 236.71647095680237
+    },
+    {
+      "assumed_native_runtime_multiplier_not_calibrated": 1.3,
+      "assumed_install_and_checks_seconds": 60,
+      "predicted_phase_seconds": 766.268587756157,
+      "margin_to_14_minutes_seconds": 73.73141224384301
+    },
+    {
+      "assumed_native_runtime_multiplier_not_calibrated": 1.5,
+      "assumed_install_and_checks_seconds": 60,
+      "predicted_phase_seconds": 874.9252935647964,
+      "margin_to_14_minutes_seconds": -34.92529356479645
+    }
+  ]
+}

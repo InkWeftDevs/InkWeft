@@ -1,0 +1,64 @@
+{
+  "schema": 1,
+  "status": "PROPOSED_NOT_AUTHORIZED_NOT_RUN",
+  "materialized_scope": [
+    "android",
+    "ci"
+  ],
+  "excluded_from_build_inputs": [
+    "android/verification"
+  ],
+  "identities": {
+    "B": {
+      "git": "a128bb07e34cb82f00eeafc8e62a47bf7b95b128",
+      "tree": "2eefbf879679d29f5ae4b1d6b9715a4cef14d5d9",
+      "production_overrides": [
+        {
+          "from_git": "7949011ca2b84492f6438d275a09d28faef3b472",
+          "from_path": "android/data-local/src/main/kotlin/org/inkweft/data/PreservingOpenHelperFactory.kt",
+          "path": "android/data-local/src/main/kotlin/org/inkweft/data/PreservingOpenHelperFactory.kt",
+          "bytes": 4426,
+          "sha256": "a049af775caa688cd0dfd938acdf1539d34ee13de272ed35c930de9ef4e3d15d"
+        }
+      ],
+      "canonical_manifest_sha256": "bcf2b51fb04e85ced2a70bc3fc7a402e1fed551583de43831d8a4ecccce91fd8",
+      "file_count": 947
+    },
+    "C0": {
+      "git": "7949011ca2b84492f6438d275a09d28faef3b472",
+      "tree": "78deba5d8fe47cc4f6d3e4eeecafba9013768635",
+      "production_overrides": [],
+      "canonical_manifest_sha256": "8b072c5833e807b5fdc722cade96f0265ba1d9badbf4ac577cb3ffe0b1b96a64",
+      "file_count": 960
+    },
+    "C1": {
+      "git": "ebb48481e7e995288c1844d43011398c513b4f4e",
+      "tree": "3d88de9681dae25f24b8e7cc6ae695cc2600a140",
+      "production_overrides": [],
+      "canonical_manifest_sha256": "c0e3b9a4cfa9b5a602e47422f080add43353d64acacea505cc8f3ebee4c91e63",
+      "file_count": 964
+    }
+  },
+  "common_probes": [
+    {
+      "from_git": "e1a813aa24be20df0901f6aff9554632e1f531b7",
+      "from_path": "android/verification/pr20-kvm-paired-20261013/evidence/probe-KvmLibraryPairProbe.kt",
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/KvmLibraryPairProbe.kt",
+      "bytes": 18281,
+      "sha256": "90525d56efe48b32441be890e29c021d0f699fe7d82389d1e049283cfb10f98c"
+    },
+    {
+      "from_git": "e1a813aa24be20df0901f6aff9554632e1f531b7",
+      "from_path": "android/verification/pr20-kvm-paired-20261013/evidence/probe-KvmLocalAppendPairProbe.kt",
+      "path": "android/app/src/androidTest/java/org/inkweft/app/KvmLocalAppendPairProbe.kt",
+      "bytes": 12932,
+      "sha256": "a916d2470d54f069d1d6071d0b56a15ac6b07d05ab0b033d0aa7d4420fa74338"
+    }
+  ],
+  "native_execution": "NOT_RUN",
+  "notes": [
+    "B retains old search/paging/raster/GC and receives only the established C0 writer factory override.",
+    "C1 is the final code commit; later report-only commits do not alter measured sources.",
+    "All source inputs are local fixed git blobs; this document authorizes no build, runner or security action."
+  ]
+}

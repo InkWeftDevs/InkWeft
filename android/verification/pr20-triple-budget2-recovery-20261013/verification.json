@@ -1,0 +1,25 @@
+{
+  "run_id": "38403076172",
+  "workflow_git": "54a1f5cc7ac757125f8ccb9cc27f5a21b87a50c9",
+  "terminal_status": "BLOCKED_OR_FAILED",
+  "root_cause": "Official MuPDF 1.28.5 POM HTTPS connection timed out during Gradle dependency resolution. No recorded HTTP policy denial or source compilation error. Transience is not established.",
+  "build_B_action_seconds": 216.56878113746643,
+  "methods_not_run": 44,
+  "install_groups": 0,
+  "complete_build_receipts": [],
+  "cleanup": {
+    "trap": {
+      "emulator": "NOT_STARTED",
+      "command_groups": "STOPPED_CONFIRMED",
+      "acl": "NOT_TOUCHED",
+      "errors": []
+    },
+    "always": {
+      "emulator": "NOT_STARTED",
+      "command_groups": "STOPPED_CONFIRMED",
+      "acl": "NOT_TOUCHED",
+      "errors": []
+    }
+  },
+  "no_new_performance_results": true
+}

@@ -1,0 +1,24 @@
+{
+  "epoch": 1791897145.9461844,
+  "uid": 1001,
+  "cpu_count": 4,
+  "kernel": "6.17.0-1022-azure",
+  "load_1_5_15": [
+    0.2060546875,
+    0.1005859375,
+    0.0361328125
+  ],
+  "cpu_model": "AMD EPYC 7763 64-Core Processor",
+  "memory": {
+    "MemTotal": "16373452 kB",
+    "MemAvailable": "14906564 kB",
+    "SwapTotal": "3145724 kB",
+    "SwapFree": "3145724 kB"
+  },
+  "disk_bytes": {
+    "total": 154894188544,
+    "used": 64194351104,
+    "free": 90683060224
+  },
+  "java": "openjdk version \"17.0.20.1\" 2026-08-18\nOpenJDK Runtime Environment Temurin-17.0.20.1+1 (build 17.0.20.1+1)\nOpenJDK 64-Bit Server VM Temurin-17.0.20.1+1 (build 17.0.20.1+1, mixed mode, sharing)"
+}
