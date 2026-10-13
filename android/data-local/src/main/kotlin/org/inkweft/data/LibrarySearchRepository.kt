@@ -27,12 +27,19 @@ class LibrarySearchRepository(private val db:NoteDatabase) {
     // Counts rows/UTF-16 characters crossing the cursor boundary, excluding draft inputs.
     internal var readObserver:((String,Int,Int)->Unit)?=null
     internal var queryPlanObserver:((List<String>)->Unit)?=null
+    @Volatile private var diagnostics:LibrarySearchDiagnostics?=null
+    // Install before collecting/reading. The default null observer creates no trace or clock reads.
+    internal var stageObserver:((String,Long,Long,Long,Long,Int)->Unit)?
+        get()=diagnostics?.observer
+        set(value){diagnostics=value?.let(::LibrarySearchDiagnostics)}
 
     fun observe(requests:Flow<LibrarySearchRequest>):Flow<LibrarySearchResult> = channelFlow {
-        val observation=LibrarySearchObservation(::read)
+        val tracing=diagnostics
+        val observation=LibrarySearchObservation(tracing){request,trace->read(request,trace)}
         val completed=MutableStateFlow(0);var indexed=0
         launch(Dispatchers.IO){db.invalidationTracker.createFlow("page_search_text","study_cards").collectLatest{
             LibraryTextIndex.build(db,onFirstBatchStep=indexFirstBatchStepObserver){indexed+=it;indexObserver?.invoke(observation.query,indexed)}
+            tracing?.event("index-build-completed",count=completed.value+1)
             completed.value++
         }}
         observation.results(requests,db.invalidationTracker.createFlow(
@@ -40,16 +47,22 @@ class LibrarySearchRepository(private val db:NoteDatabase) {
         ),completed).collect{send(it)}
     }
 
-    suspend fun read(request:LibrarySearchRequest):LibrarySearchResult=withContext(Dispatchers.IO){
+    suspend fun read(request:LibrarySearchRequest):LibrarySearchResult=read(request,diagnostics?.read(request.generation,-1))
+
+    private suspend fun read(request:LibrarySearchRequest,trace:LibrarySearchReadTrace?):LibrarySearchResult {
+        trace?.event("read-requested")
+        return withContext(Dispatchers.IO){
         require(request.offset>=0&&request.pageSize in 1..500)
+        trace?.event("read-start")
         // Requery's deferred transaction pins one WAL read snapshot without joining Room's
         // author-write queue. Keep all native calls on this thread until endTransaction.
         val active=currentCoroutineContext();val cancellation=android.os.CancellationSignal()
-        coroutineScope {
+        try{val result=coroutineScope {
             val watcher=launch(Dispatchers.IO,start=CoroutineStart.UNDISPATCHED){try{awaitCancellation()}finally{cancellation.cancel()}}
             try{SQLiteDatabase.openDatabase(db.openHelper.readableDatabase.path,null,SQLiteDatabase.OPEN_READONLY){
                 throw android.database.sqlite.SQLiteDatabaseCorruptException("Library search corruption; author data retained")
             }.use{reader->
+                trace?.event("connection-open")
                 var scanned=0
                 reader.addFunction("library_contains",1,{args,result->
                     active.ensureActive();result.set(if(args.getString(0).orEmpty().contains(request.query,true))1 else 0)
@@ -70,17 +83,22 @@ class LibrarySearchRepository(private val db:NoteDatabase) {
                     override fun query(query:String,bindArgs:Array<out Any?>)=reader.query(SimpleSQLiteQuery(query,bindArgs),cancellation)
                 }
                 reader.beginTransactionDeferred()
-                try{readSnapshot(request,sql){active.ensureActive()}}finally{reader.endTransaction()}
-            }}catch(failure:Exception){active.ensureActive();throw failure}finally{watcher.cancel()}
+                trace?.event("snapshot-open")
+                try{readSnapshot(request,sql,trace){active.ensureActive()}}finally{reader.endTransaction();trace?.event("snapshot-closed")}
+            }.also{trace?.event("connection-closed")}}catch(failure:Exception){active.ensureActive();throw failure}finally{watcher.cancel()}
+        };trace?.event("read-end",result.items.size);result
+        }catch(c:CancellationException){trace?.event("read-cancel");throw c}
+        catch(failure:Exception){trace?.event("read-error");throw failure}
         }
     }
 
-    private fun readSnapshot(request:LibrarySearchRequest,sql:SupportSQLiteDatabase,check:()->Unit):LibrarySearchResult {
+    private fun readSnapshot(request:LibrarySearchRequest,sql:SupportSQLiteDatabase,trace:LibrarySearchReadTrace?,check:()->Unit):LibrarySearchResult {
         // Only open drafts enter this temporary overlay. Saved titles, revisions, ordering,
         // classification and search sources are all read from the same author snapshot.
         sql.execSQL("CREATE TEMP TABLE library_drafts(id TEXT PRIMARY KEY,revision INTEGER,title TEXT,text TEXT,position INTEGER)")
         request.drafts.values.forEachIndexed{index,draft->check();sql.execSQL("INSERT INTO library_drafts VALUES(?,?,?,?,?)",
             arrayOf<Any>(draft.base.id,draft.base.revision,draft.title,draft.text,index))}
+        trace?.event("drafts-ready",request.drafts.size)
         val shelf="""
             WITH shelf AS (
                 SELECT n.id,COALESCE(d.revision,n.revision) revision,COALESCE(d.title,n.title) title,
@@ -100,6 +118,7 @@ class LibrarySearchRepository(private val db:NoteDatabase) {
         var favorites=0;var unfiled=0;var trashed=0;var metadataRows=0
         // This small directory supports existing learning navigation/counts; no body column
         // or shelf sort is materialized in Kotlin. The shelf itself is LIMITed below.
+        trace?.event("metadata-start")
         sql.query("$shelf SELECT id,revision,title,folder,tags,favorite,trashedAt FROM shelf ORDER BY updatedAt DESC,draftPosition,id").use{rows->while(rows.moveToNext()){
             check();metadataRows++
             if(!rows.isNull(6)){trashed++;continue}
@@ -108,6 +127,7 @@ class LibrarySearchRepository(private val db:NoteDatabase) {
             val folder=rows.getString(3);if(folder.isBlank())unfiled++ else folders[folder]=(folders[folder]?:0)+1
             tags+=rows.getString(4).split('\n').filter{it.isNotBlank()}
         }}
+        trace?.event("metadata-end",metadataRows)
         readObserver?.invoke("metadata",metadataRows,0)
         val args=ArrayList<Any>()
         val filter=buildList {
@@ -120,12 +140,15 @@ class LibrarySearchRepository(private val db:NoteDatabase) {
             }
             if(request.type!="all")add("world="+if(request.type=="board")"1"else"0")
         }.joinToString(" AND ")
+        trace?.event("scope-start")
         sql.execSQL("CREATE TEMP TABLE library_scope(id TEXT PRIMARY KEY)")
         sql.execSQL("$shelf INSERT INTO library_scope SELECT id FROM shelf WHERE $filter",args.toTypedArray())
+        trace?.event("scope-end")
         sql.execSQL("CREATE TEMP TABLE library_page_hits(notebookId TEXT,id TEXT,position INTEGER)")
         sql.execSQL("CREATE INDEX library_page_hit_order ON library_page_hits(notebookId,position,id)")
         sql.execSQL("CREATE TEMP TABLE library_card_hits(notebookId TEXT PRIMARY KEY)")
         val terms=request.query.takeIf{it.isNotBlank()}?.let(LibrarySearchTerms::query)
+        trace?.event("hits-ready")
         if(terms!=null){
             // Filter the authoritative source inside SQLite. Unmatched bodies never enter a
             // CursorWindow or a temp sort; only compact hit identities cross the boundary.
@@ -138,9 +161,11 @@ class LibrarySearchRepository(private val db:NoteDatabase) {
                 WHERE p.trashedAt IS NULL AND s.inkRevision=COALESCE(h.revision,0)
                     AND p.notebookId IN (SELECT id FROM library_scope) AND library_source_contains(s.text)=1
             """.trimIndent()
+            trace?.event("page-hits-start")
             sql.query(pageQuery,arrayOf(terms)).use{rows->while(rows.moveToNext()){
                 check();sql.execSQL("INSERT INTO library_page_hits VALUES(?,?,?)",arrayOf<Any>(rows.getString(0),rows.getString(1),rows.getInt(2)))
             }}
+            trace?.event("page-hits-end")
             val cardQuery="""
                 SELECT c.notebookId FROM (
                     SELECT target FROM library_search_pending WHERE kind=1
@@ -149,9 +174,11 @@ class LibrarySearchRepository(private val db:NoteDatabase) {
                 WHERE c.trashedAt IS NULL AND c.notebookId IN (SELECT id FROM library_scope)
                     AND (library_source_contains(c.title)=1 OR library_source_contains(c.body)=1)
             """.trimIndent()
+            trace?.event("card-hits-start")
             sql.query(cardQuery,arrayOf(terms)).use{rows->while(rows.moveToNext()){
                 check();sql.execSQL("INSERT OR IGNORE INTO library_card_hits VALUES(?)",arrayOf(rows.getString(0)))
             }}
+            trace?.event("card-hits-end")
         }
         val match=if(terms==null)"1" else """(library_contains(title)=1 OR library_contains(COALESCE((SELECT d.text FROM library_drafts d WHERE d.id=shelf.id),(SELECT n.text FROM notes n WHERE n.id=shelf.id)))=1 OR library_contains(tags)=1
             OR EXISTS(SELECT 1 FROM library_page_hits h WHERE h.notebookId=shelf.id)
@@ -172,6 +199,7 @@ class LibrarySearchRepository(private val db:NoteDatabase) {
             "page.updatedAt DESC,page.draftPosition,page.id"
         val pageArgs=arrayOf<Any>(request.pageSize+1,request.offset)
         queryPlanObserver?.invoke(sql.query("EXPLAIN QUERY PLAN $pageQuery",pageArgs).use{rows->buildList{while(rows.moveToNext())add(rows.getString(3))}})
+        trace?.event("page-start")
         sql.query(pageQuery,pageArgs).use{rows->while(rows.moveToNext()){
             check();val id=rows.getString(0);val preview=rows.getString(3);previewChars+=preview.length
             val note=Note(id,rows.getLong(1),rows.getString(2),preview)
@@ -180,10 +208,14 @@ class LibrarySearchRepository(private val db:NoteDatabase) {
                 revision=rows.getLong(11),coverKey=rows.getString(12),selectedPageId=rows.getString(13),centerX=rows.getDouble(16),centerY=rows.getDouble(17),zoom=rows.getDouble(18))
             matched+=LibraryShelfItem(note,workspace,if(rows.isNull(14))null else rows.getString(14),rows.getInt(15)!=0)
         }}
+        trace?.event("page-end",matched.size)
         readObserver?.invoke("previews",matched.size,previewChars)
         val nextOffset=if(matched.size>request.pageSize)request.offset+request.pageSize else null
+        trace?.event("pending-start")
+        val pending=sql.query("SELECT COUNT(*) FROM library_search_pending").use{it.moveToFirst();it.getInt(0)}
+        trace?.event("pending-end",pending)
         return LibrarySearchResult(request.generation,matched.take(request.pageSize),active,folders,tags.toList(),favorites,unfiled,trashed,
             query=request.query,filter=request.filter,type=request.type,byTitle=request.byTitle,offset=request.offset,nextOffset=nextOffset,
-            pendingIndex=sql.query("SELECT COUNT(*) FROM library_search_pending").use{it.moveToFirst();it.getInt(0)})
+            pendingIndex=pending)
     }
 }

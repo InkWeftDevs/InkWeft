@@ -121,13 +121,82 @@ class LibrarySearchObservationTest {
         assertFalse(f.results.last().failed);assertEquals(2L,f.results.last().sourceVersion)
     }
 
-    private class Fixture(scope:TestScope,initial:LibrarySearchRequest=request(),read:suspend (LibrarySearchRequest)->LibrarySearchResult=::response) {
+    @Test fun diagnosticsAssociateRealTriggersWithReadsWithoutChangingTheDebounceOrVersion()=runTest {
+        val events=mutableListOf<Event>()
+        val f=Fixture(this,diagnostics=diagnostics(events))
+        runCurrent();advanceTimeBy(50);runCurrent()
+        assertEquals(listOf(1L),events.filter{it.stage=="observe-request"}.map{it.generation})
+        assertEquals(listOf(0),events.filter{it.stage=="observe-index-initial"}.map{it.count})
+        assertTrue(events.none{it.stage=="observe-invalidation"||it.readId!=0L})
+        f.invalidate();runCurrent()
+        assertEquals(listOf(1L),events.filter{it.stage=="observe-invalidation"}.map{it.version})
+        advanceTimeBy(149);runCurrent();assertTrue(f.reads.isEmpty())
+        advanceTimeBy(1);runCurrent()
+        assertEquals(200L,f.reads.single().first)
+        assertEquals(listOf("observe-scheduled","observe-debounce-start","observe-debounce-end",
+            "observe-read-start","observe-read-end"),events.filter{it.readId==1L}.map{it.stage})
+        advanceTimeBy(25);f.completed.value++;runCurrent()
+        assertEquals(listOf(1),events.filter{it.stage=="observe-index-completed"}.map{it.count})
+        assertEquals(listOf(1L,1L),f.results.map{it.sourceVersion})
+        assertEquals(listOf("observe-scheduled","observe-read-start","observe-read-end"),events.filter{it.readId==2L}.map{it.stage})
+        assertTrue(events.filter{it.readId!=0L}.all{it.generation==1L&&it.version==1L})
+        assertTrue(events.filter{it.readId==0L&&it.stage!="observe-invalidation"}.all{it.version==-1L})
+        assertMonotonicPerRead(events)
+    }
+
+    @Test fun diagnosticsDistinguishCancelledDebounceFromCancelledRunningRead()=runTest {
+        val events=mutableListOf<Event>()
+        val f=Fixture(this,diagnostics=diagnostics(events)){awaitCancellation()}
+        f.invalidate();runCurrent();advanceTimeBy(50)
+        f.requests.value=request(2,"new");runCurrent()
+        assertEquals(listOf("observe-scheduled","observe-debounce-start","observe-debounce-cancel"),
+            events.filter{it.readId==1L}.map{it.stage})
+        advanceTimeBy(150);runCurrent()
+        assertEquals(200L,f.reads.single().first)
+        f.invalidate("page_search_text");runCurrent()
+        assertEquals("observe-read-cancel",events.last{it.readId==2L}.stage)
+        assertEquals(listOf("observe-scheduled","observe-read-start"),events.filter{it.readId==3L}.map{it.stage})
+        f.collector.cancel();runCurrent()
+        assertEquals("observe-read-cancel",events.last{it.readId==3L}.stage)
+        assertTrue(f.results.isEmpty())
+        assertTrue(events.none{it.stage=="observe-read-error"||it.stage=="observe-read-end"})
+        assertEquals(listOf(1L,2L),events.filter{it.stage=="observe-invalidation"}.map{it.version})
+        assertMonotonicPerRead(events)
+    }
+
+    @Test fun diagnosticsReportReadErrorsWithoutChangingFailedResultIdentityOrRecovery()=runTest {
+        val events=mutableListOf<Event>();var fail=true
+        val r=request(7,"").copy(filter="favorite",type="board",byTitle=true,offset=60)
+        val f=Fixture(this,r,diagnostics(events)){if(fail)error("synthetic failure") else response(it)}
+        f.invalidate();runCurrent()
+        assertEquals(listOf("observe-scheduled","observe-read-start","observe-read-error"),
+            events.filter{it.readId==1L}.map{it.stage})
+        assertEquals(response(r).copy(failed=true),f.results.single())
+        fail=false;f.invalidate();runCurrent()
+        assertEquals(response(r).copy(sourceVersion=2),f.results.last())
+        assertEquals(listOf("observe-scheduled","observe-read-start","observe-read-end"),
+            events.filter{it.readId==2L}.map{it.stage})
+        assertMonotonicPerRead(events)
+    }
+
+    private data class Event(val stage:String,val generation:Long,val version:Long,val readId:Long,val atNs:Long,val count:Int)
+    private fun diagnostics(events:MutableList<Event>)=LibrarySearchDiagnostics{stage,generation,version,readId,atNs,count->
+        events+=Event(stage,generation,version,readId,atNs,count)
+    }
+    private fun assertMonotonicPerRead(events:List<Event>){
+        for(read in events.filter{it.readId!=0L}.groupBy{it.readId}.values){
+            assertTrue(read.zipWithNext().all{(before,after)->after.atNs>=before.atNs})
+        }
+    }
+
+    private class Fixture(scope:TestScope,initial:LibrarySearchRequest=request(),diagnostics:LibrarySearchDiagnostics?=null,
+        read:suspend (LibrarySearchRequest)->LibrarySearchResult=::response) {
         val requests=MutableStateFlow(initial)
         val completed=MutableStateFlow(0)
         private val invalidations=Channel<Set<String>>(Channel.UNLIMITED)
         val reads=mutableListOf<Pair<Long,LibrarySearchRequest>>()
         val results=mutableListOf<LibrarySearchResult>()
-        private val observation=LibrarySearchObservation {r->reads+=scope.currentTime to r;read(r)}
+        private val observation=LibrarySearchObservation(diagnostics){r,_->reads+=scope.currentTime to r;read(r)}
         val collector=scope.backgroundScope.launch {
             observation.results(requests,invalidations.receiveAsFlow(),completed).toList(results)
         }

@@ -5,8 +5,11 @@ import android.content.Context
 import androidx.room.InvalidationTracker
 import androidx.room.withTransaction
 import androidx.test.core.app.ApplicationProvider
+import androidx.test.platform.app.InstrumentationRegistry
 import kotlinx.coroutines.*
 import org.inkweft.core.*
+import org.json.JSONArray
+import org.json.JSONObject
 import org.junit.Assert.*
 import org.junit.Test
 import java.util.UUID
@@ -55,6 +58,94 @@ class HistoryCollectionTest {
 
     @Test fun sameRoomWriterAddingRootAfterFirstBatchDefersRemainingCandidates()=newRootBetweenBatches(false)
     @Test fun separateRoomWriterAddingRootAfterFirstBatchDefersRemainingCandidates()=newRootBetweenBatches(true)
+    @Test fun sameRoomAuthorQueuedBeforeDeleteCommitPreservesNewRoot()=authorQueuedBeforeDeleteCommit(false)
+    @Test fun separateRoomAuthorQueuedBeforeDeleteCommitPreservesNewRoot()=authorQueuedBeforeDeleteCommit(true)
+
+    private fun authorQueuedBeforeDeleteCommit(separate:Boolean)=fixture{db,name,book,source->coroutineScope{
+        val other=if(separate)NoteDatabase.open(context,name)else db
+        val beforeCommit=CompletableDeferred<Unit>();val allowCommit=CountDownLatch(1)
+        val afterCommit=CompletableDeferred<Unit>();val allowNextBatch=CountDownLatch(1)
+        val authorEntered=CompletableDeferred<Unit>()
+        val beforeBatches=AtomicInteger();val afterBatches=AtomicInteger()
+        var collecting:Deferred<HistoryStorageReport>?=null;var saving:Deferred<SaveResult>?=null
+        try{
+            val existing=checkNotNull(NoteRepository(db).read(book))
+            assertTrue(NoteRepository(db).save(SaveNote(UUID.randomUUID().toString(),book,existing.revision,
+                existing.title,"Synthetic body preserved across queued rename")) is SaveResult.Committed)
+            // Open the other helper and read the author before taking the collection guard.
+            val initial=checkNotNull(NoteRepository(other).read(book))
+            val protectedSource=checkNotNull(db.sourceVersions().get(source,300))
+            val card=StudyCardRow(UUID.randomUUID().toString(),book,1,"Synthetic new live root","")
+            val title="Synthetic author queued behind deletion"
+            val work=async(Dispatchers.IO){HistoryStorage(db){phase->when(phase){
+                "before-batch-commit"->if(beforeBatches.incrementAndGet()==1){
+                    val sql=db.openHelper.writableDatabase
+                    assertTrue(sql.inTransaction())
+                    // Observe the real DELETE effects on this transaction's own connection.
+                    sql.query("SELECT COUNT(*) FROM study_source_revisions WHERE sourceId=? AND revision<=256",arrayOf(source)).use{
+                        assertTrue(it.moveToFirst());assertEquals(0L,it.getLong(0))
+                    }
+                    sql.query("SELECT COUNT(*) FROM study_source_revisions WHERE sourceId=?",arrayOf(source)).use{
+                        assertTrue(it.moveToFirst());assertEquals(1025L,it.getLong(0))
+                    }
+                    beforeCommit.complete(Unit);check(allowCommit.await(10,TimeUnit.SECONDS))
+                }
+                "after-batch"->if(afterBatches.incrementAndGet()==1){
+                    afterCommit.complete(Unit);check(allowNextBatch.await(10,TimeUnit.SECONDS))
+                }
+            }}.collectDetached()}
+            collecting=work
+            withTimeout(10_000){beforeCommit.await()}
+            // Start from the coordinator, never from the GC hook/transaction context.
+            // UNDISPATCHED reaches the writer suspension before returning to the test.
+            val author=async(Dispatchers.IO,start=CoroutineStart.UNDISPATCHED){other.withTransaction{
+                authorEntered.complete(Unit)
+                val saved=NoteRepository(other).rename(RenameNote(UUID.randomUUID().toString(),book,initial.revision,title))
+                assertTrue(saved is SaveResult.Committed)
+                assertEquals(initial.revision+1,(saved as SaveResult.Committed).note.revision)
+                other.study().addCard(card);other.study().revision(StudyCardRevisionRow(card.id,1,card.title,card.body,null))
+                other.sourceVersions().insert(StudyCardSourceSetRow(card.id,1,
+                    StudySourceRefs.encode(listOf(StudySourceVersionRef(source,300))),true))
+                saved
+            }}
+            saving=author
+            assertFalse("Author must wait while the actual deletion transaction is held",author.isCompleted)
+            assertFalse("Author transaction must not enter the held GC writer",authorEntered.isCompleted)
+            allowCommit.countDown()
+            withTimeout(10_000){afterCommit.await()}
+            val saved=withTimeout(2_000){author.await()}
+            assertTrue(saved is SaveResult.Committed);assertTrue(authorEntered.isCompleted)
+            assertEquals(initial.revision+1,(saved as SaveResult.Committed).note.revision)
+            assertNull(db.sourceVersions().get(source,256));assertNotNull(db.sourceVersions().get(source,257))
+            assertEquals(listOf(StudySourceVersionRef(source,300)),checkNotNull(db.sourceVersions().set(card.id,1)).refs())
+            allowNextBatch.countDown()
+            val report=withTimeout(10_000){work.await()}
+            assertTrue(report.collectionDeferred);assertEquals(256L,report.detachedSources)
+            assertEquals(1,beforeBatches.get());assertEquals(1,afterBatches.get())
+            assertEquals((257L..1281L).toList(),db.sourceVersions().all().map{it.revision})
+            val finished=HistoryStorage(db).collectDetached()
+            assertFalse(finished.collectionDeferred);assertEquals(1023L,finished.detachedSources)
+            assertEquals(listOf(300L,1281L),db.sourceVersions().all().map{it.revision})
+            assertArrayEquals(protectedSource.snapshot,checkNotNull(db.sourceVersions().get(source,300)).snapshot)
+            val finalNote=checkNotNull(NoteRepository(db).read(book))
+            assertEquals(initial.revision+1,finalNote.revision);assertEquals(title,finalNote.title);assertEquals(initial.text,finalNote.text)
+            val evidence=JSONObject().put("connection",if(separate)"separate-room" else "same-room")
+                .put("artificialGates",true).put("performanceMeasurement",false)
+                .put("firstDeleted",report.detachedSources).put("firstDeferred",report.collectionDeferred)
+                .put("finishDeleted",finished.detachedSources).put("authorCommitted",true)
+                .put("initialRevision",initial.revision).put("finalRevision",finalNote.revision)
+                .put("retainedRevisions",JSONArray(listOf(300L,1281L))).put("contentVerified",true)
+            InstrumentationRegistry.getInstrumentation().sendStatus(0,android.os.Bundle().apply{
+                putString("stream","HISTORY_DELETE_WRITER_CORRECTNESS $evidence\n")
+            })
+        }finally{
+            allowCommit.countDown();allowNextBatch.countDown()
+            try{withContext(NonCancellable){
+                collecting?.cancel();saving?.cancel()
+                collecting?.join();saving?.join()
+            }}finally{if(separate)other.close()}
+        }
+    }}
 
     @Test fun overlappingRootSetsAcrossFullAndPartialBatchesRetainEveryVersion()=fixture{db,_,book,source->
         val card=UUID.randomUUID().toString()
