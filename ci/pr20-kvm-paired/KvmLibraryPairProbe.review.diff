@@ -1,0 +1,172 @@
+--- android/data-local/src/androidTest/kotlin/org/inkweft/data/LibraryReadPerformanceTest.kt
++++ android/data-local/src/androidTest/kotlin/org/inkweft/data/KvmLibraryPairProbe.kt
+@@ -21,15 +21,61 @@
+  * reflectively; timing and correctness use the same fixture/API on both revisions.
+  * Save checkpoints are emitted outside measured save calls. Index progress is emitted
+  * after commits; logging can contribute to index wall time and concurrent scheduling. */
+-class LibraryReadPerformanceTest {
+-    private fun id()=UUID.randomUUID().toString()
++class KvmLibraryPairProbe {
++
++    private val pairSeed=checkNotNull(InstrumentationRegistry.getArguments().getString("pairSeed")).toLong()
++    private val pairRandom=java.util.Random(pairSeed)
++    private fun id()=UUID(pairRandom.nextLong(),pairRandom.nextLong()).toString()
++    private fun emit(marker:String,value:JSONObject){
++        InstrumentationRegistry.getInstrumentation().sendStatus(0,android.os.Bundle().apply{putString("stream","$marker $value\n")})
++    }
++    // Outside all measured operations. Hash actual logical rows, not a fixture recipe.
++    // Keep creation timestamps deterministic; later real saves retain their normal clock.
++    private suspend fun fixtureEvidence(db:NoteDatabase,label:String,tables:List<String>)=db.withTransaction{
++        val sql=db.openHelper.writableDatabase
++        sql.execSQL("UPDATE notes SET updatedAt=1700000000000 WHERE updatedAt>1000000000000")
++        sql.execSQL("UPDATE note_revisions SET committedAt=1700000000000 WHERE committedAt>1000000000000")
++        val digest=java.security.MessageDigest.getInstance("SHA-256")
++        fun add(bytes:ByteArray){digest.update(java.nio.ByteBuffer.allocate(4).putInt(bytes.size).array());digest.update(bytes)}
++        val counts=JSONObject()
++        for(table in tables){
++            require(table.matches(Regex("[a-z_]+")))
++            add(table.toByteArray(Charsets.UTF_8));var rows=0
++            val order=if(table=="page_layer_memberships")"1,2,3" else "1,2"
++            sql.query("SELECT * FROM $table ORDER BY $order").use{c->
++                c.columnNames.forEach{add(it.toByteArray(Charsets.UTF_8))}
++                while(c.moveToNext()){
++                    rows++
++                    for(i in 0 until c.columnCount){
++                        val type=c.getType(i);add(byteArrayOf(type.toByte()))
++                        add(when(type){
++                            android.database.Cursor.FIELD_TYPE_NULL->byteArrayOf()
++                            android.database.Cursor.FIELD_TYPE_BLOB->c.getBlob(i)
++                            else->c.getString(i).toByteArray(Charsets.UTF_8)
++                        })
++                    }
++                }
++            }
++            counts.put(table,rows)
++        }
++        val settings=JSONObject()
++        for(setting in listOf("page_size","auto_vacuum","journal_mode","synchronous")){
++            sql.query("PRAGMA $setting").use{it.moveToFirst();settings.put(setting,if(setting=="journal_mode")it.getString(0) else it.getLong(0))}
++        }
++        assertEquals(1024L,settings.getLong("page_size"));assertEquals(1L,settings.getLong("auto_vacuum"))
++        assertEquals("wal",settings.getString("journal_mode"));assertEquals(2L,settings.getLong("synchronous"))
++        emit("KVM_PAIR_FIXTURE",JSONObject().put("label",label).put("seed",pairSeed)
++            .put("logicalSha256",digest.digest().joinToString(""){"%02x".format(it)})
++            .put("rowCounts",counts).put("writerSqlite",settings))
++    }
++
+     private fun checkpoint(marker:String,value:JSONObject){
+         InstrumentationRegistry.getInstrumentation().sendStatus(0,android.os.Bundle().apply{putString("stream","$marker $value\n")})
+     }
+-    @Test fun coldSearchConcurrentSavesAndShelfReadScale()=runBlocking{coroutineScope{
++    @Test fun coldSearchConcurrentSavesAndShelfReadScale()=runBlocking{
+         val context=ApplicationProvider.getApplicationContext<Context>()
+         val name="library-read-probe-${id()}.db";val db=NoteDatabase.open(context,name)
+-        try{
++        try{coroutineScope{
+             val body="Synthetic note body "+"b".repeat(20_000)
+             val pages="合成页面索引 "+"a".repeat(1024)
+             var targetPage="";var targetBook=""
+@@ -50,7 +96,8 @@
+                 }
+             }
+             val noteRepo=NoteRepository(db)
+-            var writer=WorkspaceRepository(db).create("Concurrent author",false,PaperStyle.BLANK)
++            var writer=WorkspaceRepository(db).create("Concurrent author",false,PaperStyle.BLANK,operationId=id())
++            fixtureEvidence(db,"library-before",listOf("notes","note_revisions","notebook_workspace","notebook_pages","page_search_text","library_search_pending"))
+             val headerMethod=NoteRepository::class.java.methods.firstOrNull{it.name=="observeNoteHeaders"}
+             val headerStart=System.nanoTime()
+             @Suppress("UNCHECKED_CAST")
+@@ -60,19 +107,25 @@
+             val request=LibrarySearchRequest(1,notes,emptyMap(),"target-only")
+             val scanned=AtomicInteger();val entered=CompletableDeferred<Unit>()
+             repo.scanObserver={_,count->scanned.set(count);if(count==1)entered.complete(Unit)}
++            val coldEnd=java.util.concurrent.atomic.AtomicLong()
++            val directProgress=JSONArray()
+             val coldStart=System.nanoTime()
+-            val cold=async(Dispatchers.IO){repo.read(request)}
++            val cold=async(Dispatchers.IO){try{repo.read(request)}finally{coldEnd.set(System.nanoTime())}}
+             withTimeout(30_000){entered.await()}
+             val saves=async(Dispatchers.IO){buildList{repeat(30){i->
+-                val start=System.nanoTime()
++                val checksStart=scanned.get();val start=System.nanoTime()
+                 val result=noteRepo.save(SaveNote(id(),writer.id,writer.revision,writer.title,"Synthetic concurrent edit $i"))
++                val end=System.nanoTime();val checksEnd=scanned.get()
+                 assertTrue(result is SaveResult.Committed);writer=(result as SaveResult.Committed).note
+-                add((System.nanoTime()-start)/1e6)
++                val elapsed=(end-start)/1e6
++                directProgress.put(JSONObject().put("sample",i).put("startNs",start).put("endNs",end).put("elapsedMs",elapsed).put("checksStart",checksStart).put("checksEnd",checksEnd).put("committedRevision",writer.revision).put("committed",true))
++                add(elapsed)
+             }}}
+             val first=cold.await();val coldMs=(System.nanoTime()-coldStart)/1e6;val saveSamples=saves.await();val latencies=saveSamples.sorted()
+             assertEquals(targetBook,first.items.single().note.id);assertEquals(targetPage,first.items.single().pageId)
+             assertEquals(20_000,first.pendingIndex)
+             val coldScanned=scanned.get()
++            checkpoint("KVM_DIRECT_INTERVALS",JSONObject().put("coldStartNs",coldStart).put("coldEndNs",coldEnd.get()).put("saves",directProgress))
+             // Deterministic contention probe: pause inside actual source scanning. A writer
+             // must be able to commit while an optimized reader pins its old WAL snapshot.
+             val pauseEntered=CompletableDeferred<Unit>();val release=CountDownLatch(1)
+@@ -102,10 +155,12 @@
+             val firstObservedBatch=CompletableDeferred<Unit>()
+             val allRowsCommitted=CompletableDeferred<Unit>()
+             val observedIndexReady=CompletableDeferred<LibrarySearchResult>()
++            val batchProgress=java.util.concurrent.CopyOnWriteArrayList<Pair<Int,Long>>()
+             val observeStart=System.nanoTime()
+             var firstObservedBatchMs=0.0;var allObservedRowsMs=0.0
+             repo.scanObserver={_,_->observeChecks.incrementAndGet()}
+             repo.indexObserver={_,count->
++                val committedNs=System.nanoTime();batchProgress.add(count to committedNs)
+                 observeRows.set(count)
+                 val firstBatch=!firstObservedBatch.isCompleted
+                 if(firstBatch){
+@@ -138,11 +193,11 @@
+                     val rowsBefore=observeRows.get();val checksBefore=observeChecks.get()
+                     val start=System.nanoTime()
+                     val result=noteRepo.save(SaveNote(id(),writer.id,writer.revision,writer.title,"Synthetic indexed edit $i"))
+-                    val elapsed=(System.nanoTime()-start)/1e6
++                    val end=System.nanoTime();val elapsed=(end-start)/1e6
+                     val rowsAfter=observeRows.get();val checksAfter=observeChecks.get()
+                     assertTrue(result is SaveResult.Committed);writer=(result as SaveResult.Committed).note
+                     durations+=elapsed
+-                    samples.put(JSONObject().put("sample",i).put("elapsedMs",elapsed)
++                    samples.put(JSONObject().put("sample",i).put("elapsedMs",elapsed).put("startNs",start).put("endNs",end).put("committed",true).put("committedRevision",writer.revision)
+                         .put("indexRowsStart",rowsBefore).put("indexRowsEnd",rowsAfter)
+                         .put("sourceChecksStart",checksBefore).put("sourceChecksEnd",checksAfter))
+                 }}
+@@ -159,6 +214,7 @@
+                 observedIndexReady.await()
+                 val readyMs=(System.nanoTime()-observeStart)/1e6
+                 assertEquals(first.pendingIndex,observeRows.get())
++                checkpoint("KVM_INDEX_INTERVALS",JSONObject().put("observeStartNs",observeStart).put("batches",JSONArray().apply{batchProgress.forEach{put(JSONObject().put("rows",it.first).put("committedNs",it.second))}}))
+                 savedSamples.put("indexRowsFinal",observeRows.get())
+                     .put("allIndexRowsCommittedMs",allObservedRowsMs).put("searchIndexReadyMs",readyMs)
+                     .put("sourceChecks",observeChecks.get())
+@@ -166,8 +222,9 @@
+                 withContext(NonCancellable){observeJob.cancelAndJoin()}
+                 repo.indexObserver=null;repo.scanObserver=null
+             }
+-            val warm=buildList{repeat(5){val start=System.nanoTime();val result=repo.read(request)
+-                add((System.nanoTime()-start)/1e6);assertEquals(targetPage,result.items.single().pageId);assertEquals(0,result.pendingIndex)}}.sorted()
++            val warmSamples=buildList{repeat(5){val start=System.nanoTime();val result=repo.read(request)
++                add((System.nanoTime()-start)/1e6);assertEquals(targetPage,result.items.single().pageId);assertEquals(0,result.pendingIndex)}}
++            val warm=warmSamples.sorted()
+             val observed=HashMap<String,Pair<Int,Int>>()
+             val projection: (String,Int,Int)->Unit={kind,rows,chars->observed[kind]=rows to chars}
+             LibrarySearchRepository::class.java.methods.firstOrNull{it.name.startsWith("setReadObserver")}?.invoke(repo,projection)
+@@ -193,7 +250,7 @@
+             }
+             val evidence=JSONObject().put("books",500).put("pages",20000).put("noteBodyChars",body.length).put("writerSqlite",writerSqlite)
+                 .put("headerReadMs",headerMs).put("headerReturnedBodyChars",notes.sumOf{it.text.length})
+-                .put("coldMs",coldMs).put("coldSourceChecks",coldScanned).put("warmMedianMs",warm[2])
++                .put("coldMs",coldMs).put("coldSourceChecks",coldScanned).put("warmMedianMs",warm[2]).put("warmSamplesMs",JSONArray(warmSamples))
+                 .put("saveCount",latencies.size).put("saveP50Ms",latencies[latencies.size/2])
+                 .put("saveP95Ms",latencies[(latencies.size*95+99)/100-1]).put("saveMaxMs",latencies.last())
+                 .put("saveSamplesMs",JSONArray(saveSamples))
+@@ -205,6 +262,6 @@
+                 .put("projectionChars",observed["previews"]?.second?:JSONObject.NULL)
+                 .put("fullBodyOnDemandMatches",noteRepo.read(targetBook)!!.text==body)
+             InstrumentationRegistry.getInstrumentation().sendStatus(0,android.os.Bundle().apply{putString("stream","LIBRARY_READ_EVIDENCE $evidence\n")})
+-        }finally{db.close();context.deleteDatabase(name)}
+-    }}
++        }}finally{db.close();context.deleteDatabase(name)}
++    }
+ }
