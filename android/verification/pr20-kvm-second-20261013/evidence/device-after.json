@@ -1,0 +1,15 @@
+{
+  "sdk": "35",
+  "abi": "x86_64",
+  "fingerprint": "Android/sdk_slim_x86_64/emu64x:15/AE3A.240806.019/12368160:userdebug/test-keys",
+  "qemu": "1",
+  "hw_timeout_multiplier": "",
+  "size": "Physical size: 1080x1920\nOverride size: 1920x1200",
+  "density": "Physical density: 420\nOverride density: 240",
+  "font_scale": "1.0",
+  "animations": {
+    "window_animation_scale": "1.0",
+    "transition_animation_scale": "1.0",
+    "animator_duration_scale": "null"
+  }
+}

@@ -1,0 +1,2 @@
+<?xml version='1.0' encoding='utf-8'?>
+<testsuite name="org.inkweft.app.TileLocalRedrawTest#integralPanReusesInteriorTilesAndZoomPreviewNeverCompletesCapture" tests="1" failures="0" time="1.618161916732788"><testcase classname="org.inkweft.app.TileLocalRedrawTest" name="integralPanReusesInteriorTilesAndZoomPreviewNeverCompletesCapture" time="1.618161916732788" /></testsuite>

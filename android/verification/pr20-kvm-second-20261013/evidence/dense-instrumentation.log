@@ -1,0 +1,41 @@
+INSTRUMENTATION_STATUS: class=org.inkweft.app.StreamedInkRasterTest
+INSTRUMENTATION_STATUS: current=1
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=1
+INSTRUMENTATION_STATUS: stream=
+org.inkweft.app.StreamedInkRasterTest:
+INSTRUMENTATION_STATUS: test=completeFrameIncludesGeometryBeyondTheEditorWindowAndReleasesItsWorker
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: stream=STREAMED_FRAME_STAGE {"case":"original-dense","stage":"fixture-start","elapsedMs":109.398333,"fixtureStrokes":1201,"fixturePoints":76802,"frameDeadlineMs":30000}
+
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: stream=STREAMED_FRAME_STAGE {"case":"original-dense","stage":"fixture-complete","elapsedMs":720.090715,"fixtureStrokes":1201,"fixturePoints":76802,"frameDeadlineMs":30000}
+
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: stream=STREAMED_FRAME_STAGE {"windowStrokes":128,"windowPoints":8192,"case":"original-dense","stage":"editor-window-complete","elapsedMs":1423.179436,"fixtureStrokes":1201,"fixturePoints":76802,"frameDeadlineMs":30000}
+
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: stream=STREAMED_FRAME_STAGE {"case":"original-dense","stage":"frame-start","elapsedMs":1424.373061,"fixtureStrokes":1201,"fixturePoints":76802,"frameDeadlineMs":30000}
+
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: stream=STREAMED_FRAME_STAGE {"frameElapsedMs":1272.965752,"snapshotReads":[{"frameElapsedMs":116.633533,"rows":256,"points":16384,"freezeMs":11.521962,"decodeMs":15.379024},{"frameElapsedMs":432.686791,"rows":256,"points":16384,"freezeMs":9.862771,"decodeMs":14.723612},{"frameElapsedMs":685.728965,"rows":256,"points":16384,"freezeMs":10.249279,"decodeMs":14.300633},{"frameElapsedMs":914.086435,"rows":256,"points":16384,"freezeMs":9.834256,"decodeMs":13.670208},{"frameElapsedMs":1132.507279,"rows":177,"points":11266,"freezeMs":12.512018,"decodeMs":9.776409}],"snapshotRows":1201,"changeCallbacks":1,"publishedStats":"BuildStats(tiles=4, rebuilt=4, decoded=1201, bitmapBytes=800000, metadataMs=58.047088, rasterMs=1198.939202, publicationMs=0.620707, reusedStrokes=0, geometryBytes=1046656, nativeStrokeBuilds=1201)","case":"original-dense","stage":"frame-complete","elapsedMs":2696.847637,"fixtureStrokes":1201,"fixturePoints":76802,"frameDeadlineMs":30000}
+
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: stream=STREAMED_FRAME_STAGE {"case":"original-dense","stage":"verified-and-released","elapsedMs":2698.44195,"fixtureStrokes":1201,"fixturePoints":76802,"frameDeadlineMs":30000}
+
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=org.inkweft.app.StreamedInkRasterTest
+INSTRUMENTATION_STATUS: current=1
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=1
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=completeFrameIncludesGeometryBeyondTheEditorWindowAndReleasesItsWorker
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_RESULT: stream=
+
+Time: 2.712
+
+OK (1 test)
+
+
+INSTRUMENTATION_CODE: -1

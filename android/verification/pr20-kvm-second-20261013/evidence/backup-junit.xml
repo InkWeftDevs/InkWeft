@@ -1,0 +1,2 @@
+<?xml version='1.0' encoding='utf-8'?>
+<testsuite name="org.inkweft.data.LibraryBackupRepositoryTest#cancellingWrittenSnapshotRemovesPartialAndPreservesAuthorLibrary" tests="1" failures="0" time="10.387870073318481"><testcase classname="org.inkweft.data.LibraryBackupRepositoryTest" name="cancellingWrittenSnapshotRemovesPartialAndPreservesAuthorLibrary" time="10.387870073318481" /></testsuite>

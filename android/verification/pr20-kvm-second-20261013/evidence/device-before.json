@@ -1,0 +1,36 @@
+{
+  "sdk": "35",
+  "abi": "x86_64",
+  "fingerprint": "Android/sdk_slim_x86_64/emu64x:15/AE3A.240806.019/12368160:userdebug/test-keys",
+  "qemu": "1",
+  "hw_timeout_multiplier": "",
+  "size": "Physical size: 1080x1920\nOverride size: 1920x1200",
+  "density": "Physical density: 420\nOverride density: 240",
+  "font_scale": "1.0",
+  "animations": {
+    "window_animation_scale": "1.0",
+    "transition_animation_scale": "1.0",
+    "animator_duration_scale": "null"
+  },
+  "emulator_command": [
+    "/usr/local/lib/android/sdk/emulator/emulator",
+    "-avd",
+    "pr20-kvm-once",
+    "-port",
+    "5554",
+    "-no-window",
+    "-no-snapshot",
+    "-noaudio",
+    "-no-boot-anim",
+    "-gpu",
+    "swiftshader",
+    "-accel",
+    "on",
+    "-cores",
+    "2",
+    "-memory",
+    "2048"
+  ],
+  "emulator_version": "Android emulator version 37.2.12.0 (build_id 16428233) (CL:N/A)",
+  "image_source_properties": "Pkg.Desc=AOSP Automated Test Device System Image x86_64\nPkg.Revision=1\nPkg.Dependencies=emulator#30.9.2\nAndroidVersion.ApiLevel=35\nSystemImage.Abi=x86_64\nSystemImage.TagId=aosp_atd\nSystemImage.TagDisplay=AOSP ATD\nSystemImage.GpuSupport=true\nAddon.VendorId=google\nAddon.VendorDisplay=Google Inc.\n\n"
+}

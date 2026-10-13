@@ -1,0 +1,159 @@
+{
+  "read_at_utc": "2026-10-13T08:53:40.725098+00:00",
+  "read_only_endpoints": [
+    "actions/artifacts/11796344544",
+    "actions/artifacts/11795244148",
+    "actions/runs/38365926272",
+    "actions/runs/38365926272/jobs"
+  ],
+  "second_artifact": {
+    "id": 11796344544,
+    "name": "pr20-kvm-once-38365926272",
+    "size_in_bytes": 23742,
+    "digest": "sha256:520e09565b4973fd90fb2a8e8c7e1bbd9faae9da2e996f7588c704deeca8994d",
+    "created_at": "2026-10-13T08:09:53Z",
+    "expires_at": "2026-10-16T08:09:53Z",
+    "workflow_run": {
+      "id": 38365926272,
+      "repository_id": 1383361500,
+      "head_repository_id": 1383361500,
+      "head_branch": "codex/kvm-pr20-7949011-once",
+      "head_sha": "a65f8599300b42444ab516714645b4e6f28d0432"
+    }
+  },
+  "first_artifact": {
+    "id": 11795244148,
+    "name": "pr20-kvm-once-38362557447",
+    "size_in_bytes": 14645,
+    "digest": "sha256:81b4c910c72a430806fc2b814ce610f4afb762b718c4559c8146c9c2de6276de",
+    "created_at": "2026-10-13T07:37:34Z",
+    "expires_at": "2026-10-16T07:37:34Z",
+    "workflow_run": {
+      "id": 38362557447,
+      "repository_id": 1383361500,
+      "head_repository_id": 1383361500,
+      "head_branch": "codex/kvm-pr20-7949011-once",
+      "head_sha": "8d927024ee76f30e7970d44d4e55efa1b896d8ff"
+    }
+  },
+  "run": {
+    "id": 38365926272,
+    "head_branch": "codex/kvm-pr20-7949011-once",
+    "head_sha": "a65f8599300b42444ab516714645b4e6f28d0432",
+    "event": "push",
+    "status": "completed",
+    "conclusion": "success",
+    "run_attempt": 1,
+    "html_url": "https://github.com/InkWeftDevs/InkWeft/actions/runs/38365926272",
+    "created_at": "2026-10-13T07:56:36Z",
+    "updated_at": "2026-10-13T08:09:57Z"
+  },
+  "jobs": [
+    {
+      "id": 115190916087,
+      "name": "verify",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-13T07:56:39Z",
+      "completed_at": "2026-10-13T08:09:56Z",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-10-13T07:56:39Z",
+          "completed_at": "2026-10-13T07:56:41Z"
+        },
+        {
+          "name": "固定55分钟工作预算并初始化最小证据目录",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-10-13T07:56:41Z",
+          "completed_at": "2026-10-13T07:56:41Z"
+        },
+        {
+          "name": "Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-10-13T07:56:41Z",
+          "completed_at": "2026-10-13T07:56:46Z"
+        },
+        {
+          "name": "Run actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-10-13T07:56:46Z",
+          "completed_at": "2026-10-13T07:56:47Z"
+        },
+        {
+          "name": "准备可审查的执行与双重清理脚本（不改被测源码）",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-10-13T07:56:47Z",
+          "completed_at": "2026-10-13T07:56:47Z"
+        },
+        {
+          "name": "原方法各一次；退出时关闭模拟器并恢复ACL",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-10-13T07:56:47Z",
+          "completed_at": "2026-10-13T08:09:51Z"
+        },
+        {
+          "name": "always再次核验关闭与完整ACL恢复",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-10-13T08:09:51Z",
+          "completed_at": "2026-10-13T08:09:52Z"
+        },
+        {
+          "name": "只打包白名单文本且合计不超过10MiB",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8,
+          "started_at": "2026-10-13T08:09:52Z",
+          "completed_at": "2026-10-13T08:09:52Z"
+        },
+        {
+          "name": "Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9,
+          "started_at": "2026-10-13T08:09:52Z",
+          "completed_at": "2026-10-13T08:09:53Z"
+        },
+        {
+          "name": "Post Run actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17,
+          "started_at": "2026-10-13T08:09:53Z",
+          "completed_at": "2026-10-13T08:09:54Z"
+        },
+        {
+          "name": "Post Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 18,
+          "started_at": "2026-10-13T08:09:54Z",
+          "completed_at": "2026-10-13T08:09:54Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 19,
+          "started_at": "2026-10-13T08:09:54Z",
+          "completed_at": "2026-10-13T08:09:54Z"
+        }
+      ]
+    }
+  ]
+}

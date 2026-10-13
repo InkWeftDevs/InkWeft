@@ -1,0 +1,10 @@
+{
+  "uid": 1001,
+  "kernel": "6.17.0-1022-azure",
+  "cpu_count": 4,
+  "cpu_model": "AMD EPYC 7763 64-Core Processor",
+  "memory_kib": "MemTotal:       16373448 kB",
+  "java": "openjdk version \"17.0.20.1\" 2026-08-18\nOpenJDK Runtime Environment Temurin-17.0.20.1+1 (build 17.0.20.1+1)\nOpenJDK 64-Bit Server VM Temurin-17.0.20.1+1 (build 17.0.20.1+1, mixed mode, sharing)",
+  "source_sha": "7949011ca2b84492f6438d275a09d28faef3b472",
+  "workflow_sha": "a65f8599300b42444ab516714645b4e6f28d0432"
+}
