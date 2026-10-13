@@ -1,0 +1,44 @@
+{
+  "run_id": "38396134768",
+  "derived_terminal_status": "INCOMPLETE_SETUP_OUTER_TIMEOUT",
+  "evidence_basis": [
+    "Official GitHub completed/failure and exit124 annotation",
+    "C1 log without build completion and phase cutoff",
+    "Original summary preserved unchanged including stale RUNNING",
+    "Original trap and always cleanup receipts"
+  ],
+  "methods_not_run": 44,
+  "install_groups": 0,
+  "complete_build_receipts": [
+    "B",
+    "C0"
+  ],
+  "C1_build_completed": false,
+  "identical_dependency_records": 879,
+  "same_debug_signer": true,
+  "same_four_ABI_MuPDF_receipts": true,
+  "native_APKs_reverified_locally": false,
+  "native_APKs_present_in_artifact": false,
+  "cleanup": {
+    "trap": {
+      "emulator": "NOT_STARTED",
+      "command_groups": "STOPPED_CONFIRMED",
+      "acl": "NOT_TOUCHED",
+      "errors": []
+    },
+    "always": {
+      "emulator": "NOT_STARTED",
+      "command_groups": "STOPPED_CONFIRMED",
+      "acl": "NOT_TOUCHED",
+      "errors": []
+    }
+  },
+  "summary_sha256": "3512207b5d6117db0eb144e51cb5dcc0aa03b7d836f64f2b9c3bb38932c76854",
+  "summary_state_normalization_needed": true,
+  "observed_complete_build_action_seconds": {
+    "B": 664.4710767269135,
+    "C0": 501.24763798713684
+  },
+  "C1_completed_seconds": null,
+  "no_new_performance_results": true
+}

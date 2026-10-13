@@ -1,0 +1,18 @@
+{
+  "job_id": 115291708326,
+  "started_epoch": 1791893814,
+  "deadlines_minutes": [
+    26,
+    32,
+    48,
+    55,
+    60
+  ],
+  "deadline_epochs": {
+    "KVM_JOB_STARTED": 1791893814,
+    "KVM_SETUP_CUTOFF": 1791895374,
+    "KVM_CORRECTNESS_CUTOFF": 1791895734,
+    "KVM_COMMON_CUTOFF": 1791896694,
+    "KVM_WORK_DEADLINE": 1791897114
+  }
+}
