@@ -1,0 +1,40 @@
+{
+  "utc": "2026-10-13T04:21:26.621508+00:00",
+  "base_commit": "44835b42fcc23b447ee8c8ac524091b5c1720ecc",
+  "read_only_inspection": true,
+  "workflow_dispatched": false,
+  "permissions_modified": false,
+  "kvm": {
+    "exists": false,
+    "readable": false,
+    "writable": false
+  },
+  "files": {
+    ".github/workflows/android-six-batches.yml": "09cab4d9091e4964e775cc7b406fb257b2f51e34251b74f1165379fb4a86fac8",
+    ".github/workflows/android-a0.yml": "93152771ed075686b2ddc744cb17c9200f144d2a87bc2bf988049eec77883ae7",
+    ".github/workflows/android-runner-diagnostics.yml": "2a8b334c321d367058b8c624c2bab08458969a3a71044a0658be6801d7293b63",
+    ".github/workflows/android-source-snapshot.yml": "e982a61c52a37b5a31f61941a66b0eb80c17eab45dbb2ebfcc31b9037eda7c4d",
+    "ci/test_six_batch_workflow.py": "346020296474555ea77a13dd5099a5bc93c1405dc7af79688f28eea02546a930"
+  },
+  "permission_operations": [
+    {
+      "file": ".github/workflows/android-six-batches.yml",
+      "line": 77,
+      "operation": "sudo setfacl -m current-user:rw /dev/kvm",
+      "restoration_line": 232
+    },
+    {
+      "file": ".github/workflows/android-a0.yml",
+      "line": 201,
+      "operation": "sudo chmod 666 /dev/kvm",
+      "job": "device"
+    },
+    {
+      "file": ".github/workflows/android-a0.yml",
+      "line": 297,
+      "operation": "sudo chmod 666 /dev/kvm",
+      "job": "tls"
+    }
+  ],
+  "note": "Existing workflow label claiming earlier permission is not authorization for this request. No workflow or permission was changed."
+}

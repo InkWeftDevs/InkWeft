@@ -1,0 +1,20 @@
+
+org.inkweft.app.TileLocalRedrawTest:TILE_PAN_STAGE {"stage":"initial-cached","event":"start","deadlineMs":30000}
+TILE_PAN_STAGE {"stage":"initial-cached","event":"complete","elapsedMs":14386.110685}
+TILE_PAN_STAGE {"stage":"pan-cached","event":"start","deadlineMs":30000}
+TILE_PAN_STAGE {"stage":"pan-cached","event":"complete","elapsedMs":1648.029175}
+TILE_PAN_STAGE {"stage":"pan-cold","event":"start","deadlineMs":30000}
+TILE_PAN_STAGE {"stage":"pan-cold","event":"complete","elapsedMs":4045.034568}
+TILE_PAN_STAGE {"stage":"zoom-cached","event":"start","deadlineMs":30000}
+TILE_PAN_STAGE {"stage":"zoom-cached","event":"complete","elapsedMs":3109.333908}
+TILE_PAN_STAGE {"stage":"zoom-cold","event":"start","deadlineMs":30000}
+TILE_PAN_STAGE {"stage":"zoom-cold","event":"complete","elapsedMs":3006.977449}
+TILE_PAN_EVIDENCE {"rebuilt":12,"tiles":20,"panPixelsEqual":true,"zoomPixelsEqual":true,"previewCaptureReady":false}
+TILE_PAN_STAGE {"event":"workers-joined","resources":{"totalBytes":0,"budgetBytes":134217728,"peakTrackedBytes":27729920,"inFlightJobs":0,"cancelledJobs":0,"cacheBytes":0,"in_flightBytes":0,"activeBytes":0,"live_inkBytes":0}}
+.
+
+Time: 36.737
+
+OK (1 test)
+
+
