@@ -5,5 +5,6 @@
 48a834da006ae0061f94c131b25de1526c9281bce07f31ef9063e7fdf9eaa038  ci/pr20-kvm-triple/budget-revision.json
 8347651ad2991dbe062e7b1b612284b3e4968809ffafbcb4d7f3172f317cff36  ci/pr20-kvm-triple/clock-contract.json
 25a5fa4eb2d5297390503eb25296c6cffefd40d3917fb57f66b3e8081cec1de8  ci/pr20-kvm-triple/clock-server-receipt.json
-22cd17021b8b948c549a6186daa7a5ae8de619437cd3cbeef2b9af906037fc5f  ci/pr20-kvm-triple/workflow.proposed.yml
-d6c2e75a2377384f47debc2fe3dac4ce1de56027943eef38b2e39deceb925278  ci/pr20-kvm-triple/preflight.json
+2dba1946e55e1990ab23ec60d34865e826ac7b3606d31076ec06b6174efe68d9  ci/pr20-kvm-triple/workflow.proposed.yml
+8c0e6d4298be59426b7f4fa542f119db96ae74b74e850cda536eee3435413792  ci/pr20-kvm-triple/preflight.json
+2dba1946e55e1990ab23ec60d34865e826ac7b3606d31076ec06b6174efe68d9  .github/workflows/pr20-kvm-triple.yml

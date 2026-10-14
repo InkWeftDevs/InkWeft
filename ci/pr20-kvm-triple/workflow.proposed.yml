@@ -13,7 +13,7 @@ concurrency:
 jobs:
   triple:
     name: PR20 fixed three-source native validation
-    if: github.event_name == 'push' && github.ref == 'refs/heads/codex/kvm-pr20-candidate3-20261014' && github.event.created == false && github.event.before == '0000000000000000000000000000000000000000'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/codex/kvm-pr20-candidate3-20261014' && github.event.created == false && github.event.before == 'b3bcbcc9ca4e4134f0d2e4806bcd7bcf55ab0897'
       && github.run_attempt == 1
     runs-on: ubuntu-24.04
     timeout-minutes: 60
