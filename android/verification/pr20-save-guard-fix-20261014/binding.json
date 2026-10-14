@@ -1,0 +1,24 @@
+{
+  "scope": "HOST_CONSTRUCTOR_CONTRACT_NOT_NATIVE_FAILURE_STACK",
+  "old_source_sha256": "03ef99d05bc814fa19d755b0d3fb534f84da6f04e1af024dc0433c8f367a276a",
+  "new_source_sha256": "cd1b0ba9e112a19e16fdea36b1b867183c890a4addb8c6ebfdfe7986f4a73038",
+  "source_commit_of_failed_run": "4f41a501127dbed6dbef3519f93233a105b5d618",
+  "assertOuterPair_and_entire_scenario_suffix_byte_unchanged": true,
+  "existing_analyzer_sha256": "fd1c22004bb91e7e6673a6ac59eb0f2c2413c9f8ef454a00b2950c0581bbd1b7",
+  "core_source": {
+    "path": "/workspace/InkWeft/android/core-domain/src/main/kotlin/org/inkweft/core/NoteDraft.kt",
+    "sha256": "39a5df195ecb0e49b0a99fd0f9eb09def3c573f5d75b7d489345ff348af7c7e9"
+  },
+  "compiled_SaveNote_class": {
+    "path": "/workspace/InkWeft/android/core-domain/build/classes/kotlin/main/org/inkweft/core/SaveNote.class",
+    "sha256": "554693c11e54871a8bba91bfd6f3444b32164c1b7b7b977e8fa23249d5f7e869"
+  },
+  "constructor_validator": {
+    "path": "/workspace/scratch/pr20-save-guard-fix-20261014/ValidateGuardIds.java",
+    "sha256": "74387ca73b214b28fe63a370bbe8a99eeb3ff4e3c5255dbca2bd61b8cea2a034"
+  },
+  "constructor_log": {
+    "path": "/workspace/scratch/pr20-save-guard-fix-20261014/constructor-proof.log",
+    "sha256": "e64ceb44ff7df1779d67e4399588cbc7fa756974b3fb177f9cb66d23446804b0"
+  }
+}

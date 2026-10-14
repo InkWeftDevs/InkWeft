@@ -1,0 +1,27 @@
+{
+  "command": [
+    "/workspace/.setup/tools/gradle-9.4.1/bin/gradle",
+    ":data-local:compileDebugAndroidTestKotlin",
+    "--daemon",
+    "--max-workers=1",
+    "--console=plain",
+    "-Dorg.gradle.jvmargs=-Xmx2048m -Dfile.encoding=UTF-8",
+    "-Pkotlin.compiler.execution.strategy=in-process",
+    "--offline"
+  ],
+  "started_utc": "2026-10-14T09:21:59.729394+00:00",
+  "source_sha256": {
+    "android/data-local/src/androidTest/kotlin/org/inkweft/data/HistoryDeletionBoundaryDiagnosticsTest.kt": "98b69ea1d09e0bce21646d79f50f9b7dd9396c9e73bb1a9baea647de7cdf6b72",
+    "android/data-local/src/main/kotlin/org/inkweft/data/HistoryStorage.kt": "b96890478129bbb7b0bbb538c3cf8d5f2e97f2b8b5e2e34d8057c855c9ec6ca9",
+    "android/data-local/src/main/kotlin/org/inkweft/data/SaveBoundaryDiagnostics.kt": "392bf0e25e6f62d77f915eec628eac16f3f374e0de5287fb02435d29c0cecab9",
+    "android/data-local/src/main/kotlin/org/inkweft/data/NoteDatabase.kt": "c904a8ebc9b2aed64266a82d24b8f1395621314a9087fd6f0de6298b8865fb47",
+    "android/data-local/src/main/kotlin/org/inkweft/data/NoteRepository.kt": "a9351355ca45af5f6f5db34109fa68d6bf10505d3117ed60a7c68cc000b05e89",
+    "android/data-local/src/main/kotlin/org/inkweft/data/PreservingOpenHelperFactory.kt": "052467625c685a79f72337379b2d4e70718440c6717e91c6d18677c9c1982581",
+    "android/data-local/src/androidTest/kotlin/org/inkweft/data/HistoryDeletionExposureTest.kt": "7e98a67eec4f9242fc4c18e6bf662ec1d86c346796ebc28ab0971be1a9f0224f",
+    "android/data-local/src/androidTest/kotlin/org/inkweft/data/HistoryDeletionCausalTest.kt": "4f80b8ce32e1aa2bae1d919b96c06b1897e7a8500c748822efd05119ba87ec4a",
+    "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibrarySaveBoundaryDiagnosticsTest.kt": "cd1b0ba9e112a19e16fdea36b1b867183c890a4addb8c6ebfdfe7986f4a73038"
+  },
+  "native_execution": false,
+  "final_acceptance": false,
+  "hook_native_guard_dependency": "INVALID_UUID_GUARD_FIXED_BUT_NATIVE_RERUN_NOT_PERFORMED"
+}

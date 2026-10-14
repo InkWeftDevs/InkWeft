@@ -70,19 +70,20 @@ class LibrarySaveBoundaryDiagnosticsTest {
         val recorder=Recorder();var db=NoteDatabase.open(context,name,recorder.diagnostics)
         try {
             db.withTransaction{assertEquals(2,db.openHelper.writableDatabase.query("PRAGMA synchronous").use{it.moveToFirst();it.getInt(0)})}
-            val repository=NoteRepository(db);val command=SaveNote("first","author",0,"Title","Body")
+            val authorId="00000000-0000-0000-0000-000000000001"
+            val repository=NoteRepository(db);val command=SaveNote("00000000-0000-0000-0000-000000000002",authorId,0,"Title","Body")
             recorder.enabled=true
             suspend fun save(sample:Int,command:SaveNote)=withContext(Dispatchers.IO+recorder.diagnostics.sample.asContextElement(sample)){repository.save(command)}
             assertTrue(save(0,command) is SaveResult.Committed)
             assertTrue(save(1,command) is SaveResult.Committed)
-            assertTrue(save(2,command.copy(commandId="conflict",expectedRevision=0)) is SaveResult.Conflict)
+            assertTrue(save(2,command.copy(commandId="00000000-0000-0000-0000-000000000003",expectedRevision=0)) is SaveResult.Conflict)
             val failure=IllegalStateException("synthetic guard")
             repository.saveStageObserver={if(it=="head-written")throw failure}
-            try { save(3,command.copy(commandId="failed",expectedRevision=1,text="Must roll back"));fail("Expected injected failure") }
+            try { save(3,command.copy(commandId="00000000-0000-0000-0000-000000000004",expectedRevision=1,text="Must roll back"));fail("Expected injected failure") }
             catch(actual:IllegalStateException){assertSame(failure,actual)}
             val cancelled=CancellationException("synthetic rollback")
             repository.saveStageObserver={if(it=="head-written")throw cancelled}
-            try { save(4,command.copy(commandId="cancelled",expectedRevision=1,text="Must roll back"));fail("Expected cancellation") }
+            try { save(4,command.copy(commandId="00000000-0000-0000-0000-000000000005",expectedRevision=1,text="Must roll back"));fail("Expected cancellation") }
             catch(actual:CancellationException){assertSame(cancelled,actual)}
             repository.saveStageObserver=null
             // Keep Room's actual serial writer occupied. Cancellation must remove the queued
@@ -93,7 +94,7 @@ class LibrarySaveBoundaryDiagnosticsTest {
             try {
                 entered.await()
                 queued=launch(Dispatchers.IO+recorder.diagnostics.sample.asContextElement(5)) {
-                    repository.save(command.copy(commandId="queue-cancelled",expectedRevision=1,text="Must never write"))
+                    repository.save(command.copy(commandId="00000000-0000-0000-0000-000000000006",expectedRevision=1,text="Must never write"))
                 }
                 withTimeout(5_000){while(recorder.events.none{it.sample==5&&it.stage=="writer-submit"})yield()}
                 queued.cancel()
@@ -101,10 +102,10 @@ class LibrarySaveBoundaryDiagnosticsTest {
                 release.complete(Unit)
                 withContext(NonCancellable){queued?.cancelAndJoin();blocker.cancelAndJoin()}
             }
-            val committed=save(6,command.copy(commandId="second",expectedRevision=1,text="Persisted")) as SaveResult.Committed
+            val committed=save(6,command.copy(commandId="00000000-0000-0000-0000-000000000007",expectedRevision=1,text="Persisted")) as SaveResult.Committed
             assertEquals(2L,committed.note.revision)
             withContext(Dispatchers.IO+recorder.diagnostics.sample.asContextElement(7)) {
-                db.withTransaction { assertTrue(repository.save(SaveNote("nested","nested-author",0,"Nested","Body")) is SaveResult.Committed) }
+                db.withTransaction { assertTrue(repository.save(SaveNote("00000000-0000-0000-0000-000000000008","00000000-0000-0000-0000-000000000009",0,"Nested","Body")) is SaveResult.Committed) }
             }
             recorder.awaitWorkers();recorder.complete()
             val events=recorder.events.toList()
@@ -112,13 +113,13 @@ class LibrarySaveBoundaryDiagnosticsTest {
             assertOuterPair(events.filter{it.sample==7},true)
             assertTrue(events.any{it.sample==7&&it.stage=="room-begin-exit"&&it.depth==2})
             assertFalse(events.any{it.sample==5&&it.stage=="save-writer-acquired"})
-            assertEquals("Persisted",repository.read("author")!!.text)
+            assertEquals("Persisted",repository.read(authorId)!!.text)
             db.close();db=NoteDatabase.open(context,name)
             assertNull(db.saveBoundaryDiagnostics)
             val beforeUntraced=recorder.events.size
             val reopened=NoteRepository(db)
-            assertEquals(committed.note,reopened.read("author"))
-            assertTrue(reopened.save(command.copy(commandId="after-reopen",expectedRevision=2,text="After reopen")) is SaveResult.Committed)
+            assertEquals(committed.note,reopened.read(authorId))
+            assertTrue(reopened.save(command.copy(commandId="00000000-0000-0000-0000-00000000000a",expectedRevision=2,text="After reopen")) is SaveResult.Committed)
             assertEquals("Disabled path emitted a diagnostic event",beforeUntraced,recorder.events.size)
         } finally { db.close();context.deleteDatabase(name) }
     }
@@ -146,15 +147,16 @@ class LibrarySaveBoundaryDiagnosticsTest {
         val diagnosticFailure=IllegalStateException("observer failure")
         val broken=SaveBoundaryDiagnostics { _,_,_,_,_,_,_->throw diagnosticFailure }
         var db=NoteDatabase.open(context,name,broken)
+        val authorId="00000000-0000-0000-0000-00000000000b"
         try {
-            assertTrue(NoteRepository(db).save(SaveNote("first","author",0,"Title","Body")) is SaveResult.Committed)
+            assertTrue(NoteRepository(db).save(SaveNote("00000000-0000-0000-0000-00000000000c",authorId,0,"Title","Body")) is SaveResult.Committed)
             assertTrue(broken.invalid)
             db.close()
             val bounded=Recorder(1);bounded.enabled=true
             db=NoteDatabase.open(context,name,bounded.diagnostics)
-            assertTrue(NoteRepository(db).save(SaveNote("second","author",1,"Title","Next")) is SaveResult.Committed)
+            assertTrue(NoteRepository(db).save(SaveNote("00000000-0000-0000-0000-00000000000d",authorId,1,"Title","Next")) is SaveResult.Committed)
             assertTrue(bounded.dropped.get()>0)
-            assertEquals("Next",NoteRepository(db).read("author")!!.text)
+            assertEquals("Next",NoteRepository(db).read(authorId)!!.text)
             val endFailure=IllegalStateException("delegate end failure")
             val fake=Proxy.newProxyInstance(SupportSQLiteDatabase::class.java.classLoader,arrayOf(SupportSQLiteDatabase::class.java)) { _,method,_->
                 when(method.name){"beginTransaction"->null;"endTransaction"->throw endFailure;else->error("Unexpected fake delegate call")}

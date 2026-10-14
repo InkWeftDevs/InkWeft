@@ -1,0 +1,19 @@
+{
+  "status": "PASS_STATIC_MINIMAL_UUID_FIX",
+  "old_source_git": "4f41a501127dbed6dbef3519f93233a105b5d618",
+  "old_source_sha256": "03ef99d05bc814fa19d755b0d3fb534f84da6f04e1af024dc0433c8f367a276a",
+  "reviewed_source_sha256": "cd1b0ba9e112a19e16fdea36b1b867183c890a4addb8c6ebfdfe7986f4a73038",
+  "prefix_before_first_guard_unchanged": true,
+  "assertOuterPair_and_entire_scenario_suffix_unchanged": true,
+  "distinct_legal_source_uuid_literals": 13,
+  "ten_command_and_three_note_constructor_proof": "Recorded host core-constructor evidence reviewed and hashes verified; not rerun by reviewer",
+  "compile_result_sha256": "440f2a814d9713ccc2dc913845054a8ef89bbc10ab1d02e36c256cd5dd8e7938",
+  "compile_exit_code": 0,
+  "compile_elapsed_seconds": 107.79092435399798,
+  "remaining_findings": [],
+  "limitations": [
+    "Original failed native JUnit stack unavailable; static constructor violation is not recovered native failure evidence.",
+    "Compilation and host constructor proof do not establish repaired Room/native guards pass.",
+    "No repository mutation, build, network, push or native execution by this reviewer."
+  ]
+}

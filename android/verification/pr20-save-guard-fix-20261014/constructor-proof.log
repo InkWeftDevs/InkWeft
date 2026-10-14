@@ -1,0 +1,2 @@
+PASS: 10 source-derived distinct command constructors, 3 notebook IDs; original invalid command/note IDs each reject in actual core SaveNote constructor.
+Scope: host JVM constructor contract only; no Room/native execution or recovered JUnit stack.
