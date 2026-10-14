@@ -3,7 +3,7 @@ import hashlib,json,os,re,shutil,sys
 from pathlib import Path
 here=Path(__file__).resolve().parent
 FROZEN_RELATIVE='android/verification/pr20-save-boundary-20261014'
-FROZEN_SOURCE_SPEC_SHA256='UNBOUND'
+FROZEN_SOURCE_SPEC_SHA256='de95eee21d1bc3fcbe662d063b99908ec94aeec785068c9c36f698f25d5abe93'
 assert re.fullmatch(r'[0-9a-f]{64}', FROZEN_SOURCE_SPEC_SHA256), 'Finalize source-spec hash before execution'
 frozen=here.parents[1]/FROZEN_RELATIVE
 root=Path(os.environ['KVM_ONCE']);source=root/'evidence';out=root/'upload';out.mkdir(exist_ok=True)
