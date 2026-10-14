@@ -1,0 +1,188 @@
+[
+  {
+    "marker": "KVM_PAIR_FIXTURE",
+    "data": {
+      "label": "raster-1-before",
+      "seed": 4103,
+      "logicalSha256": "dab1c2e0041b38f5d3ffd8c89e17ee9fff375a4f41bec6ac426e34b8c69386c9",
+      "rowCounts": {
+        "notes": 1,
+        "note_revisions": 1,
+        "notebook_workspace": 1,
+        "notebook_pages": 1,
+        "ink_pages": 1,
+        "ink_strokes": 320,
+        "canvas_authoring": 1,
+        "page_layer_memberships": 320
+      },
+      "writerSqlite": {
+        "page_size": 1024,
+        "auto_vacuum": 1,
+        "journal_mode": "wal",
+        "synchronous": 2
+      }
+    }
+  },
+  {
+    "marker": "TILE_LOCAL_EVIDENCE",
+    "data": {
+      "layers": 1,
+      "initialStrokes": 320,
+      "finalStrokes": 321,
+      "firstCompleteMs": 263.852344,
+      "appendCompleteMs": 53.979447,
+      "forcedFullCompleteMs": 201.174931,
+      "localDecoded": 13,
+      "fullDecoded": 321,
+      "localRebuiltTiles": 1,
+      "fullRebuiltTiles": 24,
+      "metadataMs": 24.579265,
+      "rasterMs": 16.214584,
+      "publicationMs": 0.487445,
+      "pixelsEqual": true,
+      "bitmapBytes": 14371200
+    }
+  },
+  {
+    "marker": "KVM_RASTER_CLEANUP",
+    "data": {
+      "layers": 1,
+      "joined": true,
+      "resources": {
+        "totalBytes": 0,
+        "budgetBytes": 134217728,
+        "peakTrackedBytes": 28742400,
+        "inFlightJobs": 0,
+        "cancelledJobs": 0,
+        "cacheBytes": 0,
+        "in_flightBytes": 0,
+        "activeBytes": 0,
+        "live_inkBytes": 0
+      }
+    }
+  },
+  {
+    "marker": "KVM_PAIR_FIXTURE",
+    "data": {
+      "label": "raster-4-before",
+      "seed": 4103,
+      "logicalSha256": "5ad5ed9192a0eeb43b6978c2ae8d5a410fef1ab67099888cdd62f643511d50e8",
+      "rowCounts": {
+        "notes": 2,
+        "note_revisions": 2,
+        "notebook_workspace": 2,
+        "notebook_pages": 2,
+        "ink_pages": 2,
+        "ink_strokes": 641,
+        "canvas_authoring": 2,
+        "page_layer_memberships": 641
+      },
+      "writerSqlite": {
+        "page_size": 1024,
+        "auto_vacuum": 1,
+        "journal_mode": "wal",
+        "synchronous": 2
+      }
+    }
+  },
+  {
+    "marker": "TILE_LOCAL_EVIDENCE",
+    "data": {
+      "layers": 4,
+      "initialStrokes": 320,
+      "finalStrokes": 321,
+      "firstCompleteMs": 246.712071,
+      "appendCompleteMs": 126.857343,
+      "forcedFullCompleteMs": 185.610704,
+      "localDecoded": 21,
+      "fullDecoded": 321,
+      "localRebuiltTiles": 1,
+      "fullRebuiltTiles": 24,
+      "metadataMs": 55.638355000000004,
+      "rasterMs": 67.27842100000001,
+      "publicationMs": 107.444437,
+      "pixelsEqual": true,
+      "bitmapBytes": 12147408
+    }
+  },
+  {
+    "marker": "KVM_RASTER_CLEANUP",
+    "data": {
+      "layers": 4,
+      "joined": true,
+      "resources": {
+        "totalBytes": 0,
+        "budgetBytes": 134217728,
+        "peakTrackedBytes": 28742400,
+        "inFlightJobs": 0,
+        "cancelledJobs": 0,
+        "cacheBytes": 0,
+        "in_flightBytes": 0,
+        "activeBytes": 0,
+        "live_inkBytes": 0
+      }
+    }
+  },
+  {
+    "marker": "KVM_PAIR_FIXTURE",
+    "data": {
+      "label": "raster-8-before",
+      "seed": 4103,
+      "logicalSha256": "f1107ae9b0de2b2bd16830b423bc32aa9b8f890d6c91bb54bd1b00f4ec4f900d",
+      "rowCounts": {
+        "notes": 3,
+        "note_revisions": 3,
+        "notebook_workspace": 3,
+        "notebook_pages": 3,
+        "ink_pages": 3,
+        "ink_strokes": 962,
+        "canvas_authoring": 3,
+        "page_layer_memberships": 962
+      },
+      "writerSqlite": {
+        "page_size": 1024,
+        "auto_vacuum": 1,
+        "journal_mode": "wal",
+        "synchronous": 2
+      }
+    }
+  },
+  {
+    "marker": "TILE_LOCAL_EVIDENCE",
+    "data": {
+      "layers": 8,
+      "initialStrokes": 320,
+      "finalStrokes": 321,
+      "firstCompleteMs": 272.353177,
+      "appendCompleteMs": 155.030607,
+      "forcedFullCompleteMs": 273.103729,
+      "localDecoded": 11,
+      "fullDecoded": 321,
+      "localRebuiltTiles": 1,
+      "fullRebuiltTiles": 48,
+      "metadataMs": 63.13949,
+      "rasterMs": 63.921906,
+      "publicationMs": 228.581314,
+      "pixelsEqual": true,
+      "bitmapBytes": 24294816
+    }
+  },
+  {
+    "marker": "KVM_RASTER_CLEANUP",
+    "data": {
+      "layers": 8,
+      "joined": true,
+      "resources": {
+        "totalBytes": 0,
+        "budgetBytes": 134217728,
+        "peakTrackedBytes": 48589632,
+        "inFlightJobs": 0,
+        "cancelledJobs": 0,
+        "cacheBytes": 0,
+        "in_flightBytes": 0,
+        "activeBytes": 0,
+        "live_inkBytes": 0
+      }
+    }
+  }
+]

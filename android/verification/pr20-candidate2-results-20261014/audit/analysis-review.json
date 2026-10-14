@@ -1,0 +1,3482 @@
+{
+  "schema": 1,
+  "status": "INDEPENDENT_CALCULATIONS_MATCH",
+  "run_id": "38441089594",
+  "scope": "Independent offline recomputation from the 24 original common-method instrumentation logs; no analyzer import/execution and no other-run pooling. Not a repeat APK/ACL audit.",
+  "analysis_status": "COMPLETE_SCREENING_NOT_FINAL_ACCEPTANCE",
+  "source_identities": {
+    "B": "a128bb07e34cb82f00eeafc8e62a47bf7b95b128",
+    "C0": "ebb48481e7e995288c1844d43011398c513b4f4e",
+    "C1": "45b4861ae23ac19eda3246fcd34cf3d2132dc1ee"
+  },
+  "baseline_override": [
+    {
+      "from_git": "7949011ca2b84492f6438d275a09d28faef3b472",
+      "from_path": "android/data-local/src/main/kotlin/org/inkweft/data/PreservingOpenHelperFactory.kt",
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/PreservingOpenHelperFactory.kt",
+      "bytes": 4426,
+      "sha256": "a049af775caa688cd0dfd938acdf1539d34ee13de272ed35c930de9ef4e3d15d"
+    }
+  ],
+  "common_calls": 24,
+  "raw_save_intervals_checked": 720,
+  "save_percentile_indices_zero_based": [
+    14,
+    28,
+    29
+  ],
+  "triplet_orders": {
+    "4101": [
+      "B",
+      "C0",
+      "C1"
+    ],
+    "4102": [
+      "C1",
+      "B",
+      "C0"
+    ],
+    "4103": [
+      "C0",
+      "C1",
+      "B"
+    ],
+    "4104": [
+      "B",
+      "C1",
+      "C0"
+    ]
+  },
+  "metric_count": 18,
+  "comparison_count": 54,
+  "pair_values_count": 216,
+  "thresholds": {
+    "raster_all_phase_times": {
+      "relative": 0.1,
+      "absolute_ms": 5
+    },
+    "save_p50": {
+      "relative": 0.1,
+      "absolute_ms": 1
+    },
+    "save_p95": {
+      "relative": 0.15,
+      "absolute_ms": 5
+    },
+    "save_max": {
+      "relative": 0.25,
+      "absolute_ms": 20
+    },
+    "search_and_index_completion": {
+      "relative": 0.1,
+      "absolute_ms": 500
+    }
+  },
+  "classification_counts": {
+    "B->C0": {
+      "WITHIN_PROPOSED_BAND": 15,
+      "INCONCLUSIVE": 2,
+      "REGRESSION_SIGNAL": 1
+    },
+    "B->C1": {
+      "WITHIN_PROPOSED_BAND": 13,
+      "INCONCLUSIVE": 4,
+      "REGRESSION_SIGNAL": 1
+    },
+    "C0->C1": {
+      "WITHIN_PROPOSED_BAND": 13,
+      "INCONCLUSIVE": 5
+    }
+  },
+  "comparisons": [
+    {
+      "comparison": "B->C0",
+      "metric": "raster.1.firstCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 259.291195,
+          "right_ms": 259.119239,
+          "delta_ms": -0.17195600000002287,
+          "relative_change": -0.0006631771665058772,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 270.537235,
+          "right_ms": 258.661878,
+          "delta_ms": -11.875357000000008,
+          "relative_change": -0.04389546230115055,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 263.852344,
+          "right_ms": 266.464892,
+          "delta_ms": 2.612548000000004,
+          "relative_change": 0.009901553120179988,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 272.188132,
+          "right_ms": 266.381679,
+          "delta_ms": -5.806452999999976,
+          "relative_change": -0.021332498802703038,
+          "over_band": false
+        }
+      ],
+      "slower_pairs": 1,
+      "over_band_pairs": 0,
+      "median_paired_delta_ms": -2.9892044999999996,
+      "median_paired_relative_change": -0.010997837984604457,
+      "difference_of_separate_medians_ms_not_used": -4.444330500000035,
+      "classification": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "comparison": "B->C0",
+      "metric": "raster.1.appendCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 53.771687,
+          "right_ms": 53.744186,
+          "delta_ms": -0.027501000000000886,
+          "relative_change": -0.0005114401562294463,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 53.037074,
+          "right_ms": 53.665989,
+          "delta_ms": 0.6289150000000063,
+          "relative_change": 0.011858025953694323,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 53.979447,
+          "right_ms": 52.756416,
+          "delta_ms": -1.2230309999999989,
+          "relative_change": -0.02265734585980473,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 53.501635,
+          "right_ms": 53.369809,
+          "delta_ms": -0.13182600000000377,
+          "relative_change": -0.00246396208265418,
+          "over_band": false
+        }
+      ],
+      "slower_pairs": 1,
+      "over_band_pairs": 0,
+      "median_paired_delta_ms": -0.07966350000000233,
+      "median_paired_relative_change": -0.0014877011194418131,
+      "difference_of_separate_medians_ms_not_used": -0.11876200000000381,
+      "classification": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "comparison": "B->C0",
+      "metric": "raster.1.forcedFullCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 201.87237,
+          "right_ms": 218.216607,
+          "delta_ms": 16.34423700000002,
+          "relative_change": 0.08096321948367685,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 201.351283,
+          "right_ms": 201.421618,
+          "delta_ms": 0.07033500000000004,
+          "relative_change": 0.0003493148836801802,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 201.174931,
+          "right_ms": 201.56427,
+          "delta_ms": 0.38933900000000676,
+          "relative_change": 0.0019353256296133976,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 201.361169,
+          "right_ms": 201.300908,
+          "delta_ms": -0.06026099999999701,
+          "relative_change": -0.0002992682268347231,
+          "over_band": false
+        }
+      ],
+      "slower_pairs": 3,
+      "over_band_pairs": 0,
+      "median_paired_delta_ms": 0.2298370000000034,
+      "median_paired_relative_change": 0.001142320256646789,
+      "difference_of_separate_medians_ms_not_used": 0.1367180000000019,
+      "classification": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "comparison": "B->C0",
+      "metric": "raster.4.firstCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 230.521853,
+          "right_ms": 242.830003,
+          "delta_ms": 12.308150000000012,
+          "relative_change": 0.053392551898322684,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 221.802174,
+          "right_ms": 228.032007,
+          "delta_ms": 6.229832999999985,
+          "relative_change": 0.028087339666923124,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 246.712071,
+          "right_ms": 228.634704,
+          "delta_ms": -18.07736700000001,
+          "relative_change": -0.0732731354681061,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 248.331221,
+          "right_ms": 229.868691,
+          "delta_ms": -18.462529999999987,
+          "relative_change": -0.07434639078265551,
+          "over_band": false
+        }
+      ],
+      "slower_pairs": 2,
+      "over_band_pairs": 0,
+      "median_paired_delta_ms": -5.923767000000012,
+      "median_paired_relative_change": -0.022592897900591487,
+      "difference_of_separate_medians_ms_not_used": -9.365264499999995,
+      "classification": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "comparison": "B->C0",
+      "metric": "raster.4.appendCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 109.59637,
+          "right_ms": 106.755772,
+          "delta_ms": -2.840598,
+          "relative_change": -0.025918723402974023,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 109.394129,
+          "right_ms": 108.55545,
+          "delta_ms": -0.8386790000000133,
+          "relative_change": -0.0076665814488089505,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 126.857343,
+          "right_ms": 115.269074,
+          "delta_ms": -11.588268999999997,
+          "relative_change": -0.09134882322105703,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 111.875763,
+          "right_ms": 115.1188,
+          "delta_ms": 3.243036999999987,
+          "relative_change": 0.028987842523138695,
+          "over_band": false
+        }
+      ],
+      "slower_pairs": 1,
+      "over_band_pairs": 0,
+      "median_paired_delta_ms": -1.8396385000000066,
+      "median_paired_relative_change": -0.016792652425891487,
+      "difference_of_separate_medians_ms_not_used": 1.1010584999999935,
+      "classification": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "comparison": "B->C0",
+      "metric": "raster.4.forcedFullCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 208.583459,
+          "right_ms": 186.593056,
+          "delta_ms": -21.990403000000015,
+          "relative_change": -0.10542735797664576,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 183.866979,
+          "right_ms": 185.697694,
+          "delta_ms": 1.8307150000000263,
+          "relative_change": 0.009956736168488559,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 185.610704,
+          "right_ms": 192.345754,
+          "delta_ms": 6.735050000000001,
+          "relative_change": 0.03628589221880221,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 192.620638,
+          "right_ms": 195.580173,
+          "delta_ms": 2.9595349999999883,
+          "relative_change": 0.015364578950257593,
+          "over_band": false
+        }
+      ],
+      "slower_pairs": 3,
+      "over_band_pairs": 0,
+      "median_paired_delta_ms": 2.3951250000000073,
+      "median_paired_relative_change": 0.012660657559373076,
+      "difference_of_separate_medians_ms_not_used": 0.35373399999997446,
+      "classification": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "comparison": "B->C0",
+      "metric": "raster.8.firstCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 261.756184,
+          "right_ms": 246.128593,
+          "delta_ms": -15.627591000000024,
+          "relative_change": -0.05970285309477167,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 256.169127,
+          "right_ms": 267.892978,
+          "delta_ms": 11.723851000000025,
+          "relative_change": 0.045766057515588224,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 272.353177,
+          "right_ms": 294.522861,
+          "delta_ms": 22.16968399999996,
+          "relative_change": 0.08140049711995817,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 261.891556,
+          "right_ms": 289.102498,
+          "delta_ms": 27.210942000000045,
+          "relative_change": 0.1039015629812824,
+          "over_band": true
+        }
+      ],
+      "slower_pairs": 3,
+      "over_band_pairs": 1,
+      "median_paired_delta_ms": 16.946767499999993,
+      "median_paired_relative_change": 0.06358327731777319,
+      "difference_of_separate_medians_ms_not_used": 16.673868000000027,
+      "classification": "INCONCLUSIVE"
+    },
+    {
+      "comparison": "B->C0",
+      "metric": "raster.8.appendCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 143.921141,
+          "right_ms": 148.879732,
+          "delta_ms": 4.958590999999984,
+          "relative_change": 0.03445352757452071,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 147.145961,
+          "right_ms": 144.094789,
+          "delta_ms": -3.051172000000008,
+          "relative_change": -0.020735682986228948,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 155.030607,
+          "right_ms": 144.896373,
+          "delta_ms": -10.134233999999992,
+          "relative_change": -0.06536924673203397,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 148.486336,
+          "right_ms": 152.354864,
+          "delta_ms": 3.8685279999999977,
+          "relative_change": 0.026053090837934056,
+          "over_band": false
+        }
+      ],
+      "slower_pairs": 2,
+      "over_band_pairs": 0,
+      "median_paired_delta_ms": 0.40867799999999477,
+      "median_paired_relative_change": 0.0026587039258525545,
+      "difference_of_separate_medians_ms_not_used": -0.9280959999999823,
+      "classification": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "comparison": "B->C0",
+      "metric": "raster.8.forcedFullCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 265.977407,
+          "right_ms": 244.374577,
+          "delta_ms": -21.60283000000004,
+          "relative_change": -0.0812205451720944,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 263.615802,
+          "right_ms": 248.803073,
+          "delta_ms": -14.812728999999962,
+          "relative_change": -0.05619059588848154,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 273.103729,
+          "right_ms": 244.807707,
+          "delta_ms": -28.296021999999994,
+          "relative_change": -0.10360906496446995,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 259.127451,
+          "right_ms": 246.526936,
+          "delta_ms": -12.600515000000001,
+          "relative_change": -0.04862670840689897,
+          "over_band": false
+        }
+      ],
+      "slower_pairs": 0,
+      "over_band_pairs": 0,
+      "median_paired_delta_ms": -18.2077795,
+      "median_paired_relative_change": -0.06870557053028797,
+      "difference_of_separate_medians_ms_not_used": -19.129282999999987,
+      "classification": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "comparison": "B->C0",
+      "metric": "library.direct.p50",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 1
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 2.25025,
+          "right_ms": 2.473712,
+          "delta_ms": 0.22346200000000005,
+          "relative_change": 0.09930541050994336,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 2.161438,
+          "right_ms": 2.421174,
+          "delta_ms": 0.2597360000000002,
+          "relative_change": 0.12016814731674015,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 2.12309,
+          "right_ms": 2.308306,
+          "delta_ms": 0.18521600000000005,
+          "relative_change": 0.0872388829489094,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 2.016572,
+          "right_ms": 2.316218,
+          "delta_ms": 0.2996460000000001,
+          "relative_change": 0.1485917686053362,
+          "over_band": false
+        }
+      ],
+      "slower_pairs": 4,
+      "over_band_pairs": 0,
+      "median_paired_delta_ms": 0.24159900000000012,
+      "median_paired_relative_change": 0.10973677891334176,
+      "difference_of_separate_medians_ms_not_used": 0.22643199999999997,
+      "classification": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "comparison": "B->C0",
+      "metric": "library.direct.p95",
+      "band": {
+        "relative": 0.15,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 2.876792,
+          "right_ms": 7.037855,
+          "delta_ms": 4.161063,
+          "relative_change": 1.4464246980664575,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 3.372981,
+          "right_ms": 5.484253,
+          "delta_ms": 2.111272,
+          "relative_change": 0.62593652321196,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 2.557687,
+          "right_ms": 5.406598,
+          "delta_ms": 2.8489109999999997,
+          "relative_change": 1.113862251323168,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 2.470582,
+          "right_ms": 9.309137,
+          "delta_ms": 6.8385549999999995,
+          "relative_change": 2.7679935335074894,
+          "over_band": true
+        }
+      ],
+      "slower_pairs": 4,
+      "over_band_pairs": 1,
+      "median_paired_delta_ms": 3.504987,
+      "median_paired_relative_change": 1.2801434746948126,
+      "difference_of_separate_medians_ms_not_used": 3.5438145,
+      "classification": "INCONCLUSIVE"
+    },
+    {
+      "comparison": "B->C0",
+      "metric": "library.direct.max",
+      "band": {
+        "relative": 0.25,
+        "absolute_ms": 20
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 3477.299926,
+          "right_ms": 8.844174,
+          "delta_ms": -3468.4557520000003,
+          "relative_change": -0.9974565973058949,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 3505.189633,
+          "right_ms": 9.174866,
+          "delta_ms": -3496.014767,
+          "relative_change": -0.9973824908319875,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 3518.47271,
+          "right_ms": 7.436179,
+          "delta_ms": -3511.036531,
+          "relative_change": -0.9978865321368373,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 3494.362238,
+          "right_ms": 12.293929,
+          "delta_ms": -3482.068309,
+          "relative_change": -0.9964817817493826,
+          "over_band": false
+        }
+      ],
+      "slower_pairs": 0,
+      "over_band_pairs": 0,
+      "median_paired_delta_ms": -3489.0415380000004,
+      "median_paired_relative_change": -0.9974195440689412,
+      "difference_of_separate_medians_ms_not_used": -3490.7664154999998,
+      "classification": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "comparison": "B->C0",
+      "metric": "library.observe.p50",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 1
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 2.27773,
+          "right_ms": 6.462675,
+          "delta_ms": 4.184945,
+          "relative_change": 1.8373314659770912,
+          "over_band": true
+        },
+        {
+          "seed": 4102,
+          "left_ms": 2.382797,
+          "right_ms": 5.227201,
+          "delta_ms": 2.844404,
+          "relative_change": 1.1937248536069165,
+          "over_band": true
+        },
+        {
+          "seed": 4103,
+          "left_ms": 2.288807,
+          "right_ms": 5.494268,
+          "delta_ms": 3.205461,
+          "relative_change": 1.4004942312741968,
+          "over_band": true
+        },
+        {
+          "seed": 4104,
+          "left_ms": 2.294791,
+          "right_ms": 5.509591,
+          "delta_ms": 3.2148000000000003,
+          "relative_change": 1.400911891322565,
+          "over_band": true
+        }
+      ],
+      "slower_pairs": 4,
+      "over_band_pairs": 4,
+      "median_paired_delta_ms": 3.2101305,
+      "median_paired_relative_change": 1.400703061298381,
+      "difference_of_separate_medians_ms_not_used": 3.2101305,
+      "classification": "REGRESSION_SIGNAL"
+    },
+    {
+      "comparison": "B->C0",
+      "metric": "library.observe.p95",
+      "band": {
+        "relative": 0.15,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 82.099212,
+          "right_ms": 18.601257,
+          "delta_ms": -63.49795499999999,
+          "relative_change": -0.7734295306025591,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 81.039484,
+          "right_ms": 13.217063,
+          "delta_ms": -67.822421,
+          "relative_change": -0.8369058840502983,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 81.291835,
+          "right_ms": 14.444481,
+          "delta_ms": -66.84735400000001,
+          "relative_change": -0.8223132618423487,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 86.515695,
+          "right_ms": 15.031033,
+          "delta_ms": -71.48466199999999,
+          "relative_change": -0.8262623562117832,
+          "over_band": false
+        }
+      ],
+      "slower_pairs": 0,
+      "over_band_pairs": 0,
+      "median_paired_delta_ms": -67.33488750000001,
+      "median_paired_relative_change": -0.824287809027066,
+      "difference_of_separate_medians_ms_not_used": -66.9577665,
+      "classification": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "comparison": "B->C0",
+      "metric": "library.observe.max",
+      "band": {
+        "relative": 0.25,
+        "absolute_ms": 20
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 3437.77826,
+          "right_ms": 34.387224,
+          "delta_ms": -3403.391036,
+          "relative_change": -0.989997253633223,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 3489.198267,
+          "right_ms": 32.040671,
+          "delta_ms": -3457.157596,
+          "relative_change": -0.990817182473397,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 3460.105949,
+          "right_ms": 32.585392,
+          "delta_ms": -3427.520557,
+          "relative_change": -0.9905825450202133,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 3491.168439,
+          "right_ms": 30.069948,
+          "delta_ms": -3461.098491,
+          "relative_change": -0.9913868527040727,
+          "over_band": false
+        }
+      ],
+      "slower_pairs": 0,
+      "over_band_pairs": 0,
+      "median_paired_delta_ms": -3442.3390765,
+      "median_paired_relative_change": -0.9906998637468052,
+      "difference_of_separate_medians_ms_not_used": -3442.3390765000004,
+      "classification": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "comparison": "B->C0",
+      "metric": "library.coldMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 500
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 3604.124986,
+          "right_ms": 2127.271231,
+          "delta_ms": -1476.8537549999996,
+          "relative_change": -0.40976763035043084,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 3635.890206,
+          "right_ms": 2106.788243,
+          "delta_ms": -1529.101963,
+          "relative_change": -0.4205577936530243,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 3645.936995,
+          "right_ms": 2104.800989,
+          "delta_ms": -1541.1360060000002,
+          "relative_change": -0.42269957163645394,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 3622.370278,
+          "right_ms": 2114.795822,
+          "delta_ms": -1507.5744559999998,
+          "relative_change": -0.4161845256836551,
+          "over_band": false
+        }
+      ],
+      "slower_pairs": 0,
+      "over_band_pairs": 0,
+      "median_paired_delta_ms": -1518.3382095,
+      "median_paired_relative_change": -0.4183711596683397,
+      "difference_of_separate_medians_ms_not_used": -1518.3382095000002,
+      "classification": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "comparison": "B->C0",
+      "metric": "library.allIndexRowsCommittedMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 500
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 28435.980065,
+          "right_ms": 27957.648146,
+          "delta_ms": -478.3319190000002,
+          "relative_change": -0.016821362158315332,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 28802.021973,
+          "right_ms": 28358.907234,
+          "delta_ms": -443.11473900000055,
+          "relative_change": -0.015384848307365069,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 28798.9225,
+          "right_ms": 28521.123176,
+          "delta_ms": -277.7993239999996,
+          "relative_change": -0.009646170755173206,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 29103.726178,
+          "right_ms": 28195.814868,
+          "delta_ms": -907.9113099999995,
+          "relative_change": -0.03119570684685403,
+          "over_band": false
+        }
+      ],
+      "slower_pairs": 0,
+      "over_band_pairs": 0,
+      "median_paired_delta_ms": -460.7233290000004,
+      "median_paired_relative_change": -0.0161031052328402,
+      "difference_of_separate_medians_ms_not_used": -523.1111854999981,
+      "classification": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "comparison": "B->C0",
+      "metric": "library.searchIndexReadyMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 500
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 29028.565375,
+          "right_ms": 28633.216152,
+          "delta_ms": -395.34922299999744,
+          "relative_change": -0.013619316624599037,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 29393.124857,
+          "right_ms": 29018.187783,
+          "delta_ms": -374.93707399999766,
+          "relative_change": -0.012755944657946298,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 29388.684428,
+          "right_ms": 29162.227746,
+          "delta_ms": -226.456682,
+          "relative_change": -0.007705573978814918,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 29694.837705,
+          "right_ms": 28851.993434,
+          "delta_ms": -842.8442710000018,
+          "relative_change": -0.028383528456129063,
+          "over_band": false
+        }
+      ],
+      "slower_pairs": 0,
+      "over_band_pairs": 0,
+      "median_paired_delta_ms": -385.14314849999755,
+      "median_paired_relative_change": -0.013187630641272667,
+      "difference_of_separate_medians_ms_not_used": -455.81403399999544,
+      "classification": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "comparison": "B->C1",
+      "metric": "raster.1.firstCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 259.291195,
+          "right_ms": 268.584258,
+          "delta_ms": 9.293062999999961,
+          "relative_change": 0.03584025674300263,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 270.537235,
+          "right_ms": 275.432601,
+          "delta_ms": 4.895365999999967,
+          "relative_change": 0.01809498053012912,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 263.852344,
+          "right_ms": 274.67323,
+          "delta_ms": 10.820885999999973,
+          "relative_change": 0.04101114220156397,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 272.188132,
+          "right_ms": 279.539564,
+          "delta_ms": 7.351431999999988,
+          "relative_change": 0.02700864268395063,
+          "over_band": false
+        }
+      ],
+      "slower_pairs": 4,
+      "over_band_pairs": 0,
+      "median_paired_delta_ms": 8.322247499999975,
+      "median_paired_relative_change": 0.03142444971347663,
+      "difference_of_separate_medians_ms_not_used": 7.85812599999997,
+      "classification": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "comparison": "B->C1",
+      "metric": "raster.1.appendCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 53.771687,
+          "right_ms": 52.348589,
+          "delta_ms": -1.423098000000003,
+          "relative_change": -0.026465563559499316,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 53.037074,
+          "right_ms": 49.411032,
+          "delta_ms": -3.626041999999998,
+          "relative_change": -0.06836806268762109,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 53.979447,
+          "right_ms": 53.45798,
+          "delta_ms": -0.5214670000000012,
+          "relative_change": -0.009660473179727114,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 53.501635,
+          "right_ms": 64.348551,
+          "delta_ms": 10.846916,
+          "relative_change": 0.2027398975750928,
+          "over_band": true
+        }
+      ],
+      "slower_pairs": 1,
+      "over_band_pairs": 1,
+      "median_paired_delta_ms": -0.9722825000000022,
+      "median_paired_relative_change": -0.018063018369613215,
+      "difference_of_separate_medians_ms_not_used": -0.7333765000000056,
+      "classification": "INCONCLUSIVE"
+    },
+    {
+      "comparison": "B->C1",
+      "metric": "raster.1.forcedFullCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 201.87237,
+          "right_ms": 201.413897,
+          "delta_ms": -0.4584729999999979,
+          "relative_change": -0.0022711032718345653,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 201.351283,
+          "right_ms": 201.719376,
+          "delta_ms": 0.368093000000016,
+          "relative_change": 0.0018281135064831745,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 201.174931,
+          "right_ms": 200.975073,
+          "delta_ms": -0.19985799999997766,
+          "relative_change": -0.0009934538016567167,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 201.361169,
+          "right_ms": 199.568449,
+          "delta_ms": -1.7927200000000028,
+          "relative_change": -0.008903007510847352,
+          "over_band": false
+        }
+      ],
+      "slower_pairs": 1,
+      "over_band_pairs": 0,
+      "median_paired_delta_ms": -0.3291654999999878,
+      "median_paired_relative_change": -0.001632278536745641,
+      "difference_of_separate_medians_ms_not_used": -0.16174100000000635,
+      "classification": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "comparison": "B->C1",
+      "metric": "raster.4.firstCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 230.521853,
+          "right_ms": 220.970005,
+          "delta_ms": -9.551848000000007,
+          "relative_change": -0.041435759237975614,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 221.802174,
+          "right_ms": 240.642802,
+          "delta_ms": 18.84062799999998,
+          "relative_change": 0.08494338743496707,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 246.712071,
+          "right_ms": 226.023177,
+          "delta_ms": -20.688894000000005,
+          "relative_change": -0.0838584586321275,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 248.331221,
+          "right_ms": 245.518675,
+          "delta_ms": -2.8125459999999975,
+          "relative_change": -0.011325784928186687,
+          "over_band": false
+        }
+      ],
+      "slower_pairs": 1,
+      "over_band_pairs": 0,
+      "median_paired_delta_ms": -6.182197000000002,
+      "median_paired_relative_change": -0.02638077208308115,
+      "difference_of_separate_medians_ms_not_used": -5.283972500000004,
+      "classification": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "comparison": "B->C1",
+      "metric": "raster.4.appendCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 109.59637,
+          "right_ms": 78.569648,
+          "delta_ms": -31.026721999999992,
+          "relative_change": -0.28309990558993875,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 109.394129,
+          "right_ms": 111.472633,
+          "delta_ms": 2.0785039999999952,
+          "relative_change": 0.019000142137426727,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 126.857343,
+          "right_ms": 125.005296,
+          "delta_ms": -1.8520469999999989,
+          "relative_change": -0.014599446561008289,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 111.875763,
+          "right_ms": 116.992799,
+          "delta_ms": 5.117035999999999,
+          "relative_change": 0.04573855733167155,
+          "over_band": false
+        }
+      ],
+      "slower_pairs": 2,
+      "over_band_pairs": 0,
+      "median_paired_delta_ms": 0.11322849999999818,
+      "median_paired_relative_change": 0.0022003477882092193,
+      "difference_of_separate_medians_ms_not_used": 3.496649500000018,
+      "classification": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "comparison": "B->C1",
+      "metric": "raster.4.forcedFullCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 208.583459,
+          "right_ms": 181.096094,
+          "delta_ms": -27.48736500000001,
+          "relative_change": -0.13178113514744239,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 183.866979,
+          "right_ms": 181.581537,
+          "delta_ms": -2.285441999999989,
+          "relative_change": -0.012429866485161478,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 185.610704,
+          "right_ms": 186.406609,
+          "delta_ms": 0.7959050000000047,
+          "relative_change": 0.0042880339487317756,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 192.620638,
+          "right_ms": 193.310065,
+          "delta_ms": 0.6894269999999949,
+          "relative_change": 0.0035791959114993424,
+          "over_band": false
+        }
+      ],
+      "slower_pairs": 2,
+      "over_band_pairs": 0,
+      "median_paired_delta_ms": -0.7980074999999971,
+      "median_paired_relative_change": -0.004425335286831068,
+      "difference_of_separate_medians_ms_not_used": -5.121598000000006,
+      "classification": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "comparison": "B->C1",
+      "metric": "raster.8.firstCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 261.756184,
+          "right_ms": 255.916622,
+          "delta_ms": -5.839562000000029,
+          "relative_change": -0.022309165387282802,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 256.169127,
+          "right_ms": 301.920953,
+          "delta_ms": 45.751825999999994,
+          "relative_change": 0.17860007775253883,
+          "over_band": true
+        },
+        {
+          "seed": 4103,
+          "left_ms": 272.353177,
+          "right_ms": 254.677448,
+          "delta_ms": -17.67572900000002,
+          "relative_change": -0.06490002868591475,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 261.891556,
+          "right_ms": 315.241174,
+          "delta_ms": 53.34961800000002,
+          "relative_change": 0.2037088129714271,
+          "over_band": true
+        }
+      ],
+      "slower_pairs": 2,
+      "over_band_pairs": 2,
+      "median_paired_delta_ms": 19.956131999999982,
+      "median_paired_relative_change": 0.07814545618262801,
+      "difference_of_separate_medians_ms_not_used": 17.094917500000008,
+      "classification": "INCONCLUSIVE"
+    },
+    {
+      "comparison": "B->C1",
+      "metric": "raster.8.appendCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 143.921141,
+          "right_ms": 147.459818,
+          "delta_ms": 3.538677000000007,
+          "relative_change": 0.024587610794441984,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 147.145961,
+          "right_ms": 151.618793,
+          "delta_ms": 4.472832000000011,
+          "relative_change": 0.03039724617381792,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 155.030607,
+          "right_ms": 147.800336,
+          "delta_ms": -7.230271000000016,
+          "relative_change": -0.04663770038647927,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 148.486336,
+          "right_ms": 160.231419,
+          "delta_ms": 11.745082999999994,
+          "relative_change": 0.07909874616341799,
+          "over_band": false
+        }
+      ],
+      "slower_pairs": 3,
+      "over_band_pairs": 0,
+      "median_paired_delta_ms": 4.005754500000009,
+      "median_paired_relative_change": 0.02749242848412995,
+      "difference_of_separate_medians_ms_not_used": 1.893416000000002,
+      "classification": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "comparison": "B->C1",
+      "metric": "raster.8.forcedFullCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 265.977407,
+          "right_ms": 244.843721,
+          "delta_ms": -21.13368600000004,
+          "relative_change": -0.07945669610953097,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 263.615802,
+          "right_ms": 300.340891,
+          "delta_ms": 36.725089000000025,
+          "relative_change": 0.13931292707559326,
+          "over_band": true
+        },
+        {
+          "seed": 4103,
+          "left_ms": 273.103729,
+          "right_ms": 247.604083,
+          "delta_ms": -25.499645999999984,
+          "relative_change": -0.09336981993387569,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 259.127451,
+          "right_ms": 263.227755,
+          "delta_ms": 4.100303999999994,
+          "relative_change": 0.015823503006634345,
+          "over_band": false
+        }
+      ],
+      "slower_pairs": 2,
+      "over_band_pairs": 1,
+      "median_paired_delta_ms": -8.516691000000023,
+      "median_paired_relative_change": -0.03181659655144831,
+      "difference_of_separate_medians_ms_not_used": -9.380685499999998,
+      "classification": "INCONCLUSIVE"
+    },
+    {
+      "comparison": "B->C1",
+      "metric": "library.direct.p50",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 1
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 2.25025,
+          "right_ms": 2.300044,
+          "delta_ms": 0.04979400000000034,
+          "relative_change": 0.02212820797689161,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 2.161438,
+          "right_ms": 2.292863,
+          "delta_ms": 0.13142500000000013,
+          "relative_change": 0.060804427422854655,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 2.12309,
+          "right_ms": 2.339762,
+          "delta_ms": 0.21667199999999998,
+          "relative_change": 0.10205502357413015,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 2.016572,
+          "right_ms": 2.372651,
+          "delta_ms": 0.3560789999999998,
+          "relative_change": 0.17657638804862896,
+          "over_band": false
+        }
+      ],
+      "slower_pairs": 4,
+      "over_band_pairs": 0,
+      "median_paired_delta_ms": 0.17404850000000005,
+      "median_paired_relative_change": 0.08142972549849241,
+      "difference_of_separate_medians_ms_not_used": 0.1776390000000001,
+      "classification": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "comparison": "B->C1",
+      "metric": "library.direct.p95",
+      "band": {
+        "relative": 0.15,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 2.876792,
+          "right_ms": 5.826162,
+          "delta_ms": 2.94937,
+          "relative_change": 1.0252287965205689,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 3.372981,
+          "right_ms": 5.813684,
+          "delta_ms": 2.4407030000000005,
+          "relative_change": 0.7236041353331076,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 2.557687,
+          "right_ms": 5.408531,
+          "delta_ms": 2.850844,
+          "relative_change": 1.1146180122900105,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 2.470582,
+          "right_ms": 9.015058,
+          "delta_ms": 6.5444759999999995,
+          "relative_change": 2.64896125690222,
+          "over_band": true
+        }
+      ],
+      "slower_pairs": 4,
+      "over_band_pairs": 1,
+      "median_paired_delta_ms": 2.900107,
+      "median_paired_relative_change": 1.0699234044052897,
+      "difference_of_separate_medians_ms_not_used": 3.1026835000000004,
+      "classification": "INCONCLUSIVE"
+    },
+    {
+      "comparison": "B->C1",
+      "metric": "library.direct.max",
+      "band": {
+        "relative": 0.25,
+        "absolute_ms": 20
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 3477.299926,
+          "right_ms": 9.483546,
+          "delta_ms": -3467.81638,
+          "relative_change": -0.997272727057827,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 3505.189633,
+          "right_ms": 6.396186,
+          "delta_ms": -3498.793447,
+          "relative_change": -0.998175223976534,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 3518.47271,
+          "right_ms": 8.014369,
+          "delta_ms": -3510.458341,
+          "relative_change": -0.9977222023131735,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 3494.362238,
+          "right_ms": 10.726957,
+          "delta_ms": -3483.6352810000003,
+          "relative_change": -0.9969302103590326,
+          "over_band": false
+        }
+      ],
+      "slower_pairs": 0,
+      "over_band_pairs": 0,
+      "median_paired_delta_ms": -3491.2143640000004,
+      "median_paired_relative_change": -0.9974974646855003,
+      "difference_of_separate_medians_ms_not_used": -3491.026978,
+      "classification": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "comparison": "B->C1",
+      "metric": "library.observe.p50",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 1
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 2.27773,
+          "right_ms": 5.044579,
+          "delta_ms": 2.7668489999999997,
+          "relative_change": 1.2147396750273296,
+          "over_band": true
+        },
+        {
+          "seed": 4102,
+          "left_ms": 2.382797,
+          "right_ms": 6.325776,
+          "delta_ms": 3.9429790000000002,
+          "relative_change": 1.654769164137776,
+          "over_band": true
+        },
+        {
+          "seed": 4103,
+          "left_ms": 2.288807,
+          "right_ms": 6.847693,
+          "delta_ms": 4.558885999999999,
+          "relative_change": 1.9918175713373822,
+          "over_band": true
+        },
+        {
+          "seed": 4104,
+          "left_ms": 2.294791,
+          "right_ms": 6.292046,
+          "delta_ms": 3.997255,
+          "relative_change": 1.7418819404468642,
+          "over_band": true
+        }
+      ],
+      "slower_pairs": 4,
+      "over_band_pairs": 4,
+      "median_paired_delta_ms": 3.970117,
+      "median_paired_relative_change": 1.69832555229232,
+      "difference_of_separate_medians_ms_not_used": 4.017112,
+      "classification": "REGRESSION_SIGNAL"
+    },
+    {
+      "comparison": "B->C1",
+      "metric": "library.observe.p95",
+      "band": {
+        "relative": 0.15,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 82.099212,
+          "right_ms": 11.565945,
+          "delta_ms": -70.533267,
+          "relative_change": -0.8591223384701914,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 81.039484,
+          "right_ms": 12.833652,
+          "delta_ms": -68.205832,
+          "relative_change": -0.8416370469486207,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 81.291835,
+          "right_ms": 23.367652,
+          "delta_ms": -57.924183000000006,
+          "relative_change": -0.7125461370136373,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 86.515695,
+          "right_ms": 14.580712,
+          "delta_ms": -71.93498299999999,
+          "relative_change": -0.8314674348972171,
+          "over_band": false
+        }
+      ],
+      "slower_pairs": 0,
+      "over_band_pairs": 0,
+      "median_paired_delta_ms": -69.3695495,
+      "median_paired_relative_change": -0.8365522409229189,
+      "difference_of_separate_medians_ms_not_used": -67.9883415,
+      "classification": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "comparison": "B->C1",
+      "metric": "library.observe.max",
+      "band": {
+        "relative": 0.25,
+        "absolute_ms": 20
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 3437.77826,
+          "right_ms": 33.086017,
+          "delta_ms": -3404.692243,
+          "relative_change": -0.9903757559395352,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 3489.198267,
+          "right_ms": 33.425497,
+          "delta_ms": -3455.77277,
+          "relative_change": -0.9904202930179891,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 3460.105949,
+          "right_ms": 40.971204,
+          "delta_ms": -3419.134745,
+          "relative_change": -0.9881589741459099,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 3491.168439,
+          "right_ms": 30.229074,
+          "delta_ms": -3460.939365,
+          "relative_change": -0.9913412731215402,
+          "over_band": false
+        }
+      ],
+      "slower_pairs": 0,
+      "over_band_pairs": 0,
+      "median_paired_delta_ms": -3437.4537575,
+      "median_paired_relative_change": -0.9903980244787621,
+      "difference_of_separate_medians_ms_not_used": -3441.3963510000003,
+      "classification": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "comparison": "B->C1",
+      "metric": "library.coldMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 500
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 3604.124986,
+          "right_ms": 2140.032771,
+          "delta_ms": -1464.0922149999997,
+          "relative_change": -0.40622681529835264,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 3635.890206,
+          "right_ms": 2099.237468,
+          "delta_ms": -1536.6527380000002,
+          "relative_change": -0.422634527154916,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 3645.936995,
+          "right_ms": 2120.941739,
+          "delta_ms": -1524.9952560000002,
+          "relative_change": -0.41827252036756607,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 3622.370278,
+          "right_ms": 2120.239935,
+          "delta_ms": -1502.1303429999998,
+          "relative_change": -0.41468161113263197,
+          "over_band": false
+        }
+      ],
+      "slower_pairs": 0,
+      "over_band_pairs": 0,
+      "median_paired_delta_ms": -1513.5627995,
+      "median_paired_relative_change": -0.416477065750099,
+      "difference_of_separate_medians_ms_not_used": -1508.5394050000004,
+      "classification": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "comparison": "B->C1",
+      "metric": "library.allIndexRowsCommittedMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 500
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 28435.980065,
+          "right_ms": 28579.189275,
+          "delta_ms": 143.2092100000009,
+          "relative_change": 0.005036197439745283,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 28802.021973,
+          "right_ms": 28483.717364,
+          "delta_ms": -318.3046089999989,
+          "relative_change": -0.01105146747330408,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 28798.9225,
+          "right_ms": 28455.561305,
+          "delta_ms": -343.3611950000013,
+          "relative_change": -0.011922709781937199,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 29103.726178,
+          "right_ms": 28839.882427,
+          "delta_ms": -263.84375100000034,
+          "relative_change": -0.00906563473647042,
+          "over_band": false
+        }
+      ],
+      "slower_pairs": 1,
+      "over_band_pairs": 0,
+      "median_paired_delta_ms": -291.0741799999996,
+      "median_paired_relative_change": -0.01005855110488725,
+      "difference_of_separate_medians_ms_not_used": -269.0189169999976,
+      "classification": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "comparison": "B->C1",
+      "metric": "library.searchIndexReadyMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 500
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 29028.565375,
+          "right_ms": 29227.041463,
+          "delta_ms": 198.47608800000307,
+          "relative_change": 0.0068372682368566095,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 29393.124857,
+          "right_ms": 29165.618307,
+          "delta_ms": -227.50654999999824,
+          "relative_change": -0.0077401280437801884,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 29388.684428,
+          "right_ms": 29134.194544,
+          "delta_ms": -254.4898839999987,
+          "relative_change": -0.008659451382503331,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 29694.837705,
+          "right_ms": 29502.106342,
+          "delta_ms": -192.7313630000026,
+          "relative_change": -0.006490399607994846,
+          "over_band": false
+        }
+      ],
+      "slower_pairs": 1,
+      "over_band_pairs": 0,
+      "median_paired_delta_ms": -210.11895650000042,
+      "median_paired_relative_change": -0.007115263825887517,
+      "difference_of_separate_medians_ms_not_used": -194.57475749999867,
+      "classification": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "comparison": "C0->C1",
+      "metric": "raster.1.firstCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 259.119239,
+          "right_ms": 268.584258,
+          "delta_ms": 9.465018999999984,
+          "relative_change": 0.03652765821838487,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 258.661878,
+          "right_ms": 275.432601,
+          "delta_ms": 16.770722999999975,
+          "relative_change": 0.06483646964010667,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 266.464892,
+          "right_ms": 274.67323,
+          "delta_ms": 8.20833799999997,
+          "relative_change": 0.030804575936405044,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 266.381679,
+          "right_ms": 279.539564,
+          "delta_ms": 13.157884999999965,
+          "relative_change": 0.04939485721914067,
+          "over_band": false
+        }
+      ],
+      "slower_pairs": 4,
+      "over_band_pairs": 0,
+      "median_paired_delta_ms": 11.311451999999974,
+      "median_paired_relative_change": 0.042961257718762774,
+      "difference_of_separate_medians_ms_not_used": 12.302456500000005,
+      "classification": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "comparison": "C0->C1",
+      "metric": "raster.1.appendCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 53.744186,
+          "right_ms": 52.348589,
+          "delta_ms": -1.3955970000000022,
+          "relative_change": -0.02596740417651878,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 53.665989,
+          "right_ms": 49.411032,
+          "delta_ms": -4.2549570000000045,
+          "relative_change": -0.07928591421281744,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 52.756416,
+          "right_ms": 53.45798,
+          "delta_ms": 0.7015639999999976,
+          "relative_change": 0.013298174007877974,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 53.369809,
+          "right_ms": 64.348551,
+          "delta_ms": 10.978742000000004,
+          "relative_change": 0.20571072307941002,
+          "over_band": true
+        }
+      ],
+      "slower_pairs": 2,
+      "over_band_pairs": 1,
+      "median_paired_delta_ms": -0.3470165000000023,
+      "median_paired_relative_change": -0.006334615084320404,
+      "difference_of_separate_medians_ms_not_used": -0.6146145000000018,
+      "classification": "INCONCLUSIVE"
+    },
+    {
+      "comparison": "C0->C1",
+      "metric": "raster.1.forcedFullCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 218.216607,
+          "right_ms": 201.413897,
+          "delta_ms": -16.80271000000002,
+          "relative_change": -0.0770001432567413,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 201.421618,
+          "right_ms": 201.719376,
+          "delta_ms": 0.29775800000001595,
+          "relative_change": 0.0014782822368153946,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 201.56427,
+          "right_ms": 200.975073,
+          "delta_ms": -0.5891969999999844,
+          "relative_change": -0.002923122237884643,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 201.300908,
+          "right_ms": 199.568449,
+          "delta_ms": -1.7324590000000057,
+          "relative_change": -0.008606314880606529,
+          "over_band": false
+        }
+      ],
+      "slower_pairs": 1,
+      "over_band_pairs": 0,
+      "median_paired_delta_ms": -1.160827999999995,
+      "median_paired_relative_change": -0.005764718559245586,
+      "difference_of_separate_medians_ms_not_used": -0.29845900000000825,
+      "classification": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "comparison": "C0->C1",
+      "metric": "raster.4.firstCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 242.830003,
+          "right_ms": 220.970005,
+          "delta_ms": -21.85999800000002,
+          "relative_change": -0.09002181662041168,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 228.032007,
+          "right_ms": 240.642802,
+          "delta_ms": 12.610794999999996,
+          "relative_change": 0.05530274089987725,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 228.634704,
+          "right_ms": 226.023177,
+          "delta_ms": -2.6115269999999953,
+          "relative_change": -0.011422268598383889,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 229.868691,
+          "right_ms": 245.518675,
+          "delta_ms": 15.64998399999999,
+          "relative_change": 0.06808227745987377,
+          "over_band": false
+        }
+      ],
+      "slower_pairs": 2,
+      "over_band_pairs": 0,
+      "median_paired_delta_ms": 4.999634,
+      "median_paired_relative_change": 0.02194023615074668,
+      "difference_of_separate_medians_ms_not_used": 4.081291999999991,
+      "classification": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "comparison": "C0->C1",
+      "metric": "raster.4.appendCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 106.755772,
+          "right_ms": 78.569648,
+          "delta_ms": -28.186123999999992,
+          "relative_change": -0.264024356453532,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 108.55545,
+          "right_ms": 111.472633,
+          "delta_ms": 2.9171830000000085,
+          "relative_change": 0.026872745679742554,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 115.269074,
+          "right_ms": 125.005296,
+          "delta_ms": 9.736221999999998,
+          "relative_change": 0.08446517059727571,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 115.1188,
+          "right_ms": 116.992799,
+          "delta_ms": 1.873999000000012,
+          "relative_change": 0.016278826742460936,
+          "over_band": false
+        }
+      ],
+      "slower_pairs": 3,
+      "over_band_pairs": 0,
+      "median_paired_delta_ms": 2.3955910000000102,
+      "median_paired_relative_change": 0.021575786211101747,
+      "difference_of_separate_medians_ms_not_used": 2.3955910000000245,
+      "classification": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "comparison": "C0->C1",
+      "metric": "raster.4.forcedFullCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 186.593056,
+          "right_ms": 181.096094,
+          "delta_ms": -5.496961999999996,
+          "relative_change": -0.02945962790812535,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 185.697694,
+          "right_ms": 181.581537,
+          "delta_ms": -4.116157000000015,
+          "relative_change": -0.022165902609431517,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 192.345754,
+          "right_ms": 186.406609,
+          "delta_ms": -5.939144999999996,
+          "relative_change": -0.0308774427118365,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 195.580173,
+          "right_ms": 193.310065,
+          "delta_ms": -2.2701079999999934,
+          "relative_change": -0.011607045669194665,
+          "over_band": false
+        }
+      ],
+      "slower_pairs": 0,
+      "over_band_pairs": 0,
+      "median_paired_delta_ms": -4.806559500000006,
+      "median_paired_relative_change": -0.025812765258778434,
+      "difference_of_separate_medians_ms_not_used": -5.47533199999998,
+      "classification": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "comparison": "C0->C1",
+      "metric": "raster.8.firstCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 246.128593,
+          "right_ms": 255.916622,
+          "delta_ms": 9.788028999999995,
+          "relative_change": 0.03976794764353118,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 267.892978,
+          "right_ms": 301.920953,
+          "delta_ms": 34.02797499999997,
+          "relative_change": 0.1270207799175683,
+          "over_band": true
+        },
+        {
+          "seed": 4103,
+          "left_ms": 294.522861,
+          "right_ms": 254.677448,
+          "delta_ms": -39.84541299999998,
+          "relative_change": -0.1352880141959506,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 289.102498,
+          "right_ms": 315.241174,
+          "delta_ms": 26.138675999999975,
+          "relative_change": 0.09041317934236588,
+          "over_band": false
+        }
+      ],
+      "slower_pairs": 3,
+      "over_band_pairs": 1,
+      "median_paired_delta_ms": 17.963352499999985,
+      "median_paired_relative_change": 0.06509056349294853,
+      "difference_of_separate_medians_ms_not_used": 0.421049499999981,
+      "classification": "INCONCLUSIVE"
+    },
+    {
+      "comparison": "C0->C1",
+      "metric": "raster.8.appendCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 148.879732,
+          "right_ms": 147.459818,
+          "delta_ms": -1.4199139999999772,
+          "relative_change": -0.009537322380456579,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 144.094789,
+          "right_ms": 151.618793,
+          "delta_ms": 7.524004000000019,
+          "relative_change": 0.05221565645930485,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 144.896373,
+          "right_ms": 147.800336,
+          "delta_ms": 2.903962999999976,
+          "relative_change": 0.020041654182744627,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 152.354864,
+          "right_ms": 160.231419,
+          "delta_ms": 7.876554999999996,
+          "relative_change": 0.05169874327084166,
+          "over_band": false
+        }
+      ],
+      "slower_pairs": 3,
+      "over_band_pairs": 0,
+      "median_paired_delta_ms": 5.213983499999998,
+      "median_paired_relative_change": 0.035870198726793145,
+      "difference_of_separate_medians_ms_not_used": 2.8215119999999843,
+      "classification": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "comparison": "C0->C1",
+      "metric": "raster.8.forcedFullCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 244.374577,
+          "right_ms": 244.843721,
+          "delta_ms": 0.469144,
+          "relative_change": 0.001919774167015745,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 248.803073,
+          "right_ms": 300.340891,
+          "delta_ms": 51.53781799999999,
+          "relative_change": 0.20714301225692652,
+          "over_band": true
+        },
+        {
+          "seed": 4103,
+          "left_ms": 244.807707,
+          "right_ms": 247.604083,
+          "delta_ms": 2.7963760000000093,
+          "relative_change": 0.011422744954675832,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 246.526936,
+          "right_ms": 263.227755,
+          "delta_ms": 16.700818999999996,
+          "relative_change": 0.06774439852690173,
+          "over_band": false
+        }
+      ],
+      "slower_pairs": 4,
+      "over_band_pairs": 1,
+      "median_paired_delta_ms": 9.748597500000002,
+      "median_paired_relative_change": 0.03958357174078878,
+      "difference_of_separate_medians_ms_not_used": 9.748597499999988,
+      "classification": "INCONCLUSIVE"
+    },
+    {
+      "comparison": "C0->C1",
+      "metric": "library.direct.p50",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 1
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 2.473712,
+          "right_ms": 2.300044,
+          "delta_ms": -0.1736679999999997,
+          "relative_change": -0.0702054240752358,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 2.421174,
+          "right_ms": 2.292863,
+          "delta_ms": -0.12831100000000006,
+          "relative_change": -0.05299536505843862,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 2.308306,
+          "right_ms": 2.339762,
+          "delta_ms": 0.03145599999999993,
+          "relative_change": 0.013627309377526172,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 2.316218,
+          "right_ms": 2.372651,
+          "delta_ms": 0.05643299999999973,
+          "relative_change": 0.02436428695399126,
+          "over_band": false
+        }
+      ],
+      "slower_pairs": 2,
+      "over_band_pairs": 0,
+      "median_paired_delta_ms": -0.04842750000000007,
+      "median_paired_relative_change": -0.019684027840456222,
+      "difference_of_separate_medians_ms_not_used": -0.048792999999999864,
+      "classification": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "comparison": "C0->C1",
+      "metric": "library.direct.p95",
+      "band": {
+        "relative": 0.15,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 7.037855,
+          "right_ms": 5.826162,
+          "delta_ms": -1.2116930000000004,
+          "relative_change": -0.17216794037387817,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 5.484253,
+          "right_ms": 5.813684,
+          "delta_ms": 0.3294310000000005,
+          "relative_change": 0.060068527108432176,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 5.406598,
+          "right_ms": 5.408531,
+          "delta_ms": 0.0019330000000001846,
+          "relative_change": 0.00035752611901239645,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 9.309137,
+          "right_ms": 9.015058,
+          "delta_ms": -0.294079,
+          "relative_change": -0.031590361168817256,
+          "over_band": false
+        }
+      ],
+      "slower_pairs": 2,
+      "over_band_pairs": 0,
+      "median_paired_delta_ms": -0.1460729999999999,
+      "median_paired_relative_change": -0.01561641752490243,
+      "difference_of_separate_medians_ms_not_used": -0.4411309999999995,
+      "classification": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "comparison": "C0->C1",
+      "metric": "library.direct.max",
+      "band": {
+        "relative": 0.25,
+        "absolute_ms": 20
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 8.844174,
+          "right_ms": 9.483546,
+          "delta_ms": 0.6393719999999998,
+          "relative_change": 0.07229301458790835,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 9.174866,
+          "right_ms": 6.396186,
+          "delta_ms": -2.7786799999999996,
+          "relative_change": -0.302857829204263,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 7.436179,
+          "right_ms": 8.014369,
+          "delta_ms": 0.5781900000000002,
+          "relative_change": 0.0777536420250239,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 12.293929,
+          "right_ms": 10.726957,
+          "delta_ms": -1.5669719999999998,
+          "relative_change": -0.1274590084260288,
+          "over_band": false
+        }
+      ],
+      "slower_pairs": 2,
+      "over_band_pairs": 0,
+      "median_paired_delta_ms": -0.4943909999999998,
+      "median_paired_relative_change": -0.02758299691906023,
+      "difference_of_separate_medians_ms_not_used": -0.2605625000000007,
+      "classification": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "comparison": "C0->C1",
+      "metric": "library.observe.p50",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 1
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 6.462675,
+          "right_ms": 5.044579,
+          "delta_ms": -1.4180960000000002,
+          "relative_change": -0.21942864216442887,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 5.227201,
+          "right_ms": 6.325776,
+          "delta_ms": 1.0985750000000003,
+          "relative_change": 0.21016505774314023,
+          "over_band": true
+        },
+        {
+          "seed": 4103,
+          "left_ms": 5.494268,
+          "right_ms": 6.847693,
+          "delta_ms": 1.3534249999999997,
+          "relative_change": 0.24633399754070964,
+          "over_band": true
+        },
+        {
+          "seed": 4104,
+          "left_ms": 5.509591,
+          "right_ms": 6.292046,
+          "delta_ms": 0.7824549999999997,
+          "relative_change": 0.14201689381298896,
+          "over_band": false
+        }
+      ],
+      "slower_pairs": 3,
+      "over_band_pairs": 2,
+      "median_paired_delta_ms": 0.940515,
+      "median_paired_relative_change": 0.1760909757780646,
+      "difference_of_separate_medians_ms_not_used": 0.8069815,
+      "classification": "INCONCLUSIVE"
+    },
+    {
+      "comparison": "C0->C1",
+      "metric": "library.observe.p95",
+      "band": {
+        "relative": 0.15,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 18.601257,
+          "right_ms": 11.565945,
+          "delta_ms": -7.035312000000001,
+          "relative_change": -0.3782170204949053,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 13.217063,
+          "right_ms": 12.833652,
+          "delta_ms": -0.38341099999999884,
+          "relative_change": -0.029008789622929,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 14.444481,
+          "right_ms": 23.367652,
+          "delta_ms": 8.923171,
+          "relative_change": 0.61775642890873,
+          "over_band": true
+        },
+        {
+          "seed": 4104,
+          "left_ms": 15.031033,
+          "right_ms": 14.580712,
+          "delta_ms": -0.45032100000000064,
+          "relative_change": -0.02995941795883228,
+          "over_band": false
+        }
+      ],
+      "slower_pairs": 1,
+      "over_band_pairs": 1,
+      "median_paired_delta_ms": -0.41686599999999974,
+      "median_paired_relative_change": -0.02948410379088064,
+      "difference_of_separate_medians_ms_not_used": -1.0305750000000007,
+      "classification": "INCONCLUSIVE"
+    },
+    {
+      "comparison": "C0->C1",
+      "metric": "library.observe.max",
+      "band": {
+        "relative": 0.25,
+        "absolute_ms": 20
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 34.387224,
+          "right_ms": 33.086017,
+          "delta_ms": -1.301207000000005,
+          "relative_change": -0.03783983842371239,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 32.040671,
+          "right_ms": 33.425497,
+          "delta_ms": 1.3848259999999968,
+          "relative_change": 0.043220880112030007,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 32.585392,
+          "right_ms": 40.971204,
+          "delta_ms": 8.385812000000001,
+          "relative_change": 0.257348814462628,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 30.069948,
+          "right_ms": 30.229074,
+          "delta_ms": 0.15912600000000054,
+          "relative_change": 0.005291861495736559,
+          "over_band": false
+        }
+      ],
+      "slower_pairs": 3,
+      "over_band_pairs": 0,
+      "median_paired_delta_ms": 0.7719759999999987,
+      "median_paired_relative_change": 0.024256370803883282,
+      "difference_of_separate_medians_ms_not_used": 0.9427255000000017,
+      "classification": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "comparison": "C0->C1",
+      "metric": "library.coldMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 500
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 2127.271231,
+          "right_ms": 2140.032771,
+          "delta_ms": 12.761539999999968,
+          "relative_change": 0.005999018749480736,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 2106.788243,
+          "right_ms": 2099.237468,
+          "delta_ms": -7.550775000000158,
+          "relative_change": -0.003584021804321488,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 2104.800989,
+          "right_ms": 2120.941739,
+          "delta_ms": 16.140750000000025,
+          "relative_change": 0.007668539726251538,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 2114.795822,
+          "right_ms": 2120.239935,
+          "delta_ms": 5.444113000000016,
+          "relative_change": 0.0025742972174266077,
+          "over_band": false
+        }
+      ],
+      "slower_pairs": 3,
+      "over_band_pairs": 0,
+      "median_paired_delta_ms": 9.102826499999992,
+      "median_paired_relative_change": 0.004286657983453672,
+      "difference_of_separate_medians_ms_not_used": 9.798804499999733,
+      "classification": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "comparison": "C0->C1",
+      "metric": "library.allIndexRowsCommittedMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 500
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 27957.648146,
+          "right_ms": 28579.189275,
+          "delta_ms": 621.5411290000011,
+          "relative_change": 0.022231524116556534,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 28358.907234,
+          "right_ms": 28483.717364,
+          "delta_ms": 124.81013000000166,
+          "relative_change": 0.004401090950724807,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 28521.123176,
+          "right_ms": 28455.561305,
+          "delta_ms": -65.5618710000017,
+          "relative_change": -0.002298712802978629,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 28195.814868,
+          "right_ms": 28839.882427,
+          "delta_ms": 644.0675589999992,
+          "relative_change": 0.022842665197485193,
+          "over_band": false
+        }
+      ],
+      "slower_pairs": 3,
+      "over_band_pairs": 0,
+      "median_paired_delta_ms": 373.1756295000014,
+      "median_paired_relative_change": 0.013316307533640671,
+      "difference_of_separate_medians_ms_not_used": 254.0922685000005,
+      "classification": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "comparison": "C0->C1",
+      "metric": "library.searchIndexReadyMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 500
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 28633.216152,
+          "right_ms": 29227.041463,
+          "delta_ms": 593.8253110000005,
+          "relative_change": 0.020739036364188605,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 29018.187783,
+          "right_ms": 29165.618307,
+          "delta_ms": 147.43052399999942,
+          "relative_change": 0.005080624782722305,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 29162.227746,
+          "right_ms": 29134.194544,
+          "delta_ms": -28.03320199999871,
+          "relative_change": -0.0009612846537022141,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 28851.993434,
+          "right_ms": 29502.106342,
+          "delta_ms": 650.1129079999992,
+          "relative_change": 0.022532685981894333,
+          "over_band": false
+        }
+      ],
+      "slower_pairs": 3,
+      "over_band_pairs": 0,
+      "median_paired_delta_ms": 370.62791749999997,
+      "median_paired_relative_change": 0.012909830573455456,
+      "difference_of_separate_medians_ms_not_used": 261.2392764999968,
+      "classification": "WITHIN_PROPOSED_BAND"
+    }
+  ],
+  "save_distributions": [
+    {
+      "ordinal": 32,
+      "seed": 4101,
+      "identity": "B",
+      "scenario": "direct",
+      "count": 30,
+      "indices_zero_based": [
+        14,
+        28,
+        29
+      ],
+      "p50": 2.25025,
+      "p95": 2.876792,
+      "max": 3477.299926,
+      "overlapping": 1
+    },
+    {
+      "ordinal": 32,
+      "seed": 4101,
+      "identity": "B",
+      "scenario": "observe",
+      "count": 30,
+      "indices_zero_based": [
+        14,
+        28,
+        29
+      ],
+      "p50": 2.27773,
+      "p95": 82.099212,
+      "max": 3437.77826,
+      "overlapping": 30
+    },
+    {
+      "ordinal": 34,
+      "seed": 4101,
+      "identity": "C0",
+      "scenario": "direct",
+      "count": 30,
+      "indices_zero_based": [
+        14,
+        28,
+        29
+      ],
+      "p50": 2.473712,
+      "p95": 7.037855,
+      "max": 8.844174,
+      "overlapping": 30
+    },
+    {
+      "ordinal": 34,
+      "seed": 4101,
+      "identity": "C0",
+      "scenario": "observe",
+      "count": 30,
+      "indices_zero_based": [
+        14,
+        28,
+        29
+      ],
+      "p50": 6.462675,
+      "p95": 18.601257,
+      "max": 34.387224,
+      "overlapping": 30
+    },
+    {
+      "ordinal": 36,
+      "seed": 4101,
+      "identity": "C1",
+      "scenario": "direct",
+      "count": 30,
+      "indices_zero_based": [
+        14,
+        28,
+        29
+      ],
+      "p50": 2.300044,
+      "p95": 5.826162,
+      "max": 9.483546,
+      "overlapping": 30
+    },
+    {
+      "ordinal": 36,
+      "seed": 4101,
+      "identity": "C1",
+      "scenario": "observe",
+      "count": 30,
+      "indices_zero_based": [
+        14,
+        28,
+        29
+      ],
+      "p50": 5.044579,
+      "p95": 11.565945,
+      "max": 33.086017,
+      "overlapping": 30
+    },
+    {
+      "ordinal": 38,
+      "seed": 4102,
+      "identity": "C1",
+      "scenario": "direct",
+      "count": 30,
+      "indices_zero_based": [
+        14,
+        28,
+        29
+      ],
+      "p50": 2.292863,
+      "p95": 5.813684,
+      "max": 6.396186,
+      "overlapping": 30
+    },
+    {
+      "ordinal": 38,
+      "seed": 4102,
+      "identity": "C1",
+      "scenario": "observe",
+      "count": 30,
+      "indices_zero_based": [
+        14,
+        28,
+        29
+      ],
+      "p50": 6.325776,
+      "p95": 12.833652,
+      "max": 33.425497,
+      "overlapping": 30
+    },
+    {
+      "ordinal": 40,
+      "seed": 4102,
+      "identity": "B",
+      "scenario": "direct",
+      "count": 30,
+      "indices_zero_based": [
+        14,
+        28,
+        29
+      ],
+      "p50": 2.161438,
+      "p95": 3.372981,
+      "max": 3505.189633,
+      "overlapping": 1
+    },
+    {
+      "ordinal": 40,
+      "seed": 4102,
+      "identity": "B",
+      "scenario": "observe",
+      "count": 30,
+      "indices_zero_based": [
+        14,
+        28,
+        29
+      ],
+      "p50": 2.382797,
+      "p95": 81.039484,
+      "max": 3489.198267,
+      "overlapping": 30
+    },
+    {
+      "ordinal": 42,
+      "seed": 4102,
+      "identity": "C0",
+      "scenario": "direct",
+      "count": 30,
+      "indices_zero_based": [
+        14,
+        28,
+        29
+      ],
+      "p50": 2.421174,
+      "p95": 5.484253,
+      "max": 9.174866,
+      "overlapping": 30
+    },
+    {
+      "ordinal": 42,
+      "seed": 4102,
+      "identity": "C0",
+      "scenario": "observe",
+      "count": 30,
+      "indices_zero_based": [
+        14,
+        28,
+        29
+      ],
+      "p50": 5.227201,
+      "p95": 13.217063,
+      "max": 32.040671,
+      "overlapping": 30
+    },
+    {
+      "ordinal": 44,
+      "seed": 4103,
+      "identity": "C0",
+      "scenario": "direct",
+      "count": 30,
+      "indices_zero_based": [
+        14,
+        28,
+        29
+      ],
+      "p50": 2.308306,
+      "p95": 5.406598,
+      "max": 7.436179,
+      "overlapping": 30
+    },
+    {
+      "ordinal": 44,
+      "seed": 4103,
+      "identity": "C0",
+      "scenario": "observe",
+      "count": 30,
+      "indices_zero_based": [
+        14,
+        28,
+        29
+      ],
+      "p50": 5.494268,
+      "p95": 14.444481,
+      "max": 32.585392,
+      "overlapping": 30
+    },
+    {
+      "ordinal": 46,
+      "seed": 4103,
+      "identity": "C1",
+      "scenario": "direct",
+      "count": 30,
+      "indices_zero_based": [
+        14,
+        28,
+        29
+      ],
+      "p50": 2.339762,
+      "p95": 5.408531,
+      "max": 8.014369,
+      "overlapping": 30
+    },
+    {
+      "ordinal": 46,
+      "seed": 4103,
+      "identity": "C1",
+      "scenario": "observe",
+      "count": 30,
+      "indices_zero_based": [
+        14,
+        28,
+        29
+      ],
+      "p50": 6.847693,
+      "p95": 23.367652,
+      "max": 40.971204,
+      "overlapping": 30
+    },
+    {
+      "ordinal": 48,
+      "seed": 4103,
+      "identity": "B",
+      "scenario": "direct",
+      "count": 30,
+      "indices_zero_based": [
+        14,
+        28,
+        29
+      ],
+      "p50": 2.12309,
+      "p95": 2.557687,
+      "max": 3518.47271,
+      "overlapping": 1
+    },
+    {
+      "ordinal": 48,
+      "seed": 4103,
+      "identity": "B",
+      "scenario": "observe",
+      "count": 30,
+      "indices_zero_based": [
+        14,
+        28,
+        29
+      ],
+      "p50": 2.288807,
+      "p95": 81.291835,
+      "max": 3460.105949,
+      "overlapping": 30
+    },
+    {
+      "ordinal": 50,
+      "seed": 4104,
+      "identity": "B",
+      "scenario": "direct",
+      "count": 30,
+      "indices_zero_based": [
+        14,
+        28,
+        29
+      ],
+      "p50": 2.016572,
+      "p95": 2.470582,
+      "max": 3494.362238,
+      "overlapping": 1
+    },
+    {
+      "ordinal": 50,
+      "seed": 4104,
+      "identity": "B",
+      "scenario": "observe",
+      "count": 30,
+      "indices_zero_based": [
+        14,
+        28,
+        29
+      ],
+      "p50": 2.294791,
+      "p95": 86.515695,
+      "max": 3491.168439,
+      "overlapping": 30
+    },
+    {
+      "ordinal": 52,
+      "seed": 4104,
+      "identity": "C1",
+      "scenario": "direct",
+      "count": 30,
+      "indices_zero_based": [
+        14,
+        28,
+        29
+      ],
+      "p50": 2.372651,
+      "p95": 9.015058,
+      "max": 10.726957,
+      "overlapping": 30
+    },
+    {
+      "ordinal": 52,
+      "seed": 4104,
+      "identity": "C1",
+      "scenario": "observe",
+      "count": 30,
+      "indices_zero_based": [
+        14,
+        28,
+        29
+      ],
+      "p50": 6.292046,
+      "p95": 14.580712,
+      "max": 30.229074,
+      "overlapping": 30
+    },
+    {
+      "ordinal": 54,
+      "seed": 4104,
+      "identity": "C0",
+      "scenario": "direct",
+      "count": 30,
+      "indices_zero_based": [
+        14,
+        28,
+        29
+      ],
+      "p50": 2.316218,
+      "p95": 9.309137,
+      "max": 12.293929,
+      "overlapping": 30
+    },
+    {
+      "ordinal": 54,
+      "seed": 4104,
+      "identity": "C0",
+      "scenario": "observe",
+      "count": 30,
+      "indices_zero_based": [
+        14,
+        28,
+        29
+      ],
+      "p50": 5.509591,
+      "p95": 15.031033,
+      "max": 30.069948,
+      "overlapping": 30
+    }
+  ],
+  "warm_ordered_values": [
+    {
+      "seed": 4101,
+      "identity": "B",
+      "raw_ms": [
+        578.374358,
+        574.212402,
+        575.173563,
+        572.606142,
+        572.984745
+      ],
+      "median_ms": 574.212402
+    },
+    {
+      "seed": 4101,
+      "identity": "C0",
+      "raw_ms": [
+        630.181441,
+        633.918803,
+        630.314179,
+        645.606811,
+        676.851667
+      ],
+      "median_ms": 633.918803
+    },
+    {
+      "seed": 4101,
+      "identity": "C1",
+      "raw_ms": [
+        629.849697,
+        632.727099,
+        630.88979,
+        627.714413,
+        651.805957
+      ],
+      "median_ms": 630.88979
+    },
+    {
+      "seed": 4102,
+      "identity": "C1",
+      "raw_ms": [
+        693.496683,
+        727.085309,
+        678.516665,
+        715.151435,
+        641.47411
+      ],
+      "median_ms": 693.496683
+    },
+    {
+      "seed": 4102,
+      "identity": "B",
+      "raw_ms": [
+        578.789816,
+        574.403087,
+        584.69076,
+        574.280965,
+        574.27716
+      ],
+      "median_ms": 574.403087
+    },
+    {
+      "seed": 4102,
+      "identity": "C0",
+      "raw_ms": [
+        649.243634,
+        645.1461,
+        631.614229,
+        657.111254,
+        633.616894
+      ],
+      "median_ms": 645.1461
+    },
+    {
+      "seed": 4103,
+      "identity": "C0",
+      "raw_ms": [
+        629.192258,
+        631.802413,
+        634.008367,
+        652.965373,
+        634.160193
+      ],
+      "median_ms": 634.008367
+    },
+    {
+      "seed": 4103,
+      "identity": "C1",
+      "raw_ms": [
+        628.886023,
+        639.227425,
+        631.031421,
+        633.469966,
+        630.09699
+      ],
+      "median_ms": 631.031421
+    },
+    {
+      "seed": 4103,
+      "identity": "B",
+      "raw_ms": [
+        580.735071,
+        572.633343,
+        574.340954,
+        575.600429,
+        577.204086
+      ],
+      "median_ms": 575.600429
+    },
+    {
+      "seed": 4104,
+      "identity": "B",
+      "raw_ms": [
+        582.179722,
+        576.113953,
+        574.182117,
+        577.012962,
+        579.557579
+      ],
+      "median_ms": 577.012962
+    },
+    {
+      "seed": 4104,
+      "identity": "C1",
+      "raw_ms": [
+        648.527288,
+        635.941484,
+        656.321569,
+        629.547357,
+        639.897723
+      ],
+      "median_ms": 639.897723
+    },
+    {
+      "seed": 4104,
+      "identity": "C0",
+      "raw_ms": [
+        639.749101,
+        639.006296,
+        638.496237,
+        637.185816,
+        636.572984
+      ],
+      "median_ms": 638.496237
+    }
+  ],
+  "legacy_upper_median_fields_not_used": [
+    {
+      "ordinal": 32,
+      "scenario": "direct",
+      "legacy": 2.302888,
+      "nearest_rank": 2.25025
+    },
+    {
+      "ordinal": 32,
+      "scenario": "observe",
+      "legacy": 2.308446,
+      "nearest_rank": 2.27773
+    },
+    {
+      "ordinal": 34,
+      "scenario": "direct",
+      "legacy": 2.489686,
+      "nearest_rank": 2.473712
+    },
+    {
+      "ordinal": 34,
+      "scenario": "observe",
+      "legacy": 6.511477,
+      "nearest_rank": 6.462675
+    },
+    {
+      "ordinal": 36,
+      "scenario": "direct",
+      "legacy": 2.343889,
+      "nearest_rank": 2.300044
+    },
+    {
+      "ordinal": 36,
+      "scenario": "observe",
+      "legacy": 5.343078,
+      "nearest_rank": 5.044579
+    },
+    {
+      "ordinal": 38,
+      "scenario": "direct",
+      "legacy": 2.33122,
+      "nearest_rank": 2.292863
+    },
+    {
+      "ordinal": 38,
+      "scenario": "observe",
+      "legacy": 6.406005,
+      "nearest_rank": 6.325776
+    },
+    {
+      "ordinal": 40,
+      "scenario": "direct",
+      "legacy": 2.164682,
+      "nearest_rank": 2.161438
+    },
+    {
+      "ordinal": 40,
+      "scenario": "observe",
+      "legacy": 2.413933,
+      "nearest_rank": 2.382797
+    },
+    {
+      "ordinal": 42,
+      "scenario": "direct",
+      "legacy": 2.433152,
+      "nearest_rank": 2.421174
+    },
+    {
+      "ordinal": 42,
+      "scenario": "observe",
+      "legacy": 5.284115,
+      "nearest_rank": 5.227201
+    },
+    {
+      "ordinal": 44,
+      "scenario": "direct",
+      "legacy": 2.311761,
+      "nearest_rank": 2.308306
+    },
+    {
+      "ordinal": 44,
+      "scenario": "observe",
+      "legacy": 5.563531,
+      "nearest_rank": 5.494268
+    },
+    {
+      "ordinal": 46,
+      "scenario": "direct",
+      "legacy": 2.388305,
+      "nearest_rank": 2.339762
+    },
+    {
+      "ordinal": 46,
+      "scenario": "observe",
+      "legacy": 6.908803,
+      "nearest_rank": 6.847693
+    },
+    {
+      "ordinal": 48,
+      "scenario": "direct",
+      "legacy": 2.125173,
+      "nearest_rank": 2.12309
+    },
+    {
+      "ordinal": 48,
+      "scenario": "observe",
+      "legacy": 2.364379,
+      "nearest_rank": 2.288807
+    },
+    {
+      "ordinal": 50,
+      "scenario": "direct",
+      "legacy": 2.073356,
+      "nearest_rank": 2.016572
+    },
+    {
+      "ordinal": 50,
+      "scenario": "observe",
+      "legacy": 2.319362,
+      "nearest_rank": 2.294791
+    },
+    {
+      "ordinal": 52,
+      "scenario": "direct",
+      "legacy": 2.3915,
+      "nearest_rank": 2.372651
+    },
+    {
+      "ordinal": 52,
+      "scenario": "observe",
+      "legacy": 6.676808,
+      "nearest_rank": 6.292046
+    },
+    {
+      "ordinal": 54,
+      "scenario": "direct",
+      "legacy": 2.352662,
+      "nearest_rank": 2.316218
+    },
+    {
+      "ordinal": 54,
+      "scenario": "observe",
+      "legacy": 5.603681,
+      "nearest_rank": 5.509591
+    }
+  ],
+  "checked_analysis_input_hash_count": 118,
+  "input_hashes": {
+    "analysis/analysis.json": "732863e26c6159d1f67486fd907a86342d5e8933572c2227023222cc2293bf7a",
+    "evidence-archive-verification.json": "fdae6b5ad44d64ea67e2a21ff555ba28923f5af6373d5917facf7ebef41550f4",
+    "evidence/frozen-original-protocol.json": "1065177d7809426d949c4b4b67bd639a47c3fc1943f706a77c2dfabb985e9aba",
+    "evidence/frozen-method-plan.json": "808dd0cf1fece09185c59ae94ce41f51fdbc26dcde5ed196df7e803860f49765",
+    "evidence/frozen-source-spec.json": "6e9c422d8be60728967226de674b750cb7b3633485956d537dd0c2dac21a6dfb"
+  },
+  "original_common_log_hashes": [
+    {
+      "path": "evidence/method-31-B-instrumentation.log",
+      "sha256": "71b7e11d41ed5ec405995535c108417543f4c563c7ff78e45aff09dac8eba653"
+    },
+    {
+      "path": "evidence/method-32-B-instrumentation.log",
+      "sha256": "08b898d844a84b9e7606d192edad952a3321b85c2170323a7a7be3e853c1a35c"
+    },
+    {
+      "path": "evidence/method-33-C0-instrumentation.log",
+      "sha256": "7c4cc87bb3532e315210978a7fcf875525a0d77d83ca1f40e0d47fee7eced861"
+    },
+    {
+      "path": "evidence/method-34-C0-instrumentation.log",
+      "sha256": "7df22c5cef21d8534b7386733d1fa5aacd4eb30ed9ac79d1738ae749db646370"
+    },
+    {
+      "path": "evidence/method-35-C1-instrumentation.log",
+      "sha256": "25da2646e14ca6450454af4da1129108cdcb52240a3ccb5d03a56322732119cf"
+    },
+    {
+      "path": "evidence/method-36-C1-instrumentation.log",
+      "sha256": "ed1ac637b855ab854bbf89835d89a97842551faed0f76c15badbf1f785675925"
+    },
+    {
+      "path": "evidence/method-37-C1-instrumentation.log",
+      "sha256": "ec5796eaf539cc286e3f662356b2f52ed9ad9204228223692839edc2e4aa9686"
+    },
+    {
+      "path": "evidence/method-38-C1-instrumentation.log",
+      "sha256": "bcd08e8dec5a2c386956cf3f051eb8920831b2ffd32c6b2612497c5370e4361a"
+    },
+    {
+      "path": "evidence/method-39-B-instrumentation.log",
+      "sha256": "6c4cdd8b0c2203e05bc86fc325d4b7fb7974adf6764e917374d54f233618aec9"
+    },
+    {
+      "path": "evidence/method-40-B-instrumentation.log",
+      "sha256": "16a47b3f371c97c44bc48f252912ed99bf3719ee3f654434a45bca26b3f3276f"
+    },
+    {
+      "path": "evidence/method-41-C0-instrumentation.log",
+      "sha256": "fed286535c7fc71086288ef4361cd58743b1006afd9572d21b4fce21068c1b13"
+    },
+    {
+      "path": "evidence/method-42-C0-instrumentation.log",
+      "sha256": "63c1b465578a82ddb779fdf2b2b6b6c283102768549f5f34af6b35d494fcd7fd"
+    },
+    {
+      "path": "evidence/method-43-C0-instrumentation.log",
+      "sha256": "a4f0672e6952a449cb7a3990b67f56125ea88cb3164f0d7c9826984d2e9b55f0"
+    },
+    {
+      "path": "evidence/method-44-C0-instrumentation.log",
+      "sha256": "b1c85147e1924440bc4f1fa1d758c6c80f2a5a6505a309f0c7b8467d0b16fac6"
+    },
+    {
+      "path": "evidence/method-45-C1-instrumentation.log",
+      "sha256": "0f5fa94fbd032d6a5b63ef61fce116142078db4e57ca1abc7582684db92d12dc"
+    },
+    {
+      "path": "evidence/method-46-C1-instrumentation.log",
+      "sha256": "7d2f54c37258833dd942d82f6f8bd9cb67e9647065025f3ef5310b25cffb0085"
+    },
+    {
+      "path": "evidence/method-47-B-instrumentation.log",
+      "sha256": "3f245d28ba424c723c24595c4f6723cf483a23a43a59a3da60660a4f5b6d8dca"
+    },
+    {
+      "path": "evidence/method-48-B-instrumentation.log",
+      "sha256": "196bacebd2aa691bc0bc545c3ac283bd48417807848de84bd612062dc78cac24"
+    },
+    {
+      "path": "evidence/method-49-B-instrumentation.log",
+      "sha256": "cb734027eb1a29e003c4a4db9c14dcf2de93c4cac6e37ed25fad4ee43d4ab55b"
+    },
+    {
+      "path": "evidence/method-50-B-instrumentation.log",
+      "sha256": "d2fc3ab64065506c18e56d87414ab23e9ba2bf37d7635308256b080b4a841a99"
+    },
+    {
+      "path": "evidence/method-51-C1-instrumentation.log",
+      "sha256": "bd86951f7697a33f048966e392d7a5c39861be6837b46a28b61504ea5893f59a"
+    },
+    {
+      "path": "evidence/method-52-C1-instrumentation.log",
+      "sha256": "8cc5812bc9e80e48eb11aea5216d49866210453c7d8d4c8ba7b32b087d5e84a9"
+    },
+    {
+      "path": "evidence/method-53-C0-instrumentation.log",
+      "sha256": "c572bd6fbe35d5d3607e40f01030d53924c3d0954b09739bdca2878a6d0ed922"
+    },
+    {
+      "path": "evidence/method-54-C0-instrumentation.log",
+      "sha256": "3f914090c52cf22ce1c2ea195a54615a682c45119db0161520b34a8bbed4b984"
+    }
+  ],
+  "issues": [],
+  "limitations": [
+    "Only the 24 common calls enter 18 original metrics; old GC and candidate-only diagnostics are excluded.",
+    "Four seed blocks are the comparison units; do not pool 720 saves or warm repetitions into independent trials.",
+    "B->C0 has 3/1 order imbalance and is ancillary. C1 versus B/C0 is counterbalanced.",
+    "Cold means unindexed first query after fixture hashing, not cold OS/file caches.",
+    "Warm has no separately predeclared numeric band. Native counter absence is null/absent, never zero.",
+    "No sustained-contention tail claim from unequal or insufficient overlap; no causal lock/CPU inference.",
+    "Natural GC and stage diagnostics remain unmodified candidate-only raw evidence; inspect partial/unknown commit states.",
+    "Incomplete execution or input issues override acceptance status; observed numerical signals remain visible.",
+    "Independent APK/source/environment/privacy/ACL verification remains required; XML is derived, not a second run."
+  ],
+  "legacy_upper_median_matches_zero_based_index15": true
+}

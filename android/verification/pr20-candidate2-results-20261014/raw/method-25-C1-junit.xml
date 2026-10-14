@@ -1,0 +1,2 @@
+<?xml version='1.0' encoding='utf-8'?>
+<testsuite name="org.inkweft.data.RasterReadCacheTest#sameRevisionMaskChangeDuringCachedVisitRejectsTheWholeRead" tests="1" failures="0" errors="0" time="1.0145692825317383"><testcase classname="org.inkweft.data.RasterReadCacheTest" name="sameRevisionMaskChangeDuringCachedVisitRejectsTheWholeRead" time="1.0145692825317383" /></testsuite>

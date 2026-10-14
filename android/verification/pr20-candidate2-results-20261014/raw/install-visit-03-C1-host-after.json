@@ -1,0 +1,23 @@
+{
+  "epoch": 1791915383.9630737,
+  "uid": 1001,
+  "cpu_count": 4,
+  "kernel": "6.17.0-1022-azure",
+  "load_1_5_15": [
+    1.1376953125,
+    1.9521484375,
+    2.25732421875
+  ],
+  "cpu_model": "AMD EPYC 9V74 80-Core Processor",
+  "memory": {
+    "MemTotal": "16373452 kB",
+    "MemAvailable": "11906456 kB",
+    "SwapTotal": "3145724 kB",
+    "SwapFree": "3145704 kB"
+  },
+  "disk_bytes": {
+    "total": 154894188544,
+    "used": 74299596800,
+    "free": 80577814528
+  }
+}

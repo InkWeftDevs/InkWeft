@@ -1,0 +1,4715 @@
+{
+  "schema": 1,
+  "run_id": "38441089594",
+  "status": "DECODE_REDUCTION_AND_FUNCTIONAL_CHECKS_PASS_TIMING_INCONCLUSIVE",
+  "scope": "Only public raster calls31..54; raster correctness19..30 separately.",
+  "identities": {
+    "B": "a128bb07e34cb82f00eeafc8e62a47bf7b95b128",
+    "C0": "ebb48481e7e995288c1844d43011398c513b4f4e",
+    "C1": "45b4861ae23ac19eda3246fcd34cf3d2132dc1ee"
+  },
+  "source_spec": {
+    "schema": 1,
+    "status": "FROZEN_UNDER_EXISTING_CONTINUATION_AUTHORIZATION_NOT_RUN",
+    "materialized_scope": [
+      "android",
+      "ci"
+    ],
+    "excluded_from_build_inputs": [
+      "android/verification"
+    ],
+    "identities": {
+      "B": {
+        "git": "a128bb07e34cb82f00eeafc8e62a47bf7b95b128",
+        "tree": "2eefbf879679d29f5ae4b1d6b9715a4cef14d5d9",
+        "production_overrides": [
+          {
+            "from_git": "7949011ca2b84492f6438d275a09d28faef3b472",
+            "from_path": "android/data-local/src/main/kotlin/org/inkweft/data/PreservingOpenHelperFactory.kt",
+            "path": "android/data-local/src/main/kotlin/org/inkweft/data/PreservingOpenHelperFactory.kt",
+            "bytes": 4426,
+            "sha256": "a049af775caa688cd0dfd938acdf1539d34ee13de272ed35c930de9ef4e3d15d"
+          }
+        ],
+        "canonical_manifest_sha256": "bcf2b51fb04e85ced2a70bc3fc7a402e1fed551583de43831d8a4ecccce91fd8",
+        "file_count": 947
+      },
+      "C0": {
+        "git": "ebb48481e7e995288c1844d43011398c513b4f4e",
+        "tree": "3d88de9681dae25f24b8e7cc6ae695cc2600a140",
+        "production_overrides": [],
+        "canonical_manifest_sha256": "c0e3b9a4cfa9b5a602e47422f080add43353d64acacea505cc8f3ebee4c91e63",
+        "file_count": 964
+      },
+      "C1": {
+        "git": "45b4861ae23ac19eda3246fcd34cf3d2132dc1ee",
+        "tree": "9df9003679881668bf90db98d3f5efce750afe1d",
+        "production_overrides": [],
+        "canonical_manifest_sha256": "7592c7990537bde681d0179539f58e1cd79822695bfcfd4b19882d9e1f738e90",
+        "file_count": 964
+      }
+    },
+    "common_probes": [
+      {
+        "from_git": "e1a813aa24be20df0901f6aff9554632e1f531b7",
+        "from_path": "android/verification/pr20-kvm-paired-20261013/evidence/probe-KvmLibraryPairProbe.kt",
+        "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/KvmLibraryPairProbe.kt",
+        "bytes": 18281,
+        "sha256": "90525d56efe48b32441be890e29c021d0f699fe7d82389d1e049283cfb10f98c"
+      },
+      {
+        "from_git": "e1a813aa24be20df0901f6aff9554632e1f531b7",
+        "from_path": "android/verification/pr20-kvm-paired-20261013/evidence/probe-KvmLocalAppendPairProbe.kt",
+        "path": "android/app/src/androidTest/java/org/inkweft/app/KvmLocalAppendPairProbe.kt",
+        "bytes": 12932,
+        "sha256": "a916d2470d54f069d1d6071d0b56a15ac6b07d05ab0b033d0aa7d4420fa74338"
+      }
+    ],
+    "native_execution": "NOT_RUN",
+    "notes": [
+      "B retains original search/paging/raster/GC, with the established writer factory and common probes only.",
+      "C0 in THIS plan is ebb4848; historical fourth-run C0 was 7949011. Slots do not imply identical sources across runs.",
+      "C1 is the final code commit; later verification-only commits do not alter these measured inputs.",
+      "The two common probes, four seeds, sample sizes and original thresholds remain byte-identical to the fourth run.",
+      "Existing user continuation authorization applies; this source-only document performs no execution or security action."
+    ],
+    "version_aliases": {
+      "B": "controlled-original-baseline",
+      "C0": "previous-candidate-ebb4848",
+      "C1": "cancel-metadata-and-append-geometry-candidate"
+    }
+  },
+  "probe_sha256": "a916d2470d54f069d1d6071d0b56a15ac6b07d05ab0b033d0aa7d4420fa74338",
+  "verification": {
+    "public_calls": 12,
+    "raster_records": 36,
+    "candidate_records": 12,
+    "raw_log_records_and_analysis_equal": true,
+    "all_12_fixture_hash_groups_and_sqlite_configs_match": true,
+    "all_36_pixels_equal": true,
+    "all_36_cleanup_joined_and_zero_resources": true,
+    "C1_local_decode": [
+      1,
+      1,
+      1
+    ],
+    "C0_local_decode": [
+      13,
+      21,
+      11
+    ],
+    "B_local_decode": [
+      13,
+      21,
+      11
+    ],
+    "C0_C1_native": [
+      13,
+      21,
+      11
+    ],
+    "B_native": null,
+    "local_rebuilt": [
+      1,
+      1,
+      1
+    ],
+    "full_decoded": [
+      321,
+      321,
+      321
+    ],
+    "full_rebuilt": [
+      24,
+      24,
+      48
+    ],
+    "common_probe_emits_geometry_hits_or_bytes": false,
+    "independent_classifications_match_fixed_analysis": true
+  },
+  "band_rule": {
+    "pair": "delta > max(10% of left,5ms)",
+    "regression": "at least3 positive pairs AND median(relative)>10% AND median(delta)>5ms",
+    "otherwise": "INCONCLUSIVE if any over-band pair; otherwise WITHIN_PROPOSED_BAND"
+  },
+  "classification_counts": {
+    "B->C1": {
+      "WITHIN_PROPOSED_BAND": 6,
+      "INCONCLUSIVE": 3,
+      "REGRESSION_SIGNAL": 0
+    },
+    "C0->C1": {
+      "WITHIN_PROPOSED_BAND": 6,
+      "INCONCLUSIVE": 3,
+      "REGRESSION_SIGNAL": 0
+    }
+  },
+  "comparisons": [
+    {
+      "comparison": "B->C1",
+      "metric": "raster.1.firstCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 259.291195,
+          "right_ms": 268.584258,
+          "delta_ms": 9.293062999999961,
+          "relative_change": 0.03584025674300273,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 270.537235,
+          "right_ms": 275.432601,
+          "delta_ms": 4.895365999999967,
+          "relative_change": 0.018094980530129146,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 263.852344,
+          "right_ms": 274.67323,
+          "delta_ms": 10.820885999999973,
+          "relative_change": 0.04101114220156399,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 272.188132,
+          "right_ms": 279.539564,
+          "delta_ms": 7.351431999999988,
+          "relative_change": 0.027008642683950645,
+          "over_band": false
+        }
+      ],
+      "median_delta_ms": 8.322247499999975,
+      "median_relative_change": 0.03142444971347669,
+      "positive_pairs": 4,
+      "over_band_pairs": 0,
+      "screening_status": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "comparison": "B->C1",
+      "metric": "raster.1.appendCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 53.771687,
+          "right_ms": 52.348589,
+          "delta_ms": -1.423098000000003,
+          "relative_change": -0.02646556355949936,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 53.037074,
+          "right_ms": 49.411032,
+          "delta_ms": -3.626041999999998,
+          "relative_change": -0.06836806268762108,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 53.979447,
+          "right_ms": 53.45798,
+          "delta_ms": -0.5214670000000012,
+          "relative_change": -0.00966047317972707,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 53.501635,
+          "right_ms": 64.348551,
+          "delta_ms": 10.846916,
+          "relative_change": 0.2027398975750927,
+          "over_band": true
+        }
+      ],
+      "median_delta_ms": -0.9722825000000022,
+      "median_relative_change": -0.018063018369613215,
+      "positive_pairs": 1,
+      "over_band_pairs": 1,
+      "screening_status": "INCONCLUSIVE"
+    },
+    {
+      "comparison": "B->C1",
+      "metric": "raster.1.forcedFullCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 201.87237,
+          "right_ms": 201.413897,
+          "delta_ms": -0.4584729999999979,
+          "relative_change": -0.0022711032718345514,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 201.351283,
+          "right_ms": 201.719376,
+          "delta_ms": 0.368093000000016,
+          "relative_change": 0.0018281135064832643,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 201.174931,
+          "right_ms": 200.975073,
+          "delta_ms": -0.19985799999997766,
+          "relative_change": -0.0009934538016567185,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 201.361169,
+          "right_ms": 199.568449,
+          "delta_ms": -1.7927200000000028,
+          "relative_change": -0.008903007510847383,
+          "over_band": false
+        }
+      ],
+      "median_delta_ms": -0.3291654999999878,
+      "median_relative_change": -0.001632278536745635,
+      "positive_pairs": 1,
+      "over_band_pairs": 0,
+      "screening_status": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "comparison": "B->C1",
+      "metric": "raster.4.firstCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 230.521853,
+          "right_ms": 220.970005,
+          "delta_ms": -9.551848000000007,
+          "relative_change": -0.0414357592379756,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 221.802174,
+          "right_ms": 240.642802,
+          "delta_ms": 18.84062799999998,
+          "relative_change": 0.08494338743496699,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 246.712071,
+          "right_ms": 226.023177,
+          "delta_ms": -20.688894000000005,
+          "relative_change": -0.08385845863212749,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 248.331221,
+          "right_ms": 245.518675,
+          "delta_ms": -2.8125459999999975,
+          "relative_change": -0.0113257849281867,
+          "over_band": false
+        }
+      ],
+      "median_delta_ms": -6.182197000000002,
+      "median_relative_change": -0.02638077208308115,
+      "positive_pairs": 1,
+      "over_band_pairs": 0,
+      "screening_status": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "comparison": "B->C1",
+      "metric": "raster.4.appendCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 109.59637,
+          "right_ms": 78.569648,
+          "delta_ms": -31.026721999999992,
+          "relative_change": -0.2830999055899387,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 109.394129,
+          "right_ms": 111.472633,
+          "delta_ms": 2.0785039999999952,
+          "relative_change": 0.019000142137426623,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 126.857343,
+          "right_ms": 125.005296,
+          "delta_ms": -1.8520469999999989,
+          "relative_change": -0.014599446561008311,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 111.875763,
+          "right_ms": 116.992799,
+          "delta_ms": 5.117035999999999,
+          "relative_change": 0.04573855733167154,
+          "over_band": false
+        }
+      ],
+      "median_delta_ms": 0.11322849999999818,
+      "median_relative_change": 0.002200347788209156,
+      "positive_pairs": 2,
+      "over_band_pairs": 0,
+      "screening_status": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "comparison": "B->C1",
+      "metric": "raster.4.forcedFullCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 208.583459,
+          "right_ms": 181.096094,
+          "delta_ms": -27.48736500000001,
+          "relative_change": -0.13178113514744239,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 183.866979,
+          "right_ms": 181.581537,
+          "delta_ms": -2.285441999999989,
+          "relative_change": -0.012429866485161423,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 185.610704,
+          "right_ms": 186.406609,
+          "delta_ms": 0.7959050000000047,
+          "relative_change": 0.004288033948731673,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 192.620638,
+          "right_ms": 193.310065,
+          "delta_ms": 0.6894269999999949,
+          "relative_change": 0.0035791959114992444,
+          "over_band": false
+        }
+      ],
+      "median_delta_ms": -0.7980074999999971,
+      "median_relative_change": -0.004425335286831089,
+      "positive_pairs": 2,
+      "over_band_pairs": 0,
+      "screening_status": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "comparison": "B->C1",
+      "metric": "raster.8.firstCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 261.756184,
+          "right_ms": 255.916622,
+          "delta_ms": -5.839562000000029,
+          "relative_change": -0.02230916538728278,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 256.169127,
+          "right_ms": 301.920953,
+          "delta_ms": 45.751825999999994,
+          "relative_change": 0.17860007775253872,
+          "over_band": true
+        },
+        {
+          "seed": 4103,
+          "left_ms": 272.353177,
+          "right_ms": 254.677448,
+          "delta_ms": -17.67572900000002,
+          "relative_change": -0.06490002868591471,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 261.891556,
+          "right_ms": 315.241174,
+          "delta_ms": 53.34961800000002,
+          "relative_change": 0.20370881297142707,
+          "over_band": true
+        }
+      ],
+      "median_delta_ms": 19.956131999999982,
+      "median_relative_change": 0.07814545618262797,
+      "positive_pairs": 2,
+      "over_band_pairs": 2,
+      "screening_status": "INCONCLUSIVE"
+    },
+    {
+      "comparison": "B->C1",
+      "metric": "raster.8.appendCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 143.921141,
+          "right_ms": 147.459818,
+          "delta_ms": 3.538677000000007,
+          "relative_change": 0.02458761079444205,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 147.145961,
+          "right_ms": 151.618793,
+          "delta_ms": 4.472832000000011,
+          "relative_change": 0.030397246173818004,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 155.030607,
+          "right_ms": 147.800336,
+          "delta_ms": -7.230271000000016,
+          "relative_change": -0.0466377003864793,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 148.486336,
+          "right_ms": 160.231419,
+          "delta_ms": 11.745082999999994,
+          "relative_change": 0.07909874616341805,
+          "over_band": false
+        }
+      ],
+      "median_delta_ms": 4.005754500000009,
+      "median_relative_change": 0.027492428484130027,
+      "positive_pairs": 3,
+      "over_band_pairs": 0,
+      "screening_status": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "comparison": "B->C1",
+      "metric": "raster.8.forcedFullCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 265.977407,
+          "right_ms": 244.843721,
+          "delta_ms": -21.13368600000004,
+          "relative_change": -0.07945669610953099,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 263.615802,
+          "right_ms": 300.340891,
+          "delta_ms": 36.725089000000025,
+          "relative_change": 0.13931292707559328,
+          "over_band": true
+        },
+        {
+          "seed": 4103,
+          "left_ms": 273.103729,
+          "right_ms": 247.604083,
+          "delta_ms": -25.499645999999984,
+          "relative_change": -0.09336981993387572,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 259.127451,
+          "right_ms": 263.227755,
+          "delta_ms": 4.100303999999994,
+          "relative_change": 0.015823503006634265,
+          "over_band": false
+        }
+      ],
+      "median_delta_ms": -8.516691000000023,
+      "median_relative_change": -0.03181659655144836,
+      "positive_pairs": 2,
+      "over_band_pairs": 1,
+      "screening_status": "INCONCLUSIVE"
+    },
+    {
+      "comparison": "C0->C1",
+      "metric": "raster.1.firstCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 259.119239,
+          "right_ms": 268.584258,
+          "delta_ms": 9.465018999999984,
+          "relative_change": 0.036527658218384884,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 258.661878,
+          "right_ms": 275.432601,
+          "delta_ms": 16.770722999999975,
+          "relative_change": 0.0648364696401067,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 266.464892,
+          "right_ms": 274.67323,
+          "delta_ms": 8.20833799999997,
+          "relative_change": 0.030804575936405065,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 266.381679,
+          "right_ms": 279.539564,
+          "delta_ms": 13.157884999999965,
+          "relative_change": 0.04939485721914072,
+          "over_band": false
+        }
+      ],
+      "median_delta_ms": 11.311451999999974,
+      "median_relative_change": 0.0429612577187628,
+      "positive_pairs": 4,
+      "over_band_pairs": 0,
+      "screening_status": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "comparison": "C0->C1",
+      "metric": "raster.1.appendCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 53.744186,
+          "right_ms": 52.348589,
+          "delta_ms": -1.3955970000000022,
+          "relative_change": -0.02596740417651877,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 53.665989,
+          "right_ms": 49.411032,
+          "delta_ms": -4.2549570000000045,
+          "relative_change": -0.07928591421281739,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 52.756416,
+          "right_ms": 53.45798,
+          "delta_ms": 0.7015639999999976,
+          "relative_change": 0.013298174007877916,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 53.369809,
+          "right_ms": 64.348551,
+          "delta_ms": 10.978742000000004,
+          "relative_change": 0.20571072307940996,
+          "over_band": true
+        }
+      ],
+      "median_delta_ms": -0.3470165000000023,
+      "median_relative_change": -0.006334615084320427,
+      "positive_pairs": 2,
+      "over_band_pairs": 1,
+      "screening_status": "INCONCLUSIVE"
+    },
+    {
+      "comparison": "C0->C1",
+      "metric": "raster.1.forcedFullCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 218.216607,
+          "right_ms": 201.413897,
+          "delta_ms": -16.80271000000002,
+          "relative_change": -0.07700014325674132,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 201.421618,
+          "right_ms": 201.719376,
+          "delta_ms": 0.29775800000001595,
+          "relative_change": 0.0014782822368153425,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 201.56427,
+          "right_ms": 200.975073,
+          "delta_ms": -0.5891969999999844,
+          "relative_change": -0.002923122237884601,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 201.300908,
+          "right_ms": 199.568449,
+          "delta_ms": -1.7324590000000057,
+          "relative_change": -0.00860631488060648,
+          "over_band": false
+        }
+      ],
+      "median_delta_ms": -1.160827999999995,
+      "median_relative_change": -0.005764718559245541,
+      "positive_pairs": 1,
+      "over_band_pairs": 0,
+      "screening_status": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "comparison": "C0->C1",
+      "metric": "raster.4.firstCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 242.830003,
+          "right_ms": 220.970005,
+          "delta_ms": -21.85999800000002,
+          "relative_change": -0.09002181662041164,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 228.032007,
+          "right_ms": 240.642802,
+          "delta_ms": 12.610794999999996,
+          "relative_change": 0.05530274089987719,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 228.634704,
+          "right_ms": 226.023177,
+          "delta_ms": -2.6115269999999953,
+          "relative_change": -0.011422268598383911,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 229.868691,
+          "right_ms": 245.518675,
+          "delta_ms": 15.64998399999999,
+          "relative_change": 0.06808227745987372,
+          "over_band": false
+        }
+      ],
+      "median_delta_ms": 4.999634,
+      "median_relative_change": 0.02194023615074664,
+      "positive_pairs": 2,
+      "over_band_pairs": 0,
+      "screening_status": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "comparison": "C0->C1",
+      "metric": "raster.4.appendCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 106.755772,
+          "right_ms": 78.569648,
+          "delta_ms": -28.186123999999992,
+          "relative_change": -0.26402435645353206,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 108.55545,
+          "right_ms": 111.472633,
+          "delta_ms": 2.9171830000000085,
+          "relative_change": 0.026872745679742627,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 115.269074,
+          "right_ms": 125.005296,
+          "delta_ms": 9.736221999999998,
+          "relative_change": 0.08446517059727565,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 115.1188,
+          "right_ms": 116.992799,
+          "delta_ms": 1.873999000000012,
+          "relative_change": 0.01627882674246095,
+          "over_band": false
+        }
+      ],
+      "median_delta_ms": 2.3955910000000102,
+      "median_relative_change": 0.02157578621110179,
+      "positive_pairs": 3,
+      "over_band_pairs": 0,
+      "screening_status": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "comparison": "C0->C1",
+      "metric": "raster.4.forcedFullCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 186.593056,
+          "right_ms": 181.096094,
+          "delta_ms": -5.496961999999996,
+          "relative_change": -0.029459627908125396,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 185.697694,
+          "right_ms": 181.581537,
+          "delta_ms": -4.116157000000015,
+          "relative_change": -0.02216590260943152,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 192.345754,
+          "right_ms": 186.406609,
+          "delta_ms": -5.939144999999996,
+          "relative_change": -0.030877442711836456,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 195.580173,
+          "right_ms": 193.310065,
+          "delta_ms": -2.2701079999999934,
+          "relative_change": -0.011607045669194682,
+          "over_band": false
+        }
+      ],
+      "median_delta_ms": -4.806559500000006,
+      "median_relative_change": -0.02581276525877846,
+      "positive_pairs": 0,
+      "over_band_pairs": 0,
+      "screening_status": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "comparison": "C0->C1",
+      "metric": "raster.8.firstCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 246.128593,
+          "right_ms": 255.916622,
+          "delta_ms": 9.788028999999995,
+          "relative_change": 0.03976794764353109,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 267.892978,
+          "right_ms": 301.920953,
+          "delta_ms": 34.02797499999997,
+          "relative_change": 0.12702077991756822,
+          "over_band": true
+        },
+        {
+          "seed": 4103,
+          "left_ms": 294.522861,
+          "right_ms": 254.677448,
+          "delta_ms": -39.84541299999998,
+          "relative_change": -0.1352880141959506,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 289.102498,
+          "right_ms": 315.241174,
+          "delta_ms": 26.138675999999975,
+          "relative_change": 0.09041317934236592,
+          "over_band": false
+        }
+      ],
+      "median_delta_ms": 17.963352499999985,
+      "median_relative_change": 0.0650905634929485,
+      "positive_pairs": 3,
+      "over_band_pairs": 1,
+      "screening_status": "INCONCLUSIVE"
+    },
+    {
+      "comparison": "C0->C1",
+      "metric": "raster.8.appendCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 148.879732,
+          "right_ms": 147.459818,
+          "delta_ms": -1.4199139999999772,
+          "relative_change": -0.00953732238045657,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 144.094789,
+          "right_ms": 151.618793,
+          "delta_ms": 7.524004000000019,
+          "relative_change": 0.052215656459304816,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 144.896373,
+          "right_ms": 147.800336,
+          "delta_ms": 2.903962999999976,
+          "relative_change": 0.020041654182744617,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 152.354864,
+          "right_ms": 160.231419,
+          "delta_ms": 7.876554999999996,
+          "relative_change": 0.05169874327084156,
+          "over_band": false
+        }
+      ],
+      "median_delta_ms": 5.213983499999998,
+      "median_relative_change": 0.03587019872679309,
+      "positive_pairs": 3,
+      "over_band_pairs": 0,
+      "screening_status": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "comparison": "C0->C1",
+      "metric": "raster.8.forcedFullCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 244.374577,
+          "right_ms": 244.843721,
+          "delta_ms": 0.469144,
+          "relative_change": 0.0019197741670158308,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 248.803073,
+          "right_ms": 300.340891,
+          "delta_ms": 51.53781799999999,
+          "relative_change": 0.20714301225692644,
+          "over_band": true
+        },
+        {
+          "seed": 4103,
+          "left_ms": 244.807707,
+          "right_ms": 247.604083,
+          "delta_ms": 2.7963760000000093,
+          "relative_change": 0.011422744954675768,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 246.526936,
+          "right_ms": 263.227755,
+          "delta_ms": 16.700818999999996,
+          "relative_change": 0.06774439852690173,
+          "over_band": false
+        }
+      ],
+      "median_delta_ms": 9.748597500000002,
+      "median_relative_change": 0.03958357174078875,
+      "positive_pairs": 4,
+      "over_band_pairs": 1,
+      "screening_status": "INCONCLUSIVE"
+    }
+  ],
+  "over_band_pairs": [
+    {
+      "comparison": "B->C1",
+      "metric": "raster.1.appendCompleteMs",
+      "seed": 4104,
+      "left_ms": 53.501635,
+      "right_ms": 64.348551,
+      "delta_ms": 10.846916,
+      "relative_change": 0.2027398975750927,
+      "over_band": true
+    },
+    {
+      "comparison": "B->C1",
+      "metric": "raster.8.firstCompleteMs",
+      "seed": 4102,
+      "left_ms": 256.169127,
+      "right_ms": 301.920953,
+      "delta_ms": 45.751825999999994,
+      "relative_change": 0.17860007775253872,
+      "over_band": true
+    },
+    {
+      "comparison": "B->C1",
+      "metric": "raster.8.firstCompleteMs",
+      "seed": 4104,
+      "left_ms": 261.891556,
+      "right_ms": 315.241174,
+      "delta_ms": 53.34961800000002,
+      "relative_change": 0.20370881297142707,
+      "over_band": true
+    },
+    {
+      "comparison": "B->C1",
+      "metric": "raster.8.forcedFullCompleteMs",
+      "seed": 4102,
+      "left_ms": 263.615802,
+      "right_ms": 300.340891,
+      "delta_ms": 36.725089000000025,
+      "relative_change": 0.13931292707559328,
+      "over_band": true
+    },
+    {
+      "comparison": "C0->C1",
+      "metric": "raster.1.appendCompleteMs",
+      "seed": 4104,
+      "left_ms": 53.369809,
+      "right_ms": 64.348551,
+      "delta_ms": 10.978742000000004,
+      "relative_change": 0.20571072307940996,
+      "over_band": true
+    },
+    {
+      "comparison": "C0->C1",
+      "metric": "raster.8.firstCompleteMs",
+      "seed": 4102,
+      "left_ms": 267.892978,
+      "right_ms": 301.920953,
+      "delta_ms": 34.02797499999997,
+      "relative_change": 0.12702077991756822,
+      "over_band": true
+    },
+    {
+      "comparison": "C0->C1",
+      "metric": "raster.8.forcedFullCompleteMs",
+      "seed": 4102,
+      "left_ms": 248.803073,
+      "right_ms": 300.340891,
+      "delta_ms": 51.53781799999999,
+      "relative_change": 0.20714301225692644,
+      "over_band": true
+    }
+  ],
+  "public_calls": [
+    {
+      "ordinal": 31,
+      "identity": "B",
+      "seed": 4101,
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "install_group": "visit-01-B",
+      "status": "PASS",
+      "seconds": 4.473606824874878,
+      "log": "evidence/method-31-B-instrumentation.log",
+      "junit_seconds": 3.619
+    },
+    {
+      "ordinal": 33,
+      "identity": "C0",
+      "seed": 4101,
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "install_group": "visit-02-C0",
+      "status": "PASS",
+      "seconds": 4.424439191818237,
+      "log": "evidence/method-33-C0-instrumentation.log",
+      "junit_seconds": 3.56
+    },
+    {
+      "ordinal": 35,
+      "identity": "C1",
+      "seed": 4101,
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "install_group": "visit-03-C1",
+      "status": "PASS",
+      "seconds": 4.47776460647583,
+      "log": "evidence/method-35-C1-instrumentation.log",
+      "junit_seconds": 3.596
+    },
+    {
+      "ordinal": 37,
+      "identity": "C1",
+      "seed": 4102,
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "install_group": "visit-04-C1",
+      "status": "PASS",
+      "seconds": 4.623823642730713,
+      "log": "evidence/method-37-C1-instrumentation.log",
+      "junit_seconds": 3.733
+    },
+    {
+      "ordinal": 39,
+      "identity": "B",
+      "seed": 4102,
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "install_group": "visit-05-B",
+      "status": "PASS",
+      "seconds": 4.481555461883545,
+      "log": "evidence/method-39-B-instrumentation.log",
+      "junit_seconds": 3.634
+    },
+    {
+      "ordinal": 41,
+      "identity": "C0",
+      "seed": 4102,
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "install_group": "visit-06-C0",
+      "status": "PASS",
+      "seconds": 4.42924690246582,
+      "log": "evidence/method-41-C0-instrumentation.log",
+      "junit_seconds": 3.548
+    },
+    {
+      "ordinal": 43,
+      "identity": "C0",
+      "seed": 4103,
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "install_group": "visit-07-C0",
+      "status": "PASS",
+      "seconds": 4.577422142028809,
+      "log": "evidence/method-43-C0-instrumentation.log",
+      "junit_seconds": 3.699
+    },
+    {
+      "ordinal": 45,
+      "identity": "C1",
+      "seed": 4103,
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "install_group": "visit-08-C1",
+      "status": "PASS",
+      "seconds": 4.579467535018921,
+      "log": "evidence/method-45-C1-instrumentation.log",
+      "junit_seconds": 3.668
+    },
+    {
+      "ordinal": 47,
+      "identity": "B",
+      "seed": 4103,
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "install_group": "visit-09-B",
+      "status": "PASS",
+      "seconds": 4.578531503677368,
+      "log": "evidence/method-47-B-instrumentation.log",
+      "junit_seconds": 3.682
+    },
+    {
+      "ordinal": 49,
+      "identity": "B",
+      "seed": 4104,
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "install_group": "visit-10-B",
+      "status": "PASS",
+      "seconds": 4.533111572265625,
+      "log": "evidence/method-49-B-instrumentation.log",
+      "junit_seconds": 3.672
+    },
+    {
+      "ordinal": 51,
+      "identity": "C1",
+      "seed": 4104,
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "install_group": "visit-11-C1",
+      "status": "PASS",
+      "seconds": 4.834317684173584,
+      "log": "evidence/method-51-C1-instrumentation.log",
+      "junit_seconds": 3.925
+    },
+    {
+      "ordinal": 53,
+      "identity": "C0",
+      "seed": 4104,
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "install_group": "visit-12-C0",
+      "status": "PASS",
+      "seconds": 4.586199760437012,
+      "log": "evidence/method-53-C0-instrumentation.log",
+      "junit_seconds": 3.709
+    }
+  ],
+  "raw_raster_records": [
+    {
+      "ordinal": 31,
+      "identity": "B",
+      "seed": 4101,
+      "log": "evidence/method-31-B-instrumentation.log",
+      "data": {
+        "layers": 1,
+        "initialStrokes": 320,
+        "finalStrokes": 321,
+        "firstCompleteMs": 259.291195,
+        "appendCompleteMs": 53.771687,
+        "forcedFullCompleteMs": 201.87237,
+        "localDecoded": 13,
+        "fullDecoded": 321,
+        "localRebuiltTiles": 1,
+        "fullRebuiltTiles": 24,
+        "metadataMs": 25.78499,
+        "rasterMs": 16.307313,
+        "publicationMs": 0.532002,
+        "pixelsEqual": true,
+        "bitmapBytes": 14371200
+      },
+      "cleanup": {
+        "layers": 1,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 28742400,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 31,
+      "identity": "B",
+      "seed": 4101,
+      "log": "evidence/method-31-B-instrumentation.log",
+      "data": {
+        "layers": 4,
+        "initialStrokes": 320,
+        "finalStrokes": 321,
+        "firstCompleteMs": 230.521853,
+        "appendCompleteMs": 109.59637,
+        "forcedFullCompleteMs": 208.583459,
+        "localDecoded": 21,
+        "fullDecoded": 321,
+        "localRebuiltTiles": 1,
+        "fullRebuiltTiles": 24,
+        "metadataMs": 44.919329,
+        "rasterMs": 74.670524,
+        "publicationMs": 77.01476600000001,
+        "pixelsEqual": true,
+        "bitmapBytes": 12147408
+      },
+      "cleanup": {
+        "layers": 4,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 28742400,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 31,
+      "identity": "B",
+      "seed": 4101,
+      "log": "evidence/method-31-B-instrumentation.log",
+      "data": {
+        "layers": 8,
+        "initialStrokes": 320,
+        "finalStrokes": 321,
+        "firstCompleteMs": 261.756184,
+        "appendCompleteMs": 143.921141,
+        "forcedFullCompleteMs": 265.977407,
+        "localDecoded": 11,
+        "fullDecoded": 321,
+        "localRebuiltTiles": 1,
+        "fullRebuiltTiles": 48,
+        "metadataMs": 64.39017199999999,
+        "rasterMs": 76.811853,
+        "publicationMs": 189.735943,
+        "pixelsEqual": true,
+        "bitmapBytes": 24294816
+      },
+      "cleanup": {
+        "layers": 8,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 48589632,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 33,
+      "identity": "C0",
+      "seed": 4101,
+      "log": "evidence/method-33-C0-instrumentation.log",
+      "data": {
+        "layers": 1,
+        "initialStrokes": 320,
+        "finalStrokes": 321,
+        "firstCompleteMs": 259.119239,
+        "appendCompleteMs": 53.744186,
+        "forcedFullCompleteMs": 218.216607,
+        "localDecoded": 13,
+        "fullDecoded": 321,
+        "localRebuiltTiles": 1,
+        "fullRebuiltTiles": 24,
+        "metadataMs": 16.13429,
+        "rasterMs": 16.26123,
+        "publicationMs": 0.598381,
+        "pixelsEqual": true,
+        "bitmapBytes": 14371200,
+        "nativeStrokeBuilds": 13
+      },
+      "cleanup": {
+        "layers": 1,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 30839552,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 33,
+      "identity": "C0",
+      "seed": 4101,
+      "log": "evidence/method-33-C0-instrumentation.log",
+      "data": {
+        "layers": 4,
+        "initialStrokes": 320,
+        "finalStrokes": 321,
+        "firstCompleteMs": 242.830003,
+        "appendCompleteMs": 106.755772,
+        "forcedFullCompleteMs": 186.593056,
+        "localDecoded": 21,
+        "fullDecoded": 321,
+        "localRebuiltTiles": 1,
+        "fullRebuiltTiles": 24,
+        "metadataMs": 36.935075999999995,
+        "rasterMs": 59.66745399999999,
+        "publicationMs": 93.28407,
+        "pixelsEqual": true,
+        "bitmapBytes": 12147408,
+        "nativeStrokeBuilds": 21
+      },
+      "cleanup": {
+        "layers": 4,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 32683424,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 33,
+      "identity": "C0",
+      "seed": 4101,
+      "log": "evidence/method-33-C0-instrumentation.log",
+      "data": {
+        "layers": 8,
+        "initialStrokes": 320,
+        "finalStrokes": 321,
+        "firstCompleteMs": 246.128593,
+        "appendCompleteMs": 148.879732,
+        "forcedFullCompleteMs": 244.374577,
+        "localDecoded": 11,
+        "fullDecoded": 321,
+        "localRebuiltTiles": 1,
+        "fullRebuiltTiles": 48,
+        "metadataMs": 43.87504,
+        "rasterMs": 39.198863,
+        "publicationMs": 262.143136,
+        "pixelsEqual": true,
+        "bitmapBytes": 24294816,
+        "nativeStrokeBuilds": 11
+      },
+      "cleanup": {
+        "layers": 8,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 65366848,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 35,
+      "identity": "C1",
+      "seed": 4101,
+      "log": "evidence/method-35-C1-instrumentation.log",
+      "data": {
+        "layers": 1,
+        "initialStrokes": 320,
+        "finalStrokes": 321,
+        "firstCompleteMs": 268.584258,
+        "appendCompleteMs": 52.348589,
+        "forcedFullCompleteMs": 201.413897,
+        "localDecoded": 1,
+        "fullDecoded": 321,
+        "localRebuiltTiles": 1,
+        "fullRebuiltTiles": 24,
+        "metadataMs": 16.163319,
+        "rasterMs": 15.51919,
+        "publicationMs": 0.482968,
+        "pixelsEqual": true,
+        "bitmapBytes": 14371200,
+        "nativeStrokeBuilds": 13
+      },
+      "cleanup": {
+        "layers": 1,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 30839552,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 35,
+      "identity": "C1",
+      "seed": 4101,
+      "log": "evidence/method-35-C1-instrumentation.log",
+      "data": {
+        "layers": 4,
+        "initialStrokes": 320,
+        "finalStrokes": 321,
+        "firstCompleteMs": 220.970005,
+        "appendCompleteMs": 78.569648,
+        "forcedFullCompleteMs": 181.096094,
+        "localDecoded": 1,
+        "fullDecoded": 321,
+        "localRebuiltTiles": 1,
+        "fullRebuiltTiles": 24,
+        "metadataMs": 27.192596,
+        "rasterMs": 40.945776,
+        "publicationMs": 27.173395000000003,
+        "pixelsEqual": true,
+        "bitmapBytes": 12147408,
+        "nativeStrokeBuilds": 21
+      },
+      "cleanup": {
+        "layers": 4,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 32683424,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 35,
+      "identity": "C1",
+      "seed": 4101,
+      "log": "evidence/method-35-C1-instrumentation.log",
+      "data": {
+        "layers": 8,
+        "initialStrokes": 320,
+        "finalStrokes": 321,
+        "firstCompleteMs": 255.916622,
+        "appendCompleteMs": 147.459818,
+        "forcedFullCompleteMs": 244.843721,
+        "localDecoded": 1,
+        "fullDecoded": 321,
+        "localRebuiltTiles": 1,
+        "fullRebuiltTiles": 48,
+        "metadataMs": 37.587869000000005,
+        "rasterMs": 33.408016,
+        "publicationMs": 263.34311600000007,
+        "pixelsEqual": true,
+        "bitmapBytes": 24294816,
+        "nativeStrokeBuilds": 11
+      },
+      "cleanup": {
+        "layers": 8,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 65366848,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 37,
+      "identity": "C1",
+      "seed": 4102,
+      "log": "evidence/method-37-C1-instrumentation.log",
+      "data": {
+        "layers": 1,
+        "initialStrokes": 320,
+        "finalStrokes": 321,
+        "firstCompleteMs": 275.432601,
+        "appendCompleteMs": 49.411032,
+        "forcedFullCompleteMs": 201.719376,
+        "localDecoded": 1,
+        "fullDecoded": 321,
+        "localRebuiltTiles": 1,
+        "fullRebuiltTiles": 24,
+        "metadataMs": 18.328341,
+        "rasterMs": 15.284506,
+        "publicationMs": 0.511281,
+        "pixelsEqual": true,
+        "bitmapBytes": 14371200,
+        "nativeStrokeBuilds": 13
+      },
+      "cleanup": {
+        "layers": 1,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 30839552,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 37,
+      "identity": "C1",
+      "seed": 4102,
+      "log": "evidence/method-37-C1-instrumentation.log",
+      "data": {
+        "layers": 4,
+        "initialStrokes": 320,
+        "finalStrokes": 321,
+        "firstCompleteMs": 240.642802,
+        "appendCompleteMs": 111.472633,
+        "forcedFullCompleteMs": 181.581537,
+        "localDecoded": 1,
+        "fullDecoded": 321,
+        "localRebuiltTiles": 1,
+        "fullRebuiltTiles": 24,
+        "metadataMs": 40.779179,
+        "rasterMs": 61.861307999999994,
+        "publicationMs": 96.12085400000001,
+        "pixelsEqual": true,
+        "bitmapBytes": 12147408,
+        "nativeStrokeBuilds": 21
+      },
+      "cleanup": {
+        "layers": 4,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 32683424,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 37,
+      "identity": "C1",
+      "seed": 4102,
+      "log": "evidence/method-37-C1-instrumentation.log",
+      "data": {
+        "layers": 8,
+        "initialStrokes": 320,
+        "finalStrokes": 321,
+        "firstCompleteMs": 301.920953,
+        "appendCompleteMs": 151.618793,
+        "forcedFullCompleteMs": 300.340891,
+        "localDecoded": 1,
+        "fullDecoded": 321,
+        "localRebuiltTiles": 1,
+        "fullRebuiltTiles": 48,
+        "metadataMs": 37.506266999999994,
+        "rasterMs": 37.604126,
+        "publicationMs": 261.36337299999997,
+        "pixelsEqual": true,
+        "bitmapBytes": 24294816,
+        "nativeStrokeBuilds": 11
+      },
+      "cleanup": {
+        "layers": 8,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 65366848,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 39,
+      "identity": "B",
+      "seed": 4102,
+      "log": "evidence/method-39-B-instrumentation.log",
+      "data": {
+        "layers": 1,
+        "initialStrokes": 320,
+        "finalStrokes": 321,
+        "firstCompleteMs": 270.537235,
+        "appendCompleteMs": 53.037074,
+        "forcedFullCompleteMs": 201.351283,
+        "localDecoded": 13,
+        "fullDecoded": 321,
+        "localRebuiltTiles": 1,
+        "fullRebuiltTiles": 24,
+        "metadataMs": 24.252869,
+        "rasterMs": 16.528462,
+        "publicationMs": 0.528957,
+        "pixelsEqual": true,
+        "bitmapBytes": 14371200
+      },
+      "cleanup": {
+        "layers": 1,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 28742400,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 39,
+      "identity": "B",
+      "seed": 4102,
+      "log": "evidence/method-39-B-instrumentation.log",
+      "data": {
+        "layers": 4,
+        "initialStrokes": 320,
+        "finalStrokes": 321,
+        "firstCompleteMs": 221.802174,
+        "appendCompleteMs": 109.394129,
+        "forcedFullCompleteMs": 183.866979,
+        "localDecoded": 21,
+        "fullDecoded": 321,
+        "localRebuiltTiles": 1,
+        "fullRebuiltTiles": 24,
+        "metadataMs": 48.769130000000004,
+        "rasterMs": 68.59052399999999,
+        "publicationMs": 78.782584,
+        "pixelsEqual": true,
+        "bitmapBytes": 12147408
+      },
+      "cleanup": {
+        "layers": 4,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 28742400,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 39,
+      "identity": "B",
+      "seed": 4102,
+      "log": "evidence/method-39-B-instrumentation.log",
+      "data": {
+        "layers": 8,
+        "initialStrokes": 320,
+        "finalStrokes": 321,
+        "firstCompleteMs": 256.169127,
+        "appendCompleteMs": 147.145961,
+        "forcedFullCompleteMs": 263.615802,
+        "localDecoded": 11,
+        "fullDecoded": 321,
+        "localRebuiltTiles": 1,
+        "fullRebuiltTiles": 48,
+        "metadataMs": 61.06064599999999,
+        "rasterMs": 70.84076499999999,
+        "publicationMs": 211.94051499999998,
+        "pixelsEqual": true,
+        "bitmapBytes": 24294816
+      },
+      "cleanup": {
+        "layers": 8,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 48589632,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 41,
+      "identity": "C0",
+      "seed": 4102,
+      "log": "evidence/method-41-C0-instrumentation.log",
+      "data": {
+        "layers": 1,
+        "initialStrokes": 320,
+        "finalStrokes": 321,
+        "firstCompleteMs": 258.661878,
+        "appendCompleteMs": 53.665989,
+        "forcedFullCompleteMs": 201.421618,
+        "localDecoded": 13,
+        "fullDecoded": 321,
+        "localRebuiltTiles": 1,
+        "fullRebuiltTiles": 24,
+        "metadataMs": 15.142068,
+        "rasterMs": 17.193391,
+        "publicationMs": 0.512152,
+        "pixelsEqual": true,
+        "bitmapBytes": 14371200,
+        "nativeStrokeBuilds": 13
+      },
+      "cleanup": {
+        "layers": 1,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 30839552,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 41,
+      "identity": "C0",
+      "seed": 4102,
+      "log": "evidence/method-41-C0-instrumentation.log",
+      "data": {
+        "layers": 4,
+        "initialStrokes": 320,
+        "finalStrokes": 321,
+        "firstCompleteMs": 228.032007,
+        "appendCompleteMs": 108.55545,
+        "forcedFullCompleteMs": 185.697694,
+        "localDecoded": 21,
+        "fullDecoded": 321,
+        "localRebuiltTiles": 1,
+        "fullRebuiltTiles": 24,
+        "metadataMs": 40.9486,
+        "rasterMs": 61.015910999999996,
+        "publicationMs": 87.87666200000001,
+        "pixelsEqual": true,
+        "bitmapBytes": 12147408,
+        "nativeStrokeBuilds": 21
+      },
+      "cleanup": {
+        "layers": 4,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 32683424,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 41,
+      "identity": "C0",
+      "seed": 4102,
+      "log": "evidence/method-41-C0-instrumentation.log",
+      "data": {
+        "layers": 8,
+        "initialStrokes": 320,
+        "finalStrokes": 321,
+        "firstCompleteMs": 267.892978,
+        "appendCompleteMs": 144.094789,
+        "forcedFullCompleteMs": 248.803073,
+        "localDecoded": 11,
+        "fullDecoded": 321,
+        "localRebuiltTiles": 1,
+        "fullRebuiltTiles": 48,
+        "metadataMs": 37.227501999999994,
+        "rasterMs": 33.348739,
+        "publicationMs": 251.68342099999998,
+        "pixelsEqual": true,
+        "bitmapBytes": 24294816,
+        "nativeStrokeBuilds": 11
+      },
+      "cleanup": {
+        "layers": 8,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 65366848,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 43,
+      "identity": "C0",
+      "seed": 4103,
+      "log": "evidence/method-43-C0-instrumentation.log",
+      "data": {
+        "layers": 1,
+        "initialStrokes": 320,
+        "finalStrokes": 321,
+        "firstCompleteMs": 266.464892,
+        "appendCompleteMs": 52.756416,
+        "forcedFullCompleteMs": 201.56427,
+        "localDecoded": 13,
+        "fullDecoded": 321,
+        "localRebuiltTiles": 1,
+        "fullRebuiltTiles": 24,
+        "metadataMs": 14.851416,
+        "rasterMs": 16.425259,
+        "publicationMs": 0.638962,
+        "pixelsEqual": true,
+        "bitmapBytes": 14371200,
+        "nativeStrokeBuilds": 13
+      },
+      "cleanup": {
+        "layers": 1,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 30839552,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 43,
+      "identity": "C0",
+      "seed": 4103,
+      "log": "evidence/method-43-C0-instrumentation.log",
+      "data": {
+        "layers": 4,
+        "initialStrokes": 320,
+        "finalStrokes": 321,
+        "firstCompleteMs": 228.634704,
+        "appendCompleteMs": 115.269074,
+        "forcedFullCompleteMs": 192.345754,
+        "localDecoded": 21,
+        "fullDecoded": 321,
+        "localRebuiltTiles": 1,
+        "fullRebuiltTiles": 24,
+        "metadataMs": 34.815852,
+        "rasterMs": 58.871198,
+        "publicationMs": 47.363459000000006,
+        "pixelsEqual": true,
+        "bitmapBytes": 12147408,
+        "nativeStrokeBuilds": 21
+      },
+      "cleanup": {
+        "layers": 4,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 32683424,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 43,
+      "identity": "C0",
+      "seed": 4103,
+      "log": "evidence/method-43-C0-instrumentation.log",
+      "data": {
+        "layers": 8,
+        "initialStrokes": 320,
+        "finalStrokes": 321,
+        "firstCompleteMs": 294.522861,
+        "appendCompleteMs": 144.896373,
+        "forcedFullCompleteMs": 244.807707,
+        "localDecoded": 11,
+        "fullDecoded": 321,
+        "localRebuiltTiles": 1,
+        "fullRebuiltTiles": 48,
+        "metadataMs": 36.797441,
+        "rasterMs": 39.189592000000005,
+        "publicationMs": 250.96760399999997,
+        "pixelsEqual": true,
+        "bitmapBytes": 24294816,
+        "nativeStrokeBuilds": 11
+      },
+      "cleanup": {
+        "layers": 8,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 65366848,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 45,
+      "identity": "C1",
+      "seed": 4103,
+      "log": "evidence/method-45-C1-instrumentation.log",
+      "data": {
+        "layers": 1,
+        "initialStrokes": 320,
+        "finalStrokes": 321,
+        "firstCompleteMs": 274.67323,
+        "appendCompleteMs": 53.45798,
+        "forcedFullCompleteMs": 200.975073,
+        "localDecoded": 1,
+        "fullDecoded": 321,
+        "localRebuiltTiles": 1,
+        "fullRebuiltTiles": 24,
+        "metadataMs": 15.810724,
+        "rasterMs": 15.126375,
+        "publicationMs": 0.51773,
+        "pixelsEqual": true,
+        "bitmapBytes": 14371200,
+        "nativeStrokeBuilds": 13
+      },
+      "cleanup": {
+        "layers": 1,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 30839552,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 45,
+      "identity": "C1",
+      "seed": 4103,
+      "log": "evidence/method-45-C1-instrumentation.log",
+      "data": {
+        "layers": 4,
+        "initialStrokes": 320,
+        "finalStrokes": 321,
+        "firstCompleteMs": 226.023177,
+        "appendCompleteMs": 125.005296,
+        "forcedFullCompleteMs": 186.406609,
+        "localDecoded": 1,
+        "fullDecoded": 321,
+        "localRebuiltTiles": 1,
+        "fullRebuiltTiles": 24,
+        "metadataMs": 40.819068,
+        "rasterMs": 66.959907,
+        "publicationMs": 109.94677300000001,
+        "pixelsEqual": true,
+        "bitmapBytes": 12147408,
+        "nativeStrokeBuilds": 21
+      },
+      "cleanup": {
+        "layers": 4,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 32683424,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 45,
+      "identity": "C1",
+      "seed": 4103,
+      "log": "evidence/method-45-C1-instrumentation.log",
+      "data": {
+        "layers": 8,
+        "initialStrokes": 320,
+        "finalStrokes": 321,
+        "firstCompleteMs": 254.677448,
+        "appendCompleteMs": 147.800336,
+        "forcedFullCompleteMs": 247.604083,
+        "localDecoded": 1,
+        "fullDecoded": 321,
+        "localRebuiltTiles": 1,
+        "fullRebuiltTiles": 48,
+        "metadataMs": 37.308592,
+        "rasterMs": 39.960860000000004,
+        "publicationMs": 254.322375,
+        "pixelsEqual": true,
+        "bitmapBytes": 24294816,
+        "nativeStrokeBuilds": 11
+      },
+      "cleanup": {
+        "layers": 8,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 65366848,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 47,
+      "identity": "B",
+      "seed": 4103,
+      "log": "evidence/method-47-B-instrumentation.log",
+      "data": {
+        "layers": 1,
+        "initialStrokes": 320,
+        "finalStrokes": 321,
+        "firstCompleteMs": 263.852344,
+        "appendCompleteMs": 53.979447,
+        "forcedFullCompleteMs": 201.174931,
+        "localDecoded": 13,
+        "fullDecoded": 321,
+        "localRebuiltTiles": 1,
+        "fullRebuiltTiles": 24,
+        "metadataMs": 24.579265,
+        "rasterMs": 16.214584,
+        "publicationMs": 0.487445,
+        "pixelsEqual": true,
+        "bitmapBytes": 14371200
+      },
+      "cleanup": {
+        "layers": 1,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 28742400,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 47,
+      "identity": "B",
+      "seed": 4103,
+      "log": "evidence/method-47-B-instrumentation.log",
+      "data": {
+        "layers": 4,
+        "initialStrokes": 320,
+        "finalStrokes": 321,
+        "firstCompleteMs": 246.712071,
+        "appendCompleteMs": 126.857343,
+        "forcedFullCompleteMs": 185.610704,
+        "localDecoded": 21,
+        "fullDecoded": 321,
+        "localRebuiltTiles": 1,
+        "fullRebuiltTiles": 24,
+        "metadataMs": 55.638355000000004,
+        "rasterMs": 67.27842100000001,
+        "publicationMs": 107.444437,
+        "pixelsEqual": true,
+        "bitmapBytes": 12147408
+      },
+      "cleanup": {
+        "layers": 4,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 28742400,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 47,
+      "identity": "B",
+      "seed": 4103,
+      "log": "evidence/method-47-B-instrumentation.log",
+      "data": {
+        "layers": 8,
+        "initialStrokes": 320,
+        "finalStrokes": 321,
+        "firstCompleteMs": 272.353177,
+        "appendCompleteMs": 155.030607,
+        "forcedFullCompleteMs": 273.103729,
+        "localDecoded": 11,
+        "fullDecoded": 321,
+        "localRebuiltTiles": 1,
+        "fullRebuiltTiles": 48,
+        "metadataMs": 63.13949,
+        "rasterMs": 63.921906,
+        "publicationMs": 228.581314,
+        "pixelsEqual": true,
+        "bitmapBytes": 24294816
+      },
+      "cleanup": {
+        "layers": 8,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 48589632,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 49,
+      "identity": "B",
+      "seed": 4104,
+      "log": "evidence/method-49-B-instrumentation.log",
+      "data": {
+        "layers": 1,
+        "initialStrokes": 320,
+        "finalStrokes": 321,
+        "firstCompleteMs": 272.188132,
+        "appendCompleteMs": 53.501635,
+        "forcedFullCompleteMs": 201.361169,
+        "localDecoded": 13,
+        "fullDecoded": 321,
+        "localRebuiltTiles": 1,
+        "fullRebuiltTiles": 24,
+        "metadataMs": 24.9382,
+        "rasterMs": 16.267774,
+        "publicationMs": 0.547735,
+        "pixelsEqual": true,
+        "bitmapBytes": 14371200
+      },
+      "cleanup": {
+        "layers": 1,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 28742400,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 49,
+      "identity": "B",
+      "seed": 4104,
+      "log": "evidence/method-49-B-instrumentation.log",
+      "data": {
+        "layers": 4,
+        "initialStrokes": 320,
+        "finalStrokes": 321,
+        "firstCompleteMs": 248.331221,
+        "appendCompleteMs": 111.875763,
+        "forcedFullCompleteMs": 192.620638,
+        "localDecoded": 21,
+        "fullDecoded": 321,
+        "localRebuiltTiles": 1,
+        "fullRebuiltTiles": 24,
+        "metadataMs": 51.110186,
+        "rasterMs": 71.19676299999999,
+        "publicationMs": 83.519705,
+        "pixelsEqual": true,
+        "bitmapBytes": 12147408
+      },
+      "cleanup": {
+        "layers": 4,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 28742400,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 49,
+      "identity": "B",
+      "seed": 4104,
+      "log": "evidence/method-49-B-instrumentation.log",
+      "data": {
+        "layers": 8,
+        "initialStrokes": 320,
+        "finalStrokes": 321,
+        "firstCompleteMs": 261.891556,
+        "appendCompleteMs": 148.486336,
+        "forcedFullCompleteMs": 259.127451,
+        "localDecoded": 11,
+        "fullDecoded": 321,
+        "localRebuiltTiles": 1,
+        "fullRebuiltTiles": 48,
+        "metadataMs": 66.803803,
+        "rasterMs": 68.17602700000002,
+        "publicationMs": 205.31070800000003,
+        "pixelsEqual": true,
+        "bitmapBytes": 24294816
+      },
+      "cleanup": {
+        "layers": 8,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 48589632,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 51,
+      "identity": "C1",
+      "seed": 4104,
+      "log": "evidence/method-51-C1-instrumentation.log",
+      "data": {
+        "layers": 1,
+        "initialStrokes": 320,
+        "finalStrokes": 321,
+        "firstCompleteMs": 279.539564,
+        "appendCompleteMs": 64.348551,
+        "forcedFullCompleteMs": 199.568449,
+        "localDecoded": 1,
+        "fullDecoded": 321,
+        "localRebuiltTiles": 1,
+        "fullRebuiltTiles": 24,
+        "metadataMs": 27.340796,
+        "rasterMs": 20.429778,
+        "publicationMs": 0.529498,
+        "pixelsEqual": true,
+        "bitmapBytes": 14371200,
+        "nativeStrokeBuilds": 13
+      },
+      "cleanup": {
+        "layers": 1,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 30839552,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 51,
+      "identity": "C1",
+      "seed": 4104,
+      "log": "evidence/method-51-C1-instrumentation.log",
+      "data": {
+        "layers": 4,
+        "initialStrokes": 320,
+        "finalStrokes": 321,
+        "firstCompleteMs": 245.518675,
+        "appendCompleteMs": 116.992799,
+        "forcedFullCompleteMs": 193.310065,
+        "localDecoded": 1,
+        "fullDecoded": 321,
+        "localRebuiltTiles": 1,
+        "fullRebuiltTiles": 24,
+        "metadataMs": 42.761198,
+        "rasterMs": 66.899496,
+        "publicationMs": 100.467252,
+        "pixelsEqual": true,
+        "bitmapBytes": 12147408,
+        "nativeStrokeBuilds": 21
+      },
+      "cleanup": {
+        "layers": 4,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 32683424,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 51,
+      "identity": "C1",
+      "seed": 4104,
+      "log": "evidence/method-51-C1-instrumentation.log",
+      "data": {
+        "layers": 8,
+        "initialStrokes": 320,
+        "finalStrokes": 321,
+        "firstCompleteMs": 315.241174,
+        "appendCompleteMs": 160.231419,
+        "forcedFullCompleteMs": 263.227755,
+        "localDecoded": 1,
+        "fullDecoded": 321,
+        "localRebuiltTiles": 1,
+        "fullRebuiltTiles": 48,
+        "metadataMs": 40.392703000000004,
+        "rasterMs": 36.25912100000001,
+        "publicationMs": 280.72478800000005,
+        "pixelsEqual": true,
+        "bitmapBytes": 24294816,
+        "nativeStrokeBuilds": 11
+      },
+      "cleanup": {
+        "layers": 8,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 65366848,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 53,
+      "identity": "C0",
+      "seed": 4104,
+      "log": "evidence/method-53-C0-instrumentation.log",
+      "data": {
+        "layers": 1,
+        "initialStrokes": 320,
+        "finalStrokes": 321,
+        "firstCompleteMs": 266.381679,
+        "appendCompleteMs": 53.369809,
+        "forcedFullCompleteMs": 201.300908,
+        "localDecoded": 13,
+        "fullDecoded": 321,
+        "localRebuiltTiles": 1,
+        "fullRebuiltTiles": 24,
+        "metadataMs": 15.266704,
+        "rasterMs": 17.467149,
+        "publicationMs": 0.722045,
+        "pixelsEqual": true,
+        "bitmapBytes": 14371200,
+        "nativeStrokeBuilds": 13
+      },
+      "cleanup": {
+        "layers": 1,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 30839552,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 53,
+      "identity": "C0",
+      "seed": 4104,
+      "log": "evidence/method-53-C0-instrumentation.log",
+      "data": {
+        "layers": 4,
+        "initialStrokes": 320,
+        "finalStrokes": 321,
+        "firstCompleteMs": 229.868691,
+        "appendCompleteMs": 115.1188,
+        "forcedFullCompleteMs": 195.580173,
+        "localDecoded": 21,
+        "fullDecoded": 321,
+        "localRebuiltTiles": 1,
+        "fullRebuiltTiles": 24,
+        "metadataMs": 39.860761,
+        "rasterMs": 66.687881,
+        "publicationMs": 96.41715400000001,
+        "pixelsEqual": true,
+        "bitmapBytes": 12147408,
+        "nativeStrokeBuilds": 21
+      },
+      "cleanup": {
+        "layers": 4,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 32683424,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 53,
+      "identity": "C0",
+      "seed": 4104,
+      "log": "evidence/method-53-C0-instrumentation.log",
+      "data": {
+        "layers": 8,
+        "initialStrokes": 320,
+        "finalStrokes": 321,
+        "firstCompleteMs": 289.102498,
+        "appendCompleteMs": 152.354864,
+        "forcedFullCompleteMs": 246.526936,
+        "localDecoded": 11,
+        "fullDecoded": 321,
+        "localRebuiltTiles": 1,
+        "fullRebuiltTiles": 48,
+        "metadataMs": 42.875208,
+        "rasterMs": 39.69485399999999,
+        "publicationMs": 262.76623599999994,
+        "pixelsEqual": true,
+        "bitmapBytes": 24294816,
+        "nativeStrokeBuilds": 11
+      },
+      "cleanup": {
+        "layers": 8,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 65366848,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    }
+  ],
+  "fixtures": [
+    {
+      "ordinal": 31,
+      "identity": "B",
+      "seed": 4101,
+      "label": "raster-1-before",
+      "logicalSha256": "e42134ad686969604696eca0c8b1e509642eb8cb0f394806f4463a7a0c51b4f5",
+      "rowCounts": {
+        "notes": 1,
+        "note_revisions": 1,
+        "notebook_workspace": 1,
+        "notebook_pages": 1,
+        "ink_pages": 1,
+        "ink_strokes": 320,
+        "canvas_authoring": 1,
+        "page_layer_memberships": 320
+      },
+      "writerSqlite": {
+        "page_size": 1024,
+        "auto_vacuum": 1,
+        "journal_mode": "wal",
+        "synchronous": 2
+      }
+    },
+    {
+      "ordinal": 31,
+      "identity": "B",
+      "seed": 4101,
+      "label": "raster-4-before",
+      "logicalSha256": "ce90b22b09e96ba9c39c605ab6789cf87d488152388a36d473416cdbd9b4c241",
+      "rowCounts": {
+        "notes": 2,
+        "note_revisions": 2,
+        "notebook_workspace": 2,
+        "notebook_pages": 2,
+        "ink_pages": 2,
+        "ink_strokes": 641,
+        "canvas_authoring": 2,
+        "page_layer_memberships": 641
+      },
+      "writerSqlite": {
+        "page_size": 1024,
+        "auto_vacuum": 1,
+        "journal_mode": "wal",
+        "synchronous": 2
+      }
+    },
+    {
+      "ordinal": 31,
+      "identity": "B",
+      "seed": 4101,
+      "label": "raster-8-before",
+      "logicalSha256": "0df59d18c4c4dea150455471d713e6110524e93bbb78b82d0389c1ea29e36990",
+      "rowCounts": {
+        "notes": 3,
+        "note_revisions": 3,
+        "notebook_workspace": 3,
+        "notebook_pages": 3,
+        "ink_pages": 3,
+        "ink_strokes": 962,
+        "canvas_authoring": 3,
+        "page_layer_memberships": 962
+      },
+      "writerSqlite": {
+        "page_size": 1024,
+        "auto_vacuum": 1,
+        "journal_mode": "wal",
+        "synchronous": 2
+      }
+    },
+    {
+      "ordinal": 33,
+      "identity": "C0",
+      "seed": 4101,
+      "label": "raster-1-before",
+      "logicalSha256": "e42134ad686969604696eca0c8b1e509642eb8cb0f394806f4463a7a0c51b4f5",
+      "rowCounts": {
+        "notes": 1,
+        "note_revisions": 1,
+        "notebook_workspace": 1,
+        "notebook_pages": 1,
+        "ink_pages": 1,
+        "ink_strokes": 320,
+        "canvas_authoring": 1,
+        "page_layer_memberships": 320
+      },
+      "writerSqlite": {
+        "page_size": 1024,
+        "auto_vacuum": 1,
+        "journal_mode": "wal",
+        "synchronous": 2
+      }
+    },
+    {
+      "ordinal": 33,
+      "identity": "C0",
+      "seed": 4101,
+      "label": "raster-4-before",
+      "logicalSha256": "ce90b22b09e96ba9c39c605ab6789cf87d488152388a36d473416cdbd9b4c241",
+      "rowCounts": {
+        "notes": 2,
+        "note_revisions": 2,
+        "notebook_workspace": 2,
+        "notebook_pages": 2,
+        "ink_pages": 2,
+        "ink_strokes": 641,
+        "canvas_authoring": 2,
+        "page_layer_memberships": 641
+      },
+      "writerSqlite": {
+        "page_size": 1024,
+        "auto_vacuum": 1,
+        "journal_mode": "wal",
+        "synchronous": 2
+      }
+    },
+    {
+      "ordinal": 33,
+      "identity": "C0",
+      "seed": 4101,
+      "label": "raster-8-before",
+      "logicalSha256": "0df59d18c4c4dea150455471d713e6110524e93bbb78b82d0389c1ea29e36990",
+      "rowCounts": {
+        "notes": 3,
+        "note_revisions": 3,
+        "notebook_workspace": 3,
+        "notebook_pages": 3,
+        "ink_pages": 3,
+        "ink_strokes": 962,
+        "canvas_authoring": 3,
+        "page_layer_memberships": 962
+      },
+      "writerSqlite": {
+        "page_size": 1024,
+        "auto_vacuum": 1,
+        "journal_mode": "wal",
+        "synchronous": 2
+      }
+    },
+    {
+      "ordinal": 35,
+      "identity": "C1",
+      "seed": 4101,
+      "label": "raster-1-before",
+      "logicalSha256": "e42134ad686969604696eca0c8b1e509642eb8cb0f394806f4463a7a0c51b4f5",
+      "rowCounts": {
+        "notes": 1,
+        "note_revisions": 1,
+        "notebook_workspace": 1,
+        "notebook_pages": 1,
+        "ink_pages": 1,
+        "ink_strokes": 320,
+        "canvas_authoring": 1,
+        "page_layer_memberships": 320
+      },
+      "writerSqlite": {
+        "page_size": 1024,
+        "auto_vacuum": 1,
+        "journal_mode": "wal",
+        "synchronous": 2
+      }
+    },
+    {
+      "ordinal": 35,
+      "identity": "C1",
+      "seed": 4101,
+      "label": "raster-4-before",
+      "logicalSha256": "ce90b22b09e96ba9c39c605ab6789cf87d488152388a36d473416cdbd9b4c241",
+      "rowCounts": {
+        "notes": 2,
+        "note_revisions": 2,
+        "notebook_workspace": 2,
+        "notebook_pages": 2,
+        "ink_pages": 2,
+        "ink_strokes": 641,
+        "canvas_authoring": 2,
+        "page_layer_memberships": 641
+      },
+      "writerSqlite": {
+        "page_size": 1024,
+        "auto_vacuum": 1,
+        "journal_mode": "wal",
+        "synchronous": 2
+      }
+    },
+    {
+      "ordinal": 35,
+      "identity": "C1",
+      "seed": 4101,
+      "label": "raster-8-before",
+      "logicalSha256": "0df59d18c4c4dea150455471d713e6110524e93bbb78b82d0389c1ea29e36990",
+      "rowCounts": {
+        "notes": 3,
+        "note_revisions": 3,
+        "notebook_workspace": 3,
+        "notebook_pages": 3,
+        "ink_pages": 3,
+        "ink_strokes": 962,
+        "canvas_authoring": 3,
+        "page_layer_memberships": 962
+      },
+      "writerSqlite": {
+        "page_size": 1024,
+        "auto_vacuum": 1,
+        "journal_mode": "wal",
+        "synchronous": 2
+      }
+    },
+    {
+      "ordinal": 37,
+      "identity": "C1",
+      "seed": 4102,
+      "label": "raster-1-before",
+      "logicalSha256": "a041ece6c5b1a6fd1cbec080ffc738c6ad63b374516cb722d4266ca0023909df",
+      "rowCounts": {
+        "notes": 1,
+        "note_revisions": 1,
+        "notebook_workspace": 1,
+        "notebook_pages": 1,
+        "ink_pages": 1,
+        "ink_strokes": 320,
+        "canvas_authoring": 1,
+        "page_layer_memberships": 320
+      },
+      "writerSqlite": {
+        "page_size": 1024,
+        "auto_vacuum": 1,
+        "journal_mode": "wal",
+        "synchronous": 2
+      }
+    },
+    {
+      "ordinal": 37,
+      "identity": "C1",
+      "seed": 4102,
+      "label": "raster-4-before",
+      "logicalSha256": "21519a3876f8f6c9ac6434a0111d1da10fec364ce0ea31ddefe6a0a2d2967386",
+      "rowCounts": {
+        "notes": 2,
+        "note_revisions": 2,
+        "notebook_workspace": 2,
+        "notebook_pages": 2,
+        "ink_pages": 2,
+        "ink_strokes": 641,
+        "canvas_authoring": 2,
+        "page_layer_memberships": 641
+      },
+      "writerSqlite": {
+        "page_size": 1024,
+        "auto_vacuum": 1,
+        "journal_mode": "wal",
+        "synchronous": 2
+      }
+    },
+    {
+      "ordinal": 37,
+      "identity": "C1",
+      "seed": 4102,
+      "label": "raster-8-before",
+      "logicalSha256": "fd5134454ed2f4518823fb0265a0fe40c9089ce0c645bb5a39dde3af070cfc16",
+      "rowCounts": {
+        "notes": 3,
+        "note_revisions": 3,
+        "notebook_workspace": 3,
+        "notebook_pages": 3,
+        "ink_pages": 3,
+        "ink_strokes": 962,
+        "canvas_authoring": 3,
+        "page_layer_memberships": 962
+      },
+      "writerSqlite": {
+        "page_size": 1024,
+        "auto_vacuum": 1,
+        "journal_mode": "wal",
+        "synchronous": 2
+      }
+    },
+    {
+      "ordinal": 39,
+      "identity": "B",
+      "seed": 4102,
+      "label": "raster-1-before",
+      "logicalSha256": "a041ece6c5b1a6fd1cbec080ffc738c6ad63b374516cb722d4266ca0023909df",
+      "rowCounts": {
+        "notes": 1,
+        "note_revisions": 1,
+        "notebook_workspace": 1,
+        "notebook_pages": 1,
+        "ink_pages": 1,
+        "ink_strokes": 320,
+        "canvas_authoring": 1,
+        "page_layer_memberships": 320
+      },
+      "writerSqlite": {
+        "page_size": 1024,
+        "auto_vacuum": 1,
+        "journal_mode": "wal",
+        "synchronous": 2
+      }
+    },
+    {
+      "ordinal": 39,
+      "identity": "B",
+      "seed": 4102,
+      "label": "raster-4-before",
+      "logicalSha256": "21519a3876f8f6c9ac6434a0111d1da10fec364ce0ea31ddefe6a0a2d2967386",
+      "rowCounts": {
+        "notes": 2,
+        "note_revisions": 2,
+        "notebook_workspace": 2,
+        "notebook_pages": 2,
+        "ink_pages": 2,
+        "ink_strokes": 641,
+        "canvas_authoring": 2,
+        "page_layer_memberships": 641
+      },
+      "writerSqlite": {
+        "page_size": 1024,
+        "auto_vacuum": 1,
+        "journal_mode": "wal",
+        "synchronous": 2
+      }
+    },
+    {
+      "ordinal": 39,
+      "identity": "B",
+      "seed": 4102,
+      "label": "raster-8-before",
+      "logicalSha256": "fd5134454ed2f4518823fb0265a0fe40c9089ce0c645bb5a39dde3af070cfc16",
+      "rowCounts": {
+        "notes": 3,
+        "note_revisions": 3,
+        "notebook_workspace": 3,
+        "notebook_pages": 3,
+        "ink_pages": 3,
+        "ink_strokes": 962,
+        "canvas_authoring": 3,
+        "page_layer_memberships": 962
+      },
+      "writerSqlite": {
+        "page_size": 1024,
+        "auto_vacuum": 1,
+        "journal_mode": "wal",
+        "synchronous": 2
+      }
+    },
+    {
+      "ordinal": 41,
+      "identity": "C0",
+      "seed": 4102,
+      "label": "raster-1-before",
+      "logicalSha256": "a041ece6c5b1a6fd1cbec080ffc738c6ad63b374516cb722d4266ca0023909df",
+      "rowCounts": {
+        "notes": 1,
+        "note_revisions": 1,
+        "notebook_workspace": 1,
+        "notebook_pages": 1,
+        "ink_pages": 1,
+        "ink_strokes": 320,
+        "canvas_authoring": 1,
+        "page_layer_memberships": 320
+      },
+      "writerSqlite": {
+        "page_size": 1024,
+        "auto_vacuum": 1,
+        "journal_mode": "wal",
+        "synchronous": 2
+      }
+    },
+    {
+      "ordinal": 41,
+      "identity": "C0",
+      "seed": 4102,
+      "label": "raster-4-before",
+      "logicalSha256": "21519a3876f8f6c9ac6434a0111d1da10fec364ce0ea31ddefe6a0a2d2967386",
+      "rowCounts": {
+        "notes": 2,
+        "note_revisions": 2,
+        "notebook_workspace": 2,
+        "notebook_pages": 2,
+        "ink_pages": 2,
+        "ink_strokes": 641,
+        "canvas_authoring": 2,
+        "page_layer_memberships": 641
+      },
+      "writerSqlite": {
+        "page_size": 1024,
+        "auto_vacuum": 1,
+        "journal_mode": "wal",
+        "synchronous": 2
+      }
+    },
+    {
+      "ordinal": 41,
+      "identity": "C0",
+      "seed": 4102,
+      "label": "raster-8-before",
+      "logicalSha256": "fd5134454ed2f4518823fb0265a0fe40c9089ce0c645bb5a39dde3af070cfc16",
+      "rowCounts": {
+        "notes": 3,
+        "note_revisions": 3,
+        "notebook_workspace": 3,
+        "notebook_pages": 3,
+        "ink_pages": 3,
+        "ink_strokes": 962,
+        "canvas_authoring": 3,
+        "page_layer_memberships": 962
+      },
+      "writerSqlite": {
+        "page_size": 1024,
+        "auto_vacuum": 1,
+        "journal_mode": "wal",
+        "synchronous": 2
+      }
+    },
+    {
+      "ordinal": 43,
+      "identity": "C0",
+      "seed": 4103,
+      "label": "raster-1-before",
+      "logicalSha256": "dab1c2e0041b38f5d3ffd8c89e17ee9fff375a4f41bec6ac426e34b8c69386c9",
+      "rowCounts": {
+        "notes": 1,
+        "note_revisions": 1,
+        "notebook_workspace": 1,
+        "notebook_pages": 1,
+        "ink_pages": 1,
+        "ink_strokes": 320,
+        "canvas_authoring": 1,
+        "page_layer_memberships": 320
+      },
+      "writerSqlite": {
+        "page_size": 1024,
+        "auto_vacuum": 1,
+        "journal_mode": "wal",
+        "synchronous": 2
+      }
+    },
+    {
+      "ordinal": 43,
+      "identity": "C0",
+      "seed": 4103,
+      "label": "raster-4-before",
+      "logicalSha256": "5ad5ed9192a0eeb43b6978c2ae8d5a410fef1ab67099888cdd62f643511d50e8",
+      "rowCounts": {
+        "notes": 2,
+        "note_revisions": 2,
+        "notebook_workspace": 2,
+        "notebook_pages": 2,
+        "ink_pages": 2,
+        "ink_strokes": 641,
+        "canvas_authoring": 2,
+        "page_layer_memberships": 641
+      },
+      "writerSqlite": {
+        "page_size": 1024,
+        "auto_vacuum": 1,
+        "journal_mode": "wal",
+        "synchronous": 2
+      }
+    },
+    {
+      "ordinal": 43,
+      "identity": "C0",
+      "seed": 4103,
+      "label": "raster-8-before",
+      "logicalSha256": "f1107ae9b0de2b2bd16830b423bc32aa9b8f890d6c91bb54bd1b00f4ec4f900d",
+      "rowCounts": {
+        "notes": 3,
+        "note_revisions": 3,
+        "notebook_workspace": 3,
+        "notebook_pages": 3,
+        "ink_pages": 3,
+        "ink_strokes": 962,
+        "canvas_authoring": 3,
+        "page_layer_memberships": 962
+      },
+      "writerSqlite": {
+        "page_size": 1024,
+        "auto_vacuum": 1,
+        "journal_mode": "wal",
+        "synchronous": 2
+      }
+    },
+    {
+      "ordinal": 45,
+      "identity": "C1",
+      "seed": 4103,
+      "label": "raster-1-before",
+      "logicalSha256": "dab1c2e0041b38f5d3ffd8c89e17ee9fff375a4f41bec6ac426e34b8c69386c9",
+      "rowCounts": {
+        "notes": 1,
+        "note_revisions": 1,
+        "notebook_workspace": 1,
+        "notebook_pages": 1,
+        "ink_pages": 1,
+        "ink_strokes": 320,
+        "canvas_authoring": 1,
+        "page_layer_memberships": 320
+      },
+      "writerSqlite": {
+        "page_size": 1024,
+        "auto_vacuum": 1,
+        "journal_mode": "wal",
+        "synchronous": 2
+      }
+    },
+    {
+      "ordinal": 45,
+      "identity": "C1",
+      "seed": 4103,
+      "label": "raster-4-before",
+      "logicalSha256": "5ad5ed9192a0eeb43b6978c2ae8d5a410fef1ab67099888cdd62f643511d50e8",
+      "rowCounts": {
+        "notes": 2,
+        "note_revisions": 2,
+        "notebook_workspace": 2,
+        "notebook_pages": 2,
+        "ink_pages": 2,
+        "ink_strokes": 641,
+        "canvas_authoring": 2,
+        "page_layer_memberships": 641
+      },
+      "writerSqlite": {
+        "page_size": 1024,
+        "auto_vacuum": 1,
+        "journal_mode": "wal",
+        "synchronous": 2
+      }
+    },
+    {
+      "ordinal": 45,
+      "identity": "C1",
+      "seed": 4103,
+      "label": "raster-8-before",
+      "logicalSha256": "f1107ae9b0de2b2bd16830b423bc32aa9b8f890d6c91bb54bd1b00f4ec4f900d",
+      "rowCounts": {
+        "notes": 3,
+        "note_revisions": 3,
+        "notebook_workspace": 3,
+        "notebook_pages": 3,
+        "ink_pages": 3,
+        "ink_strokes": 962,
+        "canvas_authoring": 3,
+        "page_layer_memberships": 962
+      },
+      "writerSqlite": {
+        "page_size": 1024,
+        "auto_vacuum": 1,
+        "journal_mode": "wal",
+        "synchronous": 2
+      }
+    },
+    {
+      "ordinal": 47,
+      "identity": "B",
+      "seed": 4103,
+      "label": "raster-1-before",
+      "logicalSha256": "dab1c2e0041b38f5d3ffd8c89e17ee9fff375a4f41bec6ac426e34b8c69386c9",
+      "rowCounts": {
+        "notes": 1,
+        "note_revisions": 1,
+        "notebook_workspace": 1,
+        "notebook_pages": 1,
+        "ink_pages": 1,
+        "ink_strokes": 320,
+        "canvas_authoring": 1,
+        "page_layer_memberships": 320
+      },
+      "writerSqlite": {
+        "page_size": 1024,
+        "auto_vacuum": 1,
+        "journal_mode": "wal",
+        "synchronous": 2
+      }
+    },
+    {
+      "ordinal": 47,
+      "identity": "B",
+      "seed": 4103,
+      "label": "raster-4-before",
+      "logicalSha256": "5ad5ed9192a0eeb43b6978c2ae8d5a410fef1ab67099888cdd62f643511d50e8",
+      "rowCounts": {
+        "notes": 2,
+        "note_revisions": 2,
+        "notebook_workspace": 2,
+        "notebook_pages": 2,
+        "ink_pages": 2,
+        "ink_strokes": 641,
+        "canvas_authoring": 2,
+        "page_layer_memberships": 641
+      },
+      "writerSqlite": {
+        "page_size": 1024,
+        "auto_vacuum": 1,
+        "journal_mode": "wal",
+        "synchronous": 2
+      }
+    },
+    {
+      "ordinal": 47,
+      "identity": "B",
+      "seed": 4103,
+      "label": "raster-8-before",
+      "logicalSha256": "f1107ae9b0de2b2bd16830b423bc32aa9b8f890d6c91bb54bd1b00f4ec4f900d",
+      "rowCounts": {
+        "notes": 3,
+        "note_revisions": 3,
+        "notebook_workspace": 3,
+        "notebook_pages": 3,
+        "ink_pages": 3,
+        "ink_strokes": 962,
+        "canvas_authoring": 3,
+        "page_layer_memberships": 962
+      },
+      "writerSqlite": {
+        "page_size": 1024,
+        "auto_vacuum": 1,
+        "journal_mode": "wal",
+        "synchronous": 2
+      }
+    },
+    {
+      "ordinal": 49,
+      "identity": "B",
+      "seed": 4104,
+      "label": "raster-1-before",
+      "logicalSha256": "3b22700197bc4a81a3676386a52337b08263d01f28ea83f33f3303ecea9ceea4",
+      "rowCounts": {
+        "notes": 1,
+        "note_revisions": 1,
+        "notebook_workspace": 1,
+        "notebook_pages": 1,
+        "ink_pages": 1,
+        "ink_strokes": 320,
+        "canvas_authoring": 1,
+        "page_layer_memberships": 320
+      },
+      "writerSqlite": {
+        "page_size": 1024,
+        "auto_vacuum": 1,
+        "journal_mode": "wal",
+        "synchronous": 2
+      }
+    },
+    {
+      "ordinal": 49,
+      "identity": "B",
+      "seed": 4104,
+      "label": "raster-4-before",
+      "logicalSha256": "0f853304b0164070ce18cd74c855e4a926c3481b1eab24f3830ea85dc9c57fe8",
+      "rowCounts": {
+        "notes": 2,
+        "note_revisions": 2,
+        "notebook_workspace": 2,
+        "notebook_pages": 2,
+        "ink_pages": 2,
+        "ink_strokes": 641,
+        "canvas_authoring": 2,
+        "page_layer_memberships": 641
+      },
+      "writerSqlite": {
+        "page_size": 1024,
+        "auto_vacuum": 1,
+        "journal_mode": "wal",
+        "synchronous": 2
+      }
+    },
+    {
+      "ordinal": 49,
+      "identity": "B",
+      "seed": 4104,
+      "label": "raster-8-before",
+      "logicalSha256": "8f3d7c1e08bee55f9efa2504f70b3b7fe346e15a76b8b16a15043bca5e21dbf2",
+      "rowCounts": {
+        "notes": 3,
+        "note_revisions": 3,
+        "notebook_workspace": 3,
+        "notebook_pages": 3,
+        "ink_pages": 3,
+        "ink_strokes": 962,
+        "canvas_authoring": 3,
+        "page_layer_memberships": 962
+      },
+      "writerSqlite": {
+        "page_size": 1024,
+        "auto_vacuum": 1,
+        "journal_mode": "wal",
+        "synchronous": 2
+      }
+    },
+    {
+      "ordinal": 51,
+      "identity": "C1",
+      "seed": 4104,
+      "label": "raster-1-before",
+      "logicalSha256": "3b22700197bc4a81a3676386a52337b08263d01f28ea83f33f3303ecea9ceea4",
+      "rowCounts": {
+        "notes": 1,
+        "note_revisions": 1,
+        "notebook_workspace": 1,
+        "notebook_pages": 1,
+        "ink_pages": 1,
+        "ink_strokes": 320,
+        "canvas_authoring": 1,
+        "page_layer_memberships": 320
+      },
+      "writerSqlite": {
+        "page_size": 1024,
+        "auto_vacuum": 1,
+        "journal_mode": "wal",
+        "synchronous": 2
+      }
+    },
+    {
+      "ordinal": 51,
+      "identity": "C1",
+      "seed": 4104,
+      "label": "raster-4-before",
+      "logicalSha256": "0f853304b0164070ce18cd74c855e4a926c3481b1eab24f3830ea85dc9c57fe8",
+      "rowCounts": {
+        "notes": 2,
+        "note_revisions": 2,
+        "notebook_workspace": 2,
+        "notebook_pages": 2,
+        "ink_pages": 2,
+        "ink_strokes": 641,
+        "canvas_authoring": 2,
+        "page_layer_memberships": 641
+      },
+      "writerSqlite": {
+        "page_size": 1024,
+        "auto_vacuum": 1,
+        "journal_mode": "wal",
+        "synchronous": 2
+      }
+    },
+    {
+      "ordinal": 51,
+      "identity": "C1",
+      "seed": 4104,
+      "label": "raster-8-before",
+      "logicalSha256": "8f3d7c1e08bee55f9efa2504f70b3b7fe346e15a76b8b16a15043bca5e21dbf2",
+      "rowCounts": {
+        "notes": 3,
+        "note_revisions": 3,
+        "notebook_workspace": 3,
+        "notebook_pages": 3,
+        "ink_pages": 3,
+        "ink_strokes": 962,
+        "canvas_authoring": 3,
+        "page_layer_memberships": 962
+      },
+      "writerSqlite": {
+        "page_size": 1024,
+        "auto_vacuum": 1,
+        "journal_mode": "wal",
+        "synchronous": 2
+      }
+    },
+    {
+      "ordinal": 53,
+      "identity": "C0",
+      "seed": 4104,
+      "label": "raster-1-before",
+      "logicalSha256": "3b22700197bc4a81a3676386a52337b08263d01f28ea83f33f3303ecea9ceea4",
+      "rowCounts": {
+        "notes": 1,
+        "note_revisions": 1,
+        "notebook_workspace": 1,
+        "notebook_pages": 1,
+        "ink_pages": 1,
+        "ink_strokes": 320,
+        "canvas_authoring": 1,
+        "page_layer_memberships": 320
+      },
+      "writerSqlite": {
+        "page_size": 1024,
+        "auto_vacuum": 1,
+        "journal_mode": "wal",
+        "synchronous": 2
+      }
+    },
+    {
+      "ordinal": 53,
+      "identity": "C0",
+      "seed": 4104,
+      "label": "raster-4-before",
+      "logicalSha256": "0f853304b0164070ce18cd74c855e4a926c3481b1eab24f3830ea85dc9c57fe8",
+      "rowCounts": {
+        "notes": 2,
+        "note_revisions": 2,
+        "notebook_workspace": 2,
+        "notebook_pages": 2,
+        "ink_pages": 2,
+        "ink_strokes": 641,
+        "canvas_authoring": 2,
+        "page_layer_memberships": 641
+      },
+      "writerSqlite": {
+        "page_size": 1024,
+        "auto_vacuum": 1,
+        "journal_mode": "wal",
+        "synchronous": 2
+      }
+    },
+    {
+      "ordinal": 53,
+      "identity": "C0",
+      "seed": 4104,
+      "label": "raster-8-before",
+      "logicalSha256": "8f3d7c1e08bee55f9efa2504f70b3b7fe346e15a76b8b16a15043bca5e21dbf2",
+      "rowCounts": {
+        "notes": 3,
+        "note_revisions": 3,
+        "notebook_workspace": 3,
+        "notebook_pages": 3,
+        "ink_pages": 3,
+        "ink_strokes": 962,
+        "canvas_authoring": 3,
+        "page_layer_memberships": 962
+      },
+      "writerSqlite": {
+        "page_size": 1024,
+        "auto_vacuum": 1,
+        "journal_mode": "wal",
+        "synchronous": 2
+      }
+    }
+  ],
+  "correctness": [
+    {
+      "ordinal": 19,
+      "selection": "org.inkweft.data.RasterReadCacheTest#separatedRegionsSkipEmptyMetadataBatchesAndDecodeCrossingStrokeOnce",
+      "status": "PASS",
+      "junit_seconds": 0.836,
+      "log": "evidence/method-19-C1-instrumentation.log",
+      "new_in_45b": false,
+      "pan_records": []
+    },
+    {
+      "ordinal": 20,
+      "selection": "org.inkweft.data.RasterReadCacheTest#payloadMaskAndRevisionChangesCannotReuseStaleDecodedGeometry",
+      "status": "PASS",
+      "junit_seconds": 0.308,
+      "log": "evidence/method-20-C1-instrumentation.log",
+      "new_in_45b": false,
+      "pan_records": []
+    },
+    {
+      "ordinal": 21,
+      "selection": "org.inkweft.data.RasterReadCacheTest#explicitAppendReuseSkipsOldPayloadsAcrossRevisionJumpsAndDefaultsToInvalidation",
+      "status": "PASS",
+      "junit_seconds": 0.284,
+      "log": "evidence/method-21-C1-instrumentation.log",
+      "new_in_45b": true,
+      "pan_records": []
+    },
+    {
+      "ordinal": 22,
+      "selection": "org.inkweft.data.RasterReadCacheTest#appendPermissionStillRefreshesChangedPayloadVisibilityUndoAndMasks",
+      "status": "PASS",
+      "junit_seconds": 0.336,
+      "log": "evidence/method-22-C1-instrumentation.log",
+      "new_in_45b": true,
+      "pan_records": []
+    },
+    {
+      "ordinal": 23,
+      "selection": "org.inkweft.data.RasterReadCacheTest#appendReuseRejectsHeadOrMaskChangesDuringCachedBatches",
+      "status": "PASS",
+      "junit_seconds": 0.622,
+      "log": "evidence/method-23-C1-instrumentation.log",
+      "new_in_45b": true,
+      "pan_records": []
+    },
+    {
+      "ordinal": 24,
+      "selection": "org.inkweft.data.RasterReadCacheTest#decodedCacheRemainsBoundedForManyStrokesAndDenseMasks",
+      "status": "PASS",
+      "junit_seconds": 0.755,
+      "log": "evidence/method-24-C1-instrumentation.log",
+      "new_in_45b": false,
+      "pan_records": []
+    },
+    {
+      "ordinal": 25,
+      "selection": "org.inkweft.data.RasterReadCacheTest#sameRevisionMaskChangeDuringCachedVisitRejectsTheWholeRead",
+      "status": "PASS",
+      "junit_seconds": 0.627,
+      "log": "evidence/method-25-C1-instrumentation.log",
+      "new_in_45b": false,
+      "pan_records": []
+    },
+    {
+      "ordinal": 26,
+      "selection": "org.inkweft.app.TileLocalRedrawTest#appendRetainsGeometryAcrossIdleLayerRevisionsAndDestructiveChangesMatchColdFrames",
+      "status": "PASS",
+      "junit_seconds": 0.715,
+      "log": "evidence/method-26-C1-instrumentation.log",
+      "new_in_45b": true,
+      "pan_records": []
+    },
+    {
+      "ordinal": 27,
+      "selection": "org.inkweft.app.TileLocalRedrawTest#integralPanReusesInteriorTilesAndZoomPreviewNeverCompletesCapture",
+      "status": "PASS",
+      "junit_seconds": 0.851,
+      "log": "evidence/method-27-C1-instrumentation.log",
+      "new_in_45b": false,
+      "pan_records": [
+        {
+          "rebuilt": 12,
+          "tiles": 20,
+          "panPixelsEqual": true,
+          "zoomPixelsEqual": true,
+          "previewCaptureReady": false
+        }
+      ]
+    },
+    {
+      "ordinal": 28,
+      "selection": "org.inkweft.app.TileLocalRedrawTest#interruptedPanWaitJoinsItsWorkerBeforeClosingResources",
+      "status": "PASS",
+      "junit_seconds": 0.162,
+      "log": "evidence/method-28-C1-instrumentation.log",
+      "new_in_45b": false,
+      "pan_records": []
+    },
+    {
+      "ordinal": 29,
+      "selection": "org.inkweft.app.StreamedInkRasterTest#clearingPendingTransformReleasesPinnedGeometryWithoutPublishing",
+      "status": "PASS",
+      "junit_seconds": 0.214,
+      "log": "evidence/method-29-C1-instrumentation.log",
+      "new_in_45b": false,
+      "pan_records": []
+    },
+    {
+      "ordinal": 30,
+      "selection": "org.inkweft.app.StreamedInkRasterTest#omittedStrokeCannotReappearWhileItsReplacementFrameIsDelayed",
+      "status": "PASS",
+      "junit_seconds": 0.753,
+      "log": "evidence/method-30-C1-instrumentation.log",
+      "new_in_45b": false,
+      "pan_records": []
+    }
+  ],
+  "environment": {
+    "host": {
+      "epoch": 1791913489.3903654,
+      "uid": 1001,
+      "cpu_count": 4,
+      "kernel": "6.17.0-1022-azure",
+      "load_1_5_15": [
+        0.572265625,
+        0.15576171875,
+        0.05322265625
+      ],
+      "cpu_model": "AMD EPYC 9V74 80-Core Processor",
+      "memory": {
+        "MemTotal": "16373452 kB",
+        "MemAvailable": "14811568 kB",
+        "SwapTotal": "3145724 kB",
+        "SwapFree": "3145724 kB"
+      },
+      "disk_bytes": {
+        "total": 154894188544,
+        "used": 64206901248,
+        "free": 90670510080
+      },
+      "java": "openjdk version \"17.0.20.1\" 2026-08-18\nOpenJDK Runtime Environment Temurin-17.0.20.1+1 (build 17.0.20.1+1)\nOpenJDK 64-Bit Server VM Temurin-17.0.20.1+1 (build 17.0.20.1+1, mixed mode, sharing)"
+    },
+    "emulator": {
+      "command_flags": [
+        "-avd",
+        "pr20-kvm-triple",
+        "-port",
+        "5554",
+        "-no-window",
+        "-no-snapshot",
+        "-noaudio",
+        "-no-boot-anim",
+        "-gpu",
+        "swiftshader",
+        "-accel",
+        "on",
+        "-cores",
+        "2",
+        "-memory",
+        "2048"
+      ],
+      "emulator_version": "INFO         | Android emulator version 37.2.12.0 (build_id 16428233) (CL:N/A)",
+      "emulator_source_properties": "Pkg.UserSrc=false\nPkg.Revision=37.2.12\nPkg.Path=emulator\nPkg.Desc=Android Emulator\nPkg.BuildId=16428233",
+      "image_source_properties": "Pkg.Desc=AOSP Automated Test Device System Image x86_64\nPkg.Revision=1\nPkg.Dependencies=emulator#30.9.2\nAndroidVersion.ApiLevel=35\nSystemImage.Abi=x86_64\nSystemImage.TagId=aosp_atd\nSystemImage.TagDisplay=AOSP ATD\nSystemImage.GpuSupport=true\nAddon.VendorId=google\nAddon.VendorDisplay=Google Inc.\n\n"
+    },
+    "device": {
+      "sdk": "35",
+      "abi": "x86_64",
+      "fingerprint": "Android/sdk_slim_x86_64/emu64x:15/AE3A.240806.019/12368160:userdebug/test-keys",
+      "qemu": "1",
+      "hw_timeout_multiplier": "",
+      "size": "Physical size: 1080x1920\nOverride size: 1920x1200",
+      "density": "Physical density: 420\nOverride density: 240",
+      "font_scale": "1.0",
+      "animations": {
+        "window_animation_scale": "1.0",
+        "transition_animation_scale": "1.0",
+        "animator_duration_scale": "null"
+      }
+    },
+    "all_24_visit_device_snapshots_equal": true,
+    "acceleration": "accel:\n0\nKVM (version 12) is installed and usable.\naccel\n",
+    "host_visits": [
+      {
+        "identity": "B",
+        "seed": 4101,
+        "install_group": "visit-01-B",
+        "before": {
+          "epoch": 1791915232.263933,
+          "uid": 1001,
+          "cpu_count": 4,
+          "kernel": "6.17.0-1022-azure",
+          "load_1_5_15": [
+            1.7138671875,
+            2.580078125,
+            2.48828125
+          ],
+          "cpu_model": "AMD EPYC 9V74 80-Core Processor",
+          "memory": {
+            "MemTotal": "16373452 kB",
+            "MemAvailable": "12037028 kB",
+            "SwapTotal": "3145724 kB",
+            "SwapFree": "3145704 kB"
+          },
+          "disk_bytes": {
+            "total": 154894188544,
+            "used": 73246584832,
+            "free": 81630826496
+          }
+        },
+        "after": {
+          "epoch": 1791915285.067438,
+          "uid": 1001,
+          "cpu_count": 4,
+          "kernel": "6.17.0-1022-azure",
+          "load_1_5_15": [
+            1.20947265625,
+            2.2958984375,
+            2.39453125
+          ],
+          "cpu_model": "AMD EPYC 9V74 80-Core Processor",
+          "memory": {
+            "MemTotal": "16373452 kB",
+            "MemAvailable": "11946776 kB",
+            "SwapTotal": "3145724 kB",
+            "SwapFree": "3145704 kB"
+          },
+          "disk_bytes": {
+            "total": 154894188544,
+            "used": 73648181248,
+            "free": 81229230080
+          }
+        }
+      },
+      {
+        "identity": "C0",
+        "seed": 4101,
+        "install_group": "visit-02-C0",
+        "before": {
+          "epoch": 1791915285.2636666,
+          "uid": 1001,
+          "cpu_count": 4,
+          "kernel": "6.17.0-1022-azure",
+          "load_1_5_15": [
+            1.20947265625,
+            2.2958984375,
+            2.39453125
+          ],
+          "cpu_model": "AMD EPYC 9V74 80-Core Processor",
+          "memory": {
+            "MemTotal": "16373452 kB",
+            "MemAvailable": "11946808 kB",
+            "SwapTotal": "3145724 kB",
+            "SwapFree": "3145704 kB"
+          },
+          "disk_bytes": {
+            "total": 154894188544,
+            "used": 73648193536,
+            "free": 81229217792
+          }
+        },
+        "after": {
+          "epoch": 1791915334.269067,
+          "uid": 1001,
+          "cpu_count": 4,
+          "kernel": "6.17.0-1022-azure",
+          "load_1_5_15": [
+            1.0615234375,
+            2.091796875,
+            2.31884765625
+          ],
+          "cpu_model": "AMD EPYC 9V74 80-Core Processor",
+          "memory": {
+            "MemTotal": "16373452 kB",
+            "MemAvailable": "11915364 kB",
+            "SwapTotal": "3145724 kB",
+            "SwapFree": "3145704 kB"
+          },
+          "disk_bytes": {
+            "total": 154894188544,
+            "used": 73910149120,
+            "free": 80967262208
+          }
+        }
+      },
+      {
+        "identity": "C1",
+        "seed": 4101,
+        "install_group": "visit-03-C1",
+        "before": {
+          "epoch": 1791915334.431478,
+          "uid": 1001,
+          "cpu_count": 4,
+          "kernel": "6.17.0-1022-azure",
+          "load_1_5_15": [
+            1.0615234375,
+            2.091796875,
+            2.31884765625
+          ],
+          "cpu_model": "AMD EPYC 9V74 80-Core Processor",
+          "memory": {
+            "MemTotal": "16373452 kB",
+            "MemAvailable": "11915560 kB",
+            "SwapTotal": "3145724 kB",
+            "SwapFree": "3145704 kB"
+          },
+          "disk_bytes": {
+            "total": 154894188544,
+            "used": 73910157312,
+            "free": 80967254016
+          }
+        },
+        "after": {
+          "epoch": 1791915383.9630737,
+          "uid": 1001,
+          "cpu_count": 4,
+          "kernel": "6.17.0-1022-azure",
+          "load_1_5_15": [
+            1.1376953125,
+            1.9521484375,
+            2.25732421875
+          ],
+          "cpu_model": "AMD EPYC 9V74 80-Core Processor",
+          "memory": {
+            "MemTotal": "16373452 kB",
+            "MemAvailable": "11906456 kB",
+            "SwapTotal": "3145724 kB",
+            "SwapFree": "3145704 kB"
+          },
+          "disk_bytes": {
+            "total": 154894188544,
+            "used": 74299596800,
+            "free": 80577814528
+          }
+        }
+      },
+      {
+        "identity": "C1",
+        "seed": 4102,
+        "install_group": "visit-04-C1",
+        "before": {
+          "epoch": 1791915384.1204636,
+          "uid": 1001,
+          "cpu_count": 4,
+          "kernel": "6.17.0-1022-azure",
+          "load_1_5_15": [
+            1.1376953125,
+            1.9521484375,
+            2.25732421875
+          ],
+          "cpu_model": "AMD EPYC 9V74 80-Core Processor",
+          "memory": {
+            "MemTotal": "16373452 kB",
+            "MemAvailable": "11905792 kB",
+            "SwapTotal": "3145724 kB",
+            "SwapFree": "3145704 kB"
+          },
+          "disk_bytes": {
+            "total": 154894188544,
+            "used": 74299604992,
+            "free": 80577806336
+          }
+        },
+        "after": {
+          "epoch": 1791915434.006523,
+          "uid": 1001,
+          "cpu_count": 4,
+          "kernel": "6.17.0-1022-azure",
+          "load_1_5_15": [
+            2.43115234375,
+            2.22509765625,
+            2.3359375
+          ],
+          "cpu_model": "AMD EPYC 9V74 80-Core Processor",
+          "memory": {
+            "MemTotal": "16373452 kB",
+            "MemAvailable": "11919032 kB",
+            "SwapTotal": "3145724 kB",
+            "SwapFree": "3145684 kB"
+          },
+          "disk_bytes": {
+            "total": 154894188544,
+            "used": 74692112384,
+            "free": 80185298944
+          }
+        }
+      },
+      {
+        "identity": "B",
+        "seed": 4102,
+        "install_group": "visit-05-B",
+        "before": {
+          "epoch": 1791915434.171916,
+          "uid": 1001,
+          "cpu_count": 4,
+          "kernel": "6.17.0-1022-azure",
+          "load_1_5_15": [
+            2.43115234375,
+            2.22509765625,
+            2.3359375
+          ],
+          "cpu_model": "AMD EPYC 9V74 80-Core Processor",
+          "memory": {
+            "MemTotal": "16373452 kB",
+            "MemAvailable": "11918540 kB",
+            "SwapTotal": "3145724 kB",
+            "SwapFree": "3145684 kB"
+          },
+          "disk_bytes": {
+            "total": 154894188544,
+            "used": 74692120576,
+            "free": 80185290752
+          }
+        },
+        "after": {
+          "epoch": 1791915487.4019728,
+          "uid": 1001,
+          "cpu_count": 4,
+          "kernel": "6.17.0-1022-azure",
+          "load_1_5_15": [
+            1.67236328125,
+            2.0498046875,
+            2.26806640625
+          ],
+          "cpu_model": "AMD EPYC 9V74 80-Core Processor",
+          "memory": {
+            "MemTotal": "16373452 kB",
+            "MemAvailable": "11882528 kB",
+            "SwapTotal": "3145724 kB",
+            "SwapFree": "3145684 kB"
+          },
+          "disk_bytes": {
+            "total": 154894188544,
+            "used": 75080781824,
+            "free": 79796629504
+          }
+        }
+      },
+      {
+        "identity": "C0",
+        "seed": 4102,
+        "install_group": "visit-06-C0",
+        "before": {
+          "epoch": 1791915487.5658004,
+          "uid": 1001,
+          "cpu_count": 4,
+          "kernel": "6.17.0-1022-azure",
+          "load_1_5_15": [
+            1.67236328125,
+            2.0498046875,
+            2.26806640625
+          ],
+          "cpu_model": "AMD EPYC 9V74 80-Core Processor",
+          "memory": {
+            "MemTotal": "16373452 kB",
+            "MemAvailable": "11882332 kB",
+            "SwapTotal": "3145724 kB",
+            "SwapFree": "3145684 kB"
+          },
+          "disk_bytes": {
+            "total": 154894188544,
+            "used": 75080790016,
+            "free": 79796621312
+          }
+        },
+        "after": {
+          "epoch": 1791915536.8585563,
+          "uid": 1001,
+          "cpu_count": 4,
+          "kernel": "6.17.0-1022-azure",
+          "load_1_5_15": [
+            1.44384765625,
+            1.93115234375,
+            2.2158203125
+          ],
+          "cpu_model": "AMD EPYC 9V74 80-Core Processor",
+          "memory": {
+            "MemTotal": "16373452 kB",
+            "MemAvailable": "11936120 kB",
+            "SwapTotal": "3145724 kB",
+            "SwapFree": "3145684 kB"
+          },
+          "disk_bytes": {
+            "total": 154894188544,
+            "used": 75470540800,
+            "free": 79406870528
+          }
+        }
+      },
+      {
+        "identity": "C0",
+        "seed": 4103,
+        "install_group": "visit-07-C0",
+        "before": {
+          "epoch": 1791915537.0269504,
+          "uid": 1001,
+          "cpu_count": 4,
+          "kernel": "6.17.0-1022-azure",
+          "load_1_5_15": [
+            1.44384765625,
+            1.93115234375,
+            2.2158203125
+          ],
+          "cpu_model": "AMD EPYC 9V74 80-Core Processor",
+          "memory": {
+            "MemTotal": "16373452 kB",
+            "MemAvailable": "11935292 kB",
+            "SwapTotal": "3145724 kB",
+            "SwapFree": "3145684 kB"
+          },
+          "disk_bytes": {
+            "total": 154894188544,
+            "used": 75470553088,
+            "free": 79406858240
+          }
+        },
+        "after": {
+          "epoch": 1791915586.5566375,
+          "uid": 1001,
+          "cpu_count": 4,
+          "kernel": "6.17.0-1022-azure",
+          "load_1_5_15": [
+            1.37451171875,
+            1.83349609375,
+            2.16552734375
+          ],
+          "cpu_model": "AMD EPYC 9V74 80-Core Processor",
+          "memory": {
+            "MemTotal": "16373452 kB",
+            "MemAvailable": "11910400 kB",
+            "SwapTotal": "3145724 kB",
+            "SwapFree": "3145684 kB"
+          },
+          "disk_bytes": {
+            "total": 154894188544,
+            "used": 75862343680,
+            "free": 79015067648
+          }
+        }
+      },
+      {
+        "identity": "C1",
+        "seed": 4103,
+        "install_group": "visit-08-C1",
+        "before": {
+          "epoch": 1791915586.7201257,
+          "uid": 1001,
+          "cpu_count": 4,
+          "kernel": "6.17.0-1022-azure",
+          "load_1_5_15": [
+            1.37451171875,
+            1.83349609375,
+            2.16552734375
+          ],
+          "cpu_model": "AMD EPYC 9V74 80-Core Processor",
+          "memory": {
+            "MemTotal": "16373452 kB",
+            "MemAvailable": "11908720 kB",
+            "SwapTotal": "3145724 kB",
+            "SwapFree": "3145684 kB"
+          },
+          "disk_bytes": {
+            "total": 154894188544,
+            "used": 75862351872,
+            "free": 79015059456
+          }
+        },
+        "after": {
+          "epoch": 1791915636.3561547,
+          "uid": 1001,
+          "cpu_count": 4,
+          "kernel": "6.17.0-1022-azure",
+          "load_1_5_15": [
+            1.13232421875,
+            1.701171875,
+            2.10205078125
+          ],
+          "cpu_model": "AMD EPYC 9V74 80-Core Processor",
+          "memory": {
+            "MemTotal": "16373452 kB",
+            "MemAvailable": "11931716 kB",
+            "SwapTotal": "3145724 kB",
+            "SwapFree": "3145684 kB"
+          },
+          "disk_bytes": {
+            "total": 154894188544,
+            "used": 76252639232,
+            "free": 78624772096
+          }
+        }
+      },
+      {
+        "identity": "B",
+        "seed": 4103,
+        "install_group": "visit-09-B",
+        "before": {
+          "epoch": 1791915636.529446,
+          "uid": 1001,
+          "cpu_count": 4,
+          "kernel": "6.17.0-1022-azure",
+          "load_1_5_15": [
+            1.13232421875,
+            1.701171875,
+            2.10205078125
+          ],
+          "cpu_model": "AMD EPYC 9V74 80-Core Processor",
+          "memory": {
+            "MemTotal": "16373452 kB",
+            "MemAvailable": "11930552 kB",
+            "SwapTotal": "3145724 kB",
+            "SwapFree": "3145684 kB"
+          },
+          "disk_bytes": {
+            "total": 154894188544,
+            "used": 76252647424,
+            "free": 78624763904
+          }
+        },
+        "after": {
+          "epoch": 1791915689.876622,
+          "uid": 1001,
+          "cpu_count": 4,
+          "kernel": "6.17.0-1022-azure",
+          "load_1_5_15": [
+            1.0458984375,
+            1.59375,
+            2.04150390625
+          ],
+          "cpu_model": "AMD EPYC 9V74 80-Core Processor",
+          "memory": {
+            "MemTotal": "16373452 kB",
+            "MemAvailable": "11919064 kB",
+            "SwapTotal": "3145724 kB",
+            "SwapFree": "3145684 kB"
+          },
+          "disk_bytes": {
+            "total": 154894188544,
+            "used": 76643520512,
+            "free": 78233890816
+          }
+        }
+      },
+      {
+        "identity": "B",
+        "seed": 4104,
+        "install_group": "visit-10-B",
+        "before": {
+          "epoch": 1791915690.0360746,
+          "uid": 1001,
+          "cpu_count": 4,
+          "kernel": "6.17.0-1022-azure",
+          "load_1_5_15": [
+            1.0458984375,
+            1.59375,
+            2.04150390625
+          ],
+          "cpu_model": "AMD EPYC 9V74 80-Core Processor",
+          "memory": {
+            "MemTotal": "16373452 kB",
+            "MemAvailable": "11918072 kB",
+            "SwapTotal": "3145724 kB",
+            "SwapFree": "3145684 kB"
+          },
+          "disk_bytes": {
+            "total": 154894188544,
+            "used": 76643532800,
+            "free": 78233878528
+          }
+        },
+        "after": {
+          "epoch": 1791915743.7522724,
+          "uid": 1001,
+          "cpu_count": 4,
+          "kernel": "6.17.0-1022-azure",
+          "load_1_5_15": [
+            0.93798828125,
+            1.4833984375,
+            1.978515625
+          ],
+          "cpu_model": "AMD EPYC 9V74 80-Core Processor",
+          "memory": {
+            "MemTotal": "16373452 kB",
+            "MemAvailable": "12043484 kB",
+            "SwapTotal": "3145724 kB",
+            "SwapFree": "3145684 kB"
+          },
+          "disk_bytes": {
+            "total": 154894188544,
+            "used": 76840955904,
+            "free": 78036455424
+          }
+        }
+      },
+      {
+        "identity": "C1",
+        "seed": 4104,
+        "install_group": "visit-11-C1",
+        "before": {
+          "epoch": 1791915743.9336436,
+          "uid": 1001,
+          "cpu_count": 4,
+          "kernel": "6.17.0-1022-azure",
+          "load_1_5_15": [
+            1.103515625,
+            1.5087890625,
+            1.984375
+          ],
+          "cpu_model": "AMD EPYC 9V74 80-Core Processor",
+          "memory": {
+            "MemTotal": "16373452 kB",
+            "MemAvailable": "12043484 kB",
+            "SwapTotal": "3145724 kB",
+            "SwapFree": "3145684 kB"
+          },
+          "disk_bytes": {
+            "total": 154894188544,
+            "used": 76840964096,
+            "free": 78036447232
+          }
+        },
+        "after": {
+          "epoch": 1791915794.4309127,
+          "uid": 1001,
+          "cpu_count": 4,
+          "kernel": "6.17.0-1022-azure",
+          "load_1_5_15": [
+            1.1025390625,
+            1.4453125,
+            1.9375
+          ],
+          "cpu_model": "AMD EPYC 9V74 80-Core Processor",
+          "memory": {
+            "MemTotal": "16373452 kB",
+            "MemAvailable": "11893692 kB",
+            "SwapTotal": "3145724 kB",
+            "SwapFree": "3145684 kB"
+          },
+          "disk_bytes": {
+            "total": 154894188544,
+            "used": 77075341312,
+            "free": 77802070016
+          }
+        }
+      },
+      {
+        "identity": "C0",
+        "seed": 4104,
+        "install_group": "visit-12-C0",
+        "before": {
+          "epoch": 1791915794.6175332,
+          "uid": 1001,
+          "cpu_count": 4,
+          "kernel": "6.17.0-1022-azure",
+          "load_1_5_15": [
+            1.1025390625,
+            1.4453125,
+            1.9375
+          ],
+          "cpu_model": "AMD EPYC 9V74 80-Core Processor",
+          "memory": {
+            "MemTotal": "16373452 kB",
+            "MemAvailable": "11893504 kB",
+            "SwapTotal": "3145724 kB",
+            "SwapFree": "3145684 kB"
+          },
+          "disk_bytes": {
+            "total": 154894188544,
+            "used": 77075349504,
+            "free": 77802061824
+          }
+        },
+        "after": {
+          "epoch": 1791915844.0506818,
+          "uid": 1001,
+          "cpu_count": 4,
+          "kernel": "6.17.0-1022-azure",
+          "load_1_5_15": [
+            1.296875,
+            1.43896484375,
+            1.9072265625
+          ],
+          "cpu_model": "AMD EPYC 9V74 80-Core Processor",
+          "memory": {
+            "MemTotal": "16373452 kB",
+            "MemAvailable": "11808208 kB",
+            "SwapTotal": "3145724 kB",
+            "SwapFree": "3145684 kB"
+          },
+          "disk_bytes": {
+            "total": 154894188544,
+            "used": 77114564608,
+            "free": 77762846720
+          }
+        }
+      }
+    ]
+  },
+  "limitations": [
+    "Four seed blocks are comparison units; no pooling of prior runs or stage diagnostics and no statistical significance claim.",
+    "Common probe has no reusedStrokes/readObserver/geometryBytes; inferred hits12/20/10 are not independent observed counters.",
+    "Native construction remains per stroke per frame. Existing same-frame cross-tile reuse is not new cross-frame native caching.",
+    "Pixel equality is within each version, local versus cold; no cross-version hash or physical screen capture.",
+    "Append stage values sum across layers and overlap; they cannot explain first/full outliers or be added as frame wall.",
+    "New correctness detail comes from frozen assertions passing, not separately emitted numeric telemetry.",
+    "Host visit snapshots include raster and library; no frame-aligned CPU/GC/scheduling causality.",
+    "Original dense30s and NativeStrokeTileReuse differential are absent from this run; historical status remains separate."
+  ],
+  "next_step": {
+    "supported_new_production_fix": null,
+    "recommendation": "Keep the verified old-payload reduction. If latency acceptance must close, separately authorize diagnostics with unchanged fixtures and retain this complete run: distinguish first/local/full per-layer metadata, raster, publication and frame-ready wall, existing default-off metadata observer CPU/wall, and decode/native/rebuild counts. Do not blindly revert or expand native caching.",
+    "targets": [
+      "seed4104 one-layer append metadata/raster rise",
+      "seed4102 eight-layer first/forcedFull outliers",
+      "seed4104 eight-layer first outlier"
+    ],
+    "root_cause_established": false
+  },
+  "provenance": [
+    {
+      "path": "evidence/method-31-B-instrumentation.log",
+      "bytes": 4360,
+      "sha256": "71b7e11d41ed5ec405995535c108417543f4c563c7ff78e45aff09dac8eba653"
+    },
+    {
+      "path": "evidence/method-31-B-records.json",
+      "bytes": 4593,
+      "sha256": "5d7fc5a954432e7b45f582c9f09ac47711cb0498d3696df2deb9c05c2347028a"
+    },
+    {
+      "path": "evidence/method-33-C0-instrumentation.log",
+      "bytes": 4431,
+      "sha256": "7c4cc87bb3532e315210978a7fcf875525a0d77d83ca1f40e0d47fee7eced861"
+    },
+    {
+      "path": "evidence/method-33-C0-records.json",
+      "bytes": 4689,
+      "sha256": "fcddae5cb1afe6cf27d25608f4f12a53a78da1dc31c6fb51f82ee5bad95aefda"
+    },
+    {
+      "path": "evidence/method-35-C1-instrumentation.log",
+      "bytes": 4440,
+      "sha256": "25da2646e14ca6450454af4da1129108cdcb52240a3ccb5d03a56322732119cf"
+    },
+    {
+      "path": "evidence/method-35-C1-records.json",
+      "bytes": 4697,
+      "sha256": "ff399773c88ed6eaebe18645b2e6c62c7522577f893ac1c5fbeab7375be97d46"
+    },
+    {
+      "path": "evidence/method-37-C1-instrumentation.log",
+      "bytes": 4450,
+      "sha256": "ec5796eaf539cc286e3f662356b2f52ed9ad9204228223692839edc2e4aa9686"
+    },
+    {
+      "path": "evidence/method-37-C1-records.json",
+      "bytes": 4707,
+      "sha256": "91b88e751357a45ee6720086f07beace5da800a1e92a19a81c9a4e85849ccccc"
+    },
+    {
+      "path": "evidence/method-39-B-instrumentation.log",
+      "bytes": 4388,
+      "sha256": "6c4cdd8b0c2203e05bc86fc325d4b7fb7974adf6764e917374d54f233618aec9"
+    },
+    {
+      "path": "evidence/method-39-B-records.json",
+      "bytes": 4621,
+      "sha256": "f0eea77679dfc73e95f01e3a811f7ec85909559dd6b1f8ca0bec96f3f6a29a14"
+    },
+    {
+      "path": "evidence/method-41-C0-instrumentation.log",
+      "bytes": 4450,
+      "sha256": "fed286535c7fc71086288ef4361cd58743b1006afd9572d21b4fce21068c1b13"
+    },
+    {
+      "path": "evidence/method-41-C0-records.json",
+      "bytes": 4707,
+      "sha256": "639131b4c621eac016cb624e63d51e5bc2c64d6ac588af0166c7a52ae1c4ee07"
+    },
+    {
+      "path": "evidence/method-43-C0-instrumentation.log",
+      "bytes": 4444,
+      "sha256": "a4f0672e6952a449cb7a3990b67f56125ea88cb3164f0d7c9826984d2e9b55f0"
+    },
+    {
+      "path": "evidence/method-43-C0-records.json",
+      "bytes": 4701,
+      "sha256": "bfdfa0e29c13f5003294493aaa1733d03bd1876dc95ead899eaa601168410e1c"
+    },
+    {
+      "path": "evidence/method-45-C1-instrumentation.log",
+      "bytes": 4431,
+      "sha256": "0f5fa94fbd032d6a5b63ef61fce116142078db4e57ca1abc7582684db92d12dc"
+    },
+    {
+      "path": "evidence/method-45-C1-records.json",
+      "bytes": 4688,
+      "sha256": "7056dc5db81e02b35e1767f08657454f6c5005742563450699e9cd504656d5ac"
+    },
+    {
+      "path": "evidence/method-47-B-instrumentation.log",
+      "bytes": 4364,
+      "sha256": "3f245d28ba424c723c24595c4f6723cf483a23a43a59a3da60660a4f5b6d8dca"
+    },
+    {
+      "path": "evidence/method-47-B-records.json",
+      "bytes": 4597,
+      "sha256": "b47a6cdcd0079b9f5a3303c1791c5828653ff318d2a9261e2fa30d8bae226878"
+    },
+    {
+      "path": "evidence/method-49-B-instrumentation.log",
+      "bytes": 4369,
+      "sha256": "cb734027eb1a29e003c4a4db9c14dcf2de93c4cac6e37ed25fad4ee43d4ab55b"
+    },
+    {
+      "path": "evidence/method-49-B-records.json",
+      "bytes": 4602,
+      "sha256": "3ede227ca72839ccce75007544648aeadd6034c0274aa6ccdbd1a4c2a268c026"
+    },
+    {
+      "path": "evidence/method-51-C1-instrumentation.log",
+      "bytes": 4442,
+      "sha256": "bd86951f7697a33f048966e392d7a5c39861be6837b46a28b61504ea5893f59a"
+    },
+    {
+      "path": "evidence/method-51-C1-records.json",
+      "bytes": 4699,
+      "sha256": "c9b4f6d6966cd2f55337efb884c80f20faf94d33647a5f18a6236f46ab13f0c0"
+    },
+    {
+      "path": "evidence/method-53-C0-instrumentation.log",
+      "bytes": 4441,
+      "sha256": "c572bd6fbe35d5d3607e40f01030d53924c3d0954b09739bdca2878a6d0ed922"
+    },
+    {
+      "path": "evidence/method-53-C0-records.json",
+      "bytes": 4698,
+      "sha256": "9b0c30aef729b3aa62679069a5e55b6b3b84eb72227967abf4f8c89e939a2eed"
+    },
+    {
+      "path": "evidence/frozen-original-protocol.json",
+      "bytes": 1942,
+      "sha256": "1065177d7809426d949c4b4b67bd639a47c3fc1943f706a77c2dfabb985e9aba"
+    },
+    {
+      "path": "evidence/method-19-C1-instrumentation.log",
+      "bytes": 808,
+      "sha256": "3ccd2eab5e54c77ca951ab2d9355d23a11a31a06026f95629a8e188e74939272"
+    },
+    {
+      "path": "evidence/method-20-C1-instrumentation.log",
+      "bytes": 794,
+      "sha256": "b48f2dfb30cde8f7edf373dbe37263812180099ed358eecbb6089cd0a45d848c"
+    },
+    {
+      "path": "evidence/method-21-C1-instrumentation.log",
+      "bytes": 832,
+      "sha256": "1d427859c3c6f5aa2ef9b9c6c57d4ff9ec83b34b24affc8364a400e3eeef06e5"
+    },
+    {
+      "path": "evidence/method-22-C1-instrumentation.log",
+      "bytes": 806,
+      "sha256": "7486607bfc6c274dafdce83211aea041e98c820387d0497ee643b15eb54e4fda"
+    },
+    {
+      "path": "evidence/method-23-C1-instrumentation.log",
+      "bytes": 782,
+      "sha256": "82e6b0963c8ee965f73f3d70245922813218c6a3d36b854ca7aeec8370674a7d"
+    },
+    {
+      "path": "evidence/method-24-C1-instrumentation.log",
+      "bytes": 780,
+      "sha256": "d2d9cbe2426c00aa7d3dcc54948d498834fc7d084c247aa5884e010db8221ce4"
+    },
+    {
+      "path": "evidence/method-25-C1-instrumentation.log",
+      "bytes": 790,
+      "sha256": "66a0d2f05fe316db66bd14b0720281c1cd8c4cd585ddead111319d8088a284bd"
+    },
+    {
+      "path": "evidence/method-26-C1-instrumentation.log",
+      "bytes": 833,
+      "sha256": "04a826bc690e74d1bca5cae242937f0fdc257728b9799e4ab6eec31860adebcc"
+    },
+    {
+      "path": "evidence/method-27-C1-instrumentation.log",
+      "bytes": 981,
+      "sha256": "d634f9a27d51ccc7beb04da7a25ebd01c5197d41292c3246f250956f358192f6"
+    },
+    {
+      "path": "evidence/method-28-C1-instrumentation.log",
+      "bytes": 1250,
+      "sha256": "ec95d0da08fac6a31cad707a0b2dfc14a9da2ce8af547edc3352f4a84118749a"
+    },
+    {
+      "path": "evidence/method-29-C1-instrumentation.log",
+      "bytes": 803,
+      "sha256": "5424bddcb8b89f36fbd8a8880b9721c157f09aa08a83390fdc6f2d48d3bb5da2"
+    },
+    {
+      "path": "evidence/method-30-C1-instrumentation.log",
+      "bytes": 797,
+      "sha256": "a4d7658c3b9bfed6c83450bb5703fd506ef7f78ca2c53548d67be9d711928cfa"
+    },
+    {
+      "path": "evidence/frozen-source-spec.json",
+      "bytes": 3128,
+      "sha256": "6e9c422d8be60728967226de674b750cb7b3633485956d537dd0c2dac21a6dfb"
+    },
+    {
+      "path": "evidence/frozen-C0-source-manifest.json",
+      "bytes": 174221,
+      "sha256": "d623089339800dfc2234702c4278652d3c0f424891f1aa4d950ff0ff8f2db745"
+    },
+    {
+      "path": "evidence/frozen-C1-source-manifest.json",
+      "bytes": 174222,
+      "sha256": "8c32996d6dbfa5b00071a5ce1f4abda3bf155ba13bd92f9da1b60a0d6dab8fa0"
+    },
+    {
+      "path": "evidence/frozen-method-plan.json",
+      "bytes": 42514,
+      "sha256": "808dd0cf1fece09185c59ae94ce41f51fdbc26dcde5ed196df7e803860f49765"
+    },
+    {
+      "path": "evidence/probe-KvmLocalAppendPairProbe.kt",
+      "bytes": 12932,
+      "sha256": "a916d2470d54f069d1d6071d0b56a15ac6b07d05ab0b033d0aa7d4420fa74338"
+    },
+    {
+      "path": "evidence/host.json",
+      "bytes": 682,
+      "sha256": "70dcfe5cdf285adf5f228f8fe94e3e60432f176a325cfaecf9f6b619c6f62b10"
+    },
+    {
+      "path": "evidence/emulator-configuration.json",
+      "bytes": 855,
+      "sha256": "4de87d42c97e73a1ef15c47313e2049857d2c9b23a0537ee3fd710ec964d56cc"
+    },
+    {
+      "path": "evidence/acceleration.log",
+      "bytes": 57,
+      "sha256": "4484bdd6d5e16c817d4dfc5cda05334055c86428c861c1d22e8cf67ce42fee49"
+    },
+    {
+      "path": "evidence/install-visit-01-B-environment-before.json",
+      "bytes": 469,
+      "sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba"
+    },
+    {
+      "path": "evidence/install-visit-01-B-environment-after.json",
+      "bytes": 469,
+      "sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba"
+    },
+    {
+      "path": "evidence/install-visit-01-B-host-before.json",
+      "bytes": 467,
+      "sha256": "771c595352c656edba574294372d9a92e32a92763824d603bc0c62436bb1c1a4"
+    },
+    {
+      "path": "evidence/install-visit-01-B-host-after.json",
+      "bytes": 469,
+      "sha256": "6c643c3daea163d82b72cc96dcee6fd2b8efd2157e358f5841255a0397fe2513"
+    },
+    {
+      "path": "evidence/install-visit-02-C0-environment-before.json",
+      "bytes": 469,
+      "sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba"
+    },
+    {
+      "path": "evidence/install-visit-02-C0-environment-after.json",
+      "bytes": 469,
+      "sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba"
+    },
+    {
+      "path": "evidence/install-visit-02-C0-host-before.json",
+      "bytes": 470,
+      "sha256": "dddea5320f6b2486651a1dd5b7fd17b42342479edc454d816083d8290f260c53"
+    },
+    {
+      "path": "evidence/install-visit-02-C0-host-after.json",
+      "bytes": 470,
+      "sha256": "7eb0d5ff7fa41219433563c46ae6d1b67437d1055c5a69ec4debbb313ea73d76"
+    },
+    {
+      "path": "evidence/install-visit-03-C1-environment-before.json",
+      "bytes": 469,
+      "sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba"
+    },
+    {
+      "path": "evidence/install-visit-03-C1-environment-after.json",
+      "bytes": 469,
+      "sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba"
+    },
+    {
+      "path": "evidence/install-visit-03-C1-host-before.json",
+      "bytes": 470,
+      "sha256": "ce3634af5b79f22cbf44daacbe1daa10528fc76b7f983debca1357c3dfde7566"
+    },
+    {
+      "path": "evidence/install-visit-03-C1-host-after.json",
+      "bytes": 472,
+      "sha256": "f7f6b28298af3b688a16e33f797c4b734cdacb70256013acac4c0f241ae0c2a4"
+    },
+    {
+      "path": "evidence/install-visit-04-C1-environment-before.json",
+      "bytes": 469,
+      "sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba"
+    },
+    {
+      "path": "evidence/install-visit-04-C1-environment-after.json",
+      "bytes": 469,
+      "sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba"
+    },
+    {
+      "path": "evidence/install-visit-04-C1-host-before.json",
+      "bytes": 472,
+      "sha256": "f4319da646c902dc892b7fc26b980edd1103dec3bee4f06e0da62f6bbdafbb49"
+    },
+    {
+      "path": "evidence/install-visit-04-C1-host-after.json",
+      "bytes": 469,
+      "sha256": "1d8c259c83053f594674d942ced73035da0ee755c30d177567f9763b3faa0fd9"
+    },
+    {
+      "path": "evidence/install-visit-05-B-environment-before.json",
+      "bytes": 469,
+      "sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba"
+    },
+    {
+      "path": "evidence/install-visit-05-B-environment-after.json",
+      "bytes": 469,
+      "sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba"
+    },
+    {
+      "path": "evidence/install-visit-05-B-host-before.json",
+      "bytes": 469,
+      "sha256": "4389222560f04c5eee4207a1421fabe69460dd2a5d322bd200396d6c57c0bc17"
+    },
+    {
+      "path": "evidence/install-visit-05-B-host-after.json",
+      "bytes": 473,
+      "sha256": "3d2ee7c7ac04250cf9e4c9cdcbf099174e5c231b900535e795452881c2356d7b"
+    },
+    {
+      "path": "evidence/install-visit-06-C0-environment-before.json",
+      "bytes": 469,
+      "sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba"
+    },
+    {
+      "path": "evidence/install-visit-06-C0-environment-after.json",
+      "bytes": 469,
+      "sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba"
+    },
+    {
+      "path": "evidence/install-visit-06-C0-host-before.json",
+      "bytes": 473,
+      "sha256": "8eb74a550209ccb454a28f1ccd299cd94fea2eaf8dc74e655c4dcdf93f0121ee"
+    },
+    {
+      "path": "evidence/install-visit-06-C0-host-after.json",
+      "bytes": 473,
+      "sha256": "b698ee9df938916bdbb6080c67f88399c3379dffc9930a0fe48314853a6110fa"
+    },
+    {
+      "path": "evidence/install-visit-07-C0-environment-before.json",
+      "bytes": 469,
+      "sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba"
+    },
+    {
+      "path": "evidence/install-visit-07-C0-environment-after.json",
+      "bytes": 469,
+      "sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba"
+    },
+    {
+      "path": "evidence/install-visit-07-C0-host-before.json",
+      "bytes": 473,
+      "sha256": "20414bd5ef6571f28fa7d8a96da57cf170015fb9642a933f79583f6314567d73"
+    },
+    {
+      "path": "evidence/install-visit-07-C0-host-after.json",
+      "bytes": 474,
+      "sha256": "5ad00d1876a5fc933b2079dbf9abfb579350ddd79462a6c269a79947df9876a5"
+    },
+    {
+      "path": "evidence/install-visit-08-C1-environment-before.json",
+      "bytes": 469,
+      "sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba"
+    },
+    {
+      "path": "evidence/install-visit-08-C1-environment-after.json",
+      "bytes": 469,
+      "sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba"
+    },
+    {
+      "path": "evidence/install-visit-08-C1-host-before.json",
+      "bytes": 474,
+      "sha256": "d4c6924825037315762c0b03e0a7f1e4ceb04f43c01d5acf630864296938ecc7"
+    },
+    {
+      "path": "evidence/install-visit-08-C1-host-after.json",
+      "bytes": 472,
+      "sha256": "ba3b2fe94fefee1236138d3d23128c246b41b0a3c1b72a65c13402f7eebcaf96"
+    },
+    {
+      "path": "evidence/install-visit-09-B-environment-before.json",
+      "bytes": 469,
+      "sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba"
+    },
+    {
+      "path": "evidence/install-visit-09-B-environment-after.json",
+      "bytes": 469,
+      "sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba"
+    },
+    {
+      "path": "evidence/install-visit-09-B-host-before.json",
+      "bytes": 471,
+      "sha256": "4795869cf434d98720206782b44975938057d141bfd6b4326f1ee2b34b6a40e1"
+    },
+    {
+      "path": "evidence/install-visit-09-B-host-after.json",
+      "bytes": 466,
+      "sha256": "fdab5c15a678c0ee229643c5f76c66e835d59c5c0ba4af466fba717a276f3391"
+    },
+    {
+      "path": "evidence/install-visit-10-B-environment-before.json",
+      "bytes": 469,
+      "sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba"
+    },
+    {
+      "path": "evidence/install-visit-10-B-environment-after.json",
+      "bytes": 469,
+      "sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba"
+    },
+    {
+      "path": "evidence/install-visit-10-B-host-before.json",
+      "bytes": 467,
+      "sha256": "9973a256eac765c0092b90ce2fe05122cc3c107a009533c6703705f3c338a66c"
+    },
+    {
+      "path": "evidence/install-visit-10-B-host-after.json",
+      "bytes": 471,
+      "sha256": "b63de0b525ed51e4c368ce470dadcc92784b149e1d7456fa48836eb1787194fe"
+    },
+    {
+      "path": "evidence/install-visit-11-C1-environment-before.json",
+      "bytes": 469,
+      "sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba"
+    },
+    {
+      "path": "evidence/install-visit-11-C1-environment-after.json",
+      "bytes": 469,
+      "sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba"
+    },
+    {
+      "path": "evidence/install-visit-11-C1-host-before.json",
+      "bytes": 466,
+      "sha256": "5e25efa0d0219a7bea56471ff87f32b43e005a52db5ea2db25a4a0185bf9b34c"
+    },
+    {
+      "path": "evidence/install-visit-11-C1-host-after.json",
+      "bytes": 462,
+      "sha256": "3842e94e8fdf06034e5f9cae249d2f7a26e0201b3e6bb1aa198c4de5ac85cc97"
+    },
+    {
+      "path": "evidence/install-visit-12-C0-environment-before.json",
+      "bytes": 469,
+      "sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba"
+    },
+    {
+      "path": "evidence/install-visit-12-C0-environment-after.json",
+      "bytes": 469,
+      "sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba"
+    },
+    {
+      "path": "evidence/install-visit-12-C0-host-before.json",
+      "bytes": 462,
+      "sha256": "6b5a72958a71c384789ce2d8f0689442f842fa0618eb847f7394fc5b0bb9b568"
+    },
+    {
+      "path": "evidence/install-visit-12-C0-host-after.json",
+      "bytes": 468,
+      "sha256": "6b62ca32f268696931830fc28a1a4fdd7e44b28dbb1970833fdcae7486df357c"
+    },
+    {
+      "path": "analysis/analysis.json",
+      "bytes": 1947030,
+      "sha256": "732863e26c6159d1f67486fd907a86342d5e8933572c2227023222cc2293bf7a"
+    }
+  ]
+}

@@ -1,0 +1,2 @@
+<?xml version='1.0' encoding='utf-8'?>
+<testsuite name="org.inkweft.data.RasterReadCacheTest#separatedRegionsSkipEmptyMetadataBatchesAndDecodeCrossingStrokeOnce" tests="1" failures="0" errors="0" time="1.2633912563323975"><testcase classname="org.inkweft.data.RasterReadCacheTest" name="separatedRegionsSkipEmptyMetadataBatchesAndDecodeCrossingStrokeOnce" time="1.2633912563323975" /></testsuite>

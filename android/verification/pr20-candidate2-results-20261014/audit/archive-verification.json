@@ -1,0 +1,799 @@
+{
+  "artifact_id": 11837544923,
+  "archive_sha256": "e3218dda22503f2bc085cf2e96284ce0bd24f5b05c40dcee772c13b2ec7318aa",
+  "archive_bytes": 769104,
+  "payload_files": 289,
+  "uncompressed_bytes": 3638425,
+  "status": "ARCHIVE_AND_MANIFEST_VERIFIED",
+  "run_id": 38441089594,
+  "job_id": 115447545993,
+  "workflow_git": "6b180ef65fa0d966f42967fe6a592f7bfe0a8ae5",
+  "preparation_git": "6e3438e0d03fe473979cc7e4b5f7d909ca148e0c",
+  "readiness_git": "6c72fd8b20228cc324fd835efa3f505f1f179997",
+  "source_spec_sha256": "6e9c422d8be60728967226de674b750cb7b3633485956d537dd0c2dac21a6dfb",
+  "method_plan_sha256": "808dd0cf1fece09185c59ae94ce41f51fdbc26dcde5ed196df7e803860f49765",
+  "controller_execution_hashes": {
+    "README.md": "a152cc6257266590cd5e2962570c42e8c8137a0b99b50d8021a8e54bbfc927d9",
+    "authorization.json": "e22b58660ae1262ae3fdfe6a20b03eb5cab2aff759e7293e89a91d52567a9555",
+    "budget-revision.json": "0de35f7063e25c9c75daa7f4a1719eb525d40d2bdbc311c380133669dcfd582a",
+    "cleanup.py": "49e4337f483de46179466ae1c0fcf9ef18772e6a9388cce5cb6826a60d634576",
+    "clock-contract.json": "27c0402923b91c024485bba9b9c9a8d93f6a87f2fff6c408f3f7c1de46e61939",
+    "clock-server-receipt.json": "81b628032f60fc90b6b29881189123304e0b7666efa7cda5b76d55fcee051bc7",
+    "package.py": "ba7618e5011e5baf2540b85588569073628d5342c8a201228b175732c6de3b61",
+    "preflight.json": "2779d41db5b76cc5604476f316007068e4d4c84a2c7747a3ef0d6751e5000d7a",
+    "run.py": "5c5d2f2666d2fc8e9b85268680a7f3b58babde6abc752289badba65a0da7d715",
+    "workflow.proposed.yml": "036cd396213295f8613d4419e55e6ee8269948b9069f0e818127029a1f2fb4a4"
+  },
+  "runtime_audit": {
+    "budget_override": {
+      "status": "FROZEN_AUTHORIZED_PHASE_OVERRIDE_BOUND",
+      "historical_cutoffs_minutes": [
+        32,
+        38,
+        52,
+        55,
+        60
+      ],
+      "effective_cutoffs_minutes": [
+        38,
+        41,
+        53,
+        55,
+        60
+      ],
+      "historical_plan_git": "6c72fd8b20228cc324fd835efa3f505f1f179997",
+      "historical_plan_sha256": "ff2459abb0b8582d20e570c5afb0c4e9a0df5216bed8bc5191e4d008b5c4dacd",
+      "task_build_cache": false,
+      "frozen_source_and_method_unchanged": true,
+      "cleanup_nominal_seconds": 261,
+      "cleanup_overhead_seconds": 39
+    },
+    "clock": {
+      "anchor_epoch": 1791913339,
+      "anchor_utc": "2026-10-13T17:42:19Z",
+      "phase_cutoff_epochs": {
+        "setup": 1791915619,
+        "correctness": 1791915799,
+        "common": 1791916519,
+        "diagnostics": 1791916639
+      },
+      "actual_job_start_verification": "BOUND_LOCAL_METADATA",
+      "actual_job_started_epoch": 1791913473.0,
+      "actual_job_started_at": "2026-10-13T17:44:33Z",
+      "anchor_lead_seconds": 134.0,
+      "job_conclusion": "success",
+      "job_wall_seconds": 2458.0
+    },
+    "cleanup": {
+      "receipts": {
+        "trap": {
+          "emulator": "STOPPED_CONFIRMED",
+          "command_groups": "STOPPED_CONFIRMED",
+          "acl": "RESTORED_EXACT",
+          "errors": []
+        },
+        "always": {
+          "emulator": "STOPPED_CONFIRMED",
+          "command_groups": "STOPPED_CONFIRMED",
+          "acl": "RESTORED_EXACT",
+          "errors": []
+        }
+      },
+      "receipt_claims_verified": true,
+      "acl_original_bytes_verified": true,
+      "both_verified": true
+    },
+    "methods": [
+      {
+        "ordinal": 1,
+        "identity": "C1",
+        "phase": "correctness",
+        "selection": "org.inkweft.data.LibraryPagingTest#sqlPagingMatchesUnicodePinnedOrderAndLoadsOnlyBoundedPreviews",
+        "status": "PASS",
+        "junit_status": "PASS",
+        "adb_exit": 0,
+        "observed_raw_parser_status": "PASS",
+        "observed_marker_parse_errors": 0
+      },
+      {
+        "ordinal": 2,
+        "identity": "C1",
+        "phase": "correctness",
+        "selection": "org.inkweft.data.LibraryPagingTest#snapshotRetainsOldClassificationAndSourceWhileWriterCommits",
+        "status": "PASS",
+        "junit_status": "PASS",
+        "adb_exit": 0,
+        "observed_raw_parser_status": "PASS",
+        "observed_marker_parse_errors": 0
+      },
+      {
+        "ordinal": 3,
+        "identity": "C1",
+        "phase": "correctness",
+        "selection": "org.inkweft.data.LibraryPagingTest#refreshedNoteBodyAndUnicodeBlankFolderUseAuthorState",
+        "status": "PASS",
+        "junit_status": "PASS",
+        "adb_exit": 0,
+        "observed_raw_parser_status": "PASS",
+        "observed_marker_parse_errors": 0
+      },
+      {
+        "ordinal": 4,
+        "identity": "C1",
+        "phase": "correctness",
+        "selection": "org.inkweft.data.LibrarySearchRepositoryTest#pausedSourceReadCancelsOnRapidInputThenClearAndCategoryStayFresh",
+        "status": "PASS",
+        "junit_status": "PASS",
+        "adb_exit": 0,
+        "observed_raw_parser_status": "PASS",
+        "observed_marker_parse_errors": 0
+      },
+      {
+        "ordinal": 5,
+        "identity": "C1",
+        "phase": "correctness",
+        "selection": "org.inkweft.data.LibrarySearchRepositoryTest#deletedOrStalePageAndTrashedCardCannotReviveSearchHits",
+        "status": "PASS",
+        "junit_status": "PASS",
+        "adb_exit": 0,
+        "observed_raw_parser_status": "PASS",
+        "observed_marker_parse_errors": 0
+      },
+      {
+        "ordinal": 6,
+        "identity": "C1",
+        "phase": "correctness",
+        "selection": "org.inkweft.data.SearchIndexFreshnessTest#freshnessFollowsInkObjectLayerAndPageChanges",
+        "status": "PASS",
+        "junit_status": "PASS",
+        "adb_exit": 0,
+        "observed_raw_parser_status": "PASS",
+        "observed_marker_parse_errors": 0
+      },
+      {
+        "ordinal": 7,
+        "identity": "C1",
+        "phase": "correctness",
+        "selection": "org.inkweft.data.SearchIndexFreshnessTest#checkingIndexNeverDecodesPayloadWhileFullObjectReadStillValidates",
+        "status": "PASS",
+        "junit_status": "PASS",
+        "adb_exit": 0,
+        "observed_raw_parser_status": "PASS",
+        "observed_marker_parse_errors": 0
+      },
+      {
+        "ordinal": 8,
+        "identity": "C1",
+        "phase": "correctness",
+        "selection": "org.inkweft.data.HistoryCollectionTest#oneScanSurvivesRoomObserverRefreshAcrossSevenBatches",
+        "status": "PASS",
+        "junit_status": "PASS",
+        "adb_exit": 0,
+        "observed_raw_parser_status": "PASS",
+        "observed_marker_parse_errors": 0
+      },
+      {
+        "ordinal": 9,
+        "identity": "C1",
+        "phase": "correctness",
+        "selection": "org.inkweft.data.HistoryCollectionTest#sameRoomWriterAddingRootAfterFirstBatchDefersRemainingCandidates",
+        "status": "PASS",
+        "junit_status": "PASS",
+        "adb_exit": 0,
+        "observed_raw_parser_status": "PASS",
+        "observed_marker_parse_errors": 0
+      },
+      {
+        "ordinal": 10,
+        "identity": "C1",
+        "phase": "correctness",
+        "selection": "org.inkweft.data.HistoryCollectionTest#separateRoomWriterAddingRootAfterFirstBatchDefersRemainingCandidates",
+        "status": "PASS",
+        "junit_status": "PASS",
+        "adb_exit": 0,
+        "observed_raw_parser_status": "PASS",
+        "observed_marker_parse_errors": 0
+      },
+      {
+        "ordinal": 11,
+        "identity": "C1",
+        "phase": "correctness",
+        "selection": "org.inkweft.data.HistoryCollectionTest#sameRoomAuthorQueuedBeforeDeleteCommitPreservesNewRoot",
+        "status": "PASS",
+        "junit_status": "PASS",
+        "adb_exit": 0,
+        "observed_raw_parser_status": "PASS",
+        "observed_marker_parse_errors": 0
+      },
+      {
+        "ordinal": 12,
+        "identity": "C1",
+        "phase": "correctness",
+        "selection": "org.inkweft.data.HistoryCollectionTest#separateRoomAuthorQueuedBeforeDeleteCommitPreservesNewRoot",
+        "status": "PASS",
+        "junit_status": "PASS",
+        "adb_exit": 0,
+        "observed_raw_parser_status": "PASS",
+        "observed_marker_parse_errors": 0
+      },
+      {
+        "ordinal": 13,
+        "identity": "C1",
+        "phase": "correctness",
+        "selection": "org.inkweft.data.HistoryCollectionTest#overlappingRootSetsAcrossFullAndPartialBatchesRetainEveryVersion",
+        "status": "PASS",
+        "junit_status": "PASS",
+        "adb_exit": 0,
+        "observed_raw_parser_status": "PASS",
+        "observed_marker_parse_errors": 0
+      },
+      {
+        "ordinal": 14,
+        "identity": "C1",
+        "phase": "correctness",
+        "selection": "org.inkweft.data.HistoryCollectionTest#malformedTransformAfterAFullRootBatchAbortsBeforeAnyDeletion",
+        "status": "PASS",
+        "junit_status": "PASS",
+        "adb_exit": 0,
+        "observed_raw_parser_status": "PASS",
+        "observed_marker_parse_errors": 0
+      },
+      {
+        "ordinal": 15,
+        "identity": "C1",
+        "phase": "correctness",
+        "selection": "org.inkweft.data.HistoryCollectionTest#interruptedBatchRollsBackAndReopenedCollectionResumes",
+        "status": "PASS",
+        "junit_status": "PASS",
+        "adb_exit": 0,
+        "observed_raw_parser_status": "PASS",
+        "observed_marker_parse_errors": 0
+      },
+      {
+        "ordinal": 16,
+        "identity": "C1",
+        "phase": "correctness",
+        "selection": "org.inkweft.data.HistoryCollectionTest#missingRoomGuardLogAbortsWithoutDeletingCandidates",
+        "status": "PASS",
+        "junit_status": "PASS",
+        "adb_exit": 0,
+        "observed_raw_parser_status": "PASS",
+        "observed_marker_parse_errors": 0
+      },
+      {
+        "ordinal": 17,
+        "identity": "C1",
+        "phase": "correctness",
+        "selection": "org.inkweft.app.NotebookShelfUiTest#pageSourceEditResetsSecondShelfPageWithoutDirectoryChanges",
+        "status": "PASS",
+        "junit_status": "PASS",
+        "adb_exit": 0,
+        "observed_raw_parser_status": "PASS",
+        "observed_marker_parse_errors": 0
+      },
+      {
+        "ordinal": 18,
+        "identity": "C1",
+        "phase": "correctness",
+        "selection": "org.inkweft.data.LibraryPagingTest#cancelledSourceReadSkipsDirectoryAssemblyAndNextReadKeepsClassification",
+        "status": "PASS",
+        "junit_status": "PASS",
+        "adb_exit": 0,
+        "observed_raw_parser_status": "PASS",
+        "observed_marker_parse_errors": 0
+      },
+      {
+        "ordinal": 19,
+        "identity": "C1",
+        "phase": "correctness",
+        "selection": "org.inkweft.data.RasterReadCacheTest#separatedRegionsSkipEmptyMetadataBatchesAndDecodeCrossingStrokeOnce",
+        "status": "PASS",
+        "junit_status": "PASS",
+        "adb_exit": 0,
+        "observed_raw_parser_status": "PASS",
+        "observed_marker_parse_errors": 0
+      },
+      {
+        "ordinal": 20,
+        "identity": "C1",
+        "phase": "correctness",
+        "selection": "org.inkweft.data.RasterReadCacheTest#payloadMaskAndRevisionChangesCannotReuseStaleDecodedGeometry",
+        "status": "PASS",
+        "junit_status": "PASS",
+        "adb_exit": 0,
+        "observed_raw_parser_status": "PASS",
+        "observed_marker_parse_errors": 0
+      },
+      {
+        "ordinal": 21,
+        "identity": "C1",
+        "phase": "correctness",
+        "selection": "org.inkweft.data.RasterReadCacheTest#explicitAppendReuseSkipsOldPayloadsAcrossRevisionJumpsAndDefaultsToInvalidation",
+        "status": "PASS",
+        "junit_status": "PASS",
+        "adb_exit": 0,
+        "observed_raw_parser_status": "PASS",
+        "observed_marker_parse_errors": 0
+      },
+      {
+        "ordinal": 22,
+        "identity": "C1",
+        "phase": "correctness",
+        "selection": "org.inkweft.data.RasterReadCacheTest#appendPermissionStillRefreshesChangedPayloadVisibilityUndoAndMasks",
+        "status": "PASS",
+        "junit_status": "PASS",
+        "adb_exit": 0,
+        "observed_raw_parser_status": "PASS",
+        "observed_marker_parse_errors": 0
+      },
+      {
+        "ordinal": 23,
+        "identity": "C1",
+        "phase": "correctness",
+        "selection": "org.inkweft.data.RasterReadCacheTest#appendReuseRejectsHeadOrMaskChangesDuringCachedBatches",
+        "status": "PASS",
+        "junit_status": "PASS",
+        "adb_exit": 0,
+        "observed_raw_parser_status": "PASS",
+        "observed_marker_parse_errors": 0
+      },
+      {
+        "ordinal": 24,
+        "identity": "C1",
+        "phase": "correctness",
+        "selection": "org.inkweft.data.RasterReadCacheTest#decodedCacheRemainsBoundedForManyStrokesAndDenseMasks",
+        "status": "PASS",
+        "junit_status": "PASS",
+        "adb_exit": 0,
+        "observed_raw_parser_status": "PASS",
+        "observed_marker_parse_errors": 0
+      },
+      {
+        "ordinal": 25,
+        "identity": "C1",
+        "phase": "correctness",
+        "selection": "org.inkweft.data.RasterReadCacheTest#sameRevisionMaskChangeDuringCachedVisitRejectsTheWholeRead",
+        "status": "PASS",
+        "junit_status": "PASS",
+        "adb_exit": 0,
+        "observed_raw_parser_status": "PASS",
+        "observed_marker_parse_errors": 0
+      },
+      {
+        "ordinal": 26,
+        "identity": "C1",
+        "phase": "correctness",
+        "selection": "org.inkweft.app.TileLocalRedrawTest#appendRetainsGeometryAcrossIdleLayerRevisionsAndDestructiveChangesMatchColdFrames",
+        "status": "PASS",
+        "junit_status": "PASS",
+        "adb_exit": 0,
+        "observed_raw_parser_status": "PASS",
+        "observed_marker_parse_errors": 0
+      },
+      {
+        "ordinal": 27,
+        "identity": "C1",
+        "phase": "correctness",
+        "selection": "org.inkweft.app.TileLocalRedrawTest#integralPanReusesInteriorTilesAndZoomPreviewNeverCompletesCapture",
+        "status": "PASS",
+        "junit_status": "PASS",
+        "adb_exit": 0,
+        "observed_raw_parser_status": "PASS",
+        "observed_marker_parse_errors": 0
+      },
+      {
+        "ordinal": 28,
+        "identity": "C1",
+        "phase": "correctness",
+        "selection": "org.inkweft.app.TileLocalRedrawTest#interruptedPanWaitJoinsItsWorkerBeforeClosingResources",
+        "status": "PASS",
+        "junit_status": "PASS",
+        "adb_exit": 0,
+        "observed_raw_parser_status": "PASS",
+        "observed_marker_parse_errors": 0
+      },
+      {
+        "ordinal": 29,
+        "identity": "C1",
+        "phase": "correctness",
+        "selection": "org.inkweft.app.StreamedInkRasterTest#clearingPendingTransformReleasesPinnedGeometryWithoutPublishing",
+        "status": "PASS",
+        "junit_status": "PASS",
+        "adb_exit": 0,
+        "observed_raw_parser_status": "PASS",
+        "observed_marker_parse_errors": 0
+      },
+      {
+        "ordinal": 30,
+        "identity": "C1",
+        "phase": "correctness",
+        "selection": "org.inkweft.app.StreamedInkRasterTest#omittedStrokeCannotReappearWhileItsReplacementFrameIsDelayed",
+        "status": "PASS",
+        "junit_status": "PASS",
+        "adb_exit": 0,
+        "observed_raw_parser_status": "PASS",
+        "observed_marker_parse_errors": 0
+      },
+      {
+        "ordinal": 31,
+        "identity": "B",
+        "phase": "common-comparison",
+        "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+        "status": "PASS",
+        "junit_status": "PASS",
+        "adb_exit": 0,
+        "observed_raw_parser_status": "PASS",
+        "observed_marker_parse_errors": 0
+      },
+      {
+        "ordinal": 32,
+        "identity": "B",
+        "phase": "common-comparison",
+        "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+        "status": "PASS",
+        "junit_status": "PASS",
+        "adb_exit": 0,
+        "observed_raw_parser_status": "PASS",
+        "observed_marker_parse_errors": 0
+      },
+      {
+        "ordinal": 33,
+        "identity": "C0",
+        "phase": "common-comparison",
+        "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+        "status": "PASS",
+        "junit_status": "PASS",
+        "adb_exit": 0,
+        "observed_raw_parser_status": "PASS",
+        "observed_marker_parse_errors": 0
+      },
+      {
+        "ordinal": 34,
+        "identity": "C0",
+        "phase": "common-comparison",
+        "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+        "status": "PASS",
+        "junit_status": "PASS",
+        "adb_exit": 0,
+        "observed_raw_parser_status": "PASS",
+        "observed_marker_parse_errors": 0
+      },
+      {
+        "ordinal": 35,
+        "identity": "C1",
+        "phase": "common-comparison",
+        "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+        "status": "PASS",
+        "junit_status": "PASS",
+        "adb_exit": 0,
+        "observed_raw_parser_status": "PASS",
+        "observed_marker_parse_errors": 0
+      },
+      {
+        "ordinal": 36,
+        "identity": "C1",
+        "phase": "common-comparison",
+        "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+        "status": "PASS",
+        "junit_status": "PASS",
+        "adb_exit": 0,
+        "observed_raw_parser_status": "PASS",
+        "observed_marker_parse_errors": 0
+      },
+      {
+        "ordinal": 37,
+        "identity": "C1",
+        "phase": "common-comparison",
+        "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+        "status": "PASS",
+        "junit_status": "PASS",
+        "adb_exit": 0,
+        "observed_raw_parser_status": "PASS",
+        "observed_marker_parse_errors": 0
+      },
+      {
+        "ordinal": 38,
+        "identity": "C1",
+        "phase": "common-comparison",
+        "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+        "status": "PASS",
+        "junit_status": "PASS",
+        "adb_exit": 0,
+        "observed_raw_parser_status": "PASS",
+        "observed_marker_parse_errors": 0
+      },
+      {
+        "ordinal": 39,
+        "identity": "B",
+        "phase": "common-comparison",
+        "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+        "status": "PASS",
+        "junit_status": "PASS",
+        "adb_exit": 0,
+        "observed_raw_parser_status": "PASS",
+        "observed_marker_parse_errors": 0
+      },
+      {
+        "ordinal": 40,
+        "identity": "B",
+        "phase": "common-comparison",
+        "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+        "status": "PASS",
+        "junit_status": "PASS",
+        "adb_exit": 0,
+        "observed_raw_parser_status": "PASS",
+        "observed_marker_parse_errors": 0
+      },
+      {
+        "ordinal": 41,
+        "identity": "C0",
+        "phase": "common-comparison",
+        "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+        "status": "PASS",
+        "junit_status": "PASS",
+        "adb_exit": 0,
+        "observed_raw_parser_status": "PASS",
+        "observed_marker_parse_errors": 0
+      },
+      {
+        "ordinal": 42,
+        "identity": "C0",
+        "phase": "common-comparison",
+        "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+        "status": "PASS",
+        "junit_status": "PASS",
+        "adb_exit": 0,
+        "observed_raw_parser_status": "PASS",
+        "observed_marker_parse_errors": 0
+      },
+      {
+        "ordinal": 43,
+        "identity": "C0",
+        "phase": "common-comparison",
+        "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+        "status": "PASS",
+        "junit_status": "PASS",
+        "adb_exit": 0,
+        "observed_raw_parser_status": "PASS",
+        "observed_marker_parse_errors": 0
+      },
+      {
+        "ordinal": 44,
+        "identity": "C0",
+        "phase": "common-comparison",
+        "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+        "status": "PASS",
+        "junit_status": "PASS",
+        "adb_exit": 0,
+        "observed_raw_parser_status": "PASS",
+        "observed_marker_parse_errors": 0
+      },
+      {
+        "ordinal": 45,
+        "identity": "C1",
+        "phase": "common-comparison",
+        "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+        "status": "PASS",
+        "junit_status": "PASS",
+        "adb_exit": 0,
+        "observed_raw_parser_status": "PASS",
+        "observed_marker_parse_errors": 0
+      },
+      {
+        "ordinal": 46,
+        "identity": "C1",
+        "phase": "common-comparison",
+        "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+        "status": "PASS",
+        "junit_status": "PASS",
+        "adb_exit": 0,
+        "observed_raw_parser_status": "PASS",
+        "observed_marker_parse_errors": 0
+      },
+      {
+        "ordinal": 47,
+        "identity": "B",
+        "phase": "common-comparison",
+        "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+        "status": "PASS",
+        "junit_status": "PASS",
+        "adb_exit": 0,
+        "observed_raw_parser_status": "PASS",
+        "observed_marker_parse_errors": 0
+      },
+      {
+        "ordinal": 48,
+        "identity": "B",
+        "phase": "common-comparison",
+        "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+        "status": "PASS",
+        "junit_status": "PASS",
+        "adb_exit": 0,
+        "observed_raw_parser_status": "PASS",
+        "observed_marker_parse_errors": 0
+      },
+      {
+        "ordinal": 49,
+        "identity": "B",
+        "phase": "common-comparison",
+        "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+        "status": "PASS",
+        "junit_status": "PASS",
+        "adb_exit": 0,
+        "observed_raw_parser_status": "PASS",
+        "observed_marker_parse_errors": 0
+      },
+      {
+        "ordinal": 50,
+        "identity": "B",
+        "phase": "common-comparison",
+        "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+        "status": "PASS",
+        "junit_status": "PASS",
+        "adb_exit": 0,
+        "observed_raw_parser_status": "PASS",
+        "observed_marker_parse_errors": 0
+      },
+      {
+        "ordinal": 51,
+        "identity": "C1",
+        "phase": "common-comparison",
+        "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+        "status": "PASS",
+        "junit_status": "PASS",
+        "adb_exit": 0,
+        "observed_raw_parser_status": "PASS",
+        "observed_marker_parse_errors": 0
+      },
+      {
+        "ordinal": 52,
+        "identity": "C1",
+        "phase": "common-comparison",
+        "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+        "status": "PASS",
+        "junit_status": "PASS",
+        "adb_exit": 0,
+        "observed_raw_parser_status": "PASS",
+        "observed_marker_parse_errors": 0
+      },
+      {
+        "ordinal": 53,
+        "identity": "C0",
+        "phase": "common-comparison",
+        "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+        "status": "PASS",
+        "junit_status": "PASS",
+        "adb_exit": 0,
+        "observed_raw_parser_status": "PASS",
+        "observed_marker_parse_errors": 0
+      },
+      {
+        "ordinal": 54,
+        "identity": "C0",
+        "phase": "common-comparison",
+        "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+        "status": "PASS",
+        "junit_status": "PASS",
+        "adb_exit": 0,
+        "observed_raw_parser_status": "PASS",
+        "observed_marker_parse_errors": 0
+      },
+      {
+        "ordinal": 55,
+        "identity": "C1",
+        "phase": "candidate-diagnostics",
+        "selection": "org.inkweft.data.HistoryDeletionExposureTest#sameRoomWriterNaturalDeletionExposure",
+        "status": "PASS",
+        "junit_status": "PASS",
+        "adb_exit": 0,
+        "observed_raw_parser_status": "PASS",
+        "observed_marker_parse_errors": 0
+      },
+      {
+        "ordinal": 56,
+        "identity": "C1",
+        "phase": "candidate-diagnostics",
+        "selection": "org.inkweft.data.HistoryDeletionExposureTest#separateRoomWriterNaturalDeletionExposure",
+        "status": "PASS",
+        "junit_status": "PASS",
+        "adb_exit": 0,
+        "observed_raw_parser_status": "PASS",
+        "observed_marker_parse_errors": 0
+      },
+      {
+        "ordinal": 57,
+        "identity": "C1",
+        "phase": "candidate-diagnostics",
+        "selection": "org.inkweft.data.LibraryReadPerformanceTest#coldSearchConcurrentSavesAndShelfReadScale",
+        "status": "PASS",
+        "junit_status": "PASS",
+        "adb_exit": 0,
+        "observed_raw_parser_status": "PASS",
+        "observed_marker_parse_errors": 0
+      }
+    ],
+    "method_status_counts": {
+      "PASS": 57
+    },
+    "raw_junit_status_counts": {
+      "PASS": 57
+    },
+    "apk_receipts": {
+      "B": {
+        "source_commit": "a128bb07e34cb82f00eeafc8e62a47bf7b95b128",
+        "source_manifest_sha256": "bcf2b51fb04e85ced2a70bc3fc7a402e1fed551583de43831d8a4ecccce91fd8",
+        "apks": [
+          {
+            "path": "app/build/outputs/apk/debug/app-debug.apk",
+            "sha256": "4076a9cc594690c0c1e96dc617c460f14ca6080066c151c3546261f47a73d1c7",
+            "bytes": 229655251
+          },
+          {
+            "path": "app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk",
+            "sha256": "b97979698b1e20021065b8b06851224919b802fd6323240a7494002897293384",
+            "bytes": 10308467
+          },
+          {
+            "path": "data-local/build/outputs/apk/androidTest/debug/data-local-debug-androidTest.apk",
+            "sha256": "d687aa5605f3bb973e4f677567c06556201b4f83b3ea031d8624697ffef9ccd3",
+            "bytes": 22522824
+          }
+        ]
+      },
+      "C0": {
+        "source_commit": "ebb48481e7e995288c1844d43011398c513b4f4e",
+        "source_manifest_sha256": "c0e3b9a4cfa9b5a602e47422f080add43353d64acacea505cc8f3ebee4c91e63",
+        "apks": [
+          {
+            "path": "app/build/outputs/apk/debug/app-debug.apk",
+            "sha256": "16a9e264decf0c73c4b88f96d05383236c9688d75a7701a47a24ad2ed6abcaa3",
+            "bytes": 229747847
+          },
+          {
+            "path": "app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk",
+            "sha256": "0863f3b2933fe9a1992af8e93133ec0235a6ab93ac0e6b207e4428205cc7fb89",
+            "bytes": 10566911
+          },
+          {
+            "path": "data-local/build/outputs/apk/androidTest/debug/data-local-debug-androidTest.apk",
+            "sha256": "c3363dfa752941b3ce1ba6caba07b45d2abeae3f805e68a3a4f0115fbce60e9c",
+            "bytes": 23243800
+          }
+        ]
+      },
+      "C1": {
+        "source_commit": "45b4861ae23ac19eda3246fcd34cf3d2132dc1ee",
+        "source_manifest_sha256": "7592c7990537bde681d0179539f58e1cd79822695bfcfd4b19882d9e1f738e90",
+        "apks": [
+          {
+            "path": "app/build/outputs/apk/debug/app-debug.apk",
+            "sha256": "ab82c7780a4703cf6bea9d1fe649ed854f745c24ddb4188e2610ec472d6a929b",
+            "bytes": 229748859
+          },
+          {
+            "path": "app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk",
+            "sha256": "6eb9ab713f896bbdbda6f2fa773723153bc40835c386e6bbb1f357f87150a510",
+            "bytes": 10637051
+          },
+          {
+            "path": "data-local/build/outputs/apk/androidTest/debug/data-local-debug-androidTest.apk",
+            "sha256": "8cab8f89483a644a6f9e44d12890a90a64736b5775dc1fefac94f7c470afb6c4",
+            "bytes": 23276568
+          }
+        ]
+      }
+    },
+    "apk_binary_reverification": "NOT_PERFORMED_APKS_NOT_IN_APPROVED_ARTIFACT",
+    "summary_status": "EXECUTION_COMPLETE_ANALYSIS_PENDING",
+    "all57_methods_pass": true,
+    "issues": [],
+    "pending": [],
+    "assessment": "RECORDED_EXECUTION_CONSISTENT",
+    "performance": "NOT_ANALYZED_USE_UNCHANGED_FROZEN_ANALYZER_ON_VERIFIED_EVIDENCE",
+    "analyzer_sha256": "a26427d7394999a079e4af2a731cada736617a903edd682c7b5c35b5e14848eb"
+  },
+  "verifier_sha256": "f44e5a1e9631cfb136e14a0d8461059ad15faf9ee2a7331b496f2d6d55542bea",
+  "input_metadata_sha256": "9ff9e540f80c605a355fcfdf6d25d48280fa4eefc8f0694fded2c5d37ff96d85",
+  "jobs_metadata_sha256": "aa16405f5acccfccae922d3afe067008464e406b75e4818af0636d0cccf5f39a",
+  "note": "Integrity is separate from native success and performance; original failures and unfinished methods are retained."
+}

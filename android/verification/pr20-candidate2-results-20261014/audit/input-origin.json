@@ -1,0 +1,10 @@
+{
+  "library_file_id": "libfile_9e77f3a3914c8191a8a2f8b89cf8b315",
+  "original_filename": "pr20-kvm-triple-38441089594.zip",
+  "original_bytes": 769104,
+  "sha256": "e3218dda22503f2bc085cf2e96284ce0bd24f5b05c40dcee772c13b2ec7318aa",
+  "run_id": 38441089594,
+  "artifact_id": 11837544923,
+  "retrieval": "User-provided original ZIP via authorized Library materialization; original bytes retained in cloud scratch, no refused artifact-storage channel retry",
+  "zip_committed": false
+}

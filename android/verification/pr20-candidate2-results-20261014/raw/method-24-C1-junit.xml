@@ -1,0 +1,2 @@
+<?xml version='1.0' encoding='utf-8'?>
+<testsuite name="org.inkweft.data.RasterReadCacheTest#decodedCacheRemainsBoundedForManyStrokesAndDenseMasks" tests="1" failures="0" errors="0" time="1.1646873950958252"><testcase classname="org.inkweft.data.RasterReadCacheTest" name="decodedCacheRemainsBoundedForManyStrokesAndDenseMasks" time="1.1646873950958252" /></testsuite>

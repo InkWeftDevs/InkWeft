@@ -1,0 +1,2 @@
+<?xml version='1.0' encoding='utf-8'?>
+<testsuite name="org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions" tests="1" failures="0" errors="0" time="4.834317684173584"><testcase classname="org.inkweft.app.KvmLocalAppendPairProbe" name="oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions" time="4.834317684173584" /></testsuite>
